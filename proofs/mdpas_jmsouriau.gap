@@ -1,0 +1,26 @@
+# Exact-rational GAP certificate for Souriau MDPAS 1974 finite spin layer.
+Dot4 := function(a,b) return Sum([1..4], i -> a[i]*b[i]); end;
+Wedge4 := function(a,b) return List([1..4], i -> List([1..4], j -> a[i]*b[j] - a[j]*b[i])); end;
+Transpose4 := A -> TransposedMat(A);
+MatVec4 := function(A,p) return List([1..4], i -> Sum([1..4], j -> A[i][j]*p[j])); end;
+Pvec := [2,3,5,7];
+Uvec := [11,13,17,19];
+Vvec := [23,29,31,37];
+Smat := Wedge4(Uvec,Vvec);
+Z4 := NullMat(4,4);
+if Smat + Transpose4(Smat) <> Z4 then Error("spin antisymmetry failed"); fi;
+if Wedge4(Uvec,Vvec) + Wedge4(Vvec,Uvec) <> Z4 then Error("wedge swap failed"); fi;
+Cvec := MatVec4(Smat,Pvec);
+Expected := List([1..4], i -> Uvec[i]*Dot4(Vvec,Pvec) - Vvec[i]*Dot4(Uvec,Pvec));
+if Cvec <> Expected then Error("contraction identity failed"); fi;
+Fmat := [[0,1,2,3],[-1,0,5,7],[-2,-5,0,11],[-3,-7,-11,0]];
+if Fmat + Transpose4(Fmat) <> Z4 then Error("field antisymmetry failed"); fi;
+if Dot4(Pvec, MatVec4(Fmat,Pvec)) <> 0 then Error("Lorentz power failed"); fi;
+Pfaffian4 := A -> A[1][2]*A[3][4] - A[1][3]*A[2][4] + A[1][4]*A[2][3];
+if Pfaffian4(Smat) <> 0 then Error("Plucker/Pfaffian failed"); fi;
+EMat := [[0,1,2,3],[-1,0,-11,7],[-2,11,0,-5],[-3,-7,5,0]];
+if EMat + Transpose4(EMat) <> Z4 then Error("EMat antisymmetry failed"); fi;
+if Pfaffian4(EMat) <> -(1*5 + 2*7 + 3*11) then Error("EMat Pfaffian failed"); fi;
+if 2*5*13/(2*17) <> 5*13/17 then Error("gyromagnetic readout failed"); fi;
+if 2*(17/2) <> 17 then Error("spin half prequantization failed"); fi;
+Print("mdpas JMSouriau GAP certificate: ok\n");

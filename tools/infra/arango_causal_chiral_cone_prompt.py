@@ -92,6 +92,7 @@ def resolve_decl(
     if not rows:
         raise SystemExit(f"declaration not found in {raw_nodes}: {decl}")
     row = rows[0]
+    print(f"DEBUG: row = {row}")
     if not row.get("component"):
         raise SystemExit(f"declaration has no SCC membership in {overlay_edges}: {decl}")
     return row

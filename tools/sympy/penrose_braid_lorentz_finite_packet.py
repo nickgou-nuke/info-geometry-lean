@@ -18,6 +18,7 @@ physics, spacetime emergence, or an infinite categorical colimit construction.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -111,12 +112,17 @@ assert s1^2 == G.one() and s2^2 == G.one()
 assert s1*s2*s1 == s2*s1*s2
 print("SAGE_OK")
 '''
-    proc = subprocess.run([SAGE, "-c", script], text=True, capture_output=True, check=True)
+    sage_cache = Path("/tmp/info_geometry_sage_cache")
+    sage_cache.mkdir(parents=True, exist_ok=True)
+    env = {**os.environ, "DOT_SAGE": str(sage_cache)}
+    proc = subprocess.run([SAGE, "-c", script], text=True, capture_output=True, check=True, env=env)
     assert "SAGE_OK" in proc.stdout
     return {"sage_ok": True, "stdout": proc.stdout.strip()}
 
 
 def verify_clifford() -> dict[str, object]:
+    os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+    os.environ.setdefault("NUMBA_CACHE_DIR", "/tmp/numba-cache")
     import clifford  # type: ignore
 
     layout, blades = clifford.Cl(1, 1, firstIdx=1)

@@ -1,0 +1,4 @@
+session GNS_CBO_Fresh = Gelfand_Naimark_Segal +
+  options [document = false]
+  theories
+    GNS_CBO_Fresh

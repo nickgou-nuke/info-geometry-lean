@@ -5,6 +5,9 @@ Checked here:
 - the odd glide matrix `Q` satisfies `{Q,Q} = 2 P_x`, matching Lean theorem
   `wallpaper_generates_SUSY`;
 - `Q` commutes with the even translation matrix `P_x`.
+- the formal Cuntz parity map `Pi(S_i)=-S_i`, `Pi(S_i^dag)=-S_i^dag`
+  preserves the algebraic Cuntz relations and makes `Q_i=S_i+S_i^dag`
+  odd while `Q_i^2` is even.
 
 Not checked here:
 - physical supersymmetry;
@@ -13,6 +16,37 @@ Not checked here:
 """
 
 import sympy as sp
+
+
+def verify_cuntz_parity_algebra(n=3):
+    S = sp.symbols(f"S0:{n}", commutative=False)
+    Sd = sp.symbols(f"Sd0:{n}", commutative=False)
+
+    def pi(expr):
+        out = expr
+        for s, sd in zip(S, Sd):
+            out = out.subs({s: -s, sd: -sd}, simultaneous=True)
+        return sp.expand(out)
+
+    for i in range(n):
+        for j in range(n):
+            relation_lhs = Sd[i] * S[j]
+            relation_rhs = sp.Integer(1) if i == j else sp.Integer(0)
+            assert pi(relation_lhs) == relation_lhs
+            assert pi(relation_rhs) == relation_rhs
+
+    range_sum = sum(S[i] * Sd[i] for i in range(n))
+    assert pi(range_sum) == range_sum
+
+    Q = S[0] + Sd[0]
+    P = Q * Q
+    assert sp.expand(pi(Q) + Q) == 0
+    assert sp.expand(pi(P) - P) == 0
+
+    print("=== Formal Cuntz parity algebra ===")
+    print(f"Pi preserves S_i^dag S_j and sum_i S_i S_i^dag for n={n}")
+    print("Pi(Q_i) = -Q_i and Pi(Q_i^2) = Q_i^2")
+
 
 def verify_cuntz_susy_algebra():
     # Q: odd finite generator, represented by the glide reflection.
@@ -51,4 +85,5 @@ def verify_cuntz_susy_algebra():
         print("\n[SUCCESS] finite supergraded wallpaper algebra verified.")
 
 if __name__ == "__main__":
+    verify_cuntz_parity_algebra()
     verify_cuntz_susy_algebra()

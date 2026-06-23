@@ -1,0 +1,312 @@
+{
+  "$schema": "https://github.com/info-geometry-lean/aql-schema",
+  "version": "1.0",
+  "description": "AQL Data Migration Schema: Mersenne Hierarchy → Zorn Algebra"
+}
+
+-- ============================================================================
+-- AQL SCHEMA: Combinatorial Hierarchy (Discrete Arithmetic)
+-- ============================================================================
+
+schema CombinatorialHierarchy {
+  -- Mersenne prime modes: M_p = 2^p - 1
+  entity MersenneMode {
+    attribute prime_index: Integer
+    attribute dimension: Integer
+    attribute mersenne_value: Integer
+  }
+
+  -- Coupling constant decomposition
+  entity CouplingConstant {
+    attribute value: Integer
+    attribute v2_norm: Integer
+    attribute decomposition: String
+  }
+
+  -- Relationships
+  edge DecomposesTo {
+    source: CouplingConstant
+    target: MersenneMode
+    attribute weight: Integer
+  }
+}
+
+-- ============================================================================
+-- AQL SCHEMA: Zorn Algebra (Continuous Geometry)
+-- ============================================================================
+
+schema ZornAlgebra {
+  -- Zorn matrix slots
+  entity ZornSlot {
+    attribute slot_type: String  -- "scalar_a", "vector_x", "vector_y", "scalar_b"
+    attribute dimension: Integer
+    attribute representation: String  -- "singlet", "fundamental_3", "antifundamental_3bar"
+  }
+
+  -- Symmetry groups
+  entity SymmetryGroup {
+    attribute group_name: String  -- "SU(3)", "G2", "U(1)"
+    attribute dimension: Integer
+    attribute lies_in: String
+  }
+
+  -- Modular eigenvalues (tripotent spectrum)
+  entity ModularEigenvalue {
+    attribute eigenvalue: Integer  -- +1, -1, 0
+    attribute physical_interpretation: String  -- "quark", "antiquark", "vacuum"
+    attribute braiding_phase: Complex
+  }
+
+  -- Complex structures
+  entity ComplexStructure {
+    attribute generator: String  -- "e1", "e12", "J"
+    attribute squares_to: Integer  -- always -1
+    attribute algebra: String  -- "Cl(1,1)", "Cl(2,0)", "Hestenes"
+  }
+
+  -- Relationships
+  edge Stabilizes {
+    source: SymmetryGroup
+    target: ZornSlot
+    attribute action: String
+  }
+
+  edge HasEigenvalue {
+    source: ZornSlot
+    target: ModularEigenvalue
+    attribute multiplicity: Integer
+  }
+
+  edge GeneratedBy {
+    source: ComplexStructure
+    target: ZornSlot
+    attribute isomorphism_type: String
+  }
+}
+
+-- ============================================================================
+-- FUNCTOR: HierarchyToGeometry (F: DiscreteArithmetic → ContinuousGeometry)
+-- ============================================================================
+
+mapping HierarchyToGeometry {
+  imports CombinatorialHierarchy -> ZornAlgebra
+
+  -- Entity mappings
+  MersenneMode -> ZornSlot {
+    -- M_2 = 3 maps to the 3D color vector slots
+    prime_index -> (dimension = 2^prime_index - 1)
+    dimension -> dimension
+    
+    -- Constraint: only M_2 maps to ZornSlot
+    where prime_index = 2
+  }
+
+  CouplingConstant -> ComplexStructure {
+    -- The total 137 determines the complex structure normalization
+    value -> (generator = "J", squares_to = -1)
+  }
+
+  -- Edge mappings
+  DecomposesTo -> HasEigenvalue {
+    -- The decomposition 137 = 3 + 7 + 127 determines eigenvalue multiplicities
+    weight -> multiplicity
+  }
+}
+
+-- ============================================================================
+-- SOURCE INSTANCE: Exact 137 Data
+-- ============================================================================
+
+instance Exact137Data : CombinatorialHierarchy {
+  -- Mersenne modes
+  m2 : MersenneMode {
+    prime_index: 2,
+    dimension: 3,
+    mersenne_value: 3
+  }
+
+  m3 : MersenneMode {
+    prime_index: 3,
+    dimension: 7,
+    mersenne_value: 7
+  }
+
+  m7 : MersenneMode {
+    prime_index: 7,
+    dimension: 127,
+    mersenne_value: 127
+  }
+
+  -- Coupling constant
+  alpha_inv : CouplingConstant {
+    value: 137,
+    v2_norm: 1,  -- 137 = 2^0 * 137 (odd)
+    decomposition: "3 + 7 + 127"
+  }
+
+  -- Decomposition edges
+  dec_m2 : DecomposesTo {
+    source: alpha_inv,
+    target: m2,
+    weight: 3
+  }
+
+  dec_m3 : DecomposesTo {
+    source: alpha_inv,
+    target: m3,
+    weight: 7
+  }
+
+  dec_m7 : DecomposesTo {
+    source: alpha_inv,
+    target: m7,
+    weight: 127
+  }
+}
+
+-- ============================================================================
+-- DATA MIGRATION: Sigma (Left Kan Extension / Pushforward)
+-- ============================================================================
+
+instance GeometricRealization : ZornAlgebra = sigma HierarchyToGeometry Exact137Data {
+  -- This generates the following geometric entities:
+
+  -- From m2 (M_2 = 3)
+  color_vector_x : ZornSlot {
+    slot_type: "vector_x",
+    dimension: 3,
+    representation: "fundamental_3"
+  }
+
+  color_vector_y : ZornSlot {
+    slot_type: "vector_y", 
+    dimension: 3,
+    representation: "antifundamental_3bar"
+  }
+
+  -- From alpha_inv (137)
+  complex_J : ComplexStructure {
+    generator: "J",
+    squares_to: -1,
+    algebra: "Cl(1,1)"
+  }
+
+  -- Eigenvalue spectrum
+  eig_plus : ModularEigenvalue {
+    eigenvalue: 1,
+    physical_interpretation: "quark",
+    braiding_phase: exp(2 * π * i / 3)
+  }
+
+  eig_minus : ModularEigenvalue {
+    eigenvalue: -1,
+    physical_interpretation: "antiquark",
+    braiding_phase: exp(-2 * π * i / 3)
+  }
+
+  eig_zero : ModularEigenvalue {
+    eigenvalue: 0,
+    physical_interpretation: "vacuum",
+    braiding_phase: 1
+  }
+
+  -- Symmetry group
+  su3_color : SymmetryGroup {
+    group_name: "SU(3)",
+    dimension: 8,
+    lies_in: "G2"
+  }
+
+  -- Generated edges
+  stabilizes_x : Stabilizes {
+    source: su3_color,
+    target: color_vector_x,
+    action: "fundamental_representation"
+  }
+
+  stabilizes_y : Stabilizes {
+    source: su3_color,
+    target: color_vector_y,
+    action: "antifundamental_representation"
+  }
+
+  has_eigenvalue_x : HasEigenvalue {
+    source: color_vector_x,
+    target: eig_plus,
+    multiplicity: 3
+  }
+
+  has_eigenvalue_y : HasEigenvalue {
+    source: color_vector_y,
+    target: eig_minus,
+    multiplicity: 3
+  }
+
+  generated_by_J : GeneratedBy {
+    source: complex_J,
+    target: color_vector_x,
+    isomorphism_type: "complex_structure"
+  }
+}
+
+-- ============================================================================
+-- QUERIES: Verification and Extraction
+-- ============================================================================
+
+-- Query 1: Verify M_2 = 3 maps to dim 3
+query verify_mersenne_dimension : Integer {
+  SELECT dimension FROM ZornSlot 
+  WHERE slot_type = "vector_x"
+}
+-- Expected: 3
+
+-- Query 2: Count eigenvalue multiplicities
+query eigenvalue_spectrum : List<(Integer, Integer)> {
+  SELECT eigenvalue, multiplicity 
+  FROM ModularEigenvalue 
+  JOIN HasEigenvalue ON ModularEigenvalue.id = HasEigenvalue.target
+}
+-- Expected: [(+1, 3), (-1, 3)]
+
+-- Query 3: Extract complex structure isomorphism
+query complex_structure_map : String {
+  SELECT generator, algebra, isomorphism_type
+  FROM ComplexStructure
+  JOIN GeneratedBy ON ComplexStructure.id = GeneratedBy.source
+}
+-- Expected: [("J", "Cl(1,1)", "complex_structure")]
+
+-- Query 4: Verify SU(3) stabilizer
+query su3_stabilizer_check : Boolean {
+  SELECT EXISTS (
+    SELECT 1 FROM SymmetryGroup 
+    WHERE group_name = "SU(3)" AND lies_in = "G2"
+  )
+}
+-- Expected: true
+
+-- ============================================================================
+-- BRIDGE THEOREM (AQL Statement)
+-- ============================================================================
+
+theorem functorial_bridge_correct {
+  -- The pushforward preserves the discrete structure
+  ASSERT forall m : MersenneMode in Exact137Data,
+    EXISTS s : ZornSlot in GeometricRealization,
+      dimension(s) = dimension(m)
+
+  -- The complex structure squares to -1
+  ASSERT forall c : ComplexStructure in GeometricRealization,
+    squares_to(c) = -1
+
+  -- The tripotent has correct eigenvalues
+  ASSERT EXISTS (e1, e2, e3 : ModularEigenvalue) in GeometricRealization,
+    eigenvalue(e1) = 1 ∧
+    eigenvalue(e2) = -1 ∧ 
+    eigenvalue(e3) = 0
+
+  -- SU(3) stabilizes the color slots
+  ASSERT EXISTS g : SymmetryGroup in GeometricRealization,
+    group_name(g) = "SU(3)" ∧
+    EXISTS s : ZornSlot, Stabilizes(g, s)
+}

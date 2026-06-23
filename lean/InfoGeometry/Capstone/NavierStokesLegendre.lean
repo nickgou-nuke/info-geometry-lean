@@ -61,9 +61,11 @@ to the divergence-free condition of the collapsed Madelung fluid state.
 In the framework of Metriplectic dynamics, state evolution decomposes into a symplectic
 (conservative/rotational) bracket and a metric (dissipative/gradient) bracket. Reaching the
 Fenchel-Legendre contact manifold corresponds to landing on a Souriau entropic sheet, which
-nullifies the dissipative gradient flow. This halting of radial expansion translates geometrically
-to a divergence-free flow (zero trace). The remaining evolutionary component is purely conservative
-and rotational, acting as a norm-preserving unitary quantum rotor in the doubled Krein carrier.
+nullifies the dissipative gradient flow. When the radial flow orthogonal to the Souriau
+entropic sheets stops (that is, the irrotational flow of the metriplectic flow stops),
+the remaining evolution is purely unitary and rotational, acting as a norm-preserving
+unitary quantum rotor in the doubled Krein carrier. This halting of radial expansion
+translates geometrically to a divergence-free flow (zero trace).
 -/
 theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)

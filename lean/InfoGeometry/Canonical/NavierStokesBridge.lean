@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.FluidCore
 import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Krein.KreinSpace
@@ -9,6 +10,9 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.LinearAlgebra.Determinant
+import Mathlib.LinearAlgebra.Trace
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Analysis.InnerProductSpace.Trace
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Meta.Architecture
 
@@ -30,12 +34,6 @@ namespace InfoGeometry.Canonical
 
 open scoped InnerProductSpace
 open InfoGeometry.Krein
-
-/-- Linearized velocity field (Jacobian-level) on a real Hilbert carrier. -/
-abbrev VelocityField
-    (E : Type _)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
-  E →L[ℝ] E
 
 /-- Endomorphisms on the canonical doubled carrier. -/
 abbrev AlgebraEnd
@@ -117,6 +115,41 @@ theorem strainRate_add_vorticity_eq
   ext x
   simp [sub_eq_add_neg]
   module
+
+/-- Divergence-free (trace-free) property for a velocity field Jacobian. -/
+def IsDivergenceFree
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E]
+    (u : VelocityField E) : Prop :=
+  LinearMap.trace ℝ E u.toLinearMap = 0
+
+theorem trace_adjoint
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E]
+    (u : VelocityField E) :
+    LinearMap.trace ℝ E (ContinuousLinearMap.adjoint u).toLinearMap =
+      LinearMap.trace ℝ E u.toLinearMap := by
+  obtain ⟨ι, b, _⟩ := exists_orthonormalBasis ℝ E
+  rw [LinearMap.trace_eq_sum_inner (ContinuousLinearMap.adjoint u).toLinearMap b]
+  rw [LinearMap.trace_eq_sum_inner u.toLinearMap b]
+  apply Fintype.sum_congr
+  intro x
+  dsimp
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  rw [real_inner_comm]
+
+theorem vorticity_isDivergenceFree
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E]
+    (u : VelocityField E) :
+    IsDivergenceFree (vorticity u) := by
+  unfold IsDivergenceFree vorticity
+  dsimp
+  rw [LinearMap.map_smul, LinearMap.map_sub, trace_adjoint]
+  simp
 
 /--
 Modular-level circulation pairing.
@@ -881,6 +914,34 @@ noncomputable def smoothedMadelungFluidState_zero
     modularVelocity
   ]
 
+omit [FiniteDimensional ℝ E] in
+/-- Auxiliary lemma showing the scaling behaviour of collapsed base velocity. -/
+theorem collapseToBaseVelocity_smul (β : ℝ) (K : AlgebraEnd E) :
+    collapseToBaseVelocity (β • K) = β • collapseToBaseVelocity K := by
+  ext x
+  simp [collapseToBaseVelocity]
+
+omit [FiniteDimensional ℝ E] in
+/-- Linearity of the collapsed modular velocity trace. -/
+theorem trace_madelung_velocity_eq (β : ℝ) (K : AlgebraEnd E) :
+    LinearMap.trace ℝ E (collapseToBaseVelocity (β • K)).toLinearMap =
+      β * LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap := by
+  rw [collapseToBaseVelocity_smul]
+  exact map_smul (LinearMap.trace ℝ E) β (collapseToBaseVelocity K).toLinearMap
+
+/-- Divergence-free condition reduction for the collapsed Madelung fluid state. -/
+theorem madelung_divergence_free_iff (β : ℝ) (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K) (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K) :
+    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u ↔
+      β = 0 ∨ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 := by
+  unfold IsDivergenceFree
+  rw [madelungFluidState_velocity]
+  unfold modularVelocity
+  unfold modularHamiltonian
+  rw [trace_madelung_velocity_eq]
+  exact mul_eq_zero
+
 end MadelungBridge
 
 
@@ -1009,7 +1070,6 @@ theorem chiral_anomaly_sources_flow
 end ChiralFlowBridge
 
 attribute [rep_depth krein]
-  VelocityField
   AlgebraEnd
   vorticity
   strainRate
@@ -1078,5 +1138,8 @@ attribute [rep_depth krein]
   isThermodynamicallySmoothed_zero_beta
   chiralFlux_EinsteinAnomaly_def
   chiral_anomaly_sources_flow
+  IsDivergenceFree
+  trace_adjoint
+  vorticity_isDivergenceFree
 
 end InfoGeometry.Canonical

@@ -95,7 +95,7 @@ private def sortedComponentMembers (h : HydratedGraph String) (si : Nat) : Array
   members.qsort (fun a b => a < b)
 
 private def representativeString (memberLists : Array (Array String)) (si : Nat) : String :=
-  match memberLists[si]![0]? with
+  match (memberLists[si]!)[0]? with
   | some name => name
   | none => ""
 

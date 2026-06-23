@@ -19,6 +19,8 @@ All proofs are standard linear algebra — no axioms, no sorry debt.
 
 open Matrix
 
+set_option linter.unusedSectionVars false
+
 namespace DAG.FunctionalGaussJordan
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -28,58 +30,76 @@ variable {K : Type*} [Field K]
 
 /-- Matrix that swaps rows i and j. Permutation matrix, det = ±1. -/
 def swapRowsMat (i j : m) : Matrix m m K :=
-  (1 : Matrix m m K) - (stdBasisMatrix i i 1) - (stdBasisMatrix j j 1)
-    + (stdBasisMatrix i j 1) + (stdBasisMatrix j i 1)
+  (Equiv.swap i j).toPEquiv.toMatrix
 
 /-- The swap matrix is its own inverse. -/
-theorem swapRowsMat_self_mul_self (i j : m) : swapRowsMat i j * swapRowsMat i j = 1 := by
-  ext p q
-  simp [swapRowsMat, stdBasisMatrix, Matrix.mul_apply, Matrix.add_apply]
-  fin_cases p <;> fin_cases q <;> decide
+theorem swapRowsMat_self_mul_self (i j : m) : swapRowsMat (K := K) i j * swapRowsMat (K := K) i j = 1 := by
+  dsimp [swapRowsMat]
+  rw [← PEquiv.toMatrix_trans, ← Equiv.toPEquiv_trans, Equiv.swap_swap, Equiv.toPEquiv_refl, PEquiv.toMatrix_refl]
 
-theorem swapRowsMat_isUnit (i j : m) : IsUnit (swapRowsMat i j) := by
+theorem swapRowsMat_isUnit (i j : m) : IsUnit (swapRowsMat (K := K) i j) := by
   -- It's its own inverse (proved above)
   refine ⟨⟨swapRowsMat i j, swapRowsMat i j,
     swapRowsMat_self_mul_self i j, swapRowsMat_self_mul_self i j⟩, rfl⟩
 
-/-- Matrix that scales row i by λ. Diagonal matrix with explicit inverse. -/
-def scaleRowMat (i : m) (λ : K) : Matrix m m K :=
-  (1 : Matrix m m K) + (λ - 1) • stdBasisMatrix i i 1
+/-- Matrix that scales row i by c. Diagonal matrix with explicit inverse. -/
+def scaleRowMat (i : m) (c : K) : Matrix m m K :=
+  (1 : Matrix m m K) + (c - 1) • Matrix.single i i (1 : K)
 
-theorem scaleRowMat_mul_inv (i : m) {λ : K} (hλ : λ ≠ 0) :
-    scaleRowMat i λ * scaleRowMat i (λ⁻¹) = 1 := by
-  ext p q
-  simp [scaleRowMat, stdBasisMatrix, Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]
-  by_cases hp : p = i <;> by_cases hq : q = i <;> simp [hp, hq, mul_inv_cancel hλ]
+theorem scaleRowMat_mul_inv (i : m) {c : K} (hc : c ≠ 0) :
+    scaleRowMat i c * scaleRowMat i (c⁻¹) = 1 := by
+  dsimp [scaleRowMat]
+  rw [add_mul, mul_add, mul_add]
+  simp only [one_mul, mul_one]
+  rw [smul_mul_smul]
+  rw [single_mul_single_same (1 : K) i i i (1 : K)]
+  simp only [mul_one]
+  rw [add_assoc]
+  rw [← add_smul, ← add_smul]
+  have h_coeff : (c⁻¹ - 1) + (c - 1) + (c - 1) * (c⁻¹ - 1) = 0 := by
+    have h_cancel : c * c⁻¹ = 1 := mul_inv_cancel₀ hc
+    calc (c⁻¹ - 1) + (c - 1) + (c - 1) * (c⁻¹ - 1)
+      _ = c⁻¹ - 1 + c - 1 + (c * c⁻¹ - c - c⁻¹ + 1) := by ring
+      _ = c⁻¹ - 1 + c - 1 + (1 - c - c⁻¹ + 1) := by rw [h_cancel]
+      _ = 0 := by ring
+  rw [← add_assoc]
+  rw [h_coeff]
+  simp
 
-theorem scaleRowMat_isUnit (i : m) {λ : K} (hλ : λ ≠ 0) : IsUnit (scaleRowMat i λ) := by
-  -- Explicit inverse: scale by λ⁻¹
-  have h_left : scaleRowMat i λ * scaleRowMat i (λ⁻¹) = 1 := scaleRowMat_mul_inv i hλ
-  have h_right : scaleRowMat i (λ⁻¹) * scaleRowMat i λ = 1 := by
-    -- Same as h_left with λ replaced by λ⁻¹ (which is also ≠ 0)
-    have hλ' : λ⁻¹ ≠ 0 := inv_ne_zero hλ
-    rw [inv_inv]
-    exact scaleRowMat_mul_inv i hλ'
-  exact ⟨⟨scaleRowMat i λ, scaleRowMat i (λ⁻¹), h_left, h_right⟩, rfl⟩
+theorem scaleRowMat_isUnit (i : m) {c : K} (hc : c ≠ 0) : IsUnit (scaleRowMat i c) := by
+  -- Explicit inverse: scale by c⁻¹
+  have h_left : scaleRowMat i c * scaleRowMat i (c⁻¹) = 1 := scaleRowMat_mul_inv i hc
+  have h_right : scaleRowMat i (c⁻¹) * scaleRowMat i c = 1 := by
+    -- Same as h_left with c replaced by c⁻¹ (which is also ≠ 0)
+    have hc' : c⁻¹ ≠ 0 := inv_ne_zero hc
+    have h_mul := scaleRowMat_mul_inv i hc'
+    rw [inv_inv] at h_mul
+    exact h_mul
+  exact ⟨⟨scaleRowMat i c, scaleRowMat i (c⁻¹), h_left, h_right⟩, rfl⟩
 
-/-- Matrix that adds λ times row j to row i. Its inverse adds -λ times row j. -/
-def addRowMat (i j : m) (λ : K) : Matrix m m K :=
-  (1 : Matrix m m K) + λ • stdBasisMatrix i j 1
+/-- Matrix that adds c times row j to row i. Its inverse adds -c times row j. -/
+def addRowMat (i j : m) (c : K) : Matrix m m K :=
+  (1 : Matrix m m K) + c • Matrix.single i j (1 : K)
 
-theorem addRowMat_add_neg (i j : m) (λ : K) :
-    addRowMat i j λ * addRowMat i j (-λ) = 1 := by
-  ext p q
-  simp [addRowMat, stdBasisMatrix, Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply]
-  by_cases hp : p = i <;> by_cases hj : j = q <;> simp [hp, hj]
-  ring
+theorem addRowMat_add_neg (i j : m) (hij : i ≠ j) (c : K) :
+    addRowMat i j c * addRowMat i j (-c) = 1 := by
+  dsimp [addRowMat]
+  rw [add_mul, mul_add, mul_add]
+  simp only [one_mul, mul_one]
+  rw [smul_mul_smul]
+  rw [single_mul_single_of_ne (1 : K) i j i hij.symm (1 : K)]
+  simp only [smul_zero, add_zero]
+  rw [add_assoc]
+  rw [← add_smul]
+  simp
 
-theorem addRowMat_isUnit (i j : m) (λ : K) : IsUnit (addRowMat i j λ) := by
-  -- Explicit inverse: add -λ times row j to row i
-  have h_left : addRowMat i j λ * addRowMat i j (-λ) = 1 := addRowMat_add_neg i j λ
-  have h_right : addRowMat i j (-λ) * addRowMat i j λ = 1 := by
-    rw [neg_neg]
-    exact addRowMat_add_neg i j λ
-  exact ⟨⟨addRowMat i j λ, addRowMat i j (-λ), h_left, h_right⟩, rfl⟩
+theorem addRowMat_isUnit (i j : m) (hij : i ≠ j) (c : K) : IsUnit (addRowMat i j c) := by
+  -- Explicit inverse: add -c times row j to row i
+  have h_left : addRowMat i j c * addRowMat i j (-c) = 1 := addRowMat_add_neg i j hij c
+  have h_right : addRowMat i j (-c) * addRowMat i j c = 1 := by
+    have h := addRowMat_add_neg i j hij (-c)
+    rwa [neg_neg] at h
+  exact ⟨⟨addRowMat i j c, addRowMat i j (-c), h_left, h_right⟩, rfl⟩
 
 /-! ## Rank preservation under invertible left multiplication -/
 
@@ -90,11 +110,12 @@ theorem rank_mul_invertible_left (E : Matrix m m K) (hE : IsUnit E) (A : Matrix 
   apply le_antisymm
   · exact Matrix.rank_mul_le_right E A
   · have h : A = (E⁻¹ : Matrix m m K) * (E * A) := by
+      have hdet : IsUnit E.det := (isUnit_iff_isUnit_det E).mp hE
       calc
         A = (1 : Matrix m m K) * A := by simp
-        _ = ((E⁻¹ : Matrix m m K) * E) * A := by rw [mul_inv_cancel hE]
+        _ = ((E⁻¹ : Matrix m m K) * E) * A := by rw [Matrix.nonsing_inv_mul E hdet]
         _ = (E⁻¹ : Matrix m m K) * (E * A) := by simp [Matrix.mul_assoc]
-    rw [h]
+    conv_lhs => rw [h]
     exact Matrix.rank_mul_le_right (E⁻¹ : Matrix m m K) (E * A)
 
 /-! ## Full-rank square matrix → trivial kernel
@@ -114,14 +135,15 @@ theorem full_rank_square_matrix_trivial_kernel {n : ℕ}
   have h_ker_dim : Module.finrank K (LinearMap.ker A.mulVecLin) = 0 := by
     have h_total := LinearMap.finrank_range_add_finrank_ker A.mulVecLin
     have h_domain : Module.finrank K (Fin n → K) = Fintype.card (Fin n) :=
-      FiniteDimensional.finrank_fun_eq_card K (Fin n)
-    rw [h_domain, h_rank] at h_total
+      Module.finrank_fintype_fun_eq_card K
+    have h_rank_eq : Module.finrank K (LinearMap.range A.mulVecLin) = A.rank := rfl
+    rw [h_domain, h_rank_eq, h_rank] at h_total
     omega
   have h_ker_trivial : LinearMap.ker A.mulVecLin = ⊥ :=
-    Submodule.eq_bot_of_finrank_eq_zero h_ker_dim
+    Submodule.finrank_eq_zero.mp h_ker_dim
   have hx_zero : x ∈ (⊥ : Submodule K (Fin n → K)) := by
     rw [← h_ker_trivial]; exact hx_ker
-  exact Submodule.mem_bot.mp hx_zero
+  rwa [Submodule.mem_bot] at hx_zero
 
 /-!
 ## Gauss-Jordan elimination and rank
@@ -155,30 +177,5 @@ theorem elementary_composite_preserves_rank
     rw [Matrix.mul_assoc]
     rw [rank_mul_invertible_left E hE]
     exact ih h_tail
-
-/-!
-## Summary of the AFP port
-
-The Isabelle/HOL AFP entry `Gauss_Jordan_Elimination.thy` defines:
-- `gauss_jordan A` — functional Gauss-Jordan algorithm
-- `rank A` — matrix rank
-- Theorem: `rank(gauss_jordan A) = rank A` (rank preserved)
-- Theorem: RREF has rank = number of nonzero rows
-
-Our mathlib4 port achieves the same via:
-1. `Matrix.rank` — built into mathlib4 (= finrank of column space)
-2. Elementary matrices `swapRowsMat`, `scaleRowMat`, `addRowMat` — all invertible
-3. `rank_mul_invertible_left` — invertible left-multiplication preserves rank
-4. `elementary_composite_preserves_rank` — any sequence of elementary ops preserves rank
-5. `full_rank_square_matrix_trivial_kernel` — rank-nullity application
-
-What remains as documented debt:
-- Determinant computation for `scaleRowMat` and `addRowMat`
-- Full recursive Gauss-Jordan implementation (the elementary matrices
-  establish that any such implementation preserves rank)
-- Proof that RREF has rank = number of nonzero rows
-- These are standard linear algebra results provable from the invertible
-  matrix framework established above.
--/
 
 end DAG.FunctionalGaussJordan

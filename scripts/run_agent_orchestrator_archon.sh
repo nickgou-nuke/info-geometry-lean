@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-ARCHON_ROOT="$REPO_ROOT/tools/archon"
+ARCHON_ROOT="$REPO_ROOT/archon"
 
 export INFO_GEOMETRY_RUNTIME_DIR="${INFO_GEOMETRY_RUNTIME_DIR:-$REPO_ROOT/.runtime}"
 export ARCHON_HOME="${ARCHON_HOME:-$INFO_GEOMETRY_RUNTIME_DIR/archon-home}"

@@ -1,0 +1,143 @@
+{
+  "mersenne_primes": {
+    "sequence": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        5,
+        31
+      ],
+      [
+        7,
+        127
+      ],
+      [
+        13,
+        8191
+      ],
+      [
+        17,
+        131071
+      ],
+      [
+        19,
+        524287
+      ],
+      [
+        31,
+        2147483647
+      ]
+    ],
+    "connections": {
+      "M2": "SU(3) color",
+      "M3": "G\u2082 octonions",
+      "M7": "E\u2088 (120 + 7)",
+      "M13_M17_M31": "divide Monster order"
+    }
+  },
+  "monster_group": {
+    "order": 808017424794512875886459904961710757005754368000000000,
+    "order_factored": "2^46 \u00b7 3^20 \u00b7 5^9 \u00b7 7^6 \u00b7 11^2 \u00b7 13^3 \u00b7 17 \u00b7 19 \u00b7 23 \u00b7 29 \u00b7 31 \u00b7 41 \u00b7 47 \u00b7 59 \u00b7 71",
+    "distinct_prime_factors": 15,
+    "min_rep_dim": 196883,
+    "conjugacy_classes": 194
+  },
+  "monstrous_moonshine": {
+    "j_function": "1/q + 744 + 196884q + 21493760q\u00b2 + ...",
+    "coefficients": [
+      [
+        1,
+        196884,
+        "1 + 196883"
+      ],
+      [
+        2,
+        21493760,
+        "1 + 196883 + 21296876"
+      ],
+      [
+        3,
+        864299970,
+        "1 + 196883 + 21296876 + 842609326"
+      ]
+    ],
+    "connection": "c(n) = sum of Monster rep dims"
+  },
+  "liouville_grading": {
+    "definition": "Gamma = (-1)^Omega(n)",
+    "sample_on_classes": [
+      [
+        1,
+        "1A",
+        1
+      ],
+      [
+        2,
+        "2A",
+        2
+      ],
+      [
+        3,
+        "3A",
+        3
+      ],
+      [
+        4,
+        "4A",
+        4
+      ],
+      [
+        5,
+        "5A",
+        5
+      ],
+      [
+        6,
+        "6A",
+        6
+      ],
+      [
+        7,
+        "7A",
+        7
+      ],
+      [
+        8,
+        "8A",
+        8
+      ],
+      [
+        9,
+        "9A",
+        9
+      ],
+      [
+        10,
+        "10A",
+        10
+      ]
+    ],
+    "witten_index_sample": -4
+  },
+  "commutation": {
+    "theorem": "[Gamma, sigma_t] = 0 for moonshine flow",
+    "verified_grades": [
+      -1,
+      0,
+      1,
+      2
+    ],
+    "thermal_protection": true
+  },
+  "leech_lattice": {
+    "dimension": 24,
+    "minimal_vectors": 196560,
+    "automorphism": "Co\u2080 \u2192 Co\u2081 \u2282 Monster"
+  }
+}

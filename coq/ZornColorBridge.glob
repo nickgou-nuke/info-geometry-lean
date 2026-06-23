@@ -1,0 +1,96 @@
+DIGEST b3503caddaeb88dbefac6ebc8c92eedc
+FZornColorBridge
+ind 10:22 <> mersenne_mode
+constr 36:37 <> M2
+constr 41:42 <> M3
+constr 46:47 <> M7
+scheme 10:22 <> mersenne_mode_rect
+scheme 10:22 <> mersenne_mode_ind
+scheme 10:22 <> mersenne_mode_rec
+scheme 10:22 <> mersenne_mode_sind
+def 62:75 <> mode_dimension
+R82:94 ZornColorBridge <> mersenne_mode ind
+binder 78:78 <> m:3
+R99:101 Corelib.Init.Datatypes <> nat ind
+R114:114 ZornColorBridge <> m:3 var
+R125:126 ZornColorBridge <> M2 constr
+R137:138 ZornColorBridge <> M3 constr
+R149:150 ZornColorBridge <> M7 constr
+def 178:188 <> coupling137
+R192:194 Corelib.Init.Datatypes <> nat ind
+rec 212:220 <> zorn_slot
+proj 236:243 <> slot_dim
+proj 254:261 <> is_color
+proj 273:284 <> is_anticolor
+R247:249 Corelib.Init.Datatypes <> nat ind
+R265:268 Corelib.Init.Datatypes <> bool ind
+R288:291 Corelib.Init.Datatypes <> bool ind
+def 309:309 <> F
+R316:328 ZornColorBridge <> mersenne_mode ind
+binder 312:312 <> m:9
+R333:341 ZornColorBridge <> zorn_slot rec
+R354:354 ZornColorBridge <> m:9 var
+R365:366 ZornColorBridge <> M2 constr
+R374:381 ZornColorBridge <> slot_dim proj
+R374:381 ZornColorBridge <> slot_dim proj
+R374:381 ZornColorBridge <> slot_dim proj
+R389:396 ZornColorBridge <> is_color proj
+R389:396 ZornColorBridge <> is_color proj
+R407:418 ZornColorBridge <> is_anticolor proj
+R407:418 ZornColorBridge <> is_anticolor proj
+R401:404 Corelib.Init.Datatypes <> true constr
+R423:427 Corelib.Init.Datatypes <> false constr
+R436:437 ZornColorBridge <> M3 constr
+R445:452 ZornColorBridge <> slot_dim proj
+R445:452 ZornColorBridge <> slot_dim proj
+R445:452 ZornColorBridge <> slot_dim proj
+R460:467 ZornColorBridge <> is_color proj
+R460:467 ZornColorBridge <> is_color proj
+R479:490 ZornColorBridge <> is_anticolor proj
+R479:490 ZornColorBridge <> is_anticolor proj
+R472:476 Corelib.Init.Datatypes <> false constr
+R495:499 Corelib.Init.Datatypes <> false constr
+R508:509 ZornColorBridge <> M7 constr
+R517:524 ZornColorBridge <> slot_dim proj
+R517:524 ZornColorBridge <> slot_dim proj
+R517:524 ZornColorBridge <> slot_dim proj
+R534:541 ZornColorBridge <> is_color proj
+R534:541 ZornColorBridge <> is_color proj
+R553:564 ZornColorBridge <> is_anticolor proj
+R553:564 ZornColorBridge <> is_anticolor proj
+R546:550 Corelib.Init.Datatypes <> false constr
+R569:573 Corelib.Init.Datatypes <> false constr
+prf 594:610 <> mode_dimension_M2
+R631:633 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R614:627 ZornColorBridge <> mode_dimension def
+R629:630 ZornColorBridge <> M2 constr
+prf 671:687 <> mode_dimension_M3
+R708:710 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R691:704 ZornColorBridge <> mode_dimension def
+R706:707 ZornColorBridge <> M3 constr
+prf 748:764 <> mode_dimension_M7
+R785:787 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R768:781 ZornColorBridge <> mode_dimension def
+R783:784 ZornColorBridge <> M7 constr
+prf 827:851 <> coupling137_decomposition
+R868:870 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R857:867 ZornColorBridge <> coupling137 def
+R908:910 Corelib.Init.Peano <> ::nat_scope:x_'+'_x not
+R888:890 Corelib.Init.Peano <> ::nat_scope:x_'+'_x not
+R871:884 ZornColorBridge <> mode_dimension def
+R886:887 ZornColorBridge <> M2 constr
+R891:904 ZornColorBridge <> mode_dimension def
+R906:907 ZornColorBridge <> M3 constr
+R911:924 ZornColorBridge <> mode_dimension def
+R926:927 ZornColorBridge <> M7 constr
+prf 964:976 <> F_M2_slot_dim
+R995:997 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R980:987 ZornColorBridge <> slot_dim proj
+R990:990 ZornColorBridge <> F def
+R992:993 ZornColorBridge <> M2 constr
+prf 1035:1047 <> F_M2_is_color
+R1066:1068 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1051:1058 ZornColorBridge <> is_color proj
+R1061:1061 ZornColorBridge <> F def
+R1063:1064 ZornColorBridge <> M2 constr
+R1069:1072 Corelib.Init.Datatypes <> true constr

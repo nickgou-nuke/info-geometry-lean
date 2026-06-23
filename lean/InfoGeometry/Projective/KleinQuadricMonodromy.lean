@@ -106,15 +106,8 @@ theorem negLogDerivative_at (z : ℂ) (hz : z ∈ Complex.slitPlane) :
 theorem chiralNullConductor_eq_selfOrthogonal (P : Plucker6 ℂ) :
     kleinPotential P = 0 ↔ Plucker6.polar P P = 0 := by
   have h2 : (2 : ℂ) ≠ 0 := by norm_num
-  have hscale : P.add P = Plucker6.scale (2 : ℂ) P := by
-    cases P <;> ext <;> simp [Plucker6.add, Plucker6.scale] <;> ring
   have hpolar : Plucker6.polar P P = (2 : ℂ) * kleinPotential P := by
-    calc
-      Plucker6.polar P P = Plucker6.kleinQ (P.add P) - Plucker6.kleinQ P - Plucker6.kleinQ P := by rfl
-      _ = Plucker6.kleinQ (Plucker6.scale (2 : ℂ) P) - Plucker6.kleinQ P - Plucker6.kleinQ P := by rw [hscale]
-      _ = (2 : ℂ) * Plucker6.kleinQ P := by
-        rw [Plucker6.kleinQ_scale]
-        ring
+    exact Plucker6.polar_self P
   constructor
   · intro hQ
     simpa [hpolar, hQ]

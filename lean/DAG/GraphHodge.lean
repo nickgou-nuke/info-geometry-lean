@@ -40,27 +40,27 @@ namespace DAG
 def matTranspose (m : Array (Array Rat)) : Array (Array Rat) := Id.run do
   if m.size == 0 then return #[]
   let rows := m.size
-  let cols := m[0]!.size
+  let cols := (m[0]!).size
   let mut result := Array.replicate cols (Array.replicate rows (0 : Rat))
   for i in [:rows] do
     for j in [:cols] do
       let row := result[j]!
-      result := result.set! j (row.set! i m[i]![j]!)
+      result := result.set! j (row.set! i (m[i]!)[j]!)
   return result
 
 /-- Entrywise addition of two matrices of the same dimensions. -/
 def matAdd (a b : Array (Array Rat)) : Array (Array Rat) := Id.run do
-  let mut result := Array.replicate a.size (Array.replicate (a[0]!.size) (0 : Rat))
+  let mut result := Array.replicate a.size (Array.replicate ((a[0]!).size) (0 : Rat))
   for i in [:a.size] do
     let mut row := result[i]!
     for j in [:row.size] do
-      row := row.set! j (a[i]![j]! + b[i]![j]!)
+      row := row.set! j ((a[i]!)[j]! + (b[i]!)[j]!)
     result := result.set! i row
   return result
 
 /-- Diagonal of a square matrix. -/
 def matDiag (m : Array (Array Rat)) : Array Rat :=
-  Array.ofFn (n := m.size) (fun i => m[i.val]![i.val]!)
+  Array.ofFn (n := m.size) (fun i => (m[i.val]!)[i.val]!)
 
 /-- Trace of a square matrix. -/
 def matTrace (m : Array (Array Rat)) : Rat :=
@@ -79,9 +79,9 @@ def matEqual (a b : Array (Array Rat)) : Bool :=
   if a.size != b.size then false else
   Id.run do
     for i in [:a.size] do
-      if a[i]!.size != b[i]!.size then return false
-      for j in [:a[i]!.size] do
-        if a[i]![j]! != b[i]![j]! then return false
+      if (a[i]!).size != (b[i]!).size then return false
+      for j in [:(a[i]!).size] do
+        if (a[i]!)[j]! != (b[i]!)[j]! then return false
     return true
 -- ============================================================
 
@@ -107,17 +107,13 @@ def laplacian0 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array R
 /-- Hodge Laplacian Δ₁ = ∂₁ ∂₁ᵀ + ∂₂ᵀ ∂₂ on 1-chains (n1 × n1).
     Kernel = harmonic 1-forms = intrinsic cycles not killed by faces. -/
 def laplacian1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) :=
-  let b1 := boundary1 tc       -- n1 × n0
-  let b1t := matTranspose b1   -- n0 × n1
-  let b2 := boundary2 tc       -- n2 × n1
-  let b2t := matTranspose b2   -- n1 × n2
-  let down := matMul b1 b1t    -- n1 × n1  (down-Laplacian)
-  let up :=
-    if b2.size == 0 then
-      Array.replicate tc.edges.size (Array.replicate tc.edges.size (0 : Rat))
-    else
-      matMul b2t b2            -- n1 × n1  (up-Laplacian)
-  matAdd down up
+  let n1 := tc.edges.size
+  Array.ofFn (fun i : Fin n1 =>
+    Array.ofFn (fun j : Fin n1 =>
+      (laplacian1Matrix tc) i j
+    )
+  )
+
 
 -- ============================================================
 -- Nullity / Betti via Laplacians
@@ -189,12 +185,12 @@ def graphDirac {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array R
   for i in [:n0] do
     for j in [:n1] do
       let row := mat[i]!
-      mat := mat.set! i (row.set! (n0 + j) b1t[i]![j]!)
+      mat := mat.set! i (row.set! (n0 + j) (b1t[i]!)[j]!)
   -- Lower-left block: ∂₁  (rows n0..n0+n1-1, cols 0..n0-1)
   for i in [:n1] do
     for j in [:n0] do
       let row := mat[n0 + i]!
-      mat := mat.set! (n0 + i) (row.set! j b1[i]![j]!)
+      mat := mat.set! (n0 + i) (row.set! j (b1[i]!)[j]!)
   return mat
 
 -- ============================================================
@@ -297,13 +293,13 @@ def diracSquareCheck {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Bool := 
   let mut ok := true
   for i in [:n0] do
     for j in [:n0] do
-      if d2[i]![j]! != expected00[i]![j]! then ok := false
+      if (d2[i]!)[j]! != (expected00[i]!)[j]! then ok := false
   for i in [:n1] do
     for j in [:n1] do
-      if d2[n0 + i]![n0 + j]! != expected11[i]![j]! then ok := false
+      if (d2[n0 + i]!)[n0 + j]! != (expected11[i]!)[j]! then ok := false
   for i in [:n0] do
     for j in [:n1] do
-      if d2[i]![n0 + j]! != 0 || d2[n0 + j]![i]! != 0 then ok := false
+      if (d2[i]!)[n0 + j]! != 0 || (d2[n0 + j]!)[i]! != 0 then ok := false
   return ok
 
 end DAG

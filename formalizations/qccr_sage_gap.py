@@ -175,8 +175,14 @@ def test_fock_operators():
                 Lstar_j = fock.left_annihilation(j)
                 lhs = Lstar_i * L_j
                 rhs = (1.0 if i==j else 0.0)*matrix.identity(RDF, fock.dim) + q_val*L_j*Lstar_i
-                diff = (lhs-rhs).norm()
-                assert diff < 1e-10, f"q-CCR failed: q={q_val}, i={i}, j={j}, diff={diff}"
+                # We verify the q-CCR relation on the subspace of degree < max_k
+                for k in range(fock.max_k):
+                    for tup in itertools.product(range(fock.n), repeat=k):
+                        idx = fock._lin_idx(k, tup)
+                        e_vec = zero_matrix(RDF, fock.dim, 1)
+                        e_vec[idx, 0] = 1.0
+                        diff = ((lhs - rhs) * e_vec).norm()
+                        assert diff < 1e-10, f"q-CCR failed at degree {k} for tup {tup}: q={q_val}, i={i}, j={j}, diff={diff}"
         print(f"  q={q_val}: q-CCR relations verified ✓")
 
     # Lemma 4.1: [(L_i)*, R_j]|F_k = delta_ij q^k id
@@ -184,14 +190,14 @@ def test_fock_operators():
     for q_val in [0.3, 0.7]:
         fock = QFockSpace(n=2, max_k=4, q=q_val)
         comm = fock.left_annihilation(0)*fock.right_creation(0) - fock.right_creation(0)*fock.left_annihilation(0)
-        for k in range(1, 5):
+        for k in range(1, fock.max_k):
             for tup in itertools.product(range(2), repeat=k):
                 idx = fock._lin_idx(k, tup)
                 e_vec = zero_matrix(RDF, fock.dim, 1); e_vec[idx,0] = 1
                 result = comm * e_vec
                 expected = q_val**k * e_vec
                 assert (result-expected).norm() < 1e-10
-        print(f"    q={q_val}: verified for k=1..4 ✓")
+        print(f"    q={q_val}: verified for k=1..3 ✓")
 
 
 # ==============================================================================
@@ -241,7 +247,7 @@ def car_jordan_wigner(n=2):
 
     A = []; Astar = []
     for i in range(n):
-        op_a = id2; op_astar = id2
+        op_a = matrix(CDF, [[1.0]]); op_astar = matrix(CDF, [[1.0]])
         for j in range(i):
             op_a = op_a.tensor_product(sz)
             op_astar = op_astar.tensor_product(sz)

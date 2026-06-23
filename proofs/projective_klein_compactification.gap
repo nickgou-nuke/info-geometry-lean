@@ -1,0 +1,11 @@
+A := [[1,0],[0,-1]];
+B := [[1,1],[0,1]];
+Ainv := A;
+Binv := [[1,-1],[0,1]];
+I2 := [[1,0],[0,1]];
+if A*Ainv <> I2 then Error("A inverse failed"); fi;
+if B*Binv <> I2 then Error("B right inverse failed"); fi;
+if Binv*B <> I2 then Error("B left inverse failed"); fi;
+if A*B*Ainv <> Binv then Error("Klein conjugacy failed"); fi;
+if A*B*Ainv*B <> I2 then Error("Klein boundary word failed"); fi;
+Print("projective Klein compactification GAP certificate: ok\n");

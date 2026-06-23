@@ -182,6 +182,27 @@ theorem polar_scale_right (l : R) (P Q : Plucker6 R) :
   ring
 
 /--
+Directional expansion of the Klein quadric:
+  Q(P + τX) = Q(P) + τ B(P,X) + τ² Q(X).
+-/
+theorem kleinQ_add_scale (τ : R) (P X : Plucker6 R) :
+    kleinQ (add P (scale τ X)) = kleinQ P + τ * polar P X + τ ^ 2 * kleinQ X := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  rcases X with ⟨x01, x02, x03, x12, x13, x23⟩
+  simp [kleinQ, add, scale, polar]
+  ring
+
+/--
+Euler homogeneous contraction for the Klein quadric:
+  B(P,P) = 2 Q(P).
+-/
+theorem polar_self (P : Plucker6 R) :
+    polar P P = 2 * kleinQ P := by
+  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+  simp [polar, kleinQ, add]
+  ring
+
+/--
 Polar incidence associated to the Klein quadric.
 -/
 def Incident (P Q : Plucker6 R) : Prop :=

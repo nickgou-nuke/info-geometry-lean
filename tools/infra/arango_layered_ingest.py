@@ -127,12 +127,18 @@ def dag_decl_key(name: Any) -> str:
     return "d_" + hashlib.sha256(raw.encode("utf-8")).hexdigest()[:40]
 
 
-def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any]) -> Any:
+def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any], endpoint_type: str | None = None) -> Any:
     if not isinstance(endpoint, str):
         return endpoint
     if raw_collection and endpoint.startswith("ig_nodes/"):
         raw_key = endpoint.split("/", 1)[1]
-        decl_name = row.get("member_key") or row.get("src") or row.get("dst") or raw_key
+        decl_name = None
+        if endpoint_type == "from":
+            decl_name = row.get("src")
+        elif endpoint_type == "to":
+            decl_name = row.get("dst")
+        if not decl_name:
+            decl_name = row.get("member_key") or row.get("src") or row.get("dst") or raw_key
         if raw_key.startswith("InfoGeometry.") or str(decl_name).startswith("InfoGeometry."):
             return f"{raw_collection}/{dag_decl_key(decl_name)}"
         return f"{raw_collection}/{raw_key}"
@@ -173,12 +179,14 @@ def iter_jsonl(path: Path, spec: CollectionSpec) -> Iterable[dict[str, Any]]:
                     raw_collection=spec.vertex_collection,
                     overlay_collection=spec.overlay_collection,
                     row=row,
+                    endpoint_type="from",
                 )
                 row["_to"] = rewrite_endpoint(
                     row.get("_to"),
                     raw_collection=spec.vertex_collection,
                     overlay_collection=spec.overlay_collection,
                     row=row,
+                    endpoint_type="to",
                 )
 
             yield row

@@ -26,9 +26,11 @@ import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.VectorSpinorQuartic
+import InfoGeometry.Exceptional.SplitOctonionZorn
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
 import InfoGeometry.Canonical.LogarithmicCFTModularDecomposition
+import InfoGeometry.Canonical.CantorianFractalSpacetime
 import InfoGeometry.Canonical.KreinDrazinWeylSplit
 import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
@@ -79,6 +81,7 @@ import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Optics.JonesPoincareSphere
 import InfoGeometry.Optics.FiniteJonesErlanger
 import InfoGeometry.Optics.FiniteJonesBrewsterCollapse
 import InfoGeometry.Optics.FiniteJonesStinespring
@@ -100,6 +103,8 @@ import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Geometry.IndividuatedUHP
 import InfoGeometry.Geometry.DiscreteModularSubgroup
 import InfoGeometry.Section12Formalized
+import InfoGeometry.Arithmetic.ConcreteMajorana
+import InfoGeometry.Epistemology.SemanticReflector
 
 /-!
 # InfoGeometry

@@ -3,6 +3,7 @@ import Mathlib.Analysis.Complex.Conformal
 import Mathlib.Analysis.Complex.HasPrimitives
 import Mathlib.Analysis.Complex.Harmonic.Analytic
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Topology.Basic
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Krein.DoubledSpace
@@ -15,8 +16,8 @@ open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.HestenesAnalyticity
 open InfoGeometry.Krein
 open Metric
-open scoped Topology
-
+open scoped _root_.Topology
+open Filter
 /-- Pulling `DifferentiableAt` out of `AnalyticAt` is standard Mathlib. -/
 theorem differentiableAt_of_analyticAt
     {f : ℂ → ℂ} {z : ℂ} (h_an : AnalyticAt ℂ f z) :

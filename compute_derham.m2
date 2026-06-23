@@ -1,5 +1,12 @@
 
--- Load the BernsteinSato package which contains the Oaku algorithms for D-modules
+-- Experimental D-module de Rham audit for q(a) q(b) q(a-b) in C^8.
+--
+-- This is an intentionally heavy Macaulay2/Oaku computation.  It is not a Lean
+-- certificate and should be launched through a timeout wrapper when possible.
+-- A successful `rationalFunctionExt` table is evidence for the de Rham ranks;
+-- a timeout or memory exhaustion is computational evidence only.
+
+-- Load the packages containing Oaku/Takayama D-module algorithms.
 needsPackage "BernsteinSato"
 needsPackage "Dmodules"
 
@@ -20,18 +27,17 @@ f = qa * qb * qab
 -- The base structure sheaf ideal D-module for C^8
 I_vars = ideal(da1,da2,da3,da4, db1,db2,db3,db4)
 
-print "---"
-print "WARNING: Initiating Weyl algebra localization O(*V(f)) for 8-variables, degree 6."
-print "This will compute the b-function and its roots, requiring Grobner basis in 16 variables."
-print "This operation is deeply exponential and may exceed all available RAM/Time."
-print "---"
+print "DLOCALIZE_EXT:status=starting"
+print "DLOCALIZE_EXT:model=q(a)*q(b)*q(a-b), dim=4, ambient_vars=8, weyl_vars=16"
+print "DLOCALIZE_EXT:warning=heavy Oaku localization; run with an external timeout"
 
 -- Localize the structure sheaf at the singularity f using Oaku's algorithm
 time M = Dlocalize(I_vars, f)
+print ("DLOCALIZE_EXT:localized_module_class=" | toString(class M))
 
-print "Localization completed! Computing Ext for algebraic de Rham Betti numbers..."
--- Ext groups compute the algebraic de Rham cohomology for localized holonomic D-modules
-time b_numbers = rationalFunctionExt(M)
+print "DLOCALIZE_EXT:localization=completed"
+print "DLOCALIZE_EXT:computing=rationalFunctionExt"
+-- Ext groups compute algebraic de Rham data for the localized holonomic D-module.
+time dRTable = rationalFunctionExt(M)
 
-print "The algebraic de Rham Betti numbers of the complement are:"
-print b_numbers
+print ("DLOCALIZE_EXT:result=" | toString(dRTable))

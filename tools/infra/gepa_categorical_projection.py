@@ -124,6 +124,20 @@ GENOMES = [
         "fitness": 0.0,
         "status": "open",
     },
+    {
+        "task_id": "cantor_representation",
+        "target_file": "lean/InfoGeometry/Canonical/JordanWignerCantorRepresentation.lean",
+        "target_decl": "InfoGeometry.Canonical.JordanWignerCantorRepresentation.buildCantorRep_one_is_jw_rep",
+        "carrier": "MatStage 1",
+        "matrix": "complexifyMat 1 (jwCreation 1 0)",
+        "category": "CantorOp 1",
+        "functor": "Matrix.toLin",
+        "bilingual_key": "idxEquivCantorAddress",
+        "proof_strategy": "direct_2x2",
+        "error_surface": [],
+        "fitness": 0.0,
+        "status": "open",
+    },
 ]
 
 

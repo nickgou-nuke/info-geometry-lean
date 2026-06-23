@@ -8,6 +8,8 @@ import InfoGeometry.Canonical.DikinDrazinBridge
 import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 import InfoGeometry.Canonical.O55LightConeSpectrumBridge
 import InfoGeometry.Canonical.SplitCliffordO55TKKClosure
+import InfoGeometry.Canonical.O55ClosureByCommutators
+import InfoGeometry.Canonical.O55FiveGradeClosure
 import InfoGeometry.Canonical.VirasoroProjectColimitBridge
 import InfoGeometry.Canonical.OctonionCondensate
 import InfoGeometry.Canonical.SouriauBostConnesTransition
@@ -516,6 +518,10 @@ import InfoGeometry.Canonical.TriFacetGeometry
 import InfoGeometry.Canonical.TriFacetEigenspace
 import InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
 import InfoGeometry.Canonical.HodgeKreinTriFacet
+import InfoGeometry.Canonical.HodgeTrifactor
+import InfoGeometry.Canonical.FibonacciPartition
+import InfoGeometry.Canonical.EInfinityParadoxes
+import InfoGeometry.Canonical.FractalDimensions
 import InfoGeometry.Canonical.HodgeKreinBoundary
 import InfoGeometry.Canonical.HodgeKreinSuperLaplacian
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein

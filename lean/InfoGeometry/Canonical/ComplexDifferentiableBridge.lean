@@ -32,7 +32,7 @@ namespace InfoGeometry.Canonical.ComplexDifferentiableBridge
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.ComplexAnalyticBridge
-open scoped Topology
+open scoped _root_.Topology
 
 /--
 Neighborhood complex differentiability implies Mathlib `AnalyticAt`.

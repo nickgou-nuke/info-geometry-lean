@@ -1,5 +1,6 @@
 import InfoGeometry.Potential.LogPotential
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-!
 # Log Potential Thermodynamics
@@ -275,6 +276,64 @@ lemma primalBregman_nonneg_of_grad_eq_deriv
     0 ≤ M.primalBregman θ θ₀ := by
   rw [M.primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv θ θ₀ hgrad]
   exact M.fenchelGap_nonneg θ (M.dualCoord θ₀)
+
+/-- 1D subgradient uniqueness under differentiability. -/
+theorem unique_subgradient_of_differentiable {f : ℝ → ℝ} {x y g : ℝ}
+    (hd : HasDerivAt f g x)
+    (hsub : ∀ z, y * (z - x) ≤ f z - f x) :
+    y = g := by
+  have h_left_right := hasDerivAt_iff_tendsto_slope_left_right.mp hd
+  have h_left := h_left_right.1
+  have h_right := h_left_right.2
+  
+  have h_ge : y ≤ g := by
+    have h_slope_ge : ∀ z ∈ Set.Ioi x, y ≤ slope f x z := by
+      intro z hz
+      have hz_gt : x < z := hz
+      have hsub_z := hsub z
+      have h_pos : 0 < z - x := sub_pos.mpr hz_gt
+      rw [slope_def_field]
+      exact (le_div_iff₀ h_pos).mpr hsub_z
+    have h_eventually : ∀ᶠ z in nhdsWithin x (Set.Ioi x), y ≤ slope f x z := by
+      filter_upwards [self_mem_nhdsWithin] with z hz
+      exact h_slope_ge z hz
+    exact ge_of_tendsto h_right h_eventually
+
+  have h_le : g ≤ y := by
+    have h_slope_le : ∀ z ∈ Set.Iio x, slope f x z ≤ y := by
+      intro z hz
+      have hz_lt : z < x := hz
+      have hsub_z := hsub z
+      have h_neg : z - x < 0 := sub_neg.mpr hz_lt
+      rw [slope_def_field]
+      exact (div_le_iff_of_neg h_neg).mpr hsub_z
+    have h_eventually : ∀ᶠ z in nhdsWithin x (Set.Iio x), slope f x z ≤ y := by
+      filter_upwards [self_mem_nhdsWithin] with z hz
+      exact h_slope_le z hz
+    exact le_of_tendsto h_left h_eventually
+
+  exact le_antisymm h_ge h_le
+
+/-- Fenchel gap vanishes if and only if η matches the gradient under differentiability. -/
+theorem fenchelGap_eq_zero_iff_eq_grad_of_hasDerivAt
+    (M : LegendreModel) (θ η : ℝ)
+    (hd : HasDerivAt M.L.ψ (M.grad θ) θ) :
+    M.fenchelGap θ η = 0 ↔ η = M.grad θ := by
+  constructor
+  · intro hGap
+    have hsub : ∀ z, η * (z - θ) ≤ M.L.ψ z - M.L.ψ θ := by
+      intro z
+      have h_ineq := M.fenchel_ineq z η
+      have h_gap_eq : M.L.ψ θ + M.φ η - θ * η = 0 := hGap
+      have h_phi : M.φ η = θ * η - M.L.ψ θ := by linarith
+      rw [h_phi] at h_ineq
+      calc
+        η * (z - θ) = z * η - θ * η := by ring
+        _ ≤ M.L.ψ z - M.L.ψ θ := by linarith
+    exact unique_subgradient_of_differentiable hd hsub
+  · intro h
+    rw [h]
+    exact M.fenchelGap_eq_zero_at_contact θ
 
 end LegendreModel
 

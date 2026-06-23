@@ -1,0 +1,14 @@
+needsPackage "Dmodules";
+A = matrix(QQ, {{1,0},{0,-1}});
+B = matrix(QQ, {{1,1},{0,1}});
+Ainv = A;
+Binv = matrix(QQ, {{1,-1},{0,1}});
+I2 = id_(QQ^2);
+if A*Ainv != I2 then error "A inverse failed";
+if B*Binv != I2 then error "B right inverse failed";
+if Binv*B != I2 then error "B left inverse failed";
+if A*B*Ainv != Binv then error "Klein conjugacy failed";
+if A*B*Ainv*B != I2 then error "Klein boundary word failed";
+R = QQ[x, dx, WeylAlgebra => {x => dx}];
+if dx*x - x*dx != 1_R then error "Dmodules Weyl lane failed";
+print "projective Klein compactification Macaulay2+Dmodules certificate: ok";

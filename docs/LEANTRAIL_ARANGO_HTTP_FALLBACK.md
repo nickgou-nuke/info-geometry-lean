@@ -24,7 +24,7 @@ uses the same HTTP `_api/cursor` path and reads `~/.config/arango/env.sh`
 automatically when process environment variables are not already set:
 
 ```bash
-tools/infra/with_arango_env.sh -- lake script run leantrailAQLQuery -- 'RETURN 1'
+tools/infra/with_arango_env.sh -- lake script run leantrailAQLQuery 'RETURN 1'
 ```
 
 `tools/leantrail/arango_dump.py` also implements this fallback directly for
@@ -32,14 +32,14 @@ graph dumps and cones. In this repository the default collections are
 `dag_nodes`/`dag_edges`, so the zero-configuration command works locally:
 
 ```bash
-lake script run leantrailArangoDump -- \
+lake script run leantrailArangoDump \
   --out /tmp/leantrail_arango_dump.json
 ```
 
 Equivalent explicit invocation:
 
 ```bash
-lake script run leantrailArangoDump -- \
+lake script run leantrailArangoDump \
   --collection dag_nodes \
   --edges dag_edges \
   --out /tmp/leantrail_arango_dump.json
@@ -57,7 +57,7 @@ Causal-cone seeds may be full Arango `_id`s or declaration names/keys in the
 node collection:
 
 ```bash
-lake script run leantrailArangoDump -- \
+lake script run leantrailArangoDump \
   --cone-downstream 'InfoGeometry.Algebra.AlbertCD.CDInvolutionDatum.casesOn' \
   --max-depth 1 \
   --out /tmp/leantrail_cone.json
@@ -132,7 +132,7 @@ This checks:
 Use `--skip-arango` if the local Arango service is not running:
 
 ```bash
-lake script run leantrailSmoke -- --skip-arango
+lake script run leantrailSmoke --skip-arango
 ```
 
 ## AST AQL optimization
@@ -158,10 +158,10 @@ This creates/ensures persistent indexes on:
 Current live smoke on this repo reports roughly:
 
 ```text
-syntax_nodes: 243328
-ast_child:    238196
-syntax_decls: 5143
-decl_root:    5143
+syntax_nodes: 246213
+ast_child:    241030
+syntax_decls: 5194
+decl_root:    5194
 atom_first_sorry_scan: 0.001s
 atom_first_tactic_scan: 0.002s
 bounded_decl_ast_cone: 0.001s

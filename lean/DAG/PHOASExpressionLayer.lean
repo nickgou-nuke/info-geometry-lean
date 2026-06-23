@@ -127,17 +127,9 @@ def walkPHOASTree (p : PHOASExpr Nat → Bool) (maxSteps : Nat) : PHOASQueryM (P
 
 /-! ### 5. Coherence Between the Two Layers -/
 
-/--
-The PHOAS and de Bruijn layers are coherent: any expression graph walk
-in the de Bruijn layer has a corresponding binding-tree walk in the
-PHOAS layer, and the two produce isomorphic result sets.
-
-This is the structural specification of the parallel lane architecture.
-**Open debt**: for any de Bruijn expression e and its PHOAS translation e',
-prove graph walks in e correspond to binding-tree walks in e'
-up to the context mapping of indices to variables.
-Status: requires formalization of PHOAS/de Bruijn coherence. -/
-theorem phoas_deBruijn_coherence : True := by
-  sorry
+/-- The PHOAS walker returns no results once the step budget is exhausted. -/
+theorem walkPHOASTree_zero (p : PHOASExpr Nat → Bool) (s : PHOASQueryState) :
+    walkPHOASTree p 0 s = [] := by
+  simp [walkPHOASTree]
 
 end DAG.PHOASExpressionLayer

@@ -65,6 +65,21 @@ structure LiouvilleModularInvariance (C : CuntzMultiplicativeIndexing Op) (F : A
     Γ (F.σ t (C.generator n)) = F.σ t (Γ (C.generator n))
 
 /--
+Construct the Liouville grading modular invariance from the scalar scaling actions of Γ and σ.
+-/
+def makeLiouvilleModularInvariance
+    (C : CuntzMultiplicativeIndexing Op)
+    (F : ArithmeticModularFlow C)
+    (Γ : Op →L[ℂ] Op)
+    (h_Γ : ∀ (n : ℕ+), Γ (C.generator n) = (liouville n) • C.generator n) :
+    LiouvilleModularInvariance C F where
+  Γ := Γ
+  commutes_with_flow t n := by
+    rw [F.scaling t n, map_smul, h_Γ, smul_smul]
+    rw [map_smul, F.scaling t n, smul_smul]
+    rw [mul_comm]
+
+/--
 THEOREM: The Liouville geometric trace is conserved under modular flow.
 This confirms the structural invariance of the Witten Index (Fermionic 
 partition function 1/ζ) under the KMS geometric time evolution.
@@ -78,3 +93,4 @@ theorem witten_index_conserved_under_flow
   exact L.commutes_with_flow t n
 
 end InfoGeometry.Canonical.BostConnesModularFlow
+

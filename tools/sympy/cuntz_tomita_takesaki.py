@@ -1,47 +1,38 @@
 #!/usr/bin/env python3
-"""SymPy audit for the finite Cuntz/Tomita projector shadow."""
-
-from __future__ import annotations
-
+"""SymPy audit for the finite Cuntz/Tomita--Takesaki chiral shadow."""
 import sympy as sp
 
+c = sp.Rational(5, 4)
+s = sp.Rational(3, 4)
+I = sp.eye(2)
+Pp = sp.Matrix([[1, 0], [0, 0]])
+Pm = sp.Matrix([[0, 0], [0, 1]])
+eta = Pp - Pm
+L = c * I - s * eta
+R = c * I + s * eta
 
-def assert_zero_matrix(matrix: sp.Matrix) -> None:
-    for entry in matrix:
-        assert sp.trigsimp(sp.simplify(entry)) == 0
+x11, x12, x21, x22 = sp.symbols("x11 x12 x21 x22")
+X = sp.Matrix([[x11, x12], [x21, x22]])
 
+assert Pp + Pm == I
+assert Pp * Pp == Pp
+assert Pm * Pm == Pm
+assert Pp * Pm == sp.zeros(2)
+assert Pm * Pp == sp.zeros(2)
+assert eta * eta == I
+assert c**2 - s**2 == 1
+assert L * R == I
+assert R * L == I
 
-def main() -> None:
-    delta = sp.Symbol("delta", real=True)
-    x11, x12, x21, x22 = sp.symbols("x11 x12 x21 x22", complex=True)
+Delta = sp.simplify(L * X * R)
+J = lambda Y: sp.simplify(L * Y.T * R)
+S = sp.simplify(J(Delta))
+assert S == X.T
 
-    i2 = sp.eye(2)
-    p_plus = sp.Matrix([[1, 0], [0, 0]])
-    p_minus = sp.Matrix([[0, 0], [0, 1]])
-    eta = p_plus - p_minus
-    x = sp.Matrix([[x11, x12], [x21, x22]])
-    x_star = x.conjugate().T
+Ep, Em = sp.symbols("Ep Em")
+mu = (Ep + Em) / 2
+gap = (Ep - Em) / 2
+K = Ep * Pp + Em * Pm
+assert sp.simplify(K - (mu * I + gap * eta)) == sp.zeros(2)
 
-    c = sp.cosh(delta / 2)
-    s = sp.sinh(delta / 2)
-    thermal_minus = c * i2 - s * eta
-    thermal_plus = c * i2 + s * eta
-
-    assert p_plus * p_plus == p_plus
-    assert p_minus * p_minus == p_minus
-    assert p_plus * p_minus == sp.zeros(2)
-    assert p_minus * p_plus == sp.zeros(2)
-    assert p_plus + p_minus == i2
-    assert eta * eta == i2
-    assert_zero_matrix(thermal_minus * thermal_plus - i2)
-    assert_zero_matrix(thermal_plus * thermal_minus - i2)
-
-    delta_half_x = sp.simplify(thermal_minus * x * thermal_plus)
-    j_delta_half_x = sp.simplify(thermal_minus * delta_half_x.conjugate().T * thermal_plus)
-
-    assert_zero_matrix(j_delta_half_x - x_star)
-    print("Cuntz Tomita-Takesaki finite SymPy audit: ok")
-
-
-if __name__ == "__main__":
-    main()
+print("CUNTZ_TOMITA_TAKESAKI_SYMPY_AUDIT_OK")

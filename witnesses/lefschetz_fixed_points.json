@@ -1,0 +1,15 @@
+{
+    "endomorphism_flow": "scaling_gauge_twist",
+    "fixed_points": [
+        {
+            "point_id": 0,
+            "coordinates": {
+                "z_1": 0,
+                "z_2": 0
+            },
+            "local_det": 2,
+            "h_nonzero": true
+        }
+    ],
+    "global_euler_characteristic": 1
+}

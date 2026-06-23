@@ -1,3 +1,2 @@
-import Lean
-open Lean Elab Command
-#print Context
+import InfoGeometry.All
+#check InfoGeometry.Canonical.CalabiYauGrandDualityBridge.grand_unification_calabi_yau_duality_bridge

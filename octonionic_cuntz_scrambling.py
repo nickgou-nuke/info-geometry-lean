@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""SymPy witness for the octonionic horizon scrambling corridor.
+"""SymPy witness for the octonionic-horizon Cuntz/q-CCR scrambling corridor.
 
 Evidence scope:
-1) Finite Fibonacci R/F matrices (2×2) and braid/Yang-Baxter check.
-2) OP1-diagonal lift consistency (structural, non-commutative model scaffold).
-3) q-CCR symbolic interpolation table:
-   - q = -1 gives CAR anti-commutator closure,
-   - q = 0 gives Cuntz-Toeplitz normalization,
-   - q = +1 gives CCR commutator closure.
+1) Finite Fibonacci R/F matrices and braid/Yang-Baxter verification.
+2) OP1-diagonal-lift structural preservation of the same braid identity.
+3) q-CCR endpoint/readout interpolation (`q = -1, 0, +1`).
 
-This script is a computational certificate only.  The full analytic C*-isomorphism
-is represented in Lean as an explicit socket hypothesis.
+All checks are computational evidence.  The C*-equivalence of Kuzmin is represented
+in Lean as an explicit assumption socket in `InfoGeometry.Projective.KuzminCuntzPath`.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Iterable
+import argparse
+import json
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Iterable, Tuple
 
 import sympy as sp
 
@@ -50,28 +50,25 @@ def fibonacci_R_F() -> tuple[sp.Matrix, sp.Matrix]:
 
 
 def diagonal_lift(M: sp.Matrix) -> sp.Matrix:
-    """Conservative `OP1`-shell lift: act identically on two diagonal sectors."""
+    """Conservative OP1-shell lift: act identically on two diagonal sectors."""
     return sp.diag(M, M)
 
 
 def braid_and_lift_checks() -> list[Check]:
-    """Check finite braid data and Yang-Baxter relation.
-
-    `nsimplify` is used to collapse algebraic-cyclotomic terms.
-    """
+    """Check finite braid data and Yang-Baxter relation."""
     R, F = fibonacci_R_F()
 
     I2 = sp.eye(2)
-
     sigma1 = R
-    sigma2 = F * R * F
+    sigma2 = sp.simplify(F * R * F)
+
     checks: list[Check] = []
 
     checks.append(
         Check(
             "F^2 = I",
             sp.simplify(F * F - I2) == sp.zeros(2),
-            f"F^2 = {sp.Matrix(F * F).tolist()}",
+            f"F^2 = {sp.Matrix(sp.simplify(F*F)).tolist()}",
         )
     )
     checks.append(
@@ -81,52 +78,52 @@ def braid_and_lift_checks() -> list[Check]:
             f"R.H*R = {sp.Matrix(R.H * R).tolist()}",
         )
     )
-    yb_defect = (sigma1 * sigma2 * sigma1 - sigma2 * sigma1 * sigma2).applyfunc(sp.simplify)
+
+    yb_defect = (sigma1 * sigma2 * sigma1 - sigma2 * sigma1 * sigma2)
     checks.append(
         Check(
             "YB: σ1σ2σ1 = σ2σ1σ2",
-            yb_defect.applyfunc(sp.nsimplify) == sp.zeros(2),
+            yb_defect.applyfunc(sp.simplify).applyfunc(sp.nsimplify) == sp.zeros(2),
             f"defect = {sp.Matrix(yb_defect.applyfunc(sp.nsimplify))}",
         )
     )
 
-    # Structural witness on diagonal OP1 shell.
     S1 = diagonal_lift(sigma1)
     S2 = diagonal_lift(sigma2)
-    lift_defect = (S1 * S2 * S1 - S2 * S1 * S2).applyfunc(sp.simplify)
+    lift_defect = (S1 * S2 * S1 - S2 * S1 * S2)
     checks.append(
         Check(
             "OP1-diagonal lift preserves YB",
-            lift_defect.applyfunc(sp.nsimplify) == sp.zeros(4),
+            lift_defect.applyfunc(sp.simplify).applyfunc(sp.nsimplify) == sp.zeros(4),
             f"lifted defect = {sp.Matrix(lift_defect.applyfunc(sp.nsimplify))}",
         )
     )
+
     return checks
 
 
 def qccr_interpolation_checks() -> list[Check]:
-    """Symbolic carrier-level q-CCR interpolation diagnostics.
+    """Symbolic q-CCR interpolation diagnostics.
 
-    Relation is read as: a†a = 1 + q (a a†).  Write X := a a†.
-    Then:
+    Relation: `a†a = 1 + q (a a†)`; set `X := a a†`.
+    Then
       a†a + aa† = 1 + (1+q) X
       a†a - aa† = 1 + (q-1) X
     """
-
     q = sp.Symbol("q", real=True)
-    X = sp.Symbol("X", commutative=False)  # X = a * adag
+    X = sp.Symbol("X", commutative=False)
     delta = sp.Integer(1)
 
     anti_expr = sp.expand(delta + (1 + q) * X)
     comm_expr = sp.expand(delta + (q - 1) * X)
     toeplitz_expr = sp.expand(delta + q * X)
 
-    samples = [
-        (sp.Integer(-1), "CAR point: q=-1"),
+    samples: list[tuple[sp.Integer | sp.Rational, str]] = [
+        (sp.Integer(-1), "CAR point"),
         (sp.Rational(-1, 2), "intermediate"),
-        (sp.Integer(0), "Cuntz-Toeplitz point: q=0"),
+        (sp.Integer(0), "Cuntz-Toeplitz point"),
         (sp.Rational(1, 2), "intermediate"),
-        (sp.Integer(1), "CCR point: q=1"),
+        (sp.Integer(1), "CCR point"),
     ]
 
     checks: list[Check] = []
@@ -135,14 +132,13 @@ def qccr_interpolation_checks() -> list[Check]:
         comm_v = sp.simplify(comm_expr.subs(q, qv))
         tout_v = sp.simplify(toeplitz_expr.subs(q, qv))
 
+        ok = True
         if qv == -1:
             ok = anti_v == delta
         elif qv == 1:
             ok = comm_v == delta
         elif qv == 0:
             ok = tout_v == delta
-        else:
-            ok = True
 
         checks.append(
             Check(
@@ -152,16 +148,22 @@ def qccr_interpolation_checks() -> list[Check]:
             )
         )
 
-    # Coefficients governing deformation of non-delta sector.
     checks.append(
         Check(
             "deformation coefficients",
             True,
-            "anti-coefficient: (1+q); comm-coefficient: (q-1)",
+            "anti-branch coefficient: (1+q); comm-branch coefficient: (q-1)",
         )
     )
 
     return checks
+
+
+def run_checks() -> tuple[bool, list[Check], list[Check]]:
+    braid_checks = braid_and_lift_checks()
+    qccr_checks = qccr_interpolation_checks()
+    all_ok = all(c.ok for c in braid_checks + qccr_checks)
+    return all_ok, braid_checks, qccr_checks
 
 
 def print_checks(title: str, checks: Iterable[Check]) -> None:
@@ -173,16 +175,44 @@ def print_checks(title: str, checks: Iterable[Check]) -> None:
             print(f"        {chk.details}")
 
 
+def as_payload(all_ok: bool, braid_checks: list[Check], qccr_checks: list[Check]) -> dict:
+    return {
+        "schema": "octonionic_cuntz_scrambling.v1",
+        "is_verified": all_ok,
+        "status": "verified" if all_ok else "failed",
+        "checks": {
+            "fibonacci_braid": [asdict(c) for c in braid_checks],
+            "qccr_deformation": [asdict(c) for c in qccr_checks],
+        },
+    }
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run octonionic Cuntz scramble witness checks")
+    parser.add_argument("--json", action="store_true", help="Emit JSON status payload")
+    parser.add_argument("--out", type=str, default=None, help="Write JSON payload to file")
+    args = parser.parse_args()
+
+    all_ok, braid_checks, qccr_checks = run_checks()
+
+    if args.json:
+        payload = as_payload(all_ok, braid_checks, qccr_checks)
+        text = json.dumps(payload, indent=2, sort_keys=True)
+        if args.out is None:
+            print(text)
+        else:
+            out = Path(args.out)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text, encoding="utf-8")
+            print(f"wrote {out}")
+        return
+
     print("=== Octonionic Cuntz Scrambling Witness (SymPy) ===")
+    print_checks("Finite Fibonacci braid", braid_checks)
+    print_checks("q-CCR deformation", qccr_checks)
 
-    print_checks("Finite Fibonacci braid", braid_and_lift_checks())
-    print_checks("q-CCR deformation", qccr_interpolation_checks())
-
-    # Concrete endpoint numerics for quick physical intuition.
     print("\n[endpoint numerics]")
-    q_vals = [-1, -sp.Rational(1, 2), 0, sp.Rational(1, 2), 1]
-    for q in q_vals:
+    for q in [sp.Integer(-1), sp.Rational(-1, 2), sp.Integer(0), sp.Rational(1, 2), sp.Integer(1)]:
         anti_coeff = sp.simplify(1 + q)
         comm_coeff = sp.simplify(q - 1)
         print(f"  q={q!s:>5}: anti-branch coeff=(1+q)={anti_coeff!s:>4}, comm-branch coeff=(q-1)={comm_coeff!s:>4}")
@@ -193,6 +223,10 @@ def main() -> None:
         print(f"  R[{i}]={sp.N(lam, 20)}")
 
     print("\nWitness complete (computational evidence only).")
+    if all_ok:
+        print("status: PASS")
+    else:
+        print("status: FAIL")
 
 
 if __name__ == "__main__":

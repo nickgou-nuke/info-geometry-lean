@@ -226,3 +226,9 @@ knowledge_graph.json
 
 # Scratch/experiment files
 DebugScratch.lean
+.elan/
+training-extracts/
+recovery/
+black_books/
+docs/black_books/
+archon/

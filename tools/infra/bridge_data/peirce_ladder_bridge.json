@@ -1,0 +1,78 @@
+{
+  "complex_structure": {
+    "J": "e\u2081",
+    "J_squared": -1,
+    "description": "Internal complex structure for split octonions"
+  },
+  "ladder_operators": {
+    "nilpotent_creation": [
+      "u\u2080",
+      "u\u2081",
+      "u\u2082"
+    ],
+    "nilpotent_annihilation": [
+      "d\u2080",
+      "d\u2081",
+      "d\u2082"
+    ],
+    "complex_ladders": [
+      "\u03b1\u2080",
+      "\u03b1\u2081",
+      "\u03b1\u2082"
+    ],
+    "fock_dim": 8,
+    "color_triplet_dim": 3
+  },
+  "zorn_projectors": {
+    "OP1": {
+      "matrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "acts_on": "a",
+      "role": "left"
+    },
+    "OP2": {
+      "matrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "acts_on": "b",
+      "role": "right"
+    },
+    "idempotent": true,
+    "orthogonal": true,
+    "complete": true
+  },
+  "peirce_decomposition": {
+    "tripotent_eigenvalues": [
+      1,
+      -1,
+      0
+    ],
+    "eigenvalue_to_projector": {
+      "+1": "OP1 (left, acts on \ud835\udc65\u20d7)",
+      "-1": "OP2 (right, acts on \ud835\udc66\u20d7)",
+      "0": "OP1+OP2 (bilateral, acts on a,b)"
+    }
+  },
+  "su3_color": {
+    "gauge_group": "SU(3)",
+    "dimension": 8,
+    "fundamental_rep": "3 (quark)",
+    "antifundamental_rep": "3\u0304 (antiquark)",
+    "singlet_rep": "1 (lepton/vacuum)"
+  }
+}

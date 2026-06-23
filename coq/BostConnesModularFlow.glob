@@ -1,0 +1,120 @@
+DIGEST 313684aa50eceded772a62299f762a75
+FBostConnesModularFlow
+R24:28 Stdlib.Reals.Reals <> <> lib
+sec 61:70 <> BostConnes
+var 83:84 BostConnes Op
+var 103:106 BostConnes smul
+R111:114 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R110:110 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R117:120 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R115:116 BostConnesModularFlow <> BostConnes.Op var
+R121:122 BostConnesModularFlow <> BostConnes.Op var
+var 134:142 BostConnes generator
+R146:147 BostConnesModularFlow <> BostConnes.Op var
+var 160:165 BostConnes t_flow
+R169:169 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+var 181:187 BostConnes grading
+R191:191 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+var 204:207 BostConnes σ_t
+R213:216 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R211:212 BostConnesModularFlow <> BostConnes.Op var
+R217:218 BostConnesModularFlow <> BostConnes.Op var
+var 230:231 BostConnes Γ
+R237:240 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R235:236 BostConnesModularFlow <> BostConnes.Op var
+R241:242 BostConnesModularFlow <> BostConnes.Op var
+var 257:265 BostConnes σ_t_smul
+binder 276:276 <> r:15
+binder 278:278 <> x:16
+R296:298 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R281:284 BostConnesModularFlow <> BostConnes.σ_t var
+R287:290 BostConnesModularFlow <> BostConnes.smul var
+R292:292 BostConnesModularFlow <> r:15 var
+R294:294 BostConnesModularFlow <> x:16 var
+R299:302 BostConnesModularFlow <> BostConnes.smul var
+R304:304 BostConnesModularFlow <> r:15 var
+R307:310 BostConnesModularFlow <> BostConnes.σ_t var
+R312:312 BostConnesModularFlow <> x:16 var
+var 327:333 BostConnes Γ_smul
+binder 344:344 <> r:19
+binder 346:346 <> x:20
+R362:364 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R349:350 BostConnesModularFlow <> BostConnes.Γ var
+R353:356 BostConnesModularFlow <> BostConnes.smul var
+R358:358 BostConnesModularFlow <> r:19 var
+R360:360 BostConnesModularFlow <> x:20 var
+R365:368 BostConnesModularFlow <> BostConnes.smul var
+R370:370 BostConnesModularFlow <> r:19 var
+R373:374 BostConnesModularFlow <> BostConnes.Γ var
+R376:376 BostConnesModularFlow <> x:20 var
+var 392:399 BostConnes σ_t_gen
+R417:419 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R403:406 BostConnesModularFlow <> BostConnes.σ_t var
+R408:416 BostConnesModularFlow <> BostConnes.generator var
+R420:423 BostConnesModularFlow <> BostConnes.smul var
+R425:430 BostConnesModularFlow <> BostConnes.t_flow var
+R432:440 BostConnesModularFlow <> BostConnes.generator var
+var 454:459 BostConnes Γ_gen
+R475:477 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R463:464 BostConnesModularFlow <> BostConnes.Γ var
+R466:474 BostConnesModularFlow <> BostConnes.generator var
+R478:481 BostConnesModularFlow <> BostConnes.smul var
+R483:489 BostConnesModularFlow <> BostConnes.grading var
+R491:499 BostConnesModularFlow <> BostConnes.generator var
+var 514:523 BostConnes smul_assoc
+binder 534:534 <> a:27
+binder 536:536 <> b:28
+binder 538:538 <> x:29
+R558:560 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R541:544 BostConnesModularFlow <> BostConnes.smul var
+R546:546 BostConnesModularFlow <> a:27 var
+R549:552 BostConnesModularFlow <> BostConnes.smul var
+R554:554 BostConnesModularFlow <> b:28 var
+R556:556 BostConnesModularFlow <> x:29 var
+R561:564 BostConnesModularFlow <> BostConnes.smul var
+R568:570 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R567:567 BostConnesModularFlow <> a:27 var
+R571:571 BostConnesModularFlow <> b:28 var
+R574:574 BostConnesModularFlow <> x:29 var
+prf 586:607 <> witten_index_conserved
+R632:634 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R613:614 BostConnesModularFlow <> BostConnes.Γ var
+R617:620 BostConnesModularFlow <> BostConnes.σ_t var
+R622:630 BostConnesModularFlow <> BostConnes.generator var
+R635:638 BostConnesModularFlow <> BostConnes.σ_t var
+R641:642 BostConnesModularFlow <> BostConnes.Γ var
+R644:652 BostConnesModularFlow <> BostConnes.generator var
+R673:680 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R673:680 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R673:680 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R693:699 BostConnesModularFlow <> BostConnes.Γ_smul var
+R693:699 BostConnesModularFlow <> BostConnes.Γ_smul var
+R693:699 BostConnesModularFlow <> BostConnes.Γ_smul var
+R712:717 BostConnesModularFlow <> BostConnes.Γ_gen var
+R712:717 BostConnesModularFlow <> BostConnes.Γ_gen var
+R712:717 BostConnesModularFlow <> BostConnes.Γ_gen var
+R730:739 BostConnesModularFlow <> BostConnes.smul_assoc var
+R730:739 BostConnesModularFlow <> BostConnes.smul_assoc var
+R730:739 BostConnesModularFlow <> BostConnes.smul_assoc var
+R753:762 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R764:769 BostConnesModularFlow <> BostConnes.t_flow var
+R771:777 BostConnesModularFlow <> BostConnes.grading var
+R753:762 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R764:769 BostConnesModularFlow <> BostConnes.t_flow var
+R771:777 BostConnesModularFlow <> BostConnes.grading var
+R753:762 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R764:769 BostConnesModularFlow <> BostConnes.t_flow var
+R771:777 BostConnesModularFlow <> BostConnes.grading var
+R794:803 BostConnesModularFlow <> BostConnes.smul_assoc var
+R794:803 BostConnesModularFlow <> BostConnes.smul_assoc var
+R794:803 BostConnesModularFlow <> BostConnes.smul_assoc var
+R819:826 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R819:826 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R819:826 BostConnesModularFlow <> BostConnes.σ_t_gen var
+R842:850 BostConnesModularFlow <> BostConnes.σ_t_smul var
+R842:850 BostConnesModularFlow <> BostConnes.σ_t_smul var
+R842:850 BostConnesModularFlow <> BostConnes.σ_t_smul var
+R866:871 BostConnesModularFlow <> BostConnes.Γ_gen var
+R866:871 BostConnesModularFlow <> BostConnes.Γ_gen var
+R866:871 BostConnesModularFlow <> BostConnes.Γ_gen var
+R899:908 BostConnesModularFlow BostConnes <> sec

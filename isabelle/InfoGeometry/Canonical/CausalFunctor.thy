@@ -1,5 +1,5 @@
 theory CausalFunctor
-  imports Main "HOL-Algebra.Ring" "HOL-Algebra.Module"
+  imports Complex_Main "HOL-Algebra.Ring" "HOL-Algebra.Module"
 begin
 
 text \<open>

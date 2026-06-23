@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "m2_to_anticolor": "anticolor",
+    "m2_to_slot": "color",
+    "m3_interpretation": "seven_imaginary_units_packet",
+    "m7_interpretation": "127_degree_packet"
+  },
+  "scope": {
+    "is_g2_classification": false,
+    "is_physics_promotion": false,
+    "is_su3_theorem": false
+  },
+  "source_schema": {
+    "CouplingConstant": [
+      "alpha_inv"
+    ],
+    "MersenneMode": [
+      "m2",
+      "m3",
+      "m7"
+    ],
+    "dimension": {
+      "m2": 3,
+      "m3": 7,
+      "m7": 127
+    },
+    "prime_index": {
+      "m2": 2,
+      "m3": 3,
+      "m7": 7
+    },
+    "value": {
+      "alpha_inv": 137
+    }
+  },
+  "target_schema": {
+    "TripotentEigenvalue": [
+      1,
+      -1,
+      0
+    ],
+    "ZornSlot": [
+      "color",
+      "anticolor",
+      "diag_plus",
+      "diag_minus"
+    ],
+    "slot_dim": {
+      "anticolor": 3,
+      "color": 3,
+      "diag_minus": 1,
+      "diag_plus": 1
+    }
+  }
+}

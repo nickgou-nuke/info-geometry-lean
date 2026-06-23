@@ -518,4 +518,28 @@ theorem realCantorBivectorTransport_four_pi :
   exact InfoGeometry.Canonical.GeometricMonodromy.spinorial_double_loop_identity
     realCantorBivectorInf
 
+/-- The finite real matrix/Cantor equivalences form a natural transformation between the matrix tower and the Cantor operator tower. -/
+theorem realMatToCantor_natural (n : ℕ) :
+    (realCantorOpEmbed n : RealCantorOp n →ₐ[ℝ] RealCantorOp (n + 1)) ∘ (realMatToCantor n : MatStage n →ₐ[ℝ] RealCantorOp n)
+    = (realMatToCantor (n + 1) : MatStage (n + 1) →ₐ[ℝ] RealCantorOp (n + 1)) ∘ (matStageEmbed n : MatStage n →ₐ[ℝ] MatStage (n + 1)) := by
+  ext A
+  rw [show (realCantorOpEmbed n ∘ realMatToCantor n) A = realCantorOpEmbed n (realMatToCantor n A) by rfl]
+  rw [show (realMatToCantor (n + 1) ∘ matStageEmbed n) A = realMatToCantor (n + 1) (matStageEmbed n A) by rfl]
+  rw [realCantorOpEmbed_realMatToCantor]
+  <;> simp [AlgHom.comp_apply]
+
+/-- The inverse finite real/Cantor-matrix equivalences also form a natural transformation. -/
+theorem realMatToCantor_symm_natural (n : ℕ) :
+    (matStageEmbed n : MatStage n →ₐ[ℝ] MatStage (n + 1)) ∘ ((realMatToCantor n).symm : RealCantorOp n →ₐ[ℝ] MatStage n)
+    = ((realMatToCantor (n + 1)).symm : RealCantorOp (n + 1) →ₐ[ℝ] MatStage (n + 1)) ∘ (realCantorOpEmbed n : RealCantorOp n →ₐ[ℝ] RealCantorOp (n + 1)) := by
+  ext X
+  have h₁ : ((matStageEmbed n : MatStage n →ₐ[ℝ] MatStage (n + 1)) ∘ ((realMatToCantor n).symm : RealCantorOp n →ₐ[ℝ] MatStage n)) X =
+      matStageEmbed n ((realMatToCantor n).symm X) := by
+    simp [AlgHom.comp_apply]
+  have h₂ : (((realMatToCantor (n + 1)).symm : RealCantorOp (n + 1) →ₐ[ℝ] MatStage (n + 1)) ∘ (realCantorOpEmbed n : RealCantorOp n →ₐ[ℝ] RealCantorOp (n + 1))) X =
+      (realMatToCantor (n + 1)).symm (realCantorOpEmbed n X) := by
+    simp [AlgHom.comp_apply]
+  rw [h₁, h₂]
+  exact realMatToCantor_symm_realCantorOpEmbed n X
+
 end InfoGeometry.Canonical.JordanWignerCantorRepresentation

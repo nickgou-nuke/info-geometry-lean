@@ -1,0 +1,129 @@
+DIGEST 8b1fee703129e4d7d20ccbb7a3bbf828
+FKawamuraInfiniteWedge
+R27:32 Stdlib.ZArith.ZArith <> <> lib
+R62:75 Stdlib.Sets.Ensembles <> <> lib
+R105:120 Stdlib.Sets.Finite_sets <> <> lib
+def 201:210 <> maya_index
+R215:215 Corelib.Numbers.BinNums <> Z ind
+def 230:235 <> vacuum
+R239:246 Stdlib.Sets.Ensembles <> Ensemble def
+R248:257 KawamuraInfiniteWedge <> maya_index def
+binder 268:268 <> j:1
+R275:278 Stdlib.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R274:274 KawamuraInfiniteWedge <> j:1 var
+def 297:307 <> dual_vacuum
+R311:318 Stdlib.Sets.Ensembles <> Ensemble def
+R320:329 KawamuraInfiniteWedge <> maya_index def
+binder 340:340 <> j:2
+R347:350 Stdlib.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R346:346 KawamuraInfiniteWedge <> j:2 var
+def 369:375 <> is_maya
+R382:389 Stdlib.Sets.Ensembles <> Ensemble def
+R391:400 KawamuraInfiniteWedge <> maya_index def
+binder 378:378 <> S:3
+R415:420 Stdlib.Sets.Finite_sets <> Finite ind
+R425:429 Stdlib.Sets.Ensembles <> Union ind
+R434:441 Stdlib.Sets.Ensembles <> Setminus def
+R445:445 KawamuraInfiniteWedge <> S:3 var
+R447:452 KawamuraInfiniteWedge <> vacuum def
+R456:463 Stdlib.Sets.Ensembles <> Setminus def
+R467:472 KawamuraInfiniteWedge <> vacuum def
+R474:474 KawamuraInfiniteWedge <> S:3 var
+def 491:502 <> is_dual_maya
+R509:516 Stdlib.Sets.Ensembles <> Ensemble def
+R518:527 KawamuraInfiniteWedge <> maya_index def
+binder 505:505 <> S:4
+R542:547 Stdlib.Sets.Finite_sets <> Finite ind
+R552:556 Stdlib.Sets.Ensembles <> Union ind
+R561:568 Stdlib.Sets.Ensembles <> Setminus def
+R572:572 KawamuraInfiniteWedge <> S:4 var
+R574:584 KawamuraInfiniteWedge <> dual_vacuum def
+R588:595 Stdlib.Sets.Ensembles <> Setminus def
+R599:609 KawamuraInfiniteWedge <> dual_vacuum def
+R611:611 KawamuraInfiniteWedge <> S:4 var
+def 628:633 <> s_plus
+R640:647 Stdlib.Sets.Ensembles <> Ensemble def
+R649:658 KawamuraInfiniteWedge <> maya_index def
+binder 636:636 <> S:5
+R663:670 Stdlib.Sets.Ensembles <> Ensemble def
+R672:681 KawamuraInfiniteWedge <> maya_index def
+R688:699 Stdlib.Sets.Ensembles <> Intersection ind
+R703:703 KawamuraInfiniteWedge <> S:5 var
+binder 710:710 <> j:6
+R717:720 Stdlib.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R716:716 KawamuraInfiniteWedge <> j:6 var
+def 740:746 <> s_minus
+R753:760 Stdlib.Sets.Ensembles <> Ensemble def
+R762:771 KawamuraInfiniteWedge <> maya_index def
+binder 749:749 <> S:7
+R776:783 Stdlib.Sets.Ensembles <> Ensemble def
+R785:794 KawamuraInfiniteWedge <> maya_index def
+R801:812 Stdlib.Sets.Ensembles <> Intersection ind
+R816:816 KawamuraInfiniteWedge <> S:7 var
+binder 823:823 <> j:8
+R830:833 Stdlib.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R829:829 KawamuraInfiniteWedge <> j:8 var
+def 853:862 <> shift_plus
+R869:876 Stdlib.Sets.Ensembles <> Ensemble def
+R878:887 KawamuraInfiniteWedge <> maya_index def
+binder 865:865 <> S:9
+R892:899 Stdlib.Sets.Ensembles <> Ensemble def
+R901:910 KawamuraInfiniteWedge <> maya_index def
+binder 921:921 <> j:10
+R926:926 KawamuraInfiniteWedge <> S:9 var
+R930:932 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R929:929 KawamuraInfiniteWedge <> j:10 var
+def 951:962 <> negate_index
+R969:976 Stdlib.Sets.Ensembles <> Ensemble def
+R978:987 KawamuraInfiniteWedge <> maya_index def
+binder 965:965 <> S:11
+R992:999 Stdlib.Sets.Ensembles <> Ensemble def
+R1001:1010 KawamuraInfiniteWedge <> maya_index def
+binder 1021:1021 <> j:12
+R1026:1026 KawamuraInfiniteWedge <> S:11 var
+R1030:1032 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R1033:1033 KawamuraInfiniteWedge <> j:12 var
+def 1051:1052 <> g2
+R1059:1066 Stdlib.Sets.Ensembles <> Ensemble def
+R1068:1077 KawamuraInfiniteWedge <> maya_index def
+binder 1055:1055 <> S:13
+R1082:1089 Stdlib.Sets.Ensembles <> Ensemble def
+R1091:1100 KawamuraInfiniteWedge <> maya_index def
+R1107:1118 KawamuraInfiniteWedge <> negate_index def
+R1121:1125 Stdlib.Sets.Ensembles <> Union ind
+R1130:1139 KawamuraInfiniteWedge <> shift_plus def
+R1142:1147 KawamuraInfiniteWedge <> s_plus def
+R1149:1149 KawamuraInfiniteWedge <> S:13 var
+R1154:1160 KawamuraInfiniteWedge <> s_minus def
+R1162:1162 KawamuraInfiniteWedge <> S:13 var
+def 1179:1180 <> g1
+R1187:1194 Stdlib.Sets.Ensembles <> Ensemble def
+R1196:1205 KawamuraInfiniteWedge <> maya_index def
+binder 1183:1183 <> S:14
+R1210:1217 Stdlib.Sets.Ensembles <> Ensemble def
+R1219:1228 KawamuraInfiniteWedge <> maya_index def
+R1235:1246 KawamuraInfiniteWedge <> negate_index def
+R1249:1253 Stdlib.Sets.Ensembles <> Union ind
+R1258:1262 Stdlib.Sets.Ensembles <> Union ind
+R1267:1276 KawamuraInfiniteWedge <> shift_plus def
+R1279:1284 KawamuraInfiniteWedge <> s_plus def
+R1286:1286 KawamuraInfiniteWedge <> S:14 var
+R1291:1297 KawamuraInfiniteWedge <> s_minus def
+R1299:1299 KawamuraInfiniteWedge <> S:14 var
+R1304:1312 Stdlib.Sets.Ensembles <> Singleton ind
+ax 1400:1419 <> g2_maps_maya_to_dual
+binder 1432:1432 <> S:15
+R1444:1447 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1435:1441 KawamuraInfiniteWedge <> is_maya def
+R1443:1443 KawamuraInfiniteWedge <> S:15 var
+R1448:1459 KawamuraInfiniteWedge <> is_dual_maya def
+R1462:1463 KawamuraInfiniteWedge <> g2 def
+R1465:1465 KawamuraInfiniteWedge <> S:15 var
+ax 1481:1500 <> g1_maps_maya_to_dual
+binder 1513:1513 <> S:18
+R1525:1528 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1516:1522 KawamuraInfiniteWedge <> is_maya def
+R1524:1524 KawamuraInfiniteWedge <> S:18 var
+R1529:1540 KawamuraInfiniteWedge <> is_dual_maya def
+R1543:1544 KawamuraInfiniteWedge <> g1 def
+R1546:1546 KawamuraInfiniteWedge <> S:18 var

@@ -1,0 +1,81 @@
+DIGEST a22e8fe8a4bcbbcd10a9e1a330d4a933
+FCliffordEquiv
+R72:76 Stdlib.Reals.Reals <> <> lib
+rec 176:199 <> AbstractComplexStructure
+proj 271:271 <> S
+proj 285:289 <> S_add
+proj 338:343 <> S_smul
+proj 390:393 <> S_sq
+binder 202:202 <> V:1
+R220:223 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R219:219 CliffordEquiv <> V:1 var
+R225:228 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R224:224 CliffordEquiv <> V:1 var
+R229:229 CliffordEquiv <> V:1 var
+binder 213:215 <> add:2
+R241:244 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R240:240 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R246:249 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R245:245 CliffordEquiv <> V:1 var
+R250:250 CliffordEquiv <> V:1 var
+binder 233:236 <> smul:3
+R261:261 CliffordEquiv <> V:1 var
+binder 254:257 <> zero:4
+R276:279 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R275:275 CliffordEquiv <> V:1 var
+R280:280 CliffordEquiv <> V:1 var
+binder 300:300 <> x:7
+binder 302:302 <> y:8
+R316:318 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R305:305 CliffordEquiv <> S:6 meth
+R308:310 CliffordEquiv <> add:2 var
+R314:314 CliffordEquiv <> y:8 var
+R312:312 CliffordEquiv <> x:7 var
+R319:321 CliffordEquiv <> add:2 var
+R330:330 CliffordEquiv <> S:6 meth
+R332:332 CliffordEquiv <> y:8 var
+R324:324 CliffordEquiv <> S:6 meth
+R326:326 CliffordEquiv <> x:7 var
+binder 354:354 <> r:10
+binder 356:356 <> x:11
+R371:373 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R359:359 CliffordEquiv <> S:6 meth
+R362:365 CliffordEquiv <> smul:3 var
+R369:369 CliffordEquiv <> x:11 var
+R367:367 CliffordEquiv <> r:10 var
+R374:377 CliffordEquiv <> smul:3 var
+R382:382 CliffordEquiv <> S:6 meth
+R384:384 CliffordEquiv <> x:11 var
+R379:379 CliffordEquiv <> r:10 var
+binder 404:404 <> x:13
+R414:416 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R407:407 CliffordEquiv <> S:6 meth
+R410:410 CliffordEquiv <> S:6 meth
+R412:412 CliffordEquiv <> x:13 var
+R417:420 CliffordEquiv <> smul:3 var
+R427:427 CliffordEquiv <> x:13 var
+rec 479:494 <> CliffordBivector
+proj 565:565 <> I
+proj 574:577 <> I_sq
+binder 497:497 <> A:15
+R515:518 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R514:514 CliffordEquiv <> A:15 var
+R520:523 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R519:519 CliffordEquiv <> A:15 var
+R524:524 CliffordEquiv <> A:15 var
+binder 508:510 <> mul:16
+R536:539 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R535:535 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R541:544 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R540:540 CliffordEquiv <> A:15 var
+R545:545 CliffordEquiv <> A:15 var
+binder 528:531 <> smul:17
+R555:555 CliffordEquiv <> A:15 var
+binder 549:551 <> one:18
+R569:569 CliffordEquiv <> A:15 var
+R588:590 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R581:583 CliffordEquiv <> mul:16 var
+R587:587 CliffordEquiv <> I:20 meth
+R585:585 CliffordEquiv <> I:20 meth
+R591:594 CliffordEquiv <> smul:17 var
+R601:603 CliffordEquiv <> one:18 var

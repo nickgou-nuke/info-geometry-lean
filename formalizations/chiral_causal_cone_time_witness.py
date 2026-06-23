@@ -71,8 +71,13 @@ def sympy_block() -> None:
     hessian_bilinear = simplify((X.T * H * Y)[0])
     expected_hessian_bilinear = simplify(polar * polar_y / Q**2 - polar_xy / Q)
     assert simplify(hessian_bilinear - expected_hessian_bilinear) == 0
+    radial_hessian = simplify((radial.T * H * X)[0])
+    radial_self_hessian = simplify((radial.T * H * radial)[0])
+    assert simplify(radial_hessian - polar / Q) == 0
+    assert simplify(radial_self_hessian - 2) == 0
     print("Hessian of barrier (Lie parallel transport metric shape):", H.shape)
     print("Barrier Hessian bilinear formula verified.")
+    print("Radial Hessian contraction recovers d(log Q), with self-contraction 2.")
 
     # Time as de Rham 1-form cohomology winding: integral of dz/z on |z|=1.
     t = symbols("t", real=True)

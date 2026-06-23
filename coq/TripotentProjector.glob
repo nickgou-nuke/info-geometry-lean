@@ -1,0 +1,66 @@
+DIGEST c8aa13bd52f8dbf2d6412c037e0ac3bd
+FTripotentProjector
+R24:28 Stdlib.Reals.Reals <> <> lib
+sec 61:69 <> Tripotent
+var 82:82 Tripotent A
+var 101:104 Tripotent zero
+R108:108 TripotentProjector <> Tripotent.A var
+var 120:122 Tripotent one
+R126:126 TripotentProjector <> Tripotent.A var
+var 138:140 Tripotent add
+R145:148 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R144:144 TripotentProjector <> Tripotent.A var
+R150:153 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R149:149 TripotentProjector <> Tripotent.A var
+R154:154 TripotentProjector <> Tripotent.A var
+var 166:168 Tripotent sub
+R173:176 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R172:172 TripotentProjector <> Tripotent.A var
+R178:181 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R177:177 TripotentProjector <> Tripotent.A var
+R182:182 TripotentProjector <> Tripotent.A var
+var 194:196 Tripotent mul
+R201:204 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R200:200 TripotentProjector <> Tripotent.A var
+R206:209 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R205:205 TripotentProjector <> Tripotent.A var
+R210:210 TripotentProjector <> Tripotent.A var
+var 222:225 Tripotent smul
+R230:233 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R229:229 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R235:238 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R234:234 TripotentProjector <> Tripotent.A var
+R239:239 TripotentProjector <> Tripotent.A var
+var 252:254 Tripotent OP1
+R258:258 TripotentProjector <> Tripotent.A var
+var 270:272 Tripotent OP2
+R276:276 TripotentProjector <> Tripotent.A var
+var 291:298 Tripotent OP1_proj
+R313:315 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R302:304 TripotentProjector <> Tripotent.mul var
+R306:308 TripotentProjector <> Tripotent.OP1 var
+R310:312 TripotentProjector <> Tripotent.OP1 var
+R316:318 TripotentProjector <> Tripotent.OP1 var
+var 332:339 Tripotent OP2_proj
+R354:356 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R343:345 TripotentProjector <> Tripotent.mul var
+R347:349 TripotentProjector <> Tripotent.OP2 var
+R351:353 TripotentProjector <> Tripotent.OP2 var
+R357:359 TripotentProjector <> Tripotent.OP2 var
+var 373:379 Tripotent OP_orth
+R394:396 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R383:385 TripotentProjector <> Tripotent.mul var
+R387:389 TripotentProjector <> Tripotent.OP1 var
+R391:393 TripotentProjector <> Tripotent.OP2 var
+R397:400 TripotentProjector <> Tripotent.zero var
+var 414:421 Tripotent OP_orth2
+R436:438 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R425:427 TripotentProjector <> Tripotent.mul var
+R429:431 TripotentProjector <> Tripotent.OP2 var
+R433:435 TripotentProjector <> Tripotent.OP1 var
+R439:442 TripotentProjector <> Tripotent.zero var
+def 484:484 <> T
+R489:491 TripotentProjector <> Tripotent.sub var
+R493:495 TripotentProjector <> Tripotent.OP1 var
+R497:499 TripotentProjector <> Tripotent.OP2 var
+R507:515 TripotentProjector Tripotent <> sec

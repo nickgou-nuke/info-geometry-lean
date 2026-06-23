@@ -10,6 +10,14 @@
         "lean-lsp-mcp"
       ],
       "env": {}
+    },
+    "codex": {
+      "type": "stdio",
+      "command": "codex",
+      "args": [
+        "mcp-server"
+      ],
+      "env": {}
     }
   }
 }

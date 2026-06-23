@@ -92,29 +92,31 @@ def test_limits():
     print(f"    => [a_i*, a_j] = delta_ij ✓")
 
 # ==============================================================================
-# Part 4: K-Theory
+# Part 4: Literature classification targets
 # ==============================================================================
 
-def test_k_theory(n=3):
-    print(f"\n=== K-Theory (n={n}) ===")
+def report_k_theory_target(n=3):
+    print(f"\n=== K-Theory Target From Kuzmin (n={n}) ===")
     print(f"  K_0(C^T_n,q) = Z[1/{n}]")
     print(f"  1 - K_0(Ad(s1)) = ({n-1}/{n})")
     print(f"  K_0(C_n,q) = Z[1/{n}] / (({n-1}/{n})*Z[1/{n}])")
     print(f"  = Z/({n-1})Z")
-    print(f"  K_1(C_n,q) = 0  (Theorem 7.4) ✓")
+    print(f"  K_1(C_n,q) = 0  (Kuzmin Theorem 7.4)")
+    print("  status: literature theorem target only; not a SymPy proof")
 
 # ==============================================================================
-# Part 5: Extension Classification
+# Part 5: Extension classification target
 # ==============================================================================
 
-def test_extension(n=3):
-    print(f"\n=== Extension Classification (n={n}) ===")
+def report_extension_target(n=3):
+    print(f"\n=== Extension Classification Target (n={n}) ===")
     print(f"  0 -> K(F^q) -> B_n,q -> C_n,q -> 0")
     print(f"  K_0(K) = Z, K_0(B) = Z, K_0(C) = Z_{n-1}")
     print(f"  Two extension types:")
     print(f"    [+1]: P_Omega = (1-n), [1_B] = +1")
     print(f"    [-1]: P_Omega = (n-1), [1_B] = -1")
-    print(f"  Both isomorphic => B_n,q ~ KO_n (Corollary 8.2) ✓")
+    print(f"  Both isomorphic => B_n,q ~ KO_n (Kuzmin Corollary 8.2)")
+    print("  status: literature theorem target only; not a SymPy proof")
 
 # ==============================================================================
 # Main
@@ -127,9 +129,10 @@ if __name__ == '__main__':
     test_gram()
     test_yang_baxter()
     test_limits()
-    test_k_theory(3)
-    test_k_theory(2)
-    test_extension(3)
+    report_k_theory_target(3)
+    report_k_theory_target(2)
+    report_extension_target(3)
     print("=" * 60)
-    print("All SymPy tests passed ✓")
+    print("Finite algebraic SymPy tests passed.")
+    print("K-theory and extension classification are reported as literature targets only.")
     print("=" * 60)

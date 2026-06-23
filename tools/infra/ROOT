@@ -1,0 +1,4 @@
+session navier_stokes_legendre = HOL +
+  options [document = false]
+  theories
+    navier_stokes_legendre

@@ -1,0 +1,26 @@
+# tools/lie/e8_to_d5_branching.lie
+# Computes the restriction of the 248-adjoint of E8 to D5 x A3
+
+setdefault E8;
+
+# We use the built in res_mat function if it exists, otherwise the identity 
+# matrix for the embedding of a maximal rank subgroup.
+# The maximal subgroup of E8 is actually D8, but we can also look at D5 x A3.
+
+# Define the restriction matrix from E8 to D5 x A3
+res = [
+  [1, 0, 0, 0, 0, 0, 0, 0],
+  [0, 1, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0, 1, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1]
+]
+
+# Branch the adjoint representation [0,0,0,0,0,0,0,1] (dimension 248)
+print("Branching of the 248-adjoint of E8 to D5 x A3:");
+branch(1X[0,0,0,0,0,0,0,1], E8, res, D5A3);
+
+quit

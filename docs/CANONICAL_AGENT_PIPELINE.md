@@ -203,7 +203,7 @@ ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home
 If you call Archon manually, set `ARCHON_HOME` yourself before invoking the CLI:
 
 ```bash
-cd tools/archon
+cd archon
 ARCHON_HOME=/home/goutev/repos/info-geometry-lean/.runtime/archon-home \
   bun run cli workflow run agent-orchestrator-definite-sequence --cwd /home/goutev/repos/info-geometry-lean
 ```

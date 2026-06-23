@@ -1,0 +1,527 @@
+{
+  "color_gauge_mappings": [
+    {
+      "continuous_key": "𝑦⃗ (antiquark)",
+      "discrete_key": "M_2",
+      "key": "mersenne_to_antiquark_M_2",
+      "mapping_formula": "M_2 ↦ 𝑦⃗ (dim = 3)",
+      "mapping_type": "mersenne_to_color_antiquark",
+      "mathematical_justification": "Günaydin-Gürsey: M_2 = 3 ↦ anti-fundamental 3̄ of SU(3)",
+      "preserved_structure": [
+        "dimension",
+        "su3_action",
+        "tripotent_eigenvalue"
+      ]
+    },
+    {
+      "continuous_key": "𝑥⃗ (quark)",
+      "discrete_key": "M_2",
+      "key": "mersenne_to_quark_M_2",
+      "mapping_formula": "M_2 ↦ 𝑥⃗ (dim = 3)",
+      "mapping_type": "mersenne_to_color_quark",
+      "mathematical_justification": "Günaydin-Gürsey: M_2 = 3 ↦ fundamental 3 of SU(3)",
+      "preserved_structure": [
+        "dimension",
+        "su3_action",
+        "tripotent_eigenvalue"
+      ]
+    },
+    {
+      "continuous_key": "E8 (dim 248)",
+      "discrete_key": "M_7",
+      "key": "mersenne_to_e8_M_7",
+      "mapping_formula": "M_7 ↦ E8 (127 + 120 + 1 = 248)",
+      "mapping_type": "mersenne_to_exceptional_e8",
+      "mathematical_justification": "M_7 = 127 ↦ E8 root system (127 positive roots + 120 + 1 = 248)",
+      "preserved_structure": [
+        "dimension",
+        "root_system",
+        "coxeter_number"
+      ]
+    },
+    {
+      "continuous_key": "Spin(8) triality",
+      "discrete_key": "M_7",
+      "key": "mersenne_to_triality_M_7",
+      "mapping_formula": "M_7 ↦ Spin(8) triality (S3 automorphism)",
+      "mapping_type": "mersenne_to_exceptional_triality",
+      "mathematical_justification": "M_7 = 127 ↦ Spin(8) triality (exceptional outer automorphism S3)",
+      "preserved_structure": [
+        "dimension",
+        "triality",
+        "spin_representation"
+      ]
+    },
+    {
+      "continuous_key": "e_1..e_7 (Im(O))",
+      "discrete_key": "M_3",
+      "key": "mersenne_to_octonion_M_3",
+      "mapping_formula": "M_3 ↦ {e_1, ..., e_7} (dim = 7)",
+      "mapping_type": "mersenne_to_octonion_units",
+      "mathematical_justification": "M_3 = 7 ↦ 7 imaginary octonion units (G2 automorphism group)",
+      "preserved_structure": [
+        "dimension",
+        "g2_action",
+        "fano_plane"
+      ]
+    }
+  ],
+  "counts": {
+    "color_gauge_mappings": 5,
+    "functorial_mappings": 18,
+    "peirce_mappings": 4,
+    "symmetry_groups": 4,
+    "zorn_slots": 10
+  },
+  "database": "infogeometry",
+  "export_kind": "isabelle_hol_bridge_json",
+  "functorial_mappings": [
+    {
+      "continuous_key": "R(1φ)",
+      "discrete_key": "τ^1",
+      "key": "golden_to_rotor_tau_1_R_1phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(2φ)",
+      "discrete_key": "τ^2",
+      "key": "golden_to_rotor_tau_2_R_2phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(3φ)",
+      "discrete_key": "τ^3",
+      "key": "golden_to_rotor_tau_3_R_3phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(4φ)",
+      "discrete_key": "τ^4",
+      "key": "golden_to_rotor_tau_4_R_4phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(5φ)",
+      "discrete_key": "τ^5",
+      "key": "golden_to_rotor_tau_5_R_5phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(6φ)",
+      "discrete_key": "τ^6",
+      "key": "golden_to_rotor_tau_6_R_6phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(7φ)",
+      "discrete_key": "τ^7",
+      "key": "golden_to_rotor_tau_7_R_7phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(8φ)",
+      "discrete_key": "τ^8",
+      "key": "golden_to_rotor_tau_8_R_8phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "R(9φ)",
+      "discrete_key": "τ^9",
+      "key": "golden_to_rotor_tau_9_R_9phi",
+      "mapping_formula": "τⁿ ↦ e^{-nφ·I/2}",
+      "mapping_type": "golden_to_rotor",
+      "mathematical_justification": "Fibonacci recurrence ↦ Rotor composition group law",
+      "preserved_structure": [
+        "recurrence",
+        "composition",
+        "group_law"
+      ]
+    },
+    {
+      "continuous_key": "Cl(2,2)",
+      "discrete_key": "M_2",
+      "key": "mersenne_to_clifford_M_2_Cl_2_2",
+      "mapping_formula": "M_2 ↦ Cl(2,2)",
+      "mapping_type": "mersenne_to_clifford",
+      "mathematical_justification": "Bott periodicity: Cl(p,p) has dimension 2^(2p)",
+      "preserved_structure": [
+        "dimension",
+        "grading",
+        "center"
+      ]
+    },
+    {
+      "continuous_key": "Cl(3,3)",
+      "discrete_key": "M_3",
+      "key": "mersenne_to_clifford_M_3_Cl_3_3",
+      "mapping_formula": "M_3 ↦ Cl(3,3)",
+      "mapping_type": "mersenne_to_clifford",
+      "mathematical_justification": "Bott periodicity: Cl(p,p) has dimension 2^(2p)",
+      "preserved_structure": [
+        "dimension",
+        "grading",
+        "center"
+      ]
+    },
+    {
+      "continuous_key": "Cl(5,5)",
+      "discrete_key": "M_5",
+      "key": "mersenne_to_clifford_M_5_Cl_5_5",
+      "mapping_formula": "M_5 ↦ Cl(5,5)",
+      "mapping_type": "mersenne_to_clifford",
+      "mathematical_justification": "Bott periodicity: Cl(p,p) has dimension 2^(2p)",
+      "preserved_structure": [
+        "dimension",
+        "grading",
+        "center"
+      ]
+    },
+    {
+      "continuous_key": "Cl(7,7)",
+      "discrete_key": "M_7",
+      "key": "mersenne_to_clifford_M_7_Cl_7_7",
+      "mapping_formula": "M_7 ↦ Cl(7,7)",
+      "mapping_type": "mersenne_to_clifford",
+      "mathematical_justification": "Bott periodicity: Cl(p,p) has dimension 2^(2p)",
+      "preserved_structure": [
+        "dimension",
+        "grading",
+        "center"
+      ]
+    },
+    {
+      "continuous_key": "Krein(2,0)",
+      "discrete_key": "M_2",
+      "key": "mersenne_to_krein_M_2_Krein_2_0",
+      "mapping_formula": "M_2 ↦ Krein(2,0)",
+      "mapping_type": "mersenne_to_krein",
+      "mathematical_justification": "Krein signature encodes Mersenne decimal structure",
+      "preserved_structure": [
+        "signature",
+        "fundamental_symmetry",
+        "trace_zero"
+      ]
+    },
+    {
+      "continuous_key": "Krein(3,0)",
+      "discrete_key": "M_3",
+      "key": "mersenne_to_krein_M_3_Krein_3_0",
+      "mapping_formula": "M_3 ↦ Krein(3,0)",
+      "mapping_type": "mersenne_to_krein",
+      "mathematical_justification": "Krein signature encodes Mersenne decimal structure",
+      "preserved_structure": [
+        "signature",
+        "fundamental_symmetry",
+        "trace_zero"
+      ]
+    },
+    {
+      "continuous_key": "Krein(5,3)",
+      "discrete_key": "M_5",
+      "key": "mersenne_to_krein_M_5_Krein_5_3",
+      "mapping_formula": "M_5 ↦ Krein(5,3)",
+      "mapping_type": "mersenne_to_krein",
+      "mathematical_justification": "Krein signature encodes Mersenne decimal structure",
+      "preserved_structure": [
+        "signature",
+        "fundamental_symmetry",
+        "trace_zero"
+      ]
+    },
+    {
+      "continuous_key": "Krein(7,2)",
+      "discrete_key": "M_7",
+      "key": "mersenne_to_krein_M_7_Krein_7_2",
+      "mapping_formula": "M_7 ↦ Krein(7,2)",
+      "mapping_type": "mersenne_to_krein",
+      "mathematical_justification": "Krein signature encodes Mersenne decimal structure",
+      "preserved_structure": [
+        "signature",
+        "fundamental_symmetry",
+        "trace_zero"
+      ]
+    },
+    {
+      "continuous_key": "trace(S)",
+      "discrete_key": "v₂(137)",
+      "key": "padic_to_trace_anomaly_v2_137_trace_S",
+      "mapping_formula": "v₂(137) = 0 ↦ trace(S) = 0",
+      "mapping_type": "padic_to_trace_anomaly",
+      "mathematical_justification": "2-adic vanishing ↦ bivector trace vanishing (both = 0)",
+      "preserved_structure": [
+        "vanishing",
+        "anomaly_cancellation",
+        "centralizer"
+      ]
+    }
+  ],
+  "peirce_mappings": [
+    {
+      "_from": "tripotent_eigenvalues/tripotent_-1",
+      "_to": "diagonal_projectors/projector_OP2",
+      "acts_on": "𝑦⃗",
+      "continuous_key": "OP2",
+      "discrete_key": "λ = -1",
+      "key": "tripotent_minus_to_op2",
+      "mapping_formula": "λ = -1 ↦ OP2 = [[0,0],[0,1]]",
+      "mapping_type": "tripotent_to_projector",
+      "mathematical_justification": "Tripotent -1 eigenvalue projects onto antiquark slot via OP2 (right)",
+      "sandwich_role": "right"
+    },
+    {
+      "_from": "tripotent_eigenvalues/tripotent_1",
+      "_to": "diagonal_projectors/projector_OP1",
+      "acts_on": "𝑥⃗",
+      "continuous_key": "OP1",
+      "discrete_key": "λ = +1",
+      "key": "tripotent_plus_to_op1",
+      "mapping_formula": "λ = +1 ↦ OP1 = [[1,0],[0,0]]",
+      "mapping_type": "tripotent_to_projector",
+      "mathematical_justification": "Tripotent +1 eigenvalue projects onto quark slot via OP1 (left)",
+      "sandwich_role": "left"
+    },
+    {
+      "_from": "tripotent_eigenvalues/tripotent_0",
+      "_to": "diagonal_projectors/projector_OP1",
+      "acts_on": "a",
+      "continuous_key": "OP1",
+      "discrete_key": "λ = 0",
+      "key": "tripotent_zero_to_op1",
+      "mapping_formula": "λ = 0 ↦ OP1 acts on a (vacuum)",
+      "mapping_type": "tripotent_to_projector_vacuum",
+      "mathematical_justification": "Tripotent 0 eigenvalue: vacuum/diagonal scalars stabilized by SU(3)",
+      "sandwich_role": "bilateral"
+    },
+    {
+      "_from": "tripotent_eigenvalues/tripotent_0",
+      "_to": "diagonal_projectors/projector_OP2",
+      "acts_on": "b",
+      "continuous_key": "OP2",
+      "discrete_key": "λ = 0",
+      "key": "tripotent_zero_to_op2",
+      "mapping_formula": "λ = 0 ↦ OP2 acts on b (vacuum)",
+      "mapping_type": "tripotent_to_projector_vacuum",
+      "mathematical_justification": "Tripotent 0 eigenvalue: vacuum/diagonal scalars stabilized by SU(3)",
+      "sandwich_role": "bilateral"
+    }
+  ],
+  "symmetry_groups": [
+    {
+      "_id": "symmetry_groups/e8_root_system",
+      "_key": "e8_root_system",
+      "_rev": "_ltBtNqW---",
+      "description": "E8 root system from M_7 = 127 + 120 + 1",
+      "group_dim": 248,
+      "group_name": "E8",
+      "rank": 8,
+      "root_count": 240,
+      "source_mersenne": 127
+    },
+    {
+      "_id": "symmetry_groups/octonion_imaginary_units",
+      "_key": "octonion_imaginary_units",
+      "_rev": "_ltBtNpm---",
+      "description": "Imaginary octonion units from M_3 = 7",
+      "group_name": "G2-octonion-unit-family",
+      "source_mersenne": 7,
+      "unit_count": 7
+    },
+    {
+      "_id": "symmetry_groups/su3_color_gauge",
+      "_key": "su3_color_gauge",
+      "_rev": "_ltBtNoi---",
+      "description": "Color gauge group from M_2 = 3",
+      "group_dim": 8,
+      "group_name": "SU(3)",
+      "source_mersenne": 3,
+      "stabilizes_diagonal": true
+    },
+    {
+      "_id": "symmetry_groups/triality_structure",
+      "_key": "triality_structure",
+      "_rev": "_ltBtNqe---",
+      "automorphism": "S3",
+      "description": "Triality automorphism of Spin(8)",
+      "group_dim": 28,
+      "group_name": "Spin(8)",
+      "source_mersenne": 127
+    }
+  ],
+  "zorn_slots": [
+    {
+      "_id": "zorn_slots/octonion_imaginary_units",
+      "_key": "octonion_imaginary_units",
+      "_rev": "_ltBYbBO---",
+      "description": "Aggregate node for the 7 imaginary octonion units",
+      "representation": "Im(O)",
+      "slot_content": "e_1..e_7",
+      "slot_dim": 7,
+      "slot_type": "imaginary_unit_family",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_count": 7
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_1",
+      "_key": "octonion_unit_1",
+      "_rev": "_ltBtNpq---",
+      "representation": "Im(O)",
+      "slot_content": "e_1",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 1
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_2",
+      "_key": "octonion_unit_2",
+      "_rev": "_ltBtNpy---",
+      "representation": "Im(O)",
+      "slot_content": "e_2",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 2
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_3",
+      "_key": "octonion_unit_3",
+      "_rev": "_ltBtNp2---",
+      "representation": "Im(O)",
+      "slot_content": "e_3",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 3
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_4",
+      "_key": "octonion_unit_4",
+      "_rev": "_ltBtNp6---",
+      "representation": "Im(O)",
+      "slot_content": "e_4",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 4
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_5",
+      "_key": "octonion_unit_5",
+      "_rev": "_ltBtNq----",
+      "representation": "Im(O)",
+      "slot_content": "e_5",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 5
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_6",
+      "_key": "octonion_unit_6",
+      "_rev": "_ltBtNqC---",
+      "representation": "Im(O)",
+      "slot_content": "e_6",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 6
+    },
+    {
+      "_id": "zorn_slots/octonion_unit_7",
+      "_key": "octonion_unit_7",
+      "_rev": "_ltBtNqK---",
+      "representation": "Im(O)",
+      "slot_content": "e_7",
+      "slot_dim": 1,
+      "slot_type": "imaginary_unit",
+      "source_mersenne": 7,
+      "tripotent_eigenvalue": 0,
+      "unit_index": 7
+    },
+    {
+      "_id": "zorn_slots/zorn_antiquark_slot",
+      "_key": "zorn_antiquark_slot",
+      "_rev": "_ltBtNoq---",
+      "representation": "3̄ (anti-fundamental)",
+      "slot_content": "𝑦⃗",
+      "slot_dim": 3,
+      "slot_type": "vector_3bar",
+      "source_mersenne": 3,
+      "tripotent_eigenvalue": -1
+    },
+    {
+      "_id": "zorn_slots/zorn_quark_slot",
+      "_key": "zorn_quark_slot",
+      "_rev": "_ltBtNom---",
+      "representation": "3 (fundamental)",
+      "slot_content": "𝑥⃗",
+      "slot_dim": 3,
+      "slot_type": "vector_3",
+      "source_mersenne": 3,
+      "tripotent_eigenvalue": 1
+    }
+  ]
+}

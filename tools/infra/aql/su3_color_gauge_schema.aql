@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+AQL Schema: Combinatorial Hierarchy → Zorn Algebra (SU(3) Color Gauge)
+
+This schema formalizes the Günaydin-Gürsey construction mapping:
+  Mersenne primes → Zorn matrix slots → SU(3) color representations
+
+Key mappings:
+  - M_2 = 3 ↦ dim(𝑥⃗, 𝑦⃗) = 3 (fundamental + anti-fundamental of SU(3))
+  - M_3 = 7 ↦ 7 imaginary octonion units
+  - M_7 = 127 ↦ dim(G_2) = 14 + additional structure
+  - 137 = 3 + 7 + 127 ↦ coupling invariant
+
+The diagonal projectors OP1, OP2 sandwich the Zorn matrix to isolate color modes:
+  OP1 · ZornMatrix · OP2 = [0, 𝑥⃗; 0, 0]  (quark / 3 rep)
+  OP2 · ZornMatrix · OP1 = [0, 0; 𝑦⃗, 0]  (antiquark / 3̄ rep)
+
+Tripotent eigenvalues {+1, -1, 0} classify:
+  +1 → 𝑥⃗ (quark, positive energy anyon)
+  -1 → 𝑦⃗ (antiquark, negative energy anti-anyon)
+   0 → a, b (diagonal scalars, vacuum / projectors)
+"""
+
+schema CombinatorialHierarchy = {
+  entities
+    MersenneMode,      -- M_p = 2^p - 1
+    CouplingConstant   -- α^{-1} = 137
+  attributes
+    prime_index : MersenneMode -> Integer
+    dimension   : MersenneMode -> Integer
+    value       : MersenneMode -> Integer
+    is_prime    : MersenneMode -> Boolean
+    v2_norm     : CouplingConstant -> Integer
+    value_137   : CouplingConstant -> Integer
+  observation_equations
+    -- 137 decomposition
+    value_137(c) = 137 ∧ v2_norm(c) = 0  -- v₂(137) = 0 (odd)
+}
+
+schema ZornAlgebra = {
+  entities
+    ZornSlot,          -- 2×2 matrix with scalar diagonal, vector off-diagonal
+    SymmetryGroup,     -- G_2, SU(3), etc.
+    ModularEigenvalue, -- tripotent: λ³ = λ, λ ∈ {-1, 0, +1}
+    DiagonalProjector  -- OP1, OP2 for sandwiching
+  attributes
+    slot_type     : ZornSlot -> String    -- "scalar", "vector_3", "vector_3bar"
+    slot_dim      : ZornSlot -> Integer   -- 1 or 3
+    slot_content  : ZornSlot -> String    -- "a", "b", "𝑥⃗", "𝑦⃗"
+    group_name    : SymmetryGroup -> String
+    group_dim     : SymmetryGroup -> Integer
+    stabilizes    : SymmetryGroup -> ZornSlot -> Boolean
+    eigen_val     : ModularEigenvalue -> Integer
+    eigen_type    : ModularEigenvalue -> String  -- "quark", "antiquark", "vacuum"
+    projector_id  : DiagonalProjector -> String  -- "OP1", "OP2"
+    projector_val : DiagonalProjector -> Integer -- 0 or 1
+  observation_equations
+    -- Tripotent classifier: λ³ = λ
+    eigen_val(e)^3 = eigen_val(e)
+    -- SU(3) stabilizes diagonal (0-eigenvalue) slots
+    group_name(g) = "SU(3)" → 
+      (∀ s : ZornSlot, stabilizes(g, s) ↔ slot_content(s) = "a" ∨ slot_content(s) = "b")
+    -- G_2 is full automorphism group of octonions
+    group_name(g) = "G_2" → group_dim(g) = 14
+}
+
+mapping HierarchyToZorn = {
+  imports 
+    CombinatorialHierarchy -> ZornAlgebra
+  entities
+    MersenneMode -> ZornSlot
+    CouplingConstant -> SymmetryGroup
+  attributes
+    dimension -> slot_dim
+    prime_index -> eigen_val  -- p mod 3 classifies representation
+  constraints
+    -- M_2 = 3 maps to 3D color vector slots
+    ∀ m : MersenneMode, prime_index(m) = 2 → slot_dim(F(m)) = 3
+    -- M_3 = 7 maps to 7 imaginary octonion units (G_2 structure)
+    ∀ m : MersenneMode, prime_index(m) = 3 → ∃ g : SymmetryGroup, group_dim(g) = 7
+    -- 137 couples to SU(3) × U(1) structure
+    ∀ c : CouplingConstant, value_137(c) = 137 → 
+      ∃ g : SymmetryGroup, group_name(g) = "SU(3)" ∧ group_dim(g) = 8
+}
+
+instance Exact137Data = {
+  schema CombinatorialHierarchy
+  generators
+    m2, m3, m7 : MersenneMode
+    alpha_inv  : CouplingConstant
+  equations
+    -- Mersenne primes
+    prime_index(m2) = 2
+    dimension(m2) = 3
+    value(m2) = 3
+    is_prime(m2) = true
+    
+    prime_index(m3) = 3
+    dimension(m3) = 7
+    value(m3) = 7
+    is_prime(m3) = true
+    
+    prime_index(m7) = 7
+    dimension(m7) = 127
+    value(m7) = 127
+    is_prime(m7) = true
+    
+    -- Fine structure constant inverse
+    value_137(alpha_inv) = 137
+    v2_norm(alpha_inv) = 0  -- v₂(137) = 0
+}
+
+instance ZornColorRealization = {
+  schema ZornAlgebra
+  generators
+    x_slot, y_slot : ZornSlot      -- off-diagonal 3-vectors
+    a_slot, b_slot : ZornSlot      -- diagonal scalars
+    su3_group      : SymmetryGroup -- color gauge group
+    g2_group       : SymmetryGroup -- automorphism group
+    e_plus, e_minus, e_zero : ModularEigenvalue
+    op1, op2       : DiagonalProjector
+  equations
+    -- Zorn matrix slots
+    slot_type(x_slot) = "vector_3"
+    slot_dim(x_slot) = 3
+    slot_content(x_slot) = "𝑥⃗"
+    
+    slot_type(y_slot) = "vector_3bar"
+    slot_dim(y_slot) = 3
+    slot_content(y_slot) = "𝑦⃗"
+    
+    slot_type(a_slot) = "scalar"
+    slot_dim(a_slot) = 1
+    slot_content(a_slot) = "a"
+    
+    slot_type(b_slot) = "scalar"
+    slot_dim(b_slot) = 1
+    slot_content(b_slot) = "b"
+    
+    -- Symmetry groups
+    group_name(su3_group) = "SU(3)"
+    group_dim(su3_group) = 8
+    stabilizes(su3_group, a_slot) = true
+    stabilizes(su3_group, b_slot) = true
+    stabilizes(su3_group, x_slot) = false
+    stabilizes(su3_group, y_slot) = false
+    
+    group_name(g2_group) = "G_2"
+    group_dim(g2_group) = 14
+    
+    -- Tripotent eigenvalues
+    eigen_val(e_plus) = 1
+    eigen_type(e_plus) = "quark"
+    
+    eigen_val(e_minus) = -1
+    eigen_type(e_minus) = "antiquark"
+    
+    eigen_val(e_zero) = 0
+    eigen_type(e_zero) = "vacuum"
+    
+    -- Diagonal projectors (Peirce decomposition)
+    projector_id(op1) = "OP1"
+    projector_val(op1) = 1
+    
+    projector_id(op2) = "OP2"
+    projector_val(op2) = 1
+    
+    --OP1 · ZornMatrix · OP2 = [0, 𝑥⃗; 0, 0]  (isolates quark slot)
+    --OP2 · ZornMatrix · OP1 = [0, 0; 𝑦⃗, 0]  (isolates antiquark slot)
+}
+
+-- Functorial pushforward (Left Kan extension)
+instance ColorGaugePushforward = sigma HierarchyToZorn Exact137Data
+
+-- Query: Extract color gauge structure
+query ColorStructure = {
+  """
+  Extract the SU(3) color gauge structure from the Zorn algebra realization.
+  Returns the group, stabilized slots, and corresponding Mersenne origins.
+  """
+  FOR g IN SymmetryGroup
+    FILTER group_name(g) = "SU(3)"
+    FOR s IN ZornSlot
+      FILTER stabilizes(g, s) = true
+    FOR m IN MersenneMode
+      FILTER prime_index(m) = 2  -- M_2 = 3 → dim(𝑥⃗, 𝑦⃗) = 3
+    RETURN {
+      group: group_name(g),
+      dimension: group_dim(g),
+      stabilized_slots: s.slot_content,
+      mersenne_origin: CONCAT("M_", prime_index(m)),
+      mersenne_value: value(m)
+    }
+}
+
+-- Query: Tripotent classifier
+query TripotentClassifier = {
+  """
+  Classify Zorn matrix components by tripotent eigenvalue.
+  """
+  FOR e IN ModularEigenvalue
+    FOR s IN ZornSlot
+      FILTER eigen_type(e) = 
+        CASE slot_content(s)
+          WHEN "𝑥⃗" THEN "quark"
+          WHEN "𝑦⃗" THEN "antiquark"
+          ELSE "vacuum"
+    RETURN {
+      eigenvalue: eigen_val(e),
+      type: eigen_type(e),
+      slot: slot_content(s),
+      slot_dim: slot_dim(s),
+      representation: 
+        CASE slot_content(s)
+          WHEN "𝑥⃗" THEN "3 (fundamental)"
+          WHEN "𝑦⃗" THEN "3̄ (anti-fundamental)"
+          ELSE "1 (singlet)"
+    }
+}
+
+-- Query: 137 decomposition verification
+query Verify137Decomposition = {
+  """
+  Verify that 137 = M_2 + M_3 + M_7 = 3 + 7 + 127
+  and maps to the Zorn algebra structure.
+  """
+  LET mersenne_sum = (
+    FOR m IN MersenneMode
+      RETURN value(m)
+  )
+  LET zorn_dim = (
+    FOR s IN ZornSlot
+      RETURN slot_dim(s)
+  )
+  RETURN {
+    mersenne_decomposition: mersenne_sum,
+    sum_check: ARRAY_SUM(mersenne_sum) = 137,
+    zorn_dimensions: zorn_dim,
+    total_zorn_dim: 1 + 1 + 3 + 3  -- a, b, 𝑥⃗, 𝑦⃗
+  }
+}

@@ -4,6 +4,19 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  cat <<'USAGE'
+usage: aql_smoke_test.sh
+
+Checks the live Arango syntax graph collections:
+  syntax_decls, syntax_nodes, ast_child, decl_root
+
+Run through Lake:
+  tools/infra/with_arango_env.sh -- lake script run leantrailAQLSmoke
+USAGE
+  exit 0
+fi
+
 TMP_COUNTS="$(mktemp)"
 TMP_SEARCH="$(mktemp)"
 trap 'rm -f "$TMP_COUNTS" "$TMP_SEARCH"' EXIT

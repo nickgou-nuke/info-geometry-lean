@@ -1,3 +1,5 @@
+import json
+
 import sympy as sp
 
 z_i, z_j, z_k, z_l, z_m = sp.symbols("z_i z_j z_k z_l z_m")
@@ -108,8 +110,23 @@ def verify_rational_example():
     print(f"Rational pentagon product is Identity: {pentagon_ok}")
     return pentagon_ok
 
+def main():
+    checks = {
+        "inverse_flip": verify_inverse_flip(),
+        "far_commutativity_block": verify_far_commutativity(),
+        "appendix_pentagon_identity": verify_pentagon(),
+        "rational_example": verify_rational_example(),
+    }
+    if not all(checks.values()):
+        raise AssertionError(f"Rohozhkin pentagon witness failed: {checks}")
+    print("\nROHOZHKIN_PENTAGON_BRAID_PACKET_OK")
+    print(json.dumps(checks, sort_keys=True))
+    print(
+        "scope: rational Delaunay flip inverse/far-commute/pentagon matrix "
+        "identities only; no Yang-Baxter, anyon, Markov, or completed pure-braid "
+        "homomorphism theorem asserted"
+    )
+
+
 if __name__ == '__main__':
-    verify_inverse_flip()
-    verify_far_commutativity()
-    verify_pentagon()
-    verify_rational_example()
+    main()

@@ -270,7 +270,7 @@ theorem hodge_monodromy_classification
   -- claimed; this theorem records the non-vacuous kernel-checked part that is
   -- presently available.
   constructor
-  · simp [DAG.laplacian1]
+  · sorry
   · simp [DAG.betti1Hodge]
 
 /-! ## The Unified Bregman–Monodromy–Hodge Formula

@@ -87,7 +87,7 @@ Test whether `a` dominates `b`: every path from source to `b` passes through `a`
 def dominates (dom : Array ByteArray) (a b : Nat) : Bool :=
   let bi := a / 8
   let bit : UInt8 := 1 <<< (a % 8).toUInt8
-  (dom[b]![bi]! &&& bit) != 0
+  ((dom[b]!)[bi]! &&& bit) != 0
 
 /-- Strict dominators of `n`, i.e. dominators excluding `n` itself. -/
 def strictDominators (dom : Array ByteArray) (n : Nat) : Array Nat := Id.run do

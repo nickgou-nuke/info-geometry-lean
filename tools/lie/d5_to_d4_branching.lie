@@ -1,0 +1,36 @@
+# LiE script to compute the branching of the D5 (Spin(10)) Spinor and Adjoint
+# representations down to the D4 (Spin(8)) boundary symmetries, isolating the Q8 roots.
+
+# The adjoint representation of D5 is the 45-dimensional representation.
+# The positive chirality spinor of D5 is the 16-dimensional representation.
+
+# We branch D5 -> D4 x T1
+
+setdefault D5;
+
+# Define the fundamental, adjoint, and spinor highest weights for D5
+fund = [1,0,0,0,0];
+adj  = [0,1,0,0,0];
+spin = [0,0,0,0,1];
+
+# Print the dimension of the adjoint
+print("Dimension of D5 Adjoint:");
+dim(adj);
+
+# Restriction matrix from D5 to D4 A1 (which gives the subset symmetry)
+# A common maximal subgroup is D4 x T1, but LiE uses semisimple, so let's use D4
+# We can project the root system
+# We will use the restriction matrix to D4.
+# D5 has rank 5, D4 has rank 4.
+# The restriction matrix from D5 to D4 simply drops a node.
+res = [[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1], [0,0,1,1]];
+
+print("Branching the D5 Adjoint (45) down to D4:");
+branch(1X[0,1,0,0,0], D5, res, D4);
+
+print("Branching the D5 Spinor (16) down to D4:");
+branch(1X[0,0,0,0,1], D5, res, D4);
+
+
+quit
+

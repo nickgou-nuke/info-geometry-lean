@@ -1,0 +1,4 @@
+session Zorn_Modular_Flow = HOL +
+  options [timeout = 600]
+  theories
+    Zorn_Modular_Flow

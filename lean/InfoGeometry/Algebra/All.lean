@@ -112,6 +112,7 @@ import InfoGeometry.Algebra.QCCRSupergradingBridge
 import InfoGeometry.Algebra.TrialityG2
 import InfoGeometry.Algebra.BostConnesArithmeticBridge
 import InfoGeometry.Algebra.IdeleCuntzSymmetry
+import InfoGeometry.Algebra.CuntzRecursiveFermionSystem
 /-!
 # InfoGeometry.Algebra.All
 

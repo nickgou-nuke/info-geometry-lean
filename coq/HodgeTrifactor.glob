@@ -1,0 +1,184 @@
+DIGEST b5e8807a050e879bf71fb5123253112e
+FHodgeTrifactor
+R24:28 Stdlib.Reals.Reals <> <> lib
+R55:57 Stdlib.micromega.Lra <> <> lib
+sec 90:103 <> HodgeTrifactor
+var 142:142 HodgeTrifactor M
+var 161:164 HodgeTrifactor zero
+R168:168 HodgeTrifactor <> HodgeTrifactor.M var
+var 180:182 HodgeTrifactor one
+R186:186 HodgeTrifactor <> HodgeTrifactor.M var
+var 198:200 HodgeTrifactor add
+R205:208 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R204:204 HodgeTrifactor <> HodgeTrifactor.M var
+R210:213 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R209:209 HodgeTrifactor <> HodgeTrifactor.M var
+R214:214 HodgeTrifactor <> HodgeTrifactor.M var
+var 226:228 HodgeTrifactor sub
+R233:236 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R232:232 HodgeTrifactor <> HodgeTrifactor.M var
+R238:241 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R237:237 HodgeTrifactor <> HodgeTrifactor.M var
+R242:242 HodgeTrifactor <> HodgeTrifactor.M var
+var 254:256 HodgeTrifactor mul
+R261:264 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R260:260 HodgeTrifactor <> HodgeTrifactor.M var
+R266:269 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R265:265 HodgeTrifactor <> HodgeTrifactor.M var
+R270:270 HodgeTrifactor <> HodgeTrifactor.M var
+var 282:285 HodgeTrifactor smul
+R290:293 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R289:289 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R295:298 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R294:294 HodgeTrifactor <> HodgeTrifactor.M var
+R299:299 HodgeTrifactor <> HodgeTrifactor.M var
+var 312:312 HodgeTrifactor T
+R316:316 HodgeTrifactor <> HodgeTrifactor.M var
+var 330:336 HodgeTrifactor T_cubic
+R355:357 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R340:342 HodgeTrifactor <> HodgeTrifactor.mul var
+R344:344 HodgeTrifactor <> HodgeTrifactor.T var
+R347:349 HodgeTrifactor <> HodgeTrifactor.mul var
+R351:351 HodgeTrifactor <> HodgeTrifactor.T var
+R353:353 HodgeTrifactor <> HodgeTrifactor.T var
+R358:358 HodgeTrifactor <> HodgeTrifactor.T var
+var 371:374 HodgeTrifactor P_ex
+R378:378 HodgeTrifactor <> HodgeTrifactor.M var
+var 390:393 HodgeTrifactor P_co
+R397:397 HodgeTrifactor <> HodgeTrifactor.M var
+var 409:413 HodgeTrifactor P_har
+R417:417 HodgeTrifactor <> HodgeTrifactor.M var
+var 482:490 HodgeTrifactor mul_assoc
+binder 501:501 <> x:25
+binder 503:503 <> y:26
+binder 505:505 <> z:27
+R523:525 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R508:510 HodgeTrifactor <> HodgeTrifactor.mul var
+R512:512 HodgeTrifactor <> x:25 var
+R515:517 HodgeTrifactor <> HodgeTrifactor.mul var
+R519:519 HodgeTrifactor <> y:26 var
+R521:521 HodgeTrifactor <> z:27 var
+R526:528 HodgeTrifactor <> HodgeTrifactor.mul var
+R531:533 HodgeTrifactor <> HodgeTrifactor.mul var
+R535:535 HodgeTrifactor <> x:25 var
+R537:537 HodgeTrifactor <> y:26 var
+R540:540 HodgeTrifactor <> z:27 var
+var 554:564 HodgeTrifactor mul_distr_l
+binder 575:575 <> x:30
+binder 577:577 <> y:31
+binder 579:579 <> z:32
+R597:599 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R582:584 HodgeTrifactor <> HodgeTrifactor.mul var
+R586:586 HodgeTrifactor <> x:30 var
+R589:591 HodgeTrifactor <> HodgeTrifactor.add var
+R593:593 HodgeTrifactor <> y:31 var
+R595:595 HodgeTrifactor <> z:32 var
+R600:602 HodgeTrifactor <> HodgeTrifactor.add var
+R605:607 HodgeTrifactor <> HodgeTrifactor.mul var
+R609:609 HodgeTrifactor <> x:30 var
+R611:611 HodgeTrifactor <> y:31 var
+R615:617 HodgeTrifactor <> HodgeTrifactor.mul var
+R619:619 HodgeTrifactor <> x:30 var
+R621:621 HodgeTrifactor <> z:32 var
+var 636:646 HodgeTrifactor mul_distr_r
+binder 657:657 <> x:35
+binder 659:659 <> y:36
+binder 661:661 <> z:37
+R679:681 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R664:666 HodgeTrifactor <> HodgeTrifactor.mul var
+R669:671 HodgeTrifactor <> HodgeTrifactor.add var
+R673:673 HodgeTrifactor <> x:35 var
+R675:675 HodgeTrifactor <> y:36 var
+R678:678 HodgeTrifactor <> z:37 var
+R682:684 HodgeTrifactor <> HodgeTrifactor.add var
+R687:689 HodgeTrifactor <> HodgeTrifactor.mul var
+R691:691 HodgeTrifactor <> x:35 var
+R693:693 HodgeTrifactor <> z:37 var
+R697:699 HodgeTrifactor <> HodgeTrifactor.mul var
+R701:701 HodgeTrifactor <> y:36 var
+R703:703 HodgeTrifactor <> z:37 var
+var 718:727 HodgeTrifactor smul_mul_l
+binder 738:738 <> r:40
+binder 740:740 <> x:41
+binder 742:742 <> y:42
+R761:763 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R745:747 HodgeTrifactor <> HodgeTrifactor.mul var
+R750:753 HodgeTrifactor <> HodgeTrifactor.smul var
+R755:755 HodgeTrifactor <> r:40 var
+R757:757 HodgeTrifactor <> x:41 var
+R760:760 HodgeTrifactor <> y:42 var
+R764:767 HodgeTrifactor <> HodgeTrifactor.smul var
+R769:769 HodgeTrifactor <> r:40 var
+R772:774 HodgeTrifactor <> HodgeTrifactor.mul var
+R776:776 HodgeTrifactor <> x:41 var
+R778:778 HodgeTrifactor <> y:42 var
+var 793:802 HodgeTrifactor smul_mul_r
+binder 813:813 <> r:45
+binder 815:815 <> x:46
+binder 817:817 <> y:47
+R836:838 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R820:822 HodgeTrifactor <> HodgeTrifactor.mul var
+R824:824 HodgeTrifactor <> x:46 var
+R827:830 HodgeTrifactor <> HodgeTrifactor.smul var
+R832:832 HodgeTrifactor <> r:45 var
+R834:834 HodgeTrifactor <> y:47 var
+R839:842 HodgeTrifactor <> HodgeTrifactor.smul var
+R844:844 HodgeTrifactor <> r:45 var
+R847:849 HodgeTrifactor <> HodgeTrifactor.mul var
+R851:851 HodgeTrifactor <> x:46 var
+R853:853 HodgeTrifactor <> y:47 var
+def 898:910 <> bosonicFactor
+R917:917 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 913:913 <> x:50
+R922:922 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R928:931 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R937:937 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R933:935 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R936:936 HodgeTrifactor <> x:50 var
+def 951:965 <> fermionicFactor
+R972:972 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 968:968 <> x:51
+R977:977 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R983:985 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R986:986 HodgeTrifactor <> x:51 var
+def 1000:1013 <> harmonicFactor
+R1020:1020 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1016:1016 <> x:52
+R1025:1025 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1031:1033 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1034:1034 HodgeTrifactor <> x:52 var
+prf 1046:1074 <> bosonic_times_harmonic_eq_one
+binder 1087:1087 <> x:53
+R1096:1099 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1091:1094 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1090:1090 HodgeTrifactor <> x:53 var
+R1134:1136 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1115:1117 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1100:1112 HodgeTrifactor <> bosonicFactor def
+R1114:1114 HodgeTrifactor <> x:53 var
+R1118:1131 HodgeTrifactor <> harmonicFactor def
+R1133:1133 HodgeTrifactor <> x:53 var
+R1171:1183 HodgeTrifactor <> bosonicFactor def
+R1186:1199 HodgeTrifactor <> harmonicFactor def
+R1211:1214 Stdlib.Reals.Rdefinitions <> Rdiv def
+R1227:1237 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1227:1237 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1227:1237 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1250:1255 Stdlib.Reals.Raxioms <> Rinv_l thm
+R1250:1255 Stdlib.Reals.Raxioms <> Rinv_l thm
+R1250:1255 Stdlib.Reals.Raxioms <> Rinv_l thm
+R1250:1255 Stdlib.Reals.Raxioms <> Rinv_l thm
+prf 1318:1355 <> fermionic_times_harmonic_eq_one_sub_sq
+binder 1368:1368 <> x:54
+R1407:1409 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1388:1390 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1371:1385 HodgeTrifactor <> fermionicFactor def
+R1387:1387 HodgeTrifactor <> x:54 var
+R1391:1404 HodgeTrifactor <> harmonicFactor def
+R1406:1406 HodgeTrifactor <> x:54 var
+R1411:1413 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1415:1415 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1414:1414 HodgeTrifactor <> x:54 var
+R1447:1461 HodgeTrifactor <> fermionicFactor def
+R1464:1477 HodgeTrifactor <> harmonicFactor def
+R1498:1511 HodgeTrifactor HodgeTrifactor <> sec

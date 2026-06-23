@@ -1,0 +1,184 @@
+DIGEST d993848dd240ed91db5a7a3c07e63186
+FFractalDimensions
+R24:28 Stdlib.Reals.Reals <> <> lib
+R55:57 Stdlib.micromega.Lra <> <> lib
+R84:89 Stdlib.Reals.Rpower <> <> lib
+sec 122:138 <> FractalDimensions
+var 151:158 FractalDimensions UpperPhi
+var 160:167 FractalDimensions LowerPhi
+R171:171 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+var 185:196 FractalDimensions UpperPhi_pos
+R208:210 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'>'_x not
+R200:207 FractalDimensions <> FractalDimensions.UpperPhi var
+var 225:252 FractalDimensions UpperPhi_eq_one_add_LowerPhi
+R264:266 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R256:263 FractalDimensions <> FractalDimensions.UpperPhi var
+R268:270 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R271:278 FractalDimensions <> FractalDimensions.LowerPhi var
+var 292:312 FractalDimensions UpperPhi_mul_LowerPhi
+R335:337 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R324:326 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R316:323 FractalDimensions <> FractalDimensions.UpperPhi var
+R327:334 FractalDimensions <> FractalDimensions.LowerPhi var
+prf 348:368 <> UpperPhi_sub_LowerPhi
+R391:393 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R380:382 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R372:379 FractalDimensions <> FractalDimensions.UpperPhi var
+R383:390 FractalDimensions <> FractalDimensions.LowerPhi var
+prf 493:527 <> UpperPhi_fifth_minus_LowerPhi_fifth
+R560:562 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R545:547 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R541:543 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R533:540 FractalDimensions <> FractalDimensions.UpperPhi var
+R556:558 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R548:555 FractalDimensions <> FractalDimensions.LowerPhi var
+R622:628 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R607:609 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R603:605 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R595:602 FractalDimensions <> FractalDimensions.UpperPhi var
+R618:620 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R610:617 FractalDimensions <> FractalDimensions.LowerPhi var
+R714:720 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R654:660 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R629:629 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R649:652 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R638:640 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R630:637 FractalDimensions <> FractalDimensions.UpperPhi var
+R641:648 FractalDimensions <> FractalDimensions.LowerPhi var
+R686:688 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R662:665 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R685:685 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R674:676 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R666:673 FractalDimensions <> FractalDimensions.UpperPhi var
+R677:684 FractalDimensions <> FractalDimensions.LowerPhi var
+R689:689 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R709:712 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R698:700 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R690:697 FractalDimensions <> FractalDimensions.UpperPhi var
+R701:708 FractalDimensions <> FractalDimensions.LowerPhi var
+R750:753 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R773:773 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R722:724 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R725:725 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R745:748 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R734:736 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R726:733 FractalDimensions <> FractalDimensions.UpperPhi var
+R737:744 FractalDimensions <> FractalDimensions.LowerPhi var
+R762:764 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R754:761 FractalDimensions <> FractalDimensions.UpperPhi var
+R765:772 FractalDimensions <> FractalDimensions.LowerPhi var
+R622:628 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R607:609 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R603:605 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R595:602 FractalDimensions <> FractalDimensions.UpperPhi var
+R618:620 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R610:617 FractalDimensions <> FractalDimensions.LowerPhi var
+R714:720 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R654:660 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R629:629 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R649:652 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R638:640 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R630:637 FractalDimensions <> FractalDimensions.UpperPhi var
+R641:648 FractalDimensions <> FractalDimensions.LowerPhi var
+R686:688 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R662:665 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R685:685 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R674:676 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R666:673 FractalDimensions <> FractalDimensions.UpperPhi var
+R677:684 FractalDimensions <> FractalDimensions.LowerPhi var
+R689:689 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R709:712 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R698:700 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R690:697 FractalDimensions <> FractalDimensions.UpperPhi var
+R701:708 FractalDimensions <> FractalDimensions.LowerPhi var
+R750:753 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R773:773 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R722:724 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R725:725 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R745:748 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R734:736 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R726:733 FractalDimensions <> FractalDimensions.UpperPhi var
+R737:744 FractalDimensions <> FractalDimensions.LowerPhi var
+R762:764 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R754:761 FractalDimensions <> FractalDimensions.UpperPhi var
+R765:772 FractalDimensions <> FractalDimensions.LowerPhi var
+R822:824 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R811:813 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R803:810 FractalDimensions <> FractalDimensions.UpperPhi var
+R814:821 FractalDimensions <> FractalDimensions.LowerPhi var
+R837:857 FractalDimensions <> UpperPhi_sub_LowerPhi thm
+R822:824 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R811:813 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R803:810 FractalDimensions <> FractalDimensions.UpperPhi var
+R814:821 FractalDimensions <> FractalDimensions.LowerPhi var
+R837:857 FractalDimensions <> UpperPhi_sub_LowerPhi thm
+R897:899 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R886:888 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R878:885 FractalDimensions <> FractalDimensions.UpperPhi var
+R889:896 FractalDimensions <> FractalDimensions.LowerPhi var
+R912:932 FractalDimensions <> FractalDimensions.UpperPhi_mul_LowerPhi var
+R897:899 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R886:888 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R878:885 FractalDimensions <> FractalDimensions.UpperPhi var
+R889:896 FractalDimensions <> FractalDimensions.LowerPhi var
+R912:932 FractalDimensions <> FractalDimensions.UpperPhi_mul_LowerPhi var
+def 1097:1097 <> D
+R1104:1104 Corelib.Numbers.BinNums <> Z ind
+binder 1100:1100 <> n:11
+R1109:1109 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1116:1118 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1119:1124 Stdlib.Reals.Rpower <> Rpower def
+R1126:1133 FractalDimensions <> FractalDimensions.UpperPhi var
+R1141:1143 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1136:1138 Stdlib.Reals.Rdefinitions <> IZR def
+R1140:1140 FractalDimensions <> n:11 var
+prf 1231:1239 <> D_scaling
+R1246:1246 Corelib.Numbers.BinNums <> Z ind
+binder 1242:1242 <> n:12
+R1262:1264 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1253:1253 FractalDimensions <> D def
+R1257:1259 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R1256:1256 FractalDimensions <> n:12 var
+R1273:1275 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1265:1272 FractalDimensions <> FractalDimensions.UpperPhi var
+R1276:1276 FractalDimensions <> D def
+R1278:1278 FractalDimensions <> n:12 var
+R1297:1297 FractalDimensions <> D def
+R1333:1335 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1329:1331 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1318:1320 Stdlib.Reals.Rdefinitions <> IZR def
+R1324:1326 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R1336:1336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1346:1349 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1342:1344 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1337:1339 Stdlib.Reals.Rdefinitions <> IZR def
+R1333:1335 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1329:1331 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1318:1320 Stdlib.Reals.Rdefinitions <> IZR def
+R1324:1326 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R1336:1336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1346:1349 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1342:1344 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1337:1339 Stdlib.Reals.Rdefinitions <> IZR def
+R1366:1373 Stdlib.Reals.RIneq <> plus_IZR thm
+R1366:1373 Stdlib.Reals.RIneq <> plus_IZR thm
+R1366:1373 Stdlib.Reals.RIneq <> plus_IZR thm
+R1410:1420 Stdlib.Reals.Rpower <> Rpower_plus thm
+R1410:1420 Stdlib.Reals.Rpower <> Rpower_plus thm
+R1410:1420 Stdlib.Reals.Rpower <> Rpower_plus thm
+R1433:1440 Stdlib.Reals.Rpower <> Rpower_1 thm
+R1433:1440 Stdlib.Reals.Rpower <> Rpower_1 thm
+R1433:1440 Stdlib.Reals.Rpower <> Rpower_1 thm
+R1433:1440 Stdlib.Reals.Rpower <> Rpower_1 thm
+R1464:1475 FractalDimensions <> FractalDimensions.UpperPhi_pos var
+R1464:1475 FractalDimensions <> FractalDimensions.UpperPhi_pos var
+def 1495:1498 <> D_E8
+R1502:1504 Corelib.Init.Datatypes <> nat ind
+def 1525:1530 <> D_E8E8
+R1534:1536 Corelib.Init.Datatypes <> nat ind
+prf 1555:1573 <> E8_E8_dim_eq_double
+R1583:1585 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1577:1582 FractalDimensions <> D_E8E8 def
+R1588:1590 Corelib.Init.Peano <> ::nat_scope:x_'*'_x not
+R1591:1594 FractalDimensions <> D_E8 def
+R1634:1650 FractalDimensions FractalDimensions <> sec

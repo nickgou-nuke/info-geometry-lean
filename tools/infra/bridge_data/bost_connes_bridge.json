@@ -1,0 +1,67 @@
+{
+  "liouville_grading": {
+    "definition": "\u0393 = (-1)^\u03a9(n) where \u03a9(n) = prime factors with multiplicity",
+    "first_values": [
+      1,
+      -1,
+      -1,
+      1,
+      -1,
+      1,
+      -1,
+      -1,
+      1,
+      1,
+      -1,
+      -1,
+      -1,
+      1,
+      1,
+      1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "multiplicative": true,
+    "bosonic_sectors": "\u03bb(n) = +1 (even \u03a9)",
+    "fermionic_sectors": "\u03bb(n) = -1 (odd \u03a9)"
+  },
+  "modular_flow": {
+    "definition": "\u03c3\u209c(\u03bc\u2099) = n^(it) \u03bc\u2099, \u03c3\u209c(e(r)) = e(n^t r)",
+    "kms_state": true,
+    "inverse_temperature": "\u03b2"
+  },
+  "commutation": {
+    "theorem": "[\u0393, \u03c3\u209c] = 0",
+    "proof_sketch": "\u03bb(n) is scalar (\u00b11), commutes with phase n^(it)",
+    "verified_for_n": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "witten_index": {
+    "definition": "W = Tr((-1)^F e^{-\u03b2H})",
+    "conservation": "dW/d\u03b2 = 0 (conserved across all temperatures)",
+    "physical_meaning": "Topological anomalies cannot be melted by thermal flow",
+    "sample_counts": {
+      "N": 50,
+      "bosonic": 22,
+      "fermionic": 28,
+      "witten_approx": -6
+    }
+  },
+  "thermofield_double": {
+    "left_algebra": "Bost-Connes algebra A",
+    "right_algebra": "Opposite algebra A^op",
+    "thermofield_state": "|TFD\u27e9 = \u03a3 e^{-\u03b2E_n/2} |n\u27e9_L \u2297 |n\u27e9_R",
+    "preserves_grading": true
+  }
+}

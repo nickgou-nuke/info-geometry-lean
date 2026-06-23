@@ -73,9 +73,9 @@ while true; do
     python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 20 || true
     python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary || true
     if flock -n 9; then
-      if [[ -d "$ROOT/tools/archon" ]] && command -v bun >/dev/null 2>&1; then
+      if [[ -d "$ROOT/archon" ]] && command -v bun >/dev/null 2>&1; then
         timeout "${ARCHON_CYCLE_TIMEOUT_SECONDS:-1800}" \
-          bash -lc 'cd "$0/tools/archon" && bun run cli workflow run "$1" --cwd "$0" --no-worktree' "$ROOT" "$WORKFLOW" || true
+          bash -lc 'cd "$0/archon" && bun run cli workflow run "$1" --cwd "$0" --no-worktree' "$ROOT" "$WORKFLOW" || true
       else
         timeout "${ARCHON_CYCLE_TIMEOUT_SECONDS:-1800}" \
         archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree || true

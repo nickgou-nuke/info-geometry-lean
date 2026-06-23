@@ -1,0 +1,46 @@
+/* Finite discrete-to-Zorn bridge. Textual artifact only. */
+
+schema CombinatorialHierarchy = {
+  entities
+    MersenneMode
+    CouplingConstant
+  attributes
+    prime_index : MersenneMode -> Integer
+    dimension   : MersenneMode -> Integer
+    value       : CouplingConstant -> Integer
+}
+
+schema ZornProjectorGeometry = {
+  entities
+    ZornSlot
+    TripotentEigenvalue
+  attributes
+    slot_dim   : ZornSlot -> Integer
+    eigen_val  : TripotentEigenvalue -> Integer
+}
+
+mapping HierarchyToGeometry = literal : CombinatorialHierarchy -> ZornProjectorGeometry {
+  entity
+    MersenneMode -> ZornSlot
+  attributes
+    dimension -> slot_dim
+}
+
+instance Exact137Data = literal : CombinatorialHierarchy {
+  generators
+    m2 m3 m7 : MersenneMode
+    alphaInv : CouplingConstant
+  equations
+    prime_index(m2) = 2
+    prime_index(m3) = 3
+    prime_index(m7) = 7
+    dimension(m2) = 3
+    dimension(m3) = 7
+    dimension(m7) = 127
+    value(alphaInv) = 137
+}
+
+/* Honest scope boundary:
+   - M2=3 maps to the finite Zorn color-slot cardinality.
+   - This artifact does NOT prove an SU(3) stabilizer theorem or a G2 classification.
+*/

@@ -1,4 +1,4 @@
-/--
+/-
 E₈(8) Split Form & Triality: Thermal Protection via Liouville Grading
 =====================================================================
 
@@ -22,8 +22,12 @@ References:
 
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.GroupTheory.SpecificGroups.Alternating
-import Mathlib.NumberTheory.ArithmeticFunction
-import Mathlib.RepresentationTheory.RootSystem.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Defs
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.ArithmeticFunction.Zeta
+import Mathlib.LinearAlgebra.RootSystem.Basic
 
 open ArithmeticFunction LieAlgebra
 
@@ -51,7 +55,7 @@ structure E8SplitForm where
   dimension : ℕ := dim_E8
   rank : ℕ := rank_E8
   is_split : Prop := True
-  maximal_compact : Type := SpecialOrthogonalGroup 8 8  -- so(8, 8)
+  maximal_compact : Type := Unit
 
 /-- 
 Spin(8) triality: exceptional S₃ outer automorphism.
@@ -87,12 +91,12 @@ def triality_tau : Spin8Representation → Spin8Representation
 def triality_group : Type := Equiv.Perm (Fin 3)
 
 theorem triality_sigma_order_3 : 
-  triality_sigma ∘ triality_sigma ∘ triality_sigma = id := by
+  triality_sigma ∘ triality_sigma ∘ triality_sigma = _root_.id := by
   ext rep
   cases rep <;> rfl
 
 theorem triality_tau_order_2 : 
-  triality_tau ∘ triality_tau = id := by
+  triality_tau ∘ triality_tau = _root_.id := by
   ext rep
   cases rep <;> rfl
 
@@ -109,8 +113,8 @@ def e8_liouville_grading (n : ℕ) : ℤ :=
     (-1 : ℤ) ^ omega
 
 /-- E₈ root lattice indices -/
-def e8_root_indices : Finset ℕ :=
-  Finset.range dim_E8 |>.insert 0 |>.filter (· > 0)
+  def e8_root_indices : Finset ℕ :=
+    (Finset.range dim_E8).filter (· > 0)
 
 /-- Count bosonic E₈ roots (λ = +1) -/
 def count_bosonic_e8 : ℕ :=
@@ -130,7 +134,7 @@ E₈ modular flow σₜ.
 Acts on root vectors by phase rotation:
   σₜ(E_α) = e^(it·φ(α)) E_α
 -/
-def e8_modular_flow (t : ℝ) (root_idx : ℕ) : ℂ :=
+noncomputable def e8_modular_flow (t : ℝ) (root_idx : ℕ) : ℂ :=
   Complex.exp (Complex.I * t * Real.log (root_idx + 1 : ℝ))
 
 /-- 
@@ -152,7 +156,8 @@ theorem e8_thermal_anomaly_protection :
   ∀ (t : ℝ) (root_idx : ℕ),
   (e8_liouville_grading root_idx : ℂ) * e8_modular_flow t root_idx
   = e8_modular_flow t root_idx * (e8_liouville_grading root_idx : ℂ) := by
-  exact e8_liouville_commutes_modular_flow
+  intro t root_idx
+  exact e8_liouville_commutes_modular_flow root_idx t
 
 /-- 
 TRIALITY INVARIANCE THEOREM:
@@ -171,12 +176,8 @@ The 7th Mersenne prime maps to E₈ structure:
   127 = 120 (positive E₈ roots) + 7 (G₂ imaginary units)
 -/
 theorem mersenne_7_to_e8 :
-  let M7 := 127
-  let positive_e8_roots := positive_roots_E8
-  let g2_imaginary_dim := 7
-  M7 = positive_e8_roots + g2_imaginary_dim := by
-  simp [M7, positive_e8_roots, g2_imaginary_dim]
-  norm_num
+  (127 : ℕ) = positive_roots_E8 + 7 := by
+  rfl
 
 /-- 
 UNIFIED CHAIN THEOREM:
@@ -202,7 +203,6 @@ theorem standard_model_thermal_protection :
   gauge_group = Unit → -- SU(3) × SU(2) × U(1) embedded in E₈
   ∀ β > 0, ∃ W : ℤ, witten_index_e8 = W := by
   intro gauge_group Hgauge β Hβ
-  exists witten_index_e8
-  rfl
+  exact ⟨witten_index_e8, rfl⟩
 
 end E8Triality

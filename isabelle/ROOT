@@ -18,6 +18,8 @@ session InfoGeometry = "HOL-Algebra" +
     "InfoGeometry/Canonical/CoriolisBarrierAnomaly"
     "InfoGeometry/Canonical/ConformalProjectiveSouriauMetriplectic"
     "InfoGeometry/Canonical/MadelungLegendreSynthesis"
+    "InfoGeometry/Canonical/E8TrialityThermalProtection"
+
     "InfoGeometry/Canonical/Zorn_Modular_Flow"
 
 

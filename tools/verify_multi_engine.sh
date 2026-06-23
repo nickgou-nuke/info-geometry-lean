@@ -266,6 +266,168 @@ fi
 TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
 # ============================================================================
+# 12. SymPy E8 Triality Verification
+# ============================================================================
+echo -e "\n[12/19] SymPy: E8 Triality and Thermal Protection"
+echo "----------------------------------------"
+
+if python3 "$REPO_ROOT/tools/sympy/e8_triality_thermal_protection.py" > "$RESULTS_DIR/sympy_e8.log" 2>&1; then
+    RESULTS["sympy_e8"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["sympy_e8"]}"
+else
+    RESULTS["sympy_e8"]="✗ FAILED"
+    echo "  ${RESULTS["sympy_e8"]}"
+    echo "  See: $RESULTS_DIR/sympy_e8.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 13. GAlgebra E8 Triality Verification
+# ============================================================================
+echo -e "\n[13/19] GAlgebra: E8 Triality Clifford Spinor Mapping"
+echo "----------------------------------------"
+
+if python3 "$REPO_ROOT/tools/galgebra/e8_triality_thermal_protection_galgebra.py" > "$RESULTS_DIR/galgebra_e8.log" 2>&1; then
+    RESULTS["galgebra_e8"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["galgebra_e8"]}"
+else
+    RESULTS["galgebra_e8"]="✗ FAILED"
+    echo "  ${RESULTS["galgebra_e8"]}"
+    echo "  See: $RESULTS_DIR/galgebra_e8.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 14. SageMath E8 Triality Verification
+# ============================================================================
+echo -e "\n[14/19] SageMath: E8 Triality S3 Group Automorphisms"
+echo "----------------------------------------"
+
+if command -v sage &> /dev/null; then
+    if sage "$REPO_ROOT/tools/sage/e8_triality_thermal_protection.sage" > "$RESULTS_DIR/sage_e8.log" 2>&1; then
+        RESULTS["sage_e8"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["sage_e8"]}"
+    else
+        RESULTS["sage_e8"]="✗ FAILED"
+        echo "  ${RESULTS["sage_e8"]}"
+        echo "  See: $RESULTS_DIR/sage_e8.log"
+    fi
+else
+    RESULTS["sage_e8"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["sage_e8"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 15. GAP E8 Triality Verification
+# ============================================================================
+echo -e "\n[15/19] GAP: E8 Triality Group Structures"
+echo "----------------------------------------"
+
+if command -v gap &> /dev/null; then
+    if gap -q "$REPO_ROOT/proofs/e8_triality_thermal_protection.g" > "$RESULTS_DIR/gap_e8.log" 2>&1; then
+        RESULTS["gap_e8"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["gap_e8"]}"
+    else
+        RESULTS["gap_e8"]="✗ FAILED"
+        echo "  ${RESULTS["gap_e8"]}"
+        echo "  See: $RESULTS_DIR/gap_e8.log"
+    fi
+else
+    RESULTS["gap_e8"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["gap_e8"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 16. Macaulay2 E8 Triality D-Module Verification
+# ============================================================================
+echo -e "\n[16/19] Macaulay2: E8 Triality Characteristic Ideal"
+echo "----------------------------------------"
+
+if command -v M2 &> /dev/null; then
+    if M2 --script "$REPO_ROOT/proofs/e8_triality_thermal_protection.m2" > "$RESULTS_DIR/macaulay2_e8.log" 2>&1; then
+        RESULTS["macaulay2_e8"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["macaulay2_e8"]}"
+    else
+        RESULTS["macaulay2_e8"]="✗ FAILED"
+        echo "  ${RESULTS["macaulay2_e8"]}"
+        echo "  See: $RESULTS_DIR/macaulay2_e8.log"
+    fi
+else
+    RESULTS["macaulay2_e8"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["macaulay2_e8"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 17. Lean4 E8 Triality Compilation
+# ============================================================================
+echo -e "\n[17/19] Lean4: E8 Triality Kernel Verification"
+echo "----------------------------------------"
+
+cd "$REPO_ROOT"
+if ~/.elan/bin/lake env lean lean/InfoGeometry/E8/E8TrialityThermalProtection.lean > "$RESULTS_DIR/lean4_e8.log" 2>&1; then
+    RESULTS["lean4_e8"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["lean4_e8"]}"
+else
+    RESULTS["lean4_e8"]="✗ FAILED"
+    echo "  ${RESULTS["lean4_e8"]}"
+    echo "  See: $RESULTS_DIR/lean4_e8.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 18. Coq E8 Triality Verification
+# ============================================================================
+echo -e "\n[18/19] Coq: E8 Triality Type-Theoretic Proof"
+echo "----------------------------------------"
+
+if command -v coqc &> /dev/null; then
+    if coqc "$REPO_ROOT/coq/E8TrialityThermalProtection.v" > "$RESULTS_DIR/coq_e8.log" 2>&1; then
+        RESULTS["coq_e8"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["coq_e8"]}"
+    else
+        RESULTS["coq_e8"]="✗ FAILED"
+        echo "  ${RESULTS["coq_e8"]}"
+        echo "  See: $RESULTS_DIR/coq_e8.log"
+    fi
+else
+    RESULTS["coq_e8"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["coq_e8"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 19. Isabelle/HOL E8 Triality Verification
+# ============================================================================
+echo -e "\n[19/19] Isabelle/HOL: E8 Triality Flow Theory"
+echo "----------------------------------------"
+
+if command -v isabelle &> /dev/null; then
+    if isabelle build -D "$REPO_ROOT/isabelle" > "$RESULTS_DIR/isabelle_e8.log" 2>&1; then
+        RESULTS["isabelle_e8"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["isabelle_e8"]}"
+    else
+        RESULTS["isabelle_e8"]="✗ FAILED"
+        echo "  ${RESULTS["isabelle_e8"]}"
+        echo "  See: $RESULTS_DIR/isabelle_e8.log"
+    fi
+else
+    RESULTS["isabelle_e8"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["isabelle_e8"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
 # Summary
 # ============================================================================
 echo -e "\n================================================================================"
@@ -279,6 +441,11 @@ done
 
 echo -e "\nosp(1|2) Superalgebra Verification Results:"
 for engine in sympy_osp12 galgebra_osp12 sage_osp12 gap_osp12 macaulay2_osp12; do
+    printf "  %-20s %s\n" "$engine:" "${RESULTS[$engine]}"
+done
+
+echo -e "\nE8 Triality and Thermal Protection Verification Results:"
+for engine in sympy_e8 galgebra_e8 sage_e8 gap_e8 macaulay2_e8 lean4_e8 coq_e8 isabelle_e8; do
     printf "  %-20s %s\n" "$engine:" "${RESULTS[$engine]}"
 done
 
@@ -313,7 +480,15 @@ cat > "$RESULTS_DIR/summary.json" << EOF
     "galgebra_osp12": "${RESULTS["galgebra_osp12"]}",
     "sage_osp12": "${RESULTS["sage_osp12"]}",
     "gap_osp12": "${RESULTS["gap_osp12"]}",
-    "macaulay2_osp12": "${RESULTS["macaulay2_osp12"]}"
+    "macaulay2_osp12": "${RESULTS["macaulay2_osp12"]}",
+    "sympy_e8": "${RESULTS["sympy_e8"]}",
+    "galgebra_e8": "${RESULTS["galgebra_e8"]}",
+    "sage_e8": "${RESULTS["sage_e8"]}",
+    "gap_e8": "${RESULTS["gap_e8"]}",
+    "macaulay2_e8": "${RESULTS["macaulay2_e8"]}",
+    "lean4_e8": "${RESULTS["lean4_e8"]}",
+    "coq_e8": "${RESULTS["coq_e8"]}",
+    "isabelle_e8": "${RESULTS["isabelle_e8"]}"
   }
 }
 EOF

@@ -70,3 +70,6 @@
 	path = external_refs/lean_test_v4160
 	url = https://github.com/frenzymath/lean_test_v4160.git
 	ignore = dirty
+[submodule "pure_math_lib"]
+	path = pure_math_lib
+	url = /home/goutev/repos/pure_math_lib

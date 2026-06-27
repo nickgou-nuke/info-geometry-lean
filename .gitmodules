@@ -73,3 +73,9 @@
 [submodule "pure_math_lib"]
 	path = pure_math_lib
 	url = /home/goutev/repos/pure_math_lib
+[submodule "lib/InfoGeometryCore"]
+	path = lib/InfoGeometryCore
+	url = /home/goutev/repos/InfoGeometryCore
+[submodule "external_refs/Spectral"]
+	path = external_refs/Spectral
+	url = https://github.com/cmu-phil/Spectral

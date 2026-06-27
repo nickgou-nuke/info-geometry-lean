@@ -841,9 +841,18 @@ input_file dagPathingFile where
   path := "tools/pathing.py"
   text := true
 
+require InfoGeometryCore from "lib" / "InfoGeometryCore"
+
+require Qq from git
+  "https://github.com/leanprover-community/quote4.git"
+  @ "v4.28.0"
+require plausible from git
+  "https://github.com/leanprover-community/plausible.git"
+  @ "v4.28.0"
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
-  @ "v4.28.0"
+  @ "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
 require Paperproof from git
   "https://github.com/Paper-Proof/paperproof.git"
   @ "main" / "lean"
@@ -879,11 +888,11 @@ lean_lib Socratic where
 
 @[default_target]
 lean_lib InfoGeometry where
-  -- Build the maintained public entrypoint rather than every proposal shard under
-  -- `lean/InfoGeometry`.  Generated/proposal modules (notably
-  -- `InfoGeometry.External.Auto`) are snapshots and are not promotion authority;
-  -- they are compiled only when imported by the maintained entrypoint or targeted
-  -- explicitly.
+  -- Build the root project entrypoint. Repository policy is that every
+  -- repo-owned Lean module under `lean/InfoGeometry` must be buildable and
+  -- provided through the root/`InfoGeometry.All` surface. Generated, proposal,
+  -- and experimental modules are not exempt; if they fail this contract, repair
+  -- them and wire them into the provided library surface.
   roots := #[`InfoGeometry]
 
 /--

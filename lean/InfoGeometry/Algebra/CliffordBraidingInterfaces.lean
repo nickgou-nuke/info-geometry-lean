@@ -26,7 +26,8 @@ structure CliffordBraidScalars (K : Type*) [Field K] where
 /-- Certified Clifford braid operators. -/
 structure CliffordBraidData (A : Type*) [Ring A] where
   B : Nat → A
-  square_plane : ∀ i, B i * B i = B i * B i -- replace RHS by γᵢγᵢ₊₁ in concrete instances
+  squareTarget : Nat → A
+  square_eq_target : ∀ i, B i * B i = squareTarget i
   fourth_central_sign : ∀ i, B i ^ 4 = -1
   eighth_identity : ∀ i, B i ^ 8 = 1
   adjacent_artin : ∀ i, B i * B (i+1) * B i = B (i+1) * B i * B (i+1)

@@ -24,7 +24,7 @@ theorem e₁_sq : e₁ * e₁ = -1 := by
     _ = -1 := by simp [q11, proj_apply]
 
 theorem orth : q11.IsOrtho (fun i => if i = 0 then 1 else 0) (fun i => if i = 1 then 1 else 0) := by
-  simp [q11, IsOrtho, polar, proj_apply]
+  simp [q11, IsOrtho, proj_apply]
 
 theorem anticomm : e₀ * e₁ + e₁ * e₀ = 0 := by
   have h := ι_mul_ι_add_swap_of_isOrtho orth

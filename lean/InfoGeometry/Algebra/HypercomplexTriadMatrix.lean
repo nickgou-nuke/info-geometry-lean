@@ -44,6 +44,12 @@ theorem I_sq
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [I, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- The elliptic generator has determinant `1`. -/
+theorem I_det
+    {R : Type*} [CommRing R] :
+    (I R).det = (1 : R) := by
+  simp [I, Matrix.det_fin_two]
+
 /-- Hyperbolic/split sector: `E² = 1`. -/
 theorem E_sq
     {R : Type*} [CommRing R] :
@@ -51,12 +57,24 @@ theorem E_sq
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [E, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- The split generator has determinant `-1`. -/
+theorem E_det
+    {R : Type*} [CommRing R] :
+    (E R).det = (-1 : R) := by
+  simp [E, Matrix.det_fin_two]
+
 /-- Parabolic/dual sector: `N² = 0`. -/
 theorem N_sq
     {R : Type*} [CommRing R] :
     N R * N R = (0 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [N, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The parabolic generator is singular. -/
+theorem N_det
+    {R : Type*} [CommRing R] :
+    (N R).det = (0 : R) := by
+  simp [N, Matrix.det_fin_two]
 
 /-- The nilpotent unit `N` has no left inverse over a nontrivial ring. -/
 theorem N_no_left_inverse

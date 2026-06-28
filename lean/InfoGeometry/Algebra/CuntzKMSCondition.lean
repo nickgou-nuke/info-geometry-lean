@@ -28,47 +28,79 @@ noncomputable section
 namespace InfoGeometry.Algebra.CuntzKMSCondition
 
 /-- Complex-time modular phase: exp(i·z·log(p)). For z=t∈ℝ, equals modularPhase(p,t). -/
-def modularPhaseComplex (p : ℕ) (z : ℂ) : ℂ := Complex.exp (I * z * Real.log (p : ℝ))
+def modularPhaseComplex (p : ℕ) (z : ℂ) : ℂ := Complex.exp (I * z * (Real.log (p : ℝ) : ℂ))
 
 /-- Inverse complex phase: exp(-i·z·log(p)). -/
-def modularPhaseComplexInv (p : ℕ) (z : ℂ) : ℂ := Complex.exp (-(I * z * Real.log (p : ℝ)))
+def modularPhaseComplexInv (p : ℕ) (z : ℂ) : ℂ := Complex.exp (-(I * z * (Real.log (p : ℝ) : ℂ)))
 
 @[simp] lemma modularPhaseComplex_real (p : ℕ) (t : ℝ) : modularPhaseComplex p (t : ℂ) = modularPhase p t := by
   simp [modularPhaseComplex, modularPhase]
 
-@[simp] lemma modularPhaseComplex_inv_real (p : ℕ) (t : ℝ) : modularPhaseComplexInv p (t : ℂ) = modularPhaseInv p t := by
+@[simp] lemma modularPhaseComplexInv_real (p : ℕ) (t : ℝ) : modularPhaseComplexInv p (t : ℂ) = modularPhaseInv p t := by
   simp [modularPhaseComplexInv, modularPhaseInv]
 
 /-- At imaginary time iβ: p_i^{i·iβ} = p_i^{-β}. -/
-lemma modularPhaseComplex_imag (p : ℕ) (β : ℝ) : modularPhaseComplex p (I * (β : ℂ)) = (p : ℂ) ^ (-β) := by
+lemma modularPhaseComplex_imag (p : ℕ) (hp : p ≠ 0) (β : ℝ) : modularPhaseComplex p (I * (β : ℂ)) = (p : ℂ) ^ (-(β : ℂ)) := by
   dsimp [modularPhaseComplex]
-  have h : I * (I * (β : ℂ)) * Real.log (p : ℝ) = (-β) * Real.log (p : ℝ) := by ring
-  rw [h, Complex.exp_mul_log]
-  -- exp((-β)*log(p)) = p^{-β}  for p > 0. Need p ≠ 0 (true for any prime).
-  -- Actually exp((-β)*log(p)) = p^{-β} by definition of cpow for p > 0.
-  -- Use: Complex.exp (log (p : ℂ) * (-β)) = (p : ℂ) ^ (-β)
-  -- Complex.exp_mul_log requires p ≠ 0.
-  have hp : (p : ℂ) ≠ 0 := by
-    intro hzero; have := Nat.cast_eq_zero.mp hzero; omega
-  rw [mul_comm, Complex.exp_mul_log hp]
+  have h_log : (Real.log (p : ℝ) : ℂ) = Complex.log (p : ℂ) := by
+    have h2 : 0 ≤ (p : ℝ) := Nat.cast_nonneg p
+    rw [Complex.ofReal_log h2]
+    push_cast
+    rfl
+  rw [h_log]
+  have h1 : I * (I * (β : ℂ)) * Complex.log (p : ℂ) = Complex.log (p : ℂ) * (-(β : ℂ)) := by
+    calc
+      I * (I * (β : ℂ)) * log ↑p = (I * I) * (β : ℂ) * log ↑p := by ring
+      _ = (-1) * (β : ℂ) * log ↑p := by rw [Complex.I_mul_I]
+      _ = log ↑p * -(β : ℂ) := by ring
+  rw [h1]
+  have hnz : (p : ℂ) ≠ 0 := by exact_mod_cast hp
+  have hpow : (p : ℂ) ^ (-(β : ℂ)) = if (p : ℂ) = 0 then if (-(β : ℂ)) = 0 then 1 else 0 else cexp (log ↑p * -(β : ℂ)) := Complex.cpow_def _ _
+  rw [if_neg hnz] at hpow
+  exact hpow.symm
+
 
 /-- At imaginary time -iβ: p_i^{i·(-iβ)} = p_i^{β}. -/
-lemma modularPhaseComplex_neg_imag (p : ℕ) (β : ℝ) : modularPhaseComplex p (-(I * (β : ℂ))) = (p : ℂ) ^ (β) := by
+lemma modularPhaseComplex_neg_imag (p : ℕ) (hp : p ≠ 0) (β : ℝ) : modularPhaseComplex p (-(I * (β : ℂ))) = (p : ℂ) ^ (β : ℂ) := by
   dsimp [modularPhaseComplex]
-  have h : I * (-(I * (β : ℂ))) * Real.log (p : ℝ) = (β : ℂ) * Real.log (p : ℝ) := by ring
-  rw [h]
-  have hp : (p : ℂ) ≠ 0 := by intro hzero; have := Nat.cast_eq_zero.mp hzero; omega
-  rw [← Complex.exp_mul_log hp]
-  ring
+  have h_log : (Real.log (p : ℝ) : ℂ) = Complex.log (p : ℂ) := by
+    have h2 : 0 ≤ (p : ℝ) := Nat.cast_nonneg p
+    rw [Complex.ofReal_log h2]
+    push_cast
+    rfl
+  rw [h_log]
+  have h1 : I * (-(I * (β : ℂ))) * Complex.log (p : ℂ) = Complex.log (p : ℂ) * (β : ℂ) := by
+    calc
+      I * (-(I * (β : ℂ))) * log ↑p = -(I * I) * (β : ℂ) * log ↑p := by ring
+      _ = -(-1) * (β : ℂ) * log ↑p := by rw [Complex.I_mul_I]
+      _ = log ↑p * (β : ℂ) := by ring
+  rw [h1]
+  have hnz : (p : ℂ) ≠ 0 := by exact_mod_cast hp
+  have hpow : (p : ℂ) ^ (β : ℂ) = if (p : ℂ) = 0 then if (β : ℂ) = 0 then 1 else 0 else cexp (log ↑p * (β : ℂ)) := Complex.cpow_def _ _
+  rw [if_neg hnz] at hpow
+  exact hpow.symm
+
 
 /-- At imaginary time iβ: p_i^{-i·iβ} = p_i^{β}. -/
-lemma modularPhaseComplexInv_imag (p : ℕ) (β : ℝ) : modularPhaseComplexInv p (I * (β : ℂ)) = (p : ℂ) ^ (β) := by
+lemma modularPhaseComplexInv_imag (p : ℕ) (hp : p ≠ 0) (β : ℝ) : modularPhaseComplexInv p (I * (β : ℂ)) = (p : ℂ) ^ (β : ℂ) := by
   dsimp [modularPhaseComplexInv]
-  have h : -(I * (I * (β : ℂ)) * Real.log (p : ℝ)) = (β : ℂ) * Real.log (p : ℝ) := by ring
-  rw [h]
-  have hp : (p : ℂ) ≠ 0 := by intro hzero; have := Nat.cast_eq_zero.mp hzero; omega
-  rw [← Complex.exp_mul_log hp]
-  ring
+  have h_log : (Real.log (p : ℝ) : ℂ) = Complex.log (p : ℂ) := by
+    have h2 : 0 ≤ (p : ℝ) := Nat.cast_nonneg p
+    rw [Complex.ofReal_log h2]
+    push_cast
+    rfl
+  rw [h_log]
+  have h1 : -(I * (I * (β : ℂ)) * Complex.log (p : ℂ)) = Complex.log (p : ℂ) * (β : ℂ) := by
+    calc
+      -(I * (I * (β : ℂ)) * log ↑p) = -(I * I) * (β : ℂ) * log ↑p := by ring
+      _ = -(-1) * (β : ℂ) * log ↑p := by rw [Complex.I_mul_I]
+      _ = log ↑p * (β : ℂ) := by ring
+  rw [h1]
+  have hnz : (p : ℂ) ≠ 0 := by exact_mod_cast hp
+  have hpow : (p : ℂ) ^ (β : ℂ) = if (p : ℂ) = 0 then if (β : ℂ) = 0 then 1 else 0 else cexp (log ↑p * (β : ℂ)) := Complex.cpow_def _ _
+  rw [if_neg hnz] at hpow
+  exact hpow.symm
+
 
 /-- Linear map on generators for complex time z. -/
 noncomputable def modularOnFreeComplex (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) : CuntzFree n →ₗ[ℂ] CuntzTensor n :=
@@ -91,7 +123,8 @@ lemma sigmaTensorComplex_S (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (i : Fin
   calc
     sigmaTensorComplex n primes z (S n i) = modularOnFreeComplex n primes z (Finsupp.single (i, false) 1) := by
       dsimp [sigmaTensorComplex, S, gen]; rw [TensorAlgebra.lift_ι_apply]
-    _ = (1 * modularPhaseComplex (primes i) z) • gen n i false := by rw [modularOnFreeComplex_single]
+    _ = (1 * if false = true then modularPhaseComplexInv (primes i) z else modularPhaseComplex (primes i) z) • gen n i false := by rw [modularOnFreeComplex_single]
+    _ = (1 * modularPhaseComplex (primes i) z) • gen n i false := by rw [if_neg (by decide)]
     _ = (1 * modularPhaseComplex (primes i) z) • S n i := rfl
     _ = modularPhaseComplex (primes i) z • S n i := by rw [one_mul]
 
@@ -100,7 +133,8 @@ lemma sigmaTensorComplex_Sdag (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (i : 
   calc
     sigmaTensorComplex n primes z (Sdag n i) = modularOnFreeComplex n primes z (Finsupp.single (i, true) 1) := by
       dsimp [sigmaTensorComplex, Sdag, gen]; rw [TensorAlgebra.lift_ι_apply]
-    _ = (1 * modularPhaseComplexInv (primes i) z) • gen n i true := by rw [modularOnFreeComplex_single]
+    _ = (1 * if true = true then modularPhaseComplexInv (primes i) z else modularPhaseComplex (primes i) z) • gen n i true := by rw [modularOnFreeComplex_single]
+    _ = (1 * modularPhaseComplexInv (primes i) z) • gen n i true := by rw [if_pos rfl]
     _ = (1 * modularPhaseComplexInv (primes i) z) • Sdag n i := rfl
     _ = modularPhaseComplexInv (primes i) z • Sdag n i := by rw [one_mul]
 
@@ -125,8 +159,10 @@ theorem sigmaTensorComplex_descent_condition (n : ℕ) (primes : Fin n → ℕ) 
       -- because exp(-i*z*log p) * exp(i*z*log p) = exp(0) = 1
       have h_phase : modularPhaseComplexInv (primes i) z * modularPhaseComplex (primes i) z = 1 := by
         dsimp [modularPhaseComplexInv, modularPhaseComplex]
-        rw [← Complex.exp_add]; ring; simp
-      rw [mul_comm (modularPhaseComplexInv (primes i) z), h_phase, one_smul]
+        rw [← Complex.exp_add]
+        have h2 : -(I * z * (Real.log (primes i : ℝ) : ℂ)) + I * z * (Real.log (primes i : ℝ) : ℂ) = 0 := by ring
+        rw [h2, Complex.exp_zero]
+      rw [h_phase, one_smul]
       simpa [map_one (sigmaTensorComplex n primes z)] using
         RingQuot.mkAlgHom_rel ℂ (CuntzRel.orth i i)
     · have h0 : (cuntzMk n) (Sdag n i * S n j) = (cuntzMk n) 0 := by
@@ -151,10 +187,12 @@ theorem sigmaTensorComplex_descent_condition (n : ℕ) (primes : Fin n → ℕ) 
       _ = (cuntzMk n) (∑ i : Fin n, (1 : ℂ) • (S n i * Sdag n i)) := by
         refine congrArg (cuntzMk n) (Finset.sum_congr rfl (λ i _ => ?_))
         dsimp [modularPhaseComplex, modularPhaseComplexInv]
-        rw [← Complex.exp_add]; ring; simp
+        rw [← Complex.exp_add]
+        have h2 : I * z * (Real.log (primes i : ℝ) : ℂ) + -(I * z * (Real.log (primes i : ℝ) : ℂ)) = 0 := by ring
+        rw [h2, Complex.exp_zero]
       _ = (cuntzMk n) (∑ i : Fin n, S n i * Sdag n i) := by simp
       _ = (cuntzMk n) 1 := RingQuot.mkAlgHom_rel ℂ (CuntzRel.ranges_sum_one (n := n))
-      _ = (cuntzMk n) ((sigmaTensorComplex n primes z) 1) := by rw [map_one]
+      _ = (cuntzMk n) ((sigmaTensorComplex n primes z) 1) := (congrArg (cuntzMk n) (map_one _)).symm
 
 /-- Modular automorphism on the Cuntz quotient for complex time z. -/
 noncomputable def sigmaComplex (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) : CuntzAlg n →ₐ[ℂ] CuntzAlg n :=
@@ -171,7 +209,6 @@ lemma sigmaComplex_mk (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (x : CuntzTen
 @[simp] lemma sigmaComplex_real (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :
     sigmaComplex n primes (t : ℂ) = sigma n primes t := by
   ext x
-  rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
   simp [sigmaComplex_mk, sigma_mk', sigmaTensorComplex_real]
 
 /-- Projectors P_i = S_i Sdag_i are fixed by σ_z for any complex z:
@@ -179,27 +216,28 @@ lemma sigmaComplex_mk (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (x : CuntzTen
 @[simp] theorem sigmaComplex_fixes_projector (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (i : Fin n) :
     sigmaComplex n primes z (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
   dsimp [cuntzS, cuntzSdag, cuntzMk]
-  rw [sigmaComplex_mk, sigmaComplex_mk, map_mul, sigmaTensorComplex_S, sigmaTensorComplex_Sdag]
-  rw [smul_mul_smul, ← sigmaComplex_mk, ← sigmaComplex_mk]
-  -- modularPhaseComplex(p,z) * modularPhaseComplexInv(p,z) = 1
+  rw [map_mul, sigmaComplex_mk, sigmaComplex_mk, sigmaTensorComplex_S, sigmaTensorComplex_Sdag]
+  rw [map_smul, map_smul, smul_mul_smul]
   have h_phase : modularPhaseComplex (primes i) z * modularPhaseComplexInv (primes i) z = 1 := by
     dsimp [modularPhaseComplex, modularPhaseComplexInv]
-    rw [← Complex.exp_add]; ring; simp
+    rw [← Complex.exp_add]
+    have h2 : I * z * (Real.log (primes i : ℝ) : ℂ) + -(I * z * (Real.log (primes i : ℝ) : ℂ)) = 0 := by ring
+    rw [h2, Complex.exp_zero]
   rw [h_phase, one_smul]
 
 /-- At imaginary time iβ: σ_{iβ}(S_i) = p_i^{-β} · S_i. -/
-lemma sigmaComplex_imag_S (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) (i : Fin n) :
+lemma sigmaComplex_imag_S (n : ℕ) (primes : Fin n → ℕ) (hprimes : ∀ j, primes j ≠ 0) (β : ℝ) (i : Fin n) :
     sigmaComplex n primes (I * (β : ℂ)) (cuntzS n i) = ((primes i : ℂ) ^ (-β : ℂ)) • cuntzS n i := by
   dsimp [cuntzS, cuntzMk]
   rw [sigmaComplex_mk, sigmaTensorComplex_S]
-  simp [modularPhaseComplex_imag, map_smul]
+  simp [modularPhaseComplex_imag (primes i) (hprimes i), map_smul]
 
 /-- At imaginary time iβ: σ_{iβ}(Sdag_i) = p_i^{β} · Sdag_i. -/
-lemma sigmaComplex_imag_Sdag (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) (i : Fin n) :
+lemma sigmaComplex_imag_Sdag (n : ℕ) (primes : Fin n → ℕ) (hprimes : ∀ j, primes j ≠ 0) (β : ℝ) (i : Fin n) :
     sigmaComplex n primes (I * (β : ℂ)) (cuntzSdag n i) = ((primes i : ℂ) ^ (β : ℂ)) • cuntzSdag n i := by
   dsimp [cuntzSdag, cuntzMk]
   rw [sigmaComplex_mk, sigmaTensorComplex_Sdag]
-  simp [modularPhaseComplexInv_imag, map_smul]
+  simp [modularPhaseComplexInv_imag (primes i) (hprimes i), map_smul]
 
 /-- KMS weight on the diagonal subalgebra: φ_β(P_i) = p_i^{-β} (unnormalized).
     The partition function is Z_n(β) = Σ_i p_i^{-β}.
@@ -237,14 +275,15 @@ def canonical (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) : KMSWeightDiagonal 
     φ_β(AB) = φ_β(BA), which holds because the diagonal subalgebra is commutative. -/
 theorem kms_condition_diagonal (A B : Fin n → ℂ) :
     φ.eval (λ i => A i * B i) = φ.eval (λ i => B i * A i) := by
-  rw [φ.eval_eq, φ.eval_eq]
-  refine Finset.sum_congr rfl (λ i _ => ?_)
-  ring
+  have heq : (λ (i : Fin n) => A i * B i) = (λ (i : Fin n) => B i * A i) := by funext i; ring
+  rw [heq]
 
 /-- φ_β(1) = Z_n(β) = Σ p_i^{-β}. -/
 theorem eval_one : φ.eval (λ _ => 1) = φ.partition := by
   rw [φ.eval_eq, φ.partition_eq]
-  simp
+  dsimp only
+  have heq : (λ (i : Fin n) => (1:ℂ) * φ.weightOnProjector i) = φ.weightOnProjector := by funext i; ring
+  rw [heq, φ.weight_eq]
 
 /-- φ_β(P_i) = p_i^{-β}. -/
 theorem eval_projector (i : Fin n) : φ.eval (λ j => if j = i then 1 else 0) = φ.weightOnProjector i := by

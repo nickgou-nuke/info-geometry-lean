@@ -41,6 +41,66 @@ class IsBraidRepresentation (V : Type _) [AddCommGroup V] [Module ℂ V]
   /-- Far-commutativity: σ_i σ_j = σ_j σ_i for |i - j| ≥ 2 -/
   far_commute (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ i * σ j = σ j * σ i
 
+/-- A finite braid word, represented by adjacent-generator indices. -/
+abbrev BraidWord := List ℕ
+
+/-- Evaluate a finite braid word in a supplied braid representation. -/
+def evalBraidWord
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (σ : ℕ → Module.End ℂ V) : BraidWord → Module.End ℂ V
+  | [] => 1
+  | i :: w => σ i * evalBraidWord σ w
+
+@[simp]
+theorem evalBraidWord_nil
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (σ : ℕ → Module.End ℂ V) :
+    evalBraidWord σ [] = 1 :=
+  rfl
+
+@[simp]
+theorem evalBraidWord_cons
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (σ : ℕ → Module.End ℂ V) (i : ℕ) (w : BraidWord) :
+    evalBraidWord σ (i :: w) = σ i * evalBraidWord σ w :=
+  rfl
+
+/-- Braid-word evaluation sends concatenation to operator multiplication. -/
+theorem evalBraidWord_append
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (σ : ℕ → Module.End ℂ V) (u v : BraidWord) :
+    evalBraidWord σ (u ++ v) = evalBraidWord σ u * evalBraidWord σ v := by
+  induction u with
+  | nil => simp
+  | cons i u ih =>
+      simp [ih, mul_assoc]
+
+/-- Evaluation is invariant under the adjacent Yang--Baxter braid rewrite. -/
+theorem evalBraidWord_yang_baxter_rewrite
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    {σ : ℕ → Module.End ℂ V} (hσ : IsBraidRepresentation V σ)
+    (i : ℕ) (left right : BraidWord) :
+    evalBraidWord σ (left ++ [i, i + 1, i] ++ right) =
+      evalBraidWord σ (left ++ [i + 1, i, i + 1] ++ right) := by
+  rw [evalBraidWord_append, evalBraidWord_append]
+  rw [evalBraidWord_append, evalBraidWord_append]
+  have h := congrArg (fun g => evalBraidWord σ left * g * evalBraidWord σ right)
+    (hσ.yang_baxter i)
+  simpa [mul_assoc] using h
+
+/-- Evaluation is invariant under separated-generator commutation. -/
+theorem evalBraidWord_far_commute_rewrite
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    {σ : ℕ → Module.End ℂ V} (hσ : IsBraidRepresentation V σ)
+    {i j : ℕ} (hsep : i + 1 < j ∨ j + 1 < i) (left right : BraidWord) :
+    evalBraidWord σ (left ++ [i, j] ++ right) =
+      evalBraidWord σ (left ++ [j, i] ++ right) := by
+  rw [evalBraidWord_append, evalBraidWord_append]
+  rw [evalBraidWord_append, evalBraidWord_append]
+  have h := congrArg (fun g => evalBraidWord σ left * g * evalBraidWord σ right)
+    (hσ.far_commute i j hsep)
+  simpa [mul_assoc] using h
+
 /--
 The topological A-model string trajectories wrap the anyonic volume.
 The synthesis of the anyonic volume ties the boundary $Q_8$ invariants 
@@ -68,5 +128,41 @@ theorem bulk_volume_satisfies_yang_baxter
     bulk.braid_rep (i + 1) * bulk.braid_rep i * bulk.braid_rep (i + 1) := by
   have h := bulk.is_braided
   exact h.yang_baxter i
+
+/-- The braid representation carried by a bulk volume also satisfies far-commutativity. -/
+theorem bulk_volume_far_commutes
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (bulk : AnyonicBulkVolume V) (i j : ℕ) (hsep : i + 1 < j ∨ j + 1 < i) :
+    bulk.braid_rep i * bulk.braid_rep j = bulk.braid_rep j * bulk.braid_rep i := by
+  exact bulk.is_braided.far_commute i j hsep
+
+/-- Read back both Artin braid laws from the representation carried by a bulk volume. -/
+theorem bulk_volume_braid_relation_packet
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (bulk : AnyonicBulkVolume V) :
+    (∀ i : ℕ,
+      bulk.braid_rep i * bulk.braid_rep (i + 1) * bulk.braid_rep i =
+        bulk.braid_rep (i + 1) * bulk.braid_rep i * bulk.braid_rep (i + 1)) ∧
+    (∀ i j : ℕ, i + 1 < j ∨ j + 1 < i →
+      bulk.braid_rep i * bulk.braid_rep j = bulk.braid_rep j * bulk.braid_rep i) := by
+  exact ⟨bulk_volume_satisfies_yang_baxter bulk, bulk_volume_far_commutes bulk⟩
+
+/-- Bulk braid-word readouts are invariant under adjacent Yang--Baxter rewrites. -/
+theorem bulk_volume_eval_yang_baxter_rewrite
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (bulk : AnyonicBulkVolume V)
+    (i : ℕ) (left right : BraidWord) :
+    evalBraidWord bulk.braid_rep (left ++ [i, i + 1, i] ++ right) =
+      evalBraidWord bulk.braid_rep (left ++ [i + 1, i, i + 1] ++ right) :=
+  evalBraidWord_yang_baxter_rewrite bulk.is_braided i left right
+
+/-- Bulk braid-word readouts are invariant under separated-generator commutation. -/
+theorem bulk_volume_eval_far_commute_rewrite
+    {V : Type _} [AddCommGroup V] [Module ℂ V]
+    (bulk : AnyonicBulkVolume V)
+    {i j : ℕ} (hsep : i + 1 < j ∨ j + 1 < i) (left right : BraidWord) :
+    evalBraidWord bulk.braid_rep (left ++ [i, j] ++ right) =
+      evalBraidWord bulk.braid_rep (left ++ [j, i] ++ right) :=
+  evalBraidWord_far_commute_rewrite bulk.is_braided hsep left right
 
 end InfoGeometry.Topology.AnyonicVolume

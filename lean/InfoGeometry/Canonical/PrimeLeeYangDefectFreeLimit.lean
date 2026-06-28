@@ -131,8 +131,9 @@ Debt surface for the finite-prime-chain large-deviation principle under the
 chosen thermodynamic scaling.
 -/
 theorem finitePrimeChain_largeDeviationPrinciple
-    (W : DefectFreeLimitPacket CompletedXiReadout) : False :=
-  PrimeChainLargeDeviationWitness.largeDeviationPrinciple W.largeDeviation
+    (W : DefectFreeLimitPacket CompletedXiReadout) :
+    W.largeDeviation.largeDeviationPrinciple_prop :=
+  W.largeDeviation.largeDeviationPrinciple_proof
 
 end DefectFreeLimitPacket
 

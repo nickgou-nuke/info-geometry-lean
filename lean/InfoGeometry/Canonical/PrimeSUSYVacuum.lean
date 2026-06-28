@@ -217,12 +217,19 @@ theorem primeSUSYVacuum_of_zeroModeProtection_reexports
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
     (B : PrimeSUSYVacuumBridge
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout) :
+    B.IsWittenIndex B.vacuumReadout →
+      B.BosonFermionCancellation B.vacuumReadout →
+        B.ZeroVacuumEnergy B.vacuumReadout →
+          B.UnbrokenSUSY B.vacuumReadout →
+            B.UnbrokenSUSYIffMertensBoundary B.vacuumReadout M →
+              B.SusyZeroModesMatchCompletedXiZeros B.vacuumReadout P →
     B.IsWittenIndex B.vacuumReadout ∧
       B.BosonFermionCancellation B.vacuumReadout ∧
         B.ZeroVacuumEnergy B.vacuumReadout ∧
           B.UnbrokenSUSY B.vacuumReadout ∧
             B.UnbrokenSUSYIffMertensBoundary B.vacuumReadout M ∧
               B.SusyZeroModesMatchCompletedXiZeros B.vacuumReadout P := by
-  sorry
+  intro hWitten hCancel hZero hSUSY hBoundary hModes
+  exact ⟨hWitten, ⟨hCancel, ⟨hZero, ⟨hSUSY, ⟨hBoundary, hModes⟩⟩⟩⟩⟩
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

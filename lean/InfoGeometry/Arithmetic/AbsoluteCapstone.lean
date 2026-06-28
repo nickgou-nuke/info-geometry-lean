@@ -173,9 +173,9 @@ Every theorem is a statement about the universal property of
 this colimit.
 -/
 def inductionColimitPillar : Prop :=
-    InfoGeometry.Canonical.SplitCliffordJordanWigner.P *
+        InfoGeometry.Canonical.SplitCliffordJordanWigner.P *
           InfoGeometry.Canonical.SplitCliffordJordanWigner.P =
-        (1 : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R) ∧
+        (1 : InfoGeometry.Canonical.SplitCliffordJordanWigner.M2R) ∧
       InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a1 *
             InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a2 +
           InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a2 *

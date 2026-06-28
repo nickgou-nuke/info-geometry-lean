@@ -43,7 +43,7 @@ theorem quaternions_M_i_M_j_M_k : M_i * M_j * M_k = -1 := by
     InfoGeometry.Topology.Q8MonodromySpinorCover.M_k, Matrix.mul_apply]
 
 /-- Full local Q₈ certificate used by the physical Klein spinor cover story. -/
-theorem quaternions_spinor_cover_axioms :
+theorem quaternions_spinor_cover_certificate :
     M_i * M_i = -1 ∧ M_j * M_j = -1 ∧ M_k * M_k = -1 ∧ M_i * M_j = -(M_j * M_i) ∧ M_i * M_j * M_k = -1 := by
   constructor
   · exact quaternions_M_i_sq

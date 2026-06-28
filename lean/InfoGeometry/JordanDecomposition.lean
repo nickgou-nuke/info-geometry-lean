@@ -8,13 +8,11 @@ import InfoGeometry.JordanDecomposition.CyclicNilpotent
 Layer-by-layer construction of a Jordan basis for nilpotent N : V → V.
 Combined with mathlib's `JordanChevalley`, this gives full JNF over ℂ.
 
-## Proved lemmas (0 sorries):
+## Proven lemmas:
 1. `image_ker_succ_sub_ker`: N(ker N^{m+1}) ⊆ ker N^m
 2. `chain_linear_independent`: {x, Nx, ..., N^{j-1}x} linearly independent
-3. `jordanBasis`: algorithmic construction (1 sorry — quotient basis picking)
-
-## Theorem:
-`jordan_normal_form`: full JNF over algebraically closed fields (uses `jordanBasis`)
+3. `jordanBasis` in this file is not provided as a complete classical theorem; it is intentionally
+   left to a dedicated decomposition module.
 -/
 
 open FiniteDimensional
@@ -109,28 +107,5 @@ lemma chain_linear_independent (N : Module.End K V) {x : V} {j : ℕ}
     rw [h_exp] at h_apply''
     exact (smul_eq_zero.mp h_apply'').resolve_right hx
   intro i; exact hzero i.val i.2
-
-/-! ### Lemma 3: Algorithmic Jordan basis construction -/
-
-theorem jordanBasis_exists [FiniteDimensional K V]
-    (N : Module.End K V) (hN : IsNilpotent N)
-    (h :
-    ∃ (r : ℕ) (js : Fin r → ℕ) (xs : Fin r → V),
-      (∀ i, (N ^ (js i)) (xs i) = 0) ∧
-      (∀ i, js i = 0 ∨ (N ^ (js i - 1)) (xs i) ≠ 0) ∧
-      LinearIndependent K (λ (q : Σ i : Fin r, Fin (js i)) =>
-        (N ^ (q.2 : ℕ)) (xs q.1))) :
-    ∃ (r : ℕ) (js : Fin r → ℕ) (xs : Fin r → V),
-      (∀ i, (N ^ (js i)) (xs i) = 0) ∧
-      (∀ i, js i = 0 ∨ (N ^ (js i - 1)) (xs i) ≠ 0) ∧
-      LinearIndependent K (λ (q : Σ i : Fin r, Fin (js i)) =>
-        (N ^ (q.2 : ℕ)) (xs q.1)) := by
-  exact h
-
-/-! ### Theorem: Jordan normal form over algebraically closed fields -/
-
-theorem jordan_normal_form [FiniteDimensional K V] [IsAlgClosed K]
-    (f : Module.End K V) : f = f := by
-  rfl
 
 end JordanDecomposition

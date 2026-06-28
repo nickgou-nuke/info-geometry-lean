@@ -375,15 +375,6 @@ variable
     [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg]
     (E : ExceptionalAffineVirasoroCalibration Finite AffineAlg)
 
-/-- The finite algebra has dimension 248 (E₈ rank). -/
-theorem finite_dimension_eq (h : E.bridge.finiteDimension = 248) : E.bridge.finiteDimension = 248 := h
-
-/-- The dual Coxeter number is 30 (E₈). -/
-theorem dual_coxeter_eq (h : E.bridge.dualCoxeterNumber = 30) : E.bridge.dualCoxeterNumber = 30 := h
-
-/-- The level is 1. -/
-theorem level_eq (h : E.bridge.level = 1) : E.bridge.level = 1 := h
-
 /--
 The exceptional calibration enforces the E₈ Sugawara central charge `c = 8`.
 -/

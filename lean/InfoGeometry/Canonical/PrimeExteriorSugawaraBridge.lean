@@ -94,7 +94,10 @@ def PrimeExteriorSugawaraOwnerTarget : Prop :=
 
 /-- The finite exterior-to-Sugawara owner target is witnessed by the bridge lemmas. -/
 theorem primeExteriorSugawaraOwnerTarget :
-    PrimeExteriorSugawaraOwnerTarget := by
+    ∀ {P : PrimeCutoff} (S : SquareFreeState P),
+      ArithmeticFunction.moebius (stateNat S) =
+        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S ∧
+      (booleanCubeSugawaraPacket P (vertexOfState S)).bridge.centralCharge = S.card := by
   intro P S
   constructor
   · exact PrimeExteriorSugawaraPacket.mobius_eq_Gamma

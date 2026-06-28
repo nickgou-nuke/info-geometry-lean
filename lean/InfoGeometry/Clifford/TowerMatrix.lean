@@ -21,6 +21,27 @@ instance : Subsingleton (Idx 0) := by dsimp [Idx]; exact inferInstance
 
 abbrev Mat (n : ℕ) : Type := Matrix (Idx n) (Idx n) ℝ
 
+/-- The recursive binary tensor index has exactly the full spinor dimension
+`2^n`. -/
+theorem idx_card_pow_two (n : ℕ) :
+    Fintype.card (Idx n) = 2 ^ n := by
+  induction n with
+  | zero =>
+      simp [Idx]
+  | succ n ih =>
+      simp [Idx, Fintype.card_prod, ih, pow_succ, Nat.mul_comm]
+
+/-- Noncomputable cardinality equivalence between the tensor index and the
+standard full spinor index `Fin (2^n)`. -/
+noncomputable def idxEquivFinPowTwo (n : ℕ) : Idx n ≃ Fin (2 ^ n) :=
+  Fintype.equivFinOfCardEq (idx_card_pow_two n)
+
+/-- Reindexing equivalence from the tensor-stage matrix algebra to the standard
+full spinor matrix algebra of dimension `2^n`. -/
+noncomputable def matEquivFinPowTwo (n : ℕ) :
+    Mat n ≃ₐ[ℝ] Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ :=
+  Matrix.reindexAlgEquiv ℝ ℝ (idxEquivFinPowTwo n)
+
 noncomputable def kronPow (A : Matrix (Fin 2) (Fin 2) ℝ) : (n : ℕ) → Mat n
   | 0 => (1 : Mat 0)
   | n+1 => kronPow A n ⊗ₖ A

@@ -21,6 +21,8 @@ owner surfaces so downstream layers can project:
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport

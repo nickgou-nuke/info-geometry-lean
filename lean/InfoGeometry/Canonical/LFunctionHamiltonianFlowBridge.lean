@@ -17,6 +17,8 @@ top of the already-owned dynamic surface.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge

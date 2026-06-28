@@ -1,6 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.Real
+import Mathlib.Algebra.Group.Basic
 import Mathlib.Tactic.Ring
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 
@@ -170,18 +171,19 @@ theorem zornModularFlow_group_property
 -/
 
 /--
-Hamiltonian generating modular flow.
-In the Cl(1,1) representation, this is the grading operator χ = e₁₂.
+Commutator generator for the finite `Cl(1,1)` modular flow.
+This is not a Bost-Connes C*-dynamical Hamiltonian; it is the inner derivation
+`[e12Basis, ·]` in the finite coordinate algebra.
 -/
-def hamiltonian : Cl11 → Cl11 :=
+def modularCommutatorGenerator : Cl11 → Cl11 :=
   fun q => e12Basis * q - q * e12Basis
 
 /-- Commutator with Hamiltonian generates time evolution -/
 def infinitesimalGenerator (q : Cl11) : Cl11 :=
-  hamiltonian q
+  modularCommutatorGenerator q
 
-theorem infinitesimalGenerator_eq_commutator (q : Cl11) :
-    infinitesimalGenerator q = hamiltonian q := by
+theorem infinitesimalGenerator_eq_modularCommutatorGenerator (q : Cl11) :
+    infinitesimalGenerator q = modularCommutatorGenerator q := by
   rfl
 
 /-!
@@ -236,13 +238,29 @@ theorem bostConnesDirichletTerm_of_ne_zero
   simp [bostConnesDirichletTerm, hn]
 
 /--
-Symmetry group of the Bost-Connes system.
-At β > 1: IDELE_CLASS_GROUP acts on KMS states
-At β ≤ 1: Unique KMS state (no symmetry breaking)
+Explicit data for a symmetry group acting on a supplied state space.
+The finite bridge does not construct the Bost-Connes idele-class action; any
+nontrivial symmetry claim must provide this group, action, and the two action
+laws as witness data.
 -/
-def symmetryGroup : Type :=
-  -- Idele class group ℚ*×\ℚ*×_ℤ×ℤ̂×
-  Unit  -- Placeholder
+structure BostConnesSymmetryModel where
+  SymmetryGroup : Type
+  [group : Group SymmetryGroup]
+  State : Type
+  action : SymmetryGroup → State → State
+  action_one : ∀ x, action 1 x = x
+  action_mul : ∀ g h x, action (g * h) x = action g (action h x)
+
+attribute [instance] BostConnesSymmetryModel.group
+
+theorem symmetryAction_one (M : BostConnesSymmetryModel) (x : M.State) :
+    M.action 1 x = x :=
+  M.action_one x
+
+theorem symmetryAction_mul (M : BostConnesSymmetryModel)
+    (g h : M.SymmetryGroup) (x : M.State) :
+    M.action (g * h) x = M.action g (M.action h x) :=
+  M.action_mul g h x
 
 /-!
 ## 5. Connection to Mersenne Hierarchy

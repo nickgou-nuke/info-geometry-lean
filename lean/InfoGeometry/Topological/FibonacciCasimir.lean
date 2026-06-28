@@ -35,6 +35,11 @@ theorem trace2_R_matrixOf (q qInv : K) :
     trace2 (R_matrixOf q qInv) = qInv ^ 4 + q ^ 3 := by
   simp [trace2, R_matrixOf]
 
+/-- The Fibonacci fusion matrix has vanishing trace. -/
+theorem trace2_F_matrixOf (τ sqrtτ : K) :
+    trace2 (F_matrixOf τ sqrtτ) = 0 := by
+  simp [trace2, F_matrixOf]
+
 /-- Trace is cyclic for `2 × 2` matrices. -/
 theorem trace2_mul_comm
     (A B : Matrix (Fin 2) (Fin 2) K) :

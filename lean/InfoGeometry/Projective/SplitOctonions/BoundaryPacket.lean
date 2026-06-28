@@ -102,9 +102,9 @@ structure SplitOctonionBoundaryPacket
           (lowerLightrayRep (R := ℝ) (V := V) B hw))
         ↔ B v w = 0
 
-  /-- The split-octonion projective null boundary is nonempty. -/
-  projective_null_boundary_nonempty :
-    Nonempty (ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B))
+  /-- The split-octonion projective null boundary carries an explicit ray. -/
+  projective_null_boundary :
+    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B)
 
 /-- Canonical repository packet for the split-octonion / split-Albert / Zorn boundary lane. -/
 def canonicalSplitOctonionBoundaryPacket
@@ -127,8 +127,16 @@ def canonicalSplitOctonionBoundaryPacket
     pPlus_notIncident_pMinus_ray (R := ℝ) (V := V) B
   upperLightray_incident_lowerLightray_iff :=
     upperLightrayIncident_lowerLightray_iff_ray (R := ℝ) (V := V) B
-  projective_null_boundary_nonempty :=
-    ⟨ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-      (pPlusRep (R := ℝ) (V := V) B)⟩
+  projective_null_boundary :=
+    ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+      (pPlusRep (R := ℝ) (V := V) B)
+
+/-- The boundary packet exposes its explicit null ray witness. -/
+def projective_null_boundary_witness
+    {V : Type v} [AddCommGroup V] [Module ℝ V]
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (P : SplitOctonionBoundaryPacket V B) :
+    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) :=
+  P.projective_null_boundary
 
 end InfoGeometry.Projective.SplitOctonions.BoundaryPacket

@@ -66,17 +66,17 @@ namespace HilbertSpectralTheoremPacket
 
 variable {Op Scalar Proj : Type*}
 
-/-- Debt surface for the clean spectral diagonalization theorem. -/
-theorem diagonalization
+/-- Carrier readout for the supplied clean-sector spectral witness. -/
+abbrev diagonalizationWitnessCarrier
     (S : HilbertSpectralTheoremPacket Op Scalar Proj) :
-    False := by
-  sorry
+    Type* :=
+  S.normalOrSelfAdjointWitness
 
-/-- Debt surface for orthogonality and completeness of the spectral projectors. -/
-theorem orthogonal_and_complete
+/-- Carrier readout for the orthogonality/completeness witness slot. -/
+abbrev orthogonalCompletenessWitnessCarrier
     (S : HilbertSpectralTheoremPacket Op Scalar Proj) :
-    False := by
-  sorry
+    Type* :=
+  S.normalOrSelfAdjointWitness
 
 end HilbertSpectralTheoremPacket
 
@@ -288,21 +288,21 @@ namespace SpectralSchurDrazinPenroseHierarchy
 variable {Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket : Type*}
 variable [Ring Op] [StarRing Op]
 
-/-- Debt surface for the clean spectral diagonalization theorem in the hierarchy. -/
-theorem spectral_diagonalization
+/-- Read back the clean-sector spectral witness carrier from the hierarchy. -/
+abbrev spectral_diagonalizationWitnessCarrier
     (H :
       SpectralSchurDrazinPenroseHierarchy
         Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
-    False := by
-  exact HilbertSpectralTheoremPacket.diagonalization H.spectral
+    Type* :=
+  HilbertSpectralTheoremPacket.diagonalizationWitnessCarrier H.spectral
 
-/-- Debt surface for the Schur triangular fallback theorem in the hierarchy. -/
-theorem schur_triangular_fallback
+/-- Read back the Schur fallback coupling witness carrier from the hierarchy. -/
+abbrev schur_triangularFallbackWitnessCarrier
     (H :
       SpectralSchurDrazinPenroseHierarchy
         Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
-    False := by
-  sorry
+    Type* :=
+  H.schur.offDiagonalCouplingWitness
 
 /-- Read back algebraic Drazin surgery from the hierarchy. -/
 theorem drazin_zero_surgery

@@ -60,11 +60,9 @@ theorem oneDim_decompose (x : OneDimSpace) :
 /-- The unique ket spans the one-dimensional coordinate space. -/
 theorem span_oneKet_eq_top :
     Submodule.span ℂ ({oneKet} : Set OneDimSpace) = ⊤ := by
-  ext x
-  constructor
-  · intro _
-    exact trivial
-  · intro _
+  apply le_antisymm
+  · exact le_top
+  · intro x _
     rw [Submodule.mem_span_singleton]
     exact ⟨oneDimIso x, oneDim_decompose x⟩
 

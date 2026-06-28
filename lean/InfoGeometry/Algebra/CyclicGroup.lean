@@ -60,18 +60,18 @@ Exact owner theorems proved from real definitions, Mathlib, and existing owner l
 -/
 
 /-- Every infinite cyclic group is isomorphic to `Multiplicative ℤ`. -/
-theorem infinite_cyclic_iso_int {G : Type u} [Group G] [Infinite G] [IsCyclic G] :
-    Nonempty (G ≃* Multiplicative ℤ) := by
+noncomputable def infinite_cyclic_iso_int {G : Type u} [Group G] [Infinite G] [IsCyclic G] :
+    G ≃* Multiplicative ℤ := by
   classical
   have hcard : Nat.card G = Nat.card (Multiplicative ℤ) := by
     rw [Nat.card_eq_zero_of_infinite, Nat.card_eq_zero_of_infinite]
-  exact ⟨mulEquivOfCyclicCardEq (G := G) (G' := Multiplicative ℤ) hcard⟩
+  exact mulEquivOfCyclicCardEq (G := G) (G' := Multiplicative ℤ) hcard
 
 /-- Every finite cyclic group of order `Nat.card G` is isomorphic to
 `Multiplicative (ZMod (Nat.card G))`. -/
-theorem finite_cyclic_iso_zmod {G : Type u} [Group G] [Finite G] [IsCyclic G] :
-    Nonempty (G ≃* Multiplicative (ZMod (Nat.card G))) := by
-  exact ⟨(zmodCyclicMulEquiv (G := G) (h := inferInstance)).symm⟩
+noncomputable def finite_cyclic_iso_zmod {G : Type u} [Group G] [Finite G] [IsCyclic G] :
+    G ≃* Multiplicative (ZMod (Nat.card G)) :=
+  (zmodCyclicMulEquiv (G := G) (h := inferInstance)).symm
 
 /-- Every subgroup of a cyclic group is cyclic. -/
 theorem subgroup_of_cyclic_is_cyclic {G : Type u} [Group G] [IsCyclic G] (H : Subgroup G) :

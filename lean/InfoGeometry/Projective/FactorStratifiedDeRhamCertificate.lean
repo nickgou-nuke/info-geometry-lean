@@ -1,3 +1,4 @@
+import Mathlib
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 
 /-!
@@ -15,6 +16,67 @@ It is theorem-honest:
 namespace InfoGeometry.Projective.FactorStratifiedDeRhamCertificate
 
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
+open Polynomial
+
+/-! ## Exact arithmetic shadows of the verified external packets -/
+
+/-- The exact quadratic Bernstein-Sato polynomial observed for each individual factor. -/
+noncomputable def factorBernsteinPoly : ℤ[X] := X ^ 2 + 3 * X + 2
+
+/-- The exact cubic Bernstein-Sato polynomial observed for the three-factor ideal. -/
+noncomputable def generalBernsteinPoly : ℤ[X] := X ^ 3 + 10 * X ^ 2 + 33 * X + 36
+
+/-- The exact finite-field complement count polynomial recorded by the audit. -/
+def complementCountPoly (p : ℤ) : ℤ :=
+  p ^ 8 - 3 * p ^ 7 + 7 * p ^ 5 - 4 * p ^ 4 - 4 * p ^ 3 + 3 * p ^ 2
+
+theorem factorBernsteinPoly_factorization :
+    factorBernsteinPoly = (X + 1) * (X + 2) := by
+  simp [factorBernsteinPoly]
+  ring
+
+theorem generalBernsteinPoly_factorization :
+    generalBernsteinPoly = (X + 3) ^ 2 * (X + 4) := by
+  simp [generalBernsteinPoly]
+  ring
+
+theorem factorBernsteinPoly_eval_neg_one :
+    eval (-1) factorBernsteinPoly = 0 := by
+  rw [factorBernsteinPoly_factorization]
+  simp
+
+theorem factorBernsteinPoly_eval_neg_two :
+    eval (-2) factorBernsteinPoly = 0 := by
+  rw [factorBernsteinPoly_factorization]
+  simp
+
+theorem generalBernsteinPoly_eval_neg_three :
+    eval (-3) generalBernsteinPoly = 0 := by
+  rw [generalBernsteinPoly_factorization]
+  simp
+
+theorem generalBernsteinPoly_eval_neg_four :
+    eval (-4) generalBernsteinPoly = 0 := by
+  rw [generalBernsteinPoly_factorization]
+  simp
+
+theorem complementCountPoly_factorization (p : ℤ) :
+    complementCountPoly p =
+      p ^ 2 * (p - 1) ^ 2 * (p + 1) * (p ^ 3 - 2 * p ^ 2 - p + 3) := by
+  unfold complementCountPoly
+  ring
+
+theorem complementCountPoly_at_three :
+    complementCountPoly 3 = 1296 := by
+  norm_num [complementCountPoly]
+
+theorem complementCountPoly_at_five :
+    complementCountPoly 5 = 175200 := by
+  norm_num [complementCountPoly]
+
+theorem complementCountPoly_at_seven :
+    complementCountPoly 7 = 3400992 := by
+  norm_num [complementCountPoly]
 
 structure BernsteinPolynomial where
   raw : String
@@ -86,6 +148,22 @@ theorem observedAudit_factorStrings :
 theorem observedAudit_not_closed :
     ¬ DeRhamClosed observedAudit := by
   simp [DeRhamClosed, observedAudit]
+
+theorem observedAudit_fullProduct_timeout :
+    observedAudit.fullProductStatus = "timeout" := by
+  rfl
+
+theorem observedAudit_degreeZero_timeout :
+    observedAudit.degreeZeroStatus = "timeout" := by
+  rfl
+
+theorem observedAudit_fullDeRham_timeout :
+    observedAudit.fullDeRhamStatus = "timeout" := by
+  rfl
+
+theorem observedAudit_dlocalizeExt_timeout :
+    observedAudit.dlocalizeExtStatus = "timeout" := by
+  rfl
 
 /-- The current external audit can coexist with the existing rank-8 local fixture,
 but it does not prove that fixture. -/

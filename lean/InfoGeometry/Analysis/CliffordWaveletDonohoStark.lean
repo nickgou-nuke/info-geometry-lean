@@ -160,6 +160,48 @@ theorem noncollapse
       simp [hzero]
     exact (ne_of_gt hprod) hprod_zero
 
+/-- The signal support itself is nonzero under the Donoho--Stark gap. -/
+theorem signalSupport_ne_zero
+    (hAdm : W.admissible)
+    {f : W.Signal} {εT εΩ : ℝ}
+    (hT : D.signalConcentration f ≤ εT)
+    (hΩ : D.waveletConcentration (W.waveletTransform f) ≤ εΩ)
+    (hGap : εT + εΩ < 1) :
+    D.signalSupport f ≠ 0 := by
+  exact (CliffordDonohoStarkOps.noncollapse D hAdm hT hΩ hGap).1
+
+/-- The wavelet support itself is nonzero under the Donoho--Stark gap. -/
+theorem waveletSupport_ne_zero
+    (hAdm : W.admissible)
+    {f : W.Signal} {εT εΩ : ℝ}
+    (hT : D.signalConcentration f ≤ εT)
+    (hΩ : D.waveletConcentration (W.waveletTransform f) ≤ εΩ)
+    (hGap : εT + εΩ < 1) :
+    D.waveletSupport (W.waveletTransform f) ≠ 0 := by
+  exact (CliffordDonohoStarkOps.noncollapse D hAdm hT hΩ hGap).2
+
+/-- The signal support is strictly positive under the Donoho--Stark gap. -/
+theorem signalSupport_pos
+    (hAdm : W.admissible)
+    {f : W.Signal} {εT εΩ : ℝ}
+    (hT : D.signalConcentration f ≤ εT)
+    (hΩ : D.waveletConcentration (W.waveletTransform f) ≤ εΩ)
+    (hGap : εT + εΩ < 1) :
+    0 < D.signalSupport f := by
+  have hnonzero := signalSupport_ne_zero D hAdm hT hΩ hGap
+  exact lt_of_le_of_ne (D.signalSupport_nonneg f) hnonzero.symm
+
+/-- The wavelet support is strictly positive under the Donoho--Stark gap. -/
+theorem waveletSupport_pos
+    (hAdm : W.admissible)
+    {f : W.Signal} {εT εΩ : ℝ}
+    (hT : D.signalConcentration f ≤ εT)
+    (hΩ : D.waveletConcentration (W.waveletTransform f) ≤ εΩ)
+    (hGap : εT + εΩ < 1) :
+    0 < D.waveletSupport (W.waveletTransform f) := by
+  have hnonzero := waveletSupport_ne_zero D hAdm hT hΩ hGap
+  exact lt_of_le_of_ne (D.waveletSupport_nonneg (W.waveletTransform f)) hnonzero.symm
+
 end CliffordDonohoStarkOps
 
 end InfoGeometry.Analysis.CliffordWaveletDonohoStark

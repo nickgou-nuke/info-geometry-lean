@@ -2,6 +2,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic.NormNum
 import InfoGeometry.BostConnes.BostConnesParity
+import InfoGeometry.Physics.PellisFineStructure
 
 /-!
 # Golden Ratio Approximation to the Inverse Fine-Structure Constant
@@ -136,7 +137,9 @@ theorem mobius_active_iff_squarefree (n : ℕ) :
     contradiction
   · intro hs
     have := moebius_eq_liouvilleParity_of_squarefree hs
-    simp [is_mobius_active_sector, this]
+    have h_parity_ne_zero : liouvilleParity n ≠ 0 := by
+      simp [liouvilleParity]
+    simpa [is_mobius_active_sector, this] using h_parity_ne_zero
 
 /-- 
   THEOREM: The Pellis readout falls within the empirical QED window.
@@ -153,51 +156,10 @@ theorem mobius_active_iff_squarefree (n : ℕ) :
   the topological sector, and α freezes to its empirical value.
 -/
 theorem pellis_alpha_inv_bounds : 
-    137.0359991 < pellis_alpha_inv ∧ pellis_alpha_inv < 137.0359992 := by
-  unfold pellis_alpha_inv goldenRatio
-  have h_sqrt5_lower : (2.236067977499789696 : ℝ) < Real.sqrt 5 := by
-    rw [lt_sqrt]
-    norm_num
-  have h_sqrt5_upper : Real.sqrt 5 < (2.236067977499789697 : ℝ) := by
-    rw [sqrt_lt] <;> norm_num
-  constructor
-  · -- Lower bound: 137.0359991 < pellis_alpha_inv
-    have : (137.0359991 : ℝ) < 
-      360 / ((1 + 2.236067977499789696) / 2)^2 - 
-      2 / ((1 + 2.236067977499789696) / 2)^3 + 
-      1 / (3 * ((1 + 2.236067977499789696) / 2))^5 := by
-      norm_num
-    have h₁ : (360 : ℝ) / ((1 + 2.236067977499789696) / 2)^2 - 
-        2 / ((1 + 2.236067977499789696) / 2)^3 + 
-        1 / (3 * ((1 + 2.236067977499789696) / 2))^5 <
-        360 / ((1 + Real.sqrt 5) / 2)^2 - 
-        2 / ((1 + Real.sqrt 5) / 2)^3 + 
-        1 / (3 * ((1 + Real.sqrt 5) / 2))^5 := by
-      -- Monotonicity: expression increases with √5
-      have hpos : (0 : ℝ) < Real.sqrt 5 := Real.sqrt_pos.mpr (by norm_num)
-      have hpos' : (0 : ℝ) < (1 + 2.236067977499789696 : ℝ) / 2 := by norm_num
-      apply lt_of_sub_pos
-      field_simp
-      rw [← sub_pos]
-      nlinarith [Real.sq_sqrt (show 0 ≤ (5 : ℝ) by norm_num), h_sqrt5_lower]
-    linarith
-  · -- Upper bound: pellis_alpha_inv < 137.0359992
-    have : (360 : ℝ) / ((1 + 2.236067977499789697) / 2)^2 - 
-        2 / ((1 + 2.236067977499789697) / 2)^3 + 
-        1 / (3 * ((1 + 2.236067977499789697) / 2))^5 < (137.0359992 : ℝ) := by
-      norm_num
-    have h₁ : (360 : ℝ) / ((1 + Real.sqrt 5) / 2)^2 - 
-        2 / ((1 + Real.sqrt 5) / 2)^3 + 
-        1 / (3 * ((1 + Real.sqrt 5) / 2))^5 <
-        360 / ((1 + 2.236067977499789697) / 2)^2 - 
-        2 / ((1 + 2.236067977499789697) / 2)^3 + 
-        1 / (3 * ((1 + 2.236067977499789697) / 2))^5 := by
-      have hpos : (0 : ℝ) < Real.sqrt 5 := Real.sqrt_pos.mpr (by norm_num)
-      apply lt_of_sub_pos
-      field_simp
-      rw [← sub_pos]
-      nlinarith [Real.sq_sqrt (show 0 ≤ (5 : ℝ) by norm_num), h_sqrt5_upper]
-    linarith
+    (1370359991 : ℝ) / 10000000 < pellis_alpha_inv ∧
+      pellis_alpha_inv < (171294999 : ℝ) / 1250000 := by
+  simpa [pellis_alpha_inv, goldenRatio, PellisFineStructure.pellis_alpha_inv,
+    PellisFineStructure.phi] using PellisFineStructure.pellis_bounds
 
 /-- 
   Corollary: The Pellis approximation matches CODATA 2018 to 9 decimal places.
@@ -215,19 +177,9 @@ theorem pellis_alpha_inv_bounds :
   and the fine-structure constant takes its empirical value.
 -/
 theorem pellis_alpha_inv_matches_codata :
-    |pellis_alpha_inv - 137.035999084| < 1e-7 := by
-  rw [abs_lt]
-  constructor
-  · -- Lower bound: -1e-7 < pellis - 137.035999084
-    have := pellis_alpha_inv_bounds.1
-    norm_num [pellis_alpha_inv, goldenRatio] at this ⊢
-    <;>
-    nlinarith [Real.sqrt_nonneg 5, Real.sq_sqrt (show 0 ≤ (5 : ℝ) by norm_num)]
-  · -- Upper bound: pellis - 137.035999084 < 1e-7
-    have := pellis_alpha_inv_bounds.2
-    norm_num [pellis_alpha_inv, goldenRatio] at this ⊢
-    <;>
-    nlinarith [Real.sqrt_nonneg 5, Real.sq_sqrt (show 0 ≤ (5 : ℝ) by norm_num)]
+    |pellis_alpha_inv - (137035999084 : ℝ) / 1000000000| < (1 : ℝ) / 10000000 := by
+  simpa [pellis_alpha_inv, goldenRatio, PellisFineStructure.pellis_alpha_inv,
+    PellisFineStructure.phi] using PellisFineStructure.codata_agreement
 
 /-- 
   RUNNING COUPLING INTERPRETATION:
@@ -249,7 +201,7 @@ theorem pellis_alpha_inv_matches_codata :
   - β → 0:  α(0) = α_UV (ultraviolet, asymptotic freedom)
 -/
 theorem running_coupling_interpretation :
-    pellis_alpha_inv ∈ Set.Ioo (137.0359991 : ℝ) (137.0359992 : ℝ) := by
+    pellis_alpha_inv ∈ Set.Ioo ((1370359991 : ℝ) / 10000000) ((171294999 : ℝ) / 1250000) := by
   exact pellis_alpha_inv_bounds
 
 end InfoGeometry.Physics.GoldenAlphaApproximation

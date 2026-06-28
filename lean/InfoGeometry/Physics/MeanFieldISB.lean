@@ -3,7 +3,7 @@ import InfoGeometry.Physics.TKKIsospinEmbedding
 namespace InfoGeometry.Physics
 
 variable (R : Type*) [CommRing R]
-variable (L : Type*) [LieRing L] [LieAlgebra R L]
+variable (L : Type*) [AddCommGroup L] [Module R L] [LieRing L] [LieAlgebra R L]
 
 
 /-- A phenomenological Charge Symmetry Breaking (CSB) force. -/
@@ -33,6 +33,6 @@ theorem triality_subsumes_phenomenology
   refine ⟨csb, cib, ?_⟩
   ext x
   classical
-  simp [csb, cib, projected, sub_eq_add_neg, add_assoc, add_left_neg]
+  simp [csb, cib, projected, sub_eq_add_neg]
 
 end InfoGeometry.Physics

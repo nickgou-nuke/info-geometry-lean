@@ -9,8 +9,6 @@ import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 
-set_option linter.unusedSectionVars false
-
 /-!
 # Modular Spinor Bridge
 
@@ -28,7 +26,7 @@ open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 **Majorana Basis**:

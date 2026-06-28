@@ -48,6 +48,13 @@ theorem bivector_J_base_sq :
 /-- Local Witt creation atom `a† = !![0, 1; 0, 0]` for the matrix CAR tower. -/
 def wittCreationBase : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), 1; 0, 0]
 
+/-- The Witt creation atom squares to zero: (a†)² = 0. -/
+theorem wittCreationBase_sq :
+    wittCreationBase * wittCreationBase = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [wittCreationBase, Matrix.mul_apply, Fin.sum_univ_two]
+
 /-- Local Witt annihilation atom `a = !![0, 0; 1, 0]` for the matrix CAR tower. -/
 def wittAnnihilationBase : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), 0; 1, 0]
 

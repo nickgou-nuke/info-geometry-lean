@@ -1083,28 +1083,6 @@ theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem
   rw [hFullEqScale, hScaleTransport]
 
 /--
-Detailed equilibrium is equivalent to the existence of the explicit
-`DetailedEquilibriumWitness` packet on the exact clock-defect-zero lane.
-This removes the remaining bare `IsDetailedEquilibriumSeed` proposition from
-callers that already own the proof-carrying witness object.
--/
-theorem nonEquilibriumClockDefect_eq_zero_iff_nonempty_detailedEquilibriumWitness
-    (hMod : EndH) :
-    nonEquilibriumClockDefect (H := H) hMod = 0 ↔
-      Nonempty (DetailedEquilibriumWitness (H := H) hMod) := by
-  constructor
-  · intro hZero
-    refine ⟨⟨?_⟩⟩
-    exact
-      (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
-        (H := H) hMod).1 hZero
-  · intro hW
-    rcases hW with ⟨W⟩
-    exact
-      (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
-        (H := H) hMod).2 W.hEq
-
-/--
 Detailed equilibrium kills the non-equilibrium defect exactly.
 -/
 theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
@@ -1126,8 +1104,8 @@ theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibriumWitness
     (W : DetailedEquilibriumWitness (H := H) hMod) :
     nonEquilibriumClockDefect (H := H) hMod = 0 := by
   exact
-    (nonEquilibriumClockDefect_eq_zero_iff_nonempty_detailedEquilibriumWitness
-      (H := H) hMod).2 ⟨W⟩
+    (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
+      (H := H) hMod).2 W.hEq
 
 /--
 Detailed equilibrium implies zero winding obstruction for the transport

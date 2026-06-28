@@ -257,7 +257,7 @@ structure ArchimedeanCompletion where
 namespace ArchimedeanCompletion
 
 /-- The Mellin transform of the theta function gives the completed zeta. -/
-def mellin_theta_eq_completed_zeta_True (A : ArchimedeanCompletion) : Prop :=
+def mellinTheta_eq_completedZeta (A : ArchimedeanCompletion) : Prop :=
   ∀ x : ℝ, 0 < x →
     A.thetaModularity.theta x = x ^ (-(1 / 2 : ℝ)) * A.thetaModularity.theta (1 / x)
 

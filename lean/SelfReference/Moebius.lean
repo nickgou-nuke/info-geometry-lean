@@ -1,6 +1,5 @@
 import SelfReference.Core
 import InfoGeometry.Krein.DoubledSpace
-set_option linter.unusedSectionVars false
 
 namespace SelfReference
 
@@ -18,7 +17,6 @@ open InfoGeometry.Krein
 
 variable {A : Agent}
 variable [NormedAddCommGroup A.Output] [InnerProductSpace ℝ A.Output]
-  [NormedSpace ℝ A.Output] [CompleteSpace A.Output]
 
 /--
 A Möbius Loop structure.

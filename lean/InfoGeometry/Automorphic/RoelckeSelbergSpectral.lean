@@ -416,14 +416,14 @@ Siegel-Eisenstein split.
 -/
 def RoelckeSelbergSpectralOwnerTarget
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (HeckeIndex : Type uHecke) : Prop :=
-  Nonempty (RoelckeSelbergSpectralDatum W HeckeIndex)
+    (HeckeIndex : Type uHecke) : Type _ :=
+  RoelckeSelbergSpectralDatum W HeckeIndex
 
 /--
 Owner target for an automorphic L-function datum on the Hecke spectrum.
 -/
 def AutomorphicLFunctionOwnerTarget
-    (HeckeIndex : Type uHecke) : Prop :=
-  Nonempty (AutomorphicLFunctionDatum HeckeIndex)
+    (HeckeIndex : Type uHecke) : Type _ :=
+  AutomorphicLFunctionDatum HeckeIndex
 
 end InfoGeometry.Automorphic.RoelckeSelbergSpectral

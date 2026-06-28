@@ -508,7 +508,7 @@ theorem hiddenMemory_arithmetic_calibration
 Owner target for producing projected automorphic L-functions from a spectral
 functional and a bulk state.
 
-This target is purely algebraic and is constructible immediately.
+This target is the direct projected-evaluation law, not a witness wrapper.
 -/
 @[owner_target_tag]
 def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
@@ -517,20 +517,17 @@ def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
   ∀ (W : SiegelEisensteinWitness Bulk Boundary),
   ∀ (_Λ : AutomorphicLFunctional Bulk),
   ∀ (_F : Bulk),
-    Nonempty (ProjectedAutomorphicLFunctionWitness W)
+  ∀ s : ℂ,
+    cuspidalLFunction W _Λ _F s =
+      _Λ.coeff s (W.cuspidalProjector _F)
 
 /--
 The projected L-function owner target is satisfied by definition.
 -/
 theorem projectedAutomorphicLFunctionOwnerTarget :
     ProjectedAutomorphicLFunctionOwnerTarget := by
-  intro Bulk _ _ Boundary _ _ W Λ F
-  exact ⟨{
-    functional := Λ
-    bulkState := F
-    L := cuspidalLFunction W Λ F
-    L_eq_projected := rfl
-  }⟩
+  intro Bulk _ _ Boundary _ _ W Λ F s
+  rfl
 
 /--
 Owner target for attaching Euler-product and completed-L-function data.
@@ -548,9 +545,8 @@ def LanglandsPrimeResonanceOwnerTarget : Prop :=
   ∀ (Eul : EulerProductData P.L),
   ∀ (completedL : ℂ → ℂ),
     HasCompletedFunctionalEquation P.L completedL →
-      Nonempty
-        {R : LanglandsPrimeResonanceWitness P //
-          R.eulerProduct = Eul ∧ R.completedL = completedL}
+      HasEulerProduct P.L Eul.PrimeIndex Eul.localFactor Eul.convergenceRegion ∧
+        HasCompletedFunctionalEquation P.L completedL
 
 /--
 The Langlands-prime resonance owner target is satisfied once the arithmetic
@@ -559,14 +555,6 @@ Euler/completed data are supplied.
 theorem langlandsPrimeResonanceOwnerTarget :
     LanglandsPrimeResonanceOwnerTarget := by
   intro Bulk _ _ Boundary _ _ W P Eul completedL hCompleted
-  exact ⟨{
-    val := {
-      eulerProduct := Eul
-      completedL := completedL
-      completedFunctionalEquation := hCompleted
-    }
-    property := by
-      exact ⟨rfl, rfl⟩
-  }⟩
+  exact ⟨Eul.hasEulerProduct, hCompleted⟩
 
 end InfoGeometry.Automorphic.SiegelResonance

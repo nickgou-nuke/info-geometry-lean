@@ -378,8 +378,8 @@ noncomputable def basisJK : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
 lemma central_kgen_jgen_zero (Z : HeisenbergAlgebra 𝕜) :
     ⁅kgen 𝕜, Z⁆ = 0 ∧ ⁅jgen 𝕜 0, Z⁆ = 0 := by
   constructor
-  · simpa using lie_kgen 𝕜 Z
-  · simpa using lie_jgen_zero 𝕜 Z
+  · exact lie_kgen 𝕜 Z
+  · exact lie_jgen_zero 𝕜 Z
 
 /-- A generator `Jₙ` is central if and only if `n = 0`. -/
 lemma jgen_mem_center_iff (n : ℤ) :

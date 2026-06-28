@@ -1,6 +1,4 @@
 import InfoGeometry.Prequantum.Connection
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Prequantum.Quotient
@@ -17,7 +15,7 @@ namespace InfoGeometry.Prequantum
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 namespace ProjectivePrequantumBundle
 
@@ -68,7 +66,7 @@ lemma covariantDerivative_constant_on_orbits
     ProjectivePrequantumBundle.covariantDerivative P =
       ProjectivePrequantumBundle.covariantDerivative Q := by
   rcases h with ⟨u, rfl⟩
-  simpa using (ProjectivePrequantumBundle.covariantDerivative_smul (E := E) u P).symm
+  exact (ProjectivePrequantumBundle.covariantDerivative_smul (E := E) u P).symm
 
 /-- The gauge-invariant scalar descends to the quotient by gauge orbits. -/
 noncomputable def covariantDerivativeOnQuotient :

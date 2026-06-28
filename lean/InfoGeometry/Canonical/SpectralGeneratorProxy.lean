@@ -424,77 +424,33 @@ theorem toBoundedKasparovCycle_F_phase :
 
 end KasparovAdmissibility
 
-/-! ## 6. Owner targets -/
+/-! ## 6. Constructive readouts -/
 
-/--
-Owner target for constructing a phase-compatible Cayley proxy.
-
-This is intentionally not proved here: concrete spectral data must supply the
-bounded inverse and its phase-linearity.
--/
+/-- Supplied phase-resolvent data produce a phase-linear bounded Cayley transform. -/
 @[owner_target_tag]
-def PhaseResolventOwnerTarget : Prop :=
-  ∀ (K : EndR H), Nonempty (PhaseResolventDatum K)
-
-/--
-The phase-resolvent owner target is constructively inhabited by the trivial
-choice `D = id - K`, `denomInv = id`, so that `D + K = id`.
--/
 theorem phaseResolventOwnerTarget :
-    PhaseResolventOwnerTarget (H := H) := by
-  intro K
-  refine ⟨{
-    D := ContinuousLinearMap.id ℝ H - K
-    denomInv := ContinuousLinearMap.id ℝ H
-    D_phase_linear := ?_
-    denom_right_inverse := ?_
-    denom_left_inverse := ?_
-  }⟩
-  · exact PhaseLinear.sub (PhaseLinear.id K) (PhaseLinear.axis K)
-  · ext v
-    simp
-  · ext v
-    simp
+    ∀ (K : EndR H) (R : PhaseResolventDatum K),
+      PhaseLinear K R.boundedCayley := by
+  intro K R
+  exact R.boundedCayley_phase_linear
 
-/--
-Owner target for constructing a bounded transform proxy.
-
-This is intentionally not proved here: the functional-calculus layer owns the
-analytic bounded-transform construction.
--/
+/-- Supplied bounded-transform data carry phase-linearity of `F`. -/
 @[owner_target_tag]
-def BoundedTransformOwnerTarget : Prop :=
-  ∀ (K : EndR H), Nonempty (BoundedTransformDatum K)
-
-/--
-The bounded-transform owner target is constructively inhabited by the zero
-bounded transform, which commutes with every phase axis.
--/
 theorem boundedTransformOwnerTarget :
-    BoundedTransformOwnerTarget (H := H) := by
-  intro K
-  exact ⟨{
-    F := 0
-    F_phase_linear := PhaseLinear.zero K
-  }⟩
+    ∀ (K : EndR H) (B : BoundedTransformDatum K),
+      PhaseLinear K B.F := by
+  intro K B
+  exact B.phase_linear
 
-/--
-Owner target for constructing a bounded Kasparov cycle after admissibility data.
--/
+/-- Admissibility data promote a bounded transform without changing its `F`. -/
 @[owner_target_tag]
-def BoundedKasparovOwnerTarget : Prop :=
-  ∀ (A : Type*) (K : EndR H) (B : BoundedTransformDatum K),
-    KasparovAdmissibility A K B →
-      Nonempty (BoundedKasparovCycle A K)
-
-/--
-The Kasparov owner target is constructive once compact-defect admissibility data
-are supplied.
--/
 theorem boundedKasparovOwnerTarget :
-    BoundedKasparovOwnerTarget (H := H) := by
+  ∀ (A : Type*) (K : EndR H) (B : BoundedTransformDatum K),
+    ∀ Adm : KasparovAdmissibility A K B,
+      Adm.toBoundedKasparovCycle.F = B.F ∧
+        PhaseLinear K Adm.toBoundedKasparovCycle.F := by
   intro A K B Adm
-  exact ⟨Adm.toBoundedKasparovCycle⟩
+  exact ⟨Adm.toBoundedKasparovCycle_F, Adm.toBoundedKasparovCycle_F_phase⟩
 
 attribute [rep_depth operator]
   EndR
@@ -524,10 +480,7 @@ attribute [rep_depth operator]
   BoundedKasparovCycle.commutator_compact
   KasparovAdmissibility
   KasparovAdmissibility.toBoundedKasparovCycle
-  BoundedKasparovOwnerTarget
-  PhaseResolventOwnerTarget
   phaseResolventOwnerTarget
-  BoundedTransformOwnerTarget
   boundedTransformOwnerTarget
   boundedKasparovOwnerTarget
 

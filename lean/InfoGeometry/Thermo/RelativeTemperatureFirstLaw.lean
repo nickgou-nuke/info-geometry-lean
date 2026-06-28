@@ -83,14 +83,14 @@ Equivalent statement:
 -/
 @[rep_depth thermo]
 theorem invTemperature_as_inv_T_eq_entropy_div_heat
-    (hβ : D.β ≠ 0)
+    (_hβ : D.β ≠ 0)
     (hQ : D.dQ ≠ 0) :
     D.T⁻¹ = D.dS / D.dQ := by
   calc
     D.T⁻¹ = (D.β⁻¹)⁻¹ := by
       rw [D.temperature_eq_inv_beta]
     _ = D.β := by
-      simpa using inv_inv₀ hβ
+      rw [inv_inv]
     _ = D.dS / D.dQ := D.invTemperature_eq_entropy_div_heat hQ
 
 end RelativeTemperatureDatum

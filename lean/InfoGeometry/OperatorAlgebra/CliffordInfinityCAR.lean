@@ -35,11 +35,11 @@ def V_inclusion (n : ℕ) : SplitModule n →ₗ[ℝ] SplitModule (n + 1) :=
     map_add' := by
       intro v w
       ext i
-      rcases i with j | j <;> simp only [Pi.add_apply] <;> split_ifs <;> simp_all [Pi.add_apply]
+      rcases i with j | j <;> simp only [Pi.add_apply] <;> split_ifs <;> simp_all
     map_smul' := by
       intro c v
       ext i
-      rcases i with j | j <;> simp only [Pi.smul_apply, RingHom.id_apply] <;> split_ifs <;> simp_all [Pi.smul_apply]
+      rcases i with j | j <;> simp only [Pi.smul_apply, RingHom.id_apply] <;> split_ifs <;> simp_all
   }
 
 /-- The inclusion is an isometry: Q_{n+1}(i_n(x)) = Q_n(x). -/

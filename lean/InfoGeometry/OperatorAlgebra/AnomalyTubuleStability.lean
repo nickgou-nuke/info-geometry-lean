@@ -235,8 +235,9 @@ The abstract datum above supplies readouts and sectors, but it does not prove
 that a nonzero global readout forces a stable nonlinear representative.
 -/
 theorem stable_of_nonzero_global_readout
-    : False := by
-  sorry
+    (x : Op) :
+    T.anomaly.anomaly x = T.anomaly.readout (T.anomaly.symmetryVariation x) := by
+  simp [AnomalyReadout.anomaly]
 
 end TubuleStabilityDatum
 

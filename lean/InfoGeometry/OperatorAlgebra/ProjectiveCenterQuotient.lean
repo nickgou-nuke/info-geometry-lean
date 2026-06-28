@@ -50,6 +50,10 @@ theorem negId_sq : negId * negId = 1 := by
   unfold negId
   simp
 
+/-- The concrete signed-identity center is an involution. -/
+theorem concreteCenter_involution : concreteCenter.I_neg * concreteCenter.I_neg = 1 := by
+  simpa [concreteCenter] using negId_sq
+
 /-- Left multiplication by the negative identity is matrix negation. -/
 theorem negId_mul (A : Spin32Matrix) : negId * A = -A := by
   unfold negId

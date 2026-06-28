@@ -1,6 +1,5 @@
 import InfoGeometry.Volume.Base
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-set_option linter.unusedSimpArgs false
 
 /-!
 # Determinant Bundle of Information Manifolds
@@ -66,6 +65,6 @@ def HasConformalWeight (Δ : ℝ) (ψ : DeterminantLine V) : Prop :=
 theorem hasConformalWeight_one (ψ : DeterminantLine V) :
     HasConformalWeight (V := V) 1 ψ := by
   intro f
-  simp [HasConformalWeight, weylAction, Dilation, volumeScale, Real.rpow_one]
+  simp [weylAction, Dilation, volumeScale, Real.rpow_one]
 
 end InfoGeometry.Volume.DeterminantBundle

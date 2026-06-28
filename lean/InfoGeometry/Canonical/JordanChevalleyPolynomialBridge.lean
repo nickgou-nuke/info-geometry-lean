@@ -43,15 +43,26 @@ def nilpotentPart {f : Module.End K V} (P : JordanChevalleyInterpolation f) :
     Module.End K V :=
   f - semisimplePart P
 
-/--
-Every Jordan-Chevalley split admits a polynomial interpolation witness.
-This packages the semisimple part as `p(f)` using the singleton-adjoin theorem.
+/-!
+`jordanChevalleyInterpolation` is a real witness, not a `Nonempty` endpoint:
+it chooses a Jordan-Chevalley split and the polynomial whose evaluation at `f`
+is the semisimple component.
 -/
-theorem interpolation_exists (f : Module.End K V) [PerfectField K] :
-    Nonempty (JordanChevalleyInterpolation f) := by
-  rcases JordanChevalleySplit.split_exists (f := f) with ⟨B⟩
-  rcases Algebra.adjoin_mem_exists_aeval (R := K) (x := f) B.semisimpleMem with ⟨p, hp⟩
-  exact ⟨⟨B, p, hp⟩⟩
+def jordanChevalleyInterpolation (f : Module.End K V) [PerfectField K] :
+    JordanChevalleyInterpolation f := by
+  let B : JordanChevalleySplit f :=
+    Classical.choice (JordanChevalleySplit.split_exists (f := f))
+  let hPoly := Algebra.adjoin_mem_exists_aeval (R := K) (x := f) B.semisimpleMem
+  let p : K[X] := Classical.choose hPoly
+  have hp : Polynomial.aeval f p = B.semisimple := Classical.choose_spec hPoly
+  exact ⟨B, p, hp⟩
+
+/-- The canonical interpolation witness reads its semisimple part as `p(f)`. -/
+theorem jordanChevalleyInterpolation_semisimple_eq
+    (f : Module.End K V) [PerfectField K] :
+    Polynomial.aeval f (jordanChevalleyInterpolation f).poly =
+      (jordanChevalleyInterpolation f).split.semisimple :=
+  (jordanChevalleyInterpolation f).semisimple_eq
 
 /-- The semisimple interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem semisimplePart_commute {f g : Module.End K V}
@@ -59,8 +70,7 @@ theorem semisimplePart_commute {f g : Module.End K V}
     Commute (semisimplePart P) g := by
   simpa [semisimplePart] using
     (commute_of_mem_adjoin_singleton (f := f) (g := g) hfg
-      (by simpa using
-        (Polynomial.aeval_mem_adjoin_singleton (R := K) (p := P.poly) f)))
+      (Polynomial.aeval_mem_adjoin_singleton (R := K) (p := P.poly) f))
 
 /-- The nilpotent interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem nilpotentPart_commute {f g : Module.End K V}

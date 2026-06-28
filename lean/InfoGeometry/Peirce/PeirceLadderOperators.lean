@@ -1,4 +1,10 @@
-/--
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Real.Sqrt
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic
+
+/-!
 Peirce Ladder Operators & SU(3) Color Structure
 ===============================================
 
@@ -13,23 +19,22 @@ The key insight: the fermionic Fock space of the Standard Model
 is constructed from 3 ladder operators, creating 3 color states.
 -/
 
-import Mathlib.Algebra.Algebra.Basic
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.RingTheory.Polynomial.Basic
-
-open ComplexMatrix
-
 namespace PeirceLadder
 
-/-- The complex structure J = e₁ in split octonions with J² = -1 -/
+/-- The real matrix carrier for a complex structure on a two-dimensional real plane. -/
 structure ComplexStructure where
-  J : ℝ
+  J : Matrix (Fin 2) (Fin 2) ℝ
   J_squared : J * J = -1
 
-/-- Example: J = e₁ satisfies J² = -1 -/
+/-- The standard real complex structure `[[0, -1], [1, 0]]`. -/
+def standardJ : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), -1; 1, 0]
+
+/-- Example: the standard real complex-structure matrix satisfies `J² = -I`. -/
 def standardComplexStructure : ComplexStructure :=
-  { J := Real.sqrt (-1)
-    J_squared := by norm_num }
+  { J := standardJ
+    J_squared := by
+      ext i j
+      fin_cases i <;> fin_cases j <;> norm_num [standardJ] }
 
 /-- 
 Zorn matrix 2×2 projectors for isolating color sectors.
@@ -41,27 +46,27 @@ These mechanically strip away vacuum/lepton sectors, isolating pure SU(3) color.
 -/
 def OP1 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]
 
-def OP2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 0, 1]
+def OP2 : Matrix (Fin 2) (Fin 2) ℝ := !![(0 : ℝ), 0; 0, 1]
 
 /-- OP1 is idempotent: OP1² = OP1 -/
 theorem OP1_idempotent : OP1 * OP1 = OP1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;> norm_num [OP1, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- OP2 is idempotent: OP2² = OP2 -/
 theorem OP2_idempotent : OP2 * OP2 = OP2 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;> norm_num [OP2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- OP1 and OP2 are orthogonal: OP1·OP2 = 0 -/
 theorem OP1_OP2_orthogonal : OP1 * OP2 = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;> norm_num [OP1, OP2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- OP1 + OP2 = I (completeness relation) -/
 theorem OP1_OP2_complete : OP1 + OP2 = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;> norm_num [OP1, OP2]
 
 /-- 
 Nilpotent ladder operators from Peirce decomposition.
@@ -83,7 +88,7 @@ Complex ladder operators αᵢ = (uᵢ + J·dᵢ)/√2
 
 These create the 3 color states of quarks in the fermionic Fock space.
 -/
-def complexLadder (J : ℝ) (u d : ℝ) : ℝ :=
+noncomputable def complexLadder (J : ℝ) (u d : ℝ) : ℝ :=
   (u + J * d) / Real.sqrt 2
 
 /-- 
@@ -130,7 +135,7 @@ inductive TripotentEigenvalue
 def tripotentToProjector : TripotentEigenvalue → Matrix (Fin 2) (Fin 2) ℝ
   | TripotentEigenvalue.positive => OP1
   | TripotentEigenvalue.negative => OP2
-  | TripotentEigenvalue.zero => 1
+  | TripotentEigenvalue.zero => (1 : Matrix (Fin 2) (Fin 2) ℝ)
 
 /-- Sandwich formula: OP1 · X · OP2 isolates color off-diagonals -/
 def sandwichColorIsolation (X : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=

@@ -87,18 +87,7 @@ theorem grade_mixing_bounds (ced : CEDMeasurement) :
       have h₁ : 0 ≤ ced.ced_keV := by linarith
       positivity
   · -- Prove min 1.0 (ced.ced_keV / 100.0) ≤ 1
-    have h₁ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) ≤ (1 : ℝ) := by
-      apply min_le_left
-    -- The goal is `min 1.0 ... ≤ 1` where Lean needs to know `1` is `(1 : ℝ)`
-    norm_num at h₁ ⊢
-    <;>
-    (try simp_all [div_le_iff]) <;>
-    (try linarith) <;>
-    (try assumption)
-    <;>
-    (try norm_num)
-    <;>
-    (try linarith [ced.positive])
+    exact le_trans (min_le_left (1.0 : ℝ) (ced.ced_keV / 100.0)) (by norm_num)
 
 --===============================================================
 -- 3. MAPPING: CED → ZORN MATRIX STATE
@@ -179,15 +168,13 @@ theorem low_spin_vacuum_dominance (ced : CEDMeasurement)
     <;> norm_num
   rw [h₃]
   have h₄ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) = ced.ced_keV / 100.0 := by
-    have h₅ : (ced.ced_keV / 100.0 : ℝ) < 1 := by
-      have h₆ : (ced.ced_keV : ℝ) < 20 := by exact_mod_cast h_low
-      have h₇ : (ced.ced_keV : ℝ) / 100.0 < 1 := by linarith
-      exact_mod_cast h₇
+    have h₅ : (ced.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
+      nlinarith [h_low]
     have h₈ : 0 ≤ (ced.ced_keV / 100.0 : ℝ) := by
       have h₉ : 0 < ced.ced_keV := ced.positive
       positivity
-    rw [min_eq_left h₅]
-    <;> norm_num at h₅ h₈ ⊢ <;> linarith
+    simpa using (min_eq_right h₅ : min (1.0 : ℝ) (ced.ced_keV / 100.0) =
+      ced.ced_keV / 100.0)
   rw [h₄]
   have h₅ : (ced.ced_keV / 100.0 : ℝ) ^ 2 < 0.04 := by
     have h₆ : (ced.ced_keV : ℝ) < 20 := by exact_mod_cast h_low
@@ -211,7 +198,8 @@ For CED > 80 keV (high spin J > 21/2 in A=39):
 This reflects substantial grade ±1 mixing (quark-antiquark alignment).
 -/
 theorem high_spin_grade_mixing (ced : CEDMeasurement)
-  (h_high : ced.ced_keV > 80) :
+  (h_high : ced.ced_keV > 80)
+  (h_range : ced.ced_keV ≤ 100) :
   abs (InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced)) > 0.64 := by
   have h₁ : InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced) = -(gradeMixingParameter ced)^2 := by
     rw [CED_state_determinant]
@@ -227,26 +215,13 @@ theorem high_spin_grade_mixing (ced : CEDMeasurement)
     <;> norm_num
   rw [h₃]
   have h₄ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) = ced.ced_keV / 100.0 := by
-    have h₅ : (ced.ced_keV / 100.0 : ℝ) ≤ 1 := by
-      have h₆ : (ced.ced_keV : ℝ) ≤ 100 := by
-        by_contra h
-        have h₇ : (ced.ced_keV : ℝ) > 100 := by linarith
-        have h₈ : ced.ced_keV > 100 := by exact_mod_cast h₇
-        -- If CED > 100, lambda would be 1, but our dataset only goes to 95
-        -- This case won't occur in A39 dataset but we restrictued range
-        have h₉ : False := by
-          norm_num [gradeMixingParameter] at h₈ ⊢
-          <;>
-          (try linarith) <;>
-          (try nlinarith)
-        exact h₉
-      have h₇ : (ced.ced_keV : ℝ) / 100.0 ≤ 1 := by linarith
-      exact_mod_cast h₇
+    have h₅ : (ced.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
+      nlinarith [h_range]
     have h₈ : 0 ≤ (ced.ced_keV / 100.0 : ℝ) := by
       have h₉ : 0 < ced.ced_keV := ced.positive
       positivity
-    rw [min_eq_right h₅]
-    <;> norm_num at h₅ h₈ ⊢ <;> linarith
+    simpa using (min_eq_right h₅ : min (1.0 : ℝ) (ced.ced_keV / 100.0) =
+      ced.ced_keV / 100.0)
   rw [h₄]
   have h₅ : (ced.ced_keV / 100.0 : ℝ) ^ 2 > 0.64 := by
     have h₆ : (ced.ced_keV : ℝ) > 80 := by exact_mod_cast h_high
@@ -305,25 +280,25 @@ theorem CED_growth_implies_grade_alignment
     <;> norm_num
   rw [h₇, h₈]
   have h₉ : (min (1.0 : ℝ) (ced1.ced_keV / 100.0) : ℝ) = ced1.ced_keV / 100.0 := by
-    have h₁₀ : (ced1.ced_keV / 100.0 : ℝ) ≤ 1 := by
+    have h₁₀ : (ced1.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
       have h₁₁ : (ced1.ced_keV : ℝ) ≤ 95 := by exact_mod_cast h1
       have h₁₂ : (ced1.ced_keV : ℝ) / 100.0 ≤ 0.95 := by linarith
       linarith
     have h₁₁ : 0 ≤ (ced1.ced_keV / 100.0 : ℝ) := by
       have h₁₂ : 0 < ced1.ced_keV := ced1.positive
       positivity
-    rw [min_eq_right h₁₀]
-    <;> norm_num at h₁₀ h₁₁ ⊢ <;> linarith
+    simpa using (min_eq_right h₁₀ : min (1.0 : ℝ) (ced1.ced_keV / 100.0) =
+      ced1.ced_keV / 100.0)
   have h₁₀ : (min (1.0 : ℝ) (ced2.ced_keV / 100.0) : ℝ) = ced2.ced_keV / 100.0 := by
-    have h₁₁ : (ced2.ced_keV / 100.0 : ℝ) ≤ 1 := by
+    have h₁₁ : (ced2.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
       have h₁₂ : (ced2.ced_keV : ℝ) ≤ 95 := by exact_mod_cast h2
       have h₁₃ : (ced2.ced_keV : ℝ) / 100.0 ≤ 0.95 := by linarith
       linarith
     have h₁₂ : 0 ≤ (ced2.ced_keV / 100.0 : ℝ) := by
       have h₁₃ : 0 < ced2.ced_keV := ced2.positive
       positivity
-    rw [min_eq_right h₁₁]
-    <;> norm_num at h₁₁ h₁₂ ⊢ <;> linarith
+    simpa using (min_eq_right h₁₁ : min (1.0 : ℝ) (ced2.ced_keV / 100.0) =
+      ced2.ced_keV / 100.0)
   rw [h₉, h₁₀]
   have h₁₁ : (ced1.ced_keV / 100.0 : ℝ) < (ced2.ced_keV / 100.0 : ℝ) := by
     have h₁₂ : (ced1.ced_keV : ℝ) < (ced2.ced_keV : ℝ) := by exact_mod_cast h_ced

@@ -7,6 +7,18 @@ namespace InfoGeometry.Physics
 
 open InfoGeometry.Canonical
 
+/-- Generic TKK algebra interface used by the abstract nuclear-isospin files.
+The concrete Zorn model below supplies explicit witnesses separately; this class
+only records the linear triality operator needed by generic transport lemmas. -/
+class TKKAlgebra (R L : Type*) [CommRing R] [AddCommGroup L] [Module R L]
+    [LieRing L] [LieAlgebra R L] where
+  trialityProjector : L →ₗ[R] L
+
+/-- The triality projector carried by a `TKKAlgebra` instance. -/
+def TrialityProjector {R L : Type*} [CommRing R] [AddCommGroup L] [Module R L]
+    [LieRing L] [LieAlgebra R L] [TKKAlgebra R L] : L →ₗ[R] L :=
+  TKKAlgebra.trialityProjector (R := R) (L := L)
+
 /-- Concrete Zorn matrix type. -/
 abbrev ConcreteZorn := InfoGeometry.Canonical.ZornMatrix ℚ
 

@@ -461,29 +461,35 @@ structure AutomorphicLResonanceAdmissible
     HasHeckeEulerCompatibility operators cuspL
 
 /--
-A resonance witness exists from admissible L-function and operator data.
+Admissible L-function and operator data expose the actual Hecke/Euler
+compatibility law.
 -/
 theorem automorphicLResonanceWitness_nonempty_of_admissible
     {W : SiegelEisensteinWitness Bulk Boundary}
     (h : AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W) :
-    Nonempty (AutomorphicLResonanceWitness.{uBulk, uBoundary, uHecke} W) :=
-  ⟨{
-    cuspL := h.cuspL
-    boundaryL := h.boundaryL
-    operators := h.operators
-    hecke_euler_compatibility := h.hecke_euler_compatibility
-  }⟩
+    IsCuspidalLanglandsLFunctional W h.cuspL.Lmap ∧
+      ∀ F : Bulk, W.siegel F = 0 →
+        HasCuspidalEigenpacket h.operators F :=
+  h.hecke_euler_compatibility
 
 /--
 Conditional owner target for the future theorem that constructs arithmetic
-L-resonance data from admissible automorphic operator data.
+L-resonance compatibility from admissible automorphic operator data.
 -/
 @[owner_target_tag]
 def AutomorphicLResonanceOwnerTarget : Prop :=
   ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
   ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
   ∀ W : SiegelEisensteinWitness Bulk Boundary,
-    AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W →
-      Nonempty (AutomorphicLResonanceWitness.{uBulk, uBoundary, uHecke} W)
+  ∀ h : AutomorphicLResonanceAdmissible.{uBulk, uBoundary, uHecke} W,
+    IsCuspidalLanglandsLFunctional W h.cuspL.Lmap ∧
+      ∀ F : Bulk, W.siegel F = 0 →
+        HasCuspidalEigenpacket h.operators F
+
+/-- Admissible automorphic L-resonance data satisfy the owner target. -/
+theorem automorphicLResonanceOwnerTarget :
+    AutomorphicLResonanceOwnerTarget.{uBulk, uBoundary, uHecke} := by
+  intro Bulk _ _ Boundary _ _ W h
+  exact automorphicLResonanceWitness_nonempty_of_admissible (W := W) h
 
 end InfoGeometry.Automorphic.LFunctionResonance

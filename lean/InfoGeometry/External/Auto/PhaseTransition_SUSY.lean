@@ -64,6 +64,13 @@ theorem pole_log_first_derivative {β : ℝ} (hβ : β ≠ 1) :
       ((hasDerivAt_id β).sub_const 1)
   simpa using hlog.neg.deriv
 
+/-- The ordinary logarithm is strictly concave on the positive real axis,
+    hence `-log` is strictly convex there. This is the standard calculus fact
+    behind the local pole potential. -/
+theorem neg_log_strictConvexOn :
+    StrictConvexOn ℝ (Set.Ioi 0) (fun x : ℝ => -Real.log x) := by
+  exact strictConcaveOn_log_Ioi.neg
+
 theorem pole_log_second_derivative {β : ℝ} (hβ : β ≠ 1) :
     heatCapacityKernel β = ((β - 1) ^ 2)⁻¹ := by
   unfold heatCapacityKernel laurentPoleGradient

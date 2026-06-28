@@ -271,31 +271,20 @@ theorem finitePrimeGrandPotential_eq
       -β.s⁻¹ * massieuPlanck (finitePrimeBosonGrandPartition P β) := by
   rfl
 
-/-! ## 7. Owner target -/
-
-/--
-Finite Souriau/Bregman owner target.
-
-This closes the finite complex grand-canonical identities and the bridge back
-to the existing Legendre/Bregman thermodynamic layer.
--/
-@[owner_target_tag]
-def PrimeGrandCanonicalSouriauBregmanOwnerTarget : Prop :=
-  ∀ (B : PrimeGrandCanonicalSouriauBregmanPacket),
-    let M : MassieuBridge :=
-      B.massieuBridge
-    M.beta = M.temperature.s.re ∧
-      (∀ β θ η : ℝ, 0 ≤ β → 0 ≤ M.temperatureRegularizedHamiltonian β θ η) ∧
-      (∀ β θ : ℝ, M.temperatureRegularizedHamiltonian β θ
-        (M.massieuModel.dualCoord θ) = 0) ∧
-      (∀ θ η : ℝ, 0 ≤ M.massieuModel.fenchelGap θ η) ∧
-      (∀ θ : ℝ, M.massieuModel.fenchelGap θ
-        (M.massieuModel.dualCoord θ) = 0)
+/-! ## 7. Owner theorem -/
 
 /-- The finite Souriau/Bregman owner target is proved. -/
 theorem primeGrandCanonicalSouriauBregmanOwnerTarget :
-    PrimeGrandCanonicalSouriauBregmanOwnerTarget := by
-  unfold PrimeGrandCanonicalSouriauBregmanOwnerTarget
+    ∀ (B : PrimeGrandCanonicalSouriauBregmanPacket),
+      let M : MassieuBridge :=
+        B.massieuBridge
+      M.beta = M.temperature.s.re ∧
+        (∀ β θ η : ℝ, 0 ≤ β → 0 ≤ M.temperatureRegularizedHamiltonian β θ η) ∧
+        (∀ β θ : ℝ, M.temperatureRegularizedHamiltonian β θ
+          (M.massieuModel.dualCoord θ) = 0) ∧
+        (∀ θ η : ℝ, 0 ≤ M.massieuModel.fenchelGap θ η) ∧
+        (∀ θ : ℝ, M.massieuModel.fenchelGap θ
+          (M.massieuModel.dualCoord θ) = 0) := by
   intro B
   dsimp
   let M : MassieuBridge := B.massieuBridge

@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -28,6 +30,12 @@ if __package__ in (None, ""):
         default_decl_structure_file,
         repo_root,
     )
+    from tools.infra.arango_env import (
+        arango_endpoint,
+        arango_username,
+        arango_password,
+        load_repo_arango_env,
+    )
 else:
     from tools.infra.artifacts import (
         normalize_repo_output,
@@ -49,6 +57,130 @@ else:
         default_decl_structure_file,
         repo_root,
     )
+    from tools.infra.arango_env import (
+        arango_endpoint,
+        arango_username,
+        arango_password,
+        load_repo_arango_env,
+    )
+
+
+def stream_to_arango(root: Path, import_root: str, namespace: str, database: str, run_mode: str) -> int:
+    """Stream JSONL from dagIndexer directly to ArangoDB."""
+    load_repo_arango_env(root)
+
+    # Build the streaming command
+    if run_mode == "exe":
+        cmd = [
+            "lake", "env",
+            str(root / ".lake" / "build" / "bin" / "dagIndexer"),
+            import_root, namespace, "--stream"
+        ]
+    else:
+        cmd = ["lake", "env", "lean", "--run", "lean/DAG/Indexer.lean", import_root, namespace, "--stream"]
+
+    print(f"[refresh-decl-graph] streaming: {' '.join(cmd)}", flush=True)
+
+    # Connect to ArangoDB
+    try:
+        from arango import ArangoClient
+    except ImportError:
+        print("Error: python-arango not installed. Install with: pip install python-arango", file=sys.stderr)
+        return 1
+
+    client = ArangoClient(hosts=arango_endpoint())
+    db = client.db(database, username=arango_username(), password=arango_password())
+
+    # Ensure collections exist
+    collections = {
+        "decls": False,
+        "edges": True,
+    }
+    for coll_name, is_edge in collections.items():
+        if not db.has_collection(coll_name):
+            db.create_collection(coll_name, edge=is_edge)
+            print(f"[refresh-decl-graph] Created collection: {coll_name}")
+
+    # Stream JSONL to ArangoDB
+    proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    decl_count = 0
+    edge_count = 0
+    batch_size = 5000
+    decl_batch = []
+    edge_batch = []
+
+    try:
+        for line in proc.stdout:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                doc = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            # Determine if it's a decl or edge by checking for src/dst fields (streaming format) or _from/_to (file format)
+            if ("_from" in doc and "_to" in doc) or ("src" in doc and "dst" in doc):
+                # Convert streaming format (src/dst/kind) to ArangoDB format (_from/_to)
+                if "src" in doc and "dst" in doc:
+                    src_key = "d_" + hashlib.sha256(doc["src"].encode()).hexdigest()[:40]
+                    dst_key = "d_" + hashlib.sha256(doc["dst"].encode()).hexdigest()[:40]
+                    doc["_from"] = f"decls/{src_key}"
+                    doc["_to"] = f"decls/{dst_key}"
+                    doc["kind"] = doc.get("kind", "type")
+                edge_batch.append(doc)
+                if len(edge_batch) >= batch_size:
+                    # Filter edges to only keep those where both endpoints exist
+                    valid_edges = []
+                    for e in edge_batch:
+                        from_doc = db["decls"].get(e["_from"].split("/")[-1])
+                        to_doc = db["decls"].get(e["_to"].split("/")[-1])
+                        if from_doc and to_doc:
+                            valid_edges.append(e)
+                    if valid_edges:
+                        db["edges"].import_bulk(valid_edges, overwrite=True)
+                        edge_count += len(valid_edges)
+                    edge_batch = []
+            else:
+                # Ensure _key exists
+                if "_key" not in doc and "name" in doc:
+                    doc["_key"] = "d_" + hashlib.sha256(doc["name"].encode()).hexdigest()[:40]
+                decl_batch.append(doc)
+                if len(decl_batch) >= batch_size:
+                    db["decls"].import_bulk(decl_batch, overwrite=True)
+                    decl_count += len(decl_batch)
+                    decl_batch = []
+
+        # Flush remaining batches
+        if decl_batch:
+            db["decls"].import_bulk(decl_batch, overwrite=True)
+            decl_count += len(decl_batch)
+        if edge_batch:
+            # Filter edges to only keep those where both endpoints exist
+            valid_edges = []
+            for e in edge_batch:
+                from_doc = db["decls"].get(e["_from"].split("/")[-1])
+                to_doc = db["decls"].get(e["_to"].split("/")[-1])
+                if from_doc and to_doc:
+                    valid_edges.append(e)
+            if valid_edges:
+                db["edges"].import_bulk(valid_edges, overwrite=True)
+                edge_count += len(valid_edges)
+            edge_batch = []
+
+        proc.wait()
+        if proc.returncode != 0:
+            stderr = proc.stderr.read()
+            print(f"[refresh-decl-graph] Indexer failed: {stderr}", file=sys.stderr)
+            return proc.returncode
+
+    except Exception as e:
+        print(f"[refresh-decl-graph] Streaming import failed: {e}", file=sys.stderr)
+        return 1
+
+    print(f"[refresh-decl-graph] Imported {decl_count} declarations and {edge_count} edges to {database}")
+    return 0
 
 
 DEFAULT_IMPORT_ROOT = "InfoGeometry.All"
@@ -66,7 +198,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--import-root",
         default=DEFAULT_IMPORT_ROOT,
-        help="Lean import root to index. Use InfoGeometry.All for the public umbrella, or a stronger root when intentionally widening coverage.",
+        help="Comma-separated Lean import roots to index. Defaults to InfoGeometry.All (not Mathlib).",
     )
     parser.add_argument(
         "--build-target",
@@ -76,7 +208,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--namespace",
         default=DEFAULT_NAMESPACE,
-        help="Namespace prefix to keep in the exported declaration graph.",
+        help="Comma-separated namespace prefixes to keep in the exported declaration graph.",
     )
     parser.add_argument(
         "--index-dir",
@@ -120,11 +252,28 @@ def parse_args() -> argparse.Namespace:
             "(default, incremental-friendly); `run` uses `lake env lean --run`."
         ),
     )
+    parser.add_argument(
+        "--stream",
+        action="store_true",
+        help="Use streaming mode: pipe JSONL directly to ArangoDB instead of writing files.",
+    )
+    parser.add_argument(
+        "--arango-db",
+        default="infogeometry",
+        help="ArangoDB database name for streaming import.",
+    )
     return parser.parse_args()
+
 
 def main() -> int:
     args = parse_args()
     root = repo_root()
+
+    # Streaming mode: pipe directly to ArangoDB
+    if args.stream:
+        return stream_to_arango(root, args.import_root, args.namespace, args.arango_db, args.run_mode)
+
+    # File-based mode (original behavior)
     index_dir = normalize_repo_output(root, args.index_dir)
     graph_out = normalize_repo_output(root, args.graph_out)
     structure_out = normalize_repo_output(root, args.structure_out)

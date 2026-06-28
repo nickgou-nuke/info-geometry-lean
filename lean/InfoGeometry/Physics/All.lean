@@ -17,8 +17,8 @@ import InfoGeometry.Physics.MD004GeometricStructures
 import InfoGeometry.Physics.MD005Symmetries
 import InfoGeometry.Physics.MD006OperatorEigenoperators
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
-import InfoGeometry.Physics.MD008RepresentationCharge
-import InfoGeometry.Physics.MD009QuantumDynamics
+import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
+import InfoGeometry.Physics.IsospinMirrorDynamics
 import InfoGeometry.Physics.MD010GaugeSSB
 import InfoGeometry.Physics.MD011StatisticalInfoGeometry
 import InfoGeometry.Physics.MD012EmergentModelsFinite
@@ -60,6 +60,16 @@ import InfoGeometry.Physics.ChiralityPseudoscalarCuntz
 import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.PrimeGrandCanonical
 import InfoGeometry.Physics.SpacetimeThermodynamics
+import InfoGeometry.Physics.KagomeKleinIncompatibility
+import InfoGeometry.Physics.KleinBottleDefects
+import InfoGeometry.Physics.ParafermionDefectBridge
+import InfoGeometry.Physics.ElectronParafermionFlow
+import InfoGeometry.Physics.TopologicalStandardModelBridge
+import InfoGeometry.Physics.BostConnesThermalTime
+import InfoGeometry.Physics.ZornMatrixSU3
+import InfoGeometry.Physics.D4Triality
+import InfoGeometry.Physics.FineStructureDerivation
+import InfoGeometry.Physics.FineStructureModels
 
 /-!
 # Physics Umbrella

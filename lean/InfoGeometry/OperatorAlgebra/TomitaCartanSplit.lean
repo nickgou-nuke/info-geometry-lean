@@ -365,11 +365,13 @@ structure ChiralDynamics
     (Stage : ChiralStage Op) where
   act : G → Op → Op
 
-  /-- Example physics predicate: the dynamics preserves the left sector. -/
-  preserves_left_sector : Prop
+  /-- Left sector is preserved by the dynamics. -/
+  preserves_left_sector :
+    ∀ g : G, ∀ X : Op, act g (Stage.Pleft * X) = Stage.Pleft * act g X
 
-  /-- Example physics predicate: the dynamics preserves the right sector. -/
-  preserves_right_sector : Prop
+  /-- Right sector is preserved by the dynamics. -/
+  preserves_right_sector :
+    ∀ g : G, ∀ X : Op, act g (Stage.Pright * X) = Stage.Pright * act g X
 
 /--
 An action may be left-chiral.  This is contingent dynamics, not the definition
@@ -380,7 +382,46 @@ structure LeftChiralDynamics
     (Op : Type uOp) [Ring Op]
     (Stage : ChiralStage Op)
     extends ChiralDynamics G Op Stage where
-  right_sector_trivial : Prop
+  /-- Right sector is dynamically trivial. -/
+  right_sector_trivial :
+    ∀ g : G, ∀ X : Op, act g (Stage.Pright * X) = Stage.Pright * X
+
+namespace ChiralDynamics
+
+variable {G : Type*} [Group G]
+variable {Op : Type uOp} [Ring Op]
+variable {Stage : ChiralStage Op}
+
+/-- The left sector is preserved exactly as recorded in the dynamics witness. -/
+theorem act_preserves_left_sector
+    (D : ChiralDynamics G Op Stage)
+    (g : G) (X : Op) :
+    D.act g (Stage.Pleft * X) = Stage.Pleft * D.act g X :=
+  D.preserves_left_sector g X
+
+/-- The right sector is preserved exactly as recorded in the dynamics witness. -/
+theorem act_preserves_right_sector
+    (D : ChiralDynamics G Op Stage)
+    (g : G) (X : Op) :
+    D.act g (Stage.Pright * X) = Stage.Pright * D.act g X :=
+  D.preserves_right_sector g X
+
+end ChiralDynamics
+
+namespace LeftChiralDynamics
+
+variable {G : Type*} [Group G]
+variable {Op : Type uOp} [Ring Op]
+variable {Stage : ChiralStage Op}
+
+/-- Left-chiral dynamics is trivial on the right sector. -/
+theorem act_right_sector_trivial
+    (D : LeftChiralDynamics G Op Stage)
+    (g : G) (X : Op) :
+    D.act g (Stage.Pright * X) = Stage.Pright * X :=
+  D.right_sector_trivial g X
+
+end LeftChiralDynamics
 
 /--
 Owner target for the Tomita-Cartan algebraic routing layer.
@@ -1346,34 +1387,62 @@ def TomitaCartanSplitModelOwnerTarget
     (Op Split H : Type*)
     [Ring Op]
     [AddCommGroup H] [Module ℝ H] : Prop :=
-  Nonempty (TomitaCartanSplitDatum Op Split H)
+  ∀ T : TomitaCartanSplitDatum Op Split H,
+    (∀ x : Op,
+      T.mirror.mirror (T.mirror.compactLift x) =
+        T.mirror.compactLift x) ∧
+    (∀ x : Op,
+      T.mirror.mirror (T.mirror.noncompactLift x) =
+        -T.mirror.noncompactLift x) ∧
+    (∀ x : Op,
+      T.factorOverlap.inAlgebra x →
+        T.factorOverlap.inCommutant x →
+          T.factorOverlap.isScalar x) ∧
+    (∀ a : Split,
+      a ∈ T.defectToIsotropic.defectLocus →
+        T.defectToIsotropic.carrierReadout a ∈
+          InfoGeometry.Geometry.KreinIsotropicCone.IsotropicCone T.kreinQuadratic)
 
 /-! ## 6. Concise Tomita/Drazin bridge sockets -/
 
 /-- Abstract membership data for an algebra and its commutant. -/
 structure AlgebraCommutantDatum
-    (Op : Type uOp) [Mul Op] [One Op] where
+    (Op : Type uOp) [Ring Op] where
   algebra : Set Op
   commutant : Set Op
   center : Set Op
 
   center_eq_intersection :
     center = algebra ∩ commutant
+  /-- Factor-like overlap datum identifying the scalar sector. -/
+  factorOverlap : FactorOverlapDatum Op
 
-  /-- Factor-like condition: the center is scalar only. -/
-  factor_center_trivial : Prop
+namespace AlgebraCommutantDatum
+
+variable {Op : Type uOp} [Ring Op]
+variable (A : AlgebraCommutantDatum Op)
+
+/-- Any central element is scalar, via the stored overlap witness. -/
+theorem center_is_scalar
+    {x : Op}
+    (hAlg : ∀ y : Op, y ∈ A.algebra → A.factorOverlap.inAlgebra y)
+    (hComm : ∀ y : Op, y ∈ A.commutant → A.factorOverlap.inCommutant y)
+    (hx : x ∈ A.center) :
+    A.factorOverlap.isScalar x := by
+  have hx' : x ∈ A.algebra ∧ x ∈ A.commutant := by
+    simpa [A.center_eq_intersection] using hx
+  exact A.factorOverlap.scalar_of_overlap (hAlg x hx'.1) (hComm x hx'.2)
+
+end AlgebraCommutantDatum
 
 /--
 Tomita mirror data.
 
 In concrete von Neumann theory this is implemented by `x ↦ J x J`.
 -/
-structure TomitaMirror
-    (Op : Type uOp) [Mul Op] [One Op] where
-  mirror : Op → Op
-
-  mirror_maps_algebra_to_commutant : Prop
-  mirror_involutive : Prop
+abbrev TomitaMirror
+    (Op : Type uOp) [Ring Op] : Type uOp :=
+  MirrorInvolution Op
 
 /-- Cartan sign of a generator. -/
 inductive CartanKind where
@@ -1442,7 +1511,7 @@ This is deliberately a bridge, not a definition.
 -/
 structure TomitaIsotropicBridge
     (Op H : Type*)
-    [Mul Op] [One Op]
+    [Ring Op]
     [SMul ℝ H] where
   algebraCommutant : AlgebraCommutantDatum Op
   mirror : TomitaMirror Op
@@ -1460,7 +1529,7 @@ namespace TomitaIsotropicBridge
 
 variable
     {Op H : Type*}
-    [Mul Op] [One Op]
+    [Ring Op]
     [SMul ℝ H]
     (B : TomitaIsotropicBridge Op H)
 

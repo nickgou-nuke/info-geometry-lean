@@ -10,6 +10,7 @@ import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.CantorDiracGrandCanonical
 import InfoGeometry.Topology.CantorDiracOperator
 import InfoGeometry.Topology.CliffordFractalWaveletBridge
+import InfoGeometry.Topology.ConnesSpectralTriple
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.DiscreteDiracHodge
@@ -90,6 +91,7 @@ import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
 import InfoGeometry.Topology.BostConnesWilsonLoop
 import InfoGeometry.Topology.WallpaperRepresentations
+import InfoGeometry.Topology.WallpaperRepresentationTable
 import InfoGeometry.Topology.WallpaperMoebiusKMS
 
 /-!

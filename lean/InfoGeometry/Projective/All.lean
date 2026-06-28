@@ -1,3 +1,4 @@
+import InfoGeometry.Projective.MobiusDual
 import InfoGeometry.Projective.KuzminCuntzPath
 import InfoGeometry.Projective.KuzminInductiveLimitBridge
 import InfoGeometry.Projective.KuzminColimit

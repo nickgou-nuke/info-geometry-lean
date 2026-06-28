@@ -1,7 +1,6 @@
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-set_option linter.unusedSectionVars false
 
 /-!
 # DoubledSpaceMatrix
@@ -26,6 +25,12 @@ noncomputable def toDoubledColumn (u : DoubledSpace E) : DoubledColumn E :=
 noncomputable def ofDoubledColumn (M : DoubledColumn E) : DoubledSpace E :=
   to_doubled (M 0 0) (M 1 0)
 
+end MatrixView
+
+section MatrixViewLemmas
+
+variable {E : Type*}
+
 @[simp] lemma ofDoubledColumn_toDoubledColumn (u : DoubledSpace E) :
     ofDoubledColumn (toDoubledColumn u) = u := by
   apply DoubledSpace.ext
@@ -41,6 +46,6 @@ noncomputable def ofDoubledColumn (M : DoubledColumn E) : DoubledSpace E :=
   · fin_cases j
     simp [toDoubledColumn, ofDoubledColumn]
 
-end MatrixView
+end MatrixViewLemmas
 
 end InfoGeometry.Krein

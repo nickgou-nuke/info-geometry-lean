@@ -4,15 +4,12 @@ import InfoGeometry.Clifford.Grading
 /-!
 # InfoGeometry.Krein.Superphysics
 
-Algebraic supercharge generators and supersymmetric Hamiltonian structures 
-on doubled information spaces. 
+Algebraic supercharge generators and supersymmetric Hamiltonian structures
+on doubled information spaces.
 
-This implementation is strictly algebraic, avoiding coordinate-based L2 proofs 
+This implementation is strictly algebraic, avoiding coordinate-based L2 proofs
 to ensure performance and generality across general Hilbert spaces.
 -/
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.Krein
 
@@ -35,10 +32,11 @@ def superHamiltonian (S : Supercharge (E := E)) :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   superSquare S
 
+omit [CompleteSpace E] in
 /-- Supersymmetric Hamiltonians are always grade-preserving (even). -/
 lemma superHamiltonian_isEven (S : Supercharge (E := E)) :
     isEven (superHamiltonian S) := by
-  simp only [isEven, superHamiltonian, superSquare, isOdd]
+  simp only [isEven, superHamiltonian, superSquare]
   calc
     modular_j.comp (S.Q.comp S.Q)
         = (modular_j.comp S.Q).comp S.Q := by rw [ContinuousLinearMap.comp_assoc]
@@ -47,6 +45,7 @@ lemma superHamiltonian_isEven (S : Supercharge (E := E)) :
       _ = -(S.Q.comp (-(S.Q.comp modular_j))) := by rw [S.odd]
       _ = (S.Q.comp S.Q).comp modular_j := by simp [ContinuousLinearMap.comp_assoc]
 
+omit [CompleteSpace E] in
 lemma supercharge_maps_plus_to_minus
     (S : Supercharge (E := E))
     {v : DoubledSpace E}
@@ -57,6 +56,7 @@ lemma supercharge_maps_plus_to_minus
   have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T v) S.odd
   simpa [ContinuousLinearMap.comp_apply, hv] using h
 
+omit [CompleteSpace E] in
 lemma supercharge_maps_minus_to_plus
     (S : Supercharge (E := E))
     {v : DoubledSpace E}
@@ -67,6 +67,7 @@ lemma supercharge_maps_minus_to_plus
   have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T v) S.odd
   simpa [ContinuousLinearMap.comp_apply, hv] using h
 
+omit [CompleteSpace E] in
 lemma superHamiltonian_maps_plus_to_plus
     (S : Supercharge (E := E))
     {v : DoubledSpace E}
@@ -76,6 +77,7 @@ lemma superHamiltonian_maps_plus_to_plus
   apply supercharge_maps_plus_to_minus
   exact hv
 
+omit [CompleteSpace E] in
 lemma superHamiltonian_maps_minus_to_minus
     (S : Supercharge (E := E))
     {v : DoubledSpace E}

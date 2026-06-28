@@ -699,7 +699,7 @@ theorem localIota_localEpsilon_anticomm [Invertible (2 : OpC)] (j : ℕ) :
           (TSC.localMajoranaC j + TSC.localMajoranaD j) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) := by
     ring
   have hhalf : (⅟ (2 : OpC)) * (2 : OpC) = 1 := by
-    simpa using (invOf_mul_self (2 : OpC))
+    exact invOf_mul_self (2 : OpC)
   calc
     (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) *
         (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) +

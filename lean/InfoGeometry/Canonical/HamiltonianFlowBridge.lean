@@ -163,7 +163,7 @@ theorem majoranaDirac_as_quasilatticeDirac_zero
     (hSeed : M.majoranaDirac = V.connectionGenerator) :
     InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V M.majoranaDirac 0
       = M.majoranaDirac := by
-  simpa [hSeed] using
-    (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac_zero V M.majoranaDirac)
+  rw [hSeed]
+  exact InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac_zero V V.connectionGenerator
 
 end InfoGeometry.Canonical.HamiltonianFlowBridge

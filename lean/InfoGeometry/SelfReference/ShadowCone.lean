@@ -13,7 +13,7 @@ The core claim is conservative:
 - but no status value is promoted to theorem authority on its own.
 -/
 
-namespace InfoGeometry.SelfReference.ShadowCone
+namespace InfoGeometry.SelfReference
 
 /-- Shadow kinds for the boundary-object model. -/
 inductive ShadowKind where
@@ -88,4 +88,4 @@ theorem integrated_has_status_integrated
 
 end ShadowCone
 
-end InfoGeometry.SelfReference.ShadowCone
+end InfoGeometry.SelfReference

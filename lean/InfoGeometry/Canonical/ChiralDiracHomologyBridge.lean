@@ -189,32 +189,22 @@ structure ChiralHodgeHomologyCalibration
   Dminus_eq_dMinus :
     ∀ y : Cminus, hodge.Dminus y = complex.dMinus y
 
-/-! ## 4. File-level owner target -/
-
-/--
-Root-corridor owner target for the chiral/Dirac homology bridge.
-
-This packages the already-proved cycle/boundary and harmonic-loop readbacks
-from this file.
--/
-@[owner_target_tag]
-def ChiralDiracHomologyBridgeOwnerTarget : Prop :=
-  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-      (C : ChiralComplexSocket Cplus Cminus)
-      {x : Cplus}, C.plusBoundary x → C.plusCycle x) ∧
-  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-      (C : ChiralComplexSocket Cplus Cminus)
-      {y : Cminus}, C.minusBoundary y → C.minusCycle y) ∧
-  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-      (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus),
-      H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
-  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-      (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
-      H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0)
+/-! ## 4. File-level owner theorem -/
 
 /-- The chiral/Dirac homology owner target is discharged by the local witnesses. -/
 theorem chiralDiracHomologyBridgeOwnerTarget :
-    ChiralDiracHomologyBridgeOwnerTarget := by
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (C : ChiralComplexSocket Cplus Cminus)
+        {x : Cplus}, C.plusBoundary x → C.plusCycle x) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (C : ChiralComplexSocket Cplus Cminus)
+        {y : Cminus}, C.minusBoundary y → C.minusCycle y) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus),
+        H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
+    (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+        (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
+        H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0) := by
   constructor
   · intro Cplus Cminus instC instM C x hx
     exact C.plus_boundary_is_cycle hx

@@ -27,6 +27,7 @@ open InfoGeometry.Topology.Wallpaper
 open InfoGeometry.Topology.WallpaperKleinBottlePresentation
 open InfoGeometry.Topology.WallpaperToWeylBridge
 open InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
+open InfoGeometryCore
 
 /-- Interpret the three tripotent branches as the three non-identity `V₄` labels. -/
 def sectorLabel : TripotentState → NontrivialV4

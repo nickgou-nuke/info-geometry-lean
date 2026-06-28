@@ -19,8 +19,6 @@ nontrivial generator assignment from Delaunay flip matrices and prove all
 `PureBraid.pureBraidRelations` are killed.
 -/
 
-set_option linter.unusedSimpArgs false
-
 namespace InfoGeometry.Topology.Delaunay
 
 open Matrix

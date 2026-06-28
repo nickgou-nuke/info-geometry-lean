@@ -33,12 +33,13 @@ abbrev localVacuumVector : Matrix (Fin 2) (Fin 1) ℝ :=
 @[simp] theorem localAnnihilation_sq_zero :
     localAnnihilation * localAnnihilation = (0 : M2R) := by
   change N * N = (0 : M2R)
-  simpa [localAnnihilation] using (ModularNilpotentAutomorphism.N_sq_zero)
+  exact ModularNilpotentAutomorphism.N_sq_zero
 
 /-- Square-zero of the local creation mode: `a^\u2020² = 0`. -/
 @[simp] theorem localCreation_sq_zero :
     localCreation * localCreation = (0 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [localCreation, aDag, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Local CAR identity from the same Wick atom: `{a, a^\u2020} = 1`. -/

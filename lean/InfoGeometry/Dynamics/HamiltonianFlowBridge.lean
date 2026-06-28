@@ -21,6 +21,8 @@ with the Lie-algebraic temperature vector evaluation.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Dynamics.HamiltonianFlowBridge
 
 open InfoGeometry.Thermodynamics.SouriauWeylPartition

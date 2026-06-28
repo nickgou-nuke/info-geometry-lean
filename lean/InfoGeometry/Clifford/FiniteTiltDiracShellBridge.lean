@@ -29,7 +29,7 @@ structure FiniteTiltDiracShellBridgeOwnerTarget where
 theorem finiteTiltDiracShellBridgeOwnerTarget :
     FiniteTiltDiracShellBridgeOwnerTarget := by
   exact
-    { shell_square := finiteTiltDiracShellOwnerTarget
+    { shell_square := finiteTiltDiracShellOwnerTarget_shell_square
       current_density_eq := finiteTiltCurrentDensity_eq_boundaryCurrent_bridge }
 
 @[rep_depth operator]

@@ -1,4 +1,7 @@
 import Mathlib
+import InfoGeometry.Canonical.YangBaxterProof
+
+noncomputable section
 
 /-══════════════════════════════════════════════════════════════════════
   PENROSE-WALLPAPER COLIMIT — From classical wallpaper groups
@@ -52,33 +55,36 @@ theorem pentagon_forbidden : ((5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ)) := by
     The Fibonacci anyon R-matrix contains powers of q = e^{πi/5},
     which has 5-fold rotational symmetry. -/
 structure YangBaxterBypass where
-  braid : ℕ → ℂ → ℂ → ℂ
-  sigma₁ : ℂ → ℂ
-  sigma₂ : ℂ → ℂ
-  h_ybe : ∀ z, sigma₁ (sigma₂ (sigma₁ z)) = sigma₂ (sigma₁ (sigma₂ z))
+  R : Matrix (Fin 2) (Fin 2) ℂ
+  B : Matrix (Fin 2) (Fin 2) ℂ
+  h_ybe : R * B * R = B * R * B
   pentagon_root : ℂ
   h_pentagon : pentagon_root ^ 5 = 1
   -- The key insight: YBE replaces abelian translation,
   -- allowing forbidden symmetries (5-fold, 7-fold, ...)
 
-/-- The pentagon (5-fold) is forbidden in classical wallpaper groups
-    but permitted in the quantum Yang-Baxter regime. The YBE provides
-    the algebraic coherence that prevents the geometric frustration
-    that would otherwise cause gaps in pentagonal tilings. -/
-def identityYangBaxterBypass : YangBaxterBypass where
-  braid := fun _ z _ => z
-  sigma₁ := id
-  sigma₂ := id
-  h_ybe := by intro z; rfl
-  pentagon_root := 1
-  h_pentagon := by norm_num
+/-- The negated Fibonacci phase is a fifth root of unity. -/
+theorem neg_q_pow_five : (-InfoGeometry.Canonical.YangBaxterProof.q) ^ 5 = 1 := by
+  rw [neg_pow]
+  rw [InfoGeometry.Canonical.YangBaxterProof.q_pow_five]
+  norm_num
+
+/-- Owner-backed finite Fibonacci Yang-Baxter packet. -/
+def fibonacciYangBaxterBypass : YangBaxterBypass where
+  R := InfoGeometry.Canonical.YangBaxterProof.R
+  B := InfoGeometry.Canonical.YangBaxterProof.B
+  h_ybe := InfoGeometry.Canonical.YangBaxterProof.braid_relation
+  pentagon_root := -InfoGeometry.Canonical.YangBaxterProof.q
+  h_pentagon := neg_q_pow_five
 
 theorem ybe_enables_pentagon :
-    ∀ z, identityYangBaxterBypass.sigma₁
-        (identityYangBaxterBypass.sigma₂ (identityYangBaxterBypass.sigma₁ z)) =
-      identityYangBaxterBypass.sigma₂
-        (identityYangBaxterBypass.sigma₁ (identityYangBaxterBypass.sigma₂ z)) :=
-  identityYangBaxterBypass.h_ybe
+    InfoGeometry.Canonical.YangBaxterProof.R *
+        InfoGeometry.Canonical.YangBaxterProof.B *
+          InfoGeometry.Canonical.YangBaxterProof.R =
+      InfoGeometry.Canonical.YangBaxterProof.B *
+        InfoGeometry.Canonical.YangBaxterProof.R *
+          InfoGeometry.Canonical.YangBaxterProof.B :=
+  fibonacciYangBaxterBypass.h_ybe
 
 /-══════════════════════════════════════════════════════════════════════
   LAYER 2 : PENROSE TILING AS INDUCTIVE COLIMIT
@@ -175,10 +181,10 @@ structure SymmetryTransition where
     field ℚ(e^{πi/5}). All measurements are relative to this reference. -/
 theorem goutev_penrose_synthesis :
     (5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ) ∧
-    identityYangBaxterBypass.pentagon_root ^ 5 = 1 ∧
+    fibonacciYangBaxterBypass.pentagon_root ^ 5 = 1 ∧
     (∀ n, penroseFiniteLevelDim n = 2 ^ n) ∧
     Nonempty (penroseBoundary ≃ (ℕ → Bool)) := by
-  exact ⟨pentagon_forbidden, identityYangBaxterBypass.h_pentagon,
+  exact ⟨pentagon_forbidden, fibonacciYangBaxterBypass.h_pentagon,
     by intro n; rfl, ⟨penroseCantorCode⟩⟩
 
 /-══════════════════════════════════════════════════════════════════════

@@ -1,8 +1,6 @@
 import InfoGeometry.Volume.Base
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.LinearAlgebra.Determinant
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSectionVars false
 
 /-!
 # Majorana Pfaffians
@@ -15,9 +13,10 @@ namespace InfoGeometry.Volume.Pfaffian
 
 open InfoGeometry.Krein
 
+section KreinSkew
+
 variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
-variable [FiniteDimensional ℝ H]
 
 /--
 Skew-symmetry predicate in the Krein channel: `[Wu,v] = -[u,Wv]`.
@@ -25,6 +24,13 @@ Skew-symmetry predicate in the Krein channel: `[Wu,v] = -[u,Wv]`.
 def IsSkewSymmetric (W : H →ₗ[ℝ] H) : Prop :=
   ∀ u v : H,
     KreinSpace.kreinInner (H := H) (W u) v = -KreinSpace.kreinInner (H := H) u (W v)
+
+end KreinSkew
+
+section PfaffianCore
+
+variable {H : Type*}
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 /--
 Pfaffian of a 2D skew-symmetric operator.
@@ -35,7 +41,7 @@ noncomputable def pfaffian2D
     (W : H →ₗ[ℝ] H) (_hDim : Module.finrank ℝ H = 2) : ℝ :=
   Real.sqrt |LinearMap.det W|
 
-/-- 
+/--
 Theorem: Pfaffian-Determinant Identity for 2D.
 The square of the Pfaffian is the absolute determinant of the skew operator.
 -/
@@ -48,7 +54,7 @@ theorem pfaffian2D_sq_eq_abs_det (W : H →ₗ[ℝ] H) (hDim : Module.finrank �
 noncomputable def pfaffian (W : H →ₗ[ℝ] H) : ℝ :=
   Real.sqrt |LinearMap.det W|
 
-theorem pfaffian_sq_eq_abs_det (W : H →ₗ[ℝ] H) 
+theorem pfaffian_sq_eq_abs_det (W : H →ₗ[ℝ] H)
     (_hDim : Module.finrank ℝ H = 2) :
     (pfaffian W)^2 = |LinearMap.det W| := by
   unfold pfaffian
@@ -62,7 +68,7 @@ theorem pfaffian_eq_one_of_abs_det_eq_one
     (W : H →ₗ[ℝ] H) (hDet : |LinearMap.det W| = 1) :
     pfaffian W = 1 := by
   unfold pfaffian
-  simpa [hDet] using Real.sqrt_one
+  simp [hDet]
 
 /--
 Topological stability in the incompressible regime (`|det| = 1`):
@@ -73,5 +79,7 @@ theorem topological_stability_of_incompressibility
     pfaffian W = 1 ∨ pfaffian W = -1 := by
   left
   exact pfaffian_eq_one_of_abs_det_eq_one (H := H) W hDet
+
+end PfaffianCore
 
 end InfoGeometry.Volume.Pfaffian

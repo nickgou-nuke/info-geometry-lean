@@ -45,10 +45,31 @@ lemma add_smul4 (c1 c2 c3 c4 : F) (x : A_alg) :
 
 -- Prove that σ and σ_inv are inverses
 lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1 := by
-  sorry
+  have hTL : TemperleyLieb (d A) e := inferInstance
+  rw [σ, σ_inv]
+  simp only [add_mul, mul_add, tl_smul_mul_smul_comm, one_mul, mul_one, add_assoc]
+  rw [hTL.e_sq]
+  have hcoeff : A⁻¹ * A⁻¹ + (A * A) + (-A ^ 2 - (A ^ 2)⁻¹) = 0 := by
+    field_simp [hA]
+    ring
+  rw [mul_inv_cancel₀ hA, inv_mul_cancel₀ hA]
+  simp only [one_smul]
+  have hsum : ((A⁻¹ * A⁻¹) • e i + ((A * A) • e i + d A • e i)) = 0 := by
+    simpa [d, add_smul, add_assoc, add_left_comm, add_comm] using
+      congrArg (fun c : F => c • e i) hcoeff
+  rw [hsum]
+  simp
 
 -- Prove far commutation
 lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j = σ A e j * σ A e i := by
-  sorry
+  by_cases hA : A = 0
+  · subst hA
+    simp [σ]
+  · rw [σ, σ]
+    simp only [add_mul, mul_add, tl_smul_mul_smul_comm, one_mul, mul_one, add_assoc]
+    rw [TemperleyLieb.e_comm (d_val := d A) (e := e) i j h]
+    have hAAinv : (A : F) * A⁻¹ = 1 := mul_inv_cancel₀ hA
+    have hAinvA : (A : F)⁻¹ * A = 1 := inv_mul_cancel₀ hA
+    simp [hAAinv, hAinvA, add_comm, add_left_comm, add_assoc]
 
 end TemperleyLieb

@@ -183,53 +183,40 @@ theorem concreteSplitCl11NormalizedCARPair
       (concreteCl11ScaledCARPair (E := E)).normalizedCreation :=
   concreteCl11ScaledCARPair_normalized_isCARPair
 
-/--
-Combined finite owner target:
-
-* binary path depth and Cantor-cylinder split;
-* bit-code tilt/switch algebra;
-* Clifford generator readout;
-* canonical CAR/CCR channels.
--/
-@[owner_target_tag]
-def CantorBinaryTiltCARCCROwnerTarget : Prop :=
-  (∀ w : BinaryWord,
-      wordDepth (BinaryWord.child w false) = wordDepth w + 1)
-    ∧
-    (∀ {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op),
-      P.bitOperator false * P.bitOperator false = 1
-        ∧ P.bitOperator true * P.bitOperator true = 1
-        ∧ P.bitOperator false * P.bitOperator true
-            + P.bitOperator true * P.bitOperator false = 0)
-    ∧
-  (∀ {Op : Type*} [Ring Op] (R : CantorCliffordRepresentation Op),
-      (∀ i : ℕ, R.gamma i * R.gamma i = 1)
-        ∧
-      (∀ {i j : ℕ}, i ≠ j → R.gamma i * R.gamma j + R.gamma j * R.gamma i = 0))
-    ∧
-    (∀ {E : Type 0}
-      [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-      CARBracket (E := E)
-          (paritySuperchargeOp (E := E))
-          (modularSuperchargeOp (E := E)) = 0
-        ∧
-      CCRBracket (E := E)
-          (paritySuperchargeOp (E := E))
-          (modularSuperchargeOp (E := E))
-        = (2 : ℝ) • cptSuperchargeOp (E := E)
-        ∧
-      IsCARPair (E := E)
-        (concreteCARAnnihilation (E := E))
-        (concreteCARCreation (E := E))
-        ∧
-      IsCARPair (E := E)
-        (concreteCl11ScaledCARPair (E := E)).normalizedAnnihilation
-        (concreteCl11ScaledCARPair (E := E)).normalizedCreation)
-
 /-- The combined finite owner target is supplied by the repo-owned theorems. -/
-@[rep_depth operator]
 theorem cantorBinaryTiltCARCCROwnerTarget :
-    CantorBinaryTiltCARCCROwnerTarget := by
+    (∀ w : BinaryWord,
+        wordDepth (BinaryWord.child w false) = wordDepth w + 1)
+      ∧
+      (∀ {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op),
+        P.bitOperator false * P.bitOperator false = 1
+          ∧ P.bitOperator true * P.bitOperator true = 1
+          ∧ P.bitOperator false * P.bitOperator true
+              + P.bitOperator true * P.bitOperator false = 0)
+      ∧
+    (∀ {Op : Type*} [Ring Op] (R : CantorCliffordRepresentation Op),
+        (∀ i : ℕ, R.gamma i * R.gamma i = 1)
+          ∧
+        (∀ {i j : ℕ}, i ≠ j → R.gamma i * R.gamma j + R.gamma j * R.gamma i = 0))
+      ∧
+      (∀ {E : Type 0}
+        [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
+        CARBracket (E := E)
+            (paritySuperchargeOp (E := E))
+            (modularSuperchargeOp (E := E)) = 0
+          ∧
+        CCRBracket (E := E)
+            (paritySuperchargeOp (E := E))
+            (modularSuperchargeOp (E := E))
+          = (2 : ℝ) • cptSuperchargeOp (E := E)
+          ∧
+        IsCARPair (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+          ∧
+        IsCARPair (E := E)
+          (concreteCl11ScaledCARPair (E := E)).normalizedAnnihilation
+          (concreteCl11ScaledCARPair (E := E)).normalizedCreation) := by
   constructor
   · intro w
     simpa [wordDepth] using (binaryWord_child_length w false)

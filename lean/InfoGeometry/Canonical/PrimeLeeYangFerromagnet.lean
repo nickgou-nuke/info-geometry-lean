@@ -186,23 +186,14 @@ def spinHamiltonian
   - (lam / 4) * (∑ i, D.ell i * σ i) ^ 2
     + (w / 2) * ∑ i, D.ell i * σ i
 
-/--
-Owner target for the compact finite ferromagnetic anchor:
-nonnegative, symmetric pair couplings with deleted diagonal.
--/
-@[owner_target_tag]
-def PrimeLeeYangFerromagnetOwnerTarget : Prop :=
-  ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-    0 ≤ lam →
-      ∀ i j : Fin N,
-        0 ≤ D.spinCoupling lam i j ∧
-          D.spinCoupling lam i j = D.spinCoupling lam j i ∧
-            D.spinCoupling lam i i = 0
-
 /-- The owner target follows from the explicit finite matrix elements. -/
-@[rep_depth thermo]
 theorem primeLeeYangFerromagnetOwnerTarget :
-    PrimeLeeYangFerromagnetOwnerTarget := by
+    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
+      0 ≤ lam →
+        ∀ i j : Fin N,
+          0 ≤ D.spinCoupling lam i j ∧
+            D.spinCoupling lam i j = D.spinCoupling lam j i ∧
+              D.spinCoupling lam i i = 0 := by
   intro N D lam hLam i j
   exact ⟨D.spinCoupling_nonneg hLam i j, D.spinCoupling_symm lam i j,
     D.spinCoupling_self lam i⟩

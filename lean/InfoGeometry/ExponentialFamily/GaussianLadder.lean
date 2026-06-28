@@ -1,7 +1,6 @@
 import InfoGeometry.ExponentialFamily.Gaussian
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.QuantumInference
-set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.ExponentialFamily.GaussianLadder
 
@@ -42,7 +41,7 @@ noncomputable def gaussianCreation (G : GaussianFamily E) :
     map_add' := by
       intro x y
       apply (WithLp.ofLp_injective 2)
-      simp [to_doubled, map_add, add_comm, add_left_comm, add_assoc]
+      simp [to_doubled, map_add, add_comm]
     map_smul' := by
       intro c x
       apply (WithLp.ofLp_injective 2)

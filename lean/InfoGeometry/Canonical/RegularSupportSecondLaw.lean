@@ -485,14 +485,22 @@ end RegularSupportSecondLawPacket
 @[rep_depth krein]
 def RegularSupportSecondLawTarget
     (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] : Prop :=
-  Nonempty (RegularHeatDefectMemorySplit Op)
+  ∀ S : RegularHeatDefectMemorySplit Op,
+    (∀ x : Op,
+      InRegularCorner S.support x →
+        0 ≤ entropyProduction S.compressedState S.dissipator x) ∧
+    (∀ x : Op,
+      S.defectReadout.readout x =
+        S.defectReadout.readout (S.support.q * x * S.support.q))
 
-/-- Constructor for the regular-support Second Law target. -/
+/-- Readout theorem for the regular-support Second Law target. -/
 @[rep_depth krein]
-theorem constructRegularSupportSecondLawTarget
-    {Op : Type} [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : RegularHeatDefectMemorySplit Op) :
+theorem regularSupportSecondLawTarget
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] :
     RegularSupportSecondLawTarget Op := by
-  exact ⟨S⟩
+  intro S
+  exact ⟨
+    (fun x hx => split_second_law_on_regular_corner S x hx),
+    (fun x => S.defectReadout.supported_on_defect x)⟩
 
 end InfoGeometry.Canonical.RegularSupportSecondLaw

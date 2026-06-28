@@ -148,35 +148,23 @@ theorem itakura_shape_scale_right
 
 /-! ## 2. Owner target -/
 
-/--
-Installed owner target for the primitive/Souriau/projective arithmetic
-pipeline.
-
-The target is intentionally modest: it exposes the finite cold-sector,
-nonnegativity, prime-flow, KMS, Weyl-factorization, and Itakura-Saito
-scale-invariance payloads supplied by the sidecar stack.
--/
-@[owner_target_tag]
-def PrimitiveSouriauPipelineOwnerTarget : Prop :=
-  ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
-    1 < betaInvert P.u ∧
-    0 ≤ projectiveArithmeticGibbsPartition P.support P.u ∧
-    P.kms.projectiveModularFlowReadout (P.kms.stateOfFinset P.support) P.u =
-      projectiveArithmeticGibbsPartition P.support P.u ∧
-    0 ≤ P.kmsPrime.prime.modularFlowReadout
-      (P.kmsPrime.prime.stateOfFinset P.support) P.u ∧
-    P.prime.modularFlowReadout (P.prime.stateOfFinset P.support) P.u =
-      projectivePrimePartition P.support P.u ∧
-    P.weyl.totalReadout
-        (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u =
-      P.weyl.weylScaleReadout
-          (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u *
-        P.weyl.shapeCoreReadout
-          (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u
-
 /-- The owner target follows directly from the supplied witness bundle. -/
 theorem primitiveSouriauPipelineOwnerTarget :
-    PrimitiveSouriauPipelineOwnerTarget := by
+    ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
+      1 < betaInvert P.u ∧
+      0 ≤ projectiveArithmeticGibbsPartition P.support P.u ∧
+      P.kms.projectiveModularFlowReadout (P.kms.stateOfFinset P.support) P.u =
+        projectiveArithmeticGibbsPartition P.support P.u ∧
+      0 ≤ P.kmsPrime.prime.modularFlowReadout
+        (P.kmsPrime.prime.stateOfFinset P.support) P.u ∧
+      P.prime.modularFlowReadout (P.prime.stateOfFinset P.support) P.u =
+        projectivePrimePartition P.support P.u ∧
+      P.weyl.totalReadout
+          (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u =
+        P.weyl.weylScaleReadout
+            (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u *
+          P.weyl.shapeCoreReadout
+            (P.weyl.stateOfProfiles P.counts₁ P.counts₂ P.support) P.u := by
   intro State P
   exact ⟨
     P.beta_cold,

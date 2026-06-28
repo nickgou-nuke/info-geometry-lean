@@ -17,6 +17,39 @@ Critical-axis shorthand used by the Hilbert–Pólya narrative.
 def criticalAxis : ℝ := 1 / 2
 
 /--
+Strict convexity plus symmetry around `x ↦ 1 - x` forces the midpoint
+`1 / 2` to be a strict minimizer on the critical interval.
+
+This is the standard convex-analysis core hidden behind the model language:
+if `f(1 - σ) = f(σ)` and `f` is strictly convex, then the midpoint lies
+strictly below the symmetric pair whenever `σ ≠ 1 / 2`.
+-/
+theorem strictConvex_symmetric_midpoint_lt
+    (f : ℝ → ℝ)
+    (hConvex : StrictConvexOn ℝ (Set.Ioo (0 : ℝ) 1) f)
+    (hSymm : ∀ σ ∈ Set.Ioo (0 : ℝ) 1, f (1 - σ) = f σ)
+    (σ : ℝ) (hσ : σ ∈ Set.Ioo (0 : ℝ) 1) (hσ_ne : σ ≠ criticalAxis) :
+    f criticalAxis < f σ := by
+  have hσ' : 1 - σ ∈ Set.Ioo (0 : ℝ) 1 := by
+    rcases hσ with ⟨h0, h1⟩
+    constructor <;> linarith
+  have hne : σ ≠ 1 - σ := by
+    intro h
+    have : σ = criticalAxis := by
+      dsimp [criticalAxis]
+      linarith
+    exact hσ_ne this
+  have hlt :=
+    hConvex.lt_on_open_segment' (x := σ) (y := 1 - σ) (a := (1 / 2 : ℝ)) (b := (1 / 2 : ℝ))
+      hσ hσ' hne (by positivity) (by positivity) (by norm_num)
+  have hsymm' : f (1 - σ) = f σ := hSymm σ hσ
+  have hsum : (2⁻¹ * σ + 2⁻¹ * (1 - σ) : ℝ) = (2⁻¹ : ℝ) := by
+    ring
+  have hlt' : f criticalAxis < max (f σ) (f (1 - σ)) := by
+    simpa [criticalAxis, hsum] using hlt
+  simpa [hsymm', max_eq_right, criticalAxis] using hlt'
+
+/--
 A typed, two-branch statement of the Hilbert–Pólya extraction inside this repository:
 - a KK-factorized O₂ channel is identified with the anomaly index,
 - Connes/KK-topology collapses the anomaly,

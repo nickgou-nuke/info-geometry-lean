@@ -51,7 +51,7 @@ abbrev Mat2 : Type :=
   Matrix (Fin 2) (Fin 2) ℂ
 
 @[simp] theorem complex_I_sq : (Complex.I : ℂ) ^ 2 = -1 := by
-  rw [pow_two, Complex.I_mul_I]
+  simp
 
 /-- The `2 × 2` identity in the Pauli basis. -/
 def σ0 : Mat2 :=

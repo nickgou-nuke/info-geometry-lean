@@ -316,7 +316,7 @@ lemma sameRay_toPositiveMeasure
           have hscale_t : s₂.f t = c * s₁.f t := by
             simpa using congrArg (fun f => f t) hscale
           rw [hscale_t]
-          simp [ENNReal.toReal_mul, hc0, hcTop]
+          simp [ENNReal.toReal_mul]
 
 /-- A full-support score slice as a strict-positive projective ray. -/
 noncomputable def positiveRay (s : FullSupportScoreSlice (T := T)) : PositiveRay T :=

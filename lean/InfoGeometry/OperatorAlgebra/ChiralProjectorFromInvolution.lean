@@ -310,13 +310,12 @@ theorem rightChiralImage_invariant_of_chi_invariant
 
 end ChiralInvolutionAction
 
-/-! ## 3. Owner target -/
+/-! ## 3. Owner theorem -/
 
 /--
-Owner target for constructing chiral projector stages from involutions.
+Constructing chiral projector stages from involutions.
 -/
-@[owner_target_tag]
-def ChiralProjectorFromInvolutionOwnerTarget : Prop :=
+theorem chiralProjectorFromInvolutionOwnerTarget :
   ∀ (Op : Type*) [Ring Op] [Algebra ℝ Op],
   ∀ C : ChiralInvolution Op,
     C.Pleft * C.Pleft = C.Pleft ∧
@@ -324,11 +323,7 @@ def ChiralProjectorFromInvolutionOwnerTarget : Prop :=
     C.Pleft * C.Pright = 0 ∧
     C.Pright * C.Pleft = 0 ∧
     C.Pleft + C.Pright = 1 ∧
-    C.Pleft - C.Pright = C.chi
-
-/-- The chiral projector owner target is constructive from `chi_sq`. -/
-theorem chiralProjectorFromInvolutionOwnerTarget :
-    ChiralProjectorFromInvolutionOwnerTarget := by
+    C.Pleft - C.Pright = C.chi := by
   intro Op _ _ C
   exact ⟨
     C.Pleft_idem,
@@ -339,5 +334,16 @@ theorem chiralProjectorFromInvolutionOwnerTarget :
     C.Pleft_sub_Pright
   ⟩
 
-end InfoGeometry.OperatorAlgebra
+/-- Direct packet for one chiral involution's two projectors. -/
+theorem chiralProjectorFromInvolution_packet
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (C : ChiralInvolution Op) :
+    C.Pleft * C.Pleft = C.Pleft ∧
+      C.Pright * C.Pright = C.Pright ∧
+      C.Pleft * C.Pright = 0 ∧
+      C.Pright * C.Pleft = 0 ∧
+      C.Pleft + C.Pright = 1 ∧
+      C.Pleft - C.Pright = C.chi :=
+  chiralProjectorFromInvolutionOwnerTarget Op C
 
+end InfoGeometry.OperatorAlgebra

@@ -143,7 +143,7 @@ theorem maps_regular_sector
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPreg
   calc
     Preg T TD (F.U y) = F.U (Preg T TD y) := hApply.symm
-    _ = F.U x := by simpa [hy]
+    _ = F.U x := by simp [hy]
 
 /-- Transport by `U` preserves membership in the null/defect Drazin sector. -/
 @[rep_depth operator]
@@ -161,7 +161,7 @@ theorem maps_null_sector
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPzero
   calc
     Pzero T TD (F.U y) = F.U (Pzero T TD y) := hApply.symm
-    _ = F.U x := by simpa [hy]
+    _ = F.U x := by simp [hy]
 
 /-- Inverse transport preserves regular-sector membership. -/
 @[rep_depth operator]
@@ -179,7 +179,7 @@ theorem inverse_maps_regular_sector
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPreg
   calc
     Preg T TD (F.Uinv y) = F.Uinv (Preg T TD y) := hApply.symm
-    _ = F.Uinv x := by simpa [hy]
+    _ = F.Uinv x := by simp [hy]
 
 /-- Inverse transport preserves null/defect-sector membership. -/
 @[rep_depth operator]
@@ -197,11 +197,11 @@ theorem inverse_maps_null_sector
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun G : EndH => G y) hPzero
   calc
     Pzero T TD (F.Uinv y) = F.Uinv (Pzero T TD y) := hApply.symm
-    _ = F.Uinv x := by simpa [hy]
+    _ = F.Uinv x := by simp [hy]
 
 /-- Transport by `U` preserves the fixed chiral commutation law. -/
 @[rep_depth krein]
-theorem preserves_chiral_True
+theorem preserves_chiral
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
     F.U.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.U :=
@@ -209,7 +209,7 @@ theorem preserves_chiral_True
 
 /-- Inverse transport preserves the fixed chiral commutation law. -/
 @[rep_depth krein]
-theorem inverse_preserves_chiral_True
+theorem inverse_preserves_chiral
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
     F.Uinv.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.Uinv :=

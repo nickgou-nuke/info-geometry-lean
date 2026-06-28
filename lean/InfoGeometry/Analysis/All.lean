@@ -19,3 +19,6 @@ import InfoGeometry.Analysis.ComplexBSpline
 import InfoGeometry.Analysis.SouriauThermodynamics
 import InfoGeometry.Analysis.SouriauKoszulMetric
 import InfoGeometry.Analysis.SouriauCocycle
+import InfoGeometry.Analysis.FractalMeasure.Basic
+import InfoGeometry.Analysis.Graph
+import InfoGeometry.Analysis.RankOneTrace

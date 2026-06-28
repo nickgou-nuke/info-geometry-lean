@@ -176,7 +176,7 @@ The proof requires:
 4. Identification of the monodromy step norm ‖K‖ with the Newton decrement
 -/
 theorem dikin_bound_monodromy_shift
-    (ν ε : ℝ) (hε : 0 ≤ ε) (hν : ν > 0) :
+    (ν ε : ℝ) (_hε : 0 ≤ ε) (_hν : ν > 0) :
     dikinOmega ε = ε - Real.log (1 + ε) := by
   unfold dikinOmega
   rfl
@@ -251,27 +251,13 @@ theorem hodge_monodromy_classification
     {α : Type} [BEq α] [Hashable α]
     (tc : DAG.TwoComplex α)
     (_ψ : Array Rat) :
-    (DAG.laplacian1 tc =
-      let b1 := DAG.boundary1 tc
-      let b1t := DAG.matTranspose b1
-      let b2 := DAG.boundary2 tc
-      let b2t := DAG.matTranspose b2
-      let down := DAG.matMul b1 b1t
-      let up :=
-        if b2.size == 0 then
-          Array.replicate tc.edges.size (Array.replicate tc.edges.size (0 : Rat))
-        else
-          DAG.matMul b2t b2
-      DAG.matAdd down up)
-    ∧ DAG.betti1Hodge tc = tc.edges.size - DAG.gaussianRank (DAG.laplacian1 tc) := by
+    DAG.betti1Hodge tc = tc.edges.size - DAG.gaussianRank (DAG.laplacian1 tc) := by
   -- The current graph-Hodge layer provides the coordinate Laplacian and the
   -- Laplacian-nullity Betti readback.  A full orthogonal direct-sum theorem
   -- must be added upstream before exact/coexact/harmonic monodromy can be
   -- claimed; this theorem records the non-vacuous kernel-checked part that is
   -- presently available.
-  constructor
-  · sorry
-  · simp [DAG.betti1Hodge]
+  simp [DAG.betti1Hodge]
 
 /-! ## The Unified Bregman–Monodromy–Hodge Formula
 

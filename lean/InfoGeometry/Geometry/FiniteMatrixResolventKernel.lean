@@ -222,26 +222,18 @@ theorem scalarOneByOneResolventKernel_unique
       R h_left h_right
   exact huniq
 
-/-! ## 5. Owner targets discharged constructively -/
-
-/--
-Owner target: finite matrix resolvent uniqueness from explicit two-sided
-inverse laws.
--/
-@[owner_target_tag]
-def FiniteMatrixResolventUniquenessOwnerTarget : Prop :=
-  ∀ (n : Type*) [Fintype n] [DecidableEq n],
-  ∀ (A : Matrix n n ℂ) (z : ℂ),
-  ∀ (R₁ R₂ : Matrix n n ℂ),
-    resolventDiff z A * R₁ = 1 →
-    R₁ * resolventDiff z A = 1 →
-    resolventDiff z A * R₂ = 1 →
-    R₂ * resolventDiff z A = 1 →
-      R₁ = R₂
+/-! ## 5. Constructive theorem packets -/
 
 /-- Constructive proof of finite matrix resolvent uniqueness. -/
 theorem finiteMatrixResolventUniquenessOwnerTarget :
-    FiniteMatrixResolventUniquenessOwnerTarget := by
+    ∀ (n : Type*) [Fintype n] [DecidableEq n],
+    ∀ (A : Matrix n n ℂ) (z : ℂ),
+    ∀ (R₁ R₂ : Matrix n n ℂ),
+      resolventDiff z A * R₁ = 1 →
+      R₁ * resolventDiff z A = 1 →
+      resolventDiff z A * R₂ = 1 →
+      R₂ * resolventDiff z A = 1 →
+        R₁ = R₂ := by
   intro n _ _ A z R₁ R₂ h₁L h₁R h₂L h₂R
   let K : MatrixResolventKernel n :=
     { A := A
@@ -251,32 +243,55 @@ theorem finiteMatrixResolventUniquenessOwnerTarget :
       kernel_mul_diff := h₂R }
   exact K.kernel_unique R₁ h₁L h₁R
 
-/-- Owner target: scalar one-by-one resolvent exists constructively when `z-a ≠ 0`. -/
-@[owner_target_tag]
-def ScalarOneByOneResolventOwnerTarget : Prop :=
-  ∀ z a : ℂ,
-    z - a ≠ 0 →
-      Nonempty (MatrixResolventKernel (Fin 1))
-
 /-- Constructive proof of scalar one-by-one resolvent existence. -/
 theorem scalarOneByOneResolventOwnerTarget :
-    ScalarOneByOneResolventOwnerTarget := by
+    ∀ z a : ℂ,
+      z - a ≠ 0 →
+        resolventDiff z (scalarOneByOne a) *
+            scalarOneByOne ((z - a)⁻¹) = 1 ∧
+          scalarOneByOne ((z - a)⁻¹) *
+            resolventDiff z (scalarOneByOne a) = 1 := by
   intro z a h
-  exact ⟨scalarOneByOneResolventKernel z a h⟩
-
-/-- Owner target: resolvent kernel from a unit witness. -/
-@[owner_target_tag]
-def MatrixResolventFromUnitOwnerTarget : Prop :=
-  ∀ (n : Type*) [Fintype n] [DecidableEq n],
-  ∀ (A : Matrix n n ℂ) (z : ℂ),
-  ∀ U : Units (Matrix n n ℂ),
-    U.val = resolventDiff z A →
-      Nonempty (MatrixResolventKernel n)
+  exact ⟨(scalarOneByOneResolventKernel z a h).diff_mul_kernel,
+    (scalarOneByOneResolventKernel z a h).kernel_mul_diff⟩
 
 /-- Constructive proof of matrix resolvent construction from a unit. -/
 theorem matrixResolventFromUnitOwnerTarget :
-    MatrixResolventFromUnitOwnerTarget := by
+    ∀ (n : Type*) [Fintype n] [DecidableEq n],
+    ∀ (A : Matrix n n ℂ) (z : ℂ),
+    ∀ U : Units (Matrix n n ℂ),
+      U.val = resolventDiff z A →
+        resolventDiff z A * U.inv = 1 ∧
+          U.inv * resolventDiff z A = 1 := by
   intro n _ _ A z U hU
-  exact ⟨matrixResolventKernelOfUnit A z U hU⟩
+  exact ⟨(matrixResolventKernelOfUnit A z U hU).diff_mul_kernel,
+    (matrixResolventKernelOfUnit A z U hU).kernel_mul_diff⟩
+
+/-- Combined finite resolvent packet: uniqueness, scalar construction, and unit construction. -/
+@[owner_target_tag]
+theorem finiteMatrixResolventKernel_packet :
+    (∀ (n : Type*) [Fintype n] [DecidableEq n],
+      ∀ (A : Matrix n n ℂ) (z : ℂ),
+      ∀ (R₁ R₂ : Matrix n n ℂ),
+        resolventDiff z A * R₁ = 1 →
+        R₁ * resolventDiff z A = 1 →
+        resolventDiff z A * R₂ = 1 →
+        R₂ * resolventDiff z A = 1 →
+          R₁ = R₂) ∧
+      (∀ z a : ℂ,
+        z - a ≠ 0 →
+          resolventDiff z (scalarOneByOne a) *
+              scalarOneByOne ((z - a)⁻¹) = 1 ∧
+            scalarOneByOne ((z - a)⁻¹) *
+              resolventDiff z (scalarOneByOne a) = 1) ∧
+      (∀ (n : Type*) [Fintype n] [DecidableEq n],
+        ∀ (A : Matrix n n ℂ) (z : ℂ),
+        ∀ U : Units (Matrix n n ℂ),
+          U.val = resolventDiff z A →
+            resolventDiff z A * U.inv = 1 ∧
+              U.inv * resolventDiff z A = 1) := by
+  exact ⟨finiteMatrixResolventUniquenessOwnerTarget,
+    scalarOneByOneResolventOwnerTarget,
+    matrixResolventFromUnitOwnerTarget⟩
 
 end InfoGeometry.Geometry.FiniteMatrixResolventKernel

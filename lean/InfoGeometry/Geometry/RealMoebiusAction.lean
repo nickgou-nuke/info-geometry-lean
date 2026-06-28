@@ -80,6 +80,11 @@ theorem one_moebius (τ : RealUpperHalfPlane) :
   · simp [moebius, a, b, c, d, denomSq]
   · simp [moebius, a, b, c, d, denomSq]
 
+@[simp]
+theorem moebius_y_pos (g : SL2R) (τ : RealUpperHalfPlane) :
+    0 < (moebius g τ).y := by
+  simpa [moebius] using div_pos τ.y_pos (realDenomSq_pos g τ)
+
 /-- Helper to lift a real point to Mathlib's complex UHP. -/
 def toComplex (τ : RealUpperHalfPlane) : ℍ :=
   ⟨Complex.mk τ.x τ.y, by exact τ.y_pos⟩

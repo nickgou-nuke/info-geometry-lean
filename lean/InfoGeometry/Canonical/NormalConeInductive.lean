@@ -29,9 +29,19 @@ matrices for the Cl(1,1)^⊗^n system.
 def StateSpace (n : ℕ) : Set (Stage n) :=
   {A | A = 0}
 
+/-- The explicit finite-stage socket state used by this cone model. -/
+def stateSpaceBasepoint (n : ℕ) : Stage n :=
+  0
+
+/-- The explicit basepoint belongs to the finite-stage state space. -/
+@[simp]
+theorem stateSpaceBasepoint_mem (n : ℕ) :
+    stateSpaceBasepoint n ∈ StateSpace n := by
+  rfl
+
 /-- The finite socket state space is nonempty, witnessed by the zero operator. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
-  exact ⟨0, rfl⟩
+  exact ⟨stateSpaceBasepoint n, stateSpaceBasepoint_mem n⟩
 
 /--
 The embedding A ↦ A ⊗ I₂ maps the state space at stage n to the state
@@ -61,7 +71,8 @@ The limit cone contains the image of the maximally mixed state at
 every stage, hence is nonempty.
 -/
 theorem limitCone_nonempty : Set.Nonempty LimitCone := by
-  refine ⟨ofStage 0 (0 : Stage 0), 0, 0, rfl, rfl⟩
+  refine ⟨ofStage 0 (stateSpaceBasepoint 0), 0, stateSpaceBasepoint 0,
+    stateSpaceBasepoint_mem 0, rfl⟩
 
 /--
 The inductive cone system {StateSpace n, stageEmbed n} is a compatible
@@ -73,7 +84,7 @@ family: the diagram commutes.
     ↓                       ↓
   LimitCone  ←────────────  same limit element
 -/
-theorem cone_system_compatible (n : ℕ) (A : Stage n) (hA : A ∈ StateSpace n) :
+theorem cone_system_compatible (n : ℕ) (A : Stage n) (_hA : A ∈ StateSpace n) :
     ofStage n A = ofStage (n + 1) (stageEmbed n A) := by
   symm
   apply ofStage_apply_bond n A

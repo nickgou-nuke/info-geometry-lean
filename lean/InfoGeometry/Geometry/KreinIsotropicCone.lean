@@ -230,6 +230,20 @@ geometry.
 def DefectToIsotropicOwnerTarget
     (Split H : Type*) [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) : Prop :=
-  Nonempty (DefectMapsToIsotropic Split H Q)
+  ∀ W : DefectMapsToIsotropic Split H Q,
+    (∀ a : Split, a ∈ W.defectLocus →
+      W.carrierReadout a ∈ IsotropicCone Q) ∧
+    (∀ a : Split, a ∈ W.defectLocus →
+      Q.q (W.carrierReadout a) = 0)
+
+/-- The represented defect bridge supplies the null-cone readout laws. -/
+theorem defectToIsotropicOwnerTarget
+    (Split H : Type*) [AddCommGroup H] [Module ℝ H]
+    (Q : KreinQuadraticDatum H) :
+    DefectToIsotropicOwnerTarget Split H Q := by
+  intro W
+  exact ⟨
+    (fun a ha => W.defect_mem_isotropic ha),
+    (fun a ha => W.defect_q_zero ha)⟩
 
 end InfoGeometry.Geometry.KreinIsotropicCone

@@ -170,8 +170,12 @@ The GNS Hilbert space is H itself, with cyclic vector Ω = δ_∅.
 
 The GNS representation π(A) = A is the left regular representation.
 -/
-theorem GNS_isomorphic_to_H (_Φ : CuntzKMSState) : Nonempty (H ≃ H) :=
-  ⟨Equiv.refl _⟩
+def GNS_isomorphic_to_H (_Φ : CuntzKMSState) : H ≃ H :=
+  Equiv.refl H
+
+theorem GNS_isomorphic_to_H_eq_refl (Φ : CuntzKMSState) :
+    Φ.GNS_isomorphic_to_H = Equiv.refl H :=
+  rfl
 
 end CuntzKMSState
 

@@ -19,6 +19,14 @@ import InfoGeometry.Physics.MD006OperatorEigenoperators
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 import InfoGeometry.Physics.IsospinMirrorDynamics
+import InfoGeometry.Physics.A39Mirror
+import InfoGeometry.Physics.ConcreteKleinBridge
+import InfoGeometry.Physics.GammasphereZornMap
+import InfoGeometry.Physics.GoldenAlphaApproximation
+import InfoGeometry.Physics.InfoGeoFermi
+import InfoGeometry.Physics.MeanFieldISB
+import InfoGeometry.Physics.ParabolicClock
+import InfoGeometry.Physics.PellisfineStructure
 import InfoGeometry.Physics.MD010GaugeSSB
 import InfoGeometry.Physics.MD011StatisticalInfoGeometry
 import InfoGeometry.Physics.MD012EmergentModelsFinite

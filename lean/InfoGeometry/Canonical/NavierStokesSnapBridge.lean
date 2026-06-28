@@ -371,14 +371,33 @@ law from projected extreme behavior to hidden-sector activation.
 -/
 def NavierStokesOperatorSnapBridgeOwnerTarget
     (State Classical Hidden : Type*) : Prop :=
-  Nonempty (NavierStokesOperatorSnapBridge State Classical Hidden)
+  ∀ B : NavierStokesOperatorSnapBridge State Classical Hidden,
+  ∀ s : State,
+    B.classical.ClassicalExtreme (B.classical.project s) →
+      B.operator.HiddenNontrivial (B.operator.hiddenReadout s)
+
+/-- Installed snap bridges satisfy the owner hidden-sector activation target. -/
+theorem navierStokesOperatorSnapBridgeOwnerTarget
+    (State Classical Hidden : Type*) :
+    NavierStokesOperatorSnapBridgeOwnerTarget State Classical Hidden := by
+  intro B s hExtreme
+  exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
 
 /--
 Owner target for a protected post-snap sector.
 -/
 def ProtectedNavierStokesSnapSectorOwnerTarget
     (State Charge : Type*) [Zero Charge] : Prop :=
-  Nonempty (ProtectedNavierStokesSnapSector State Charge)
+  ∀ S : ProtectedNavierStokesSnapSector State Charge,
+  ∀ t : ℝ,
+    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat
+
+/-- Installed protected snap sectors satisfy the owner no-relaxation target. -/
+theorem protectedNavierStokesSnapSectorOwnerTarget
+    (State Charge : Type*) [Zero Charge] :
+    ProtectedNavierStokesSnapSectorOwnerTarget State Charge := by
+  intro S t
+  exact S.cannot_relax_to_flat t
 
 /--
 Installed-owner target: once a snap bridge is supplied, projected classical

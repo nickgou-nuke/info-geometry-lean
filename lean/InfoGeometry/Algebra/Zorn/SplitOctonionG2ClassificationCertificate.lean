@@ -85,7 +85,7 @@ structure ClassificationCertificate (cp : ZornCompositionDatum R) where
   act_detZ : ∀ g : Aut, ∀ X : ZornMatrix R,
     ZornMatrix.detZ cp.toCrossProduct3 (act g X) = ZornMatrix.detZ cp.toCrossProduct3 X
   /-- The actual group-classification equivalence, supplied as certificate data. -/
-  autEquivG2_nonempty : Nonempty (Aut ≃* G2)
+  autEquivG2 : Aut ≃* G2
   /-- Evidence/invariant ledger attached to the model. -/
   evidence : G2EvidenceInvariants
 
@@ -95,12 +95,10 @@ variable {cp : ZornCompositionDatum R}
 variable (C : ClassificationCertificate (R := R) (Aut := Aut) (G2 := G2) cp)
 
 /-- Read back the supplied classification as a multiplicative equivalence. -/
-theorem aut_equiv_g2
+def aut_equiv_g2
     (C : ClassificationCertificate (R := R) (Aut := Aut) (G2 := G2) cp) :
-    Nonempty (Aut ≃* G2) := by
-  rcases C with ⟨act, act_one, act_mul, act_mulZ, act_OP1, act_OP2, act_detZ,
-    autEquivG2_nonempty, evidence⟩
-  exact autEquivG2_nonempty
+    Aut ≃* G2 :=
+  C.autEquivG2
 
 /-- Every certified automorphism preserves the null cone. -/
 theorem act_preserves_null_cone
@@ -135,22 +133,32 @@ theorem act_preserves_anticolorPart_of_canonical_zMul
     C.act g (anticolorPart X) = anticolorPart (C.act g X) := by
   exact (C.toG2TwoCandidate g).preserves_anticolorPart_of_canonical_zMul hcp X
 
+/-- Full certificate readback packet with the actual equivalence as data. -/
+structure ClassificationReadbackPacket where
+  autEquivG2 : Aut ≃* G2
+  act_mulZ :
+    ∀ g : Aut, ∀ X Y : ZornMatrix R,
+      C.act g (cp.mulZ X Y) = cp.mulZ (C.act g X) (C.act g Y)
+  act_detZ :
+    ∀ g : Aut, ∀ X : ZornMatrix R,
+      ZornMatrix.detZ cp.toCrossProduct3 (C.act g X) =
+        ZornMatrix.detZ cp.toCrossProduct3 X
+  act_preserves_colorPart :
+    ∀ g : Aut, ∀ X : ZornMatrix R,
+      C.act g (colorPart X) = colorPart (C.act g X)
+  act_preserves_anticolorPart :
+    ∀ g : Aut, ∀ X : ZornMatrix R,
+      C.act g (anticolorPart X) = anticolorPart (C.act g X)
+
 /-- Full certificate readback packet. -/
-theorem classification_certificate_packet
+def classification_certificate_packet
     (hcp : cp.mulZ = zMul (R := R)) :
-    Nonempty (Aut ≃* G2) ∧
-      (∀ g : Aut, ∀ X Y : ZornMatrix R,
-        C.act g (cp.mulZ X Y) = cp.mulZ (C.act g X) (C.act g Y)) ∧
-      (∀ g : Aut, ∀ X : ZornMatrix R,
-        ZornMatrix.detZ cp.toCrossProduct3 (C.act g X) =
-          ZornMatrix.detZ cp.toCrossProduct3 X) ∧
-      (∀ g : Aut, ∀ X : ZornMatrix R,
-        C.act g (colorPart X) = colorPart (C.act g X)) ∧
-      (∀ g : Aut, ∀ X : ZornMatrix R,
-        C.act g (anticolorPart X) = anticolorPart (C.act g X)) := by
-  exact ⟨aut_equiv_g2 C, C.act_mulZ, C.act_detZ,
-    C.act_preserves_colorPart_of_canonical_zMul hcp,
-    C.act_preserves_anticolorPart_of_canonical_zMul hcp⟩
+    C.ClassificationReadbackPacket where
+  autEquivG2 := aut_equiv_g2 C
+  act_mulZ := C.act_mulZ
+  act_detZ := C.act_detZ
+  act_preserves_colorPart := C.act_preserves_colorPart_of_canonical_zMul hcp
+  act_preserves_anticolorPart := C.act_preserves_anticolorPart_of_canonical_zMul hcp
 
 end ClassificationCertificate
 

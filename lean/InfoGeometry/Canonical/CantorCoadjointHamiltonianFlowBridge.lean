@@ -25,6 +25,8 @@ surfaces; this packet only records their compatible readout.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic

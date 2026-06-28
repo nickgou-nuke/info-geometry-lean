@@ -79,3 +79,8 @@
 [submodule "external_refs/Spectral"]
 	path = external_refs/Spectral
 	url = https://github.com/cmu-phil/Spectral
+
+[submodule "QuantumLib"]
+	path = QuantumLib
+	url = https://github.com/inQWIRE/QuantumLib.git
+	ignore = dirty

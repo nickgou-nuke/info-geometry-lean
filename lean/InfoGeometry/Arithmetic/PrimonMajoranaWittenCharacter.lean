@@ -375,7 +375,10 @@ def PrimonMajoranaWittenCharacterOwnerTarget : Prop :=
 
 /-- The finite two-state trace, spinor pairing, and signed Pfaffian products agree. -/
 theorem primonMajoranaWittenCharacterOwnerTarget :
-    PrimonMajoranaWittenCharacterOwnerTarget := by
+    ∀ (P : Finset ℕ) (s : ℝ),
+      finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
+      finiteSpinorPairing P s = finiteWittenCharacter P s ∧
+      finiteMajoranaPfaffian P s = finiteWittenCharacter P s := by
   intro P s
   exact ⟨finiteTwoStateWittenTrace_eq_wittenCharacter P s,
     finiteSpinorPairing_eq_wittenCharacter P s,

@@ -47,7 +47,7 @@ def informationFreeEnergy : M2R := step - step
 
 /-- Modular-flux recasting to the existing modular names. -/
 theorem entropyFlux_eq_step : entropyFlux = step := by
-  simpa [step] using
+  exact
     (ModularNilpotentAutomorphism.entropyFlux_eq_N : entropyFlux = SplitCliffordSourceWickBase.N)
 
 theorem modular_informationFreeEnergy_eq_zero :

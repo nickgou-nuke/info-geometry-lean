@@ -50,7 +50,7 @@ class TransformerNetwork (J : n → n → ℝ) where
 noncomputable def EntropyProduction (J : n → n → ℝ) (D : n → n → ℝ) : ℝ :=
   ∑ i, ∑ j, (J i j - J j i) * D i j
 
-set_option linter.unusedSectionVars false in
+omit [DecidableEq n] in
 /-- Theorem: A Hopfield Network produces zero entropy.
     Therefore, time is completely reversible (static). -/
 theorem hopfield_zero_entropy (J : n → n → ℝ) [h : HopfieldNetwork J] (D : n → n → ℝ) :

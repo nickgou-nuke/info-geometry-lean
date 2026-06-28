@@ -124,8 +124,8 @@ theorem bernoulli_defect_5_tower_parity (τ : ℝ) (hτ : 0 < τ) :
 
 /-- A finite defect polynomial has Ramanujan parity `(-1)^(n+1)` if swapping
 `alpha` and `beta` multiplies the polynomial by that sign. -/
-def DefectParityTarget (n : ℕ) (D : ℝ → ℝ → ℝ) : Prop :=
-  ∀ alpha beta : ℝ, D beta alpha = (-1 : ℝ) ^ (n + 1) * D alpha beta
+structure DefectParityTarget (n : ℕ) (D : ℝ → ℝ → ℝ) where
+  swap_eq : ∀ alpha beta : ℝ, D beta alpha = (-1 : ℝ) ^ (n + 1) * D alpha beta
 
 /-- The finite `ζ(3)` Bernoulli defect is invariant under `alpha ↔ beta`. -/
 theorem zeta3_defect_swap_even (alpha beta : ℝ) :
@@ -161,27 +161,59 @@ theorem zeta9_defect_swap_odd (alpha beta : ℝ) :
 
 theorem zeta3_defect_parity :
     DefectParityTarget 1 (ramanujanBernoulliSide aperyBernoulliReadout 1) := by
-  intro alpha beta
-  rw [zeta3_defect_swap_even]
-  norm_num
+  exact
+    { swap_eq := by
+        intro alpha beta
+        rw [zeta3_defect_swap_even]
+        norm_num }
 
 theorem zeta5_defect_parity :
     DefectParityTarget 2 (ramanujanBernoulliSide zetaFiveBernoulliReadout 2) := by
-  intro alpha beta
-  rw [zeta5_defect_swap_odd]
-  norm_num
+  exact
+    { swap_eq := by
+        intro alpha beta
+        rw [zeta5_defect_swap_odd]
+        norm_num }
 
 theorem zeta7_defect_parity :
     DefectParityTarget 3 (ramanujanBernoulliSide zetaSevenBernoulliReadout 3) := by
-  intro alpha beta
-  rw [zeta7_defect_swap_even]
-  norm_num
+  exact
+    { swap_eq := by
+        intro alpha beta
+        rw [zeta7_defect_swap_even]
+        norm_num }
 
 theorem zeta9_defect_parity :
     DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
-  intro alpha beta
-  rw [zeta9_defect_swap_odd]
-  norm_num
+  exact
+    { swap_eq := by
+        intro alpha beta
+        rw [zeta9_defect_swap_odd]
+        norm_num }
+
+theorem zeta3_defect_parity_swap_eq (alpha beta : ℝ) :
+    ramanujanBernoulliSide aperyBernoulliReadout 1 beta alpha =
+      (-1 : ℝ) ^ (1 + 1) *
+        ramanujanBernoulliSide aperyBernoulliReadout 1 alpha beta :=
+  zeta3_defect_parity.swap_eq alpha beta
+
+theorem zeta5_defect_parity_swap_eq (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaFiveBernoulliReadout 2 beta alpha =
+      (-1 : ℝ) ^ (2 + 1) *
+        ramanujanBernoulliSide zetaFiveBernoulliReadout 2 alpha beta :=
+  zeta5_defect_parity.swap_eq alpha beta
+
+theorem zeta7_defect_parity_swap_eq (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaSevenBernoulliReadout 3 beta alpha =
+      (-1 : ℝ) ^ (3 + 1) *
+        ramanujanBernoulliSide zetaSevenBernoulliReadout 3 alpha beta :=
+  zeta7_defect_parity.swap_eq alpha beta
+
+theorem zeta9_defect_parity_swap_eq (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaNineBernoulliReadout 4 beta alpha =
+      (-1 : ℝ) ^ (4 + 1) *
+        ramanujanBernoulliSide zetaNineBernoulliReadout 4 alpha beta :=
+  zeta9_defect_parity.swap_eq alpha beta
 
 /-- The finite `ζ(7)` tau-defect is invariant under `tau ↦ tau⁻¹`. -/
 theorem zeta7_tau_defect_even {tau : ℝ} (hτ : tau ≠ 0) :

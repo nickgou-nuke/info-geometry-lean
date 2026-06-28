@@ -68,6 +68,13 @@ theorem midpointTemp_mem_preformedPairWindow
   unfold InPreformedPairWindow midpointTemp IsCrossover at *
   constructor <;> linarith
 
+/-- The midpoint temperature sits strictly between the two crossover scales. -/
+theorem midpointTemp_strictly_between
+    (S : CrossoverScales) (h : S.IsCrossover) :
+    S.condensationTemp < S.midpointTemp ∧ S.midpointTemp < S.pairFormationTemp := by
+  unfold midpointTemp IsCrossover at *
+  constructor <;> linarith
+
 /-- Explicit existential version of the preformed-pair window nonemptiness. -/
 theorem exists_preformedPairWindow
     (S : CrossoverScales) (h : S.IsCrossover) :

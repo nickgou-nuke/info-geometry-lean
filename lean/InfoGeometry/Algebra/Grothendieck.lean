@@ -197,7 +197,7 @@ def grothendieckLift {A : Type*} [AddCommGroup A] (f : M →+ A) : Grothendieck 
       _ = f (x.1 + y.1) - f (x.2 + y.2) := by simpa using h3
       _ = (f x.1 - f x.2) + (f y.1 - f y.2) := by
         simp; abel
-      _ = L X + L Y := by simpa [h4, h5]
+      _ = L X + L Y := by simp [h4, h5]
 
 theorem grothendieckLift_comp {A : Type*} [AddCommGroup A] (f : M →+ A) (m : M) :
     grothendieckLift f (grothendieckMap M m) = f m := by
@@ -284,7 +284,6 @@ def grothendieckToInt : Grothendieck ℕ →+ ℤ where
     have h3 : L (Quotient.mk (grothendieckSetoid ℕ) (x.1 + y.1, x.2 + y.2)) = to_int_raw (x.1 + y.1, x.2 + y.2) := rfl
     have h_to_int : to_int_raw (x.1 + y.1, x.2 + y.2) = ((x.1 : ℤ) - (x.2 : ℤ)) + ((y.1 : ℤ) - (y.2 : ℤ)) := by
       dsimp [to_int_raw]
-      push_cast
       ring
     have hLX : L X = to_int_raw (x.1, x.2) := rfl
     have hLY : L Y = to_int_raw (y.1, y.2) := rfl
@@ -294,7 +293,7 @@ def grothendieckToInt : Grothendieck ℕ →+ ℤ where
       _ = to_int_raw (x.1 + y.1, x.2 + y.2) := by simpa using h3
       _ = ((x.1 : ℤ) - (x.2 : ℤ)) + ((y.1 : ℤ) - (y.2 : ℤ)) := by simpa using h_to_int
       _ = to_int_raw (x.1, x.2) + to_int_raw (y.1, y.2) := by simp [to_int_raw]
-      _ = L X + L Y := by simpa [hLX, hLY]
+      _ = L X + L Y := by simp [hLX, hLY]
 
 theorem grothendieckToInt_injective : Function.Injective grothendieckToInt := by
   intro a b hab

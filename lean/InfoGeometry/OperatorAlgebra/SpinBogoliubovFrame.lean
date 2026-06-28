@@ -240,16 +240,13 @@ variable (E : SpinEinsteinReadoutCalibration Frame Sys Comm Curv Stress S)
 
 end SpinEinsteinReadoutCalibration
 
-/-! ## Owner targets -/
+/-! ## Owner theorems -/
 
 /--
-Owner target for spin-Bogoliubov conservation.
-
 Once a spin-Bogoliubov frame is supplied, visible deficit is exactly recovered
 hidden flow in every frame.
 -/
-@[owner_target_tag]
-def SpinBogoliubovConservationOwnerTarget : Prop :=
+theorem spinBogoliubovConservationOwnerTarget :
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],
   ∀ [NormedAddCommGroup Comm], ∀ [NormedSpace ℝ Comm],
@@ -257,22 +254,14 @@ def SpinBogoliubovConservationOwnerTarget : Prop :=
   ∀ θ : Frame,
   ∀ x : Sys,
     (S.channel θ).ideal x - (S.channel θ).actual x =
-      (S.dilation θ).recoverHidden ((S.dilation θ).hiddenFlow x)
-
-/--
-The spin-Bogoliubov conservation target follows from Stinespring/Tomita
-dilation.
--/
-theorem spinBogoliubovConservationOwnerTarget :
-    SpinBogoliubovConservationOwnerTarget := by
+      (S.dilation θ).recoverHidden ((S.dilation θ).hiddenFlow x) := by
   intro Frame Sys Comm _ _ _ _ S θ x
   exact S.deficit_eq_recovered_hidden θ x
 
 /--
-Owner target for calibrated heat as hidden information.
+Calibrated heat as hidden information.
 -/
-@[owner_target_tag]
-def SpinHeatHiddenInformationOwnerTarget : Prop :=
+theorem spinHeatHiddenInformationOwnerTarget :
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],
   ∀ [NormedAddCommGroup Comm], ∀ [NormedSpace ℝ Comm],
@@ -282,15 +271,31 @@ def SpinHeatHiddenInformationOwnerTarget : Prop :=
   ∀ x : Sys,
     heatLoss C.bregman (S.channel θ) x =
       (C.heatBridge θ).hiddenReadout.hiddenInfo
-        ((S.dilation θ).hiddenFlow x)
-
-/--
-The calibrated heat-hidden-information target follows from the supplied bridge.
--/
-theorem spinHeatHiddenInformationOwnerTarget :
-    SpinHeatHiddenInformationOwnerTarget := by
+        ((S.dilation θ).hiddenFlow x) := by
   intro Frame Sys Comm _ _ _ _ S C θ x
   exact C.heat_eq_hidden_information θ x
+
+/-- One-frame conservation readout for a supplied spin-Bogoliubov frame. -/
+theorem spinBogoliubovConservation_packet
+    {Frame Sys Comm : Type*}
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    (S : SpinBogoliubovFrame Frame Sys Comm) (θ : Frame) (x : Sys) :
+    (S.channel θ).ideal x - (S.channel θ).actual x =
+      (S.dilation θ).recoverHidden ((S.dilation θ).hiddenFlow x) :=
+  spinBogoliubovConservationOwnerTarget Frame Sys Comm S θ x
+
+/-- One-frame heat-hidden-information readout for a supplied calibration. -/
+theorem spinHeatHiddenInformation_packet
+    {Frame Sys Comm : Type*}
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    {S : SpinBogoliubovFrame Frame Sys Comm}
+    (C : SpinHeatCalibration Frame Sys Comm S) (θ : Frame) (x : Sys) :
+    heatLoss C.bregman (S.channel θ) x =
+      (C.heatBridge θ).hiddenReadout.hiddenInfo
+        ((S.dilation θ).hiddenFlow x) :=
+  spinHeatHiddenInformationOwnerTarget Frame Sys Comm S C θ x
 
 attribute [rep_depth operator]
   SpinConnectionDatum
@@ -304,9 +309,9 @@ attribute [rep_depth operator]
   SpinHeatCalibration.heat_nonneg
   SpinHeatCalibration.heat_eq_zero_of_inertial
   SpinEinsteinReadoutCalibration
-  SpinBogoliubovConservationOwnerTarget
   spinBogoliubovConservationOwnerTarget
-  SpinHeatHiddenInformationOwnerTarget
   spinHeatHiddenInformationOwnerTarget
+  spinBogoliubovConservation_packet
+  spinHeatHiddenInformation_packet
 
 end InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame

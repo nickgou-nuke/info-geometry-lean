@@ -1,8 +1,6 @@
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Canonical.RGFlow
 
-set_option linter.unusedSectionVars false
-
 namespace InfoGeometry.Quantum.HurwitzRGFlow
 
 open InfoGeometry.Quantum.Hurwitz

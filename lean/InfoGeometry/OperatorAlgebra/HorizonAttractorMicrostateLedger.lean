@@ -221,25 +221,26 @@ variable
 
 end HorizonThermalLedger
 
-/-! ## 4. Owner target -/
+/-! ## 4. Owner theorem -/
 
 /--
-Owner target for horizon attractor microstate accounting.
-
 Once the ledger is supplied, entropy is determined by charge through the
 installed attractor law.
 -/
-@[owner_target_tag]
-def HorizonAttractorMicrostateOwnerTarget : Prop :=
+theorem horizonAttractorMicrostateOwnerTarget :
   ∀ (State Charge Scalar Memory : Type*),
   ∀ L : HorizonAttractorMicrostateLedger State Charge Scalar Memory,
   ∀ s : State,
-    L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s)
-
-/-- The owner target follows by reading the supplied attractor law. -/
-theorem horizonAttractorMicrostateOwnerTarget :
-    HorizonAttractorMicrostateOwnerTarget := by
+    L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) := by
   intro State Charge Scalar Memory L s
   exact L.entropyReadout_eq_entropyOfCharge s
+
+/-- One-state attractor readout from a supplied horizon microstate ledger. -/
+theorem horizonAttractorMicrostate_packet
+    {State Charge Scalar Memory : Type*}
+    (L : HorizonAttractorMicrostateLedger State Charge Scalar Memory)
+    (s : State) :
+    L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) :=
+  horizonAttractorMicrostateOwnerTarget State Charge Scalar Memory L s
 
 end InfoGeometry.OperatorAlgebra.HorizonAttractorMicrostateLedger

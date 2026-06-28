@@ -73,7 +73,7 @@ def tilt (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunct
   map_add' := by
     intro f g
     ext x
-    by_cases hx : x j <;> simp [hx, add_comm, add_left_comm, add_assoc]
+    by_cases hx : x j <;> simp [hx, add_comm]
   map_smul' := by
     intro c f
     ext x

@@ -247,35 +247,35 @@ def toLanglandsPrimeResonanceWitness
   (toLanglandsPrimeResonanceStrongWitness R).toWeakWitness
 
 /-- Owner target for a supplied Siegel--Jacobi standard L-function packet. -/
-def SiegelJacobiStandardLFunctionTarget
+abbrev SiegelJacobiStandardLFunctionTarget
     (D : SiegelJacobiDatum)
-    (F : SiegelJacobiFormPacket D) : Prop :=
-  Nonempty (SiegelJacobiStandardLFunctionPacket D F)
+    (F : SiegelJacobiFormPacket D) : Type 1 :=
+  SiegelJacobiStandardLFunctionPacket D F
 
 /-- Constructor for the Siegel--Jacobi standard L-function target. -/
-theorem constructSiegelJacobiStandardLFunctionTarget
+def constructSiegelJacobiStandardLFunctionTarget
     (D : SiegelJacobiDatum)
     (F : SiegelJacobiFormPacket D)
     (P : SiegelJacobiStandardLFunctionPacket D F) :
-    SiegelJacobiStandardLFunctionTarget D F := by
-  exact ⟨P⟩
+    SiegelJacobiStandardLFunctionTarget D F :=
+  P
 
 /--
 Owner target for a supplied projected realization of a Siegel--Jacobi standard
 L-function inside the existing Siegel-projector automorphic lane.
 -/
-def SiegelJacobiProjectedRealizationTarget
+abbrev SiegelJacobiProjectedRealizationTarget
     {Bulk : Type uBulk} {Boundary : Type uBoundary}
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (W : SiegelEisensteinWitness Bulk Boundary)
     (D : SiegelJacobiDatum)
     (F : SiegelJacobiFormPacket D)
-    (SJ : SiegelJacobiStandardLFunctionPacket D F) : Prop :=
-  Nonempty (SiegelJacobiProjectedRealization W D F SJ)
+    (SJ : SiegelJacobiStandardLFunctionPacket D F) : Type _ :=
+  SiegelJacobiProjectedRealization W D F SJ
 
 /-- Constructor for the projected-realization target. -/
-theorem constructSiegelJacobiProjectedRealizationTarget
+def constructSiegelJacobiProjectedRealizationTarget
     {Bulk : Type uBulk} {Boundary : Type uBoundary}
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
@@ -284,7 +284,7 @@ theorem constructSiegelJacobiProjectedRealizationTarget
     (F : SiegelJacobiFormPacket D)
     (SJ : SiegelJacobiStandardLFunctionPacket D F)
     (R : SiegelJacobiProjectedRealization W D F SJ) :
-    SiegelJacobiProjectedRealizationTarget W D F SJ := by
-  exact ⟨R⟩
+    SiegelJacobiProjectedRealizationTarget W D F SJ :=
+  R
 
 end InfoGeometry.Automorphic.SiegelJacobi

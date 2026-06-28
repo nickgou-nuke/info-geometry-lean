@@ -15,7 +15,19 @@ namespace InfoGeometry.Analysis.KatzSarnak
 open Real
 
 /-- The Unitary (U) symmetry scaling density. -/
-def w_U (x : ℝ) : ℝ := 1
+def w_U (_x : ℝ) : ℝ := 1
+
+/-- The unitary density is constantly `1`. -/
+theorem w_U_eq_one (_x : ℝ) : w_U _x = 1 := by
+  rfl
+
+/-- The unitary density at the origin is `1`. -/
+theorem w_U_zero : w_U 0 = 1 := by
+  rfl
+
+/-- The unitary density is nonnegative everywhere. -/
+theorem w_U_nonneg (x : ℝ) : 0 ≤ w_U x := by
+  simp [w_U]
 
 /-- The Symplectic (Sp) symmetry scaling density. 
 Note: x = 0 is a removable singularity. -/
@@ -46,5 +58,25 @@ theorem w_SO_even_zero : w_SO_even 0 = 2 := by
   split_ifs
   · rfl
   · contradiction
+
+/-- The symplectic and even-orthogonal densities sum to `2`. -/
+theorem w_Sp_add_w_SO_even (x : ℝ) :
+    w_Sp x + w_SO_even x = 2 := by
+  by_cases hx : x = 0
+  · simp [w_Sp, w_SO_even, hx]
+  · simp [w_Sp, w_SO_even, hx]
+    ring
+
+/-- The even-orthogonal density is the complement of the symplectic one. -/
+theorem w_SO_even_eq_two_sub_w_Sp (x : ℝ) :
+    w_SO_even x = 2 - w_Sp x := by
+  have h := w_Sp_add_w_SO_even x
+  linarith
+
+/-- The symplectic density is the complement of the even-orthogonal one. -/
+theorem w_Sp_eq_two_sub_w_SO_even (x : ℝ) :
+    w_Sp x = 2 - w_SO_even x := by
+  have h := w_Sp_add_w_SO_even x
+  linarith
 
 end InfoGeometry.Analysis.KatzSarnak

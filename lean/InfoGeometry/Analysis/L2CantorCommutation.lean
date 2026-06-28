@@ -72,10 +72,10 @@ theorem J₀_sq : J₀ ∘ J₀ = -id := by
 abbrev H := BaseIndex → Fiber
 
 def S_left : H → H :=
-  fun ψ y => if h : head y = plus then ψ (tail y) else (0, 0)
+  fun ψ y => if _h : head y = plus then ψ (tail y) else (0, 0)
 
 def S_right : H → H :=
-  fun ψ y => if h : head y = minus then ψ (tail y) else (0, 0)
+  fun ψ y => if _h : head y = minus then ψ (tail y) else (0, 0)
 
 def star_S_left : H → H :=
   fun ψ x => ψ (prepend plus x)
@@ -85,6 +85,13 @@ def star_S_right : H → H :=
 
 def K_op : H → H :=
   fun ψ x => J₀ (ψ x)
+
+theorem K_op_sq : K_op ∘ K_op = -id := by
+  ext ψ x
+  · simpa [K_op, Function.comp_apply] using
+      congrArg Prod.fst (congrArg (fun f : Fiber → Fiber => f (ψ x)) J₀_sq)
+  · simpa [K_op, Function.comp_apply] using
+      congrArg Prod.snd (congrArg (fun f : Fiber → Fiber => f (ψ x)) J₀_sq)
 
 /-! ## Commutation -/
 
@@ -110,17 +117,17 @@ theorem star_S_right_comp_S_right : star_S_right ∘ S_right = id := by
 
 theorem star_S_left_comp_S_right : star_S_left ∘ S_right = fun (_ : H) _ => (0, 0) := by
   apply funext; intro ψ; apply funext; intro x
-  simp [star_S_left, S_right, Function.comp_apply, head_prepend, tail_prepend]
+  simp [star_S_left, S_right, Function.comp_apply, head_prepend]
 
 theorem star_S_right_comp_S_left : star_S_right ∘ S_left = fun (_ : H) _ => (0, 0) := by
   apply funext; intro ψ; apply funext; intro x
-  simp [star_S_right, S_left, Function.comp_apply, head_prepend, tail_prepend]
+  simp [star_S_right, S_left, Function.comp_apply, head_prepend]
 
 theorem S_left_star_S_left_add_S_right_star_S_right :
     (S_left ∘ star_S_left) + (S_right ∘ star_S_right) = id := by
   apply funext; intro ψ; apply funext; intro x
   simp [Pi.add_apply, S_left, star_S_left, S_right, star_S_right, Function.comp_apply,
-    head_prepend, tail_prepend]
+    ]
   rcases head_cases x with (hplus | hminus)
   · have : prepend plus (tail x) = x := by
       calc

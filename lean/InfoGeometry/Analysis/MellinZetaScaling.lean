@@ -170,14 +170,13 @@ theorem finite_sample_product_factor_as_multiplicative_weight
   simpa [finiteMultiplicativeWeightProduct] using D.finite_sample_product_factor A f
 
 /--
-Owner target for the finite Mellin scaling bridge.
+The finite Mellin scaling owner target is discharged by the finite bridge.
 
 This records the finite orbit-sum factorization, the Dirichlet weight sum, and
 the finite multiplicative orbit-character product. The infinite zeta
 interchange remains socketed.
 -/
-@[owner_target_tag]
-def MellinZetaScalingOwnerTarget : Prop :=
+theorem mellinZetaScalingOwnerTarget :
   ∀ {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
     (D : FiniteMellinScalingDatum Func R)
     (A : Finset ℕ) (f : Func),
@@ -187,13 +186,23 @@ def MellinZetaScalingOwnerTarget : Prop :=
       ∧
       (∏ n ∈ A, D.Mellin (D.sample n f))
         =
-      finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card
-
-/-- The finite Mellin scaling owner target is discharged by the finite bridge. -/
-theorem mellinZetaScalingOwnerTarget :
-    MellinZetaScalingOwnerTarget := by
+      finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card := by
   intro Func R inst1 inst2 D A f
   exact ⟨D.finite_sample_sum_factor A f,
     finite_sample_product_factor_as_multiplicative_weight D A f⟩
+
+@[owner_target_tag, bridge_target_tag, rep_depth projective]
+theorem mellinZetaScaling_packet
+    {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
+    (D : FiniteMellinScalingDatum Func R)
+    (A : Finset ℕ) (f : Func) :
+      D.Mellin (Finset.sum A (fun n => D.sample n f))
+        =
+      finiteDirichletWeightSum A D.weight * D.Mellin f
+      ∧
+      (∏ n ∈ A, D.Mellin (D.sample n f))
+        =
+      finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card :=
+  mellinZetaScalingOwnerTarget D A f
 
 end InfoGeometry.Analysis.MellinZetaScaling

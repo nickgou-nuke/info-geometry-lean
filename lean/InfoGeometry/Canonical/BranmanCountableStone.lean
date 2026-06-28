@@ -9,8 +9,7 @@ spaces” (BLMS 2025).
 
 The paper's global classification of `Homeo(X_{α,n})` uses countable ordinals,
 Cantor--Bendixson derivatives, Rosendal coarse boundedness, and
-Cayley--Abels--Rosendal graphs.  This module does not encode those analytic and
-ordinal theorems as placeholders.  It proves the finite Mathlib core used by
+Cayley--Abels--Rosendal graphs.  This module proves the finite Mathlib core used by
 that layer.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -27,7 +26,7 @@ that layer.
 * Cayley/CAR symmetry is conditional on the explicit premise
   `∀ f ∈ F, f⁻¹ ∈ F`.
 
-#### BUCKET 3: OPEN CLOSURE DEBT
+#### Out of Scope
 * No theorem here asserts Theorem A of the paper.
 * The countable-ordinal Cantor--Bendixson classification of countable Stone
   spaces is not formalized here.

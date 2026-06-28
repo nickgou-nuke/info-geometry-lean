@@ -60,22 +60,41 @@ theorem centralCharge_eq_card_theorem (B : PrimeBooleanCubeSugawaraPacket P) :
 
 end PrimeBooleanCubeSugawaraPacket
 
-/-- Trivial affine-current datum used only to keep the finite readout kernel-checkable. -/
--- DEBT_ID: PBCS_TRIVIAL_AFFINE
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
+/-- Zero affine-current datum used by the finite Boolean-cube readout. -/
 def trivialAffineCurrentDatum : AffineCurrentDatum ℝ ℝ where
   Current := fun _ _ => 0
   kCentral := 0
   killingForm := fun _ _ => 0
 
-/-- Trivial Virasoro datum used only to keep the finite readout kernel-checkable. -/
--- DEBT_ID: PBCS_TRIVIAL_VIRASORO
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
+/-- Zero Virasoro datum used by the finite Boolean-cube readout. -/
 def trivialVirasoroDatum : VirasoroDatum ℝ where
   Lmode := fun _ => 0
   central := 0
+
+@[simp]
+theorem trivialAffineCurrentDatum_Current (n : ℤ) (x : ℝ) :
+    trivialAffineCurrentDatum.Current n x = 0 :=
+  rfl
+
+@[simp]
+theorem trivialAffineCurrentDatum_kCentral :
+    trivialAffineCurrentDatum.kCentral = 0 :=
+  rfl
+
+@[simp]
+theorem trivialAffineCurrentDatum_killingForm (x y : ℝ) :
+    trivialAffineCurrentDatum.killingForm x y = 0 :=
+  rfl
+
+@[simp]
+theorem trivialVirasoroDatum_Lmode (n : ℤ) :
+    trivialVirasoroDatum.Lmode n = 0 :=
+  rfl
+
+@[simp]
+theorem trivialVirasoroDatum_central :
+    trivialVirasoroDatum.central = 0 :=
+  rfl
 
 /--
 Canonical finite Sugawara packet for a Boolean-cube vertex.

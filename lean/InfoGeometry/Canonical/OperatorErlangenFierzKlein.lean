@@ -222,16 +222,26 @@ end OperatorErlangenFierzKlein
 @[rep_depth operator]
 def OperatorErlangenFierzKleinTarget
     (Obs : Type u)
-    [Ring Obs] [Star Obs] : Prop :=
-  Nonempty (OperatorErlangenFierzKlein Obs)
+    [Ring Obs] [Star Obs] : Type u :=
+  OperatorErlangenFierzKlein Obs
 
 /-- Constructor for the operator Erlangen Fierz--Klein target. -/
 @[rep_depth operator]
-theorem constructOperatorErlangenFierzKleinTarget
+def constructOperatorErlangenFierzKleinTarget
     {Obs : Type u}
     [Ring Obs] [Star Obs]
     (E : OperatorErlangenFierzKlein Obs) :
-    OperatorErlangenFierzKleinTarget Obs := by
-  exact ⟨E⟩
+    OperatorErlangenFierzKleinTarget Obs :=
+  E
+
+/-- The constructed target preserves the Fierz--Klein variety readout. -/
+@[rep_depth operator]
+theorem constructOperatorErlangenFierzKleinTarget_holds
+    {Obs : Type u}
+    [Ring Obs] [Star Obs]
+    (E : OperatorErlangenFierzKlein Obs) :
+    IsOnFierzKleinVariety
+      (constructOperatorErlangenFierzKleinTarget E).coordinates :=
+  (constructOperatorErlangenFierzKleinTarget E).operator_erlangen_fierz_klein_holds
 
 end InfoGeometry.Canonical.OperatorErlangenFierzKlein

@@ -43,7 +43,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [FiniteDimensional ℝ E]
 variable [CausalGraph α]
 
-abbrev ShadowBoundary (α : Type*) := InfoGeometry.SelfReference.ShadowCone.ShadowCone α
+abbrev ShadowBoundary (α : Type*) := InfoGeometry.SelfReference.ShadowCone α
 
 /--
 Repo-native self-model state.

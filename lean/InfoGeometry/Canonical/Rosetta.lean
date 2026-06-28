@@ -195,7 +195,7 @@ export InfoGeometry.Canonical.WeylLineIntegrator (
   integrateCurvature_transformByPotential_eq
   holonomy
   gaugeCompensatedHolonomy
-  gaugeCompensatedHolonomy_eq_base_of_boundary_True
+  gaugeCompensatedHolonomy_eq_base_of_boundary
 )
 
 export InfoGeometry.Canonical.WeylTransportBridge (

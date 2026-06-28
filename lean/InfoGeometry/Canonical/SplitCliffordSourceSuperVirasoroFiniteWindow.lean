@@ -107,7 +107,7 @@ theorem superBracket_LG_of_boundaryDefect_zero
         - (G_trunc N r J ψ) * (L_trunc N m J ψ)
       = (LG_coeff (𝕜 := 𝕜) m r) • (G_trunc N (m + r) J ψ)
           + boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ := superBracket_LG_decompose (𝕜 := 𝕜) N m r J ψ
-    _ = (LG_coeff (𝕜 := 𝕜) m r) • (G_trunc N (m + r) J ψ) := by simpa [hdef]
+    _ = (LG_coeff (𝕜 := 𝕜) m r) • (G_trunc N (m + r) J ψ) := by simp [hdef]
 
 /--
 Owner-side shifted-mode exact closure criterion:
@@ -157,7 +157,7 @@ theorem superBracket_GG_of_boundaryDefect_zero
           + boundaryDefect_GG (𝕜 := 𝕜) N r s J ψ central_N :=
         superBracket_GG_decompose (𝕜 := 𝕜) N r s J ψ central_N
     _ = (2 : 𝕜) • (L_trunc N (r + s) J ψ)
-          + (central_N r s) • (1 : EndV) := by simpa [hdef]
+          + (central_N r s) • (1 : EndV) := by simp [hdef]
 
 /-! ### Stabilization-to-closure lemmas (atTop) -/
 
@@ -379,7 +379,7 @@ theorem G_trunc_r0_mode01_eq_zero
 
 /--
 Concrete real lemma (nontrivial witness family):
-for `J = J_sorry A`, `ψ = psi_sorry B`, and `r = 0`,
+for `J = J_mode0 A`, `ψ = psi_mode1 B`, and `r = 0`,
 the mixed finite-window defect is identically zero for all `N,m`.
 -/
 theorem boundaryDefect_LG_mode01_r0_eq_zero

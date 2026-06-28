@@ -56,4 +56,30 @@ theorem scalar_resolvent_identity {K : Type*} [Field K]
     A⁻¹ - B⁻¹ = A⁻¹ * (B - A) * B⁻¹ := by
   exact resolvent_identity A B (scalarVerifiedInverse A hA) (scalarVerifiedInverse B hB)
 
+/-- The resolvent identity specializes to the zero difference when the points coincide. -/
+theorem scalar_resolvent_identity_self {K : Type*} [Field K]
+    (A : K) :
+    A⁻¹ - A⁻¹ = A⁻¹ * (A - A) * A⁻¹ := by
+  simp
+
+/-- The scalar inverse-difference specialization of the resolvent identity. -/
+theorem scalar_inverse_difference {K : Type*} [Field K]
+    (A B : K)
+    (hA : A ≠ 0)
+    (hB : B ≠ 0) :
+    A⁻¹ - B⁻¹ = A⁻¹ * (B - A) * B⁻¹ := by
+  exact scalar_resolvent_identity A B hA hB
+
+/-- The bundled scalar inverse is left-inverse to the scalar. -/
+theorem scalarVerifiedInverse_left_inv {K : Type*} [Field K]
+    (z : K) (hz : z ≠ 0) :
+    (scalarVerifiedInverse z hz).inv * z = 1 := by
+  simpa [scalarVerifiedInverse] using inv_mul_cancel₀ hz
+
+/-- The bundled scalar inverse is right-inverse to the scalar. -/
+theorem scalarVerifiedInverse_right_inv {K : Type*} [Field K]
+    (z : K) (hz : z ≠ 0) :
+    z * (scalarVerifiedInverse z hz).inv = 1 := by
+  simpa [scalarVerifiedInverse] using mul_inv_cancel₀ hz
+
 end InfoGeometry.Geometry.ConstructiveCauchyKernel

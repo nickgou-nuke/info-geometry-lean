@@ -843,16 +843,12 @@ input_file dagPathingFile where
 
 require InfoGeometryCore from "lib" / "InfoGeometryCore"
 
-require Qq from git
-  "https://github.com/leanprover-community/quote4.git"
-  @ "v4.28.0"
-require plausible from git
-  "https://github.com/leanprover-community/plausible.git"
-  @ "v4.28.0"
+require Qq from ".lake/packages/Qq"
+require Plausible from ".lake/packages/Plausible"
 
-require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git"
-  @ "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+-- Enforce a single local mathlib source for this repository.
+-- Do not let Lake re-resolve mathlib from the upstream git URL.
+require mathlib from ".lake/packages/mathlib"
 require Paperproof from git
   "https://github.com/Paper-Proof/paperproof.git"
   @ "main" / "lean"
@@ -893,7 +889,7 @@ lean_lib InfoGeometry where
   -- provided through the root/`InfoGeometry.All` surface. Generated, proposal,
   -- and experimental modules are not exempt; if they fail this contract, repair
   -- them and wire them into the provided library surface.
-  roots := #[`InfoGeometry]
+  globs := #[.andSubmodules `InfoGeometry]
 
 /--
 Pinned local clone of the formal Lean proof of Erdos Problem #1196.

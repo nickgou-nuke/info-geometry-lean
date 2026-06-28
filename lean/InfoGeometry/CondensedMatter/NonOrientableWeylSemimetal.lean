@@ -189,6 +189,15 @@ theorem finite_glide_orbit_charge_cancellation_packet (q : ℤ) :
     nonorientable_mod_two_charge_cancels,
     same_integer_charge_mod_two_cancels q⟩
 
+/-- Reversing the local orientation at every site leaves the finite packet unchanged mod two. -/
+theorem totalChargeModTwo_pointwise_orientation_invariant
+    {ι : Type} [Fintype ι] (charge : ι → ℤ)
+    (sign : ι → ℤ) (hsign : ∀ i, sign i = 1 ∨ sign i = -1) :
+    totalChargeModTwo (fun i => sign i * charge i) = totalChargeModTwo charge := by
+  unfold totalChargeModTwo
+  exact Finset.sum_congr rfl
+    (fun i _ => orientation_sign_mul_invisible_mod_two (q := charge i) (hsign i))
+
 end InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 
 end noncomputable section

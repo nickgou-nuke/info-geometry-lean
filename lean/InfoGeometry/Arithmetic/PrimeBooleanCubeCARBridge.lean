@@ -168,37 +168,44 @@ theorem carGlobalChiralityReadout_eq_mobius
   exact (mobius_representedNat_eq_fermionParity P v).symm
 
 
-/-! ## 3. Bridge target contract -/
+/-! ## 3. Bridge theorem packet -/
 
 /--
-Finite CAR/Boolean-cube bridge target.
-
-This target intentionally covers only the finite preservation bridge.
+The finite CAR/Boolean-cube bridge is closed.
 -/
-@[owner_target_tag]
-def PrimeBooleanCubeCARBridgeOwnerTarget : Prop :=
-  ∀ {Op : Type*} [Ring Op]
+theorem primeBooleanCubeCARBridgeOwnerTarget :
+    ∀ {Op : Type*} [Ring Op]
+      (P : PrimeRegister)
+      (v : Vertex P)
+      (E : ℕ → ExteriorCARPair Op)
+      (χ : Op →+* ℤ)
+      (_ :
+        ∀ p ∈ P.primes,
+          χ ((E p).numberOp) = occupationInt p v.val),
+      carGlobalChiralityReadout P E χ = globalChirality P v.val ∧
+      carGlobalChiralityReadout P E χ = fermionParity v ∧
+      carGlobalChiralityReadout P E χ =
+        ArithmeticFunction.moebius (representedNat v) := by
+  intro Op inst P v E χ hN
+  exact
+    ⟨ carGlobalChiralityReadout_eq_booleanChirality P v E χ hN,
+      carGlobalChiralityReadout_eq_fermionParity P v E χ hN,
+      carGlobalChiralityReadout_eq_mobius P v E χ hN ⟩
+
+@[owner_target_tag, bridge_target_tag, rep_depth thermo]
+theorem primeBooleanCubeCARBridge_packet
+    {Op : Type*} [Ring Op]
     (P : PrimeRegister)
     (v : Vertex P)
     (E : ℕ → ExteriorCARPair Op)
     (χ : Op →+* ℤ)
     (hN :
       ∀ p ∈ P.primes,
-        χ ((E p).numberOp) = occupationInt p v.val),
+        χ ((E p).numberOp) = occupationInt p v.val) :
     carGlobalChiralityReadout P E χ = globalChirality P v.val ∧
     carGlobalChiralityReadout P E χ = fermionParity v ∧
     carGlobalChiralityReadout P E χ =
-      ArithmeticFunction.moebius (representedNat v)
-
-/--
-The finite CAR/Boolean-cube bridge owner target is closed.
--/
-theorem primeBooleanCubeCARBridgeOwnerTarget :
-    PrimeBooleanCubeCARBridgeOwnerTarget := by
-  intro Op inst P v E χ hN
-  exact
-    ⟨ carGlobalChiralityReadout_eq_booleanChirality P v E χ hN,
-      carGlobalChiralityReadout_eq_fermionParity P v E χ hN,
-      carGlobalChiralityReadout_eq_mobius P v E χ hN ⟩
+      ArithmeticFunction.moebius (representedNat v) :=
+  primeBooleanCubeCARBridgeOwnerTarget P v E χ hN
 
 end InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge

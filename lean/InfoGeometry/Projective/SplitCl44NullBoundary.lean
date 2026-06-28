@@ -73,11 +73,13 @@ def splitCl44NullMk (Z : SplitCl44ProjectiveNullRep) : SplitCl44ProjectiveNullSp
       asProjectiveNullBoundaryDatum u Z) := by
   exact ProjectiveNullBoundaryDatum.nullMk_scaleNull asProjectiveNullBoundaryDatum u Z
 
-/-- The split `Cl(4,4)` causal boundary is available as a generic projective-null quotient. -/
+/-- The split `Cl(4,4)` causal boundary contains the concrete head-null ray. -/
 theorem splitCl44ProjectiveNullBoundary_nonempty :
-    Nonempty SplitCl44ProjectiveNullSpace :=
-  ⟨ProjectiveNullBoundaryDatum.nullMk asProjectiveNullBoundaryDatum
-    ⟨InfoGeometry.Clifford.ClNN.headNullMinus 3,
+    ∃ Z : SplitCl44ProjectiveNullRep,
+      Z.Z = InfoGeometry.Clifford.ClNN.headNullMinus 3 ∧
+        splitCl44NullMk Z =
+          ProjectiveNullBoundaryDatum.nullMk asProjectiveNullBoundaryDatum Z := by
+  refine ⟨⟨InfoGeometry.Clifford.ClNN.headNullMinus 3,
       splitCl44_headNullMinus_isotropic,
       by
         intro hzero
@@ -86,6 +88,13 @@ theorem splitCl44ProjectiveNullBoundary_nonempty :
           exact LinearMap.map_zero (CliffordAlgebra.ι (Clifford.ClNN.Quad 4))
         have hcontr : (0 : SplitCl44Algebra) = 1 := by
           simpa [hzeroγ] using (splitCl44_headNull_clifford_car)
-        exact zero_ne_one hcontr⟩⟩
+        exact zero_ne_one hcontr⟩, rfl, rfl⟩
+
+/-- The split `Cl(4,4)` projective null quotient is inhabited by the concrete
+head-null ray. -/
+theorem splitCl44ProjectiveNullSpace_nonempty :
+    Nonempty SplitCl44ProjectiveNullSpace := by
+  rcases splitCl44ProjectiveNullBoundary_nonempty with ⟨Z, _hZ, _hmk⟩
+  exact ⟨splitCl44NullMk Z⟩
 
 end InfoGeometry.Projective.SplitCl44NullBoundary

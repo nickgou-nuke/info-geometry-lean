@@ -398,24 +398,43 @@ theorem chiral_odd
 
 end MomentumDIIISuperfluidDatum
 
-/-! ## 4. Owner target -/
+/-! ## 4. Owner theorem -/
 
 /--
-Owner target for DIII symmetry-class data.
+Read out the DIII symmetry laws from a supplied model datum.
 
-It is witness-gated: the concrete BdG carrier, symmetry operators, and
-topological invariant must be supplied by a model.
+The theorem is still model-gated: the concrete BdG carrier, symmetry
+operators, and topological invariant must be supplied by a model.  What it
+proves is not mere inhabitation; it exposes the kernel-checked sign,
+phase-reversal, chiral, and BdG covariance laws carried by that datum.
 -/
-@[owner_target_tag]
-def DIIISuperfluidOwnerTarget : Prop :=
-  ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
-    DIIISuperfluidDatum.{uH, uInv} H →
-      Nonempty (DIIISuperfluidDatum.{uH, uInv} H)
-
-/-- The DIII owner target is satisfied once the datum is supplied. -/
 theorem dIIISuperfluidOwnerTarget :
-    DIIISuperfluidOwnerTarget := by
+  ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
+    ∀ D : DIIISuperfluidDatum.{uH, uInv} H,
+      D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧
+      D.Theta.comp D.K = -(D.K.comp D.Theta) ∧
+      D.Xi.comp D.K = -(D.K.comp D.Xi) ∧
+      D.Theta.comp D.Theta = -(ContinuousLinearMap.id ℝ H) ∧
+      D.Xi.comp D.Xi = ContinuousLinearMap.id ℝ H ∧
+      D.Theta.comp D.Xi = -(D.Xi.comp D.Theta) ∧
+      D.chi = D.Theta.comp D.Xi ∧
+      D.chi.comp D.chi = ContinuousLinearMap.id ℝ H ∧
+      D.chi.comp D.K = D.K.comp D.chi ∧
+      D.Xi.comp D.BdG = -(D.BdG.comp D.Xi) ∧
+      D.Theta.comp D.BdG = D.BdG.comp D.Theta ∧
+      D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by
   intro H _ _ D
-  exact ⟨D⟩
+  exact ⟨D.K_sq, D.Theta_reverses_phase, D.Xi_reverses_phase,
+    D.Theta_sq, D.Xi_sq, D.Theta_Xi_anticomm, D.chi_eq, D.chi_sq,
+    D.chi_phase_linear, D.Xi_BdG, D.Theta_BdG, D.chi_BdG⟩
+
+/-- A supplied DIII datum exposes the chiral and BdG laws used downstream. -/
+theorem dIIISuperfluidDatum_packet
+    {H : Type uH} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (D : DIIISuperfluidDatum.{uH, uInv} H) :
+    D.chi.comp D.chi = ContinuousLinearMap.id ℝ H ∧
+      D.chi.comp D.K = D.K.comp D.chi ∧
+      D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by
+  exact ⟨D.chi_sq, D.chi_phase_linear, D.chi_BdG⟩
 
 end InfoGeometry.OperatorAlgebra.DIIISuperfluid

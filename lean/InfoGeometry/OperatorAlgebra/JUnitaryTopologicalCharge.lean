@@ -617,25 +617,29 @@ theorem determinant_sq_eq_one
 
 end ChiralTopologicalChargeBridge
 
-/-! ## 6. Owner targets -/
+/-! ## 6. Determinant obstruction readout -/
 
-/--
-Owner target for the determinant obstruction.
--/
-@[owner_target_tag]
-def JUnitaryTopologicalChargeOwnerTarget : Prop :=
+/-- The determinant obstruction follows algebraically from the adjoint determinant datum. -/
+theorem jUnitaryTopologicalChargeOwnerTarget :
   ∀ (Op : Type*) [Monoid Op],
   ∀ Adj : AdjointDatum Op,
   ∀ Det : AdjointDeterminantDatum Op Adj,
   ∀ J : Op,
   Det.det J ≠ 0 →
   ∀ U : JUnitary Adj J,
-    Det.det U.op ^ 2 = 1
-
-/-- The determinant obstruction owner target is proved algebraically from the datum. -/
-theorem jUnitaryTopologicalChargeOwnerTarget :
-    JUnitaryTopologicalChargeOwnerTarget := by
+    Det.det U.op ^ 2 = 1 := by
   intro Op _ Adj Det J hJ U
   exact JUnitary.det_sq_eq_one Det hJ U
+
+/-- Packet readout for a concrete `J`-unitary determinant obstruction. -/
+theorem jUnitaryTopologicalCharge_packet
+    (Op : Type*) [Monoid Op]
+    (Adj : AdjointDatum Op)
+    (Det : AdjointDeterminantDatum Op Adj)
+    (J : Op)
+    (hJ : Det.det J ≠ 0)
+    (U : JUnitary Adj J) :
+    Det.det U.op ^ 2 = 1 :=
+  jUnitaryTopologicalChargeOwnerTarget Op Adj Det J hJ U
 
 end InfoGeometry.OperatorAlgebra.TopologicalCharge

@@ -113,17 +113,30 @@ theorem d23HurwitzCliffordFilterBank_sum_normSq_eq_one :
 /--
 Combined theorem-safe owner target for the D23 Hurwitz--Clifford layer.
 
-This is intentionally lightweight: it records the instantiated filter bank
-and its three repo-owned readouts.
+This records the instantiated filter bank through its repo-owned readouts
+rather than a dummy inhabitance wrapper.
 -/
-@[owner_target_tag]
-def D23HurwitzCliffordFilterBankOwnerTarget : Prop :=
-  Nonempty (Fin 2 → HurwitzNode)
-
-/-- The D23 owner target is available. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBankOwnerTarget :
-    D23HurwitzCliffordFilterBankOwnerTarget := by
-  exact ⟨fun _ => node 0 0 0 0⟩
+    paraunitary d23HurwitzCliffordFilterBank ∧
+      Quaternion.normSq (d23HurwitzCliffordFilterBank.lowPass (show Fin 2 from 0)) =
+        (1 / 2 : ℝ) ∧
+      (∀ i : Fin 2,
+        Quaternion.normSq (d23HurwitzCliffordFilterBank.highPass i) = (1 / 2 : ℝ)) ∧
+      d23HurwitzCliffordFilterBank.sum_normSq_eq_one := by
+  exact ⟨d23HurwitzCliffordFilterBank_paraunitary,
+    d23_lowPass_normSq,
+    d23_highPass_normSq,
+    d23HurwitzCliffordFilterBank_sum_normSq_eq_one⟩
+
+@[owner_target_tag, rep_depth operator]
+theorem d23HurwitzCliffordFilterBank_packet :
+    paraunitary d23HurwitzCliffordFilterBank ∧
+      Quaternion.normSq (d23HurwitzCliffordFilterBank.lowPass (show Fin 2 from 0)) =
+        (1 / 2 : ℝ) ∧
+      (∀ i : Fin 2,
+        Quaternion.normSq (d23HurwitzCliffordFilterBank.highPass i) = (1 / 2 : ℝ)) ∧
+      d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
+  d23HurwitzCliffordFilterBankOwnerTarget
 
 end InfoGeometry.Analysis.D23HurwitzCliffordFilterBank

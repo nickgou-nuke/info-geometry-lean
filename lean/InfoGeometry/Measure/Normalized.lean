@@ -3,17 +3,15 @@ import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
-set_option linter.unnecessarySimpa false
 
 set_option autoImplicit false
-set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.MeasureProjective.Normalized
 
 open MeasureTheory
 open scoped ENNReal
 
-variable {α : Type*} [MeasurableSpace α] [MeasurableSingletonClass α]
+variable {α : Type*} [MeasurableSpace α]
 
 /-! ### 1. Normalized slice of the cone -/
 
@@ -28,8 +26,7 @@ abbrev probMeasureToUState (P : ProbabilityMeasure α) : UState α :=
 /-- A probability measure is nonzero when viewed as a finite measure. -/
 @[simp] theorem probMeasureToUState_ne_zero (P : ProbabilityMeasure α) :
     probMeasureToUState P ≠ 0 := by
-  simpa [probMeasureToUState] using
-    (ProbabilityMeasure.toFiniteMeasure_nonzero P)
+  exact ProbabilityMeasure.toFiniteMeasure_nonzero P
 
 /-- The canonical injection from `ProbabilityMeasure` to `NonzeroUState`. -/
 abbrev probMeasureToNonzero (P : ProbabilityMeasure α) : NonzeroUState α :=
@@ -39,8 +36,8 @@ abbrev probMeasureToNonzero (P : ProbabilityMeasure α) : NonzeroUState α :=
 @[simp] theorem normalizedSlice_probMeasureToNonzero [Nonempty α]
     (P : ProbabilityMeasure α) :
     normalizedSlice (probMeasureToNonzero P) = P := by
-  simpa [normalizedSlice, probMeasureToNonzero, probMeasureToUState] using
-    (ProbabilityMeasure.toFiniteMeasure_normalize_eq_self P)
+  simp [normalizedSlice, probMeasureToUState,
+    ProbabilityMeasure.toFiniteMeasure_normalize_eq_self]
 
 /-- Register a probability measure as a projective ray. -/
 noncomputable def probMeasureToProjectiveState [Nonempty α]
@@ -50,8 +47,7 @@ noncomputable def probMeasureToProjectiveState [Nonempty α]
 @[simp] theorem normalize_probMeasureToProjectiveState [Nonempty α]
     (P : ProbabilityMeasure α) :
     ProjectiveState.normalize (probMeasureToProjectiveState P) = P := by
-  simpa [probMeasureToProjectiveState] using
-    normalizedSlice_probMeasureToNonzero (P := P)
+  simp [probMeasureToProjectiveState]
 
 /-! ### 2. PMF embedding and discrete equivalence -/
 
@@ -65,12 +61,12 @@ noncomputable def pmfToProjectiveState [Nonempty α] (P : PMF α) : ProjectiveSt
 
 @[simp] theorem normalize_pmfToProjectiveState [Nonempty α] (P : PMF α) :
     ProjectiveState.normalize (pmfToProjectiveState P) = pmfToProbMeasure P := by
-  simpa [pmfToProjectiveState] using
-    normalize_probMeasureToProjectiveState (P := pmfToProbMeasure P)
+  simp [pmfToProjectiveState]
 
 section Countable
 
 variable [Countable α]
+variable [MeasurableSingletonClass α]
 
 /-- Recover a `PMF` from a discrete probability measure. -/
 noncomputable def probMeasureToPMF (P : ProbabilityMeasure α) : PMF α :=
@@ -78,15 +74,13 @@ noncomputable def probMeasureToPMF (P : ProbabilityMeasure α) : PMF α :=
 
 @[simp] theorem probMeasureToPMF_apply (P : ProbabilityMeasure α) (x : α) :
     probMeasureToPMF P x = (P : Measure α) {x} := by
-  simpa [probMeasureToPMF] using
-    (Measure.toPMF_apply (μ := (P : Measure α)) x)
+  simp [probMeasureToPMF, Measure.toPMF_apply]
 
 /-- `PMF → ProbabilityMeasure → PMF` is the identity on the discrete slice. -/
 @[simp] theorem probMeasureToPMF_pmfToProbMeasure (P : PMF α) :
     probMeasureToPMF (pmfToProbMeasure P) = P := by
   change P.toMeasure.toPMF = P
-  simpa [probMeasureToPMF, pmfToProbMeasure] using
-    (PMF.toMeasure_toPMF (p := P))
+  exact PMF.toMeasure_toPMF (p := P)
 
 /-- `ProbabilityMeasure → PMF → ProbabilityMeasure` is the identity on countable
 measurable-singleton spaces. -/
@@ -94,8 +88,7 @@ measurable-singleton spaces. -/
     pmfToProbMeasure (probMeasureToPMF P) = P := by
   apply ProbabilityMeasure.toMeasure_injective
   change (((P : Measure α)).toPMF.toMeasure) = (P : Measure α)
-  simpa [probMeasureToPMF, pmfToProbMeasure] using
-    (Measure.toPMF_toMeasure (μ := (P : Measure α)))
+  exact Measure.toPMF_toMeasure (μ := (P : Measure α))
 
 end Countable
 

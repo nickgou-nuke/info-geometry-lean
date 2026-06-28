@@ -447,16 +447,15 @@ theorem heat_eq_scalar_curvature_variation_plus_defect
 
 end ConformalThermodynamicLedger
 
-/-! ## 4. Owner target -/
+/-! ## 4. Ledger readout -/
 
 /--
-Owner target for the conformal ledger bridge.
+Conformal ledger bridge readout.
 
 Once the conformal thermodynamic ledger is supplied, heat, hidden information,
 and scalarized TKK Ricci flux agree by the bridge laws.
 -/
-@[owner_target_tag]
-def ConformalLedgerBridgeOwnerTarget : Prop :=
+theorem conformalLedgerBridgeOwnerTarget :
   ∀ (Sys Comm Jordan V Wamb L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
@@ -474,14 +473,30 @@ def ConformalLedgerBridgeOwnerTarget : Prop :=
         Λ.closure.ricciFlux
         Λ.heatRicciBridge.scalarReadout
         (Λ.heatRicciBridge.generatorOf x)
-        (Λ.heatRicciBridge.stateOf x)
-
-/--
-The owner target follows from the supplied conformal ledger bridge.
--/
-theorem conformalLedgerBridgeOwnerTarget :
-    ConformalLedgerBridgeOwnerTarget := by
+        (Λ.heatRicciBridge.stateOf x) := by
   intro Sys Comm Jordan V Wamb L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ Λ x
   exact Λ.heat_eq_tkk_ricci_flux x
+
+/-- Packet readout for one conformal thermodynamic ledger. -/
+theorem conformalLedgerBridge_packet
+    (Sys Comm Jordan V Wamb L State Geometry : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    [AddCommGroup Jordan] [Module ℝ Jordan]
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup Wamb] [Module ℝ Wamb]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry]
+    (Λ : ConformalThermodynamicLedger
+      Sys Comm Jordan V Wamb L State Geometry)
+    (x : Sys) :
+    heatLoss Λ.bregman Λ.channel x =
+      scalarTKKRicciFlux
+        Λ.closure.ricciFlux
+        Λ.heatRicciBridge.scalarReadout
+        (Λ.heatRicciBridge.generatorOf x)
+        (Λ.heatRicciBridge.stateOf x) :=
+  conformalLedgerBridgeOwnerTarget Sys Comm Jordan V Wamb L State Geometry Λ x
 
 end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

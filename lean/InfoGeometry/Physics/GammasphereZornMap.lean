@@ -1,5 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Mathlib.Tactic
+import InfoGeometry.Physics.ZornMatrixSU3
 import InfoGeometry.Physics.ZornNuclearState
 
 /- 
@@ -26,6 +28,8 @@ Date: 2026-06-23
 -/
 
 namespace InfoGeometry.Physics.Gammasphere
+
+abbrev ZornMatrix := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
 
 --===============================================================
 -- 1. EXPERIMENTAL DATA STRUCTURES (A=39 CED)
@@ -114,28 +118,10 @@ This represents the high-spin state as a coherent mixture of:
 -/
 noncomputable def CED_to_ZornState (ced : CEDMeasurement) : ZornMatrix :=
   let lambda := gradeMixingParameter ced
-  let vacuum_component := ZornMatrix.vacuumPos  -- |v₁⟩
-  let quark_antiquark_sum := 
-    (ZornMatrix.quarkState 0 + ZornMatrix.antiquarkState 0) +
-    (ZornMatrix.quarkState 1 + ZornMatrix.antiquarkState 1) +
-    (ZornMatrix.quarkState 2 + ZornMatrix.antiquarkState 2)
-  
-  -- Superposition: √(1-lambda²)|v₁⟩ + (lambda/√3) Σ|qᵢ + q̄ᵢ⟩
-  -- Normalized such that det captures the grade mixing
-  let normalization_vacuum := Real.sqrt (1 - lambda^2)
-  let normalization_qqbar := lambda / Real.sqrt 3
-  
-  -- Scale vacuum
-  ({ a := normalization_vacuum * vacuum_component.a
-     b := normalization_vacuum * vacuum_component.b
-     x := fun i => normalization_vacuum * vacuum_component.x i
-     y := fun i => normalization_vacuum * vacuum_component.y i } : ZornMatrix)
-  +
-  -- Scale quark-antiquark sum
-  ({ a := normalization_qqbar * quark_antiquark_sum.a
-     b := normalization_qqbar * quark_antiquark_sum.b
-     x := fun i => normalization_qqbar * quark_antiquark_sum.x i
-     y := fun i => normalization_qqbar * quark_antiquark_sum.y i } : ZornMatrix)
+  { a := Real.sqrt (1 - lambda^2)
+    b := 0
+    x := fun _ => lambda / Real.sqrt 3
+    y := fun _ => lambda / Real.sqrt 3 }
 
 /-- 
 Theorem: Determinant of CED-derived Zorn state encodes CED magnitude
@@ -153,53 +139,16 @@ the pull away from the null cone into the massive bulk.
 -/
 theorem CED_state_determinant (ced : CEDMeasurement) :
   let lambda := gradeMixingParameter ced
-  (CED_to_ZornState ced).det = -lambda^2 := by
-  dsimp only [CED_to_ZornState, gradeMixingParameter, ZornMatrix.det, ZornMatrix.vacuumPos,
-    ZornMatrix.quarkState, ZornMatrix.antiquarkState, ZornMatrix.add] at *
-  -- Compute the determinant explicitly
-  have h₁ : (Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (1 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (0 : ℝ)) * ((Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (0 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (0 : ℝ)) - (∑ i : Fin 3, (Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (0 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (1 : ℝ)) * (Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (0 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (1 : ℝ)) = -(min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2 := by
-    have h₂ : 0 ≤ (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) := by
-      apply le_min
-      · norm_num
-      · have h₃ : 0 < ced.ced_keV := ced.positive
-        have h₄ : 0 ≤ ced.ced_keV := by linarith
-        positivity
-    have h₃ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) ≤ 1 := by
-      apply min_le_left
-    have h₄ : 0 ≤ Real.sqrt 3 := Real.sqrt_nonneg 3
-    have h₅ : 0 < Real.sqrt 3 := Real.sqrt_pos.mpr (by norm_num)
-    have h₆ : 0 ≤ 1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2 := by
-      have h₇ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) ≤ 1 := h₃
-      have h₈ : 0 ≤ (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) := h₂
-      nlinarith [sq_nonneg (min (1.0 : ℝ) (ced.ced_keV / 100.0))]
-    have h₇ : 0 ≤ Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) := Real.sqrt_nonneg _
-    -- Simplify the sum
-    have h₈ : (∑ i : Fin 3, (Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (0 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (1 : ℝ)) * (Real.sqrt (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2) * (0 : ℝ) + (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (1 : ℝ)) = 3 * ((min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3)) := by
-      simp [Fin.sum_univ_succ]
-      <;> ring_nf
-      <;> field_simp [h₅.ne']
-      <;> ring_nf
-      <;> norm_num
-      <;> linarith
-    rw [h₈]
-    have h₉ : 3 * ((min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3) * (min (1.0 : ℝ) (ced.ced_keV / 100.0) / Real.sqrt 3)) = (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2 := by
-      field_simp [h₅.ne', Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
-      <;> ring_nf
-      <;> field_simp [h₅.ne']
-      <;> nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
-    rw [h₉]
-    <;> ring_nf
-    <;> field_simp [h₅.ne']
-    <;> nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num), Real.sqrt_nonneg (1 - (min (1.0 : ℝ) (ced.ced_keV / 100.0)) ^ 2)]
-  -- Use the computation to prove the theorem
-  simp_all [gradeMixingParameter]
-  <;>
-  (try norm_num at *) <;>
-  (try linarith) <;>
-  (try ring_nf at *) <;>
-  (try simp_all [div_le_iff]) <;>
-  (try norm_num) <;>
-  (try linarith [ced.positive])
+  InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced) = -lambda^2 := by
+  have hsqrt3 : (Real.sqrt 3) ^ 2 = (3 : ℝ) :=
+    Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)
+  have hsqrt3_ne : Real.sqrt 3 ≠ 0 :=
+    (Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 3)).ne'
+  simp [CED_to_ZornState, InfoGeometry.Physics.ZornMatrixSU3.norm,
+    InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+  field_simp [hsqrt3_ne]
+  nlinarith
 
 --===============================================================
 -- 4. PHYSICAL INTERPRETATION THEOREMS
@@ -215,8 +164,8 @@ This corresponds to the dominance of the grade-0 vacuum component.
 -/
 theorem low_spin_vacuum_dominance (ced : CEDMeasurement)
   (h_low : ced.ced_keV < 20) :
-  abs (CED_to_ZornState ced).det < 0.04 := by
-  have h₁ : (CED_to_ZornState ced).det = -(gradeMixingParameter ced)^2 := by
+  abs (InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced)) < 0.04 := by
+  have h₁ : InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced) = -(gradeMixingParameter ced)^2 := by
     rw [CED_state_determinant]
   rw [h₁]
   have h₂ : abs (-(gradeMixingParameter ced : ℝ)^2) = (gradeMixingParameter ced : ℝ)^2 := by
@@ -263,8 +212,8 @@ This reflects substantial grade ±1 mixing (quark-antiquark alignment).
 -/
 theorem high_spin_grade_mixing (ced : CEDMeasurement)
   (h_high : ced.ced_keV > 80) :
-  abs (CED_to_ZornState ced).det > 0.64 := by
-  have h₁ : (CED_to_ZornState ced).det = -(gradeMixingParameter ced)^2 := by
+  abs (InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced)) > 0.64 := by
+  have h₁ : InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced) = -(gradeMixingParameter ced)^2 := by
     rw [CED_state_determinant]
   rw [h₁]
   have h₂ : abs (-(gradeMixingParameter ced : ℝ)^2) = (gradeMixingParameter ced : ℝ)^2 := by
@@ -331,10 +280,10 @@ theorem CED_growth_implies_grade_alignment
   (h_ced : ced1.ced_keV < ced2.ced_keV)
   (h1 : ced1.ced_keV ≤ 95)
   (h2 : ced2.ced_keV ≤ 95) :
-  abs (CED_to_ZornState ced1).det < abs (CED_to_ZornState ced2).det := by
-  have h₃ : (CED_to_ZornState ced1).det = -(gradeMixingParameter ced1)^2 := by
+  abs (InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced1)) < abs (InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced2)) := by
+  have h₃ : InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced1) = -(gradeMixingParameter ced1)^2 := by
     rw [CED_state_determinant]
-  have h₄ : (CED_to_ZornState ced2).det = -(gradeMixingParameter ced2)^2 := by
+  have h₄ : InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced2) = -(gradeMixingParameter ced2)^2 := by
     rw [CED_state_determinant]
   rw [h₃, h₄]
   have h₅ : abs (-(gradeMixingParameter ced1 : ℝ)^2) = (gradeMixingParameter ced1 : ℝ)^2 := by
@@ -405,7 +354,7 @@ This spans the transition from null cone to bulk.
 -/
 noncomputable def verify_A39_data : List (ℝ × ℝ) :=
   A39_CED_Dataset.map (fun ced => 
-    (ced.ced_keV, (CED_to_ZornState ced).det))
+    (ced.ced_keV, InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced)))
 
 /-- 
 Summary theorem: TKK formalism matches A=39 CED systematics
@@ -423,7 +372,7 @@ external parameters.
 theorem A39_CED_validation :
   ∀ (ced : CEDMeasurement), ced ∈ A39_CED_Dataset →
     ∃ (lambda : ℝ), lambda = gradeMixingParameter ced ∧
-    (CED_to_ZornState ced).det = -lambda^2 := by
+    InfoGeometry.Physics.ZornMatrixSU3.norm (CED_to_ZornState ced) = -lambda^2 := by
   intro ced h_in
   refine' ⟨gradeMixingParameter ced, rfl, _⟩
   exact CED_state_determinant ced

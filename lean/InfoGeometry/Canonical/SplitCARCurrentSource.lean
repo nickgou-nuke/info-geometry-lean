@@ -54,11 +54,14 @@ def toCurrentHeisenbergRep
   trunc := W.trunc
   comm := W.comm
 
-/-- Any such witness yields a `CurrentHeisenbergRep`. -/
-theorem toCurrentHeisenbergRep_nonempty
+/-- The converted Heisenberg representation preserves the witness fields and current law. -/
+theorem toCurrentHeisenbergRep_readout
     (W : SplitCARCurrentWitness 𝕜 A V) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) :=
-  ⟨W.toCurrentHeisenbergRep⟩
+    W.toCurrentHeisenbergRep.J = W.J ∧
+      W.toCurrentHeisenbergRep.trunc = W.trunc ∧
+      ∀ m n, (W.toCurrentHeisenbergRep.J m).commutator (W.toCurrentHeisenbergRep.J n) =
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 :=
+  ⟨rfl, rfl, W.toCurrentHeisenbergRep.comm⟩
 
 end SplitCARCurrentWitness
 
@@ -102,14 +105,26 @@ noncomputable def chargedFockSpaceSplitCARCurrentWitness
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
   rfl
 
-/-- The concrete charged-Fock CAR witness is nonempty. -/
-theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
+/-- The concrete charged-Fock CAR witness carries truncation and commutator laws. -/
+theorem chargedFockSpaceSplitCARCurrentWitness_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (SplitCARCurrentWitness 𝕜
-      (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
-        (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
-      (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  ⟨chargedFockSpaceSplitCARCurrentWitness 𝕜 α⟩
+    (∀ v : VirasoroProject.ChargedFockSpace 𝕜 α,
+      ∀ᶠ l : Int in atTop,
+        (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J l v = 0)
+      ∧
+    (∀ m n : Int,
+      ((chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J m).commutator
+          ((chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J n)
+        =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)
+      else
+        0) :=
+  ⟨(chargedFockSpaceSplitCARCurrentWitness 𝕜 α).trunc,
+    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).comm⟩
 
 /-- The concrete charged-Fock CAR witness canonically yields a Sugawara morphism. -/
 noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
@@ -130,11 +145,14 @@ noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
       (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation :=
   rfl
 
-/-- The concrete charged-Fock CAR witness also yields the packaged Sugawara surface. -/
-theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_nonempty
+/-- The concrete charged-Fock CAR witness yields the stated Sugawara fields. -/
+theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  ⟨chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α⟩
+    (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).heisenberg =
+        (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep ∧
+      (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).virasoro =
+        (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation :=
+  ⟨rfl, rfl⟩
 
 /-! ## Direct constructive closure (no witness wrapper in theorem statements) -/
 

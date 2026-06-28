@@ -1,0 +1,8 @@
+DIGEST 4987dbcf4612451ce7e58fc219533fcf
+Ftest11
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:40 Stdlib.setoid_ring.Ring <> <> lib
+prf 69:72 <> test
+R80:83 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R76:79 Corelib.Init.Logic <> True ind
+R84:87 Corelib.Init.Logic <> True ind

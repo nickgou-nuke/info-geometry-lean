@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
+open InfoGeometryCore
 /-!
 # Section 30 repaired: finite Pauli/Bloch/Minkowski matrix framework
 
@@ -29,52 +31,52 @@ open Matrix Complex
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
 /-- First Pauli matrix. -/
-def sigma1 : Mat2C :=
-  ![![(0 : ℂ), (1 : ℂ)],
-    ![(1 : ℂ), (0 : ℂ)]]
+abbrev sigma1 := sigma1C
 
 /-- Second Pauli matrix. -/
-def sigma2 : Mat2C :=
-  ![![(0 : ℂ), (-Complex.I : ℂ)],
-    ![Complex.I, (0 : ℂ)]]
+abbrev sigma2 := sigma2C
 
 /-- Third Pauli matrix. -/
-def sigma3 : Mat2C :=
-  ![![(1 : ℂ), (0 : ℂ)],
-    ![(0 : ℂ), (-1 : ℂ)]]
+abbrev sigma3 := sigma3C
 
 /-- `σ₁² = I`. -/
 theorem sigma1_sq : sigma1 * sigma1 = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [sigma1, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    norm_num [sigma1, sigma1C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- `σ₂² = I`. -/
 theorem sigma2_sq : sigma2 * sigma2 = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [sigma2, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    norm_num [sigma2, sigma2C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- `σ₃² = I`. -/
 theorem sigma3_sq : sigma3 * sigma3 = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;>
+    norm_num [sigma3, sigma3C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Pauli multiplication: `σ₁ σ₂ = I σ₃`. -/
 theorem sigma1_mul_sigma2 : sigma1 * sigma2 = Complex.I • sigma3 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sigma1, sigma2, sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    norm_num [sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C, Matrix.mul_apply,
+      Fin.sum_univ_two]
 
 /-- Pauli multiplication: `σ₂ σ₃ = I σ₁`. -/
 theorem sigma2_mul_sigma3 : sigma2 * sigma3 = Complex.I • sigma1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sigma1, sigma2, sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    norm_num [sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C, Matrix.mul_apply,
+      Fin.sum_univ_two]
 
 /-- Pauli multiplication: `σ₃ σ₁ = I σ₂`. -/
 theorem sigma3_mul_sigma1 : sigma3 * sigma1 = Complex.I • sigma2 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [sigma1, sigma2, sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    norm_num [sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C, Matrix.mul_apply,
+      Fin.sum_univ_two]
 
 /-- Corrected quaternion-image basis element corresponding to quaternion `i`. -/
 def quatI : Mat2C := Complex.I • sigma1
@@ -89,25 +91,30 @@ def quatK : Mat2C := -(Complex.I • sigma3)
 theorem quatI_sq : quatI * quatI = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatI, sigma1, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
+    simp [quatI, sigma1, sigma1C, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
 
 /-- The corrected image has `j² = -1`. -/
 theorem quatJ_sq : quatJ * quatJ = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatJ, sigma2, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
+    simp [quatJ, sigma2, sigma2C, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
 
 /-- The corrected image has `k² = -1`. -/
 theorem quatK_sq : quatK * quatK = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatK, sigma3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
+    simp [quatK, sigma3, sigma3C, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
 
 /-- Corrected quaternion sign: `(Iσ₁)(Iσ₂) = -Iσ₃`, i.e. `ij = k`. -/
 theorem quatI_mul_quatJ : quatI * quatJ = quatK := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatI, quatJ, quatK, sigma1, sigma2, sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [quatI, quatJ, quatK, sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C,
+      Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
 
 /-- Unnormalized Hermitian/Minkowski matrix `t I + x σ₁ + y σ₂ + z σ₃`. -/
 def spacetimeMatrix (t x y z : ℝ) : Mat2C :=
@@ -123,6 +130,7 @@ theorem spacetimeMatrix_det (t x y z : ℝ) :
     (spacetimeMatrix t x y z).det =
       (t : ℂ) ^ 2 - (x : ℂ) ^ 2 - (y : ℂ) ^ 2 - (z : ℂ) ^ 2 := by
   simp [spacetimeMatrix, sigma1, sigma2, sigma3, Matrix.det_fin_two]
+  simp [sigma1C, sigma2C, sigma3C]
   ring_nf
   rw [pow_two (Complex.I : ℂ), Complex.I_mul_I]
   ring
@@ -142,7 +150,8 @@ def blochMatrix (nx ny nz : ℝ) : Mat2C :=
 /-- Every finite Bloch matrix has trace one. -/
 theorem blochMatrix_trace (nx ny nz : ℝ) :
     (blochMatrix nx ny nz).trace = 1 := by
-  simp [blochMatrix, sigma1, sigma2, sigma3, Matrix.trace, Fin.sum_univ_two]
+  simp [blochMatrix, sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C, Matrix.trace,
+    Fin.sum_univ_two]
   ring_nf
 
 /-- Determinant of the finite Bloch matrix. -/
@@ -150,6 +159,7 @@ theorem blochMatrix_det (nx ny nz : ℝ) :
     (blochMatrix nx ny nz).det =
       ((1 : ℂ) - (nx : ℂ) ^ 2 - (ny : ℂ) ^ 2 - (nz : ℂ) ^ 2) / 4 := by
   simp [blochMatrix, sigma1, sigma2, sigma3, Matrix.det_fin_two]
+  simp [sigma1C, sigma2C, sigma3C]
   ring_nf
   rw [pow_two (Complex.I : ℂ), Complex.I_mul_I]
   ring

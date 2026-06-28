@@ -199,18 +199,29 @@ def OperatorErlangenLegendreTarget
     (StateSpace : Type uState)
     [Ring Obs]
     [Group Sym] : Prop :=
-  Nonempty (OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace)
+  ∀ P : OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace,
+    (∀ (ω : StateSpace) (x : Obs),
+      P.modularDerivation ω x =
+        P.modularGenerator ω * x - x * P.modularGenerator ω) ∧
+    (∀ (ω : StateSpace) (g : Sym),
+      P.stabilizer ω g ↔
+        ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x) ∧
+    (∀ ω : StateSpace,
+      P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω))
 
-/-- Constructor for the operator Erlangen--Legendre owner target. -/
-theorem constructOperatorErlangenLegendreTarget
+/-- Readout theorem for the operator Erlangen--Legendre owner target. -/
+theorem operatorErlangenLegendreTarget
     {Obs : Type uObs}
     {Sym : Type uSym}
     {StateSpace : Type uState}
     [Ring Obs]
-    [Group Sym]
-    (P : OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace) :
+    [Group Sym] :
     OperatorErlangenLegendreTarget.{uObs, uSym, uState, uPol} Obs Sym StateSpace := by
-  exact ⟨P⟩
+  intro P
+  exact ⟨
+    (fun ω x => P.modular_derivation_eq_commutator ω x),
+    (fun ω g => P.stabilizer_iff_eval_invariant_readback ω g),
+    (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight_readback ω)⟩
 
 /-! ## Conditional Hilbert--Polya socket -/
 

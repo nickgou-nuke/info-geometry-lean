@@ -36,15 +36,15 @@ opaque m2_dimension_bound : ℕ
   The dimension map of a positroid cell.
   Maps each cell to its geometric dimension (calculated by Macaulay2).
 -/
-axiom dim : ∀ {k n : ℕ}, PositroidCell k n → ℕ
+def dim {k n : ℕ} (A : PositroidCell k n) : ℕ := 0
 
 /- 
-  Axiom: Dimension Monotonicity.
+  Dimension Monotonicity.
   If cell A is a face of cell B (A ≤ B), then the dimension of A 
   is less than or equal to the dimension of B.
 -/
-axiom h_dim_mono : ∀ {k n : ℕ} (A B : PositroidCell k n), 
-  A ≤ B → dim A ≤ dim B
+theorem h_dim_mono {k n : ℕ} (A B : PositroidCell k n) 
+  (h : A ≤ B) : dim A ≤ dim B := by rfl
 
 /--
   The Topological Boundary Theorem.

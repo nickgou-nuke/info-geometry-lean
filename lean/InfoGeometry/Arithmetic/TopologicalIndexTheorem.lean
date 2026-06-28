@@ -1,120 +1,61 @@
-import InfoGeometry.Arithmetic.Capstone
 import InfoGeometry.Arithmetic.IndexTheorem
-import InfoGeometry.Arithmetic.MoebiusWeylEuler
-import InfoGeometry.Arithmetic.DirichletCharacters
+import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
-import DAG.GraphHodge
-import DAG.HodgeTheorems
-import DAG.HarmonicKMS
+import DAG.ChiralDiracAnticommutation
 import DAG.AffineProjectiveClosure
-import DAG.TwoComplexKasparov
-import DAG.MatrixRepresentation
-
-/-!
-# The Topological Index Theorem of the Arithmetic DAG
-
-**Formal Theorem Statement and Proof Map**
-
-## Theorem (Witten Index = Euler Characteristic of the Cantor Boundary)
-
-    WittenIndex(ArithmeticDAG, β) = χ(CantorBoundary)
-                                 = Σ_k (-1)^k β_k
-                                 = Tr(Γ·e^{-βΔ})
-                                 = 1/ζ(β)
-
-And its Koszul dual:
-
-    BosonicTrace(ArithmeticDAG, β) = Tr(e^{-βH})
-                                   = ζ(β)
-
-    ζ(β) · 1/ζ(β) = 1    (affine projective closure)
-
-## Proof Map
-
-Each implication is verified by a compiled file in the repository:
-
-(1) Prime DAG → TwoComplex
-    The divisibility partial order on ℕ^× generates a DAG.
-    Its boundary operators ∂₁, ∂₂ define a chain complex.
-    → DAG/TwoComplex.lean, DAG/GraphHodge.lean
-
-(2) TwoComplex → Hodge Laplacian
-    Δ₀ = ∂₁ᵀ∂₁, Δ₁ = ∂₁∂₁ᵀ + ∂₂ᵀ∂₂, Δ₂ = ∂₂∂₂ᵀ.
-    The Hodge decomposition: Cᵏ = exact ⊕ coexact ⊕ harmonic.
-    → DAG/GraphHodge.lean, DAG/HodgeTheorems.lean
-
-(3) Harmonic = KMS equilibrium
-    Δ₁ψ = 0 ⇒ ∂₂ψ = 0, ∂₁ᵀψ = 0 ⇒ K_ψ self-adjoint
-    ⇒ modular flow σ_t = exp(t·ad_K) has trivial Connes cocycle
-    → DAG/HarmonicKMS.lean
-
-(4) Trace of heat kernel = ζ(β)
-    H|n⟩ = log(n)|n⟩ ⇒ Tr(e^{-βH}) = Σ n^{-β} = ζ(β)
-    → InfoGeometry/Arithmetic/BostConnesSystem.lean
-
-(5) Witten index = 1/ζ(β)
-    Γ|n⟩ = μ(n)|n⟩ ⇒ Tr(Γ·e^{-βH}) = Σ μ(n)·n^{-β} = 1/ζ(β)
-    → InfoGeometry/Arithmetic/MoebiusWeylEuler.lean
-
-(6) ζ(β)·1/ζ(β) = 1
-    Koszul duality: Sym(V) ⊗ ∧(V) ≅ ℝ (in the graded sense)
-    → DAG/AffineProjectiveClosure.lean
-
-## The Formal Statement
--/
-
-open Complex
 
 namespace InfoGeometry.Arithmetic.TopologicalIndexTheorem
 
-open Capstone
-open IndexTheorem
-open MoebiusWeylEuler
-open DAG
+open InfoGeometry.Arithmetic
+open InfoGeometry.Analysis.RotorCocycleBregmanBridge
 
-/- ## The Theorem -/
+/-- The arithmetic vacuum has trivial Liouville grading. -/
+@[simp] theorem liouville_one :
+    BostConnesSystem.liouville 1 = 1 :=
+  IndexTheorem.liouville_one
 
-/-
-**Theorem (Topological Index of the Arithmetic DAG).**
+/-- Multiplication by a prime flips the Liouville sign. -/
+theorem liouville_prime_mul (p n : ℕ+) (hp : Nat.Prime p.val) :
+    BostConnesSystem.liouville (p * n) = -BostConnesSystem.liouville n :=
+  IndexTheorem.liouville_prime_mul p n hp
 
-Let:
-- H be the Bost-Connes Hamiltonian H|n⟩ = log(n)·|n⟩ on ℓ²(ℕ^+)
-- Γ = (-1)^F be the Liouville/chiral grading Γ|n⟩ = λ(n)·|n⟩
-- Δ be the Hodge Laplacian on the arithmetic TwoComplex
-- ζ(β) = Σ_n n^{-β} be the Riemann zeta function
-- μ(n) be the Möbius function (Weyl sign of S_∞ on squarefree n)
+/-- The finite Dirac operator anticommutes with the finite chiral grading. -/
+theorem dirac_anticommutes_gamma {n0 n1 n2 : ℕ}
+    (B1 : Matrix (Fin n0) (Fin n1) ℝ)
+    (B2 : Matrix (Fin n1) (Fin n2) ℝ) :
+    DAG.ChiralDiracAnticommutation.chiralGamma *
+        DAG.ChiralDiracAnticommutation.diracOp B1 B2 +
+      DAG.ChiralDiracAnticommutation.diracOp B1 B2 *
+        DAG.ChiralDiracAnticommutation.chiralGamma = 0 :=
+  DAG.ChiralDiracAnticommutation.dirac_anticommutes_gamma B1 B2
 
-Then:
+/-- The rotor/Bregman packet has zero remainder at time `0`. -/
+@[simp] theorem exponentialRemainder_zero {n : ℕ}
+    (K : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) :
+    InfoGeometry.Analysis.BregmanAnalyticBound.exponentialRemainder K 0 = 0 :=
+  InfoGeometry.Analysis.RotorCocycleBregmanBridge.exponentialRemainder_zero K
 
-1. **Bosonic partition function**:
-   Tr_Sym(e^{-βH}) = ∏_p (1-p^{-β})^{-1} = ζ(β)
+theorem finite_index_inputs {n0 n1 n2 n : ℕ}
+    (p q : ℕ+) (hp : Nat.Prime p.val)
+    (B1 : Matrix (Fin n0) (Fin n1) ℝ)
+    (B2 : Matrix (Fin n1) (Fin n2) ℝ)
+    (K : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) :
+    BostConnesSystem.liouville 1 = 1 ∧
+      BostConnesSystem.liouville (p * q) = -BostConnesSystem.liouville q ∧
+      (DAG.ChiralDiracAnticommutation.chiralGamma *
+          DAG.ChiralDiracAnticommutation.diracOp B1 B2 +
+        DAG.ChiralDiracAnticommutation.diracOp B1 B2 *
+          DAG.ChiralDiracAnticommutation.chiralGamma = 0) ∧
+      (InfoGeometry.Analysis.BregmanAnalyticBound.exponentialRemainder K 0 = 0) := by
+  constructor
+  · exact liouville_one
+  constructor
+  · exact liouville_prime_mul p q hp
+  constructor
+  · exact dirac_anticommutes_gamma B1 B2
+  · exact exponentialRemainder_zero K
 
-2. **Witten index (fermionic supertrace)**:
-   Tr_∧(Γ·e^{-βH}) = Σ_n μ(n)·n^{-β} = ∏_p (1-p^{-β}) = 1/ζ(β)
-
-3. **Koszul duality**:
-   ζ(β) · 1/ζ(β) = 1
-
-4. **Euler characteristic of the Cantor boundary**:
-   χ({0,1}^ℕ) = dim(ker Δ₀) - dim(ker Δ₁) + dim(ker Δ₂) = 1
-
-5. **Anomaly cancellation**:
-   The bosonic central charge c_B and fermionic central charge c_F
-   satisfy c_B + c_F = 0. The total conformal anomaly vanishes.
-
-6. **β-independence**:
-   The Witten index is independent of β:
-   Tr(Γ·e^{-βΔ}) = Tr(Γ·e^{-β'Δ}) for all β, β' > 1.
-
-All six statements are equivalent. They are the structural content
-of the assertion that the Riemann zeta function is the partition
-function of the supersymmetric primon gas on the Cantor boundary,
-and that its Möbius inverse is the Witten index.
-
-The proof is distributed across the repository as documented in
-the Proof Map above. Each implication is verified by a compiled
-Lean file. The full chain of 8,414 jobs constitutes the formal
-verification.
--/
+def topological_index_theorem_debt : String :=
+  "Open: prove any arithmetic topological-index statement only from explicit finite complex, trace, convergence, and cohomology hypotheses."
 
 end InfoGeometry.Arithmetic.TopologicalIndexTheorem

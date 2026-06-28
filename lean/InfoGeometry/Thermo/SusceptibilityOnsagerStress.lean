@@ -406,7 +406,15 @@ theorem susceptibilityOnsagerStressOwnerTarget
     [NormedAddCommGroup Field] [NormedSpace ℝ Field]
     [NormedAddCommGroup Response] [NormedSpace ℝ Response]
     [AddCommMonoid Carrier] [Module ℝ Carrier] :
-    SusceptibilityOnsagerStressOwnerTarget Op Field Response Carrier := by
+    ∀ (P : SusceptibilityOnsagerStressPacket Op Field Response Carrier),
+      (∀ (A B : Op),
+        P.operatorOnsager.form A B = P.operatorOnsager.form B A) ∧
+      (∀ (U : Op) (E₁ E₂ : Field),
+        P.onsagerPairing.pairing U E₁ E₂ = P.onsagerPairing.pairing U E₂ E₁) ∧
+      (∀ (U : Op) (X Y : Carrier),
+        P.stressTensor.stress U X Y = P.stressTensor.stress U Y X) ∧
+      (∀ (U : Op),
+        P.derivedStress.derivedStress U = P.stressTensor.stress (P.derivation U)) := by
   intro P
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro A B

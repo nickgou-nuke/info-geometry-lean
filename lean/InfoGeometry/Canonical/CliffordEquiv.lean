@@ -328,19 +328,19 @@ noncomputable def complexLiftEquiv {A : Type*} [Ring A] [Algebra ℝ A] [Nontriv
     dsimp [complexLiftRange]
     exact hz⟩
 
-/-- Peirce-Clifford equivalence: both subalgebras are isomorphic to ℂ,
-    so they are isomorphic to each other. -/
-theorem peirceCliffordEquivalence :
-    Nonempty (complexSubalgebra e₁_R e₁_R_sq ≃ₗ[ℝ]
-              complexSubalgebra cliffordBivector cliffordBivector_sq) := by
-  have h1 : Nonempty (complexSubalgebra e₁_R e₁_R_sq ≃ₗ[ℝ] ℂ) :=
-    ⟨(complexLiftEquiv e₁_R e₁_R_sq).symm⟩
-  have h2 : Nonempty (ℂ ≃ₗ[ℝ] complexSubalgebra
-                      cliffordBivector cliffordBivector_sq) :=
-    ⟨complexLiftEquiv cliffordBivector cliffordBivector_sq⟩
-  rcases h1 with ⟨e1⟩
-  rcases h2 with ⟨e2⟩
-  exact ⟨e1.trans e2⟩
+/-- Peirce-Clifford equivalence: both generated subalgebras are linearly
+equivalent through the canonical `ℂ` model. -/
+noncomputable def peirceCliffordEquivalence :
+    complexSubalgebra e₁_R e₁_R_sq ≃ₗ[ℝ]
+      complexSubalgebra cliffordBivector cliffordBivector_sq :=
+  (complexLiftEquiv e₁_R e₁_R_sq).symm.trans
+    (complexLiftEquiv cliffordBivector cliffordBivector_sq)
+
+theorem peirceCliffordEquivalence_eq_trans :
+    peirceCliffordEquivalence =
+      (complexLiftEquiv e₁_R e₁_R_sq).symm.trans
+        (complexLiftEquiv cliffordBivector cliffordBivector_sq) :=
+  rfl
 
 /-- The Peirce-ladder complex structure is definitionally the `Cl(1,1)` generator `e₁`. -/
 theorem peirceLadder_J_eq_cl11_generator :
@@ -356,25 +356,28 @@ theorem peirceLadder_J_sq_neg_one :
 /--
 Finite bridge packet for the internal complex structures currently realized in-repo.
 
-This is the honest closure surface presently available:
-* the Furey/Peirce ladder complex structure is exactly the `Cl(1,1)` generator `e₁`;
-* that generator squares to `-1`;
-* the Mathlib `Cl(2,0)` bivector squares to `-1`;
-* the corresponding `ℂ`-generated real subalgebras are linearly equivalent;
-* the finite Hestenes spinor proxy has a bivector `e₁₂` with the same square law.
-
+It carries the actual linear equivalence data instead of an existence wrapper.
 It does not claim a full global representation identification between all these carriers.
 -/
-theorem finite_complex_structure_bridge_packet :
-    InfoGeometry.Algebra.PeirceLadder.J = InfoGeometry.Algebra.Cl11Fermions.e₁ ∧
-    InfoGeometry.Algebra.PeirceLadder.J * InfoGeometry.Algebra.PeirceLadder.J = -1 ∧
-    cliffordBivector * cliffordBivector = -1 ∧
-    Nonempty (complexSubalgebra e₁_R e₁_R_sq ≃ₗ[ℝ]
-      complexSubalgebra cliffordBivector cliffordBivector_sq) ∧
+structure FiniteComplexStructureBridgePacket where
+  peirce_eq_cl11 :
+    InfoGeometry.Algebra.PeirceLadder.J = InfoGeometry.Algebra.Cl11Fermions.e₁
+  peirce_sq :
+    InfoGeometry.Algebra.PeirceLadder.J * InfoGeometry.Algebra.PeirceLadder.J = -1
+  clifford_bivector_sq : cliffordBivector * cliffordBivector = -1
+  peirce_clifford_equiv :
+    complexSubalgebra e₁_R e₁_R_sq ≃ₗ[ℝ]
+      complexSubalgebra cliffordBivector cliffordBivector_sq
+  finite_hestenes_sq :
     InfoGeometry.Geometry.FiniteHestenesCR.bivector_i *
-        InfoGeometry.Geometry.FiniteHestenesCR.bivector_i = ⟨-1, 0, 0, 0⟩ := by
-  exact ⟨peirceLadder_J_eq_cl11_generator, peirceLadder_J_sq_neg_one,
-    cliffordBivector_sq, peirceCliffordEquivalence,
-    InfoGeometry.Geometry.FiniteHestenesCR.bivector_i_squared⟩
+        InfoGeometry.Geometry.FiniteHestenesCR.bivector_i = ⟨-1, 0, 0, 0⟩
+
+noncomputable def finite_complex_structure_bridge_packet :
+    FiniteComplexStructureBridgePacket where
+  peirce_eq_cl11 := peirceLadder_J_eq_cl11_generator
+  peirce_sq := peirceLadder_J_sq_neg_one
+  clifford_bivector_sq := cliffordBivector_sq
+  peirce_clifford_equiv := peirceCliffordEquivalence
+  finite_hestenes_sq := InfoGeometry.Geometry.FiniteHestenesCR.bivector_i_squared
 
 end InfoGeometry.Canonical.CliffordEquiv

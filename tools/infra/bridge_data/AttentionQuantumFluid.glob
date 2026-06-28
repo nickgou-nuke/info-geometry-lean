@@ -1,0 +1,91 @@
+DIGEST c49333a2df89857075e45a5752d3e93d
+FAttentionQuantumFluid
+R127:131 Stdlib.Reals.Reals <> <> lib
+sec 163:175 <> AttentionFlow
+var 188:188 AttentionFlow n
+R192:194 Corelib.Init.Datatypes <> nat ind
+var 201:206 AttentionFlow Matrix
+R214:217 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R211:213 Corelib.Init.Datatypes <> nat ind
+R221:224 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R218:220 Corelib.Init.Datatypes <> nat ind
+R225:225 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+def 240:248 <> transpose
+R255:260 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 251:251 <> M:3
+R265:270 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 281:281 <> i:4
+binder 283:283 <> j:5
+R288:288 AttentionQuantumFluid <> M:3 var
+R290:290 AttentionQuantumFluid <> j:5 var
+R292:292 AttentionQuantumFluid <> i:4 var
+def 307:316 <> neg_matrix
+R323:328 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 319:319 <> M:6
+R333:338 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 349:349 <> i:7
+binder 351:351 <> j:8
+R356:357 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R358:358 AttentionQuantumFluid <> M:6 var
+R360:360 AttentionQuantumFluid <> i:7 var
+R362:362 AttentionQuantumFluid <> j:8 var
+def 377:381 <> trace
+R388:393 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 384:384 <> M:9
+R398:398 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+def 466:480 <> is_skew_adjoint
+R487:492 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 483:483 <> M:10
+R518:520 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R507:515 AttentionQuantumFluid <> transpose def
+R517:517 AttentionQuantumFluid <> M:10 var
+R521:530 AttentionQuantumFluid <> neg_matrix def
+R532:532 AttentionQuantumFluid <> M:10 var
+var 616:638 AttentionFlow skew_adjoint_trace_zero
+R654:659 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 650:650 <> M:11
+R682:685 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R665:679 AttentionQuantumFluid <> is_skew_adjoint def
+R681:681 AttentionQuantumFluid <> M:11 var
+R693:695 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R686:690 AttentionQuantumFluid <> trace def
+R692:692 AttentionQuantumFluid <> M:11 var
+def 778:787 <> divergence
+R794:794 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 790:790 <> u:14
+R799:799 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R804:804 AttentionQuantumFluid <> u:14 var
+var 819:852 AttentionFlow trace_free_implies_divergence_free
+R868:873 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 864:864 <> K:15
+R884:884 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 877:880 <> beta:16
+R901:904 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R897:899 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R890:894 AttentionQuantumFluid <> trace def
+R896:896 AttentionQuantumFluid <> K:15 var
+R932:934 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R905:914 AttentionQuantumFluid <> divergence def
+R921:923 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R917:920 AttentionQuantumFluid <> beta:16 var
+R924:928 AttentionQuantumFluid <> trace def
+R930:930 AttentionQuantumFluid <> K:15 var
+prf 947:977 <> attention_is_quantum_fluid_flow
+R993:998 AttentionQuantumFluid <> AttentionFlow.Matrix var
+binder 989:989 <> K:19
+R1009:1009 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1002:1005 <> beta:20
+R1032:1035 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1015:1029 AttentionQuantumFluid <> is_skew_adjoint def
+R1031:1031 AttentionQuantumFluid <> K:19 var
+R1063:1065 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1036:1045 AttentionQuantumFluid <> divergence def
+R1052:1054 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1048:1051 AttentionQuantumFluid <> beta:20 var
+R1055:1059 AttentionQuantumFluid <> trace def
+R1061:1061 AttentionQuantumFluid <> K:19 var
+R1108:1141 AttentionQuantumFluid <> AttentionFlow.trace_free_implies_divergence_free var
+R1108:1141 AttentionQuantumFluid <> AttentionFlow.trace_free_implies_divergence_free var
+R1152:1174 AttentionQuantumFluid <> AttentionFlow.skew_adjoint_trace_zero var
+R1152:1174 AttentionQuantumFluid <> AttentionFlow.skew_adjoint_trace_zero var
+R1203:1215 AttentionQuantumFluid AttentionFlow <> sec

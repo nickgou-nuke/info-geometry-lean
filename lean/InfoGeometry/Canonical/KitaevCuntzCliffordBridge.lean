@@ -47,6 +47,9 @@ open InfoGeometry.Tessellation
 
 universe u v
 
+/-- Local concrete `2 × 2` real matrix carrier from the core package. -/
+abbrev M2R := InfoGeometryCore.M2R
+
 /--
 The formal owner target for the Kitaev/Cuntz/Clifford dictionary.
 
@@ -59,7 +62,7 @@ def KitaevCuntzCliffordOwnerTarget : Prop :=
       (cl11DoubledCore E)
       (SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E))
       (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E))) ∧
-  (P * P = (1 : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R)
+  (P * P = (1 : InfoGeometry.Canonical.SplitCliffordJordanWigner.M2R)
     ∧ P * InfoGeometry.Canonical.SplitCliffordSourceWickBase.a
         + InfoGeometry.Canonical.SplitCliffordSourceWickBase.a * P = 0
     ∧ P * InfoGeometry.Canonical.SplitCliffordSourceWickBase.aDag

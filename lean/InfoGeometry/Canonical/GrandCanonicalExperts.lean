@@ -150,6 +150,15 @@ lemma cliffordSemanticState_coord_sum_eq_weight_sum {n : Nat}
   rw [cliffordSemanticState_fst_eq_plusMass, cliffordSemanticState_snd_eq_minusMass]
   exact plusMass_add_minusMass_eq_sum w label
 
+/-- Lemma `cliffordSemanticState_nonneg_of_nonneg_weights`. -/
+lemma cliffordSemanticState_nonneg_of_nonneg_weights {n : Nat}
+    {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
+    (hw : ∀ σ, 0 ≤ w σ) :
+    0 ≤ (cliffordSemanticState w label).1 ∧ 0 ≤ (cliffordSemanticState w label).2 := by
+  constructor
+  · simpa [cliffordSemanticState_fst_eq_plusMass] using plusMass_nonneg hw
+  · simpa [cliffordSemanticState_snd_eq_minusMass] using minusMass_nonneg hw
+
 /-! ## Graded Superalgebra Layer -/
 
 /-- `ℤ₂`-parity for split Clifford labels (`plus` even, `minus` odd). -/
@@ -407,12 +416,10 @@ theorem exists_clifford_labeled_state_of_bistochastic
     ⟨w, hw_nonneg, hw_sum, hw_matrix⟩
   refine ⟨w, hw_nonneg, hw_sum, hw_matrix, ?_⟩
   dsimp
-  refine ⟨?_, ?_, ?_⟩
-  · rw [cliffordSemanticState_fst_eq_plusMass]
-    exact plusMass_nonneg hw_nonneg
-  · rw [cliffordSemanticState_snd_eq_minusMass]
-    exact minusMass_nonneg hw_nonneg
-  · rw [cliffordSemanticState_coord_sum_eq_weight_sum, hw_sum]
+  have hnonneg := cliffordSemanticState_nonneg_of_nonneg_weights (n := n) (w := w)
+    (label := label) hw_nonneg
+  exact ⟨hnonneg.1, hnonneg.2,
+    by rw [cliffordSemanticState_coord_sum_eq_weight_sum, hw_sum]⟩
 
 /-- Theorem `exists_modewiseClifford_rep_of_bistochastic`. -/
 theorem exists_modewiseClifford_rep_of_bistochastic

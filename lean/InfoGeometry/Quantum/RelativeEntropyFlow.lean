@@ -1,6 +1,7 @@
 import InfoGeometry.Dynamics.KanDecomposition
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
 import Mathlib.Tactic
+import InfoGeometryCore.Basic
 
 noncomputable section
 
@@ -25,10 +26,7 @@ namespace InfoGeometry.Quantum.RelativeEntropyFlow
 
 open Matrix
 open InfoGeometry.Dynamics.KanDecomposition
-
-/-- The concrete qubit matrix algebra used in the finite parabolic readout. -/
-abbrev M2C : Type :=
-  Matrix (Fin 2) (Fin 2) ℂ
+open InfoGeometryCore
 
 /--
 Finite trace-one Hermitian predicate.  Positivity is intentionally not included;

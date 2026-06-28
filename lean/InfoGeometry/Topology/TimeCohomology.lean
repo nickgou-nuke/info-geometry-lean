@@ -5,70 +5,83 @@ open scoped ComplexConjugate
 namespace InfoGeometry.Motives
 
 /-!
-# Time as the de Rham Cohomology of Winding
+# TimeCohomology
 
-This module formalizes the ultimate synthesis of the thermodynamic and
-algebraic foundations of the spacetime lattice.
+This file keeps only a very small theorem-honest core:
 
-We establish that Time is not an absolute parameter, but an emergent
-topological invariant: the de Rham 1-form cohomology of winding around
-the singularity of the chiral Klein quadric of the causal algebra.
+- a concrete 2×2 causal matrix model,
+- a null-cone predicate via determinant zero,
+- an abstract record carrying a chosen winding number,
+- the tautological fact that one may read that chosen winding number back as an
+  integer-valued time label.
+
+It does not prove that physical time is de Rham cohomology, nor that the
+Klein-quadric complement has already been computed globally.
 
 ## Core Definitions
-1. `ChiralKleinQuadric`: The null space `det(X) = 0` of the causal cone.
-2. `DeRhamWindingForm`: The 1-differential form `ω = d log X = X⁻¹ dX`.
-3. `MonodromyTime`: Time emerges from the Berry phase holonomy (winding) around the cone.
+1. `KleinQuadric`: the determinant-zero causal cone.
+2. `MonodromyWinding`: a package containing a chosen winding-number readout.
+3. `time_readout`: the associated integer label.
 -/
 
 variable {R : Type*} [CommRing R]
 
 /-- 
-The causal algebra representing 4-vectors as 2x2 Hermitian matrices.
-This embodies the chiral parafermion algebra.
+The simple 2×2 causal matrix model.
 -/
 def CausalMatrix (t x y z : R) : Matrix (Fin 2) (Fin 2) R :=
   ![![t + z, x - y],
     ![x + y, t - z]]
 
 /-- 
-The determinant classification defining the causal cone.
-For the Causal Matrix, det(X) = t² - x² - y² - z² (Minkowski Metric).
+The determinant readout for the simple causal matrix model.
 -/
 def CausalDeterminant (t x y z : R) : R :=
   (CausalMatrix t x y z).det
 
 /-- 
-The Klein quadric restricts the causal matrices to the null boundary,
-representing the absolute horizon (zero volume, zero determinant).
-This is the chiral causal cone.
+The determinant-zero locus in the simple causal matrix model.
 -/
 structure KleinQuadric (t x y z : R) : Prop where
   null_space : CausalDeterminant t x y z = 0
 
 /-- 
-The self-concordant barrier potential `F(X) = - log det(X)`
-whose derivative generates the de Rham 1-form.
+A logarithmic barrier potential on the open determinant-positive region.
+
+This is only a definition here; no derivative or cohomology theorem is proved in
+this file.
 -/
 noncomputable def LogBarrierPotential (X : Matrix (Fin 2) (Fin 2) ℝ) : ℝ :=
   - Real.log (X.det)
 
 /-- 
-The de Rham 1-form `ω = d log Q`.
-This captures the Tomita-Takesaki derivation `Δ` and the thermodynamic gauge
-`d log Q = dQ / Q`.
+Minimal package carrying a chosen winding-number label.
+
+No analytic de Rham form, holonomy theorem, or modular-flow identification is
+constructed in this file.
 -/
 class MonodromyWinding where
   /-- The base manifold (Minkowski space) excluding the Klein quadric singularity. -/
   base_space : Type*
-  /-- The closed de Rham 1-form `d log Q`. -/
+  /-- Placeholder for the scalar observable whose winding one wants to track. -/
   omega : base_space → ℝ
-  /-- The holonomy integral over the closed cycle giving the Berry Phase winding. -/
+  /-- The chosen winding-number readout. -/
   winding_number : ℤ
 
 /-- 
-The ultimate theorem: Time is isomorphic to the Monodromy winding
-around the chiral causal cone. The arrow of time is the non-commutative 
-entropy production measured by this winding.
+The integer time readout associated with a chosen winding-number packet.
+-/
+def time_readout (M : MonodromyWinding) : ℤ :=
+  M.winding_number
+
+@[simp] theorem time_readout_eq_winding_number (M : MonodromyWinding) :
+  time_readout M = M.winding_number := rfl
+
+/--
+Tautological existence of an integer time label equal to the recorded winding.
+
+This is an exact readback theorem about the packaged data, not a global theorem
+about physical time.
 -/
 theorem time_is_cohomology_of_winding (M : MonodromyWinding) :
   ∃ (Time : ℤ), Time = M.winding_number := by

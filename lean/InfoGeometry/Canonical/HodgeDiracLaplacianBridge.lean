@@ -150,24 +150,37 @@ structure CentralReadoutWitness
     {Op : Type*}
     (C : HodgeDiracLaplacianCarrier Op) where
   centralReadout : Op
+  centralReadout_eq_carrier :
+    centralReadout = C.centralReadout
 
 /--
-Owner-facing central-readout gate: the bridge exports only the existence of a
-supplied witness.
+Owner-facing central-readout gate: the bridge exports only a supplied witness
+whose readout is tied to the carrier readout.
 -/
 @[rep_depth operator]
 def IsCentralReadoutFromLaplacianAnomaly
     {Op : Type*}
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  Nonempty (CentralReadoutWitness C)
+  ∃ W : CentralReadoutWitness C,
+    W.centralReadout = C.centralReadout
 
-/-- Readback that the central/anomaly readout is intentionally externally gated. -/
+/-- Readback from a central/anomaly witness to the carrier readout. -/
+@[rep_depth operator]
+theorem centralReadout_eq_carrier_of_witness
+    {Op : Type*}
+    (C : HodgeDiracLaplacianCarrier Op)
+    (W : CentralReadoutWitness C) :
+    W.centralReadout = C.centralReadout :=
+  W.centralReadout_eq_carrier
+
+/-- Readback that the central/anomaly gate supplies a carrier-tied readout. -/
 @[rep_depth operator]
 theorem centralReadout_is_witness_gated
     {Op : Type*}
     (C : HodgeDiracLaplacianCarrier Op)
     (h : IsCentralReadoutFromLaplacianAnomaly C) :
-    IsCentralReadoutFromLaplacianAnomaly C :=
+    ∃ W : CentralReadoutWitness C,
+      W.centralReadout = C.centralReadout :=
   h
 
 end InfoGeometry.Canonical.HodgeDiracLaplacianBridge

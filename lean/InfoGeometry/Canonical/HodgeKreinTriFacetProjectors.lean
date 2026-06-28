@@ -14,24 +14,10 @@ This is a linear-algebraic theorem owner only.  It does not assert that `O` is
 a geometric Hodge Laplacian on a manifold, nor does it construct analytic
 Hodge representatives.
 
-## Audit Protocol Map
-- BUCKET 1: CLOSED FINITE THEOREMS:
-  `half_smul_add_self`, `half_smul_sub_neg_self`,
-  `half_smul_add_sub_eq_left`, `P_ext`, `P_coext`, `P_harm`,
-  `P_core`, `P_nil`, `O_P_ext`, `O_O_P_ext`, `O_P_coext`,
-  `O_O_P_coext`, `O_P_harm`, `O_O_P_harm`,
-  `P_ext_add_P_coext_eq_P_core`, `P_ext_add_P_coext_add_P_harm`,
-  `P_ext_idem`, `P_coext_idem`, `P_harm_idem`,
-  `P_ext_P_coext`, `P_coext_P_ext`, `P_ext_P_harm`,
-  `P_harm_P_ext`, `P_coext_P_harm`, `P_harm_P_coext`,
-  `P_core_eq_P_ext_add_P_coext`, `P_core_add_P_nil`,
-  `P_core_P_nil`, `P_nil_P_core`.
-- BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES:
-  Every operator theorem is conditional on the explicit cubic law
-  `∀ x, O (O (O x)) = O x`.
-- BUCKET 3: OPEN CLOSURE DEBT:
-  Geometric Hodge theory, Krein signatures, and Drazin inverses are not
-  constructed here.
+The operator theorems below are finite linear-algebra statements conditional on
+the explicit cubic law `∀ x, O (O (O x)) = O x`.  Geometric Hodge theory, Krein
+signatures, and Drazin inverses are separate owner files and are not asserted by
+this projector calculus.
 -/
 
 namespace InfoGeometry.Canonical.HodgeKreinTriFacetProjectors

@@ -428,6 +428,179 @@ fi
 TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
 # ============================================================================
+# 20. SymPy de Rham Verification
+# ============================================================================
+echo -e "\n[20/27] SymPy: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if python3 "$REPO_ROOT/tools/sympy/de_rham_boltzmann_modular_matrix.py" \
+        > "$RESULTS_DIR/sympy_derham.log" 2>&1; then
+    RESULTS["sympy_derham"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["sympy_derham"]}"
+else
+    RESULTS["sympy_derham"]="✗ FAILED"
+    echo "  ${RESULTS["sympy_derham"]}"
+    echo "  See: $RESULTS_DIR/sympy_derham.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 21. Lean4 de Rham Compilation
+# ============================================================================
+echo -e "\n[21/27] Lean4: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+cd "$REPO_ROOT"
+if ~/.elan/bin/lake env lean \
+        lean/InfoGeometry/Canonical/DeRhamBoltzmannModular.lean \
+        > "$RESULTS_DIR/lean4_derham.log" 2>&1; then
+    RESULTS["lean4_derham"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["lean4_derham"]}"
+else
+    RESULTS["lean4_derham"]="✗ FAILED"
+    echo "  ${RESULTS["lean4_derham"]}"
+    echo "  See: $RESULTS_DIR/lean4_derham.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 22. SageMath de Rham Verification
+# ============================================================================
+echo -e "\n[22/27] SageMath: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if command -v sage &> /dev/null; then
+    if sage "$REPO_ROOT/tools/sage/de_rham_boltzmann_modular.sage" \
+            > "$RESULTS_DIR/sage_derham.log" 2>&1; then
+        RESULTS["sage_derham"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["sage_derham"]}"
+    else
+        RESULTS["sage_derham"]="✗ FAILED"
+        echo "  ${RESULTS["sage_derham"]}"
+        echo "  See: $RESULTS_DIR/sage_derham.log"
+    fi
+else
+    RESULTS["sage_derham"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["sage_derham"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 23. GAlgebra de Rham Spinor Verification
+# ============================================================================
+echo -e "\n[23/27] GAlgebra: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if python3 "$REPO_ROOT/tools/galgebra/clifford_spinor_hamiltonian.py" \
+        > "$RESULTS_DIR/galgebra_derham.log" 2>&1; then
+    RESULTS["galgebra_derham"]="✓ PASSED"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    echo "  ${RESULTS["galgebra_derham"]}"
+else
+    RESULTS["galgebra_derham"]="✗ FAILED"
+    echo "  ${RESULTS["galgebra_derham"]}"
+    echo "  See: $RESULTS_DIR/galgebra_derham.log"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 24. GAP de Rham Verification
+# ============================================================================
+echo -e "\n[24/27] GAP: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if command -v gap &> /dev/null; then
+    if gap -q "$REPO_ROOT/tools/gap/de_rham_boltzmann_modular.g" \
+            > "$RESULTS_DIR/gap_derham.log" 2>&1; then
+        RESULTS["gap_derham"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["gap_derham"]}"
+    else
+        RESULTS["gap_derham"]="✗ FAILED"
+        echo "  ${RESULTS["gap_derham"]}"
+        echo "  See: $RESULTS_DIR/gap_derham.log"
+    fi
+else
+    RESULTS["gap_derham"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["gap_derham"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 25. Macaulay2 de Rham Verification
+# ============================================================================
+echo -e "\n[25/27] Macaulay2: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if command -v M2 &> /dev/null; then
+    if M2 --script "$REPO_ROOT/tools/macaulay2/de_rham_boltzmann_modular.m2" \
+            > "$RESULTS_DIR/macaulay2_derham.log" 2>&1; then
+        RESULTS["macaulay2_derham"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["macaulay2_derham"]}"
+    else
+        RESULTS["macaulay2_derham"]="✗ FAILED"
+        echo "  ${RESULTS["macaulay2_derham"]}"
+        echo "  See: $RESULTS_DIR/macaulay2_derham.log"
+    fi
+else
+    RESULTS["macaulay2_derham"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["macaulay2_derham"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 26. Coq de Rham Verification
+# ============================================================================
+echo -e "\n[26/27] Coq: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if command -v coqc &> /dev/null; then
+    if PATH="/home/goutev/.opam/coq-switch/bin:$PATH" \
+       coqc "$REPO_ROOT/tools/coq/DeRhamBoltzmannModular.v" \
+            > "$RESULTS_DIR/coq_derham.log" 2>&1; then
+        RESULTS["coq_derham"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["coq_derham"]}"
+    else
+        RESULTS["coq_derham"]="✗ FAILED"
+        echo "  ${RESULTS["coq_derham"]}"
+        echo "  See: $RESULTS_DIR/coq_derham.log"
+    fi
+else
+    RESULTS["coq_derham"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["coq_derham"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
+# 27. Isabelle/HOL de Rham Verification
+# ============================================================================
+echo -e "\n[27/27] Isabelle/HOL: de Rham ∘ Boltzmann ∝ Modular"
+echo "----------------------------------------"
+
+if command -v isabelle &> /dev/null; then
+    if PATH="/home/goutev/Isabelle2025-2/bin:$PATH" \
+       isabelle build -D "$REPO_ROOT/isabelle" \
+            > "$RESULTS_DIR/isabelle_derham.log" 2>&1; then
+        RESULTS["isabelle_derham"]="✓ PASSED"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        echo "  ${RESULTS["isabelle_derham"]}"
+    else
+        RESULTS["isabelle_derham"]="✗ FAILED"
+        echo "  ${RESULTS["isabelle_derham"]}"
+        echo "  See: $RESULTS_DIR/isabelle_derham.log"
+    fi
+else
+    RESULTS["isabelle_derham"]="⊘ SKIPPED (not installed)"
+    echo "  ${RESULTS["isabelle_derham"]}"
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+# ============================================================================
 # Summary
 # ============================================================================
 echo -e "\n================================================================================"
@@ -446,6 +619,12 @@ done
 
 echo -e "\nE8 Triality and Thermal Protection Verification Results:"
 for engine in sympy_e8 galgebra_e8 sage_e8 gap_e8 macaulay2_e8 lean4_e8 coq_e8 isabelle_e8; do
+    printf "  %-20s %s\n" "$engine:" "${RESULTS[$engine]}"
+done
+
+echo -e "\nde Rham ∘ Boltzmann ∝ Modular Duality Verification Results:"
+for engine in sympy_derham lean4_derham sage_derham galgebra_derham \
+              gap_derham macaulay2_derham coq_derham isabelle_derham; do
     printf "  %-20s %s\n" "$engine:" "${RESULTS[$engine]}"
 done
 
@@ -488,7 +667,15 @@ cat > "$RESULTS_DIR/summary.json" << EOF
     "macaulay2_e8": "${RESULTS["macaulay2_e8"]}",
     "lean4_e8": "${RESULTS["lean4_e8"]}",
     "coq_e8": "${RESULTS["coq_e8"]}",
-    "isabelle_e8": "${RESULTS["isabelle_e8"]}"
+    "isabelle_e8": "${RESULTS["isabelle_e8"]}",
+    "sympy_derham": "${RESULTS["sympy_derham"]}",
+    "lean4_derham": "${RESULTS["lean4_derham"]}",
+    "sage_derham": "${RESULTS["sage_derham"]}",
+    "galgebra_derham": "${RESULTS["galgebra_derham"]}",
+    "gap_derham": "${RESULTS["gap_derham"]}",
+    "macaulay2_derham": "${RESULTS["macaulay2_derham"]}",
+    "coq_derham": "${RESULTS["coq_derham"]}",
+    "isabelle_derham": "${RESULTS["isabelle_derham"]}"
   }
 }
 EOF

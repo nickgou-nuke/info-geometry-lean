@@ -464,29 +464,28 @@ theorem charge_balance_zero_form :
 
 end AndreevChargeLedger
 
-/-! ## 7. Owner targets discharged constructively -/
-
-/-- Owner target for the finite Andreev diagonal. -/
-@[owner_target_tag]
-def FiniteAndreevDiagonalOwnerTarget : Prop :=
-  electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed
+/-! ## 7. Owner theorems discharged constructively -/
 
 /-- Constructive proof of the finite Andreev diagonal owner target. -/
 theorem finiteAndreevDiagonalOwnerTarget :
-    FiniteAndreevDiagonalOwnerTarget :=
+    electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed :=
   finite_electron_hole_diagonal_fixed
-
-/-- Owner target for the finite Andreev imbalance. -/
-@[owner_target_tag]
-def FiniteAndreevImbalanceOwnerTarget : Prop :=
-  finiteAndreevClosure.theta
-      (electronAmplitude - holeAmplitude)
-    =
-      -(electronAmplitude - holeAmplitude)
 
 /-- Constructive proof of the finite Andreev imbalance owner target. -/
 theorem finiteAndreevImbalanceOwnerTarget :
-    FiniteAndreevImbalanceOwnerTarget :=
+    finiteAndreevClosure.theta
+        (electronAmplitude - holeAmplitude)
+      =
+        -(electronAmplitude - holeAmplitude) :=
   finite_electron_hole_imbalance_anti_fixed
+
+@[owner_target_tag]
+theorem finiteAndreevBoundary_packet :
+    electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed ∧
+      finiteAndreevClosure.theta
+          (electronAmplitude - holeAmplitude)
+        =
+          -(electronAmplitude - holeAmplitude) :=
+  ⟨finiteAndreevDiagonalOwnerTarget, finiteAndreevImbalanceOwnerTarget⟩
 
 end InfoGeometry.OperatorAlgebra.AndreevBoundary

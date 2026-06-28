@@ -3,6 +3,7 @@
 --          (2) fixed property projections and mappings
 --          (3) standardized full_graph.json output
 --          (4) native structural-topology artifact output
+--          (5) streaming JSONL output mode (no in-memory graph)
 
 import Lean
 import Lean.Data.Json
@@ -52,6 +53,26 @@ structure DeclNode where
   typeFingerprint  : ExprFingerprint
   valueFingerprint : Option ExprFingerprint
   shapeHash        : ExprFingerprint
+deriving ToJson
+
+structure StreamDecl where
+  name   : String
+  kind   : String
+  module : String
+  file   : String
+  line   : Nat
+  column : Nat
+  doc    : String
+  attrs  : Array String
+  typeFingerprint  : ExprFingerprint
+  valueFingerprint : Option ExprFingerprint
+  shapeHash        : ExprFingerprint
+deriving ToJson
+
+structure StreamEdge where
+  src  : String
+  dst  : String
+  kind : String -- "type" | "value"
 deriving ToJson
 
 structure DepEdge where
@@ -163,7 +184,17 @@ def getModuleName (env : Environment) (n : Name) : Name :=
   | none      => env.mainModule
 
 def moduleToLeanFile (sp : SearchPath) (mod : Name) : MetaM String := do
-  let fp? : Option System.FilePath ← Lean.findLean sp mod
+  let modStr := mod.toString
+  if modStr = "Init" || modStr.startsWith "Init." ||
+      modStr = "Lean" || modStr.startsWith "Lean." ||
+      modStr = "Std" || modStr.startsWith "Std." then
+    return "unknown"
+  let fp? : Option System.FilePath ←
+    try
+      let fp ← Lean.findLean sp mod
+      pure (some fp)
+    catch _ =>
+      pure none
   match fp? with
   | some fp => pure fp.toString
   | none => pure "unknown"
@@ -180,8 +211,7 @@ environment. A blanket `whnf` here is too expensive for large umbrellas such as
 timeouts before the caller can recover. Keep this recognizer cheap and syntactic:
 direct Π-types are enough for `Func`, and head-symbol inspection catches the
 common `Hom`/`Equiv`/`Iso`/`Map` surfaces without normalizing every type in the
-codebase.
--/
+codebase. -/
 def recognizeMorphism (e : Expr) : MetaM (Option (String × Expr × Expr)) := do
   match e with
   | .forallE _ d b _ =>
@@ -211,6 +241,18 @@ def addEdge (src dst kind : String) : IndexerM Unit := do
 
 private def shouldIndexDeclString (s : String) : Bool :=
   !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq")
+
+private def parseNamespaceFilters (s : String) : Option (List String) :=
+  let parts :=
+    (s.splitOn ",").map (fun part => part.trimAscii.toString) |>.filter (fun x => x != "" && x != "*")
+  if parts.isEmpty then none else some parts
+
+private def inNamespaceFilters (nsFilters : Option (List String)) (n : Name) : Bool :=
+  match nsFilters with
+  | none => true
+  | some filters =>
+      let s := toString n
+      filters.any (fun p => s = p || s.startsWith (p ++ "."))
 
 private def moduleToLeanFileCached (sp : SearchPath) (mod : Name) : IndexerM String := do
   let st ← get
@@ -367,14 +409,14 @@ private structure EdgeFilterResult where
 
 private def classifyDroppedDst
   (env : Environment)
-  (nsPrefix : String)
+  (nsFilters : Option (List String))
   (dst : String)
   : DroppedDstClass :=
   let dstName := parseName dst
   match env.find? dstName with
   | some _ =>
       let modName := getModuleName env dstName |>.toString
-      if modName.startsWith nsPrefix then
+      if inNamespaceFilters nsFilters dstName then
         if shouldIndexDeclString dst then
           .internalStable modName
         else
@@ -384,14 +426,13 @@ private def classifyDroppedDst
   | none =>
       .unknown
 
-/--
-Filter kept edges and classify dropped edges in one pass.
+/-- Filter kept edges and classify dropped edges in one pass.
 The destination classification is cached per missing target so repeated
-cross-namespace/generated edges do not repeatedly parse names or query the env.
--/
+cross-namespace/generated edges do not repeatedly parse names or query the env. -/
 private def filterEdgesAndClassifyLeakage
   (env : Environment)
   (nsPrefix : String)
+  (nsFilters : Option (List String))
   (nodeSet : Std.HashSet String)
   (edges : Array DepEdge)
   : EdgeFilterResult :=
@@ -425,7 +466,7 @@ private def filterEdgesAndClassifyLeakage
             match dstCache.get? e.dst with
             | some dstClass => (dstClass, dstCache)
             | none =>
-                let dstClass := classifyDroppedDst env nsPrefix e.dst
+                let dstClass := classifyDroppedDst env nsFilters e.dst
                 (dstClass, dstCache.insert e.dst dstClass)
           dstCache := nextCache
           match dstClass with
@@ -472,9 +513,9 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   let srcSearchPath ← liftM Lean.getSrcSearchPath
   let outPath := System.FilePath.mk outDir
   liftM <| IO.FS.createDirAll outPath
-  let nsName := nsPrefix.toName
+  let nsFilters := parseNamespaceFilters nsPrefix
   let consts : Array PendingConstant := env.constants.fold (init := #[]) fun acc name ci =>
-    if nsName.isPrefixOf name then
+    if inNamespaceFilters nsFilters name then
       let nameStr := name.toString
       if shouldIndexDeclString nameStr then
         acc.push { name := name, nameStr := nameStr, ci := ci }
@@ -482,7 +523,7 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
     else acc
   let consts := consts.qsort (fun a b => a.nameStr < b.nameStr)
 
-  let (_, st) ← (consts.forM fun (entry : PendingConstant) => do
+  let (_, st) ← (consts.forM fun (entry : PendingConstant) =>
     processConstant env srcSearchPath entry.name entry.nameStr entry.ci
   ).run {} {}
   let mut stageStart ← checkpoint timingLog s!"collect/process constants ({st.decls.size} decls, {st.edges.size} raw edges, {st.morphisms.size} morphisms)" runStart
@@ -491,7 +532,7 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   let nodeSet : Std.HashSet String :=
     nodes.foldl (init := ({} : Std.HashSet String)) (fun acc n => acc.insert n)
 
-  let edgeFilter := filterEdgesAndClassifyLeakage env nsPrefix nodeSet st.edges
+  let edgeFilter := filterEdgesAndClassifyLeakage env nsPrefix nsFilters nodeSet st.edges
   let leakage := edgeFilter.leakage
   let edgesFiltered := edgeFilter.keptEdges
   stageStart ← checkpoint timingLog s!"classify/filter edges ({edgesFiltered.size} kept / {st.edges.size} raw)" stageStart
@@ -591,36 +632,129 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   IO.println s!"[Indexer v{indexerSchemaVersion}] Exported {st.decls.size} decls, {edgesFiltered.size} edges, {st.morphisms.size} morphisms to {outDir}/"
   IO.println s!"[Indexer v{indexerSchemaVersion}] Wrote {graphOut}, {structureOut}, and {outDir}/meta.json"
 
-def indexerMain (args : List String) : IO UInt32 := do
-  let importStart ← IO.monoMsNow
-  let (importModsStr, nsPrefix, outDir, graphOut, structureOut) ←
-    match args with
-    | [m, ns, o] =>
-        let graphOut := "artifacts/dag/full_graph.json"
-        pure (m, ns, o, graphOut, defaultStructureOutFor graphOut)
-    | [m, ns, o, go] =>
-        pure (m, ns, o, go, defaultStructureOutFor go)
-    | [m, ns, o, go, so] =>
-        pure (m, ns, o, go, so)
-    | _ =>
-        let graphOut := "artifacts/dag/full_graph.json"
-        pure ("InfoGeometry.All", "InfoGeometry", "artifacts/dag/index", graphOut, defaultStructureOutFor graphOut)
+-- Streaming indexer: emits JSONL to stdout, no in-memory graph construction
+def streamWriteJsonl {α} [ToJson α] (x : α) : MetaM Unit := do
+  liftM (IO.println (toJson x).compress)
 
-  let timingLog := System.FilePath.mk outDir / "indexer-timing.log"
-  IO.FS.createDirAll timingLog.parent.get!
-  try IO.FS.removeFile timingLog catch _ => pure ()
-  initSearchPath (← findSysroot)
-  let env ← importModules (parseImports importModsStr) {} 0
-  let importStop ← IO.monoMsNow
-  logTiming timingLog s!"importModules ({importModsStr})" (importStop - importStart)
-  let coreContext : Core.Context := {
-    fileName := "<Indexer>",
-    fileMap := default,
-    maxHeartbeats := 10000000
+-- Process a single constant and return the decl node (streaming version)
+def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM StreamDecl := do
+  let modName := getModuleName env name
+  let fileStr ← moduleToLeanFile sp modName
+
+  let (line, col) ←
+    match (← findDeclarationRanges? name) with
+    | some dr => pure (dr.range.pos.line, dr.range.pos.column)
+    | none    => pure (0, 0)
+
+  let docStr ← match ← Lean.findDocString? env name with
+               | some d => pure d
+               | none   => pure ""
+
+  let attrStrs : Array String := Id.run do
+    let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
+    attrs := attrs ++ InfoGeometry.Meta.repDepthTagStringsOf env name
+    if InfoGeometry.Meta.capstoneAttr.hasTag env name then
+      attrs := attrs.push "capstone"
+    attrs
+
+  let typeFingerprint := DAG.computeFingerprint ci.type
+  let valueFingerprint := (ci.value? (allowOpaque := true)).map DAG.computeFingerprint
+  let shapeFingerprint := shapeFingerprint ci.type
+
+  pure {
+    name := nameStr
+    kind := getKindString ci
+    module := modName.toString
+    file := fileStr
+    line := line
+    column := col
+    doc := docStr
+    attrs := attrStrs
+    typeFingerprint := typeFingerprint
+    valueFingerprint := valueFingerprint
+    shapeHash := shapeFingerprint
   }
 
-  let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut timingLog).run {} {}).toIO coreContext { env := env }
-  return 0
+-- Also stream edges for each constant
+def streamConstantEdges (env : Environment) (name : Name) (nameStr : String) (ci : ConstantInfo) : MetaM Unit := do
+  let typeDeps := (collectConsts ci.type).toList
+  for d in typeDeps do
+    if d != name then
+      streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "type" } : StreamEdge)
+
+  if let some v := ci.value? (allowOpaque := true) then
+    let valDeps := (collectConsts v).toList
+    for d in valDeps do
+      if d != name then
+        streamWriteJsonl ({ src := nameStr, dst := d.toString, kind := "value" } : StreamEdge)
+
+def runStreamingIndexer (nsPrefix : String) (importRoot : String) (env : Environment) : MetaM Unit := do
+  let srcSearchPath ← liftM Lean.getSrcSearchPath
+  let nsFilters := parseNamespaceFilters nsPrefix
+  let consts : Array PendingConstant := env.constants.fold (init := #[]) fun acc name ci =>
+    if inNamespaceFilters nsFilters name then
+      let nameStr := name.toString
+      if shouldIndexDeclString nameStr then
+        acc.push { name := name, nameStr := nameStr, ci := ci }
+      else acc
+    else acc
+  let consts := consts.qsort (fun a b => a.nameStr < b.nameStr)
+
+  -- Process each constant and stream output immediately
+  for entry in consts do
+    let declNode ← processConstantStreaming env srcSearchPath entry.name entry.nameStr entry.ci
+    streamWriteJsonl declNode
+    -- Also stream edges for this constant
+    streamConstantEdges env entry.name entry.nameStr entry.ci
+
+  IO.println "" -- flush
+
+def indexerMain (args : List String) : IO UInt32 := do
+  let importStart ← IO.monoMsNow
+  let (importModsStr, nsPrefix, outDir, graphOut, structureOut, streaming) ←
+    match args with
+    | [m, ns, "--stream"] =>
+        pure (m, ns, "", "", "", true)
+    | [m, ns, o, "--stream"] =>
+        pure (m, ns, "", "", "", true)
+    | [m, ns, o] =>
+        let graphOut := "artifacts/dag/full_graph.json"
+        pure (m, ns, o, graphOut, defaultStructureOutFor graphOut, false)
+    | [m, ns, o, go] =>
+        pure (m, ns, o, go, defaultStructureOutFor go, false)
+    | [m, ns, o, go, so] =>
+        pure (m, ns, o, go, so, false)
+    | _ =>
+        let graphOut := "artifacts/dag/full_graph.json"
+        pure ("Mathlib,InfoGeometry.All", "Mathlib,InfoGeometry", "artifacts/dag/index", graphOut, defaultStructureOutFor graphOut, false)
+
+  if streaming then
+    -- Streaming mode: output JSONL to stdout
+    initSearchPath (← getBuildDir)
+    let env ← importModules (parseImports importModsStr) {} 0
+    let coreContext : Core.Context := {
+      fileName := "<Indexer-stream>",
+      fileMap := default,
+      maxHeartbeats := 10000000
+    }
+    let _ ← ((runStreamingIndexer nsPrefix importModsStr env).run {} {}).toIO coreContext { env := env }
+    return 0
+  else
+    let timingLog := System.FilePath.mk outDir / "indexer-timing.log"
+    IO.FS.createDirAll timingLog.parent.get!
+    try IO.FS.removeFile timingLog catch _ => pure ()
+    initSearchPath (← getBuildDir)
+    let env ← importModules (parseImports importModsStr) {} 0
+    let importStop ← IO.monoMsNow
+    logTiming timingLog s!"importModules ({importModsStr})" (importStop - importStart)
+    let coreContext : Core.Context := {
+      fileName := "<Indexer>",
+      fileMap := default,
+      maxHeartbeats := 10000000
+    }
+
+    let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut timingLog).run {} {}).toIO coreContext { env := env }
+    return 0
 
 def main (args : List String) : IO UInt32 :=
   indexerMain args

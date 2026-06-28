@@ -10,18 +10,17 @@ local Cuntz branches carry isometric copies of the whole observable lane, and
 under the Cuntz range-sum relation the two branch projections reassemble the
 identity.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
+## Closed finite theorems
 * Branch recovery from the imported `CuntzO2Carrier` isometry equations.
 * Branch projection partition from the imported Cuntz range relation.
 * Unitality and half-branch fixed-point readout for the imported Cuntz map.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
+## Conditional theorem from explicit premises
 * `hologram_readout_fixed` depends on the explicit half-branch scaling premises.
 
-#### BUCKET 3: OPEN CLOSURE DEBT
-This file does **not** prove the Reeh--Schlieder theorem, a full Cuntz
-representation theorem, or a continuum holography theorem. It records the exact
-algebraic facts already available from the abstract `O₂` carrier.
+## Scope
+This file records the exact algebraic facts available from the abstract `O₂`
+carrier.
 -/
 
 namespace InfoGeometry.Canonical.CuntzHologramShard

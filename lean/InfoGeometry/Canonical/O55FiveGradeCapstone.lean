@@ -1,6 +1,11 @@
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Canonical.ConformalFiveGradeInversion
+import InfoGeometry.Canonical.O55FiveGradeClosure
+
+open InfoGeometry.Clifford.ConformalLieAlgebra55
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
+open InfoGeometry.Canonical.O55FiveGradeClosure
 
 /-!
 # InfoGeometry.Canonical.O55FiveGradeCapstone
@@ -14,10 +19,9 @@ We build upon the proved commutator growth:
 * adjoined reflection generators J₅ = u5 - v5, J₄ = u4 - v4, J = J5J4.
 
 We then identify the conformal weight of each generator under the Cartan
-element D (grading by eigenvalues of ad D).  The proved adjoint actions are:
-  [D, u₅] = u₅,   [D, u₄] = u₄.
-The missing actions [D, v₅] and [D, v₄] are marked as open debt (sorry) but
-are expected to be [D, v₅] = -v₅, [D, v₄] = -v₄ by symmetry.
+element D (grading by eigenvalues of ad D).  The adjoint actions are:
+  [D, u₅] = u₅,   [D, u₄] = u₄,
+  [D, v₅] = -v₅,  [D, v₄] = -v₄.
 
 Using the theta involution (which swaps weights) we deduce:
   weight(u₅) = +1, weight(v₅) = -1,
@@ -29,8 +33,8 @@ Thus the nontrivial five-grade pieces live in grades ±1, while the grade 0
 piece is the Cartan-like center.  The grades ±2 are empty in this truncation;
 they could be filled by higher monomials (e.g. u₅u₄ etc.) as future work.
 
-This file packages the weight deductions as theorem statements where the
-adjoint actions are proved, and uses sorry for the missing adjoint actions.
+This file packages the weight deductions as theorem statements with genuine
+proofs for the adjoint actions and reflection laws.
 -/
 
 noncomputable section
@@ -71,10 +75,10 @@ theorem adjoint_action_u_packet :
     D * u4 - u4 * D = u4 := by
   exact ⟨adD_u5, adD_u4⟩
 
--- Missing adjoint actions (open debt).  Expected: [D, v₅] = -v₅, [D, v₄] = -v₄.
 theorem adjoint_action_v_packet :
     D * v5 - v5 * D = -v5 ∧
-    D * v4 - v4 * D = -v4 := ⟨sorry, sorry⟩
+    D * v4 - v4 * D = -v4 := by
+  exact ⟨adD_v5, adD_v4⟩
 
 -- Theta reflection packet (already proved).
 theorem theta_reflection_packet :
@@ -85,10 +89,13 @@ theorem theta_reflection_packet :
     thetaOp D = -D := by
   exact ⟨theta_u5, theta_v5, theta_u4, theta_v4, theta_D⟩
 
--- Weight deduction from proved adjoint actions (placeholder).
-theorem weight_deduction_placeholder :
-    (D * u5 - u5 * D = u5) ∧ (D * u4 - u4 * D = u4) := by
-  exact ⟨adD_u5, adD_u4⟩
+-- Weight readout from the proved adjoint actions.
+theorem weight_deduction_from_adjoint_actions :
+    (D * u5 - u5 * D = u5)
+      ∧ (D * u4 - u4 * D = u4)
+      ∧ (D * v5 - v5 * D = -v5)
+      ∧ (D * v4 - v4 * D = -v4) := by
+  exact ⟨adD_u5, adD_u4, adD_v5, adD_v4⟩
 
 -- The five-grade decomposition packet.
 theorem five_grade_decomposition_packet :
@@ -111,8 +118,8 @@ theorem five_grade_decomposition_packet :
       ∧ J = J5 * J4)
     ∧ (D * u5 - u5 * D = u5
       ∧ D * u4 - u4 * D = u4)
-    ∧ (D * v5 - v5 * D = -v5   -- sorry
-      ∧ D * v4 - v4 * D = -v4)  -- sorry
+    ∧ (D * v5 - v5 * D = -v5
+      ∧ D * v4 - v4 * D = -v4)
     ∧ (thetaOp u5 = v5
       ∧ thetaOp v5 = u5
       ∧ thetaOp u4 = v4

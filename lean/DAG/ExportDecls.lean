@@ -57,16 +57,21 @@ def dottedName (s : String) : Name :=
   (s.splitOn ".").foldl (init := Name.anonymous) fun acc part =>
     if part.isEmpty then acc else Name.str acc part
 
+def parseNamespaceFilters (s : String) : Option (List String) :=
+  let parts :=
+    (s.splitOn ",").map (fun part => part.trimAscii.toString) |>.filter (fun x => x != "" && x != "*")
+  if parts.isEmpty then none else some parts
+
 def normalizePrefix? (s : String) : Option String :=
   if s = "" || s = "*" then none else some s
 
-def inNamespace (nsPrefix : String) (n : Name) : Bool :=
-  match normalizePrefix? nsPrefix with
+def inNamespaceFilters (nsFilters : Option (List String)) (n : Name) : Bool :=
+  match nsFilters with
   | none =>
       true
-  | some p =>
+  | some filters =>
       let s := toString n
-      s = p || s.startsWith (p ++ ".")
+      filters.any (fun p => s = p || s.startsWith (p ++ "."))
 
 def kindString? : ConstantInfo → Option String
   | .thmInfo _    => some "theorem"
@@ -120,8 +125,8 @@ def getDeps (ci : ConstantInfo) (depsPrefix? : Option String := none) : List Str
   let cleaned := filtered.map toString
   sortStrings cleaned
 
-def shouldInclude (nsPrefix : String) (declName : Name) (ci : ConstantInfo) : Bool :=
-  inNamespace nsPrefix declName &&
+def shouldInclude (nsFilters : Option (List String)) (declName : Name) (ci : ConstantInfo) : Bool :=
+  inNamespaceFilters nsFilters declName &&
   !isGeneratedOrUnstableName declName &&
   (kindString? ci).isSome
 
@@ -134,9 +139,10 @@ def collectDecls
     (env : Environment)
     (nsPrefix : String)
     (depsPrefix? : Option String := none) : IO (Array DeclRow) := do
+  let nsFilters := parseNamespaceFilters nsPrefix
   let mut rows : Array DeclRow := #[]
   for (declName, ci) in env.constants.toList do
-    if shouldInclude nsPrefix declName ci then
+    if shouldInclude nsFilters declName ci then
       match kindString? ci with
       | some k =>
           let doc ← getDocString env declName
@@ -241,7 +247,7 @@ def main (args : List String) : IO UInt32 := do
 
   | _ =>
       IO.eprintln <|
-        "usage: ExportDecls <import-module[,module2,...]> <namespace-prefix> <output.json> " ++
+        "usage: ExportDecls <import-module[,module2,...]> <namespace-prefix[,namespace-prefix2,...]> <output.json> " ++
           "[deps-prefix]"
       IO.eprintln "examples:"
       IO.eprintln <|
@@ -249,7 +255,7 @@ def main (args : List String) : IO UInt32 := do
           "InfoGeometry.Core,InfoGeometry.Convex InfoGeometry docs-map/declarations.json"
       IO.eprintln <|
         "  lake env lean --run lean/DAG/ExportDecls.lean " ++
-          "InfoGeometry.Core InfoGeometry docs-map/declarations.json InfoGeometry"
+          "Mathlib,InfoGeometry.All Mathlib,InfoGeometry docs-map/declarations.json Mathlib"
       IO.eprintln <|
         "  lake env lean --run lean/DAG/ExportDecls.lean " ++
           "InfoGeometry.Core \"*\" docs-map/declarations.debug.json"

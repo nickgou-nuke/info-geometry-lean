@@ -66,9 +66,14 @@ theorem every_element_has_window_representative
 The reversal from the recursive owner order is the supergraded tensor braiding.
 -/
 @[rep_depth krein]
-theorem bott_step_cl44_tensor_cl11_to_cl55 :
-    Nonempty (SplitCl55TailHeadTensorStep ≃ₐ[ℝ] SplitCl55Alg) :=
-  ⟨splitCl55_cl44TensorCl11Equiv⟩
+noncomputable abbrev bott_step_cl44_tensor_cl11_to_cl55 :
+    SplitCl55TailHeadTensorStep ≃ₐ[ℝ] SplitCl55Alg :=
+  splitCl55_cl44TensorCl11Equiv
+
+@[rep_depth krein]
+theorem bott_step_cl44_tensor_cl11_to_cl55_eq_owner :
+    bott_step_cl44_tensor_cl11_to_cl55 = splitCl55_cl44TensorCl11Equiv :=
+  rfl
 
 /-- Owner-order form of the same `Cl(5,5)` Bott step. -/
 @[rep_depth krein]
@@ -110,14 +115,14 @@ theorem tail_predicate_lifts_to_infinity
 /-! ## [5] Unified ——————————————————————————— ——— -/
 
 /--
-The absorption roof as a real proposition bundle.
+The absorption roof as proof-carrying data.
 
 It deliberately separates stage-5 finite-tail transport from the stronger
 "all elements" transport, which requires an invariant proof at every
 representative stage `n ≥ 5`.
 -/
 @[rep_depth krein]
-structure AbsorptionRoof : Prop where
+structure AbsorptionRoof where
   absorption :
     ∀ (x : SplitClNNAlg 5) (k : ℕ),
       ofSplit (5 + k)
@@ -127,7 +132,9 @@ structure AbsorptionRoof : Prop where
     ∀ z : SplitCliffordInfinity,
       ∃ n ≥ 5, ∃ x : SplitClNNAlg n, ofSplit n x = z
   bottStep :
-    Nonempty (SplitCl55TailHeadTensorStep ≃ₐ[ℝ] SplitCl55Alg)
+    SplitCl55TailHeadTensorStep ≃ₐ[ℝ] SplitCl55Alg
+  bottStep_eq_owner :
+    bottStep = splitCl55_cl44TensorCl11Equiv
   cl55PredicateLift :
     ∀ (P : SplitCliffordInfinity → Prop),
       (∀ x : SplitClNNAlg 5, P (ofSplit 5 x)) →
@@ -141,10 +148,11 @@ structure AbsorptionRoof : Prop where
 
 /-- Owner-backed absorption roof. -/
 @[rep_depth krein]
-theorem absorption_capstone_unified : AbsorptionRoof where
+noncomputable def absorption_capstone_unified : AbsorptionRoof where
   absorption := cl55_absorbs_into_infinity
   completeness := every_element_has_window_representative
   bottStep := bott_step_cl44_tensor_cl11_to_cl55
+  bottStep_eq_owner := bott_step_cl44_tensor_cl11_to_cl55_eq_owner
   cl55PredicateLift := by
     intro P h5 x k
     exact finite_window_predicate_lifts_to_absorbed_tail (P := P) h5 x k

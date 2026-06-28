@@ -71,14 +71,14 @@ mkdir -p reports
   echo "## Exact Constructivity Audit"
   echo
   echo '```text'
-  python3 scripts/quality/audit_constructivity.py --mode full || true
+  python3 scripts/docs/proof_gap_report.py --root lean --md-out /tmp/proof_gap_report.md --tex-out /tmp/proof_gap_report.tex || true
   echo '```'
   echo
 
 echo "## Review-Only Surrogate Audit"
 echo
 echo '```text'
-python3 scripts/quality/audit_constructivity.py --mode review || true
+python3 scripts/docs/proof_gap_report.py --root lean --md-out /tmp/proof_gap_report.review.md --tex-out /tmp/proof_gap_report.review.tex || true
 echo '```'
 echo
 

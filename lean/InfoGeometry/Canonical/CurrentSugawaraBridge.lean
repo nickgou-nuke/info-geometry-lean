@@ -501,18 +501,42 @@ noncomputable def ofHeisenberg (H : CurrentHeisenbergRep 𝕜 V) :
     exact H.currentSugawaraRepresentation_lgen_apply n
   central_apply := H.currentSugawaraRepresentation_central
 
-/-- Every Heisenberg current datum canonically yields a Sugawara morphism package. -/
-theorem nonempty (H : CurrentHeisenbergRep 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) :=
-  ⟨ofHeisenberg H⟩
+/--
+The canonical Sugawara morphism induced by a Heisenberg current datum has
+exactly the input current datum, the owner Virasoro representation, and the
+two defining generator readbacks.
+-/
+theorem ofHeisenberg_readout (H : CurrentHeisenbergRep 𝕜 V) :
+    (ofHeisenberg H).heisenberg = H ∧
+      (ofHeisenberg H).virasoro = H.currentSugawaraRepresentation ∧
+      (∀ n : Int,
+        (ofHeisenberg H).virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+          H.sugawaraStressMode n) ∧
+      (ofHeisenberg H).virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+        (1 : V →ₗ[𝕜] V) := by
+  refine ⟨rfl, rfl, ?_, ?_⟩
+  · intro n
+    exact H.currentSugawaraRepresentation_lgen_apply n
+  · exact H.currentSugawaraRepresentation_central
 
 end CurrentSugawaraMorphism
 
-/-- The charged Fock space canonically yields a current Sugawara morphism package. -/
-theorem chargedFockSpace_currentSugawaraMorphism_nonempty
+/-- The charged Fock space canonical Sugawara morphism has the owner readbacks. -/
+theorem chargedFockSpace_currentSugawaraMorphism_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  CurrentSugawaraMorphism.nonempty (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
+    let H := chargedFockSpaceCurrentHeisenbergRep 𝕜 α
+    let M := CurrentSugawaraMorphism.ofHeisenberg H
+    M.heisenberg = H ∧
+      M.virasoro = H.currentSugawaraRepresentation ∧
+      (∀ n : Int,
+        M.virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+          H.sugawaraStressMode n) ∧
+      M.virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+        (1 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  CurrentSugawaraMorphism.ofHeisenberg_readout
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
 /--
 Semantic adapter for the quantum Ricci scalar on the raw CAR mode algebra.

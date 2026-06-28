@@ -91,19 +91,15 @@ PROVED BY:
     spectral_bound: |n^{-s}| < 1          — Convergence on Re(s)>½
     modular_j_conjugates_hestenesScalar   — J·s·J = s̄
 
-The capstone conclusion remains an explicit statement socket: a concrete owner
-must supply the spectral-support and chart data before this statement can be
-used as a theorem about a chosen spectral model.
--/
-def KreinRHIsomorphicStatement : Prop :=
-  ∃ zeroSector throat : ℕ → Prop, ∀ n : ℕ, zeroSector n → throat n
-
-/--
-The theorem name is kept compiler-visible as a conditional capstone surface.
-It is not a proof of the original complex-plane formulation.
+The closed theorem below is only the proved Hestenes-Krein conjugation readout.
+It is not a spectral-support theorem and not a proof of RH on the complex plane.
 -/
 theorem krein_rh_isomorphic_proved
-    (h : KreinRHIsomorphicStatement) : KreinRHIsomorphicStatement :=
-  h
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    InfoGeometry.Krein.modular_j (E := E) *
+        InfoGeometry.Krein.complex_i (E := E) *
+        InfoGeometry.Krein.modular_j (E := E) =
+      -InfoGeometry.Krein.complex_i (E := E) :=
+  translation_exists E
 
 end InfoGeometry.GrandUnification.Capstone

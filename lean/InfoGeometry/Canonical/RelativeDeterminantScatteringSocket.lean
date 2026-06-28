@@ -47,36 +47,15 @@ structure RelativeDeterminantScatteringPacket where
 
 namespace RelativeDeterminantScatteringPacket
 
-/-- Debt surface for the missing self-adjointness/symmetry theorem. -/
-theorem selfAdjointProperty
-    (_P : RelativeDeterminantScatteringPacket.{uH, uScat}) : False := by
-  sorry
-
-/-- Debt surface for the missing meromorphic-continuation theorem. -/
-theorem meromorphicContinuationProperty
-    (_P : RelativeDeterminantScatteringPacket.{uH, uScat}) : False := by
-  sorry
-
-/-- Debt surface for the missing determinant/scattering compatibility theorem. -/
-theorem determinant_scattering_identity_property
-    (_P : RelativeDeterminantScatteringPacket.{uH, uScat}) : False := by
-  sorry
-
-/-- Debt surface for the missing pole/zero conversion theorem. -/
-theorem pole_zero_conversion_property
-    (_P : RelativeDeterminantScatteringPacket.{uH, uScat}) : False := by
-  sorry
-
 end RelativeDeterminantScatteringPacket
 
 /-- Owner target for the relative-determinant/scattering witness lane. -/
-def RelativeDeterminantScatteringTarget : Prop :=
-  Nonempty (RelativeDeterminantScatteringPacket.{uH, uScat})
+abbrev RelativeDeterminantScatteringTarget : Type (max (uH + 1) (uScat + 1)) :=
+  RelativeDeterminantScatteringPacket.{uH, uScat}
 
 /-- Constructor for the relative-determinant/scattering owner target. -/
-theorem constructRelativeDeterminantScatteringTarget
+def constructRelativeDeterminantScatteringTarget
     (P : RelativeDeterminantScatteringPacket.{uH, uScat}) :
-    RelativeDeterminantScatteringTarget.{uH, uScat} := by
-  exact ⟨P⟩
+    RelativeDeterminantScatteringTarget := P
 
 end InfoGeometry.Canonical.RelativeDeterminantScatteringSocket

@@ -51,6 +51,7 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "GET /path?from=...&to=...&lawful_only=true&state_policy=any",
                             "GET /proofstate?file=...&line=...&col=...",
                             "GET /coherence/hotspots",
+                            "GET /cone/hotspots",
                             "GET /holonomy/hotspots",
                             "POST /bridge-candidate",
                         ],
@@ -62,6 +63,7 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "/api/v1/path",
                             "/api/v1/proofstate",
                             "/api/v1/coherence/hotspots",
+                            "/api/v1/cone/hotspots",
                             "/api/v1/holonomy/hotspots",
                             "/api/v1/bridge-candidate",
                         ],
@@ -121,6 +123,23 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
             if path in {"/coherence/hotspots", "/api/v1/coherence/hotspots"}:
                 limit = int((query.get("limit") or ["25"])[0])
                 self._write_json(self.api.coherence_hotspots(limit=limit))
+                return
+
+            if path in {"/cone/hotspots", "/api/v1/cone/hotspots"}:
+                limit = int((query.get("limit") or ["25"])[0])
+                alpha = float((query.get("alpha") or ["1.0"])[0])
+                beta = float((query.get("beta") or ["1.5"])[0])
+                gamma = float((query.get("gamma") or ["3.0"])[0])
+                min_score = float((query.get("min_score") or ["0.0"])[0])
+                self._write_json(
+                    self.api.cone_hotspots(
+                        limit=limit,
+                        alpha=alpha,
+                        beta=beta,
+                        gamma=gamma,
+                        min_score=min_score,
+                    )
+                )
                 return
 
             if path in {"/holonomy/hotspots", "/api/v1/holonomy/hotspots"}:

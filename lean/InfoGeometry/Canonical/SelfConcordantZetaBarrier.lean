@@ -273,15 +273,11 @@ structure VariationalRHTarget where
   /-- MISSING: zeros of ξ are barrier-critical.
       If ξ(s₀) = 0, then Re(s₀) minimizes the spectral barrier.
       This is the variational content of RH. -/
-  zeros_are_barrier_critical : Prop
-
-  /-- The missing bridge has the correct logical shape. -/
-  zeros_are_barrier_critical_shape :
-    zeros_are_barrier_critical =
-      (∀ s₀ : ℂ, xi s₀ = 0 →
-        ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
-          ∀ σ : ℝ,
-            primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ)
+  zeros_are_barrier_critical :
+    ∀ s₀ : ℂ, xi s₀ = 0 →
+      ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
+        ∀ σ : ℝ,
+          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ
 
   /-- Guardrail: this is not a proof of RH. -/
   no_unconditional_RH_claim_guard : Type*
@@ -297,7 +293,6 @@ Re(s₀) = 1/2.
 @[rep_depth operator]
 theorem variationalRH_implies_criticalLine
     (V : VariationalRHTarget)
-    (hBridge : V.zeros_are_barrier_critical)
     (s₀ : ℂ)
     (hz : V.xi s₀ = 0) :
     OnCriticalLine s₀ := by
@@ -305,15 +300,10 @@ theorem variationalRH_implies_criticalLine
   -- The barrier at σ₀ = Re(s₀) must be ≤ the barrier at 1/2 = 0.
   -- But the barrier is nonneg, so the barrier at σ₀ is 0.
   -- The barrier is 0 iff σ₀ = 1/2.
-  have hShape : ∀ s₀ : ℂ, V.xi s₀ = 0 →
-      ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
-        ∀ σ : ℝ,
-          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ := by
-    simpa [V.zeros_are_barrier_critical_shape] using hBridge
   -- Use any concrete prime set, e.g. {2}
   have h2 : (1 : ℕ) < 2 := by norm_num
   have hS : ∀ p ∈ ({2} : Finset ℕ), 1 < p := by simp [h2]
-  have hMin := hShape s₀ hz {2} hS (1 / 2 : ℝ)
+  have hMin := V.zeros_are_barrier_critical s₀ hz {2} hS (1 / 2 : ℝ)
   have hZero := primeSpectralBarrier_eq_zero_on_criticalLine {2} hS
   rw [hZero] at hMin
   have hNonneg := primeSpectralBarrier_nonneg {2} hS s₀.re

@@ -46,6 +46,9 @@ namespace InfoGeometry.Physics.Section01MatrixBasisIntroduction
 
 open Matrix Complex
 
+@[simp] theorem I_sq : (Complex.I : ℂ) ^ 2 = (-1 : ℂ) := by
+  simp
+
 /-- Complex `2 × 2` matrices, reused from the repaired Section 30 Pauli layer. -/
 abbrev Mat2C := _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.Mat2C
 
@@ -92,11 +95,11 @@ the Section30 definitions.
 -/
 theorem pauli_trace_packet :
     sigma1.trace = 0 ∧ sigma2.trace = 0 ∧ sigma3.trace = 0 := by
-  simp [sigma1, sigma2, sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3,
-    Matrix.trace, Fin.sum_univ_two]
+  constructor
+  · simp [sigma1, InfoGeometryCore.sigma1C, Matrix.trace, Fin.sum_univ_two]
+  · constructor
+    · simp [sigma2, InfoGeometryCore.sigma2C, Matrix.trace, Fin.sum_univ_two]
+    · simp [sigma3, InfoGeometryCore.sigma3C, Matrix.trace, Fin.sum_univ_two]
 
 /-! ## Owner-backed spacetime and qubit-density readouts -/
 
@@ -155,38 +158,32 @@ def coeffZ (M : Mat2C) : ℂ :=
 theorem coeffT_pauliExpand (a b c d : ℂ) :
     coeffT (pauliExpand a b c d) = a := by
   simp [coeffT, pauliExpand, sigma1, sigma2, sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3]
-  ring
+    InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C, InfoGeometryCore.sigma3C]
+  field_simp
+  try ring
 
 /-- The first Pauli readback recovers the `σ₁` coefficient. -/
 theorem coeffX_pauliExpand (a b c d : ℂ) :
     coeffX (pauliExpand a b c d) = b := by
   simp [coeffX, pauliExpand, sigma1, sigma2, sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3]
-  ring
+    InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C, InfoGeometryCore.sigma3C]
+  field_simp
+  try ring
 
 /-- The second Pauli readback recovers the `σ₂` coefficient. -/
 theorem coeffY_pauliExpand (a b c d : ℂ) :
     coeffY (pauliExpand a b c d) = c := by
   simp [coeffY, pauliExpand, sigma1, sigma2, sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3]
-  ring_nf
-  rw [pow_two (Complex.I : ℂ), Complex.I_mul_I]
-  ring
+    InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C, InfoGeometryCore.sigma3C]
+  field_simp
+  try rw [I_sq]
+  try ring
 
 /-- The third Pauli readback recovers the `σ₃` coefficient. -/
 theorem coeffZ_pauliExpand (a b c d : ℂ) :
     coeffZ (pauliExpand a b c d) = d := by
   simp [coeffZ, pauliExpand, sigma1, sigma2, sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3]
+    InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C, InfoGeometryCore.sigma3C]
 
 /-- Every complex `2 × 2` matrix is reconstructed by its Pauli coefficients. -/
 theorem pauliExpansion_reconstruct (M : Mat2C) :
@@ -194,13 +191,12 @@ theorem pauliExpansion_reconstruct (M : Mat2C) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [pauliExpand, coeffT, coeffX, coeffY, coeffZ,
+      coeffT_pauliExpand, coeffX_pauliExpand, coeffY_pauliExpand, coeffZ_pauliExpand,
       sigma1, sigma2, sigma3,
-      _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-      _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-      _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3]
-  all_goals ring_nf
-  all_goals rw [pow_two (Complex.I : ℂ), Complex.I_mul_I]
-  all_goals ring
+      InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C, InfoGeometryCore.sigma3C, I_sq]
+  all_goals try ring_nf
+  all_goals try rw [I_sq]
+  all_goals try ring
 
 /-- The Pauli expansion has unique coefficients. -/
 theorem pauliExpand_injective_coords {a b c d a' b' c' d' : ℂ}

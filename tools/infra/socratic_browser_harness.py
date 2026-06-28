@@ -12,7 +12,7 @@ Pipeline:
   3. PAULI prompt: "You are the critic. Find every flaw. If it compiles, say PASS..."
      → Wait for full response
   4. Optionally loop: send Pauli's feedback back to Jung
-  5. Extract Lean code, compile check, write to file
+  5. Extract Lean code, compile-check a candidate file only
 
 Usage (inside browser-harness):
     browser-harness -c tools/infra/socratic_browser_harness.py \
@@ -448,7 +448,10 @@ def _run_socratic_harness_locked(
 
     # Final: compile check
     if current_proof:
-        # Write the proof into the file and compile
+        # Write the proof into a sidecar candidate and compile it.  The
+        # browser oracle is advice-only; it must never overwrite the owner
+        # file.  A coding agent applies any accepted repair with a normal
+        # reviewed patch after inspection.
         new_content = (
             "\n".join(lines[:start_line]) + "\n" +
             current_proof + "\n" +
@@ -459,20 +462,27 @@ def _run_socratic_harness_locked(
         print(f"  COMPILE CHECK")
         print(f"{'='*60}")
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".lean", delete=False,
-                                         dir="/tmp", encoding="utf-8") as f:
-            f.write(new_content)
-            tmp_path = Path(f.name)
+        candidate_dir = _REPO / "tmp" / "oracle_candidates"
+        candidate_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            relative = filepath.resolve().relative_to(_REPO.resolve())
+        except ValueError:
+            relative = Path(filepath.name)
+        candidate_path = candidate_dir / (
+            "__".join(relative.parts) + f".socratic.{os.getpid()}.lean"
+        )
+        candidate_path.write_text(new_content, encoding="utf-8")
 
-        result = compile_check(tmp_path)
-        tmp_path.unlink()
+        result = compile_check(candidate_path)
 
         if result["success"]:
-            print("COMPILE SUCCESS!")
-            # Write back to the real file
-            filepath.write_text(new_content, encoding="utf-8")
-            print(f"Written to {filepath}")
-            return {"success": True, "proof": current_proof, "rounds": r if 'r' in dir() else rounds}
+            print(f"CANDIDATE COMPILE SUCCESS: {candidate_path}")
+            return {
+                "success": True,
+                "proof": current_proof,
+                "candidate": str(candidate_path),
+                "rounds": r if 'r' in dir() else rounds,
+            }
         else:
             print(f"COMPILE FAILED:")
             # Show first few error lines

@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Canonical.YangBaxterProof
 
 /-!
 # ZetaJuliaYangBaxterBridge
@@ -16,6 +17,8 @@ this file.
 
 namespace InfoGeometry.Canonical.ZetaJuliaYangBaxterBridge
 
+open InfoGeometry.Canonical.YangBaxterProof
+
 /-- The golden ratio φ = (1 + √5)/2, the Lyapunov exponent of the
     Julia set of ζ(s) and the growth rate of the Fib(n) lattice. -/
 noncomputable def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
@@ -29,29 +32,23 @@ noncomputable def juliaHausdorffDim : ℝ := 2 * goldenRatio - 1
     as its Julia set boundary.  The golden ratio φ is the Lyapunov exponent. -/
 theorem julia_lyapunov_is_golden_ratio : goldenRatio = (1 + Real.sqrt 5) / 2 := rfl
 
-/--
-The algebraic trace-condition target for a future concrete braid-matrix theorem.
+/-- The concrete 2×2 trace identity for the Fibonacci Yang-Baxter braid matrix. -/
+theorem yang_baxter_trace_condition :
+    (Matrix.trace B) ^ 2 = Matrix.trace (B * B) + 2 * Matrix.det B :=
+  trace_sq_eq_tr_sq_add_two_det B
 
-This keeps the original theorem name compiler-visible while requiring the
-actual matrix trace identity as an explicit premise.
--/
-theorem yang_baxter_trace_condition (tr_B det_B : ℂ)
-    (h : tr_B ^ 2 - (tr_B ^ 2 - 2 * det_B) = 2 * det_B) :
-    tr_B ^ 2 - (tr_B ^ 2 - 2 * det_B) = 2 * det_B :=
-  h
-
-/--
-Compiler-visible statement socket for the proposed Julia/zeta/Fibonacci/
-Yang-Baxter bridge.
--/
-def UnifiedBridgeStatement : Prop :=
-  ∃ φ : ℝ, φ = goldenRatio ∧ 0 < φ
+/-- The golden ratio used by the bridge is strictly positive. -/
+theorem goldenRatio_pos : 0 < goldenRatio := by
+  unfold goldenRatio
+  have hsqrt : 0 < Real.sqrt 5 := Real.sqrt_pos.2 (by norm_num)
+  nlinarith
 
 /--
-The unified bridge theorem name remains present, but the bridge content is an
-explicit premise until a concrete owner theorem supplies it.
+Closed kernel readout for the proved part of the bridge: the scalar barrier is
+positive and the finite Fibonacci Yang-Baxter matrix relation holds.
 -/
-theorem unified_bridge (h : UnifiedBridgeStatement) : UnifiedBridgeStatement :=
-  h
+theorem unified_bridge :
+    0 < goldenRatio ∧ R * B * R = B * R * B :=
+  ⟨goldenRatio_pos, braid_relation⟩
 
 end InfoGeometry.Canonical.ZetaJuliaYangBaxterBridge

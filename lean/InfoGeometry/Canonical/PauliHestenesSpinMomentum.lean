@@ -16,6 +16,9 @@ import Mathlib
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Meta.Architecture
+import InfoGeometryCore.Basic
+
+open InfoGeometryCore
 
 noncomputable section
 
@@ -85,13 +88,13 @@ theorem trace_pauliMatrix_eq_two_energy
 def sigma0 : Matrix (Fin 2) (Fin 2) ℂ := !![(1 : ℂ), 0; 0, 1]
 
 /-- First Pauli axis `σ¹`. -/
-def sigma1 : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), 1; 1, 0]
+abbrev sigma1 := sigma1C
 
 /-- Second Pauli axis `σ²`. -/
-def sigma2 : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), -Complex.I; Complex.I, 0]
+abbrev sigma2 := sigma2C
 
 /-- Third Pauli axis `σ³`. -/
-def sigma3 : Matrix (Fin 2) (Fin 2) ℂ := !![(1 : ℂ), 0; 0, -1]
+abbrev sigma3 := sigma3C
 
 /-- The Pauli four-vector `σ^μ = (I, σ¹, σ², σ³)`. -/
 def sigma : Fin 4 → Matrix (Fin 2) (Fin 2) ℂ
@@ -142,9 +145,11 @@ theorem pauliCoefficientReadout_pauliMatrix (P : PauliParavector) (a : Fin 4) :
       | 3 => (P.pz : ℂ) := by
   fin_cases a <;>
     simp [pauliCoefficientReadout, pauliTraceReadout, sigma, sigma0, sigma1, sigma2,
-      sigma3, pauliMatrix, Matrix.trace, Fin.sum_univ_two]
+      sigma3, sigma1C, sigma2C, sigma3C, pauliMatrix, Matrix.trace, Matrix.mul_apply,
+      Fin.sum_univ_two]
   all_goals ring_nf
-  all_goals simp [Complex.I_sq]
+  all_goals rw [Complex.I_sq]
+  all_goals ring
 
 /-- Trace against the lowered Pauli basis recovers the metric-lowered coordinates. -/
 theorem loweredPauliCoefficientReadout_pauliMatrix (P : PauliParavector) (a : Fin 4) :
@@ -156,9 +161,11 @@ theorem loweredPauliCoefficientReadout_pauliMatrix (P : PauliParavector) (a : Fi
       | 3 => (-(P.pz) : ℂ) := by
   fin_cases a <;>
     simp [loweredPauliCoefficientReadout, pauliTraceReadout, barSigma, sigma0, sigma1,
-      sigma2, sigma3, pauliMatrix, Matrix.trace, Fin.sum_univ_two]
+      sigma2, sigma3, sigma1C, sigma2C, sigma3C, pauliMatrix, Matrix.trace, Matrix.mul_apply,
+      Fin.sum_univ_two]
   all_goals ring_nf
-  all_goals simp [Complex.I_sq]
+  all_goals rw [Complex.I_sq]
+  all_goals ring
 
 /-- The `1/4 Tr(σ^μ {Q,Qbar})` formula is the ordinary Pauli coefficient readout. -/
 theorem superchargeMomentumReadout_eq_pauliCoefficientReadout
@@ -190,9 +197,10 @@ theorem loweredSuperchargeMomentumReadout_eq_components (P : PauliParavector) (a
   fin_cases a <;>
     simp [loweredSuperchargeMomentumReadout, superPoincareAnticommutatorMatrix,
       pauliTraceReadout, barSigma, sigma0, sigma1, sigma2, sigma3, pauliMatrix,
-      Matrix.trace, Fin.sum_univ_two]
+      sigma1C, sigma2C, sigma3C, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
   all_goals ring_nf
-  all_goals simp [Complex.I_sq]
+  all_goals rw [Complex.I_sq]
+  all_goals ring
 
 /--
 The determinant of the super-Poincare anticommutator matrix is four times the

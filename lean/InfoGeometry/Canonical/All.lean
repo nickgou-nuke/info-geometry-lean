@@ -21,6 +21,9 @@ import InfoGeometry.Canonical.BiquaternionTorsionBridge
 import InfoGeometry.Canonical.EmergentGravityActionVariation
 import InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
 import InfoGeometry.Canonical.PenroseColimit
+import InfoGeometry.Canonical.FinitePenrosePatchColimit
+import InfoGeometry.Canonical.PenroseSpinNetGraphCategory
+import InfoGeometry.Canonical.PenroseSpinNetPathColimitBridge
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
@@ -132,6 +135,7 @@ import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Canonical.HamiltonianFlowBridge
 import InfoGeometry.Canonical.Cl11TensorTowerBridge
+import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 import InfoGeometry.Canonical.CuntzKTowerCommutation
 import InfoGeometry.Canonical.CuntzCliffordBottBridge
 import InfoGeometry.Canonical.CuntzMapFixedPoint
@@ -544,6 +548,8 @@ import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EntanglementResidualOwner
 import InfoGeometry.Canonical.HolographicEntanglementSymmetry
+import InfoGeometry.Canonical.RosettaTimeClock
+import InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
 import InfoGeometry.Canonical.ErgodicFixedPointBridge
 import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 import InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
@@ -614,6 +620,7 @@ import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral
 import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
+import InfoGeometry.Canonical.KreinCarrierInstances
 import InfoGeometry.Canonical.InfiniteHestenesKrein
 import InfoGeometry.Canonical.HestenesModularBregman
 import InfoGeometry.Canonical.HestenesComplexTranslation
@@ -772,6 +779,8 @@ import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.ModularSurprisalThermoPacket
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.ModularMonodromyClock
+import InfoGeometry.Canonical.ThermalTimeMonodromyBridge
+import InfoGeometry.Canonical.RyuTakayanagiThermalTimeBridge
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 import InfoGeometry.Canonical.ModularWeldBridge
@@ -1228,6 +1237,7 @@ import InfoGeometry.Canonical.OctonionCl8
 import InfoGeometry.Canonical.SpinStatisticsBridge
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 import InfoGeometry.Canonical.ConfigurationSpaceColimit
+import InfoGeometry.Canonical.MasterSynthesis
 
 namespace InfoGeometry
 

@@ -3,8 +3,8 @@ import Mathlib
 /-!
 # Wallpaper Group Representations
 
-This module enumerates the 17 2D crystallographic (wallpaper) groups 
-and provides the formal signature for classifying their irreducible 
+This module enumerates the 17 2D crystallographic (wallpaper) groups
+and provides the formal signature for classifying their irreducible
 representations via the little group method on the Brillouin zone.
 -/
 
@@ -146,5 +146,92 @@ theorem p4m_gamma_irrep_profile :
 theorem p6m_gamma_irrep_profile :
     pointGroupIrrepProfile (pointGroupKind WallpaperGroup.p6m) = ⟨4, 2, 6⟩ := by
   rfl
+
+/-- Conjugacy class labels for each point group, ordered consistently with character tables. -/
+def pointGroupClassLabels (P : WallpaperPointGroup) : List String :=
+  match P with
+  | .C1 => ["1"]
+  | .C2 => ["1", "g"]
+  | .D1 => ["1", "r"]
+  | .V4 => ["1", "a", "b", "ab"]
+  | .C4 => ["1", "g", "g²", "g³"]
+  | .D4 => ["1", "r²", "r", "rs", "r²s"]
+  | .C3 => ["1", "g", "g²"]
+  | .D3 => ["1", "r", "s"]
+  | .C6 => ["1", "g", "g²", "g³", "g⁴", "g⁵"]
+  | .D6 => ["1", "r³", "r", "r²", "s", "rs"]
+
+/-- The number of conjugacy classes equals the number of irreps for each point group. -/
+theorem pointGroupClassLabels_length (P : WallpaperPointGroup) :
+    (pointGroupClassLabels P).length = (pointGroupIrrepProfile P).total := by
+  cases P <;> native_decide
+
+/-- Class size table matches character table column count for each point group. -/
+theorem pointGroupClassLabels_class_size_match (P : WallpaperPointGroup) :
+    (pointGroupClassLabels P).length = match P with
+    | .C1 => 1 | .C2 => 2 | .D1 => 2 | .V4 => 4 | .C4 => 4
+    | .D4 => 5 | .C3 => 3 | .D3 => 3 | .C6 => 6 | .D6 => 6 := by
+  cases P <;> native_decide
+
+/-- Little-group momentum orbit labels for each wallpaper group. -/
+structure MomentumOrbitLabel where
+  name : String
+  stabilizer : WallpaperPointGroup
+  stabilizerOrder : ℕ
+  orbitSize : ℕ
+  deriving Repr, DecidableEq
+
+/-- Complete momentum-orbit tables per wallpaper group with explicit class labels. -/
+def momentumOrbitTable : WallpaperGroup → List MomentumOrbitLabel :=
+  fun g =>
+    match g with
+    | .p1 => [{ name := "Γ", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 1 }]
+    | .p2 => [{ name := "Γ", stabilizer := .C2, stabilizerOrder := 2, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 2 }]
+    | .pm => [{ name := "Γ", stabilizer := .D1, stabilizerOrder := 2, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 2 }]
+    | .pg => [{ name := "Γ", stabilizer := .D1, stabilizerOrder := 2, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 2 }]
+    | .cm => [{ name := "Γ", stabilizer := .D1, stabilizerOrder := 2, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 2 }]
+    | .pmm => [{ name := "Γ", stabilizer := .V4, stabilizerOrder := 4, orbitSize := 1 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 4 }]
+    | .pmg => [{ name := "Γ", stabilizer := .V4, stabilizerOrder := 4, orbitSize := 1 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 4 }]
+    | .pgg => [{ name := "Γ", stabilizer := .V4, stabilizerOrder := 4, orbitSize := 1 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 4 }]
+    | .cmm => [{ name := "Γ", stabilizer := .V4, stabilizerOrder := 4, orbitSize := 1 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 4 }]
+    | .p4 => [{ name := "Γ", stabilizer := .C4, stabilizerOrder := 4, orbitSize := 1 },
+              { name := "X", stabilizer := .C2, stabilizerOrder := 2, orbitSize := 2 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 4 }]
+    | .p4m => [{ name := "Γ", stabilizer := .D4, stabilizerOrder := 8, orbitSize := 1 },
+               { name := "X", stabilizer := .D1, stabilizerOrder := 2, orbitSize := 4 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 8 }]
+    | .p4g => [{ name := "Γ", stabilizer := .D4, stabilizerOrder := 8, orbitSize := 1 },
+               { name := "X", stabilizer := .D1, stabilizerOrder := 2, orbitSize := 4 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 8 }]
+    | .p3 => [{ name := "Γ", stabilizer := .C3, stabilizerOrder := 3, orbitSize := 1 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 3 }]
+    | .p3m1 => [{ name := "Γ", stabilizer := .D3, stabilizerOrder := 6, orbitSize := 1 },
+                { name := "K", stabilizer := .C3, stabilizerOrder := 3, orbitSize := 2 },
+                { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 6 }]
+    | .p31m => [{ name := "Γ", stabilizer := .D3, stabilizerOrder := 6, orbitSize := 1 },
+                { name := "K", stabilizer := .C3, stabilizerOrder := 3, orbitSize := 2 },
+                { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 6 }]
+    | .p6 => [{ name := "Γ", stabilizer := .C6, stabilizerOrder := 6, orbitSize := 1 },
+              { name := "K", stabilizer := .C3, stabilizerOrder := 3, orbitSize := 2 },
+              { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 6 }]
+    | .p6m => [{ name := "Γ", stabilizer := .D6, stabilizerOrder := 12, orbitSize := 1 },
+               { name := "K", stabilizer := .D3, stabilizerOrder := 6, orbitSize := 2 },
+               { name := "generic", stabilizer := .C1, stabilizerOrder := 1, orbitSize := 12 }]
+
+/-- Orbit-stabilizer theorem holds for each momentum orbit: |G| = |Stab(k)| · |Orbit(k)|. -/
+theorem momentumOrbit_orbit_stabilizer (g : WallpaperGroup) (o : MomentumOrbitLabel) (h : o ∈ momentumOrbitTable g) :
+    o.stabilizerOrder * o.orbitSize = point_group_order g := by
+  cases g <;>
+    simp [momentumOrbitTable, point_group_order, pointGroupOrder, pointGroupKind] at h ⊢ <;>
+    rcases h with rfl | rfl | rfl <;> simp
 
 end InfoGeometry.Topology

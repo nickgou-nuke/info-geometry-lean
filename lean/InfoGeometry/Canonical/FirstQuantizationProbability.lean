@@ -81,6 +81,28 @@ noncomputable def quantizedSurprisalOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
   firstQuantize (n := n) (classicalSurprisal (n := n) q q0)
 
+/--
+Boltzmann-entropy / surprisal operator on the finite first-quantized modular
+lane. This is the diagonal observable whose eigenvalues are the pointwise
+microstate surprisal values `-log λ`.
+-/
+@[rep_depth operator]
+noncomputable def boltzmannEntropyOperator
+    (q q0 : PositiveRay (Fin n)) : FinMat n :=
+  quantizedSurprisalOperator (n := n) q q0
+
+@[simp] theorem boltzmannEntropyOperator_diag
+    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
+    boltzmannEntropyOperator (n := n) q q0 i i =
+      classicalSurprisal (n := n) q q0 i := by
+  rw [boltzmannEntropyOperator, quantizedSurprisalOperator, firstQuantize_apply_diag]
+
+@[simp] theorem boltzmannEntropyOperator_offdiag
+    (q q0 : PositiveRay (Fin n)) {i j : Fin n} (hij : i ≠ j) :
+    boltzmannEntropyOperator (n := n) q q0 i j = 0 := by
+  rw [boltzmannEntropyOperator, quantizedSurprisalOperator]
+  exact firstQuantize_apply_offdiag (n := n) (a := classicalSurprisal (n := n) q q0) (hij := hij)
+
 /-- `-log λ` first-quantized equals the relative modular-potential operator. -/
 @[rep_depth operator]
 theorem quantizedSurprisalOperator_eq_relativeModularPotentialOperator
@@ -120,6 +142,19 @@ theorem relativeModularHamiltonianOperator_eq_quantizedSurprisalOperator
     _ = quantizedSurprisalOperator (n := n) q q0 := by
           symm
           exact quantizedSurprisalOperator_eq_relativeModularPotentialOperator (n := n) q q0
+
+/--
+Terminology repair on the finite commuting modular lane: the historical
+"relative modular Hamiltonian" is exactly the Boltzmann-entropy / surprisal
+operator.
+-/
+@[rep_depth operator]
+theorem relativeModularHamiltonianOperator_eq_boltzmannEntropyOperator
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularHamiltonianOperator (n := n) q q0
+      = boltzmannEntropyOperator (n := n) q q0 := by
+  rw [boltzmannEntropyOperator]
+  exact relativeModularHamiltonianOperator_eq_quantizedSurprisalOperator (n := n) q q0
 
 end FiniteDictionary
 

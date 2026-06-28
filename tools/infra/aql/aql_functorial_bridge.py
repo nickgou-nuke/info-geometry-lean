@@ -116,7 +116,7 @@ except ImportError as e:
 # ===========================================================================
 
 @dataclass
-class TripotentEigenvalue:
+class ZornSlot:
     """Zorn matrix slot from SplitOctonionZorn.lean"""
     slot_type: str  # "scalar", "vector_3", "vector_3bar"
     slot_dim: int
@@ -448,14 +448,21 @@ class AQLQueries:
             'symmetry_groups',
             'tripotent_eigenvalues',
             'diagonal_projectors',
-            'color_gauge_mappings'
+            'color_gauge_mappings',
+            'peirce_mappings'
         ]
+        
+        edge_collections = {
+            'functorial_mappings',
+            'color_gauge_mappings',
+            'peirce_mappings'
+        }
         
         for coll_name in collections:
             if not self.db.has_collection(coll_name):
-                edge_type = coll_name == 'functorial_mappings'
+                edge_type = coll_name in edge_collections
                 self.db.create_collection(coll_name, edge=edge_type)
-                print(f"Created collection: {coll_name}")
+                print(f"Created collection: {coll_name} (edge={edge_type})")
     
     # -------------------------------------------------------------------------
     # Insertion Methods

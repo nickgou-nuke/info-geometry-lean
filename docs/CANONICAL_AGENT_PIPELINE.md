@@ -30,6 +30,14 @@ return here before touching repo-owned code.
 ChatGPT does not prove anything. It audits and suggests. The coding agent edits.
 Lean decides.
 
+Oracle outputs are advice artifacts, not source edits. Browser-harness and
+aiClaw tools may write response logs, JSON reports, and candidate files under
+`tmp/oracle_candidates` or `artifacts/oracle`, but they must not overwrite Lean,
+Python, or other repo source files. A coding agent must inspect the candidate,
+apply an ordinary patch, and verify it locally. This rule exists because older
+auto-edit loops corrupted files and then encouraged unjustified deletion of
+damaged modules.
+
 ## First Files To Read
 
 For every agent session:
@@ -106,6 +114,20 @@ python3 tools/infra/socratic_clawbot.py \
   --theorem theorem_name \
   --dry-run --json
 ```
+
+If a candidate is requested, write it explicitly as an artifact:
+
+```bash
+python3 tools/infra/socratic_clawbot.py \
+  --file lean/InfoGeometry/Path/To/File.lean \
+  --theorem theorem_name \
+  --candidate-out tmp/oracle_candidates/theorem_name.lean \
+  --response-out artifacts/oracle/theorem_name.md \
+  --json-out artifacts/oracle/theorem_name.json
+```
+
+Do not let ChatGPT/browser-harness promote the candidate into the owner file.
+Only the coding agent may edit source, and only after local inspection.
 
 Then send one prompt, with complete owner file and full relevant build output:
 

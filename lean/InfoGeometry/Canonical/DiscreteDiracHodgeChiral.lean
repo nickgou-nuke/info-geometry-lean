@@ -6,18 +6,13 @@ import Mathlib
 Finite algebraic owner for the total-form Dirac-Hodge pattern
 `D = d + δ`, its Laplacian `L = dδ + δd`, and the chirality split.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
 The nilpotent expansion `D² = dδ + δd`, chirality anticommutation, evenness of
 `D²`, and exact/coexact/harmonic predicate readbacks are proved at ring/function
 level.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
 Hodge decomposition, Betti-number identification, and graph/simplicial
-realization are represented only by named hypotheses.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-Orthogonal Hodge decomposition, spectral pairing, McKean-Singer supertrace, and
-continuum de Rham comparison are not claimed here.
+realization are intentionally represented only by explicit hypotheses in the
+readout theorem below.
 -/
 
 namespace InfoGeometry.Canonical.DiscreteDiracHodgeChiral

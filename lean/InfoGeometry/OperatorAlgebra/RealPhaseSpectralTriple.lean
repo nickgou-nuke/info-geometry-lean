@@ -101,7 +101,7 @@ structure ChiralGrading
   chi_square : chi.comp chi = 1
   chi_phase_linear : PhasePreserving K.K K.K chi
 
-/-- Bounded placeholder for the spectral/Dirac generator. -/
+/-- Bounded spectral/Dirac generator with explicit model obligations. -/
 structure SpectralGenerator
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   D : RealEnd H
@@ -113,6 +113,32 @@ def commutator
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (S T : RealEnd H) : RealEnd H :=
   S.comp T - T.comp S
+
+namespace SpectralGenerator
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (D : SpectralGenerator H)
+
+@[simp]
+theorem comp_id :
+    D.D.comp (ContinuousLinearMap.id ℝ H) = D.D := by
+  ext x
+  rfl
+
+@[simp]
+theorem id_comp :
+    (ContinuousLinearMap.id ℝ H).comp D.D = D.D := by
+  ext x
+  rfl
+
+@[simp]
+theorem commutator_self :
+    commutator D.D D.D = 0 := by
+  ext x
+  simp [commutator]
+
+end SpectralGenerator
 
 /-- A represented real operator algebra. -/
 structure RepresentedAlgebra

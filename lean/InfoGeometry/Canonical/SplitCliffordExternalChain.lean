@@ -124,10 +124,25 @@ theorem externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight (α : �
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) :=
   VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace_highestWeight ℂ α
 
-/-- The charged Fock space canonically yields a current/Sugawara morphism package. -/
-theorem externalHeisenberg_currentSugawaraMorphism_nonempty (α : ℂ) :
-    Nonempty (CurrentSugawaraMorphism ℂ (VirasoroProject.ChargedFockSpace ℂ α)) :=
-  CurrentSugawaraBridge.chargedFockSpace_currentSugawaraMorphism_nonempty ℂ α
+/-- The charged Fock current/Sugawara morphism has the canonical owner readbacks. -/
+theorem externalHeisenberg_currentSugawaraMorphism_readout (α : ℂ) :
+    let H := CurrentSugawaraBridge.chargedFockSpaceCurrentHeisenbergRep ℂ α
+    let M := CurrentSugawaraMorphism.ofHeisenberg H
+    M.heisenberg = H ∧
+      M.virasoro = H.currentSugawaraRepresentation ∧
+      (∀ n : Int,
+        M.virasoro (VirasoroProject.VirasoroAlgebra.lgen ℂ n) =
+          H.sugawaraStressMode n) ∧
+      M.virasoro (VirasoroProject.VirasoroAlgebra.cgen ℂ) =
+        (1 :
+          VirasoroProject.ChargedFockSpace ℂ α →ₗ[ℂ]
+            VirasoroProject.ChargedFockSpace ℂ α) :=
+  by
+    let H := CurrentSugawaraBridge.chargedFockSpaceCurrentHeisenbergRep ℂ α
+    refine ⟨rfl, rfl, ?_, ?_⟩
+    · intro n
+      exact H.currentSugawaraRepresentation_lgen_apply n
+    · exact H.currentSugawaraRepresentation_central
 
 /-- The external Heisenberg-owned Sugawara datum has central charge `1`. -/
 theorem externalHeisenberg_sugawaraDatum_centralCharge_one :

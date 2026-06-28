@@ -58,23 +58,25 @@ def OddSector (P : FiniteParityPairing) : Type :=
   {x : P.Carrier // P.isEven x = false}
 
 instance (P : FiniteParityPairing) : Fintype P.EvenSector :=
-  Fintype.subtype _ _
+  Subtype.fintype _
 
 instance (P : FiniteParityPairing) : Fintype P.OddSector :=
-  Fintype.subtype _ _
+  Subtype.fintype _
 
 /-- The flip induces a bijection between even and odd sectors. -/
 def parityEquiv (P : FiniteParityPairing) : P.EvenSector ≃ P.OddSector where
   toFun x := ⟨P.flip x.val, by
-    rw [P.flip_toggles_parity, Bool.not_eq_true_iff]
-    exact x.property⟩
+    have h1 := P.flip_toggles_parity x.val
+    have h2 := x.property
+    rw [h2] at h1
+    exact h1⟩
   invFun x := ⟨P.flip x.val, by
-    rw [P.flip_toggles_parity, Bool.not_eq_false_iff]
-    exact x.property⟩
-  left_inv := by
-    intro x; ext; simp [P.flip_involutive]
-  right_inv := by
-    intro x; ext; simp [P.flip_involutive]
+    have h1 := P.flip_toggles_parity x.val
+    have h2 := x.property
+    rw [h2] at h1
+    exact h1⟩
+  left_inv := fun x => Subtype.ext (P.flip_involutive x.val)
+  right_inv := fun x => Subtype.ext (P.flip_involutive x.val)
 
 /-- The finite Witten index: card(even) - card(odd). -/
 def wittenIndex (P : FiniteParityPairing) : ℤ :=
@@ -103,7 +105,7 @@ def fourModeParityPairing : FiniteParityPairing where
     intro w; intro h
     have h0 := congr_fun h 0
     simp [toggle0] at h0
-  isEven := fun w => (Finset.univ.filter w).card % 2 == 0
+  isEven := fun w => decide (Even (fermionNumber w))
   flip_toggles_parity := by
     -- This requires a combinatorial argument that toggle0 flips parity.
     -- The toggle adds/removes mode 0 from the occupied set, changing

@@ -1,0 +1,118 @@
+DIGEST 607b59e108f886a0f1976cfae3c2daf0
+FNeedhamFineStructureConstant
+R27:31 Stdlib.Reals.Reals <> <> lib
+R33:35 Stdlib.micromega.Lra <> <> lib
+R37:41 Stdlib.setoid_ring.Field <> <> lib
+R43:47 Stdlib.micromega.Psatz <> <> lib
+def 83:85 <> phi
+R89:89 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R94:94 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R105:108 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R96:98 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R99:102 Stdlib.Reals.R_sqrt <> sqrt def
+def 123:143 <> needham_alpha_inverse
+R147:147 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R173:175 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R165:167 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R159:161 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R154:156 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R157:158 Stdlib.Reals.Rtrigo1 <> PI def
+R162:164 NeedhamFineStructureConstant <> phi def
+R168:170 Stdlib.Reals.Rtrigo_def <> exp def
+R176:177 Stdlib.Reals.Rpower <> ln def
+R179:180 Stdlib.Reals.Rtrigo1 <> PI def
+def 194:217 <> codata2018_alpha_inverse
+R221:221 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+def 252:268 <> needham_abs_error
+R272:272 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R277:280 Stdlib.Reals.Rbasic_fun <> Rabs def
+R304:306 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R283:303 NeedhamFineStructureConstant <> needham_alpha_inverse def
+R307:330 NeedhamFineStructureConstant <> codata2018_alpha_inverse def
+def 345:361 <> needham_rel_error
+R365:365 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R387:389 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R370:386 NeedhamFineStructureConstant <> needham_abs_error def
+R390:413 NeedhamFineStructureConstant <> codata2018_alpha_inverse def
+prf 423:428 <> phi_sq
+R439:441 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R435:437 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R432:434 NeedhamFineStructureConstant <> phi def
+R445:447 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R442:444 NeedhamFineStructureConstant <> phi def
+R467:469 NeedhamFineStructureConstant <> phi def
+R497:499 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R487:487 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R494:495 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R488:491 Stdlib.Reals.R_sqrt <> sqrt def
+R497:499 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R487:487 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R494:495 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R488:491 Stdlib.Reals.R_sqrt <> sqrt def
+R517:517 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R524:525 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R518:521 Stdlib.Reals.R_sqrt <> sqrt def
+R541:543 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R535:538 Stdlib.Reals.R_sqrt <> sqrt def
+R544:547 Stdlib.Reals.R_sqrt <> sqrt def
+R517:517 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R524:525 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R518:521 Stdlib.Reals.R_sqrt <> sqrt def
+R541:543 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R535:538 Stdlib.Reals.R_sqrt <> sqrt def
+R544:547 Stdlib.Reals.R_sqrt <> sqrt def
+R573:581 Stdlib.Reals.R_sqrt <> sqrt_sqrt thm
+R573:581 Stdlib.Reals.R_sqrt <> sqrt_sqrt thm
+R573:581 Stdlib.Reals.R_sqrt <> sqrt_sqrt thm
+R573:581 Stdlib.Reals.R_sqrt <> sqrt_sqrt thm
+prf 610:616 <> phi_pos
+R621:623 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<'_x not
+R624:626 NeedhamFineStructureConstant <> phi def
+R645:647 NeedhamFineStructureConstant <> phi def
+R661:664 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<='_x not
+R665:668 Stdlib.Reals.R_sqrt <> sqrt def
+R682:689 Stdlib.Reals.R_sqrt <> sqrt_pos thm
+R661:664 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<='_x not
+R665:668 Stdlib.Reals.R_sqrt <> sqrt def
+R682:689 Stdlib.Reals.R_sqrt <> sqrt_pos thm
+prf 713:748 <> needham_alpha_inverse_eq_closed_form
+R775:777 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R754:774 NeedhamFineStructureConstant <> needham_alpha_inverse def
+R807:809 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R799:801 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R784:787 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R798:798 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R779:781 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R782:783 Stdlib.Reals.Rtrigo1 <> PI def
+R789:791 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R792:795 Stdlib.Reals.R_sqrt <> sqrt def
+R802:804 Stdlib.Reals.Rtrigo_def <> exp def
+R810:811 Stdlib.Reals.Rpower <> ln def
+R813:814 Stdlib.Reals.Rtrigo1 <> PI def
+R833:853 NeedhamFineStructureConstant <> needham_alpha_inverse def
+R856:858 NeedhamFineStructureConstant <> phi def
+prf 882:909 <> codata2018_alpha_inverse_pos
+R914:916 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<'_x not
+R917:940 NeedhamFineStructureConstant <> codata2018_alpha_inverse def
+R959:982 NeedhamFineStructureConstant <> codata2018_alpha_inverse def
+prf 1002:1025 <> needham_abs_error_nonneg
+R1030:1033 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<='_x not
+R1034:1050 NeedhamFineStructureConstant <> needham_abs_error def
+R1069:1085 NeedhamFineStructureConstant <> needham_abs_error def
+R1096:1103 Stdlib.Reals.Rbasic_fun <> Rabs_pos thm
+R1096:1103 Stdlib.Reals.Rbasic_fun <> Rabs_pos thm
+prf 1118:1141 <> needham_rel_error_nonneg
+R1146:1149 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<='_x not
+R1150:1166 NeedhamFineStructureConstant <> needham_rel_error def
+R1185:1201 NeedhamFineStructureConstant <> needham_rel_error def
+R1204:1207 Stdlib.Reals.Rdefinitions <> Rdiv def
+R1218:1229 Stdlib.Reals.RIneq <> Rmult_le_pos thm
+R1218:1229 Stdlib.Reals.RIneq <> Rmult_le_pos thm
+R1242:1265 NeedhamFineStructureConstant <> needham_abs_error_nonneg thm
+R1242:1265 NeedhamFineStructureConstant <> needham_abs_error_nonneg thm
+R1278:1283 Stdlib.Reals.RIneq <> Rlt_le thm
+R1278:1283 Stdlib.Reals.RIneq <> Rlt_le thm
+R1296:1311 Stdlib.Reals.RIneq <> Rinv_0_lt_compat thm
+R1296:1311 Stdlib.Reals.RIneq <> Rinv_0_lt_compat thm
+R1324:1351 NeedhamFineStructureConstant <> codata2018_alpha_inverse_pos thm
+R1324:1351 NeedhamFineStructureConstant <> codata2018_alpha_inverse_pos thm

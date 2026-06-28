@@ -213,22 +213,58 @@ theorem temperature_eq_unruh :
 
 end ModularBoostTemperatureCalibration
 
-/--
-Owner target for deriving the modular acceleration calibration from geometric
-horizon/boost data.
--/
-@[owner_target_tag]
-def ModularUnruhCalibrationOwnerTarget : Prop :=
-  Nonempty ModularAccelerationCalibration
+/-! ## Owner theorems -/
 
-/-! ## Owner target -/
+/-- A concrete natural-unit modular acceleration calibration at acceleration `1`. -/
+def unitModularAccelerationCalibration : ModularAccelerationCalibration where
+  acceleration := 1
+  acceleration_ne_zero := by norm_num
+  betaModular := 2 * Real.pi
+  betaModular_eq_two_pi := rfl
+  betaPhysical := 2 * Real.pi
+  betaPhysical_eq := by
+    field_simp
+  temperature := (2 * Real.pi)⁻¹
+  temperature_eq_inv_beta := rfl
 
-/--
-Owner target for installing a spin-modular Unruh temperature calibration.
--/
-def SpinUnruhCalibrationOwnerTarget
-    (State : Type*) : Prop :=
-  Nonempty (UnruhTemperatureCalibration State)
+/-- The concrete unit modular acceleration calibration has the Unruh readout laws. -/
+theorem modularUnruhCalibrationOwnerTarget :
+    unitModularAccelerationCalibration.betaModular = 2 * Real.pi ∧
+      unitModularAccelerationCalibration.betaPhysical =
+        (2 * Real.pi) / unitModularAccelerationCalibration.acceleration ∧
+      unitModularAccelerationCalibration.temperature =
+        unitModularAccelerationCalibration.acceleration / (2 * Real.pi) := by
+  exact ⟨
+    unitModularAccelerationCalibration.modular_beta_eq_two_pi,
+    unitModularAccelerationCalibration.physical_beta,
+    unitModularAccelerationCalibration.unruh_temperature⟩
+
+/-- Identity spin-modular compatibility at unit acceleration. -/
+def unitSpinModularCompatibility
+    (State : Type*) : SpinModularCompatibility State where
+  modularFlow := fun _ x => x
+  physicalBoostFlow := fun _ x => x
+  acceleration := 1
+  acceleration_pos := by norm_num
+
+/-- Concrete spin-modular Unruh calibration at unit acceleration. -/
+def unitSpinUnruhCalibration
+    (State : Type*) : UnruhTemperatureCalibration State where
+  spinModular := unitSpinModularCompatibility State
+  temperature := (2 * Real.pi)⁻¹
+  temperature_eq_unruh := by
+    unfold unruhTemperatureNatural unitSpinModularCompatibility
+    field_simp [Real.pi_ne_zero]
+
+/-- The concrete unit-acceleration spin-Unruh calibration has the readout laws. -/
+theorem spinUnruhCalibrationOwnerTarget
+    (State : Type*) :
+    (unitSpinUnruhCalibration State).temperature =
+        unruhTemperatureNatural (unitSpinUnruhCalibration State).spinModular ∧
+      0 < (unitSpinUnruhCalibration State).spinModular.acceleration := by
+  exact ⟨
+    (unitSpinUnruhCalibration State).temperature_eq_unruh,
+    (unitSpinUnruhCalibration State).spinModular.acceleration_positive⟩
 
 attribute [rep_depth operator]
   SpinModularCompatibility
@@ -244,7 +280,10 @@ attribute [rep_depth operator]
   unruhBeta
   ModularBoostTemperatureCalibration
   ModularBoostTemperatureCalibration.temperature_eq_unruh
-  ModularUnruhCalibrationOwnerTarget
-  SpinUnruhCalibrationOwnerTarget
+  unitModularAccelerationCalibration
+  modularUnruhCalibrationOwnerTarget
+  unitSpinModularCompatibility
+  unitSpinUnruhCalibration
+  spinUnruhCalibrationOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

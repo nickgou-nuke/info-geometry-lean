@@ -447,7 +447,13 @@ structure KinematicGeneration (Op : Type*) where
 structure ThermodynamicFlow (Op : Type*) where
   state : Op → ℝ
   entropy : ℝ
-  modular_flow : Unit  -- placeholder
+  modular_flow : ℝ → Op → Op
+  modular_flow_zero : ∀ x, modular_flow 0 x = x
+
+theorem ThermodynamicFlow.state_modular_flow_zero
+    {Op : Type*} (F : ThermodynamicFlow Op) (x : Op) :
+    F.state (F.modular_flow 0 x) = F.state x := by
+  rw [F.modular_flow_zero x]
 
 /-- Stage 3: Stabilization Filter (Clifford → Drazin → Hodge)
 

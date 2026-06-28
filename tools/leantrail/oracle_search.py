@@ -300,7 +300,7 @@ Format each lemma as a separate `lemma` block with docstring."""
 
 
 def cmd_fix(args: argparse.Namespace) -> int:
-    """Repair a broken Lean file."""
+    """Generate a sidecar repair candidate for a broken Lean file."""
     filepath = Path(args.fix).resolve()
     if not filepath.exists():
         print(f"Error: file not found: {filepath}", file=sys.stderr)
@@ -342,15 +342,13 @@ Requirements:
     fixed = _extract_lean_code(response)
 
     if args.in_place:
-        filepath.write_text(fixed, encoding="utf-8")
-        print(f"  Wrote {len(fixed)} chars to {filepath}")
-    else:
-        out_path = Path(args.out or str(filepath.with_suffix(".fixed.lean"))).resolve()
-        out_path.write_text(fixed, encoding="utf-8")
-        print(f"  Wrote {len(fixed)} chars to {out_path}")
+        print("  Refusing --in-place: oracle fixes are advice artifacts, not source edits.")
+    out_path = Path(args.out or str(filepath.with_suffix(".fixed.lean"))).resolve()
+    out_path.write_text(fixed, encoding="utf-8")
+    print(f"  Wrote {len(fixed)} chars to {out_path}")
 
     if args.compile:
-        verify_path = filepath if args.in_place else out_path
+        verify_path = out_path
         print("  Verifying compilation ...")
         rc, stdout, stderr = _run_lean(verify_path)
         if rc == 0:
@@ -482,7 +480,7 @@ def _parse_args() -> argparse.Namespace:
                      help="Path to a SymPy/Isabelle/Python proof to translate")
 
     parser.add_argument("--in-place", action="store_true",
-                        help="Overwrite the input file with the fixed version")
+                        help="Deprecated and refused: oracle fixes are written to sidecar files only")
     parser.add_argument("--from-lang", dest="from_lang", default=None,
                         help="Source language for translation (py, thy, sage)")
     return parser.parse_args()

@@ -68,12 +68,15 @@ provides a `SplitCliffordHeisenbergWitness` without any extra closure surface.
 -/
 theorem strictWitness_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty
-      (SplitCliffordHeisenbergWitness 𝕜
-        (VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+    ∃ J :
+        Int →
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α,
+      (∀ v, ∀ᶠ n : Int in Filter.atTop, J n v = 0) ∧
+        SplitSourceEndWickLaw J := by
   rcases represented_current_commutator_chargedFock (𝕜 := 𝕜) α with
     ⟨J, hTruncLift, hCommLift⟩
-  exact ⟨packagedHeisenbergWitness J hTruncLift hCommLift⟩
+  exact ⟨J, hTruncLift, hCommLift⟩
 
 /-! ## Packaging from split source lift data -/
 
@@ -102,8 +105,10 @@ theorem strictWitness_of_splitCurrentLiftDatum
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
     (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    Nonempty (SplitCliffordHeisenbergWitness 𝕜 V) := by
-  exact ⟨packagedHeisenbergWitness L.Jlift L.trunc hCommLift⟩
+    (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).J = L.Jlift ∧
+      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).trunc = L.trunc ∧
+      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).comm = hCommLift :=
+  ⟨rfl, rfl, rfl⟩
 
 /--
 The same source-side hypotheses already yield the existing repository
@@ -114,9 +119,13 @@ theorem currentRep_nonempty_of_splitCurrentLiftDatum
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
     (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    Nonempty (InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V) := by
-  rcases strictWitness_of_splitCurrentLiftDatum L hCommLift with ⟨W⟩
-  exact splitClifford_to_currentHeisenbergRep W
+    (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.J =
+        L.Jlift ∧
+      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.trunc =
+        L.trunc ∧
+      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.comm =
+        hCommLift :=
+  ⟨rfl, rfl, rfl⟩
 
 /-! ## Explicit infinite-current consumer readouts -/
 

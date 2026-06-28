@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometryCore.Basic
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.ModularSL2R
@@ -19,6 +20,8 @@ open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ModularLorentzBoost
 open InfoGeometry.Canonical.ModularSL2R
 open InfoGeometry.Canonical.TomitaBregmanDuality
+
+open InfoGeometryCore
 
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 
@@ -333,7 +336,12 @@ theorem gK_smul_right (c : ℝ) (X Y : M2R) :
 theorem gK_TomitaBregman_zero (Y : M2R) :
     gK TomitaBregmanOp Y = 0 := by
   unfold gK
-  rw [modular_derivation_bregman_invariant]
+  have hcomm : innerDerivation K TomitaBregmanOp = 0 := by
+    rw [tomita_bregman_diagonal]
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [innerDerivation, K, InfoGeometry.Canonical.ModularLorentzBoost.K,
+        E, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [hcomm]
   unfold tr
   simp
 

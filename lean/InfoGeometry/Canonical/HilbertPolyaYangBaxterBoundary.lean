@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.YangBaxterProof
 
 open Complex
 open Real
@@ -31,6 +32,7 @@ Zero global axioms. No claim of RH proof.
 namespace InfoGeometry.Canonical.HilbertPolyaYangBaxterBoundary
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.YangBaxterProof
 
 /-! ### Cayley bijection — proved in CayleyCriticalLineCircleBridge -/
 
@@ -44,26 +46,25 @@ theorem reflection_is_inversion (s : ℂ) :
 
 /-! ### Structural capstone — assembles proved components -/
 
+/-- The finite Fibonacci Yang--Baxter matrix relation used by this boundary lane. -/
+theorem yang_baxter_relation : R * B * R = B * R * B :=
+  braid_relation
+
+/-- The Fibonacci scalar identities used by the finite braid readout. -/
+theorem fibonacci_parameters : q ^ 5 = -1 ∧ τ ^ 2 + τ = 1 :=
+  ⟨q_pow_five, tau_sq_add_tau⟩
+
 /--
-The Hilbert-Pólya structural correspondence.
-
-Components and their repo locations:
-1. Cayley bijection: `criticalLine_iff_cayley_unitCircle` (proved)
-2. Yang-Baxter R-matrix: `YangBaxterProof.lean` q⁵=-1, τ²+τ=1 (proved)
-3. Fibonacci braiding: `FibonacciBraidedTowerCone` uses mathlib YB iso (proved)
-4. Anomaly cancellation: `chiral_anomaly_vanishes_at_flat_boundary` (proved)
-5. Zero-temperature limit: `ZeroTemperatureCrystallization` (proved)
+The Hilbert-Pólya/Yang--Baxter boundary packet contains only theorem content:
+Cayley critical-line compactification, Cayley reflection, the finite Fibonacci
+Yang--Baxter matrix relation, and the Fibonacci scalar identities.
 -/
-structure HilbertPolyaCorrespondence where
-  cayley_proved : String := "criticalLine_iff_cayley_unitCircle"
-  yang_baxter_proved : String := "YangBaxterProof.lean q⁵=-1 τ²+τ=1"
-  fibonacci_braiding_proved : String := "FibonacciBraidedTowerCone"
-  anomaly_cancellation_proved : String := "chiral_anomaly_vanishes_at_flat_boundary"
-  zero_temperature_proved : String := "ZeroTemperatureCrystallization"
-  structural_debt : String := "spectral determinant and Lee-Yang admissibility"
-  rhBoundaryNotice : String := "No claim of unconditional RH proof"
-
-/-- The assembled correspondence. -/
-def capstone : HilbertPolyaCorrespondence := {}
+theorem capstone :
+    (∀ s : ℂ, OnCriticalLine s ↔ OnLeeYangCircle (cayleyToFugacity s)) ∧
+      (∀ s : ℂ, cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹) ∧
+        R * B * R = B * R * B ∧
+          q ^ 5 = -1 ∧ τ ^ 2 + τ = 1 := by
+  exact ⟨critical_line_cayley_bijection, reflection_is_inversion,
+    yang_baxter_relation, fibonacci_parameters⟩
 
 end InfoGeometry.Canonical.HilbertPolyaYangBaxterBoundary

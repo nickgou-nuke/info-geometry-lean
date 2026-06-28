@@ -149,11 +149,32 @@ namespace ModularHamiltonianSurprisalContext
 
 variable (C : ModularHamiltonianSurprisalContext (H := H))
 
+/--
+The Boltzmann-entropy / surprisal operator readout attached to the modular
+operator. In this finite/bounded owner surface it is exactly the supplied
+negative-log modular operator.
+-/
+@[rep_depth operator]
+def boltzmannEntropyOperator : H →L[ℝ] H :=
+  C.negativeLogModularOperator
+
+@[simp]
+theorem boltzmannEntropyOperator_eq_negativeLogModularOperator :
+    C.boltzmannEntropyOperator = C.negativeLogModularOperator :=
+  rfl
+
 /-- The modular Hamiltonian is the supplied negative-log modular operator. -/
 @[rep_depth operator]
 theorem modularHamiltonian_eq_supplied_negativeLog :
     C.modularHamiltonian = C.negativeLogModularOperator :=
   C.modularHamiltonian_eq_negativeLog
+
+/-- The historical modular-Hamiltonian name is exactly the Boltzmann-entropy operator. -/
+@[rep_depth operator]
+theorem modularHamiltonian_eq_boltzmannEntropyOperator :
+    C.modularHamiltonian = C.boltzmannEntropyOperator := by
+  rw [boltzmannEntropyOperator_eq_negativeLogModularOperator,
+    modularHamiltonian_eq_supplied_negativeLog]
 
 end ModularHamiltonianSurprisalContext
 

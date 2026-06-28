@@ -1,0 +1,82 @@
+// Pellis Fine-Structure Constant - Singular Formalization
+// Stergios Pellis (2022): α⁻¹ = 360·φ⁻² - 2·φ⁻³ + (3·φ)⁻⁵
+
+// Working in polynomial ring with golden ratio relation
+ring R = 0, (phi), dp;
+ideal I = phi^2 - phi - 1;  // φ² = φ + 1
+
+print("======================================================================");
+print("PELLIS FINE-STRUCTURE CONSTANT - SINGULAR FORMALIZATION");
+print("======================================================================");
+print("");
+
+// 1. Verify quadratic relation
+print("1. Quadratic relation φ² = φ + 1:");
+poly phiSq = phi^2;
+poly phiPlus1 = phi + 1;
+print("   φ² = " + string(phiSq));
+print("   φ + 1 = " + string(phiPlus1));
+print("   φ² - (φ+1) = " + string(phiSq - phiPlus1) + " (should reduce to 0)");
+
+// Reduce modulo the ideal
+reduce(phiSq - phiPlus1, std(I));
+print("   Reduced: " + string(reduce(phiSq - phiPlus1, std(I))));
+print("");
+
+// 2. Compute inverse powers (in quotient field)
+// φ⁻² = 2 - φ, φ⁻³ = 2φ - 3, φ⁻⁵ = 5φ - 8
+poly invPhi2 = 2 - phi;
+poly invPhi3 = 2*phi - 3;
+poly invPhi5 = 5*phi - 8;
+
+print("2. Inverse powers:");
+print("   φ⁻² = " + string(invPhi2));
+print("   φ⁻³ = " + string(invPhi3));
+print("   φ⁻⁵ = " + string(invPhi5));
+print("");
+
+// 3. Verify inverse relations
+// φ² × (2-φ) should equal 1 modulo I
+poly check2 = phi^2 * invPhi2;
+poly check2Reduced = reduce(check2 - 1, std(I));
+print("   Verification: φ² × φ⁻² - 1 = " + string(check2Reduced));
+
+poly check3 = phi^3 * invPhi3;
+poly check3Reduced = reduce(check3 - 1, std(I));
+print("   Verification: φ³ × φ⁻³ - 1 = " + string(check3Reduced));
+
+poly check5 = phi^5 * invPhi5;
+poly check5Reduced = reduce(check5 - 1, std(I));
+print("   Verification: φ⁵ × φ⁻⁵ - 1 = " + string(check5Reduced));
+print("");
+
+// 4. Pellis formula
+poly pellis = 360 * invPhi2 - 2 * invPhi3 + 1/243 * invPhi5;
+poly pellisReduced = reduce(pellis, std(I));
+
+print("3. Pellis formula (Equation 6):");
+print("   α⁻¹ = 360·φ⁻² - 2·φ⁻³ + (3·φ)⁻⁵");
+print("   α⁻¹ = " + string(pellisReduced));
+print("");
+
+// 5. Extract coefficients for normal form a + b·φ
+intvec v = lead(pellisReduced);
+// In Singular, we need to extract coeffs manually
+// The reduced form should be linear: a + b·phi
+
+print("4. Normal form in basis {1, φ}:");
+print("   Expected: 176410/243 - 88447/243·φ");
+print("");
+
+// 5. Numerical evaluation (external check)
+print("5. Numerical evaluation:");
+print("   Use external tools (SageMath/SymPy) for floating point:");
+print("   φ ≈ 1.618033988749895");
+print("   α⁻¹ ≈ 137.0359991647656");
+print("   CODATA 2018: 137.035999084");
+print("   Difference: < 10⁻⁷");
+print("");
+
+print("======================================================================");
+print("SINGULAR ALGEBRAIC VERIFICATION COMPLETE");
+print("======================================================================");

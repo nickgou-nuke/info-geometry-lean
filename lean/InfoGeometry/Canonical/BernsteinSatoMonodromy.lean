@@ -24,18 +24,21 @@ structure BernsteinSato (Q : ℝ → ℝ) where
 def m2_b_function_roots : List ℚ := [-1]
 
 /--
-  THE HOLONOMIC MONODROMY THEOREM
-  Connects the Lagrangian nature of the Fenchel-Legendre submanifold 
-  to the discrete rational quantization of the D-module.
+  Bernstein-Sato rational-root quantization.
+
+  This is the kernel-checked content carried by the `BernsteinSato` witness:
+  every real root of the real scalar extension of `b_poly` is the image of a
+  rational number.
 -/
-theorem holonomic_quantization {V : Type _} {R : Type _} [AddCommGroup V] [CommRing R]
-  [InnerSpace V R] [DeRhamComplex V R] (ψ φ : V → R)
-  (pair : DeRhamFenchelDualPair ψ φ) (Q : ℝ → ℝ) (b : BernsteinSato Q)
-  -- The fundamental Lagrangian condition derived from DeRhamFenchelLegendre
-  (h_lagrangian : ∀ x y, DeRhamComplex.d1 pair.eta x y = (0 : R)) :
-  -- The connection d(ln Q) has discrete, rational monodromy phases
-  ∃ (phases : List ℚ), phases = m2_b_function_roots := by
-  -- The phases are topologically fixed by the D-module singular support
-  exact ⟨m2_b_function_roots, rfl⟩
+theorem holonomic_quantization (Q : ℝ → ℝ) (b : BernsteinSato Q) :
+    ∀ r : ℝ, (b.b_poly.map (algebraMap ℚ ℝ)).IsRoot r → ∃ q : ℚ, (q : ℝ) = r :=
+  b.roots_are_rational
+
+/-- The concrete Macaulay2 root list used here contains only rational phases. -/
+theorem m2_b_function_roots_are_rational :
+    ∀ r ∈ m2_b_function_roots, ∃ q : ℚ, q = r := by
+  intro r hr
+  simp [m2_b_function_roots] at hr
+  exact ⟨r, rfl⟩
 
 end InfoGeometry.Canonical

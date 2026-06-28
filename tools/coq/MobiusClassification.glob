@@ -1,0 +1,134 @@
+DIGEST 43780c55000b29c0023afed4c77230e5
+FMobiusClassification
+R27:32 Stdlib.QArith.QArith <> <> lib
+R34:44 Stdlib.QArith.QArith_base <> <> lib
+ind 78:89 <> mobius_class
+constr 94:101 <> Elliptic
+constr 105:113 <> Parabolic
+constr 117:126 <> Hyperbolic
+constr 130:139 <> Loxodromic
+scheme 78:89 <> mobius_class_rect
+scheme 78:89 <> mobius_class_ind
+scheme 78:89 <> mobius_class_rec
+scheme 78:89 <> mobius_class_sind
+def 154:163 <> sigma_pair
+R170:172 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R169:169 Stdlib.QArith.QArith_base <> Q rec
+R173:173 Stdlib.QArith.QArith_base <> Q rec
+def 194:195 <> re
+R202:211 MobiusClassification <> sigma_pair def
+binder 198:198 <> s:3
+R216:216 Stdlib.QArith.QArith_base <> Q rec
+R221:223 Corelib.Init.Datatypes <> fst def
+R225:225 MobiusClassification <> s:3 var
+def 239:240 <> im
+R247:256 MobiusClassification <> sigma_pair def
+binder 243:243 <> s:4
+R261:261 Stdlib.QArith.QArith_base <> Q rec
+R266:268 Corelib.Init.Datatypes <> snd def
+R270:270 MobiusClassification <> s:4 var
+def 285:298 <> classify_sigma
+R305:314 MobiusClassification <> sigma_pair def
+binder 301:301 <> s:5
+R319:330 MobiusClassification <> mobius_class ind
+R340:347 Stdlib.QArith.QArith_base <> Qeq_bool def
+R350:351 MobiusClassification <> im def
+R353:353 MobiusClassification <> s:5 var
+R472:481 MobiusClassification <> Loxodromic constr
+R370:377 Stdlib.QArith.QArith_base <> Qeq_bool def
+R380:381 MobiusClassification <> re def
+R383:383 MobiusClassification <> s:5 var
+R415:424 Stdlib.QArith.QArith_base <> Qlt_le_dec thm
+R427:428 MobiusClassification <> re def
+R430:430 MobiusClassification <> s:5 var
+R454:463 MobiusClassification <> Hyperbolic constr
+R440:447 MobiusClassification <> Elliptic constr
+R393:401 MobiusClassification <> Parabolic constr
+def 496:506 <> hyper_sigma
+R510:519 MobiusClassification <> sigma_pair def
+R524:524 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R529:530 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R532:532 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R527:527 Stdlib.QArith.QArith_base <> ::Q_scope:x_'#'_x not
+def 546:555 <> para_sigma
+R559:568 MobiusClassification <> sigma_pair def
+R573:573 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R575:576 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R578:578 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 592:600 <> ell_sigma
+R604:613 MobiusClassification <> sigma_pair def
+R618:618 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R620:621 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R623:623 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 637:645 <> lox_sigma
+R649:658 MobiusClassification <> sigma_pair def
+R663:663 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R665:666 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R668:668 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 683:697 <> gaussian_square
+R706:706 Stdlib.QArith.QArith_base <> Q rec
+binder 700:700 <> a:6
+binder 702:702 <> b:7
+R711:720 MobiusClassification <> sigma_pair def
+R725:725 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R739:740 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R750:750 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R731:733 Stdlib.QArith.QArith_base <> ::Q_scope:x_'-'_x not
+R727:729 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R726:726 MobiusClassification <> a:6 var
+R730:730 MobiusClassification <> a:6 var
+R735:737 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R734:734 MobiusClassification <> b:7 var
+R738:738 MobiusClassification <> b:7 var
+R746:748 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R742:744 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R745:745 MobiusClassification <> a:6 var
+R749:749 MobiusClassification <> b:7 var
+def 762:781 <> hyper_sigma_readback
+R796:798 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R785:795 MobiusClassification <> hyper_sigma def
+R799:799 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R813:814 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R816:816 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R800:800 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R804:808 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R812:812 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+R802:802 Stdlib.QArith.QArith_base <> ::Q_scope:x_'#'_x not
+R810:810 Stdlib.QArith.QArith_base <> ::Q_scope:x_'#'_x not
+def 853:871 <> para_sigma_readback
+R885:887 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R875:884 MobiusClassification <> para_sigma def
+R888:888 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R894:895 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R897:897 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R890:892 Stdlib.QArith.QArith_base <> ::Q_scope:x_'*'_x not
+def 934:951 <> ell_sigma_readback
+R964:966 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R955:963 MobiusClassification <> ell_sigma def
+R967:967 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R969:970 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R972:972 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 1009:1026 <> lox_sigma_readback
+R1049:1051 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1030:1044 MobiusClassification <> gaussian_square def
+R1052:1060 MobiusClassification <> lox_sigma def
+def 1097:1116 <> hyper_classification
+R1146:1148 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1120:1133 MobiusClassification <> classify_sigma def
+R1135:1145 MobiusClassification <> hyper_sigma def
+R1149:1158 MobiusClassification <> Hyperbolic constr
+def 1195:1213 <> para_classification
+R1242:1244 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1217:1230 MobiusClassification <> classify_sigma def
+R1232:1241 MobiusClassification <> para_sigma def
+R1245:1253 MobiusClassification <> Parabolic constr
+def 1290:1307 <> ell_classification
+R1335:1337 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1311:1324 MobiusClassification <> classify_sigma def
+R1326:1334 MobiusClassification <> ell_sigma def
+R1338:1345 MobiusClassification <> Elliptic constr
+def 1382:1399 <> lox_classification
+R1427:1429 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1403:1416 MobiusClassification <> classify_sigma def
+R1418:1426 MobiusClassification <> lox_sigma def
+R1430:1439 MobiusClassification <> Loxodromic constr

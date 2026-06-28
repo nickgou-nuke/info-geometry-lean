@@ -248,10 +248,12 @@ def run_audit_and_save(
     repo_root: str | Path,
     timeout: int = 120,
 ) -> bool:
-    """Full chain: audit -> extract code -> save -> compile once.
+    """Full chain: audit -> extract code -> save candidate -> compile once.
 
     This is intentionally single-shot with respect to ChatGPT. Any retry should
     be scheduled by the queue/worker layer, not by this function.
+    It never overwrites ``target_file``.  The browser oracle is an advice tool;
+    a coding agent must inspect and apply accepted source edits separately.
     """
     result = run_audit(context_code, timeout=timeout)
     if not result or result == "timeout":
@@ -265,11 +267,21 @@ def run_audit_and_save(
 
     target_file = Path(target_file)
     repo_root = Path(repo_root)
-    target_file.write_text(replacement, encoding="utf-8")
-    print(f"Saved: {len(replacement)} chars, {replacement.count(chr(10))} lines")
+    candidate_dir = repo_root / "tmp" / "oracle_candidates"
+    candidate_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        relative = target_file.resolve().relative_to(repo_root.resolve())
+    except ValueError:
+        relative = Path(target_file.name)
+    candidate_file = candidate_dir / ("__".join(relative.parts) + f".browser.{os.getpid()}.lean")
+    candidate_file.write_text(replacement, encoding="utf-8")
+    print(
+        f"Candidate saved: {candidate_file} "
+        f"{len(replacement)} chars, {replacement.count(chr(10))} lines"
+    )
 
     lean = subprocess.run(
-        ["lake", "env", "lean", str(target_file)],
+        ["lake", "env", "lean", str(candidate_file)],
         capture_output=True,
         text=True,
         timeout=60,

@@ -12,7 +12,7 @@ orthogonal range projectors `Pplus`, `Pminus` and their parity difference
 `eta = Pplus - Pminus`.  The analytic GNS/C*-completion, unbounded modular
 operator, and genuine Tomita--Takesaki theorem are not asserted here.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
+## Closed finite theorems
 * `Pplus + Pminus = 1`, orthogonality and idempotence;
 * `eta^2 = 1`;
 * the two-level modular Hamiltonian
@@ -22,13 +22,12 @@ operator, and genuine Tomita--Takesaki theorem are not asserted here.
 * finite matrix formulas for `Δ^{1/2}`, `J`, and
   `S = J Δ^{1/2}`, proving the thermal weights cancel and `S(X)=Xᵀ`.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
+## Conditional theorems from explicit premises
 * The inverse-weight and Tomita-cancellation theorems depend on the named
   premise `c * c - s * s = 1`.
 
-#### BUCKET 3: OPEN CLOSURE DEBT
-This file does not prove a finite-dimensional representation of the full Cuntz
-algebra `O₂`, KMS analyticity, or the unbounded Tomita--Takesaki theorem.
+## Scope
+This file proves the finite algebraic Cuntz/Tomita shadow stated above.
 -/
 
 noncomputable section

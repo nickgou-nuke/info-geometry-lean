@@ -12,11 +12,11 @@ Closed here:
 - a theorem-safe separation between the verified finite bridge and the timed-out
   Macaulay2 `deRham(0,q)` lane.
 
-Not closed here:
-- no theorem that the timed-out Macaulay2 D-module lane computed a full de Rham
-  certificate;
-- no upgrade from these finite audits to a global Cantor-colimit or GNS-quotient
-  closure theorem.
+Out of scope:
+- any assertion that the timed-out Macaulay2 D-module lane computed a full
+  de Rham certificate;
+- any upgrade from these finite audits to a global Cantor-colimit or
+  GNS-quotient closure theorem.
 -/
 
 namespace InfoGeometry.Canonical.CantorSplitNullExternalAudit

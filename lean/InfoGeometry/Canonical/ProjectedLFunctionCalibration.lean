@@ -57,11 +57,8 @@ theorem projectedL_resonance_iff_zero
 theorem projectedAutomorphicLFunctionOwnerTarget :
     ProjectedAutomorphicLFunctionOwnerTarget := by
   intro Bulk _ _ Boundary _ _ W Λ F
-  exact ⟨{
-    functional := Λ
-    bulkState := F
-    L := cuspidalLFunction W Λ F
-    L_eq_projected := rfl
-  }⟩
+  intro s
+  exact InfoGeometry.Automorphic.SiegelResonance.projectedAutomorphicLFunctionOwnerTarget
+    Bulk Boundary W Λ F s
 
 end InfoGeometry.Canonical.ProjectedLFunctionCalibration

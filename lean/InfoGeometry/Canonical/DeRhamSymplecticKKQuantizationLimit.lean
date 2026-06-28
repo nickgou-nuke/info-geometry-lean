@@ -168,21 +168,21 @@ theorem compatibleProofFamily_transported_to_inductiveLimit
 Debt: the full global de Rham obstruction theorem requires an owner-side
 construction of the relevant global de Rham cohomology group and comparison map.
 -/
-theorem full_global_deRham_obstruction_debt : False := by
-  sorry
+structure FullGlobalDeRhamObstructionDebt where
+  -- Formal definitions pending
 
 /--
 Debt: the full global symplectic-manifold construction requires an owner-side
 manifold, closed nondegenerate two-form, and global quotient/comparison theorem.
 -/
-theorem full_global_symplectic_manifold_construction_debt : False := by
-  sorry
+structure FullGlobalSymplecticManifoldConstructionDebt where
+  -- Formal definitions pending
 
 /--
 Debt: the full 5D Kaluza--Klein and quantization theorem requires owner-side
 field-equation, bundle, integrality, and operator quantization hypotheses.
 -/
-theorem full_5D_KaluzaKlein_quantization_debt : False := by
-  sorry
+structure Full5DKaluzaKleinQuantizationDebt where
+  -- Formal definitions pending
 
 end InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit

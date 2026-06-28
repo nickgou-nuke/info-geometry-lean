@@ -5,6 +5,9 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 import Mathlib.Tactic.Ring
 import InfoGeometry.Canonical.BiQuaternionKahlerLagrangian
+import InfoGeometryCore.Basic
+
+open InfoGeometryCore
 /-!
 # InfoGeometry.Canonical.EmergentGaugeSymmetry
 
@@ -60,9 +63,9 @@ theorem U1_norm_preservation (θ : ℝ) (Φ : QuaternionicField) :
   ring
 
 /-- The Pauli Matrices generating the emergent $SU(2)$ algebra. -/
-def sigma1 : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 1, 0]
-def sigma2 : Matrix (Fin 2) (Fin 2) ℂ := !![0, -Complex.I; Complex.I, 0]
-def sigma3 : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
+abbrev sigma1 := sigma1C
+abbrev sigma2 := sigma2C
+abbrev sigma3 := sigma3C
 
 /-- The $SU(2)$ gauge transformation acting on the condensate.
     $\Phi \to \exp(i \vec{\alpha} \cdot \vec{\sigma} / 2) \Phi$ -/

@@ -29,6 +29,8 @@ noncomputable section
 
 open scoped InnerProductSpace
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Topology.FractalCantorFockWitness
 
 /-- Symbolic Cantor boundary: infinite binary address space. -/
@@ -204,7 +206,7 @@ def tilt (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunct
   map_add' := by
     intro f g
     ext x
-    by_cases hx : x j <;> simp [hx, add_comm, add_left_comm, add_assoc]
+    by_cases hx : x j <;> simp [hx, add_comm]
   map_smul' := by
     intro c f
     ext x
@@ -293,7 +295,7 @@ def canonicalTiltSwitchSystem :
     intro i j
     by_cases hij : i = j
     · subst hij
-      simp [mul_comm]
+      simp
     · exact switch_comm hij
   T_S_comm_ne := by
     intro i j hij
@@ -399,7 +401,7 @@ variable (H : CelikKocakInfiniteHilbertCarrier E)
 @[rep_depth operator]
 theorem orbit_orthonormal :
     Orthonormal ℂ H.orbitBasis := by
-  simpa using H.orbitBasis.orthonormal
+  exact H.orbitBasis.orthonormal
 
 /-- The Hilbert carrier is complete. -/
 @[rep_depth operator]

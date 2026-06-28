@@ -761,24 +761,34 @@ variable [FiniteDimensional ℝ E]
 Finite-dimensional continuous-operator bridge into the Riesz-style package.
 -/
 @[rep_depth operator]
-theorem nonempty_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
-    Nonempty (RieszDrazinData T) := by
-  rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
-      (E := E) T with ⟨k, D, hD⟩
-  exact ⟨
+noncomputable def rieszDrazinData_endCLM (T : E →L[ℝ] E) :
+    RieszDrazinData T := by
+  let h := DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
+      (E := E) T
+  let k := Classical.choose h
+  let hD_exists := Classical.choose_spec h
+  let D := Classical.choose hD_exists
+  have hD : Drazin.IsDrazinInverse T D k := Classical.choose_spec hD_exists
+  exact
     { k := k
       D := D
       P := Drazin.IsDrazinInverse.projection T D
       hIsDrazin := hD
-      hP := rfl
-    }⟩
+      hP := rfl }
+
+@[rep_depth operator]
+theorem rieszDrazinData_endCLM_isDrazinInverse (T : E →L[ℝ] E) :
+    Drazin.IsDrazinInverse T
+      (rieszDrazinData_endCLM (E := E) T).D
+      (rieszDrazinData_endCLM (E := E) T).k :=
+  (rieszDrazinData_endCLM (E := E) T).hIsDrazin
 
 /--
-Canonical finite-dimensional Riesz-Drazin package chosen from existence.
+Canonical finite-dimensional Riesz-Drazin package.
 -/
 noncomputable def canonicalRieszDrazinData_endCLM (T : E →L[ℝ] E) :
     RieszDrazinData T :=
-  Classical.choice (nonempty_rieszDrazinData_endCLM (E := E) T)
+  rieszDrazinData_endCLM (E := E) T
 
 /-- Canonical finite-dimensional Drazin index. -/
 noncomputable def canonicalDrazinIndex_endCLM (T : E →L[ℝ] E) : ℕ :=

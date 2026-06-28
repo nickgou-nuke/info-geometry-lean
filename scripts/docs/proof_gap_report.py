@@ -19,9 +19,11 @@ from pathlib import Path
 
 
 DECL_RE = re.compile(
-    r"^\s*(?:noncomputable\s+)?"
-    r"(theorem|lemma|def|structure|class|instance|axiom)\s+([A-Za-z0-9_'.]+)"
+    r"^\s*(?:(?:private|protected|partial|unsafe|nonrec|noncomputable)\s+)*"
+    r"(theorem|lemma|def|structure|class|instance|axiom|opaque|abbrev)\s+([A-Za-z0-9_'.]+)"
 )
+
+SORRY_RE = re.compile(r"\bsorry\b")
 
 
 @dataclass
@@ -38,6 +40,83 @@ class Gap:
     line: int
     gap_kind: str  # "sorry" or "axiom"
     decl: Decl | None
+
+
+def strip_lean_comments(lines: list[str]) -> list[str]:
+    """Remove Lean line and block comments while preserving code structure.
+
+    This is intentionally lightweight.  It is good enough for the proof-gap
+    scanner, whose job is to avoid false positives from docstrings and prose.
+    """
+
+    out: list[str] = []
+    depth = 0
+    for line in lines:
+        i = 0
+        kept: list[str] = []
+        while i < len(line):
+            if depth == 0 and line.startswith("--", i):
+                break
+            if line.startswith("/-", i):
+                depth += 1
+                i += 2
+                continue
+            if depth > 0 and line.startswith("-/", i):
+                depth -= 1
+                i += 2
+                continue
+            if depth == 0:
+                kept.append(line[i])
+            i += 1
+        out.append("".join(kept))
+    return out
+
+
+def strip_lean_strings(line: str) -> str:
+    """Replace string literal contents with spaces while preserving quotes."""
+
+    out: list[str] = []
+    in_string = False
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        if not in_string:
+            if ch == '"':
+                in_string = True
+            out.append(ch)
+        else:
+            if ch == '\\' and i + 1 < len(line):
+                out.append(' ')
+                out.append(' ')
+                i += 1
+            elif ch == '"':
+                in_string = False
+                out.append(ch)
+            else:
+                out.append(' ')
+        i += 1
+    return ''.join(out)
+
+
+def strip_lean_quoted_names(line: str) -> str:
+    """Remove quoted Lean syntax-name fragments from a line."""
+
+    out: list[str] = []
+    i = 0
+    while i < len(line):
+        if line.startswith("``", i):
+            i += 2
+            while i < len(line) and line[i] not in " \t,)]}":
+                i += 1
+            continue
+        out.append(line[i])
+        i += 1
+    return "".join(out)
+
+
+def count_token(lines: list[str], token: str) -> int:
+    pattern = re.compile(rf"\b{re.escape(token)}\b")
+    return sum(len(pattern.findall(line)) for line in lines)
 
 
 def escape_tex(s: str) -> str:
@@ -69,8 +148,13 @@ def collect_gaps(root: Path) -> list[Gap]:
     gaps: list[Gap] = []
     files = sorted(root.rglob("*.lean"))
     for f in files:
+        if not f.exists():
+            continue
         rel = f.relative_to(root.parent)
-        lines = f.read_text(encoding="utf-8").splitlines()
+        lines = [
+            strip_lean_quoted_names(strip_lean_strings(line))
+            for line in strip_lean_comments(f.read_text(encoding="utf-8").splitlines())
+        ]
         last_decl: Decl | None = None
         for i, line in enumerate(lines, start=1):
             m = DECL_RE.match(line)
@@ -80,7 +164,7 @@ def collect_gaps(root: Path) -> list[Gap]:
                 if kind == "axiom":
                     gaps.append(Gap(file=rel, line=i, gap_kind="axiom", decl=last_decl))
                 continue
-            if "sorry" in line and not line.strip().startswith("--"):
+            if SORRY_RE.search(line):
                 gaps.append(Gap(file=rel, line=i, gap_kind="sorry", decl=last_decl))
     return gaps
 
@@ -88,8 +172,18 @@ def collect_gaps(root: Path) -> list[Gap]:
 def render_md(gaps: list[Gap]) -> str:
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     by_file: dict[Path, list[Gap]] = defaultdict(list)
+    noncomputable_counts: dict[Path, int] = {}
     for g in gaps:
         by_file[g.file].append(g)
+    for f in by_file:
+        source_path = Path(f)
+        if not source_path.exists():
+            continue
+        raw_lines = [
+            strip_lean_quoted_names(strip_lean_strings(line))
+            for line in strip_lean_comments(source_path.read_text(encoding="utf-8").splitlines())
+        ]
+        noncomputable_counts[f] = count_token(raw_lines, "noncomputable")
 
     lines: list[str] = []
     lines.append("# Proof Gap Report")
@@ -103,11 +197,28 @@ def render_md(gaps: list[Gap]) -> str:
     lines.append("")
     lines.append(f"- Total gaps: **{len(gaps)}**")
     lines.append(f"- Files with gaps: **{len(by_file)}**")
+    lines.append(
+        f"- Files with `noncomputable`: **{sum(1 for n in noncomputable_counts.values() if n > 0)}**"
+    )
     lines.append("")
+
+    heavy_noncomputable = sorted(
+        ((n, f) for f, n in noncomputable_counts.items() if n > 0),
+        key=lambda kv: (-kv[0], str(kv[1])),
+    )
+    if heavy_noncomputable:
+        lines.append("## `noncomputable` density")
+        lines.append("")
+        for n, f in heavy_noncomputable[:30]:
+            lines.append(f"- {n:3} `noncomputable` tokens in `{f}`")
+        lines.append("")
 
     for f in sorted(by_file):
         lines.append(f"## `{f}`")
         lines.append("")
+        nc = noncomputable_counts.get(f, 0)
+        if nc > 0:
+            lines.append(f"- `noncomputable` tokens in this file: **{nc}**")
         for g in by_file[f]:
             decl = g.decl
             if decl is None:
@@ -208,4 +319,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

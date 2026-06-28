@@ -21,17 +21,20 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from igf.config import DEFAULT_GRAPH_MODE, GRAPH_MODE_CHOICES, resolve_graph_mode
+
+_DEFAULT_GRAPH_PROFILE = resolve_graph_mode(DEFAULT_GRAPH_MODE)
 
 DEFAULT_NODES = Path("artifacts/dag/index/decls.jsonl")
 DEFAULT_EDGES = Path("artifacts/dag/index/edges.jsonl")
 DEFAULT_ARANGO = "http://127.0.0.1:8530"
 DEFAULT_DB = "infogeometry"
-DEFAULT_NODE_COLLECTION = "ig_nodes"
-DEFAULT_EDGE_COLLECTION = "ig_edges"
-DEFAULT_RAW_NODE_COLLECTION = "raw_info_nodes"
-DEFAULT_RAW_EDGE_COLLECTION = "raw_info_edges"
-DEFAULT_OVERLAY_NODE_COLLECTION = "topology_overlay"
-DEFAULT_OVERLAY_EDGE_COLLECTION = "topology_overlay_edges"
+DEFAULT_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.compact_nodes
+DEFAULT_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.compact_edges
+DEFAULT_RAW_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.raw_nodes
+DEFAULT_RAW_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.raw_edges
+DEFAULT_OVERLAY_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.overlay_nodes
+DEFAULT_OVERLAY_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.overlay_edges
 DEFAULT_EQUIVALENCE_DICTIONARY = Path("reports/dag/equivalence-dictionary.json")
 STOPWORDS = {
     "against",
@@ -411,7 +414,8 @@ def load_faithful_arango(
 
 
 def load_graph(args: argparse.Namespace) -> tuple[str, list[dict[str, Any]], list[dict[str, Any]]]:
-    if args.graph_mode == "faithful":
+    profile = resolve_graph_mode(args.graph_mode)
+    if profile.name in {"faithful", "unified"}:
         try:
             nodes, edges = load_faithful_arango(
                 args.arango_url,
@@ -421,11 +425,12 @@ def load_graph(args: argparse.Namespace) -> tuple[str, list[dict[str, Any]], lis
                 args.limit_nodes,
                 args.limit_edges,
             )
-            return "arango:faithful_raw", nodes, edges
+            source_name = "arango:unified_layered" if profile.name == "unified" else "arango:faithful_raw"
+            return source_name, nodes, edges
         except (RuntimeError, urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
-            raise SystemExit(f"failed to load faithful Arango graph: {exc}") from exc
+            raise SystemExit(f"failed to load {profile.name} Arango graph: {exc}") from exc
 
-    if args.graph_mode == "hybrid":
+    if profile.name == "hybrid":
         try:
             nodes, edges = load_arango(
                 args.arango_url,
@@ -947,7 +952,7 @@ def build_context_from_query(
     use_equivalence_expansion: bool = True,
     max_equivalence_groups: int = 8,
     max_equivalence_tokens: int = 64,
-    graph_mode: str = "compact",
+    graph_mode: str = DEFAULT_GRAPH_MODE,
     raw_nodes_collection: str = DEFAULT_RAW_NODE_COLLECTION,
     raw_edges_collection: str = DEFAULT_RAW_EDGE_COLLECTION,
     overlay_nodes_collection: str = DEFAULT_OVERLAY_NODE_COLLECTION,
@@ -1089,11 +1094,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--edges-collection", default=DEFAULT_EDGE_COLLECTION)
     parser.add_argument(
         "--graph-mode",
-        choices=["compact", "faithful", "hybrid"],
-        default="compact",
+        choices=list(GRAPH_MODE_CHOICES),
+        default=DEFAULT_GRAPH_MODE,
         help=(
-            "compact uses ig_nodes/ig_edges; faithful uses raw_info_nodes/raw_info_edges; "
-            "hybrid ranks compact hits but requires raw-layer witnesses by default."
+            "unified is the canonical lane: retrieve from raw_info_nodes/raw_info_edges, anchor on topology_overlay, "
+            "and carry compact/Hive layers as sidecars only. faithful keeps the raw-only view; hybrid keeps compact ranking "
+            "with raw witnesses; compact is projection-only."
         ),
     )
     parser.add_argument("--raw-nodes-collection", default=DEFAULT_RAW_NODE_COLLECTION)

@@ -34,16 +34,16 @@ variational bridge.
 @[rep_depth operator]
 structure SelfConcordantZetaBarrierCalibrationPacket where
   barrier : VariationalRHTarget
-  zeros_are_barrier_critical :
-    barrier.zeros_are_barrier_critical
 
 variable (C : SelfConcordantZetaBarrierCalibrationPacket)
 
 /-- Reexport of the supplied barrier-critical bridge. -/
 @[bridge_target_tag, rep_depth operator]
-theorem zeros_are_barrier_critical_True :
-    C.barrier.zeros_are_barrier_critical :=
-  C.zeros_are_barrier_critical
+theorem zeros_are_barrier_critical
+    (s₀ : ℂ) (hz : C.barrier.xi s₀ = 0)
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (σ : ℝ) :
+    primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ :=
+  C.barrier.zeros_are_barrier_critical s₀ hz S hS σ
 
 /--
 The calibrated barrier still forces the critical line once the supplied
@@ -55,6 +55,6 @@ theorem criticalLine_of_calibration
     (hz : C.barrier.xi s₀ = 0) :
     OnCriticalLine s₀ := by
   exact SelfConcordantZetaBarrier.variationalRH_implies_criticalLine
-    C.barrier C.zeros_are_barrier_critical s₀ hz
+    C.barrier s₀ hz
 
 end InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration

@@ -285,14 +285,14 @@ structure RealHestenesPolarizationMechanismPacket where
   realOnlyNoComplexScalarWitness : Type
 
 /-- Owner target for the transparent real Hestenes polarization mechanism. -/
-def RealHestenesPolarizationMechanismTarget : Prop :=
-  Nonempty RealHestenesPolarizationMechanismPacket
+abbrev RealHestenesPolarizationMechanismTarget : Type 1 :=
+  RealHestenesPolarizationMechanismPacket
 
 /-- Construct the mechanism target from explicit packet data. -/
-theorem constructRealHestenesPolarizationMechanismTarget
+def constructRealHestenesPolarizationMechanismTarget
     (P : RealHestenesPolarizationMechanismPacket) :
-    RealHestenesPolarizationMechanismTarget := by
-  exact ⟨P⟩
+    RealHestenesPolarizationMechanismTarget :=
+  P
 
 namespace RealHestenesPolarizationMechanismPacket
 
@@ -315,6 +315,15 @@ def realOnlyGuard
     (P : RealHestenesPolarizationMechanismPacket) :
     P.realOnlyGuard = P.realOnlyNoComplexScalarWitness :=
   rfl
+
+/-- Constructing the packet preserves the two explicit guard lanes. -/
+theorem constructRealHestenesPolarizationMechanismTarget_guards
+    (P : RealHestenesPolarizationMechanismPacket) :
+    (constructRealHestenesPolarizationMechanismTarget P).diagonalShadowGuard =
+        P.diagonalOnlyKANShadowWitness ∧
+      (constructRealHestenesPolarizationMechanismTarget P).realOnlyGuard =
+        P.realOnlyNoComplexScalarWitness := by
+  exact ⟨rfl, rfl⟩
 
 end RealHestenesPolarizationMechanismPacket
 

@@ -25,7 +25,9 @@ namespace InfoGeometry.Arithmetic.LiouvilleParity
 theorem liouville_eq_one_of_even_totalPrimeFactors {n : ℕ+}
     (h : Even (totalPrimeFactors n)) : liouville n = 1 := by
   rcases h with ⟨m, hm⟩
-  rw [liouville, hm, ← two_mul, pow_mul, show ((-1 : ℂ) ^ 2) = 1 by norm_num, one_pow]
+  unfold liouville
+  change (-1 : ℤ) ^ totalPrimeFactors n = 1
+  rw [hm, ← two_mul, pow_mul, show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow]
 
 /--
 **λ(n) = -1 when Ω(n) is odd.** Since `(-1)^{2m+1} = -1`.
@@ -33,8 +35,10 @@ theorem liouville_eq_one_of_even_totalPrimeFactors {n : ℕ+}
 theorem liouville_eq_neg_one_of_odd_totalPrimeFactors {n : ℕ+}
     (h : Odd (totalPrimeFactors n)) : liouville n = -1 := by
   rcases h with ⟨m, hm⟩
-  rw [liouville, hm, pow_succ, pow_mul (a := (-1 : ℂ)) (m := 2),
-    show ((-1 : ℂ) ^ 2) = 1 by norm_num, one_pow, one_mul]
+  unfold liouville
+  change (-1 : ℤ) ^ totalPrimeFactors n = -1
+  rw [hm, pow_succ, pow_mul (a := (-1 : ℤ)) (m := 2),
+    show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow, one_mul]
 
 /--
 **Corollary: λ(n) is always ±1.** This is already known from
@@ -42,7 +46,7 @@ theorem liouville_eq_neg_one_of_odd_totalPrimeFactors {n : ℕ+}
 from the parity of Ω(n).
 -/
 theorem liouville_is_neg_one_pow (n : ℕ+) :
-    liouville n = (-1 : ℂ) ^ (totalPrimeFactors n) := rfl
+    liouville n = (-1 : ℤ) ^ (totalPrimeFactors n) := rfl
 
 /--
 **λ(1) = 1** because Ω(1) = 0 which is even.
@@ -61,19 +65,15 @@ This follows from Ω(p^k) = k (proved in `PrimeFactorCount.lean`).
 -/
 theorem liouville_prime_pow_eq_one_of_even (p : ℕ+) (hp : Nat.Prime p.val) {k : ℕ} (hk : Even k) :
     liouville (p ^ k) = 1 := by
-  have h_omega : totalPrimeFactors (p ^ k) = k :=
-    InfoGeometry.Arithmetic.PrimeFactorCount.totalPrimeFactors_prime_pow p hp k
-  rw [liouville, h_omega]
+  rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
   rcases hk with ⟨m, hm⟩
-  rw [hm, ← two_mul, pow_mul, show ((-1 : ℂ) ^ 2) = 1 by norm_num, one_pow]
+  rw [hm, ← two_mul, pow_mul, show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow]
 
 theorem liouville_prime_pow_eq_neg_one_of_odd (p : ℕ+) (hp : Nat.Prime p.val) {k : ℕ} (hk : Odd k) :
     liouville (p ^ k) = -1 := by
-  have h_omega : totalPrimeFactors (p ^ k) = k :=
-    InfoGeometry.Arithmetic.PrimeFactorCount.totalPrimeFactors_prime_pow p hp k
-  rw [liouville, h_omega]
+  rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
   rcases hk with ⟨m, hm⟩
-  rw [hm, pow_succ, pow_mul (a := (-1 : ℂ)) (m := 2),
-    show ((-1 : ℂ) ^ 2) = 1 by norm_num, one_pow, one_mul]
+  rw [hm, pow_succ, pow_mul (a := (-1 : ℤ)) (m := 2),
+    show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow, one_mul]
 
 end InfoGeometry.Arithmetic.LiouvilleParity

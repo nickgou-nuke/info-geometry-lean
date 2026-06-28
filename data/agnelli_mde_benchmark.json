@@ -1,0 +1,50 @@
+{
+  "source": "Agnelli Thesis 2019",
+  "method": "HFODD (Skyrme-HFB + SAMi-ISB)",
+  "data": [
+    {
+      "pair": "30Si-30S",
+      "A": 30,
+      "MDE_experimental": 11.937,
+      "HFODD": {
+        "0Pair0CSB": 11.126,
+        "0Pair1CSB": 13.341,
+        "1Pair0CSB": 11.340,
+        "1Pair1CSB": 13.408
+      }
+    },
+    {
+      "pair": "34S-34Ar",
+      "A": 34,
+      "MDE_experimental": 13.118,
+      "HFODD": {
+        "0Pair0CSB": 12.527,
+        "0Pair1CSB": 14.704,
+        "1Pair0CSB": 12.643,
+        "1Pair1CSB": 14.864
+      }
+    },
+    {
+      "pair": "50Ti-50Ni",
+      "A": 50,
+      "MDE_experimental": 51.985,
+      "HFODD": {
+        "0Pair0CSB": 48.220,
+        "0Pair1CSB": 54.383,
+        "1Pair0CSB": 48.780,
+        "1Pair1CSB": 54.804
+      }
+    },
+    {
+      "pair": "52Cr-52Ni",
+      "A": 52,
+      "MDE_experimental": 36.243,
+      "HFODD": {
+        "0Pair0CSB": 33.457,
+        "0Pair1CSB": 37.781,
+        "1Pair0CSB": 33.684,
+        "1Pair1CSB": 37.791
+      }
+    }
+  ]
+}

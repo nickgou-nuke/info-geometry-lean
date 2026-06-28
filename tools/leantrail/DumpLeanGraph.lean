@@ -245,16 +245,19 @@ def envDeclToJson (name : Name) (ci : ConstantInfo) : String :=
 /-! ## Main -/
 
 def main (args : List String) : IO Unit := do
-  if args.isEmpty then
+  let quiet := args.contains "--quiet"
+  let files := args.filter (fun a => a != "--quiet")
+  if files.isEmpty then
     IO.eprintln "Usage: lake env lean --run tools/lean_graph/DumpLeanGraph.lean <file.lean> [<file2.lean> ...]"
     return
 
   -- Syntax dump for each file
-  for filePath in args do
+  for filePath in files do
     if !((filePath.endsWith ".lean")) then
       IO.eprintln s!"Skipping non-.lean file: {filePath}"
       continue
-    IO.eprintln s!"[dump] syntax: {filePath}"
+    if !quiet then
+      IO.eprintln s!"[dump] syntax: {filePath}"
     let result ← parseFileForSyntax filePath
     for di in result.decls do
       let line := jsonObj [
@@ -265,5 +268,6 @@ def main (args : List String) : IO Unit := do
       ]
       IO.println line
 
-  IO.eprintln "[dump] note: environment layer available via 'lake env lean tools/ExtractGraph.lean'"
-  IO.eprintln "[dump] done."
+  if !quiet then
+    IO.eprintln "[dump] note: environment layer available via 'lake env lean tools/ExtractGraph.lean'"
+    IO.eprintln "[dump] done."

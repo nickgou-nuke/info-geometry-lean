@@ -4,7 +4,8 @@
 This test avoids network/LLM calls and validates the local paths that should work
 on a fresh checkout with the local Arango service available:
 
-- `ast_extract.py` on a small Lean subtree;
+- `refresh_mathlib_infogeometry_graphs.py` for the coordinated syntax,
+  declaration/type, syntax-ingest, and AST-AQL lane;
 - `external_index.py` on a repository-local Lean path;
 - `oracle_search.py --local-only` for actual repo symbols;
 - optional `arango_dump.py` live check unless `--skip-arango` is passed.
@@ -22,13 +23,19 @@ REPO = Path(__file__).resolve().parents[2]
 TMP = Path("/tmp/leantrail_smoke")
 
 
-def run(cmd: list[str]) -> subprocess.CompletedProcess[str]:
+def run(cmd: list[str], *, capture: bool = True) -> subprocess.CompletedProcess[str]:
     print("$", " ".join(cmd))
-    proc = subprocess.run(cmd, cwd=REPO, text=True, capture_output=True)
-    if proc.stdout:
-        print(proc.stdout.strip())
-    if proc.stderr:
-        print(proc.stderr.strip(), file=sys.stderr)
+    proc = subprocess.run(
+        cmd,
+        cwd=REPO,
+        text=True,
+        capture_output=capture,
+    )
+    if capture:
+        if proc.stdout:
+            print(proc.stdout.strip())
+        if proc.stderr:
+            print(proc.stderr.strip(), file=sys.stderr)
     if proc.returncode != 0:
         raise SystemExit(proc.returncode)
     return proc
@@ -41,24 +48,36 @@ def main() -> int:
 
     TMP.mkdir(parents=True, exist_ok=True)
 
+    print("[smoke] stage 1/5: coordinated graph refresh", flush=True)
     run([
-        "python3", "tools/leantrail/ast_extract.py",
-        "--root", "lean/InfoGeometry/Algebra",
-        "--out", str(TMP / "algebra_ast"),
-        "--jsonl", "--no-imports",
-    ])
-    node = json.loads((TMP / "algebra_ast_nodes.jsonl").read_text().splitlines()[0])
-    assert "_key" in node and "module" in node and "namespace" in node
+        "python3", "tools/infra/refresh_mathlib_infogeometry_graphs.py",
+        "--syntax-out", str(TMP / "batch_syntax.jsonl"),
+        "--decl-index-dir", str(TMP / "decl-index"),
+        "--decl-graph-out", str(TMP / "decl-graph.json"),
+        "--decl-structure-out", str(TMP / "decl-structure.json"),
+        "--skip-prebuild",
+        *([] if args.skip_arango else [
+            "--ingest-http",
+            "--ast-aql-smoke",
+            "--ast-aql-no-index",
+        ]),
+    ], capture=False)
+    batch_syntax = TMP / "batch_syntax.jsonl"
+    node = json.loads(batch_syntax.read_text().splitlines()[0])
+    assert node.get("layer") == "syntax" and "name" in node
+    assert (TMP / "decl-index" / "decls.jsonl").exists()
 
+    print("[smoke] stage 2/5: external index export", flush=True)
     run([
         "python3", "tools/leantrail/external_index.py",
         "--repo", "lean/InfoGeometry/Algebra",
         "--out", str(TMP / "external_arango.json"),
         "--format", "arango", "--chunk", "--limit", "3",
-    ])
+    ], capture=False)
     ext = json.loads((TMP / "external_arango.json").read_text())
     assert ext["collection"] == "alexandria_chunks" and ext["documents"]
 
+    print("[smoke] stage 3/5: oracle search", flush=True)
     proc = run([
         "python3", "tools/leantrail/oracle_search.py",
         "--search", "cuntzMajoranaSupercharge",
@@ -66,19 +85,10 @@ def main() -> int:
     ])
     assert "CuntzSupergradedSUSY.lean" in proc.stdout
 
-    syntax_jsonl = TMP / "dump_syntax.jsonl"
-    with syntax_jsonl.open("w", encoding="utf-8") as out:
-        proc = subprocess.run([
-            "lake", "env", "lean", "--run", "tools/leantrail/DumpLeanGraph.lean",
-            "lean/InfoGeometry/Algebra/CuntzLorentzPoincarePresentation.lean",
-        ], cwd=REPO, text=True, stdout=out, stderr=subprocess.PIPE)
-    if proc.stderr:
-        print(proc.stderr.strip(), file=sys.stderr)
-    if proc.returncode != 0:
-        raise SystemExit(proc.returncode)
+    print("[smoke] stage 4/5: syntax shape check", flush=True)
     check = subprocess.run([
         "python3", "tools/leantrail/check_dump_shape.py", "--expect-keyword", "theorem",
-    ], cwd=REPO, text=True, stdin=syntax_jsonl.open("r", encoding="utf-8"), capture_output=True)
+    ], cwd=REPO, text=True, stdin=batch_syntax.open("r", encoding="utf-8"), capture_output=True)
     if check.stderr:
         print(check.stderr.strip(), file=sys.stderr)
     if check.returncode != 0:
@@ -86,27 +96,17 @@ def main() -> int:
         raise SystemExit(check.returncode)
 
     if not args.skip_arango:
+        print("[smoke] stage 5/5: live arango checks", flush=True)
         run([
             "python3", "tools/leantrail/arango_dump.py",
             "--cone-downstream", "InfoGeometry.Algebra.AlbertCD.CDInvolutionDatum.casesOn",
             "--max-depth", "1",
             "--out", str(TMP / "cone.json"),
-        ])
+        ], capture=False)
         cone = json.loads((TMP / "cone.json").read_text())
         assert isinstance(cone, list)
 
-        run(["bash", "tools/leantrail/aql_smoke_test.sh"])
-        run([
-            "python3", "tools/leantrail/ingest_syntax_to_arango.py",
-            str(syntax_jsonl), "--execute-http",
-        ])
-        proc = run([
-            "python3", "tools/leantrail/ast_aql_optimize.py",
-            "--no-index", "--depth", "5",
-        ])
-        assert "atom_first_sorry_scan" in proc.stdout
-        assert "bounded_decl_ast_cone" in proc.stdout
-
+        run(["bash", "tools/leantrail/aql_smoke_test.sh"], capture=False)
     print("leantrail smoke passed")
     return 0
 

@@ -127,21 +127,6 @@ def canonicalSplitOctonionPacket : SplitHierarchyPacket 4 where
   signature := tierSignature .splitOctonion
   signature_eq := rfl
 
-/-- The local split-complex seed is inhabited by the canonical packet. -/
-theorem localSeed_inhabited :
-    Nonempty (SplitHierarchyPacket 1) :=
-  ⟨canonicalSplitComplexPacket⟩
-
-/-- The split-quaternion tier is inhabited by the canonical packet. -/
-theorem quaternionTier_inhabited :
-    Nonempty (SplitHierarchyPacket 2) :=
-  ⟨canonicalSplitQuaternionPacket⟩
-
-/-- The split-octonion readout tier is inhabited by the canonical packet. -/
-theorem octonionTier_inhabited :
-    Nonempty (SplitHierarchyPacket 4) :=
-  ⟨canonicalSplitOctonionPacket⟩
-
 /--
 Diagnostic split-hierarchy corridor.
 
@@ -150,28 +135,53 @@ the corrected conformal normalization as a single readout.  It does not claim
 an `E₈` theorem or a signature-selection theorem.
 -/
 structure SplitHierarchyDiagnostic where
-  localSeed : Nonempty (SplitHierarchyPacket 1)
-  quaternionTier : Nonempty (SplitHierarchyPacket 2)
-  octonionTier : Nonempty (SplitHierarchyPacket 4)
-  trialityPlacement : Nonempty TrialityLeviPlacement
+  localSeed : SplitHierarchyPacket 1
+  quaternionTier : SplitHierarchyPacket 2
+  octonionTier : SplitHierarchyPacket 4
+  trialityPlacement : TrialityLeviPlacement
   conformalNormalization : Cl44ConformalNormalizationOwnerTarget
 
 /-- Canonical diagnostic readout for the split hierarchy corridor. -/
 def canonicalDiagnostic : SplitHierarchyDiagnostic where
-  localSeed := localSeed_inhabited
-  quaternionTier := quaternionTier_inhabited
-  octonionTier := octonionTier_inhabited
-  trialityPlacement := ⟨TrialityLeviPlacement.canonical⟩
+  localSeed := canonicalSplitComplexPacket
+  quaternionTier := canonicalSplitQuaternionPacket
+  octonionTier := canonicalSplitOctonionPacket
+  trialityPlacement := TrialityLeviPlacement.canonical
   conformalNormalization := cl44ConformalNormalizationOwnerTarget
 
 /-- The canonical diagnostic has the canonical local seed. -/
 theorem canonicalDiagnostic_localSeed :
-    canonicalDiagnostic.localSeed = localSeed_inhabited :=
+    canonicalDiagnostic.localSeed = canonicalSplitComplexPacket :=
+  rfl
+
+/-- The canonical diagnostic has the canonical split-quaternion tier. -/
+theorem canonicalDiagnostic_quaternionTier :
+    canonicalDiagnostic.quaternionTier = canonicalSplitQuaternionPacket :=
+  rfl
+
+/-- The canonical diagnostic has the canonical split-octonion tier. -/
+theorem canonicalDiagnostic_octonionTier :
+    canonicalDiagnostic.octonionTier = canonicalSplitOctonionPacket :=
   rfl
 
 /-- The canonical diagnostic has the canonical triality placement. -/
 theorem canonicalDiagnostic_trialityPlacement :
-    canonicalDiagnostic.trialityPlacement = ⟨TrialityLeviPlacement.canonical⟩ :=
+    canonicalDiagnostic.trialityPlacement = TrialityLeviPlacement.canonical :=
   rfl
+
+/-- The diagnostic split-complex tier has signature `(1,1)`. -/
+theorem canonicalDiagnostic_localSeed_signature :
+    canonicalDiagnostic.localSeed.signature = (1, 1) := by
+  simp [canonicalDiagnostic, canonicalSplitComplexPacket]
+
+/-- The diagnostic split-quaternion tier has signature `(2,2)`. -/
+theorem canonicalDiagnostic_quaternionTier_signature :
+    canonicalDiagnostic.quaternionTier.signature = (2, 2) := by
+  simp [canonicalDiagnostic, canonicalSplitQuaternionPacket]
+
+/-- The diagnostic split-octonion tier has signature `(4,4)`. -/
+theorem canonicalDiagnostic_octonionTier_signature :
+    canonicalDiagnostic.octonionTier.signature = (4, 4) := by
+  simp [canonicalDiagnostic, canonicalSplitOctonionPacket]
 
 end InfoGeometry.Canonical.SplitHierarchy

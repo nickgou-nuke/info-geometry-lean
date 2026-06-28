@@ -305,26 +305,25 @@ theorem core_mode_fixed :
 
 end VortexCoreMajoranaWitness
 
-/-! ## 6. Owner target -/
+/-! ## 6. Owner theorem -/
 
 /--
-Owner target for the Andreev ledger.
-
 An Andreev electron/hole swap has a particle-hole fixed diagonal mode.
 -/
-@[owner_target_tag]
-def AndreevLedgerOwnerTarget : Prop :=
+theorem andreevLedgerOwnerTarget :
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ A : AndreevLedger V,
   ∀ P : AndreevPair A,
-    P.evenMajorana ∈ A.Fixed
-
-/--
-The owner target follows by processing the swap and involutivity laws.
--/
-theorem andreevLedgerOwnerTarget :
-    AndreevLedgerOwnerTarget := by
+    P.evenMajorana ∈ A.Fixed := by
   intro V _ _ A P
   exact P.evenMajorana_fixed
+
+/-- Packet readout for an Andreev pair: the diagonal mode is fixed and self-conjugate. -/
+theorem andreevPair_majorana_packet
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {A : AndreevLedger V} (P : AndreevPair A) :
+    P.evenMajorana ∈ A.Fixed ∧
+      A.theta P.evenMajorana = P.evenMajorana := by
+  exact ⟨andreevLedgerOwnerTarget V A P, P.theta_evenMajorana_eq_evenMajorana⟩
 
 end InfoGeometry.OperatorAlgebra.AndreevLedger

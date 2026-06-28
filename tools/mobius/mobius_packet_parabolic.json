@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "description": "Möbius classification packet - SL(2,C) element classified by trace invariant",
+  "matrix": {
+    "a": "1",
+    "b": "1",
+    "c": "0",
+    "d": "1"
+  },
+  "ring": "QQ",
+  "expected": {
+    "determinant": "1",
+    "trace": "2",
+    "sigma": "4",
+    "classification": "parabolic",
+    "fixed_points": ["infinity"],
+    "projective_eigendirections": ["infinity"]
+  }
+}

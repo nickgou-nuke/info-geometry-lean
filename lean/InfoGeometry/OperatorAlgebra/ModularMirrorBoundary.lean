@@ -367,26 +367,29 @@ theorem fluxThrough_eq_zero
 
 end FluxExpulsionWitness
 
-/-! ## 7. Owner target -/
+/-! ## 7. Boundary readout -/
 
 /--
-Owner target for modular mirror boundaries.
+Modular mirror boundary readout.
 
 Every closure mirror has a transparent diagonal and an anti-fixed imbalance.
 -/
-@[owner_target_tag]
-def ModularMirrorBoundaryOwnerTarget : Prop :=
+theorem modularMirrorBoundaryOwnerTarget :
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ M : ClosureMirrorBoundary V,
     M.IsTransparent M.diagonal ∧
-    M.closure.theta M.imbalance = -M.imbalance
-
-/-- The owner target follows from closure involutivity and linearity. -/
-theorem modularMirrorBoundaryOwnerTarget :
-    ModularMirrorBoundaryOwnerTarget := by
+    M.closure.theta M.imbalance = -M.imbalance := by
   intro V _ _ M
   exact
     ⟨M.diagonal_transparent,
       M.imbalance_anti_fixed⟩
+
+/-- Packet readout for one concrete modular mirror boundary. -/
+theorem modularMirrorBoundary_packet
+    (V : Type*) [AddCommGroup V] [Module ℝ V]
+    (M : ClosureMirrorBoundary V) :
+    M.IsTransparent M.diagonal ∧
+      M.closure.theta M.imbalance = -M.imbalance :=
+  modularMirrorBoundaryOwnerTarget V M
 
 end InfoGeometry.OperatorAlgebra.ModularMirrorBoundary

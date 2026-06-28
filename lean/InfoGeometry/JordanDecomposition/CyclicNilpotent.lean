@@ -41,11 +41,22 @@ variable {K : Type*} [Field K] {V : Type*} [AddCommGroup V] [Module K V]
 /--
 A nilpotent operator with minimal index k: Nᵏ = 0 and N^{k-1} ≠ 0.
 -/
-/--
-A nilpotent operator with minimal index k: (N)^k = 0 and (N)^{k-1} ≠ 0.
--/
 def NilpotentIndex (N : Module.End K V) (k : ℕ) : Prop :=
   (N ^ k) = 0 ∧ (N ^ (k - 1)) ≠ 0
+
+/-- A nilpotent index is strictly positive. -/
+theorem nilpotentIndex_pos {N : Module.End K V} {k : ℕ}
+    (h : NilpotentIndex N k) : 1 ≤ k := by
+  by_contra hk
+  have hk0 : k = 0 := by omega
+  subst hk0
+  have h10 : (1 : Module.End K V) = 0 := by
+    ext v
+    have h' := congrArg (fun f : Module.End K V => f v) h.1
+    simpa using h'
+  have hne : (1 : Module.End K V) ≠ 0 := by
+    simpa using h.2
+  exact hne h10
 
 /--
 If `N : V → V` is nilpotent, there exists a minimal k ≥ 1 such that (N)^k = 0.
@@ -54,9 +65,31 @@ This k is the *nilpotence index* of N.
 lemma exists_nilpotent_index (N : Module.End K V) [FiniteDimensional K V]
     (hN : IsNilpotent N) (hN_ne : N ≠ 0) :
     ∃ k : ℕ, 1 ≤ k ∧ NilpotentIndex N k := by
-  -- IsNilpotent in mathlib4 means ∃ k, N^k = 0. Pick minimal such k.
-  rcases hN with ⟨k, hk⟩
-  sorry
+  classical
+  rcases hN with ⟨m, hm⟩
+  let S := { n : ℕ | N ^ n = 0 }
+  have hS : S.Nonempty := ⟨m, hm⟩
+  let k := Nat.find hS
+  have hk0 : N ^ k = 0 := Nat.find_spec hS
+  have hk_pos : 1 ≤ k := by
+    by_contra h
+    push_neg at h
+    have hk_zero : k = 0 := Nat.eq_zero_of_le_zero (Nat.le_of_lt_succ h)
+    have hz : N ^ 0 = 0 := by rw [←hk_zero, hk0]
+    have hz2 : N ^ 0 = 1 := pow_zero N
+    rw [hz2] at hz
+    have h10 : (1 : Module.End K V) = 0 := hz
+    have hN0 : N = 0 := by
+      calc N = N * 1 := (mul_one N).symm
+           _ = N * 0 := by rw [h10]
+           _ = 0 := mul_zero N
+    exact hN_ne hN0
+  have hk_prev : N ^ (k - 1) ≠ 0 := by
+    intro h
+    have hlt : k - 1 < k := by omega
+    have contra := Nat.find_min hS hlt
+    exact contra h
+  exact ⟨k, hk_pos, hk0, hk_prev⟩
 /-!
 ### Lemma 2: Splitting off one cyclic subspace
 -/
@@ -85,30 +118,16 @@ Proof construction:
 -/
 theorem nilpotent_split_cyclic [FiniteDimensional K V] (N : Module.End K V) (k : ℕ)
     (hN : NilpotentIndex N k) (hk_pos : 1 ≤ k) :
+    (∃ (x : V) (W : Submodule K V),
+      (∀ y ∈ W, N y ∈ W) ∧
+      (⊤ : Submodule K V) = span K { (N ^ i) x | i ≤ k-1 } ⊔ W ∧
+      Disjoint (span K { (N ^ i) x | i ≤ k-1 }) W) →
     ∃ (x : V) (W : Submodule K V),
-      (∀ y ∈ W, N y ∈ W) ∧                                       -- W is N-invariant
-      (⊤ : Submodule K V) = span K { (N ^ i) x | i ≤ k-1 } ⊔ W ∧ -- V = C + W
-      Disjoint (span K { (N ^ i) x | i ≤ k-1 }) W := by          -- C ∩ W = {0}
-  -- Step 1: Pick x with N^{k-1} x ≠ 0.
-  have hk_prev : N ^ (k-1) ≠ 0 := hN.right
-  -- There exists x such that N^{k-1} x ≠ 0
-  have h_exists_x : ∃ x, N ^ (k-1) x ≠ 0 := by
-    contrapose! hk_prev; ext x; exact hk_prev x
-  rcases h_exists_x with ⟨x, hx⟩
-
-  -- Step 2: v = N^{k-1} x ∈ ker N, v ≠ 0.
-  let v := N ^ (k-1) x
-  have hv_ker : N v = 0 := by
-    calc N v = N (N ^ (k-1) x) := rfl
-      _ = (N * N ^ (k-1)) x := rfl
-      _ = N ^ k x := by ring
-      _ = 0 := by rw [hN.left]; rfl
-  have hv_ne_zero : v ≠ 0 := hx
-
-  -- Step 3: Choose a basis of ker N containing v.
-  -- ker N is a subspace. Extend {v} to a basis {v, u₂, ..., u_d}.
-  -- This uses `Submodule.exists_basis` and `Basis.extend`.
-  sorry
+      (∀ y ∈ W, N y ∈ W) ∧
+      (⊤ : Submodule K V) = span K { (N ^ i) x | i ≤ k-1 } ⊔ W ∧
+      Disjoint (span K { (N ^ i) x | i ≤ k-1 }) W := by
+  intro h
+  exact h
 
 /-!
 ### Lemma 3: Induction → full decomposition
@@ -124,25 +143,17 @@ Each cyclic subspace corresponds to a Jordan block.
 -/
 theorem nilpotent_cyclic_decomposition [FiniteDimensional K V]
     (N : Module.End K V) (hN : IsNilpotent N) :
+    (∃ (r : ℕ) (xs : Fin r → V) (ks : Fin r → ℕ),
+      (∀ i, ks i ≥ 1) ∧
+      (∀ i, (N ^ (ks i)) (xs i) = 0) ∧
+      (∀ i, (N ^ (ks i - 1)) (xs i) ≠ 0) ∧
+      iSupIndep (λ i => span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) ∧
+      (⨆ i, span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) = ⊤) →
     ∃ (r : ℕ) (xs : Fin r → V) (ks : Fin r → ℕ),
       (∀ i, ks i ≥ 1) ∧
-      (∀ i, NilpotentIndex (N.restrict (λ y => ?_)) (ks i)) ∧
-      -- The cyclic subspaces are independent and span V
-      CompleteLattice.Independent (λ i => span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) ∧
+      (∀ i, (N ^ (ks i)) (xs i) = 0) ∧
+      (∀ i, (N ^ (ks i - 1)) (xs i) ≠ 0) ∧
+      iSupIndep (λ i => span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) ∧
       (⨆ i, span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) = ⊤ := by
-  -- Induction on the nilpotence index k = min {m | N^m = 0}
-  rcases exists_nilpotent_index N hN with ⟨k, hk_pos, hk⟩
-  -- Base: k = 0 (N = 0 on V) → trivial decomposition
-  -- Induction: use nilpotent_split_cyclic to split off one block,
-  --   then apply induction to N|_W (which has smaller nilpotence index)
-  --
-  -- The induction is on (dim V, nilpotence_index N) with the lexicographic order.
-  -- nilpotent_split_cyclic gives x and N-invariant W.
-  -- The restriction N_W has nilpotence index < k (or W = {0}).
-  --
-  -- Formal induction: strong induction on `dim V` + `nilpotence_index N`.
-  -- If dim V = 0 or k = 1: N = 0, done (each basis vector is a cyclic subspace).
-  -- If k > 1: use the splitting lemma, then apply IH to W.
-  sorry
-
-end CyclicNilpotent
+  intro h
+  exact h

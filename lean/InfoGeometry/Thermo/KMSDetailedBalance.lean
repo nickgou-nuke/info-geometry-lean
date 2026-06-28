@@ -272,7 +272,12 @@ theorem kmsDetailedBalanceOwnerTarget
     [Mul A]
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value) :
-    KMSDetailedBalanceOwnerTarget A Region Point Tangent Value I := by
+    ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)
+      (t : ℝ) (a b : A) (Ω : Region),
+        lowerKMSCorrelation D.kms t a b = upperKMSCorrelation D.kms t a b ∧
+        lowerKMSCorrelation D.kms t a b =
+          D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a ∧
+        I.boundaryIntegral Ω D.form.modularForm = 0 := by
   intro D t a b Ω
   exact ⟨D.kms_boundary t a b, D.kms_boundary_wilson t a b, D.boundaryIntegral_eq_zero Ω⟩
 

@@ -16,37 +16,38 @@ namespace InfoGeometry.Eval.SorryFillerTest
 
 /-- Simple equality: `a + 0 = a`. Fill with `simp`. -/
 theorem add_zero_easy (a : ℕ) : a + 0 = a := by
-  sorry
+  simp
 
 /-- Simple equality: `0 + a = a`. Fill with `simp`. -/
 theorem zero_add_easy (a : ℕ) : 0 + a = a := by
-  sorry
+  simp
 
 /-- Simple implication. Fill with `intro h; exact h`. -/
 theorem imply_id (P : Prop) : P → P := by
-  sorry
+  intro h
+  exact h
 
 /-- Simple commutativity. Fill with `simp [add_comm]`. -/
 theorem add_comm_easy (a b : ℕ) : a + b = b + a := by
-  sorry
+  simp [Nat.add_comm]
 
 /-- Simple associativity. Fill with `simp [add_assoc]`. -/
 theorem add_assoc_easy (a b c : ℕ) : (a + b) + c = a + (b + c) := by
-  sorry
+  simp [Nat.add_assoc]
 
 /-- Conjunction decomposition. Fill with `intro h; exact ⟨h.1, h.2⟩`. -/
 theorem and_decompose (P Q : Prop) (h : P ∧ Q) : P := by
-  sorry
+  exact h.1
 
 /-- Disjunction introduction. Fill with `intro h; left; exact h`. -/
 theorem or_intro_left (P Q : Prop) (h : P) : P ∨ Q := by
-  sorry
+  exact Or.inl h
 
 /--
 Multi-step proof: `n * (m + 1) = n * m + n`.
 Hint: `rw [Nat.succ_eq_add_one, mul_add, mul_one]`.
 -/
 theorem mul_succ_easy (n m : ℕ) : n * (m + 1) = n * m + n := by
-  sorry
+  simp [Nat.mul_succ]
 
 end InfoGeometry.Eval.SorryFillerTest

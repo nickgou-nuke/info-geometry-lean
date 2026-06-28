@@ -205,25 +205,26 @@ theorem swapped_boundary_imbalance_anti_fixed
 
 end SelfDualChiralConeBoundary
 
-/-! ## 2. Owner target -/
+/-! ## 2. Owner theorem -/
 
 /--
-Owner target for the self-dual chiral cone boundary socket.
-
 Every fixed-boundary point is boundary data and is closure-fixed.
 -/
-@[owner_target_tag]
-def SelfDualChiralConeBoundaryOwnerTarget : Prop :=
+theorem selfDualChiralConeBoundaryOwnerTarget :
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ B : SelfDualChiralConeBoundary V,
   ∀ x : V,
     x ∈ B.FixedBoundary →
-      B.boundaryOf x ∧ B.closure.theta x = x
-
-/-- The owner target follows by unfolding the fixed-boundary equalizer. -/
-theorem selfDualChiralConeBoundaryOwnerTarget :
-    SelfDualChiralConeBoundaryOwnerTarget := by
+      B.boundaryOf x ∧ B.closure.theta x = x := by
   intro V _ _ B x hx
   exact hx
+
+/-- Fixed-boundary readout for one point in a self-dual chiral cone boundary. -/
+theorem fixedBoundary_packet
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (B : SelfDualChiralConeBoundary V) {x : V}
+    (hx : x ∈ B.FixedBoundary) :
+    B.boundaryOf x ∧ B.closure.theta x = x :=
+  selfDualChiralConeBoundaryOwnerTarget V B x hx
 
 end InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary

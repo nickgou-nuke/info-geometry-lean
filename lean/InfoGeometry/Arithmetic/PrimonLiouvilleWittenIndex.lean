@@ -255,5 +255,44 @@ structure MellinThermalVsDiracHeatKernelGuard where
   mellinThermalReadout : Type*
   diracHeatReadout : Type*
 
+namespace MellinThermalVsDiracHeatKernelGuard
+
+/-- Disjoint carrier separating the Mellin/thermal lane from the Dirac heat lane. -/
+def ReadoutSpecies (G : MellinThermalVsDiracHeatKernelGuard) : Type :=
+  Sum G.mellinThermalReadout G.diracHeatReadout
+
+/-- Embed a Mellin/thermal readout into the separated readout species. -/
+def mellinSpecies (G : MellinThermalVsDiracHeatKernelGuard)
+    (x : G.mellinThermalReadout) : G.ReadoutSpecies :=
+  Sum.inl x
+
+/-- Embed a Dirac heat readout into the separated readout species. -/
+def diracSpecies (G : MellinThermalVsDiracHeatKernelGuard)
+    (x : G.diracHeatReadout) : G.ReadoutSpecies :=
+  Sum.inr x
+
+/-- The Mellin/thermal lane and Dirac heat lane remain disjoint in the separated species carrier. -/
+theorem readoutSpecies_separate
+    (G : MellinThermalVsDiracHeatKernelGuard)
+    (x : G.mellinThermalReadout) (y : G.diracHeatReadout) :
+    G.mellinSpecies x ≠ G.diracSpecies y := by
+  intro h
+  cases h
+
+/-- The separated species carrier remembers each Mellin/thermal readout exactly. -/
+@[simp] theorem mellinSpecies_injective
+    (G : MellinThermalVsDiracHeatKernelGuard)
+    {x y : G.mellinThermalReadout}
+    (h : G.mellinSpecies x = G.mellinSpecies y) : x = y := by
+  injection h
+
+/-- The separated species carrier remembers each Dirac heat readout exactly. -/
+@[simp] theorem diracSpecies_injective
+    (G : MellinThermalVsDiracHeatKernelGuard)
+    {x y : G.diracHeatReadout}
+    (h : G.diracSpecies x = G.diracSpecies y) : x = y := by
+  injection h
+
+end MellinThermalVsDiracHeatKernelGuard
 
 end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex

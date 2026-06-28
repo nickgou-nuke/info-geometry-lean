@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Coding Agent Worker — fills `sorry` blocks using literature + LLM.
+Coding Agent Worker — proposes `sorry`-replacement candidates using literature + LLM.
 
-Pipeline stage:  ready-to-code → [coding agent] → verified / deeper-debt
+Pipeline stage:  ready-to-code → [oracle candidate worker] → oracle-candidate / deeper-debt
 
 For each task in ready-to-code:
   1. Extract each `theorem ... := by sorry` block
   2. Search Google AI for literature on that theorem
   3. Feed literature + code to ChatGPT for proof attempt
-  4. Compile with lake build
-  5. If compiles → mark verified, else → mark deeper-debt with enriched context
+  4. Store candidate text for a coding agent to inspect
+
+This worker does not edit source files and does not verify theorem closure.
+Only a coding agent patch plus local Lean/build checks can promote a result.
 """
 from __future__ import annotations
 import json, logging, os, re, sys, time, subprocess, tempfile
@@ -135,13 +137,24 @@ def run(once: bool = False):
             rp["updated_code"] = updated
             rp["pass"] = "coding-agent-v1"
 
-            status = "completed" if filled else "deeper-debt"
+            status = "pending" if filled else "deeper-debt"
+            queue_name = "oracle-candidate" if filled else "deeper-debt"
             update_task_status(ep, db, usr, pwd,
                 task_key_value=task["_key"], worker_id="coding-agent",
                 status=status,
-                extra_fields={"runtime_goal_packet": rp, "queue_name": "verified" if filled else "deeper-debt"})
+                extra_fields={
+                    "runtime_goal_packet": rp,
+                    "queue_name": queue_name,
+                    "task_kind": "oracle.candidate" if filled else "deeper.debt",
+                })
 
-            logger.info("[Coder] %d/%d theorems filled → %s", len(filled), len(sorry_theorems[:3]), status)
+            logger.info(
+                "[Coder] %d/%d candidate proofs proposed → %s/%s",
+                len(filled),
+                len(sorry_theorems[:3]),
+                status,
+                queue_name,
+            )
             if once: break
 
         except KeyboardInterrupt: break

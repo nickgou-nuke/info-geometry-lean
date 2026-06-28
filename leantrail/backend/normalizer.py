@@ -14,6 +14,13 @@ EDGE_KIND_MAP = {
     "value": "depends_value",
 }
 
+TYPED_SEMANTIC_KIND_MAP = {
+    "translator": "translator_of",
+    "coherence": "coheres_with",
+    "obstruction": "obstructs",
+    "quotientWitness": "quotient_witness",
+}
+
 _FAILED_KINDS = {"obstructs", "violates_depth"}
 _META_KINDS = {"contains"}
 _LOCKABLE_STATES = {"bound", "locked"}
@@ -227,6 +234,67 @@ def _annotate_node_endpoints(nodes: list[NodeRecord], edges: list[EdgeRecord]) -
     return summary
 
 
+def _annotate_node_process_geometry(
+    nodes: list[NodeRecord],
+    *,
+    lawful_cones_by_name: dict[str, dict[str, Any]],
+    typed_paths_by_src: dict[str, list[dict[str, Any]]],
+) -> dict[str, int]:
+    summary = {"cones": 0, "path_owners": 0, "paths": 0}
+    for node in nodes:
+        if node.kind != "Declaration":
+            continue
+
+        attrs = node.attrs if isinstance(node.attrs, dict) else {}
+        attrs = dict(attrs)
+
+        cone_row = lawful_cones_by_name.get(node.id)
+        if isinstance(cone_row, dict):
+            base = cone_row.get("base")
+            base = base if isinstance(base, dict) else {}
+            legs = base.get("legs")
+            shared = base.get("sharedComparisons")
+            defects = cone_row.get("defects")
+            leg_rows = legs if isinstance(legs, list) else []
+            shared_rows = shared if isinstance(shared, list) else []
+            defect_rows = defects if isinstance(defects, list) else []
+            leg_kinds = sorted(
+                {
+                    str(leg.get("kind", "")).strip()
+                    for leg in leg_rows
+                    if isinstance(leg, dict) and str(leg.get("kind", "")).strip()
+                }
+            )
+            total_defect_cost = cone_row.get("totalDefectCost")
+            total_cost = int(total_defect_cost) if isinstance(total_defect_cost, int) else 0
+            attrs["lawful_cone"] = {
+                "leg_count": len(leg_rows),
+                "shared_comparison_count": len(shared_rows),
+                "defect_count": len(defect_rows),
+                "total_defect_cost": total_cost,
+                "leg_kinds": leg_kinds,
+            }
+            summary["cones"] += 1
+
+        typed_paths = typed_paths_by_src.get(node.id, [])
+        if typed_paths:
+            costs = [
+                int(row.get("totalDefectCost", 0))
+                for row in typed_paths
+                if isinstance(row, dict) and isinstance(row.get("totalDefectCost", 0), int)
+            ]
+            attrs["lawful_path_summary"] = {
+                "count": len(typed_paths),
+                "defectful_count": sum(1 for cost in costs if cost > 0),
+                "max_defect_cost": max(costs, default=0),
+            }
+            summary["path_owners"] += 1
+            summary["paths"] += len(typed_paths)
+
+        node.attrs = attrs
+    return summary
+
+
 def _safe_git_head(repo_root: Path) -> str:
     try:
         out = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True)
@@ -288,6 +356,10 @@ class LeanTrailNormalizer:
         edge_file = self.dag_root / "index" / "edges.jsonl"
         depth_file = self.dag_root / "representation-depth-tags.json"
         process_file = self.dag_root / "process-flow" / "process-events.jsonl"
+        typed_objects_file = self.dag_root / "process-flow" / "typed-decl-objects.jsonl"
+        typed_semantic_morphisms_file = self.dag_root / "process-flow" / "typed-semantic-morphisms.jsonl"
+        lawful_typed_paths_file = self.dag_root / "process-flow" / "lawful-typed-composite-paths.jsonl"
+        lawful_cones_file = self.dag_root / "process-flow" / "lawful-cones.jsonl"
         holonomy_file = self.dag_root / "process-flow" / "holonomy-events.jsonl"
         failed_transitions_file = self.repo_root / "artifacts" / "leantrail" / "failed_transitions.jsonl"
         path_locks_file = self.repo_root / "artifacts" / "leantrail" / "path_locks.jsonl"
@@ -310,9 +382,33 @@ class LeanTrailNormalizer:
                     holonomy_by_name[name] = row
 
         process_by_name: dict[str, dict[str, Any]] = {}
+        typed_objects_by_name: dict[str, dict[str, Any]] = {}
+        lawful_cones_by_name: dict[str, dict[str, Any]] = {}
+        typed_paths_by_src: dict[str, list[dict[str, Any]]] = {}
         extra_edges: list[EdgeRecord] = []
         failed_index = _load_failed_transition_index(failed_transitions_file)
         locked_index = _load_path_lock_index(path_locks_file)
+        if typed_objects_file.exists():
+            for row in _iter_jsonl(typed_objects_file, max_rows=max_process_events):
+                name = str(row.get("decl", "")).strip()
+                if name:
+                    typed_objects_by_name[name] = row
+        if lawful_cones_file.exists():
+            for row in _iter_jsonl(lawful_cones_file, max_rows=max_process_events):
+                base = row.get("base")
+                base = base if isinstance(base, dict) else {}
+                apex = base.get("apex")
+                apex = apex if isinstance(apex, dict) else {}
+                name = str(apex.get("decl", "")).strip()
+                if name:
+                    lawful_cones_by_name[name] = row
+        if lawful_typed_paths_file.exists():
+            for row in _iter_jsonl(lawful_typed_paths_file, max_rows=max_process_events):
+                base = row.get("base")
+                base = base if isinstance(base, dict) else {}
+                src = str(base.get("src", "")).strip()
+                if src:
+                    typed_paths_by_src.setdefault(src, []).append(row)
         if process_file.exists():
             for row in _iter_jsonl(process_file, max_rows=max_process_events):
                 name = str(row.get("node", "")).strip()
@@ -323,6 +419,30 @@ class LeanTrailNormalizer:
                     "boundaryClass": row.get("boundaryClass"),
                     "novelty": row.get("novelty"),
                 }
+        if typed_semantic_morphisms_file.exists():
+            for row in _iter_jsonl(typed_semantic_morphisms_file):
+                src = str(row.get("src", "")).strip()
+                dst = str(row.get("dst", "")).strip()
+                kind_raw = str(row.get("kind", "")).strip()
+                if not src or not dst or not kind_raw:
+                    continue
+                kind = TYPED_SEMANTIC_KIND_MAP.get(kind_raw)
+                if not kind:
+                    continue
+                extra_edges.append(
+                    EdgeRecord(
+                        src=src,
+                        dst=dst,
+                        kind=kind,
+                        weight=0.6,
+                        evidence_ref="artifacts/dag/process-flow/typed-semantic-morphisms.jsonl",
+                    )
+                )
+        elif process_file.exists():
+            for row in _iter_jsonl(process_file, max_rows=max_process_events):
+                name = str(row.get("node", "")).strip()
+                if not name:
+                    continue
                 for field, kind in (
                     ("supportCandidates", "translator_of"),
                     ("comparisonCandidates", "coheres_with"),
@@ -367,10 +487,11 @@ class LeanTrailNormalizer:
 
             depth_row = depth_by_name.get(name, {})
             process_row = process_by_name.get(name, {})
+            typed_object_row = typed_objects_by_name.get(name, {})
             capstone = bool(depth_row.get("capstone", False))
 
-            role_raw = str(process_row.get("role", "")).strip() or None
-            if role_raw in {"owner", "translator", "coherence", "capstone"}:
+            role_raw = str(typed_object_row.get("role", "")).strip() or str(process_row.get("role", "")).strip() or None
+            if role_raw in {"owner", "translator", "coherence", "capstone", "infrastructure"}:
                 role = role_raw
             else:
                 role = _infer_role(name, module, capstone)
@@ -378,10 +499,13 @@ class LeanTrailNormalizer:
             attrs = {
                 "decl_kind": decl.get("kind"),
                 "doc": decl.get("doc", ""),
-                "boundary_class": process_row.get("boundaryClass"),
+                "boundary_class": typed_object_row.get("boundary") or process_row.get("boundaryClass"),
                 "novelty": process_row.get("novelty"),
                 "attrs": decl.get("attrs", []),
             }
+            holonomy_row = holonomy_by_name.get(name)
+            if holonomy_row:
+                attrs["holonomy"] = holonomy_row
             if role_raw and role_raw != role:
                 attrs["process_role"] = role_raw
 
@@ -492,6 +616,11 @@ class LeanTrailNormalizer:
             locked_index=locked_index,
         )
         endpoint_summary = _annotate_node_endpoints(nodes, edges)
+        process_geometry_summary = _annotate_node_process_geometry(
+            nodes,
+            lawful_cones_by_name=lawful_cones_by_name,
+            typed_paths_by_src=typed_paths_by_src,
+        )
 
         snapshot_meta = {
             "created_at": _utc_now(),
@@ -507,6 +636,7 @@ class LeanTrailNormalizer:
                 "edges": len(edges),
                 "depth_rows": len(depth_records),
                 "path_endpoints": endpoint_summary,
+                "process_geometry": process_geometry_summary,
                 "failed_transition_edges": len(failed_index),
                 "locked_edges": len(locked_index),
                 "duplicate_edges_removed": duplicate_edges_removed,

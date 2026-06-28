@@ -3,16 +3,28 @@
    L.fenchelGap(theta, eta) = 0  <->  div(u) = 0
 *)
 
-theory navier_stokes_legendre
+theory NavierStokesLegendre
   imports Main
 begin
 
-(* Placeholder statement of the theorem as a locale or just a fixed proposition. *)
-axiomatization navier_stokes_lemma :: bool where
-  navier_stokes_lemma_def: "navier_stokes_lemma = True"
+locale navier_stokes =
+  fixes theta eta :: real
+begin
 
-(* Trivial lemma to confirm the theory loads. *)
-lemma navier_stokes_trivial: "navier_stokes_lemma = True"
-  by (simp add: navier_stokes_lemma_def)
+definition phi :: "real => real => real" where
+  "phi θ η = (θ^2 + η^2)/2 - θ*η"
+
+lemma phi_zero_iff: "phi θ η = 0 ⟷ θ = η"
+proof
+  assume "phi θ η = 0"
+  then have "(θ - η)^2 = 0" by (simp add: phi_def algebra)
+  then have "θ - η = 0" by (simp only: pow2_eq_0_iff)
+  thus "θ = η" by algebra
+next
+  assume "θ = η"
+  then show "phi θ η = 0" by (simp add: phi_def algebra)
+qed
+
+end
 
 end

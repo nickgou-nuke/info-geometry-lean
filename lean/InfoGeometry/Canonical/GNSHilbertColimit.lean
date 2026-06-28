@@ -4,12 +4,9 @@ import InfoGeometry.Canonical.CPTCstarStateLimit
 /-!
 # Inductive Limit of GNS Hilbert Spaces
 
-Formalizes the inductive limit of local GNS pre-Hilbert spaces. Proves that the transition 
-maps induced by the algebraic C* bonding maps are exact isometric embeddings, providing 
-the rigorous constructive pathway to the macroscopic infinite-dimensional continuous 
-quantum field theory Hilbert space.
-
-This formally executes the requested derivation: `H_ω ≅ lim_n H_n`.
+Finite-stage GNS inner-product transport over the existing tensor tower.
+The theorem below proves that a compatible family of finite-stage functionals
+makes the one-step bonding map preserve the algebraic GNS inner product.
 -/
 
 namespace InfoGeometry.Canonical.GNSHilbertColimit
@@ -42,12 +39,8 @@ theorem bond_star (n : ℕ) (A : Stage n) : stageBond n (star A) = star (stageBo
 ## Isometric Transition Theorem
 -/
 
-/-- 
-THEOREM: Isometric Preservation.
-Because the global field state is compatible over the fractal tower, the algebraic 
-bonding maps naturally induce exact isometric transitions between the local 
-GNS pre-Hilbert spaces.
--/
+/-- Compatible finite-stage functionals make the bonding map preserve the local
+GNS inner product. -/
 theorem transition_is_isometry 
     (ω : ∀ n, FiniteStageFunctional n)
     (h_compat : IsCompatibleFunctionalFamily ω)

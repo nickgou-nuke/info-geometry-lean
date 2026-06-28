@@ -13,10 +13,10 @@ Closed here:
 - square-zero and self-polar-zero readbacks for both generators;
 - the cross-polar hyperbolic pairing between the two isotropic directions.
 
-Not closed here:
-- no global Cantor-fractal colimit theorem;
-- no identification of a full GNS null ideal with an infinite split-null colimit;
-- no `G₂(2)` or exceptional-group boundary-closure theorem.
+Out of scope:
+- global Cantor-fractal colimits;
+- identification of a full GNS null ideal with an infinite split-null colimit;
+- `G₂(2)` or exceptional-group boundary-closure theorems.
 -/
 
 namespace InfoGeometry.Canonical.CantorSplitNullBridge
@@ -147,19 +147,19 @@ theorem addressNullGenerator_child_ne_zero (w : FiniteBinaryWord) (b : Bool) :
 /-- Every one-step child address lands in the split null cone. -/
 theorem addressNullGenerator_child_detZ_zero (w : FiniteBinaryWord) (b : Bool) :
     detZ (addressNullGenerator (BinaryWord.child w b)) = 0 := by
-  simpa [addressNullGenerator_child] using bitNullGenerator_detZ_zero b
+  simp [addressNullGenerator_child]
 
 /-- Every one-step child address is square-zero. -/
 theorem addressNullGenerator_child_sq_zero (w : FiniteBinaryWord) (b : Bool) :
     addressNullGenerator (BinaryWord.child w b) *
       addressNullGenerator (BinaryWord.child w b) = (0 : ZornCell ℝ) := by
-  simpa [addressNullGenerator_child] using bitNullGenerator_sq_zero b
+  simp [addressNullGenerator_child]
 
 /-- Every one-step child address is self-orthogonal for the split polar form. -/
 theorem addressNullGenerator_child_polar_self_zero (w : FiniteBinaryWord) (b : Bool) :
     polarZ (addressNullGenerator (BinaryWord.child w b))
       (addressNullGenerator (BinaryWord.child w b)) = 0 := by
-  simpa [addressNullGenerator_child] using bitNullGenerator_polar_self_zero b
+  simp [addressNullGenerator_child]
 
 /-- The two bit-controlled split-null directions form a concrete hyperbolic pair. -/
 @[simp] theorem topRight_bottomLeft_polar_pair :

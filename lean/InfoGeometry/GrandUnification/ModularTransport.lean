@@ -26,12 +26,8 @@ noncomputable section
 
 namespace InfoGeometry.GrandUnification
 
-/--
-Finite modular transport target.
-
-This is intentionally a proposition, not a packet of supplied data.
--/
-def ModularTransportBridgeTarget : Prop :=
+/-- Finite modular transport theorem from the owner finite Connes cocycle. -/
+theorem modularTransportBridgeTarget :
   ∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
       (s t : ℝ),
     (fun i =>
@@ -44,35 +40,69 @@ def ModularTransportBridgeTarget : Prop :=
             φ s
               (fun j =>
                 _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-                  φ ψ t j) i
-
-/--
-Constructor for the finite modular transport target.
-
-No external transport data are accepted; the proof delegates to the owner
-finite Connes theorem.
--/
-theorem constructModularTransportBridgeTarget :
-    ModularTransportBridgeTarget := by
+                  φ ψ t j) i := by
   intro φ ψ s t
   exact
     _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle
       φ ψ s t
 
 /--
-Tomita--Gromov bridge target, narrowed to the currently proved finite theorem
-stack.
-
-The name is retained as a public roadmap endpoint, but no Gromov/spectral
-comparison data are accepted here.  Those remain future theorem surfaces.
+Compatibility readout for the finite modular transport theorem.
 -/
-def TomitaGromovBridgeTarget : Prop :=
-  ModularTransportBridgeTarget ∧ AlgebraicSouriauTomitaTarget
+theorem constructModularTransportBridgeTarget :
+    ∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
+        (s t : ℝ),
+      (fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ (s + t) i) =
+        fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ s i *
+            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
+              φ s
+                (fun j =>
+                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+                    φ ψ t j) i :=
+  modularTransportBridgeTarget
+
+/--
+Tomita--Gromov theorem stack, narrowed to the currently proved finite theorem
+surface.
+-/
+theorem tomitaGromovBridgeTarget :
+    (∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
+        (s t : ℝ),
+      (fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ (s + t) i) =
+        fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ s i *
+            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
+              φ s
+                (fun j =>
+                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+                    φ ψ t j) i) ∧
+      AlgebraicSouriauTomitaTarget := by
+  exact ⟨modularTransportBridgeTarget, constructAlgebraicSouriauTomitaTarget⟩
 
 /-- Constructor for the narrowed Tomita--Gromov endpoint from proved owner theorems. -/
 theorem constructTomitaGromovBridgeTarget :
-    TomitaGromovBridgeTarget := by
-  exact ⟨constructModularTransportBridgeTarget, constructAlgebraicSouriauTomitaTarget⟩
+    (∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
+        (s t : ℝ),
+      (fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ (s + t) i) =
+        fun i =>
+          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+            φ ψ s i *
+            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
+              φ s
+                (fun j =>
+                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
+                    φ ψ t j) i) ∧
+      AlgebraicSouriauTomitaTarget :=
+  tomitaGromovBridgeTarget
 
 end InfoGeometry.GrandUnification
 

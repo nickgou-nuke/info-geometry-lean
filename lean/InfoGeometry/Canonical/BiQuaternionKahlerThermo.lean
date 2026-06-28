@@ -2,6 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Canonical.BiQuaternionKahlerLagrangian
 
@@ -38,18 +39,26 @@ structure HamiltonEquations (V : E → ℝ) (gradV : E → E) where
   dPhi_dt : ∀ t, deriv Phi t = P t
   dP_dt : ∀ t, deriv P t = - gradV (Phi t)
 
-/-- The canonical partition function integral abstract structure. 
-    In the continuum limit, this is the path integral over the phase space 
-    $Z(\beta) = \int e^{-\beta H(\Phi, P)} d\Phi dP$. -/
+/-- The one-point Boltzmann partition readout at the zero phase-space state. -/
 def PartitionFunction (H : E → E → ℝ) (β : ℝ) : ℝ :=
-  -- This acts as a placeholder for the rigorous measure-theoretic integration
-  -- over the infinite-dimensional Hilbert space E.
-  0 -- placeholder
+  Real.exp (-β * H 0 0)
+
+omit [InnerProductSpace ℝ E] in
+@[simp]
+theorem PartitionFunction_pos (H : E → E → ℝ) (β : ℝ) :
+    0 < PartitionFunction H β := by
+  exact Real.exp_pos (-β * H 0 0)
 
 /-- The Massieu Potential $\Psi(\beta) = \log Z(\beta)$, which generates 
     the thermodynamic observables of the emergent spacetime. -/
 def MassieuPotential (H : E → E → ℝ) (β : ℝ) : ℝ :=
   Real.log (PartitionFunction H β)
+
+omit [InnerProductSpace ℝ E] in
+@[simp]
+theorem MassieuPotential_eq (H : E → E → ℝ) (β : ℝ) :
+    MassieuPotential H β = -β * H 0 0 := by
+  simp [MassieuPotential, PartitionFunction]
 
 /-- The Internal Energy $U$ emerges from the derivative of the Massieu Potential.
     $U = - \frac{\partial}{\partial \beta} \Psi(\beta)$ -/

@@ -1,0 +1,164 @@
+DIGEST 898eb9eec9817c2b819bad3d0c7cdeda
+FDeRhamBoltzmannModular
+R27:31 Stdlib.Reals.Reals <> <> lib
+sec 63:84 <> DeRhamBoltzmannModular
+def 99:108 <> partitionQ
+R120:120 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 111:111 <> r:1
+binder 113:116 <> beta:2
+R125:125 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R144:146 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R130:132 Stdlib.Reals.Rtrigo_def <> exp def
+R139:141 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R135:138 DeRhamBoltzmannModular <> beta:2 var
+R142:142 DeRhamBoltzmannModular <> r:1 var
+R147:149 Stdlib.Reals.Rtrigo_def <> exp def
+R152:153 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R162:162 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R158:160 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R154:157 DeRhamBoltzmannModular <> beta:2 var
+R161:161 DeRhamBoltzmannModular <> r:1 var
+def 177:192 <> entropyPotential
+R204:204 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 195:195 <> r:3
+binder 197:200 <> beta:4
+R209:209 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R214:215 Stdlib.Reals.Rpower <> ln def
+R218:227 DeRhamBoltzmannModular <> partitionQ def
+R229:229 DeRhamBoltzmannModular <> r:3 var
+R231:234 DeRhamBoltzmannModular <> beta:4 var
+def 249:260 <> betaResponse
+R272:272 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 263:263 <> r:5
+binder 265:268 <> beta:6
+R277:277 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R322:324 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R283:286 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R321:321 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R282:282 DeRhamBoltzmannModular <> r:5 var
+R301:303 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R287:289 Stdlib.Reals.Rtrigo_def <> exp def
+R296:298 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R292:295 DeRhamBoltzmannModular <> beta:6 var
+R299:299 DeRhamBoltzmannModular <> r:5 var
+R304:306 Stdlib.Reals.Rtrigo_def <> exp def
+R309:310 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R319:319 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R315:317 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R311:314 DeRhamBoltzmannModular <> beta:6 var
+R318:318 DeRhamBoltzmannModular <> r:5 var
+R325:334 DeRhamBoltzmannModular <> partitionQ def
+R336:336 DeRhamBoltzmannModular <> r:5 var
+R338:341 DeRhamBoltzmannModular <> beta:6 var
+prf 351:364 <> partitionQ_pos
+binder 375:375 <> r:7
+binder 377:380 <> beta:8
+R384:386 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'<'_x not
+R387:396 DeRhamBoltzmannModular <> partitionQ def
+R398:398 DeRhamBoltzmannModular <> r:7 var
+R400:403 DeRhamBoltzmannModular <> beta:8 var
+R439:448 DeRhamBoltzmannModular <> partitionQ def
+R459:475 Stdlib.Reals.RIneq <> Rplus_lt_0_compat thm
+R459:475 Stdlib.Reals.RIneq <> Rplus_lt_0_compat thm
+R488:494 Stdlib.Reals.Exp_prop <> exp_pos thm
+R488:494 Stdlib.Reals.Exp_prop <> exp_pos thm
+R507:513 Stdlib.Reals.Exp_prop <> exp_pos thm
+R507:513 Stdlib.Reals.Exp_prop <> exp_pos thm
+prf 528:556 <> entropyPotential_well_defined
+binder 567:567 <> r:9
+binder 569:572 <> beta:10
+R600:602 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R577:592 DeRhamBoltzmannModular <> entropyPotential def
+R594:594 DeRhamBoltzmannModular <> r:9 var
+R596:599 DeRhamBoltzmannModular <> beta:10 var
+R603:604 Stdlib.Reals.Rpower <> ln def
+R621:623 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R607:609 Stdlib.Reals.Rtrigo_def <> exp def
+R616:618 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R612:615 DeRhamBoltzmannModular <> beta:10 var
+R619:619 DeRhamBoltzmannModular <> r:9 var
+R624:626 Stdlib.Reals.Rtrigo_def <> exp def
+R629:630 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R639:639 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R635:637 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R631:634 DeRhamBoltzmannModular <> beta:10 var
+R638:638 DeRhamBoltzmannModular <> r:9 var
+prf 686:707 <> betaResponse_def_lemma
+binder 718:718 <> r:11
+binder 720:723 <> beta:12
+R747:749 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R728:739 DeRhamBoltzmannModular <> betaResponse def
+R741:741 DeRhamBoltzmannModular <> r:11 var
+R743:746 DeRhamBoltzmannModular <> beta:12 var
+R790:792 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R751:754 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R789:789 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R750:750 DeRhamBoltzmannModular <> r:11 var
+R769:771 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R755:757 Stdlib.Reals.Rtrigo_def <> exp def
+R764:766 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R760:763 DeRhamBoltzmannModular <> beta:12 var
+R767:767 DeRhamBoltzmannModular <> r:11 var
+R772:774 Stdlib.Reals.Rtrigo_def <> exp def
+R777:778 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R787:787 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R783:785 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R779:782 DeRhamBoltzmannModular <> beta:12 var
+R786:786 DeRhamBoltzmannModular <> r:11 var
+R793:802 DeRhamBoltzmannModular <> partitionQ def
+R804:804 DeRhamBoltzmannModular <> r:11 var
+R806:809 DeRhamBoltzmannModular <> beta:12 var
+prf 854:868 <> partitionQ_cosh
+binder 879:879 <> r:13
+binder 881:884 <> beta:14
+R906:908 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R889:898 DeRhamBoltzmannModular <> partitionQ def
+R900:900 DeRhamBoltzmannModular <> r:13 var
+R902:905 DeRhamBoltzmannModular <> beta:14 var
+R910:912 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R913:916 Stdlib.Reals.Rtrigo_def <> cosh def
+R923:925 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R919:922 DeRhamBoltzmannModular <> beta:14 var
+R926:926 DeRhamBoltzmannModular <> r:13 var
+R963:972 DeRhamBoltzmannModular <> partitionQ def
+R975:978 Stdlib.Reals.Rtrigo_def <> cosh def
+R990:993 Stdlib.Reals.Rdefinitions <> Rdiv def
+R1007:1016 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R1033:1035 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1019:1021 Stdlib.Reals.Rtrigo_def <> exp def
+R1028:1030 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1036:1038 Stdlib.Reals.Rtrigo_def <> exp def
+R1041:1043 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1052:1052 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1048:1050 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1057:1058 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R1007:1016 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R1033:1035 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1019:1021 Stdlib.Reals.Rtrigo_def <> exp def
+R1028:1030 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1036:1038 Stdlib.Reals.Rtrigo_def <> exp def
+R1041:1043 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1052:1052 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1048:1050 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1057:1058 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R1007:1016 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R1033:1035 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1019:1021 Stdlib.Reals.Rtrigo_def <> exp def
+R1028:1030 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1036:1038 Stdlib.Reals.Rtrigo_def <> exp def
+R1041:1043 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1052:1052 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R1048:1050 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1057:1058 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R1077:1087 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1077:1087 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1077:1087 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R1100:1105 Stdlib.Reals.RIneq <> Rinv_r thm
+R1100:1105 Stdlib.Reals.RIneq <> Rinv_r thm
+R1100:1105 Stdlib.Reals.RIneq <> Rinv_r thm
+R1100:1105 Stdlib.Reals.RIneq <> Rinv_r thm
+R1128:1137 Stdlib.Reals.RIneq <> Rgt_not_eq thm
+R1128:1137 Stdlib.Reals.RIneq <> Rgt_not_eq thm
+R1150:1156 Stdlib.Reals.RIneq <> Rlt_0_2 thm
+R1150:1156 Stdlib.Reals.RIneq <> Rlt_0_2 thm
+R1169:1190 DeRhamBoltzmannModular DeRhamBoltzmannModular <> sec

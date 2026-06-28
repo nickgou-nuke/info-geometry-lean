@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "description": "Möbius 2x2 packet - finite exact cross-engine verification format",
+  "matrix": {
+    "a": "2",
+    "b": "0",
+    "c": "0",
+    "d": "1/2"
+  },
+  "ring": "QQ",
+  "properties": {
+    "determinant": "1",
+    "trace": "5/2",
+    "fixed_polynomial": "-3/2 * z",
+    "fixed_points": ["0", "infinity"],
+    "eigenvalues": ["2", "1/2"],
+    "projective_eigendirections": ["0", "infinity"],
+    "multiplier_at_zero": "4",
+    "multiplier_at_infinity": "1/4",
+    "classification": "hyperbolic",
+    "pairing_invariant": true,
+    "quaternion_norm_symbolic": "w^2 + x^2 + y^2 + z^2"
+  },
+  "verification": {
+    "forward_orbit_from_1": ["1", "4", "16", "64", "256"],
+    "attracting_fixed_point": "infinity"
+  }
+}

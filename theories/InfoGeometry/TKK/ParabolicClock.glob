@@ -1,0 +1,126 @@
+DIGEST d4f8b7123a87c7bce4269069ff167c31
+FParabolicClock
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:41 Stdlib.micromega.Psatz <> <> lib
+def 108:117 <> inner_prod
+R146:146 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 120:123 <> eta1:1
+binder 125:128 <> eta2:2
+binder 130:135 <> theta1:3
+binder 137:142 <> theta2:4
+R151:151 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R171:173 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R162:164 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R158:161 ParabolicClock <> eta1:1 var
+R165:170 ParabolicClock <> theta1:3 var
+R178:180 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R174:177 ParabolicClock <> eta2:2 var
+R181:186 ParabolicClock <> theta2:4 var
+def 245:251 <> M_theta
+R278:278 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 254:254 <> a:5
+binder 256:256 <> b:6
+binder 258:258 <> c:7
+binder 260:260 <> d:8
+binder 262:267 <> theta1:9
+binder 269:274 <> theta2:10
+R284:286 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R283:283 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R287:287 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R294:294 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R318:319 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R343:343 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R305:307 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R296:298 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R295:295 ParabolicClock <> a:5 var
+R299:304 ParabolicClock <> theta1:9 var
+R309:311 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R308:308 ParabolicClock <> b:6 var
+R312:317 ParabolicClock <> theta2:10 var
+R330:332 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R321:323 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R320:320 ParabolicClock <> c:7 var
+R324:329 ParabolicClock <> theta1:9 var
+R334:336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R333:333 ParabolicClock <> d:8 var
+R337:342 ParabolicClock <> theta2:10 var
+def 358:366 <> MinvT_eta
+R389:389 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 369:369 <> a:11
+binder 371:371 <> b:12
+binder 373:373 <> c:13
+binder 375:375 <> d:14
+binder 377:380 <> eta1:15
+binder 382:385 <> eta2:16
+R395:397 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R394:394 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R398:398 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R405:405 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R425:426 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R447:447 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R414:416 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R407:409 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R406:406 ParabolicClock <> d:14 var
+R410:413 ParabolicClock <> eta1:15 var
+R418:420 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R417:417 ParabolicClock <> c:13 var
+R421:424 ParabolicClock <> eta2:16 var
+R436:438 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R429:431 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R427:427 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R428:428 ParabolicClock <> b:12 var
+R432:435 ParabolicClock <> eta1:15 var
+R440:442 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R439:439 ParabolicClock <> a:11 var
+R443:446 ParabolicClock <> eta2:16 var
+prf 566:590 <> contragredient_invariance
+R637:637 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 603:603 <> a:17
+binder 605:605 <> b:18
+binder 607:607 <> c:19
+binder 609:609 <> d:20
+binder 611:614 <> eta1:21
+binder 616:619 <> eta2:22
+binder 621:626 <> theta1:23
+binder 628:633 <> theta2:24
+R659:664 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R655:657 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R647:649 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R643:645 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R642:642 ParabolicClock <> a:17 var
+R646:646 ParabolicClock <> d:20 var
+R651:653 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R650:650 ParabolicClock <> b:18 var
+R654:654 ParabolicClock <> c:19 var
+R691:697 ParabolicClock <> M_theta def
+R699:699 ParabolicClock <> a:17 var
+R701:701 ParabolicClock <> b:18 var
+R703:703 ParabolicClock <> c:19 var
+R705:705 ParabolicClock <> d:20 var
+R707:712 ParabolicClock <> theta1:23 var
+R714:719 ParabolicClock <> theta2:24 var
+binder 670:676 <> theta1':25
+binder 679:685 <> theta2':26
+R748:756 ParabolicClock <> MinvT_eta def
+R758:758 ParabolicClock <> a:17 var
+R760:760 ParabolicClock <> b:18 var
+R762:762 ParabolicClock <> c:19 var
+R764:764 ParabolicClock <> d:20 var
+R766:769 ParabolicClock <> eta1:21 var
+R771:774 ParabolicClock <> eta2:22 var
+binder 731:735 <> eta1':27
+binder 738:742 <> eta2':28
+R819:821 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R781:790 ParabolicClock <> inner_prod def
+R792:796 ParabolicClock <> eta1':27 var
+R798:802 ParabolicClock <> eta2':28 var
+R804:810 ParabolicClock <> theta1':25 var
+R812:818 ParabolicClock <> theta2':26 var
+R822:831 ParabolicClock <> inner_prod def
+R833:836 ParabolicClock <> eta1:21 var
+R838:841 ParabolicClock <> eta2:22 var
+R843:848 ParabolicClock <> theta1:23 var
+R850:855 ParabolicClock <> theta2:24 var
+R884:893 ParabolicClock <> inner_prod def
+R896:902 ParabolicClock <> M_theta def
+R905:913 ParabolicClock <> MinvT_eta def

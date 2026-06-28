@@ -16,8 +16,6 @@ the Riemann zeros to the critical line.
    or co-exact chiral charge is annihilated. Only Harmonic Zero-Modes survive.
 -/
 
-set_option linter.unusedSectionVars false
-
 namespace InfoGeometry.GrandUnification.UVSymmetry
 
 /-- The centered holomorphic coordinate chart at s = 1/2. -/
@@ -50,7 +48,9 @@ theorem functional_equation_isomorphism (z : UVChart) :
 open InfoGeometry.GrandUnification.HodgeCartan
 open InfoGeometry.Canonical.TrifactorDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+section Basic
+
+variable {R : Type*} [CommRing R]
 variable (T : R)
 
 /-- A state `ρ` survives the non-orientable boundary if it is invariant under the Cartan Involution. -/
@@ -68,6 +68,13 @@ theorem harmonic_trap_survives (hT : T ^ 3 = T) (ρ : R) (h_harmonic : harmonic_
     _ = (cartan_involution T * harmonic_op T) * ρ := by rw [mul_assoc]
     _ = harmonic_op T * ρ := by rw [cartan_symmetric_harmonic T hT]
     _ = ρ := h_harmonic
+
+end Basic
+
+section WithHalf
+
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable (T : R)
 
 /-- **Theorem: Exact Topological Annihilation**
 If a state lies entirely in the Exact sector (P_+), the topological non-orientable
@@ -92,5 +99,7 @@ theorem coexact_annihilation (hT : T ^ 3 = T) (ρ : R) (h_coexact : coexact_op T
     _ = (- coexact_op T) * ρ := by rw [cartan_antisymmetric_coexact T hT]
     _ = - (coexact_op T * ρ) := by ring
     _ = -ρ := by rw [h_coexact]
+
+end WithHalf
 
 end InfoGeometry.GrandUnification.UVSymmetry

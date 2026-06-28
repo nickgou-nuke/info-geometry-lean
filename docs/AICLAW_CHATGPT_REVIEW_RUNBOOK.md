@@ -35,6 +35,9 @@ an unproved "chatbot convergence" claim.
 
 - Do not send a second prompt while a first prompt may still be generating.
 - Do not write aiClaw proof memory into the repo theorem-DAG Arango brain.
+- Do not let aiClaw, ChatGPT, or browser-harness overwrite repo source files.
+  They may write response logs, JSON reports, and candidate files only. A
+  coding agent must inspect the candidate, apply a normal patch, and verify it.
 - Do not treat SymPy witnesses as Lean proof authority.
 - Do not treat ChatGPT prose as theorem authority.
 - Do not confuse ChatGPT with the coding agent. ChatGPT is an external auditor

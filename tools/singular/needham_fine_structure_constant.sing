@@ -1,0 +1,12 @@
+// Singular verification for the golden-ratio algebra behind Needham's formula.
+ring R = 0,(p),dp;
+ideal J = std(ideal(p^2 - p - 1));
+poly normal = reduce(p^2 - p - 1, J);
+if (normal != 0)
+{
+  print("SINGULAR FAIL");
+  quit;
+}
+print("SINGULAR PASS");
+print("phi_quadratic_remainder = 0");
+quit;

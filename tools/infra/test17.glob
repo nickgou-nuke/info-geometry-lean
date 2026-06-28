@@ -1,0 +1,7 @@
+DIGEST aec1f28fc80a0c2b9fe2dbd75c31a487
+Ftest17
+R15:19 Stdlib.Reals.Reals <> <> lib
+prf 28:31 <> test
+R39:42 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R35:38 Corelib.Init.Logic <> True ind
+R43:46 Corelib.Init.Logic <> True ind

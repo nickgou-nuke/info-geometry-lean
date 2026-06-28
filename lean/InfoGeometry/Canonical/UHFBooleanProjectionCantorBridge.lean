@@ -629,28 +629,40 @@ theorem cantor_stone_ultrafilter_layer :
     CantorStoneUltrafilter.atom_mem_iff_prefix_eq⟩
 
 /--
-Rosetta theorem: the inverse limit of finite Boolean projection vertices in the
-UHF Bratteli diagram is the established Cantor bitword carrier, the finite
-Boolean projection algebra maps contravariantly to Cantor cylinders, and the
-Stone ultrafilter layer recovers Cantor points from their atom filters.
+Owner-backed Rosetta data: the inverse limit of finite Boolean projection
+vertices in the UHF Bratteli diagram is the established Cantor bitword carrier,
+the finite Boolean projection algebra maps contravariantly to Cantor cylinders,
+and the Stone ultrafilter layer recovers Cantor points from their atom filters.
 -/
-theorem boolean_projection_bratteli_path_space_is_cantor :
-    Nonempty (CoherentBitPath ≃ CantorBoundary) ∧
-      (∀ p n, boundaryPrefix n (coherentPathEquivCantorBoundary p) = p.word n) ∧
-      (∀ x : CantorBoundary,
-        coherentPathEquivCantorBoundary (boundaryToCoherentPath x) = x) ∧
-      (∀ n (A : FiniteBooleanAlgebra n),
-        cantorCylinder (n + 1) (prefixPullback n A) = cantorCylinder n A) ∧
-      (∀ x n (A : FiniteBooleanAlgebra n),
-        cantorBooleanEvaluation x (n + 1) (prefixPullback n A) =
-          cantorBooleanEvaluation x n A) ∧
-      (∀ x : CantorBoundary, (CantorStoneUltrafilter.principal x).toBoundary = x) := by
-  exact ⟨⟨coherentPathEquivCantorBoundary⟩,
-    witt_bits_eq_cantor_prefix,
-    coherentPathToBoundary_boundaryToCoherentPath,
-    cantorCylinder_prefixPullback,
-    cantorBooleanEvaluation_prefixPullback,
-    CantorStoneUltrafilter.toBoundary_principal⟩
+structure BooleanProjectionBratteliCantorData where
+  pathEquiv : CoherentBitPath ≃ CantorBoundary
+  pathEquiv_eq_owner : pathEquiv = coherentPathEquivCantorBoundary
+  pathEquiv_prefix :
+    ∀ p n, boundaryPrefix n (pathEquiv p) = p.word n
+  boundary_right_inv :
+    ∀ x : CantorBoundary, pathEquiv (boundaryToCoherentPath x) = x
+  cylinder_prefixPullback :
+    ∀ n (A : FiniteBooleanAlgebra n),
+      cantorCylinder (n + 1) (prefixPullback n A) = cantorCylinder n A
+  booleanEvaluation_prefixPullback :
+    ∀ x n (A : FiniteBooleanAlgebra n),
+      cantorBooleanEvaluation x (n + 1) (prefixPullback n A) =
+        cantorBooleanEvaluation x n A
+  principal_toBoundary :
+    ∀ x : CantorBoundary, (CantorStoneUltrafilter.principal x).toBoundary = x
+
+/--
+Rosetta theorem as concrete owner data, not an existential equivalence wrapper.
+-/
+noncomputable def boolean_projection_bratteli_path_space_is_cantor :
+    BooleanProjectionBratteliCantorData where
+  pathEquiv := coherentPathEquivCantorBoundary
+  pathEquiv_eq_owner := rfl
+  pathEquiv_prefix := witt_bits_eq_cantor_prefix
+  boundary_right_inv := coherentPathToBoundary_boundaryToCoherentPath
+  cylinder_prefixPullback := cantorCylinder_prefixPullback
+  booleanEvaluation_prefixPullback := cantorBooleanEvaluation_prefixPullback
+  principal_toBoundary := CantorStoneUltrafilter.toBoundary_principal
 
 end InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 

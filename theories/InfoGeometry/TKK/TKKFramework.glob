@@ -1,0 +1,37 @@
+DIGEST 255fcbcd1aeb012a8bc963b99244bb12
+FTKKFramework
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:39 Stdlib.micromega.Lia <> <> lib
+rec 50:59 <> TKKGrading
+proj 79:80 <> g2
+proj 97:98 <> g1
+proj 115:116 <> g0
+proj 133:135 <> gn1
+proj 152:154 <> gn2
+proj 171:174 <> h112
+proj 186:189 <> h123
+proj 201:204 <> h224
+proj 216:222 <> hn1n1n2
+proj 234:238 <> hn120
+proj 250:253 <> h000
+binder 62:62 <> E:1
+R85:88 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R84:84 TKKFramework <> E:1 var
+R103:106 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R102:102 TKKFramework <> E:1 var
+R121:124 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R120:120 TKKFramework <> E:1 var
+R140:143 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R139:139 TKKFramework <> E:1 var
+R159:162 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R158:158 TKKFramework <> E:1 var
+R178:181 Corelib.Init.Logic <> True ind
+R193:196 Corelib.Init.Logic <> True ind
+R208:211 Corelib.Init.Logic <> True ind
+R226:229 Corelib.Init.Logic <> True ind
+R242:245 Corelib.Init.Logic <> True ind
+R257:260 Corelib.Init.Logic <> True ind
+prf 273:284 <> trivial_true
+R288:291 Corelib.Init.Logic <> True ind
+R307:307 Corelib.Init.Logic <> I constr
+R307:307 Corelib.Init.Logic <> I constr

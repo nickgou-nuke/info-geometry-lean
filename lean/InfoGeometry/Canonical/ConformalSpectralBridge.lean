@@ -6,7 +6,7 @@ open CategoryTheory Limits
 namespace InfoGeometry.Canonical
 
 variable (Q : ∀ n, QuadraticForm ℝ (InfoGeometry.Topology.V n))
-variable (h_compat : ∀ (m n : ℕ) (h : m ≤ n) (x : InfoGeometry.Topology.V m), 
+variable (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V m), 
   Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x)
 variable [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
 
@@ -26,7 +26,7 @@ def IsConformalSpectralLink (a4 : ℝ) (c : ℝ) : Prop :=
 -/
 theorem conformal_anomaly_residual_vacuum
     (S : ℝ → ℝ) (a0 a2 a4 c : ℝ)
-    (h_expansion : HasAsymptoticSpectralExpansion S a0 a2 a4)
+    (_h_expansion : HasAsymptoticSpectralExpansion S a0 a2 a4)
     (h_link : IsConformalSpectralLink a4 c) :
     ∃ (limit_vacuum : ℝ), limit_vacuum = c / 24 := by
   use a4

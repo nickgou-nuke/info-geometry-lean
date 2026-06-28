@@ -221,13 +221,31 @@ structure BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) where
   pre_eq : pre = boundaryPrefix n ξ
   suf_eq : suf = boundaryIterateTail n ξ
 
-/-- Boundary crossing as a theorem-backed witness packet. -/
+/-- Canonical boundary crossing witness at depth `n`. -/
+@[rep_depth operator]
+def boundaryCrossingWitness
+    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    BoundaryCrossingWitness n ξ where
+  pre := boundaryPrefix n ξ
+  suf := boundaryIterateTail n ξ
+  reconstruction := boundary_finite_reconstruction n ξ
+  pre_eq := rfl
+  suf_eq := rfl
+
+/-- Boundary crossing readout: the canonical witness is exactly prefix/tail reconstruction. -/
 @[rep_depth operator]
 theorem boundary_crossing
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
-    Nonempty (BoundaryCrossingWitness n ξ) := by
-  refine ⟨⟨boundaryPrefix n ξ, boundaryIterateTail n ξ, ?_, rfl, rfl⟩⟩
-  exact boundary_finite_reconstruction n ξ
+    ξ =
+      boundaryConsList
+        (boundaryCrossingWitness n ξ).pre
+        (boundaryCrossingWitness n ξ).suf
+      ∧ (boundaryCrossingWitness n ξ).pre = boundaryPrefix n ξ
+      ∧ (boundaryCrossingWitness n ξ).suf = boundaryIterateTail n ξ := by
+  exact
+    ⟨(boundaryCrossingWitness n ξ).reconstruction,
+      (boundaryCrossingWitness n ξ).pre_eq,
+      (boundaryCrossingWitness n ξ).suf_eq⟩
 
 /-! ## 2. Zorn boundary subsystem for the infinite Cantor carrier -/
 

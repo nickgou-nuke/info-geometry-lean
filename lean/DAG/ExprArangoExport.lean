@@ -59,6 +59,10 @@ structure ExportState where
   nodeCount : Nat := 0
   edgeCount : Nat := 0
   brokenBVarCount : Nat := 0
+  pendingDecls : Array Name := #[]
+  pendingDeclCursor : Nat := 0
+  enqueuedDecls : Std.HashSet Name := {}
+  processedDecls : Std.HashSet Name := {}
 deriving Inhabited
 
 abbrev ExportM := StateT ExportState IO
@@ -207,6 +211,25 @@ private def addEdge
 private def bumpBrokenBVar : ExportM Unit :=
   modify fun st => { st with brokenBVarCount := st.brokenBVarCount + 1 }
 
+private def enqueueDecl (name : Name) : ExportM Unit := do
+  modify fun st =>
+    if st.enqueuedDecls.contains name then
+      st
+    else
+      { st with
+        pendingDecls := st.pendingDecls.push name
+        enqueuedDecls := st.enqueuedDecls.insert name
+      }
+
+private def dequeueDecl? : ExportM (Option Name) := do
+  let st ← get
+  if h : st.pendingDeclCursor < st.pendingDecls.size then
+    let name := st.pendingDecls[st.pendingDeclCursor]
+    modify fun s => { s with pendingDeclCursor := s.pendingDeclCursor + 1 }
+    pure (some name)
+  else
+    pure none
+
 private def ensureDeclNode (hNodes : IO.FS.Handle) (env : Environment) (name : Name) : ExportM String := do
   let st ← get
   match st.declKeyMap.get? name with
@@ -297,6 +320,7 @@ def visitExpr
       if includeExternalDecls then
         let target ← ensureDeclNode hNodes env cname
         addEdge hEdges key target "const_ref" "const_ref" (toString declName) sectionTag
+        enqueueDecl cname
       pure key
   | .app fn arg =>
       addNode hNodes base
@@ -341,6 +365,33 @@ def visitExpr
       let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
       addEdge hEdges key bodyKey "ast" "expr" (toString declName) sectionTag
       pure key
+
+partial def drainWorklist
+    (hNodes hEdges : IO.FS.Handle)
+    (env : Environment)
+    (includeExternalDecls : Bool) : ExportM Unit := do
+  match ← dequeueDecl? with
+  | none => pure ()
+  | some name =>
+      let st ← get
+      if st.processedDecls.contains name then
+        drainWorklist hNodes hEdges env includeExternalDecls
+      else
+        modify fun s => { s with processedDecls := s.processedDecls.insert name }
+        let declKey ← ensureDeclNode hNodes env name
+        match env.find? name with
+        | none =>
+            drainWorklist hNodes hEdges env includeExternalDecls
+        | some ci =>
+            let typeRoot ← visitExpr hNodes hEdges env name "type" "type" #[] includeExternalDecls ci.type
+            addEdge hEdges declKey typeRoot "decl_root" "type_root" (toString name) "type"
+            match ci.value? with
+            | none =>
+                drainWorklist hNodes hEdges env includeExternalDecls
+            | some val =>
+                let valRoot ← visitExpr hNodes hEdges env name "value" "value" #[] includeExternalDecls val
+                addEdge hEdges declKey valRoot "decl_root" "value_root" (toString name) "value"
+                drainWorklist hNodes hEdges env includeExternalDecls
 
 private def createDirAllFrom (path : System.FilePath) : IO Unit :=
   match path.parent with
@@ -406,24 +457,10 @@ private def runExport
   let mut st : ExportState := {}
 
   for name in targets do
-    let (declKey, st1) ← (ensureDeclNode hNodes env name).run st
+    let (_, st1) ← (enqueueDecl name).run st
     st := st1
-    match env.find? name with
-    | none => pure ()
-    | some ci =>
-        let (typeRoot, st2) ←
-          (visitExpr hNodes hEdges env name "type" "type" #[] includeExternalDecls ci.type).run st
-        st := st2
-        let (_, st3) ← (addEdge hEdges declKey typeRoot "decl_root" "type_root" (toString name) "type").run st
-        st := st3
-        match ci.value? with
-        | none => pure ()
-        | some val =>
-            let (valRoot, st4) ←
-              (visitExpr hNodes hEdges env name "value" "value" #[] includeExternalDecls val).run st
-            st := st4
-            let (_, st5) ← (addEdge hEdges declKey valRoot "decl_root" "value_root" (toString name) "value").run st
-            st := st5
+  let (_, stFinal) ← (drainWorklist hNodes hEdges env includeExternalDecls).run st
+  st := stFinal
 
   hNodes.flush
   hEdges.flush

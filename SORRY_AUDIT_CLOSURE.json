@@ -1,0 +1,2543 @@
+{
+  "generated_at": "2026-06-24",
+  "filtered_files_with_sorry": 152,
+  "results": [
+    {
+      "path": "lean/InfoGeometry/Probability/HomologicalProbability.lean",
+      "count": 16,
+      "hits": [
+        {
+          "line": 21,
+          "text": "- `theorem ... := by sorry`  \u2014 mathematically stated, analytic proof deferred",
+          "kind": "def"
+        },
+        {
+          "line": 1577,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 1771,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 1796,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 1941,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2122,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2209,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2312,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2355,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2416,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2476,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2492,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2610,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2663,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2677,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 2693,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Quiver/KoroteevZeitlinMirror.lean",
+      "count": 12,
+      "hits": [
+        {
+          "line": 126,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 213,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 282,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 293,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 328,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 393,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 410,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 417,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 434,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 452,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 497,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 513,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/OwnerTarget.lean",
+      "count": 11,
+      "hits": [
+        {
+          "line": 30,
+          "text": "sorry -- obligation: fill in the proof",
+          "kind": "other"
+        },
+        {
+          "line": 39,
+          "text": "(`#audit_owner_targets`, `sorry_analyzer.py`, graph overlay) can enumerate",
+          "kind": "other"
+        },
+        {
+          "line": 43,
+          "text": "A `sorry` in an owner-target proof is machine-visible closure debt.",
+          "kind": "other"
+        },
+        {
+          "line": 71,
+          "text": "let mut sorry_decls : Array Name := #[]",
+          "kind": "other"
+        },
+        {
+          "line": 86,
+          "text": "if axioms.contains ``sorryAx then",
+          "kind": "other"
+        },
+        {
+          "line": 87,
+          "text": "sorry_decls := sorry_decls.push thmName",
+          "kind": "other"
+        },
+        {
+          "line": 91,
+          "text": "sorry_decls := sorry_decls.push declName",
+          "kind": "other"
+        },
+        {
+          "line": 93,
+          "text": "sorry_decls := sorry_decls.push declName",
+          "kind": "other"
+        },
+        {
+          "line": 94,
+          "text": "if sorry_decls.isEmpty then",
+          "kind": "other"
+        },
+        {
+          "line": 97,
+          "text": "for d in sorry_decls do",
+          "kind": "other"
+        },
+        {
+          "line": 99,
+          "text": "logInfo m!\"Owner Target Audit: {proved}/{total} proved, {sorry_decls.size} with closure debt.\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RealRotorGaussHestenesBridge.lean",
+      "count": 9,
+      "hits": [
+        {
+          "line": 156,
+          "text": "scalar_i_replaced_by_real_rotor_sorry :",
+          "kind": "other"
+        },
+        {
+          "line": 158,
+          "text": "contour_residue_replaced_by_real_gauss_stokes_sorry :",
+          "kind": "other"
+        },
+        {
+          "line": 160,
+          "text": "complex_analysis_is_optional_shadow_sorry :",
+          "kind": "other"
+        },
+        {
+          "line": 170,
+          "text": "G.scalar_i_replaced_by_real_rotor_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 177,
+          "text": "G.contour_residue_replaced_by_real_gauss_stokes_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 184,
+          "text": "G.complex_analysis_is_optional_shadow_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 203,
+          "text": "rotorReadout_preserves_real_lane_sorry :",
+          "kind": "other"
+        },
+        {
+          "line": 230,
+          "text": "B.guard.complex_analysis_is_optional_shadow_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 237,
+          "text": "B.rotorReadout_preserves_real_lane_sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/ParabolicClockInClifford.lean",
+      "count": 9,
+      "hits": [
+        {
+          "line": 17,
+          "text": "instance : Ring ParabolicClockAlg := by sorry",
+          "kind": "other"
+        },
+        {
+          "line": 18,
+          "text": "instance : Algebra \u211d ParabolicClockAlg := by sorry",
+          "kind": "other"
+        },
+        {
+          "line": 21,
+          "text": "def \u03b5 : ParabolicClockAlg := by sorry",
+          "kind": "def"
+        },
+        {
+          "line": 23,
+          "text": "property \u03b5_sq_zero : \u03b5 * \u03b5 = 0 := by sorry",
+          "kind": "other"
+        },
+        {
+          "line": 27,
+          "text": "def embed_parabolic_to_Cl11 : ParabolicClockAlg \u2192\u2090[\u211d] CliffordAlgebra (splitQuadraticForm 1) := by sorry",
+          "kind": "def"
+        },
+        {
+          "line": 29,
+          "text": "property embed_preserves_nilpotent : (embed_parabolic_to_Cl11 \u03b5) * (embed_parabolic_to_Cl11 \u03b5) = 0 := by sorry",
+          "kind": "other"
+        },
+        {
+          "line": 35,
+          "text": "def embed_Cl11_to_Clnn {n : \u2115} (hn : 1 \u2264 n) : CliffordAlgebra (splitQuadraticForm 1) \u2192\u2090[\u211d] CliffordAlgebra (splitQuadraticForm n) := by sorry",
+          "kind": "def"
+        },
+        {
+          "line": 38,
+          "text": "def embed_parabolic_to_Clnn {n : \u2115} (hn : 1 \u2264 n) : ParabolicClockAlg \u2192\u2090[\u211d] CliffordAlgebra (splitQuadraticForm n) := by sorry",
+          "kind": "def"
+        },
+        {
+          "line": 44,
+          "text": "\u2203 (x : CliffordAlgebra (splitQuadraticForm 0)), False := by sorry  -- placeholder",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Quiver/FermiGTIsometry.lean",
+      "count": 9,
+      "hits": [
+        {
+          "line": 99,
+          "text": "sorry  -- Requires complex differential geometry machinery",
+          "kind": "other"
+        },
+        {
+          "line": 111,
+          "text": "sorry  -- Requires Lie derivative machinery",
+          "kind": "other"
+        },
+        {
+          "line": 157,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 169,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 177,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 205,
+          "text": "sorry  -- Requires representation theory formalization",
+          "kind": "other"
+        },
+        {
+          "line": 224,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 241,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 262,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean",
+      "count": 7,
+      "hits": [
+        {
+          "line": 18,
+          "text": "It does not depend on the sorry-equivalent modular spinor layer.",
+          "kind": "other"
+        },
+        {
+          "line": 119,
+          "text": "let hplus_sorry := (M.chiralityPolarization.plus).ne_bot_iff.mp hplus_ne'",
+          "kind": "other"
+        },
+        {
+          "line": 120,
+          "text": "let \u03c8plus := Classical.choose hplus_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 121,
+          "text": "let hplus_witness_spec := Classical.choose_spec hplus_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 122,
+          "text": "let hminus_sorry := (M.chiralityPolarization.minus).ne_bot_iff.mp hminus_ne'",
+          "kind": "other"
+        },
+        {
+          "line": 123,
+          "text": "let \u03c8minus := Classical.choose hminus_sorry",
+          "kind": "other"
+        },
+        {
+          "line": 124,
+          "text": "let hminus_witness_spec := Classical.choose_spec hminus_sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/GrandUnification/SpectralThermalNormalization.lean",
+      "count": 7,
+      "hits": [
+        {
+          "line": 113,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 145,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 157,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 205,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 221,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 232,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 260,
+          "text": "Mechanically verified: no `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FluidCore.lean",
+      "count": 6,
+      "hits": [
+        {
+          "line": 39,
+          "text": "divergence := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 40,
+          "text": "gradient := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 41,
+          "text": "laplacian := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 47,
+          "text": "divergence := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 48,
+          "text": "gradient := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 49,
+          "text": "laplacian := sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/O55FiveGradeCapstone.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 19,
+          "text": "The missing actions [D, v\u2085] and [D, v\u2084] are marked as open debt (sorry) but",
+          "kind": "other"
+        },
+        {
+          "line": 33,
+          "text": "adjoint actions are proved, and uses sorry for the missing adjoint actions.",
+          "kind": "other"
+        },
+        {
+          "line": 77,
+          "text": "D * v4 - v4 * D = -v4 := \u27e8sorry, sorry\u27e9",
+          "kind": "other"
+        },
+        {
+          "line": 114,
+          "text": "\u2227 (D * v5 - v5 * D = -v5   -- sorry",
+          "kind": "other"
+        },
+        {
+          "line": 115,
+          "text": "\u2227 D * v4 - v4 * D = -v4)  -- sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PrimeLeeYangLargeDeviation.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 23,
+          "text": "`sorry` debt, not as arbitrary `Prop` fields.",
+          "kind": "other"
+        },
+        {
+          "line": 204,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 214,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 223,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 233,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 10,
+          "text": "unsupported claims are exposed as explicit `sorry` debt, not hidden as arbitrary",
+          "kind": "other"
+        },
+        {
+          "line": 53,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 58,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 63,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 68,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/HilbertTensorProduct/Phase2_HS2Ell2.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 70,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 131,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 202,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 221,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 231,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/StrictDef.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 18,
+          "text": ", ``Lean.Parser.Term.\u00absorry\u00bb",
+          "kind": "other"
+        },
+        {
+          "line": 31,
+          "text": "\"strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its type.\"",
+          "kind": "other"
+        },
+        {
+          "line": 34,
+          "text": "\"strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its value.\"",
+          "kind": "other"
+        },
+        {
+          "line": 252,
+          "text": "s!\"strict {declKind} `{declName}` elaborated to an expression containing `sorryAx`.\"",
+          "kind": "other"
+        },
+        {
+          "line": 291,
+          "text": "It accepts only ordinary `def` syntax and rejects tactic blocks, `sorry`, and",
+          "kind": "def"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Monster/MonsterMoonshineThermal.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 82,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 139,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 143,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 168,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 247,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Quiver/TKKHamiltonian.lean",
+      "count": 5,
+      "hits": [
+        {
+          "line": 140,
+          "text": "sorry  -- Requires spectral theorem for endomorphisms",
+          "kind": "theorem"
+        },
+        {
+          "line": 164,
+          "text": "sorry  -- Requires diagonalization of H_inc.H_TKK_INC",
+          "kind": "other"
+        },
+        {
+          "line": 204,
+          "text": "sorry  -- Requires QQ-system relations",
+          "kind": "other"
+        },
+        {
+          "line": 249,
+          "text": "sorry  -- Requires explicit construction with A=73 parameters",
+          "kind": "other"
+        },
+        {
+          "line": 264,
+          "text": "sorry  -- Requires case-by-case analysis",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinCARColimitBridge_proposal.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 14,
+          "text": "abbrev LimitHilbertSpace (P : CPTDirectLimitGNSPacket) : Type := sorry",
+          "kind": "def"
+        },
+        {
+          "line": 17,
+          "text": "abbrev LimitDoubledSpace (P : CPTDirectLimitGNSPacket) : Type := sorry",
+          "kind": "def"
+        },
+        {
+          "line": 21,
+          "text": "InfoGeometry.Canonical.CertifiedInverseKernel (LimitDoubledSpace P) := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 26,
+          "text": "DrazinFredholmProofBundle (limitCertifiedInverseKernel P) cl11 := sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/JordanDecomposition.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 13,
+          "text": "3. `jordanBasis`: algorithmic construction (1 sorry \u2014 quotient basis picking)",
+          "kind": "other"
+        },
+        {
+          "line": 155,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 161,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 165,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/HonestyPolicy.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 15,
+          "text": "- if it does not exist yet, expose the gap explicitly as `sorry` or an",
+          "kind": "other"
+        },
+        {
+          "line": 43,
+          "text": "/-- Explicit `sorry` is acceptable only as visible debt. -/",
+          "kind": "other"
+        },
+        {
+          "line": 47,
+          "text": "/-- Banner text must not claim certified readback when `sorry` remains. -/",
+          "kind": "other"
+        },
+        {
+          "line": 59,
+          "text": "\"If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners.\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/SocketTarget.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 12,
+          "text": "normal `sorry` detection because the law itself is a parameter.",
+          "kind": "other"
+        },
+        {
+          "line": 27,
+          "text": "parameters that look clean to `sorry_analyzer.py`.",
+          "kind": "other"
+        },
+        {
+          "line": 29,
+          "text": "closure debt \u2014 the architectural equivalent of a typed `sorry`.",
+          "kind": "other"
+        },
+        {
+          "line": 49,
+          "text": "not check for `sorry` \u2014 sockets are *expected* to carry opaque laws.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Optics/JonesCalculusSpinorLorentz.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 69,
+          "text": "sorry  -- Explicit construction via Pauli matrices",
+          "kind": "other"
+        },
+        {
+          "line": 107,
+          "text": "sorry  -- Direct computation with complex norms",
+          "kind": "other"
+        },
+        {
+          "line": 113,
+          "text": "sorry  -- Explicit 2:1 homomorphism via sigma matrices",
+          "kind": "other"
+        },
+        {
+          "line": 128,
+          "text": "sorry  -- Check det = 1 and M*M\u2020 = I",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/SelfReference/Shadow.lean",
+      "count": 4,
+      "hits": [
+        {
+          "line": 42,
+          "text": "| sorryDebt",
+          "kind": "other"
+        },
+        {
+          "line": 54,
+          "text": "| ShadowKind.sorryDebt => \"sorryDebt\"",
+          "kind": "other"
+        },
+        {
+          "line": 64,
+          "text": "| ShadowKind.sorryDebt => \"explicit sorry in proof body\"",
+          "kind": "other"
+        },
+        {
+          "line": 165,
+          "text": "| ShadowKind.sorryDebt => 2",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SpectralSchurDrazinPenroseHierarchy.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 73,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 79,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 305,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ThermodynamicChiralGraphCalculus.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 373,
+          "text": "gradient_sorry : G.IsGradientFlow gradientPart",
+          "kind": "other"
+        },
+        {
+          "line": 374,
+          "text": "cycle_sorry : G.IsCycleFlow cyclePart",
+          "kind": "other"
+        },
+        {
+          "line": 386,
+          "text": "refine \u27e8(H.gradientPart, H.cyclePart), \u27e8H.gradient_sorry, H.cycle_sorry,",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/JordanDecomposition/CyclicNilpotent.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 59,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 111,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 146,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/KTheory/Dadarlat.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 74,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 156,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 186,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/InfoGeoFermi.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 39,
+          "text": "fun \u03c8 => \u27e8\u2045g0, \u03c8.state_vector\u2046, by sorry\u27e9",
+          "kind": "other"
+        },
+        {
+          "line": 46,
+          "text": "fun \u03c8 => \u27e8T \u03c8.state_vector, by sorry\u27e9",
+          "kind": "other"
+        },
+        {
+          "line": 72,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CognitiveShadow.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 48,
+          "text": "triggerTerms := #[\"sorry\", \"proof debt\", \"hole\"]",
+          "kind": "other"
+        },
+        {
+          "line": 49,
+          "text": "criticKind := \"honest_sorry_triage\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GaugeGroups.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 14,
+          "text": "Dead declarations (`SU2N`, `block_embedding_*`) removed \u2014 sorry-equivalent",
+          "kind": "other"
+        },
+        {
+          "line": 15,
+          "text": "with zero external consumers. See `reports/dag/sorry-equivalence.md`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 909,
+          "text": "`Analysis.AsanoContractionNative` (no `sorry`).",
+          "kind": "other"
+        },
+        {
+          "line": 1090,
+          "text": "`sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/External/Auto/test_wrapper.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 48,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 52,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Instanton/HilbertTwoPoints.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 40,
+          "text": "have h : ( (MVPolynomial (Fin 2) \u211a) \u29f8 I ) \u2243\u2097[\u211a] (Fin 2 \u2192 \u211a) := by sorry",
+          "kind": "other"
+        },
+        {
+          "line": 41,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/Admission.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 141,
+          "text": "mkAdmissionReason syntheticDecl \"trust.sorry\" \"error\"",
+          "kind": "other"
+        },
+        {
+          "line": 142,
+          "text": "\"declaration depends on `sorryAx`.\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/ShadowLedger.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 6,
+          "text": "The shadow ledger tracks every `:= by sorry` declaration in the repository.",
+          "kind": "other"
+        },
+        {
+          "line": 30,
+          "text": "Every `:= by sorry` is a seed for the next evolution cycle.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/Trust.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 13,
+          "text": "/-- First-pass forbidden axioms beyond explicit `sorryAx` detection. -/",
+          "kind": "other"
+        },
+        {
+          "line": 96,
+          "text": "hasSorryAx := axioms.contains ``sorryAx",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/ChiralCompass.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 76,
+          "text": "sorry\u27e9",
+          "kind": "other"
+        },
+        {
+          "line": 85,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/SplitOctonions/FureyLadderCAR.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 168,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 174,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/A39Mirror.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 30,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 44,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Quiver/BetheAnsatzXXZ.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 184,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 201,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Topology/BottPeriodicCantorEntropyGraph.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 273,
+          "text": "sorry",
+          "kind": "other"
+        },
+        {
+          "line": 280,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Topology/CantorCliffordFunctor.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 53,
+          "text": "map_id n := sorry",
+          "kind": "other"
+        },
+        {
+          "line": 54,
+          "text": "map_comp {l m n} h_lm h_mn := sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CuntzFockRepresentation.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 173,
+          "text": "| `BostConnesAnalytic.lean` | 7+1 | Boltzmann limits, partition function (+1 ground state calculus sorry) |",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 216,
+          "text": "/-! ## Wedge Actions (sorry-free) -/",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 18,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/NilpotentNonunit.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "No wrappers. No structures. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/Concrete.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No wrappers. No abstract datum. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 18,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 20,
+          "text": "Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 2070,
+          "text": "Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not",
+          "kind": "theorem"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 6,
+          "text": "No sockets. No certificates. No axioms. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/ZetaDihedral.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No sockets. No certificates. No axioms. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 12,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No placeholders. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Automorphic/HeckePurification.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 82,
+          "text": "`Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.",
+          "kind": "theorem"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AlgebraicDerivations.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 12,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 19,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/BayesianConformalCompression.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 18,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 29,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralKKTIsolation.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CliffordColimitDynamics.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 53,
+          "text": "sorry -- socket_debt_tag: D14_global_bracket",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ConformalSubalgebraDebt.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 8,
+          "text": "`sorry` tokens from the conformal subalgebra without introducing new wrappers.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DepthLogScaleInvariant.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 21,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 7,
+          "text": "remaining fully constructive (no `sorry`).",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinAnomalousProjector.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/FenchelExpLogCore.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 14,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GeneralizedOperatorChiral.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 18,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/HestenesKreinModularGeometry.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 780,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 25,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 13,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 13,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ModularLorentzBoost.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 9,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ModularSL2R.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ModularTensorInduction.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 118,
+          "text": "/-- Junction 5: spinor-modular identification without sorry-equivalent layer. -/",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PrimeSUSYVacuum.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 226,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 10,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/QuaternionicEmergentGravityFoundation.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 138,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 21,
+          "text": "No placeholders. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SO3RotationFenchelWitness.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 14,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauInfinitesimalInvariance.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 8,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 21,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordJordanWignerTwoModeCurrent.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 13,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordSourceSuperVirasoroFiniteWindow.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 382,
+          "text": "for `J = J_sorry A`, `\u03c8 = psi_sorry B`, and `r = 0`,",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "No placeholders. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No placeholders. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 15,
+          "text": "No placeholders. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 20,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/TomitaFisherMetric.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 13,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ZetaBraneCantorDirac.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 101,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/ConformalReflection55.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 36,
+          "text": "These are **native Lean proofs** \u2014 no axioms, sorry, or external certificates.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/ConformalSpinorBridge/SuperLieRingInstance.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 20,
+          "text": "- All proofs are real \u2014 no `trivial`, `axiom`, or `sorry` placeholders",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Clifford/Hestenes1975.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 23,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/External/Auto/test_noncomm.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 10,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/AmplituhedronFacePoset.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 22,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/BerezinianCayleyVolume.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 75,
+          "text": "strings or `sorryAx`; package their projectors and algebraic laws.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/PrimaMateriaThermodynamics.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 86,
+          "text": "sorry -- Proved abstractly using the non-empty, zero-dimensional variety boundary",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/HilbertTensorProduct.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 27,
+          "text": "lemma hsNorm_sq_eq (A : H\u2081 \u2192L[\u211d] H\u2082) : (hsNorm A)^2 = hsInner A A := by sorry",
+          "kind": "theorem"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/HilbertTensorProduct/Phase5_SpectralTheorem.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 81,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/BridgeTarget.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 44,
+          "text": "if axioms.contains ``sorryAx then",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/ClosureAttribute.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 11,
+          "text": "anchored to the DAG, and free of `sorry` or `admit`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 37,
+          "text": "fitness : \u211d          -- between 0 and 1 (1 = compiles, 0 = sorry)",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/ModularVolumePotential.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 375,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/AffineCl44CardyEntropy.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 131,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/AnomalyTubuleStability.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 239,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/ChiralTubuleBoundary.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 305,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/LightConeAffineCurrentBridge.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 75,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/ParabolicClockInCliffordInfinity.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 79,
+          "text": "\u2203 (x : CliffordAlgebra (splitQuadraticForm 0)), False := by sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/OperatorAlgebra/SugawaraVirasoroComm.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 81,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/A31Mirror.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 44,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/A73Mirror.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 27,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/A75Mirror.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 42,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/GammasphereZornMap.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 138,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/IsospinMirrorDynamics.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 78,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Physics/MeanFieldISB.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 31,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/BostConnesZetaIdentity.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 31,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/KleinQuadric.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 23,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/KleinQuadricIncidence.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/KleinQuadricPlucker.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 23,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 16,
+          "text": "No `sorry`, no `True` placeholders, no fake Freudenthal determinant.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 14,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 19,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 22,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 21,
+          "text": "No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 14,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 21,
+          "text": "No wrappers. No `sorry`.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Quiver/HbarOper.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 184,
+          "text": "sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/SelfReference/ShadowCone.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 20,
+          "text": "| sorryDebt",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 12,
+          "text": "It follows the Pauli Protocol: zero sorry, bottom-up derivation, and direct conductivity",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/InfoGeometry/TKK/TKKFramework.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 35,
+          "text": "(isospin_operator c \u2260 0) \u2194 (\u2203 i : Fin 4, c i \u2260 0) := sorry",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/DAG/DisconnectedAudit.lean",
+      "count": 24,
+      "hits": [
+        {
+          "line": 25,
+          "text": "--   3. sorry_incomplete   : proof uses sorry (debt, not fake root)",
+          "kind": "other"
+        },
+        {
+          "line": 35,
+          "text": "category       : String  -- \"axiom_contaminated\" | \"disconnected_island\" | \"sorry_incomplete\" | \"unknown\"",
+          "kind": "other"
+        },
+        {
+          "line": 53,
+          "text": "sorryIncomplete    : Nat",
+          "kind": "other"
+        },
+        {
+          "line": 95,
+          "text": "/-- Check if a declaration's proof uses sorry. -/",
+          "kind": "other"
+        },
+        {
+          "line": 104,
+          "text": "all.any (fun r => r.toString == \"sorryAx\" || r.toString == \"sorry\")",
+          "kind": "other"
+        },
+        {
+          "line": 107,
+          "text": "/-- Collect axiom/sorry names from a declaration. -/",
+          "kind": "other"
+        },
+        {
+          "line": 118,
+          "text": "if r.toString == \"sorryAx\" then",
+          "kind": "other"
+        },
+        {
+          "line": 119,
+          "text": "axioms := axioms.push s!\"sorry:{n.toString}\"",
+          "kind": "other"
+        },
+        {
+          "line": 191,
+          "text": "let mut sorryCount := 0",
+          "kind": "other"
+        },
+        {
+          "line": 231,
+          "text": "\"sorry_incomplete\"",
+          "kind": "other"
+        },
+        {
+          "line": 238,
+          "text": "else if category == \"sorry_incomplete\" then sorryCount := sorryCount + 1",
+          "kind": "other"
+        },
+        {
+          "line": 265,
+          "text": "IO.println s!\"[DisconnectedAudit]   sorry_incomplete:   {sorryCount}\"",
+          "kind": "other"
+        },
+        {
+          "line": 283,
+          "text": "sorryIncomplete := sorryCount",
+          "kind": "other"
+        },
+        {
+          "line": 320,
+          "text": "(\"sorryIncomplete\", toJson s.sorryIncomplete),",
+          "kind": "other"
+        },
+        {
+          "line": 362,
+          "text": "lines := lines.push s!\"|   sorry_incomplete | {s.sorryIncomplete} |\"",
+          "kind": "other"
+        },
+        {
+          "line": 372,
+          "text": "lines := lines.push \"These capstones contain declarations that are axioms or opaques, or that reference sorryAx.\"",
+          "kind": "other"
+        },
+        {
+          "line": 379,
+          "text": "let sorryStr := if d.isSorry then \"YES\" else \"no\"",
+          "kind": "other"
+        },
+        {
+          "line": 382,
+          "text": "lines := lines.push s!\"| `{d.repName}` | {d.sccSize} | {d.declCount} | {axStr} | {sorryStr} | {mlStr} | {mods} |\"",
+          "kind": "other"
+        },
+        {
+          "line": 405,
+          "text": "let sorryStr := if d.isSorry then \"YES\" else \"no\"",
+          "kind": "other"
+        },
+        {
+          "line": 407,
+          "text": "lines := lines.push s!\"| `{d.repName}` | {d.sccSize} | {d.declCount} | {sorryStr} | {mods} |\"",
+          "kind": "other"
+        },
+        {
+          "line": 411,
+          "text": "let sorryOnes := payload.disconnected.filter (fun d => d.category == \"sorry_incomplete\")",
+          "kind": "other"
+        },
+        {
+          "line": 412,
+          "text": "if sorryOnes.size > 0 then",
+          "kind": "other"
+        },
+        {
+          "line": 415,
+          "text": "lines := lines.push \"These capstones use `sorry` in their proofs. The statements might be true\"",
+          "kind": "other"
+        },
+        {
+          "line": 420,
+          "text": "for d in sorryOnes do",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/DAG/ExactProoflessnessAudit.lean",
+      "count": 3,
+      "hits": [
+        {
+          "line": 189,
+          "text": "let mut sorryCount : Nat := 0",
+          "kind": "other"
+        },
+        {
+          "line": 217,
+          "text": "| \"blocked.localSorry\" => sorryCount := sorryCount + 1",
+          "kind": "other"
+        },
+        {
+          "line": 242,
+          "text": "directSorry := sorryCount",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/Agent/CompilerBridgeCore.lean",
+      "count": 2,
+      "hits": [
+        {
+          "line": 682,
+          "text": "s.endsWith \"sorryAx\" || s.endsWith \"admitAx\"",
+          "kind": "other"
+        },
+        {
+          "line": 705,
+          "text": "s!\"Declaration '{declName}' contains `sorry`.\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/DAG/EckmannHodge.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 12,
+          "text": "All `sorry` debt is closed. Every theorem is a genuine algebraic proof.",
+          "kind": "theorem"
+        }
+      ]
+    },
+    {
+      "path": "lean/DAG/FunctionalGaussJordan.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 17,
+          "text": "All proofs are standard linear algebra \u2014 no axioms, no sorry debt.",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/DAG/InfoTreeExtract.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 216,
+          "text": "isSorrySourceScan := refs.contains \"sorryAx\" || refs.contains \"sorry\"",
+          "kind": "other"
+        }
+      ]
+    },
+    {
+      "path": "lean/test_measure3.lean",
+      "count": 1,
+      "hits": [
+        {
+          "line": 3,
+          "text": "def test : MeasureTheory.Measure Bool := \u27e8fun _ => 0, by sorry\u27e9",
+          "kind": "def"
+        }
+      ]
+    }
+  ]
+}

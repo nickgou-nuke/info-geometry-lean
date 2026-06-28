@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
 /-!
 # Q8 Schur Cover of V4
@@ -14,7 +15,7 @@ namespace InfoGeometry.Topology.Q8MonodromySpinorCover
 
 open Matrix Complex
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+open InfoGeometryCore
 
 /-- The $i$ generator of $Q_8$. -/
 def M_i : M2C :=

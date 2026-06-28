@@ -136,14 +136,26 @@ def pairedFunctionPresentation (α : Type) : Presentation where
   act := fun o s => (o s.1, o s.2)
   support := fun s => s.1 = s.1
   generator := fun s => (s.2, s.1)
-  -- DEBT_ID: QPR_PAIRED_METRIC
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial metric for paired function model
   metricReadout := fun _ => 0
-  -- DEBT_ID: QPR_PAIRED_PHASE
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial phase for paired function model
   phaseReadout := fun _ => 0
+
+@[simp, rep_depth operator]
+theorem pairedFunctionPresentation_metricReadout
+    (α : Type) (s : (pairedFunctionPresentation α).State) :
+    (pairedFunctionPresentation α).metricReadout s = (0 : Nat) :=
+  rfl
+
+@[simp, rep_depth operator]
+theorem pairedFunctionPresentation_phaseReadout
+    (α : Type) (s : (pairedFunctionPresentation α).State) :
+    (pairedFunctionPresentation α).phaseReadout s = (0 : Nat) :=
+  rfl
+
+@[simp, rep_depth operator]
+theorem pairedFunctionPresentation_generator
+    (α : Type) (s : α × α) :
+    (pairedFunctionPresentation α).generator s = (s.2, s.1) :=
+  rfl
 
 /-- Non-identity symmetry intertwiner on the paired-function presentation. -/
 @[rep_depth krein]

@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta charset="UTF-8" />
+				<title>Example: Elliptical Orbit &amp; Hodograph | Primer on Geometric Algebra | David Hestenes</title>
+		<meta name="author" content="David Hestenes" />
+		<meta name="robots" content="all" />
+		<meta name="generator" content="Sandvox 2.7.3" />
+		<meta name="viewport" content="width=1000" />
+		<meta http-equiv="X-UA-Compatible" content="IE=100" />
+		<link rel="stylesheet" type="text/css" href="../../../../_Resources/ddsmoothmenu.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../com_blueballdesign_Blueball_Smooth_Sky_Wide/main.css" title="Blueball Smooth Sky Wide" /><!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="../../../../com_blueballdesign_Blueball_Smooth_Sky_Wide/ie8.css" /><![endif]-->
+		<!--
+		-->
+		<script src="../../../../_Resources/jquery-1.5.2.min.js"></script>
+		<script>
+		</script><script id="ddsmoothmenu" src="../../../../_Resources/ddsmoothmenu.js">
+/***********************************************
+* Smooth Navigational Menu- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+		</script>
+		<script>
+		ddsmoothmenu.arrowimages = {down:['downarrowclass', '../../../../_Resources/down.gif', 23], right:['rightarrowclass', '../../../../_Resources/right.gif']}
+ddsmoothmenu.init({ mainmenuid: 'sitemenu-content',orientation:'h', classname:'ddsmoothmenu',contentsource:'markup'})
+	</script>
+	</head>
+	<body class="sandvox has-page-title no-sidebar no-custom-banner no-navigation no-IR" id="www_localhost_com" >
+				<div id="page-container">
+			<div id="page">
+				<div id="page-top" class="has-logo has-title has-tagline">
+					<div id="title">
+						<a href="../../../../index.html" class="imageLink"><span id="logo-container"><img id="logo" width="201" height="128" src="../../../../_Media/ga_logo_01_med.png" alt="GA logo 01" /></span></a>
+						<h1 class="title in"><a href="../../../../index.html"><span class="in">Primer on Geometric Algebra</span></a></h1>
+						<p id="tagline"><span class="in">           for introductory mathematics and physics </span></p>
+					</div><!-- title -->
+					<div id="sitemenu-container">
+						<div id="sitemenu">
+							<h2 class="hidden">Site Navigation<a href="#page-content" rel="nofollow">[Skip]</a></h2>
+							<div id="sitemenu-content">
+								<ul>
+									<li class="i1 o"><a href="../../../../index.html" title="Galileo's Manifesto for Science"><span class="in">Home</span></a></li>
+									<li class="i2 e"><a href="../../../../outline-table-of-contents/index.html" title="Outline (Table Of Contents)"><span class="in">Outline (TOC)</span></a></li>
+									<li class="i3 o"><a href="../../../../prolog-on-optimizing-the.html" title="Prolog: On Optimizing the Design of Introductory Mathematics"><span class="in">Prolog</span></a></li>
+									<li class="i4 e hasSubmenu"><a href="../../../../standard-algebraic-tools/index.html" title="Standard Algebraic Tools for Linear Geometry"><span class="in">Standard Tools</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../../../standard-algebraic-tools/rules-for-vector-addition/index.html" title="Rules for Vector Addition"><span class="in">Rules for Vector Addition</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../../../standard-algebraic-tools/rules-for-vector-addition/solution-commutative-rule.html" title="Solution: Commutative Rule for Vector Addition"><span class="in">Solution: Commutative Rule for Vector Addition</span></a></li><li class="i2 e last-item last"><a href="../../../../standard-algebraic-tools/rules-for-vector-addition/solution-associative-rule.html" title="Solution: Associative Rule for Vector Addition"><span class="in">Solution: Associative Rule for Vector Addition</span></a></li></ul></li><li class="i2 e"><a href="../../../../standard-algebraic-tools/rules-for-multiplication-by.html" title="Rules for Multiplication by Scalars"><span class="in">Rules for Multiplication by Scalars</span></a></li><li class="i3 o last-item last hasSubmenu"><a href="../../../../standard-algebraic-tools/parametric-equations/index.html" title="Parametric Equations"><span class="in">Parametric Equations</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../../../standard-algebraic-tools/parametric-equations/solution-linear-constraints.html" title="Solution: Linear Constraints in a Plane"><span class="in">Solution: Linear Constraints in a Plane</span></a></li><li class="i2 e last-item last"><a href="../../../../standard-algebraic-tools/parametric-equations/solution-quadratic-constrai.html" title="Solution: Quadratic Constraints in a Plane"><span class="in">Solution: Quadratic Constraints in a Plane</span></a></li></ul></li></ul></li>
+									<li class="i5 o hasSubmenu currentParent"><a href="../../../index.html" title="Introduction to Geometric Algebra and Basic 2D Applications"><span class="in">GA Intro &amp; 2D Apps</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../../defining-and-interpreting.html" title="Defining and Interpreting the Geometric Product"><span class="in">Defining and Interpreting the Geometric Product</span></a></li><li class="i2 e"><a href="../../../rotors-and-rotations-in-the.html" title="Rotors and Rotations in the Euclidean Plane"><span class="in">Rotors and Rotations in the Euclidean Plane</span></a></li><li class="i3 o hasSubmenu"><a href="../../../vector-identities-and-plane/index.html" title="Vector Identities and Plane Trigonometry with GA"><span class="in">Vector Identities and Plane Trigonometry with GA</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../vector-identities-and-plane/solutions-vector-identities.html" title="Solutions: Vector Identities &amp; Plane Trig with GA"><span class="in">Solutions: Vector Identities &amp; Plane Trig with GA</span></a></li></ul></li><li class="i4 e hasSubmenu"><a href="../../../modeling-real-objects-and/index.html" title="Modeling Real Objects and Motions with Vectors"><span class="in">Modeling Real Objects and Motions with Vectors</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../modeling-real-objects-and/solution-barycentric-coordi.html" title="Solution: Barycentric Coordinates"><span class="in">Solution: Barycentric Coordinates</span></a></li></ul></li><li class="i5 o hasSubmenu"><a href="../../../high-school-geometry-with/index.html" title="High School Geometry with Geometric Algebra"><span class="in">High School Geometry with Geometric Algebra</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../high-school-geometry-with/solutions-for-straight-line.html" title="Solutions for Straight Line Representation"><span class="in">Solutions for Straight Line Representation</span></a></li></ul></li><li class="i6 e hasSubmenu currentParent"><a href="../../index.html" title="Basic Kinematic Models of Particle Motion"><span class="in">Basic Kinematic Models of Particle Motion</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../free-particle-model.html" title="Free Particle Model"><span class="in">Free Particle Model</span></a></li><li class="i2 e hasSubmenu"><a href="../../constant-acceleration-model/index.html" title="Constant Acceleration Model"><span class="in">Constant Acceleration Model</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../constant-acceleration-model/solution-constant-accelerat.html" title="Solution: Constant Acceleration Projectile/Target Problem"><span class="in">Solution: Constant Acceleration Projectile/Target Problem</span></a></li></ul></li><li class="i3 o hasSubmenu"><a href="../../circular-motion-model/index.html" title="Circular Motion Model"><span class="in">Circular Motion Model</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../circular-motion-model/solution-motion-map-for.html" title="Solution: Motion Map for Circle"><span class="in">Solution: Motion Map for Circle</span></a></li></ul></li><li class="i4 e hasSubmenu"><a href="../../general-kinematic-theorem/index.html" title="General Kinematic Theorem"><span class="in">General Kinematic Theorem</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../general-kinematic-theorem/solution-particle-on-fricti.html" title="Solution: Particle on Frictionless Track"><span class="in">Solution: Particle on Frictionless Track</span></a></li></ul></li><li class="i5 o last-item last hasSubmenu currentParent"><a href="../index.html" title="General Keplerian Motion"><span class="in">General Keplerian Motion</span></a><ul class="isSubMenu"><li class="i1 o last-item last hasSubmenu currentParent"><a href="index.html" title="Further Central Force Details &amp; Derivations"><span class="in">Further Central Force Details &amp; Derivations</span></a><ul class="isSubMenu"><li class="i1 o last-item last currentPage"><span class="in">Example: Elliptical Orbit &amp; Hodograph</span></li></ul></li></ul></li></ul></li><li class="i7 o hasSubmenu"><a href="../../../planar-rigid-body-motion/index.html" title="Planar Rigid Body Motion and Reference Frames"><span class="in">Planar Rigid Body Motion and Reference Frames</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../../planar-rigid-body-motion/solution-planar-rigid-body.html" title="Solution: Planar Rigid Body Transformations"><span class="in">Solution: Planar Rigid Body Transformations</span></a></li><li class="i2 e last-item last"><a href="../../../planar-rigid-body-motion/solution-galilean-transform.html" title="Solution: Galilean Transformations"><span class="in">Solution: Galilean Transformations</span></a></li></ul></li><li class="i8 e last-item last"><a href="../../../the-zeroth-law-of-physics.html" title="The Zeroth Law of Physics"><span class="in">The Zeroth Law of Physics</span></a></li></ul></li>
+									<li class="i6 e last-item last hasSubmenu"><a href="../../../../special-relativity-with/index.html" title="Special Relativity with Geometric Algebra"><span class="in">Spec. Relativity with GA</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../../../special-relativity-with/defining-spacetime/index.html" title="Defining Spacetime"><span class="in">Defining Spacetime</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/defining-spacetime/solution-interval-invarianc.html" title="Solution: Interval Invariance Implies Universal Speed of Light"><span class="in">Solution: Interval Invariance Implies Universal Speed of Light</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../../../special-relativity-with/spacetime-maps/index.html" title="Spacetime Maps"><span class="in">Spacetime Maps</span></a><ul class="isSubMenu"><li class="i1 o last-item last hasSubmenu"><a href="../../../../special-relativity-with/spacetime-maps/particle-history-and-proper/index.html" title="Particle History and Proper Velocity"><span class="in">Particle History and Proper Velocity</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/spacetime-maps/particle-history-and-proper/solution-proper-velocity.html" title="Solution: Proper Velocity"><span class="in">Solution: Proper Velocity</span></a></li></ul></li></ul></li><li class="i3 o hasSubmenu"><a href="../../../../special-relativity-with/spacetime-trigonometry/index.html" title="Spacetime Trigonometry"><span class="in">Spacetime Trigonometry</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../../../special-relativity-with/spacetime-trigonometry/time-dilation-and-desynchro/index.html" title="Time Dilation and Desynchronization"><span class="in">Time Dilation and Desynchronization</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/spacetime-trigonometry/time-dilation-and-desynchro/solutions-parable-of-the.html" title="Solutions: Parable of the Twins"><span class="in">Solutions: Parable of the Twins</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../../../special-relativity-with/spacetime-trigonometry/lorentz-contraction/index.html" title="Lorentz Contraction"><span class="in">Lorentz Contraction</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/spacetime-trigonometry/lorentz-contraction/solution-lorentz-contractio.html" title="Solution: Lorentz Contraction Formula"><span class="in">Solution: Lorentz Contraction Formula</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../../../special-relativity-with/spacetime-trigonometry/doppler-shift/index.html" title="Doppler Shift"><span class="in">Doppler Shift</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/spacetime-trigonometry/doppler-shift/solution-the-doppler-factor.html" title="Solution: The Doppler Factor"><span class="in">Solution: The Doppler Factor</span></a></li></ul></li></ul></li><li class="i4 e hasSubmenu"><a href="../../../../special-relativity-with/lorentz-transformations/index.html" title="Lorentz Transformations"><span class="in">Lorentz Transformations</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../../../special-relativity-with/lorentz-transformations/solution-time--position.html" title="Solution: Time &amp; Position Transformations"><span class="in">Solution: Time &amp; Position Transformations</span></a></li><li class="i2 e hasSubmenu"><a href="../../../../special-relativity-with/lorentz-transformations/velocity-composition/index.html" title="Velocity Composition"><span class="in">Velocity Composition</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/lorentz-transformations/velocity-composition/solution-composition-laws.html" title="Solution: Composition Laws"><span class="in">Solution: Composition Laws</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../../../special-relativity-with/lorentz-transformations/active-lorentz-transformati/index.html" title="Active Lorentz Transformations"><span class="in">Active Lorentz Transformations</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/lorentz-transformations/active-lorentz-transformati/solution-hyperbolic-rotatio.html" title="Solution: Hyperbolic Rotations"><span class="in">Solution: Hyperbolic Rotations</span></a></li></ul></li></ul></li><li class="i5 o hasSubmenu"><a href="../../../../special-relativity-with/energy-and-momentum/index.html" title="Energy and Momentum"><span class="in">Energy and Momentum</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../../../special-relativity-with/energy-and-momentum/the-proper-momentum/index.html" title="The Proper Momentum"><span class="in">The Proper Momentum</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/energy-and-momentum/the-proper-momentum/solutions-relativistic.html" title="Solutions: Relativistic Energy &amp; Momentum"><span class="in">Solutions: Relativistic Energy &amp; Momentum</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../../../special-relativity-with/energy-and-momentum/the-photon/index.html" title="The Photon"><span class="in">The Photon</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/energy-and-momentum/the-photon/solution-photon-proper.html" title="Solution: Photon Proper Momentum"><span class="in">Solution: Photon Proper Momentum</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/index.html" title="Energy-Momentum Conservation"><span class="in">Energy-Momentum Conservation</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-comptons-formula/index.html" title="Solution: Compton's Formula"><span class="in">Solution: Compton's Formula</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-comptons-formula/solution-classical-2d-elast.html" title="Solution: Classical 2D Elastic Scattering"><span class="in">Solution: Classical 2D Elastic Scattering</span></a></li></ul></li><li class="i2 e last-item last"><a href="../../../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-pion-decay-energie.html" title="Solution: Pion Decay Energies"><span class="in">Solution: Pion Decay Energies</span></a></li></ul></li></ul></li><li class="i6 e last-item last"><a href="../../../../special-relativity-with/universal-laws-for-spacetim.html" title="Universal Laws for Spacetime Physics"><span class="in">Universal Laws for Spacetime Physics</span></a></li></ul></li>
+								</ul>
+							</div> <!-- /sitemenu-content -->
+						</div> <!-- /sitemenu -->
+					</div> <!-- sitemenu-container -->
+				</div> <!-- page-top -->
+				<div class="clear below-page-top"></div>
+				<div id="page-content" class="no-navigation">
+					<div id="main">
+						<div id="main-top"></div>
+						<div id="main-content">
+							<h2 class="title"><span class="in">Example: Elliptical Orbit &amp; Hodograph</span></h2>
+							<div class="article">
+								<div class="article-content">
+									<div class="RichTextElement">
+										<div><p><strong style="font-weight: 700; "><span style="color: rgb(118, 205, 15); font-size: 14px; font-family: Verdana; "><u><a href="../index.html">Return to current section</a></u></span></strong><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; ">: </strong></span><strong style="font-weight: 700; "><span style="color: rgb(169, 0, 157); font-size: 14px; font-family: Verdana; ">General Keplerian Motion</span></strong><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; ">.</strong></span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p><p><span style="font-family: Verdana; font-size: 14px; ">Remember <em>k</em>&gt;0 for an attractive force. We already have position, velocity, and acceleration as functions of direction:</span><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p>
+											
+											<div class="first wide left">
+												<div style="width:748px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{r}}\,\,\, = \,\,\,r{\bf{\hat r}}\,\,\, = \,\,\,\left( {\frac{\ell }{{1 + \varepsilon \cos \theta }}} \right)\,\,\hat {\boldsymbol{\varepsilon}} \,{e^{{\bf{\hat L}}\theta }}\,\,\,\,\,~~~~~~~~~~\,\,\,\,\,\left\{ {\ell  = \frac{{{L^2}}}{{mk}}} \right\}\\{\bf{v}}\,\,\, = \,\,\,{\bf{\dot r}}\,\,\, = \,\,\,\frac{k}{L}\,\,\left( {{\bf{\hat r}}\,\, + \,\,{\boldsymbol{\varepsilon}} } \right)\,\,{\bf{\hat L}}\\{\bf{\dot v}}\,\,\, = \,\,\,{\bf{\ddot r}}\,\,\, = \,\,\, - \,\,\frac{k}{{m{r^2}}}\,\,{\bf{\hat r}}\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p><p><span style="font-size: 14px; font-family: Verdana; ">To end up with elliptical motion, the values of <em>m</em>, <em>k</em>, <strong>r</strong></span><sub style="font-family: Verdana; font-size: 14px; ">init</sub><span style="font-size: 14px; font-family: Verdana; ">, and </span><strong style="font-family: Verdana; font-size: 14px; ">v</strong><sub style="font-family: Verdana; font-size: 14px; ">init</sub><span style="font-size: 14px; font-family: Verdana; "> will result in 0&lt;<em>ε</em>&lt;1. <br /><br /></span></p><p><span style="font-family: Verdana; font-size: 14px; ">Over hundreds of years many, many ellipse parameter relationships and theorems have emerged. The point of the orbit closest to the center of force is called the </span><strong><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; ">pericenter</span></em></strong><span style="font-family: Verdana; font-size: 14px; "> in the general case (perigee for a satellite around Earth, perihelion for a planet around the sun). The center of force is at one </span><strong><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; ">focus</span></em></strong><span style="font-family: Verdana; font-size: 14px; "> of the ellipse. The point furthest from the focus is generally called the </span><strong><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; ">apocenter</span></em></strong><span style="font-family: Verdana; font-size: 14px; "> (apogee for an Earth satellite, aphelion for a solar planet). The distance from the center of the ellipse to the focus is called the </span><strong><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; ">focal length</span></em></strong><span style="font-family: Verdana; font-size: 14px; ">, </span><span style="font-size: 14px; font-family: Verdana; "><em>f</em></span><span style="font-family: Verdana; font-size: 14px; ">. Here are some common ellipse parameters and relationships derivable from the orbit and velocity equations above:<strong><br /></strong></span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:814px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{r_{\min }}\,\,\, = \,\,\,r\left( {\theta  = 0} \right)\,\,\, = \,\,\,\frac{\ell }{{1 + \varepsilon }}~~~~\,\,\,\,\,\,\,~~~~~~\,\,\,\,\,\,\,\,\,\,\,\,\,{r_{\max }}\,\,\, = \,\,\,r\left( {\theta  = \pi } \right)\,\,\, = \,\,\,\frac{\ell }{{1 - \varepsilon }}\\\\a\,\,\, = \,\,\,{\rm{semimajor ~ axis}}\,\,\,{\rm{ = }}\,\,\,\frac{{{r_{\min }}\, + \,\,{r_{\max }}}}{2}\,\,\, = \,\,\,\frac{\ell }{{1 - {\varepsilon ^2}}}\\\\f\,\,\, = \,\,\,{\rm{focal ~ length}}\,\,\,{\rm{ = }}\,\,\,\frac{{{r_{\max }}\, - \,\,{r_{\min }}}}{2}\,\,\, = \,\,\,a\, - \,{r_{\min }}\,\,\, = \,\,\,a\varepsilon \\\\b\,\,\, = \,\,\,{\rm{semiminor ~ axis}}\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />The semiminor axis intersects the ellipse where the particle is midway between pericenter and apocenter. At that moment, </span><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; ">v</strong></span><span style="font-family: Verdana; font-size: 14px; "> is parallel to </span><span style="font-size: 18px; font-family: Verdana; "><strong style="font-weight: 700; ">ε</strong></span><span style="font-family: Verdana; font-size: 14px; ">. We can use that property to find </span><span style="font-size: 14px; font-family: Verdana; "><em>b</em></span><span style="font-family: Verdana; font-size: 14px; ">:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:768px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}0\,\,\, = \,\,\,{\boldsymbol{\varepsilon}}  \wedge {\bf{v}}\,\,\, = \,\,\,{\left\langle {{\boldsymbol{\varepsilon}} \,{\bf{v}}} \right\rangle _2}\,\,\,\,\,\, \Rightarrow \,\,\,\,\,\,0\,\,\, = \,\,\,{\boldsymbol{\varepsilon}}  \cdot \left( {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right)\,\,\, = \,\,\,{\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}\,\, + \,\,{\varepsilon ^2}\\{r_{mid}}\,\,\, = \,\,\,\frac{\ell }{{1\,\, + \,\,{\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}}}\,\,\, = \,\,\,\frac{\ell }{{1\,\, - \,\,{\varepsilon ^2}}}\,\,\, = \,\,\,a\\\\\\{\rm{Right}}\,\,{\rm{triangle:}}\,\,\,\,\,\,{a^2}\,\,\, = \,\,\,{b^2}\, + \,\,{f^2}\,\,\, = \,\,\,{b^2}\, + \,\,{a^2}{\varepsilon ^2}\\\\~~~~~~~~~~~~b\,\,\, = \,\,\,a\,\,\sqrt {1\, - \,{\varepsilon ^2}} \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><u><br />Specific Example:</u></strong></span></p><p><span style="font-family: Verdana; font-size: 14px; "><br />          </span><strong style="font-weight: 700; font-family: Verdana; font-size: 14px; ">Initial conditions:</strong><span style="font-size: 14px; font-family: Verdana; "> (We need to specify <em>m</em>, <em>k</em>, and initial values of <strong style="font-weight: 700; ">v</strong> and <strong style="font-weight: 700; ">r</strong>.  All other values can be calculated.)</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:809px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{m\,\,\, = \,\,\,1\,\,~~~~~~~~~~\,\,k\,\,\, = \,\,\,20\,\,~~~~~~~~~~\,\,{{\bf{r}}_{{\rm{init}}}}\,\,\, = \,\,\,2{\bf{\hat a}}\,\,~~~~~~~~~~\,\,{{\bf{v}}_{{\rm{init}}}}\,\,\, = \,\,\,4{\bf{\hat b}}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-size: 14px; font-family: Verdana; ">          These values were chosen to give convenient dimensions in the interactive diagram below. <br />          Assume appropriate units are used. The constants of motion fit conditions for elliptical motion:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:738px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{L}}\,\,\, = \,\,\,L\,{\bf{\hat L}}\,\,\, = \,\,\,m\,{{\bf{r}}_{{\rm{init}}}} \wedge {{\bf{v}}_{{\rm{init}}}}\,\,\, = \,\,\,8{\bf{\hat a\hat b}}\,\,\, = \,\,\,8{\bf{\hat L}}\\\\E\,\,\, = \,\,\,\frac{1}{2}\,\,m\,{v_{{\rm{init}}}}^2\,\,\,\, - \,\,\,\frac{k}{{{r_{{\rm{init}}}}}}\,\,\, = \,\,\, - \,2\\\\\\{\varepsilon ^2}\,\,\, = \,\,\,1\,\, + \,\,\frac{{2E\,{L^2}}}{{m\,{k^2}}}\,\,\, = \,\,\,\frac{9}{{25}}\,\,\,\,\,\,\,\,\,\, \Rightarrow \,\,\,\,\,\,\,\,\,\,\varepsilon \,\,\, = \,\,\,3/5\,\,\, = \,\,\,0.6\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />          Other ellipse parameters are also easy to calculate:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:855px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}\ell \,\,\, = \,\,\,\frac{{{L^2}}}{{mk}}\,\,\, = \,\,\,3.2\,\,\,~~~~~~~~~~\,\,\,{r_{\min }}\,\,\, = \,\,\,\frac{\ell }{{1 + \varepsilon }}\,\,\, = \,\,\,2\,\,\,~~~~~~~~~~\,\,\,{r_{\max }}\,\,\, = \,\,\,\frac{\ell }{{1 - \varepsilon }}\,\,\, = \,\,\,8\\\\a\,\,\, = \,\,\,\frac{1}{2}\,\,\left( {{r_{\min }}\, + \,\,{r_{\max }}} \right)\,\,\, = \,\,\,5\,\,\,~~~~~~~~~~\,\,\,f\,\,\, = \,\,\,a\varepsilon \,\,\, = \,\,\,3\,\,\, = \,\,\,a\,\, - \,\,{r_{\min }}\\\\\\b\,\,\, = \,\,\,a\,\,\sqrt {1 - {\varepsilon ^2}} \,\,\, = \,\,\,4\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />          In the following interacive diagram, we let the hodogram ride along with the particle. <br />          This is not necessary (the orbit and hodogram are independent), but may aid visualization.<br />          Also, the orbit (drawing distances) and hodogram (drawing velocities) have different units.</span></p><p><span style="font-family: Verdana; font-size: 14px; "><br />          Finally, we can calculate some hodograph parameters:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:763px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{v}}({\rm{pericenter)}}\,\,\, = \,\,\,\frac{k}{L}\,\,\left( {{\bf{\hat r}}\,\, + \,\,{\boldsymbol{\varepsilon}} } \right)\,\,{\bf{\hat L}}\,\,\, = \,\,\,2.5\,\left( {1 + \varepsilon } \right)\,\hat {\boldsymbol{\varepsilon}} \,{\bf{\hat L}}\,\,\, = \,\,\,4{\bf{\hat b}}\\{\bf{v}}({\rm{apocenter)}}\,\,\, = \,\,\,2.5\,\left( {\, - \,\,1\,\, + \,\,\varepsilon } \right)\,\hat {\boldsymbol{\varepsilon}} \,{\bf{\hat L}}\,\,\, = \,\,\, - \,\,1\,\,{\bf{\hat b}}\\{\bf{u}}\,\,\, \equiv \,\,\,k\,{{\bf{L}}^{ - 1}}\,{\boldsymbol{\varepsilon}} \,\,\, = \,\,\,\frac{{k\varepsilon }}{L}\,\,\hat {\boldsymbol{\varepsilon}} \,{\bf{\hat L}}\,\,\, = \,\,\,1.5\,{\bf{\hat b}}\\\left| {{\bf{v}} - {\bf{u}}} \right|\,\,\, = \,\,\,{\rm{hodograph ~ radius}}\,\,\, = \,\,\,\frac{k}{L}\,\,\, = \,\,\,2.5\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />In the following interactive diagram, use your mouse (hold down the left mouse button and drag) to pull the yellow dot (our particle) around in a CCW direction. You should be able to check whether all distances and velocities seem correct around the orbit. Check values at the ellipse extrema. Can you estimate the value of the semi-latus rectum using the grid?  </span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p>
+											
+											<div class="not-first-item wide center">
+												<div style="width:937px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<iframe src="../../../../../Hodograph_02.html" width="930" height="670">
+														Your browser does not currently support iframes.</iframe>
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><u>Interesting tidbit:</u></strong></span></p><p><span style="font-family: Verdana; font-size: 14px; ">          This is a central attractive force, so the acceleration is always towards the ellipse focus, but only </span><strong><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; ">at pericenter and apocenter</span></em></strong><span style="font-family: Verdana; font-size: 14px; "> is that direction also perpendicular to the orbit path. At those two points, </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>the acceleration is all centripetal</em></strong></span><span style="font-family: Verdana; font-size: 14px; ">, and therefore can be written in the well known form of </span><span style="font-size: 14px; font-family: Verdana; "><em>v</em></span><span style="font-family: Verdana; font-size: 14px; "><sup>2</sup>/</span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; ">. Thus, looking at magnitudes in the equation of motion, we may be tempted (even knowing that </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>temptations are often dangerous!</em></strong></span><span style="font-family: Verdana; font-size: 14px; ">) to write:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:561px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{m\,\,\frac{{{v^2}}}{r}\,\,\, = \,\,\,\frac{k}{{{r^2}}}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />for either the pericenter or apocenter. </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>Yet, this equation is incorrect!</em></strong></span><span style="font-family: Verdana; font-size: 14px; "> You can try a quick check with the numbers in our example above (</span><span style="font-size: 14px; font-family: Verdana; "><em>v</em></span><span style="font-family: Verdana; font-size: 14px; ">=4, </span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; ">=2 or </span><span style="font-size: 14px; font-family: Verdana; "><em>v</em></span><span style="font-family: Verdana; font-size: 14px; ">=1, </span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; ">=8) to see it doesn't work. </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>What's wrong?</em></strong></span><span style="font-family: Verdana; font-size: 14px; "> Well, the </span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; "> in </span><span style="font-size: 14px; font-family: Verdana; "><em>v</em></span><span style="font-family: Verdana; font-size: 14px; "><sup>2</sup>/</span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; "> is supposed to be the </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>radius of curvature</em></strong></span><span style="font-family: Verdana; font-size: 14px; "> at that point in the particle's orbit. The radius of curvature obviously varies along the ellipse. What is its value at the two positions of interest? We could use this formula properly and work backwards. Call the radius of curvature at either point ρ. By symmetry, we had better get the same value at either pericenter or apocenter.</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:894px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}m\,\,\frac{{{v^2}}}{\rho }\,\,\, = \,\,\,\frac{k}{{{r^2}}}\,\,\,\,\,\,\,\,\,\, \Rightarrow \,\,\,\,\,\,\,\,\,\,\rho \,\,\, = \,\,\,m{v^2}{r^2}/k\\\\{v^2}\left( {{\bf{\hat r}} =  \pm \hat {\boldsymbol{\varepsilon}} } \right)\,\,\, = \,\,\,\frac{{{k^2}}}{{{L^2}}}{\left( {\varepsilon  \pm 1} \right)^2}\,\,\,\,\,\,\,\,\,\,~~~~~~\,\,\,\,\,\,\,\,\,\,{r^2}\left( {{\bf{\hat r}} =  \pm \hat {\boldsymbol{\varepsilon}} } \right)\,\,\, = \,\,\,\frac{{{\ell ^2}}}{{{{\left( {1 \pm \varepsilon } \right)}^2}}}\\\rho \left( {{\bf{\hat r}} =  \pm \hat {\boldsymbol{\varepsilon}} } \right)\,\,\, = \,\,\,\frac{m}{k}\,\,\frac{{{k^2}}}{{{L^2}}}\,\,{\ell ^2}\,\,\, = \,\,\,\ell \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p><span style="font-family: Verdana; font-size: 14px; ">That's a neat result. What if we wanted the general expression for the radius of curvature at any point around an ellipse? Well, we could go on perhaps forever discovering tidbits about ellipses. We'll try for a little restraint and settle for answering this final question on the subject. Here is a formula for finding the radius of curvature for any curve in polar form, such as our </span><span style="font-size: 14px; font-family: Verdana; "><em>r</em></span><span style="font-family: Verdana; font-size: 14px; ">(</span><span style="font-size: 14px; font-family: Verdana; "><em>θ</em></span><span style="font-family: Verdana; font-size: 14px; ">):</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:745px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\rho ~~~ = ~~~ \frac{{{{\left[ {{r^2} + {{\left( {\frac{{dr}}{{d\theta }}} \right)}^2}} \right]}^{3/2}}}}{{\left| {{r^2} + 2{{\left( {\frac{{dr}}{{d\theta }}} \right)}^2} - r\frac{{{d^2}r}}{{d{\theta ^2}}}} \right|}} ~~~ = ~~~ \ell {\left[ {1 + {{\left( {\frac{{\varepsilon \sin \theta }}{{1 + \varepsilon \cos \theta }}} \right)}^2}} \right]^{3/2}}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p><span style="font-family: Verdana; font-size: 14px; ">Getting to that last expression from the formula may be even more painful than one imagines by staring at the formula. But, there it is, and it agrees with our previous discovery for <em>θ</em>=0 or <em>θ</em>=</span><span style="font-size: 18px; font-family: 'Times New Roman'; ">π</span><span style="font-family: Verdana; font-size: 14px; ">. </span></p><p><span style="font-family: Verdana; font-size: 14px; "><br /></span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>Here's a better method, applicable to a general space curve.</em></strong></span><span style="font-family: Verdana; font-size: 14px; "> The formula involves velocity and acceleration, for which we have expressions at the top of this page, and is much easier to understand, to derive, and at least in our case, to use. We start with expressions for the unit tangent vector and the unit normal vector to any curve, expressions involving rates of change with respect to arc length and the definition of radius of curvature. </span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:833px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat T}}\,\,\, = \,\,\,\frac{{d{\bf{r}}}}{{ds}}\,\,\, = \,\,\,\frac{{d{\bf{r}}}}{{dt}}\,\,\frac{{dt}}{{ds}}\,\,\, = \,\,\,{\bf{v}}/v\,\,\, = \,\,\,{\bf{\hat v}}\\\\\\\frac{{d{\bf{\hat T}}}}{{ds}}\,\,\, = \,\,\,\frac{1}{\rho }\,\,{\bf{\hat N}}\,\,\, = \,\,\,\frac{1}{v}\,\,\frac{d}{{dt}}\,\left( {\frac{{\bf{v}}}{v}} \right)\,\,\, = \,\,\,\frac{{v{\bf{\dot v}} - {\bf{v}}\dot v}}{{{v^3}}}\\\\\\\frac{{{\bf{\hat T}} \wedge {\bf{\hat N}}}}{\rho }\,\,\, = \,\,\,{\bf{\hat v}} \wedge \frac{{v{\bf{\dot v}} - {\bf{v}}\dot v}}{{{v^3}}}\,\,\, = \,\,\,\frac{{{\bf{v}} \wedge {\bf{\dot v}}}}{{{v^3}}}\,\,\,\,\,\,\,\,\,\, \Rightarrow \,\,~~~~~~\,\,\,\,\,\,\,\, \bbox[8px, border:2px solid red] {\rho \,\,\, = \,\,\,\frac{{{v^3}}}{{\left| {{\bf{v}} \wedge {\bf{\dot v}}} \right|}}}\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br />Now we can plug in our expressions for velocity and acceleration:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:853px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}\rho \,\,\, = \,\,\,\frac{{\frac{{{k^3}}}{{{L^3}}}\,\,{{\left| {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right|}^3}}}{{\frac{{{k^2}}}{{Lm{r^2}}}\,\,\left| {{{\left\langle {\left( {1 + {\boldsymbol{\varepsilon}} {\bf{\hat r}}} \right){\bf{\hat L}}} \right\rangle }_2}} \right|}}\,\,\, = \,\,\,\frac{{km{r^2}\,{{\left| {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right|}^3}}}{{{L^2}\,\,\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}}\,\,\, = \,\,\,\ell \,\,\frac{{{{\left| {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right|}^3}}}{{{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}^3}}}\\\\\\\\\,\,\,\,\,~\, = \,\,\,\ell \,\,{\left[ {\frac{{\left( {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right){\bf{\hat r\hat r}}\left( {{\bf{\hat r}} + {\boldsymbol{\varepsilon}} } \right)}}{{{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}^2}}}} \right]^{3/2}}\,\,\, = \,\,\,\ell \,\,{\left[ {\frac{{\left( {1 + {\boldsymbol{\varepsilon}} {\bf{\hat r}}} \right)\left( {1 + {\bf{\hat r}}{\boldsymbol{\varepsilon}} } \right)}}{{{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}^2}}}} \right]^{3/2}}\\\\\\\\\,\,\,\,\,~\, = \,\,\,\ell \,\,{\left[ {\frac{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}} + {\boldsymbol{\varepsilon}}  \wedge {\bf{\hat r}}} \right)\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}} - {\boldsymbol{\varepsilon}}  \wedge {\bf{\hat r}}} \right)}}{{{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}^2}}}} \right]^{3/2}}\\\\\\\\\rho \,\,\, = \,\,\,\ell \,\,{\left[ {1\,\, - \,\,\,\frac{{{{\left( {{\boldsymbol{\varepsilon}}  \wedge {\bf{\hat r}}} \right)}^2}}}{{{{\left( {1 + {\boldsymbol{\varepsilon}}  \cdot {\bf{\hat r}}} \right)}^2}}}} \right]^{3/2}}\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p><span style="font-family: Verdana; font-size: 14px; ">This is the same formula as given above in polar coordinate form. It may at first seem like a more complicated procedure, but consider the differences. </span></p><p><span style="font-family: Verdana; font-size: 14px; "><br />In the polar case we gave a very complicated formula (without the very complex proof) and presented the final answer without showing the agonizing trig derivatives, expanding, grouping of terms and factoring involved. Even then, it was a formula valid only for planar motion.</span></p><p><span style="font-family: Verdana; font-size: 14px; "><br />In the second method, we derived the </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>much simpler expression for radius of curvature</em></strong></span><span style="font-family: Verdana; font-size: 14px; ">, a formula </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>valid for 3D space curves</em></strong></span><span style="font-family: Verdana; font-size: 14px; ">. Then we filled in the steps needed to apply the formula to our ellipse. Finally, notice that to apply the formula, </span><span style="font-family: Verdana; color: rgb(247, 90, 0); font-size: 14px; "><strong><em>we took NO derivatives!</em></strong></span><span style="font-family: Verdana; font-size: 14px; "> The only derivatives needed were finished earlier by getting the velocity and acceleration formulas, and to get those we performed only a few very simple derivatives. Finally, our orbit parameter was not the arc length, nor did we know any functions of time. We can use this formula for radius of curvature if we know velocity and acceleration as functions of any parameter at all.<br /><br /></span></p><p><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p><strong style="font-weight: 700; "><span style="color: rgb(118, 205, 15); font-size: 14px; font-family: Verdana; "><u><a href="../index.html">Return to current section</a></u></span></strong><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; ">: </strong></span><strong style="font-weight: 700; "><span style="color: rgb(169, 0, 157); font-size: 14px; font-family: Verdana; ">General Keplerian Motion</span></strong><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; ">.</strong></span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p><p><span style="font-size: 14px; font-family: Verdana; "><strong style="font-weight: 700; "><br /></strong></span></p>
+											
+										</div>
+									</div>
+								</div> <!-- /article-content -->
+								<div class="article-info">
+								</div> <!-- /article-info -->
+							</div> <!-- /article -->
+						</div> <!-- main-content -->
+						<div id="main-bottom"></div>
+					</div> <!-- main -->
+				</div> <!-- content -->
+				<div class="clear below-content"></div>
+				<div id="page-bottom">
+					<div id="page-bottom-contents">
+						<div>© David Hestenes 2005, 2014</div>
+						<div class="hidden"> <a rel="nofollow" href="#title">[Back To Top]</a></div>
+					</div>
+				</div> <!-- page-bottom -->
+			</div> <!-- container -->
+			<div id="extraDiv1"><span></span></div><div id="extraDiv2"><span></span></div><div id="extraDiv3"><span></span></div><div id="extraDiv4"><span></span></div><div id="extraDiv5"><span></span></div><div id="extraDiv6"><span></span></div>
+		</div> <!-- specific body type -->
+			</body>
+</html>

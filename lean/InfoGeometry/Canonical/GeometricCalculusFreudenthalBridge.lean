@@ -352,18 +352,18 @@ end OperatorFreudenthalBoundaryFluxBridge
 universe uE uP uQ uΩ uVolume
 
 /--
-Per-data owner target for constructing an operator/Freudenthal flux bridge.
+Per-data construction type for an operator/Freudenthal flux bridge.
 
-This is intentionally not quantified as “for all data, a bridge exists,”
-because the bridge contains the nontrivial compatibility equation
+This is intentionally data, not a proposition saying “for all data, a bridge
+exists,” because the bridge contains the nontrivial compatibility equation
 `scalarGeometricFlux = boundaryEntropy`.
 -/
-def OperatorFreudenthalBoundaryFluxConstructionProblem
+abbrev OperatorFreudenthalBoundaryFluxConstructionProblem
     (E : Type uE) (P : Type uP) (Charge : Type uQ)
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
-    (D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Charge) : Prop :=
-  Nonempty (OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D)
+    (D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Charge) :=
+  OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D
 
 /--
 Construct an operator/Freudenthal flux bridge from explicit witnesses.
@@ -373,7 +373,7 @@ observer and arbitrary Freudenthal charge geometry, the scalar flux/entropy
 equality is not constructible; it must be supplied by the concrete
 Clifford/Stokes/Freudenthal model.
 -/
-theorem operatorFreudenthalBoundaryFluxBridge_from_witnesses
+def operatorFreudenthalBoundaryFluxBridge_from_witnesses
     {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
@@ -390,14 +390,14 @@ theorem operatorFreudenthalBoundaryFluxBridge_from_witnesses
       FluxEqualsBoundaryEntropy
         D.A resolvent D.boundary normalizationFactor observer
         D.geometry D.boundaryCharges) :
-    Nonempty (OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D) :=
-  ⟨{ phase := phase
-     resolvent := resolvent
-     normalizationFactor := normalizationFactor
-     observer := observer
-     stokes := stokes
-     horizonOperator_eq_flux := horizonOperator_eq_flux
-     scalarFlux_eq_entropy := scalarFlux_eq_entropy }⟩
+    OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D where
+  phase := phase
+  resolvent := resolvent
+  normalizationFactor := normalizationFactor
+  observer := observer
+  stokes := stokes
+  horizonOperator_eq_flux := horizonOperator_eq_flux
+  scalarFlux_eq_entropy := scalarFlux_eq_entropy
 
 end
 

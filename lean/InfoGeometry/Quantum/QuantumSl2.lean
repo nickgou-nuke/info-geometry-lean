@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
+open InfoGeometryCore
 /-!
 # U_q(sl(2)) — The Quantum Group (Standard 2×2 Representation)
 
@@ -133,7 +135,7 @@ def qNumber (q : ℂ) (n : ℤ) (hq_sq_ne_one : q ^ 2 ≠ 1) : ℂ :=
 /--
 The Fibonacci golden ratio φ = (1+√5)/2.
 -/
-noncomputable def phi : ℂ := (1 + Real.sqrt 5) / 2
+noncomputable abbrev phi := phiC
 
 theorem q_plus_qinv_equals_phi_at_fibonacci :
     (Complex.exp (Real.pi * Complex.I / 5) + Complex.exp (-Real.pi * Complex.I / 5)) = phi := by
@@ -159,7 +161,7 @@ theorem q_plus_qinv_equals_phi_at_fibonacci :
   unfold θ
   rw [hcos]
   -- 2 * ((1 + √5)/4) = (1 + √5)/2 = φ
-  unfold phi
+  unfold phi InfoGeometryCore.phiC
   ring
 
 /--
@@ -174,7 +176,7 @@ fusion ring is the Fibonacci anyon model.
 V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V_{1/2} in the semisimple quotient.
 Status: requires quantum-group representation theory formalization. -/
 theorem fibonacci_fusion_from_quantum_group : phi * phi = phi + 1 := by
-  unfold phi
+  unfold phi InfoGeometryCore.phiC
   have h5sq : (Real.sqrt 5 : ℂ) ^ 2 = (5 : ℂ) := by
     norm_cast
     exact Real.sq_sqrt (show 0 ≤ 5 by norm_num)

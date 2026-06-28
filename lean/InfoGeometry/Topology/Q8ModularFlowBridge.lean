@@ -13,6 +13,7 @@ discrete thermodynamic steps.
 namespace InfoGeometry.Topology.Q8ModularFlowBridge
 
 open Matrix Complex
+open InfoGeometryCore
 open InfoGeometry.Topology.Q8MonodromySpinorCover
 
 /-- 
@@ -20,8 +21,9 @@ The continuous unitary evolution evaluated at time t.
 $U(t) = \cos(\pi t / 2) I - i \sin(\pi t / 2) \sigma_z$
 -/
 noncomputable def U (t : ℝ) : M2C :=
-  (Real.cos (Real.pi * t / 2) : ℂ) • (1 : M2C) -
-  (I * (Real.sin (Real.pi * t / 2) : ℂ)) • !![1, 0; 0, -1]
+  let c : ℂ := Real.cos (Real.pi * t / 2)
+  let s : ℂ := Real.sin (Real.pi * t / 2)
+  !![c - I * s, 0; 0, c + I * s]
 
 /-- 
 The discrete step is evaluated at t = 1.

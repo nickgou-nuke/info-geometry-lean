@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "name": "p2",
+      "translation_x": [[1, 0, 1], [0, 1, 0], [0, 0, 1]],
+      "translation_y": [[1, 0, 0], [0, 1, 1], [0, 0, 1]],
+      "symmetry": [[-1, 0, 0], [0, -1, 0], [0, 0, 1]],
+      "symmetry_square": "identity",
+      "conjugation_target": "tx_inv"
+    },
+    {
+      "name": "pm",
+      "translation_x": [[1, 0, 1], [0, 1, 0], [0, 0, 1]],
+      "translation_y": [[1, 0, 0], [0, 1, 1], [0, 0, 1]],
+      "symmetry": [[1, 0, 0], [0, -1, 0], [0, 0, 1]],
+      "symmetry_square": "identity",
+      "conjugation_target": "ty_inv"
+    },
+    {
+      "name": "pg",
+      "translation_x": [[1, 0, 1], [0, 1, 0], [0, 0, 1]],
+      "translation_y": [[1, 0, 0], [0, 1, 1], [0, 0, 1]],
+      "symmetry": [[1, 0, 0.5], [0, -1, 0], [0, 0, 1]],
+      "symmetry_square": "tx",
+      "conjugation_target": "ty_inv"
+    }
+  ]
+}

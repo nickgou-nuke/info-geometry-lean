@@ -162,9 +162,13 @@ def towerToCyclic5 : Fin 5 → Type :=
 /--
 The colimit of the tower is `ℤ/5ℤ`.
 -/
-theorem towerColimit_is_ZMod5 :
-    Nonempty ((x : ZMod (4+1)) → ZMod 5) := by
-  refine ⟨fun (x : ZMod (4+1)) => (x : ZMod 5)⟩
+def towerColimitToZMod5 : ZMod (4 + 1) → ZMod 5 :=
+  fun x => (x : ZMod 5)
+
+@[simp]
+theorem towerColimit_is_ZMod5 (x : ZMod (4 + 1)) :
+    towerColimitToZMod5 x = (x : ZMod 5) :=
+  rfl
 
 /-! ## 6. Grothendieck extension: ℕ-grading → 5-grading -/
 

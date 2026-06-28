@@ -350,70 +350,59 @@ theorem cost_eq_length
 
 end Circuit
 
-/-! ## 7. Owner targets discharged constructively -/
-
-/-- Owner target for Bell-same support correlation. -/
-@[owner_target_tag]
-def BellSameSupportOwnerTarget : Prop :=
-  ∀ x : Bit × Bit,
-    bellSameAmplitude x ≠ 0 ↔ x.1 = x.2
+/-! ## 7. Owner theorems discharged constructively -/
 
 /-- Constructive proof of Bell-same support correlation. -/
 theorem bellSameSupportOwnerTarget :
-    BellSameSupportOwnerTarget :=
+    ∀ x : Bit × Bit,
+      bellSameAmplitude x ≠ 0 ↔ x.1 = x.2 :=
   bellSame_nonzero_iff
-
-/-- Owner target for GHZ support correlation. -/
-@[owner_target_tag]
-def GHZSupportOwnerTarget : Prop :=
-  ∀ x : TripleBit,
-    ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c
 
 /-- Constructive proof of GHZ support correlation. -/
 theorem ghzSupportOwnerTarget :
-    GHZSupportOwnerTarget :=
+    ∀ x : TripleBit,
+      ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c :=
   ghz_nonzero_iff
-
-/-- Owner target for the finite Bell-to-GHZ copy-register support transition. -/
-@[owner_target_tag]
-def BellToGHZCopyOwnerTarget : Prop :=
-  ∀ x : Bit × Bit,
-    bellSameAmplitude x ≠ 0 →
-      ghzAmplitude (copyBobToCharlie x) ≠ 0
 
 /-- Constructive proof of the finite Bell-to-GHZ support transition. -/
 theorem bellToGHZCopyOwnerTarget :
-    BellToGHZCopyOwnerTarget := by
+    ∀ x : Bit × Bit,
+      bellSameAmplitude x ≠ 0 →
+        ghzAmplitude (copyBobToCharlie x) ≠ 0 := by
   intro x h
   exact copyBellSame_to_GHZ h
 
-/-- Owner target for the classical single-flip complexity bound. -/
-@[owner_target_tag]
-def ClassicalSingleFlipComplexityOwnerTarget : Prop :=
-  ∀ (n : ℕ) (s : BitString n),
-    classicalSingleFlipComplexity s ≤ n
-
 /-- Constructive proof of the classical single-flip complexity bound. -/
 theorem classicalSingleFlipComplexityOwnerTarget :
-    ClassicalSingleFlipComplexityOwnerTarget := by
+    ∀ (n : ℕ) (s : BitString n),
+      classicalSingleFlipComplexity s ≤ n := by
   intro n s
   exact classicalSingleFlipComplexity_le s
-
-/--
-Owner target for finite circuit gate-accounting additivity.
--/
-@[owner_target_tag]
-def CircuitCostAppendOwnerTarget : Prop :=
-  ∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
-    Circuit.cost (C₁ ++ C₂) =
-      Circuit.cost C₁ + Circuit.cost C₂
 
 /--
 Constructive proof of finite circuit gate-accounting additivity.
 -/
 theorem circuitCostAppendOwnerTarget :
-    CircuitCostAppendOwnerTarget := by
+    ∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
+      Circuit.cost (C₁ ++ C₂) =
+        Circuit.cost C₁ + Circuit.cost C₂ := by
   intro Wire C₁ C₂
   exact Circuit.cost_append C₁ C₂
+
+@[owner_target_tag]
+theorem finiteEntanglementComplexity_packet :
+    (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 ↔ x.1 = x.2) ∧
+      (∀ x : TripleBit, ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c) ∧
+      (∀ x : Bit × Bit, bellSameAmplitude x ≠ 0 →
+        ghzAmplitude (copyBobToCharlie x) ≠ 0) ∧
+      (∀ (n : ℕ) (s : BitString n), classicalSingleFlipComplexity s ≤ n) ∧
+      (∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
+        Circuit.cost (C₁ ++ C₂) =
+          Circuit.cost C₁ + Circuit.cost C₂) := by
+  exact ⟨bellSameSupportOwnerTarget,
+    ghzSupportOwnerTarget,
+    bellToGHZCopyOwnerTarget,
+    classicalSingleFlipComplexityOwnerTarget,
+    circuitCostAppendOwnerTarget⟩
 
 end InfoGeometry.Quantum.FiniteEntanglementComplexityCore

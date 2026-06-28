@@ -73,12 +73,8 @@ def toVariationalRHTarget : VariationalRHTarget where
   xi_reflection := D.xi_reflection
   barrierApproximation := fun _ => ∅
   approx_primes := fun _ _ h => by simp at h
-  zeros_are_barrier_critical :=
-    (∀ s₀ : ℂ, D.xi s₀ = 0 →
-      ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
-        ∀ σ : ℝ,
-          primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ)
-  zeros_are_barrier_critical_shape := rfl
+  zeros_are_barrier_critical := fun s₀ hz S hS σ =>
+    D.zeros_are_barrier_critical s₀ hz S hS σ
   no_unconditional_RH_claim_guard := D.no_unconditional_RH_claim_guard
 
 /--
@@ -88,10 +84,7 @@ Debt lemma: if the supplied duality hypotheses hold for `D`, then any zero of th
 theorem RH_of_SouriauDuality
     (s₀ : ℂ) (hz : D.xi s₀ = 0) :
     OnCriticalLine s₀ := by
-  have hBridge : D.toVariationalRHTarget.zeros_are_barrier_critical := by
-    intro s hs S hS σ
-    exact D.zeros_are_barrier_critical s hs S hS σ
-  exact variationalRH_implies_criticalLine D.toVariationalRHTarget hBridge s₀ hz
+  exact variationalRH_implies_criticalLine D.toVariationalRHTarget s₀ hz
 
 end SouriauZetaDualityHypotheses
 

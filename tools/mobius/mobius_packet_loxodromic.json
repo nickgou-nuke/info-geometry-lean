@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "description": "Möbius classification packet - SL(2,C) element classified by trace invariant",
+  "matrix": {
+    "a": "1+I",
+    "b": "2",
+    "c": "-I",
+    "d": "1-I"
+  },
+  "ring": "CC",
+  "expected": {
+    "determinant": "1",
+    "trace": "2",
+    "sigma": "1+2*I",
+    "classification": "loxodromic",
+    "fixed_points": ["complex", "complex"],
+    "projective_eigendirections": ["complex", "complex"]
+  }
+}

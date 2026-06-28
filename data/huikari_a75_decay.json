@@ -1,0 +1,50 @@
+{
+  "source": "Huikari et al. 2003, Eur. Phys. J. A",
+  "system": "A=75 Mirror Pair (75Sr, 75Rb)",
+  "experiment": "ISOLDE PSB facility at CERN",
+  "measurements": {
+    "beta_decay_half_life_ms": {
+      "value": 88,
+      "uncertainty": 3
+    },
+    "Q_EC_MeV": {
+      "value": 10.60,
+      "uncertainty": 0.22
+    },
+    "beta_delayed_proton_branching_ratio_percent": {
+      "value": 5.2,
+      "uncertainty": 0.9
+    }
+  },
+  "transitions": [
+    {
+      "initial_state": "75Sr_gs",
+      "final_state": "75Rb_gs",
+      "energy_keV": 0,
+      "log_ft": {
+        "value": 3.7,
+        "uncertainty": 0.2
+      },
+      "Gamow_Teller_matrix_element": {
+        "value": 0.35,
+        "uncertainty": 0.05
+      }
+    },
+    {
+      "initial_state": "75Sr_gs",
+      "final_state": "75Rb_144keV",
+      "energy_keV": 144,
+      "log_ft": {
+        "value": 5.0,
+        "uncertainty_plus": 0.1,
+        "uncertainty_minus": 0.2
+      },
+      "Gamow_Teller_matrix_element": {
+        "value": 0.20,
+        "uncertainty_plus": 0.04,
+        "uncertainty_minus": 0.02
+      }
+    }
+  ],
+  "structural_notes": "The large beta-delayed proton branch indicates strong feeding to the high-lying states of 75Rb, providing a qualitative insight into nuclear deformation effects in the A=70-80 region."
+}

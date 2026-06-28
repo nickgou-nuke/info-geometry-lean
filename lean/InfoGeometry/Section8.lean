@@ -4,6 +4,9 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
+import InfoGeometryCore.Basic
+
+open InfoGeometryCore
 
 /-!
 # Section 8: Quaternion Spin Connection and Curvature
@@ -191,14 +194,11 @@ theorem conj_eq_neg_of_pure (q : Quat) (h : IsPureImaginary q) :
 def sigma0 : Matrix (Fin 2) (Fin 2) ℂ :=
   !![(1 : ℂ), 0; 0, 1]
 
-def sigma1 : Matrix (Fin 2) (Fin 2) ℂ :=
-  !![(0 : ℂ), 1; 1, 0]
+abbrev sigma1 := sigma1C
 
-def sigma2 : Matrix (Fin 2) (Fin 2) ℂ :=
-  !![(0 : ℂ), -Complex.I; Complex.I, 0]
+abbrev sigma2 := sigma2C
 
-def sigma3 : Matrix (Fin 2) (Fin 2) ℂ :=
-  !![(1 : ℂ), 0; 0, -1]
+abbrev sigma3 := sigma3C
 
 /-- Pauli/Hermitian representative of a four-vector. -/
 def spacetimeMatrix (t x y z : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
@@ -206,10 +206,10 @@ def spacetimeMatrix (t x y z : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 
 theorem spacetimeMatrix_det (t x y z : ℂ) :
     (spacetimeMatrix t x y z).det = t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2 := by
-  simp [spacetimeMatrix, sigma0, sigma1, sigma2, sigma3, Matrix.det_fin_two_of]
+  simp [spacetimeMatrix, sigma0, sigma1C, sigma2C, sigma3C, Matrix.det_fin_two, Complex.I_sq]
   ring_nf
-  rw [show Complex.I ^ 2 = (-1 : ℂ) by simp [pow_two, Complex.I_mul_I]]
-  ring_nf
+  rw [Complex.I_sq]
+  ring
 
 /-! ## 8.2 Quaternion connection -/
 

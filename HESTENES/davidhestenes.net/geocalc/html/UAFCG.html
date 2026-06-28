@@ -1,0 +1,334 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+<TITLE>A Unified Algebraic Framework for Classical Geometry</TITLE>
+
+</HEAD>
+<BODY>
+<P ALIGN="CENTER"><IMG SRC="../gif/rainbow.gif" WIDTH=600 HEIGHT=5>
+
+<H1 ALIGN="CENTER">A Unified Algebraic Framework for Classical Geometry</H1>
+
+<p align=right>[<a href="https://decodedbutter.wordpress.com/2016/01/08/a-unified-algebraic-framework-for-classical-geometry-doc/">
+    Vietnamese version</a> of this page is translated by 
+        <br>Ng&#7885c Th&#7843o Nguy&#7877n.]
+	<br>
+</p>
+
+<P>
+<BR>
+<FONT SIZE=2>
+<DD>David Hestenes, Hongbo Li & Alyn Rockwood. In: G. Sommer (ed.), <EM>Geometric Computing with Clifford Algebra</EM>, 
+    <A HREF="Copyrights.html#Springer">&copy Springer-Verlag: Heidelberg</A> (2000).</DD></FONT>
+
+
+</DL></DIR>
+<P>
+<DT><LI><A HREF="../pdf/CompGeom-ch1.pdf">1. New Algebraic Tools for Classical Geometry (p. 1-24)</A></DD>
+<DD>
+<BR>
+&nbsp Classical geometry has emerged from efforts to codify perception of
+  space and motion. With roots in ancient times, the great flowering of classical geometry
+  was in the 19th century, when Euclidean, non-Euclidean and projective geometries
+  were given precise mathematical formulations and the rich properties of geometric
+  objects were explored. Though fundamental ideas of classical geometry are
+  permanently imbedded and broadly applied in mathematics and physics, the subject itself
+  has practically disappeared from the modern mathematics curriculum. Many of its
+  results have been consigned to the seldom-visited museum of mathematics history, in
+  part, because they are expressed in splintered and arcane language. To make them
+  readily accessible and useful, they need to be reexamined and integrated into a coherent
+  mathematical system.
+  
+  Classical geometry has been making a comeback recently because it is useful in such
+  fields as Computer-Aided Geometric Design (CAGD), CAD/CAM, computer graphics, computer
+  vision and robotics. In all these fields there is a premium on computational efficiency
+  in designing and manipulating geometric objects. Our purpose here is to introduce
+  powerful new mathematical tools for meeting that objective and developing new insights within a
+  unified algebraic framework. In this and subsequent chapters
+  we show how classical geometry fits neatly into the broader mathematical system
+  of <I>Geometric Algebra</I>  (GA)
+  and its extension to a complete <I>Geometric Calculus</I>
+  (GC)  that includes differential forms and much more. 
+  <P>
+    Over the last four decades GC has been developed as a universal geometric language for
+    mathematics and physics. This can be regarded as the culmination of an R & D program
+    innaugurated by Hermann Grassmann in 1844 [G44, H96]. 
+    Here, we draw on this rich source of concepts, tools and methods to enrich classical
+    geometry by integrating it more fully into the whole system.
+  <P>
+    This chapter provides a synopsis of basic tools in Geometric Algebra to set the stage for
+    further elaboration and applications in subsequent chapters. To make the synopsis compact,
+    proofs are omitted. Geometric interpretation is emphasized, as it is essential for practical
+    applications.
+  <P>
+    In classical geometry the primitive elements are points, and 
+  <I>geometric objects</I>  are point
+    sets with properties. The properties are of two main types: structural and transformational.
+    Objects are characterized by structural relations and compared by transformations. In his
+    Erlanger program, Felix Klein [K08] classified geometries by the transformations used to
+    compare objects (for example, similarities, projectivities, affinities, etc). Geometric Algebra
+    provides a unified algebraic framework for both kinds of properties and any kind of geometry.
+  </DD>
+  <P>
+<DT><LI><A HREF="../pdf/CompGeom-ch2.pdf">2. Generalized Homogeneous Coordinates for Computational Geometry (p. 25-58)</A>
+<DD>
+<BR>
+&nbsp The standard algebraic model for Euclidean space <I>E^n</I> is an <I>n</I>-dimensional
+  real vector space <I>R^n</I> or, equivalently, a set of real coordinates. One
+  trouble with this model is that, algebraically, the origin is a distinguished
+  element, whereas all the points of <I>E^n</I> are identical. This deficiency in
+  the <I>vector space model</I> was corrected early in the 19th century by removing the
+  origin from the plane and placing it one dimension higher. Formally, that
+  was done by introducing <I>homogeneous coordinates</I> [H91]. The vector space model
+  also lacks adequate representation for Euclidean points or lines at infinity.
+  We solve both problems here with a new model for <I>E^n</I> employing the tools of
+  geometric algebra. We call it the <I>homogeneous model</I> of <I>E^n</I>.
+  <P>
+    Our "new model" has its origins in the work of F. A. Wachter (1792-1817),
+    a student of Gauss. He showed that a certain type of surface in hyperbolic geometry known
+    as a <I>horosphere</I> is metrically equivalent to Euclidean space, so it constitutes
+    a non-Euclidean model of Euclidean geometry. Without knowledge of this model, the
+    technique of <I>comformal</I> and <I>projective</I> splits needed to incorporate it into
+    geometric algebra were developed by Hestenes in [H91]. The <I>conformal split</I> was developed
+    to linearize the conformal group and simplify the connection to its spin representation.
+    The <I>projective split</I> was developed to incorporate all the advantages of homogeneous
+    coordinates in a "coordinate-free" representation of geometrical points by vectors.
+  <P>
+    Andraes Dress and Timothy Havel [DH93] recognized the relation of the conformal split to
+    Wachter's model as well as to classical work on <I>distance geometry</I> by Menger [M31],
+    Blumenthal [B53, 61] and Seidel [S52, 55]. They also stressed connections to classical
+  <I>invariant theory</I>, for which the basics have been incorporated into geometric algebra
+    in [HZ91] and [HS84].
+    The present work synthesizes all these developments and integrates conformal
+    and projective splits into a powerful algebraic formalism for representing and
+    manipulating geometric concepts. We demonstrate this power in an explicit construction
+    of the new <I>homogeneous model</I> of <I>E^n</I>, the characterization of geometric
+    objects therein, and in the proofs of geometric theorems.
+  <P>
+    The truly new thing about our model is the algebraic formalism in which it is embedded.
+  <I>This integrates the representational simplicity of synthetic geometry with
+    the computational capabilities of analytic geometry.</I> As in synthetic geometry we designate
+    points by letters <I>a</I>, <I>b</I>, .... but we also give them algebraic properties. Thus, the
+    outer product <I>a</I> \wedge <I>b</I> represents the line determined by <I>a</I> and <I>b</I>. This notion
+    was invented by Hermann Grassmann [G1844] and applied to projective geometry, but
+    it was incorporated into geometric algebra only recently [HZ91]. 
+    To this day, however, it has not been used in Euclidean geometry, owing to a subtle defect that
+    is corrected by our homogeneous model. We show that in our model <I>a</I> \wedge <I>b</I> \wedge <I>c</I> represents the circle through the three points. If one of these points
+    is a null vector <I>e</I> representing the point at infinity, then <I>a</I> \wedge <I>b</I> \wedge <I>e</I> 
+    represents the straight line through <I>a</I> and <I>b</I> as a circle through infinity. This
+    representation was not available to Grassmann, because he did not have the concept
+    of null vector.
+  <P>
+    Our model also solves another problem that perplexed Grassmann thoughout his life.
+    He was finally forced to conclude that it is impossible to define a geometrically meaningful inner
+    product between points. The solution eluded him because it requires the  concept of
+    indefinite metric that accompanies the concept of null vector. Our model supplies an
+    inner product <I>a</I> \cdot <I>b</I> that directly represents the Euclidean distance between the points.
+    This is a boon to distance geometry, because it greatly facilitates computation of
+    distances among many points. Havel [H98] has used this in applications of geometric algebra
+    to the theory of molecular conformations. The present work provides a framework for
+    significantly advancing such applications.
+  <P>
+    We believe that our homogeneous model provides the first ideal framework
+    for computational Euclidean geometry. The concepts and theorems of synthetic geometry
+    can be translated into algebraic form without the unnecessary complexities of coordinates
+    or matrices. Constructions and proofs can be done by direct computations, as needed
+    for practical applications in computer vision and similar fields. The spin
+    representation of conformal transformations greatly facilitates their composition and
+    application. We aim to develop the basics and examples in
+    sufficient detail to make applications in Euclidean geometry fairly 
+    straightforward. As a starting point, we presume familiarity with the notations and results
+    of Chapter 1.
+  <P>
+    We have confined our analysis to Euclidean geometry, because it has the
+    widest applicability. However, the algebraic and conceptual framework applies
+    to geometrics of any signature. In particular, it applies to modeling
+    spacetime geometry, but that is a matter for another time.
+    
+    
+  </LI></DT>
+  </DD>
+  <P>
+<DT><LI><A HREF="../pdf/CompGeom-ch3.pdf">3. Spherical Conformal Geometry with Geometric Algebra (p. 59-72)</A>
+<DD>
+<BR>
+&nbsp The recorded study of spheres dates back to the first century in the book <I>Sphaerica</I> of Menelaus. Spherical trigonometry was thoroughly 
+  developed in modern form by Euler in
+  his 1782 paper [E1782]. Spherical geometry in <I>n</I>-dimensions 
+  was first studied by Schlafli in his
+  1852 treatise, which was published posthumously in [S1901].
+  The most important transformation in spherical geometry, the
+  Mobius transformation, was considered by Mobius in his
+  1855 paper [M1855]. Hamilton was the first to apply vectors to spherical trigonometry.
+  In 1987 Hestenes [H98] formulated a spherical trigonometry in terms of  Geometric Algebra,
+  and that remains a useful supplement to the present treatment. This chapter is a continuation of the preceding chapter. Here
+  we consider the homogeneous model of spherical space, which is similar to
+  that of Euclidean space. We establish conformal geometry of spherical
+  space in this model, and discuss several typical conformal transformations.
+  <P>
+    Although it is well known that the conformal groups of <I>n</I>-dimensional
+    Euclidean and spherical spaces are isometric to each other,
+    and are all isometric to the
+    group of isometries of hyperbolic (<I>n</I>+1)-space [K1872], [K1873]
+    spherical conformal geometry has its unique conformal 
+    transformations,  and it can provide good understanding for
+    hyperbolic conformal geometry. It is an indispensible part of the
+    unification of all conformal geometries in the homogeneous model, which is
+    addressed in the next chapter.
+    
+  </LI></DT>
+  </DD>
+  <P>
+<DT><LI><A HREF="../pdf/CompGeom-ch4.pdf">4. A Universal Model for Conformal Geometries of Euclidean, Spherical and Double-Hyperbolic Spaces (p. 73-100)</A>
+<DD>
+<BR>
+  &nbsp The study of relations among Euclidean, spherical and hyperbolic geometries 
+    dates back to the beginning of last century. The attempt to prove Euclid's 
+    fifth postulate led C. F. Gauss to discover hyperbolic geometry in 
+    the 1820's.  Only a few years passed before this 
+    geometry was rediscovered
+    independently by N. Lobachevski (1829) and J. Bolyai (1832).
+    The strongest evidence given by the founders for its consistency is the
+    duality between hyperbolic and spherical trigonometries. This duality 
+    was first demonstrated by Lambert in his 1770 memoir [L1770].
+    Some theorems, for example the law of sines, can be stated in a form
+    that is valid in spherical, Euclidean, and hyperbolic geometries [B1832].
+    To prove the consistency of hyperbolic geometry, people built various
+    analytic models of hyperbolic geometry on the Euclidean plane.
+    E. Beltrami [B1868]
+    constructed a Euclidean model of the hyperbolic plane, and
+    using differential geometry, showed that his model satisfies all 
+    the axioms of hyperbolic plane geometry. In 1871, F. Klein gave an 
+    interpretation of Beltrami's model in terms of projective geometry. Because of
+    Klein's interpretation, Beltrami's model is later called Klein's disc model 
+    of the hyperbolic plane. The generalization of this model to <I>n</I>-dimensional
+    hyperbolic space is now called the Klein ball model [CFK98].
+    
+    <p>
+      In the same paper Beltrami constructed two other Euclidean models of the 
+      hyperbolic plane, one on a disc and the other on a Euclidean half-plane.
+      Both models are later generalized to <I>n</I>-dimensions by H. Poincare [P08],
+      and are now associated with his name.
+    </p>
+    <p>
+      All three of the above models are built in Euclidean space, and the latter
+      two are conformal in the sense that the metric is a point-to-point scaling
+      of the Euclidean metric. In his 1878 paper [K1878], 
+      Killing described a hyperboloid model of hyperbolic geometry by constructing
+      the stereographic projection of Beltrami's disc model onto 
+      the hyperbolic space. This hyperboloid model was generalized to <I>n</I>-dimensions
+      by Poincare.
+    </p>
+    <p>
+      There is another model of hyperbolic geometry
+      built in spherical space, called hemisphere model,
+      which is also conformal. Altogether there are five well-known models for 
+      the <I>n</I>-dimensional hyperbolic geometry: </p>
+  <ul>
+    <li>the half-space model,</li>
+    <li>the conformal ball model,</li>
+    <li>the Klein ball model,</li>
+    <li>the hemisphere model,</li>
+    <li>the hyperboloid model.</li>
+  </ul>
+  <p>
+    The theory of hyperbolic geometry can be built in a unified way within
+    any of the models. With several models one can, so to speak, turn 
+    the object around and scrutinize it from different viewpoints. 
+    The connections among these models are 
+    largely established through stereographic projections. Because stereographic
+    projections are conformal maps, the conformal groups of <I>n</I>-dimensional
+    Euclidean, spherical, and hyperbolic spaces are isometric to each other,
+    and are all isometric to the
+    group of isometries of hyperbolic (<I>n</I>+1)-space, according to observations
+    of Klein [K1872], [K1872].  
+    
+    It seems that everything is worked out for unified treatment of the three 
+    spaces. In this chapter we go further.
+    We unify the three geometries, together with
+    the stereographic projections, various models of hyperbolic geometry, in such 
+    a way that we need only one Minkowski space, where null vectors represent
+    points or points at infinity in any of the three geometries and any of 
+    the models of hyperbolic 
+    space, where Minkowski subspaces
+    represent spheres and hyperplanes in any of the three geometries, and where
+    stereographic projections are simply rescaling of null vectors. We call this
+    construction the <I>homogeneous model</I>.
+    It serves as a sixth analytic model for hyperbolic geometry.
+  </p>
+  <p>
+    We constructed homogeneous models for Euclidean and spherical
+    geometries in previous chapters. There the models are constructed in
+    Minkowski space by projective splits with respect to a fixed vector of null or 
+    negative signature. Here we show that a 
+    projective split with respect to a fixed vector of positive signature 
+    produces the homogeneous model of hyperbolic geometry.
+  </p>
+  <p>
+    Because the three geometries are obtained by interpreting null vectors 
+    of the same Minkowski space
+    differently,  natural correspondences exist among geometric entities and
+    constraints of these 
+    geometries.  In particular, there are correspondences among theorems 
+    on conformal properties of the three geometries. 
+    Every algebraic identity can
+    be interpreted in three ways and therefore represents three theorems.
+    In the last section we illustrate this feature with an example.
+  </p>
+  <p>
+    The homogeneous model has the significant advantage of simplifying geometric
+    computations, because it employs the powerful language of <I>Geometric
+      Algebra</I>. Geometric Algebra was applied to hyperbolic geometry by H. Li in [L97],
+    stimulated by Iversen's book [I92]
+    on the algebraic treatment of hyperbolic geometry and by the paper of Hestenes and
+    Ziegler [HZ91] on projective geometry with Geometric Algebra. 
+      </DD>  
+    <P>
+  <DT><LI><A HREF="../pdf/New_Tools_for_Comp_Geom.pdf">5. New Tools for Computational Geometry and rejuvenation of Screw Theory </A>
+<DD>
+<BR>
+
+<FONT SIZE=2>
+D. Hestenes, in E. Bayro-Corrochano and G. Scheuermann (eds.), <em>Geometric Algebra Computing for Engineering and Computer Science.</em> (London: Springer Verlag, 2009).</FONT>
+<BR>
+<BR>
+
+&nbsp Conformal Geometric Algebraic (CGA) provides ideal mathematical
+  tools for construction, analysis and integration of classical Euclidean, Inversive &
+  Projective Geometries, with practical applications to computer science,
+  engineering and physics. This paper is a comprehensive introduction to a CGA
+  tool kit. Synthetic statements in classical geometry translate directly to
+  coordinate-free algebraic forms. Invariant and covariant methods are coordinated
+  by conformal splits, which are readily related to the literature using methods of
+  matrix algebra, biquaternions and screw theory. Designs for a complete system of
+  powerful tools for the mechanics of linked rigid bodies are presented.
+  </LI>
+  </DT>
+  <BR>
+  <P>
+  <table width="100%" border=0 cellspacing="0" cellpadding="0" bgcolor="#000000">
+      <tr>
+        <td height="25" align="left" nowrap>
+          <span style="color:#FFCC00">
+          <font face="ms sans serif, geneva" size="-2" > &nbsp;&nbsp;<font color="#FFFFFF"><span style="color:#FFFFFF"><b>GC R&D</b></span></font>
+           | <a href="../"><font color="#FFCC00"><b>Home</b></font></a>
+           | <a href="Overview.html"><font color="#FFCC00"><b>Overview</b></font></a>
+           | <a href="Evolution.html"><font color='#FFCC00'><b>Evolution</b></font></a>
+           | <a href="Intro.html"><font color='#FFCC00'><b>Intro</b></font></a>
+           | <a href="NFMP.html"><font color='#FFCC00'><b>NFMP</b></font></a>
+           | <a href="UGC.html"><font color='#FFCC00'><b>UGC</b></font></a>
+           | <a href="STC.html"><font color='#FFCC00'><b>STC</b></font></a>
+           | <a href="GAinQM.html"><font color='#FFCC00'><b>GA in QM</b></font></a>
+           | <a href="GCgravity.html"><font color='#FFCC00'><b>GC Gravity</b></font></a>
+           | <a href="ComputationalGeometry.html"><font color='#FFCC00'><b>CG</b></font></a>
+           | <a href="Evolution.html#References"><font color='#FFCC00'><b>Books</b></font></a>
+           | <a href="Inferential.html"><font color='#FFCC00'><b>Infer Calc</b></font></a>
+           | <a href="Modeling.html"><font color='#FFCC00'><b>Modeling</b></font></a>
+           | <a href="Links.html"><font color='#FFCC00'><b>Links</b></font></a>
+          | <a href="http://www.adobe.com/"><font color='#FFCC00'><b>PDF</b></font></a> </font></span> </td>
+      </tr>
+              </table>
+</BODY>
+</HTML>
+

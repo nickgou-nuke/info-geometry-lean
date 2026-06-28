@@ -32,6 +32,9 @@ open InfoGeometry.Canonical.BekensteinBound
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Volume.ConnesCocycle
 
+/-- Local concrete matrix carrier reused from the nilpotent automorphism owner. -/
+abbrev M2R := InfoGeometry.Canonical.ModularNilpotentAutomorphism.M2R
+
 noncomputable section
 
 /-- Pairing weight for `n` split steps: `0 + 1 + ... + (n - 1)`. -/

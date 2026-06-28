@@ -16,6 +16,9 @@ open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 
+/-- Local concrete matrix carrier for this finite nilpotent lane. -/
+abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+
 /-- Local modular perturbation `Δ = 1 + N`. -/
 def Delta : M2R :=
   (1 : M2R) + N

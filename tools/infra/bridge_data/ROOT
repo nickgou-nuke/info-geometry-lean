@@ -1,0 +1,4 @@
+session GrandIdentity = HOL +
+  options [document = false]
+  theories
+    GrandIdentity

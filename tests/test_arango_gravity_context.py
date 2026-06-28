@@ -87,21 +87,85 @@ def test_igf_config_and_legacy_arango_env_resolve_same_config(
         "ARANGO_USERNAME",
         "ARANGO_PASS",
         "ARANGO_PASSWORD",
+        "HIVE_ARANGO_ENDPOINT",
+        "HIVE_ARANGO_DATABASE",
+        "HIVE_ARANGO_USER",
+        "HIVE_ARANGO_USERNAME",
+        "HIVE_ARANGO_PASS",
+        "HIVE_ARANGO_PASSWORD",
+        "HIVE_DATABASE",
+        "HIVE_ENDPOINT",
     ]:
         monkeypatch.delenv(key, raising=False)
     monkeypatch.setenv("HIVE_ARANGO_ENV_FILE", str(env_file))
 
     sys.path.insert(0, str((REPO / "src").resolve()))
-    from igf.config import load_arango_config
+    from igf.config import load_arango_config, normalized_hive_arango_env
     from tools.infra import arango_env
 
     package_cfg = load_arango_config(tmp_path)
+    hive_cfg = normalized_hive_arango_env()
 
     assert arango_env.load_repo_arango_env(tmp_path) == env_file
     assert package_cfg.endpoint == arango_env.arango_endpoint()
     assert package_cfg.database == arango_env.arango_database()
     assert package_cfg.user == arango_env.arango_username()
     assert package_cfg.password == arango_env.arango_password()
+    assert hive_cfg["endpoint"] == "http://127.0.0.1:7777"
+    assert hive_cfg["database"] == "hive_live"
+    assert hive_cfg["user"] == "legacy_user"
+    assert hive_cfg["password"] == "legacy pass"
+
+
+def test_hive_aliases_override_database_without_collapsing_back_to_theorem_lane(
+    tmp_path: Path, monkeypatch
+) -> None:
+    env_file = tmp_path / "hive_arango.env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "ARANGO_ENDPOINT=http://127.0.0.1:8530",
+                "ARANGO_DATABASE=infogeometry",
+                "ARANGO_USER=root",
+                "ARANGO_PASS=secret123",
+                "HIVE_ARANGO_DATABASE=hive_memory",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    for key in [
+        "HIVE_ARANGO_ENV_FILE",
+        "ARANGO_ENDPOINT",
+        "ARANGO_DATABASE",
+        "ARANGO_USER",
+        "ARANGO_USERNAME",
+        "ARANGO_PASS",
+        "ARANGO_PASSWORD",
+        "HIVE_ARANGO_ENDPOINT",
+        "HIVE_ARANGO_DATABASE",
+        "HIVE_ARANGO_USER",
+        "HIVE_ARANGO_USERNAME",
+        "HIVE_ARANGO_PASS",
+        "HIVE_ARANGO_PASSWORD",
+        "HIVE_DATABASE",
+        "HIVE_ENDPOINT",
+    ]:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("HIVE_ARANGO_ENV_FILE", str(env_file))
+
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.config import normalized_hive_arango_env
+    from tools.infra import arango_env
+
+    arango_env.load_repo_arango_env(tmp_path)
+    hive_cfg = normalized_hive_arango_env()
+
+    assert hive_cfg == {
+        "endpoint": "http://127.0.0.1:8530",
+        "database": "hive_memory",
+        "user": "root",
+        "password": "secret123",
+    }
 
 
 def test_gravity_context_ranks_proven_neighbor_and_excerpt(tmp_path: Path) -> None:
@@ -399,6 +463,87 @@ def test_gravity_context_can_filter_by_rep_layer(tmp_path: Path) -> None:
             "rep_depth_slugs": ["operator"],
         }
     ]
+
+
+def test_build_hive_sidecar_defaults_to_hive_live_packet_memory(monkeypatch) -> None:
+    module = load_tool_module()
+    profile = module.resolve_graph_mode("unified")
+
+    monkeypatch.delenv("HIVE_ARANGO_ENDPOINT", raising=False)
+    monkeypatch.delenv("HIVE_ARANGO_DATABASE", raising=False)
+    monkeypatch.delenv("HIVE_ARANGO_USER", raising=False)
+    monkeypatch.delenv("HIVE_ARANGO_PASS", raising=False)
+    monkeypatch.delenv("HIVE_ENDPOINT", raising=False)
+    monkeypatch.delenv("HIVE_DATABASE", raising=False)
+    monkeypatch.setenv("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+    monkeypatch.setenv("ARANGO_DATABASE", "infogeometry")
+    monkeypatch.setenv("ARANGO_USER", "root")
+    monkeypatch.setenv("ARANGO_PASS", "test")
+    monkeypatch.setenv("HIVE_ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+
+    rows = [
+        [
+            {"_key": "heartbeat-1", "score": 1, "artifact_kind": "HeartbeatPulsePacket", "source": "local_heartbeat", "space": "hive_qi", "entity_key": "heartbeat", "packet": {"note": "hestenes modular"}},
+            {"_key": "event-1", "score": 1, "artifact_kind": "InfoTreeArtifact", "source": "hive-queue-smoke", "space": "infotree", "entity_key": "hestenes-goal", "packet": {"targetPretty": "Hestenes modular bivector"}},
+        ],
+        [{"_key": "packet-1", "score": 1, "kind": "RetrievalHypothesisPacket", "query_text": "Hestenes modular bivector", "authority": "navigation", "representation_class": "translator", "representation_depth": "categorical", "status": "draft"}],
+    ]
+
+    def fake_hive_cursor_all(base_url: str, db: str, payload: dict[str, object]) -> list[dict[str, object]]:
+        assert base_url == "http://127.0.0.1:8530"
+        assert db == "hive_live"
+        return rows.pop(0)
+
+    monkeypatch.setattr(module, "hive_cursor_all", fake_hive_cursor_all)
+    sidecar = module.build_hive_sidecar("Hestenes modular bivector", profile, 2)
+
+    assert sidecar["enabled"] is True
+    assert sidecar["status"] == "ok"
+    assert sidecar["database"] == "hive_live"
+    assert sidecar["memory_mode"] == "packet_memory"
+    assert sidecar["collections"] == {
+        "events": "hive_events",
+        "retrieval_packets": "hive_retrieval_packets",
+    }
+    assert sidecar["matches"]["events"][0]["_key"] == "event-1"
+    assert all(row["_key"] != "heartbeat-1" for row in sidecar["matches"]["events"])
+    assert sidecar["matches"]["events"][0]["weighted_score"] > 0
+    assert sidecar["matches"]["retrieval_packets"][0]["_key"] == "packet-1"
+    assert sidecar["matches"]["retrieval_packets"][0]["weighted_score"] > 0
+    assert "non-authoritative" in sidecar["authority_note"]
+
+
+def test_build_hive_sidecar_returns_bounded_non_authoritative_matches(monkeypatch) -> None:
+    module = load_tool_module()
+    profile = module.resolve_graph_mode("unified")
+
+    monkeypatch.setenv("HIVE_ARANGO_ENDPOINT", "http://127.0.0.1:8540")
+    monkeypatch.setenv("HIVE_ARANGO_DATABASE", "hive_memory")
+    monkeypatch.setenv("HIVE_ARANGO_USER", "root")
+    monkeypatch.setenv("HIVE_ARANGO_PASS", "test")
+
+    rows = [
+        [{"_key": "thought-1", "score": 2, "title": "modular bivector", "kind": "note"}],
+        [{"_key": "link-1", "score": 1, "relation": "supports", "_from": "Thoughts/a", "_to": "Thoughts/b"}],
+    ]
+
+    def fake_hive_cursor_all(base_url: str, db: str, payload: dict[str, object]) -> list[dict[str, object]]:
+        assert base_url == "http://127.0.0.1:8540"
+        assert db == "hive_memory"
+        return rows.pop(0)
+
+    monkeypatch.setattr(module, "hive_cursor_all", fake_hive_cursor_all)
+    sidecar = module.build_hive_sidecar("Hestenes modular bivector", profile, 2)
+
+    assert sidecar["enabled"] is True
+    assert sidecar["status"] == "ok"
+    assert sidecar["database"] == "hive_memory"
+    assert sidecar["memory_mode"] == "legacy_memory"
+    assert sidecar["collections"]["thoughts"] == "Thoughts"
+    assert sidecar["collections"]["causal_links"] == "CausalLinks"
+    assert sidecar["matches"]["thoughts"][0]["_key"] == "thought-1"
+    assert sidecar["matches"]["causal_links"][0]["_key"] == "link-1"
+    assert "non-authoritative" in sidecar["authority_note"]
 
 
 def test_gravity_context_uses_spectral_edge_priors_without_promotion(tmp_path: Path) -> None:

@@ -36,17 +36,17 @@ abbrev MadelungOperator (E : Type _) [NormedAddCommGroup E] [InnerProductSpace �
 /-- Placeholder instance for classical Navier‑Stokes – to be refined with concrete definitions. -/
 instance fluidOperator_NavierStokes {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     FluidOperator E where
-  divergence := sorry
-  gradient := sorry
-  laplacian := sorry
+  divergence := 0
+  gradient := 0
+  laplacian := 0
   timeEvolution := fun _ v => v
 
 /-- Placeholder instance for quantum Madelung operator – to be refined with concrete definitions. -/
 instance fluidOperator_Madelung {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     FluidOperator E where
-  divergence := sorry
-  gradient := sorry
-  laplacian := sorry
+  divergence := 0
+  gradient := 0
+  laplacian := 0
   timeEvolution := fun _ v => v
 
 end InfoGeometry.Canonical

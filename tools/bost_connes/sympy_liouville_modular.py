@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """
-SymPy Verification: Bost-Connes Liouville-Modular Flow Commutation
+SymPy verification: Bost-Connes Liouville-modular flow commutation.
 
-This script symbolically verifies that the Liouville grading operator Γ
-(prime factor parity (-1)^Ω(n)) commutes with the modular flow σ_t.
+This script checks a symbolic scalar commutation identity for the Liouville
+grading operator Γ and the modular-flow phase σ_t.
 
-Theorem: [Γ, σ_t] = 0 for all t ∈ ℝ, n ∈ ℕ⁺
-
-Physical meaning: The Witten index is conserved under thermal time evolution.
+Target identity: [Γ, σ_t] = 0 for all t ∈ ℝ, n ∈ ℕ⁺.
 """
 
 import sympy as sp
@@ -38,7 +36,7 @@ def liouville_grading(n: int) -> int:
     """
     The Liouville grading: Γ(n) = (-1)^Ω(n)
     
-    This is the fermion parity operator in the thermofield context.
+    This is the scalar grading used in the script.
     """
     return (-1) ** omega(n)
 
@@ -368,7 +366,7 @@ def main():
     if all_passed:
         print("✅ ALL TESTS PASSED")
         print("\nThe Liouville grading Γ commutes with the modular flow σ_t.")
-        print("This confirms the Witten index is invariant under thermal time evolution.")
+        print("This executable check establishes the scalar commutation identity used here.")
     else:
         print("❌ SOME TESTS FAILED")
         print("\nReview the failures above.")

@@ -173,7 +173,8 @@ theorem pairTerm_commute_pairPrefix {m i : ℕ} (hmi : m ≤ i) :
       have hmi' : m ≤ i := Nat.le_of_succ_le hmi
       have hi_ne_m : i ≠ m := by
         intro h
-        have : m + 1 ≤ m := by simpa [h] using hmi
+        have : m + 1 ≤ m := by
+          rwa [h] at hmi
         exact (Nat.not_succ_le_self m) this
       have hcomm_prefix : Commute (pairTerm (n := n) i) (pairPrefix (n := n) m) := ih hmi'
       have hcomm_pair : Commute (pairTerm (n := n) i) (pairTerm (n := n) m) := by
@@ -216,7 +217,7 @@ theorem pairPrefix_sq {m : ℕ} (hm : m ≤ n) :
         _ = ((-((-1 : ℂ) ^ m)) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)) := by
                   exact (neg_smul (((-1 : ℂ) ^ m)) (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n)).symm
         _ = ((-1 : ℂ) ^ (m + 1)) • (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
-                  simp [pow_succ, mul_comm, mul_left_comm, mul_assoc]
+                  simp [pow_succ, mul_comm]
 
 theorem tilt_comm_pairPrefix {m j : ℕ} (hmj : m ≤ j) (hj : j < n) :
     Commute (FunctionSpace.tilt (n := n) ⟨j, hj⟩) (pairPrefix (n := n) m) := by
@@ -336,7 +337,7 @@ theorem paperOddGenerator_sq (j : ℕ) (hj : j < n) :
               have hsign : ((-1 : ℂ) ^ j) * ((-1 : ℂ) ^ j) = 1 := by
                 rw [← mul_pow]
                 simp
-              simp [tilt_sq, smul_smul, hsign, mul_smul]
+              simp [tilt_sq, smul_smul, hsign]
 
 theorem paperEvenGenerator_sq (j : ℕ) (hj : j < n) :
     paperEvenGenerator (n := n) j hj * paperEvenGenerator (n := n) j hj = 1 := by
@@ -370,7 +371,7 @@ theorem paperEvenGenerator_sq (j : ℕ) (hj : j < n) :
               have hsign : ((-1 : ℂ) ^ j) * ((-1 : ℂ) ^ j) = 1 := by
                 rw [← mul_pow]
                 simp
-              simp [switch_sq, smul_smul, hsign, mul_smul]
+              simp [switch_sq, smul_smul, hsign]
 
 /-- The normalized odd and even generators at the same slot anticommute. -/
 theorem paperOddGenerator_anticomm_paperEvenGenerator (j : ℕ) (hj : j < n) :
@@ -471,8 +472,29 @@ end FunctionSpace
 
 /-- The paper's `n = 1` finite Pauli bridge is theorem-backed. -/
 theorem cl11PauliBridge_target :
-    Nonempty (InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge.FiniteCantorPauliBridge 1 Mat2) :=
-  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_target
+    (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma
+        ⟨0, by decide⟩ = Eplus ∧
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma
+        ⟨1, by decide⟩ = J1 ∧
+      (∀ i : Fin (2 * 1),
+        (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i *
+          (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i = 1) ∧
+      (∀ {i j : Fin (2 * 1)}, i ≠ j →
+        (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i *
+            (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma j +
+          (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma j *
+            (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).psiGamma i = 0) :=
+by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_zero
+  · exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_one
+  · intro i
+    exact
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).clifford_sq i
+  · intro i j hij
+    rw [
+      (InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge).clifford_anticomm i j hij]
+    simp
 
 /-- The first paper generator in the `n = 1` matrix base case. -/
 theorem cl11PauliBridge_psiGamma_zero :

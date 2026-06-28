@@ -1,0 +1,42 @@
+DIGEST f81f9ad15040e0dcfd8baefe5183b05f
+Ftest2
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:40 Stdlib.setoid_ring.Ring <> <> lib
+prf 69:80 <> test_eq_funs
+R99:102 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R98:98 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R103:103 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 92:92 <> f:1
+binder 94:94 <> g:2
+R111:111 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 107:107 <> x:3
+R115:115 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R135:139 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+binder 123:123 <> t:4
+R129:131 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R126:126 test2 <> f:1 var
+R128:128 test2 <> t:4 var
+R132:132 test2 <> g:2 var
+R134:134 test2 <> t:4 var
+R156:159 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R140:151 Stdlib.Reals.Ranalysis1 <> derivable_pt def
+R153:153 test2 <> f:1 var
+R155:155 test2 <> x:3 var
+R176:180 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R243:243 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R160:171 Stdlib.Reals.Ranalysis1 <> derivable_pt def
+R173:173 test2 <> g:2 var
+R175:175 test2 <> x:3 var
+R181:187 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R193:194 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R192:192 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 188:188 <> l:5
+R217:220 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R195:210 Stdlib.Reals.Ranalysis1 <> derivable_pt_abs def
+R212:212 test2 <> f:1 var
+R214:214 test2 <> x:3 var
+R216:216 test2 <> l:5 var
+R221:236 Stdlib.Reals.Ranalysis1 <> derivable_pt_abs def
+R238:238 test2 <> g:2 var
+R240:240 test2 <> x:3 var
+R242:242 test2 <> l:5 var

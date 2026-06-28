@@ -1,0 +1,61 @@
+DIGEST 23fb3e3b54b3e1791e96050674a25147
+FHolyTrinity
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:54 Stdlib.Sets.Ensembles <> <> lib
+sec 66:76 <> HolyTrinity
+def 139:145 <> ZornDet
+R158:158 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 148:148 <> a:1
+binder 150:150 <> b:2
+binder 152:152 <> x:3
+binder 154:154 <> y:4
+R163:163 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R174:176 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R170:172 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R169:169 HolyTrinity <> a:1 var
+R173:173 HolyTrinity <> b:2 var
+R178:180 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R177:177 HolyTrinity <> x:3 var
+R181:181 HolyTrinity <> y:4 var
+def 198:205 <> Confined
+R214:214 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 208:210 <> det:5
+R230:232 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R227:229 HolyTrinity <> det:5 var
+prf 245:261 <> quark_confinement
+R277:277 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 273:273 <> x:6
+R283:290 HolyTrinity <> Confined def
+R293:299 HolyTrinity <> ZornDet def
+R305:305 HolyTrinity <> x:6 var
+R335:342 HolyTrinity <> Confined def
+R345:351 HolyTrinity <> ZornDet def
+def 420:433 <> InstantonSpace
+R438:440 Corelib.Init.Datatypes <> nat ind
+def 454:464 <> BaryonSpace
+R469:471 Corelib.Init.Datatypes <> nat ind
+def 485:506 <> atiyah_manton_holonomy
+R513:526 HolyTrinity <> InstantonSpace def
+binder 509:509 <> I:7
+R531:541 HolyTrinity <> BaryonSpace def
+R546:546 HolyTrinity <> I:7 var
+def 560:577 <> topological_charge
+R584:597 HolyTrinity <> InstantonSpace def
+binder 580:580 <> I:8
+R602:604 Corelib.Init.Datatypes <> nat ind
+R609:609 HolyTrinity <> I:8 var
+def 623:635 <> baryon_number
+R642:652 HolyTrinity <> BaryonSpace def
+binder 638:638 <> B:9
+R657:659 Corelib.Init.Datatypes <> nat ind
+R664:664 HolyTrinity <> B:9 var
+prf 674:692 <> instanton_is_baryon
+R708:721 HolyTrinity <> InstantonSpace def
+binder 704:704 <> I:10
+R768:770 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R728:740 HolyTrinity <> baryon_number def
+R743:764 HolyTrinity <> atiyah_manton_holonomy def
+R766:766 HolyTrinity <> I:10 var
+R771:788 HolyTrinity <> topological_charge def
+R790:790 HolyTrinity <> I:10 var
+R833:843 HolyTrinity HolyTrinity <> sec

@@ -294,11 +294,20 @@ structure ChiralIndexFormulaDatum
 /-- Owner target for constructing chiral Fredholm index data. -/
 def ChiralFredholmIndexOwnerTarget
     (H : Type*) [AddCommGroup H] [Module ℝ H] : Prop :=
-  Nonempty (ChiralFredholmDatum H)
+  ∀ F : ChiralFredholmDatum H,
+    F.chi.comp F.chi = LinearMap.id ∧
+      F.chi.comp F.D = -(F.D.comp F.chi) ∧
+      F.fredholmIndex.index = F.kernelCount.index ∧
+      F.kernelCount.mirror.index = -F.kernelCount.index
 
 /-- Owner target for constructing an even Kasparov-cycle socket. -/
 def EvenKasparovCycleOwnerTarget
     (A H : Type*) [AddCommGroup H] [Module ℝ H] : Prop :=
-  Nonempty (EvenKasparovCycleDatum A H)
+  ∀ K : EvenKasparovCycleDatum A H,
+    K.chi.comp K.chi = LinearMap.id ∧
+      K.chi.comp K.F = -(K.F.comp K.chi) ∧
+      K.commutators_compact ∧
+      K.square_minus_one_compact ∧
+      K.self_adjoint_mod_compact
 
 end InfoGeometry.OperatorAlgebra.ChiralFredholmIndex

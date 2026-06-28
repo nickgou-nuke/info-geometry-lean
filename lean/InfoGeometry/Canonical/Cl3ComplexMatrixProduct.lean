@@ -43,7 +43,7 @@ abbrev Mat2C : Type := Matrix (Fin 2) (Fin 2) ℂ
 abbrev ProdMat2C : Type := Mat2C × Mat2C
 
 @[simp] lemma I_sq : Complex.I ^ 2 = (-1 : ℂ) := by
-  rw [pow_two, Complex.I_mul_I]
+  simpa using Complex.I_sq
 
 noncomputable def q3 : QuadraticForm ℂ Vec3 :=
   QuadraticMap.sq.prod (QuadraticMap.sq.prod QuadraticMap.sq)

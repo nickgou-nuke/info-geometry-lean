@@ -91,7 +91,7 @@ Standard Pythagorean property for Bregman divergences.
 Re-exported from the core library for research visibility.
 -/
 @[blueprint "thm:research-bregman-pythagorean"]
-theorem pythagorean_True
+theorem bregman_pythagorean_identity
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (S : DualFlatStructure E) (x y z : E)
     (h_ortho : inner ℝ (nabla S z - nabla S y) (x - y) = 0) :

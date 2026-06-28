@@ -301,11 +301,40 @@ end LocalToGlobalAnomalyDatum
 /--
 Owner target for a concrete model connecting four split Clifford atoms to a
 global anomaly class.
+
+This carries the actual witness data directly:
+- the four-atom chirality package,
+- the hypercube action on states,
+- the local-to-global anomaly datum.
 -/
-def CliffordAtomsZ2nOwnerTarget
-    (Op State : Type*) [Ring Op] : Prop :=
-  Nonempty (FourAtomChirality Op) ∧
-    Nonempty (CliffordHypercubeAction (Fin 4) Op State) ∧
-      Nonempty (LocalToGlobalAnomalyDatum.{0})
+structure CliffordAtomsZ2nOwnerTarget
+    (Op State : Type*) [Ring Op] where
+  fourAtomChirality : FourAtomChirality Op
+  hypercubeAction : CliffordHypercubeAction (Fin 4) Op State
+  anomalyDatum : LocalToGlobalAnomalyDatum.{0}
+
+namespace CliffordAtomsZ2nOwnerTarget
+
+variable {Op State : Type*} [Ring Op]
+
+/-- The owner target exposes the four-atom chirality package directly. -/
+def fourAtomChirality_of
+    (T : CliffordAtomsZ2nOwnerTarget Op State) :
+    FourAtomChirality Op :=
+  T.fourAtomChirality
+
+/-- The owner target exposes the local hypercube action directly. -/
+def hypercubeAction_of
+    (T : CliffordAtomsZ2nOwnerTarget Op State) :
+    CliffordHypercubeAction (Fin 4) Op State :=
+  T.hypercubeAction
+
+/-- The owner target exposes the local-to-global anomaly datum directly. -/
+def anomalyDatum_of
+    (T : CliffordAtomsZ2nOwnerTarget Op State) :
+    LocalToGlobalAnomalyDatum.{0} :=
+  T.anomalyDatum
+
+end CliffordAtomsZ2nOwnerTarget
 
 end InfoGeometry.CondensedMatter.CliffordAtomsZ2n

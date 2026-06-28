@@ -648,76 +648,94 @@ The compatibility content is the primitive Clifford pair: two involutions
 square law is proved by `ModularSignCPTRelations.Kmod_square`.
 -/
 def ModularSignCPTCompatibility
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Prop :=
-  Nonempty (ModularSignCPTRelations H)
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Type _ :=
+  ModularSignCPTRelations H
 
 /--
-Owner target for the full/gapped modular sign-CPT construction.
+The full/gapped datum is constructed from primitive Clifford relations.
 
 This remains intentionally compatibility-gated: abstract normed real Hilbert
 data alone do not construct the modular sign and conjugation witnesses.
 -/
-@[owner_target_tag]
-def ModularSignCPTDatumOwnerTarget : Prop :=
+theorem modularSignCPTDatumOwnerTarget :
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     ModularSignCPTCompatibility H →
-      Nonempty (ModularSignCPTDatum H)
-
-/-- The full/gapped datum is constructed from primitive Clifford relations. -/
-theorem modularSignCPTDatumOwnerTarget :
-    ModularSignCPTDatumOwnerTarget := by
+      ∃ R : ModularSignCPTRelations H,
+        R.eps.comp R.eps = 1 ∧
+          R.J.comp R.J = 1 ∧
+          R.J.comp R.eps = -(R.eps.comp R.J) ∧
+          R.Kmod = R.J.comp R.eps ∧
+          R.Kmod.comp R.Kmod = -(1 : EndR H) := by
   intro H _ _ h
-  rcases h with ⟨R⟩
-  exact ⟨R.toDatum⟩
+  let R : ModularSignCPTRelations H := h
+  exact ⟨R, R.eps_square, R.J_square, R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square⟩
+
+/-- Packet readout for the datum constructed from full modular sign-CPT relations. -/
+theorem modularSignCPTDatum_packet
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : ModularSignCPTRelations H) :
+    R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -(1 : EndR H) :=
+  ⟨R.Kmod_eq, R.Kmod_square⟩
 
 /-- Compatibility predicate for constructing the partial zero-mode-aware datum. -/
 def PartialModularSignCPTCompatibility
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Prop :=
-  Nonempty (PartialModularSignCPTRelations H)
-
-/-- Owner target for the partial modular sign-CPT construction. -/
-@[owner_target_tag]
-def PartialModularSignCPTDatumOwnerTarget : Prop :=
-  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    PartialModularSignCPTCompatibility H →
-      Nonempty (PartialModularSignCPTDatum H)
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Type _ :=
+  PartialModularSignCPTRelations H
 
 /-- The partial datum is constructed from primitive zero-mode-aware relations. -/
 theorem partialModularSignCPTDatumOwnerTarget :
-    PartialModularSignCPTDatumOwnerTarget := by
+  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+    PartialModularSignCPTCompatibility H →
+      ∃ R : PartialModularSignCPTRelations H,
+        R.support.comp R.support = R.support ∧
+          R.eps.comp R.eps = R.support ∧
+          R.J.comp R.J = 1 ∧
+          R.J.comp R.eps = -(R.eps.comp R.J) ∧
+          R.Kmod = R.J.comp R.eps ∧
+          R.Kmod.comp R.Kmod = -R.support ∧
+          R.support.comp R.Kmod = R.Kmod ∧
+          R.Kmod.comp R.support = R.Kmod := by
   intro H _ _ h
-  rcases h with ⟨R⟩
-  exact ⟨R.toDatum⟩
+  let R : PartialModularSignCPTRelations H := h
+  exact ⟨R, R.support_idempotent, R.eps_square, R.J_square,
+    R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square, R.support_Kmod,
+    R.Kmod_support⟩
+
+/-- Packet readout for the datum constructed from partial modular sign-CPT relations. -/
+theorem partialModularSignCPTDatum_packet
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : PartialModularSignCPTRelations H) :
+    R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -R.support ∧
+      R.support.comp R.Kmod = R.Kmod ∧
+      R.Kmod.comp R.support = R.Kmod :=
+  ⟨R.Kmod_eq, R.Kmod_square, R.support_Kmod, R.Kmod_support⟩
 
 /--
-Owner target for the full/gapped modular sign-CPT algebra.
+Read back the full/gapped modular sign-CPT algebra once the datum is supplied.
 
 This is intentionally witness-gated: the sign operator, modular conjugation,
 and anticommutation relation are analytic input.
 -/
-@[owner_target_tag]
-def ModularSignCPTOwnerTarget : Prop :=
-  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    ModularSignCPTDatum H →
-      Nonempty (ModularSignCPTDatum H)
-
-/-- The full/gapped owner target is satisfied once the datum is supplied. -/
 theorem modularSignCPTOwnerTarget :
-    ModularSignCPTOwnerTarget := by
-  intro H _ _ M
-  exact ⟨M⟩
-
-/-- Owner target for the partial/zero-mode modular sign-CPT algebra. -/
-@[owner_target_tag]
-def PartialModularSignCPTOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-    PartialModularSignCPTDatum H →
-      Nonempty (PartialModularSignCPTDatum H)
-
-/-- The partial owner target is satisfied once the datum is supplied. -/
-theorem partialModularSignCPTOwnerTarget :
-    PartialModularSignCPTOwnerTarget := by
+    ∀ M : ModularSignCPTDatum H,
+      M.Kmod = M.J.comp M.eps ∧
+        M.Kmod.comp M.Kmod = -(1 : EndR H) ∧
+        M.J.comp M.eps = -(M.eps.comp M.J) := by
   intro H _ _ M
-  exact ⟨M⟩
+  exact ⟨M.Kmod_eq, M.Kmod_square, M.J_eps_anticomm⟩
+
+/-- Read back the partial/zero-mode modular sign-CPT algebra once the datum is supplied. -/
+theorem partialModularSignCPTOwnerTarget :
+  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+    ∀ M : PartialModularSignCPTDatum H,
+      M.Kmod = M.J.comp M.eps ∧
+        M.Kmod.comp M.Kmod = -M.support ∧
+        M.support.comp M.Kmod = M.Kmod ∧
+        M.Kmod.comp M.support = M.Kmod := by
+  intro H _ _ M
+  exact ⟨M.Kmod_eq, M.Kmod_square, M.support_Kmod, M.Kmod_support⟩
 
 end InfoGeometry.OperatorAlgebra.ModularSignCPT

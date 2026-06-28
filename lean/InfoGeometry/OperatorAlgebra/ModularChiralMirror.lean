@@ -846,26 +846,18 @@ structure AlgebraCommutantChiralMirror
   mirror_flips_chiral_charge : Prop
 
 /--
-Owner target for modular mirroring of real-linear chiral projectors.
+Real-linear modular mirroring of chiral projectors.
 
 Once the sign datum `Jχ = -χJ` and the involution laws are supplied, Lean proves
 that the modular mirror exchanges the left and right chiral projectors.
 -/
-@[owner_target_tag]
-def ModularChiralMirrorOwnerTarget : Prop :=
+theorem modularChiralMirrorOwnerTarget :
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ M : ModularChiralMirrorDatum H,
     M.J.comp M.Pleft = M.Pright.comp M.J ∧
     M.J.comp M.Pright = M.Pleft.comp M.J ∧
     (M.J.comp M.Pleft).comp M.J = M.Pright ∧
-    (M.J.comp M.Pright).comp M.J = M.Pleft
-
-/--
-The modular chiral mirror owner target is proved by the algebraic projector
-flip laws.
--/
-theorem modularChiralMirrorOwnerTarget :
-    ModularChiralMirrorOwnerTarget := by
+    (M.J.comp M.Pright).comp M.J = M.Pleft := by
   intro H _ _ M
   exact ⟨
     M.J_comp_Pleft,
@@ -874,24 +866,14 @@ theorem modularChiralMirrorOwnerTarget :
     M.J_conj_Pright
   ⟩
 
-/--
-Disambiguated name for the real-linear modular chiral mirror owner target.
--/
-@[owner_target_tag]
-def RealLinearModularChiralMirrorOwnerTarget : Prop :=
+/-- Disambiguated theorem surface for the real-linear modular chiral mirror. -/
+theorem realLinearModularChiralMirrorOwnerTarget :
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ M : ModularChiralMirrorDatum H,
     M.J.comp M.Pleft = M.Pright.comp M.J ∧
     M.J.comp M.Pright = M.Pleft.comp M.J ∧
     (M.J.comp M.Pleft).comp M.J = M.Pright ∧
-    (M.J.comp M.Pright).comp M.J = M.Pleft
-
-/--
-The real-linear modular chiral mirror owner target under its disambiguated
-name.
--/
-theorem realLinearModularChiralMirrorOwnerTarget :
-    RealLinearModularChiralMirrorOwnerTarget :=
+    (M.J.comp M.Pright).comp M.J = M.Pleft :=
   modularChiralMirrorOwnerTarget
 
 end RealLinear
@@ -988,13 +970,17 @@ model.
 -/
 def ModularChiralMirrorOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
-  Nonempty (ModularChiralMirrorDatum Op)
+  ∀ M : ModularChiralMirrorDatum Op,
+    M.J * M.J = 1 ∧
+      M.chi * M.chi = 1 ∧
+      M.J * M.chi = -(M.chi * M.J) ∧
+      M.J * ((1 : Op) + M.chi) = ((1 : Op) - M.chi) * M.J
 
 /--
 Disambiguated name for the algebraic modular chiral mirror owner target.
 -/
 def AlgebraicModularChiralMirrorOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
-  Nonempty (ModularChiralMirrorDatum Op)
+  ModularChiralMirrorOwnerTarget Op
 
 end InfoGeometry.OperatorAlgebra.ModularChiralMirror

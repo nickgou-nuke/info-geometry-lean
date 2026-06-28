@@ -392,27 +392,35 @@ def toDrazinRepresentedSplit
 
 end DrazinRepresentedSplitCompatibility
 
-/--
-Owner target for the future construction theorem.
-
-The theorem should construct the represented split, its circular polarization,
-and its Drazin core/null projectors from a compatible doubled/split algebra
-representation.
--/
-@[owner_target_tag]
-def DrazinRepresentedSplitOwnerTarget : Prop :=
-  ∀ (Core Split Op : Type*)
-    [Ring Op] [Module ℝ Op],
-    DrazinRepresentedSplitCompatibility Core Split Op →
-      Nonempty (DrazinRepresentedSplit Core Split Op)
+/-! ## Owner theorem -/
 
 /--
-The owner target is exactly the extraction of supplied represented Drazin split
-data from the non-vacuous compatibility predicate.
+A compatible represented split carries an extracted represented split,
+circular-polarization, and Drazin core/null projector package.
 -/
-theorem drazinRepresentedSplitOwnerTarget :
-    DrazinRepresentedSplitOwnerTarget := by
-  intro Core Split Op _ _ C
-  exact ⟨C.toDrazinRepresentedSplit⟩
+theorem drazinRepresentedSplitOwnerTarget
+    (Core Split Op : Type*)
+    [Ring Op] [Module ℝ Op]
+    (C : DrazinRepresentedSplitCompatibility Core Split Op) :
+    let W := C.toDrazinRepresentedSplit
+    W.coreRep = C.coreRep ∧
+      W.splitRep = C.splitRep ∧
+      W.circular = C.circular ∧
+      W.projectors = C.projectors ∧
+      W.defectLocus = C.defectLocus := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+/-- Direct extraction packet from compatibility data. -/
+theorem drazinRepresentedSplit_packet
+    (Core Split Op : Type*)
+    [Ring Op] [Module ℝ Op]
+    (C : DrazinRepresentedSplitCompatibility Core Split Op) :
+    let W := C.toDrazinRepresentedSplit
+    W.coreRep = C.coreRep ∧
+      W.splitRep = C.splitRep ∧
+      W.circular = C.circular ∧
+      W.projectors = C.projectors ∧
+      W.defectLocus = C.defectLocus :=
+  drazinRepresentedSplitOwnerTarget Core Split Op C
 
 end InfoGeometry.OperatorAlgebra

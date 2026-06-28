@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
 /-!
 
@@ -27,8 +28,7 @@ namespace InfoGeometry.Algebra.SplitQuaternionMatrices
 
 open Matrix
 
-abbrev M2R : Type :=
-Matrix (Fin 2) (Fin 2) ℝ
+open InfoGeometryCore
 
 /-- Split-quaternion elliptic unit: `i² = -1`. -/
 def sqI : M2R :=
@@ -48,55 +48,64 @@ def sqK : M2R :=
 @[simp]
 theorem sqI_sq :
 sqI * sqI = -(1 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_sq :
 sqJ * sqJ = (1 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_sq :
 sqK * sqK = (1 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqI_mul_sqJ :
 sqI * sqJ = sqK := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_mul_sqI :
 sqJ * sqI = -sqK := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqJ_mul_sqK :
 sqJ * sqK = -sqI := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_mul_sqJ :
 sqK * sqJ = sqI := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqK_mul_sqI :
 sqK * sqI = sqJ := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem sqI_mul_sqK :
 sqI * sqK = -sqJ := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [sqI, sqJ, sqK, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Positive split idempotent `(1+j)/2`. -/
@@ -110,31 +119,36 @@ noncomputable def Pminus : M2R :=
 @[simp]
 theorem Pplus_idempotent :
 Pplus * Pplus = Pplus := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Pplus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pminus_idempotent :
 Pminus * Pminus = Pminus := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pplus_mul_Pminus :
 Pplus * Pminus = (0 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pminus_mul_Pplus :
 Pminus * Pplus = (0 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Pplus, Pminus, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Pplus_add_Pminus :
 Pplus + Pminus = (1 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Pplus, Pminus, sqJ]
 
 /-- Nilpotent split-quaternion element `i-j`. -/
@@ -144,7 +158,8 @@ sqI - sqJ
 @[simp]
 theorem Nsplit_sq_zero :
 Nsplit * Nsplit = (0 : M2R) := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 norm_num [Nsplit, sqI, sqJ, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem Nsplit_ne_zero :
@@ -168,7 +183,8 @@ theorem splitQ_eq_matrix (w x y z : ℝ) :
 splitQ w x y z =
 !![w + z, x + y;
 y - x, w - z] := by
-ext i j <;> fin_cases i <;> fin_cases j <;>
+ext i j
+all_goals fin_cases i <;> fin_cases j <;>
 simp [splitQ, sqI, sqJ, sqK] <;> ring
 
 /-- Coordinate determinant for `2×2` real matrices. -/

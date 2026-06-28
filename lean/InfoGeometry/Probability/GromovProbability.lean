@@ -25,6 +25,11 @@ variable {α β : Type*} [DecidableEq α] [DecidableEq β]
 theorem projection_bound (A B : Finset α) : (A ∩ B).card ≤ A.card := by
   exact Finset.card_le_card Finset.inter_subset_left
 
+/-- The intersection and set-difference split the total count exactly. -/
+theorem projection_sdiff_decomposition (A B : Finset α) :
+    (A ∩ B).card + (A \ B).card = A.card := by
+  exact Finset.card_inter_add_card_sdiff A B
+
 /-- Strict positivity of the canonical finite permutation count `n!`. -/
 theorem perm_count_pos (n : ℕ) : 0 < n.factorial := by
   exact Nat.factorial_pos n

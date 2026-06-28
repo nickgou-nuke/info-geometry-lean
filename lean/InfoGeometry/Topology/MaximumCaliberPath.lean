@@ -27,7 +27,7 @@ open InfoGeometry.Topology.WilsonLoopThermodynamics
 
 universe u
 
-variable {Op : Type u} [Ring Op] [Algebra ℝ Op]
+variable {Op : Type u} [Ring Op]
 
 /-- Finite path space for a causal DAG. -/
 abbrev PathSpace (Op : Type u) := List Op

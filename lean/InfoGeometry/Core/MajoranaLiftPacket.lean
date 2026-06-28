@@ -2,7 +2,6 @@ import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
-set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Core.MajoranaLiftPacket
@@ -21,7 +20,7 @@ open InfoGeometry.Krein
 section Core
 
 variable {E : Type}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
@@ -58,6 +57,10 @@ theorem K_sq_eq_neg_id :
 
 end MajoranaLiftPacket
 
+section Complete
+
+variable [CompleteSpace E]
+
 /-- Canonical doubled-core Majorana packet from the repo-owned root maps. -/
 @[rep_depth krein]
 noncomputable def canonicalMajoranaLiftPacket : MajoranaLiftPacket (E := E) where
@@ -91,6 +94,7 @@ theorem canonicalMajoranaLiftPacket_root_laws :
   refine ⟨rfl, rfl, rfl, ?_⟩
   exact MajoranaLiftPacket.K_sq_eq_neg_id (E := E) (canonicalMajoranaLiftPacket (E := E))
 
+end Complete
 end Core
 
 end InfoGeometry.Core

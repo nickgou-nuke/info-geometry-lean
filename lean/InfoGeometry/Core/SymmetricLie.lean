@@ -558,9 +558,14 @@ noncomputable def cartanLinearEquiv (S : SymmetricLieAlgebra L) :
   left_inv := S.cartan_left_inverse
   right_inv := S.cartan_right_inverse }
 
-theorem cartan_direct_sum (S : SymmetricLieAlgebra L) :
-    Nonempty (L ≃ₗ[ℝ] S.evenLieSubalgebra × S.oddSubmodule) :=
-  ⟨S.cartanLinearEquiv⟩
+/-- The Cartan decomposition as an actual linear equivalence, not an existence wrapper. -/
+noncomputable def cartan_direct_sum (S : SymmetricLieAlgebra L) :
+    L ≃ₗ[ℝ] S.evenLieSubalgebra × S.oddSubmodule :=
+  S.cartanLinearEquiv
+
+theorem cartan_direct_sum_eq_cartanLinearEquiv (S : SymmetricLieAlgebra L) :
+    S.cartan_direct_sum = S.cartanLinearEquiv :=
+  rfl
 
 section Topology
 

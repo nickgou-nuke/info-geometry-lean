@@ -5,7 +5,6 @@ import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-set_option linter.unnecessarySimpa false
 
 set_option autoImplicit false
 
@@ -31,8 +30,8 @@ lemma set_lintegral_singleton (ν : Measure α) (f : α → ℝ≥0∞) (x : α)
     _ = ∫⁻ y in s, (fun _ => f x) y ∂ν := by
       exact MeasureTheory.lintegral_indicator₀ hs (fun _ => f x)
     _ = f x * ν s := by
-      simpa [s] using
-        (MeasureTheory.lintegral_const (μ := ν.restrict s) (c := f x))
+      rw [MeasureTheory.lintegral_const]
+      simp [s]
 
 omit [Countable α] in
 /--

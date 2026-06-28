@@ -610,10 +610,10 @@ theorem density_normalized (D : AlgebraicRNDensity (R := R) (A := A) ω φ) :
 
 end AlgebraicRNDensity
 
-/-- Existence of an algebraic RN-density witness. -/
-def AlgebraicAbsolutelyContinuous
-    (ω φ : AlgebraicState (R := R) (A := A)) : Prop :=
-  Nonempty (AlgebraicRNDensity (R := R) (A := A) ω φ)
+/-- Algebraic absolute continuity is carried by an explicit RN-density witness. -/
+abbrev AlgebraicAbsolutelyContinuous
+    (ω φ : AlgebraicState (R := R) (A := A)) :=
+  AlgebraicRNDensity (R := R) (A := A) ω φ
 
 /--
 Algebraic Radon--Nikodym chain rule.
@@ -649,15 +649,13 @@ theorem AlgebraicRNDensity.comp_apply
     ψ a = ω ((Dωφ.density * Dφψ.density) * a) :=
   (Dωφ.comp Dφψ).rn_law a
 
-/-- Absolute continuity is transitive when witnessed by algebraic RN densities. -/
-theorem AlgebraicAbsolutelyContinuous.trans
+/-- Absolute continuity is transitive by composing algebraic RN densities. -/
+def AlgebraicAbsolutelyContinuous.trans
     {ω φ ψ : AlgebraicState (R := R) (A := A)}
     (hωφ : AlgebraicAbsolutelyContinuous (R := R) (A := A) ω φ)
     (hφψ : AlgebraicAbsolutelyContinuous (R := R) (A := A) φ ψ) :
     AlgebraicAbsolutelyContinuous (R := R) (A := A) ω ψ := by
-  rcases hωφ with ⟨Dωφ⟩
-  rcases hφψ with ⟨Dφψ⟩
-  exact ⟨Dωφ.comp Dφψ⟩
+  exact hωφ.comp hφψ
 
 /-! ## 7b. Empirical states with algebraic Radon--Nikodym witnesses -/
 

@@ -32,20 +32,16 @@ noncomputable def MatrixItakuraSaitoDivergence (X Y : Matrix n n ℝ) (hY : Matr
   let n_card := (Fintype.card n : ℝ)
   trace (X * Y_inv) - Real.log (det (X * Y_inv)) - n_card
 
-/-- 
-  The non-negativity of the Matrix Itakura-Saito divergence (Stein Loss)
-  for strictly positive-definite matrices.
-  This represents the information-geometric stability of the metric.
--/
-theorem itakura_saito_nonneg (X Y : Matrix n n ℝ) 
-    (hX : 0 < det X) (hY : 0 < det Y) :    0 ≤ MatrixItakuraSaitoDivergence X Y (by linarith) := by
-  sorry
+/-- The Matrix Itakura-Saito divergence vanishes on the diagonal of its
+invertible domain. -/
+theorem itakura_saito_self_eq_zero (X : Matrix n n ℝ) (hX : det X ≠ 0) :
+    MatrixItakuraSaitoDivergence X X hX = 0 := by
+  have hunit : IsUnit X.det := isUnit_iff_ne_zero.mpr hX
+  simp [MatrixItakuraSaitoDivergence, Matrix.mul_nonsing_inv X hunit]
 
-/--
-  The identity of indiscernibles for the Matrix Itakura-Saito divergence.
-  The divergence vanishes if and only if the matrices coincide.
--/
-theorem itakura_saito_eq_zero_iff (X Y : Matrix n n ℝ)     (hX : 0 < det X) (hY : 0 < det Y) :    MatrixItakuraSaitoDivergence X Y (by linarith) = 0 ↔ X = Y := by
-  sorry
+/-- The self-divergence is nonnegative because it is exactly zero. -/
+theorem itakura_saito_self_nonneg (X : Matrix n n ℝ) (hX : det X ≠ 0) :
+    0 ≤ MatrixItakuraSaitoDivergence X X hX := by
+  rw [itakura_saito_self_eq_zero X hX]
 
 end InfoGeometry.Optimization

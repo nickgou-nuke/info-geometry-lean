@@ -47,6 +47,26 @@ def BirkhoffDualAscentStep (W A : Matrix n n ℝ) (η : ℝ) : Matrix n n ℝ :=
 theorem dual_ascent_preserves_sums (W A : Matrix n n ℝ) (η : ℝ)
     (h_tan : IsInTangentCone W A) : 
     (∀ i, ∑ j, (BirkhoffDualAscentStep W A η) i j = 1) ↔ (∀ i, ∑ j, W i j = 1) := by
-  sorry
+  constructor
+  · intro h i
+    have hi := h i
+    have hsum :
+        ∑ j, (W i j + η * A i j) = ∑ j, W i j := by
+      rw [Finset.sum_add_distrib]
+      have hscaled : ∑ j, η * A i j = 0 := by
+        rw [← Finset.mul_sum, h_tan.row_sum_zero i, mul_zero]
+      rw [hscaled, add_zero]
+    simp [BirkhoffDualAscentStep] at hi
+    rw [hsum] at hi
+    exact hi
+  · intro h i
+    have hsum :
+        ∑ j, (W i j + η * A i j) = ∑ j, W i j := by
+      rw [Finset.sum_add_distrib]
+      have hscaled : ∑ j, η * A i j = 0 := by
+        rw [← Finset.mul_sum, h_tan.row_sum_zero i, mul_zero]
+      rw [hscaled, add_zero]
+    simp [BirkhoffDualAscentStep]
+    rw [hsum, h i]
 
 end InfoGeometry.Optimization

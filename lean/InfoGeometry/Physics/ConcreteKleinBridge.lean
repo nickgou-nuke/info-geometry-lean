@@ -1,68 +1,60 @@
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.NumberTheory.Padics.PadicVal.Defs
+import InfoGeometry.Canonical.KreinCarrierInstances
 
 /-!
 # InfoGeometry.Physics.ConcreteKleinBridge
 
-Concrete two-coordinate Klein bridge used as a small executable owner file for
-the grading, trace-zero readout, and p-adic anomaly-resolution interface.
+Thin projection package over the owner file
+`InfoGeometry.Canonical.KreinCarrierInstances`.
+
+This keeps the mathematically correct `WithLp 2 (ℝ × ℝ)` carrier and reuses the
+already-verified concrete Klein/Krein datum instead of duplicating raw-product
+smoke-test code.
+
+Honesty boundary:
+- the carrier is the `L²` product carrier, not raw `ℝ × ℝ`
+- the trace-zero theorem is still a concrete readout theorem for the explicit
+  zero-defect bridge
+- this file is a projection surface, not a new owner formalization
 -/
 
 namespace InfoGeometry.Physics.ConcreteKleinBridge
 
-abbrev KleinCoverCarrier := ℝ × ℝ
+abbrev KleinCoverCarrier : Type := _root_.KleinBottleCarrier
 
-/-- Fundamental symmetry `J(x,y) = (x,-y)` on the concrete two-coordinate Klein carrier. -/
-noncomputable def fundamentalSymmetryKlein :
-    KleinCoverCarrier →L[ℝ] KleinCoverCarrier :=
-  { toFun := fun p => (p.1, -p.2)
-    map_add' := by intro x y; ext <;> simp [add_comm]
-    map_smul' := by intro c x; ext <;> simp
-    cont := by continuity }
+abbrev fundamentalSymmetryKlein : KleinCoverCarrier →L[ℝ] KleinCoverCarrier :=
+  _root_.fundamentalSymmetryKlein
 
-/-- Modular generator `G(x,y) = (-x,y)` on the concrete two-coordinate Klein carrier. -/
-noncomputable def modularGeneratorKlein :
-    KleinCoverCarrier →L[ℝ] KleinCoverCarrier :=
-  { toFun := fun p => (-p.1, p.2)
-    map_add' := by intro x y; ext <;> simp [add_comm]
-    map_smul' := by intro c x; ext <;> simp
-    cont := by continuity }
+abbrev modularGeneratorKlein : KleinCoverCarrier →L[ℝ] KleinCoverCarrier :=
+  _root_.modularGeneratorKlein
 
-/-- The concrete fundamental symmetry is involutive. -/
-theorem fundamentalSymmetry_sq :
-    (fundamentalSymmetryKlein.comp fundamentalSymmetryKlein) =
-      ContinuousLinearMap.id ℝ KleinCoverCarrier := by
-  apply ContinuousLinearMap.ext
-  intro p
-  ext <;> simp [fundamentalSymmetryKlein, ContinuousLinearMap.comp_apply]
+noncomputable abbrev concreteKreinDatumKlein := _root_.concreteKreinDatumKlein
+noncomputable abbrev concreteRotorFlowKlein := _root_.concreteRotorFlowKlein
+noncomputable abbrev concreteCoreProjectorKlein := _root_.concreteCoreProjectorKlein
+noncomputable abbrev concreteRelativeFredholmKlein := _root_.concreteRelativeFredholmKlein
+noncomputable abbrev concreteBridgeKlein := _root_.concreteBridgeKlein
 
-structure SimpleKreinDatum where
-  grading : KleinCoverCarrier →L[ℝ] KleinCoverCarrier
-  grading_sq : grading.comp grading = ContinuousLinearMap.id ℝ KleinCoverCarrier
+/-- The fundamental symmetry on the `WithLp` Klein carrier is involutive. -/
+theorem fundamentalSymmetryKlein_sq :
+    fundamentalSymmetryKlein * fundamentalSymmetryKlein =
+      ContinuousLinearMap.id ℝ KleinCoverCarrier :=
+  _root_.fundamentalSymmetryKlein_sq
 
-noncomputable def concreteKreinDatumKlein : SimpleKreinDatum :=
-  { grading := fundamentalSymmetryKlein
-    grading_sq := fundamentalSymmetry_sq }
+/-- Honest concrete readout: the explicit bridge has zero Krein trace. -/
+theorem concreteBridgeKlein_kreinTrace_zero :
+    concreteBridgeKlein.relativeFredholm.fredholm.kreinTrace = 0 :=
+  _root_.concreteBridgeKlein_kreinTrace
 
-structure SimpleBridge where
-  datum : SimpleKreinDatum
-  kreinTrace : ℝ
-  trace_zero : kreinTrace = 0
+/-- Re-export the concrete 2-adic valuation fact for `137`. -/
+theorem padicValNat_137_eq_zero : padicValNat 2 137 = 0 :=
+  _root_.padicValNat_two_137
 
-noncomputable def concreteBridgeKlein : SimpleBridge :=
-  { datum := concreteKreinDatumKlein
-    kreinTrace := 0
-    trace_zero := rfl }
-
-theorem concreteBridgeKlein_kreinTrace_zero : concreteBridgeKlein.kreinTrace = 0 := rfl
-
-/-- Trace-zero anomaly-resolution predicate for a bridge at a chosen p-adic stage. -/
-def TraceZeroAnomalyResolution (B : SimpleBridge) (n : ℕ) : Prop :=
-  padicValNat 2 n = 0 → B.kreinTrace = 0
-
+/--
+Projection of the owner theorem: this is still a concrete bridge theorem, not a
+uniform p-adic anomaly theorem for arbitrary bridges.
+-/
 theorem concreteBridgeKlein_traceZeroAnomalyResolution_137 :
-    TraceZeroAnomalyResolution concreteBridgeKlein 137 := fun _ => rfl
-
-theorem padicValNat_137_eq_zero : padicValNat 2 137 = 0 := by norm_num [padicValNat]
+    InfoGeometry.Canonical.HestenesKreinModularGeometry.HestenesKreinModularFredholmBridge.TraceZeroAnomalyResolution
+      concreteBridgeKlein 137 :=
+  _root_.concreteBridgeKlein_traceZeroAnomalyResolution_137
 
 end InfoGeometry.Physics.ConcreteKleinBridge

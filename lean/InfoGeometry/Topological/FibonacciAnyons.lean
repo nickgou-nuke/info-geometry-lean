@@ -112,6 +112,20 @@ theorem mapMatrix_mul {m n p K L : Type*} [Fintype n] [CommRing K] [CommRing L]
   ext i j
   simp [mapMatrix, Matrix.mul_apply]
 
+/-- Coordinatewise ring-hom transport preserves matrix addition. -/
+theorem mapMatrix_add {m n K L : Type*} [CommRing K] [CommRing L]
+    (f : K →+* L) (A B : Matrix m n K) :
+    mapMatrix f (A + B) = mapMatrix f A + mapMatrix f B := by
+  ext i j
+  simp [mapMatrix]
+
+/-- Coordinatewise ring-hom transport preserves the zero matrix. -/
+theorem mapMatrix_zero {m n K L : Type*} [CommRing K] [CommRing L]
+    (f : K →+* L) :
+    mapMatrix f (0 : Matrix m n K) = 0 := by
+  ext i j
+  simp [mapMatrix]
+
 /-- Coordinatewise ring-hom transport preserves the identity matrix. -/
 theorem mapMatrix_one {n K L : Type*} [DecidableEq n] [CommRing K] [CommRing L]
     (f : K →+* L) :

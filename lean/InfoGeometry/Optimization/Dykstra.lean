@@ -2,8 +2,7 @@
 /- Alternating projection algorithm to retract a matrix onto the Birkhoff Polytope
    (doubly stochastic matrices with row/column sums = 1 and non-negative entries). -/
 
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Algebra.BigOperators.Basic
+import Mathlib
 
 open Matrix
 open scoped Matrix BigOperators
@@ -20,7 +19,7 @@ noncomputable def ProjectRow (M : Matrix n n ℝ) : Matrix n n ℝ :=
 noncomputable def ProjectCol (M : Matrix n n ℝ) : Matrix n n ℝ :=
   fun i j => M i j / (∑ k : n, M k j)
 
-/-- 
+/--
   One step of Dykstra's Alternating Projection Algorithm.
   Takes the current matrix X, and the residual increment matrices P and Q.
 -/

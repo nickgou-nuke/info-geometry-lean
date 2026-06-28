@@ -10,20 +10,24 @@ This module implements the `Extend F` structure for handling both positive and
 negative infinity in info-geometric measures and divergences.
 -/
 
-set_option linter.unusedSectionVars false
-
 namespace InfoGeometry.Core
 
 /-- `Extend F` represents the extended field `F ∪ {⊥, ⊤}`. -/
 abbrev Extend (F : Type*) := WithBot (WithTop F)
 
 section Instances
-variable {F : Type*} [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+variable {F : Type*}
+
+section OrderedField
+
+variable [Field F] [LinearOrder F] [IsStrictOrderedRing F]
 
 instance : LinearOrder (Extend F) := inferInstance
 instance : AddCommMonoid (Extend F) := inferInstance
 instance : BoundedOrder (Extend F) := inferInstance
 instance : IsOrderedAddMonoid (Extend F) := inferInstance
+
+end OrderedField
 
 /-- The canonical inclusion from `F` to `Extend F` is registered as a coercion. -/
 instance : Coe F (Extend F) := ⟨fun x => WithBot.some (WithTop.some x)⟩
@@ -53,13 +57,13 @@ instance [InvolutiveNeg F] : InvolutiveNeg (Extend F) where
         change some ((- -a : F) : WithTop F) = some (a : WithTop F)
         exact congrArg some (by simp)
 
-@[simp] lemma coe_zero : ((0 : F) : Extend F) = WithBot.some (WithTop.some 0) := rfl
-@[simp] lemma coe_one : ((1 : F) : Extend F) = WithBot.some (WithTop.some 1) := rfl
+@[simp] lemma coe_zero [Zero F] : ((0 : F) : Extend F) = WithBot.some (WithTop.some 0) := rfl
+@[simp] lemma coe_one [One F] : ((1 : F) : Extend F) = WithBot.some (WithTop.some 1) := rfl
 
-@[simp] lemma bot_lt_coe (x : F) : (⊥ : Extend F) < (x : Extend F) := by
+@[simp] lemma bot_lt_coe [Preorder F] (x : F) : (⊥ : Extend F) < (x : Extend F) := by
   simp
 
-@[simp] lemma coe_lt_top (x : F) : (x : Extend F) < (⊤ : Extend F) := by
+@[simp] lemma coe_lt_top [Preorder F] (x : F) : (x : Extend F) < (⊤ : Extend F) := by
   simpa using
     (WithBot.coe_lt_coe.mpr (WithTop.coe_lt_top x) :
       (((WithTop.some x : WithTop F) : WithBot (WithTop F)) < ((⊤ : WithTop F) : WithBot (WithTop F))))

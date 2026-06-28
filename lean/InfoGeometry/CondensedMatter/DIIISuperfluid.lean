@@ -92,11 +92,11 @@ structure DIIISuperfluidDatum
   /--
   Phase-corrected product relation.
 
-  In complex notation this is morally `chi = i Theta Xi`.  In the real doubled
-  formalism, the phase correction is represented by the Hestenes/modular phase
-  structure, so the concrete relation is supplied as data.
+  In the real doubled formalism, the chiral grading is supplied as the actual
+  product of the two symmetry generators.
   -/
-  chiral_is_phase_corrected_product : Prop
+  chiral_is_phase_corrected_product :
+    chi = Theta * Xi
 
 namespace DIIISuperfluidDatum
 
@@ -137,6 +137,33 @@ def ChiralOffDiagonal : Prop :=
 theorem chiral_offDiagonal :
     D.ChiralOffDiagonal :=
   D.chi_anticommutes_H
+
+/-- The chiral grading is explicitly the product of time reversal and particle-hole symmetry. -/
+theorem chi_eq_phase_corrected_product :
+    D.chi = D.Theta * D.Xi :=
+  D.chiral_is_phase_corrected_product
+
+/--
+The phase-corrected chiral product is a genuine involution:
+its square is the identity.
+-/
+theorem phase_corrected_product_sq :
+    (D.Theta * D.Xi) * (D.Theta * D.Xi) = 1 := by
+  simpa [D.chi_eq_phase_corrected_product] using D.chi_square
+
+/--
+The phase-corrected product inherits the chiral symmetry relation.
+-/
+theorem phase_corrected_product_chiral_symmetry :
+    (D.Theta * D.Xi) * D.Hbdg * (D.Theta * D.Xi) = -D.Hbdg := by
+  simpa [D.chi_eq_phase_corrected_product] using D.chiral_symmetry
+
+/--
+The phase-corrected product anticommutes with the BdG Hamiltonian.
+-/
+theorem phase_corrected_product_anticommutes_H :
+    (D.Theta * D.Xi) * D.Hbdg = -(D.Hbdg * (D.Theta * D.Xi)) := by
+  simpa [D.chi_eq_phase_corrected_product] using D.chi_anticommutes_H
 
 end DIIISuperfluidDatum
 
@@ -184,9 +211,11 @@ Owner target for a concrete DIII superfluid model.
 
 Concrete instances include continuum 3He-B, lattice BdG models, or
 Dirac/Majorana effective surface theories.
+
+This is the actual datum type, not a wrapper existence claim.
 -/
-def DIIISuperfluidOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
-  Nonempty (DIIISuperfluidDatum Op)
+abbrev DIIISuperfluidOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Type _ :=
+  DIIISuperfluidDatum Op
 
 end InfoGeometry.CondensedMatter.DIIISuperfluid

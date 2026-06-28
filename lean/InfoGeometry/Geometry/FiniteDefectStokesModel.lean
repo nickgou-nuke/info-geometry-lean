@@ -107,6 +107,34 @@ theorem P_mul_P :
   fin_cases i <;> fin_cases j <;>
     norm_num [P, Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem F_add_P :
+    F + P = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [F, P]
+
+theorem P_add_F :
+    P + F = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [F, P]
+
+/-- The defect projector is the complement of the bounded transform piece. -/
+theorem P_eq_one_sub_F :
+    P = 1 - F := by
+  have h := F_add_P
+  ext i j
+  have h' := congrFun (congrFun h i) j
+  fin_cases i <;> fin_cases j <;> norm_num at h' ⊢
+
+/-- The bounded transform piece is the complement of the defect projector. -/
+theorem F_eq_one_sub_P :
+    F = 1 - P := by
+  have h := P_add_F
+  ext i j
+  have h' := congrFun (congrFun h i) j
+  fin_cases i <;> fin_cases j <;> norm_num at h' ⊢
+
 theorem F_mul_F_add_P :
     F * F + P = 1 := by
   ext i j

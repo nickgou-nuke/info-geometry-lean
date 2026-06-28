@@ -44,6 +44,24 @@ namespace RealChiralPhase
 def normSq (z : RealChiralPhase) : ℝ :=
   z.scalar ^ 2 + z.bivector ^ 2
 
+/-- The norm square of a real chiral phase is nonnegative. -/
+theorem normSq_nonneg (z : RealChiralPhase) : 0 ≤ normSq z := by
+  unfold normSq
+  exact add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- The norm square vanishes exactly when both coordinates vanish. -/
+theorem normSq_eq_zero_iff (z : RealChiralPhase) :
+    normSq z = 0 ↔ z.scalar = 0 ∧ z.bivector = 0 := by
+  constructor
+  · intro h
+    have hpair :
+        z.scalar ^ 2 = 0 ∧ z.bivector ^ 2 = 0 := by
+      exact (add_eq_zero_iff_of_nonneg (sq_nonneg z.scalar) (sq_nonneg z.bivector)).mp h
+    exact ⟨sq_eq_zero_iff.mp hpair.1, sq_eq_zero_iff.mp hpair.2⟩
+  · intro h0
+    rcases h0 with ⟨hs, hb⟩
+    simp [normSq, hs, hb]
+
 /-- Multiplication in the real rotor plane, with `J² = -1`. -/
 def mul (z w : RealChiralPhase) : RealChiralPhase where
   scalar := z.scalar * w.scalar - z.bivector * w.bivector
@@ -129,6 +147,26 @@ def realMoebiusDenSq
     (τ : RealUpperHalfPlane) : ℝ :=
   (g.c * τ.x + g.d) ^ 2 + (g.c * τ.y) ^ 2
 
+/-- The modular denominator norm square is exactly the displayed quadratic form. -/
+theorem realModularDenominatorNormSq_eq_realMoebiusDenSq
+    (g : SL2RMatrix) (τ : RealUpperHalfPlane) :
+    realModularDenominatorNormSq g τ = realMoebiusDenSq g τ := by
+  rfl
+
+/-- The real Möbius denominator square is nonnegative. -/
+theorem realMoebiusDenSq_nonneg
+    (g : SL2RMatrix) (τ : RealUpperHalfPlane) :
+    0 ≤ realMoebiusDenSq g τ := by
+  unfold realMoebiusDenSq
+  exact add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- The rotor denominator norm square is nonnegative. -/
+theorem realModularDenominatorNormSq_nonneg
+    (g : SL2RMatrix) (τ : RealUpperHalfPlane) :
+    0 ≤ realModularDenominatorNormSq g τ := by
+  simpa [realModularDenominatorNormSq_eq_realMoebiusDenSq] using
+    realMoebiusDenSq_nonneg g τ
+
 /--
 Real Möbius action formula, stated with an explicit positivity gate.
 
@@ -146,5 +184,12 @@ def realMoebiusApply
     τ.y / realMoebiusDenSq g τ
   y_pos := by
     exact div_pos τ.y_pos hden
+
+/-- The real Möbius action lands back in the positive-height half-plane. -/
+theorem realMoebiusApply_y_pos
+    (g : SL2RMatrix) (τ : RealUpperHalfPlane)
+    (hden : 0 < realMoebiusDenSq g τ) :
+    0 < (realMoebiusApply g τ hden).y := by
+  simpa [realMoebiusApply] using div_pos τ.y_pos hden
 
 end InfoGeometry.Geometry

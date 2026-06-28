@@ -197,6 +197,14 @@ theorem exists_mode_of_kernelIndex_ne_zero
   | cons m _ms =>
       exact ⟨m, by simp⟩
 
+/-- A nonzero finite index forces the kernel basis to be nonempty. -/
+theorem kernelBasis_nonempty_of_kernelIndex_ne_zero
+    {x : State}
+    (hx : K.kernelIndex x ≠ 0) :
+    K.kernelBasis x ≠ [] := by
+  intro hEmpty
+  exact hx (K.kernelIndex_eq_zero_of_kernelBasis_eq_nil hEmpty)
+
 end FiniteGradedKernelDatum
 
 /-! ## 2. Algebraic Kasparov defect and projected kernel -/

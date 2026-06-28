@@ -243,6 +243,16 @@ theorem generalizedKL_eq_zero_iff (μ ν : PositiveMeasure α ℝ) :
   · rintro rfl
     simp [generalizedKL, gklTerm]
 
+theorem generalizedKL_pos_of_ne (μ ν : PositiveMeasure α ℝ) (h : μ ≠ ν) :
+    0 < generalizedKL μ ν := by
+  have hnonneg : 0 ≤ generalizedKL μ ν := generalizedKL_nonneg μ ν
+  have hne : generalizedKL μ ν ≠ 0 := by
+    intro hz
+    exact h ((generalizedKL_eq_zero_iff μ ν).1 hz)
+  have hne' : 0 ≠ generalizedKL μ ν := by
+    simpa [eq_comm] using hne
+  exact lt_of_le_of_ne hnonneg hne'
+
 end GeneralizedKL
 
 end PositiveMeasure

@@ -12,6 +12,10 @@ import InfoGeometry.Clifford.KoszulFoundation
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
+import InfoGeometry.Clifford.CliffordInjectivity
+import InfoGeometry.Clifford.CliffordTower
+import InfoGeometry.Clifford.CliffordTowerFunctor
+import InfoGeometry.Clifford.QuadraticPolarBridge
 import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
@@ -25,11 +29,16 @@ import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
 import InfoGeometry.Clifford.Cl11SupergradedTensorBridge
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.Clifford.RealCantorOpLimit
 import InfoGeometry.Clifford.Cl11TensorTowerSupergraded
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
 import InfoGeometry.Clifford.InductiveColimitCrystal
 import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
+import InfoGeometry.Clifford.GammaMatrices
+import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Clifford.SpinorRep_REAL
+import InfoGeometry.Clifford.SignedPermutation
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.SplitQuaternion
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
@@ -39,6 +48,7 @@ import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.Hestenes1975
 import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 import InfoGeometry.Clifford.HestenesCauchyRiemann
 import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
@@ -80,6 +90,7 @@ import InfoGeometry.Clifford.GeometricRotor
 import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
 import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
+import InfoGeometry.Clifford.ConformalSpinorBridge.SuperLieRingInstance
 
 namespace InfoGeometry
 

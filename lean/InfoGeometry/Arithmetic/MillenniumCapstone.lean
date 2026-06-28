@@ -115,7 +115,7 @@ Proved in `BostConnesSystem.lean:141` using `ArithmeticFunction.cardFactors_mul`
 -/
 example (p n : ℕ+) (hp : Nat.Prime (p.val)) :
     BostConnesSystem.liouville (p * n) = - BostConnesSystem.liouville n :=
-  BostConnesSystem.liouville_prime_mul p n hp
+  BostConnesSystem.liouville_prime_mul p n hp n.property
 
 /-
 **Kernel Theorem 3 (Chiral Dirac Anticommutation).** For all boundary

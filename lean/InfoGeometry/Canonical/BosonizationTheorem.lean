@@ -88,10 +88,20 @@ package.
 theorem splitClifford_current_boundary_and_sugawara_morphism
     (H : CurrentHeisenbergRep 𝕜 V) :
     Nonempty SplitCliffordCurrentMorphism ∧
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
+    let M := CurrentSugawaraMorphism.ofHeisenberg H
+    M.heisenberg = H ∧
+      M.virasoro = H.currentSugawaraRepresentation ∧
+      (∀ n : Int,
+        M.virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+          H.sugawaraStressMode n) ∧
+      M.virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+        (1 : V →ₗ[𝕜] V) := by
   constructor
   · exact ⟨splitCliffordInfinityCurrentMorphism⟩
-  · exact CurrentSugawaraMorphism.nonempty H
+  · refine ⟨rfl, rfl, ?_, ?_⟩
+    · intro n
+      exact H.currentSugawaraRepresentation_lgen_apply n
+    · exact H.currentSugawaraRepresentation_central
 
 end Core
 

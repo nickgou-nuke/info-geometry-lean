@@ -12,11 +12,33 @@ same theorem rather than carrying an unfinished independent scalar derivation.
 
 namespace InfoGeometry.Fibonacci.FibAnyonThm4
 
-abbrev F := InfoGeometry.Canonical.YangBaxterProof.F
-abbrev R := InfoGeometry.Canonical.YangBaxterProof.R
-abbrev B := InfoGeometry.Canonical.YangBaxterProof.B
+open InfoGeometry.Canonical.YangBaxterProof
 
-theorem braid_relation : R * B * R = B * R * B := by
-  exact InfoGeometry.Canonical.YangBaxterProof.braid_relation
+/-- The Fibonacci scalar constraints used by the finite matrix owner. -/
+theorem fibonacci_scalar_packet :
+    q ^ 5 = -1 ∧ τ ^ 2 + τ = 1 ∧ s ^ 2 = τ :=
+  ⟨q_pow_five, tau_sq_add_tau, s_sq_eq_tau⟩
+
+/-- The finite Fibonacci recoupling matrix is involutive. -/
+theorem fusion_matrix_involutive :
+    F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+  F_sq
+
+/-- Conjugating the middle braid by the fusion matrix recovers the diagonal braid. -/
+theorem middle_braid_conjugation :
+    F * B * F = R :=
+  F_B_F_eq_R
+
+/-- Concrete finite Fibonacci Artin/Yang-Baxter matrix relation. -/
+theorem braid_relation : R * B * R = B * R * B :=
+  InfoGeometry.Canonical.YangBaxterProof.braid_relation
+
+/-- The archived theorem surface is backed by the owner scalar, fusion, and braid facts. -/
+theorem theorem4_packet :
+    (q ^ 5 = -1 ∧ τ ^ 2 + τ = 1 ∧ s ^ 2 = τ) ∧
+      F * F = (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
+        F * B * F = R ∧
+          R * B * R = B * R * B :=
+  ⟨fibonacci_scalar_packet, fusion_matrix_involutive, middle_braid_conjugation, braid_relation⟩
 
 end InfoGeometry.Fibonacci.FibAnyonThm4

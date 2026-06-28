@@ -653,67 +653,170 @@ end HorizonProcessClassification
 /-! ## 11. Owner targets -/
 
 /--
-Owner target for Genesis/quench data.
+Owner target for Genesis/quench split readout.
 -/
 def GenesisQuenchOwnerTarget
     (Latent Observable Hidden Boundary : Type*) : Prop :=
-  Nonempty (GenesisSplitDatum Latent Observable Hidden Boundary)
+  ∀ G : GenesisSplitDatum Latent Observable Hidden Boundary,
+    ∀ x y : Latent,
+      G.toObservable x = G.toObservable y →
+      G.toHidden x = G.toHidden y →
+      G.boundaryOf x = G.boundaryOf y →
+        x = y
+
+/-- A supplied Genesis split datum separates latent states by full readout. -/
+theorem genesisQuenchOwnerTarget
+    (Latent Observable Hidden Boundary : Type*) :
+    GenesisQuenchOwnerTarget Latent Observable Hidden Boundary := by
+  intro G x y hobs hhidden hboundary
+  exact G.latent_eq_of_split_eq hobs hhidden hboundary
 
 /--
-Owner target for Revelation/recovery data.
+Owner target for Revelation/recovery readout.
 -/
 def RevelationRecoveryOwnerTarget
     (Event Obs Memory : Type*) : Prop :=
-  ∃ L : HiddenMemoryLedger Event Obs Memory,
-    Nonempty (RevelationRecoveryDatum L)
+  ∀ L : HiddenMemoryLedger Event Obs Memory,
+    ∀ R : RevelationRecoveryDatum L,
+      L.ExteriorSeparatesHidden ∧
+        (∀ e : Event,
+          R.exteriorDecode (L.observedDefect e) = L.hiddenMemory e)
+
+/-- A supplied Revelation datum separates hidden memory through exterior data. -/
+theorem revelationRecoveryOwnerTarget
+    (Event Obs Memory : Type*) :
+    RevelationRecoveryOwnerTarget Event Obs Memory := by
+  intro L R
+  exact ⟨R.exterior_separates_hidden, fun e => R.faithful_recovery e⟩
 
 /--
-Owner target for Pralaya/dissolution data.
+Owner target for Pralaya/dissolution readout.
 -/
 def PralayaDissolutionOwnerTarget
     (Memory Thermal : Type*) : Prop :=
-  Nonempty (PralayaDissolutionDatum Memory Thermal)
+  ∀ P : PralayaDissolutionDatum Memory Thermal,
+    ∀ m₁ m₂ : Memory,
+      P.thermalize m₁ = P.thermalize m₂
+
+/-- A supplied Pralaya datum collapses all memories to the same terminal image. -/
+theorem pralayaDissolutionOwnerTarget
+    (Memory Thermal : Type*) :
+    PralayaDissolutionOwnerTarget Memory Thermal := by
+  intro P m₁ m₂
+  exact P.thermalize_eq_thermalize m₁ m₂
 
 /--
 Owner target for evaporation plus exterior-collapse obstruction.
 -/
 def EvaporationWithoutRecoveryOwnerTarget
     (Time Entropy Event Obs Memory : Type*) : Prop :=
-  Nonempty (EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory)
+  ∀ W : EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory,
+    ¬ Nonempty (RevelationRecoveryDatum W.ledger)
+
+/-- Exterior collapse blocks faithful Revelation recovery for the witness ledger. -/
+theorem evaporationWithoutRecoveryOwnerTarget
+    (Time Entropy Event Obs Memory : Type*) :
+    EvaporationWithoutRecoveryOwnerTarget Time Entropy Event Obs Memory := by
+  intro W
+  exact W.no_faithful_recovery
 
 /--
-Owner target for operational eschaton data.
+Owner target for operational eschaton branch readout.
 -/
 def HorizonEschatonOwnerTarget
     (Time Entropy Event Obs Memory Terminal : Type*) : Prop :=
-  Nonempty (HorizonEschatonDatum Time Entropy Event Obs Memory Terminal)
+  ∀ E : HorizonEschatonDatum Time Entropy Event Obs Memory Terminal,
+    (∀ R : RevelationRecoveryDatum E.ledger,
+      ∀ e : Event,
+        R.exteriorDecode (E.ledger.observedDefect e) =
+          E.ledger.hiddenMemory e) ∧
+    (∀ P : PralayaDissolutionDatum Memory Terminal,
+      ∀ m₁ m₂ : Memory,
+        P.thermalize m₁ = P.thermalize m₂)
+
+/-- A supplied eschaton datum exposes the Revelation and Pralaya branch laws. -/
+theorem horizonEschatonOwnerTarget
+    (Time Entropy Event Obs Memory Terminal : Type*) :
+    HorizonEschatonOwnerTarget Time Entropy Event Obs Memory Terminal := by
+  intro E
+  exact ⟨
+    (fun R e => E.revelation_recovers R e),
+    (fun P m₁ m₂ =>
+      HorizonEschatonDatum.pralaya_collapses
+        (P := P) (m₁ := m₁) (m₂ := m₂))⟩
 
 /--
 Owner target for holographic terminal memory retention.
 -/
 def HolographicMemoryRetentionOwnerTarget
     (State Memory Readout : Type*) : Prop :=
-  Nonempty (HolographicMemoryRetention State Memory Readout)
+  ∀ H : HolographicMemoryRetention State Memory Readout,
+    ∀ x y : State,
+      H.readout (H.terminalize x) =
+        H.readout (H.terminalize y) →
+          H.memoryOf x = H.memoryOf y
+
+/-- A supplied terminal-retention datum faithfully reads memory from terminal data. -/
+theorem holographicMemoryRetentionOwnerTarget
+    (State Memory Readout : Type*) :
+    HolographicMemoryRetentionOwnerTarget State Memory Readout := by
+  intro H x y hread
+  exact H.memory_eq_of_terminal_readout_eq hread
 
 /--
-Owner target for Mahapralaya/reset data.
+Owner target for Mahapralaya/reset obstruction.
 -/
 def MahapralayaResetOwnerTarget
     (State Memory Readout : Type*) : Prop :=
-  Nonempty (MahapralayaResetDatum State Memory Readout)
+  ∀ R : MahapralayaResetDatum State Memory Readout,
+    (∀ x y : State,
+      R.readout (R.terminalize x) =
+        R.readout (R.terminalize y)) ∧
+    ¬ ∀ x y : State,
+      R.readout (R.terminalize x) =
+        R.readout (R.terminalize y) →
+          R.memoryOf x = R.memoryOf y
+
+/-- A supplied reset datum collapses terminal readout and forbids faithful retention. -/
+theorem mahapralayaResetOwnerTarget
+    (State Memory Readout : Type*) :
+    MahapralayaResetOwnerTarget State Memory Readout := by
+  intro R
+  exact ⟨
+    (fun x y => R.terminal_readout_eq x y),
+    R.terminal_collapse_not_faithful⟩
 
 /--
 Owner target for memory-level holographic retention data.
 -/
 def HolographicRetentionOwnerTarget
     (Memory Readout : Type*) : Prop :=
-  Nonempty (HolographicRetentionDatum Memory Readout)
+  ∀ H : HolographicRetentionDatum Memory Readout,
+    Function.Injective H.encode
+
+/-- A supplied memory-level retention datum is exactly an injective encoding. -/
+theorem holographicRetentionOwnerTarget
+    (Memory Readout : Type*) :
+    HolographicRetentionOwnerTarget Memory Readout := by
+  intro H
+  exact H.faithful
 
 /--
 Owner target for memory-level computational reset data.
 -/
 def ComputationalResetOwnerTarget
     (Memory Readout : Type*) : Prop :=
-  Nonempty (ComputationalResetDatum Memory Readout)
+  ∀ R : ComputationalResetDatum Memory Readout,
+    (∀ m₁ m₂ : Memory, R.encode m₁ = R.encode m₂) ∧
+      ¬ Function.Injective R.encode
+
+/-- A supplied computational reset collapses encoding and cannot be faithful. -/
+theorem computationalResetOwnerTarget
+    (Memory Readout : Type*) :
+    ComputationalResetOwnerTarget Memory Readout := by
+  intro R
+  exact ⟨
+    (fun m₁ m₂ => R.encode_eq_encode m₁ m₂),
+    R.collapse_forbids_faithful_retention⟩
 
 end InfoGeometry.OperatorAlgebra.HorizonEschaton

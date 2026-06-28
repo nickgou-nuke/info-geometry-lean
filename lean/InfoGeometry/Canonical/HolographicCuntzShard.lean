@@ -8,18 +8,11 @@ Finite theorem-owner for the optical hologram intuition: an isometric shard can
 carry a recoverable copy of its source sector, while its range projection records
 the restricted aperture.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
-* Abstract `O₂` shard recovery from `Sᵢ* Sᵢ = 1`.
-* Abstract aperture idempotence from the same isometry equations.
-* A finite exact-rational two-shard model over `ℚ`.
-* Source recovery and range/aperture projection identities for the finite model.
-
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
-None beyond the named `CuntzO2Carrier` hypotheses already imported.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-This file does not prove analytic Fourier holography, Reeh-Schlieder density,
-Tomita-Takesaki modular flow, or an infinite `C*` representation theorem.
+The abstract theorems use only the named `CuntzO2Carrier` hypotheses already
+imported.  The finite shard model is an exact rational matrix model over `ℚ`.
+Analytic Fourier holography, Reeh-Schlieder density, Tomita-Takesaki modular
+flow, and infinite `C*` representation theorems are separate topics and are not
+asserted here.
 -/
 
 noncomputable section

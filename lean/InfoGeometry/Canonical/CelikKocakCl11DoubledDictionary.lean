@@ -78,7 +78,8 @@ theorem source_phase_eq_Eminus :
     (canonical (E := E)).source.pauliBridge.psiGamma ⟨0, by decide⟩ *
         (canonical (E := E)).source.pauliBridge.psiGamma ⟨1, by decide⟩ = Eminus := by
   rw [source_gamma_zero_eq_Eplus (E := E), source_gamma_one_eq_J1 (E := E)]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [Eplus, J1, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Doubled-side first generator is the modular involution `J`. -/

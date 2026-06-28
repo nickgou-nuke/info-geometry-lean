@@ -170,10 +170,35 @@ universe uα uOp
 
 /--
 Owner target for a concrete Tomita-Cartan parity to Clifford Jordan/Lie bridge.
+
+The target is not mere inhabitation of a socket.  A supplied bridge must read
+out the Tomita parity laws, the Clifford/TKK Jordan-Lie product laws, and the
+two calibration certificates.
 -/
 def TomitaCliffordJordanLieBridgeOwnerTarget
     (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] : Prop :=
-  Nonempty (TomitaCliffordJordanLieBridge.{uα, uOp, 0} (α := α) (Op := Op) (H := H))
+  ∀ (B : TomitaCliffordJordanLieBridge.{uα, uOp, 0} (α := α) (Op := Op) (H := H))
+    (x y : Op),
+    B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x
+      ∧ B.mirror.mirror (B.mirror.noncompactLift y) = -B.mirror.noncompactLift y
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
+          B.packet.closure.gibbs.conformalGeometricTemperature
+          B.packet.closure.weylTemperature =
+            (2 : ℝ) • B.packet.closure.lieProductTemperatureWeyl
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
+          B.packet.closure.gibbs.conformalGeometricTemperature
+          B.packet.closure.weylTemperature =
+            (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl
+      ∧ B.compactEvenFeedsJordan
+      ∧ B.noncompactOddFeedsLie
+
+@[rep_depth transport]
+theorem tomitaCliffordJordanLieBridgeOwnerTarget
+    (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] :
+    TomitaCliffordJordanLieBridgeOwnerTarget α Op H := by
+  intro B x y
+  exact B.tomita_clifford_jordan_lie_packet x y
 
 end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

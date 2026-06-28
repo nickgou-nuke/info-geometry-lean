@@ -122,10 +122,8 @@ theorem map_one_eq_id (P : ProjectiveRepresentation k G V) :
 
 section CocycleBridge
 
-variable {K : Type*}
-  [Group G] [Field K] [AddCommGroup V] [Module K V]
-
-local instance : MulDistribMulAction G Kˣ where
+local instance trivialUnitsMulDistribMulAction
+    (G : Type*) [Group G] (K : Type*) [Field K] : MulDistribMulAction G Kˣ where
   smul := fun _ x => x
   mul_smul := by
     intro g h x
@@ -140,16 +138,22 @@ local instance : MulDistribMulAction G Kˣ where
     intro g
     rfl
 
-@[simp] theorem multiplierTrivialAction_smul (g : G) (x : Kˣ) :
+@[simp] theorem multiplierTrivialAction_smul
+    {G : Type*} [Group G] {K : Type*} [Field K] (g : G) (x : Kˣ) :
     g • x = x :=
   rfl
 
 /-- The projective multiplier is a normalized multiplicative 2-cocycle. -/
-theorem multiplier_isMulCocycle₂ (P : ProjectiveRepresentation K G V) :
+theorem multiplier_isMulCocycle₂
+    {G : Type*} [Group G] {K : Type*} [Field K]
+    {V : Type*} [AddCommMonoid V] [Module K V]
+    (P : ProjectiveRepresentation K G V) :
     groupCohomology.IsMulCocycle₂ (fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) := by
   intro g h l
-  simpa [ProjectiveRepresentation.cocycle, mul_comm, mul_left_comm, mul_assoc]
-    using (P.cocycle g h l)
+  rw [multiplierTrivialAction_smul]
+  rw [mul_comm ((fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) (g * h, l))
+    ((fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) (g, h))]
+  exact P.cocycle g h l
 
 end CocycleBridge
 
@@ -157,7 +161,7 @@ section CocycleBridgeLowDegree
 
 variable (G : Type) [Group G]
 variable (K : Type) [Field K]
-variable (V : Type) [AddCommGroup V] [Module K V]
+variable (V : Type) [AddCommMonoid V] [Module K V]
 
 local instance : MulDistribMulAction G Kˣ where
   smul := fun _ x => x
@@ -237,7 +241,9 @@ def ofLinearHom (ρ : G →* (V ≃ₗ[k] V)) : ProjectiveRepresentation k G V w
     exact congrArg (fun e : V ≃ₗ[k] V => e x) ρ.map_one
   map_mul := by
     intro g h x
-    simpa using congrArg (fun e : V ≃ₗ[k] V => e x) (ρ.map_mul g h)
+    change (ρ (g * h)) x = (1 : k) • (ρ g) ((ρ h) x)
+    rw [one_smul]
+    exact congrArg (fun e : V ≃ₗ[k] V => e x) (ρ.map_mul g h)
   cocycle := by
     intro g h l
     simp
@@ -260,7 +266,7 @@ section CocycleBridgeLowDegree
 
 variable {G : Type} [Group G]
 variable {K : Type} [Field K]
-variable {V : Type} [AddCommGroup V] [Module K V]
+variable {V : Type} [AddCommMonoid V] [Module K V]
 
 @[simp] theorem ofLinearHom_multiplierToCocycles₂ (ρ : G →* (V ≃ₗ[K] V)) :
     multiplierToCocycles₂ (G := G) (K := K) (V := V) (ofLinearHom (k := K) (G := G) (V := V) ρ)
@@ -319,8 +325,7 @@ theorem projectivizationMap_mul (P : ProjectiveRepresentation K G V)
   ext ⟨v, hv⟩
   apply (Projectivization.mk_eq_mk_iff' K _ _ _ _).2
   refine ⟨P.multiplier g h, ?_⟩
-  simpa [projectivizationMap, Projectivization.map_mk] using
-    (P.map_mul_apply g h v).symm
+  exact (P.map_mul_apply g h v).symm
 
 /-- The projective representation induces a genuine monoid action on projective space. -/
 def projectivizationAction (P : ProjectiveRepresentation K G V) : G →* Function.End (ℙ K V) where
@@ -413,14 +418,14 @@ instance : Monoid (P.centralExtension) where
       ext
       · change 1 * g = g
         exact one_mul g
-      · simp [ProjectiveRepresentation.one_left]
+      · simp
   mul_one x := by
     cases x with
     | mk g a =>
       ext
       · change g * 1 = g
         exact mul_one g
-      · simp [ProjectiveRepresentation.one_right]
+      · simp
 
 /-- The extension projects to the original group. -/
 def proj : P.centralExtension →* G where
@@ -474,8 +479,7 @@ theorem kernel_isCentral (u : Kˣ) (x : P.centralExtension) :
     ⟨1, u⟩ * x = x * ⟨1, u⟩ := by
   cases x with
   | mk g a =>
-    ext <;> simp [mul_assoc, mul_left_comm, mul_comm, ProjectiveRepresentation.one_left,
-      ProjectiveRepresentation.one_right]
+    ext <;> simp [mul_comm]
 
 /-- The honest linear case gives a split central extension. -/
 def ofLinearHomSection (ρ : G →* (V ≃ₗ[K] V)) :
@@ -542,8 +546,9 @@ theorem multiplierClass_eq_zero_of_exists_splitSection
   have hhx : ∀ g h : G,
       (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier (s g).1 (s h).1 := by
     intro g h
-    have := congrArg centralExtension.snd (s.map_mul g h)
-    simpa [centralExtension.mul_snd] using this
+    have hmul := congrArg centralExtension.snd (s.map_mul g h)
+    rw [centralExtension.mul_snd] at hmul
+    exact hmul
   have hm : groupCohomology.IsMulCoboundary₂
       (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) := by
     refine ⟨fun g => (s g).2⁻¹, ?_⟩
@@ -553,11 +558,11 @@ theorem multiplierClass_eq_zero_of_exists_splitSection
     have hsnd0 : (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier (s g).1 (s h).1 :=
       hhx g h
     have hsnd : (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier g h := by
-      simpa [hg', hh'] using hsnd0
+      rwa [hg', hh'] at hsnd0
     have h1 : (s h).2⁻¹ * (s (g * h)).2 * (s g).2⁻¹ = P.multiplier g h := by
       rw [hsnd]
-      simp [mul_comm, mul_left_comm, mul_assoc]
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h1
+      simp [mul_comm, mul_assoc]
+    simpa [div_eq_mul_inv, mul_comm, mul_assoc] using h1
   exact (multiplierClass_eq_zero_iff_isMulCoboundary₂ (P := P)).mpr hm
 
 /-- The multiplier class vanishes exactly when the cocycle extension splits. -/
@@ -630,7 +635,7 @@ instance : Mul (PGL (K := K) (V := V)) where
       rcases hf with ⟨b, rfl⟩
       refine ⟨b * a, ?_⟩
       ext v
-      simp [smul_smul, mul_comm, mul_left_comm, mul_assoc])
+      simp [smul_smul, mul_comm])
 
 instance : MulOne (PGL (K := K) (V := V)) where
   mul := (· * ·)
@@ -684,7 +689,7 @@ def pglAction : PGL (K := K) (V := V) → ℙ K V → ℙ K V :=
       have hmul : ((a⁻¹ : K) * (a : K)) = 1 := by
         simp
       rw [Units.smul_def, smul_smul]
-      simp [hmul])
+      simp)
 
 /-- The quotient action agrees with the usual action of a chosen representative. -/
 theorem pglAction_mk (e : V ≃ₗ[K] V) :
@@ -698,7 +703,7 @@ theorem pglAction_scalar (a : Kˣ) :
   funext p
   refine Quotient.inductionOn p ?_
   intro v
-  simp [projectivizationMap, Projectivization.map_mk]
+  simp
   apply (Projectivization.mk_eq_mk_iff' K _ _ _ _).2
   refine ⟨a, ?_⟩
   simp
@@ -797,7 +802,7 @@ variable
     {Γ X R Op : Type*}
     [Group Γ] [MulAction Γ X] [Group R] [Monoid Op]
 
-theorem projective_comp_True
+theorem projective_comp
     (K : KreinProjectiveCarrier Γ X R Op)
     (g h : Γ) (x : X) :
     K.op (g * h) x =

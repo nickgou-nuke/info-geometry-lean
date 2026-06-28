@@ -1,9 +1,12 @@
 import Mathlib.Algebra.Colimit.DirectLimit
 import Mathlib.Algebra.Colimit.Module
+import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+import Mathlib.RingTheory.Flat.Basic
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped TensorProduct
+open scoped DirectSum
 
 noncomputable section
 
@@ -30,6 +33,57 @@ noncomputable def splitCliffordStep (n : ℕ) :
   ((splitCliffordTensorStepEquiv n).symm.toAlgHom).comp
     (GradedTensorProduct.includeRight (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
       (CliffordAlgebra.evenOdd (Qsplit n)))
+
+/-- The canonical split-Clifford one-step map is injective. -/
+theorem splitCliffordStep_injective (n : ℕ) : Function.Injective (splitCliffordStep n) := by
+  classical
+  set_option synthInstance.maxHeartbeats 200000 in
+  let A0 : Type _ := ⨁ i, CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11 i
+  let Bn : Type _ := ⨁ i, CliffordAlgebra.evenOdd (Qsplit n) i
+  have hA0 : Function.Injective (algebraMap ℝ A0) := by
+    intro r s h
+    haveI : Nontrivial (CliffordAlgebra InfoGeometry.CliffordTower.Q11) :=
+      (CliffordAlgebra.equivExterior InfoGeometry.CliffordTower.Q11).symm.injective.nontrivial
+    have h' :=
+      congrArg
+        ((DirectSum.decomposeAlgEquiv
+          (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)).symm) h
+    have h'' :
+        (algebraMap ℝ (CliffordAlgebra InfoGeometry.CliffordTower.Q11)) r =
+          (algebraMap ℝ (CliffordAlgebra InfoGeometry.CliffordTower.Q11)) s := by
+      simpa [A0] using h'
+    haveI : Module.Free ℝ (CliffordAlgebra InfoGeometry.CliffordTower.Q11) := by
+      infer_instance
+    exact (FaithfulSMul.algebraMap_injective ℝ
+      (CliffordAlgebra InfoGeometry.CliffordTower.Q11)) h''
+  have h_right :
+      Function.Injective
+        (fun b : CliffordAlgebra (Qsplit n) =>
+          Algebra.TensorProduct.includeRight
+            (R := ℝ)
+            (A := A0)
+            (B := Bn)
+            ((DirectSum.decomposeAlgEquiv (CliffordAlgebra.evenOdd (Qsplit n))) b)) := by
+    exact
+      Function.Injective.comp
+        (Algebra.TensorProduct.includeRight_injective
+          (R := ℝ)
+          (A := A0)
+          (B := Bn)
+          hA0)
+        ((DirectSum.decomposeAlgEquiv (CliffordAlgebra.evenOdd (Qsplit n))).injective)
+  have h_inc :
+      Function.Injective (GradedTensorProduct.includeRight
+        (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
+        (CliffordAlgebra.evenOdd (Qsplit n))) := by
+    intro b₁ b₂ h
+    apply h_right
+    simpa [A0, Bn, GradedTensorProduct.includeRight, GradedTensorProduct.auxEquiv_tmul] using
+      congrArg
+        (GradedTensorProduct.auxEquiv ℝ
+          (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
+          (CliffordAlgebra.evenOdd (Qsplit n))) h
+  exact (splitCliffordTensorStepEquiv n).symm.injective.comp h_inc
 
 /--
 Iterated embedding from stage `m` to stage `n` for `m ≤ n`.
@@ -77,20 +131,15 @@ theorem splitCliffordMap_apply_trans (m n k : ℕ) (hmn : m ≤ n) (hnk : n ≤ 
     (x : SplitClNNAlg m) :
     splitCliffordMap m k (hmn.trans hnk) x
       = splitCliffordMap n k hnk (splitCliffordMap m n hmn x) := by
-  refine Nat.le_induction
-    (m := n)
-    (P := fun t ht =>
-      splitCliffordMap m t (Nat.le_trans hmn ht) x
-        = splitCliffordMap n t ht (splitCliffordMap m n hmn x))
-    ?base ?succ k hnk
-  · simpa using
-      congrArg (fun φ : SplitClNNAlg m →ₐ[ℝ] SplitClNNAlg n => φ x)
-        (splitCliffordMap_refl n)
-  · intro t ht ih
-    have hmt : m ≤ t := Nat.le_trans hmn ht
-    rw [splitCliffordMap_succ (m := m) (n := t) (h := hmt),
-      splitCliffordMap_succ (m := n) (n := t) (h := ht)]
-    exact congrArg (fun y => splitCliffordStep t y) ih
+  induction k, hnk using Nat.le_induction with
+  | base =>
+      simp
+        [splitCliffordMap_refl]
+  | succ k hk ih =>
+      rw [splitCliffordMap_succ (m := m) (n := k) (h := Nat.le_trans hmn hk),
+        splitCliffordMap_succ (m := n) (n := k) (h := hk)]
+      exact congrArg (fun y => splitCliffordStep k y) ih
+
 
 /-- The recursive split tower is a directed system in the `Mathlib` sense. -/
 @[rep_depth krein]
@@ -98,7 +147,7 @@ instance splitCliffordDirectedSystem :
     DirectedSystem SplitClNNAlg (fun m n h => splitCliffordMap m n h) where
   map_self := by
     intro m x
-    simpa using congrArg (fun φ : SplitClNNAlg m →ₐ[ℝ] SplitClNNAlg m => φ x)
+    exact congrArg (fun φ : SplitClNNAlg m →ₐ[ℝ] SplitClNNAlg m => φ x)
       (splitCliffordMap_refl m)
   map_map := by
     intro k j i hij hjk x
@@ -145,7 +194,7 @@ theorem splitCliffordInfinity_boundary_expands
         (splitCliffordMap n (n + k) (Nat.le_add_right n k) x)
         = DirectLimit.Module.of ℝ ℕ SplitClNNAlg
             (fun m n h => splitCliffordMap m n h) n x := by
-              simpa using
+              exact
                 (DirectLimit.Module.of_f
                   (f := fun m n h => splitCliffordMap m n h)
                   (i := n) (j := n + k) (hij := Nat.le_add_right n k) (x := x))
@@ -181,7 +230,7 @@ theorem splitCliffordInfinity_cl55_window_absorbs_finite_tail
       =
     DirectLimit.Module.of ℝ ℕ SplitClNNAlg
         (fun m n h => splitCliffordMap m n h) 5 x := by
-  simpa using
+  exact
     (DirectLimit.Module.of_f
       (f := fun m n h => splitCliffordMap m n h)
       (i := 5) (j := 5 + k) (hij := Nat.le_add_right 5 k) (x := x))

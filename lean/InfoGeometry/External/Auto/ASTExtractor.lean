@@ -11,21 +11,21 @@ open Lean.Elab.Command
   from the environment and dump them as JSON for ArangoDB ingestion.
 -/
 
-structure Node where
+structure ASTNode where
   name : String
   type : String
   kind : String
   deriving ToJson
 
-structure Edge where
+structure ASTEdge where
   from_node : String
   to_node   : String
   relation  : String
   deriving ToJson
 
-structure GraphData where
-  nodes : Array Node
-  edges : Array Edge
+structure ASTGraphData where
+  nodes : Array ASTNode
+  edges : Array ASTEdge
   deriving ToJson
 
 /-- Recursively collects all constant names used within an expression -/
@@ -45,8 +45,8 @@ elab "#extract_graph " prefixName:ident : command => do
   let env ← getEnv
   let prefixStr := prefixName.getId.toString
   
-  let mut nodes : Array Node := #[]
-  let mut edges : Array Edge := #[]
+  let mut nodes : Array ASTNode := #[]
+  let mut edges : Array ASTEdge := #[]
   
   for (name, cinfo) in env.constants.toList do
     let nameStr := name.toString
@@ -72,7 +72,7 @@ elab "#extract_graph " prefixName:ident : command => do
           -- Create an edge if it depends on something (we can filter for our modules or keep all)
           edges := edges.push { from_node := nameStr, to_node := depStr, relation := "depends_on" }
 
-  let graph : GraphData := { nodes := nodes, edges := edges }
+  let graph : ASTGraphData := { nodes := nodes, edges := edges }
   let jsonStr := toJson graph |>.pretty
   
   -- We output to a file that our Python pipeline can pick up

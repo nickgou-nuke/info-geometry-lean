@@ -1,0 +1,72 @@
+DIGEST 85451f23dc18a17570293919f384cd96
+Ftest_proof
+R27:31 Stdlib.Reals.Reals <> <> lib
+def 66:75 <> partitionQ
+R87:87 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 78:78 <> r:1
+binder 80:83 <> beta:2
+R92:92 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R111:113 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R97:99 Stdlib.Reals.Rtrigo_def <> exp def
+R106:108 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R102:105 test_proof <> beta:2 var
+R109:109 test_proof <> r:1 var
+R114:116 Stdlib.Reals.Rtrigo_def <> exp def
+R119:120 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R129:129 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R125:127 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R121:124 test_proof <> beta:2 var
+R128:128 test_proof <> r:1 var
+prf 140:154 <> partitionQ_cosh
+binder 165:165 <> r:3
+binder 167:170 <> beta:4
+R192:194 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R175:184 test_proof <> partitionQ def
+R186:186 test_proof <> r:3 var
+R188:191 test_proof <> beta:4 var
+R196:198 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R199:202 Stdlib.Reals.Rtrigo_def <> cosh def
+R209:211 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R205:208 test_proof <> beta:4 var
+R212:212 test_proof <> r:3 var
+R249:258 test_proof <> partitionQ def
+R261:264 Stdlib.Reals.Rtrigo_def <> cosh def
+R276:279 Stdlib.Reals.Rdefinitions <> Rdiv def
+R293:302 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R319:321 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R305:307 Stdlib.Reals.Rtrigo_def <> exp def
+R314:316 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R322:324 Stdlib.Reals.Rtrigo_def <> exp def
+R327:329 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R338:338 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R334:336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R343:344 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R293:302 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R319:321 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R305:307 Stdlib.Reals.Rtrigo_def <> exp def
+R314:316 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R322:324 Stdlib.Reals.Rtrigo_def <> exp def
+R327:329 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R338:338 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R334:336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R343:344 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R293:302 Stdlib.Reals.Raxioms <> Rmult_comm thm
+R319:321 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R305:307 Stdlib.Reals.Rtrigo_def <> exp def
+R314:316 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R322:324 Stdlib.Reals.Rtrigo_def <> exp def
+R327:329 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R338:338 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R334:336 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R343:344 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R363:373 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R363:373 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R363:373 Stdlib.Reals.Raxioms <> Rmult_assoc thm
+R386:391 Stdlib.Reals.RIneq <> Rinv_r thm
+R386:391 Stdlib.Reals.RIneq <> Rinv_r thm
+R386:391 Stdlib.Reals.RIneq <> Rinv_r thm
+R386:391 Stdlib.Reals.RIneq <> Rinv_r thm
+R414:423 Stdlib.Reals.RIneq <> Rgt_not_eq thm
+R414:423 Stdlib.Reals.RIneq <> Rgt_not_eq thm
+R436:442 Stdlib.Reals.RIneq <> Rlt_0_2 thm
+R436:442 Stdlib.Reals.RIneq <> Rlt_0_2 thm

@@ -229,18 +229,26 @@ inductive RenormalizedTraceBackend
 /-- Owner target for choosing a singular/Dixmier trace backend. -/
 def SingularTraceOwnerTarget
     (A : Type*) [AddCommMonoid A] [Mul A] : Prop :=
-  Nonempty (SingularTraceDatum A)
+  ∃ τ : SingularTraceDatum A,
+    ∀ a b : A,
+      a ∈ τ.ideal → b ∈ τ.ideal →
+        τ.singularTrace (a * b) = τ.singularTrace (b * a)
 
 /-- Owner target for choosing a zeta-regularization backend. -/
 def ZetaRegularizationOwnerTarget
     (A : Type*) : Prop :=
-  Nonempty (ZetaRegularizationDatum A)
+  ∃ ζ : ZetaRegularizationDatum A,
+    ζ.meromorphic_continuation
 
 /-- Owner target for a type III-safe renormalized trace backend. -/
 def TypeIIIRenormalizedTraceOwnerTarget
     (M Core : Type*)
     [AddCommMonoid M]
     [AddCommMonoid Core] [Mul Core] : Prop :=
-  Nonempty (TypeIIIRenormalizedTraceDatum M Core)
+  ∃ T : TypeIIIRenormalizedTraceDatum M Core,
+    ∀ x : M,
+      T.coreSingular.baseSingularTrace x =
+        T.coreSingular.singularCoreTrace.singularTrace
+          (T.coreSingular.coreTrace.embed x)
 
 end InfoGeometry.OperatorAlgebra

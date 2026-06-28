@@ -44,6 +44,7 @@ open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 open InfoGeometry.Algebraic
 open InfoGeometry.Krein
 open InfoGeometry.Topology.V4RootSystem
+open InfoGeometryCore.TripotentState
 
 /-! ## Role dictionary -/
 
@@ -59,18 +60,17 @@ inductive ClosureRole where
 namespace ClosureRole
 
 /-- Tripotent readout for the five roles: `±2` and `±1` share the sign, `g₀` is zero. -/
-def tripotentSector : ClosureRole → TripotentState
-  | negTwo => TripotentState.neg
-  | negOne => TripotentState.neg
-  | zero => TripotentState.zero
-  | posOne => TripotentState.pos
-  | posTwo => TripotentState.pos
+def tripotentSector : ClosureRole → InfoGeometryCore.TripotentState
+  | negTwo => InfoGeometryCore.TripotentState.neg
+  | negOne => InfoGeometryCore.TripotentState.neg
+  | zero => InfoGeometryCore.TripotentState.zero
+  | posOne => InfoGeometryCore.TripotentState.pos
+  | posTwo => InfoGeometryCore.TripotentState.pos
 
 /-- The role-to-tripotent dictionary is compatible with `T³ = T`. -/
 theorem tripotentSector_cube (r : ClosureRole) :
-    TripotentState.toInt (tripotentSector r) ^ 3 =
-      TripotentState.toInt (tripotentSector r) := by
-  exact TripotentState.cube_eq_self (tripotentSector r)
+    toInt (tripotentSector r) ^ 3 = toInt (tripotentSector r) := by
+  exact cube_eq_self (tripotentSector r)
 
 /-- The `±2` roles are exactly the explicit defect roles in this finite dictionary. -/
 def IsDefect (r : ClosureRole) : Prop :=
@@ -139,15 +139,15 @@ theorem chiral_operator_carrier_packet {X : InvolutiveSelfDualCarrier} :
 
 /-- Tripotent finite readout for the `±/0` boundary grading. -/
 theorem tripotent_boundary_packet :
-    (∀ s : TripotentState, TripotentState.toInt s ^ 3 = TripotentState.toInt s) ∧
-    (∀ s : TripotentState,
-      TripotentState.pNeg s + TripotentState.pZero s + TripotentState.pPos s = 1) ∧
-    (∀ s : TripotentState,
-      TripotentState.toInt s * TripotentState.pNeg s = -TripotentState.pNeg s ∧
-        TripotentState.toInt s * TripotentState.pZero s = 0 ∧
-        TripotentState.toInt s * TripotentState.pPos s = TripotentState.pPos s) := by
-  exact ⟨TripotentState.cube_eq_self, TripotentState.trifactor_projector_partition,
-    TripotentState.trifactor_eigen_readout⟩
+    (∀ s : InfoGeometryCore.TripotentState, toInt s ^ 3 = toInt s) ∧
+    (∀ s : InfoGeometryCore.TripotentState,
+      pNeg s + pZero s + pPos s = 1) ∧
+    (∀ s : InfoGeometryCore.TripotentState,
+      toInt s * pNeg s = -pNeg s ∧
+        toInt s * pZero s = 0 ∧
+        toInt s * pPos s = pPos s) := by
+  exact ⟨cube_eq_self, trifactor_projector_partition,
+    trifactor_eigen_readout⟩
 
 /-- Combined finite hierarchy packet for the super-TKK/chiral/tripotent dictionary. -/
 theorem super_tkk_chiral_tripotent_hierarchy_packet
@@ -158,14 +158,14 @@ theorem super_tkk_chiral_tripotent_hierarchy_packet
     (ChiralOperatorCarrier.canonicalChiralOperatorCarrier (X := X)).eps =
         (ChiralOperatorCarrier.canonicalChiralOperatorCarrier (X := X)).uPlus -
           (ChiralOperatorCarrier.canonicalChiralOperatorCarrier (X := X)).uMinus ∧
-    (∀ s : TripotentState, TripotentState.toInt s ^ 3 = TripotentState.toInt s) ∧
+    (∀ s : InfoGeometryCore.TripotentState, toInt s ^ 3 = toInt s) ∧
     ClosureRole.IsDefect ClosureRole.posTwo ∧
     ClosureRole.IsDefect ClosureRole.negTwo := by
   exact ⟨(fun X Y hX hY => G.neg_one_pos_one_mem_zero hX hY),
     (fun X Y hX hY => G.pos_one_pos_one_mem_pos_two hX hY),
     (fun X Y hX hY => G.neg_one_neg_one_mem_neg_two hX hY),
     ChiralOperatorCarrier.canonicalChiralOperatorCarrier_eps_eq_uPlus_sub_uMinus,
-    TripotentState.cube_eq_self, ClosureRole.posTwo_is_defect, ClosureRole.negTwo_is_defect⟩
+    cube_eq_self, ClosureRole.posTwo_is_defect, ClosureRole.negTwo_is_defect⟩
 
 end InfoGeometry.Canonical.SuperTKKChiralTripotentBridge
 

@@ -1,0 +1,98 @@
+DIGEST 37500072de4acd892a368eb5f96eeb26
+FGrandIdentity
+R492:496 Stdlib.Reals.Reals <> <> lib
+sec 528:540 <> GrandIdentity
+def 557:582 <> spinorialPartitionFunction
+R590:593 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R589:589 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R594:594 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 585:585 <> Q:1
+R600:603 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R599:599 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R604:604 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R609:609 GrandIdentity <> Q:1 var
+def 626:641 <> boltzmannEntropy
+R649:652 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R648:648 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R653:653 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 644:644 <> Q:2
+R664:664 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 657:660 <> beta:3
+R669:669 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R678:679 Stdlib.Reals.Rpower <> ln def
+R682:707 GrandIdentity <> spinorialPartitionFunction def
+R709:709 GrandIdentity <> Q:2 var
+R711:714 GrandIdentity <> beta:3 var
+def 732:755 <> modularEnergyExpectation
+R766:769 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R765:765 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R770:770 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 758:761 <> Kexp:4
+R776:779 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R775:775 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R780:780 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R785:788 GrandIdentity <> Kexp:4 var
+def 805:821 <> vonNeumannEntropy
+R834:837 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R833:833 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R838:838 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 824:824 <> Q:5
+binder 826:829 <> Kexp:6
+R849:849 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 842:845 <> beta:7
+R854:854 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R886:888 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R863:878 GrandIdentity <> boltzmannEntropy def
+R880:880 GrandIdentity <> Q:5 var
+R882:885 GrandIdentity <> beta:7 var
+R893:895 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R889:892 GrandIdentity <> beta:7 var
+R896:919 GrandIdentity <> modularEnergyExpectation def
+R921:924 GrandIdentity <> Kexp:6 var
+R926:929 GrandIdentity <> beta:7 var
+prf 941:972 <> spinorialPartitionFunction_apply
+binder 983:983 <> Q:8
+binder 985:988 <> beta:9
+R1028:1030 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R995:1020 GrandIdentity <> spinorialPartitionFunction def
+R1022:1022 GrandIdentity <> Q:8 var
+R1024:1027 GrandIdentity <> beta:9 var
+R1031:1031 GrandIdentity <> Q:8 var
+R1033:1036 GrandIdentity <> beta:9 var
+prf 1089:1118 <> modularEnergyExpectation_apply
+binder 1129:1132 <> Kexp:10
+binder 1134:1137 <> beta:11
+R1178:1180 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1144:1167 GrandIdentity <> modularEnergyExpectation def
+R1169:1172 GrandIdentity <> Kexp:10 var
+R1174:1177 GrandIdentity <> beta:11 var
+R1181:1184 GrandIdentity <> Kexp:10 var
+R1186:1189 GrandIdentity <> beta:11 var
+prf 1242:1263 <> boltzmannEntropy_eq_ln
+binder 1274:1274 <> Q:12
+binder 1276:1279 <> beta:13
+R1309:1311 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1286:1301 GrandIdentity <> boltzmannEntropy def
+R1303:1303 GrandIdentity <> Q:12 var
+R1305:1308 GrandIdentity <> beta:13 var
+R1312:1313 Stdlib.Reals.Rpower <> ln def
+R1316:1316 GrandIdentity <> Q:12 var
+R1318:1321 GrandIdentity <> beta:13 var
+prf 1375:1426 <> vonNeumannEntropy_eq_boltzmann_plus_beta_expectation
+binder 1437:1437 <> Q:14
+binder 1439:1442 <> Kexp:15
+binder 1444:1447 <> beta:16
+R1483:1485 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1454:1470 GrandIdentity <> vonNeumannEntropy def
+R1472:1472 GrandIdentity <> Q:14 var
+R1474:1477 GrandIdentity <> Kexp:15 var
+R1479:1482 GrandIdentity <> beta:16 var
+R1509:1511 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1486:1501 GrandIdentity <> boltzmannEntropy def
+R1503:1503 GrandIdentity <> Q:14 var
+R1505:1508 GrandIdentity <> beta:16 var
+R1516:1518 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1512:1515 GrandIdentity <> beta:16 var
+R1519:1522 GrandIdentity <> Kexp:15 var
+R1524:1527 GrandIdentity <> beta:16 var
+R1576:1588 GrandIdentity GrandIdentity <> sec

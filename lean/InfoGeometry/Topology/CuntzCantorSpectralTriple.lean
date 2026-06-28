@@ -98,6 +98,10 @@ theorem rangeProjection_sum_one :
     C.leftRangeProjection + C.rightRangeProjection = 1 := by
   exact C.range_sum
 
+section ProjectionSubequiv
+
+variable {Op : Type*} [Ring Op]
+
 /--
 Projection subequivalence on the current Cuntz carrier.
 
@@ -132,19 +136,21 @@ theorem projectionSubequiv_trans
     _ = p := by
       rw [hpq]
 
+end ProjectionSubequiv
+
 /-- The left Cuntz range projection is subequivalent to the unit. -/
 @[rep_depth operator]
 theorem leftRangeProjection_subequiv_one :
     projectionSubequiv C.leftRangeProjection 1 := by
-  simpa [projectionSubequiv, C.rangeProjection_sum_one] using
-    C.leftRangeProjection_absorb_sum_one
+  unfold projectionSubequiv
+  simp
 
 /-- The right Cuntz range projection is subequivalent to the unit. -/
 @[rep_depth operator]
 theorem rightRangeProjection_subequiv_one :
     projectionSubequiv C.rightRangeProjection 1 := by
-  simpa [projectionSubequiv, C.rangeProjection_sum_one] using
-    C.rightRangeProjection_absorb_sum_one
+  unfold projectionSubequiv
+  simp
 
 /-- The left range projection is subequivalent to itself. -/
 @[rep_depth operator]
@@ -274,7 +280,7 @@ def CuntzProjection := { p : Op // p * p = p }
 
 namespace CuntzProjection
 
-variable {Op : Type*} [Ring Op] [StarRing Op]
+variable {Op : Type*} [Ring Op]
 
 /-- A Cuntz projection remembers its underlying operator. -/
 @[rep_depth operator]
@@ -301,6 +307,10 @@ def rightCuntzProjection :
   val := C.rightRangeProjection
   property := C.rightRangeProjection_idempotent
 
+section ProjectionPreorder
+
+variable {Op : Type*} [Ring Op]
+
 /--
 Subequivalence between Cuntz projections.
 
@@ -326,6 +336,8 @@ theorem projectionPreorder_trans
     projectionPreorder p r := by
   exact projectionSubequiv_trans hpq hqr
 
+end ProjectionPreorder
+
 /-- The projection preorder is the native preorder on Cuntz projections. -/
 @[rep_depth operator]
 instance instLE : LE (CuntzProjection (Op := Op)) where
@@ -345,6 +357,10 @@ def unitCuntzProjection : CuntzProjection (Op := Op) where
   val := 1
   property := by
     simp
+
+section ProjectionOrthogonal
+
+variable {Op : Type*} [Ring Op]
 
 /-- The zero element as a Cuntz projection. -/
 @[rep_depth operator]
@@ -404,7 +420,7 @@ def orthogonalSum
       _ = p.val + q.val := by
             have hp : p.val * p.val = p.val := p.2
             have hq : q.val * q.val = q.val := q.2
-            simpa [hp, hq]
+            simp [hp, hq]
 
 /-- Orthogonal sum is commutative when the orthogonality data is swapped. -/
 @[rep_depth operator]
@@ -414,7 +430,7 @@ theorem orthogonalSum_comm
     orthogonalSum p q h = orthogonalSum q p ⟨h.2, h.1⟩ := by
   apply Subtype.ext
   change p.val + q.val = q.val + p.val
-  simpa [add_comm]
+  simp [add_comm]
 
 /-- Orthogonal sum with zero on the left is the original projection. -/
 @[rep_depth operator]
@@ -497,6 +513,8 @@ theorem orthogonalSum_assoc
   change (p.val + q.val) + r.val = p.val + (q.val + r.val)
   abel
 
+end ProjectionOrthogonal
+
 /- The left and right range projections are orthogonal on the left product. -/
 @[rep_depth operator]
 theorem leftRangeProjection_mul_rightRangeProjection_eq_zero :
@@ -543,6 +561,10 @@ theorem leftRightOrthogonalSum_eq_unit :
   simpa [leftCuntzProjection, rightCuntzProjection, unitCuntzProjection] using
     C.rangeProjection_sum_one
 
+section ProjectionEquivalence
+
+variable {Op : Type*} [Ring Op]
+
 /-- The left summand lies below its orthogonal sum. -/
 @[rep_depth operator]
 theorem left_le_orthogonalSum
@@ -575,6 +597,8 @@ theorem right_le_orthogonalSum
       rw [hpq, hq]
       simp
 
+end ProjectionEquivalence
+
 /-- The left range projection lies below the unit in the projection preorder. -/
 @[rep_depth operator]
 theorem leftRangeProjection_le_unit :
@@ -586,6 +610,10 @@ theorem leftRangeProjection_le_unit :
 theorem rightRangeProjection_le_unit :
     rightCuntzProjection (C := C) ≤ unitCuntzProjection (Op := Op) := by
   exact rightRangeProjection_subequiv_one (C := C)
+
+section ProjectionEquivalence
+
+variable {Op : Type*} [Ring Op]
 
 /--
 Projection equivalence on the Cuntz carrier.
@@ -664,9 +692,7 @@ theorem CuntzCu_orthogonalSum_proof_irrel
     (h h' : projectionOrthogonal p q) :
     (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) : CuntzCu) =
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h') := by
-  refine Quotient.sound ?_
-  simpa [orthogonalSum_proof_irrel p q h h'] using
-    (projectionEquivalent_refl (orthogonalSum p q h).val (orthogonalSum p q h).property)
+  rw [orthogonalSum_proof_irrel p q h h']
 
 /--
 The projection preorder is invariant under projection equivalence on both sides.
@@ -683,6 +709,12 @@ theorem projectionPreorder_congr
     exact projectionPreorder_trans (projectionPreorder_trans hpp'.2 hpq) hqq'.1
   · intro hpq
     exact projectionPreorder_trans (projectionPreorder_trans hpp'.1 hpq) hqq'.2
+
+end ProjectionEquivalence
+
+section CuntzCuOrder
+
+variable {Op : Type*} [Ring Op]
 
 /-- The quotient map to `CuntzCu` is monotone. -/
 @[rep_depth operator]
@@ -737,6 +769,8 @@ theorem CuntzCu_right_le_orthogonalSum
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) := by
   exact CuntzCu_mk_le q (orthogonalSum p q h) (right_le_orthogonalSum p q h)
 
+end CuntzCuOrder
+
 /-- The left/right orthogonal sum class is the unit class. -/
 @[rep_depth operator]
 theorem CuntzCu_leftRightOrthogonalSum_eq_unit :
@@ -744,13 +778,7 @@ theorem CuntzCu_leftRightOrthogonalSum_eq_unit :
       (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
         (leftRightCuntzProjection_orthogonal (C := C))) : CuntzCu) =
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
-  simpa [leftRightOrthogonalSum_eq_unit] using
-    (CuntzCu_mk_eq (C := C)
-      (p := orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-        (leftRightCuntzProjection_orthogonal (C := C)))
-      (q := unitCuntzProjection (Op := Op))
-      (projectionEquivalent_refl (unitCuntzProjection (Op := Op))
-        (unitCuntzProjection (Op := Op)).property))
+  rw [leftRightOrthogonalSum_eq_unit]
 
 /-- The left/right orthogonal sum class lies below the unit class. -/
 @[rep_depth operator]
@@ -759,14 +787,11 @@ theorem CuntzCu_leftRightOrthogonalSum_le_unit :
       (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
         (leftRightCuntzProjection_orthogonal (C := C))) : CuntzCu) ≤
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
-  simpa [CuntzCu_leftRightOrthogonalSum_eq_unit] using
-    (le_rfl :
-      (Quotient.mk (CuntzProjectionSetoid (Op := Op))
-        (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-          (leftRightCuntzProjection_orthogonal (C := C))) : CuntzCu) ≤
-        Quotient.mk (CuntzProjectionSetoid (Op := Op))
-          (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-            (leftRightCuntzProjection_orthogonal (C := C))))
+  rw [CuntzCu_leftRightOrthogonalSum_eq_unit]
+
+section CuntzCuOrthogonalSumOrder
+
+variable {Op : Type*} [Ring Op]
 
 /-- The orthogonal sum class lies between the summands and the unit class. -/
 @[rep_depth operator]
@@ -795,9 +820,7 @@ theorem CuntzCu_orthogonalSum_comm
     (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) : CuntzCu) =
       Quotient.mk (CuntzProjectionSetoid (Op := Op))
         (orthogonalSum q p ⟨h.2, h.1⟩) := by
-  simpa [orthogonalSum_comm p q h] using
-    (CuntzCu_mk_eq (C := C) (p := orthogonalSum p q h) (q := orthogonalSum q p ⟨h.2, h.1⟩)
-      (projectionEquivalent_refl (orthogonalSum p q h).val (orthogonalSum p q h).property))
+  rw [orthogonalSum_comm p q h]
 
 /-- The quotient class of an orthogonal sum with zero on the left is the original class. -/
 @[rep_depth operator]
@@ -807,12 +830,7 @@ theorem CuntzCu_orthogonalSum_zero_left
       (orthogonalSum (zeroCuntzProjection (Op := Op)) p
         (zeroProjectionOrthogonal_left (p := p))) : CuntzCu) =
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) p := by
-  simpa [orthogonalSum_zero_left] using
-    (CuntzCu_mk_eq (C := C)
-      (p := orthogonalSum (zeroCuntzProjection (Op := Op)) p
-        (zeroProjectionOrthogonal_left (p := p)))
-      (q := p)
-      (projectionEquivalent_refl p p.2))
+  rw [orthogonalSum_zero_left]
 
 /-- The quotient class of an orthogonal sum with zero on the right is the original class. -/
 @[rep_depth operator]
@@ -822,12 +840,7 @@ theorem CuntzCu_orthogonalSum_zero_right
       (orthogonalSum p (zeroCuntzProjection (Op := Op))
         (zeroProjectionOrthogonal_right (p := p))) : CuntzCu) =
       Quotient.mk (CuntzProjectionSetoid (Op := Op)) p := by
-  simpa [orthogonalSum_zero_right] using
-    (CuntzCu_mk_eq (C := C)
-      (p := orthogonalSum p (zeroCuntzProjection (Op := Op))
-        (zeroProjectionOrthogonal_right (p := p)))
-      (q := p)
-      (projectionEquivalent_refl p p.2))
+  rw [orthogonalSum_zero_right]
 
 /-- The quotient class of a pairwise orthogonal triple sum is independent of association. -/
 @[rep_depth operator]
@@ -842,17 +855,9 @@ theorem CuntzCu_orthogonalSum_assoc
       Quotient.mk (CuntzProjectionSetoid (Op := Op))
         (orthogonalSum p (orthogonalSum q r hqr)
           (orthogonalSum_left_orthogonal p q r hpq hpr hqr)) := by
-  simpa [orthogonalSum_assoc p q r hpq hpr hqr] using
-    (CuntzCu_mk_eq (C := C)
-      (p := orthogonalSum (orthogonalSum p q hpq) r
-        (orthogonalSum_right_orthogonal p q r hpq hpr hqr))
-      (q := orthogonalSum p (orthogonalSum q r hqr)
-        (orthogonalSum_left_orthogonal p q r hpq hpr hqr))
-      (projectionEquivalent_refl
-        (orthogonalSum (orthogonalSum p q hpq) r
-          (orthogonalSum_right_orthogonal p q r hpq hpr hqr)).val
-        (orthogonalSum (orthogonalSum p q hpq) r
-          (orthogonalSum_right_orthogonal p q r hpq hpr hqr)).property))
+  rw [orthogonalSum_assoc p q r hpq hpr hqr]
+
+end CuntzCuOrthogonalSumOrder
 
 
 /-- The left Cuntz projection class lies below the unit class. -/
@@ -1305,17 +1310,16 @@ theorem canonicalRealDoubledPhaseAxis_eq_clockAxis
 theorem canonicalRealDoubledPhaseAxis_eq_complex_i
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     canonicalRealDoubledPhaseAxis (E := E) = complex_i (E := E) := by
-  simpa [canonicalRealDoubledPhaseAxis] using
-    InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_eq_complex_i
-      (E := E)
+  rw [canonicalRealDoubledPhaseAxis]
+  exact InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_eq_complex_i (E := E)
 
 @[rep_depth operator]
 theorem canonicalRealDoubledPhaseAxis_sq_eq_neg_id
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (canonicalRealDoubledPhaseAxis (E := E)).comp (canonicalRealDoubledPhaseAxis (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [canonicalRealDoubledPhaseAxis] using
-    InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_sq (E := E)
+  rw [canonicalRealDoubledPhaseAxis]
+  exact InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_sq (E := E)
 
 /-- The canonical doubled real phase axis is Hilbert-skew-adjoint. -/
 @[rep_depth operator]
@@ -1333,8 +1337,8 @@ theorem canonicalRealDoubledPhaseAxis_star_eq_neg
     ⟪canonicalRealDoubledPhaseAxis (E := E) v, u⟫_ℝ =
       ⟪v, -(canonicalRealDoubledPhaseAxis (E := E) u)⟫_ℝ
   rw [inner_neg_right]
-  simpa [canonicalRealDoubledPhaseAxis] using
-    InfoGeometry.Canonical.TomitaTakesaki.clockAxis_inner_skew (E := E) v u
+  rw [canonicalRealDoubledPhaseAxis]
+  exact InfoGeometry.Canonical.TomitaTakesaki.clockAxis_inner_skew (E := E) v u
 
 /-- The generic carrier readout specializes to the canonical clock axis on the doubled carrier. -/
 @[rep_depth operator, simp]
@@ -1359,22 +1363,22 @@ local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- The phase axis is derived from the canonical real doubled lane. -/
 @[rep_depth operator]
-noncomputable def realDoubledPhaseAxis (M : RealDoubledCuntzMajoranaPacket (E := E)) : EndH :=
+noncomputable def realDoubledPhaseAxis (_M : RealDoubledCuntzMajoranaPacket (E := E)) : EndH :=
   canonicalRealDoubledPhaseAxis (E := E)
 
 /-- The phase axis readout is the canonical clock axis. -/
 @[rep_depth operator, simp]
 theorem realDoubledPhaseAxis_eq_clockAxis :
     M.realDoubledPhaseAxis = clockAxis (E := E) := by
-  simpa [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis] using
-    canonicalRealDoubledPhaseAxis_eq_clockAxis (E := E)
+  rw [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis]
+  exact canonicalRealDoubledPhaseAxis_eq_clockAxis (E := E)
 
 /-- The phase axis readout is the canonical real doubled complex structure. -/
 @[rep_depth operator, simp]
 theorem realDoubledPhaseAxis_eq_complex_i :
     M.realDoubledPhaseAxis = complex_i (E := E) := by
-  simpa [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis] using
-    canonicalRealDoubledPhaseAxis_eq_complex_i (E := E)
+  rw [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis]
+  exact canonicalRealDoubledPhaseAxis_eq_complex_i (E := E)
 
 /-- Convert the specialized packet to the generic Cuntz/Majorana candidate. -/
 @[rep_depth operator]

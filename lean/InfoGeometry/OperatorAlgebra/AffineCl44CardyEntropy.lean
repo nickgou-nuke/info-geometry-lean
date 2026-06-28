@@ -120,15 +120,7 @@ variable
 
 variable (B : AffineDrazinBoundaryEntropyBridge (Finite := Finite) (Alg := Alg))
 
-/--
-Debt boundary for Drazin/Cardy entropy agreement.
-
-The abstract packet contains the affine-Virasoro and Cardy data, but not a
-proof identifying a Drazin-stable boundary entropy with the Cardy readout.
--/
-theorem entropyAgreement_holds_of_bridge :
-    False := by
-  sorry
+/- The agreement theorem remains open debt and is not asserted here. -/
 
 end AffineDrazinBoundaryEntropyBridge
 

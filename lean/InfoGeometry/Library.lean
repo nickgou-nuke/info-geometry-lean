@@ -25,7 +25,13 @@ namespace InfoGeometry
 /-!
 # InfoGeometry.Library
 
-Stable, linted umbrella module for the canonical InfoGeometry publication surface.
+Compatibility umbrella for the current `InfoGeometry.Canonical.All` import surface.
+
+This is not the whole-project entrypoint.  The intended full project surface is
+`InfoGeometry.All` / root `InfoGeometry`, and every repo-owned Lean module should
+be buildable and provided through that surface.  The theorem owner modules and
+Lean/Lake checks remain the authority for what is closed, conditional, or still
+carrying proof debt.
 -/
 
 end InfoGeometry

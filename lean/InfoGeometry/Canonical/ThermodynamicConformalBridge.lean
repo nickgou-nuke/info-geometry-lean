@@ -9,7 +9,7 @@ open CategoryTheory Limits
 namespace InfoGeometry.Canonical
 
 variable (Q : ∀ n, QuadraticForm ℝ (InfoGeometry.Topology.V n))
-variable (h_compat : ∀ (m n : ℕ) (h : m ≤ n) (x : InfoGeometry.Topology.V m), 
+variable (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V m), 
   Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x)
 variable [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
 
@@ -23,12 +23,12 @@ variable [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
 theorem kms_conformal_vacuum_bridge
     (σ : GlobalModularEvolution Q h_compat)
     (ω : CPTSpinorVacuum Q h_compat → ℝ)
-    (h_kms : GlobalKMSState Q h_compat σ ω)
+    (_h_kms : GlobalKMSState Q h_compat σ ω)
     (a4 c : ℝ)
     (h_link : IsConformalSpectralLink a4 c)
     (h_anomaly_nonzero : a4 ≠ 0)
     (x : CPTSpinorVacuum Q h_compat)
-    (hx : x ∈ KMSFixedPoints (CliffordTowerCausalFunctor Q h_compat) σ) :
+    (_hx : x ∈ KMSFixedPoints (CliffordTowerCausalFunctor Q h_compat) σ) :
     ∃ (scale_factor : ℝ), ω x = scale_factor * (c / 24) := by
   -- 1. Unpack the conformal link to substitute the anomaly residual value
   rw [← h_link]
@@ -50,7 +50,7 @@ theorem kms_conformal_vacuum_bridge
 -/
 def IsThermodynamicConformalBridge 
     (σ : GlobalModularEvolution Q h_compat)
-    (S : ℝ → ℝ) (c : ℝ) : Prop :=
+    (_S : ℝ → ℝ) (c : ℝ) : Prop :=
   ∃ (a4 : ℝ), IsConformalSpectralLink a4 c ∧ 
     ∀ (ω : CPTSpinorVacuum Q h_compat → ℝ), 
       GlobalKMSState Q h_compat σ ω → 

@@ -330,14 +330,16 @@ structure RealGWToSplitKreinBridgePacket where
   -/
   noAutomaticSplitKreinWitness : Type
 
-/-- Owner target for a supplied bridge from real GW data to split Krein data. -/
-def RealGWToSplitKreinBridgeTarget : Prop :=
-  Nonempty RealGWToSplitKreinBridgePacket
-
-/-- Construct the split-Krein bridge target from explicit witness data. -/
+/-- Construct the split-Krein bridge theorem from explicit witness data. -/
 theorem constructRealGWToSplitKreinBridgeTarget
     (P : RealGWToSplitKreinBridgePacket) :
-    RealGWToSplitKreinBridgeTarget := by
+    Nonempty RealGWToSplitKreinBridgePacket := by
   exact ⟨P⟩
+
+/-- Supplied real-GW/split-Krein bridge packet readout. -/
+theorem realGWToSplitKreinBridge_packet
+    (P : RealGWToSplitKreinBridgePacket) :
+    Nonempty RealGWToSplitKreinBridgePacket :=
+  constructRealGWToSplitKreinBridgeTarget P
 
 end InfoGeometry.OperatorAlgebra.RealGWClifford

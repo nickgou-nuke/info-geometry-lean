@@ -1,0 +1,105 @@
+DIGEST 483ed1c637918af7d41179c2464d3657
+FMobiusDual2x2
+R27:31 Stdlib.Reals.Reals <> <> lib
+R33:37 Stdlib.micromega.Psatz <> <> lib
+def 73:79 <> pairing
+R108:108 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 82:85 <> eta1:1
+binder 87:90 <> eta2:2
+binder 92:97 <> theta1:3
+binder 99:104 <> theta2:4
+R113:113 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R133:135 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R124:126 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R120:123 MobiusDual2x2 <> eta1:1 var
+R127:132 MobiusDual2x2 <> theta1:3 var
+R140:142 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R136:139 MobiusDual2x2 <> eta2:2 var
+R143:148 MobiusDual2x2 <> theta2:4 var
+def 163:172 <> fixed_poly
+R187:187 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 175:175 <> a:5
+binder 177:177 <> b:6
+binder 179:179 <> c:7
+binder 181:181 <> d:8
+binder 183:183 <> z:9
+R192:192 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R222:224 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R208:210 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R204:206 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R200:202 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R199:199 MobiusDual2x2 <> c:7 var
+R203:203 MobiusDual2x2 <> z:9 var
+R207:207 MobiusDual2x2 <> z:9 var
+R211:211 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R217:220 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R213:215 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R212:212 MobiusDual2x2 <> d:8 var
+R216:216 MobiusDual2x2 <> a:5 var
+R221:221 MobiusDual2x2 <> z:9 var
+R225:225 MobiusDual2x2 <> b:6 var
+def 240:257 <> multiplier_at_zero
+R266:266 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 260:260 <> c:10
+binder 262:262 <> d:11
+R271:271 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R276:278 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R284:284 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R280:282 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R279:279 MobiusDual2x2 <> d:11 var
+R283:283 MobiusDual2x2 <> d:11 var
+def 298:319 <> multiplier_at_infinity
+R326:326 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 322:322 <> a:12
+R331:331 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R336:338 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R344:344 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R340:342 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R339:339 MobiusDual2x2 <> a:12 var
+R343:343 MobiusDual2x2 <> a:12 var
+prf 356:381 <> hyperbolic_pairing_example
+R464:470 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R387:393 MobiusDual2x2 <> pairing def
+R402:404 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R398:400 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R396:396 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R406:408 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R420:422 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R416:418 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R413:414 Stdlib.Reals.Rdefinitions <> ::R_scope:'-'_x not
+R424:426 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R436:438 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R432:434 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R440:442 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R453:455 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R449:451 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R458:460 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R456:456 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R471:477 MobiusDual2x2 <> pairing def
+R505:511 MobiusDual2x2 <> pairing def
+prf 535:555 <> hyperbolic_fixed_zero
+R584:586 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R561:570 MobiusDual2x2 <> fixed_poly def
+R579:579 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R606:615 MobiusDual2x2 <> fixed_poly def
+prf 640:673 <> hyperbolic_fixed_polynomial_factor
+binder 686:686 <> z:13
+R712:714 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R689:698 MobiusDual2x2 <> fixed_poly def
+R707:707 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R711:711 MobiusDual2x2 <> z:13 var
+R715:715 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R720:723 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R718:718 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'/'_x not
+R724:724 MobiusDual2x2 <> z:13 var
+R754:763 MobiusDual2x2 <> fixed_poly def
+prf 787:808 <> hyperbolic_multipliers
+R843:846 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R839:841 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R814:831 MobiusDual2x2 <> multiplier_at_zero def
+R836:836 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R871:873 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R847:868 MobiusDual2x2 <> multiplier_at_infinity def
+R874:874 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R894:911 MobiusDual2x2 <> multiplier_at_zero def
+R914:935 MobiusDual2x2 <> multiplier_at_infinity def

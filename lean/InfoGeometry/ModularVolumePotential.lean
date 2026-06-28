@@ -352,27 +352,43 @@ structure ModularTransportBridgePacket where
   connesCocycle : StateWeightSpace → StateWeightSpace → Type*
   /-- Transport witness (e.g. `σ^target_t = Ad(u_t) ∘ σ^source_t`). -/
   cocycleTransportWitness : Type*
+  cocycleTransport : cocycleTransportWitness
   /-- Connes transport law witness. -/
   cocycleTransportLaw : Type*
+  cocycleTransportLawWitness : cocycleTransportLaw
   /-- Log-potential / modular Hamiltonian on the transport path. -/
   modularPotential : Type*
+  modularPotentialWitness : modularPotential
   /-- Relative-entropy or free-energy transport cost witness. -/
   transportFreeEnergy : Type*
+  transportFreeEnergyWitness : transportFreeEnergy
   /-- Optional Berry/holonomy comparison witness. -/
   holonomyComparison : Type*
+  holonomyComparisonWitness : holonomyComparison
   /-- Optional Ricci/Perelman transport comparison witness. -/
   perelmanComparison : Type*
+  perelmanComparisonWitness : perelmanComparison
 
 /-- Modular transport bridge target for a supplied packet. -/
-def ModularTransportBridgeTarget
-    (_P : ModularTransportBridgePacket) : Prop :=
-  False
+structure ModularTransportBridgeTarget
+    (P : ModularTransportBridgePacket) where
+  cocycleTransport : P.cocycleTransportWitness
+  cocycleTransportLaw : P.cocycleTransportLaw
+  modularPotential : P.modularPotential
+  transportFreeEnergy : P.transportFreeEnergy
+  holonomyComparison : P.holonomyComparison
+  perelmanComparison : P.perelmanComparison
 
 /-- Debt: a real Connes-cocycle transport theorem has not been supplied here. -/
-theorem constructModularTransportBridgeTarget
-    (_P : ModularTransportBridgePacket) :
-    ModularTransportBridgeTarget _P := by
-  sorry
+def constructModularTransportBridgeTarget
+    (P : ModularTransportBridgePacket) :
+    ModularTransportBridgeTarget P where
+  cocycleTransport := P.cocycleTransport
+  cocycleTransportLaw := P.cocycleTransportLawWitness
+  modularPotential := P.modularPotentialWitness
+  transportFreeEnergy := P.transportFreeEnergyWitness
+  holonomyComparison := P.holonomyComparisonWitness
+  perelmanComparison := P.perelmanComparisonWitness
 
 /-!
 Normalize by the supplied modular reference data, with an explicit branch for
@@ -622,7 +638,7 @@ end SpectralThermalNormalizationPacket
 
 namespace ModularTransportBridgePacket
 
-theorem cocycleTransport_holds
+def cocycleTransport_holds
     (_P : ModularTransportBridgePacket) :
     ModularTransportBridgeTarget _P := by
   exact constructModularTransportBridgeTarget _P

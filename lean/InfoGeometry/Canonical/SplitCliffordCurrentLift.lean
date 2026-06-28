@@ -24,14 +24,28 @@ noncomputable instance splitCliffordInfinityLieAlgebra :
       Algebra.smul_mul_assoc, Algebra.mul_smul_comm, sub_eq_add_neg]
 
 /-- A zero-central current datum on the split direct limit. -/
--- DEBT_ID: SCCL_ZERO_CENTRAL_DATUM
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: Zero central charge lift for split direct limit
 noncomputable def splitCliffordInfinityCurrentDatum :
     AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity where
   Current := fun _ X => X
   kCentral := 0
   killingForm := fun _ _ => 0
+
+@[simp]
+theorem splitCliffordInfinityCurrentDatum_Current
+    (n : ℤ) (X : SplitCliffordInfinity) :
+    splitCliffordInfinityCurrentDatum.Current n X = X :=
+  rfl
+
+@[simp]
+theorem splitCliffordInfinityCurrentDatum_kCentral :
+    splitCliffordInfinityCurrentDatum.kCentral = 0 :=
+  rfl
+
+@[simp]
+theorem splitCliffordInfinityCurrentDatum_killingForm
+    (X Y : SplitCliffordInfinity) :
+    splitCliffordInfinityCurrentDatum.killingForm X Y = 0 :=
+  rfl
 
 /-- The split completion satisfies the current-mode bracket law in the zero-central lift. -/
 theorem splitCliffordInfinity_current_mode_bracket

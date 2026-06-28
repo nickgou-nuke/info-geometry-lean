@@ -173,7 +173,7 @@ theorem STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy
   OperatorFreudenthalBoundaryFluxBridge.scalarFlux_eq_quarticEntropy W
 
 /--
-Owner target for constructing the STU-specialized boundary bridge.
+Owner target for reading the STU-specialized boundary bridge.
 
 The construction remains witness-gated: the Clifford resolvent family,
 boundary, observer, and flux/entropy equality must still be supplied by future
@@ -186,7 +186,16 @@ def STUQubitBoundaryFluxOwnerTarget : Prop :=
     [NormedAddCommGroup P] [NormedSpace ℝ P],
     ∀ D : STUQubitBoundaryDatum.{uE, uP, uΩ} E P,
       D.geometry = stuQubitChargeGeometry →
-        Nonempty (STUQubitBoundaryFluxBridge.{uE, uP, uΩ, uΩ} D)
+        ∀ W : STUQubitBoundaryFluxBridge.{uE, uP, uΩ, uΩ} D,
+          FluxEqualsQuarticEntropy
+            D.A W.resolvent D.boundary W.normalizationFactor W.observer
+            D.geometry D.boundaryCharges
+
+/-- A supplied STU boundary bridge reads out scalar flux as quartic entropy. -/
+theorem stuQubitBoundaryFluxOwnerTarget :
+    STUQubitBoundaryFluxOwnerTarget.{uE, uP, uΩ} := by
+  intro E P _ _ _ _ _ D _ W
+  exact STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy W
 
 end
 

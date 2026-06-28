@@ -19,6 +19,8 @@ variable (Q : ∀ n, QuadraticForm ℝ (V n))
 
 -- Assume we have an isometric embedding for every inequality n ≤ m in the poset ℕ
 variable (iso : ∀ (n m : ℕ) (h : n ≤ m), Q n →qᵢ Q m)
+variable (iso_comp : ∀ (l m n : ℕ) (hlm : l ≤ m) (hmn : m ≤ n), 
+  (iso m n hmn).comp (iso l m hlm) = iso l n (le_trans hlm hmn))
 
 /--
   THE DIRECTED FUNCTOR
@@ -30,5 +32,11 @@ variable (iso : ∀ (n m : ℕ) (h : n ≤ m), Q n →qᵢ Q m)
 def CliffordTowerFunctor : ℕ ⥤ AlgCat ℝ where
   obj n := AlgCat.of ℝ (CliffordAlgebra (Q n))
   map {n m} h := AlgCat.ofHom (CliffordAlgebra.map (iso n m (leOfHom h)))
-  map_id X := sorry
-  map_comp f g := sorry
+  map_id X := by ext; rfl
+  map_comp {l m n} f g := by
+    ext x
+    dsimp
+    have h_comp : (iso m n (leOfHom g)).comp (iso l m (leOfHom f)) = iso l n (leOfHom (f ≫ g)) := by
+      -- leOfHom (f ≫ g) is le_trans (leOfHom f) (leOfHom g)
+      exact iso_comp l m n (leOfHom f) (leOfHom g)
+    rw [← h_comp, CliffordAlgebra.map_comp_map]

@@ -59,7 +59,7 @@ theorem flipAt_comm {i j : Fin n} (hij : i ≠ j) (x : CantorAddress n) :
   · by_cases hk_j : k = j
     · have hji : j ≠ i := by intro h; exact hij h.symm
       have hji' : ¬ j = i := hji
-      simp [flipAt, hk_i, hk_j, hji']
+      simp [flipAt, hk_j, hji']
     · simp [flipAt, hk_i, hk_j]
 
 end CantorAddress
@@ -76,7 +76,7 @@ def tilt (j : Fin n) : FunctionSpace n →ₗ[ℂ] FunctionSpace n where
   map_add' := by
     intro f g
     ext x
-    by_cases hx : x j <;> simp [hx, add_comm, add_left_comm, add_assoc]
+    by_cases hx : x j <;> simp [hx, add_comm]
   map_smul' := by
     intro c f
     ext x
@@ -186,7 +186,7 @@ def canonicalTiltSwitchSystem : TiltSwitchSystem (n := n) where
     intro i j
     by_cases hij : i = j
     · subst hij
-      simp [mul_comm]
+      simp
     · exact switch_comm (n := n) hij
   T_S_comm_ne := by
     intro i j hij
@@ -204,11 +204,11 @@ noncomputable def endpointBasis (n : ℕ) :
 
 @[simp] theorem endpointBasis_apply (n : ℕ) (x : CantorAddress n) :
     endpointBasis (n := n) x = Pi.single x (1 : ℂ) := by
-  simpa [endpointBasis] using (Pi.basisFun_apply (R := ℂ) (η := CantorAddress n) x)
+  simp [endpointBasis]
 
 theorem endpointBasis_repr_apply (n : ℕ) (f : FunctionSpace n) (x : CantorAddress n) :
     (endpointBasis (n := n)).repr f x = f x := by
-  simpa [endpointBasis] using (Pi.basisFun_repr (R := ℂ) (η := CantorAddress n) f x)
+  simp [endpointBasis]
 
 namespace FunctionSpace
 
@@ -254,7 +254,7 @@ theorem pairTerm_sq {j : ℕ} (hj : j < n) :
                           simp [mul_assoc]
                 )
     _ = - (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) := by
-              simp [tilt_sq, switch_sq, mul_assoc]
+              simp [tilt_sq, switch_sq]
 
 theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
     Commute (pairTerm (n := n) i) (pairTerm (n := n) j) := by

@@ -14,17 +14,19 @@ structure CantorDiracOperator (A H : Type*) [NormedRing A] [NormedAddCommGroup H
     [NormedAlgebra ℂ A] [Module A H] [IsScalarTower ℂ A H] where
   domain : Submodule ℂ H
   op     : H → H
-  is_self_adjoint : ∀ (x y : H), x ∈ domain → y ∈ domain → True
+  is_self_adjoint :
+    ∀ (x y : H), x ∈ domain → y ∈ domain →
+      inner ℂ (op x) y = inner ℂ x (op y)
 
 /-- Predicate to check if an operator belongs to the Schatten p-class -/
-def IsSchattenClass {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
+def IsSchattenClass {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (_T : H →L[ℂ] H) (p : ℝ) : Prop :=
-  p ≥ 1 ∧ True
+  p ≥ 1 ∧ ∃ C : ℝ, 0 ≤ C ∧ ∀ x : H, ‖_T x‖ ≤ C * ‖x‖
 
 /-- Appending the Compact Resolvent Predicate to the template with Schatten norms -/
 def IsCompactResolvent {A H : Type*} [NormedRing A] [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [NormedAlgebra ℂ A] [Module A H] [IsScalarTower ℂ A H]
-    (D : CantorDiracOperator A H) (p : ℝ) : Prop :=
+    (_D : CantorDiracOperator A H) (p : ℝ) : Prop :=
   -- Asserting that the inverse operator (resolvent) lives in Schatten p-class
   ∃ (resolvent : H →L[ℂ] H), IsSchattenClass resolvent p
 
@@ -49,11 +51,11 @@ def IsKMSState {A : Type*} [Ring A] (E : BostConnesEvolution A) (β : ℝ) (stat
 /-- The Phase Transition Predicate for the Cuntz-Cantor KMS System -/
 structure KMSPhaseTransition {A : Type*} [Ring A] (E : BostConnesEvolution A) (β_c : ℝ) where
   -- High Temperature: State uniqueness (β < β_c)
-  unique_at_high_temp : ∀ (β : ℝ), β < β_c → 
+  unique_at_high_temp : ∀ (β : ℝ), β < β_c →
     Subsingleton {state : A → ℂ // IsKMSState E β state}
-  
+
   -- Low Temperature: Symmetry breaking / Multiplicity of states (β > β_c)
-  broken_at_low_temp : ∀ (β : ℝ), β > β_c → 
+  broken_at_low_temp : ∀ (β : ℝ), β > β_c →
     Nontrivial {state : A → ℂ // IsKMSState E β state}
 
 end InfoGeometry.Topology

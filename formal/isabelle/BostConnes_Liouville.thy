@@ -198,16 +198,15 @@ proof -
   by simp
 qed
 
-section {* Physical Interpretation *}
+section {* Interpretive note *}
 
 text {*
-  Corollary: The Witten index is conserved under thermal time evolution.
+  Interpretive note for this formal file.
   
   Since [Γ, σ_t] = 0, we have:
     d/dt Tr(Γ · σ_t(e^{-βH})) = 0
   
-  This means the topological index is independent of the modular flow
-  parameter t - it's a conserved quantity.
+  This file contains a simple equality-level readout for the partial sum.
 *}
 
 theorem witten_index_conservation:
@@ -231,10 +230,9 @@ text {*
   ✓ Definition of Witten index partial sums
   ✓ Theorem: Witten index is invariant under flow
   
-  Physical interpretation:
-  - Fermion parity is preserved by thermal time evolution
-  - The Witten index is a topological invariant
-  - Topological structure is protected against thermal decoherence
+  Interpretive summary:
+  - the file packages arithmetic and commutation-style statements
+  - broader physical language is intentionally omitted from the theorem surface
 *}
 
 end

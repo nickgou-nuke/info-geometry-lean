@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta charset="UTF-8" />
+				<title>Solutions: Vector Identities &amp; Plane Trig with GA | Primer on Geometric Algebra | David Hestenes</title>
+		<meta name="author" content="David Hestenes" />
+		<meta name="robots" content="all" />
+		<meta name="generator" content="Sandvox 2.7.3" />
+		<meta name="viewport" content="width=1000" />
+		<meta http-equiv="X-UA-Compatible" content="IE=100" />
+		<link rel="stylesheet" type="text/css" href="../../_Resources/ddsmoothmenu.css" />
+		<link rel="stylesheet" type="text/css" href="../../com_blueballdesign_Blueball_Smooth_Sky_Wide/main.css" title="Blueball Smooth Sky Wide" /><!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="../../com_blueballdesign_Blueball_Smooth_Sky_Wide/ie8.css" /><![endif]-->
+		<!--
+		-->
+		<script src="../../_Resources/jquery-1.5.2.min.js"></script>
+		<script>
+		</script><script id="ddsmoothmenu" src="../../_Resources/ddsmoothmenu.js">
+/***********************************************
+* Smooth Navigational Menu- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+		</script>
+		<script>
+		ddsmoothmenu.arrowimages = {down:['downarrowclass', '../../_Resources/down.gif', 23], right:['rightarrowclass', '../../_Resources/right.gif']}
+ddsmoothmenu.init({ mainmenuid: 'sitemenu-content',orientation:'h', classname:'ddsmoothmenu',contentsource:'markup'})
+	</script>
+	</head>
+	<body class="sandvox has-page-title no-sidebar no-custom-banner no-navigation no-IR" id="www_localhost_com" >
+				<div id="page-container">
+			<div id="page">
+				<div id="page-top" class="has-logo has-title has-tagline">
+					<div id="title">
+						<a href="../../index.html" class="imageLink"><span id="logo-container"><img id="logo" width="201" height="128" src="../../_Media/ga_logo_01_med.png" alt="GA logo 01" /></span></a>
+						<h1 class="title in"><a href="../../index.html"><span class="in">Primer on Geometric Algebra</span></a></h1>
+						<p id="tagline"><span class="in">           for introductory mathematics and physics </span></p>
+					</div><!-- title -->
+					<div id="sitemenu-container">
+						<div id="sitemenu">
+							<h2 class="hidden">Site Navigation<a href="#page-content" rel="nofollow">[Skip]</a></h2>
+							<div id="sitemenu-content">
+								<ul>
+									<li class="i1 o"><a href="../../index.html" title="Galileo's Manifesto for Science"><span class="in">Home</span></a></li>
+									<li class="i2 e"><a href="../../outline-table-of-contents/index.html" title="Outline (Table Of Contents)"><span class="in">Outline (TOC)</span></a></li>
+									<li class="i3 o"><a href="../../prolog-on-optimizing-the.html" title="Prolog: On Optimizing the Design of Introductory Mathematics"><span class="in">Prolog</span></a></li>
+									<li class="i4 e hasSubmenu"><a href="../../standard-algebraic-tools/index.html" title="Standard Algebraic Tools for Linear Geometry"><span class="in">Standard Tools</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../standard-algebraic-tools/rules-for-vector-addition/index.html" title="Rules for Vector Addition"><span class="in">Rules for Vector Addition</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../standard-algebraic-tools/rules-for-vector-addition/solution-commutative-rule.html" title="Solution: Commutative Rule for Vector Addition"><span class="in">Solution: Commutative Rule for Vector Addition</span></a></li><li class="i2 e last-item last"><a href="../../standard-algebraic-tools/rules-for-vector-addition/solution-associative-rule.html" title="Solution: Associative Rule for Vector Addition"><span class="in">Solution: Associative Rule for Vector Addition</span></a></li></ul></li><li class="i2 e"><a href="../../standard-algebraic-tools/rules-for-multiplication-by.html" title="Rules for Multiplication by Scalars"><span class="in">Rules for Multiplication by Scalars</span></a></li><li class="i3 o last-item last hasSubmenu"><a href="../../standard-algebraic-tools/parametric-equations/index.html" title="Parametric Equations"><span class="in">Parametric Equations</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../standard-algebraic-tools/parametric-equations/solution-linear-constraints.html" title="Solution: Linear Constraints in a Plane"><span class="in">Solution: Linear Constraints in a Plane</span></a></li><li class="i2 e last-item last"><a href="../../standard-algebraic-tools/parametric-equations/solution-quadratic-constrai.html" title="Solution: Quadratic Constraints in a Plane"><span class="in">Solution: Quadratic Constraints in a Plane</span></a></li></ul></li></ul></li>
+									<li class="i5 o hasSubmenu currentParent"><a href="../index.html" title="Introduction to Geometric Algebra and Basic 2D Applications"><span class="in">GA Intro &amp; 2D Apps</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../defining-and-interpreting.html" title="Defining and Interpreting the Geometric Product"><span class="in">Defining and Interpreting the Geometric Product</span></a></li><li class="i2 e"><a href="../rotors-and-rotations-in-the.html" title="Rotors and Rotations in the Euclidean Plane"><span class="in">Rotors and Rotations in the Euclidean Plane</span></a></li><li class="i3 o hasSubmenu currentParent"><a href="index.html" title="Vector Identities and Plane Trigonometry with GA"><span class="in">Vector Identities and Plane Trigonometry with GA</span></a><ul class="isSubMenu"><li class="i1 o last-item last currentPage"><span class="in">Solutions: Vector Identities &amp; Plane Trig with GA</span></li></ul></li><li class="i4 e hasSubmenu"><a href="../modeling-real-objects-and/index.html" title="Modeling Real Objects and Motions with Vectors"><span class="in">Modeling Real Objects and Motions with Vectors</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../modeling-real-objects-and/solution-barycentric-coordi.html" title="Solution: Barycentric Coordinates"><span class="in">Solution: Barycentric Coordinates</span></a></li></ul></li><li class="i5 o hasSubmenu"><a href="../high-school-geometry-with/index.html" title="High School Geometry with Geometric Algebra"><span class="in">High School Geometry with Geometric Algebra</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../high-school-geometry-with/solutions-for-straight-line.html" title="Solutions for Straight Line Representation"><span class="in">Solutions for Straight Line Representation</span></a></li></ul></li><li class="i6 e hasSubmenu"><a href="../basic-kinematic-models-of/index.html" title="Basic Kinematic Models of Particle Motion"><span class="in">Basic Kinematic Models of Particle Motion</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../basic-kinematic-models-of/free-particle-model.html" title="Free Particle Model"><span class="in">Free Particle Model</span></a></li><li class="i2 e hasSubmenu"><a href="../basic-kinematic-models-of/constant-acceleration-model/index.html" title="Constant Acceleration Model"><span class="in">Constant Acceleration Model</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../basic-kinematic-models-of/constant-acceleration-model/solution-constant-accelerat.html" title="Solution: Constant Acceleration Projectile/Target Problem"><span class="in">Solution: Constant Acceleration Projectile/Target Problem</span></a></li></ul></li><li class="i3 o hasSubmenu"><a href="../basic-kinematic-models-of/circular-motion-model/index.html" title="Circular Motion Model"><span class="in">Circular Motion Model</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../basic-kinematic-models-of/circular-motion-model/solution-motion-map-for.html" title="Solution: Motion Map for Circle"><span class="in">Solution: Motion Map for Circle</span></a></li></ul></li><li class="i4 e hasSubmenu"><a href="../basic-kinematic-models-of/general-kinematic-theorem/index.html" title="General Kinematic Theorem"><span class="in">General Kinematic Theorem</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../basic-kinematic-models-of/general-kinematic-theorem/solution-particle-on-fricti.html" title="Solution: Particle on Frictionless Track"><span class="in">Solution: Particle on Frictionless Track</span></a></li></ul></li><li class="i5 o last-item last hasSubmenu"><a href="../basic-kinematic-models-of/general-keplerian-motion/index.html" title="General Keplerian Motion"><span class="in">General Keplerian Motion</span></a><ul class="isSubMenu"><li class="i1 o last-item last hasSubmenu"><a href="../basic-kinematic-models-of/general-keplerian-motion/further-central-force-detai/index.html" title="Further Central Force Details &amp; Derivations"><span class="in">Further Central Force Details &amp; Derivations</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../basic-kinematic-models-of/general-keplerian-motion/further-central-force-detai/example-elliptical-orbit-.html" title="Example: Elliptical Orbit &amp; Hodograph"><span class="in">Example: Elliptical Orbit &amp; Hodograph</span></a></li></ul></li></ul></li></ul></li><li class="i7 o hasSubmenu"><a href="../planar-rigid-body-motion/index.html" title="Planar Rigid Body Motion and Reference Frames"><span class="in">Planar Rigid Body Motion and Reference Frames</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../planar-rigid-body-motion/solution-planar-rigid-body.html" title="Solution: Planar Rigid Body Transformations"><span class="in">Solution: Planar Rigid Body Transformations</span></a></li><li class="i2 e last-item last"><a href="../planar-rigid-body-motion/solution-galilean-transform.html" title="Solution: Galilean Transformations"><span class="in">Solution: Galilean Transformations</span></a></li></ul></li><li class="i8 e last-item last"><a href="../the-zeroth-law-of-physics.html" title="The Zeroth Law of Physics"><span class="in">The Zeroth Law of Physics</span></a></li></ul></li>
+									<li class="i6 e last-item last hasSubmenu"><a href="../../special-relativity-with/index.html" title="Special Relativity with Geometric Algebra"><span class="in">Spec. Relativity with GA</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../special-relativity-with/defining-spacetime/index.html" title="Defining Spacetime"><span class="in">Defining Spacetime</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/defining-spacetime/solution-interval-invarianc.html" title="Solution: Interval Invariance Implies Universal Speed of Light"><span class="in">Solution: Interval Invariance Implies Universal Speed of Light</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../special-relativity-with/spacetime-maps/index.html" title="Spacetime Maps"><span class="in">Spacetime Maps</span></a><ul class="isSubMenu"><li class="i1 o last-item last hasSubmenu"><a href="../../special-relativity-with/spacetime-maps/particle-history-and-proper/index.html" title="Particle History and Proper Velocity"><span class="in">Particle History and Proper Velocity</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/spacetime-maps/particle-history-and-proper/solution-proper-velocity.html" title="Solution: Proper Velocity"><span class="in">Solution: Proper Velocity</span></a></li></ul></li></ul></li><li class="i3 o hasSubmenu"><a href="../../special-relativity-with/spacetime-trigonometry/index.html" title="Spacetime Trigonometry"><span class="in">Spacetime Trigonometry</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../special-relativity-with/spacetime-trigonometry/time-dilation-and-desynchro/index.html" title="Time Dilation and Desynchronization"><span class="in">Time Dilation and Desynchronization</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/spacetime-trigonometry/time-dilation-and-desynchro/solutions-parable-of-the.html" title="Solutions: Parable of the Twins"><span class="in">Solutions: Parable of the Twins</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../special-relativity-with/spacetime-trigonometry/lorentz-contraction/index.html" title="Lorentz Contraction"><span class="in">Lorentz Contraction</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/spacetime-trigonometry/lorentz-contraction/solution-lorentz-contractio.html" title="Solution: Lorentz Contraction Formula"><span class="in">Solution: Lorentz Contraction Formula</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../special-relativity-with/spacetime-trigonometry/doppler-shift/index.html" title="Doppler Shift"><span class="in">Doppler Shift</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/spacetime-trigonometry/doppler-shift/solution-the-doppler-factor.html" title="Solution: The Doppler Factor"><span class="in">Solution: The Doppler Factor</span></a></li></ul></li></ul></li><li class="i4 e hasSubmenu"><a href="../../special-relativity-with/lorentz-transformations/index.html" title="Lorentz Transformations"><span class="in">Lorentz Transformations</span></a><ul class="isSubMenu"><li class="i1 o"><a href="../../special-relativity-with/lorentz-transformations/solution-time--position.html" title="Solution: Time &amp; Position Transformations"><span class="in">Solution: Time &amp; Position Transformations</span></a></li><li class="i2 e hasSubmenu"><a href="../../special-relativity-with/lorentz-transformations/velocity-composition/index.html" title="Velocity Composition"><span class="in">Velocity Composition</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/lorentz-transformations/velocity-composition/solution-composition-laws.html" title="Solution: Composition Laws"><span class="in">Solution: Composition Laws</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../special-relativity-with/lorentz-transformations/active-lorentz-transformati/index.html" title="Active Lorentz Transformations"><span class="in">Active Lorentz Transformations</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/lorentz-transformations/active-lorentz-transformati/solution-hyperbolic-rotatio.html" title="Solution: Hyperbolic Rotations"><span class="in">Solution: Hyperbolic Rotations</span></a></li></ul></li></ul></li><li class="i5 o hasSubmenu"><a href="../../special-relativity-with/energy-and-momentum/index.html" title="Energy and Momentum"><span class="in">Energy and Momentum</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../special-relativity-with/energy-and-momentum/the-proper-momentum/index.html" title="The Proper Momentum"><span class="in">The Proper Momentum</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/energy-and-momentum/the-proper-momentum/solutions-relativistic.html" title="Solutions: Relativistic Energy &amp; Momentum"><span class="in">Solutions: Relativistic Energy &amp; Momentum</span></a></li></ul></li><li class="i2 e hasSubmenu"><a href="../../special-relativity-with/energy-and-momentum/the-photon/index.html" title="The Photon"><span class="in">The Photon</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/energy-and-momentum/the-photon/solution-photon-proper.html" title="Solution: Photon Proper Momentum"><span class="in">Solution: Photon Proper Momentum</span></a></li></ul></li><li class="i3 o last-item last hasSubmenu"><a href="../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/index.html" title="Energy-Momentum Conservation"><span class="in">Energy-Momentum Conservation</span></a><ul class="isSubMenu"><li class="i1 o hasSubmenu"><a href="../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-comptons-formula/index.html" title="Solution: Compton's Formula"><span class="in">Solution: Compton's Formula</span></a><ul class="isSubMenu"><li class="i1 o last-item last"><a href="../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-comptons-formula/solution-classical-2d-elast.html" title="Solution: Classical 2D Elastic Scattering"><span class="in">Solution: Classical 2D Elastic Scattering</span></a></li></ul></li><li class="i2 e last-item last"><a href="../../special-relativity-with/energy-and-momentum/energy-momentum-conservatio/solution-pion-decay-energie.html" title="Solution: Pion Decay Energies"><span class="in">Solution: Pion Decay Energies</span></a></li></ul></li></ul></li><li class="i6 e last-item last"><a href="../../special-relativity-with/universal-laws-for-spacetim.html" title="Universal Laws for Spacetime Physics"><span class="in">Universal Laws for Spacetime Physics</span></a></li></ul></li>
+								</ul>
+							</div> <!-- /sitemenu-content -->
+						</div> <!-- /sitemenu -->
+					</div> <!-- sitemenu-container -->
+				</div> <!-- page-top -->
+				<div class="clear below-page-top"></div>
+				<div id="page-content" class="no-navigation">
+					<div id="main">
+						<div id="main-top"></div>
+						<div id="main-content">
+							<h2 class="title"><span class="in">Solutions: Vector Identities &amp; Plane Trig with GA</span></h2>
+							<div class="article">
+								<div class="article-content">
+									<div class="RichTextElement">
+										<div><p style="font: normal normal normal 12px/normal Times; "><strong style="font-weight: 700; "><span style="color: rgb(118, 205, 15); font-family: Verdana; font-size: 14px; "><u><a href="index.html">Return to current section</a></u></span><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">: </span><span style="color: rgb(169, 0, 157); font-family: Verdana; font-size: 14px; ">Vector Identities and Plane Trigonometry with GA</span><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">.</span></strong></p><p style="font: normal normal normal 12px/normal Times; "><u><strong style="font-weight: 700; "><em><span style="color: rgb(247, 90, 0); font-size: 14px; font-family: Verdana; "><br /></span></em></strong></u></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; ">Exercise 1: </strong></span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">Prove the following vector identities and show that they are equivalent to trig identities for unit vectors </span><span style="font-family: Verdana; font-size: 14px; color: rgb(255, 0, 0); "><strong><em><u><br /></u></em></strong>                  in a common plane.</span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><br />          (a)  </span><span style="font-family: Verdana; font-size: 14px; color: rgb(61, 0, 255); ">Expand </span><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); "><strong>abba </strong>to derive the trig </span><span style="font-family: Verdana; color: rgb(255, 0, 0); font-size: 14px; "><strong><em>Pythagorean Identity</em></strong></span><span style="font-family: Verdana; font-size: 14px; color: rgb(255, 0, 0); ">:</span></p>
+											
+											<div class="first wide left">
+												<div style="width:751px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{a^2}{b^2}\,\,\, = \,\,\,{\bf{abba}}\,\,\, = \,\,\,\left( {{\bf{a}} \cdot {\bf{b}}\,\, + \,\,{\bf{a}} \wedge {\bf{b}}} \right)\,\,\left( {{\bf{b}} \cdot {\bf{a}}\,\, + \,\,{\bf{b}} \wedge {\bf{a}}} \right)\,\,\,\\\,\,\,\,\,\,\,\,\,\,\,\,\, = \,\,\,\left( {{\bf{a}} \cdot {\bf{b}}\,\, + \,\,{\bf{a}} \wedge {\bf{b}}} \right)\,\,\left( {{\bf{a}} \cdot {\bf{b}}\,\, - \,\,{\bf{a}} \wedge {\bf{b}}} \right)\,\,\, = \,\,\,{\left( {{\bf{a}} \cdot {\bf{b}}} \right)^2}\,\, - \,\,{\left( {{\bf{a}} \wedge {\bf{b}}} \right)^2}\\\,\,\,\,\,\,\,\,\,\,\,\,\, = \,\,\,{\left( {{\bf{a}} \cdot {\bf{b}}} \right)^2}\,\, + \,\,{\left| {{\bf{a}} \wedge {\bf{b}}} \right|^2}\,\,\, = \,\,\,{a^2}{b^2}\,{\cos ^2}\theta \,\, + \,\,{a^2}{b^2}\,{\sin ^2}\theta \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; ">                 </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">or, pulling out the magnitudes (leaving unit vectors) and writing these as rotors:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:842px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{abba}}\,\,\, = \,\,\,{a^2}{b^2}\,\left( {{\bf{\hat a\hat b}}} \right)\left( {{\bf{\hat b\hat a}}} \right)\,\,\, = \,\,\,{a^2}{b^2}\,{e^{{\bf{i}}\theta }}{e^{ - {\bf{i}}\theta }}\,\,\, = \,\,\,{a^2}{b^2}\\\,\,\,\,\,~~~\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\, = \,\,\,{a^2}{b^2}\,\left( {\cos \theta \,\, + \,\,{\bf{i}}\,\,\sin \theta } \right)\left( {\cos \theta \,\, - \,\,{\bf{i}}\,\,\sin \theta } \right)\,\,\, = \,\,\,{a^2}{b^2}\,\left( {{{\cos }^2}\theta \,\, + \,\,{{\sin }^2}\theta } \right)\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; ">          (b)  </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">Looking at the equation we are asked to prove and at part (a) above, we'll save a little typing<br />                by factoring out all the magnitudes (</span><span style="font-family: Verdana; font-size: 14px; color: rgb(255, 0, 0); ">divide both sides by </span><em><span style="color: rgb(255, 0, 0); font-size: 18px; font-family: Georgia; ">a</span></em><span style="font-size: 14px; font-family: Verdana; color: rgb(255, 0, 0); "><em>b</em></span><span style="color: rgb(255, 0, 0); "><sup style="font-family: Verdana; font-size: 14px; ">2</sup></span><span style="font-family: Verdana; font-size: 14px; color: rgb(255, 0, 0); "><em>c</em></span><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); ">) and using unit vectors. These </span><span style="color: rgb(61, 0, 255); "><br /></span><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); ">                magnitudes can always be put back in later, if desired. </span><span style="color: rgb(61, 0, 255); "><br /></span><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); ">                The hint was to expand </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>abbc</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> two different ways:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:938px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat a}}\left( {{\bf{\hat b\hat b}}} \right){\bf{\hat c}}\,\,\, = \,\,\,{\bf{\hat a\hat c}}\,\,\, = \,\,\,{\bf{\hat a}} \cdot {\bf{\hat c}}\,\, + \,\,{\bf{\hat a}} \wedge {\bf{\hat c}}\,\,\, = \,\,\,\left( {{\bf{\hat a\hat b}}} \right)\left( {{\bf{\hat b\hat c}}} \right)\,\,\, = \,\,\,\left( {{\bf{\hat a}} \cdot {\bf{\hat b}}\,\, + \,\,{\bf{\hat a}} \wedge {\bf{\hat b}}} \right)\left( {{\bf{\hat b}} \cdot {\bf{\hat c}}\,\, + \,\,{\bf{\hat b}} \wedge {\bf{\hat c}}} \right)\\\,\,\,\,\,\,\,\,\,~~~~~~~~\,\,\,\,\,\,\,\,\,\,\, = \,\,\,\left( {{\bf{\hat a}} \cdot {\bf{\hat b}}} \right)\,{\bf{\hat b}} \cdot {\bf{\hat c}}\,\, + \,\,\left( {{\bf{\hat a}} \wedge {\bf{\hat b}}} \right)\left( {{\bf{\hat b}} \wedge {\bf{\hat c}}} \right)\,\, + \,\,\left( {{\bf{\hat a}} \cdot {\bf{\hat b}}} \right){\bf{\hat b}} \wedge {\bf{\hat c}}\,\, + \,\,\left( {{\bf{\hat b}} \cdot {\bf{\hat c}}} \right){\bf{\hat a}} \wedge {\bf{\hat b}}\\\\\\\left( {{\bf{\hat a}} \wedge {\bf{\hat b}}} \right)\left( {{\bf{\hat b}} \wedge {\bf{\hat c}}} \right)\,\,\, = \,\,\,{\bf{\hat a}} \cdot {\bf{\hat c}}\,\, - \,\,\left( {{\bf{\hat a}} \cdot {\bf{\hat b}}} \right)\,{\bf{\hat b}} \cdot {\bf{\hat c}}\,\, - \,\,\left[ {\left( {{\bf{\hat b}} \cdot {\bf{\hat a}}} \right){\bf{\hat b}} \wedge {\bf{\hat c}}\,\, - \,\,\left( {{\bf{\hat b}} \cdot {\bf{\hat b}}} \right){\bf{\hat a}} \wedge {\bf{\hat c}}\,\, + \,\,\left( {{\bf{\hat b}} \cdot {\bf{\hat c}}} \right){\bf{\hat a}} \wedge {\bf{\hat b}}} \right]\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; ">                <br />                 </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">We will have completed the proof if we can show the last expression inside square brackets is zero.<br />                 Remember we were also supposed to consider only the case where </span><span style="font-family: Verdana; color: rgb(255, 0, 0); font-size: 14px; "><strong><em>the three vectors are coplanar</em></strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">.<br /><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">                 This Primer has been concentrating on two dimensional descriptions and examples of GA, so we <br />                 haven't yet learned that the expression in square brackets can be written as </span><span style="font-family: Verdana; font-size: 14px; color: rgb(0, 0, 0); "><strong>b</strong></span><span style="color: rgb(0, 0, 0); "><strong style="font-weight: 700; font-family: Verdana; font-size: 14px; ">∙</strong></span><span style="font-family: Verdana; font-size: 14px; color: rgb(0, 0, 0); ">(</span><span style="font-size: 14px; font-family: Verdana; color: rgb(0, 0, 0); "><strong style="font-weight: 700; ">a</strong></span><span style="font-family: Verdana; font-size: 14px; color: rgb(0, 0, 0); "><strong style="font-weight: 700; ">∧</strong></span><span style="font-size: 14px; font-family: Verdana; color: rgb(0, 0, 0); "><strong style="font-weight: 700; ">b</strong></span><span style="font-family: Verdana; font-size: 14px; color: rgb(0, 0, 0); "><strong style="font-weight: 700; ">∧</strong></span><span style="font-size: 14px; font-family: Verdana; color: rgb(0, 0, 0); "><strong style="font-weight: 700; ">c</strong></span><span style="font-family: Verdana; font-size: 14px; color: rgb(0, 0, 0); ">)</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">, which is<br />                 more clearly zero if the three vectors are coplanar. Since our toolbox of tricks is still a bit empty,<br />                 how can we show the expression in square brackets is zero? You should be able to convince yourself<br />                 that if </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>a</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> is parallel or antiparallel to </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>c</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">, the expression is zero. Yet, if </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>a</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> and </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>c</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> are not colinear, we can<br />                 write </span><span style="font-family: Verdana; color: rgb(61, 0, 255); font-size: 14px; "><strong>b</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> in terms of them and see what happens to the expression:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:763px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat b}}\,\,\, \equiv \,\,\,\alpha {\bf{\hat a}}\,\, + \,\,\beta {\bf{\hat c}}\,,\,\,\,\,\,\,\,\,\,\,\,\,{\bf{\hat b\hat b}}\,\,\, = \,\,\,1\,\,\, = \,\,\,{\alpha ^2}\,\, + \,\,{\beta ^2}\,\, + \,\,2\alpha \beta \,{\bf{\hat a}} \cdot {\bf{\hat c}}\\\\\left( {{\bf{\hat b}} \cdot {\bf{\hat a}}} \right){\bf{\hat b}} \wedge {\bf{\hat c}}\,\, - \,\,\left( {{\bf{\hat b}} \cdot {\bf{\hat b}}} \right){\bf{\hat a}} \wedge {\bf{\hat c}}\,\, + \,\,\left( {{\bf{\hat b}} \cdot {\bf{\hat c}}} \right){\bf{\hat a}} \wedge {\bf{\hat b}}\\\,\,\,\,\,\,\,\,\,\,\,~~~~\, = \,\,\,\left( {\alpha  + \beta \,{\bf{\hat a}} \cdot {\bf{\hat c}}} \right)\alpha \,{\bf{\hat a}} \wedge {\bf{\hat c}}\,\, - \,\,{\bf{\hat a}} \wedge {\bf{\hat c}}\,\, + \,\,\left( {\alpha \,{\bf{\hat a}} \cdot {\bf{\hat c}} + \beta } \right)\beta \,{\bf{\hat a}} \wedge {\bf{\hat c}}\\\,\,\,\,\,\,\,\,\,~~~~\,\,\, = \,\,\,\left( {{\alpha ^2}\,\, + \,\,\alpha \beta \,{\bf{\hat a}} \cdot {\bf{\hat c}}\,\, - \,\,1\,\, + \,\,\alpha \beta \,{\bf{\hat a}} \cdot {\bf{\hat c}}\,\, + \,\,{\beta ^2}} \right)\,\,{\bf{\hat a}} \wedge {\bf{\hat c}}\,\,\, = \,\,\,0\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> <br />                 That was a lot of work. Is it equivalent to some trig identity? As in part (a) above, rotor notation will help:</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:870px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat a\hat b}}\,\,\, \equiv \,\,\,{e^{{\bf{i}}\theta }}\,\,\, = \,\,\,\cos \theta \,\, + \,\,{\bf{i}}\,\sin \theta \,,\,\,\,\,\,\,\,\,\,\,\,\,{\bf{\hat b\hat c}}\,\,\, \equiv \,\,\,{e^{{\bf{i}}\phi }}\,\,\, = \,\,\,\cos \phi \,\, + \,\,{\bf{i}}\,\sin \phi \\\,\,\,\,\,\,\,\,\,\,\,\,\left( {{\bf{\hat a\hat b}}} \right)\left( {{\bf{\hat b\hat c}}} \right)\,\,\, = \,\,\,{e^{{\bf{i}}\theta }}{e^{{\bf{i}}\phi }}\,\,\, = \,\,\,{e^{{\bf{i}}\left( {\theta  + \phi } \right)}}\,\,\, = \,\,\,{\bf{\hat a\hat c}}\,\,\, = \,\,\,\cos \left( {\theta  + \phi } \right)\,\, + \,\,{\bf{i}}\,\sin \left( {\theta  + \phi } \right)\\\\\\\left( {{\bf{\hat a}} \wedge {\bf{\hat b}}} \right)\left( {{\bf{\hat b}} \wedge {\bf{\hat c}}} \right)\,\,\, = \,\,\,{\bf{\hat a}} \cdot {\bf{\hat c}}\,\, - \,\,\left( {{\bf{\hat a}} \cdot {\bf{\hat b}}} \right)\,{\bf{\hat b}} \cdot {\bf{\hat c}}\\\,\,\,\,\,\,\,\,~~~~~~~~\,\,\,\, \Leftrightarrow \,\,\,\,\,\,\,\,\,\,\,\,\left( {{\bf{i}}\,\sin \theta } \right)\left( {{\bf{i}}\,\sin \phi } \right)\,\,\, = \,\,\,\cos \left( {\theta  + \phi } \right)\,\, - \,\,\cos \theta \,\,\cos \phi \\\cos \theta \,\,\cos \phi \,\, - \,\,\sin \theta \,\,\sin \phi \,\,\, = \,\,\,\cos \left( {\theta  + \phi } \right)\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); "><br />                 It turns out our GA identity is equivalent to the trig identity for the cosine of the sum of two angles.<br />                 Notice, even here, we require the three vectors to be coplanar, so that the unit bivector </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">i</span></strong><span style="font-size: 14px; font-family: Verdana; color: rgb(61, 0, 255); "> represents<br />                 the same plane in all of these rotor expressions.</span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; ">Exercise 2: </strong></span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">Use rotor products to derive the trigonometric "sum of two angles" formulas.</span><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; "><br />                </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">We've begun this derivation in the last group of expressions above.</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:743px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat a\hat c}}\,\,\, = \,\,\,{e^{{\bf{i}}\left( {\theta  + \phi } \right)}}\,\,\, = \,\,\,\cos \left( {\theta  + \phi } \right)\,\, + \,\,{\bf{i}}\,\sin \left( {\theta  + \phi } \right)\,\,\, = \,\,\,\left( {{\bf{\hat a\hat b}}} \right)\left( {{\bf{\hat b\hat c}}} \right)\\\,\,\,\,\,\,\,\, = \,\,\,\left( {\cos \theta \,\, + \,\,{\bf{i}}\,\sin \theta } \right)\left( {\cos \phi \,\, + \,\,{\bf{i}}\,\sin \phi } \right)\\\,\,\,\,\,\,\,\, = \,\,\,\left( {\cos \theta \cos \phi \,\, - \,\,\sin \theta \sin \phi } \right)\,\, + \,\,{\bf{i}}\,\left( {\sin \theta \cos \phi \,\, + \,\,\cos \theta \sin \phi } \right)\end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div>
+											
+											<div class="not-first-item wide left">
+												<div style="width:476px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}\left( a \right)\,\,\,\,\,\,\,\,\,\,\,\,\cos \left( {\theta  + \phi } \right)\,\,\, = \,\,\,\cos \theta \cos \phi \,\, - \,\,\sin \theta \sin \phi \\\\\\\left( b \right)\,\,\,\,\,\,\,\,\,\,\,\,\sin \left( {\theta  + \phi } \right)\,\,\, = \,\,\,\sin \theta \cos \phi \,\, + \,\,\cos \theta \sin \phi \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-size: 14px; font-family: Verdana; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><strong style="font-family: Verdana; font-size: 14px; font-weight: 700; ">Exercise 3: </strong><span style="color: rgb(255, 0, 0); font-size: 14px; font-family: Verdana; ">Prove the following triangle theorems.</span></p>
+											
+											<div class="not-first-item wide center">
+												<div style="width:609px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<!-- SolvingTheTriangle.svg -->
+														<svg width="10.2cm" height="6cm" viewBox="98 117 323 186" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+														  <g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="100" y1="260" x2="210.764" y2="296.921"/>
+														    <polygon style="fill: #000000" points="217.879,299.293 206.811,300.874 210.764,296.921 209.973,291.387 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="217.879,299.293 206.811,300.874 210.764,296.921 209.973,291.387 "/>
+														  </g>
+														  <g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="220" y1="300" x2="182.112" y2="129.504"/>
+														    <polygon style="fill: #000000" points="180.485,122.183 187.535,130.86 182.112,129.504 177.773,133.029 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="180.485,122.183 187.535,130.86 182.112,129.504 177.773,133.029 "/>
+														  </g>
+														  <g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="100" y1="260" x2="175.17" y2="128.453"/>
+														    <polygon style="fill: #000000" points="178.891,121.941 178.27,133.105 175.17,128.453 169.588,128.143 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="178.891,121.941 178.27,133.105 175.17,128.453 169.588,128.143 "/>
+														  </g>
+														  <g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="300" y1="260" x2="420" y2="300"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="420" y1="300" x2="380" y2="120"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="300" y1="260" x2="380" y2="120"/>
+														  </g>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="143" y="297">
+														    <tspan x="143" y="297">a</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="209" y="217">
+														    <tspan x="209" y="217">b</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="123" y="190">
+														    <tspan x="123" y="190">c</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:italic;font-weight:normal" x="324" y="190">
+														    <tspan x="324" y="190">c</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:italic;font-weight:normal" x="409" y="220">
+														    <tspan x="409" y="220">b</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:Lucida Handwriting;font-style:italic;font-weight:normal" x="345" y="296">
+														    <tspan x="345" y="296">a</tspan>
+														  </text>
+														  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="480" y="280">
+														    <tspan x="480" y="280"></tspan>
+														  </text>
+														  <text font-size="18.0622" style="fill: #000000;text-anchor:start;font-family:Courier;font-style:normal;font-weight:normal" x="370" y="159">
+														    <tspan x="370" y="159">α</tspan>
+														  </text>
+														  <text font-size="14.6756" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="318" y="257">
+														    <tspan x="318" y="257">β</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:Calibri;font-style:normal;font-weight:normal" x="399" y="284">
+														    <tspan x="399" y="284">ϒ</tspan>
+														  </text>
+														</svg>
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><br /><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; ">          (a)  </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">Derive the law of cosines. </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">Let </span><em><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">θ</span></em><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> be the angle between the directions of </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">a</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> and </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">b</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">. Then </span><span style="color: rgb(0, 0, 0); font-size: 18px; font-family: 'Times New Roman'; ">γ</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> is its<br />                supplementary angle.</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:844px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{c^2}\,\,\, = \,\,\,{{\bf{c}}^2}\,\,\, = \,\,\,\left( {{\bf{a}} + {\bf{b}}} \right)\left( {{\bf{a}} + {\bf{b}}} \right)\,\,\, = \,\,\,{{\bf{a}}^2}\,\, + \,\,{{\bf{b}}^2}\,\, + \,\,\left( {{\bf{ab}}\,\, + \,\,{\bf{ba}}} \right)\\\,\,\,\,\,\,\,\, = \,\,\,{a^2}\,\, + \,\,{b^2}\,\, + \,\,2\,{\bf{a}} \cdot {\bf{b}}\,\,\, = \,\,\,{a^2}\,\, + \,\,{b^2}\,\, + \,\,2\,ab\,\cos \theta \,\,\, = \,\,\,{a^2}\,\, + \,\,{b^2}\,\, - \,\,2\,ab\,\cos \gamma \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; ">          (b)  </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">Derive the law of sines.</span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p>
+											
+											<div class="not-first-item wide center">
+												<div style="width:744px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<!-- TriangleLaws.svg -->
+														<svg width="18.5cm" height="8.5cm" viewBox="58 38 724 325" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+														  <g>
+														    <polygon style="fill: #add8e6" points="580,200 680,100 680,260 580,360 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="580,200 680,100 680,260 580,360 "/>
+														  </g>
+														  <g>
+														    <polygon style="fill: #ffff00" points="320,40 420,100 420,260 320,200 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="320,40 420,100 420,260 320,200 "/>
+														  </g>
+														  <g>
+														    <polygon style="fill: #90ee90" points="160,100 260,160 160,260 60,200 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="160,100 260,160 160,260 60,200 "/>
+														  </g>
+														  <g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="200" x2="151.651" y2="254.991"/>
+														      <polygon style="fill: #000000" points="158.083,258.85 146.935,257.992 151.651,254.991 152.08,249.417 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="158.083,258.85 146.935,257.992 151.651,254.991 152.08,249.417 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="160" y1="260" x2="160" y2="109.736"/>
+														      <polygon style="fill: #000000" points="160,102.236 165,112.236 160,109.736 155,112.236 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="160,102.236 165,112.236 160,109.736 155,112.236 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="200" x2="153.116" y2="106.884"/>
+														      <polygon style="fill: #000000" points="158.419,101.581 154.883,112.188 153.116,106.884 147.812,105.117 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="158.419,101.581 154.883,112.188 153.116,106.884 147.812,105.117 "/>
+														    </g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="160" y1="260" x2="260" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="160" y1="100" x2="260" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="200" x2="60" y2="40"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="40" x2="160" y2="100"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="360" x2="160" y2="260"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="60" y1="360" x2="60" y2="200"/>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="106" y="224">
+														      <tspan x="106" y="224">a</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="144" y="183">
+														      <tspan x="144" y="183">b</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="108" y="169">
+														      <tspan x="108" y="169">c</tspan>
+														    </text>
+														  </g>
+														  <g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="200" x2="411.651" y2="254.991"/>
+														      <polygon style="fill: #000000" points="418.083,258.85 406.935,257.992 411.651,254.991 412.08,249.417 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="418.083,258.85 406.935,257.992 411.651,254.991 412.08,249.417 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="420" y1="260" x2="420" y2="109.736"/>
+														      <polygon style="fill: #000000" points="420,102.236 425,112.236 420,109.736 415,112.236 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="420,102.236 425,112.236 420,109.736 415,112.236 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="200" x2="413.116" y2="106.884"/>
+														      <polygon style="fill: #000000" points="418.419,101.581 414.883,112.188 413.116,106.884 407.812,105.117 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="418.419,101.581 414.883,112.188 413.116,106.884 407.812,105.117 "/>
+														    </g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="420" y1="260" x2="520" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="420" y1="100" x2="520" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="200" x2="320" y2="40"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="40" x2="420" y2="100"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="360" x2="420" y2="260"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="320" y1="360" x2="320" y2="200"/>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="366" y="224">
+														      <tspan x="366" y="224">a</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="404" y="183">
+														      <tspan x="404" y="183">b</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="368" y="169">
+														      <tspan x="368" y="169">c</tspan>
+														    </text>
+														  </g>
+														  <g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="200" x2="671.651" y2="254.991"/>
+														      <polygon style="fill: #000000" points="678.083,258.85 666.935,257.992 671.651,254.991 672.08,249.417 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="678.083,258.85 666.935,257.992 671.651,254.991 672.08,249.417 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="680" y1="260" x2="680" y2="109.736"/>
+														      <polygon style="fill: #000000" points="680,102.236 685,112.236 680,109.736 675,112.236 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="680,102.236 685,112.236 680,109.736 675,112.236 "/>
+														    </g>
+														    <g>
+														      <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="200" x2="673.116" y2="106.884"/>
+														      <polygon style="fill: #000000" points="678.419,101.581 674.883,112.188 673.116,106.884 667.812,105.117 "/>
+														      <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="678.419,101.581 674.883,112.188 673.116,106.884 667.812,105.117 "/>
+														    </g>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="680" y1="260" x2="780" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="680" y1="100" x2="780" y2="160"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="200" x2="580" y2="40"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="40" x2="680" y2="100"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="360" x2="680" y2="260"/>
+														    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="580" y1="360" x2="580" y2="200"/>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="626" y="224">
+														      <tspan x="626" y="224">a</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="664" y="183">
+														      <tspan x="664" y="183">b</tspan>
+														    </text>
+														    <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="628" y="169">
+														      <tspan x="628" y="169">c</tspan>
+														    </text>
+														  </g>
+														  <g>
+														    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" d="M 140,220 A 43.3333,43.3333 0 1 0 149.174,137.319"/>
+														    <polygon style="fill: #ff0000" points="142.064,139.14 149.372,130.678 148.987,136.255 153.218,139.909 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" points="142.064,139.14 149.372,130.678 148.987,136.255 153.218,139.909 "/>
+														  </g>
+														  <g>
+														    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" d="M 600,200 A 37.1231,37.1231 0 1 0 660.96,229.447"/>
+														    <polygon style="fill: #ff0000" points="660.509,222.177 667.653,230.777 662.215,229.481 657.916,233.053 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" points="660.509,222.177 667.653,230.777 662.215,229.481 657.916,233.053 "/>
+														  </g>
+														  <g>
+														    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" d="M 400,140 A 35.2979,35.2979 0 1 0 370.915,182.677"/>
+														    <polygon style="fill: #ff0000" points="377.959,180.914 370.877,189.565 371.114,183.98 366.789,180.438 "/>
+														    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #ff0000" points="377.959,180.914 370.877,189.565 371.114,183.98 366.789,180.438 "/>
+														  </g>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="206" y="166">
+														    <tspan x="206" y="166">aΛc</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="337" y="94">
+														    <tspan x="337" y="94">aΛb</tspan>
+														  </text>
+														  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="598" y="291">
+														    <tspan x="598" y="291">cΛb</tspan>
+														  </text>
+														</svg>
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:730px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{a}} \wedge {\bf{c}}\,\,\, = \,\,\,{\bf{a}} \wedge \left( {{\bf{a}} + {\bf{b}}} \right)\,\,\, = \,\,\,{\bf{a}} \wedge {\bf{b}}\,\,\, = \,\,\,\left( {{\bf{a}} + {\bf{b}}} \right) \wedge {\bf{b}}\,\,\, = \,\,\,{\bf{c}} \wedge {\bf{b}}\\{\bf{i}}\,\,ac\,\,\sin \beta \,\,\, = \,\,\,{\bf{i}}\,\,ab\,\,\sin \left( {\pi  - \gamma } \right)\,\,\, = \,\,\,{\bf{i}}\,\,ab\,\,\sin \gamma \,\,\, = \,\,\,{\bf{i}}\,\,cb\,\,\sin \alpha \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><strong style="font-family: Verdana; font-size: 14px; font-weight: 700; "><br />                </strong><span style="color: rgb(61, 0, 255); font-size: 14px; font-family: Verdana; ">These results should be clear with the help of the previous two diagrams. Now, if we divide all terms<br />                by </span><span style="font-family: Verdana; color: rgb(0, 0, 0); font-size: 14px; "><strong>i </strong></span><em><span style="color: rgb(0, 0, 0); font-size: 18px; font-family: Georgia; ">a</span></em><span style="font-family: Verdana; color: rgb(0, 0, 0); font-size: 14px; "><em>bc</em></span><span style="color: rgb(61, 0, 255); font-size: 14px; font-family: Verdana; ">, we have the law of sines.</span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-family: Verdana; font-size: 14px; "><strong style="font-weight: 700; "><br /></strong></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="font-size: 14px; font-family: Verdana; ">          (c)  </span><span style="color: rgb(255, 0, 0); font-size: 14px; font-family: Verdana; ">Derive triangle laws for supplementary angles </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">(interior/exterior), sum of interior angles, and<br />                sum of exterior angles. </span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; "><br />                </span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">Above, we've assumed previous knowledge that </span><em><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">θ</span></em><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> and </span><span style="color: rgb(0, 0, 0); font-size: 18px; font-family: 'Times New Roman'; ">γ</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> are supplementary angles. Let </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">i</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> be the unit<br />                CCW bivector in the plane of the paper. Then </span><em><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">θ</span></em><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> is the rotor angle taking the direction of </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">a</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> into the<br />                direction of </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">b</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">, while </span><span style="color: rgb(0, 0, 0); font-size: 18px; font-family: 'Times New Roman'; ">γ</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> is the rotor angle taking the direction of </span><strong><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">b</span></strong><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> into the direction of </span><span style="font-family: Verdana; font-size: 14px; ">−</span><span style="font-size: 14px; font-family: Verdana; "><strong>a</strong></span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">.</span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:713px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{\bf{\hat a\hat b}}\left[ {{\bf{\hat b}}\left( { - {\bf{\hat a}}} \right)} \right]\,\,\, = \,\,\,{e^{{\bf{i}}\theta }}{e^{{\bf{i}}\gamma }}\,\,\, = \,\,\,{e^{{\bf{i}}\left( {\theta  + \gamma } \right)}}\,\,\, = \,\,\,{\bf{\hat a}}\left( { - {\bf{\hat a}}} \right)\,\,\, = \,\,\,{e^{{\bf{i}}\pi }}\\{\rm{Therefore:}}\,~~~~~~~~\,\theta  + \gamma \,\,\, = \,\,\,\pi \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">                For considering sums of angles, let's look at </span><span style="color: rgb(255, 0, 0); font-size: 14px; font-family: Verdana; ">general <em>n</em>-sided simple</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> (sides intersect only at corners)<br />                </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">polygons</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">. Let all the edge vectors connect tip-of-one-to-tail-of-next, tracing around the polygon in a <br />                general CCW direction. An </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">exterior angle</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> is defined as the turning angle to get from the direction of <br />                one edge vector to the direction of the next edge vector. If the next edge vector makes a CW turn, that<br />                will count as a negative exterior angle. We have already shown above that each corresponding </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">interior<br />                angle</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "> will be </span><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; ">supplementary to its exterior angle</span><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; ">. We'll use rotors to represent turning from one edge<br />                to the next. </span></p>
+											
+											<div class="not-first-item wide left">
+												<div style="width:721px;" class="graphic">
+													<div class="figure-content HTMLElement">
+														<span>
+														<script type="text/javascript"
+														  src="../../_Resources/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+														</script>
+														\[\Large{\begin{array}{l}{e^{{\bf{i}}{\theta _1}}}{e^{{\bf{i}}{\theta _2}}} \cdot  \cdot  \cdot {e^{{\bf{i}}{\theta _n}}}\,\,\, = \,\,\,{e^{{\bf{i}}2\pi }}\\{\rm{Sum}}\,\,{\rm{of}}\,\,{\rm{exterior}}\,\,{\rm{angles}}\,\,\, = \,\,\,{\theta _1}\,\, + \,\,{\theta _2}\,\, + \,\, \cdot  \cdot  \cdot \,\, + \,\,{\theta _n}\,\,\, = \,\,\,2\pi \\\\\\\left( {\pi  - {\theta _1}} \right)\,\, + \,\,\left( {\pi  - {\theta _2}} \right)\,\, + \,\, \cdot  \cdot  \cdot \,\, + \,\,\left( {\pi  - {\theta _n}} \right)\,\,\, = \,\,\,n\pi \,\, - \,\,2\pi \\{\rm{Sum}}\,\,{\rm{of}}\,\,{\rm{interior}}\,\,{\rm{angles}}\,\,\, = \,\,\,\left( {n\,\, - \,\,2} \right)\,\pi \end{array}}\]
+														</span>
+													</div>
+												</div>
+											</div><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(61, 0, 255); font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><strong style="font-weight: 700; "><span style="font-family: Verdana; font-size: 14px; "><u><a href="index.html" style="text-decoration: underline; ">Return to current section</a></u></span><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">: </span><span style="color: rgb(169, 0, 157); font-family: Verdana; font-size: 14px; ">Vector Identities and Plane Trigonometry with GA</span><span style="color: rgb(0, 0, 0); font-family: Verdana; font-size: 14px; ">.</span></strong></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; "><br /></span></p><p style="font: normal normal normal 12px/normal Times; "><span style="color: rgb(255, 0, 0); font-family: Verdana; font-size: 14px; "><br /></span></p>
+											
+										</div>
+									</div>
+								</div> <!-- /article-content -->
+								<div class="article-info">
+								</div> <!-- /article-info -->
+							</div> <!-- /article -->
+						</div> <!-- main-content -->
+						<div id="main-bottom"></div>
+					</div> <!-- main -->
+				</div> <!-- content -->
+				<div class="clear below-content"></div>
+				<div id="page-bottom">
+					<div id="page-bottom-contents">
+						<div>© David Hestenes 2005, 2014</div>
+						<div class="hidden"> <a rel="nofollow" href="#title">[Back To Top]</a></div>
+					</div>
+				</div> <!-- page-bottom -->
+			</div> <!-- container -->
+			<div id="extraDiv1"><span></span></div><div id="extraDiv2"><span></span></div><div id="extraDiv3"><span></span></div><div id="extraDiv4"><span></span></div><div id="extraDiv5"><span></span></div><div id="extraDiv6"><span></span></div>
+		</div> <!-- specific body type -->
+			</body>
+</html>

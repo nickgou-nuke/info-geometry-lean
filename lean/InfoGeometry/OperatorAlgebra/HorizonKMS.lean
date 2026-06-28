@@ -930,7 +930,11 @@ def HorizonKMSFiveGradeBridgeOwnerTarget
     [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
-    Nonempty (HorizonKMSFiveGradeBridge J L Obs Memory A)
+  ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
+  ∀ x y : J,
+    H.heatCalibration.observedHeat (A.observedDefect x y) =
+      H.heatCalibration.memoryHeat
+        (H.ledger.memoryReadout (A.hiddenTotal x y))
 
 /--
 Installed-owner target: once a bridge witness is supplied, observed heat equals
@@ -977,7 +981,10 @@ def GradeTwoMemoryRecoveryOwnerTarget
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
   ∀ B : BlackHoleInformationLedger J L Obs Memory A,
-    Nonempty (GradeTwoMemoryRecoveryData J L Obs Memory B)
+    ∃ exteriorData : Obs → Memory,
+      ∀ x y : J,
+        exteriorData (A.observedDefect x y) =
+          B.memoryReadout (A.hiddenTotal x y)
 
 /--
 Owner target for the thermodynamic/Tomita horizon KMS memory bridge.
@@ -991,7 +998,10 @@ def HorizonKMSThermodynamicMemoryBridgeOwnerTarget
     [Ring Op] : Prop :=
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
-    Nonempty (HorizonKMSThermodynamicMemoryBridge (G := G) J L Obs Memory Op A)
+  ∀ H : HorizonKMSThermodynamicMemoryBridge (G := G) J L Obs Memory Op A,
+    H.beta = H.normalization.beta ∧
+      (∀ x y : J,
+        H.memoryToOperator (H.ledger.memoryReadout (A.hiddenTotal x y)) ∈ H.tomita.Mcomm)
 
 /-! ## 10. Exterior KMS flow calibration structure -/
 

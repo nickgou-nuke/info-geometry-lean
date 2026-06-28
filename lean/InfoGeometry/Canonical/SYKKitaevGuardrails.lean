@@ -100,16 +100,49 @@ def KitaevRepoHypotheses
 
 omit [FiniteDimensional ℝ S] in
 @[rep_depth krein]
-theorem exists_weylBoundarySpinorPair_of_kitaevRepoHypotheses
+noncomputable def weylBoundarySpinorPair_of_kitaevRepoHypotheses
     (M : RealMajoranaDatum (S := S))
     (localOp : KitaevCell → S →L[ℝ] S)
     (chain : List KitaevCell)
     (hRepo : KitaevRepoHypotheses (S := S) M localOp chain) :
-    Nonempty (WeylBoundarySpinorPair
-      (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain)) := by
+    WeylBoundarySpinorPair
+      (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
   rcases hRepo with ⟨hTopo, hPHS, hSimple⟩
-  exact ⟨weylBoundarySpinorPair_of_simplifiedBoundaryModel
-    (S := S) M localOp chain hTopo hPHS hSimple⟩
+  exact weylBoundarySpinorPair_of_simplifiedBoundaryModel
+    (S := S) M localOp chain hTopo hPHS hSimple
+
+omit [FiniteDimensional ℝ S] in
+@[rep_depth krein]
+theorem weylBoundarySpinorPair_readout_of_kitaevRepoHypotheses
+    (M : RealMajoranaDatum (S := S))
+    (localOp : KitaevCell → S →L[ℝ] S)
+    (chain : List KitaevCell)
+    (hRepo : KitaevRepoHypotheses (S := S) M localOp chain) :
+    let W :=
+      weylBoundarySpinorPair_of_kitaevRepoHypotheses
+        (S := S) M localOp chain hRepo
+    W.psiPlus ≠ 0 ∧
+      W.psiMinus ≠ 0 ∧
+        M.J W.psiPlus = W.psiPlus ∧
+          M.J W.psiMinus = -W.psiMinus ∧
+            (globalChainOperatorFromOpenChain (S := S) localOp chain) W.psiPlus = 0 ∧
+              (globalChainOperatorFromOpenChain (S := S) localOp chain) W.psiMinus = 0 := by
+  let W :=
+    weylBoundarySpinorPair_of_kitaevRepoHypotheses
+      (S := S) M localOp chain hRepo
+  change W.psiPlus ≠ 0 ∧
+    W.psiMinus ≠ 0 ∧
+      M.J W.psiPlus = W.psiPlus ∧
+        M.J W.psiMinus = -W.psiMinus ∧
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) W.psiPlus = 0 ∧
+            (globalChainOperatorFromOpenChain (S := S) localOp chain) W.psiMinus = 0
+  exact ⟨
+    W.psiPlus_ne_zero,
+    W.psiMinus_ne_zero,
+    W.psiPlus_weyl,
+    W.psiMinus_weyl,
+    W.psiPlus_zeroMode,
+    W.psiMinus_zeroMode⟩
 
 @[rep_depth krein]
 theorem exists_nontrivial_regularization_pair_of_kitaevRepoHypotheses

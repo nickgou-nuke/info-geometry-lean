@@ -1,0 +1,41 @@
+DIGEST 3bfdda7c117c2ba8bd7a2569cdf1671e
+FWallpaperAffineMatrix
+R27:31 Stdlib.Reals.Reals <> <> lib
+R33:37 Stdlib.micromega.Psatz <> <> lib
+def 73:81 <> p2_square
+R85:85 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R90:90 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R93:97 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R100:100 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+def 114:122 <> pm_square
+R126:126 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R131:131 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R134:138 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R141:141 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+def 155:162 <> pg_shift
+R166:166 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R173:175 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R171:171 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+R176:176 Stdlib.Reals.Rdefinitions <> ::R_scope:'/'_x not
+prf 189:204 <> p2_square_eq_one
+R217:219 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R208:216 WallpaperAffineMatrix <> p2_square def
+R237:245 WallpaperAffineMatrix <> p2_square def
+prf 267:282 <> pm_square_eq_one
+R295:297 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R286:294 WallpaperAffineMatrix <> pm_square def
+R315:323 WallpaperAffineMatrix <> pm_square def
+prf 345:359 <> pg_shift_eq_one
+R371:373 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R363:370 WallpaperAffineMatrix <> pg_shift def
+R391:398 WallpaperAffineMatrix <> pg_shift def
+prf 420:454 <> pm_conjugates_y_translation_example
+R474:476 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R460:460 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R463:467 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R473:473 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R469:471 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R477:477 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R486:489 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R478:478 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R481:484 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not

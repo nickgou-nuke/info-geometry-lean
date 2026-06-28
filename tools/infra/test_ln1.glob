@@ -1,0 +1,10 @@
+DIGEST 4f43622b65ad2e9eff084c93d3aeddea
+Ftest_ln1
+R15:19 Stdlib.Reals.Reals <> <> lib
+prf 28:33 <> ln_one
+R41:44 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R50:50 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R37:38 Stdlib.Reals.Rpower <> ln def
+R49:49 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R68:71 Stdlib.Reals.Rpower <> ln_1 thm
+R68:71 Stdlib.Reals.Rpower <> ln_1 thm

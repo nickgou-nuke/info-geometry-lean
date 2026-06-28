@@ -236,6 +236,79 @@ class GraphStore:
         rows.sort(key=lambda x: x[0], reverse=True)
         return [row for _, row in rows[:limit]]
 
+    def cone_hotspots(
+        self,
+        limit: int = 25,
+        alpha: float = 1.0,
+        beta: float = 1.5,
+        gamma: float = 3.0,
+        min_score: float = 0.0,
+    ) -> list[dict[str, Any]]:
+        def _as_nonneg_int(value: Any) -> int:
+            return value if isinstance(value, int) and value >= 0 else 0
+
+        rows: list[tuple[float, dict[str, Any]]] = []
+        for node in self.snapshot.nodes:
+            if node.kind != "Declaration":
+                continue
+
+            attrs = node.attrs if isinstance(node.attrs, dict) else {}
+            cone_attrs = attrs.get("lawful_cone")
+            path_attrs = attrs.get("lawful_path_summary")
+            cone = cone_attrs if isinstance(cone_attrs, dict) else {}
+            path = path_attrs if isinstance(path_attrs, dict) else {}
+            if not cone and not path:
+                continue
+
+            leg_count = _as_nonneg_int(cone.get("leg_count"))
+            shared_comparison_count = _as_nonneg_int(cone.get("shared_comparison_count"))
+            cone_defect_count = _as_nonneg_int(cone.get("defect_count"))
+            total_defect_cost = _as_nonneg_int(cone.get("total_defect_cost"))
+            path_count = _as_nonneg_int(path.get("count"))
+            defectful_path_count = _as_nonneg_int(path.get("defectful_count"))
+            max_path_defect_cost = _as_nonneg_int(path.get("max_defect_cost"))
+            leg_kinds = cone.get("leg_kinds") if isinstance(cone.get("leg_kinds"), list) else []
+
+            coverage = float(leg_count + path_count)
+            comparison_pressure = float(shared_comparison_count)
+            defect_pressure = float(
+                total_defect_cost + cone_defect_count + defectful_path_count + max_path_defect_cost
+            )
+            cone_score = alpha * coverage + beta * comparison_pressure + gamma * defect_pressure
+            if cone_score < min_score:
+                continue
+
+            rows.append(
+                (
+                    cone_score,
+                    {
+                        "node": node.to_dict(),
+                        "cone_score": cone_score,
+                        "components": {
+                            "coverage": coverage,
+                            "comparison_pressure": comparison_pressure,
+                            "defect_pressure": defect_pressure,
+                        },
+                        "cone": {
+                            "leg_count": leg_count,
+                            "shared_comparison_count": shared_comparison_count,
+                            "defect_count": cone_defect_count,
+                            "total_defect_cost": total_defect_cost,
+                            "leg_kinds": leg_kinds,
+                        },
+                        "paths": {
+                            "count": path_count,
+                            "defectful_count": defectful_path_count,
+                            "max_defect_cost": max_path_defect_cost,
+                        },
+                        "weights": {"alpha": alpha, "beta": beta, "gamma": gamma},
+                    },
+                )
+            )
+
+        rows.sort(key=lambda x: x[0], reverse=True)
+        return [row for _, row in rows[:limit]]
+
     def holonomy_hotspots(
         self,
         limit: int = 25,

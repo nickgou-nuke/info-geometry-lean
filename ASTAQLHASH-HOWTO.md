@@ -1,0 +1,429 @@
+# Complete ArangoDB + AST/AQL Hash-Based Search Methodology
+
+## Prerequisites
+
+```bash
+# 1. ArangoDB running on localhost:8530
+# 2. Python arango driver: pip install python-arango
+# 3. Lean 4 + Lake with dagIndexer target built
+# 4. Mathlib cache populated: lake exe cache get!
+```
+
+---
+
+## Phase 1: Initialize ArangoDB Environment
+
+```bash
+# 1.1 Load ArangoDB credentials (one-time setup)
+cat > configs/local/hive_arango.env <<'EOF'
+ARANGO_ENDPOINT=http://127.0.0.1:8530
+ARANGO_DATABASE=infogeometry
+ARANGO_USERNAME=root
+ARANGO_PASSWORD=your_password
+EOF
+
+# 1.2 Verify connection
+python3 -c "
+from arango import ArangoClient
+from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password, arango_database
+from pathlib import Path
+load_repo_arango_env(Path('.').resolve())
+client = ArangoClient(hosts=arango_endpoint())
+db = client.db(arango_database(), username=arango_username(), password=arango_password())
+print('Connected:', db.name)
+print('Collections:', [c['name'] for c in db.collections() if not c['name'].startswith('_')])
+"
+```
+
+---
+
+## Phase 2: Build & Stream Declaration Graph to ArangoDB
+
+```bash
+# 2.1 Sync mathlib cache (required for full namespace)
+lake update
+lake exe cache get!
+
+# 2.2 Build the dagIndexer (one-time, ~5 min)
+lake build dagIndexer
+
+# 2.3 Stream declaration graph to ArangoDB (constant memory, ~30 sec for Core)
+python3 tools/infra/refresh_decl_graph.py \
+  --stream \
+  --import-root InfoGeometry.Core \
+  --namespace InfoGeometry \
+  --arango-db infogeometry
+
+# 2.4 Verify import
+python3 -c "
+from arango import ArangoClient
+from pathlib import Path
+from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+load_repo_arango_env(Path('.').resolve())
+client = ArangoClient(hosts=arango_endpoint())
+db = client.db('infogeometry', username=arango_username(), password=arango_password())
+print('decls:', db.collection('decls').count())
+print('edges:', db.collection('edges').count())
+"
+```
+
+**Output expected**: `decls: ~1156, edges: ~365` (for Core namespace)
+
+---
+
+## Phase 3: Core AST/AQL Hash-Based Searches
+
+### 3.1 Find Equivalence Classes by ShapeHash (Structural Identity)
+
+```python
+from arango import ArangoClient
+from pathlib import Path
+from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+
+load_repo_arango_env(Path('.').resolve())
+client = ArangoClient(hosts=arango_endpoint())
+db = client.db('infogeometry', username=arango_username(), password=arango_password())
+
+# Find ALL equivalence classes by shapeHash (structural AST identity)
+# Note: shapeHash is stored as STRING in ArangoDB
+q = '''
+FOR d IN decls
+  COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
+  FILTER c > 1
+  SORT c DESC
+  LIMIT 20
+  RETURN {hash: hash, count: c}
+'''
+for row in db.aql.execute(q):
+    print(f'{row["hash"]}: {row["count"]} decls')
+
+# Get declarations in a specific equivalence class
+# Note: hash values are STRINGS in ArangoDB
+target_hash = "3892707284033108221"  # largest class (43 decls)
+q2 = f'''
+FOR d IN decls
+  FILTER d.shapeHash.shapeHash == "{target_hash}"
+  RETURN {{name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}}
+'''
+for doc in db.aql.execute(q2):
+    print(f'{doc["name"]} ({doc["kind"]}) - {doc["module"]} | attrs: {doc["attrs"]}')
+```
+
+### 3.2 Find Equivalence Classes by ValueFingerprint (Proof Identity)
+
+```python
+# Find ALL equivalence classes by valueFingerprint (proof identity)
+q = '''
+FOR d IN decls
+  FILTER d.valueFingerprint != null
+  COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c
+  FILTER c > 1
+  SORT c DESC
+  LIMIT 20
+  RETURN {hash: hash, count: c}
+'''
+for row in db.aql.execute(q):
+    print(f'{row["hash"]}: {row["count"]} decls')
+
+# Get declarations in a specific value equivalence class
+q2 = '''
+FOR d IN decls
+  FILTER d.valueFingerprint != null AND d.valueFingerprint.shapeHash == "10538156713300787596"
+  RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
+'''
+for doc in db.aql.execute(q2):
+    print(f'{doc["name"]} ({doc["kind"]}) - {doc["module"]}')
+```
+
+### 3.3 Search by Attributes (Closure Debt / Sorry Markers)
+
+```python
+# Find declarations with specific attrs (closure debt markers)
+q = '''
+FOR d IN decls
+  FILTER d.attrs != [] AND (POSITION(d.attrs, "infrastructure") != null OR POSITION(d.attrs, "sorry") != null)
+  RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
+'''
+for doc in db.aql.execute(q):
+    print(f'{doc["name"]} ({doc["kind"]}) - {doc["module"]} | {doc["attrs"]}')
+
+# Find declarations by rep_depth tag
+q2 = '''
+FOR d IN decls
+  FILTER d.attrs != [] AND POSITION(d.attrs, "rep_depth:krein") != null
+  RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
+'''
+```
+
+### 3.4 Search by Dependency Edges (Call Graph) — CORRECTED
+
+```python
+# Find all callers of a specific declaration
+# Use _from/_to (NOT from/to). Edge documents use _from/_to fields.
+target_key = "d_<hash_of_target>"  # e.g., "d_3892707284033108221"
+q = f'''
+FOR e IN edges
+  FILTER e._to == "decls/{target_key}"
+  LET src = DOCUMENT(e._from)
+  RETURN {{caller: src.name, kind: src.kind, module: src.module}}
+'''
+
+# Find all callees of a specific declaration
+q2 = f'''
+FOR e IN edges
+  FILTER e._from == "decls/{target_key}"
+  LET dst = DOCUMENT(e._to)
+  RETURN {{callee: dst.name, kind: dst.kind, module: dst.module}}
+'''
+```
+
+### 3.5 Search by Module/Kind Filters
+
+```python
+# Find all theorems in a module
+q = '''
+FOR d IN decls
+  FILTER d.module == "InfoGeometry.Core.GrandCanonical" AND d.kind == "theorem"
+  RETURN {name: d.name, attrs: d.attrs}
+'''
+
+# Find all inductive types
+q2 = '''
+FOR d IN decls
+  FILTER d.kind == "inductive"
+  RETURN {name: d.name, module: d.module}
+'''
+```
+
+### 3.6 Edge Validation — CRITICAL
+
+```python
+# Filter edges to only those where BOTH endpoints exist in decls
+q = '''
+FOR e IN edges
+  LET from_doc = DOCUMENT(e._from)
+  LET to_doc = DOCUMENT(e._to)
+  FILTER from_doc != null AND to_doc != null
+  RETURN e
+'''
+```
+
+---
+
+## Phase 4: AQL Graph Traversal (Advanced)
+
+### 4.1 Find Strongly Connected Components (if hydrate ran)
+
+```python
+# Only available if hydrate step ran and created scc_nodes collection
+q = '''
+FOR scc IN scc_nodes
+  COLLECT id = scc.scc_id WITH COUNT INTO c
+  FILTER c > 1
+  SORT c DESC
+  LIMIT 10
+  RETURN {scc_id: id, size: c}
+'''
+```
+
+### 4.2 Find Paths Between Two Declarations
+
+```python
+# Requires graph definition or Pregel. Use edge traversal for simple cases.
+from_decl = "InfoGeometry.Core.GrandCanonical.partitionGC"
+to_decl = "InfoGeometry.Core.GrandCanonical.responseMatrix"
+
+# Get _key for from/to declarations first
+from_key = db.aql.execute(f'FOR d IN decls FILTER d.name == "{from_decl}" RETURN d._key').next()
+to_key = db.aql.execute(f'FOR d IN decls FILTER d.name == "{to_decl}" RETURN d._key').next()
+
+# Simple edge traversal (not true shortest path without graph)
+q2 = f'''
+FOR v, e IN 1..5 OUTBOUND "decls/{from_key}" edges
+  FILTER v._key == "{to_key}"
+  RETURN {{vertex: v.name, edge: e.kind}}
+'''
+```
+
+### 4.3 Dominators (Only if hydrate step ran)
+
+```python
+# Only available if hydrate step created dominators collection
+q3 = '''
+FOR d IN dominators
+  FILTER d.idom != null
+  RETURN {node: d.name, idom: d.idom}
+'''
+```
+
+---
+
+## Phase 5: Complete Workflow Script
+
+```bash
+#!/bin/bash
+# full_refresh_and_search.sh
+
+set -e
+
+echo "=== Phase 1: Update Mathlib Cache ==="
+lake update
+lake exe cache get!
+
+echo "=== Phase 2: Build Indexer ==="
+lake build dagIndexer
+
+echo "=== Phase 3: Stream to ArangoDB ==="
+python3 tools/infra/refresh_decl_graph.py \
+  --stream \
+  --import-root InfoGeometry.Core \
+  --namespace InfoGeometry \
+  --arango-db infogeometry
+
+echo "=== Phase 4: Run Searches ==="
+python3 <<'PYEOF'
+from arango import ArangoClient
+from pathlib import Path
+from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+
+load_repo_arango_env(Path('.').resolve())
+client = ArangoClient(hosts=arango_endpoint())
+db = client.db('infogeometry', username=arango_username(), password=arango_password())
+
+print("=== DECLARATION STATS ===")
+print(f"Decls: {db.collection('decls').count()}")
+print(f"Edges: {db.collection('edges').count()}")
+
+print("\n=== TOP 10 SHAPE HASH EQUIVALENCE CLASSES ===")
+for row in db.aql.execute('''
+  FOR d IN decls
+    COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c
+    FILTER c > 1
+    SORT c DESC
+    LIMIT 10
+    RETURN {hash: hash, count: c}
+'''):
+    print(f'  {row["hash"]}: {row["count"]}')
+
+print("\n=== TOP 10 VALUE FINGERPRINT CLASSES ===")
+for row in db.aql.execute('''
+  FOR d IN decls
+    FILTER d.valueFingerprint != null
+    COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c
+    FILTER c > 1
+    SORT c DESC
+    LIMIT 10
+    RETURN {hash: hash, count: c}
+'''):
+    print(f'  {row["hash"]}: {row["count"]}')
+
+print("\n=== SORRY/INFRASTRUCTURE DECLARATIONS ===")
+for doc in db.aql.execute('''
+  FOR d IN decls
+    FILTER d.attrs != [] AND (POSITION(d.attrs, "infrastructure") != null OR POSITION(d.attrs, "sorry") != null)
+    RETURN {name: d.name, kind: d.kind, module: d.module, attrs: d.attrs}
+'''):
+    print(f'  {doc["name"]} ({doc["kind"]}) | {doc["attrs"]}')
+
+print("\n=== EDGE VALIDATION ===")
+total = db.collection('edges').count()
+valid = 0
+for e in db.aql.execute('''
+  FOR e IN edges
+    LET from_doc = DOCUMENT(e._from)
+    LET to_doc = DOCUMENT(e._to)
+    FILTER from_doc != null AND to_doc != null
+    RETURN 1
+'''):
+    valid += 1
+print(f'Total edges: {total}, Valid edges: {valid}, Orphaned: {total - valid}')
+
+print("\n=== DONE ===")
+PYEOF
+```
+
+---
+
+## Phase 6: CI Integration (GitHub Actions Example)
+
+```yaml
+# .github/workflows/decl-graph.yml
+name: Declaration Graph Refresh
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM
+  push:
+    paths:
+      - 'lean/**/*.lean'
+      - 'lakefile.lean'
+
+jobs:
+  refresh-decl-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        uses: leanprover/lean4-action@v2
+      - name: Build dagIndexer
+        run: lake build dagIndexer
+      - name: Start ArangoDB
+        run: docker run -d -p 8529:8529 -e ARANGO_ROOT_PASSWORD=${{ secrets.ARANGO_PASSWORD }} arangodb/arangodb:3.11
+      - name: Stream to ArangoDB
+        env:
+          ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
+        run: |
+          python3 tools/infra/refresh_decl_graph.py \
+            --stream \
+            --import-root InfoGeometry.Core \
+            --namespace InfoGeometry \
+            --arango-db infogeometry
+      - name: Run Verification Queries
+        run: python3 tools/infra/verify_decl_graph.py
+```
+
+---
+
+## Key AQL Patterns Reference (CORRECTED)
+
+| Search Type | AQL Pattern |
+|-------------|-------------|
+| ShapeHash equivalence | `COLLECT hash = d.shapeHash.shapeHash WITH COUNT INTO c` |
+| ValueFingerprint equivalence | `COLLECT hash = d.valueFingerprint.shapeHash WITH COUNT INTO c` |
+| Attribute filter | `FILTER d.attrs != [] AND POSITION(d.attrs, "tag") != null` |
+| Module filter | `FILTER d.module == "InfoGeometry.Core"` |
+| Kind filter | `FILTER d.kind == "theorem"` |
+| Edge traversal (callers) | `FOR e IN edges FILTER e._to == "decls/key" LET src = DOCUMENT(e._from) RETURN src` |
+| Edge traversal (callees) | `FOR e IN edges FILTER e._from == "decls/key" LET dst = DOCUMENT(e._to) RETURN dst` |
+| Edge validation | `LET from_doc = DOCUMENT(e._from) LET to_doc = DOCUMENT(e._to) FILTER from_doc != null AND to_doc != null` |
+| Document lookup | `DOCUMENT("decls/key")` |
+| ShapeHash filter | `FILTER d.shapeHash.shapeHash == "3892707284033108221"` |
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| `python-arango not installed` | `pip install python-arango` |
+| `dagIndexer not found` not found | `lake build dagIndexer` |
+| `object file .olean does not exist` | `lake build <namespace>` |
+| `could not execute external process` | Check `.lake/build/bin/dagIndexer` exists |
+| Network timeout on `lake update` | Increase timeout, check git connectivity |
+| ArangoDB connection refused | Ensure ArangoDB running on port 8530 |
+| `object file InfoGeometry/All.olean does not exist` | `lake build InfoGeometry.All` |
+| `python-arango not installed` in lake env | Use `lake env pip install python-arango` |
+
+---
+
+## Files Modified in This Methodology
+
+| File | Purpose |
+|------|---------|
+| `lean/DAG/Indexer.lean` | Added `--stream` mode for JSONL output |
+| `tools/infra/refresh_decl_graph.py` | Added `--stream` mode with ArangoDB import |
+| `tools/infra/aql/aql_functorial_bridge.py` | Added `lean_decl`/`lean_status` provenance fields |
+
+---
+
+This methodology gives you **constant-memory** declaration graph indexing with **hash-based structural search** capability.

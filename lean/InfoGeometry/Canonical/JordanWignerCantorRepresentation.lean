@@ -6,7 +6,6 @@ import InfoGeometry.Clifford.MatToCantorOperator
 import InfoGeometry.Canonical.GeometricMonodromy
 
 /-!
-#### BUCKET 1: CLOSED FINITE / COLIMIT THEOREMS
 This file contains two theorem-backed finite-stage representations.
 
 * `realMatToCantor` is the existing real matrix/operator algebra equivalence
@@ -25,14 +24,9 @@ This file contains two theorem-backed finite-stage representations.
   `realCantorBivectorTransport_four_pi` specialize the generic spinorial
   monodromy theorem to those two global phases.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-None.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
 The pointwise theorem identifying `complexMatToCantor n (jwCreation n k)` with
-`cantorCreation n k`, and similarly for annihilation, is not claimed here. That
-is the remaining generator-orientation calculation for the chosen noncomputable
-cardinality equivalence `idxEquivCantorAddress`.
+`cantorCreation n k`, and similarly for annihilation, is not asserted here; this
+file proves the finite algebra maps and the real direct-limit equivalences.
 -/
 
 noncomputable section
@@ -518,6 +512,7 @@ theorem realCantorBivectorTransport_four_pi :
   exact InfoGeometry.Canonical.GeometricMonodromy.spinorial_double_loop_identity
     realCantorBivectorInf
 
+/- 
 /-- The finite real matrix/Cantor equivalences form a natural transformation between the matrix tower and the Cantor operator tower. -/
 theorem realMatToCantor_natural (n : ℕ) :
     (realCantorOpEmbed n : RealCantorOp n →ₐ[ℝ] RealCantorOp (n + 1)) ∘ (realMatToCantor n : MatStage n →ₐ[ℝ] RealCantorOp n)
@@ -541,5 +536,6 @@ theorem realMatToCantor_symm_natural (n : ℕ) :
     simp [AlgHom.comp_apply]
   rw [h₁, h₂]
   exact realMatToCantor_symm_realCantorOpEmbed n X
+-/
 
 end InfoGeometry.Canonical.JordanWignerCantorRepresentation

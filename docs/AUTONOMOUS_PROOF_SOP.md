@@ -248,13 +248,15 @@ The browser harness lives in `tools/infra/chatgpt_browser_harness_driver.py`.
 The coding agent may:
 - consume the audit map or proof sketch;
 - generate Lean code;
-- run write -> compile -> error -> fix loops;
+- run candidate -> compile -> error -> fix loops in `tmp/oracle_candidates`;
 - iterate up to the configured limit.
 
 Hard rule:
-- generated code is not success until the repo’s Lean/build gates pass.
+- generated code is not success until a coding agent applies a reviewed patch
+  to the owner file and the repo’s Lean/build gates pass.
 
-The direct coding lane is owned by `tools/infra/proof_seeker.py`.
+The search/advice lane is owned by `tools/infra/proof_seeker.py`. It must not
+rename or overwrite owner files.
 
 ### Stage 2: Literature / arXiv Sidecar
 
@@ -367,13 +369,17 @@ Promote a result only if all are true:
 
 ## Quick Single-Task Test
 
-Example browser-audit smoke test:
+Example browser-audit smoke test. This writes an oracle candidate under
+`tmp/oracle_candidates` and checks that candidate; it does not promote it into
+the owner file.
 
 ```bash
 browser-harness -c "from pathlib import Path; from tools.infra.chatgpt_browser_harness_driver import run_audit_and_save; run_audit_and_save('lean/InfoGeometry/Canonical/BerezinianTrace.lean', Path('lean/InfoGeometry/Canonical/BerezinianTrace.lean').read_text(), 57, '.')"
 ```
 
-Interpret this as a sidecar test only, not a promotion event.
+Interpret this as a sidecar advice test only, not a promotion event. If the
+candidate is useful, a coding agent must inspect it, apply a normal patch, and
+run the narrow Lean/build gate.
 
 ## Emergency Recovery
 

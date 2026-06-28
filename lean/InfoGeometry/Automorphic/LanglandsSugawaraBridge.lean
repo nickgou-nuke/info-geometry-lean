@@ -41,17 +41,9 @@ structure LanglandsSugawaraBridge
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State] where
 
-  /-- Supplied Euler product data for the projected L-function. -/
-  eulerProduct :
-    EulerProductData P.L
-
-  /-- Supplied completed L-function. -/
-  completedL :
-    ℂ → ℂ
-
-  /-- Supplied completed functional equation witness. -/
-  completedFunctionalEquation :
-    HasCompletedFunctionalEquation P.L completedL
+  /-- Strong arithmetic witness for the projected L-function. -/
+  resonance :
+    LanglandsPrimeResonanceStrongWitness P
 
   /-- Exceptional affine/Virasoro central-charge bridge with complex readout. -/
   affineVirasoro :
@@ -73,7 +65,7 @@ structure LanglandsSugawaraBridge
   -/
   centralCharge_eq_completedL_value :
     affineVirasoro.centralChargeReadout state =
-      completedL spectralPoint
+      resonance.completed.completedL spectralPoint
 
 namespace LanglandsSugawaraBridge
 
@@ -90,15 +82,28 @@ variable
 variable
     (B : LanglandsSugawaraBridge P Finite Affine Vir State)
 
+/-- Legacy weak Euler-product data read back from the strong witness lane. -/
+def eulerProduct :
+    EulerProductData P.L :=
+  B.resonance.eulerProduct.toEulerProductData
+
+/-- Legacy completed L-function read back from the strong witness lane. -/
+def completedL :
+    ℂ → ℂ :=
+  B.resonance.completed.completedL
+
+/-- Legacy completed-functional-equation witness read back from the strong witness lane. -/
+theorem completedFunctionalEquation :
+    HasCompletedFunctionalEquation P.L B.completedL :=
+  B.resonance.completed.toHasCompletedFunctionalEquation
+
 /--
 The bridge packages the supplied Euler/completed data as a
 `LanglandsPrimeResonanceWitness`.
 -/
 def toLanglandsPrimeResonanceWitness :
-    LanglandsPrimeResonanceWitness P where
-  eulerProduct := B.eulerProduct
-  completedL := B.completedL
-  completedFunctionalEquation := B.completedFunctionalEquation
+    LanglandsPrimeResonanceWitness P :=
+  B.resonance.toWeakWitness
 
 /--
 Central charge equals the selected completed L-function value by the supplied
@@ -148,32 +153,46 @@ end LanglandsSugawaraBridge
 /--
 Installed owner target for the Langlands/Sugawara bridge.
 
-Once the bridge witness is supplied, it packages a
-`LanglandsPrimeResonanceWitness` and exposes the central-charge/completed-L
-calibration.
+Once the bridge witness is supplied, it packages the strong
+`LanglandsPrimeResonanceStrongWitness` already carried by the bridge and
+exposes the central-charge/completed-L calibration.
 -/
-def LanglandsSugawaraBridgeInstalledTarget : Prop :=
-  ∀ {Bulk : Type uBulk} {Boundary : Type uBoundary}
+structure LanglandsSugawaraBridgeInstalledTarget
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
     [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary],
-  ∀ {W : SiegelEisensteinWitness Bulk Boundary},
-  ∀ (P : ProjectedAutomorphicLFunctionWitness W),
-  ∀ (Finite Affine Vir State : Type*)
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    (P : ProjectedAutomorphicLFunctionWitness W)
+    (Finite Affine Vir State : Type*)
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
-    [AddCommGroup State] [Module ℝ State],
-  ∀ B : LanglandsSugawaraBridge P Finite Affine Vir State,
-    Nonempty (LanglandsPrimeResonanceWitness P) ∧
-      B.affineVirasoro.centralChargeReadout B.state =
-        B.completedL B.spectralPoint
+    [AddCommGroup State] [Module ℝ State]
+    (B : LanglandsSugawaraBridge P Finite Affine Vir State) where
+  /-- Strong resonance witness already carried by the bridge. -/
+  strongWitness : LanglandsPrimeResonanceStrongWitness P
+
+  /-- Central charge calibration carried by the bridge. -/
+  centralCharge_eq_completedL :
+    B.affineVirasoro.centralChargeReadout B.state =
+      B.completedL B.spectralPoint
 
 /--
-The installed target follows from the supplied bridge witness.
+The installed target data follows from the supplied bridge witness.
 -/
-theorem langlandsSugawaraBridgeInstalledTarget :
-    LanglandsSugawaraBridgeInstalledTarget := by
+def langlandsSugawaraBridgeInstalledTarget :
+    ∀ {Bulk : Type uBulk} {Boundary : Type uBoundary}
+      [AddCommGroup Bulk] [Module ℝ Bulk]
+      [AddCommGroup Boundary] [Module ℝ Boundary]
+      {W : SiegelEisensteinWitness Bulk Boundary}
+      (P : ProjectedAutomorphicLFunctionWitness W)
+      (Finite Affine Vir State : Type*)
+      [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+      [AddCommGroup State] [Module ℝ State]
+      (B : LanglandsSugawaraBridge P Finite Affine Vir State),
+    LanglandsSugawaraBridgeInstalledTarget
+      (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
   intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State _ _ _ _ _ _ B
   exact
-    ⟨⟨B.toLanglandsPrimeResonanceWitness⟩,
-      B.centralCharge_eq_completedL⟩
+    { strongWitness := B.resonance,
+      centralCharge_eq_completedL := B.centralCharge_eq_completedL }
 
 end InfoGeometry.Automorphic

@@ -10,7 +10,10 @@ Pipeline:
   3. Compile check (lake build the module)
   4. On failure: Pauli/ChatGPT fixes errors from compiler output
   5. Recompile, repeat until green or max iterations
-  6. If green: write the proof back to the .lean file
+  6. If green: save a candidate file for a coding agent to inspect
+
+This script is oracle/advice infrastructure. It never overwrites the owner Lean
+file; source edits must be applied by a coding agent as reviewed patches.
 
 Usage:
     python3 tools/infra/targeted_proof_repair.py \
@@ -427,34 +430,33 @@ def repair_loop(
 
         logger.info("Jung produced %d chars of Lean code", len(lean_code))
 
-        # Phase 2: Compile check the FULL file (not just the block)
-        # Write a temporary file with the full context + new proof
+        # Phase 2: Compile check the FULL file (not just the block) as a
+        # sidecar candidate. The oracle must not overwrite the owner file.
         new_file_content = block["context"] + "\n" + lean_code + "\n" + block["rest"]
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".lean", delete=False,
-                                         dir="/tmp", encoding="utf-8") as f:
-            f.write(new_file_content)
-            tmp_path = Path(f.name)
+        candidate_dir = _REPO / "tmp" / "oracle_candidates"
+        candidate_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            relative = filepath.resolve().relative_to(_REPO.resolve())
+        except ValueError:
+            relative = Path(filepath.name)
+        tmp_path = candidate_dir / (
+            "__".join(relative.parts) + f".targeted.{os.getpid()}.{iteration}.lean"
+        )
+        tmp_path.write_text(new_file_content, encoding="utf-8")
 
         result = compile_check(tmp_path)
-        tmp_path.unlink()
 
         if result["success"]:
             logger.info("COMPILE SUCCESS! Iteration %d", iteration)
-            # Write the fix back to the real file
-            new_content = block["context"] + "\n" + lean_code + "\n" + block["rest"]
-            filepath.write_text(new_content, encoding="utf-8")
-            logger.info("Wrote fix to %s", filepath)
-
-            # Verify with lake build
-            module_name = str(filepath.relative_to(_REPO)).replace("/", ".").replace(".lean", "")
-            logger.info("lake build %s ...", module_name)
-            build_result = build_module(module_name)
+            logger.info("Candidate saved to %s", tmp_path)
 
             return {
                 "success": True,
                 "iterations": iteration,
                 "lean_code": lean_code,
-                "build_success": build_result["success"],
+                "candidate": str(tmp_path),
+                "build_success": False,
+                "build_note": "source not promoted; no module build run",
                 "history": history,
             }
 

@@ -141,6 +141,23 @@ theorem bridge_semanticState_eq_canonical
   rfl
 
 /--
+Nonnegative routing weights induce nonnegative Clifford semantic coordinates
+on the canonical bridge object.
+-/
+theorem bridge_semanticState_nonneg_of_nonneg_weights
+    (P : PermutationPresentation n)
+    (hw : ∀ σ : RoutingMode n, 0 ≤ P.weights σ) :
+    0 ≤ (toCliffordPresentation P).semanticState.1 ∧
+      0 ≤ (toCliffordPresentation P).semanticState.2 := by
+  constructor
+  · simpa [toCliffordPresentation, canonicalCliffordState, permutationCliffordSemanticState,
+      cliffordSemanticState_fst_eq_plusMass] using
+      (plusMass_nonneg (w := P.weights) (label := P.labels) hw)
+  · simpa [toCliffordPresentation, canonicalCliffordState, permutationCliffordSemanticState,
+      cliffordSemanticState_snd_eq_minusMass] using
+      (minusMass_nonneg (w := P.weights) (label := P.labels) hw)
+
+/--
 Coordinate-sum mass law on the bridged Clifford presentation.
 -/
 theorem bridge_semanticState_coord_sum_eq_totalMass
@@ -152,6 +169,57 @@ theorem bridge_semanticState_coord_sum_eq_totalMass
     (cliffordSemanticState_coord_sum_eq_weight_sum P.weights P.labels)
 
 end Core
+
+section BistochasticLift
+
+variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+variable (n : Nat) [Nonempty (Fin n)]
+
+/--
+Bistochastic routing admits a Clifford presentation whose permutation weights
+and permutation-vertex decomposition are simultaneously preserved.
+
+This is the honest bridge statement: the permutation matrices are the
+extreme-point vertices of the bistochastic polytope, and the same weights can
+be transported into the split-Clifford presentation.
+-/
+theorem exists_cliffordPresentation_of_bistochastic
+    (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
+    (label : RoutingMode n → RoutingLabel) :
+    ∃ C : CliffordPresentation n,
+      ∑ σ : RoutingMode n, C.weights σ • σ.permMatrix ℝ = switchMatrix n β x ∧
+      cliffordTotalMass C = 1 ∧
+      C.semanticState = permutationCliffordSemanticState C.weights C.labels := by
+  rcases exists_clifford_labeled_state_of_bistochastic (n := n) β x hcol label with
+    ⟨w, _hw_nonneg, hw_sum, hw_matrix, _hψ⟩
+  refine ⟨{ weights := w
+            labels := label
+            semanticState := permutationCliffordSemanticState w label
+            h_semanticState := rfl }, hw_matrix, ?_, rfl⟩
+  simpa [cliffordTotalMass] using hw_sum
+
+/--
+The bistochastic Clifford bridge can be chosen with nonnegative semantic
+coordinates.
+-/
+theorem exists_cliffordPresentation_of_bistochastic_nonneg
+    (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
+    (label : RoutingMode n → RoutingLabel) :
+    ∃ C : CliffordPresentation n,
+      ∑ σ : RoutingMode n, C.weights σ • σ.permMatrix ℝ = switchMatrix n β x ∧
+      cliffordTotalMass C = 1 ∧
+      C.semanticState = permutationCliffordSemanticState C.weights C.labels ∧
+      0 ≤ C.semanticState.1 ∧ 0 ≤ C.semanticState.2 := by
+  rcases exists_clifford_labeled_state_of_bistochastic (n := n) β x hcol label with
+    ⟨w, hw_nonneg, hw_sum, hw_matrix, hψ⟩
+  refine ⟨{ weights := w
+            labels := label
+            semanticState := permutationCliffordSemanticState w label
+            h_semanticState := rfl }, hw_matrix, ?_, rfl, ?_⟩
+  · simpa [cliffordTotalMass] using hw_sum
+  · simpa [permutationCliffordSemanticState] using ⟨hψ.1, hψ.2.left⟩
+
+end BistochasticLift
 
 section SpectralHooks
 

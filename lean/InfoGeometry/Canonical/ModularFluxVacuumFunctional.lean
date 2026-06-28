@@ -69,6 +69,9 @@ section ConcreteM2Seed
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
+/-- Local concrete matrix carrier for the finite seed. -/
+abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+
 /-- The local nilpotent modular perturbation `Δ = 1 + N` in `M₂(ℝ)`. -/
 def DeltaM2 : M2R :=
   (1 : M2R) + N

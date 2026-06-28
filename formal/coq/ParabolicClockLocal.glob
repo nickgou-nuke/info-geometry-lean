@@ -1,0 +1,195 @@
+DIGEST c2453a329f7f51f2f500f0a45e13e95b
+FParabolicClockLocal
+R27:32 Stdlib.ZArith.ZArith <> <> lib
+R62:64 Stdlib.micromega.Lia <> <> lib
+R94:97 Stdlib.setoid_ring.Ring <> <> lib
+rec 135:138 <> mat2
+proj 147:149 <> m11
+proj 158:160 <> m12
+proj 169:171 <> m21
+proj 180:182 <> m22
+R153:153 Corelib.Numbers.BinNums <> Z ind
+R164:164 Corelib.Numbers.BinNums <> Z ind
+R175:175 Corelib.Numbers.BinNums <> Z ind
+R186:186 Corelib.Numbers.BinNums <> Z ind
+def 203:210 <> mat_zero
+R214:217 ParabolicClockLocal <> mat2 rec
+R225:227 ParabolicClockLocal <> m11 proj
+R225:227 ParabolicClockLocal <> m11 proj
+R225:227 ParabolicClockLocal <> m11 proj
+R235:237 ParabolicClockLocal <> m12 proj
+R235:237 ParabolicClockLocal <> m12 proj
+R245:247 ParabolicClockLocal <> m21 proj
+R245:247 ParabolicClockLocal <> m21 proj
+R255:257 ParabolicClockLocal <> m22 proj
+R255:257 ParabolicClockLocal <> m22 proj
+def 279:285 <> mat_one
+R289:292 ParabolicClockLocal <> mat2 rec
+R300:302 ParabolicClockLocal <> m11 proj
+R300:302 ParabolicClockLocal <> m11 proj
+R300:302 ParabolicClockLocal <> m11 proj
+R310:312 ParabolicClockLocal <> m12 proj
+R310:312 ParabolicClockLocal <> m12 proj
+R320:322 ParabolicClockLocal <> m21 proj
+R320:322 ParabolicClockLocal <> m21 proj
+R330:332 ParabolicClockLocal <> m22 proj
+R330:332 ParabolicClockLocal <> m22 proj
+def 355:361 <> mat_mul
+R370:373 ParabolicClockLocal <> mat2 rec
+binder 364:364 <> A:6
+binder 366:366 <> B:7
+R378:381 ParabolicClockLocal <> mat2 rec
+R391:393 ParabolicClockLocal <> m11 proj
+R391:393 ParabolicClockLocal <> m11 proj
+R391:393 ParabolicClockLocal <> m11 proj
+R434:436 ParabolicClockLocal <> m12 proj
+R434:436 ParabolicClockLocal <> m12 proj
+R477:479 ParabolicClockLocal <> m21 proj
+R477:479 ParabolicClockLocal <> m21 proj
+R520:522 ParabolicClockLocal <> m22 proj
+R520:522 ParabolicClockLocal <> m22 proj
+R411:413 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R403:405 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R398:400 ParabolicClockLocal <> m11 proj
+R402:402 ParabolicClockLocal <> A:6 var
+R406:408 ParabolicClockLocal <> m11 proj
+R410:410 ParabolicClockLocal <> B:7 var
+R419:421 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R414:416 ParabolicClockLocal <> m12 proj
+R418:418 ParabolicClockLocal <> A:6 var
+R422:424 ParabolicClockLocal <> m21 proj
+R426:426 ParabolicClockLocal <> B:7 var
+R454:456 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R446:448 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R441:443 ParabolicClockLocal <> m11 proj
+R445:445 ParabolicClockLocal <> A:6 var
+R449:451 ParabolicClockLocal <> m12 proj
+R453:453 ParabolicClockLocal <> B:7 var
+R462:464 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R457:459 ParabolicClockLocal <> m12 proj
+R461:461 ParabolicClockLocal <> A:6 var
+R465:467 ParabolicClockLocal <> m22 proj
+R469:469 ParabolicClockLocal <> B:7 var
+R497:499 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R489:491 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R484:486 ParabolicClockLocal <> m21 proj
+R488:488 ParabolicClockLocal <> A:6 var
+R492:494 ParabolicClockLocal <> m11 proj
+R496:496 ParabolicClockLocal <> B:7 var
+R505:507 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R500:502 ParabolicClockLocal <> m22 proj
+R504:504 ParabolicClockLocal <> A:6 var
+R508:510 ParabolicClockLocal <> m21 proj
+R512:512 ParabolicClockLocal <> B:7 var
+R540:542 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R532:534 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R527:529 ParabolicClockLocal <> m21 proj
+R531:531 ParabolicClockLocal <> A:6 var
+R535:537 ParabolicClockLocal <> m12 proj
+R539:539 ParabolicClockLocal <> B:7 var
+R548:550 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R543:545 ParabolicClockLocal <> m22 proj
+R547:547 ParabolicClockLocal <> A:6 var
+R551:553 ParabolicClockLocal <> m22 proj
+R555:555 ParabolicClockLocal <> B:7 var
+def 573:579 <> mat_det
+R586:589 ParabolicClockLocal <> mat2 rec
+binder 582:582 <> A:8
+R594:594 Corelib.Numbers.BinNums <> Z ind
+R614:616 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R606:608 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R601:603 ParabolicClockLocal <> m11 proj
+R605:605 ParabolicClockLocal <> A:8 var
+R609:611 ParabolicClockLocal <> m22 proj
+R613:613 ParabolicClockLocal <> A:8 var
+R622:624 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R617:619 ParabolicClockLocal <> m12 proj
+R621:621 ParabolicClockLocal <> A:8 var
+R625:627 ParabolicClockLocal <> m21 proj
+R629:629 ParabolicClockLocal <> A:8 var
+def 644:644 <> K
+R648:651 ParabolicClockLocal <> mat2 rec
+R659:661 ParabolicClockLocal <> m11 proj
+R659:661 ParabolicClockLocal <> m11 proj
+R659:661 ParabolicClockLocal <> m11 proj
+R669:671 ParabolicClockLocal <> m12 proj
+R669:671 ParabolicClockLocal <> m12 proj
+R679:681 ParabolicClockLocal <> m21 proj
+R679:681 ParabolicClockLocal <> m21 proj
+R689:691 ParabolicClockLocal <> m22 proj
+R689:691 ParabolicClockLocal <> m22 proj
+def 713:726 <> parabolic_flow
+R733:733 Corelib.Numbers.BinNums <> Z ind
+binder 729:729 <> t:9
+R738:741 ParabolicClockLocal <> mat2 rec
+R751:753 ParabolicClockLocal <> m11 proj
+R751:753 ParabolicClockLocal <> m11 proj
+R751:753 ParabolicClockLocal <> m11 proj
+R761:763 ParabolicClockLocal <> m12 proj
+R761:763 ParabolicClockLocal <> m12 proj
+R771:773 ParabolicClockLocal <> m21 proj
+R771:773 ParabolicClockLocal <> m21 proj
+R781:783 ParabolicClockLocal <> m22 proj
+R781:783 ParabolicClockLocal <> m22 proj
+R768:768 ParabolicClockLocal <> t:9 var
+prf 803:811 <> K_sq_zero
+R826:828 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R815:821 ParabolicClockLocal <> mat_mul def
+R823:823 ParabolicClockLocal <> K def
+R825:825 ParabolicClockLocal <> K def
+R829:836 ParabolicClockLocal <> mat_zero def
+prf 875:903 <> parabolic_flow_eq_one_plus_tK
+R918:918 Corelib.Numbers.BinNums <> Z ind
+binder 914:914 <> t:10
+R939:944 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R983:985 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R923:936 ParabolicClockLocal <> parabolic_flow def
+R938:938 ParabolicClockLocal <> t:10 var
+R945:947 ParabolicClockLocal <> m11 proj
+R945:947 ParabolicClockLocal <> m11 proj
+R945:947 ParabolicClockLocal <> m11 proj
+R955:957 ParabolicClockLocal <> m12 proj
+R955:957 ParabolicClockLocal <> m12 proj
+R965:967 ParabolicClockLocal <> m21 proj
+R965:967 ParabolicClockLocal <> m21 proj
+R975:977 ParabolicClockLocal <> m22 proj
+R975:977 ParabolicClockLocal <> m22 proj
+R962:962 ParabolicClockLocal <> t:10 var
+prf 1035:1056 <> parabolic_flow_det_one
+R1071:1071 Corelib.Numbers.BinNums <> Z ind
+binder 1067:1067 <> t:11
+R1102:1104 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1076:1082 ParabolicClockLocal <> mat_det def
+R1085:1098 ParabolicClockLocal <> parabolic_flow def
+R1100:1100 ParabolicClockLocal <> t:11 var
+R1135:1148 ParabolicClockLocal <> parabolic_flow def
+R1151:1157 ParabolicClockLocal <> mat_det def
+R1192:1194 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1184:1186 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R1180:1182 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R1188:1190 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R1192:1194 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1184:1186 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R1180:1182 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R1188:1190 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R1209:1217 Stdlib.ZArith.BinInt Z mul_0_r thm
+R1209:1217 Stdlib.ZArith.BinInt Z mul_0_r thm
+R1209:1217 Stdlib.ZArith.BinInt Z mul_0_r thm
+R1230:1238 Stdlib.ZArith.BinInt Z mul_1_l thm
+R1230:1238 Stdlib.ZArith.BinInt Z mul_1_l thm
+R1230:1238 Stdlib.ZArith.BinInt Z mul_1_l thm
+R1251:1259 Stdlib.ZArith.BinInt Z sub_0_r thm
+R1251:1259 Stdlib.ZArith.BinInt Z sub_0_r thm
+R1251:1259 Stdlib.ZArith.BinInt Z sub_0_r thm
+prf 1291:1314 <> parabolic_flow_unipotent
+R1329:1329 Corelib.Numbers.BinNums <> Z ind
+binder 1325:1325 <> t:12
+R1360:1363 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R1356:1358 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1334:1336 ParabolicClockLocal <> m11 proj
+R1339:1352 ParabolicClockLocal <> parabolic_flow def
+R1354:1354 ParabolicClockLocal <> t:12 var
+R1386:1388 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1364:1366 ParabolicClockLocal <> m22 proj
+R1369:1382 ParabolicClockLocal <> parabolic_flow def
+R1384:1384 ParabolicClockLocal <> t:12 var

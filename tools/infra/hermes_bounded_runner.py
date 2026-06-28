@@ -34,6 +34,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from tools.infra.hive_packet_path_runner import emit_packet_chain
+from igf.config import DEFAULT_GRAPH_MODE, GRAPH_MODE_CHOICES
 
 
 REPO_ROOT = ROOT
@@ -482,8 +483,8 @@ def main() -> int:
     parser.add_argument("--gravity-max-chars", type=int, default=int(os.environ.get("HERMES_LOOP_GRAVITY_MAX_CHARS", "6000")))
     parser.add_argument(
         "--gravity-graph-mode",
-        choices=["compact", "faithful", "hybrid"],
-        default=os.environ.get("HERMES_LOOP_GRAVITY_GRAPH_MODE", "compact"),
+        choices=list(GRAPH_MODE_CHOICES),
+        default=os.environ.get("HERMES_LOOP_GRAVITY_GRAPH_MODE", DEFAULT_GRAPH_MODE),
     )
     parser.add_argument("--no-gravity-context", action="store_true")
     args = parser.parse_args()

@@ -1,0 +1,47 @@
+{
+  "paper": {
+    "title": "A Mathematical Expression for the Fine Structure Constant",
+    "source_pdf": "/home/goutev/Downloads/collection_for_formalization/ssrn-5404131.pdf",
+    "pages": 21,
+    "core_math_scope": [
+      "golden ratio definition phi = (1 + sqrt(5)) / 2",
+      "proposed formula alpha^{-1} = 10*pi*phi*e - ln(pi)",
+      "high-precision numerical evaluation of the formula",
+      "comparison against CODATA experimental inverse fine-structure constant"
+    ],
+    "nonformalized_prose_claims": [
+      "theoretical significance / deep mathematical structure",
+      "physical interpretation of why the formula should hold"
+    ]
+  },
+  "explicit_claims": [
+    {
+      "id": "golden-ratio-def",
+      "statement": "phi = (1 + sqrt(5)) / 2"
+    },
+    {
+      "id": "needham-formula",
+      "statement": "alpha^{-1} = 10*pi*phi*e - ln(pi)"
+    },
+    {
+      "id": "paper-numeric-eval",
+      "statement": "10*pi*phi*e \u2248 138.175802271765, ln(pi) \u2248 1.144729885849400, alpha^{-1} \u2248 137.031072385916"
+    },
+    {
+      "id": "paper-codata-compare",
+      "statement": "experimental alpha^{-1} = 137.035999084(21), absolute difference \u2248 0.004927, relative error \u2248 3.59e-5"
+    }
+  ],
+  "formalization_targets": {
+    "lean4": "kernel-checked symbolic lemmas for phi and closed-form rewrite",
+    "coq": "kernel-checked symbolic lemmas for phi and closed-form rewrite",
+    "isabelle": "kernel-checked symbolic lemmas for phi and closed-form rewrite",
+    "sympy": "symbolic verification plus high-precision numerics",
+    "sage": "quadratic-field verification plus high-precision numerics",
+    "gap": "floating-point numeric verification",
+    "singular": "exact polynomial quotient verification of phi^2 - phi - 1 = 0",
+    "galgebra": "symbolic verification in Python/galgebra environment",
+    "clifford": "symbolic verification in Python/clifford environment",
+    "macaulay2_dmodules": "script written but not executed; engine unavailable on PATH"
+  }
+}

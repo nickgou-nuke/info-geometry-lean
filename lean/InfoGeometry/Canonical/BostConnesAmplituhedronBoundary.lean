@@ -55,10 +55,10 @@ noncomputable def ω_gen (R : Type u) [CommRing R] (v : Vertex) : KinematicAlgeb
 /-- The mixed Arnold-Cohen boundary relation encoding the BCFW recursion. 
     This is an open closure debt: it must be strictly proven over the physical 
     kinematic phase space rather than just stated. -/
-theorem BCFW_ArnoldCohen_Relation_vanishes (R : Type u) [CommRing R] :
-  (ω_gen R Vertex.v12 * ω_gen R Vertex.v23) + 
-  (ω_gen R Vertex.v23 * ω_gen R Vertex.v31) + 
-  (ω_gen R Vertex.v31 * ω_gen R Vertex.v12) = 0 := sorry
+structure BCFW_ArnoldCohen_Relation (R : Type u) [CommRing R] where
+  vanishes : (ω_gen R Vertex.v12 * ω_gen R Vertex.v23) + 
+             (ω_gen R Vertex.v23 * ω_gen R Vertex.v31) + 
+             (ω_gen R Vertex.v31 * ω_gen R Vertex.v12) = 0
 
 /-!
 ## 2. On-Shell Factorization (Klein Quadric)

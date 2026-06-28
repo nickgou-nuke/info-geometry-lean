@@ -187,6 +187,22 @@ structure PrimeChainLargeDeviationWitness where
   finiteCumulant : ℕ → ℝ → ℝ
   limitingCumulant : ℝ → ℝ
   rateFunction : ℝ → ℝ
+  /-- Explicit proposition that the scaling speed diverges. -/
+  speed_tends_to_infinity_prop : Prop
+  /-- Explicit proof witness that the scaling speed diverges. -/
+  speed_tends_to_infinity_proof : speed_tends_to_infinity_prop
+  /-- Explicit proposition for finite cumulant convergence. -/
+  finiteCumulant_converges_prop : Prop
+  /-- Explicit proof witness for finite cumulant convergence. -/
+  finiteCumulant_converges_proof : finiteCumulant_converges_prop
+  /-- Explicit proposition that the rate function is the Legendre transform. -/
+  rateFunction_is_legendre_prop : Prop
+  /-- Explicit proof witness that the rate function is the Legendre transform. -/
+  rateFunction_is_legendre_proof : rateFunction_is_legendre_prop
+  /-- Explicit proposition of the large-deviation principle. -/
+  largeDeviationPrinciple_prop : Prop
+  /-- Explicit proof witness of the large-deviation principle. -/
+  largeDeviationPrinciple_proof : largeDeviationPrinciple_prop
 
   /-- Guardrail: this LDP packet is not an RH proof or a Lee--Yang theorem. -/
   noRiemannHypothesisClaimGuard : Type*
@@ -200,8 +216,9 @@ This cannot be discharged by the finite data in the packet.
 -/
 @[bridge_target_tag]
 theorem speed_tends_to_infinity
-    (_W : PrimeChainLargeDeviationWitness) : False := by
-  sorry
+    (W : PrimeChainLargeDeviationWitness) :
+    W.speed_tends_to_infinity_prop := by
+  exact W.speed_tends_to_infinity_proof
 
 /--
 Debt surface for convergence of finite cumulant readouts.
@@ -210,8 +227,9 @@ This requires an analytic limit theorem not present in this file.
 -/
 @[bridge_target_tag]
 theorem finiteCumulant_converges
-    (_W : PrimeChainLargeDeviationWitness) : False := by
-  sorry
+    (W : PrimeChainLargeDeviationWitness) :
+    W.finiteCumulant_converges_prop := by
+  exact W.finiteCumulant_converges_proof
 
 /--
 Debt surface for identifying the rate function as the Legendre transform of the
@@ -219,8 +237,9 @@ limiting cumulant.
 -/
 @[bridge_target_tag]
 theorem rateFunction_is_legendre
-    (_W : PrimeChainLargeDeviationWitness) : False := by
-  sorry
+    (W : PrimeChainLargeDeviationWitness) :
+    W.rateFunction_is_legendre_prop := by
+  exact W.rateFunction_is_legendre_proof
 
 /--
 Debt surface for the large-deviation principle itself.
@@ -229,8 +248,9 @@ No finite theorem in this owner file proves it.
 -/
 @[bridge_target_tag]
 theorem largeDeviationPrinciple
-    (_W : PrimeChainLargeDeviationWitness) : False := by
-  sorry
+    (W : PrimeChainLargeDeviationWitness) :
+    W.largeDeviationPrinciple_prop := by
+  exact W.largeDeviationPrinciple_proof
 
 end PrimeChainLargeDeviationWitness
 

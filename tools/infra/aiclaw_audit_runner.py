@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """aiClaw-queued Lean owner-file audit runner.
 
-This is the safe replacement for the old browser-harness write-back loop:
+This is the safe replacement for the old browser-harness write-back loop.
+It is intentionally advice-only with respect to repo source:
 
 1. send one complete prompt through the repo-local aiClaw single-flight queue;
 2. extract a complete Lean drop-in replacement candidate;
 3. write the candidate under ``tmp/oracle_candidates``;
 4. run ``lake env lean`` on the candidate;
-5. promote to the owner file only after the candidate passes;
-6. restore the original owner file if the promoted path fails.
+5. report the candidate path and check result for a coding agent to inspect.
 
-Lean remains the authority. ChatGPT/aiClaw is only a proposal source.
+Lean remains the authority. ChatGPT/aiClaw is only a proposal source.  This
+runner never overwrites an owner file; a coding agent must apply any accepted
+repair with a normal reviewed patch.
 """
 
 from __future__ import annotations
@@ -223,7 +225,7 @@ def ask_replacement(prompt: str, *, timeout: int, new: bool) -> str:
     return extract_lean_code(content)
 
 
-def try_candidate(candidate: str, *, label: str, target_file: Path, repo_root: Path, original: str) -> tuple[bool, str, str]:
+def try_candidate(candidate: str, *, label: str, target_file: Path, repo_root: Path) -> tuple[bool, str, str]:
     candidate = normalize_candidate(candidate)
     reject_reason = lean_candidate_reject_reason(candidate)
     if reject_reason:
@@ -239,22 +241,13 @@ def try_candidate(candidate: str, *, label: str, target_file: Path, repo_root: P
         print(f"COMPILE_CANDIDATE_FAILED {label}: {error[:300]}...")
         return False, error, candidate
 
-    target_file.write_text(candidate, encoding="utf-8")
-    owner = run_lean(target_file, repo_root)
-    if owner.returncode == 0:
-        print(f"COMPILE_SUCCESS {label}")
-        return True, "", candidate
-
-    target_file.write_text(original, encoding="utf-8")
-    error = (owner.stderr or owner.stdout)[:4000]
-    print(f"COMPILE_OWNER_FAILED_RESTORED {label}: {error[:300]}...")
-    return False, error, candidate
+    print(f"CANDIDATE_COMPILES {label}: {path}")
+    return True, "", candidate
 
 
 def run_audit_and_save(target_file: Path, context: str, target_line: int, repo_root: Path) -> bool:
     target_file = target_file.resolve()
     repo_root = repo_root.resolve()
-    original = target_file.read_text(encoding="utf-8")
 
     replacement = ask_replacement(build_prompt(context), timeout=120, new=True)
     ok, error, last_candidate = try_candidate(
@@ -262,7 +255,6 @@ def run_audit_and_save(target_file: Path, context: str, target_line: int, repo_r
         label="attempt_0",
         target_file=target_file,
         repo_root=repo_root,
-        original=original,
     )
     if ok:
         return True
@@ -283,10 +275,9 @@ def run_audit_and_save(target_file: Path, context: str, target_line: int, repo_r
             label=f"attempt_{attempt + 1}",
             target_file=target_file,
             repo_root=repo_root,
-            original=original,
         )
         if ok:
-            print(f"COMPILE_FIXED (attempt {attempt + 1})")
+            print(f"CANDIDATE_FIXED (attempt {attempt + 1})")
             return True
 
     print("COMPILE_FAILED_ALL_ATTEMPTS")

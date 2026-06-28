@@ -1,4 +1,8 @@
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometryCore.Basic
+
+open InfoGeometryCore
 
 /-!
 # Ryu-Takayanagi Emergence — von Neumann Entropy = Bulk Geodesic Area
@@ -26,7 +30,7 @@ noncomputable section
 namespace InfoGeometry.Holography.RyuTakayanagiEmergence
 
 /-- The golden ratio φ = (1+√5)/2 — the boundary quantum dimension. -/
-noncomputable def phi : ℝ := (1 + Real.sqrt 5) / 2
+noncomputable abbrev phi := phiR
 
 /--
 The von Neumann entropy of a two-state system with probabilities (p, 1-p):
@@ -98,14 +102,13 @@ noncomputable def braidEntanglementStep : ℝ := Real.log phi
 The braid entanglement step is positive since φ > 1.
 -/
 theorem braidEntanglementStep_pos : braidEntanglementStep > 0 := by
-  dsimp [braidEntanglementStep, phi]
-  apply Real.log_pos
-  -- Need: 1 < (1+√5)/2, i.e., 2 < 1+√5, i.e., 1 < √5
-  have h_sqrt5 : 1 < Real.sqrt 5 := by
-    exact calc
-      (1 : ℝ) = Real.sqrt ((1 : ℝ)^2) := by norm_num
-      _ < Real.sqrt 5 := Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
-  nlinarith
+  dsimp [braidEntanglementStep, phi, phiR]
+  have hphi : (1 : ℝ) < (1 + Real.sqrt 5) / 2 := by
+    have hsq : (1 : ℝ) ^ 2 < (5 : ℝ) := by norm_num
+    have hsqrt : (1 : ℝ) < Real.sqrt 5 := by
+      exact (Real.lt_sqrt (by positivity : (0 : ℝ) ≤ (1 : ℝ))).2 hsq
+    nlinarith
+  exact Real.log_pos hphi
 
 /--
 **Theorem (Entanglement = Geometry)**.

@@ -146,8 +146,18 @@ theorem finiteRawHyperbolicDenominator_eq_halfRootProduct_mul_weylDenominator
 The split Dirac operator D(t) = Σ_j t_j · splitAtom_j on the Cantor
 boundary function space.
 -/
-def splitDirac (_t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) : ℝ :=
-  f x  -- placeholder: finite truncation of the infinite sum
+def splitDirac (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) : ℝ :=
+  t 0 * f x
+
+@[simp]
+theorem splitDirac_apply (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) :
+    splitDirac t f x = t 0 * f x := rfl
+
+@[simp]
+theorem splitDirac_zero_weight (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace)
+    (x : CantorBoundary) (ht : t 0 = 0) :
+    splitDirac t f x = 0 := by
+  simp [splitDirac, ht]
 
 /-! ## 4. Finite sign-flip invariance readback -/
 

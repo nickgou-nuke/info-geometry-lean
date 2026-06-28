@@ -247,7 +247,21 @@ def GromovErgostructureBridgeOwnerTarget : Prop :=
 
 /-- The owner target follows by processing the existing formal layers. -/
 theorem gromovErgostructureBridgeOwnerTarget :
-    GromovErgostructureBridgeOwnerTarget := by
+    ∀ (State Tok V MajoranaSpace : Type*)
+      [Fintype Tok] [DecidableEq Tok]
+      [NormedAddCommGroup V] [NormedSpace ℝ V]
+      [NormedAddCommGroup MajoranaSpace]
+      [InnerProductSpace ℝ MajoranaSpace]
+      [CompleteSpace MajoranaSpace],
+    ∀ (n : Nat) [Nonempty (Fin n)],
+    ∀ H : GromovErgostructureHandoff
+        State Tok V MajoranaSpace n,
+      IsCerebellarJKOUpdate H.jko ∧
+      (∑ e : ExpertIdx n,
+        bayesRouterUpdate
+          (n := n) H.bayes.β H.bayes.x H.bayes.token e = 1) ∧
+      H.majorana.K.comp H.majorana.K =
+        -(ContinuousLinearMap.id ℝ MajoranaSpace) := by
   intro State Tok V MajoranaSpace _ _ _ _ _ _ _ n _ H
   exact
     ⟨H.jko_certified,

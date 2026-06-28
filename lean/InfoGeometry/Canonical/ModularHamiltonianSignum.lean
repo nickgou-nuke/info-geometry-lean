@@ -29,7 +29,7 @@ open InfoGeometry.Canonical.BogoliubovProjectorTransport
 section Core
 
 variable {E : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
@@ -67,24 +67,26 @@ variable {J S : DoubledSpace E →L[ℝ] DoubledSpace E}
 variable (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
 variable (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
 variable (hJS : J * S = -(S * J))
-include hJ hS hJS
 
 /-- Product orientation: `S J = - J S`. -/
 @[rep_depth krein]
-theorem signum_mul_reflection_eq_neg_phase :
+theorem signum_mul_reflection_eq_neg_phase (hJS : J * S = -(S * J)) :
     S * J = -(signumPhaseAxis (E := E) J S) := by
   unfold signumPhaseAxis
   simpa using (congrArg Neg.neg hJS).symm
 
 /-- The generated phase axis squares to `-1`. -/
 @[rep_depth krein]
-theorem signumPhaseAxis_sq :
+theorem signumPhaseAxis_sq
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumPhaseAxis (E := E) J S * signumPhaseAxis (E := E) J S = -(1 : EndH) := by
   unfold signumPhaseAxis
   calc
     (J * S) * (J * S) = J * (S * J) * S := by noncomm_ring
     _ = J * (-(J * S)) * S := by
-          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
           rfl
     _ = -(J * J) * (S * S) := by
           apply ContinuousLinearMap.ext
@@ -94,7 +96,8 @@ theorem signumPhaseAxis_sq :
 
 /-- `J K = S`. -/
 @[rep_depth krein]
-theorem reflection_mul_phaseAxis :
+theorem reflection_mul_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     J * signumPhaseAxis (E := E) J S = S := by
   unfold signumPhaseAxis
   calc
@@ -103,13 +106,15 @@ theorem reflection_mul_phaseAxis :
 
 /-- `K J = -S`. -/
 @[rep_depth krein]
-theorem phaseAxis_mul_reflection :
+theorem phaseAxis_mul_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumPhaseAxis (E := E) J S * J = -S := by
   unfold signumPhaseAxis
   calc
     (J * S) * J = J * (S * J) := by noncomm_ring
     _ = J * (-(J * S)) := by
-          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
           rfl
     _ = -((J * J) * S) := by
           apply ContinuousLinearMap.ext
@@ -119,13 +124,15 @@ theorem phaseAxis_mul_reflection :
 
 /-- `S K = -J`. -/
 @[rep_depth krein]
-theorem signum_mul_phaseAxis :
+theorem signum_mul_phaseAxis
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     S * signumPhaseAxis (E := E) J S = -J := by
   unfold signumPhaseAxis
   calc
     S * (J * S) = (S * J) * S := by noncomm_ring
     _ = (-(J * S)) * S := by
-          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+          rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
           simp [signumPhaseAxis]
     _ = -(J * (S * S)) := by
           apply ContinuousLinearMap.ext
@@ -135,7 +142,8 @@ theorem signum_mul_phaseAxis :
 
 /-- `K S = J`. -/
 @[rep_depth krein]
-theorem phaseAxis_mul_signum :
+theorem phaseAxis_mul_signum
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     signumPhaseAxis (E := E) J S * S = J := by
   unfold signumPhaseAxis
   calc
@@ -170,10 +178,10 @@ theorem signumAnticommutator_one_right (A : EndH) :
 
 /-- `[J,S] = 2K`. -/
 @[rep_depth krein]
-theorem signumCommutator_reflection_signum :
+theorem signumCommutator_reflection_signum (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) J S = (2 : ℝ) • signumPhaseAxis (E := E) J S := by
   unfold signumCommutator
-  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   unfold signumPhaseAxis
   calc
     J * S - -(J * S) = J * S + J * S := by abel
@@ -181,10 +189,10 @@ theorem signumCommutator_reflection_signum :
 
 /-- `[S,J] = -2K`. -/
 @[rep_depth krein]
-theorem signumCommutator_signum_reflection :
+theorem signumCommutator_signum_reflection (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) S J = -((2 : ℝ) • signumPhaseAxis (E := E) J S) := by
   unfold signumCommutator
-  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   unfold signumPhaseAxis
   calc
     -(J * S) - J * S = -((J * S) + J * S) := by abel
@@ -192,77 +200,90 @@ theorem signumCommutator_signum_reflection :
 
 /-- `[J,K] = 2S`. -/
 @[rep_depth krein]
-theorem signumCommutator_reflection_phaseAxis :
+theorem signumCommutator_reflection_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) J (signumPhaseAxis (E := E) J S) = (2 : ℝ) • S := by
   unfold signumCommutator
-  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   calc
     S - -S = S + S := by abel
     _ = (2 : ℝ) • S := by simpa using (two_smul ℝ S).symm
 
 /-- `[K,J] = -2S`. -/
 @[rep_depth krein]
-theorem signumCommutator_phaseAxis_reflection :
+theorem signumCommutator_phaseAxis_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) (signumPhaseAxis (E := E) J S) J = -((2 : ℝ) • S) := by
   unfold signumCommutator
-  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   calc
     -S - S = -(S + S) := by abel
     _ = -((2 : ℝ) • S) := by rw [(two_smul ℝ S).symm]
 
 /-- `[S,K] = -2J`. -/
 @[rep_depth krein]
-theorem signumCommutator_signum_phaseAxis :
+theorem signumCommutator_signum_phaseAxis
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) S (signumPhaseAxis (E := E) J S) = -((2 : ℝ) • J) := by
   unfold signumCommutator
-  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) (hS := hS) (hJS := hJS)]
+  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) (hS := hS)]
   calc
     -J - J = -(J + J) := by abel
     _ = -((2 : ℝ) • J) := by rw [(two_smul ℝ J).symm]
 
 /-- `[K,S] = 2J`. -/
 @[rep_depth krein]
-theorem signumCommutator_phaseAxis_signum :
+theorem signumCommutator_phaseAxis_signum
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) (signumPhaseAxis (E := E) J S) S = (2 : ℝ) • J := by
   unfold signumCommutator
-  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) (hS := hS) (hJS := hJS)]
+  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) (hS := hS)]
   calc
     J - -J = J + J := by abel
     _ = (2 : ℝ) • J := by simpa using (two_smul ℝ J).symm
 
 /-- `{J,S} = 0`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_reflection_signum :
+theorem signumAnticommutator_reflection_signum (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) J S = 0 := by
   unfold signumAnticommutator
-  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   simp [signumPhaseAxis]
 
 /-- `{J,K} = 0`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_reflection_phaseAxis :
+theorem signumAnticommutator_reflection_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) J (signumPhaseAxis (E := E) J S) = 0 := by
   unfold signumAnticommutator
-  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   abel
 
 /-- `{S,K} = 0`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_signum_phaseAxis :
+theorem signumAnticommutator_signum_phaseAxis
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) S (signumPhaseAxis (E := E) J S) = 0 := by
   unfold signumAnticommutator
-  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) hJ hS hJS]
-  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signum_mul_phaseAxis (E := E) (J := J) (S := S) (hS := hS) (hJS := hJS)]
+  rw [phaseAxis_mul_signum (E := E) (J := J) (S := S) (hS := hS)]
   abel
 
 /-- `{J,J} = 2`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_reflection_reflection :
+theorem signumAnticommutator_reflection_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     signumAnticommutator (E := E) J J = (2 : ℝ) • (1 : EndH) := by
   unfold signumAnticommutator
   rw [hJ]
@@ -270,7 +291,8 @@ theorem signumAnticommutator_reflection_reflection :
 
 /-- `{S,S} = 2`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_signum_signum :
+theorem signumAnticommutator_signum_signum
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     signumAnticommutator (E := E) S S = (2 : ℝ) • (1 : EndH) := by
   unfold signumAnticommutator
   rw [hS]
@@ -278,12 +300,15 @@ theorem signumAnticommutator_signum_signum :
 
 /-- `{K,K} = -2`. -/
 @[rep_depth krein]
-theorem signumAnticommutator_phaseAxis_phaseAxis :
+theorem signumAnticommutator_phaseAxis_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hS : S * S = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) (signumPhaseAxis (E := E) J S)
         (signumPhaseAxis (E := E) J S)
       = -((2 : ℝ) • (1 : EndH)) := by
   unfold signumAnticommutator
-  rw [signumPhaseAxis_sq (E := E) (J := J) (S := S) hJ hS hJS]
+  rw [signumPhaseAxis_sq (E := E) (J := J) (S := S) (hJ := hJ) (hS := hS) (hJS := hJS)]
   calc
     -(1 : EndH) + -(1 : EndH) = -((1 : EndH) + (1 : EndH)) := by abel
     _ = -((2 : ℝ) • (1 : EndH)) := by rw [(two_smul ℝ (1 : EndH)).symm]
@@ -314,18 +339,20 @@ variable {J S p : DoubledSpace E →L[ℝ] DoubledSpace E}
 variable (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
 variable (hS : S * S = p)
 variable (hJS : J * S = -(S * J))
-include hJ hS hJS
 
 /-- Zero-sector-aware product orientation: `S J = - J S`. -/
 @[rep_depth krein]
-theorem modularSignum_mul_reflection_eq_neg_phase :
+theorem modularSignum_mul_reflection_eq_neg_phase (hJS : J * S = -(S * J)) :
     S * J = -(signumPhaseAxis (E := E) J S) := by
   unfold signumPhaseAxis
   simpa using (congrArg Neg.neg hJS).symm
 
 /-- With `q = J S`, the square is `q² = -p`. -/
 @[rep_depth krein]
-theorem modularSignum_phaseAxis_sq :
+theorem modularSignum_phaseAxis_sq
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     signumPhaseAxis (E := E) J S * signumPhaseAxis (E := E) J S = -p := by
   unfold signumPhaseAxis
   apply ContinuousLinearMap.ext
@@ -333,7 +360,7 @@ theorem modularSignum_phaseAxis_sq :
   have hSJ :
       S * J = -(J * S) :=
     modularSignum_mul_reflection_eq_neg_phase
-      (E := E) (J := J) (S := S) (p := p) hJ hS hJS
+      (E := E) (J := J) (S := S) (hJS := hJS)
   have hSJx : S (J (S x)) = -J (S (S x)) := by
     simpa using congrArg (fun F : EndH => F (S x)) hSJ
   have hJx : J (J (S (S x))) = S (S x) := by
@@ -349,7 +376,8 @@ theorem modularSignum_phaseAxis_sq :
 
 /-- `J q = S`. -/
 @[rep_depth krein]
-theorem modularSignum_reflection_mul_phaseAxis :
+theorem modularSignum_reflection_mul_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     J * signumPhaseAxis (E := E) J S = S := by
   unfold signumPhaseAxis
   calc
@@ -358,14 +386,16 @@ theorem modularSignum_reflection_mul_phaseAxis :
 
 /-- `q J = -S`. -/
 @[rep_depth krein]
-theorem modularSignum_phaseAxis_mul_reflection :
+theorem modularSignum_phaseAxis_mul_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumPhaseAxis (E := E) J S * J = -S := by
   unfold signumPhaseAxis
   calc
     (J * S) * J = J * (S * J) := by noncomm_ring
     _ = J * (-(J * S)) := by
           rw [modularSignum_mul_reflection_eq_neg_phase
-            (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+            (E := E) (J := J) (S := S) (hJS := hJS)]
           rfl
     _ = -((J * J) * S) := by
           apply ContinuousLinearMap.ext
@@ -375,14 +405,16 @@ theorem modularSignum_phaseAxis_mul_reflection :
 
 /-- `S q = -J p`. -/
 @[rep_depth krein]
-theorem modularSignum_signum_mul_phaseAxis :
+theorem modularSignum_signum_mul_phaseAxis
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     S * signumPhaseAxis (E := E) J S = -(J * p) := by
   unfold signumPhaseAxis
   calc
     S * (J * S) = (S * J) * S := by noncomm_ring
     _ = (-(J * S)) * S := by
           rw [modularSignum_mul_reflection_eq_neg_phase
-            (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+            (E := E) (J := J) (S := S) (hJS := hJS)]
           simp [signumPhaseAxis]
     _ = -(J * (S * S)) := by
           apply ContinuousLinearMap.ext
@@ -392,7 +424,8 @@ theorem modularSignum_signum_mul_phaseAxis :
 
 /-- `q S = J p`. -/
 @[rep_depth krein]
-theorem modularSignum_phaseAxis_mul_signum :
+theorem modularSignum_phaseAxis_mul_signum
+    (hS : S * S = p) :
     signumPhaseAxis (E := E) J S * S = J * p := by
   unfold signumPhaseAxis
   calc
@@ -401,10 +434,10 @@ theorem modularSignum_phaseAxis_mul_signum :
 
 /-- `[J,S] = 2q`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_reflection_signum :
+theorem modularSignumCommutator_reflection_signum (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) J S = (2 : ℝ) • signumPhaseAxis (E := E) J S := by
   unfold signumCommutator
-  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   unfold signumPhaseAxis
   calc
     J * S - -(J * S) = J * S + J * S := by abel
@@ -412,10 +445,10 @@ theorem modularSignumCommutator_reflection_signum :
 
 /-- `[S,J] = -2q`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_signum_reflection :
+theorem modularSignumCommutator_signum_reflection (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) S J = -((2 : ℝ) • signumPhaseAxis (E := E) J S) := by
   unfold signumCommutator
-  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   unfold signumPhaseAxis
   calc
     -(J * S) - J * S = -((J * S) + J * S) := by abel
@@ -423,77 +456,90 @@ theorem modularSignumCommutator_signum_reflection :
 
 /-- `[J,q] = 2S`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_reflection_phaseAxis :
+theorem modularSignumCommutator_reflection_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) J (signumPhaseAxis (E := E) J S) = (2 : ℝ) • S := by
   unfold signumCommutator
-  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   calc
     S - -S = S + S := by abel
     _ = (2 : ℝ) • S := by simpa using (two_smul ℝ S).symm
 
 /-- `[q,J] = -2S`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_phaseAxis_reflection :
+theorem modularSignumCommutator_phaseAxis_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) (signumPhaseAxis (E := E) J S) J = -((2 : ℝ) • S) := by
   unfold signumCommutator
-  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   calc
     -S - S = -(S + S) := by abel
     _ = -((2 : ℝ) • S) := by rw [(two_smul ℝ S).symm]
 
 /-- `[S,q] = -2 J p`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_signum_phaseAxis :
+theorem modularSignumCommutator_signum_phaseAxis
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) S (signumPhaseAxis (E := E) J S) = -((2 : ℝ) • (J * p)) := by
   unfold signumCommutator
-  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) (hS := hS) (hJS := hJS)]
+  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) (hS := hS)]
   calc
     -(J * p) - J * p = -((J * p) + (J * p)) := by abel
     _ = -((2 : ℝ) • (J * p)) := by rw [(two_smul ℝ (J * p)).symm]
 
 /-- `[q,S] = 2 J p`. -/
 @[rep_depth krein]
-theorem modularSignumCommutator_phaseAxis_signum :
+theorem modularSignumCommutator_phaseAxis_signum
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     signumCommutator (E := E) (signumPhaseAxis (E := E) J S) S = (2 : ℝ) • (J * p) := by
   unfold signumCommutator
-  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) (hS := hS) (hJS := hJS)]
+  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) (hS := hS)]
   calc
     J * p - -(J * p) = J * p + J * p := by abel
     _ = (2 : ℝ) • (J * p) := by simpa using (two_smul ℝ (J * p)).symm
 
 /-- `{J,S} = 0`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_reflection_signum :
+theorem modularSignumAnticommutator_reflection_signum (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) J S = 0 := by
   unfold signumAnticommutator
-  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_mul_reflection_eq_neg_phase (E := E) (J := J) (S := S) (hJS := hJS)]
   simp [signumPhaseAxis]
 
 /-- `{J,q} = 0`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_reflection_phaseAxis :
+theorem modularSignumAnticommutator_reflection_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) J (signumPhaseAxis (E := E) J S) = 0 := by
   unfold signumAnticommutator
-  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_reflection_mul_phaseAxis (E := E) (J := J) (S := S) (hJ := hJ)]
+  rw [modularSignum_phaseAxis_mul_reflection (E := E) (J := J) (S := S) (hJ := hJ) (hJS := hJS)]
   abel
 
 /-- `{S,q} = 0`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_signum_phaseAxis :
+theorem modularSignumAnticommutator_signum_phaseAxis
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) S (signumPhaseAxis (E := E) J S) = 0 := by
   unfold signumAnticommutator
-  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
-  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_signum_mul_phaseAxis (E := E) (J := J) (S := S) (p := p) (hS := hS) (hJS := hJS)]
+  rw [modularSignum_phaseAxis_mul_signum (E := E) (J := J) (S := S) (p := p) (hS := hS)]
   abel
 
 /-- `{J,J} = 2`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_reflection_reflection :
+theorem modularSignumAnticommutator_reflection_reflection
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)) :
     signumAnticommutator (E := E) J J = (2 : ℝ) • (1 : EndH) := by
   unfold signumAnticommutator
   rw [hJ]
@@ -501,7 +547,8 @@ theorem modularSignumAnticommutator_reflection_reflection :
 
 /-- `{S,S} = 2p`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_signum_signum :
+theorem modularSignumAnticommutator_signum_signum
+    (hS : S * S = p) :
     signumAnticommutator (E := E) S S = (2 : ℝ) • p := by
   unfold signumAnticommutator
   rw [hS]
@@ -509,17 +556,23 @@ theorem modularSignumAnticommutator_signum_signum :
 
 /-- `{q,q} = -2p`. -/
 @[rep_depth krein]
-theorem modularSignumAnticommutator_phaseAxis_phaseAxis :
+theorem modularSignumAnticommutator_phaseAxis_phaseAxis
+    (hJ : J * J = (1 : DoubledSpace E →L[ℝ] DoubledSpace E))
+    (hS : S * S = p)
+    (hJS : J * S = -(S * J)) :
     signumAnticommutator (E := E) (signumPhaseAxis (E := E) J S)
         (signumPhaseAxis (E := E) J S)
       = -((2 : ℝ) • p) := by
   unfold signumAnticommutator
-  rw [modularSignum_phaseAxis_sq (E := E) (J := J) (S := S) (p := p) hJ hS hJS]
+  rw [modularSignum_phaseAxis_sq (E := E) (J := J) (S := S) (p := p)
+    (hJ := hJ) (hS := hS) (hJS := hJS)]
   calc
     -p + -p = -(p + p) := by abel
     _ = -((2 : ℝ) • p) := by rw [(two_smul ℝ p).symm]
 
 end GeneralSignumWithZeroSector
+
+variable [CompleteSpace E]
 
 /-- Ordered readback: the projector-first sign operator is the Clifford/Krein `ε`. -/
 @[rep_depth krein]
@@ -541,7 +594,7 @@ theorem epsilon_sign_sq_one :
     (ε : EndH) * ε = (1 : EndH) := by
   change (spectral_epsilon (E := E)).comp (spectral_epsilon (E := E))
     = ContinuousLinearMap.id ℝ H₂
-  simpa using spectral_epsilon_involution (E := E)
+  exact spectral_epsilon_involution (E := E)
 
 /-- The `+` spectral projector is a left `+1` eigensector for `ε`. -/
 @[rep_depth krein]
@@ -567,11 +620,13 @@ theorem minusProjector_mul_epsilon :
     P₋.comp ε = -P₋ :=
   spectralMinusProj_comp_spectral_epsilon (E := E)
 
-/-- On the Unruh/Rindler lane, the modular Hamiltonian is the sign involution `ε`. -/
-@[rep_depth krein]
+-- On the Unruh/Rindler lane, the modular Hamiltonian is the sign involution `ε`.
+omit [CompleteSpace E] in
 theorem unruh_modularHamiltonian_eq_epsilon :
     Kᵤ = ε := by
   rfl
+
+attribute [rep_depth krein] unruh_modularHamiltonian_eq_epsilon
 
 /--
 On the Unruh/Rindler lane, the modular Hamiltonian is the projector-first sign
@@ -587,8 +642,8 @@ theorem unruh_modularHamiltonian_eq_projector_sign :
 @[rep_depth krein]
 theorem unruh_modularHamiltonian_sq_one :
     (Kᵤ : EndH) * Kᵤ = (1 : EndH) := by
-  simpa [unruh_modularHamiltonian_eq_epsilon (E := E)] using
-    epsilon_sign_sq_one (E := E)
+  rw [unruh_modularHamiltonian_eq_epsilon (E := E)]
+  exact epsilon_sign_sq_one (E := E)
 
 /-- The Unruh/Rindler modular Hamiltonian acts by `+1` on the plus sector. -/
 @[rep_depth krein]

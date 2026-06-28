@@ -12,18 +12,10 @@ This file formalizes the theorem-safe coefficient-tail step over a field.  The
 full rectangular Moore-Penrose equations are checked separately by exact
 rational matrix computation in `tools/sympy/decell_cayley_hamilton_inverse.py`.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
 Degree-two and degree-three Cayley-Hamilton tail formulas give explicit
-one-sided inverses when the final displayed coefficient is nonzero.
-
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
-The inverse conclusions depend on explicit polynomial equations and explicit
+one-sided inverses when the final displayed coefficient is nonzero.  The
+inverse conclusions depend on explicit polynomial equations and explicit
 nonzero coefficient hypotheses.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-The general rectangular Moore-Penrose theorem, uniqueness of the Penrose
-solution, and the full all-degrees Faddeev-Leverrier algorithm are not asserted
-in Lean here.
 -/
 
 namespace InfoGeometry.Canonical.DecellCayleyHamiltonInverse

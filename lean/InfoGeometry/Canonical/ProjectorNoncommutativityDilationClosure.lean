@@ -32,6 +32,7 @@ open InfoGeometry.Canonical.ConformalProjectorAgreement
 open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 
 variable {H : Type}
+variable {α : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 local notation "EndH" => H →L[ℝ] H
@@ -57,29 +58,72 @@ theorem noncommuting_obstruction_implies_projector_anomaly (P : ProjectorPair R)
 @[rep_depth transport]
 structure DilationClosureWitness (P : ProjectorPair R) where
   dilationGenerator : R
-  sourcedByObstruction : Prop
-  sourcedByObstructionCertified : sourcedByObstruction
-  closureContribution : Prop
+  sourcedByObstruction : HasProjectorAnomaly P
+  closureContribution : R
+
+namespace DilationClosureWitness
+
+variable {R : Type*} [Ring R]
+
+/-- The dilation witness carries a concrete projector anomaly. -/
+theorem projectorAnomaly
+    {P : ProjectorPair R}
+    (W : DilationClosureWitness P) :
+    HasProjectorAnomaly P :=
+  W.sourcedByObstruction
+
+end DilationClosureWitness
 
 /-- If the obstruction source is exact and the commutator vanishes, the supplied
 obstruction-sourced contribution may be declared absent by witness. -/
 @[rep_depth transport]
 structure DilationClosureVanishesWhenCommutatorZero (P : ProjectorPair R)
-    (W : DilationClosureWitness P) : Prop where
+    (W : DilationClosureWitness P) where
   commutator_zero : P.ProjectorCommutator = 0
-  contribution_vanishes : W.closureContribution = False
+  contribution_vanishes : W.closureContribution = 0
 
 /-- Candidate bridge packet assembled only after all readout witnesses are supplied. -/
 @[rep_depth transport]
 structure ProjectorToCl44BridgeCandidate (P : ProjectorPair R) where
-  projectorMismatchAnomaly : HasProjectorAnomaly P
-  metricTransportWitness : Prop
-  metricTransportCertified : metricTransportWitness
+  transportTarget : ProjectorPair R
+  metricTransportWitness : MetricTransportWitness (P := P) (P' := transportTarget)
   dilationWitness : DilationClosureWitness P
-  conformalClosureWitness : Prop
-  conformalClosureCertified : conformalClosureWitness
-  cl44ReadoutWitness : Prop
-  cl44ReadoutCertified : cl44ReadoutWitness
+  CI : ConformalInference H
+  X : InfoGeometry.Quantum.RealSplitCl11Action H
+  conformalClosureWitness : ConformalCanopyPackage (E := H) CI X
+  cl44ReadoutWitness : ConformalInference.ObstructionScalarReadout (CI := CI)
+
+namespace ProjectorToCl44BridgeCandidate
+
+variable {P : ProjectorPair R}
+
+/-- The candidate carries a genuine metric transport witness. -/
+def metricTransport
+    (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
+    MetricTransportWitness (P := P) (P' := B.transportTarget) :=
+  B.metricTransportWitness
+
+/-- The candidate carries a genuine conformal canopy witness. -/
+def conformalClosure
+    (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
+    ConformalCanopyPackage (E := H) B.CI B.X :=
+  B.conformalClosureWitness
+
+/-- The candidate carries the combined operator-owner and scalar-readout pair. -/
+theorem conformal_owner_and_scalar
+    (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
+    ConformalInference.ObstructionOperatorOwner (CI := B.CI) B.X ∧
+      ConformalInference.ObstructionScalarReadout (CI := B.CI) := by
+  exact ConformalUnification.canopy_operator_and_scalar
+    (E := H) (CI := B.CI) (X := B.X) B.conformalClosureWitness
+
+/-- The candidate carries a genuine scalar readout witness. -/
+theorem cl44Readout
+    (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
+    ConformalInference.ObstructionScalarReadout (CI := B.CI) :=
+  B.cl44ReadoutWitness
+
+end ProjectorToCl44BridgeCandidate
 
 end PureProjectorAlgebra
 
@@ -91,7 +135,7 @@ projector obstruction on the conformal owner surface.
 -/
 @[rep_depth transport]
 structure DrazinMPProjectorCommutator
-    (CI : ConformalInference H) : Prop where
+    (CI : ConformalInference H) where
   projectorObstruction_eq_commutator :
     CI.projectorObstruction =
       CI.spectralChiralProjector * CI.metricChiralProjector
@@ -112,7 +156,7 @@ operator, and its norm is the scalar anomaly scale.
 -/
 @[rep_depth transport]
 structure ProjectorMismatchAnomaly
-    (CI : ConformalInference H) : Prop where
+    (CI : ConformalInference H) where
   projectorObstruction_eq_chiralAnomaly :
     CI.projectorObstruction = CI.chiralAnomalyOperator
   obstructionScale_eq_norm :
@@ -140,8 +184,7 @@ forced by a nonzero projector commutator.
 @[rep_depth transport]
 structure DilationFromProjectorNoncommutativity
     (CI : ConformalInference H) where
-  sourceWitness : Prop
-  sourceCertified : sourceWitness
+  sourceWitness : CI.projectorObstruction ≠ 0
   obstructionScale_eq_norm :
     CI.obstructionScale = ‖CI.projectorObstruction‖₊
 
@@ -149,17 +192,15 @@ structure DilationFromProjectorNoncommutativity
 when a source witness is supplied. -/
 def dilation_witness_of_source
     (CI : ConformalInference H)
-    (hSource : Prop)
-    (hSourceCertified : hSource) :
+    (hSource : CI.projectorObstruction ≠ 0) :
     DilationFromProjectorNoncommutativity CI :=
-  ⟨hSource, hSourceCertified, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩
+  ⟨hSource, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩
 
 theorem noncommutativity_requires_dilation
     (CI : ConformalInference H)
-    (hSource : Prop)
-    (hSourceCertified : hSource) :
-    (dilation_witness_of_source CI hSource hSourceCertified).sourceWitness :=
-  hSourceCertified
+    (hSource : CI.projectorObstruction ≠ 0) :
+    CI.projectorObstruction ≠ 0 :=
+  (dilation_witness_of_source CI hSource).sourceWitness
 
 /-- The dilation generator is grade-zero in the information-geometric split. -/
 theorem dilation_isGZero
@@ -180,8 +221,9 @@ theorems.
 @[rep_depth transport]
 structure ConformalClosureWitness
     (CI : ConformalInference H)
-    (X : InfoGeometry.Quantum.RealSplitCl11Action H) : Prop where
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) where
   canopy : ConformalCanopyPackage CI X
+
 
 /-- The closure witness implies KKT/TKK/Weyl/JordanLie closure. -/
 theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
@@ -198,27 +240,31 @@ theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
 /--
 Consolidated Cl(4,4) conformal readout.
 -/
-@[rep_depth transport]
-structure Cl44ConformalReadout (CI : ConformalInference H) where
-  readout : Prop
-
-/--
-Consolidated TKK/Jordan-Lie packet for Cl(4,4) specialization.
--/
-@[rep_depth transport]
-structure SplitCl44TKKJordanLiePacket (CI : ConformalInference H) where
-  packet : Prop
+abbrev Cl44ConformalReadout (CI : ConformalInference H) : Prop :=
+  ConformalInference.ObstructionScalarReadout (CI := CI)
 
 /--
 Theorem-safe consolidated packet for the projector noncommutativity 
 dilation closure.
 -/
-@[rep_depth transport]
-structure ProjectorNoncommutativityDilationClosurePacket where
+structure ProjectorNoncommutativityDilationClosurePacket (α : Type*) where
   CI : ConformalInference H
   comm : DrazinMPProjectorCommutator CI
   anomaly : ProjectorMismatchAnomaly CI
   readout : Cl44ConformalReadout CI
-  tkk : SplitCl44TKKJordanLiePacket CI
+  tkk : InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge.SplitCl44TKKJordanLiePacket (α := α) (H := H)
+
+/-- The consolidated packet carries an actual scalar readout witness. -/
+theorem projectorNoncommutativityDilationClosurePacket_readout_witness
+    (P : ProjectorNoncommutativityDilationClosurePacket (H := H) α) :
+    ConformalInference.ObstructionScalarReadout (CI := P.CI) :=
+  P.readout
+
+/-- The consolidated packet carries an actual split TKK/Jordan-Lie packet. -/
+def projectorNoncommutativityDilationClosurePacket_tkk_witness
+    (P : ProjectorNoncommutativityDilationClosurePacket (H := H) α) :
+    InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge.SplitCl44TKKJordanLiePacket
+      (α := α) (H := H) :=
+  P.tkk
 
 end InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure

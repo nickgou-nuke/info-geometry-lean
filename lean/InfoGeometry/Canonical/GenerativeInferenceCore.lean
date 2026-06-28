@@ -262,6 +262,25 @@ theorem exists_contextSemanticState_of_bistochastic
     (exists_clifford_labeled_state_of_bistochastic
       (n := n) β x hcol label)
 
+/--
+The same bistochastic lift can be chosen with nonnegative context semantic
+coordinates.
+-/
+theorem exists_contextSemanticState_of_bistochastic_nonneg
+    (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
+    (label : RoutingMode n → RoutingLabel) :
+    ∃ w : RoutingMode n → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • σ.permMatrix ℝ = switchMatrix n β x ∧
+      let ψ := permutationCliffordSemanticState w label
+      0 ≤ ψ.1 ∧ 0 ≤ ψ.2 := by
+  rcases exists_clifford_labeled_state_of_bistochastic (n := n) β x hcol label with
+    ⟨w, hw_nonneg, hw_sum, hw_matrix, hψ⟩
+  refine ⟨w, hw_nonneg, hw_sum, hw_matrix, ?_⟩
+  dsimp
+  exact ⟨hψ.1, hψ.2.left⟩
+
 end BistochasticLift
 
 section SplitDoubledLane

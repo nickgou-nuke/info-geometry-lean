@@ -1,0 +1,6 @@
+DIGEST 50a389710120fad485d78038a840745a
+Ftest8
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:40 Stdlib.setoid_ring.Ring <> <> lib
+prf 69:72 <> test
+R76:79 Corelib.Init.Logic <> True ind

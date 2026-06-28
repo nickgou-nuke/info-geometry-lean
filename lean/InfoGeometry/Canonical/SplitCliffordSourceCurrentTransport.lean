@@ -42,10 +42,28 @@ def toHeisenbergWitness
     SplitCliffordHeisenbergWitness 𝕜 V :=
   packagedHeisenbergWitness T.Jlift T.truncLift T.wickLift
 
-theorem toCurrentHeisenbergRep_nonempty
+def toCurrentHeisenbergRep
     (T : SplitCurrentEndTransport S Jsrc) :
-    Nonempty (InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V) :=
-  (toHeisenbergWitness T).nonempty_currentHeisenbergRep
+    InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V :=
+  (toHeisenbergWitness T).toCurrentHeisenbergRep
+
+theorem toCurrentHeisenbergRep_readout
+    (T : SplitCurrentEndTransport S Jsrc) :
+    (T.toCurrentHeisenbergRep.J = T.Jlift)
+      ∧ (T.toCurrentHeisenbergRep.trunc = T.truncLift)
+      ∧ (∀ m n : Int,
+          (T.toCurrentHeisenbergRep.J m).commutator (T.toCurrentHeisenbergRep.J n) =
+            if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0)
+      ∧ (∀ n : Int, ∀ v : V,
+          S.embed (T.toCurrentHeisenbergRep.J n v) = Jsrc.modeAction n v) := by
+  constructor
+  · rfl
+  constructor
+  · rfl
+  constructor
+  · exact T.toCurrentHeisenbergRep.comm
+  · intro n v
+    exact T.transported n v
 
 end SplitCurrentEndTransport
 

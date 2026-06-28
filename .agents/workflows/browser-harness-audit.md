@@ -7,9 +7,11 @@ Use this workflow to perform a rigorous formal audit of a Lean 4 bridge or modul
 - Identify the relevant **Pauli Mandates** to audit against.
 - Package the code and mandates into a markdown block for transmission.
 
-## 2. Initialize Browser Harness
-- Load the `browser-harness` skill.
-- Navigate to the external auditor (e.g., `https://chatgpt.com`).
+## 2. Initialize Guarded Browser Harness
+- Prefer `tools/infra/socratic_clawbot.py` through the aiClaw queue.
+- If direct `browser-harness` is unavoidable, wrap it with
+  `tools/infra/chatgpt_lane_guard.py`.
+- Do not use raw DOM injection or Enter-key fallback.
 - Ensure "Temporary Chat" is enabled if privacy is required.
 
 ## 3. The Socratic Audit Loop
@@ -19,7 +21,8 @@ Use this workflow to perform a rigorous formal audit of a Lean 4 bridge or modul
 - **Extract**: Identify the auditor's specific refactoring suggestions and Mathlib-rooting proposals.
 
 ## 4. Implementation & Surgical Refactor
-- Implement the refactor locally.
+- Treat extracted suggestions as proposal-only candidate artifacts.
+- Implement the refactor locally as a normal reviewed patch.
 - Prefer minimal, surgical changes that preserve existing theorem statements while strengthening the mathematical logic.
 - Resolve scaling or syntactic mismatches using Mathlib-canonical lemmas (e.g., `smul_ite_zero`).
 
@@ -35,4 +38,6 @@ Use this workflow to perform a rigorous formal audit of a Lean 4 bridge or modul
 
 ---
 > [!IMPORTANT]
-> This workflow follows the **"Bitter Lesson"**: it prioritizes direct browser-based action and external high-level reasoning over narrow tool abstractions.
+> ChatGPT/browser-harness is an oracle-advice lane, not a source editor.
+> Candidate code must be inspected, patched by the coding agent, and verified
+> locally before it counts.

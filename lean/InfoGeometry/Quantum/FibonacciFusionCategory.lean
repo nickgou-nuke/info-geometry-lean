@@ -1,6 +1,9 @@
+import Mathlib.Algebra.Order.Ring.Defs
+import InfoGeometryCore.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
 
+open InfoGeometryCore
 open Complex
 open Real
 open Matrix
@@ -56,7 +59,7 @@ def fusionMultiplicity (a b c : FibObject) : ℕ :=
 /-! ### 2. Golden ratio and its algebraic identities -/
 
 /-- The golden ratio φ = (1 + √5)/2. -/
-noncomputable def phi : ℝ := (1 + Real.sqrt 5) / 2
+noncomputable abbrev phi := phiR
 
 /-- The golden ratio conjugate φ̃ = (1 - √5)/2 = -φ⁻¹. -/
 noncomputable def phiConj : ℝ := (1 - Real.sqrt 5) / 2
@@ -69,26 +72,27 @@ noncomputable def phiInvSqrt : ℝ := Real.sqrt phiInv
 
 /-- φ² = φ + 1.  This is the defining equation of the golden ratio. -/
 theorem phi_sq : phi ^ 2 = phi + 1 := by
-  unfold phi
-  have h5sq : (Real.sqrt 5) ^ 2 = (5 : ℝ) := Real.sq_sqrt (by norm_num : 0 ≤ (5 : ℝ))
-  nlinarith
+  dsimp [phi, phiR]
+  calc
+    ((1 + Real.sqrt 5) / 2)^2 = ((1 + Real.sqrt 5)^2) / 4 := by ring
+    _ = (1 + 2 * Real.sqrt 5 + (Real.sqrt 5)^2) / 4 := by ring
+    _ = (1 + 2 * Real.sqrt 5 + 5) / 4 := by rw [Real.sq_sqrt (by positivity : 0 ≤ (5 : ℝ))]
+    _ = (6 + 2 * Real.sqrt 5) / 4 := by ring
+    _ = (3 + Real.sqrt 5) / 2 := by ring
+    _ = (1 + Real.sqrt 5) / 2 + 1 := by ring
 
 /-- φ > 0. -/
 theorem phi_pos : 0 < phi := by
-  unfold phi
-  have h : 0 < Real.sqrt 5 := Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 5)
+  dsimp [phi, phiR]
+  have h5pos : Real.sqrt 5 > 0 := Real.sqrt_pos.mpr (by positivity : (0 : ℝ) < 5)
   nlinarith
 
 /-- φ > 1. -/
 theorem phi_gt_one : (1 : ℝ) < phi := by
-  unfold phi
-  have hsqrt5_gt_2 : (2 : ℝ) < Real.sqrt 5 := by
-    have h4lt5 : (4 : ℝ) < 5 := by norm_num
-    have h_nonneg_4 : 0 ≤ (4 : ℝ) := by norm_num
-    calc
-      (2 : ℝ) = Real.sqrt ((2 : ℝ) ^ 2) := by norm_num
-      _ = Real.sqrt (4 : ℝ) := by norm_num
-      _ < Real.sqrt 5 := Real.sqrt_lt_sqrt h_nonneg_4 h4lt5
+  dsimp [phi, phiR]
+  have hsq : (1 : ℝ) ^ 2 < (5 : ℝ) := by norm_num
+  have hsqrt : (1 : ℝ) < Real.sqrt 5 := by
+    exact (Real.lt_sqrt (by positivity : (0 : ℝ) ≤ (1 : ℝ))).2 hsq
   nlinarith
 
 /-- φ⁻¹ = φ - 1 > 0. -/
@@ -100,9 +104,8 @@ theorem phiInv_pos : 0 < phiInv := by
 theorem phiInv_sq_add_phiInv : phiInv ^ 2 + phiInv = 1 := by
   -- φ⁻¹ = φ - 1, so φ⁻² + φ⁻¹ = φ⁻¹(φ⁻¹ + 1) = φ⁻¹·φ = 1
   have h : phi * phiInv = 1 := by
-    unfold phiInv phi
-    have h5sq : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num : 0 ≤ (5 : ℝ))
-    nlinarith
+    unfold phiInv
+    nlinarith [phi_sq]
   have hsq_add : phiInv ^ 2 + phiInv = phiInv * (phiInv + 1) := by ring
   rw [hsq_add]
   have hphiInv_add_one : phiInv + 1 = phi := by

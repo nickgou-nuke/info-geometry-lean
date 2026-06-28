@@ -18,6 +18,8 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.SplitCliffordRealization
 
+universe uK
+
 variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 
 /-! ## Euler/chirality identities -/
@@ -409,8 +411,14 @@ structure SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n
 def mkRealization (cl11 : Cl11Atom K) (n : ℕ) : SplitCliffordRealizationPacket K n where
   cl11 := cl11
 
-theorem capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ) :
-    Nonempty (SplitCliffordRealizationPacket K n) := by
-  exact ⟨mkRealization cl11 n⟩
+/-- Owner target for the split Clifford realization lane. -/
+abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] (n : ℕ) :
+    Type uK :=
+  SplitCliffordRealizationPacket K n
+
+/-- The split Clifford realization packet is constructible directly. -/
+def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ) :
+    SplitCliffordRealizationTarget K n :=
+  mkRealization cl11 n
 
 end InfoGeometry.Arithmetic.SplitCliffordRealization

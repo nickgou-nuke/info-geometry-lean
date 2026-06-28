@@ -36,27 +36,27 @@ X, Y = sp.symbols('X Y', real=True)
 # is available in closed form.  In a full development L would be an
 # arbitrary smooth convex function (perhaps coming from a thermodynamic
 # potential).
-L = x**2 / 2          # L : R -> R,  L'(x) = x
+L_expr = x**2 / 2          # L : R -> R,  L'(x) = x
 
 # ----------------------------------------------------------------------
 # 3.  Legendre‑Fenchel transform L★(η)
 # ----------------------------------------------------------------------
 # Solve  L'(x) = eta  for x  (here: x = eta)
-x_star = sp.solve(sp.diff(L, x) - eta, x)[0]   # => eta
-L_star = sp.simplify(x_star * eta - L.subs(x, x_star))
+x_star = sp.solve(sp.diff(L_expr, x) - eta, x)[0]   # => eta
+L_star = sp.simplify(x_star * eta - L_expr.subs(x, x_star))
 # L_star = eta**2 / 2
 
 # ----------------------------------------------------------------------
-# 4.  Fenchel‑Legendre gap
+# 4.  Fenchel‑Legendre gap: Φ(θ,η) = L(θ) + L★(η) − ⟨θ,η⟩
 # ----------------------------------------------------------------------
-Phi = L + L_star - theta * eta
-# Substitute L and L_star (they are functions of x and x_star respectively)
-Phi_simplified = sp.simplify(Phi.subs({L: x**2/2, L_star: eta**2/2}))
-# Now replace the optimal x by eta (the stationary condition)
-Phi_simplified = sp.simplify(Phi_simplified.subs(x, eta))
-# Result: Phi = (theta**2)/2 + (eta**2)/2 - theta*eta
-#          = 1/2 * (theta - eta)**2
+L_theta = L_expr.subs(x, theta)   # L(θ) = θ²/2
+Phi = L_theta + L_star - theta * eta
+# Substitute L_star
+Phi_simplified = sp.simplify(Phi.subs(L_star, eta**2/2))
+# Now Phi = θ²/2 + η²/2 − θ·η
 Phi_simplified = sp.simplify(Phi_simplified)
+# Which equals ½(θ−η)²
+Phi_simplified = sp.factor(Phi_simplified)
 
 print("Fenchel‑Legendre gap (quadratic L):")
 sp.pprint(Phi_simplified)
@@ -88,23 +88,6 @@ print()
 # ----------------------------------------------------------------------
 # 6.  Statement of the (to‑be‑proved) equivalence
 # ----------------------------------------------------------------------
-# For the quadratic choice we have already seen:
-#     Phi = 0   <=>   theta = eta
-# The thermodynamic identification (to be made precise in a full model)
-# would set:
-#     theta  <--  some thermodynamic force (e.g. β)
-#     eta    <--  gradient of the potential (i.e. a component of u)
-# Hence the condition theta = eta becomes a component‑wise version of
-#   “the thermodynamic force equals the fluid velocity gradient”.
-#
-# In the incompressible limit the *full* condition div u = 0 is recovered
-# when all components of the gradient match the corresponding forces.
-#
-# Below we state the desired equivalence as a comment; a future proof
-# would replace the placeholder `TODO` with a chain of rewrites that
-# uses the specific definitions of the thermodynamic potentials and the
-# fluid variables.
-
 print("=== To be proved (placeholder) ===")
 print("Theorem (informal):")
 print("    Fenchel‑Legendre gap Φ(θ,η) = 0   ⇔   div( u ) = 0")

@@ -333,7 +333,7 @@ theorem tomita_maps_right_readout_to_left
 
 end TomitaLightconeMirrorCompatibility
 
-/-! ## 5. Owner targets -/
+/-! ## 5. Compatibility readouts -/
 
 /--
 Compatibility data for constructing the Stinespring-Tomita dilation.
@@ -349,25 +349,43 @@ structure StinespringTomitaDilationCompatibility
   witness :
     StinespringTomitaDilation Op GlobalOp Φ
 
-/--
-Owner target for the Stinespring-Tomita dilation theorem.
--/
-@[owner_target_tag]
-def StinespringTomitaDilationOwnerTarget : Prop :=
-  ∀ (Op GlobalOp : Type*)
+/-- Construct the Stinespring-Tomita dilation from compatibility data. -/
+theorem stinespringTomitaDilationOwnerTarget
+    (Op GlobalOp : Type*)
     [Ring Op] [Module ℝ Op]
-    [Ring GlobalOp] [Module ℝ GlobalOp],
-  ∀ Φ : LocalChannel Op,
-    StinespringTomitaDilationCompatibility Op GlobalOp Φ →
-      Nonempty (StinespringTomitaDilation Op GlobalOp Φ)
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
+    (∀ x : Op,
+        Φ.map x =
+          h.witness.compress (h.witness.globalEvolution (h.witness.embed x))) ∧
+      (∀ x : Op, h.witness.embed x ∈ h.witness.tomita.M) ∧
+      (∀ x : Op, h.witness.leakage x ∈ h.witness.tomita.Mcomm) ∧
+      (∀ x : Op,
+        h.witness.globalEvolution (h.witness.embed x) =
+          h.witness.embed (Φ.map x) + h.witness.leakage x) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact h.witness.channel_factorization
+  · exact h.witness.embed_mem_observable
+  · exact h.witness.leakage_mem_commutant
+  · exact h.witness.accounting
 
-/--
-The owner target follows once the compatibility witness is supplied.
--/
-theorem stinespringTomitaDilationOwnerTarget :
-    StinespringTomitaDilationOwnerTarget := by
-  intro Op GlobalOp _ _ _ _ Φ h
-  exact ⟨h.witness⟩
+/-- Packet readout for one Stinespring-Tomita compatibility witness. -/
+theorem stinespringTomitaDilation_packet
+    (Op GlobalOp : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
+    (∀ x : Op,
+        Φ.map x =
+          h.witness.compress (h.witness.globalEvolution (h.witness.embed x))) ∧
+      (∀ x : Op, h.witness.embed x ∈ h.witness.tomita.M) ∧
+      (∀ x : Op, h.witness.leakage x ∈ h.witness.tomita.Mcomm) ∧
+      (∀ x : Op,
+        h.witness.globalEvolution (h.witness.embed x) =
+          h.witness.embed (Φ.map x) + h.witness.leakage x) :=
+  stinespringTomitaDilationOwnerTarget Op GlobalOp Φ h
 
 /--
 Compatibility data for constructing the chiral-lightcone refinement.
@@ -383,11 +401,8 @@ structure StinespringTomitaChiralLightconeCompatibility
   witness :
     StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ
 
-/--
-Owner target for the chiral-lightcone Stinespring-Tomita theorem.
--/
-@[owner_target_tag]
-def StinespringTomitaChiralLightconeOwnerTarget : Prop :=
+/-- Construct the chiral-lightcone Stinespring-Tomita refinement from compatibility data. -/
+theorem stinespringTomitaChiralLightconeOwnerTarget :
   ∀ (Op GlobalOp H : Type*)
     [Ring Op] [Module ℝ Op]
     [Ring GlobalOp] [Module ℝ GlobalOp]
@@ -397,15 +412,22 @@ def StinespringTomitaChiralLightconeOwnerTarget : Prop :=
   ∀ Φ : LocalChannel Op,
     StinespringTomitaChiralLightconeCompatibility Op GlobalOp H Q C Φ →
       Nonempty
-        (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ)
-
-/--
-The chiral-lightcone owner target follows once the compatibility witness is
-supplied.
--/
-theorem stinespringTomitaChiralLightconeOwnerTarget :
-    StinespringTomitaChiralLightconeOwnerTarget := by
+        (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) := by
   intro Op GlobalOp H _ _ _ _ _ _ Q C Φ h
   exact ⟨h.witness⟩
+
+/-- Packet readout for one chiral-lightcone Stinespring-Tomita compatibility witness. -/
+theorem stinespringTomitaChiralLightcone_packet
+    (Op GlobalOp H : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaChiralLightconeCompatibility Op GlobalOp H Q C Φ) :
+    Nonempty
+      (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) :=
+  stinespringTomitaChiralLightconeOwnerTarget Op GlobalOp H Q C Φ h
 
 end InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone

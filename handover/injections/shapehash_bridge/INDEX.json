@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-06-24",
+  "total_clusters": 20,
+  "total_nodes": 16241,
+  "proposals": [
+    {
+      "hash": "10538156713300787596",
+      "count": 3731,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_10538156713300787596_3731x.md",
+      "type": "SORRY_CERT_CLUSTER"
+    },
+    {
+      "hash": "2147435847357609255",
+      "count": 1301,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_2147435847357609255_1301x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "17307638282192463654",
+      "count": 1281,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_17307638282192463654_1281x.md",
+      "type": "SORRY_CERT_CLUSTER"
+    },
+    {
+      "hash": "4113390700071399620",
+      "count": 1063,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_4113390700071399620_1063x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "3456694850442955444",
+      "count": 989,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_3456694850442955444_989x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "18218628324351146028",
+      "count": 927,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_18218628324351146028_927x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "2724110823769384239",
+      "count": 786,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_2724110823769384239_786x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "7373222792890993051",
+      "count": 768,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_7373222792890993051_768x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "16754253492277755127",
+      "count": 711,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_16754253492277755127_711x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "93724516755064749",
+      "count": 705,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_93724516755064749_705x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "15517739234248984583",
+      "count": 648,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_15517739234248984583_648x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "15031813957600899923",
+      "count": 599,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_15031813957600899923_599x.md",
+      "type": "SORRY_CERT_CLUSTER"
+    },
+    {
+      "hash": "9055880318550517836",
+      "count": 541,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_9055880318550517836_541x.md",
+      "type": "CROSS_DOMAIN_ISOMORPHISM"
+    },
+    {
+      "hash": "891188105046693343",
+      "count": 398,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_891188105046693343_398x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "14703491838449442598",
+      "count": 384,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_14703491838449442598_384x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "6323419665017937653",
+      "count": 315,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_6323419665017937653_315x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "13379641520317788962",
+      "count": 288,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_13379641520317788962_288x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "9235109859180930804",
+      "count": 287,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_9235109859180930804_287x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "2574248020462547666",
+      "count": 279,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_2574248020462547666_279x.md",
+      "type": "STRUCTURAL_DUPLICATE"
+    },
+    {
+      "hash": "7397510394798749692",
+      "count": 240,
+      "canonical_module": null,
+      "canonical_line": null,
+      "proposal_file": "injections/shapehash_bridge/shapehash_7397510394798749692_240x.md",
+      "type": "SORRY_CERT_CLUSTER"
+    }
+  ]
+}

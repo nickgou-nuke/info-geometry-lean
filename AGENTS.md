@@ -103,3 +103,12 @@ When formalizing the cohomological shadow of the Amplituhedron or the Bost-Conne
    * **BCFW Recursion** = The mixed Arnold-Cohen relations (`ω₁₂ ∧ ω₂₃ + ω₂₃ ∧ ω₃₁ + ω₃₁ ∧ ω₁₂ = 0`).
    * **On-Shell Factorization** = The Klein quadric boundary ($Q = 0$) represented by nilpotent chiral Cuntz generators ($S_\pm^2 = 0$).
    * **All-Loop Integrand / Amplituhedron Volume** = The Riemann Zeta partition function evaluated by the Bost-Connes KMS state.
+
+## The Hive Memory (ArangoDB RAG)
+The AI agent has its own persistent "Hive Memory" ArangoDB container running on port `8540`.
+- **Address**: `http://localhost:8540`
+- **Database**: `hive_memory`
+- **Credentials**: `root` / `hive_brain`
+- **Collections**: `Thoughts` (Document), `CausalLinks` (Edge)
+- **Function**: Contains the complete JSONL transcript DAG of all past agent thoughts, generated code, and reasoning steps.
+- **Action**: When starting a new session or encountering a forgotten concept, the agent should connect to this ArangoDB instance using `python-arango` or write AQL queries to retrieve its old memories and code from previous transcripts. The memory population script is at `scratch/populate_arangodb.py`.

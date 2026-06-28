@@ -311,8 +311,8 @@ quadratic Casimir datum, not a bare centrality postulate.
 -/
 def ConstructiveCasimirOwnerTarget
     (A ι : Type*) [Ring A] [Fintype ι] : Prop :=
-  Nonempty (VerifiedQuadraticCasimir A ι) →
-    Nonempty (IndividuatedCasimir A)
+  ∀ C : VerifiedQuadraticCasimir A ι,
+    IsCentral C.element ∧ IsUnitConjugationInvariant C.element
 
 /--
 The owner target is constructively discharged.
@@ -320,8 +320,7 @@ The owner target is constructively discharged.
 theorem constructiveCasimirOwnerTarget
     (A ι : Type*) [Ring A] [Fintype ι] :
     ConstructiveCasimirOwnerTarget A ι := by
-  intro h
-  rcases h with ⟨C⟩
-  exact ⟨C.toIndividuatedCasimir⟩
+  intro C
+  exact ⟨C.isCentral, C.unitConjugationInvariant⟩
 
 end InfoGeometry.OperatorAlgebra.ConstructiveCasimir

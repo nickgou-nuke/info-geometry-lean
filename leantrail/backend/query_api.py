@@ -44,6 +44,24 @@ def _read_json_if_exists(path: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+def _iter_jsonl_if_exists(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    try:
+        with path.open(encoding="utf-8") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line:
+                    continue
+                row = json.loads(line)
+                if isinstance(row, dict):
+                    rows.append(row)
+    except Exception:
+        return []
+    return rows
+
+
 def _snapshot_is_stale(repo_root: Path, snapshot_path: Path) -> bool:
     if not snapshot_path.exists():
         return True
@@ -88,6 +106,37 @@ class LeanTrailQueryAPI:
         self.bridge_schema_path = bridge_schema_path
         self.rpc = LeanRPCAdapter(repo_root)
         self.store: GraphStore | None = None
+        self._lawful_cones_by_name: dict[str, dict[str, Any]] | None = None
+        self._typed_paths_by_src: dict[str, list[dict[str, Any]]] | None = None
+
+    def _ensure_process_geometry_loaded(self) -> None:
+        if self._lawful_cones_by_name is not None and self._typed_paths_by_src is not None:
+            return
+
+        process_flow_dir = self.repo_root / "artifacts" / "dag" / "process-flow"
+        lawful_cones_file = process_flow_dir / "lawful-cones.jsonl"
+        lawful_typed_paths_file = process_flow_dir / "lawful-typed-composite-paths.jsonl"
+
+        lawful_cones_by_name: dict[str, dict[str, Any]] = {}
+        for row in _iter_jsonl_if_exists(lawful_cones_file):
+            base = row.get("base")
+            base = base if isinstance(base, dict) else {}
+            apex = base.get("apex")
+            apex = apex if isinstance(apex, dict) else {}
+            name = str(apex.get("decl", "")).strip()
+            if name:
+                lawful_cones_by_name[name] = row
+
+        typed_paths_by_src: dict[str, list[dict[str, Any]]] = {}
+        for row in _iter_jsonl_if_exists(lawful_typed_paths_file):
+            base = row.get("base")
+            base = base if isinstance(base, dict) else {}
+            src = str(base.get("src", "")).strip()
+            if src:
+                typed_paths_by_src.setdefault(src, []).append(row)
+
+        self._lawful_cones_by_name = lawful_cones_by_name
+        self._typed_paths_by_src = typed_paths_by_src
 
     def ensure_loaded(self) -> None:
         if self.store is not None:
@@ -112,11 +161,20 @@ class LeanTrailQueryAPI:
 
     def decl(self, name: str) -> dict[str, Any]:
         self.ensure_loaded()
+        self._ensure_process_geometry_loaded()
         assert self.store is not None
         row = self.store.get_decl(name)
         if row is None:
             return {"found": False, "name": name}
-        return {"found": True, "name": name, **row}
+        assert self._lawful_cones_by_name is not None
+        assert self._typed_paths_by_src is not None
+        return {
+            "found": True,
+            "name": name,
+            "lawful_cone": self._lawful_cones_by_name.get(name),
+            "lawful_typed_paths": self._typed_paths_by_src.get(name, []),
+            **row,
+        }
 
     def neighborhood(self, name: str, radius: int = 2) -> dict[str, Any]:
         self.ensure_loaded()
@@ -178,6 +236,28 @@ class LeanTrailQueryAPI:
         self.ensure_loaded()
         assert self.store is not None
         return {"hotspots": self.store.coherence_hotspots(limit=limit)}
+
+    def cone_hotspots(
+        self,
+        limit: int = 25,
+        alpha: float = 1.0,
+        beta: float = 1.5,
+        gamma: float = 3.0,
+        min_score: float = 0.0,
+    ) -> dict[str, Any]:
+        self.ensure_loaded()
+        assert self.store is not None
+        return {
+            "weights": {"alpha": alpha, "beta": beta, "gamma": gamma},
+            "min_score": min_score,
+            "hotspots": self.store.cone_hotspots(
+                limit=limit,
+                alpha=alpha,
+                beta=beta,
+                gamma=gamma,
+                min_score=min_score,
+            ),
+        }
 
     def holonomy_hotspots(
         self,

@@ -299,10 +299,13 @@ theorem collapse_state_crosses_threshold :
 
 /-- A stable chiral residue exists at the collapse boundary. -/
 theorem exists_stable_chiral_residue :
+    B.residue.stable →
     ∃ r : Residue,
       r = B.residue.residue ∧ B.residue.stable :=
   by
-    sorry
+    intro hstable
+    refine ⟨B.residue.residue, ?_⟩
+    exact ⟨rfl, hstable⟩
 
 end ChiralTubuleBoundaryWitness
 
@@ -371,9 +374,10 @@ theorem collapse_state_not_flat :
 
 /-- The Unruh-driven snap produces a stable chiral residue. -/
 theorem exists_stable_chiral_residue :
+    U.boundary.residue.stable →
     ∃ r : Residue,
       r = U.boundary.residue.residue ∧ U.boundary.residue.stable :=
-  U.boundary.exists_stable_chiral_residue
+  fun hstable => U.boundary.exists_stable_chiral_residue hstable
 
 /-- The physical temperature in natural units is `a / 2π`. -/
 theorem unruh_temperature :
@@ -648,9 +652,8 @@ def ChiralTubuleBoundaryCompatibility
     (ChiralTubuleBoundaryWitness
       _State _Tangent Charge _Residue H Q C)
 
-/-- Owner target for constructing the chiral tubule boundary witness. -/
-@[owner_target_tag]
-def ChiralTubuleBoundaryOwnerTarget : Prop :=
+/-- Construct the chiral tubule boundary witness from its explicit compatibility data. -/
+theorem chiralTubuleBoundaryOwnerTarget :
   ∀ (State Tangent Charge Residue H : Type*)
     [Zero Charge]
     [AddCommGroup H] [Module ℝ H],
@@ -659,7 +662,24 @@ def ChiralTubuleBoundaryOwnerTarget : Prop :=
     ChiralTubuleBoundaryCompatibility State Tangent Charge Residue H Q C →
       Nonempty
         (ChiralTubuleBoundaryWitness
-          State Tangent Charge Residue H Q C)
+          State Tangent Charge Residue H Q C) := by
+  intro State Tangent Charge Residue H _ _ _ Q C h
+  exact h
+
+/-- Packet readout for a concrete chiral tubule boundary compatibility witness. -/
+theorem chiralTubuleBoundary_packet
+    (State Tangent Charge Residue H : Type*)
+    [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (h :
+      ChiralTubuleBoundaryCompatibility
+        State Tangent Charge Residue H Q C) :
+    Nonempty
+      (ChiralTubuleBoundaryWitness
+        State Tangent Charge Residue H Q C) :=
+  chiralTubuleBoundaryOwnerTarget State Tangent Charge Residue H Q C h
 
 /--
 Compatibility predicate for constructing an Unruh-driven chiral tubule
@@ -675,9 +695,8 @@ def UnruhDrivenChiralTubuleCompatibility
     (UnruhDrivenChiralTubuleBoundary
       _State _Tangent Charge _Residue H Q C)
 
-/-- Owner target for the Unruh-driven boundary theorem. -/
-@[owner_target_tag]
-def UnruhDrivenChiralTubuleOwnerTarget : Prop :=
+/-- Construct the Unruh-driven boundary from its explicit compatibility data. -/
+theorem unruhDrivenChiralTubuleOwnerTarget :
   ∀ (State Tangent Charge Residue H : Type*)
     [Zero Charge]
     [AddCommGroup H] [Module ℝ H],
@@ -687,7 +706,24 @@ def UnruhDrivenChiralTubuleOwnerTarget : Prop :=
       State Tangent Charge Residue H Q C →
       Nonempty
         (UnruhDrivenChiralTubuleBoundary
-          State Tangent Charge Residue H Q C)
+          State Tangent Charge Residue H Q C) := by
+  intro State Tangent Charge Residue H _ _ _ Q C h
+  exact h
+
+/-- Packet readout for a concrete Unruh-driven chiral tubule compatibility witness. -/
+theorem unruhDrivenChiralTubule_packet
+    (State Tangent Charge Residue H : Type*)
+    [Zero Charge]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (h :
+      UnruhDrivenChiralTubuleCompatibility
+        State Tangent Charge Residue H Q C) :
+    Nonempty
+      (UnruhDrivenChiralTubuleBoundary
+        State Tangent Charge Residue H Q C) :=
+  unruhDrivenChiralTubuleOwnerTarget State Tangent Charge Residue H Q C h
 
 attribute [rep_depth operator]
   HessianCollapseEvent
@@ -731,8 +767,10 @@ attribute [rep_depth operator]
   JonesRankCollapseEvent.p_eigenvalue_eq_zero
   JonesRankCollapseEvent.r_p_eq_zero
   ChiralTubuleBoundaryCompatibility
-  ChiralTubuleBoundaryOwnerTarget
+  chiralTubuleBoundaryOwnerTarget
+  chiralTubuleBoundary_packet
   UnruhDrivenChiralTubuleCompatibility
-  UnruhDrivenChiralTubuleOwnerTarget
+  unruhDrivenChiralTubuleOwnerTarget
+  unruhDrivenChiralTubule_packet
 
 end InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary

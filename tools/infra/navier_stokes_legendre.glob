@@ -1,0 +1,4 @@
+DIGEST df79889b4ad495a2372a384f488f4ea1
+Fnavier_stokes_legendre
+R325:329 Stdlib.Reals.Reals <> <> lib
+R347:350 Stdlib.setoid_ring.Ring <> <> lib

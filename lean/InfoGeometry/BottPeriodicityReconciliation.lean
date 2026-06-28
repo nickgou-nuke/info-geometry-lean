@@ -3,6 +3,9 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic.Ring
+import InfoGeometryCore.Basic
+
+open InfoGeometryCore
 
 /-!
 # Bott Periodicity Reconciliation: CL(1,1)⁵ = CL(5,5) → O(5,5) → PO(5,5;ℚ)
@@ -68,9 +71,9 @@ e₁ with e₁² = 1 and e₂ with e₂² = -1. These are represented in M₂(�
 The real Pauli algebra {I₂, σ₁, ε, σ₃} spans all of M₂(ℝ).
 -/
 def I2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 1]
-def sigma1 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
+abbrev sigma1 := sigma1R
 def epsilon : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; -1, 0]
-def sigma3 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
+abbrev sigma3 := sigma3R
 
 /--
 **CL(1,1) generators**: e₁² = I, e₂² = -I, {e₁, e₂} = 0.
@@ -80,9 +83,9 @@ theorem cl11_generator_relations :
     epsilon * epsilon = -I2 ∧
     sigma1 * epsilon + epsilon * sigma1 = 0 := by
   refine ⟨?_, ?_, ?_⟩
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [sigma1, I2, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [epsilon, I2, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [sigma1, epsilon]
+  · ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [sigma1R, I2, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [epsilon, I2, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;> norm_num [sigma1R, epsilon, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 **CL(1,1) ≅ M₂(ℝ)**: the four basis matrices {I₂, σ₁, ε, σ₃} form a
@@ -123,17 +126,17 @@ theorem cl11_basis_spans_M2 (A : Matrix (Fin 2) (Fin 2) ℝ) :
   ext i j
   fin_cases i <;> fin_cases j
   · -- (0,0): (A₀₀+A₁₁)/2 + (A₀₀-A₁₁)/2 = A₀₀
-    simp [I2, sigma1, epsilon, sigma3, Matrix.add_apply]
-    ring_nf
+    simp [I2, sigma1R, epsilon, sigma3R, Matrix.add_apply, Matrix.smul_apply]
+    ring
   · -- (0,1): (A₀₁+A₁₀)/2 + (A₀₁-A₁₀)/2 = A₀₁
-    simp [I2, sigma1, epsilon, sigma3, Matrix.add_apply]
-    ring_nf
+    simp [I2, sigma1R, epsilon, sigma3R, Matrix.add_apply, Matrix.smul_apply]
+    ring
   · -- (1,0): (A₀₁+A₁₀)/2 - (A₀₁-A₁₀)/2 = A₁₀
-    simp [I2, sigma1, epsilon, sigma3, Matrix.add_apply]
-    ring_nf
+    simp [I2, sigma1R, epsilon, sigma3R, Matrix.add_apply, Matrix.smul_apply]
+    ring
   · -- (1,1): (A₀₀+A₁₁)/2 - (A₀₀-A₁₁)/2 = A₁₁
-    simp [I2, sigma1, epsilon, sigma3, Matrix.add_apply]
-    ring_nf
+    simp [I2, sigma1R, epsilon, sigma3R, Matrix.add_apply, Matrix.smul_apply]
+    ring
 
 /-! ### 2. Bott Periodicity: CL(1,1)⁵ = CL(5,5) → O(5,5) → PO(5,5;ℚ) -/
 

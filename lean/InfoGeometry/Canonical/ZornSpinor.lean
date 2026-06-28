@@ -67,13 +67,26 @@ def cross (v1 v2 : Fin 3 → R) : Fin 3 → R :=
 Zorn matrix multiplication.
 This defines the split-octonion algebra structure.
 -/
+def mul (z1 z2 : ZornMatrix R) : ZornMatrix R := {
+  a := z1.a * z2.a + dot z1.x z2.y
+  b := z1.b * z2.b + dot z1.y z2.x
+  x := z1.a • z2.x + z2.b • z1.x - cross z1.y z2.y
+  y := z1.b • z2.y + z2.a • z1.y + cross z1.x z2.x
+}
+
 instance : Mul (ZornMatrix R) where
-  mul z1 z2 := {
-    a := z1.a * z2.a + dot z1.x z2.y
-    b := z1.b * z2.b + dot z1.y z2.x
-    x := z1.a • z2.x + z2.b • z1.x - cross z1.y z2.y
-    y := z1.b • z2.y + z2.a • z1.y + cross z1.x z2.x
-  }
+  mul := mul
+
+@[simp] theorem mul_def (z1 z2 : ZornMatrix R) : z1 * z2 = mul z1 z2 := rfl
+
+@[simp] theorem add_def (z1 z2 : ZornMatrix R) :
+  z1 + z2 = { a := z1.a + z2.a, b := z1.b + z2.b, x := z1.x + z2.x, y := z1.y + z2.y } := rfl
+
+@[simp] theorem sub_def (z1 z2 : ZornMatrix R) :
+  z1 - z2 = { a := z1.a - z2.a, b := z1.b - z2.b, x := z1.x - z2.x, y := z1.y - z2.y } := rfl
+
+@[simp] theorem neg_def (z : ZornMatrix R) :
+  -z = { a := -z.a, b := -z.b, x := -z.x, y := -z.y } := rfl
 
 /-- Zorn matrix identity. -/
 instance : One (ZornMatrix R) where

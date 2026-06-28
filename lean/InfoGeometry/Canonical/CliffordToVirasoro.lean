@@ -52,17 +52,18 @@ Any proved Heisenberg current representation gives the split-current witness,
 the packaged current interface, the Sugawara morphism, and the Virasoro
 representation.
 -/
-theorem clifford_current_to_virasoro_sugawara
+noncomputable def clifford_current_to_virasoro_sugawara
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (H : CurrentHeisenbergRep 𝕜 V) :
-    Nonempty (SplitCliffordHeisenbergWitness 𝕜 V) ∧
-    Nonempty (CurrentHeisenbergRep 𝕜 V) ∧
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) ∧
-    Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) := by
+    SplitCliffordHeisenbergWitness 𝕜 V ×
+      CurrentHeisenbergRep 𝕜 V ×
+        CurrentSugawaraMorphism 𝕜 V ×
+          (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V := construct_heisenberg_witness H
-  exact ⟨⟨W⟩, ⟨H⟩, splitClifford_to_currentSugawaraMorphism W,
-    splitClifford_to_sugawaraRepresentation W⟩
+  exact
+    ⟨W, H, splitClifford_to_currentSugawaraMorphism W,
+      splitClifford_to_sugawaraRepresentation W⟩
 
 /-! ### 3. Charged Fock specialization -/
 
@@ -72,20 +73,27 @@ def charged_fock_space_witness
     SplitCliffordHeisenbergWitness 𝕜 (ChargedFockSpace 𝕜 α) :=
   construct_heisenberg_witness (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
-/-- Propositional form: a current witness for the charged Fock space exists. -/
-theorem charged_fock_space_admits_witness
+/-- The charged Fock witness has the expected current readout. -/
+theorem charged_fock_space_witness_readout
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (SplitCliffordHeisenbergWitness 𝕜 (ChargedFockSpace 𝕜 α)) :=
-  ⟨charged_fock_space_witness 𝕜 α⟩
+    (charged_fock_space_witness 𝕜 α).J = (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
+      ∧ (charged_fock_space_witness 𝕜 α).trunc =
+        (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+      ∧ ∀ m n,
+          ((charged_fock_space_witness 𝕜 α).J m).commutator
+              ((charged_fock_space_witness 𝕜 α).J n) =
+            if m + n = 0 then (m : 𝕜) •
+              (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α) else 0 := by
+  exact ⟨rfl, rfl, (charged_fock_space_witness 𝕜 α).comm⟩
 
 /-- The full current/Sugawara/Virasoro pipeline works for the charged Fock space. -/
-theorem charged_fock_space_full_pipeline
+noncomputable def charged_fock_space_full_pipeline
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (SplitCliffordHeisenbergWitness 𝕜 (ChargedFockSpace 𝕜 α)) ∧
-    Nonempty (CurrentHeisenbergRep 𝕜 (ChargedFockSpace 𝕜 α)) ∧
-    Nonempty (CurrentSugawaraMorphism 𝕜 (ChargedFockSpace 𝕜 α)) ∧
-    Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
-      (ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α)) :=
+    SplitCliffordHeisenbergWitness 𝕜 (ChargedFockSpace 𝕜 α) ×
+      CurrentHeisenbergRep 𝕜 (ChargedFockSpace 𝕜 α) ×
+        CurrentSugawaraMorphism 𝕜 (ChargedFockSpace 𝕜 α) ×
+          (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
+            (ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α)) :=
   clifford_current_to_virasoro_sugawara
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 

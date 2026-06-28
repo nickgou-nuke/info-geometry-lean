@@ -75,23 +75,20 @@ Now a pure data structure.
 -/
 @[rep_depth operator]
 structure UsesLightConeAffineBridgeWitness where
-  -- DEBT_ID: LCSC-ZD-001
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial witness for lightcone/Sugawara bridge compatibility
-  dummy : PUnit
+  law : S.UsesLightConeAffineBridge
 
-/-- Recover the compatibility law as honest debt. -/
+/-- Recover the compatibility law from the proof-carrying witness. -/
 theorem UsesLightConeAffineBridgeWitness.use
-    (W : UsesLightConeAffineBridgeWitness) :
+    (W : S.UsesLightConeAffineBridgeWitness) :
     S.UsesLightConeAffineBridge := by
-  exact S.uses_lightcone_affine_bridge
+  exact W.law
 
 /-- Recover the compatibility proposition from its witness packet. -/
 @[rep_depth operator]
 theorem usesLightConeAffineBridge_of_witness
-    (W : UsesLightConeAffineBridgeWitness) :
+    (W : S.UsesLightConeAffineBridgeWitness) :
     S.UsesLightConeAffineBridge :=
-  W.use S
+  UsesLightConeAffineBridgeWitness.use S W
 
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
@@ -241,7 +238,7 @@ consuming a proof-carrying witness packet.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
-    (W : UsesLightConeAffineBridgeWitness)
+    (W : S.UsesLightConeAffineBridgeWitness)
     (m n : ℤ) :
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -251,7 +248,8 @@ theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
   intro hact
-  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use S) m n hact
+  exact S.sugawara_virasoro_acts_on_uPlusCurrent
+    (UsesLightConeAffineBridgeWitness.use S W) m n hact
 
 /--
 Under the compatibility predicate, the supplied Sugawara Virasoro modes act on

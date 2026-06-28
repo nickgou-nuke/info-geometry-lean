@@ -49,13 +49,12 @@ barrier-critical theorem for the barrier owner is supplied.
 -/
 @[bridge_target_tag, rep_depth operator]
 theorem zetaPeriod_zero_implies_criticalLine
-    (hcritical : C.barrier.zeros_are_barrier_critical)
     (s : ℂ)
     (hz : C.brane.brane.centralCharge.zetaPeriod s = 0) :
     OnCriticalLine s := by
   have hxi : C.barrier.xi s = 0 := by
     simpa [C.zetaPeriod_eq_xi s] using hz
   exact SelfConcordantZetaBarrier.variationalRH_implies_criticalLine
-    C.barrier hcritical s hxi
+    C.barrier s hxi
 
 end InfoGeometry.Canonical.SelfConcordantZetaBarrierZetaPeriodBridge

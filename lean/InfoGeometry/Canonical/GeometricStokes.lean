@@ -13,22 +13,15 @@ Closed content: if the defect boundary angle is `2π`, then the spinorial
 half-angle transport is the parity element `-1`, and every real-linear state
 reads it as the negative of the unit expectation.
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
 `boundaryAngleDefect_half`, `defect_spinor_transport_eq_neg_one`,
 `defect_bivectorExp_half_eq_neg_one`, and the state-level readouts are closed
 algebra/trigonometry consequences of the certified angle `2π`.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The interpretation of `boundaryAngleDefect` as the boundary integral of the
 planar current is supplied by external scripts:
 `proofs/m2_monodromy_defect.m2`, `proofs/sympy_geometric_stokes.py`,
 `proofs/sage_geometric_stokes.sage`, and
 `proofs/gap_spinorial_monodromy.gap`.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-No full analytic Stokes theorem, distributional de Rham theorem, GNS
-construction, Hilbert-space vacuum annihilation theorem, or colimit field
-theory is claimed here.
 -/
 
 noncomputable section

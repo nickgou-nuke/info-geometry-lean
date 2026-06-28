@@ -106,23 +106,17 @@ theorem pauli_anticommutation_packet :
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [sigma1, sigma2,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-        Matrix.mul_apply, Fin.sum_univ_two]
+      norm_num [sigma1, sigma2, sigma3, InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C,
+        InfoGeometryCore.sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [sigma2, sigma3,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3,
-        Matrix.mul_apply, Fin.sum_univ_two]
+      norm_num [sigma1, sigma2, sigma3, InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C,
+        InfoGeometryCore.sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [sigma1, sigma3,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1,
-        _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3,
-        Matrix.mul_apply, Fin.sum_univ_two]
+      norm_num [sigma1, sigma2, sigma3, InfoGeometryCore.sigma1C, InfoGeometryCore.sigma2C,
+        InfoGeometryCore.sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
 
 /-! ## Matrix metric equivalence -/
 

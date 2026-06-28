@@ -1,0 +1,19 @@
+DIGEST 7734e0df8f4b3cbd2427b31e206b099d
+FWallpaperRepresentations17
+R27:31 Stdlib.Reals.Reals <> <> lib
+R33:37 Stdlib.micromega.Psatz <> <> lib
+def 52:72 <> wallpaper_group_count
+R76:78 Corelib.Init.Datatypes <> nat ind
+def 98:112 <> p4m_irrep_total
+R116:118 Corelib.Init.Datatypes <> nat ind
+def 137:151 <> p6m_irrep_total
+R155:157 Corelib.Init.Datatypes <> nat ind
+prf 174:197 <> wallpaper_group_count_ok
+R222:224 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R201:221 WallpaperRepresentations17 <> wallpaper_group_count def
+prf 267:284 <> p4m_irrep_total_ok
+R303:305 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R288:302 WallpaperRepresentations17 <> p4m_irrep_total def
+prf 347:364 <> p6m_irrep_total_ok
+R383:385 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R368:382 WallpaperRepresentations17 <> p6m_irrep_total def

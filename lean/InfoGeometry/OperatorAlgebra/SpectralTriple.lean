@@ -179,20 +179,46 @@ end ChiralGrading
 /-! ## 5. Spectral generator -/
 
 /--
-Bounded placeholder for a spectral generator.
+Bounded spectral generator.
 
-A future closed-operator API should replace `D : EndR H` by a closed,
-densely-defined self-adjoint operator with bounded commutators.
+The carrier is a bounded real-linear endomorphism.  Closed unbounded operators
+and compact-resolvent data are intentionally kept as explicit proof obligations.
 -/
 structure SpectralGenerator
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   D : EndR H
 
-  /-- Placeholder for self-adjointness or Krein-self-adjointness. -/
+  /-- Self-adjointness or Krein-self-adjointness obligation for concrete models. -/
   selfAdjoint : Prop
 
-  /-- Placeholder for compact-resolvent/summability data. -/
+  /-- Compact-resolvent or summability obligation for concrete models. -/
   compactResolventOrSummability : Prop
+
+namespace SpectralGenerator
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (D : SpectralGenerator H)
+
+@[simp]
+theorem comp_id :
+    D.D.comp (ContinuousLinearMap.id ℝ H) = D.D := by
+  ext x
+  rfl
+
+@[simp]
+theorem id_comp :
+    (ContinuousLinearMap.id ℝ H).comp D.D = D.D := by
+  ext x
+  rfl
+
+@[simp]
+theorem commutator_self :
+    commutator D.D D.D = 0 := by
+  ext x
+  simp [commutator]
+
+end SpectralGenerator
 
 /-- The spectral generator is odd relative to a chiral grading. -/
 def DiracOdd

@@ -1,0 +1,5 @@
+DIGEST a8ea55ed9d930464c27fa7a5df910a43
+Ftest19
+R15:19 Stdlib.Reals.Reals <> <> lib
+prf 28:31 <> test
+R35:38 Corelib.Init.Logic <> True ind

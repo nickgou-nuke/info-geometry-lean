@@ -180,7 +180,7 @@ end CantorCuntzBasis
 
 section HilbertOrbit
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 /--
 Orbit family attached to a Hilbert basis on binary words.
@@ -211,7 +211,7 @@ theorem orbit_orthogonal_of_distinct_words
 @[rep_depth operator]
 theorem orbit_orthonormal (b : HilbertBasis CantorCuntzBasis.BinaryWord ℂ E) :
     Orthonormal ℂ (orbitHilbert b) := by
-  simpa [orbitHilbert] using b.orthonormal
+  exact b.orthonormal
 
 /-- The Hilbert-basis orbit is complete in the Hilbert-space sense. -/
 @[rep_depth operator]

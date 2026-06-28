@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
+open InfoGeometryCore
 /-!
 # Finite Pauli `B₃` braid shadow
 
@@ -25,16 +27,16 @@ namespace InfoGeometry.Canonical.PauliBraidB3
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
 @[simp] lemma I_sq : Complex.I ^ 2 = (-1 : ℂ) := by
-  rw [pow_two, Complex.I_mul_I]
+  simp
 
 /-- First Pauli matrix. -/
-def sigma1 : Mat2C := !![(0 : ℂ), 1; 1, 0]
+abbrev sigma1 := sigma1C
 
 /-- Second Pauli matrix. -/
-def sigma2 : Mat2C := !![(0 : ℂ), -Complex.I; Complex.I, 0]
+abbrev sigma2 := sigma2C
 
 /-- Third Pauli matrix. -/
-def sigma3 : Mat2C := !![(1 : ℂ), 0; 0, -1]
+abbrev sigma3 := sigma3C
 
 /-- Unnormalised Pauli braid generator `1 + i σ₁`.
 
@@ -48,43 +50,41 @@ def pauliBraidY : Mat2C := 1 + Complex.I • sigma2
 
 @[simp] theorem sigma1_sq : sigma1 * sigma1 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [sigma1, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [sigma1C, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf
 
 @[simp] theorem sigma2_sq : sigma2 * sigma2 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [sigma2, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
+    simp [sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
 
 @[simp] theorem sigma3_sq : sigma3 * sigma3 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [sigma3C, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf
 
 /-- Pauli anticommutation in the `σ₁, σ₂` plane. -/
 theorem sigma1_sigma2_anticomm : sigma1 * sigma2 = -(sigma2 * sigma1) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [sigma1, sigma2, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [sigma1C, sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
 
 /-- The concrete product `σ₁σ₂ = i σ₃`. -/
 theorem sigma1_mul_sigma2 : sigma1 * sigma2 = Complex.I • sigma3 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [sigma1, sigma2, sigma3, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [sigma1C, sigma2C, sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
 
 /-- Exact unnormalised Pauli braid relation. -/
 theorem pauli_braid_relation :
     pauliBraidX * pauliBraidY * pauliBraidX =
       pauliBraidY * pauliBraidX * pauliBraidY := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [pauliBraidX, pauliBraidY, sigma1, sigma2,
-      Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I] <;> ring_nf <;>
-    simp <;> ring_nf
+    simp [pauliBraidX, pauliBraidY, sigma1C, sigma2C, sigma3C,
+      Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf <;> rw [I_sq] <;> ring_nf
 
 /-- Exact triple product for the unnormalised Pauli braid generators. -/
 theorem pauli_braid_triple_product :
     pauliBraidX * pauliBraidY * pauliBraidX =
       (2 * Complex.I : ℂ) • (sigma1 + sigma2) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [pauliBraidX, pauliBraidY, sigma1, sigma2,
-      Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I] <;> ring_nf <;>
-    simp <;> ring_nf
+    simp [pauliBraidX, pauliBraidY, sigma1C, sigma2C, sigma3C,
+      Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf <;> rw [I_sq] <;> ring_nf
 
 /-- The two finite identities packaged as a local `B₃` braid shadow. -/
 theorem pauli_b3_braid_shadow_packet :

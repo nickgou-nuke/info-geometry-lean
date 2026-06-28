@@ -1,0 +1,38 @@
+{
+  "source": "Thomas Andersson MSc Thesis 1999 (GAMMASPHERE data)",
+  "system": "A=39 Mirror Pair (39K, 39Ca)",
+  "reaction": "28Si + 16O -> 44Ti -> 39K (1a1p) / 39Ca (1a1n)",
+  "high_spin_states_39K": [
+    {
+      "spin_parity": "15/2-",
+      "energy_keV": 7140.4,
+      "configuration": "1p-2h"
+    },
+    {
+      "spin_parity": "19/2-",
+      "energy_keV": 8027.4,
+      "configuration": "1p-2h"
+    },
+    {
+      "spin_parity": "23/2-",
+      "energy_keV": 10997.0,
+      "configuration": "1p-2h"
+    },
+    {
+      "spin_parity": "19/2+",
+      "energy_keV": 10383.0,
+      "configuration": "2p-3h"
+    },
+    {
+      "spin_parity": "23/2+",
+      "energy_keV": 13776.4,
+      "configuration": "2p-3h"
+    },
+    {
+      "spin_parity": "27/2+",
+      "energy_keV": 14060.6,
+      "configuration": "2p-3h"
+    }
+  ],
+  "structural_notes": "The negative parity high-spin states (e.g. 19/2-, 23/2-) drive the downsloping CED trend due to spatial wavefunction expansion from proton excitations across the N=Z=20 shell gap."
+}

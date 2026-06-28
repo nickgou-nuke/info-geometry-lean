@@ -15,19 +15,9 @@ are constructed here.
 
 It intentionally does not assert the existence of a Hilbert-space completion, a
 C*-completion, an infinite inductive limit, an anomaly index, or Macaulay2 de
-Rham weights.
-
-#### BUCKET 1: CLOSED ALGEBRAIC / QUOTIENT READOUTS
-* CAR anticommutator projection lemmas for the supplied algebraic data.
-* Diagonal/off-diagonal specialization of the `uᵢ vⱼ` anticommutator.
-* Valid abstract-GNS quotient identities derived from the declared null law,
-  including `souriau_vacuum_annihilated`.
-
-#### BUCKET 2: OPEN CLOSURE DEBT
-* Construct the CAR C*-completion from the algebraic tower.
-* Construct the infinite-limit theorem mirroring `transition_is_isometry`.
-* Define the Drazin anomaly index as an actual real-valued limit object.
-* Prove the explicit de Rham-weight convergence sequence to that limit invariant.
+Rham weights.  The closed statements here are exactly the CAR anticommutator
+projection lemmas and the abstract-GNS quotient identities derived from the
+declared null law, including `souriau_vacuum_annihilated`.
 -/
 
 noncomputable section
@@ -91,9 +81,9 @@ section AbstractGNSQuotientReadout
 
 variable [Algebra ℝ A] [StarRing A] [StarModule ℝ A]
 
-/-- The Souriau state interface on the CAR algebra, wrapping the repository's
-existing abstract GNS state.  This is only a state wrapper, not a representation
-or completed GNS Hilbert space. -/
+/-- The Souriau state interface on the CAR algebra, carrying the repository's
+existing abstract GNS state.  This is only state data, not a representation or
+completed GNS Hilbert space. -/
 structure SouriauState (car : CARAlgebra A) where
   functional : AbstractGNSState A
   vacuum_law : ∀ i, functional.eval (star (car.v i) * car.v i) = 0
@@ -116,7 +106,7 @@ lemma souriau_annihilator_state_pairing_zero
     (souriau_annihilator_mem_gnsNullSet s i)
 
 /--
-A valid quotient-level identity for the CAR tower inside an abstract GNS wrapper.
+A valid quotient-level identity for the CAR tower inside abstract GNS state data.
 It says the representative `car.v i * 1` is equal to zero in
 `AbstractGNSState.gnsQuotient` when its quadratic state norm is zero.
 This is not a representation theorem and defines no operator action.

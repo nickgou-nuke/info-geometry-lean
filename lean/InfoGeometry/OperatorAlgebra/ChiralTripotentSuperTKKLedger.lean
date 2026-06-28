@@ -1,6 +1,7 @@
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometryCore.Basic
 
 /-!
 # Chiral / tripotent / Super-TKK hierarchy ledger
@@ -57,25 +58,30 @@ theorem chiral_carrier_packet :
 
 /-- The zero branch is the tripotent defect/kernel branch in the finite classifier. -/
 theorem tripotent_zero_branch_packet :
-    TripotentState.toInt TripotentState.zero = 0 ∧
-      TripotentState.pZero TripotentState.zero = 1 ∧
-      TripotentState.pPos TripotentState.zero = 0 ∧
-      TripotentState.pNeg TripotentState.zero = 0 := by
-  simp [TripotentState.toInt, TripotentState.pZero, TripotentState.pPos,
-    TripotentState.pNeg]
+    InfoGeometryCore.TripotentState.toInt InfoGeometryCore.TripotentState.zero = 0 ∧
+      InfoGeometryCore.TripotentState.pZero InfoGeometryCore.TripotentState.zero = 1 ∧
+      InfoGeometryCore.TripotentState.pPos InfoGeometryCore.TripotentState.zero = 0 ∧
+      InfoGeometryCore.TripotentState.pNeg InfoGeometryCore.TripotentState.zero = 0 := by
+  simp [InfoGeometryCore.TripotentState.toInt, InfoGeometryCore.TripotentState.pZero,
+    InfoGeometryCore.TripotentState.pPos, InfoGeometryCore.TripotentState.pNeg]
 
 /-- The finite tripotent classifier carries `T³=T` and projector partition laws. -/
 theorem tripotent_classifier_packet :
-    (∀ s : TripotentState, TripotentState.toInt s ^ 3 = TripotentState.toInt s) ∧
-      (∀ s : TripotentState,
-        TripotentState.pNeg s + TripotentState.pZero s + TripotentState.pPos s = 1) ∧
-      (∀ s : TripotentState,
-        TripotentState.pNeg s * TripotentState.pNeg s = TripotentState.pNeg s ∧
-          TripotentState.pZero s * TripotentState.pZero s = TripotentState.pZero s ∧
-          TripotentState.pPos s * TripotentState.pPos s = TripotentState.pPos s) := by
-  exact ⟨TripotentState.cube_eq_self,
-    TripotentState.trifactor_projector_partition,
-    TripotentState.trifactor_projector_idempotent⟩
+    (∀ s : InfoGeometryCore.TripotentState,
+        InfoGeometryCore.TripotentState.toInt s ^ 3 = InfoGeometryCore.TripotentState.toInt s) ∧
+      (∀ s : InfoGeometryCore.TripotentState,
+        InfoGeometryCore.TripotentState.pNeg s + InfoGeometryCore.TripotentState.pZero s +
+            InfoGeometryCore.TripotentState.pPos s = 1) ∧
+      (∀ s : InfoGeometryCore.TripotentState,
+        InfoGeometryCore.TripotentState.pNeg s * InfoGeometryCore.TripotentState.pNeg s =
+            InfoGeometryCore.TripotentState.pNeg s ∧
+          InfoGeometryCore.TripotentState.pZero s * InfoGeometryCore.TripotentState.pZero s =
+            InfoGeometryCore.TripotentState.pZero s ∧
+          InfoGeometryCore.TripotentState.pPos s * InfoGeometryCore.TripotentState.pPos s =
+            InfoGeometryCore.TripotentState.pPos s) := by
+  exact ⟨InfoGeometryCore.TripotentState.cube_eq_self,
+    InfoGeometryCore.TripotentState.trifactor_projector_partition,
+    InfoGeometryCore.TripotentState.trifactor_projector_idempotent⟩
 
 /-! ## Super-TKK five-grade routing -/
 
@@ -129,15 +135,16 @@ theorem chiral_tripotent_super_tkk_hierarchy_packet
     (hZ₂ : Z₂ ∈ G.gZero)
     (hP₂ : P₂ ∈ G.gPosTwo)
     (hN₂ : N₂ ∈ G.gNegTwo) :
-    (∀ s : TripotentState, TripotentState.toInt s ^ 3 = TripotentState.toInt s) ∧
-      TripotentState.toInt TripotentState.zero = 0 ∧
+    (∀ s : InfoGeometryCore.TripotentState,
+        InfoGeometryCore.TripotentState.toInt s ^ 3 = InfoGeometryCore.TripotentState.toInt s) ∧
+      InfoGeometryCore.TripotentState.toInt InfoGeometryCore.TripotentState.zero = 0 ∧
       ⁅Xminus, Xplus⁆ ∈ G.gZero ∧
       ⁅Xplus, Yplus⁆ ∈ G.gPosTwo ∧
       ⁅Xminus, Yminus⁆ ∈ G.gNegTwo ∧
       ⁅Z₁, Z₂⁆ ∈ G.gZero ∧
       ⁅Z₁, P₂⁆ ∈ G.gPosTwo ∧
       ⁅Z₁, N₂⁆ ∈ G.gNegTwo := by
-  exact ⟨TripotentState.cube_eq_self, rfl,
+  exact ⟨InfoGeometryCore.TripotentState.cube_eq_self, rfl,
     G.neg_one_pos_one_mem_zero hXm hXp,
     G.pos_one_pos_one_mem_pos_two hXp hYp,
     G.neg_one_neg_one_mem_neg_two hXm hYm,

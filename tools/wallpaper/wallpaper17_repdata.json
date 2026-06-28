@@ -1,0 +1,33 @@
+{
+  "point_groups": {
+    "C1": {"order": 1, "class_sizes": [1], "characters": [["1"]]},
+    "C2": {"order": 2, "class_sizes": [1, 1], "characters": [["1", "1"], ["1", "-1"]]},
+    "D1": {"order": 2, "class_sizes": [1, 1], "characters": [["1", "1"], ["1", "-1"]]},
+    "V4": {"order": 4, "class_sizes": [1, 1, 1, 1], "characters": [["1", "1", "1", "1"], ["1", "1", "-1", "-1"], ["1", "-1", "1", "-1"], ["1", "-1", "-1", "1"]]},
+    "C4": {"order": 4, "class_sizes": [1, 1, 1, 1], "characters": [["1", "1", "1", "1"], ["1", "i", "-1", "-i"], ["1", "-1", "1", "-1"], ["1", "-i", "-1", "i"]]},
+    "D4": {"order": 8, "class_sizes": [1, 1, 2, 2, 2], "characters": [["1", "1", "1", "1", "1"], ["1", "1", "1", "-1", "-1"], ["1", "1", "-1", "1", "-1"], ["1", "1", "-1", "-1", "1"], ["2", "-2", "0", "0", "0"]]},
+    "C3": {"order": 3, "class_sizes": [1, 1, 1], "characters": [["1", "1", "1"], ["1", "w3", "w3^2"], ["1", "w3^2", "w3"]]},
+    "D3": {"order": 6, "class_sizes": [1, 2, 3], "characters": [["1", "1", "1"], ["1", "1", "-1"], ["2", "-1", "0"]]},
+    "C6": {"order": 6, "class_sizes": [1, 1, 1, 1, 1, 1], "characters": [["1", "1", "1", "1", "1", "1"], ["1", "z6", "z6^2", "-1", "z6^4", "z6^5"], ["1", "z6^2", "z6^4", "1", "z6^2", "z6^4"], ["1", "-1", "1", "-1", "1", "-1"], ["1", "z6^4", "z6^2", "1", "z6^4", "z6^2"], ["1", "z6^5", "z6^4", "-1", "z6^2", "z6"]]},
+    "D6": {"order": 12, "class_sizes": [1, 1, 2, 2, 3, 3], "characters": [["1", "1", "1", "1", "1", "1"], ["1", "1", "1", "1", "-1", "-1"], ["1", "-1", "-1", "1", "1", "-1"], ["1", "-1", "-1", "1", "-1", "1"], ["2", "-2", "1", "-1", "0", "0"], ["2", "2", "-1", "-1", "0", "0"]]}
+  },
+  "orbit_samples": {
+    "p1": [{"k": "Gamma", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 1}],
+    "p2": [{"k": "Gamma", "stabilizer": "C2", "stabilizer_order": 2, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 2}],
+    "pm": [{"k": "Gamma", "stabilizer": "D1", "stabilizer_order": 2, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 2}],
+    "pg": [{"k": "Gamma", "stabilizer": "D1", "stabilizer_order": 2, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 2}],
+    "cm": [{"k": "Gamma", "stabilizer": "D1", "stabilizer_order": 2, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 2}],
+    "pmm": [{"k": "Gamma", "stabilizer": "V4", "stabilizer_order": 4, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 4}],
+    "pmg": [{"k": "Gamma", "stabilizer": "V4", "stabilizer_order": 4, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 4}],
+    "pgg": [{"k": "Gamma", "stabilizer": "V4", "stabilizer_order": 4, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 4}],
+    "cmm": [{"k": "Gamma", "stabilizer": "V4", "stabilizer_order": 4, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 4}],
+    "p4": [{"k": "Gamma", "stabilizer": "C4", "stabilizer_order": 4, "orbit_size": 1}, {"k": "X", "stabilizer": "C2", "stabilizer_order": 2, "orbit_size": 2}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 4}],
+    "p4m": [{"k": "Gamma", "stabilizer": "D4", "stabilizer_order": 8, "orbit_size": 1}, {"k": "X", "stabilizer": "D1", "stabilizer_order": 2, "orbit_size": 4}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 8}],
+    "p4g": [{"k": "Gamma", "stabilizer": "D4", "stabilizer_order": 8, "orbit_size": 1}, {"k": "X", "stabilizer": "D1", "stabilizer_order": 2, "orbit_size": 4}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 8}],
+    "p3": [{"k": "Gamma", "stabilizer": "C3", "stabilizer_order": 3, "orbit_size": 1}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 3}],
+    "p3m1": [{"k": "Gamma", "stabilizer": "D3", "stabilizer_order": 6, "orbit_size": 1}, {"k": "K", "stabilizer": "C3", "stabilizer_order": 3, "orbit_size": 2}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 6}],
+    "p31m": [{"k": "Gamma", "stabilizer": "D3", "stabilizer_order": 6, "orbit_size": 1}, {"k": "K", "stabilizer": "C3", "stabilizer_order": 3, "orbit_size": 2}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 6}],
+    "p6": [{"k": "Gamma", "stabilizer": "C6", "stabilizer_order": 6, "orbit_size": 1}, {"k": "K", "stabilizer": "C3", "stabilizer_order": 3, "orbit_size": 2}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 6}],
+    "p6m": [{"k": "Gamma", "stabilizer": "D6", "stabilizer_order": 12, "orbit_size": 1}, {"k": "K", "stabilizer": "D3", "stabilizer_order": 6, "orbit_size": 2}, {"k": "generic", "stabilizer": "C1", "stabilizer_order": 1, "orbit_size": 12}]
+  }
+}

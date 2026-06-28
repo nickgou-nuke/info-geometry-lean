@@ -116,10 +116,10 @@ theorem virasoro_central_commutes
 
 end ExceptionalAffineVirasoroBridge
 
-/-! ## 2. Owner target -/
+/-! ## 2. Bridge readout -/
 
 /--
-Owner target for the affine/Virasoro exceptional bridge.
+Affine/Virasoro exceptional bridge readout.
 
 This captures the precise slogan:
 
@@ -129,22 +129,26 @@ hidden grade-two memory in the exceptional ledger
 Virasoro/affine central charge readout on the helical boundary.
 ```
 -/
-@[owner_target_tag]
-def ExceptionalAffineVirasoroBridgeOwnerTarget : Prop :=
+theorem exceptionalAffineVirasoroBridgeOwnerTarget :
   ∀ (Finite Affine Vir State Charge : Type*)
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    [AddCommGroup Charge] [Module ℝ Charge],
+      [AddCommGroup Charge] [Module ℝ Charge],
   ∀ B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge,
   ∀ s : State,
-    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s
-
-/--
-The owner target follows from the supplied calibration witness.
--/
-theorem exceptionalAffineVirasoroBridgeOwnerTarget :
-    ExceptionalAffineVirasoroBridgeOwnerTarget := by
+    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s := by
   intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ B s
   exact B.centralCharge_eq_hiddenGradeMemory s
+
+/-- Packet readout for one exceptional affine/Virasoro bridge. -/
+theorem exceptionalAffineVirasoroBridge_packet
+    (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Charge] [Module ℝ Charge]
+    (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
+    (s : State) :
+    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s :=
+  exceptionalAffineVirasoroBridgeOwnerTarget Finite Affine Vir State Charge B s
 
 end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

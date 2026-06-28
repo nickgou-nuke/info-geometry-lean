@@ -4,40 +4,32 @@
 SageMath sketch of the Navier–Stokes–Legendre theorem.
 
 Mirrors the SymPy sketch but uses Sage's syntax.  The core idea is the
-same: illustrate the structure of the statement
-    Fenchel–Legendre gap = 0   <=>   div( u ) = 0
-by working out a concrete quadratic Lagrangian example and indicating
-how the general case would proceed.
+same: illustrate the equivalence between the vanishing Fenchel–Legendre
+gap and the divergence‑free condition for a quadratic Lagrangian.
 """
 
 # ----------------------------------------------------------------------
-# 1.  Basic symbols (using Sage's symbolic ring)
+# 1.  Basic symbols
 # ----------------------------------------------------------------------
-theta, eta = var('theta eta', domain='RR')
-x = var('x', domain='RR')
-X, Y = var('X Y', domain='RR')
+# Thermodynamic / Legendre variables
+theta, eta = var('theta eta', domain='real')
+
+# Spatial coordinates (for the fluid picture)
+X, Y = var('X Y', domain='real')
 
 # ----------------------------------------------------------------------
-# 2.  A concrete convex Lagrangian L(x)
+# 2.  Quadratic Lagrangian L(x) = x^2/2  (so L(theta) = theta^2/2)
 # ----------------------------------------------------------------------
-L = x^2 / 2          # L : R -> R,  L'(x) = x
-
-# ----------------------------------------------------------------------
-# 3.  Legendre‑Fenchel transform L★(η)
-# ----------------------------------------------------------------------
-# Solve L'(x) = eta  for x  (here: x = eta)
-x_star = solve(diff(L, x) - eta, x)[0]   # => eta
-L_star = simplify(x_star * eta - L.subs(x, x_star))
-# L_star = eta^2 / 2
-
-# ----------------------------------------------------------------------
-# 4.  Fenchel‑Legendre gap
-# ----------------------------------------------------------------------
-Phi = L + L_star - theta * eta
-Phi_simplified = simplify(Phi.subs({L: x^2/2, L_star: eta^2/2}))
-Phi_simplified = simplify(Phi_simplified.subs(x, eta))
-# Result: Phi = 1/2 * (theta - eta)^2
-Phi_simplified = simplify(Phi_simplified)
+# We'll compute the Fenchel–Legendre gap directly:
+# Φ(θ,η) = L(θ) + L★(η) − θ·η
+# For L(x)=x^2/2, the Legendre transform is L★(η)=η^2/2.
+# Hence Φ(θ,η) = θ^2/2 + η^2/2 − θ·η = ½(θ−η)^2.
+#
+# We compute it symbolically:
+L_theta = theta^2 / 2
+L_star  = eta^2 / 2
+Phi = L_theta + L_star - theta*eta
+Phi_simplified = factor(Phi)  # should be 1/2*(theta - eta)^2
 
 print("Fenchel‑Legendre gap (quadratic L):")
 print(Phi_simplified)
@@ -47,9 +39,9 @@ print(bool(Phi_simplified == 0))
 print()
 
 # ----------------------------------------------------------------------
-# 5.  Fluid picture: velocity as gradient of a scalar potential
+# 3.  Fluid picture: velocity as gradient of a scalar potential
 # ----------------------------------------------------------------------
-# Let φ(X,Y) be a smooth scalar potential (function)
+# Let φ(X,Y) be a smooth scalar potential (stream‑function analogue)
 phi = function('phi')(X, Y)
 
 # Velocity field u = (u_x, u_y) = grad φ
@@ -67,7 +59,7 @@ print(div_u)
 print()
 
 # ----------------------------------------------------------------------
-# 6.  Statement of the (to‑be‑proved) equivalence
+# 4.  Statement of the (to‑be‑proved) equivalence
 # ----------------------------------------------------------------------
 print("=== To be proved (placeholder) ===")
 print("Theorem (informal):")
@@ -84,9 +76,9 @@ print("divergence‑free condition once all spatial directions are accounted for
 print()
 print("Next steps:")
 print("  1. Replace the quadratic L by an unspecified convex function")
-print("     (sage.symbolic.function.Function) and keep the Legendre transform implicit.")
+print("     (symbolic function) and keep the Legendre transform implicit.")
 print("  2. Define the thermodynamic potentials (β, K, ω, …) as functions")
-print("     of the same variables and identify θ, η with appropriate")
+print("     of the same variables and identify θ, ν with appropriate")
 print("     gradients of those potentials.")
 print("  3. Show that, under the identification, the condition Φ=0")
 print("     translates exactly to Δφ = 0, i.e. div u = 0.")

@@ -1,38 +1,26 @@
 theory LogCFT
-  imports Complex_Main
+  imports Complex_Main "InfoGeometry/Canonical/ParabolicClock"
 begin
 
-locale log_cft =
-  fixes N :: "'a"
-    and I :: "'a"
-    and zero :: "'a"
-    and mul :: "'a \<Rightarrow> 'a \<Rightarrow> 'a" (infixl "*" 70)
-    and add :: "'a \<Rightarrow> 'a \<Rightarrow> 'a" (infixl "+" 65)
-    and smul :: "real \<Rightarrow> 'a \<Rightarrow> 'a"
-  assumes N_nilpotent: "N * N = zero"
-begin
+text \<open>Logarithmic CFT Jordan Block Matrix\<close>
 
-theorem JordanN_sq_zero: "N * N = zero"
-  by (rule N_nilpotent)
+definition N_mat :: "Matrix2x2" where
+"N_mat = \<lparr> m11 = 0, m12 = 1, m21 = 0, m22 = 0 \<rparr>"
 
-end
+definition id_mat :: "Matrix2x2" where
+"id_mat = \<lparr> m11 = 1, m12 = 0, m21 = 0, m22 = 1 \<rparr>"
 
-theorem fibonacci_scale_reduction:
-  fixes phi :: real
-  assumes phi_def: "phi^2 = phi + 1"
-  shows "20 * phi^4 = 60 * phi + 40"
-proof -
-  have "phi^4 = (phi^2)^2" by (simp add: power2_eq_square [symmetric] power_mult [symmetric])
-  also have "... = (phi + 1)^2" by (simp add: phi_def)
-  also have "... = phi^2 + 2 * phi + 1" by (simp add: power2_eq_square algebra_simps)
-  also have "... = (phi + 1) + 2 * phi + 1" by (simp add: phi_def)
-  also have "... = 3 * phi + 2" by simp
-  finally have "phi^4 = 3 * phi + 2" .
-  then show ?thesis by simp
-qed
+definition mat_add :: "Matrix2x2 \<Rightarrow> Matrix2x2 \<Rightarrow> Matrix2x2" where
+"mat_add A B = \<lparr> m11 = m11 A + m11 B, m12 = m12 A + m12 B, m21 = m21 A + m21 B, m22 = m22 A + m22 B \<rparr>"
 
-theorem combinatorial_backbone:
-  "(3::real) + 7 + 127 = 137"
-  by simp
+definition mat_smul :: "real \<Rightarrow> Matrix2x2 \<Rightarrow> Matrix2x2" where
+"mat_smul c A = \<lparr> m11 = c * m11 A, m12 = c * m12 A, m21 = c * m21 A, m22 = c * m22 A \<rparr>"
+
+definition L0_mat :: "real \<Rightarrow> Matrix2x2" where
+"L0_mat h = mat_add (mat_smul h id_mat) N_mat"
+
+theorem L0_is_jordan:
+  "L0_mat h = \<lparr> m11 = h, m12 = 1, m21 = 0, m22 = h \<rparr>"
+  by (simp add: L0_mat_def mat_add_def mat_smul_def id_mat_def N_mat_def)
 
 end

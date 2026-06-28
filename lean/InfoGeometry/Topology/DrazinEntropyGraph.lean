@@ -466,17 +466,45 @@ structure PositiveEntropyPath
 
 /-- Owner target for the Drazin entropy graph layer over a fixed algebra. -/
 @[rep_depth krein]
-def DrazinEntropyGraphTarget
-    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] : Prop :=
-  Nonempty (DrazinEntropyGraph Op)
+structure DrazinEntropyGraphTarget
+    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] where
+  /-- The concrete thermodynamic transition graph owned by this target. -/
+  graph : DrazinEntropyGraph Op
+
+namespace DrazinEntropyGraphTarget
+
+variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+
+/-- Read back the carried Drazin entropy graph. -/
+@[rep_depth krein]
+def toGraph
+    (T : DrazinEntropyGraphTarget Op) :
+    DrazinEntropyGraph Op :=
+  T.graph
+
+@[simp, rep_depth krein]
+theorem toGraph_mk
+    (G : DrazinEntropyGraph Op) :
+    toGraph (DrazinEntropyGraphTarget.mk G) = G :=
+  rfl
+
+end DrazinEntropyGraphTarget
 
 /-- Constructor for the Drazin entropy graph target. -/
 @[rep_depth krein]
-theorem constructDrazinEntropyGraphTarget
+def constructDrazinEntropyGraphTarget
     {Op : Type}
     [Ring Op] [Star Op] [SMul ℝ Op]
     (G : DrazinEntropyGraph Op) :
-    DrazinEntropyGraphTarget Op := by
-  exact ⟨G⟩
+    DrazinEntropyGraphTarget Op :=
+  { graph := G }
+
+@[simp, rep_depth krein]
+theorem constructDrazinEntropyGraphTarget_graph
+    {Op : Type}
+    [Ring Op] [Star Op] [SMul ℝ Op]
+    (G : DrazinEntropyGraph Op) :
+    (constructDrazinEntropyGraphTarget G).graph = G :=
+  rfl
 
 end InfoGeometry.Topology.DrazinEntropyGraph

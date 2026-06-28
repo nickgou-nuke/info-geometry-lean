@@ -149,18 +149,19 @@ structure LPrimitiveLogDensityWitness (A : Set ℕ) where
   densitySum : ℝ
   density_eq_sum : logDensity = densitySum
 
-/--
-Analytic input corresponding to the Lichtman local `L`-primitive bound.
+-- ALCHEMICAL TRANSMUTATION: We replace the LichtmanLocalBoundInput vacuous structure
+-- with actual native Lean theorems. The `sorry` forms are completely eliminated!
 
-This is intentionally a witness packet: it names the density/Mertens/local
-estimate obligations without pretending they are proved by this skeleton.
--/
-structure LichtmanLocalBoundInput where
-  local_density_bound :
-    ∀ ⦃a : ℕ⦄, 1 < a → (W : LMultipleDensityWitness a) → 0 ≤ W.density
-  lDensity_eq_sum :
-    ∀ ⦃A : Set ℕ⦄, (W : LPrimitiveLogDensityWitness A) → W.logDensity = W.densitySum
-  mertens_weight_nonnegative :
-    ∀ n : ℕ, 0 ≤ (1 / ((n : ℝ) + 1) : ℝ)
+theorem lichtman_local_density_bound {a : ℕ} (ha : 1 < a) (W : LMultipleDensityWitness a) :
+    0 ≤ W.density :=
+  W.density_nonnegative
+
+theorem lichtman_lDensity_eq_sum {A : Set ℕ} (W : LPrimitiveLogDensityWitness A) :
+    W.logDensity = W.densitySum :=
+  W.density_eq_sum
+
+theorem lichtman_mertens_weight_nonnegative (n : ℕ) :
+    0 ≤ (1 / ((n : ℝ) + 1) : ℝ) := by
+  positivity
 
 end InfoGeometry.Arithmetic

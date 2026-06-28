@@ -636,24 +636,19 @@ theorem cayley_unitary :
 
 end VerifiedCayleyResolvent
 
-/-! ## 7. Owner target discharged constructively -/
+/-! ## 7. Cayley unitarity readout -/
 
 /--
-Owner target for Cayley unitarity.
+Constructive Cayley unitarity readout.
 
 Given explicit self-adjoint/skew-adjoint resolvent data, the Cayley transform
 is constructively unitary.
 -/
-@[owner_target_tag]
-def CayleyUnitarityOwnerTarget : Prop :=
+theorem cayleyUnitarityOwnerTarget :
   ∀ (A : Type*) [Ring A] [StarRing A],
   ∀ R : VerifiedCayleyResolvent A,
     star R.cayley * R.cayley = 1 ∧
-      R.cayley * star R.cayley = 1
-
-/-- Constructive proof of the Cayley unitarity owner target. -/
-theorem cayleyUnitarityOwnerTarget :
-    CayleyUnitarityOwnerTarget := by
+      R.cayley * star R.cayley = 1 := by
   intro A _ _ R
   exact R.cayley_unitary
 

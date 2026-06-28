@@ -1,0 +1,5 @@
+session MobiusDual2x2 = HOL +
+  theories
+    MobiusDual2x2
+    MobiusClassification
+    MobiusInfinitesimal

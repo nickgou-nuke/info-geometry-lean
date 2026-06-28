@@ -549,29 +549,45 @@ def toTKKMobiusGroupClosure
 end TKKClosureCompatibility
 
 /--
-Owner target for the TKK closure layer.
+Construct the TKK closure layer from explicit compatibility data.
 
 Concrete modules must supply the Jordan triple system, the three-grade Lie
 closure, and the conformal/projective Pin-Möbius action.
 -/
-@[owner_target_tag]
-def TKKClosureOwnerTarget : Prop :=
+theorem tkkClosureOwnerTarget :
   ∀ (J L V W PinBase PinConf : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
     [AddCommGroup V] [Module ℝ V]
     [AddCommGroup W] [Module ℝ W]
     [Monoid PinBase] [Monoid PinConf],
-    TKKClosureCompatibility J L V W PinBase PinConf →
-      Nonempty (TKKMobiusGroupClosure J L V W PinBase PinConf)
-
-/--
-The owner target is constructively satisfied by explicit TKK/Möbius
-compatibility data.
--/
-theorem tkkClosureOwnerTarget :
-    TKKClosureOwnerTarget := by
+    ∀ C : TKKClosureCompatibility J L V W PinBase PinConf,
+      C.negative_grade_projective_action_statement ∧
+        C.zero_grade_structure_action_statement ∧
+        C.positive_grade_is_inversion_conjugate_statement ∧
+        C.acts_on_projective_null_states_statement ∧
+        C.full_reflection_sensitive_group_closure_statement := by
   intro J L V W PinBase PinConf _ _ _ _ _ _ _ _ _ _ C
-  exact ⟨C.toTKKMobiusGroupClosure⟩
+  exact ⟨C.negative_grade_projective_action_holds,
+    C.zero_grade_structure_action_holds,
+    C.positive_grade_is_inversion_conjugate_holds,
+    C.acts_on_projective_null_states_holds,
+    C.full_reflection_sensitive_group_closure_holds⟩
+
+/-- Packet readout for a concrete TKK/Möbius compatibility datum. -/
+theorem tkkClosure_packet
+    (J L V W PinBase PinConf : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf]
+    (C : TKKClosureCompatibility J L V W PinBase PinConf) :
+    C.negative_grade_projective_action_statement ∧
+      C.zero_grade_structure_action_statement ∧
+      C.positive_grade_is_inversion_conjugate_statement ∧
+      C.acts_on_projective_null_states_statement ∧
+      C.full_reflection_sensitive_group_closure_statement :=
+  tkkClosureOwnerTarget J L V W PinBase PinConf C
 
 end InfoGeometry.OperatorAlgebra

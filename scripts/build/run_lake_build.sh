@@ -11,4 +11,5 @@ if ! command -v lake >/dev/null 2>&1; then
   fi
 fi
 
+python3 tools/infra/assert_single_mathlib_source.py
 exec python3 tools/infra/run_locked_lake_build.py "$@"

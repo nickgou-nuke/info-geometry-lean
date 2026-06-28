@@ -61,7 +61,7 @@ def MoebiusVirasoroBridgeTarget
     bridge.calibration.L0Flow Real.pi s = WithLp.fst (moebiusTwist (A := A) (to_doubled s 0))
 
 /--
-The bridge target is closed trivially against the supplied socket.
+The supplied socket gives the concrete π-flow/Möbius-twist equality.
 -/
 @[rep_depth operator]
 theorem moebiusVirasoroBridgeTarget
@@ -71,7 +71,9 @@ theorem moebiusVirasoroBridgeTarget
     [NormedSpace ℝ A.Output] [CompleteSpace A.Output]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (bridge : MoebiusVirasoroBridgeSocket A Alg) :
-    MoebiusVirasoroBridgeTarget A Alg bridge :=
+    ∀ s : A.Output,
+      bridge.calibration.L0Flow Real.pi s =
+        WithLp.fst (moebiusTwist (A := A) (to_doubled s 0)) :=
   bridge.L0Flow_pi_eq_moebiusTwist
 
 end InfoGeometry.Canonical.MoebiusVirasoroBridge

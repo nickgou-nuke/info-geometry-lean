@@ -16,11 +16,12 @@ A wallpaper symmetry `S` is compatible with the Klein bottle topology
 if it normalizes the glide reflection group, i.e., `S ∘ G = G ± ∘ S` 
 modulo integer lattice translations.
 
-## Compatible Symmetries (The `pg`, `pmg`, `pgg` subset):
+## Compatible Symmetries (The `pg`, `pmg`, `pgg`/`p2gg`, `cm` subset):
 1. Pure Translations `T(x, y) = (x + a, y + b)`
 2. Parallel Glide Reflections `G'(x, y) = (-x + c, y + d)`
 3. 2-Fold Rotations `R_π(x, y) = (-x, -y)`
 4. Perpendicular Mirrors `M_x(x, y) = (x, -y)`
+5. Parallel Mirrors `M_y(x, y) = (-x, y)`
 -/
 
 noncomputable section
@@ -82,9 +83,9 @@ theorem parallel_glide_compatible (d : ℝ) : IsCompatibleSymmetry (parallel_gli
   · ring
 
 /-!
-### 3. 2-Fold Rotations (pgg subgroup)
+### 3. 2-Fold Rotations (pgg / p2gg subgroup)
 A 180-degree rotation `(x, y) ↦ (-x, -y)` is characteristic of the `pgg` 
-wallpaper group. It inverts the glide direction.
+(also denoted `p2gg`) wallpaper group. It inverts the glide direction.
 -/
 
 /-- 180-degree rotation around the origin. -/
@@ -118,7 +119,22 @@ theorem mirror_perp_compatible : IsCompatibleSymmetry mirror_perp := by
   · ring
 
 /-!
-### 5. Incompatible Symmetries
+### 5. Parallel Mirrors (cm subgroup)
+A mirror reflection parallel to the glide axis `(x, y) ↦ (-x, y)` characterizes 
+the `cm` wallpaper group (as well as `pm`). It strictly commutes with the glide.
+-/
+
+/-- Mirror reflection parallel to the glide axis. -/
+def mirror_parallel (p : ℝ × ℝ) : ℝ × ℝ :=
+  (-p.1, p.2)
+
+theorem mirror_parallel_compatible : IsCompatibleSymmetry mirror_parallel := by
+  left
+  intro p
+  simpa [mirror_parallel, G, G_inv, glide_reflection]
+
+/-!
+### 6. Incompatible Symmetries
 Rotations by 90 degrees (`p4`) or 60 degrees (`p6`) destroy the 
 1D invariant axis of the Klein bottle and are NOT compatible.
 -/

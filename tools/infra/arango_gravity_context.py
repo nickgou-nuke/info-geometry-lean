@@ -12,6 +12,7 @@ import argparse
 import collections
 import json
 import math
+import os
 import re
 import sys
 import urllib.error
@@ -34,18 +35,29 @@ from tools.infra.arango_env import (
     load_repo_arango_env,
     repo_root_from,
 )
+from igf.config import (
+    DEFAULT_GRAPH_MODE,
+    GRAPH_MODE_CHOICES,
+    hive_arango_database,
+    hive_arango_endpoint,
+    hive_arango_password,
+    hive_arango_username,
+    resolve_graph_mode,
+)
 from igf.graph import ArangoHttpTarget, execute_aql
+
+_DEFAULT_GRAPH_PROFILE = resolve_graph_mode(DEFAULT_GRAPH_MODE)
 
 DEFAULT_NODES = Path("artifacts/dag/index/decls.jsonl")
 DEFAULT_EDGES = Path("artifacts/dag/index/edges.jsonl")
 DEFAULT_ARANGO = DEFAULT_ARANGO_ENDPOINT
 DEFAULT_DB = DEFAULT_ARANGO_DATABASE
-DEFAULT_NODE_COLLECTION = "ig_nodes"
-DEFAULT_EDGE_COLLECTION = "ig_edges"
-DEFAULT_RAW_NODE_COLLECTION = "raw_info_nodes"
-DEFAULT_RAW_EDGE_COLLECTION = "raw_info_edges"
-DEFAULT_OVERLAY_NODE_COLLECTION = "topology_overlay"
-DEFAULT_OVERLAY_EDGE_COLLECTION = "topology_overlay_edges"
+DEFAULT_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.compact_nodes
+DEFAULT_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.compact_edges
+DEFAULT_RAW_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.raw_nodes
+DEFAULT_RAW_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.raw_edges
+DEFAULT_OVERLAY_NODE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.overlay_nodes
+DEFAULT_OVERLAY_EDGE_COLLECTION = _DEFAULT_GRAPH_PROFILE.collections.overlay_edges
 DEFAULT_EQUIVALENCE_DICTIONARY = Path("reports/dag/equivalence-dictionary.json")
 STOPWORDS = {
     "against",
@@ -237,6 +249,50 @@ def arango_cursor_all(base_url: str, db: str, payload: dict[str, Any]) -> list[d
     )
 
 
+def env_first(*names: str, default: str = "") -> str:
+    for name in names:
+        value = os.environ.get(name)
+        if value:
+            return value
+    return default
+
+
+def hive_endpoint(default: str | None = None) -> str:
+    fallback = default or _DEFAULT_GRAPH_PROFILE.collections.hive_endpoint
+    return hive_arango_endpoint(fallback)
+
+
+def hive_database(default: str | None = None) -> str:
+    fallback = default or _DEFAULT_GRAPH_PROFILE.collections.hive_database
+    return hive_arango_database(fallback)
+
+
+def hive_username(default: str | None = None) -> str:
+    fallback = default or arango_username()
+    return hive_arango_username(fallback)
+
+
+def hive_password(default: str | None = None) -> str:
+    fallback = default or arango_password()
+    return hive_arango_password(fallback)
+
+
+def hive_cursor_all(base_url: str, db: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
+    target = ArangoHttpTarget(
+        endpoint=base_url.rstrip("/"),
+        database=db,
+        username=hive_username(),
+        password=hive_password(),
+    )
+    return execute_aql(
+        target,
+        str(payload["query"]),
+        payload.get("bindVars") or {},
+        timeout=15,
+        batch_size=payload.get("batchSize"),
+    )
+
+
 def load_arango(
     base_url: str,
     db: str,
@@ -392,7 +448,13 @@ def load_faithful_arango(
 
 
 def load_graph(args: argparse.Namespace) -> tuple[str, list[dict[str, Any]], list[dict[str, Any]]]:
-    if args.graph_mode == "faithful":
+    if args.source == "jsonl":
+        nodes = read_jsonl(args.nodes)
+        edges = read_jsonl(args.edges)
+        return "jsonl", nodes, edges
+
+    profile = resolve_graph_mode(args.graph_mode)
+    if profile.name in {"faithful", "unified"}:
         try:
             nodes, edges = load_faithful_arango(
                 args.arango_url,
@@ -402,11 +464,13 @@ def load_graph(args: argparse.Namespace) -> tuple[str, list[dict[str, Any]], lis
                 args.limit_nodes,
                 args.limit_edges,
             )
-            return "arango:faithful_raw", nodes, edges
+            source_name = "arango:unified_layered" if profile.name == "unified" else "arango:faithful_raw"
+            return source_name, nodes, edges
         except (RuntimeError, urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
-            raise SystemExit(f"failed to load faithful Arango graph: {exc}") from exc
+            if args.source == "arango":
+                raise SystemExit(f"failed to load {profile.name} Arango graph: {exc}") from exc
 
-    if args.graph_mode == "hybrid":
+    if profile.name == "hybrid":
         try:
             nodes, edges = load_arango(
                 args.arango_url,
@@ -483,6 +547,314 @@ def load_faithful_index(args: argparse.Namespace, names: list[str]) -> dict[str,
             "witness_backed": bool(row.get("membership")),
         }
     return out
+
+
+def _hive_text_blob(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    try:
+        return json.dumps(value, sort_keys=True)
+    except TypeError:
+        return str(value)
+
+
+def _count_query_token_hits(text: str, query_tokens: list[str]) -> int:
+    haystack = text.lower()
+    return sum(1 for tok in query_tokens if tok and tok in haystack)
+
+
+def _score_hive_event_row(row: dict[str, Any], query_tokens: list[str]) -> float:
+    text = " ".join(
+        [
+            _hive_text_blob(row.get("artifact_kind")),
+            _hive_text_blob(row.get("source")),
+            _hive_text_blob(row.get("space")),
+            _hive_text_blob(row.get("entity_key")),
+            _hive_text_blob(row.get("packet")),
+        ]
+    )
+    score = float(_count_query_token_hits(text, query_tokens))
+    artifact_kind = str(row.get("artifact_kind") or "")
+    space = str(row.get("space") or "")
+    source = str(row.get("source") or "")
+    if artifact_kind == "InfoTreeArtifact":
+        score += 3.0
+    elif artifact_kind == "DiamondFossil":
+        score += 2.5
+    elif artifact_kind == "ResearchDigest":
+        score += 1.0
+    elif artifact_kind == "MotherBeeSummaryPacket":
+        score -= 1.0
+    elif artifact_kind == "HeartbeatPulsePacket":
+        score -= 2.0
+    if space == "infotree":
+        score += 1.5
+    elif space == "logos":
+        score += 1.0
+    elif space == "hive_qi":
+        score -= 0.75
+    if source == "local_heartbeat":
+        score -= 0.75
+    return score
+
+
+def _score_hive_retrieval_packet_row(row: dict[str, Any], query_tokens: list[str]) -> float:
+    text = " ".join(
+        [
+            _hive_text_blob(row.get("kind")),
+            _hive_text_blob(row.get("query_text")),
+            _hive_text_blob(row.get("retrieval_summary")),
+            _hive_text_blob(row.get("representation_class")),
+            _hive_text_blob(row.get("representation_depth")),
+            _hive_text_blob(row.get("authority")),
+            _hive_text_blob(row.get("tags")),
+            _hive_text_blob(row.get("seed_refs")),
+        ]
+    )
+    score = float(_count_query_token_hits(text, query_tokens))
+    kind = str(row.get("kind") or "")
+    authority = str(row.get("authority") or "")
+    rep_class = str(row.get("representation_class") or "")
+    rep_depth = str(row.get("representation_depth") or "")
+    status = str(row.get("status") or "")
+    if kind == "RetrievalHypothesisPacket":
+        score += 2.0
+    if authority == "navigation":
+        score += 0.5
+    if rep_class in {"translator", "theorem", "operator"}:
+        score += 0.5
+    if rep_depth in {"categorical", "operator", "module"}:
+        score += 0.25
+    if status == "draft":
+        score += 0.25
+    return score
+
+
+def _rerank_hive_rows(
+    rows: list[dict[str, Any]],
+    query_tokens: list[str],
+    scorer: Any,
+    limit: int,
+) -> list[dict[str, Any]]:
+    scored: list[tuple[float, int, dict[str, Any]]] = []
+    for idx, row in enumerate(rows):
+        row_copy = dict(row)
+        weighted_score = float(scorer(row_copy, query_tokens))
+        row_copy["weighted_score"] = weighted_score
+        scored.append((weighted_score, -idx, row_copy))
+    scored.sort(reverse=True)
+    return [row for weighted_score, _neg_idx, row in scored if weighted_score > 0][:limit]
+
+
+def build_hive_sidecar(query: str, graph_profile: Any, limit: int) -> dict[str, Any]:
+    if not getattr(graph_profile, "include_hive_sidecar", False):
+        return {"enabled": False, "status": "disabled", "reason": "profile_excludes_hive_sidecar"}
+    if limit <= 0:
+        return {"enabled": True, "status": "disabled", "reason": "limit_nonpositive"}
+
+    collections = graph_profile.collections
+    endpoint = hive_endpoint(collections.hive_endpoint)
+    database_name = hive_database(collections.hive_database)
+    query_tokens = sorted(tokenize(query))[:12]
+    memory_mode = "packet_memory" if database_name == "hive_live" else "legacy_memory"
+    collection_map = (
+        {"events": "hive_events", "retrieval_packets": "hive_retrieval_packets"}
+        if memory_mode == "packet_memory"
+        else {"thoughts": collections.hive_thoughts, "causal_links": collections.hive_causal_links}
+    )
+    empty_matches = {key: [] for key in collection_map}
+    base = {
+        "enabled": True,
+        "endpoint": endpoint,
+        "database": database_name,
+        "memory_mode": memory_mode,
+        "collections": collection_map,
+        "authority_note": "Hive sidecar is non-authoritative historical memory; Lean/raw graph remain theorem authority.",
+    }
+    if not query_tokens:
+        return {
+            **base,
+            "status": "skipped",
+            "reason": "no_query_tokens",
+            "matches": empty_matches,
+        }
+
+    if memory_mode == "packet_memory":
+        candidate_limit = max(limit * 5, limit)
+        event_payload = {
+            "query": """
+            FOR e IN @@events
+              LET haystack = LOWER(CONCAT_SEPARATOR(" ", TO_STRING(e.artifact_kind), TO_STRING(e.source), TO_STRING(e.space), TO_STRING(e.entity_key), TO_STRING(e.packet), TO_STRING(e.canonical_shape)))
+              LET score = LENGTH(
+                FOR tok IN @tokens
+                  FILTER CONTAINS(haystack, tok)
+                  RETURN 1
+              )
+              FILTER score > 0
+              SORT score DESC, e._key DESC
+              LIMIT @candidate_limit
+              RETURN {
+                _key: e._key,
+                score: score,
+                artifact_kind: e.artifact_kind,
+                source: e.source,
+                space: e.space,
+                entity_key: e.entity_key,
+                created_at: e.created_at,
+                packet: e.packet
+              }
+            """,
+            "bindVars": {
+                "@events": collection_map["events"],
+                "tokens": query_tokens,
+                "limit": limit,
+                "candidate_limit": candidate_limit,
+            },
+            "batchSize": candidate_limit,
+        }
+        retrieval_payload = {
+            "query": """
+            FOR r IN @@packets
+              LET haystack = LOWER(CONCAT_SEPARATOR(" ", TO_STRING(r.query_text), TO_STRING(r.retrieval_summary), TO_STRING(r.kind), TO_STRING(r.lineage_id), TO_STRING(r.tags), TO_STRING(r.seed_refs), TO_STRING(r.formal_target), TO_STRING(r.candidate_anchor_refs)))
+              LET score = LENGTH(
+                FOR tok IN @tokens
+                  FILTER CONTAINS(haystack, tok)
+                  RETURN 1
+              )
+              FILTER score > 0
+              SORT score DESC, r._key DESC
+              LIMIT @candidate_limit
+              RETURN {
+                _key: r._key,
+                score: score,
+                kind: r.kind,
+                query_text: r.query_text,
+                retrieval_summary: r.retrieval_summary,
+                representation_class: r.representation_class,
+                representation_depth: r.representation_depth,
+                authority: r.authority,
+                lineage_id: r.lineage_id,
+                created_at: r.created_at,
+                tags: r.tags,
+                seed_refs: r.seed_refs,
+                status: r.status
+              }
+            """,
+            "bindVars": {
+                "@packets": collection_map["retrieval_packets"],
+                "tokens": query_tokens,
+                "limit": limit,
+                "candidate_limit": candidate_limit,
+            },
+            "batchSize": candidate_limit,
+        }
+        try:
+            event_rows = hive_cursor_all(endpoint, database_name, event_payload)
+            retrieval_rows = hive_cursor_all(endpoint, database_name, retrieval_payload)
+        except (RuntimeError, urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
+            return {
+                **base,
+                "status": "unavailable",
+                "reason": str(exc),
+                "query_tokens": query_tokens,
+                "matches": empty_matches,
+            }
+        event_rows = _rerank_hive_rows(event_rows, query_tokens, _score_hive_event_row, limit)
+        retrieval_rows = _rerank_hive_rows(retrieval_rows, query_tokens, _score_hive_retrieval_packet_row, limit)
+        return {
+            **base,
+            "status": "ok",
+            "query_tokens": query_tokens,
+            "matches": {
+                "events": event_rows,
+                "retrieval_packets": retrieval_rows,
+            },
+        }
+
+    thought_payload = {
+        "query": """
+        FOR t IN @@thoughts
+          LET haystack = LOWER(CONCAT_SEPARATOR(" ", TO_STRING(t.title), TO_STRING(t.summary), TO_STRING(t.content), TO_STRING(t.text), TO_STRING(t.goal), TO_STRING(t.kind), TO_STRING(t.payload)))
+          LET score = LENGTH(
+            FOR tok IN @tokens
+              FILTER CONTAINS(haystack, tok)
+              RETURN 1
+          )
+          FILTER score > 0
+          SORT score DESC, t._key DESC
+          LIMIT @limit
+          RETURN {
+            _key: t._key,
+            score: score,
+            title: t.title,
+            summary: t.summary,
+            text: t.text,
+            content: t.content,
+            goal: t.goal,
+            kind: t.kind
+          }
+        """,
+        "bindVars": {
+            "@thoughts": collection_map["thoughts"],
+            "tokens": query_tokens,
+            "limit": limit,
+        },
+        "batchSize": limit,
+    }
+    link_payload = {
+        "query": """
+        FOR e IN @@links
+          LET haystack = LOWER(CONCAT_SEPARATOR(" ", TO_STRING(e.relation), TO_STRING(e.reason), TO_STRING(e.note), TO_STRING(e.label), TO_STRING(e._from), TO_STRING(e._to), TO_STRING(e.from), TO_STRING(e.to), TO_STRING(e.payload)))
+          LET score = LENGTH(
+            FOR tok IN @tokens
+              FILTER CONTAINS(haystack, tok)
+              RETURN 1
+          )
+          FILTER score > 0
+          SORT score DESC, e._key DESC
+          LIMIT @limit
+          RETURN {
+            _key: e._key,
+            score: score,
+            relation: e.relation,
+            reason: e.reason,
+            note: e.note,
+            from: e.from,
+            to: e.to,
+            _from: e._from,
+            _to: e._to,
+            label: e.label
+          }
+        """,
+        "bindVars": {
+            "@links": collection_map["causal_links"],
+            "tokens": query_tokens,
+            "limit": limit,
+        },
+        "batchSize": limit,
+    }
+    try:
+        thought_rows = hive_cursor_all(endpoint, database_name, thought_payload)
+        link_rows = hive_cursor_all(endpoint, database_name, link_payload)
+    except (RuntimeError, urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
+        return {
+            **base,
+            "status": "unavailable",
+            "reason": str(exc),
+            "query_tokens": query_tokens,
+            "matches": empty_matches,
+        }
+    return {
+        **base,
+        "status": "ok",
+        "query_tokens": query_tokens,
+        "matches": {
+            "thoughts": thought_rows,
+            "causal_links": link_rows,
+        },
+    }
 
 
 def lexical_score(node: dict[str, Any], query_tokens: set[str], phrases: list[str]) -> float:
@@ -898,6 +1270,7 @@ def source_excerpt(node: dict[str, Any], repo_root: Path, radius: int) -> dict[s
 
 
 def build_context(args: argparse.Namespace) -> dict[str, Any]:
+    graph_profile = resolve_graph_mode(args.graph_mode)
     source, nodes, edges = load_graph(args)
     repo_root = args.repo_root.resolve()
     query_tokens = tokenize(args.query)
@@ -955,7 +1328,7 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     seed_scores = dict(sorted(lexical.items(), key=lambda item: item[1], reverse=True)[: args.seed_k])
     seed_sccs: set[int] = set()
     scc_distances: dict[int, int] = {}
-    if args.graph_mode == "faithful":
+    if graph_profile.uses_overlay:
         seed_sccs, scc_distances = scc_anchor_distances(
             nodes_by_id,
             edges,
@@ -964,7 +1337,7 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
             seed_node_ids=set(seed_scores),
         )
 
-    if args.graph_mode == "faithful" and args.scc_anchor_first:
+    if graph_profile.uses_overlay and args.scc_anchor_first:
         propagated: dict[str, float] = {}
         distances: dict[str, int] = {}
         if not scc_distances and args.require_scc_anchor:
@@ -987,7 +1360,7 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
             final_scores[node_id] = final_scores.get(node_id, 0.0) + args.scc_anchor_weight / float(distance + 1)
 
     ranked = sorted(final_scores.items(), key=lambda item: item[1], reverse=True)
-    if args.graph_mode == "faithful" and args.scc_anchor_first and scc_distances:
+    if graph_profile.uses_overlay and args.scc_anchor_first and scc_distances:
         ranked = [
             (node_id, score)
             for node_id, score in ranked
@@ -1007,7 +1380,7 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
             if node_rep_layer(nodes_by_id[node_id]) in requested_rep_layers
         ]
     faithful_index: dict[str, dict[str, Any]] = {}
-    if args.graph_mode == "hybrid":
+    if graph_profile.name == "hybrid":
         candidate_names: list[str] = []
         for node_id, _score in ranked[: max(args.top_k * 8, args.seed_k)]:
             node = nodes_by_id[node_id]
@@ -1027,16 +1400,16 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         attrs = node.get("attrs") or {}
         name = str(node.get("name") or node_id)
         faithful_witness = None
-        if args.graph_mode == "faithful":
+        if graph_profile.name in {"faithful", "unified"}:
             faithful_witness = {
                 "raw_key": node.get("_raw_key"),
                 "raw_doc_id": node.get("_raw_doc_id"),
                 "scc_id": node.get("scc_id"),
                 "scc_key": node.get("scc_key"),
                 "witness_backed": True,
-                "mode": "raw_graph_source",
+                "mode": "unified_layered_source" if graph_profile.name == "unified" else "raw_graph_source",
             }
-        elif args.graph_mode == "hybrid":
+        elif graph_profile.name == "hybrid":
             faithful_witness = faithful_index.get(name)
             if args.require_faithful_witness and not faithful_witness:
                 continue
@@ -1071,6 +1444,8 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         if len(items) >= args.top_k:
             break
 
+    hive_sidecar = build_hive_sidecar(args.query, graph_profile, args.hive_sidecar_limit)
+
     return {
         "schema": "info_geometry.gravity_context.v1",
         "query": args.query,
@@ -1084,7 +1459,9 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
             "matched_groups": synonym_groups,
         },
         "graph_source": source,
-        "graph_mode": args.graph_mode,
+        "graph_mode": graph_profile.name,
+        "graph_profile": graph_profile.to_dict(),
+        "hive_sidecar": hive_sidecar,
         "repo_root": str(repo_root),
         "seed_count": len(seed_scores),
         "seed_scc_count": len(seed_sccs),
@@ -1139,7 +1516,7 @@ def build_context_from_query(
     use_equivalence_expansion: bool = True,
     max_equivalence_groups: int = 8,
     max_equivalence_tokens: int = 64,
-    graph_mode: str = "compact",
+    graph_mode: str = DEFAULT_GRAPH_MODE,
     raw_nodes_collection: str = DEFAULT_RAW_NODE_COLLECTION,
     raw_edges_collection: str = DEFAULT_RAW_EDGE_COLLECTION,
     overlay_nodes_collection: str = DEFAULT_OVERLAY_NODE_COLLECTION,
@@ -1156,6 +1533,7 @@ def build_context_from_query(
     spectral_witness_gap_weight: float = 1.25,
     spectral_unsafe_weight: float = 2.5,
     spectral_proof_weight: float = 0.75,
+    hive_sidecar_limit: int = 3,
 ) -> dict[str, Any]:
     """Programmatic entry point for bounded agents."""
     args = argparse.Namespace(
@@ -1198,16 +1576,21 @@ def build_context_from_query(
         spectral_witness_gap_weight=spectral_witness_gap_weight,
         spectral_unsafe_weight=spectral_unsafe_weight,
         spectral_proof_weight=spectral_proof_weight,
+        hive_sidecar_limit=hive_sidecar_limit,
     )
     return build_context(args)
 
 
 def write_markdown(packet: dict[str, Any], path: Path) -> None:
+    graph_profile = packet.get("graph_profile") or {}
+    graph_authority = graph_profile.get("authority_note")
+    graph_layers_meta = graph_profile.get("collections") if isinstance(graph_profile, dict) else None
     lines = [
         "# Gravitational Lean Context",
         "",
         f"- Query: `{packet['query']}`",
         f"- Graph source: `{packet['graph_source']}`",
+        f"- Graph mode: `{packet['graph_mode']}`",
         f"- Nodes: `{packet['node_count']}`",
         f"- Edges: `{packet['edge_count']}`",
         f"- Synonym groups: `{packet.get('synonym_expansion', {}).get('matched_group_count', 0)}`",
@@ -1215,6 +1598,23 @@ def write_markdown(packet: dict[str, Any], path: Path) -> None:
         f"- Promotion allowed: `false`",
         "",
     ]
+    if graph_authority:
+        lines.extend(["## Lane Authority", "", f"- {graph_authority}", ""])
+    if isinstance(graph_layers_meta, dict):
+        lines.extend(["## Lane Collections", ""])
+        for key in sorted(graph_layers_meta):
+            lines.append(f"- `{key}`: `{graph_layers_meta[key]}`")
+        lines.append("")
+    hive_sidecar = packet.get("hive_sidecar") if isinstance(packet, dict) else None
+    if isinstance(hive_sidecar, dict):
+        lines.extend([
+            "## Hive Sidecar",
+            "",
+            f"- Status: `{hive_sidecar.get('status')}`",
+            f"- Database: `{hive_sidecar.get('database')}`",
+            f"- Endpoint: `{hive_sidecar.get('endpoint')}`",
+            "",
+        ])
     graph_layers = packet.get("graph_rep_layer_counts") or []
     if graph_layers:
         lines.extend(["## Representation Layers", ""])
@@ -1295,11 +1695,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--edges-collection", default=DEFAULT_EDGE_COLLECTION)
     parser.add_argument(
         "--graph-mode",
-        choices=["compact", "faithful", "hybrid"],
-        default="compact",
+        choices=list(GRAPH_MODE_CHOICES),
+        default=DEFAULT_GRAPH_MODE,
         help=(
-            "compact uses ig_nodes/ig_edges; faithful uses raw_info_nodes/raw_info_edges; "
-            "hybrid ranks compact hits but requires raw-layer witnesses by default."
+            "unified is the canonical lane: retrieve from raw_info_nodes/raw_info_edges, anchor on topology_overlay, "
+            "and carry compact/Hive layers as sidecars only. faithful keeps the raw-only view; hybrid keeps compact ranking "
+            "with raw witnesses; compact is projection-only."
         ),
     )
     parser.add_argument("--raw-nodes-collection", default=DEFAULT_RAW_NODE_COLLECTION)
@@ -1348,6 +1749,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--use-equivalence-expansion", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--max-equivalence-groups", type=int, default=8)
     parser.add_argument("--max-equivalence-tokens", type=int, default=64)
+    parser.add_argument("--hive-sidecar-limit", type=int, default=3)
+    parser.add_argument("--declarations-only", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument(
         "--use-spectral-weights",
         action=argparse.BooleanOptionalAction,
@@ -1384,7 +1787,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=0.75,
         help="Reward multiplier for proof_weight edge fields.",
     )
-    parser.add_argument("--declarations-only", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--require-source", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--md-out", type=Path)

@@ -99,4 +99,17 @@ theorem criticalReflection_fixed_iff
   ⟨isCriticalLineRealPart_of_reflection_fixed,
     reflection_fixed_of_isCriticalLineRealPart⟩
 
+/-- The negative logarithm is strictly convex on the positive reals. -/
+theorem neg_log_strictConvexOn :
+    StrictConvexOn ℝ (Set.Ioi 0) (fun x : ℝ => -Real.log x) := by
+  exact strictConcaveOn_log_Ioi.neg
+
+/-- A compact theorem chain: a reflection fixed point lies on the critical line,
+    and the log potential supplying the stability picture is strictly convex. -/
+theorem criticalReflection_fixed_point_log_chain
+    {σ : ℝ} (h : criticalReflection σ = σ) :
+    IsCriticalLineRealPart σ ∧
+      StrictConvexOn ℝ (Set.Ioi 0) (fun x : ℝ => -Real.log x) := by
+  exact ⟨isCriticalLineRealPart_of_reflection_fixed h, neg_log_strictConvexOn⟩
+
 end InfoGeometry.Arithmetic.RHQuantumStabilityBridge

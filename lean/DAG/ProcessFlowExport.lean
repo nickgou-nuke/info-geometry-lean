@@ -2,212 +2,13 @@ import Lean
 import Lean.Data.Json
 import DAG.Basic
 import DAG.JsonInstances
+import DAG.TypedCategory
 import InfoGeometry.Meta.Architecture
 
 open Lean
 open InfoGeometry.Meta
 
 namespace DAG
-
-instance : Inhabited DAG.EdgeKind := ⟨DAG.EdgeKind.value⟩
-
-private def schemaVersion : Nat := 4
-
-inductive DependencyRole
-  | head
-  | requiredArg
-  | transportArg
-  | witness
-  | closureSupport
-  | ornament
-  | remoteSupport
-  | unknown
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive BoundaryClass
-  | internal
-  | localInterface
-  | bridge
-  | capstone
-  | mixed
-  | unclear
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive LocalityClass
-  | local
-  | adjacent
-  | remote
-  | mixed
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive NormalizationClass
-  | definitional
-  | propositional
-  | structural
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive CanonicalityClass
-  | stableSpine
-  | capstone
-  | derived
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive PolarityClass
-  | neutral
-  | sameLayer
-  | descending
-  | remote
-  | mixed
-  | regressive
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive DerivationalRole
-  | vertical
-  | primitiveTranslator
-  | capstoneCoherence
-  | violation
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive DefectKind
-  | remoteAttachment
-  | failedLocalFactorization
-  | unresolvedComparison
-  | illicitBoundaryCrossing
-  | mixedPolarity
-  | regressiveFlow
-  | typeOnlySupport
-  | boundaryBypass
-  | unclearPolarity
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive FlowProvenanceKind
-  | directObserved
-  | boundedComposite
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-inductive EdgeUse
-  | typeOnly
-  | valueOnly
-  | both
-  deriving Repr, BEq, Inhabited, ToJson, Hashable
-
-structure FeatureBundle where
-  layer : String
-  layerNat : Nat
-  locality : LocalityClass
-  normalization : NormalizationClass
-  canonicality : CanonicalityClass
-  polarity : PolarityClass
-  deriving Repr, BEq, Inhabited, ToJson
-
-structure WeightedName where
-  name : Name
-  weight : Nat
-  deriving Repr, Inhabited, ToJson
-
-structure DirectEdgeEvidence where
-  src : Name
-  dst : Name
-  edgeUse : EdgeUse
-  srcDepthNat? : Option Nat := none
-  dstDepthNat? : Option Nat := none
-  srcModule : String
-  dstModule : String
-  deriving Repr, Inhabited
-
-structure FeatureInput where
-  dep : Name
-  feature : FeatureBundle
-  deriving Repr, Inhabited, ToJson
-
-structure FlowEdge where
-  schemaVersion : Nat := schemaVersion
-  src : Name
-  dst : Name
-  edgeUse : EdgeUse
-  edgeKind : DAG.EdgeKind
-  provenanceKind : FlowProvenanceKind
-  inferredRole : DependencyRole
-  inferredBoundary : BoundaryClass
-  depthHint? : Option Nat
-  inferredPolarity : PolarityClass
-  srcFeature : FeatureBundle
-  dstFeature : FeatureBundle
-  defectTags : Array DefectKind
-  deriving Repr, Inhabited, ToJson
-
-structure ProcessEvent where
-  schemaVersion : Nat := schemaVersion
-  node : Name
-  module : String
-  kind : String
-  role : DerivationalRole
-  boundaryClass : BoundaryClass
-  directDeps : Array Name
-  directValueDeps : Array Name
-  directTypeDeps : Array Name
-  closureDeps : Array Name
-  featureInputs : Array FeatureInput
-  featureIn : Array FeatureBundle
-  featureOut : Array FeatureBundle
-  headCandidates : Array WeightedName
-  supportCandidates : Array Name
-  comparisonCandidates : Array Name
-  novelty : Nat
-  deriving Repr, Inhabited, ToJson
-
-structure PathStep where
-  schemaVersion : Nat := schemaVersion
-  src : Name
-  dst : Name
-  edgeUse : EdgeUse
-  edgeKind : DAG.EdgeKind
-  inferredRole : DependencyRole
-  provenanceKind : FlowProvenanceKind
-  inferredBoundary : BoundaryClass
-  boundaryCrossing : Bool
-  featureIn : FeatureBundle
-  featureOut : FeatureBundle
-  deriving Repr, Inhabited, ToJson
-
-structure Defect where
-  kind : DefectKind
-  atStep : Nat
-  cost : Nat
-  witness : Option Name := none
-  deriving Repr, Inhabited, ToJson
-
-structure LawfulPathCandidate where
-  schemaVersion : Nat := schemaVersion
-  src : Name
-  dst : Name
-  steps : Array PathStep
-  totalDefectCost : Nat
-  defects : Array Defect
-  sharedComparisonCandidates : Array Name
-  deriving Repr, Inhabited, ToJson
-
-structure DefectRow where
-  schemaVersion : Nat := schemaVersion
-  locus : String
-  src : Name
-  dst : Name
-  defect : Defect
-  deriving Repr, Inhabited, ToJson
-
-structure DeclFlowSummary where
-  depth : RepDepth
-  kind : String
-  capstone : Bool
-  directEvidence : Array DirectEdgeEvidence
-  feature : FeatureBundle
-  deriving Inhabited
-
-structure ComparisonGroupKey where
-  role : DerivationalRole
-  layerNat : Nat
-  boundaryClass : BoundaryClass
-  deriving Repr, BEq, Inhabited, Hashable
 
 private def dottedName (s : String) : Name :=
   (s.splitOn ".").foldl (init := Name.anonymous) fun acc part =>
@@ -888,16 +689,29 @@ private def runExport (importModsStr outDirStr : String) : IO UInt32 := do
   IO.println s!"[ProcessFlowExport] flowEdges={flowEdges.size}"
   let events := addComparisonCandidates (processEventsBase env summaries flowEdges)
   IO.println s!"[ProcessFlowExport] events={events.size}"
+  let typedObjects := events.map ProcessEvent.toTypedDeclObject
+  IO.println s!"[ProcessFlowExport] typedObjects={typedObjects.size}"
+  let semanticMorphisms := events.foldl (init := #[]) fun acc ev =>
+    acc ++ ev.semanticTypedMorphisms
+  IO.println s!"[ProcessFlowExport] semanticMorphisms={semanticMorphisms.size}"
   let paths := lawfulPathsRaw events flowEdges
   IO.println s!"[ProcessFlowExport] paths={paths.size}"
+  let typedPaths := paths.map LawfulPathCandidate.toLawfulTypedCompositePath
+  IO.println s!"[ProcessFlowExport] typedPaths={typedPaths.size}"
+  let lawfulCones := events.map (ProcessEvent.toLawfulCone paths)
+  IO.println s!"[ProcessFlowExport] lawfulCones={lawfulCones.size}"
   let defects := edgeDefectRowsOf flowEdges ++ pathDefectRowsOf paths
   IO.println s!"[ProcessFlowExport] defects={defects.size}"
   let outDir := System.FilePath.mk outDirStr
   writeJsonl (outDir / "flow-edges.jsonl") flowEdges
   writeJsonl (outDir / "process-events.jsonl") events
+  writeJsonl (outDir / "typed-decl-objects.jsonl") typedObjects
+  writeJsonl (outDir / "typed-semantic-morphisms.jsonl") semanticMorphisms
   writeJsonl (outDir / "lawful-path-candidates.jsonl") paths
+  writeJsonl (outDir / "lawful-typed-composite-paths.jsonl") typedPaths
+  writeJsonl (outDir / "lawful-cones.jsonl") lawfulCones
   writeJsonl (outDir / "defects.jsonl") defects
-  IO.println s!"[ProcessFlowExport] modules={importModsStr} edges={flowEdges.size} events={events.size} paths={paths.size} defects={defects.size} wrote {outDirStr}"
+  IO.println s!"[ProcessFlowExport] modules={importModsStr} edges={flowEdges.size} events={events.size} typedObjects={typedObjects.size} semanticMorphisms={semanticMorphisms.size} paths={paths.size} typedPaths={typedPaths.size} lawfulCones={lawfulCones.size} defects={defects.size} wrote {outDirStr}"
   return 0
 
 def main (args : List String) : IO UInt32 := do

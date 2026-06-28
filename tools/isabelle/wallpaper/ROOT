@@ -1,0 +1,4 @@
+session Wallpaper = HOL +
+  theories
+    WallpaperAffineMatrix
+    WallpaperRepresentations17

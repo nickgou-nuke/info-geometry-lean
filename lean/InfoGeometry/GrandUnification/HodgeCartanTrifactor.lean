@@ -8,41 +8,28 @@ This module formally implements the strict, functorial isomorphism between class
 differential geometry (Hodge decomposition, Cartan Involution) and the non-commutative
 O^3 = O Trifactor grading that constrains the Riemann Zeta boundary thermodynamics.
 
-1. **Hodge Decomposition**: Any state is uniquely decomposed into an Exact (d, P_+), 
+1. **Hodge Decomposition**: Any state is uniquely decomposed into an Exact (d, P_+),
    Co-exact (δ, P_-), and Harmonic (H, P_0) part.
 2. **Cartan Involution**: The involution θ = 1 - 2T² which splits the space into
-   the Symmetric core (𝔨, Harmonic, +1 eigenspace) and Antisymmetric driver 
+   the Symmetric core (𝔨, Harmonic, +1 eigenspace) and Antisymmetric driver
    (𝔭, Active Bulk, -1 eigenspace).
 -/
-
-set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.GrandUnification.HodgeCartan
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+section Basic
+
+variable {R : Type*} [CommRing R]
 variable (T : R)
-
-/-- The Exact (Holomorphic) operator, corresponding to d (P_plus) -/
-def exact_op : R := P_plus T
-
-/-- The Co-exact (Anti-holomorphic) operator, corresponding to δ (P_minus) -/
-def coexact_op : R := P_minus T
 
 /-- The Harmonic operator (Kernel), corresponding to ℋ (P_zero) -/
 def harmonic_op : R := P_zero T
 
-/-- **Theorem: The Non-Commutative Hodge Decomposition**
-Every state decomposes into Exact, Co-exact, and Harmonic components. 
-This is the operator algebra equivalent of Ω^k = d(Ω^{k-1}) ⊕ δ(Ω^{k+1}) ⊕ ℋ^k -/
-theorem hodge_decomposition : harmonic_op T + exact_op T + coexact_op T = 1 := by
-  unfold harmonic_op exact_op coexact_op
-  exact partition_of_unity T
-
 /-! ### The Cartan Involution -/
 
-/-- The Cartan Involution θ on the algebra, defined as 1 - 2T^2. 
+/-- The Cartan Involution θ on the algebra, defined as 1 - 2T^2.
 It cleanly separates the Harmonic anchor from the Active thermodynamic driver. -/
 def cartan_involution : R := 1 - 2 * T^2
 
@@ -69,6 +56,26 @@ theorem cartan_symmetric_harmonic (hT : T ^ 3 = T) :
     _ = 1 - 3 * T^2 + 2 * (T * T) := by rw [hT]
     _ = 1 - T^2 := by ring
 
+end Basic
+
+section WithHalf
+
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable (T : R)
+
+/-- The Exact (Holomorphic) operator, corresponding to d (P_plus) -/
+def exact_op : R := P_plus T
+
+/-- The Co-exact (Anti-holomorphic) operator, corresponding to δ (P_minus) -/
+def coexact_op : R := P_minus T
+
+/-- **Theorem: The Non-Commutative Hodge Decomposition**
+Every state decomposes into Exact, Co-exact, and Harmonic components.
+This is the operator algebra equivalent of Ω^k = d(Ω^{k-1}) ⊕ δ(Ω^{k+1}) ⊕ ℋ^k -/
+theorem hodge_decomposition : harmonic_op T + exact_op T + coexact_op T = 1 := by
+  unfold harmonic_op exact_op coexact_op
+  exact partition_of_unity T
+
 /-- **Theorem: Antisymmetric Sector (𝔭)**
 The Exact sector (P_+) is in the -1 eigenspace of the Cartan Involution. -/
 theorem cartan_antisymmetric_exact (hT : T ^ 3 = T) :
@@ -92,5 +99,7 @@ theorem cartan_antisymmetric_coexact (hT : T ^ 3 = T) :
     _ = ⅟(2 : R) * (T^2 - T - 2 * (T * T) + 2 * T) := by rw [hT]
     _ = ⅟(2 : R) * (- T^2 + T) := by ring
     _ = - (⅟(2 : R) * (T^2 - T)) := by ring
+
+end WithHalf
 
 end InfoGeometry.GrandUnification.HodgeCartan

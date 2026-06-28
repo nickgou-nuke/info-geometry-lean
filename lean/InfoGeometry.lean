@@ -106,10 +106,16 @@ import InfoGeometry.Section12Formalized
 import InfoGeometry.Arithmetic.ConcreteMajorana
 import InfoGeometry.Epistemology.SemanticReflector
 
+import InfoGeometry.Physics.ParabolicClock
+import InfoGeometry.Physics.LogCFT
+
 /-!
 # InfoGeometry
 
-Canonical published entrypoint for the `InfoGeometry` Lean 4 library.
+Root entrypoint for the `InfoGeometry` Lean 4 library.
 
-This module exposes the stable, linted surface from `InfoGeometry/Library.lean`.
+The repository intent is that all repo-owned Lean modules build and are
+available through the root project surface.  `InfoGeometry.All` is the explicit
+whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
+for the canonical subset.
 -/

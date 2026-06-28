@@ -33,12 +33,15 @@ These are projective invariants: independent of basis, ray, or representation.
 -/
 theorem golden_ratio_projective_invariant :
     phi = (1 + Real.sqrt 5) / 2 ∧ phi ^ 2 = phi + 1 ∧ phi > 1 ∧ phi < 2 := by
-  have h_bound : Real.sqrt 5 < 3 :=
+  have hsqrt : Real.sqrt 5 < 3 := by
     calc
-      Real.sqrt 5 < Real.sqrt 9 := Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+      Real.sqrt 5 < Real.sqrt 9 :=
+        Real.sqrt_lt_sqrt (by norm_num : (0 : ℝ) ≤ 5) (by norm_num : (5 : ℝ) < 9)
       _ = 3 := by norm_num
-  refine ⟨rfl, phi_sq, phi_gt_one, ?_⟩
-  unfold phi; nlinarith
+  have hphi_lt2 : phi < 2 := by
+    change (1 + Real.sqrt 5) / 2 < 2
+    nlinarith
+  refine ⟨rfl, phi_sq, phi_gt_one, hphi_lt2⟩
 
 /-! ### 2. Galois Transport of Cyclotomic Generator Values -/
 
@@ -98,12 +101,14 @@ theorem fibonacci_quantum_dimension_at_boundary :
     let tau_dim := phi
     tau_dim ^ 2 = tau_dim + 1 ∧ 1 < tau_dim ∧ tau_dim < 2 := by
   intro tau_dim
-  have h_bound : Real.sqrt 5 < 3 :=
+  have hsqrt : Real.sqrt 5 < 3 := by
     calc
-      Real.sqrt 5 < Real.sqrt 9 := Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+      Real.sqrt 5 < Real.sqrt 9 :=
+        Real.sqrt_lt_sqrt (by norm_num : (0 : ℝ) ≤ 5) (by norm_num : (5 : ℝ) < 9)
       _ = 3 := by norm_num
-  refine ⟨phi_sq, phi_gt_one, ?_⟩
-  dsimp [tau_dim]
-  unfold phi; nlinarith
+  have htau_lt2 : phi < 2 := by
+    change (1 + Real.sqrt 5) / 2 < 2
+    nlinarith
+  refine ⟨phi_sq, phi_gt_one, htau_lt2⟩
 
 end InfoGeometry.Canonical.BostConnesProjectiveGeometry

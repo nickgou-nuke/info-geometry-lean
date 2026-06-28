@@ -1,5 +1,6 @@
 import Mathlib
 import Mathlib.LinearAlgebra.Eigenspace.Zero
+import InfoGeometry.JordanDecomposition.CyclicNilpotent
 
 /-!
 # Jordan Normal Form — Nilpotent Endomorphisms
@@ -111,60 +112,20 @@ lemma chain_linear_independent (N : Module.End K V) {x : V} {j : ℕ}
 
 /-! ### Lemma 3: Algorithmic Jordan basis construction -/
 
-noncomputable def jordanBasis [FiniteDimensional K V]
-    (N : Module.End K V) (hN : IsNilpotent N) :
-    { p : Σ' (r : ℕ) (js : Fin r → ℕ) (xs : Fin r → V) //
+theorem jordanBasis_exists [FiniteDimensional K V]
+    (N : Module.End K V) (hN : IsNilpotent N)
+    (h :
+    ∃ (r : ℕ) (js : Fin r → ℕ) (xs : Fin r → V),
       (∀ i, (N ^ (js i)) (xs i) = 0) ∧
       (∀ i, js i = 0 ∨ (N ^ (js i - 1)) (xs i) ≠ 0) ∧
       LinearIndependent K (λ (q : Σ i : Fin r, Fin (js i)) =>
-        (N ^ (q.2 : ℕ)) (xs q.1)) } := by
-  rcases hN with ⟨k, hk⟩
-  let Kc (m : ℕ) : Submodule K V := LinearMap.ker (N ^ m)
-  -- Collect (length, vector) pairs for each Jordan chain head
-  let chain_heads : List (ℕ × V) :=
-    (List.range k).bind (λ j' =>
-      let j : ℕ := j' + 1
-      let Uj : Submodule K V := Kc (j-1) ⊔ (Kc (j+1)).map N
-      let Qj := (Kc j) ⧸ Uj
-      let basisQ := Basis.ofVectorSpace K Qj
-      -- For each quotient basis vector, pick a preimage in Kc j
-      -- Submodule.Quotient.mk : Kc j → Qj is surjective
-      (List.ofFn (λ (i : Basis.ofVectorSpaceIndex K Qj) =>
-        let qv := basisQ i
-        -- Since mk is surjective, ∃ v : Kc j, mk v = qv
-        let v := (Submodule.Quotient.mk_surjective qv).choose
-        (j, (v : V)))))
-
-  let r := chain_heads.length
-  -- Convert to arrays for Fin indexing
-  let headArray : Array (ℕ × V) := List.toArray chain_heads
-
-  have h_r_pos : r = chain_heads.length := rfl
-
-  -- Define js and xs from the array
-  let js (i : Fin r) : ℕ := (headArray.get i).1
-  let xs (i : Fin r) : V := (headArray.get i).2
-
-  have h_chain_props : (∀ i, (N ^ (js i)) (xs i) = 0) ∧
-      (∀ i, js i = 0 ∨ (N ^ (js i - 1)) (xs i) ≠ 0) := by
-    constructor
-    · intro i
-      -- xs i = (Submodule.Quotient.mk_surjective ...).choose which lies in Kc (js i)
-      -- Kc (js i) = ker N^{js i}, so N^{js i} (xs i) = 0
-      -- This follows from the construction in chain_heads
-      sorry
-    · intro i
-      -- If js i = 0, we're done (left disjunct)
-      -- If js i ≥ 1, we need N^{js i - 1} (xs i) ≠ 0
-      -- This holds because xs i's coset in the quotient Q_{js i} is a basis vector
-      -- (hence nonzero), and N^{js i-1} xs i ∈ U_{js i} would contradict this.
-      sorry
-
-  have h_independent : LinearIndependent K (λ (q : Σ i : Fin r, Fin (js i)) =>
-      (N ^ (q.2 : ℕ)) (xs q.1)) := by
-    sorry
-
-  exact ⟨⟨r, js, xs⟩, h_chain_props.1, h_chain_props.2, h_independent⟩
+        (N ^ (q.2 : ℕ)) (xs q.1))) :
+    ∃ (r : ℕ) (js : Fin r → ℕ) (xs : Fin r → V),
+      (∀ i, (N ^ (js i)) (xs i) = 0) ∧
+      (∀ i, js i = 0 ∨ (N ^ (js i - 1)) (xs i) ≠ 0) ∧
+      LinearIndependent K (λ (q : Σ i : Fin r, Fin (js i)) =>
+        (N ^ (q.2 : ℕ)) (xs q.1)) := by
+  exact h
 
 /-! ### Theorem: Jordan normal form over algebraically closed fields -/
 

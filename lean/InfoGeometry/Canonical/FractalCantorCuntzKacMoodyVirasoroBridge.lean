@@ -39,6 +39,9 @@ source-side normal-ordering construction is supplied by this packet.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 
 open InfoGeometry.Core

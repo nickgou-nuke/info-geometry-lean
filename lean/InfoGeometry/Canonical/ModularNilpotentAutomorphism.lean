@@ -31,6 +31,9 @@ namespace InfoGeometry.Canonical.ModularNilpotentAutomorphism
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
+/-- Local concrete matrix carrier for this finite nilpotent owner. -/
+abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+
 /-- Local modular perturbation `Δ = 1 + N`. -/
 def Delta : M2R :=
   (1 : M2R) + N
@@ -55,14 +58,16 @@ def informationFreeEnergy : M2R :=
 @[simp]
 theorem N_sq_zero :
     N * N = (0 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The regularized modular flux is exactly the nilpotent generator. -/
 @[simp]
 theorem entropyFlux_eq_N :
     entropyFlux = N := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [entropyFlux, Delta, N]
 
 /--
@@ -85,14 +90,16 @@ def nilpotentFlow (t : ℝ) : M2R :=
 @[simp]
 theorem nilpotentFlow_zero :
     nilpotentFlow 0 = (1 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [nilpotentFlow, N]
 
 /-- At time `1`, the nilpotent flow is `Δ`. -/
 @[simp]
 theorem nilpotentFlow_one :
     nilpotentFlow 1 = Delta := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [nilpotentFlow, Delta, N]
 
 /--
@@ -106,7 +113,7 @@ theorem nilpotentFlow_mul (s t : ℝ) :
   fin_cases i <;> fin_cases j
   · simp [nilpotentFlow, N, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [nilpotentFlow, N, Matrix.mul_apply, Fin.sum_univ_two]
-    simpa [add_comm]
+    ring
   · simp [nilpotentFlow, N, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [nilpotentFlow, N, Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -123,11 +130,11 @@ theorem nilpotentFlow_pow (t : ℝ) (n : ℕ) :
       calc
         (nilpotentFlow t) ^ (n + 1)
             = (nilpotentFlow t) ^ n * nilpotentFlow t := by simp [pow_succ]
-        _ = nilpotentFlow ((n : ℝ) * t) * nilpotentFlow t := by simpa [ih]
+        _ = nilpotentFlow ((n : ℝ) * t) * nilpotentFlow t := by rw [ih]
         _ = nilpotentFlow (((n : ℝ) * t) + t) := by
-              simpa [add_comm] using nilpotentFlow_mul ((n : ℝ) * t) t
+              exact nilpotentFlow_mul ((n : ℝ) * t) t
         _ = nilpotentFlow (((n + 1 : ℕ) : ℝ) * t) := by
-              simp [Nat.cast_add, add_mul, one_mul, add_comm, add_left_comm, add_assoc]
+              simp [Nat.cast_add, add_mul, one_mul, add_comm]
 
 /-- The inverse of `E(t)` is `E(-t)`. -/
 @[simp]
@@ -168,7 +175,7 @@ theorem modularAutomorphism_exact_expansion
     ring
   · simp [modularAutomorphism, nilpotentFlow, N, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
   · simp [modularAutomorphism, nilpotentFlow, N, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]
-    simpa [mul_comm, add_comm, add_left_comm, add_assoc]
+    ring
 
 /-- At time zero, the modular automorphism is the identity on operators. -/
 @[simp]
@@ -254,10 +261,13 @@ theorem commutator_eq_half_time_symmetric_difference
     N * A - A * N =
       ((1 / 2 : ℝ)) • (modularAutomorphism 1 A - modularAutomorphism (-1) A) := by
   have hodd := modularAutomorphism_sub_neg 1 A
+  have hodd' :
+      modularAutomorphism 1 A - modularAutomorphism (-1) A = (2 : ℝ) • (N * A - A * N) := by
+    simpa using hodd
   have hsmul :
       ((1 / 2 : ℝ)) • (modularAutomorphism 1 A - modularAutomorphism (-1) A) =
         ((1 / 2 : ℝ)) • ((2 : ℝ) • (N * A - A * N)) := by
-    simpa [hodd]
+    exact congrArg (fun X => ((1 / 2 : ℝ)) • X) hodd'
   calc
     N * A - A * N
         = (1 : ℝ) • (N * A - A * N) := by simp
@@ -335,11 +345,11 @@ theorem modularAutomorphism_rec_nat
       have hcast : t + ((n : ℝ) * t) = (((n + 1 : ℕ) : ℝ) * t) := by
         calc
           t + ((n : ℝ) * t) = ((n : ℝ) + 1) * t := by ring
-          _ = (((n + 1 : ℕ) : ℝ) * t) := by simp [Nat.cast_add, add_comm]
+          _ = (((n + 1 : ℕ) : ℝ) * t) := by simp [Nat.cast_add]
       rw [hcast]
       have hcast2 : (((n + 1 : ℕ) : ℝ) * t) = ((n : ℝ) + 1) * t := by
-        simp [Nat.cast_add, add_comm]
-      simpa [hcast2]
+        simp [Nat.cast_add]
+      rw [hcast2]
 
 /--
 Closed-form finite iterate of the nilpotent modular automorphism:
@@ -389,7 +399,8 @@ The modular perturbation fixes the local vacuum vector.
 @[simp]
 theorem Delta_vacuum :
     Delta * vac = vac := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [Delta, N, vac, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--

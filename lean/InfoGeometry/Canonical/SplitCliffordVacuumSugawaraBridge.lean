@@ -27,13 +27,13 @@ open Filter
 Given explicit truncation and Wick commutator laws, the source current family
 closes to the external `CurrentHeisenbergRep`.
 -/
-theorem vacuum_closes_external_heisenberg_rep
+def vacuum_closes_external_heisenberg_rep
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (J : Int → V →ₗ[𝕜] V)
     (h_trunc : ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0)
     (h_wick : SplitSourceEndWickLaw J) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) := by
+    CurrentHeisenbergRep 𝕜 V := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
     packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentHeisenbergRep W
@@ -41,16 +41,31 @@ theorem vacuum_closes_external_heisenberg_rep
 /--
 The same data also closes to the packaged external Sugawara morphism surface.
 -/
-theorem vacuum_closes_external_sugawara_morphism
+noncomputable def vacuum_closes_external_sugawara_morphism
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (J : Int → V →ₗ[𝕜] V)
     (h_trunc : ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0)
     (h_wick : SplitSourceEndWickLaw J) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
+    CurrentSugawaraMorphism 𝕜 V := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
     packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentSugawaraMorphism W
+
+/-- Explicit Wick data read out as the exact external Heisenberg current laws. -/
+theorem vacuum_closes_external_heisenberg_rep_readout
+    {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (J : Int → V →ₗ[𝕜] V)
+    (h_trunc : ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0)
+    (h_wick : SplitSourceEndWickLaw J) :
+    (vacuum_closes_external_heisenberg_rep J h_trunc h_wick).J = J
+      ∧ (vacuum_closes_external_heisenberg_rep J h_trunc h_wick).trunc = h_trunc
+      ∧ ∀ m n,
+          ((vacuum_closes_external_heisenberg_rep J h_trunc h_wick).J m).commutator
+              ((vacuum_closes_external_heisenberg_rep J h_trunc h_wick).J n) =
+            if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
+  exact ⟨rfl, rfl, (vacuum_closes_external_heisenberg_rep J h_trunc h_wick).comm⟩
 
 /--
 External charged-Fock base commutator readout in bridge form:
@@ -104,4 +119,3 @@ theorem chargedFock_external_sugawara_vacuum_highest_weight_packet
   chargedFock_sugawara_vacuum_highest_weight_packet (𝕜 := 𝕜) α
 
 end InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
-

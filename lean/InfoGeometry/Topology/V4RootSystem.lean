@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
+open InfoGeometryCore
 /-!
 # Finite V4 root-system socket
 
@@ -135,74 +137,7 @@ theorem trialityCycle_toV4_ne_identity (g : NontrivialV4) :
 
 end NontrivialV4
 
-/-- The three scalar states selected by the tripotent polynomial `x^3 = x`. -/
-inductive TripotentState where
-  | neg
-  | zero
-  | pos
-  deriving DecidableEq, Repr
 
-namespace TripotentState
-
-/-- Integer readout of the finite tripotent spectrum `{-1,0,+1}`. -/
-def toInt : TripotentState → ℤ
-  | neg => -1
-  | zero => 0
-  | pos => 1
-
-/-- Every finite tripotent state satisfies `x^3=x`. -/
-theorem cube_eq_self (s : TripotentState) : toInt s ^ 3 = toInt s := by
-  cases s <;> norm_num [toInt]
-
-/-- Projector onto the `-1` branch of the finite trifactor spectrum. -/
-def pNeg : TripotentState → ℤ
-  | neg => 1
-  | zero => 0
-  | pos => 0
-
-/-- Projector onto the `0` branch of the finite trifactor spectrum. -/
-def pZero : TripotentState → ℤ
-  | neg => 0
-  | zero => 1
-  | pos => 0
-
-/-- Projector onto the `+1` branch of the finite trifactor spectrum. -/
-def pPos : TripotentState → ℤ
-  | neg => 0
-  | zero => 0
-  | pos => 1
-
-/-- The three finite trifactor projectors partition the scalar state. -/
-theorem trifactor_projector_partition (s : TripotentState) :
-    pNeg s + pZero s + pPos s = 1 := by
-  cases s <;> norm_num [pNeg, pZero, pPos]
-
-/-- Each finite trifactor projector is idempotent. -/
-theorem trifactor_projector_idempotent (s : TripotentState) :
-    pNeg s * pNeg s = pNeg s ∧
-      pZero s * pZero s = pZero s ∧
-      pPos s * pPos s = pPos s := by
-  cases s <;> norm_num [pNeg, pZero, pPos]
-
-/-- The tripotent scalar acts by the expected eigenvalue on each trifactor branch. -/
-theorem trifactor_eigen_readout (s : TripotentState) :
-    toInt s * pNeg s = -pNeg s ∧
-      toInt s * pZero s = 0 ∧
-      toInt s * pPos s = pPos s := by
-  cases s <;> norm_num [toInt, pNeg, pZero, pPos]
-
-/-- Triality-shaped cycle on the three trifactor branches. -/
-def trialityCycle : TripotentState → TripotentState
-  | neg => zero
-  | zero => pos
-  | pos => neg
-
-/-- The trifactor branch triality cycle has order three. -/
-theorem trialityCycle_cube (s : TripotentState) :
-    trialityCycle (trialityCycle (trialityCycle s)) = s := by
-  cases s <;> rfl
-
-end TripotentState
 
 /-- The four roots of the finite `A₁ × A₁` sign-root picture. -/
 inductive A1xA1Root where

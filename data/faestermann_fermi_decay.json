@@ -1,0 +1,24 @@
+{
+  "source": "Faestermann et al., Eur. Phys. J. A 15, 185-188 (2002)",
+  "experiment": "FRS at GSI, 112Sn fragmentation",
+  "superallowed_fermi_decay": {
+    "constant_ft_value_s": 3072,
+    "heavy_N_eq_Z_nuclei_observed": [
+      "78Y",
+      "82Nb",
+      "86Tc",
+      "90Rh",
+      "94Ag",
+      "98In"
+    ],
+    "physics_principle": "Conserved Vector Current (CVC) hypothesis leading to structure-independent ft-values."
+  },
+  "gamow_teller_decay_102Sn": {
+    "half_life_s": 3.8,
+    "half_life_uncertainty_s": 0.2,
+    "B_GT_measured": 4.0,
+    "B_GT_measured_uncertainty": 0.6,
+    "B_GT_extreme_single_particle": 17.8,
+    "hindrance_factor": 4.5
+  }
+}

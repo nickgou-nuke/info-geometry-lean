@@ -4,7 +4,7 @@ import Mathlib.Algebra.Module.Basic
 /-!
 # Sandbox: Atiyah-Bott Lefschetz Fixed-Point Formalization
 
-This file formalizes the abstract Lefschetz trace formula over discrete, 
+This file formalizes the abstract Lefschetz trace formula over discrete,
 isolated fixed points of the spinorial flow natively inside Lean 4.
 -/
 variable {R : Type*} [CommRing R]
@@ -29,7 +29,7 @@ def m2_lefschetz_det_weight : ℤ := 2
 
 /--
   THE ATIYAH-BOTT LEFSCHETZ FIXED-POINT PREDICATE
-  
+
   Formulates the type tree assertion equating the global alternating cohomology trace
   to the localized sum of tangent weights over the discrete fixed-point array.
 -/
@@ -37,4 +37,5 @@ structure LefschetzFormulaSetup (X : Type*) (GradedH : GradedCohomology X R) whe
   global_cohomology_trace : R
   fixed_points_list : List (IsolatedFixedPoint X R)
   -- The global-to-local trace equality pairing
-  trace_equivalence : True 
+  trace_equivalence :
+    global_cohomology_trace = (fixed_points_list.map (fun p => p.local_det)).sum

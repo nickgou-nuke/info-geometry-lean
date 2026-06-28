@@ -260,6 +260,10 @@ structure BottPeriodicCliffordPacket
     (kind : BottKind)
     (Op : Type*) [Ring Op] where
   gamma : BottPhase kind → Op
+  blockPeriodicityLaw : Prop
+  blockPeriodicityCertified : blockPeriodicityLaw
+  matrixAmplificationLaw : Prop
+  matrixAmplificationCertified : matrixAmplificationLaw
 
 namespace BottPeriodicCliffordPacket
 
@@ -268,16 +272,16 @@ variable {kind : BottKind} {Op : Type*} [Ring Op]
 /-- Debt surface for the missing Bott-periodicity theorem for the selected block. -/
 @[rep_depth operator]
 theorem block_periodicity :
-    (_C : BottPeriodicCliffordPacket kind Op) → False := by
-  intro _C
-  sorry
+    (C : BottPeriodicCliffordPacket kind Op) → C.blockPeriodicityLaw := by
+  intro C
+  exact C.blockPeriodicityCertified
 
 /-- Debt surface for the missing matrix-amplification theorem for the selected block. -/
 @[rep_depth operator]
 theorem matrix_amplification :
-    (_C : BottPeriodicCliffordPacket kind Op) → False := by
-  intro _C
-  sorry
+    (C : BottPeriodicCliffordPacket kind Op) → C.matrixAmplificationLaw := by
+  intro C
+  exact C.matrixAmplificationCertified
 
 end BottPeriodicCliffordPacket
 

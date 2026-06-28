@@ -1,0 +1,83 @@
+{"totalEdges": 52371,
+ "topUnknownTargets":
+ [{"label":
+   "_private.InfoGeometry.Core.UnifiedGeometry.0.InfoGeometry.Core.mem_conjugationEvenSubmodule_iff",
+   "count": 3},
+  {"label":
+   "_private.InfoGeometry.Krein.KreinSpace.0.InfoGeometry.Krein.signFlipMap_invol",
+   "count": 3},
+  {"label":
+   "_private.InfoGeometry.Krein.KreinSpace.0.InfoGeometry.Krein.signFlipMap_selfAdj",
+   "count": 3},
+  {"label":
+   "_private.InfoGeometry.Core.UnifiedGeometry.0.InfoGeometry.Core.mem_conjugationOddSubmodule_iff",
+   "count": 2},
+  {"label":
+   "_private.InfoGeometry.Krein.InvolutiveSelfDualCarrier.0.InfoGeometry.Krein.InvolutiveSelfDualCarrier.ε_is_cartan",
+   "count": 2},
+  {"label":
+   "_private.InfoGeometry.Krein.KreinSpace.0.InfoGeometry.Krein.signFlipMap",
+   "count": 2},
+  {"label":
+   "_private.InfoGeometry.Core.UnifiedGeometry.0.InfoGeometry.Core.cartanInvolution_ext",
+   "count": 1},
+  {"label":
+   "_private.InfoGeometry.Krein.KreinSpace.0.InfoGeometry.Krein.signFlipMap_apply",
+   "count": 1},
+  {"label":
+   "_private.InfoGeometry.Krein.KreinSpace.0.InfoGeometry.Krein.signFlipMap_norm",
+   "count": 1}],
+ "topInternalTargets":
+ [{"label": "InfoGeometry.Krein.DoubledSpace._proof_1", "count": 122},
+  {"label": "InfoGeometry.Core.Projector.plus._proof_1", "count": 22},
+  {"label": "InfoGeometry.Core.conjugationMap._proof_4", "count": 17},
+  {"label": "InfoGeometry.Core.conjugationMapNeg._proof_1", "count": 16},
+  {"label": "InfoGeometry.Cartan.Pplus._proof_1", "count": 15},
+  {"label": "InfoGeometry.Core.conjugationMap._proof_2", "count": 15},
+  {"label": "InfoGeometry.Core.conjugationMap._proof_3", "count": 14},
+  {"label": "InfoGeometry.Core.conjugationMap._proof_1", "count": 13},
+  {"label": "InfoGeometry.Cartan.Pplus._proof_2", "count": 11},
+  {"label": "InfoGeometry.Krein.KreinSpace.kreinAdjoint._proof_7",
+   "count": 10}],
+ "topInternalModules":
+ [{"label": "InfoGeometry.Krein.DoubledSpace", "count": 174},
+  {"label": "InfoGeometry.Core.UnifiedGeometry", "count": 120},
+  {"label": "InfoGeometry.Krein.KreinSpace", "count": 94},
+  {"label": "InfoGeometry.Core.SymmetricLie", "count": 80},
+  {"label": "InfoGeometry.Krein.InvolutiveSelfDualCarrier", "count": 43},
+  {"label": "InfoGeometry.Core.SymmetricLieGeneric", "count": 30},
+  {"label": "InfoGeometry.Core.Involution", "count": 27},
+  {"label": "InfoGeometry.Cartan.Involution", "count": 26},
+  {"label": "InfoGeometry.Meta.Architecture", "count": 14},
+  {"label": "InfoGeometry.Architecture.SymmetricSpace", "count": 13}],
+ "topExternalTargets":
+ [{"label": "Real", "count": 1483},
+  {"label": "Eq", "count": 998},
+  {"label": "Real.semiring", "count": 802},
+  {"label": "AddCommGroup.toAddCommMonoid", "count": 617},
+  {"label": "LieAlgebra", "count": 562},
+  {"label": "LieRing", "count": 562},
+  {"label": "PseudoMetricSpace.toUniformSpace", "count": 561},
+  {"label": "OfNat.ofNat", "count": 560},
+  {"label": "Semiring.toNonAssocSemiring", "count": 547},
+  {"label": "RingHom.id", "count": 505}],
+ "topExternalModules":
+ [{"label": "Init.Prelude", "count": 7203},
+  {"label": "Mathlib.Algebra.Group.Defs", "count": 4988},
+  {"label": "Mathlib.Data.Real.Basic", "count": 4395},
+  {"label": "Mathlib.Algebra.Ring.Defs", "count": 3077},
+  {"label": "Mathlib.Analysis.Normed.Group.Defs", "count": 2526},
+  {"label": "Mathlib.Algebra.Lie.Basic", "count": 2279},
+  {"label": "Mathlib.Topology.Algebra.Module.LinearMap", "count": 1122},
+  {"label": "Mathlib.Analysis.InnerProductSpace.Defs", "count": 844},
+  {"label": "Mathlib.Algebra.GroupWithZero.Action.Defs", "count": 838},
+  {"label": "Mathlib.Analysis.Normed.Field.Basic", "count": 833}],
+ "srcOutsideFilteredSet": 0,
+ "schemaVersion": 1,
+ "nsFilter": "InfoGeometry",
+ "keptEdges": 6398,
+ "dstUnknownEdges": 18,
+ "dstOutsideModuleEdges": 45320,
+ "dstInsideModuleStableEdges": 0,
+ "dstInsideModuleGeneratedEdges": 635,
+ "droppedEdges": 45973}

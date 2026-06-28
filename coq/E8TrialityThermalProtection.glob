@@ -1,0 +1,80 @@
+DIGEST c6be645978442222e68515a48db06106
+FE8TrialityThermalProtection
+R15:19 Stdlib.Reals.Reals <> <> lib
+R37:42 Stdlib.ZArith.ZArith <> <> lib
+def 116:121 <> dim_E8
+R125:127 Corelib.Init.Datatypes <> nat ind
+def 148:154 <> rank_E8
+R158:160 Corelib.Init.Datatypes <> nat ind
+def 179:195 <> positive_roots_E8
+R199:201 Corelib.Init.Datatypes <> nat ind
+ind 261:279 <> Spin8Representation
+constr 295:300 <> vector
+constr 342:352 <> spinor_plus
+constr 390:401 <> spinor_minus
+R304:322 E8TrialityThermalProtection <> Spin8Representation:1 ind
+R356:374 E8TrialityThermalProtection <> Spin8Representation:1 ind
+R405:423 E8TrialityThermalProtection <> Spin8Representation:1 ind
+scheme 261:279 <> Spin8Representation_rect
+scheme 261:279 <> Spin8Representation_ind
+scheme 261:279 <> Spin8Representation_rec
+scheme 261:279 <> Spin8Representation_sind
+def 447:459 <> spin8_rep_dim
+R468:486 E8TrialityThermalProtection <> Spin8Representation ind
+binder 462:464 <> rep:3
+R491:493 Corelib.Init.Datatypes <> nat ind
+R506:508 E8TrialityThermalProtection <> rep:3 var
+R519:524 E8TrialityThermalProtection <> vector constr
+R535:545 E8TrialityThermalProtection <> spinor_plus constr
+R556:567 E8TrialityThermalProtection <> spinor_minus constr
+def 619:632 <> triality_sigma
+R641:659 E8TrialityThermalProtection <> Spin8Representation ind
+binder 635:637 <> rep:5
+R664:682 E8TrialityThermalProtection <> Spin8Representation ind
+R695:697 E8TrialityThermalProtection <> rep:5 var
+R708:713 E8TrialityThermalProtection <> vector constr
+R718:728 E8TrialityThermalProtection <> spinor_plus constr
+R734:744 E8TrialityThermalProtection <> spinor_plus constr
+R749:760 E8TrialityThermalProtection <> spinor_minus constr
+R766:777 E8TrialityThermalProtection <> spinor_minus constr
+R782:787 E8TrialityThermalProtection <> vector constr
+def 808:819 <> triality_tau
+R828:846 E8TrialityThermalProtection <> Spin8Representation ind
+binder 822:824 <> rep:7
+R851:869 E8TrialityThermalProtection <> Spin8Representation ind
+R882:884 E8TrialityThermalProtection <> rep:7 var
+R895:900 E8TrialityThermalProtection <> vector constr
+R905:910 E8TrialityThermalProtection <> vector constr
+R916:926 E8TrialityThermalProtection <> spinor_plus constr
+R931:942 E8TrialityThermalProtection <> spinor_minus constr
+R948:959 E8TrialityThermalProtection <> spinor_minus constr
+R964:974 E8TrialityThermalProtection <> spinor_plus constr
+prf 992:1013 <> triality_sigma_order_3
+binder 1024:1026 <> rep:9
+R1083:1085 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1031:1044 E8TrialityThermalProtection <> triality_sigma def
+R1047:1060 E8TrialityThermalProtection <> triality_sigma def
+R1063:1076 E8TrialityThermalProtection <> triality_sigma def
+R1078:1080 E8TrialityThermalProtection <> rep:9 var
+R1086:1088 E8TrialityThermalProtection <> rep:9 var
+prf 1141:1160 <> triality_tau_order_2
+binder 1171:1173 <> rep:10
+R1209:1211 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1178:1189 E8TrialityThermalProtection <> triality_tau def
+R1192:1203 E8TrialityThermalProtection <> triality_tau def
+R1205:1207 E8TrialityThermalProtection <> rep:10 var
+R1212:1214 E8TrialityThermalProtection <> rep:10 var
+ax 1311:1330 <> e8_liouville_grading
+R1337:1340 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1334:1336 Corelib.Init.Datatypes <> nat ind
+R1341:1341 Corelib.Numbers.BinNums <> Z ind
+prf 1353:1378 <> triality_preserves_grading
+binder 1389:1391 <> rep:13
+R1436:1440 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1396:1415 E8TrialityThermalProtection <> e8_liouville_grading defax
+R1418:1430 E8TrialityThermalProtection <> spin8_rep_dim def
+R1432:1434 E8TrialityThermalProtection <> rep:13 var
+R1441:1460 E8TrialityThermalProtection <> e8_liouville_grading defax
+R1463:1475 E8TrialityThermalProtection <> spin8_rep_dim def
+R1478:1491 E8TrialityThermalProtection <> triality_sigma def
+R1493:1495 E8TrialityThermalProtection <> rep:13 var

@@ -401,10 +401,16 @@ class ProofSeeker:
         target_line: int,
         max_iterations: int = 3,
     ) -> bool:
-        """Iteratively refine the candidate proof using compiler errors.
+        """Iteratively refine a candidate proof using compiler errors.
 
-        Acts as a coding agent: write → compile → read errors → fix → repeat.
-        Returns True if the file compiles within *max_iterations* attempts.
+        This is an oracle/search helper, not a source editor.  It builds a
+        complete candidate file under ``tmp/oracle_candidates`` and compiles
+        that candidate.  It never renames or overwrites ``target_file``.  If a
+        candidate compiles, a coding agent must inspect it and apply a normal
+        patch separately.
+
+        Returns True if a candidate file compiles within *max_iterations*
+        attempts.
         """
         if not candidate.proof_lean:
             logger.warning("No Lean code to formalize")
@@ -422,46 +428,51 @@ class ProofSeeker:
             return False
 
         proof_lines = candidate.proof_lean.strip().split("\n")
+        candidate_dir = _REPO / "tmp" / "oracle_candidates"
+        candidate_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            relative = target_file.resolve().relative_to(_REPO.resolve())
+        except ValueError:
+            relative = Path(target_file.name)
+        candidate_file = candidate_dir / (
+            "__".join(relative.parts) + f".proof_seeker.{os.getpid()}.lean"
+        )
 
         for attempt in range(max_iterations):
             logger.info("  Formalization attempt %d/%d", attempt + 1, max_iterations)
 
-            # Backup
-            backup = target_file.with_suffix(".lean.bak")
-            target_file.rename(backup)
-
             try:
-                # Write the proof
                 new_lines = lines[:target_line - 1] + proof_lines + lines[target_line:]
-                target_file.write_text("\n".join(new_lines), encoding="utf-8")
+                candidate_file.write_text("\n".join(new_lines), encoding="utf-8")
 
-                # Compile
                 result = subprocess.run(
-                    ["lake", "env", "lean", str(target_file)],
+                    ["lake", "env", "lean", str(candidate_file)],
                     capture_output=True, text=True, timeout=120,
                     cwd=str(_REPO),
                 )
 
                 if result.returncode == 0:
-                    logger.info("  ✓ Compilation SUCCESS (attempt %d)", attempt + 1)
-                    backup.unlink(missing_ok=True)
+                    logger.info(
+                        "  ✓ Candidate compilation SUCCESS (attempt %d): %s",
+                        attempt + 1,
+                        candidate_file,
+                    )
                     return True
 
-                # Compilation failed — read errors and fix
                 raw_stderr = (result.stderr or "")[:2000]
                 error_output = "\n".join(
                     l for l in raw_stderr.split("\n")
                     if not l.strip().startswith("note:") and not l.strip().startswith("to ")
                 )  # last 20 meaningful lines
-                logger.info("  ✗ Compilation FAILED — fixing...")
+                logger.info("  ✗ Candidate compilation FAILED — asking for advice...")
 
-                # Build a fix prompt with the error
-                current_code = target_file.read_text(encoding="utf-8")
+                current_code = candidate_file.read_text(encoding="utf-8")
                 fix_prompt = (
-                    f"Lean compilation error. Fix the proof at `{target_file.name}:{target_line}`.\n"
+                    f"Lean compilation error. Advise a fix for `{target_file.name}:{target_line}`.\n"
                     f"Error:\n```\n{error_output}\n```\n"
                     f"Code:\n```lean4\n{current_code[:2000]}\n```\n"
-                    f"Return ONLY the fixed Lean code for the proof block, no markdown fences."
+                    f"Return ONLY the fixed Lean code for the proof block, no markdown fences. "
+                    f"Do not claim the source file was edited."
                 )
 
                 # Use Pi as the lightweight coding agent for iterative fixes
@@ -523,14 +534,7 @@ class ProofSeeker:
 
             except Exception as exc:
                 logger.error("  Formalization error: %s", exc)
-                target_file.write_text(original, encoding="utf-8")
-                backup.unlink(missing_ok=True)
                 return False
-            finally:
-                # Always restore the original between attempts
-                if backup.exists():
-                    target_file.write_text(original, encoding="utf-8")
-                    backup.unlink(missing_ok=True)
 
         logger.warning("  All %d formalization attempts failed", max_iterations)
         return False

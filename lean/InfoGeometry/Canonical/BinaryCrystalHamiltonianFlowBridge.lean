@@ -45,7 +45,16 @@ variable (B : BinaryCrystalHamiltonianFlowBridge 𝔤)
 @[rep_depth transport]
 theorem crystal_ownerTarget (_B : BinaryCrystalHamiltonianFlowBridge
     𝔤) :
-    BinaryCrystalWeylBlochOwnerTarget :=
+    (∀ w : BinaryLattice,
+      binaryUnitCell w =
+        ({w} : Set BinaryLattice)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w false)
+          ∪ binaryUnitCell (TypeIIIModularCantorSystem.BinaryWord.child w true))
+    ∧ (∀ w : BinaryLattice, ∀ b : Bool,
+        wordParity (TypeIIIModularCantorSystem.BinaryWord.child w b) = not (wordParity w))
+    ∧ (∀ {G : Type*} [Group G] [MulAction G BinaryLattice]
+        (g : G) (f : BinaryCrystalObservable) (w : BinaryLattice),
+        adjointAction (G := G) g f (g • w) = f w) :=
   binaryCrystalWeylBlochOwnerTarget
 
 /-- The Souriau partition function is read as a Souriau character on the crystal side. -/

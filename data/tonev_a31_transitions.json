@@ -1,0 +1,28 @@
+{
+  "source": "Tonev et al., Physics Letters B 821 (2021) 136603",
+  "experiment": "20Ne + 12C at 33 MeV, GASP + EUCLIDES",
+  "data": {
+    "A31": {
+      "pair": "31P-31S",
+      "transitions": [
+        {
+          "initial_state": "7/2_1^-",
+          "final_state": "5/2_2^+",
+          "energy_keV": {
+            "31P": 1135.6,
+            "31S": 1163.9
+          },
+          "B_E1_exp_e2fm2": {
+            "31P": 2.7e-4,
+            "31S": 7.2e-4
+          },
+          "B_E1_EMPM_e2fm2": {
+            "31P": 2.2e-4,
+            "31S": 7.9e-4
+          },
+          "isospin_mixing_ratio": 0.24
+        }
+      ]
+    }
+  }
+}

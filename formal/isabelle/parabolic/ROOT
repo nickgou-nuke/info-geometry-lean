@@ -1,0 +1,3 @@
+session Parabolic_Clock_Local = HOL +
+  theories
+    Parabolic_Clock_Local

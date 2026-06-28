@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometryCore.Basic
 
+open InfoGeometryCore
 /-!
 # Fibonacci seed to Clifford atom bridge
 
@@ -20,14 +22,14 @@ namespace InfoGeometry.GrandUnification.FibonacciCliffordBridge
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 abbrev M4R := Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ
 
-/-- Golden ratio. -/
-def φ : ℝ := (1 + Real.sqrt 5) / 2
+/-- The golden ratio. -/
+noncomputable abbrev φ := phiR
 
 lemma h5sq : (Real.sqrt 5)^2 = (5 : ℝ) :=
   Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 5)
 
 theorem golden_identity : φ^2 = φ + 1 := by
-  dsimp [φ]
+  dsimp [φ, phiR]
   calc
     ((1 + Real.sqrt 5) / 2)^2 = ((1 + Real.sqrt 5)^2) / 4 := by ring
     _ = (1 + 2*Real.sqrt 5 + (Real.sqrt 5)^2) / 4 := by ring
@@ -56,7 +58,7 @@ theorem tau_fusion_dimension : fibDim FibSector.tau ^ 2 = fibDim FibSector.one +
   simp [fibDim, golden_identity, add_comm]
 
 /-- Chiral grading / `e₁` generator of the `Cl(1,1)` atom. -/
-def sigma3 : M2R := !![1, 0; 0, -1]
+abbrev sigma3 := sigma3R
 
 /-- Real representative of `iσ₂`; `e₂²=-1`. -/
 def iSigma2 : M2R := !![0, 1; -1, 0]

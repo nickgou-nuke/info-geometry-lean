@@ -61,11 +61,17 @@ theorem zorn_maximal_above_eq
   exact ⟨m, ham, fun x hmx => le_antisymm (hm hmx) hmx⟩
 
 /-- In a preorder category, the canonical morphism attached to an inequality. -/
-theorem poset_hom_of_le
+def poset_hom_of_le
     {P : Type uP} [Preorder P] {x y : P}
     (hxy : x ≤ y) :
-    Nonempty (x ⟶ y) :=
-  ⟨homOfLE hxy⟩
+    x ⟶ y :=
+  homOfLE hxy
+
+theorem poset_hom_of_le_eq_homOfLE
+    {P : Type uP} [Preorder P] {x y : P}
+    (hxy : x ≤ y) :
+    poset_hom_of_le hxy = homOfLE hxy :=
+  rfl
 
 /-- In a preorder category, every morphism reads back to an inequality. -/
 theorem le_of_poset_hom

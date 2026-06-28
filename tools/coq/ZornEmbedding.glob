@@ -1,0 +1,217 @@
+DIGEST 37a0f90252616a02212bf23cbff90662
+FZornEmbedding
+R111:115 Stdlib.Reals.Reals <> <> lib
+R117:121 Stdlib.micromega.Psatz <> <> lib
+R123:126 Stdlib.setoid_ring.Ring <> <> lib
+R156:159 Stdlib.Lists.List <> <> lib
+sec 427:436 <> ZornMatrix
+rec 447:456 <> ZornMatrix
+proj 472:472 <> a
+proj 479:479 <> b
+proj 486:486 <> x
+proj 501:501 <> y
+R476:476 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R483:483 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R495:497 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R491:493 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R490:490 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R494:494 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R498:498 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R510:512 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R506:508 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R505:505 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R509:509 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R513:513 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+def 530:537 <> zorn_one
+R541:550 ZornEmbedding <> ZornMatrix rec
+R560:560 ZornEmbedding <> a proj
+R560:560 ZornEmbedding <> a proj
+R560:560 ZornEmbedding <> a proj
+R568:568 ZornEmbedding <> b proj
+R568:568 ZornEmbedding <> b proj
+R576:576 ZornEmbedding <> x proj
+R576:576 ZornEmbedding <> x proj
+R592:592 ZornEmbedding <> y proj
+R592:592 ZornEmbedding <> y proj
+R581:581 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R583:584 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R586:587 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R589:589 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R597:597 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R599:600 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R602:603 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R605:605 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 623:631 <> zorn_zero
+R635:644 ZornEmbedding <> ZornMatrix rec
+R654:654 ZornEmbedding <> a proj
+R654:654 ZornEmbedding <> a proj
+R654:654 ZornEmbedding <> a proj
+R662:662 ZornEmbedding <> b proj
+R662:662 ZornEmbedding <> b proj
+R670:670 ZornEmbedding <> x proj
+R670:670 ZornEmbedding <> x proj
+R686:686 ZornEmbedding <> y proj
+R686:686 ZornEmbedding <> y proj
+R675:675 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R677:678 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R680:681 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R683:683 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R691:691 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R693:694 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R696:697 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R699:699 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 717:721 <> ePlus
+R725:734 ZornEmbedding <> ZornMatrix rec
+R744:744 ZornEmbedding <> a proj
+R744:744 ZornEmbedding <> a proj
+R744:744 ZornEmbedding <> a proj
+R752:752 ZornEmbedding <> b proj
+R752:752 ZornEmbedding <> b proj
+R760:760 ZornEmbedding <> x proj
+R760:760 ZornEmbedding <> x proj
+R776:776 ZornEmbedding <> y proj
+R776:776 ZornEmbedding <> y proj
+R765:765 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R767:768 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R770:771 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R773:773 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R781:781 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R783:784 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R786:787 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R789:789 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 807:812 <> eMinus
+R816:825 ZornEmbedding <> ZornMatrix rec
+R835:835 ZornEmbedding <> a proj
+R835:835 ZornEmbedding <> a proj
+R835:835 ZornEmbedding <> a proj
+R843:843 ZornEmbedding <> b proj
+R843:843 ZornEmbedding <> b proj
+R851:851 ZornEmbedding <> x proj
+R851:851 ZornEmbedding <> x proj
+R867:867 ZornEmbedding <> y proj
+R867:867 ZornEmbedding <> y proj
+R856:856 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R858:859 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R861:862 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R864:864 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R872:872 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R874:875 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R877:878 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R880:880 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 898:900 <> up0
+R904:913 ZornEmbedding <> ZornMatrix rec
+R923:923 ZornEmbedding <> a proj
+R923:923 ZornEmbedding <> a proj
+R923:923 ZornEmbedding <> a proj
+R931:931 ZornEmbedding <> b proj
+R931:931 ZornEmbedding <> b proj
+R939:939 ZornEmbedding <> x proj
+R939:939 ZornEmbedding <> x proj
+R955:955 ZornEmbedding <> y proj
+R955:955 ZornEmbedding <> y proj
+R944:944 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R946:947 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R949:950 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R952:952 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R960:960 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R962:963 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R965:966 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R968:968 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 986:990 <> down0
+R994:1003 ZornEmbedding <> ZornMatrix rec
+R1013:1013 ZornEmbedding <> a proj
+R1013:1013 ZornEmbedding <> a proj
+R1013:1013 ZornEmbedding <> a proj
+R1021:1021 ZornEmbedding <> b proj
+R1021:1021 ZornEmbedding <> b proj
+R1029:1029 ZornEmbedding <> x proj
+R1029:1029 ZornEmbedding <> x proj
+R1045:1045 ZornEmbedding <> y proj
+R1045:1045 ZornEmbedding <> y proj
+R1034:1034 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1036:1037 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1039:1040 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1042:1042 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1050:1050 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1052:1053 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1055:1056 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1058:1058 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 1109:1116 <> zorn_dot
+R1130:1132 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1126:1128 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1125:1125 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1129:1129 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1133:1133 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1119:1119 <> v:6
+binder 1121:1121 <> w:7
+R1138:1138 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1154:1154 ZornEmbedding <> w:7 var
+R1151:1151 ZornEmbedding <> v:6 var
+R1165:1165 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1168:1169 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1172:1173 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1176:1176 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1179:1179 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1182:1183 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1186:1187 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1190:1190 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1212:1214 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1202:1204 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1197:1199 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1207:1209 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1217:1219 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+def 1277:1286 <> zorn_cross
+R1300:1302 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1296:1298 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1295:1295 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1299:1299 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1303:1303 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1289:1289 <> v:10
+binder 1291:1291 <> w:11
+R1313:1315 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1309:1311 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1308:1308 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1312:1312 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1316:1316 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1332:1332 ZornEmbedding <> w:11 var
+R1329:1329 ZornEmbedding <> v:10 var
+R1343:1343 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1346:1347 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1350:1351 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1354:1354 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1357:1357 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1360:1361 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1364:1365 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1368:1368 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1377:1377 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1395:1396 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1414:1415 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1433:1433 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1385:1387 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1380:1382 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1390:1392 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1404:1406 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1399:1401 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1409:1411 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1423:1425 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'-'_x not
+R1418:1420 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1428:1430 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+def 1491:1496 <> get_x1
+R1508:1510 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1504:1506 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1503:1503 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1507:1507 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1511:1511 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1499:1499 <> t:14
+R1517:1519 Corelib.Init.Datatypes <> fst def
+R1521:1521 ZornEmbedding <> t:14 var
+def 1535:1540 <> get_x2
+R1552:1554 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1548:1550 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1547:1547 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1551:1551 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R1555:1555 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 1543:1543 <> t:15
+R1561:1563 Corelib.Init.Datatypes <> fst def
+R1566:1568 Corelib.Init.Datatypes <> snd def
+R1570:1570 ZornEmbedding <> t:15 var

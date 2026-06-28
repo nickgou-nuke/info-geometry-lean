@@ -21,6 +21,9 @@ namespace InfoGeometry.Canonical.SplitCliffordJordanWigner
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 
+/-- Local concrete carrier used by this owner file. -/
+abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+
 /--
 Local fermionic parity/grading operator:
 
@@ -35,7 +38,8 @@ def P : M2R :=
 theorem P_eq_diag :
     P = !![1, 0;
            0, -1] := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -46,7 +50,8 @@ This is the involution property required for Jordan-Wigner strings.
 @[simp]
 theorem parity_sq_eq_one :
     P * P = (1 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -57,7 +62,8 @@ Parity anticommutes with the annihilation operator:
 @[simp]
 theorem parity_anticommutes_annihilate :
     P * a + a * P = (0 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -68,7 +74,8 @@ Parity anticommutes with the creation operator:
 @[simp]
 theorem parity_anticommutes_create :
     P * aDag + aDag * P = (0 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -78,7 +85,8 @@ Conjugation by parity flips annihilation:
 -/
 theorem parity_conj_annihilate :
     P * a * P = -a := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -88,7 +96,8 @@ Conjugation by parity flips creation:
 -/
 theorem parity_conj_create :
     P * aDag * P = -aDag := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
@@ -98,7 +107,8 @@ Parity preserves the vacuum line:
 -/
 theorem parity_vacuum :
     P * vac = vac := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     norm_num [P, a, aDag, N, vac, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-! ## Two-mode Jordan-Wigner cross CAR base case -/

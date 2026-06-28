@@ -233,12 +233,12 @@ theorem km_cocycle_bilinear
       =
       a * affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y := by
   constructor
-  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_add_left X Y Z
-  constructor
-  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_smul_left a X Z
-  constructor
-  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_add_right X Y Z
-  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_smul_right a X Y
+  · exact LieTwoCocycle.apply_add (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs) X Y Z
+  · constructor
+    · exact LieTwoCocycle.apply_smul (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs) a X Z
+    · constructor
+      · exact LieTwoCocycle.apply_add₂ (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs) X Y Z
+      · exact LieTwoCocycle.apply_smul₂ (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs) a X Y
 
 /--
 Skew-symmetry of the affine Kac--Moody cocycle.

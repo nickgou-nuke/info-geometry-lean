@@ -830,7 +830,7 @@ theorem cutoffBulkBoundaryDiagonalTerm_eventually_zero
   have hm : a + m ∈ cutoffWindow N := Finset.mem_Icc.mpr (abs_le.mp hmInt)
   have hn : a + n ∈ cutoffWindow N := Finset.mem_Icc.mpr (abs_le.mp hnInt)
   exact cutoffBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
-    (C := C) N m n a (by constructor <;> intro _ <;> simpa [hm, hn])
+    (C := C) N m n a (by constructor <;> intro _ <;> simp [hm, hn])
 
 /--
 Finite-sum lift of eventual vanishing for reindexed boundary diagonal summands.

@@ -650,44 +650,39 @@ structure GeometricOriginData
   invariantPredicates :
     Set (InvariantPredicate symmetry)
 
-/-! ## 8. Owner target -/
+/-! ## 8. Owner theorems -/
 
 /--
-Owner target for the invariant-operator layer.
-
 Every symmetry action has a nonempty invariant subring: at least `0` and `1`
 are invariant.
 -/
-@[owner_target_tag]
-def SymmetryInvariantOwnerTarget : Prop :=
+theorem symmetryInvariantOwnerTarget :
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
   ∀ α : SymmetryAction G Op,
-    Nonempty (invariantSubring α)
-
-/-- The invariant-operator owner target is satisfied by the invariant unit. -/
-theorem symmetryInvariantOwnerTarget :
-    SymmetryInvariantOwnerTarget := by
+    IsInvariant α (1 : Op) := by
   intro G _ Op _ α
-  exact ⟨⟨1, IsInvariant.one α⟩⟩
+  exact IsInvariant.one α
 
 /--
-Owner target for invariant projectors.
-
 Every symmetry action has at least the trivial invariant projectors `0` and `1`.
 -/
-@[owner_target_tag]
-def InvariantProjectorOwnerTarget : Prop :=
+theorem invariantProjectorOwnerTarget :
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
   ∀ α : SymmetryAction G Op,
-    ∃ p : Op, IsInvariantProjector α p
-
-/-- The invariant-projector owner target is satisfied by the identity projector. -/
-theorem invariantProjectorOwnerTarget :
-    InvariantProjectorOwnerTarget := by
+    IsInvariantProjector α (1 : Op) := by
   intro G _ Op _ α
-  exact ⟨1, Projector.one_isInvariantProjector α⟩
+  exact Projector.one_isInvariantProjector α
+
+/-- Trivial invariant packet: unit lies in the invariant subring and is an invariant projector. -/
+theorem trivialInvariant_unit_packet
+    (G : Type uG) [Group G]
+    (Op : Type uOp) [Ring Op]
+    (α : SymmetryAction G Op) :
+    (⟨1, IsInvariant.one α⟩ : invariantSubring α).val = 1 ∧
+      IsInvariantProjector α (1 : Op) := by
+  exact ⟨rfl, Projector.one_isInvariantProjector α⟩
 
 /-! ## 9. Real-linear operator symmetry actions -/
 
@@ -1381,7 +1376,11 @@ trace/weight/spectral readouts.
 @[owner_target_tag]
 def GeometricOriginOwnerTarget : Prop :=
   ∃ S : OperatorSymmetryAction G Op,
-    Nonempty S.InvariantDrazinGeometry
+  ∃ Geom : S.InvariantDrazinGeometry,
+    S.IsInvariantSet (leftImage Geom.circular.P_left) ∧
+      S.IsInvariantSet (leftImage Geom.circular.P_right) ∧
+      S.IsInvariantSet (leftImage Geom.projectors.Pcore) ∧
+      S.IsInvariantSet (leftImage Geom.projectors.Pnil)
 
 end OperatorSymmetryAction
 
@@ -1416,6 +1415,17 @@ action on one fixed ambient operator algebra.
 def HasInvariantOperatorOrigin
     (G : Type uG) (Op : Type uOp)
     [Group G] [Ring Op] [Module ℝ Op] : Prop :=
-  Nonempty (OperatorSymmetryAction G Op)
+  ∃ S : OperatorSymmetryAction G Op,
+    (∀ x : Op, S.act 1 x = x)
+      ∧ (∀ (g h : G) (x : Op), S.act (g * h) x = S.act g (S.act h x))
+      ∧ (∀ g : G, S.act g (1 : Op) = 1)
+      ∧ (∀ (g : G) (x y : Op), S.act g (x * y) = S.act g x * S.act g y)
+
+theorem hasInvariantOperatorOrigin_of_operatorSymmetryAction
+    (G : Type uG) (Op : Type uOp)
+    [Group G] [Ring Op] [Module ℝ Op]
+    (S : OperatorSymmetryAction G Op) :
+    HasInvariantOperatorOrigin G Op := by
+  exact ⟨S, S.act_id, S.act_mul, S.map_one, S.map_mul⟩
 
 end InfoGeometry.OperatorAlgebra

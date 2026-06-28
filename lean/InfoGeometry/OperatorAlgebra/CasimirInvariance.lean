@@ -118,28 +118,35 @@ theorem diracSouriauCasimir_fixed_under_conjugation
       (diracSouriauCasimir S T).C :=
   verifiedCasimir_fixed_under_conjugation (diracSouriauCasimir S T) u v huv
 
-/-! ## 3. Owner target -/
+/-! ## 3. Owner theorem -/
 
 /--
-Owner target for algebraic Casimir anchoring.
+Owner theorem for algebraic Casimir anchoring.
 
 Once a verified Casimir and an explicit inverse pair are displayed, conjugation
 fixes the Casimir.  This is not a modular-flow theorem.
 -/
-@[owner_target_tag]
-def CasimirInvarianceOwnerTarget : Prop :=
+theorem casimirInvarianceOwnerTarget :
   ∀ (Op : Type*) [Ring Op],
   ∀ (G : Type*) [Group G],
   ∀ (α : SymmetryAction G Op),
   ∀ (V : VerifiedCasimir α),
   ∀ u v : Op,
     u * v = 1 →
-      u * V.C * v = V.C
-
-/-- The algebraic Casimir invariance owner target is constructively discharged. -/
-theorem casimirInvarianceOwnerTarget :
-    CasimirInvarianceOwnerTarget := by
+      u * V.C * v = V.C := by
   intro Op _ G _ α V u v huv
   exact verifiedCasimir_fixed_under_conjugation V u v huv
+
+@[owner_target_tag]
+theorem casimirInvariance_packet
+    (Op : Type*) [Ring Op]
+    (G : Type*) [Group G]
+    (α : SymmetryAction G Op)
+    (V : VerifiedCasimir α)
+    (u v : Op)
+    (huv : u * v = 1) :
+    u * V.C * v = V.C ∧
+      IsCentral V.C := by
+  exact ⟨casimirInvarianceOwnerTarget Op G α V u v huv, V.is_central⟩
 
 end InfoGeometry.OperatorAlgebra.CasimirInvariance

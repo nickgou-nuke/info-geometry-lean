@@ -467,10 +467,10 @@ def modularThermalState :
     KMSState Op E.modularKMS.modularFlow E.modularKMS.beta :=
   E.modularKMS.kms
 
-/-- Thermality as seen by the calibrated physical observer starts from KMS. -/
-theorem has_modular_kms_state :
-    Nonempty (KMSState Op E.modularKMS.modularFlow E.modularKMS.beta) :=
-  ⟨E.modularThermalState⟩
+/-- Thermality as seen by the calibrated physical observer is the carried KMS state. -/
+@[simp] theorem modularThermalState_eq_kms :
+    E.modularThermalState = E.modularKMS.kms :=
+  rfl
 
 end EmergentThermalRadiation
 

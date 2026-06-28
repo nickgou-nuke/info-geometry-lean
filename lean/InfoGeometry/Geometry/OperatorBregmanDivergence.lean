@@ -390,7 +390,10 @@ def OperatorBregmanConvexityOwnerTarget
     (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E))
     (ω : OperatorEnd E →L[ℝ] ℝ)
     (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ) : Prop :=
-  Nonempty (OperatorBregmanConvexityDatum c ω gradPhi)
+  (∀ U V : RegularConePoint c,
+    0 ≤ operatorBregmanDivergence ω gradPhi U V) ∧
+  (∀ U V : RegularConePoint c,
+    operatorBregmanDivergence ω gradPhi U V = 0 ↔ U.op = V.op)
 
 /-- Owner target for a modular Bregman/Ricci bridge. -/
 def BregmanRicciFluxBridgeOwnerTarget
@@ -405,6 +408,9 @@ def BregmanRicciFluxBridgeOwnerTarget
     [AddCommGroup Obs] [Module ℝ Obs]
     (T : TKKLieClosure J L)
     (R : RicciFluxReadout J L Obs T) : Prop :=
-  Nonempty (BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R)
+  ∃ conePointOf : J → J → RegularConePoint c,
+    ∀ (x y : J),
+      R.flux x y =
+        D2.eval (modularBregmanEnergy ω gradPhi F (conePointOf x y))
 
 end InfoGeometry.Geometry.OperatorBregmanDivergence

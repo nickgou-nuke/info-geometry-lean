@@ -111,6 +111,12 @@ theorem distance_self
     M.distance A A = 0 :=
   M.zero_self A
 
+/-- Re-export symmetry of the reconstructed transport distance. -/
+theorem distance_symm
+    (A B : ProjectivePolarizationState Op) :
+    M.distance A B = M.distance B A :=
+  M.symmetric A B
+
 end JonesTransportMetricDatum
 
 end InfoGeometry.Geometry.JonesTransportMetric

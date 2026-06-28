@@ -173,6 +173,14 @@ theorem denominator_phase_linear
     (PhaseLinear.comp hC Z.phase_linear)
     hD
 
+/-- The denominator phase-linearity is stable under right-composition by `τ`. -/
+theorem denominator_phase_linear_comp
+    {C D_op : EndH}
+    (hC : PhaseLinear D C)
+    (hD : PhaseLinear D D_op) :
+    PhaseLinear D (C.comp Z.tau + D_op) := by
+  simpa using denominator_phase_linear (D := D) (Z := Z) hC hD
+
 /--
 Raw fractional-linear Möbius action.
 

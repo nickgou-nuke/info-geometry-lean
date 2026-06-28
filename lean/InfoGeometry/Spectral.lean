@@ -10,6 +10,7 @@ import InfoGeometry.Spectral.Cohomology.Serre
 import InfoGeometry.Spectral.Cohomology.Gysin
 import InfoGeometry.Spectral.Cohomology.ProjectiveSpace
 import InfoGeometry.Spectral.HigherGroups
+import InfoGeometry.Spectral.Numerical.QR
 
 namespace InfoGeometry.Spectral
 

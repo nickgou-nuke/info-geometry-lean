@@ -92,4 +92,9 @@ theorem kl_divergence_self_zero (x : ℝ) (hx : 0 < x) :
     x * Real.log (x / x) - x + x = 0 :=
   scalarKLDivergence_self_zero x hx
 
+/-- The one-dimensional KL potential is a convexity gap for the logarithm. -/
+theorem kl_divergence_lower_bound (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
+    x * Real.log (x / y) - x + y ≥ 0 := by
+  simpa [scalarKLDivergence] using scalarKLDivergence_nonneg x y hx hy
+
 end InfoGeometry.Prequantum.JaynesKLPotential

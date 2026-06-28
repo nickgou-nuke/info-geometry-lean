@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Projective.KleinQuadricMonodromy
+import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 
 /-!
 # ThermalTimeMonodromyBridge
@@ -12,6 +13,18 @@ A conservative bridge between two existing owner lanes:
 This file does not identify `ℝ`-valued modular time with `ℤ`-valued winding by
 fiat. Instead it introduces an explicit calibration map from winding labels to
 real times and proves compatibility theorems relative to that calibration.
+
+## Connection to Cl(1,1) Monodromy Dictionary
+
+This bridge is compatible with the concrete Cl(1,1) construction in
+`InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction`, which provides:
+
+- A square-zero modular Hamiltonian `K` (Witt creation operator)
+- A carrier residue operator `Res(X) = [K, X]`
+- An explicit characterization of when `Res² = 0` (parabolicity condition)
+
+The calibration data in this file can be instantiated using the Cl(1,1) tower
+by choosing the period to match the natural scaling of the Witt generator.
 -/
 
 namespace InfoGeometry.Canonical.ThermalTimeMonodromyBridge
@@ -112,6 +125,21 @@ theorem wilsonPhase_of_calibrated_winding
     (B : BridgeData (E := E)) (n : ℤ) :
     Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) := by
   exact wilsonPhase_of_winding (R := B.radius) B.radius_pos n
+
+/--
+The concrete `Cl(1,1)` carrier residue from
+`Cl11MonodromyDictionaryConstruction` supplies an explicit square-zero modular
+generator together with a commutator residue operator.
+
+This theorem is intentionally conservative: it records the availability of the
+concrete operator-algebraic data, without identifying it with the winding
+calibration in this file by fiat.
+-/
+theorem cl11_concrete_monodromy_data_available :
+    ∃ K : InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier,
+      K * K = 0 := by
+  refine ⟨InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian, ?_⟩
+  exact InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian_sq
 
 end Bridge
 

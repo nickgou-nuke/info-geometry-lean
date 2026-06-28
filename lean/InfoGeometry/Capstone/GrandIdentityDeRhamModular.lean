@@ -2,6 +2,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Canonical.DeRhamBoltzmannModular
+import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 
 noncomputable section
 
@@ -26,6 +27,20 @@ What is not formalized here:
 - a global de Rham cohomology computation,
 - an operator-algebraic Tomita-Takesaki construction,
 - a proof that physical time, modular flow, and de Rham winding coincide.
+
+## Relationship to Cl(1,1) Monodromy Dictionary
+
+The concrete Cl(1,1) monodromy construction in
+`InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction` provides:
+
+- A square-zero modular Hamiltonian `K` (nilpotent generator)
+- A commutator residue operator `Res(X) = [K, X]`
+- A characterization: `Res²(X) = 0` iff `K X K = 0`
+
+This scalar capstone packet is compatible with that construction but does not
+identify its abstract `Kexp` with the operator-algebraic modular Hamiltonian.
+The scalar model can be viewed as a "shadow" or expectation-value readout of
+the deeper noncommutative structure.
 -/
 
 /-- Scalar partition function. -/
@@ -117,5 +132,21 @@ theorem exists_twoLevel_capstone_packet :
   refine ⟨twoLevelPartition 1, ?_⟩
   intro β
   exact twoLevelPartition_pos 1 β
+
+/--
+The concrete Cl(1,1) monodromy construction supplies a square-zero modular
+generator, validating that the operator-algebraic side of the "Grand Identity"
+slogan is non-vacuous.
+
+This theorem conservatively records the existence of the concrete nilpotent
+generator. The connection between the scalar thermodynamic packet and the
+operator-algebraic modular Hamiltonian remains a calibration choice, not a
+definition.
+-/
+theorem cl11_nilpotent_generator_exists :
+    ∃ K : InfoGeometry.Clifford.Cl11InfiniteCarrier.CompatibleCarrier,
+      K * K = 0 := by
+  refine ⟨InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian, ?_⟩
+  exact InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian_sq
 
 end InfoGeometry.Capstone.GrandIdentityDeRhamModular

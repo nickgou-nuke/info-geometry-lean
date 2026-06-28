@@ -4,9 +4,9 @@
 AQL Functorial Bridge: Hestenes-Krein Bivector Mapping
 
 This module defines the AQL schemas and transformation queries for mapping
-discrete combinatorial limits (p-adic valuations, Mersenne primes from 
-CantorianFractalSpacetime.lean) into continuous geometric limits 
-(Hestenes-Krein bivector invariants from HestenesKreinModularGeometry.lean).
+discrete combinatorial limits (p-adic valuations, Mersenne primes, golden-power
+recurrences) into continuous geometric / operator-theoretic limits tracked in
+the repository's Lean declaration graph and exported into ArangoDB.
 
 ## Mathematical Foundation
 
@@ -24,8 +24,13 @@ The functorial bridge F: Discrete → Continuous is defined by:
      ↦ Bivector grade-2 purity ⟨I⟩₀ = 0
 
 3. **Invariant Correspondence**:
-   - v₂(137) = 0 (137 odd) ↦ trace(moebiusParity) = 0
-   - 137 = M₂ + M₃ + M₇ ↦ dim(Spin(5,5)) = 45 + 45 + 47 = 137 (conjectural)
+   - finite commuting modular lane:
+     relativeModularHamiltonianOperator = boltzmannEntropyOperator
+   - finite surprisal lane:
+     quantizedSurprisalOperator = relativeModularPotentialOperator
+   - arithmetic/anomaly lane:
+     v₂(137) = 0 ↦ trace/anomaly bridge remains open closure debt unless a
+     native Lean theorem closes it without `sorry`
 
 ## Architecture
 
@@ -242,7 +247,7 @@ class DiagonalProjector:
 
 @dataclass
 class MersennePrime:
-    """Mersenne prime M_p = 2^p - 1 from CantorianFractalSpacetime.lean"""
+    """Mersenne prime M_p = 2^p - 1 used as discrete bridge input."""
     p: int  # Exponent
     value: int  # 2^p - 1
     is_prime: bool  # Verified primality
@@ -265,7 +270,7 @@ class MersennePrime:
 
 @dataclass
 class PadicValuation:
-    """p-adic valuation v_p(n) from CantorianFractalSpacetime.lean"""
+    """p-adic valuation v_p(n) used as discrete bridge input."""
     prime: int  # Prime p
     n: int  # Integer being evaluated
     valuation: int  # v_p(n)
@@ -282,7 +287,7 @@ class PadicValuation:
 
 @dataclass  
 class GoldenPower:
-    """Golden ratio power τⁿ = F_{n+1} + F_n·φ from CantorianFractalSpacetime.lean"""
+    """Golden ratio power τⁿ = F_{n+1} + F_n·φ used as discrete bridge input."""
     n: int  # Exponent
     tau_n: float  # Numerical value of τⁿ
     fib_n: int  # F_n
@@ -342,7 +347,7 @@ class CliffordAlgebra:
 
 @dataclass
 class KreinSpace:
-    """Krein space with fundamental symmetry J from HestenesKreinModularGeometry.lean"""
+    """Krein space proxy object used by the bridge's continuous lane."""
     signature_p: int  # Positive part
     signature_q: int  # Negative part
     fundamental_symmetry: str  # J (symbolic representation)
@@ -368,7 +373,7 @@ class KreinSpace:
 
 @dataclass
 class HestenesRotor:
-    """Hestenes rotor R(θ) = e^{-θI/2} from HestenesKreinModularGeometry.lean"""
+    """Hestenes rotor R(θ) = e^{-θI/2} used by the bridge's continuous lane."""
     n: int  # Golden-power exponent, used as stable bridge key
     angle: float  # θ (radians)
     bivector: str  # I (unit bivector)
@@ -409,6 +414,8 @@ class FunctorialMapping:
     mapping_formula: str
     preserved_structure: List[str]
     mathematical_justification: str
+    lean_decl: str = ""  # Lean declaration name (e.g., InfoGeometry.Canonical.FirstQuantizationProbability.relativeModularHamiltonianOperator_eq_boltzmannEntropyOperator)
+    lean_status: str = ""  # theorem_backed | definition_backed | open_debt_live_sorry | not_applicable
     _key: str = field(init=False)
     
     def __post_init__(self):
@@ -575,6 +582,8 @@ class AQLQueries:
           LET dimension = POW(2, 2 * m.p)
           LET bivector_dim = (2 * m.p) * (2 * m.p - 1) / 2
           LET mapping_key = CONCAT('mersenne_to_clifford_M_', TO_STRING(m.p), '_Cl_', TO_STRING(m.p), '_', TO_STRING(m.p))
+          LET lean_decl = 'InfoGeometry.Canonical.MoebiusHurwitzDuality.moebius_hurwitz_duality'
+          LET lean_status = 'theorem_backed'
           
           UPSERT { p: m.p, q: m.p }
             INSERT {
@@ -600,7 +609,9 @@ class AQLQueries:
               mapping_type: 'mersenne_to_clifford',
               mapping_formula: CONCAT('M_', m.p, ' ↦ Cl(', m.p, ',', m.p, ')'),
               preserved_structure: ['dimension', 'grading', 'center'],
-              mathematical_justification: 'Bott periodicity: Cl(p,p) has dimension 2^(2p)'
+              mathematical_justification: 'Bott periodicity: Cl(p,p) has dimension 2^(2p)',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             }
             UPDATE {
               _from: CONCAT('mersenne_primes/', m._key),
@@ -613,7 +624,9 @@ class AQLQueries:
               mapping_type: 'mersenne_to_clifford',
               mapping_formula: CONCAT('M_', m.p, ' ↦ Cl(', m.p, ',', m.p, ')'),
               preserved_structure: ['dimension', 'grading', 'center'],
-              mathematical_justification: 'Bott periodicity: Cl(p,p) has dimension 2^(2p)'
+              mathematical_justification: 'Bott periodicity: Cl(p,p) has dimension 2^(2p)',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             } IN functorial_mappings
             LET mapping_doc = NEW
           
@@ -633,6 +646,8 @@ class AQLQueries:
           LET sig_p = m.p % 10
           LET sig_q = FLOOR(m.value / 10) % 10
           LET mapping_key = CONCAT('mersenne_to_krein_M_', TO_STRING(m.p), '_Krein_', TO_STRING(sig_p), '_', TO_STRING(sig_q))
+          LET lean_decl = 'InfoGeometry.Canonical.HestenesKreinModularGeometry.KreinHestenesModularDatum.modularDerivation_eq_zero_iff_commutes'
+          LET lean_status = 'theorem_backed'
           
           UPSERT { signature_p: sig_p, signature_q: sig_q }
             INSERT {
@@ -658,7 +673,9 @@ class AQLQueries:
               mapping_type: 'mersenne_to_krein',
               mapping_formula: CONCAT('M_', m.p, ' ↦ Krein(', sig_p, ',', sig_q, ')'),
               preserved_structure: ['signature', 'fundamental_symmetry', 'trace_zero'],
-              mathematical_justification: 'Krein signature encodes Mersenne decimal structure'
+              mathematical_justification: 'Krein signature encodes Mersenne decimal structure',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             }
             UPDATE {
               _from: CONCAT('mersenne_primes/', m._key),
@@ -671,7 +688,9 @@ class AQLQueries:
               mapping_type: 'mersenne_to_krein',
               mapping_formula: CONCAT('M_', m.p, ' ↦ Krein(', sig_p, ',', sig_q, ')'),
               preserved_structure: ['signature', 'fundamental_symmetry', 'trace_zero'],
-              mathematical_justification: 'Krein signature encodes Mersenne decimal structure'
+              mathematical_justification: 'Krein signature encodes Mersenne decimal structure',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             } IN functorial_mappings
             LET mapping_doc = NEW
           
@@ -693,6 +712,8 @@ class AQLQueries:
           LET bivector = 'I = γ₂γ₁ (spacetime bivector)'
           LET rotor_expr = CONCAT('e^(-', angle, '·I/2)')
           LET mapping_key = CONCAT('golden_to_rotor_tau_', TO_STRING(g.n), '_R_', TO_STRING(g.n), 'phi')
+          LET lean_decl = ''
+          LET lean_status = 'not_applicable'
           
           UPSERT { n: g.n }
             INSERT {
@@ -720,7 +741,9 @@ class AQLQueries:
               mapping_type: 'golden_to_rotor',
               mapping_formula: 'τⁿ ↦ e^{-nφ·I/2}',
               preserved_structure: ['recurrence', 'composition', 'group_law'],
-              mathematical_justification: 'Fibonacci recurrence ↦ Rotor composition group law'
+              mathematical_justification: 'Fibonacci recurrence ↦ Rotor composition group law',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             }
             UPDATE {
               _from: CONCAT('golden_powers/', g._key),
@@ -733,7 +756,9 @@ class AQLQueries:
               mapping_type: 'golden_to_rotor',
               mapping_formula: 'τⁿ ↦ e^{-nφ·I/2}',
               preserved_structure: ['recurrence', 'composition', 'group_law'],
-              mathematical_justification: 'Fibonacci recurrence ↦ Rotor composition group law'
+              mathematical_justification: 'Fibonacci recurrence ↦ Rotor composition group law',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             } IN functorial_mappings
             LET mapping_doc = NEW
           
@@ -754,6 +779,8 @@ class AQLQueries:
           /* v₂(137) = 0 ↦ trace(S) = 0 (Möbius parity) */
           LET trace_zero = (v.valuation == 0)
           LET mapping_key = 'padic_to_trace_anomaly_v2_137_trace_S'
+          LET lean_decl = 'InfoGeometry.Canonical.HestenesKreinModularGeometry.pAdicValuation_Implies_TraceZero_AnomalyResolution'
+          LET lean_status = 'open_debt_live_sorry'
           
           UPSERT { name: 'fine_structure_anomaly' }
             INSERT {
@@ -780,7 +807,9 @@ class AQLQueries:
               mapping_type: 'padic_to_trace_anomaly',
               mapping_formula: 'v₂(137) = 0 ↦ trace(S) = 0',
               preserved_structure: ['vanishing', 'anomaly_cancellation', 'centralizer'],
-              mathematical_justification: '2-adic vanishing ↦ bivector trace vanishing (both = 0)'
+              mathematical_justification: '2-adic vanishing ↦ bivector trace vanishing (both = 0)',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             }
             UPDATE {
               _from: CONCAT('padic_valuations/', v._key),
@@ -793,7 +822,9 @@ class AQLQueries:
               mapping_type: 'padic_to_trace_anomaly',
               mapping_formula: 'v₂(137) = 0 ↦ trace(S) = 0',
               preserved_structure: ['vanishing', 'anomaly_cancellation', 'centralizer'],
-              mathematical_justification: '2-adic vanishing ↦ bivector trace vanishing (both = 0)'
+              mathematical_justification: '2-adic vanishing ↦ bivector trace vanishing (both = 0)',
+              lean_decl: lean_decl,
+              lean_status: lean_status
             } IN functorial_mappings
             LET mapping_doc = NEW
           
@@ -914,6 +945,41 @@ class FunctorialBridgeRunner:
         """Print only if not in quiet mode."""
         if not self.quiet:
             print(msg)
+
+    def _lean_bridge_provenance(self) -> Dict[str, Any]:
+        """Return theorem-honest Lean provenance for downstream bridge consumers."""
+        return {
+            "authoritative_collection": "ig_nodes",
+            "authoritative_artifact": "artifacts/dag/index/decls.jsonl",
+            "theorem_backed_lanes": {
+                "finite_commuting_modular_lane": {
+                    "decl": "InfoGeometry.Canonical.FirstQuantizationProbability.relativeModularHamiltonianOperator_eq_boltzmannEntropyOperator",
+                    "file": "lean/InfoGeometry/Canonical/FirstQuantizationProbability.lean",
+                    "status": "theorem_backed",
+                },
+                "finite_surprisal_lane": {
+                    "decl": "InfoGeometry.Canonical.FirstQuantizationProbability.quantizedSurprisalOperator_eq_relativeModularPotentialOperator",
+                    "file": "lean/InfoGeometry/Canonical/FirstQuantizationProbability.lean",
+                    "status": "theorem_backed",
+                },
+                "relative_surprisal_operator_lane": {
+                    "decl": "InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator",
+                    "file": "lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean",
+                    "status": "definition_backed",
+                },
+                "krein_commutator_lane": {
+                    "decl": "InfoGeometry.Canonical.HestenesKreinModularGeometry.KreinHestenesModularDatum.modularDerivation_eq_zero_iff_commutes",
+                    "file": "lean/InfoGeometry/Canonical/HestenesKreinModularGeometry.lean",
+                    "status": "theorem_backed",
+                },
+            },
+            "open_closure_debt": {
+                "decl": "InfoGeometry.Canonical.HestenesKreinModularGeometry.pAdicValuation_Implies_TraceZero_AnomalyResolution",
+                "file": "lean/InfoGeometry/Canonical/HestenesKreinModularGeometry.lean",
+                "status": "open_debt_live_sorry",
+                "bridge_policy": "do_not_treat_as_theorem_backed",
+            },
+        }
     
     def populate_discrete_data(self) -> Dict[str, int]:
         """Insert discrete combinatorial data"""
@@ -1098,7 +1164,9 @@ class FunctorialBridgeRunner:
                   mapping_type: 'mersenne_to_color_quark',
                   mapping_formula: 'M_2 ↦ 𝑥⃗ (dim = 3)',
                   preserved_structure: ['dimension', 'su3_action', 'tripotent_eigenvalue'],
-                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ fundamental 3 of SU(3)'
+                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ fundamental 3 of SU(3)',
+                  lean_decl: '',
+                  lean_status: 'not_applicable'
                 }
                 UPDATE {
                   _from: CONCAT('mersenne_primes/', m._key),
@@ -1111,7 +1179,9 @@ class FunctorialBridgeRunner:
                   mapping_type: 'mersenne_to_color_quark',
                   mapping_formula: 'M_2 ↦ 𝑥⃗ (dim = 3)',
                   preserved_structure: ['dimension', 'su3_action', 'tripotent_eigenvalue'],
-                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ fundamental 3 of SU(3)'
+                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ fundamental 3 of SU(3)',
+                  lean_decl: '',
+                  lean_status: 'not_applicable'
                 } IN color_gauge_mappings
             """)
             self.db.aql.execute("""
@@ -1129,7 +1199,9 @@ class FunctorialBridgeRunner:
                   mapping_type: 'mersenne_to_color_antiquark',
                   mapping_formula: 'M_2 ↦ 𝑦⃗ (dim = 3)',
                   preserved_structure: ['dimension', 'su3_action', 'tripotent_eigenvalue'],
-                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ anti-fundamental 3̄ of SU(3)'
+                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ anti-fundamental 3̄ of SU(3)',
+                  lean_decl: '',
+                  lean_status: 'not_applicable'
                 }
                 UPDATE {
                   _from: CONCAT('mersenne_primes/', m._key),
@@ -1142,7 +1214,9 @@ class FunctorialBridgeRunner:
                   mapping_type: 'mersenne_to_color_antiquark',
                   mapping_formula: 'M_2 ↦ 𝑦⃗ (dim = 3)',
                   preserved_structure: ['dimension', 'su3_action', 'tripotent_eigenvalue'],
-                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ anti-fundamental 3̄ of SU(3)'
+                  mathematical_justification: 'Günaydin-Gürsey: M_2 = 3 ↦ anti-fundamental 3̄ of SU(3)',
+                  lean_decl: '',
+                  lean_status: 'not_applicable'
                 } IN color_gauge_mappings
             """)
             
@@ -1498,7 +1572,9 @@ class FunctorialBridgeRunner:
                   mapping_type: m.mapping_type,
                   mapping_formula: m.mapping_formula,
                   preserved_structure: m.preserved_structure,
-                  mathematical_justification: m.mathematical_justification
+                  mathematical_justification: m.mathematical_justification,
+                  lean_decl: m.lean_decl,
+                  lean_status: m.lean_status
                 }
             )
             LET functorial = (
@@ -1511,7 +1587,9 @@ class FunctorialBridgeRunner:
                   mapping_type: m.mapping_type,
                   mapping_formula: m.mapping_formula,
                   preserved_structure: m.preserved_structure,
-                  mathematical_justification: m.mathematical_justification
+                  mathematical_justification: m.mathematical_justification,
+                  lean_decl: m.lean_decl,
+                  lean_status: m.lean_status
                 }
             )
             LET zorn = (
@@ -1537,7 +1615,9 @@ class FunctorialBridgeRunner:
                   mapping_formula: p.mapping_formula,
                   sandwich_role: p.sandwich_role,
                   acts_on: p.acts_on,
-                  mathematical_justification: p.mathematical_justification
+                  mathematical_justification: p.mathematical_justification,
+                  lean_decl: p.lean_decl,
+                  lean_status: p.lean_status
                 }
             )
             RETURN {
@@ -1561,6 +1641,7 @@ class FunctorialBridgeRunner:
             raise RuntimeError("Isabelle export query returned no rows")
         payload = rows[0]
         payload['database'] = self.db.name
+        payload['lean_provenance'] = self._lean_bridge_provenance()
         out = Path(output_path)
         if not out.is_absolute():
             out = Path.cwd() / out

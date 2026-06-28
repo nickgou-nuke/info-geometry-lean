@@ -251,32 +251,17 @@ theorem virasoroCentralCharge_calibrated :
       P.primeVirasoro.affineVirasoro.centralCharge :=
   rfl
 
-/--
-Combined prime-to-Virasoro owner target.
-
-This is the honest theorem surface available in the repo:
-finite arithmetic Gibbs readout,
-prime zeta-trace readout,
-prime Sugawara/Virasoro central charge,
-operatorial central charge.
--/
-@[rep_depth thermo]
-def PrimonVirasoroCentralChargeOwnerTarget
-    (P : InfoGeometry.Canonical.PrimonVirasoroCentralCharge.PrimonVirasoroCentralChargeBridge
-      State LieAlg Obs PrimeLabel Field Coeff Finite Alg A B E) : Prop :=
-  P.massieu.souriau.partitionPotential = Real.log P.arithmeticPartition
-    ∧ let V : PrimeVielbeinCarrier := P.primeVielbein
-      InfoGeometry.Arithmetic.PrimeVielbeinCarrier.traceLogSupervolume V P.zetaParameter =
-        riemannZeta P.zetaParameter
-    ∧ P.operatorialCharge =
-        operatorialCentralCharge
-          (A := A) (B := B) (E := E) P.topologicalChargeX P.topologicalChargehX
-    ∧ P.virasoroCentralCharge = P.primeVirasoro.affineVirasoro.centralCharge
-
-/-- The combined owner target is witnessed by the stored bridge equalities. -/
+/-- The stored bridge data give the four concrete prime-to-Virasoro readouts. -/
 @[rep_depth thermo]
 theorem primonVirasoroCentralChargeOwnerTarget :
-    PrimonVirasoroCentralChargeOwnerTarget P := by
+    P.massieu.souriau.partitionPotential = Real.log P.arithmeticPartition
+      ∧ let V : PrimeVielbeinCarrier := P.primeVielbein
+        InfoGeometry.Arithmetic.PrimeVielbeinCarrier.traceLogSupervolume V P.zetaParameter =
+          riemannZeta P.zetaParameter
+      ∧ P.operatorialCharge =
+          operatorialCentralCharge
+            (A := A) (B := B) (E := E) P.topologicalChargeX P.topologicalChargehX
+      ∧ P.virasoroCentralCharge = P.primeVirasoro.affineVirasoro.centralCharge := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact partitionPotential_eq_log_arithmeticPartition (P := P)
   · exact primeTraceLogSupervolume_eq_riemannZeta (P := P)

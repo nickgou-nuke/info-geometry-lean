@@ -584,18 +584,17 @@ theorem virasoro_anomalyCoeff_zero_on_global_modes
     m * (m ^ 2 - 1) = 0 :=
   virasoroCentralPolynomial_global_zero m hm
 
-/-! ## 7. Owner target -/
+/-! ## 7. Bridge readout -/
 
 /--
-Owner target for the exceptional affine/Virasoro horizon bridge.
+Exceptional affine/Virasoro horizon bridge readout.
 
 Once the bridge is supplied:
 
 * hidden grade-two memory is represented as an affine current;
 * the hidden memory scalar equals the Virasoro/current stress readout.
 -/
-@[owner_target_tag]
-def ExceptionalVirasoroBridgeOwnerTarget : Prop :=
+theorem exceptionalVirasoroBridgeOwnerTarget :
   ∀ (J L Obs Memory Finite AffineAlg : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
@@ -612,12 +611,29 @@ def ExceptionalVirasoroBridgeOwnerTarget : Prop :=
           (hiddenMemoryReadout B.horizon.ledger x y) =
         B.currentCalibration.affineVirasoro.affine.Current
           (B.currentCalibration.modeOf x y)
-          (B.currentCalibration.finiteChargeOf x y)
-
-/-- The owner target follows from the supplied exceptional/Virasoro bridge. -/
-theorem exceptionalVirasoroBridgeOwnerTarget :
-    ExceptionalVirasoroBridgeOwnerTarget := by
+          (B.currentCalibration.finiteChargeOf x y) := by
   intro J L Obs Memory Finite AffineAlg _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ G A B
   exact fun x y => B.hidden_memory_eq_current_mode x y
+
+/-- Packet readout for one exceptional Virasoro horizon bridge. -/
+theorem exceptionalVirasoroBridge_packet
+    (J L Obs Memory Finite AffineAlg : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup AffineAlg] [Module ℝ AffineAlg]
+    [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg]
+    (G : FiveGrading L)
+    (A : FiveGradeProjectedAccounting J L Obs G)
+    (B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A)
+    (x y : J) :
+    B.currentCalibration.memoryToAffine
+        (hiddenMemoryReadout B.horizon.ledger x y) =
+      B.currentCalibration.affineVirasoro.affine.Current
+        (B.currentCalibration.modeOf x y)
+        (B.currentCalibration.finiteChargeOf x y) :=
+  exceptionalVirasoroBridgeOwnerTarget J L Obs Memory Finite AffineAlg G A B x y
 
 end InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge

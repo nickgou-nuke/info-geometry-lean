@@ -366,16 +366,15 @@ theorem cannot_relax_to_flat
 
 end ProtectedTubuleSector
 
-/-! ## 9. Owner target -/
+/-! ## 9. Boundary readout -/
 
 /--
-Owner target for the chiral tubule boundary.
+Chiral tubule boundary readout.
 
 It is intentionally witness-gated by thermal/shear calibration and a transition
 law.
 -/
-@[owner_target_tag]
-def ChiralTubuleBoundaryOwnerTarget : Prop :=
+theorem chiralTubuleBoundaryOwnerTarget :
   ∀ (Op Charge Residue : Type*)
     [NormedAddCommGroup Op] [NormedSpace ℝ Op]
     [Zero Charge],
@@ -387,16 +386,24 @@ def ChiralTubuleBoundaryOwnerTarget : Prop :=
     IsTopologicalSnapBoundary H U →
     IsThermallyCritical T U →
       ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
-        C.boundaryState = U
-
-/--
-The owner target follows directly from the supplied thermal-triggered
-transition law.
--/
-theorem chiralTubuleBoundaryOwnerTarget :
-    ChiralTubuleBoundaryOwnerTarget := by
+        C.boundaryState = U := by
   intro Op Charge Residue _ _ _ H G T L U hSnap hThermal
   exact L.thermal_snap_implies_crystallization U hSnap hThermal
 
+/-- Packet readout for one thermally triggered chiral tubule boundary. -/
+theorem chiralTubuleBoundary_packet
+    (Op Charge Residue : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
+    (H : BregmanHessianDatum Op)
+    (G : DualFlatOperatorGeometry Op)
+    (T : ThermalDriveDatum Op)
+    (L : ThermalTriggeredTubuleLaw Op Charge Residue H G T)
+    (U : Op)
+    (hSnap : IsTopologicalSnapBoundary H U)
+    (hThermal : IsThermallyCritical T U) :
+    ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
+      C.boundaryState = U :=
+  chiralTubuleBoundaryOwnerTarget Op Charge Residue H G T L U hSnap hThermal
 
 end InfoGeometry.Geometry.ChiralTubuleBoundary

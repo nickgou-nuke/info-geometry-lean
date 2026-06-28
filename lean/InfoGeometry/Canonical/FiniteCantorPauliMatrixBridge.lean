@@ -14,6 +14,8 @@ and the finite bridge facts are re-exported here.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
@@ -66,15 +68,25 @@ noncomputable def cl11PauliBridge : FiniteCantorPauliBridge 1 Mat2 where
     · simpa [J1] using J1_sq
   clifford_anticomm := by
     intro i j hij
-    fin_cases i <;> fin_cases j <;> simp [Eplus, J1, Matrix.mul_apply, Fin.sum_univ_two]
+    fin_cases i <;> fin_cases j <;> simp [Eplus, J1]
     · exact False.elim (hij rfl)
     · exact False.elim (hij rfl)
 
 /-- The `n = 1` finite Cantor-Pauli representation is theorem-backed. -/
 @[rep_depth operator]
 theorem cl11PauliBridge_target :
-    Nonempty (FiniteCantorPauliBridge 1 Mat2) :=
-  ⟨cl11PauliBridge⟩
+    (cl11PauliBridge).psiGamma ⟨0, by decide⟩ = Eplus ∧
+      (cl11PauliBridge).psiGamma ⟨1, by decide⟩ = J1 ∧
+      (∀ i : Fin (2 * 1),
+        (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma i = 1) ∧
+      (∀ {i j : Fin (2 * 1)}, i ≠ j →
+        (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma j +
+          (cl11PauliBridge).psiGamma j * (cl11PauliBridge).psiGamma i = 0) := by
+  refine ⟨rfl, rfl, ?_, ?_⟩
+  · intro i
+    exact (cl11PauliBridge).clifford_sq i
+  · intro i j hij
+    simpa using (FiniteCantorPauliMatrixBridge.psiGamma_anticomm cl11PauliBridge hij)
 
 /-- The `n = 1` finite Cantor-Pauli bridge recovers the first paper generator. -/
 @[rep_depth operator]
@@ -104,24 +116,37 @@ noncomputable def cl11PauliBridge_equivMat :
     CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11 ≃ₐ[ℝ] Mat2 :=
   InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat
 
-/-- Packaged owner for the finite Cantor-Pauli matrix lane. -/
+/-- Any supplied finite Cantor-Pauli bridge exposes the Clifford square law directly. -/
 @[rep_depth operator]
-structure FiniteCantorPauliMatrixOwner where
-  n : ℕ
-  Mat : Type
-  instRing : Ring Mat
-  bridge : @FiniteCantorPauliBridge n Mat instRing
-
-/-- Owner target for the finite Cantor-Pauli matrix bridge. -/
-def FiniteCantorPauliMatrixBridgeTarget : Prop :=
-  Nonempty FiniteCantorPauliMatrixOwner
-
-/-- Constructor for the finite Cantor-Pauli matrix owner target. -/
-@[rep_depth operator]
-theorem constructFiniteCantorPauliMatrixBridgeTarget
+theorem finiteCantorPauliBridge_square_packet
     {n : ℕ} {Mat : Type} [Ring Mat]
     (B : FiniteCantorPauliBridge n Mat) :
-    FiniteCantorPauliMatrixBridgeTarget := by
-  exact ⟨{ n := n, Mat := Mat, instRing := inferInstance, bridge := B }⟩
+    ∀ i : Fin (2 * n), B.psiGamma i * B.psiGamma i = 1 :=
+  B.clifford_sq
+
+/-- Any supplied finite Cantor-Pauli bridge exposes the Clifford anticommutation law directly. -/
+@[rep_depth operator]
+theorem finiteCantorPauliBridge_anticomm_packet
+    {n : ℕ} {Mat : Type} [Ring Mat]
+    (B : FiniteCantorPauliBridge n Mat) :
+    ∀ ⦃i j : Fin (2 * n)⦄, i ≠ j →
+      B.psiGamma i * B.psiGamma j + B.psiGamma j * B.psiGamma i = 0 := by
+  intro i j hij
+  exact FiniteCantorPauliMatrixBridge.psiGamma_anticomm B hij
+
+/-- Concrete `Cl(1,1)` finite Cantor-Pauli matrix packet. -/
+@[rep_depth operator]
+theorem cl11PauliBridge_clifford_packet :
+    (∀ i : Fin 2, (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma i = 1) ∧
+      (∀ ⦃i j : Fin 2⦄, i ≠ j →
+        (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma j +
+            (cl11PauliBridge).psiGamma j * (cl11PauliBridge).psiGamma i = 0) ∧
+      (cl11PauliBridge).psiGamma ⟨0, by decide⟩ = Eplus ∧
+      (cl11PauliBridge).psiGamma ⟨1, by decide⟩ = J1 := by
+  exact ⟨
+    finiteCantorPauliBridge_square_packet cl11PauliBridge,
+    finiteCantorPauliBridge_anticomm_packet cl11PauliBridge,
+    cl11PauliBridge_psiGamma_zero,
+    cl11PauliBridge_psiGamma_one⟩
 
 end InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge

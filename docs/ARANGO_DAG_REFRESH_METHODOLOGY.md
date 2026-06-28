@@ -1,13 +1,11 @@
 # Arango DAG Refresh Methodology
 
 > Status: operational runbook
-> Audited: 2026-05-14 for ordering semantics.
-> Scope: refreshed Lean declaration DAG, layered Arango raw/overlay ingest, and SCC-first navigation overlays
+> Audited: 2026-06-27 for streaming pipeline + syntax layer
+> Scope: refreshed Lean declaration DAG, layered Arango raw/overlay ingest, syntax AST layer, and SCC-first navigation overlays
 > Proof rule: Arango is navigation and audit infrastructure. Lean files and `lake build` remain proof authority.
 
-This document records the exact methodology used to refresh the derived Arango
-DAG from the Lean repository. It is intentionally script-by-script: the goal is
-to make the database rebuild reproducible without relying on chat memory.
+This document records the exact methodology used to refresh the derived Arango DAG from the Lean repository. It is intentionally script-by-script: the goal is to make the database rebuild reproducible without relying on chat memory.
 
 ## Skill and Discipline Used
 
@@ -15,10 +13,8 @@ The workflow follows the `arango-dag-operator` discipline:
 
 - start from the coarse SCC/component graph for navigation;
 - preserve raw DAG witnesses one-for-one before using overlays;
-- treat connectedness, motifs, dominators, process flow, Hodge, Dirac, and
-  chiral rows as derived audit signals only;
-- descend from any graph claim back to raw Lean declarations before encoding a
-  theorem;
+- treat connectedness, motifs, dominators, process flow, Hodge, Dirac, and chiral rows as derived audit signals only;
+- descend from any graph claim back to raw Lean declarations before encoding a theorem;
 - never treat graph proximity as proof.
 
 The practical order is:
@@ -33,16 +29,37 @@ Lean DAG export
   -> optional faithful retrieval checks
 ```
 
-## 1. Refresh the Lean Declaration DAG
+## 1. Refresh the Lean Declaration DAG (Streaming Mode)
 
-Run the repository-owned Lake script:
+**Primary method (constant memory, recommended):**
+
+```bash
+# Build the indexer once
+lake build dagIndexer
+
+# Stream declaration graph directly to ArangoDB (constant memory)
+python3 tools/infra/refresh_decl_graph.py \
+  --stream \
+  --import-root InfoGeometry.All \
+  --namespace InfoGeometry \
+  --arango-db infogeometry
+```
+
+**Alternative: Full pipeline wrapper (includes syntax + AST layers):**
+
+```bash
+python3 tools/infra/refresh_mathlib_infogeometry_graphs.py \
+  --stream \
+  --syntax-out artifacts/leantrail/batch_syntax_dump.jsonl
+```
+
+**Legacy method (file-based, for full Mathlib+InfoGeometry):**
 
 ```bash
 lake script run dagRefresh
 ```
 
-This performs the focused build/export path and writes the declaration graph
-artifacts under:
+This performs the focused build/export path and writes the declaration graph artifacts under:
 
 ```text
 artifacts/dag/index/
@@ -50,28 +67,35 @@ artifacts/dag/full_graph.json
 artifacts/dag/structural-topology.json
 ```
 
-Current behavior is fail-fast: if the configured build target
-`InfoGeometry.All` does not build, `dagRefresh` stops before indexing. In that
-case there is no fresh DAG to ingest into Arango. Fix the Lean build first.
+Current behavior is fail-fast: if the configured build target `InfoGeometry.All` does not build, `dagRefresh` stops before indexing. In that case there is no fresh DAG to ingest into Arango. Fix the Lean build first.
 
-For open-socket triage during a build blockage, use the source-only scanner
-`tools/quality/closure_debt_crawler.py`. That script is not a graph crawler and
-does not establish source-sink or Mathlib reachability.
+For open-socket triage during a build blockage, use the source-only scanner `tools/quality/closure_debt_crawler.py`. That script is not a graph crawler and does not establish source-sink or Mathlib reachability.
 
-For the run documented here, the indexer reported:
+## 2. Syntax AST Layer Export & Ingest
 
-```text
-decls:      55,008
-raw edges:  2,131,863
-kept edges:   383,546
-morphisms:      5,582
+The syntax layer is exported separately and ingested into its own collections (`syntax_decls`, `syntax_nodes`, `ast_child`, `decl_root`).
+
+```bash
+# Export syntax AST for repo + mathlib source
+python3 tools/leantrail/batch_dump_syntax.py \
+  --root lean \
+  --root .lake/packages/mathlib/Mathlib \
+  --out artifacts/leantrail/batch_syntax_dump.jsonl
+
+# Ingest via python-arango (preferred, faster)
+python3 tools/leantrail/ingest_syntax_to_arango.py \
+  artifacts/leantrail/batch_syntax_dump.jsonl \
+  --execute \
+  --database infogeometry
+
+# Or via HTTP API (no python-arango dependency)
+python3 tools/leantrail/ingest_syntax_to_arango.py \
+  artifacts/leantrail/batch_syntax_dump.jsonl \
+  --execute-http \
+  --database infogeometry
 ```
 
-The indexer may report filtered-edge drops for endpoints outside the filtered
-declaration set. That is not an ingest failure. The raw edge layer is handled in
-the next step.
-
-## 2. Materialize the Lossless Raw DAG Arango Layer
+## 3. Materialize the Lossless Raw DAG Arango Layer (File-Based)
 
 Before materializing, confirm the local artifacts are fresh enough:
 
@@ -79,8 +103,7 @@ Before materializing, confirm the local artifacts are fresh enough:
 lake script run dagDoctor
 ```
 
-If `dagDoctor` reports stale source or olean hashes, do not ingest those
-artifacts as current-source truth.
+If `dagDoctor` reports stale source or olean hashes, do not ingest those artifacts as current-source truth.
 
 Materialize the Arango-shaped raw DAG and topology overlay artifacts:
 
@@ -111,10 +134,9 @@ overlay_edge_docs:             2,196,288
 raw_edges_preserved_one_for_one: true
 ```
 
-This is a lossless raw DAG dependency layer. It is not a claim that full Lean
-compiler InfoTree state has been preserved.
+This is a lossless raw DAG dependency layer. It is not a claim that full Lean compiler InfoTree state has been preserved.
 
-## 3. Add Filename Shims Expected by the Current Ingest Script
+## 4. Add Filename Shims Expected by the Current Ingest Script
 
 The materializer writes:
 
@@ -132,22 +154,20 @@ decls.jsonl
 edges.jsonl
 ```
 
-Until the script is updated to accept explicit raw artifact filenames, create
-local symlinks in the materialized output directory:
+Until the script is updated to accept explicit raw artifact filenames, create local symlinks in the materialized output directory:
 
 ```bash
 ln -sf infotree_raw_nodes.jsonl artifacts/infotree/arango-lossless-dag/decls.jsonl
 ln -sf infotree_raw_edges.jsonl artifacts/infotree/arango-lossless-dag/edges.jsonl
 ```
 
-Without these shims, only the topology overlay files are ingested and
-`verify_layered_arango_descent.py` will fail with:
+Without these shims, only the topology overlay files are ingested and `verify_layered_arango_descent.py` will fail with:
 
 ```text
 no raw_info_edges rows found
 ```
 
-## 4. Ingest Raw and Overlay Layers into Arango
+## 5. Ingest Raw and Overlay Layers into Arango
 
 Use the module entrypoint so repo-relative imports resolve cleanly:
 
@@ -162,8 +182,7 @@ python3 -m tools.infra.arango_layered_ingest \
   --json-out artifacts/infotree/arango-lossless-dag/ingest_report.json
 ```
 
-If this is run from a restricted sandbox, localhost Arango access may require
-approval/escalation. A successful full ingest reports all four collections:
+If this is run from a restricted sandbox, localhost Arango access may require approval/escalation. A successful full ingest reports all four collections:
 
 ```text
 raw_info_nodes=64425
@@ -172,10 +191,9 @@ topology_overlay=64425
 topology_overlay_edges=2196288
 ```
 
-The `--drop-existing` flag intentionally replaces the derived Arango layer with
-the freshly materialized artifact set. It does not modify Lean source files.
+The `--drop-existing` flag intentionally replaces the derived Arango layer with the freshly materialized artifact set. It does not modify Lean source files.
 
-## 5. Verify Raw-to-SCC Descent
+## 6. Verify Raw-to-SCC Descent
 
 Run the descent verifier:
 
@@ -183,9 +201,7 @@ Run the descent verifier:
 python3 -m tools.infra.verify_layered_arango_descent --json
 ```
 
-The verifier samples a raw edge, maps both endpoints through `member_of_scc`,
-finds the corresponding `scc_quotient` edge, and checks that the quotient
-multiplicity matches the raw witness query count.
+The verifier samples a raw edge, maps both endpoints through `member_of_scc`, finds the corresponding `scc_quotient` edge, and checks that the quotient multiplicity matches the raw witness query count.
 
 A successful report includes:
 
@@ -198,7 +214,7 @@ A successful report includes:
 
 This is the minimum audit gate before using SCC connectedness as navigation.
 
-## 6. Materialize SCC-First Algorithm Overlays
+## 7. Materialize SCC-First Algorithm Overlays
 
 Run the repo-documented algorithm overlay pass:
 
@@ -246,14 +262,11 @@ arango_dag_communities:                42
 arango_dag_community_member_edges: 64,425
 ```
 
-These are derived overlays. They are useful for routing, impact analysis,
-dominance questions, motif discovery, and theorem-basin navigation, but they
-are not mathematical proofs.
+These are derived overlays. They are useful for routing, impact analysis, dominance questions, motif discovery, and theorem-basin navigation, but they are not mathematical proofs.
 
-## 7. Optional Faithful Retrieval Check
+## 8. Optional Faithful Retrieval Check
 
-After ingest and overlays, run a targeted graph-context retrieval to confirm
-that the refreshed Arango layer can find the intended corridor:
+After ingest and overlays, run a targeted graph-context retrieval to confirm that the refreshed Arango layer can find the intended corridor:
 
 ```bash
 python3 tools/infra/arango_gravity_context.py \
@@ -265,9 +278,7 @@ python3 tools/infra/arango_gravity_context.py \
   --json-out artifacts/infotree/arango-lossless-dag/projective_count_drazin_context.json
 ```
 
-Use this only as a retrieval smoke test. If the result suggests a mathematical
-connection, descend to the Lean owner files and encode the relation as a real
-definition, theorem, or constructive witness.
+Use this only as a retrieval smoke test. If the result suggests a mathematical connection, descend to the Lean owner files and encode the relation as a real definition, theorem, or constructive witness.
 
 ## Connectedness Semantics
 
@@ -320,8 +331,7 @@ FOR v, e, p IN 1..20 ANY @seed arango_dag_component_edges
 
 ## Non-Negotiable Proof Boundary
 
-Arango connectedness is navigation, audit, and context assembly. It is not a
-Lean proof.
+Arango connectedness is navigation, audit, and context assembly. It is not a Lean proof.
 
 When a graph connection matters mathematically:
 
@@ -330,7 +340,46 @@ When a graph connection matters mathematically:
 3. traverse `arango_dag_component_edges` or `topology_overlay_edges`;
 4. descend from the SCC path back to raw Lean declarations;
 5. read the owner files;
-6. replace any vacuous bridge hypothesis with a constructive Lean statement
-   or a narrowed, current (Native Closure Mandated) witness field.
+6. replace any vacuous bridge hypothesis with a constructive Lean statement or a narrowed, current (Native Closure Mandated) witness field.
 
 That last step is where theorem work happens.
+
+## Collections Summary (Current State)
+
+| Layer | Collections | Source |
+|-------|-------------|--------|
+| **Streaming Declaration** | `decls`, `edges` | `dagIndexer --stream` → `refresh_decl_graph.py --stream` |
+| **Syntax AST** | `syntax_decls`, `syntax_nodes`, `ast_child`, `decl_root` | `DumpLeanGraph.lean` → `batch_dump_syntax.py` → `ingest_syntax_to_arango.py` |
+| **Raw DAG (file-based)** | `raw_info_nodes`, `raw_info_edges` | `dagIndexer` file export → `materialize_lossless_infotree.py` |
+| **Topology Overlay** | `topology_overlay`, `topology_overlay_edges` | `hydrate_arango_topology.py` |
+| **Algorithm Overlays** | `arango_dag_*` (named graph) | `arango_dag_algorithms.py` |
+| **Retrieval Projection** | `ig_nodes`, `ig_edges` | `adapters.py` / legacy export |
+
+## Quick Reference: Current Recommended Pipeline
+
+```bash
+# 1. Syntax AST layer (repo + mathlib source)
+python3 tools/leantrail/batch_dump_syntax.py \
+  --root lean --root .lake/packages/mathlib/Mathlib \
+  --out artifacts/leantrail/batch_syntax_dump.jsonl
+python3 tools/leantrail/ingest_syntax_to_arango.py \
+  artifacts/leantrail/batch_syntax_dump.jsonl \
+  --execute --database infogeometry
+
+# 2. Declaration graph (streaming, constant memory, InfoGeometry only)
+python3 tools/infra/refresh_decl_graph.py \
+  --stream \
+  --import-root InfoGeometry.All \
+  --namespace InfoGeometry \
+  --arango-db infogeometry
+
+# 3. Full wrapper (syntax + declarations + AST AQL smoke)
+python3 tools/infra/refresh_mathlib_infogeometry_graphs.py --stream
+
+# 4. Verify & overlays (when using file-based artifacts)
+lake script run dagDoctor
+python3 tools/infra/materialize_lossless_infotree.py ...
+python3 -m tools.infra.arango_layered_ingest ...
+python3 -m tools.infra.verify_layered_arango_descent --json
+python3 -m tools.infra.arango_dag_algorithms --write --drop-existing --create-named-graph --graph-name arango_dag
+```

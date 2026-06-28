@@ -1,8 +1,6 @@
 import InfoGeometry.Prequantum.Bundle
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Tactic.Ring
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Prequantum.Connection
@@ -19,7 +17,37 @@ open InfoGeometry.Krein
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+namespace ProjectivePrequantumBundle
+
+/-- Scalar connection observable carried by a projective prequantum bundle point. -/
+def connectionObservable (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
+  P.data.connectionScale
+
+/-- Scalar covariant-derivative proxy `F * ℏ`, inherited from the underlying datum. -/
+def covariantDerivative (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
+  P.data.covariantScale
+
+lemma connectionObservable_gauge
+    (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+    connectionObservable (u • P) = connectionObservable P / (u : ℝ) := by
+  change PrequantumData.connectionScale (u • P.data) =
+      PrequantumData.connectionScale P.data / (u : ℝ)
+  exact PrequantumData.connectionScale_smul u P.data
+
+@[simp] lemma covariantDerivative_smul
+    (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+    covariantDerivative (u • P) = covariantDerivative P := by
+  change PrequantumData.covariantScale (u • P.data) =
+      PrequantumData.covariantScale P.data
+  exact PrequantumData.covariantScale_smul u P.data
+
+end ProjectivePrequantumBundle
+
+section Complete
+
+variable [CompleteSpace E]
 
 open ProjectivePrequantumBundle
 
@@ -40,38 +68,13 @@ private lemma Hess_smul_smul (a : ℝ) (v w : InfoGeometry.Krein.DoubledSpace E)
   rw [Hess_smul_left, Hess_smul_right]
   ring
 
-namespace ProjectivePrequantumBundle
-
-/-- Scalar connection observable carried by a projective prequantum bundle point. -/
-def connectionObservable (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
-  P.data.connectionScale
-
-/-- Scalar covariant-derivative proxy `F * ℏ`, inherited from the underlying datum. -/
-def covariantDerivative (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
-  P.data.covariantScale
-
-lemma connectionObservable_gauge
-    (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
-    connectionObservable (u • P) = connectionObservable P / (u : ℝ) := by
-  change PrequantumData.connectionScale (u • P.data) =
-      PrequantumData.connectionScale P.data / (u : ℝ)
-  simpa using PrequantumData.connectionScale_smul u P.data
-
-@[simp] lemma covariantDerivative_smul
-    (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
-    covariantDerivative (u • P) = covariantDerivative P := by
-  change PrequantumData.covariantScale (u • P.data) =
-      PrequantumData.covariantScale P.data
-  simpa using PrequantumData.covariantScale_smul u P.data
-
-end ProjectivePrequantumBundle
-
 lemma hessian_indefinite_form_smul_smul_weyl
   (u : PrequantumData.Gauge) (v w : InfoGeometry.Krein.DoubledSpace E) :
     Hess (u • v) (u • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w := by
   change Hess (((u : ℝ)) • v) (((u : ℝ)) • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w
   simpa using Hess_smul_smul ((u : ℝ)) v w
 
+end Complete
 end KreinClifford
 
 end InfoGeometry.Prequantum

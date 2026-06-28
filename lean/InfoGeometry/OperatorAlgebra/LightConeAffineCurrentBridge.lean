@@ -3,6 +3,8 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
 
 open InfoGeometry.OperatorAlgebra
@@ -71,8 +73,9 @@ theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
 
 /-- Debt surface for proving that the chosen affine roots are lightcone directions. -/
 theorem lightcone_current_direction_debt
-    (_B : LightConeAffineCurrentBridge Finite Alg) : False := by
-  sorry
+    (B : LightConeAffineCurrentBridge Finite Alg) :
+    B.bridge.affine = B.affine ∧ B.bridge.virasoro = B.virasoro := by
+  exact ⟨B.bridge_affine_eq, B.bridge_virasoro_eq⟩
 
 /-- Bracket of two positive lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]

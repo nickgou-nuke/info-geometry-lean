@@ -59,8 +59,8 @@ from `WeightGrading55`.
 -/
 theorem refined_orbit_tag_exists
     (X : InfoGeometry.Physics.OrbitClassification55.JordanMatrix10D) :
-    Nonempty (RefinedOrbitType X) := by
-  exact ⟨refined_orbit_classification X⟩
+    RefinedOrbitType X := by
+  exact refined_orbit_classification X
 
 /-! ## 3. Boundary for future global compensation theorems -/
 

@@ -103,6 +103,12 @@ theorem modularBurgGenerator_nonnegative (K : ℝ) :
   unfold modularBurgGenerator
   linarith [Real.add_one_le_exp K]
 
+/-- The Burg generator has derivative `exp K - 1`. -/
+theorem modularBurgGenerator_deriv (K : ℝ) :
+    deriv modularBurgGenerator K = Real.exp K - 1 := by
+  unfold modularBurgGenerator
+  simp [Real.deriv_exp]
+
 theorem scalarItakuraSaito_scale_invariant (lam x y : ℝ) (hlam : lam ≠ 0) (hy : y ≠ 0) :
     scalarItakuraSaito (lam * x) (lam * y) = scalarItakuraSaito x y := by
   have h_lam_y : lam * y ≠ 0 := mul_ne_zero hlam hy

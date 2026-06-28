@@ -127,8 +127,8 @@ theorem basis_repr_smul_head
   subst hhead
   by_cases hi : i = 0
   · subst hi
-    simp [Pi.smul_apply, Module.Basis.repr_self_apply]
-  · simp [Pi.smul_apply, Module.Basis.repr_self_apply, hi]
+    simp
+  · simp [hi]
 
 /--
 First-column transport for a selected eigenvector.
@@ -156,8 +156,8 @@ theorem basis_repr_eigenvector_head
     simpa [Pi.smul_apply] using hcoord
   rw [heig']
   ext i
-  simpa using
-    (basis_repr_smul_head (basis := basis) (eigenvector := basis 0) rfl eigval i)
+  rw [basis_repr_smul_head (basis := basis) (eigenvector := basis 0) rfl eigval i]
+  by_cases hi : i = 0 <;> simp [hi]
 
 /--
 Native first-Schur-column transport in basis-change form.
@@ -191,11 +191,11 @@ theorem schurStep_first_col
   let W : Matrix (Fin (n + 1)) (Fin (n + 1)) K := std.toMatrix basis
   let WInv : Matrix (Fin (n + 1)) (Fin (n + 1)) K := basis.toMatrix std
   have hrepr0 : basis.repr (basis 0) = Finsupp.single 0 (1 : K) := by
-    simpa using (basis.repr_self (0 : Fin (n + 1)))
+    simp
   have hW : Matrix.mulVec W (Finsupp.single 0 (1 : K)) = eigenvector := by
     have htmp : Matrix.mulVec W (basis.repr (basis 0)) = basis 0 := by
       convert Module.Basis.toMatrix_mulVec_repr (b' := std) (b := basis)
-        (m := basis 0) using 1 <;> simp [W, std]
+        (m := basis 0) using 1
     calc
       Matrix.mulVec W (Finsupp.single 0 (1 : K))
           = Matrix.mulVec W (basis.repr (basis 0)) := by
@@ -207,7 +207,7 @@ theorem schurStep_first_col
     exact hrepr0
   have hWinv0 : Matrix.mulVec WInv eigenvector = basis.repr eigenvector := by
     convert Module.Basis.toMatrix_mulVec_repr (b := std) (b' := basis)
-      (m := eigenvector) using 1 <;> simp [WInv, std]
+      (m := eigenvector) using 1
   have hWinv : Matrix.mulVec WInv eigenvector = Finsupp.single 0 (1 : K) := by
     rw [hrepr] at hWinv0
     exact hWinv0
@@ -356,9 +356,12 @@ def similarWitness (S : SchurDecompositionPacket K n) :
 
 /-- AFP theorem surface: Schur output is similar, upper triangular, and has the requested diagonal. -/
 theorem schur_decomposition (S : SchurDecompositionPacket K n) :
-    Nonempty (SimilarMatrixWitness S.A S.B) ∧ UpperTriangular S.B ∧
+    S.A = S.P * S.B * S.Q ∧
+      S.P * S.Q = 1 ∧
+      S.Q * S.P = 1 ∧
+      UpperTriangular S.B ∧
       diagList S.B = S.eigenvalues :=
-  ⟨⟨S.similarWitness⟩, S.upper_triangular, S.diag_eq⟩
+  ⟨S.factorization, S.P_mul_Q, S.Q_mul_P, S.upper_triangular, S.diag_eq⟩
 
 /-- The upper-triangular component of a certified Schur decomposition. -/
 def schurUpperTriangular (S : SchurDecompositionPacket K n) :
@@ -481,39 +484,47 @@ theorem of_basis
     (hhead : basis 0 = eigenvector)
     (eigval : K)
     (heig : A.mulVec eigenvector = fun i => eigval * eigenvector i) :
-    Nonempty (SchurStepPacket K n) := by
+    ∃ S : SchurStepPacket K n,
+      S.A' 0 0 = eigval ∧
+        (∀ i : Fin (n + 1), i ≠ 0 → S.A' i 0 = 0) := by
   classical
   let std : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K) :=
     Pi.basisFun K (Fin (n + 1))
   let W : Matrix (Fin (n + 1)) (Fin (n + 1)) K := std.toMatrix basis
   let WInv : Matrix (Fin (n + 1)) (Fin (n + 1)) K := basis.toMatrix std
-  refine ⟨{ A := A
-            eigenvalue := eigval
-            eigenvector := eigenvector
-            eigenvector_eq := heig
-            eigenvector_ne_zero := by
-              simpa [hhead] using (basis.ne_zero (0 : Fin (n + 1)))
-            basisCompletion :=
-              { v := eigenvector
-                nonzero := by
-                  simpa [hhead] using (basis.ne_zero (0 : Fin (n + 1)))
-                basis := basis
-                headIndex := 0
-                head_eq := hhead }
-            basisCompletion_head := rfl
-            W := W
-            WInv := WInv
-            WInv_mul_W := by
-              simpa [WInv, W, std] using
-                (basis.toMatrix_mul_toMatrix_flip (b := basis) (b' := std))
-            W_mul_WInv := by
-              simpa [WInv, W, std] using
-                (basis.toMatrix_mul_toMatrix_flip (b := std) (b' := basis))
-            A' := WInv * A * W
-            A'_eq := rfl
-            first_col_eq := by
-              simpa [WInv, W, std] using
-                (schurStep_first_col (K := K) (n := n) basis A eigenvector hhead eigval heig) }⟩
+  let S : SchurStepPacket K n :=
+    { A := A
+      eigenvalue := eigval
+      eigenvector := eigenvector
+      eigenvector_eq := heig
+      eigenvector_ne_zero := by
+        simpa [hhead] using (basis.ne_zero (0 : Fin (n + 1)))
+      basisCompletion :=
+        { v := eigenvector
+          nonzero := by
+            simpa [hhead] using (basis.ne_zero (0 : Fin (n + 1)))
+          basis := basis
+          headIndex := 0
+          head_eq := hhead }
+      basisCompletion_head := rfl
+      W := W
+      WInv := WInv
+      WInv_mul_W := by
+        simp [WInv, W, std]
+      W_mul_WInv := by
+        simp [WInv, W, std]
+      A' := WInv * A * W
+      A'_eq := rfl
+      first_col_eq := by
+        simpa [WInv, W, std] using
+          (schurStep_first_col (K := K) (n := n) basis A eigenvector hhead eigval heig) }
+  refine ⟨S, ?_, ?_⟩
+  · change S.A' 0 0 = eigval
+    rw [S.first_col_eq]
+    dsimp [S]
+  · intro i hi
+    rw [S.first_col_eq]
+    simp [hi]
 
 theorem first_col_zero_of_ne_zero
     (S : SchurStepPacket K n) {i : Fin (n + 1)} (hi : i ≠ 0) :
@@ -565,7 +576,8 @@ theorem schurStep_block_form (S : SchurStepPacket K n) :
         (0 : Matrix (Fin n) PUnit K)
         S.tailMatrix := by
   classical
-  ext x y <;> cases x <;> cases y <;> simp [schurStepEquiv, tailMatrix, S.first_col_eq]
+  ext x y
+  cases x <;> cases y <;> simp [schurStepEquiv, tailMatrix, S.first_col_eq]
 
 /--
 Recursive Schur tail assembly in block form.
@@ -636,8 +648,7 @@ variable {K n m : Type*} [CommRing K] [Fintype n] [Fintype m] [DecidableEq n] [D
 theorem char_poly_0_block (P : CharpolyUpperBlockPacket K n m) :
     P.A.charpoly = P.B.charpoly * P.D.charpoly :=
   by
-    simpa [P.A_eq] using
-      (char_poly_fromBlocks_zero₁₂ (K := K) (B := P.B) (C := P.C) (D := P.D))
+    simp [P.A_eq]
 
 end CharpolyUpperBlockPacket
 
@@ -674,8 +685,7 @@ variable {K n m : Type*} [CommRing K] [Fintype n] [Fintype m] [DecidableEq n] [D
 theorem char_poly_0_block' (P : CharpolyLowerBlockPacket K n m) :
     P.A.charpoly = P.B.charpoly * P.D.charpoly :=
   by
-    simpa [P.A_eq] using
-      (char_poly_fromBlocks_zero₂₁ (K := K) (B := P.B) (C := P.C) (D := P.D))
+    simp [P.A_eq]
 
 end CharpolyLowerBlockPacket
 

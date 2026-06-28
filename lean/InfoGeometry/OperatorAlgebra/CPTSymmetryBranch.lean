@@ -828,8 +828,26 @@ theorem cptSymmetryBranchOwnerTarget :
   exact C.CPT_exchanges_chiral_sectors
 
 /-- Owner target for supplying the calibrated abstract algebraic CPT branch. -/
-def CPTBranchOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
-  Nonempty (CPTBranch Op)
+structure CPTBranchOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] where
+  /-- The calibrated algebraic CPT branch owned by this target. -/
+  branch : CPTBranch Op
+
+namespace CPTBranchOwnerTarget
+
+variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
+
+/-- Read back the carried CPT branch. -/
+def toBranch
+    (T : CPTBranchOwnerTarget Op) :
+    CPTBranch Op :=
+  T.branch
+
+@[simp] theorem toBranch_mk
+    (C : CPTBranch Op) :
+    toBranch (CPTBranchOwnerTarget.mk C) = C :=
+  rfl
+
+end CPTBranchOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.CPTSymmetryBranch

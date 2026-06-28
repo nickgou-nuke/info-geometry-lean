@@ -130,21 +130,24 @@ theorem logBarrier_selfConcordant_on_Ioi :
   exact logBarrier_selfConcordant_core hx
 
 /--
-Owner target for the native logarithmic barrier theorem.
+The native self-concordant logarithmic barrier owner target is closed.
 
 This is deliberately only the standard positive-line log barrier.  It is not
 a theorem about `-log ζ`.
 -/
-@[owner_target_tag]
-def SelfConcordantLogBarrierOwnerTarget : Prop :=
-  OneDimSelfConcordantCurvature
-    logBarrierHessian
-    logBarrierThirdAbs
-    (Set.Ioi (0 : ℝ))
-
-/-- The native self-concordant logarithmic barrier owner target is closed. -/
 theorem selfConcordantLogBarrierOwnerTarget :
-    SelfConcordantLogBarrierOwnerTarget :=
+    OneDimSelfConcordantCurvature
+      logBarrierHessian
+      logBarrierThirdAbs
+      (Set.Ioi (0 : ℝ)) :=
   logBarrier_selfConcordant_on_Ioi
+
+@[owner_target_tag, rep_depth thermo]
+theorem selfConcordantLogBarrier_packet :
+    (∀ x, x ∈ Set.Ioi (0 : ℝ) →
+      logBarrierThirdAbs x ≤ 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) ∧
+      (∀ {x : ℝ}, 0 < x →
+        logBarrierThirdAbs x = 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) := by
+  exact ⟨selfConcordantLogBarrierOwnerTarget, fun hx => logBarrier_selfConcordant_exact hx⟩
 
 end InfoGeometry.Convex.SelfConcordantLogBarrier

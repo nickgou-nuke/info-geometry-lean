@@ -1,12 +1,13 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Projective.FiveGradedCentralizer
 
 /-!
 # InfoGeometry/Canonical/HestenesKreinModularGeometry.lean
 
 Bounded Hestenes/Krein modular geometry.
 
-This file is real-linear.  It does not construct complex Tomita-Takesaki theory,
+This file is real-linear. It does not construct complex Tomita-Takesaki theory,
 anti-linear modular conjugations, unbounded modular operators, Type III traces,
 or complex Fredholm determinants.
 
@@ -28,14 +29,14 @@ noncomputable section
 
 set_option autoImplicit false
 
-/-- Bounded real endomorphisms of the carrier space. -/
+/-! Bounded real endomorphisms of the carrier space. -/
 abbrev RealEnd
     (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
   E →L[ℝ] E
 
 /-! ## 1. Real Hestenes/Krein modular datum -/
 
-/--
+/-
 Bounded Hestenes/Krein modular datum.
 
 `fundamentalSymmetry` is the real Krein symmetry. It is not a complex Tomita
@@ -53,6 +54,8 @@ The two former generic-`Prop` witness slots are now concrete:
 * **Krein self-adjointness of the generator**: `J G J = G` where `J` is the
   fundamental symmetry.
 -/
+
+
 @[rep_depth operator]
 structure KreinHestenesModularDatum
     (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] where
@@ -91,7 +94,7 @@ structure KreinHestenesModularDatum
   /--
   The modular generator is Krein self-adjoint: `J G J = G`.
 
-  This is the concrete Krein-compatibility condition.  It replaces the former
+  This is the concrete Krein-compatibility condition. It replaces the former
   generic `Prop` placeholder.
   -/
   generator_krein_selfadjoint :
@@ -106,29 +109,26 @@ variable
 
 /-! ## 2. Hestenes commutator derivation -/
 
-/-- The real Hestenes commutator product of bounded endomorphisms. -/
+/- The real Hestenes commutator product of bounded endomorphisms. -/
 def hestenesCommutator (A B : RealEnd E) : RealEnd E :=
   A * B - B * A
 
-/--
+/-
 Intrinsic modular derivation.
 
 This replaces external spacetime/vector derivatives in the bounded
 Hestenes/Krein layer.
 -/
+
+
 def modularDerivation (A : RealEnd E) : RealEnd E :=
   hestenesCommutator D.modularGenerator A
 
-/--
-Modular monogenicity.
-
-An observable is modular-monogenic when it is annihilated by the intrinsic
-modular commutator derivation.
+/-
+Vanishing modular derivation is exactly commutation with the modular generator.
 -/
-def IsModularMonogenic (A : RealEnd E) : Prop :=
-  modularDerivation D A = 0
 
-/-- Vanishing modular derivation is exactly commutation with the modular generator. -/
+
 theorem modularDerivation_eq_zero_iff_commutes
     (A : RealEnd E) :
     modularDerivation D A = 0 ↔
@@ -140,63 +140,62 @@ theorem modularDerivation_eq_zero_iff_commutes
   · intro h
     exact sub_eq_zero.mpr h
 
-/-- Modular monogenicity is exactly commutation with the modular generator. -/
-theorem isModularMonogenic_iff_commutes
-    (A : RealEnd E) :
-    IsModularMonogenic D A ↔
-      D.modularGenerator * A = A * D.modularGenerator :=
-  modularDerivation_eq_zero_iff_commutes D A
+/-- Modular monogenicity: an operator commutes with the modular generator -/
+def IsMonogenic (A : RealEnd E) : Prop :=
+  modularDerivation D A = 0
 
-/-- The modular generator has zero commutator with itself. -/
+/- Modular monogenicity is exactly commutation with the modular generator. -/
+theorem isMonogenic_iff_commutes
+    (A : RealEnd E) :
+    IsMonogenic D A ↔
+      D.modularGenerator * A = A * D.modularGenerator := by
+  exact modularDerivation_eq_zero_iff_commutes D A
+
+/- The modular generator has zero commutator with itself. -/
 @[simp]
 theorem modularDerivation_generator :
     modularDerivation D D.modularGenerator = 0 := by
   simp [modularDerivation, hestenesCommutator]
 
-/-- The modular generator is modular-monogenic. -/
+/- The modular generator is monogenic. -/
 @[simp]
-theorem modularGenerator_isModularMonogenic :
-    IsModularMonogenic D D.modularGenerator :=
-  modularDerivation_generator D
+theorem modularGenerator_isMonogenic :
+    IsMonogenic D D.modularGenerator := by
+  exact modularDerivation_generator D
 
-/-- The stored Krein fundamental symmetry is involutive. -/
+/- The stored Krein fundamental symmetry is involutive. -/
 theorem fundamentalSymmetry_sq :
     D.fundamentalSymmetry * D.fundamentalSymmetry =
-      ContinuousLinearMap.id ℝ E :=
-  D.fundamentalSymmetry_involution
+      ContinuousLinearMap.id ℝ E := by
+  exact D.fundamentalSymmetry_involution
 
-/-- The modular weight is modular-monogenic (it commutes with the generator). -/
-theorem modularWeight_isModularMonogenic :
-    IsModularMonogenic D D.modularWeight :=
-  (modularDerivation_eq_zero_iff_commutes D D.modularWeight).mpr
+/- The modular weight is monogenic (it commutes with the generator). -/
+theorem modularWeight_isMonogenic :
+    IsMonogenic D D.modularWeight := by
+  exact (modularDerivation_eq_zero_iff_commutes D D.modularWeight).mpr
     D.modularWeight_comm_generator.symm
 
-/--
-Krein self-adjointness of the generator implies that the fundamental symmetry
-commutes with the generator.
--/
+/- Krein self-adjointness of the generator implies that the fundamental symmetry commutes with the generator. -/
 theorem fundamentalSymmetry_commutes_modularGenerator :
     D.fundamentalSymmetry * D.modularGenerator =
       D.modularGenerator * D.fundamentalSymmetry := by
   calc
-    D.fundamentalSymmetry * D.modularGenerator
-        =
+    D.fundamentalSymmetry * D.modularGenerator =
       (D.fundamentalSymmetry * D.modularGenerator * D.fundamentalSymmetry) *
         D.fundamentalSymmetry := by
-          ext v
-          have hJv : D.fundamentalSymmetry (D.fundamentalSymmetry v) = v := by
-            have h := congrArg (fun T : RealEnd E => T v) D.fundamentalSymmetry_involution
-            simpa [ContinuousLinearMap.mul_apply] using h
-          simp [ContinuousLinearMap.mul_apply, hJv]
-    _ =
-      D.modularGenerator * D.fundamentalSymmetry := by
-        rw [D.generator_krein_selfadjoint]
+        ext v
+        have hJv : D.fundamentalSymmetry (D.fundamentalSymmetry v) = v := by
+          have h := congrArg (fun T : RealEnd E => T v) D.fundamentalSymmetry_involution
+          simpa [ContinuousLinearMap.mul_apply] using h
+        simp [ContinuousLinearMap.mul_apply, hJv]
+    _ = D.modularGenerator * D.fundamentalSymmetry := by
+      rw [D.generator_krein_selfadjoint]
 
 end KreinHestenesModularDatum
 
 /-! ## 3. Real rotor-flow -/
 
-/--
+/-
 Real Hestenes rotor-flow.
 
 This is the real/Krein replacement for a complex modular automorphism group.
@@ -205,6 +204,8 @@ The flow is represented by real bounded endomorphism rotors and their inverses.
 The former generic `Prop` witness for the generator relation is replaced by
 a concrete one-parameter group law `rotor(s+t) = rotor(s) * rotor(t)`.
 -/
+
+
 @[rep_depth operator]
 structure HestenesRotorFlow
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -235,7 +236,7 @@ structure HestenesRotorFlow
   One-parameter group law for the rotor flow.
 
   This is the concrete replacement for the former generic `Prop` generator
-  relation.  It states that the rotor family forms a one-parameter group,
+  relation. It states that the rotor family forms a one-parameter group,
   which is the defining property of being generated by an infinitesimal
   generator (the modular generator).
   -/
@@ -245,10 +246,11 @@ structure HestenesRotorFlow
   /-- Predicate saying that an observable is fixed by the rotor flow. -/
   fixedByFlow : RealEnd E → Prop
 
-  /-- Flow-fixed observables are exactly modular-monogenic observables. -/
+  /-- Flow-fixed observables are exactly monogenic observables. -/
   fixedByFlow_iff_monogenic :
     ∀ A : RealEnd E,
-      fixedByFlow A ↔ KreinHestenesModularDatum.IsModularMonogenic D A
+      fixedByFlow A ↔ KreinHestenesModularDatum.IsMonogenic D A
+
 
 namespace HestenesRotorFlow
 
@@ -257,18 +259,22 @@ variable
     {D : KreinHestenesModularDatum E}
     (F : HestenesRotorFlow D)
 
-/-- Rotor conjugation action on observables. -/
+/- Rotor conjugation action on observables. -/
 def sigma (t : ℝ) (A : RealEnd E) : RealEnd E :=
   F.rotor t * A * F.rotorInv t
 
-/-- Rotor conjugation at time zero is the identity on observables. -/
+/-
+Rotor conjugation at time zero is the identity on observables.
+-/
+
+
 theorem sigma_zero_apply (A : RealEnd E) :
     F.sigma 0 A = A := by
   ext v
   simp [sigma, F.rotor_zero, F.rotorInv_zero]
 
-/-- The inverse rotor satisfies the reversed group law. -/
-theorem rotorInv_group_True (s t : ℝ) :
+/- The inverse rotor satisfies the reversed group law. -/
+theorem rotorInv_group (s t : ℝ) :
     F.rotorInv (s + t) = F.rotorInv t * F.rotorInv s := by
   let x : RealEnd E := F.rotor (s + t)
   let y : RealEnd E := F.rotorInv (s + t)
@@ -279,19 +285,15 @@ theorem rotorInv_group_True (s t : ℝ) :
   have hxz : x * z = ContinuousLinearMap.id ℝ E := by
     dsimp [x, z]
     calc
-      F.rotor (s + t) * (F.rotorInv t * F.rotorInv s)
-          =
-        (F.rotor s * F.rotor t) * (F.rotorInv t * F.rotorInv s) := by
-          rw [F.rotor_group_True]
-      _ =
-        F.rotor s * (F.rotor t * F.rotorInv t) * F.rotorInv s := by
+      F.rotor (s + t) * (F.rotorInv t * F.rotorInv s) =
+          (F.rotor s * F.rotor t) * (F.rotorInv t * F.rotorInv s) := by
+            rw [F.rotor_group_True]
+        _ = F.rotor s * (F.rotor t * F.rotorInv t) * F.rotorInv s := by
           simp [mul_assoc]
-      _ =
-        F.rotor s * F.rotorInv s := by
+        _ = F.rotor s * F.rotorInv s := by
           ext v
           simp [ContinuousLinearMap.mul_apply, F.rotor_right_inv t]
-      _ =
-        ContinuousLinearMap.id ℝ E := by
+        _ = ContinuousLinearMap.id ℝ E := by
           exact F.rotor_right_inv s
   calc
     y = y * ContinuousLinearMap.id ℝ E := by
@@ -304,41 +306,56 @@ theorem rotorInv_group_True (s t : ℝ) :
       ext v
       simp [ContinuousLinearMap.mul_apply]
 
-/-- The rotor conjugation actions compose by adding their parameters. -/
+
+/- The rotor conjugation actions compose by adding their parameters. -/
 theorem sigma_comp (s t : ℝ) (A : RealEnd E) :
     F.sigma s (F.sigma t A) = F.sigma (s + t) A := by
   ext v
   simp [sigma, ContinuousLinearMap.mul_apply, F.rotor_group_True,
-    F.rotorInv_group_True, mul_assoc]
+    F.rotorInv_group, mul_assoc]
 
-/-- Flow-fixed observables are exactly modular-monogenic observables. -/
+/-
+Flow-fixed observables are exactly monogenic observables.
+-/
+
+
 theorem fixedByFlow_iff (A : RealEnd E) :
-    F.fixedByFlow A ↔ KreinHestenesModularDatum.IsModularMonogenic D A :=
-  F.fixedByFlow_iff_monogenic A
+    F.fixedByFlow A ↔ KreinHestenesModularDatum.IsMonogenic D A := by
+  exact F.fixedByFlow_iff_monogenic A
 
-/-- A modular-monogenic observable is fixed by the stored flow predicate. -/
+/-
+A monogenic observable is fixed by the stored flow predicate.
+-/
+
+
 theorem fixedByFlow_of_monogenic
-    {A : RealEnd E} (hA : KreinHestenesModularDatum.IsModularMonogenic D A) :
-    F.fixedByFlow A :=
-  (F.fixedByFlow_iff A).mpr hA
+    {A : RealEnd E} (hA : KreinHestenesModularDatum.IsMonogenic D A) :
+    F.fixedByFlow A := by
+  exact (F.fixedByFlow_iff A).mpr hA
 
-/-- A flow-fixed observable is modular-monogenic. -/
+/-
+A fixed-by-flow observable is monogenic.
+-/
+
+
 theorem monogenic_of_fixedByFlow
     {A : RealEnd E} (hA : F.fixedByFlow A) :
-    KreinHestenesModularDatum.IsModularMonogenic D A :=
-  (F.fixedByFlow_iff A).mp hA
+    KreinHestenesModularDatum.IsMonogenic D A := by
+  exact (F.fixedByFlow_iff A).mp hA
 
 end HestenesRotorFlow
 
 /-! ## 4. Real Krein/Fredholm determinant contract -/
 
-/--
+/-
 Real Krein/Fredholm determinant contract for an identity-plus-perturbation
 operator.
 
 The former generic `Prop` fields are replaced by an explicit determinant
 readout, an explicit Krein trace readout, and a first-order determinant law.
 -/
+
+
 @[rep_depth operator]
 structure KreinFredholmDeterminantContract
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -365,26 +382,38 @@ variable
     {T : RealEnd E}
     (F : KreinFredholmDeterminantContract T)
 
-/-- The determinant is expressed in terms of the Krein trace. -/
-theorem determinant_eq :
-    F.determinant = 1 + F.kreinTrace :=
-  F.determinant_first_order
+/-
+The determinant is expressed in terms of the Krein trace.
+-/
 
-/-- When the trace vanishes, the determinant is 1. -/
+
+theorem determinant_eq :
+    F.determinant = 1 + F.kreinTrace := by
+  exact F.determinant_first_order
+
+/-
+When the trace vanishes, the determinant is 1.
+-/
+
+
 theorem determinant_of_trace_zero (h : F.kreinTrace = 0) :
     F.determinant = 1 := by
   rw [F.determinant_first_order, h, add_zero]
 
-/-- The bounded perturbation has a nonnegative operator norm. -/
+/-
+The bounded perturbation has a nonnegative operator norm.
+-/
+
+
 theorem operator_norm_nonneg :
-    0 ≤ ‖T‖ :=
-  norm_nonneg T
+    0 ≤ ‖T‖ := by
+  exact norm_nonneg T
 
 end KreinFredholmDeterminantContract
 
 /-! ## 5. Relative real modular Fredholm readout -/
 
-/--
+/-
 Relative real modular Fredholm datum.
 
 This stores a relative modular defect between a reference and localized
@@ -394,6 +423,8 @@ contract for that defect.
 The former generic `Prop` field for relative count-density is replaced by
 a concrete log-determinant relation.
 -/
+
+
 @[rep_depth operator]
 structure RelativeKreinModularFredholmDatum
     (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] where
@@ -423,7 +454,7 @@ structure RelativeKreinModularFredholmDatum
     relativePartitionReadout = fredholm.determinant
 
   /--
-  Relative count-density is the log of the relative partition readout.
+  Relative count-density is the log of the partition readout.
 
   This is the information-geometric content: the relative entropy/count-density
   is `log det(1 + ΔW)` where `ΔW` is the modular defect.
@@ -434,29 +465,46 @@ structure RelativeKreinModularFredholmDatum
   relativeCountDensity_eq_log :
     relativeCountDensity = Real.log relativePartitionReadout
 
+
 namespace RelativeKreinModularFredholmDatum
 
 variable
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (R : RelativeKreinModularFredholmDatum E)
 
-/-- The relative defect equation. -/
+/-
+The relative defect equation.
+-/
+
+
 theorem defect_eq :
     R.modularDefect =
-      R.localizedDatum.modularWeight - R.referenceDatum.modularWeight :=
-  R.modularDefect_eq
+      R.localizedDatum.modularWeight - R.referenceDatum.modularWeight := by
+  exact R.modularDefect_eq
 
-/-- The relative partition readout equals the stored real Fredholm determinant. -/
+/-
+The relative partition readout equals the stored real Fredholm determinant.
+-/
+
+
 theorem partition_eq_fredholmDeterminant :
-    R.relativePartitionReadout = R.fredholm.determinant :=
-  R.relativePartitionReadout_eq_det
+    R.relativePartitionReadout = R.fredholm.determinant := by
+  exact R.relativePartitionReadout_eq_det
 
-/-- The relative count-density is the log of the partition readout. -/
+/-
+The relative count-density is the log of the partition readout.
+-/
+
+
 theorem countDensity_eq_log :
-    R.relativeCountDensity = Real.log R.relativePartitionReadout :=
-  R.relativeCountDensity_eq_log
+    R.relativeCountDensity = Real.log R.relativePartitionReadout := by
+  exact R.relativeCountDensity_eq_log
 
-/-- The count-density expressed via the Fredholm trace. -/
+/-
+The count-density expressed via the Fredholm trace.
+-/
+
+
 theorem countDensity_eq_log_det :
     R.relativeCountDensity =
       Real.log (1 + R.fredholm.kreinTrace) := by
@@ -467,7 +515,7 @@ end RelativeKreinModularFredholmDatum
 
 /-! ## 6. Krein modular core projector -/
 
-/--
+/-
 Krein modular core projector.
 
 This is the real bounded modular analogue of a Drazin/Fredholm core projector.
@@ -475,6 +523,8 @@ All projector algebra (idempotence, disjointness, partition, commutation) is
 kernel-verified. Krein self-adjointness of the core projector is stated
 concretely.
 -/
+
+
 @[rep_depth operator]
 structure KreinModularCoreProjector
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -520,16 +570,6 @@ structure KreinModularCoreProjector
     D.fundamentalSymmetry * coreProjector * D.fundamentalSymmetry =
       coreProjector
 
-  /--
-  The nil projector is also Krein self-adjoint: `J (1−P) J = 1−P`.
-
-  This follows from `core_krein_selfadjoint` and `fundamentalSymmetry_involution`
-  but is stored as a field for direct access; the derivation theorem is below.
-  -/
-  nil_krein_selfadjoint :
-    D.fundamentalSymmetry * nilProjector * D.fundamentalSymmetry =
-      nilProjector
-
 namespace KreinModularCoreProjector
 
 variable
@@ -537,66 +577,113 @@ variable
     {D : KreinHestenesModularDatum E}
     (C : KreinModularCoreProjector D)
 
-/-- Pointwise idempotence of the modular core projector. -/
+/-
+Pointwise idempotence of the modular core projector.
+-/
+
+
 @[simp]
 theorem core_idempotent_apply (v : E) :
     C.coreProjector (C.coreProjector v) = C.coreProjector v := by
-  have h :=
-    congrArg (fun T : RealEnd E => T v) C.core_idempotent
+  have h := congrArg (fun T : RealEnd E => T v) C.core_idempotent
   change (C.coreProjector * C.coreProjector) v = C.coreProjector v
   exact h
 
-/-- Pointwise idempotence of the modular nil projector. -/
+/-
+Pointwise idempotence of the modular nil projector.
+-/
+
+
 @[simp]
 theorem nil_idempotent_apply (v : E) :
     C.nilProjector (C.nilProjector v) = C.nilProjector v := by
-  have h :=
-    congrArg (fun T : RealEnd E => T v) C.nil_idempotent
+  have h := congrArg (fun T : RealEnd E => T v) C.nil_idempotent
   change (C.nilProjector * C.nilProjector) v = C.nilProjector v
   exact h
 
-/-- The core and nil projectors partition the identity. -/
+/-
+The core and nil projectors partition the identity.
+-/
+
+
 theorem core_add_nil_partition :
     C.coreProjector + C.nilProjector =
-      ContinuousLinearMap.id ℝ E :=
-  C.core_add_nil
+      ContinuousLinearMap.id ℝ E := by
+  exact C.core_add_nil
 
-/-- Pointwise partition of the carrier into core plus nil parts. -/
+/-
+Pointwise partition of the carrier into core plus nil parts.
+-/
+
+
 theorem core_add_nil_apply (v : E) :
     C.coreProjector v + C.nilProjector v = v := by
-  have h :=
-    congrArg (fun T : RealEnd E => T v) C.core_add_nil
+  have h := congrArg (fun T : RealEnd E => T v) C.core_add_nil
   simpa using h
 
-/-- The modular core projector commutes with the modular generator. -/
+/-
+The modular core projector commutes with the modular generator.
+-/
+
+
 theorem core_commutes_with_modularGenerator :
     C.coreProjector * D.modularGenerator =
-      D.modularGenerator * C.coreProjector :=
-  C.core_commutes_with_generator
+      D.modularGenerator * C.coreProjector := by
+  exact C.core_commutes_with_generator
 
-/-- The core projector is Krein self-adjoint. -/
+/-
+The core projector is Krein self-adjoint.
+-/
+
+
 theorem core_krein :
     D.fundamentalSymmetry * C.coreProjector * D.fundamentalSymmetry =
-      C.coreProjector :=
-  C.core_krein_selfadjoint
+      C.coreProjector := by
+  exact C.core_krein_selfadjoint
 
-/-- The nil projector is Krein self-adjoint. -/
+/-
+The nil projector is Krein self-adjoint.
+-/
+
+
 theorem nil_krein :
     D.fundamentalSymmetry * C.nilProjector * D.fundamentalSymmetry =
-      C.nilProjector :=
-  C.nil_krein_selfadjoint
+      C.nilProjector := by
+  have h_add : C.coreProjector + C.nilProjector = ContinuousLinearMap.id ℝ E := C.core_add_nil
+  have h_core : D.fundamentalSymmetry * C.coreProjector * D.fundamentalSymmetry = C.coreProjector :=
+    C.core_krein_selfadjoint
+  have h_inv : D.fundamentalSymmetry * D.fundamentalSymmetry = ContinuousLinearMap.id ℝ E :=
+    D.fundamentalSymmetry_involution
+  have h_nil (x : E) : C.nilProjector x = x - C.coreProjector x := by
+    have h_v2 : C.coreProjector x + C.nilProjector x = x := by
+      have h_cong := congrArg (fun T : RealEnd E => T x) h_add
+      simpa using h_cong
+    rw [add_comm] at h_v2
+    exact eq_sub_of_add_eq h_v2
+  ext v
+  simp only [ContinuousLinearMap.mul_apply]
+  rw [h_nil, h_nil]
+  simp only [ContinuousLinearMap.map_sub]
+  have h_core_v := congrArg (fun T : RealEnd E => T v) h_core
+  simp only [ContinuousLinearMap.mul_apply] at h_core_v
+  rw [h_core_v]
+  have h_inv_v := congrArg (fun T : RealEnd E => T v) h_inv
+  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.id_apply] at h_inv_v
+  rw [h_inv_v]
 
 end KreinModularCoreProjector
 
 /-! ## 7. Combined Hestenes/Krein modular Fredholm-Drazin bridge -/
 
-/--
+/-
 Combined real Hestenes/Krein modular Fredholm-Drazin bridge.
 
 This is an integration object packaging the modular datum, rotor flow,
 core projector, and relative Fredholm readout, together with a concrete
 comparison law relating them.
 -/
+
+
 @[rep_depth operator]
 structure HestenesKreinModularFredholmBridge
     (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] where
@@ -623,30 +710,69 @@ structure HestenesKreinModularFredholmBridge
     relativeFredholm.relativeCountDensity =
       Real.log (1 + relativeFredholm.fredholm.kreinTrace)
 
+
 namespace HestenesKreinModularFredholmBridge
 
 variable
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (B : HestenesKreinModularFredholmBridge E)
 
-/-- The modular generator is monogenic for the bridge datum. -/
-@[simp]
-theorem modularGenerator_is_monogenic :
-    KreinHestenesModularDatum.IsModularMonogenic B.datum B.datum.modularGenerator :=
-  KreinHestenesModularDatum.modularGenerator_isModularMonogenic B.datum
+/-
+The modular generator is monogenic for the bridge datum.
+-/
 
-/-- The relative Fredholm defect is the localized-minus-reference modular weight. -/
+
+@[simp]
+theorem generator_isMonogenic
+    (B : HestenesKreinModularFredholmBridge E) :
+    KreinHestenesModularDatum.IsMonogenic B.datum B.datum.modularGenerator := by
+  exact KreinHestenesModularDatum.modularGenerator_isMonogenic B.datum
+
+/-
+The relative Fredholm defect is the localized-minus-reference modular weight.
+-/
+
+
 theorem relative_defect_eq :
     B.relativeFredholm.modularDefect =
       B.relativeFredholm.localizedDatum.modularWeight -
-        B.relativeFredholm.referenceDatum.modularWeight :=
-  B.relativeFredholm.defect_eq
+        B.relativeFredholm.referenceDatum.modularWeight := by
+  exact B.relativeFredholm.defect_eq
 
-/-- The core/Fredholm/count comparison is the log-determinant identity. -/
+/-
+The core/Fredholm/count comparison is the log-determinant identity.
+-/
+
+
 theorem core_fredholm_count :
     B.relativeFredholm.relativeCountDensity =
-      Real.log (1 + B.relativeFredholm.fredholm.kreinTrace) :=
-  B.core_fredholm_count_comparison
+      Real.log (1 + B.relativeFredholm.fredholm.kreinTrace) := by
+  exact B.core_fredholm_count_comparison
+
+/-- A bridge has trace-zero anomaly resolution at integer `n` when the
+vanishing of the 2-adic valuation of `n` implies vanishing Krein trace. -/
+def TraceZeroAnomalyResolution
+    (B : HestenesKreinModularFredholmBridge E)
+    (n : ℕ) : Prop :=
+  padicValNat 2 n = 0 → B.relativeFredholm.fredholm.kreinTrace = 0
+
+/-- Read back trace zero from an explicitly supplied p-adic trace-zero law. -/
+theorem traceZero_of_padicValuation_anomalyResolution
+    (B : HestenesKreinModularFredholmBridge E)
+    {n : ℕ}
+    (h_resolution : TraceZeroAnomalyResolution B n)
+    (h_padic_valuation : padicValNat 2 n = 0) :
+    B.relativeFredholm.fredholm.kreinTrace = 0 :=
+  h_resolution h_padic_valuation
+
+/-- Specialization of the explicit p-adic trace-zero law to `137`. -/
+theorem pAdicValuation_Implies_TraceZero_AnomalyResolution
+    (B : HestenesKreinModularFredholmBridge E)
+    (h_resolution : TraceZeroAnomalyResolution B 137)
+    (h_padic_valuation : padicValNat 2 137 = 0) :
+    B.relativeFredholm.fredholm.kreinTrace = 0 :=
+  traceZero_of_padicValuation_anomalyResolution B h_resolution h_padic_valuation
+
 
 end HestenesKreinModularFredholmBridge
 

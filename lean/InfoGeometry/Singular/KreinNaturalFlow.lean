@@ -14,8 +14,6 @@ This module wires singular-flow structures to the canonical Mathlib-based Krein 
 It keeps the API used by downstream singular-bridge modules.
 -/
 
-set_option linter.unusedSectionVars false
-
 namespace InfoGeometry.Singular.Architecture
 
 open InfoGeometry.Singular.MoorePenrose

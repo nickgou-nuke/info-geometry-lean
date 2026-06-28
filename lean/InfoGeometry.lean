@@ -91,6 +91,7 @@ import InfoGeometry.Geometry.AnomalousErlangerHeight
 import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Geometry.OperatorialJonesConnection
 import InfoGeometry.Geometry.ErlangerPhaseGeometry
+import InfoGeometry.Geometry.GromovHyperbolicity
 import InfoGeometry.Geometry.PhaseErlanger
 import InfoGeometry.Geometry.JonesTransportMetric
 import InfoGeometry.Geometry.TKKBregmanRicciBridge

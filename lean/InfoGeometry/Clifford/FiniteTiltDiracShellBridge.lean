@@ -17,18 +17,32 @@ theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge :
   exact finiteTiltCurrentDensity_eq_boundaryCurrent
 
 @[rep_depth operator]
-def FiniteTiltDiracShellBridgeOwnerTarget : Prop :=
-  ∀ m : ℝ,
-    finiteTiltDiracShell m * finiteTiltDiracShell m =
-      (m ^ 2 : ℝ) • (1 : Mat2) ∧
+structure FiniteTiltDiracShellBridgeOwnerTarget where
+  shell_square :
+    ∀ m : ℝ,
+      finiteTiltDiracShell m * finiteTiltDiracShell m =
+        (m ^ 2 : ℝ) • (1 : Mat2)
+  current_density_eq :
     finiteTiltCurrentDensity = finiteTiltBoundaryCurrent
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellBridgeOwnerTarget :
     FiniteTiltDiracShellBridgeOwnerTarget := by
-  intro m
-  constructor
-  · exact finiteTiltDiracShellOwnerTarget m
-  · exact finiteTiltCurrentDensity_eq_boundaryCurrent_bridge
+  exact
+    { shell_square := finiteTiltDiracShellOwnerTarget
+      current_density_eq := finiteTiltCurrentDensity_eq_boundaryCurrent_bridge }
+
+@[rep_depth operator]
+theorem finiteTiltDiracShellBridge_shell_square (m : ℝ) :
+    finiteTiltDiracShell m * finiteTiltDiracShell m =
+      (m ^ 2 : ℝ) • (1 : Mat2) :=
+  let pkt := finiteTiltDiracShellBridgeOwnerTarget
+  pkt.shell_square m
+
+@[rep_depth operator]
+theorem finiteTiltDiracShellBridge_current_density_eq :
+    finiteTiltCurrentDensity = finiteTiltBoundaryCurrent :=
+  let pkt := finiteTiltDiracShellBridgeOwnerTarget
+  pkt.current_density_eq
 
 end InfoGeometry.Clifford.FiniteTiltDiracShellBridge

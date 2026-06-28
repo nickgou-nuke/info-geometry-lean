@@ -60,20 +60,15 @@ theorem canonicalGamma_eq_negOne_pow_fermionNumber
     Gamma S = (-1 : ℤ) ^ fermionNumber S :=
   Gamma_eq_negOne_pow_fermionNumber S
 
-/-- Canonical owner target for the finite exterior surface. -/
-@[owner_target_tag]
-def PrimeExteriorRepresentationOwnerTarget : Prop :=
-  ∀ {PrimeLabel : Type*} [DecidableEq PrimeLabel]
-    (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel),
-    (localOccupation p S = 1 ↔ p ∈ S) ∧
-    (localOccupation p S = 0 ↔ p ∉ S) ∧
-    (localParitySign p S = -1 ↔ p ∈ S) ∧
-    (localParitySign p S = 1 ↔ p ∉ S) ∧
-    Gamma S = (-1 : ℤ) ^ fermionNumber S
-
 /-- The canonical owner target is proved. -/
 theorem primeExteriorRepresentationOwnerTarget :
-    PrimeExteriorRepresentationOwnerTarget := by
+    ∀ {PrimeLabel : Type*} [DecidableEq PrimeLabel]
+      (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel),
+      (localOccupation p S = 1 ↔ p ∈ S) ∧
+      (localOccupation p S = 0 ↔ p ∉ S) ∧
+      (localParitySign p S = -1 ↔ p ∈ S) ∧
+      (localParitySign p S = 1 ↔ p ∉ S) ∧
+      Gamma S = (-1 : ℤ) ^ fermionNumber S := by
   intro PrimeLabel _ p S
   exact ⟨canonicalLocalOccupation_eq_one_iff_mem p S,
     canonicalLocalOccupation_eq_zero_iff_not_mem p S,

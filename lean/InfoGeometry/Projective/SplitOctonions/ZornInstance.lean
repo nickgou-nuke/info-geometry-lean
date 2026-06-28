@@ -284,12 +284,14 @@ def lowerLightrayNullRay
     ZornProjectiveDatum.NullRay (projectiveDatum B) :=
   ZornProjectiveDatum.nullRayMk (projectiveDatum B) (lowerLightrayNullRep B hw)
 
-/-- The split-octonion projective null boundary is nonempty. -/
+/-- The split-octonion projective null boundary contains the explicit `pPlus` ray. -/
 theorem projectiveNullBoundary_nonempty
     [Nontrivial R]
     (B : V →ₗ[R] V →ₗ[R] R) :
-    Nonempty (ZornProjectiveDatum.NullRay (projectiveDatum B)) := by
-  exact ⟨pPlusNullRay B⟩
+    ∃ X : ZornProjectiveDatum.NullRep (projectiveDatum B),
+      X.rep = pPlus ∧
+        ZornProjectiveDatum.nullRayMk (projectiveDatum B) X = pPlusNullRay B := by
+  exact ⟨pPlusNullRep B, rfl, rfl⟩
 
 end ZornCell
 

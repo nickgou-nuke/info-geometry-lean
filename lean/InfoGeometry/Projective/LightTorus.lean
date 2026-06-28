@@ -55,14 +55,11 @@ def lightTorusBasePoint : LightTorus := by
   · unfold IsNullSplitQuaternion splitNormSq
     norm_num
 
-/--
-The light-torus owner surface is inhabited by an explicit nonzero null point.
-
-This is the honest theorem currently proved in this file.  The stronger global
-topological equivalence with `ℝ_{>0} × S¹ × S¹` remains open until an explicit
-forward and inverse map are formalized.
--/
-theorem lightTorus_nonempty : Nonempty LightTorus :=
-  ⟨lightTorusBasePoint⟩
+/-- The explicit light-torus base point has coordinates `(1,0,1,0)` and is null. -/
+theorem lightTorus_basePoint_readout :
+    lightTorusBasePoint.val = ⟨1, 0, 1, 0⟩ ∧
+      lightTorusBasePoint.val ≠ ⟨0, 0, 0, 0⟩ ∧
+      IsNullSplitQuaternion lightTorusBasePoint.val := by
+  exact ⟨rfl, lightTorusBasePoint.property.1, lightTorusBasePoint.property.2⟩
 
 end InfoGeometry.Projective

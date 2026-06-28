@@ -51,7 +51,7 @@ is the semisimple component.
 def jordanChevalleyInterpolation (f : Module.End K V) [PerfectField K] :
     JordanChevalleyInterpolation f := by
   let B : JordanChevalleySplit f :=
-    Classical.choice (JordanChevalleySplit.split_exists (f := f))
+    JordanChevalleySplit.split (f := f)
   let hPoly := Algebra.adjoin_mem_exists_aeval (R := K) (x := f) B.semisimpleMem
   let p : K[X] := Classical.choose hPoly
   have hp : Polynomial.aeval f p = B.semisimple := Classical.choose_spec hPoly
@@ -64,6 +64,7 @@ theorem jordanChevalleyInterpolation_semisimple_eq
       (jordanChevalleyInterpolation f).split.semisimple :=
   (jordanChevalleyInterpolation f).semisimple_eq
 
+omit [FiniteDimensional K V] in
 /-- The semisimple interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem semisimplePart_commute {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
@@ -72,12 +73,14 @@ theorem semisimplePart_commute {f g : Module.End K V}
     (commute_of_mem_adjoin_singleton (f := f) (g := g) hfg
       (Polynomial.aeval_mem_adjoin_singleton (R := K) (p := P.poly) f))
 
+omit [FiniteDimensional K V] in
 /-- The nilpotent interpolation commutes with every symmetry commuting with the Hamiltonian. -/
 theorem nilpotentPart_commute {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
     Commute (nilpotentPart P) g := by
   simpa [nilpotentPart] using Commute.sub_left hfg (semisimplePart_commute (P := P) hfg)
 
+omit [FiniteDimensional K V] in
 /-- The polynomial interpolation preserves both the scale and defect symmetries. -/
 theorem preserves_symmetries {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f) (hfg : Commute f g) :
@@ -86,6 +89,7 @@ theorem preserves_symmetries {f g : Module.End K V}
   · exact semisimplePart_commute (P := P) hfg
   · exact nilpotentPart_commute (P := P) hfg
 
+omit [FiniteDimensional K V] in
 /-- Supersymmetry readback for the nilpotent defect sector. -/
 theorem unbroken_susy_in_jordan_blocks {f g : Module.End K V}
     (P : JordanChevalleyInterpolation f)

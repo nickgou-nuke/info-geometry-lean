@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# Jensen inverse-iteration inclusion sockets
+# Jensen inverse-iteration inclusion data
 
-Formalization scaffold for Paul S. Jensen, "An Inclusion Theorem Related to
+Finite formalization surface for Paul S. Jensen, "An Inclusion Theorem Related to
 Inverse Iteration" (Linear Algebra Appl. 6, 209--215, 1973).
 
 The paper proves that inverse iteration for a real symmetric generalized

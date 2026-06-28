@@ -32,14 +32,17 @@ open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Quantum
 open InfoGeometry.Core
 
+noncomputable section NC
+
+
 section Core
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 local notation "EndH" => DoubledSpace H →L[ℝ] DoubledSpace H
 
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : NormedRing EndH := inferInstance
+local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
@@ -48,7 +51,7 @@ The topological clock generator (unit bivector axis for rotation).
 This is the Hestenes rotation axis $J \circ \epsilon$ on the doubled real lane.
 -/
 @[rep_depth transport]
-noncomputable def clockAxis (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+def clockAxis (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   (modular_j (E := E)).comp (spectral_epsilon (E := E))
 
@@ -62,14 +65,14 @@ Where:
 - `N` is the Winding Number (Clock Tick).
 -/
 @[rep_depth transport]
-noncomputable def multiBranchedGenerator (K : EndH) (N : ℤ) : EndH :=
+def multiBranchedGenerator (K : EndH) (N : ℤ) : EndH :=
   K + (2 * Real.pi * (N : ℝ)) • clockAxis H
 
 /--
 The topo-shift between adjacent winding branches.
 -/
 @[rep_depth transport]
-noncomputable def topoShift (N : ℤ) : EndH :=
+def topoShift (N : ℤ) : EndH :=
   (2 * Real.pi * (N : ℝ)) • clockAxis H
 
 /--
@@ -165,23 +168,6 @@ def HasClockAxisForcingSeed (hMod : EndH) : Prop :=
   InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := H) hMod
 
 /--
-Proof-carrying witness for the phase-linear forcing seed on the modular
-transport lane. This narrows the remaining bare
-`hForce : HasClockAxisForcingSeed ...` hypothesis to an explicit witness packet.
--/
-structure ClockAxisForcingSeedWitness (hMod : EndH) where
-  hForce : HasClockAxisForcingSeed (H := H) hMod
-
-/--
-Recover the original forcing predicate from the witness packet.
--/
-theorem forcingSeed_of_witness
-    {hMod : EndH}
-    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
-    HasClockAxisForcingSeed (H := H) hMod :=
-  W.hForce
-
-/--
 Commutator forcing theorem on the modular transport lane:
 phase-linearity of the seed implies commutation with the winding clock axis.
 -/
@@ -199,18 +185,6 @@ theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeed
   have hAxis : clockAxis H = InfoGeometry.Krein.clockAxis (E := H) := by
     rfl
   simpa [hAxis] using hCommGlobal.symm
-
-/--
-Witness-routed clock-axis commutation on the modular transport lane.
--/
-theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeedWitness
-    (hMod : EndH)
-    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
-    Commute
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      (clockAxis H) :=
-  modularTransportGenerator_commutes_clockAxis_of_forcingSeed (H := H) hMod
-    (forcingSeed_of_witness (H := H) W)
 
 /--
 Winding periodicity obtained from the forcing predicate, with no explicit
@@ -232,20 +206,6 @@ theorem winding_orbit_periodicity_of_forcingSeed
   exact winding_orbit_periodicity
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
-
-/--
-Witness-routed winding periodicity on the modular transport lane.
--/
-theorem winding_orbit_periodicity_of_forcingSeedWitness
-    (hMod : EndH) (N : ℤ)
-    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
-      NormedSpace.exp
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) :=
-  winding_orbit_periodicity_of_forcingSeed (H := H) hMod N
-    (forcingSeed_of_witness (H := H) W)
 
 /--
 Derived periodic closure for the canonical modular transport generator: if the
@@ -288,22 +248,6 @@ theorem winding_orbit_periodicity_succ_of_forcingSeed
     (N := N) hCommLocal
 
 /--
-Successor branch-cut periodicity on the modular transport lane routed through the
-explicit forcing-seed witness packet.
--/
-theorem winding_orbit_periodicity_succ_of_forcingSeedWitness
-    (hMod : EndH) (N : ℤ)
-    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
-      NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) :=
-  winding_orbit_periodicity_succ_of_forcingSeed (H := H) hMod N
-    (forcingSeed_of_witness (H := H) W)
-
-/--
 Successor branch-cut periodicity for a phase-linear seed, exposed without the
 raw commutation packet required by `winding_orbit_periodicity_succ`.
 -/
@@ -323,7 +267,7 @@ theorem winding_orbit_periodicity_succ_of_IsPhaseLinear_modularTransportGenerato
 Winding obstruction: deviation from exact branch-periodic closure at winding `N`.
 -/
 @[rep_depth transport]
-noncomputable def windingOrbitObstruction (K : EndH) (N : ℤ) : EndH :=
+def windingOrbitObstruction (K : EndH) (N : ℤ) : EndH :=
   NormedSpace.exp (multiBranchedGenerator K N) - NormedSpace.exp K
 
 /--
@@ -432,21 +376,6 @@ theorem commute_clockAxis_of_windingOrbitObstruction_eq_zero_of_localClockGaugeS
       (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)).1 hObs
 
 /--
-A certified local clock-gauge symmetry package also upgrades the full
-winding-obstruction/commutation equivalence to a theorem surface that no longer
-exposes the faithful-branch predicate separately.
--/
-theorem windingOrbitObstruction_eq_zero_iff_commute_of_localClockGaugeSymmetry
-    {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
-    windingOrbitObstruction K N = 0 ↔ Commute K (clockAxis H) := by
-  exact windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
-    (H := H)
-    K
-    N
-    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
-
-/--
 Phase-linearity of the modular seed forces zero winding obstruction for the
 induced transport generator branch.
 -/
@@ -522,28 +451,6 @@ abbrev HasCartanGradeForcingSeed (hMod : EndH) : Prop :=
   IsDetailedEquilibriumSeed (H := H) hMod
 
 /--
-Proof-carrying witness for the detailed-equilibrium forcing surface.
-
-This narrows the remaining bare `hEq : IsDetailedEquilibriumSeed ...` hypothesis
-on the winding owner lane to an explicit witness object.
--/
-@[rep_depth transport]
-structure DetailedEquilibriumWitness (hMod : EndH) where
-  hEq : IsDetailedEquilibriumSeed (H := H) hMod
-
-namespace DetailedEquilibriumWitness
-
-/-- Recover the detailed-equilibrium proposition from the proof-carrying witness. -/
-@[rep_depth transport]
-theorem detailedEquilibrium_of_witness
-    {hMod : EndH}
-    (W : DetailedEquilibriumWitness (H := H) hMod) :
-    IsDetailedEquilibriumSeed (H := H) hMod :=
-  W.hEq
-
-end DetailedEquilibriumWitness
-
-/--
 Detailed-equilibrium forcing on the modular transport lane:
 vanishing Cartan-odd scale sector forces commutation with the clock axis.
 -/
@@ -576,20 +483,6 @@ theorem modularTransportGenerator_commutes_clockAxis_of_cartanGradeForcingSeed
     (H := H) hMod hForce
 
 /--
-Witness-routed owner theorem for the detailed-equilibrium forcing lane.
-This removes the bare `hEq` argument for callers that already own the explicit
-proof-carrying detailed-equilibrium witness.
--/
-theorem modularTransportGenerator_commutes_clockAxis_of_detailedEquilibriumWitness
-    (hMod : EndH)
-    (W : DetailedEquilibriumWitness (H := H) hMod) :
-    Commute
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      (clockAxis H) := by
-  exact modularTransportGenerator_commutes_clockAxis_of_detailedEquilibrium
-    (H := H) hMod W.hEq
-
-/--
 Winding periodicity obtained from detailed equilibrium, with no explicit
 commutation hypothesis in the theorem signature.
 -/
@@ -610,22 +503,6 @@ theorem winding_orbit_periodicity_of_detailedEquilibrium
   exact winding_orbit_periodicity
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
-
-/--
-Witness-routed winding periodicity theorem on the detailed-equilibrium lane.
-This removes the bare `hEq` proof argument for callers that own the explicit
-`DetailedEquilibriumWitness` packet.
--/
-theorem winding_orbit_periodicity_of_detailedEquilibriumWitness
-    (hMod : EndH) (N : ℤ)
-    (W : DetailedEquilibriumWitness (H := H) hMod) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
-      NormedSpace.exp
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
-  exact winding_orbit_periodicity_of_detailedEquilibrium
-    (H := H) hMod N W.hEq
 
 /--
 Branch-cut numbering theorem on the detailed-equilibrium lane:
@@ -650,22 +527,6 @@ theorem winding_orbit_periodicity_succ_of_detailedEquilibrium
     (H := H)
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
-
-/--
-Witness-routed branch-cut numbering theorem on the detailed-equilibrium lane.
-This removes the bare `hEq` proof argument in favor of the explicit witness.
--/
-theorem winding_orbit_periodicity_succ_of_detailedEquilibriumWitness
-    (hMod : EndH) (N : ℤ)
-    (W : DetailedEquilibriumWitness (H := H) hMod) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
-      NormedSpace.exp
-        (multiBranchedGenerator
-          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
-  exact winding_orbit_periodicity_succ_of_detailedEquilibrium
-    (H := H) hMod N W.hEq
 
 /--
 Backward-compatible API surface: Cartan-grade forcing routes through the
@@ -789,7 +650,7 @@ Non-equilibrium clock defect on the modular lane:
 the commutator of the full transport generator with the clock axis.
 -/
 @[rep_depth transport]
-noncomputable def nonEquilibriumClockDefect (hMod : EndH) : EndH :=
+def nonEquilibriumClockDefect (hMod : EndH) : EndH :=
   InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
     (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (clockAxis H)
@@ -1094,20 +955,6 @@ theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
       (H := H) hMod hEq)
 
 /--
-Proof-carrying owner export of
-`nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium`.
-Callers can supply the explicit `DetailedEquilibriumWitness` packet instead of
-reopening the bare detailed-equilibrium proposition.
--/
-theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibriumWitness
-    (hMod : EndH)
-    (W : DetailedEquilibriumWitness (H := H) hMod) :
-    nonEquilibriumClockDefect (H := H) hMod = 0 := by
-  exact
-    (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
-      (H := H) hMod).2 W.hEq
-
-/--
 Detailed equilibrium implies zero winding obstruction for the transport
 generator branch.
 -/
@@ -1192,92 +1039,6 @@ theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBra
       (H := H) hMod N hFaithful hObs
 
 /--
-Constructive reverse direction for D1: a local clock-gauge symmetry certificate
-supplies the faithful branch witness, so zero winding obstruction forces clock
-equilibrium without exposing `IsClockFaithfulExponentialBranch` separately.
--/
-theorem clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N)
-    (hObs :
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0) :
-    IsClockEquilibriumLane (H := H) hMod := by
-  exact clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
-    (H := H)
-    hMod
-    N
-    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
-    hObs
-
-/--
-Constructive faithful-branch package for the reverse D1 equivalence: a local
-clock-gauge symmetry certificate is enough to recover the winding-obstruction /
-clock-equilibrium iff on the selected branch.
--/
-theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N) :
-    IsClockEquilibriumLane (H := H) hMod ↔
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0 := by
-  exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
-    (H := H)
-    hMod
-    N
-    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
-
-/--
-Constructive reverse-lane iff: the local clock-gauge certificate upgrades the
-winding-obstruction criterion all the way to the raw non-equilibrium defect
-surface, not just the packaged clock-equilibrium predicate.
--/
-theorem nonEquilibriumClockDefect_eq_zero_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N) :
-    nonEquilibriumClockDefect (H := H) hMod = 0 ↔
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0 := by
-  show IsClockEquilibriumLane (H := H) hMod ↔
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0
-  exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (H := H) hMod N C
-
-/--
-Constructive reverse-lane readback: on a certified local clock-gauge branch,
-zero winding obstruction already forces vanishing of the non-equilibrium clock
-defect, without a separate faithful-branch hypothesis.
--/
-theorem nonEquilibriumClockDefect_eq_zero_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N)
-    (hObs :
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0) :
-    nonEquilibriumClockDefect (H := H) hMod = 0 := by
-  exact
-    (nonEquilibriumClockDefect_eq_zero_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-      (H := H) hMod N C).2 hObs
-
-/--
 Clock-equilibrium gives branch periodicity for the modular transport generator.
 -/
 theorem winding_orbit_periodicity_of_clockEquilibrium
@@ -1314,60 +1075,6 @@ theorem winding_orbit_periodicity_succ_of_clockEquilibrium
     ((nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1 hEq)
 
 /--
-Constructive branch periodicity: a local clock-gauge symmetry certificate plus
-zero winding obstruction recovers clock equilibrium, so the modular transport
-branch is periodic without exposing a separate faithful-branch or equilibrium
-hypothesis.
--/
-theorem winding_orbit_periodicity_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N)
-    (hObs :
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
-      NormedSpace.exp
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
-  exact winding_orbit_periodicity_of_clockEquilibrium
-    (H := H)
-    hMod
-    N
-    (clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-      (H := H) hMod N C hObs)
-
-/--
-Successor branch periodicity on the same constructive reverse lane.
--/
-theorem winding_orbit_periodicity_succ_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-    (hMod : EndH) (N : ℤ)
-    (C : LocalClockGaugeSymmetryCertificate
-      (H := H)
-      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-      N)
-    (hObs :
-      windingOrbitObstruction
-        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-        N = 0) :
-    NormedSpace.exp
-      (multiBranchedGenerator
-        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
-      NormedSpace.exp
-        (multiBranchedGenerator
-          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
-  exact winding_orbit_periodicity_succ_of_clockEquilibrium
-    (H := H)
-    hMod
-    N
-    (clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
-      (H := H) hMod N C hObs)
-
-/--
 Any noncommuting scale lane is necessarily outside detailed equilibrium.
 -/
 theorem not_detailedEquilibrium_of_noncommutingScaleLane
@@ -1393,5 +1100,7 @@ theorem noncommutingScaleLane_iff_not_detailedEquilibrium
       ((nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium (H := H) hMod).1 hZero)
 
 end Core
+
+end NC
 
 end InfoGeometry.Canonical.WindingOrbitClosure

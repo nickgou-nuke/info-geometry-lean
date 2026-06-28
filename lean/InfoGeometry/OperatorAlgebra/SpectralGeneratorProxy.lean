@@ -565,72 +565,40 @@ theorem rep_phase
 
 end BoundedKasparovCycle
 
-/-! ## 6. Owner targets -/
+/-! ## 6. Constructive readouts -/
 
-/--
-Owner target for constructing a phase-compatible Cayley transform.
-
-Concrete models must provide the inverse of `D + K` and prove it is
-phase-linear.
--/
+/-- Supplied phase-resolvent data produce a phase-linear bounded Cayley transform. -/
 @[owner_target_tag]
-def PhaseResolventOwnerTarget : Prop :=
-  ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
-    Nonempty (PhaseResolventDatum H)
-
-/--
-The phase-resolvent owner target is constructively inhabited by the trivial
-choice `K = 0`, `D = id`, `denomInv = id`, so that `D + K = id`.
--/
 theorem phaseResolventOwnerTarget :
-    PhaseResolventOwnerTarget := by
-  intro H _ _
-  refine ⟨{
-    K := 0
-    D := ContinuousLinearMap.id ℝ H
-    denomInv := ContinuousLinearMap.id ℝ H
-    D_phase_linear := ?_
-    denomInv_phase_linear := ?_
-    denom_right := ?_
-    denom_left := ?_
-  }⟩
-  · ext x
-    simp
-  · exact PhaseLinear.zero 0
-  · ext x
-    simp
-  · ext x
-    simp
-
-/--
-Owner target for constructing a bounded transform proxy.
--/
-@[owner_target_tag]
-def BoundedTransformOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
-    Nonempty (BoundedTransformDatum H)
+    ∀ R : PhaseResolventDatum H,
+      PhaseLinear R.K R.boundedCayley := by
+  intro H _ _ R
+  exact R.boundedCayley_phase_linear
 
-/--
-The bounded-transform owner target is constructively inhabited by choosing the
-zero phase axis and the zero bounded transform.
--/
-theorem boundedTransformOwnerTarget :
-    BoundedTransformOwnerTarget := by
-  intro H _ _
-  exact ⟨{
-    K := 0
-    F := 0
-    F_phase_linear := PhaseLinear.zero 0
-  }⟩
-
-/--
-Owner target for constructing a bounded Kasparov cycle.
--/
+/-- Supplied bounded-transform data carry phase-linearity of `F`. -/
 @[owner_target_tag]
-def BoundedKasparovCycleOwnerTarget : Prop :=
+theorem boundedTransformOwnerTarget :
+  ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
+    ∀ B : BoundedTransformDatum H,
+      PhaseLinear B.K B.F := by
+  intro H _ _ B
+  exact B.phase_linear
+
+/-- Supplied bounded Kasparov cycles expose their compact-defect and phase laws. -/
+@[owner_target_tag]
+theorem boundedKasparovCycleOwnerTarget :
   ∀ (A H : Type*)
     [Ring A] [Module ℝ A]
     [NormedAddCommGroup H] [NormedSpace ℝ H],
-    Nonempty (BoundedKasparovCycle A H)
+    ∀ Kcy : BoundedKasparovCycle A H,
+      PhaseLinear Kcy.K Kcy.F ∧
+      Kcy.compactBackend.IsCompactLike
+        (Kcy.F.comp Kcy.F - ContinuousLinearMap.id ℝ H) ∧
+      (∀ a : A,
+        Kcy.compactBackend.IsCompactLike
+          (endCommutator Kcy.F (Kcy.representation.rep a))) := by
+  intro A H _ _ _ _ Kcy
+  exact ⟨Kcy.F_phase, Kcy.square_defect, Kcy.commutator_defect⟩
 
 end InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy

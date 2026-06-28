@@ -97,9 +97,9 @@ Bernoulli readouts for `ζ(3)`, `ζ(5)`, `ζ(7)`, and `ζ(9)`.
 
 theorem ramanujan_defect_layers_follow_witten_sequence :
     DefectParityTarget 1 (ramanujanBernoulliSide aperyBernoulliReadout 1) ∧
-    DefectParityTarget 2 (ramanujanBernoulliSide zetaFiveBernoulliReadout 2) ∧
-    DefectParityTarget 3 (ramanujanBernoulliSide zetaSevenBernoulliReadout 3) ∧
-    DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
+      DefectParityTarget 2 (ramanujanBernoulliSide zetaFiveBernoulliReadout 2) ∧
+      DefectParityTarget 3 (ramanujanBernoulliSide zetaSevenBernoulliReadout 3) ∧
+      DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
   exact ⟨zeta3_defect_parity, zeta5_defect_parity,
     zeta7_defect_parity, zeta9_defect_parity⟩
 

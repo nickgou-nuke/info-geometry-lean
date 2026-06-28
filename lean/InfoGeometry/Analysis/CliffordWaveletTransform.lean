@@ -84,4 +84,14 @@ structure CliffordWaveletModel where
   /-- Reproducing kernel property. -/
   reproducingKernel : Prop
 
+namespace CliffordWaveletModel
+
+/-- Admissible signals are exactly reconstructed by the wavelet transform. -/
+theorem reconstruction_waveletTransform
+    (W : CliffordWaveletModel) (hAdm : W.admissible) (f : W.Signal) :
+    W.reconstruction (W.waveletTransform f) = f :=
+  W.reconstruction_left_inverse hAdm f
+
+end CliffordWaveletModel
+
 end InfoGeometry.Analysis.CliffordWaveletTransform

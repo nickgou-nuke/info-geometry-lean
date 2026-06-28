@@ -9,7 +9,7 @@ import Mathlib.Analysis.Normed.Operator.Banach
 # Moore-Penrose Inverse
 
 This module provides the L0 foundation for generalized inverses in StarRings and Hilbert spaces.
-It follows the Pauli Protocol: zero sorry, bottom-up derivation, and direct conductivity 
+It follows the Pauli Protocol: zero by rfl, bottom-up derivation, and direct conductivity
 to Mathlib roots.
 
 The construction is generalized to bounded operators between different Hilbert spaces.

@@ -304,6 +304,30 @@ theorem rightProjector_phaseLinear
   exact PhaseLinear.smul (1 / 2 : ℝ)
     (PhaseLinear.sub PhaseLinear.id χ.chi_phase_linear)
 
+/-- The two chiral projectors add up to the identity. -/
+theorem leftProjector_add_rightProjector
+    (χ : ChiralAxis K) :
+    χ.leftProjector + χ.rightProjector = ContinuousLinearMap.id ℝ H := by
+  ext x
+  calc
+    (χ.leftProjector + χ.rightProjector) x
+        = (1 / 2 : ℝ) • (x + χ.chi x) + (1 / 2 : ℝ) • (x - χ.chi x) := by
+            rfl
+    _ = (1 / 2 : ℝ) • ((x + χ.chi x) + (x - χ.chi x)) := by
+            rw [← smul_add]
+    _ = (1 / 2 : ℝ) • (x + x) := by
+            simp [add_assoc]
+    _ = x := by
+            rw [show x + x = (2 : ℝ) • x by simp [two_smul]]
+            rw [smul_smul]
+            norm_num
+
+/-- The right and left chiral projectors add up to the identity. -/
+theorem rightProjector_add_leftProjector
+    (χ : ChiralAxis K) :
+    χ.rightProjector + χ.leftProjector = ContinuousLinearMap.id ℝ H := by
+  simpa [add_comm] using leftProjector_add_rightProjector (K := K) χ
+
 end ChiralAxis
 
 /-- A map preserves chiral axes if it intertwines the supplied chiral involutions. -/
@@ -427,14 +451,24 @@ Erlanger refinements.
 def PhaseErlangerOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : EndR H),
-    Nonempty (PhaseCentralizer K)
+    PhaseLinear K (ContinuousLinearMap.id ℝ H)
 
 theorem phaseErlangerOwnerTarget :
     PhaseErlangerOwnerTarget := by
   intro H _ _ K
-  exact ⟨{
-    op := ContinuousLinearMap.id ℝ H
-    phase_linear := PhaseLinear.id
-  }⟩
+  exact PhaseLinear.id
+
+/-- Every phase axis has a canonical phase-centralizer element: the identity. -/
+def phaseCentralizer_id
+    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (K : EndR H) : PhaseCentralizer K where
+  op := ContinuousLinearMap.id ℝ H
+  phase_linear := phaseErlangerOwnerTarget H K
+
+@[simp] theorem phaseCentralizer_id_op
+    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (K : EndR H) :
+    (phaseCentralizer_id H K).op = ContinuousLinearMap.id ℝ H :=
+  rfl
 
 end InfoGeometry.Geometry.PhaseErlanger

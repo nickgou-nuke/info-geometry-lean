@@ -28,7 +28,7 @@ def associatorDefect (x y z : R) : R :=
 @[simp]
 theorem associatorDefect_apply (x y z : R) :
     associatorDefect (R := R) x y z = (x * y) * z - x * (y * z) := by
-  rfl
+  simpa [associatorDefect] using associator_apply (R := R) x y z
 
 /--
 The associator cocycle identity.
@@ -78,4 +78,3 @@ theorem ZornMatrix.associatorDefect_apply (x y z : ZornMatrix R) :
 end ZornAssociatorShadow
 
 end InfoGeometry.Canonical
-

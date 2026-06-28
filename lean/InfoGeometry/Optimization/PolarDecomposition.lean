@@ -2,8 +2,7 @@
 /- The Newton-Schulz iteration computes the unitary factor U = msign(G) of the polar decomposition
    G = P * U without requiring a full SVD. Uses only matrix addition, transposition, and inversion. -/
 
-import Mathlib.Data.Matrix.Basic
-import InfoGeometry.Singular.MoorePenrose
+import Mathlib
 
 open Matrix
 open scoped Matrix
@@ -24,34 +23,24 @@ structure PolarDecomposition (G : Matrix n n ℝ) where
   unitary : U * Uᵀ = 1
   self_adjoint : Pᵀ = P
 
-/-- 
+/--
   If the Newton iteration converges to a fixed point U, U must be orthogonal.
   X_{k+1} = X_k ⟹ U = 1/2(U + U^{-T}) ⟹ U = U^{-T} ⟹ U * Uᵀ = I.
 -/
-theorem polar_newton_limit_unitary (U U_inv : Matrix n n ℝ) 
-    (h_inv : U * U_inv = 1) (h_fixed : PolarNewtonStep U U_inv = U) : 
+theorem polar_newton_limit_unitary (U U_inv : Matrix n n ℝ)
+    (h_inv : U * U_inv = 1) (h_fixed : PolarNewtonStep U U_inv = U) :
     U * Uᵀ = 1 := by
-  dsimp [PolarNewtonStep] at h_fixed
-  have h₁ : (1/2 : ℝ) • (U + U_invᵀ) = U := h_fixed
-  have h₂ : U + U_invᵀ = 2 • U := by
-    rw [← sub_eq_zero, smul_smul] at h₁
-    simp [two_smul] at h₁ ⊢
-    <;>
-    (try simp_all [Matrix.ext_iff]) <;>
-    (try abel_nf at * <;> simp_all [Matrix.ext_iff]) <;>
-    (try linarith)
-  have h₃ : U_invᵀ = U := by
-    have h₄ : U + U_invᵀ = U + U := by
-      calc
-        U + U_invᵀ = 2 • U := h₂
-        _ = U + U := by simp [two_smul]
-    have h₅ : U_invᵀ = U := by
-      apply_fun (fun X => X - U) h₄
-      <;> simp [sub_self, add_comm]
-      <;> abel
-    exact h₅
+  have h_transpose_inv : Uᵀ = U_inv := by
+    ext i j
+    have hij := congrFun (congrFun h_fixed j) i
+    simp [PolarNewtonStep] at hij
+    have hij₂ : U j i + U_inv i j = 2 * U j i := by
+      have hmul := congrArg (fun x : ℝ => (2 : ℝ) * x) hij
+      norm_num [mul_add, mul_assoc] at hmul
+      simpa [two_mul] using hmul
+    simpa using (by linarith : U j i = U_inv i j)
   calc
-    U * Uᵀ = U * U_inv := by rw [h₃]
+    U * Uᵀ = U * U_inv := by rw [h_transpose_inv]
     _ = 1 := h_inv
 
 end InfoGeometry.Optimization

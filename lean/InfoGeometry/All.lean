@@ -325,6 +325,7 @@ import InfoGeometry.OperatorAlgebra.TKKHamiltonian
 import InfoGeometry.OperatorAlgebra.VirasoroProjectPin
 import InfoGeometry.Optics.JonesCalculus
 import InfoGeometry.Optics.JonesCalculusSpinorLorentz
+import InfoGeometry.Optimization
 import InfoGeometry.OptimalTransport.BayesianGradientFlow
 import InfoGeometry.Peirce.PeirceLadderOperators
 import InfoGeometry.Physics.A31Mirror

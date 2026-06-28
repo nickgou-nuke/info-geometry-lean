@@ -112,9 +112,42 @@ theorem projectivelyEquivalent_trans {A B C : Spin32Matrix} :
     subst C
     exact Or.inl (by simp)
 
+/-- The signed-center projective relation as a canonical quotient setoid. -/
+def projectiveCenterSetoid : Setoid Spin32Matrix where
+  r := ProjectivelyEquivalent
+  iseqv := ⟨
+    (fun A => projectivelyEquivalent_refl A),
+    (fun {A B} h => projectivelyEquivalent_symm (A := A) (B := B) h),
+    (fun {A B C} hAB hBC =>
+      projectivelyEquivalent_trans (A := A) (B := B) (C := C) hAB hBC)⟩
+
+@[simp]
+theorem projectiveCenterSetoid_r (A B : Spin32Matrix) :
+    projectiveCenterSetoid.r A B = ProjectivelyEquivalent A B :=
+  rfl
+
+/-- The finite projective spinor carrier modulo the signed identity center. -/
+abbrev ProjectiveSpin32 : Type :=
+  Quotient projectiveCenterSetoid
+
+/-- Quotient map from finite spinor matrices to the projective signed-center carrier. -/
+def projectiveClass (A : Spin32Matrix) : ProjectiveSpin32 :=
+  Quotient.mk projectiveCenterSetoid A
+
+@[simp]
+theorem projectiveClass_eq_iff (A B : Spin32Matrix) :
+    projectiveClass A = projectiveClass B ↔ ProjectivelyEquivalent A B := by
+  exact Quotient.eq
+
 /-- Every matrix is projectively equivalent to its central sign flip. -/
 theorem projectivelyEquivalent_neg (A : Spin32Matrix) : ProjectivelyEquivalent A (-A) := by
   exact Or.inr rfl
+
+/-- The central sign flip has the same projective class. -/
+@[simp]
+theorem projectiveClass_neg (A : Spin32Matrix) :
+    projectiveClass (-A) = projectiveClass A := by
+  exact (projectiveClass_eq_iff (-A) A).2 (Or.inr (by simp))
 
 /-- Applying the nontrivial central sign twice returns the same representative. -/
 theorem projective_double_flip (A : Spin32Matrix) : negId * (negId * A) = A := by

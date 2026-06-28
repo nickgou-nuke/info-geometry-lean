@@ -133,9 +133,17 @@ theorem torsionFromCommutator_antisymm
   ring
 
 @[rep_depth thermo]
-theorem selfConsistencyPacket_holds (P : SelfConsistencyPacket) :
-    False := by
-  sorry
+theorem quaternionField_mul_conj
+    (a b c d : ℝ) :
+    quaternionField a b c d * quaternionConj a b c d =
+      (((a * a + b * b + c * c + d * d : ℝ) : ℂ) • (1 : QuaternionMatrix)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [quaternionField, quaternionConj, qi, qj, qk, gamma1, gamma2, gamma3,
+      Matrix.mul_apply, Fin.sum_univ_succ, Matrix.smul_apply, Matrix.add_apply,
+      Matrix.sub_apply, Matrix.one_apply, Complex.ext_iff] <;>
+    ring_nf <;>
+    simp
 
 end
 end InfoGeometry.Canonical.QuaternionicEmergentGravityFoundation

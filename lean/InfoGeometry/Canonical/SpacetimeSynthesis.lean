@@ -18,7 +18,7 @@ abbrev CantorIndexCategory : Type := InfoGeometry.Topology.J
 -/
 noncomputable def CliffordTowerCausalFunctor
     (Q : ∀ n, QuadraticForm ℝ (InfoGeometry.Topology.V n))
-    (h_compat : ∀ (m n : ℕ) (h : m ≤ n) (x : InfoGeometry.Topology.V m), 
+    (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V m),
       Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x) :
     CausalFunctor CantorIndexCategory :=
   InfoGeometry.Topology.CliffordTowerFunctor Q h_compat ⋙ forget₂ (AlgCat ℝ) RingCat
@@ -29,8 +29,8 @@ noncomputable def CliffordTowerCausalFunctor
 -/
 noncomputable abbrev CPTSpinorVacuum
     (Q : ∀ n, QuadraticForm ℝ (InfoGeometry.Topology.V n))
-    (h_compat : ∀ (m n : ℕ) (h : m ≤ n) (x : InfoGeometry.Topology.V m), 
-      Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x) 
+    (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V m),
+      Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x)
     [HasColimit (CliffordTowerCausalFunctor Q h_compat)] : RingCat :=
   UniversalCausalFuture (CliffordTowerCausalFunctor Q h_compat)
 
@@ -41,13 +41,13 @@ noncomputable abbrev CPTSpinorVacuum
 -/
 theorem cpt_vacuum_causality
     (Q : ∀ n, QuadraticForm ℝ (InfoGeometry.Topology.V n))
-    (h_compat : ∀ (m n : ℕ) (h : m ≤ n) (x : InfoGeometry.Topology.V m), 
+    (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V m),
       Q n (fun i => if h_lim : i.val < 2 * m then x ⟨i.val, h_lim⟩ else 0) = Q m x)
     [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
     (m n : CantorIndexCategory) (causal_link : m ≤ n)
     (x : (CliffordTowerCausalFunctor Q h_compat).obj m) :
-    (colimit.ι (CliffordTowerCausalFunctor Q h_compat) m) x = 
-      (colimit.ι (CliffordTowerCausalFunctor Q h_compat) n) 
+    (colimit.ι (CliffordTowerCausalFunctor Q h_compat) m) x =
+      (colimit.ι (CliffordTowerCausalFunctor Q h_compat) n)
         (((CliffordTowerCausalFunctor Q h_compat).map (homOfLE causal_link)) x) :=
   causal_information_conservation (CliffordTowerCausalFunctor Q h_compat) causal_link x
 

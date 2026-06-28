@@ -20,10 +20,10 @@ and group-inverse residual substitutions.
 The residual substitutions are explicit named premises.  No hidden
 generalized-inverse existence theorem is assumed.
 
-#### BUCKET 3: OPEN CLOSURE DEBT
+#### Out of Scope
 The full complex matrix norm continuity theorem, uniqueness of Moore-Penrose
-and Drazin inverses, and convergence of arbitrary matrix sequences are not
-asserted in Lean here.
+and Drazin inverses, and convergence of arbitrary matrix sequences are outside
+this finite algebraic file.
 -/
 
 namespace InfoGeometry.Canonical.CampbellContinuityGeneralizedInverse

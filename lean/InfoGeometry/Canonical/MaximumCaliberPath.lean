@@ -61,11 +61,12 @@ variable (L : GraphMaxCalPathLaw G PathSample)
 
 /-- Convert the MaxCal path law to the generic fluctuation-ratio owner packet. -/
 noncomputable def toPathProbabilityRatioLaw :
-    DirectedThermoGraph.PathProbabilityRatioLaw PathSample where
+    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioLaw
+      PathSample where
   forwardProbability := L.forwardProbability
   backwardProbability := L.backwardProbability
   entropyProduction := fun γ => G.pathEntropyProduction (L.pathEdges γ)
-  ratio_True := L.ratio_eq_exp_pathEntropy
+  ratio_law := L.ratio_eq_exp_pathEntropy
 
 /-- Forward/backward path probabilities read as exponentiated graph entropy production. -/
 theorem forward_backward_ratio_eq_exp_pathEntropy (γ : PathSample) :

@@ -246,7 +246,12 @@ structure HestenesRotorFlow
   /-- Predicate saying that an observable is fixed by the rotor flow. -/
   fixedByFlow : RealEnd E → Prop
 
-  /-- Flow-fixed observables are exactly monogenic observables. -/
+  /--
+  Flow-fixed observables are exactly monogenic observables.
+
+  The bounded abstract flow stores this equivalence as part of its contract:
+  differentiability of `t ↦ sigma_t(A)` is not present in this file.
+  -/
   fixedByFlow_iff_monogenic :
     ∀ A : RealEnd E,
       fixedByFlow A ↔ KreinHestenesModularDatum.IsMonogenic D A
@@ -318,7 +323,6 @@ theorem sigma_comp (s t : ℝ) (A : RealEnd E) :
 Flow-fixed observables are exactly monogenic observables.
 -/
 
-
 theorem fixedByFlow_iff (A : RealEnd E) :
     F.fixedByFlow A ↔ KreinHestenesModularDatum.IsMonogenic D A := by
   exact F.fixedByFlow_iff_monogenic A
@@ -326,7 +330,6 @@ theorem fixedByFlow_iff (A : RealEnd E) :
 /-
 A monogenic observable is fixed by the stored flow predicate.
 -/
-
 
 theorem fixedByFlow_of_monogenic
     {A : RealEnd E} (hA : KreinHestenesModularDatum.IsMonogenic D A) :
@@ -336,7 +339,6 @@ theorem fixedByFlow_of_monogenic
 /-
 A fixed-by-flow observable is monogenic.
 -/
-
 
 theorem monogenic_of_fixedByFlow
     {A : RealEnd E} (hA : F.fixedByFlow A) :

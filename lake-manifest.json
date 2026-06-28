@@ -92,7 +92,7 @@
    "manifestFile": "lake-manifest.json",
    "inherited": false,
    "dir": "lib/InfoGeometryCore",
-   "configFile": "lakefile.toml"},
+   "configFile": "lakefile.lean"},
   {"url": "https://github.com/leanprover-community/aesop",
    "type": "git",
    "subDir": null,

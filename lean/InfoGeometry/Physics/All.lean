@@ -70,6 +70,7 @@ import InfoGeometry.Physics.PrimeGrandCanonical
 import InfoGeometry.Physics.SpacetimeThermodynamics
 import InfoGeometry.Physics.KagomeKleinIncompatibility
 import InfoGeometry.Physics.KleinBottleDefects
+import InfoGeometry.Physics.KleinBottleCosmology
 import InfoGeometry.Physics.ParafermionDefectBridge
 import InfoGeometry.Physics.ElectronParafermionFlow
 import InfoGeometry.Physics.TopologicalStandardModelBridge

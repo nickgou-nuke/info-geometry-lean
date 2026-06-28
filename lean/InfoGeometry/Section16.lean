@@ -32,11 +32,6 @@ namespace Section16
 
 open Matrix
 
-set_option linter.unusedSimpArgs false
-set_option linter.unusedTactic false
-set_option linter.unreachableTactic false
-set_option linter.unnecessarySeqFocus false
-
 abbrev EvenCoord := Fin 4 → ℂ
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
@@ -57,13 +52,13 @@ theorem evenToMatrix_matrixToEven (M : Mat2C) :
     evenToMatrix (matrixToEven M) = M := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [evenToMatrix, matrixToEven] <;> ring_nf <;> try simp [complex_I_sq] <;> try ring
+    simp [evenToMatrix, matrixToEven] <;> ring_nf <;> rw [complex_I_sq] <;> ring_nf
 
 theorem matrixToEven_evenToMatrix (x : EvenCoord) :
     matrixToEven (evenToMatrix x) = x := by
   funext i
   fin_cases i <;>
-    simp [evenToMatrix, matrixToEven] <;> ring_nf <;> try simp [complex_I_sq] <;> try ring
+    simp [evenToMatrix, matrixToEven] <;> ring_nf <;> rw [complex_I_sq] <;> ring_nf
 
 def I₂ : Mat2C :=
   1

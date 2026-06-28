@@ -272,16 +272,13 @@ theorem sheet_eq_divisor_charge
 
 end LFunctionHelicalBranch
 
-/-! ## 6. Owner target -/
+/-! ## 6. Owner theorem -/
 
 /--
-Owner target for helical Stinespring bookkeeping.
-
 Once a helical Stinespring calibration is supplied, the hidden sector carries
 the visible sheet charge.
 -/
-@[owner_target_tag]
-def HelicalStinespringOwnerTarget : Prop :=
+theorem helicalStinespringOwnerTarget :
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm],
@@ -290,12 +287,23 @@ def HelicalStinespringOwnerTarget : Prop :=
   ∀ K : HelicalStinespringCalibration Sys Comm C D,
   ∀ x : Sys,
     K.hiddenHelix.sheet (D.hiddenFlow x) =
-      K.visibleHelix.sheet x
-
-/-- The owner target follows from the supplied calibration. -/
-theorem helicalStinespringOwnerTarget :
-    HelicalStinespringOwnerTarget := by
+      K.visibleHelix.sheet x := by
   intro Sys Comm _ _ _ _ C D K x
   exact K.hidden_sheet_eq_visible_sheet_apply x
+
+/-- Sheet-charge packet for a calibrated helical Stinespring dilation. -/
+theorem helicalStinespring_sheet_packet
+    {Sys Comm : Type*}
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    {C : DissipativeChannel Sys}
+    {D : StinespringTomitaDilation Sys Comm C}
+    (K : HelicalStinespringCalibration Sys Comm C D)
+    (x : Sys) :
+    K.hiddenHelix.sheet (D.hiddenFlow x) = K.visibleHelix.sheet x ∧
+      K.hiddenHelix.sheet (D.hiddenFlow (K.visibleHelix.flow (2 * Real.pi) x)) =
+        K.visibleHelix.sheet x + 1 := by
+  exact ⟨helicalStinespringOwnerTarget Sys Comm C D K x,
+    K.one_turn_hidden_charge x⟩
 
 end InfoGeometry.OperatorAlgebra.HelicalTimeStinespring

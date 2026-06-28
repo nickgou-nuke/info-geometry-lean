@@ -454,16 +454,15 @@ theorem mass_nonneg_of_BPS
 
 end BPSBoundDatum
 
-/-! ## 7. Owner target -/
+/-! ## 7. Absorption readout -/
 
 /--
-Owner target for five-grade defect absorption.
+Five-grade defect absorption readout.
 
 Once a five-grade absorption witness is supplied, every old closure defect is
 represented in the `g_+2` memory sector.
 -/
-@[owner_target_tag]
-def FiveGradeDefectAbsorptionOwnerTarget : Prop :=
+theorem fiveGradeDefectAbsorptionOwnerTarget :
   ∀ (L State Defect : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Defect] [Module ℝ Defect],
@@ -471,19 +470,36 @@ def FiveGradeDefectAbsorptionOwnerTarget : Prop :=
   ∀ D : ThreeGradeClosureDefect State Defect,
   ∀ A : DefectAbsorbedInPlusTwo L State Defect G D,
   ∀ s : State,
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo
-
-/-- The owner target follows from the supplied absorption witness. -/
-theorem fiveGradeDefectAbsorptionOwnerTarget :
-    FiveGradeDefectAbsorptionOwnerTarget := by
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo := by
   intro L State Defect _ _ _ _ _ _ G D A s
   exact A.defect_is_plus_two_memory s
+
+/-- Packet readout for one five-grade defect absorption witness. -/
+theorem fiveGradeDefectAbsorption_packet
+    (L State Defect : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Defect] [Module ℝ Defect]
+    (G : FiveGrading L)
+    (D : ThreeGradeClosureDefect State Defect)
+    (A : DefectAbsorbedInPlusTwo L State Defect G D)
+    (s : State) :
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
+  fiveGradeDefectAbsorptionOwnerTarget L State Defect G D A s
 
 /--
 Owner target for installing a BPS/central-charge bound.
 -/
 def BPSBoundOwnerTarget
     (State : Type*) : Prop :=
-  Nonempty (BPSBoundDatum State)
+  ∀ B : BPSBoundDatum State,
+    (∀ s : State, 0 ≤ B.centralNorm s) ∧
+      (∀ s : State, B.centralNorm s ≤ B.mass s)
+
+/-- Installed BPS data satisfy the central-norm lower-bound target. -/
+theorem bpsBoundOwnerTarget
+    (State : Type*) :
+    BPSBoundOwnerTarget State := by
+  intro B
+  exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

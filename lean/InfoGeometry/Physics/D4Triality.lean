@@ -9,7 +9,7 @@ Formalization of D₄ Triality and its S₃ Action on the Three 8-Dimensional Re
 This module implements the genuine D₄ triality: the S₃ action permuting the three
 8-dimensional irreducible representations of Spin(8):
 - 8ᵥ: vector representation
-- 8ₛ: positive spinor representation  
+- 8ₛ: positive spinor representation
 - 8꜀: negative spinor representation
 
 The current ZornMatrix color permutation (Fin 3) is moved to ColorPermutationAction.
@@ -17,7 +17,7 @@ The current ZornMatrix color permutation (Fin 3) is moved to ColorPermutationAct
 
 namespace InfoGeometry.Physics.D4Triality
 
-open InfoGeometry.Physics
+open InfoGeometry.Physics.ZornMatrixSU3
 
 /-- The three branches of the D₄ triality -/
 inductive TrialityBranch
@@ -48,6 +48,7 @@ def TrialityPacket.ofBranch {R : Type*} (f : TrialityBranch → Fin 8 → R) : T
 /-- S₃ action on the three triality branches -/
 structure TrialityAction where
   perm : Equiv.Perm TrialityBranch -- Permutation of the three branches
+deriving DecidableEq
 
 /-- Apply a triality action to a packet -/
 def TrialityAction.apply {R : Type*} (τ : TrialityAction) (P : TrialityPacket R) : TrialityPacket R :=
@@ -61,19 +62,14 @@ theorem TrialityAction.apply_branch {R : Type*} (τ : TrialityAction) (P : Trial
 
 /-- The S₃ group of triality actions -/
 def S3Triality : Finset TrialityAction :=
-  { perm := (1 : Equiv.Perm TrialityBranch) }
-  ∪ { perm := (Equiv.swap TrialityBranch.vector TrialityBranch.spinorPlus : Equiv.Perm TrialityBranch) }
-  ∪ { perm := (Equiv.swap TrialityBranch.vector TrialityBranch.spinorMinus : Equiv.Perm TrialityBranch) }
-  ∪ { perm := (Equiv.swap TrialityBranch.spinorPlus TrialityBranch.spinorMinus : Equiv.Perm TrialityBranch) }
-  ∪ { perm := (Equiv.cycle [TrialityBranch.vector, TrialityBranch.spinorPlus, TrialityBranch.spinorMinus] : Equiv.Perm TrialityBranch) }
-  ∪ { perm := (Equiv.cycle [TrialityBranch.vector, TrialityBranch.spinorMinus, TrialityBranch.spinorPlus] : Equiv.Perm TrialityBranch) }
+  Finset.univ.image fun σ : Equiv.Perm TrialityBranch => ({ perm := σ } : TrialityAction)
 
 /-- A triality action is in S₃ -/
 def TrialityAction.inS3 (τ : TrialityAction) : Prop := τ ∈ S3Triality
 
 /-- Theorem: S₃ triality has exactly 6 elements -/
 theorem S3Triality_card : S3Triality.card = 6 := by
-  decide
+  native_decide
 
 /-- Color permutation action on Zorn matrices (separate from D₄ triality) -/
 structure ColorPermutationAction where
@@ -86,48 +82,49 @@ def ColorPermutationAction.apply (τ : ColorPermutationAction) (Z : ZornMatrix) 
     x := fun i => Z.x (τ.perm i)
     y := fun i => Z.y (τ.perm i) }
 
-/-- Theorem: Color permutation preserves the Zorn determinant -/
-theorem ColorPermutationAction.preserves_det (τ : ColorPermutationAction) (Z : ZornMatrix) :
-    (τ.apply Z).det = Z.det := by
-  simp [ColorPermutationAction.apply, ZornMatrix.det]
-  have h_sum : (∑ i : Fin 3, Z.x (τ.perm i) * Z.y (τ.perm i)) = (∑ j : Fin 3, Z.x j * Z.y j) := by
-    rw [Finset.sum_equiv (τ.perm)]
-    <;> simp [Equiv.Perm.sign]
-  rw [h_sum]
-  <;> rfl
+/-- Theorem: Color permutation preserves the Zorn norm (determinant) -/
+theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z : ZornMatrix) :
+    ZornMatrixSU3.norm (τ.apply Z) = ZornMatrixSU3.norm Z := by
+  have h_dot :
+      ZornMatrixSU3.dotProduct (fun i => Z.x (τ.perm i)) (fun i => Z.y (τ.perm i)) =
+        ZornMatrixSU3.dotProduct Z.x Z.y := by
+    rw [show
+        ZornMatrixSU3.dotProduct (fun i => Z.x (τ.perm i)) (fun i => Z.y (τ.perm i)) =
+          ∑ i : Fin 3, Z.x (τ.perm i) * Z.y (τ.perm i) by
+        simp [ZornMatrixSU3.dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          Fin.sum_univ_three]]
+    rw [show
+        ZornMatrixSU3.dotProduct Z.x Z.y = ∑ i : Fin 3, Z.x i * Z.y i by
+        simp [ZornMatrixSU3.dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          Fin.sum_univ_three]]
+    exact Fintype.sum_bijective (fun i : Fin 3 => τ.perm i) τ.perm.bijective
+      (fun i : Fin 3 => Z.x (τ.perm i) * Z.y (τ.perm i))
+      (fun i : Fin 3 => Z.x i * Z.y i)
+      (fun _ => rfl)
+  simp [ColorPermutationAction.apply, ZornMatrixSU3.norm, h_dot]
 
 /-- The tripotent operator on Zorn matrices: T(Z) = (0, 0, x, -y) -/
 @[simp]
-def ZornMatrix.tripotent (Z : ZornMatrix) : ZornMatrix :=
-  { a := 0
-    b := 0
+def tripotent (Z : ZornMatrix) : ZornMatrix :=
+  { a := (0 : ℝ)
+    b := (0 : ℝ)
     x := Z.x
     y := fun i => -Z.y i }
 
 /-- Theorem: Tripotent is idempotent (T² = T) -/
 @[simp]
-theorem ZornMatrix.tripotent_tripotent (Z : ZornMatrix) :
-    (Z.tripotent).tripotent = { a := 0, b := 0, x := Z.x, y := Z.y } := by
-  ext i <;> simp [ZornMatrix.tripotent]
+theorem tripotent_tripotent (Z : ZornMatrix) :
+    tripotent (tripotent Z) = { a := (0 : ℝ), b := (0 : ℝ), x := Z.x, y := Z.y } := by
+  ext i <;> simp [tripotent]
 
 /-- Theorem: Tripotent satisfies T³ = T -/
-theorem ZornMatrix.tripotent_cube (Z : ZornMatrix) :
-    (Z.tripotent).tripotent.tripotent = Z.tripotent := by
-  ext i <;> simp [ZornMatrix.tripotent]
+theorem tripotent_cube (Z : ZornMatrix) :
+    tripotent (tripotent (tripotent Z)) = tripotent Z := by
+  ext i <;> simp [tripotent]
 
 /-- Theorem: Color permutation commutes with tripotent operator -/
 theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAction) (Z : ZornMatrix) :
-    (τ.apply (ZornMatrix.tripotent Z)) = ZornMatrix.tripotent (τ.apply Z) := by
-  simp [ColorPermutationAction.apply, ZornMatrix.tripotent]
-  <;> ext <;> simp [Equiv.Perm.sign]
-  <;>
-  (try aesop)
-  <;>
-  (try
-    {
-      fin_cases τ.perm <;>
-      simp_all [Equiv.Perm.sign, Fin.val_zero, Fin.val_one, Fin.val_two] <;>
-      aesop
-    })
+    ColorPermutationAction.apply τ (tripotent Z) = tripotent (ColorPermutationAction.apply τ Z) := by
+  simp [ColorPermutationAction.apply, tripotent]
 
 end InfoGeometry.Physics.D4Triality

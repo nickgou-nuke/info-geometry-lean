@@ -88,6 +88,20 @@ theorem rhPoleModel_inverse_relation (s : ℂ) (hs : s ≠ rhHagedornPole) :
   have hsub : s - rhHagedornPole ≠ 0 := sub_ne_zero.mpr hs
   simpa [rhPoleModel] using inv_mul_cancel₀ hsub
 
+/-- Bolzano's theorem in a form usable for RH-style zero localization.
+
+If a continuous real function is nonpositive at one endpoint and nonnegative at
+the other, then it vanishes somewhere in between. This is the honest real
+analysis replacement for any unproved zero-on-a-line claim.
+-/
+theorem continuous_zero_of_sign_change
+    {f : ℝ → ℝ} {a b : ℝ}
+    (hf : Continuous f) (ha : f a ≤ 0) (hb : 0 ≤ f b) :
+    ∃ x : ℝ, f x = 0 := by
+  rcases intermediate_value_univ₂ (X := ℝ) (α := ℝ) (f := f) (g := fun _ : ℝ => (0 : ℝ))
+      hf continuous_const ha hb with ⟨x, hx⟩
+  exact ⟨x, hx⟩
+
 /-- A Hilbert--Pólya-shaped zero set implies the RH-style critical-line statement. -/
 theorem hilbertPolyaShape_implies_RHStatement
     {Z : ℂ → ℂ} (hHP : HilbertPolyaShape Z) :

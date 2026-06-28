@@ -330,48 +330,49 @@ theorem decomposition_theorem (M : ZornMatrix) :
   simp [hx, hy]
 
 /-!
-## 5. SU(3) Stabilizer Subgroup
+## 5. Real cross-product stabilizer
 -/
 
 /-- 
-A linear map on ℝ³ preserves the cross product if it's in SO(3).
-For SU(3), we need the stronger condition of preserving the 
-full Zorn multiplication structure while fixing the projectors.
+A real linear map on `ℝ³` that preserves both the dot product and the cross
+product. This is the exact finite real stabilizer property used by the Zorn
+multiplication proofs below; it is not a complex `SU(3)` formalization.
 -/
-def IsInSU3Stabilizer (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) : Prop :=
-  -- Preserves dot product (orthogonal)
+def IsRealCrossProductStabilizer (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) : Prop :=
   (∀ x y, dotProduct (R x) (R y) = dotProduct x y) ∧
-  -- Preserves cross product (special orthogonal)
-  (∀ x y, R (crossProduct x y) = crossProduct (R x) (R y)) ∧
-  -- Determinant = 1 (special)
-  True  -- TODO: Add proper determinant condition
+  (∀ x y, R (crossProduct x y) = crossProduct (R x) (R y))
 
 /-- 
-Action of SU(3) stabilizer on a Zorn matrix.
+Action of a real cross-product stabilizer on a Zorn matrix.
 The transformation rotates the color triplet and antitriplet
 while leaving the diagonal scalars invariant.
 -/
-def su3Action (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) (M : ZornMatrix) : ZornMatrix :=
+def realCrossProductStabilizerAction
+    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) (M : ZornMatrix) : ZornMatrix :=
   ⟨M.a, M.b, R M.x, R M.y⟩
 
-theorem su3Action_preserves_norm (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
-    (hR : IsInSU3Stabilizer R) (M : ZornMatrix) :
-    norm (su3Action R M) = norm M := by
-  simp [su3Action, norm, dotProduct]
+theorem realCrossProductStabilizerAction_preserves_norm
+    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
+    (hR : IsRealCrossProductStabilizer R) (M : ZornMatrix) :
+    norm (realCrossProductStabilizerAction R M) = norm M := by
+  simp [realCrossProductStabilizerAction, norm, dotProduct]
   exact hR.1 M.x M.y
 
-theorem su3Action_preserves_multiplication (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
-    (hR : IsInSU3Stabilizer R) (M N : ZornMatrix) :
-    su3Action R (M * N) = (su3Action R M) * (su3Action R N) := by
+theorem realCrossProductStabilizerAction_preserves_multiplication
+    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
+    (hR : IsRealCrossProductStabilizer R) (M N : ZornMatrix) :
+    realCrossProductStabilizerAction R (M * N) =
+      (realCrossProductStabilizerAction R M) *
+        (realCrossProductStabilizerAction R N) := by
   cases M with
   | mk a b x y =>
   cases N with
   | mk a' b' x' y' =>
       ext
-      · simp [su3Action, mul, hR.1]
-      · simp [su3Action, mul, hR.1]
-      · simp [su3Action, mul, hR.2.1, hR.2.2]
-      · simp [su3Action, mul, hR.2.1, hR.2.2]
+      · simp [realCrossProductStabilizerAction, mul, hR.1]
+      · simp [realCrossProductStabilizerAction, mul, hR.1]
+      · simp [realCrossProductStabilizerAction, mul, hR.2]
+      · simp [realCrossProductStabilizerAction, mul, hR.2]
 
 /-!
 ## 6. Connection to Cl(1,1) Grading

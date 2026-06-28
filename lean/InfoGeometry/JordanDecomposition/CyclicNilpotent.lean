@@ -94,66 +94,10 @@ lemma exists_nilpotent_index (N : Module.End K V) [FiniteDimensional K V]
 ### Lemma 2: Splitting off one cyclic subspace
 -/
 
-/--
-**Nilpotent Splitting Lemma (Shapiro, Thm 2.1).**
-
-Let N : V → V be nilpotent with nilpotence index k ≥ 1.
-There exist a vector x ∈ V and an N-invariant subspace W ⊆ V such that:
-  (a) V = span{x, Nx, ..., N^{k-1}x} ⊕ W  (internal direct sum)
-  (b) N|_W has nilpotence index < k (or W = {0})
-
-In matrix terms: this splits off one Jordan block of size k.
-
-Proof construction:
-  1. Pick x with N^{k-1} x ≠ 0. Set v = N^{k-1} x ∈ ker N, v ≠ 0.
-  2. Choose a basis {v, u₂, ..., u_d} of ker N. Let φ : ker N → K
-     be the linear functional with φ(v) = 1, φ(u_i) = 0.
-  3. Extend φ to a linear functional ψ : ker N^{k-1} → K by:
-     For y ∈ ker N^{k-1}, define ψ(y) such that there exists z with
-     ψ(y) = φ(N^{k-1} z) when y = N^{k-1} z + u where u ∈ ker N.
-     This uses the fact that im N ∩ ker N = span{v} when k > 1.
-  4. Define π : V → span{x, ..., N^{k-1}x} as a projection
-     commuting with N. Set W = ker π, then W is N-invariant
-     and V = C ⊕ W where C = span{x, ..., N^{k-1}x}.
--/
-theorem nilpotent_split_cyclic [FiniteDimensional K V] (N : Module.End K V) (k : ℕ)
-    (hN : NilpotentIndex N k) (hk_pos : 1 ≤ k) :
-    (∃ (x : V) (W : Submodule K V),
-      (∀ y ∈ W, N y ∈ W) ∧
-      (⊤ : Submodule K V) = span K { (N ^ i) x | i ≤ k-1 } ⊔ W ∧
-      Disjoint (span K { (N ^ i) x | i ≤ k-1 }) W) →
-    ∃ (x : V) (W : Submodule K V),
-      (∀ y ∈ W, N y ∈ W) ∧
-      (⊤ : Submodule K V) = span K { (N ^ i) x | i ≤ k-1 } ⊔ W ∧
-      Disjoint (span K { (N ^ i) x | i ≤ k-1 }) W := by
-  intro h
-  exact h
-
 /-!
-### Lemma 3: Induction → full decomposition
+### Lemma 2 & 3: Splitting/decomposition roadmap
+
+The full cyclic splitting and full cyclic decomposition theorems are not encoded
+as kernel-checked claims in this file. This file contributes only local index
+lemmas and infrastructure for finite-dimensional nilpotent chains.
 -/
-
-/--
-**Nilpotent Cyclic Decomposition Theorem.**
-
-Every nilpotent endomorphism of a finite-dimensional vector space
-decomposes the space into a direct sum of cyclic subspaces.
-
-Each cyclic subspace corresponds to a Jordan block.
--/
-theorem nilpotent_cyclic_decomposition [FiniteDimensional K V]
-    (N : Module.End K V) (hN : IsNilpotent N) :
-    (∃ (r : ℕ) (xs : Fin r → V) (ks : Fin r → ℕ),
-      (∀ i, ks i ≥ 1) ∧
-      (∀ i, (N ^ (ks i)) (xs i) = 0) ∧
-      (∀ i, (N ^ (ks i - 1)) (xs i) ≠ 0) ∧
-      iSupIndep (λ i => span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) ∧
-      (⨆ i, span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) = ⊤) →
-    ∃ (r : ℕ) (xs : Fin r → V) (ks : Fin r → ℕ),
-      (∀ i, ks i ≥ 1) ∧
-      (∀ i, (N ^ (ks i)) (xs i) = 0) ∧
-      (∀ i, (N ^ (ks i - 1)) (xs i) ≠ 0) ∧
-      iSupIndep (λ i => span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) ∧
-      (⨆ i, span K { (N ^ j) (xs i) | j ≤ ks i - 1 }) = ⊤ := by
-  intro h
-  exact h

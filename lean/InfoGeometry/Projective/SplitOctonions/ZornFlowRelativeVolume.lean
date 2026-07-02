@@ -84,11 +84,11 @@ Zorn log-barrier potentials.
 theorem zornLogBarrier_flowDifference
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (X Y : ZornCell ℝ V)
-    (hX : ZornCell.detZ B X ≠ 0)
-    (hY : ZornCell.detZ B Y ≠ 0) :
+    (hX : 0 < ZornCell.detZ B X)
+    (hY : 0 < ZornCell.detZ B Y) :
     - Real.log (flowRelativeVolumeRN B X Y) =
       zornLogBarrier B Y - zornLogBarrier B X := by
-  exact negLog_zornRelativeVolumeRN_eq_zornLogBarrier_sub B X Y hX hY
+  exact negLog_zornRelativeVolumeRN_eq_zornLogBarrier_sub B X Y (ne_of_gt hX) (ne_of_gt hY)
 
 /-- The identity map preserves the Zorn determinant. -/
 theorem detPreserving_id

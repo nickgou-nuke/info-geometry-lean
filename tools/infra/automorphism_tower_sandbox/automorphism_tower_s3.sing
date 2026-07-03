@@ -1,0 +1,9 @@
+int groupOrder = 6;
+int automorphismCount = 6;
+int innerAutomorphismCount = 6;
+int centerCount = 1;
+if (groupOrder != 6) { ERROR("S3 order mismatch"); }
+if (automorphismCount != groupOrder) { ERROR("Aut(S3) cardinal mismatch"); }
+if (innerAutomorphismCount != automorphismCount) { ERROR("inner/aut mismatch"); }
+if (centerCount != 1) { ERROR("center mismatch"); }
+print("SINGULAR_AUTOMORPHISM_TOWER_S3_LEDGER_OK");

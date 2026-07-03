@@ -308,6 +308,7 @@ import InfoGeometry.KTheory.Dadarlat
 import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.Lie.G2FromSplitOctonions
+import InfoGeometry.Lie.RealSplitOctonionG2Classification
 import InfoGeometry.Measure.ProjectiveState
 import InfoGeometry.Meta
 import InfoGeometry.Meta.DefectRegistry

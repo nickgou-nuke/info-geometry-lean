@@ -1225,6 +1225,7 @@ import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.SplitOctonionRigidity
+import InfoGeometry.Canonical.SplitOctonionAutomorphism
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Canonical.ComplexCliffordHierarchy

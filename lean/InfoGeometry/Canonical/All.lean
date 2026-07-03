@@ -374,6 +374,7 @@ import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.SplitQ11Sesquilinear
 import InfoGeometry.Cocycle.SplitQuaternionicJacobian
 import InfoGeometry.Canonical.ZornComposition
+import InfoGeometry.Canonical.ZornBasisTable
 import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading

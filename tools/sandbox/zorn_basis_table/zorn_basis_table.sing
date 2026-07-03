@@ -1,0 +1,83 @@
+proc cell(string name) {
+  if (name=="E11") { return(intvec(1,0,0,0,0,0,0,0)); }
+  if (name=="E22") { return(intvec(0,1,0,0,0,0,0,0)); }
+  if (name=="U1") { return(intvec(0,0,1,0,0,0,0,0)); }
+  if (name=="U2") { return(intvec(0,0,0,1,0,0,0,0)); }
+  if (name=="U3") { return(intvec(0,0,0,0,1,0,0,0)); }
+  if (name=="V1") { return(intvec(0,0,0,0,0,1,0,0)); }
+  if (name=="V2") { return(intvec(0,0,0,0,0,0,1,0)); }
+  if (name=="V3") { return(intvec(0,0,0,0,0,0,0,1)); }
+}
+proc eqv(intvec X, intvec Y) { int k; for (k=1;k<=8;k++) { if (X[k]!=Y[k]) { return(0); } } return(1); }
+proc mul(intvec X, intvec Y) {
+  int r=X[1]; int s=X[2]; int x1=X[3]; int x2=X[4]; int x3=X[5]; int y1=X[6]; int y2=X[7]; int y3=X[8];
+  int R=Y[1]; int S=Y[2]; int u1=Y[3]; int u2=Y[4]; int u3=Y[5]; int v1=Y[6]; int v2=Y[7]; int v3=Y[8];
+  return(intvec(r*R+x1*v1+x2*v2+x3*v3, y1*u1+y2*u2+y3*u3+s*S,
+    r*u1+S*x1-(y2*v3-y3*v2), r*u2+S*x2-(y3*v1-y1*v3), r*u3+S*x3-(y1*v2-y2*v1),
+    R*y1+s*v1+(x2*u3-x3*u2), R*y2+s*v2+(x3*u1-x1*u3), R*y3+s*v3+(x1*u2-x2*u1)));
+}
+if (eqv(mul(cell("E11"),cell("E11")), intvec(1,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E11 E11"); }
+if (eqv(mul(cell("E11"),cell("E22")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E11 E22"); }
+if (eqv(mul(cell("E11"),cell("U1")), intvec(0,0,1,0,0,0,0,0)) == 0) { ERROR("mismatch E11 U1"); }
+if (eqv(mul(cell("E11"),cell("U2")), intvec(0,0,0,1,0,0,0,0)) == 0) { ERROR("mismatch E11 U2"); }
+if (eqv(mul(cell("E11"),cell("U3")), intvec(0,0,0,0,1,0,0,0)) == 0) { ERROR("mismatch E11 U3"); }
+if (eqv(mul(cell("E11"),cell("V1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E11 V1"); }
+if (eqv(mul(cell("E11"),cell("V2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E11 V2"); }
+if (eqv(mul(cell("E11"),cell("V3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E11 V3"); }
+if (eqv(mul(cell("E22"),cell("E11")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E22 E11"); }
+if (eqv(mul(cell("E22"),cell("E22")), intvec(0,1,0,0,0,0,0,0)) == 0) { ERROR("mismatch E22 E22"); }
+if (eqv(mul(cell("E22"),cell("U1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E22 U1"); }
+if (eqv(mul(cell("E22"),cell("U2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E22 U2"); }
+if (eqv(mul(cell("E22"),cell("U3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch E22 U3"); }
+if (eqv(mul(cell("E22"),cell("V1")), intvec(0,0,0,0,0,1,0,0)) == 0) { ERROR("mismatch E22 V1"); }
+if (eqv(mul(cell("E22"),cell("V2")), intvec(0,0,0,0,0,0,1,0)) == 0) { ERROR("mismatch E22 V2"); }
+if (eqv(mul(cell("E22"),cell("V3")), intvec(0,0,0,0,0,0,0,1)) == 0) { ERROR("mismatch E22 V3"); }
+if (eqv(mul(cell("U1"),cell("E11")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U1 E11"); }
+if (eqv(mul(cell("U1"),cell("E22")), intvec(0,0,1,0,0,0,0,0)) == 0) { ERROR("mismatch U1 E22"); }
+if (eqv(mul(cell("U1"),cell("U1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U1 U1"); }
+if (eqv(mul(cell("U1"),cell("U2")), intvec(0,0,0,0,0,0,0,1)) == 0) { ERROR("mismatch U1 U2"); }
+if (eqv(mul(cell("U1"),cell("U3")), intvec(0,0,0,0,0,0,-1,0)) == 0) { ERROR("mismatch U1 U3"); }
+if (eqv(mul(cell("U1"),cell("V1")), intvec(1,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U1 V1"); }
+if (eqv(mul(cell("U1"),cell("V2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U1 V2"); }
+if (eqv(mul(cell("U1"),cell("V3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U1 V3"); }
+if (eqv(mul(cell("U2"),cell("E11")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U2 E11"); }
+if (eqv(mul(cell("U2"),cell("E22")), intvec(0,0,0,1,0,0,0,0)) == 0) { ERROR("mismatch U2 E22"); }
+if (eqv(mul(cell("U2"),cell("U1")), intvec(0,0,0,0,0,0,0,-1)) == 0) { ERROR("mismatch U2 U1"); }
+if (eqv(mul(cell("U2"),cell("U2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U2 U2"); }
+if (eqv(mul(cell("U2"),cell("U3")), intvec(0,0,0,0,0,1,0,0)) == 0) { ERROR("mismatch U2 U3"); }
+if (eqv(mul(cell("U2"),cell("V1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U2 V1"); }
+if (eqv(mul(cell("U2"),cell("V2")), intvec(1,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U2 V2"); }
+if (eqv(mul(cell("U2"),cell("V3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U2 V3"); }
+if (eqv(mul(cell("U3"),cell("E11")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U3 E11"); }
+if (eqv(mul(cell("U3"),cell("E22")), intvec(0,0,0,0,1,0,0,0)) == 0) { ERROR("mismatch U3 E22"); }
+if (eqv(mul(cell("U3"),cell("U1")), intvec(0,0,0,0,0,0,1,0)) == 0) { ERROR("mismatch U3 U1"); }
+if (eqv(mul(cell("U3"),cell("U2")), intvec(0,0,0,0,0,-1,0,0)) == 0) { ERROR("mismatch U3 U2"); }
+if (eqv(mul(cell("U3"),cell("U3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U3 U3"); }
+if (eqv(mul(cell("U3"),cell("V1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U3 V1"); }
+if (eqv(mul(cell("U3"),cell("V2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U3 V2"); }
+if (eqv(mul(cell("U3"),cell("V3")), intvec(1,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch U3 V3"); }
+if (eqv(mul(cell("V1"),cell("E11")), intvec(0,0,0,0,0,1,0,0)) == 0) { ERROR("mismatch V1 E11"); }
+if (eqv(mul(cell("V1"),cell("E22")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V1 E22"); }
+if (eqv(mul(cell("V1"),cell("U1")), intvec(0,1,0,0,0,0,0,0)) == 0) { ERROR("mismatch V1 U1"); }
+if (eqv(mul(cell("V1"),cell("U2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V1 U2"); }
+if (eqv(mul(cell("V1"),cell("U3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V1 U3"); }
+if (eqv(mul(cell("V1"),cell("V1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V1 V1"); }
+if (eqv(mul(cell("V1"),cell("V2")), intvec(0,0,0,0,-1,0,0,0)) == 0) { ERROR("mismatch V1 V2"); }
+if (eqv(mul(cell("V1"),cell("V3")), intvec(0,0,0,1,0,0,0,0)) == 0) { ERROR("mismatch V1 V3"); }
+if (eqv(mul(cell("V2"),cell("E11")), intvec(0,0,0,0,0,0,1,0)) == 0) { ERROR("mismatch V2 E11"); }
+if (eqv(mul(cell("V2"),cell("E22")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V2 E22"); }
+if (eqv(mul(cell("V2"),cell("U1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V2 U1"); }
+if (eqv(mul(cell("V2"),cell("U2")), intvec(0,1,0,0,0,0,0,0)) == 0) { ERROR("mismatch V2 U2"); }
+if (eqv(mul(cell("V2"),cell("U3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V2 U3"); }
+if (eqv(mul(cell("V2"),cell("V1")), intvec(0,0,0,0,1,0,0,0)) == 0) { ERROR("mismatch V2 V1"); }
+if (eqv(mul(cell("V2"),cell("V2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V2 V2"); }
+if (eqv(mul(cell("V2"),cell("V3")), intvec(0,0,-1,0,0,0,0,0)) == 0) { ERROR("mismatch V2 V3"); }
+if (eqv(mul(cell("V3"),cell("E11")), intvec(0,0,0,0,0,0,0,1)) == 0) { ERROR("mismatch V3 E11"); }
+if (eqv(mul(cell("V3"),cell("E22")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V3 E22"); }
+if (eqv(mul(cell("V3"),cell("U1")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V3 U1"); }
+if (eqv(mul(cell("V3"),cell("U2")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V3 U2"); }
+if (eqv(mul(cell("V3"),cell("U3")), intvec(0,1,0,0,0,0,0,0)) == 0) { ERROR("mismatch V3 U3"); }
+if (eqv(mul(cell("V3"),cell("V1")), intvec(0,0,0,-1,0,0,0,0)) == 0) { ERROR("mismatch V3 V1"); }
+if (eqv(mul(cell("V3"),cell("V2")), intvec(0,0,1,0,0,0,0,0)) == 0) { ERROR("mismatch V3 V2"); }
+if (eqv(mul(cell("V3"),cell("V3")), intvec(0,0,0,0,0,0,0,0)) == 0) { ERROR("mismatch V3 V3"); }
+"SINGULAR_ZORN_BASIS_TABLE_OK entries=64";

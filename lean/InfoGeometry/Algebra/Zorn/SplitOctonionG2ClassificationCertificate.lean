@@ -1,19 +1,21 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 
 /-!
-# Split-octonion `Aut(𝕆_s) = G₂(2)` classification certificate
+# Split-octonion `Aut(𝕆_s)` / real split `G₂` classification certificate
 
 This file is the theorem-safe landing zone for the requested full
-classification.  It does **not** manufacture the classification from a name.
-Instead it states the exact kernel-checkable certificate needed to promote the
-slogan
+classification.  It does **not** manufacture the classification from a name,
+and it does not conflate the finite Chevalley group `G₂(2)` with the real split
+form often denoted `G_{2(2)}`.  Instead it states the exact kernel-checkable
+certificate needed to promote the slogan
 
-`Aut(𝕆_s) = G₂(2)`
+`Aut(𝕆_s(ℝ)) = G₂^{split}(ℝ)`
 
 to a Lean theorem:
 
 * an automorphism group `Aut` acting on the Zorn split-octonion carrier;
-* an abstract `G2` group model;
+* an abstract `G2` group model, to be instantiated by the intended split-real
+  or finite carrier;
 * a multiplicative equivalence `Aut ≃* G2`;
 * explicit product, determinant, OP-projector, and null-cone preservation laws;
 * optional finite/root-system invariants matching the GAP/Sage evidence lane.

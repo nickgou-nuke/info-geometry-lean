@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Multi-system derivation classification check for the Zorn split-octonion algebra.
 
-This is the computational first pass for the honest theorem behind
-`Aut(O_s) = G_{2(2)}` over characteristic-zero split octonions:
+This is the computational first pass for the characteristic-zero split-octonion
+derivation algebra behind the real split-form classification target:
 
   Lie(Aut(O_s)) = Der(O_s), and dim Der(O_s) = 14.
 
@@ -28,6 +28,7 @@ What is NOT verified here:
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -92,6 +93,80 @@ def build_derivation_constraint_matrix() -> sp.Matrix:
     for eq in equations:
         rows.append([sp.expand(eq).coeff(v) for v in variables])
     return sp.Matrix(rows)
+
+
+def derivation_basis_matrices(nullspace: list[sp.Matrix]) -> list[sp.Matrix]:
+    """Convert nullspace vectors to 8x8 matrices in row*8+col convention."""
+    return [sp.Matrix(8, 8, [sp.Rational(x) for x in vec]) for vec in nullspace]
+
+
+def flatten_matrix(M: sp.Matrix) -> sp.Matrix:
+    return sp.Matrix([M[row, col] for row in range(8) for col in range(8)])
+
+
+def solve_in_derivation_basis(B: sp.Matrix, v: sp.Matrix) -> sp.Matrix:
+    sol, params = B.gauss_jordan_solve(v)
+    if params.rows:
+        sol = sol.subs({p: 0 for p in list(params)})
+    if B * sol != v:
+        raise AssertionError("failed to reconstruct vector from derivation basis")
+    return sp.Matrix([sp.Rational(x) for x in sol])
+
+
+def bracket_certificate(A: sp.Matrix, nullspace: list[sp.Matrix]) -> dict[str, object]:
+    """Exact rational Lie-bracket certificate for Der(O_s)."""
+    mats = derivation_basis_matrices(nullspace)
+    B = sp.Matrix.hstack(*[flatten_matrix(M) for M in mats])
+    if B.rank() != len(mats):
+        raise AssertionError("derivation basis is not independent")
+
+    structure_columns: list[sp.Matrix] = []
+    bracket_vectors: list[sp.Matrix] = []
+    max_den = sp.Integer(1)
+    nonzero_brackets = 0
+    for i, Mi in enumerate(mats):
+        for j, Mj in enumerate(mats):
+            C = Mi * Mj - Mj * Mi
+            cv = flatten_matrix(C)
+            if A * cv != sp.zeros(A.rows, 1):
+                raise AssertionError(f"commutator ({i},{j}) is not a derivation")
+            coords_ij = solve_in_derivation_basis(B, cv)
+            structure_columns.append(coords_ij)
+            bracket_vectors.append(cv)
+            if any(x != 0 for x in coords_ij):
+                nonzero_brackets += 1
+            for x in coords_ij:
+                max_den = sp.ilcm(max_den, sp.denom(x))
+
+    bracket_span_rank = sp.Matrix.hstack(*bracket_vectors).rank()
+
+    center_rows = []
+    n = len(mats)
+    for j in range(n):
+        for k in range(n):
+            center_rows.append([structure_columns[i * n + j][k] for i in range(n)])
+    center_matrix = sp.Matrix(center_rows)
+    center_rank = center_matrix.rank()
+    center_nullity = n - center_rank
+
+    if bracket_span_rank != n:
+        raise AssertionError(f"derived algebra rank {bracket_span_rank} != {n}")
+    if center_nullity != 0:
+        raise AssertionError(f"center nullity {center_nullity} != 0")
+
+    exact_constants = [str(x) for col in structure_columns for x in list(col)]
+    return {
+        "basis_count": n,
+        "commutator_pairs": n * n,
+        "nonzero_commutator_pairs": nonzero_brackets,
+        "structure_constant_max_denominator": int(max_den),
+        "bracket_span_rank": int(bracket_span_rank),
+        "center_rank": int(center_rank),
+        "center_nullity": int(center_nullity),
+        "structure_constants_sha256": hashlib.sha256(
+            "\n".join(exact_constants).encode("utf-8")
+        ).hexdigest(),
+    }
 
 
 def sage_crosscheck(A: sp.Matrix) -> str:
@@ -181,15 +256,38 @@ def main() -> None:
         M = sp.Matrix(8, 8, list(vec))
         assert M * unit_col == sp.zeros(8, 1)
 
+    bracket = bracket_certificate(A, nullspace)
+    certificate = {
+        "field": "QQ",
+        "carrier_dimension": 8,
+        "constraint_rows": int(A.rows),
+        "constraint_cols": int(A.cols),
+        "constraint_rank": int(rank),
+        "derivation_dimension": int(nullity),
+        "derivation_basis_count": len(nullspace),
+        "derivations_kill_unit": True,
+        "lie_bracket": bracket,
+        "scope": "Exact rational Der(O_s) Lie-algebra certificate; no finite G2(2) conflation and no global Lie-group integration theorem.",
+    }
+
     print("SYMPY_DERIVATION_CONSTRAINT_MATRIX", A.rows, A.cols)
     print("SYMPY_DERIVATION_RANK", rank)
     print("SYMPY_DERIVATION_NULLITY", nullity)
     print("SYMPY_DERIVATION_BASIS_COUNT", len(nullspace))
     print("SYMPY_DERIVATIONS_KILL_UNIT yes")
+    print("SYMPY_DERIVATION_BRACKET_CLOSED yes")
+    print("SYMPY_DERIVED_LIE_RANK", bracket["bracket_span_rank"])
+    print("SYMPY_DERIVATION_CENTER_NULLITY", bracket["center_nullity"])
+    print("SYMPY_STRUCTURE_CONSTANT_MAX_DENOMINATOR", bracket["structure_constant_max_denominator"])
+    print("SYMPY_STRUCTURE_CONSTANTS_SHA256", bracket["structure_constants_sha256"])
     print(sage_crosscheck(A))
     print(gap_crosscheck())
     print(clifford_galgebra_crosscheck())
-    print("SCOPE Lie algebra derivations dim=14 verified computationally; full Lean/global Aut(O_s)=G_{2(2)} classification still requires a theorem bridge from derivations to automorphism group")
+    if "--write-json" in sys.argv:
+        out = ROOT / "tools" / "sympy" / "split_octonion_derivation_certificate.json"
+        out.write_text(json.dumps(certificate, indent=2, sort_keys=True) + "\n")
+        print("WROTE_CERTIFICATE", out.relative_to(ROOT))
+    print("SCOPE Lie algebra derivations dim=14 verified computationally; global real split-form classification still requires a theorem bridge from derivations to automorphism group")
 
 
 if __name__ == "__main__":

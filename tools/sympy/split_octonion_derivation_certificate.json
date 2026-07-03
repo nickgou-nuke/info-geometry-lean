@@ -1,0 +1,21 @@
+{
+  "carrier_dimension": 8,
+  "constraint_cols": 64,
+  "constraint_rank": 50,
+  "constraint_rows": 512,
+  "derivation_basis_count": 14,
+  "derivation_dimension": 14,
+  "derivations_kill_unit": true,
+  "field": "QQ",
+  "lie_bracket": {
+    "basis_count": 14,
+    "bracket_span_rank": 14,
+    "center_nullity": 0,
+    "center_rank": 14,
+    "commutator_pairs": 196,
+    "nonzero_commutator_pairs": 112,
+    "structure_constant_max_denominator": 1,
+    "structure_constants_sha256": "e8cbefbec6c399bd5904bdd2770ae3e63cc5e96ee42904cd8d4e151babc58ca5"
+  },
+  "scope": "Exact rational Der(O_s) Lie-algebra certificate; no finite G2(2) conflation and no global Lie-group integration theorem."
+}

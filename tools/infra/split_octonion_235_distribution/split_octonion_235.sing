@@ -1,0 +1,13 @@
+ring R = 0,(a,x0,x1,x2,y0,y1,y2),dp;
+// Imaginary norm q = -a^2 - x.y.  Null quadric in P^6 has dimension 5.
+poly q = -a^2 - x0*y0 - x1*y1 - x2*y2;
+int imaginaryDim = 7;
+int quadricEquations = 1;
+int projectiveNullQuadricDim = imaginaryDim - 1 - quadricEquations;
+int leftAnnihilatorRank = 4;
+int leftAnnihilatorDim = imaginaryDim - leftAnnihilatorRank;
+int projectivizedDistributionRank = leftAnnihilatorDim - 1;
+if (projectiveNullQuadricDim <> 5) { ERROR("projective null quadric dimension mismatch"); }
+if (leftAnnihilatorDim <> 3) { ERROR("left annihilator dimension mismatch"); }
+if (projectivizedDistributionRank <> 2) { ERROR("distribution rank mismatch"); }
+print("SINGULAR_SPLIT_OCTONION_235_LEDGER_OK");

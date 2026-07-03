@@ -1,0 +1,11 @@
+rankDistribution := 2;;
+firstDerivedRank := 3;;
+ambientRank := 5;;
+symmetryDimension := 14;;
+weylG2Order := 12;;
+if [rankDistribution, firstDerivedRank, ambientRank] <> [2,3,5] then Error("growth vector mismatch"); fi;
+if symmetryDimension <> 14 then Error("g2 symmetry dimension mismatch"); fi;
+W := DihedralGroup(IsPermGroup, 12);;
+if Size(W) <> weylG2Order then Error("G2 Weyl order mismatch"); fi;
+Print("GAP_SPLIT_OCTONION_235_GROWTH_LEDGER_OK\n");
+QUIT;

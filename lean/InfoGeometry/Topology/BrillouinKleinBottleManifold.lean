@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.Canonical.PhotonicParabolicTransfer
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 import InfoGeometry.Canonical.WallpaperPin55RootCrossSection
 
@@ -151,6 +152,13 @@ def brillouinKleinZ2 (gamma0 gammaPi : ℤ) : ℤ :=
 theorem brillouinKleinZ2_gauge_stable (gamma0 gammaPi n : ℤ) :
     brillouinKleinZ2 (gamma0 + 2 * n) gammaPi = brillouinKleinZ2 gamma0 gammaPi :=
   klein_bottle_invariant_gauge_stable gamma0 gammaPi n
+
+/-- Periodic parabolic transfer on a two-wall cell. -/
+theorem parabolic_transfer_periodic_cell_pow (χ₁ χ₂ : ℝ) (n : ℕ) :
+    (InfoGeometry.Canonical.PhotonicParabolicTransfer.T χ₁ *
+      InfoGeometry.Canonical.PhotonicParabolicTransfer.T χ₂) ^ n =
+    InfoGeometry.Canonical.PhotonicParabolicTransfer.T ((n : ℝ) * (χ₁ + χ₂)) := by
+  exact InfoGeometry.Canonical.PhotonicParabolicTransfer.T_periodic_cell_pow χ₁ χ₂ n
 
 /--
 Theorem-safe certificate for a Bloch/Berry realization.  The analytic content is

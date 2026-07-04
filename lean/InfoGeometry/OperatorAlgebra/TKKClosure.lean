@@ -77,21 +77,22 @@ def box
     (x y : J) : J → J :=
   fun z => T.triple x y z
 
-/-- Re-export outer symmetry. -/
-theorem outer_symm_apply
+/-- Apply the box operator. -/
+@[simp] theorem box_apply
     (x y z : J) :
-    T.triple x y z = T.triple z y x :=
-  T.outer_symm x y z
+    T.box x y z = T.triple x y z :=
+  rfl
 
-/-- Re-export the Jordan triple identity. -/
-theorem triple_identity_apply
+/-- A zero-on-one-side restatement of the Jordan triple identity. -/
+theorem triple_identity_eq_zero
     (u v x y z : J) :
       T.triple u v (T.triple x y z) -
-          T.triple x y (T.triple u v z)
-        =
-      T.triple (T.triple u v x) y z -
-          T.triple x (T.triple v u y) z :=
-  T.triple_identity u v x y z
+          T.triple x y (T.triple u v z) -
+          (T.triple (T.triple u v x) y z -
+            T.triple x (T.triple v u y) z)
+        = 0 := by
+  rw [T.triple_identity u v x y z]
+  simp
 
 end JordanTripleSystem
 
@@ -143,12 +144,6 @@ namespace LieSocket
 variable
     {L : Type*} [AddCommGroup L] [Module ℝ L]
     (𝔤 : LieSocket L)
-
-/-- Re-export skew-symmetry. -/
-theorem skew
-    (x y : L) :
-    𝔤.bracket x y = -𝔤.bracket y x :=
-  𝔤.bracket_skew x y
 
 end LieSocket
 
@@ -247,6 +242,14 @@ theorem bracket_neg_pos
     T.lie.bracket (T.neg x) (T.pos y) = T.zero x y :=
   T.neg_pos_bracket x y
 
+/-- Re-export: the opposite cross-bracket is the negative of the grade-zero
+structure element, by Lie-socket skew symmetry. -/
+theorem bracket_pos_neg
+    (x y : J) :
+    T.lie.bracket (T.pos y) (T.neg x) = -T.zero x y := by
+  rw [T.lie.bracket_skew]
+  rw [T.bracket_neg_pos]
+
 /-- Re-export: structure-grade action on translations. -/
 theorem bracket_zero_neg
     (x y z : J) :
@@ -254,12 +257,31 @@ theorem bracket_zero_neg
       T.neg (T.jordan.triple x y z) :=
   T.zero_neg_action x y z
 
+/-- Re-export: the opposite translation/structure bracket is the negative of
+the induced triple action, by Lie-socket skew symmetry. -/
+theorem bracket_neg_zero
+    (x y z : J) :
+    T.lie.bracket (T.neg z) (T.zero x y) =
+      -T.neg (T.jordan.triple x y z) := by
+  rw [T.lie.bracket_skew]
+  rw [T.bracket_zero_neg]
+
 /-- Re-export: structure-grade action on special conformal elements. -/
 theorem bracket_zero_pos
     (x y z : J) :
     T.lie.bracket (T.zero x y) (T.pos z) =
       -T.pos (T.jordan.triple y x z) :=
   T.zero_pos_action x y z
+
+/-- Re-export: the opposite special-conformal/structure bracket removes the
+leading minus sign from the contragredient action. -/
+theorem bracket_pos_zero
+    (x y z : J) :
+    T.lie.bracket (T.pos z) (T.zero x y) =
+      T.pos (T.jordan.triple y x z) := by
+  rw [T.lie.bracket_skew]
+  rw [T.bracket_zero_pos]
+  simp
 
 end TKKLieClosure
 
@@ -301,18 +323,6 @@ variable
     [AddCommGroup L] [Module ℝ L]
     {T : TKKLieClosure J L}
     (I : TKKInversionClosure J L T)
-
-/-- Inversion sends a translation generator to its special-conformal mirror. -/
-theorem neg_to_pos
-    (x : J) :
-    I.inversion (T.neg x) = T.pos x :=
-  I.maps_neg_to_pos x
-
-/-- Inversion sends a special-conformal generator back to a translation. -/
-theorem pos_to_neg
-    (x : J) :
-    I.inversion (T.pos x) = T.neg x :=
-  I.maps_pos_to_neg x
 
 end TKKInversionClosure
 

@@ -1,0 +1,39 @@
+LIB "nctools.lib";
+
+// Define a ring with variables Q, Qi (Q inverse), and dQ
+ring r = 0, (Q, Qi, dQ), dp;
+
+// Set up the non-commutative relations
+matrix C[3][3];
+C[1,1]=1; C[1,2]=1; C[1,3]=1;  // Q commutes with Qi, dQ
+C[2,1]=1; C[2,2]=1; C[2,3]=1;  // Qi commutes with Q, dQ
+C[3,1]=1; C[3,2]=1; C[3,3]=-1; // dQ anti-commutes with itself
+
+matrix D[3][3];
+def A = nc_algebra(C, D);
+setring A;
+
+// Ideal defining Qi as inverse of Q, and the nilpotency of dQ
+ideal I = Q*Qi - 1, Qi*Q - 1, dQ*dQ;
+ideal stdI = twostd(I);
+
+// q = dQ / Q
+poly q = dQ * Qi;
+
+// dq = d(dQ * Qi) = d(dQ) * Qi - dQ * d(Qi)
+// Since d(dQ) = 0, and d(Qi) = - Qi * dQ * Qi
+poly dQi = - Qi * dQ * Qi;
+poly dq = - dQ * dQi;
+
+// Evaluate dq modulo the relations
+poly dq_eval = reduce(dq, stdI);
+
+print("Evaluating dq algebraically:");
+print(dq_eval);
+
+// Check if q * q is also 0
+poly q_sq = reduce(q * q, stdI);
+print("Evaluating q * q algebraically:");
+print(q_sq);
+
+exit;

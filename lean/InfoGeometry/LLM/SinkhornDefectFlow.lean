@@ -375,49 +375,6 @@ theorem ofDetailedEquilibrium_isRouterEquilibrium
     (ofDetailedEquilibrium_δ_odd_eq_zero (E := E) (CIK := CIK) (flow := flow)
       (hMod := hMod) (hEq := hEq))
 
-/--
-Witness-routed detailed-equilibrium constructor on the clock-defect bridge.
-
-This removes the bare `hEq` proof argument for callers that already own the
-explicit `DetailedEquilibriumWitness` packet on the winding owner lane.
--/
-noncomputable def ofDetailedEquilibriumWitness
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
-    (flow : BackgroundModularFlow CIK)
-    (hMod : EndH)
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
-    RouterClockDefectBridge (E := E) :=
-  ofDetailedEquilibrium (E := E) CIK flow hMod W.hEq
-
-@[simp] theorem ofDetailedEquilibriumWitness_routerResidual
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
-    (flow : BackgroundModularFlow CIK)
-    (hMod : EndH)
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
-    (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound.routerResidual = 0 := by
-  simpa [ofDetailedEquilibriumWitness] using
-    ofDetailedEquilibrium_routerResidual (E := E) (CIK := CIK) (flow := flow)
-      (hMod := hMod) (hEq := W.hEq)
-
-@[simp] theorem ofDetailedEquilibriumWitness_δ_odd_eq_zero
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
-    (flow : BackgroundModularFlow CIK)
-    (hMod : EndH)
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
-    δ_odd (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound = 0 := by
-  simpa [ofDetailedEquilibriumWitness] using
-    ofDetailedEquilibrium_δ_odd_eq_zero (E := E) (CIK := CIK) (flow := flow)
-      (hMod := hMod) (hEq := W.hEq)
-
-theorem ofDetailedEquilibriumWitness_isRouterEquilibrium
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
-    (flow : BackgroundModularFlow CIK)
-    (hMod : EndH)
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
-    IsRouterEquilibrium (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound := by
-  simpa [ofDetailedEquilibriumWitness] using
-    ofDetailedEquilibrium_isRouterEquilibrium (E := E) (CIK := CIK) (flow := flow)
-      (hMod := hMod) (hEq := W.hEq)
 
 end RouterClockDefectBridge
 
@@ -480,30 +437,6 @@ theorem router_equilibrium_of_detailedEquilibrium
     IsRouterEquilibrium B.bound := by
   exact equilibrium_of_δ_odd_eq_zero (E := E) B.bound
     (δ_odd_eq_zero_of_detailedEquilibrium (E := E) B hEq)
-
-/--
-Witness-routed zero-defect theorem on the clock-defect bridge.
-
-This removes the bare detailed-equilibrium proposition in favor of the explicit
-`DetailedEquilibriumWitness` packet.
--/
-theorem δ_odd_eq_zero_of_detailedEquilibriumWitness
-    (B : RouterClockDefectBridge (E := E))
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) B.hMod) :
-    δ_odd B.bound = 0 :=
-  δ_odd_eq_zero_of_detailedEquilibrium (E := E) B W.hEq
-
-/--
-Witness-routed router-equilibrium theorem on the clock-defect bridge.
-
-This removes the bare detailed-equilibrium proposition in favor of the explicit
-`DetailedEquilibriumWitness` packet.
--/
-theorem router_equilibrium_of_detailedEquilibriumWitness
-    (B : RouterClockDefectBridge (E := E))
-    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) B.hMod) :
-    IsRouterEquilibrium B.bound :=
-  router_equilibrium_of_detailedEquilibrium (E := E) B W.hEq
 
 /--
 Positive odd-sector defect implies noncommuting scale lane on the same

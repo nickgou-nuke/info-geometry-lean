@@ -1,9 +1,41 @@
 # Complete ArangoDB + AST/AQL Hash-Based Search Methodology
 
+## Live-code audit status (2026-07-04)
+
+This HOWTO is grounded against the live repository implementation, not against
+prose memory of the toolchain.  The authoritative implementation surfaces are:
+
+- `lean/DAG/Indexer.lean`: emits `DeclNode` / `StreamDecl` records with
+  `typeFingerprint`, `valueFingerprint`, and `shapeHash`, plus stream edges
+  with `src`, `dst`, and `kind`.
+- `lean/DAG/ExprFingerprint.lean`: defines `ExprFingerprint` and
+  `computeFingerprint`; `shapeHash` is a `UInt64` field inside this structure.
+- `lean/DAG/SearchByHash.lean`: native Lean-side hash search over imported
+  modules.
+- `tools/infra/refresh_decl_graph.py`: supports `--stream`, `--arango-db`,
+  `--run-mode`, `--import-root`, and `--namespace`.
+- `tools/infra/arango_env.py` / `src/igf/config/env_aliases.py`: repo-owned
+  Arango credential/config loading.  Default endpoint is
+  `http://127.0.0.1:8530`; default database is `infogeometry`; default env file
+  is `configs/local/hive_arango.env`.
+- `tools/infra/hash_owner_map.py`: offline/native shape-hash owner lookup via
+  Lean import plus source owner scan.
+
+Important boundary:
+
+- Shape/value hashes are structural navigation evidence, not mathematical proof.
+- A shape cluster may identify duplicated proof shape, vacuous sockets, or a
+  useful owner corridor; it does not by itself prove a theorem.
+- Do not use legacy scripts with hard-coded credentials or collection names as
+  authority.  In particular, `tools/shapehash_bridge.py` and
+  `tools/infra/shapehash_to_lean_bridge.py` are legacy/proposal generators and
+  still contain hard-coded Arango settings; prefer the repo env loader and
+  `hash_owner_map.py` / direct AQL snippets below.
+
 ## Prerequisites
 
 ```bash
-# 1. ArangoDB running on localhost:8530
+# 1. ArangoDB running on localhost:8530 (repo default)
 # 2. Python arango driver: pip install python-arango
 # 3. Lean 4 + Lake with dagIndexer target built
 # 4. Mathlib cache populated: lake exe cache get!
@@ -14,18 +46,24 @@
 ## Phase 1: Initialize ArangoDB Environment
 
 ```bash
-# 1.1 Load ArangoDB credentials (one-time setup)
-cat > configs/local/hive_arango.env <<'EOF'
-ARANGO_ENDPOINT=http://127.0.0.1:8530
-ARANGO_DATABASE=infogeometry
-ARANGO_USERNAME=root
-ARANGO_PASSWORD=your_password
-EOF
+# 1.1 Load ArangoDB credentials (one-time local setup)
+# Prefer editing configs/local/hive_arango.env yourself. Do not commit it.
+# Supported aliases include ARANGO_USER/ARANGO_USERNAME and
+# ARANGO_PASS/ARANGO_PASSWORD.
+mkdir -p configs/local
+chmod 700 configs/local
+$EDITOR configs/local/hive_arango.env
 
 # 1.2 Verify connection
 python3 -c "
 from arango import ArangoClient
-from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password, arango_database
+from tools.infra.arango_env import (
+    load_repo_arango_env,
+    arango_endpoint,
+    arango_username,
+    arango_password,
+    arango_database,
+)
 from pathlib import Path
 load_repo_arango_env(Path('.').resolve())
 client = ArangoClient(hosts=arango_endpoint())
@@ -58,10 +96,16 @@ python3 tools/infra/refresh_decl_graph.py \
 python3 -c "
 from arango import ArangoClient
 from pathlib import Path
-from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+from tools.infra.arango_env import (
+    load_repo_arango_env,
+    arango_endpoint,
+    arango_username,
+    arango_password,
+    arango_database,
+)
 load_repo_arango_env(Path('.').resolve())
 client = ArangoClient(hosts=arango_endpoint())
-db = client.db('infogeometry', username=arango_username(), password=arango_password())
+db = client.db(arango_database(), username=arango_username(), password=arango_password())
 print('decls:', db.collection('decls').count())
 print('edges:', db.collection('edges').count())
 "
@@ -73,16 +117,38 @@ print('edges:', db.collection('edges').count())
 
 ## Phase 3: Core AST/AQL Hash-Based Searches
 
+### 3.0 Native/offline owner lookup before live Arango
+
+Use this when you have a `shapeHash` and want a source-level owner map without
+depending on a live Arango connection:
+
+```bash
+python3 tools/infra/hash_owner_map.py 3892707284033108221 40 \
+  > artifacts/dag/hash_owner_3892707284033108221.json
+```
+
+This invokes Lean over `InfoGeometry.All`, recomputes value-expression
+fingerprints with `DAG.computeFingerprint`, and then scans Lean source owners
+for the sampled declarations.  Treat the output as navigation evidence: open
+the cited owner files and verify the actual theorem bodies before editing or
+claiming closure.
+
 ### 3.1 Find Equivalence Classes by ShapeHash (Structural Identity)
 
 ```python
 from arango import ArangoClient
 from pathlib import Path
-from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+from tools.infra.arango_env import (
+    load_repo_arango_env,
+    arango_endpoint,
+    arango_username,
+    arango_password,
+    arango_database,
+)
 
 load_repo_arango_env(Path('.').resolve())
 client = ArangoClient(hosts=arango_endpoint())
-db = client.db('infogeometry', username=arango_username(), password=arango_password())
+db = client.db(arango_database(), username=arango_username(), password=arango_password())
 
 # Find ALL equivalence classes by shapeHash (structural AST identity)
 # Note: shapeHash is stored as STRING in ArangoDB
@@ -284,11 +350,17 @@ echo "=== Phase 4: Run Searches ==="
 python3 <<'PYEOF'
 from arango import ArangoClient
 from pathlib import Path
-from tools.infra.arango_env import load_repo_arango_env, arango_endpoint, arango_username, arango_password
+from tools.infra.arango_env import (
+    load_repo_arango_env,
+    arango_endpoint,
+    arango_username,
+    arango_password,
+    arango_database,
+)
 
 load_repo_arango_env(Path('.').resolve())
 client = ArangoClient(hosts=arango_endpoint())
-db = client.db('infogeometry', username=arango_username(), password=arango_password())
+db = client.db(arango_database(), username=arango_username(), password=arango_password())
 
 print("=== DECLARATION STATS ===")
 print(f"Decls: {db.collection('decls').count()}")
@@ -368,7 +440,7 @@ jobs:
       - name: Build dagIndexer
         run: lake build dagIndexer
       - name: Start ArangoDB
-        run: docker run -d -p 8529:8529 -e ARANGO_ROOT_PASSWORD=${{ secrets.ARANGO_PASSWORD }} arangodb/arangodb:3.11
+        run: docker run -d -p 8530:8529 -e ARANGO_ROOT_PASSWORD=${{ secrets.ARANGO_PASSWORD }} arangodb/arangodb:3.11
       - name: Stream to ArangoDB
         env:
           ARANGO_PASSWORD: ${{ secrets.ARANGO_PASSWORD }}
@@ -420,9 +492,12 @@ jobs:
 
 | File | Purpose |
 |------|---------|
-| `lean/DAG/Indexer.lean` | Added `--stream` mode for JSONL output |
-| `tools/infra/refresh_decl_graph.py` | Added `--stream` mode with ArangoDB import |
-| `tools/infra/aql/aql_functorial_bridge.py` | Added `lean_decl`/`lean_status` provenance fields |
+| `lean/DAG/Indexer.lean` | Owns streamed `DeclNode` / `StreamDecl` JSONL with fingerprints and edges |
+| `lean/DAG/ExprFingerprint.lean` | Owns `ExprFingerprint` and `computeFingerprint` |
+| `lean/DAG/SearchByHash.lean` | Native Lean-side shape-hash search over imported modules |
+| `tools/infra/refresh_decl_graph.py` | Owns `--stream` mode with ArangoDB import |
+| `tools/infra/hash_owner_map.py` | Native/offline shape-hash owner lookup and source owner scan |
+| `tools/infra/aql/aql_functorial_bridge.py` | Adds `lean_decl`/`lean_status` provenance fields in the AQL functorial bridge lane |
 
 ---
 

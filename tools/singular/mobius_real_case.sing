@@ -1,0 +1,15 @@
+ring R = 0, (a, d, e, s), dp;
+ideal I = 2*e - a - d, s - (a+d)^2;
+ideal G = std(I);
+poly target = s - 4*e^2;
+poly r = reduce(target, G);
+
+print("Reduction of s - 4e^2 modulo the ideal:");
+print(r);
+
+if (r == 0) {
+  print("Proved: sigma - 4e^2 = 0 belongs to the ideal.");
+} else {
+  print("Failed.");
+}
+quit;

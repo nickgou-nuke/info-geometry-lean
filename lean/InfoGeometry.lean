@@ -109,6 +109,21 @@ import InfoGeometry.Epistemology.SemanticReflector
 
 import InfoGeometry.Physics.ParabolicClock
 import InfoGeometry.Physics.LogCFT
+import InfoGeometry.Categorical.CFTVirasoro
+import InfoGeometry.Categorical.CFTPrimary
+import InfoGeometry.Categorical.CFTWard
+import InfoGeometry.Categorical.CFTBpz
+import InfoGeometry.Categorical.CFTFusion
+import InfoGeometry.Categorical.CFTStructure
+import InfoGeometry.Categorical.CFTBlocks
+import InfoGeometry.Categorical.CFTBootstrap
+import InfoGeometry.Categorical.CFTMinimal
+import InfoGeometry.Categorical.CFTLiouville
+import InfoGeometry.Categorical.CFTLogarithmic
+import InfoGeometry.Categorical.CFTSigma
+import InfoGeometry.Complex.BergmanKernelLocalization
+import InfoGeometry.Information.BergmanBregman
+import InfoGeometry.Information.DeRhamScore
 
 /-!
 # InfoGeometry

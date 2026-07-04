@@ -844,7 +844,7 @@ input_file dagPathingFile where
 require InfoGeometryCore from "lib" / "InfoGeometryCore"
 
 require Qq from ".lake/packages/Qq"
-require Plausible from ".lake/packages/Plausible"
+require plausible from ".lake/packages/plausible"
 
 -- Enforce a single local mathlib source for this repository.
 -- Do not let Lake re-resolve mathlib from the upstream git URL.

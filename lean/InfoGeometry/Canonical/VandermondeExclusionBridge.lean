@@ -4,17 +4,16 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.VandermondeExclusionBridge
 
-Finite Vandermonde exclusion shadow for the fermionic/determinantal corridor.
+\[
+V(v)=\mathrm{Matrix.vandermonde}(v),\qquad
+\det V(v)=\prod_i\prod_{j\in Ioi(i)}(v_j-v_i).
+\]
 
-This file is intentionally narrow.  It packages the exact finite-dimensional
-`Matrix.vandermonde` determinant identities from mathlib as the owner surface
-for the exclusion/zero-locus lane:
-
-* collision of two nodes forces the Vandermonde determinant to vanish;
-* nonvanishing of the determinant is equivalent to injectivity of the node map.
-
-It does **not** claim to formalize CAR, Slater determinants, AQFT, or Type III
-operator algebras.  Those remain owned elsewhere or explicit debt.
+\[
+\det V(v)=0 \iff \exists i\neq j,\ v_i=v_j,
+\qquad
+\det V(v)\neq 0 \iff v \text{ injective}.
+\]
 -/
 
 namespace InfoGeometry.Canonical.VandermondeExclusionBridge
@@ -27,12 +26,7 @@ section CommRing
 
 variable {R : Type u} [CommRing R] {n : ℕ}
 
-/--
-Finite Vandermonde exclusion witness.
-
-The `nodes` field is the finite list of coordinates/weights whose pairwise
-collisions are detected by the Vandermonde determinant.
--/
+/-- `v : Fin n → R`. -/
 @[rep_depth thermo]
 structure FiniteVandermondeExclusionWitness where
   nodes : Fin n → R
@@ -41,17 +35,17 @@ namespace FiniteVandermondeExclusionWitness
 
 variable (W : FiniteVandermondeExclusionWitness (R := R) (n := n))
 
-/-- The finite Vandermonde matrix attached to the witness nodes. -/
+/-- `V(v)`. -/
 @[rep_depth thermo]
 def matrix : Matrix (Fin n) (Fin n) R :=
   Matrix.vandermonde W.nodes
 
-/-- The determinant readout of the witness matrix. -/
+/-- `\det V(v)`. -/
 @[rep_depth thermo]
 def determinant : R :=
   W.matrix.det
 
-/-- The determinant is the exact Vandermonde separation product. -/
+/-- `\det V(v)=\prod_i\prod_{j\in Ioi(i)}(v_j-v_i)`. -/
 @[rep_depth thermo]
 theorem determinant_eq_pairwise_separation :
     W.determinant = ∏ i : Fin n, ∏ j ∈ Finset.Ioi i, (W.nodes j - W.nodes i) := by
@@ -70,32 +64,21 @@ namespace FiniteVandermondeExclusionWitness
 
 variable (W : FiniteVandermondeExclusionWitness (R := R) (n := n))
 
-/--
-Zero-locus theorem for the finite Vandermonde shadow.
-
-The determinant vanishes exactly when two distinct nodes collide.
--/
+/-- `\det V(v)=0 \iff` collision. -/
 @[rep_depth thermo]
 theorem determinant_eq_zero_iff_collision :
     W.determinant = 0 ↔ ∃ i j : Fin n, W.nodes i = W.nodes j ∧ i ≠ j := by
   unfold determinant matrix
   simpa using (Matrix.det_vandermonde_eq_zero_iff (v := W.nodes))
 
-/--
-Injectivity theorem for the finite Vandermonde shadow.
-
-The determinant is nonzero exactly when the node map is injective.
--/
+/-- `\det V(v)\neq 0 \iff` injective. -/
 @[rep_depth thermo]
 theorem determinant_ne_zero_iff_injective :
     W.determinant ≠ 0 ↔ Function.Injective W.nodes := by
   unfold determinant matrix
   simpa using (Matrix.det_vandermonde_ne_zero_iff (v := W.nodes))
 
-/--
-Finite Pauli/exclusion shadow:
-if two distinct nodes coincide, the Vandermonde determinant collapses to zero.
--/
+/-- `i\neq j \wedge v_i=v_j \to \det V(v)=0`. -/
 @[rep_depth thermo]
 theorem collision_forces_determinant_zero
     {i j : Fin n} (hij : i ≠ j) (hEq : W.nodes i = W.nodes j) :
@@ -103,19 +86,14 @@ theorem collision_forces_determinant_zero
   rw [W.determinant_eq_zero_iff_collision]
   exact ⟨i, j, hEq, hij⟩
 
-/--
-Contrapositive exclusion shadow:
-if the determinant is nonzero, distinct indices cannot occupy the same node.
--/
+/-- `\det V(v)\neq 0 \to v_i=v_j \to i=j`. -/
 @[rep_depth thermo]
 theorem determinant_ne_zero_forbids_collision
     (hdet : W.determinant ≠ 0) {i j : Fin n} (hEq : W.nodes i = W.nodes j) :
     i = j := by
   exact (W.determinant_ne_zero_iff_injective.mp hdet) hEq
 
-/--
-Packet form of the finite exclusion shadow.
--/
+/-- `\det V(v)\neq0 \leftrightarrow \mathrm{Injective}(v)` and `\det V(v)=0 \leftrightarrow` collision. -/
 @[rep_depth thermo]
 theorem exclusion_packet :
     (W.determinant ≠ 0 ↔ Function.Injective W.nodes) ∧

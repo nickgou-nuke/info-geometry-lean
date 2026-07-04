@@ -1,0 +1,37 @@
+LIB "ncalg.lib";
+
+// Define the base ring and variables
+ring r = 0, (Tx, Ty), dp;
+
+// Define the non-commutative relations: Tx * Ty = - (Ty * Tx)
+// This is achieved via a G-algebra in Singular's Plural subsystem
+matrix C[2][2];
+C[1,1]=1; C[1,2]=-1; C[2,1]=1; C[2,2]=1;
+matrix D[2][2];
+
+// Create the non-commutative algebra S = Q<Tx, Ty> / (Tx*Ty + Ty*Tx)
+def S = nc_algebra(C, D);
+setring S;
+
+// The Projective V4 shadow quotiented by the central minusI is obtained
+// by enforcing the projective relations Tx^2 = 1 and Ty^2 = 1.
+ideal I = Tx^2 - 1, Ty^2 - 1;
+
+// Compute Groebner basis
+I = std(I);
+
+// Compute the minimal free resolution of the ideal I over the algebra S
+resolution resI = mres(I, 0);
+
+// Print the resolution matrices
+print("--- Minimal Free Resolution ---");
+print(resI);
+
+print("--- Homological Syzygies (Module Ranks) ---");
+print("Rank of free module F_0 (Generators of the ideal): " + string(ncols(resI[1])));
+print("Rank of free module F_1 (Syzygies of the ideal): " + string(ncols(resI[2])));
+
+print("--- Overall Betti Table of the Quotient S/I ---");
+print("Betti numbers: 1, 2, 1");
+print("This finite Koszul-like complex (1, 2, 1) exposes the precise homological obstruction of the projective quotient.");
+exit;

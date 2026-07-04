@@ -1,0 +1,31 @@
+ring r = 0, (z, z1, z2, z3), dp;
+
+poly N = (z - z1) * (z2 - z3);
+poly D = (z - z3) * (z2 - z1);
+
+// Substitute z = z1 and verify N = 0
+ideal I1 = z - z1;
+poly N1 = reduce(N, std(I1));
+if (N1 != 0) {
+    print("Error: N is not 0 at z=z1");
+    quit;
+}
+
+// Substitute z = z2 and prove N - D = 0
+ideal I2 = z - z2;
+poly Diff2 = reduce(N - D, std(I2));
+if (Diff2 != 0) {
+    print("Error: N - D is not 0 at z=z2");
+    quit;
+}
+
+// Substitute z = z3 and prove D = 0
+ideal I3 = z - z3;
+poly D3 = reduce(D, std(I3));
+if (D3 != 0) {
+    print("Error: D is not 0 at z=z3");
+    quit;
+}
+
+print("All conditions verified successfully.");
+quit;

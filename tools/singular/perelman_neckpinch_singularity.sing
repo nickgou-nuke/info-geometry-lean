@@ -1,0 +1,21 @@
+LIB "sing.lib";
+
+ring r = 0, (x, y, z), ds;
+
+int k = 2;
+poly f2 = x^2 + y^2 - z^k;
+int m2 = milnor(f2);
+print("Milnor number for k=2 (ordinary neckpinch):");
+print(m2);
+
+k = 3;
+poly f3 = x^2 + y^2 - z^k;
+int m3 = milnor(f3);
+print("Milnor number for k=3 (degenerate neckpinch):");
+print(m3);
+
+int t3 = tjurina(f3);
+print("Tjurina number for k=3:");
+print(t3);
+
+exit;

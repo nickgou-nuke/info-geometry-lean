@@ -8,17 +8,17 @@ import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 /-!
 # Time as logarithmic monodromy in 3D chiral cone geometry
 
-This file packages a conservative 3D-geometry kernel layer for the thesis-text idea:
+\[
+Q(X)=t^2-x^2-y^2-z^2,
+\qquad
+\partial Q = \{X\mid Q(X)=0\}.
+\]
 
-* points `X : ChiralState ℝ` are coordinates `(t,x,y,z)`;
-* `lightconeQ X = t^2 - x^2 - y^2 - z^2` is the Klein/light-cone potential;
-* its zero-locus models the singular/quadric boundary;
-* finite 2×2 nilpotents lie on that quadric by determinant=0;
-* logarithmic monodromy around the pole has integer winding (via existing
-  `KleinQuadric.DeRhamMonodromy` results).
-
-No overclaiming is made: Tomita-Wilson/anyon conclusions are represented by
-explicit interface assumptions.
+\[
+\det(\mathrm{chiralMatrix}(X)) = Q(X),
+\qquad
+\mathrm{poleWinding}(R,h_R,n) \sim n\cdot 2\pi i.
+\]
 -/
 
 noncomputable section
@@ -31,20 +31,18 @@ namespace InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.ChiralCausalConeFlow
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 
-/-- Chiral 3+1 coordinate state (used as 3D geometry carrier in this model). -/
+/-- `\mathrm{ChiralState}\,\mathbb R`. -/
 abbrev Chiral3 := ChiralState ℝ
 
-/-- Light-cone/Klein quadratic potential. -/
+/-- `Q(X)`. -/
 def lightconePotential (X : Chiral3) : ℝ :=
   causal_interval X
 
-/-- The chiral boundary cone: null-locus of the quadratic form. -/
+/-- `\partial Q := \{X\mid Q(X)=0\}`. -/
 def lightconeBoundary : Set Chiral3 :=
   {X | lightconePotential X = 0}
 
-/-- Rank-one chiral matrix realization of a point.
-
-`det( [[t+z, x-iy],[x+iy,t-z]] ) = t^2-x^2-y^2-z^2`. -/
+/-- `\det\begin{psmallmatrix}t+z&x-iy\\x+iy&t-z\end{psmallmatrix}=Q(X)`. -/
 def chiralMatrix (X : Chiral3) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![(X.t + X.z : ℂ), (X.x - Complex.I * X.y : ℂ);
      (X.x + Complex.I * X.y : ℂ), (X.t - X.z : ℂ)]
@@ -67,12 +65,12 @@ theorem chiralPotential_eq_det (X : Chiral3) :
   (lightconePotential X : ℂ) = Matrix.det (chiralMatrix X) := by
   rw [chiralMatrix_det]
 
-/-- Boundary points are exactly singular points for the associated determinant. -/
+/-- `X\in\partial Q \iff \det(\mathrm{chiralMatrix}(X))=0`. -/
 theorem boundary_eq_det_zero_iff (X : Chiral3) :
     X ∈ lightconeBoundary ↔ Matrix.det (chiralMatrix X) = 0 := by
   simp [lightconeBoundary, chiralMatrix_det]
 
-/-- Explicit nilpotent 2×2 matrices in the chiral algebra model. -/
+/-- `S_+^2=S_-^2=0`. -/
 def Splus : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), 1; 0, 0]
 def Sminus : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), 0; 1, 0]
 
@@ -88,22 +86,22 @@ theorem Splus_det_zero : Matrix.det Splus = 0 := by
 theorem Sminus_det_zero : Matrix.det Sminus = 0 := by
   simp [Sminus, Matrix.det_fin_two]
 
-/-- Singular nilpotents lie on the cone by determinant test. -/
+/-- `\det(S_\pm)=0`. -/
 theorem Splus_lightcone_singular : Matrix.det Splus = 0 := Splus_det_zero
 
 theorem Sminus_lightcone_singular : Matrix.det Sminus = 0 := Sminus_det_zero
 
-/-- Logarithmic monodromy (pole model): windings are integer multiples of `2πi`. -/
+/-- `\mathrm{poleWinding}`. -/
 def poleWinding (R : ℝ) (hR : 0 < R) (n : ℤ) : ℂ :=
   (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z)
 
-/-- The model quantization law: the winding integral is `n · (2π i)`. -/
+/-- `\mathrm{poleWinding}=n\cdot 2\pi i`. -/
 theorem poleWinding_eq_logarithmicPhase (R : ℝ) (hR : 0 < R) (n : ℤ) :
     poleWinding R hR n = logarithmicPhase n := by
   unfold poleWinding
   simpa using (deRhamClass_of_winding (R := R) hR n)
 
-/-- Integer clock-readout form: divided winding is the integer `n`. -/
+/-- `\mathrm{poleWinding}/(2\pi i)=n`. -/
 theorem poleWinding_index_is_integer (R : ℝ) (hR : 0 < R) (n : ℤ) :
     poleWinding R hR n / (2 * Real.pi * Complex.I : ℂ) = (n : ℂ) := by
   have hI : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := by
@@ -112,9 +110,7 @@ theorem poleWinding_index_is_integer (R : ℝ) (hR : 0 < R) (n : ℤ) :
   rw [deRhamClass_of_winding (R := R) hR n, logarithmicPhase, mul_assoc]
   field_simp [hI]
 
-/-- Non-vacuous support condition used by the regularized entropy-readout field:
-the geometric boundary is exactly the determinant-zero locus of the chiral
-matrix realization. -/
+/-- `\partial Q \leftrightarrow \det(\mathrm{chiralMatrix})=0`. -/
 def lightconeEntropyReadoutSupport : Prop :=
   ∀ X : Chiral3, X ∈ lightconeBoundary ↔ Matrix.det (chiralMatrix X) = 0
 
@@ -123,11 +119,7 @@ theorem lightcone_entropy_readout_support :
   intro X
   exact boundary_eq_det_zero_iff X
 
-/-- A regularized determinant/phase-volume carrier for the chiral potential.
-
-The entropy-readout field is no longer filled by `True`; it records the
-proved cone/determinant equivalence above.
--/
+/-- `\log\det` / volume-compression carrier. -/
 noncomputable def lightconeBarrierCarrier :
     InfoGeometry.Canonical.SouriauOperatorialLogPotential.RegularizedJacobianPotential Chiral3 :=
   { jacobian := fun _ => (1 : ℝ)
@@ -149,15 +141,12 @@ theorem lightconeBarrierCarrier_entropyReadoutRequiresStateClaim :
     (InfoGeometry.Canonical.SouriauOperatorialLogPotential.RegularizedJacobianPotential.volumeCompressionPotential_eq_neg_logDetReg_apply
       lightconeBarrierCarrier X)
 
-/-- Conservatively, modular boost isometry is already established on the chiral cone. -/
+/-- `Q(\mathrm{rindler\_boost}(X,\eta)) = Q(X)`. -/
 theorem rindler_isometry [ModularTimeFlow ℝ] (X : Chiral3) (η : ℝ) :
     lightconePotential (rindler_boost X η) = lightconePotential X := by
   simpa [lightconePotential] using (rindler_flow_isometry (R := ℝ) X η)
 
-/-- Interface class for Tomita-flow ↔ geometric monodromy interpretation.
-
-This field packages the interpretation hypothesis only; it is not proved in this file.
--/
+/-- `\mathrm{TimeIsMonodromy}`. -/
 class TimeIsMonodromy (ClockState : Type*) where
   clockCarrier : ClockState → Chiral3
   monodromyIndex : ClockState → ℤ → ℤ

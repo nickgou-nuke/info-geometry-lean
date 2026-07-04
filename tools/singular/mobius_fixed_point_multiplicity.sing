@@ -1,0 +1,56 @@
+// tools/singular/mobius_fixed_point_multiplicity.sing
+LIB "primdec.lib";
+
+print("--- General Case (Algebraic Multiplicity over C) ---");
+ring R = (0, a, b, c, d), z, dp;
+poly P = c*z^2 + (d-a)*z - b;
+ideal I = P;
+ideal J = std(I);
+
+print("Polynomial defining fixed points: cz^2 + (d-a)z - b");
+int total_mult = vdim(J);
+print("Total root multiplicity (sum of Lefschetz indices over C):");
+print(total_mult);
+print("");
+
+print("--- Parabolic Case ---");
+print("Example: a=1, b=0, c=1, d=1 -> P(z) = z^2");
+ring R_para = 0, z, dp;
+poly P_para = z^2;
+ideal I_para = P_para;
+ideal J_para = std(I_para);
+print("Total algebraic multiplicity:");
+print(vdim(J_para));
+
+ring R_para_loc = 0, z, ds;
+poly P_para_loc = z^2;
+ideal I_para_loc = P_para_loc;
+ideal J_para_loc = std(I_para_loc);
+print("Local multiplicity at z=0:");
+print(mult(J_para_loc));
+print("");
+
+print("--- Elliptic Case (Real vs Complex Locus) ---");
+print("Example: a=0, b=-1, c=1, d=0 -> P(z) = z^2 + 1");
+print("This represents a rotation of the Riemann sphere.");
+print("Over the Real locus (R), there are no fixed points.");
+print("However, over the Complex numbers (algebraically closed),");
+print("the total root multiplicity is invariant:");
+
+ring R_ell = 0, z, dp;
+poly P_ell = z^2 + 1;
+ideal I_ell = P_ell;
+ideal J_ell = std(I_ell);
+print(vdim(J_ell));
+print("");
+
+print("Primary decomposition of z^2 + 1 over Q(i) (algebraic extension):");
+ring R_C = (0, i), z, dp;
+minpoly = i^2 + 1;
+poly P_C = z^2 + 1;
+ideal I_C = P_C;
+list PD = primdecGTZ(I_C);
+print(PD);
+print("");
+
+quit;

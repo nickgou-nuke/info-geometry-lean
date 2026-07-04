@@ -4,20 +4,15 @@ import InfoGeometry.MaxEnt.Jaynes
 /-!
 # InfoGeometry.Arithmetic.PrimeLatticeGasVariational
 
-Finite hard-core lattice gas supported on prime sites.
+\[
+\mathcal C_M := \{\text{finite subsets of prime sites }\le M\},
+\qquad
+\Xi(M,z)=\sum_{C\in\mathcal C_M} z^{|C|}.
+\]
 
-This file formalizes the proof-bearing finite statistical-mechanics layer behind
-the Vericat-style prime lattice gas:
-
-* lattice sites are `1, …, M`;
-* only prime sites are allowed;
-* each allowed site has hard-core occupation;
-* the finite grand partition function is `(1 + z)^(# prime sites ≤ M)`.
-
-The variational explicit-formula/RH-facing material is deliberately represented
-only by witness sockets. This file does not prove RH, does not assert that a
-variational extremum proves RH, and does not replace the Euler-product zeta
-owner files.
+\[
+\Xi(M,z) = (1+z)^{\#\{p\le M : p\ \mathrm{prime}\}}.
+\]
 -/
 
 noncomputable section
@@ -31,12 +26,7 @@ open InfoGeometry.MaxEnt
 
 /-! ## 1. Finite prime-supported lattice sites -/
 
-/--
-The finite set of prime lattice sites in `1, …, M`.
-
-This is a concrete finite set of natural numbers. The `< M + 1` encoding is
-equivalent to `≤ M`, and gives a finite carrier immediately.
--/
+/-- `\{p\in\mathbb N : p\le M\wedge p\ \mathrm{prime}\}`. -/
 def primeSiteFinset (M : ℕ) : Finset ℕ :=
   (Finset.range (M + 1)).filter Nat.Prime
 
@@ -44,11 +34,11 @@ def primeSiteFinset (M : ℕ) : Finset ℕ :=
 abbrev PrimeSites (M : ℕ) : Type :=
   {n : ℕ // n ∈ primeSiteFinset M}
 
-/-- The number of allowed prime sites up to the cutoff. -/
+/-- `\#\{p\le M : p\ \mathrm{prime}\}`. -/
 def primeSiteCount (M : ℕ) : ℕ :=
   (primeSiteFinset M).card
 
-/-- A prime site has natural-number value at most `M`. -/
+/-- `p\in\mathrm{PrimeSites}(M) \to p\le M`. -/
 theorem PrimeSites.value_le_cutoff
     {M : ℕ}
     (p : PrimeSites M) :
@@ -56,14 +46,14 @@ theorem PrimeSites.value_le_cutoff
   have hp_range : p.1 ∈ Finset.range (M + 1) := (Finset.mem_filter.mp p.2).1
   exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hp_range)
 
-/-- A prime site is prime. -/
+/-- `p\in\mathrm{PrimeSites}(M) \to p\ \mathrm{prime}`. -/
 theorem PrimeSites.value_prime
     {M : ℕ}
     (p : PrimeSites M) :
     Nat.Prime p.1 :=
   (Finset.mem_filter.mp p.2).2
 
-/-- The finite type cardinality agrees with the concrete site count. -/
+/-- `\#\mathrm{PrimeSites}(M) = \mathrm{primeSiteCount}(M)`. -/
 theorem fintype_card_PrimeSites (M : ℕ) :
     Fintype.card (PrimeSites M) = primeSiteCount M := by
   rw [primeSiteCount]
@@ -71,32 +61,24 @@ theorem fintype_card_PrimeSites (M : ℕ) :
 
 /-! ## 2. Hard-core configurations and grand partition -/
 
-/-- A hard-core configuration is a finite subset of the allowed prime sites. -/
+/-- `\mathcal C_M := \mathrm{Finset}(\mathrm{PrimeSites}(M))`. -/
 abbrev Configuration (M : ℕ) : Type :=
   Finset (PrimeSites M)
 
-/-- Fugacity parameter. In physics notation, `z = exp(β μ)`. -/
+/-- `z := e^{\beta\mu}`. -/
 structure Fugacity where
-  /-- The fugacity weight per occupied prime site. -/
+  /-- Fugacity weight `z`. -/
   z : ℝ
 
-/--
-Finite grand partition function of the prime-supported hard-core lattice gas.
-
-Every allowed prime site is either empty or occupied once.
--/
+/-- `\Xi(M,z)=\sum_{C\in\mathcal C_M} z^{|C|}`. -/
 def grandPartition (M : ℕ) (Z : Fugacity) : ℝ :=
   ∑ C : Configuration M, Z.z ^ C.card
 
-/--
-Closed finite grand partition function:
-
-`Ξ(M,z) = (1 + z)^(number of prime sites ≤ M)`.
--/
+/-- `\Xi(M,z)=(1+z)^{\#\mathrm{PrimeSites}(M)}`. -/
 def grandPartitionClosed (M : ℕ) (Z : Fugacity) : ℝ :=
   (1 + Z.z) ^ Fintype.card (PrimeSites M)
 
-/-- Grand potential for the finite lattice gas: `Ω = -(1 / β) log Ξ`. -/
+/-- `\Omega = -(1/\beta)\log\Xi`. -/
 def grandPotential (β : ℝ) (M : ℕ) (Z : Fugacity) : ℝ :=
   - (1 / β) * Real.log (grandPartitionClosed M Z)
 
@@ -125,12 +107,7 @@ theorem grandPartition_eq_one_add_pow_primeSiteCount
 
 /-! ## 3. Variational explicit-formula witness sockets -/
 
-/--
-A witness-gated variational explicit-formula model for the prime-counting term.
-
-This packages a supplied `π(M; σ)`-style approximation and grand-potential
-approximation. It is not a proof of RH.
--/
+/-- Witness packet for `\pi(M;\sigma)` and `\Omega(M;\sigma)`. -/
 structure PrimeCountingVariationalModel where
   /-- Lattice cutoff. -/
   M : ℕ
@@ -163,13 +140,7 @@ theorem extremum_holds
 
 end PrimeCountingVariationalModel
 
-/--
-Vericat-style critical-line gate.
-
-If a supplied variational model selects `1 / 2`, this structure records that
-fact. It is a theorem about the supplied model data, not a theorem about zeta
-zeros.
--/
+/-- `\sigma = 1/2` witness packet. -/
 structure VariationalCriticalLineGate where
   /-- Selected variational parameter. -/
   selectedSigma : ℝ
@@ -178,16 +149,13 @@ structure VariationalCriticalLineGate where
   /-- Guardrail: this gate is not an RH proof. -/
   noRHClaimWitness : Type*
 
-/-- Re-export of the supplied critical-line selection certificate. -/
+/-- `\sigma = 1/2`. -/
 theorem selectedSigma_eq_half
     (G : VariationalCriticalLineGate) :
     G.selectedSigma = 1 / 2 :=
   G.selectedSigma_eq_half
 
-/--
-Optional packet combining the finite exact lattice gas with a supplied
-variational model. The finite theorem remains independent of the heuristic gate.
--/
+/-- `\mathcal C_M` plus optional variational witnesses. -/
 structure PrimeLatticeGasVariationalPacket where
   /-- Finite cutoff. -/
   M : ℕ
@@ -200,13 +168,7 @@ structure PrimeLatticeGasVariationalPacket where
   /-- Guardrail: no Euler-product zeta bridge is claimed here. -/
   notEulerProductBridgeWitness : Type*
 
-/--
-Finite entropy maximizer on the prime lattice configuration space.
-
-This is the honest MaxEnt statement available in the repository: the zero-feature
-Gibbs law on the finite configuration carrier maximizes Shannon entropy on the
-Jaynes feasible set.  It does not claim anything about zeta zeros.
--/
+/-- `H(q) \le H(\mathrm{gibbs})` on the zero-feature Jaynes feasible set. -/
 theorem primeLatticeGas_zeroFeature_entropy_maximizer
     (M : ℕ) :
     let n := Fintype.card (Configuration M)

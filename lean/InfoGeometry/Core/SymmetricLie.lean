@@ -51,7 +51,7 @@ structure LieTripleSystem (P : Type _)
         + triple z (triple x y u) v
         + triple z u (triple x y v)
 
-/-- Compact local symmetric-space package on an odd sector:
+/-- Compact odd-sector local model package:
 triple system + convexity + path connectedness. -/
 structure OddLocalModel (L : Type _)
     [LieRing L] [LieAlgebra ℝ L]
@@ -594,6 +594,10 @@ def triple (S : SymmetricLieAlgebra L) (x y z : L) : L :=
   let _ := S
   ⁅⁅x, y⁆, z⁆
 
+@[simp] lemma triple_eq_lie (S : SymmetricLieAlgebra L) (x y z : L) :
+    S.triple x y z = ⁅⁅x, y⁆, z⁆ :=
+  rfl
+
 /-- The odd submodule is closed under the triple bracket. -/
 lemma triple_closed (S : SymmetricLieAlgebra L)
     {x y z : L}
@@ -657,6 +661,16 @@ noncomputable def oddTriple (S : SymmetricLieAlgebra L)
     (x y z : S.oddSubmodule) : S.oddSubmodule :=
   ⟨S.triple x y z, S.triple_closed x.property y.property z.property⟩
 
+lemma oddTriple_closed (S : SymmetricLieAlgebra L)
+    (x y z : S.oddSubmodule) :
+    S.triple x y z ∈ S.oddSubmodule :=
+  S.triple_closed x.property y.property z.property
+
+@[simp] lemma coe_oddTriple (S : SymmetricLieAlgebra L)
+    (x y z : S.oddSubmodule) :
+    ((S.oddTriple x y z : S.oddSubmodule) : L) = S.triple x y z :=
+  rfl
+
 /-- Triple operation on `𝔭` in compatibility naming. -/
 noncomputable abbrev tripleOnP (S : SymmetricLieAlgebra L)
     (x y z : S.𝔭) : S.𝔭 :=
@@ -694,24 +708,12 @@ section TopologicalModel
 
 variable [TopologicalSpace L] [ContinuousAdd L] [ContinuousSMul ℝ L]
 
-/-- Canonical local symmetric-space wrapper for the odd sector. -/
+/-- Canonical local model wrapper for the odd sector. -/
 noncomputable def oddLocalModel (S : SymmetricLieAlgebra L) : OddLocalModel L where
   odd := S.oddSubmodule
   tripleSystem := S.oddLieTripleSystem
   convex := S.odd_convex
   pathConnected := S.odd_isPathConnected
-
-@[simp] lemma oddLocalModel_odd (S : SymmetricLieAlgebra L) :
-    (S.oddLocalModel).odd = S.oddSubmodule := rfl
-
-@[simp] lemma oddLocalModel_tripleSystem (S : SymmetricLieAlgebra L) :
-    (S.oddLocalModel).tripleSystem = S.oddLieTripleSystem := rfl
-
-lemma oddLocalModel_convex (S : SymmetricLieAlgebra L) :
-    (S.oddLocalModel).convex = S.odd_convex := rfl
-
-lemma oddLocalModel_pathConnected (S : SymmetricLieAlgebra L) :
-    (S.oddLocalModel).pathConnected = S.odd_isPathConnected := rfl
 
 end TopologicalModel
 
@@ -798,10 +800,6 @@ attribute [expository]
   odd_isPathConnected
   even_isConnected
   even_isPathConnected
-  oddLocalModel_odd
-  oddLocalModel_tripleSystem
-  oddLocalModel_convex
-  oddLocalModel_pathConnected
   cartanForm_def
 
 attribute [terminal]

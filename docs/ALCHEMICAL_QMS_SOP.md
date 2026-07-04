@@ -1,11 +1,41 @@
-# QMS-SOP-ALC-001 — Confabulation-to-Mathlib Transmutation QMS
+# QMS-SOP-ALC-001 — Semantic Normalization and Kernel Validation QMS
 
-Status: proposed controlled SOP
+Subtitle: Confabulation-to-Mathlib transmutation procedure.
+
+Latent mathematical language is not refined into truth. It is refined into
+typed claims. Only the Lean kernel upgrades typed claims into verified
+mathematics.
+
+Status: controlled SOP
 Document ID: QMS-SOP-ALC-001
-Version: 4.0
+Version: 4.1
 Effective date: 2026-07-04
-Scope: `info-geometry-lean` symbolic/confabulated mathematical intake, CAS evidence, Lean/mathlib translation, independent audit, and acceptance.
-Standard posture: ISO 9001:2015-inspired / ISO 9001-aligned internal quality-management workflow. This repository does not claim external ISO certification, accreditation, registration, or third-party compliance from this document.
+Scope: `info-geometry-lean` informal/speculative mathematical intake, semantic
+normalization, CAS evidence, Lean/mathlib translation, independent audit, and
+acceptance.
+Standard posture: ISO 9001:2015-inspired / ISO 9001-aligned internal
+quality-management workflow, including awareness of ISO 9001:2015/Amd 1:2024
+where present-day alignment language is used. This repository does not claim
+external ISO certification, accreditation, registration, or third-party
+compliance from this document.
+
+Controlled-document metadata:
+
+- Document owner: repository maintainers / QMS orchestrator role.
+- Approval authority: repository owner or delegated theorem-QA lead.
+- Review interval: quarterly or on major Lean/mathlib/toolchain/pipeline change.
+- Supersedes: QMS-SOP-ALC-001 v4.0.
+- Controlled location: `docs/ALCHEMICAL_QMS_SOP.md`.
+- Record class: QMS procedure.
+- Promotion status: controlled.
+- Last QA disposition: qms_document_controlled.
+
+Revision history:
+
+| Version | Date | Change summary | Author role | Reviewer role | QA disposition |
+|---|---|---|---|---|---|
+| 4.0 | 2026-07-04 | Added role separation, colimit gates, CAPA, QA gates, and ISO-inspired alignment. | Orchestrator/G-A | A-A | ACCEPTED_WITH_LIMITED_SCOPE before tracking |
+| 4.1 | 2026-07-04 | Renamed formal record to semantic normalization/kernel validation; added intent envelope, risk classes, disjoint status tags, toolchain fingerprint, theorem-name honesty, QA tool-existence checks, and quick operator gate. | Orchestrator/G-A | A-A PASS | QA-A ACCEPTED |
 
 ISO 9001:2015 alignment map, internal only:
 
@@ -19,7 +49,12 @@ ISO 9001:2015 alignment map, internal only:
 
 ## 0. Purpose
 
-This SOP defines the quality-management system for converting latent, symbolic, speculative, or confabulated mathematical material into theorem-honest Lean/mathlib code.
+This SOP governs the controlled conversion of informal, speculative, latent, or
+model-generated mathematical content into Lean 4 artifacts classified as
+definition-backed, theorem-backed, model-assumption-backed, computational
+witness, external-evidence, conjectural-scaffold, or documentation-only. No
+artifact may be marked theorem-verified unless it passes sterile compilation,
+placeholder scan, axiom audit, and style review in its stated scope.
 
 The central control principle is independence:
 
@@ -138,6 +173,78 @@ support finite coordinate identities. They do not promote a finite coordinate
 identity to a direct-limit, inverse-limit, filtered-colimit, topological, or
 analytic theorem without the Lean owner layer above.
 
+### 3.6 Formal intent envelope
+
+The pipeline must not attempt to prove a latent or confabulated theorem directly.
+The first QMS artifact is a formal intent envelope. Its purpose is to separate
+conceptual payload, theorem candidate, model assumption, external evidence, and
+documentation-only material before Lean generation begins.
+
+Minimum schema:
+
+```json
+{
+  "concept_id": "gamma-group-cl11-base",
+  "source_text": "...",
+  "intake_classification": "definition-only | theorem-bearing | computational-witness | narrative-documentation | external-system-verification | conjectural-scaffold",
+  "classification": "representation-level theorem",
+  "mathematical_domain": ["Clifford algebra", "matrix algebra"],
+  "target_status": "definition-backed | theorem-backed | model-parameter | computational-witness | external-verified | conjectural-scaffold | documentation-only",
+  "risk_level": "R0 | R1 | R2 | R3 | R4 | R5",
+  "allowed_imports": [
+    "Mathlib.Data.Matrix.Basic",
+    "Mathlib.LinearAlgebra.Matrix.Notation",
+    "Mathlib.Tactic"
+  ],
+  "non_theorem_claims": [],
+  "formal_objects": ["Mat", "gammaPos", "gammaNeg", "GammaSystem"],
+  "acceptance_theorems": [
+    "gammaPos_sq",
+    "gammaNeg_sq",
+    "gammaPos_gammaNeg_anticomm",
+    "cl11GammaSystem"
+  ]
+}
+```
+
+The envelope is a hard anti-smuggling control: claims such as D4 triality,
+Bost-Connes closure, Mersenne numerology, thermodynamic completion, or physics
+bridge completion may not enter the theorem contract unless the envelope names
+the exact formal object, owner import, and acceptance theorem carrying that
+structure.
+
+### 3.7 Deconfabulation buckets
+
+Every generated claim must be split into one of four buckets before theorem
+generation:
+
+- A. Already theorem-backed in mathlib or current repo owner files.
+- B. Prove locally from existing hypotheses and imports.
+- C. Store as a structure field / model assumption with honest naming and no
+  theorem-promotion claim.
+- D. Reject or downgrade to comment/conjectural scaffold.
+
+If a theorem statement is found false, the correction loop must not attempt
+proof repair. It must rewrite the theorem contract, weaken the conclusion,
+strengthen the hypotheses, or downgrade the artifact to conjectural scaffold.
+
+### 3.8 Risk classes
+
+Risk controls scale with artifact type:
+
+- R0: documentation-only, no theorem implications.
+- R1: finite computational theorem, local imports only.
+- R2: theorem using existing owner surfaces.
+- R3: new structure/class/API with downstream imports.
+- R4: colimit, quotient, topology, analysis, nonassociative algebra, or physics
+  bridge.
+- R5: claim touching external standards, publication claims, or repository-wide
+  release status.
+
+R4 and R5 tasks require owner search, independent A-A, QA-A acceptance, build or
+tooling evidence appropriate to the artifact, placeholder scan, and axiom/scope
+audit where theorem-bearing Lean declarations are involved.
+
 ## 4. Role separation
 
 Every theorem-bearing task must be split into at least three independent roles.
@@ -225,25 +332,28 @@ The orchestrator routes work and records status. It may author coordination docu
 Latent bundle / symbolic claim
         |
         v
-[Gate 0] Intake and claim inventory
+[Stage 0] Intake classification and formal intent envelope
         |
         v
-[Gate 1] Owner-first repo/mathlib/DAG search
+[Stage 1] Semantic normalization to Lean objects and owner surfaces
         |
         v
-[G-A] Candidate theorem/task generation
+[Stage 2] Theorem contract with honest hypotheses and names
         |
         v
-[A-A] Independent semantic audit
+[Stage 3] Sterile compile with narrow imports
         |
         v
-[CAPA loop if nonconforming]
+[Stage 4] Independent gap audit and countermodel attempt
         |
         v
-[QA-A] Acceptance build/kernel/axiom/vacuity gates
+[Stage 5] Bounded repair loop with monotonicity controls
         |
         v
-Disposition: BUCKET 1 / BUCKET 2 / BUCKET 3 / rejected
+[Stage 6] Kernel acceptance, axiom audit, placeholder/style checks
+        |
+        v
+[Stage 7] Release classification and append-only record
 ```
 
 ## 5A. Standard operating procedures
@@ -262,7 +372,7 @@ Responsible party: G-A, Generation Agent.
 Mandatory operational steps:
 
 1. Extract the core structural nouns, carriers, operations, relations, and scope
-   words from the source bundle.
+   words from the formal intent envelope.
 2. Convert the extracted nouns into valid Lean 4 universe, variable, namespace,
    and import declarations only after repo/mathlib lookup.
 3. Map non-associative, quotient, or higher-categorical structures to existing
@@ -274,10 +384,10 @@ Mandatory operational steps:
    ambiguity or universe deadlocks.
 5. Use structured tactic blocks (`by` with named intermediate steps) for
    candidate proofs unless a short term proof is clearer and fully local.
-6. Emit one bounded task packet containing the candidate Lean payload, required
-   imports, auxiliary lemmas, theorem target, expected scope label, and exact
-   verification commands. Do not emit sprawling multi-file rewrites as a single
-   uncontrolled payload.
+6. Emit one bounded theorem-contract packet containing the candidate Lean
+   payload, required imports, auxiliary lemmas, theorem target, expected scope
+   label, release classification, and exact verification commands. Do not emit
+   sprawling multi-file rewrites as a single uncontrolled payload.
 7. Append status tag `[payload_ready]` only when the packet is ready for A-A.
 
 Generation stop conditions:
@@ -311,14 +421,16 @@ Mandatory operational steps:
    at the first failing boundary. If the interface is unavailable, record the
    direct `lake env lean` or `lake build` diagnostic instead.
 4. Gap taxonomy logging: classify each unresolved goal under one of:
-   - `[gap_type_1]` type mismatch, missing typeclass instance, universe problem,
-     or import/API mismatch;
-   - `[gap_type_2]` unproved side condition, algebraic identity, missing
-     auxiliary lemma, or missing rewrite theorem;
-   - `[gap_type_3]` structural divergence, such as a wrong induction hypothesis,
-     missing transition-map compatibility, or colimit/inverse-limit mismatch;
-   - `[gap_type_4]` false target, vacuous target, quotient collapse, or theorem
-     strength beyond owner authority.
+   - `G1`: syntax, parser, or elaboration failure;
+   - `G2`: type mismatch, missing typeclass instance, universe problem, or
+     import/API mismatch;
+   - `G3`: missing algebraic lemma, unproved side condition, or missing rewrite
+     theorem;
+   - `G4`: false target, vacuous target, quotient collapse, countermodel found,
+     or theorem strength beyond owner authority;
+   - `G5`: scope pollution or import-dependent success, where the payload only
+     checks because of undeclared broad imports, namespace leakage, or accidental
+     instance availability.
 5. Counterexample generation: attempt bounded counterexample/model search when
    the goal is finite, algebraic, first-order, or otherwise model-searchable.
    If not model-searchable, record `counterexample_status: not_applicable`.
@@ -377,15 +489,43 @@ Mandatory operational steps:
    status tag. Do not claim immutable storage unless backed by an actual signed
    or WORM ledger.
 
-Acceptance status tags:
+Acceptance status tags are disjoint by artifact class.
 
-- `[verified_logos]` — accepted in the stated native Lean scope;
+Theorem/code status:
+
+- `[payload_ready]` — candidate payload ready for independent audit;
+- `[intent_captured]` — formal intent envelope recorded;
+- `[formal_contract_ready]` — theorem contract ready for sterile compile;
+- `[sterile_compile_failed]` — narrow-import compile failed;
+- `[gap_report_ready]` — A-A gap report exists;
+- `[countermodel_found]` — bounded search or owner theorem refutes the target;
+- `[repair_split_required]` — loop monotonicity failed; auxiliary lemma split is required;
+- `[kernel_verified]` — Lean kernel build passed in the stated module scope;
+- `[axiom_audited]` — final theorem symbols have classified axiom output;
+- `[release_ready]` — QA-A accepted release classification;
+- `[verified_logos]` — theorem-bearing Lean declarations are accepted in the
+  stated native Lean scope after build, placeholder scan, axiom audit, and style
+  review.
+
+Documentation/QMS status:
+
+- `[qms_document_draft]` — reviewed draft, not controlled;
+- `[qms_document_accepted]` — accepted documentation/control artifact;
+- `[qms_document_controlled]` — tracked controlled document in the repository;
+- `[qms_document_retired]` — superseded or retired controlled document.
+
+Process status:
+
 - `[accepted_limited_scope]` — useful artifact accepted only in a narrower
   finite/conditional/evidence scope;
 - `[needs_capa]` — correctable nonconformance;
 - `[audit_blocked]` — audit lacked required evidence or tooling;
+- `[qa_blocked]` — acceptance lacked required evidence or tooling;
 - `[bucket_3_open_debt]` — honest open theorem debt;
 - `[rejected_false_surface]` — target refuted or structurally dishonest.
+
+Do not apply `[verified_logos]` to this SOP document itself. The correct status
+for this file is `[qms_document_controlled]` once tracked and pushed.
 
 Recommended acceptance record path: `artifacts/qms/<task-id>-qa.json`.
 
@@ -428,6 +568,10 @@ Candidate Lean code must obey these controls:
 - no `axiom` in owner files;
 - no hidden theorem debt in structure fields unless the field is genuinely a primitive law of an explicitly axiomatized object;
 - no `Prop := True`, `_True`, `_holds`, `_valid`, `_certificate`, or wrapper-field replacement for proof debt;
+- no theorem name stronger than the type signature. Names must be
+  content-descriptive, not ambition-descriptive;
+- no broad `import Mathlib` or `InfoGeometry.All` in sterile candidate modules
+  unless the theorem contract explicitly justifies that import footprint;
 - no full `LieRing` instance for full Zorn/split-octonion element commutator; use existing obstruction theorems or derivation algebra instead;
 - no direct-limit, inverse-limit, filtered-colimit, topological, or analytic
   theorem from finite matrix or CAS evidence unless the corresponding Lean owner
@@ -435,6 +579,28 @@ Candidate Lean code must obey these controls:
 - no quotient relation whose breadth collapses the intended degrees of freedom without a separate nontriviality theorem.
 
 Generation deliverables are candidates, not accepted artifacts.
+
+Theorem-name honesty examples:
+
+Good names:
+
+```lean
+gammaNeg_sq
+trialityAction_apply_det
+rationalZornMatrix_det_quark_add_antiquark
+modularDerivation_eq_zero_iff_commutes
+concreteBridgeKlein_traceZero_of_stored_zeroDefect
+```
+
+Nonconforming names unless the type signature truly proves the stated scope:
+
+```lean
+anomalyResolution_complete
+cathedral_sealed
+physicsBridge_proves_RH
+bott_periodicity_iso : Bool := true
+pAdicValuation_Implies_TraceZero_AnomalyResolution
+```
 
 ## 9. Gate 3 — Independent semantic audit
 
@@ -450,6 +616,8 @@ A-A must check these items:
 | Existing owner reuse | stronger existing theorem checked before new surface proposed |
 | Zorn/Lie honesty | full Zorn element commutator obstruction respected |
 | Comments/docstrings | narrative matches theorem strength |
+| Name honesty | theorem names describe proved content rather than desired interpretation |
+| Import honesty | sterile candidate does not depend on undeclared broad imports or namespace leakage |
 
 Audit verdicts:
 
@@ -503,6 +671,37 @@ the operator explicitly approves the exact command.
 ## 11. Gate 5 — Acceptance testing
 
 QA-A must run the relevant subset of these gates.
+
+### 11.0 Toolchain and environment fingerprint
+
+Every QA-A acceptance record must capture the exact execution fingerprint:
+
+```bash
+git rev-parse HEAD
+git status --short
+cat lean-toolchain
+lake --version
+lean --version
+sha256sum <artifact>
+```
+
+Minimum QA JSON fields:
+
+```json
+{
+  "git_head": "...",
+  "working_tree_scope": "clean | dirty-with-excluded-artifacts | dirty",
+  "lean_toolchain": "...",
+  "lean_version": "...",
+  "lake_version": "...",
+  "artifact_sha256": "..."
+}
+```
+
+If a required QA tool path does not exist in the current checkout, QA-A must
+record `tool_missing` and either use an approved fallback or return
+`[audit_blocked]` / `[qa_blocked]`. A missing QA tool may not be silently
+skipped.
 
 ### 11.1 Lean gates
 
@@ -585,6 +784,19 @@ If hash/DAG evidence is cited, QA-A must verify freshness:
 Do not cite stale repo-wide DAG artifacts for newly changed declarations. Use a narrow refresh artifact if needed.
 
 ## 12. Disposition rules
+
+Release classification tags:
+
+- `[definition_backed]` — definitions or structures checked, no theorem claim
+  beyond definitional well-formedness;
+- `[theorem_backed]` — theorem-bearing Lean declarations passed acceptance;
+- `[model_parameter]` — stored assumption/field/parameter, not derived theorem;
+- `[computational_witness]` — finite or executable evidence with explicit scope;
+- `[external_verified]` — external proof assistant/CAS artifact accepted only in
+  its external scope;
+- `[conjectural_scaffold]` — useful scaffold or target, not theorem-backed;
+- `[documentation_only]` — narrative/control/process document with no theorem
+  promotion authority.
 
 ### ACCEPTED
 
@@ -768,3 +980,43 @@ Before any theorem-bearing claim is delivered, answer yes/no:
 8. Is every remaining gap recorded as BUCKET 3/open debt?
 
 If any answer is no, delivery is not accepted.
+
+## 18. Operator quick gate
+
+Before accepting a theorem-bearing artifact, execute or explicitly record why the
+following gate is not applicable:
+
+1. `git status --short` checked.
+2. Exact owner files read.
+3. Formal intent envelope captured.
+4. Scope and risk labels assigned.
+5. Narrow build or file check run.
+6. Placeholder scan run.
+7. Axiom audit run or explicitly not applicable.
+8. CAS/external evidence labeled finite/external only.
+9. A-A and QA-A are not the authoring context.
+10. CAPA closed or BUCKET 3/open debt recorded.
+11. Theorem names checked for content-descriptive honesty.
+12. Final checksum and toolchain fingerprint recorded.
+
+## 19. First recommended pipeline test case
+
+The first theorem-bearing test case should be small and theorem-honest. Prefer
+Split `Cl(1,1)` gamma matrices over Bost-Connes, D4 triality, or arbitrary
+dimension gamma groups:
+
+```text
+gammaPos_sq
+gammaNeg_sq
+gammaPos_gammaNeg_anticomm
+cl11GammaSystem
+```
+
+Acceptance criteria:
+
+- no `sorry`;
+- no `axiom`;
+- no broad `import Mathlib` unless justified in the theorem contract;
+- no physical overclaim in theorem names;
+- declarations compile in a sterile module;
+- axiom audit clean or limited to approved/classified Lean foundations.

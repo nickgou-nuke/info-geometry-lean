@@ -1,0 +1,28 @@
+ring r = 0, (k, g1, g2, t), dp;
+matrix H[2][2] = g1 - k*g2, (k-1)*g1*g2, 1 - k, k*g1 - g2;
+
+print("Matrix H:");
+print(H);
+
+poly detH = det(H);
+print("Determinant of H:");
+print(detH);
+
+poly expected_det = k * (g1 - g2)^2;
+print("Is determinant k*(g1 - g2)^2?");
+if (detH == expected_det) {
+  print("Yes");
+} else {
+  print("No");
+}
+
+poly traceH = trace(H);
+print("Trace of H:");
+print(traceH);
+
+matrix E[2][2] = 1, 0, 0, 1;
+poly charpoly = det(H - t*E);
+print("Characteristic Polynomial:");
+print(charpoly);
+
+quit;

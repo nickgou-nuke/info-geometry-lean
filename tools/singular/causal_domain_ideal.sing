@@ -1,0 +1,8 @@
+// causal_domain_ideal.sing
+ring r = 0, (x,y,z,t), dp;
+// Boundary of causal wedge, e.g., light cone
+ideal I = x^2 + y^2 + z^2 - t^2;
+ideal G = std(I);
+print("Groebner basis of the causal wedge ideal:");
+print(G);
+quit;

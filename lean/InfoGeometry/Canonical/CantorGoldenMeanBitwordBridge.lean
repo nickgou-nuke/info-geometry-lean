@@ -158,6 +158,12 @@ theorem noAdjacentOnes_cons_false (x : GoldenMeanBoundary) :
   | succ n =>
       exact x.2 n hpair
 
+/-- Finite prefixes remain golden-mean admissible after prepending `false`. -/
+theorem prefix_noAdjacentFinite_cons_false
+    (x : GoldenMeanBoundary) (n : Nat) :
+    NoAdjacentFinite (prefixWord (consBit false x.1) n) := by
+  exact prefix_noAdjacentFinite ⟨consBit false x.1, noAdjacentOnes_cons_false x⟩ n
+
 /--
 Adding a leading one preserves the golden-mean subshift exactly when the old
 head bit is zero.
@@ -175,5 +181,12 @@ theorem noAdjacentOnes_cons_true_of_head_false
       contradiction
   | succ n =>
       exact x.2 n hpair
+
+/-- Finite prefixes remain golden-mean admissible after legally prepending `true`. -/
+theorem prefix_noAdjacentFinite_cons_true_of_head_false
+    (x : GoldenMeanBoundary) (hhead : x.1 0 = false) (n : Nat) :
+    NoAdjacentFinite (prefixWord (consBit true x.1) n) := by
+  exact prefix_noAdjacentFinite
+    ⟨consBit true x.1, noAdjacentOnes_cons_true_of_head_false x hhead⟩ n
 
 end InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge

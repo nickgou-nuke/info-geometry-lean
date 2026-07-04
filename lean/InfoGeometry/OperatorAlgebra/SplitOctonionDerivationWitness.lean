@@ -34,6 +34,14 @@ def IsDerivation (D : SplitOct → SplitOct) : Prop :=
 def rot01Derivation (X : SplitOct) : SplitOct :=
   ⟨0, 0, X.x1, -X.x0, 0, X.y1, -X.y0, 0⟩
 
+/-- The coordinate rotation is additive on the explicit Zorn carrier. -/
+theorem rot01_preserves_add (X Y : SplitOct) :
+    rot01Derivation (addZ X Y) = addZ (rot01Derivation X) (rot01Derivation Y) := by
+  cases X
+  cases Y
+  unfold rot01Derivation addZ
+  congr <;> ring
+
 /-- The coordinate rotation `rot01Derivation` is a native split-octonion derivation. -/
 theorem rot01_is_derivation : IsDerivation rot01Derivation := by
   intro X Y

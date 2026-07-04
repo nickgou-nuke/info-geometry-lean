@@ -88,11 +88,14 @@ import InfoGeometry.Topology.DelaunayFlipInterfaces
 import InfoGeometry.Topology.DelaunayPureBraidRepresentation
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
+import InfoGeometry.Topology.GeneralizedCircleMobius
+import InfoGeometry.Topology.MobiusGeometry
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
 import InfoGeometry.Topology.BostConnesWilsonLoop
 import InfoGeometry.Topology.WallpaperRepresentations
 import InfoGeometry.Topology.WallpaperRepresentationTable
 import InfoGeometry.Topology.WallpaperMoebiusKMS
+import InfoGeometry.Topology.BregmanDivergence
 
 /-!
 # Closed finite-trace closure ledger (topology layer)

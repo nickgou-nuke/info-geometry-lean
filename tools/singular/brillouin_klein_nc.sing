@@ -1,0 +1,16 @@
+LIB "nctools.lib";
+ring r = 0, (Tx, Ty), dp;
+matrix C[2][2];
+C[1,2] = -1;
+matrix D[2][2];
+def S = nc_algebra(C, D);
+setring S;
+
+ideal I = Tx^2 - 1, Ty^2 - 1;
+ideal J = twostd(I);
+qring Q = J;
+
+poly Txy = Tx * Ty;
+poly Txy2 = Txy^2;
+reduce(Txy2, std(0));
+quit;

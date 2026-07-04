@@ -1,0 +1,25 @@
+// hessian_degeneracy_ideal.sing
+LIB "sing.lib";
+LIB "primdec.lib";
+
+ring r = 0, (x, y), dp;
+poly f = x^4 + y^4 - 2*x^2*y^2 + x^2 + y^2;
+
+ideal grad = jacob(f);
+
+matrix H[2][2];
+H[1,1] = diff(grad[1], x);
+H[1,2] = diff(grad[1], y);
+H[2,1] = diff(grad[2], x);
+H[2,2] = diff(grad[2], y);
+
+poly H_det = det(H);
+ideal I = grad[1], grad[2], H_det;
+ideal sloc = slocus(I);
+
+print("Hessian Determinant:");
+print(H_det);
+print("Singular locus ideal:");
+print(sloc);
+
+exit;

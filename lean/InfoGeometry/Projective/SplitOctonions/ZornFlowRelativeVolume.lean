@@ -119,6 +119,61 @@ theorem detSimilitude_id
     DetSimilitude B id 1 :=
   detSimilitude_one_of_detPreserving B id (detPreserving_id B)
 
+/-- Determinant-preserving maps are closed under composition. -/
+theorem detPreserving_comp
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ Ψ : ZornCell ℝ V → ZornCell ℝ V)
+    (hΦ : DetPreserving B Φ)
+    (hΨ : DetPreserving B Ψ) :
+    DetPreserving B (Ψ ∘ Φ) := by
+  intro X
+  simp only [Function.comp_apply]
+  rw [hΨ, hΦ]
+
+/-- Determinant similitudes compose, multiplying their characters. -/
+theorem detSimilitude_comp
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ Ψ : ZornCell ℝ V → ZornCell ℝ V)
+    (χ ψ : ℝ)
+    (hΦ : DetSimilitude B Φ χ)
+    (hΨ : DetSimilitude B Ψ ψ) :
+    DetSimilitude B (Ψ ∘ Φ) (ψ * χ) := by
+  intro X
+  simp only [Function.comp_apply]
+  rw [hΨ, hΦ]
+  ring
+
+/-- A positive-multiplier similitude preserves the positive determinant stratum. -/
+theorem detSimilitude_pos
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ : ZornCell ℝ V → ZornCell ℝ V)
+    (χ : ℝ)
+    (hΦ : DetSimilitude B Φ χ)
+    (hχ : 0 < χ)
+    (X : ZornCell ℝ V)
+    (hX : 0 < ZornCell.detZ B X) :
+    0 < ZornCell.detZ B (Φ X) := by
+  rw [hΦ X]
+  exact mul_pos hχ hX
+
+/--
+For a positive-multiplier determinant similitude, the log barrier shifts by
+`-log χ` on the positive determinant stratum.
+-/
+theorem zornLogBarrier_detSimilitude
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ : ZornCell ℝ V → ZornCell ℝ V)
+    (χ : ℝ)
+    (hΦ : DetSimilitude B Φ χ)
+    (hχ : 0 < χ)
+    (X : ZornCell ℝ V)
+    (hX : 0 < ZornCell.detZ B X) :
+    zornLogBarrier B (Φ X) = zornLogBarrier B X - Real.log χ := by
+  unfold zornLogBarrier
+  rw [hΦ X]
+  rw [Real.log_mul (ne_of_gt hχ) (ne_of_gt hX)]
+  ring
+
 /-- A determinant similitude has RN-style factor equal to its multiplier. -/
 theorem RN_of_detSimilitude
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)

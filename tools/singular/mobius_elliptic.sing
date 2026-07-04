@@ -1,0 +1,19 @@
+ring r = 0, (u, v, x, y), dp;
+ideal I = u^2 + v^2 - 1;
+ideal J = std(I);
+
+poly new_x = u*x - v*y;
+poly new_y = v*x + u*y;
+
+poly difference = new_x^2 + new_y^2 - (x^2 + y^2);
+poly rem = reduce(difference, J);
+
+print("Reduced difference:");
+print(rem);
+
+if (rem == 0) {
+  print("Radius is strictly invariant!");
+} else {
+  print("Error: Radius is not invariant!");
+}
+quit;

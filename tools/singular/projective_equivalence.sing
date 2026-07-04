@@ -1,0 +1,21 @@
+ring r = 0, (a,b,c,d,z1,z2,z), dp;
+ideal I = z1 - z*z2;
+poly num1 = a*z1 + b*z2;
+poly den1 = c*z1 + d*z2;
+poly num2 = a*z + b;
+poly den2 = c*z + d;
+
+// We want to check if num1/den1 == num2/den2 modulo I.
+// This is equivalent to checking if num1*den2 - num2*den1 is in I.
+poly cross_diff = num1*den2 - num2*den1;
+
+ideal J = std(I);
+poly rem = reduce(cross_diff, J);
+
+if (rem == 0) {
+    print("Projective ratio collapses perfectly to the affine fraction.");
+} else {
+    print("Error: Expressions are not equivalent.");
+    print(rem);
+}
+exit;

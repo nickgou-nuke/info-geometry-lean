@@ -44,3 +44,15 @@ Proof. reflexivity. Qed.
 
 Example lox_classification : classify_sigma lox_sigma = Loxodromic.
 Proof. reflexivity. Qed.
+
+From Stdlib Require Import Reals.
+From Stdlib Require Import Lra.
+Open Scope R_scope.
+
+Lemma elliptic_trace_sq : forall alpha : R,
+  (cos alpha + cos alpha) ^ 2 = 4 * (cos alpha) ^ 2.
+Proof.
+  intros alpha.
+  simpl.
+  ring.
+Qed.

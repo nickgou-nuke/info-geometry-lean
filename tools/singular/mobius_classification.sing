@@ -1,0 +1,81 @@
+// mobius_classification.sing
+// Classification of Möbius transformations based on squared trace sigma = (a+d)^2
+
+LIB "primdec.lib";
+
+// We use a polynomial ring with variables a, b, c, d for the Möbius transformation matrix.
+// t and u are auxiliary variables to algebraicize inequalities.
+// Base field 0 (rationals, representing characteristic 0 for reals/complexes).
+ring R = 0, (a,b,c,d,t,u), dp;
+
+// Möbius transformation determinant condition (unimodular representative)
+poly mobius_cond = a*d - b*c - 1;
+
+// Squared trace
+poly sigma = (a+d)^2;
+
+// ---------------------------------------------------------
+// 1. Parabolic condition: sigma = 4
+// ---------------------------------------------------------
+ideal Parabolic = mobius_cond, sigma - 4;
+
+// ---------------------------------------------------------
+// 2. Elliptic condition: 0 <= sigma < 4
+// ---------------------------------------------------------
+// Over the reals, sigma < 4 is algebraically parameterized as 4 - sigma = t^2 for t != 0.
+// We enforce t != 0 with the auxiliary variable u such that u*t = 1.
+// Note: sigma >= 0 is automatically true for real a, d, but can also be explicitly modeled if needed.
+ideal Elliptic = mobius_cond, 4 - sigma - t^2, u*t - 1;
+
+// ---------------------------------------------------------
+// 3. Hyperbolic condition: sigma > 4
+// ---------------------------------------------------------
+// Over the reals, sigma > 4 is algebraically parameterized as sigma - 4 = t^2 for t != 0.
+// We enforce t != 0 with u*t = 1.
+ideal Hyperbolic = mobius_cond, sigma - 4 - t^2, u*t - 1;
+
+// ---------------------------------------------------------
+// 4. Loxodromic condition (Complexes): sigma not in [0, 4]
+// ---------------------------------------------------------
+// Over the complexes, a transformation is loxodromic if sigma != 4 (and not real in [0,4], though usually just sigma != 4 is the main algebraic non-parabolic condition, sometimes loxodromic means strictly complex trace).
+// The most general non-parabolic condition is just sigma - 4 != 0.
+ideal Loxodromic = mobius_cond, sigma - 4 - t, u*t - 1;
+
+print("========================================");
+print("Möbius Transformation Classification");
+print("========================================");
+
+print("");
+print("--- Parabolic Ideal ---");
+print("Groebner Basis:");
+ideal Parabolic_std = std(Parabolic);
+Parabolic_std;
+print("Primary Decomposition:");
+list P_par = primdecGTZ(Parabolic);
+P_par;
+
+print("");
+print("--- Elliptic Ideal ---");
+print("Groebner Basis:");
+ideal Elliptic_std = std(Elliptic);
+Elliptic_std;
+print("Primary Decomposition:");
+list P_ell = primdecGTZ(Elliptic);
+P_ell;
+
+print("");
+print("--- Hyperbolic Ideal ---");
+print("Groebner Basis:");
+ideal Hyperbolic_std = std(Hyperbolic);
+Hyperbolic_std;
+print("Primary Decomposition:");
+list P_hyp = primdecGTZ(Hyperbolic);
+P_hyp;
+
+print("");
+print("--- Loxodromic Ideal (Complex Non-Parabolic) ---");
+print("Groebner Basis:");
+ideal Loxodromic_std = std(Loxodromic);
+Loxodromic_std;
+
+exit;

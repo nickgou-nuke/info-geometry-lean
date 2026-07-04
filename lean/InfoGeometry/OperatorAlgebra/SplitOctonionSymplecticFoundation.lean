@@ -42,6 +42,61 @@ def commZ (X Y : SplitOct) : SplitOct := subZ (mulZ X Y) (mulZ Y X)
 /-- Zorn anticommutator `{X,Y} = XY + YX`. -/
 def antiCommZ (X Y : SplitOct) : SplitOct := addZ (mulZ X Y) (mulZ Y X)
 
+/-! ## Cleared Jordan triple and Jacobiator readbacks -/
+
+/-- Cleared Jordan triple `2·{X,Y,Z}` over the concrete integer Zorn lane.
+
+The pasted abstract formula uses a factor `1/2`; this owner file works over
+`ℤ`, so the theorem-honest readback is the doubled expression
+`(XY)Z + (ZY)X`. -/
+def doubleJordanTriple (X Y Z : SplitOct) : SplitOct :=
+  addZ (mulZ (mulZ X Y) Z) (mulZ (mulZ Z Y) X)
+
+/-- Jacobiator of the concrete Zorn commutator.  This measures the obstruction
+to promoting the raw split-octonion commutator to a Lie bracket on the full
+eight-coordinate carrier. -/
+def jacobiatorZ (X Y Z : SplitOct) : SplitOct :=
+  addZ (addZ (commZ X (commZ Y Z)) (commZ Y (commZ Z X))) (commZ Z (commZ X Y))
+
+/-- Axiom-clean concrete readback for the cleared Jordan triple
+`(up₀ down₀) up₀ + (up₀ down₀) up₀ = 2·up₀`. -/
+theorem doubleJordan_up0_down0_up0_eq :
+    doubleJordanTriple up0 down0 up0 = ⟨0, 0, 2, 0, 0, 0, 0, 0⟩ := by
+  rfl
+
+/-- Axiom-clean concrete readback for the cleared Jordan triple
+`(up₀ down₀) up₁ + (up₁ down₀) up₀ = up₁`. -/
+theorem doubleJordan_up0_down0_up1_eq :
+    doubleJordanTriple up0 down0 up1 = ⟨0, 0, 0, 1, 0, 0, 0, 0⟩ := by
+  rfl
+
+/-- Axiom-clean concrete readback for the cleared Jordan triple
+`(up₁ down₁) up₂ + (up₂ down₁) up₁ = up₂`. -/
+theorem doubleJordan_up1_down1_up2_eq :
+    doubleJordanTriple up1 down1 up2 = ⟨0, 0, 0, 0, 1, 0, 0, 0⟩ := by
+  rfl
+
+/-- Concrete upper-sector closure readback for one cleared Jordan triple. -/
+theorem doubleJordan_up0_down0_up0_closure :
+    (doubleJordanTriple up0 down0 up0).a = 0 ∧
+      (doubleJordanTriple up0 down0 up0).b = 0 ∧
+      (doubleJordanTriple up0 down0 up0).y0 = 0 ∧
+      (doubleJordanTriple up0 down0 up0).y1 = 0 ∧
+      (doubleJordanTriple up0 down0 up0).y2 = 0 := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+/-- Concrete Jacobiator readback for the raw Zorn commutator:
+`J(up₀, up₁, down₀) = 6·up₁`. -/
+theorem jacobiator_up0_up1_down0 :
+    jacobiatorZ up0 up1 down0 = ⟨0, 0, 0, 6, 0, 0, 0, 0⟩ := by
+  rfl
+
+/-- The concrete Jacobiator is nonzero, so the raw split-octonion commutator on
+the full owner carrier is not a Lie bracket. -/
+theorem jacobiator_up0_up1_down0_ne_zero :
+    jacobiatorZ up0 up1 down0 ≠ zeroZ := by
+  decide
+
 @[simp] theorem oneZ_eq : oneZ = ⟨1, 1, 0, 0, 0, 0, 0, 0⟩ := rfl
 
 @[simp] theorem H_eq : H = ⟨1, -1, 0, 0, 0, 0, 0, 0⟩ := rfl
@@ -62,6 +117,25 @@ theorem detZ_oneZ : detZ oneZ = 1 := rfl
 theorem up_down_comm_eq_H (i : Fin 3) : commZ (up i) (down i) = H := by
   fin_cases i <;> rfl
 
+/-- Finite TKK-style anomaly-cancellation readback: the same-slot upper/lower
+commutator has no off-diagonal Zorn coordinates.  This is the valid concrete
+projection of the proposed `e⁺/e⁻` cancellation statement; it does not assert a
+global five-graded Lie algebra or `P_n(5,5)` classification. -/
+theorem up_down_comm_offDiagonal_zero (i : Fin 3) :
+    (commZ (up i) (down i)).x0 = 0 ∧
+      (commZ (up i) (down i)).x1 = 0 ∧
+      (commZ (up i) (down i)).x2 = 0 ∧
+      (commZ (up i) (down i)).y0 = 0 ∧
+      (commZ (up i) (down i)).y1 = 0 ∧
+      (commZ (up i) (down i)).y2 = 0 := by
+  rw [up_down_comm_eq_H]
+  simp [H, subZ, ePlus, eMinus]
+
+/-- The same finite upper/lower commutator has zero trace. -/
+theorem up_down_comm_trace_zero (i : Fin 3) : trZ (commZ (up i) (down i)) = 0 := by
+  rw [up_down_comm_eq_H]
+  rfl
+
 /-- Canonical paired anticommutator on each paired Zorn slot. -/
 theorem up_down_anticomm_eq_oneZ (i : Fin 3) : antiCommZ (up i) (down i) = oneZ := by
   fin_cases i <;> rfl
@@ -74,54 +148,27 @@ theorem detZ_up_null (i : Fin 3) : detZ (up i) = 0 := by
 theorem detZ_down_null (i : Fin 3) : detZ (down i) = 0 := by
   fin_cases i <;> rfl
 
-/-- Foundation packet collecting the exact finite Peirce-Witt commutator facts. -/
-theorem splitOctonion_symplectic_foundation_packet :
-    mulZ H H = oneZ ∧
-      detZ H = -1 ∧
-      detZ oneZ = 1 ∧
-      (∀ i : Fin 3, commZ (up i) (down i) = H) ∧
-      (∀ i : Fin 3, antiCommZ (up i) (down i) = oneZ) ∧
-      (∀ i : Fin 3, detZ (up i) = 0) ∧
-      (∀ i : Fin 3, detZ (down i) = 0) := by
-  exact ⟨H_sq, detZ_H, detZ_oneZ, up_down_comm_eq_H,
-    up_down_anticomm_eq_oneZ, detZ_up_null, detZ_down_null⟩
-
-/-! ## Complex structure candidate on the split-octonion carrier -/
+/-! ## Concrete square-to-`-oneZ` element on the split-octonion carrier -/
 
 /--
-A Peirce-side internal complex structure candidate.
+A concrete element defined by subtracting the first lower basis vector from the
+first upper basis vector.
 
-This is `J = up₀ - down₀`, which satisfies `J² = -oneZ`.
-It provides a square-to-minus-one element in the split-octonion
-multiplication algebra, distinct from the hyperbolic grading element `H`
-(which satisfies `H² = +oneZ`).
-
-Physically, this candidate corresponds to choosing a distinguished
-direction in the Peirce/Witt decomposition and using the difference
-between the upper and lower ladder operators as an "imaginary unit."
+Concretely, `J` is the coordinate vector with `x0 = 1`, `y0 = -1`, and all
+other coordinates zero.  The theorems below record its square and determinant.
 -/
 def J : SplitOct := subZ up0 down0
 
 @[simp] theorem J_eq : J = ⟨0, 0, 1, 0, 0, -1, 0, 0⟩ := rfl
 
 /--
-The complex structure candidate squares to minus the diagonal unit.
-
-This is the key algebraic law that makes `J` a valid internal
-"imaginary unit" in the split-octonion algebra:
-  J² = (up₀ - down₀)² = up₀² - up₀·down₀ - down₀·up₀ + down₀²
-     = 0 - ePlus - eMinus + 0
-     = -(ePlus + eMinus)
-     = -oneZ
+Direct coordinate readback: multiplying `J` by itself gives `negZ oneZ`.
 -/
 theorem J_sq_neg_oneZ : mulZ J J = negZ oneZ := by
   rfl
 
 /--
-The determinant of the complex structure candidate is `1`.
-
-This confirms that `J` lies on the "unit sphere" of the split-octonion
-norm geometry, consistent with its role as a complex structure.
+Direct coordinate readback: the determinant of `J` is `1`.
 -/
 theorem detZ_J : detZ J = 1 := by
   rfl

@@ -1,0 +1,22 @@
+system("--no-warn", 1);
+LIB "dmod.lib";
+LIB "dmodapp.lib";
+LIB "nctools.lib";
+
+// Define a commutative ring first
+ring r = 0,(x,y,Dx,Dy),dp;
+
+// Construct the corresponding Weyl algebra D
+def D = Weyl();
+setring D;
+
+// Simplicial cotensors differential bounds
+ideal I = x*Dx + y*Dy - 2, Dx^2 + Dy^2;
+
+// Compute Groebner basis in the Weyl algebra
+ideal stdI = std(I);
+
+print("Enriched change-of-base mapped via D-module Groebner basis (local non-commutative differential bounds):");
+print(stdI);
+
+exit;

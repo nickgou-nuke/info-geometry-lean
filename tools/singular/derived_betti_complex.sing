@@ -1,0 +1,27 @@
+LIB "ncalg.lib";
+LIB "homolog.lib";
+
+// Define a base ring with two variables for the projective gauge quotient
+ring r = 0, (x, y), dp;
+
+// Define a non-commutative algebra (e.g. quantum plane: yx = -xy)
+// This represents the non-commutative space for the infinity-topos sheaf cohomology
+matrix C[2][2];
+C[1,2] = -1; // non-commutative relation: yx = -xy
+matrix D[2][2];
+
+// Create the non-commutative ring
+def R = nc_algebra(C, D);
+setring R;
+
+// Define the non-commutative ideal representing the projective gauge quotient
+ideal gauge_ideal = x, y;
+gauge_ideal = std(gauge_ideal);
+
+// Compute the free resolution of the ideal (the derived complex / syzygies)
+resolution rs = mres(gauge_ideal, 0);
+
+// Extract and print the derived Betti sequence
+print("Derived Betti sequence (Koszul complex):");
+print(betti(rs));
+exit;

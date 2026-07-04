@@ -1,0 +1,29 @@
+// Liouville Momentum relation and Weyl reflection symmetry
+ring r = 0, (b, a, Q, b_inv), dp;
+
+// Define Q = b + 1/b using b * b_inv = 1
+ideal I = b * b_inv - 1, Q - b - b_inv;
+
+// Compute in the quotient ring
+qring q = std(I);
+
+// Delta = alpha * (Q - alpha)
+poly Delta1 = a * (Q - a);
+
+// Delta evaluated at Q - alpha
+poly Delta2 = (Q - a) * (Q - (Q - a));
+
+// The ideal difference
+poly D_diff = Delta1 - Delta2;
+
+// Output the difference
+print("Evaluating the difference Delta(alpha) - Delta(Q - alpha):");
+D_diff;
+
+if (D_diff == 0) {
+    print("Weyl reflection symmetry established natively: Delta(alpha) == Delta(Q - alpha)");
+} else {
+    print("Symmetry failed.");
+}
+
+exit;

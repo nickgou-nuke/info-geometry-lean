@@ -60,6 +60,14 @@ theorem flowRelativeVolumeRN_self
     flowRelativeVolumeRN B X X = 1 := by
   exact zornRelativeVolumeRN_self B X hX
 
+/-- Alias for the identity-flow formulation of `flowRelativeVolumeRN_self`. -/
+theorem flowRelativeVolumeRN_id
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    flowRelativeVolumeRN B X (id X) = 1 := by
+  simpa using flowRelativeVolumeRN_self B X hX
+
 /--
 Determinant-ratio cocycle:
 
@@ -105,6 +113,12 @@ theorem detSimilitude_one_of_detPreserving
   intro X
   rw [h X, one_mul]
 
+/-- The identity map is a determinant similitude with multiplier `1`. -/
+theorem detSimilitude_id
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) :
+    DetSimilitude B id 1 :=
+  detSimilitude_one_of_detPreserving B id (detPreserving_id B)
+
 /-- A determinant similitude has RN-style factor equal to its multiplier. -/
 theorem RN_of_detSimilitude
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
@@ -147,6 +161,48 @@ theorem RN_scalarScale_from_detSimilitude
   exact RN_of_detSimilitude B (ZornCell.scalarScale u) ((u : ℝ) ^ 2)
     (detSimilitude_scalarScale B u) X hX
 
+/--
+Generic scalar/similitude-step form: if `scaledX` has determinant
+`χ * detZ X`, then the flow RN-style factor from `X` to `scaledX` is `χ`.
+-/
+theorem flowRelativeVolumeRN_of_det_scale
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X scaledX : ZornCell ℝ V)
+    (χ : ℝ)
+    (hX : ZornCell.detZ B X ≠ 0)
+    (h_scale : ZornCell.detZ B scaledX = χ * ZornCell.detZ B X) :
+    flowRelativeVolumeRN B X scaledX = χ := by
+  unfold flowRelativeVolumeRN
+  rw [h_scale]
+  field_simp [hX]
+
+/--
+Compatibility name for the scalar-scaling packet: a step whose determinant is
+scaled by `u²` has RN-style factor `u²`.
+-/
+theorem flowRelativeVolumeRN_scalarScale
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X scaledX : ZornCell ℝ V)
+    (u : ℝ)
+    (hX : ZornCell.detZ B X ≠ 0)
+    (h_scale : ZornCell.detZ B scaledX = u ^ 2 * ZornCell.detZ B X) :
+    flowRelativeVolumeRN B X scaledX = u ^ 2 :=
+  flowRelativeVolumeRN_of_det_scale B X scaledX (u ^ 2) hX h_scale
+
+/--
+If two points have the same Zorn determinant, their determinant-ratio
+relative-volume factor is `1`.
+-/
+theorem flowRelativeVolumeRN_det_preserving
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X Y : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0)
+    (h_pres : ZornCell.detZ B Y = ZornCell.detZ B X) :
+    flowRelativeVolumeRN B X Y = 1 := by
+  unfold flowRelativeVolumeRN
+  rw [h_pres]
+  field_simp [hX]
+
 /-- Right scaling of the target multiplies the flow RN-style factor by `u²`. -/
 theorem flowRelativeVolumeRN_scalarScale_right
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
@@ -175,6 +231,89 @@ theorem flowRelativeVolumeRN_scalarScale_both
   unfold flowRelativeVolumeRN
   rw [ZornCell.detZ_scalarScale, ZornCell.detZ_scalarScale]
   field_simp [hX, pow_ne_zero 2 (Units.ne_zero u)]
+
+/--
+Combined relative density for a finite flow step.
+
+The factor `jacobian X` is intentionally external: it represents an ambient
+coordinate-volume Jacobian.  The Zorn determinant contributes only the internal
+relative factor `flowRelativeVolumeRN B X (Φ X)`.
+-/
+def totalFlowRelativeDensity
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ : ZornCell ℝ V → ZornCell ℝ V)
+    (jacobian : ZornCell ℝ V → ℝ)
+    (X : ZornCell ℝ V) : ℝ :=
+  jacobian X * flowRelativeVolumeRN B X (Φ X)
+
+/-- With unit ambient Jacobian, the identity flow has combined density `1`. -/
+theorem totalFlowRelativeDensity_id_one
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    totalFlowRelativeDensity B id (fun _ => 1) X = 1 := by
+  unfold totalFlowRelativeDensity
+  simpa using flowRelativeVolumeRN_self B X hX
+
+/--
+For a determinant similitude, the internal determinant-density contribution is
+the multiplier `χ`; the ambient Jacobian remains a separate factor.
+-/
+theorem totalFlowRelativeDensity_of_detSimilitude
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ : ZornCell ℝ V → ZornCell ℝ V)
+    (jacobian : ZornCell ℝ V → ℝ)
+    (χ : ℝ)
+    (hΦ : DetSimilitude B Φ χ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    totalFlowRelativeDensity B Φ jacobian X = jacobian X * χ := by
+  unfold totalFlowRelativeDensity
+  rw [RN_of_detSimilitude B Φ χ hΦ X hX]
+
+/-- A determinant-preserving flow contributes no internal Zorn density factor. -/
+theorem totalFlowRelativeDensity_of_detPreserving
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (Φ : ZornCell ℝ V → ZornCell ℝ V)
+    (jacobian : ZornCell ℝ V → ℝ)
+    (hΦ : DetPreserving B Φ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    totalFlowRelativeDensity B Φ jacobian X = jacobian X := by
+  rw [totalFlowRelativeDensity_of_detSimilitude
+    B Φ jacobian 1 (detSimilitude_one_of_detPreserving B Φ hΦ) X hX]
+  ring
+
+/--
+For scalar scaling, the combined density separates into the ambient
+8-dimensional Jacobian factor and the internal determinant character `u²`.
+-/
+theorem totalFlowRelativeDensity_scalarScale_zornJacobian
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (u : ℝˣ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    totalFlowRelativeDensity B (ZornCell.scalarScale u)
+        (fun _ => zornVolumeJacobianOfScale u) X =
+      zornVolumeJacobianOfScale u * ((u : ℝ) ^ 2) := by
+  exact totalFlowRelativeDensity_of_detSimilitude
+    B (ZornCell.scalarScale u) (fun _ => zornVolumeJacobianOfScale u)
+    ((u : ℝ) ^ 2) (detSimilitude_scalarScale B u) X hX
+
+/--
+The scalar-scaling combined density can also be written with the ambient
+Jacobian displayed as `u^8`.
+-/
+theorem totalFlowRelativeDensity_scalarScale_pow_eight
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (u : ℝˣ)
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    totalFlowRelativeDensity B (ZornCell.scalarScale u)
+        (fun _ => zornVolumeJacobianOfScale u) X =
+      ((u : ℝ) ^ 8) * ((u : ℝ) ^ 2) := by
+  rw [totalFlowRelativeDensity_scalarScale_zornJacobian B u X hX,
+    zornVolumeJacobianOfScale_eq_pow_eight]
 
 end ZornCell
 

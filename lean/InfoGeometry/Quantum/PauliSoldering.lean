@@ -141,20 +141,21 @@ def masslessMomentum (l0 l1 : ℂ) : ℂ × ℂ × ℂ × ℂ :=
 /-- For massless momentum: explicit rank-one solder matrix. -/
 theorem null_momentum_factorization (l0 l1 : ℂ) :
     solder (masslessMomentum l0 l1) =
-      !![l0 * conj l0 + l1 * conj l1,
-        l0 * conj l1 + l1 * conj l0 - Complex.I * (l0 * conj l1 - l1 * conj l0);
-        l0 * conj l1 + l1 * conj l0 + Complex.I * (l0 * conj l1 - l1 * conj l0),
-        l0 * conj l0 - l1 * conj l1] := by
+      !![2 * l0 * conj l0, 2 * l0 * conj l1;
+         2 * l1 * conj l0, 2 * l1 * conj l1] := by
   rw [solder_explicit]
-  simp [masslessMomentum, Complex.I, sub_eq_add_neg]
-  ring_nf
+  ext i j; fin_cases i <;> fin_cases j
+  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
+  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
+  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
+  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
 
 /-- Null momentum has zero determinant -/
 theorem null_momentum_det_zero (l0 l1 : ℂ) :
     (solder (masslessMomentum l0 l1)).det = 0 := by
   rw [null_momentum_factorization]
   simp [Matrix.det_fin_two]
-  ring_nf
+  ring
 
 /-! ## 5. Souriau beta-vector pairing -/
 
@@ -163,7 +164,7 @@ def souriauPairing (βμ Pμ : ℂ × ℂ × ℂ × ℂ) : ℂ :=
   βμ.1 * Pμ.1 - βμ.2.1 * Pμ.2.1 - βμ.2.2.1 * Pμ.2.2.1 - βμ.2.2.2 * Pμ.2.2.2
 
 /-- In the rest frame (u^μ = (1,0,0,0)): β^μ = (1/T, 0, 0, 0) -/
-theorem souriauPairing_rest_frame (T E : ℂ) (hT : T ≠ 0) :
+theorem souriauPairing_rest_frame (T E : ℂ) :
     souriauPairing (T⁻¹, 0, 0, 0) (E, 0, 0, 0) = E / T := by
   simp [souriauPairing, div_eq_mul_inv]
   ring_nf
@@ -180,7 +181,7 @@ theorem souriau_invariant (T vx vy vz : ℂ) :
 
 /-- σ+ and σ- are Hermitian conjugates: (σ+)† = σ-. -/
 @[simp] theorem σPlus_adjoint : σPlusᴴ = σMinus := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [σPlus, σMinus, Complex.conj_I]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [σPlus, σMinus]
 
 /-- σ³ is self-adjoint. -/
 @[simp] theorem σ3_adjoint : σ3ᴴ = σ3 := by
@@ -229,7 +230,7 @@ The **supercharge → momentum dictionary** is now complete with genuine lemmas:
 All 11 theorems are `fin_cases` kernel-checked, 0 sorries.
 -/
 theorem capstone_all_lemmas_proved :
-    σPlus_sq ∧ (σMinus_sq ∧ (commutator_σPlus_σMinus ∧ (σPlus_adjoint ∧ σ3_adjoint))) := by
+    σPlus * σPlus = 0 ∧ (σMinus * σMinus = 0 ∧ (σPlus * σMinus - σMinus * σPlus = σ3 ∧ (σPlusᴴ = σMinus ∧ σ3ᴴ = σ3))) := by
   exact ⟨σPlus_sq, ⟨σMinus_sq, ⟨commutator_σPlus_σMinus, ⟨σPlus_adjoint, σ3_adjoint⟩⟩⟩⟩
 
 end InfoGeometry.Quantum.PauliSoldering

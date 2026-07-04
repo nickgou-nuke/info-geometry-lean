@@ -1,0 +1,29 @@
+ring r = 0, (a11,a12,a21,a22, x11,x12,x21,x22, b11,b12,b21,b22), dp;
+matrix A[2][2] = a11, a12, a21, a22;
+matrix X[2][2] = x11, x12, x21, x22;
+matrix B[2][2] = b11, b12, b21, b22;
+
+matrix AX = A * X;
+matrix AXB = AX * B;
+
+poly detA = det(A);
+poly detX = det(X);
+poly detB = det(B);
+poly detAXB = det(AXB);
+
+poly difference = detAXB - (detA * detX * detB);
+if (difference == 0) {
+    print("det(AXB) = det(A)det(X)det(B) is TRUE");
+} else {
+    print("det(AXB) = det(A)det(X)det(B) is FALSE");
+}
+
+ideal I = detA - 1, detB - 1;
+ideal J = std(I);
+poly result = reduce(detAXB - detX, J);
+if (result == 0) {
+    print("If det(A)=1 and det(B)=1, det(AXB) - det(X) = 0 is TRUE");
+} else {
+    print("If det(A)=1 and det(B)=1, det(AXB) - det(X) = 0 is FALSE");
+}
+quit;

@@ -1,0 +1,24 @@
+LIB "ncalg.lib";
+
+// Set short output to 0 to see full polynomial expressions
+short = 0;
+
+// Define the Weyl algebra in 3 variables
+def W = makeWeyl(3);
+setring W;
+
+// Causal operator cone: f = x(1)^2 + x(2)^2 - x(3)^2
+poly f = x(1)^2 + x(2)^2 - x(3)^2;
+
+// The Euler operator E = x(1)*D(1) + x(2)*D(2) + x(3)*D(3)
+poly E = x(1)*D(1) + x(2)*D(2) + x(3)*D(3);
+
+// Operators representing local orientability bundles over the causal cone
+ideal I = E, f;
+
+// Compute non-commutative syzygies
+module S = syz(I);
+
+print("Local non-commutative syzygies for the orientability bundles over the causal operator cone:");
+print(S);
+exit;

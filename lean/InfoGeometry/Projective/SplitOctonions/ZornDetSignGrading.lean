@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitOctonions
+import InfoGeometry.Projective.SplitOctonions.ZornInstance
 import Mathlib.Tactic
 
 /-!
@@ -143,6 +144,94 @@ theorem zornDetSign_sq_of_bulk
     ring
   · rw [zornDetSign_eq_neg_one_of_negative X hneg]
     ring
+
+/-! ## Projective scale invariance of the determinant strata -/
+
+/-- Unit scalar scaling multiplies the concrete determinant by a square. -/
+theorem detZ3_scalarScale
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ)) :
+    detZ3 (scalarScale u X) = ((u : ℝ) ^ 2) * detZ3 X := by
+  rcases X with ⟨a, b, v, w⟩
+  rcases v with ⟨v1, v23⟩
+  rcases v23 with ⟨v2, v3⟩
+  rcases w with ⟨w1, w23⟩
+  rcases w23 with ⟨w2, w3⟩
+  unfold detZ3 scalarScale Coord3.dot
+  simp
+  ring
+
+/-- Positive determinant sector is invariant under projective unit scaling. -/
+theorem positiveSector_scalarScale
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsPositiveSector X) :
+    IsPositiveSector (scalarScale u X) := by
+  unfold IsPositiveSector at *
+  rw [detZ3_scalarScale]
+  exact mul_pos (sq_pos_of_ne_zero (Units.ne_zero u)) hX
+
+/-- Negative determinant sector is invariant under projective unit scaling. -/
+theorem negativeSector_scalarScale
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsNegativeSector X) :
+    IsNegativeSector (scalarScale u X) := by
+  unfold IsNegativeSector at *
+  rw [detZ3_scalarScale]
+  exact mul_neg_of_pos_of_neg (sq_pos_of_ne_zero (Units.ne_zero u)) hX
+
+/-- Boundary/null sector is exactly invariant under projective unit scaling. -/
+theorem boundarySector_scalarScale_iff
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ)) :
+    IsBoundarySector (scalarScale u X) ↔ IsBoundarySector X := by
+  unfold IsBoundarySector
+  rw [detZ3_scalarScale]
+  constructor
+  · intro h
+    exact (mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 (Units.ne_zero u))
+  · intro h
+    simp [h]
+
+/-- Bulk/non-null sector is exactly invariant under projective unit scaling. -/
+theorem bulk_scalarScale_iff
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ)) :
+    IsBulk (scalarScale u X) ↔ IsBulk X := by
+  unfold IsBulk
+  rw [detZ3_scalarScale]
+  constructor
+  · intro h hX
+    exact h (by simp [hX])
+  · intro hX h
+    exact hX ((mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 (Units.ne_zero u)))
+
+/-- The determinant sign itself is projectively invariant under unit scaling. -/
+theorem zornDetSign_scalarScale
+    (u : ℝˣ) (X : ZornCell ℝ (ℝ × ℝ × ℝ)) :
+    zornDetSign (scalarScale u X) = zornDetSign X := by
+  by_cases hpos : IsPositiveSector X
+  · rw [zornDetSign_eq_one_of_positive X hpos]
+    rw [zornDetSign_eq_one_of_positive (scalarScale u X)
+      (positiveSector_scalarScale u X hpos)]
+  · by_cases hneg : IsNegativeSector X
+    · rw [zornDetSign_eq_neg_one_of_negative X hneg]
+      rw [zornDetSign_eq_neg_one_of_negative (scalarScale u X)
+        (negativeSector_scalarScale u X hneg)]
+    · have hb : IsBoundarySector X := by
+        unfold IsPositiveSector at hpos
+        unfold IsNegativeSector at hneg
+        unfold IsBoundarySector
+        exact le_antisymm (not_lt.mp hpos) (not_lt.mp hneg)
+      rw [(zornDetSign_eq_zero_iff_boundary X).2 hb]
+      rw [(zornDetSign_eq_zero_iff_boundary (scalarScale u X)).2
+        ((boundarySector_scalarScale_iff u X).2 hb)]
+
+/-- Positive/negative/boundary trichotomy for the determinant causal strata. -/
+theorem determinant_strata_trichotomy
+    (X : ZornCell ℝ (ℝ × ℝ × ℝ)) :
+    IsPositiveSector X ∨ IsNegativeSector X ∨ IsBoundarySector X := by
+  unfold IsPositiveSector IsNegativeSector IsBoundarySector
+  rcases lt_trichotomy (detZ3 X) 0 with hneg | hzero | hpos
+  · exact Or.inr (Or.inl hneg)
+  · exact Or.inr (Or.inr hzero)
+  · exact Or.inl hpos
 
 /-! ## Product sector laws -/
 

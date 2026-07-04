@@ -1,0 +1,6 @@
+ring r = integer, (p, q, c), dp;
+poly P = 2*p*q*(c - 1) + 12*(p-q)^2;
+ideal I = p-4, q-3, 2*c-1;
+poly P_eval = reduce(P, std(I));
+print(P_eval);
+exit;

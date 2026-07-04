@@ -71,11 +71,15 @@ import InfoGeometry.Physics.SpacetimeThermodynamics
 import InfoGeometry.Physics.KagomeKleinIncompatibility
 import InfoGeometry.Physics.KleinBottleDefects
 import InfoGeometry.Physics.KleinBottleCosmology
+import InfoGeometry.Physics.KleinTransitionGlideSkeleton
 import InfoGeometry.Physics.ParafermionDefectBridge
 import InfoGeometry.Physics.ElectronParafermionFlow
 import InfoGeometry.Physics.TopologicalStandardModelBridge
 import InfoGeometry.Physics.BostConnesThermalTime
 import InfoGeometry.Physics.ZornMatrixSU3
+import InfoGeometry.Physics.ZornTkkAnomalyCancellation
+import InfoGeometry.Physics.ZornTkkAlgebraicClosure
+import InfoGeometry.Physics.ZornTkkOrchestration
 import InfoGeometry.Physics.D4Triality
 import InfoGeometry.Physics.FineStructureDerivation
 import InfoGeometry.Physics.FineStructureModels

@@ -4,18 +4,21 @@ import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 /-!
 # InfoGeometry.Arithmetic.PrimonGasSupertrace
 
-Finite primon gas and Möbius supertrace owner surface.
+\[
+E(n):=\log n,
+\qquad
+w_\beta(n):=e^{-\beta E(n)},
+\qquad
+w_\beta(0):=0.
+\]
 
-This module formalizes the conservative arithmetic layer of the primon gas:
-
-* energy `E n = log n`;
-* bosonic finite partition sums;
-* square-free finite partition sums;
-* Möbius signed finite supertrace;
-* parity/projector distinction.
-
-It does not assert Bost--Connes KMS phases, Type III factors, the Riemann
-Hypothesis, or an analytic continuation theorem.
+\[
+Z_B(A,\beta)=\sum_{n\in A} w_\beta(n),
+\quad
+Z_{\mathrm{sf}}(A,\beta)=\sum_{n\in A\cap\mathrm{SqFree}} w_\beta(n),
+\quad
+\mathrm{Str}(A,\beta)=\sum_{n\in A}\mu(n)w_\beta(n).
+\]
 -/
 
 noncomputable section
@@ -24,34 +27,30 @@ namespace InfoGeometry.Arithmetic.PrimonGasSupertrace
 
 open scoped BigOperators
 
-/-- Primon gas energy level: `E(n) = log n`. -/
+/-- `E(n):=\log n`. -/
 def primonEnergy (n : ℕ) : ℝ :=
   Real.log (n : ℝ)
 
-/-- Boltzmann weight `e^{-β log n}` with zero convention at `n = 0`. -/
+/-- `w_\beta(n)`. -/
 def primonBoltzmannWeight (β : ℝ) (n : ℕ) : ℝ :=
   if n = 0 then 0 else Real.exp (-β * primonEnergy n)
 
-/-- Finite bosonic primon-gas partition sum over a finite support. -/
+/-- `Z_B(A,\beta)`. -/
 def finiteBosonicPartition
     (A : Finset ℕ)
     (β : ℝ) : ℝ :=
   ∑ n ∈ A, primonBoltzmannWeight β n
 
-/--
-Square-free support predicate.
-
-This is the fermionic occupancy lane: each prime may occur at most once.
--/
+/-- `\mathrm{SqFree}`. -/
 def IsSquarefreeState (n : ℕ) : Prop :=
   Squarefree n
 
-/-- Square-free state membership is used as a finite filter predicate. -/
+/-- `\mathrm{SqFree}` filter predicate. -/
 noncomputable instance decidablePredIsSquarefreeState :
     DecidablePred IsSquarefreeState :=
   Classical.decPred IsSquarefreeState
 
-/-- Finite square-free partition sum. -/
+/-- `Z_{\mathrm{sf}}(A,\beta)`. -/
 def finiteSquarefreePartition
     (A : Finset ℕ)
     (β : ℝ) : ℝ :=
@@ -59,20 +58,15 @@ def finiteSquarefreePartition
     classical
     exact ∑ n ∈ A.filter IsSquarefreeState, primonBoltzmannWeight β n
 
-/--
-A supplied Möbius coefficient.
-
-This is kept as a parameter rather than hard-coding a Mathlib API choice.
-The intended value is `μ(n)`.
--/
+/-- Supplied coefficient `\mu : \mathbb N\to\mathbb R`. -/
 structure MobiusCoefficient where
   coeff : ℕ → ℝ
 
-  /-- Non-square-free states are killed. -/
+  /-- `\neg\mathrm{SqFree}(n) \to \mu(n)=0`. -/
   coeff_eq_zero_of_not_squarefree :
     ∀ n : ℕ, ¬ IsSquarefreeState n → coeff n = 0
 
-  /-- Square-free states have parity value `±1`. -/
+  /-- `\mathrm{SqFree}(n) \to \mu(n)^2=1`. -/
   coeff_sq_eq_one_of_squarefree :
     ∀ n : ℕ, IsSquarefreeState n → coeff n ^ 2 = 1
 
@@ -80,15 +74,13 @@ namespace MobiusCoefficient
 
 variable (μ : MobiusCoefficient)
 
-/-- Finite Möbius/signed supertrace. -/
+/-- `\mathrm{Str}(A,\beta)`. -/
 def finiteSupertrace
     (A : Finset ℕ)
     (β : ℝ) : ℝ :=
   ∑ n ∈ A, μ.coeff n * primonBoltzmannWeight β n
 
-/--
-The Möbius finite supertrace only sees square-free states.
--/
+/-- `\mathrm{Str}(A,\beta)=\sum_{A\cap\mathrm{SqFree}} \mu(n)w_\beta(n)`. -/
 theorem finiteSupertrace_eq_squarefree_filter
     (A : Finset ℕ)
     (β : ℝ) :
@@ -131,12 +123,7 @@ theorem finiteSupertrace_eq_squarefree_filter
 
 end MobiusCoefficient
 
-/--
-Finite arithmetic thermal packet.
-
-This packages the three finite readouts without claiming an infinite analytic
-identity.
--/
+/-- `\langle Z_B,Z_{\mathrm{sf}},\mathrm{Str}\rangle`. -/
 structure FinitePrimonThermalPacket where
   support : Finset ℕ
   beta : ℝ
@@ -146,19 +133,19 @@ namespace FinitePrimonThermalPacket
 
 variable (P : FinitePrimonThermalPacket)
 
-/-- Bosonic finite partition readout. -/
+/-- `Z_B`. -/
 def bosonicPartition : ℝ :=
   finiteBosonicPartition P.support P.beta
 
-/-- Square-free finite partition readout. -/
+/-- `Z_{\mathrm{sf}}`. -/
 def squarefreePartition : ℝ :=
   finiteSquarefreePartition P.support P.beta
 
-/-- Möbius signed finite supertrace readout. -/
+/-- `\mathrm{Str}`. -/
 def supertrace : ℝ :=
   P.mobius.finiteSupertrace P.support P.beta
 
-/-- Supertrace is supported on the square-free lane. -/
+/-- `\mathrm{Str}(A,\beta)=\sum_{A\cap\mathrm{SqFree}} \mu(n)w_\beta(n)`. -/
 theorem supertrace_eq_squarefree_filter :
     P.supertrace =
       ∑ n ∈ P.support.filter IsSquarefreeState,

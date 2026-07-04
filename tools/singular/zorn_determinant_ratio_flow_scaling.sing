@@ -1,0 +1,26 @@
+// Singular polynomial verifier for Zorn determinant ratio / scalar-flow identities.
+// Scaled determinants are derived from scaled Zorn coordinates.
+ring R = 0,(a,b,u1,u2,u3,v1,v2,v3,c,d,x1,x2,x3,y1,y2,y3,r,s,t),dp;
+proc normZ(poly A, poly B, poly U1, poly U2, poly U3, poly V1, poly V2, poly V3) {
+  return(A*B - (U1*V1 + U2*V2 + U3*V3));
+}
+poly NX = normZ(a,b,u1,u2,u3,v1,v2,v3);
+poly NY = normZ(c,d,x1,x2,x3,y1,y2,y3);
+poly NrX = normZ(r*a,r*b,r*u1,r*u2,r*u3,r*v1,r*v2,r*v3);
+poly NrY = normZ(r*c,r*d,r*x1,r*x2,r*x3,r*y1,r*y2,r*y3);
+poly NsX = normZ(s*a,s*b,s*u1,s*u2,s*u3,s*v1,s*v2,s*v3);
+poly NtY = normZ(t*c,t*d,t*x1,t*x2,t*x3,t*y1,t*y2,t*y3);
+poly scaleX = reduce(NrX - r^2*NX, std(ideal(0)));
+poly scaleY = reduce(NrY - r^2*NY, std(ideal(0)));
+poly common = reduce(NrY*NX - NY*NrX, std(ideal(0)));
+poly unequal = reduce(s^2*NtY*NX - t^2*NY*NsX, std(ideal(0)));
+if (scaleX != 0) { "FAIL scaleX"; scaleX; quit(1); }
+if (scaleY != 0) { "FAIL scaleY"; scaleY; quit(1); }
+if (common != 0) { "FAIL common"; common; quit(1); }
+if (unequal != 0) { "FAIL unequal"; unequal; quit(1); }
+"PASS: N(scale_r(X)) = r^2 N(X)";
+"PASS: N(scale_r(Y)) = r^2 N(Y)";
+"PASS: common-scaling determinant ratio invariant";
+"PASS: unequal-scaling determinant ratio factor";
+"ZORN_DETERMINANT_RATIO_FLOW_SCALING_OK";
+quit;

@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Topology.TwistedCohomologyWeyl
 import Mathlib.LinearAlgebra.Determinant
 import Mathlib.Analysis.Calculus.Deriv.Shift
 import Mathlib.Tactic.Abel
@@ -303,6 +304,15 @@ noncomputable def hestenesBerryTwoForm
     hestenesMetricTwoForm hMod A
       (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   exact hestenesBerryTwoForm_apply (E := E) hMod A u v
+
+/-- Chiral-sheet Berry-curvature readout on the doubled real space. -/
+@[simp] theorem hestenesBerryTwoForm_chiralSheet_readout
+    (hMod A : EndH) (u v : H₂) :
+    hestenesBerryTwoForm hMod A u v
+      =
+    hestenesMetricTwoForm hMod A
+      (InfoGeometry.Krein.clockAxis (E := E) u) v := by
+  exact hestenesBerryTwoForm_apply_complex_i (E := E) hMod A u v
 
 /--
 Operator Maurer-Cartan curvature bracket on doubled real space.
@@ -761,6 +771,51 @@ theorem starCertifiedEinsteinAnomalyQGT_berry_eq_metricOfOperator_liftedProjecto
       (E := E) SCI hProj
 
 end StarCertifiedWeld
+
+section TopologicalSheetGlideReadout
+
+/--
+Forwarder to the topological owner: a constructed sheet/glide Berry connection generated from
+a base potential satisfies the odd potential law, without taking that law as a free hypothesis.
+-/
+theorem sheetGlideOddBerryConnection_owner_odd
+    {BZ : Type*} [TopologicalSpace BZ]
+    (gbz : InfoGeometry.Topology.Weyl.GlideBrillouinZone BZ) (φ : BZ → ℝ) :
+    ∀ s k,
+      (InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ).potential s.swap (gbz.glide k) =
+        -(InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ).potential s k := by
+  exact InfoGeometry.Topology.Weyl.oddSheetConnection_owner_odd gbz φ
+
+/--
+Forwarder to the topological owner: the finite glide-difference curvature induced by the
+constructed sheet/glide-odd connection is itself strictly odd under sheet/glide.
+-/
+theorem inducedSheetGlideOddBerryCurvature_owner_odd
+    {BZ : Type*} [TopologicalSpace BZ]
+    (gbz : InfoGeometry.Topology.Weyl.GlideBrillouinZone BZ) (φ : BZ → ℝ)
+    (s : InfoGeometry.Topology.Weyl.ChiralSheet) (k : BZ) :
+    (InfoGeometry.Topology.Weyl.inducedSheetBerryCurvature gbz
+      (InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ)).curvature s.swap (gbz.glide k) =
+      -(InfoGeometry.Topology.Weyl.inducedSheetBerryCurvature gbz
+        (InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ)).curvature s k := by
+  exact InfoGeometry.Topology.Weyl.induced_oddSheetBerryCurvature_owner_odd gbz φ s k
+
+/--
+Forwarder to the topological owner: the constructed sheet/glide-odd Berry curvature cancels on
+each sheet/glide pair.
+-/
+theorem inducedSheetGlideOddBerryCurvature_owner_odd_cancellation
+    {BZ : Type*} [TopologicalSpace BZ]
+    (gbz : InfoGeometry.Topology.Weyl.GlideBrillouinZone BZ) (φ : BZ → ℝ)
+    (s : InfoGeometry.Topology.Weyl.ChiralSheet) (k : BZ) :
+    (InfoGeometry.Topology.Weyl.inducedSheetBerryCurvature gbz
+      (InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ)).curvature s k +
+      (InfoGeometry.Topology.Weyl.inducedSheetBerryCurvature gbz
+        (InfoGeometry.Topology.Weyl.oddSheetConnection gbz φ)).curvature s.swap
+          (gbz.glide k) = 0 := by
+  exact InfoGeometry.Topology.Weyl.induced_oddSheetBerryCurvature_owner_odd_cancellation gbz φ s k
+
+end TopologicalSheetGlideReadout
 
 section Legacy
 

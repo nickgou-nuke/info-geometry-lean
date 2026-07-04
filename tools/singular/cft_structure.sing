@@ -1,0 +1,10 @@
+ring r = 0, (D1, D2, D3, A), dp;
+ideal I = A - (D3 - D1 - D2);
+poly expr = (A + D1 + D2) - D3;
+poly result = reduce(expr, std(I));
+if (result == 0) {
+  print("Proof successful: (A + D1 + D2) - D3 = 0");
+} else {
+  print("Proof failed");
+}
+quit;

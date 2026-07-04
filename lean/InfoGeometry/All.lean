@@ -118,6 +118,7 @@ import InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
 import InfoGeometry.Arithmetic.FredholmClosure
 import InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
 import InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
+import InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimonSplitChiralFiniteCutoff
 import InfoGeometry.Arithmetic.ChiralPrimonGas
@@ -183,6 +184,7 @@ import InfoGeometry.GromovProbability
 import InfoGeometry.Probability.GromovSystem
 import InfoGeometry.Probability.GromovConcentration
 import InfoGeometry.Probability.ThermodynamicFittingBridge
+import InfoGeometry.Probability.ZornStatisticalVariety
 import InfoGeometry.GromovConcentration
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 import InfoGeometry.KL.EntropicInferenceTest
@@ -290,6 +292,7 @@ import InfoGeometry.FormalAgentLib.Layer1
 import InfoGeometry.Geometry.AmplituhedronFacePoset
 import InfoGeometry.Geometry.AmplituhedronZetaEquivalence
 import InfoGeometry.Geometry.MobiusClassification
+import InfoGeometry.Topology.MobiusClassification
 import InfoGeometry.Geometry.MobiusDual2x2
 import InfoGeometry.Geometry.MobiusInfinitesimal
 import InfoGeometry.Geometry.PrimaMateriaThermodynamics
@@ -309,6 +312,9 @@ import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.Lie.G2FromSplitOctonions
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
+import InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+import InfoGeometry.Lie.SplitOctonion235Distribution
+import InfoGeometry.Lie.SagerschnigS2S3Distribution
 import InfoGeometry.Measure.ProjectiveState
 import InfoGeometry.Meta
 import InfoGeometry.Meta.DefectRegistry
@@ -591,6 +597,7 @@ import InfoGeometry.Categorical.ModularDoubledRealHopfTransport
 import InfoGeometry.Categorical.ModularDoubledRealHopfFiberContent
 import InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
 import InfoGeometry.Categorical.ModularDoubledRealTwistorColimit
+import InfoGeometry.Categorical.StateSpaceColimitCommutativity
 import InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit
 import InfoGeometry.Bridge.RealModularBerryBridge
 import InfoGeometry.Differential.RealAbelianCurvature

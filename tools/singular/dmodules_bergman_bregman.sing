@@ -1,0 +1,31 @@
+LIB "dmod.lib";
+
+// We formalize the D-modules logarithmic correlator bounds for the
+// Fisher Information Metric (Bergman/Bregman potentials)
+
+ring r = 0, (x, y), dp;
+// x corresponds to z, y corresponds to z_bar
+poly f = 1 - x*y;
+
+// Compute the Bernstein-Sato polynomial of the Bergman potential
+// The roots of this polynomial give bounds on the correlator decay
+def b = bfct(f);
+print("Bernstein-Sato polynomial roots (Fisher/Bergman bounds):");
+print(b);
+
+// Now we define the Weyl algebra to map the gradients
+def D = Weyl();
+setring D;
+
+// The Fisher Information Metric is derived from the Hessian of the Bergman potential
+// K = -log(f)
+// The gradients are dx, dy.
+// Annihilator of f^s
+def A = annfs(1 - x*y);
+setring A;
+
+// Output the results
+print("Fisher Information D-module generators (Annihilator of f^s):");
+print(LD);
+
+quit;

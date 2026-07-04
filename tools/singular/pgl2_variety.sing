@@ -1,0 +1,19 @@
+ring r = 0, (z1, z2, a, b, c, d, lambda), dp;
+
+poly w1 = a*z1 + b*z2;
+poly w2 = c*z1 + d*z2;
+
+poly w1_scaled = lambda*a*z1 + lambda*b*z2;
+poly w2_scaled = lambda*c*z1 + lambda*d*z2;
+
+poly eq = w1*w2_scaled - w2*w1_scaled;
+
+if (eq == 0)
+{
+  print("Success: The action of PGL(2) is well-defined on CP^1.");
+}
+else
+{
+  print("Failure.");
+}
+exit;

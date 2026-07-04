@@ -1,0 +1,48 @@
+LIB "ncalg.lib";
+LIB "dmod.lib";
+
+// Define a Weyl algebra over the field QQ(h), where h is the conformal dimension.
+// Variables are x and D (representing \partial_x).
+ring r = (0,h), (x, D), dp;
+
+matrix C[2][2];
+C[1,2] = 1;
+
+matrix Dmat[2][2];
+Dmat[1,2] = 1;
+
+// Construct the non-commutative Weyl algebra: D*x = x*D + 1
+def W = nc_algebra(C, Dmat);
+setring W;
+
+// Define the standard Virasoro operators acting on fields in coordinate space
+// L_{-1} corresponds to translation: \partial_x
+poly L_m1 = D;
+
+// L_0 corresponds to dilation: x \partial_x + h
+poly L_0 = x*D + h;
+
+// L_1 corresponds to special conformal transformation: x^2 \partial_x + 2 h x
+poly L_1 = x^2*D + 2*h*x;
+
+// For logarithmic CFTs, the correlator is not a pure eigenstate of L_0,
+// but has a nilpotent Jordan block structure.
+// Specifically, the shift is given by (L_0 - h)^2 |psi> = 0.
+// We isolate the logarithmic boundary shift exactly inside the x \partial_x ideals.
+poly log_shift_generator = (L_0 - h)^2;
+
+// The D-module constraint ideal for the logarithmic correlator
+ideal log_ideal = log_shift_generator;
+
+// Isolate the boundary shift computationally via standard Groebner basis
+ideal log_bound = std(log_ideal);
+
+print("Virasoro constraints mapped to Weyl algebra generators:");
+print("L_{-1} = " + string(L_m1));
+print("L_0    = " + string(L_0));
+print("L_1    = " + string(L_1));
+print("");
+print("Logarithmic boundary shift exactly inside the x \partial_x ideal computationally:");
+print(log_bound);
+
+exit;

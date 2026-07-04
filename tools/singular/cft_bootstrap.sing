@@ -1,0 +1,36 @@
+LIB "matrix.lib";
+ring r = 0, (x), dp;
+
+// Construct S and T as 2x2 matrices with integer coefficients
+matrix S[2][2] = 0, -1, 1, 0;
+matrix T[2][2] = 1, 1, 0, 1;
+matrix I[2][2] = 1, 0, 0, 1;
+
+// Compute S^2 and (S*T)^3
+matrix S2 = S * S;
+matrix ST = S * T;
+matrix ST3 = ST * ST * ST;
+
+// Prove S^2 + I = 0 and (S*T)^3 + I = 0
+matrix eq1 = S2 + I;
+matrix eq2 = ST3 + I;
+
+print("Matrix S:");
+print(S);
+print("Matrix T:");
+print(T);
+
+print("Evaluating S^2 + I:");
+print(eq1);
+
+print("Evaluating (S*T)^3 + I:");
+print(eq2);
+
+if (eq1[1,1] == 0 && eq1[1,2] == 0 && eq1[2,1] == 0 && eq1[2,2] == 0 &&
+    eq2[1,1] == 0 && eq2[1,2] == 0 && eq2[2,1] == 0 && eq2[2,2] == 0) {
+    print("PSL(2, Z) identities proven computationally: S^2 + I = 0 and (S*T)^3 + I = 0.");
+} else {
+    print("Identities failed.");
+}
+
+exit;

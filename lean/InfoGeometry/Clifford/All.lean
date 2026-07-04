@@ -43,6 +43,8 @@ import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.SplitQuaternion
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 import InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
+import InfoGeometry.Clifford.MonodromyFlowAdapter
+import InfoGeometry.Clifford.ModularCftBridge
 import InfoGeometry.Clifford.ClNNSpecialization
 import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField

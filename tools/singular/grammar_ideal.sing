@@ -1,0 +1,6 @@
+ring r = 0, (x, y, z), dp;
+ideal valid_tokens = x2 - y, z - x*y;
+ideal logit_mask = eliminate(valid_tokens, z);
+print("Elimination ideal (logit masking):");
+print(logit_mask);
+exit;

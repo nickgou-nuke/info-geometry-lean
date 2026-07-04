@@ -75,6 +75,13 @@ theorem T_pow (χ : ℝ) : ∀ n : ℕ, (T χ) ^ n = T ((n : ℝ) * χ) := by
         _ = T (((n + 1 : ℕ) : ℝ) * χ) := by
               exact congrArg T (cast_succ_mul n χ)
 
+/-- Repeated transfer through a two-wall periodic cell. -/
+theorem T_periodic_cell_pow (χ₁ χ₂ : ℝ) (n : ℕ) :
+    (T χ₁ * T χ₂) ^ n = T ((n : ℝ) * (χ₁ + χ₂)) := by
+  calc
+    (T χ₁ * T χ₂) ^ n = (T (χ₁ + χ₂)) ^ n := by rw [T_mul]
+    _ = T ((n : ℝ) * (χ₁ + χ₂)) := by simpa using T_pow (χ₁ + χ₂) n
+
 /--
 Parameter identifiability on the parabolic transfer lane:
 if two transfer matrices are equal, their shear parameters are equal.

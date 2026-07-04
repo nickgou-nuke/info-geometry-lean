@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsTraceIncidence
 
 /-!
 # Split octonion evidence for the flat `(2,3,5)` distribution
@@ -10,6 +11,8 @@ finite-dimensional ranks/dimensions verified from the Zorn product over `QQ`.
 -/
 
 namespace InfoGeometry.Lie.SplitOctonion235Distribution
+
+open InfoGeometry.Projective.SplitOctonions
 
 /-- Status labels for the split-octonion `(2,3,5)` lane. -/
 inductive Distribution235Status where
@@ -54,6 +57,33 @@ theorem splitOctonion235Packet_dimensions :
       splitOctonion235Packet.ambientRank = 5 ∧
       splitOctonion235Packet.splitG2SymmetryDimension = 14 := by
   simp [splitOctonion235Packet]
+
+/-- The concrete projective model is expressed by the trace-style numerator. -/
+theorem splitOctonion235TraceIncidence_formula
+    (X Y : ZornCell ℚ (Vec3 ℚ)) :
+    ZornCell.traceIncidence3 X Y = ZornCell.polarZ3 X Y := by
+  simpa using ZornCell.traceIncidence3_eq_polarZ3 X Y
+
+/-- The trace numerator is symmetric. -/
+theorem splitOctonion235TraceIncidence_symm
+    (X Y : ZornCell ℚ (Vec3 ℚ)) :
+    ZornCell.traceIncidence3 X Y = ZornCell.traceIncidence3 Y X := by
+  exact ZornCell.traceIncidence3_symm X Y
+
+/-- The trace numerator vanishes exactly when the polarization numerator vanishes. -/
+theorem splitOctonion235TraceIncidence_zero_iff_polarZ3_zero
+    (X Y : ZornCell ℚ (Vec3 ℚ)) :
+    ZornCell.traceIncidence3 X Y = 0 ↔ ZornCell.polarZ3 X Y = 0 := by
+  rw [ZornCell.traceIncidence3_eq_polarZ3]
+
+/-- The representative incidence is the zero-locus of the concrete trace numerator. -/
+theorem splitOctonion235Incident_iff_traceIncidence3_eq_zero
+    (D : ZornProjectiveDatum.PolarDatum ℚ (Vec3 ℚ))
+    (hpolar3 : ∀ U V : ZornCell ℚ (Vec3 ℚ), D.polarZ U V = ZornCell.polarZ3 U V)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    D.IncidentRep X Y ↔ ZornCell.traceIncidence3 X.rep Y.rep = 0 := by
+  exact ZornProjectiveDatum.PolarDatum.incidentRep_iff_traceIncidence3_eq_zero
+    D hpolar3 X Y
 
 /-- The current packet is local algebra evidence, not a global Cartan-geometry proof. -/
 theorem splitOctonion235Packet_not_global_cartan_geometry :

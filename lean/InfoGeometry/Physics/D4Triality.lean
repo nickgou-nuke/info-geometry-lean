@@ -4,85 +4,89 @@ import Mathlib.Tactic.Ring
 import Mathlib.Data.Finset.Basic
 
 /-!
-Formalization of D₄ Triality and its S₃ Action on the Three 8-Dimensional Representations.
+# D₄ triality
 
-This module implements the genuine D₄ triality: the S₃ action permuting the three
-8-dimensional irreducible representations of Spin(8):
-- 8ᵥ: vector representation
-- 8ₛ: positive spinor representation
-- 8꜀: negative spinor representation
+\[
+\mathrm{TrialityBranch} = \{\mathrm{vector},\mathrm{spinorPlus},\mathrm{spinorMinus}\},
+\qquad
+|S_3|=6.
+\]
 
-The current ZornMatrix color permutation (Fin 3) is moved to ColorPermutationAction.
+\[
+\mathrm{tripotent}(Z)^3=\mathrm{tripotent}(Z),
+\qquad
+\mathrm{ColorPermutationAction}(\tau)(Z)\text{ preserves }\|Z\|.
+\]
 -/
 
 namespace InfoGeometry.Physics.D4Triality
 
 open InfoGeometry.Physics.ZornMatrixSU3
 
-/-- The three branches of the D₄ triality -/
+/-- `\{\mathrm{vector},\mathrm{spinorPlus},\mathrm{spinorMinus}\}`. -/
 inductive TrialityBranch
   | vector       -- 8ᵥ: vector representation
   | spinorPlus   -- 8ₛ: positive spinor representation
   | spinorMinus  -- 8꜀: negative spinor representation
 deriving DecidableEq, Fintype, Repr
 
-/-- A packet carrying the three 8-dimensional branches of the D₄ triality -/
+/-- `\mathrm{vector}\oplus\mathrm{spinorPlus}\oplus\mathrm{spinorMinus}`. -/
 structure TrialityPacket (R : Type*) where
   vector : Fin 8 → R
   spinorPlus : Fin 8 → R
   spinorMinus : Fin 8 → R
 
-/-- Access a specific branch of a triality packet -/
+/-- `P\mapsto P_b`. -/
 def TrialityPacket.branch {R : Type*} (P : TrialityPacket R) : TrialityBranch → Fin 8 → R :=
   fun b => match b with
     | TrialityBranch.vector => P.vector
     | TrialityBranch.spinorPlus => P.spinorPlus
     | TrialityBranch.spinorMinus => P.spinorMinus
 
-/-- Construct a triality packet from a branch function -/
+/-- `f\mapsto P_f`. -/
 def TrialityPacket.ofBranch {R : Type*} (f : TrialityBranch → Fin 8 → R) : TrialityPacket R :=
   { vector := f TrialityBranch.vector
     spinorPlus := f TrialityBranch.spinorPlus
     spinorMinus := f TrialityBranch.spinorMinus }
 
-/-- S₃ action on the three triality branches -/
+/-- `S_3` action on the three branches. -/
 structure TrialityAction where
   perm : Equiv.Perm TrialityBranch -- Permutation of the three branches
 deriving DecidableEq
 
-/-- Apply a triality action to a packet -/
+/-- `\tau\cdot P`. -/
 def TrialityAction.apply {R : Type*} (τ : TrialityAction) (P : TrialityPacket R) : TrialityPacket R :=
   TrialityPacket.ofBranch fun b => P.branch (τ.perm b)
 
-/-- Theorem: Triality action preserves branch structure -/
+/-- `(\tau\cdot P)_b = P_{\tau(b)}`. -/
 @[simp]
 theorem TrialityAction.apply_branch {R : Type*} (τ : TrialityAction) (P : TrialityPacket R) (b : TrialityBranch) :
     (τ.apply P).branch b = P.branch (τ.perm b) := by
   cases b <;> rfl
 
-/-- The S₃ group of triality actions -/
+/-- Finite `S_3` triality action set. -/
 def S3Triality : Finset TrialityAction :=
   Finset.univ.image fun σ : Equiv.Perm TrialityBranch => ({ perm := σ } : TrialityAction)
 
-/-- A triality action is in S₃ -/
+/-- `\tau\in S_3`. -/
 def TrialityAction.inS3 (τ : TrialityAction) : Prop := τ ∈ S3Triality
 
-/-- Theorem: S₃ triality has exactly 6 elements -/
+/-- `|S_3|=6`. -/
 theorem S3Triality_card : S3Triality.card = 6 := by
   native_decide
 
-/-- Color permutation action on Zorn matrices (separate from D₄ triality) -/
+/-- `\mathrm{Fin}\,3` permutation on Zorn matrices. -/
 structure ColorPermutationAction where
   perm : Equiv.Perm (Fin 3)
 
-/-- Apply a color permutation to a Zorn matrix -/
+/-- `\tau\cdot Z`. -/
 def ColorPermutationAction.apply (τ : ColorPermutationAction) (Z : ZornMatrix) : ZornMatrix :=
   { a := Z.a
     b := Z.b
     x := fun i => Z.x (τ.perm i)
     y := fun i => Z.y (τ.perm i) }
 
-/-- Theorem: Color permutation preserves the Zorn norm (determinant) -/
+/-- `\|\tau\cdot Z\|=\|Z\|`. -/
 theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z : ZornMatrix) :
     ZornMatrixSU3.norm (τ.apply Z) = ZornMatrixSU3.norm Z := by
   have h_dot :
@@ -103,7 +107,7 @@ theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z :
       (fun _ => rfl)
   simp [ColorPermutationAction.apply, ZornMatrixSU3.norm, h_dot]
 
-/-- The tripotent operator on Zorn matrices: T(Z) = (0, 0, x, -y) -/
+/-- `T(Z)=(0,0,x,-y)`. -/
 @[simp]
 def tripotent (Z : ZornMatrix) : ZornMatrix :=
   { a := (0 : ℝ)
@@ -111,18 +115,18 @@ def tripotent (Z : ZornMatrix) : ZornMatrix :=
     x := Z.x
     y := fun i => -Z.y i }
 
-/-- Theorem: Tripotent is idempotent (T² = T) -/
+/-- `T(T(Z))=T(Z)`. -/
 @[simp]
 theorem tripotent_tripotent (Z : ZornMatrix) :
     tripotent (tripotent Z) = { a := (0 : ℝ), b := (0 : ℝ), x := Z.x, y := Z.y } := by
   ext i <;> simp [tripotent]
 
-/-- Theorem: Tripotent satisfies T³ = T -/
+/-- `T^3=T`. -/
 theorem tripotent_cube (Z : ZornMatrix) :
     tripotent (tripotent (tripotent Z)) = tripotent Z := by
   ext i <;> simp [tripotent]
 
-/-- Theorem: Color permutation commutes with tripotent operator -/
+/-- `\tau\cdot T(Z)=T(\tau\cdot Z)`. -/
 theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAction) (Z : ZornMatrix) :
     ColorPermutationAction.apply τ (tripotent Z) = tripotent (ColorPermutationAction.apply τ Z) := by
   simp [ColorPermutationAction.apply, tripotent]

@@ -1,0 +1,10 @@
+R = frac(QQ[b])[a]
+D = x -> x * (b + 1/b - x)
+a1 = a - b/2
+a2 = a + b/2
+D1 = D(a1)
+D2 = D(a2)
+gap = D2 - D1
+<< "D(a1) = " << D1 << endl;
+<< "D(a2) = " << D2 << endl;
+<< "Dimension gap = " << gap << endl;

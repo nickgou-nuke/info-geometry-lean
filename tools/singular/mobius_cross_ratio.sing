@@ -1,0 +1,26 @@
+ring r = 0, (T, w1,w2,w3,w4, z1,z2,z3,z4, a,b,c,d), dp;
+
+ideal I =
+  w1*(c*z1+d) - (a*z1+b),
+  w2*(c*z2+d) - (a*z2+b),
+  w3*(c*z3+d) - (a*z3+b),
+  w4*(c*z4+d) - (a*z4+b),
+  T * (c*z1+d)*(c*z2+d)*(c*z3+d)*(c*z4+d) - 1;
+
+ideal J = std(I);
+
+poly Nw = (w3-w1)*(w4-w2);
+poly Dw = (w3-w2)*(w4-w1);
+poly Nz = (z3-z1)*(z4-z2);
+poly Dz = (z3-z2)*(z4-z1);
+
+poly P = Nw * Dz - Dw * Nz;
+poly rem = reduce(P, J);
+
+if (rem == 0) {
+    print("Cross-ratio is invariant under Mobius transformations.");
+} else {
+    print("Error: Cross-ratio is NOT invariant!");
+    print(rem);
+}
+quit;

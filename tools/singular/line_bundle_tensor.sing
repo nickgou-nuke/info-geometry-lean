@@ -1,0 +1,58 @@
+// tools/singular/line_bundle_tensor.sing
+// Evaluates the asymptotic growth of the line bundle tensor powers L^{\otimes p}
+// on a Riemann surface via the Hilbert polynomial of its homogeneous ideal.
+// This is analogous to the Riemann-Roch theorem asymptotic:
+// h^0(X, L^{\otimes p}) = p * deg(L) + 1 - g.
+
+LIB "polylib.lib";
+
+// Define a graded polynomial ring in 3 variables (projective plane P^2)
+// Variables x, y, z with standard grading
+ring r = 0, (x, y, z), dp;
+
+// Define a smooth projective plane curve.
+// We use a Fermat curve of degree d = 4 as an example.
+// For degree d=4, the curve has genus g = (d-1)(d-2)/2 = 3.
+// And the line bundle O_X(1) has degree d = 4.
+int d = 4;
+ideal I = x^d + y^d + z^d;
+
+// Compute the standard basis (Groebner basis) for the ideal I
+ideal J = std(I);
+
+// Compute the Hilbert polynomial of the quotient ring R/I.
+// hilbPoly(J) returns an intvec v = (v_0, v_1, ..., v_r)
+// such that the Hilbert polynomial is (v_0 + v_1 * p + ... + v_r * p^r) / r!
+intvec v = hilbPoly(J);
+
+// Print the computed coefficients
+print("---- Coefficients of the Hilbert polynomial (v_0, v_1) ----");
+print(v);
+
+// Extract the terms for the asymptotic dimension growth
+int v0 = v[1];
+int v1 = v[2];
+
+// In the case of a curve (dimension 1), r = 1, so the polynomial is linear:
+// H(p) = v0 + v1 * p
+// Comparing to Riemann-Roch: h^0(X, O_X(p)) = p * deg(L) + 1 - g
+// We can identify:
+// deg(L) = v1
+// 1 - g = v0  =>  g = 1 - v0
+int deg_L = v1;
+int genus = 1 - v0;
+
+print("---- Geometric Data Extracted from Hilbert Polynomial ----");
+print("Degree of the Line Bundle deg(L) = " + string(deg_L));
+print("Genus of the Riemann Surface g   = " + string(genus));
+
+// We can also evaluate it for a few tensor powers p:
+print("---- Asymptotic Dimension Growth h^0(X, L^{\\otimes p}) ----");
+int p;
+int h0;
+for (p = 1; p <= 5; p++) {
+    h0 = v0 + v1 * p;
+    print("p = " + string(p) + " : h^0 = " + string(h0));
+}
+
+exit;

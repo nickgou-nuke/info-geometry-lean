@@ -1,0 +1,18 @@
+// tools/singular/hodge_metric_ideal.sing
+LIB "elim.lib";
+ring r = 0, (g11, g12, g22, F12, S, J1, J2), dp;
+
+// Metric determinant constraint for Hodge dual
+// S represents the Hodge dual scalar: S^2 * det(g) = F12^2
+ideal I = S^2 * (g11*g22 - g12^2) - F12^2,
+          S - J1,
+          S - J2;
+
+// Eliminate the Hodge scalar S to find direct relations between F, J, and metric
+ideal traj = eliminate(I, S);
+
+print("Hodge Metric Equations of Motion Ideal:");
+print(I);
+print("Elimination Ideal (Dynamic Trajectories):");
+print(traj);
+exit;

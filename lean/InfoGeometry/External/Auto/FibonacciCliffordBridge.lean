@@ -72,19 +72,19 @@ def fibSectorToAtom : FibSector → M2R
   | FibSector.tau => sigma3
 
 theorem sigma3_sq : sigma3 * sigma3 = (1 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3]
+  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3, sigma3R]
 
 theorem iSigma2_sq : iSigma2 * iSigma2 = -(1 : M2R) := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [iSigma2]
 
 theorem sigma3_iSigma2_anticomm : sigma3 * iSigma2 + iSigma2 * sigma3 = (0 : M2R) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3, iSigma2]
+  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3, sigma3R, iSigma2]
 
 theorem sigmaPlus_sq : sigmaPlus * sigmaPlus = (0 : M2R) := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigmaPlus]
 
 theorem sigma3_cubed : sigma3 * sigma3 * sigma3 = sigma3 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3]
+  ext i j <;> fin_cases i <;> fin_cases j <;> simp [sigma3, sigma3R]
 
 /-- The nontrivial Fibonacci sector maps to the tripotent Clifford/Witten grading. -/
 theorem tau_maps_to_tripotent :
@@ -125,7 +125,7 @@ def atomicSupertrace (M : M2R) : ℝ := Matrix.trace (sigma3 * M)
 theorem atomicSupertrace_formula (θ α n : ℝ) :
     atomicSupertrace (atomicNormalForm θ α n) =
       2 * Real.sinh α * Real.cos θ - n * Real.exp (-α) * Real.sin θ := by
-  simp [atomicSupertrace, atomicNormalForm, KAtom, NAtom, AAtom, sigma3, Matrix.trace]
+  simp [atomicSupertrace, atomicNormalForm, KAtom, NAtom, AAtom, sigma3, sigma3R, Matrix.trace, Matrix.mul_apply]
   rw [Real.sinh_eq]
   ring
 
@@ -138,7 +138,7 @@ lemma sum_fin2_pair (f : Fin 2 × Fin 2 → ℝ) :
     (∑ x, f x) = f (0,0) + f (0,1) + f (1,0) + f (1,1) := by
   rw [← Finset.univ_product_univ]
   rw [Finset.sum_product]
-  simp [Fin.sum_univ_two, add_comm, add_left_comm, add_assoc]
+  simp [Fin.sum_univ_two, add_assoc]
 
 /-- Kronecker/tensor product of two neighbouring atoms. -/
 def kron2 (A B : M2R) : M4R :=
@@ -155,14 +155,14 @@ theorem twoAtomParity_sq : twoAtomParity * twoAtomParity = (1 : M4R) := by
   rcases a with ⟨a₁, a₂⟩
   rcases b with ⟨b₁, b₂⟩
   fin_cases a₁ <;> fin_cases a₂ <;> fin_cases b₁ <;> fin_cases b₂ <;>
-    simp [twoAtomParity, kron2, sigma3, Matrix.mul_apply, sum_fin2_pair] <;> norm_num
+    simp [twoAtomParity, kron2, sigma3, sigma3R, Matrix.mul_apply, sum_fin2_pair]
 
 theorem twoAtomNilpotent_sq : twoAtomNilpotent * twoAtomNilpotent = (0 : M4R) := by
   ext a b
   rcases a with ⟨a₁, a₂⟩
   rcases b with ⟨b₁, b₂⟩
   fin_cases a₁ <;> fin_cases a₂ <;> fin_cases b₁ <;> fin_cases b₂ <;>
-    simp [twoAtomNilpotent, kron2, sigmaPlus, Matrix.mul_apply, sum_fin2_pair] <;> norm_num
+    simp [twoAtomNilpotent, kron2, sigmaPlus, Matrix.mul_apply, sum_fin2_pair]
 
 /-- Finite prime-labelled tensor approximation of the global Witten index. -/
 def finitePrimeAtomIndex (S : Finset ℕ) (α : ℕ → ℝ) : ℝ :=

@@ -1,0 +1,55 @@
+LIB "primdec.lib";
+
+ring r = 0, (a,b,c,d, p1,p2,p3,p4, q, L, M), dp;
+
+matrix H[2][2] = a,b,c,d;
+matrix P[2][2] = p1,p2,p3,p4;
+
+poly detP = p1*p4 - p2*p3;
+poly P_inv = detP * q - 1;
+
+// --- Parabolic ---
+matrix N_p[2][2] = 1,1,0,1;
+matrix eq_p = H * P - P * N_p;
+ideal I_p = eq_p[1,1], eq_p[1,2], eq_p[2,1], eq_p[2,2], P_inv;
+ideal I_p_std = std(I_p);
+ideal cond_p = eliminate(I_p_std, p1*p2*p3*p4*q*L*M);
+cond_p = std(cond_p);
+ideal exp_p = std(ideal(a*d-b*c-1, a+d-2));
+
+print("--- Parabolic Normal Form (Trace 2) ---");
+print("Expected Ideal:");
+exp_p;
+print("Computed Ideal (Elimination):");
+cond_p;
+print("Ideals match (Parabolic)?");
+print(size(reduce(cond_p, exp_p)) == 0 and size(reduce(exp_p, cond_p)) == 0);
+
+// --- Non-parabolic ---
+matrix N_np[2][2] = L,0,0,M;
+matrix eq_np = H * P - P * N_np;
+ideal I_np = eq_np[1,1], eq_np[1,2], eq_np[2,1], eq_np[2,2], P_inv, L*M-1;
+ideal I_np_std = std(I_np);
+ideal cond_np = eliminate(I_np_std, p1*p2*p3*p4*q);
+cond_np = std(cond_np);
+ideal exp_np = std(ideal(a*d-b*c-1, a+d-L-M, L*M-1));
+
+print("--- Non-Parabolic Normal Form (Diagonal) ---");
+print("Expected Ideal (Parameter L, M):");
+exp_np;
+print("Computed Ideal (Elimination):");
+cond_np;
+print("Ideals match (Non-Parabolic)?");
+print(size(reduce(cond_np, exp_np)) == 0 and size(reduce(exp_np, cond_np)) == 0);
+
+// --- Characteristic Polynomial ---
+poly char_poly = L^2 - (a+d)*L + (a*d-b*c);
+ideal char_ideal = std(ideal(char_poly, a*d-b*c-1));
+ideal exp_np_L = eliminate(exp_np, M);
+exp_np_L = std(exp_np_L);
+
+print("--- Characteristic Polynomial ---");
+print("Does the trace/det parameterization match the characteristic polynomial for L?");
+print(size(reduce(exp_np_L, char_ideal)) == 0 and size(reduce(char_ideal, exp_np_L)) == 0);
+
+exit;

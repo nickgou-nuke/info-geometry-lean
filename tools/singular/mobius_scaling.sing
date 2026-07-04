@@ -1,0 +1,5 @@
+ring r = 0, (a,b,c,d,L,z), dp;
+ideal I = (L*a*z + L*b)*(c*z + d) - (a*z + b)*(L*c*z + L*d);
+ideal G = std(I);
+print(G);
+exit;

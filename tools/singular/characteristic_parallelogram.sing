@@ -1,0 +1,36 @@
+// Characteristic Parallelogram of a Möbius transformation
+// We formalize the algebraic ideal of the Characteristic Parallelogram.
+// The four vertices are gamma_1, Z_infty, gamma_2, z_infty.
+// We verify that gamma_1 + gamma_2 = z_infty + Z_infty.
+
+// Define the ring with parameters a, b, c, d (the coefficients of the Möbius transformation)
+// and variables g1, g2, zinf, Zinf.
+ring r = (0, a, b, c, d), (g1, g2, zinf, Zinf), dp;
+
+// The Möbius transformation is f(z) = (az + b)/(cz + d).
+// Fixed points gamma_1 (g1) and gamma_2 (g2) are roots of:
+// c*z^2 + (d - a)*z - b = 0.
+// By Vieta's formulas, we have:
+// g1 + g2 = (a - d)/c
+// g1*g2 = -b/c
+ideal I = c*(g1 + g2) - (a - d), c*(g1 * g2) + b;
+
+// z_infty is the pole of f(z), so c*z_infty + d = 0.
+// Z_infty is the pole of the inverse of f(z), which is equivalent to f(infinity) = a/c.
+I = I + ideal(c*zinf + d, c*Zinf - a);
+
+// Compute the Groebner basis of the ideal.
+ideal G = std(I);
+
+// We want to verify that gamma_1 + gamma_2 = z_infty + Z_infty.
+// This is equivalent to showing that g1 + g2 - zinf - Zinf = 0.
+poly target = g1 + g2 - zinf - Zinf;
+poly rem = reduce(target, G);
+
+if (rem == 0) {
+    print("Verification successful: gamma_1 + gamma_2 = z_infty + Z_infty");
+} else {
+    print("Verification failed.");
+    print(rem);
+}
+quit;

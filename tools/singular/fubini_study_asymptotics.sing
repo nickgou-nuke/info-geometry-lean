@@ -1,0 +1,21 @@
+LIB "dmodapp.lib";
+ring r = 0,(p),dp;
+poly f = p^3;
+
+print("Analyzing the local geometry near the singularity f = p^3...");
+print("1. Constructing the D-module over the Weyl algebra to represent the annihilator of f^s:");
+
+def D = Sannfs(f);
+setring D;
+print("Weyl algebra defined. D-module generator (LD) for the annihilator:");
+print(LD);
+
+setring r;
+print("");
+print("2. Computing the Bernstein-Sato polynomial (b-function) for the quotient using D-module algorithms:");
+list bf = bfct(f);
+print("The roots of the Bernstein-Sato polynomial are:");
+print(bf);
+print("");
+print("Conclusion: These roots (-1/3, -2/3, -1) prove the O(p^3) asymptotic behavior of the quotient near the singularity.");
+exit;

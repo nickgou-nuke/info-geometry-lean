@@ -1,0 +1,8 @@
+LIB "freegb.lib";
+ring r = integer, (D, c, P), dp;
+def R = freeAlgebra(r, 7);
+setring R;
+ideal I = 24*D - c + 1 - 24*P^2;
+ideal zero_ideal = reduce(I, std(I));
+print(zero_ideal);
+exit;

@@ -1,0 +1,9 @@
+ring R = 0, (T), dp;
+poly expr = (T^2+1)^2 - 4*T^2 - (T^2-1)^2;
+if (expr != 0) {
+  print("Error: Expression does not reduce to 0.");
+  print(expr);
+  exit(1);
+}
+print(expr);
+quit;

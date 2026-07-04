@@ -59,6 +59,11 @@ BASIS = [basis_vector(i) for i in range(DIM)]
 PRODUCT = [[zorn_mul(BASIS[i], BASIS[j]) for j in range(DIM)] for i in range(DIM)]
 
 
+def zorn_norm(X: sp.Matrix) -> sp.Expr:
+    """Split Zorn norm/determinant N(a,b,x,y)=ab-x·y."""
+    return sp.expand(X[0] * X[1] - sum(X[2 + i] * X[5 + i] for i in range(3)))
+
+
 def derivation_constraint_matrix() -> sp.Matrix:
     rows = []
     for i in range(DIM):
@@ -158,6 +163,24 @@ def inertia_symmetric(M: sp.Matrix) -> tuple[int, int, int]:
 
 
 def main() -> None:
+    one = BASIS[0] + BASIS[1]
+    for e in BASIS:
+        assert zorn_mul(one, e) == e
+        assert zorn_mul(e, one) == e
+
+    norm_matrix = sp.Matrix(DIM, DIM, lambda i, j:
+        sp.Rational(1, 2) * (
+            zorn_norm(BASIS[i] + BASIS[j]) - zorn_norm(BASIS[i]) - zorn_norm(BASIS[j])
+        ))
+    norm_inertia = inertia_symmetric(norm_matrix)
+    assert norm_inertia == (4, 4, 0)
+
+    xs = sp.symbols("x0:8")
+    ys = sp.symbols("y0:8")
+    Xsym = sp.Matrix(xs)
+    Ysym = sp.Matrix(ys)
+    assert sp.expand(zorn_norm(zorn_mul(Xsym, Ysym)) - zorn_norm(Xsym) * zorn_norm(Ysym)) == 0
+
     C = derivation_constraint_matrix()
     rank = C.rank()
     nullity = DIM * DIM - rank
@@ -205,6 +228,9 @@ def main() -> None:
     # over QQ and therefore symbolically certifies the real split form.
     certificate = {
         "carrier": "Zorn split octonions over QQ/RR, basis E11,E22,U0,U1,U2,V0,V1,V2",
+        "zorn_unit_two_sided": True,
+        "norm_signature_pos_neg_zero": list(map(int, norm_inertia)),
+        "norm_multiplicative_symbolic": True,
         "constraint_rows": int(C.rows),
         "constraint_cols": int(C.cols),
         "constraint_rank": int(rank),

@@ -5,14 +5,17 @@ import Mathlib
 /-!
 # The Primon Coulomb Gas and GUE Level Repulsion
 
-This module formalizes the statistical fluctuations of the Riemann Zeros
-trapped inside the non-commutative harmonic sector. By modeling the
-zero-modes as a 1D Coulomb gas under the exact constraints of the conserved
-Trap Projector, their energy level spacing is mathematically governed
-by the Gaussian Unitary Ensemble (GUE).
+\[
+R_2(x)=1-\left(\frac{\sin(\pi x)}{\pi x}\right)^2,
+\qquad
+H_{\mathrm{Dyson}}=E_{\mathrm{ext}}-2E_{\log}.
+\]
 
-The core signature of the GUE is level repulsion: no two zeros can occupy
-the exact same energy state, guaranteeing the structural integrity of the trap.
+\[
+\log\Delta = E_{\log},
+\qquad
+H_{\mathrm{Dyson}} = E_{\mathrm{ext}} - \log \Delta^2.
+\]
 -/
 
 namespace InfoGeometry.Canonical.PrimonCoulombGas
@@ -20,17 +23,11 @@ namespace InfoGeometry.Canonical.PrimonCoulombGas
 open Real
 open scoped BigOperators
 
-/-- The normalized GUE Pair Correlation function R₂(x).
-    It describes the probability density of finding two energy levels
-    separated by a distance x. -/
+/-- `R_2(x) := 1 - (\sin(\pi x)/(\pi x))^2`. -/
 noncomputable def gue_pair_correlation (x : ℝ) : ℝ :=
   1 - (sin (π * x) / (π * x)) ^ 2
 
-/-- **Theorem: GUE Level Repulsion (Qualitative)**
-    At exactly zero distance (x = 0), the unnormalized Sinc function limit
-    sin(z)/z → 1 causes the correlation function to evaluate to 0. 
-    This formalized repulsion guarantees that the Primon Gas fermions
-    obey the Pauli Exclusion Principle even in the continuum limit. -/
+/-- `\sin(\pi x)/(\pi x)=1 \to R_2(x)=0`. -/
 theorem gue_repulsion_at_origin (x : ℝ) (h_limit : sin (π * x) / (π * x) = 1) :
     gue_pair_correlation x = 0 := by
   unfold gue_pair_correlation
@@ -43,25 +40,25 @@ section FiniteDysonBridge
 
 variable {N : ℕ}
 
-/-- Finite external potential energy of the Dyson gas. -/
+/-- `E_{\mathrm{ext}}(\lambda,V)`. -/
 def external_potential_energy (lam : Fin N → ℝ) (V : ℝ → ℝ) : ℝ :=
   Finset.sum Finset.univ (fun i : Fin N => V (lam i))
 
-/-- Finite logarithmic interaction energy over ordered pairs `i < j`. -/
+/-- `E_{\log}(\lambda)`. -/
 noncomputable def log_interaction_energy (lam : Fin N → ℝ) : ℝ :=
   Finset.sum Finset.univ (fun i : Fin N =>
     Finset.sum (Finset.Ioi i) (fun j : Fin N => Real.log |lam j - lam i|))
 
-/-- Absolute Vandermonde separation product over ordered pairs `i < j`. -/
+/-- `|\Delta(\lambda)|`. -/
 def vandermonde_product_abs (lam : Fin N → ℝ) : ℝ :=
   Finset.prod Finset.univ (fun i : Fin N =>
     Finset.prod (Finset.Ioi i) (fun j : Fin N => |lam j - lam i|))
 
-/-- Finite Dyson Hamiltonian at β = 2. -/
+/-- `H_{\mathrm{Dyson}}(\lambda,V) := E_{\mathrm{ext}} - 2E_{\log}`. -/
 noncomputable def dyson_hamiltonian (lam : Fin N → ℝ) (V : ℝ → ℝ) : ℝ :=
   external_potential_energy lam V - 2 * log_interaction_energy lam
 
-/-- Finite positive-factor logarithm rule for real products. -/
+/-- `\log(\prod f)=\sum\log f` under `0<f`. -/
 theorem log_prod_of_pos
     {α : Type*}
     (s : Finset α)
@@ -72,10 +69,7 @@ theorem log_prod_of_pos
   intro a ha
   exact ne_of_gt (hf a ha)
 
-/--
-If all pairwise separations over `i < j` are nonzero, the logarithm of the
-absolute Vandermonde product is exactly the Coulomb log-interaction sum.
--/
+/-- `\forall i<j,\ \lambda_i\ne\lambda_j \to \log|\Delta| = E_{\log}`. -/
 theorem log_vandermonde_product_abs_eq_log_interaction_energy
     (lam : Fin N → ℝ)
     (hsep : ∀ i : Fin N, ∀ j ∈ Finset.Ioi i, lam j ≠ lam i) :
@@ -96,10 +90,7 @@ theorem log_vandermonde_product_abs_eq_log_interaction_energy
   intro i hi
   rw [log_prod_of_pos (s := Finset.Ioi i) (f := fun j : Fin N => |lam j - lam i|) (hinner i)]
 
-/--
-The logarithm of the squared absolute Vandermonde product is twice the Coulomb
-log-interaction sum.
--/
+/-- `\log|\Delta|^2 = 2E_{\log}`. -/
 theorem log_vandermonde_square_eq_two_log_interaction
     (lam : Fin N → ℝ)
     (hsep : ∀ i : Fin N, ∀ j ∈ Finset.Ioi i, lam j ≠ lam i) :
@@ -108,11 +99,7 @@ theorem log_vandermonde_square_eq_two_log_interaction
   rw [log_vandermonde_product_abs_eq_log_interaction_energy lam hsep]
   ring
 
-/--
-Finite Dyson/Vandermonde bridge:
-for non-colliding nodes, the β = 2 Dyson Hamiltonian is the external energy
-minus the logarithm of the squared absolute Vandermonde product.
--/
+/-- `H_{\mathrm{Dyson}} = E_{\mathrm{ext}} - \log|\Delta|^2`. -/
 theorem dyson_to_vandermonde_bridge
     (lam : Fin N → ℝ)
     (V : ℝ → ℝ)

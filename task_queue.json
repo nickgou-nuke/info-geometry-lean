@@ -361,6 +361,109 @@
       "sympy_path": "proofs/agent_orchestrator_archon_smoke.sp",
       "lean_path": "proofs/agent_orchestrator_archon_smoke.lean",
       "last_report": "artifacts/agent_orchestrator/20260606T183932Z_agent_orchestrator_archon_smoke.json"
+    },
+    {
+      "id": "pin55formal_owner_surface",
+      "title": "Pin55Formal",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": "lean/InfoGeometry/Physics/Pin55Formal.lean",
+      "sympy_path": "tools/sympy/pin55_cl55.py",
+      "lean_path": "lean/InfoGeometry/Physics/Pin55Formal.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T153620Z_pin55formal_owner_surface.json"
+    },
+    {
+      "id": "full_pin55_matrix_laws",
+      "title": "FullPin55MatrixLaws",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": "lean/InfoGeometry/OperatorAlgebra/FullPin55MatrixLaws.lean",
+      "sympy_path": "tools/sympy/full_pin55_matrix_laws.py",
+      "lean_path": "lean/InfoGeometry/OperatorAlgebra/FullPin55MatrixLaws.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T153644Z_full_pin55_matrix_laws.json"
+    },
+    {
+      "id": "pin55_reflection_glide",
+      "title": "Pin55ReflectionGlide",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": "lean/InfoGeometry/Clifford/Pin55ReflectionGlide.lean",
+      "sympy_path": "tools/sympy/pin55_reflection_glide.py",
+      "lean_path": "lean/InfoGeometry/Clifford/Pin55ReflectionGlide.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T153651Z_pin55_reflection_glide.json"
+    },
+    {
+      "id": "centralizer_invariance_twisted_conjugation",
+      "title": "CentralizerInvariance",
+      "status": "done",
+      "sympy_witness": false,
+      "lean_proof": true,
+      "external_ref": "lean/InfoGeometry/Physics/CentralizerInvariance.lean",
+      "lean_path": "lean/InfoGeometry/Physics/CentralizerInvariance.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T153900Z_centralizer_invariance_twisted_conjugation.json"
+    },
+    {
+      "id": "split_clifford_carrier_spin_group",
+      "title": "SplitCliffordCarrier",
+      "status": "done",
+      "sympy_witness": false,
+      "lean_proof": true,
+      "external_ref": "lean/InfoGeometry/Algebraic/SplitCliffordCarrier.lean",
+      "lean_path": "lean/InfoGeometry/Algebraic/SplitCliffordCarrier.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T153933Z_split_clifford_carrier_spin_group.json"
+    },
+    {
+      "id": "pin_group_mathlib_inventory",
+      "title": "pinGroup",
+      "status": "running",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean"
+    },
+    {
+      "id": "spin_group_mathlib_inventory",
+      "title": "spinGroup",
+      "status": "running",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean"
+    },
+    {
+      "id": "conjact_mathlib_inventory",
+      "title": "ConjAct",
+      "status": "done",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T154147Z_conjact_mathlib_inventory.json"
+    },
+    {
+      "id": "reverse_mathlib_inventory",
+      "title": "reverse",
+      "status": "running",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean"
+    },
+    {
+      "id": "involute_mathlib_inventory",
+      "title": "involute",
+      "status": "running",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean"
+    },
+    {
+      "id": "star_mathlib_inventory",
+      "title": "star",
+      "status": "done",
+      "sympy_witness": false,
+      "lean_proof": false,
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Star.lean",
+      "last_report": "artifacts/agent_orchestrator/20260704T154205Z_star_mathlib_inventory.json"
     }
   ],
   "agents": {

@@ -1,0 +1,6 @@
+ring r = (0),(Tx, Ty), dp;
+def S = nc_algebra(1, -1);
+setring S;
+ideal I = Tx^2 - 1, Ty^2 - 1;
+ideal syz_I = syz(I);
+print(syz_I);

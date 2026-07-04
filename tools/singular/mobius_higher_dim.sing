@@ -1,0 +1,5 @@
+ring R = 0, (x, n, x_new, I_norm, I2_x), dp;
+ideal I = n * x_new - x, n * I_norm - 1, I_norm * I2_x - x_new;
+ideal J = std(I);
+reduce(I2_x - x, J);
+quit;

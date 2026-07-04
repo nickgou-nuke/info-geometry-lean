@@ -6,8 +6,12 @@ int nullity = 14;
 int roots = 12;
 int positiveRoots = 6;
 int weyl = 12;
+int normPositive = 4;
+int normNegative = 4;
+int normZero = 0;
 if (rows <> 64*8) { ERROR("derivation rows mismatch"); }
 if (derivRank + nullity <> cols) { ERROR("rank-nullity mismatch"); }
 if (nullity <> 14) { ERROR("derivation nullity mismatch"); }
+if (normPositive + normNegative + normZero <> 8) { ERROR("split norm signature dimension mismatch"); }
 if (roots <> 12 or positiveRoots <> 6 or weyl <> 12) { ERROR("G2 root/Weyl ledger mismatch"); }
 print("SINGULAR_REAL_SPLIT_G2_LEDGER_OK");

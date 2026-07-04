@@ -1,0 +1,26 @@
+LIB "elim.lib";
+
+// Define the ring with parameters a, b, c, d and variables g1, g2
+ring r = (0,a,b,c,d), (g1,g2), dp;
+
+// The ideal of fixed point relations for g1 and g2
+ideal I_roots = c*g1^2 - (a-d)*g1 - b, c*g2^2 - (a-d)*g2 - b;
+
+// We assume g1 != g2, so we saturate the ideal by (g1 - g2)
+ideal I_distinct = sat(I_roots, g1-g2)[1];
+
+// We want to prove g1 + g2 - (a/c - d/c) = 0 is contained in the ideal.
+// Over this ring, we clear denominators: c*(g1 + g2) - (a - d)
+poly target = c*(g1 + g2) - (a - d);
+
+// Reduce the target polynomial with respect to the standard basis of I_distinct
+poly check = reduce(target, std(I_distinct));
+
+// Check if the reduction is 0
+if (check == 0) {
+    print("Proof successful: c*(g1 + g2) - (a - d) = 0 is in the saturated ideal.");
+} else {
+    print("Proof failed.");
+    print(check);
+}
+quit;

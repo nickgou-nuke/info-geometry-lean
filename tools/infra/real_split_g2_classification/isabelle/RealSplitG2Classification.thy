@@ -8,6 +8,10 @@ definition derivation_rows :: nat where "derivation_rows = 512"
 definition derivation_cols :: nat where "derivation_cols = 64"
 definition derivation_rank :: nat where "derivation_rank = 50"
 definition derivation_nullity :: nat where "derivation_nullity = 14"
+definition norm_positive :: nat where "norm_positive = 4"
+definition norm_negative :: nat where "norm_negative = 4"
+definition norm_zero :: nat where "norm_zero = 0"
+definition norm_multiplicative_symbolic :: bool where "norm_multiplicative_symbolic = True"
 definition g2_rank :: nat where "g2_rank = 2"
 definition g2_roots :: nat where "g2_roots = 12"
 definition g2_positive_roots :: nat where "g2_positive_roots = 6"
@@ -23,6 +27,11 @@ lemma g2_root_weyl_packet:
   "g2_rank = 2 \<and> g2_roots = 12 \<and> g2_positive_roots = 6 \<and>
    g2_weyl_order = 12 \<and> g2_rank + g2_roots = derivation_nullity"
   by (simp add: g2_rank_def g2_roots_def g2_positive_roots_def g2_weyl_order_def derivation_nullity_def)
+
+lemma split_norm_packet:
+  "norm_positive = 4 \<and> norm_negative = 4 \<and> norm_zero = 0 \<and>
+   norm_positive + norm_negative + norm_zero = 8 \<and> norm_multiplicative_symbolic = True"
+  by (simp add: norm_positive_def norm_negative_def norm_zero_def norm_multiplicative_symbolic_def)
 
 lemma current_status_not_native_group_equivalence:
   "current_status \<noteq> NativeGroupEquivalence"

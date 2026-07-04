@@ -10,6 +10,9 @@ import InfoGeometry.Algebra.Zorn.BasisTable
 import InfoGeometry.Algebra.Zorn.RelativeVolume
 import InfoGeometry.Algebra.Zorn.ConcreteBarrier
 import InfoGeometry.Algebra.Zorn.Associator
+import InfoGeometry.Algebra.Zorn.AssociatorObstruction
+import InfoGeometry.Algebra.Zorn.ScalarJacobian8
+import InfoGeometry.Algebra.Zorn.InverseAdjugate
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
@@ -83,6 +86,8 @@ import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
 import InfoGeometry.Algebra.SplitQuaternionFlows
+import InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
+import InfoGeometry.Algebra.AiStudioNativeMathlibFindings
 import InfoGeometry.Algebra.NilpotentModularAutomorphism
 import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT

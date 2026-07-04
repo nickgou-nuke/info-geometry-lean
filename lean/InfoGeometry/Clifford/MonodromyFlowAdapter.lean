@@ -30,6 +30,11 @@ abbrev infinitesimalNullGenerator : Matrix (Fin 2) (Fin 2) ℂ :=
 def lcftParabolicFlowStep (t : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   1 + t • infinitesimalNullGenerator
 
+/-- The nilpotent generator used by the complex parabolic flow is square-zero. -/
+theorem infinitesimalNullGenerator_sq_zero :
+    infinitesimalNullGenerator * infinitesimalNullGenerator = 0 := by
+  simpa [infinitesimalNullGenerator] using (epsilon_sq)
+
 /--
 The complex parabolic flow has additive composition law.  This is the matrix
 analogue of moving along a horocycle/null shear.
@@ -44,12 +49,23 @@ theorem lcftParabolicFlow_composition (t₁ t₂ : ℂ) :
       jordanNilpotent, Matrix.mul_apply]
   all_goals ring
 
+/-- Alias for the additive parabolic-flow law. -/
+theorem parabolicTimeFlow_add (t₁ t₂ : ℂ) :
+    lcftParabolicFlowStep t₁ * lcftParabolicFlowStep t₂ =
+      lcftParabolicFlowStep (t₁ + t₂) :=
+  lcftParabolicFlow_composition t₁ t₂
+
 /-- Repeated complex parabolic flow is just flow at the accumulated parameter. -/
 theorem lcftParabolicFlow_pow (t : ℂ) (n : ℕ) :
     lcftParabolicFlowStep t ^ n =
       lcftParabolicFlowStep ((n : ℂ) * t) := by
   simpa [lcftParabolicFlowStep, infinitesimalNullGenerator] using
     (one_plus_c_epsilon_pow t n)
+
+/-- Alias for the discrete power law of the parabolic flow. -/
+theorem parabolicTimeFlow_pow (t : ℂ) (n : ℕ) :
+    lcftParabolicFlowStep t ^ n = lcftParabolicFlowStep ((n : ℂ) * t) :=
+  lcftParabolicFlow_pow t n
 
 /--
 One Hadjiivanov monodromy wrap is a scalar conformal phase times the complex

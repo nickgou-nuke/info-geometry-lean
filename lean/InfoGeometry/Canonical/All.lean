@@ -125,6 +125,7 @@ import InfoGeometry.Canonical.IdeleSymmetries
 import InfoGeometry.Canonical.ZetaChiralConeAlgebra
 import InfoGeometry.Canonical.CliffordToVirasoro
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Canonical.PhotonicParabolicTransfer
 import InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
 import InfoGeometry.Canonical.BerryDrazin
 import InfoGeometry.Canonical.BerryRotorBridge

@@ -84,11 +84,123 @@ def zero : ZornMatrix R where
   w := ![0, 0, 0]
   b := 0
 
+/-- Standard coordinate vector in `R^3`. -/
+def Vec3.basis (i : Fin 3) : Vec3 R :=
+  fun j => if j = i then 1 else 0
+
+/-- Upper-left diagonal idempotent. -/
+def E11 : ZornMatrix R where
+  a := 1
+  v := ![0, 0, 0]
+  w := ![0, 0, 0]
+  b := 0
+
+/-- Lower-right diagonal idempotent. -/
+def E22 : ZornMatrix R where
+  a := 0
+  v := ![0, 0, 0]
+  w := ![0, 0, 0]
+  b := 1
+
+/-- Upper off-diagonal Zorn basis element. -/
+def U (i : Fin 3) : ZornMatrix R where
+  a := 0
+  v := Vec3.basis i
+  w := ![0, 0, 0]
+  b := 0
+
+/-- Lower off-diagonal Zorn basis element. -/
+def V (i : Fin 3) : ZornMatrix R where
+  a := 0
+  v := ![0, 0, 0]
+  w := Vec3.basis i
+  b := 0
+
 instance : Add (ZornMatrix R) := ⟨add⟩
 instance : Sub (ZornMatrix R) := ⟨sub⟩
 instance : Mul (ZornMatrix R) := ⟨mul⟩
 instance : HSMul R (ZornMatrix R) (ZornMatrix R) := ⟨smul⟩
 instance : Zero (ZornMatrix R) := ⟨zero⟩
+
+@[simp] theorem mul_eq_mul (X Y : ZornMatrix R) : X * Y = mul X Y := rfl
+
+@[simp] theorem zero_eq_zero : (0 : ZornMatrix R) = zero := rfl
+
+@[simp] theorem E11_mul_E11 : (E11 : ZornMatrix R) * E11 = E11 := by
+  ext j <;>
+    simp [E11, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem E22_mul_E22 : (E22 : ZornMatrix R) * E22 = E22 := by
+  ext j <;>
+    simp [E22, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem E11_mul_E22 : (E11 : ZornMatrix R) * E22 = 0 := by
+  ext j <;>
+    simp [E11, E22, zero, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem E22_mul_E11 : (E22 : ZornMatrix R) * E11 = 0 := by
+  ext j <;>
+    simp [E11, E22, zero, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem U_mul_self_zero (i : Fin 3) : (U i : ZornMatrix R) * U i = 0 := by
+  fin_cases i <;>
+    ext j <;>
+      simp [U, zero, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem V_mul_self_zero (i : Fin 3) : (V i : ZornMatrix R) * V i = 0 := by
+  fin_cases i <;>
+    ext j <;>
+      simp [V, zero, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem U_mul_V_self (i : Fin 3) : (U i : ZornMatrix R) * V i = E11 := by
+  fin_cases i <;>
+    ext j <;>
+      simp [U, V, E11, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem V_mul_U_self (i : Fin 3) : (V i : ZornMatrix R) * U i = E22 := by
+  fin_cases i <;>
+    ext j <;>
+      simp [U, V, E22, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem U_zero_mul_U_one : (U 0 : ZornMatrix R) * U 1 = V 2 := by
+  ext j
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem U_one_mul_U_two : (U 1 : ZornMatrix R) * U 2 = V 0 := by
+  ext j
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+@[simp] theorem U_two_mul_U_zero : (U 2 : ZornMatrix R) * U 0 = V 1 := by
+  ext j
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · fin_cases j <;>
+      simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+  · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+
+/-- A concrete associator witness: the Zorn product is not associative. -/
+theorem nonassociative_witness [Nontrivial R] :
+    ((U 0 : ZornMatrix R) * U 1) * U 2 ≠ U 0 * (U 1 * U 2) := by
+  intro h
+  have hleft : ((U 0 : ZornMatrix R) * U 1) * U 2 = E22 := by
+    rw [U_zero_mul_U_one, V_mul_U_self]
+  have hright : (U 0 : ZornMatrix R) * (U 1 * U 2) = E11 := by
+    rw [U_one_mul_U_two, U_mul_V_self]
+  have hdiag : (E22 : ZornMatrix R) = E11 :=
+    hleft.symm.trans (h.trans hright)
+  have ha := congrArg ZornMatrix.a hdiag
+  simp [E11, E22] at ha
 
 lemma dot_cross_self (v : Vec3 R) : Vec3.dot v (Vec3.cross v v) = 0 := by
   dsimp [Vec3.dot, Vec3.cross]
@@ -124,6 +236,29 @@ theorem zorn_characteristic_equation (X : ZornMatrix R) :
   · simp [mul, sub, add, smul, zornTrace, zornNorm, I, zero,
       Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
     ring_nf
+
+/--
+The reduced determinant of the scalar pencil `I - tX` is the quadratic
+trace-norm polynomial `1 - t Tr(X) + t² N(X)`.
+-/
+theorem zornNorm_I_sub_smul (t : R) (X : ZornMatrix R) :
+    zornNorm ((I : ZornMatrix R) - t • X) =
+      1 - t * zornTrace X + t ^ 2 * zornNorm X := by
+  change zornNorm (sub (I : ZornMatrix R) (smul t X)) =
+    1 - t * zornTrace X + t ^ 2 * zornNorm X
+  simp [sub, smul, zornTrace, zornNorm, I, Vec3.dot, Vec3.sub, Vec3.smul]
+  ring_nf
+
+/-- AI Studio alias: Cayley-Hamilton for Zorn matrices. -/
+theorem cayley_hamilton (X : ZornMatrix R) :
+    X * X - (zornTrace X) • X + (zornNorm X) • (I : ZornMatrix R) = 0 :=
+  zorn_characteristic_equation X
+
+/-- AI Studio alias: the Fredholm-style quadratic determinant expansion. -/
+theorem fredholm_expansion (t : R) (X : ZornMatrix R) :
+    zornNorm ((I : ZornMatrix R) - t • X) =
+      1 - t * zornTrace X + t ^ 2 * zornNorm X :=
+  zornNorm_I_sub_smul t X
 
 end ZornMatrix
 end InfoGeometry.Algebra

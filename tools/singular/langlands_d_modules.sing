@@ -1,0 +1,18 @@
+LIB "nctools.lib";
+LIB "dmod.lib";
+
+ring r = 0, (x, y), dp;
+def W = makeWeyl(r);
+setring W;
+
+// Geometric Langlands Correspondence toy example:
+// Compute the Annihilator in the Weyl algebra (D-module)
+// corresponding to a coherent sheaf on the moduli space.
+poly f = x^3 + y^3;
+ideal I = f;
+
+ideal ann = annfs(I);
+print("Weyl operators (D-module annihilator) mapping the coherent sheaf:");
+print(ann);
+
+exit;

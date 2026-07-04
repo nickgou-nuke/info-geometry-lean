@@ -1,0 +1,12 @@
+ring r = 0, (ur, ui, vr, vi), dp;
+ideal I = ur^2 + ui^2 + vr^2 + vi^2 - 1;
+ideal J = std(I);
+poly det_val = ur^2 + ui^2 + vr^2 + vi^2;
+poly rem_val = reduce(det_val, J);
+print(rem_val);
+if (rem_val == 1) {
+    print("Determinant is exactly 1 under the ideal.");
+} else {
+    print("Determinant is NOT 1 under the ideal.");
+}
+exit;

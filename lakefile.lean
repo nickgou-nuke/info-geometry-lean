@@ -849,15 +849,12 @@ require plausible from ".lake/packages/plausible"
 -- Enforce a single local mathlib source for this repository.
 -- Do not let Lake re-resolve mathlib from the upstream git URL.
 require mathlib from ".lake/packages/mathlib"
-require Paperproof from git
-  "https://github.com/Paper-Proof/paperproof.git"
-  @ "main" / "lean"
-require paranoia from git
-  "https://github.com/oOo0oOo/LeanParanoia.git"
-  @ "main"
-require LeanArchitect from git
-  "https://github.com/hanwenzhu/LeanArchitect.git"
-  @ "v4.28.0"
+require Paperproof from git "https://github.com/Paper-Proof/paperproof.git"
+  @ "c85fb0b45ce9ebaaa4715c7d043aadda80306c46" / "lean"
+require paranoia from git "https://github.com/oOo0oOo/LeanParanoia.git"
+  @ "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab"
+require LeanArchitect from git "https://github.com/hanwenzhu/LeanArchitect.git"
+  @ "54d3fb249685db8e5a564e0b3f331cff77991607"
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
@@ -866,9 +863,8 @@ require «GIFT» from
   "external_refs/gift-framework-core"
 require Atlas from
   "external_refs/atlas-lean"
-require LeanCopilot from git
-  "https://github.com/lean-dojo/LeanCopilot.git"
-  @ "v4.28.0"
+require LeanCopilot from git "https://github.com/lean-dojo/LeanCopilot.git"
+  @ "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
 
 lean_lib DAG where
   globs := #[.andSubmodules `DAG]

@@ -1,0 +1,146 @@
+DIGEST ed71fb71f29f8def321260c54e3578ee
+FHestenesKreinComplexAxis
+R27:32 Stdlib.ZArith.ZArith <> <> lib
+mod 63:86 <> HestenesKreinComplexAxis
+rec 97:100 HestenesKreinComplexAxis Pair
+proj 114:115 HestenesKreinComplexAxis re
+proj 122:123 HestenesKreinComplexAxis im
+R119:119 Corelib.Numbers.BinNums <> Z ind
+R127:127 Corelib.Numbers.BinNums <> Z ind
+def 144:147 HestenesKreinComplexAxis cmul
+R156:159 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+binder 150:150 <> z:4
+binder 152:152 <> w:5
+R164:167 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+R174:179 HestenesKreinComplexAxis HestenesKreinComplexAxis mkPair constr
+R193:195 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R186:188 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R182:183 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R185:185 HestenesKreinComplexAxis <> z:4 var
+R189:190 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R192:192 HestenesKreinComplexAxis <> w:5 var
+R200:202 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R196:197 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R199:199 HestenesKreinComplexAxis <> z:4 var
+R203:204 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R206:206 HestenesKreinComplexAxis <> w:5 var
+R230:232 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R223:225 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R219:220 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R222:222 HestenesKreinComplexAxis <> z:4 var
+R226:227 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R229:229 HestenesKreinComplexAxis <> w:5 var
+R237:239 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R233:234 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R236:236 HestenesKreinComplexAxis <> z:4 var
+R240:241 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R243:243 HestenesKreinComplexAxis <> w:5 var
+def 259:259 HestenesKreinComplexAxis K
+R266:269 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+binder 262:262 <> z:6
+R274:277 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+R282:287 HestenesKreinComplexAxis HestenesKreinComplexAxis mkPair constr
+R290:291 Stdlib.ZArith.BinInt <> ::Z_scope:'-'_x not
+R292:293 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R295:295 HestenesKreinComplexAxis <> z:6 var
+R299:300 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R302:302 HestenesKreinComplexAxis <> z:6 var
+def 317:323 HestenesKreinComplexAxis negPair
+R330:333 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+binder 326:326 <> z:7
+R338:341 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+R346:351 HestenesKreinComplexAxis HestenesKreinComplexAxis mkPair constr
+R354:355 Stdlib.ZArith.BinInt <> ::Z_scope:'-'_x not
+R356:357 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R359:359 HestenesKreinComplexAxis <> z:7 var
+R363:364 Stdlib.ZArith.BinInt <> ::Z_scope:'-'_x not
+R365:366 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R368:368 HestenesKreinComplexAxis <> z:7 var
+def 383:390 HestenesKreinComplexAxis rho_smul
+R399:399 Corelib.Numbers.BinNums <> Z ind
+binder 393:393 <> a:8
+binder 395:395 <> b:9
+R407:410 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+binder 403:403 <> z:10
+R415:418 HestenesKreinComplexAxis HestenesKreinComplexAxis Pair rec
+R425:430 HestenesKreinComplexAxis HestenesKreinComplexAxis mkPair constr
+R441:443 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R434:436 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R433:433 HestenesKreinComplexAxis <> a:8 var
+R437:438 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R440:440 HestenesKreinComplexAxis <> z:10 var
+R445:447 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R444:444 HestenesKreinComplexAxis <> b:9 var
+R448:449 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R451:451 HestenesKreinComplexAxis <> z:10 var
+R463:465 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R456:458 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R455:455 HestenesKreinComplexAxis <> a:8 var
+R459:460 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R462:462 HestenesKreinComplexAxis <> z:10 var
+R467:469 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R466:466 HestenesKreinComplexAxis <> b:9 var
+R470:471 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R473:473 HestenesKreinComplexAxis <> z:10 var
+prf 484:491 HestenesKreinComplexAxis pair_ext
+binder 502:502 <> z:11
+binder 504:504 <> w:12
+R518:521 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R511:513 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R507:508 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R510:510 HestenesKreinComplexAxis <> z:11 var
+R514:515 HestenesKreinComplexAxis HestenesKreinComplexAxis re proj
+R517:517 HestenesKreinComplexAxis <> w:12 var
+R533:536 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R526:528 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R522:523 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R525:525 HestenesKreinComplexAxis <> z:11 var
+R529:530 HestenesKreinComplexAxis HestenesKreinComplexAxis im proj
+R532:532 HestenesKreinComplexAxis <> w:12 var
+R538:540 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R537:537 HestenesKreinComplexAxis <> z:11 var
+R541:541 HestenesKreinComplexAxis <> w:12 var
+prf 627:638 HestenesKreinComplexAxis K_square_neg
+binder 649:649 <> z:13
+R659:661 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R652:652 HestenesKreinComplexAxis HestenesKreinComplexAxis K def
+R655:655 HestenesKreinComplexAxis HestenesKreinComplexAxis K def
+R657:657 HestenesKreinComplexAxis <> z:13 var
+R662:668 HestenesKreinComplexAxis HestenesKreinComplexAxis negPair def
+R670:670 HestenesKreinComplexAxis <> z:13 var
+prf 721:738 HestenesKreinComplexAxis rho_multiplicative
+binder 749:749 <> a:14
+binder 751:751 <> b:15
+binder 753:753 <> c:16
+binder 755:755 <> d:17
+binder 757:757 <> z:18
+R796:800 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R762:769 HestenesKreinComplexAxis HestenesKreinComplexAxis rho_smul def
+R775:777 Stdlib.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R773:773 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R772:772 HestenesKreinComplexAxis <> a:14 var
+R774:774 HestenesKreinComplexAxis <> c:16 var
+R779:779 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R778:778 HestenesKreinComplexAxis <> b:15 var
+R780:780 HestenesKreinComplexAxis <> d:17 var
+R787:789 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R785:785 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R784:784 HestenesKreinComplexAxis <> a:14 var
+R786:786 HestenesKreinComplexAxis <> d:17 var
+R791:791 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R790:790 HestenesKreinComplexAxis <> b:15 var
+R792:792 HestenesKreinComplexAxis <> c:16 var
+R795:795 HestenesKreinComplexAxis <> z:18 var
+R801:808 HestenesKreinComplexAxis HestenesKreinComplexAxis rho_smul def
+R810:810 HestenesKreinComplexAxis <> a:14 var
+R812:812 HestenesKreinComplexAxis <> b:15 var
+R815:822 HestenesKreinComplexAxis HestenesKreinComplexAxis rho_smul def
+R824:824 HestenesKreinComplexAxis <> c:16 var
+R826:826 HestenesKreinComplexAxis <> d:17 var
+R828:828 HestenesKreinComplexAxis <> z:18 var
+R869:876 HestenesKreinComplexAxis HestenesKreinComplexAxis pair_ext thm
+R869:876 HestenesKreinComplexAxis HestenesKreinComplexAxis pair_ext thm
+prf 906:931 HestenesKreinComplexAxis K_trace_zero_finite_matrix
+R940:942 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R936:938 Stdlib.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R976:999 HestenesKreinComplexAxis HestenesKreinComplexAxis <> mod

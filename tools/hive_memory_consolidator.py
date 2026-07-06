@@ -11,7 +11,7 @@ DB = CLIENT.db('hive_memory', username='root', password='hive_brain')
 THOUGHTS = DB['Thoughts']
 
 # Path to the shared transcript pool
-SHARED_TRANSCRIPTS_PATH = "/home/goutev/repos/info-geometry-lean/brain"
+SHARED_TRANSCRIPTS_PATH = "/home/goutev/.gemini/antigravity-cli/brain"
 LAST_PROCESSED_LOG = "/home/goutev/.hermes/hive_last_processed.txt"
 
 logging.basicConfig(level=logging.INFO)

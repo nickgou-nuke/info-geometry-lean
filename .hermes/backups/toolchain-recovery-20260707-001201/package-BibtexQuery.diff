@@ -1,0 +1,45 @@
+diff --git a/lake-manifest.json b/lake-manifest.json
+index 5545103..a1809ce 100644
+--- a/lake-manifest.json
++++ b/lake-manifest.json
+@@ -1,15 +1,20 @@
+-{"version": "1.1.0",
++{
++ "version": "1.1.0",
+  "packagesDir": ".lake/packages",
+- "packages":
+- [{"url": "https://github.com/fgdorais/lean4-unicode-basic",
++ "packages": [
++  {
++   "url": "https://github.com/fgdorais/lean4-unicode-basic",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "ff04f5c424e50e23476d3539c7c0cc4956e971ad",
+    "name": "UnicodeBasic",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "ff04f5c424e50e23476d3539c7c0cc4956e971ad",
+    "inherited": false,
+-   "configFile": "lakefile.lean"}],
++   "configFile": "lakefile.lean"
++  }
++ ],
+  "name": "BibtexQuery",
+- "lakeDir": ".lake"}
++ "lakeDir": ".lake"
++}
+\ No newline at end of file
+diff --git a/lakefile.toml b/lakefile.toml
+index 555ac1d..9b9b08d 100644
+--- a/lakefile.toml
++++ b/lakefile.toml
+@@ -4,7 +4,7 @@ defaultTargets = ["BibtexQuery", "«bibtex-query»"]
+ [[require]]
+ name = "UnicodeBasic"
+ git = "https://github.com/fgdorais/lean4-unicode-basic"
+-rev = "main"
++rev = "v4.28.0"
+ 
+ [[lean_lib]]
+ name = "BibtexQuery"

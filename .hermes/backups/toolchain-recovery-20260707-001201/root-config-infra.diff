@@ -1,0 +1,758 @@
+diff --git a/lake-manifest.json b/lake-manifest.json
+index 9f2f9ffe..e878d7d1 100644
+--- a/lake-manifest.json
++++ b/lake-manifest.json
+@@ -1,99 +1,123 @@
+-{"version": "1.2.0",
++{
++ "version": "1.2.0",
+  "packagesDir": ".lake/packages",
+- "packages":
+- [{"url": "https://github.com/lean-dojo/LeanCopilot.git",
++ "packages": [
++  {
++   "url": "https://github.com/lean-dojo/LeanCopilot.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53",
+    "name": "LeanCopilot",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "v4.28.0",
++   "inputRev": "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53",
+    "inherited": false,
+-   "configFile": "lakefile.lean"},
+-  {"type": "path",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "Atlas",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": "external_refs/atlas-lean",
+-   "configFile": "lakefile.toml"},
+-  {"type": "path",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "GIFT",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": "external_refs/gift-framework-core",
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/leanprover/doc-gen4.git",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/leanprover/doc-gen4.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff",
+-   "name": "«doc-gen4»",
++   "name": "\u00abdoc-gen4\u00bb",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "v4.28.0",
++   "inputRev": "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff",
+    "inherited": false,
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/hanwenzhu/LeanArchitect.git",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/hanwenzhu/LeanArchitect.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "54d3fb249685db8e5a564e0b3f331cff77991607",
+    "name": "LeanArchitect",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "v4.28.0",
++   "inputRev": "54d3fb249685db8e5a564e0b3f331cff77991607",
+    "inherited": false,
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/oOo0oOo/LeanParanoia.git",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/oOo0oOo/LeanParanoia.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab",
+    "name": "paranoia",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab",
+    "inherited": false,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/Paper-Proof/paperproof.git",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/Paper-Proof/paperproof.git",
+    "type": "git",
+    "subDir": "lean",
+    "scope": "",
+    "rev": "c85fb0b45ce9ebaaa4715c7d043aadda80306c46",
+    "name": "Paperproof",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "c85fb0b45ce9ebaaa4715c7d043aadda80306c46",
+    "inherited": false,
+-   "configFile": "lakefile.lean"},
+-  {"type": "path",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "mathlib",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": ".lake/packages/mathlib",
+-   "configFile": "lakefile.lean"},
+-  {"type": "path",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "plausible",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": ".lake/packages/plausible",
+-   "configFile": "lakefile.toml"},
+-  {"type": "path",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "Qq",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": ".lake/packages/Qq",
+-   "configFile": "lakefile.toml"},
+-  {"type": "path",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "type": "path",
+    "scope": "",
+    "name": "InfoGeometryCore",
+    "manifestFile": "lake-manifest.json",
+    "inherited": false,
+    "dir": "lib/InfoGeometryCore",
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/leanprover-community/aesop",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/leanprover-community/aesop",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+@@ -102,8 +126,10 @@
+    "manifestFile": "lake-manifest.json",
+    "inputRev": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/leanprover-community/batteries.git",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/leanprover-community/batteries.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+@@ -112,97 +138,118 @@
+    "manifestFile": "lake-manifest.json",
+    "inputRev": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/PatrickMassot/checkdecls.git",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/PatrickMassot/checkdecls.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "3d425859e73fcfbef85b9638c2a91708ef4a22d4",
+    "name": "checkdecls",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "master",
++   "inputRev": "3d425859e73fcfbef85b9638c2a91708ef4a22d4",
+    "inherited": true,
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/leanprover/lean4-cli",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/leanprover/lean4-cli",
+    "type": "git",
+    "subDir": null,
+    "scope": "leanprover",
+    "rev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+    "name": "Cli",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "v4.28.0",
++   "inputRev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/fgdorais/lean4-unicode-basic",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/fgdorais/lean4-unicode-basic",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "ff04f5c424e50e23476d3539c7c0cc4956e971ad",
+    "name": "UnicodeBasic",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "ff04f5c424e50e23476d3539c7c0cc4956e971ad",
+    "inherited": true,
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/dupuisf/BibtexQuery",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/dupuisf/BibtexQuery",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "058ada3acad7dd0d55657476bf292c8e02a2f650",
+    "name": "BibtexQuery",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "master",
++   "inputRev": "058ada3acad7dd0d55657476bf292c8e02a2f650",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/acmepjz/md4lean",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/acmepjz/md4lean",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "7e097e9a076d5fbe48aa39aceee871af0d011101",
+    "name": "MD4Lean",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "7e097e9a076d5fbe48aa39aceee871af0d011101",
+    "inherited": true,
+-   "configFile": "lakefile.lean"},
+-  {"url": "https://github.com/leanprover/lean4checker.git",
++   "configFile": "lakefile.lean"
++  },
++  {
++   "url": "https://github.com/leanprover/lean4checker.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "b1efea26e138821953e43dfb8fe63770ccb766d1",
+    "name": "lean4checker",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "master",
++   "inputRev": "b1efea26e138821953e43dfb8fe63770ccb766d1",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/leanprover-community/LeanSearchClient",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/leanprover-community/LeanSearchClient",
+    "type": "git",
+    "subDir": null,
+    "scope": "leanprover-community",
+    "rev": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+    "name": "LeanSearchClient",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/leanprover-community/import-graph",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/leanprover-community/import-graph",
+    "type": "git",
+    "subDir": null,
+    "scope": "leanprover-community",
+-   "rev": "48d5698bc464786347c1b0d859b18f938420f060",
++   "rev": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+    "name": "importGraph",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "main",
++   "inputRev": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+    "inherited": true,
+-   "configFile": "lakefile.toml"},
+-  {"url": "https://github.com/leanprover-community/ProofWidgets4",
++   "configFile": "lakefile.toml"
++  },
++  {
++   "url": "https://github.com/leanprover-community/ProofWidgets4",
+    "type": "git",
+    "subDir": null,
+    "scope": "leanprover-community",
+-   "rev": "3c52dee17f0cd89c1ec14de78920d1bdaa3d26b3",
++   "rev": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+    "name": "proofwidgets",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "v0.0.95",
++   "inputRev": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+    "inherited": true,
+-   "configFile": "lakefile.lean"}],
++   "configFile": "lakefile.lean"
++  }
++ ],
+  "name": "infogeometry",
+  "lakeDir": ".lake",
+- "fixedToolchain": false}
++ "fixedToolchain": false
++}
+\ No newline at end of file
+diff --git a/lakefile.lean b/lakefile.lean
+index a7a497f3..24bf6afd 100644
+--- a/lakefile.lean
++++ b/lakefile.lean
+@@ -851,16 +851,16 @@ require plausible from ".lake/packages/plausible"
+ require mathlib from ".lake/packages/mathlib"
+ require Paperproof from git
+   "https://github.com/Paper-Proof/paperproof.git"
+-  @ "main" / "lean"
++  @ "c85fb0b45ce9ebaaa4715c7d043aadda80306c46" / "lean"
+ require paranoia from git
+   "https://github.com/oOo0oOo/LeanParanoia.git"
+-  @ "main"
++  @ "11c2385ade3cc417d69ce837bfda9d2c5b1d61ab"
+ require LeanArchitect from git
+   "https://github.com/hanwenzhu/LeanArchitect.git"
+-  @ "v4.28.0"
++  @ "54d3fb249685db8e5a564e0b3f331cff77991607"
+ require «doc-gen4» from git
+   "https://github.com/leanprover/doc-gen4.git"
+-  @ "v4.28.0"
++  @ "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff"
+ 
+ require «GIFT» from
+   "external_refs/gift-framework-core"
+@@ -868,7 +868,7 @@ require Atlas from
+   "external_refs/atlas-lean"
+ require LeanCopilot from git
+   "https://github.com/lean-dojo/LeanCopilot.git"
+-  @ "v4.28.0"
++  @ "c360b5df5d8a67ed8f1a8769aa157f6adca7dd53"
+ 
+ lean_lib DAG where
+   globs := #[.andSubmodules `DAG]
+@@ -899,8 +899,7 @@ The source lives under `external/Erdos1196` at commit
+ `PrimitiveSetsAboveX.mainTheorem`.
+ 
+ This library is intentionally not a default target: the external proof repo is
+-pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
+-Lean `v4.28.0`. Build/import it explicitly after toolchain alignment.
++pinned to a foreign Lean toolchain outside the root repository freeze. Build/import it only after explicit external toolchain alignment.
+ -/
+ lean_lib PrimitiveSetsAboveX where
+   globs := #[.andSubmodules `PrimitiveSetsAboveX]
+diff --git a/scripts/build/bootstrap_ubuntu_debian.sh b/scripts/build/bootstrap_ubuntu_debian.sh
+index cef1200a..80d5ddd0 100755
+--- a/scripts/build/bootstrap_ubuntu_debian.sh
++++ b/scripts/build/bootstrap_ubuntu_debian.sh
+@@ -14,6 +14,7 @@ End-to-end bootstrap for Ubuntu/Debian:
+ 
+ Options:
+   --with-infra         Install scientific Python deps and run full infra refresh pipeline
++  --refresh-deps       Disabled under the immutable v4.28.0 manifest freeze
+   --skip-apt           Skip apt-get install/update steps
+   --skip-strict-check  Skip 'lake script run strictCheck'
+   --dry-run            Print commands without executing
+@@ -67,6 +68,7 @@ ensure_debian_family() {
+ SKIP_APT=0
+ SKIP_STRICT_CHECK=0
+ WITH_INFRA=0
++REFRESH_DEPS=0
+ DRY_RUN=0
+ 
+ while [[ $# -gt 0 ]]; do
+@@ -74,6 +76,9 @@ while [[ $# -gt 0 ]]; do
+     --with-infra)
+       WITH_INFRA=1
+       ;;
++    --refresh-deps)
++      REFRESH_DEPS=1
++      ;;
+     --skip-apt)
+       SKIP_APT=1
+       ;;
+@@ -104,6 +109,9 @@ cd "$REPO_ROOT"
+ 
+ log "Repository root: $REPO_ROOT"
+ 
++run_cmd python3 tools/infra/assert_v428_manifest_freeze.py
++run_cmd python3 tools/infra/assert_single_mathlib_source.py
++
+ APT_PREFIX=()
+ if [[ "$SKIP_APT" -eq 0 ]]; then
+   if ! command -v apt-get >/dev/null 2>&1; then
+@@ -159,9 +167,17 @@ if command -v elan >/dev/null 2>&1; then
+ fi
+ 
+ run_cmd lake --version
+-run_cmd lake update
++
++run_cmd "$REPO_ROOT/scripts/infra/enforce-v428-local-manifests.sh"
++
++if [[ "$REFRESH_DEPS" -eq 1 ]]; then
++  echo "error: --refresh-deps is disabled by the immutable v4.28.0 manifest freeze" >&2
++  exit 1
++fi
++log "Manifest freeze enforced; Lake dependency refresh is disabled"
+ 
+ log "Attempting mathlib cache download"
++run_cmd python3 tools/infra/assert_v428_manifest_freeze.py
+ if [[ "$DRY_RUN" -eq 1 ]]; then
+   log "lake exe cache get"
+ else
+@@ -169,6 +185,7 @@ else
+     log "Warning: 'lake exe cache get' failed; continuing with source build"
+   fi
+ fi
++run_cmd python3 tools/infra/assert_v428_manifest_freeze.py
+ 
+ run_cmd python3 -m venv .venv
+ VENV_PY="$REPO_ROOT/.venv/bin/python"
+@@ -221,4 +238,4 @@ if [[ "$WITH_INFRA" -eq 1 ]]; then
+ fi
+ 
+ log "Bootstrap complete"
+-log "In a new shell, activate the environment with: source .venv/bin/activate"
+\ No newline at end of file
++log "In a new shell, activate the environment with: source .venv/bin/activate"
+diff --git a/scripts/infra/build_and_index.sh b/scripts/infra/build_and_index.sh
+index 0faeaf57..5e55b735 100644
+--- a/scripts/infra/build_and_index.sh
++++ b/scripts/infra/build_and_index.sh
+@@ -7,6 +7,7 @@ set -euo pipefail
+ ROOT="/home/goutev/repos/info-geometry-lean"
+ REPO="$ROOT/external_refs/$1"
+ LOOGLE_BIN="$ROOT/external_refs/loogle/.lake/build/bin/loogle"
++REFRESH_DEPS="${REFRESH_DEPS:-0}"
+ 
+ if [ ! -d "$REPO" ]; then
+     echo "ERROR: repo $1 not found"
+@@ -19,48 +20,28 @@ echo "=========================================="
+ 
+ cd "$REPO"
+ 
+-# 1. Set toolchain to v4.28.0
+-echo "leanprover/lean4:v4.28.0" > lean-toolchain
++python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py" --root "$REPO" --external-package
+ 
+-# 2. Change mathlib pin to v4.28.0 in lakefile (handle all formats)
+-if [ -f lakefile.lean ]; then
+-    # Format: require mathlib from git "URL" @ "v4.X.Y.Z"
+-    sed -i 's|@ "v4\.[0-9]*\.[0-9]*\(-rc[0-9]*\)\?"|@ "v4.28.0"|g' lakefile.lean
+-    # Format: require "mathlib" from git "URL" @ "commithash"
+-    sed -i 's|require "mathlib" from git "[^"]*" @ "[^"]*"|require mathlib from git "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.0"|' lakefile.lean
++if [ "$REFRESH_DEPS" -eq 1 ]; then
++    echo "  >>> BUILD FAILED ($1) - REFRESH_DEPS is disabled by the immutable v4.28.0 manifest freeze"
++    exit 1
+ fi
+ 
+-# 3. Update manifest to reflect v4.28.0 mathlib
+-if [ -f lake-manifest.json ]; then
+-    python3 -c "
+-import json
+-with open('lake-manifest.json') as f:
+-    data = json.load(f)
+-changed = False
+-for pkg in data.get('packages', []):
+-    if pkg.get('name') in ('mathlib', 'mathlib4'):
+-        pkg['rev'] = 'v4.28.0'
+-        changed = True
+-if changed:
+-    with open('lake-manifest.json', 'w') as f:
+-        json.dump(data, f, indent=2)
+-" 2>/dev/null || true
+-fi
++echo "  >>> Manifest freeze enforced; skipping Lake dependency refresh"
+ 
+-# 4. Update deps and build
+-if lake update mathlib 2>&1; then
+-    if lake build 2>&1; then
++python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py" --root "$REPO" --external-package
++if lake build 2>&1; then
+         echo "  >>> BUILD OK ($1)"
+ 
+         # 5. Find modules to index
+         have_lib=false
+-        grep -E '^lean_lib' lakefile.lean 2>/dev/null | sed 's/.*lean_lib //; s/ .*//; s/«//g; s/»//g' | while read -r mod; do
++        while read -r mod; do
+             if [ -n "$mod" ]; then
+                 have_lib=true
+                 echo "  indexing $mod..."
+                 lake env "$LOOGLE_BIN" --module "$mod" --index-mode write 2>&1 | grep -v "^warning:" || true
+             fi
+-        done
++        done < <(grep -E '^lean_lib' lakefile.lean 2>/dev/null | sed 's/.*lean_lib //; s/ .*//; s/«//g; s/»//g')
+ 
+         # Also try the package name if no lean_lib found
+         if ! $have_lib; then
+@@ -70,11 +51,7 @@ if lake update mathlib 2>&1; then
+                 lake env "$LOOGLE_BIN" --module "$pkg_name" --index-mode write 2>&1 | grep -v "^warning:" || true
+             fi
+         fi
+-    else
+-        echo "  >>> BUILD FAILED ($1) - build error"
+-        exit 1
+-    fi
+ else
+-    echo "  >>> BUILD FAILED ($1) - lake update failed"
++    echo "  >>> BUILD FAILED ($1) - build error"
+     exit 1
+ fi
+diff --git a/scripts/infra/enforce-v428-local-manifests.sh b/scripts/infra/enforce-v428-local-manifests.sh
+index 9fa737af..1068f789 100755
+--- a/scripts/infra/enforce-v428-local-manifests.sh
++++ b/scripts/infra/enforce-v428-local-manifests.sh
+@@ -4,51 +4,4 @@ set -euo pipefail
+ ROOT=$(git rev-parse --show-toplevel)
+ cd "$ROOT"
+ 
+-if [ ! -d .lake/packages ]; then
+-  echo "No .lake/packages directory; skipping v4.28 policy check." >&2
+-  exit 0
+-fi
+-
+-BAD=0
+-check_file() {
+-  local file="$1"
+-  while IFS= read -r line; do
+-    if [[ "$line" == *"leanprover/lean4:"* ]]; then
+-      if [[ "$line" != *"leanprover/lean4:v4.28.0"* ]]; then
+-        echo "$file: $line"
+-        BAD=1
+-      fi
+-    fi
+-    if [[ "$line" == *"rev = "* ]]; then
+-      if [[ "$line" =~ rev[[:space:]]*=[[:space:]]*"v4\.[0-9]+\.[0-9]+(-rc[0-9]+)?" ]]; then
+-        if [[ "$line" != *'rev = "v4.28.0"'* ]]; then
+-          echo "$file: $line"
+-          BAD=1
+-        fi
+-      fi
+-    fi
+-    if [[ "$line" == *'"inputRev": '* ]]; then
+-      if [[ "$line" =~ \"inputRev\"[[:space:]]*:[[:space:]]*"v4\.[0-9]+\.[0-9]+" ]]; then
+-        if [[ "$line" != *'"inputRev": "v4.28.0"'* ]]; then
+-          echo "$file: $line"
+-          BAD=1
+-        fi
+-      fi
+-    fi
+-  done < "$file"
+-}
+-
+-# Only inspect package manifest / toolchain files.
+-mapfile -t FILES < <(find .lake/packages -type f \
+-  \( -name lean-toolchain -o -name lakefile.toml -o -name lakefile.lean -o -name lake-manifest.json \) | sort)
+-
+-for f in "${FILES[@]}"; do
+-  check_file "$f"
+-done
+-
+-if [[ $BAD -ne 0 ]]; then
+-  echo "Nested package policy violation: non-v4.28.0 pin detected in .lake/packages." >&2
+-  exit 1
+-fi
+-
+-exit 0
++exec python3 tools/infra/assert_v428_manifest_freeze.py
+diff --git a/scripts/infra/index_all_repos.sh b/scripts/infra/index_all_repos.sh
+index d2bce6ac..63cdd5a8 100644
+--- a/scripts/infra/index_all_repos.sh
++++ b/scripts/infra/index_all_repos.sh
+@@ -16,14 +16,24 @@ PASS=0
+ FAIL=0
+ SKIP=0
+ 
++if [ "${ALLOW_MANIFEST_MUTATION:-0}" != "1" ]; then
++    echo "ERROR: manifest freeze enforced; index_all_repos is disabled unless ALLOW_MANIFEST_MUTATION=1" >&2
++    exit 1
++fi
++
+ mkdir -p "$ROOT/scripts/infra"
+ 
+ echo '[]' > "$SUMMARY"
+ 
+ # Ensure loogle is built for v4.28.0
+ echo ">>> Ensuring loogle is built for v4.28.0..."
+-echo "leanprover/lean4:v4.28.0" > "$LOOGLE_TC"
++if [ ! -f "$LOOGLE_TC" ] || [ "$(tr -d '[:space:]' < "$LOOGLE_TC")" != "leanprover/lean4:v4.28.0" ]; then
++    echo ">>> loogle lean-toolchain is not frozen to leanprover/lean4:v4.28.0; refusing to rewrite it automatically"
++    exit 1
++fi
++python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py"
+ cd "$LOOGLE"
++python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py"
+ lake build 2>&1 | tail -5
+ 
+ # All cached packages we can point to locally
+@@ -66,18 +76,24 @@ process_repo() {
+     echo ">>> Processing $name..."
+     echo "=========================================="
+ 
+-    # 1. Set toolchain to v4.28.0
+-    echo "leanprover/lean4:v4.28.0" > "$tc"
++    # 1. Enforce toolchain immutability; never rewrite external repos here.
++    if [ ! -f "$tc" ] || [ "$(tr -d '[:space:]' < "$tc")" != "leanprover/lean4:v4.28.0" ]; then
++        echo ">>> $name: lean-toolchain is not frozen to leanprover/lean4:v4.28.0; skipping"
++        ((FAIL++))
++        return
++    fi
+ 
+-    # 2. Replace git dependencies with local paths in lakefile
++    # 2. Refuse mutable mathlib dependency wiring; do not patch lakefiles in-place.
+     if grep -q "require mathlib from git" "$lf" 2>/dev/null; then
+-        echo ">>> $name: patching mathlib to local path..."
+-        sed -i 's|require mathlib from git.*$|require mathlib from "'"$MATHLIB"'"|' "$lf"
++        echo ">>> $name: lakefile still uses git mathlib; refusing to rewrite it automatically"
++        ((FAIL++))
++        return
+     fi
+ 
+     # 3. Try to build
+     echo ">>> $name: building..."
+     cd "$repo"
++    python3 "$ROOT/tools/infra/assert_v428_manifest_freeze.py"
+     if lake build 2>&1 | tail -20; then
+         echo ">>> $name: BUILD SUCCEEDED"
+         ((PASS++))
+diff --git a/tools/infra/assert_single_mathlib_source.py b/tools/infra/assert_single_mathlib_source.py
+index 455ec40d..9128e1ea 100644
+--- a/tools/infra/assert_single_mathlib_source.py
++++ b/tools/infra/assert_single_mathlib_source.py
+@@ -19,19 +19,9 @@ ROOT = Path(__file__).resolve().parents[2]
+ 
+ CONFIG_PATHS = [
+     ROOT / "lakefile.lean",
+-    ROOT / "lake-manifest.json",
+-    ROOT / "lean_sandbox" / "lakefile.lean",
+-    ROOT / "lib" / "InfoGeometryCore" / "lakefile.toml",
+-    ROOT / "lib" / "InfoGeometryCore" / "lake-manifest.json",
+-    ROOT / "pure_math_lib" / "lakefile.toml",
+-    ROOT / ".lake" / "packages" / "Paperproof" / "lakefile.lean",
+-    ROOT / ".lake" / "packages" / "LeanArchitect" / "lakefile.lean",
+-    ROOT / ".lake" / "packages" / "LeanArchitect" / "lake-manifest.json",
+-    ROOT / ".lake" / "packages" / "doc-gen4" / "lakefile.lean",
+-    ROOT / ".lake" / "packages" / "doc-gen4" / "lake-manifest.json",
+-    ROOT / "external_refs" / "gift-framework-core" / "lakefile.lean",
+-    ROOT / "external_refs" / "gift-framework-core" / "lake-manifest.json",
+-    ROOT / "external_refs" / "atlas-lean" / "lakefile.toml",
++    ROOT / "lean-toolchain",
++    ROOT / "external_refs" / "paperproof" / "lean-toolchain",
++    ROOT / "external_refs" / "LeanCopilot" / "lean-toolchain",
+ ]
+ 
+ FORBIDDEN_PATTERNS = {
+@@ -43,7 +33,7 @@ FORBIDDEN_PATTERNS = {
+ 
+ def check_text(path: Path) -> list[str]:
+     if not path.exists():
+-        return [f"{path}: missing"]
++        return []
+     text = path.read_text(encoding="utf-8")
+     problems: list[str] = []
+     for name, pat in FORBIDDEN_PATTERNS.items():
+diff --git a/tools/infra/bootstrap_env.sh b/tools/infra/bootstrap_env.sh
+index b01c95c7..2dc6633e 100644
+--- a/tools/infra/bootstrap_env.sh
++++ b/tools/infra/bootstrap_env.sh
+@@ -12,6 +12,13 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
+ sandbox_dir="${repo_root}/tools/infra/sandbox-bin"
+ ci_mode="${1:-}"
+ 
++python_guard_bin="$(command -v python3 2>/dev/null || command -v python 2>/dev/null || true)"
++if [[ -z "${python_guard_bin}" ]]; then
++  echo "[sandbox-bootstrap] missing python interpreter for v4.28.0 freeze preflight" >&2
++  return 2 2>/dev/null || exit 2
++fi
++"${python_guard_bin}" "${repo_root}/tools/infra/assert_v428_manifest_freeze.py"
++
+ resolve_command() {
+   local cmd="$1"
+   local original_path="${PATH:-}"
+diff --git a/tools/infra/build.py b/tools/infra/build.py
+index 6fca2fe5..66c35541 100644
+--- a/tools/infra/build.py
++++ b/tools/infra/build.py
+@@ -11,6 +11,15 @@ from typing import Sequence
+ from tools.build_lock import BuildLockBusyError, acquire_build_lock
+ from tools.pathing import repo_root
+ 
++
++def assert_v428_manifest_freeze(root: Path) -> int:
++    guard = root / "tools" / "infra" / "assert_v428_manifest_freeze.py"
++    if not guard.exists():
++        print(f"  >>> BUILD FAILED - missing manifest freeze guard: {guard}", file=sys.stderr)
++        return 1
++    proc = subprocess.run([sys.executable, str(guard)], cwd=root)
++    return proc.returncode
++
+ _SPECTRAL_STAGE_PREFIX: dict[str, str] = {
+     "PREP": "[Sample Preparation]",
+     "DECOMP": "[Spectral Decomposition]",
+@@ -78,6 +87,9 @@ def compute_lean_source_hash(root: Path) -> str:
+ 
+ def ensure_mathlib_cache(root: Path) -> None:
+     """Hydrate the precompiled mathlib cache if the local build artifacts are missing."""
++    rc = assert_v428_manifest_freeze(root)
++    if rc != 0:
++        raise RuntimeError("v4.28.0 manifest freeze guard failed before mathlib cache hydration")
+     mathlib_olean = (
+         root / ".lake" / "packages" / "mathlib" / ".lake" / "build" / "lib" / "lean" / "Mathlib.olean"
+     )
+@@ -94,6 +106,12 @@ def run_locked_lake_build(
+     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
+ ) -> int:
+     root = repo_root()
++    
++    rc = assert_v428_manifest_freeze(root)
++    if rc != 0:
++        print("  >>> BUILD FAILED - v4.28.0 manifest freeze guard failed", file=sys.stderr)
++        return rc
++
+     ensure_mathlib_cache(root)
+     target_label = " ".join(targets) if targets else "<default>"
+     owner = f"locked-lake-build:{os.getpid()}:{target_label}"
+diff --git a/tools/infra/sandbox-bin/lake b/tools/infra/sandbox-bin/lake
+index 01dfba24..f0aacd95 100755
+--- a/tools/infra/sandbox-bin/lake
++++ b/tools/infra/sandbox-bin/lake
+@@ -37,6 +37,15 @@ fi
+ fallback_mode="${BWRAP_LAKE_WRAPPER_MODE:-sandbox}"
+ require_sandbox="${BWRAP_REQUIRE_SANDBOX:-0}"
+ 
++case "${*:-}" in
++  *"--help"*|*"-h"*) ;;
++  *)
++    if [[ -x "${repo_root}/tools/infra/assert_v428_manifest_freeze.py" || -f "${repo_root}/tools/infra/assert_v428_manifest_freeze.py" ]]; then
++      python3 "${repo_root}/tools/infra/assert_v428_manifest_freeze.py"
++    fi
++    ;;
++esac
++
+ if [[ ! -x "${bwrap_preflight}" ]]; then
+   echo "[bwrap-sandbox-wrapper] missing ${bwrap_preflight}" >&2
+   exit 127

@@ -1,0 +1,49 @@
+diff --git a/lake-manifest.json b/lake-manifest.json
+index bc68e3b..c6dbc9f 100644
+--- a/lake-manifest.json
++++ b/lake-manifest.json
+@@ -1,15 +1,20 @@
+-{"version": "1.1.0",
++{
++ "version": "1.1.0",
+  "packagesDir": ".lake/packages",
+- "packages":
+- [{"url": "https://github.com/leanprover/lean4checker.git",
++ "packages": [
++  {
++   "url": "https://github.com/leanprover/lean4checker.git",
+    "type": "git",
+    "subDir": null,
+    "scope": "",
+    "rev": "b1efea26e138821953e43dfb8fe63770ccb766d1",
+    "name": "lean4checker",
+    "manifestFile": "lake-manifest.json",
+-   "inputRev": "master",
++   "inputRev": "b1efea26e138821953e43dfb8fe63770ccb766d1",
+    "inherited": false,
+-   "configFile": "lakefile.toml"}],
++   "configFile": "lakefile.toml"
++  }
++ ],
+  "name": "paranoia",
+- "lakeDir": ".lake"}
++ "lakeDir": ".lake"
++}
+\ No newline at end of file
+diff --git a/lakefile.toml b/lakefile.toml
+index 5acb433..3f0e383 100644
+--- a/lakefile.toml
++++ b/lakefile.toml
+@@ -12,4 +12,4 @@ root = "Main"
+ [[require]]
+ name = "lean4checker"
+ git = "https://github.com/leanprover/lean4checker.git"
+-rev = "master"
++rev = "v4.28.0"
+diff --git a/lean-toolchain b/lean-toolchain
+index e5ab73a..4c685fa 100644
+--- a/lean-toolchain
++++ b/lean-toolchain
+@@ -1 +1 @@
+-leanprover/lean4:v4.25.0
++leanprover/lean4:v4.28.0

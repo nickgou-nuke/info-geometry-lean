@@ -1,0 +1,29 @@
+--- lean/InfoGeometry/Arithmetic/ArithmeticKMS.lean
++++ lean/InfoGeometry/Arithmetic/ArithmeticKMS.lean
+@@ -343,4 +343,23 @@
+ 
+ end ProjectiveKMSPrimeCompatibility
+ 
++/-! ## 6. Concrete Instantiations (Purification) -/
++
++def concreteArithmeticKMSWitness : ArithmeticKMSWitness (Finset ℕ) where
++  stateOfFinset := id
++  modularFlowReadout := fun A β => arithmeticGibbsPartition A β
++  modularFlow_eq_gibbsPartition := fun _ _ => rfl
++
++def concreteProjectiveArithmeticKMSWitness : ProjectiveArithmeticKMSWitness (Finset ℕ) where
++  stateOfFinset := id
++  projectiveModularFlowReadout := fun A u => projectiveArithmeticGibbsPartition A u
++  projectiveFlow_eq_gibbsPartition := fun _ _ _ => rfl
++
++def concreteProjectiveKMSPrimeCompatibility : ProjectiveKMSPrimeCompatibility (Finset ℕ) where
++  kms := concreteProjectiveArithmeticKMSWitness
++  prime := {
++    stateOfFinset := id
++    modularFlowReadout := fun A u => projectivePrimePartition A u
++    flow_eq_projectivePrimePartition := fun _ _ _ => rfl
++  }
++  state_agrees := fun _ => rfl
++  prime_flow_eq_kms_flow := fun _ _ _ => sorry
++
+ end InfoGeometry.Arithmetic.ArithmeticKMS

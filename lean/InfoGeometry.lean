@@ -120,7 +120,7 @@ import InfoGeometry.Categorical.CFTBootstrap
 import InfoGeometry.Categorical.CFTMinimal
 import InfoGeometry.Categorical.CFTLiouville
 import InfoGeometry.Categorical.CFTLogarithmic
-import InfoGeometry.Categorical.CFTSigma
+
 import InfoGeometry.Complex.BergmanKernelLocalization
 import InfoGeometry.Information.BergmanBregman
 import InfoGeometry.Information.DeRhamScore

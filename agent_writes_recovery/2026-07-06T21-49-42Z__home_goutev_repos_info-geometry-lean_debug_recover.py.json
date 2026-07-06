@@ -1,0 +1,8 @@
+{
+  "CodeContent": "import json\nimport os\nimport re\n\nlogs_dir = \"/home/goutev/.gemini/antigravity-cli/brain\"\nrepo_dir = \"/home/goutev/repos/info-geometry-lean\"\n\nfor conv_id in os.listdir(logs_dir):\n    log_path = os.path.join(logs_dir, conv_id, \".system_generated\", \"logs\", \"transcript.jsonl\")\n    log_full_path = os.path.join(logs_dir, conv_id, \".system_generated\", \"logs\", \"transcript_full.jsonl\")\n    \n    if not os.path.exists(log_full_path):\n        continue\n    \n    with open(log_full_path, 'r') as f:\n        lines = f.readlines()\n        \n    for i in range(len(lines)):\n        try:\n            step = json.loads(lines[i])\n        except json.JSONDecodeError:\n            continue\n            \n        if step.get(\"type\") == \"PLANNER_RESPONSE\" and step.get(\"tool_calls\"):\n            for call in step[\"tool_calls\"]:\n                if call.get(\"name\") == \"view_file\":\n                    args = call.get(\"args\", {})\n                    abs_path = args.get(\"AbsolutePath\", \"\")\n                    \n                    if not isinstance(abs_path, str):\n                        # Some versions might store args as a JSON string?\n                        print(\"args is not a dict?\", type(args))\n                        continue\n                    \n                    # It seems `args` could be a JSON string itself!\n                    print(f\"Subagent {conv_id} view_file AbsPath: {abs_path}\")\n",
+  "Description": "Debug the recover script",
+  "Overwrite": true,
+  "TargetFile": "/home/goutev/repos/info-geometry-lean/debug_recover.py",
+  "toolAction": "Debug recovery script",
+  "toolSummary": "Write file"
+}

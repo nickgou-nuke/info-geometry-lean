@@ -1,0 +1,20 @@
+# Exact GAP verifier over rationals for representative Hestenes/Krein axis laws.
+I2 := [[1,0],[0,1]];
+K := [[0,-1],[1,0]];
+J := [[0,1],[1,0]];
+eps := [[1,0],[0,-1]];
+if K*K <> -I2 then Error("K^2=-I failed"); fi;
+if J*J <> I2 then Error("J^2=I failed"); fi;
+if eps*eps <> I2 then Error("eps^2=I failed"); fi;
+if J*eps <> K then Error("J eps=K failed"); fi;
+if eps*J <> -K then Error("eps J=-K failed"); fi;
+if TraceMat(K) <> 0 then Error("trace K failed"); fi;
+a := 2;; b := -3;; c := 5;; d := 7;;
+rho1 := a*I2 + b*K;;
+rho2 := c*I2 + d*K;;
+rhoProd := (a*c-b*d)*I2 + (a*d+b*c)*K;;
+if rho1*rho2 <> rhoProd then Error("rho multiplicative failed"); fi;
+p := 11;; q := -13;; A := [[p,q],[-q,p]];;
+if K*A <> A*K then Error("commutant shape failed"); fi;
+Print("GAP_HK_COMPLEX_AXIS_OK\n");
+QUIT;

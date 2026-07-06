@@ -1,0 +1,18 @@
+diff --git a/lakefile.lean b/lakefile.lean
+index e25c914..a7b7664 100644
+--- a/lakefile.lean
++++ b/lakefile.lean
+@@ -426,4 +426,4 @@ require batteries from git "https://github.com/leanprover-community/batteries.gi
+ require aesop from git "https://github.com/leanprover-community/aesop" @ "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1"
+ 
+ meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
+-require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"
++require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "v4.28.0"
+diff --git a/lean-toolchain b/lean-toolchain
+index ea6ca7f..4c685fa 100644
+--- a/lean-toolchain
++++ b/lean-toolchain
+@@ -1 +1 @@
+-leanprover/lean4:v4.28.0
+\ No newline at end of file
++leanprover/lean4:v4.28.0

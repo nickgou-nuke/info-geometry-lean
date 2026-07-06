@@ -1,0 +1,46 @@
+{
+  "packet": "hestenes_krein_complex_axis",
+  "scope": "finite exact 2x2 real model of the Hestenes/Krein square-minus-one phase axis; mirrors existing Lean owner theorems, does not prove global GA/Krein analytic claims",
+  "matrix_convention": {
+    "K": [[0, -1], [1, 0]],
+    "J": [[0, 1], [1, 0]],
+    "epsilon": [[1, 0], [0, -1]],
+    "relation": "K = J epsilon"
+  },
+  "theorems": [
+    "K^2 = -I",
+    "J^2 = I",
+    "epsilon^2 = I",
+    "J epsilon = K",
+    "epsilon J = -K",
+    "trace(K)=0",
+    "rho(a,b)=aI+bK preserves complex multiplication",
+    "[K,A]=0 iff A=[[p,q],[-q,p]]"
+  ],
+  "lean_owner_declarations": [
+    {
+      "file": "lean/InfoGeometry/Krein/DoubledSpace.lean",
+      "decls": ["complex_i", "complex_i_sq", "modular_j_involution", "spectral_epsilon_involution", "modular_j_spectral_epsilon_anticommute"]
+    },
+    {
+      "file": "lean/InfoGeometry/Quantum/RealSplitClifford.lean",
+      "decls": ["RealSplitCl11Action.K", "RealSplitCl11Action.K_sq", "doubledSpaceCl11Action_K"]
+    },
+    {
+      "file": "lean/InfoGeometry/Quantum/RealKCategory.lean",
+      "decls": ["RealKVect", "complexModule", "complexI_smul_eq_K"]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/HestenesComplexTranslation.lean",
+      "decls": ["hestenesScalar", "hestenesScalar_I_sq", "hestenesCoeff_mul", "hestenesScalar_commutes_iff_phaseLinear", "modular_j_conjugates_complex_i"]
+    },
+    {
+      "file": "lean/InfoGeometry/Clifford/RealDoubledHestenesAnchor.lean",
+      "decls": ["doubledIBivector", "doubledI_rotor_exp_reverse", "doubledI_rotor_reverse_comp_exp"]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/HestenesKreinModularGeometry.lean",
+      "decls": ["hestenesCommutator", "modularDerivation", "modularDerivation_eq_zero_iff_commutes", "IsMonogenic", "isMonogenic_iff_commutes"]
+    }
+  ]
+}

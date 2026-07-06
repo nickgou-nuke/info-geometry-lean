@@ -43,9 +43,6 @@ structure HessianResponseDatum
   /-- Material response readout. -/
   responseReadout : Op → Response
 
-  /-- This Hessian is the intended linear-response geometry. -/
-  hessian_response : Prop
-
 namespace HessianResponseDatum
 
 variable
@@ -73,9 +70,6 @@ structure SusceptibilityDatum
     [NormedAddCommGroup Response] [NormedSpace ℝ Response] where
   /-- Linear material susceptibility at the chosen state/parameter. -/
   susceptibility : Op → Field →L[ℝ] Response
-
-  /-- Susceptibility is obtained from the Hessian response. -/
-  derived_from_hessian : Prop
 
 namespace SusceptibilityDatum
 
@@ -163,11 +157,6 @@ uninterpreted external hypothesis.
 def toSusceptibilityDatum :
     SusceptibilityDatum Op Field Response where
   susceptibility := C.susceptibility
-  derived_from_hessian :=
-    ∀ U : Op,
-      C.susceptibility U =
-        (C.responseFromTangent U).comp
-          ((C.hessianResponse.hessian U).comp (C.fieldToTangent U))
 
 /-- The generated susceptibility datum has the constructive susceptibility map. -/
 theorem toSusceptibilityDatum_susceptibility :
@@ -288,9 +277,6 @@ structure OpticalInterfaceGeometry where
   /-- Transmission/refraction angle, if applicable. -/
   theta_t : ℝ
 
-  /-- Geometric/Snell-law calibration proof payload. -/
-  angle_calibration : Prop
-
 namespace OpticalInterfaceGeometry
 
 variable (G : OpticalInterfaceGeometry)
@@ -313,9 +299,6 @@ structure FresnelFromSusceptibilityCalibration
 
   /-- Fresnel coefficients supplied to the Jones layer. -/
   coeffs : InfoGeometry.Optics.JonesCalibration.FresnelCoefficientDatum
-
-  /-- Proof payload that `coeffs` are determined by dielectric and interface data. -/
-  fresnel_from_dielectric : Prop
 
 namespace FresnelFromSusceptibilityCalibration
 
@@ -415,9 +398,6 @@ structure FresnelEigenvalueCalibration
     ∀ U : State,
       (coeffs U).r_p = E.eigenvalue FresnelChannel.p U
 
-  /-- Proof payload that the eigenvalues come from the intended Fresnel boundary problem. -/
-  fresnel_boundary_calibration : Prop
-
 namespace FresnelEigenvalueCalibration
 
 variable
@@ -513,18 +493,6 @@ structure MetalMirrorSusceptibilityCalibration
   fresnel :
     FresnelFromSusceptibilityCalibration Op
 
-  /-- Hessian response determines susceptibility in this model. -/
-  hessian_controls_susceptibility : Prop
-
-  /-- Susceptibility/dielectric response controls absorption. -/
-  susceptibility_controls_absorption : Prop
-
-  /-- Susceptibility/dielectric response controls retardance. -/
-  susceptibility_controls_retardance : Prop
-
-  /-- Jones reflector is calibrated by the Fresnel coefficients. -/
-  jones_calibrated : Prop
-
 namespace MetalMirrorSusceptibilityCalibration
 
 variable
@@ -582,18 +550,6 @@ structure SusceptibilityHessianJonesCalibration
   /-- Fresnel coefficients as eigenchannel readouts. -/
   fresnel :
     FresnelEigenvalueCalibration State JonesOp projectors eigenResponse
-
-  /-- Hessian response controls susceptibility in the chosen material model. -/
-  hessian_controls_susceptibility : Prop
-
-  /-- Susceptibility controls dielectric response. -/
-  susceptibility_controls_dielectric : Prop
-
-  /-- Dielectric response plus interface geometry controls Fresnel coefficients. -/
-  dielectric_controls_fresnel : Prop
-
-  /-- Jones reflector is calibrated by the resulting Fresnel coefficients. -/
-  jones_calibrated : Prop
 
 namespace SusceptibilityHessianJonesCalibration
 
@@ -661,18 +617,6 @@ structure MetalMirrorSusceptibilityHessianCalibration
 
   /-- Complex-index readout. -/
   complexIndex : State → ℂ
-
-  /-- Absorption is controlled by the dissipative part of response. -/
-  response_controls_absorption : Prop
-
-  /-- Retardance is controlled by relative phase of `s/p` eigenvalues. -/
-  eigenphase_controls_retardance : Prop
-
-  /-- Ellipticity is controlled by amplitude imbalance plus retardance. -/
-  eigenresponse_controls_ellipticity : Prop
-
-  /-- Complex index is calibrated to the dielectric response. -/
-  complex_index_calibrated : Prop
 
 namespace MetalMirrorSusceptibilityHessianCalibration
 

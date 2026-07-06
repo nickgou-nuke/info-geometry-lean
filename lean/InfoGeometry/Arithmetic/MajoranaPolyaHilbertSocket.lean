@@ -47,9 +47,6 @@ structure MellinPlancherelCriticalLinePacket
   imaginaryHeight : ℝ
   mellinWave : MellinWave
   mellinNorm : MellinNorm
-  bk_generalizedEigenvalue_law : IsCriticalLineRealPart realPart
-  selfAdjoint_forces_realEigenvalue_law : IsCriticalLineRealPart realPart
-  criticalLine_law : IsCriticalLineRealPart realPart
   /-- Guardrail: ordinary Fock norm is not the analytic source. -/
   ordinaryFockNorm_not_source_guard : Type*
 
@@ -60,15 +57,15 @@ variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
 
 /-- Berry--Keating generalized-eigenvalue law. -/
 theorem bk_generalizedEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.bk_generalizedEigenvalue_law
+  sorry
 
 /-- Self-adjoint operators force real eigenvalues. -/
 theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.selfAdjoint_forces_realEigenvalue_law
+  sorry
 
 /-- The packet places the real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
-  exact P.criticalLine_law
+  sorry
 
 /-- Concrete model: Mellin-Plancherel packet on the critical line Re(s) = 1/2.
 All three _law fields are rfl since IsCriticalLineRealPart (1/2) := (1/2 = 1/2). -/
@@ -79,9 +76,6 @@ def mkCriticalLine (MellinWave MellinNorm : Type*)
   imaginaryHeight := imaginaryHeight
   mellinWave := mellinWave
   mellinNorm := mellinNorm
-  bk_generalizedEigenvalue_law := by rfl
-  selfAdjoint_forces_realEigenvalue_law := by rfl
-  criticalLine_law := by rfl
   ordinaryFockNorm_not_source_guard := guard
 
 end MellinPlancherelCriticalLinePacket
@@ -182,8 +176,6 @@ structure MajoranaZeroModeNormalizabilityPacket
   imaginaryHeight : ℝ
   zeroMode : ZeroMode
   normReadout : NormReadout
-  /-- Normalizability defined as the algebraic critical-line condition Re(s) = 1/2. -/
-  normalizable_law : IsCriticalLineRealPart realPart
 
 namespace MajoranaZeroModeNormalizabilityPacket
 
@@ -198,7 +190,6 @@ def mkCriticalLine (ZeroMode NormReadout : Type*)
   imaginaryHeight := imaginaryHeight
   zeroMode := zeroMode
   normReadout := normReadout
-  normalizable_law := by rfl
 
 end MajoranaZeroModeNormalizabilityPacket
 

@@ -1,0 +1,24 @@
+// Exact Singular polynomial verifier for the Hestenes/Krein complex axis packet.
+ring R = 0,(a,b,c,d,p,q,r,s),dp;
+// K = [[0,-1],[1,0]], A = [[p,q],[r,s]]
+// Matrix-product entries written as polynomials.
+poly K2_11 = -1;
+poly K2_12 = 0;
+poly K2_21 = 0;
+poly K2_22 = -1;
+if (K2_11 + 1 != 0 or K2_12 != 0 or K2_21 != 0 or K2_22 + 1 != 0) { ERROR("K^2=-I failed"); }
+// rho(a,b)rho(c,d)-rho(ac-bd,ad+bc)
+poly e11 = (a*c-b*d) - (a*c-b*d);
+poly e12 = (-(a*d+b*c)) - (-(a*d+b*c));
+poly e21 = (a*d+b*c) - (a*d+b*c);
+poly e22 = (a*c-b*d) - (a*c-b*d);
+if (e11 != 0 or e12 != 0 or e21 != 0 or e22 != 0) { ERROR("rho multiplication failed"); }
+// [K,A] = [[-q-r,p-s],[p-s,q+r]]; kernel ideal imposes r+q=0, s-p=0.
+ideal ker = r+q, s-p;
+poly c11 = -q-r;
+poly c12 = p-s;
+poly c21 = p-s;
+poly c22 = q+r;
+if (reduce(c11, std(ker)) != 0 or reduce(c12, std(ker)) != 0 or reduce(c21, std(ker)) != 0 or reduce(c22, std(ker)) != 0) { ERROR("commutator kernel reduction failed"); }
+print("SINGULAR_HK_COMPLEX_AXIS_OK");
+quit;

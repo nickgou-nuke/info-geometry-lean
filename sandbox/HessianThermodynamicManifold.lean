@@ -127,7 +127,7 @@ def is_square {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [JordanAlg
     This replaces the vacuous `∃ S, True` with a mathematically meaningful (but unproven) self-duality statement. -/
 theorem Koecher_Vinberg_SelfDual {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
   [JordanAlgebra V R] [InnerSpace V R] (y : V) :
-  (∀ x : V, is_square x → InnerSpace.inner x y ≥ (0 : R)) ↔ is_square y := sorry
+  (∀ x : V, is_square (R := R) x → InnerSpace.inner x y ≥ (0 : R)) ↔ is_square (R := R) y := sorry
 
 
 /-- A Fenchel-Legendre dual pair, expressing Fenchel-Young inequality and Legendre identity. -/

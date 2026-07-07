@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSUSY
+import InfoGeometry.Algebra.FiniteSUSYBlocks
 
 noncomputable section
 

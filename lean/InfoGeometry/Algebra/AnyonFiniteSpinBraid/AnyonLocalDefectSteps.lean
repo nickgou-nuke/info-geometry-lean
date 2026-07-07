@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpin
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 noncomputable section
 

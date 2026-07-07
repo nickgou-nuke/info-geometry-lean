@@ -290,7 +290,7 @@ def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Uni
   rnDerivative_eq_gibbsDensity := rfl
   expectationBeta _ := 0
   Q := ()
-  entropy_eq_Phi_add_pairing_Q_beta := rfl
+  entropy_eq_Phi_add_pairing_Q_beta := by change (0 : ℝ) = 0 + 0; norm_num
 
 @[rep_depth thermo]
 structure MomentMapGeneratingPotential (State LieAlgebra LieDual : Type*) where
@@ -317,7 +317,7 @@ def instMomentMapGeneratingPotential : MomentMapGeneratingPotential Unit Unit Un
   dPhi _ := 0
   hessian _ _ := 0
   covarianceTensor _ _ := 0
-  dPhi_eq_negative_pairing_Q _ := by norm_num
+  dPhi_eq_negative_pairing_Q _ := by change (0 : ℝ) = - 0; norm_num
   hessian_eq_covariance _ _ := rfl
 
 @[rep_depth thermo]

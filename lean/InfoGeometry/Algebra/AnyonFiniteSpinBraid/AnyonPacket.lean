@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Algebra.FiniteSpin
-import InfoGeometry.Algebra.FiniteSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonLocalDefectSteps
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonHomologicalStability
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonCoxeterQuotient

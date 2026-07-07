@@ -653,6 +653,167 @@ theorem entropyComparison_holds
 
 end ModularVolumeBridgePacket
 
+section ConcreteInstances
+
+/-- Concrete instance for LogRadonNikodymPacket -/
+def concreteLogRadonNikodymPacket : LogRadonNikodymPacket where
+  SampleSpace := Unit
+  ReferenceCarrier := Unit
+  StateCarrier := Unit
+  relativeDensity _ _ := 1
+  logPotential _ _ := 0
+  logPotential_eq _ _ := by simp
+  referenceVolume := ()
+  stateVolume := ()
+
+/-- Concrete instance for RelativeSurprisalPacket -/
+def concreteRelativeSurprisalPacket : RelativeSurprisalPacket where
+  SourceState := Unit
+  ReferenceState := Unit
+  relativeLogPotential _ _ _ := 0
+  klReadout _ _ := 0
+  klReadout_eq _ _ := rfl
+
+/-- Concrete instance for GibbsFreeEnergyPacket -/
+def concreteGibbsFreeEnergyPacket : GibbsFreeEnergyPacket where
+  StateSpace := Unit
+  inverseTemperature := 1
+  energy _ := 0
+  logPartitionConstant := 0
+  gibbsWeight _ := 1
+  gibbsState := ()
+  freeEnergy _ := 0
+  klToGibbs _ := 0
+  gibbsWeight_eq _ := by simp
+  freeEnergy_eq _ := by simp
+
+/-- Concrete instance for ModularFlowPacket -/
+def concreteModularFlowPacket : ModularFlowPacket where
+  AlgebraCarrier := Unit
+  StateCarrier := Unit
+  modularFlow _ _ := ()
+  modularHamiltonian _ := 0
+  connesCocycle _ _ := 0
+  relativeModularPotential _ _ := 0
+  hasTraceReference := True
+  tracePartition _ := 1
+  kmsPartition _ := 1
+  modularState := ()
+
+/-- Concrete instance for SupervolumePacket -/
+def concreteSupervolumePacket : SupervolumePacket where
+  GradedCarrier := Unit
+  EvenSector := Unit
+  OddSector := Unit
+  evenTrace _ := 0
+  oddTrace _ := 0
+  supertrace _ := 0
+  supertrace_eq _ := by simp
+
+/-- Concrete instance for GKSLPacket -/
+def concreteGKSLPacket : GKSLPacket where
+  StateCarrier := Unit
+  generator _ _ := ()
+  jumpIndex := Unit
+  anticommutator _ _ _ := ()
+  involution _ := ()
+  freeEnergyShadow _ := 0
+  freeEnergyDecay _ _ := True
+  freeEnergyDecay_holds _ _ := trivial
+  freeEnergy_monotone _ _ _ := by simp
+  equilibriumState := ()
+
+/-- Concrete instance for SpectralThermalNormalizationPacket -/
+def concreteSpectralThermalNormalizationPacket : SpectralThermalNormalizationPacket where
+  EnergySpace := Unit
+  SpectralGeometry := Unit
+  spectralVolume _ := 1
+  energy _ := 1
+  inverseTemperature := 1
+  inverseTemperature_pos := by norm_num
+  boltzmannPotential _ := 1
+  boltzmannPotential_eq _ := by simp
+  partitionFunction := 1
+  partitionFunction_pos := by norm_num
+  normalizedSpectralState := Unit
+  boltzmannTiltWitness := True
+  logarithmicPotentialWitness := True
+  freeEnergyIdentityWitness := True
+  weylGaugeWitness := True
+  boltzmannTilt := True
+  boltzmannTilt_proof := trivial
+
+/-- Concrete instance for ModularTransportBridgePacket -/
+def concreteModularTransportBridgePacket : ModularTransportBridgePacket where
+  VonNeumannSystem := Unit
+  StateWeightSpace := Unit
+  referenceWeight := ()
+  targetWeight := ()
+  modularFlow _ := Unit
+  connesCocycle _ _ := Unit
+  cocycleTransportWitness := Unit
+  cocycleTransport := ()
+  cocycleTransportLaw := Unit
+  cocycleTransportLawWitness := ()
+  modularPotential := Unit
+  modularPotentialWitness := ()
+  transportFreeEnergy := Unit
+  transportFreeEnergyWitness := ()
+  holonomyComparison := Unit
+  holonomyComparisonWitness := ()
+  perelmanComparison := Unit
+  perelmanComparisonWitness := ()
+
+/-- Concrete instance for ModularVolumeBridgePacket -/
+def concreteModularVolumeBridgePacket : ModularVolumeBridgePacket where
+  ClassicalMeasureSpace := Unit
+  VonNeumannSystem := Unit
+  SpectralGeometry := Unit
+  classicalVolume := Unit
+  classicalState := Unit
+  classicalLogPotential := Unit
+  modularWeight := Unit
+  modularData := Unit
+  modularHamiltonian := Unit
+  klDivergence := True
+  arakiRelativeEntropy := Unit
+  freeEnergy := True
+  spectralVolume := True
+  weylVolumeGauge := True
+  spectralThermalNormalization := concreteSpectralThermalNormalizationPacket
+  modularTransport := concreteModularTransportBridgePacket
+  entropyComparison := True
+  freeEnergyComparison := True
+  spectralVolumeComparison := True
+  entropyComparisonLaw := trivial
+  freeEnergyComparisonLaw := trivial
+  spectralVolumeComparisonLaw := trivial
+
+/-- Concrete instance for TomitaGromovBridgePacket -/
+def concreteTomitaGromovBridgePacket : TomitaGromovBridgePacket where
+  modularVolume := concreteModularVolumeBridgePacket
+  spectralThermalNormalization := concreteSpectralThermalNormalizationPacket
+  modularTransport := concreteModularTransportBridgePacket
+  spectralThermalNormalization_eq := rfl
+  modularTransport_eq := rfl
+
+/-- Integrated modular volume potential instantiation. -/
+theorem constructModularVolumePotential
+    : ModularVolumePotentialTarget
+        concreteLogRadonNikodymPacket
+        concreteRelativeSurprisalPacket
+        concreteGibbsFreeEnergyPacket
+        concreteModularFlowPacket
+        concreteSupervolumePacket
+        concreteGKSLPacket := by
+  exact constructModularVolumePotentialTarget
+    concreteLogRadonNikodymPacket
+    concreteRelativeSurprisalPacket
+    concreteGibbsFreeEnergyPacket
+    concreteModularFlowPacket
+    concreteSupervolumePacket
+    concreteGKSLPacket
+
 end ModularVolumePotential
 
 end InfoGeometry

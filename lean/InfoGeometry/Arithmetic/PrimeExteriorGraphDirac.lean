@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 

@@ -1,4 +1,4 @@
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 import InfoGeometry.Meta.OwnerTarget
@@ -516,5 +516,138 @@ structure MBKAnalyticFrontier
     ZetaRegularizedPfaffianSocket Operator ZetaReadout
   completedXiIdentity :
     CompletedXiSuperdeterminantIdentitySocket DeterminantReadout CompletedXiReadout
+
+/-! ## 9. Concrete Toy Model -/
+
+/--
+A concrete, trivial instantiation of the Majorana--Pólya--Hilbert analytic sockets
+using `Unit` to prove that the structures are not structurally vacuous.
+-/
+def concreteBerryKeatingOperatorPacket : BerryKeatingOperatorPacket Unit Unit Unit where
+  carrier := ()
+  domain := ()
+  position := ()
+  momentum := ()
+  symmetrizedDilation := ()
+
+def concreteMajoranaBerryKeatingOperatorPacket : MajoranaBerryKeatingOperatorPacket Unit Unit Unit Unit where
+  berryKeating := concreteBerryKeatingOperatorPacket
+  majoranaMode := fun _ => ()
+  thermalOperator := fun _ => ()
+  majoranaDirac := ()
+  squareRootEnergyCoefficient := fun _ => 1
+
+def concreteRealMajoranaBerryKeatingProblem : RealMajoranaBerryKeatingProblem Unit Unit Unit Unit where
+  carrier := ()
+  cutoff := ()
+  realBerryKeatingBlock := ()
+  chiralityRho := ()
+  majoranaDiracCutoff := ()
+  combinedDirac := ()
+  modeEnergyCoefficient := fun _ => 1
+
+def concreteFockVsMellinNormalizabilityGuard : FockVsMellinNormalizabilityGuard Unit Unit Unit Unit where
+  fockState := ()
+  mellinState := ()
+  fockNorm := ()
+  mellinNorm := ()
+  criticalLine_not_from_ordinaryFockNorm_guard := Unit
+
+def concreteMajoranaPfaffianZetaSpectralSocket : MajoranaPfaffianZetaSpectralSocket Unit Unit Unit where
+  parameter := ()
+  pfaffianReadout := ()
+  zetaReadout := ()
+
+def concreteWittenCharacterVsCompletedXiSocket : WittenCharacterVsCompletedXiSocket Unit Unit Unit Unit where
+  parameter := ()
+  wittenCharacter := ()
+  completedXi := ()
+  spectralPfaffian := ()
+
+def concreteBosonFermionSuperdeterminantSocket : BosonFermionSuperdeterminantSocket Unit Unit Unit Unit Unit where
+  bosonicReadout := ()
+  fermionicReadout := ()
+  superdeterminantReadout := ()
+  zetaReadout := ()
+  inverseZetaReadout := ()
+
+def concreteArchimedeanGammaFactorSocket : ArchimedeanGammaFactorSocket Unit Unit Unit Unit where
+  parameter := ()
+  archimedeanReadout := ()
+  finitePrimeReadout := ()
+  completedZetaReadout := ()
+  finitePrimes_alone_not_completed_guard := Unit
+
+def concreteBoundaryScatteringDiscretizationSocket : BoundaryScatteringDiscretizationSocket Unit Unit Unit Unit Unit where
+  boundaryData := ()
+  scatteringMatrix := ()
+  continuousSpectrum := ()
+  discreteOrAbsorptionReadout := ()
+  phaseShiftReadout := ()
+
+def concreteMBKHeatTraceExplicitFormulaSocket : MBKHeatTraceExplicitFormulaSocket Unit Unit Unit Unit Unit where
+  heatTrace := ()
+  bkHeatTrace := ()
+  arithmeticHeatTrace := ()
+  mellinTransformReadout := ()
+  explicitFormulaReadout := ()
+
+def concreteMajoranaPolyaHilbertBridge : MajoranaPolyaHilbertBridge
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit where
+  berryKeatingBlock := concreteBerryKeatingOperatorPacket
+  majoranaDirac := concreteMajoranaBerryKeatingOperatorPacket
+  realMajorana := concreteRealMajoranaBerryKeatingProblem
+  normalizability := MajoranaZeroModeNormalizabilityPacket.mkCriticalLine Unit Unit () () 0
+  fockMellinGuard := concreteFockVsMellinNormalizabilityGuard
+  pfaffianZeta := concreteMajoranaPfaffianZetaSpectralSocket
+  wittenCompletedXi := concreteWittenCharacterVsCompletedXiSocket
+  bosonFermion := concreteBosonFermionSuperdeterminantSocket
+  archimedean := concreteArchimedeanGammaFactorSocket
+  discretization := concreteBoundaryScatteringDiscretizationSocket
+  heatTraceExplicit := concreteMBKHeatTraceExplicitFormulaSocket
+  witten_is_inverse_zeta_guard := Unit
+  continuous_spectrum_not_zero_guard := Unit
+
+def concreteCompletedXiHilbertPolyaReduction : CompletedXiHilbertPolyaReduction Unit where
+  selfAdjointOperator := ()
+
+def concreteMajoranaBKTraceFormulaBridge : MajoranaBKTraceFormulaBridge
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit where
+  base_bridge := concreteMajoranaPolyaHilbertBridge
+
+def concreteRelativeMBKDeterminantScatteringPacket : RelativeMBKDeterminantScatteringPacket Unit Unit Unit where
+  diracCutoff := ()
+  diracFree := ()
+  relativeDeterminant := ()
+  scatteringPhase := ()
+
+def concreteEssentialSelfAdjointLimitSocket : EssentialSelfAdjointLimitSocket Unit where
+  diracCutoffSeq := fun _ => ()
+  essentialSelfAdjointLimit := ()
+
+def concreteZetaRegularizedPfaffianSocket : ZetaRegularizedPfaffianSocket Unit Unit where
+  diracSquare := ()
+  zetaRegularizedDet := ()
+
+def concreteCompletedXiSuperdeterminantIdentitySocket : CompletedXiSuperdeterminantIdentitySocket Unit Unit where
+  relativeSuperdeterminant := ()
+  completedXiTarget := ()
+
+def concreteMBKAnalyticFrontier : MBKAnalyticFrontier
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit
+    Unit Unit Unit Unit Unit Unit Unit Unit Unit where
+  base_bridge := concreteMajoranaPolyaHilbertBridge
+  relativeDeterminant := concreteRelativeMBKDeterminantScatteringPacket
+  essentialSelfAdjoint := concreteEssentialSelfAdjointLimitSocket
+  zetaRegularized := concreteZetaRegularizedPfaffianSocket
+  completedXiIdentity := concreteCompletedXiSuperdeterminantIdentitySocket
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

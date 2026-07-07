@@ -25,6 +25,18 @@
 
 **Remember:** The goal is to keep your main conversation focused on **proof strategy and tactics**, while automating everything else.
 
+## Repository sandbox rule (`info-geometry-lean`)
+
+For this repository, subagent delegation is sandbox-only for theorem/code repair work:
+
+1. Never ask a subagent to fix or rewrite an existing live owner file.
+2. Every subagent artifact must be a new file under a sandbox path.
+3. The parent agent must provide the mathematical target, relevant owner-file excerpts, local constraints, and verification commands in the subagent context.
+4. The parent agent alone integrates accepted sandbox output back into the live owner file with an ordinary reviewed patch.
+5. Favor small reusable lemma packets over large one-shot proof dumps; sandbox artifacts should decompose facts for later reuse.
+
+Treat this rule as stronger than generic delegation convenience. The point is to preserve owner-file integrity and make every promotion back to the live surface explicit and reviewable.
+
 ## When to Dispatch Subagents
 
 ### ✅ Dispatch Subagents For

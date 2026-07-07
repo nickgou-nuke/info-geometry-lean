@@ -139,6 +139,7 @@ Rules:
 - do not create a grand standard when a supplement to an existing one is enough;
 - do not restate repo doctrine as if it were new mathematics;
 - keep scope explicit: theorem-bearing, theorem-adjacent, or process-only.
+- for Lean artifacts, prefer small files and helper-lemma decomposition over monolithic proof blocks so downstream reuse and audit remain local.
 
 ### Gate 2 — Independent audit
 The `A-A` must inspect the draft without editing it first.
@@ -149,6 +150,7 @@ Minimum audit questions:
 - Are names/docstrings stronger than the actual content?
 - Are packet/wrapper layers adding noise instead of verified mathematics?
 - Are required verifications narrow and repo-first?
+- Is the Lean surface kept small and factored into reusable lemmas rather than one oversized, non-reusable proof block?
 
 ### Gate 3 — Corrective revision
 The drafting/orchestrating side may revise only in response to audit findings.
@@ -230,13 +232,25 @@ Default correction rule:
 
 1. Search existing standards.
 2. Draft the smallest artifact.
-3. Dispatch independent audit subagent.
-4. Dispatch independent acceptance subagent with a non-overlapping task.
-5. Revise only from audit findings.
-6. Rerun decisive checks.
-7. Report disposition, traceability roots, scope class, and residual debt exactly.
+3. If dispatching a subagent, give it a sandbox-only task: write to a new file under a sandbox path and never ask it to fix or rewrite a live owner file.
+4. Provide the subagent with sufficient mathematical and file-context excerpts from the live owner surface so it can work without touching that owner file directly.
+5. Dispatch independent audit subagent.
+6. Dispatch independent acceptance subagent with a non-overlapping task.
+7. Revise only from audit findings.
+8. Parent integrates accepted sandbox output into the live owner file with an ordinary reviewed patch.
+9. Rerun decisive checks.
+10. Report disposition, traceability roots, scope class, and residual debt exactly.
 
-## 12. Mission rule
+## 12. Subagent sandbox mandate
+
+When this SOP uses subagents, apply the following repository rule:
+
+- subagents must not be tasked with fixing or rewriting an existing live owner file;
+- every subagent write target must be a new file under a sandbox/quarantine path;
+- the parent agent must pass enough mathematical context, theorem targets, local excerpts, and verification requirements for the subagent to work offline from the owner surface;
+- only the parent may promote sandbox output into a live owner file, and only after rereading both the owner file and the sandbox artifact, then rerunning decisive checks.
+
+## 13. Mission rule
 
 This SOP is successful only when it reduces false confidence.
 It fails if acceptance is based on tone, summary confidence, or process narration rather than independent evidence, rerun checks, root traceability, and scope fidelity.

@@ -12,11 +12,13 @@ import re
 
 REPO = Path(__file__).resolve().parents[3]
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "deep_search_inventory.json"
-MAINTAINED_ROOTS = [
+OUT = ROOT / os.environ.get("HK_SEARCH_OUT", "deep_search_inventory.json")
+DEFAULT_MAINTAINED_ROOTS = [
     "lean", "lib", "tools", "scripts", "tests", "docs", "external_refs",
     "lakefile.lean", "README.md", "AGENTS.md", "pyproject.toml", "package.json",
 ]
+_roots_env = os.environ.get("HK_SEARCH_ROOTS")
+MAINTAINED_ROOTS = [p for p in _roots_env.split(":") if p] if _roots_env else DEFAULT_MAINTAINED_ROOTS
 TEXT_EXT = {
     ".lean", ".py", ".sage", ".g", ".gap", ".sing", ".m2", ".v", ".thy",
     ".json", ".md", ".txt", ".aql", ".toml", ".yaml", ".yml", ".sh"

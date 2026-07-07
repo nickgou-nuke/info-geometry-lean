@@ -1,4 +1,4 @@
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Meta.SocketTarget
 

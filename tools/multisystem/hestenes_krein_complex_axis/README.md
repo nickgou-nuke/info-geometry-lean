@@ -47,6 +47,20 @@ Run:
 python3 tools/multisystem/hestenes_krein_complex_axis/run_all.py
 ```
 
+The runner first checks that the repo-wide deep-search artifacts exist. This is
+deliberate: no new theorem/code surface in this packet is justified without the
+search-first duplication audit.
+
+Deep-search artifacts:
+
+- `deep_search_inventory_lean.json` — maintained `lean/` scan.
+- `deep_search_inventory_tools.json` — maintained `tools/` scan.
+- `deep_search_inventory_docs_misc.json` — `docs/`, `scripts/`, `tests/`, and
+  root metadata scan.
+- `deep_search_external_refs_rg.txt` — `external_refs/` and `lib/` scan using
+  `rg --no-ignore` with generated/cache/vendor exclusions.
+- `deep_search_duplication_table.md` — synthesized owner/duplication table.
+
 Verified lanes:
 
 - SymPy exact symbolic matrices: `sympy_hk_complex_axis.py`
@@ -61,6 +75,7 @@ Verified lanes:
 Last observed result:
 
 ```text
+deep_search_artifact_audit: ok
 sympy: ok
 sage: ok
 gap: ok

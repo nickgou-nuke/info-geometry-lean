@@ -46,31 +46,23 @@ theorem det_eq_quadratic (X : Herm2x2Hs) (x1 x2 x3 x4 x5 x6 : ℚ)
 def traceReversal (X : Herm2x2Hs) : Herm2x2Hs :=
   ⟨X.xm, X.xp, SplitH.neg X.z⟩
 
-/--
-Result of multiplying `X · X̃` as 2-component diagonal.
--/
-structure ProdResult where
-  e11 : ℚ
-  e22 : ℚ
-
 /-- Compute `X · X̃`.  Off-diagonal entries vanish by construction. -/
-def mulTraceReversal (X : Herm2x2Hs) : ProdResult :=
-  { e11 := X.xp * X.xm - SplitH.norm X.z
-    e22 := -(X.xp * X.xm - SplitH.norm X.z) }
+def mulTraceReversal (X : Herm2x2Hs) : ℚ × ℚ :=
+  (X.xp * X.xm - SplitH.norm X.z, -(X.xp * X.xm - SplitH.norm X.z))
 
 /-- Coordinate trace-reversal determinant identity for the diagonal packet. -/
 theorem fundamental_identity (X : Herm2x2Hs) :
-    X.mulTraceReversal = { e11 := X.det, e22 := -X.det } := by
+    X.mulTraceReversal = (X.det, -X.det) := by
   simp [mulTraceReversal, det]
 
 /--
 **Corollary:** On the Klein quadric `{det(X) = 0}`, `X · X̃ = 0`.
 -/
 theorem on_klein_quadric (X : Herm2x2Hs) (h : X.det = 0) :
-    X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0 := by
-  have h1 : X.mulTraceReversal.e11 = X.det := by
+    X.mulTraceReversal.1 = 0 ∧ X.mulTraceReversal.2 = 0 := by
+  have h1 : X.mulTraceReversal.1 = X.det := by
     unfold mulTraceReversal det; rfl
-  have h2 : X.mulTraceReversal.e22 = -X.det := by
+  have h2 : X.mulTraceReversal.2 = -X.det := by
     unfold mulTraceReversal det; rfl
   rw [h1, h2, h]
   simp

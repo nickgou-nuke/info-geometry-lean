@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.GammaMatrices
@@ -82,8 +83,7 @@ def dotProduct (x y : Fin 3 → ℝ) : ℝ := InfoGeometry.Canonical.ZornVectorM
 
 theorem dotProduct_comm (x y : Fin 3 → ℝ) :
     dotProduct x y = dotProduct y x := by
-  simpa [dotProduct] using
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3_comm x y
+  simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3_comm]
 
 @[simp] theorem dotProduct_zero_left (x : Fin 3 → ℝ) :
     dotProduct (fun _ : Fin 3 => 0) x = 0 := by
@@ -91,7 +91,8 @@ theorem dotProduct_comm (x y : Fin 3 → ℝ) :
 
 @[simp] theorem dotProduct_zero_right (x : Fin 3 → ℝ) :
     dotProduct x (fun _ : Fin 3 => 0) = 0 := by
-  simpa [dotProduct_comm] using dotProduct_zero_left x
+  rw [dotProduct_comm]
+  exact dotProduct_zero_left x
 
 @[simp] theorem dotProduct_zero_zero :
     dotProduct (0 : Fin 3 → ℝ) (0 : Fin 3 → ℝ) = 0 := by
@@ -119,6 +120,46 @@ theorem crossProduct_anticomm (x y : Fin 3 → ℝ) :
 
 @[simp] theorem crossProduct_self (x : Fin 3 → ℝ) :
     crossProduct x x = (0 : Fin 3 → ℝ) := by
+  ext i
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+
+theorem dotProduct_add_left (x y z : Fin 3 → ℝ) :
+    dotProduct (x + y) z = dotProduct x z + dotProduct y z := by
+  simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3, add_mul]
+  ring
+
+theorem dotProduct_add_right (x y z : Fin 3 → ℝ) :
+    dotProduct x (y + z) = dotProduct x y + dotProduct x z := by
+  simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3, mul_add]
+  ring
+
+theorem crossProduct_add_left (x y z : Fin 3 → ℝ) :
+    crossProduct (x + y) z = crossProduct x z + crossProduct y z := by
+  ext i
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, add_mul] <;> ring
+
+theorem crossProduct_add_right (x y z : Fin 3 → ℝ) :
+    crossProduct x (y + z) = crossProduct x y + crossProduct x z := by
+  ext i
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, mul_add] <;> ring
+
+theorem dotProduct_smul_left (r : ℝ) (x y : Fin 3 → ℝ) :
+    dotProduct (r • x) y = r * dotProduct x y := by
+  simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+  ring
+
+theorem dotProduct_smul_right (r : ℝ) (x y : Fin 3 → ℝ) :
+    dotProduct x (r • y) = r * dotProduct x y := by
+  simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+  ring
+
+theorem crossProduct_smul_left (r : ℝ) (x y : Fin 3 → ℝ) :
+    crossProduct (r • x) y = r • crossProduct x y := by
+  ext i
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+
+theorem crossProduct_smul_right (r : ℝ) (x y : Fin 3 → ℝ) :
+    crossProduct x (r • y) = r • crossProduct x y := by
   ext i
   fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
 
@@ -173,10 +214,8 @@ instance : Mul ZornMatrix := ⟨mul⟩
 
 @[simp] theorem zero_a : (0 : ZornMatrix).a = 0 := rfl
 @[simp] theorem zero_b : (0 : ZornMatrix).b = 0 := rfl
-@[simp] theorem zero_x : (0 : ZornMatrix).x = (0 : Fin 3 → ℝ) := by
-  rfl
-@[simp] theorem zero_y : (0 : ZornMatrix).y = (0 : Fin 3 → ℝ) := by
-  rfl
+@[simp] theorem zero_x : (0 : ZornMatrix).x = (0 : Fin 3 → ℝ) := by rfl
+@[simp] theorem zero_y : (0 : ZornMatrix).y = (0 : Fin 3 → ℝ) := by rfl
 
 @[simp] theorem neg_a (M : ZornMatrix) : (-M).a = -M.a := rfl
 @[simp] theorem neg_b (M : ZornMatrix) : (-M).b = -M.b := rfl
@@ -211,8 +250,8 @@ def conjugate (M : ZornMatrix) : ZornMatrix :=
 
 theorem norm_conjugate (M : ZornMatrix) :
     norm (conjugate M) = norm M := by
-  simpa [norm, conjugate, dotProduct] using
-    (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y))
+  simp [norm, conjugate, dotProduct]
+  exact InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y)
 
 theorem norm_mul (M N : ZornMatrix) :
     norm (M * N) = norm M * norm N := by
@@ -222,11 +261,11 @@ theorem norm_mul (M N : ZornMatrix) :
         (M.a, M.b, M.x, M.y) (N.a, N.b, N.x, N.y)) =
       InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm (M.a, M.b, M.x, M.y) *
       InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm (N.a, N.b, N.x, N.y)
-  simpa [norm, dotProduct, crossProduct,
+  simp [norm, dotProduct, crossProduct,
     InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul] using
-    (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_mul
-      (M.a, M.b, M.x, M.y) (N.a, N.b, N.x, N.y))
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul]
+  exact InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_mul
+      (M.a, M.b, M.x, M.y) (N.a, N.b, N.x, N.y)
 
 
 /-!
@@ -248,8 +287,8 @@ def projector2 : ZornMatrix :=
       ext
       · simp [projector1, mul]
       · simp [projector1, mul]
-      · simp [projector1, mul, dotProduct_zero_left, crossProduct_zero_left]
-      · simp [projector1, mul, crossProduct_self]
+      · simp [projector1, mul]
+      · simp [projector1, mul]
 
 @[simp] lemma mul_projector2 (M : ZornMatrix) :
     projector2 * M = ⟨0, M.b, fun _ : Fin 3 => 0, M.y⟩ := by
@@ -258,8 +297,8 @@ def projector2 : ZornMatrix :=
       ext
       · simp [projector2, mul]
       · simp [projector2, mul]
-      · simp [projector2, mul, crossProduct_self]
-      · simp [projector2, mul, dotProduct_zero_left, crossProduct_zero_left]
+      · simp [projector2, mul]
+      · simp [projector2, mul]
 
 @[simp] lemma projector1_mul (M : ZornMatrix) :
     M * projector1 = ⟨M.a, 0, fun _ : Fin 3 => 0, M.y⟩ := by
@@ -268,8 +307,8 @@ def projector2 : ZornMatrix :=
       ext
       · simp [projector1, mul]
       · simp [projector1, mul]
-      · simp [projector1, mul, crossProduct_self]
-      · simp [projector1, mul, crossProduct_self]
+      · simp [projector1, mul]
+      · simp [projector1, mul]
 
 @[simp] lemma projector2_mul (M : ZornMatrix) :
     M * projector2 = ⟨0, M.b, M.x, fun _ : Fin 3 => 0⟩ := by
@@ -278,22 +317,22 @@ def projector2 : ZornMatrix :=
       ext
       · simp [projector2, mul]
       · simp [projector2, mul]
-      · simp [projector2, mul, crossProduct_self]
-      · simp [projector2, mul, dotProduct_zero_left, crossProduct_zero_left]
+      · simp [projector2, mul]
+      · simp [projector2, mul]
 
 @[simp] theorem projector1_sq : projector1 * projector1 = projector1 := by
   ext
   · simp [projector1, mul]
   · simp [projector1, mul]
-  · simp [projector1, mul, crossProduct_self]
-  · simp [projector1, mul, crossProduct_self]
+  · simp [projector1, mul]
+  · simp [projector1, mul]
 
 @[simp] theorem projector2_sq : projector2 * projector2 = projector2 := by
   ext
   · simp [projector2, mul]
   · simp [projector2, mul]
-  · simp [projector2, mul, crossProduct_self]
-  · simp [projector2, mul, crossProduct_self]
+  · simp [projector2, mul]
+  · simp [projector2, mul]
 
 theorem projector1_projector2_orthogonal :
     projector1 * projector2 = zero ∧ projector2 * projector1 = zero := by
@@ -301,13 +340,48 @@ theorem projector1_projector2_orthogonal :
   · ext
     · simp [projector1, projector2, zero]
     · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero, dotProduct_zero_zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
+    · simp [projector1, projector2, zero]
+    · simp [projector1, projector2, zero]
   · ext
     · simp [projector1, projector2, zero]
     · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
+    · simp [projector1, projector2, zero]
+    · simp [projector1, projector2, zero]
+
+theorem projector1_add_projector2 : projector1 + projector2 = one := by
+  ext i <;> simp [projector1, projector2, one, add]
+
+@[simp] theorem zero_mul_zorn (M : ZornMatrix) : (0 : ZornMatrix) * M = 0 := by
+  cases M <;> ext <;> simp [mul, zero]
+
+@[simp] theorem mul_zero_zorn (M : ZornMatrix) : M * (0 : ZornMatrix) = 0 := by
+  cases M <;> ext <;> simp [mul, zero]
+
+theorem add_mul_zorn (M N P : ZornMatrix) : (M + N) * P = M * P + N * P := by
+  cases M <;> cases N <;> cases P <;> ext <;>
+    simp [add, mul, dotProduct_add_left, dotProduct_add_right, crossProduct_add_left,
+      crossProduct_add_right, dotProduct_comm] <;> ring
+
+theorem mul_add_zorn (M N P : ZornMatrix) : M * (N + P) = M * N + M * P := by
+  cases M <;> cases N <;> cases P <;> ext <;>
+    simp [add, mul, dotProduct_add_left, dotProduct_add_right, crossProduct_add_left,
+      crossProduct_add_right, dotProduct_comm] <;> ring
+
+theorem smul_mul_zorn (r : ℝ) (M N : ZornMatrix) : (r • M) * N = r • (M * N) := by
+  cases M <;> cases N <;> ext <;>
+    simp [smul, mul, dotProduct_smul_left, dotProduct_smul_right, crossProduct_smul_left,
+      crossProduct_smul_right] <;> ring
+
+theorem mul_smul_zorn (r : ℝ) (M N : ZornMatrix) : M * (r • N) = r • (M * N) := by
+  cases M <;> cases N <;> ext <;>
+    simp [smul, mul, dotProduct_smul_left, dotProduct_smul_right, crossProduct_smul_left,
+      crossProduct_smul_right] <;> ring
+
+@[simp] theorem one_mul_zorn (M : ZornMatrix) : (1 : ZornMatrix) * M = M := by
+  cases M <;> ext <;> simp [mul, one]
+
+@[simp] theorem mul_one_zorn (M : ZornMatrix) : M * (1 : ZornMatrix) = M := by
+  cases M <;> ext <;> simp [mul, one]
 
 /-- Color triplet extraction: OP₁ · M · OP₂ -/
 def extractTriplet (M : ZornMatrix) : Fin 3 → ℝ :=
@@ -321,13 +395,15 @@ def extractAntitriplet (M : ZornMatrix) : Fin 3 → ℝ :=
 def extractScalars (M : ZornMatrix) : ℝ × ℝ :=
   ((projector1 * M * projector1).a, (projector2 * M * projector2).b)
 
+@[simp] theorem extractTriplet_eq (M : ZornMatrix) : extractTriplet M = M.x := by
+  cases M <;> simp [extractTriplet, mul, projector1, projector2]
+
+@[simp] theorem extractAntitriplet_eq (M : ZornMatrix) : extractAntitriplet M = M.y := by
+  cases M <;> simp [extractAntitriplet, mul, projector1, projector2]
+
 theorem decomposition_theorem (M : ZornMatrix) :
     M = ⟨M.a, M.b, extractTriplet M, extractAntitriplet M⟩ := by
-  have hx : extractTriplet M = M.x := by
-    simpa [extractTriplet, mul_projector1, mul_projector2, projector2_mul]
-  have hy : extractAntitriplet M = M.y := by
-    simpa [extractAntitriplet, mul_projector2, projector1_mul]
-  simp [hx, hy]
+  simp [extractTriplet_eq, extractAntitriplet_eq]
 
 /-!
 ## 5. Real cross-product stabilizer
@@ -338,9 +414,16 @@ A real linear map on `ℝ³` that preserves both the dot product and the cross
 product. This is the exact finite real stabilizer property used by the Zorn
 multiplication proofs below; it is not a complex `SU(3)` formalization.
 -/
-def IsRealCrossProductStabilizer (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) : Prop :=
-  (∀ x y, dotProduct (R x) (R y) = dotProduct x y) ∧
-  (∀ x y, R (crossProduct x y) = crossProduct (R x) (R y))
+structure RealCrossProductStabilizer where
+  toFun : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)
+  preserves_dot : ∀ x y, dotProduct (toFun x) (toFun y) = dotProduct x y
+  preserves_cross : ∀ x y, toFun (crossProduct x y) = crossProduct (toFun x) (toFun y)
+
+/-- The identity map is a real cross product stabilizer. -/
+def idRealCrossProductStabilizer : RealCrossProductStabilizer where
+  toFun := LinearMap.id
+  preserves_dot x y := rfl
+  preserves_cross x y := rfl
 
 /-- 
 Action of a real cross-product stabilizer on a Zorn matrix.
@@ -348,19 +431,17 @@ The transformation rotates the color triplet and antitriplet
 while leaving the diagonal scalars invariant.
 -/
 def realCrossProductStabilizerAction
-    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ)) (M : ZornMatrix) : ZornMatrix :=
-  ⟨M.a, M.b, R M.x, R M.y⟩
+    (R : RealCrossProductStabilizer) (M : ZornMatrix) : ZornMatrix :=
+  ⟨M.a, M.b, R.toFun M.x, R.toFun M.y⟩
 
 theorem realCrossProductStabilizerAction_preserves_norm
-    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
-    (hR : IsRealCrossProductStabilizer R) (M : ZornMatrix) :
+    (R : RealCrossProductStabilizer) (M : ZornMatrix) :
     norm (realCrossProductStabilizerAction R M) = norm M := by
   simp [realCrossProductStabilizerAction, norm, dotProduct]
-  exact hR.1 M.x M.y
+  exact R.preserves_dot M.x M.y
 
 theorem realCrossProductStabilizerAction_preserves_multiplication
-    (R : (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ))
-    (hR : IsRealCrossProductStabilizer R) (M N : ZornMatrix) :
+    (R : RealCrossProductStabilizer) (M N : ZornMatrix) :
     realCrossProductStabilizerAction R (M * N) =
       (realCrossProductStabilizerAction R M) *
         (realCrossProductStabilizerAction R N) := by
@@ -369,10 +450,16 @@ theorem realCrossProductStabilizerAction_preserves_multiplication
   cases N with
   | mk a' b' x' y' =>
       ext
-      · simp [realCrossProductStabilizerAction, mul, hR.1]
-      · simp [realCrossProductStabilizerAction, mul, hR.1]
-      · simp [realCrossProductStabilizerAction, mul, hR.2]
-      · simp [realCrossProductStabilizerAction, mul, hR.2]
+      · simp [realCrossProductStabilizerAction]
+        rw [R.preserves_dot]
+      · simp [realCrossProductStabilizerAction]
+        rw [R.preserves_dot]
+      · simp [realCrossProductStabilizerAction]
+        rw [R.toFun.map_sub, R.toFun.map_add, R.toFun.map_smul, R.toFun.map_smul]
+        rw [R.preserves_cross]
+      · simp [realCrossProductStabilizerAction]
+        rw [R.toFun.map_add, R.toFun.map_add, R.toFun.map_smul, R.toFun.map_smul]
+        rw [R.preserves_cross]
 
 /-!
 ## 6. Connection to Cl(1,1) Grading
@@ -391,7 +478,7 @@ def gradingOperator (M : ZornMatrix) : ZornMatrix :=
 
 theorem grading_tripotent (M : ZornMatrix) :
     gradingOperator (gradingOperator (gradingOperator M)) = gradingOperator M := by
-  ext <;> simp [gradingOperator, grading_sq]
+  ext <;> simp [gradingOperator]
 
 /-- Eigenvalue +1 subspace: color triplets -/
 def gradingEigenPlus : Set ZornMatrix := {M | gradingOperator M = M}
@@ -412,9 +499,9 @@ theorem eigenspace_decomposition (M : ZornMatrix) :
       ⟨⟨0, 0, x, fun _ : Fin 3 => 0⟩,
         ⟨0, 0, fun _ : Fin 3 => 0, y⟩,
         ⟨a, b, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩, ?_, ?_, ?_, ?_⟩
-    · ext <;> simp [gradingOperator]
-    · ext <;> simp [gradingOperator]
-    · ext <;> simp [gradingOperator]
+    · simp [gradingEigenPlus, gradingOperator]
+    · simp [gradingEigenMinus, gradingOperator]
+    · simp [gradingEigenZero, gradingOperator, zero]
     · ext <;> simp [add, zero, Pi.add_apply, add_assoc, add_left_comm, add_comm]
 
 /-!

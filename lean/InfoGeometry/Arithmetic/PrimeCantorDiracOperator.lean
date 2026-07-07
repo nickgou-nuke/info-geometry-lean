@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Arithmetic.PrimeBooleanCube
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 
 /-!

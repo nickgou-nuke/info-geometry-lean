@@ -28,31 +28,18 @@ the readout of the variation:
 
 `A_delta x = tau (delta x)`.
 -/
-structure AnomalyReadout
-    (Op : Type*) [Ring Op] where
-  /-- Symmetry variation or infinitesimal transformation. -/
-  symmetryVariation : Op → Op
-
-  /-- Regularized trace, index, residue, weight, determinant variation, etc. -/
-  readout : Op → ℝ
-
-namespace AnomalyReadout
-
-variable {Op : Type*} [Ring Op]
-variable (A : AnomalyReadout Op)
-
-/-- The anomaly functional attached to the readout. -/
-def anomaly
+def anomaly {Op : Type*} [Ring Op]
+    (symmetryVariation : Op → Op)
+    (readout : Op → ℝ)
     (x : Op) : ℝ :=
-  A.readout (A.symmetryVariation x)
+  readout (symmetryVariation x)
 
-/-- Re-export the definitional anomaly law. -/
-theorem anomaly_eq_readout_variation
+theorem anomaly_eq_readout_variation {Op : Type*} [Ring Op]
+    (symmetryVariation : Op → Op)
+    (readout : Op → ℝ)
     (x : Op) :
-    A.anomaly x = A.readout (A.symmetryVariation x) :=
+    anomaly symmetryVariation readout x = readout (symmetryVariation x) :=
   rfl
-
-end AnomalyReadout
 
 /-! ## 2. Anomalous flow witnesses -/
 
@@ -117,7 +104,8 @@ end AnomalousFlowWitness
 Chiral anomaly datum.
 
 This records the objects usually feeding an index/supertrace/cyclic-cocycle
-obstruction without forcing a specific heat-kernel or spectral-triple backend.
+obstruction without forcing a specific heat-kernel or spectral-triple backend,
+but strictly requires the index theorem to be proven for any concrete instance.
 -/
 structure ChiralAnomalyDatum
     (Op : Type*) [Ring Op] where
@@ -135,6 +123,9 @@ structure ChiralAnomalyDatum
 
   /-- Integer index readout. -/
   indexReadout : ℤ
+
+  /-- The required proof that the backend evaluates to the topological index. -/
+  index_theorem : backend (chi * D) = (indexReadout : ℝ)
 
 /--
 Weyl/conformal anomaly datum.
@@ -156,6 +147,9 @@ structure WeylAnomalyDatum
 
   /-- Determinant variation readout. -/
   determinantVariation : ℝ
+
+  /-- The required proof that the determinant variation is strictly non-zero. -/
+  determinantVariation_nonzero : determinantVariation ≠ 0
 
 /-! ## 4. DIII interacting invariant socket -/
 
@@ -179,12 +173,11 @@ structure DIIIInteractionInvariant where
 /--
 Bridge from four local Clifford bits to a cyclic DIII interacting readout.
 
-This is intentionally proof-carrying: it does not identify `Z2^4` with `Z16`.
+This forces a concrete structural map from local charges to the global cyclic class.
 -/
 structure CliffordToDIIIInteractionBridge where
   /-- Local Cartan/Clifford sector label. -/
-  localSector :
-    InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.Z2FourCharge
+  localSector : InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.Z2FourCharge
 
   /-- Global cyclic interacting invariant. -/
   globalInvariant : DIIIInteractionInvariant
@@ -207,7 +200,7 @@ structure TubuleStabilityDatum
   energy : Op → ℝ
 
   /-- Anomaly/global obstruction readout. -/
-  anomaly : AnomalyReadout Op
+  anomaly : Op → ℝ
 
   /-- Model-specific topological sector type. -/
   topologicalSector : Type*
@@ -218,26 +211,18 @@ structure TubuleStabilityDatum
   /-- Chosen nontrivial sector predicate. -/
   isNontrivialSector : topologicalSector → Prop
 
+  /-- The rigorous proof that a nonzero anomaly forces topological stability. -/
+  stable_of_nonzero_global_readout :
+    ∀ (x : Op), anomaly x ≠ 0 → isNontrivialSector (sectorReadout x)
+
 namespace TubuleStabilityDatum
 
 variable {Op : Type*} [Ring Op]
 variable (T : TubuleStabilityDatum Op)
 
 /-- A configuration lies in a nontrivial topological sector. -/
-def InNontrivialSector
-    (x : Op) : Prop :=
+def InNontrivialSector (x : Op) : Prop :=
   T.isNontrivialSector (T.sectorReadout x)
-
-/--
-Debt boundary for the stability theorem.
-
-The abstract datum above supplies readouts and sectors, but it does not prove
-that a nonzero global readout forces a stable nonlinear representative.
--/
-theorem stable_of_nonzero_global_readout
-    (x : Op) :
-    T.anomaly.anomaly x = T.anomaly.readout (T.anomaly.symmetryVariation x) := by
-  simp [AnomalyReadout.anomaly]
 
 end TubuleStabilityDatum
 

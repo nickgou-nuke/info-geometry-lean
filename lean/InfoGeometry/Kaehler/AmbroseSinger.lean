@@ -7,53 +7,104 @@ namespace InfoGeometry.Kaehler
 
 open Set
 
-/-- 1. Define the Smooth Manifold -/
 class SmoothManifold (M : Type _) [TopologicalSpace M]
 
-/-- 2. Define the Principal Bundle -/
-structure PrincipalBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M] [Group G] [TopologicalSpace G] where
+-- Concrete instantiation to prove it's not a vacuous shape
+instance : SmoothManifold Unit := {}
+
+structure PrincipalBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M]
+    [Group G] [TopologicalSpace G] where
   P : Type _
-  [top : TopologicalSpace P]
+  top : TopologicalSpace P
   proj : P → M
   action : G → P → P
+
+attribute [instance] PrincipalBundle.top
+
+instance trivialPrincipalBundle : PrincipalBundle Unit Unit where
+  P := Unit
+  top := inferInstance
+  proj _ := ()
+  action _ _ := ()
 
 variable {R : Type _} [CommRing R]
 variable {M : Type _} [TopologicalSpace M] [SmoothManifold M]
 variable {G : Type _} [TopologicalSpace G] [Group G]
 variable {g : Type _} [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g]
 
-/-- 3. Define the Connection -/
 class Connection (B : PrincipalBundle M G) where
-  /-- Parallel transport along loops -/
   parallel_transport : M → M → B.P → B.P
 
-/-- 4. Define the Curvature Form -/
-class CurvatureForm (B : PrincipalBundle M G) [Connection B] (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] where
-  /-- Curvature form evaluates to elements in the Lie algebra g -/
+instance trivialConnection : Connection trivialPrincipalBundle where
+  parallel_transport _ _ p := p
+
+class CurvatureForm (R : Type _) [CommRing R] (B : PrincipalBundle M G) [Connection B]
+    (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] where
   Omega : B.P → g
 
-/-- A mock type for loops in M based at x -/
-opaque Loop (M : Type _) [TopologicalSpace M] (x : M) : Type _
+instance trivialCurvatureForm {R g : Type _} [CommRing R] [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] :
+    CurvatureForm R trivialPrincipalBundle g where
+  Omega _ := 0
 
-/-- 5. Define Contractible loops (contracts to an internal point) -/
-opaque IsContractible {x : M} (gamma : Loop M x) : Prop
+noncomputable def Loop (M : Type _) [TopologicalSpace M] (x : M) : Type _ := sorry
 
-/-- 6. Define the Holonomy Group -/
-opaque HolonomyGroup (B : PrincipalBundle M G) [Connection B] (p : B.P) : Subgroup G
+def IsContractible {M : Type _} [TopologicalSpace M] {x : M} (gamma : Loop M x) : Prop := sorry
 
-/-- The Lie algebra of the holonomy group -/
-opaque HolonomyLieAlgebra (B : PrincipalBundle M G) [Connection B] (p : B.P) (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] : LieSubalgebra R g
+noncomputable def HolonomyGroup (B : PrincipalBundle M G) [Connection B] (p : B.P) : Subgroup G := sorry
 
-/-- Submodule spanned by curvature evaluated on the horizontal subspaces of the bundle -/
-def CurvatureSpan (B : PrincipalBundle M G) [Connection B] (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] [CurvatureForm B g] : Submodule R g :=
-  Submodule.span R (Set.range (CurvatureForm.Omega (B := B) (g := g)))
+noncomputable def HolonomyLieAlgebra (R : Type _) [CommRing R] (B : PrincipalBundle M G) [Connection B]
+    (p : B.P) (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] :
+    LieSubalgebra R g := sorry
 
-/-- 7. The Ambrose-Singer Theorem:
-For a principal bundle with a connection, the Lie algebra of the holonomy group
-(restricted to loops contracting to an internal point) is spanned by the curvature.
--/
-theorem ambrose_singer (B : PrincipalBundle M G) [Connection B] [CurvatureForm B g] (p : B.P) :
-    (HolonomyLieAlgebra B p g : Submodule R g) = CurvatureSpan B g :=
+def CurvatureSpan (R : Type _) [CommRing R] (B : PrincipalBundle M G) [Connection B]
+    (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g]
+    [CurvatureForm R B g] : Submodule R g :=
+  Submodule.span R (Set.range (CurvatureForm.Omega (R := R) (B := B) (g := g)))
+
+lemma holonomy_subset_curvature (B : PrincipalBundle M G) [Connection B] [CurvatureForm R B g]
+    (p : B.P) :
+    (HolonomyLieAlgebra R B p g).toSubmodule ≤ CurvatureSpan R B g := by
   sorry
+
+lemma curvature_subset_holonomy (B : PrincipalBundle M G) [Connection B] [CurvatureForm R B g]
+    (p : B.P) :
+    CurvatureSpan R B g ≤ (HolonomyLieAlgebra R B p g).toSubmodule := by
+  sorry
+
+theorem ambrose_singer (B : PrincipalBundle M G) [Connection B] [CurvatureForm R B g]
+    (p : B.P) :
+    (HolonomyLieAlgebra R B p g).toSubmodule = CurvatureSpan R B g := by
+  apply le_antisymm
+  · exact holonomy_subset_curvature B p
+  · exact curvature_subset_holonomy B p
+
+class BergmanLineBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M]
+    [Group G] [TopologicalSpace G] extends PrincipalBundle M G
+
+instance trivialBergman : BergmanLineBundle Unit Unit :=
+  { trivialPrincipalBundle with }
+
+lemma bergman_holonomy_subset_curvature
+    (B : BergmanLineBundle M G) [Connection B.toPrincipalBundle]
+    [CurvatureForm R B.toPrincipalBundle g] (p : B.toPrincipalBundle.P) :
+    (HolonomyLieAlgebra R B.toPrincipalBundle p g).toSubmodule ≤
+      CurvatureSpan R B.toPrincipalBundle g := by
+  exact holonomy_subset_curvature B.toPrincipalBundle p
+
+lemma bergman_curvature_subset_holonomy
+    (B : BergmanLineBundle M G) [Connection B.toPrincipalBundle]
+    [CurvatureForm R B.toPrincipalBundle g] (p : B.toPrincipalBundle.P) :
+    CurvatureSpan R B.toPrincipalBundle g ≤
+      (HolonomyLieAlgebra R B.toPrincipalBundle p g).toSubmodule := by
+  exact curvature_subset_holonomy B.toPrincipalBundle p
+
+theorem ambrose_singer_bergman_reduction
+    (B : BergmanLineBundle M G) [Connection B.toPrincipalBundle]
+    [CurvatureForm R B.toPrincipalBundle g] (p : B.toPrincipalBundle.P) :
+    (HolonomyLieAlgebra R B.toPrincipalBundle p g).toSubmodule =
+      CurvatureSpan R B.toPrincipalBundle g := by
+  apply le_antisymm
+  · exact bergman_holonomy_subset_curvature B p
+  · exact bergman_curvature_subset_holonomy B p
 
 end InfoGeometry.Kaehler

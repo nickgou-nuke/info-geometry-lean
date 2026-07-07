@@ -1,5 +1,17 @@
 [
   {
+    "name": "deep_search_artifact_audit",
+    "status": "ok",
+    "returncode": 0,
+    "cmd": [
+      "/home/goutev/miniforge3/envs/sage/bin/python3",
+      "-c",
+      "from pathlib import Path\nroot=Path('tools/multisystem/hestenes_krein_complex_axis')\nreq=['deep_search_inventory_lean.json','deep_search_inventory_tools.json','deep_search_inventory_docs_misc.json','deep_search_external_refs_rg.txt','deep_search_duplication_table.md']\nmissing=[p for p in req if not (root/p).exists() or (root/p).stat().st_size==0]\nassert not missing, missing\nprint('DEEP_SEARCH_ARTIFACT_AUDIT_OK')"
+    ],
+    "marker": "DEEP_SEARCH_ARTIFACT_AUDIT_OK",
+    "output_tail": "DEEP_SEARCH_ARTIFACT_AUDIT_OK\n"
+  },
+  {
     "name": "sympy",
     "status": "ok",
     "returncode": 0,
@@ -78,7 +90,7 @@
       "/home/goutev/repos/info-geometry-lean/tools/multisystem/hestenes_krein_complex_axis"
     ],
     "marker": "__EXIT_CODE_ONLY__",
-    "output_tail": "0:00:02 elapsed time\n"
+    "output_tail": "0:00:09 elapsed time\n"
   },
   {
     "name": "lean_owner_source_audit",

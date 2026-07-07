@@ -46,6 +46,14 @@ coqc = find_cmd("coqc")
 isabelle = find_cmd("isabelle")
 
 jobs = [
+    ("deep_search_artifact_audit", [python3 or "", "-c",
+        "from pathlib import Path\n"
+        "root=Path('tools/multisystem/hestenes_krein_complex_axis')\n"
+        "req=['deep_search_inventory_lean.json','deep_search_inventory_tools.json','deep_search_inventory_docs_misc.json','deep_search_external_refs_rg.txt','deep_search_duplication_table.md']\n"
+        "missing=[p for p in req if not (root/p).exists() or (root/p).stat().st_size==0]\n"
+        "assert not missing, missing\n"
+        "print('DEEP_SEARCH_ARTIFACT_AUDIT_OK')"],
+     "DEEP_SEARCH_ARTIFACT_AUDIT_OK", REPO, 120),
     ("sympy", [python3 or "", str(ROOT / "sympy_hk_complex_axis.py")], "SYMPY_HK_COMPLEX_AXIS_OK", ROOT, 120),
     ("sage", [sage or "", str(ROOT / "sage_hk_complex_axis.sage")], "SAGE_HK_COMPLEX_AXIS_OK", ROOT, 120),
     ("gap", [gap or "", str(ROOT / "gap_hk_complex_axis.g")], "GAP_HK_COMPLEX_AXIS_OK", ROOT, 120),

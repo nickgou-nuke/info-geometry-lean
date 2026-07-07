@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

@@ -1,0 +1,1972 @@
+[
+  {
+    "archive_file": "archive/scratch_recovery/Parafermion.lean",
+    "namespace": null,
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Quotient",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Quotient.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_depth.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.CasimirWeylDrazinContext",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/CasimirWeylDrazinContext.lean"
+      },
+      {
+        "import": "InfoGeometry.Meta.Architecture",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Meta/Architecture.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_identifiers.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Quantum.RealMajorana",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Quantum/RealMajorana.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_mul.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.MulVec",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/MulVec.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/debug_ite.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.OperatorAlgebra.AffineVirasoroBridge",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/OperatorAlgebra/AffineVirasoroBridge.lean"
+      },
+      {
+        "import": "InfoGeometry.External.Virasoro.VirasoroAlgebra",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/External/Virasoro/VirasoroAlgebra.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.GroupWithZero.Action.Defs",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/GroupWithZero/Action/Defs.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/debug_tags.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.CasimirWeylDrazinContext",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/CasimirWeylDrazinContext.lean"
+      },
+      {
+        "import": "InfoGeometry.Meta.Architecture",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Meta/Architecture.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_alghom_verification.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Algebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Algebra/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_asano_induction.lean",
+    "namespace": "InfoGeometry.Canonical.AsanoInduction",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.CommRing",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/CommRing.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.Rename",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/Rename.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.LeeYangAsanoDigest",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_cbo_verification.lean",
+    "namespace": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.ToLin",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/ToLin.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.PiL2",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/PiL2.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Topology.Algebra.Module.FiniteDimension",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Topology/Algebra/Module/FiniteDimension.lean"
+      },
+      {
+        "import": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/FiniteMatrix.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_clean_substrate.lean",
+    "namespace": null,
+    "decl_count": 6,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.ToLin",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/ToLin.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.PiL2",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/PiL2.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Topology.Algebra.Module.FiniteDimension",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Topology/Algebra/Module/FiniteDimension.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_conductive_mp.lean",
+    "namespace": "InfoGeometry.Singular.MoorePenrose",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Star.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Star/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_drazin_test.lean",
+    "namespace": "InfoGeometry.Singular.Drazin",
+    "decl_count": 27,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/FiniteDimensional/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Projection",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Projection.lean"
+      },
+      {
+        "import": "Mathlib.RingTheory.Artinian.Module",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/RingTheory/Artinian/Module.lean"
+      },
+      {
+        "import": "InfoGeometry.Singular.MoorePenrose",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Singular/MoorePenrose.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_final_substrate.lean",
+    "namespace": null,
+    "decl_count": 6,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.ToLin",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/ToLin.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.PiL2",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/PiL2.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Topology.Algebra.Module.FiniteDimension",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Topology/Algebra/Module/FiniteDimension.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_fredholm_verification.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "InfoGeometry.KK.DiracFredholmModule",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/KK/DiracFredholmModule.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.DrazinSupercharge",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean"
+      },
+      {
+        "import": "InfoGeometry.Krein.DoubledSpace",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Krein/DoubledSpace.lean"
+      },
+      {
+        "import": "InfoGeometry.Krein.HilbertBridge",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Krein/HilbertBridge.lean"
+      },
+      {
+        "import": "InfoGeometry.Krein.Clifford",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Krein/Clifford.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_hamiltonian.lean",
+    "namespace": "InfoGeometry.Canonical.SandboxHamiltonian",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.BogoliubovOptimalTransport",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/SouriauMetriplecticOptimalTransport.lean"
+      },
+      {
+        "import": "InfoGeometry.Meta.Architecture",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Meta/Architecture.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_hamiltonian_bridge.lean",
+    "namespace": "InfoGeometry.Canonical.HamiltonianFlowBridge",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/SouriauMetriplecticOptimalTransport.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.BogoliubovOptimalTransport",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.LatticeHoppingDiffusionFlow",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/LatticeHoppingDiffusionFlow.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.CertifiedModularReduction",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/CertifiedModularReduction.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.RGFlow",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/RGFlow.lean"
+      },
+      {
+        "import": "InfoGeometry.Convex.HessianGeometry",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Convex/HessianGeometry.lean"
+      },
+      {
+        "import": "InfoGeometry.Krein.DoubledSpace",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Krein/DoubledSpace.lean"
+      },
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp.lean",
+    "namespace": "InfoGeometry.Singular.MoorePenrose",
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Star.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Star/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_authoritative.lean",
+    "namespace": "InfoGeometry.Singular.MoorePenrose",
+    "decl_count": 15,
+    "imports": [
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_final.lean",
+    "namespace": "InfoGeometry.Singular.MoorePenrose",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Star.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Star/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_test.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "sandbox_mp_authoritative",
+        "exists_live": false,
+        "live_path": "lean/sandbox_mp_authoritative.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_test_full.lean",
+    "namespace": "InfoGeometry.Singular.MoorePenrose",
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Star.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Star/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Positive",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Positive.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_multiaffine_linearity.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.Degrees",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/Degrees.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.MvPolynomial.CommRing",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/MvPolynomial/CommRing.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_ontology_check.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "InfoGeometry.KK.DiracFredholmModule",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/KK/DiracFredholmModule.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.CertifiedInverseKernel",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_singular_test.lean",
+    "namespace": "InfoGeometry.Canonical",
+    "decl_count": 17,
+    "imports": [
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Positive",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Positive.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Projection/Submodule.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Dimension.Finite",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Dimension/Finite.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Normed.Operator.Banach",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Normed/Operator/Banach.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.Clifford",
+        "exists_live": false,
+        "live_path": "lean/InfoGeometry/Canonical/Clifford.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.MoorePenrose",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/MoorePenrose.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.Drazin",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/Drazin.lean"
+      },
+      {
+        "import": "InfoGeometry.Singular.Drazin",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Singular/Drazin.lean"
+      },
+      {
+        "import": "InfoGeometry.Meta.Architecture",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Meta/Architecture.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_split_gas.lean",
+    "namespace": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas",
+    "decl_count": 11,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Group.Units.Defs",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Group/Units/Defs.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_test_zorn.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.DiracSouriauOperator",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/DiracSouriauOperator.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_ultimate_cbo.lean",
+    "namespace": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators",
+    "decl_count": 13,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Matrix.Mul",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Mul.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.ToLin",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/ToLin.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Basis.Defs",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Basis/Defs.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Adjoint",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Adjoint.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.PiL2",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/PiL2.lean"
+      },
+      {
+        "import": "Mathlib.Topology.Algebra.Module.FiniteDimension",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Topology/Algebra/Module/FiniteDimension.lean"
+      },
+      {
+        "import": "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/OperatorAlgebra/ComplexBoundedOperators/FiniteMatrix.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_axioms.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.ProjectiveCCR",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/ProjectiveCCR.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_axioms_final.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.ChiralNullSpaceBridge",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/ChiralNullSpaceBridge.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_bh_demo.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/Determinant/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/FiniteDimensional/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_test_isometry.lean",
+    "namespace": "InfoGeometry.OperatorAlgebra",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.FilteredColimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/FilteredColimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.HasLimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/HasLimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.Creates",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/Creates.lean"
+      },
+      {
+        "import": "Mathlib.Order.Bounds.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Order/Bounds/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Algebraic.SplitQuadraticForm",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Algebraic/SplitQuadraticForm.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/BigOperators/Group/Finset/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Fin.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Fin/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Tactic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.BigOperators.Order",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/BigOperators/Order.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_trace_axiom.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "InfoGeometry.Canonical.ProjectiveCCR",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/ProjectiveCCR.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/temp_moebius.lean",
+    "namespace": "InfoGeometry.Arithmetic",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "InfoGeometry.Algebra.PrimeA1RootSystem",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Algebra/PrimeA1RootSystem.lean"
+      },
+      {
+        "import": "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/NumberTheory/ArithmeticFunction/Moebius.lean"
+      },
+      {
+        "import": "Mathlib.Data.Nat.Squarefree",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Nat/Squarefree.lean"
+      },
+      {
+        "import": "Mathlib.Data.Nat.Factors",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Nat/Factors.lean"
+      },
+      {
+        "import": "Mathlib.NumberTheory.ArithmeticFunction.Misc",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/NumberTheory/ArithmeticFunction/Misc.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.BigOperators.Ring.Finset",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/BigOperators/Ring/Finset.lean"
+      },
+      {
+        "import": "Mathlib.Tactic.SplitIfs",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic/SplitIfs.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Complex/UpperHalfPlane/MoebiusAction.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.ProjectiveSpecialLinearGroup",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/ProjectiveSpecialLinearGroup.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test2.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Tactic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test3.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Tactic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test4.lean",
+    "namespace": null,
+    "decl_count": 8,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Complex/UpperHalfPlane/MoebiusAction.lean"
+      },
+      {
+        "import": "InfoGeometry.Geometry.RealUpperHalfPlane",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Geometry/RealUpperHalfPlane.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test4_fixed.lean",
+    "namespace": null,
+    "decl_count": 8,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Complex.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Complex/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/Complex/UpperHalfPlane/MoebiusAction.lean"
+      },
+      {
+        "import": "InfoGeometry.Geometry.RealUpperHalfPlane",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Geometry/RealUpperHalfPlane.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm2.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm4.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCantorRepresentation.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case_eval.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCantorRepresentation.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case_eval2.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCantorRepresentation.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.Analysis.InnerProductSpace.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Analysis/InnerProductSpace/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis_map.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis_reindex.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_braid.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_change.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.External.Virasoro.CentralExtension",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/External/Virasoro/CentralExtension.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_clifford.lean",
+    "namespace": "InfoGeometry.OperatorAlgebra",
+    "decl_count": 8,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.FilteredColimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/FilteredColimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.HasLimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/HasLimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.Creates",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/Creates.lean"
+      },
+      {
+        "import": "Mathlib.Order.Bounds.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Order/Bounds/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Algebraic.SplitQuadraticForm",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Algebraic/SplitQuadraticForm.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/BigOperators/Group/Finset/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Fin.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Fin/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Tactic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_comp.lean",
+    "namespace": "InfoGeometry.OperatorAlgebra",
+    "decl_count": 5,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.FilteredColimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/FilteredColimits.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Limits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Limits.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Colimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Colimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.HasLimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/HasLimits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.Creates",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/Creates.lean"
+      },
+      {
+        "import": "Mathlib.Order.Bounds.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Order/Bounds/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Algebraic.SplitQuadraticForm",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Algebraic/SplitQuadraticForm.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/BigOperators/Group/Finset/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Fin.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Fin/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Tactic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Tactic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_d4_brane.lean",
+    "namespace": "D4MatrixFactorization",
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.Matrix.NonsingularInverse",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/Matrix/NonsingularInverse.lean"
+      },
+      {
+        "import": "InfoGeometry.Topology.D4TrialityQ8Equivalence",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Topology/D4TrialityQ8Equivalence.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_dbrane.lean",
+    "namespace": "MatrixFactorization",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "Mathlib.Data.Matrix.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Matrix/Basic.lean"
+      },
+      {
+        "import": "InfoGeometry.Topology.Q8ModularFlowBridge",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Topology/Q8ModularFlowBridge.lean"
+      },
+      {
+        "import": "InfoGeometry.Topology.BuscherTDuality",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Topology/BuscherTDuality.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_derive.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_dot.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_equiv.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Logic.Equiv.TransferInstance",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Logic/Equiv/TransferInstance.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_equiv2.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Group.Equiv.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Group/Equiv/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_functor.lean",
+    "namespace": "InfoGeometry.Topology",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Category.Preorder",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Category/Preorder.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/QuadraticForm/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_functor_proofs.lean",
+    "namespace": "InfoGeometry.Topology",
+    "decl_count": 4,
+    "imports": [
+      {
+        "import": "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/CliffordAlgebra/Basic.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Category.Preorder",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Category/Preorder.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/QuadraticForm/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_grr.lean",
+    "namespace": "InfoGeometry.Topology",
+    "decl_count": 7,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Category.AlgCat.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/AlgCat/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Ring.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Ring/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Algebra.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Algebra/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_hom_proofs.lean",
+    "namespace": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCelikKocakBridgeNDepth.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_hom_proofs2.lean",
+    "namespace": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCelikKocakBridgeNDepth.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj.lean",
+    "namespace": null,
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj2.lean",
+    "namespace": null,
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Group.InjSurj",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Group/InjSurj.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj3.lean",
+    "namespace": null,
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Module.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Module/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Algebra.Group.InjSurj",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Group/InjSurj.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_kawamura.lean",
+    "namespace": "InfoGeometry.Algebra",
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Topology.CuntzCantorSpectralTriple",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Topology/CuntzCantorSpectralTriple.lean"
+      },
+      {
+        "import": "InfoGeometry.Algebra.KawamuraCuntzCAR",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Algebra/KawamuraCuntzCAR.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_kldiv.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.InformationTheory.KullbackLeibler.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/InformationTheory/KullbackLeibler/Basic.lean"
+      },
+      {
+        "import": "Mathlib.MeasureTheory.Measure.LogLikelihoodRatio",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/MeasureTheory/Measure/LogLikelihoodRatio.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_leRec.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limit.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "InfoGeometry.Clifford.MatToCantorOperator",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Clifford/MatToCantorOperator.lean"
+      },
+      {
+        "import": "InfoGeometry.Clifford.RealCantorOpLimit",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Clifford/RealCantorOpLimit.lean"
+      },
+      {
+        "import": "InfoGeometry.Clifford.Cl11TensorTowerLimit",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Clifford/Cl11TensorTowerLimit.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limit2.lean",
+    "namespace": "InfoGeometry.Clifford.RealCantorOpLimit",
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "InfoGeometry.Clifford.RealCantorOpLimit",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Clifford/RealCantorOpLimit.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limits.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Category.Ring.Limits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Category/Ring/Limits.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Limits.HasLimits",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Limits/HasLimits.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_manual_hom.lean",
+    "namespace": null,
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Canonical.JordanWignerCantorRepresentation",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Canonical/JordanWignerCantorRepresentation.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_alg_hom.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_reindex.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_to_lin.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_phase.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Clifford.Cl11TensorTower",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Clifford/Cl11TensorTower.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_q8_aut.lean",
+    "namespace": "InfoGeometry.Topology.D4Triality",
+    "decl_count": 5,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Topology.D4TrialityQ8Equivalence",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Topology/D4TrialityQ8Equivalence.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_reflector.lean",
+    "namespace": "InfoGeometry.Epistemology",
+    "decl_count": 1,
+    "imports": [
+      {
+        "import": "Mathlib.CategoryTheory.Category.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Category/Basic.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Functor.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Functor/Basic.lean"
+      },
+      {
+        "import": "Mathlib.CategoryTheory.Adjunction.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/CategoryTheory/Adjunction/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_ring_colimit.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_ringhom.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_spectral.lean",
+    "namespace": null,
+    "decl_count": 2,
+    "imports": [
+      {
+        "import": "Mathlib.Algebra.Polynomial.Roots",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Algebra/Polynomial/Roots.lean"
+      },
+      {
+        "import": "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/LinearAlgebra/QuadraticForm/Basic.lean"
+      },
+      {
+        "import": "Mathlib.Data.Real.Basic",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/Data/Real/Basic.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_sum_prod.lean",
+    "namespace": null,
+    "decl_count": 3,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      },
+      {
+        "import": "InfoGeometry.Arithmetic.SplitMajoranaPrimon",
+        "exists_live": true,
+        "live_path": "lean/InfoGeometry/Arithmetic/SplitMajoranaPrimon.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_toLin.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_toLinAlgHom.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib",
+        "exists_live": false,
+        "live_path": "lean/Mathlib.lean"
+      }
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_zeta.lean",
+    "namespace": null,
+    "decl_count": 0,
+    "imports": [
+      {
+        "import": "Mathlib.NumberTheory.LSeries.RiemannZeta",
+        "exists_live": false,
+        "live_path": "lean/Mathlib/NumberTheory/LSeries/RiemannZeta.lean"
+      }
+    ]
+  }
+]

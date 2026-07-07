@@ -254,4 +254,63 @@ variable {Op : Type*} [Mul Op]
 
 end ChiralMediumDatum
 
+/-! ## 5. Statistical channel layer -/
+
+/--
+A statistical polarization channel.
+
+This is the Jones-to-Mueller upgrade: one no longer has a single coherent
+operator, but a family of scattering operators.
+-/
+structure PolarizationChannel
+    (Op : Type*) [Ring Op] where
+  /-- Index of scattering/Jones branches. -/
+  Branch : Type*
+
+  /-- Branch operator. -/
+  branchOp : Branch → Op
+
+  /-- Abstract adjoint. -/
+  adj : Op → Op
+
+  /-- Channel action. -/
+  channel : Op → Op
+
+
+/--
+Rough reflection belongs to the channel/Mueller layer, not the pure Jones
+single-operator layer.
+-/
+structure RoughReflectionChannel
+    (Op : Type*) [Ring Op]
+    extends PolarizationChannel Op where
+
+/-! ## 5. Owner target -/
+
+/--
+Owner target for connecting Fresnel/Jones data to the bilingual operator
+geometry.
+-/
+structure OperatorialJonesOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℂ Op] where
+  /-- The Fresnel `s/p` projector pair owned by the Jones calculus layer. -/
+  projectors : PolarizationProjectorPair Op
+
+namespace OperatorialJonesOwnerTarget
+
+variable {Op : Type*} [Ring Op] [Algebra ℂ Op]
+
+/-- Read back the concrete projector pair carried by the owner target. -/
+def toProjectorPair
+    (T : OperatorialJonesOwnerTarget Op) :
+    PolarizationProjectorPair Op :=
+  T.projectors
+
+@[simp] theorem toProjectorPair_mk
+    (P : PolarizationProjectorPair Op) :
+    toProjectorPair (OperatorialJonesOwnerTarget.mk P) = P :=
+  rfl
+
+end OperatorialJonesOwnerTarget
+
 end InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus

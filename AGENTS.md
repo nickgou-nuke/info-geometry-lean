@@ -112,3 +112,18 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 - **Collections**: `Thoughts` (Document), `CausalLinks` (Edge)
 - **Function**: Contains the complete JSONL transcript DAG of all past agent thoughts, generated code, and reasoning steps.
 - **Action**: When starting a new session or encountering a forgotten concept, the agent should connect to this ArangoDB instance using `python-arango` or write AQL queries to retrieve its old memories and code from previous transcripts. The memory population script is at `scratch/populate_arangodb.py`.
+
+## Continuous Tracking Mandate
+**CRITICAL**: To prevent destructive data loss from rogue `git restore` operations, all agents MUST proactively track their work.
+- **Action**: Whenever an agent creates or modifies a file, they MUST immediately run `git add -A` to stage the changes into the Git index. Uncommitted work that is staged is protected from `git restore`. Do not wait until the end of a session to stage files.
+
+## Subagent Sandbox Mandate
+**CRITICAL**: Subagents SHALL NEVER be given a task to fix or rewrite an existing file.
+- **Action**: When delegating work to a subagent, they must be given a task to write to a **new file** always located within a sandbox environment.
+- **Context**: The parent agent MUST provide the subagent with sufficient mathematical context from the old file so the subagent can perform the task safely without touching the live owner file.
+
+## Lean file size and lemma reuse mandate
+**CRITICAL**: Lean owner files shall be kept small, modular, and reusable.
+- **Action**: Prefer division into focused helper lemmas rather than long monolithic proofs or oversized theorem packets.
+- **Reuse**: When a proof pattern or intermediate fact may be used again, expose it as a named lemma with a truthful scope instead of burying it inside one large proof.
+- **Structure**: New bridge files and owner repairs should take the smallest theorem-safe shape that improves downstream reuse and keeps local verification narrow.

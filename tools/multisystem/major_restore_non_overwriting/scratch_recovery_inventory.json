@@ -1,0 +1,1030 @@
+[
+  {
+    "archive_file": "archive/scratch_recovery/Parafermion.lean",
+    "stem": "parafermion",
+    "tokens": [
+      "parafermion"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/Categorical/Z3Parafermion.lean",
+      "lean/InfoGeometry/Topology/BraidParafermionClosure.lean",
+      "lean/InfoGeometry/Topology/ParafermionBraiding.lean",
+      "lean/InfoGeometry/Physics/ParafermionicBECHiggs.lean",
+      "lean/InfoGeometry/Physics/ElectronParafermionFlow.lean",
+      "lean/InfoGeometry/Physics/ParafermionDefectBridge.lean",
+      "lean/InfoGeometry/Parafermion/PrimeParafermionGrandCanonicalClock.lean",
+      "lean/InfoGeometry/OperatorAlgebra/ParafermionicQCommutatorShadow.lean",
+      "lean/InfoGeometry/Canonical/FibonacciParafermionFusionBridge.lean",
+      "lean/InfoGeometry/Canonical/ParafermionCentralizer.lean",
+      "lean/InfoGeometry/Canonical/PrimeParafermionGrandCanonicalClock.lean",
+      "lean/InfoGeometry/Canonical/FibonacciParafermionAtoms.lean",
+      "lean/InfoGeometry/Algebra/ParafermionGaugeTwist.lean",
+      "lean/InfoGeometry/Algebra/FibonacciParafermion.lean",
+      "lean/InfoGeometry/Arithmetic/PrimeParafermionGrandCanonicalClock.lean",
+      "lean/InfoGeometry/External/Auto/KleinBottleParafermionInvariant.lean",
+      "lean/InfoGeometry/External/Auto/KleinParafermionCohomology.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_depth.lean",
+    "stem": "check_depth",
+    "tokens": [
+      "check",
+      "depth"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_identifiers.lean",
+    "stem": "check_identifiers",
+    "tokens": [
+      "check",
+      "identifiers"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/check_mul.lean",
+    "stem": "check_mul",
+    "tokens": [
+      "check",
+      "mul"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/debug_ite.lean",
+    "stem": "debug_ite",
+    "tokens": [
+      "debug",
+      "ite"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/debug_tags.lean",
+    "stem": "debug_tags",
+    "tokens": [
+      "debug",
+      "tags"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_alghom_verification.lean",
+    "stem": "alghom_verification",
+    "tokens": [
+      "alghom",
+      "verification"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_asano_induction.lean",
+    "stem": "asano_induction",
+    "tokens": [
+      "asano",
+      "induction"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_cbo_verification.lean",
+    "stem": "cbo_verification",
+    "tokens": [
+      "cbo",
+      "verification"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Conclusion/DyadicBoundaryConstructiveReplayVsAdversarialVerificationSplit.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/DyadicBoundaryConstructiveReplayVsAdversarialVerificationSplit.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_clean_substrate.lean",
+    "stem": "clean_substrate",
+    "tokens": [
+      "clean",
+      "substrate"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_conductive_mp.lean",
+    "stem": "conductive_mp",
+    "tokens": [
+      "conductive",
+      "mp"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_drazin_test.lean",
+    "stem": "drazin_test",
+    "tokens": [
+      "drazin",
+      "test"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_final_substrate.lean",
+    "stem": "final_substrate",
+    "tokens": [
+      "final",
+      "substrate"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_fredholm_verification.lean",
+    "stem": "fredholm_verification",
+    "tokens": [
+      "fredholm",
+      "verification"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_hamiltonian.lean",
+    "stem": "hamiltonian",
+    "tokens": [
+      "hamiltonian"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/NuclearHamiltonian.lean",
+      "lean/Omega/Conclusion/Window6EvenDegeneracyNoncommutativeHamiltonian.lean",
+      "lean/InfoGeometry/Dynamics/HamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Topology/BenderZetaHamiltonian.lean",
+      "lean/InfoGeometry/OperatorAlgebra/TKKHamiltonian.lean",
+      "lean/InfoGeometry/Quiver/TKKHamiltonian.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianSignum.lean",
+      "lean/InfoGeometry/Canonical/SuperchargeModularHamiltonianBridge.lean",
+      "lean/InfoGeometry/Canonical/BinaryCrystalHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/HamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/CantorCoadjointHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/RelativeModularHamiltonian.lean",
+      "lean/InfoGeometry/Canonical/SouriauModularHamiltonianBridge.lean",
+      "lean/InfoGeometry/Canonical/RelativeModularHamiltonianSupport.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean",
+      "lean/InfoGeometry/Canonical/LFunctionHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/GrandCanonicalHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianSurrogateCalibration.lean",
+      "lean/InfoGeometry/SuperMetriplectic/DiscreteMellinHamiltonian.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_hamiltonian_bridge.lean",
+    "stem": "hamiltonian_bridge",
+    "tokens": [
+      "hamiltonian",
+      "bridge"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/Dynamics/HamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/SuperchargeModularHamiltonianBridge.lean",
+      "lean/InfoGeometry/Canonical/BinaryCrystalHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/HamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/CantorCoadjointHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/SouriauModularHamiltonianBridge.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean",
+      "lean/InfoGeometry/Canonical/LFunctionHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/GrandCanonicalHamiltonianFlowBridge.lean",
+      "lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp.lean",
+    "stem": "mp",
+    "tokens": [
+      "mp"
+    ],
+    "candidate_live_hits": [
+      "lean/temp_test.lean",
+      "lean/SelfReference/Counterexamples.lean",
+      "lean/DAG/TwoComplexFunctor.lean",
+      "lean/DAG/TwoComplexColimitRecursor.lean",
+      "lean/DAG/TwoComplex.lean",
+      "lean/DAG/TwoComplexKasparov.lean",
+      "lean/DAG/BlockDecomposition.lean",
+      "lean/DAG/Impact.lean",
+      "lean/DAG/GeneralizedTwoComplex.lean",
+      "lean/Agent/CompilerBridgeCore.lean",
+      "lean/Omega/TypedAddressBiaxialCompletion.lean",
+      "lean/Omega/FoldComputability.lean",
+      "lean/InfoGeometry/TrifactorDecomposition.lean",
+      "lean/InfoGeometry/KreinCarrierInstances_tmp.lean",
+      "lean/InfoGeometry/TrifactorSpectralDecomposition.lean",
+      "lean/InfoGeometry/JordanDecomposition.lean",
+      "lean/scripts/DAG/Exploration/CompilerBridgeServer.lean",
+      "lean/Omega/Graph/CoarsegrainingCycleRankDecomposition.lean",
+      "lean/Omega/Experiments/MarkovTVSampleComplexity.lean",
+      "lean/Omega/RecursiveAddressing/CompleteAddressReconstruction.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_authoritative.lean",
+    "stem": "mp_authoritative",
+    "tokens": [
+      "mp",
+      "authoritative"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_final.lean",
+    "stem": "mp_final",
+    "tokens": [
+      "mp",
+      "final"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Conclusion/CofinalSparsificationSemanticCompleteness.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/CofinalSparsificationSemanticCompleteness.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_test.lean",
+    "stem": "mp_test",
+    "tokens": [
+      "mp",
+      "test"
+    ],
+    "candidate_live_hits": [
+      "lean/temp_test.lean",
+      "lean/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/Omega/Conclusion/FixedTempSoftOrderProbabilisticFiniteStateDecidable.lean",
+      "lean/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean",
+      "lean/InfoGeometry/External/Auto/TestImportKB.lean",
+      "lean/InfoGeometry/External/Auto/test_simp.lean",
+      "lean/InfoGeometry/External/Auto/TestImport2.lean",
+      "lean/InfoGeometry/External/Auto/TestImportGP.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/FixedTempSoftOrderProbabilisticFiniteStateDecidable.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_mp_test_full.lean",
+    "stem": "mp_test_full",
+    "tokens": [
+      "mp",
+      "test",
+      "full"
+    ],
+    "candidate_live_hits": [
+      "lean/temp_test.lean",
+      "lean/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/Omega/Conclusion/FixedTempSoftOrderProbabilisticFiniteStateDecidable.lean",
+      "lean/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean",
+      "lean/InfoGeometry/External/Auto/TestImportKB.lean",
+      "lean/InfoGeometry/External/Auto/test_simp.lean",
+      "lean/InfoGeometry/External/Auto/TestImport2.lean",
+      "lean/InfoGeometry/External/Auto/TestImportGP.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/FixedTempSoftOrderProbabilisticFiniteStateDecidable.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_multiaffine_linearity.lean",
+    "stem": "multiaffine_linearity",
+    "tokens": [
+      "multiaffine",
+      "linearity"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_ontology_check.lean",
+    "stem": "ontology_check",
+    "tokens": [
+      "ontology",
+      "check"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_singular_test.lean",
+    "stem": "singular_test",
+    "tokens": [
+      "singular",
+      "test"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_split_gas.lean",
+    "stem": "split_gas",
+    "tokens": [
+      "split",
+      "gas"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Conclusion/PrimesliceOmegaSupportImplStructureSplit.lean",
+      "lean/InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/PrimesliceOmegaSupportImplStructureSplit.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_test_zorn.lean",
+    "stem": "test_zorn",
+    "tokens": [
+      "test",
+      "zorn"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/sandbox_ultimate_cbo.lean",
+    "stem": "ultimate_cbo",
+    "tokens": [
+      "ultimate",
+      "cbo"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_axioms.lean",
+    "stem": "scratch_axioms",
+    "tokens": [
+      "scratch",
+      "axioms"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_axioms_final.lean",
+    "stem": "scratch_axioms_final",
+    "tokens": [
+      "scratch",
+      "axioms",
+      "final"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_bh_demo.lean",
+    "stem": "scratch_bh_demo",
+    "tokens": [
+      "scratch",
+      "bh",
+      "demo"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_test_isometry.lean",
+    "stem": "scratch_test_isometry",
+    "tokens": [
+      "scratch",
+      "test",
+      "isometry"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/Sandbox/scratch_colim_test.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/scratch_trace_axiom.lean",
+    "stem": "scratch_trace_axiom",
+    "tokens": [
+      "scratch",
+      "trace",
+      "axiom"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/temp_moebius.lean",
+    "stem": "temp_moebius",
+    "tokens": [
+      "temp",
+      "moebius"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test.lean",
+    "stem": "test",
+    "tokens": [
+      "test"
+    ],
+    "candidate_live_hits": [
+      "lean/ast_export_test.lean",
+      "lean/test_measure.lean",
+      "lean/test_selfconcordance.lean",
+      "lean/test_arnold.lean",
+      "lean/temp_test.lean",
+      "lean/test_mt.lean",
+      "lean/test_measure2.lean",
+      "lean/test_measure3.lean",
+      "lean/test_fixes2.lean",
+      "lean/test_rpow.lean",
+      "lean/test_reflection.lean",
+      "lean/Test.lean",
+      "lean/DAG/ExactMorphismTest.lean",
+      "lean/DAG/SearchCoreTests.lean",
+      "lean/DAG/CategoryBridgeTest.lean",
+      "lean/DAG/IntegrationTest.lean",
+      "lean/Omega/RecursiveAddressing/PrefixSiteStrictVsIntrinsicHidden.lean",
+      "lean/Omega/SyncKernelWeighted/RateStrictConvex.lean",
+      "lean/Omega/Zeta/XiFiniteStateTimeImageDiscreteOrDense.lean",
+      "lean/Omega/Zeta/XiHankelBadprimesSingleCoordinateStiffness.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test2.lean",
+    "stem": "test2",
+    "tokens": [
+      "test2"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test3.lean",
+    "stem": "test3",
+    "tokens": [
+      "test3"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test4.lean",
+    "stem": "test4",
+    "tokens": [
+      "test4"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test4_fixed.lean",
+    "stem": "test4_fixed",
+    "tokens": [
+      "test4",
+      "fixed"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm.lean",
+    "stem": "test_addcomm",
+    "tokens": [
+      "test",
+      "addcomm"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm2.lean",
+    "stem": "test_addcomm2",
+    "tokens": [
+      "test",
+      "addcomm2"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_addcomm4.lean",
+    "stem": "test_addcomm4",
+    "tokens": [
+      "test",
+      "addcomm4"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case.lean",
+    "stem": "test_base_case",
+    "tokens": [
+      "test",
+      "base",
+      "case"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case_eval.lean",
+    "stem": "test_base_case_eval",
+    "tokens": [
+      "test",
+      "base",
+      "case",
+      "eval"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_base_case_eval2.lean",
+    "stem": "test_base_case_eval2",
+    "tokens": [
+      "test",
+      "base",
+      "case",
+      "eval2"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis.lean",
+    "stem": "test_basis",
+    "tokens": [
+      "test",
+      "basis"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean",
+      "lean/InfoGeometry/External/Automath/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis_map.lean",
+    "stem": "test_basis_map",
+    "tokens": [
+      "test",
+      "basis",
+      "map"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean",
+      "lean/InfoGeometry/External/Automath/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_basis_reindex.lean",
+    "stem": "test_basis_reindex",
+    "tokens": [
+      "test",
+      "basis",
+      "reindex"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean",
+      "lean/InfoGeometry/External/Automath/Omega/POM/DiagonalRateSturmCauchyEigenbasis.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_braid.lean",
+    "stem": "test_braid",
+    "tokens": [
+      "test",
+      "braid"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/External/Auto/TestBraid.lean",
+      "lean/InfoGeometry/External/Auto/test_braid.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_change.lean",
+    "stem": "test_change",
+    "tokens": [
+      "test",
+      "change"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_clifford.lean",
+    "stem": "test_clifford",
+    "tokens": [
+      "test",
+      "clifford"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/Quantum/CliffordDictionaryTest.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_comp.lean",
+    "stem": "test_comp",
+    "tokens": [
+      "test",
+      "comp"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/CompleteStrictificationDualCriterion.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/FixedResolutionNontrivialCollisionMinimalCompleteStatistic.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/AlgebraicLdpDfiniteStokesCompression.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Conclusion/ZeroMeanResidueTestsCompleteDetection.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_d4_brane.lean",
+    "stem": "test_d4_brane",
+    "tokens": [
+      "test",
+      "d4",
+      "brane"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_dbrane.lean",
+    "stem": "test_dbrane",
+    "tokens": [
+      "test",
+      "dbrane"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_derive.lean",
+    "stem": "test_derive",
+    "tokens": [
+      "test",
+      "derive"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_dot.lean",
+    "stem": "test_dot",
+    "tokens": [
+      "test",
+      "dot"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_equiv.lean",
+    "stem": "test_equiv",
+    "tokens": [
+      "test",
+      "equiv"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/POM/FiberPosteriorEquivalenceSingleCandidateTest.lean",
+      "lean/InfoGeometry/External/Automath/Omega/POM/FiberPosteriorEquivalenceSingleCandidateTest.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_equiv2.lean",
+    "stem": "test_equiv2",
+    "tokens": [
+      "test",
+      "equiv2"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_functor.lean",
+    "stem": "test_functor",
+    "tokens": [
+      "test",
+      "functor"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_functor_proofs.lean",
+    "stem": "test_functor_proofs",
+    "tokens": [
+      "test",
+      "functor",
+      "proofs"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_grr.lean",
+    "stem": "test_grr",
+    "tokens": [
+      "test",
+      "grr"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_hom_proofs.lean",
+    "stem": "test_hom_proofs",
+    "tokens": [
+      "test",
+      "hom",
+      "proofs"
+    ],
+    "candidate_live_hits": [
+      "lean/ast_export_test.lean",
+      "lean/test_measure.lean",
+      "lean/test_selfconcordance.lean",
+      "lean/test_arnold.lean",
+      "lean/temp_test.lean",
+      "lean/test_mt.lean",
+      "lean/test_measure2.lean",
+      "lean/test_measure3.lean",
+      "lean/test_fixes2.lean",
+      "lean/test_rpow.lean",
+      "lean/test_reflection.lean",
+      "lean/Test.lean",
+      "lean/DAG/ExactMorphismTest.lean",
+      "lean/DAG/SearchCoreTests.lean",
+      "lean/DAG/CategoryBridgeTest.lean",
+      "lean/DAG/IntegrationTest.lean",
+      "lean/Omega/RecursiveAddressing/PrefixSiteStrictVsIntrinsicHidden.lean",
+      "lean/Omega/SyncKernelWeighted/RateStrictConvex.lean",
+      "lean/Omega/Zeta/XiFiniteStateTimeImageDiscreteOrDense.lean",
+      "lean/Omega/Zeta/XiHankelBadprimesSingleCoordinateStiffness.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_hom_proofs2.lean",
+    "stem": "test_hom_proofs2",
+    "tokens": [
+      "test",
+      "hom",
+      "proofs2"
+    ],
+    "candidate_live_hits": [
+      "lean/ast_export_test.lean",
+      "lean/test_measure.lean",
+      "lean/test_selfconcordance.lean",
+      "lean/test_arnold.lean",
+      "lean/temp_test.lean",
+      "lean/test_mt.lean",
+      "lean/test_measure2.lean",
+      "lean/test_measure3.lean",
+      "lean/test_fixes2.lean",
+      "lean/test_rpow.lean",
+      "lean/test_reflection.lean",
+      "lean/Test.lean",
+      "lean/DAG/ExactMorphismTest.lean",
+      "lean/DAG/SearchCoreTests.lean",
+      "lean/DAG/CategoryBridgeTest.lean",
+      "lean/DAG/IntegrationTest.lean",
+      "lean/Omega/RecursiveAddressing/PrefixSiteStrictVsIntrinsicHidden.lean",
+      "lean/Omega/SyncKernelWeighted/RateStrictConvex.lean",
+      "lean/Omega/Zeta/XiFiniteStateTimeImageDiscreteOrDense.lean",
+      "lean/Omega/Zeta/XiHankelBadprimesSingleCoordinateStiffness.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj.lean",
+    "stem": "test_inj",
+    "tokens": [
+      "test",
+      "inj"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj2.lean",
+    "stem": "test_inj2",
+    "tokens": [
+      "test",
+      "inj2"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_inj3.lean",
+    "stem": "test_inj3",
+    "tokens": [
+      "test",
+      "inj3"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_kawamura.lean",
+    "stem": "test_kawamura",
+    "tokens": [
+      "test",
+      "kawamura"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_kldiv.lean",
+    "stem": "test_kldiv",
+    "tokens": [
+      "test",
+      "kldiv"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_leRec.lean",
+    "stem": "test_lerec",
+    "tokens": [
+      "test",
+      "lerec"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limit.lean",
+    "stem": "test_limit",
+    "tokens": [
+      "test",
+      "limit"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limit2.lean",
+    "stem": "test_limit2",
+    "tokens": [
+      "test",
+      "limit2"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_limits.lean",
+    "stem": "test_limits",
+    "tokens": [
+      "test",
+      "limits"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_manual_hom.lean",
+    "stem": "test_manual_hom",
+    "tokens": [
+      "test",
+      "manual",
+      "hom"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_alg_hom.lean",
+    "stem": "test_matrix_alg_hom",
+    "tokens": [
+      "test",
+      "matrix",
+      "alg",
+      "hom"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_reindex.lean",
+    "stem": "test_matrix_reindex",
+    "tokens": [
+      "test",
+      "matrix",
+      "reindex"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_matrix_to_lin.lean",
+    "stem": "test_matrix_to_lin",
+    "tokens": [
+      "test",
+      "matrix",
+      "to",
+      "lin"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_phase.lean",
+    "stem": "test_phase",
+    "tokens": [
+      "test",
+      "phase"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_q8_aut.lean",
+    "stem": "test_q8_aut",
+    "tokens": [
+      "test",
+      "q8",
+      "aut"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_reflector.lean",
+    "stem": "test_reflector",
+    "tokens": [
+      "test",
+      "reflector"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_ring_colimit.lean",
+    "stem": "test_ring_colimit",
+    "tokens": [
+      "test",
+      "ring",
+      "colimit"
+    ],
+    "candidate_live_hits": [
+      "lean/InfoGeometry/External/Auto/test_ring.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_ringhom.lean",
+    "stem": "test_ringhom",
+    "tokens": [
+      "test",
+      "ringhom"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_spectral.lean",
+    "stem": "test_spectral",
+    "tokens": [
+      "test",
+      "spectral"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_sum_prod.lean",
+    "stem": "test_sum_prod",
+    "tokens": [
+      "test",
+      "sum",
+      "prod"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiTimePart9zbbFiniteStirlingSumTranslation.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9zbbFiniteStirlingSumTranslation.lean"
+    ]
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_toLin.lean",
+    "stem": "test_tolin",
+    "tokens": [
+      "test",
+      "tolin"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_toLinAlgHom.lean",
+    "stem": "test_tolinalghom",
+    "tokens": [
+      "test",
+      "tolinalghom"
+    ],
+    "candidate_live_hits": []
+  },
+  {
+    "archive_file": "archive/scratch_recovery/test_zeta.lean",
+    "stem": "test_zeta",
+    "tokens": [
+      "test",
+      "zeta"
+    ],
+    "candidate_live_hits": [
+      "lean/Omega/Zeta/XiFiniteStateTimeImageDiscreteOrDense.lean",
+      "lean/Omega/Zeta/XiHankelBadprimesSingleCoordinateStiffness.lean",
+      "lean/Omega/Zeta/DephysicalizedEpsSoundDominatesTv.lean",
+      "lean/Omega/Zeta/XiTimePart9xAbelianizedCertificateStrictInsufficiency.lean",
+      "lean/Omega/Zeta/DephysBudgetDistanceDominatesTv.lean",
+      "lean/Omega/Zeta/XiTimePart9zbbFiniteStirlingSumTranslation.lean",
+      "lean/Omega/Zeta/XiTimePart9vkResonanceShadowFiniteStepPoleGeneration.lean",
+      "lean/Omega/Zeta/XiLinearRecurrenceLocalTestByViolationRate.lean",
+      "lean/Omega/Zeta/XiTimePart9xfTailSpectrumCompleteStatistic.lean",
+      "lean/Omega/Zeta/XiJSexticEllipticLattesTMap.lean",
+      "lean/Omega/Zeta/XiFoldUniformBaselineTestingConstant.lean",
+      "lean/Omega/Zeta/FinitePartSingleLayerSquareRootTest.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiFiniteStateTimeImageDiscreteOrDense.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiHankelBadprimesSingleCoordinateStiffness.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/DephysicalizedEpsSoundDominatesTv.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9xAbelianizedCertificateStrictInsufficiency.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/DephysBudgetDistanceDominatesTv.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9zbbFiniteStirlingSumTranslation.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiTimePart9vkResonanceShadowFiniteStepPoleGeneration.lean",
+      "lean/InfoGeometry/External/Automath/Omega/Zeta/XiLinearRecurrenceLocalTestByViolationRate.lean"
+    ]
+  }
+]

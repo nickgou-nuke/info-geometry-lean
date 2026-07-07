@@ -267,7 +267,6 @@ theorem penroseProjectiveNullTwistor_nonempty :
     have h0 := congrArg (fun f : PenroseTwistorCarrier => f 0) hzero
     have h0 : (1 : ℂ) = 0 := by
       simp [v] at h0
-      exact h0
     exact one_ne_zero h0
   exact ⟨penroseNullTwistorMk ⟨v, hv, hv0⟩⟩
 

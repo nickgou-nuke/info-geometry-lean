@@ -86,10 +86,10 @@ def containsExt (circ : GenCircle) (z : RiemannSphere) : Prop :=
 end GenCircle
 
 -- Circle-Preserving Theorem: Decomposition of Möbius transformations
-def trans_f1 (c d z : ℂ) := z + d / c
-def inv_f2 (z : ℂ) := z⁻¹
-def dil_f3 (a b c d z : ℂ) := ((b * c - a * d) / c^2) * z
-def trans_f4 (a c z : ℂ) := z + a / c
+noncomputable def trans_f1 (c d z : ℂ) := z + d / c
+noncomputable def inv_f2 (z : ℂ) := z⁻¹
+noncomputable def dil_f3 (a b c d z : ℂ) := ((b * c - a * d) / c^2) * z
+noncomputable def trans_f4 (a c z : ℂ) := z + a / c
 
 lemma trans_preserves_circle (c : ℂ) (circ : GenCircle) :
     ∃ circ' : GenCircle, ∀ z : ℂ, circ.contains z ↔ circ'.contains (z + c) := by sorry
@@ -258,9 +258,9 @@ theorem multiplier_from_poles (M : MobiusTransform) (hc : M.c ≠ 0)
   sorry
 
 -- Eigenvalue mapping: λ_i = c γ_i + d
-lemma eigenvalue_mapping (a b c d λ γ : ℂ) (h_fixed : c * γ^2 + (d - a) * γ - b = 0) (h_eigen : λ = c * γ + d) :
-    λ^2 - (a + d) * λ + (a * d - b * c) = 0 := by
-  calc λ^2 - (a + d) * λ + (a * d - b * c)
+lemma eigenvalue_mapping (a b c d lam γ : ℂ) (h_fixed : c * γ^2 + (d - a) * γ - b = 0) (h_eigen : lam = c * γ + d) :
+    lam^2 - (a + d) * lam + (a * d - b * c) = 0 := by
+  calc lam^2 - (a + d) * lam + (a * d - b * c)
     _ = (c * γ + d)^2 - (a + d) * (c * γ + d) + (a * d - b * c) := by rw [h_eigen]
     _ = c * (c * γ^2 + (d - a) * γ - b) := by ring
     _ = c * 0 := by rw [h_fixed]
@@ -321,7 +321,7 @@ theorem mobius_algebraic_decomposition (M : MobiusTransform) (hc : M.c ≠ 0) (z
     calc M.c * (z + M.d / M.c) = M.c * z + M.c * (M.d / M.c) := by ring
     _ = M.c * z + M.d := by rw [mul_div_cancel₀ M.d hc]
   have eq1 : ((M.b * M.c - M.a * M.d) / M.c ^ 2) / (z + M.d / M.c) = (M.b * M.c - M.a * M.d) / (M.c ^ 2 * (z + M.d / M.c)) := by
-    rw [div_mul_div_comm, mul_one]
+    rw [div_div]
   rw [eq1]
   have eq2 : M.c ^ 2 * (z + M.d / M.c) = M.c * (M.c * z + M.d) := by
     calc M.c ^ 2 * (z + M.d / M.c) = M.c * (M.c * (z + M.d / M.c)) := by ring
@@ -511,7 +511,7 @@ theorem mobius_decomposition_alt (a b c d z : ℂ) (hc : c ≠ 0) (hz : z + d/c 
     | inl hc_eq_0 => exact hc hc_eq_0
     | inr hz_eq_0 => exact hz hz_eq_0
   have eq1 : ((b * c - a * d) / c ^ 2) * (1 / (z + d / c)) = (b * c - a * d) / (c ^ 2 * (z + d / c)) := by
-    rw [div_mul_div_comm, mul_one]
+    rw [mul_one_div, div_div]
   rw [eq1]
   have eq2 : c ^ 2 * (z + d / c) = c * (c * z + d) := by
     calc c ^ 2 * (z + d / c) = c * (c * (z + d / c)) := by ring

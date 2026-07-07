@@ -43,41 +43,71 @@ def MoebiusSymmetry : KleinBottleCarrier ≃ KleinBottleCarrier where
 def ConcretePG : InfoGeometry.Topology.Wallpaper.WallpaperGroupPG :=
   InfoGeometry.Topology.Wallpaper.concretePG
 
+@[simp]
+lemma fundamentalSymmetryKlein_map_add' (p q : KleinBottleCarrier) :
+    WithLp.toLp (2 : ENNReal) (WithLp.fst (p + q), -WithLp.snd (p + q)) =
+      WithLp.toLp (2 : ENNReal) (WithLp.fst p, -WithLp.snd p) +
+      WithLp.toLp (2 : ENNReal) (WithLp.fst q, -WithLp.snd q) := by
+  simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
+    (WithLp.toLp_add (p := (2 : ENNReal))
+      (x := (WithLp.fst p, -WithLp.snd p))
+      (y := (WithLp.fst q, -WithLp.snd q)))
+
+@[simp]
+lemma fundamentalSymmetryKlein_map_smul' (c : ℝ) (p : KleinBottleCarrier) :
+    WithLp.toLp (2 : ENNReal) (WithLp.fst (c • p), -WithLp.snd (c • p)) =
+      c • WithLp.toLp (2 : ENNReal) (WithLp.fst p, -WithLp.snd p) := by
+  simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
+    (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+      (x := (WithLp.fst p, -WithLp.snd p)))
+
+lemma fundamentalSymmetryKlein_cont :
+    Continuous fun p : KleinBottleCarrier =>
+      WithLp.toLp (2 : ENNReal) (WithLp.fst p, -WithLp.snd p) := by
+  simpa using
+    (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
+      ((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).prodMk
+        ((WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg))
+
 /-- The split fundamental symmetry `J(x,y) = (x,-y)`. -/
 def fundamentalSymmetryKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier where
   toFun p := WithLp.toLp (2 : ENNReal) (WithLp.fst p, -WithLp.snd p)
-  map_add' p q := by
-    simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
-      (WithLp.toLp_add (p := (2 : ENNReal))
-        (x := (WithLp.fst p, -WithLp.snd p))
-        (y := (WithLp.fst q, -WithLp.snd q)))
-  map_smul' c p := by
-    simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
-      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
-        (x := (WithLp.fst p, -WithLp.snd p)))
-  cont := by
-    simpa using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
-        ((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).prodMk
-          ((WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg))
+  map_add' p q := fundamentalSymmetryKlein_map_add' p q
+  map_smul' c p := fundamentalSymmetryKlein_map_smul' c p
+  cont := fundamentalSymmetryKlein_cont
+
+@[simp]
+lemma modularGeneratorKlein_map_add' (p q : KleinBottleCarrier) :
+    WithLp.toLp (2 : ENNReal) (-WithLp.fst (p + q), WithLp.snd (p + q)) =
+      WithLp.toLp (2 : ENNReal) (-WithLp.fst p, WithLp.snd p) +
+      WithLp.toLp (2 : ENNReal) (-WithLp.fst q, WithLp.snd q) := by
+  simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
+    (WithLp.toLp_add (p := (2 : ENNReal))
+      (x := (-WithLp.fst p, WithLp.snd p))
+      (y := (-WithLp.fst q, WithLp.snd q)))
+
+@[simp]
+lemma modularGeneratorKlein_map_smul' (c : ℝ) (p : KleinBottleCarrier) :
+    WithLp.toLp (2 : ENNReal) (-WithLp.fst (c • p), WithLp.snd (c • p)) =
+      c • WithLp.toLp (2 : ENNReal) (-WithLp.fst p, WithLp.snd p) := by
+  simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
+    (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+      (x := (-WithLp.fst p, WithLp.snd p)))
+
+lemma modularGeneratorKlein_cont :
+    Continuous fun p : KleinBottleCarrier =>
+      WithLp.toLp (2 : ENNReal) (-WithLp.fst p, WithLp.snd p) := by
+  simpa using
+    (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
+      (((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg).prodMk
+        (WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)))
 
 /-- The diagonal modular generator `G(x,y) = (-x,y)`. -/
 def modularGeneratorKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier where
   toFun p := WithLp.toLp (2 : ENNReal) (-WithLp.fst p, WithLp.snd p)
-  map_add' p q := by
-    simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
-      (WithLp.toLp_add (p := (2 : ENNReal))
-        (x := (-WithLp.fst p, WithLp.snd p))
-        (y := (-WithLp.fst q, WithLp.snd q)))
-  map_smul' c p := by
-    simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
-      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
-        (x := (-WithLp.fst p, WithLp.snd p)))
-  cont := by
-    simpa using
-      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).comp
-        (((WithLp.continuous_fst (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)).neg).prodMk
-          (WithLp.continuous_snd (p := (2 : ENNReal)) (α := ℝ) (β := ℝ)))
+  map_add' p q := modularGeneratorKlein_map_add' p q
+  map_smul' c p := modularGeneratorKlein_map_smul' c p
+  cont := modularGeneratorKlein_cont
 
 /-- The identity real endomorphism on the Klein carrier. -/
 def idMapKlein : KleinBottleCarrier →L[ℝ] KleinBottleCarrier :=
@@ -313,8 +343,7 @@ still a hardcoded readout of this concrete zero-defect bridge; it is not an
 unconditional p-adic anomaly theorem.
 -/
 theorem concreteBridgeKlein_traceZeroAnomalyResolution_137 :
-    HestenesKreinModularFredholmBridge.TraceZeroAnomalyResolution
-      concreteBridgeKlein 137 := by
+    padicValNat 2 137 = 0 → concreteBridgeKlein.relativeFredholm.fredholm.kreinTrace = 0 := by
   intro _h137
   exact concreteBridgeKlein_kreinTrace
 
@@ -322,5 +351,16 @@ theorem concreteBridgeKlein_traceZeroAnomalyResolution_137 :
 theorem concreteBridgeKlein_traceZero_of_padicValNat_137 :
     concreteBridgeKlein.relativeFredholm.fredholm.kreinTrace = 0 :=
   concreteBridgeKlein_traceZeroAnomalyResolution_137 padicValNat_two_137
+
+/--
+The true missing gap: an unconditional theorem for ANY bridge, not just the trivial
+zero-defect case constructed above. We expose this explicitly as sorry rather than
+hiding behind the concrete instance.
+-/
+theorem unconditional_pAdic_anomaly {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (B : HestenesKreinModularFredholmBridge E)
+    (n : ℕ) (hn : padicValNat 2 n = 0) :
+    B.relativeFredholm.fredholm.kreinTrace = 0 := by
+  sorry
 
 end

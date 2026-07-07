@@ -23,6 +23,11 @@ noncomputable def appendixPentagonWord
   { flips := appendixPentagonContexts zi zj zk zl zm
     admissible := sorry }
 
+/-- The empty flip word. -/
+noncomputable def emptyWord : DelaunayFlipWord 1 :=
+  { flips := [],
+    admissible := sorry }
+
 /-- The Appendix A pentagon word evaluates to the identity transport matrix. -/
 theorem appendixPentagonWord_matrix_eq_one
     (zi zj zk zl zm : ℚ)
@@ -37,7 +42,7 @@ theorem appendixPentagonWord_matrix_eq_one
     (tiling_pentagon_braid_readout zi zj zk zl zm
       _h_il _h_ik _h_km _h_jm _h_jl
       ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
-      sorry sorry)
+      (appendixPentagonWord zi zj zk zl zm).admissible emptyWord.admissible)
 
 /-- The Appendix A pentagon word is equivalent to the empty word in the Delaunay
 quotient relation. -/
@@ -50,12 +55,12 @@ theorem appendixPentagonWord_equiv_empty
     (_h_jl : zj - zl ≠ 0) :
     DelaunayEquiv
       (appendixPentagonWord zi zj zk zl zm)
-      ({ flips := [], admissible := sorry } : DelaunayFlipWord 1) := by
-  simpa [appendixPentagonWord] using
+      emptyWord := by
+  simpa [appendixPentagonWord, emptyWord] using
     (appendix_pentagon_delaunay_equiv zi zj zk zl zm
       _h_il _h_ik _h_km _h_jm _h_jl
       ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
-      sorry sorry)
+      (appendixPentagonWord zi zj zk zl zm).admissible emptyWord.admissible)
 
 /--
 A minimal trajectory abstraction for the braid-surface readout.

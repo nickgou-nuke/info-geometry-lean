@@ -799,8 +799,6 @@ variable
 
 variable (C : TKKConformalClosure J V W L State Geometry)
 
-
-
 /-- Ricci flux expands as curvature variation plus closure defect. -/
 theorem ricciFlux_def
     (X : L)
@@ -833,6 +831,106 @@ theorem anomaly_is_closure_defect
 
 end TKKConformalClosure
 
-end InfoGeometry.OperatorAlgebra.TKKConformalClosure
+/-! ## Instantiations exposing missing holes -/
 
-The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+def instConformalCompactificationDatum {V W} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
+    (affineEmbed : V →ₗ[ℝ] W) (ambientQ : W → ℝ) (nullCone : Set W) (projectiveNullBoundary : Set W) :
+    ConformalCompactificationDatum V W where
+  affineEmbed := affineEmbed
+  ambientQ := ambientQ
+  nullCone := nullCone
+  projectiveNullBoundary := projectiveNullBoundary
+  nullCone_eq_zero_locus := sorry
+  boundary_subset_nullCone := sorry
+  affineEmbed_injective := sorry
+
+def instTKKThreeGrading {L} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    (gMinus gZero gPlus : Submodule ℝ L) : TKKThreeGrading L where
+  gMinus := gMinus
+  gZero := gZero
+  gPlus := gPlus
+  decomposition_True := sorry
+  bracket_minus_minus := sorry
+  bracket_plus_plus := sorry
+  bracket_zero_minus := sorry
+  bracket_zero_plus := sorry
+  bracket_zero_zero := sorry
+  bracket_minus_plus := sorry
+
+def instTKKClosureDatum {J L} [AddCommGroup J] [Module ℝ J] [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    (grading : TKKThreeGrading L) (toMinus : J →ₗ[ℝ] L) (toPlus : J →ₗ[ℝ] L) : TKKClosureDatum J L where
+  grading := grading
+  toMinus := toMinus
+  toPlus := toPlus
+  toMinus_mem := sorry
+  toPlus_mem := sorry
+  tkk_identity := sorry
+
+def instTKKInfinitesimalAction {L State} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State]
+    (act : L →ₗ[ℝ] State →ₗ[ℝ] State) : TKKInfinitesimalAction L State where
+  act := act
+  lie_action_True := sorry
+
+def instConformalGroupLiftWitness {L W} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup W] [Module ℝ W]
+    (infinitesimalAction : L →ₗ[ℝ] W →ₗ[ℝ] W) (IsConformalMotion : (W →ₗ[ℝ] W) → Prop) : ConformalGroupLiftWitness L W where
+  infinitesimalAction := infinitesimalAction
+  IsConformalMotion := IsConformalMotion
+  infinitesimalAction_lie := sorry
+
+def instPinLiftWitness {L W} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup W] [Module ℝ W]
+    (quadraticForm : QuadraticForm ℝ W) (infinitesimalAction : ConformalGroupLiftWitness L W)
+    (PinGroupCarrier : Type) (pinMul : PinGroupCarrier → PinGroupCarrier → PinGroupCarrier) (pinOne : PinGroupCarrier)
+    (scalarEmbed : ℝ → PinGroupCarrier) (cliffordGen : W → PinGroupCarrier) (pinAction : PinGroupCarrier → W →ₗ[ℝ] W) :
+    PinLiftWitness L W where
+  quadraticForm := quadraticForm
+  infinitesimalAction := infinitesimalAction
+  PinGroupCarrier := PinGroupCarrier
+  pinMul := pinMul
+  pinOne := pinOne
+  scalarEmbed := scalarEmbed
+  cliffordGen := cliffordGen
+  clifford_sq := sorry
+  pinAction := pinAction
+  pinAction_preserves_Q := sorry
+
+def instTKKClosureDefect {L State Defect} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State] [AddCommGroup Defect] [Module ℝ Defect]
+    (defect : L → State → Defect) : TKKClosureDefect L State Defect where
+  defect := defect
+  defect_linear_gen := sorry
+
+def instCurvatureReadout {State Geometry} [AddCommGroup State] [Module ℝ State] [AddCommGroup Geometry] [Module ℝ Geometry]
+    (curvature : State → Geometry) (curvature_linear : State →ₗ[ℝ] Geometry) : CurvatureReadout State Geometry where
+  curvature := curvature
+  curvature_linear := curvature_linear
+  curvature_eq_linear := sorry
+
+def instDirectionalDerivativeAlong {L State Geometry} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State] [AddCommGroup Geometry] [Module ℝ Geometry]
+    (deriv : (State → Geometry) → L → State → Geometry) : DirectionalDerivativeAlong L State Geometry where
+  deriv := deriv
+  deriv_linear_gen := sorry
+
+def instTKKRicciFluxDatum {L State Geometry} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State] [AddCommGroup Geometry] [Module ℝ Geometry]
+    (curvatureReadout : CurvatureReadout State Geometry) (derivativeAlong : DirectionalDerivativeAlong L State Geometry)
+    (closureDefect : TKKClosureDefect L State Geometry) (ricciFlux : L → State → Geometry) : TKKRicciFluxDatum L State Geometry where
+  curvatureReadout := curvatureReadout
+  derivativeAlong := derivativeAlong
+  closureDefect := closureDefect
+  ricciFlux := ricciFlux
+  ricciFlux_eq := sorry
+
+def instAnomalyClosureDefectDatum {L State Geometry} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State] [AddCommGroup Geometry] [Module ℝ Geometry]
+    (closureDefect : TKKClosureDefect L State Geometry) (anomalyReadout : L → State → Geometry) : AnomalyClosureDefectDatum L State Geometry where
+  closureDefect := closureDefect
+  anomalyReadout := anomalyReadout
+  anomalyReadout_linear := sorry
+  anomaly_eq_closure_defect := sorry
+
+def instTKKConformalClosure {J V W L State Geometry} [AddCommGroup J] [Module ℝ J] [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W] [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] [AddCommGroup State] [Module ℝ State] [AddCommGroup Geometry] [Module ℝ Geometry]
+    (compactification : ConformalCompactificationDatum V W) (tkk : TKKClosureDatum J L) (infinitesimalAction : TKKInfinitesimalAction L State) (groupLift : ConformalGroupLiftWitness L W) (ricciFlux : TKKRicciFluxDatum L State Geometry) : TKKConformalClosure J V W L State Geometry where
+  compactification := compactification
+  tkk := tkk
+  infinitesimalAction := infinitesimalAction
+  groupLift := groupLift
+  ricciFlux := ricciFlux
+
+end InfoGeometry.OperatorAlgebra.TKKConformalClosure

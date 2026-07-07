@@ -1,12 +1,6 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
-import InfoGeometry.Canonical.ZornVectorMatrixExplicit
-import InfoGeometry.Clifford.Cl11CoordinateAlgebra
-import InfoGeometry.Clifford.GammaMatrices
-
-open Matrix
+import InfoGeometry.Physics.ZornMatrixSU3.Vector3
+import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
+import InfoGeometry.Physics.ZornMatrixSU3.ZornSU3Properties
 
 /-!
 # InfoGeometry.Physics.ZornMatrixSU3

@@ -84,7 +84,7 @@ theorem ambrose_singer_bergman_reduction
       CurvatureSpan R B.toPrincipalBundle g := by
   exact le_antisymm (bergman_holonomy_subset_curvature B p) (bergman_curvature_subset_holonomy B p)
 
-instance : TopologicalSpace Unit where
+instance myTrivialTopologicalSpace : TopologicalSpace Unit where
   IsOpen _ := True
   isOpen_univ := trivial
   isOpen_inter _ _ _ _ := trivial
@@ -105,7 +105,7 @@ instance : Group Unit where
 
 instance trivialPrincipalBundle : PrincipalBundle Unit Unit where
   P := Unit
-  top := instTopologicalSpaceUnit
+  top := myTrivialTopologicalSpace
   proj _ := ()
   action _ _ := ()
 

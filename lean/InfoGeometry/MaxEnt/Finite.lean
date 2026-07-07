@@ -1,20 +1,100 @@
-import InfoGeometry.Basic
+import Mathlib
 import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Basic
+import InfoGeometry.ExponentialFamily.Class
+
 set_option linter.unusedSectionVars false
 
-open scoped BigOperators
+open scoped BigOperators ENNReal
+open Finset
+
+namespace InfoGeometry
 
 /-!
-# Finite Jaynes MaxEnt
+# Finite Exponential Family and Jaynes MaxEnt
 
-Finite-state Jaynes-style maximum-entropy primitives:
-- partition function
-- Gibbs form
-- normalization and positivity lemmas
-- a packaged feasible point under a target expectation constraint
+Combined primitives for finite exponential families and MaxEnt.
 -/
 
-namespace InfoGeometry.MaxEnt
+namespace ExponentialFamily
+
+structure FiniteExponentialFamilyData (α : Type _) [Fintype α] where
+  base : ProbabilityDist α
+  stat : α → ℝ
+  base_pos : ∀ x, 0 < (base x).toReal
+
+variable {α : Type _} [Fintype α]
+
+noncomputable def familyPartition (F : FiniteExponentialFamilyData α) (θ : ℝ) : ℝ :=
+  ∑ x, (F.base x).toReal * Real.exp (θ * F.stat x)
+
+noncomputable def familyLogPartition (F : FiniteExponentialFamilyData α) (θ : ℝ) : ℝ :=
+  Real.log (familyPartition F θ)
+
+noncomputable def familyStatistic (F : FiniteExponentialFamilyData α) (x : α) (θ : ℝ) : ℝ :=
+  θ * F.stat x + Real.log ((F.base x).toReal)
+
+noncomputable def familyDensity (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) : ℝ :=
+  (F.base x).toReal * Real.exp (θ * F.stat x) / familyPartition F θ
+
+section Nonempty
+
+variable [Nonempty α]
+
+lemma familyPartition_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) :
+    0 < familyPartition F θ := by
+  unfold familyPartition
+  exact
+    Finset.sum_pos
+      (fun x _ => mul_pos (F.base_pos x) (Real.exp_pos _))
+      Finset.univ_nonempty
+
+lemma familyDensity_eq (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
+    familyDensity F θ x =
+    Real.exp (familyStatistic F x θ - familyLogPartition F θ) := by
+  unfold familyDensity familyStatistic familyLogPartition
+  have hZpos : 0 < familyPartition F θ := familyPartition_pos F θ
+  have hbpos : 0 < (F.base x).toReal := F.base_pos x
+  rw [Real.exp_sub, Real.exp_add]
+  rw [Real.exp_log hbpos, Real.exp_log hZpos]
+  simp [mul_comm]
+
+lemma familyDensity_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
+    0 < familyDensity F θ x := by
+  unfold familyDensity
+  exact div_pos
+    (mul_pos (F.base_pos x) (Real.exp_pos _))
+    (familyPartition_pos F θ)
+
+lemma familyNormalization (F : FiniteExponentialFamilyData α) (θ : ℝ) :
+    ∑ x, familyDensity F θ x = 1 := by
+  classical
+  unfold familyDensity familyPartition
+  have hZne : (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) ≠ 0 :=
+    ne_of_gt (by simpa [familyPartition] using familyPartition_pos F θ)
+  calc
+    ∑ x : α,
+      (F.base x).toReal * Real.exp (θ * F.stat x) /
+      (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y))
+        = (∑ x : α, (F.base x).toReal * Real.exp (θ * F.stat x)) /
+          (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) := by
+      rw [Finset.sum_div]
+    _ = 1 := by
+      exact div_self hZne
+
+noncomputable instance instFiniteExponentialFamilyData :
+    FiniteExponentialFamily α ℝ where
+  statistic := fun x θ => familyStatistic F x θ
+  logPartition := fun θ => familyLogPartition F θ
+  density := fun θ x => familyDensity F θ x
+  density_eq := fun θ x => familyDensity_eq F θ x
+  normalization := fun θ => familyNormalization F θ
+
+end Nonempty
+end ExponentialFamily
+
+namespace MaxEnt
 
 section Finite
 
@@ -48,7 +128,6 @@ noncomputable def gibbs (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) : ℝ :=
 noncomputable def gibbsExpectation (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
   ∑ i, gibbs f lam i * f i
 
-/-- The finite partition function is strictly positive on nonempty support. -/
 lemma partition_pos
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     0 < partition f lam := by
@@ -59,30 +138,26 @@ lemma partition_pos
       (s := (Finset.univ : Finset (Fin n)))
       (f := fun i => Real.exp (-lam * f i))
       (by
-        intro i hi
+        intro i _
         exact Real.exp_pos _)
       Finset.univ_nonempty)
 
-/-- The finite partition function is nonzero on nonempty support. -/
 lemma partition_ne_zero
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     partition f lam ≠ 0 :=
   (partition_pos f lam).ne'
 
-/-- Gibbs weights are strictly positive on nonempty support. -/
 lemma gibbs_pos
     (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) [Nonempty (Fin n)] :
     0 < gibbs f lam i := by
   unfold gibbs
   exact div_pos (Real.exp_pos _) (partition_pos f lam)
 
-/-- Gibbs weights are nonnegative on nonempty support. -/
 lemma gibbs_nonneg
     (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) [Nonempty (Fin n)] :
     0 ≤ gibbs f lam i :=
   (gibbs_pos f lam i).le
 
-/-- The Gibbs form is normalized to one on nonempty support. -/
 lemma gibbs_sum_one
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     ∑ i, gibbs f lam i = 1 := by
@@ -101,7 +176,6 @@ lemma gibbs_sum_one
     _ = 1 := by
           exact div_self hZne
 
-/-- Gibbs form rewritten as a single exponential with `logPartition`. -/
 lemma gibbs_eq_exp_sub_logPartition
     (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) [Nonempty (Fin n)] :
     gibbs f lam i = Real.exp (-lam * f i - logPartition f lam) := by
@@ -114,7 +188,6 @@ lemma gibbs_eq_exp_sub_logPartition
     _ = Real.exp (-lam * f i - Real.log (partition f lam)) := by
           rw [Real.exp_sub]
 
-/-- The Gibbs point is feasible for MaxEnt once the target expectation is matched. -/
 noncomputable def gibbsMaxEntProblemOfExpectation
     (f : Fin n → ℝ) (lam expectationVal : ℝ)
     [Nonempty (Fin n)]
@@ -128,25 +201,20 @@ noncomputable def gibbsMaxEntProblemOfExpectation
     intro i
     exact gibbs_nonneg f lam i
 
+/-- Existence of Lagrange multipliers matching feasible moments -/
+theorem exists_lam_of_feasible_expectation
+    (f : Fin n → ℝ) (expectationVal : ℝ)
+    [Nonempty (Fin n)]
+    (p_opt : Fin n → ℝ)
+    (hp_opt_pos : ∀ i, 0 < p_opt i)
+    (hp_opt_norm : ∑ i, p_opt i = 1)
+    (hp_opt_exp : ∑ i, p_opt i * f i = expectationVal) :
+    ∃ lam : ℝ, gibbsExpectation f lam = expectationVal := by
+  sorry
+
 end Finite
 
-end InfoGeometry.MaxEnt
-
-/-!
-# Finite Jaynes MaxEnt Model
-
-Concrete finite-dimensional Jaynes/MaxEnt layer over `ProbabilityDist α`:
-
-- prior `q`
-- finite feature family `f_i`
-- Lagrange multipliers `lam_i`
-- Gibbs partition function `Z(lam)`
-- Gibbs posterior `p_lam(x) ∝ q(x) * exp(∑ lam_i f_i(x))`
--/
-
-namespace InfoGeometry.MaxEnt.Finite
-
-open scoped BigOperators ENNReal
+namespace Finite
 
 noncomputable section
 
@@ -163,7 +231,6 @@ structure FiniteJaynesProblem (α ι : Type*) [Fintype α] [DecidableEq α] [Dec
 
 namespace FiniteJaynesProblem
 
-/-- Exponential-family score `E_lam(x) = ∑_{i ∈ index} lam_i f_i(x)`. -/
 def energy (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
   ∑ i ∈ J.index, lam i * J.feature i x
 
@@ -171,11 +238,9 @@ def energy (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
     J.energy (fun _ => 0) x = 0 := by
   simp [energy]
 
-/-- Partition function `Z(lam) = ∑ q(x) exp(E_lam(x))`. -/
 def partition (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) : ℝ :=
   ∑ x, (J.prior x).toReal * Real.exp (J.energy lam x)
 
-/-- The finite exponential-family partition function is nonnegative. -/
 lemma partition_nonneg (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) :
     0 ≤ J.partition lam := by
   unfold partition
@@ -183,11 +248,9 @@ lemma partition_nonneg (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) :
   intro x _hx
   exact mul_nonneg (J.prior x).toReal_nonneg (le_of_lt (Real.exp_pos _))
 
-/-- Full support on the finite prior. -/
 def FullSupportPrior (J : FiniteJaynesProblem α ι) : Prop :=
   ∀ x, 0 < (J.prior x).toReal
 
-/-- Full prior support yields strict positivity of the partition function. -/
 lemma partition_pos_of_fullSupport
     (J : FiniteJaynesProblem α ι)
     [Nonempty α]
@@ -206,7 +269,6 @@ lemma partition_pos_of_fullSupport
       (by simp)
   exact lt_of_lt_of_le hx0 hle
 
-/-- Full prior support yields nonvanishing partition function. -/
 lemma partition_ne_zero_of_fullSupport
     (J : FiniteJaynesProblem α ι)
     [Nonempty α]
@@ -214,7 +276,6 @@ lemma partition_ne_zero_of_fullSupport
     J.partition lam ≠ 0 :=
   (J.partition_pos_of_fullSupport hprior lam).ne'
 
-/-- Unnormalized Gibbs weight `q(x) e^{E_lam(x)}`. -/
 def gibbsWeight (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
   (J.prior x).toReal * Real.exp (J.energy lam x)
 
@@ -223,13 +284,11 @@ def gibbsWeight (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : �
     0 ≤ J.gibbsWeight lam x := by
   exact mul_nonneg (J.prior x).toReal_nonneg (le_of_lt (Real.exp_pos _))
 
-/-- Pointwise normalized Gibbs posterior. -/
 def gibbsProb
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (_hZ : J.partition lam ≠ 0) (x : α) : ℝ :=
   J.gibbsWeight lam x / J.partition lam
 
-/-- Pointwise finite Gibbs probabilities are nonnegative. -/
 lemma gibbsProb_nonneg
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) (x : α) :
@@ -239,29 +298,24 @@ lemma gibbsProb_nonneg
   have hZpos : 0 < J.partition lam := lt_of_le_of_ne hZnonneg (Ne.symm hZ)
   exact div_nonneg (J.gibbsWeight_nonneg lam x) (le_of_lt hZpos)
 
-/-- The Gibbs probabilities sum to 1 in ℝ. -/
 lemma sum_gibbsProb_eq_one
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) :
     ∑ x, J.gibbsProb lam hZ x = 1 := by
   unfold gibbsProb
   rw [← Finset.sum_div]
-  -- By definition, ∑ x, J.gibbsWeight lam x is exactly J.partition lam
   change J.partition lam / J.partition lam = 1
   exact div_self hZ
 
-/-- Gibbs posterior as a `ProbabilityDist`. -/
 noncomputable def gibbsDist
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) : ProbabilityDist α :=
   PMF.ofFintype (fun x => ENNReal.ofReal (J.gibbsProb lam hZ x)) (by
-    -- Push the sum inside ENNReal.ofReal using the non-negativity of gibbsProb
     rw [← ENNReal.ofReal_sum_of_nonneg (fun x _ => J.gibbsProb_nonneg lam hZ x)]
     rw [J.sum_gibbsProb_eq_one lam hZ]
     exact ENNReal.ofReal_one
   )
 
-/-- Real-valued normalization of a finite probability distribution. -/
 lemma sum_toReal_eq_one (P : ProbabilityDist α) :
     ∑ x, (P x).toReal = 1 := by
   have h' : ∑ x, P x = (1 : ℝ≥0∞) := by
@@ -274,34 +328,40 @@ lemma sum_toReal_eq_one (P : ProbabilityDist α) :
   rw [h'''] at h''
   simpa using h''
 
-/-- Finite free-energy potential `ψ(lam) = log Z(lam)`. -/
 noncomputable def logPartition (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) : ℝ :=
   Real.log (J.partition lam)
 
-/-- At zero multipliers, the finite partition function equals `1`. -/
 lemma partition_zero (J : FiniteJaynesProblem α ι) :
     J.partition (fun _ => 0) = 1 := by
   unfold partition energy
   simpa using sum_toReal_eq_one J.prior
 
-/-- At zero multipliers, the finite log-partition equals `0`. -/
 lemma logPartition_zero (J : FiniteJaynesProblem α ι) :
     J.logPartition (fun _ => 0) = 0 := by
   unfold logPartition
   rw [J.partition_zero]
   simp
 
-/-- Moment of an observable under a finite probability distribution. -/
 def moment (_J : FiniteJaynesProblem α ι) (P : ProbabilityDist α) (f : α → ℝ) : ℝ :=
   ∑ x, (P x).toReal * f x
 
-/-- Constraint satisfaction for the Gibbs posterior at multipliers `lam`. -/
 def SatisfiesTargetMoments
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) : Prop :=
   ∀ i ∈ J.index, J.moment (J.gibbsDist lam hZ) (J.feature i) = J.target i
 
-/-- Expected energy under `P` rewritten by swapping the finite sums. -/
+/-- Missing general existence theorem for multidimensional MaxEnt matching moments -/
+theorem exists_satisfiesTargetMoments
+    (J : FiniteJaynesProblem α ι)
+    [Nonempty α]
+    (hprior : J.FullSupportPrior)
+    (P_opt : ProbabilityDist α)
+    (h_P_opt_full : ∀ x, 0 < (P_opt x).toReal)
+    (h_P_opt_moments : ∀ i ∈ J.index, J.moment P_opt (J.feature i) = J.target i) :
+    ∃ (lam : ι → ℝ) (hZ : J.partition lam ≠ 0),
+      J.SatisfiesTargetMoments lam hZ := by
+  sorry
+
 lemma sum_prob_mul_energy
     (J : FiniteJaynesProblem α ι)
     (P : ProbabilityDist α)
@@ -326,27 +386,20 @@ lemma sum_prob_mul_energy
     _ = ∑ i ∈ J.index, lam i * J.moment P (J.feature i) := by
           rfl
 
-/-! ### Dual Objective and Moment Characterization -/
-
-/-- The finite Jaynes dual objective:
-`Φ(λ) = log Z(λ) - ∑ᵢ λᵢ cᵢ`. -/
 noncomputable def dualObjective (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) : ℝ :=
   J.logPartition lam - ∑ i ∈ J.index, lam i * J.target i
 
-/-- Gibbs expectation of a feature under the Gibbs posterior. -/
 noncomputable def gibbsMoment
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) (f : α → ℝ) : ℝ :=
   J.moment (J.gibbsDist lam hZ) f
 
-/-- The dual objective at zero multipliers is zero. -/
 lemma dualObjective_zero (J : FiniteJaynesProblem α ι) :
     J.dualObjective (fun _ => 0) = 0 := by
   unfold dualObjective
   rw [J.logPartition_zero]
   simp
 
-/-- The Gibbs posterior satisfies the exponential tilt formula pointwise. -/
 lemma gibbsDist_pointwise
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) (x : α) :
@@ -356,7 +409,6 @@ lemma gibbsDist_pointwise
     fun x => J.gibbsProb_nonneg lam hZ x
   simp [PMF.ofFintype, h_nonneg]
 
-/-- The Gibbs moment can be rewritten directly in terms of `gibbsProb`. -/
 lemma gibbsMoment_eq_sum
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) (f : α → ℝ) :
@@ -366,7 +418,6 @@ lemma gibbsMoment_eq_sum
   intro x _hx
   rw [gibbsDist_pointwise]
 
-/-- Constraint satisfaction can be expressed directly through `gibbsProb`. -/
 lemma satisfiesTargetMoments_iff
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) :
@@ -384,7 +435,6 @@ lemma satisfiesTargetMoments_iff
     rw [← h_eq i] at h_hi
     exact h_hi
 
-/-- Pointwise exponential-tilt shape relative to the prior. -/
 lemma gibbsProb_eq_prior_mul_exp_tilt
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ)
@@ -403,7 +453,6 @@ lemma gibbsProb_eq_prior_mul_exp_tilt
     _ = (J.prior x).toReal * Real.exp (J.energy lam x - Real.log (J.partition lam)) := by
           rw [Real.exp_sub]
 
-/-- Log-ratio identity relative to the prior under full support. -/
 lemma log_gibbsRatio_eq_energy_sub_logPartition
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
@@ -425,9 +474,6 @@ lemma log_gibbsRatio_eq_energy_sub_logPartition
   rw [Real.log_div hExp hZpos.ne', Real.log_exp]
   rfl
 
-/-! ### The Variational Identity and Information Projection -/
-
-/-- Pointwise logarithmic identity, already multiplied by `P(x)`. -/
 private lemma mul_log_ratio_to_gibbs_eq
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
@@ -456,7 +502,36 @@ private lemma mul_log_ratio_to_gibbs_eq
       linarith
     rw [hmain]
 
-/-- Generalized Pythagorean identity for the finite Gibbs posterior. -/
+/-- Extracted sum rewriting lemma to break up kl_gibbs_variational_identity -/
+lemma sum_mul_log_ratio_to_gibbs_eq
+    (J : FiniteJaynesProblem α ι)
+    (hprior : J.FullSupportPrior)
+    (lam : ι → ℝ) (hZ : J.partition lam ≠ 0)
+    (P : ProbabilityDist α) :
+    (∑ x, (P x).toReal * Real.log ((P x).toReal / J.gibbsProb lam hZ x))
+    = ∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal)
+      - ∑ x, (P x).toReal * J.energy lam x
+      + ∑ x, (P x).toReal * J.logPartition lam := by
+  calc
+    (∑ x, (P x).toReal * Real.log ((P x).toReal / J.gibbsProb lam hZ x))
+      = ∑ x, (P x).toReal *
+        (Real.log ((P x).toReal / (J.prior x).toReal)
+          - (J.energy lam x - J.logPartition lam)) := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            exact mul_log_ratio_to_gibbs_eq J hprior lam hZ P x
+    _ = ∑ x,
+        ((P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal)
+          - (P x).toReal * J.energy lam x
+          + (P x).toReal * J.logPartition lam) := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            ring
+    _ = (∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal))
+        - (∑ x, (P x).toReal * J.energy lam x)
+        + (∑ x, (P x).toReal * J.logPartition lam) := by
+            rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+
 lemma kl_gibbs_variational_identity
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
@@ -467,41 +542,11 @@ lemma kl_gibbs_variational_identity
       (∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal))
         - (∑ i ∈ J.index, lam i * J.moment P (J.feature i))
         + J.logPartition lam := by
-  calc
-    (∑ x, (P x).toReal * Real.log ((P x).toReal / J.gibbsProb lam hZ x))
-      =
-      ∑ x, (P x).toReal *
-        (Real.log ((P x).toReal / (J.prior x).toReal)
-          - (J.energy lam x - J.logPartition lam)) := by
-            refine Finset.sum_congr rfl ?_
-            intro x hx
-            exact mul_log_ratio_to_gibbs_eq J hprior lam hZ P x
-    _ =
-      ∑ x,
-        ((P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal)
-          - (P x).toReal * J.energy lam x
-          + (P x).toReal * J.logPartition lam) := by
-            refine Finset.sum_congr rfl ?_
-            intro x hx
-            ring
-    _ =
-      (∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal))
-        - (∑ x, (P x).toReal * J.energy lam x)
-        + (∑ x, (P x).toReal * J.logPartition lam) := by
-            rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
-    _ =
-      (∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal))
-        - (∑ i ∈ J.index, lam i * J.moment P (J.feature i))
-        + (∑ x, (P x).toReal * J.logPartition lam) := by
-            rw [J.sum_prob_mul_energy P lam]
-    _ =
-      (∑ x, (P x).toReal * Real.log ((P x).toReal / (J.prior x).toReal))
-        - (∑ i ∈ J.index, lam i * J.moment P (J.feature i))
-        + J.logPartition lam := by
-            have hsum : ∑ x, (P x).toReal = 1 := sum_toReal_eq_one P
-            rw [← Finset.sum_mul, hsum, one_mul]
+  rw [sum_mul_log_ratio_to_gibbs_eq J hprior lam hZ P]
+  rw [J.sum_prob_mul_energy P lam]
+  have hsum : ∑ x, (P x).toReal = 1 := sum_toReal_eq_one P
+  rw [← Finset.sum_mul, hsum, one_mul]
 
-/-- Weak-duality form after imposing the target moment constraints. -/
 lemma kl_prior_eq_kl_gibbs_add_dualObjective
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
@@ -524,7 +569,6 @@ lemma kl_prior_eq_kl_gibbs_add_dualObjective
   rw [hmom] at hvar
   linarith
 
-/-- Weak duality: for any feasible distribution `P`, KL to the prior is bounded below by the dual objective. -/
 lemma dual_objective_le_kl_prior
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
@@ -536,7 +580,6 @@ lemma dual_objective_le_kl_prior
   rw [J.kl_prior_eq_kl_gibbs_add_dualObjective hprior lam hZ P h_feasible]
   linarith
 
-/-- Single-feature specialization: `p(x) ∝ q(x)e^{ℓ(x)}`. -/
 def ofLogLikelihood (prior : ProbabilityDist α) (ℓ : α → ℝ) :
     FiniteJaynesProblem α Unit where
   prior := prior
@@ -550,7 +593,7 @@ def ofLogLikelihood (prior : ProbabilityDist α) (ℓ : α → ℝ) :
   simp [ofLogLikelihood, energy]
 
 end FiniteJaynesProblem
-
 end
-
-end InfoGeometry.MaxEnt.Finite
+end Finite
+end MaxEnt
+end InfoGeometry

@@ -101,17 +101,17 @@ theorem dotProduct_comm (x y : Fin 3 → ℝ) :
 @[simp] theorem crossProduct_zero_left (x : Fin 3 → ℝ) :
     crossProduct (fun _ : Fin 3 => 0) x = (0 : Fin 3 → ℝ) := by
   funext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
 
 @[simp] theorem crossProduct_zero_zero :
     crossProduct (0 : Fin 3 → ℝ) (0 : Fin 3 → ℝ) = (0 : Fin 3 → ℝ) := by
   funext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
 
 @[simp] theorem crossProduct_zero_right (x : Fin 3 → ℝ) :
     crossProduct x (fun _ : Fin 3 => 0) = (0 : Fin 3 → ℝ) := by
   funext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
 
 theorem crossProduct_anticomm (x y : Fin 3 → ℝ) :
     crossProduct x y = -(crossProduct y x) := by
@@ -136,12 +136,12 @@ theorem dotProduct_add_right (x y z : Fin 3 → ℝ) :
 theorem crossProduct_add_left (x y z : Fin 3 → ℝ) :
     crossProduct (x + y) z = crossProduct x z + crossProduct y z := by
   ext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, add_mul] <;> ring
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, add_mul]
 
 theorem crossProduct_add_right (x y z : Fin 3 → ℝ) :
     crossProduct x (y + z) = crossProduct x y + crossProduct x z := by
   ext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, mul_add] <;> ring
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, mul_add]
 
 theorem dotProduct_smul_left (r : ℝ) (x y : Fin 3 → ℝ) :
     dotProduct (r • x) y = r * dotProduct x y := by
@@ -331,10 +331,10 @@ def projector2 : ZornMatrix :=
       _ = 0 := by simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * projector1 : ZornMatrix).x i
       _ = (a • (0 : Fin 3 → ℝ) + (0 : ℝ) • x - crossProduct y (0 : Fin 3 → ℝ)) i := rfl
-      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * projector1 : ZornMatrix).y i
       _ = (b • (0 : Fin 3 → ℝ) + (1 : ℝ) • y + crossProduct x (0 : Fin 3 → ℝ)) i := rfl
-      _ = y i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = y i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 @[simp] lemma projector2_mul (M : ZornMatrix) :
     M * projector2 = ⟨0, M.b, M.x, fun _ : Fin 3 => 0⟩ := by
   cases M with | mk a b x y =>
@@ -346,11 +346,11 @@ def projector2 : ZornMatrix :=
       _ = b * 1 + dotProduct y (0 : Fin 3 → ℝ) := rfl
       _ = b := by simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * projector2 : ZornMatrix).x i
-      _ = (a • (0 : Fin 3 → ℝ) + (0 : ℝ) • x - crossProduct y (0 : Fin 3 → ℝ)) i := rfl
-      _ = x i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = (a • (0 : Fin 3 → ℝ) + (1 : ℝ) • x - crossProduct y (0 : Fin 3 → ℝ)) i := rfl
+      _ = x i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * projector2 : ZornMatrix).y i
       _ = (b • (0 : Fin 3 → ℝ) + (0 : ℝ) • y + crossProduct x (0 : Fin 3 → ℝ)) i := rfl
-      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 @[simp] theorem projector1_sq : projector1 * projector1 = projector1 := by
   ext1
   · exact calc (projector1 * projector1 : ZornMatrix).a
@@ -450,10 +450,10 @@ theorem projector1_add_projector2 : projector1 + projector2 = one := by
       _ = 0 := by simp [dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * (0 : ZornMatrix) : ZornMatrix).x i
       _ = (a • (0 : Fin 3 → ℝ) + (0 : ℝ) • x - crossProduct y (0 : Fin 3 → ℝ)) i := rfl
-      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
   · ext i; exact calc ({ a := a, b := b, x := x, y := y } * (0 : ZornMatrix) : ZornMatrix).y i
       _ = (b • (0 : Fin 3 → ℝ) + (0 : ℝ) • y + crossProduct x (0 : Fin 3 → ℝ)) i := rfl
-      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+      _ = ((0 : Fin 3 → ℝ)) i := by fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 
 theorem add_mul_zorn (M N P : ZornMatrix) : (M + N) * P = M * P + N * P := by
   cases M; cases N; cases P; ext1

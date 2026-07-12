@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-lake-
       - name: Stub unavailable path-only packages
         run: |
-          make_stub() {
+          make_lean_stub() {
             dir="$1"
             name="$2"
             mkdir -p "$dir"
@@ -37,9 +37,13 @@ jobs:
           package $name
           EOF
           }
-          make_stub external_refs/atlas-lean Atlas
-          make_stub external_refs/gift-framework-core GIFT
-          make_stub lib/InfoGeometryCore InfoGeometryCore
+          mkdir -p external_refs/atlas-lean
+          cat > external_refs/atlas-lean/lakefile.toml <<'EOF'
+          name = "Atlas"
+          version = "0.0.0"
+          EOF
+          make_lean_stub external_refs/gift-framework-core GIFT
+          make_lean_stub lib/InfoGeometryCore InfoGeometryCore
       - name: Build Gauss-Jordan module
         id: lean-build
         continue-on-error: true

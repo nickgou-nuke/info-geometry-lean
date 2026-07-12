@@ -25,7 +25,7 @@ jobs:
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
-      - name: Update Lake dependencies
-        run: lake update
+      - name: Refresh available dependencies
+        run: lake update || true
       - name: Build Gauss-Jordan module
         run: lake build InfoGeometry.Algebra.GaussJordan

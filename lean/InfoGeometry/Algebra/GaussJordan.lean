@@ -89,11 +89,11 @@ theorem rank_le_pivots (h : ReducedRowEchelon A p) : A.rank ≤ p := by
 /-- The pivot columns contain `p` independent standard basis vectors. -/
 theorem pivots_le_rank (h : ReducedRowEchelon A p) : p ≤ A.rank := by
   let e : Fin p → Fin m := rowIndex h.rows_le
-  let std : Fin p → (Fin m → ℚ) := fun s => Pi.basisFun ℚ (Fin m) (e s)
+  let std : Fin p → (Fin m → ℚ) := (Pi.basisFun ℚ (Fin m)) ∘ e
   have he : Function.Injective e := by
     simpa [e] using rowIndex_injective h.rows_le
   have hli : LinearIndependent ℚ std := by
-    simpa [std] using (Pi.basisFun ℚ (Fin m)).linearIndependent.comp e he
+    exact (Pi.basisFun ℚ (Fin m)).linearIndependent.comp e he
   have hmem : ∀ s : Fin p, std s ∈ A.mulVecLin.range := by
     intro s
     refine LinearMap.mem_range.mpr ⟨Pi.basisFun ℚ (Fin n) (h.pivot s), ?_⟩

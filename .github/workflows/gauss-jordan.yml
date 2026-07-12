@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "lean/InfoGeometry/Algebra/GaussJordan.lean"
+      - "lean/InfoGeometry/Algebra/GaussJordan/**"
       - ".github/workflows/gauss-jordan.yml"
 
 jobs:
@@ -44,7 +45,8 @@ jobs:
         continue-on-error: true
         run: |
           cd .lake/packages/mathlib
-          lake env lean "$GITHUB_WORKSPACE/lean/InfoGeometry/Algebra/GaussJordan.lean" \
+          ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
+          lake env lean InfoGeometry/Algebra/GaussJordan.lean \
             > "$GITHUB_WORKSPACE/gauss-jordan-build.log" 2>&1
       - name: Upload Lean diagnostics
         if: always()

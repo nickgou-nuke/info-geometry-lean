@@ -13,10 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Install elan
+      - name: Restore Lean toolchain
+        id: elan-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-v4.28.0
+      - name: Install elan and Lean
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          if [ ! -x "$HOME/.elan/bin/lean" ]; then
+            curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.28.0
+      - name: Save Lean toolchain
+        if: steps.elan-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-v4.28.0
       - name: Restore Mathlib checkout and oleans
         id: mathlib-cache
         uses: actions/cache/restore@v4
@@ -44,7 +59,8 @@ jobs:
         continue-on-error: true
         run: |
           cd .lake/packages/mathlib
-          ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
+          rm -rf InfoGeometry
+          cp -R "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
           {
             LEAN_PATH="$PWD" lake env lean -o InfoGeometry/Algebra/GaussJordan/Rank.olean \
               InfoGeometry/Algebra/GaussJordan/Rank.lean

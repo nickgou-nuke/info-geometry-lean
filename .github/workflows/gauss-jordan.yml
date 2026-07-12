@@ -25,8 +25,6 @@ jobs:
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
-      - name: Refresh available dependencies
-        run: lake update || true
       - name: Build Gauss-Jordan module
         id: lean-build
         continue-on-error: true

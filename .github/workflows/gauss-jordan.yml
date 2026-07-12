@@ -16,38 +16,29 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Cache Lake dependencies
+      - name: Cache Mathlib checkout and oleans
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.elan
-            .lake/packages
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-
-      - name: Stub unavailable path-only packages
+          path: .lake/packages/mathlib
+          key: ${{ runner.os }}-mathlib-v4.28.0
+      - name: Prepare Mathlib v4.28.0
         run: |
-          make_lean_stub() {
-            dir="$1"
-            name="$2"
-            mkdir -p "$dir"
-            cat > "$dir/lakefile.lean" <<EOF
-          import Lake
-          open Lake DSL
-          package $name
-          EOF
-          }
-          mkdir -p external_refs/atlas-lean
-          cat > external_refs/atlas-lean/lakefile.toml <<'EOF'
-          name = "Atlas"
-          version = "0.0.0"
-          EOF
-          make_lean_stub external_refs/gift-framework-core GIFT
-          make_lean_stub lib/InfoGeometryCore InfoGeometryCore
+          if [ ! -f .lake/packages/mathlib/lakefile.lean ]; then
+            rm -rf .lake/packages/mathlib
+            mkdir -p .lake/packages
+            git clone --depth 1 --branch v4.28.0 \
+              https://github.com/leanprover-community/mathlib4.git \
+              .lake/packages/mathlib
+          fi
+          cd .lake/packages/mathlib
+          lake exe cache get
       - name: Build Gauss-Jordan module
         id: lean-build
         continue-on-error: true
-        run: lake build InfoGeometry.Algebra.GaussJordan > gauss-jordan-build.log 2>&1
+        run: |
+          cd .lake/packages/mathlib
+          lake env lean "$GITHUB_WORKSPACE/lean/InfoGeometry/Algebra/GaussJordan.lean" \
+            > "$GITHUB_WORKSPACE/gauss-jordan-build.log" 2>&1
       - name: Upload Lean diagnostics
         if: always()
         uses: actions/upload-artifact@v4

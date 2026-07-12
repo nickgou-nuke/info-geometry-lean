@@ -46,7 +46,7 @@ jobs:
         run: |
           cd .lake/packages/mathlib
           ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
-          lake env lean InfoGeometry/Algebra/GaussJordan.lean \
+          LEAN_PATH="$PWD" lake env lean InfoGeometry/Algebra/GaussJordan.lean \
             > "$GITHUB_WORKSPACE/gauss-jordan-build.log" 2>&1
       - name: Upload Lean diagnostics
         if: always()

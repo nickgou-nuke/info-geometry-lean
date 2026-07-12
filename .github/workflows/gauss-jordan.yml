@@ -16,8 +16,9 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Cache Mathlib checkout and oleans
-        uses: actions/cache@v4
+      - name: Restore Mathlib checkout and oleans
+        id: mathlib-cache
+        uses: actions/cache/restore@v4
         with:
           path: .lake/packages/mathlib
           key: ${{ runner.os }}-mathlib-v4.28.0
@@ -32,6 +33,12 @@ jobs:
           fi
           cd .lake/packages/mathlib
           lake exe cache get
+      - name: Save Mathlib checkout and oleans
+        if: steps.mathlib-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/packages/mathlib
+          key: ${{ runner.os }}-mathlib-v4.28.0
       - name: Build Gauss-Jordan module
         id: lean-build
         continue-on-error: true

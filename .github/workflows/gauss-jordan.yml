@@ -1,0 +1,31 @@
+name: Gauss-Jordan kernel check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lean/InfoGeometry/Algebra/GaussJordan.lean"
+      - ".github/workflows/gauss-jordan.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Cache Lake dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-
+      - name: Update Lake dependencies
+        run: lake update
+      - name: Build Gauss-Jordan module
+        run: lake build InfoGeometry.Algebra.GaussJordan

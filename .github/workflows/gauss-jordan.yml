@@ -39,14 +39,20 @@ jobs:
         with:
           path: .lake/packages/mathlib
           key: ${{ runner.os }}-mathlib-v4.28.0
-      - name: Build Gauss-Jordan module
+      - name: Build Gauss-Jordan modules
         id: lean-build
         continue-on-error: true
         run: |
           cd .lake/packages/mathlib
           ln -s "$GITHUB_WORKSPACE/lean/InfoGeometry" InfoGeometry
-          LEAN_PATH="$PWD" lake env lean InfoGeometry/Algebra/GaussJordan.lean \
-            > "$GITHUB_WORKSPACE/gauss-jordan-build.log" 2>&1
+          {
+            LEAN_PATH="$PWD" lake env lean -o InfoGeometry/Algebra/GaussJordan/Rank.olean \
+              InfoGeometry/Algebra/GaussJordan/Rank.lean
+            LEAN_PATH="$PWD" lake env lean -o InfoGeometry/Algebra/GaussJordan/Elementary.olean \
+              InfoGeometry/Algebra/GaussJordan/Elementary.lean
+            LEAN_PATH="$PWD" lake env lean -o InfoGeometry/Algebra/GaussJordan.olean \
+              InfoGeometry/Algebra/GaussJordan.lean
+          } > "$GITHUB_WORKSPACE/gauss-jordan-build.log" 2>&1
       - name: Upload Lean diagnostics
         if: always()
         uses: actions/upload-artifact@v4

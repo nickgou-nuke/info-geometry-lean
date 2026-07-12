@@ -25,6 +25,21 @@ jobs:
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
             ${{ runner.os }}-lake-
+      - name: Stub unavailable path-only packages
+        run: |
+          make_stub() {
+            dir="$1"
+            name="$2"
+            mkdir -p "$dir"
+            cat > "$dir/lakefile.lean" <<EOF
+          import Lake
+          open Lake DSL
+          package $name
+          EOF
+          }
+          make_stub external_refs/atlas-lean Atlas
+          make_stub external_refs/gift-framework-core GIFT
+          make_stub lib/InfoGeometryCore InfoGeometryCore
       - name: Build Gauss-Jordan module
         id: lean-build
         continue-on-error: true

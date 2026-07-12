@@ -19,16 +19,16 @@ theorem rowIndex_injective {p m : ℕ} (hp : p ≤ m) :
     Function.Injective (rowIndex hp : Fin p → Fin m) := by
   intro i j hij
   apply Fin.ext
-  exact congrArg Fin.val hij
+  simpa [rowIndex] using congrArg (fun x : Fin m => x.1) hij
 
 /--
-A witness-form reduced row-echelon predicate.
+A proof-relevant certificate of reduced row-echelon form.
 
 The first `p` rows are the pivot rows; `pivot s` is the pivot column of row `s`.
-The remaining rows are zero. This form is designed both for the executable
-invariant and for the pivot-count/rank theorem.
+The remaining rows are zero. Keeping the pivot function in `Type` avoids hiding
+computational data in a proposition.
 -/
-structure ReducedRowEchelon {m n : ℕ} (A : RatMatrix m n) (p : ℕ) : Prop where
+structure ReducedRowEchelon {m n : ℕ} (A : RatMatrix m n) (p : ℕ) where
   rows_le : p ≤ m
   pivot : Fin p → Fin n
   pivot_strict : StrictMono pivot
@@ -36,6 +36,10 @@ structure ReducedRowEchelon {m n : ℕ} (A : RatMatrix m n) (p : ℕ) : Prop whe
   pivot_zero : ∀ s i, i ≠ rowIndex rows_le s → A i (pivot s) = 0
   left_zero : ∀ s j, j.1 < (pivot s).1 → A (rowIndex rows_le s) j = 0
   zero_rows : ∀ i, p ≤ i.1 → A i = 0
+
+/-- Propositional wrapper around the proof-relevant RREF certificate. -/
+def IsReducedRowEchelon {m n : ℕ} (A : RatMatrix m n) (p : ℕ) : Prop :=
+  Nonempty (ReducedRowEchelon A p)
 
 namespace ReducedRowEchelon
 
@@ -57,11 +61,12 @@ theorem row_span_le_pivot_row_span (h : ReducedRowEchelon A p) :
   rintro _ ⟨i, rfl⟩
   change A i ∈ Submodule.span ℚ (Set.range (fun s : Fin p => A (rowIndex h.rows_le s)))
   by_cases hi : i.1 < p
-  · have hieq : i = rowIndex h.rows_le ⟨i.1, hi⟩ := by
+  · let s : Fin p := ⟨i.1, hi⟩
+    have hieq : i = rowIndex h.rows_le s := by
       apply Fin.ext
       rfl
     rw [hieq]
-    exact Submodule.subset_span (Set.mem_range_self ⟨i.1, hi⟩)
+    exact Submodule.subset_span (Set.mem_range_self s)
   · have hip : p ≤ i.1 := Nat.le_of_not_gt hi
     rw [h.zero_rows i hip]
     exact Submodule.zero_mem _
@@ -88,7 +93,7 @@ theorem pivots_le_rank (h : ReducedRowEchelon A p) : p ≤ A.rank := by
   have he : Function.Injective e := by
     simpa [e] using rowIndex_injective h.rows_le
   have hli : LinearIndependent ℚ std := by
-    exact (Pi.basisFun ℚ (Fin m)).linearIndependent.comp e he
+    simpa [std] using (Pi.basisFun ℚ (Fin m)).linearIndependent.comp e he
   have hmem : ∀ s : Fin p, std s ∈ A.mulVecLin.range := by
     intro s
     refine LinearMap.mem_range.mpr ⟨Pi.basisFun ℚ (Fin n) (h.pivot s), ?_⟩

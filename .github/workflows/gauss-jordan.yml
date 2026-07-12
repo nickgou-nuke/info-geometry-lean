@@ -24,14 +24,13 @@ jobs:
           path: .lake/packages/mathlib
           key: ${{ runner.os }}-mathlib-v4.28.0
       - name: Prepare Mathlib v4.28.0
+        if: steps.mathlib-cache.outputs.cache-hit != 'true'
         run: |
-          if [ ! -f .lake/packages/mathlib/lakefile.lean ]; then
-            rm -rf .lake/packages/mathlib
-            mkdir -p .lake/packages
-            git clone --depth 1 --branch v4.28.0 \
-              https://github.com/leanprover-community/mathlib4.git \
-              .lake/packages/mathlib
-          fi
+          rm -rf .lake/packages/mathlib
+          mkdir -p .lake/packages
+          git clone --depth 1 --branch v4.28.0 \
+            https://github.com/leanprover-community/mathlib4.git \
+            .lake/packages/mathlib
           cd .lake/packages/mathlib
           lake exe cache get
       - name: Save Mathlib checkout and oleans

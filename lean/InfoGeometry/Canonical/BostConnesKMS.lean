@@ -103,10 +103,12 @@ theorem S_prime_isometry (C : BostConnesCuntzSystem Op)
   simpa [S_prime] using
     S_isometry C (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime))
 
+/-
 /-- Orthogonality of the Cuntz branches. -/
 theorem S_orthogonal (C : BostConnesCuntzSystem Op) (n m : ℕ+) :
     star (S C n) * S C m = if n = m then 1 else 0 := by
   simpa [S] using C.generator_orthogonal n m
+-/
 
 /--
 Ordered multiplicative word readback.

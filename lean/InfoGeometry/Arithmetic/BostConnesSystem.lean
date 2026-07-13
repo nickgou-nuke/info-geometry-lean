@@ -86,14 +86,18 @@ def S_prime (C : MultiplicativeIndexing Op) (p : ℕ) [Fact p.Prime] : Op :=
 
 end MultiplicativeIndexing
 
-/-- Cuntz-style multiplicative indexing with isometry and orthogonality laws. -/
+/--
+Multiplicatively indexed Bost--Connes isometries.
+
+There is deliberately no pairwise-orthogonality field here.  Since the index
+map is a monoid homomorphism, its value at `1` is the unit; demanding
+`star (S 1) * S n = 0` for `n ≠ 1` would force every non-unit generator to be
+zero and collapse any nontrivial ring.
+-/
 structure CuntzMultiplicativeIndexing (Op : Type*) [Ring Op] [StarRing Op]
     extends MultiplicativeIndexing Op where
   generator_isometry : ∀ n : ℕ+, star (toMultiplicativeIndexing.generator n) *
       toMultiplicativeIndexing.generator n = 1
-  generator_orthogonal : ∀ n m : ℕ+,
-      star (toMultiplicativeIndexing.generator n) * toMultiplicativeIndexing.generator m =
-        if n = m then 1 else 0
 
 namespace CuntzMultiplicativeIndexing
 
@@ -110,6 +114,27 @@ def generator (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
 @[simp] theorem generator_mul (C : CuntzMultiplicativeIndexing Op) (n m : ℕ+) :
     C.generator (n * m) = C.generator n * C.generator m :=
   C.toMultiplicativeIndexing.generator_mul n m
+
+/-- The range projection of the isometry indexed by `n`. -/
+def rangeProjection (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
+  C.generator n * star (C.generator n)
+
+/-- Range projections are idempotent, by the isometry law. -/
+@[simp] theorem rangeProjection_idempotent (C : CuntzMultiplicativeIndexing Op)
+    (n : ℕ+) : C.rangeProjection n * C.rangeProjection n = C.rangeProjection n := by
+  have hIso : star (C.generator n) * C.generator n = 1 := by
+    simpa [generator] using C.generator_isometry n
+  calc
+    C.rangeProjection n * C.rangeProjection n =
+        C.generator n * (star (C.generator n) * C.generator n) * star (C.generator n) := by
+          simp only [rangeProjection, mul_assoc]
+    _ = C.generator n * 1 * star (C.generator n) := by rw [hIso]
+    _ = C.rangeProjection n := by simp [rangeProjection]
+
+/-- Range projections are self-adjoint. -/
+@[simp] theorem rangeProjection_star (C : CuntzMultiplicativeIndexing Op)
+    (n : ℕ+) : star (C.rangeProjection n) = C.rangeProjection n := by
+  simp [rangeProjection]
 
 /-- Prime generators inherit the isometry law. -/
 theorem prime_generator_isometry (C : CuntzMultiplicativeIndexing Op)

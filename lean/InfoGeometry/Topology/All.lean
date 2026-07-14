@@ -5,6 +5,7 @@ import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 import InfoGeometry.Topology.ArtinBraidRep
 import InfoGeometry.Topology.ArtinBraidS3Quotient
+import InfoGeometry.Topology.ArtinCentralizerMonodromy
 import InfoGeometry.Topology.BraidParafermionClosure
 import InfoGeometry.Topology.BraidedMonoidal
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
@@ -91,6 +92,7 @@ import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.GeneralizedCircleMobius
 import InfoGeometry.Topology.MobiusGeometry
+import InfoGeometry.Topology.MobiusCantorTKKClosure
 import InfoGeometry.Topology.MobiusSouriauThermodynamicFlow
 import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
 import InfoGeometry.Topology.MobiusRecoveredHelpers

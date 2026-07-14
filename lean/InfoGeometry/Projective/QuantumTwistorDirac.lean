@@ -12,7 +12,7 @@ field of the spectral-triple structure; this file does not invent a separate
 projector-level theorem.
 -/
 
-namespace InfoGeometry.Projective.QuantumTwistorDirac
+namespace QuantumTwistorDirac
 
 open InfoGeometry.Projective.QuantumGrassmannian
 open InfoGeometry.Projective.QuantumTwistor
@@ -59,7 +59,7 @@ def IsGaugeCovariant {H : Type*} [NormedAddCommGroup H] [InnerProductSpace R H]
     (∀ (a : coordinateRing R q), ST.rep (gaugeCoordinateRing R q u a) = (U : H →L[R] H) * ST.rep a * (U.symm : H →L[R] H)) ∧
     (∀ (x : H), x ∈ ST.D.domain → U x ∈ ST.D.domain ∧ ST.D.op (U x) = U (ST.D.op x))
 
-end InfoGeometry.Projective.QuantumTwistorDirac
+end QuantumTwistorDirac
 
 /-! ### Bost-Connes GNS Instantiation -/
 

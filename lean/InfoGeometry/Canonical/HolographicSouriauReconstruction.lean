@@ -22,7 +22,7 @@ reconstruction theorem, no KMS uniqueness theorem, and no global `SU(3)` bundle
 classification is asserted here.
 -/
 
-namespace InfoGeometry.Canonical.HolographicSouriauReconstruction
+namespace HolographicSouriauReconstruction
 
 open InfoGeometry.Canonical.ContinuousThermodynamicGeometry
 
@@ -272,4 +272,4 @@ end Color
 
 end
 
-end InfoGeometry.Canonical.HolographicSouriauReconstruction
+end HolographicSouriauReconstruction

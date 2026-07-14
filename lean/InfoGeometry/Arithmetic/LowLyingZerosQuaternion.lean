@@ -10,7 +10,7 @@ as derived by Didier Lesesvre (2021).
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.LowLyingZerosQuaternion
+namespace LowLyingZerosQuaternion
 
 /--
 The orthogonal one-level density limit function W_O(x).
@@ -40,4 +40,4 @@ def non_vanishing_proportion_bound_prop
     (limit_inf : (ℝ → ℝ) → ℝ) : Prop :=
   limit_inf (fun Q ↦ ∑' (m : ℕ), if m ≥ 1 then (m : ℝ) * p m Q else 0) ≤ 2
 
-end InfoGeometry.Arithmetic.LowLyingZerosQuaternion
+end LowLyingZerosQuaternion

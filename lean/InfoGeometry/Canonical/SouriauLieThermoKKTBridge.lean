@@ -30,7 +30,7 @@ infinite-dimensional metriplectic flow.  It packages the existing owner lanes:
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.SouriauLieThermoKKTBridge
+namespace SouriauLieThermoKKTBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.SouriauConformalKKT
@@ -1776,4 +1776,4 @@ attribute [terminal]
 
 end SouriauLieThermoKKTContext
 
-end InfoGeometry.Canonical.SouriauLieThermoKKTBridge
+end SouriauLieThermoKKTBridge

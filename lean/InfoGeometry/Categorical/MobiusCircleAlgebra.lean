@@ -13,7 +13,7 @@ conjugates.  Keeping the statement over an arbitrary commutative ring gives a
 small, robust certificate for the symbolic expansion.
 -/
 
-namespace InfoGeometry.Categorical.MobiusCircleAlgebra
+namespace MobiusCircleAlgebra
 
 open scoped ComplexConjugate
 
@@ -211,4 +211,4 @@ end GeneralizedCircle
 
 end ComplexSpecialization
 
-end InfoGeometry.Categorical.MobiusCircleAlgebra
+end MobiusCircleAlgebra

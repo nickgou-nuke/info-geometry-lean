@@ -11,7 +11,7 @@ transformation.  The matrix identities from `ModularCftBridge` become literal
 translations on the affine chart where the denominator is `1`.
 -/
 
-namespace InfoGeometry.Clifford.DiscreteMoebiusGroup
+namespace DiscreteMoebiusGroup
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -64,4 +64,4 @@ theorem moebius_hadjiivanov_unscaled_action (z : ℂ) :
     moebiusAction (lcftParabolicFlowStep logShearBase) z = z + logShearBase := by
   exact moebius_monodromy_flow_action logShearBase z
 
-end InfoGeometry.Clifford.DiscreteMoebiusGroup
+end DiscreteMoebiusGroup

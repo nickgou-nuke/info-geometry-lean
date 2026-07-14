@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Canonical.KleinBottleOrientifold
 
-namespace InfoGeometry.Canonical.KleinBottleTopology
+namespace KleinBottleTopology
 
 open Matrix
 
@@ -61,4 +61,4 @@ def connect_to_orientifold (Z2 : Z2GlideReflectionPacket) : InfoGeometry.Canonic
     wittenMod16AnomalyCancellation := Z2.is_orthogonal = Z2.is_orthogonal,
     wittenMod4GaugeAnomaly := Z2.is_involution = Z2.is_involution }
 
-end InfoGeometry.Canonical.KleinBottleTopology
+end KleinBottleTopology

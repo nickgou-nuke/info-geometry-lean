@@ -9,7 +9,7 @@ noncomputable section
 open scoped TensorProduct DirectSum Matrix Kronecker
 open Matrix
 
-namespace InfoGeometry.Clifford.Cl11TensorTower
+namespace Cl11TensorTower
 
 abbrev Cl11 : Type := CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11
 
@@ -436,4 +436,4 @@ theorem symmetryWord_induction {C : SymmetryWord → Prop}
   exact InfoGeometry.Algebra.TensorAlgebraCanonical.tensorAlgebra_induction
     (R := ℝ) (M := SymmetryAtom) h_scalar h_atom h_mul h_add a
 
-end InfoGeometry.Clifford.Cl11TensorTower
+end Cl11TensorTower

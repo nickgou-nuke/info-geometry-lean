@@ -25,7 +25,7 @@ Open debt:
   conditional Lean theorem.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+namespace G2TwoSplitZorn
 
 open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
@@ -75,4 +75,4 @@ theorem certificate_evidence_packet :
       computationalEvidenceInvariants.atlasG2TwoOrder = 12096 :=
   computationalEvidenceInvariants_packet
 
-end InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+end G2TwoSplitZorn

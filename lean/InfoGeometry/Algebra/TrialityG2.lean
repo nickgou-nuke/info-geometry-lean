@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Lie.Basic
 
-namespace InfoGeometry.Algebra.TrialityG2
+namespace TrialityG2
 
 /--
 Triality automorphism data on a Lie algebra `L` over `K`.
@@ -37,4 +37,4 @@ def eigenspaceBracketGradingStatement
     y ∈ trialityEigenspaceSet (ω ^ 2) σ →
     ⁅x, y⁆ ∈ fixedSet σ
 
-end InfoGeometry.Algebra.TrialityG2
+end TrialityG2

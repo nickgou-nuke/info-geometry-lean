@@ -28,7 +28,7 @@ Full C*-algebraic isomorphism 𝔅_{n,q} ≃ KO_n for |q|<1 requires C*-framewor
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.QCCRSupergradingBridge
+namespace QCCRSupergradingBridge
 
 open InfoGeometry.Algebra.Cuntz
 open InfoGeometry.Algebra.SupergradedSUSY
@@ -167,6 +167,6 @@ theorem mobius_closure_connection_at_q_neg_one (Q : QCCRAlgebra N Op)
   have h := q_neg_one_chiral_balance_restored Q hqneg1 i
   simpa using h
 
-end InfoGeometry.Algebra.QCCRSupergradingBridge
+end QCCRSupergradingBridge
 
 end noncomputable section

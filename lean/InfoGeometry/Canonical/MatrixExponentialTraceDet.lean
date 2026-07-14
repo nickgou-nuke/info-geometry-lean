@@ -21,7 +21,7 @@ exponential of its additive trace generator.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.MatrixExponentialTraceDet
+namespace MatrixExponentialTraceDet
 
 open scoped BigOperators Matrix
 
@@ -357,7 +357,7 @@ theorem det_exp_eq_exp_trace_of_is_units_upperTriangular
 
 end UpperTriangular
 
-end InfoGeometry.Canonical.MatrixExponentialTraceDet
+end MatrixExponentialTraceDet
 
 namespace Matrix
 

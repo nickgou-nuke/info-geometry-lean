@@ -17,7 +17,7 @@ No bridge file is imported here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalMobiusJacobian
+namespace ConformalMobiusJacobian
 
 open InfoGeometry.Canonical.ConformalInversionCore
 
@@ -66,4 +66,4 @@ theorem mobiusJacobianFactor_eq_one_of_norm_one {x : E}
 
 end JacobianFactor
 
-end InfoGeometry.Canonical.ConformalMobiusJacobian
+end ConformalMobiusJacobian

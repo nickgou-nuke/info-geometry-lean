@@ -2,7 +2,7 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Complex.Basic
 
-namespace InfoGeometry.Topology.CFT
+namespace CFT
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 variable (L : ℤ → (V →ₗ[ℂ] V))
@@ -37,4 +37,4 @@ structure StateFieldCorrespondence (L : ℤ → (V →ₗ[ℂ] V)) where
   /-- Applying the field to the vacuum at z=0 recovers the state -/
   state_recovery : ∀ v : V, fieldMap v 0 vacuum = v
 
-end InfoGeometry.Topology.CFT
+end CFT

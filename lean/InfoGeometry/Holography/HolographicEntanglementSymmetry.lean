@@ -21,7 +21,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Holography.HolographicEntanglementSymmetry
+namespace HolographicEntanglementSymmetry
 
 open InfoGeometry.Holography.RyuTakayanagiEmergence
 open InfoGeometry.Canonical.TrialitySpin8Permutations
@@ -98,4 +98,4 @@ theorem holographic_triality_capstone
   · exact canonical_hestenesKrein_triality_packet (E := E) s n N
   · exact braidEntanglementStep_pos
 
-end InfoGeometry.Holography.HolographicEntanglementSymmetry
+end HolographicEntanglementSymmetry

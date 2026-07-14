@@ -11,7 +11,7 @@ split Heisenberg witness.
 This file introduces no pseudo-closure surfaces.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
+namespace SplitCliffordSourceHeisenberg
 
 open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
@@ -158,4 +158,4 @@ theorem canonicalInfiniteCurrent_central
     ⁅Kinf 𝕜, Z⁆ = 0 :=
   canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
 
-end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
+end SplitCliffordSourceHeisenberg

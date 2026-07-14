@@ -10,7 +10,7 @@ This module does not claim unconditional convergence to `1 / ζ`.  It records
 finite-cutoff objects and a proof-carrying witness for the analytic limit step.
 -/
 
-namespace InfoGeometry.Canonical.AnalyticLimit
+namespace AnalyticLimit
 
 /--
 Finite prime-cutoff Dirichlet/Euler data at inverse temperature `beta`.
@@ -63,4 +63,4 @@ theorem inverseZeta_eq_tendsto_finiteInverseZeta
     W.limitingInverseZeta = W.limitingInverseZeta :=
   W.inverseZeta_eq_limit
 
-end InfoGeometry.Canonical.AnalyticLimit
+end AnalyticLimit

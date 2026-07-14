@@ -30,7 +30,7 @@ The correct formal move is therefore to expose two proof-carrying interfaces
 and connect them only under explicit compatibility hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.TwistorHodgePalatialBridge
+namespace TwistorHodgePalatialBridge
 
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
@@ -227,4 +227,4 @@ theorem hodgeStarSelfDualSplitOfIncidentNullSeparation_incidenceCompatible
 
 end ClassicalIncidence
 
-end InfoGeometry.Canonical.TwistorHodgePalatialBridge
+end TwistorHodgePalatialBridge

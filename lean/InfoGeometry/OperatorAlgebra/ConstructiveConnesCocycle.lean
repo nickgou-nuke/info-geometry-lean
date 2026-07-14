@@ -6,7 +6,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ConstructiveConnesCocycle
+namespace ConstructiveConnesCocycle
 
 structure VerifiedModularFlow (A : Type*) [Ring A] where
   σ : ℝ → (A → A)
@@ -82,4 +82,4 @@ def chain_cocycles {A : Type*} [Ring A]
       _ = (u.u t * v.u t) * flow_psi.σ t x := by
             rw [mul_assoc]
 
-end InfoGeometry.OperatorAlgebra.ConstructiveConnesCocycle
+end ConstructiveConnesCocycle

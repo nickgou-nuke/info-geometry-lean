@@ -22,7 +22,7 @@ No global analytic number theory is asserted without a witness.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
+namespace PrimeLeeYangRHBridge
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -147,4 +147,4 @@ theorem RH_of_LeeYangPrimeApproximation
   · exact False.elim (Ξ.zero_ne_one s hs hs1)
   · exact (C.critical_iff_unit s hs1).mpr hcircle
 
-end InfoGeometry.Canonical.PrimeLeeYangRHBridge
+end PrimeLeeYangRHBridge

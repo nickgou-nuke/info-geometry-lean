@@ -19,7 +19,7 @@ second finite difference is already proved to vanish in
 
 noncomputable section
 
-namespace InfoGeometry.Thermodynamics.FiniteGibbsRelative
+namespace FiniteGibbsRelative
 
 open scoped BigOperators
 open InfoGeometry.Algebraic.CartanExponentialFamily
@@ -205,4 +205,4 @@ theorem finiteScalarRelativeCocycle_stateChain
     ring
   rw [h, Real.exp_add]
 
-end InfoGeometry.Thermodynamics.FiniteGibbsRelative
+end FiniteGibbsRelative

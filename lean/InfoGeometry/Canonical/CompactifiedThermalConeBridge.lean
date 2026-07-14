@@ -14,7 +14,7 @@ cone-preservation statement the compactified operator must satisfy once such a
 carrier is supplied.
 -/
 
-namespace InfoGeometry.Canonical.CompactifiedThermalConeBridge
+namespace CompactifiedThermalConeBridge
 
 open InfoGeometry.Canonical.StandardFormNaturalConeBridge
 
@@ -68,4 +68,4 @@ theorem J_fixes_coneVector
 
 end CompactifiedThermalConeCarrier
 
-end InfoGeometry.Canonical.CompactifiedThermalConeBridge
+end CompactifiedThermalConeBridge

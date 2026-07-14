@@ -15,7 +15,7 @@ analytic zeta/Fredholm closure as explicit debt via `UnifiedCapstone`.
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.ErlangenLanglandsConcrete
+namespace ErlangenLanglandsConcrete
 
 open Matrix
 
@@ -126,4 +126,4 @@ theorem unification : J2 * J2 = - (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
     (K2 * eps2 + eps2 * K2) = (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
   exact ⟨J2_square_neg_one, eps2_involution, J_eps_anticomm, connes_anomaly_cancellation_2x2⟩
 
-end InfoGeometry.Capstone.ErlangenLanglandsConcrete
+end ErlangenLanglandsConcrete

@@ -23,7 +23,7 @@ set_option linter.unusedSectionVars false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SelfDualWeylRootKleinBridge
+namespace SelfDualWeylRootKleinBridge
 
 open Matrix
 open BigOperators
@@ -335,6 +335,6 @@ theorem weyl_klein_torus_noncommute (θ1 θ2 : ℝ) :
 
 end KleinBottleFinite
 
-end InfoGeometry.Canonical.SelfDualWeylRootKleinBridge
+end SelfDualWeylRootKleinBridge
 
 end

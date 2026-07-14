@@ -12,7 +12,7 @@ finite Souriau Gibbs layer sees the scalar Minkowski contraction `β·p`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
+namespace ChiralSuperPoincareSouriauBridge
 
 open InfoGeometry.Algebra.SupergradedSUSY
 open InfoGeometry.Physics.SouriauMassieuPlanckFunctional
@@ -233,4 +233,4 @@ theorem casimir_eq_minkowski_square {A : Type*} [Ring A]
 
 end ChiralSuperPoincareSouriauPacket
 
-end InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
+end ChiralSuperPoincareSouriauBridge

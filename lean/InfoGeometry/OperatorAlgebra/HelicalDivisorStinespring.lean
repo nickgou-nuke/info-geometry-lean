@@ -17,7 +17,7 @@ import InfoGeometry.OperatorAlgebra.StinespringDilation
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring
+namespace HelicalDivisorStinespring
 
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 open InfoGeometry.OperatorAlgebra.StinespringDilation
@@ -292,4 +292,4 @@ variable (C : SpectralFunctionDivisorCalibration State)
 
 end SpectralFunctionDivisorCalibration
 
-end InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring
+end HelicalDivisorStinespring

@@ -19,7 +19,7 @@ The module keeps three claims separate:
   doubled-projector super branch.
 -/
 
-namespace InfoGeometry.Canonical.SuperSouriauFermionGasBridge
+namespace SuperSouriauFermionGasBridge
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
@@ -518,4 +518,4 @@ theorem toContext_superTrace_eq_zero_and_is_weyl_invariant
 
 end IdentityBalancedStressSeed
 
-end InfoGeometry.Canonical.SuperSouriauFermionGasBridge
+end SuperSouriauFermionGasBridge

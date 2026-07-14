@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.AtiyahSingerWittenIndexBridge
+namespace AtiyahSingerWittenIndexBridge
 
 open Matrix
 
@@ -93,4 +93,4 @@ theorem topological_index_zero_of_identification
     topologicalIndex = 0 := by
   rw [hidentification, witten_index_zero]
 
-end InfoGeometry.Canonical.AtiyahSingerWittenIndexBridge
+end AtiyahSingerWittenIndexBridge

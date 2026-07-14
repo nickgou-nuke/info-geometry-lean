@@ -50,7 +50,7 @@ open InfoGeometry.Topology.FractalCantorFockWitness
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikCantorClifford
+namespace CelikCantorClifford
 
 /-! ### 1. Lemma 2.2 — Already proved in FractalCantorFockWitness -/
 
@@ -120,4 +120,4 @@ theorem celik_pauli_clifford_base :
   inverse laws are explicit Lean objects.
 -/
 
-end InfoGeometry.Canonical.CelikCantorClifford
+end CelikCantorClifford

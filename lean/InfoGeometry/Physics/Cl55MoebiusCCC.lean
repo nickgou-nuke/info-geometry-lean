@@ -70,7 +70,7 @@ The finite Witten index cancellation in Cl44FockParity.lean is the
 algebraic shadow of this geometric mechanism.
 -/
 
-namespace InfoGeometry.Physics.Cl55MoebiusCCC
+namespace Cl55MoebiusCCC
 
 open InfoGeometry.OperatorAlgebra.CliffordCAR
 open InfoGeometry.Physics.OrbitClassification55
@@ -110,4 +110,4 @@ theorem moebius_ccc_packet :
     ((8 : ℤ) - 8) = 0 ∧ ((16 : ℤ) - 16) = 0 ∧ ((16 : ℤ) - 16) = 0 := by
   refine ⟨cl44_witten_index_zero, by norm_num, by norm_num⟩
 
-end InfoGeometry.Physics.Cl55MoebiusCCC
+end Cl55MoebiusCCC

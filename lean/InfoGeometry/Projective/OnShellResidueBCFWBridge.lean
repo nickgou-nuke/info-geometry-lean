@@ -30,7 +30,7 @@ Not closed here:
 * no amplituhedron volume or positive-geometry statement is proved.
 -/
 
-namespace InfoGeometry.Projective.OnShellResidueBCFWBridge
+namespace OnShellResidueBCFWBridge
 
 open scoped BigOperators
 
@@ -173,4 +173,4 @@ def on_shell_q_residue_to_bost_connes_certificate
     trace (thermodynamic_curvature jewel.thermodynamic_flow) = zetaValue :=
   ⟨h_holonomy, h_curvature⟩
 
-end InfoGeometry.Projective.OnShellResidueBCFWBridge
+end OnShellResidueBCFWBridge

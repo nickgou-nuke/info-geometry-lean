@@ -8,7 +8,7 @@ Defines the abstract multiplicative volume homomorphism interface.
 The primary instantiation is the determinant on linear automorphisms.
 -/
 
-namespace InfoGeometry.Volume.Base
+namespace Base
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -19,4 +19,4 @@ Maps linear automorphisms to the scalar group of units ℝˣ.
 noncomputable def VolumeHom : (V ≃ₗ[ℝ] V) →* ℝˣ :=
   LinearEquiv.det
 
-end InfoGeometry.Volume.Base
+end Base

@@ -14,7 +14,7 @@ convergence/spectral hypotheses not present in `Ring`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinSum
+namespace DrazinSum
 
 open InfoGeometry.Canonical.Drazin
 
@@ -187,4 +187,4 @@ theorem orthogonal_sum_drazin_candidate_eq
 
 end Ring
 
-end InfoGeometry.Canonical.DrazinSum
+end DrazinSum

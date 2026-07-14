@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
+namespace HestenesKreinPrimeThermodynamics
 
 /-- A split-complex number in the standard `a + j b` basis. -/
 @[ext]
@@ -273,4 +273,4 @@ theorem normalizedPrimeHolonomySplit_norm_eq_one_of_critical
     ring
   rw [hsum, Real.exp_zero]
 
-end InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
+end HestenesKreinPrimeThermodynamics

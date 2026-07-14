@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Krein.SplitQuadratic
+namespace SplitQuadratic
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -229,4 +229,4 @@ theorem neg_divergence_eq_krein_minus_half_diagonals (q k : H₂) :
   rw [divergence_eq_half_signed_krein_sq, kreinInner_sub_sq]
   ring
 
-end InfoGeometry.Krein.SplitQuadratic
+end SplitQuadratic

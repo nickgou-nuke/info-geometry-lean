@@ -29,7 +29,7 @@ open scoped Classical
 open scoped LinearAlgebra.Projectivization
 open Module
 
-namespace InfoGeometry.Twistor.PenroseTwistor
+namespace PenroseTwistor
 
 /-- The underlying complex 4-space of twistors. -/
 abbrev TwistorCarrier : Type := Fin 4 → ℂ
@@ -340,4 +340,4 @@ theorem projective_twistor_sign_trichotomy (p : ProjectiveTwistorSpace) :
         linarith
       exact Or.inr (Or.inr (by simpa [IsProjectiveNull] using hzero))
 
-end InfoGeometry.Twistor.PenroseTwistor
+end PenroseTwistor

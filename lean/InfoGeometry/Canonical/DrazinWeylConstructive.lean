@@ -9,7 +9,7 @@ Constructive owner interface for routing Drazin-side inverse candidates into the
 Weyl-compatibility surface used by `TriadicWeylBridge`.
 -/
 
-namespace InfoGeometry.Canonical.DrazinWeylConstructive
+namespace DrazinWeylConstructive
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.TriadicWeylBridge
@@ -883,4 +883,4 @@ theorem rieszDrazinCandidate_isWeylCompatible
     { riesz := hR
       candidate_commutes_spectralEpsilon := hComm }
 
-end InfoGeometry.Canonical.DrazinWeylConstructive
+end DrazinWeylConstructive

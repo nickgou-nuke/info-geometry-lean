@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.OctonionCl8
+namespace OctonionCl8
 
 /-- The 8 basis elements of the Octonion algebra (1 real, 7 imaginary) -/
 inductive OctBasis
@@ -99,4 +99,4 @@ def E (i : OctBasis) (s : Spinor16) : Spinor16 :=
   | e0 => (s.2, fun j => -s.1 j)               -- E_8 generator (using e0 as the index for the 8th generator)
   | a  => (L a s.2, L a s.1)                   -- E_1 ... E_7 generators
 
-end InfoGeometry.Canonical.OctonionCl8
+end OctonionCl8

@@ -2,7 +2,7 @@ import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Clifford.SplitQ44
 
-namespace InfoGeometry.Clifford.Cl44Witt
+namespace Cl44Witt
 
 open CliffordAlgebra
 
@@ -130,7 +130,7 @@ theorem witt_CAR_eq (i : Fin 4) :
     a i * adag i + adag i * a i = 1 := by
   simp [witt_CAR]
 
-end InfoGeometry.Clifford.Cl44Witt
+end Cl44Witt
 
 /-! ## Split `Cl(1,1)` finite seed
 
@@ -138,7 +138,7 @@ The first Witt pair `(a 0, adag 0)` is the standard split-`(1,1)` CAR seed.
 The three lemmas below package this explicitly for downstream finite-atom users.
 -/
 
-namespace InfoGeometry.Clifford.Cl44Witt
+namespace Cl44Witt
 
 /-- Split annihilation generator for the finite `Cl(1,1)` seed. -/
 noncomputable abbrev a11 : Cl44 := a 0
@@ -158,4 +158,4 @@ theorem cl11_adag_sq_zero : adag11 * adag11 = 0 := by
 theorem cl11_witt_CAR_eq : a11 * adag11 + adag11 * a11 = 1 := by
   simpa [a11, adag11] using (witt_CAR_eq (i := 0))
 
-end InfoGeometry.Clifford.Cl44Witt
+end Cl44Witt

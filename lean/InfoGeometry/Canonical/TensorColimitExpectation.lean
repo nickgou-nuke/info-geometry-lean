@@ -15,7 +15,7 @@ a supplied conditional expectation exposes projection, bimodule, unital, and
 state-compatibility laws as kernel-checked theorems.
 -/
 
-namespace InfoGeometry.Canonical.TensorColimitExpectation
+namespace TensorColimitExpectation
 
 universe u v
 
@@ -136,4 +136,4 @@ end ConditionalExpectation
 
 end TensorInductiveLimit
 
-end InfoGeometry.Canonical.TensorColimitExpectation
+end TensorColimitExpectation

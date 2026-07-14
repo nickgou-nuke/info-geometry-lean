@@ -27,7 +27,7 @@ noncomputable section
 open scoped BigOperators
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Arithmetic.PrimonKreinKMS
+namespace PrimonKreinKMS
 
 open InfoGeometry.Arithmetic.ArithmeticKMS
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -289,4 +289,4 @@ theorem arithmetic_beta_normalizable
 
 end PrimonDoubledKreinKMSSocket
 
-end InfoGeometry.Arithmetic.PrimonKreinKMS
+end PrimonKreinKMS

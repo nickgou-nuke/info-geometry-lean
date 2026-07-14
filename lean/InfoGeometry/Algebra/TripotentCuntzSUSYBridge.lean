@@ -33,7 +33,7 @@ open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.TripotentCuntzSUSYBridge
+namespace TripotentCuntzSUSYBridge
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -115,4 +115,4 @@ theorem tripotent_projector_implies_superbracket_routing (O : Op V) (hO3 : O ^ 3
     projUp O * projDown O = 0 ∧ projDown O * projUp O = 0 := by
   exact ⟨projUp_mul_projDown O hO3, projDown_mul_projUp O hO3⟩
 
-end InfoGeometry.Algebra.TripotentCuntzSUSYBridge
+end TripotentCuntzSUSYBridge

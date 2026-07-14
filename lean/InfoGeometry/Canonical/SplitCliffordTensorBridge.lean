@@ -24,7 +24,7 @@ one-step Bott factorization as the repo-native recursive statement:
   D4 / `Spin(4,4)` files.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordTensorBridge
+namespace SplitCliffordTensorBridge
 
 open InfoGeometry.Canonical.BottPeriodicity
 open InfoGeometry.Canonical.ClNNBottBridge
@@ -306,4 +306,4 @@ noncomputable abbrev splitCl55_cl44TensorCl11Equiv :
 
 end Split55
 
-end InfoGeometry.Canonical.SplitCliffordTensorBridge
+end SplitCliffordTensorBridge

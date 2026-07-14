@@ -13,7 +13,7 @@ matrix-level: `T` is the unit parabolic shear, and conjugation by `S` moves the
 nilpotent shear from the upper to the lower triangular sector.
 -/
 
-namespace InfoGeometry.Clifford.ModularCftBridge
+namespace ModularCftBridge
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -136,4 +136,4 @@ theorem phase_algebraic_modular_relation (h τ : ℂ) :
   congr 1
   ring
 
-end InfoGeometry.Clifford.ModularCftBridge
+end ModularCftBridge

@@ -30,7 +30,7 @@ functions, Massieu/Fisher geometry from a genuine finite measure, and continuum
 field dynamics.
 -/
 
-namespace InfoGeometry.Canonical.BiQuaternionKahlerLegendreFinite
+namespace BiQuaternionKahlerLegendreFinite
 
 open InfoGeometry.Canonical.BiQuaternionKahlerFinite
 
@@ -77,4 +77,4 @@ theorem hamiltonian_nonneg_of_potential_nonneg (V : R4 → ℝ) (q p : R4)
   dsimp [hamiltonian]
   nlinarith [kinetic_nonneg p, hV]
 
-end InfoGeometry.Canonical.BiQuaternionKahlerLegendreFinite
+end BiQuaternionKahlerLegendreFinite

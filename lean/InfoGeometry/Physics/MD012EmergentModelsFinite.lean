@@ -30,7 +30,7 @@ Dirac equations, ECSK dynamics, or geometric torsion of a connection.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD012EmergentModelsFinite
+namespace MD012EmergentModelsFinite
 
 set_option linter.unusedSimpArgs false
 
@@ -212,6 +212,6 @@ theorem repaired_MD012_finite_model_packet
     (repaired_section38_stress_domain_packet D hmetric hconn hzero).2,
     torsionFromSpin_zero_of_spin_zero kap spin hspin⟩
 
-end InfoGeometry.Physics.MD012EmergentModelsFinite
+end MD012EmergentModelsFinite
 
 end noncomputable section

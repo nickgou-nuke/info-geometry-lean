@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.Triality
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
-namespace InfoGeometry.ExponentialFamily.Bernoulli
+namespace Bernoulli
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.Triality
@@ -74,4 +74,4 @@ noncomputable instance : BregmanDivergence ℝ ℝ :=
 noncomputable def bernoulliTriadicCore : TriadicCore ℝ ℝ ℝ :=
   bregmanTriadicCore (fun η₁ η₂ => η₁ + η₂)
 
-end InfoGeometry.ExponentialFamily.Bernoulli
+end Bernoulli

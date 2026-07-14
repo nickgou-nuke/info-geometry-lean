@@ -12,7 +12,7 @@ or physical thermodynamic model.  Conservation statements are proved from
 explicit bracket-annihilation fields supplied by the packet.
 -/
 
-namespace InfoGeometry.Topology.Metriplectic
+namespace Metriplectic
 
 /--
 A finite algebraic metriplectic structure on a commutative ring of observables.
@@ -64,4 +64,4 @@ theorem metriplectic_packet {R : Type*} [CommRing R] (M : MetriplecticStructure 
     totalEvolution M M.H = 0 ∧ totalEvolution M M.S = M.metric M.S M.S := by
   exact ⟨energy_conservation M, entropy_evolution M⟩
 
-end InfoGeometry.Topology.Metriplectic
+end Metriplectic

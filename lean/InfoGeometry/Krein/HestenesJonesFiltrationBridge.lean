@@ -6,7 +6,7 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesJonesFiltrationBridge
+namespace HestenesJonesFiltrationBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -178,4 +178,4 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Krein.HestenesJonesFiltrationBridge
+end HestenesJonesFiltrationBridge

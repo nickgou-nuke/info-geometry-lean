@@ -4,7 +4,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.ThermofieldDouble
+namespace ThermofieldDouble
 
 /--
 Finite quantum spectrum for theorem-safe TFD coefficient transport.
@@ -320,4 +320,4 @@ end ArithmeticModularCalibration
 
 end PrimeBitSpectrum
 
-end InfoGeometry.Quantum.ThermofieldDouble
+end ThermofieldDouble

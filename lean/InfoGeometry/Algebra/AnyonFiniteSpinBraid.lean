@@ -16,7 +16,7 @@ needed before a later model-specific braid representation is imported.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid
+namespace AnyonFiniteSpinBraid
 
 open Matrix
 open InfoGeometry.Algebra.FiniteSpin
@@ -282,7 +282,7 @@ theorem finite_spin_anyon_braid_packet :
     CoxeterDQuotientCertificate.D4_order_readout,
     CoxeterDQuotientCertificate.D5_order_readout⟩
 
-end InfoGeometry.Algebra.AnyonFiniteSpinBraid
+end AnyonFiniteSpinBraid
 
 end noncomputable section
 

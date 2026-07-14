@@ -15,7 +15,7 @@ polynomial and matrix equalities and proves the exact scalar polynomial
 identities displayed in the examples.
 -/
 
-namespace InfoGeometry.Canonical.RoseDrazinComputation
+namespace RoseDrazinComputation
 
 noncomputable section
 
@@ -240,4 +240,4 @@ end BinomialNilpotentInversePower
 
 end
 
-end InfoGeometry.Canonical.RoseDrazinComputation
+end RoseDrazinComputation

@@ -11,7 +11,7 @@ model after a Drazin split.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
+namespace ZetaRegularizedBoundaryReadout
 
 open InfoGeometry.Canonical.KreinDrazinBoundarySupport
 
@@ -146,5 +146,5 @@ theorem packet_topological_index_eq_zeta_zero
     G.zetaReadout.zetaData
     G.topologicalCalibration
 
-end InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
+end ZetaRegularizedBoundaryReadout
 

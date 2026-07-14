@@ -24,7 +24,7 @@ Those comparisons remain owner theorems/debt, represented here by explicit
 carrier equivalences.
 -/
 
-namespace InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
+namespace PenroseDAGAmplituhedronRosetta
 
 open InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 open InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge.Plucker6
@@ -181,4 +181,4 @@ theorem rosetta_owner_readback_packet {moving : ℕ}
     delaunay_pure_braid_descent_readback D⟩
   simpa using penrose_klein_glide_readback (0 : ℝ) (0 : ℝ)
 
-end InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
+end PenroseDAGAmplituhedronRosetta

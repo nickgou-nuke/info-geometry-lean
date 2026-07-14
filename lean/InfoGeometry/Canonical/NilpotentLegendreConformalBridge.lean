@@ -27,7 +27,7 @@ or affine geometry beyond the supplied compatibility data.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.NilpotentLegendreConformalBridge
+namespace NilpotentLegendreConformalBridge
 
 open InfoGeometry.Core
 open InfoGeometry.Convex
@@ -140,4 +140,4 @@ end NilpotentLegendreConformalBridge
 
 end Core
 
-end InfoGeometry.Canonical.NilpotentLegendreConformalBridge
+end NilpotentLegendreConformalBridge

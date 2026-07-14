@@ -12,7 +12,7 @@ law, re-exposed here as honest debt.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
+namespace LightConeSugawaraCalibration
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -274,4 +274,4 @@ theorem sugawara_virasoro_acts_on_uMinusCurrent
 
 end Calibration
 
-end InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
+end LightConeSugawaraCalibration

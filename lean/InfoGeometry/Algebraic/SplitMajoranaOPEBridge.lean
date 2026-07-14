@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Algebraic.SplitMajoranaOPEBridge
+namespace SplitMajoranaOPEBridge
 
 variable {Mode : Type*}
 
@@ -93,4 +93,4 @@ theorem finitePfaffianCharacterReadout_eq_prod
   unfold finiteDirichletWittenLocalFactor
   rfl
 
-end InfoGeometry.Algebraic.SplitMajoranaOPEBridge
+end SplitMajoranaOPEBridge

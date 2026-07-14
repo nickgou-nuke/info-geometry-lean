@@ -14,7 +14,7 @@ This file answers the missing capstone question:
 when does `Θ` reduce to `K`, and when is it genuinely more general?
 -/
 
-namespace InfoGeometry.Canonical.KramersPhaseAxisReduction
+namespace KramersPhaseAxisReduction
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -311,4 +311,4 @@ theorem kramers_no_scalar_phaseAxis_collapse
 
 end Core
 
-end InfoGeometry.Canonical.KramersPhaseAxisReduction
+end KramersPhaseAxisReduction

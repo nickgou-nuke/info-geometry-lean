@@ -1,7 +1,7 @@
 import InfoGeometry.EntropicInference
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.KL.EntropicInferenceTest
+namespace EntropicInferenceTest
 
 open InfoGeometry.EntropicInference
 open scoped BigOperators
@@ -158,4 +158,4 @@ example :
 
 end StrictPositiveStateTests
 
-end InfoGeometry.KL.EntropicInferenceTest
+end EntropicInferenceTest

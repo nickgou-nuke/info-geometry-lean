@@ -26,7 +26,7 @@ relative modular logarithm is represented only as an explicit proof/readout
 packet, not constructed by functional calculus in this file.
 -/
 
-namespace InfoGeometry.Canonical.TypeIIIModularCantorSystem
+namespace TypeIIIModularCantorSystem
 
 open InfoGeometry.Canonical.StandardFormCore
 
@@ -274,4 +274,4 @@ noncomputable def relativeEntropyOn
 
 end CylinderWeights
 
-end InfoGeometry.Canonical.TypeIIIModularCantorSystem
+end TypeIIIModularCantorSystem

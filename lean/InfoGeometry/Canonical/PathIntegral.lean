@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.QuantumInference
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
-namespace InfoGeometry.Canonical.PathIntegral
+namespace PathIntegral
 
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.QuantumInference
@@ -44,4 +44,4 @@ noncomputable def expectedHolonomy
     (paths : Finset (ℝ → E)) (N : ℕ) (T : ℝ) : Complex :=
   (∑ γ ∈ paths, (continuousWilsonLoop Dε γ) * (Complex.exp ((- (bayesianAction H (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T))) / (chiralPathIntegral H Dε paths N T)
 
-end InfoGeometry.Canonical.PathIntegral
+end PathIntegral

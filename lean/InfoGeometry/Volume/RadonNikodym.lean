@@ -11,7 +11,7 @@ Radon-Nikodym logarithms.  The RN readout is not supplied as a field: it is
 defined directly as `log |vol a|`.
 -/
 
-namespace InfoGeometry.Volume.RadonNikodym
+namespace RadonNikodym
 
 open InfoGeometry.Canonical
 open InfoGeometry.Volume.Base
@@ -138,4 +138,4 @@ noncomputable def toProjectiveRotorCocycle {A : Type*} [Group A]
         toProjectiveRotorCocycle vol b PUnit.unit := by
   simp [toProjectiveRotorCocycle, rn_chain_rule]
 
-end InfoGeometry.Volume.RadonNikodym
+end RadonNikodym

@@ -7,7 +7,7 @@ import InfoGeometry.Clifford.ConformalGeneratorLemmas55
 Dilation action lemmas for the $C\ell(5,5)$ conformal generators.
 -/
 
-namespace InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
+namespace ConformalLieAlgebra55Dilation
 
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.ClNN
@@ -370,7 +370,7 @@ theorem adD_v4 : D * v4 - v4 * D = -v4 := by
     _ = 0 + -v4 := by rw [adD5_v4, adD4_v4]
     _ = -v4 := by rw [zero_add]
 
-end InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
+end ConformalLieAlgebra55Dilation
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

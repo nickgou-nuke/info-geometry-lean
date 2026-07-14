@@ -24,7 +24,7 @@ forms, elliptic regularity, or analytic Hodge decomposition.
   not asserted here.
 -/
 
-namespace InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
+namespace AbstractHodgeAdjointAlgebra
 
 variable {V : Type*} [AddCommGroup V]
 
@@ -147,4 +147,4 @@ theorem exact_coexact_orthogonal
     _ = B 0 u := B_comm u 0
     _ = 0 := B_zero_left B B_add_left u
 
-end InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
+end AbstractHodgeAdjointAlgebra

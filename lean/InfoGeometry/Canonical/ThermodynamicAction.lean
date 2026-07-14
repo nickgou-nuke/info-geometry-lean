@@ -18,7 +18,7 @@ already-owned identifications:
   `ThermodynamicGenerator`.
 -/
 
-namespace InfoGeometry.Canonical.ThermodynamicAction
+namespace ThermodynamicAction
 
 open InfoGeometry.Canonical.RelationalInformationCore
 
@@ -55,4 +55,4 @@ attribute [expository]
 
 end Core
 
-end InfoGeometry.Canonical.ThermodynamicAction
+end ThermodynamicAction

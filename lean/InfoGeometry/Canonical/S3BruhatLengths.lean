@@ -27,7 +27,7 @@ Finite inversion-length computation for the six elements of the Weyl group
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Canonical.S3BruhatLengths
+namespace S3BruhatLengths
 
 /-- The inversion set of a map `f : Fin n -> Fin n`. -/
 def inversions (n : Nat) (f : Fin n -> Fin n) : Finset (Fin n × Fin n) :=
@@ -97,4 +97,4 @@ lemma len_s_132 : inv_length 3 s_132 = 2 := by
 lemma len_s_13 : inv_length 3 s_13 = 3 := by
   decide
 
-end InfoGeometry.Canonical.S3BruhatLengths
+end S3BruhatLengths

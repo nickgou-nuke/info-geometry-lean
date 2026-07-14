@@ -29,7 +29,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.OperatorAlgebra.HorizonAttractorMicrostateLedger
+namespace HorizonAttractorMicrostateLedger
 
 /-! ## 1. Horizon attractor accounting ledger -/
 
@@ -243,4 +243,4 @@ theorem horizonAttractorMicrostate_packet
     L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) :=
   horizonAttractorMicrostateOwnerTarget State Charge Scalar Memory L s
 
-end InfoGeometry.OperatorAlgebra.HorizonAttractorMicrostateLedger
+end HorizonAttractorMicrostateLedger

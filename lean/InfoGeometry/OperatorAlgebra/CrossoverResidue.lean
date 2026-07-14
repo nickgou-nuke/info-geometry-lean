@@ -23,7 +23,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CrossoverResidue
+namespace CrossoverResidue
 
 open InfoGeometry.OperatorAlgebra.ConformalCrossover
 
@@ -476,4 +476,4 @@ theorem resolvedResidue_seed_smooth_sign
         Chirality.sign R.chirality :=
   crossoverResidueOwnerTarget V NewState C Smooth Vort D A R hR
 
-end InfoGeometry.OperatorAlgebra.CrossoverResidue
+end CrossoverResidue

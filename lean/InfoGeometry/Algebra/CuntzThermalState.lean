@@ -24,7 +24,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzThermalState
+namespace CuntzThermalState
 
 /-- The truncated exponential polynomial: exp_N(x) = Σ_{k=0}^N x^k / k!. -/
 noncomputable def truncExp (N : ℕ) : Polynomial ℂ :=
@@ -74,4 +74,4 @@ theorem primon_thermal_state (primes : Fin 3 → ℕ) (_hprimes : ∀ i, Nat.Pri
   simpa using
     truncExp_neg_beta_explicit 3 (λ i => (Real.log (primes i : ℝ) : ℂ)) β N
 
-end InfoGeometry.Algebra.CuntzThermalState
+end CuntzThermalState

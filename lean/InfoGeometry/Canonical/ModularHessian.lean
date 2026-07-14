@@ -17,7 +17,7 @@ already elsewhere:
 - its vortex/phase side is the `(Jε)`-twisted comparison-state phase form.
 -/
 
-namespace InfoGeometry.Canonical.ModularHessian
+namespace ModularHessian
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.ThermodynamicAction
@@ -70,4 +70,4 @@ attribute [expository]
 
 end Core
 
-end InfoGeometry.Canonical.ModularHessian
+end ModularHessian

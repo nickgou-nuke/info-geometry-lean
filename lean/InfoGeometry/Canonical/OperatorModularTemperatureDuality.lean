@@ -22,7 +22,7 @@ Frobenius classification theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.OperatorModularTemperatureDuality
+namespace OperatorModularTemperatureDuality
 
 /--
 Closed operator product with Frobenius trace.
@@ -239,4 +239,4 @@ theorem contact_balance :
 
 end ModularFlowOperatorDuality
 
-end InfoGeometry.Canonical.OperatorModularTemperatureDuality
+end OperatorModularTemperatureDuality

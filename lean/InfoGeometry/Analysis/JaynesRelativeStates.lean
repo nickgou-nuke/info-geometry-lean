@@ -27,7 +27,7 @@ the caller's additive functional.
 None for this branch-weight readback.
 -/
 
-namespace InfoGeometry.Analysis.JaynesRelativeStates
+namespace JaynesRelativeStates
 
 /-- Additive-hom specialization to the concrete Cuntz range projections. -/
 theorem branch_weight_one_half_on_cuntz_projections
@@ -59,4 +59,4 @@ theorem branch_weight_one_half_on_cuntz_projections
       _ = (1 / 2 : ℝ) := by ring
   exact ⟨h_left, by rw [← h_symm, h_left]⟩
 
-end InfoGeometry.Analysis.JaynesRelativeStates
+end JaynesRelativeStates

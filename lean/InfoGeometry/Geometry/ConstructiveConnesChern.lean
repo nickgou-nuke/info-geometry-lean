@@ -8,7 +8,7 @@ import InfoGeometry.Geometry.SpectralDivisors
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.ConstructiveConnesChern
+namespace ConstructiveConnesChern
 
 open InfoGeometry.Geometry.ConstructiveKasparov
 open InfoGeometry.Geometry.BilingualAnalyticity
@@ -56,5 +56,5 @@ theorem kasparov_defect_is_quantized
   rw [h_index]
   exact h_wind
 
-end InfoGeometry.Geometry.ConstructiveConnesChern
+end ConstructiveConnesChern
 

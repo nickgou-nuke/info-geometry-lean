@@ -1,7 +1,7 @@
 import Mathlib
 import Mathlib.Tactic.FinCases
 
-namespace InfoGeometry.Canonical.SL2CZhukovsky
+namespace SL2CZhukovsky
 
 open Matrix
 open Complex
@@ -146,4 +146,4 @@ theorem trace_free_eigenvalue_inv_eq_neg (M : Mat2C) (x : ℂ)
     x * (-x) = -(x ^ 2) := by ring
     _ = 1 := by rw [hsq]; norm_num
 
-end InfoGeometry.Canonical.SL2CZhukovsky
+end SL2CZhukovsky

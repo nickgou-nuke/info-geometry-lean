@@ -25,7 +25,7 @@ amplituhedron theorem is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.BayesianTuringCantor
+namespace BayesianTuringCantor
 
 open BigOperators
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
@@ -210,4 +210,4 @@ def bayesian_turing_cantor_packet : BayesianTuringPacket where
   finite_log_cocycle := logRNIncrement_cocycle
   residue_one := logResidue_self
 
-end InfoGeometry.Physics.BayesianTuringCantor
+end BayesianTuringCantor

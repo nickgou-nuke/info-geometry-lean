@@ -34,7 +34,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeSupertraceFinite
+namespace PrimeSupertraceFinite
 
 open InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 
@@ -506,4 +506,4 @@ theorem supertrace_eq_inv_zeta_of_admissible
 
 end SupersymmetricPrimonZetaCalibration
 
-end InfoGeometry.Arithmetic.PrimeSupertraceFinite
+end PrimeSupertraceFinite

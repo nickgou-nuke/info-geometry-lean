@@ -13,7 +13,7 @@ It is theorem-honest:
 - de Rham closure is *not* claimed unless the external lanes actually return it.
 -/
 
-namespace InfoGeometry.Projective.FactorStratifiedDeRhamCertificate
+namespace FactorStratifiedDeRhamCertificate
 
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
 open Polynomial
@@ -179,4 +179,4 @@ theorem future_candidateFixture_spinTiled_rank32 :
     candidateLocalBettiData.totalRank * PenroseSpinTiling.spinTilingMultiplicity = 32 :=
   candidateLocalBettiData_spinTiled_rank32
 
-end InfoGeometry.Projective.FactorStratifiedDeRhamCertificate
+end FactorStratifiedDeRhamCertificate

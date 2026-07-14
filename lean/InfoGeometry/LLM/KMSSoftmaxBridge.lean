@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.KMSSoftmaxBridge
+namespace KMSSoftmaxBridge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.RouterFreeEnergyBridge
@@ -114,4 +114,4 @@ theorem routerFreeEnergyEps_eq_neg_eps_kmsLogPartition
 
 end TokenLocalKMS
 
-end InfoGeometry.LLM.KMSSoftmaxBridge
+end KMSSoftmaxBridge

@@ -21,7 +21,7 @@ import InfoGeometry.Canonical.DiracSouriauOperator
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
+namespace IndividuatedCl44Casimir
 
 open Matrix
 open InfoGeometry.OperatorAlgebra
@@ -176,4 +176,4 @@ theorem casimir_eq_pfaffian_identity
 
 end PfaffianCasimirCalibration
 
-end InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
+end IndividuatedCl44Casimir

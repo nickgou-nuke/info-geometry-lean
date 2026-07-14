@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 
-namespace InfoGeometry.Canonical.CartanBerezinianCore
+namespace CartanBerezinianCore
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.RestrictedVolumeCharacter
@@ -97,4 +97,4 @@ theorem generalizedBerezinian_diagonal_reduction
 
 end Berezinian
 
-end InfoGeometry.Canonical.CartanBerezinianCore
+end CartanBerezinianCore

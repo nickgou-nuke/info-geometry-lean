@@ -34,7 +34,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+namespace IndividuatedCasimir
 
 /-! ## 1. Invertible conjugation -/
 
@@ -235,4 +235,4 @@ theorem quadraticCasimir_fixed_by_conjugation
 
 end CliffordFrame
 
-end InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+end IndividuatedCasimir

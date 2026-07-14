@@ -16,7 +16,7 @@ repository and are not re-stated here.
 
 noncomputable section
 
-namespace InfoGeometry.GrandUnification.BiQuaternionKahlerThermoBridge
+namespace BiQuaternionKahlerThermoBridge
 
 open InfoGeometry.GrandUnification.HodgeCartan
 
@@ -40,4 +40,4 @@ def constructBiQuaternionKahlerThermoPacket :
     exact @HodgeCartan.hodge_decomposition R _ _ T
   · exact InfoGeometry.GrandUnification.constructAlgebraicSouriauTomitaTarget
 
-end InfoGeometry.GrandUnification.BiQuaternionKahlerThermoBridge
+end BiQuaternionKahlerThermoBridge

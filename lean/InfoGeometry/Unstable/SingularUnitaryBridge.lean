@@ -19,7 +19,7 @@ This module formalizes the high-level connections between:
 The glue is the Cartan involution and the resulting Chiral Anomaly.
 -/
 
-namespace InfoGeometry.Unstable.SingularUnitaryBridge
+namespace SingularUnitaryBridge
 
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Singular.Drazin
@@ -77,4 +77,4 @@ lemma rg_dissipation_bounded_by_anomaly
   · intro s; exact hLaw s
   · intro s; exact (nnnorm χ).2
 
-end InfoGeometry.Unstable.SingularUnitaryBridge
+end SingularUnitaryBridge

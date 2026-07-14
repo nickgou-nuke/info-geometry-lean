@@ -10,7 +10,7 @@ It is the bridge from discrete finite patches to later colimit-style Penrose
 limit constructions.
 -/
 
-namespace InfoGeometry.Canonical.FinitePenrosePatchTower
+namespace FinitePenrosePatchTower
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -79,4 +79,4 @@ theorem localState_reaches_upperBound
 
 end Basic
 
-end InfoGeometry.Canonical.FinitePenrosePatchTower
+end FinitePenrosePatchTower

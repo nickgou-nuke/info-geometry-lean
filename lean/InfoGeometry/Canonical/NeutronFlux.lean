@@ -16,7 +16,7 @@ the chiral Hestenes boost, ensuring the topological integrity of the quasilattic
 - `isFluxInvariant`: The stability of the flux under relativistic evolution.
 -/
 
-namespace InfoGeometry.Canonical.NeutronFlux
+namespace NeutronFlux
 
 open InfoGeometry.Quantum.Hurwitz
 open InfoGeometry.Canonical.ProjectorEquivariance
@@ -46,4 +46,4 @@ theorem flux_boost_invariant
       neutronFlux (E := E) ψ q := by
   simp [neutronFlux]
 
-end InfoGeometry.Canonical.NeutronFlux
+end NeutronFlux

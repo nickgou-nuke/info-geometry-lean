@@ -18,7 +18,7 @@ This file exports:
 - and a CPT/root central-split specialization.
 -/
 
-namespace InfoGeometry.Canonical.KKTNoetherCharges
+namespace KKTNoetherCharges
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -266,4 +266,4 @@ theorem cpt_noether_commutator_of_central_split
 
 end RootLane
 
-end InfoGeometry.Canonical.KKTNoetherCharges
+end KKTNoetherCharges

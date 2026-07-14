@@ -1,7 +1,7 @@
 import InfoGeometry.RegularizedKL
 import Mathlib.Tactic
 
-namespace InfoGeometry.KL.RegularizedKLTest
+namespace RegularizedKLTest
 
 open StatisticalMechanics
 
@@ -46,4 +46,4 @@ example :
       hε
       (x := true))
 
-end InfoGeometry.KL.RegularizedKLTest
+end RegularizedKLTest

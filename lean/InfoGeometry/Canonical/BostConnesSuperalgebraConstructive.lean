@@ -33,7 +33,7 @@ Riemann-hypothesis consequences.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
+namespace BostConnesSuperalgebraConstructive
 
 open InfoGeometry.Topology
 open InfoGeometry.Canonical
@@ -187,6 +187,6 @@ theorem invariant_state_supertrace_carFromCuntz_eq_zero
 
 end ParityEquivariantCuntzCarrier
 
-end InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
+end BostConnesSuperalgebraConstructive
 
 end noncomputable section

@@ -20,7 +20,7 @@ survive the thermal bath. The 2e²/h peak is protected.
 open InfoGeometry.Dynamics
 open InfoGeometry.Krein
 
-namespace InfoGeometry.Dynamics.ThermalChiralConservation
+namespace ThermalChiralConservation
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "H₂" => DoubledSpace E
@@ -89,4 +89,4 @@ observable model.
 def drazin_anomaly_thermally_protected_debt : String :=
   "Open: derive the Drazin anomaly/conductance invariant from thermal chiral conservation."
 
-end InfoGeometry.Dynamics.ThermalChiralConservation
+end ThermalChiralConservation

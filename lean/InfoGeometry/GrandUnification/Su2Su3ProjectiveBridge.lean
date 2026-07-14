@@ -6,7 +6,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 open Matrix
 
-namespace InfoGeometry.GrandUnification.Su2Su3ProjectiveBridge
+namespace Su2Su3ProjectiveBridge
 
 /-- 
 The Master Grand Unification Projective Matrix.
@@ -33,4 +33,4 @@ theorem master_symmetry_reconciliation (T_leakage : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [grand_unification_matrix, mul_apply, sum_fin_3] <;> ring
 
-end InfoGeometry.GrandUnification.Su2Su3ProjectiveBridge
+end Su2Su3ProjectiveBridge

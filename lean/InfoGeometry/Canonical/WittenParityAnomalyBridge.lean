@@ -2,7 +2,7 @@ import Mathlib.Data.ZMod.Basic
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 
-namespace InfoGeometry.Canonical.WittenParityAnomalyBridge
+namespace WittenParityAnomalyBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.NoncommutativeModularSignum
@@ -54,4 +54,4 @@ requires the number of Majorana fermions `nu` to be a multiple of 16.
 def AnomalyFree (nu : ℕ) : Prop :=
   nu % 16 = 0
 
-end InfoGeometry.Canonical.WittenParityAnomalyBridge
+end WittenParityAnomalyBridge

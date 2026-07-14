@@ -26,7 +26,7 @@ theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Optics.JonesPoincareSphere
+namespace JonesPoincareSphere
 
 open scoped Matrix
 open InfoGeometry.Geometry.PauliParavectorBridge
@@ -265,5 +265,5 @@ def jonesPoincareBridgePacket : JonesPoincareBridgePacket :=
     stokesPauliDetZero := JonesSpinor.stokesPauli_det_zero
     nullSeparation := TwistorIncidenceReadout.IncidentPair.null_separation }
 
-end InfoGeometry.Optics.JonesPoincareSphere
+end JonesPoincareSphere
 

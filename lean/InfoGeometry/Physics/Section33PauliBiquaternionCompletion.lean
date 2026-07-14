@@ -22,7 +22,7 @@ correction, gravitational-wave equation, or experimental prediction is asserted.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section33PauliBiquaternionCompletion
+namespace Section33PauliBiquaternionCompletion
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -155,6 +155,6 @@ theorem repaired_section33_pauli_biquaternion_packet
     blochDensityAtRadius_idempotent_of_scaled_unit r n1 n2 n3 hunit,
     blochSpacetimePoint_det_zero_of_scaled_unit t r n1 n2 n3 hunit⟩
 
-end InfoGeometry.Physics.Section33PauliBiquaternionCompletion
+end Section33PauliBiquaternionCompletion
 
 end noncomputable section

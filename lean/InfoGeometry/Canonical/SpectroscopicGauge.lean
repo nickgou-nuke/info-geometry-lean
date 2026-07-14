@@ -23,7 +23,7 @@ This file is a translator/coherence surface; it does not introduce a new KMS
 owner for thermodynamics.
 -/
 
-namespace InfoGeometry.Canonical.SpectroscopicGauge
+namespace SpectroscopicGauge
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.OnsagerReciprocity
@@ -206,4 +206,4 @@ theorem geometric_anomaly_is_gaugeObstruction
 
 end Core
 
-end InfoGeometry.Canonical.SpectroscopicGauge
+end SpectroscopicGauge

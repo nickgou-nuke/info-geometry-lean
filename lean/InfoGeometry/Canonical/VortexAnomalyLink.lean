@@ -22,7 +22,7 @@ surfaces:
   with the canonical source/sink projectors.
 -/
 
-namespace InfoGeometry.Canonical.VortexAnomalyLink
+namespace VortexAnomalyLink
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -1067,4 +1067,4 @@ end BoundaryLocalization
 
 end Core
 
-end InfoGeometry.Canonical.VortexAnomalyLink
+end VortexAnomalyLink

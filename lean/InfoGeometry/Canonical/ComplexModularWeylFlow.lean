@@ -11,7 +11,7 @@ Finite complex-time modular/Weyl readout on a 2D real carrier:
 This is a concrete owner-side packet (no Type III/KMS existence claim).
 -/
 
-namespace InfoGeometry.Canonical.ComplexModularWeylFlow
+namespace ComplexModularWeylFlow
 
 noncomputable section
 
@@ -92,4 +92,4 @@ theorem modularScale_compose
 
 end
 
-end InfoGeometry.Canonical.ComplexModularWeylFlow
+end ComplexModularWeylFlow

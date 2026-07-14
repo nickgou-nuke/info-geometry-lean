@@ -23,7 +23,7 @@ The clock tick $N$ represents the winding around the modular singularity,
 mapping to the Drazin index of the operator flow.
 -/
 
-namespace InfoGeometry.Canonical.WindingOrbitClosure
+namespace WindingOrbitClosure
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.KKTCore
@@ -1103,4 +1103,4 @@ end Core
 
 end NC
 
-end InfoGeometry.Canonical.WindingOrbitClosure
+end WindingOrbitClosure

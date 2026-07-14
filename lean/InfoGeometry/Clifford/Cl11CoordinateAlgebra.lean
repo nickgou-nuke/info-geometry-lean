@@ -26,7 +26,7 @@ Connes--Radon--Nikodym theorem, a spectral-triple theorem, or a completed
 operator-algebraic modular-flow construction.
 -/
 
-namespace InfoGeometry.Clifford.Cl11CoordinateAlgebra
+namespace Cl11CoordinateAlgebra
 
 /-- Coordinate model for the real split Clifford algebra `Cl(1,1)`. -/
 @[ext]
@@ -290,4 +290,4 @@ Open closure debt, deliberately not encoded as declarations:
 * any von Neumann algebra, spectral triple, or completed modular-flow theorem.
 -/
 
-end InfoGeometry.Clifford.Cl11CoordinateAlgebra
+end Cl11CoordinateAlgebra

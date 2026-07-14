@@ -19,7 +19,7 @@ index on the bounded real split-Krein Dirac module, with its existing
 Bogoliubov transport invariance.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialCentralCharge
+namespace OperatorialCentralCharge
 
 open InfoGeometry.KK
 open InfoGeometry.KK.RealSplitKreinKasparovCycle
@@ -179,4 +179,4 @@ theorem quasilatticeSlice_ne_zero_transport_protected
   exact quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero
     (A := A) (B := B) (E := E) V X hX hEven hCentral t
 
-end InfoGeometry.Canonical.OperatorialCentralCharge
+end OperatorialCentralCharge

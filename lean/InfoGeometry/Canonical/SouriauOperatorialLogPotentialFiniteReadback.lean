@@ -23,7 +23,7 @@ No infinite Dirichlet series, no McKean-Singer heat-kernel theorem, and no
 unconditional `1 / ζ(s) = STr(exp(-sH))` theorem are claimed here.
 -/
 
-namespace InfoGeometry.Canonical.SouriauOperatorialLogPotentialFiniteReadback
+namespace SouriauOperatorialLogPotentialFiniteReadback
 
 open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 open InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
@@ -79,4 +79,4 @@ theorem finite_readback_corridor
       levels zero boson fermion weight hzero hpair
   · exact finitePrimonPartition_eq_evaluatedWeylDenominator_inv L β
 
-end InfoGeometry.Canonical.SouriauOperatorialLogPotentialFiniteReadback
+end SouriauOperatorialLogPotentialFiniteReadback

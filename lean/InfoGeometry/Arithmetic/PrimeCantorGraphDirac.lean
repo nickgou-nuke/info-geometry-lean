@@ -26,7 +26,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeCantorGraphDirac
+namespace PrimeCantorGraphDirac
 
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -896,4 +896,4 @@ theorem hamiltonian_eq_sum_occupied
 
 end FinitePrimeCantorGraphDirac
 
-end InfoGeometry.Arithmetic.PrimeCantorGraphDirac
+end PrimeCantorGraphDirac

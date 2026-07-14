@@ -40,7 +40,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Canonical.BraidColimitZornBarrier
+namespace BraidColimitZornBarrier
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Topological.FibonacciAnyons

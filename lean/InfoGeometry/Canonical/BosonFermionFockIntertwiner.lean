@@ -16,7 +16,7 @@ This module formalizes that level only.  It does not construct the
 normal-ordered fermion current from raw CAR modes.
 -/
 
-namespace InfoGeometry.Canonical.BosonFermionFockIntertwiner
+namespace BosonFermionFockIntertwiner
 
 open VirasoroProject
 
@@ -97,4 +97,4 @@ end FockLevelCurrentIntertwiner
 
 end FockLevel
 
-end InfoGeometry.Canonical.BosonFermionFockIntertwiner
+end BosonFermionFockIntertwiner

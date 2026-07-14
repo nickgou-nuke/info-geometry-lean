@@ -3,7 +3,7 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.LinearAlgebra.Dimension.Finite
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.InformationNumber
+namespace InformationNumber
 
 open InfoGeometry.Canonical.Drazin
 
@@ -55,4 +55,4 @@ theorem informationNumber_eq_ambientDim_of_surjectiveProjection
   rw [hrange]
   simp
 
-end InfoGeometry.Canonical.InformationNumber
+end InformationNumber

@@ -16,7 +16,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Analysis.AsanoRuelleBasicBranches
+namespace AsanoRuelleBasicBranches
 
 /-- Two-variable separately affine Asano block. -/
 def Phi (A B C D z₁ z₂ : ℂ) : ℂ :=
@@ -172,5 +172,5 @@ theorem asano_degenerate_right_endpoint_mem
     phi_right_endpoint_zero_of_degenerate A B C D 0 hD hdeg
   exact (hZeroFree 0 (-(B / D)) h0K₁ hnot) hzero
 
-end InfoGeometry.Analysis.AsanoRuelleBasicBranches
+end AsanoRuelleBasicBranches
 

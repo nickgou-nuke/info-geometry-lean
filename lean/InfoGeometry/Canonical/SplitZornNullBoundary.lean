@@ -27,7 +27,7 @@ No projective Cantor-colimit boundary theorem, no split exceptional-group
 closure theorem, and no GNS quotient/null-ideal identification is claimed here.
 -/
 
-namespace InfoGeometry.Canonical.SplitZornNullBoundary
+namespace SplitZornNullBoundary
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
@@ -136,4 +136,4 @@ theorem split_zorn_null_boundary_packet :
     zornTopRightNull_sq_zero,
     zornTopRightNull_polar_self_zero⟩
 
-end InfoGeometry.Canonical.SplitZornNullBoundary
+end SplitZornNullBoundary

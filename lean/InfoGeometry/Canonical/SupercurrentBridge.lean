@@ -16,7 +16,7 @@ super-coadjoint readout surface into a small covariance packet:
   invariance claim.
 -/
 
-namespace InfoGeometry.Canonical.SupercurrentBridge
+namespace SupercurrentBridge
 
 open InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 
@@ -133,4 +133,4 @@ theorem identityBalanced_supercurrent_eq_projection
 
 end SuperCoadjointMomentMapData
 
-end InfoGeometry.Canonical.SupercurrentBridge
+end SupercurrentBridge

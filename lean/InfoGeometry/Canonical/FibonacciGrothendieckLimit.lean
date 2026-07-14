@@ -29,7 +29,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Canonical.FibonacciGrothendieckLimit
+namespace FibonacciGrothendieckLimit
 
 open Filter
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -387,4 +387,4 @@ theorem grothendieck_colimit_stage_operator_eq_sugawara_lzero
   rw [directLimitLift_of, hx]
   exact (sugawaraRepresentation_lzero_eq_sugawaraGen_zero heiOper heiTrunc heiComm).symm
 
-end InfoGeometry.Canonical.FibonacciGrothendieckLimit
+end FibonacciGrothendieckLimit

@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ModularSpectralWedge
+namespace ModularSpectralWedge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealTomitaCore
@@ -117,4 +117,4 @@ end HasModularSpectralWedge
 
 end Core
 
-end InfoGeometry.Canonical.ModularSpectralWedge
+end ModularSpectralWedge

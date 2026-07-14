@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.InformationTorsion
 
-namespace InfoGeometry.Canonical.BeliefAlgebra
+namespace BeliefAlgebra
 
 open InfoGeometry.Canonical.InformationTorsion
 
@@ -44,4 +44,4 @@ def InformationLieAlgebra (E : Type*) [NormedAddCommGroup E] [InnerProductSpace 
 
 end BeliefSystem
 
-end InfoGeometry.Canonical.BeliefAlgebra
+end BeliefAlgebra

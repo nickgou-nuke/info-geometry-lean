@@ -18,7 +18,7 @@ No new ontology is introduced here; this module packages existing owner
 surfaces into a single repo-native formula surface.
 -/
 
-namespace InfoGeometry.Canonical.GrandCanonicalGaussianScaleShape
+namespace GrandCanonicalGaussianScaleShape
 
 open scoped BigOperators
 open InfoGeometry.ExponentialFamily.Gaussian
@@ -186,4 +186,4 @@ theorem kahlerPotentialRN_eq_neg_log_relativeVolumeChangeRN
 
 end SelfDualConeKahler
 
-end InfoGeometry.Canonical.GrandCanonicalGaussianScaleShape
+end GrandCanonicalGaussianScaleShape

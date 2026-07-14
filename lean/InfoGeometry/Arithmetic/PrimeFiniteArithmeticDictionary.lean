@@ -33,7 +33,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace InfoGeometry.Arithmetic.PrimeFiniteArithmeticDictionary
+namespace PrimeFiniteArithmeticDictionary
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex (PrimeRegister)
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -274,4 +274,4 @@ theorem exteriorMobius_eq_booleanMöbius
   InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma_eq_negOne_pow_fermionNumber
     S
 
-end InfoGeometry.Arithmetic.PrimeFiniteArithmeticDictionary
+end PrimeFiniteArithmeticDictionary

@@ -20,7 +20,7 @@ defect support:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.KreinDrazinBoundarySupport
+namespace KreinDrazinBoundarySupport
 
 set_option linter.dupNamespace false
 
@@ -765,4 +765,4 @@ structure BoundaryNormalCone
   Normal : B.Ray → Type*
 
 
-end InfoGeometry.Canonical.KreinDrazinBoundarySupport
+end KreinDrazinBoundarySupport

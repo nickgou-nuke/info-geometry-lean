@@ -16,7 +16,7 @@ particular nontrivial groups is supplied by separate computational/literature
 lanes, not assumed here.
 -/
 
-namespace InfoGeometry.GroupTheory.AutomorphismTower
+namespace AutomorphismTower
 
 /-- A theorem-honest certificate for a complete group: an explicit multiplicative
 equivalence between the group and its automorphism group.  In the standard
@@ -64,4 +64,4 @@ theorem card_perm_fin_three : Fintype.card (Equiv.Perm (Fin 3)) = 6 := by
 
 end CompleteGroupCertificate
 
-end InfoGeometry.GroupTheory.AutomorphismTower
+end AutomorphismTower

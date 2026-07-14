@@ -22,7 +22,7 @@ The results are finite algebraic identities in the imported CAR and braid settin
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ColorCARStandardModel
+namespace ColorCARStandardModel
 
 open Matrix
 open TensorProduct
@@ -230,4 +230,4 @@ theorem color_car_standard_model_synthesis :
     numberOp1_idem,
     numberOp2_idem⟩
 
-end InfoGeometry.Physics.ColorCARStandardModel
+end ColorCARStandardModel

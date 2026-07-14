@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Analytic.PrimonZeta
+namespace PrimonZeta
 
 open Real
 open Filter
@@ -50,4 +50,4 @@ theorem primonPartition_eq_dirichletZeta (β : ℝ) (hβ : 1 < β) :
     simp [hn]
     exact primonWeight_eq_rpow n hn_pos β
 
-end InfoGeometry.Analytic.PrimonZeta
+end PrimonZeta

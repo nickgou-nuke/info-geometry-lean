@@ -13,7 +13,7 @@ The commutative diagonal sector is handled separately by the weighted
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.NoncommutativeFockBridge
+namespace NoncommutativeFockBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -73,4 +73,4 @@ theorem bogoliubov_maps_weylMinus
     T.B x ∈ T.transportWeylMinus := by
   exact T.map_weylMinus x hx
 
-end InfoGeometry.Quantum.NoncommutativeFockBridge
+end NoncommutativeFockBridge

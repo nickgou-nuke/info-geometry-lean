@@ -16,7 +16,7 @@ This file proves two concrete facts:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.BayesianConformalCompression
+namespace BayesianConformalCompression
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -47,4 +47,4 @@ theorem trace_conformal_update_boundary_invariant (t : ℝ) :
   rw [expKExact_eval]
   norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.Canonical.BayesianConformalCompression
+end BayesianConformalCompression

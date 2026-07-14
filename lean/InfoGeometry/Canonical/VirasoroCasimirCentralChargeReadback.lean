@@ -13,7 +13,7 @@ This is theorem-only and algebraic:
 * no Type III factor theorem.
 -/
 
-namespace InfoGeometry.Canonical.VirasoroCasimirCentralChargeReadback
+namespace VirasoroCasimirCentralChargeReadback
 
 open InfoGeometry.Canonical.HypercomplexTriadVirasoroBridge
 
@@ -131,4 +131,4 @@ theorem LminusOne_vacuum_of_N_vacuum
 
 end TriadVirasoroCentralReadback
 
-end InfoGeometry.Canonical.VirasoroCasimirCentralChargeReadback
+end VirasoroCasimirCentralChargeReadback

@@ -19,7 +19,7 @@ The point is structural: a stagewise invariant is proved at stage `0` and
 propagated by a successor step.  No analytic continuation is involved.
 -/
 
-namespace InfoGeometry.Canonical.RecursiveClosureBridge
+namespace RecursiveClosureBridge
 
 /-! ## Generic stagewise recursion skeleton -/
 
@@ -145,4 +145,4 @@ theorem sinkhornTrajectory_phaseRNBarrier_monotone
 
 end Sinkhorn
 
-end InfoGeometry.Canonical.RecursiveClosureBridge
+end RecursiveClosureBridge

@@ -19,7 +19,7 @@ analytic by Mathlib's `Differentiable.analyticAt`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
+namespace FiniteZetaHolonomyAnalyticBridge
 
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 open InfoGeometry.Canonical.ComplexAnalyticBridge
@@ -100,5 +100,5 @@ def zetaNormalizedPrimeHolonomy_lifted_doubled_cauchyAnalyticAt
   analyticAt_liftedToDoubled_cauchyAnalyticAt
     (zetaNormalizedPrimeHolonomy_analyticAt p s)
 
-end InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
+end FiniteZetaHolonomyAnalyticBridge
 

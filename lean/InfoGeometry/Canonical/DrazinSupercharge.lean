@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.DrazinSupercharge
+namespace DrazinSupercharge
 
 open InfoGeometry.Canonical
 
@@ -1947,4 +1947,4 @@ theorem central_supercharge_theorem_with_drazin_evenness
 
 end CentralSupercharge
 
-end InfoGeometry.Canonical.DrazinSupercharge
+end DrazinSupercharge

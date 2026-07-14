@@ -17,7 +17,7 @@ This file is intentionally narrow and owner-respecting:
 - concrete split-`Cl(1,1)` null-mode CAR pair.
 -/
 
-namespace InfoGeometry.Canonical.SuperchargeCARCCRBridge
+namespace SuperchargeCARCCRBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -429,4 +429,4 @@ theorem harmonic_oscillator_spine :
 
 end Core
 
-end InfoGeometry.Canonical.SuperchargeCARCCRBridge
+end SuperchargeCARCCRBridge

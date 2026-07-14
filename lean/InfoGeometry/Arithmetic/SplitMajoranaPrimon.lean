@@ -26,7 +26,7 @@ matrix Pfaffian API is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.SplitMajoranaPrimon
+namespace SplitMajoranaPrimon
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
@@ -259,4 +259,4 @@ theorem infiniteEulerProductZeta_readout {s : ℂ} (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
   simpa using InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge hs
 
-end InfoGeometry.Arithmetic.SplitMajoranaPrimon
+end SplitMajoranaPrimon

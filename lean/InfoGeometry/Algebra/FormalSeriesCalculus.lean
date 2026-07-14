@@ -15,7 +15,7 @@ used here.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.FormalSeriesCalculus
+namespace FormalSeriesCalculus
 
 variable (A : Type*) [CommRing A]
 
@@ -88,4 +88,4 @@ theorem map_formalGeometric (f : A →ₐ[ℚ] B) :
   ext n
   simp [formalGeometric]
 
-end InfoGeometry.Algebra.FormalSeriesCalculus
+end FormalSeriesCalculus

@@ -7,7 +7,7 @@ import InfoGeometry.Causal.ProofTopology
 Canonical bridge for the finite proof-topology layer.
 -/
 
-namespace InfoGeometry.Canonical.ProofTopologyBridge
+namespace ProofTopologyBridge
 
 open InfoGeometry.Causal.Sensing
 
@@ -36,4 +36,4 @@ theorem faithful_sensor_reflects_no_loop
     a ≤ b ∧ b ≤ a :=
   ⟨S.reflects_order hab, S.reflects_order hba⟩
 
-end InfoGeometry.Canonical.ProofTopologyBridge
+end ProofTopologyBridge

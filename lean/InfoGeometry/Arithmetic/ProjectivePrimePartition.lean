@@ -14,7 +14,7 @@ import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ProjectivePrimePartition
+namespace ProjectivePrimePartition
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
@@ -111,5 +111,5 @@ lemma modularFlowReadout_pos_of_mem_positive_weight
 
 end ProjectivePrimeCalibration
 
-end InfoGeometry.Arithmetic.ProjectivePrimePartition
+end ProjectivePrimePartition
 

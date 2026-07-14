@@ -17,7 +17,7 @@ theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.RelativeTemperatureFirstLaw
+namespace RelativeTemperatureFirstLaw
 
 /--
 State-relative thermal readout.
@@ -95,4 +95,4 @@ theorem invTemperature_as_inv_T_eq_entropy_div_heat
 
 end RelativeTemperatureDatum
 
-end InfoGeometry.Thermo.RelativeTemperatureFirstLaw
+end RelativeTemperatureFirstLaw

@@ -19,7 +19,7 @@ The full idele-deformation narrative remains external evidence.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DeformedIdeleActionBridge
+namespace DeformedIdeleActionBridge
 
 /-- Lean-carrying status of the deformation claim. -/
 inductive DeformedIdeleClaimStatus where
@@ -73,4 +73,4 @@ theorem commutator_ne_zero_of_range_mismatch
   intro h
   exact w.range_mismatch (sub_eq_zero.mp h)
 
-end InfoGeometry.Canonical.DeformedIdeleActionBridge
+end DeformedIdeleActionBridge

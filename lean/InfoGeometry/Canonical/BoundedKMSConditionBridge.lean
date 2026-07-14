@@ -23,7 +23,7 @@ No finite-dimensional density matrix is introduced here, and no analytic KMS
 theorem is inferred from the bounded flow alone.
 -/
 
-namespace InfoGeometry.Canonical.BoundedKMSConditionBridge
+namespace BoundedKMSConditionBridge
 
 open InfoGeometry.Canonical.BoundedModularFlowCalibration
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -279,4 +279,4 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Canonical.BoundedKMSConditionBridge
+end BoundedKMSConditionBridge

@@ -17,7 +17,7 @@ This is not a proof of the Weyl character formula.  It is the honest finite
 owner surface needed before any local cancellation or quotient regularity shadow.
 -/
 
-namespace InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
+namespace WeylAlternatingNumeratorShadow
 
 open scoped BigOperators
 
@@ -138,4 +138,4 @@ end D4AlternatingCharacterShadowPacket
 
 end D4Shadow
 
-end InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
+end WeylAlternatingNumeratorShadow

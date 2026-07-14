@@ -13,7 +13,7 @@ actual Yang-Baxter and covariance laws.
 
 set_option linter.unusedVariables false
 
-namespace InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
+namespace Z3GrassmannDifferentialCalculus
 
 /-! ## Cubic Grassmann Coordinates -/
 
@@ -184,4 +184,4 @@ theorem z3_differential_calculus_packet (D : Z3DifferentialCalculus A) (x y : A)
 
 end Z3DifferentialCalculus
 
-end InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
+end Z3GrassmannDifferentialCalculus

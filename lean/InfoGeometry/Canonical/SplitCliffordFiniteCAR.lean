@@ -8,7 +8,7 @@ Indexed finite CAR core over the concrete two-mode Jordan-Wigner model.
 No wrappers. No placeholders.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordFiniteCAR
+namespace SplitCliffordFiniteCAR
 
 open Matrix
 open Filter
@@ -896,4 +896,4 @@ theorem completedCurrentModeJW_pairComm_two_terms_zero_of_add_ne_zero
     simpa [hm] using completedCurrentModeJW_comm_table_piecewise (-1) (m + n + 1)
   simp [hA, hB]
 
-end InfoGeometry.Canonical.SplitCliffordFiniteCAR
+end SplitCliffordFiniteCAR

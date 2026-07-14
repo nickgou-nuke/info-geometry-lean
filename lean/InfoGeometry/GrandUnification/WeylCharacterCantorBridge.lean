@@ -17,7 +17,7 @@ No analytic Cantor limit or global Weyl-character theorem is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.GrandUnification.WeylCharacterCantorBridge
+namespace WeylCharacterCantorBridge
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
@@ -58,6 +58,6 @@ theorem bitword_weyl_partition_and_boundary_atom
       cylinder n (atomProjection n (boundaryPrefix n x)) x = 1 :=
   ⟨bitword_partitionFunction_eq_weighted_sum n W, boundary_prefix_atom_eval_one n x⟩
 
-end InfoGeometry.GrandUnification.WeylCharacterCantorBridge
+end WeylCharacterCantorBridge
 
 end noncomputable section

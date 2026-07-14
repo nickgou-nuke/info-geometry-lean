@@ -16,7 +16,7 @@ the induced affine-chart infinitesimal orbit has the canonical Riccati vector fi
 
 noncomputable section
 
-namespace InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
+namespace ThermodynamicSL2MobiusFlow
 
 open InfoGeometry.Geometry
 open InfoGeometry.Canonical.MatrixDetExpTraceJacobi
@@ -648,4 +648,4 @@ theorem hasDerivAt_infinitesimalOrbit (v : ThermodynamicSL2Variation) (z : ℂ) 
 
 end ThermodynamicSL2Variation
 
-end InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
+end ThermodynamicSL2MobiusFlow

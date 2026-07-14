@@ -10,7 +10,7 @@ zeta functions, based on "Fonctions zêta dynamiques" by Viviane Baladi.
 
 noncomputable section
 
-namespace InfoGeometry.Dynamics.DynamicalZetaFunction
+namespace DynamicalZetaFunction
 
 open Complex
 
@@ -52,4 +52,4 @@ def higher_dim_milnor_thurston_prop
     (Det_star : ℂ → ℂ → ℂ) : Prop :=
   ∀ z : ℂ, Det_sharp z = ∏ k : Fin n, (Det_star z (D_k k.val z)) ^ ((-1 : ℂ)^(k.val + 1))
 
-end InfoGeometry.Dynamics.DynamicalZetaFunction
+end DynamicalZetaFunction

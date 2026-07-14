@@ -19,7 +19,7 @@ The content is deliberately finite and algebraic:
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.CuntzPoincareLorentzSupercharge
+namespace CuntzPoincareLorentzSupercharge
 
 open Matrix
 open InfoGeometry.Algebra.SupergradedSUSY
@@ -80,6 +80,6 @@ theorem finite_cuntz_poincare_lorentz_supercharge_packet
     pauli_supercharge_trace_recovers_four_momentum P a,
     exactBoostTransport_comp_self_pauli_minkowski P⟩
 
-end InfoGeometry.Quantum.CuntzPoincareLorentzSupercharge
+end CuntzPoincareLorentzSupercharge
 
 end noncomputable section

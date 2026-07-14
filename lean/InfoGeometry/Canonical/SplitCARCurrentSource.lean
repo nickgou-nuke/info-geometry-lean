@@ -13,7 +13,7 @@ It does not claim that split-Clifford data itself already provides such a
 witness. The actual split-source construction theorem remains open debt.
 -/
 
-namespace InfoGeometry.Canonical.SplitCARCurrentSource
+namespace SplitCARCurrentSource
 
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -252,4 +252,4 @@ theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
             VirasoroProject.ChargedFockSpace 𝕜 α) := by
   simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
-end InfoGeometry.Canonical.SplitCARCurrentSource
+end SplitCARCurrentSource

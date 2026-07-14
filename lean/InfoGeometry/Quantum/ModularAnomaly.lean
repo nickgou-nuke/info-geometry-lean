@@ -22,7 +22,7 @@ set_option linter.unusedSectionVars false
 attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instAddCommGroup
 attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instModule
 
-namespace InfoGeometry.Quantum.ModularAnomaly
+namespace ModularAnomaly
 
 open InfoGeometry.Krein
 
@@ -1414,4 +1414,4 @@ theorem latticeAvatar_canonicalCl11_modularAnomalyGenerator
 
 end Cl11LatticeBridge
 
-end InfoGeometry.Quantum.ModularAnomaly
+end ModularAnomaly

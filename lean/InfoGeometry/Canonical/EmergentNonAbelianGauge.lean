@@ -15,7 +15,7 @@ that the gauge fields do not identically vanish and obey the correct
 geometric transformation structure.
 -/
 
-namespace InfoGeometry.Canonical.EmergentNonAbelianGauge
+namespace EmergentNonAbelianGauge
 
 open Matrix
 open Complex
@@ -45,4 +45,4 @@ theorem non_abelian_gauge_nonzero (Psi : DiracSpinor) (Ta : ℂ) :
   dsimp [gaugeInsertionBilinear, spinorBilinear]
   ring
 
-end InfoGeometry.Canonical.EmergentNonAbelianGauge
+end EmergentNonAbelianGauge

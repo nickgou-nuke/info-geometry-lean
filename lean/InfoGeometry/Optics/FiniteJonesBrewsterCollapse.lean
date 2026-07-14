@@ -22,7 +22,7 @@ import InfoGeometry.Optics.FiniteJonesErlanger
 
 noncomputable section
 
-namespace InfoGeometry.Optics.FiniteJonesBrewsterCollapse
+namespace FiniteJonesBrewsterCollapse
 
 open Matrix
 open InfoGeometry.Optics.FiniteJonesModel
@@ -149,4 +149,4 @@ theorem s_channel_survives :
 
 end ConstructiveBrewsterCollapse
 
-end InfoGeometry.Optics.FiniteJonesBrewsterCollapse
+end FiniteJonesBrewsterCollapse

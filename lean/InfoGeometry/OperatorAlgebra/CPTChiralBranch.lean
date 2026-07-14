@@ -20,7 +20,7 @@ import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CPTChiralBranch
+namespace CPTChiralBranch
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 open InfoGeometry.OperatorAlgebra.ModularChiralMirror
@@ -162,4 +162,4 @@ theorem cptChiralBranchOwnerTarget
     (fun x hM hL => B.algebra_left_to_commutant_right hM hL),
     (fun x hM hR => B.algebra_right_to_commutant_left hM hR)⟩
 
-end InfoGeometry.OperatorAlgebra.CPTChiralBranch
+end CPTChiralBranch

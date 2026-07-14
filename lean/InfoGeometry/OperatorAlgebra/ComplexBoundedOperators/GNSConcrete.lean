@@ -21,7 +21,7 @@ The bounded-operator carrier is the existing CBO adapter
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSConcrete
+namespace GNSConcrete
 
 open scoped InnerProductSpace
 
@@ -153,4 +153,4 @@ lemma gns_state_on_positive_square_as_cyclic_coefficient (a : ℂ) :
     inner ℂ Omega (pi (involution a * a) Omega) = omega (involution a * a) := by
   exact gns_vector_state_recovers_state (involution a * a)
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSConcrete
+end GNSConcrete

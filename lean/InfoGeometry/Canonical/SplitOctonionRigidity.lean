@@ -20,7 +20,7 @@ The two defects are allowed to be different.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitOctonionRigidity
+namespace SplitOctonionRigidity
 
 section AbstractRigidity
 
@@ -80,4 +80,4 @@ lemma non_scalar_has_nonzero_commutator_and_associator
 
 end AbstractRigidity
 
-end InfoGeometry.Canonical.SplitOctonionRigidity
+end SplitOctonionRigidity

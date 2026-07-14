@@ -19,7 +19,7 @@ that a geometric quotient is a manifold.  It packages:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
+namespace KleinMonodromyRepresentationSpace
 
 open InfoGeometry.ProjectiveFoundation
 open InfoGeometry.Canonical.PSLDescent
@@ -95,6 +95,6 @@ theorem finite_formula_packet (t : ℚ) :
     finiteProjectiveKleinWitness.mobius_refocus t,
     finiteProjectiveKleinWitness.mobius_square_projective⟩
 
-end InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
+end KleinMonodromyRepresentationSpace
 
 end noncomputable section

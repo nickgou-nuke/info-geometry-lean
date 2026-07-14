@@ -32,7 +32,7 @@ consequence.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzPrimitiveExactness
+namespace CuntzPrimitiveExactness
 
 open Complex
 open InfoGeometry.Canonical.PrimitiveExactness
@@ -109,6 +109,6 @@ theorem differentiableOn_ball_with_cuntz_projection_exactness
   exact primitiveExactOn_with_cuntz_projection_exactness
     Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf) C
 
-end InfoGeometry.Canonical.CuntzPrimitiveExactness
+end CuntzPrimitiveExactness
 
 end noncomputable section

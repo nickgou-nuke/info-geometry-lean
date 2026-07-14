@@ -26,7 +26,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
+namespace EntanglementGeometryLedger
 
 /-! ## 1. Maximal entanglement as a monogamous relation -/
 
@@ -435,4 +435,4 @@ theorem not_bridge_growth_constant_on_thermal_window
 
 end ERBridgeGrowthComplexityCalibration
 
-end InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
+end EntanglementGeometryLedger

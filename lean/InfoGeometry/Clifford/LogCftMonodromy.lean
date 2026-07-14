@@ -20,7 +20,7 @@ bridge to Clifford / signature machinery is through the already-owned
 `OpSignatureBridge` and `SupermatrixKoszul` lanes.
 -/
 
-namespace InfoGeometry.Clifford.LogCftMonodromy
+namespace LogCftMonodromy
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -504,4 +504,4 @@ theorem lowerHadjiivanovMonodromy_pow_original (h : ℂ) (n : ℕ) :
   all_goals simp [lowerJordan, lowerJordanNilpotent]
   all_goals ring_nf
 
-end InfoGeometry.Clifford.LogCftMonodromy
+end LogCftMonodromy

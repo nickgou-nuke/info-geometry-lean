@@ -16,7 +16,7 @@ operator lane: commutator derivations satisfy Leibniz in any noncommutative
 ring.
 -/
 
-namespace InfoGeometry.Projective.NoncommutativeCrossRatio
+namespace NoncommutativeCrossRatio
 
 /-! ## Inner derivations -/
 
@@ -306,4 +306,4 @@ theorem ncCrossRatio_rightFractionalLinear_parabolic (c P1 P2 P3 P4 : R) :
 
 end CrossRatio
 
-end InfoGeometry.Projective.NoncommutativeCrossRatio
+end NoncommutativeCrossRatio

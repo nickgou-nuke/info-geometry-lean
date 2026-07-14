@@ -14,7 +14,7 @@ Wilson-loop readbacks, and small definitional theorems that later owner modules
 can strengthen.
 -/
 
-namespace InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
+namespace ThermodynamicChiralGraphCalculus
 
 open Finset
 
@@ -1129,4 +1129,4 @@ theorem trace_portClosure_correct
 
 end TracePortSemantics
 
-end InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
+end ThermodynamicChiralGraphCalculus

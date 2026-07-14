@@ -12,7 +12,7 @@ inversion, or full orbit classification.  The quotient and Klein-bottle layers
 below are finite coordinate shadows only.
 -/
 
-namespace InfoGeometry.Topology.O55V4KleinBottleFinite
+namespace O55V4KleinBottleFinite
 
 /-- Rational coordinate carrier for the split hyperbolic `5+5` model. -/
 abbrev Vec55 := Fin 10 → ℚ
@@ -152,4 +152,4 @@ theorem finite_o55_v4_klein_packet (x y : Vec55) :
     reflPair0_comm_reflPair1 x,
     kleinBottle_affine_relation 1 x⟩
 
-end InfoGeometry.Topology.O55V4KleinBottleFinite
+end O55V4KleinBottleFinite

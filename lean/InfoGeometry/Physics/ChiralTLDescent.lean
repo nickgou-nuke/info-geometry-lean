@@ -22,7 +22,7 @@ The proof proceeds via:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ChiralTLDescent
+namespace ChiralTLDescent
 
 open Matrix
 open TensorProduct
@@ -247,4 +247,4 @@ theorem chiral_right_kernel_tau_ideal :
 #check chiral_right_tau_ideal
 #check chiral_right_kernel_tau_ideal
 
-end InfoGeometry.Physics.ChiralTLDescent
+end ChiralTLDescent

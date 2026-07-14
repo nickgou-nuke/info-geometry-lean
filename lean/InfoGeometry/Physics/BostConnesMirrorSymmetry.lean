@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
-namespace InfoGeometry.Physics.BostConnesMirrorSymmetry
+namespace BostConnesMirrorSymmetry
 
 /-!
 # Bost-Connes Primon Gas and 3D Mirror Symmetry in C^2
@@ -29,4 +29,4 @@ theorem absolute_rigidity (m : MirrorSymmetry_C2) :
   m.higgs_branch_dim - m.coulomb_branch_dim = 0 :=
   m.witten_index_zero
 
-end InfoGeometry.Physics.BostConnesMirrorSymmetry
+end BostConnesMirrorSymmetry

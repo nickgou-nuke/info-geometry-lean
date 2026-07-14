@@ -23,7 +23,7 @@ noncentral diagonal and applying the crossing-count theorem; it is not stored
 as a field of the CAR data.
 -/
 
-namespace InfoGeometry.Canonical.BosonizationConstructiveCurrent
+namespace BosonizationConstructiveCurrent
 
 open scoped BigOperators
 
@@ -2437,4 +2437,4 @@ theorem cutoffCurrent_commutator_eq_boundary_add_central_of_add_eq_zero
 
 end RawCARModeCompletion
 
-end InfoGeometry.Canonical.BosonizationConstructiveCurrent
+end BosonizationConstructiveCurrent

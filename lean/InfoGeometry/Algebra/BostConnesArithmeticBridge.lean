@@ -32,7 +32,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.BostConnesArithmeticBridge
+namespace BostConnesArithmeticBridge
 
 open InfoGeometry.Algebra.BostConnesAnalytic
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
@@ -108,4 +108,4 @@ theorem ground_state_limit (n : ℕ) (primes : Fin n → ℕ)
       (𝓝 (if i.val = 0 then 1 else 0)) :=
   BostConnesAnalytic.ground_state_limit n primes hpos hmono i
 
-end InfoGeometry.Algebra.BostConnesArithmeticBridge
+end BostConnesArithmeticBridge

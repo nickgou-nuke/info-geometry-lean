@@ -19,7 +19,7 @@ open scoped Topology TensorProduct
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauBostConnesClosureProofs
+namespace SouriauBostConnesClosureProofs
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open Matrix Complex
@@ -225,4 +225,4 @@ theorem canonical_sewn_boundary_chiral_index_vanishes :
     sewnChiralIndex canonicalSewnBoundaryState = 0 :=
   sewn_boundary_chiral_index_vanishes canonicalSewnBoundaryState
 
-end InfoGeometry.Canonical.SouriauBostConnesClosureProofs
+end SouriauBostConnesClosureProofs

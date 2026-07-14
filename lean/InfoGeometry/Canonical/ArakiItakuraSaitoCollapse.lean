@@ -38,7 +38,7 @@ this file.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
+namespace ArakiItakuraSaitoCollapse
 
 open InfoGeometry.Canonical.SouriauModularBregmanOperator
 open InfoGeometry.Canonical.SouriauOperatorBregmanModular
@@ -240,6 +240,6 @@ theorem ofSouriauOperatorialBregmanPacket_divergence
 
 end BoundedDoubledCarrier
 
-end InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
+end ArakiItakuraSaitoCollapse
 
 end noncomputable section

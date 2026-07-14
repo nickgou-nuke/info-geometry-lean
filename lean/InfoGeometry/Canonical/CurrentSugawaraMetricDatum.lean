@@ -8,7 +8,7 @@ It keeps the indefinite signature data separate from the split/Krein carrier
 used elsewhere in the repo.
 -/
 
-namespace InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+namespace CurrentSugawaraMetricDatum
 
 open scoped BigOperators
 
@@ -124,4 +124,4 @@ noncomputable def splitEightCurrentMetricDatum : CurrentMetricDatum ℝ (Fin 8) 
 
 end CurrentMetricDatum
 
-end InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+end CurrentSugawaraMetricDatum

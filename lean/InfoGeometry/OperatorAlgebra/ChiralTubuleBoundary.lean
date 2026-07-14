@@ -28,7 +28,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
+namespace ChiralTubuleBoundary
 
 open InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 open InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
@@ -776,4 +776,4 @@ attribute [rep_depth operator]
   unruhDrivenChiralTubuleOwnerTarget
   unruhDrivenChiralTubule_packet
 
-end InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
+end ChiralTubuleBoundary

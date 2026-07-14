@@ -19,7 +19,7 @@ This is only the trace-counting layer. It does not introduce a non-associative
 Cayley-Dickson multiplication table or a Zorn multiplication table.
 -/
 
-namespace InfoGeometry.Canonical.SplitCayleyDicksonTrace
+namespace SplitCayleyDicksonTrace
 
 open Finset
 open scoped BigOperators
@@ -128,4 +128,4 @@ theorem splitPureTrace_eq_one {q p : ℕ} (hp : 0 < p) :
     splitPureTrace 3 1 = 1 := by
   exact splitPureTrace_eq_one (q := 3) (p := 1) (by norm_num)
 
-end InfoGeometry.Canonical.SplitCayleyDicksonTrace
+end SplitCayleyDicksonTrace

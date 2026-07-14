@@ -18,7 +18,7 @@ structures carrying whichever expansion/partial-derivative data a downstream
 owner chooses to provide.
 -/
 
-namespace InfoGeometry.Clifford.HestenesCauchyRiemann
+namespace HestenesCauchyRiemann
 
 set_option autoImplicit false
 
@@ -230,4 +230,4 @@ structure HestenesAnalyticSocket (ψ : ℝ → ℝ → HestenesSpinor) where
   hestenes_cr_law : ∀ x y : ℝ, satisfy_hestenes_cr (partials x y)
   source : ℝ → ℝ → HestenesSpinor := ψ
 
-end InfoGeometry.Clifford.HestenesCauchyRiemann
+end HestenesCauchyRiemann

@@ -29,7 +29,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+namespace PrimeLeeYangFerromagneticChain
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
@@ -495,4 +495,4 @@ end LeeYangStabilityWitness
 
 end PrimeFerromagneticChain
 
-end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+end PrimeLeeYangFerromagneticChain

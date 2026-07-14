@@ -21,7 +21,7 @@ Hilbert-Pólya spectral theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.PauliParavectorBridge
+namespace PauliParavectorBridge
 
 open scoped Matrix
 
@@ -222,4 +222,4 @@ theorem coupling_holds
 
 end MomentumSpinCoupling
 
-end InfoGeometry.Geometry.PauliParavectorBridge
+end PauliParavectorBridge

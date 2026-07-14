@@ -29,7 +29,7 @@ ends, Seiberg-Witten monopole theory, KMS/cooling geometry, and RH/zeta-zero
 interpretations.
 -/
 
-namespace InfoGeometry.Canonical.APSMcKeanSingerBoundaryBridge
+namespace APSMcKeanSingerBoundaryBridge
 
 /--
 If the APS index readout is `bulkAhatTerm - etaCorrection`, and both the bulk
@@ -84,4 +84,4 @@ theorem aps_mckean_singer_boundary_capstone
       finiteSupertrace analyticIndex bulkAhatTerm etaCorrection
       hMS hAPS hAhat hEta⟩
 
-end InfoGeometry.Canonical.APSMcKeanSingerBoundaryBridge
+end APSMcKeanSingerBoundaryBridge

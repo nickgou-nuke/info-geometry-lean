@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.OperatorAlgebra.JaynesFiniteState
+namespace JaynesFiniteState
 
 universe uR uA uS uι
 
@@ -205,4 +205,4 @@ end FiniteStateCompatibleFamily
 
 end
 
-end InfoGeometry.OperatorAlgebra.JaynesFiniteState
+end JaynesFiniteState

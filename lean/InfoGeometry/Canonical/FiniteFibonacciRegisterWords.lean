@@ -21,7 +21,7 @@ No analytic continuation theorem.
 No universality or fault-tolerance claim.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciRegisterWords
+namespace FiniteFibonacciRegisterWords
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
@@ -165,4 +165,4 @@ theorem registerWordComputationalAction_empty_eq_id {N : ℕ} (r b : Bool → Bo
   funext α
   rfl
 
-end InfoGeometry.Canonical.FiniteFibonacciRegisterWords
+end FiniteFibonacciRegisterWords

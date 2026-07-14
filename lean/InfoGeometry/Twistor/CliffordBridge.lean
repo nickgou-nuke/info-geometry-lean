@@ -21,7 +21,7 @@ bridge.  It makes the bilinear/Clifford and equivariance surfaces explicit.
 
 open scoped Classical
 
-namespace InfoGeometry.Twistor.CliffordBridge
+namespace CliffordBridge
 
 open InfoGeometry.Twistor.PenroseTwistor
 
@@ -85,4 +85,4 @@ noncomputable def twistorCliffordMap
   rw [twistorCliffordMap, CliffordAlgebra.map_apply_ι]
   rfl
 
-end InfoGeometry.Twistor.CliffordBridge
+end CliffordBridge

@@ -19,7 +19,7 @@ existing owners so the thermal reading stays on the correct carrier:
   generator.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordThermalBridge
+namespace SplitCliffordThermalBridge
 
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -204,4 +204,4 @@ theorem normalized_logSplitCliffordThermalBridge_of_strictSymmetry
 
 end Doubled
 
-end InfoGeometry.Canonical.SplitCliffordThermalBridge
+end SplitCliffordThermalBridge

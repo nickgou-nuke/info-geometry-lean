@@ -5,7 +5,7 @@ import Mathlib.Tactic.Linarith
 
 open BigOperators
 
-namespace InfoGeometry.Arithmetic.ZetaGate
+namespace ZetaGate
 
 /-- Abstract representation of the Möbius arithmetic parity function. -/
 noncomputable def mobius_parity (n : ℕ) : ℝ :=
@@ -30,4 +30,4 @@ theorem gate_bounds_structurally_sound (s : ℝ) (hs : 0 < s) :
   have h_pos : 0 < (2 : ℝ)^(-s) := by positivity
   linarith
 
-end InfoGeometry.Arithmetic.ZetaGate
+end ZetaGate

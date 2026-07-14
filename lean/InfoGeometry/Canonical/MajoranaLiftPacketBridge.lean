@@ -19,7 +19,7 @@ This file is a translator surface over existing owners; it does not introduce a
 second ontology.
 -/
 
-namespace InfoGeometry.Canonical.MajoranaLiftPacketBridge
+namespace MajoranaLiftPacketBridge
 
 open InfoGeometry.Core
 open InfoGeometry.Krein
@@ -111,4 +111,4 @@ theorem onsager_phaseChannel_signFlip
 
 end Core
 
-end InfoGeometry.Canonical.MajoranaLiftPacketBridge
+end MajoranaLiftPacketBridge

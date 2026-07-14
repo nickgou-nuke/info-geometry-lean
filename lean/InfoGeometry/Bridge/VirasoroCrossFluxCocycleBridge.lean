@@ -13,7 +13,7 @@ identify the finite coproduct defect with the infinite Virasoro central charge.
 It does not claim to prove the limit.
 -/
 
-namespace InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
+namespace VirasoroCrossFluxCocycleBridge
 
 /--
 Closure debt: an exact mathematical map connecting the finite-stage
@@ -25,4 +25,4 @@ theorem in this bridge file.
 def crossFlux_yields_virasoroCocycle_debt : String :=
   "Open: prove the finite cross-flux-to-Virasoro-cocycle limit with explicit convergence data."
 
-end InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
+end VirasoroCrossFluxCocycleBridge

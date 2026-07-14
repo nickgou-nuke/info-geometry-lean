@@ -9,7 +9,7 @@ identified here with a split Chevalley group of type `G₂`; that classification
 is a separate theorem.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
+namespace SplitCayleyStabilizer
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 
@@ -102,4 +102,4 @@ def autEquivStabilizer :
 @[simp] theorem autEquivStabilizer_apply
     (e : SplitCayleyAut (R := R)) : autEquivStabilizer e = e := rfl
 
-end InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
+end SplitCayleyStabilizer

@@ -27,7 +27,7 @@ open InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzChiralProjectors
+namespace CuntzChiralProjectors
 
 /-! ## Chiral projectors -/
 
@@ -286,4 +286,4 @@ theorem P_odd_hamiltonian (n : ℕ) (ε : Fin n → ℂ) :
     P_odd n (hamiltonian n ε) = 0 :=
   P_odd_of_even n (hamiltonian_is_even n ε)
 
-end InfoGeometry.Algebra.CuntzChiralProjectors
+end CuntzChiralProjectors

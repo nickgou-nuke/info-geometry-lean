@@ -6,7 +6,7 @@ import Mathlib.Algebra.Star.Basic
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CartanInvolution
+namespace CartanInvolution
 
 open Complex
 open InfoGeometry.Canonical.QuaternionCondensate
@@ -151,4 +151,4 @@ def embedH4 (q : H4) : DiracMatrix :=
   fin_cases r <;> fin_cases c <;>
     simp [embedH4, H4.k, embedK, embedOne, embedI, embedJ]
 
-end InfoGeometry.Canonical.CartanInvolution
+end CartanInvolution

@@ -16,7 +16,7 @@ local quotient lane on the noncollision domain:
 * a quotient readout defined only when the denominator is nonzero.
 -/
 
-namespace InfoGeometry.Canonical.WeylLocalCancellationShadow
+namespace WeylLocalCancellationShadow
 
 open InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
 open InfoGeometry.Canonical.WeylCharacterVandermondeShadow
@@ -147,4 +147,4 @@ end LocalCancellationShadowPacket
 
 end LocalShadow
 
-end InfoGeometry.Canonical.WeylLocalCancellationShadow
+end WeylLocalCancellationShadow

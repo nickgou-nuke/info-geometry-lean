@@ -2,7 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 
-namespace InfoGeometry.Canonical.KMSHagedornBridge
+namespace KMSHagedornBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.NoncommutativeModularSignum
@@ -45,4 +45,4 @@ This is the boundary of the thermal cylinder. -/
 def is_hagedorn_temperature (T_H T : ℝ) : Prop :=
   T = T_H
 
-end InfoGeometry.Canonical.KMSHagedornBridge
+end KMSHagedornBridge

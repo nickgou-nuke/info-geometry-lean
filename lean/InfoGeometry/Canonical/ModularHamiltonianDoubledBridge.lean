@@ -18,7 +18,7 @@ Tomita package into explicit `J, ε, J∘ε` equalities on the doubled carrier a
 keeps the `K = -log Δ` meaning via the exponential certificate.
 -/
 
-namespace InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
+namespace ModularHamiltonianDoubledBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -208,4 +208,4 @@ theorem projectedEven_superHamiltonian_eq_doubledExpr
 
 end Core
 
-end InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
+end ModularHamiltonianDoubledBridge

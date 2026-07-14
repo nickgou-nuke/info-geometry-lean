@@ -25,7 +25,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CasimirInvariance
+namespace CasimirInvariance
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -149,4 +149,4 @@ theorem casimirInvariance_packet
       IsCentral V.C := by
   exact ⟨casimirInvarianceOwnerTarget Op G α V u v huv, V.is_central⟩
 
-end InfoGeometry.OperatorAlgebra.CasimirInvariance
+end CasimirInvariance

@@ -24,7 +24,7 @@ open InfoGeometry.Algebra.CuntzContractionLemmas
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzConditionalExpectation
+namespace CuntzConditionalExpectation
 
 /-- The conditional expectation E(x) = Σ_i P_i x P_i.
     A ℂ-linear unital idempotent map onto the diagonal subalgebra. -/
@@ -107,4 +107,4 @@ theorem expectation_is_diagonal_matrix_unit (n : ℕ) (i j : Fin n) :
   · refine ⟨λ _ => 0, ?_⟩
     simp [hij]
 
-end InfoGeometry.Algebra.CuntzConditionalExpectation
+end CuntzConditionalExpectation

@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 
-namespace InfoGeometry.Canonical.CptBoundaryMobius
+namespace CptBoundaryMobius
 
 open Matrix
 
@@ -51,4 +51,4 @@ theorem moebius_zero_infinity_duality :
   dsimp [CPT_local, P_zero, L_spectator]
   decide
 
-end InfoGeometry.Canonical.CptBoundaryMobius
+end CptBoundaryMobius

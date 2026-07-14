@@ -22,7 +22,7 @@ existing STU/Freudenthal proofs.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitAlbert
+namespace SplitAlbert
 
 open scoped BigOperators
 open InfoGeometry.Exceptional.Freudenthal
@@ -124,4 +124,4 @@ theorem splitAlbertCarrier_finrank_eq_27 :
     Module.finrank ℝ SplitAlbertCarrier = 27 := by
   simp [SplitAlbertCarrier, STUCarrier, Module.finrank_pi_fintype]
 
-end InfoGeometry.Canonical.SplitAlbert
+end SplitAlbert

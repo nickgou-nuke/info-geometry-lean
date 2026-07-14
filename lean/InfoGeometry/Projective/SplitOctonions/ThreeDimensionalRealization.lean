@@ -17,7 +17,7 @@ The point is simply:
 That gives the concrete 3D realization map on the Zorn null shell.
 -/
 
-namespace InfoGeometry.Projective.SplitOctonions.ThreeDimensionalRealization
+namespace ThreeDimensionalRealization
 
 open InfoGeometry.Projective.SplitOctonions
 open ZornProjectiveDatum
@@ -80,4 +80,4 @@ theorem upperLowerLightray_realization_iff_dot_zero
   rw [projective_polar_incidence_iff (B := dot3Bilin)]
   simp [dot3Bilin, polarExpr_closed, upperLightrayRep, lowerLightrayRep]
 
-end InfoGeometry.Projective.SplitOctonions.ThreeDimensionalRealization
+end ThreeDimensionalRealization

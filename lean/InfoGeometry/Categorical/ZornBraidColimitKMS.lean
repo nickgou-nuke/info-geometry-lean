@@ -48,7 +48,7 @@ This module constructs the formal mathematical structures that connect the
   of freedom of the finite Zorn representations.
 -/
 
-namespace InfoGeometry.Categorical.ZornBraidColimitKMS
+namespace ZornBraidColimitKMS
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -127,4 +127,4 @@ theorem evaluate_continuum_boltzmann_weight_off_diag {j k : J} (h : state.stageI
 
 end ZornBraidKMSState
 
-end InfoGeometry.Categorical.ZornBraidColimitKMS
+end ZornBraidColimitKMS

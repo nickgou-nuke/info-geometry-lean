@@ -9,7 +9,7 @@ This file stays at the ring level: no Taylor series, no analytic continuation,
 and no functional-calculus wrapper.
 -/
 
-namespace InfoGeometry.Canonical.CompactifiedThermalOperators
+namespace CompactifiedThermalOperators
 
 /--
 The inductive addition step for the Cayley/Möbius compactification map.
@@ -51,4 +51,4 @@ theorem compactified_doubling_step
     _ = (1 + Tn * Tn) * (1 - qn * qn) := h2
     _ = (1 - qn * qn) * (1 + Tn * Tn) := by ring
 
-end InfoGeometry.Canonical.CompactifiedThermalOperators
+end CompactifiedThermalOperators

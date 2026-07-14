@@ -4,7 +4,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 open Matrix
 
-namespace InfoGeometry.Algebra.SpinCore
+namespace SpinCore
 
 /-- The 2-dimensional rational spin space canvas. -/
 def SpinSpace : Type := Fin 2 → ℚ
@@ -25,4 +25,4 @@ def J_zero : Matrix (Fin 2) (Fin 2) ℚ :=
 theorem j_plus_nilpotent : J_plus * J_plus = 0 := by ext i j; fin_cases i <;> fin_cases j <;> simp [J_plus, mul_apply, Fin.sum_univ_two]
 theorem j_minus_nilpotent : J_minus * J_minus = 0 := by ext i j; fin_cases i <;> fin_cases j <;> simp [J_minus, mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.Algebra.SpinCore
+end SpinCore

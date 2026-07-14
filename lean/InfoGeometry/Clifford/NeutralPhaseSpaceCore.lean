@@ -21,7 +21,7 @@ This file is deliberately algebraic:
 No doubled/Krein realization is imported here.
 -/
 
-namespace InfoGeometry.Clifford.NeutralPhaseSpaceCore
+namespace NeutralPhaseSpaceCore
 
 universe u
 
@@ -104,4 +104,4 @@ abbrev NeutralPhaseClifford (E : Type*) [AddCommGroup E] [Module ℝ E] :=
 
 end Core
 
-end InfoGeometry.Clifford.NeutralPhaseSpaceCore
+end NeutralPhaseSpaceCore

@@ -25,7 +25,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimeLeeYangFerromagnet
+namespace PrimeLeeYangFerromagnet
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
@@ -200,4 +200,4 @@ theorem primeLeeYangFerromagnetOwnerTarget :
 
 end FinitePrimeChainData
 
-end InfoGeometry.Canonical.PrimeLeeYangFerromagnet
+end PrimeLeeYangFerromagnet

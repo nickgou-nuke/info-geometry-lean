@@ -19,7 +19,7 @@ No Poincaré-ball topology.
 No boundary CFT construction.
 -/
 
-namespace InfoGeometry.Canonical.BoundaryLoopSuperClosure
+namespace BoundaryLoopSuperClosure
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
@@ -162,4 +162,4 @@ theorem lifted_commutes_deck (P : BoundaryLoopClosurePacket)
 
 end BoundaryLoopClosurePacket
 
-end InfoGeometry.Canonical.BoundaryLoopSuperClosure
+end BoundaryLoopSuperClosure

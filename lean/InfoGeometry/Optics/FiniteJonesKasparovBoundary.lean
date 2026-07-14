@@ -32,7 +32,7 @@ import InfoGeometry.Optics.FiniteJonesStinespringConstructive
 
 noncomputable section
 
-namespace InfoGeometry.Optics.FiniteJonesKasparovBoundary
+namespace FiniteJonesKasparovBoundary
 
 open InfoGeometry.Geometry.ConstructiveKasparov
 open InfoGeometry.Optics.FiniteJonesModel
@@ -196,4 +196,4 @@ theorem exists_projected_mode_of_index_ne_zero
 
 end FiniteOpticalKernelReadout
 
-end InfoGeometry.Optics.FiniteJonesKasparovBoundary
+end FiniteJonesKasparovBoundary

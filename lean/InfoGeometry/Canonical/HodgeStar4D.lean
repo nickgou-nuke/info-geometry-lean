@@ -14,7 +14,7 @@ the decomposition into Self-Dual (SD) and Anti-Self-Dual (ASD) components
 via the chiral projectors.
 -/
 
-namespace InfoGeometry.Canonical.HodgeStar4D
+namespace HodgeStar4D
 
 open Matrix
 open Complex
@@ -92,4 +92,4 @@ theorem P_SD_mul_P_ASD_eq_zero : P_SD * P_ASD = 0 := by
 
 end
 
-end InfoGeometry.Canonical.HodgeStar4D
+end HodgeStar4D

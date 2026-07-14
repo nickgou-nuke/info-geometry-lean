@@ -22,7 +22,7 @@ BUCKET 3: OPEN CLOSURE DEBT:
 --------------------------
 -/
 
-namespace InfoGeometry.Canonical.DeterminantBasicBridge
+namespace DeterminantBasicBridge
 
 open Matrix
 
@@ -104,4 +104,4 @@ theorem det_fromBlocks₂₂_eq
     det (Matrix.fromBlocks A B C D) = det D * det (A - B * ⅟D * C) := by
   simpa using (Matrix.det_fromBlocks₂₂ A B C D)
 
-end InfoGeometry.Canonical.DeterminantBasicBridge
+end DeterminantBasicBridge

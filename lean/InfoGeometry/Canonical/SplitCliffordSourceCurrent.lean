@@ -11,7 +11,7 @@ This file does not claim truncation is already proved from split completion.
 It isolates the exact truncation theorem obligation.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordSourceCurrent
+namespace SplitCliffordSourceCurrent
 
 open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceCarrier
@@ -224,4 +224,4 @@ theorem Jlift_from_cutoff (L : SplitCurrentLiftDatum 𝕜 V) :
 
 end EndLift
 
-end InfoGeometry.Canonical.SplitCliffordSourceCurrent
+end SplitCliffordSourceCurrent

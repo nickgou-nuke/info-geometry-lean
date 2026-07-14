@@ -16,7 +16,7 @@ Hamiltonian as the Souriau thermal generator and as the expectation term in the
 free-energy functional.
 -/
 
-namespace InfoGeometry.Canonical.SouriauGWCountOTBridge
+namespace SouriauGWCountOTBridge
 
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 open InfoGeometry.GromovWittenErlangen
@@ -124,4 +124,4 @@ theorem gwCount_freeEnergy_and_flow_packet
 
 end SouriauGWCountOTCalibration
 
-end InfoGeometry.Canonical.SouriauGWCountOTBridge
+end SouriauGWCountOTBridge

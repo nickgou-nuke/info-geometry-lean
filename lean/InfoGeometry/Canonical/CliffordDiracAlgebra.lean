@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 import InfoGeometry.Carrier.HestenesKrein
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 
-namespace InfoGeometry.Canonical.CliffordDiracAlgebra
+namespace CliffordDiracAlgebra
 
 open LinearMap
 
@@ -195,4 +195,4 @@ theorem odd_square_commutes_hodge {W : Type*} [AddCommGroup W] [Module ℝ W]
 
 end CarrierBridge
 
-end InfoGeometry.Canonical.CliffordDiracAlgebra
+end CliffordDiracAlgebra

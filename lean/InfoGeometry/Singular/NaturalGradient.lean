@@ -26,7 +26,7 @@ open InfoGeometry.Clifford.Decomposition
 open InfoGeometry.Clifford.TowerMatrix
 open Matrix
 
-namespace InfoGeometry.Singular.NaturalGradient
+namespace NaturalGradient
 
 variable {n : ℕ} (J1 : Matrix (Fin 2) (Fin 2) ℝ)
 variable (hJ1_sq : J1 * J1 = 1)
@@ -49,4 +49,4 @@ theorem natural_gradient_symmetry (G G_pinv : Mat n)
     (h : IsMoorePenroseInverse G G_pinv) :
     (G * G_pinv)† = G * G_pinv := h.eq3
 
-end InfoGeometry.Singular.NaturalGradient
+end NaturalGradient

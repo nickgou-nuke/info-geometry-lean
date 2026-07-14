@@ -17,7 +17,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Categorical.FibonacciBraidDirectLimit
+namespace FibonacciBraidDirectLimit
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Topological.FibonacciAnyons
@@ -160,4 +160,4 @@ theorem stable_projective_gate_cone_compat
   stable_fibonacci_projective_gate_compat
     (φ := φ) (ι := ι) phase readout w h_readout h_ι_smul h_cone n
 
-end InfoGeometry.Categorical.FibonacciBraidDirectLimit
+end FibonacciBraidDirectLimit

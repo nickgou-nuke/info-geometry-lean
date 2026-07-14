@@ -21,7 +21,7 @@ inverse commutator, the dilation gap, and the Drazin core projector all land in
 grade zero.
 -/
 
-namespace InfoGeometry.Canonical.KKTGeneralizedInverseBridge
+namespace KKTGeneralizedInverseBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.KKTCore
@@ -94,4 +94,4 @@ local notation "EndH" => E →L[ℝ] E
 
 end Core
 
-end InfoGeometry.Canonical.KKTGeneralizedInverseBridge
+end KKTGeneralizedInverseBridge

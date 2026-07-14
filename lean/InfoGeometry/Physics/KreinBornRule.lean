@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 
 open Matrix Complex
 
-namespace InfoGeometry.Physics.KreinBornRule
+namespace KreinBornRule
 
 set_option autoImplicit false
 
@@ -98,4 +98,4 @@ theorem KreinState.trace_eq_one
 
 end FiniteDimensional
 
-end InfoGeometry.Physics.KreinBornRule
+end KreinBornRule

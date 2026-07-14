@@ -18,7 +18,7 @@ This file does not introduce new owners; it repackages existing ones:
 - `SuperchargeTransportBridge` for the second-derivative Hessian landing.
 -/
 
-namespace InfoGeometry.Canonical.SuperchargeGapHessianBridge
+namespace SuperchargeGapHessianBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -253,4 +253,4 @@ theorem root_supercharge_lichnerowicz_closure
 
 end Core
 
-end InfoGeometry.Canonical.SuperchargeGapHessianBridge
+end SuperchargeGapHessianBridge

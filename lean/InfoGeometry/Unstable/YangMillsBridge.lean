@@ -12,7 +12,7 @@ Bridge-layer contracts linking the existing chiral RG flow scaffold to
 Yang-Mills mass-gap obligations.
 -/
 
-namespace InfoGeometry.Unstable.YangMillsBridge
+namespace YangMillsBridge
 
 open InfoGeometry.Canonical.ChiralRGFlow
 open InfoGeometry.Canonical.GaugeGroups
@@ -708,4 +708,4 @@ theorem millennium_obligations_of_expectationSeedLayersFiniteFromLogDet
 
 end YangMillsMassGapBridge
 
-end InfoGeometry.Unstable.YangMillsBridge
+end YangMillsBridge

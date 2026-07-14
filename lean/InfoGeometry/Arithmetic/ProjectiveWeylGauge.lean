@@ -18,7 +18,7 @@ import InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ProjectiveWeylGauge
+namespace ProjectiveWeylGauge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
@@ -347,4 +347,4 @@ theorem total_eq_scale_mul_shape
 
 end ProjectiveWeylGaugeCalibration
 
-end InfoGeometry.Arithmetic.ProjectiveWeylGauge
+end ProjectiveWeylGauge

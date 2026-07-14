@@ -23,7 +23,7 @@ measuring α = G_M·Z₀/4 ≈ 1/137 — the fine-structure constant of the
 universe, scaled by the vacuum impedance.
 -/
 
-namespace InfoGeometry.Canonical.CosmologicalCoupling
+namespace CosmologicalCoupling
 
 /--
 **The Holographic Coupling Theorem.**
@@ -96,4 +96,4 @@ theorem majorana_resistance_from_coupling (R_M G_M alpha Z_0 : ℝ)
     Cantor boundary onto the continuous electromagnetic vacuum.
 -/
 
-end InfoGeometry.Canonical.CosmologicalCoupling
+end CosmologicalCoupling

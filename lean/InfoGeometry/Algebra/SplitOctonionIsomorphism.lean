@@ -29,7 +29,7 @@ all structural operations are preserved.
 open InfoGeometry.Algebra.SplitOctonionQ
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace InfoGeometry.Algebra.SplitOctonionIsomorphism
+namespace SplitOctonionIsomorphism
 
 /-! ## 1. Carrier-level promotion -/
 
@@ -140,4 +140,4 @@ theorem isomorphism_packet :
   ⟨det_preserved, traceReversal_preserved,
     mulTraceReversal_e11_preserved, mulTraceReversal_e22_preserved⟩
 
-end InfoGeometry.Algebra.SplitOctonionIsomorphism
+end SplitOctonionIsomorphism

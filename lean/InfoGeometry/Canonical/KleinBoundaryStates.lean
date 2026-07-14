@@ -15,7 +15,7 @@ This module packages the concrete `Cl(5,5)` spinor decomposition used by the
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.KleinBoundaryStates
+namespace KleinBoundaryStates
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Canonical.Cl55V4SpinorFragmentation
@@ -54,4 +54,4 @@ theorem boundary_sandwich_involutions (p : ConformalNullPair) (x : Cl55) :
   · exact J_sandwich_involution p x
   · exact S_sandwich_involution p x
 
-end InfoGeometry.Canonical.KleinBoundaryStates
+end KleinBoundaryStates

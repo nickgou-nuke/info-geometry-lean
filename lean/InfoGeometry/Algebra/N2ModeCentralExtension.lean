@@ -17,7 +17,7 @@ This is an algebraic direct-sum/cocycle construction, not an analytic limit or
 Sugawara representation theorem.
 -/
 
-namespace InfoGeometry.Algebra.N2ModeCentralExtension
+namespace N2ModeCentralExtension
 
 open Module
 open VirasoroProject
@@ -255,4 +255,4 @@ theorem bracket_central_component_eq_cocycle
 
 end N2CentralExt
 
-end InfoGeometry.Algebra.N2ModeCentralExtension
+end N2ModeCentralExtension

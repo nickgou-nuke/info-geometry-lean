@@ -16,7 +16,7 @@ parameters; no functional calculus, Taylor expansion, analytic continuation, or
 operator limit is asserted.
 -/
 
-namespace InfoGeometry.Canonical.ThermalCompactRecurrence
+namespace ThermalCompactRecurrence
 
 section RingLemmas
 
@@ -324,4 +324,4 @@ def bosonicNewtonGirardStep {R : Type*} [CommRing R]
     acc + A k * Z (N - k)) 0
   invNat N * sum
 
-end InfoGeometry.Canonical.ThermalCompactRecurrence
+end ThermalCompactRecurrence

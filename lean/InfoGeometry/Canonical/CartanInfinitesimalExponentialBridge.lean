@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
+namespace CartanInfinitesimalExponentialBridge
 
 open InfoGeometry.Canonical.HestenesAnalyticity
 open InfoGeometry.Krein
@@ -262,4 +262,4 @@ theorem hestenesCartan_eigen_image_is_analytic
 
 end HestenesKrein
 
-end InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
+end CartanInfinitesimalExponentialBridge

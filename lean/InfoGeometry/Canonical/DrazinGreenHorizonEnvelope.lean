@@ -28,7 +28,7 @@ projector.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
+namespace DrazinGreenHorizonEnvelope
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.HorizonZitterModes
@@ -187,4 +187,4 @@ def toDrazinFrequencyData
     rw [G.P_harm_def, G.P_reg_def]
   harmonic_self_adjoint := G.P_harm_self_adjoint
 
-end InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
+end DrazinGreenHorizonEnvelope

@@ -13,7 +13,7 @@ owned count/projective and scalar surfaces as the canonical log-volume and
 negative-log-volume deformation lane.
 -/
 
-namespace InfoGeometry.Canonical.ModularVolumeDeformationBridge
+namespace ModularVolumeDeformationBridge
 
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Canonical.RelativePotentialScalarBridge
@@ -96,4 +96,4 @@ theorem scalar_modularPotential_is_neg_log
 
 end Scalar
 
-end InfoGeometry.Canonical.ModularVolumeDeformationBridge
+end ModularVolumeDeformationBridge

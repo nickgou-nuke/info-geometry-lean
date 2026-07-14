@@ -15,7 +15,7 @@ act by negative identity.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.BraidNegativeIdentityMonodromy
+namespace BraidNegativeIdentityMonodromy
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 
@@ -84,4 +84,4 @@ theorem majorana_projective_inverse_bridge :
 #check B3_full_twist_negative
 #check negative_root_doubles_to_identity
 
-end InfoGeometry.Topology.BraidNegativeIdentityMonodromy
+end BraidNegativeIdentityMonodromy

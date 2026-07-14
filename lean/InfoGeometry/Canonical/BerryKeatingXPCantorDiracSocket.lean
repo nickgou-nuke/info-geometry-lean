@@ -28,7 +28,7 @@ The operator existence problem remains socketed.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
+namespace BerryKeatingXPCantorDiracSocket
 
 open InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 abbrev PrimeCutoff := InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.PrimeCutoff
@@ -61,4 +61,4 @@ structure BerryKeatingCantorDiracBridge
   cantorDirac :
     InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator.FiniteCantorZetaDirac P
 
-end InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
+end BerryKeatingXPCantorDiracSocket

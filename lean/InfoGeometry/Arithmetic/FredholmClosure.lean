@@ -29,7 +29,7 @@ trace-class owner file constructs them from first principles.
 open Complex
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.FredholmClosure
+namespace FredholmClosure
 
 open InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 
@@ -213,4 +213,4 @@ theorem fredholm_determinant_mul_zeta_eq_one
     C.determinant s * C.zeta s = 1 :=
   C.determinant_mul_zeta_eq_one s hs
 
-end InfoGeometry.Arithmetic.FredholmClosure
+end FredholmClosure

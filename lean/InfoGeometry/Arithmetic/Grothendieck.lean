@@ -4,7 +4,7 @@ import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import DAG.AffineProjectiveClosure
 import DAG.ChiralDiracAnticommutation
 
-namespace InfoGeometry.Arithmetic.Grothendieck
+namespace Grothendieck
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Analysis.BregmanAnalyticBound
@@ -58,4 +58,4 @@ theorem grothendieck_finite_inputs {n0 n1 n2 : ℕ}
 def grothendieck_debt : String :=
   DAG.AffineProjectiveClosure.affine_projective_closure_debt
 
-end InfoGeometry.Arithmetic.Grothendieck
+end Grothendieck

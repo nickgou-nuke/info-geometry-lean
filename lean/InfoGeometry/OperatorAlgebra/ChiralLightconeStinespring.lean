@@ -20,7 +20,7 @@ import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
+namespace ChiralLightconeStinespring
 
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 open InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
@@ -648,4 +648,4 @@ def ChiralLightconeStinespringOwnerTarget
     (ChiralLightconeStinespringClinch
       System Dilated Env Carrier)
 
-end InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
+end ChiralLightconeStinespring

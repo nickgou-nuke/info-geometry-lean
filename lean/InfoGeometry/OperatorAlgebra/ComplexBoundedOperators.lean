@@ -13,6 +13,6 @@ noncomputable section
 open scoped InnerProductSpace
 open scoped BigOperators
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
+namespace ComplexBoundedOperators
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
+end ComplexBoundedOperators

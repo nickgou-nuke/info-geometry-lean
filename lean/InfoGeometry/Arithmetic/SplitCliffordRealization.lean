@@ -16,7 +16,7 @@ open InfoGeometry.OperatorAlgebra.CliffordCAR
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.SplitCliffordRealization
+namespace SplitCliffordRealization
 
 universe uK
 
@@ -421,4 +421,4 @@ def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ) :
     SplitCliffordRealizationTarget K n :=
   mkRealization cl11 n
 
-end InfoGeometry.Arithmetic.SplitCliffordRealization
+end SplitCliffordRealization

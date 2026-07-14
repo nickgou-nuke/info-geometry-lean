@@ -17,7 +17,7 @@ algebra.  It records the two independently owned surfaces side by side:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalCurrentHierarchyBoundary
+namespace ConformalCurrentHierarchyBoundary
 
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
@@ -69,4 +69,4 @@ theorem boundary_current_heisenberg
 
 end ConformalCurrentBoundary
 
-end InfoGeometry.Canonical.ConformalCurrentHierarchyBoundary
+end ConformalCurrentHierarchyBoundary

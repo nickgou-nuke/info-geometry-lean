@@ -22,7 +22,7 @@ open InfoGeometryCore
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PauliHestenesSpinMomentum
+namespace PauliHestenesSpinMomentum
 
 open scoped Matrix
 
@@ -1098,4 +1098,4 @@ attribute [rep_depth operator]
   PauliHestenesChiralLightconeBridge
   PauliHestenesChiralLightconeBridge.chiral_lightcone_readout_of_null_momentum
 
-end InfoGeometry.Canonical.PauliHestenesSpinMomentum
+end PauliHestenesSpinMomentum

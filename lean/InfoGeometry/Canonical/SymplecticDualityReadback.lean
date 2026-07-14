@@ -12,7 +12,7 @@ finite readback law: localized indices are transported along involutive
 reindexings of the point and character labels.
 -/
 
-namespace InfoGeometry.Canonical.SymplecticDualityReadback
+namespace SymplecticDualityReadback
 
 universe u v w
 
@@ -139,4 +139,4 @@ theorem grassmannianGr24_readback_identity
   funext p χ
   rfl
 
-end InfoGeometry.Canonical.SymplecticDualityReadback
+end SymplecticDualityReadback

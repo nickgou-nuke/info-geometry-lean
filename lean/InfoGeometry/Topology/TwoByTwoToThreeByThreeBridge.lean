@@ -19,7 +19,7 @@ The file proves only finite matrix identities.  It does not prove an `SU(2)` to
 parafermion/confinement statement.
 -/
 
-namespace InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
+namespace TwoByTwoToThreeByThreeBridge
 
 open Matrix
 open InfoGeometry.CognitiveTopology.ExceptionalPoints
@@ -97,4 +97,4 @@ theorem embeddedJordanNilpotent_commutes_vortexOperator (v : AharonovBohmVortex)
     simp [embeddedJordanNilpotent, linearEmbed2to3, jordanNilpotent,
       vortexOperator, diagonalVortexOperator, Matrix.mul_apply, Fin.sum_univ_three]
 
-end InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
+end TwoByTwoToThreeByThreeBridge

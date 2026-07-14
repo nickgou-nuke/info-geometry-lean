@@ -22,7 +22,7 @@ surfaces; this module does not replace those owner theorems.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
+namespace GrandCanonicalThermodynamicEngine
 
 open InfoGeometry.Thermodynamics.SouriauWeylPartition
 open InfoGeometry.Dynamics.HamiltonianFlowBridge
@@ -232,4 +232,4 @@ theorem positive_roots_spectral_encoding
     ∃ (energy : ℝ), energy = Real.log (p : ℝ) :=
   Engine.flow.spectralCompatibility p hp
 
-end InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
+end GrandCanonicalThermodynamicEngine

@@ -15,7 +15,7 @@ This is the finite theorem-root behind the formal cancellation
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeBosonFermionGas
+namespace PrimeBosonFermionGas
 
 open scoped BigOperators
 
@@ -290,4 +290,4 @@ theorem log_prod_prime_pow_of_prime
   intro i hi
   exact Nat.Prime.pos (hprime i hi)
 
-end InfoGeometry.Arithmetic.PrimeBosonFermionGas
+end PrimeBosonFermionGas

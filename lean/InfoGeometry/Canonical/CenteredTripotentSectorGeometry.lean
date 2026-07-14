@@ -19,7 +19,7 @@ while the imaginary axis is read back operatorially on the doubled carrier.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CenteredTripotentSectorGeometry
+namespace CenteredTripotentSectorGeometry
 
 open InfoGeometry.Canonical.ZetaStandardRealizations
 open InfoGeometry.Canonical.TrifactorDecomposition
@@ -139,4 +139,4 @@ theorem centeredHestenesCoordinate_eq_real_shift_plus_imag_axis (z : ℂ) :
 
 end DoubledReadback
 
-end InfoGeometry.Canonical.CenteredTripotentSectorGeometry
+end CenteredTripotentSectorGeometry

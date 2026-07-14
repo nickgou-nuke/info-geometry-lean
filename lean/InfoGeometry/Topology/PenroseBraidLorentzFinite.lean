@@ -17,7 +17,7 @@ topology, Jones/Kauffman invariants, Lorentz/Spin/Pin/biquaternion representatio
 theorems, particle physics, spacetime emergence, or infinite braid colimits.
 -/
 
-namespace InfoGeometry.Topology.PenroseBraidLorentzFinite
+namespace PenroseBraidLorentzFinite
 
 /-- Five pentagrid directions as labels. -/
 abbrev FiveLabel := ZMod 5
@@ -116,4 +116,4 @@ theorem finite_cl11_packet :
       cl11Plus * cl11Minus + cl11Minus * cl11Plus = (0 : Mat2Z) := by
   exact ⟨cl11Plus_sq, cl11Minus_sq, cl11_anticomm⟩
 
-end InfoGeometry.Topology.PenroseBraidLorentzFinite
+end PenroseBraidLorentzFinite

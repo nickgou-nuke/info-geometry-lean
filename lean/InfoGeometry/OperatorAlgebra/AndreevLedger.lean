@@ -22,7 +22,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.AndreevLedger
+namespace AndreevLedger
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
@@ -324,4 +324,4 @@ theorem andreevPair_majorana_packet
       A.theta P.evenMajorana = P.evenMajorana := by
   exact ⟨andreevLedgerOwnerTarget V A P, P.theta_evenMajorana_eq_evenMajorana⟩
 
-end InfoGeometry.OperatorAlgebra.AndreevLedger
+end AndreevLedger

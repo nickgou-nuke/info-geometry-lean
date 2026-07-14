@@ -28,7 +28,7 @@ their theorem-owner modules; they are not derived from the finite matrix tower
 alone.
 -/
 
-namespace InfoGeometry.Canonical.CliffordCantorModeHierarchy
+namespace CliffordCantorModeHierarchy
 
 open InfoGeometry.Canonical.CantorCylinderLattice
 open InfoGeometry.Canonical.KreinProjectorLattice
@@ -419,4 +419,4 @@ theorem cliffordCantorModeHierarchyPacket
 
 end TheoremPacket
 
-end InfoGeometry.Canonical.CliffordCantorModeHierarchy
+end CliffordCantorModeHierarchy

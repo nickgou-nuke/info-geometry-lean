@@ -13,7 +13,7 @@ finite parity supertrace, and the analytic limit is inverse zeta.  The bosonic
 zeta trace and ordinary positive fermion trace remain separate.
 -/
 
-namespace InfoGeometry.Canonical.WeylSupertraceOwner
+namespace WeylSupertraceOwner
 
 open InfoGeometry.Algebraic.SplitSignature
 
@@ -99,4 +99,4 @@ structure SplitWeylSupertraceShadow (n : ℕ) where
 
 
 
-end InfoGeometry.Canonical.WeylSupertraceOwner
+end WeylSupertraceOwner

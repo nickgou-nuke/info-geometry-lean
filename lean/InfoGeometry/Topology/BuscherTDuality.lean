@@ -10,7 +10,7 @@ and proves that the T-duality transformation preserves the non-orientable
 V₄/Q₈ boundary conditions of the emergent spacetime.
 -/
 
-namespace InfoGeometry.Topology.BuscherTDuality
+namespace BuscherTDuality
 
 variable (M : Type _) [Field M]
 
@@ -53,4 +53,4 @@ theorem t_duality_preserves_q8_boundary (bg : StringBackground M)
   have h_inv : bg.g_yy⁻¹ = bg.g_yy := inv_eq_of_mul_eq_one_left h_q8
   rw [h_inv, h_q8]
 
-end InfoGeometry.Topology.BuscherTDuality
+end BuscherTDuality

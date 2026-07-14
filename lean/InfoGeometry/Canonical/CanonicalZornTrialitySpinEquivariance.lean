@@ -18,7 +18,7 @@ does not identify the internal axis cycle with the outer Cartan triality.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
+namespace CanonicalZornTrialitySpinEquivariance
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
@@ -259,6 +259,6 @@ theorem triality_clifford_spin_five_grade_closure
     cliffordAxisCycle_ι V,
     conformalTriality_bracket A B⟩
 
-end InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
+end CanonicalZornTrialitySpinEquivariance
 
 end noncomputable section

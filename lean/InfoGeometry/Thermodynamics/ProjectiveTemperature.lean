@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Thermodynamics.ProjectiveTemperature
+namespace ProjectiveTemperature
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
@@ -178,4 +178,4 @@ theorem PrimitiveTemperatureInversionCalibration.primitiveWeightSum_eq_inverted_
   rw [primitiveWeightSum_eq_integral_mellinKernel A]
   exact PrimitiveTemperatureInversionCalibration.inversion_integral C
 
-end InfoGeometry.Thermodynamics.ProjectiveTemperature
+end ProjectiveTemperature

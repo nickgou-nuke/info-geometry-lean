@@ -9,7 +9,7 @@ import Mathlib.LinearAlgebra.Eigenspace.Charpoly
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.LatticeHilbertPolyaPipeline
+namespace LatticeHilbertPolyaPipeline
 
 universe u
 
@@ -1016,4 +1016,4 @@ theorem xi_ne_zero_of_hilbertSelfAdjoint_finiteCharacteristicDeterminant_offCrit
 
 end HilbertPolyaLemmaSeries
 
-end InfoGeometry.Arithmetic.LatticeHilbertPolyaPipeline
+end LatticeHilbertPolyaPipeline

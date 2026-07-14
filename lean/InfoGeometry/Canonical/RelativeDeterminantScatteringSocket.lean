@@ -13,7 +13,7 @@ packet propositions.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
+namespace RelativeDeterminantScatteringSocket
 
 universe uH uScat
 
@@ -58,4 +58,4 @@ def constructRelativeDeterminantScatteringTarget
     (P : RelativeDeterminantScatteringPacket.{uH, uScat}) :
     RelativeDeterminantScatteringTarget := P
 
-end InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
+end RelativeDeterminantScatteringSocket

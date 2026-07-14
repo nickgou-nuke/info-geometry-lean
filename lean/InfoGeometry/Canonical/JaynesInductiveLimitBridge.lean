@@ -19,7 +19,7 @@ any completeness theorem. It records the algebraic inductive skeleton only.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.JaynesInductiveLimitBridge
+namespace JaynesInductiveLimitBridge
 
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -88,4 +88,4 @@ end JaynesInductivePacket
 
 end Tower
 
-end InfoGeometry.Canonical.JaynesInductiveLimitBridge
+end JaynesInductiveLimitBridge

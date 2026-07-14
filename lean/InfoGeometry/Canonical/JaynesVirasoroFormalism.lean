@@ -20,7 +20,7 @@ new Virasoro theorem. It packages the existing owners into a single Jaynes-
 adapted formalism surface.
 -/
 
-namespace InfoGeometry.Canonical.JaynesVirasoroFormalism
+namespace JaynesVirasoroFormalism
 
 open MeasureTheory
 open InfoGeometry.Canonical.JaynesFormalism
@@ -145,4 +145,4 @@ end Sugawara
 
 end Ward
 
-end InfoGeometry.Canonical.JaynesVirasoroFormalism
+end JaynesVirasoroFormalism

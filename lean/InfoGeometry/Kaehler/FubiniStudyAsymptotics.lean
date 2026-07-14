@@ -11,7 +11,7 @@ of the line bundle and the Poincaré form near the singularity grows polynomiall
 as $\mathcal{O}(p^3)$ as $p \to \infty$.
 -/
 
-namespace InfoGeometry.Kaehler.FubiniStudyAsymptotics
+namespace FubiniStudyAsymptotics
 
 set_option linter.unusedSectionVars false
 
@@ -30,4 +30,4 @@ theorem fubini_study_asymptotics (x : M)
     (fun p : ℕ => FubiniStudyMetric p x / PoincareForm x) =O[atTop] (fun p : ℕ => (p : ℝ)^3) :=
   hAsymp
 
-end InfoGeometry.Kaehler.FubiniStudyAsymptotics
+end FubiniStudyAsymptotics

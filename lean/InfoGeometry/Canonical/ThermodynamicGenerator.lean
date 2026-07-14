@@ -21,7 +21,7 @@ existing owner surface:
   relational datum.
 -/
 
-namespace InfoGeometry.Canonical.ThermodynamicGenerator
+namespace ThermodynamicGenerator
 
 open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -932,4 +932,4 @@ theorem liftedEinsteinAnomalyMassieuPotential_normalizedInfinitesimalLaw_of_proj
 
 end Anomaly
 
-end InfoGeometry.Canonical.ThermodynamicGenerator
+end ThermodynamicGenerator

@@ -1,0 +1,110 @@
+# Auto archive parity — 2026-07-15
+
+Source commit: `ea2e4c7ac662cc9270a42bc446e3c8278c8c656f`
+Tracked Lean files: 906
+Live Lean files scanned: 24054
+Errors: 0
+Classifications: {'archive_only_basename': 662, 'basename_variant': 123, 'exact_live': 121}
+
+## Ranked zero-placeholder archive-only candidates
+
+- `proofs/V4_test2.lean` — 3 lines, 1 declarations, 0 imports
+- `proofs/GrandUnifiedVacuum.lean` — 15 lines, 7 declarations, 0 imports
+- `proofs/FreedHeteroticTorsion.lean` — 15 lines, 6 declarations, 0 imports
+- `proofs/TomitaTakesakiRelativeEntropy.lean` — 20 lines, 5 declarations, 0 imports
+- `proofs/T5Z2AnomalyCancellation.lean` — 22 lines, 5 declarations, 0 imports
+- `proofs/SullivanShimuraTransfer.lean` — 24 lines, 7 declarations, 0 imports
+- `proofs/LocalConcavity.lean` — 24 lines, 6 declarations, 0 imports
+- `proofs/LanglandsGromovWitten.lean` — 26 lines, 7 declarations, 0 imports
+- `proofs/MaxCalFeynmanGaussBonnet.lean` — 28 lines, 6 declarations, 0 imports
+- `proofs/HolographicArchitect.lean` — 28 lines, 5 declarations, 0 imports
+- `proofs/NonIsoConf3QuadricCompactification.lean` — 50 lines, 3 declarations, 0 imports
+- `proofs/Pin55AnomalyInflow.lean` — 54 lines, 4 declarations, 0 imports
+- `proofs/FreedAnomalyCancellation.lean` — 56 lines, 12 declarations, 0 imports
+- `proofs/wareham_cga/WarehamCGA.lean` — 57 lines, 7 declarations, 0 imports
+- `proofs/SpinorVectorDuality.lean` — 61 lines, 9 declarations, 0 imports
+- `proofs/KleinBottleCobordism.lean` — 64 lines, 15 declarations, 0 imports
+- `proofs/EntropicHodgeDecomposition.lean` — 101 lines, 11 declarations, 0 imports
+- `formal-theory-quantum.lean` — 205 lines, 13 declarations, 0 imports
+- `lean_sandbox/CofactorExpansion.lean` — 7 lines, 1 declarations, 1 imports
+- `proofs/CofactorExpansion.lean` — 7 lines, 1 declarations, 1 imports
+- `proofs/V4.lean` — 8 lines, 2 declarations, 1 imports
+- `external_refs/braids_better/BraidProject/ListFact.lean` — 9 lines, 1 declarations, 1 imports
+- `proofs/_deprecated/removed_from_default_2026_06_15/ChiralScratch.lean` — 15 lines, 1 declarations, 1 imports
+- `proofs/TwistedOrbifoldVacuum.lean` — 16 lines, 6 declarations, 1 imports
+- `proofs/CurveOrientation.lean` — 18 lines, 2 declarations, 1 imports
+- `proofs/V4_test.lean` — 20 lines, 1 declarations, 1 imports
+- `proofs/JordanLieMetriplectic.lean` — 23 lines, 4 declarations, 1 imports
+- `proofs/RamanScattering.lean` — 23 lines, 3 declarations, 1 imports
+- `proofs/LogDeterminantHomomorphism.lean` — 24 lines, 3 declarations, 1 imports
+- `proofs/HolographicMonodromy.lean` — 26 lines, 8 declarations, 1 imports
+- `proofs/SelbergTraceFormula.lean` — 26 lines, 2 declarations, 1 imports
+- `proofs/ItFromBitProjectiveHolographicSynthesis.lean` — 28 lines, 3 declarations, 1 imports
+- `proofs/InstantonQCD.lean` — 29 lines, 4 declarations, 1 imports
+- `proofs/PfaffianLineBundle.lean` — 32 lines, 1 declarations, 1 imports
+- `proofs/OctonionicStandardModel.lean` — 33 lines, 4 declarations, 1 imports
+- `proofs/PlatycosmKTheory.lean` — 35 lines, 5 declarations, 1 imports
+- `proofs/RGFixedPoint.lean` — 37 lines, 3 declarations, 1 imports
+- `proofs/RP3Octupole.lean` — 38 lines, 6 declarations, 1 imports
+- `proofs/WallpaperIsometry.lean` — 38 lines, 5 declarations, 1 imports
+- `proofs/SouriauGaussian.lean` — 38 lines, 3 declarations, 1 imports
+- `proofs/LiuCollinsAffineInvariance.lean` — 41 lines, 5 declarations, 1 imports
+- `proofs/PaperwallSUSY.lean` — 42 lines, 1 declarations, 1 imports
+- `proofs/orlandi_a67/OrlandiA67.lean` — 43 lines, 12 declarations, 1 imports
+- `proofs/TripotentPenroseHolography.lean` — 43 lines, 6 declarations, 1 imports
+- `proofs/KleinNilpotentThermo.lean` — 44 lines, 7 declarations, 1 imports
+- `proofs/DiracZeroModes.lean` — 44 lines, 5 declarations, 1 imports
+- `proofs/CliffordInductiveTripotent.lean` — 44 lines, 4 declarations, 1 imports
+- `proofs/CptTensorFractal.lean` — 44 lines, 2 declarations, 1 imports
+- `proofs/DiracFourierMellin.lean` — 46 lines, 5 declarations, 1 imports
+- `proofs/CuntzK0TorsionRelation.lean` — 46 lines, 4 declarations, 1 imports
+- `proofs/KasparovKreinDoubling.lean` — 47 lines, 6 declarations, 1 imports
+- `proofs/NonOrientableBraid.lean` — 47 lines, 6 declarations, 1 imports
+- `proofs/_deprecated/removed_from_default_2026_06_15/NonOrientableBraid.lean` — 47 lines, 3 declarations, 1 imports
+- `proofs/KleinGeometrySupergraded.lean` — 48 lines, 6 declarations, 1 imports
+- `proofs/IsospinSymmetryBreaking.lean` — 48 lines, 5 declarations, 1 imports
+- `scripts/theorem-009.lean` — 49 lines, 7 declarations, 1 imports
+- `proofs/MinkowskiBiquaternion.lean` — 50 lines, 5 declarations, 1 imports
+- `proofs/FinalHolographicThesisSeal.lean` — 51 lines, 13 declarations, 1 imports
+- `proofs/TPUAQLattice.lean` — 51 lines, 11 declarations, 1 imports
+- `proofs/MetriplecticCausality.lean` — 51 lines, 9 declarations, 1 imports
+- `proofs/ProjectiveCrystalTopology.lean` — 51 lines, 5 declarations, 1 imports
+- `proofs/CuntzInverseLimit.lean` — 52 lines, 6 declarations, 1 imports
+- `proofs/HolographicGaugeSymmetryUniqueness20.lean` — 52 lines, 1 declarations, 1 imports
+- `proofs/ModularGlideCPT.lean` — 53 lines, 5 declarations, 1 imports
+- `proofs/QCDConfinementISDivergence.lean` — 58 lines, 10 declarations, 1 imports
+- `proofs/CptFractalClosure.lean` — 59 lines, 8 declarations, 1 imports
+- `proofs/GoldenSpectralTriple.lean` — 59 lines, 6 declarations, 1 imports
+- `proofs/SouriauBiquaternionGaussian.lean` — 59 lines, 6 declarations, 1 imports
+- `proofs/HolographicScaleExtinctions.lean` — 59 lines, 5 declarations, 1 imports
+- `proofs/WallpaperClassification.lean` — 59 lines, 4 declarations, 1 imports
+- `proofs/AdelicSymmetrySpectrum.lean` — 59 lines, 1 declarations, 1 imports
+- `proofs/WeylGaugeItakuraSaito.lean` — 60 lines, 8 declarations, 1 imports
+- `proofs/YangBaxterQuotientDescent.lean` — 60 lines, 5 declarations, 1 imports
+- `proofs/RaychaudhuriConformalBregman.lean` — 62 lines, 9 declarations, 1 imports
+- `proofs/BoltzmannLnQTensorFlowToy.lean` — 63 lines, 11 declarations, 1 imports
+- `proofs/GlideSymmetricInvariant.lean` — 63 lines, 6 declarations, 1 imports
+- `proofs/PrimeMellinSymplecticCAR.lean` — 65 lines, 7 declarations, 1 imports
+- `proofs/CuntzKreinMinkowskiTest.lean` — 65 lines, 6 declarations, 1 imports
+- `proofs/VirasoroFinsupp.lean` — 66 lines, 8 declarations, 1 imports
+- `proofs/PaperwallDiscreteSUSY.lean` — 67 lines, 8 declarations, 1 imports
+- `proofs/PenroseCuntzKriegerHolography.lean` — 68 lines, 16 declarations, 1 imports
+- `proofs/CuntzKriegerKTheory.lean` — 69 lines, 11 declarations, 1 imports
+- `proofs/SpinorMonodromySteppingStone.lean` — 70 lines, 7 declarations, 1 imports
+- `proofs/UnifiedKleinHolographicArchitecture.lean` — 71 lines, 14 declarations, 1 imports
+- `proofs/PolynomialSymmetryOperators.lean` — 71 lines, 11 declarations, 1 imports
+- `proofs/GrothendieckGromovWittenYangBaxter.lean` — 71 lines, 8 declarations, 1 imports
+- `proofs/MobiusWittenKleinIndex.lean` — 71 lines, 8 declarations, 1 imports
+- `proofs/ProjectiveSymmetryAlgebra.lean` — 71 lines, 3 declarations, 1 imports
+- `proofs/GellMannCartan.lean` — 74 lines, 9 declarations, 1 imports
+- `proofs/SplitOctonionNilpotent.lean` — 74 lines, 8 declarations, 1 imports
+- `proofs/NonIsoConf3QuadricD4EPolynomial.lean` — 75 lines, 13 declarations, 1 imports
+- `proofs/InformationGeometricCutoff.lean` — 75 lines, 11 declarations, 1 imports
+- `proofs/LogDetSuperKahlerBarrier.lean` — 75 lines, 10 declarations, 1 imports
+- `proofs/QRootOfUnityTruncation.lean` — 75 lines, 7 declarations, 1 imports
+- `proofs/ModularHolographicMetric.lean` — 77 lines, 8 declarations, 1 imports
+- `proofs/CubicJordanPeirceDecomposition.lean` — 77 lines, 7 declarations, 1 imports
+- `proofs/ExceptionalKleinGlideEP.lean` — 79 lines, 9 declarations, 1 imports
+- `proofs/ZornAssociator.lean` — 79 lines, 9 declarations, 1 imports
+- `proofs/_deprecated/removed_from_default_2026_06_15/PaperwallDiscreteSUSY.lean` — 79 lines, 8 declarations, 1 imports
+- `proofs/GeneralizedMirrorNuclei.lean` — 80 lines, 14 declarations, 1 imports

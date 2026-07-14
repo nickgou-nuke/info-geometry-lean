@@ -25,7 +25,7 @@ limit theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.Cl11CompatibleLocalStateNet
+namespace Cl11CompatibleLocalStateNet
 
 open Matrix
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -157,4 +157,4 @@ theorem cl11CompatibleLocalStateNet_state_embedMap
 - no Virasoro-limit theorem asserted in this module
 -/
 
-end InfoGeometry.Canonical.Cl11CompatibleLocalStateNet
+end Cl11CompatibleLocalStateNet

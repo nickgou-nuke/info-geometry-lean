@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.WeylMobiusReflection
 Krein-adjoint identities for the local `2×2` real split-Clifford mode.
 -/
 
-namespace InfoGeometry.Canonical.HestenesKreinVacuum
+namespace HestenesKreinVacuum
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -68,4 +68,4 @@ theorem krein_adjoint_creation :
   rw [aDag_eq_N_transpose, Matrix.transpose_transpose, a_eq_N]
   simpa [W_eq_K] using (weyl_conj_N : W * N * W = -N)
 
-end InfoGeometry.Canonical.HestenesKreinVacuum
+end HestenesKreinVacuum

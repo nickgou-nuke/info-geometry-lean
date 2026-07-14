@@ -11,7 +11,7 @@ that enables annihilation/creation operators to act on cyclic states.
 
 noncomputable section
 
-namespace InfoGeometry.Prequantum.GNSAction
+namespace GNSAction
 
 open InfoGeometry.Prequantum.AlgebraicGNSState
 open InfoGeometry.Prequantum.GNSBridge
@@ -75,4 +75,4 @@ def vacuum : AbstractGNSState.gnsQuotient S.state :=
 
 end RepresentationState
 
-end InfoGeometry.Prequantum.GNSAction
+end GNSAction

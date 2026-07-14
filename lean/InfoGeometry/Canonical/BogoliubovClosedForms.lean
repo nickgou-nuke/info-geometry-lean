@@ -4,7 +4,7 @@ import Mathlib.Tactic
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.BogoliubovClosedForms
+namespace BogoliubovClosedForms
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -383,4 +383,4 @@ theorem spectral_epsilon_comp_KRotation
 
 end Basic
 
-end InfoGeometry.Canonical.BogoliubovClosedForms
+end BogoliubovClosedForms

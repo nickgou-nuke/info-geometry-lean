@@ -30,7 +30,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge
+namespace PrimonTFDKreinMobiusBridge
 
 open InfoGeometry.Canonical.PrimeGasPartitions
 
@@ -260,4 +260,4 @@ structure PrimonTFDKreinMobiusBridge (A : Type*) [Mul A] where
   krein_mobius_compatibility : Type*
 
 
-end InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge
+end PrimonTFDKreinMobiusBridge

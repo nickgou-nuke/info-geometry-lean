@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
+namespace ProjectiveCountBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 
@@ -232,4 +232,4 @@ theorem entropy_nonneg_of_one_le_volume
 
 end GaugeFixedGWProjectiveCountBridge
 
-end InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
+end ProjectiveCountBridge

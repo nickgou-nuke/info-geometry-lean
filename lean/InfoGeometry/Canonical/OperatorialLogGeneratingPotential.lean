@@ -22,7 +22,7 @@ function is assumed.  The only scalarization is the supplied continuous linear
 readout `ω`.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialLogGeneratingPotential
+namespace OperatorialLogGeneratingPotential
 
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
@@ -186,4 +186,4 @@ theorem hasDerivAt_modularBetaLogGeneratingPotential_zero_of_normalized
       (E := E) (ω := ω) (K := -K) hω1
   simpa [modularBetaLogGeneratingPotential_eq_operatorialLogGeneratingPotential_neg] using h
 
-end InfoGeometry.Canonical.OperatorialLogGeneratingPotential
+end OperatorialLogGeneratingPotential

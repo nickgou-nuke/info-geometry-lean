@@ -24,7 +24,7 @@ objects in the owner modules.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBridge
+namespace CelikZ3FibonacciCantorCuntzBridge
 
 open InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
@@ -119,6 +119,6 @@ theorem explicit_braided_tensor_category_bridge
     InfoGeometry.Canonical.CelikErlangenBraidBridge.z3_artin_relation_via_atoms,
     cantor_cuntz_null_boundary_orbit_readout B b w⟩
 
-end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBridge
+end CelikZ3FibonacciCantorCuntzBridge
 
 end noncomputable section

@@ -11,7 +11,7 @@ along the Fadell-Neuwirth fibrations, lifting them to the stable
 infinite-dimensional de Rham cohomology limit.
 -/
 
-namespace InfoGeometry.Canonical.ConfigurationSpaceColimit
+namespace ConfigurationSpaceColimit
 
 open InfoGeometry.Canonical.InductiveColimitBridge
 
@@ -81,4 +81,4 @@ theorem configuration_space_homotopical_stabilization
                              arnold_mixed_relation arnold_compat limit_arnold_relation limit_arnold_readout) 
     n x y h_arnold
 
-end InfoGeometry.Canonical.ConfigurationSpaceColimit
+end ConfigurationSpaceColimit

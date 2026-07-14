@@ -10,7 +10,7 @@ set_option linter.unusedSectionVars false
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.RicciMongeAmpere
+namespace RicciMongeAmpere
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.CurvatureRGFlow
@@ -786,4 +786,4 @@ lemma mongeAmpereConsistentAtBasepoint (IST : InfoSpectralTriple E)
 
 end MongeAmpere
 
-end InfoGeometry.Canonical.RicciMongeAmpere
+end RicciMongeAmpere

@@ -21,7 +21,7 @@ projector calculation.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ChiralTensorRecoupling
+namespace ChiralTensorRecoupling
 
 open Matrix
 open TensorProduct
@@ -495,4 +495,4 @@ theorem e_factors_through_cl11_atom :
 
 #check e_factors_through_cl11_atom
 
-end InfoGeometry.Physics.ChiralTensorRecoupling
+end ChiralTensorRecoupling

@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.SplitBottPeriodicityBridge
 
 open scoped TensorProduct
 
-namespace InfoGeometry.Clifford.Cl44C8Comparison
+namespace Cl44C8Comparison
 
 /-- Honest owner equivalence for the split `Cl(4,4)` complexification corridor. -/
 noncomputable abbrev cl44_complexification_is_C8 :
@@ -15,4 +15,4 @@ theorem cl44_complexification_is_C8_eq_owner :
       InfoGeometry.Canonical.SplitBottPeriodicityBridge.cl44_complexification_anchor :=
   rfl
 
-end InfoGeometry.Clifford.Cl44C8Comparison
+end Cl44C8Comparison

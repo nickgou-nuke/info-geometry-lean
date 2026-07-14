@@ -9,7 +9,7 @@ for the twisted Hecke algebra as derived by Anne-Marie Aubert and Roger Plymen (
 
 noncomputable section
 
-namespace InfoGeometry.Topology.TwistedHeckeKleinBottle
+namespace TwistedHeckeKleinBottle
 
 open Complex
 
@@ -53,4 +53,4 @@ def twisted_hecke_relations_prop (w z : ℂ) (hz : z ≠ 0) : Prop :=
   s_matrix * Y_matrix w = - (Y_matrix w) * s_matrix ∧
   X_matrix z * Y_matrix w = Y_matrix w * X_matrix z
 
-end InfoGeometry.Topology.TwistedHeckeKleinBottle
+end TwistedHeckeKleinBottle

@@ -18,7 +18,7 @@ a representation theorem is supplied by a stronger analytic owner.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinGreen
+namespace DrazinGreen
 
 open InfoGeometry.Canonical.Drazin
 
@@ -163,4 +163,4 @@ def greenOperator : R :=
 
 end DrazinGreenKernelData
 
-end InfoGeometry.Canonical.DrazinGreen
+end DrazinGreen

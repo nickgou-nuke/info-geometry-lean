@@ -13,7 +13,7 @@ between cutoffs. No limit, completion, or convergence statement is made here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeThermodynamicStage
+namespace PrimeThermodynamicStage
 
 open InfoGeometry.Arithmetic.ChiralPrimonGas
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
@@ -77,4 +77,4 @@ theorem embedState_trans {n m k : ℕ} (hnm : n ≤ m) (hmk : m ≤ k)
     embedState (hnm.trans hmk) S = embedState hmk (embedState hnm S) := by
   exact Subtype.ext rfl
 
-end InfoGeometry.Arithmetic.PrimeThermodynamicStage
+end PrimeThermodynamicStage

@@ -20,7 +20,7 @@ after a `ScalarCocycleBridge` has been supplied.
 
 noncomputable section
 
-namespace InfoGeometry.Volume.LogarithmicOrderParameterConnesBridge
+namespace LogarithmicOrderParameterConnesBridge
 
 open InfoGeometry.Cocycle
 open InfoGeometry.Volume.ConnesCocycle
@@ -85,5 +85,5 @@ theorem connesScalarModularHamiltonian_add
   rw [cocycleLogPotential_add (H := H) σ u hCocycle B s t]
   ring
 
-end InfoGeometry.Volume.LogarithmicOrderParameterConnesBridge
+end LogarithmicOrderParameterConnesBridge
 

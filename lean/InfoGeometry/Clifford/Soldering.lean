@@ -25,7 +25,7 @@ $\omega = \sigma(X) \pi$ connects the twistor to spacetime points.
 open scoped Matrix
 open scoped Quaternion
 
-namespace InfoGeometry.Clifford.Soldering
+namespace Soldering
 
 /-- Spacetime 4-vector in signature (2,2). -/
 abbrev Vec22 := ℝ × ℝ × ℝ × ℝ
@@ -100,4 +100,4 @@ noncomputable def pointAction (X : Vec22) (π : ℝ × ℝ) : ℝ × ℝ :=
 def Incident (ω π : ℝ × ℝ) (X : Vec22) : Prop :=
   ω = pointAction X π
 
-end InfoGeometry.Clifford.Soldering
+end Soldering

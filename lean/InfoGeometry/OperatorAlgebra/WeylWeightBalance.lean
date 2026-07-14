@@ -22,7 +22,7 @@ predicates supplied by owner modules.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.WeylWeightBalance
+namespace WeylWeightBalance
 
 /-! ## 1. Five Weyl weights -/
 
@@ -221,4 +221,4 @@ theorem centralSelector_eq_zero_of_not_modeBalanced
     selector m n = 0 :=
   hSelector m n hNot
 
-end InfoGeometry.OperatorAlgebra.WeylWeightBalance
+end WeylWeightBalance

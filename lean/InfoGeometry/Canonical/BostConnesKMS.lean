@@ -39,7 +39,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesKMS
+namespace BostConnesKMS
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 
@@ -330,4 +330,4 @@ theorem kms_evaluation_on_word_products
 
 end KMSProjectionState
 
-end InfoGeometry.Canonical.BostConnesKMS
+end BostConnesKMS

@@ -21,7 +21,7 @@ anomaly mechanism.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ZetaPrimeFluctuationBridge
+namespace ZetaPrimeFluctuationBridge
 
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
@@ -150,4 +150,4 @@ theorem fullWave_eq_baseline_mul_phase_of_critical
 
 end PrimeWaveEnvelope
 
-end InfoGeometry.Arithmetic.ZetaPrimeFluctuationBridge
+end ZetaPrimeFluctuationBridge

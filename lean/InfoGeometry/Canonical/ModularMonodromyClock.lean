@@ -30,7 +30,7 @@ supplies a dictionary identifying a residue operator with a modular derivation.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ModularMonodromyClock
+namespace ModularMonodromyClock
 
 variable (A : Type _) [CommRing A]
 
@@ -146,4 +146,4 @@ theorem deRhamResidue_nilpotent (res : DeRhamResidue A) (X : A) :
     res.Res (res.Res X) = 0 :=
   res.is_parabolic X
 
-end InfoGeometry.Canonical.ModularMonodromyClock
+end ModularMonodromyClock

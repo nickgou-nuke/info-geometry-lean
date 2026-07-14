@@ -24,7 +24,7 @@ sum of projectors in the operator algebra.
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.DiscreteMellinModularBridge
+namespace DiscreteMellinModularBridge
 
 open InfoGeometry.Canonical.OperatorLightconeCoordinates
 open InfoGeometry.Canonical.RelativeModularOperator
@@ -129,4 +129,4 @@ theorem modularHamiltonian_commutes_spectralProjectors
 
 end OperatorialModularHamiltonian
 
-end InfoGeometry.Canonical.DiscreteMellinModularBridge
+end DiscreteMellinModularBridge

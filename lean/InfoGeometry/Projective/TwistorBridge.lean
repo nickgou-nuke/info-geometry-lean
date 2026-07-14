@@ -23,7 +23,7 @@ The intended target is Penrose's carried-structure statement:
 the quantized twistor algebra carries split-octonion and `G2*` structure.
 -/
 
-namespace InfoGeometry.Projective.TwistorBridge
+namespace TwistorBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Projective
@@ -150,4 +150,4 @@ noncomputable def coneInteriorStateSpaceToTwistor
 
 end EuclideanTwistorBridge
 
-end InfoGeometry.Projective.TwistorBridge
+end TwistorBridge

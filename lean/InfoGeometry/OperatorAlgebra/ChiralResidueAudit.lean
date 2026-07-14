@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ChiralResidueAudit
+namespace ChiralResidueAudit
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
@@ -346,5 +346,5 @@ theorem not_global_regular_of_audit_obstructed
 
 end ChiralAuditRegularityBridge
 
-end InfoGeometry.OperatorAlgebra.ChiralResidueAudit
+end ChiralResidueAudit
 

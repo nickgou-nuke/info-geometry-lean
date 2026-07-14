@@ -17,7 +17,7 @@ The proofs use mathlib's matrix determinant scaling theorem.  There is no
 noncanonical bridge or classification theorem here.
 -/
 
-namespace InfoGeometry.Volume.ZeroJacobianWeylBoundary
+namespace ZeroJacobianWeylBoundary
 
 open InfoGeometry.Clifford.SplitCl44CausalEnvelope
 
@@ -198,4 +198,4 @@ def IsSplitCl44NullPoint (x : SplitCl44Carrier) : Prop :=
     IsSplitCl44NullPoint x ↔ SplitCl44Quad x = 0 :=
   Iff.rfl
 
-end InfoGeometry.Volume.ZeroJacobianWeylBoundary
+end ZeroJacobianWeylBoundary

@@ -51,7 +51,7 @@ noncomputable section
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
+namespace CelikZ3FibonacciCuntzBoundaryBridge
 
 open CategoryTheory
 open CategoryTheory.MonoidalCategory
@@ -249,6 +249,6 @@ theorem explicit_celik_fibonacci_cuntz_boundary_bridge
     fibonacci_tau_tensor_tau_channels,
     cantor_cuntz_odd_odd_boundary_even a b⟩
 
-end InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
+end CelikZ3FibonacciCuntzBoundaryBridge
 
 end noncomputable section

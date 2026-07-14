@@ -15,7 +15,7 @@ evaluate the same doubled-state Hessian form. It does not assert a scalar
 log-readout second-variation theorem.
 -/
 
-namespace InfoGeometry.Canonical.NoetherRelationalBridge
+namespace NoetherRelationalBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.NoetherInference
@@ -48,4 +48,4 @@ theorem fisherBilinAt_eq_channelKreinMetricAtState
 
 end Core
 
-end InfoGeometry.Canonical.NoetherRelationalBridge
+end NoetherRelationalBridge

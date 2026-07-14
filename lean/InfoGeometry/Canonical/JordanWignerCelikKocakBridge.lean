@@ -24,7 +24,7 @@ Fock representation.  It only proves:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.JordanWignerCelikKocakBridge
+namespace JordanWignerCelikKocakBridge
 
 open Matrix
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -324,4 +324,4 @@ theorem depthOneCAR_axioms :
 
 end CelikDepthOne
 
-end InfoGeometry.Canonical.JordanWignerCelikKocakBridge
+end JordanWignerCelikKocakBridge

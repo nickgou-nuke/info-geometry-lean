@@ -18,7 +18,7 @@ positive rescaling and taking the canonical gauge.
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.RelativePotentialCountBridge
+namespace RelativePotentialCountBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -985,4 +985,4 @@ theorem projectiveLogGenerator_countRay_eq_projectiveCountHamiltonianProfile
 
 end PositiveCounts
 
-end InfoGeometry.Canonical.RelativePotentialCountBridge
+end RelativePotentialCountBridge

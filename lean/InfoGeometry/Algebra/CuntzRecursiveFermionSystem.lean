@@ -1,6 +1,6 @@
 import InfoGeometry.Algebra
 
-namespace InfoGeometry.Algebra.CuntzRecursiveFermionSystem
+namespace CuntzRecursiveFermionSystem
 
 /-!
 # Maya Diagrams and the Infinite Wedge Representation
@@ -232,4 +232,4 @@ noncomputable def RFS_fermion {Op : Type*} [Ring Op] [StarRing Op]
     (C : CuntzO2Carrier Op) (n : ℕ) : Op :=
   kawamuraCARSequence C n
 
-end InfoGeometry.Algebra.CuntzRecursiveFermionSystem
+end CuntzRecursiveFermionSystem

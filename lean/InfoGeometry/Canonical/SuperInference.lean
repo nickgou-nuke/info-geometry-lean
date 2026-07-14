@@ -1,7 +1,7 @@
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Krein.Metric
 
-namespace InfoGeometry.Canonical.SuperInference
+namespace SuperInference
 
 open InfoGeometry.Convex
 
@@ -60,4 +60,4 @@ omit [FiniteDimensional ℝ E] in
 @[simp] lemma susyHamiltonian_eq_self (H : HessianGeometry E) (s : SuperBeliefState E) :
     susyHamiltonian H s = s := rfl
 
-end InfoGeometry.Canonical.SuperInference
+end SuperInference

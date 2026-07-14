@@ -16,7 +16,7 @@ same inverse laws on the one-dimensional body lane, and that the hidden block in
 `ScalarSchurDrazinBlock` carries those certified scalar shadows.
 -/
 
-namespace InfoGeometry.SuperMetriplectic.InverseBridge
+namespace InverseBridge
 
 open InfoGeometry.Canonical
 
@@ -64,4 +64,4 @@ theorem hiddenBlock_hasDrazinShadow
   have hD := toIsDrazinInverse B.drazin
   simpa [B.drazin_matches_hidden] using hD
 
-end InfoGeometry.SuperMetriplectic.InverseBridge
+end InverseBridge

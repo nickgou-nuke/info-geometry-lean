@@ -28,7 +28,7 @@ from the twisted Weyl denominator.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.LFunctionRepresentationBridge
+namespace LFunctionRepresentationBridge
 
 open InfoGeometry.Thermodynamics.SouriauWeylPartition
 
@@ -129,4 +129,4 @@ def LanglandsThermodynamicEquivalence
 
 end TwistedSouriauWeylBridge
 
-end InfoGeometry.Arithmetic.LFunctionRepresentationBridge
+end LFunctionRepresentationBridge

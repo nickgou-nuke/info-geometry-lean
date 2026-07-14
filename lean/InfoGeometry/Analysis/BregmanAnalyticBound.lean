@@ -90,7 +90,7 @@ open scoped BigOperators Matrix Norms.Operator
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Analysis.BregmanAnalyticBound
+namespace BregmanAnalyticBound
 
 abbrev MatrixEnd (n : ℕ) :=
   Matrix (Fin n) (Fin n) ℂ
@@ -618,4 +618,4 @@ theorem bregman_bound_clears_at_flat_boundary {n : ℕ}
     ‖exponentialRemainder K 0‖ ≤ 0 := by
   simp
 
-end InfoGeometry.Analysis.BregmanAnalyticBound
+end BregmanAnalyticBound

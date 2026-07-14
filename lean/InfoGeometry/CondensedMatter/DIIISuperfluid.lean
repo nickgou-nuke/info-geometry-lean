@@ -23,7 +23,7 @@ import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 
 noncomputable section
 
-namespace InfoGeometry.CondensedMatter.DIIISuperfluid
+namespace DIIISuperfluid
 
 /-! ## 1. Condensed-matter DIII BdG datum -/
 
@@ -218,4 +218,4 @@ abbrev DIIISuperfluidOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] : Type _ :=
   DIIISuperfluidDatum Op
 
-end InfoGeometry.CondensedMatter.DIIISuperfluid
+end DIIISuperfluid

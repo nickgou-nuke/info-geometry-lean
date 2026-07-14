@@ -19,7 +19,7 @@ No analytic continuation.
 No all-`n` Artin-relation proof.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
+namespace FiniteFibonacciSparseLowAnyonMatrices
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
@@ -173,4 +173,4 @@ theorem pi8_b6_first_block (q3 : ℂ) (B : BBlockEntries) :
       pi8_b6 q3 B 8 0 = B.B10 ∧ pi8_b6 q3 B 8 8 = B.B11 := by
   simp [pi8_b6, sparseBraidMatrix, blockEntries?, blockEntry?]
 
-end InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
+end FiniteFibonacciSparseLowAnyonMatrices

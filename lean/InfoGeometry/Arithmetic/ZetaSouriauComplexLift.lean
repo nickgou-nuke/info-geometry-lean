@@ -40,7 +40,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.ZetaSouriauComplexLift
+namespace ZetaSouriauComplexLift
 
 open InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
@@ -865,4 +865,4 @@ theorem finitePrimeGrandPotential_eq
 
 end PrimeSpecialization
 
-end InfoGeometry.Arithmetic.ZetaSouriauComplexLift
+end ZetaSouriauComplexLift

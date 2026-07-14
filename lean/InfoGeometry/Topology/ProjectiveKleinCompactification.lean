@@ -24,7 +24,7 @@ classification of Klein-bottle homogeneous spaces, or a diffeomorphism theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.ProjectiveKleinCompactification
+namespace ProjectiveKleinCompactification
 
 abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
 
@@ -128,6 +128,6 @@ theorem projective_klein_formula_packet (t : ℚ) :
   exact ⟨projective_identifies_central_sign, klein_bottle_relation,
     mobius_refocus_vector t, mobius_square_projectively_identity⟩
 
-end InfoGeometry.Topology.ProjectiveKleinCompactification
+end ProjectiveKleinCompactification
 
 end noncomputable section

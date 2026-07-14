@@ -11,7 +11,7 @@ Minimal coordinate-free projector/boost surface used by canonical transport and
 thermal-flow modules.
 -/
 
-namespace InfoGeometry.Canonical.ProjectorEquivariance
+namespace ProjectorEquivariance
 
 open InfoGeometry.Krein
 
@@ -181,4 +181,4 @@ theorem phaseFlip_projectorResolution :
   rw [plusProjector_eq_spectralPlusProj (E := E), minusProjector_eq_spectralMinusProj (E := E)]
   simpa [add_comm] using (spectralProj_sum (E := E))
 
-end InfoGeometry.Canonical.ProjectorEquivariance
+end ProjectorEquivariance

@@ -16,7 +16,7 @@ projector algebra once that field is supplied.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.TrifactorZetaBridge
+namespace TrifactorZetaBridge
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
@@ -100,4 +100,4 @@ theorem trifactorZetaMode_in_vacuum_sector {T state z : ℂ}
     P_zero T * state = state :=
   vacuum_sector_of_active_support_zero T state M.activeSupportZero
 
-end InfoGeometry.Arithmetic.TrifactorZetaBridge
+end TrifactorZetaBridge

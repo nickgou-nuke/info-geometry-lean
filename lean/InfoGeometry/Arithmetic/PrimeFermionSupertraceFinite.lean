@@ -21,7 +21,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeFermionSupertraceFinite
+namespace PrimeFermionSupertraceFinite
 
 open InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 
@@ -162,4 +162,4 @@ theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
 
 end FinitePrimeBitLattice
 
-end InfoGeometry.Arithmetic.PrimeFermionSupertraceFinite
+end PrimeFermionSupertraceFinite

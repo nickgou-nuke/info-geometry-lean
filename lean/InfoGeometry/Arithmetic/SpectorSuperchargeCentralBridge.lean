@@ -32,7 +32,7 @@ No analytic continuation, infinite Euler product, Bethe ansatz, sigma-model,
 or Riemann Hypothesis claim is proved here.
 -/
 
-namespace InfoGeometry.Arithmetic.SpectorSuperchargeCentralBridge
+namespace SpectorSuperchargeCentralBridge
 
 open scoped BigOperators
 
@@ -132,4 +132,4 @@ theorem spector_finite_witten_supercharge_conservation_packet :
 
 end SpectorSuperchargeCentralReadout
 
-end InfoGeometry.Arithmetic.SpectorSuperchargeCentralBridge
+end SpectorSuperchargeCentralBridge

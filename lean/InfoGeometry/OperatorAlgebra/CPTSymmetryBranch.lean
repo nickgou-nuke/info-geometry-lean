@@ -17,7 +17,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
+namespace CPTSymmetryBranch
 
 open InfoGeometry.OperatorAlgebra.ModularSignCPT
 open InfoGeometry.OperatorAlgebra.ModularChiralMirror
@@ -768,4 +768,4 @@ theorem cptSymmetryBranchOwnerTarget :
   intro H _ _ C
   exact C.CPT_exchanges_chiral_sectors
 
-end InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
+end CPTSymmetryBranch

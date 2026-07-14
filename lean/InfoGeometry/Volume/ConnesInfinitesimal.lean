@@ -19,7 +19,7 @@ This file keeps the infinitesimal modular statements concrete:
 
 open scoped InnerProductSpace Topology
 
-namespace InfoGeometry.Volume.ConnesInfinitesimal
+namespace ConnesInfinitesimal
 
 open InfoGeometry.Canonical
 open InfoGeometry.Volume.ConnesCocycle
@@ -236,4 +236,4 @@ theorem modularHamiltonianAction_eq_generatedFlow
   simp [modularHamiltonianAction, expTransport, additiveModularFlowOfGenerator_apply,
     InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift, smul_neg]
 
-end InfoGeometry.Volume.ConnesInfinitesimal
+end ConnesInfinitesimal

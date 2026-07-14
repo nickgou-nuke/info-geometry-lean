@@ -52,7 +52,7 @@ This file DOES prove:
 Reference: Pellis, "Fine-structure constant from the golden angle", 2022
 -/
 
-namespace InfoGeometry.Physics.GoldenAlphaApproximation
+namespace GoldenAlphaApproximation
 
 open InfoGeometry.BostConnes
 
@@ -204,4 +204,4 @@ theorem running_coupling_interpretation :
     pellis_alpha_inv ∈ Set.Ioo ((1370359991 : ℝ) / 10000000) ((171294999 : ℝ) / 1250000) := by
   exact pellis_alpha_inv_bounds
 
-end InfoGeometry.Physics.GoldenAlphaApproximation
+end GoldenAlphaApproximation

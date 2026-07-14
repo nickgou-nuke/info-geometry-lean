@@ -18,7 +18,7 @@ This file packages the existing direct-limit spine already owned in the repo:
 No analytic completion is claimed here.
 -/
 
-namespace InfoGeometry.Canonical.JaynesCategoricalFormalism
+namespace JaynesCategoricalFormalism
 
 open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -84,4 +84,4 @@ theorem centeredScore_readback
 
 end Tower
 
-end InfoGeometry.Canonical.JaynesCategoricalFormalism
+end JaynesCategoricalFormalism

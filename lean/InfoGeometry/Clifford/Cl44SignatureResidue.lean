@@ -22,7 +22,7 @@ the uniqueness of spacetime signature.  Those claims require separate analytic
 and representation-theoretic owners.
 -/
 
-namespace InfoGeometry.Clifford.Cl44SignatureResidue
+namespace Cl44SignatureResidue
 
 open InfoGeometry.Clifford.SplitCl44CausalEnvelope
 open InfoGeometry.Canonical.Spin44CharacterShadow
@@ -151,4 +151,4 @@ theorem spin44_balanced_half_spinor_total_count :
       + (Finset.univ.filter fun eps : Fin 4 → Bool => OddMinus eps).card = 16 := by
   rw [spin44_even_half_spinor_weight_count, spin44_odd_half_spinor_weight_count]
 
-end InfoGeometry.Clifford.Cl44SignatureResidue
+end Cl44SignatureResidue

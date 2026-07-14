@@ -22,7 +22,7 @@ is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.HoradamIonBinetSlice
+namespace HoradamIonBinetSlice
 
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 
@@ -112,6 +112,6 @@ theorem horadam_ion_binet_slice_packet {N : ℕ}
   exact ⟨binetCore_recurrence A B α β p q hα hβ,
     binetIon_recurrence A B α β p q hα hβ⟩
 
-end InfoGeometry.Arithmetic.HoradamIonBinetSlice
+end HoradamIonBinetSlice
 
 end noncomputable section

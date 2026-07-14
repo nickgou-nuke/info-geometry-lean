@@ -24,7 +24,7 @@ is a genuine group action.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauCasimirInvariant
+namespace SouriauCasimirInvariant
 
 /-- Raw affine coadjoint transport. -/
 def affineCoAd
@@ -352,4 +352,4 @@ theorem affineCoAd_sub
   rw [map_sub]
   abel
 
-end InfoGeometry.Canonical.SouriauCasimirInvariant
+end SouriauCasimirInvariant

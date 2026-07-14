@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ResponseWeylAnomalyBridge
+namespace ResponseWeylAnomalyBridge
 
 open InfoGeometry.GrandCanonical
 open InfoGeometry.Canonical
@@ -136,4 +136,4 @@ two-parameter grand-canonical point is not on the spinodal locus.
 
 end Finite
 
-end InfoGeometry.Canonical.ResponseWeylAnomalyBridge
+end ResponseWeylAnomalyBridge

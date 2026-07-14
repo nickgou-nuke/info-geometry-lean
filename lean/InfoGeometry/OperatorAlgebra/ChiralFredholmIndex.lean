@@ -17,7 +17,7 @@ import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
+namespace ChiralFredholmIndex
 
 open InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
@@ -331,4 +331,4 @@ def EvenKasparovCycleOwnerTarget
       K.square_minus_one_compact ∧
       K.self_adjoint_mod_compact
 
-end InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
+end ChiralFredholmIndex

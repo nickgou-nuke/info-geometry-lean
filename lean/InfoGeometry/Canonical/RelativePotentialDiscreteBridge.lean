@@ -18,7 +18,7 @@ language to the existing PMF / `MeasureProjective` presentation:
 
 open scoped BigOperators ENNReal
 
-namespace InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+namespace RelativePotentialDiscreteBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -218,4 +218,4 @@ theorem projectiveLogGenerator_eq_relativeModularPotential
 
 end FiniteDiscrete
 
-end InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+end RelativePotentialDiscreteBridge

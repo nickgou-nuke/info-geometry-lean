@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.HagedornKMSBoundary
+namespace HagedornKMSBoundary
 
 variable (β : ℝ)
 variable (chiral_anomaly : ℝ → ℝ)
@@ -20,4 +20,4 @@ theorem hagedorn_anomaly_cancellation (c : ℝ)
   rw [h_scaling β, h_hagedorn]
   ring
 
-end InfoGeometry.Canonical.HagedornKMSBoundary
+end HagedornKMSBoundary

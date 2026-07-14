@@ -10,7 +10,7 @@ This file keeps approximation obligations in information-geometric
 shape/scale-cost form and avoids least-squares-only contracts.
 -/
 
-namespace InfoGeometry.Canonical.NeuralOperatorCore
+namespace NeuralOperatorCore
 
 universe u v w
 
@@ -137,4 +137,4 @@ def HasNeuralOperatorApproximationAt
     (N : NeuralOperator X Y Z) (ε : ℝ) : Prop :=
   ∃ C : NeuralOperatorApproximationContract N, C.costBound ≤ ε
 
-end InfoGeometry.Canonical.NeuralOperatorCore
+end NeuralOperatorCore

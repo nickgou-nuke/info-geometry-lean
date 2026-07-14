@@ -17,7 +17,7 @@ Operatorial bridge translating "apex singularity" language into:
 - modular-flow fixedness under explicit commutation hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.DrazinModularSingularityBridge
+namespace DrazinModularSingularityBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -432,4 +432,4 @@ theorem hD_fixed_under_modularFlow_of_commute_theta
 
 end Core
 
-end InfoGeometry.Canonical.DrazinModularSingularityBridge
+end DrazinModularSingularityBridge

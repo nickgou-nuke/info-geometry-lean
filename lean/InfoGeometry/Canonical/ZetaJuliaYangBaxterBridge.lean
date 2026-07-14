@@ -15,7 +15,7 @@ The speculative Julia/zeta/Yang-Baxter identifications below are not proved in
 this file.
 -/
 
-namespace InfoGeometry.Canonical.ZetaJuliaYangBaxterBridge
+namespace ZetaJuliaYangBaxterBridge
 
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -51,4 +51,4 @@ theorem unified_bridge :
     0 < goldenRatio ∧ R * B * R = B * R * B :=
   ⟨goldenRatio_pos, braid_relation⟩
 
-end InfoGeometry.Canonical.ZetaJuliaYangBaxterBridge
+end ZetaJuliaYangBaxterBridge

@@ -39,7 +39,7 @@ proofs for the adjoint actions and reflection laws.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.O55FiveGradeCapstone
+namespace O55FiveGradeCapstone
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Algebra.FiveGradedTKK
@@ -135,4 +135,4 @@ theorem five_grade_decomposition_packet :
     theta_reflection_packet
   ⟩
 
-end InfoGeometry.Canonical.O55FiveGradeCapstone
+end O55FiveGradeCapstone

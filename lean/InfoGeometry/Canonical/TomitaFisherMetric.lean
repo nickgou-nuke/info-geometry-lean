@@ -17,7 +17,7 @@ This yields an explicit diagonal Fisher matrix, plus:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.TomitaFisherMetric
+namespace TomitaFisherMetric
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -144,4 +144,4 @@ theorem fisherQuad_eq_zero_iff_euclidean_sq_zero (v : V2R) :
     have h1 : v 1 0 = 0 := pow_eq_zero h1sq
     exact (fisherQuad_eq_zero_iff v).2 ⟨h0, h1⟩
 
-end InfoGeometry.Canonical.TomitaFisherMetric
+end TomitaFisherMetric

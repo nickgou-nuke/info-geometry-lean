@@ -45,7 +45,7 @@ In the arithmetic DAG language:
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.DirichletCharacters
+namespace DirichletCharacters
 
 open LFunctionRepresentationBridge
 open MoebiusWeylEuler
@@ -133,4 +133,4 @@ compatible with the gauge twist χ. The root number ε(χ) is the
 eigenvalue of the involution β ↔ 1-β.
 -/
 
-end InfoGeometry.Arithmetic.DirichletCharacters
+end DirichletCharacters

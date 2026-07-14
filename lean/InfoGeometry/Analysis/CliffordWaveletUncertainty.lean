@@ -20,7 +20,7 @@ It does not assert any prime-number, zeta, Mertens, Lee--Yang, or RH theorem.
 noncomputable section
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.Analysis.CliffordWaveletUncertainty
+namespace CliffordWaveletUncertainty
 
 open InfoGeometry.Analysis.CliffordWaveletTransform
 
@@ -126,4 +126,4 @@ theorem noncollapse
 
 end CliffordWaveletUncertaintyOps
 
-end InfoGeometry.Analysis.CliffordWaveletUncertainty
+end CliffordWaveletUncertainty

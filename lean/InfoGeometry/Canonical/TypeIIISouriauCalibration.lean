@@ -18,7 +18,7 @@ surrogate `Ksur` with the Type-III modular generator already supplied by
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.TypeIIISouriauCalibration
+namespace TypeIIISouriauCalibration
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.SouriauModularHamiltonianBridge
@@ -146,4 +146,4 @@ end Calibration
 
 end Core
 
-end InfoGeometry.Canonical.TypeIIISouriauCalibration
+end TypeIIISouriauCalibration

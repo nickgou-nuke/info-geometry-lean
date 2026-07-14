@@ -22,7 +22,7 @@ import Mathlib.Algebra.Module.Submodule.Range
 
 noncomputable section
 
-namespace InfoGeometry.Automorphic.SiegelResonance
+namespace SiegelResonance
 
 universe uBulk uBoundary uParabolic
 
@@ -461,4 +461,4 @@ theorem globalCuspidalSubspace_le_ker
       LinearMap.ker (siegelFamily P) := by
   exact iInf_le _ P
 
-end InfoGeometry.Automorphic.SiegelResonance
+end SiegelResonance

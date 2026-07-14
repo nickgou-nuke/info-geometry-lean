@@ -20,7 +20,7 @@ No claim is made here that the primes have already been proved from the
 geometry; this file records the exact packet one would need to do so.
 -/
 
-namespace InfoGeometry.Canonical.PrimeGeodesicEmergence
+namespace PrimeGeodesicEmergence
 
 open InfoGeometry.Canonical.KleinBottleOrientifold
 open InfoGeometry.Canonical.PrimeGasMaxEnt
@@ -91,4 +91,4 @@ structure PrimeGeodesicEmergencePacket
   squareFreeSupport : emergence.squareFreeSupport
   kleinBottleFilter : emergence.orientifold.squareFreeSupport
 
-end InfoGeometry.Canonical.PrimeGeodesicEmergence
+end PrimeGeodesicEmergence

@@ -19,7 +19,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
+namespace LFunctionHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge
@@ -161,4 +161,4 @@ theorem packet_denominator_is_prime_euler_product :
 
 end LFunctionHamiltonianFlowBridge
 
-end InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
+end LFunctionHamiltonianFlowBridge

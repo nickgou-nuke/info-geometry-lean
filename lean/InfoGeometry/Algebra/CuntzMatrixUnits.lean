@@ -11,7 +11,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzMatrixUnits
+namespace CuntzMatrixUnits
 
 def E (n : ℕ) (i j : Fin n) : CuntzAlg n := cuntzS n i * cuntzSdag n j
 
@@ -59,4 +59,4 @@ theorem matrix_unit_sum_diag_eq_one (n : ℕ) :
     (∑ i : Fin n, E n i i) = 1 := by
   simp [E, cuntz_ranges_sum_one n]
 
-end InfoGeometry.Algebra.CuntzMatrixUnits
+end CuntzMatrixUnits

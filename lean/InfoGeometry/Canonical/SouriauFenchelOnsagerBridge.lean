@@ -34,7 +34,7 @@ instantiate concrete `G₂(2)` / `Spin(5,5)` coadjoint-orbit thermodynamic
 models.
 -/
 
-namespace InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
+namespace SouriauFenchelOnsagerBridge
 
 open InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.Canonical.SouriauMetriplectic
@@ -494,4 +494,4 @@ theorem entropy_difference_on_state_orbit_eq_zero
 
 end CoadjointEntropySymmetryContext
 
-end InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
+end SouriauFenchelOnsagerBridge

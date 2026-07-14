@@ -7,7 +7,7 @@ import InfoGeometry.Algebra.SupergradedBracket
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.VirasoroProjectColimitBridge
+namespace VirasoroProjectColimitBridge
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.SupergradedBracket
@@ -163,4 +163,4 @@ theorem concrete_readback_trivial_bond_GG_mode01_r0_s1 (N : ℤ) :
       hcone N 0 1 (J_mode0 (𝕜 := ℝ) (1 : Module.End ℝ ℝ))
       (psi_mode1 (𝕜 := ℝ) (1 : Module.End ℝ ℝ)) (centralZero (𝕜 := ℝ)) hdef
 
-end InfoGeometry.Canonical.VirasoroProjectColimitBridge
+end VirasoroProjectColimitBridge

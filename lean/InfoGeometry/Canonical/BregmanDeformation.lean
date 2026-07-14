@@ -51,7 +51,7 @@ witnesses, certificates, or renamed placeholders.]
   relative entropy in the repository's standard-form von Neumann algebra lane.
 -/
 
-namespace InfoGeometry.Canonical.BregmanDeformation
+namespace BregmanDeformation
 
 /--
 The concrete real phase-axis generator in the two-dimensional rotation lane.
@@ -143,4 +143,4 @@ theorem bregman_deformation_of_hamiltonian_zero :
       (0 : Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
   simp [bregman_deformation_of_hamiltonian]
 
-end InfoGeometry.Canonical.BregmanDeformation
+end BregmanDeformation

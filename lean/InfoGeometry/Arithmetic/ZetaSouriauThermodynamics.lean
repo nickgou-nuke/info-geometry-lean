@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
+namespace ZetaSouriauThermodynamics
 
 /-! ## 1. Complex Souriau temperature and grand-canonical weights -/
 
@@ -614,4 +614,4 @@ theorem finitePrimeGrandPotential_eq
 
 end PrimeSpecialization
 
-end InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
+end ZetaSouriauThermodynamics

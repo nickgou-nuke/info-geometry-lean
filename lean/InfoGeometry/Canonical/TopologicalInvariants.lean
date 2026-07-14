@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.InformationTorsion
 import Mathlib.LinearAlgebra.Dimension.Finite
 
-namespace InfoGeometry.Canonical.TopologicalInvariants
+namespace TopologicalInvariants
 
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.InformationTorsion
@@ -86,4 +86,4 @@ theorem chiralAnomalyIndex_eq_zero_of_projectors_commute
 
 end ChiralIndex
 
-end InfoGeometry.Canonical.TopologicalInvariants
+end TopologicalInvariants

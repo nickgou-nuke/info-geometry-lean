@@ -2,7 +2,7 @@ import Mathlib
 open Matrix
 open Real
 
-namespace InfoGeometry.Fibonacci.FibAnyonThm2
+namespace FibAnyonThm2
 
 noncomputable section
 
@@ -59,4 +59,4 @@ theorem F_det : F.det = -1 := by
 
 end
 
-end InfoGeometry.Fibonacci.FibAnyonThm2
+end FibAnyonThm2

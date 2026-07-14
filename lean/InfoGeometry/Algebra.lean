@@ -5,7 +5,7 @@ open InfoGeometry.Topology
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
-namespace InfoGeometry.Algebra
+namespace Algebra
 
 /-- The canonical endomorphism (zeta map) for the Kawamura CAR embedding.
     ζ(x) = s₁ x s₁* - s₂ x s₂*
@@ -134,4 +134,4 @@ theorem kawamuraCAR_nilpotent (C : CuntzO2Carrier Op) (n : ℕ) :
     rw [ih]
     exact kawamuraRho_zero C
 
-end InfoGeometry.Algebra
+end Algebra

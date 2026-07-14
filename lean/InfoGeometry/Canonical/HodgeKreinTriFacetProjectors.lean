@@ -20,7 +20,7 @@ signatures, and Drazin inverses are separate owner files and are not asserted by
 this projector calculus.
 -/
 
-namespace InfoGeometry.Canonical.HodgeKreinTriFacetProjectors
+namespace HodgeKreinTriFacetProjectors
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -249,4 +249,4 @@ theorem P_nil_P_core
   rw [hO (O x)]
   abel
 
-end InfoGeometry.Canonical.HodgeKreinTriFacetProjectors
+end HodgeKreinTriFacetProjectors

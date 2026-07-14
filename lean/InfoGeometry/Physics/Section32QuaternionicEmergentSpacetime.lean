@@ -22,7 +22,7 @@ entanglement connections, black-hole information, or cosmological dynamics
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
+namespace Section32QuaternionicEmergentSpacetime
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -105,6 +105,6 @@ theorem repaired_section32_quaternionic_spacetime_packet
     blochSpacetimePoint_det_zero_of_unit_boundary t r n1 n2 n3 hunit hr,
     vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 (r * n1) (r * n2) (r * n3)⟩
 
-end InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
+end Section32QuaternionicEmergentSpacetime
 
 end noncomputable section

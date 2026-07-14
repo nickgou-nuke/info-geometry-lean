@@ -11,7 +11,7 @@ real-linear equivalence and proves compatibility with the canonical Zorn
 product, identity, and split norm. No associative algebra structure is imposed.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+namespace KingdonCanonicalBridge
 
 abbrev PhysicsZorn := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
 abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
@@ -353,4 +353,4 @@ native transported split-octonion norm. -/
     (kingdonCanonicalLinearEquiv x)
   simpa [ψ] using h
 
-end InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+end KingdonCanonicalBridge

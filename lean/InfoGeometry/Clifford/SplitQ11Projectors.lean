@@ -14,7 +14,7 @@ This file stays on the abstract Clifford-algebra side:
 - the `K`-axis phase flip swaps the two projectors.
 -/
 
-namespace InfoGeometry.Clifford.SplitQ11Projectors
+namespace SplitQ11Projectors
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 
@@ -215,4 +215,4 @@ noncomputable def epsPlusProjector : Alg :=
   rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
   simp [phaseFlip_apply_epsGen, sub_eq_add_neg, smul_add]
 
-end InfoGeometry.Clifford.SplitQ11Projectors
+end SplitQ11Projectors

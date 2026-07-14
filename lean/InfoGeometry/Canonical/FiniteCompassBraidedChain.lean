@@ -21,7 +21,7 @@ No CPT theorem.
 No physical final-state claim.
 -/
 
-namespace InfoGeometry.Canonical.FiniteCompassBraidedChain
+namespace FiniteCompassBraidedChain
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 
@@ -143,4 +143,4 @@ theorem braidTransport_commute_rewrite {Op : Type*} [Mul Op] [One Op] [Zero Op] 
   unfold braidTransport
   rw [evalBraidWord_commute_rewrite hsep]
 
-end InfoGeometry.Canonical.FiniteCompassBraidedChain
+end FiniteCompassBraidedChain

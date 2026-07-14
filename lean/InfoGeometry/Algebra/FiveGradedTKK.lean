@@ -23,7 +23,7 @@ classification, not a Witten-index theorem, and not a global super-TKK closure
 theorem.
 -/
 
-namespace InfoGeometry.Algebra.FiveGradedTKK
+namespace FiveGradedTKK
 
 variable {K : Type*} [CommRing K]
 variable {A : Type*} [Ring A] [Algebra K A]
@@ -149,4 +149,4 @@ theorem split_idempotent_projection_packet
   ⟨right_mul_E_of_split E Ebar h a a_plus a_minus h_decomp,
     right_mul_Ebar_of_split E Ebar h a a_plus a_minus h_decomp⟩
 
-end InfoGeometry.Algebra.FiveGradedTKK
+end FiveGradedTKK

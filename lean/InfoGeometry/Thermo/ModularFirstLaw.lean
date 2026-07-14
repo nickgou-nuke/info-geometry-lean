@@ -3,7 +3,7 @@ import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
 
 noncomputable section
-namespace InfoGeometry.Thermo.ModularFirstLaw
+namespace ModularFirstLaw
 
 def entropy (expectK : ℝ) : ℝ := expectK
 
@@ -34,4 +34,4 @@ theorem first_law_normalized_States {S K : ℝ → ℝ}
     exact deriv_eq_of_fun_eq h₆ x
   exact h₄
 
-end InfoGeometry.Thermo.ModularFirstLaw
+end ModularFirstLaw

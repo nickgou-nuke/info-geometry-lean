@@ -1,7 +1,7 @@
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Canonical.GaugeUnified
 
-namespace InfoGeometry.Canonical.CliffordBridge
+namespace CliffordBridge
 
 open InfoGeometry.Clifford
 
@@ -18,4 +18,4 @@ theorem splitBilinear_eq_gaugeBilinear (u v : ℝ × ℝ) :
   rcases v with ⟨v1, v2⟩
   simp [splitB11_apply, InfoGeometry.Canonical.Gauge.bilinear]
 
-end InfoGeometry.Canonical.CliffordBridge
+end CliffordBridge

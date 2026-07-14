@@ -27,7 +27,7 @@ localization, Cuntz/UHF completion, infinite Fock-space Witten index, or
 Spector-style physical supersymmetry theorem.
 -/
 
-namespace InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
+namespace DrazinTripotentTrifactorBridge
 
 open InfoGeometry.Singular.Drazin
 open InfoGeometry.Canonical.TrifactorDecomposition
@@ -129,4 +129,4 @@ theorem drazin_tripotent_trifactor_capstone
     tripotent_drazin_null_projector_eq_P_zero T,
     tripotent_annihilates_drazin_null_projector T hT⟩
 
-end InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
+end DrazinTripotentTrifactorBridge

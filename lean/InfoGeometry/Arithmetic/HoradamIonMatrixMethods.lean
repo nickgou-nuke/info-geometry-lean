@@ -21,7 +21,7 @@ formulas.  Those require separate owner files.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+namespace HoradamIonMatrixMethods
 
 open Matrix
 open scoped Matrix
@@ -140,6 +140,6 @@ theorem horadam_ion_matrix_methods_packet {N : ℕ} (a b p q : R) :
     companion_mul_fundamentalState p q,
     horadamIonMatrix_mul_companionIon a b p q⟩
 
-end InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+end HoradamIonMatrixMethods
 
 end noncomputable section

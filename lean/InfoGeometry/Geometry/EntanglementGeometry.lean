@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.EntanglementGeometry
+namespace EntanglementGeometry
 
 /-! ## 1. Monogamous maximal entanglement -/
 
@@ -939,4 +939,4 @@ theorem quantumMaxComplexityScale_eq_two_pow
     quantumMaxComplexityScale K = 2 ^ K :=
   rfl
 
-end InfoGeometry.Geometry.EntanglementGeometry
+end EntanglementGeometry

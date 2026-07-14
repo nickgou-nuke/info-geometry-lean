@@ -5,7 +5,7 @@ open InfoGeometry.GrandUnification.UHF
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimitiveCuntzIsometry
+namespace PrimitiveCuntzIsometry
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 variable [UHF : UHFAlgebra A]
@@ -130,4 +130,4 @@ theorem P_L_mul_P_R_eq_zero : P_L (A := A) * P_R (A := A) = 0 := by
     _ = 0 := by
           simp
 
-end InfoGeometry.Canonical.PrimitiveCuntzIsometry
+end PrimitiveCuntzIsometry

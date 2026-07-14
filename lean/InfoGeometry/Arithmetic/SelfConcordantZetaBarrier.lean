@@ -37,7 +37,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.SelfConcordantZetaBarrier
+namespace SelfConcordantZetaBarrier
 
 /-! ## 1. Basic zeta-plane predicates -/
 
@@ -266,4 +266,4 @@ theorem zero_implies_critical (s : ℂ) :
 
 end BarrierRHGate
 
-end InfoGeometry.Arithmetic.SelfConcordantZetaBarrier
+end SelfConcordantZetaBarrier

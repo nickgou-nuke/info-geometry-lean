@@ -20,7 +20,7 @@ No conformal-block construction.
 No Solovay--Kitaev or fault-tolerance theorem.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
+namespace FiniteFibonacciQubitNoLeakage
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
@@ -142,4 +142,4 @@ theorem twoQubit_nc_count :
     nonComputationalCount 2 = 1 :=
   nonComputationalCount_two
 
-end InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
+end FiniteFibonacciQubitNoLeakage

@@ -17,7 +17,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge
+namespace CantorDiracSeaChargeHestenesBridge
 
 open InfoGeometry.Tessellation
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
@@ -116,4 +116,4 @@ theorem owner_right_charge
 
 end CantorDiracSeaChargeHestenesPacket
 
-end InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge
+end CantorDiracSeaChargeHestenesBridge

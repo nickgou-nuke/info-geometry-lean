@@ -13,7 +13,7 @@ This file uses the nilpotent matrix atom
 as annihilation operator, with transpose as creation operator.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordSourceWickBase
+namespace SplitCliffordSourceWickBase
 
 open Matrix
 
@@ -118,4 +118,4 @@ theorem local_jordan_wigner_parity_profile :
      parity_anticommutes_annihilation,
      parity_anticommutes_creation⟩
 
-end InfoGeometry.Canonical.SplitCliffordSourceWickBase
+end SplitCliffordSourceWickBase

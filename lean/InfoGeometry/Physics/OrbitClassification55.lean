@@ -26,7 +26,7 @@ open InfoGeometry.Algebra.JordanCayleyInversionOs
 open InfoGeometry.Physics.Pin55Formal
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace InfoGeometry.Physics.OrbitClassification55
+namespace OrbitClassification55
 
 /-! ## 1. The 10D Jordan matrix and its determinant -/
 
@@ -112,4 +112,4 @@ theorem v4_preserves_stratification (X : JordanMatrix10D) :
 
 end JordanMatrix10D
 
-end InfoGeometry.Physics.OrbitClassification55
+end OrbitClassification55

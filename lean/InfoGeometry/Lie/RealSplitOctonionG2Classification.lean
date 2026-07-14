@@ -13,7 +13,7 @@ The executable certificate is produced by
 primitive Zorn product over `QQ`.
 -/
 
-namespace InfoGeometry.Lie.RealSplitOctonionG2Classification
+namespace RealSplitOctonionG2Classification
 
 /-- Status of the real split-octonion classification lane. -/
 inductive RealClassificationStatus where
@@ -173,4 +173,4 @@ theorem current_status_is_not_native_group_equivalence :
     currentRealClassificationStatus ≠ RealClassificationStatus.nativeLeanGroupEquivalence := by
   decide
 
-end InfoGeometry.Lie.RealSplitOctonionG2Classification
+end RealSplitOctonionG2Classification

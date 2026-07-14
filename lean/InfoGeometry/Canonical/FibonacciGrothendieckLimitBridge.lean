@@ -13,7 +13,7 @@ It does not add a new Bratteli-diagram theory or a new anyon category.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.FibonacciGrothendieckLimitBridge
+namespace FibonacciGrothendieckLimitBridge
 
 open InfoGeometry.Canonical.FibonacciGrothendieckLimit
 open InfoGeometry.Algebra.FibonacciGrothendieckRing
@@ -100,4 +100,4 @@ theorem fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
     (𝕜 := 𝕜) α n
 
-end InfoGeometry.Canonical.FibonacciGrothendieckLimitBridge
+end FibonacciGrothendieckLimitBridge

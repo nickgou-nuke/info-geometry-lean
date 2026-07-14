@@ -20,7 +20,7 @@ the canonical `n ↦ n + 1` split-tower embedding, the induced directed system,
 and the corresponding direct limit in `Mathlib`'s `DirectLimit` API.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordDirectLimit
+namespace SplitCliffordDirectLimit
 
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.ClNN
@@ -295,4 +295,4 @@ theorem splitCliffordInfinity_tail_predicate_lifts_to_all
   rw [← hx]
   exact hTail n hn x
 
-end InfoGeometry.Canonical.SplitCliffordDirectLimit
+end SplitCliffordDirectLimit

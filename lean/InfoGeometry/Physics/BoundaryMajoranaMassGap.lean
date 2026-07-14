@@ -18,7 +18,7 @@ No Riemann-spectrum theorem, `E₈` representation theorem, or full gravity
 theorem is asserted here.
 -/
 
-namespace InfoGeometry.Physics.BoundaryMajoranaMassGap
+namespace BoundaryMajoranaMassGap
 
 /-! ## 1. Explicit one-pair Majorana gap -/
 
@@ -159,4 +159,4 @@ theorem log_weylScaledGap_eq_log_gap0_sub_phi {gap0 phi : ℝ}
   rw [Real.log_exp]
   ring
 
-end InfoGeometry.Physics.BoundaryMajoranaMassGap
+end BoundaryMajoranaMassGap

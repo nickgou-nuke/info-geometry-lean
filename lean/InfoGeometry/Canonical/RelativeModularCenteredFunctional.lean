@@ -16,7 +16,7 @@ workflows:
   with `η(1) = 0`.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularCenteredFunctional
+namespace RelativeModularCenteredFunctional
 
 noncomputable section
 
@@ -670,4 +670,4 @@ theorem cantorPathLocalMellinGreen_one
 
 end
 
-end InfoGeometry.Canonical.RelativeModularCenteredFunctional
+end RelativeModularCenteredFunctional

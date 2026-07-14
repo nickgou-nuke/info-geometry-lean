@@ -13,7 +13,7 @@ central summand from `BoundaryMatrixUnitWick` as the defect of a Wilson loop
 based at the identity diamond.
 -/
 
-namespace InfoGeometry.Canonical.WilsonSchwingerBridge
+namespace WilsonSchwingerBridge
 
 open InfoGeometry.Tessellation
 
@@ -96,4 +96,4 @@ theorem normalOrdered_matrixUnit_commutator_with_wilsonDefect
       psiPlus psiMinus car_minus_plus car_plus_plus car_minus_minus a b c d]
   rw [← wickCentralTerm_eq_wilsonDefect (A := A) a b c d]
 
-end InfoGeometry.Canonical.WilsonSchwingerBridge
+end WilsonSchwingerBridge

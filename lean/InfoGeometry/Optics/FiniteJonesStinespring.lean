@@ -19,7 +19,7 @@ import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section
 
-namespace InfoGeometry.Optics.FiniteJonesStinespring
+namespace FiniteJonesStinespring
 
 open InfoGeometry.Optics.FiniteJonesModel
 
@@ -186,4 +186,4 @@ theorem diagonal_defect_eq_environment_gain
 abbrev JonesStinespringIsometry :=
   StinespringIsometry JonesMat
 
-end InfoGeometry.Optics.FiniteJonesStinespring
+end FiniteJonesStinespring

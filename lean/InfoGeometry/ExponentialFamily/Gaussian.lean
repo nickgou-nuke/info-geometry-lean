@@ -6,7 +6,7 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.FDeriv.Add
 import Mathlib.Analysis.Calculus.FDeriv.Mul
 
-namespace InfoGeometry.ExponentialFamily.Gaussian
+namespace Gaussian
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.Triality
@@ -123,4 +123,4 @@ noncomputable def softmaxGaussianAttention
 
 end GaussianFamily
 
-end InfoGeometry.ExponentialFamily.Gaussian
+end Gaussian

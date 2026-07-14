@@ -12,5 +12,5 @@ supercharge closure is owned by `InfoGeometry.Algebra.CuntzSupergradedSUSY`.
 This file declares no theorem aliases.
 -/
 
-namespace InfoGeometry.Canonical.DirectPoincareSupercharge
-end InfoGeometry.Canonical.DirectPoincareSupercharge
+namespace DirectPoincareSupercharge
+end DirectPoincareSupercharge

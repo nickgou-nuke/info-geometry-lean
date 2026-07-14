@@ -14,7 +14,7 @@ This file provides coordinate-free modular scale bookkeeping.
 Finite-dimensional scalar diagonal matrices are NOT allowed.
 -/
 
-namespace InfoGeometry.Canonical.TypeIIILambdaCore
+namespace TypeIIILambdaCore
 
 open InfoGeometry.Canonical.DiscreteModularSpectrum
 
@@ -236,4 +236,4 @@ end SuperMellin
 
 end LambdaLattice
 
-end InfoGeometry.Canonical.TypeIIILambdaCore
+end TypeIIILambdaCore

@@ -15,7 +15,7 @@ from mathlib.  The Varlamov projectors are constructed from the repository owner
 
 open Real
 
-namespace InfoGeometry.Arithmetic.BostConnesCriticality
+namespace BostConnesCriticality
 
 /-- Harmonic-series divergence in the normalization that removes the zero term. -/
 lemma harmonic_series_diverges :
@@ -102,4 +102,4 @@ lemma varlamov_e_minus_idempotent (X : KreinDoubledAtom) :
     varlamovW_apply_apply]
   module
 
-end InfoGeometry.Arithmetic.BostConnesCriticality
+end BostConnesCriticality

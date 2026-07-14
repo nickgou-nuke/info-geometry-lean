@@ -29,7 +29,7 @@ and the Poisson odd-count formula are not silently converted into theorems.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RadioactivePoissonBitStream
+namespace RadioactivePoissonBitStream
 
 open scoped BigOperators
 
@@ -271,4 +271,4 @@ theorem constructRadioactiveSpinorSocketTarget
     RadioactiveSpinorSocketTarget :=
   ⟨rss⟩
 
-end InfoGeometry.Canonical.RadioactivePoissonBitStream
+end RadioactivePoissonBitStream

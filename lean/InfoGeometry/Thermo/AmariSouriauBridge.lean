@@ -22,7 +22,7 @@ single interface for:
 * the equilibrium Killing-field socket already owned by the canonical bridge.
 -/
 
-namespace InfoGeometry.Thermo.AmariSouriauBridge
+namespace AmariSouriauBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Convex.LegendrePotential
@@ -108,4 +108,4 @@ theorem fisher_nonneg (θ : ℝ) :
 
 end Bridge
 
-end InfoGeometry.Thermo.AmariSouriauBridge
+end AmariSouriauBridge

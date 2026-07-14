@@ -12,7 +12,7 @@ is a complex-linear functional and is compatible with the C*-involution.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStateLinear
+namespace GNSFiniteSupportStateLinear
 
 open scoped BigOperators
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
@@ -61,4 +61,4 @@ theorem omega_self_adjoint_im_zero (a : Alg n) (ha : involution a = a) :
     rw [ha]
   simpa [Complex.star_def] using hstar
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStateLinear
+end GNSFiniteSupportStateLinear

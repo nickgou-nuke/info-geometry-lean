@@ -18,7 +18,7 @@ construction of the Clifford algebra `Cl(5,5)`, the topological group
 `Pin(5,5)`, or a physical T-duality theorem.
 -/
 
-namespace InfoGeometry.Topology.Pin55ReflectionGlide
+namespace Pin55ReflectionGlide
 
 /-- Rational coordinate carrier for a finite split-signature `(5,5)` model. -/
 abbrev Vec55 := Fin 10 → ℚ
@@ -81,4 +81,4 @@ theorem pin55_reflection_and_glide_packet (x : Vec55) :
         glide01 (glide01 x) = translate1 1 x := by
   exact ⟨reflect0_preserves_splitNorm x, reflect0_involutive x, glide01_squared_eq_translate1 x⟩
 
-end InfoGeometry.Topology.Pin55ReflectionGlide
+end Pin55ReflectionGlide

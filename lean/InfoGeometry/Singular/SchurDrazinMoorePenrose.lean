@@ -8,7 +8,7 @@ Closed algebraic core for Schur/Drazin/Moore--Penrose readbacks.
 
 noncomputable section
 
-namespace InfoGeometry.Singular.SchurDrazinMoorePenrose
+namespace SchurDrazinMoorePenrose
 
 section Ring
 
@@ -34,4 +34,4 @@ theorem drazinResidueBlock_eq (A D : R) :
 
 end Ring
 
-end InfoGeometry.Singular.SchurDrazinMoorePenrose
+end SchurDrazinMoorePenrose

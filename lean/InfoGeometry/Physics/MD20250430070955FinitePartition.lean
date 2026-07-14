@@ -31,7 +31,7 @@ emergent-spacetime theorem is asserted.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD20250430070955FinitePartition
+namespace MD20250430070955FinitePartition
 
 open BigOperators
 
@@ -130,6 +130,6 @@ theorem repaired_MD20250430070955_finite_partition_packet
     finiteCovariance_zero_left_of_constant w hZ c P,
     fun i => MD20250430071017MatrixStatistics.localMatrix_recompose (q i)⟩
 
-end InfoGeometry.Physics.MD20250430070955FinitePartition
+end MD20250430070955FinitePartition
 
 end noncomputable section

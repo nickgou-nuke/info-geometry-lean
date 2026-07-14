@@ -20,7 +20,7 @@ lane.  That would be a stronger theorem than the current owner surfaces provide.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzWeylUHFBridge
+namespace CuntzWeylUHFBridge
 
 open scoped BigOperators
 
@@ -103,4 +103,4 @@ theorem weyl_signum_cuntz_parity_match
   rw [weyl_cuntz_reflection_invariance cws]
   exact trace.map_neg (cws.S_L ∘L (cws.cell.e_plus ∘L cws.cell.e_minus))
 
-end InfoGeometry.Canonical.CuntzWeylUHFBridge
+end CuntzWeylUHFBridge

@@ -19,7 +19,7 @@ Thus an odd Dirac/supercharge operator has a Hodge-even square, provided the
 chosen Hodge/phase axis anticommutes with it.
 -/
 
-namespace InfoGeometry.Canonical.HodgeDiracLaplacianBridge
+namespace HodgeDiracLaplacianBridge
 
 /--
 Carrier for a Hodge/Dirac/Laplacian readout.
@@ -183,4 +183,4 @@ theorem centralReadout_is_witness_gated
       W.centralReadout = C.centralReadout :=
   h
 
-end InfoGeometry.Canonical.HodgeDiracLaplacianBridge
+end HodgeDiracLaplacianBridge

@@ -21,7 +21,7 @@ finite C*-algebra `ℂ²`, represented as `Fin 2 → ℂ`:
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteTwoPoint
+namespace GNSFiniteTwoPoint
 
 /-- The two-point finite commutative algebra `ℂ²`. -/
 abbrev Two := Fin 2 → ℂ
@@ -101,4 +101,4 @@ theorem adjoint_relation (a x y : Two) :
   simp [inner2, mulVec, involution]
   ring
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteTwoPoint
+end GNSFiniteTwoPoint

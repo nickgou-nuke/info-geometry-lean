@@ -23,7 +23,7 @@ Boundary:
 * no `Spin(2,2) ≃ SL(2,C_s)` theorem.
 -/
 
-namespace InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
+namespace KleinSpinorOrbitCertifiedPacket
 
 open InfoGeometry.Algebra.KleinSpinorOrbit
 open InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
@@ -82,4 +82,4 @@ def splitComplexPacket : CertifiedOrbitPacket where
       Cs.add (Cs.mul M.ba Cs.E) (Cs.mul M.bb Cs.E) = Cs.E :=
   splitComplexPacket.diagonal_null_representative_complete M
 
-end InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
+end KleinSpinorOrbitCertifiedPacket

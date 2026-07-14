@@ -11,9 +11,9 @@ Transition between sections is given by the Volume Homomorphism, and
 the fibers are rescaled by the Dilation generators (Cartan D).
 -/
 
-namespace InfoGeometry.Volume.DeterminantBundle
+namespace DeterminantBundle
 
-open InfoGeometry.Volume.Base
+open Base
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
 
@@ -67,4 +67,4 @@ theorem hasConformalWeight_one (ψ : DeterminantLine V) :
   intro f
   simp [weylAction, Dilation, volumeScale, Real.rpow_one]
 
-end InfoGeometry.Volume.DeterminantBundle
+end DeterminantBundle

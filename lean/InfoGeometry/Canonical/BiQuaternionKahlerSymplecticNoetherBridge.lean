@@ -34,7 +34,7 @@ Killing flows, moment maps, Noether currents, conservation along actual
 solutions, gauge fields, and continuum physical dynamics.
 -/
 
-namespace InfoGeometry.Canonical.BiQuaternionKahlerSymplecticNoetherBridge
+namespace BiQuaternionKahlerSymplecticNoetherBridge
 
 open Matrix
 open InfoGeometry.Canonical.BiQuaternionKahlerFinite
@@ -126,4 +126,4 @@ theorem radialQuadraticHamiltonian_I4c_invariant (q p : R4) :
   dsimp [hamiltonian]
   rw [kinetic_I4c_invariant p, kinetic_I4c_invariant q]
 
-end InfoGeometry.Canonical.BiQuaternionKahlerSymplecticNoetherBridge
+end BiQuaternionKahlerSymplecticNoetherBridge

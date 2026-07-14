@@ -19,7 +19,7 @@ layers:
 
 noncomputable section
 
-namespace InfoGeometry.Krein.SplitComplex
+namespace SplitComplex
 
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
@@ -97,4 +97,4 @@ theorem norm_mul_right_of_norm_one (x y : SC) (hx : SplitComplex.norm x = 1) :
     SplitComplex.norm (SplitComplex.mul y x) = SplitComplex.norm y := by
   rw [norm_mul, hx, mul_one]
 
-end InfoGeometry.Krein.SplitComplex
+end SplitComplex

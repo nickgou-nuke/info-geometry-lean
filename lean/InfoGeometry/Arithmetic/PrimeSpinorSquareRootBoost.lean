@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
+namespace PrimeSpinorSquareRootBoost
 
 open InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 
@@ -290,4 +290,4 @@ theorem bilinear_partition
 
 end PrimeSpinorSquareRootPacket
 
-end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
+end PrimeSpinorSquareRootBoost

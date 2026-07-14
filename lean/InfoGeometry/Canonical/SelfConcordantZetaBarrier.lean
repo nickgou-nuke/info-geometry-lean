@@ -37,7 +37,7 @@ This file does not prove RH.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SelfConcordantZetaBarrier
+namespace SelfConcordantZetaBarrier
 
 open Real
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -317,4 +317,4 @@ theorem variationalRH_implies_criticalLine
     rw [hsum] at hEq
     linarith
 
-end InfoGeometry.Canonical.SelfConcordantZetaBarrier
+end SelfConcordantZetaBarrier

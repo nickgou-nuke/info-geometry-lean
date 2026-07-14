@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
+namespace ChiralPackingEnergy
 
 open InfoGeometry.OperatorAlgebra.CrossoverResidue
 open InfoGeometry.OperatorAlgebra.ConformalCrossover
@@ -442,4 +442,4 @@ theorem chiralPackingAudit_packet
         D.totalWeight :=
   chiralPackingAuditOwnerTarget Site V C D A
 
-end InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
+end ChiralPackingEnergy

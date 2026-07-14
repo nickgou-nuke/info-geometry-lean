@@ -19,7 +19,7 @@ data interfaces:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ArakiConnesHaagerupBridge
+namespace ArakiConnesHaagerupBridge
 
 open InfoGeometry.Canonical.StandardFormNaturalConeBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -136,4 +136,4 @@ theorem cylinderPotential_child
 
 end StandardFormCantorConeSystem
 
-end InfoGeometry.Canonical.ArakiConnesHaagerupBridge
+end ArakiConnesHaagerupBridge

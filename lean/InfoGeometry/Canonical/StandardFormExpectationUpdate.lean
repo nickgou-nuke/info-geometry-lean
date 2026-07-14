@@ -12,7 +12,7 @@ packages the exact witness form needed to express how a recursive modular
 scaling engine updates the expectation readout through the cone-vector carrier.
 -/
 
-namespace InfoGeometry.Canonical.StandardFormExpectationUpdate
+namespace StandardFormExpectationUpdate
 
 open InfoGeometry.Canonical.StandardFormNaturalConeBridge
 
@@ -98,4 +98,4 @@ theorem J_fixes_scaled_coneVector
 
 end StandardFormExpectationUpdateBridge
 
-end InfoGeometry.Canonical.StandardFormExpectationUpdate
+end StandardFormExpectationUpdate

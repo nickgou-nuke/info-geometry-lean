@@ -23,7 +23,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.UnifiedMatrixBasis
+namespace UnifiedMatrixBasis
 
 open InfoGeometry.Canonical.CelikCantorClifford
 
@@ -197,4 +197,4 @@ theorem unified_matrix_basis_capstone :
   · exact hilbertSchmidt_hermitian
   · exact soldering_is_real
 
-end InfoGeometry.Capstone.UnifiedMatrixBasis
+end UnifiedMatrixBasis

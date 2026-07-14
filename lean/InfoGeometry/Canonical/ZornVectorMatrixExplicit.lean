@@ -20,7 +20,7 @@ This is the finite algebraic readout behind the split-octonion light-cone
 language.  It is not ordinary associative matrix multiplication.
 -/
 
-namespace InfoGeometry.Canonical.ZornVectorMatrixExplicit
+namespace ZornVectorMatrixExplicit
 
 abbrev Vec3 : Type :=
   Fin 3 → ℝ
@@ -342,4 +342,4 @@ theorem split_null_projector_pair :
       pPlus + pMinus = zornOne :=
   ⟨pPlus_ne_zero, pMinus_ne_zero, pPlus_isNull, pMinus_isNull, pPlus_add_pMinus⟩
 
-end InfoGeometry.Canonical.ZornVectorMatrixExplicit
+end ZornVectorMatrixExplicit

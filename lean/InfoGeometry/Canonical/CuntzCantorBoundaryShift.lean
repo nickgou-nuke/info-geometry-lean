@@ -32,7 +32,7 @@ orthogonal range projections, KMS dynamics, and analytic/zeta interpretations.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzCantorBoundaryShift
+namespace CuntzCantorBoundaryShift
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
@@ -164,6 +164,6 @@ theorem finite_cuntz_cantor_shift_synthesis :
     cylinder_branch_pullback,
     branch_pullback_mem_colimit⟩
 
-end InfoGeometry.Canonical.CuntzCantorBoundaryShift
+end CuntzCantorBoundaryShift
 
 end noncomputable section

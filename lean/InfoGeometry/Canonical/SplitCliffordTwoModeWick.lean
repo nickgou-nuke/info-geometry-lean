@@ -16,7 +16,7 @@ evaluate exactly to their correlated contraction pairs:
 No placeholders. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordTwoModeWick
+namespace SplitCliffordTwoModeWick
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
@@ -75,4 +75,4 @@ theorem two_mode_vev_wick_package :
     wick_uncontracted_string_vanishes,
     wick_uncontracted_string_vanishes_right⟩
 
-end InfoGeometry.Canonical.SplitCliffordTwoModeWick
+end SplitCliffordTwoModeWick

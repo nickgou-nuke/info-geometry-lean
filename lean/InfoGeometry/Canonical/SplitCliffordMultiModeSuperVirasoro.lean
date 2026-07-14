@@ -12,7 +12,7 @@ keeps the boundary defect as an explicit operator remainder.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
+namespace SplitCliffordMultiModeSuperVirasoro
 
 open InfoGeometry.Canonical.SuperVirasoroFiniteWindow
 
@@ -99,4 +99,4 @@ theorem mixedBracket_m1_r0_witness_of_mul_zero
     (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)
     (boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero N A B hN hAB)
 
-end InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
+end SplitCliffordMultiModeSuperVirasoro

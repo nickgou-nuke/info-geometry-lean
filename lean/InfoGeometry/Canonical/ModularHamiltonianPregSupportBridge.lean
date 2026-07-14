@@ -14,7 +14,7 @@ certified support-restricted lane is an explicit compression of the same
 canonical `Δ/δ` package.
 -/
 
-namespace InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+namespace ModularHamiltonianPregSupportBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -234,4 +234,4 @@ theorem Kphys_eq_metric_compress_of_canonicalTomita
 
 end Core
 
-end InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+end ModularHamiltonianPregSupportBridge

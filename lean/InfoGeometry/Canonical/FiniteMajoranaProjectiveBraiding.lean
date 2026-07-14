@@ -21,7 +21,7 @@ No fault-tolerance theorem.
 No analytic/topological completion.
 -/
 
-namespace InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
+namespace FiniteMajoranaProjectiveBraiding
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 
@@ -104,4 +104,4 @@ theorem projectiveBraidGate_commute_rewrite_of_evalPhase
   exact projectiveBraidGate_commute_rewrite_of_phase Gate (phaseOfEval χ) readout hsep
     left right (phaseOfEval_commute_rewrite χ hsep left right)
 
-end InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
+end FiniteMajoranaProjectiveBraiding

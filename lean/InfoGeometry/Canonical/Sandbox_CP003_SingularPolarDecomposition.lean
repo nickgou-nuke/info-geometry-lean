@@ -13,7 +13,7 @@ This file is intentionally non-authority and reuses canonical owners from
 names for the singular KAN/polar surrogate claim packet.
 -/
 
-namespace InfoGeometry.Canonical.Sandbox_CP003_SingularPolarDecomposition
+namespace Sandbox_CP003_SingularPolarDecomposition
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -96,4 +96,4 @@ theorem cp003_singular_polar_kan_package_of_commute
 
 end Core
 
-end InfoGeometry.Canonical.Sandbox_CP003_SingularPolarDecomposition
+end Sandbox_CP003_SingularPolarDecomposition

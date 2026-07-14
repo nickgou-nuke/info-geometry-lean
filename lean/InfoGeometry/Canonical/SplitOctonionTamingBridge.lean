@@ -25,7 +25,7 @@ exposes the supported "banished or tamed by pairing" chain.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitOctonionTamingBridge
+namespace SplitOctonionTamingBridge
 
 open scoped InfoGeometryJordan
 
@@ -133,4 +133,4 @@ theorem singularResidue_eq_nilpotentResidue_on_state
 
 end DrazinInformation
 
-end InfoGeometry.Canonical.SplitOctonionTamingBridge
+end SplitOctonionTamingBridge

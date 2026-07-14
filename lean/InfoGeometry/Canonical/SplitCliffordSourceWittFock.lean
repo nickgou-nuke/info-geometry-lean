@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceCarrier
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitCliffordSourceWittFock
+namespace SplitCliffordSourceWittFock
 
 open Filter
 
@@ -90,4 +90,4 @@ def CurrentWickLaw
 
 end WittGenerators
 
-end InfoGeometry.Canonical.SplitCliffordSourceWittFock
+end SplitCliffordSourceWittFock

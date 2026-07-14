@@ -12,6 +12,6 @@ Use the imported Souriau owner files for the actual definitions and checked
 theorems.
 -/
 
-namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
+namespace BulgarianThermodynamicGeometryPacket
 
-end InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
+end BulgarianThermodynamicGeometryPacket

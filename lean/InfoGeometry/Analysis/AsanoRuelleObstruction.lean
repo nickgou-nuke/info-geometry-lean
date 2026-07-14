@@ -17,7 +17,7 @@ The zero-freeness premise is vacuous because there is no `z₁ ∉ K₁`.
 But `Q(-1)=0`, while `-1 ∉ -(K₁K₂) = {0}`.
 -/
 
-namespace InfoGeometry.Analysis.AsanoRuelleObstruction
+namespace AsanoRuelleObstruction
 
 /-- Two-variable separately affine block. -/
 def Phi (A B C D z₁ z₂ : ℂ) : ℂ :=
@@ -74,5 +74,5 @@ theorem asanoRuelle_unrestricted_claim_false :
 
   exact hConclusion hNotForbidden hRoot
 
-end InfoGeometry.Analysis.AsanoRuelleObstruction
+end AsanoRuelleObstruction
 

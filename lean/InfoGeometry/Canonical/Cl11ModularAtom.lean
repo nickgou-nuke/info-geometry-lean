@@ -22,7 +22,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.Canonical.Cl11ModularAtomPacket
+namespace Cl11ModularAtomPacket
 
 open InfoGeometry.Canonical
 
@@ -63,4 +63,4 @@ theorem axis_square_neg_one
 
 end Core
 
-end InfoGeometry.Canonical.Cl11ModularAtomPacket
+end Cl11ModularAtomPacket

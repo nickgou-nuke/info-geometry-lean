@@ -14,7 +14,7 @@ interfaces while the full AFP JNF growth machinery is ported incrementally.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius
+namespace SpectralRadius
 
 open scoped BigOperators
 open Polynomial
@@ -293,4 +293,4 @@ theorem eigenvalue_gt_one_power_growth {n : Nat}
     eigenvalue_norm_gt_one_of_hypothesis hc,
     eigenvector_power_action hv⟩
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius
+end SpectralRadius

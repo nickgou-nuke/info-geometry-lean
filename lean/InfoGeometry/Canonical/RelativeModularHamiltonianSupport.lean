@@ -21,7 +21,7 @@ This gives a strict bridge between the fully positive finite lane and the
 future unbounded/support-aware modular Hamiltonian interface.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularHamiltonianSupport
+namespace RelativeModularHamiltonianSupport
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -177,4 +177,4 @@ theorem supportRestricted_finite_hamiltonian_lane_package
 
 end Finite
 
-end InfoGeometry.Canonical.RelativeModularHamiltonianSupport
+end RelativeModularHamiltonianSupport

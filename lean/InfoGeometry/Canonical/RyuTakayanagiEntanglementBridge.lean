@@ -46,7 +46,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RyuTakayanagiEntanglementBridge
+namespace RyuTakayanagiEntanglementBridge
 
 open InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
 open InfoGeometry.Physics.HolographicPressureFunctional
@@ -222,4 +222,4 @@ theorem ryu_takayanagi_capstone (n N : ℕ) :
   · rfl
   · exact braidEntanglementPerStep_pos
 
-end InfoGeometry.Canonical.RyuTakayanagiEntanglementBridge
+end RyuTakayanagiEntanglementBridge

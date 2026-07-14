@@ -15,7 +15,7 @@ This file keeps the owner split:
 - this module only packages expectation-level coordinate channels.
 -/
 
-namespace InfoGeometry.Canonical.OperatorLightconeCoordinates
+namespace OperatorLightconeCoordinates
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -216,4 +216,4 @@ theorem rapiditySpaceCoordinate_eq_sinh_time_add_cosh_space (ψ : H₂) (η : �
 
 end Core
 
-end InfoGeometry.Canonical.OperatorLightconeCoordinates
+end OperatorLightconeCoordinates

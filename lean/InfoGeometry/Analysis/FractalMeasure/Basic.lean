@@ -1,7 +1,7 @@
 import Mathlib.Probability.ProductMeasure
 import Mathlib.Probability.UniformOn
 
-namespace InfoGeometry.Analysis.FractalMeasure.Basic
+namespace Basic
 
 noncomputable section
 
@@ -63,4 +63,4 @@ theorem measure_cylinderSet (s : Finset ℕ) (f : ℕ → Bool) :
 
 end
 
-end InfoGeometry.Analysis.FractalMeasure.Basic
+end Basic

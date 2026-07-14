@@ -31,7 +31,7 @@ noncomputable section
 
 set_option synthInstance.maxHeartbeats 20000
 
-namespace InfoGeometry.Algebra.TripotentClSUSYBridge
+namespace TripotentClSUSYBridge
 
 /-! ## 1. Tripotent from Cl(1,1) fermions -/
 
@@ -205,4 +205,4 @@ theorem word_parity_matches_projectors :
       _ = (0 : ZMod 2) := by decide
   exact ⟨h_odd, h_even, h_append⟩
 
-end InfoGeometry.Algebra.TripotentClSUSYBridge
+end TripotentClSUSYBridge

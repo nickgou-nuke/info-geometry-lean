@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.Sandbox_CP002_Lifted
+namespace Sandbox_CP002_Lifted
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -77,4 +77,4 @@ theorem drazin_quarantine_annihilates_shape
 
 end Core
 
-end InfoGeometry.Canonical.Sandbox_CP002_Lifted
+end Sandbox_CP002_Lifted

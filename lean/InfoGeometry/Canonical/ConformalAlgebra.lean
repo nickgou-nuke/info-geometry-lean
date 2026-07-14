@@ -7,7 +7,7 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySeqFocus false
 
-namespace InfoGeometry.Canonical.ConformalAlgebra
+namespace ConformalAlgebra
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.ChiralCartanCore
@@ -372,4 +372,4 @@ theorem scale_anomaly_obstructs_weyl_flatness :
 
 end ConformalBeliefAlgebra
 
-end InfoGeometry.Canonical.ConformalAlgebra
+end ConformalAlgebra

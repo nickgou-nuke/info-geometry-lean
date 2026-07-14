@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HilbertCuntz
+namespace HilbertCuntz
 
 /-! ## 1. Topological Base and Fiber Setups -/
 
@@ -95,4 +95,4 @@ theorem S_left_K_commute_global (f : H) (w : BinaryWord) :
       _                                  = J0 (S_left f (prefix_word 1 tw)) := by rw [S_left_apply_one]
       _                                  = K_op (S_left f) (prefix_word 1 tw) := by rw [K_op_apply]
 
-end InfoGeometry.Canonical.HilbertCuntz
+end HilbertCuntz

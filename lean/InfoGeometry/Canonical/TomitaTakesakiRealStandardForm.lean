@@ -19,7 +19,7 @@ carrier language `(H₂, J, ε, K)` and proves explicit gauge-equivalence facts:
 - reversing modular time `t ↦ -t`.
 -/
 
-namespace InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
+namespace TomitaTakesakiRealStandardForm
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -257,4 +257,4 @@ theorem orientation_equivalence_package
 
 end Core
 
-end InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
+end TomitaTakesakiRealStandardForm

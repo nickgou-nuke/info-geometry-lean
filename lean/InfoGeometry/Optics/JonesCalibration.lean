@@ -23,7 +23,7 @@ import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
-namespace InfoGeometry.Optics.JonesCalibration
+namespace JonesCalibration
 
 /-! ## 1. Optical eigenchannels -/
 
@@ -754,4 +754,4 @@ theorem nontrivial_cannot_relax_to_flat
 
 end JonesObstructionFlow
 
-end InfoGeometry.Optics.JonesCalibration
+end JonesCalibration

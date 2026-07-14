@@ -30,7 +30,7 @@ repository.  They expose the proof obligations needed to connect those
 literature statements to repo-native operator lanes.
 -/
 
-namespace InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
+namespace LiteratureGrandCanonicalWeylTKK
 
 /-! ## Residue-controlled singular ensembles -/
 
@@ -786,4 +786,4 @@ theorem grandCanonicalActionAffine
 
 end LiteratureWeylGrandCanonicalTKKKKTBridge
 
-end InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
+end LiteratureGrandCanonicalWeylTKK

@@ -19,7 +19,7 @@ we prove that its centered chart lies entirely in the tangent (`J`-even) sector
 and has zero normal (`J`-odd) component.
 -/
 
-namespace InfoGeometry.Arithmetic.CompletedXiProjectorBridge
+namespace CompletedXiProjectorBridge
 
 open InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -123,4 +123,4 @@ theorem xi_anchor_normal_projector_eq_zero (P : CompletedXiProjectorPacket) :
     criticalNormalProjector (centeredOfComplex P.anchor) = zero :=
   criticalNormalProjector_eq_zero_of_complex_fixed P.xi_anchor_fixed
 
-end InfoGeometry.Arithmetic.CompletedXiProjectorBridge
+end CompletedXiProjectorBridge

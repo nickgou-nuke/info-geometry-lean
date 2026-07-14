@@ -18,7 +18,7 @@ surfaces on the doubled-carrier theorem spine.
 This file records the explicit connections proven in the repository.
 -/
 
-namespace InfoGeometry.Canonical.FisherVolumeBridge
+namespace FisherVolumeBridge
 
 open InfoGeometry.Canonical.ModularHessian
 open InfoGeometry.Canonical.OperatorialUncertainty
@@ -116,4 +116,4 @@ theorem dynamic_rotation_preserves_hessian
   -- Follows directly from the definition of IsDynamicRotation
   exact hRot X Y
 
-end InfoGeometry.Canonical.FisherVolumeBridge
+end FisherVolumeBridge

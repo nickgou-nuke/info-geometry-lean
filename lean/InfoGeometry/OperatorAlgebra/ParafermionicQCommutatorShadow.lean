@@ -18,7 +18,7 @@ representation closure, braid/Yang-Baxter coherence, wallpaper forcing,
 parafermionic field theory, or a global automorphism classification.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.ParafermionicQCommutatorShadow
+namespace ParafermionicQCommutatorShadow
 
 abbrev M2Z := Matrix (Fin 2) (Fin 2) ℤ
 
@@ -97,4 +97,4 @@ theorem parafermionic_q_commutator_shadow_packet (q : ℤ) :
   exact ⟨U_sq_zero, D_sq_zero, U_mul_D, D_mul_U, q_commutator_shadow q,
     commutator_eq_H, anticommutator_eq_one⟩
 
-end InfoGeometry.OperatorAlgebra.ParafermionicQCommutatorShadow
+end ParafermionicQCommutatorShadow

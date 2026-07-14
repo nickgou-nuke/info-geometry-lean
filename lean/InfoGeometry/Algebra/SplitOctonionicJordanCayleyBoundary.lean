@@ -14,7 +14,7 @@ fundamental determinant identity.  Once such a proof is supplied for a concrete
 split-octonion model, the Klein-quadric corollary follows automatically.
 -/
 
-namespace InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
+namespace SplitOctonionicJordanCayleyBoundary
 
 open InfoGeometry.Algebra.SplitJordanSpinor
 
@@ -98,4 +98,4 @@ theorem on_klein_quadric (B : SplitOctonionicBoundary K A)
 
 end SplitOctonionicBoundary
 
-end InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
+end SplitOctonionicJordanCayleyBoundary

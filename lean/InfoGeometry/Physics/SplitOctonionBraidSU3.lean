@@ -22,7 +22,7 @@ Bilson-Thompson/Furey/split-octonion color layer:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.SplitOctonionBraidSU3
+namespace SplitOctonionBraidSU3
 
 /-! ## Coxeter generator data in S₃ -/
 
@@ -461,4 +461,4 @@ theorem tripotentScaleDet_at_one :
     tripotentScaleDet 1 = 0 := by
   norm_num [tripotentScaleDet, tripotentScaleCofactor]
 
-end InfoGeometry.Physics.SplitOctonionBraidSU3
+end SplitOctonionBraidSU3

@@ -18,7 +18,7 @@ This file is intentionally built on the landed owner surfaces:
 It does not depend on the sorry-equivalent modular spinor layer.
 -/
 
-namespace InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
+namespace MajoranaKitaevSpinorBridge
 
 open InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 open InfoGeometry.Canonical.Drazin
@@ -389,4 +389,4 @@ theorem exists_majorana_kitaev_spinor_regularization_package_of_simplifiedBounda
 
 end Core
 
-end InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
+end MajoranaKitaevSpinorBridge

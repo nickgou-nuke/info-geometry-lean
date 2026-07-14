@@ -5,7 +5,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.Cl11TensorTowerLimit
+namespace Cl11TensorTowerLimit
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -195,4 +195,4 @@ theorem finite_sequence_involution_in_limit
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 -- [No open closure debt in this module.]
 
-end InfoGeometry.Clifford.Cl11TensorTowerLimit
+end Cl11TensorTowerLimit

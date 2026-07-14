@@ -25,7 +25,7 @@ No analytic continuation theorem.
 No Laughlin-factor braid-matrix derivation.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+namespace FiniteFibonacciElectronIndependence
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -140,4 +140,4 @@ theorem fibonacciWithElectrons_artin_from_matrix_identity
         fibonacciBMatrixWithElectrons r q τ root :=
   hArtin
 
-end InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+end FiniteFibonacciElectronIndependence

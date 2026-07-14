@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.AlgebraicStateEmergence
+namespace AlgebraicStateEmergence
 
 open InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 open InfoGeometry.Canonical.Cl11LorentzAction
@@ -92,4 +92,4 @@ theorem emergentCovariantRatio_covariant
 
 end EmergentGeometry
 
-end InfoGeometry.Canonical.AlgebraicStateEmergence
+end AlgebraicStateEmergence

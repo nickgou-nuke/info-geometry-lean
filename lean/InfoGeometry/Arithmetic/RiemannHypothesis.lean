@@ -32,7 +32,7 @@ vacuous theorem.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.RiemannHypothesis
+namespace RiemannHypothesis
 
 open InfoGeometry.Analysis.BregmanAnalyticBound
 
@@ -114,4 +114,4 @@ theorem fredholm_determinant_nonzero_on_critical_halfplane
     C.determinant s ≠ 0 :=
   C.determinant_ne_zero s hs
 
-end InfoGeometry.Arithmetic.RiemannHypothesis
+end RiemannHypothesis

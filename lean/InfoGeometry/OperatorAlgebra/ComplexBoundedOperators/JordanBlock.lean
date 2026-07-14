@@ -12,7 +12,7 @@ its entry equations, upper-triangularity, and characteristic polynomial.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock
+namespace JordanBlock
 
 open scoped BigOperators
 open Polynomial
@@ -516,4 +516,4 @@ theorem jordanBlock_charpoly {R : Type*} [CommRing R] {n : Nat} (a : R) :
     _ = ∏ _i : Fin n, (X - C a) := by simp
     _ = (X - C a) ^ n := by simp
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock
+end JordanBlock

@@ -19,7 +19,7 @@ separate `spin44OrSO44Readout`, and standard 3+1 conformal gravity would need
 additional signature-translation data.
 -/
 
-namespace InfoGeometry.Canonical.Cl44BridgeCandidate
+namespace Cl44BridgeCandidate
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
 open InfoGeometry.Canonical.ConformalUnification
@@ -244,4 +244,4 @@ def candidate_spin44Readout_packet
     InfoGeometry.Canonical.Spin44CharacterShadow.Cartan4 :=
   C.spin44OrSO44Readout
 
-end InfoGeometry.Canonical.Cl44BridgeCandidate
+end Cl44BridgeCandidate

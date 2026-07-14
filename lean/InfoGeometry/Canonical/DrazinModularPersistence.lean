@@ -22,7 +22,7 @@ Drazin, modular-flow, or Fierz readout owners.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinModularPersistence
+namespace DrazinModularPersistence
 
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -472,4 +472,4 @@ theorem fierz_quadric_from_modular_physical_horizon_assumption
     K.residual.residual (horizonFierzVector K.compressedState K.channels D) = 0 :=
   K.compatibility_assumption D hHorizon hChannels
 
-end InfoGeometry.Canonical.DrazinModularPersistence
+end DrazinModularPersistence

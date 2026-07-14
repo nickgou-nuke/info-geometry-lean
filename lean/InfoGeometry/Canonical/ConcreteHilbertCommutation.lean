@@ -59,7 +59,7 @@ witnesses, certificates, or renamed placeholders.]
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConcreteHilbertCommutation
+namespace ConcreteHilbertCommutation
 
 open scoped TensorProduct
 
@@ -328,4 +328,4 @@ theorem S_left_commutes_K_lp (ψ : H_lp E) :
   · rfl
   · exact (map_zero (clockAxis (E := E))).symm
 
-end InfoGeometry.Canonical.ConcreteHilbertCommutation
+end ConcreteHilbertCommutation

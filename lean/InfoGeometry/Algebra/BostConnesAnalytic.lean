@@ -27,7 +27,7 @@ open Topology
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.BostConnesAnalytic
+namespace BostConnesAnalytic
 
 /-! ## 1. Boltzmann factor limits -/
 
@@ -230,4 +230,4 @@ theorem ground_state_limit (n : ℕ) (primes : Fin n → ℕ)
 
 
 
-end InfoGeometry.Algebra.BostConnesAnalytic
+end BostConnesAnalytic

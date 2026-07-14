@@ -19,7 +19,7 @@ It packages the theorem-safe readout:
 * optional compatibility with the Drazin regular-support lane.
 -/
 
-namespace InfoGeometry.Canonical.ErgodicFixedPointBridge
+namespace ErgodicFixedPointBridge
 
 open InfoGeometry.Canonical.KMSConditionBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -186,4 +186,4 @@ end CantorDyadicRenormalization
 
 end Cantor
 
-end InfoGeometry.Canonical.ErgodicFixedPointBridge
+end ErgodicFixedPointBridge

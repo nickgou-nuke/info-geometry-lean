@@ -12,7 +12,7 @@ spectral triple implementation; it packages the data needed to embed a
 graph-defined Dirac lane into `QuantumPresentation`.
 -/
 
-namespace InfoGeometry.Canonical.GraphDiracPresentation
+namespace GraphDiracPresentation
 
 open InfoGeometry.Canonical.QuantumPresentation
 
@@ -82,4 +82,4 @@ def taggedPresentation (G : GraphMetricDirac) : TaggedPresentation where
 
 end GraphMetricDirac
 
-end InfoGeometry.Canonical.GraphDiracPresentation
+end GraphDiracPresentation

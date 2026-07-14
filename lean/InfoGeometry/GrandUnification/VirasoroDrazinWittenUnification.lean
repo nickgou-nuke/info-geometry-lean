@@ -41,7 +41,7 @@ Riemann-zeta/RH interpretations.
 
 noncomputable section
 
-namespace InfoGeometry.GrandUnification.VirasoroDrazinWittenUnification
+namespace VirasoroDrazinWittenUnification
 
 open scoped BigOperators
 
@@ -174,4 +174,4 @@ theorem gull_doran_real_pseudoscalar_phase_readout :
   ⟨InfoGeometry.Clifford.GullDoranPseudoscalarBridge.real_pseudoscalar_eq_phaseAxis,
     InfoGeometry.Clifford.GullDoranPseudoscalarBridge.realPhaseAxis_sq⟩
 
-end InfoGeometry.GrandUnification.VirasoroDrazinWittenUnification
+end VirasoroDrazinWittenUnification

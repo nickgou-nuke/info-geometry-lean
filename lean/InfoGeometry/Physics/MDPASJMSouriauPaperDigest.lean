@@ -26,7 +26,7 @@ Covered finite content:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MDPASJMSouriauPaperDigest
+namespace MDPASJMSouriauPaperDigest
 
 open InfoGeometry.Topology.ThermodynamicGauge
 open InfoGeometry.Topology.WilsonLoopThermodynamics
@@ -257,4 +257,4 @@ theorem finiteStageTower_inductiveLimitCarrier_lifts_finiteIdentities
 
 end FiniteMDPASObstructionPacket
 
-end InfoGeometry.Physics.MDPASJMSouriauPaperDigest
+end MDPASJMSouriauPaperDigest

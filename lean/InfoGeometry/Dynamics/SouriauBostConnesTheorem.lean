@@ -47,7 +47,7 @@ open scoped Topology
 
 noncomputable section
 
-namespace InfoGeometry.Dynamics.SouriauBostConnesTheorem
+namespace SouriauBostConnesTheorem
 
 open FibonacciFusion
 open InfoGeometry.Canonical
@@ -177,4 +177,4 @@ structure TransitionDictionary where
 theorem transition_dictionary_nonempty : Nonempty TransitionDictionary :=
   ⟨{}⟩
 
-end InfoGeometry.Dynamics.SouriauBostConnesTheorem
+end SouriauBostConnesTheorem

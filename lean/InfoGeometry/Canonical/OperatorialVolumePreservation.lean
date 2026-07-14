@@ -18,7 +18,7 @@ This file keeps the construction strictly in bounded endomorphism algebra:
 - and a Krein-isometric Bogoliubov transport closure witness.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialVolumePreservation
+namespace OperatorialVolumePreservation
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
@@ -158,4 +158,4 @@ theorem volumePreserving_of_bogoliubov_kreinIsometry
 
 end Core
 
-end InfoGeometry.Canonical.OperatorialVolumePreservation
+end OperatorialVolumePreservation

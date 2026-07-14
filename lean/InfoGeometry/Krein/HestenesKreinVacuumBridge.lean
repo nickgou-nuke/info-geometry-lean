@@ -5,7 +5,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesKreinVacuumBridge
+namespace HestenesKreinVacuumBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -124,4 +124,4 @@ end HestenesKreinVacuum
 
 end Core
 
-end InfoGeometry.Krein.HestenesKreinVacuumBridge
+end HestenesKreinVacuumBridge

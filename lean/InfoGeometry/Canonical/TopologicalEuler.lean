@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.SpectralInference
 
-namespace InfoGeometry.Canonical.TopologicalEuler
+namespace TopologicalEuler
 
 open InfoGeometry.Canonical.SpectralInference
 
@@ -33,4 +33,4 @@ topological 'holes' (singularities) that prevent global coordinate recovery.
 def HasInformationHoles (IST : InfoSpectralTriple E) : Prop :=
   eulerCharacteristic IST ≠ 1 -- assuming χ=1 for flat E
 
-end InfoGeometry.Canonical.TopologicalEuler
+end TopologicalEuler

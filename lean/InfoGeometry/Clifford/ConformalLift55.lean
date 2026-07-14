@@ -12,7 +12,7 @@ This file records the honest real split-Bott architecture used in the repo:
 It is not a complexification claim.
 -/
 
-namespace InfoGeometry.Clifford.ConformalLift55
+namespace ConformalLift55
 
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.BottPeriodicity
@@ -93,4 +93,4 @@ theorem conformalNullPair_exists :
       norm_num
     exact hpair.trans hnorm
 
-end InfoGeometry.Clifford.ConformalLift55
+end ConformalLift55

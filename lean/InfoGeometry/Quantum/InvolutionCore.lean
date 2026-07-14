@@ -35,7 +35,7 @@ noncomputable def je (X : InvolutionCore) : X →ₗ[ℝ] X :=
   X.J.comp X.eps
 
 @[simp] theorem je_def (X : InvolutionCore) :
-    X.je = X.J.comp X.eps := rfl
+    je X = X.J.comp X.eps := rfl
 
 @[simp] theorem J_sq_apply (X : InvolutionCore) (x : X) :
     X.J (X.J x) = x := by

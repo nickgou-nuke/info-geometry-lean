@@ -49,7 +49,7 @@ Prime numbers (arithmetic)  →  TwoComplex  →  Hodge decomposition
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.Capstone
+namespace Capstone
 
 open BostConnesSystem
 open PrimonGasPartition
@@ -145,4 +145,4 @@ Clifford lanes.  Rows marked as targets/debt are not theorem-closed in this
 file.
 -/
 
-end InfoGeometry.Arithmetic.Capstone
+end Capstone

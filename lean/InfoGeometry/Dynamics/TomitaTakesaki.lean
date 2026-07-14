@@ -15,7 +15,7 @@ reflection `J`, the diagonal modular operator `Δ`, and the induced complexified
 diagonal flow.
 -/
 
-namespace InfoGeometry.Dynamics.TomitaTakesaki
+namespace TomitaTakesaki
 
 open Matrix
 open InfoGeometry.Dynamics.KmsBoundary
@@ -105,4 +105,4 @@ theorem finiteTomitaFlow_add (s t : ℝ) :
       ← Complex.exp_add, mul_add]
   all_goals ring_nf
 
-end InfoGeometry.Dynamics.TomitaTakesaki
+end TomitaTakesaki

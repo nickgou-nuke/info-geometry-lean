@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.OperatorAlgebra.SupergradedClosure
 
-namespace InfoGeometry.OperatorAlgebra.RecursiveSupercharge
+namespace RecursiveSupercharge
 open InfoGeometry.OperatorAlgebra.SupergradedClosure
 
 /--
@@ -475,4 +475,4 @@ theorem odd_nilpotent_along_chain
   exact (C.Invariant n).odd_nilpotency (C.iterMap n x0) hodd
 end FiniteInvariantChain
 
-end InfoGeometry.OperatorAlgebra.RecursiveSupercharge
+end RecursiveSupercharge

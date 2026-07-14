@@ -33,7 +33,7 @@ the orientifold propositions from geometry.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.KleinBottleBoundaryAction
+namespace KleinBottleBoundaryAction
 
 open Matrix
 
@@ -144,5 +144,5 @@ theorem orientifold_klein_gluing_trace_closure
     h_projection,
     h_quotient⟩
 
-end InfoGeometry.Canonical.KleinBottleBoundaryAction
+end KleinBottleBoundaryAction
 

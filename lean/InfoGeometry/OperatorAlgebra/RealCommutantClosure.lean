@@ -25,7 +25,7 @@ Finite real-operator commutant closure lemmas.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.RealCommutantClosure
+namespace RealCommutantClosure
 
 variable {HR : Type*}
 variable [NormedAddCommGroup HR] [InnerProductSpace ℝ HR]
@@ -293,4 +293,4 @@ theorem realCommutant_basic_closure
       intro B D hB hD
       exact realCommutant_mul_mem A hB hD⟩
 
-end InfoGeometry.OperatorAlgebra.RealCommutantClosure
+end RealCommutantClosure

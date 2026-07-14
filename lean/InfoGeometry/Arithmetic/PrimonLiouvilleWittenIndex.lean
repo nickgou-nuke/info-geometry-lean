@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
+namespace PrimonLiouvilleWittenIndex
 
 open InfoGeometry.Arithmetic.PrimonFinite
 
@@ -295,4 +295,4 @@ theorem readoutSpecies_separate
 
 end MellinThermalVsDiracHeatKernelGuard
 
-end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
+end PrimonLiouvilleWittenIndex

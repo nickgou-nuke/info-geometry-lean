@@ -23,7 +23,7 @@ No smooth Berry bundle, analytic Wilson loop, band-Hamiltonian theorem,
 continuum curvature theorem, or high-energy duality theorem is asserted here.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite
+namespace KleinBerryConnectionFinite
 
 open Matrix
 open InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge
@@ -147,4 +147,4 @@ theorem kleinBerryConnection_finite_packet :
     phaseParity_add_two, antisymmetric_boundary_klein_invariant_zero,
     g2Cartan_entries.2.1, rfl, rfl, rfl⟩
 
-end InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite
+end KleinBerryConnectionFinite

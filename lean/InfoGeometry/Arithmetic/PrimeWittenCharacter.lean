@@ -24,7 +24,7 @@ is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeWittenCharacter
+namespace PrimeWittenCharacter
 
 open scoped BigOperators
 
@@ -65,4 +65,4 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
       symm
       exact InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q
 
-end InfoGeometry.Arithmetic.PrimeWittenCharacter
+end PrimeWittenCharacter

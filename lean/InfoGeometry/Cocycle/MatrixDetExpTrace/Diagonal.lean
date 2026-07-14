@@ -19,7 +19,7 @@ volume cocycle statement, not a Fisher/Souriau partition statement.
 
 noncomputable section
 
-namespace InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
+namespace Diagonal
 
 open scoped Matrix
 
@@ -57,4 +57,4 @@ theorem h1_det_exp_diagonal_trace
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
   det_exp_diagonal v
 
-end InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
+end Diagonal

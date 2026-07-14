@@ -7,7 +7,7 @@ import Mathlib.Tactic
 
 open InfoGeometry.Algebra.KleinSpinorOrbit
 
-namespace InfoGeometry.Algebra.OrbitStratification
+namespace OrbitStratification
 
 /-- The zero spinor (0,0). -/
 def zeroSpinor : CsSpinor := ⟨Cs.zero, Cs.zero⟩
@@ -39,4 +39,4 @@ theorem zero_iff_both_zero (ψ : CsSpinor) : ψ = zeroSpinor ↔ ψ.plus = Cs.ze
     simp [zeroSpinor]
     exact ⟨hp, hm⟩
 
-end InfoGeometry.Algebra.OrbitStratification
+end OrbitStratification

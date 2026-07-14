@@ -36,7 +36,7 @@ universe u
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesGalois
+namespace BostConnesGalois
 
 open InfoGeometry.Canonical.BostConnesKMS
 open InfoGeometry.Arithmetic.BostConnesSystem
@@ -184,4 +184,4 @@ structure BostConnesCrossedProduct
     BostConnesKMS.S cuntz n * ι A *
       star (BostConnesKMS.S cuntz n) = ι (semigroup.α n A)
 
-end InfoGeometry.Canonical.BostConnesGalois
+end BostConnesGalois

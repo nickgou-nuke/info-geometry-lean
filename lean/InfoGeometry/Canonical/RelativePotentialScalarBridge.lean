@@ -11,7 +11,7 @@ carrier. This makes plain `-log` potentials instances of the existing
 representative-level modular-potential language rather than a separate ontology.
 -/
 
-namespace InfoGeometry.Canonical.RelativePotentialScalarBridge
+namespace RelativePotentialScalarBridge
 
 open InfoGeometry.Canonical.RelativePotentialCore
 
@@ -80,4 +80,4 @@ attribute [rep_depth projective]
   exp_neg_scalarModularPotential_eq
   scalarModularPotential_weylRescale_eq_sub_log
 
-end InfoGeometry.Canonical.RelativePotentialScalarBridge
+end RelativePotentialScalarBridge

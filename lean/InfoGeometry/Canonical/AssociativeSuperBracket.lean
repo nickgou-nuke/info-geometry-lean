@@ -11,7 +11,7 @@ packages the standard super-commutator formula on an associative algebra using
 the repo's existing `SuperParity` tags.
 -/
 
-namespace InfoGeometry.Canonical.AssociativeSuperBracket
+namespace AssociativeSuperBracket
 
 open InfoGeometry.Canonical.SuperAnomaly
 
@@ -74,4 +74,4 @@ noncomputable abbrev anticommutator (a b : A) : A :=
     superBracket SuperParity.odd SuperParity.odd a b = a * b + b * a := by
   simp [superBracket, paritySign, sub_eq_add_neg]
 
-end InfoGeometry.Canonical.AssociativeSuperBracket
+end AssociativeSuperBracket

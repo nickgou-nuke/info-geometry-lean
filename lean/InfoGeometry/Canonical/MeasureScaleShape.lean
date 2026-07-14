@@ -21,7 +21,7 @@ open scoped ENNReal
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.MeasureScaleShape
+namespace MeasureScaleShape
 
 variable {α : Type*} [MeasurableSpace α] [Nonempty α]
 
@@ -49,4 +49,4 @@ theorem generalizedKL_scale_shape_split
 
 
 
-end InfoGeometry.Canonical.MeasureScaleShape
+end MeasureScaleShape

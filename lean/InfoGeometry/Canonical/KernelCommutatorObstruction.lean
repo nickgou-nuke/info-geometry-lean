@@ -14,7 +14,7 @@ This module does not introduce new defect ontology. It re-exports:
   `SuperchargeEinsteinSourceBridge`.
 -/
 
-namespace InfoGeometry.Canonical.KernelCommutatorObstruction
+namespace KernelCommutatorObstruction
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.ChiralDefectIndexBridge
@@ -83,4 +83,4 @@ theorem projectorObstruction_ne_zero_of_mismatch_direct
 
 end Core
 
-end InfoGeometry.Canonical.KernelCommutatorObstruction
+end KernelCommutatorObstruction

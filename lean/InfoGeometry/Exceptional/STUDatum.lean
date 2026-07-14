@@ -11,7 +11,7 @@ import InfoGeometry.Exceptional.Freudenthal
 
 noncomputable section
 
-namespace InfoGeometry.Exceptional.STUDatum
+namespace STUDatum
 
 open InfoGeometry.Exceptional.Freudenthal
 
@@ -118,4 +118,4 @@ def STU_Datum : CubicJordanDatum STUCarrier where
     dsimp [stuNormTrilin, stuNormCubic]
     ring
 
-end InfoGeometry.Exceptional.STUDatum
+end STUDatum

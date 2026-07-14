@@ -26,7 +26,7 @@ BUCKET 3: OPEN CLOSURE DEBT
 - no twistor field equation or K-theoretic classification theorem.
 -/
 
-namespace InfoGeometry.Canonical.PenroseSpinNetGraphCategory
+namespace PenroseSpinNetGraphCategory
 
 open CategoryTheory
 open InfoGeometry.Canonical.DiscretePenroseSpinNet
@@ -223,4 +223,4 @@ theorem patchPathInclusion_preserves_le
 
 end PatchInclusions
 
-end InfoGeometry.Canonical.PenroseSpinNetGraphCategory
+end PenroseSpinNetGraphCategory

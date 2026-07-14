@@ -62,7 +62,7 @@ open Matrix
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikErlangenBraidBridge
+namespace CelikErlangenBraidBridge
 
 open InfoGeometry.Canonical.CelikCantorClifford
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -249,4 +249,4 @@ theorem celik_erlangen_z3_concrete_braid_bridge :
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix) := by
   exact ⟨celik_erlangen_braid_bridge, z3_artin_relation_via_atoms⟩
 
-end InfoGeometry.Canonical.CelikErlangenBraidBridge
+end CelikErlangenBraidBridge

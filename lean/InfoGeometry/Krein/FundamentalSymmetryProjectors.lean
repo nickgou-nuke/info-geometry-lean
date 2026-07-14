@@ -52,7 +52,7 @@ Krein space is asserted here; this is the closed algebraic projector layer.
   - None for this algebraic projector layer.
 -/
 
-namespace InfoGeometry.Krein.FundamentalSymmetryProjectors
+namespace FundamentalSymmetryProjectors
 
 open InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
 
@@ -160,4 +160,4 @@ theorem K_plus_K_minus_orthogonal
   self_dual_anti_self_dual_orthogonal
     indefInner indefInner_comm indefInner_smul_left J hJ2 hJadj half x y
 
-end InfoGeometry.Krein.FundamentalSymmetryProjectors
+end FundamentalSymmetryProjectors

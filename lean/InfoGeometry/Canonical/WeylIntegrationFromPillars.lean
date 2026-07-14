@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.WeylIntegrationFromPillars
+namespace WeylIntegrationFromPillars
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -124,4 +124,4 @@ theorem weylIntegration_kernel_orbit_mellin_packet
     spectralDeterminant lam = mellinCharacter lam :=
   ⟨hδ_det t, hδ_mellin t, hlaplace_fourier ξ, horbit x, hspectral_mellin lam⟩
 
-end InfoGeometry.Canonical.WeylIntegrationFromPillars
+end WeylIntegrationFromPillars

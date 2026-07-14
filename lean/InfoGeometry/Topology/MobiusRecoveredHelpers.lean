@@ -6,7 +6,7 @@ import InfoGeometry.Topology.MobiusGeometry
 Importable helper packet for Möbius inverse and composition laws.
 -/
 
-namespace InfoGeometry.Topology.MobiusRecoveredHelpers
+namespace MobiusRecoveredHelpers
 
 open Complex
 
@@ -317,4 +317,4 @@ lemma eval_comp (M1 M2 : MobiusTransform) (z : RiemannSphere) :
         rw [num_eq, den_eq]
         rw [div_div_div_cancel_right₀ h2_denom]
 
-end InfoGeometry.Topology.MobiusRecoveredHelpers
+end MobiusRecoveredHelpers

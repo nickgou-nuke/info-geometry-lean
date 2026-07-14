@@ -6,7 +6,7 @@ import Mathlib
 Boolean/Cantor local encoding of the `2×2` split-Clifford ladder block.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordCantorFock
+namespace SplitCliffordCantorFock
 
 open Matrix
 
@@ -202,7 +202,7 @@ theorem cantorState_hop_true_eq_annihilate :
     cantorState (hopBit true) = a_op * cantorState true := by
   simpa [hopBit] using annihilate_true_eq_false.symm
 
-end InfoGeometry.Canonical.SplitCliffordCantorFock
+end SplitCliffordCantorFock
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

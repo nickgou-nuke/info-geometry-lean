@@ -33,7 +33,7 @@ from an analytic Massieu potential, Hodge integration, Killing/Noether
 conservation laws, and physical field equations.
 -/
 
-namespace InfoGeometry.Canonical.BiQuaternionKahlerFinite
+namespace BiQuaternionKahlerFinite
 
 open Matrix
 
@@ -146,4 +146,4 @@ theorem toyCasimir2_sigmaX_sigmaYReal :
   fin_cases i <;> fin_cases j <;>
     simp [toyCasimir2, sigmaX, sigmaYReal]
 
-end InfoGeometry.Canonical.BiQuaternionKahlerFinite
+end BiQuaternionKahlerFinite

@@ -14,7 +14,7 @@ No separate scalar `Complex.I` is used at operator level: complex action is
 implemented as a derived real action through `K`.
 -/
 
-namespace InfoGeometry.Canonical.RealBdG
+namespace RealBdG
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -216,4 +216,4 @@ lemma complexI_action_eq_modularK (v : DoubledSpace E) :
 
 end Core
 
-end InfoGeometry.Canonical.RealBdG
+end RealBdG

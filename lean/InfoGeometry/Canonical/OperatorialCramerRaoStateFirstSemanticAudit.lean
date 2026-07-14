@@ -27,7 +27,7 @@ meta-theorem proving axiom-freeness or global non-vacuity.
 #print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.stateFirst_admissibleGate_transport_and_operatorialCramerRao
 #print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.stateFirst_measurable_uncertainty_operatorialCramerRao_package
 
-namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
+namespace OperatorialCramerRaoStateFirstSemanticAudit
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -318,4 +318,4 @@ theorem chunk4_cr_lower_bound_audit
 
 end Core
 
-end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
+end OperatorialCramerRaoStateFirstSemanticAudit

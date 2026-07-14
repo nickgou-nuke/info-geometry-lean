@@ -27,7 +27,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
+namespace PrimeGrandCanonicalMassieuBridge
 
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 open InfoGeometry.LogPotential
@@ -151,4 +151,4 @@ theorem fenchelGap_eq_zero_at_contact (θ : ℝ) :
 
 end Bridge
 
-end InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
+end PrimeGrandCanonicalMassieuBridge

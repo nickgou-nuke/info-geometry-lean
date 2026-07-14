@@ -29,7 +29,7 @@ import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.NavierStokesSnapBridge
+namespace NavierStokesSnapBridge
 
 open InfoGeometry.Geometry.ChiralTubuleBoundary
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
@@ -434,4 +434,4 @@ theorem protectedNavierStokesSnapSectorInstalledTarget
   intro S t
   exact S.cannot_relax_to_flat t
 
-end InfoGeometry.Canonical.NavierStokesSnapBridge
+end NavierStokesSnapBridge

@@ -25,7 +25,7 @@ It does not assert any prime-number, Lee--Yang, xi, or RH theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
+namespace DiscreteHurwitzCliffordWavelet
 
 /-- Abstract Hurwitz integer lattice used as the discrete coefficient geometry. -/
 @[rep_depth operator]
@@ -177,4 +177,4 @@ structure CliffordCascadeSystem
   compactUniformUpgrade : Prop
   reconstructionExists : Prop
 
-end InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
+end DiscreteHurwitzCliffordWavelet

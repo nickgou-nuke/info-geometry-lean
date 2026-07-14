@@ -27,7 +27,7 @@ models.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Algebra.SplitQuaternionFlows
+namespace SplitQuaternionFlows
 
 /--
 The split-quaternion, or coquaternion, real carrier with coordinates in the
@@ -95,4 +95,4 @@ abbrev parabolic_flow := parabolicFlow
 /-- Compatibility alias for the split norm. -/
 abbrev norm := splitNorm
 
-end InfoGeometry.Algebra.SplitQuaternionFlows
+end SplitQuaternionFlows

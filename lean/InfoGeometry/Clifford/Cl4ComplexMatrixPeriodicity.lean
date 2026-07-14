@@ -16,7 +16,7 @@ set_option maxHeartbeats 900000
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySimpa false
 
-namespace InfoGeometry.Clifford.Cl4ComplexMatrixPeriodicity
+namespace Cl4ComplexMatrixPeriodicity
 
 /-- Complex Clifford matrix shape: one simple block, or two simple blocks. -/
 inductive ComplexCliffordShape where
@@ -219,4 +219,4 @@ theorem bare_M2H_dimension_ne_M4C_real_dimension :
     (2 * 2 * 4 : ℕ) ≠ 4 * 4 * 2 := by
   norm_num
 
-end InfoGeometry.Clifford.Cl4ComplexMatrixPeriodicity
+end Cl4ComplexMatrixPeriodicity

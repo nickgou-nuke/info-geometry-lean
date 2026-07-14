@@ -7,7 +7,7 @@ import Mathlib.Data.Finset.Basic
 # D₄ triality audit copy
 -/
 
-namespace InfoGeometry.Physics.D4Triality_audit
+namespace D4Triality_audit
 
 open InfoGeometry.Physics.ZornMatrixSU3
 
@@ -117,4 +117,4 @@ theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAct
 #print axioms InfoGeometry.Physics.D4Triality_audit.tripotent_cube
 #print axioms InfoGeometry.Physics.D4Triality_audit.ColorPermutationAction.commutes_with_tripotent
 
-end InfoGeometry.Physics.D4Triality_audit
+end D4Triality_audit

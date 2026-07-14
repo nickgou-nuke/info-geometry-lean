@@ -15,7 +15,7 @@ It does not attempt any general `PGL₄(ℝ)` classification of arbitrary real
 quadrics.
 -/
 
-namespace InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
+namespace QuadricSliceSignPacket
 
 open InfoGeometry.Projective.Quadrics.AffineSlices
 open InfoGeometry.Projective.Quadrics.SignatureDeterminant
@@ -48,4 +48,4 @@ def canonical_quadric_slice_sign_packet (x y z : ℝ) :
   paraboloid := paraboloidAff_iff_homogeneous_one (R := ℝ) x y z
   determinant := determinant_sign_packet
 
-end InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
+end QuadricSliceSignPacket

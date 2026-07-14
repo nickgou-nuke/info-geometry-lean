@@ -24,7 +24,7 @@ No certificate.
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.ComplexThermodynamicLift
+namespace ComplexThermodynamicLift
 
 
 /-! ## 1. Complex first law algebra -/
@@ -373,4 +373,4 @@ theorem yangLeeZero_realPhaseConditions
     simpa [mul_assoc, mul_comm, mul_left_comm] using him
 
 
-end InfoGeometry.Thermo.ComplexThermodynamicLift
+end ComplexThermodynamicLift

@@ -3,7 +3,7 @@ import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.MD008RepresentationCharge
 
-namespace InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
+namespace ItakuraSaitoFradkinTseytlin
 
 
 open InfoGeometry.Physics.FreeEntropyDiffusionFunctional
@@ -73,4 +73,4 @@ def standardModelCocycles : ScaleInvariantCocycles := {
 theorem ft_fields_are_de_rham_cocycles :
   standardModelCocycles.ft_scalars = 36 := rfl
 
-end InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
+end ItakuraSaitoFradkinTseytlin

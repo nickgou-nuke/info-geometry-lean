@@ -17,7 +17,7 @@ Those remain outside this finite packet unless closed by existing analytic owner
 surfaces.
 -/
 
-namespace InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
+namespace PhysicsRiemannHypothesisFinite
 
 /-- Paper-local finite Mobius table, enough for the checked divisor-sum examples. -/
 def muPaper : ℕ → ℤ
@@ -151,4 +151,4 @@ theorem mertens_muPaper_ten :
       muPaper 6 + muPaper 7 + muPaper 8 + muPaper 9 + muPaper 10 = -1 := by
   decide
 
-end InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
+end PhysicsRiemannHypothesisFinite

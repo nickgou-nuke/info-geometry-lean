@@ -17,7 +17,7 @@ into the bundled `DrazinInfiniteAssumptions` owner from
 `InfoGeometry.Canonical.DrazinInfiniteCore`.
 -/
 
-namespace InfoGeometry.Canonical.DrazinSpectralBridge
+namespace DrazinSpectralBridge
 
 open InfoGeometry.Canonical.DrazinInfiniteCore
 
@@ -144,4 +144,4 @@ theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_package
   exact exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
     (T := T) h hFinite
 
-end InfoGeometry.Canonical.DrazinSpectralBridge
+end DrazinSpectralBridge

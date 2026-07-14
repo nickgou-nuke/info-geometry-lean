@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Convex.Bregman
 
-namespace InfoGeometry.Topology.BregmanDivergence
+namespace BregmanDivergence
 
 /-- A topological Bregman readout is the same one-dimensional Bregman divergence
 used by the convex core, viewed at the topology umbrella level. -/
@@ -22,4 +22,4 @@ theorem topologicalBregmanDiv_threePoint_eq_of_deriv_eq
   simpa [topologicalBregmanDiv] using
     InfoGeometry.bregmanThreePoint_eq_of_deriv_eq F x y z hderiv
 
-end InfoGeometry.Topology.BregmanDivergence
+end BregmanDivergence

@@ -21,7 +21,7 @@ full supersymmetric field theory.  The closed content is the finite simplicial
 readback needed by the repository's topological and thermodynamic lanes.
 -/
 
-namespace InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge
+namespace DiscreteDiracHodgeChiralBridge
 
 open Matrix
 open DAG
@@ -124,4 +124,4 @@ theorem exact_readout :
 
 end K3HodgeModePacket
 
-end InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge
+end DiscreteDiracHodgeChiralBridge

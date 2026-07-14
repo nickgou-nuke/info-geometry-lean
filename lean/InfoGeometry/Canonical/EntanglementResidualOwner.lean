@@ -13,7 +13,7 @@ default.  Entanglement-level claims require explicit positivity / separability
 or Gaussian witnesses.
 -/
 
-namespace InfoGeometry.Canonical.EntanglementResidualOwner
+namespace EntanglementResidualOwner
 
 open InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 open InfoGeometry.Canonical.OperatorProjectorMismatch
@@ -435,4 +435,4 @@ theorem nonfactorizing_covariance_is_not_entanglement
     ¬ Factorizes R.ω₀ R.bipartite.A_L R.bipartite.A_R :=
   corr_nonzero_implies_not_factorize (R := R) (a := a) (b := b) ha hb h
 
-end InfoGeometry.Canonical.EntanglementResidualOwner
+end EntanglementResidualOwner

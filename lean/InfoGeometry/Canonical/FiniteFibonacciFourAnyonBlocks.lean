@@ -22,7 +22,7 @@ No CFT correlator construction.
 No concrete non-diagonal `B` matrix.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
+namespace FiniteFibonacciFourAnyonBlocks
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 
@@ -185,4 +185,4 @@ theorem fourAnyon_middle_last_middle_rewrite (q : Units ℂ)
       diagonalRAction q (middle (diagonalRAction q v)) :=
   h v
 
-end InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
+end FiniteFibonacciFourAnyonBlocks

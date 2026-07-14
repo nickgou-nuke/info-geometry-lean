@@ -27,7 +27,7 @@ primitive assumptions or pretending that the classification has already been con
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
+namespace SplitOctonionG2ClassificationCertificate
 
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
@@ -166,6 +166,6 @@ def classification_certificate_packet
 
 end ClassificationCertificate
 
-end InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
+end SplitOctonionG2ClassificationCertificate
 
 end noncomputable section

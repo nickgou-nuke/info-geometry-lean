@@ -28,7 +28,7 @@ definitions and then proves that subtracting that computed contraction gives
 zero vacuum coefficient.
 -/
 
-namespace InfoGeometry.Canonical.CanonicalNormalOrdering
+namespace CanonicalNormalOrdering
 
 open CliffordAlgebra
 
@@ -665,4 +665,4 @@ theorem normalMatrixUnit_vacuumCoeff_apply_vacuum_zero_directSum
 
 end IntegerDirectSum
 
-end InfoGeometry.Canonical.CanonicalNormalOrdering
+end CanonicalNormalOrdering

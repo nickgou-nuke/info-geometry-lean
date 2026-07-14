@@ -21,7 +21,7 @@ The chain-level bridge below is stated with explicit hypotheses linking
 No axioms are introduced.
 -/
 
-namespace InfoGeometry.Quantum.BulkBoundary
+namespace BulkBoundary
 
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Quantum.RealMajorana
@@ -1164,4 +1164,4 @@ theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel_under_
 
 end ChainBridge
 
-end InfoGeometry.Quantum.BulkBoundary
+end BulkBoundary

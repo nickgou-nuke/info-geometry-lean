@@ -18,7 +18,7 @@ owner readouts that already exist in the codebase:
 The purpose is to keep the bridge explicit and theorem-honest.
 -/
 
-namespace InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
+namespace DeRhamArnoldTwistorPenroseBridge
 
 open scoped BigOperators
 open Complex
@@ -74,4 +74,4 @@ def finite_bridge_packet : FiniteBridgePacket := by
   · intro v
     exact det_pauliMatrix v
 
-end InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
+end DeRhamArnoldTwistorPenroseBridge

@@ -25,7 +25,7 @@ profile requires an additional representation/occupation-readout theorem.
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ChiralChargeFockNumberBridge
+namespace ChiralChargeFockNumberBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -223,4 +223,4 @@ def ChiralLightconeKKTClosure.ofOwners
 
 end Core
 
-end InfoGeometry.Canonical.ChiralChargeFockNumberBridge
+end ChiralChargeFockNumberBridge

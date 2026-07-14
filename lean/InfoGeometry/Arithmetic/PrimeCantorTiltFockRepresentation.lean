@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
+namespace PrimeCantorTiltFockRepresentation
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
@@ -192,4 +192,4 @@ theorem switch_splitDOp_eq_tilt
       PrimeBooleanCube.flipVertex_involutive (P := P) (p := p) (hp := hp) v]
 
 
-end InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
+end PrimeCantorTiltFockRepresentation

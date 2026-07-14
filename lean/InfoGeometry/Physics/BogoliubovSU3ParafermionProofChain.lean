@@ -17,7 +17,7 @@ This file contains explicit finite algebraic lemma chains:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+namespace BogoliubovSU3ParafermionProofChain
 
 open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
@@ -427,6 +427,6 @@ theorem bogoliubov_su3_parafermion_proof_chain
 
 
 
-end InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+end BogoliubovSU3ParafermionProofChain
 
 end noncomputable section

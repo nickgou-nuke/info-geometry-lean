@@ -19,7 +19,7 @@ The finite algebra is proved.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.MobiusCantorTKKClosure
+namespace MobiusCantorTKKClosure
 
 open InfoGeometry.Topology.CantorBoundaryCuntzFamily
 open InfoGeometry.External.Auto.UHFInductiveColimit
@@ -203,6 +203,6 @@ theorem cartan_involution_eigen_minus (J : M2C) (hJ : tkkInvolution J) :
     ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.sub_apply, Matrix.smul_apply, Matrix.neg_apply] <;> ring
   rw [H2]
 
-end InfoGeometry.Topology.MobiusCantorTKKClosure
+end MobiusCantorTKKClosure
 
 end noncomputable section

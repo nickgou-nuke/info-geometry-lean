@@ -23,7 +23,7 @@ without collapsing distinct ontologies, while still exposing the full
 generalized-metric projector transport.
 -/
 
-namespace InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
+namespace PhaseSpaceGeneralizedMetricChiralityBridge
 
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
@@ -389,4 +389,4 @@ end RealizedFixpoints
 
 end Core
 
-end InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
+end PhaseSpaceGeneralizedMetricChiralityBridge

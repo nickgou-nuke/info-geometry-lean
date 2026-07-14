@@ -7,7 +7,7 @@ Compatibility namespace for the canonical tripotent-sector decomposition.
 The proof owner is `InfoGeometry.Canonical.TrifactorDecomposition`.
 -/
 
-namespace InfoGeometry.TrifactorSpectralDecomposition
+namespace TrifactorSpectralDecomposition
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
@@ -80,4 +80,4 @@ theorem trifactor_capstone (T : R) (h_cube : T ^ 3 = T) :
     P_plus T - P_minus T = T :=
   InfoGeometry.Canonical.TrifactorDecomposition.trifactor_capstone T h_cube
 
-end InfoGeometry.TrifactorSpectralDecomposition
+end TrifactorSpectralDecomposition

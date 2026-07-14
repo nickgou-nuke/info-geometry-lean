@@ -33,7 +33,7 @@ import Mathlib
 - none
 -/
 
-namespace InfoGeometry.Canonical.MathematicalUnification
+namespace MathematicalUnification
 
 section TriFacet
 
@@ -321,4 +321,4 @@ theorem verlinde_golden_identity
 
 end GoldenRatio
 
-end InfoGeometry.Canonical.MathematicalUnification
+end MathematicalUnification

@@ -34,7 +34,7 @@ theorem, harmonic decomposition, topological charges, instantons, Maxwell /
 Yang-Mills equations, and physical field dynamics.
 -/
 
-namespace InfoGeometry.Canonical.HodgeStar4DFinite
+namespace HodgeStar4DFinite
 
 /-- Complexified finite carrier for two-forms in four dimensions. -/
 abbrev TwoFormC : Type :=
@@ -99,4 +99,4 @@ theorem self_minus_anti_star (F : TwoFormC) :
   simp [selfDualPart, antiSelfDualPart]
   ring
 
-end InfoGeometry.Canonical.HodgeStar4DFinite
+end HodgeStar4DFinite

@@ -24,7 +24,7 @@ This file provides:
 #print axioms InfoGeometry.Canonical.GlobalChiralDecomposition.singular_polar_surrogate_closure
 #print axioms InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit
 
-namespace InfoGeometry.Canonical.CapstoneSemanticAudit
+namespace CapstoneSemanticAudit
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -150,4 +150,4 @@ theorem block_diagonal_of_commute_idempotent_similarity
 
 end Core
 
-end InfoGeometry.Canonical.CapstoneSemanticAudit
+end CapstoneSemanticAudit

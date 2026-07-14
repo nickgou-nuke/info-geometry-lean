@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.FresnelJonesReflection
+namespace FresnelJonesReflection
 
 /-! ## 1. Two-component Jones carriers -/
 
@@ -272,4 +272,4 @@ structure RoughReflectionChannelDatum where
   /-- Incidence planes are direction-dependent, so a single global `s/p` basis is invalid. -/
   directionDependentIncidencePlanes : Stokes → Prop
 
-end InfoGeometry.OperatorAlgebra.FresnelJonesReflection
+end FresnelJonesReflection

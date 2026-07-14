@@ -21,7 +21,7 @@ Zero sorries.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.ParafermionIdentityRealization
+namespace ParafermionIdentityRealization
 
 open InfoGeometry.Physics.GellMannParafermionSolder
 open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
@@ -122,6 +122,6 @@ def cuntzFamilyRealization (V : Type*) [AddCommGroup V] [Module ℂ V]
     (F : CuntzFamilyOn V) (v₀ : V) : ParafermionRealization V where
   map x := (cuntzFamilyLift V F x) v₀
 
-end InfoGeometry.Topology.ParafermionIdentityRealization
+end ParafermionIdentityRealization
 
 end noncomputable section

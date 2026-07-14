@@ -26,7 +26,7 @@ thermodynamic heat/memory split.
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.DrazinDilationGapBridge
+namespace DrazinDilationGapBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -231,4 +231,4 @@ theorem projectedOddOddBlackBook_eq_two_smul_translation_plus_central :
 
 end UnifiedSuperchargePackage
 
-end InfoGeometry.Canonical.DrazinDilationGapBridge
+end DrazinDilationGapBridge

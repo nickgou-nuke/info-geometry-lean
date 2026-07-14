@@ -13,7 +13,7 @@ Coordinate-free inner-derivation lemmas on the finite `M₂(ℝ)` seed.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.AlgebraicDerivations
+namespace AlgebraicDerivations
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -431,4 +431,4 @@ theorem inner_derivation_jacobi_expanded (X Y Z : M2R) :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [innerDerivation, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
-end InfoGeometry.Canonical.AlgebraicDerivations
+end AlgebraicDerivations

@@ -20,7 +20,7 @@ theorem, antiunitarity of time reversal, or any interaction-specific
 conservation/violation statement.
 -/
 
-namespace InfoGeometry.Canonical.DiscreteCPTGroup
+namespace DiscreteCPTGroup
 
 /-! ## Mathlib-native `Z₂³` carrier -/
 
@@ -275,4 +275,4 @@ theorem cases_eq_named
     funext i
     fin_cases i <;> simp [CPT, C, P, T, generator, CPTLabel.toFin3, cptMul, h0, h1, h2]
 
-end InfoGeometry.Canonical.DiscreteCPTGroup
+end DiscreteCPTGroup

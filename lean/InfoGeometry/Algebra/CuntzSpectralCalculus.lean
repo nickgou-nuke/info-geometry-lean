@@ -11,7 +11,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzSpectralCalculus
+namespace CuntzSpectralCalculus
 
 theorem polynomial_spectral (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) :
     Polynomial.aeval (hamiltonian n ε) p =
@@ -28,4 +28,4 @@ theorem polynomial_spectral (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) 
   rw [Polynomial.aeval_eq_sum_range (x := ε i) (p := p)]
   simp [Finset.sum_smul, mul_comm, smul_eq_mul]
 
-end InfoGeometry.Algebra.CuntzSpectralCalculus
+end CuntzSpectralCalculus

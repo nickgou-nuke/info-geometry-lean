@@ -21,7 +21,7 @@ interpretation.  It packages the finite algebraic shadow currently available:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Cl55FiniteShadowPacket
+namespace Cl55FiniteShadowPacket
 
 open InfoGeometry.Physics.Pin55Formal
 open BottPeriodicityReconciliation
@@ -59,4 +59,4 @@ theorem finite_cl55_shadow_packet :
   exact ⟨displayed_split_signature, displayed_clifford_relations,
     displayed_product_square, cl11_block_shadow⟩
 
-end InfoGeometry.Physics.Cl55FiniteShadowPacket
+end Cl55FiniteShadowPacket

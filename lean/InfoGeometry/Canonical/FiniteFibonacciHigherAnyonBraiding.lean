@@ -27,7 +27,7 @@ No recursive monodromy matrices.
 No proof of Artin relations for all `n`.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
+namespace FiniteFibonacciHigherAnyonBraiding
 
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
@@ -257,4 +257,4 @@ theorem localDoubletMatrix_independent_of_r
       some (fibonacciBMatrixWithElectrons s q τ root) := by
   rw [fibonacciBMatrixWithElectrons_independent_of_r]
 
-end InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
+end FiniteFibonacciHigherAnyonBraiding

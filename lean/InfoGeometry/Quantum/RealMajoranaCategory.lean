@@ -15,7 +15,7 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
 
-namespace InfoGeometry.Quantum.RealMajoranaCategory
+namespace RealMajoranaCategory
 
 /-- Primitive real Majorana core object: real module + involutive operator package. -/
 structure RealMajoranaCore where
@@ -914,4 +914,4 @@ theorem car_realization_of_clifford_concrete :
 
 end Cl11ConcreteRealization
 
-end InfoGeometry.Quantum.RealMajoranaCategory
+end RealMajoranaCategory

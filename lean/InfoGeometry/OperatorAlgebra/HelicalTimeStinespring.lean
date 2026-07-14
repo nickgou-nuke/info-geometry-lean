@@ -19,7 +19,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.HelicalTimeStinespring
+namespace HelicalTimeStinespring
 
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 
@@ -306,4 +306,4 @@ theorem helicalStinespring_sheet_packet
   exact ⟨helicalStinespringOwnerTarget Sys Comm C D K x,
     K.one_turn_hidden_charge x⟩
 
-end InfoGeometry.OperatorAlgebra.HelicalTimeStinespring
+end HelicalTimeStinespring

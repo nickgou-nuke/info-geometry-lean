@@ -15,7 +15,7 @@ Per the Categorical Synthesis Dictionary:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzWeylNilpotentBoundary
+namespace CuntzWeylNilpotentBoundary
 
 open InfoGeometry.Canonical.CuntzWeylUHFBridge
 
@@ -93,4 +93,4 @@ theorem weyl_cuntz_formal_evaluation_identity :
   rw [h_SR]
   exact trace_nilpotent_boundary_SR_sq ncws trace
 
-end InfoGeometry.Canonical.CuntzWeylNilpotentBoundary
+end CuntzWeylNilpotentBoundary

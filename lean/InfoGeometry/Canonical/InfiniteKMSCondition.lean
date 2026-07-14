@@ -18,7 +18,7 @@ induction pattern that is already used throughout the codebase:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.InfiniteKMSCondition
+namespace InfiniteKMSCondition
 
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
@@ -153,4 +153,4 @@ end KMSTower
 
 end Tower
 
-end InfoGeometry.Canonical.InfiniteKMSCondition
+end InfiniteKMSCondition

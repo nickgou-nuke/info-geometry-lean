@@ -8,7 +8,7 @@ set_option linter.unusedSectionVars false
 open MeasureTheory
 open ProbabilityTheory
 
-namespace InfoGeometry.Canonical.IBIteration
+namespace IBIteration
 
 open InfoGeometry.Canonical.IBFunctional
 open InfoGeometry.Canonical.IBMeasure
@@ -75,4 +75,4 @@ lemma IBStepMeasure_eq_comp :
 
 end Step
 
-end InfoGeometry.Canonical.IBIteration
+end IBIteration

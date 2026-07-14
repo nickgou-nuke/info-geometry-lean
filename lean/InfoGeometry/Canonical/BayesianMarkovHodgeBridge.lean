@@ -20,7 +20,7 @@ the finite Hodge layer.
 
 open Matrix
 
-namespace InfoGeometry.Canonical.BayesianMarkovHodgeBridge
+namespace BayesianMarkovHodgeBridge
 
 open InfoGeometry.Canonical.BayesianMarkovChain
 open InfoGeometry.Canonical.BayesianMarkovChain.TensorLimitStateSpace
@@ -101,4 +101,4 @@ theorem stationary_current_hodge_protection
 
 end BayesianMarkovHodgePacket
 
-end InfoGeometry.Canonical.BayesianMarkovHodgeBridge
+end BayesianMarkovHodgeBridge

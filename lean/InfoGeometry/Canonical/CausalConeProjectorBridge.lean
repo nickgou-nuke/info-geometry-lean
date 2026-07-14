@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.CliffordDiracAlgebra
 import InfoGeometry.Canonical.RealTomitaStandardSubspace
 
-namespace InfoGeometry.Canonical.CausalConeProjectorBridge
+namespace CausalConeProjectorBridge
 
 open InfoGeometry.Canonical.CliffordDiracAlgebra
 
@@ -127,4 +127,4 @@ lemma reduced_tomita_on_standard_involutive
 
 end StandardSubspaceBridge
 
-end InfoGeometry.Canonical.CausalConeProjectorBridge
+end CausalConeProjectorBridge

@@ -22,7 +22,7 @@ and prove S_left, S_right, and K = J₀ satisfy:
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Analysis.L2CantorCommutation
+namespace L2CantorCommutation
 
 /-! ## Binary symbols and boundary sequences -/
 
@@ -140,4 +140,4 @@ theorem S_left_star_S_left_add_S_right_star_S_right :
         _ = x := prepend_head_tail x
     simp [hminus, this]
 
-end InfoGeometry.Analysis.L2CantorCommutation
+end L2CantorCommutation

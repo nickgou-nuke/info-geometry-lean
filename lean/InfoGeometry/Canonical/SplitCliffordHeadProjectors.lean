@@ -10,7 +10,7 @@ The owned algebra lives in `SplitCliffordHeadPolarization`. This file is a thin
 renaming layer that exposes the same surface with projector terminology.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordHeadProjectors
+namespace SplitCliffordHeadProjectors
 
 open InfoGeometry.Canonical.SplitCliffordHeadLift
 open InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
@@ -119,4 +119,4 @@ theorem headKFlipTensor_particleHole_resolves_projectorAnomaly (n : ℕ) :
     headEpsMinusProjectorTensor_mul_headEpsPlusProjectorTensor n,
     headEpsPlusProjectorTensor_mul_headEpsMinusProjectorTensor n⟩
 
-end InfoGeometry.Canonical.SplitCliffordHeadProjectors
+end SplitCliffordHeadProjectors

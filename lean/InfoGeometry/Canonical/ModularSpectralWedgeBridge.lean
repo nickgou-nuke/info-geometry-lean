@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ModularSpectralWedgeBridge
+namespace ModularSpectralWedgeBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealTomitaCore
@@ -143,4 +143,4 @@ end WedgeCalibrated
 
 end Bridge
 
-end InfoGeometry.Canonical.ModularSpectralWedgeBridge
+end ModularSpectralWedgeBridge

@@ -10,7 +10,7 @@ parameter may be compared with thermal evaluation only through explicit witness
 data; no global identification `q = e^{-β}` is made here.
 -/
 
-namespace InfoGeometry.Canonical.DeformationLayer
+namespace DeformationLayer
 
 /-- Bare deformation parameter surface retained for layer-facing callers. -/
 @[rep_depth thermo]
@@ -60,4 +60,4 @@ theorem q_identified_with_thermal_parameter_from_witness
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 
-end InfoGeometry.Canonical.DeformationLayer
+end DeformationLayer

@@ -16,7 +16,7 @@ operator-algebraic uniqueness statement is asserted here.  Those belong to
 specialized owner modules as explicit witnesses.
 -/
 
-namespace InfoGeometry.Canonical.KANColimitBridge
+namespace KANColimitBridge
 
 open InfoGeometry.Canonical.InductiveColimitBridge
 
@@ -154,4 +154,4 @@ theorem full_KAN_signature_colimit {n : ℕ} {x : T.system.Stage n}
 
 end KANColimitTower
 
-end InfoGeometry.Canonical.KANColimitBridge
+end KANColimitBridge

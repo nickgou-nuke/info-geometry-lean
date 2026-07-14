@@ -22,7 +22,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
+namespace MobiusClosureFixedPoints
 
 /-! ## 1. Abstract closure involution -/
 
@@ -539,4 +539,4 @@ theorem fixed_observable_mem_overlap
 
 end MobiusSurvivalLedger
 
-end InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
+end MobiusClosureFixedPoints

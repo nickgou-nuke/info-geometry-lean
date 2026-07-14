@@ -20,7 +20,7 @@ norms are represented by the determinant of the soldered paravector.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+namespace HestenesCuntzSpacetimeAlgebra
 
 open Matrix
 open InfoGeometry.Physics.ChiralPoincareSouriauBridge
@@ -228,6 +228,6 @@ theorem hestenes_cuntz_spacetime_synthesis
   · exact hestenes_cuntz_lorentz_transport g S
   · exact hestenes_cuntz_deformed_super_poincare β x y
 
-end InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+end HestenesCuntzSpacetimeAlgebra
 
 end noncomputable section

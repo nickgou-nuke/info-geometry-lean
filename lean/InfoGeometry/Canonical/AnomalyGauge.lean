@@ -13,7 +13,7 @@ symmetry algebra: it is a Lie algebra generator for a gauge rotation on the
 degenerate causal boundary.
 -/
 
-namespace InfoGeometry.Canonical.AnomalyGauge
+namespace AnomalyGauge
 
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Singular.Drazin
@@ -98,4 +98,4 @@ theorem anomaly_generates_isometry
   anomaly_generates_krein_infinitesimal_isometry G G_pinv D_inv k hMP hD hD_symm
 
 end KreinAnomaly
-end InfoGeometry.Canonical.AnomalyGauge
+end AnomalyGauge

@@ -3,7 +3,7 @@ import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Canonical.ChiralCausalConeFlow
+namespace ChiralCausalConeFlow
 
 /-- The realified chiral causal-cone state. -/
 structure ChiralState (R : Type*) [CommRing R] where
@@ -163,4 +163,4 @@ theorem thermofield_double_entanglement_trace_eq
     partial_trace (fun _ : R => β) = gibbs_state β := by
   rfl
 
-end InfoGeometry.Canonical.ChiralCausalConeFlow
+end ChiralCausalConeFlow

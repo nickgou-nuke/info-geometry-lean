@@ -2,7 +2,7 @@ import Mathlib
 
 open Set Matrix
 
-namespace InfoGeometry.Causal.ProofTopology
+namespace ProofTopology
 
 /-!
 # Proof Topology
@@ -177,4 +177,4 @@ def trace (A : CausalMat2) : ℝ :=
     trace orientation = 0 := by
   norm_num [trace, orientation, Matrix.trace]
 
-end InfoGeometry.Causal.ProofTopology
+end ProofTopology

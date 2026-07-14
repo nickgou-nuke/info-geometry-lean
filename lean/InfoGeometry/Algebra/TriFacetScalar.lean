@@ -49,7 +49,7 @@ The reconstruction theorem requires the explicit characteristic condition
   - None for this scalar algebra layer.
 -/
 
-namespace InfoGeometry.Algebra.TriFacetScalar
+namespace TriFacetScalar
 
 variable {A : Type*} [Field A]
 
@@ -109,4 +109,4 @@ theorem tri_facet_spectral_reconstruction
   field_simp [h2]
   ring
 
-end InfoGeometry.Algebra.TriFacetScalar
+end TriFacetScalar

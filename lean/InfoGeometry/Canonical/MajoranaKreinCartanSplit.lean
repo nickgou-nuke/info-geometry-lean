@@ -20,7 +20,7 @@ already split by the `K`-phase parity decomposition into its compact/gauge and
 noncompact/source sectors.
 -/
 
-namespace InfoGeometry.Canonical.MajoranaKreinCartanSplit
+namespace MajoranaKreinCartanSplit
 
 open InfoGeometry.Canonical.StandardFormCore
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -520,4 +520,4 @@ theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFa
 
 end Core
 
-end InfoGeometry.Canonical.MajoranaKreinCartanSplit
+end MajoranaKreinCartanSplit

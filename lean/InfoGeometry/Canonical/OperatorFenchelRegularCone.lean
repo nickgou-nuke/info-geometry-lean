@@ -17,7 +17,7 @@ Krein carrier, explicitly gated by regular-branch positivity.
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.OperatorFenchelRegularCone
+namespace OperatorFenchelRegularCone
 
 open InfoGeometry.Canonical.Positivity
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -190,4 +190,4 @@ theorem operatorUncertainty_from_hessianJordan
 
 end Core
 
-end InfoGeometry.Canonical.OperatorFenchelRegularCone
+end OperatorFenchelRegularCone

@@ -23,7 +23,7 @@ No normal state or von Neumann algebra theorem.
 No spectral theorem or analytic completion.
 -/
 
-namespace InfoGeometry.Canonical.JaynesLDDSCentering
+namespace JaynesLDDSCentering
 
 open Finset
 
@@ -144,4 +144,4 @@ theorem square_of_one_add_squareZero {y : A}
 
 end IdentityCentered
 
-end InfoGeometry.Canonical.JaynesLDDSCentering
+end JaynesLDDSCentering

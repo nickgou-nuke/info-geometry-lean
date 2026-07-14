@@ -9,8 +9,8 @@ Lifted KL/gauge decomposition to projective and cone-interior state-space
 interfaces, with compatibility wrappers to the legacy `PositiveMeasure` API.
 -/
 
-namespace InfoGeometry.Projective.ConeKL
-end InfoGeometry.Projective.ConeKL
+namespace ConeKL
+end ConeKL
 
 namespace InfoGeometry.Projective
 

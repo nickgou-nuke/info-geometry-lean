@@ -3,7 +3,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
+namespace SplitMajoranaPrimeGas
 
 open scoped BigOperators
 
@@ -72,4 +72,4 @@ theorem Pi_eq_one_sub_two_N (p : PrimeLabel) :
 
 end SplitPrimeCAR
 
-end InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
+end SplitMajoranaPrimeGas

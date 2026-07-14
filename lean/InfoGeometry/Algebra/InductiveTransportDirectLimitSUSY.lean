@@ -21,7 +21,7 @@ physics-specific structure is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.InductiveTransportDirectLimitSUSY
+namespace InductiveTransportDirectLimitSUSY
 
 open InfoGeometry.Algebra.InductiveSuperClosureLemmas
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -154,4 +154,4 @@ theorem directLimit_lift_unique
     g = directLimitLift bond toTarget hcone :=
   directLimitLift_unique bond toTarget hcone g hg
 
-end InfoGeometry.Algebra.InductiveTransportDirectLimitSUSY
+end InductiveTransportDirectLimitSUSY

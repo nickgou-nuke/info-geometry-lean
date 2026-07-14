@@ -22,7 +22,7 @@ BUCKET 3: OPEN CLOSURE DEBT
   or a twistor/K-theoretic classification theorem.
 -/
 
-namespace InfoGeometry.Canonical.FinitePenrosePatchColimit
+namespace FinitePenrosePatchColimit
 
 open InfoGeometry.Canonical.FinitePenrosePatchCategory
 open InfoGeometry.Canonical.FinitePenrosePatchTower
@@ -227,4 +227,4 @@ theorem transported_patchLocalState_equiv_to_colimit
 
 end Basic
 
-end InfoGeometry.Canonical.FinitePenrosePatchColimit
+end FinitePenrosePatchColimit

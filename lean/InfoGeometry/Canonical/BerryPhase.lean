@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.TopologicalInvariants
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.BerryPhase
+namespace BerryPhase
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.WeylGaugeOperatorLift
@@ -92,4 +92,4 @@ theorem berry_phase_vanishes_for_normal (L : BayesianLoop E) (CST : ChiralSpectr
     informationBerryPhase L CST = 0 := by
   simp [informationBerryPhase, chiralAnomalyIndex, ChiralSpectralTriple.epsilon, h_normal]
 
-end InfoGeometry.Canonical.BerryPhase
+end BerryPhase

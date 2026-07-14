@@ -8,7 +8,7 @@ normal-cone rays, and pullback metrics.  Stronger analytic claims belong in the
 bridge modules that import this file.
 -/
 
-namespace InfoGeometry.Canonical.ModularCartanCantorSystem
+namespace ModularCartanCantorSystem
 
 def modularTwin {A : Type*} [Mul A] (J X : A) : A :=
 J * X * J
@@ -177,4 +177,4 @@ theorem metric_eq_pullback
 intro x y
 exact hmetric x y
 
-end InfoGeometry.Canonical.ModularCartanCantorSystem
+end ModularCartanCantorSystem

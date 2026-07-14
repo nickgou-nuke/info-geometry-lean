@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 
-namespace InfoGeometry.Canonical.ChiralGravity
+namespace ChiralGravity
 
 open InfoGeometry.Canonical.ChiralAnomaly
 open InfoGeometry.Canonical.ChiralEinsteinBridge
@@ -123,4 +123,4 @@ theorem routingAnomaly_nonzero_forces_curved_plus_component
 
 end RoutingSource
 
-end InfoGeometry.Canonical.ChiralGravity
+end ChiralGravity

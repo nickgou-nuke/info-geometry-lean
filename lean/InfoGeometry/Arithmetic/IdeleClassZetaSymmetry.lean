@@ -29,7 +29,7 @@ supplied through the explicit decomposition packet below.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
+namespace IdeleClassZetaSymmetry
 
 open InfoGeometry.Canonical.BostConnesGalois
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -514,4 +514,4 @@ theorem to_from (x : IdeleClassLayer G) :
 
 end RationalIdeleClassDecomposition
 
-end InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
+end IdeleClassZetaSymmetry

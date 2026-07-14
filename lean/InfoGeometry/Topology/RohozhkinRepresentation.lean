@@ -16,7 +16,7 @@ representation: a concrete generator assignment into rational matrix units and
 a proof that all presented pure-braid relators evaluate to `1`.
 -/
 
-namespace InfoGeometry.Topology.RohozhkinRepresentation
+namespace RohozhkinRepresentation
 
 open InfoGeometry.Topology.RohozhkinBoundary
 open InfoGeometry.Topology.PureBraid
@@ -70,4 +70,4 @@ theorem descent_packet {moving : ℕ}
 
 end RohozhkinDelaunayBraidingSpec
 
-end InfoGeometry.Topology.RohozhkinRepresentation
+end RohozhkinRepresentation

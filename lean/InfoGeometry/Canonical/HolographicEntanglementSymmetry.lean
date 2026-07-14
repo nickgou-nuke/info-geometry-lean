@@ -30,7 +30,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HolographicEntanglementSymmetry
+namespace HolographicEntanglementSymmetry
 
 open InfoGeometry.Canonical.RyuTakayanagiEntanglementBridge
 open InfoGeometry.Canonical.RyuTakayanagiThermalTimeBridge
@@ -283,4 +283,4 @@ theorem time_is_positive_branch_winding
 
 end
 
-end InfoGeometry.Canonical.HolographicEntanglementSymmetry
+end HolographicEntanglementSymmetry

@@ -10,7 +10,7 @@ This is the finite-index analogue of
 `(If)(x) = ∫ δ(x-y) f(y) dy = f(x)`.
 -/
 
-namespace InfoGeometry.Canonical.DeltaKernelIdentity
+namespace DeltaKernelIdentity
 
 open BigOperators
 
@@ -253,4 +253,4 @@ theorem deltaKernel_mulVec_eq (f : ι → 𝕜) :
   funext i
   exact deltaKernel_apply (ι := ι) (𝕜 := 𝕜) f i
 
-end InfoGeometry.Canonical.DeltaKernelIdentity
+end DeltaKernelIdentity

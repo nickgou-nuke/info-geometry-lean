@@ -6,7 +6,7 @@ open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.O55FiveGradeClosure
+namespace O55FiveGradeClosure
 
 -- Helper anticommutation lemmas
 theorem h_v4_v5_anti : v4 * v5 = - (v5 * v4) := by
@@ -206,4 +206,4 @@ theorem D_grade : D ∈ gradeSpace ConformalGrade.zero := by
   simp
 
 
-end InfoGeometry.Canonical.O55FiveGradeClosure
+end O55FiveGradeClosure

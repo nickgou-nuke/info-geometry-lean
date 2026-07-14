@@ -28,7 +28,7 @@ Hyperbolic rotor/boost channels are surfaced explicitly; no primitive complex
 scalar ontology is introduced by this owner.
 -/
 
-namespace InfoGeometry.Canonical.GenerativeInferenceCore
+namespace GenerativeInferenceCore
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.SpectralInference
@@ -417,4 +417,4 @@ noncomputable def canonicalHyperbolicBoostRotor (n : ℕ) (θ : ℝ) :
 
 end RotorLane
 
-end InfoGeometry.Canonical.GenerativeInferenceCore
+end GenerativeInferenceCore

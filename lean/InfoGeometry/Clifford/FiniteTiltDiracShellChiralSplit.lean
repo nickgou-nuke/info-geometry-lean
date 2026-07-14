@@ -13,7 +13,7 @@ noncomputable section
 
 open scoped Matrix
 
-namespace InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
+namespace FiniteTiltDiracShellChiralSplit
 
 open InfoGeometry.Clifford.FiniteTiltDiracShell
 open InfoGeometry.Clifford.Cl11Matrix
@@ -208,4 +208,4 @@ theorem finiteTiltLeftChiralProjector_mul_rightChiralShell (m : ℝ) :
     _ = 0 := by
           rw [finiteTiltChiralProjectors.pq_zero, zero_mul]
 
-end InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
+end FiniteTiltDiracShellChiralSplit

@@ -13,7 +13,7 @@ readbacks under a canonical owner-facing namespace.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeExteriorRepresentationCalibration
+namespace PrimeExteriorRepresentationCalibration
 
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
@@ -76,4 +76,4 @@ theorem primeExteriorRepresentationOwnerTarget :
     canonicalLocalParitySign_eq_one_iff_not_mem p S,
     canonicalGamma_eq_negOne_pow_fermionNumber S⟩
 
-end InfoGeometry.Canonical.PrimeExteriorRepresentationCalibration
+end PrimeExteriorRepresentationCalibration

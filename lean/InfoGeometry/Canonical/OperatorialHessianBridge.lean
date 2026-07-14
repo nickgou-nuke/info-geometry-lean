@@ -21,7 +21,7 @@ and formalizes the Bogoliubov-Kubo-Mori (BKM) metric proxy via the
 double transport commutator.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialHessianBridge
+namespace OperatorialHessianBridge
 
 open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -318,4 +318,4 @@ theorem operatorInformationHessian_eq_observableLieHessian (X A : EndH) :
 
 end Bridge
 
-end InfoGeometry.Canonical.OperatorialHessianBridge
+end OperatorialHessianBridge

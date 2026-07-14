@@ -20,7 +20,7 @@ No analytic or universal-completion claim is made here; this is the finite
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Cl11ChiralCARBridge
+namespace Cl11ChiralCARBridge
 
 open Matrix
 open InfoGeometry.Physics.ChiralCausalCone
@@ -158,4 +158,4 @@ theorem cpt_atom_matches_cl11_chiral_CAR_bridge :
     σPlus_eq_carAnn, σMinus_eq_carCre⟩
 
 
-end InfoGeometry.Physics.Cl11ChiralCARBridge
+end Cl11ChiralCARBridge

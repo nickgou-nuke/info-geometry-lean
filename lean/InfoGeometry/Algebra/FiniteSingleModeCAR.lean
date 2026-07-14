@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.FiniteSingleModeCAR
+namespace FiniteSingleModeCAR
 
 /-- One fermionic mode has two basis states: unoccupied/occupied. -/
 abbrev OneModeState := Bool
@@ -90,4 +90,4 @@ theorem one_mode_gibbs_trace (ε β : ℝ) :
   simp
   ring
 
-end InfoGeometry.Algebra.FiniteSingleModeCAR
+end FiniteSingleModeCAR

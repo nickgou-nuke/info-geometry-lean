@@ -12,7 +12,7 @@ It does not prove the nondegenerate circular-region/topological endpoint
 lemma. That remains the Grace/Ruelle analytic step.
 -/
 
-namespace InfoGeometry.Canonical.AsanoRuelleEndpoint
+namespace AsanoRuelleEndpoint
 
 open Set
 
@@ -153,4 +153,4 @@ theorem degenerate_contracted_zero_forces_forbidden
   degenerate_contracted_root_mem_negProductSet
     K₁ K₂ hD hdeg hK₁ hK₂ hz
 
-end InfoGeometry.Canonical.AsanoRuelleEndpoint
+end AsanoRuelleEndpoint

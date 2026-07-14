@@ -25,7 +25,7 @@ consumed through its theorem fields, not treated as independent authority.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ContinuumPropagatorLimitBridge
+namespace ContinuumPropagatorLimitBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
@@ -107,4 +107,4 @@ theorem propagator_continuum_fusion
   by
     simpa [one_smul] using B.propagator.hLimitGenerator.exp
 
-end InfoGeometry.Canonical.ContinuumPropagatorLimitBridge
+end ContinuumPropagatorLimitBridge

@@ -13,7 +13,7 @@ import InfoGeometry.Canonical.BostConnesKMS
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesLiouvilleModularComm
+namespace BostConnesLiouvilleModularComm
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical.BostConnesModularFlow
@@ -144,4 +144,4 @@ theorem witten_index_invariant_under_flow
   dsimp [wittenIndexPartial, modularPhase]
   simp
 
-end InfoGeometry.Canonical.BostConnesLiouvilleModularComm
+end BostConnesLiouvilleModularComm

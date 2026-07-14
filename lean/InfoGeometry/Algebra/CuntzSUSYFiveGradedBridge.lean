@@ -19,7 +19,7 @@ This file documents the connection; the actual routing theorems are in
 `SuperTKKConformalClosure.`.
 -/
 
-namespace InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge
+namespace CuntzSUSYFiveGradedBridge
 
 open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 open InfoGeometry.Algebra.SupergradedSUSY
@@ -36,4 +36,4 @@ theorem word_parity_matches_superbracket_routing (a b : Bool) :
           superAnticommutator Q Q = P_x + P_x := by
   exact cuntz_odd_odd_generates_even_translation_packet a b
 
-end InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge
+end CuntzSUSYFiveGradedBridge

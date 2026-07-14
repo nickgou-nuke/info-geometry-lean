@@ -17,7 +17,7 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.SpectralDivisors
+namespace SpectralDivisors
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 
@@ -905,4 +905,4 @@ theorem multiplicity_zero_off_spectral_divisor
 
 end SpectralFunctionCalibration
 
-end InfoGeometry.Geometry.SpectralDivisors
+end SpectralDivisors

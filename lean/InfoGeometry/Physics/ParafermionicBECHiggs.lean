@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
-namespace InfoGeometry.Physics.ParafermionicBECHiggs
+namespace ParafermionicBECHiggs
 
 open InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
@@ -31,4 +31,4 @@ structure BEC_Phase_Higgs where
 theorem higgs_is_composite_phase (h : BEC_Phase_Higgs) :
   fundamental_scalars = 0 := h.is_composite
 
-end InfoGeometry.Physics.ParafermionicBECHiggs
+end ParafermionicBECHiggs

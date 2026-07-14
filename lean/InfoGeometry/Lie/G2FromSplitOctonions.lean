@@ -11,7 +11,7 @@ Builds 𝔤₂ = Der(𝕆ₛ) with computational evidence.
 
 noncomputable section
 
-namespace InfoGeometry.Lie.G2FromSplitOctonions
+namespace G2FromSplitOctonions
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness
@@ -109,6 +109,6 @@ def D01 : DerivSpace := rot01Derivation
 theorem D01_deriv : IsDeriv D01 :=
   ⟨rot01_preserves_add, rot01_preserves_neg, rot01_is_derivation⟩
 
-end InfoGeometry.Lie.G2FromSplitOctonions
+end G2FromSplitOctonions
 
 noncomputable section

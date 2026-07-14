@@ -4,7 +4,7 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
 
 noncomputable section
-namespace InfoGeometry.Lie.CanonicalZornDerivationDimension
+namespace CanonicalZornDerivationDimension
 
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
@@ -669,4 +669,4 @@ theorem finrank_canonicalZornDerivations :
   rw [← CanonicalZornDerivation.vectorCanonicalLinearEquiv.finrank_eq]
   exact finrank_vectorDerivations
 
-end InfoGeometry.Lie.CanonicalZornDerivationDimension
+end CanonicalZornDerivationDimension

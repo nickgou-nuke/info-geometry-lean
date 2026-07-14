@@ -25,7 +25,7 @@ law.  Those are model data/closure debt, not consequences of this finite socket.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DeformedSuperCuntzWarp
+namespace DeformedSuperCuntzWarp
 
 open scoped BigOperators
 
@@ -252,6 +252,6 @@ theorem modular_scales_edge (t : ℝ) (p : PrimeLabel) :
 
 end DeformedSuperCuntzWarpPacket
 
-end InfoGeometry.Canonical.DeformedSuperCuntzWarp
+end DeformedSuperCuntzWarp
 
 end noncomputable section

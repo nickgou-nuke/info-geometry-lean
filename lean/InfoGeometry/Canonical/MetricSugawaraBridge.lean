@@ -13,7 +13,7 @@ owned by the existing single-current Sugawara lane; this file only introduces
 the finite-channel operator formula in a repo-native form.
 -/
 
-namespace InfoGeometry.Canonical.MetricSugawaraBridge
+namespace MetricSugawaraBridge
 
 open scoped BigOperators
 open InfoGeometry.Canonical.CurrentSugawaraMetricDatum
@@ -76,4 +76,4 @@ noncomputable def splitEightKernel
         channelPairNO H i j (n - k) k v := by
   rfl
 
-end InfoGeometry.Canonical.MetricSugawaraBridge
+end MetricSugawaraBridge

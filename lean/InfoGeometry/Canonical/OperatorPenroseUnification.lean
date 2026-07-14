@@ -13,7 +13,7 @@ and packages a single theorem-shaped capstone witness.
 Full unbounded Type III closure is tracked as a later translation layer.
 -/
 
-namespace InfoGeometry.Canonical.OperatorPenroseUnification
+namespace OperatorPenroseUnification
 
 open InfoGeometry.Canonical.QuantumPresentation
 
@@ -361,4 +361,4 @@ theorem boundedCapstone_seeds_unbounded_translation
       BoundaryPreservation Φ ∧ GeneratorPreservation Φ := by
   exact ⟨cap.Φ, cap.boundary, cap.generator⟩
 
-end InfoGeometry.Canonical.OperatorPenroseUnification
+end OperatorPenroseUnification

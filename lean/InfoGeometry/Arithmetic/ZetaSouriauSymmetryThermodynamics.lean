@@ -28,7 +28,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
+namespace ZetaSouriauSymmetryThermodynamics
 
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
@@ -438,4 +438,4 @@ theorem zetaSouriauDisplacementMassieuCocycle_eq_zero
   rw [zetaSouriauDisplacementMassieu_invariant]
   ring
 
-end InfoGeometry.Arithmetic.ZetaSouriauSymmetryThermodynamics
+end ZetaSouriauSymmetryThermodynamics

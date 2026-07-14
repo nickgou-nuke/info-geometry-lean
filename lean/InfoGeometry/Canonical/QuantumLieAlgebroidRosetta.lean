@@ -14,7 +14,7 @@ checked identification between the paper's standard complex/Kähler vocabulary
 and the repository's internal doubled Krein / Majorana language.
 -/
 
-namespace InfoGeometry.Canonical.QuantumLieAlgebroidRosetta
+namespace QuantumLieAlgebroidRosetta
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RelativeModularPotential
@@ -168,4 +168,4 @@ comparison state.
 
 end Core
 
-end InfoGeometry.Canonical.QuantumLieAlgebroidRosetta
+end QuantumLieAlgebroidRosetta

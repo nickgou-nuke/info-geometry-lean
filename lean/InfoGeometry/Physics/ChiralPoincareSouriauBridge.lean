@@ -21,7 +21,7 @@ identities that follow from it.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ChiralPoincareSouriauBridge
+namespace ChiralPoincareSouriauBridge
 
 open Matrix
 open scoped BigOperators
@@ -197,4 +197,4 @@ theorem chiral_poincare_souriau_bridge_synthesis (S : ChiralSUSYMomentum) :
 #check souriau_beta_norm
 #check chiral_poincare_souriau_bridge_synthesis
 
-end InfoGeometry.Physics.ChiralPoincareSouriauBridge
+end ChiralPoincareSouriauBridge

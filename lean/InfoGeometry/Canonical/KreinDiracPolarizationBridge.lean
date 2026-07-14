@@ -19,7 +19,7 @@ existing owners on the same carrier:
 - and the transported spectral square law.
 -/
 
-namespace InfoGeometry.Canonical.KreinDiracPolarizationBridge
+namespace KreinDiracPolarizationBridge
 
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Canonical.SpectralInference
@@ -148,4 +148,4 @@ theorem doubledKreinDiracPolarizationBridge_of_strictSymmetry
 
 end Doubled
 
-end InfoGeometry.Canonical.KreinDiracPolarizationBridge
+end KreinDiracPolarizationBridge

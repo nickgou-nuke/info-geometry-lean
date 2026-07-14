@@ -8,7 +8,7 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 Small sandbox packet for the trace-normalized monodromy volume readout.
 -/
 
-namespace InfoGeometry.Physics.AmplituhedronVolume
+namespace AmplituhedronVolume
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -77,4 +77,4 @@ theorem amplituhedronVolume_eq_zeta_sum (β : ℂ) :
   rw [h_cast] at h_term
   exact h_term
 
-end InfoGeometry.Physics.AmplituhedronVolume
+end AmplituhedronVolume

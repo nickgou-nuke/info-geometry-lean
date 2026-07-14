@@ -21,7 +21,7 @@ import InfoGeometry.OperatorAlgebra.HorizonEschaton
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology
+namespace ConformalCyclicCosmology
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
@@ -427,4 +427,4 @@ theorem anti_diagonal_is_antiSurvivor
 
 end LinearAeonReset
 
-end InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology
+end ConformalCyclicCosmology

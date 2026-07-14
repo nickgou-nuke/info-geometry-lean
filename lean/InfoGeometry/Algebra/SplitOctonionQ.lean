@@ -18,7 +18,7 @@ theorem, a global `Spin(5,5)` isomorphism, or an octonionic matrix
 inverse theorem.
 -/
 
-namespace InfoGeometry.Algebra.SplitOctonionQ
+namespace SplitOctonionQ
 
 /-- Eight-coordinate Zorn split-octonion cell over ℚ. -/
 structure SplitO where
@@ -195,4 +195,4 @@ theorem norm_eq_quadratic (z : SplitO) (p q u0 u1 u2 v0 v1 v2 : ℚ)
 
 end SplitO
 
-end InfoGeometry.Algebra.SplitOctonionQ
+end SplitOctonionQ

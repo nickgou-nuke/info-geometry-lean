@@ -19,7 +19,7 @@ This file gives the Cantor-boundary operator side cleanly, without using
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorBoundarySplitClifford
+namespace CantorBoundarySplitClifford
 
 /-- Infinite binary Cantor boundary. -/
 abbrev CantorBoundary := ℕ → Bool
@@ -163,4 +163,4 @@ theorem splitAtom_sq (j : ℕ) :
 
 end CantorBoundaryFunctionSpace
 
-end InfoGeometry.Canonical.CantorBoundarySplitClifford
+end CantorBoundarySplitClifford

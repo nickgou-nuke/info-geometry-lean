@@ -24,7 +24,7 @@ The layer is purely compositional:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.FreeEntropySouriauBridge
+namespace FreeEntropySouriauBridge
 
 /-- The explicit combined free-entropy functional `S_free`. -/
 def S_free
@@ -266,4 +266,4 @@ theorem holographicPressure_coeff_eq
   InfoGeometry.Physics.HolographicPressureFunctional.holographicPressure_coeff
     A0 q F0 z Neff chi
 
-end InfoGeometry.Physics.FreeEntropySouriauBridge
+end FreeEntropySouriauBridge

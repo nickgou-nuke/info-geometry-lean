@@ -25,7 +25,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.EntanglementMonogamy
+namespace EntanglementMonogamy
 
 /-! ## 1. Bipartite observable readouts -/
 
@@ -443,4 +443,4 @@ theorem entanglementMonogamyOwnerTarget :
   intro System MaxEntangled Independent hmonogamy B A R hBA hBR hAR
   exact hmonogamy B A R hBA hBR hAR
 
-end InfoGeometry.Quantum.EntanglementMonogamy
+end EntanglementMonogamy

@@ -21,7 +21,7 @@ This is not the completed current theorem
 mode-indexed Fock completion and normal ordering construction.
 -/
 
-namespace InfoGeometry.Canonical.NormalOrderedCurrent
+namespace NormalOrderedCurrent
 
 open scoped BigOperators
 
@@ -132,4 +132,4 @@ def integerWindow (N : ℕ) : Finset ℤ :=
 
 end CanonicalMatrixUnits
 
-end InfoGeometry.Canonical.NormalOrderedCurrent
+end NormalOrderedCurrent

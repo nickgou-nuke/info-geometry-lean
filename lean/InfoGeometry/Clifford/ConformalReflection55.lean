@@ -40,7 +40,7 @@ Each theorem is a kernel-checked derivation from the `ConformalNullPair` axioms
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.ConformalReflection55
+namespace ConformalReflection55
 
 open InfoGeometry.Clifford.ConformalLift55
 
@@ -158,4 +158,4 @@ theorem J_swap_involutive_infinity :
   rw [J_swap_infinity]
   exact J_swap_origin p
 
-end InfoGeometry.Clifford.ConformalReflection55
+end ConformalReflection55

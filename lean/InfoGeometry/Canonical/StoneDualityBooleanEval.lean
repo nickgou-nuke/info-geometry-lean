@@ -12,7 +12,7 @@ lemmas from the UHF Boolean projection bridge.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.StoneDualityBooleanEval
+namespace StoneDualityBooleanEval
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
@@ -34,5 +34,5 @@ theorem cantor_atom_mem_iff_prefix_eq
     atomCylinder n w ∈ U.filter ↔ boundaryPrefix n U.toBoundary = w :=
   CantorStoneUltrafilter.atom_mem_iff_prefix_eq U n w
 
-end InfoGeometry.Canonical.StoneDualityBooleanEval
+end StoneDualityBooleanEval
 

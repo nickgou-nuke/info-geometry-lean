@@ -14,7 +14,7 @@ This file packages the conversion between modular time and wedge-boost rapidity,
 and links the Unruh flow owner to the real modular-time normalization.
 -/
 
-namespace InfoGeometry.Canonical.WedgeBoostModularBridge
+namespace WedgeBoostModularBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealTomitaCore
@@ -162,4 +162,4 @@ end WedgeBoostModularCompatibility
 
 end Core
 
-end InfoGeometry.Canonical.WedgeBoostModularBridge
+end WedgeBoostModularBridge

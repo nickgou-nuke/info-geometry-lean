@@ -5,7 +5,7 @@ import Mathlib.Probability.ProbabilityMassFunction.Integrals
 
 set_option autoImplicit false
 
-namespace InfoGeometry.MaxEnt.IProjection
+namespace IProjection
 
 open scoped BigOperators ENNReal
 open InfoGeometry InfoGeometry.MaxEnt.Finite MeasureTheory
@@ -213,4 +213,4 @@ theorem gibbs_is_unique_minimizer
 
 end
 
-end InfoGeometry.MaxEnt.IProjection
+end IProjection

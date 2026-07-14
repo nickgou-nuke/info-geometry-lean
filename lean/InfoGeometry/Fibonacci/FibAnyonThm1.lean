@@ -1,7 +1,7 @@
 import Mathlib
 open Real
 
-namespace InfoGeometry.Fibonacci.FibAnyonThm1
+namespace FibAnyonThm1
 
 noncomputable section
 
@@ -65,4 +65,4 @@ theorem fusion_dim_identity : dim_tau^2 = dim_tau + dim_one := by
 
 end
 
-end InfoGeometry.Fibonacci.FibAnyonThm1
+end FibAnyonThm1

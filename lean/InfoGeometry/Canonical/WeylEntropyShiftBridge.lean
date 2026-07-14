@@ -12,7 +12,7 @@ import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.Meta.Architecture
 import Mathlib
 
-namespace InfoGeometry.Canonical.WeylEntropyShiftBridge
+namespace WeylEntropyShiftBridge
 
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 
@@ -123,4 +123,4 @@ theorem entropy_scale_of_weight_two
 
 end WeylHomogeneousEntropy
 
-end InfoGeometry.Canonical.WeylEntropyShiftBridge
+end WeylEntropyShiftBridge

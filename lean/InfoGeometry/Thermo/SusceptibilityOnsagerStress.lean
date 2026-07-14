@@ -21,7 +21,7 @@ calibration fields.
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.SusceptibilityOnsagerStress
+namespace SusceptibilityOnsagerStress
 
 open InfoGeometry.Thermo.SusceptibilityHessian
 
@@ -426,4 +426,4 @@ theorem susceptibilityOnsagerStressOwnerTarget
   · intro U
     exact P.derivedStress_eq_stress_derivation U
 
-end InfoGeometry.Thermo.SusceptibilityOnsagerStress
+end SusceptibilityOnsagerStress

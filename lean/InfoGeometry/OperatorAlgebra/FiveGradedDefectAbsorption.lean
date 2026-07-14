@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
+namespace FiveGradedDefectAbsorption
 
 
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
@@ -502,4 +502,4 @@ theorem bpsBoundOwnerTarget
   intro B
   exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
 
-end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
+end FiveGradedDefectAbsorption

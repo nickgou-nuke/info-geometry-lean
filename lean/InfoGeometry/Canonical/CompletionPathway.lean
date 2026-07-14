@@ -51,7 +51,7 @@ extension into the bulk is the upper adjoint (preserving meets).
 
 -/
 
-namespace InfoGeometry.Canonical.CompletionPathway
+namespace CompletionPathway
 
 open InfoGeometry.Canonical.SectorLattice
 open InfoGeometry.Canonical.SelfSimilarVacuum
@@ -253,4 +253,4 @@ theorem greatestSelfSimilarProjectionCompletion_fixed :
     projectionR projectionR_hom.gfp = projectionR_hom.gfp :=
   greatestProjectionVacuum_isFixed
 
-end InfoGeometry.Canonical.CompletionPathway
+end CompletionPathway

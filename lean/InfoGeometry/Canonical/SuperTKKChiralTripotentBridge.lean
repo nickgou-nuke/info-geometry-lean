@@ -38,7 +38,7 @@ proves the finite owner-backed dictionary.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SuperTKKChiralTripotentBridge
+namespace SuperTKKChiralTripotentBridge
 
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 open InfoGeometry.Algebraic
@@ -167,6 +167,6 @@ theorem super_tkk_chiral_tripotent_hierarchy_packet
     ChiralOperatorCarrier.canonicalChiralOperatorCarrier_eps_eq_uPlus_sub_uMinus,
     cube_eq_self, ClosureRole.posTwo_is_defect, ClosureRole.negTwo_is_defect⟩
 
-end InfoGeometry.Canonical.SuperTKKChiralTripotentBridge
+end SuperTKKChiralTripotentBridge
 
 end

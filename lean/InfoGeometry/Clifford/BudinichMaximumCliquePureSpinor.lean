@@ -30,7 +30,7 @@ The file is intentionally conservative:
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
+namespace BudinichMaximumCliquePureSpinor
 
 open InfoGeometry.Twistor
 open BudinichCliqueSpinor
@@ -260,4 +260,4 @@ theorem pairwiseNull_iff_clique
 
 end SaturatedCliqueVectorPacket
 
-end InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
+end BudinichMaximumCliquePureSpinor

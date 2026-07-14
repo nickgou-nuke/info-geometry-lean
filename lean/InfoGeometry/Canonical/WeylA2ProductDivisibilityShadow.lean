@@ -19,7 +19,7 @@ This file is deliberately conservative.  It does **not** claim the genuine
 This is the honest next step after the 2-node divisibility shadow.
 -/
 
-namespace InfoGeometry.Canonical.WeylA2ProductDivisibilityShadow
+namespace WeylA2ProductDivisibilityShadow
 
 open Polynomial
 open InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
@@ -141,4 +141,4 @@ theorem product_divisibility_packet :
 
 end ThreeNodePolynomialShadow
 
-end InfoGeometry.Canonical.WeylA2ProductDivisibilityShadow
+end WeylA2ProductDivisibilityShadow

@@ -16,7 +16,7 @@ Scope guardrails for SYK-vs-Kitaev language and a strict four-step modular lane:
 4. cocycle chain law: multiplicative primary dynamics.
 -/
 
-namespace InfoGeometry.Canonical.SYKKitaevGuardrails
+namespace SYKKitaevGuardrails
 
 open InfoGeometry.Canonical.FirstQuantizationProbability
 open InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
@@ -197,4 +197,4 @@ theorem fourStep_modular_lane_package
 
 end FourStepLane
 
-end InfoGeometry.Canonical.SYKKitaevGuardrails
+end SYKKitaevGuardrails

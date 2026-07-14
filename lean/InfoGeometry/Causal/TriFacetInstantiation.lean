@@ -28,7 +28,7 @@ This unifies the graph-theoretic (partial order / causal cone) and
 operator-algebraic (d, δ) pictures under a single abstract framework.
 -/
 
-namespace InfoGeometry.Causal.TriFacetInstantiation
+namespace TriFacetInstantiation
 
 open InfoGeometry.Causal.Algebra
 open Audit
@@ -234,4 +234,4 @@ theorem abstract_δ_eq_causal_δ :
     (Audit.coexact_projector_lin (V := V) : V →ₗ[ℝ] V) = Matrix.toLin' δℝ := by
   ext x; simp [Audit.coexact_projector_lin, coexact_projector_eq_δℝ, Matrix.toLin'_apply]
 
-end InfoGeometry.Causal.TriFacetInstantiation
+end TriFacetInstantiation

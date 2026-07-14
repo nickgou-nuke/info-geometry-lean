@@ -21,7 +21,7 @@
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Tactic.Ring
 
-namespace InfoGeometry.Canonical.GoldenRatioInvariants
+namespace GoldenRatioInvariants
 
 variable {F : Type*} [Field F]
 
@@ -100,4 +100,4 @@ theorem verlinde_golden_identity (h_div : 1 + phi^2 ≠ 0) :
   rw [verlinde_golden_identity_mul (phi := phi) (hphi := hphi)]
   exact div_self h_div
 
-end InfoGeometry.Canonical.GoldenRatioInvariants
+end GoldenRatioInvariants

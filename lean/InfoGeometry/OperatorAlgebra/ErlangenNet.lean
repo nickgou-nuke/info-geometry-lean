@@ -30,7 +30,7 @@ Those belong to downstream owner modules with direct proof lineage to
 mathlib/kernel.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.ErlangenNet
+namespace ErlangenNet
 
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 
@@ -254,4 +254,4 @@ theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
 
 end WeylRefinedSectorLabel
 
-end InfoGeometry.OperatorAlgebra.ErlangenNet
+end ErlangenNet

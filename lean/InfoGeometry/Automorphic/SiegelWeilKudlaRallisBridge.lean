@@ -23,7 +23,7 @@ import InfoGeometry.Automorphic.ProjectedLFunction
 
 noncomputable section
 
-namespace InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
+namespace SiegelWeilKudlaRallisBridge
 
 open InfoGeometry.Automorphic.SiegelResonance
 
@@ -391,4 +391,4 @@ theorem projectedL_shift_eq_pairing_div_inner_bad
 
 end RankinSelbergProjectedLBridge
 
-end InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
+end SiegelWeilKudlaRallisBridge

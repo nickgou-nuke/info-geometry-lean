@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Physics.FiveFoldProgram
+namespace FiveFoldProgram
 
 /-!
 # The Five-Fold Contribution to Modern Mathematics
@@ -37,4 +37,4 @@ structure SymplecticManifold where
 structure CuntzUHFIso (Boundary : Type*) (Bulk : Type*) where
   (iso : Boundary ≃ Bulk)
 
-end InfoGeometry.Physics.FiveFoldProgram
+end FiveFoldProgram

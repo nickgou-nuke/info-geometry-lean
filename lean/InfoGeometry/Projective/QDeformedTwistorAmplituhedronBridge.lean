@@ -25,7 +25,7 @@ Not closed here:
   physical scattering-amplitude stability.
 -/
 
-namespace InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
+namespace QDeformedTwistorAmplituhedronBridge
 
 open InfoGeometry.Algebra.QCCR.Kuzmin
 open InfoGeometry.Algebra.QCCR.Proved
@@ -165,4 +165,4 @@ theorem q_deformed_twistor_amplituhedron_packet {moving : ℕ}
     hbase.2.1,
     hbase.2.2⟩
 
-end InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
+end QDeformedTwistorAmplituhedronBridge

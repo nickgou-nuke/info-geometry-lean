@@ -25,7 +25,7 @@ new number system is superior, that quantum mechanics is reconstructed, or
 that any Riemann Hypothesis consequence follows from this representation.
 -/
 
-namespace InfoGeometry.Canonical.HaugManiYinYangBridge
+namespace HaugManiYinYangBridge
 
 open InfoGeometry.Krein.TomitaMatrixAtom
 
@@ -185,4 +185,4 @@ theorem haug_mani_real_doubled_capstone :
     physical_add_ghost, mixedSector_conj_physical, mixedSector_conj_ghost,
     phaseAxis_eq_J_mul_eps, phaseAxis_sq, mixedSector_conj_phaseAxis⟩
 
-end InfoGeometry.Canonical.HaugManiYinYangBridge
+end HaugManiYinYangBridge

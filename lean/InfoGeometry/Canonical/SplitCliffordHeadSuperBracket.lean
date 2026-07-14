@@ -15,7 +15,7 @@ This is a strict coherence layer over `SplitCliffordHeadLift`:
 - all statements are direct consequences of already-proved head-lift algebra.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
+namespace SplitCliffordHeadSuperBracket
 
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SplitCliffordHeadLift
@@ -67,5 +67,5 @@ theorem head_jk_commutator (n : ℕ) :
   rw [headKTensor_mul_headJTensor]
   simp [headEpsTensor, sub_eq_add_neg, two_smul]
 
-end InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
+end SplitCliffordHeadSuperBracket
 

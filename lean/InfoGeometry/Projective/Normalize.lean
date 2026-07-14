@@ -6,7 +6,7 @@ import InfoGeometry.Projective.Bridge
 Normalization of positive measures modulo projective ray equivalence.
 -/
 
-namespace InfoGeometry.Projective.Normalize
+namespace Normalize
 
 section NormalizeOnProj
 
@@ -88,4 +88,4 @@ end NormalizeCompat
 
 end InfoGeometry.PositiveMeasure
 
-end InfoGeometry.Projective.Normalize
+end Normalize

@@ -12,7 +12,7 @@ directly from explicit oddness hypotheses on the relevant endomorphisms.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
+namespace CelikKocakKreinSupergradedLift
 
 open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Krein
@@ -82,5 +82,5 @@ theorem gamma_superComm_eq_anticomm
         (clifford.gamma j) := by
   exact superComm_odd_odd (gammaOdd i) (gammaOdd j)
 
-end InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
+end CelikKocakKreinSupergradedLift
 

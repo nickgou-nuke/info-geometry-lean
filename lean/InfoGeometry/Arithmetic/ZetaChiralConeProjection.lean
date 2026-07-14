@@ -26,7 +26,7 @@ modules.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ZetaChiralConeProjection
+namespace ZetaChiralConeProjection
 
 open Complex
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -195,4 +195,4 @@ def CenteredXiSymmetryPacket.toChiralConeAnchorReadout
   even_projection_eq_anchor := X.xi_JEvenProjector_eq
   odd_projection_eq_zero := X.xi_JOddProjector_eq_zero
 
-end InfoGeometry.Arithmetic.ZetaChiralConeProjection
+end ZetaChiralConeProjection

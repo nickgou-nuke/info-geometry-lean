@@ -10,7 +10,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RealHestenesKreinHomology
+namespace RealHestenesKreinHomology
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.Drazin
@@ -397,4 +397,4 @@ theorem preserves_phaseAxis
 
 end HestenesKreinDoubledFrame
 
-end InfoGeometry.Canonical.RealHestenesKreinHomology
+end RealHestenesKreinHomology

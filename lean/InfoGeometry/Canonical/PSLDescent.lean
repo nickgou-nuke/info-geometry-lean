@@ -20,7 +20,7 @@ noncomputable section
 open scoped MatrixGroups Modular
 open UpperHalfPlane
 
-namespace InfoGeometry.Canonical.PSLDescent
+namespace PSLDescent
 
 abbrev SL2R : Type := SL(2, ℝ)
 abbrev PSL2R : Type := PSL(2, ℝ)
@@ -67,4 +67,4 @@ structure PSLDescentContract : Prop where
 theorem pslDescentContract : PSLDescentContract :=
   ⟨sl2r_neg_smul⟩
 
-end InfoGeometry.Canonical.PSLDescent
+end PSLDescent

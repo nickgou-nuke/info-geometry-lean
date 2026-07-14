@@ -15,7 +15,7 @@ and boundary-trace invariants.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.ModularTensorInduction
+namespace ModularTensorInduction
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordChiralProjection
@@ -91,4 +91,4 @@ theorem trace_logDeltaBase_boundary :
   rw [K_eval]
   norm_num [InfoGeometry.Algebra.HypercomplexTriad.N, Matrix.mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.Canonical.ModularTensorInduction
+end ModularTensorInduction

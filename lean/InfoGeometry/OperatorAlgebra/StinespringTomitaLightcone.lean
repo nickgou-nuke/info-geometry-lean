@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
+namespace StinespringTomitaLightcone
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 open InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
@@ -430,4 +430,4 @@ theorem stinespringTomitaChiralLightcone_packet
       (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) :=
   stinespringTomitaChiralLightconeOwnerTarget Op GlobalOp H Q C Φ h
 
-end InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
+end StinespringTomitaLightcone

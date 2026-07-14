@@ -17,7 +17,7 @@ This file does three things:
   sector packaging.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularPolarizedBridge
+namespace RelativeModularPolarizedBridge
 
 open InfoGeometry.Canonical.StandardFormCore
 open InfoGeometry.Canonical.RelativeModularCore
@@ -239,4 +239,4 @@ variable {nMinus : Nat} [Nonempty (Fin nMinus)]
 
 end Count
 
-end InfoGeometry.Canonical.RelativeModularPolarizedBridge
+end RelativeModularPolarizedBridge

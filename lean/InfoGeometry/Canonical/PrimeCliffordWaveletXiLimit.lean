@@ -16,7 +16,7 @@ replace the raw Hurwitz convergence witness.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
+namespace PrimeCliffordWaveletXiLimit
 
 open InfoGeometry.Analysis.CliffordWaveletTransform
 
@@ -96,4 +96,4 @@ def locallyUniformLimit_of_cliffordWaveletRealization
     Prop :=
   R.locallyUniformRenormalizedLimit
 
-end InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
+end PrimeCliffordWaveletXiLimit

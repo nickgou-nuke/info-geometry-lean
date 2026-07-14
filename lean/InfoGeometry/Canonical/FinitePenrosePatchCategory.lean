@@ -15,7 +15,7 @@ This is the finite discrete graph / category layer beneath any later Penrose
 colimit theorem.
 -/
 
-namespace InfoGeometry.Canonical.FinitePenrosePatchCategory
+namespace FinitePenrosePatchCategory
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -194,4 +194,4 @@ end PatchCocones
 
 end SpinNetPatches
 
-end InfoGeometry.Canonical.FinitePenrosePatchCategory
+end FinitePenrosePatchCategory

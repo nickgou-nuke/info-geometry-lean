@@ -15,7 +15,7 @@ This file is not an owner of modular or Wigner ontology.
 It only records a controlled correspondence surface.
 -/
 
-namespace InfoGeometry.Canonical.SignedParticleBridge
+namespace SignedParticleBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinKreinCompatibility
@@ -76,4 +76,4 @@ def nonclassicalShadow
     {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) : R :=
   chiralAnomaly a a_d a_mp
 
-end InfoGeometry.Canonical.SignedParticleBridge
+end SignedParticleBridge

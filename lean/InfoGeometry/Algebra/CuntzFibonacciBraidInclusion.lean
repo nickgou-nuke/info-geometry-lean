@@ -10,7 +10,7 @@ open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
+namespace CuntzFibonacciBraidInclusion
 
 private lemma tau_ne_zero : τ ≠ 0 := by
   intro h
@@ -174,4 +174,4 @@ theorem fibonacciBraid_cuntz_nonabelian
   have h_mat_eq := h_inj h_eq
   exact fibonacci_generators_noncommute h_mat_eq
 
-end InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
+end CuntzFibonacciBraidInclusion

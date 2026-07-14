@@ -21,7 +21,7 @@ division-algebra classification theorem. It records the theorem-safe chain:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DIIIDrazinEntropyBridge
+namespace DIIIDrazinEntropyBridge
 
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Quantum.RealMajorana
@@ -162,4 +162,4 @@ theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg
 
 end DIIIZ2DivisionEntropyBridge
 
-end InfoGeometry.Canonical.DIIIDrazinEntropyBridge
+end DIIIDrazinEntropyBridge

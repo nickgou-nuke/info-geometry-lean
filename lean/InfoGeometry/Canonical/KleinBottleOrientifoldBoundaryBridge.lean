@@ -33,7 +33,7 @@ No global orientifold realization, no physical anomaly cancellation theorem, and
 no Katz-Sarnak / string-spectrum statement are proved here.
 -/
 
-namespace InfoGeometry.Canonical.KleinBottleOrientifoldBoundaryBridge
+namespace KleinBottleOrientifoldBoundaryBridge
 
 open Matrix
 open InfoGeometry.Canonical.KleinBottleTopology
@@ -75,4 +75,4 @@ theorem orientifold_packet_closes_cantor_boundary_faces
   intro i
   exact orientifold_packet_trace_closed B (step.boundary_face i) (step.chiral_balance i)
 
-end InfoGeometry.Canonical.KleinBottleOrientifoldBoundaryBridge
+end KleinBottleOrientifoldBoundaryBridge

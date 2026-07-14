@@ -17,7 +17,7 @@ paper-named `C(8)` owner surface.
 
 open scoped TensorProduct
 
-namespace InfoGeometry.Clifford.SplitCl44Complexification
+namespace SplitCl44Complexification
 
 open InfoGeometry.Clifford.BottPeriodicity
 
@@ -47,4 +47,4 @@ noncomputable def cl44ComplexificationEquiv :
   simpa [cl44ComplexificationEquiv] using
     (CliffordAlgebra.ofBaseChange_tmul_ι (A := ℂ) (Q := SplitBottQuad 4) z v)
 
-end InfoGeometry.Clifford.SplitCl44Complexification
+end SplitCl44Complexification

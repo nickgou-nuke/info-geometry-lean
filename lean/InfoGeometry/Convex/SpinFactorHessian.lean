@@ -10,7 +10,7 @@ This module formalizes the Hessian metric derived from the canonical Kähler pot
 of the Spin Factor symmetric space. We explore its properties as a thermodynamic barrier.
 -/
 
-namespace InfoGeometry.Convex.SpinFactorHessian
+namespace SpinFactorHessian
 
 open InfoGeometry.Architecture.SpinFactor
 
@@ -52,4 +52,4 @@ lemma spinFactorHessian_pos_def_at_origin (v : E) (hv : v ≠ 0) :
     0 < 4 * ‖v‖^2 := by
   nlinarith [norm_pos_iff.mpr hv]
 
-end InfoGeometry.Convex.SpinFactorHessian
+end SpinFactorHessian

@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BottStabilizedFrameEquiv
+namespace BottStabilizedFrameEquiv
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealHomologyCohomologyDictionary
@@ -296,4 +296,4 @@ end BottCartanWeightStabilization
 
 end CartanWeight
 
-end InfoGeometry.Canonical.BottStabilizedFrameEquiv
+end BottStabilizedFrameEquiv

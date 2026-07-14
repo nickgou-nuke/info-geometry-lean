@@ -19,7 +19,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesProjectiveGeometry
+namespace BostConnesProjectiveGeometry
 
 open InfoGeometry.Canonical.BostConnesGalois
 open FibonacciFusion
@@ -111,4 +111,4 @@ theorem fibonacci_quantum_dimension_at_boundary :
     nlinarith
   refine ⟨phi_sq, phi_gt_one, htau_lt2⟩
 
-end InfoGeometry.Canonical.BostConnesProjectiveGeometry
+end BostConnesProjectiveGeometry

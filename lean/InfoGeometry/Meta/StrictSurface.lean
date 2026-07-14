@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Trust
 
 open Lean Meta Elab Command Term
 
-namespace InfoGeometry.Meta.StrictSurface
+namespace StrictSurface
 
 inductive DeclRole where
   | owner
@@ -213,4 +213,4 @@ elab "strict_coherence " id:ident " : " type:term " := " val:term : command => d
 elab "strict_capstone " id:ident " : " type:term " := " val:term : command => do
   processStrictDecl id type.raw val.raw DeclRole.capstone
 
-end InfoGeometry.Meta.StrictSurface
+end StrictSurface

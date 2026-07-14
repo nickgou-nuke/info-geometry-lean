@@ -15,7 +15,7 @@ ordinary associative matrix multiplication. It only records the coordinate
 roundtrip interface and the explicit block map in an associative envelope.
 -/
 
-namespace InfoGeometry.Clifford.Cl44QuaternionSplit
+namespace Cl44QuaternionSplit
 
 open scoped Matrix
 
@@ -108,4 +108,4 @@ theorem bektasBlock_mul_assoc
     (A * B) * C = A * (B * C) := by
   simpa using Matrix.mul_assoc A B C
 
-end InfoGeometry.Clifford.Cl44QuaternionSplit
+end Cl44QuaternionSplit

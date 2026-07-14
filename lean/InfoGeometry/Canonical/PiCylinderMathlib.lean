@@ -25,7 +25,7 @@ None.  This file proves only the local product-topology basis facts.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PiCylinderMathlib
+namespace PiCylinderMathlib
 
 open Set Filter TopologicalSpace
 open scoped Topology
@@ -127,4 +127,4 @@ theorem pi_bool_product_cylinder_topology_packet :
     pure_mem_canonicalCylinder_iff,
     mem_all_finsetCanonical_cylinders_iff⟩
 
-end InfoGeometry.Canonical.PiCylinderMathlib
+end PiCylinderMathlib

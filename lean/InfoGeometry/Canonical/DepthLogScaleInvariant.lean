@@ -21,7 +21,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.DepthLogScaleInvariant
+namespace DepthLogScaleInvariant
 
 noncomputable section
 
@@ -173,4 +173,4 @@ theorem normalizedLog_binary_defect_zero
 
 end
 
-end InfoGeometry.Canonical.DepthLogScaleInvariant
+end DepthLogScaleInvariant

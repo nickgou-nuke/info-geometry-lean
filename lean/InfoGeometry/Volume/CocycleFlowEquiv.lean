@@ -14,7 +14,7 @@ and the additive composition law.  No analytic assumptions are introduced.
 set_option autoImplicit false
 noncomputable section
 
-namespace InfoGeometry.Volume.CocycleFlowEquiv
+namespace CocycleFlowEquiv
 
 /--
 A one-parameter additive flow is invertible at each time if it is normalized at
@@ -43,4 +43,4 @@ noncomputable def cocycleFlowEquiv
     rw [hneg, h_id]
     rfl
 
-end InfoGeometry.Volume.CocycleFlowEquiv
+end CocycleFlowEquiv

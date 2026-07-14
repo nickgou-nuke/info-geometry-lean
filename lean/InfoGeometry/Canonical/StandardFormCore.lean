@@ -19,7 +19,7 @@ development. It packages:
 - a bridge from operator cocycles to projective relative potentials.
 -/
 
-namespace InfoGeometry.Canonical.StandardFormCore
+namespace StandardFormCore
 
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -281,4 +281,4 @@ the canonical gauge slice.
 
 end ProjectiveBridge
 
-end InfoGeometry.Canonical.StandardFormCore
+end StandardFormCore

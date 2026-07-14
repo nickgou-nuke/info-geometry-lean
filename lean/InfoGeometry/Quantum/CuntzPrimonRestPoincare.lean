@@ -15,7 +15,7 @@ invariance remain available in one packet.
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.CuntzPrimonRestPoincare
+namespace CuntzPrimonRestPoincare
 
 open Matrix
 open InfoGeometry.Algebra.CuntzPrimonHamiltonian
@@ -93,6 +93,6 @@ theorem finite_cuntz_primon_rest_poincare_lorentz_packet
     restPauli_supercharge_trace_readout (ε i) a,
     restPauli_exactBoost_comp_self_det (ε i)⟩
 
-end InfoGeometry.Quantum.CuntzPrimonRestPoincare
+end CuntzPrimonRestPoincare
 
 end noncomputable section

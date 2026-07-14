@@ -6,7 +6,7 @@ import InfoGeometry.ExponentialFamily.GaussianHolonomy
 Canonical facade for Gaussian holonomy and Dirac-field interfaces.
 -/
 
-namespace InfoGeometry.Canonical.GaussianHolonomy
+namespace GaussianHolonomy
 
 export InfoGeometry.ExponentialFamily.GaussianHolonomy (
   gaussianDiracField
@@ -27,4 +27,4 @@ theorem gaussianDiracField_const (G : GaussianFamily E) (x y : E) :
     gaussianDiracField G x = gaussianDiracField G y := by
   simp [gaussianDiracField_apply]
 
-end InfoGeometry.Canonical.GaussianHolonomy
+end GaussianHolonomy

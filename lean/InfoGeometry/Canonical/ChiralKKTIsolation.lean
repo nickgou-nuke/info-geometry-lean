@@ -11,7 +11,7 @@ grade-zero/orthogonal sector, with vanishing off-diagonal wing couplings.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.ChiralKKTIsolation
+namespace ChiralKKTIsolation
 
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ConformalUnification
@@ -364,4 +364,4 @@ theorem triad_square_packet :
 
 end
 
-end InfoGeometry.Canonical.ChiralKKTIsolation
+end ChiralKKTIsolation

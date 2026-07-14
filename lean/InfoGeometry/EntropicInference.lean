@@ -5,7 +5,7 @@ import InfoGeometry.MaxEnt.IProjection
 
 open scoped BigOperators ENNReal NNReal
 
-namespace InfoGeometry.EntropicInference
+namespace EntropicInference
 
 /-!
 # Entropic Inference (Canonical implementation)
@@ -682,4 +682,4 @@ noncomputable def dirac {α : Type*} (x : α) : FinProb α :=
 
 end Decompositions
 
-end InfoGeometry.EntropicInference
+end EntropicInference

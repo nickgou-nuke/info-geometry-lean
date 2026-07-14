@@ -22,7 +22,7 @@ No quotient construction.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
+namespace ProjectivePolarFiberTransport
 
 /-- Incidence fiber of a representative `X`: all representatives incident with `X`. -/
 def incidenceFiber
@@ -132,4 +132,4 @@ theorem mem_incidenceFiber_iff_exists_preimage
   rw [← hset]
   rfl
 
-end InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
+end ProjectivePolarFiberTransport

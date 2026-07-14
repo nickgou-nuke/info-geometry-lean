@@ -17,7 +17,7 @@ import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
 
-namespace InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
+namespace DrazinCliffordMatrixUnitBridge
 
 open InfoGeometry.Canonical.DrazinLightConeDictionary
 
@@ -197,4 +197,4 @@ theorem split_clifford_relations :
 
 end DrazinCliffordMatrixUnitCell
 
-end InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
+end DrazinCliffordMatrixUnitBridge

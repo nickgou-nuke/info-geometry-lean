@@ -25,7 +25,7 @@ It does not construct singular homology, de Rham cohomology, quotient-space
 homology groups, higher incidence faces, or scalar-complex coefficient lanes.
 -/
 
-namespace InfoGeometry.Canonical.RealIncidenceHomology
+namespace RealIncidenceHomology
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesPhaseSemilinear
@@ -262,4 +262,4 @@ theorem boundary_phase_readback
 
 end HestenesChainComplex
 
-end InfoGeometry.Canonical.RealIncidenceHomology
+end RealIncidenceHomology

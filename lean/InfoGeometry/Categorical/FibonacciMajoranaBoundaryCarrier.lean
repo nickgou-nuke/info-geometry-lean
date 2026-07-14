@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
+namespace FibonacciMajoranaBoundaryCarrier
 
 open InfoGeometry.Categorical.FibonacciSelfDualCarrier
 open InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
@@ -72,4 +72,4 @@ theorem carrier_selfDualCone_and_exists_boundary_zeroMode
         (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧ v ≠ 0 :=
   ⟨C.positiveCone_innerDual_eq, owner_exists_zeroMode O⟩
 
-end InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
+end FibonacciMajoranaBoundaryCarrier

@@ -18,7 +18,7 @@ This closes the affine-to-linear correspondence loop without relying on
 implicit coordinate checks.
 -/
 
-namespace InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
+namespace AffineWeylD5WallpaperQuotient
 
 open InfoGeometry.Canonical.V4D4WeylEmbedding
 open InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
@@ -208,4 +208,4 @@ theorem affine_wallpaper_lift_is_homomorphism (a b : AffineWallpaperD4) :
     exact (weylD5CrossSection2_is_homomorphism a.g b.g).symm
 
 end
-end InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
+end AffineWeylD5WallpaperQuotient

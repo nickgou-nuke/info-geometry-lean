@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.RicciMongeAmpere
 
-namespace InfoGeometry.Canonical.ChiralEinsteinBridge
+namespace ChiralEinsteinBridge
 
 open InfoGeometry.Canonical.ChiralAnomaly
 open InfoGeometry.Canonical.MoE
@@ -165,4 +165,4 @@ theorem anomalyDriven_fixedpoint_eq_inverseEpsilon
 end InverseSource
 end AnomalyRicciFlow
 
-end InfoGeometry.Canonical.ChiralEinsteinBridge
+end ChiralEinsteinBridge

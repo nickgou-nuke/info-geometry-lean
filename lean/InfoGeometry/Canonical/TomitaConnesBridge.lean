@@ -24,7 +24,7 @@ The finite doubled-real atom remains in `TomitaKreinNilpotentAtom`; the
 Connes/Radon-Nikodym infinitesimal layer remains in `Volume.ConnesInfinitesimal`.
 -/
 
-namespace InfoGeometry.Canonical.TomitaConnesBridge
+namespace TomitaConnesBridge
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
@@ -97,4 +97,4 @@ theorem finiteKrein_idempotent_exponential_add (s t : ℝ) :
       finiteKreinIdempotentExponential s * finiteKreinIdempotentExponential t :=
   InfoGeometry.Volume.ConnesTomitaKreinBridge.finiteKrein_idempotent_exponential_add s t
 
-end InfoGeometry.Canonical.TomitaConnesBridge
+end TomitaConnesBridge

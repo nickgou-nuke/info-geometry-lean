@@ -18,7 +18,7 @@ open CliffordAlgebra
 
 noncomputable section
 
-namespace InfoGeometry.Physics.CentralizerInvariance
+namespace CentralizerInvariance
 
 variable {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] (Q : QuadraticForm R M)
 
@@ -67,4 +67,4 @@ theorem centralizer_preserves_orbit_readout (x : CliffordAlgebra Q) :
     twistedConjugation Q (minusOne Q) x = x :=
   centralizer_action_trivial Q x
 
-end InfoGeometry.Physics.CentralizerInvariance
+end CentralizerInvariance

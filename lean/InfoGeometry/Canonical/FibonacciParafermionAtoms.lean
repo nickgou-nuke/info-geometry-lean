@@ -31,7 +31,7 @@ Jones/Fibonacci braid-group representation, and density/universality theorem
 are not proved here.
 -/
 
-namespace InfoGeometry.Canonical.FibonacciParafermionAtoms
+namespace FibonacciParafermionAtoms
 
 /-! ## Fibonacci `F` matrix -/
 
@@ -1280,4 +1280,4 @@ theorem z3_computational3_R_B_R_eq_B_R_B :
         embed2x2Computational3 z3BMatrix :=
   embed2x2Computational3_artin _ _ z3_R_B_R_eq_B_R_B
 
-end InfoGeometry.Canonical.FibonacciParafermionAtoms
+end FibonacciParafermionAtoms

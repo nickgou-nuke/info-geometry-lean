@@ -21,7 +21,7 @@ The file is intentionally split into two theorem surfaces:
   Clifford null-mode construction.
 -/
 
-namespace InfoGeometry.Canonical.BogoliubovFockSuper
+namespace BogoliubovFockSuper
 
 open InfoGeometry.Quantum
 open InfoGeometry.Canonical.RicciMongeAmpere
@@ -949,4 +949,4 @@ attribute [deprecated grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransp
   (since := "2026-02-26")]
   grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
 
-end InfoGeometry.Canonical.BogoliubovFockSuper
+end BogoliubovFockSuper

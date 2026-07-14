@@ -12,7 +12,7 @@ already-verified concrete Klein/Krein datum instead of duplicating raw-product
 smoke-test code.
 -/
 
-namespace InfoGeometry.Physics.ConcreteKleinBridge
+namespace ConcreteKleinBridge
 
 open InfoGeometry.Canonical.HestenesKreinModularGeometry
 
@@ -58,4 +58,4 @@ theorem concreteBridgeKlein_traceZeroAnomalyResolution_137 :
 
 end
 
-end InfoGeometry.Physics.ConcreteKleinBridge
+end ConcreteKleinBridge

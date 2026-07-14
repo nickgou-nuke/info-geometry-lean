@@ -31,7 +31,7 @@ file proves the finite algebra maps and the real direct-limit equivalences.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.JordanWignerCantorRepresentation
+namespace JordanWignerCantorRepresentation
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -538,4 +538,4 @@ theorem realMatToCantor_symm_natural (n : ℕ) :
   exact realMatToCantor_symm_realCantorOpEmbed n X
 -/
 
-end InfoGeometry.Canonical.JordanWignerCantorRepresentation
+end JordanWignerCantorRepresentation

@@ -13,7 +13,7 @@ This file is intentionally finite and theorem-safe (no Type III/KMS existence
 claims).
 -/
 
-namespace InfoGeometry.Canonical.SouriauBetaVectorField
+namespace SouriauBetaVectorField
 
 noncomputable section
 
@@ -66,4 +66,4 @@ end SouriauBetaScalar
 
 end
 
-end InfoGeometry.Canonical.SouriauBetaVectorField
+end SouriauBetaVectorField

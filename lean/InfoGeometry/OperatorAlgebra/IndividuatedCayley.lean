@@ -29,7 +29,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.IndividuatedCayley
+namespace IndividuatedCayley
 
 /-! ## 1. Phase-linearity in a noncommutative ring -/
 
@@ -675,4 +675,4 @@ attribute [rep_depth operator]
   VerifiedCayleyResolvent.cayley_mul_star_cayley
   VerifiedCayleyResolvent.cayley_unitary
 
-end InfoGeometry.OperatorAlgebra.IndividuatedCayley
+end IndividuatedCayley

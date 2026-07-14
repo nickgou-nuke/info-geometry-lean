@@ -20,7 +20,7 @@ The analytic owner is `HestenesAnalyticity`, where preservation of the internal
 phase axis `clockAxis` replaces scalar-complex holomorphy.
 -/
 
-namespace InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
+namespace HestenesKreinAnalyticFlowBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesAnalyticity
@@ -135,4 +135,4 @@ end HestenesAnalyticRotorGenerator
 
 end Core
 
-end InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
+end HestenesKreinAnalyticFlowBridge

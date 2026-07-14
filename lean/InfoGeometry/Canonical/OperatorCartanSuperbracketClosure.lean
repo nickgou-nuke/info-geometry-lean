@@ -14,7 +14,7 @@ No structure packet.
 No wrapper.
 -/
 
-namespace InfoGeometry.Canonical.OperatorCartanSuperbracketClosure
+namespace OperatorCartanSuperbracketClosure
 
 variable {𝕜 V : Type*}
 variable [CommRing 𝕜]
@@ -323,4 +323,4 @@ theorem operator_cartan_superbracket_conjugation_profile
         (operator_odd_square_even Γ o₁ ho₁c)
     ⟩
 
-end InfoGeometry.Canonical.OperatorCartanSuperbracketClosure
+end OperatorCartanSuperbracketClosure

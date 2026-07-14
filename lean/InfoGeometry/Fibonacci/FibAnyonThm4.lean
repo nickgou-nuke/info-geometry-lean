@@ -11,7 +11,7 @@ the old theorem surface as a bridge and avoids maintaining a divergent scalar
 proof with a different root-of-unity convention.
 -/
 
-namespace InfoGeometry.Fibonacci.FibAnyonThm4
+namespace FibAnyonThm4
 
 open InfoGeometry.Canonical.YangBaxterProof
 
@@ -42,4 +42,4 @@ theorem theorem4_packet :
           R * B * R = B * R * B :=
   ⟨fibonacci_scalar_packet, fusion_matrix_involutive, middle_braid_conjugation, braid_relation⟩
 
-end InfoGeometry.Fibonacci.FibAnyonThm4
+end FibAnyonThm4

@@ -11,7 +11,7 @@ completion.  Each value at depth `n` is obtained by exactly `n` finite
 multiplication steps.
 -/
 
-namespace InfoGeometry.Algebra.IterativeExponentiation
+namespace IterativeExponentiation
 
 universe u v
 
@@ -154,4 +154,4 @@ theorem invariant_iterativeOrbit
 
 end Orbits
 
-end InfoGeometry.Algebra.IterativeExponentiation
+end IterativeExponentiation

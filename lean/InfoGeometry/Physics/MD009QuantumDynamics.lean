@@ -23,7 +23,7 @@ semigroups, propagators, or path integrals.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD009QuantumDynamics
+namespace MD009QuantumDynamics
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
@@ -143,6 +143,6 @@ theorem repaired_MD009_quantum_dynamics_packet (c ihbar : ℂ) (hc : IsPauliNorm
     unscaledQuaternionDerivativeOnQ_eq_four,
     canonicallyScaledQuaternionDerivativeOnQ_eq_one⟩
 
-end InfoGeometry.Physics.MD009QuantumDynamics
+end MD009QuantumDynamics
 
 end noncomputable section

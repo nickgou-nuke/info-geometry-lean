@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.ChirlaTorsionHierarchy
+namespace ChirlaTorsionHierarchy
 
 open scoped TensorProduct
 
@@ -38,4 +38,4 @@ def chirlaTorsionPattern (Z : CliffordAlgebra Q_V) :
   change (oldGeneratorTorsion Q_V Q_W v) + (newGeneratorTorsion Q_V Q_W Z w) = _
   rfl
 
-end InfoGeometry.Canonical.ChirlaTorsionHierarchy
+end ChirlaTorsionHierarchy

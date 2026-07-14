@@ -2,7 +2,7 @@ import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 
-namespace InfoGeometry.Clifford.ChiralBasis
+namespace ChiralBasis
 
 open InfoGeometry.Krein
 open InfoGeometry.Clifford.Spacetime
@@ -44,4 +44,4 @@ theorem uMinus_is_null : (soldering uMinus).det = 0 := by
   unfold uMinus
   simp [det_soldering]
 
-end InfoGeometry.Clifford.ChiralBasis
+end ChiralBasis

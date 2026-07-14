@@ -9,7 +9,7 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ConstructiveKasparovBoundary
+namespace ConstructiveKasparovBoundary
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 
@@ -317,4 +317,4 @@ theorem boundary_eq_volume_defect
 
 end KasparovBoundaryAccounting
 
-end InfoGeometry.OperatorAlgebra.ConstructiveKasparovBoundary
+end ConstructiveKasparovBoundary

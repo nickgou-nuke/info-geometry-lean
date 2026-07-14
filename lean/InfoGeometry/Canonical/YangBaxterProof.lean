@@ -18,7 +18,7 @@ Source: `tools/sympy/fibonacci_osp12_bridge.py`
 Each SymPy section is translated one check at a time.
 -/
 
-namespace InfoGeometry.Canonical.YangBaxterProof
+namespace YangBaxterProof
 
 /-! ## Fibonacci scalars — concrete definitions -/
 
@@ -400,4 +400,4 @@ theorem braid_relation : R * B * R = B * R * B := by
   rw [hR, hB]
   exact diagonal_artin_relation_complex τ s (-q) (q ^ 3) hF hA
 
-end InfoGeometry.Canonical.YangBaxterProof
+end YangBaxterProof

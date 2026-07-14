@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.KleinianTwist
+namespace KleinianTwist
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
@@ -151,4 +151,4 @@ theorem chiral_left_action_flips_at_boundary
 
 end ChiralKleinianTwistDatum
 
-end InfoGeometry.OperatorAlgebra.KleinianTwist
+end KleinianTwist

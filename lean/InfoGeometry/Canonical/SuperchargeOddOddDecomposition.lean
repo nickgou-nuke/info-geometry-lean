@@ -20,7 +20,7 @@ No continuum super-Poincare theorem is claimed here.
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.SuperchargeOddOddDecomposition
+namespace SuperchargeOddOddDecomposition
 
 open InfoGeometry.Canonical.SuperchargeHoppingBridge
 
@@ -291,4 +291,4 @@ theorem oddOdd_decomposition_transport_chain
 
 end Core
 
-end InfoGeometry.Canonical.SuperchargeOddOddDecomposition
+end SuperchargeOddOddDecomposition

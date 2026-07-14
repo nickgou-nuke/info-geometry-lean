@@ -18,7 +18,7 @@ This file is intentionally compositional. It does not introduce a new central
 charge owner, a new KKT ontology, or a new Dirac presentation.
 -/
 
-namespace InfoGeometry.Canonical.CentralChargeKKTParityBridge
+namespace CentralChargeKKTParityBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.ChiralDefectIndexBridge
@@ -189,4 +189,4 @@ theorem centralCharge_nonzero_forces_dimMismatch_and_kkt_odd_split
 
 end Core
 
-end InfoGeometry.Canonical.CentralChargeKKTParityBridge
+end CentralChargeKKTParityBridge

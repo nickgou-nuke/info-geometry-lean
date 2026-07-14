@@ -21,7 +21,7 @@ after the normal-ordered current construction and local truncation have been
 provided.
 -/
 
-namespace InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy
+namespace CliffordCompleteLatticeCurrentHierarchy
 
 open InfoGeometry.Canonical.CompletionPathway
 open InfoGeometry.Canonical.SectorLattice
@@ -195,4 +195,4 @@ theorem packet_external_sugawara_central
 
 end Packet
 
-end InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy
+end CliffordCompleteLatticeCurrentHierarchy

@@ -17,7 +17,7 @@ No continuum entropy limit theorem.
 No global state uniqueness claim.
 -/
 
-namespace InfoGeometry.Canonical.JaynesCategoricalAnalyticBridge
+namespace JaynesCategoricalAnalyticBridge
 
 open InfoGeometry.Canonical.JaynesCategoricalInductionBridge
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
@@ -100,4 +100,4 @@ theorem stage_centered_zero_and_cross_eq_entropy_add_kl
 
 end Cone
 
-end InfoGeometry.Canonical.JaynesCategoricalAnalyticBridge
+end JaynesCategoricalAnalyticBridge

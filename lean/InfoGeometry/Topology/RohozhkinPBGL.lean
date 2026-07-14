@@ -6,7 +6,7 @@ import InfoGeometry.Topology.DelaunayPureBraidRepresentation
 Thin boundary alias for the Delaunay pure-braid representation layer.
 -/
 
-namespace InfoGeometry.Topology.RohozhkinPBGL
+namespace RohozhkinPBGL
 
 open InfoGeometry.Topology.RohozhkinBoundary
 
@@ -14,4 +14,4 @@ open InfoGeometry.Topology.RohozhkinBoundary
 abbrev RohozhkinGLBoundary (moving : ℕ) :=
   RohozhkinMatrixUnits moving
 
-end InfoGeometry.Topology.RohozhkinPBGL
+end RohozhkinPBGL

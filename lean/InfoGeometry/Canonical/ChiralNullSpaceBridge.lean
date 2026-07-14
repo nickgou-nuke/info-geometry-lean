@@ -12,7 +12,7 @@ owner surfaces.
 It does not claim a generalized inverse theorem or a spectral theorem.
 -/
 
-namespace InfoGeometry.Canonical.ChiralNullSpaceBridge
+namespace ChiralNullSpaceBridge
 
 open InfoGeometry.Canonical.TopologicalGapShadow
 open InfoGeometry.Canonical.ChiralRadiationCones
@@ -55,4 +55,4 @@ theorem vacuumMode_eq_one (W : ZeroModeSubtractionWitness) :
 
 end Core
 
-end InfoGeometry.Canonical.ChiralNullSpaceBridge
+end ChiralNullSpaceBridge

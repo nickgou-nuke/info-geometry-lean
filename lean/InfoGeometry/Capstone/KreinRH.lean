@@ -33,7 +33,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.KreinRH
+namespace KreinRH
 
 open InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 open InfoGeometry.Arithmetic.SpectralGap
@@ -264,6 +264,6 @@ theorem krein_spectral_concentration_topological_completion
     KreinSpectralConcentration C :=
   kreinSpectralConcentration_of_zornMaximalSubsystem P.zornSubsystem
 
-end InfoGeometry.Capstone.KreinRH
+end KreinRH
 
 end

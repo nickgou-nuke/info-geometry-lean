@@ -27,7 +27,7 @@ lightcone projectors.
 open InfoGeometry.Physics.OrbitClassification55
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace InfoGeometry.Physics.WeightGrading55
+namespace WeightGrading55
 
 namespace JordanMatrix10D
 
@@ -136,4 +136,4 @@ def ebComponent (Z : SplitOct) : ℚ := (Z.a : ℚ) - (Z.b : ℚ)
 
 end JordanMatrix10D
 
-end InfoGeometry.Physics.WeightGrading55
+end WeightGrading55

@@ -27,7 +27,7 @@ Lorentzian-signature emergence, or Einstein equations.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD011StatisticalInfoGeometry
+namespace MD011StatisticalInfoGeometry
 
 set_option linter.unusedSimpArgs false
 
@@ -189,6 +189,6 @@ theorem repaired_MD011_statistical_info_packet {ι : Type} [Fintype ι]
     finiteFisherCov2Atom_symmetric w2 T,
     finiteFisherCov2Atom_quadratic_nonneg w2 hw2 u T⟩
 
-end InfoGeometry.Physics.MD011StatisticalInfoGeometry
+end MD011StatisticalInfoGeometry
 
 end noncomputable section

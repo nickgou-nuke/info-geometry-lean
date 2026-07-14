@@ -5,7 +5,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorCl11Limit
+namespace CantorCl11Limit
 
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -161,4 +161,4 @@ theorem prefix_family_involution_in_limit
 -- Virasoro, SUSY, categorical completion, or analytic infinite tensor-product
 -- structure. Those require separate owner-side constructions.
 
-end InfoGeometry.Canonical.CantorCl11Limit
+end CantorCl11Limit

@@ -15,7 +15,7 @@ probe-read lane, while the canonical free-energy and entropy-production names
 here are exported scalar shadows.
 -/
 
-namespace InfoGeometry.Canonical.OperatorThermoBridge
+namespace OperatorThermoBridge
 
 open InfoGeometry.Canonical.Operators
 open InfoGeometry.LogPotential
@@ -93,4 +93,4 @@ theorem scalarCanonicalEnergy_sign
 
 end Bridge
 
-end InfoGeometry.Canonical.OperatorThermoBridge
+end OperatorThermoBridge

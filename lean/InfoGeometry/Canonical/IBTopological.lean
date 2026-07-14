@@ -5,7 +5,7 @@ import Mathlib.Probability.Moments.Tilted
 open MeasureTheory
 open ProbabilityTheory
 
-namespace InfoGeometry.Canonical.IBTopological
+namespace IBTopological
 
 open InfoGeometry.Canonical.IBMeasure
 
@@ -47,4 +47,4 @@ theorem F_secondDeriv_eq_variance
     (ProbabilityTheory.variance_tilted_mul
       (μ := qT) (X := distortionRV D x) (t := β) hβ).symm
 
-end InfoGeometry.Canonical.IBTopological
+end IBTopological

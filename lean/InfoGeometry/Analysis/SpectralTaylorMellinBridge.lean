@@ -19,7 +19,7 @@ No unbounded functional calculus.
 No Mellin inversion.
 -/
 
-namespace InfoGeometry.Analysis.SpectralTaylorMellinBridge
+namespace SpectralTaylorMellinBridge
 
 open Finset
 open InfoGeometry.Analysis.FiniteSpectralMellinTaylor
@@ -122,4 +122,4 @@ theorem prefix_succ (P : SpectralTaylorMellinPacket ι) (N : ℕ) :
 
 end SpectralTaylorMellinPacket
 
-end InfoGeometry.Analysis.SpectralTaylorMellinBridge
+end SpectralTaylorMellinBridge

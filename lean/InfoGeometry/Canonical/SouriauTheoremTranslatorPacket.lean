@@ -21,7 +21,7 @@ introducing placeholder `True` claims and without upgrading finite owner
 theorems into unproved analytic/infinite-dimensional statements.
 -/
 
-namespace InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
+namespace SouriauTheoremTranslatorPacket
 
 open InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
@@ -985,4 +985,4 @@ theorem claimCDE_fullCoadjointOrbit_strict_hessian_metriplectic_packet
  C.full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_theorem
  β Q X Y x hX hFirst hSecond hFenchel hEntropyGradient
 
-end InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
+end SouriauTheoremTranslatorPacket

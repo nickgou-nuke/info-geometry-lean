@@ -16,7 +16,7 @@ No Hilbert-space completion or von Neumann closure is constructed here.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Prequantum.GNSBridge
+namespace GNSBridge
 
 open InfoGeometry.Prequantum.AlgebraicGNSState
 
@@ -151,4 +151,4 @@ def atStage
 
 end CompatibleFiniteNet
 
-end InfoGeometry.Prequantum.GNSBridge
+end GNSBridge

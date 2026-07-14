@@ -31,7 +31,7 @@ or analytic-continuation replacement theorem is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GeometricMonodromy
+namespace GeometricMonodromy
 
 variable {AInf : Type*} [Ring AInf] [Algebra ℝ AInf]
 
@@ -235,4 +235,4 @@ theorem spinorialWindingTransport_odd (J : AInf) (m : ℕ) :
     spinorialWindingTransport J (2 * m + 1) = -(1 : AInf) := by
   rw [spinorialWindingTransport_eq_windingReadout, windingReadout_odd]
 
-end InfoGeometry.Canonical.GeometricMonodromy
+end GeometricMonodromy

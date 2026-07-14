@@ -31,7 +31,7 @@ model beyond this local rule table, KMS/BEC interpretation, or zeta/RH
 interpretation.
 -/
 
-namespace InfoGeometry.Canonical.EvansHarmonicTrap
+namespace EvansHarmonicTrap
 
 open InfoGeometry.GrandUnification.HodgeTrifactorBridge
 
@@ -141,4 +141,4 @@ theorem harmonic_trap_pairwise_invariant :
       updateRight harmonicTrap = harmonicTrap := by
   exact ⟨harmonic_trap_updateLeft, harmonic_trap_updateRight⟩
 
-end InfoGeometry.Canonical.EvansHarmonicTrap
+end EvansHarmonicTrap

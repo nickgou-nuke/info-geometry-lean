@@ -8,7 +8,7 @@ proofs into a typed additive derivation object.  The owner does not add an
 unproved scalar-linearity claim.
 -/
 
-namespace InfoGeometry.Lie.RealSplitOctonionDerivation
+namespace RealSplitOctonionDerivation
 
 open InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
@@ -53,4 +53,4 @@ theorem rot01Derivation_nonzero :
     ∃ X : SplitCayley, rot01Derivation X ≠ 0 := by
   exact ⟨up0, rot01Real_nonzero_on_up0⟩
 
-end InfoGeometry.Lie.RealSplitOctonionDerivation
+end RealSplitOctonionDerivation

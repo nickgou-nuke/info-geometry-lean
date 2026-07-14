@@ -3,7 +3,7 @@ import Mathlib.MeasureTheory.Measure.GiryMonad
 
 open MeasureTheory
 
-namespace InfoGeometry.Canonical.IBFunctional
+namespace IBFunctional
 
 open InfoGeometry.Canonical.IBFreeEnergy
 
@@ -77,4 +77,4 @@ lemma IBMarginalize_congr
 
 end Marginalization
 
-end InfoGeometry.Canonical.IBFunctional
+end IBFunctional

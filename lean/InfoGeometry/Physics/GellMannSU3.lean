@@ -1,6 +1,6 @@
 import Mathlib
 open Matrix
-namespace InfoGeometry.Physics.GellMannSU3
+namespace GellMannSU3
 
 def gl3 : Matrix (Fin 3) (Fin 3) ℂ := !![1, 0, 0; 0, -1, 0; 0, 0, 0]
 def gl8 : Matrix (Fin 3) (Fin 3) ℂ := !![1, 0, 0; 0, 1, 0; 0, 0, -2]
@@ -67,4 +67,4 @@ theorem gl4_comm_gl8 : gl4 * gl8 - gl8 * gl4 = (-3 * Complex.I) • gl5 := by
     simp [gl4, gl5, gl8, Matrix.mul_apply, Matrix.smul_apply, Fin.sum_univ_three] <;>
     ring_nf <;> simp [Complex.I_mul_I]
 
-end InfoGeometry.Physics.GellMannSU3
+end GellMannSU3

@@ -27,7 +27,7 @@ localization, or the Riemann Hypothesis.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimonSupersymmetry
+namespace PrimonSupersymmetry
 
 open Matrix
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -65,5 +65,5 @@ theorem finite_primon_susy_master_identity
           P q = 1 :=
   InfoGeometry.Arithmetic.MobiusWittenWeylDenominator.finite_mobius_witten_weyl_packet P q h
 
-end InfoGeometry.Canonical.PrimonSupersymmetry
+end PrimonSupersymmetry
 

@@ -16,7 +16,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesGibbsState
+namespace BostConnesGibbsState
 
 open InfoGeometry.Canonical.BostConnesKMS
 
@@ -141,4 +141,4 @@ theorem normalizedWeight_tendsto_zero_atTop (β : ℝ) (hβ : 1 < β) :
   simpa [normalizedBostConnesWeight, div_eq_mul_inv, mul_assoc, mul_left_comm,
     mul_comm] using hmul
 
-end InfoGeometry.Canonical.BostConnesGibbsState
+end BostConnesGibbsState

@@ -30,7 +30,7 @@ general Jacobi formula for arbitrary matrix paths.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.MatrixDetExpTraceJacobi
+namespace MatrixDetExpTraceJacobi
 
 open scoped Matrix Matrix.Norms.Operator Polynomial
 
@@ -373,7 +373,7 @@ theorem det_matrixExpFlow_eq_exp_trace_mul (A : Matrix n n ℂ) :
     (fun t => by simpa using hasDerivAt_det_matrixExpFlow A t)
     (by simp [matrixExpFlow])
 
-end InfoGeometry.Canonical.MatrixDetExpTraceJacobi
+end MatrixDetExpTraceJacobi
 
 namespace Matrix
 

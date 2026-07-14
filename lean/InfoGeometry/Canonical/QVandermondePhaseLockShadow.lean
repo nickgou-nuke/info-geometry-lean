@@ -22,7 +22,7 @@ KMS spectra, or modular absorption lines.  It is only the finite
 `q`-Vandermonde phase-lock shadow.
 -/
 
-namespace InfoGeometry.Canonical.QVandermondePhaseLockShadow
+namespace QVandermondePhaseLockShadow
 
 /-- Two-node complex `q`-deformed collision chart. -/
 @[rep_depth thermo]
@@ -163,4 +163,4 @@ theorem a2_phase_lock_packet :
 
 end A2QChart
 
-end InfoGeometry.Canonical.QVandermondePhaseLockShadow
+end QVandermondePhaseLockShadow

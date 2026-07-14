@@ -25,7 +25,7 @@ This file does not construct a C*-completion, an infinite-generator
 Cuntz--Toeplitz algebra, or Kuzmin's analytic classification theorem.
 -/
 
-namespace InfoGeometry.Canonical.KuzminColimit
+namespace KuzminColimit
 
 open InfoGeometry.Canonical.InductiveColimitBridge
 
@@ -166,4 +166,4 @@ theorem finite_cuntz_toeplitz_q_zero_readout
     astar i * a j = (if i = j then 1 else 0) :=
   InfoGeometry.Algebra.QCCR.Proved.cuntz_toeplitz_limit a astar hstar hrel i j
 
-end InfoGeometry.Canonical.KuzminColimit
+end KuzminColimit

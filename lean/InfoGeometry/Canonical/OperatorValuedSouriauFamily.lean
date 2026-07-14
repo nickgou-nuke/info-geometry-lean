@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.OperatorValuedSouriauFamily
+namespace OperatorValuedSouriauFamily
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Canonical.OperatorModularTemperatureDuality
@@ -131,4 +131,4 @@ def timeSouriauAction : ℝ :=
 
 end Family
 
-end InfoGeometry.Canonical.OperatorValuedSouriauFamily
+end OperatorValuedSouriauFamily

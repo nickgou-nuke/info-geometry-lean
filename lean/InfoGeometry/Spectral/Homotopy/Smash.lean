@@ -11,7 +11,7 @@ the product equivalences that are actually represented here.
 
 noncomputable section
 
-namespace InfoGeometry.Spectral.Homotopy.Smash
+namespace Smash
 
 open InfoGeometry.Spectral.Homotopy.Suspension
 
@@ -77,4 +77,4 @@ def SuspensionProductReadout (X Y : PointedReadout) :
     PointedEquiv (Suspension (X ⋀ Y)) (Suspension X ⋀ Suspension Y) :=
   PointedEquiv.refl (X ⋀ Y)
 
-end InfoGeometry.Spectral.Homotopy.Smash
+end Smash

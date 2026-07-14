@@ -22,7 +22,7 @@ import InfoGeometry.Geometry.SpectralDivisors
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.ConstructiveKasparov
+namespace ConstructiveKasparov
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Geometry.SpectralDivisors
@@ -708,4 +708,4 @@ theorem nonzero_constructive_index_cannot_flow_to_flat
 
 end ConstructiveResidueReadout
 
-end InfoGeometry.Geometry.ConstructiveKasparov
+end ConstructiveKasparov

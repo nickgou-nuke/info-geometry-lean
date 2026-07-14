@@ -21,7 +21,7 @@ Analytic MaxCal existence, quantum Markov semigroup construction, and continuum
 cohomology identification are not claimed here.
 -/
 
-namespace InfoGeometry.Canonical.MaximumCaliberKLSplit
+namespace MaximumCaliberKLSplit
 
 open InfoGeometry.Topology.ThermodynamicGauge
 
@@ -223,4 +223,4 @@ theorem maxCal_state_stationary
   rw [hselect]
   exact hstationary
 
-end InfoGeometry.Canonical.MaximumCaliberKLSplit
+end MaximumCaliberKLSplit

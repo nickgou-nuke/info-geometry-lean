@@ -11,7 +11,7 @@ Defines the Connes 1-cocycle identity over a one-parameter automorphism group.
 This fuses the multiplicative volume theory with operator algebraic modular dynamics.
 -/
 
-namespace InfoGeometry.Volume.ConnesCocycle
+namespace ConnesCocycle
 
 open InfoGeometry.Canonical
 open InfoGeometry.Volume.Base
@@ -747,4 +747,4 @@ theorem scalarStabilizerAnomalyAtUnit_hom
       scalarStabilizerCharacter (H := H) σ u hCocycle B :=
   rfl
 
-end InfoGeometry.Volume.ConnesCocycle
+end ConnesCocycle

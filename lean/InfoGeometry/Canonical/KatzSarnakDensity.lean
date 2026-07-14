@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 
-namespace InfoGeometry.Canonical.KatzSarnakDensity
+namespace KatzSarnakDensity
 
 open Matrix
 
@@ -48,4 +48,4 @@ theorem katz_sarnak_trace_vanishes_on_bulk :
   dsimp [katz_sarnak_trace, P_zero, P_D]
   decide
 
-end InfoGeometry.Canonical.KatzSarnakDensity
+end KatzSarnakDensity

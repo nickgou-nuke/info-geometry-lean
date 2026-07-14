@@ -7,7 +7,7 @@ open QuadraticMap
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.Cl11Fermions
+namespace Cl11Fermions
 
 def q11 : QuadraticForm ℚ (Fin 2 → ℚ) := proj 0 0 - proj 1 1
 def e₀ : CliffordAlgebra q11 := ι q11 (fun i => if i = 0 then 1 else 0)
@@ -106,4 +106,4 @@ theorem anticomm_bbdag : b * bdag + bdag * b = 1 := by
           _ = 1 := by simp
       exact hcalc
 
-end InfoGeometry.Algebra.Cl11Fermions
+end Cl11Fermions

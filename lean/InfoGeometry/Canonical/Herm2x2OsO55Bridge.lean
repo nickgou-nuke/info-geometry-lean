@@ -14,7 +14,7 @@ linear equivalence until an explicit rational base-change carrier is introduced.
 open InfoGeometry.Algebra.JordanCayleyInversionOs
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace InfoGeometry.Canonical.Herm2x2OsO55Bridge
+namespace Herm2x2OsO55Bridge
 
 /-- The rational coordinates of `J₂(𝕆_s)` in the diagonal `(5,5)` convention. -/
 def toVec55 (X : Herm2x2Os) : Fin 10 → ℚ :=
@@ -41,4 +41,4 @@ theorem q55_toVec55_eq_det (X : Herm2x2Os) :
     InfoGeometry.Physics.Pin55Formal.q55 (toVec55 X) = X.det :=
   (det_eq_q55_toVec55 X).symm
 
-end InfoGeometry.Canonical.Herm2x2OsO55Bridge
+end Herm2x2OsO55Bridge

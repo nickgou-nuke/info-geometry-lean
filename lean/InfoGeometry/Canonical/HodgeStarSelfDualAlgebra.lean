@@ -30,7 +30,7 @@ owner file.
   self-dual curvature decomposition are not asserted here.
 -/
 
-namespace InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
+namespace HodgeStarSelfDualAlgebra
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -138,4 +138,4 @@ theorem self_dual_anti_self_dual_orthogonal
   rw [B_neg_right B B_comm B_smul_left (P_plus half S x) (P_minus half S y)] at h1
   linarith
 
-end InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
+end HodgeStarSelfDualAlgebra

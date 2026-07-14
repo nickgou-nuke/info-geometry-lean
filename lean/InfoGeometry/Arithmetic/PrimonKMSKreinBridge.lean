@@ -22,7 +22,7 @@ noncomputable section
 open scoped BigOperators
 open InfoGeometry.Krein
 
-namespace InfoGeometry.Arithmetic.PrimonKMSKreinBridge
+namespace PrimonKMSKreinBridge
 
 /-! ## 1. Finite positive Gibbs lane -/
 
@@ -286,4 +286,4 @@ theorem positiveKMS_holds :
 
 end DoubledKreinPrimonKMSPacket
 
-end InfoGeometry.Arithmetic.PrimonKMSKreinBridge
+end PrimonKMSKreinBridge

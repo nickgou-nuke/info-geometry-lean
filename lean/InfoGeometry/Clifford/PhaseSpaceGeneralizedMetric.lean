@@ -26,7 +26,7 @@ This file stays algebraic and owner-level:
 No polarized, recomposition, or KKT capstones are attached here.
 -/
 
-namespace InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
+namespace PhaseSpaceGeneralizedMetric
 
 open InfoGeometry.Cartan
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
@@ -476,4 +476,4 @@ end Core
 
 end
 
-end InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
+end PhaseSpaceGeneralizedMetric

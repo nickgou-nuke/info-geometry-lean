@@ -16,7 +16,7 @@ polarization identity for the associated quadric.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Projective.KleinQuadricPlucker
+namespace KleinQuadricPlucker
 
 /-- Homogeneous coordinates in a 4-dimensional vector space. -/
 structure Vec4 (R : Type*) where
@@ -455,4 +455,4 @@ theorem kleinRel_exists_pluckerLine_of_p03_ne_zero
   · field_simp [hp03]
     ring_nf
 
-end InfoGeometry.Projective.KleinQuadricPlucker
+end KleinQuadricPlucker

@@ -15,7 +15,7 @@ existing Sugawara / affine-Virasoro bridge.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorCFTObservables
+namespace CantorCFTObservables
 
 open InfoGeometry.OperatorAlgebra
 
@@ -115,4 +115,4 @@ condition enforced by the Dikin ellipsoid / self-concordant barrier.
 -/
 theorem net_chiral_charge_vanishes (c : ℝ) : c - c = 0 := by ring
 
-end InfoGeometry.Canonical.CantorCFTObservables
+end CantorCFTObservables

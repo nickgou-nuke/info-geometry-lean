@@ -19,7 +19,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimeCloseNowProofs
+namespace PrimeCloseNowProofs
 
 /-! ## 1. Cayley critical-line algebra -/
 
@@ -323,4 +323,4 @@ def shiftedCriticalField : CriticalField where
   fieldRe := shiftedRiemannFieldRe
   field_zero_iff_critical := shiftedRiemannField_zero_iff_critical
 
-end InfoGeometry.Canonical.PrimeCloseNowProofs
+end PrimeCloseNowProofs

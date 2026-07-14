@@ -21,7 +21,7 @@ Scope boundary:
   subgeometry.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.G2TwoHexagonIncidenceWitness
+namespace G2TwoHexagonIncidenceWitness
 
 /-- Number of points in the degree-63 split Cayley hexagon action. -/
 def pointCount : Nat := 63
@@ -99,4 +99,4 @@ theorem fixed_points_not_fano_plane_by_all_fixed_line_count :
     allFixedPointLineCount ≠ fanoPlaneLineCount := by
   norm_num [allFixedPointLineCount, fanoPlaneLineCount]
 
-end InfoGeometry.OperatorAlgebra.G2TwoHexagonIncidenceWitness
+end G2TwoHexagonIncidenceWitness

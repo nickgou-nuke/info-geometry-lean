@@ -24,7 +24,7 @@ This file is intentionally a transport layer:
   for quasilattice transport.
 -/
 
-namespace InfoGeometry.Canonical.TopologicalInvariantInvariance
+namespace TopologicalInvariantInvariance
 
 section SplitQ11
 
@@ -1067,4 +1067,4 @@ end BoundaryReadout
 
 end KK
 
-end InfoGeometry.Canonical.TopologicalInvariantInvariance
+end TopologicalInvariantInvariance

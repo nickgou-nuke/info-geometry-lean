@@ -20,7 +20,7 @@ noncomputable section
 set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Algebraic.SplitSuperGeometry
+namespace SplitSuperGeometry
 
 open InfoGeometry.Algebraic.SplitSignature
 
@@ -383,7 +383,7 @@ theorem superBerezinian_pos
   dsimp [superBerezinian]
   positivity
 
-end InfoGeometry.Algebraic.SplitSuperGeometry
+end SplitSuperGeometry
 
 namespace InfoGeometry.Algebraic.SplitSignature
 

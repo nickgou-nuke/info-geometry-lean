@@ -20,7 +20,7 @@ This file stays at the doubled/Krein level:
 - exact canonical specialization to the repo's `(J, ε, Jε)` split atom.
 -/
 
-namespace InfoGeometry.Canonical.GeneralizedMetricCore
+namespace GeneralizedMetricCore
 
 open InfoGeometry.Cartan
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -490,4 +490,4 @@ noncomputable def tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H where
 
 end CanonicalSeed
 
-end InfoGeometry.Canonical.GeneralizedMetricCore
+end GeneralizedMetricCore

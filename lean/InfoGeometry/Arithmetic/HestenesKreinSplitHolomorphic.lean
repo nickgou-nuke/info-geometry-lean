@@ -19,7 +19,7 @@ native to the repo's split-complex carrier.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
+namespace HestenesKreinSplitHolomorphic
 
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
@@ -155,4 +155,4 @@ theorem splitHolomorphicComplex_chiral_decomposition
     splitHolomorphicComplex φL φR z := by
   exact projectPlus_add_projectMinus (splitHolomorphicComplex φL φR z)
 
-end InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
+end HestenesKreinSplitHolomorphic

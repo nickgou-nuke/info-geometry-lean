@@ -19,7 +19,7 @@ import InfoGeometry.Thermo.FromLogDet
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.OperatorThermodynamics
+namespace OperatorThermodynamics
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorThermoBridge
@@ -323,4 +323,4 @@ theorem modularHamiltonian_eq_negativeLogModularOperator
 
 end FirstQuantizationLaw
 
-end InfoGeometry.Canonical.OperatorThermodynamics
+end OperatorThermodynamics

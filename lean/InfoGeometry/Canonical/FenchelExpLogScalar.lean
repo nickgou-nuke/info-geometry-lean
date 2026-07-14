@@ -9,7 +9,7 @@ Primal potential: `f(x) = exp x`.
 Dual potential: `f*(y) = y * log y - y` for `y > 0`.
 -/
 
-namespace InfoGeometry.Canonical.FenchelExpLogScalar
+namespace FenchelExpLogScalar
 
 noncomputable section
 
@@ -236,4 +236,4 @@ theorem fenchelObj_isGreatest (y : ℝ) (hy : 0 < y) :
 
 end
 
-end InfoGeometry.Canonical.FenchelExpLogScalar
+end FenchelExpLogScalar

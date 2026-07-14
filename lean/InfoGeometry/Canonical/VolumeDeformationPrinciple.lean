@@ -13,7 +13,7 @@ This file introduces no new primitive structures. It re-exports the exact and
 defective bridge owners under volume-deformation language.
 -/
 
-namespace InfoGeometry.Canonical.VolumeDeformationPrinciple
+namespace VolumeDeformationPrinciple
 
 open InfoGeometry.Canonical
 
@@ -106,4 +106,4 @@ end ExactVolumeBridge
 
 end CommutatorPotential
 
-end InfoGeometry.Canonical.VolumeDeformationPrinciple
+end VolumeDeformationPrinciple

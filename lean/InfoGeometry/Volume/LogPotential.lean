@@ -8,9 +8,9 @@ Introduces the additive potential (Log-Volume) derived from the multiplicative
 volume homomorphism. This formalizes the transition from groups to potentials.
 -/
 
-namespace InfoGeometry.Volume.LogPotential
+namespace LogPotential
 
-open InfoGeometry.Volume.Base
+open Base
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -37,4 +37,4 @@ theorem logAbsVolume_add (f g : V ≃ₗ[ℝ] V) :
   · exact abs_ne_zero.mpr (Units.ne_zero _)
   · exact abs_ne_zero.mpr (Units.ne_zero _)
 
-end InfoGeometry.Volume.LogPotential
+end LogPotential

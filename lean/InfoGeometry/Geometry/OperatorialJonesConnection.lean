@@ -15,7 +15,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.OperatorialJonesConnection
+namespace OperatorialJonesConnection
 
 /-! ## 1. Abstract adjoint and projectors -/
 
@@ -158,4 +158,4 @@ theorem maps_projector
 
 end OperatorialJonesTransport
 
-end InfoGeometry.Geometry.OperatorialJonesConnection
+end OperatorialJonesConnection

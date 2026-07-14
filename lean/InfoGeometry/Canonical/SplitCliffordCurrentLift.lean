@@ -5,7 +5,7 @@ open scoped TensorProduct
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitCliffordCurrentLift
+namespace SplitCliffordCurrentLift
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -107,4 +107,4 @@ theorem splitCliffordInfinityCurrentMorphism_current_central_commutes :
   simpa [splitCliffordInfinityCurrentMorphism] using
     splitCliffordInfinity_current_central_commutes X
 
-end InfoGeometry.Canonical.SplitCliffordCurrentLift
+end SplitCliffordCurrentLift

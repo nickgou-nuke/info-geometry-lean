@@ -27,7 +27,7 @@ spacetime modular flow versus internal color flow and prove their exact commutat
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HolographicSouriauClosure
+namespace HolographicSouriauClosure
 
 open Complex
 
@@ -96,4 +96,4 @@ theorem color_commutes_with_modular_laser (σ : V → V) (U : W → W) (state : 
     internal_color_action U (spacetime_modular_action σ state) := by
   rfl
 
-end InfoGeometry.Canonical.HolographicSouriauClosure
+end HolographicSouriauClosure

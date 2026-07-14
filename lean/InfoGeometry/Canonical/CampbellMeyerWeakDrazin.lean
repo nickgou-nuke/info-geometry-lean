@@ -33,7 +33,7 @@ applications.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CampbellMeyerWeakDrazin
+namespace CampbellMeyerWeakDrazin
 
 open InfoGeometry.Canonical
 
@@ -259,4 +259,4 @@ theorem weak_conjugated_polynomial_inverse_isWeak :
   unfold IsWeakDrazin
   native_decide
 
-end InfoGeometry.Canonical.CampbellMeyerWeakDrazin
+end CampbellMeyerWeakDrazin

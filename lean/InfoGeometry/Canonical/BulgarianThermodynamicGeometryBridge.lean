@@ -1,4 +1,4 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
-end InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
+namespace BulgarianThermodynamicGeometryBridge
+end BulgarianThermodynamicGeometryBridge

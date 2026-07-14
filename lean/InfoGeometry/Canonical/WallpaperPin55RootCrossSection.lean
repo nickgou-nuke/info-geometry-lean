@@ -27,7 +27,7 @@ double cover, or an analytic Cartan bundle.  Those remain higher-level sockets;
 this module supplies the exact finite algebraic cross-section used by them.
 -/
 
-namespace InfoGeometry.Canonical.WallpaperPin55RootCrossSection
+namespace WallpaperPin55RootCrossSection
 
 open InfoGeometry.Canonical.WallpaperKleinBottleCartan
 
@@ -374,4 +374,4 @@ theorem wallpaper_pin55_root_cross_section_packet (g r : Fin 8) :
 
 end
 
-end InfoGeometry.Canonical.WallpaperPin55RootCrossSection
+end WallpaperPin55RootCrossSection

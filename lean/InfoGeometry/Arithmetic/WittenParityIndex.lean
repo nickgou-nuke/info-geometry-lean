@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.RamanujanDefectTower
 
-namespace InfoGeometry.Arithmetic.WittenParityIndex
+namespace WittenParityIndex
 
 /-!
 # The Thermodynamics of the Möbius/Witten Parity Index
@@ -103,4 +103,4 @@ theorem ramanujan_defect_layers_follow_witten_sequence :
   exact ⟨zeta3_defect_parity, zeta5_defect_parity,
     zeta7_defect_parity, zeta9_defect_parity⟩
 
-end InfoGeometry.Arithmetic.WittenParityIndex
+end WittenParityIndex

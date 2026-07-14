@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
+namespace SuperchargeModularHamiltonianBridge
 
 open InfoGeometry.Canonical
 
@@ -181,4 +181,4 @@ theorem Ksur_isSpectralCompact :
 
 end Bridge
 
-end InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
+end SuperchargeModularHamiltonianBridge

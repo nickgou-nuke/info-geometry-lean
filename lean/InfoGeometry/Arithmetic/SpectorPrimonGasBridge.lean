@@ -35,7 +35,7 @@ proved here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.SpectorPrimonGasBridge
+namespace SpectorPrimonGasBridge
 
 open scoped BigOperators
 
@@ -139,4 +139,4 @@ theorem spector_finite_supertrace_supported_on_squarefree
         mu.coeff n * primonBoltzmannWeight beta n :=
   mu.finiteSupertrace_eq_squarefree_filter A beta
 
-end InfoGeometry.Arithmetic.SpectorPrimonGasBridge
+end SpectorPrimonGasBridge

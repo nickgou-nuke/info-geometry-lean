@@ -15,7 +15,7 @@ is proved by three lemmas, each connecting to an owner file.
 open Complex
 open Matrix
 
-namespace InfoGeometry.Arithmetic.MasterIdentity
+namespace MasterIdentity
 
 /--
 **Lemma 1 (Jordan-Wigner determinant for a single mode).**
@@ -84,4 +84,4 @@ All proven or structurally wired across:
 - UnifiedCapstone.lean (master identity)
 -/
 
-end InfoGeometry.Arithmetic.MasterIdentity
+end MasterIdentity

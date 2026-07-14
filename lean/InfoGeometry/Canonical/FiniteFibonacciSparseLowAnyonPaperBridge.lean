@@ -19,7 +19,7 @@ No analytic continuation.
 No claim that these templates are derived from hypergeometric formulas here.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonPaperBridge
+namespace FiniteFibonacciSparseLowAnyonPaperBridge
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
@@ -74,4 +74,4 @@ theorem sectionSix_pi8_b6_first_block
       pi8_b6 q3 B 8 0 = B.B10 ∧ pi8_b6 q3 B 8 8 = B.B11 :=
   InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices.pi8_b6_first_block q3 B
 
-end InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonPaperBridge
+end FiniteFibonacciSparseLowAnyonPaperBridge

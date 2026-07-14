@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.TopologicalSnap
+namespace TopologicalSnap
 
 /-! ## 1. Conserved obstruction flows -/
 
@@ -221,4 +221,4 @@ theorem no_nontrivial_flattening :
 
 end ConservedObstructionFlow
 
-end InfoGeometry.OperatorAlgebra.TopologicalSnap
+end TopologicalSnap

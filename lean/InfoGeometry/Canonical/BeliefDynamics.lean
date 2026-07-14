@@ -2,7 +2,7 @@ import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.Analysis.SpecialFunctions.Exp
 
-namespace InfoGeometry.Canonical.BeliefDynamics
+namespace BeliefDynamics
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.SpectralInference
@@ -74,4 +74,4 @@ lemma radonNikodymOp_pos (H : HessianGeometry E) (x y : E) :
   unfold radonNikodymOp
   exact Real.exp_pos _
 
-end InfoGeometry.Canonical.BeliefDynamics
+end BeliefDynamics

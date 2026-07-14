@@ -14,7 +14,7 @@ are reciprocals.  The analytic/unitary Fourier layer is kept as explicit
 certificates.  A concrete exact `2 × 2` Penrose calculation is proved directly.
 -/
 
-namespace InfoGeometry.Canonical.SmithRetrocirculantMoorePenrose
+namespace SmithRetrocirculantMoorePenrose
 
 noncomputable section
 
@@ -156,4 +156,4 @@ end RetrocirculantClosureCertificate
 
 end
 
-end InfoGeometry.Canonical.SmithRetrocirculantMoorePenrose
+end SmithRetrocirculantMoorePenrose

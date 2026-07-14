@@ -24,7 +24,7 @@ finite entropy, centered-score, and direct-limit layers under one namespace:
 The measure-theoretic and spectral completions remain separate owners.
 -/
 
-namespace InfoGeometry.Canonical.JaynesFormalism
+namespace JaynesFormalism
 
 open Finset
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
@@ -239,4 +239,4 @@ theorem gibbs_maximizes_entropy_on_constraint
       InfoGeometry.MaxEnt.entropy q 1 ≤ InfoGeometry.MaxEnt.entropy (InfoGeometry.MaxEnt.gibbs f lam) 1 :=
   InfoGeometry.MaxEnt.gibbs_maximizes_entropy_on_constraint (n := n) f E lam hE
 
-end InfoGeometry.Canonical.JaynesFormalism
+end JaynesFormalism

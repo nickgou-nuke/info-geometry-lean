@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Volume.DeterminantBundle
 import Mathlib.Tactic
 
-namespace InfoGeometry.Canonical.RestrictedVolumeCharacter
+namespace RestrictedVolumeCharacter
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -541,4 +541,4 @@ end RestrictedCharacter
 
 end RestrictedSheetEquiv
 
-end InfoGeometry.Canonical.RestrictedVolumeCharacter
+end RestrictedVolumeCharacter

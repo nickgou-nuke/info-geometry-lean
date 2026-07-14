@@ -16,7 +16,7 @@ It does not construct a probability measure, a stochastic process, a CAR
 algebra, or a metric-space instance for Cantor space.
 -/
 
-namespace InfoGeometry.Cantor.CantorRandomWalk
+namespace CantorRandomWalk
 
 open Matrix
 open InfoGeometry.Dynamics.KanDecomposition
@@ -121,4 +121,4 @@ theorem cantor_noise_accumulation_matrix (i : ℕ) (δ : ℂ) (n : ℕ) :
   rw [cantor_noise_accumulation]
   exact componentN_eq ((n : ℂ) * δ)
 
-end InfoGeometry.Cantor.CantorRandomWalk
+end CantorRandomWalk

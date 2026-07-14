@@ -12,7 +12,7 @@ continuation, CFT completeness, or geometric interpretation beyond the matrix
 identities themselves.
 -/
 
-namespace InfoGeometry.Canonical.LogCftMonodromyBridge
+namespace LogCftMonodromyBridge
 
 open InfoGeometry.Clifford.LogCftMonodromy
 open Matrix
@@ -96,4 +96,4 @@ theorem lowerHadjiivanovMonodromy_pow_original (h : ℂ) (n : ℕ) :
         ((n : ℂ) * logShearBase * lcftPhase h ^ n) :=
   InfoGeometry.Clifford.LogCftMonodromy.lowerHadjiivanovMonodromy_pow_original h n
 
-end InfoGeometry.Canonical.LogCftMonodromyBridge
+end LogCftMonodromyBridge

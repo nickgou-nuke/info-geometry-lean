@@ -15,7 +15,7 @@ Concrete finite-instance extraction lemmas that connect canonical theorem
 surfaces to directly checkable model configurations.
 -/
 
-namespace InfoGeometry.Canonical.EmpiricalChecks
+namespace EmpiricalChecks
 
 open scoped BigOperators
 open InfoGeometry.Canonical.ChiralAnomaly
@@ -75,4 +75,4 @@ lemma switch_exists_routing_weights_epsilon_le_one
 
 end RoutingBounds
 
-end InfoGeometry.Canonical.EmpiricalChecks
+end EmpiricalChecks

@@ -25,7 +25,7 @@ Finite algebraic inverse theorem for the projective-space relation
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Canonical.ProjectiveSpaceGrothendieckRing
+namespace ProjectiveSpaceGrothendieckRing
 
 open scoped BigOperators
 
@@ -87,4 +87,4 @@ theorem projective_space_nilpotent (T : R) (n : Nat) (h : (1 - T) ^ (n + 1) = 0)
     IsNilpotent (1 - T) := by
   exact IsNilpotent.mk (1 - T) (n + 1) h
 
-end InfoGeometry.Canonical.ProjectiveSpaceGrothendieckRing
+end ProjectiveSpaceGrothendieckRing

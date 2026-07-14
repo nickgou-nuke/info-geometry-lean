@@ -30,7 +30,7 @@ construct a spin representation, identify a physical state space, classify
 subgroups, prove a causal-boundary theorem, or assert analytic completion.
 -/
 
-namespace InfoGeometry.Canonical.FierzKleinQuarticBridge
+namespace FierzKleinQuarticBridge
 
 open InfoGeometry.Canonical.FierzKleinFoundation
 open InfoGeometry.Canonical.DrazinModularPersistence
@@ -452,4 +452,4 @@ theorem intervalQuarticSqrtAreaFunctional_eq_zero_of_interval_zero
   rw [spacetimeIntervalQuartic_eq_zero_of_interval_zero X h]
   simp
 
-end InfoGeometry.Canonical.FierzKleinQuarticBridge
+end FierzKleinQuarticBridge

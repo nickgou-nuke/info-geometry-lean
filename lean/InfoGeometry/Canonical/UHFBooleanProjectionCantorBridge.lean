@@ -40,7 +40,7 @@ used by those later layers.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
+namespace UHFBooleanProjectionCantorBridge
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
@@ -664,6 +664,6 @@ noncomputable def boolean_projection_bratteli_path_space_is_cantor :
   booleanEvaluation_prefixPullback := cantorBooleanEvaluation_prefixPullback
   principal_toBoundary := CantorStoneUltrafilter.toBoundary_principal
 
-end InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
+end UHFBooleanProjectionCantorBridge
 
 end noncomputable section

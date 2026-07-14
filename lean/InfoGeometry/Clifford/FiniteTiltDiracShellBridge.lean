@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 Thin bridge exports for the finite tilt Dirac shell.
 -/
 
-namespace InfoGeometry.Clifford.FiniteTiltDiracShellBridge
+namespace FiniteTiltDiracShellBridge
 
 open InfoGeometry.Clifford.FiniteTiltDiracShell
 
@@ -45,4 +45,4 @@ theorem finiteTiltDiracShellBridge_current_density_eq :
   let pkt := finiteTiltDiracShellBridgeOwnerTarget
   pkt.current_density_eq
 
-end InfoGeometry.Clifford.FiniteTiltDiracShellBridge
+end FiniteTiltDiracShellBridge

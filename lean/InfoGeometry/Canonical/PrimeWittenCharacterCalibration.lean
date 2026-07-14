@@ -13,7 +13,7 @@ Witten-character identities under a canonical owner-facing namespace.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeWittenCharacterCalibration
+namespace PrimeWittenCharacterCalibration
 
 open InfoGeometry.Arithmetic.PrimeWittenCharacter
 
@@ -60,4 +60,4 @@ theorem canonicalPrimeWittenCharacterOwnerTarget :
     finiteWittenCharacter_eq_mobiusGradedThermalCharacter P q,
     finiteWittenCharacter_eq_dirichletWittenCharacter P q⟩
 
-end InfoGeometry.Canonical.PrimeWittenCharacterCalibration
+end PrimeWittenCharacterCalibration

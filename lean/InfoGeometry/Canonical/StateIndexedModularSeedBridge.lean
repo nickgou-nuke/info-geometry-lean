@@ -17,7 +17,7 @@ This file is a translator/coherence surface:
   compatibility witness.
 -/
 
-namespace InfoGeometry.Canonical.StateIndexedModularSeedBridge
+namespace StateIndexedModularSeedBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -165,4 +165,4 @@ theorem stateIndexed_transportGenerator_eq_canonical_of_boundedWitness
 
 end Core
 
-end InfoGeometry.Canonical.StateIndexedModularSeedBridge
+end StateIndexedModularSeedBridge

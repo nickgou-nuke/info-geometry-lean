@@ -17,7 +17,7 @@ mixed upper/lower-lane witness proves genuine nonassociativity.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.IntegralZornAlternativeAlgebra
+namespace IntegralZornAlternativeAlgebra
 
 set_option maxHeartbeats 1000000
 
@@ -74,19 +74,7 @@ theorem integralZorn_left_alternative (X Y : IntegralZorn) :
       integralZornMul X (integralZornMul X Y) := by
   apply integralToCoreZorn_injective
   apply InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_injective
-  have hXXY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul
-    (integralZornMul X X) Y
-  have hX_XY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul
-    X (integralZornMul X Y)
-  have hXX := IntegralZornCompositionAlgebra.integralToCoreZorn_mul X X
-  have hXY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul X Y
-  rw [hXXY, hX_XY,
-    hXX, hXY,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul]
-  exact canonicalZorn_left_alternative
+  simpa [coreToCanonical_integralZornMul] using canonicalZorn_left_alternative
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
       (integralToCoreZorn X))
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
@@ -97,19 +85,7 @@ theorem integralZorn_right_alternative (X Y : IntegralZorn) :
       integralZornMul X (integralZornMul Y Y) := by
   apply integralToCoreZorn_injective
   apply InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_injective
-  have hXY_Y := IntegralZornCompositionAlgebra.integralToCoreZorn_mul
-    (integralZornMul X Y) Y
-  have hX_YY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul
-    X (integralZornMul Y Y)
-  have hXY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul X Y
-  have hYY := IntegralZornCompositionAlgebra.integralToCoreZorn_mul Y Y
-  rw [hXY_Y, hX_YY,
-    hXY, hYY,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul,
-    InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_mul]
-  exact canonicalZorn_right_alternative
+  simpa [coreToCanonical_integralZornMul] using canonicalZorn_right_alternative
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
       (integralToCoreZorn X))
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
@@ -120,13 +96,8 @@ theorem integralZornConj_mul (X Y : IntegralZorn) :
       integralZornMul (integralZornConj Y) (integralZornConj X) := by
   apply integralToCoreZorn_injective
   apply InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical_injective
-  have h1 := coreToCanonical_integralZornConj (integralZornMul X Y)
-  have h2 := coreToCanonical_integralZornMul (integralZornConj Y) (integralZornConj X)
-  rw [h1, h2,
-    coreToCanonical_integralZornMul,
-    coreToCanonical_integralZornConj,
-    coreToCanonical_integralZornConj]
-  exact canonicalZorn_conj_mul
+  simpa [coreToCanonical_integralZornConj, coreToCanonical_integralZornMul]
+    using canonicalZorn_conj_mul
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
       (integralToCoreZorn X))
     (InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge.coreToCanonical
@@ -188,6 +159,6 @@ theorem integralZorn_not_associative :
   rw [hu] at ha
   norm_num at ha
 
-end InfoGeometry.Canonical.IntegralZornAlternativeAlgebra
+end IntegralZornAlternativeAlgebra
 
 end noncomputable section

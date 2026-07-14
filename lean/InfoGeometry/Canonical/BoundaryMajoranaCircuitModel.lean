@@ -20,7 +20,7 @@ The boundary algebra is still carried by the existing owner files. This
 module is just the theorem-level synthesis point.
 -/
 
-namespace InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
+namespace BoundaryMajoranaCircuitModel
 
 open InfoGeometry.Canonical.NormalOrderedCurrent
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -110,4 +110,4 @@ theorem majoranaBosonizationTheorem :
 
 end Core
 
-end InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
+end BoundaryMajoranaCircuitModel

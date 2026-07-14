@@ -27,7 +27,7 @@ Hestenes phase-equivariant sector once the representation and mode laws are
 supplied.
 -/
 
-namespace InfoGeometry.Canonical.HestenesAnalyticity
+namespace HestenesAnalyticity
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -346,4 +346,4 @@ noncomputable def bilingualAnalyticAtEquiv
 
 end Equivalences
 
-end InfoGeometry.Canonical.HestenesAnalyticity
+end HestenesAnalyticity

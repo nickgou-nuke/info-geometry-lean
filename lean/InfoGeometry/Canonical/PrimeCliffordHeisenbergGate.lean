@@ -17,7 +17,7 @@ No Mertens estimate or RH theorem is proved here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeCliffordHeisenbergGate
+namespace PrimeCliffordHeisenbergGate
 
 open InfoGeometry.Canonical.PrimeMertensDefectBoundary
 
@@ -107,4 +107,4 @@ theorem zero_point_exponent_eq_half
 
 end HeisenbergMertensGate
 
-end InfoGeometry.Canonical.PrimeCliffordHeisenbergGate
+end PrimeCliffordHeisenbergGate

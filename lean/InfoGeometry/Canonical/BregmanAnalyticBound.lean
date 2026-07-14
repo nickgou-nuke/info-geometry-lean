@@ -16,7 +16,7 @@ Frobenius norm: ‖R‖_F = √(2(c-1)² + 2(s-ε)²) ≤ 2√2·ε² for |ε| �
 Zero global axioms. No matrix typeclass dependencies.
 -/
 
-namespace InfoGeometry.Canonical.BregmanAnalyticBound
+namespace BregmanAnalyticBound
 
 /-! ### Taylor bounds for sin/cos -/
 
@@ -118,4 +118,4 @@ theorem bregman_quadratic_bound (ε : ℝ) (hε : |ε| ≤ 1) :
     _ = Real.sqrt 2 * (2 * ε ^ 2) := by ring
     _ = (2 * Real.sqrt 2) * ε ^ 2 := by ring
 
-end InfoGeometry.Canonical.BregmanAnalyticBound
+end BregmanAnalyticBound

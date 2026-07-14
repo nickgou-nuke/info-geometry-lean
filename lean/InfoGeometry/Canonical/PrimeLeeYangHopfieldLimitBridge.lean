@@ -26,7 +26,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
+namespace PrimeLeeYangHopfieldLimitBridge
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
@@ -128,4 +128,4 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
   unfold PrimeFerromagneticChain.centeredOccupationCoupling twoPrimeLogConvolutionCoeff
   ring
 
-end InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
+end PrimeLeeYangHopfieldLimitBridge

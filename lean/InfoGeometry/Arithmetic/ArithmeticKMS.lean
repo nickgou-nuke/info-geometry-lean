@@ -16,7 +16,7 @@ import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ArithmeticKMS
+namespace ArithmeticKMS
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.ProjectivePrimePartition
@@ -369,4 +369,4 @@ theorem primeFlow_nonneg
 
 end ProjectiveKMSPrimeCompatibility
 
-end InfoGeometry.Arithmetic.ArithmeticKMS
+end ArithmeticKMS

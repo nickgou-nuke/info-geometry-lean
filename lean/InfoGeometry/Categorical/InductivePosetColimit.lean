@@ -19,7 +19,7 @@ The Zorn statement below is the order-theoretic maximality theorem that follows
 from the chain-upper-bound condition.
 -/
 
-namespace InfoGeometry.Categorical.InductivePosetColimit
+namespace InductivePosetColimit
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -115,4 +115,4 @@ theorem colimit_le_of_upperBound
     sup ≤ ub :=
   h_lub.2 hub
 
-end InfoGeometry.Categorical.InductivePosetColimit
+end InductivePosetColimit

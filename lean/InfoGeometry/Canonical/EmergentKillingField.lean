@@ -6,7 +6,7 @@ import Mathlib
 Finite-dimensional operator-level Killing identity for the trace-form metric.
 -/
 
-namespace InfoGeometry.Canonical.EmergentKillingField
+namespace EmergentKillingField
 
 open Matrix
 
@@ -62,4 +62,4 @@ theorem emergent_killing_equation (X A B : M2R) :
   simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
   ring
 
-end InfoGeometry.Canonical.EmergentKillingField
+end EmergentKillingField

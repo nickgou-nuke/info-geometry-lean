@@ -29,7 +29,7 @@ No all-`n` monodromy matrices.
 No analytic continuation.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciGeneralBnPaperBridge
+namespace FiniteFibonacciGeneralBnPaperBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -447,4 +447,4 @@ theorem general_sparse_basis8_card :
     Fintype.card FiniteFibonacciSparseLowAnyonMatrices.Basis8 = 13 :=
   sectionSix_basis8_card
 
-end InfoGeometry.Canonical.FiniteFibonacciGeneralBnPaperBridge
+end FiniteFibonacciGeneralBnPaperBridge

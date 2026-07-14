@@ -27,7 +27,7 @@ open scoped ComplexConjugate
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzFockRepresentation
+namespace CuntzFockRepresentation
 
 /-! ## 1. The GNS pre-inner product from the KMS state on the diagonal
 
@@ -183,4 +183,4 @@ theorem leftMultiplication_mul (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
 4. Cuntz algebra C*-norm (requires C*-algebra envelope theorem)
 -/
 
-end InfoGeometry.Algebra.CuntzFockRepresentation
+end CuntzFockRepresentation

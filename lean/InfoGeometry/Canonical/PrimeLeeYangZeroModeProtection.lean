@@ -19,7 +19,7 @@ completed-`xi` determinant.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
+namespace PrimeLeeYangZeroModeProtection
 
 /--
 Readout packet for the defect-free prime Lee--Yang limit.
@@ -51,4 +51,4 @@ variable
 
 end ZeroModeProtectionPacket
 
-end InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
+end PrimeLeeYangZeroModeProtection

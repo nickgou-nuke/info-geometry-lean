@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
+namespace BogoliubovHomologyFrameEquiv
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealHomologyCohomologyDictionary
@@ -202,4 +202,4 @@ end HomologyFrameEquiv
 
 end Core
 
-end InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
+end BogoliubovHomologyFrameEquiv

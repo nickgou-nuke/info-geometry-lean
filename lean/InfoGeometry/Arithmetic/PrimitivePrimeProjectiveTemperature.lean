@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
+namespace PrimitivePrimeProjectiveTemperature
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
@@ -140,4 +140,4 @@ theorem ArithmeticPrimeTemperatureInversionCalibration.primePartitionIntegral_eq
     ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u :=
   ArithmeticPrimeTemperatureInversionCalibration.inversion_integral_law C
 
-end InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
+end PrimitivePrimeProjectiveTemperature

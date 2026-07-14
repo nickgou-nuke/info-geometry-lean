@@ -28,7 +28,7 @@ open scoped ComplexConjugate
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzGNSRepresentation
+namespace CuntzGNSRepresentation
 
 /-- Diagonal subalgebra element: a ℂ-linear combination of projectors P_i.
     Represented by a coefficient vector c : Fin n → ℂ, the element is Σ c_i P_i. -/
@@ -81,4 +81,4 @@ convergence Z_n(β) → ζ(β) remain as documented debt.
 The algebraic structure that supports them is fully proved.
 -/
 
-end InfoGeometry.Algebra.CuntzGNSRepresentation
+end CuntzGNSRepresentation

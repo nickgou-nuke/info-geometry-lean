@@ -12,7 +12,7 @@ the canonical head `K`-flip and identifies the fixed versus anti-fixed
 projector combinations.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordHeadEquivariance
+namespace SplitCliffordHeadEquivariance
 
 open InfoGeometry.Canonical.SplitCliffordHeadLift
 open InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
@@ -75,4 +75,4 @@ noncomputable def headKFlipResidualTensor (n : ℕ) (x : SplitClNNTensorStep n) 
   rw [headKFlipTensor_apply_headEpsTensor]
   module
 
-end InfoGeometry.Canonical.SplitCliffordHeadEquivariance
+end SplitCliffordHeadEquivariance

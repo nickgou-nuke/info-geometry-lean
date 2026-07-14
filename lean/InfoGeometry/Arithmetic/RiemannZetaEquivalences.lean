@@ -29,7 +29,7 @@ Ramanujan's odd-zeta transformation.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.RiemannZetaEquivalences
+namespace RiemannZetaEquivalences
 
 open Complex
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -203,4 +203,4 @@ def RamanujanOddZetaTarget (n : ℕ) (α β : ℝ) : Prop :=
   0 < n → 0 < α → 0 < β → α * β = Real.pi ^ 2 →
     InfoGeometry.Arithmetic.RamanujanOddZeta.RamanujanOddZetaFormula n α β
 
-end InfoGeometry.Arithmetic.RiemannZetaEquivalences
+end RiemannZetaEquivalences

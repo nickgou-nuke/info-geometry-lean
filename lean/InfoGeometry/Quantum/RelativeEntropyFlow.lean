@@ -22,7 +22,7 @@ No von Neumann entropy, logarithm, positivity completion, or nonlinear quantum
 proximal theorem is asserted here.
 -/
 
-namespace InfoGeometry.Quantum.RelativeEntropyFlow
+namespace RelativeEntropyFlow
 
 open Matrix
 open InfoGeometry.Dynamics.KanDecomposition
@@ -215,4 +215,4 @@ theorem quantumShearSandwich_maximallyMixed_not_trace_preserving :
   rw [quantumShearSandwich_maximallyMixed_trace_one_shear]
   norm_num
 
-end InfoGeometry.Quantum.RelativeEntropyFlow
+end RelativeEntropyFlow

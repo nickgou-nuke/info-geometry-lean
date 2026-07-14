@@ -12,7 +12,7 @@ import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness
+namespace BaryonAsymmetryWitness
 
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 
@@ -57,4 +57,4 @@ theorem asymmetry_eq_transfer :
 
 end BaryonAsymmetryAccounting
 
-end InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness
+end BaryonAsymmetryWitness

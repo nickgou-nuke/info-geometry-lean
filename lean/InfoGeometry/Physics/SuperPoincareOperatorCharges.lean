@@ -7,7 +7,7 @@ Central charges are elements of the operator algebra, not scalars. This file
 proves only algebraic operator lemmas in a noncommutative ring.
 -/
 
-namespace InfoGeometry.Physics.SuperPoincareOperatorCharges
+namespace SuperPoincareOperatorCharges
 
 /-- Operator commutator. -/
 def comm {A : Type*} [Ring A] (x y : A) : A := x * y - y * x
@@ -84,4 +84,4 @@ theorem central_charge_commutes_with_defining_anticommutator {A : Type*} [Ring A
   rw [hAnti]
   exact comm_eq_zero_of_commutes (hZ Zij)
 
-end InfoGeometry.Physics.SuperPoincareOperatorCharges
+end SuperPoincareOperatorCharges

@@ -19,7 +19,7 @@ already-owned canonical surfaces:
 - `𝓕±(T)` as sector-exchange observables `[T, P±]`.
 -/
 
-namespace InfoGeometry.Canonical.OperatorDictionary
+namespace OperatorDictionary
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -155,4 +155,4 @@ theorem minusProjectorFlux_eq_neg_sectorExchangeObservableMinus (T : EndH) :
 
 end Core
 
-end InfoGeometry.Canonical.OperatorDictionary
+end OperatorDictionary

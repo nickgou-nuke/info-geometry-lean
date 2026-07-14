@@ -10,7 +10,7 @@ finite ring-level data. It does not prove analytic Wilson-loop, positivity,
 de Rham-period, or zeta identities.
 -/
 
-namespace InfoGeometry.Topology.ThermodynamicGauge
+namespace ThermodynamicGauge
 
 /-- Nonequilibrium causal flow over a directed causal network. -/
 structure CausalNonequilibriumFlow (Op : Type*) [Ring Op] where
@@ -170,4 +170,4 @@ theorem wilson_loop_computes_zeta_of_trace_eval
     trace (wilson_loop_holonomy flow) = partitionZeta :=
   htrace
 
-end InfoGeometry.Topology.ThermodynamicGauge
+end ThermodynamicGauge

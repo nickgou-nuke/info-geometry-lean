@@ -30,7 +30,7 @@ Global topological realization, infinite-colimit transport, and physical
 orientifold/string interpretations remain outside this file.
 -/
 
-namespace InfoGeometry.Canonical.KleinBottleBoundaryActionPacket
+namespace KleinBottleBoundaryActionPacket
 
 open Matrix
 open InfoGeometry.Canonical.CptBoundaryMobius
@@ -96,4 +96,4 @@ def canonicalPacket : BoundaryActionPacket where
     canonicalPacket.boundaryAction (canonicalPacket.boundaryAction M) = M :=
   glideReflection_involutive M
 
-end InfoGeometry.Canonical.KleinBottleBoundaryActionPacket
+end KleinBottleBoundaryActionPacket

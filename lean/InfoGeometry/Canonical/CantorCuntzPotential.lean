@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 
-namespace InfoGeometry.Canonical.CantorCuntzPotential
+namespace CantorCuntzPotential
 
 -- The fractal scaling constant derived from the Cuntz algebra relations.
 -- It determines the dimension of the Cantor set boundary.
@@ -39,4 +39,4 @@ theorem trap_equilibrium (h_a_pos : a ≠ 0) (lam : ℝ) (h_eq : confining_force
     | inr h5 => exact False.elim (h_a_pos h5)
   | inr h6 => exact h6
 
-end InfoGeometry.Canonical.CantorCuntzPotential
+end CantorCuntzPotential

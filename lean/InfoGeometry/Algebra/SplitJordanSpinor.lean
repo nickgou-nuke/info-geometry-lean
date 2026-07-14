@@ -24,7 +24,7 @@ full orbit classification of Section 5.1.  Those are represented as explicit
 interfaces/sockets to be filled only by later kernel-checked constructions.
 -/
 
-namespace InfoGeometry.Algebra.SplitJordanSpinor
+namespace SplitJordanSpinor
 
 /-- The three split composition dimensions used in the paper: `q = 2,4,8`. -/
 inductive SplitCriticalDimension where
@@ -257,4 +257,4 @@ structure KleinSpinorOrbitStratification (A : Type*) [NonAssocSemiring A] where
   generic_stabilizer_description : Prop
   null_stabilizer_description : Prop
 
-end InfoGeometry.Algebra.SplitJordanSpinor
+end SplitJordanSpinor

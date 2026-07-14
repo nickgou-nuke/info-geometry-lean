@@ -21,7 +21,7 @@ is made.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+namespace ZetaCoordinateSymmetry
 
 open Complex
 open InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
@@ -927,4 +927,4 @@ end ZeroSetSymmetry
 
 end ZetaAffineChart
 
-end InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+end ZetaCoordinateSymmetry

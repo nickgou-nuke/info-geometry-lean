@@ -2,7 +2,7 @@ import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Meta.Architecture
 
-namespace InfoGeometry.Twistor.LightconeBridge
+namespace LightconeBridge
 
 open InfoGeometry.Clifford.Spacetime
 open InfoGeometry.Twistor.Incidence
@@ -66,4 +66,4 @@ theorem twistor_incidence_variety (v : Vec13) (Z : Twistor) (_h_pi : Z.2 ≠ 0) 
     have h1 : ω = (twistorLift v π).1 := congrArg Prod.fst h
     simpa [twistorLift_apply] using h1
 
-end InfoGeometry.Twistor.LightconeBridge
+end LightconeBridge

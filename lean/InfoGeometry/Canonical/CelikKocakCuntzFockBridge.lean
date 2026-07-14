@@ -32,7 +32,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikKocakCuntzFockBridge
+namespace CelikKocakCuntzFockBridge
 
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Canonical.CuntzCliffordBottBridge
@@ -164,4 +164,4 @@ theorem annihilation_seed_square_zero_in_cl11_limit
 
 end SplitFockCuntzClock
 
-end InfoGeometry.Canonical.CelikKocakCuntzFockBridge
+end CelikKocakCuntzFockBridge

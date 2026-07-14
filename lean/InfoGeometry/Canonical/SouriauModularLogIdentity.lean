@@ -8,7 +8,7 @@ Constructive modular-log commutator transport lemmas.
 This file is algebraic only: no `exp`, no `log`, no placeholders.
 -/
 
-namespace InfoGeometry.Canonical.SouriauModularLogIdentity
+namespace SouriauModularLogIdentity
 
 open LinearMap
 
@@ -90,4 +90,4 @@ theorem commutator_zero_iff_composed_zero
     exact (M.comp_Delta_eq_zero_iff (M.K.commutator A)).1 h.1
 
 end ModularLogData
-end InfoGeometry.Canonical.SouriauModularLogIdentity
+end SouriauModularLogIdentity

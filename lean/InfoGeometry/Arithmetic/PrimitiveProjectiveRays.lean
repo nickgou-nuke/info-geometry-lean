@@ -16,6 +16,8 @@ noncomputable section
 
 open scoped BigOperators
 
+open InfoGeometry.Arithmetic
+
 namespace PrimitiveProjectiveRays
 
 /-- Arithmetic count profiles indexed by `ℕ`. -/

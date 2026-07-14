@@ -24,7 +24,7 @@ universe u v w z
 
 namespace ModularDoubledRealTwistorColimit
 
-open InfoGeometry.Categorical.ModularDoubledRealHopfFibration
+open ModularDoubledRealHopfFibration
 
 /-! ## Projective twistor quotient -/
 
@@ -139,7 +139,7 @@ def toModularDoubledRealFibration
     (projection_twist :
       ∀ x : C.TotalLimit, C.limitProjection (totalTwist x) =
         baseTwist (C.limitProjection x)) :
-    ModularDoubledRealHopf where
+    ModularDoubledRealHopfFibration.ModularDoubledRealHopf where
   Total := C.TotalLimit
   Base := C.BaseLimit
   projection := C.limitProjection

@@ -21,7 +21,7 @@ The finite `Cl(1,1)` atom is kept separate from the mode current:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.TensorModularAtomCurrent
+namespace TensorModularAtomCurrent
 
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -161,4 +161,4 @@ theorem tensorModularAtom_currentSugawara_readout
 
 end ChargedFockWitness
 
-end InfoGeometry.Canonical.TensorModularAtomCurrent
+end TensorModularAtomCurrent

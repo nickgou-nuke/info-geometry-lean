@@ -12,7 +12,7 @@ Conditional Souriau/Legendre zeta-duality hypotheses and debt lemmas.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauZetaDualityBridge
+namespace SouriauZetaDualityBridge
 
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -88,4 +88,4 @@ theorem RH_of_SouriauDuality
 
 end SouriauZetaDualityHypotheses
 
-end InfoGeometry.Canonical.SouriauZetaDualityBridge
+end SouriauZetaDualityBridge

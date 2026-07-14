@@ -11,7 +11,7 @@ triality and multiplication automatically commute with scalar extension via
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZornIntegralSpinTrialityClosure
+namespace ZornIntegralSpinTrialityClosure
 
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
@@ -84,6 +84,6 @@ theorem integral_spin_triality_closure (X Y : ZornMatrix ℤ) :
     zornBaseChange (zornTriality X) = zornTriality (zornBaseChange X) := by
   exact ⟨zornBaseChange_zornNorm X, zornBaseChange_mul X Y, zornBaseChange_triality X⟩
 
-end InfoGeometry.Canonical.ZornIntegralSpinTrialityClosure
+end ZornIntegralSpinTrialityClosure
 
 end noncomputable section

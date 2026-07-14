@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.CertifiedInverseKernel
 
-namespace InfoGeometry.Canonical.ChiralCartanCore
+namespace ChiralCartanCore
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MoorePenrose
@@ -30,4 +30,4 @@ def IsCompactBeliefUpdate (CI : ConformalInference E) (X : E →L[ℝ] E) : Prop
 def IsNonCompactBeliefUpdate (CI : ConformalInference E) (X : E →L[ℝ] E) : Prop :=
   X * chiralGrading CI = - (chiralGrading CI * X)
 
-end InfoGeometry.Canonical.ChiralCartanCore
+end ChiralCartanCore

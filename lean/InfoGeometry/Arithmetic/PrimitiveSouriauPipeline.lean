@@ -30,7 +30,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
+namespace PrimitiveSouriauPipeline
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.ArithmeticKMS
@@ -177,4 +177,4 @@ theorem primitiveSouriauPipelineOwnerTarget :
 
 end PrimitiveSouriauPipelineWitness
 
-end InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
+end PrimitiveSouriauPipeline

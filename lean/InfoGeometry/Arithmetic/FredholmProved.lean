@@ -22,7 +22,7 @@ requires the trace-class construction recorded in `FredholmClosureCertificate`.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.FredholmProved
+namespace FredholmProved
 
 open InfoGeometry.Canonical.HestenesKreinModularGeometry
 open InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
@@ -71,4 +71,4 @@ module deliberately does not assert critical-strip nonvanishing or the Riemann
 Hypothesis.
 -/
 
-end InfoGeometry.Arithmetic.FredholmProved
+end FredholmProved

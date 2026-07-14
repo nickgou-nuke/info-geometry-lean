@@ -29,7 +29,7 @@ hypothesis claim is introduced here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.MellinDirichletConvolutionSymmetry
+namespace MellinDirichletConvolutionSymmetry
 
 open scoped ArithmeticFunction.Moebius
 open scoped BigOperators
@@ -129,4 +129,4 @@ theorem standard_reflection_in_scale_coordinate (x : ℝ) :
   simpa using ZetaAffineChart.markedPairScaleCoordinate_reflection
     (a := 0) (b := 1) (x := x) (by norm_num : (1 : ℝ) ≠ 0)
 
-end InfoGeometry.Arithmetic.MellinDirichletConvolutionSymmetry
+end MellinDirichletConvolutionSymmetry

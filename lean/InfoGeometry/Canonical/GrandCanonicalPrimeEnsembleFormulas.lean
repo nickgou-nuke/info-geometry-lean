@@ -19,7 +19,7 @@ finite Clifford/Majorana cancellation theorem directly.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
+namespace GrandCanonicalPrimeEnsembleFormulas
 
 open scoped BigOperators
 
@@ -241,4 +241,4 @@ theorem twoMajoranaDirac_sq
     _ = (2 : Op) := by
         norm_num
 
-end InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
+end GrandCanonicalPrimeEnsembleFormulas

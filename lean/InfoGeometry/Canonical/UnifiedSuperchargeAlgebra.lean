@@ -10,7 +10,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
+namespace UnifiedSuperchargeAlgebra
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -3945,4 +3945,4 @@ theorem wick_signature_return_sector
 
 end EllipticSectorAPI
 
-end InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
+end UnifiedSuperchargeAlgebra

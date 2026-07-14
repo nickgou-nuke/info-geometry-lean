@@ -22,7 +22,7 @@ physics interpretation is asserted.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.StoneCantorMathlib
+namespace StoneCantorMathlib
 
 open Set
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
@@ -164,4 +164,4 @@ theorem sharpCylinderExpectation_successor
       exact hw (prefixSucc_extendSucc n w true ▸ congrArg (prefixSucc n) hbad)
     simp [hw, hf, ht]
 
-end InfoGeometry.Canonical.StoneCantorMathlib
+end StoneCantorMathlib

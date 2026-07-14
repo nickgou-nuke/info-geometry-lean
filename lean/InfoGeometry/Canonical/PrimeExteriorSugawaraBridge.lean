@@ -22,7 +22,7 @@ finite prime cutoff into:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeExteriorSugawaraBridge
+namespace PrimeExteriorSugawaraBridge
 
 open InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 open InfoGeometry.Canonical.PrimeBooleanCubeSugawara
@@ -105,4 +105,4 @@ theorem primeExteriorSugawaraOwnerTarget :
   · exact PrimeExteriorSugawaraPacket.centralCharge_eq_card
       (⟨S, vertexOfState S, rfl⟩ : PrimeExteriorSugawaraPacket P)
 
-end InfoGeometry.Canonical.PrimeExteriorSugawaraBridge
+end PrimeExteriorSugawaraBridge

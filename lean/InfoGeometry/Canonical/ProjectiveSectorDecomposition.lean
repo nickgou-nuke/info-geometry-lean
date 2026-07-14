@@ -10,7 +10,7 @@ Coherence layer relating strict Mathlib projectivization sectors to the
 existing pointed projective sectors away from the distinguished vacuum.
 -/
 
-namespace InfoGeometry.Canonical.ProjectiveSectorDecomposition
+namespace ProjectiveSectorDecomposition
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ProjectiveSplitQ11Realization
@@ -184,4 +184,4 @@ theorem mathlibProjectiveJ_eq_self_of_strictGradeNullRay
   · exact mathlibProjectiveJ_eq_self_of_strictGradePlusRay (E := E) hq
   · exact mathlibProjectiveJ_eq_self_of_strictGradeMinusRay (E := E) hq
 
-end InfoGeometry.Canonical.ProjectiveSectorDecomposition
+end ProjectiveSectorDecomposition

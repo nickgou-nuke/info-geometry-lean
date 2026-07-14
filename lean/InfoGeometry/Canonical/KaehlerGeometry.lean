@@ -2,7 +2,7 @@ import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Clifford.Relations
 import Mathlib.Analysis.InnerProductSpace.Basic
 
-namespace InfoGeometry.Canonical.KaehlerGeometry
+namespace KaehlerGeometry
 
 open InfoGeometry.Convex
 open InfoGeometry.Clifford
@@ -57,4 +57,4 @@ noncomputable def symplecticCurvature (u v : E) : ℝ :=
 
 end KaehlerInformationGeometry
 
-end InfoGeometry.Canonical.KaehlerGeometry
+end KaehlerGeometry

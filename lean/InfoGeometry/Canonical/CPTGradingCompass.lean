@@ -50,7 +50,7 @@ open InfoGeometry.Algebra.CubicJordanPeirce
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CPTGradingCompass
+namespace CPTGradingCompass
 
 /-! ## 1. The CPT Compass bivector -/
 
@@ -161,4 +161,4 @@ theorem thermal_q_dial_alignment (q : ℝ) (hq : 0 < q ∧ q < 1) :
     Real.exp (-(1 - q) / q) > 0 :=
   Real.exp_pos _
 
-end InfoGeometry.Canonical.CPTGradingCompass
+end CPTGradingCompass

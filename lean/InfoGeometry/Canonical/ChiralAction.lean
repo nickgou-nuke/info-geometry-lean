@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.Determinant
 
-namespace InfoGeometry.Canonical.ChiralAction
+namespace ChiralAction
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.SpectralInference
@@ -89,4 +89,4 @@ theorem chiralDirac_eq_of_unitRelativeVolumeBit
       (CI := CI) (M := M) hScaleFromKahler bit
   exact chiral_action_reduces_for_normal IST CI g 0 hNormal
 
-end InfoGeometry.Canonical.ChiralAction
+end ChiralAction

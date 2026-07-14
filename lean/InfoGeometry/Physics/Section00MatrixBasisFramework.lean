@@ -45,7 +45,7 @@ the Pauli determinant or an explicitly indefinite split-quaternion convention.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section00MatrixBasisFramework
+namespace Section00MatrixBasisFramework
 
 open Matrix Complex
 
@@ -310,6 +310,6 @@ theorem section00_finite_matrix_basis_packet (a b : PauliCoord) :
     neg_det_pauliMatrix_eq_minkowskiForm a,
     normalizedPauliMatrix_neg_two_det_eq_minkowskiForm a⟩
 
-end InfoGeometry.Physics.Section00MatrixBasisFramework
+end Section00MatrixBasisFramework
 
 end noncomputable section

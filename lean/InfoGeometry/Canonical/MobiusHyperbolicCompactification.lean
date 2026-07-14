@@ -13,7 +13,7 @@ owner-side model for:
 This is the theorem-safe compactified-hyperbolic readout layer.
 -/
 
-namespace InfoGeometry.Canonical.MobiusHyperbolicCompactification
+namespace MobiusHyperbolicCompactification
 
 open scoped ENNReal
 
@@ -76,4 +76,4 @@ theorem twoSheet_mobius_swap (x : HyperChart) :
   ext <;> simp [twoSheet, mobiusInv]
 
 end
-end InfoGeometry.Canonical.MobiusHyperbolicCompactification
+end MobiusHyperbolicCompactification

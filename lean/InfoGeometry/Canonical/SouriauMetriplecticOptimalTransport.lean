@@ -29,7 +29,7 @@ This module also formalizes the Grand Canonical Engine discovery:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+namespace SouriauMetriplecticOptimalTransport
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
 open InfoGeometry.Canonical.MetricTransport
@@ -654,4 +654,4 @@ theorem continuum_emergence_via_equilibration
     E.entropyProduction_zero ∧ E.detailedBalance_restored :=
   ⟨hEntropy, hBalance⟩
 
-end InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+end SouriauMetriplecticOptimalTransport

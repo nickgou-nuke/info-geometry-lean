@@ -11,7 +11,7 @@ shape consumed by downstream Heisenberg/Sugawara packaging.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitCliffordWickDiracSea
+namespace SplitCliffordWickDiracSea
 
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 
@@ -104,4 +104,4 @@ theorem cutoffCurrent_commutator_eq_mode_of_boundary_zero
 
 end RawCARModeCompletion
 
-end InfoGeometry.Canonical.SplitCliffordWickDiracSea
+end SplitCliffordWickDiracSea

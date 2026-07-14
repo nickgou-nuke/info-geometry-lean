@@ -23,7 +23,7 @@ Finite count thermodynamics remains a shadow. The owner lane here is the
 operator algebra on `DoubledSpace E`.
 -/
 
-namespace InfoGeometry.Canonical.OperatorSuperKaehlerLift
+namespace OperatorSuperKaehlerLift
 
 open InfoGeometry.Canonical.BerryPhase
 open InfoGeometry.Canonical.NoetherInference
@@ -191,4 +191,4 @@ theorem fisher_readout_eq_channelKreinMetric
 
 end Core
 
-end InfoGeometry.Canonical.OperatorSuperKaehlerLift
+end OperatorSuperKaehlerLift

@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Dynamics.SouriauDiracHodge
 
-namespace InfoGeometry.Canonical.CalabiYauGrandDualityBridge
+namespace CalabiYauGrandDualityBridge
 
 open InfoGeometry.Clifford.SplitCartanHopWittBridge
 open InfoGeometry.Canonical.CalabiYauBridge
@@ -61,4 +61,4 @@ theorem grand_unification_calabi_yau_duality_bridge
   · exact o55_antidiagonal_cartan_hop_realizes_split_clifford_witt_pair
   · exact D.hodge_star_executes_legendre_transform
 
-end InfoGeometry.Canonical.CalabiYauGrandDualityBridge
+end CalabiYauGrandDualityBridge

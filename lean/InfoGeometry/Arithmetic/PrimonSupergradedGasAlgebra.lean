@@ -29,7 +29,7 @@ noncomputable section
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
+namespace PrimonSupergradedGasAlgebra
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBosonFermionGas
@@ -331,4 +331,4 @@ theorem eightN1Multiplets_twiceCentralCharge :
     InfoGeometry.Canonical.SUSYCentralChargeBridge.twiceCentralN1Multiplet 8 = 24 :=
   InfoGeometry.Canonical.SUSYCentralChargeBridge.eight_N1_multiplets_have_c12
 
-end InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra
+end PrimonSupergradedGasAlgebra

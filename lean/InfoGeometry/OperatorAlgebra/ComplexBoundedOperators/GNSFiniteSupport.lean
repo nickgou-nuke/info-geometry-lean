@@ -19,7 +19,7 @@ AFP's zero-inner/null-space quotient step in this finite model.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
+namespace GNSFiniteSupport
 
 open scoped BigOperators
 
@@ -147,4 +147,4 @@ theorem null_iff_norm_inner_zero (a : Alg n) :
       simpa [restrict] using hsqrt
     exact norm_eq_zero.mp hnorm
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
+end GNSFiniteSupport

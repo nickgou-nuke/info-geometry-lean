@@ -29,7 +29,7 @@ state schema with explicit proof-causality readouts.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HiveSelfModel
+namespace HiveSelfModel
 
 open InfoGeometry.Canonical.GenerativeInferenceCore
 open InfoGeometry.Canonical.ProofCausalityBridge
@@ -204,4 +204,4 @@ end Model
 
 end Core
 
-end InfoGeometry.Canonical.HiveSelfModel
+end HiveSelfModel

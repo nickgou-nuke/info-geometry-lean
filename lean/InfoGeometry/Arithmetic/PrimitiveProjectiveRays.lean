@@ -16,7 +16,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+namespace PrimitiveProjectiveRays
 
 /-- Arithmetic count profiles indexed by `ℕ`. -/
 abbrev CountProfile := ℕ → ℝ
@@ -268,4 +268,4 @@ theorem FiniteShapeScaleKLDecomposition.finiteUnnormalizedKL_eq_shape_plus_scala
     finiteUnnormalizedKLDivergence counts₁ counts₂ support s = D.shapeKL + D.scalarKL :=
   D.unnormalizedKL_eq_shape_plus_scalar
 
-end InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+end PrimitiveProjectiveRays

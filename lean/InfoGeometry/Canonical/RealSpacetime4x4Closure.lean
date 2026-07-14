@@ -11,7 +11,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RealSpacetime4x4Closure
+namespace RealSpacetime4x4Closure
 
 open InfoGeometry.Clifford.HestenesDirac
 
@@ -269,4 +269,4 @@ theorem concrete_null_cone_celestial_sphere_unit (X : RealSpacetime4x4)
 /-- Fully discharged in this module. -/
 def open_closure_debt : List String := []
 
-end InfoGeometry.Canonical.RealSpacetime4x4Closure
+end RealSpacetime4x4Closure

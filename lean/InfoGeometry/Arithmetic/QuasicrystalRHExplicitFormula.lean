@@ -29,7 +29,7 @@ exactly the repo-backed Lean content imported above.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula
+namespace QuasicrystalRHExplicitFormula
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic
@@ -144,4 +144,4 @@ theorem repo_compiled_primon_crystal_surface_nonempty :
   · intro n
     exact lambdaR_ne_zero_iff_primePowerAtom n
 
-end InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula
+end QuasicrystalRHExplicitFormula

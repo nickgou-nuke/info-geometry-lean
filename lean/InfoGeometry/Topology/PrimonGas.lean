@@ -9,7 +9,7 @@ specifically the construction of the Riemann gas (primon gas) whose partition
 function maps exactly to the Riemann zeta function.
 -/
 
-namespace InfoGeometry.Topology.PrimonGas
+namespace PrimonGas
 
 /-- The structure defining a generic Primon Gas state. -/
 structure PrimonGasState where
@@ -32,4 +32,4 @@ theorem partition_function_zeta_map_iff (state : PrimonGasState) :
     partition_function_zeta_map state ↔ state.E_0 > state.T := by
   rfl
 
-end InfoGeometry.Topology.PrimonGas
+end PrimonGas

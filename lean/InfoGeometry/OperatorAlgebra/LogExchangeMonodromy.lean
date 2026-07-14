@@ -30,7 +30,7 @@ What this file deliberately does not prove:
   surface formalized here.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
+namespace LogExchangeMonodromy
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -214,7 +214,7 @@ theorem S_conjugation_componentN (t : ℂ) :
   fin_cases i <;> fin_cases j <;>
     simp [S_mirror, Matrix.mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
+end LogExchangeMonodromy
 
 namespace InfoGeometry.OperatorAlgebra
 

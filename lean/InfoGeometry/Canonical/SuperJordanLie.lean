@@ -8,7 +8,7 @@ This file records the operatorial Jordan/Lie split of the Clifford product on
 channels carried by `SuperHestenesKaehlerDatum`.
 -/
 
-namespace InfoGeometry.Canonical.SuperJordanLie
+namespace SuperJordanLie
 
 open InfoGeometry.Canonical.BerryPhase
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -47,4 +47,4 @@ theorem fockAnticommutator_eq_two_smul_jordanProduct
     InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_odd_odd,
     jordanProduct, smul_smul]
 
-end InfoGeometry.Canonical.SuperJordanLie
+end SuperJordanLie

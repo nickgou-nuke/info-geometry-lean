@@ -14,7 +14,7 @@ the CPT compass alignment and chiral raising/lowering operators.
 Zero sorries, zero axioms. Canonical `kroneckerMap` + `fin_cases`.
 -/
 
-namespace InfoGeometry.Physics.FierzIdentities
+namespace FierzIdentities
 
 open Matrix
 open InfoGeometry.Physics.ChiralCausalCone
@@ -39,4 +39,4 @@ theorem chiral_fierz_identity :
   fin_cases i1 <;> fin_cases i2 <;> fin_cases j1 <;> fin_cases j2 <;>
     simp [Swap, kroneckerMap, σPlus, σMinus, σ3c] <;> ring
 
-end InfoGeometry.Physics.FierzIdentities
+end FierzIdentities

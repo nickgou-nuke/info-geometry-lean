@@ -23,7 +23,7 @@ import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
+namespace KapustinWittenDualitySocket
 
 /-! ## 1. Electric and magnetic operator ledgers -/
 
@@ -264,4 +264,4 @@ theorem operatorSDualityOwnerTarget :
   intro ElectricState MagneticState Charge S ψ χ hψ
   exact S.wilsonEigen_transports_to_tHooftEigen hψ
 
-end InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
+end KapustinWittenDualitySocket

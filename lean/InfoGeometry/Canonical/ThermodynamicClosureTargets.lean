@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ThermodynamicClosureTargets
+namespace ThermodynamicClosureTargets
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -231,4 +231,4 @@ def weylScale_absorbs_defect_of_scaleShapeSplit_target : Prop :=
 
 end Core
 
-end InfoGeometry.Canonical.ThermodynamicClosureTargets
+end ThermodynamicClosureTargets

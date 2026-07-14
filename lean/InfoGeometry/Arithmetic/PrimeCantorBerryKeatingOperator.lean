@@ -30,7 +30,7 @@ noncomputable section
 open scoped BigOperators
 open Classical
 
-namespace InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
+namespace PrimeCantorBerryKeatingOperator
 
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 
@@ -271,4 +271,4 @@ theorem zero_implies_critical (s : ℂ) :
 
 end BerryKeatingCantorSpectralGate
 
-end InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
+end PrimeCantorBerryKeatingOperator

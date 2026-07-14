@@ -21,7 +21,7 @@ the Cartan Fisher partition function; Fisher/Souriau geometry is owned by
 
 noncomputable section
 
-namespace InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonalizable
+namespace Diagonalizable
 
 open scoped Matrix
 
@@ -69,4 +69,4 @@ theorem h1_det_exp_trace_of_is_units_diagonalizable
       NormedSpace.exp (Matrix.trace A) :=
   det_exp_eq_exp_trace_of_is_units_diagonalizable A U v hA
 
-end InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonalizable
+end Diagonalizable

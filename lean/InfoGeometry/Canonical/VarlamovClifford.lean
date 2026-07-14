@@ -33,7 +33,7 @@ BRST/Fredholm/PDE theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.VarlamovClifford
+namespace VarlamovClifford
 
 open InfoGeometry.Canonical.HodgeDrazinEnvelope
 
@@ -272,4 +272,4 @@ theorem d_HL_off_diagonal
     C.H_L * D.d C.H_L * C.H_L = 0 :=
   D.idempotent_d_off_diagonal C.H_L_idempotent
 
-end InfoGeometry.Canonical.VarlamovClifford
+end VarlamovClifford

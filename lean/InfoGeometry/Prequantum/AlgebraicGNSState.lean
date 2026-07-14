@@ -26,7 +26,7 @@ The repository policy here is two-lane:
 
 noncomputable section
 
-namespace InfoGeometry.Prequantum.AlgebraicGNSState
+namespace AlgebraicGNSState
 
 /--
 A real algebraic state on a real `*`-algebra.
@@ -328,4 +328,4 @@ end CompatibleAlgebraicStateNet
 
 end CompatibleFiniteNet
 
-end InfoGeometry.Prequantum.AlgebraicGNSState
+end AlgebraicGNSState

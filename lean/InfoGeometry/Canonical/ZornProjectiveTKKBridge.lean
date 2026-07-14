@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.TKKJordanPairData
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZornProjectiveTKKBridge
+namespace ZornProjectiveTKKBridge
 
 open ProjectiveAffineConformalClosure55
 open ZornTrialityTKKBridge
@@ -183,4 +183,4 @@ theorem canonical_triality_projective_five_grade_bridge (Z : ZornMatrix ℝ) :
     realToComplex_triality Z, canonicalGradedLane_grade _,
     canonicalGradedLane_grade _⟩
 
-end InfoGeometry.Canonical.ZornProjectiveTKKBridge
+end ZornProjectiveTKKBridge

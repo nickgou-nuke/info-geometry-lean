@@ -19,7 +19,7 @@ combinatorial core as a reusable bridge.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DiracSea
+namespace DiracSea
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -159,4 +159,4 @@ theorem diracSeaStep_eq_none_iff
     (w : DiracSeaBoundary) : diracSeaStep w = none ↔ ¬ (w (-1) = true ∧ w 0 = false) := by
   simp [diracSeaStep]
 
-end InfoGeometry.Canonical.DiracSea
+end DiracSea

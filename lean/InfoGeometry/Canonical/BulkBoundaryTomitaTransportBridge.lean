@@ -23,7 +23,7 @@ the honest transport statement currently supported by the repo:
 - and the induced persistence of the zero mode under modular transport.
 -/
 
-namespace InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
+namespace BulkBoundaryTomitaTransportBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.StandardFormCore
@@ -250,4 +250,4 @@ end ModularBulkBoundaryBridge
 
 end Core
 
-end InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
+end BulkBoundaryTomitaTransportBridge

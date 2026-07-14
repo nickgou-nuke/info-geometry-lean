@@ -13,7 +13,7 @@ This file is theorem-safe and algebraic only. It does **not** claim analytic
 completion, Type III factor classification, or a global CFT construction.
 -/
 
-namespace InfoGeometry.Canonical.HypercomplexTriadVirasoroBridge
+namespace HypercomplexTriadVirasoroBridge
 
 /-- Noncommutative commutator. -/
 def commutator {A : Type*} [Ring A] (X Y : A) : A :=
@@ -153,4 +153,4 @@ end TriadToVirasoroBridge
 
 end AbstractBridge
 
-end InfoGeometry.Canonical.HypercomplexTriadVirasoroBridge
+end HypercomplexTriadVirasoroBridge

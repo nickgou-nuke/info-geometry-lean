@@ -11,7 +11,7 @@ space.  Here the corresponding finite-support inequality is proved directly.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportBounded
+namespace GNSFiniteSupportBounded
 
 open scoped BigOperators
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
@@ -64,4 +64,4 @@ theorem liftMul_respects_same_gns
   simp [restrict] at hi
   simp [restrict, hi]
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportBounded
+end GNSFiniteSupportBounded

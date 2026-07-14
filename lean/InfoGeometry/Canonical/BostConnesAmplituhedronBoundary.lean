@@ -15,7 +15,7 @@ Per the Categorical Synthesis Dictionary:
   by the Bost-Connes KMS state.
 -/
 
-namespace InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
+namespace BostConnesAmplituhedronBoundary
 
 open InfoGeometry.Canonical.CPTCstarStateLimit
 open InfoGeometry.Projective.BostConnes
@@ -92,4 +92,4 @@ structure AmplituhedronZetaEquivalence (R : Type u) [CommRing R] where
   Vol : AmplituhedronVolumeData R
   equivalence : ∀ (β : R) (L : ℕ), Z β = Vol L
 
-end InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
+end BostConnesAmplituhedronBoundary

@@ -19,7 +19,7 @@ elsewhere.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitComplex
+namespace SplitComplex
 
 /-- The split-complex carrier. -/
 @[ext]
@@ -166,4 +166,4 @@ end Projectors
 
 end Carrier
 
-end InfoGeometry.Canonical.SplitComplex
+end SplitComplex

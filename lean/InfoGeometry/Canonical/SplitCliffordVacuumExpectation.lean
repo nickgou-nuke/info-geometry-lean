@@ -15,7 +15,7 @@ extracts exactly the scalar anomaly `1`, representing the central extension
 No placeholders. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordVacuumExpectation
+namespace SplitCliffordVacuumExpectation
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -63,4 +63,4 @@ theorem vev_linear (M L : M2R) (c : ℝ) :
 
 end
 
-end InfoGeometry.Canonical.SplitCliffordVacuumExpectation
+end SplitCliffordVacuumExpectation

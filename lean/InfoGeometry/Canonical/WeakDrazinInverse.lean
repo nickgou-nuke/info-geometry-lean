@@ -20,7 +20,7 @@ characteristic-polynomial, and Markov-chain applications require separate
 owner definitions before they can be promoted to theorem surfaces.
 -/
 
-namespace InfoGeometry.Canonical.WeakDrazinInverse
+namespace WeakDrazinInverse
 
 noncomputable section
 
@@ -195,4 +195,4 @@ end MarkovWeakDrazinProjection
 
 end
 
-end InfoGeometry.Canonical.WeakDrazinInverse
+end WeakDrazinInverse

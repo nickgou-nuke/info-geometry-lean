@@ -30,7 +30,7 @@ noncomputable section
 
 universe u
 
-namespace InfoGeometry.External.VirasoroPaperDigest
+namespace VirasoroPaperDigest
 
 open LieAlgebra.LoopAlgebra
 open VirasoroProject
@@ -78,4 +78,4 @@ theorem virasoroVermaToChargedFockSpace_hwVec
       (.hwVec 𝕜 _ _) = VirasoroProject.ChargedFockSpace.vacuum 𝕜 α :=
   VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace_hwVec 𝕜 α
 
-end InfoGeometry.External.VirasoroPaperDigest
+end VirasoroPaperDigest

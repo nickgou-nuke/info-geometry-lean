@@ -20,7 +20,7 @@ It does not assert a new `CL(4,4)` closure theorem. That remains an explicit
 gap in the repository.
 -/
 
-namespace InfoGeometry.Canonical.AnomalyOwnerMap
+namespace AnomalyOwnerMap
 
 open InfoGeometry.Canonical.AnomalyGauge
 open InfoGeometry.Canonical.DrazinPenroseDilationKKT
@@ -109,4 +109,4 @@ theorem projector_noncommutativity_closure_packet
 
 end Core
 
-end InfoGeometry.Canonical.AnomalyOwnerMap
+end AnomalyOwnerMap

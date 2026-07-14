@@ -20,7 +20,7 @@ open InfoGeometry.Algebra.JordanCayleyInversionCs
 open InfoGeometry.Algebra.JordanCayleyInversionHs
 open InfoGeometry.Algebra.JordanCayleyInversionOs
 
-namespace InfoGeometry.Algebra.OrbitClassification
+namespace OrbitClassification
 
 /-! ## 1. Coordinate strata for J₂(ℂ_s) [2+2 signature] -/
 
@@ -75,4 +75,4 @@ theorem ccc_crossover (X : Herm2x2Cs) (hzero : X.det = 0) :
     X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0 :=
   cs_null_orbit X hzero
 
-end InfoGeometry.Algebra.OrbitClassification
+end OrbitClassification

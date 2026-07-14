@@ -29,7 +29,7 @@ No analytic Bures formula, operator square-root theorem, C*-completion theorem,
 or GNS/Tomita modular theorem is asserted here.
 -/
 
-namespace InfoGeometry.Projective.BuresMetricStabilization
+namespace BuresMetricStabilization
 
 open InfoGeometry.Canonical.TensorColimitExpectation
 
@@ -138,4 +138,4 @@ theorem restricted_metric_isometry_of_stage_isometry
 
 end TensorColimit
 
-end InfoGeometry.Projective.BuresMetricStabilization
+end BuresMetricStabilization

@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.ModularSpectralConjugationBridge
+namespace ModularSpectralConjugationBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealTomitaCore
@@ -201,4 +201,4 @@ end Compatibility
 
 end Core
 
-end InfoGeometry.Canonical.ModularSpectralConjugationBridge
+end ModularSpectralConjugationBridge

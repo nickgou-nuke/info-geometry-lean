@@ -29,7 +29,7 @@ Together they form the Polya-Hilbert spectral picture on the Cantor-Dirac-Hodge 
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
+namespace PolyaHilbertDiracHodgeCantorBridge
 
 open Omega.Zeta
 
@@ -81,6 +81,6 @@ theorem polya_hilbert_dirac_hodge_cantor_conclusion
     h_caratheodory_herglotz h_unit_cmv h_doubled_unit.symm
   result.2.1
 
-end InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
+end PolyaHilbertDiracHodgeCantorBridge
 
 end noncomputable section

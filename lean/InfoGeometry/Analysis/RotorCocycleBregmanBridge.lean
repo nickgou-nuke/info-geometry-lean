@@ -14,7 +14,7 @@ particle/hole anomaly cancellation, β = 1 phase-transition theorem, or CPT
 invariance of a residue functional.
 -/
 
-namespace InfoGeometry.Analysis.RotorCocycleBregmanBridge
+namespace RotorCocycleBregmanBridge
 
 open InfoGeometry.Analysis.BregmanAnalyticBound
 open InfoGeometry.OperatorAlgebra.ModularSignCPT
@@ -74,4 +74,4 @@ functional, and conjugation hypotheses.
 def rotor_cocycle_bregman_debt : String :=
   "Open: add residue/trace-level CPT and anomaly statements only as theorem-shaped claims with explicit hypotheses."
 
-end InfoGeometry.Analysis.RotorCocycleBregmanBridge
+end RotorCocycleBregmanBridge

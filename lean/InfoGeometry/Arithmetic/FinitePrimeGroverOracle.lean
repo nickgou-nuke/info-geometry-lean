@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.FinitePrimeGroverOracle
+namespace FinitePrimeGroverOracle
 
 /-! ## 1. Finite phase oracle -/
 
@@ -298,4 +298,4 @@ theorem fluctuation_bound
 
 end QuantumCountingFluctuationPacket
 
-end InfoGeometry.Arithmetic.FinitePrimeGroverOracle
+end FinitePrimeGroverOracle

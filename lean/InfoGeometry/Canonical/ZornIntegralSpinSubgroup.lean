@@ -16,7 +16,7 @@ we provide the explicit base change maps along `algebraMap ℤ ℝ`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZornIntegralSpinSubgroup
+namespace ZornIntegralSpinSubgroup
 
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
@@ -73,6 +73,6 @@ abbrev realSpin44 := spinGroup (zornNorm (R := ℝ))
 -- when there is an isometric base change map. The map `zornBaseChange` is
 -- exactly that isometry over `algebraMap ℤ ℝ`.
 
-end InfoGeometry.Canonical.ZornIntegralSpinSubgroup
+end ZornIntegralSpinSubgroup
 
 end noncomputable section

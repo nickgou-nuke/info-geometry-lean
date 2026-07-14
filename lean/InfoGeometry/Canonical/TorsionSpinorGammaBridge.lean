@@ -18,7 +18,7 @@ source packet for the finite owner lane.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.TorsionSpinorGammaBridge
+namespace TorsionSpinorGammaBridge
 
 open InfoGeometry.Clifford.DiracPauliGamma
 open InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
@@ -68,4 +68,4 @@ theorem gammaSpinorTorsion_antisymm
       = -spinorTorsion κ β (gammaSpinorSource psi).S lam nu mu := by
   exact spinorTorsion_antisymm κ β (gammaSpinorSource psi) lam mu nu
 
-end InfoGeometry.Canonical.TorsionSpinorGammaBridge
+end TorsionSpinorGammaBridge

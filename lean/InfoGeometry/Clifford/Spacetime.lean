@@ -22,7 +22,7 @@ For Minkowski signature (1,3), we typically use:
 open scoped Matrix
 open scoped Quaternion
 
-namespace InfoGeometry.Clifford.Spacetime
+namespace Spacetime
 
 open InfoGeometry.Krein
 
@@ -123,4 +123,4 @@ def splitQuatBasis : QuaternionAlgebra.Basis (Matrix (Fin 2) (Fin 2) ℝ) 1 0 (-
     ext i j; fin_cases i <;> fin_cases j <;> 
       (simp [sigma3, sigma2_i, sigma1, Matrix.mul_apply, Fin.sum_univ_two]; try ring)
 
-end InfoGeometry.Clifford.Spacetime
+end Spacetime

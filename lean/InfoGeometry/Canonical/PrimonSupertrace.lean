@@ -7,7 +7,7 @@ Formalizes the structural identity of the Möbius Chiral Parity Grading
 as the topological charge density of the vacuum.
 -/
 
-namespace InfoGeometry.Canonical.PrimonSupertrace
+namespace PrimonSupertrace
 
 /-- 
 The Graded Partition Function representing the Supertrace of the heat kernel.
@@ -44,4 +44,4 @@ theorem supersymmetric_pairing {S : Type*} [CommRing S]
   rw [Z.mckean_singer]
   exact h_inverse
 
-end InfoGeometry.Canonical.PrimonSupertrace
+end PrimonSupertrace

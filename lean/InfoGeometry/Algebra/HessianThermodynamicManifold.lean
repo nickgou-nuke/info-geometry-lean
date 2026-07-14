@@ -4,7 +4,7 @@ import Mathlib.Algebra.Lie.Basic
 set_option autoImplicit false
 universe u
 
-namespace InfoGeometry.Algebra.HessianThermodynamicManifold
+namespace HessianThermodynamicManifold
 
 /-!
 # InfoGeometry.Algebra.HessianThermodynamicManifold
@@ -150,4 +150,4 @@ theorem bregman_eq_fenchel_young_loss {V : Type u} [AddCommGroup V] {R : Type u}
   rw [← h_legendre]
   ring
 
-end InfoGeometry.Algebra.HessianThermodynamicManifold
+end HessianThermodynamicManifold

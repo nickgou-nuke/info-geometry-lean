@@ -21,7 +21,7 @@ or physics interpretation is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorCylinderTopology
+namespace CantorCylinderTopology
 
 open Set Filter TopologicalSpace
 open scoped Topology
@@ -132,4 +132,4 @@ theorem principalUltrafilter_all_initialSegmentCylinder_iff
     rw [hy]
     simp [initialSegmentCylinder, finiteCoordinateCylinder, canonicalCylinder, initialSegmentSet]
 
-end InfoGeometry.Canonical.CantorCylinderTopology
+end CantorCylinderTopology

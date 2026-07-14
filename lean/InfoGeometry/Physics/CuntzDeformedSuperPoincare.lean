@@ -23,7 +23,7 @@ This file keeps the requested bridge algebraic and finite:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.CuntzDeformedSuperPoincare
+namespace CuntzDeformedSuperPoincare
 
 open Matrix
 open scoped BigOperators
@@ -187,4 +187,4 @@ theorem boostXPoincare_preserves_mass (φ : ℝ) (p : FourVector) :
 #check poincareComp_actMomentum
 #check boostXPoincare_preserves_mass
 
-end InfoGeometry.Physics.CuntzDeformedSuperPoincare
+end CuntzDeformedSuperPoincare

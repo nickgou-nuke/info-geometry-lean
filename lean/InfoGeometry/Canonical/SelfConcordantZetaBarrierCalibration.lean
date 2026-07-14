@@ -19,7 +19,7 @@ the supplied calibration datum.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration
+namespace SelfConcordantZetaBarrierCalibration
 
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -57,4 +57,4 @@ theorem criticalLine_of_calibration
   exact SelfConcordantZetaBarrier.variationalRH_implies_criticalLine
     C.barrier s₀ hz
 
-end InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration
+end SelfConcordantZetaBarrierCalibration

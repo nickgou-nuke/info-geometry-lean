@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
-namespace InfoGeometry.Canonical.FibonacciPartition
+namespace FibonacciPartition
 
 noncomputable def UpperPhi : ℝ := (1 + Real.sqrt 5) / 2
 noncomputable def LowerPhi : ℝ := (Real.sqrt 5 - 1) / 2
@@ -42,4 +42,4 @@ theorem bosonic_minus_fermionic_eq_sq_mul_bosonic (x : ℝ) (h : x ≠ 1) :
   field_simp [h_diff]
   ring
 
-end InfoGeometry.Canonical.FibonacciPartition
+end FibonacciPartition

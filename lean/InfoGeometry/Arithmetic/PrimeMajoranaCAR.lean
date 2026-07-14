@@ -18,7 +18,7 @@ or zeta-function identity.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeMajoranaCAR
+namespace PrimeMajoranaCAR
 
 /-- Anticommutator in a noncommutative ring. -/
 def anticomm
@@ -408,4 +408,4 @@ theorem parityOp_sq :
 
 end ExteriorCARPair
 
-end InfoGeometry.Arithmetic.PrimeMajoranaCAR
+end PrimeMajoranaCAR

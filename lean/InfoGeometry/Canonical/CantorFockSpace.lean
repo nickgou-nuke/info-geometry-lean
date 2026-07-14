@@ -7,7 +7,7 @@ import InfoGeometry.Topology.FractalCantorFockWitness
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorFockSpace
+namespace CantorFockSpace
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -129,4 +129,4 @@ theorem cantorVacuumPrefixState_zero
     cantorVacuumPrefixState (W := W) 0 = W.hilbertCarrier.orbitBasis [] := by
   simp [cantorVacuumPrefixState, cantorPrefixState]
 
-end InfoGeometry.Canonical.CantorFockSpace
+end CantorFockSpace

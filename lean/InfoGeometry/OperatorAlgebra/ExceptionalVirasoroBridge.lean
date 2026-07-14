@@ -29,7 +29,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge
+namespace ExceptionalVirasoroBridge
 
 open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 open InfoGeometry.OperatorAlgebra.HorizonKMS
@@ -636,4 +636,4 @@ theorem exceptionalVirasoroBridge_packet
         (B.currentCalibration.finiteChargeOf x y) :=
   exceptionalVirasoroBridgeOwnerTarget J L Obs Memory Finite AffineAlg G A B x y
 
-end InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge
+end ExceptionalVirasoroBridge

@@ -23,7 +23,7 @@ The two-state comparison surface and the induced relational datum are derived
 constructively from those owners.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularPotential
+namespace RelativeModularPotential
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.StateDependentTransport
@@ -305,4 +305,4 @@ attribute [deprecated toRelationalInformationDatum_comparisonGeneratorPhase_appl
 
 end Core
 
-end InfoGeometry.Canonical.RelativeModularPotential
+end RelativeModularPotential

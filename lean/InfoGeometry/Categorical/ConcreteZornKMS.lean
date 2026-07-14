@@ -32,7 +32,7 @@ import InfoGeometry.Canonical.ZornSpinor
 This file instantiates `ZornBraidKMSState` over the `concreteZornSequence`.
 -/
 
-namespace InfoGeometry.Categorical.ConcreteZornKMS
+namespace ConcreteZornKMS
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -83,4 +83,4 @@ noncomputable def concreteZornBraidKMSState {Op : Type*} [Ring Op] [StarRing Op]
   continuumStar := continuumStar
   eval_continuum_cuntz := sorry
 
-end InfoGeometry.Categorical.ConcreteZornKMS
+end ConcreteZornKMS

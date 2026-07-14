@@ -17,7 +17,7 @@ the algebra layer:
 This is the category-language version of "base case + successor step".
 -/
 
-namespace InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
+namespace CategoricalRecursiveClosureBridge
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.InfiniteSuperClosureLemmas
@@ -71,4 +71,4 @@ theorem directLimit_readback
 
 end CompatibleCone
 
-end InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
+end CategoricalRecursiveClosureBridge

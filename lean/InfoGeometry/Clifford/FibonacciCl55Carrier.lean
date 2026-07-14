@@ -12,7 +12,7 @@ unsupported identification between the five-grade carrier and Fibonacci theory.
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.FibonacciCl55Carrier
+namespace FibonacciCl55Carrier
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Canonical.FibonacciFiveGradeBridge
@@ -112,4 +112,4 @@ theorem braid_preserves_center (grade : ConformalLift55.Cl55 → ConformalGrade)
     grade (braid x) = ConformalGrade.zero :=
   InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_center grade braid h_grade hx
 
-end InfoGeometry.Clifford.FibonacciCl55Carrier
+end FibonacciCl55Carrier

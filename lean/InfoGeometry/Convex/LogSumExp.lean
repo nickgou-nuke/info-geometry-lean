@@ -12,7 +12,7 @@ partition sum, translation of log-sum-exp under uniform shifts, invariance of
 softmax under that shift, and normalization.
 -/
 
-namespace InfoGeometry.Convex.LogSumExp
+namespace LogSumExp
 
 variable {n : Type*} [Fintype n] [Nonempty n]
 
@@ -110,4 +110,4 @@ lemma softmax_le_one (x : RN (n := n)) (i : n) :
     exact Finset.single_le_sum (fun j _hj => hnonneg j) (Finset.mem_univ i)
   simpa [hsum] using hi_le_sum
 
-end InfoGeometry.Convex.LogSumExp
+end LogSumExp

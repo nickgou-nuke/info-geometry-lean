@@ -18,7 +18,7 @@ complexified boost.  It does not assert the analytic KMS theorem for a
 von Neumann algebra.
 -/
 
-namespace InfoGeometry.Dynamics.KmsBoundary
+namespace KmsBoundary
 
 open Matrix
 
@@ -164,4 +164,4 @@ theorem unruh_periodicity :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [imaginaryTimeEvolution, hpos, hneg]
 
-end InfoGeometry.Dynamics.KmsBoundary
+end KmsBoundary

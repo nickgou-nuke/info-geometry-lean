@@ -37,7 +37,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzMapKreinBridge
+namespace CuntzMapKreinBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Topology
@@ -263,4 +263,4 @@ theorem graph_clock_eq :
 
 end DAGCuntzClockPacket
 
-end InfoGeometry.Canonical.CuntzMapKreinBridge
+end CuntzMapKreinBridge

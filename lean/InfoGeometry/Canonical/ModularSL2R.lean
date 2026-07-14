@@ -11,7 +11,7 @@ triple `(K, N, Nᵀ)` in `M₂(ℝ)`.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.ModularSL2R
+namespace ModularSL2R
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -76,4 +76,4 @@ theorem traceForm_K_N : traceForm K N = 0 ∧ traceForm K Nᵀ = 0 := by
   · unfold traceForm tr
     norm_num [K_eval, N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]
 
-end InfoGeometry.Canonical.ModularSL2R
+end ModularSL2R

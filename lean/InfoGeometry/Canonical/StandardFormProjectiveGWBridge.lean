@@ -27,7 +27,7 @@ two weights.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.StandardFormProjectiveGWBridge
+namespace StandardFormProjectiveGWBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveWeylGauge
@@ -249,4 +249,4 @@ end FaceBridge
 
 end Core
 
-end InfoGeometry.Canonical.StandardFormProjectiveGWBridge
+end StandardFormProjectiveGWBridge

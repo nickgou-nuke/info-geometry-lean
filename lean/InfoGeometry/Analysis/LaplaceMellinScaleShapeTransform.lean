@@ -22,7 +22,7 @@ It does not assert any prime-number, xi, or RH theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
+namespace LaplaceMellinScaleShapeTransform
 
 /--
 Abstract scale-shape packet.
@@ -39,4 +39,4 @@ structure LaplaceMellinScaleShapePacket where
   laplaceShapeCompatible : Prop
   scaleShapeBlockSplit : Prop
 
-end InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
+end LaplaceMellinScaleShapeTransform

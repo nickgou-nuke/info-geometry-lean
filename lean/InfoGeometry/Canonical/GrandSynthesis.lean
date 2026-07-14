@@ -10,7 +10,7 @@ Umbrella facade re-exporting the owned GrandSynthesis theorem families.
 The actual mathematics now lives in lower owner files split by lane.
 -/
 
-namespace InfoGeometry.Canonical.GrandSynthesis
+namespace GrandSynthesis
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.ChiralAnomaly
@@ -120,4 +120,4 @@ theorem grandSynthesis_root_factorization
 
 end CanopyAssembly
 
-end InfoGeometry.Canonical.GrandSynthesis
+end GrandSynthesis

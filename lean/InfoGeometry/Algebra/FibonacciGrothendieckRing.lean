@@ -17,7 +17,7 @@ braidings, pentagon proofs, or hexagon proofs here.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Algebra.FibonacciGrothendieckRing
+namespace FibonacciGrothendieckRing
 
 /-! ## Positive Fibonacci fusion classes and their K₀ completion -/
 
@@ -229,4 +229,4 @@ theorem k0_tau_square_model :
   rw [tensorTauK0_tau]
   ext <;> norm_num [FibonacciRingModel.tau, FibonacciRingModel.one]
 
-end InfoGeometry.Algebra.FibonacciGrothendieckRing
+end FibonacciGrothendieckRing

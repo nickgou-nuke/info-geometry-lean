@@ -22,7 +22,7 @@ The file proves the finite algebraic GNS core:
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFinite
+namespace GNSFinite
 
 open scoped BigOperators
 
@@ -109,4 +109,4 @@ theorem omega_eq_sum {n : ℕ} (a : FinAlg n) :
   intro i _
   simp
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFinite
+end GNSFinite

@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.IBPythagorean
 open MeasureTheory
 open ProbabilityTheory
 
-namespace InfoGeometry.Canonical.IBMonotonicity
+namespace IBMonotonicity
 
 open InfoGeometry.Canonical.IBFunctional
 open InfoGeometry.Canonical.IBPythagorean
@@ -79,4 +79,4 @@ theorem IB_monotone_descent
     IBGlobalFreeEnergy pX q_n β D p_old hKL_old := by
   exact le_trans h_marginal.descent h_encoder
 
-end InfoGeometry.Canonical.IBMonotonicity
+end IBMonotonicity

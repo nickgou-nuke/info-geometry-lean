@@ -6,7 +6,7 @@ open InfoGeometry.Causal.ProofDAGRepresentation
 universe u
 set_option autoImplicit false
 
-namespace InfoGeometry.Causal.ProofCohomology
+namespace ProofCohomology
 
 structure Edge {α : Type u} (G : ProofDAG α) where
   source : α
@@ -125,4 +125,4 @@ theorem H1_vanishes {α : Type u} {G : ProofDAG α}
         _ = omega ⟨e.source, a0, hsrc'⟩ - omega ⟨e.target, a0, htgt'⟩ := by rw [hsum]
         _ = (-omega ⟨e.target, a0, htgt'⟩) - (-omega ⟨e.source, a0, hsrc'⟩) := by ring
 
-end InfoGeometry.Causal.ProofCohomology
+end ProofCohomology

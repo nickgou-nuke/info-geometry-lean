@@ -26,7 +26,7 @@ normalization gates:
 Central-charge or Tomita mirror cancellation is kept as an external predicate.
 -/
 
-namespace InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
+namespace WeylFiveGradeBalanceBridge
 
 open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
@@ -233,4 +233,4 @@ theorem totalCharge_eq_zero
 
 end TomitaCentralBalanceCarrier
 
-end InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
+end WeylFiveGradeBalanceBridge

@@ -9,7 +9,7 @@ Concrete logarithmic relative-volume identities for
 `InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell`.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.RelativeVolume
+namespace RelativeVolume
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open ZornCell
@@ -82,4 +82,4 @@ theorem negLogVolume_mul
   rw [log_detZ_mul X Y hX hY]
   ring
 
-end InfoGeometry.Algebra.Zorn.RelativeVolume
+end RelativeVolume

@@ -30,7 +30,7 @@ derived cancellation of the intercept from first principles.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.O55LightConeSpectrumBridge
+namespace O55LightConeSpectrumBridge
 
 open Matrix
 
@@ -111,4 +111,4 @@ theorem lightCone_zeroIntercept_packet (alphaPrime : ℝ) :
     doubled_ground_massSq_zero alphaPrime,
     doubled_first_excited_massSq alphaPrime⟩
 
-end InfoGeometry.Canonical.O55LightConeSpectrumBridge
+end O55LightConeSpectrumBridge

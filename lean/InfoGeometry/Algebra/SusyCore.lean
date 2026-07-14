@@ -3,7 +3,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 open Matrix
 
-namespace InfoGeometry.Algebra.SusyCore
+namespace SusyCore
 
 open InfoGeometry.Algebra.SpinCore
 
@@ -28,4 +28,4 @@ def witten_index_trace : ℚ := (H_minus - H_plus) 0 0 + (H_minus - H_plus) 1 1
 /-- Theorem: Perfect Supersymmetric State Balance -/
 theorem witten_index_cancellation : witten_index_trace = 0 := by simp [witten_index_trace, H_minus, H_plus, Supercharge_A, Supercharge_Adjoint, J_plus, J_minus, mul_apply, Fin.sum_univ_two, sub_apply]
 
-end InfoGeometry.Algebra.SusyCore
+end SusyCore

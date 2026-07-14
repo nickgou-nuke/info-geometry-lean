@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.CurrentSugawaraBridge
 Concrete conjugation transport lemmas for current operators.
 -/
 
-namespace InfoGeometry.Canonical.CurrentConjugationLemmas
+namespace CurrentConjugationLemmas
 
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -236,4 +236,4 @@ noncomputable def conjugatedCurrentHeisenbergRep
     intro m n
     simpa using current_commutator_conjugated H U m n
 
-end InfoGeometry.Canonical.CurrentConjugationLemmas
+end CurrentConjugationLemmas

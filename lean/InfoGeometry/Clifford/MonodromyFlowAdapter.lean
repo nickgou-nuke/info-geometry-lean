@@ -17,7 +17,7 @@ by the common nilpotent law: additive flow parameters compose linearly because
 the nilpotent generator squares to zero.
 -/
 
-namespace InfoGeometry.Clifford.MonodromyFlowAdapter
+namespace MonodromyFlowAdapter
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -133,4 +133,4 @@ theorem splitQuaternionParabolicFlow_winding (T : ℝ) (n : ℕ) :
       splitQuaternionParabolicFlowStep ((n : ℝ) * T) := by
   rfl
 
-end InfoGeometry.Clifford.MonodromyFlowAdapter
+end MonodromyFlowAdapter

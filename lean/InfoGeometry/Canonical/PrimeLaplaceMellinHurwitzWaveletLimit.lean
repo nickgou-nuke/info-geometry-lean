@@ -20,7 +20,7 @@ is the Cayley pullback of the completed xi function.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit
+namespace PrimeLaplaceMellinHurwitzWaveletLimit
 
 open InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 open InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
@@ -104,4 +104,4 @@ def toPrimeHurwitzCliffordCascadeRealization
   reconstruction_eq_xi_cayley := R.reconstruction_eq_xi_cayley
   locallyUniformRenormalizedLimit := R.locallyUniformRenormalizedLimit
 
-end InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit
+end PrimeLaplaceMellinHurwitzWaveletLimit

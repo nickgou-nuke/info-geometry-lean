@@ -39,7 +39,7 @@ socket explicit.
 
 noncomputable section
 
-namespace InfoGeometry.GrandUnification.Capstone
+namespace Capstone
 
 open InfoGeometry.Dynamics.SouriauDiracHodge
 open InfoGeometry.Canonical.HestenesComplexTranslation
@@ -102,4 +102,4 @@ theorem krein_rh_isomorphic_proved
       -InfoGeometry.Krein.complex_i (E := E) :=
   translation_exists E
 
-end InfoGeometry.GrandUnification.Capstone
+end Capstone

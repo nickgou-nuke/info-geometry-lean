@@ -19,7 +19,7 @@ The finite theorem-honest content is:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
+namespace BogoliubovSU3ParafermionWeld
 
 open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 open InfoGeometry.Physics.SupergradedCuntzBdG
@@ -162,6 +162,6 @@ theorem bogoliubov_su3_parafermion_synthesis
   · exact bdgParafermionPlus4_sq
   · exact parafermionBraid_one
 
-end InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
+end BogoliubovSU3ParafermionWeld
 
 end noncomputable section

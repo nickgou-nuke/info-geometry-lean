@@ -29,7 +29,7 @@ introduced here.
 
 open scoped Matrix
 
-namespace InfoGeometry.Canonical.SplitQuaternionMatrixModel
+namespace SplitQuaternionMatrixModel
 
 open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.Clifford.SplitQ11CausalCone
@@ -275,4 +275,4 @@ theorem splitKreinSpine :
 
 end
 
-end InfoGeometry.Canonical.SplitQuaternionMatrixModel
+end SplitQuaternionMatrixModel

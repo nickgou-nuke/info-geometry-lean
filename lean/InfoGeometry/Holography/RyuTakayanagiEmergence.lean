@@ -27,7 +27,7 @@ open Real
 
 noncomputable section
 
-namespace InfoGeometry.Holography.RyuTakayanagiEmergence
+namespace RyuTakayanagiEmergence
 
 /-- The golden ratio φ = (1+√5)/2 — the boundary quantum dimension. -/
 noncomputable abbrev phi := phiR
@@ -124,4 +124,4 @@ theorem entanglement_geometry_capstone :
     vonNeumannEntropy (1/2 : ℝ) = Real.log 2 ∧ braidEntanglementStep > 0 := by
   exact ⟨maxEntropy_twoState, braidEntanglementStep_pos⟩
 
-end InfoGeometry.Holography.RyuTakayanagiEmergence
+end RyuTakayanagiEmergence

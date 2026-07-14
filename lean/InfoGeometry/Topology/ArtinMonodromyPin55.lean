@@ -18,7 +18,7 @@ This file packages the algebraic slogan:
 
 noncomputable section
 
-namespace InfoGeometry.Topology.ArtinMonodromyPin55
+namespace ArtinMonodromyPin55
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 
@@ -158,4 +158,4 @@ theorem artin_monodromy_pin55_synthesis (J : M2C) :
 #check negative_centralizer_root_closes
 #check artin_monodromy_pin55_synthesis
 
-end InfoGeometry.Topology.ArtinMonodromyPin55
+end ArtinMonodromyPin55

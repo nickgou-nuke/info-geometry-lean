@@ -13,7 +13,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
+namespace CliffordAtomsZ2n
 
 /-! ## 1. Split Clifford atoms -/
 
@@ -494,4 +494,4 @@ def toDIIIIndexCalibration : DIIIIndexCalibration Charge4 where
 
 end DIIIInteractionCalibration
 
-end InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
+end CliffordAtomsZ2n

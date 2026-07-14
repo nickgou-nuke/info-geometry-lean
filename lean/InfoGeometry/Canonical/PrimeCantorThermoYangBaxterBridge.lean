@@ -28,7 +28,7 @@ by their existing witness-gated or categorical files.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
+namespace PrimeCantorThermoYangBaxterBridge
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangRHBridge
@@ -132,4 +132,4 @@ theorem fibonacci_yangBaxter_artin :
           InfoGeometry.Canonical.YangBaxterProof.B :=
   InfoGeometry.Canonical.YangBaxterProof.braid_relation
 
-end InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
+end PrimeCantorThermoYangBaxterBridge

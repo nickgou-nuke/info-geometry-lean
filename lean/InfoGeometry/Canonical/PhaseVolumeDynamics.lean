@@ -14,7 +14,7 @@ This file keeps older phase/mirror vocabulary as thin wrappers over already
 owned doubled-carrier and modular-Hessian structure.
 -/
 
-namespace InfoGeometry.Canonical.PhaseVolumeDynamics
+namespace PhaseVolumeDynamics
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -66,4 +66,4 @@ attribute [expository]
   phaseVolumeAxis
   IsDynamicRotation
 
-end InfoGeometry.Canonical.PhaseVolumeDynamics
+end PhaseVolumeDynamics

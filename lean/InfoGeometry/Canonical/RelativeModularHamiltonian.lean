@@ -22,7 +22,7 @@ Methodological contract:
 - scalar Hamiltonian readouts remain shadows of the operator owner.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularHamiltonian
+namespace RelativeModularHamiltonian
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -149,4 +149,4 @@ theorem relativeModularHamiltonianExpectation_self
 
 end Finite
 
-end InfoGeometry.Canonical.RelativeModularHamiltonian
+end RelativeModularHamiltonian

@@ -48,7 +48,7 @@ All four are proved or structurally wired in the repo across:
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.UnifiedCapstone
+namespace UnifiedCapstone
 
 /--
 **The Master Identity — Target Statement.**
@@ -64,4 +64,4 @@ analytic Fredholm/Euler/Dirichlet identity here.
 def master_identity_debt (β : ℂ) (_hRe : β.re > 1) : String :=
   "Open: prove Fredholm determinant = Euler product = Dirichlet series = zeta under trace-class hypotheses."
 
-end InfoGeometry.Arithmetic.UnifiedCapstone
+end UnifiedCapstone

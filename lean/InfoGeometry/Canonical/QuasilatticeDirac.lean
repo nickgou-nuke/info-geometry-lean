@@ -12,7 +12,7 @@ or energy coupling of the Majorana modes. When the quasilattice is stretched
 vielbein to maintain local consistency.
 -/
 
-namespace InfoGeometry.Canonical.QuasilatticeDirac
+namespace QuasilatticeDirac
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.BogoliubovVielbein
@@ -192,4 +192,4 @@ theorem deriv2_quasilatticeDirac_at_zero
   simpa [X, δD, InfoGeometry.Canonical.BogoliubovTransport.transportCommutator]
     using hSecond
 
-end InfoGeometry.Canonical.QuasilatticeDirac
+end QuasilatticeDirac

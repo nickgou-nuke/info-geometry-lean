@@ -26,7 +26,7 @@ No abstract algebra equivalence for the complex Clifford classification is
 claimed here.
 -/
 
-namespace InfoGeometry.Canonical.ComplexCliffordHierarchy
+namespace ComplexCliffordHierarchy
 
 /-- Matrix-block shape of the complex Clifford classification. -/
 inductive ComplexCliffordShape where
@@ -114,4 +114,4 @@ theorem jordan_recovers_polar {R M : Type*} [CommRing R] [AddCommGroup M] [Modul
       algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q u v) := by
   exact CliffordAlgebra.ι_mul_ι_add_swap u v
 
-end InfoGeometry.Canonical.ComplexCliffordHierarchy
+end ComplexCliffordHierarchy

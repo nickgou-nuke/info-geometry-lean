@@ -17,7 +17,7 @@ the modular supercharge is an involution, so its zero-mode sector is trivial
 and the induced analytical residue vanishes.
 -/
 
-namespace InfoGeometry.Canonical.TopologicalResidue
+namespace TopologicalResidue
 
 open InfoGeometry.Quantum
 open InfoGeometry.Krein
@@ -177,4 +177,4 @@ theorem canonicalSuperchargeMultiplet_wittenIndexResidue_eq_zero
 
 attribute [expository] InformationalZeroMode IsTopologicalMemory
 
-end InfoGeometry.Canonical.TopologicalResidue
+end TopologicalResidue

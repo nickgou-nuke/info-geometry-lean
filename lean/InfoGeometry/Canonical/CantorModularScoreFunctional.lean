@@ -21,7 +21,7 @@ All statements here are finite algebraic identities.  No infinite state,
 measure-theoretic limit, or operator-algebraic completion is constructed here.
 -/
 
-namespace InfoGeometry.Canonical.CantorModularScoreFunctional
+namespace CantorModularScoreFunctional
 
 open scoped BigOperators
 open Finset
@@ -210,4 +210,4 @@ theorem scoreLinear_one {n : Nat} (w : BinaryWord n) :
 
 end
 
-end InfoGeometry.Canonical.CantorModularScoreFunctional
+end CantorModularScoreFunctional

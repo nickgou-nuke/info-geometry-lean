@@ -20,7 +20,7 @@ The result is a concrete signed pullback layer, not a claim that a full
 Einstein-Hilbert action has already been induced.
 -/
 
-namespace InfoGeometry.Physics.FisherKreinLorentz
+namespace FisherKreinLorentz
 
 open Finset
 open scoped BigOperators
@@ -138,4 +138,4 @@ theorem quantumCorrectedEinsteinResidual_eq_zero_iff
 
 end
 
-end InfoGeometry.Physics.FisherKreinLorentz
+end FisherKreinLorentz

@@ -62,7 +62,7 @@ theorem is the finite-stage readback authority.
   - The concrete sequential Zorn tower is already closed in `ZornUHFColimit`.
 -/
 
-namespace InfoGeometry.Categorical.ZornBraidColimit
+namespace ZornBraidColimit
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -213,4 +213,4 @@ theorem continuumCuntz_sq_zero (j : J)
   exact CompatibleBilinearMultiplication.colimit_square_zero_of_stage
     (R := R) (ZornSequence := ZornSequence) M h
 
-end InfoGeometry.Categorical.ZornBraidColimit
+end ZornBraidColimit

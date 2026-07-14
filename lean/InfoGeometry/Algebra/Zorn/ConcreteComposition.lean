@@ -15,7 +15,7 @@ This file proves:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
+namespace ConcreteComposition
 
 /--
 A concrete Zorn cell
@@ -251,4 +251,4 @@ theorem negLogDet_mul
 
 end ZornCell
 
-end InfoGeometry.Algebra.Zorn.ConcreteComposition
+end ConcreteComposition

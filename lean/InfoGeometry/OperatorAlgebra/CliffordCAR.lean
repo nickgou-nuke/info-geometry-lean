@@ -16,7 +16,7 @@ open InfoGeometry.Algebraic.SplitSignature
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.CliffordCAR
+namespace CliffordCAR
 
 /-! ### Split quadratic form decomposition
 
@@ -296,4 +296,4 @@ theorem car_packet (n : ℕ) :
     (∀ i j, ann n i * cre n j + cre n j * ann n i = if i = j then (1 : Clnn n) else 0) := by
   exact ⟨ann_sq_zero n, cre_sq_zero n, ann_ann_anticomm n, cre_cre_anticomm n, car_identity n⟩
 
-end InfoGeometry.OperatorAlgebra.CliffordCAR
+end CliffordCAR

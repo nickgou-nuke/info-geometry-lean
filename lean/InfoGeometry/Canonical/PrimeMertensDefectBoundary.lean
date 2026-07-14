@@ -17,7 +17,7 @@ prove them.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeMertensDefectBoundary
+namespace PrimeMertensDefectBoundary
 
 open scoped BigOperators
 
@@ -178,4 +178,4 @@ variable (B : MertensToDefectFreeBridge CompletedXiReadout)
 
 end MertensToDefectFreeBridge
 
-end InfoGeometry.Canonical.PrimeMertensDefectBoundary
+end PrimeMertensDefectBoundary

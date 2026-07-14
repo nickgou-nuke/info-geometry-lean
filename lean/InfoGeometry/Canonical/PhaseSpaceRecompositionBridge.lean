@@ -24,7 +24,7 @@ This file stays narrow:
 No new defect language is introduced here beyond that exact identification.
 -/
 
-namespace InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
+namespace PhaseSpaceRecompositionBridge
 
 open InfoGeometry.Canonical.RelativeModularRecomposition
 open InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
@@ -623,4 +623,4 @@ logarithmic recomposition shadow. -/
 
 end Core
 
-end InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
+end PhaseSpaceRecompositionBridge

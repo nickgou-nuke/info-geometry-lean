@@ -23,7 +23,7 @@ violation, or Yukawa/mixing-matrix physics.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD014TriSpinZ3Projectors
+namespace MD014TriSpinZ3Projectors
 
 set_option linter.unusedSimpArgs false
 
@@ -258,6 +258,6 @@ theorem repaired_MD014_z3_projector_packet {G : Type} [Semigroup G]
     sectorProjector1_mul_sectorPhase omega, sectorPhase_cube_identity omega homega,
     finiteCentralExtensionMul_assoc tau hassoc x y z⟩
 
-end InfoGeometry.Physics.MD014TriSpinZ3Projectors
+end MD014TriSpinZ3Projectors
 
 end noncomputable section

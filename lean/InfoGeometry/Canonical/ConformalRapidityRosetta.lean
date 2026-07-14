@@ -37,7 +37,7 @@ set_option linter.dupNamespace false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalRapidityRosetta
+namespace ConformalRapidityRosetta
 
 /-! ## Rapidities and Rindler flow -/
 
@@ -106,4 +106,4 @@ abbrev comm_P_K :=
   InfoGeometry.Canonical.ConformalSL2GeneratorBridge.comm_P_K
 
 
-end InfoGeometry.Canonical.ConformalRapidityRosetta
+end ConformalRapidityRosetta

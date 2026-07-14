@@ -28,7 +28,7 @@ cancellation, fermion-generation physics, or future research success.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD017ConclusionFiniteLedger
+namespace MD017ConclusionFiniteLedger
 
 /-- Local alias for the finite biquaternion coordinate carrier from Section 17. -/
 abbrev BiquatCoord := Section17.BiquatCoord
@@ -118,6 +118,6 @@ theorem repaired_MD017_conclusion_ledger_packet (M : Mat2C) (q : BiquatCoord) :
     conclusion_z3_projector_partition,
     conclusion_darkEnergyEOS_sample⟩
 
-end InfoGeometry.Physics.MD017ConclusionFiniteLedger
+end MD017ConclusionFiniteLedger
 
 end noncomputable section

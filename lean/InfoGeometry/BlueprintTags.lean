@@ -16,9 +16,9 @@ Refresh path:
 - `lake build InfoGeometry.BlueprintTags:blueprintJson`
 -/
 
-namespace InfoGeometry.BlueprintTags
+namespace BlueprintTags
 
 -- declarations are registered in `InfoGeometry.auto_blueprints`
 -- and exposed through this dedicated LeanArchitect-facing module.
 
-end InfoGeometry.BlueprintTags
+end BlueprintTags

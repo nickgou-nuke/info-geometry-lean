@@ -17,7 +17,7 @@ This does **not** formalize Gromov non-squeezing as a theorem.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Prequantum.LiouvilleCapacity
+namespace LiouvilleCapacity
 
 /-- An abstract nonzero volume cell. -/
 structure SymplecticVolume (A : Type*) [Ring A] where
@@ -134,4 +134,4 @@ theorem symplectic_preservation_iff_det_one (L : Matrix2D) :
         symplectic_preservation_eq_det_one L x y
       _ = omega x y := by rw [hdet, one_mul]
 
-end InfoGeometry.Prequantum.LiouvilleCapacity
+end LiouvilleCapacity

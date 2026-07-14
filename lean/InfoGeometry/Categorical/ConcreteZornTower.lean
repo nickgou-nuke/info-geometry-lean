@@ -31,7 +31,7 @@ This file instantiates the categorical `CompatibleBilinearMultiplication` witnes
 for the concrete sequence of `ZornMatrix ℚ` spaces.
 -/
 
-namespace InfoGeometry.Categorical.ConcreteZornTower
+namespace ConcreteZornTower
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -171,4 +171,4 @@ noncomputable def concreteZornBilinearMultiplication :
     change invToColimit (concreteStageMul (homToZorn (invToColimit x)) (homToZorn (invToColimit y))) = invToColimit (concreteStageMul x y)
     rw [h1, h2]
 
-end InfoGeometry.Categorical.ConcreteZornTower
+end ConcreteZornTower

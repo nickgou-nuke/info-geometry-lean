@@ -22,7 +22,7 @@ This file stays in the noncommutative operatorial lane. It formalizes:
   the perturbation channels.
 -/
 
-namespace InfoGeometry.Canonical.OnsagerReciprocity
+namespace OnsagerReciprocity
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BohmMadelungOperatorialBridge
@@ -545,4 +545,4 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_of_firstVariation_e
 
 end Core
 
-end InfoGeometry.Canonical.OnsagerReciprocity
+end OnsagerReciprocity

@@ -23,7 +23,7 @@ product formulas.  It stays on the theorem side of the existing finite
 computational-space interface.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciComputationalQubitPaperBridge
+namespace FiniteFibonacciComputationalQubitPaperBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
@@ -95,4 +95,4 @@ theorem computational_sector_section8 (N : ℕ) :
     Fintype.card (ComputationalVector N) = 2 ^ N :=
   computational_vector_card N
 
-end InfoGeometry.Canonical.FiniteFibonacciComputationalQubitPaperBridge
+end FiniteFibonacciComputationalQubitPaperBridge

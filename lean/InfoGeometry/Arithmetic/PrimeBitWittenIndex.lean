@@ -18,7 +18,7 @@ No CAR/UHF, GNS, thermodynamic limit, random-walk, Hilbert--Polya,
 or analytic-continuation claim is made here.
 -/
 
-namespace InfoGeometry.Arithmetic.PrimeBitWittenIndex
+namespace PrimeBitWittenIndex
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
@@ -233,4 +233,4 @@ theorem finite_prime_weyl_denominator_identity
     (InfoGeometry.Canonical.FormalPrimeRootSystem.finite_prime_weyl_denominator
       (L := primeRootLattice P) x)
 
-end InfoGeometry.Arithmetic.PrimeBitWittenIndex
+end PrimeBitWittenIndex

@@ -10,7 +10,7 @@ as established by Dehbia Achab (1995).
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.JordanAlgebraZeta
+namespace JordanAlgebraZeta
 
 /--
 Theorem 1: Convergence of the Jordan Algebra Zeta Series.
@@ -34,4 +34,4 @@ def jordan_zeta_functional_eq_prop
       (vol_L : ℂ) * ((Real.pi : ℂ) ^ ((N / 2 : ℂ) - 2 * (m : ℂ) * s)) *
       (Gamma_Omega s / Gamma_Omega (half_N_over_m - s)) * zeta_L_star s
 
-end InfoGeometry.Arithmetic.JordanAlgebraZeta
+end JordanAlgebraZeta

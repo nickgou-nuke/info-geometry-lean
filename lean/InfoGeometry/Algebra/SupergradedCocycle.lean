@@ -13,7 +13,7 @@ mode base used by `N2ModeCentralExtension`.  It does not pretend to be a
 super-anticommutator lane.
 -/
 
-namespace InfoGeometry.Algebra.SupergradedCocycle
+namespace SupergradedCocycle
 
 open Module
 open InfoGeometry.Algebra.N2ModeCentralExtension
@@ -104,4 +104,4 @@ theorem superBilin_qgen_rgen_centralCoefficient (i j : ι) :
       if i = j then (1 : 𝕜) else 0 := by
   simp
 
-end InfoGeometry.Algebra.SupergradedCocycle
+end SupergradedCocycle

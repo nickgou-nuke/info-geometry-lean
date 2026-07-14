@@ -12,7 +12,7 @@ that inner product.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorInner
+namespace GNSFiniteSupportOperatorInner
 
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperator
@@ -63,4 +63,4 @@ theorem liftOp_positive_square_state (a : Alg n) :
       omega p (fun i => involution a i * a i) := by
   exact liftOp_vector_state_recovers_omega p (fun i => involution a i * a i)
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorInner
+end GNSFiniteSupportOperatorInner

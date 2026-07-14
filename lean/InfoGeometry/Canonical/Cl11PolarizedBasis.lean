@@ -25,7 +25,7 @@ and proves the first structural laws needed later for Cartan/Lorentz action:
 So this file is a lawful basis/translator layer rather than a capstone.
 -/
 
-namespace InfoGeometry.Canonical.Cl11PolarizedBasis
+namespace Cl11PolarizedBasis
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Quantum
@@ -249,4 +249,4 @@ def doubledChiralLightConeAlgebraWitness
 
 end DoubledSpaceSpecialization
 
-end InfoGeometry.Canonical.Cl11PolarizedBasis
+end Cl11PolarizedBasis

@@ -19,7 +19,7 @@ projector `epsPlusProjector`.
 No mode-indexed current, normal ordering, or central extension is asserted here.
 -/
 
-namespace InfoGeometry.Volume.ConnesTomitaKreinDerivation
+namespace ConnesTomitaKreinDerivation
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
@@ -146,4 +146,4 @@ theorem finiteKrein_idempotent_transport_zero (A : Alg) :
     finiteKreinIdempotentTransport 0 A = A := by
   simp [finiteKreinIdempotentTransport, finiteKrein_idempotent_exponential_zero]
 
-end InfoGeometry.Volume.ConnesTomitaKreinDerivation
+end ConnesTomitaKreinDerivation

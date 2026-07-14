@@ -27,7 +27,7 @@ connections, spectral gaps, edge modes, or a full condensed-matter phase
 classification.  Those remain explicit certificate fields.
 -/
 
-namespace InfoGeometry.Topology.BrillouinKleinBottleManifold
+namespace BrillouinKleinBottleManifold
 
 open Matrix
 open InfoGeometry.Topology.BrillouinKleinGauge
@@ -234,4 +234,4 @@ theorem brillouin_klein_wallpaper_cross_section_packet :
     fun i =>
       InfoGeometry.Canonical.WallpaperPin55RootCrossSection.project_pin55LiftOfWallpaperRoot i⟩
 
-end InfoGeometry.Topology.BrillouinKleinBottleManifold
+end BrillouinKleinBottleManifold

@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.RestrictedSheetContinuous
 
-namespace InfoGeometry.Canonical.RealBdGSheetBridge
+namespace RealBdGSheetBridge
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.RestrictedSheetContinuous
@@ -185,4 +185,4 @@ theorem chiralImbalanceLift_is_KAntilinear
 
 end Basic
 
-end InfoGeometry.Canonical.RealBdGSheetBridge
+end RealBdGSheetBridge

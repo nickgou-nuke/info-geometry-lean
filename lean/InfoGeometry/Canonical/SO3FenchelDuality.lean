@@ -15,7 +15,7 @@ Highlights:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SO3FenchelDuality
+namespace SO3FenchelDuality
 
 open InfoGeometry.Canonical.LieGeometricDuality
 
@@ -398,4 +398,4 @@ theorem so3_kksForm_as_lieKks (L X Y : V3) :
 
 end LieBridge
 
-end InfoGeometry.Canonical.SO3FenchelDuality
+end SO3FenchelDuality

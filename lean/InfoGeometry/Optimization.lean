@@ -9,6 +9,6 @@ import InfoGeometry.Optimization.InteriorPoint
 import InfoGeometry.Optimization.RelativeEntropyObjective
 import InfoGeometry.Optimization.BregmanPotentials
 
-namespace InfoGeometry.Optimization
+namespace Optimization
 
-end InfoGeometry.Optimization
+end Optimization

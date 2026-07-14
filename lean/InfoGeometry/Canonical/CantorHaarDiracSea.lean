@@ -18,7 +18,7 @@ This file formalizes the concrete identities:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.CantorHaarDiracSea
+namespace CantorHaarDiracSea
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -56,5 +56,5 @@ theorem HaarPsi_boundary_regularization :
   rw [HaarPsi_eq_K]
   exact trace_K_boundary_from_MP
 
-end InfoGeometry.Canonical.CantorHaarDiracSea
+end CantorHaarDiracSea
 

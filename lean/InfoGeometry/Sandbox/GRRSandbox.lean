@@ -13,7 +13,7 @@ cell boundaries to Cohomology pushforwards twisted by the Todd class.
 variable {A B : Type*} [AddCommGroup A] [AddCommGroup B]
 variable {R : Type*} [CommRing R]
 
-namespace InfoGeometry.Sandbox.GRRSandbox
+namespace GRRSandbox
 
 -- K0 Groups
 structure K0Group (X : Type*) where
@@ -73,4 +73,4 @@ theorem grr_preserves_zero (A B : Type*) (R : Type*) [CommRing R]
   rw [map_zero f_star.f_shriek_K]
   rw [map_zero chB.ch]
 
-end InfoGeometry.Sandbox.GRRSandbox
+end GRRSandbox

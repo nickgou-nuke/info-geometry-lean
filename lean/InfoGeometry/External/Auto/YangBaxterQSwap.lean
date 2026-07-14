@@ -13,7 +13,7 @@ pattern that successfully proved TL₃(2) in TLChain.lean.
 
 noncomputable section
 
-namespace InfoGeometry.External.Auto.YangBaxterQSwap
+namespace YangBaxterQSwap
 
 open Matrix
 
@@ -59,4 +59,4 @@ theorem yang_baxter_relation (q : ℂ) :
 
 #check yang_baxter_relation
 
-end InfoGeometry.External.Auto.YangBaxterQSwap
+end YangBaxterQSwap

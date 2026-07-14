@@ -12,7 +12,7 @@ This file keeps only finite, explicit real formulas:
 * exact algebraic identities (no analytic continuation theorem claims).
 -/
 
-namespace InfoGeometry.Canonical.ComplexModularFlow
+namespace ComplexModularFlow
 
 noncomputable section
 
@@ -147,4 +147,4 @@ theorem log_amplitude_quench
 
 end
 
-end InfoGeometry.Canonical.ComplexModularFlow
+end ComplexModularFlow

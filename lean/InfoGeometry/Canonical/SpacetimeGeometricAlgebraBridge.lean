@@ -2,7 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.NoncommutativeModularSignum
 
-namespace InfoGeometry.Canonical.SpacetimeGeometricAlgebraBridge
+namespace SpacetimeGeometricAlgebraBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.NoncommutativeModularSignum
@@ -75,4 +75,4 @@ The Tomita-Takesaki modular evolution Δ^{it} J matches the spinor rotor dynamic
 def tomita_biquaternion_isomorphism (Delta_it J_op R_rotor : EndH) : Prop :=
   Delta_it.comp J_op = R_rotor
 
-end InfoGeometry.Canonical.SpacetimeGeometricAlgebraBridge
+end SpacetimeGeometricAlgebraBridge

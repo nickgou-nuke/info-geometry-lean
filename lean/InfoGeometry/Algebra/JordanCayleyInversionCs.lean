@@ -13,7 +13,7 @@ a global spin/structure-group isomorphism.
 
 open InfoGeometry.Clifford.Arxiv160309063
 
-namespace InfoGeometry.Algebra.JordanCayleyInversionCs
+namespace JordanCayleyInversionCs
 
 /--
 A Hermitian 2x2 matrix over Cs:
@@ -89,4 +89,4 @@ theorem klein_quadric_equation (X : Herm2x2Cs) (x1 x2 x3 x4 : ℚ)
 
 end Herm2x2Cs
 
-end InfoGeometry.Algebra.JordanCayleyInversionCs
+end JordanCayleyInversionCs

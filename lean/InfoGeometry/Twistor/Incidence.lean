@@ -16,7 +16,7 @@ The proof leverages the Metric-Determinant Duality established via the Soldering
 open scoped Matrix
 open scoped Quaternion
 
-namespace InfoGeometry.Twistor.Incidence
+namespace Incidence
 
 open InfoGeometry.Clifford.Soldering
 
@@ -128,4 +128,4 @@ theorem incident_points_null_separated (Z : Twistor) (X Y : Vec22)
   rw [← det_soldering_eq_q22 (X - Y)]
   exact h_det_zero
 
-end InfoGeometry.Twistor.Incidence
+end Incidence

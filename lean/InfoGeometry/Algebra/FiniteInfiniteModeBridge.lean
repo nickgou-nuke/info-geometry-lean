@@ -23,7 +23,7 @@ The bridge is equation-shape only:
 No wrappers. No witness fields. No completion claim.
 -/
 
-namespace InfoGeometry.Algebra.FiniteInfiniteModeBridge
+namespace FiniteInfiniteModeBridge
 
 open InfoGeometry.Algebra.FiniteN2Induction
 
@@ -363,4 +363,4 @@ theorem sugawara_central_charge_one
   exact VirasoroProject.sugawaraRepresentation_cgen
     (heiOper := heiOper) heiTrunc heiComm
 
-end InfoGeometry.Algebra.FiniteInfiniteModeBridge
+end FiniteInfiniteModeBridge

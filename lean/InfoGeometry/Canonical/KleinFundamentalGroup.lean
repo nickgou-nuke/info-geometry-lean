@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 
-namespace InfoGeometry.Canonical.KleinFundamentalGroup
+namespace KleinFundamentalGroup
 
 open Matrix
 
@@ -120,4 +120,4 @@ theorem explicit_b_symp : trans_bᵀ * omega2 * trans_b = omega2 := by
   fin_cases i <;> fin_cases j <;> 
     simp [trans_b, omega2, Matrix.transpose_apply, Matrix.mul_apply, Fin.sum_univ_succ]
 
-end InfoGeometry.Canonical.KleinFundamentalGroup
+end KleinFundamentalGroup

@@ -14,7 +14,7 @@ algebras (the spectra of the finite CPT stages) uniquely determines a linear fun
 on the infinite inductive colimit.
 -/
 
-namespace InfoGeometry.Canonical.CPTCstarStateLimit
+namespace CPTCstarStateLimit
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -77,4 +77,4 @@ theorem global_implies_compatible
     exact ofStage_apply_bond n A
   rw [h_bond]
 
-end InfoGeometry.Canonical.CPTCstarStateLimit
+end CPTCstarStateLimit

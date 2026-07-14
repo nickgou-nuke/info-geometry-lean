@@ -20,7 +20,7 @@ No topological compactification theorem.
 No conformal boundary field theory.
 -/
 
-namespace InfoGeometry.Canonical.FiniteBoundaryLoopAlgebraicClosure
+namespace FiniteBoundaryLoopAlgebraicClosure
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.BoundaryLoopSuperClosure
@@ -104,4 +104,4 @@ theorem lifted_commutes_deck
 
 end FiniteBoundaryAlgebraicClosure
 
-end InfoGeometry.Canonical.FiniteBoundaryLoopAlgebraicClosure
+end FiniteBoundaryLoopAlgebraicClosure

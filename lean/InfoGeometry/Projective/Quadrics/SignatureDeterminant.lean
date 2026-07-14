@@ -16,7 +16,7 @@ This is the sign packet only.  It does not prove the full projective
 classification of all quadrics.
 -/
 
-namespace InfoGeometry.Projective.Quadrics.SignatureDeterminant
+namespace SignatureDeterminant
 
 open Matrix
 
@@ -59,4 +59,4 @@ theorem determinant_sign_packet :
     Matrix.det paraboloidQuadric = (-1 : ℝ) := by
   exact ⟨det_ellipsoidQuadric, det_hyperboloidQuadric, det_paraboloidQuadric⟩
 
-end InfoGeometry.Projective.Quadrics.SignatureDeterminant
+end SignatureDeterminant

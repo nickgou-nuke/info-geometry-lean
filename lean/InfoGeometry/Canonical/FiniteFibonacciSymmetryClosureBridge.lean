@@ -25,7 +25,7 @@ No conformal-block function theory.
 No explicit braid-matrix derivation.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciSymmetryClosureBridge
+namespace FiniteFibonacciSymmetryClosureBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciComputationalQubitPaperBridge
@@ -102,4 +102,4 @@ theorem section8_symmetry_closure_target (N : ℕ) :
     Fintype.card (ComputationalVector N) = 2 ^ N :=
   computational_vector_card N
 
-end InfoGeometry.Canonical.FiniteFibonacciSymmetryClosureBridge
+end FiniteFibonacciSymmetryClosureBridge

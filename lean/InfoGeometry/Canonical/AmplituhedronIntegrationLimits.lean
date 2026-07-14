@@ -19,7 +19,7 @@ Per the Synthesis Dictionary:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.AmplituhedronIntegrationLimits
+namespace AmplituhedronIntegrationLimits
 
 open InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
 open InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
@@ -82,4 +82,4 @@ structure PositiveAmplituhedronIntegration (E : Type u) [NormedAddCommGroup E] [
   /-- The integration domain strictly enforces the boundary limits. -/
   respects_limits : ∀ (X : E), B.boundary_coordinate X < 0 → C.amplitude_form X = 0
 
-end InfoGeometry.Canonical.AmplituhedronIntegrationLimits
+end AmplituhedronIntegrationLimits

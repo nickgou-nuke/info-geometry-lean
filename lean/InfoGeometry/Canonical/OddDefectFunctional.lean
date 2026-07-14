@@ -18,7 +18,7 @@ already present in the projective count lane (`countMassShift`), with operator
 readout obtained by the existing canonical lift theorems.
 -/
 
-namespace InfoGeometry.Canonical.OddDefectFunctional
+namespace OddDefectFunctional
 
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Canonical.RelativePotentialScalarBridge
@@ -229,4 +229,4 @@ theorem onsager_responseCoefficient_swap
 
 end OnsagerLine
 
-end InfoGeometry.Canonical.OddDefectFunctional
+end OddDefectFunctional

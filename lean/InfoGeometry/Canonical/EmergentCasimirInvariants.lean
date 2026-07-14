@@ -22,7 +22,7 @@ We formally define:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.EmergentCasimirInvariants
+namespace EmergentCasimirInvariants
 
 open Matrix
 
@@ -63,4 +63,4 @@ theorem mass_squared_rest_frame (m : ℝ) :
   simp
   ring
 
-end InfoGeometry.Canonical.EmergentCasimirInvariants
+end EmergentCasimirInvariants

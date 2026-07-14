@@ -2,7 +2,7 @@ import Lean
 
 open Lean Meta Elab Tactic Command
 
-namespace InfoGeometry.Meta.HiveLogos
+namespace HiveLogos
 
 structure ProbeArtifact where
   artifactKind : String
@@ -170,4 +170,4 @@ elab "hive_annihilate " c:ident : tactic => do
   let name ← resolveGlobalConstNoOverload c
   applyRetrievedConst name true
 
-end InfoGeometry.Meta.HiveLogos
+end HiveLogos

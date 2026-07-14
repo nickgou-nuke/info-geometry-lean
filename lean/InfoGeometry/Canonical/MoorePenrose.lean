@@ -6,7 +6,7 @@ import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Meta.Architecture
 
-namespace InfoGeometry.Canonical.MoorePenrose
+namespace MoorePenrose
 
 open InfoGeometry.Canonical.Drazin
 
@@ -182,4 +182,4 @@ noncomputable def epsilon {R : Type*} [NormedRing R] [StarRing R] (a a_d a_mp : 
 noncomputable def chiralScale {R : Type*} [NormedRing R] [StarRing R] (a a_d a_mp : R) : ℝ :=
   epsilon a a_d a_mp
 
-end InfoGeometry.Canonical.MoorePenrose
+end MoorePenrose

@@ -13,7 +13,7 @@ import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.KreinIsotropicCone
+namespace KreinIsotropicCone
 
 /-! ## 1. Quadratic Krein cone sockets -/
 
@@ -615,4 +615,4 @@ theorem isotropic_representation_is_drazin_nil
     IsNilpotentElement (B.repVector v) :=
   nilpotent_of_isotropic_bridge_drazin B v hv hNil
 
-end InfoGeometry.OperatorAlgebra.KreinIsotropicCone
+end KreinIsotropicCone

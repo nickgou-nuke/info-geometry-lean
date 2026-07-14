@@ -29,7 +29,7 @@ spin chain, and the Yang-Baxter integrability at the Cantor boundary.
 Zero global axioms. No claim of RH proof.
 -/
 
-namespace InfoGeometry.Canonical.HilbertPolyaYangBaxterBoundary
+namespace HilbertPolyaYangBaxterBoundary
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.YangBaxterProof
@@ -67,4 +67,4 @@ theorem capstone :
   exact ⟨critical_line_cayley_bijection, reflection_is_inversion,
     yang_baxter_relation, fibonacci_parameters⟩
 
-end InfoGeometry.Canonical.HilbertPolyaYangBaxterBoundary
+end HilbertPolyaYangBaxterBoundary

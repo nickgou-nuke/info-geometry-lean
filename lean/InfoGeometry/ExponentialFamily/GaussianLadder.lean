@@ -2,7 +2,7 @@ import InfoGeometry.ExponentialFamily.Gaussian
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.QuantumInference
 
-namespace InfoGeometry.ExponentialFamily.GaussianLadder
+namespace GaussianLadder
 
 open InfoGeometry.ExponentialFamily.Gaussian
 open InfoGeometry.Krein
@@ -61,4 +61,4 @@ theorem gaussian_ccr (G : GaussianFamily E)
   apply (WithLp.ofLp_injective 2)
   ext <;> simp [gaussianAnnihilation, gaussianCreation, to_doubled, two_smul]
 
-end InfoGeometry.ExponentialFamily.GaussianLadder
+end GaussianLadder

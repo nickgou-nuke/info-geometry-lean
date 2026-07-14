@@ -14,7 +14,7 @@ archetype recognition or synthesis commentary is proof authority.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BlackBookIntegration
+namespace BlackBookIntegration
 
 /--
 Typed record for a black-book corridor.
@@ -131,4 +131,4 @@ def detectArchetypes (B : BlackBookPacket) : Array String :=
 def detectShadows (B : BlackBookPacket) : Array String :=
   InfoGeometry.Canonical.CognitiveShadow.detectShadows B.residualDebt
 
-end InfoGeometry.Canonical.BlackBookIntegration
+end BlackBookIntegration

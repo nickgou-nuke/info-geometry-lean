@@ -28,7 +28,7 @@ packages existing owner surfaces already present in the repo:
   lifted operator.
 -/
 
-namespace InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+namespace RelativeSurprisalOperatorLift
 
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.RelativeModularOperator
@@ -898,4 +898,4 @@ theorem hasDerivAt_logInformationPartitionFunction_zero_relativeCountLift_of_nor
 
 end SpectralTaylor
 
-end InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+end RelativeSurprisalOperatorLift

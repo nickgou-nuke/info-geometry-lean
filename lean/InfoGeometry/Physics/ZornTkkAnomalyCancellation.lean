@@ -15,7 +15,7 @@ No abstract 5-graded Lie closure, Jacobi theorem, or global TKK package is
 asserted here.
 -/
 
-namespace InfoGeometry.Physics.ZornTkkAnomalyCancellation
+namespace ZornTkkAnomalyCancellation
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
@@ -57,4 +57,4 @@ theorem tkk_commutator_base_readout :
   · exact tkk_commutator_trace_evaluation
   · exact tkk_commutator_det_evaluation
 
-end InfoGeometry.Physics.ZornTkkAnomalyCancellation
+end ZornTkkAnomalyCancellation

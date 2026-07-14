@@ -29,7 +29,7 @@ is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MDPASJMGlobalQuantization
+namespace MDPASJMGlobalQuantization
 
 open InfoGeometry.Physics.MDPASJMSouriauDigest
 
@@ -199,4 +199,4 @@ theorem directLimitCarrier_lifts_finiteIdentities_readback
                 (T.tower.stage n).pathPacket.flow)) := by
   exact FiniteMDPASJMDirectSystem.inductiveLimitCarrier_lifts_finiteIdentities T
 
-end InfoGeometry.Physics.MDPASJMGlobalQuantization
+end MDPASJMGlobalQuantization

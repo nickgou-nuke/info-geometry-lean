@@ -28,7 +28,7 @@ power-series analyticity is intentionally not claimed.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ComplexDifferentiableBridge
+namespace ComplexDifferentiableBridge
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.ComplexAnalyticBridge
@@ -72,4 +72,4 @@ def eventually_differentiableAt_to_doubled_cauchyAnalyticAt
   analyticAt_liftedToDoubled_cauchyAnalyticAt
     (eventually_differentiableAt_to_analyticAt h_diff)
 
-end InfoGeometry.Canonical.ComplexDifferentiableBridge
+end ComplexDifferentiableBridge

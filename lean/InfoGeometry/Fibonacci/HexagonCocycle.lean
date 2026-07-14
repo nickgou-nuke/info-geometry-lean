@@ -31,7 +31,7 @@ documentation strings, not theorem-shaped placeholders.
 
 universe v u
 
-namespace InfoGeometry.Fibonacci.HexagonCocycle
+namespace HexagonCocycle
 
 section HexagonAxiom
 
@@ -132,4 +132,4 @@ theorem unification :
     unified_cocycle_diagram.length ≥ 1 ∧ unified_cocycle_diagram.length ≥ 2 := by
   decide
 
-end InfoGeometry.Fibonacci.HexagonCocycle
+end HexagonCocycle

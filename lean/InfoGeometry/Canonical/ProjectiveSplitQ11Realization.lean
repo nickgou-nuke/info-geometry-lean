@@ -30,7 +30,7 @@ What does **not** descend here is the old distinguished vacuum point itself.
 That remains an upstairs / pointed-quotient feature and is not silently erased.
 -/
 
-namespace InfoGeometry.Canonical.ProjectiveSplitQ11Realization
+namespace ProjectiveSplitQ11Realization
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -366,4 +366,4 @@ theorem realSplitClifford_realizes_Q11 :
   · exact doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E)
   · exact doubledSpaceCl11Action_eps_eq_cl11Rep_pseudoscalar (E := E)
 
-end InfoGeometry.Canonical.ProjectiveSplitQ11Realization
+end ProjectiveSplitQ11Realization

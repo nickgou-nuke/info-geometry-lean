@@ -44,7 +44,7 @@ noncomputable section
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.BenderBrodyMullerHamiltonian
+namespace BenderBrodyMullerHamiltonian
 
 /-! ## Spectral coordinate algebra -/
 
@@ -184,4 +184,4 @@ theorem rhConsequence_of_selfAdjointClosure
     rhConsequence :=
   hAnalytic hSelfAdjoint
 
-end InfoGeometry.Arithmetic.BenderBrodyMullerHamiltonian
+end BenderBrodyMullerHamiltonian

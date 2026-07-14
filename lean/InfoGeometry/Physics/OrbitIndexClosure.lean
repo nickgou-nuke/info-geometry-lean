@@ -20,7 +20,7 @@ closure debt until explicit graded trace data and Möbius recursion are added.
 open InfoGeometry.Physics.WeightGrading55.JordanMatrix10D
 open InfoGeometry.Algebra.Cl11Fermions
 
-namespace InfoGeometry.Physics.OrbitIndexClosure
+namespace OrbitIndexClosure
 
 /-! ## 1. Local Cl(1,1) compensation data -/
 
@@ -74,4 +74,4 @@ theorem local_compensation_anticommutator :
       cl11LocalCompensation.eMinus * cl11LocalCompensation.ePlus = 1 := by
   simpa [cl11LocalCompensation] using anticomm_bbdag
 
-end InfoGeometry.Physics.OrbitIndexClosure
+end OrbitIndexClosure

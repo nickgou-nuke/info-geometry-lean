@@ -26,7 +26,7 @@ and does not construct `log Δ`. It only transports support/evenness properties
 from the already-owned `SuperchargeModularHamiltonianBridge`.
 -/
 
-namespace InfoGeometry.Canonical.SouriauModularHamiltonianBridge
+namespace SouriauModularHamiltonianBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
@@ -403,4 +403,4 @@ theorem surrogate_expectation_eq_souriau_free_energy
 
 end ExpectationCalibration
 
-end InfoGeometry.Canonical.SouriauModularHamiltonianBridge
+end SouriauModularHamiltonianBridge

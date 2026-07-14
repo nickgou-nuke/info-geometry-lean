@@ -22,7 +22,7 @@ noncomputable section
 open scoped BigOperators
 open Filter Topology
 
-namespace InfoGeometry.Arithmetic.PrimeDistributionLaw
+namespace PrimeDistributionLaw
 
 /-! ## Finite empirical prime observables -/
 
@@ -223,4 +223,4 @@ def RHPrimeCountingErrorLaw : Prop :=
       |(primeCounting N : ℝ) - pntCountingScale N| ≤
         C * Real.sqrt (N : ℝ) * Real.log (N : ℝ)
 
-end InfoGeometry.Arithmetic.PrimeDistributionLaw
+end PrimeDistributionLaw

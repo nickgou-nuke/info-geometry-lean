@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration
+namespace TraceFreeSuperIntegration
 
 /-! ## 1. Backend classification -/
 
@@ -366,4 +366,4 @@ theorem traceFreeSuperIntegrationOwnerTarget
   intro S x
   exact S.superReadout_apply x
 
-end InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration
+end TraceFreeSuperIntegration

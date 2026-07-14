@@ -14,7 +14,7 @@ a set-theoretic lift to a genuine, faithful representation of the wallpaper
 group inside the 5-graded `O(5,5)` algebraic structure.
 -/
 
-namespace InfoGeometry.Canonical.V4D4WeylEmbedding
+namespace V4D4WeylEmbedding
 
 open InfoGeometry.Canonical.WallpaperKleinBottleCartan
 open InfoGeometry.Canonical.WallpaperPin55RootCrossSection
@@ -63,4 +63,4 @@ theorem d4_weyl_subgroup_embedding_packet (a b : Fin 8) :
 
 end
 
-end InfoGeometry.Canonical.V4D4WeylEmbedding
+end V4D4WeylEmbedding

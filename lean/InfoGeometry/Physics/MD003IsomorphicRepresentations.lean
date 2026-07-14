@@ -26,7 +26,7 @@ dedicated owners.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD003IsomorphicRepresentations
+namespace MD003IsomorphicRepresentations
 
 open Matrix BigOperators
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
@@ -286,6 +286,6 @@ theorem repaired_MD003_isomorphic_representations_packet
     (biquat_trace_recover 0 dx dy dz).2.1,
     fun A Ap B Bp => md003_unnormalized_fierz_identity A Ap B Bp⟩
 
-end InfoGeometry.Physics.MD003IsomorphicRepresentations
+end MD003IsomorphicRepresentations
 
 end noncomputable section

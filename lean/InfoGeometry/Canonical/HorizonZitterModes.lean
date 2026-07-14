@@ -28,7 +28,7 @@ Fierz/channel readouts are isolated in `HorizonZitterFierzReadout`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HorizonZitterModes
+namespace HorizonZitterModes
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.Drazin
@@ -340,4 +340,4 @@ structure ChiralCausalApex
   apex_chiral_balanced :
     ∀ x : Obs, Apex x → chirality.action x = x
 
-end InfoGeometry.Canonical.HorizonZitterModes
+end HorizonZitterModes

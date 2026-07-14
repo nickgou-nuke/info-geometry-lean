@@ -13,7 +13,7 @@ potential by a constant cocycle, while the operatorial first-response and
 comparison-state metric/phase readouts remain unchanged.
 -/
 
-namespace InfoGeometry.Canonical.CanonicalGaugeBridge
+namespace CanonicalGaugeBridge
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RelativeModularPotential
@@ -168,4 +168,4 @@ anchor.
 
 end Core
 
-end InfoGeometry.Canonical.CanonicalGaugeBridge
+end CanonicalGaugeBridge

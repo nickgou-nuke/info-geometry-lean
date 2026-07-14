@@ -23,7 +23,7 @@ The role of the file is to make the "Virasoro constraints as equilibrium
 equations" interpretation explicit without turning it into an axiom.
 -/
 
-namespace InfoGeometry.Canonical.VirasoroWardEquilibrium
+namespace VirasoroWardEquilibrium
 
 open InfoGeometry.Canonical.OperatorThermodynamics
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -119,4 +119,4 @@ theorem thermodynamics_freeEnergy_eq_neg_log_partition
 
 end VirasoroWardEquilibriumPacket
 
-end InfoGeometry.Canonical.VirasoroWardEquilibrium
+end VirasoroWardEquilibrium

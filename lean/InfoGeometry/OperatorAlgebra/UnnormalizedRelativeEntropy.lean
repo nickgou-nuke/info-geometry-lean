@@ -11,7 +11,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
+namespace UnnormalizedRelativeEntropy
 
 /-! ## 1. Unnormalized weights -/
 
@@ -243,4 +243,4 @@ variable (H : SymmetricRelativeHamiltonianCalibration A Modular SymHam)
 
 end SymmetricRelativeHamiltonianCalibration
 
-end InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
+end UnnormalizedRelativeEntropy

@@ -26,7 +26,7 @@ No KMS analytic continuation.
 No Virasoro central-charge theorem.
 -/
 
-namespace InfoGeometry.Canonical.ModularNilpotentAutomorphism
+namespace ModularNilpotentAutomorphism
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -426,4 +426,4 @@ theorem nilpotentFlow_vacuum (t : ℝ) :
     _ = vac + t • (N * vac) := by simp
     _ = vac := by simp [hNv]
 
-end InfoGeometry.Canonical.ModularNilpotentAutomorphism
+end ModularNilpotentAutomorphism

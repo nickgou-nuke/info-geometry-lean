@@ -20,9 +20,9 @@ Mathlib API: `Complex.normSq`, `Real.rpow_lt_rpow_of_exponent_lt`,
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.SpectralDistance
+namespace SpectralDistance
 
 -- The full proof is a chain of Real.rpow inequalities documented above.
 -- The Complex norm reduces to Real.rpow via `Complex.normSq` on positive reals.
 
-end InfoGeometry.Arithmetic.SpectralDistance
+end SpectralDistance

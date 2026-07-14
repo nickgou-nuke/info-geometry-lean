@@ -27,7 +27,7 @@ Not closed here:
 * no theorem identifies the configured rank `32` with an `N=4` SYM multiplet.
 -/
 
-namespace InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
+namespace TwistorAmplituhedronConfigurationBridge
 
 open InfoGeometry.Projective.KleinQuadric
 open InfoGeometry.Projective.KleinQuadricIncidence
@@ -266,4 +266,4 @@ theorem twistor_amplituhedron_q_deformation_packet {moving : ℕ}
     D.deformation.amplituhedronBoundaryRank = 32 :=
   q_deformation_stability_keeps_rank D.deformation
 
-end InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
+end TwistorAmplituhedronConfigurationBridge

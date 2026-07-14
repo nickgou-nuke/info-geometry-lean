@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.SplitCliffordJordanWigner
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.ConcreteCapstone
+namespace ConcreteCapstone
 
 /-! ## [1] Finite CAR — two-mode Jordan-Wigner ———————— ——— -/
 
@@ -95,6 +95,6 @@ theorem concrete_capstone_sixfold
           bregman_three_point_holds F x y z,
           bregman_pythagorean_holds F x y z hproj⟩
 
-end InfoGeometry.Capstone.ConcreteCapstone
+end ConcreteCapstone
 
 end

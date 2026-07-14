@@ -16,7 +16,7 @@ No loop-group analytic representation.
 No physical boundary-state construction.
 -/
 
-namespace InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
+namespace SuperBracketHestenesKreinClosure
 
 /-- A linear generator intertwines a Hestenes/Krein axis `K` with scalar sign `σ`. -/
 def IntertwinesBy {V : Type*} [AddCommGroup V] [Module ℂ V]
@@ -145,4 +145,4 @@ theorem odd_odd_closure (g h : P.oddGen) :
 
 end HestenesKreinCartanPacket
 
-end InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
+end SuperBracketHestenesKreinClosure

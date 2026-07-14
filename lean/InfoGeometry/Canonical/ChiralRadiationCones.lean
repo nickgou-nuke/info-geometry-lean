@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 
-namespace InfoGeometry.Canonical.ChiralRadiationCones
+namespace ChiralRadiationCones
 
 set_option linter.dupNamespace false
 
@@ -64,4 +64,4 @@ theorem diracMassTerm_eq_of_mass_eq_flipRate {Rad : Type u}
 
 set_option linter.dupNamespace true
 
-end InfoGeometry.Canonical.ChiralRadiationCones
+end ChiralRadiationCones

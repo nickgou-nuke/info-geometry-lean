@@ -36,7 +36,7 @@ import Mathlib.Tactic.Basic
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ErlangenOperator2
+namespace ErlangenOperator2
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
@@ -229,4 +229,4 @@ theorem entropy_is_geometric_invariant
 
 end CoadjointCasimirGeometrySocket
 
-end InfoGeometry.OperatorAlgebra.ErlangenOperator2
+end ErlangenOperator2

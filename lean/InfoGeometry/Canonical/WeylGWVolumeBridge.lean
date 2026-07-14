@@ -32,7 +32,7 @@ weight 2 intensity × inverse-weight 2 gauge = scale-invariant volume.
 All physical identifications remain explicit predicates/hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.WeylGWVolumeBridge
+namespace WeylGWVolumeBridge
 
 open InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
@@ -414,4 +414,4 @@ end StandardFormFaceWeylGWVolumeFusion
 
 end StandardFormFaces
 
-end InfoGeometry.Canonical.WeylGWVolumeBridge
+end WeylGWVolumeBridge

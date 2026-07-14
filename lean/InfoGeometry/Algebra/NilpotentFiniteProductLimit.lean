@@ -26,7 +26,7 @@ This file keeps three lanes separate.
   product.
 -/
 
-namespace InfoGeometry.Algebra.NilpotentFiniteProductLimit
+namespace NilpotentFiniteProductLimit
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
 
@@ -136,6 +136,6 @@ or identify the limit with any external Dirac/Virasoro flow.
 def general_analytic_completion_debt : String :=
   "Open: prove a general analytic product/completion theorem beyond the eventually-constant nilpotent case."
 
-end InfoGeometry.Algebra.NilpotentFiniteProductLimit
+end NilpotentFiniteProductLimit
 
 end

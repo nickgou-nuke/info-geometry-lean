@@ -27,7 +27,7 @@ theorems of the paper.  Those remain future owner layers.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MDPASJMSouriauDigest
+namespace MDPASJMSouriauDigest
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Algebraic.CartanExponentialFamily
@@ -698,4 +698,4 @@ theorem inductiveLimitCarrier_lifts_finiteIdentities
 
 end FiniteMDPASJMDirectSystem
 
-end InfoGeometry.Physics.MDPASJMSouriauDigest
+end MDPASJMSouriauDigest

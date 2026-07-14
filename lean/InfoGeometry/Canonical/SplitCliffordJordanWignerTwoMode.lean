@@ -11,7 +11,7 @@ This file records the finite two-mode CAR facts and finite current table
 without promoting them to a full infinite Heisenberg representation.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
+namespace SplitCliffordJordanWignerTwoMode
 
 open Matrix
 
@@ -104,4 +104,4 @@ theorem Jfin_comm_1_neg1_ne_identity :
     simpa [finiteChargeDiag, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Hdiag] using h00
   norm_num at h01
 
-end InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
+end SplitCliffordJordanWignerTwoMode

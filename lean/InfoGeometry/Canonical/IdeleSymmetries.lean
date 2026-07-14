@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Canonical.IdeleSymmetries
+namespace IdeleSymmetries
 
 /-!
 Finite algebraic symmetry layer for the idele/Tomita fixed-locus picture.
@@ -87,4 +87,4 @@ theorem critical_line_symmetry_iff
     specialize h 1 one_ne_zero
     simpa [IdeleAction.scale_one] using h
 
-end InfoGeometry.Canonical.IdeleSymmetries
+end IdeleSymmetries

@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorKMSCylinderState
+namespace CantorKMSCylinderState
 
 open InfoGeometry.Canonical.CantorCuntzBasis
 
@@ -166,4 +166,4 @@ theorem cylinderKMSCoeff_cons_true_false (u v : BinaryWord) :
     cases hc
   exact cylinderKMSCoeff_ne h
 
-end InfoGeometry.Canonical.CantorKMSCylinderState
+end CantorKMSCylinderState

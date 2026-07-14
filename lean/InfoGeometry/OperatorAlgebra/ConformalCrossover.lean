@@ -18,7 +18,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ConformalCrossover
+namespace ConformalCrossover
 
 /-! ## 1. Conformal crossover datum -/
 
@@ -334,4 +334,4 @@ def genesisSeed
   seed_ne_zero :=
     G.seed_nonzero P.generator P.generator_ne_zero
 
-end InfoGeometry.OperatorAlgebra.ConformalCrossover
+end ConformalCrossover

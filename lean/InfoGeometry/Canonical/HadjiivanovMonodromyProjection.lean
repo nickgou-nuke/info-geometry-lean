@@ -34,7 +34,7 @@ open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Clifford.MonodromyFlowAdapter
 open InfoGeometry.Canonical.HadjiivanovRindlerModularBridge
 
-namespace InfoGeometry.Canonical.HadjiivanovMonodromyProjection
+namespace HadjiivanovMonodromyProjection
 
 /--
 The Hadjiivanov monodromy in nilpotent+phase form (complex language).
@@ -158,4 +158,4 @@ theorem virasoro_L0_trace (h : ℂ) : (virasoroL0Cell h).trace = 2 * h := by
 theorem virasoro_L0_det (h : ℂ) : (virasoroL0Cell h).det = h ^ 2 := by
   simp [virasoroL0Cell, upperJordan, Matrix.det_fin_two]; ring
 
-end InfoGeometry.Canonical.HadjiivanovMonodromyProjection
+end HadjiivanovMonodromyProjection

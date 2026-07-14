@@ -5,7 +5,7 @@ import Mathlib.Data.Real.Basic
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.QCCRCore
+namespace QCCRCore
 
 /-!
 # q-CCR core algebraic surface
@@ -71,4 +71,4 @@ theorem q_one_is_ccr (N : ℕ) (Op : Type*) [Ring Op] [StarRing Op] [Algebra ℝ
 
 end QCCRAlgebra
 
-end InfoGeometry.OperatorAlgebra.QCCRCore
+end QCCRCore

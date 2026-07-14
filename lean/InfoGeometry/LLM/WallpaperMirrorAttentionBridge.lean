@@ -33,7 +33,7 @@ band-structure semantics remain outside this finite bridge.
 
 noncomputable section
 
-namespace InfoGeometry.LLM.WallpaperMirrorAttentionBridge
+namespace WallpaperMirrorAttentionBridge
 
 open InfoGeometry.Topology.Wallpaper
 open InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
@@ -65,6 +65,6 @@ theorem pg_glide_charge_and_attention_anomaly_packet
     totalChargeModTwo_orientation_reversal_invariant charge,
     mirrorAttention_kills_branchAnomaly v⟩
 
-end InfoGeometry.LLM.WallpaperMirrorAttentionBridge
+end WallpaperMirrorAttentionBridge
 
 end noncomputable section

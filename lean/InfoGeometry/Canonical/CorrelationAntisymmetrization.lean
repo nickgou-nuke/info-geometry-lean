@@ -19,7 +19,7 @@ This file does not duplicate the raw antisymmetric compression already owned in
   under explicit phase-linearity hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.CorrelationAntisymmetrization
+namespace CorrelationAntisymmetrization
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.CorrelationSymmetrization
@@ -199,4 +199,4 @@ theorem toRelationalInformationDatum_comparisonGeneratorPhase_eq_antisymmetricPh
 
 end Core
 
-end InfoGeometry.Canonical.CorrelationAntisymmetrization
+end CorrelationAntisymmetrization

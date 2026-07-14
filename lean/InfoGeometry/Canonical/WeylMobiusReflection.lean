@@ -16,7 +16,7 @@ So the conjugation action by `E` is a sign flip on the boundary lanes
 (`N`, `Nᵀ`), while fixing the Cartan generator `K`.
 -/
 
-namespace InfoGeometry.Canonical.WeylMobiusReflection
+namespace WeylMobiusReflection
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -57,4 +57,4 @@ theorem weyl_conj_N_transpose :
     W * Nᵀ * W = -Nᵀ := by
   simpa [Nt_eq_transpose] using weyl_conj_Nt
 
-end InfoGeometry.Canonical.WeylMobiusReflection
+end WeylMobiusReflection

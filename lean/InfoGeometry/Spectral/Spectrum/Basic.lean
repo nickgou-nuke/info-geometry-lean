@@ -17,7 +17,7 @@ transport facts.
 
 noncomputable section
 
-namespace InfoGeometry.Spectral.Spectrum.Basic
+namespace Basic
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -158,4 +158,4 @@ theorem stableHomotopyClifford_period
       (f := fun m n h => splitCliffordMap m n h)
       (i := n) (j := n + 8) (hij := Nat.le_add_right n 8) (x := x))
 
-end InfoGeometry.Spectral.Spectrum.Basic
+end Basic

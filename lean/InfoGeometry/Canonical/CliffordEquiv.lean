@@ -11,7 +11,7 @@ open InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CliffordEquiv
+namespace CliffordEquiv
 
 /-! ## 1. Abstract Complex Structure and Induced Module -/
 
@@ -374,4 +374,4 @@ noncomputable def finite_complex_structure_bridge_packet :
   peirce_clifford_equiv := peirceCliffordEquivalence
   finite_hestenes_sq := InfoGeometry.Geometry.FiniteHestenesCR.bivector_i_squared
 
-end InfoGeometry.Canonical.CliffordEquiv
+end CliffordEquiv

@@ -17,7 +17,7 @@ open Finset
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.Cl44FockParity
+namespace Cl44FockParity
 
 /-- Occupation label for four modes. -/
 abbrev Occ4 := Fin 4 → Bool
@@ -158,4 +158,4 @@ theorem even_odd_card_equal :
 theorem witten_index_zero : ((8 : ℤ) - 8) = 0 := by
   norm_num
 
-end InfoGeometry.OperatorAlgebra.Cl44FockParity
+end Cl44FockParity

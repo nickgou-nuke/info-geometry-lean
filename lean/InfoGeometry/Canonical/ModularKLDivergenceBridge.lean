@@ -18,7 +18,7 @@ This file adds no new ontology. It only re-exports and lightly repackages:
 - the equivalent negative-relative-log-density form.
 -/
 
-namespace InfoGeometry.Canonical.ModularKLDivergenceBridge
+namespace ModularKLDivergenceBridge
 
 open scoped ENNReal NNReal
 open MeasureTheory
@@ -446,4 +446,4 @@ theorem weylOrderParameter_eq_neg_relativeLogDensity
 
 end PositiveRayCompatibility
 
-end InfoGeometry.Canonical.ModularKLDivergenceBridge
+end ModularKLDivergenceBridge

@@ -5,7 +5,7 @@ import InfoGeometry.Quantum.ModularAnomaly
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.Unification
+namespace Unification
 
 open InfoGeometry.Krein
 
@@ -282,4 +282,4 @@ end Cl11LatticeRosettaStone
 
 end Cl11LatticeRosetta
 
-end InfoGeometry.Canonical.Unification
+end Unification

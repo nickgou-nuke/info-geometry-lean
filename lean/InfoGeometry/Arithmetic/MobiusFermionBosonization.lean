@@ -25,7 +25,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.MobiusFermionBosonization
+namespace MobiusFermionBosonization
 
 open InfoGeometry.Arithmetic.PrimonFinite
 
@@ -263,4 +263,4 @@ theorem valid
 
 end DeterminantVandermondeComparisonGate
 
-end InfoGeometry.Arithmetic.MobiusFermionBosonization
+end MobiusFermionBosonization

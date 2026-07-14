@@ -6,7 +6,7 @@ import InfoGeometry.MaxEnt.JaynesRNMaxEnt
 Canonical facade for Radon-Nikodym/Jaynes maximum-entropy constructions.
 -/
 
-namespace InfoGeometry.Canonical.JaynesRNMaxEnt
+namespace JaynesRNMaxEnt
 
 export InfoGeometry.MaxEnt.JaynesRNMaxEnt (
   MomentFamily
@@ -39,4 +39,4 @@ variable {Ω : Type*} [MeasurableSpace Ω]
     objectiveKL (μ₀ := μ₀) P
       = InformationTheory.klDiv (P : MeasureTheory.Measure Ω) μ₀ := rfl
 
-end InfoGeometry.Canonical.JaynesRNMaxEnt
+end JaynesRNMaxEnt

@@ -3,7 +3,7 @@ import InfoGeometry.Causal.CausalAlgebra
 
 open Set Matrix
 
-namespace InfoGeometry.Causal.ProofDAGRepresentation
+namespace ProofDAGRepresentation
 
 open InfoGeometry.Causal.Algebra
 
@@ -162,4 +162,4 @@ theorem represented_edge_orthogonality_rev
   rw [R.edgeOp_backward (a := b) (b := a) hab hne.symm, R.edgeOp_forward hab hne]
   exact δd_zero
 
-end InfoGeometry.Causal.ProofDAGRepresentation
+end ProofDAGRepresentation

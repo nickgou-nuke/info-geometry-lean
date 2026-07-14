@@ -23,7 +23,7 @@ This file records the exact algebraic facts available from the abstract `O₂`
 carrier.
 -/
 
-namespace InfoGeometry.Canonical.CuntzHologramShard
+namespace CuntzHologramShard
 
 open InfoGeometry.Topology
 
@@ -59,4 +59,4 @@ theorem hologram_readout_fixed
     φ (InfoGeometry.Topology.CuntzMap.map Op C X) = φ X :=
   InfoGeometry.Topology.CuntzMap.map_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
 
-end InfoGeometry.Canonical.CuntzHologramShard
+end CuntzHologramShard

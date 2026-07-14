@@ -15,7 +15,7 @@ Super-TKK, `SU(3)`, or `Aut(𝕆_s)=G₂(2)` classification theorem.  It is the
 kernel-checked finite block layer those larger statements would have to consume.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.G22CartanFiniteLaws
+namespace G22CartanFiniteLaws
 
 abbrev Sector := Fin 2
 abbrev Color5 := Fin 5
@@ -69,4 +69,4 @@ theorem cartan_finite_laws_packet :
       (∀ v : Vec10, theta (theta (theta v)) = theta v) := by
   exact ⟨boost_so55_skew, theta_boost_theta_odd, theta_involutive, theta_core_even⟩
 
-end InfoGeometry.OperatorAlgebra.G22CartanFiniteLaws
+end G22CartanFiniteLaws

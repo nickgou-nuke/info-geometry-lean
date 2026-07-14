@@ -11,7 +11,7 @@ set_option linter.unnecessarySimpa false
 Finite chain layer where macroscopic volume is the product of local Pfaffians.
 -/
 
-namespace InfoGeometry.Quantum.KitaevChain
+namespace KitaevChain
 
 open InfoGeometry.Krein
 
@@ -313,4 +313,4 @@ theorem macroscopicVolume_eq_one_of_pfaffian_one
         simpa [macroscopicVolume] using hcs
       simp [macroscopicVolume, hc, hcs']
 
-end InfoGeometry.Quantum.KitaevChain
+end KitaevChain

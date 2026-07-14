@@ -18,7 +18,7 @@ introduced here.
 
 noncomputable section
 
-namespace InfoGeometry.Erlangen.ProjectiveLineGeometry
+namespace ProjectiveLineGeometry
 
 open InfoGeometry.Canonical.FierzKleinFoundation
 
@@ -92,4 +92,4 @@ theorem lineThrough_isLineScrew (p q : Point4) :
     IsLineScrew (lineThrough p q) := by
   exact lineThrough_isProjectiveLine p q
 
-end InfoGeometry.Erlangen.ProjectiveLineGeometry
+end ProjectiveLineGeometry

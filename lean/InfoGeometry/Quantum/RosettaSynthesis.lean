@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.RosettaSourceBridge
 
-namespace InfoGeometry.Quantum.RosettaSynthesis
+namespace RosettaSynthesis
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Rosetta
@@ -114,4 +114,4 @@ theorem rosetta_anomaly_free_triality
             (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ := hChem.symm
       _ = 0 := hResidual0
 
-end InfoGeometry.Quantum.RosettaSynthesis
+end RosettaSynthesis

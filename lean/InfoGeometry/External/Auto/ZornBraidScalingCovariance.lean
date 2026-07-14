@@ -21,7 +21,7 @@ The API deliberately separates two layers:
 
 noncomputable section
 
-namespace InfoGeometry.External.Auto.ZornBraidScalingCovariance
+namespace ZornBraidScalingCovariance
 
 open Matrix
 open InfoGeometry.External.Auto.SplitOctonionBraidSU3
@@ -278,6 +278,6 @@ theorem scaled_leftMul_braid
   rw [scaledBraidGen1_val p hp, scaledBraidGen2_val p hp] at h
   simpa only using h
 
-end InfoGeometry.External.Auto.ZornBraidScalingCovariance
+end ZornBraidScalingCovariance
 
 end noncomputable section

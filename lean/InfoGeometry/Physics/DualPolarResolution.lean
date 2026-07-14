@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Physics.DualPolarResolution
+namespace DualPolarResolution
 
 /--
 The homological syzygy Betti sequence defining the dual polar singularity
@@ -38,4 +38,4 @@ theorem dual_polar_euler_characteristic_vanishes :
     dualPolarBettiSequence.betti_2 - dualPolarBettiSequence.betti_3 = 0 := by
   rfl
 
-end InfoGeometry.Physics.DualPolarResolution
+end DualPolarResolution

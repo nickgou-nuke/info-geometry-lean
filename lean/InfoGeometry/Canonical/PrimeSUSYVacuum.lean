@@ -21,7 +21,7 @@ does not identify inverse-zeta Witten poles with zero modes.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeSUSYVacuum
+namespace PrimeSUSYVacuum
 
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open InfoGeometry.Canonical.PrimeMertensDefectBoundary
@@ -84,4 +84,4 @@ theorem finiteSUSYVacuum_wittenIndexCancellation
   exact ⟨finiteWittenIndexSum_cancel_of_nonempty P hP,
     powerset_parity_sum_cancel_of_nonempty P hP⟩
 
-end InfoGeometry.Canonical.PrimeSUSYVacuum
+end PrimeSUSYVacuum

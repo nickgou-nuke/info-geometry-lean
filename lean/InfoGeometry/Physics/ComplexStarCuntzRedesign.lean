@@ -26,7 +26,7 @@ construction, while the real Cuntz star still swaps `Sᵢ` and `Tᵢ`.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ComplexStarCuntzRedesign
+namespace ComplexStarCuntzRedesign
 
 open scoped TensorProduct
 open InfoGeometry.Topology.AlgebraicCuntzQuotient
@@ -152,4 +152,4 @@ structure GenuineComplexCuntzStarRepresentation
 #check realLift
 #check GenuineComplexCuntzStarRepresentation
 
-end InfoGeometry.Physics.ComplexStarCuntzRedesign
+end ComplexStarCuntzRedesign

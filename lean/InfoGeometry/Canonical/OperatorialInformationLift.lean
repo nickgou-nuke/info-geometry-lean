@@ -18,7 +18,7 @@ facts already proved in the repo:
   transported thermal generators on the doubled Dirac--Clifford--Krein carrier.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialInformationLift
+namespace OperatorialInformationLift
 
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
@@ -236,4 +236,4 @@ theorem normalized_logTransportedThermalOperatorialInformationLift_of_vacuumTran
 
 end Doubled
 
-end InfoGeometry.Canonical.OperatorialInformationLift
+end OperatorialInformationLift

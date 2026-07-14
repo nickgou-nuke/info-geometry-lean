@@ -17,7 +17,7 @@ asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HolographicCuntzShard
+namespace HolographicCuntzShard
 
 open InfoGeometry.Topology
 
@@ -166,6 +166,6 @@ theorem finite_holographic_shard_packet (x : Fin 2 → ℚ) :
   exact ⟨finiteShard_source, finiteShard_aperture,
     finiteShard_reconstructs_source x, finiteAperture_idempotent, finite_source_partition⟩
 
-end InfoGeometry.Canonical.HolographicCuntzShard
+end HolographicCuntzShard
 
 end noncomputable section

@@ -27,7 +27,7 @@ Those require additional representation-level premises.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CPTRealCl11Emergence
+namespace CPTRealCl11Emergence
 
 open InfoGeometry.Canonical.DiscreteCPTGroup
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
@@ -160,4 +160,4 @@ theorem realParity_seed_package :
     realParityOperator_apply_epsMinusProjector, realParityOperator_apply_epsPlusProjector,
     realParityOperator_apply_epsProjector_sum, realParityOperator_apply_epsProjector_diff⟩
 
-end InfoGeometry.Canonical.CPTRealCl11Emergence
+end CPTRealCl11Emergence

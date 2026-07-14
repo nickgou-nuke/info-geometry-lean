@@ -13,7 +13,7 @@ This file proves concrete non-scalar facts:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.LieOrbitAdjointInvariants
+namespace LieOrbitAdjointInvariants
 
 open Matrix
 
@@ -61,5 +61,5 @@ theorem det_constant_on_adjointOrbit (A B : Matrix n n R)
 
 end
 
-end InfoGeometry.Canonical.LieOrbitAdjointInvariants
+end LieOrbitAdjointInvariants
 

@@ -19,7 +19,7 @@ The bridge only packages state-functionals that are compatible with that owned
 modular-flow lane.
 -/
 
-namespace InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+namespace SpectroscopicGaugeKMSBridge
 
 open InfoGeometry.Krein
 
@@ -81,4 +81,4 @@ theorem owned_unruhFlow_expansion (θ : ℝ) :
 
 end Core
 
-end InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+end SpectroscopicGaugeKMSBridge

@@ -16,7 +16,7 @@ No wrappers. No `sorry`.
 
 open Quaternion
 
-namespace InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
+namespace SplitOctonionsColorStabilizer
 
 variable {R : Type*} [CommRing R]
 
@@ -178,4 +178,4 @@ theorem blockComm_add_swap_eq_zero (X Y : BektasMatrix R) :
 
 end BektasMatrix
 
-end InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
+end SplitOctonionsColorStabilizer

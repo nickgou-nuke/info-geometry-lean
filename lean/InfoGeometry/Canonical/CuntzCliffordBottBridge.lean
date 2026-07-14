@@ -31,7 +31,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzCliffordBottBridge
+namespace CuntzCliffordBottBridge
 
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -150,4 +150,4 @@ theorem cuntz_clock_involution_in_cl11_limit
     (hF := clockStageSequence_succ M encode seed hcompat)
     (h0 := h0)
 
-end InfoGeometry.Canonical.CuntzCliffordBottBridge
+end CuntzCliffordBottBridge

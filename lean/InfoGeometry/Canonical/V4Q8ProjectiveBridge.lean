@@ -18,7 +18,7 @@ kept in the external certificates.  This file stays theorem-safe and finite:
 it does not assert a full Schur-multiplier classification theorem.
 -/
 
-namespace InfoGeometry.Canonical.V4Q8ProjectiveBridge
+namespace V4Q8ProjectiveBridge
 
 open InfoGeometry.Topology.V4RootSystem
 
@@ -223,4 +223,4 @@ theorem q8_central_extension_packet :
     Function.Surjective q8ToV4 := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, q8ToV4_surjective⟩
 
-end InfoGeometry.Canonical.V4Q8ProjectiveBridge
+end V4Q8ProjectiveBridge

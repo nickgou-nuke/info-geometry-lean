@@ -34,7 +34,7 @@ where:
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.D4Cl11Tripotent
+namespace D4Cl11Tripotent
 
 open TKKJordanPairData
 open InfoGeometry.Topology.ArtinCentralizerMonodromy
@@ -354,6 +354,6 @@ theorem standard_model_from_D4_tripotent
     (graded : FiveGradedD4Cl11Algebra)
     (h_anomaly : anomalyIndex 5 5 = 0) : anomalyIndex 5 5 = 0 := h_anomaly
 
-end InfoGeometry.Clifford.D4Cl11Tripotent
+end D4Cl11Tripotent
 
 end noncomputable section

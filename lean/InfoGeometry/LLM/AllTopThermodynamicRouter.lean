@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.AllTopThermodynamicRouter
+namespace AllTopThermodynamicRouter
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.ThermodynamicSwitching
@@ -119,4 +119,4 @@ end OmitAllTopThermoIds
 
 end AllTopRouter
 
-end InfoGeometry.LLM.AllTopThermodynamicRouter
+end AllTopThermodynamicRouter

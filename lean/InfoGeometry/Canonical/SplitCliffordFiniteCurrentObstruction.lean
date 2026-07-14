@@ -21,7 +21,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
+namespace SplitCliffordFiniteCurrentObstruction
 
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -105,4 +105,4 @@ theorem no_two_mode_supported_currentHeisenbergRep
     (hSupport 2 (by norm_num) (by norm_num))
     (hSupport (-2) (by norm_num) (by norm_num))
 
-end InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
+end SplitCliffordFiniteCurrentObstruction

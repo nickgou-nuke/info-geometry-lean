@@ -35,7 +35,7 @@ SUSY interpretations remain outside this finite word-parity bridge.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzCantorSupergradedBridge
+namespace CuntzCantorSupergradedBridge
 
 open InfoGeometry.Canonical.CantorCuntzBasis
 open InfoGeometry.Algebra.SupergradedSUSY
@@ -90,6 +90,6 @@ theorem cuntz_odd_odd_generates_even_translation_packet (a b : Bool) :
     odd_odd_concat_even a b,
     susy_anticommutator_generates_spacetime⟩
 
-end InfoGeometry.Algebra.CuntzCantorSupergradedBridge
+end CuntzCantorSupergradedBridge
 
 end noncomputable section

@@ -20,7 +20,7 @@ only when the required stabilization certificates are supplied.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ItFromBit
+namespace ItFromBit
 
 open scoped BigOperators
 open InfoGeometry.Algebra.CuntzTensorQuotient
@@ -509,4 +509,4 @@ theorem constructItFromBitTarget
     ItFromBitTarget := by
   exact ⟨P⟩
 
-end InfoGeometry.Canonical.ItFromBit
+end ItFromBit

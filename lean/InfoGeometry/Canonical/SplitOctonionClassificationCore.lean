@@ -14,7 +14,7 @@ nonassociative `InfoGeometry.Canonical.ZornMatrix`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitOctonionClassificationCore
+namespace SplitOctonionClassificationCore
 
 open scoped BigOperators
 
@@ -396,4 +396,4 @@ theorem nonzero_associator_of_not_scalar
 
 end ZornMatrix
 
-end InfoGeometry.Canonical.SplitOctonionClassificationCore
+end SplitOctonionClassificationCore

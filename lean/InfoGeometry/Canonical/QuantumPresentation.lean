@@ -10,7 +10,7 @@ This file is a translator/interface surface, not a grand-unification owner.
 It packages the minimal invariants that presentation morphisms must respect.
 -/
 
-namespace InfoGeometry.Canonical.QuantumPresentation
+namespace QuantumPresentation
 
 /-- Named representation lanes tracked in this repository program. -/
 @[rep_depth operator]
@@ -196,4 +196,4 @@ theorem pairedSwapIntertwiner_moves_state
     exact congrArg Prod.fst hEq
   exact h hb.symm
 
-end InfoGeometry.Canonical.QuantumPresentation
+end QuantumPresentation

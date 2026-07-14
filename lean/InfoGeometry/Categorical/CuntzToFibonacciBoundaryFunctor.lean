@@ -6,7 +6,7 @@ import InfoGeometry.Categorical.FibonacciFusionCategoryData
 
 noncomputable section
 
-namespace InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor
+namespace CuntzToFibonacciBoundaryFunctor
 
 open CategoryTheory
 open InfoGeometry.Topology
@@ -114,4 +114,4 @@ completed Hilbert spaces.
 def analyticOperatorFunctorDebt : String :=
   "Lift the discrete CuntzToFibonacciFunctor to an analytic C*-algebraic or braided monoidal functor on the Hilbert boundary."
 
-end InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor
+end CuntzToFibonacciBoundaryFunctor

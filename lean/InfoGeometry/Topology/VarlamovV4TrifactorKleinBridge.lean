@@ -20,7 +20,7 @@ Klein-bottle quotient manifold, or assert a physical triality theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
+namespace VarlamovV4TrifactorKleinBridge
 
 open InfoGeometry.Topology.V4RootSystem
 open InfoGeometry.Topology.Wallpaper
@@ -123,6 +123,6 @@ theorem concrete_varlamov_trifactor_cl11_klein_packet
     (concrete_pg_relation_and_mod_two_charge_invariance p charge).1,
     (concrete_pg_relation_and_mod_two_charge_invariance p charge).2⟩
 
-end InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
+end VarlamovV4TrifactorKleinBridge
 
 end noncomputable section

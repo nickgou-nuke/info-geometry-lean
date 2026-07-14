@@ -19,7 +19,7 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.BuresWassersteinKMSCost
+namespace BuresWassersteinKMSCost
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 
@@ -289,4 +289,4 @@ variable (C : BilingualKMSHolonomyCompatibility State Region Point Tangent Value
 
 end BilingualKMSHolonomyCompatibility
 
-end InfoGeometry.Thermo.BuresWassersteinKMSCost
+end BuresWassersteinKMSCost

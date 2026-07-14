@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge
+namespace TopologicalSuperconductorEdge
 
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
@@ -138,4 +138,4 @@ theorem andreev_imbalance_anti_fixed :
 
 end BdGEdgeModeWitness
 
-end InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge
+end TopologicalSuperconductorEdge

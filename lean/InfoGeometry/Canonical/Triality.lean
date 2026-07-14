@@ -15,7 +15,7 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Module.BigOperators
 import Mathlib.Analysis.SpecialFunctions.Exp
 
-namespace InfoGeometry.Canonical.Triality
+namespace Triality
 
 open InfoGeometry.Clifford
 open scoped BigOperators
@@ -219,4 +219,4 @@ theorem output_decomposition_residual
 
 end MultiHeadGeometricAttention
 
-end InfoGeometry.Canonical.Triality
+end Triality

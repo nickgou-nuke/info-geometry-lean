@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.BilingualAnalyticity
+namespace BilingualAnalyticity
 
 /-! ## 1. Phase structures -/
 
@@ -1222,4 +1222,4 @@ theorem kernel_phaseLinear_of_phaseLinear
 
 end SuppliedOperatorResolventKernel
 
-end InfoGeometry.Geometry.BilingualAnalyticity
+end BilingualAnalyticity

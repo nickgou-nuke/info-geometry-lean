@@ -37,7 +37,7 @@ Any continuum, topological, experimental, KMS/BEC, zeta, or RH interpretation.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.FinitePhenomenologyReadout
+namespace FinitePhenomenologyReadout
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 open InfoGeometry.Canonical.EvansHarmonicTrap
@@ -138,6 +138,6 @@ theorem finite_braid_gate_readout :
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix) :=
   z3_artin_relation_via_atoms
 
-end InfoGeometry.Canonical.FinitePhenomenologyReadout
+end FinitePhenomenologyReadout
 
 end noncomputable section

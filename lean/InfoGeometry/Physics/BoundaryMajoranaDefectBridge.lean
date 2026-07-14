@@ -19,7 +19,7 @@ Not closed here:
   topology.
 -/
 
-namespace InfoGeometry.Physics.BoundaryMajoranaDefectBridge
+namespace BoundaryMajoranaDefectBridge
 
 open InfoGeometry.Physics.BoundaryMajoranaMassGap
 
@@ -44,4 +44,4 @@ theorem boundary_defect_mzm_bridge
     C.defect_count = C.mzm_count :=
   C.defect_count_eq_mzm_count
 
-end InfoGeometry.Physics.BoundaryMajoranaDefectBridge
+end BoundaryMajoranaDefectBridge

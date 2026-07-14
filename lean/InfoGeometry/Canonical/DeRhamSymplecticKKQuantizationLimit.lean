@@ -18,7 +18,7 @@ construction, a full Kaluza--Klein field equation theorem, or a full
 quantization theorem without owner-side analytic hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit
+namespace DeRhamSymplecticKKQuantizationLimit
 
 open InfoGeometry.Canonical.InductiveColimitBridge
 
@@ -185,4 +185,4 @@ field-equation, bundle, integrality, and operator quantization hypotheses.
 structure Full5DKaluzaKleinQuantizationDebt where
   -- Formal definitions pending
 
-end InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit
+end DeRhamSymplecticKKQuantizationLimit

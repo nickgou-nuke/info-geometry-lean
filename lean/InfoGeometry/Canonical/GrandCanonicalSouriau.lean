@@ -18,7 +18,7 @@ and prove the boundary pairing vanishes:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.GrandCanonicalSouriau
+namespace GrandCanonicalSouriau
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -40,5 +40,5 @@ theorem grand_canonical_regularization (beta mu : ℝ) :
   rw [InfoGeometry.Canonical.ModularLorentzBoost.K_eval]
   norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
 
-end InfoGeometry.Canonical.GrandCanonicalSouriau
+end GrandCanonicalSouriau
 

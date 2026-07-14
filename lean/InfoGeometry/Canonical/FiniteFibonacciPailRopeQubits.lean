@@ -26,7 +26,7 @@ No analytic continuation.
 No physical fault-tolerance theorem.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
+namespace FiniteFibonacciPailRopeQubits
 
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
@@ -154,4 +154,4 @@ theorem braidReadout_r_zero_reduction
     fibonacciRMatrixWithElectrons r q = fibonacciRMatrixWithElectrons 0 q :=
   fibonacciRMatrixWithElectrons_independent_of_r r 0 q
 
-end InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
+end FiniteFibonacciPailRopeQubits

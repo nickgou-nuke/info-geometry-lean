@@ -20,7 +20,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.FiniteEntanglementComplexityCore
+namespace FiniteEntanglementComplexityCore
 
 /-! ## 1. Bits and finite amplitudes -/
 
@@ -405,4 +405,4 @@ theorem finiteEntanglementComplexity_packet :
     classicalSingleFlipComplexityOwnerTarget,
     circuitCostAppendOwnerTarget⟩
 
-end InfoGeometry.Quantum.FiniteEntanglementComplexityCore
+end FiniteEntanglementComplexityCore

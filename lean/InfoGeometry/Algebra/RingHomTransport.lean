@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 universe u
 
-namespace InfoGeometry.Algebra.RingHomTransport
+namespace RingHomTransport
 
 variable {A B : Type*} [Ring A] [Ring B]
 variable (φ : A →+* B)
@@ -78,4 +78,4 @@ theorem superbracket_transport_induction
 
 end InductiveSystem
 
-end InfoGeometry.Algebra.RingHomTransport
+end RingHomTransport

@@ -68,7 +68,7 @@ The poles ARE the solutions. The Riemann zeros ARE the eigenvalues.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.PolesAsCharacters
+namespace PolesAsCharacters
 
 /-
 ## Theorem: The Character Equals the Determinant
@@ -119,4 +119,4 @@ group orbit. The zeros of this sum ARE the points where the
 characters vanish — the fixed points of the modular flow.
 -/
 
-end InfoGeometry.Arithmetic.PolesAsCharacters
+end PolesAsCharacters

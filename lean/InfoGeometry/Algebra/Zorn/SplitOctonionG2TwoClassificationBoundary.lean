@@ -21,7 +21,7 @@ all split-octonion automorphisms remains closure debt for a separate owner.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
+namespace SplitOctonionG2TwoClassificationBoundary
 
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
@@ -106,6 +106,6 @@ theorem conditional_g2two_boundary_packet
 
 end G2TwoCandidate
 
-end InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
+end SplitOctonionG2TwoClassificationBoundary
 
 end noncomputable section

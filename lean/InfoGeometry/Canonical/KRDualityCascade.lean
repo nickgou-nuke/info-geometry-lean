@@ -30,7 +30,7 @@ geometry, Katz-Sarnak monodromy, or a global non-orientable orbifold quotient.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.KRDualityCascade
+namespace KRDualityCascade
 
 open Matrix
 
@@ -153,5 +153,5 @@ theorem finite_kr_buscher_o55_packet {X : Type*} [TopologicalSpace X]
     buscherFirst_preserves_etaO55,
     buscherFirst_parityFirstCell_anticomm⟩
 
-end InfoGeometry.Canonical.KRDualityCascade
+end KRDualityCascade
 

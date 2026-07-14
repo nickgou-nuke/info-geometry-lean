@@ -13,7 +13,7 @@ the tower matrix `J`.
 open scoped Matrix
 open scoped Kronecker
 
-namespace InfoGeometry.Clifford.Decomposition
+namespace Decomposition
 
 open Matrix InfoGeometry.Clifford.TowerMatrix
 
@@ -81,4 +81,4 @@ lemma θ_mul_rev (hJ1_sq : J1 * J1 = 1) (X Y : Matn (n := n)) :
   dsimp [φ] at h_phi ⊢
   rw [h_phi, neg_mul_neg]
 
-end InfoGeometry.Clifford.Decomposition
+end Decomposition

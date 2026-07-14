@@ -13,7 +13,7 @@ well-defined vector action.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CanonicalZornSpinVectorAction
+namespace CanonicalZornSpinVectorAction
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 open InfoGeometry.Canonical.CanonicalZornCompositionTriality
@@ -803,6 +803,6 @@ theorem complexSpin_outer_triality_five_grade_projective_closure
   exact outer_triality_five_grade_projective_closure
     (complexSpinRelatedRepresentation g) x y hxy S C
 
-end InfoGeometry.Canonical.CanonicalZornSpinVectorAction
+end CanonicalZornSpinVectorAction
 
 end noncomputable section

@@ -5,7 +5,7 @@ import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
 
 set_option autoImplicit false
 
-namespace InfoGeometry.MeasureProjective.GeneratorBridge
+namespace GeneratorBridge
 
 open MeasureTheory
 open InfoGeometry.MeasureProjective
@@ -31,4 +31,4 @@ theorem logGenerator_pmf_eq_log_div (P Q : PMF α)
   simp only [hx_rn]
   rw [ENNReal.toReal_div]
 
-end InfoGeometry.MeasureProjective.GeneratorBridge
+end GeneratorBridge

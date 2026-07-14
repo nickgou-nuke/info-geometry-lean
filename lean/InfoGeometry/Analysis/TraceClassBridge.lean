@@ -43,7 +43,7 @@ operator `T = -e^{-sH}` on ℓ²(ℕ^+) where `H|n⟩ = log(n)·|n⟩`.
 
 open Complex
 
-namespace InfoGeometry.Analysis.TraceClassBridge
+namespace TraceClassBridge
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical
@@ -140,4 +140,4 @@ This is the final, honest analytic gap — the bridge from the algebraic
 colimit to the analytic Fredholm determinant.
 -/
 
-end InfoGeometry.Analysis.TraceClassBridge
+end TraceClassBridge

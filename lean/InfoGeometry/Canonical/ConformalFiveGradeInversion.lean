@@ -17,7 +17,7 @@ No bridge surface is imported here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalFiveGradeInversion
+namespace ConformalFiveGradeInversion
 
 /-- The five conformal grades. -/
 inductive ConformalGrade where
@@ -183,4 +183,4 @@ theorem mem_center_iff_mem_center (x : L) :
 
 end FiveGradedConformalInversion
 
-end InfoGeometry.Canonical.ConformalFiveGradeInversion
+end ConformalFiveGradeInversion

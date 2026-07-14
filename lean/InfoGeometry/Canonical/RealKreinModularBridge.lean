@@ -9,7 +9,7 @@ This bridge stays in the real Hestenes/Krein language. It does not introduce
 complex-analytic claims.
 -/
 
-namespace InfoGeometry.Canonical.RealKreinModularBridge
+namespace RealKreinModularBridge
 
 open InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
 
@@ -27,4 +27,4 @@ theorem Kmod_square (T : RealKreinModularTriple A H Core) :
     T.Kmod.comp T.Kmod = -(1 : RealEnd H) :=
   modularPhaseAxis_square T
 
-end InfoGeometry.Canonical.RealKreinModularBridge
+end RealKreinModularBridge

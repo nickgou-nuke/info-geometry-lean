@@ -17,7 +17,7 @@ noncomputable section
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Application.OperatorFreudenthalBoundary
+namespace OperatorFreudenthalBoundary
 
 open InfoGeometry.Exceptional.Freudenthal
 open InfoGeometry.Application.STUOperator
@@ -185,4 +185,4 @@ structure FreudenthalBoundarySurgery
 
 end Hilbert
 
-end InfoGeometry.Application.OperatorFreudenthalBoundary
+end OperatorFreudenthalBoundary

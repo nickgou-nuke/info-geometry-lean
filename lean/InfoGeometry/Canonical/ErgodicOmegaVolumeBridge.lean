@@ -21,7 +21,7 @@ the calibrated socket:
   the existing `Ω`-localized volume readout.
 -/
 
-namespace InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
+namespace ErgodicOmegaVolumeBridge
 
 open InfoGeometry.Canonical.ErgodicFixedPointBridge
 open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
@@ -147,4 +147,4 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
+end ErgodicOmegaVolumeBridge

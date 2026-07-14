@@ -6,7 +6,7 @@ import Mathlib.Data.Int.Basic
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.PUnit
 
-namespace InfoGeometry.Spectral.Cohomology.Basic
+namespace Basic
 
 open InfoGeometry.Spectral.Spectrum.Basic
 
@@ -48,4 +48,4 @@ theorem cohomology_subsingleton (X : Type*) (Y : Spectrum) (n : ℤ) :
     infer_instance
 
 /- The ordinary cohomitted -/
-end InfoGeometry.Spectral.Cohomology.Basic
+end Basic

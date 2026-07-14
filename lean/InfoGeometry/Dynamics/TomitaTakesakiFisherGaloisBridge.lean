@@ -32,7 +32,7 @@ open Complex
 
 noncomputable section
 
-namespace InfoGeometry.Dynamics.TomitaTakesakiFisherGaloisBridge
+namespace TomitaTakesakiFisherGaloisBridge
 
 open InfoGeometry.Dynamics.TomitaTakesaki
 open InfoGeometry.Dynamics.ModularThermalState
@@ -80,4 +80,4 @@ own that analytic theorem.
 def fisher_metric_divergence_closure_debt : String :=
   "Open: prove divergence of the Fisher/log-zeta Hessian at beta -> 1+ from analytic zeta estimates."
 
-end InfoGeometry.Dynamics.TomitaTakesakiFisherGaloisBridge
+end TomitaTakesakiFisherGaloisBridge

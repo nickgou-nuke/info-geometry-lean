@@ -16,7 +16,7 @@ reversible symmetry channel. No differentiable one-parameter PGL₂ flow or
 infinite-dimensional metriplectic evolution is claimed here.
 -/
 
-namespace InfoGeometry.Topology.MobiusSouriauThermodynamicFlow
+namespace MobiusSouriauThermodynamicFlow
 
 open scoped BigOperators
 open InfoGeometry
@@ -350,4 +350,4 @@ theorem metriplectic_entropy_channel_packet
 
 end
 
-end InfoGeometry.Topology.MobiusSouriauThermodynamicFlow
+end MobiusSouriauThermodynamicFlow

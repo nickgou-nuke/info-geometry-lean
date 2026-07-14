@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.PrimeHurwitzLimit
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CayleyMobiusPowerLaws
+namespace CayleyMobiusPowerLaws
 
 /--
 An explicit involutive-power lemma with no witness/socket fields:
@@ -98,4 +98,4 @@ theorem cayley_partition_invariant_under_reflection
   rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0 hs1]
   exact hZ (PrimeHurwitzLimit.cayley s)
 
-end InfoGeometry.Canonical.CayleyMobiusPowerLaws
+end CayleyMobiusPowerLaws

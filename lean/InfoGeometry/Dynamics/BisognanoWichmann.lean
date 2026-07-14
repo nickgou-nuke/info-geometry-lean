@@ -20,7 +20,7 @@ algebras in QFT.  It proves the exact matrix identities used by this
 repository's finite Rindler model.
 -/
 
-namespace InfoGeometry.Dynamics.BisognanoWichmann
+namespace BisognanoWichmann
 
 open Matrix
 open InfoGeometry.Dynamics.KmsBoundary
@@ -139,4 +139,4 @@ theorem bisognano_wichmann_period_one :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [bwRapidity, componentA, hpos, hneg]
 
-end InfoGeometry.Dynamics.BisognanoWichmann
+end BisognanoWichmann

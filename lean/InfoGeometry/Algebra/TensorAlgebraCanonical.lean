@@ -10,7 +10,7 @@ set_option autoImplicit false
 
 open scoped DirectSum TensorProduct
 
-namespace InfoGeometry.Algebra.TensorAlgebraCanonical
+namespace TensorAlgebraCanonical
 
 section Basic
 
@@ -192,4 +192,4 @@ abbrev SA : Type _ := SymmetricAlgebra R M
 
 end QuotientAlgebras
 
-end InfoGeometry.Algebra.TensorAlgebraCanonical
+end TensorAlgebraCanonical

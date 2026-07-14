@@ -11,7 +11,7 @@ It is a Coxeter/permutation quotient obtained by imposing `sigma_i^2 = 1`; it is
 not the genuine Fibonacci F/R braid representation.
 -/
 
-namespace InfoGeometry.Topology.AnyonBraidRepresentation
+namespace AnyonBraidRepresentation
 
 open InfoGeometry.Topology.ArtinBraidS3Quotient
 
@@ -37,4 +37,4 @@ theorem s3_projective_closure_one : sigma1 * sigma1 = 1 := by
 theorem s3_projective_closure_two : sigma2 * sigma2 = 1 := by
   exact InfoGeometry.Topology.ArtinBraidS3Quotient.sigma2_sq
 
-end InfoGeometry.Topology.AnyonBraidRepresentation
+end AnyonBraidRepresentation

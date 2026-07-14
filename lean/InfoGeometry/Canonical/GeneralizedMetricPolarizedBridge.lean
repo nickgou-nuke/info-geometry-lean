@@ -17,7 +17,7 @@ This file keeps the scope narrow:
   witness package without changing the underlying carrier data.
 -/
 
-namespace InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
+namespace GeneralizedMetricPolarizedBridge
 
 open InfoGeometry.Canonical.GeneralizedMetricCore
 open InfoGeometry.Canonical.RelativeModularPolarizedBridge
@@ -79,4 +79,4 @@ noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricWitness
 
 end PolarizedWitness
 
-end InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
+end GeneralizedMetricPolarizedBridge

@@ -22,7 +22,7 @@ group isomorphism or the real split-octonion Lie-group theorem
 `Aut(𝕆_s)=G_{2(2)}`.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
+namespace G2TwoAutomorphismOrderLedger
 
 /-- GAP/Atlas finite `G2(2)` / `U3(3).2` order. -/
 def g2TwoOrder : ℕ := 12096
@@ -112,4 +112,4 @@ theorem finite_g2two_order_ledger_packet :
     pgammaL3F3_order_eq_pgl3F3_order, pgammaL3F3Order_ne_g2TwoOrder,
     pgl3F3Order_ne_g2TwoOrder⟩
 
-end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
+end G2TwoAutomorphismOrderLedger

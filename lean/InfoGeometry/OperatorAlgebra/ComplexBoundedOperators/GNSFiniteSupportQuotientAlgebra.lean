@@ -10,7 +10,7 @@ algebra operations, so the quotient algebra operations are well-defined.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportQuotientAlgebra
+namespace GNSFiniteSupportQuotientAlgebra
 
 open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
 
@@ -79,4 +79,4 @@ theorem sameGNS_involution {a a' : Alg n} (ha : SameGNS p a a') :
   simp [restrict, involution] at hai ⊢
   rw [hai]
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportQuotientAlgebra
+end GNSFiniteSupportQuotientAlgebra

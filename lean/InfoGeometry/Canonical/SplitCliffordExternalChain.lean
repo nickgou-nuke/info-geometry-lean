@@ -26,7 +26,7 @@ already proven theorems as direct corollaries and packages them in one
 conjunction.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordExternalChain
+namespace SplitCliffordExternalChain
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -469,4 +469,4 @@ theorem splitClifford_sectorRefine_sectorCoarse_galoisConnection
       (InfoGeometry.Topology.sectorCoarse f) :=
   InfoGeometry.Topology.sectorRefine_sectorCoarse_galoisConnection f
 
-end InfoGeometry.Canonical.SplitCliffordExternalChain
+end SplitCliffordExternalChain

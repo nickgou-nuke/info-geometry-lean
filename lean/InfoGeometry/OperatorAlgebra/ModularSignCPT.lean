@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ModularSignCPT
+namespace ModularSignCPT
 
 /-! ## 0. Bounded real operator notation -/
 
@@ -738,4 +738,4 @@ theorem partialModularSignCPTOwnerTarget :
   intro H _ _ M
   exact ⟨M.Kmod_eq, M.Kmod_square, M.support_Kmod, M.Kmod_support⟩
 
-end InfoGeometry.OperatorAlgebra.ModularSignCPT
+end ModularSignCPT

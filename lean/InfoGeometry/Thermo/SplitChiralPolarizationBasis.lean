@@ -22,7 +22,7 @@ claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.SplitChiralPolarizationBasis
+namespace SplitChiralPolarizationBasis
 
 /-- Split-complex rapidity coordinate `sigma + j tau`, stored as real data. -/
 @[rep_depth thermo]
@@ -321,4 +321,4 @@ theorem rightPart_splitChiralThermalExponent (E : ℝ) (s : SplitRapidity) :
 
 /-! ## Clifford projector readout -/
 
-end InfoGeometry.Thermo.SplitChiralPolarizationBasis
+end SplitChiralPolarizationBasis

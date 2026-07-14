@@ -14,7 +14,7 @@ flow invariance is supplied as an explicit law.  Renormalization fixed-point
 invariance is kept as a separate theorem surface.
 -/
 
-namespace InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
+namespace DeterminantPhaseVolumeBridge
 
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 
@@ -125,4 +125,4 @@ theorem volume_density_fixed_point_readback
 
 end RenormalizedVolumeDensityCarrier
 
-end InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
+end DeterminantPhaseVolumeBridge

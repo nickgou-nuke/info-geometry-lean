@@ -14,7 +14,7 @@ projector sector, then the anchored relative potential is independent of which
 reference anchor is chosen.
 -/
 
-namespace InfoGeometry.Canonical.ReferenceSectorGaugeBridge
+namespace ReferenceSectorGaugeBridge
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RelativeModularPotential
@@ -143,4 +143,4 @@ expressing the statement through a degenerate projector sector.
 
 end Core
 
-end InfoGeometry.Canonical.ReferenceSectorGaugeBridge
+end ReferenceSectorGaugeBridge

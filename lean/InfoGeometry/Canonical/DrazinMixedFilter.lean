@@ -19,7 +19,7 @@ This proves, concretely and without wrappers:
 * `P_D(X) = H`
 -/
 
-namespace InfoGeometry.Canonical.DrazinMixedFilter
+namespace DrazinMixedFilter
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -83,4 +83,4 @@ theorem PD_flowH_commute (t : ℝ) (A : M2R) :
     PD (flowH t A) = flowH t (PD A) := by
   simp [flowH]
 
-end InfoGeometry.Canonical.DrazinMixedFilter
+end DrazinMixedFilter

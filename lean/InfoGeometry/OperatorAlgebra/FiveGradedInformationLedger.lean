@@ -8,7 +8,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+namespace FiveGradedInformationLedger
 
 variable
     {J L Obs : Type*}
@@ -238,4 +238,4 @@ theorem observedDefect_ne_zero_iff_visibleHidden_ne_zero
 
 end BlackHoleInformationLedger
 
-end InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+end FiveGradedInformationLedger

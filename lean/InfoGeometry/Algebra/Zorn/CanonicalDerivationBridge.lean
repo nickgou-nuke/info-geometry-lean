@@ -14,7 +14,7 @@ commutator bracket through injective Lie equivalences.
 No dimension or split-`G₂` classification claim is made here.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
+namespace CanonicalDerivationBridge
 
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.KingdonSplitOctonion
@@ -210,4 +210,4 @@ noncomputable def kingdonDerivationLieEquiv :
     (kingdonDerivationLieEquiv D : KingdonEnd) = toKingdonEnd D := by
   rfl
 
-end InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
+end CanonicalDerivationBridge

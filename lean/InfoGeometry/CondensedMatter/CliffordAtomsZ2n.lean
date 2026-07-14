@@ -19,7 +19,7 @@ import InfoGeometry.CondensedMatter.DIIISuperfluid
 
 noncomputable section
 
-namespace InfoGeometry.CondensedMatter.CliffordAtomsZ2n
+namespace CliffordAtomsZ2n
 
 /-! ## 1. Split Clifford atom systems -/
 
@@ -341,4 +341,4 @@ def anomalyDatum_of
 
 end CliffordAtomsZ2nOwnerTarget
 
-end InfoGeometry.CondensedMatter.CliffordAtomsZ2n
+end CliffordAtomsZ2n

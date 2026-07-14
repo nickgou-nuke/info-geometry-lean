@@ -1,6 +1,6 @@
 import InfoGeometry.Singular.Drazin
 
-namespace InfoGeometry.Singular.DrazinAdjoint
+namespace DrazinAdjoint
 
 section Drazin
 
@@ -73,4 +73,4 @@ def IsNormal (A : R) : Prop :=
 
 end Anomaly
 
-end InfoGeometry.Singular.DrazinAdjoint
+end DrazinAdjoint

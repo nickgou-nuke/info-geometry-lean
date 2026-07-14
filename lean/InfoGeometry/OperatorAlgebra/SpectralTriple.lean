@@ -28,7 +28,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace InfoGeometry.OperatorAlgebra.SpectralTriple
+namespace SpectralTriple
 
 open InfoGeometry.Geometry.PhaseErlanger
 
@@ -548,4 +548,4 @@ theorem orderOne_apply
 
 end PhaseRealSpectralTriple
 
-end InfoGeometry.OperatorAlgebra.SpectralTriple
+end SpectralTriple

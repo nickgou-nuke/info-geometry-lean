@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesModularKMSBridge
+namespace HestenesModularKMSBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -151,4 +151,4 @@ end HestenesKreinKMSPacket
 
 end Core
 
-end InfoGeometry.Krein.HestenesModularKMSBridge
+end HestenesModularKMSBridge

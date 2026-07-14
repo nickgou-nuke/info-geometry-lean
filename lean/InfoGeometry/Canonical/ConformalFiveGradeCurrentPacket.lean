@@ -20,7 +20,7 @@ new infinite current algebra construction.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
+namespace ConformalFiveGradeCurrentPacket
 
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Canonical.ConformalFiveGradeInversion.FiveGradedConformalInversion
@@ -101,4 +101,4 @@ theorem center_stable
 
 end FiveGradeBoundaryCurrentPacket
 
-end InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
+end ConformalFiveGradeCurrentPacket

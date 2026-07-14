@@ -17,7 +17,7 @@ This file keeps the same interface in Lean:
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.RingHomMatrix
+namespace RingHomMatrix
 
 open scoped BigOperators
 
@@ -221,4 +221,4 @@ theorem matReal_entry_le_ceil {α m n : Type*}
     A i j ≤ (Int.ceil z : α) :=
   RealEmbedding.realOf_le_ceil h
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.RingHomMatrix
+end RingHomMatrix

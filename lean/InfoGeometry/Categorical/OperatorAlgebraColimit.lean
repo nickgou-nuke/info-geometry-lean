@@ -44,7 +44,7 @@ geometric reflection, ensuring the commutant maps across the colimit.
   - None.
 -/
 
-namespace InfoGeometry.Categorical.OperatorAlgebraColimit
+namespace OperatorAlgebraColimit
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -74,4 +74,4 @@ noncomputable def tomita_takesaki_colimit [HasColimit F] [HasColimit F_commutant
     infiniteObservableAlgebra F ≅ infiniteObservableAlgebra F_commutant :=
   HasColimit.isoOfNatIso tomita_takesaki
 
-end InfoGeometry.Categorical.OperatorAlgebraColimit
+end OperatorAlgebraColimit

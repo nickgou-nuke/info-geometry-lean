@@ -14,7 +14,7 @@ so the matrix product is reversed relative to the group word: the first
 generator applied (γ_1) sits on the right.
 -/
 
-namespace InfoGeometry.Topology.RohozhkinFlipWord
+namespace RohozhkinFlipWord
 
 /-- Chronological product of a list of matrices: A_l * ... * A_1. -/
 def chronologicalProduct {d : ℕ} (Ms : List (Matrix (Fin d) (Fin d) ℚ)) :
@@ -30,4 +30,4 @@ structure FlipWord (n : ℕ) where
 def eval (w : FlipWord n) : Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ :=
   chronologicalProduct w.matrices
 
-end InfoGeometry.Topology.RohozhkinFlipWord
+end RohozhkinFlipWord

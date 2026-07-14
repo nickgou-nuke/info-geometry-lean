@@ -25,7 +25,7 @@ Lorentz/conformal exponentials, or physical emergence.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section35IntegratedConcepts
+namespace Section35IntegratedConcepts
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -130,6 +130,6 @@ theorem repaired_section35_integrated_concepts_packet
     pairQuadraticTrace_dualConj q,
     chiralAsymmetryTrace_dualConj q⟩
 
-end InfoGeometry.Physics.Section35IntegratedConcepts
+end Section35IntegratedConcepts
 
 end noncomputable section

@@ -29,7 +29,7 @@ ellipsoid theorem, analytic cone feasibility, or Riemann-zeta consequences.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DikinDrazinBridge
+namespace DikinDrazinBridge
 
 open Complex
 
@@ -97,4 +97,4 @@ theorem dikin_metric_stability_in_core
 
 end DikinDrazinSystem
 
-end InfoGeometry.Canonical.DikinDrazinBridge
+end DikinDrazinBridge

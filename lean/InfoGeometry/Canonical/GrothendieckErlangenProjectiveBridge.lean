@@ -16,7 +16,7 @@ theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
+namespace GrothendieckErlangenProjectiveBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Canonical.ErlangenOperator2
@@ -140,4 +140,4 @@ theorem gw_projectiveHamiltonianProfile_self
         B.counts B.counts B.counts_pos B.counts_pos i = 0 :=
   B.projectiveHamiltonianProfile_self i
 
-end InfoGeometry.Canonical.GrothendieckErlangenProjectiveBridge
+end GrothendieckErlangenProjectiveBridge

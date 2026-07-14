@@ -1,6 +1,6 @@
 import InfoGeometry.Clifford.Cl44Spinors
 
-namespace InfoGeometry.Clifford.Cl44S3Family
+namespace Cl44S3Family
 
 /--
 An honest `S₃` action on the split-Clifford spinor data.
@@ -43,4 +43,4 @@ theorem splitCl44_three_generation_model
     LinearlyIndependentFamilies D := by
   simp [PreservesSemiSpinors, ColorInvariant, ChargeInvariant, LinearlyIndependentFamilies]
 
-end InfoGeometry.Clifford.Cl44S3Family
+end Cl44S3Family

@@ -27,7 +27,7 @@ No universal TQFT theorem.
 No fault-tolerance or physical FQH claim.
 -/
 
-namespace InfoGeometry.Topological.FibonacciBraiding
+namespace FibonacciBraiding
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
@@ -152,4 +152,4 @@ theorem fourFibonacciAnyon_B_eq_FRF (q : Units ℂ) (τ s : ℂ) :
       fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s
   rfl
 
-end InfoGeometry.Topological.FibonacciBraiding
+end FibonacciBraiding

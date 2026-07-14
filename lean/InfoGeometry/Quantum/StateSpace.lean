@@ -24,7 +24,7 @@ analytic noncommutative Radon--Nikodym theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.StateSpace
+namespace StateSpace
 
 open InfoGeometry.Clifford.CliffordBott
 
@@ -237,4 +237,4 @@ theorem rnStatePath_hasDerivAt_zero
   have h := affineStatePath_hasDerivAt_zero τ R.epsilonReadout R.epsilonReadout_one a
   simpa [rnStatePath, R.readout_law a] using h
 
-end InfoGeometry.Quantum.StateSpace
+end StateSpace

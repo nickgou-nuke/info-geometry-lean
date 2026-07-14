@@ -20,7 +20,7 @@ the theorem below.
 
 noncomputable section
 
-namespace InfoGeometry.Dynamics.SouriauAPSBoundarySocket
+namespace SouriauAPSBoundarySocket
 
 open Filter
 
@@ -88,4 +88,4 @@ theorem cylindrical_end_aps_package :
 
 end APSBoundarySocket
 
-end InfoGeometry.Dynamics.SouriauAPSBoundarySocket
+end SouriauAPSBoundarySocket

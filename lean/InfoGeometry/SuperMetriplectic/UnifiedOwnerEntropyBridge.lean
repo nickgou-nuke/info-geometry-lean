@@ -18,7 +18,7 @@ This file stays fully honest:
   new operator-to-triad compatibility layer.
 -/
 
-namespace InfoGeometry.SuperMetriplectic.UnifiedOwnerEntropyBridge
+namespace UnifiedOwnerEntropyBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
@@ -97,4 +97,4 @@ end UnifiedOwnerTriadCompatibility
 
 end Core
 
-end InfoGeometry.SuperMetriplectic.UnifiedOwnerEntropyBridge
+end UnifiedOwnerEntropyBridge

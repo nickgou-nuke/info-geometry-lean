@@ -10,7 +10,7 @@ This file lifts the scalar additive/multiplicative morphism pattern to
 the concrete operator family `expKExact : ℝ → M₂(ℝ)`.
 -/
 
-namespace InfoGeometry.Canonical.OperatorExpLogMorphism
+namespace OperatorExpLogMorphism
 
 open Matrix
 open InfoGeometry.Canonical.ModularTensorInduction
@@ -87,4 +87,4 @@ theorem opLog_pair_on_exp (t : ℝ) :
     (opLogLeft (expKExact t), opLogRight (expKExact t)) = (t, -t) := by
   ext <;> simp [opLogLeft_on_exp, opLogRight_on_exp]
 
-end InfoGeometry.Canonical.OperatorExpLogMorphism
+end OperatorExpLogMorphism

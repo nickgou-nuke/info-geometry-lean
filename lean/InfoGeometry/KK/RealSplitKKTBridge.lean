@@ -34,7 +34,7 @@ Under that hypothesis:
   pi_isGZero_of_witness (X:=X) w a
 -/
 
-namespace InfoGeometry.KK.RealSplitKKTBridge
+namespace RealSplitKKTBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Krein
@@ -128,4 +128,4 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
 
 end Core
 
-end InfoGeometry.KK.RealSplitKKTBridge
+end RealSplitKKTBridge

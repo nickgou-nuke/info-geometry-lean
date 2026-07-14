@@ -26,7 +26,7 @@ The proved owner surfaces are:
 
 noncomputable section
 
-namespace InfoGeometry.Cocycle.MatrixDetExpTrace
+namespace MatrixDetExpTrace
 
 open scoped Matrix
 
@@ -222,4 +222,4 @@ theorem h1_det_exp_trace_of_is_units_upperTriangular
       NormedSpace.exp (Matrix.trace A) :=
   det_exp_eq_exp_trace_of_is_units_upperTriangular A U T hT hA
 
-end InfoGeometry.Cocycle.MatrixDetExpTrace
+end MatrixDetExpTrace

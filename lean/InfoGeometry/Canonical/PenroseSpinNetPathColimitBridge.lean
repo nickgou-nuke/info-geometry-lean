@@ -25,7 +25,7 @@ BUCKET 3: OPEN CLOSURE DEBT
 - no twistor/K-theoretic classification theorem.
 -/
 
-namespace InfoGeometry.Canonical.PenroseSpinNetPathColimitBridge
+namespace PenroseSpinNetPathColimitBridge
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -778,4 +778,4 @@ theorem transported_pathEndpoint_equiv_to_colimit
 
 end PathColimit
 
-end InfoGeometry.Canonical.PenroseSpinNetPathColimitBridge
+end PenroseSpinNetPathColimitBridge

@@ -10,7 +10,7 @@ import InfoGeometry.Krein.DoubledSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ComplexAnalyticBridge
+namespace ComplexAnalyticBridge
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.HestenesAnalyticity
@@ -336,4 +336,4 @@ def conformalHolomorphicToCauchyAnalyticAt
     CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
   differentiableAtToCauchyAnalyticAt hf
 
-end InfoGeometry.Canonical.ComplexAnalyticBridge
+end ComplexAnalyticBridge

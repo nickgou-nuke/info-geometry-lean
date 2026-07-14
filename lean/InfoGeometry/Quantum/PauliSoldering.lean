@@ -26,7 +26,7 @@ open InfoGeometry.Physics.Section33PauliBiquaternionCompletion
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.PauliSoldering
+namespace PauliSoldering
 
 /-! ## 1. Pauli matrices -/
 
@@ -235,4 +235,4 @@ theorem capstone_all_lemmas_proved :
     σPlus * σPlus = 0 ∧ (σMinus * σMinus = 0 ∧ (σPlus * σMinus - σMinus * σPlus = σ3 ∧ (σPlusᴴ = σMinus ∧ σ3ᴴ = σ3))) := by
   exact ⟨σPlus_sq, ⟨σMinus_sq, ⟨commutator_σPlus_σMinus, ⟨σPlus_adjoint, σ3_adjoint⟩⟩⟩⟩
 
-end InfoGeometry.Quantum.PauliSoldering
+end PauliSoldering

@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.DiscreteRouterBayesStep
+namespace DiscreteRouterBayesStep
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.ScalarThermoBridge
@@ -67,4 +67,4 @@ end OmitBayesSoftmaxShift
 
 end RouterBayesStep
 
-end InfoGeometry.LLM.DiscreteRouterBayesStep
+end DiscreteRouterBayesStep

@@ -25,7 +25,7 @@ No witness packets, trace assumptions, diagonal models, or scalar-complex owner
 language are introduced.
 -/
 
-namespace InfoGeometry.Canonical.HestenesCommutantGeometry
+namespace HestenesCommutantGeometry
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -265,4 +265,4 @@ theorem conjugate_hestenesLeftCoeff_of_flipsK
 
 end Core
 
-end InfoGeometry.Canonical.HestenesCommutantGeometry
+end HestenesCommutantGeometry

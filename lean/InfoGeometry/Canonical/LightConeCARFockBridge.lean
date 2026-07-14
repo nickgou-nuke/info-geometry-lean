@@ -19,7 +19,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.LightConeCARFockBridge
+namespace LightConeCARFockBridge
 
 open InfoGeometry.Canonical.DrazinLightConeDictionary
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -136,4 +136,4 @@ theorem annihilation_creation_is_projector_super_pair :
   InfoGeometry.Canonical.SuperSouriauFermionGasBridge.projector_super_pair_is_not_claimed_as_CAR
     (E := E)
 
-end InfoGeometry.Canonical.LightConeCARFockBridge
+end LightConeCARFockBridge

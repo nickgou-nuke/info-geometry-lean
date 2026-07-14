@@ -16,7 +16,7 @@ It implements:
 and proves the cross-mode anticommutators vanish.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+namespace SplitCliffordTwoModeCAR
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -114,4 +114,4 @@ theorem traceForm4_mode2_car :
     tr4 (a2 * a2Dag + a2Dag * a2) = 4 := by
   simpa [mode2_car_identity] using tr4_one
 
-end InfoGeometry.Canonical.SplitCliffordTwoModeCAR
+end SplitCliffordTwoModeCAR

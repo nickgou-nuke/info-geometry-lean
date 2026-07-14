@@ -19,7 +19,7 @@ Hessian has a stress projection and the projected stress obeys the Fierz
 channel identity.
 -/
 
-namespace InfoGeometry.Canonical.FierzStressProjectionBridge
+namespace FierzStressProjectionBridge
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Quantum.Fierz
@@ -169,4 +169,4 @@ end FierzStressProjectionContext
 
 end Bridge
 
-end InfoGeometry.Canonical.FierzStressProjectionBridge
+end FierzStressProjectionBridge

@@ -64,7 +64,7 @@ electromagnetic coupling is self-dual under S-duality β ↔ 1/β.
 
 open Real
 
-namespace InfoGeometry.Canonical.FineStructureConstant
+namespace FineStructureConstant
 
 open DrazinAnomaly
 open TransportObservable
@@ -241,5 +241,5 @@ noncomputable def fibonacciScale : ℝ := 20 * (goldenRatio ^ 4)
 theorem combinatorial_backbone : (137 : ℝ) = 3 + 7 + 127 := by
   norm_num
 
-end InfoGeometry.Canonical.FineStructureConstant
+end FineStructureConstant
 

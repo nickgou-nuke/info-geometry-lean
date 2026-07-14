@@ -22,7 +22,7 @@ No analytic continuation.
 No physical fault-tolerance claim.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+namespace FiniteFibonacciComputationalSpace
 
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 
@@ -185,4 +185,4 @@ theorem localQubitBlockAction_preserves_computational {N : ℕ} {NC : Type*}
   blockDiagonalAction_preserves_computational
     (localQubitAction k f) onNonComputational hx
 
-end InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+end FiniteFibonacciComputationalSpace

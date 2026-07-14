@@ -17,7 +17,7 @@ representation interface into an existing mathlib `CStarAlgebra`.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.CStarCuntzTensorQuotient
+namespace CStarCuntzTensorQuotient
 
 open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
@@ -200,4 +200,4 @@ end CStarCuntzCompletion
 #check CStarCuntzFamily.liftToGenerated_T
 #check CStarCuntzCompletion
 
-end InfoGeometry.Physics.CStarCuntzTensorQuotient
+end CStarCuntzTensorQuotient

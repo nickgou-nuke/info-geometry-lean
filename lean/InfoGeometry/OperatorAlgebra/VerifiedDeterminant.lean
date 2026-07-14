@@ -21,7 +21,7 @@ import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.VerifiedDeterminant
+namespace VerifiedDeterminant
 
 open InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 open scoped Matrix
@@ -131,4 +131,4 @@ theorem real_matrix_det_invariant_under_transport
     Matrix.det (U.conjugate A) = Matrix.det A :=
   matrix_det_invariant_under_transport A U
 
-end InfoGeometry.OperatorAlgebra.VerifiedDeterminant
+end VerifiedDeterminant

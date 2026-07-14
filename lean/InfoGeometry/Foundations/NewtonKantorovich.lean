@@ -10,7 +10,7 @@ import InfoGeometry.Foundations.NewtonKantorovichCertificate
 Focused Newton--Kantorovich certificate layer for the scalar majorant lane.
 -/
 
-namespace InfoGeometry.Foundations.NewtonKantorovich
+namespace NewtonKantorovich
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
 open InfoGeometry.Foundations.NewtonKantorovichRoots
@@ -92,4 +92,4 @@ theorem majorant_seq_cauchy_of_h_le_half
   exact cauchySeq_of_le_geometric q C hq hstep
 
 end
-end InfoGeometry.Foundations.NewtonKantorovich
+end NewtonKantorovich

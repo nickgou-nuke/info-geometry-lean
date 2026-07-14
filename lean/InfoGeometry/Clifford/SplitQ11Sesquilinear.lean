@@ -14,7 +14,7 @@ No new witness packet and no placeholder theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.SplitQ11Sesquilinear
+namespace SplitQ11Sesquilinear
 
 open InfoGeometry.Clifford
 
@@ -97,4 +97,4 @@ theorem splitSesq11_unit_modulus_smul
     splitSesq11 (c • z) (c • w) = splitSesq11 z w := by
   rw [splitSesq11_smul_left, splitSesq11_smul_right, ← mul_assoc, hc, one_mul]
 
-end InfoGeometry.Clifford.SplitQ11Sesquilinear
+end SplitQ11Sesquilinear

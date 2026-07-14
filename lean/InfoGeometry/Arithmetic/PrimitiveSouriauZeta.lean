@@ -21,7 +21,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimitiveSouriauZeta
+namespace PrimitiveSouriauZeta
 
 open InfoGeometry.Arithmetic
 
@@ -618,4 +618,4 @@ theorem partition_eq_finite_zeta
 
 end identityPrimitiveSouriauZetaCalibration
 
-end InfoGeometry.Arithmetic.PrimitiveSouriauZeta
+end PrimitiveSouriauZeta

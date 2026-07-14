@@ -16,7 +16,7 @@ No infinite-factor theorem.
 No infinite-limit claim.
 -/
 
-namespace InfoGeometry.Canonical.ModularCoproductFlux
+namespace ModularCoproductFlux
 
 open scoped TensorProduct
 
@@ -170,4 +170,4 @@ theorem liftFlux_cube_zero
 
 end
 
-end InfoGeometry.Canonical.ModularCoproductFlux
+end ModularCoproductFlux

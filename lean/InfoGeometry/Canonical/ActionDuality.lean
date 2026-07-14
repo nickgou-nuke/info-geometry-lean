@@ -11,7 +11,7 @@ Compatibility bridge between the reduced spectral action proxy and
 Legendre/Fenchel duality data.
 -/
 
-namespace InfoGeometry.Canonical.ActionDuality
+namespace ActionDuality
 
 open InfoGeometry.Geometry
 open InfoGeometry.Canonical.QFTTDFTLaunchpad
@@ -73,4 +73,4 @@ theorem einsteinHilbertAction_and_zeroGap_of_compatible
     rw [primal_value_of_fenchelYoungEquality ψ ψStar θ₀ (grad θ₀) (hFY θ₀)]
   · exact (fenchelYoungEquality_iff_gap_eq_zero ψ ψStar θ₀ (grad θ₀)).1 (hFY θ₀)
 
-end InfoGeometry.Canonical.ActionDuality
+end ActionDuality

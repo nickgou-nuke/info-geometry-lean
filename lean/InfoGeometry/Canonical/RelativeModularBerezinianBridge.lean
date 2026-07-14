@@ -19,7 +19,7 @@ restricted-volume and Berezinian readouts with the modular supervolume shadow.
 
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.RelativeModularBerezinianBridge
+namespace RelativeModularBerezinianBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
@@ -488,4 +488,4 @@ end RelativeModularSupervolumeKreinHessianLift
 
 end KreinHessianLift
 
-end InfoGeometry.Canonical.RelativeModularBerezinianBridge
+end RelativeModularBerezinianBridge

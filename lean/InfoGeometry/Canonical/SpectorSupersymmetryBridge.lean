@@ -4,7 +4,7 @@ import InfoGeometry.Arithmetic.MellinDirichletConvolutionSymmetry
 open Nat
 open Finset
 
-namespace InfoGeometry.Canonical.SpectorSupersymmetryBridge
+namespace SpectorSupersymmetryBridge
 
 open InfoGeometry.Arithmetic.MellinDirichletConvolutionSymmetry
 
@@ -21,4 +21,4 @@ theorem spector_dirichlet_inverse (n : ℕ) :
     (((ArithmeticFunction.zeta : ArithmeticFunction ℂ) * ArithmeticFunction.moebius) n) = if n = 1 then 1 else 0 := by
   exact zeta_moebius_apply_delta n
 
-end InfoGeometry.Canonical.SpectorSupersymmetryBridge
+end SpectorSupersymmetryBridge

@@ -8,7 +8,7 @@ Finite binary Cantor endpoint operations with closed switch/tilt laws.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
+namespace CantorCliffordFiniteRepresentation
 
 /-- Binary words of length `n`. -/
 abbrev Word (n : ℕ) : Type := Fin n → Bool
@@ -55,4 +55,4 @@ theorem tilt_sq {n : ℕ} {α : Type*} [InvolutiveNeg α] (j : Fin n) (f : Fn n 
   funext w
   simp [tilt, boolSignAct_sq]
 
-end InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
+end CantorCliffordFiniteRepresentation

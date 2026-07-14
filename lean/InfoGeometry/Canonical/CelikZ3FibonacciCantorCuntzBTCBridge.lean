@@ -33,7 +33,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
+namespace CelikZ3FibonacciCantorCuntzBTCBridge
 
 open Matrix
 open InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
@@ -370,4 +370,4 @@ theorem bridge_packet (G : CelikZ3FibonacciCantorCuntzBridge A Op) :
 
 end CelikZ3FibonacciCantorCuntzBridge
 
-end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
+end CelikZ3FibonacciCantorCuntzBTCBridge

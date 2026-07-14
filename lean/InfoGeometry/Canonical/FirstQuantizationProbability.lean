@@ -17,7 +17,7 @@ This module packages the three substitutions as compiled surfaces:
 3. classical expectation -> operator/vacuum expectation pairing.
 -/
 
-namespace InfoGeometry.Canonical.FirstQuantizationProbability
+namespace FirstQuantizationProbability
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -228,4 +228,4 @@ theorem firstQuantization_dictionary
 
 end DictionaryPackage
 
-end InfoGeometry.Canonical.FirstQuantizationProbability
+end FirstQuantizationProbability

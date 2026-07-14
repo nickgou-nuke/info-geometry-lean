@@ -3,7 +3,7 @@ set_option linter.unnecessarySimpa false
 
 open scoped BigOperators ENNReal
 
-namespace InfoGeometry.TransformationGroups
+namespace TransformationGroups
 
 /-!
 Canonical Lean4/Mathlib scaffold for transformation-group prior rules.
@@ -129,4 +129,4 @@ lemma log_coord_flat (c : ℝ) :
 
 end ContinuousLocationScale
 
-end InfoGeometry.TransformationGroups
+end TransformationGroups

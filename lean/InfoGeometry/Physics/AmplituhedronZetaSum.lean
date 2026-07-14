@@ -2,7 +2,7 @@ import Mathlib
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
 import InfoGeometry.Physics.AmplituhedronKMSBridge
 
-namespace InfoGeometry.Physics.AmplituhedronZetaSum
+namespace AmplituhedronZetaSum
 
 open InfoGeometry.Physics.AmplituhedronKMSBridge
 open InfoGeometry.Canonical.BostConnesKMS
@@ -14,4 +14,4 @@ theorem amplituhedron_partition_sum_eq_zeta (β : ℝ) (hβ : 1 < β) :
     (∑' (n : ℕ), ((kmsProjectionReadout β 1 ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ)) = riemannZeta (β : ℂ) := by
   sorry
 
-end InfoGeometry.Physics.AmplituhedronZetaSum
+end AmplituhedronZetaSum

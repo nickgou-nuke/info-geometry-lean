@@ -16,7 +16,7 @@ This stays below the threshold of a full Weyl-character theorem while giving a
 genuine three-node cancellation witness.
 -/
 
-namespace InfoGeometry.Canonical.WeylA2CancellationChart
+namespace WeylA2CancellationChart
 
 open InfoGeometry.Canonical.VandermondeExclusionBridge
 
@@ -126,4 +126,4 @@ theorem concrete_a2_cancellation_packet :
 
 end A2Chart
 
-end InfoGeometry.Canonical.WeylA2CancellationChart
+end WeylA2CancellationChart

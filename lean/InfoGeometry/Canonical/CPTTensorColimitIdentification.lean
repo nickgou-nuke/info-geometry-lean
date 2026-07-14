@@ -14,7 +14,7 @@ This establishes that the macroscopic limit field constructed from `Cl(1,1)`
 symmetry atoms perfectly satisfies the generic abstract colimit architecture.
 -/
 
-namespace InfoGeometry.Canonical.CPTTensorColimitIdentification
+namespace CPTTensorColimitIdentification
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -129,4 +129,4 @@ theorem cpt_protected_states_survive (n : ℕ) (x : Stage n)
     ofStageLinear n x ≠ 0 := by
   exact protected_states_survive_colimit Stage stageBondLinear Limit ofStageLinear h_kernel n x h_prot
 
-end InfoGeometry.Canonical.CPTTensorColimitIdentification
+end CPTTensorColimitIdentification

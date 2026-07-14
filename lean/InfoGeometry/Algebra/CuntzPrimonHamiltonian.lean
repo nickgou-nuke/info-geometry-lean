@@ -12,7 +12,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzPrimonHamiltonian
+namespace CuntzPrimonHamiltonian
 
 def P (n : ℕ) (i : Fin n) : CuntzAlg n := cuntzS n i * cuntzSdag n i
 def hamiltonian (n : ℕ) (ε : Fin n → ℂ) : CuntzAlg n := ∑ i : Fin n, ε i • P n i
@@ -60,4 +60,4 @@ theorem H_pow_eq (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) :
     refine Finset.sum_congr rfl (λ i _ => ?_)
     rw [mul_smul_comm, H_mul_P n ε, smul_smul, pow_succ]
 
-end InfoGeometry.Algebra.CuntzPrimonHamiltonian
+end CuntzPrimonHamiltonian

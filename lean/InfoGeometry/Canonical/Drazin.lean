@@ -8,7 +8,7 @@ import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Singular.Drazin
 
-namespace InfoGeometry.Canonical.Drazin
+namespace Drazin
 
 /-- Predicate encoding the Drazin inverse laws. -/
 @[rep_depth krein]
@@ -891,4 +891,4 @@ theorem fittingNilpotentPart_mul_fittingRegularPart_eq_zero
   exact nilpotent_mul_core_eq_zero h
 
 end IsDrazinInverse
-end InfoGeometry.Canonical.Drazin
+end Drazin

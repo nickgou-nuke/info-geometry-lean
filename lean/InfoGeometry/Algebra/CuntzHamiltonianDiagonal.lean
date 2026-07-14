@@ -17,7 +17,7 @@ open InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzHamiltonianDiagonal
+namespace CuntzHamiltonianDiagonal
 
 /-- P_i H P_j = 0 for i≠j (off-diagonal vanishes). -/
 theorem hamiltonian_off_diag (n : ℕ) (ε : Fin n → ℂ) (i j : Fin n) (hij : i ≠ j) :
@@ -68,4 +68,4 @@ theorem hamiltonian_commutes_projector (n : ℕ) (ε : Fin n → ℂ) (i : Fin n
   change hamiltonian n ε * P n i = P n i * hamiltonian n ε
   rw [H_mul_P n ε i, P_mul_H n ε i]
 
-end InfoGeometry.Algebra.CuntzHamiltonianDiagonal
+end CuntzHamiltonianDiagonal

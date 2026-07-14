@@ -18,7 +18,7 @@ commutator/anticommutator surfaces, and no-leakage block actions.
 No fault-tolerance theorem.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciAnyonRegister
+namespace FiniteFibonacciAnyonRegister
 
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
@@ -1563,4 +1563,4 @@ theorem monodromy_commute_rewrite
       monodromy (Gate := Gate) χ readout (left ++ [j, i] ++ right) := by
   exact fibonacciProjectiveGate_commute_rewrite_of_evalPhase Gate χ readout hsep left right
 
-end InfoGeometry.Canonical.FiniteFibonacciAnyonRegister
+end FiniteFibonacciAnyonRegister

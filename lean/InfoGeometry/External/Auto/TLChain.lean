@@ -16,7 +16,7 @@ Explicit 8×8 matrix verification of the TL₂(2) chain relations.
 
 noncomputable section
 
-namespace InfoGeometry.External.Auto.TLChain
+namespace TLChain
 
 open Matrix
 
@@ -110,4 +110,4 @@ theorem tl3_chain_synthesis :
 #check e1_mul_e0_mul_e1
 #check tl3_chain_synthesis
 
-end InfoGeometry.External.Auto.TLChain
+end TLChain

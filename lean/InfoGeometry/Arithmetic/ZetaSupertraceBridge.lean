@@ -17,7 +17,7 @@ determinant identity are fully constructed.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ZetaSupertraceBridge
+namespace ZetaSupertraceBridge
 
 open scoped BigOperators
 
@@ -48,4 +48,4 @@ structure MajoranaZeroModeHypothesis (s : ℂ) where
   /-- The correspondence holds. -/
   zero_correspondence : is_zeta_zero ↔ has_zero_mode
 
-end InfoGeometry.Arithmetic.ZetaSupertraceBridge
+end ZetaSupertraceBridge

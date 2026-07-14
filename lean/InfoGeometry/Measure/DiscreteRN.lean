@@ -8,7 +8,7 @@ import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Measure.DiscreteRN
+namespace DiscreteRN
 
 open MeasureTheory
 open scoped ENNReal
@@ -98,4 +98,4 @@ theorem rnDeriv_pmf_eq_div
     simp [hPx]
   · simp [hbad]
 
-end InfoGeometry.Measure.DiscreteRN
+end DiscreteRN

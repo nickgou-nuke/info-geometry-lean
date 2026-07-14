@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Clifford.Biquaternion
 import InfoGeometry.Krein.DoubledSpace
 
-namespace InfoGeometry.Canonical.BilingualBiquaternionBridge
+namespace BilingualBiquaternionBridge
 
 open InfoGeometry.Canonical.BilingualRealHestenesDictionary
 open InfoGeometry.Clifford
@@ -79,4 +79,4 @@ the complex scalar insertion, rigorously applying the Bilingual dictionary.
 theorem bilingual_readback_bridge (q : StandardBiquaternion E) :
     (bilingualSoldering q).op = q.realPart + (complex_i (E := E)).comp q.imagPart := by rfl
 
-end InfoGeometry.Canonical.BilingualBiquaternionBridge
+end BilingualBiquaternionBridge

@@ -16,7 +16,7 @@ This file stays intentionally finite and support-compressed:
 - no promotion of interface data to full Type-III owner completeness.
 -/
 
-namespace InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge
+namespace ConnesCocycleDeltaPrimaryBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
@@ -112,4 +112,4 @@ theorem connes_to_deltaFiniteSupport_package
 
 end TypeIIIToFiniteSupport
 
-end InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge
+end ConnesCocycleDeltaPrimaryBridge

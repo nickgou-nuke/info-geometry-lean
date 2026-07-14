@@ -33,7 +33,7 @@ debt.
     📐 Concrete C*-KMS state construction remains an existence theorem
 -/
 
-namespace InfoGeometry.Analysis.AxiomFreeGNS
+namespace AxiomFreeGNS
 
 /-! ## 0. Axiom-free branch-weight algebra -/
 
@@ -194,4 +194,4 @@ theorem GNS_isomorphic_to_H_eq_refl (Φ : CuntzKMSState) :
 
 end CuntzKMSState
 
-end InfoGeometry.Analysis.AxiomFreeGNS
+end AxiomFreeGNS

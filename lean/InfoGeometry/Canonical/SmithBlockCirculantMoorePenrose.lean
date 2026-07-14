@@ -23,7 +23,7 @@ matrix witness is the exact rational certificate consumed by the Sage/GAP/M2/
 SymPy/Clifford lanes.
 -/
 
-namespace InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose
+namespace SmithBlockCirculantMoorePenrose
 
 open InfoGeometry.Canonical
 
@@ -151,4 +151,4 @@ theorem smithAMP_isMoorePenrose :
 
 end
 
-end InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose
+end SmithBlockCirculantMoorePenrose

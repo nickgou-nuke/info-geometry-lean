@@ -16,7 +16,7 @@ open scoped InnerProductSpace
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.TomitaTakesaki
+namespace TomitaTakesaki
 
 open InfoGeometry.Clifford
 open InfoGeometry.Krein
@@ -810,4 +810,4 @@ noncomputable abbrev tomitaRepresentation :
 
 end ModularRealization
 
-end InfoGeometry.Canonical.TomitaTakesaki
+end TomitaTakesaki

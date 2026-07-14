@@ -3,7 +3,7 @@ import Mathlib.Tactic.NoncommRing
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Physics.ZornTkkAlgebraicClosure
+namespace ZornTkkAlgebraicClosure
 
 
 variable {A : Type*} [Ring A]
@@ -52,4 +52,4 @@ theorem associativeRing_bridge_packet (a b x y z : A) :
   exact ⟨jordanTriple_identity a b x y z, by
     simpa [Ring.lie_def] using (commutator_jacobi a b x)⟩
 
-end InfoGeometry.Physics.ZornTkkAlgebraicClosure
+end ZornTkkAlgebraicClosure

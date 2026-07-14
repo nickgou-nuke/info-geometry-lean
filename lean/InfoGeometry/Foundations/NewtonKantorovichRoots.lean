@@ -9,7 +9,7 @@ import InfoGeometry.Foundations.NewtonKantorovichBase
 Explicit majorant roots for the Newton--Kantorovich scalar polynomial.
 -/
 
-namespace InfoGeometry.Foundations.NewtonKantorovichRoots
+namespace NewtonKantorovichRoots
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
 
@@ -96,4 +96,4 @@ theorem one_sub_L_tMinus (L η : ℝ) (hL : L ≠ 0) :
   ring
 
 end
-end InfoGeometry.Foundations.NewtonKantorovichRoots
+end NewtonKantorovichRoots

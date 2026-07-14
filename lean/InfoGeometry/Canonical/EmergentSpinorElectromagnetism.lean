@@ -23,7 +23,7 @@ fundamental spinor trace completely resolves the obstruction, yielding
 exact non-zero generation of both Gravity and Electromagnetism.
 -/
 
-namespace InfoGeometry.Canonical.EmergentSpinorElectromagnetism
+namespace EmergentSpinorElectromagnetism
 
 open Matrix
 open Complex
@@ -86,4 +86,4 @@ theorem a_mu_spatial_nonzero (Psi : DiracSpinor) :
   simp [spinorBilinear, diracAdjoint, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
   try ring
 
-end InfoGeometry.Canonical.EmergentSpinorElectromagnetism
+end EmergentSpinorElectromagnetism

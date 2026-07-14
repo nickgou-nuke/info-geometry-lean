@@ -29,7 +29,7 @@ chains, de Rham cohomology, Hodge decomposition, characteristic classes,
 instanton number integrality, and physical topological charge laws.
 -/
 
-namespace InfoGeometry.Canonical.DiscreteStokesFinite
+namespace DiscreteStokesFinite
 
 /-- Scalar functions on the three vertices of the oriented triangle. -/
 abbrev ZeroCochain : Type :=
@@ -102,4 +102,4 @@ theorem boundary1_boundary2_eq_zero (t : TwoChain) :
   ext v
   fin_cases v <;> simp [boundary1, boundary2]
 
-end InfoGeometry.Canonical.DiscreteStokesFinite
+end DiscreteStokesFinite

@@ -19,7 +19,7 @@ This file adds:
    operatorial Cramér-Rao lower bound.
 -/
 
-namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
+namespace OperatorialCramerRaoStateFirstChunk4
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -253,4 +253,4 @@ theorem stateFirst_measurable_uncertainty_operatorialCramerRao_package
 
 end Core
 
-end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
+end OperatorialCramerRaoStateFirstChunk4

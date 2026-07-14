@@ -22,7 +22,7 @@ therefore take explicit hypotheses and forward to existing owner theorems:
 
 universe v u uR uA uInf uE
 
-namespace InfoGeometry.Categorical.FibonacciBraidedTowerCone
+namespace FibonacciBraidedTowerCone
 
 open Set
 open CategoryTheory
@@ -155,4 +155,4 @@ theorem braided_zorn_colimit_trifacet_selfDual_readout
     triFacet_par_idempotent T hT,
     selfDual_positiveCone K⟩
 
-end InfoGeometry.Categorical.FibonacciBraidedTowerCone
+end FibonacciBraidedTowerCone

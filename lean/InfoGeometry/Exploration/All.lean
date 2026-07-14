@@ -6,5 +6,5 @@ Legacy intake claims that remain assumption-carried or proofless are quarantined
 under `InfoGeometry.Unstable.Quarantine`.
 -/
 
-namespace InfoGeometry.Exploration.All
-end InfoGeometry.Exploration.All
+namespace All
+end All

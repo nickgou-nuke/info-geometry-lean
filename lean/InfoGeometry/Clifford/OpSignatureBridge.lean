@@ -16,7 +16,7 @@ This file is deliberately thin: it reuses the theorem-owned triad, the concrete
 `1|1` block matrices, and the native Clifford polarization law.
 -/
 
-namespace InfoGeometry.Clifford.OpSignatureBridge
+namespace OpSignatureBridge
 
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Clifford.KoszulFoundation
@@ -112,4 +112,4 @@ theorem bridge_to_polarization
   simpa using
     (clifford_polarization (Q := signatureToQuadraticForm (R := R) sig) v w)
 
-end InfoGeometry.Clifford.OpSignatureBridge
+end OpSignatureBridge

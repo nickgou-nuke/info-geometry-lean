@@ -27,7 +27,7 @@ not asserted here.  Those belong in later geometry/GW owner modules.
 
 noncomputable section
 
-namespace InfoGeometry.GW.VirasoroWardEquilibrium
+namespace VirasoroWardEquilibrium
 
 open InfoGeometry.Cocycle
 
@@ -195,4 +195,4 @@ theorem virasoro_constraint_as_freeEnergy_balance
 
 end GWVirasoroWardEquilibrium
 
-end InfoGeometry.GW.VirasoroWardEquilibrium
+end VirasoroWardEquilibrium

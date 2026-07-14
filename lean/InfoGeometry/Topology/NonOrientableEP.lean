@@ -2,7 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Pi.Bounds
 
-namespace InfoGeometry.Topology.NonOrientableEP
+namespace NonOrientableEP
 
 /-- Coordinates in the Brillouin Zone -/
 structure Momentum where
@@ -49,4 +49,4 @@ theorem model_is_KBZ_symmetric (α β γ : ℝ) : is_KBZ_symmetric (H_model α �
     ring
   exact And.intro hdx hdy
 
-end InfoGeometry.Topology.NonOrientableEP
+end NonOrientableEP

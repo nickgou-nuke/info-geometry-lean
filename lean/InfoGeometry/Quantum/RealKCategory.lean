@@ -27,7 +27,7 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
 
-namespace InfoGeometry.Quantum.RealKCategory
+namespace RealKCategory
 
 /-- Real vector spaces with an internal complex axis `K^2 = -Id`. -/
 structure RealKVect where
@@ -519,4 +519,4 @@ noncomputable def Fmatrix_asRealK (τ s : ℂ) (hτ : τ ^ 2 + τ = 1) (hs : s ^
       ext v
       exact hF_sq_id v }
 
-end InfoGeometry.Quantum.RealKCategory
+end RealKCategory

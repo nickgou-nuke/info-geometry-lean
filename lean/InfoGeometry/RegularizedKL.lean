@@ -1,7 +1,7 @@
 import InfoGeometry.PositiveMeasure -- canonical PositiveMeasure
 
-namespace InfoGeometry.RegularizedKL
-end InfoGeometry.RegularizedKL
+namespace RegularizedKL
+end RegularizedKL
 
 open Finset
 open InfoGeometry
@@ -148,7 +148,7 @@ lemma sum_regularizedPMF_eq_one
 end StatisticalMechanics
 
 
-namespace InfoGeometry.RegularizedKL
+namespace RegularizedKL
 
 noncomputable abbrev regTotalCount {α : Type*} [Fintype α] [Nonempty α]
     (count : α → ℕ) (ε : ℝ) : ℝ :=
@@ -224,4 +224,4 @@ lemma sum_regularizedPMF_eq_one
   simpa [regularizedPMF] using
     (StatisticalMechanics.sum_regularizedPMF_eq_one count ε hε)
 
-end InfoGeometry.RegularizedKL
+end RegularizedKL

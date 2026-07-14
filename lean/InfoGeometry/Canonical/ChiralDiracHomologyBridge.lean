@@ -21,7 +21,7 @@ This file separates the chain-complex and Hodge/Dirac readings.
 No full Hodge theorem or cohomology theorem is asserted here.
 -/
 
-namespace InfoGeometry.Canonical.ChiralDiracHomologyBridge
+namespace ChiralDiracHomologyBridge
 
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Canonical.HestenesAnalyticity
@@ -306,4 +306,4 @@ theorem KLinearCochain_commutator
 
 end KLinearReadout
 
-end InfoGeometry.Canonical.ChiralDiracHomologyBridge
+end ChiralDiracHomologyBridge

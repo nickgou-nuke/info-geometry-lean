@@ -20,7 +20,7 @@ This is a finite quotient bridge, not a full classification theorem for
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.Pin55WallpaperQuotientBridge
+namespace Pin55WallpaperQuotientBridge
 
 open InfoGeometry.Canonical.Pin55
 open InfoGeometry.Canonical.Pin55WeylWallpaper
@@ -68,4 +68,4 @@ theorem pin55_d5_wallpaper_quotient_packet
   · exact concrete_kleinBottlePresentation_relation p
   · exact wallpaperD4_is_klein_compatible
 
-end InfoGeometry.Canonical.Pin55WallpaperQuotientBridge
+end Pin55WallpaperQuotientBridge

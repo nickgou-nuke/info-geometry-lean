@@ -14,7 +14,7 @@ The main formal content is the scaling law
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesModularFlow
+namespace BostConnesModularFlow
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 
@@ -83,5 +83,5 @@ theorem witten_index_conserved_under_flow
     L.Γ (F.σ t (C.generator n)) = F.σ t (L.Γ (C.generator n)) := by
   exact L.commutes_with_flow t n
 
-end InfoGeometry.Canonical.BostConnesModularFlow
+end BostConnesModularFlow
 

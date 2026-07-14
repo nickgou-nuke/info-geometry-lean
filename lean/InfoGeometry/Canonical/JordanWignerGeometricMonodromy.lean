@@ -18,7 +18,7 @@ set_option synthInstance.maxHeartbeats 100000
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.JordanWignerGeometricMonodromy
+namespace JordanWignerGeometricMonodromy
 
 open InfoGeometry.Canonical.GeometricMonodromy
 open InfoGeometry.Canonical.JordanWignerCantorRepresentation
@@ -52,4 +52,4 @@ theorem realCantorBivectorInf_spinorial_double_loop_identity :
     realCantorBivectorTransport (4 * Real.pi) = (1 : RealCantorOpInf) :=
   spinorial_double_loop_identity realCantorBivectorInf
 
-end InfoGeometry.Canonical.JordanWignerGeometricMonodromy
+end JordanWignerGeometricMonodromy

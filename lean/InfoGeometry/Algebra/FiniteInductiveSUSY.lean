@@ -15,7 +15,7 @@ No colimit or completion theorem is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.FiniteInductiveSUSY
+namespace FiniteInductiveSUSY
 
 variable {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
 
@@ -189,4 +189,4 @@ theorem dirac_square_closure_chain
     superclosure_chain φ Q R H Z hclosure0 hQstep hRstep hHstep hZstep n
   exact nilpotent_dirac_square_eq_closure (Q n) (R n) (H n) (Z n) hQn hRn hcln
 
-end InfoGeometry.Algebra.FiniteInductiveSUSY
+end FiniteInductiveSUSY

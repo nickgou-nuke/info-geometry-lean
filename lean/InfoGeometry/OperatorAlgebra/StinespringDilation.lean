@@ -20,7 +20,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.StinespringDilation
+namespace StinespringDilation
 
 set_option linter.dupNamespace false
 
@@ -954,4 +954,4 @@ def StinespringInformationDilationOwnerTarget
     [NormedAddCommGroup Env] [NormedSpace ℝ Env] : Prop :=
   Nonempty (StinespringInformationDilation System Dilated Env)
 
-end InfoGeometry.OperatorAlgebra.StinespringDilation
+end StinespringDilation

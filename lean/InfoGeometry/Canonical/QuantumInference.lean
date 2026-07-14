@@ -27,7 +27,7 @@ open MeasureTheory intervalIntegral
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealBdG
 
-namespace InfoGeometry.Canonical.QuantumInference
+namespace QuantumInference
 
 section Basic
 
@@ -151,4 +151,4 @@ end GrandCanonical
 
 end Basic
 
-end InfoGeometry.Canonical.QuantumInference
+end QuantumInference

@@ -21,7 +21,7 @@ import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section
 
-namespace InfoGeometry.Automorphic.ZetaPotentialSign
+namespace ZetaPotentialSign
 
 universe uX uS
 
@@ -213,4 +213,4 @@ def ZetaJordanCorrespondenceOwnerTarget
     (L : EulerProductDatum S),
       Nonempty (ZetaJordanPotentialCorrespondence J L)
 
-end InfoGeometry.Automorphic.ZetaPotentialSign
+end ZetaPotentialSign

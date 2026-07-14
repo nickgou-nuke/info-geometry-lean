@@ -8,7 +8,7 @@ This module verifies the structural identities of the Cl(1,1) atom and
 the QGT identifies derived from the Kähler compatibility.
 -/
 
-namespace InfoGeometry.Quantum.CliffordDictionaryTest
+namespace CliffordDictionaryTest
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -69,4 +69,4 @@ theorem phase_observable_eq_neg_two_mul_inner_fst_snd (ψ : H₂) :
   simp [modularComplexI, InfoGeometry.Krein.complex_i_apply,
     sub_eq_add_neg, real_inner_comm, two_mul]
 
-end InfoGeometry.Quantum.CliffordDictionaryTest
+end CliffordDictionaryTest

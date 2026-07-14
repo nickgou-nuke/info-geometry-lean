@@ -18,7 +18,7 @@ No RH-level witness.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeCl11ModularAtomCore
+namespace PrimeCl11ModularAtomCore
 
 open InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 
@@ -362,4 +362,4 @@ theorem shiftedRiemannField_zero_iff_critical
   · intro h
     linarith
 
-end InfoGeometry.Canonical.PrimeCl11ModularAtomCore
+end PrimeCl11ModularAtomCore

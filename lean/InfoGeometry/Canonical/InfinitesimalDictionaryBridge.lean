@@ -26,7 +26,7 @@ exact readback pattern of those notions when explicit owner-side witnesses are
 supplied.
 -/
 
-namespace InfoGeometry.Canonical.InfinitesimalDictionaryBridge
+namespace InfinitesimalDictionaryBridge
 
 open InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 open InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
@@ -319,4 +319,4 @@ theorem finite_operatorBoltzmannEntropy_eq_neg_log_delta_diag
 
 end FiniteDeltaPrimary
 
-end InfoGeometry.Canonical.InfinitesimalDictionaryBridge
+end InfinitesimalDictionaryBridge

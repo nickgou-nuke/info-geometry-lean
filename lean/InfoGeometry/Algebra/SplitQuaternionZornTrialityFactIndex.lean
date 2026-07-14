@@ -31,7 +31,7 @@ separate owner theorem, not inferred here.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.SplitQuaternionZornTrialityFactIndex
+namespace SplitQuaternionZornTrialityFactIndex
 
 open InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
 open InfoGeometry.Algebra.SplitQuaternionMatrices
@@ -160,4 +160,4 @@ theorem finite_triality_order_three (rep : InfoGeometry.HolyTrinity.D4Rep) :
         (InfoGeometry.HolyTrinity.triality_shift rep)) = rep :=
   InfoGeometry.HolyTrinity.triality_order_three rep
 
-end InfoGeometry.Algebra.SplitQuaternionZornTrialityFactIndex
+end SplitQuaternionZornTrialityFactIndex

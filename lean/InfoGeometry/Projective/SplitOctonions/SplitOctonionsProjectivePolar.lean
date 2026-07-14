@@ -14,7 +14,7 @@ for projective unit scalars `λ μ : Rˣ`.
 No new projective quotient, no new incidence structure, no wrapper.
 -/
 
-namespace InfoGeometry.Projective.SplitOctonions.SplitOctonionsProjectivePolar
+namespace SplitOctonionsProjectivePolar
 
 /--
 Projective orthogonality is well-defined under independent unit rescaling.
@@ -86,4 +86,4 @@ theorem projective_incidence_well_defined_units_right
     (projective_incidence_well_defined_units
       splitOctPolar h_left h_right l m X Y).symm
 
-end InfoGeometry.Projective.SplitOctonions.SplitOctonionsProjectivePolar
+end SplitOctonionsProjectivePolar

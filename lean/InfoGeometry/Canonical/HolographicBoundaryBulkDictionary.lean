@@ -10,7 +10,7 @@ kernel-checked theorems. It does not claim a full AdS/CFT correspondence,
 geometric completeness, or physical closure beyond the stated algebraic facts.
 -/
 
-namespace InfoGeometry.Canonical.HolographicBoundaryBulkDictionary
+namespace HolographicBoundaryBulkDictionary
 
 set_option autoImplicit false
 
@@ -71,4 +71,4 @@ theorem holographic_det_formula (M : Monomial) :
   unfold det_2x2 holographic_map
   ring
 
-end InfoGeometry.Canonical.HolographicBoundaryBulkDictionary
+end HolographicBoundaryBulkDictionary

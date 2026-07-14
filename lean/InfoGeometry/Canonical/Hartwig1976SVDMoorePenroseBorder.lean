@@ -34,7 +34,7 @@ Those are represented by exact external certificates in `tools/`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+namespace Hartwig1976SVDMoorePenroseBorder
 
 open InfoGeometry.Canonical
 
@@ -208,4 +208,4 @@ theorem case1_conjugated_border_isMoorePenrose :
   · native_decide
   · native_decide
 
-end InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
+end Hartwig1976SVDMoorePenroseBorder

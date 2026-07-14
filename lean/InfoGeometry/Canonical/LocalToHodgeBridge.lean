@@ -13,7 +13,7 @@ This file is theorem-only:
 - explicit hypotheses only
 -/
 
-namespace InfoGeometry.Canonical.LocalToHodgeBridge
+namespace LocalToHodgeBridge
 
 /--
 If `d` is square-zero, restate it as a theorem-level fact.
@@ -110,4 +110,4 @@ theorem comm_delta_laplacian
       _ = δ * d * δ := by rw [mul_assoc]
   exact hleft.trans hright.symm
 
-end InfoGeometry.Canonical.LocalToHodgeBridge
+end LocalToHodgeBridge

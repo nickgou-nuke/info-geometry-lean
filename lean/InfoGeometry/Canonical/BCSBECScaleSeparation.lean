@@ -22,7 +22,7 @@ consequence.  It only records the finite real-order skeleton that can be used
 as a theorem-safe interface by downstream thermodynamic modules.
 -/
 
-namespace InfoGeometry.Canonical.BCSBECScaleSeparation
+namespace BCSBECScaleSeparation
 
 noncomputable section
 
@@ -109,4 +109,4 @@ theorem negativeChemicalPotential_not_positive
 
 end
 
-end InfoGeometry.Canonical.BCSBECScaleSeparation
+end BCSBECScaleSeparation

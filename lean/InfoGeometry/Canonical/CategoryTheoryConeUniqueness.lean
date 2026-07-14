@@ -41,7 +41,7 @@ for colimiting cocones.
   - None.
 -/
 
-namespace InfoGeometry.Canonical.CategoryTheoryConeUniqueness
+namespace CategoryTheoryConeUniqueness
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -71,4 +71,4 @@ theorem colimitCocone_apex_inversePair {F : J ⥤ C} {s t : Cocone F}
   · simp
   · simp
 
-end InfoGeometry.Canonical.CategoryTheoryConeUniqueness
+end CategoryTheoryConeUniqueness

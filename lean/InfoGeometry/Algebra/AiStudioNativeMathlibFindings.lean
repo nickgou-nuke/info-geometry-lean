@@ -4,7 +4,7 @@ import Mathlib.Tactic
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Canonical.SL2CZhukovsky
 
-namespace InfoGeometry.Algebra.AiStudioNativeMathlibFindings
+namespace AiStudioNativeMathlibFindings
 
 open Matrix
 
@@ -193,4 +193,4 @@ theorem native_char_poly_eq_zhukovsky (M : Matrix (Fin 2) (Fin 2) â„‚) (x Tr : â
   simpa [h_tr, h_det] using
     (InfoGeometry.Canonical.SL2CZhukovsky.char_poly_eq_zhukovsky M x Tr h_tr h_det)
 
-end InfoGeometry.Algebra.AiStudioNativeMathlibFindings
+end AiStudioNativeMathlibFindings

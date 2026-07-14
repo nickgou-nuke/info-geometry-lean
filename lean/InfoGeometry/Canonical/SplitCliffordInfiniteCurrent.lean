@@ -15,7 +15,7 @@ its central element `Kinf`, with proved commutator law:
 No wrappers, no placeholders.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
+namespace SplitCliffordInfiniteCurrent
 
 open scoped BigOperators
 
@@ -61,4 +61,4 @@ theorem lie_Jinf_neg_one_one :
     ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 := by
   simpa [Jinf, Kinf] using VirasoroProject.HeisenbergAlgebra.lie_jgen (𝕜 := 𝕜) (-1 : Int) (1 : Int)
 
-end InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
+end SplitCliffordInfiniteCurrent

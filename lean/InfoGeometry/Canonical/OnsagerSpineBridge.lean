@@ -11,7 +11,7 @@ Narrow owner bridge connecting the existing operatorial Onsager Hessian lane to
 `LogGenerator -> GeneratedFlow -> GeometricResponse` spine primitives.
 -/
 
-namespace InfoGeometry.Canonical.OnsagerSpineBridge
+namespace OnsagerSpineBridge
 
 open InfoGeometry.Canonical.OnsagerReciprocity
 
@@ -129,4 +129,4 @@ theorem spineRespond_curvature_swap_neg
 
 end Core
 
-end InfoGeometry.Canonical.OnsagerSpineBridge
+end OnsagerSpineBridge

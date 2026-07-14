@@ -13,7 +13,7 @@ zero-modes, forcing their energy level spacings to align with the
 Gaussian Unitary Ensemble (GUE) of Random Matrix Theory.
 -/
 
-namespace InfoGeometry.Canonical.PrimonGasGUE
+namespace PrimonGasGUE
 
 variable {H : Type*} [Ring H]
 
@@ -40,4 +40,4 @@ theorem trap_is_conserved_charge
   rw [trap_invariance]
   exact sub_self (P_trap * Hamiltonian)
 
-end InfoGeometry.Canonical.PrimonGasGUE
+end PrimonGasGUE

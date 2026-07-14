@@ -8,7 +8,7 @@ Recursive/iterative proof schema for Virasoro adjoint dynamics,
 using the external Virasoro algebra as boundary data.
 -/
 
-namespace InfoGeometry.Canonical.VirasoroRecursiveSchema
+namespace VirasoroRecursiveSchema
 
 open VirasoroProject
 open VirasoroProject.VirasoroAlgebra
@@ -62,5 +62,5 @@ theorem adPowL_iterative_schema (n : ℤ) :
 
 end
 
-end InfoGeometry.Canonical.VirasoroRecursiveSchema
+end VirasoroRecursiveSchema
 

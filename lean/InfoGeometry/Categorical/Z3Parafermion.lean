@@ -12,7 +12,7 @@ namespace requested by the snippet.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Categorical.Z3Parafermion
+namespace Z3Parafermion
 
 open InfoGeometry.Canonical.FibonacciParafermionAtoms
 
@@ -163,4 +163,4 @@ theorem O_mul_proj_vacancy (O : A) (h : O ^ 3 = O) :
     (InfoGeometry.Canonical.FibonacciParafermionAtoms.O_mul_proj_vacancy
       (A := A) (O := O) h)
 
-end InfoGeometry.Categorical.Z3Parafermion
+end Z3Parafermion

@@ -41,7 +41,7 @@ open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CubicJordanPeirce
+namespace CubicJordanPeirce
 
 /-! ## 1. Peirce idempotents and projection predicates -/
 
@@ -234,4 +234,4 @@ theorem penrose_global_closure :
     adjoint_peirce_mapping_diagonal,
     associator_peirce_witness⟩
 
-end InfoGeometry.Algebra.CubicJordanPeirce
+end CubicJordanPeirce

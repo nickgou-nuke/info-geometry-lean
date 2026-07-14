@@ -16,7 +16,7 @@ statement, or a `Spin(5,5)`/structure-group isomorphism.
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.NormComposition
 
-namespace InfoGeometry.Algebra.JordanCayleyInversionOs
+namespace JordanCayleyInversionOs
 
 /-- Zorn norm lifted to ℚ. -/
 def zornNormℚ (Z : SplitOct) : ℚ :=
@@ -205,4 +205,4 @@ theorem klein_quadric_equation' (X : Herm2x2Os) (x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 
 
 end Herm2x2Os
 
-end InfoGeometry.Algebra.JordanCayleyInversionOs
+end JordanCayleyInversionOs

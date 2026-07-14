@@ -4,7 +4,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Physics.ZornTkkOrchestration
+namespace ZornTkkOrchestration
 
 open InfoGeometry.Clifford.Pin55ReflectionGlide
 
@@ -62,4 +62,4 @@ theorem defectRunway_packet (s : DefectSheetState) :
   · simpa using defectSheetTransition_preserves_splitPair s s
   · exact defectSheetGlide_square_eq_translation s
 
-end InfoGeometry.Physics.ZornTkkOrchestration
+end ZornTkkOrchestration

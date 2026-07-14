@@ -36,7 +36,7 @@ open InfoGeometry.Algebra.SupergradedSUSY
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzChiralMomentum
+namespace CuntzChiralMomentum
 
 /-- Split a finite square sum into diagonal and off-diagonal rows. -/
 theorem sum_split_diagonal (n : ℕ) {A : Type*} [AddCommMonoid A]
@@ -267,4 +267,4 @@ In the limit n → ∞ (over all primes), the KMS state on O_∞ gives the
 Riemann zeta regularization of the primon gas partition function.
 -/
 
-end InfoGeometry.Algebra.CuntzChiralMomentum
+end CuntzChiralMomentum

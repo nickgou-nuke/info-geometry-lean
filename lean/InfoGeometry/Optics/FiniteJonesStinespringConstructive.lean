@@ -44,7 +44,7 @@ noncomputable section
 
 open scoped Matrix
 
-namespace InfoGeometry.Optics.FiniteJonesStinespringConstructive
+namespace FiniteJonesStinespringConstructive
 
 open InfoGeometry.Optics.FiniteJonesModel
 
@@ -520,4 +520,4 @@ theorem hiddenPIntensity_le_one
   have hvis : 0 ≤ visiblePIntensity D := visiblePIntensity_nonneg D
   linarith
 
-end InfoGeometry.Optics.FiniteJonesStinespringConstructive
+end FiniteJonesStinespringConstructive

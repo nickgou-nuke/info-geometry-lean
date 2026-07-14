@@ -6,8 +6,8 @@ import Mathlib.Tactic
 Scalarized prequantum scaling laws relating curvature, symplectic scale, and `ℏ`.
 -/
 
-namespace InfoGeometry.Prequantum.Scaling
-end InfoGeometry.Prequantum.Scaling
+namespace Scaling
+end Scaling
 
 /-- Minimal prequantum line-bundle data (scalarized): symplectic scale `ω`,
 curvature scale `F`, and conversion constant `ℏ` with relation `F = ω / ℏ`. -/
@@ -184,7 +184,7 @@ noncomputable def omegaScaleOnQuotient :
 end PrequantumData
 
 
-namespace InfoGeometry.Prequantum.Scaling
+namespace Scaling
 
 /-- Canonical namespaced façade for the scalarized prequantum scaling data. -/
 abbrev PrequantumData := _root_.PrequantumData
@@ -224,4 +224,4 @@ noncomputable abbrev omegaScaleOnQuotient :
 
 end PrequantumData
 
-end InfoGeometry.Prequantum.Scaling
+end Scaling

@@ -23,7 +23,7 @@ the TKK closure defect is a field of `DrazinTKKAnomalyCalibration`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinFiveGradedTKKAnomalyBridge
+namespace DrazinFiveGradedTKKAnomalyBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -182,4 +182,4 @@ end DrazinTKKAnomalyCalibration
 
 end Bridge
 
-end InfoGeometry.Canonical.DrazinFiveGradedTKKAnomalyBridge
+end DrazinFiveGradedTKKAnomalyBridge

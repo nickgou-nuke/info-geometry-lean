@@ -26,7 +26,7 @@ Atiyah-Singer index theorem, nonlinear sigma model, Dirac operator geometry,
 or continuum Witten-index theorem is proved here.
 -/
 
-namespace InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
+namespace KudinoorWittenIndexBridge
 
 open scoped BigOperators
 
@@ -130,4 +130,4 @@ theorem kudinoor_finite_witten_index_capstone
     finiteWeightedSupertrace_weight_independent
       levels zero boson fermion weight₁ weight₂ hzero₁ hzero₂ hpair⟩
 
-end InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
+end KudinoorWittenIndexBridge

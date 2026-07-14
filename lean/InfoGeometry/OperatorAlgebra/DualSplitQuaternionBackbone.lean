@@ -29,7 +29,7 @@ The GAP evidence is only the finite signed-unit subgroup of the base split
 quaternions; `ε` is not a multiplicative unit because `ε² = 0`.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.DualSplitQuaternionBackbone
+namespace DualSplitQuaternionBackbone
 
 /-- Integer-coordinate split quaternion `a + b i + c j + d k`. -/
 structure SplitQ where
@@ -238,4 +238,4 @@ theorem dualSplitQuaternion_backbone_packet :
 
 end DualSplitQ
 
-end InfoGeometry.OperatorAlgebra.DualSplitQuaternionBackbone
+end DualSplitQuaternionBackbone

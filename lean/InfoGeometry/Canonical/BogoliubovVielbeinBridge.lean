@@ -23,7 +23,7 @@ noncomputable section
 set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
-namespace InfoGeometry.Canonical.BogoliubovVielbeinBridge
+namespace BogoliubovVielbeinBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -113,4 +113,4 @@ def canonical
 
 end BogoliubovVielbeinBridge
 
-end InfoGeometry.Canonical.BogoliubovVielbeinBridge
+end BogoliubovVielbeinBridge

@@ -18,7 +18,7 @@ Thin closure layer for the boundary-localization lane:
 This file introduces no new owners; it composes already-owned bridges.
 -/
 
-namespace InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
+namespace BoundaryLocalizationIndexEquiv
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.BogoliubovVielbein
@@ -344,4 +344,4 @@ theorem operatorialCentralChargeParity_ne_zero_coriolisVorticity_ne_zero_of_kern
 
 end TransportedBoundary
 
-end InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
+end BoundaryLocalizationIndexEquiv

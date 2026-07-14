@@ -12,7 +12,7 @@ recurrences already owned by the repository and provides a conservative
 keyword-based detector over them.
 -/
 
-namespace InfoGeometry.Canonical.CognitiveArchetype
+namespace CognitiveArchetype
 
 /-- A recurring cross-domain pattern with a name and keyword triggers. -/
 structure ArchetypeTemplate where
@@ -109,4 +109,4 @@ def detectedArchetypes (observedTerms : Array String) : Array DetectedArchetype 
   knownArchetypes.filter (fun T => T.detects observedTerms) |>.map (fun T =>
     { template := T, observedTerms := observedTerms })
 
-end InfoGeometry.Canonical.CognitiveArchetype
+end CognitiveArchetype

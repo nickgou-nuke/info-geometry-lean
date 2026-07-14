@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesKreinRotorBoundaryBridge
+namespace HestenesKreinRotorBoundaryBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -181,4 +181,4 @@ end HestenesKreinVacuumRotorBoundaryBridge
 
 end Core
 
-end InfoGeometry.Krein.HestenesKreinRotorBoundaryBridge
+end HestenesKreinRotorBoundaryBridge

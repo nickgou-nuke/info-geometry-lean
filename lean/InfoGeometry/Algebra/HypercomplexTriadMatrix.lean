@@ -18,7 +18,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Algebra.HypercomplexTriadMatrix
+namespace HypercomplexTriadMatrix
 
 open Matrix
 
@@ -215,4 +215,4 @@ theorem Pplus_add_Pminus
     <;> simp [Pplus, Pminus, E]
     <;> ring
 
-end InfoGeometry.Algebra.HypercomplexTriadMatrix
+end HypercomplexTriadMatrix

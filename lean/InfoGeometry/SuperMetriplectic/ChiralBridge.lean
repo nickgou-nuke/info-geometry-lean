@@ -16,7 +16,7 @@ existing owner packet from `UnifiedSuperchargeAlgebra` in the axiomatic
 `SuperMetriplectic.ChiralSuperchargeClosure` language.
 -/
 
-namespace InfoGeometry.SuperMetriplectic.ChiralBridge
+namespace ChiralBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
@@ -110,4 +110,4 @@ end DrazinChiralSuperchargeClosureBridge
 
 end Core
 
-end InfoGeometry.SuperMetriplectic.ChiralBridge
+end ChiralBridge

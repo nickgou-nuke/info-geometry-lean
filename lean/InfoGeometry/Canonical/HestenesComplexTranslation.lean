@@ -27,7 +27,7 @@ This file adds the theorem-level spine:
 No new witness packets are introduced.
 -/
 
-namespace InfoGeometry.Canonical.HestenesComplexTranslation
+namespace HestenesComplexTranslation
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -326,4 +326,4 @@ theorem hestenesBoostSignum_sq_of_pos {t : ℝ} (ht : 0 < t) :
 
 end Core
 
-end InfoGeometry.Canonical.HestenesComplexTranslation
+end HestenesComplexTranslation

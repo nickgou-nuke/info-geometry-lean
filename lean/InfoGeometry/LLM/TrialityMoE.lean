@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.TrialityMoE
+namespace TrialityMoE
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ObserverDefect
@@ -1167,4 +1167,4 @@ end RouterDefectBoundBridge
 
 end CanonicalBridge
 
-end InfoGeometry.LLM.TrialityMoE
+end TrialityMoE

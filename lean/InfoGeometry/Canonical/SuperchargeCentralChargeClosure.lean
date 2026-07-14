@@ -22,7 +22,7 @@ The result is a single closure theorem surface for downstream DIII/topological
 transport files.
 -/
 
-namespace InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+namespace SuperchargeCentralChargeClosure
 
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.SuperchargeGapHessianBridge
@@ -762,4 +762,4 @@ theorem unified_supercharge_central_supergeometry_topological_closure
 
 end Core
 
-end InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+end SuperchargeCentralChargeClosure

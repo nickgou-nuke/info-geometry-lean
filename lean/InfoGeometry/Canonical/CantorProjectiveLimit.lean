@@ -18,7 +18,7 @@ layers.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorProjectiveLimit
+namespace CantorProjectiveLimit
 
 open scoped Topology
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
@@ -134,4 +134,4 @@ theorem projection_coherent (p : PrefixProjectiveLimit) (n : ℕ) :
 
 end PrefixProjectiveLimit
 
-end InfoGeometry.Canonical.CantorProjectiveLimit
+end CantorProjectiveLimit

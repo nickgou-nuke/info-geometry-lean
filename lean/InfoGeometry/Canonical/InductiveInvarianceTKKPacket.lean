@@ -45,7 +45,7 @@ This file bridges them without duplicating definitions.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.InductiveInvarianceTKKPacket
+namespace InductiveInvarianceTKKPacket
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 open InfoGeometry.OperatorAlgebra
@@ -394,4 +394,4 @@ theorem finite_stage_cover
 
 end ColimitInvarianceSocket
 
-end InfoGeometry.Canonical.InductiveInvarianceTKKPacket
+end InductiveInvarianceTKKPacket

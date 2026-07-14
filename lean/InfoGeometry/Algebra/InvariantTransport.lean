@@ -19,7 +19,7 @@ No inductive-limit wrapper is introduced here. These are direct algebraic
 equalities for one structure-preserving bonding map.
 -/
 
-namespace InfoGeometry.Algebra.InvariantTransport
+namespace InvariantTransport
 
 /-- Associative commutator. -/
 def commutator {A : Type*} [Mul A] [Sub A] (x y : A) : A :=
@@ -208,4 +208,4 @@ theorem complementary_projectors_transport
   · simpa using congrArg φ hqp
   · simpa using congrArg φ hsum
 
-end InfoGeometry.Algebra.InvariantTransport
+end InvariantTransport

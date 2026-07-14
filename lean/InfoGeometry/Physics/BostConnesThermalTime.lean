@@ -76,7 +76,7 @@ This file provides the conceptual bridge. Full formalization requires:
 4. Connection to Riemann zeta function
 -/
 
-namespace InfoGeometry.Physics.BostConnesThermalTime
+namespace BostConnesThermalTime
 
 open InfoGeometry.Clifford.Cl11CoordinateAlgebra
 
@@ -353,4 +353,4 @@ Full formalization awaits:
 Current status: conceptual bridge with placeholder definitions.
 -/
 
-end InfoGeometry.Physics.BostConnesThermalTime
+end BostConnesThermalTime

@@ -10,7 +10,7 @@ It demonstrates that the K_0 group of the infinite Penrose tiling is the
 inductive limit of the finite-stage K-theories.
 -/
 
-namespace InfoGeometry.Canonical.PenroseColimit
+namespace PenroseColimit
 
 open InfoGeometry.Canonical.InductiveColimitBridge
 
@@ -79,4 +79,4 @@ theorem penrose_k0_colimit_stabilization
                          k0_functor k0_compat limit_k0_functor limit_k0_readout) 
     n x y h_k0
 
-end InfoGeometry.Canonical.PenroseColimit
+end PenroseColimit

@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.ThermodynamicSwitching
+namespace ThermodynamicSwitching
 
 open InfoGeometry.Canonical.MoE
 
@@ -209,4 +209,4 @@ theorem arnoldQuantumPresentation_generator_mem_submodule
 
 end ArnoldBridge
 
-end InfoGeometry.LLM.ThermodynamicSwitching
+end ThermodynamicSwitching

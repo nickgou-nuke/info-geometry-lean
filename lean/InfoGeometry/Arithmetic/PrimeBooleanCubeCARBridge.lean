@@ -28,7 +28,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
+namespace PrimeBooleanCubeCARBridge
 
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -208,4 +208,4 @@ theorem primeBooleanCubeCARBridge_packet
       ArithmeticFunction.moebius (representedNat v) :=
   primeBooleanCubeCARBridgeOwnerTarget P v E χ hN
 
-end InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
+end PrimeBooleanCubeCARBridge

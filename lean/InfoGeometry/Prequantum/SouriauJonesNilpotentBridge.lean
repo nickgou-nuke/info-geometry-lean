@@ -32,7 +32,7 @@ noncomputable section
 open Matrix
 open scoped Matrix Kronecker
 
-namespace InfoGeometry.Prequantum.SouriauJonesNilpotentBridge
+namespace SouriauJonesNilpotentBridge
 
 open InfoGeometry.Prequantum.SouriauJaynesTrace
 
@@ -138,4 +138,4 @@ theorem trace_localJordan_modularRegularizationLCFT_eq_zero :
   rw [localJordan_modularRegularizationLCFT_eq_zero]
   simp
 
-end InfoGeometry.Prequantum.SouriauJonesNilpotentBridge
+end SouriauJonesNilpotentBridge

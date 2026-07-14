@@ -30,7 +30,7 @@ open InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzKMSState
+namespace CuntzKMSState
 
 /-! ## Primon Boltzmann weights -/
 
@@ -195,4 +195,4 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → Concrete instantiation on O_n remains as documented debt
 -/
 
-end InfoGeometry.Algebra.CuntzKMSState
+end CuntzKMSState

@@ -5,7 +5,7 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.AlgebraicStateLorentzAction
+namespace AlgebraicStateLorentzAction
 
 open InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 open InfoGeometry.Canonical.Cl11LorentzAction
@@ -143,4 +143,4 @@ theorem modularAdjointStateFlow_gZeroPart
 
 end TransportLaws
 
-end InfoGeometry.Canonical.AlgebraicStateLorentzAction
+end AlgebraicStateLorentzAction

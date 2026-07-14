@@ -169,7 +169,7 @@ theorem vacuumChoice_switch_swaps_polarizations_minus :
 end KreinClifford
 
 
-namespace InfoGeometry.Krein.Prelude
+namespace Prelude
 
 section KreinClifford
 
@@ -263,4 +263,4 @@ theorem vacuumChoice_switch_swaps_polarizations_minus :
 
 end KreinClifford
 
-end InfoGeometry.Krein.Prelude
+end Prelude

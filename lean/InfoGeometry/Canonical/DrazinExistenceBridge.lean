@@ -12,7 +12,7 @@ Bridge layer between the singular Drazin existence theorem and the canonical
 Drazin predicate used by the regularization/capstone lanes.
 -/
 
-namespace InfoGeometry.Canonical.DrazinExistenceBridge
+namespace DrazinExistenceBridge
 
 open InfoGeometry.Singular
 
@@ -95,4 +95,4 @@ theorem exists_canonicalDrazinInverse_global_endCLM
         (f := (A ^ k).toLinearMap) (g := A ^ k)).2 rfl
     exact hPow'.trans hRoundTrip
 
-end InfoGeometry.Canonical.DrazinExistenceBridge
+end DrazinExistenceBridge

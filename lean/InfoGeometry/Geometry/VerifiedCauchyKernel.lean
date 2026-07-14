@@ -10,7 +10,7 @@ import InfoGeometry.OperatorAlgebra.ConstructiveCayley
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.VerifiedCauchyKernel
+namespace VerifiedCauchyKernel
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.OperatorAlgebra.ConstructiveCayley
@@ -176,4 +176,4 @@ theorem resolvent_identity
     _ = (ζ₂ - ζ₁) • (R1.kernelVal * R2.kernelVal) := by
             rw [mul_smul_comm]
 
-end InfoGeometry.Geometry.VerifiedCauchyKernel
+end VerifiedCauchyKernel

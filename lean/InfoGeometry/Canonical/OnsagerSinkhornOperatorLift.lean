@@ -16,7 +16,7 @@ This file introduces no new dynamics. It only packages:
   Onsager-response bounds.
 -/
 
-namespace InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
+namespace OnsagerSinkhornOperatorLift
 
 open InfoGeometry.Canonical.OnsagerReciprocity
 open InfoGeometry.Canonical.RelativeModularPotential
@@ -115,4 +115,4 @@ theorem onsagerResponseAbs_next_le_now_swap
 
 end Core
 
-end InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
+end OnsagerSinkhornOperatorLift

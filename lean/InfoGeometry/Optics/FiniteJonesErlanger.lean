@@ -16,7 +16,7 @@ import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section
 
-namespace InfoGeometry.Optics.FiniteJonesErlanger
+namespace FiniteJonesErlanger
 
 open InfoGeometry.Optics.FiniteJonesModel
 
@@ -212,4 +212,4 @@ theorem brewsterMatrix_invariant_under_diagonalJonesTransport
       _ = rs := by ring
   simp [hs]
 
-end InfoGeometry.Optics.FiniteJonesErlanger
+end FiniteJonesErlanger

@@ -20,7 +20,7 @@ import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 
 noncomputable section
 
-namespace InfoGeometry.Optics.OperatorialJonesCalculus
+namespace OperatorialJonesCalculus
 
 /-! ## 1. Polarization projectors -/
 
@@ -496,4 +496,4 @@ def toProjectorPair
 
 end OperatorialJonesOwnerTarget
 
-end InfoGeometry.Optics.OperatorialJonesCalculus
+end OperatorialJonesCalculus

@@ -6,7 +6,7 @@ import Mathlib.CategoryTheory.Functor.OfSequence
 
 noncomputable section
 
-namespace InfoGeometry.Categorical.ZornUHFColimit
+namespace ZornUHFColimit
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -358,5 +358,5 @@ theorem colimitNilpotent_sq_zero : colimitNilpotent * colimitNilpotent = 0 := by
   change (colimit.ι zornStageFunctor 0).hom 0 = 0
   exact (colimit.ι zornStageFunctor 0).hom.map_zero
 
-end InfoGeometry.Categorical.ZornUHFColimit
+end ZornUHFColimit
 

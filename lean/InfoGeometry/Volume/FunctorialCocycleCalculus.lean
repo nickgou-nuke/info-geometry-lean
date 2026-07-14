@@ -34,7 +34,7 @@ entry is the already-existing `IsConnesCocycle` interface from
 
 noncomputable section
 
-namespace InfoGeometry.Volume.FunctorialCocycleCalculus
+namespace FunctorialCocycleCalculus
 
 open InfoGeometry.Canonical.Algebraic
 open InfoGeometry.Canonical.ProjectiveFoundation
@@ -260,4 +260,4 @@ theorem projectiveMultiplierClass_eq_zero_iff_centralExtension_splits
 
 end ProjectiveMultipliers
 
-end InfoGeometry.Volume.FunctorialCocycleCalculus
+end FunctorialCocycleCalculus

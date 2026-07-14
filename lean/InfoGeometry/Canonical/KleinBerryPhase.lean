@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Canonical.KleinExceptionalBraid
 
-namespace InfoGeometry.Canonical.KleinBerryPhase
+namespace KleinBerryPhase
 
 open Matrix
 open InfoGeometry.Canonical.KleinExceptionalBraid
@@ -35,4 +35,4 @@ theorem klein_holonomy_cancellation :
     B_EP * (G_Glide * B_EP * G_Glide) = 1 := by
   decide
 
-end InfoGeometry.Canonical.KleinBerryPhase
+end KleinBerryPhase

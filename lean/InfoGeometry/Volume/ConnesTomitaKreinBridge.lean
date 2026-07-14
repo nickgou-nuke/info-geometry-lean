@@ -11,7 +11,7 @@ small bridge statements under the requested public name.  No mode-indexed
 current, normal-ordering construction, or central extension is asserted here.
 -/
 
-namespace InfoGeometry.Volume.ConnesTomitaKreinBridge
+namespace ConnesTomitaKreinBridge
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
@@ -84,4 +84,4 @@ theorem finiteKrein_idempotent_exponential_add (s t : ℝ) :
       finiteKreinIdempotentExponential s * finiteKreinIdempotentExponential t :=
   InfoGeometry.Volume.ConnesTomitaKreinDerivation.finiteKrein_idempotent_exponential_add s t
 
-end InfoGeometry.Volume.ConnesTomitaKreinBridge
+end ConnesTomitaKreinBridge

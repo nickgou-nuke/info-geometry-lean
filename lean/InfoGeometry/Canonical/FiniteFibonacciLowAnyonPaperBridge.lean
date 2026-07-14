@@ -21,7 +21,7 @@ No analytic continuation.
 No `n = 7` or `n = 8` matrix claim.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciLowAnyonPaperBridge
+namespace FiniteFibonacciLowAnyonPaperBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 
@@ -114,4 +114,4 @@ theorem sectionSix_n6_adjacent_artin_from_identities
         pi6_b5 qNeg4 q3 * pi6_b4 q3 B * pi6_b5 qNeg4 q3) :=
   pi6_adjacent_artin_from_identities qNeg4 q3 B h12 h23 h34 h45
 
-end InfoGeometry.Canonical.FiniteFibonacciLowAnyonPaperBridge
+end FiniteFibonacciLowAnyonPaperBridge

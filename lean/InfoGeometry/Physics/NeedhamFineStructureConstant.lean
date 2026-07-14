@@ -12,7 +12,7 @@ This file formalizes the explicit mathematics stated in SSRN 5404131:
 It does not claim any physical derivation of the fine-structure constant.
 -/
 
-namespace InfoGeometry.Physics.NeedhamFineStructureConstant
+namespace NeedhamFineStructureConstant
 
 open InfoGeometryCore
 
@@ -63,4 +63,4 @@ lemma needhamRelError_eq :
     needhamRelError = |needhamAlphaInv - codata2018AlphaInv| / codata2018AlphaInv := by
   rfl
 
-end InfoGeometry.Physics.NeedhamFineStructureConstant
+end NeedhamFineStructureConstant

@@ -21,7 +21,7 @@ This file builds a genuine finite-dimensional recomposition package with:
   doubled corridor.
 -/
 
-namespace InfoGeometry.Canonical.PhaseSpaceRecompositionExample
+namespace PhaseSpaceRecompositionExample
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore

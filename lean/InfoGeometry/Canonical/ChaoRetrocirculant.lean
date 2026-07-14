@@ -12,7 +12,7 @@ explicit finite certificate and proves the elementary block identities behind
 Chao's eigenvalue readout.
 -/
 
-namespace InfoGeometry.Canonical.ChaoRetrocirculant
+namespace ChaoRetrocirculant
 
 noncomputable section
 
@@ -153,4 +153,4 @@ end ChaoRetrocirculantSpectralCertificate
 
 end
 
-end InfoGeometry.Canonical.ChaoRetrocirculant
+end ChaoRetrocirculant

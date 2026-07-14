@@ -17,7 +17,7 @@ open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.FreudenthalComplete
+namespace FreudenthalComplete
 
 /-- Diagonal Albert matrices satisfy the Freudenthal identity. -/
 theorem freudenthal_diagonal
@@ -68,4 +68,4 @@ theorem freudenthal_diag_zero_zero_one :
       z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } := by
   simpa using freudenthal_diagonal (0 : ℝ) 0 1
 
-end InfoGeometry.Algebra.FreudenthalComplete
+end FreudenthalComplete

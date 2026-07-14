@@ -22,7 +22,7 @@ index Tr((-1)^F) = 2^(n-1) - 2^(n-1) = 0.
 
 open Finset
 
-namespace InfoGeometry.OperatorAlgebra.CliffordCARFockParity
+namespace CliffordCARFockParity
 
 /-- Occupation label for n modes. -/
 abbrev Occupation (n : ℕ) := Fin n → Bool
@@ -61,4 +61,4 @@ theorem n4_even_odd_equal :
 theorem witten_index_n4 : ((8 : ℤ) - 8) = 0 := by
   norm_num
 
-end InfoGeometry.OperatorAlgebra.CliffordCARFockParity
+end CliffordCARFockParity

@@ -15,7 +15,7 @@ import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.ProjectiveEntropy
+namespace ProjectiveEntropy
 
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
 open InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
@@ -144,4 +144,4 @@ theorem prime_density_le_primitive_density
 
 end ProjectiveRelativeEntropyCalibration
 
-end InfoGeometry.Arithmetic.ProjectiveEntropy
+end ProjectiveEntropy

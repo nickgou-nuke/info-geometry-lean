@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.DoubledSpace
 
-namespace InfoGeometry.Canonical.KreinLadder
+namespace KreinLadder
 
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
@@ -72,4 +72,4 @@ noncomputable def creation : (DoubledSpace E) →ₗ[ℝ] (DoubledSpace E) :=
 
 end InformationLadder
 
-end InfoGeometry.Canonical.KreinLadder
+end KreinLadder

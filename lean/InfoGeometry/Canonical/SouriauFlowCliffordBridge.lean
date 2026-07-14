@@ -12,7 +12,7 @@ Thin bridge collecting the operatorial Souriau-temperature lane with existing
 Clifford/Jordan/Lie and source/sink transport owners.
 -/
 
-namespace InfoGeometry.Canonical.SouriauFlowCliffordBridge
+namespace SouriauFlowCliffordBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ThermodynamicGenerator
@@ -135,4 +135,4 @@ theorem sourceSink_souriau_defect_split_of_connection_eq
 
 end Core
 
-end InfoGeometry.Canonical.SouriauFlowCliffordBridge
+end SouriauFlowCliffordBridge

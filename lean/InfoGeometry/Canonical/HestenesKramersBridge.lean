@@ -13,7 +13,7 @@ This file does not introduce complex antiunitary primitives. The Kramers partner
 is the internal phase-axis image `K ψ`, where `K = J ∘ ε`.
 -/
 
-namespace InfoGeometry.Canonical.HestenesKramersBridge
+namespace HestenesKramersBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.OperatorDictionary
@@ -116,4 +116,4 @@ theorem kreinInner_phasePartner_phasePartner (ψ φ : H₂) :
 
 end Core
 
-end InfoGeometry.Canonical.HestenesKramersBridge
+end HestenesKramersBridge

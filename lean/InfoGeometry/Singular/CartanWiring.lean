@@ -1,7 +1,7 @@
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.Decomposition
 
-namespace InfoGeometry.Singular.CartanWiring
+namespace CartanWiring
 
 open InfoGeometry.Clifford
 open InfoGeometry.Clifford.Decomposition
@@ -58,4 +58,4 @@ noncomputable def CartanAdjoint (A : TowerMatrix.Mat n) : TowerMatrix.Mat n :=
   rw [hJJ, Matrix.one_mul]
   rw [Matrix.mul_assoc, hJJ, Matrix.mul_one]
 
-end InfoGeometry.Singular.CartanWiring
+end CartanWiring

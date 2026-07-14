@@ -21,7 +21,7 @@ trace formulas, or a full Tomita-Takesaki standard form.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauOperatorBregmanModular
+namespace SouriauOperatorBregmanModular
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Geometry.OperatorBregmanDivergence
@@ -227,4 +227,4 @@ theorem regularConeBregman_self_readback
     operatorBregmanDivergence (E := E) ω gradPhi U U = 0 := by
   simpa using operatorBregmanDivergence_self (E := E) ω gradPhi U
 
-end InfoGeometry.Canonical.SouriauOperatorBregmanModular
+end SouriauOperatorBregmanModular

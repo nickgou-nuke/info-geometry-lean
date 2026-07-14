@@ -38,7 +38,7 @@ claim is proved here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.SupersymmetricPrimonGas
+namespace SupersymmetricPrimonGas
 
 open scoped BigOperators
 
@@ -190,4 +190,4 @@ theorem supercharge_square_readout
 
 end Supercharge
 
-end InfoGeometry.Arithmetic.SupersymmetricPrimonGas
+end SupersymmetricPrimonGas

@@ -6,7 +6,7 @@ import InfoGeometry.Causal.ProofDAGRepresentation
 Canonical bridge for the finite proof-DAG representation layer.
 -/
 
-namespace InfoGeometry.Canonical.ProofDAGRepresentationBridge
+namespace ProofDAGRepresentationBridge
 
 open InfoGeometry.Causal.ProofDAGRepresentation
 
@@ -55,4 +55,4 @@ theorem represented_edge_orthogonality_rev
     R.edgeOp b a * R.edgeOp a b = 0 :=
   InfoGeometry.Causal.ProofDAGRepresentation.represented_edge_orthogonality_rev G R hab hne
 
-end InfoGeometry.Canonical.ProofDAGRepresentationBridge
+end ProofDAGRepresentationBridge

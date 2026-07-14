@@ -17,7 +17,7 @@ It includes:
   `stageTrajectory`).
 -/
 
-namespace InfoGeometry.Meta.InductionHandbook
+namespace InductionHandbook
 
 /-! ## 1. Structural induction -/
 
@@ -1140,4 +1140,4 @@ theorem stageTrajectory_image_constant
 
 end Categorical
 
-end InfoGeometry.Meta.InductionHandbook
+end InductionHandbook

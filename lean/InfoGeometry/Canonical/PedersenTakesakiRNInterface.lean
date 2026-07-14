@@ -21,7 +21,7 @@ compiled interface with:
 - finite operator shadows attached to existing `relativeModularOperator` owners.
 -/
 
-namespace InfoGeometry.Canonical.PedersenTakesakiRNInterface
+namespace PedersenTakesakiRNInterface
 
 open InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 open InfoGeometry.Canonical.YangMillsContinuum
@@ -145,4 +145,4 @@ theorem finite_affiliatedRN_shadow_package
 
 end FiniteShadow
 
-end InfoGeometry.Canonical.PedersenTakesakiRNInterface
+end PedersenTakesakiRNInterface

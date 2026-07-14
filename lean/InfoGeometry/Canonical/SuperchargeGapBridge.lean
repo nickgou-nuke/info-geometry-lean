@@ -14,7 +14,7 @@ odd-odd pair develops a first-order anomaly seed, so the zero-gap value is a
 special normalization point rather than the whole supercharge story.
 -/
 
-namespace InfoGeometry.Canonical.SuperchargeGapBridge
+namespace SuperchargeGapBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -149,4 +149,4 @@ theorem transportedParityModularGapSeed_eq_zero_of_commute_modularJ
 
 end Core
 
-end InfoGeometry.Canonical.SuperchargeGapBridge
+end SuperchargeGapBridge

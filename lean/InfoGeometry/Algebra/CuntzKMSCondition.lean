@@ -25,7 +25,7 @@ open Complex
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzKMSCondition
+namespace CuntzKMSCondition
 
 /-- Complex-time modular phase: exp(i·z·log(p)). For z=t∈ℝ, equals modularPhase(p,t). -/
 def modularPhaseComplex (p : ℕ) (z : ℂ) : ℂ := Complex.exp (I * z * (Real.log (p : ℝ) : ℂ))
@@ -332,4 +332,4 @@ Step 5 requires the C*-completion (GNS representation), which is
 documented debt.
 -/
 
-end InfoGeometry.Algebra.CuntzKMSCondition
+end CuntzKMSCondition

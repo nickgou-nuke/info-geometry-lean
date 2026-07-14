@@ -55,7 +55,7 @@ analytic Hodge decomposition theorem.
   - None for this rational endomorphism-level algebraic layer.
 -/
 
-namespace InfoGeometry.Canonical.HodgeKreinSuperLaplacian
+namespace HodgeKreinSuperLaplacian
 
 variable {E : Type*} [AddCommGroup E] [Module ℚ E]
 
@@ -365,4 +365,4 @@ theorem O_nilpotent_on_P_nil
   rw [map_sub, O_comp_O_comp_O O hO3 x]
   abel
 
-end InfoGeometry.Canonical.HodgeKreinSuperLaplacian
+end HodgeKreinSuperLaplacian

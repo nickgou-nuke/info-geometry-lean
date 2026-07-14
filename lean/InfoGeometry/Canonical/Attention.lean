@@ -14,7 +14,7 @@ thermodynamic process over a triality of vector spaces.
 - The scaling factor `1/√d` acts as the inverse temperature `β`.
 -/
 
-namespace InfoGeometry.Canonical.Attention
+namespace Attention
 
 open InfoGeometry.GrandCanonical
 open scoped BigOperators
@@ -102,4 +102,4 @@ lemma attentionWeights_le_one
   simpa [attentionWeights] using
     gibbsWeight_le_one (attentionParams q ctx matchForm) β i
 
-end InfoGeometry.Canonical.Attention
+end Attention

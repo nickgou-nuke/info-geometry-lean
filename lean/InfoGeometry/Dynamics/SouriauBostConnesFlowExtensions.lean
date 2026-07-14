@@ -34,7 +34,7 @@ open Topology
 
 noncomputable section
 
-namespace InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
+namespace SouriauBostConnesFlowExtensions
 
 noncomputable def thermalCayley (β : ℝ) : ℝ :=
   (β - (1 / 2 : ℝ)) / (β + (1 / 2 : ℝ))
@@ -157,4 +157,4 @@ theorem cayley_boundary_contraction_limits :
       (nhds 0) :=
   ⟨thermalCayley_tendsto_one, thermalCayley_jacobian_tendsto_zero⟩
 
-end InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
+end SouriauBostConnesFlowExtensions

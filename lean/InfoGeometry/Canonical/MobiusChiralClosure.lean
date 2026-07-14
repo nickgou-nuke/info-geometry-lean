@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 
-namespace InfoGeometry.Canonical.MobiusChiralClosure
+namespace MobiusChiralClosure
 
 open Matrix
 
@@ -41,4 +41,4 @@ theorem moebius_parity_closure_achieved_4 :
   rw [Matrix.trace, Fin.sum_univ_four]
   simp [moebius_strip_4, chi_global_4]
 
-end InfoGeometry.Canonical.MobiusChiralClosure
+end MobiusChiralClosure

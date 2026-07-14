@@ -19,7 +19,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.InductiveColimitCrystal
+namespace InductiveColimitCrystal
 
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 
@@ -106,6 +106,6 @@ theorem bindAtoms_normalizedLogAbsDet_stable
       InfoGeometry.Clifford.Cl11TensorTower.normalizedLogAbsDet m A := by
   exact InfoGeometry.Clifford.Cl11TensorTowerIteration.iteratedStageEmbed_normalizedLogAbsDet m k A
 
-end InfoGeometry.Clifford.InductiveColimitCrystal
+end InductiveColimitCrystal
 
 end noncomputable section

@@ -17,7 +17,7 @@ No global measure-theoretic extension is claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorCylinderPrior
+namespace CantorCylinderPrior
 
 open InfoGeometry.Canonical.CantorKMSCylinderState
 open InfoGeometry.Canonical.CantorCuntzBasis
@@ -53,4 +53,4 @@ theorem uniformKMSPrior_finitely_additive (w : BinaryWord) :
   symm
   exact uniformKMSPrior_successor_consistent w
 
-end InfoGeometry.Canonical.CantorCylinderPrior
+end CantorCylinderPrior

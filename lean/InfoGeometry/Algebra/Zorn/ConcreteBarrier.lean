@@ -22,7 +22,7 @@ No global analytic boundary-divergence claim.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteBarrier
+namespace ConcreteBarrier
 
 /-!
 ## 1. Concrete 8D Zorn cell
@@ -394,4 +394,4 @@ theorem barrier_hessian_b_pos
 
 end ZornSlice
 
-end InfoGeometry.Algebra.Zorn.ConcreteBarrier
+end ConcreteBarrier

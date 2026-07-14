@@ -13,7 +13,7 @@ Lorentz group `SO(n, 2)`. We formalize the defining Kähler potential for
 this space.
 -/
 
-namespace InfoGeometry.Architecture.SpinFactor
+namespace SpinFactor
 
 variable {E : Type*} [NormedAddCommGroup E]
 
@@ -60,4 +60,4 @@ lemma spinFactorPotential_zero :
   unfold spinFactorPotential
   simp
 
-end InfoGeometry.Architecture.SpinFactor
+end SpinFactor

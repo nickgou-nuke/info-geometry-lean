@@ -24,7 +24,7 @@ Markov/Jones trace-determinant side of the engine.
 
 noncomputable section
 
-namespace InfoGeometry.Clifford.Cl11MarkovJonesEngine
+namespace Cl11MarkovJonesEngine
 
 open Matrix
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -126,4 +126,4 @@ Open closure debt, deliberately not encoded as declarations:
   finite-window/limit closure theorems.
 -/
 
-end InfoGeometry.Clifford.Cl11MarkovJonesEngine
+end Cl11MarkovJonesEngine

@@ -6,7 +6,7 @@ import Mathlib.Tactic.Abel
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.StateDependentTransport
+namespace StateDependentTransport
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -313,4 +313,4 @@ theorem pairedSourceCancellation
 
 end
 
-end InfoGeometry.Canonical.StateDependentTransport
+end StateDependentTransport

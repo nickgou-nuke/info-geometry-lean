@@ -20,7 +20,7 @@ No analytic MaxCal existence theorem, CP map construction, KMS uniqueness
 theorem, or continuous path-integral result is asserted here.
 -/
 
-namespace InfoGeometry.Canonical.MaximumCaliberPath
+namespace MaximumCaliberPath
 
 open InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
 open InfoGeometry.Canonical.BayesianMarkovChain
@@ -166,4 +166,4 @@ theorem posterior_minimizes
 
 end MaximumCaliberMarkovBridge
 
-end InfoGeometry.Canonical.MaximumCaliberPath
+end MaximumCaliberPath

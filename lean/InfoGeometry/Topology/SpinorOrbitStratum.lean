@@ -19,7 +19,7 @@ full group orbit classification, spin-action invariance, a `Pin(5,5) → O(5,5)`
 double-cover theorem, CCC, analytic conformality, or global conformal inversion.
 -/
 
-namespace InfoGeometry.Topology.SpinorOrbitStratum
+namespace SpinorOrbitStratum
 
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
@@ -165,4 +165,4 @@ theorem q55NegAll_maps_stratum {x : Vec55} :
     Q55Stratum x → Q55Stratum (q55NegAll x) :=
   map_stratum_of_preserves q55NegAll_preserves_orbit_strata
 
-end InfoGeometry.Topology.SpinorOrbitStratum
+end SpinorOrbitStratum

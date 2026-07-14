@@ -1,4 +1,4 @@
 import Mathlib
 
-namespace InfoGeometry.Forge
-end InfoGeometry.Forge
+namespace Forge
+end Forge

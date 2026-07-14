@@ -17,7 +17,7 @@ This file makes explicit the soldering map:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.GellMannParafermionSolder
+namespace GellMannParafermionSolder
 
 open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
@@ -149,6 +149,6 @@ theorem gellmann_parafermion_solder_synthesis
     solder_su3_color_action_all_commutators R,
     frameSolderedBraid_mu_shift R F δμ⟩
 
-end InfoGeometry.Physics.GellMannParafermionSolder
+end GellMannParafermionSolder
 
 end noncomputable section

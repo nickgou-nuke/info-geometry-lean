@@ -6,7 +6,7 @@ set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
 
-namespace InfoGeometry.Canonical.RGFlow
+namespace RGFlow
 
 open InfoGeometry.Convex
 
@@ -294,4 +294,4 @@ theorem dual_map_deriv_eq_zero_at_stationary_scale
     deriv (fun t => (flow t).dualMap x) scale0 = 0 :=
   (hStationary.2 x).deriv
 
-end InfoGeometry.Canonical.RGFlow
+end RGFlow

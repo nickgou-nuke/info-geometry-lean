@@ -6,8 +6,8 @@ import InfoGeometry.Prequantum.Connection
 Gauge-orbit quotient structures for projective prequantum bundle points.
 -/
 
-namespace InfoGeometry.Prequantum.Quotient
-end InfoGeometry.Prequantum.Quotient
+namespace Quotient
+end Quotient
 
 open InfoGeometry.Projective
 

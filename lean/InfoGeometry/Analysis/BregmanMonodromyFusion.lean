@@ -59,7 +59,7 @@ open InfoGeometry.QuantumMonodromy
 open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Convex
 
-namespace InfoGeometry.Analysis.BregmanMonodromyFusion
+namespace BregmanMonodromyFusion
 
 /-! ## Lemma 1: Nilpotent Exponential Truncation
 
@@ -325,4 +325,4 @@ theorem unified_bregman_monodromy_hodge
   · exact h_betti1_zero
   · simp [DAG.betti1Hodge]
 
-end InfoGeometry.Analysis.BregmanMonodromyFusion
+end BregmanMonodromyFusion

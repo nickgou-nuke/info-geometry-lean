@@ -16,7 +16,7 @@ This file separates:
 - constructive finite-dimensional bridge into a Riesz-style package.
 -/
 
-namespace InfoGeometry.Canonical.DrazinInfiniteCore
+namespace DrazinInfiniteCore
 
 open InfoGeometry.Canonical
 
@@ -778,4 +778,4 @@ theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
 
 end FiniteDimensionalBridge
 
-end InfoGeometry.Canonical.DrazinInfiniteCore
+end DrazinInfiniteCore

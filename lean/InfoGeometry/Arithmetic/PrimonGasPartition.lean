@@ -58,7 +58,7 @@ The character group is the group of units of the profinite integers
 Cuntz isometries.
 -/
 
-namespace InfoGeometry.Arithmetic.PrimonGasPartition
+namespace PrimonGasPartition
 
 open BostConnesSystem
 
@@ -201,4 +201,4 @@ The Cuntz isometries S_i* S_i = 1 enforce the commutation relations
 of the Bost-Connes semigroup.
 -/
 
-end InfoGeometry.Arithmetic.PrimonGasPartition
+end PrimonGasPartition

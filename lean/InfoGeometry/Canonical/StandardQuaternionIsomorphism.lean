@@ -12,7 +12,7 @@ This file proves the quaternion-side multiplication table only; it does not yet
 construct an algebra equivalence from an even Clifford algebra.
 -/
 
-namespace InfoGeometry.Canonical.StandardQuaternionIsomorphism
+namespace StandardQuaternionIsomorphism
 
 open Quaternion
 
@@ -40,4 +40,4 @@ theorem cross_12_23 : e12 * e23 = -e31 := by ext <;> simp [e12, e23, e31] <;> ri
 theorem cross_23_31 : e23 * e31 = -e12 := by ext <;> simp [e12, e23, e31] <;> ring
 theorem cross_31_12 : e31 * e12 = -e23 := by ext <;> simp [e12, e23, e31] <;> ring
 
-end InfoGeometry.Canonical.StandardQuaternionIsomorphism
+end StandardQuaternionIsomorphism

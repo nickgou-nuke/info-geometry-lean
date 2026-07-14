@@ -21,7 +21,7 @@ No analytic continuation.
 No topological completion.
 -/
 
-namespace InfoGeometry.Canonical.InductiveOperatorTaylorClosure
+namespace InductiveOperatorTaylorClosure
 
 open Finset
 open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
@@ -164,4 +164,4 @@ theorem intertwines_operatorTaylorPrefix_of_homogeneous
             (Finset.mem_range.mpr (Nat.lt_trans (Finset.mem_range.mp hk) (Nat.lt_succ_self N)))
             hck)) hterm
 
-end InfoGeometry.Canonical.InductiveOperatorTaylorClosure
+end InductiveOperatorTaylorClosure

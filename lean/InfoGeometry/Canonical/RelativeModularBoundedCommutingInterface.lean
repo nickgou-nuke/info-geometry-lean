@@ -13,7 +13,7 @@ Strict finite/bounded interface for the commuting positive lane:
 This file does not claim unbounded/type-III functional calculus.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
+namespace RelativeModularBoundedCommutingInterface
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -142,4 +142,4 @@ theorem relativeModularOperator_commuting
 
 end Finite
 
-end InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
+end RelativeModularBoundedCommutingInterface

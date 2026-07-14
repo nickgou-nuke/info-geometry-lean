@@ -22,7 +22,7 @@ No analytic continuation.
 No concrete proof of all Artin relations.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
+namespace FiniteFibonacciGeneralBraidGenerators
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
@@ -226,4 +226,4 @@ theorem determinantExponent_first_examples :
       determinantExponent 4 = 1 ∧ determinantExponent 5 = 3 := by
   norm_num [determinantExponent]
 
-end InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
+end FiniteFibonacciGeneralBraidGenerators

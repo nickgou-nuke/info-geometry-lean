@@ -25,7 +25,7 @@ concrete calculus instances documented in the owner files.
 
 universe u v w m r s
 
-namespace InfoGeometry.Categorical.ModularDoubledRealHopfFiberContent
+namespace ModularDoubledRealHopfFiberContent
 
 open InfoGeometry.Categorical.ModularDoubledRealHopfFibration
 open InfoGeometry.Categorical.ModularDoubledRealHopfTransport
@@ -242,4 +242,4 @@ theorem z3_differential_fiber_content_readout
       D.d (x * y) = D.d x * y + D.omegaPow (D.degree x) * (x * D.d y) :=
   z3_differential_calculus_packet D x y
 
-end InfoGeometry.Categorical.ModularDoubledRealHopfFiberContent
+end ModularDoubledRealHopfFiberContent

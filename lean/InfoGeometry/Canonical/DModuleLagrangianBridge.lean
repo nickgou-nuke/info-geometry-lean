@@ -15,6 +15,6 @@ Import surface for the de Rham/Lagrangian facts already owned by:
 This file declares no additional theorem names.
 -/
 
-namespace InfoGeometry.Canonical.DModuleLagrangianBridge
+namespace DModuleLagrangianBridge
 
-end InfoGeometry.Canonical.DModuleLagrangianBridge
+end DModuleLagrangianBridge

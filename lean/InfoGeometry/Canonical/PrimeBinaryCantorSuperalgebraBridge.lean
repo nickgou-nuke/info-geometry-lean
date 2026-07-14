@@ -19,7 +19,7 @@ new superalgebra construction, or RH claim.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
+namespace PrimeBinaryCantorSuperalgebraBridge
 
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
@@ -128,4 +128,4 @@ The finite theorem content remains:
 * Hurwitz 24-shell units.
 -/
 
-end InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
+end PrimeBinaryCantorSuperalgebraBridge

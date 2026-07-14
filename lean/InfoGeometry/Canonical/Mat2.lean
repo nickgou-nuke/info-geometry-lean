@@ -40,7 +40,7 @@ the native `Matrix (Fin 2) (Fin 2) R`.
   - None for this finite carrier-free matrix layer.
 -/
 
-namespace InfoGeometry.Canonical.Mat2
+namespace Mat2
 
 open scoped Matrix
 
@@ -98,4 +98,4 @@ theorem E1_E2_anticommute :
   fin_cases i <;> fin_cases j <;>
     simp [E1, E2, Z2]
 
-end InfoGeometry.Canonical.Mat2
+end Mat2

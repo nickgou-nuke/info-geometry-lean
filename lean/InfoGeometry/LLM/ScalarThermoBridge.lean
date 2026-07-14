@@ -8,7 +8,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.ScalarThermoBridge
+namespace ScalarThermoBridge
 
 open InfoGeometry.Canonical.MoE
 
@@ -145,4 +145,4 @@ theorem fenchelGap_nonneg_bridge
 
 end FenchelBridge
 
-end InfoGeometry.LLM.ScalarThermoBridge
+end ScalarThermoBridge

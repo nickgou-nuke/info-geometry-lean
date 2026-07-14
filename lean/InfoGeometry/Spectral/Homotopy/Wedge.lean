@@ -11,7 +11,7 @@ only the corresponding elementary equivalences are proved.
 
 noncomputable section
 
-namespace InfoGeometry.Spectral.Homotopy.Wedge
+namespace Wedge
 
 open InfoGeometry.Spectral.Homotopy.Suspension
 open InfoGeometry.Spectral.Homotopy.Smash
@@ -110,4 +110,4 @@ theorem FibreSequence.fibre_readout_apply
     fs.fibre_readout x = fs.fibre_readout.toEquiv x :=
   rfl
 
-end InfoGeometry.Spectral.Homotopy.Wedge
+end Wedge

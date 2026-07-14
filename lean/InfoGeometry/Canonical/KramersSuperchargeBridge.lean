@@ -11,7 +11,7 @@ Bridge the real Kramers/Majorana symmetry interfaces to the projected
 Drazin-supercharge lane `(χ_L, χ_R, Q_D, H_D)`.
 -/
 
-namespace InfoGeometry.Canonical.KramersSuperchargeBridge
+namespace KramersSuperchargeBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -375,4 +375,4 @@ theorem majorana_closed_HK_and_ZD_of_commute_chi_and_Q0
 
 end Core
 
-end InfoGeometry.Canonical.KramersSuperchargeBridge
+end KramersSuperchargeBridge

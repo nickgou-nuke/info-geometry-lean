@@ -18,7 +18,7 @@ construction, or a full orbit/stabilizer classification for `O(5,5)` or
 `Pin(5,5)`.
 -/
 
-namespace InfoGeometry.Topology.O55V4KleinBottleStabilizerShadow
+namespace O55V4KleinBottleStabilizerShadow
 
 open InfoGeometry.Topology.O55V4KleinBottleFinite
 open InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
@@ -108,4 +108,4 @@ theorem finite_v4_stabilizer_shadow_packet {x y : Vec55}
     (reflPair01_eq_self_iff x).2 ⟨h0, h1⟩,
     orbitShadow_singleton_of_pair01Fixed h0 h1⟩
 
-end InfoGeometry.Topology.O55V4KleinBottleStabilizerShadow
+end O55V4KleinBottleStabilizerShadow

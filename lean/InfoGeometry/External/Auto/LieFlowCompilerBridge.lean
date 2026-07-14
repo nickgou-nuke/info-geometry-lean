@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.External.Auto.LieFlowMatching
 import InfoGeometry.External.Auto.TrifactorGeometry
+open InfoGeometry.External.Auto
 import InfoGeometry.External.Auto.DeterminantSupergrading
 
 noncomputable section

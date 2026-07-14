@@ -25,7 +25,7 @@ this file does not construct the affine current witness
 `J : Int → V →ₗ[𝕜] V` with truncation/commutator laws.
 -/
 
-namespace InfoGeometry.Canonical.ModeExtensionBoundary
+namespace ModeExtensionBoundary
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -157,4 +157,4 @@ theorem zeroModeSeed_ccrBracket_of_not_both_zero {m n : ℤ} (h : ¬ (m = 0 ∧ 
 
 end ZeroModeSeed
 
-end InfoGeometry.Canonical.ModeExtensionBoundary
+end ModeExtensionBoundary

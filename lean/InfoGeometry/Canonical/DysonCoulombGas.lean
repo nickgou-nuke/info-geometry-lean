@@ -5,7 +5,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DysonCoulombGas
+namespace DysonCoulombGas
 
 /-!
 # Dyson Coulomb Gas
@@ -95,4 +95,4 @@ theorem dyson_to_vandermonde_bridge (h_inj : Function.Injective lam) :
   rw [Real.log_pow]
   ring
 
-end InfoGeometry.Canonical.DysonCoulombGas
+end DysonCoulombGas

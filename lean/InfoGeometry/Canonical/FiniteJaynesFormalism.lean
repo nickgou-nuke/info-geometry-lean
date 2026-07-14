@@ -23,7 +23,7 @@ No MaxEnt optimizer theorem beyond explicitly imported finite modules.
 No spectral theorem, Tomita theorem, or analytic completion.
 -/
 
-namespace InfoGeometry.Canonical.FiniteJaynesFormalism
+namespace FiniteJaynesFormalism
 
 open Finset
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
@@ -140,4 +140,4 @@ theorem finiteGibbsProfile_pos
   unfold finiteGibbsProfile
   exact div_pos (finitePartition_summand_pos R observable lam href i) hZ
 
-end InfoGeometry.Canonical.FiniteJaynesFormalism
+end FiniteJaynesFormalism

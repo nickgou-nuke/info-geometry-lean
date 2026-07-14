@@ -13,7 +13,7 @@ No analytic closure claims are made here.  This file proves the concrete
 algebraic commutation and annihilation identities under explicit hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
+namespace HodgeHelmholtzKreinDecomposition
 
 open LinearMap
 
@@ -151,4 +151,4 @@ end DecompositionPacket
 end HodgePacket
 end
 
-end InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
+end HodgeHelmholtzKreinDecomposition

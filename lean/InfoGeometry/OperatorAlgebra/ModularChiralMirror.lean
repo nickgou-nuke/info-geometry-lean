@@ -22,7 +22,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ModularChiralMirror
+namespace ModularChiralMirror
 
 /-! ## 1. Chiral half-projectors -/
 
@@ -983,4 +983,4 @@ def AlgebraicModularChiralMirrorOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
   ModularChiralMirrorOwnerTarget Op
 
-end InfoGeometry.OperatorAlgebra.ModularChiralMirror
+end ModularChiralMirror

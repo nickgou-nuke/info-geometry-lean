@@ -14,7 +14,7 @@ open Complex
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzModularAutomorphism
+namespace CuntzModularAutomorphism
 
 def modularPhase (p : ℕ) (t : ℝ) : ℂ := Complex.exp (I * (t : ℂ) * Real.log (p : ℝ))
 def modularPhaseInv (p : ℕ) (t : ℝ) : ℂ := Complex.exp (-(I * (t : ℂ) * Real.log (p : ℝ)))
@@ -177,4 +177,4 @@ lemma sigma_mk' (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (x : CuntzTensor n)
   rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
   rw [sigma_mk', sigmaTensor_zero]; rfl
 
-end InfoGeometry.Algebra.CuntzModularAutomorphism
+end CuntzModularAutomorphism

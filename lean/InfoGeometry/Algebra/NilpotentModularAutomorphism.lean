@@ -5,7 +5,7 @@ import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Algebra.NilpotentModularAutomorphism
+namespace NilpotentModularAutomorphism
 
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
 -- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
@@ -123,5 +123,5 @@ theorem exponential_flow_truncation
     (nhds (InfoGeometry.Algebra.NilpotentFiniteProductLimit.nilpotent_exp T N)) :=
   InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_to_infinite_limit T N hN
 
-end InfoGeometry.Algebra.NilpotentModularAutomorphism
+end NilpotentModularAutomorphism
 

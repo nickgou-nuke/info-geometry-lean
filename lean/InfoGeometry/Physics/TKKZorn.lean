@@ -19,7 +19,7 @@ The 5-grading is induced by the tripotent T = e₊ - e₋ = diag(1, -1):
 
 The full TKK algebra is the conformal algebra of the split octonion Jordan algebra.
 -/
-namespace InfoGeometry.Physics.TKKZorn
+namespace TKKZorn
 
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Canonical.ZornMatrix
@@ -183,4 +183,4 @@ def applyGT (cp : CrossProduct3 R)
 
 end ProjectiveZornState
 
-end InfoGeometry.Physics.TKKZorn
+end TKKZorn

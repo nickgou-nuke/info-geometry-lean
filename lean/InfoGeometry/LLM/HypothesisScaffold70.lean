@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.HypothesisScaffold70
+namespace HypothesisScaffold70
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicTransformer
@@ -158,4 +158,4 @@ end OmitTransportSurfaceVars
 
 end TransportInterfaces
 
-end InfoGeometry.LLM.HypothesisScaffold70
+end HypothesisScaffold70

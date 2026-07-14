@@ -9,7 +9,7 @@ Checked finite CAR/Fock facts are owned by `CARFockBridge_withproofs` and
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CARFockBridge
+namespace CARFockBridge
 
 open InfoGeometry.Algebra.CARFockBridgeWithProofs
 open InfoGeometry.Algebra.FiniteSingleModeCAR
@@ -27,4 +27,4 @@ theorem finite_trace_factorization (n : ℕ) (ε : Fin n → ℝ) (β : ℝ) :
     fockTraceExp n ε β = ∏ i : Fin n, (1 + localBoltzmann (ε i) β) := by
   exact finite_many_mode_trace_packet n ε β
 
-end InfoGeometry.Algebra.CARFockBridge
+end CARFockBridge

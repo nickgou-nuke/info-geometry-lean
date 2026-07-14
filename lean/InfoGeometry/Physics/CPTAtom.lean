@@ -16,7 +16,7 @@ Then `(εJ)²=+1`, giving the minimal CPT grading atom.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.CPTAtom
+namespace CPTAtom
 
 open Matrix
 
@@ -115,4 +115,4 @@ theorem Trip_tripotent : Trip^3 - Trip = 0 := by
 #check signum_mapping
 #check Trip_tripotent
 
-end InfoGeometry.Physics.CPTAtom
+end CPTAtom

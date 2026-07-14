@@ -10,7 +10,7 @@ import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.WindingSnap
+namespace WindingSnap
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Geometry.SpectralDivisors
@@ -305,4 +305,4 @@ theorem nonzero_spectralFlow_cannot_flow_to_flat
 
 end StateIndexReadout
 
-end InfoGeometry.Geometry.WindingSnap
+end WindingSnap

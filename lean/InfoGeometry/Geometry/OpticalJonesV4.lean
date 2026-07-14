@@ -11,7 +11,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.OpticalJonesV4
+namespace OpticalJonesV4
 
 /-! ## 1. V4 orientation tags -/
 
@@ -260,4 +260,4 @@ def depolarizingSurfaceTransport
   kind := OpticalEventKind.roughDepolarizingSurface
   coherent := coherent
 
-end InfoGeometry.Geometry.OpticalJonesV4
+end OpticalJonesV4

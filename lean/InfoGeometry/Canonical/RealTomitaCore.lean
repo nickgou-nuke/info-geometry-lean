@@ -17,7 +17,7 @@ This file provides:
 - orientation-flip law: `δ ↦ -δ` is equivalent to `τ ↦ -τ`.
 -/
 
-namespace InfoGeometry.Canonical.RealTomitaCore
+namespace RealTomitaCore
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -161,4 +161,4 @@ theorem modularTimeOfWedgeBoost_wedgeBoostParameter (τmod : ℝ) :
 
 end Core
 
-end InfoGeometry.Canonical.RealTomitaCore
+end RealTomitaCore

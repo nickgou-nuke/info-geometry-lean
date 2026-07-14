@@ -18,7 +18,7 @@ No Hodge-star wrapper.
 No axiom.
 -/
 
-namespace InfoGeometry.Projective.Quadrics.PluckerKlein
+namespace PluckerKlein
 
 variable {R : Type*} [CommRing R]
 
@@ -151,4 +151,4 @@ theorem plucker_coordinates_smul_both_satisfy_KleinRel
  readouts are not proved here.]
 -/
 
-end InfoGeometry.Projective.Quadrics.PluckerKlein
+end PluckerKlein

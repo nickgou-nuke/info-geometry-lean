@@ -22,7 +22,7 @@ import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.AnomalousErlangerHeight
+namespace AnomalousErlangerHeight
 
 open InfoGeometry.OperatorAlgebra
 open scoped ENNReal
@@ -287,4 +287,4 @@ structure ErlangerGRReconstructionWitness
   heightDatum :
     FiniteAnomalyHeightDatum Op
 
-end InfoGeometry.Geometry.AnomalousErlangerHeight
+end AnomalousErlangerHeight

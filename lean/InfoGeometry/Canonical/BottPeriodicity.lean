@@ -14,7 +14,7 @@ set_option linter.unnecessarySimpa false
 
 open scoped TensorProduct
 
-namespace InfoGeometry.Canonical.BottPeriodicity
+namespace BottPeriodicity
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -305,4 +305,4 @@ when `ε = 1`.
 
 end CompanionInjection
 
-end InfoGeometry.Canonical.BottPeriodicity
+end BottPeriodicity

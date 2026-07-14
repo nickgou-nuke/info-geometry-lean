@@ -14,7 +14,7 @@ the canonical vortex pair. It makes the degenerate-reference story explicit in
 the doubled Majorana source/sink language.
 -/
 
-namespace InfoGeometry.Canonical.VortexReferenceGaugeBridge
+namespace VortexReferenceGaugeBridge
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RelativeModularPotential
@@ -672,4 +672,4 @@ with sink-seed derivative readout anchor invariance.
 
 end Core
 
-end InfoGeometry.Canonical.VortexReferenceGaugeBridge
+end VortexReferenceGaugeBridge

@@ -6,7 +6,7 @@ open Set
 
 set_option autoImplicit false
 
-namespace InfoGeometry.Tooling.PipelineSpec
+namespace PipelineSpec
 
 open InfoGeometry.Tooling.VacuityCritic
 
@@ -118,4 +118,4 @@ lemma detect_eq_filter_not_pass (declarations : List String) :
 delta_projector_eq_causal_delta) require delta_proj, detect, d, delta, O
 from an inspection-detector / scalar-causal module not yet implemented. -/
 
-end InfoGeometry.Tooling.PipelineSpec
+end PipelineSpec

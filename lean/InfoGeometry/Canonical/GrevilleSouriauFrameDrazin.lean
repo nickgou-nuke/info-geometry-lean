@@ -29,7 +29,7 @@ rank/basis algorithm for arbitrary fields.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GrevilleSouriauFrameDrazin
+namespace GrevilleSouriauFrameDrazin
 
 open InfoGeometry.Canonical
 
@@ -175,4 +175,4 @@ theorem greville_conjugated_formula_isDrazinInverse :
   · native_decide
   · native_decide
 
-end InfoGeometry.Canonical.GrevilleSouriauFrameDrazin
+end GrevilleSouriauFrameDrazin

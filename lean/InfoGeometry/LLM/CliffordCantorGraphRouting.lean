@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
-namespace InfoGeometry.LLM.CliffordCantorGraphRouting
+namespace CliffordCantorGraphRouting
 
 open InfoGeometry.Canonical.MoE
 
@@ -185,4 +185,4 @@ theorem maskedRoutingWeight_allActive_eq_softmax
 
 end SoftmaxRouter
 
-end InfoGeometry.LLM.CliffordCantorGraphRouting
+end CliffordCantorGraphRouting

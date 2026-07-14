@@ -17,7 +17,7 @@ It is declaration-bearing and importable.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalFiveGradeBracketAPI
+namespace ConformalFiveGradeBracketAPI
 
 open InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
 open InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
@@ -220,4 +220,4 @@ def ofClosurePacket
 
 end FiveGradeBracketPacket
 
-end InfoGeometry.Canonical.ConformalFiveGradeBracketAPI
+end ConformalFiveGradeBracketAPI

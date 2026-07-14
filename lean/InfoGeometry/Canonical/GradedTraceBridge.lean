@@ -26,7 +26,7 @@ The bridge: ζβ·Φ.φ = τL0. This is the structural identity.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GradedTraceBridge
+namespace GradedTraceBridge
 
 open InfoGeometry.Canonical.BostConnesKMS
 
@@ -103,4 +103,4 @@ theorem structural_bridge_is_identity
   rw [Φ.eval_projection n m]
   exact (hTrace Op C τ Φ.ζβ hζβ_pos n m).symm
 
-end InfoGeometry.Canonical.GradedTraceBridge
+end GradedTraceBridge

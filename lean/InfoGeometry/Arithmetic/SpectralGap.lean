@@ -41,7 +41,7 @@ For the primon gas: gap = log 2.
 open Complex
 open Real
 
-namespace InfoGeometry.Arithmetic.SpectralGap
+namespace SpectralGap
 
 /--
 The spectral gap of the primon gas: log 2 > 0.
@@ -105,4 +105,4 @@ on the excited subspace combined with the absolute convergence for
 Re(s) > 1 (ZetaConvergence.lean).
 -/
 
-end InfoGeometry.Arithmetic.SpectralGap
+end SpectralGap

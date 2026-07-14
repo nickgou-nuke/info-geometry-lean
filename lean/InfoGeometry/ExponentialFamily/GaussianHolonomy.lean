@@ -1,7 +1,7 @@
 import InfoGeometry.ExponentialFamily.Gaussian
 import InfoGeometry.Canonical.QuantumInference
 
-namespace InfoGeometry.ExponentialFamily.GaussianHolonomy
+namespace GaussianHolonomy
 
 open InfoGeometry.ExponentialFamily.Gaussian
 open InfoGeometry.Canonical.QuantumInference
@@ -39,4 +39,4 @@ theorem gaussian_holonomy_flat (G : GaussianFamily E) (_γ : List E) :
     ∃ (H : E →L[ℝ] E), H = G.sigma :=
   ⟨G.sigma, rfl⟩
 
-end InfoGeometry.ExponentialFamily.GaussianHolonomy
+end GaussianHolonomy

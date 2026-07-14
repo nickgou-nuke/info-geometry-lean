@@ -18,7 +18,7 @@ It DOES provide the finite honest surface already verified in-repo:
 - nonzero projective brackets stay inside the projective index set.
 -/
 
-namespace InfoGeometry.Algebra.WittProjectiveClosure
+namespace WittProjectiveClosure
 
 open VirasoroProject
 open VirasoroProject.WittAlgebra
@@ -88,4 +88,4 @@ theorem projective_sum_mem_of_bracket_coeff_ne_zero
 
 end ClosureOnly
 
-end InfoGeometry.Algebra.WittProjectiveClosure
+end WittProjectiveClosure

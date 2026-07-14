@@ -11,7 +11,7 @@ The BdG datum stays the owner surface. The Nambu block operator is derived from
 that datum and then read back through the existing `τ₃` grading lemmas.
 -/
 
-namespace InfoGeometry.Canonical.RealBdGNambuGorkovFusion
+namespace RealBdGNambuGorkovFusion
 
 open InfoGeometry.Canonical.RealBdG
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
@@ -80,4 +80,4 @@ theorem nambuBlock_square_apply
 
 end Core
 
-end InfoGeometry.Canonical.RealBdGNambuGorkovFusion
+end RealBdGNambuGorkovFusion

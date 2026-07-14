@@ -26,7 +26,7 @@ set_option linter.dupNamespace false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.QCCRThermalKMSCertificate
+namespace QCCRThermalKMSCertificate
 
 open InfoGeometry.Algebra.QCCRSupergradingBridge
 open InfoGeometry.Krein
@@ -137,6 +137,6 @@ theorem modular_flow_scaling_boundary (t : ℝ) :
     Real.exp t * Real.exp (-t) = 1 ∧ Real.exp (-t) * Real.exp t = 1 := by
   constructor <;> rw [← Real.exp_add] <;> ring_nf <;> simp
 
-end InfoGeometry.Canonical.QCCRThermalKMSCertificate
+end QCCRThermalKMSCertificate
 
 end noncomputable section

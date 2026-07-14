@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Analysis.Normed.Algebra.Exponential
 
-namespace InfoGeometry.Canonical.SandboxVerification
+namespace SandboxVerification
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealBdG
@@ -30,4 +30,4 @@ noncomputable def testGrandCanonical (β μ : ℝ) (H N : EndH) : EndH :=
 
 end Basic
 
-end InfoGeometry.Canonical.SandboxVerification
+end SandboxVerification

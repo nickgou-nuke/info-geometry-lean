@@ -3,7 +3,7 @@ import InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.EmergentGravity
+namespace EmergentGravity
 
 set_option linter.unusedSectionVars false
 
@@ -414,4 +414,4 @@ def einsteinCartanSystem {idx : Type*} [Fintype idx] [DecidableEq idx]
     (spinDens : idx → idx → idx → ℂ) (Λ κ : ℂ) : Prop :=
   einsteinCartanFieldEq G T_BR g Λ κ ∧ torsionFieldEq Torsion spinDens κ
 
-end InfoGeometry.Canonical.EmergentGravity
+end EmergentGravity

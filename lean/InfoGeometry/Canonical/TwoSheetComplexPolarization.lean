@@ -33,7 +33,7 @@ noncomputable section
 
 open scoped Matrix
 
-namespace InfoGeometry.Canonical.TwoSheetComplexPolarization
+namespace TwoSheetComplexPolarization
 
 /-- The finite real two-sheet carrier. -/
 abbrev SheetMat : Type :=
@@ -190,5 +190,5 @@ theorem twoSheetPolarizationPackage :
     emergentComplexK_sq, physical_ghost_projectors_complement,
     diracHodgeHopping_eq_sheetSwap, bregmanFreeEnergy_zero⟩
 
-end InfoGeometry.Canonical.TwoSheetComplexPolarization
+end TwoSheetComplexPolarization
 

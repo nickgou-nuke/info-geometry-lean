@@ -15,7 +15,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzInductiveLimit
+namespace CuntzInductiveLimit
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
 
@@ -102,4 +102,4 @@ theorem fermionicPartition_converges
   have hβpos : 0 < β := by linarith
   exact ⟨hβpos, fermionicPartitionTruncated_pos primes hprime β hβpos⟩
 
-end InfoGeometry.Algebra.CuntzInductiveLimit
+end CuntzInductiveLimit

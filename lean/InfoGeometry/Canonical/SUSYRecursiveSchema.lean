@@ -8,7 +8,7 @@ Recursive iterative schema specialized to the local SUSY seed
 from `SuperAlgebraEquilibrium`.
 -/
 
-namespace InfoGeometry.Canonical.SUSYRecursiveSchema
+namespace SUSYRecursiveSchema
 
 open Matrix
 open InfoGeometry.Canonical.SuperAlgebraEquilibrium
@@ -94,4 +94,4 @@ theorem adPow_H_Qdag_of_pos :
   rcases Nat.exists_eq_succ_of_ne_zero (Nat.ne_of_gt hn) with ⟨k, rfl⟩
   simpa using adPow_H_Qdag_succ_zero k
 
-end InfoGeometry.Canonical.SUSYRecursiveSchema
+end SUSYRecursiveSchema

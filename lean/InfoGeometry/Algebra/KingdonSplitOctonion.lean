@@ -7,7 +7,7 @@ import Mathlib.LinearAlgebra.StdBasis
 # The real split octonion as a three-dimensional Kingdon target
 -/
 
-namespace InfoGeometry.Algebra.KingdonSplitOctonion
+namespace KingdonSplitOctonion
 
 open InfoGeometry.Algebra.Kingdon
 open InfoGeometry.Physics.ZornMatrixSU3
@@ -2475,4 +2475,4 @@ coordinate preimage constructed above. -/
   apply reducedEquiv.injective
   simp
 
-end InfoGeometry.Algebra.KingdonSplitOctonion
+end KingdonSplitOctonion

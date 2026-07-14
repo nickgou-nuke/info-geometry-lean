@@ -10,7 +10,7 @@ analysis. It provides the finite arithmetic scale data used by the wavelet
 namespace and leaves Hilbert-space MRA constructions to downstream owner files.
 -/
 
-namespace InfoGeometry.Wavelet.PrimeWaveletMRA
+namespace PrimeWaveletMRA
 
 /-- Dyadic scale at level `n`. -/
 def dyadicScale (n : ℕ) : ℕ :=
@@ -52,4 +52,4 @@ theorem primeWaveletWeight_zero_level
     primeWaveletWeight p 0 = 1 := by
   simp [primeWaveletWeight, hp]
 
-end InfoGeometry.Wavelet.PrimeWaveletMRA
+end PrimeWaveletMRA

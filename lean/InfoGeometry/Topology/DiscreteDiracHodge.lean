@@ -25,7 +25,7 @@ physical zero-mode theorem is asserted here.
 
 open Matrix
 
-namespace InfoGeometry.Topology.DiscreteDiracHodge
+namespace DiscreteDiracHodge
 
 noncomputable section
 
@@ -277,4 +277,4 @@ theorem harmonicOneForm_iff_eckmannHarmonic1
 
 end
 
-end InfoGeometry.Topology.DiscreteDiracHodge
+end DiscreteDiracHodge

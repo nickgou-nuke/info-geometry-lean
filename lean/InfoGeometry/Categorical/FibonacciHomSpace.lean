@@ -16,7 +16,7 @@ so a morphism `X ⟶ Y` is simply a block-diagonal matrix:
 - A `X(tau) × Y(tau)` complex matrix.
 -/
 
-namespace InfoGeometry.Categorical.FibonacciHomSpace
+namespace FibonacciHomSpace
 
 open CategoryTheory
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
@@ -68,4 +68,4 @@ noncomputable instance : Category FibCat where
     · exact Matrix.mul_assoc f.unit_comp g.unit_comp h.unit_comp
     · exact Matrix.mul_assoc f.tau_comp g.tau_comp h.tau_comp
 
-end InfoGeometry.Categorical.FibonacciHomSpace
+end FibonacciHomSpace

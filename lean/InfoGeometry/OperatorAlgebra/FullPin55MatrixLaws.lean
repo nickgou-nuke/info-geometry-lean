@@ -24,7 +24,7 @@ or a continuum proof that every non-null unit vector acts by Clifford sandwich.
 It closes the finite basis-generator matrix-law surface used by this repository.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
+namespace FullPin55MatrixLaws
 
 open Matrix
 
@@ -233,4 +233,4 @@ theorem full_pin55_basis_packet :
   exact ⟨pinReflect_all_o55, pinReflect_all_involutive, pinProduct_all_o55,
     pinReflect_basis_action, positive_square_signs, negative_square_signs⟩
 
-end InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
+end FullPin55MatrixLaws

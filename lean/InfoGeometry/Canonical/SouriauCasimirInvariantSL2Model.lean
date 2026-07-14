@@ -13,7 +13,7 @@ No wrapper structures.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SouriauCasimirInvariantSL2Model
+namespace SouriauCasimirInvariantSL2Model
 
 open InfoGeometry.Canonical.SouriauCasimirInvariant
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
@@ -116,4 +116,4 @@ theorem sl2_operatorFenchel_contact_iff
   rw [sl2_operatorFenchelGap_invariant (g := g)
       (pair := pair) (massieu := massieu) (entropy := entropy) (Q := Q) (ξ := ξ)]
 
-end InfoGeometry.Canonical.SouriauCasimirInvariantSL2Model
+end SouriauCasimirInvariantSL2Model

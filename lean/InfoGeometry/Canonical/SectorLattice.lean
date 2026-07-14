@@ -19,7 +19,7 @@ The combined sector projector selects the local corner algebra `E A E` where
 physics takes place.
 -/
 
-namespace InfoGeometry.Canonical.SectorLattice
+namespace SectorLattice
 
 open InfoGeometry.Canonical.CantorCylinderLattice
 open InfoGeometry.Canonical.KreinProjectorLattice
@@ -382,4 +382,4 @@ theorem coarseProjectionAssignment_iInf {n : ℕ} {ι : Sort*}
     coarseProjectionAssignment (⨅ i, Q i) = ⨅ i, coarseProjectionAssignment (Q i) :=
   (projectionAssignment_galoisConnection n).u_iInf
 
-end InfoGeometry.Canonical.SectorLattice
+end SectorLattice

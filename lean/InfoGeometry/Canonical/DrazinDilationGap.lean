@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.DrazinDilationGap
+namespace DrazinDilationGap
 
 /--
 Drazin data for an operator A.
@@ -321,4 +321,4 @@ theorem star_commutator_eq_neg_of_self_adjoint
     star (commutator P G) = -commutator P G := by
   simp [commutator, hP, hG]
 
-end InfoGeometry.Canonical.DrazinDilationGap
+end DrazinDilationGap

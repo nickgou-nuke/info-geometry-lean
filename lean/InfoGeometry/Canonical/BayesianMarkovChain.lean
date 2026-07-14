@@ -19,7 +19,7 @@ No uniqueness theorem, CP-map construction, KMS theorem, or analytic convergence
 claim is asserted here.
 -/
 
-namespace InfoGeometry.Canonical.BayesianMarkovChain
+namespace BayesianMarkovChain
 
 open InfoGeometry.Canonical.TensorColimitExpectation
 
@@ -308,4 +308,4 @@ end BayesianProjection
 
 end TensorLimitStateSpace
 
-end InfoGeometry.Canonical.BayesianMarkovChain
+end BayesianMarkovChain

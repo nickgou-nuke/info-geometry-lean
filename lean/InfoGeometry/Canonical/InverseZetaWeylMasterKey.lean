@@ -36,7 +36,7 @@ Analytic `1 / zeta`, McKean-Singer, Weyl-Kac, Hilbert-Polya, and RH remain open
 outside this finite packet.
 -/
 
-namespace InfoGeometry.Canonical.InverseZetaWeylMasterKey
+namespace InverseZetaWeylMasterKey
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -123,4 +123,4 @@ theorem master_key_summary (P : MasterKeyPacket) :
       P.thermalLattice P.thermalEvaluation
   · exact MasterKeyPacket.wittenIndex_eq_inverseZeta P
 
-end InfoGeometry.Canonical.InverseZetaWeylMasterKey
+end InverseZetaWeylMasterKey

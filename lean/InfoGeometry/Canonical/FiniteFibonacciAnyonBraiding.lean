@@ -21,7 +21,7 @@ interface that can safely connect such future data to the existing braid-word
 rewrite layer.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
+namespace FiniteFibonacciAnyonBraiding
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
@@ -157,4 +157,4 @@ theorem fibonacciProjectiveGate_commute_rewrite_of_evalPhase
       fibonacciProjectiveGate Gate (fibonacciPhaseOfEval χ) readout (left ++ [j, i] ++ right) := by
   exact projectiveBraidGate_commute_rewrite_of_evalPhase Gate χ readout hsep left right
 
-end InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
+end FiniteFibonacciAnyonBraiding

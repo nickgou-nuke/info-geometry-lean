@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
 Symmetric counterpart of the topological endpoint limit argument.
 -/
 
-namespace InfoGeometry.Canonical.AsanoRuelleSymmetricEndpoint
+namespace AsanoRuelleSymmetricEndpoint
 
 open Set Filter Topology
 open InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
@@ -135,4 +135,4 @@ theorem asano_endpoint_disjunction_combined
   · exact asano_endpoint_disjunction_left
       A B C D K1 K2 hD hNondeg hK1_closed hK2_bdd hK1_no_zero h_zerofree
 
-end InfoGeometry.Canonical.AsanoRuelleSymmetricEndpoint
+end AsanoRuelleSymmetricEndpoint

@@ -29,7 +29,7 @@ This file introduces no new mathematical objects. It only assembles existing,
 verified owner theorems into one compact ledger packet.
 -/
 
-namespace InfoGeometry.Canonical.MasterFiniteBridgeLedger
+namespace MasterFiniteBridgeLedger
 
 open InfoGeometry.Canonical.KLDivergenceDecomposition
 open InfoGeometry.Canonical.InfinitesimalDictionaryBridge
@@ -160,4 +160,4 @@ theorem wallpaper_packet (g r : Fin 8) (b d : ℝ) :
 
 end WallpaperLedger
 
-end InfoGeometry.Canonical.MasterFiniteBridgeLedger
+end MasterFiniteBridgeLedger

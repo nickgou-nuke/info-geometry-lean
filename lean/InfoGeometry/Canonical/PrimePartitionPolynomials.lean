@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimePartitionPolynomials
+namespace PrimePartitionPolynomials
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeHurwitzLimit
@@ -490,4 +490,4 @@ theorem local_preserves_unit_circle
 
 end LocalFugacityProjectionWitness
 
-end InfoGeometry.Canonical.PrimePartitionPolynomials
+end PrimePartitionPolynomials

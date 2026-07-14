@@ -24,7 +24,7 @@ It proves only finite algebraic identities.  It does not assert that the
 Einstein-Hilbert term or the Bekenstein-Hawking area law has been induced.
 -/
 
-namespace InfoGeometry.Physics.SouriauMassieuPlanckFunctional
+namespace SouriauMassieuPlanckFunctional
 
 open Finset
 open scoped BigOperators
@@ -161,4 +161,4 @@ theorem souriauFreeEntropyFirstVariation_eq
 
 end
 
-end InfoGeometry.Physics.SouriauMassieuPlanckFunctional
+end SouriauMassieuPlanckFunctional

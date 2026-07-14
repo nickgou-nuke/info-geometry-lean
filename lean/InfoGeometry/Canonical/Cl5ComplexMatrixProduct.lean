@@ -16,7 +16,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 set_option linter.unnecessarySimpa false
 
-namespace InfoGeometry.Canonical.Cl5ComplexMatrixProduct
+namespace Cl5ComplexMatrixProduct
 
 abbrev Vec5 : Type := ℂ × ℂ × ℂ × ℂ × ℂ
 abbrev Mat4C : Type := Matrix (Fin 4) (Fin 4) ℂ
@@ -118,4 +118,4 @@ noncomputable def e5 : CliffordAlgebra q5 := CliffordAlgebra.ι q5 (0,0,0,0,1)
 lemma finrank_prodMat4C : Module.finrank ℂ ProdMat4C = 32 := by
   simp [ProdMat4C, Mat4C, Module.finrank_prod, Module.finrank_matrix, Fintype.card_fin]
 
-end InfoGeometry.Canonical.Cl5ComplexMatrixProduct
+end Cl5ComplexMatrixProduct

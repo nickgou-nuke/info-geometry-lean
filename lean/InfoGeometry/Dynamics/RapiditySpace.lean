@@ -17,7 +17,7 @@ finite `2 × 2` level:
 No KMS condition, modular analyticity, or Rindler thermal theorem is asserted.
 -/
 
-namespace InfoGeometry.Dynamics.RapiditySpace
+namespace RapiditySpace
 
 open Matrix
 open InfoGeometry.Dynamics.HyperbolicComponent
@@ -79,4 +79,4 @@ theorem log_coordinate_rapidity_shift (ξ lam : ℝ) :
   rw [Real.log_exp]
   ring
 
-end InfoGeometry.Dynamics.RapiditySpace
+end RapiditySpace

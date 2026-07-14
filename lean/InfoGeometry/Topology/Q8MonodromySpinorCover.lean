@@ -11,7 +11,7 @@ representation of $V_4$ where the non-trivial Schur multiplier is resolved by
 the central element $-I$.
 -/
 
-namespace InfoGeometry.Topology.Q8MonodromySpinorCover
+namespace Q8MonodromySpinorCover
 
 open Matrix Complex
 
@@ -58,4 +58,4 @@ theorem M_i_M_j_anticommute : M_i * M_j = -(M_j * M_i) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [M_i, M_j, Matrix.mul_apply]
 
-end InfoGeometry.Topology.Q8MonodromySpinorCover
+end Q8MonodromySpinorCover

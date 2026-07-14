@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesKreinNaturalConeBridge
+namespace HestenesKreinNaturalConeBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -290,4 +290,4 @@ end KreinIsometricVectorFlow
 
 end Core
 
-end InfoGeometry.Krein.HestenesKreinNaturalConeBridge
+end HestenesKreinNaturalConeBridge

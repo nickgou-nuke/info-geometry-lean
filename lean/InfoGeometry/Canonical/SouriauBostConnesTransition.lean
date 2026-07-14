@@ -34,7 +34,7 @@ noncomputable section
 
 open scoped Topology
 
-namespace InfoGeometry.Canonical.SouriauBostConnesTransition
+namespace SouriauBostConnesTransition
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -325,4 +325,4 @@ theorem souriau_bost_connes_transition_verified
         (souriau_bost_connes_transition_Package P primesP β hβpos).bulk) :=
   ⟨verifiedTransitionMatrix _⟩
 
-end InfoGeometry.Canonical.SouriauBostConnesTransition
+end SouriauBostConnesTransition

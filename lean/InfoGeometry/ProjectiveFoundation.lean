@@ -30,7 +30,7 @@ open scoped MatrixGroups Topology
 open Filter
 open InfoGeometry.Geometry
 
-namespace InfoGeometry.ProjectiveFoundation
+namespace ProjectiveFoundation
 
 abbrev SL2R := Matrix.SpecialLinearGroup (Fin 2) ℝ
 abbrev SL2Z := Matrix.SpecialLinearGroup (Fin 2) ℤ
@@ -202,4 +202,4 @@ theorem projectiveRepresentation_multiplierClass_eq_zero_iff_exists_splitSection
     (InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation.centralExtension.multiplierClass_eq_zero_iff_exists_splitSection
       (P := P))
 
-end InfoGeometry.ProjectiveFoundation
+end ProjectiveFoundation

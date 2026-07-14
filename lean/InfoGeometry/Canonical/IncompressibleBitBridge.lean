@@ -22,7 +22,7 @@ This bridge packages that corridor without asserting a new global equivalence
 between all incompressible Hessian data and all conformal anomaly data.
 -/
 
-namespace InfoGeometry.Canonical.IncompressibleBitBridge
+namespace IncompressibleBitBridge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.MongeAmpereCramerRao
@@ -525,4 +525,4 @@ theorem not_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume_of_unitOf
 
 end CramerRaoBit
 
-end InfoGeometry.Canonical.IncompressibleBitBridge
+end IncompressibleBitBridge

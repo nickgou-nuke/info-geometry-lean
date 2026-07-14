@@ -19,7 +19,7 @@ ready to feed into the algebraic product lemmas.
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
+namespace AsanoRuelleTopologicalEndpoint
 
 open Set Filter Topology
 
@@ -154,4 +154,4 @@ theorem asano_endpoint_disjunction_left
   have h_in := asano_left_pole_in_K1 A B C D K1 K2 hD hNondeg hK1_closed hK2_bdd h_zerofree
   exact Or.inl ⟨left_pole_nonzero C D K1 hK1_no_zero h_in, h_in⟩
 
-end InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
+end AsanoRuelleTopologicalEndpoint

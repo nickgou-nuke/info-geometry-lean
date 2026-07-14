@@ -28,7 +28,7 @@ Thus `θ` and `O(N,N)` are installed as calibrated symmetry sockets, not as new
 unproved primitives contaminating the core DAG.
 -/
 
-namespace InfoGeometry.Krein.HestenesCPTONNDualityBridge
+namespace HestenesCPTONNDualityBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -267,6 +267,6 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Krein.HestenesCPTONNDualityBridge
+end HestenesCPTONNDualityBridge
 
 end

@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.HestenesCohomology
+namespace HestenesCohomology
 
 /-!
 # Hestenes cohomology/readout layer
@@ -216,4 +216,4 @@ end OmitComplete
 
 end ScalarReadouts
 
-end InfoGeometry.Canonical.HestenesCohomology
+end HestenesCohomology

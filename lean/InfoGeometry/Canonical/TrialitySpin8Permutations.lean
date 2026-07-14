@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.Cl55V4SpinorFragmentation
 -- Conservative boundary-level witness of a 3-cycle permutation on sector labels.
 -- It formalizes the cycle 0 → 1 → 2 → 0 and transport of concrete Cl(5,5) seeds.
 
-namespace InfoGeometry.Canonical.TrialitySpin8Permutations
+namespace TrialitySpin8Permutations
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Canonical.Cl55V4SpinorFragmentation
@@ -92,4 +92,4 @@ theorem trialitySectorTransport_cube_id (p : ConformalNullPair) (s : TrialitySec
     trialitySectorSeed p ((trialityCycle ^ 3) s) = trialitySectorSeed p s := by
   simp [trialityCycle_pow_three]
 
-end InfoGeometry.Canonical.TrialitySpin8Permutations
+end TrialitySpin8Permutations

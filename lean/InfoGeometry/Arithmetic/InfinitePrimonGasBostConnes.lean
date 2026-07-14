@@ -21,7 +21,7 @@ set_option linter.unusedSectionVars false
 open InfoGeometry.Arithmetic.PrimonFinite
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
-namespace InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
+namespace InfinitePrimonGasBostConnes
 
 variable {ι : Type*} [DecidableEq ι]
 variable {A : ℕ → Type*} [∀ n : ℕ, CommRing (A n)]
@@ -96,4 +96,4 @@ theorem infinite_primon_susy_cancellation
   have h_local := local_susy_cancellation (K := K n) modes (q_stage n) (h_nonzero_stage n)
   rw [h_local, map_one]
 
-end InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
+end InfinitePrimonGasBostConnes

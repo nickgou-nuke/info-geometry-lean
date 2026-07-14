@@ -23,7 +23,7 @@ state-functional KMS self-similar fixed operator
 ```
 -/
 
-namespace InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
+namespace BoundedKMSErgodicWeylGWVolumeBridge
 
 open InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge
 open InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
@@ -169,4 +169,4 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
+end BoundedKMSErgodicWeylGWVolumeBridge

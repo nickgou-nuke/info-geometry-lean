@@ -25,7 +25,7 @@ theorems, Fredholm Pfaffians, or spectral triples.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+namespace PrimonMajoranaWittenCharacter
 
 open scoped BigOperators
 
@@ -393,4 +393,4 @@ theorem primonMajoranaWittenCharacterOwnerTarget :
     finiteSpinorPairing_eq_wittenCharacter P s,
     finiteMajoranaPfaffian_eq_wittenCharacter P s⟩
 
-end InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+end PrimonMajoranaWittenCharacter

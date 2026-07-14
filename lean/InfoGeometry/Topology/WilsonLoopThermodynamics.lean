@@ -12,7 +12,7 @@ algebra for transported loop words and the detailed-balance curvature
 collapse used by downstream files.
 -/
 
-namespace InfoGeometry.Topology.WilsonLoopThermodynamics
+namespace WilsonLoopThermodynamics
 
 open InfoGeometry.Topology.ThermodynamicGauge
 
@@ -106,4 +106,4 @@ theorem curvature_vanishes_under_detailed_balance
   rw [thermodynamic_curvature, hdb]
   simp
 
-end InfoGeometry.Topology.WilsonLoopThermodynamics
+end WilsonLoopThermodynamics

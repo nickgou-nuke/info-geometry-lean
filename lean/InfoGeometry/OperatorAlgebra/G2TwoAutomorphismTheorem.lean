@@ -33,7 +33,7 @@ matching the GAP/Sage `G₂(2)` ledger.
 * No statement is made about real or integer split-octonion automorphism groups.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+namespace G2TwoAutomorphismTheorem
 
 /-- One bit of the field `F₂`, represented as `Bool`. -/
 abbrev F2Bit := Bool
@@ -230,4 +230,4 @@ theorem aut_splitOctF2_card_eq_g2twoOrder_from_enumeration
     Fintype.card SplitOctF2Aut = g2twoOrder := by
   simpa [g2twoOrder] using h_enum
 
-end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
+end G2TwoAutomorphismTheorem

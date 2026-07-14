@@ -27,7 +27,7 @@ here.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.CastroThetaScalingBridge
+namespace CastroThetaScalingBridge
 
 open scoped BigOperators
 
@@ -157,4 +157,4 @@ theorem finite_kronecker_resolution
       simp [kronecker, hki, hij]
     · simp [kronecker, hki]
 
-end InfoGeometry.Arithmetic.CastroThetaScalingBridge
+end CastroThetaScalingBridge

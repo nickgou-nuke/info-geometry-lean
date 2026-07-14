@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 
 noncomputable section
 
-namespace InfoGeometry.Lie.CanonicalZornDerivation
+namespace CanonicalZornDerivation
 
 open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 
@@ -137,4 +137,4 @@ noncomputable def vectorCanonicalLieEquiv :
           (D (E (canonicalVectorEquiv X))) (E (D (canonicalVectorEquiv X)))
       rfl }
 
-end InfoGeometry.Lie.CanonicalZornDerivation
+end CanonicalZornDerivation

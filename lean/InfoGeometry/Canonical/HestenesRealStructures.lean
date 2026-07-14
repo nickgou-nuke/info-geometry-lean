@@ -17,7 +17,7 @@ This file stays strictly in the language
 - `MajoranaRealStructure` as a real involution and its fixed sector.
 -/
 
-namespace InfoGeometry.Canonical.HestenesRealStructures
+namespace HestenesRealStructures
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.OperatorDictionary
@@ -280,4 +280,4 @@ end MajoranaRealStructure
 
 end Core
 
-end InfoGeometry.Canonical.HestenesRealStructures
+end HestenesRealStructures

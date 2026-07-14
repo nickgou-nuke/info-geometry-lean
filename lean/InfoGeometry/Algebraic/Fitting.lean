@@ -11,7 +11,7 @@ This module formalizes the kernel-range splitting for operators with finite
 ascent and descent at zero, strictly avoiding complex analysis.
 -/
 
-namespace InfoGeometry.Algebraic.Fitting
+namespace Fitting
 
 variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
 
@@ -145,4 +145,4 @@ theorem injective_on_range {T : Module.End K V} {k : ℕ}
   rw [← ha] at h_y
   exact h_y
 
-end InfoGeometry.Algebraic.Fitting
+end Fitting

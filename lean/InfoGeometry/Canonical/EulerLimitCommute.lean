@@ -6,7 +6,7 @@ import Mathlib
 Finite Euler-step commutation lemma for matrix operators.
 -/
 
-namespace InfoGeometry.Canonical.EulerLimitCommute
+namespace EulerLimitCommute
 
 open Matrix
 
@@ -112,4 +112,4 @@ theorem eulerStep_mul_sameScale
   · simp [Matrix.mul_apply, Fin.sum_univ_two]
     ring
 
-end InfoGeometry.Canonical.EulerLimitCommute
+end EulerLimitCommute

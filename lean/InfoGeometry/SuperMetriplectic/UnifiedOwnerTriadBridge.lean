@@ -17,7 +17,7 @@ packages explicit scalar readouts of the operator owner channels and records
 their agreement with the already-owned scalar Schur/Drazin/body surfaces.
 -/
 
-namespace InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
+namespace UnifiedOwnerTriadBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge
@@ -129,4 +129,4 @@ end UnifiedOwnerTriadCompatibility
 
 end Core
 
-end InfoGeometry.SuperMetriplectic.UnifiedOwnerTriadBridge
+end UnifiedOwnerTriadBridge

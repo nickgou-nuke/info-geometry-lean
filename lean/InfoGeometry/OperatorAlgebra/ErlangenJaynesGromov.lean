@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
+namespace ErlangenJaynesGromov
 
 universe uR uA uB uC uS uι
 
@@ -850,4 +850,4 @@ theorem dual_rescaled_power
 
 end OperatorErlangenSystem
 
-end InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
+end ErlangenJaynesGromov

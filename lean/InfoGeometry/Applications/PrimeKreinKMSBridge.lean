@@ -26,7 +26,7 @@ continuation, or zeta-zero statement is proved here.
 
 noncomputable section
 
-namespace InfoGeometry.Applications.PrimeKreinKMSBridge
+namespace PrimeKreinKMSBridge
 
 /-! ## 1. Positive primon Gibbs/KMS sector -/
 
@@ -424,4 +424,4 @@ theorem finite_positiveGibbsWeight_nonneg
     0 ≤ InfoGeometry.Arithmetic.PrimonKMSKreinBridge.positiveGibbsWeight energy β s :=
   InfoGeometry.Arithmetic.PrimonKMSKreinBridge.positiveGibbsWeight_nonneg energy β s
 
-end InfoGeometry.Applications.PrimeKreinKMSBridge
+end PrimeKreinKMSBridge

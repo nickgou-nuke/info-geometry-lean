@@ -15,7 +15,7 @@ import Mathlib
 
 import Mathlib
 
-namespace InfoGeometry.Canonical.TriFacetComplete
+namespace TriFacetComplete
 
 variable {A : Type*} [Field A]
 
@@ -117,4 +117,4 @@ theorem P_hyp_sub_P_ell (h2 : (2 : A) ≠ 0) (O : A) : P_hyp O - P_ell O = O := 
 theorem sum_to_id (h2 : (2 : A) ≠ 0) (O : A) : P_hyp O + P_ell O + P_par O = 1 := by
   unfold P_hyp P_ell P_par; field_simp [h2]; ring
 
-end InfoGeometry.Canonical.TriFacetComplete
+end TriFacetComplete

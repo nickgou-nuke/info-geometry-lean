@@ -13,7 +13,7 @@ projection and resonance theorems under a canonical owner-facing namespace.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ProjectedLFunctionCalibration
+namespace ProjectedLFunctionCalibration
 
 open InfoGeometry.Automorphic.SiegelResonance
 
@@ -61,4 +61,4 @@ theorem projectedAutomorphicLFunctionOwnerTarget :
   exact InfoGeometry.Automorphic.SiegelResonance.projectedAutomorphicLFunctionOwnerTarget
     Bulk Boundary W Λ F s
 
-end InfoGeometry.Canonical.ProjectedLFunctionCalibration
+end ProjectedLFunctionCalibration

@@ -1,6 +1,6 @@
 import InfoGeometry.Causal.ProofDAGRepresentation
 
-namespace InfoGeometry.Causal.ProofGraphExteriorCalculus
+namespace ProofGraphExteriorCalculus
 
 open InfoGeometry.Causal.ProofDAGRepresentation
 
@@ -102,4 +102,4 @@ theorem grad_ofProofDAG_apply
     grad (DirectedProofGraph.ofProofDAG G) f a b = f b - f a := by
   exact grad_apply_of_edge _ _ hab
 
-end InfoGeometry.Causal.ProofGraphExteriorCalculus
+end ProofGraphExteriorCalculus

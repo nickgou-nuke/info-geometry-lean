@@ -12,7 +12,7 @@ where it is the anticommutator.  No completion, analytic limit, or hidden
 proof-carrying packet is introduced.
 -/
 
-namespace InfoGeometry.Algebra.SupergradedBracket
+namespace SupergradedBracket
 
 universe u
 
@@ -131,4 +131,4 @@ theorem superBracketClosure_all
 
 end Chain
 
-end InfoGeometry.Algebra.SupergradedBracket
+end SupergradedBracket

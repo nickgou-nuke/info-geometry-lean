@@ -27,7 +27,7 @@ so `⋆χ² = 1`. This is a chirality/grading operator, not the Hestenes phase
 axis `K`, which has square `-1`.
 -/
 
-namespace InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
+namespace DrazinMPChiralHodgeConeBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinLightConeDictionary
@@ -381,4 +381,4 @@ end DrazinMPChiralHodgeConeBridge
 
 end Core
 
-end InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
+end DrazinMPChiralHodgeConeBridge

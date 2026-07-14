@@ -1,7 +1,7 @@
 import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
-namespace InfoGeometry.Convex.Euclidean
+namespace Euclidean
 
 open InfoGeometry.Convex
 
@@ -141,4 +141,4 @@ theorem neg_divergence_eq_dot_minus_half_norms (q k : E) :
     real_inner_self_eq_norm_sq q, real_inner_self_eq_norm_sq k, norm_sub_sq_real]
   ring_nf
 
-end InfoGeometry.Convex.Euclidean
+end Euclidean

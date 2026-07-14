@@ -18,7 +18,7 @@ the `Cl(1,1)` tensor tower:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
+namespace Cl11MonodromyDictionaryConstruction
 
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 
@@ -157,4 +157,4 @@ theorem carrierResidue_globally_parabolic_of_middle_annihilation
   intro X
   exact carrierResidue_iterate_eq_zero_of_middle_annihilation X (h X)
 
-end InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
+end Cl11MonodromyDictionaryConstruction

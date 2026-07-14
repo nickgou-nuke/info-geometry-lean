@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
-namespace InfoGeometry.LLM.KreinAttentionEnergy
+namespace KreinAttentionEnergy
 
 open InfoGeometry.Canonical.Attention
 open InfoGeometry.Clifford
@@ -49,4 +49,4 @@ theorem kreinAttentionWeights_sum_one
   simpa [kreinAttentionWeights] using
     (attentionWeights_sum_one (q := q) (ctx := ctx) (matchForm := splitB11) (β := β))
 
-end InfoGeometry.LLM.KreinAttentionEnergy
+end KreinAttentionEnergy

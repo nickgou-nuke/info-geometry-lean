@@ -15,7 +15,7 @@ This file states the Cartan-action facts in explicit algebraic form:
 - channel-boost scaling in exponential form.
 -/
 
-namespace InfoGeometry.Canonical.Cl11LorentzAction
+namespace Cl11LorentzAction
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.KKTLorentzOrbitBridge
@@ -400,4 +400,4 @@ theorem modularAdjointFlow_fixes_gZeroPart
 
 end Core
 
-end InfoGeometry.Canonical.Cl11LorentzAction
+end Cl11LorentzAction

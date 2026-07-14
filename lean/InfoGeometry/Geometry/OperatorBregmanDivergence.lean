@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.PO55RicciFlux
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.OperatorBregmanDivergence
+namespace OperatorBregmanDivergence
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorFenchelRegularCone
@@ -413,4 +413,4 @@ def BregmanRicciFluxBridgeOwnerTarget
       R.flux x y =
         D2.eval (modularBregmanEnergy ω gradPhi F (conePointOf x y))
 
-end InfoGeometry.Geometry.OperatorBregmanDivergence
+end OperatorBregmanDivergence

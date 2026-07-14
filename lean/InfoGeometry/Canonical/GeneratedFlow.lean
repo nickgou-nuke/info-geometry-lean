@@ -36,7 +36,7 @@ def along (Φ : GeneratedFlow G F) (L : LogGenerator W G) : W → F :=
 
 /-- Pointwise expansion of `GeneratedFlow.along`. -/
 @[simp] theorem along_apply (Φ : GeneratedFlow G F) (L : LogGenerator W G) (w : W) :
-    Φ.along L w = Φ.flowOf (L.logGen w) := by
+    along Φ L w = flowOf Φ (L.logGen w) := by
   rfl
 
 end GeneratedFlow
@@ -60,7 +60,8 @@ def along (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) : G → R :=
 
 /-- Pointwise expansion of `GeometricResponse.along`. -/
 @[simp] theorem along_apply (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) (g : G) :
-    resp.along Φ g = resp.responseOf (Φ.flowOf g) := by
+    GeometricResponse.along resp Φ g =
+      GeometricResponse.responseOf resp (GeneratedFlow.flowOf Φ g) := by
   rfl
 
 /-- Full relative-geometry pipeline from log-generator to geometric response. -/
@@ -71,19 +72,17 @@ def fromLogGenerator (resp : GeometricResponse F R) (Φ : GeneratedFlow G F)
 /-- Pointwise expansion of `fromLogGenerator`. -/
 @[simp] theorem fromLogGenerator_apply
     (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) (L : LogGenerator W G) (w : W) :
-    resp.fromLogGenerator Φ L w = resp.responseOf (Φ.flowOf (L.logGen w)) := by
+    GeometricResponse.fromLogGenerator resp Φ L w =
+      GeometricResponse.responseOf resp (GeneratedFlow.flowOf Φ (L.logGen w)) := by
   rfl
 
 /-- `fromLogGenerator` factors through `along` after applying the log-generator. -/
 @[simp] theorem fromLogGenerator_eq_along_comp
     (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) (L : LogGenerator W G) :
-    resp.fromLogGenerator Φ L = resp.along Φ ∘ L.logGen := by
+    GeometricResponse.fromLogGenerator resp Φ L =
+      GeometricResponse.along resp Φ ∘ L.logGen := by
   funext w
   rfl
-
-attribute [spine_functor, spine_functor_lift] GeneratedFlow.along
-attribute [spine_functor, spine_functor_responder] GeometricResponse.along
-attribute [spine_functor, spine_functor_responder] GeometricResponse.fromLogGenerator
 
 end GeometricResponse
 
@@ -97,12 +96,12 @@ def generate (L : LogGenerator W G) (Φ : GeneratedFlow G F) : W → F :=
 
 /-- `generate` is the canonical alias for `GeneratedFlow.along`. -/
 @[simp] theorem generate_eq_along (L : LogGenerator W G) (Φ : GeneratedFlow G F) :
-    L.generate Φ = Φ.along L := by
+    LogGenerator.generate L Φ = GeneratedFlow.along Φ L := by
   rfl
 
 /-- Pointwise expansion of `generate`. -/
 @[simp] theorem generate_apply (L : LogGenerator W G) (Φ : GeneratedFlow G F) (w : W) :
-    L.generate Φ w = Φ.flowOf (L.logGen w) := by
+    LogGenerator.generate L Φ w = GeneratedFlow.flowOf Φ (L.logGen w) := by
   rfl
 
 /-- Read geometric response from a logarithmic generator through a flow. -/
@@ -113,24 +112,23 @@ def respond (L : LogGenerator W G) (Φ : GeneratedFlow G F)
 /-- `respond` is the direct alias-expansion of `fromLogGenerator`. -/
 @[simp] theorem respond_eq_fromLogGenerator
     (L : LogGenerator W G) (Φ : GeneratedFlow G F) (resp : GeometricResponse F R) :
-    L.respond Φ resp = resp.fromLogGenerator Φ L := by
+    LogGenerator.respond L Φ resp = GeometricResponse.fromLogGenerator resp Φ L := by
   rfl
 
 /-- Reading response after generation factors through the generated transport. -/
 theorem respond_eq_responseOf_comp_generate
     (L : LogGenerator W G) (Φ : GeneratedFlow G F) (resp : GeometricResponse F R) :
-    L.respond Φ resp = resp.responseOf ∘ L.generate Φ := by
+    LogGenerator.respond L Φ resp =
+      GeometricResponse.responseOf resp ∘ LogGenerator.generate L Φ := by
   funext w
   rfl
 
 /-- Pointwise form of `respond_eq_responseOf_comp_generate`. -/
 theorem respond_apply
     (L : LogGenerator W G) (Φ : GeneratedFlow G F) (resp : GeometricResponse F R) (w : W) :
-    L.respond Φ resp w = resp.responseOf (L.generate Φ w) := by
+    LogGenerator.respond L Φ resp w =
+      GeometricResponse.responseOf resp (LogGenerator.generate L Φ w) := by
   rfl
-
-attribute [spine_functor, spine_functor_lift] LogGenerator.generate
-attribute [spine_functor, spine_functor_responder] LogGenerator.respond
 
 end LogGenerator
 

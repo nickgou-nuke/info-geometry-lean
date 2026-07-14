@@ -4,7 +4,7 @@ import Mathlib.Data.Set.Basic
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.WheelerComplexity
+namespace WheelerComplexity
 
 /-!
 # Wheeler's "It from Bit" and Cosmological Complexity
@@ -69,4 +69,4 @@ upper limit `C_max`, representing the finite information capacity of the region.
 structure BekensteinBoundedSpace (S P : Type*) (vacuum : S) (eval : P → S → S) (length : P → ℕ) (C_max : ℕ) : Prop where
   bounded : ∀ (s : S), stateComplexity vacuum eval length s ≤ C_max
 
-end InfoGeometry.Canonical.WheelerComplexity
+end WheelerComplexity

@@ -6,7 +6,7 @@ import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 Canonical facade for finite log-sum-exp potentials and scaled Gibbs/OT bridges.
 -/
 
-namespace InfoGeometry.Canonical.LogSumExp
+namespace LogSumExp
 
 export InfoGeometry.Analytic (
   logSumExpPartition
@@ -39,4 +39,4 @@ export InfoGeometry.Analytic (
     {ι : Type _} [Fintype ι] (w a : ι → ℝ) (θ : ℝ) :
     logSumExp w a θ = Real.log (logSumExpPartition w a θ) := rfl
 
-end InfoGeometry.Canonical.LogSumExp
+end LogSumExp

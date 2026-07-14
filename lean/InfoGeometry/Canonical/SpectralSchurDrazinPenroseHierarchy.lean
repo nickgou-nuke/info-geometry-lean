@@ -19,7 +19,7 @@ statements.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
+namespace SpectralSchurDrazinPenroseHierarchy
 
 open InfoGeometry.Singular.Drazin
 open InfoGeometry.Singular.MoorePenrose
@@ -90,4 +90,4 @@ theorem penrose_laws (M : MoorePenroseMetricReadout Op) :
 
 end MoorePenroseMetricReadout
 
-end InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
+end SpectralSchurDrazinPenroseHierarchy

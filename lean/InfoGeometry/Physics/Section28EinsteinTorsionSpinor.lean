@@ -26,7 +26,7 @@ Dirac-equation theorem, or physical Einstein--Cartan field equation is asserted.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section28EinsteinTorsionSpinor
+namespace Section28EinsteinTorsionSpinor
 
 /-- Four-dimensional finite index set used for component shadows. -/
 abbrev Idx4 := Fin 4
@@ -138,6 +138,6 @@ theorem repaired_section28_symmetric_residual_packet
     (spinorStressShadow_symmetric hg)
     (torsionStressShadow_symmetric hg hB)
 
-end InfoGeometry.Physics.Section28EinsteinTorsionSpinor
+end Section28EinsteinTorsionSpinor
 
 end noncomputable section

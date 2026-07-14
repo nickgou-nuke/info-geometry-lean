@@ -20,7 +20,7 @@ No RH claim is added here.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SelfConcordantZetaBarrierZetaPeriodBridge
+namespace SelfConcordantZetaBarrierZetaPeriodBridge
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
@@ -57,4 +57,4 @@ theorem zetaPeriod_zero_implies_criticalLine
   exact SelfConcordantZetaBarrier.variationalRH_implies_criticalLine
     C.barrier s hxi
 
-end InfoGeometry.Canonical.SelfConcordantZetaBarrierZetaPeriodBridge
+end SelfConcordantZetaBarrierZetaPeriodBridge

@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace InfoGeometry.Krein.HestenesStandardFormNaturalConeAdapter
+namespace HestenesStandardFormNaturalConeAdapter
 
 open InfoGeometry.Canonical.StandardFormNaturalConeBridge
 open InfoGeometry.Krein.HestenesKreinNaturalConeBridge
@@ -218,4 +218,4 @@ end CanonicalRealizedByHestenesKrein
 
 end Core
 
-end InfoGeometry.Krein.HestenesStandardFormNaturalConeAdapter
+end HestenesStandardFormNaturalConeAdapter

@@ -12,7 +12,7 @@ This is a finite witness layer:
 * only local bilinear compatibility identities are formalized.
 -/
 
-namespace InfoGeometry.Canonical.SpinorLieDerivative
+namespace SpinorLieDerivative
 
 open InfoGeometry.Canonical.CoordinateFreeSouriau
 
@@ -136,4 +136,4 @@ theorem sigma_zero_iff_bilinear_equilibrium
 
 end
 
-end InfoGeometry.Canonical.SpinorLieDerivative
+end SpinorLieDerivative

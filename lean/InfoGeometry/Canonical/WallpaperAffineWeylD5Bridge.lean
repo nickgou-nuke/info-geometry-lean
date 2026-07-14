@@ -22,7 +22,7 @@ compatibility that the owner files can prove.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
+namespace WallpaperAffineWeylD5Bridge
 
 open InfoGeometry.Canonical.WallpaperPin55RootCrossSection
 
@@ -87,4 +87,4 @@ theorem wallpaper_to_affine_weyl_d5_packet (t : Z2) :
       matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t) := by
   exact ⟨latticeEmbed_sum_zero t, latticeEmbed_sigmaX t, latticeEmbed_sigmaD t⟩
 
-end InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
+end WallpaperAffineWeylD5Bridge

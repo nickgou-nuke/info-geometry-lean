@@ -10,7 +10,7 @@ witness, e.g. normal or self-adjoint finite-dimensional Hilbert data.
 This module does not claim that semisimple zero alone is sufficient.
 -/
 
-namespace InfoGeometry.Canonical.NormalSemisimpleAgreement
+namespace NormalSemisimpleAgreement
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
 
@@ -118,4 +118,4 @@ structure NonnormalTearPoint where
   nonnormalityObstruction : Prop
   agreementRequiresMetricWitness : Prop
 
-end InfoGeometry.Canonical.NormalSemisimpleAgreement
+end NormalSemisimpleAgreement

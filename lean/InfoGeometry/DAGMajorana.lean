@@ -15,7 +15,7 @@ Paths map to Majorana operators; commuting diamonds may carry central residues.
 
 noncomputable section
 
-namespace InfoGeometry.DAGMajorana
+namespace DAGMajorana
 
 open DAG
 
@@ -67,4 +67,4 @@ theorem central_residue_binary_for_obstruction_readout
   intro u v
   exact F.residue_binary u v
 
-end InfoGeometry.DAGMajorana
+end DAGMajorana

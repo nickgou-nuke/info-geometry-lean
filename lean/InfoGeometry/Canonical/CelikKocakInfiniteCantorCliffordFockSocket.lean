@@ -23,7 +23,7 @@ No Hilbert--Polya claim.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
+namespace CelikKocakInfiniteCantorCliffordFockSocket
 
 open InfoGeometry.Topology.FractalCantorFockWitness
 
@@ -53,4 +53,4 @@ def carrierData_readout {Op E : Type*} [Ring Op]
     CelikKocakInfiniteFockCarrierData E :=
   S.carrierData
 
-end InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
+end CelikKocakInfiniteCantorCliffordFockSocket

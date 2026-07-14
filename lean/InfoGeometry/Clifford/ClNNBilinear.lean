@@ -18,7 +18,7 @@ No witness packet is introduced here.  Every law is a theorem from the explicit
 recursive definitions and mathlib's Clifford-algebra relations.
 -/
 
-namespace InfoGeometry.Clifford.ClNNBilinear
+namespace ClNNBilinear
 
 open InfoGeometry.Clifford
 open InfoGeometry.CliffordTower
@@ -296,4 +296,4 @@ theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_from_hyperbolic_pairin
   rw [gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_eq_hyperbolic_pairing]
   simp [hyperbolic_headNullMinus_headNullPlus_pairing]
 
-end InfoGeometry.Clifford.ClNNBilinear
+end ClNNBilinear

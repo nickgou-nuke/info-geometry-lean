@@ -16,7 +16,7 @@ existing owner facts on the doubled carrier:
   generator.
 -/
 
-namespace InfoGeometry.Canonical.KreinDiracSpectralLift
+namespace KreinDiracSpectralLift
 
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Canonical.KreinDiracPolarizationBridge
@@ -135,4 +135,4 @@ theorem normalized_logKreinDiracSpectralLift_of_strictSymmetry
 
 end Doubled
 
-end InfoGeometry.Canonical.KreinDiracSpectralLift
+end KreinDiracSpectralLift

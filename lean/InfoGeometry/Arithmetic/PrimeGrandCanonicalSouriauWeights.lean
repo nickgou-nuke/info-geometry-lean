@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauWeights
+namespace PrimeGrandCanonicalSouriauWeights
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
@@ -196,4 +196,4 @@ theorem finitePrimeGrandPotential_eq
       -β.s⁻¹ * massieuPlanck (finitePrimeBosonGrandPartition P β) := by
   rfl
 
-end InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauWeights
+end PrimeGrandCanonicalSouriauWeights

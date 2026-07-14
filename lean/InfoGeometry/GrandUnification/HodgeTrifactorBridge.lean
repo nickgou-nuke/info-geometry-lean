@@ -34,7 +34,7 @@ Any identification with analytic Hodge decomposition, zeta zeros, Dirac-Hodge
 operators, KMS thermodynamics, CFT, or Riemann-hypothesis statements.
 -/
 
-namespace InfoGeometry.GrandUnification.HodgeTrifactorBridge
+namespace HodgeTrifactorBridge
 
 open InfoGeometry.Canonical.TrifactorDecomposition
 
@@ -213,4 +213,4 @@ theorem linearMap_preserves_active_sector_vanishing
     ← linearMap_map_coexactSector (T := T) F ρ,
     ← F.map_add, hactive, F.map_zero]
 
-end InfoGeometry.GrandUnification.HodgeTrifactorBridge
+end HodgeTrifactorBridge

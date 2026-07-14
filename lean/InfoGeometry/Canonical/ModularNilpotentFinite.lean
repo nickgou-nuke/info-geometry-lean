@@ -9,7 +9,7 @@ import Mathlib.Tactic
 Parabolic nilpotent modular flow and global mode zero-anomaly readouts.
 -/
 
-namespace InfoGeometry.Canonical.ModularNilpotentFinite
+namespace ModularNilpotentFinite
 
 open Matrix
 open Filter
@@ -268,7 +268,7 @@ theorem superVirasoroCentralPolynomial_zero_of_global_mode
     InfoGeometry.OperatorAlgebra.SuperVirasoroExtension.virasoroCentralPolynomial m = 0 :=
   InfoGeometry.OperatorAlgebra.SuperVirasoroExtension.anomalyCoefficient_zero_on_global_modes m hm
 
-end InfoGeometry.Canonical.ModularNilpotentFinite
+end ModularNilpotentFinite
 
 namespace InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 

@@ -18,7 +18,7 @@ The contract records one fixed orientation and the explicit equivalence under:
 - dictionary-vs-owner commutator orientation on projector fluxes.
 -/
 
-namespace InfoGeometry.Canonical.ModularOrientationContract
+namespace ModularOrientationContract
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.Prelude
@@ -181,4 +181,4 @@ theorem orientationFlip_equivalence_package
 
 end Core
 
-end InfoGeometry.Canonical.ModularOrientationContract
+end ModularOrientationContract

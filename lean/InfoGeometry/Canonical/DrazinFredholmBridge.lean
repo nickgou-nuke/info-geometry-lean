@@ -19,7 +19,7 @@ This file is intentionally narrow:
 No determinant/trace-class analytics are introduced here.
 -/
 
-namespace InfoGeometry.Canonical.DrazinFredholmBridge
+namespace DrazinFredholmBridge
 
 open InfoGeometry.Canonical.DrazinKreinCompatibility
 open InfoGeometry.KK
@@ -183,4 +183,4 @@ theorem defectProjector_ne_zero_of_package
 
 end CompactnessPackage
 
-end InfoGeometry.Canonical.DrazinFredholmBridge
+end DrazinFredholmBridge

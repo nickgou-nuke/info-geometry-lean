@@ -31,7 +31,7 @@ open scoped InnerProductSpace
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.Topology.FractalCantorFockWitness
+namespace FractalCantorFockWitness
 
 /-- Symbolic Cantor boundary: infinite binary address space. -/
 abbrev CantorBoundary := ℕ → Bool
@@ -797,4 +797,4 @@ def fractalFockFierzCoordinate
     (ch : FierzChannel) : ℝ :=
   R.channel ch (fractalFockMatterEnvelope D G x)
 
-end InfoGeometry.Topology.FractalCantorFockWitness
+end FractalCantorFockWitness

@@ -5,7 +5,7 @@ import InfoGeometry.Topology.TwistedCohomologyWeyl
 import InfoGeometry.Topology.BrillouinKleinBottleManifold
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 
-namespace InfoGeometry.Physics.KleinTransitionGlideSkeleton
+namespace KleinTransitionGlideSkeleton
 
 open InfoGeometry.Physics.ZornTkkAnomalyCancellation
 open InfoGeometry.Physics.KleinBottleCosmology
@@ -81,4 +81,4 @@ abbrev brillouin_klein_wallpaper_cross_section_packet :=
 abbrev klein_bottle_cosmology_packet :=
   InfoGeometry.Physics.KleinBottleCosmology.klein_bottle_cosmology_packet
 
-end InfoGeometry.Physics.KleinTransitionGlideSkeleton
+end KleinTransitionGlideSkeleton

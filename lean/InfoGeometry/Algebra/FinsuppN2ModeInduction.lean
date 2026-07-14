@@ -11,7 +11,7 @@ Witt algebra uses `ℤ →₀ 𝕜`.
 No analytic limit is asserted.  No wrapper/certificate/law fields are used.
 -/
 
-namespace InfoGeometry.Algebra.FinsuppN2ModeInduction
+namespace FinsuppN2ModeInduction
 
 open InfoGeometry.Algebra.FiniteN2Induction
 
@@ -215,4 +215,4 @@ theorem finsuppMode_preserves_n2_closures_eq
         ((modeN2ClosureEq_iff_modeN2Closure Q R H Z).2 hQR),
       iterateModeFamily_preserves_n2_square_closure φ n Q R H Z hQ hR hQR⟩
 
-end InfoGeometry.Algebra.FinsuppN2ModeInduction
+end FinsuppN2ModeInduction

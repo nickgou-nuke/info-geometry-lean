@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace InfoGeometry.Fibonacci.FibAnyonThm5
+namespace FibAnyonThm5
 
 noncomputable section
 
@@ -32,4 +32,4 @@ abbrev braidGeneratorFamily (n : ℕ) : Type :=
 
 end
 
-end InfoGeometry.Fibonacci.FibAnyonThm5
+end FibAnyonThm5

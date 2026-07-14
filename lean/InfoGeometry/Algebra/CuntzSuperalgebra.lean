@@ -21,7 +21,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CuntzSuperalgebra
+namespace CuntzSuperalgebra
 
 /-! ## Parity on the free tensor algebra -/
 
@@ -325,4 +325,4 @@ noncomputable def labeledParityEquiv {n : ℕ} (δ : Fin n → Bool) :
   map_add' := map_add (labeledParity δ)
   commutes' := (labeledParity δ).commutes
 
-end InfoGeometry.Algebra.CuntzSuperalgebra
+end CuntzSuperalgebra

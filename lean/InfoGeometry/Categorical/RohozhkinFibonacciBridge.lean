@@ -20,7 +20,7 @@ Not closed here:
   first principles.
 -/
 
-namespace InfoGeometry.Categorical.RohozhkinFibonacciBridge
+namespace RohozhkinFibonacciBridge
 
 open InfoGeometry.Topology.RohozhkinDelaunayBraiding
 open InfoGeometry.Categorical.MTC_PentagonTriangle
@@ -44,4 +44,4 @@ theorem rohozhkin_fibonacci_bridge
   intro _
   trivial
 
-end InfoGeometry.Categorical.RohozhkinFibonacciBridge
+end RohozhkinFibonacciBridge

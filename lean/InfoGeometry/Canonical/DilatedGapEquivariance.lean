@@ -17,7 +17,7 @@ This file stays entirely non-coordinate:
 - transported parity/modular gap residual on the doubled-carrier lane.
 -/
 
-namespace InfoGeometry.Canonical.DilatedGapEquivariance
+namespace DilatedGapEquivariance
 
 open InfoGeometry.Canonical.AnalyticalIndex
 open InfoGeometry.Canonical.ProjectorEquivariance
@@ -122,4 +122,4 @@ theorem transportedParityModularGapObstruction_eq_zero_of_commute_phaseLinearPar
 
 end TransportedGap
 
-end InfoGeometry.Canonical.DilatedGapEquivariance
+end DilatedGapEquivariance

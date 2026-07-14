@@ -13,7 +13,7 @@ Canonical KL umbrella:
   foundation and is not redefined here.
 -/
 
-namespace InfoGeometry.KL
+namespace KL
 
 
 open scoped BigOperators ENNReal
@@ -70,4 +70,4 @@ noncomputable def renyiBridge
   unfold renyiBridge
   field_simp [hs]
 
-end InfoGeometry.KL
+end KL

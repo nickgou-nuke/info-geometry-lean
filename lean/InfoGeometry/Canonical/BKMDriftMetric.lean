@@ -28,7 +28,7 @@ the genuine infinite-dimensional Kubo-Mori form, or that a physical mass exists
 without an explicit calibration predicate.
 -/
 
-namespace InfoGeometry.Canonical.BKMDriftMetric
+namespace BKMDriftMetric
 
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 open InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
@@ -276,4 +276,4 @@ theorem physicalMass_nonnegative
 
 end OperatorBKMDriftFusion
 
-end InfoGeometry.Canonical.BKMDriftMetric
+end BKMDriftMetric

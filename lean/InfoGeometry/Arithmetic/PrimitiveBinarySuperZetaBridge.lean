@@ -21,7 +21,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
+namespace PrimitiveBinarySuperZetaBridge
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.PrimitiveSouriauZeta
@@ -333,4 +333,4 @@ theorem PrimitiveBinarySupport.partition_eq_exp_sum
 
 end FinitePrimeBitLattice
 
-end InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
+end PrimitiveBinarySuperZetaBridge

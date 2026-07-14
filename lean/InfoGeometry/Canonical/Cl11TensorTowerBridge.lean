@@ -17,7 +17,7 @@ It does **not** prove a hyperfinite `II₁` factor theorem, a Type `III`
 classification theorem, or any general Jones-subfactor completeness claim.
 -/
 
-namespace InfoGeometry.Canonical.Cl11TensorTowerBridge
+namespace Cl11TensorTowerBridge
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerIteration
@@ -128,4 +128,4 @@ theorem scalar_normalizedLogDet_tensorId2_step
 and no general Jones-subfactor theorem are proved here.]
 -/
 
-end InfoGeometry.Canonical.Cl11TensorTowerBridge
+end Cl11TensorTowerBridge

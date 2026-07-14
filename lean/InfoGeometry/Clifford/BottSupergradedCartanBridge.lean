@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped Matrix
 
-namespace InfoGeometry.Clifford.BottSupergradedCartanBridge
+namespace BottSupergradedCartanBridge
 
 open InfoGeometry.Algebra.SupergradedBracket
 open InfoGeometry.Clifford.BottPeriodicity
@@ -64,4 +64,4 @@ theorem supergraded_bott_chiral_cartan_packet
     splitQ11_chiral_pair_decomposition x,
     C_isCartanInvolution (J1 := J1) (n := n) hJ1_sq hJ1t⟩
 
-end InfoGeometry.Clifford.BottSupergradedCartanBridge
+end BottSupergradedCartanBridge

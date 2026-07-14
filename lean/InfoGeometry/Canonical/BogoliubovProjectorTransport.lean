@@ -3,7 +3,7 @@ import InfoGeometry.Krein.SplitQuadraticSheets
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
-namespace InfoGeometry.Canonical.BogoliubovProjectorTransport
+namespace BogoliubovProjectorTransport
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BogoliubovClosedForms
@@ -385,4 +385,4 @@ end Sheets
 
 end Basic
 
-end InfoGeometry.Canonical.BogoliubovProjectorTransport
+end BogoliubovProjectorTransport

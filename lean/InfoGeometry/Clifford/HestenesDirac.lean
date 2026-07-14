@@ -31,7 +31,7 @@ packets until a lower analytic owner proves them from a concrete differential
 model.
 -/
 
-namespace InfoGeometry.Clifford.HestenesDirac
+namespace HestenesDirac
 
 /--
 A minimal real spacetime-algebra interface for the Dirac-Hestenes corridor.
@@ -830,4 +830,4 @@ theorem pfaffian_bridge_extract (B : RealPfaffianBridge M4) :
 
 end RealPfaffianBridge
 
-end InfoGeometry.Clifford.HestenesDirac
+end HestenesDirac

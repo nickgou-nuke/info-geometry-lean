@@ -35,7 +35,7 @@ Analytic positivity, global de Rham/Hodge theory, Souriau coadjoint-orbit
 construction, and ODE existence/uniqueness are not claimed here.
 -/
 
-namespace InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+namespace AmariSouriauThermodynamicGauge
 
 open InfoGeometry.Topology.ThermodynamicGauge
 
@@ -380,4 +380,4 @@ theorem constant_translation_lieMetric_zero :
 
 end QuadraticTwoCoordinate
 
-end InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+end AmariSouriauThermodynamicGauge

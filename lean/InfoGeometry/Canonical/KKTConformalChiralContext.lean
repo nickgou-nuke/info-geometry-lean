@@ -22,7 +22,7 @@ proved owner theorems can be used together.
 
 open scoped InnerProductSpace
 
-namespace InfoGeometry.Canonical.KKTConformalChiralContext
+namespace KKTConformalChiralContext
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.KKTCore
@@ -303,4 +303,4 @@ end OperatorContext
 
 end OperatorContext
 
-end InfoGeometry.Canonical.KKTConformalChiralContext
+end KKTConformalChiralContext

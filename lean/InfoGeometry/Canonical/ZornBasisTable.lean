@@ -16,7 +16,7 @@ Closed content:
 It intentionally does not claim any global group-identification theorem.
 -/
 
-namespace InfoGeometry.Canonical.ZornBasisTable
+namespace ZornBasisTable
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
@@ -64,4 +64,4 @@ theorem cross_sign_packet :
 
 end Basis8
 
-end InfoGeometry.Canonical.ZornBasisTable
+end ZornBasisTable

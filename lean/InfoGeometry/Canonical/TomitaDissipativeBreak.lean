@@ -9,7 +9,7 @@ Minimal formal corridor separating:
 * dissipative semigroup-style monotone flow (arrow of time).
 -/
 
-namespace InfoGeometry.Canonical.TomitaDissipativeBreak
+namespace TomitaDissipativeBreak
 
 /-- Minimal metriplectic packet over real-valued observables. -/
 structure MetriplecticSystem (A : Type*) where
@@ -428,4 +428,4 @@ def tomitaEquilibriumOfTwoSidedMonotone
         simpa using potential_constant_of_two_sided_monotone env hBackward ρ t
       _ = env.potential ρ := by rw [hFlowZero ρ]
 
-end InfoGeometry.Canonical.TomitaDissipativeBreak
+end TomitaDissipativeBreak

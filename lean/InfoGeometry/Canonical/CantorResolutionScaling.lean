@@ -23,7 +23,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CantorResolutionScaling
+namespace CantorResolutionScaling
 
 open InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
 
@@ -38,4 +38,4 @@ theorem jacobian_bound_at_stage {n : ℕ} (hn : (n : ℝ) > 1/2) :
     1 / (((n : ℝ) + (1/2 : ℝ)) ^ 2) ≤ 4 / ((n : ℝ) ^ 2) :=
   thermalCayley_jacobian_bound hn
 
-end InfoGeometry.Canonical.CantorResolutionScaling
+end CantorResolutionScaling

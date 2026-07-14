@@ -12,7 +12,7 @@ This file records the theorem-backed algebraic statements that the repository
 already owns for the Hurwitz/split-Hurwitz corridor.
 -/
 
-namespace InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
+namespace Hurwitz3DGeometricAlgebra
 
 open scoped TensorProduct
 open InfoGeometry.Canonical.AlbertCayleyDickson
@@ -50,4 +50,4 @@ noncomputable def cl44_complexification_equiv :
       ℂ ⊗[ℝ] InfoGeometry.Clifford.BottPeriodicity.Cl44 :=
   InfoGeometry.Clifford.SplitCl44Complexification.cl44ComplexificationEquiv
 
-end InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
+end Hurwitz3DGeometricAlgebra

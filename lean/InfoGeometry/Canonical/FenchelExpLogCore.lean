@@ -14,7 +14,7 @@ This file proves:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.FenchelExpLogCore
+namespace FenchelExpLogCore
 
 open Real
 
@@ -61,4 +61,4 @@ theorem phi_log_is_global_maximizer (y x : ℝ) (hy : 0 < y) :
 
 end
 
-end InfoGeometry.Canonical.FenchelExpLogCore
+end FenchelExpLogCore

@@ -23,7 +23,7 @@ No `twistor space = split octonions` theorem is encoded here.
 
 noncomputable section
 
-namespace InfoGeometry.Projective.SplitOctonions.BoundaryPacket
+namespace BoundaryPacket
 
 open InfoGeometry.Canonical.AlbertCayleyDickson
 open InfoGeometry.Canonical.SplitAlbert
@@ -196,4 +196,4 @@ def projective_null_boundary_witness
     ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) :=
   P.projective_null_boundary
 
-end InfoGeometry.Projective.SplitOctonions.BoundaryPacket
+end BoundaryPacket

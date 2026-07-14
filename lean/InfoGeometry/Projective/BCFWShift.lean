@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Projective.ArnoldRelations
 
-namespace InfoGeometry.Projective.BCFWShift
+namespace BCFWShift
 
 open InfoGeometry.Projective.Amplituhedron
 
@@ -82,4 +82,4 @@ theorem bcfwShift_preserves_mixed_zero (i j k : ι) :
   rw [InfoGeometry.Projective.Amplituhedron.arnold_mixed_relation_quotient_zero R ι i j k]
   simp
 
-end InfoGeometry.Projective.BCFWShift
+end BCFWShift

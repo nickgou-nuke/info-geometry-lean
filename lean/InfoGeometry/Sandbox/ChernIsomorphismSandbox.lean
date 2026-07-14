@@ -9,7 +9,7 @@ This file formalizes the abstract Chern Character map (ch : K₀(A) → H_even(A
 natively within the safe sandbox layer to protect the primary codebase.
 -/
 
-namespace InfoGeometry.Sandbox.ChernIsomorphismSandbox
+namespace ChernIsomorphismSandbox
 
 /-- Representation of the abstract Even De Rham / Cyclic Cohomology Module space -/
 structure EvenCohomology (A : Type*) (R : Type*) [CommRing R] where
@@ -53,4 +53,4 @@ theorem chern_map_preserves_zero (A : Type*) (R : Type*) [CommRing R]
   -- Fully resolved by native Mathlib 4 additive homomorphism properties
   exact map_zero ch.ch_map
 
-end InfoGeometry.Sandbox.ChernIsomorphismSandbox
+end ChernIsomorphismSandbox

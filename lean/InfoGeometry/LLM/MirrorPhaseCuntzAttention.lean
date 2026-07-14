@@ -44,7 +44,7 @@ None.
 
 noncomputable section
 
-namespace InfoGeometry.LLM.MirrorPhaseCuntzAttention
+namespace MirrorPhaseCuntzAttention
 
 open scoped BigOperators
 open InfoGeometry.Canonical.CantorCuntzBasis
@@ -189,6 +189,6 @@ theorem applyMirrorAttention_eq_self_iff_branchAnomaly_eq_zero (v : TwoBranchVec
       have h1 : (v 0 + v 1) / 2 = v 1 := by linarith
       simpa using h1
 
-end InfoGeometry.LLM.MirrorPhaseCuntzAttention
+end MirrorPhaseCuntzAttention
 
 end noncomputable section

@@ -12,7 +12,7 @@ self-evolution pipeline. They will be filled automatically by evolved skills
 and reset between evaluation runs.
 -/
 
-namespace InfoGeometry.Eval.SorryFillerTest
+namespace SorryFillerTest
 
 /-- Simple equality: `a + 0 = a`. Fill with `simp`. -/
 theorem add_zero_easy (a : ℕ) : a + 0 = a := by
@@ -50,4 +50,4 @@ Hint: `rw [Nat.succ_eq_add_one, mul_add, mul_one]`.
 theorem mul_succ_easy (n m : ℕ) : n * (m + 1) = n * m + n := by
   simp [Nat.mul_succ]
 
-end InfoGeometry.Eval.SorryFillerTest
+end SorryFillerTest

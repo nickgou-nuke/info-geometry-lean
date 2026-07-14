@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.SupergradedBracket
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.OSp12InductiveColimit
+namespace OSp12InductiveColimit
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.SupergradedBracket
@@ -131,4 +131,4 @@ variable
 
 end DirectLimitRelations
 
-end InfoGeometry.Algebra.OSp12InductiveColimit
+end OSp12InductiveColimit

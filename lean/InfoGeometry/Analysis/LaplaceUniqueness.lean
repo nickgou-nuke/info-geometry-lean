@@ -24,7 +24,7 @@ future work; this file is the right home for it.
 
 noncomputable section
 
-namespace InfoGeometry.Analysis.LaplaceUniqueness
+namespace LaplaceUniqueness
 
 open scoped BigOperators
 open Set MeasureTheory
@@ -397,4 +397,4 @@ theorem bromwichContourPackage_of_hypotheses
 
 end FourierAxis
 
-end InfoGeometry.Analysis.LaplaceUniqueness
+end LaplaceUniqueness

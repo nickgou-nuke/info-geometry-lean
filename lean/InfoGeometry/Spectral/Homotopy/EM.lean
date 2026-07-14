@@ -14,7 +14,7 @@ noncomputable section
 
 universe u
 
-namespace InfoGeometry.Spectral.Homotopy.EM
+namespace EM
 
 open InfoGeometry.Spectral.Homotopy.Suspension
 open InfoGeometry.Spectral.Spectrum.Basic
@@ -72,4 +72,4 @@ theorem SplitCliffordPostnikov_space (n k : ℕ) :
     (SplitCliffordPostnikov n).space k = SplitClNNAlg k :=
   rfl
 
-end InfoGeometry.Spectral.Homotopy.EM
+end EM

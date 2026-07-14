@@ -16,7 +16,7 @@ The Einstein/Ricci side remains a separate proof-carrying calibration.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame
+namespace SpinBogoliubovFrame
 
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 
@@ -314,4 +314,4 @@ attribute [rep_depth operator]
   spinBogoliubovConservation_packet
   spinHeatHiddenInformation_packet
 
-end InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame
+end SpinBogoliubovFrame

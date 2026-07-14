@@ -24,7 +24,7 @@ ordinary KMS boundary remains the proof-carrying certificate owned by
 fields.
 -/
 
-namespace InfoGeometry.Krein.HestenesAnalyticKMSBridge
+namespace HestenesAnalyticKMSBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -130,4 +130,4 @@ end Bridge
 
 end Core
 
-end InfoGeometry.Krein.HestenesAnalyticKMSBridge
+end HestenesAnalyticKMSBridge

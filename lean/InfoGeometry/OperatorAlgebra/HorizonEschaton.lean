@@ -28,7 +28,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.HorizonEschaton
+namespace HorizonEschaton
 
 /-! ## 1. Outcome labels -/
 
@@ -819,4 +819,4 @@ theorem computationalResetOwnerTarget
     (fun m₁ m₂ => R.encode_eq_encode m₁ m₂),
     R.collapse_forbids_faithful_retention⟩
 
-end InfoGeometry.OperatorAlgebra.HorizonEschaton
+end HorizonEschaton

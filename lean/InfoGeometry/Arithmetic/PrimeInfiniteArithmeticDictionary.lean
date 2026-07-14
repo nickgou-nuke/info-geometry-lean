@@ -24,7 +24,7 @@ No global infinite-state chirality theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeInfiniteArithmeticDictionary
+namespace PrimeInfiniteArithmeticDictionary
 
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR (ExteriorCARPair)
@@ -97,4 +97,4 @@ theorem carParity_limit_readout_eq_one_of_not_mem
   rw [carParity_limit_readout_eq_booleanLocalParity ι P χ n p S hN]
   exact localParity_eq_one_of_not_mem hp
 
-end InfoGeometry.Arithmetic.PrimeInfiniteArithmeticDictionary
+end PrimeInfiniteArithmeticDictionary

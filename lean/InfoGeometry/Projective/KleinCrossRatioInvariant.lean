@@ -16,7 +16,7 @@ the projective invariance of the cross-ratio:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Projective.KleinCrossRatioInvariant
+namespace KleinCrossRatioInvariant
 
 /-- Homogeneous coordinates `[x : y]` on a projective line. -/
 structure HomPoint2 (R : Type*) where
@@ -290,4 +290,4 @@ theorem crossRatio_lin_cross_mul
 
 end HomPoint2
 
-end InfoGeometry.Projective.KleinCrossRatioInvariant
+end KleinCrossRatioInvariant

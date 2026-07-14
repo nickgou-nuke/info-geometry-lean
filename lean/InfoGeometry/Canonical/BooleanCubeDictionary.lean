@@ -27,7 +27,7 @@ The bridges are established via explicit `Equiv` intertwiners and
 preservation 2-morphisms.
 -/
 
-namespace InfoGeometry.Canonical.BooleanCubeDictionary
+namespace BooleanCubeDictionary
 
 variable (P : PrimeRegister)
 
@@ -147,4 +147,4 @@ Boolean cube structure.
 def fullDictionaryEquiv : PrimeBitState P ≃ ArithmeticRegister P :=
   (stateToSubsetEquiv P).trans (subsetToArithmeticEquiv P)
 
-end InfoGeometry.Canonical.BooleanCubeDictionary
+end BooleanCubeDictionary

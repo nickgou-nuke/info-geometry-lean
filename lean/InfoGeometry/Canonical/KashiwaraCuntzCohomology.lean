@@ -32,7 +32,7 @@ Weyl character integrability, exceptional Jordan triple systems, and analytic
 number-theoretic consequences.
 -/
 
-namespace InfoGeometry.Canonical.KashiwaraCuntzCohomology
+namespace KashiwaraCuntzCohomology
 
 /-- A finite symbolic Cantor/crystal word. -/
 abbrev CrystalWord := List Bool
@@ -195,4 +195,4 @@ theorem finite_kashiwara_cuntz_cohomology_packet (w : CrystalWord) :
     raiseLeft (mirror (lowerRight w)) = some (mirror w) := by
   simp [raiseLeft, raiseRight, mirror_involutive]
 
-end InfoGeometry.Canonical.KashiwaraCuntzCohomology
+end KashiwaraCuntzCohomology

@@ -47,7 +47,7 @@ owner files. The infinite Fredholm determinant remains gated by the explicit
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.FredholmGenuine
+namespace FredholmGenuine
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.HestenesKreinModularGeometry
@@ -147,4 +147,4 @@ theorem genuine_fredholm_determinant
   ⟨FredholmClosure.fredholm_determinant_mul_zeta_eq_one C hβ,
     FredholmClosure.fredholm_closure_theorem C hβ⟩
 
-end InfoGeometry.Arithmetic.FredholmGenuine
+end FredholmGenuine

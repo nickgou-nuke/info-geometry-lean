@@ -4,7 +4,7 @@ open Subgroup
 
 universe u
 
-namespace InfoGeometry.Algebra.CyclicGroup
+namespace CyclicGroup
 
 section GroupDefinition
 

@@ -16,7 +16,7 @@ hexagon coherence, anomaly-free TQFT, a mass gap, super-Kähler geometry, or
 metriplectic thermodynamics.
 -/
 
-namespace InfoGeometry.Topology.ThreeStackBraidLorentzMetriplectic
+namespace ThreeStackBraidLorentzMetriplectic
 
 abbrev Mat2Q := Matrix (Fin 2) (Fin 2) ℚ
 
@@ -123,4 +123,4 @@ theorem finite_three_stack_packet :
   exact ⟨boost_preserves_eta, boost_conj_one, boost_conj_neg_one, J_skew, J_sq,
     G_symmetric, s4_adjacent_artin, s4_distant_commutes⟩
 
-end InfoGeometry.Topology.ThreeStackBraidLorentzMetriplectic
+end ThreeStackBraidLorentzMetriplectic

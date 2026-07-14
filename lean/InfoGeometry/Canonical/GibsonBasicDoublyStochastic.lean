@@ -14,7 +14,7 @@ are represented here as explicit certificates.  The concrete `3 × 3` basic
 matrix identities are proved directly.
 -/
 
-namespace InfoGeometry.Canonical.GibsonBasicDoublyStochastic
+namespace GibsonBasicDoublyStochastic
 
 noncomputable section
 
@@ -200,4 +200,4 @@ end CharacteristicTwoTransposeInverseCertificate
 
 end
 
-end InfoGeometry.Canonical.GibsonBasicDoublyStochastic
+end GibsonBasicDoublyStochastic

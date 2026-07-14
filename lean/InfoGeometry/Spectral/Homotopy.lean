@@ -7,6 +7,6 @@ import InfoGeometry.Spectral.Homotopy.Smash
 import InfoGeometry.Spectral.Homotopy.Wedge
 import InfoGeometry.Spectral.Homotopy.EM
 
-namespace InfoGeometry.Spectral.Homotopy
+namespace Homotopy
 
-end InfoGeometry.Spectral.Homotopy
+end Homotopy

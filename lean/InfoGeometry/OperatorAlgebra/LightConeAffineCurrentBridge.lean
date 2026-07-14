@@ -5,7 +5,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
+namespace LightConeAffineCurrentBridge
 
 open InfoGeometry.OperatorAlgebra
 
@@ -169,4 +169,4 @@ theorem centralCharge_calibrated :
 
 end LightConeAffineCurrentBridge
 
-end InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
+end LightConeAffineCurrentBridge

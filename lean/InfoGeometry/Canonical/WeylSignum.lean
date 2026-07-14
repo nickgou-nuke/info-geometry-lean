@@ -23,7 +23,7 @@ representation, a Weyl-Kac character formula, or a Riemann-zero theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.WeylSignum
+namespace WeylSignum
 
 open Matrix
 open InfoGeometry.Algebra
@@ -64,5 +64,5 @@ theorem signum_trace_annihilation
   rw [h1, h2, h_twist, Matrix.one_mul]
   exact h_trace
 
-end InfoGeometry.Canonical.WeylSignum
+end WeylSignum
 

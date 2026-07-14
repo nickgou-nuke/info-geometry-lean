@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.ErlangenInductiveClosure
 
 open InfoGeometry.Canonical.ErlangenInductiveClosure
 
-namespace InfoGeometry.Canonical.ErlangenColimitResolution
+namespace ErlangenColimitResolution
 
 /--
 Resolves the BUCKET 3 OPEN CLOSURE DEBT (`ColimitInheritsInvariants`) natively
@@ -27,4 +27,4 @@ def resolveColimitInheritsInvariants_of_ambient
   colimitRing := inferInstance
   LimitInvariants := GlobalInvariants
 
-end InfoGeometry.Canonical.ErlangenColimitResolution
+end ErlangenColimitResolution

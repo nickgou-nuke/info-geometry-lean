@@ -86,7 +86,7 @@ Its heat kernel trace gives 1/ζ(s). The poles are at the zeros of
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.BosonFermionSwap
+namespace BosonFermionSwap
 
 open BostConnesSystem
 open MoebiusWeylEuler
@@ -158,4 +158,4 @@ alternating sum Σ μ(n)·n^{-s} IS the fermionic partition function.
 Its poles ARE the Riemann zeros.
 -/
 
-end InfoGeometry.Arithmetic.BosonFermionSwap
+end BosonFermionSwap

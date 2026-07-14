@@ -3,7 +3,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+namespace AffineVirasoroBridge
 
 /-! ## 1. Virasoro data -/
 
@@ -575,4 +575,4 @@ theorem affine_symmetry_inverse_holds :
 
 end ModularHelicalCalibration
 
-end InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+end AffineVirasoroBridge

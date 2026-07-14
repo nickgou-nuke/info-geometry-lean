@@ -24,7 +24,7 @@ owner-map surface that keeps the missing proof substrate explicit.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.LeeYangAsanoDigest
+namespace LeeYangAsanoDigest
 
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -1103,4 +1103,4 @@ def AsanoInductiveStepSourceClaim : Prop :=
 
 end AsanoInduction
 
-end InfoGeometry.Canonical.LeeYangAsanoDigest
+end LeeYangAsanoDigest

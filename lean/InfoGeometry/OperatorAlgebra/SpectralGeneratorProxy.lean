@@ -27,7 +27,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy
+namespace SpectralGeneratorProxy
 
 /-! ## 1. Bounded real endomorphisms and phase-linearity -/
 
@@ -601,4 +601,4 @@ theorem boundedKasparovCycleOwnerTarget :
   intro A H _ _ _ _ Kcy
   exact ⟨Kcy.F_phase, Kcy.square_defect, Kcy.commutator_defect⟩
 
-end InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy
+end SpectralGeneratorProxy

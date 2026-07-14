@@ -15,7 +15,7 @@ failure, one must transport a flat reference frame via exponential modular flow.
 The resulting operator frame is the Bogoliubov Vielbein.
 -/
 
-namespace InfoGeometry.Canonical.BogoliubovVielbein
+namespace BogoliubovVielbein
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BerryPhase
@@ -208,4 +208,4 @@ theorem deriv_localFrame_at
 
 end BogoliubovVielbeinBundle
 
-end InfoGeometry.Canonical.BogoliubovVielbein
+end BogoliubovVielbein

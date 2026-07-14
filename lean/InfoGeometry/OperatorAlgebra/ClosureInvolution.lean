@@ -21,7 +21,7 @@ import Mathlib
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ClosureInvolution
+namespace ClosureInvolution
 
 /--
 A linear closure involution.
@@ -642,4 +642,4 @@ theorem theta_eq_neg_self_of_mem_antiFixed
 
 end LinearClosureInvolution
 
-end InfoGeometry.OperatorAlgebra.ClosureInvolution
+end ClosureInvolution

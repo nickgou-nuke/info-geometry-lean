@@ -27,7 +27,7 @@ Authority note:
   lane.
 -/
 
-namespace InfoGeometry.Clifford.ClNN
+namespace ClNN
 
 open InfoGeometry.CliffordTower
 
@@ -163,4 +163,4 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
     (CliffordAlgebra.ι_mul_ι_add_swap
       (Q := Quad (n + 1)) (headNullPlus n) (tailLift n xs))
 
-end InfoGeometry.Clifford.ClNN
+end ClNN

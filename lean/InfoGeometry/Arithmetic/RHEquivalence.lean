@@ -21,7 +21,7 @@ These three formulations are EQUIVALENT in the repo's architecture.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.RHEquivalence
+namespace RHEquivalence
 
 open InfoGeometry.Analysis.BregmanAnalyticBound
 
@@ -77,4 +77,4 @@ The theorem type:
 where `moebiusSum x` is the summatory Möbius function Σ_{n≤x} μ(n).
 -/
 
-end InfoGeometry.Arithmetic.RHEquivalence
+end RHEquivalence

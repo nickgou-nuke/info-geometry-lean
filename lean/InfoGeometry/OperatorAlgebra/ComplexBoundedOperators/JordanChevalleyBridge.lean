@@ -15,7 +15,7 @@ coordinate carrier.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge
+namespace JordanChevalleyBridge
 
 open Algebra Polynomial
 
@@ -154,4 +154,4 @@ theorem exists_matrixEnd_jordanChevalleySplit [PerfectField K] {n : Nat}
 
 end Core
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge
+end JordanChevalleyBridge

@@ -15,7 +15,7 @@ comments; formal proofs of those relationships are left as future work.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.O55FiveGradeWeights
+namespace O55FiveGradeWeights
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Algebra.FiveGradedTKK
@@ -42,4 +42,4 @@ theorem weight_constants :
             weight_D5, weight_D4, weight_D,
             weight_J5, weight_J4, weight_J] <;> rfl
 
-end InfoGeometry.Canonical.O55FiveGradeWeights
+end O55FiveGradeWeights

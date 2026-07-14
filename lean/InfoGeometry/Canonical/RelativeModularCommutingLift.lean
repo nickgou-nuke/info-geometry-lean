@@ -16,7 +16,7 @@ This file is intentionally conservative:
   `RelativeModularOperator` and `RelativeModularHamiltonian`.
 -/
 
-namespace InfoGeometry.Canonical.RelativeModularCommutingLift
+namespace RelativeModularCommutingLift
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -102,4 +102,4 @@ theorem finite_commuting_lift_package
 
 end Finite
 
-end InfoGeometry.Canonical.RelativeModularCommutingLift
+end RelativeModularCommutingLift

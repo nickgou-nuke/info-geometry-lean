@@ -24,7 +24,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
+namespace SpinBogoliubovStinespring
 
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 
@@ -819,4 +819,4 @@ attribute [rep_depth operator]
   SpinBogoliubovStinespringFrame.transport_not_commuting_of_shear_ne_zero
   EinsteinReadoutBridge
 
-end InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
+end SpinBogoliubovStinespring

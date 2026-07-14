@@ -13,7 +13,7 @@ No Sugawara.
 No `sorry`.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
+namespace SplitCliffordJordanWignerTwoModeCurrent
 
 open Matrix
 open Filter
@@ -263,4 +263,4 @@ theorem Hdiag_comm_Jminus :
       [commM4, Hdiag, Jminus, a1, a1Dag, a2, a2Dag,
        Matrix.mul_apply, Fin.sum_univ_four]
 
-end InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
+end SplitCliffordJordanWignerTwoModeCurrent

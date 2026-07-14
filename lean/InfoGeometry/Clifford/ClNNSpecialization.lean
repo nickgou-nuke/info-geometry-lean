@@ -22,7 +22,7 @@ Authority note:
 - the corrected owner-side rank-one bridge lives in `NeutralPhaseSpaceRankOne`.
 -/
 
-namespace InfoGeometry.Clifford.ClNNSpecialization
+namespace ClNNSpecialization
 
 open InfoGeometry.Clifford.ClNN
 
@@ -104,4 +104,4 @@ noncomputable def rankOneEquiv : Carrier 1 ≃ₗ[ℝ] (ℝ × ℝ) :=
     gammaHeadNullPlus 0 * gammaHeadNullPlus 0 = 0 := by
   exact gammaHeadNullPlus_sq 0
 
-end InfoGeometry.Clifford.ClNNSpecialization
+end ClNNSpecialization

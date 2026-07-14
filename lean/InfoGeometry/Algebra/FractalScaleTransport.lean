@@ -28,7 +28,7 @@ No analytic continuation.
 No Virasoro-origin theorem.
 -/
 
-namespace InfoGeometry.Algebra.FractalScaleTransport
+namespace FractalScaleTransport
 
 open Finset
 
@@ -243,4 +243,4 @@ theorem normalizedLogDet_iter
               try ring
         _ = logdet 0 / dim 0 := ih
 
-end InfoGeometry.Algebra.FractalScaleTransport
+end FractalScaleTransport

@@ -22,7 +22,7 @@ This file stays narrow:
   new ontology layer.
 -/
 
-namespace InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+namespace PhaseSpaceConformalKKTBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.KKTGeneralizedMetricBridge
@@ -175,4 +175,4 @@ hypotheses hold. -/
 
 end CorrectedOwnerEndpoint
 
-end InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+end PhaseSpaceConformalKKTBridge

@@ -13,7 +13,7 @@ subsets of `P`.  This file proves the finite denominator identity as a direct
 `Finset.prod_sub` combinatorial expansion.
 -/
 
-namespace InfoGeometry.Canonical.FormalPrimeRootSystem
+namespace FormalPrimeRootSystem
 
 open scoped BigOperators
 
@@ -164,4 +164,4 @@ theorem finite_denominator_identity
     weylDenominatorProduct L x = weylAlternatingSum L x :=
   finite_prime_weyl_denominator L x
 
-end InfoGeometry.Canonical.FormalPrimeRootSystem
+end FormalPrimeRootSystem

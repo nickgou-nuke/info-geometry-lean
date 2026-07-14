@@ -13,7 +13,7 @@ Reference: Bost–Connes (1995), Section 2: The Primon Gas.
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 
-namespace InfoGeometry.Arithmetic.PrimeFactorCount
+namespace PrimeFactorCount
 
 /--
 **Ω(p^k) = k.** For any prime p and any k ≥ 0, the total number of
@@ -38,4 +38,4 @@ theorem liouville_prime_pow (p : ℕ+) (hp : Nat.Prime p.val) (k : ℕ) :
     liouville (p ^ k) = (-1 : ℤ) ^ k := by
   rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
 
-end InfoGeometry.Arithmetic.PrimeFactorCount
+end PrimeFactorCount

@@ -14,7 +14,7 @@ No Type III/predual theorem.
 No Virasoro-origin theorem.
 -/
 
-namespace InfoGeometry.Canonical.SplitCliffordCantorHop
+namespace SplitCliffordCantorHop
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordCantorFock
@@ -165,4 +165,4 @@ theorem local_matrix_hop_packet :
     cantorState_hop_true_eq_annihilate,
     local_car_identity⟩
 
-end InfoGeometry.Canonical.SplitCliffordCantorHop
+end SplitCliffordCantorHop

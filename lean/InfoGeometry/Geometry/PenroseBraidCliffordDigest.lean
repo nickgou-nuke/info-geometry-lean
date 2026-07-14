@@ -32,7 +32,7 @@ unless supplied by precise definitions and proof obligations.
 * Infinite braid-group colimits as categorical colimits.
 -/
 
-namespace InfoGeometry.Geometry.PenroseBraidCliffordDigest
+namespace PenroseBraidCliffordDigest
 
 open Matrix
 
@@ -124,4 +124,4 @@ theorem cliffordF_sq : cliffordF * cliffordF = -1 := by
 theorem cliffordEF_anticommute : cliffordE * cliffordF + cliffordF * cliffordE = 0 := by
   native_decide
 
-end InfoGeometry.Geometry.PenroseBraidCliffordDigest
+end PenroseBraidCliffordDigest

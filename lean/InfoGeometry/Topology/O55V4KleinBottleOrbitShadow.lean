@@ -17,7 +17,7 @@ It does **not** prove the actual quotient space `Vec55/{±I}`, a Lie-group actio
 a `Pin(5,5)` double cover, or a full orbit classification.
 -/
 
-namespace InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
+namespace O55V4KleinBottleOrbitShadow
 
 open InfoGeometry.Topology.O55V4KleinBottleFinite
 
@@ -149,4 +149,4 @@ theorem finite_projective_v4_orbit_packet (x y z : Vec55) :
     reflPair01_descends_projective, reflPair0_orbitShadow_closed,
     reflPair1_orbitShadow_closed, negAll_orbitShadow_closed⟩
 
-end InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
+end O55V4KleinBottleOrbitShadow

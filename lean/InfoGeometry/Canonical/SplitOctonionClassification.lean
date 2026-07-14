@@ -18,7 +18,7 @@ associative-ring arguments.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitOctonionClassification
+namespace SplitOctonionClassification
 
 open scoped BigOperators
 
@@ -233,4 +233,4 @@ theorem left_nucleus_eq_scalars
 
 end ZornMatrix
 
-end InfoGeometry.Canonical.SplitOctonionClassification
+end SplitOctonionClassification

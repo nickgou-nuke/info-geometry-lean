@@ -19,7 +19,7 @@ open InfoGeometry.Canonical.ComplexRealHestenesFinite
 open InfoGeometry.Algebra.FiniteInductiveSUSY
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
-namespace InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
+namespace Cl11InfiniteHestenesKreinCompletion
 
 variable (A : ℕ → Type*) [∀ n : ℕ, Ring (A n)]
 variable (L : Type*) [Ring L]
@@ -56,4 +56,4 @@ theorem infinite_hestenes_krein_closure
   intro n
   exact limit_image_inductive_susy_closure φ ι Q R H Z hQ0 hR0 hclosure0 hZQ0 hZR0 hQstep hRstep hHstep hZstep n
 
-end InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
+end Cl11InfiniteHestenesKreinCompletion

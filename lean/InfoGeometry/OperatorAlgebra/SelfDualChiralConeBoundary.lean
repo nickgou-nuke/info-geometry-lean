@@ -26,7 +26,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
+namespace SelfDualChiralConeBoundary
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
@@ -227,4 +227,4 @@ theorem fixedBoundary_packet
     B.boundaryOf x ∧ B.closure.theta x = x :=
   selfDualChiralConeBoundaryOwnerTarget V B x hx
 
-end InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
+end SelfDualChiralConeBoundary

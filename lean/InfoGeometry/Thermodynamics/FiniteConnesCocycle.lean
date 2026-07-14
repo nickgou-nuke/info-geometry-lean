@@ -29,7 +29,7 @@ commuting scalar exponential laws that are valid in the finite Cartan lane.
 
 noncomputable section
 
-namespace InfoGeometry.Thermodynamics.FiniteConnesCocycle
+namespace FiniteConnesCocycle
 
 open scoped BigOperators
 open InfoGeometry.Thermodynamics.FiniteGibbsRelative
@@ -258,4 +258,4 @@ theorem finiteCommutingConnesPhase_stateChain
   unfold relativeHamiltonian
   ring
 
-end InfoGeometry.Thermodynamics.FiniteConnesCocycle
+end FiniteConnesCocycle

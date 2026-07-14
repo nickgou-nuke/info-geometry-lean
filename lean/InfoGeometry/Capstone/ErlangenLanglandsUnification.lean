@@ -49,7 +49,7 @@ set_option maxHeartbeats 600000
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.ErlangenLanglandsUnification
+namespace ErlangenLanglandsUnification
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesAffineO55ClosureBridge
@@ -139,4 +139,4 @@ All three are unified by the Hestenes-Krein doubled structure:
 def erlangen_langlands_capstone_debt : String :=
   "Use ErlangenLanglandsConnesCapstone.trinity_capstone_unified for the owner-backed finite capstone; the analytic zeta/Fredholm identity remains UnifiedCapstone.master_identity_debt."
 
-end InfoGeometry.Capstone.ErlangenLanglandsUnification
+end ErlangenLanglandsUnification

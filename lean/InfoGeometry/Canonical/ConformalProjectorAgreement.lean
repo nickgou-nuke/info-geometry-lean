@@ -12,7 +12,7 @@ finite matrix counterexample showing that fixed Euclidean Moore--Penrose
 projectors are not generically similarity-equivariant.
 -/
 
-namespace InfoGeometry.Canonical.ConformalProjectorAgreement
+namespace ConformalProjectorAgreement
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
 
@@ -114,4 +114,4 @@ theorem moorePenrose_not_generic_similarity_equivariant_under_fixed_metric :
   · simpa [P, P'] using shearCounterexample_Aprime_eq.symm
   · simpa [P, P'] using shearCounterexample_fixedMetric_MP_transport_fails
 
-end InfoGeometry.Canonical.ConformalProjectorAgreement
+end ConformalProjectorAgreement

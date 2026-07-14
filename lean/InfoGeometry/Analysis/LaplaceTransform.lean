@@ -20,7 +20,7 @@ not claimed here.
 
 noncomputable section
 
-namespace InfoGeometry.Analysis.LaplaceTransform
+namespace LaplaceTransform
 
 open scoped BigOperators
 
@@ -867,4 +867,4 @@ theorem comp_mul_right {f : ℝ → E} {s : ℂ} {m : E} {a : ℝ} (ha : 0 < a)
 
 end HasLaplacePos
 
-end InfoGeometry.Analysis.LaplaceTransform
+end LaplaceTransform

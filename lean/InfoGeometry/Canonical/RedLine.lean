@@ -48,7 +48,7 @@ References:
 - `docs/projective_mathlib_canonicalization_plan.md` for owner/translator law.
 -/
 
-namespace InfoGeometry.Canonical.RedLine
+namespace RedLine
 
 
 export InfoGeometry.Jordan (
@@ -292,4 +292,4 @@ export InfoGeometry.Canonical.BohmMadelungOperatorialBridge (
 )
 
 
-end InfoGeometry.Canonical.RedLine
+end RedLine

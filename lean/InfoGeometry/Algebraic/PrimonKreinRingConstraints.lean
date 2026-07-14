@@ -16,7 +16,7 @@ It is a structural packet surface: no analytic zeta/RH/zero-location claims.
 
 noncomputable section
 
-namespace InfoGeometry.Algebraic.PrimonKreinRingConstraints
+namespace PrimonKreinRingConstraints
 
 open InfoGeometry.Krein
 
@@ -153,4 +153,4 @@ noncomputable def HyperbolicPrimonFlow.toCarrierTransport
   transport_add := F.U_add
   transport_preserves_pairing := hCarrierPairing
 
-end InfoGeometry.Algebraic.PrimonKreinRingConstraints
+end PrimonKreinRingConstraints

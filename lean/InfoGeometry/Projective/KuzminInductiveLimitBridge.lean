@@ -22,7 +22,7 @@ Not closed here:
 The bridge is assumption-gated: the infinite carrier map is an explicit field.
 -/
 
-namespace InfoGeometry.Projective.KuzminInductiveLimitBridge
+namespace KuzminInductiveLimitBridge
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Projective.KuzminCuntzPath
@@ -99,4 +99,4 @@ def q_zero_limit_data
   toCuntzToeplitz := toCuntzToeplitz
   toLimit := toLimit
 
-end InfoGeometry.Projective.KuzminInductiveLimitBridge
+end KuzminInductiveLimitBridge

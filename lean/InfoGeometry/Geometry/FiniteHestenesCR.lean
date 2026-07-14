@@ -22,7 +22,7 @@ Morera equivalence, contour integration, conformality, or Dirac-equation
 analytic equivalence.  Those remain analytic/differential owner-file work.
 -/
 
-namespace InfoGeometry.Geometry.FiniteHestenesCR
+namespace FiniteHestenesCR
 
 /-- Complex numbers modeled as a two-dimensional real vector space. -/
 structure ComplexReal where
@@ -264,4 +264,4 @@ geometry work, not a consequence of the finite algebra in this file alone.
 def hestenes_conformal_mapping_preservation_debt : String :=
   "Open: prove conformality of Hestenes-analytic maps under explicit differential-geometric hypotheses."
 
-end InfoGeometry.Geometry.FiniteHestenesCR
+end FiniteHestenesCR

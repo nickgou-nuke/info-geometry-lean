@@ -2,6 +2,6 @@
 
 import InfoGeometry.Spectral.Colimit.Basic
 
-namespace InfoGeometry.Spectral.Colimit
+namespace Colimit
 
-end InfoGeometry.Spectral.Colimit
+end Colimit

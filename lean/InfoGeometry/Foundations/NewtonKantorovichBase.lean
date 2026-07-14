@@ -9,7 +9,7 @@ import Mathlib.Tactic.FieldSimp
 Algebraic base lemmas for Newton--Kantorovich majorant arguments.
 -/
 
-namespace InfoGeometry.Foundations.NewtonKantorovichBase
+namespace NewtonKantorovichBase
 
 noncomputable section
 
@@ -101,4 +101,4 @@ theorem newton_step_identity_requested_form (L η t : ℝ) (h_deriv : P_deriv L 
     _ = (((L / 2) * t^2) - η) / (L * t - 1) := hfrac
 
 end
-end InfoGeometry.Foundations.NewtonKantorovichBase
+end NewtonKantorovichBase

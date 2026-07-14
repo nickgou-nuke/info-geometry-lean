@@ -12,7 +12,7 @@ It records the exact pointwise distribution on the product sphere
 `y ∈ ℝ³`.
 -/
 
-namespace InfoGeometry.Lie.SagerschnigS2S3Distribution
+namespace SagerschnigS2S3Distribution
 
 open InfoGeometry.Projective.SplitOctonions
 
@@ -93,4 +93,4 @@ theorem sagerschnigDistribution_w_formula
       smulVec3 (Vec3.dot p.y p.x) q.1 := by
   simpa [sagerschnigDistribution] using hq.2.2
 
-end InfoGeometry.Lie.SagerschnigS2S3Distribution
+end SagerschnigS2S3Distribution

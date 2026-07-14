@@ -18,7 +18,7 @@ The main AFP lemmas are then available as direct Lean theorems.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.DerivationBound
+namespace DerivationBound
 
 /-- Exact-length relation power: `Steps r n a b` means `a` rewrites to `b`
 in exactly `n` steps. -/
@@ -224,4 +224,4 @@ theorem derivBound_steps {α : Type*} {r : α → α → Prop}
   rw [derivBound_iff] at hb
   exact hb b n hlt hsteps
 
-end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.DerivationBound
+end DerivationBound

@@ -19,7 +19,7 @@ separate analytic/spectral witnesses.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
+namespace PrimonFreeEnergyRelativeTrace
 
 open InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
 
@@ -166,4 +166,4 @@ theorem riemannZeta_functionalEquation_symmetry
         Complex.cos (Real.pi * s / 2) * riemannZeta s := by
   simpa using (riemannZeta_one_sub (s := s) hs hs')
 
-end InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
+end PrimonFreeEnergyRelativeTrace

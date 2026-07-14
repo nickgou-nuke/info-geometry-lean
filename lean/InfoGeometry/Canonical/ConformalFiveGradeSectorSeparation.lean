@@ -17,7 +17,7 @@ No bridge surface is introduced.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
+namespace ConformalFiveGradeSectorSeparation
 
 open InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
@@ -115,4 +115,4 @@ def ofPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :
 
 end FiveGradeSectorSeparationPacket
 
-end InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
+end ConformalFiveGradeSectorSeparation

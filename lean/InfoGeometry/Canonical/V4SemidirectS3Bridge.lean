@@ -9,7 +9,7 @@ Lean bridge for the finite model of the `V₄ ⋊ S₃` signature acting on the
 three triality sectors (vector, spinor⁺, spinor⁻).
 -/
 
-namespace InfoGeometry.Canonical.V4SemidirectS3Bridge
+namespace V4SemidirectS3Bridge
 
 open InfoGeometry.Canonical.TrialitySpin8Permutations
 
@@ -295,4 +295,4 @@ theorem semidirect_nontrivial_triplet :
       trialityCycle • (JS : V4Element)) = (S, JS, J) := by
   simp [trialityAction_cycle_J, trialityAction_cycle_S, trialityAction_cycle_JS]
 
-end InfoGeometry.Canonical.V4SemidirectS3Bridge
+end V4SemidirectS3Bridge

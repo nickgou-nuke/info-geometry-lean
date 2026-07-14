@@ -46,7 +46,7 @@ the KMS equilibrium ensures the vacuum is unique.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.RHStructural
+namespace RHStructural
 
 open BostConnesSystem
 open MoebiusWeylEuler
@@ -171,4 +171,4 @@ The proof of equivalence is documented across the repository:
   iff the CCR/CAR duality is unbroken
 -/
 
-end InfoGeometry.Arithmetic.RHStructural
+end RHStructural

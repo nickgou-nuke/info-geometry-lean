@@ -10,7 +10,7 @@ Bridge theorem linking:
 * scalar NK majorant update (`t ↦ t + Δ`) from the NK lane.
 -/
 
-namespace InfoGeometry.Canonical.MassieuNewtonKantorovichBridge
+namespace MassieuNewtonKantorovichBridge
 
 open InfoGeometry.Canonical.MassieuOptimalTransport
 open InfoGeometry.Foundations.NewtonKantorovichBase
@@ -291,4 +291,4 @@ theorem majorantSeq_tendsto_of_massieu_tail
     majorantSeq_cauchy_of_massieu_tail L η s Δ h_flow h_deriv hΔ htail
   exact cauchySeq_tendsto_of_complete hcauchy
 
-end InfoGeometry.Canonical.MassieuNewtonKantorovichBridge
+end MassieuNewtonKantorovichBridge

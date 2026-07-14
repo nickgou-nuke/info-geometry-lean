@@ -13,7 +13,7 @@ import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
 noncomputable section
 
-namespace InfoGeometry.Geometry.JonesTransportMetric
+namespace JonesTransportMetric
 
 open InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
@@ -111,4 +111,4 @@ theorem distance_symm
 
 end JonesTransportMetricDatum
 
-end InfoGeometry.Geometry.JonesTransportMetric
+end JonesTransportMetric

@@ -17,7 +17,7 @@ and `KleinSpinorOrbitSocketClosure` for the stabilizer closure.
 open InfoGeometry.Algebra.KleinSpinorOrbit
 open InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
-namespace InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
+namespace KleinSpinorOrbitCompleteness
 
 /-- The zero split-complex spinor. -/
 def zeroSpinor : CsSpinor :=
@@ -73,4 +73,4 @@ theorem orbit_completeness_statement (h : OrbitCompletenessClaim) :
     OrbitCompletenessClaim :=
   h
 
-end InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
+end KleinSpinorOrbitCompleteness

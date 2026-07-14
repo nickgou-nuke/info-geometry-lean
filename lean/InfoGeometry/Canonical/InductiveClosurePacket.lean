@@ -5,7 +5,7 @@ import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.InductiveClosurePacket
+namespace InductiveClosurePacket
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 open InfoGeometry.OperatorAlgebra.SupergradedClosure
@@ -131,4 +131,4 @@ structure LimitPassageSocket (C : InductiveOperatorChain) where
     (∀ n, SupergradedClosureAt (R := C.Stage n) (C.iterMap n Q0) (C.iterMap n Qsharp0)) →
     SupergradedClosureAt (R := LimitStage) (embed 0 Q0) (embed 0 Qsharp0)
 
-end InfoGeometry.Canonical.InductiveClosurePacket
+end InductiveClosurePacket

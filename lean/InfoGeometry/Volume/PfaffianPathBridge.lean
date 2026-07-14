@@ -23,7 +23,7 @@ are witness-gated here.
 
 noncomputable section
 
-namespace InfoGeometry.Volume.PfaffianPathBridge
+namespace PfaffianPathBridge
 
 open scoped BigOperators
 
@@ -299,4 +299,4 @@ theorem constructPfaffianPathBridgeTarget
       P.pfaffianPairings.determinantEvenVolume :=
   P.pfaffianPairings.pfaffian_sq_eq_determinantEvenVolume
 
-end InfoGeometry.Volume.PfaffianPathBridge
+end PfaffianPathBridge

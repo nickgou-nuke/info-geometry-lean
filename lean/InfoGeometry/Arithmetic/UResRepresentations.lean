@@ -48,7 +48,7 @@ connecting to `DAG.HarmonicKMS` and `DAG.AffineProjectiveClosure`.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.UResRepresentations
+namespace UResRepresentations
 
 open BostConnesSystem
 open PrimonGasPartition
@@ -255,4 +255,4 @@ universal cover) is replaced by the algebraic colimit `SplitCliffordInfinity`
 which provides the multi-sheeted structure natively.
 -/
 
-end InfoGeometry.Arithmetic.UResRepresentations
+end UResRepresentations

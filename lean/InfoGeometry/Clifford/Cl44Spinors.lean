@@ -1,6 +1,6 @@
 import InfoGeometry.Clifford.Cl44Witt
 
-namespace InfoGeometry.Clifford.Cl44Spinors
+namespace Cl44Spinors
 
 open InfoGeometry.Clifford.Cl44Witt
 
@@ -85,4 +85,4 @@ theorem oddSemiSpinorProj_idem :
     oddSemiSpinorProj * oddSemiSpinorProj = oddSemiSpinorProj := by
   simp [oddSemiSpinorProj, volumeElement]
 
-end InfoGeometry.Clifford.Cl44Spinors
+end Cl44Spinors

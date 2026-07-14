@@ -3,7 +3,7 @@ import InfoGeometry.Projective.QuantumTwistor
 import Mathlib.Algebra.FreeAlgebra
 import Mathlib.Algebra.RingQuot
 
-namespace InfoGeometry.Projective.Sandbox.QuantumTwistorGauge
+namespace QuantumTwistorGauge
 
 open InfoGeometry.Projective.QuantumGrassmannian
 open InfoGeometry.Projective.QuantumTwistor
@@ -154,4 +154,4 @@ theorem gauge_covariance_p23 :
     (u ^ 2) • (quantumPluckerMap R q).p23.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(2, 3), by decide⟩
 
-end InfoGeometry.Projective.Sandbox.QuantumTwistorGauge
+end QuantumTwistorGauge

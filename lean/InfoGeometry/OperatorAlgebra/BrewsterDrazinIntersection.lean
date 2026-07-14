@@ -22,7 +22,7 @@ import InfoGeometry.Thermo.SusceptibilityHessian
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+namespace BrewsterDrazinIntersection
 
 open InfoGeometry.Optics.JonesCalibration
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
@@ -317,4 +317,4 @@ theorem nontrivial_cannot_flow_to_flat
 
 end BrewsterSnapBoundary
 
-end InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+end BrewsterDrazinIntersection

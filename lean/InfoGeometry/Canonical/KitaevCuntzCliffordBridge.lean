@@ -32,7 +32,7 @@ Kitaev Hamiltonian analysis, many-chain braiding as a complete representation,
 and universality/density are not claimed here.
 -/
 
-namespace InfoGeometry.Canonical.KitaevCuntzCliffordBridge
+namespace KitaevCuntzCliffordBridge
 
 open InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 open InfoGeometry.Canonical.CelikErlangenBraidBridge
@@ -146,4 +146,4 @@ theorem kitaev_chain_realizes_cuntz_clifford_boundary_dictionary :
     KitaevCuntzCliffordOwnerTarget :=
   kitaev_cuntz_clifford_owner_target
 
-end InfoGeometry.Canonical.KitaevCuntzCliffordBridge
+end KitaevCuntzCliffordBridge

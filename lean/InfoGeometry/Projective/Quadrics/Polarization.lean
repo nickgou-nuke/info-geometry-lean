@@ -20,7 +20,7 @@ The existing projective-null and Zorn/split-octonion polar-incidence lanes remai
 the concrete projective-quadric owners.
 -/
 
-namespace InfoGeometry.Projective.Quadrics.Polarization
+namespace Polarization
 
 /--
 Poincaré pairing extracted from a trilinear invariant by inserting a chosen
@@ -160,4 +160,4 @@ Klein quadric line embedding, Plücker relations, `Gr(2,4)` Schubert calculus,
 and Gromov--Witten/Chow-ring identification are not proved here.
 -/
 
-end InfoGeometry.Projective.Quadrics.Polarization
+end Polarization

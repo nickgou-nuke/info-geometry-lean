@@ -30,7 +30,7 @@ The hard analytic work is isolated in `HurwitzZeroTransferWitness`.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.PrimeHurwitzLimit
+namespace PrimeHurwitzLimit
 
 /-- Cayley map sending the Riemann critical line to the Lee--Yang circle. -/
 @[rep_depth operator]
@@ -429,4 +429,4 @@ theorem RH_from_Correct_Hurwitz_LeeYang
     corrected_hurwitz_xiZeros_map_to_unit_circle H s hs_ne_one hs
   exact C.critical_of_unit s hs_ne_one hcircle
 
-end InfoGeometry.Canonical.PrimeHurwitzLimit
+end PrimeHurwitzLimit

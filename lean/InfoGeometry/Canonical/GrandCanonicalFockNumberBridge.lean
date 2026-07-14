@@ -14,7 +14,7 @@ This file records the exact shared algebraic form without asserting that finite
 count profiles and Fock number operators are definitionally equal.
 -/
 
-namespace InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
+namespace GrandCanonicalFockNumberBridge
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
@@ -174,4 +174,4 @@ theorem grandCanonicalFockGenerator_zero_mu
   intro v
   simp
 
-end InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
+end GrandCanonicalFockNumberBridge

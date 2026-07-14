@@ -22,7 +22,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BostConnesAnticommutation
+namespace BostConnesAnticommutation
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical.BostConnesKMS
@@ -96,4 +96,4 @@ theorem anticommutation_multiplicative (C : BostConnesCuntzSystem Op)
       -(S C (MultiplicativeIndexing.primePNat p hp) * liouvilleAction C (n * m)) :=
   liouville_action_anticommutes C p hp (n * m)
 
-end InfoGeometry.Canonical.BostConnesAnticommutation
+end BostConnesAnticommutation

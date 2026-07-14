@@ -11,7 +11,7 @@ braid-group representation theorem, analytic continuation, conformal-block
 construction, or universal topological quantum-computing theorem.
 -/
 
-namespace InfoGeometry.Categorical.FibonacciBraiding
+namespace FibonacciBraiding
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -77,4 +77,4 @@ theorem finite_hexagon_shadow
     B_eq_FRF q τ s,
     artin_relation q τ s hq_inv hq_pow3 hq5 h_poly hτ s_sq⟩
 
-end InfoGeometry.Categorical.FibonacciBraiding
+end FibonacciBraiding

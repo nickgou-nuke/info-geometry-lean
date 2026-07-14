@@ -1,6 +1,6 @@
 import InfoGeometry.Meta.Architecture
 
-namespace InfoGeometry.LLM.SpectralToken
+namespace SpectralToken
 
 /--
 Minimal spectral token carrier with a primal and dual lane.
@@ -126,4 +126,4 @@ variable {Q K : Type _}
 
 end KramersQKBridge
 
-end InfoGeometry.LLM.SpectralToken
+end SpectralToken

@@ -20,7 +20,7 @@ part already available from the repository's canonical split `Cl(n,n)` tower:
 * the parabolic power law `(1 + rε)^n = 1 + nrε` holds inside the direct limit.
 -/
 
-namespace InfoGeometry.Clifford.CliffordBott
+namespace CliffordBott
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -191,4 +191,4 @@ theorem clInfinity_parabolic_pow (r : ℝ) (n : ℕ) :
   rw [ofStage_add, ofStage_one, ofStage_smul]
   rfl
 
-end InfoGeometry.Clifford.CliffordBott
+end CliffordBott

@@ -13,7 +13,7 @@ existence theorem, or global semisimplicity theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
+namespace DrazinProjectionLocalization
 
 /-- A pair of complementary idempotent projections. -/
 structure SelfAdjointIdempotentPair (A : Type*) [Ring A] [StarRing A] where
@@ -329,4 +329,4 @@ theorem drazinDataAt_element_eq_weight (p : S.Point) :
 
 end SpectralDivisorStratification
 
-end InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
+end DrazinProjectionLocalization

@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace InfoGeometry.LLM.AllTopThermodynamicTransformer
+namespace AllTopThermodynamicTransformer
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicRouter
@@ -343,4 +343,4 @@ end AllTopThermodynamicLanguageModel
 
 end Model
 
-end InfoGeometry.LLM.AllTopThermodynamicTransformer
+end AllTopThermodynamicTransformer

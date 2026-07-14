@@ -23,7 +23,7 @@ prove conformal action on any causal cone, and does not assert a global analytic
 or Clifford-completion theorem.
 -/
 
-namespace InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
+namespace SplitQuaternionFlowCoordinates
 
 /-- Elliptic unit-coordinate curve in the `1,i` split-quaternion plane. -/
 noncomputable def ellipticFlow (θ : ℝ) : SplitQuaternion :=
@@ -82,4 +82,4 @@ of an exhaustive subgroup classification or a global causal/conformal theorem.
 def split_quaternion_subgroup_classification_debt : String :=
   "Open: classify split-quaternion one-parameter subgroups beyond the three norm-one coordinate flows."
 
-end InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
+end SplitQuaternionFlowCoordinates

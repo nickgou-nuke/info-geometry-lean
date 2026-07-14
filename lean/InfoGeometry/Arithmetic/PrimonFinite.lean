@@ -18,7 +18,7 @@ statement, or cohomological interpretation.
 
 open scoped BigOperators
 
-namespace InfoGeometry.Arithmetic.PrimonFinite
+namespace PrimonFinite
 
 variable {ι R : Type*}
 
@@ -175,4 +175,4 @@ theorem ZB_mul_STrF_eq_one [DecidableEq ι]
 
 end Bosonic
 
-end InfoGeometry.Arithmetic.PrimonFinite
+end PrimonFinite

@@ -17,7 +17,7 @@ The analytic limit theory is not claimed here.  That part remains the job of
 the external calculus and limit-state lanes.
 -/
 
-namespace InfoGeometry.Canonical.MatrixValuedDerivativeMoorePenrose
+namespace MatrixValuedDerivativeMoorePenrose
 
 open InfoGeometry.Canonical.MoorePenrose
 
@@ -90,4 +90,4 @@ theorem constant_generalizedDifferenceQuotient_zero (c : Mat2) :
 
 end
 
-end InfoGeometry.Canonical.MatrixValuedDerivativeMoorePenrose
+end MatrixValuedDerivativeMoorePenrose

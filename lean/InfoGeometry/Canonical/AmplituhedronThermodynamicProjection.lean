@@ -17,7 +17,7 @@ Per the Categorical Synthesis Dictionary:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
+namespace AmplituhedronThermodynamicProjection
 
 open InfoGeometry.Canonical.ContinuousThermodynamicGeometry
 open InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
@@ -76,4 +76,4 @@ theorem amplituhedron_metric_positive_definite
   rw [M.is_inherited]
   exact G.is_strictly_convex β X hX
 
-end InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
+end AmplituhedronThermodynamicProjection

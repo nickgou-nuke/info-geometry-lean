@@ -9,7 +9,7 @@ mathematical hypotheses and conclusions.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ExplicitWitnessObligations
+namespace ExplicitWitnessObligations
 
 open scoped BigOperators
 
@@ -100,4 +100,4 @@ theorem souriau_beta_projection_obligation
     (fun i => pair β (p i)) = (fun i => pair β (p i)) := by
   rfl
 
-end InfoGeometry.Canonical.ExplicitWitnessObligations
+end ExplicitWitnessObligations

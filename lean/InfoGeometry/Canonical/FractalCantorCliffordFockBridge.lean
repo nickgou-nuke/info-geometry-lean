@@ -28,7 +28,7 @@ packages their theorem-safe consequences.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+namespace FractalCantorCliffordFockBridge
 
 open InfoGeometry.Topology
 open InfoGeometry.Topology.FractalCantorFockWitness

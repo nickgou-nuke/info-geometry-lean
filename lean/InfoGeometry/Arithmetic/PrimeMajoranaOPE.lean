@@ -17,7 +17,7 @@ Pfaffian identity, or assert an infinite Euler product.
 
 noncomputable section
 
-namespace InfoGeometry.Arithmetic.PrimeMajoranaOPE
+namespace PrimeMajoranaOPE
 
 /-- A symbolic singular OPE carrier. -/
 structure SingularOPE
@@ -108,4 +108,4 @@ theorem current_d_holds
 
 end MobiusCurrentOPE
 
-end InfoGeometry.Arithmetic.PrimeMajoranaOPE
+end PrimeMajoranaOPE

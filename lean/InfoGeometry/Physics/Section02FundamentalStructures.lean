@@ -41,7 +41,7 @@ determinant readout or an explicitly split convention.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.Section02FundamentalStructures
+namespace Section02FundamentalStructures
 
 open Matrix Complex
 
@@ -238,6 +238,6 @@ theorem section02_finite_fundamental_structures_packet (a b : PauliCoord) :
     ordinary_quaternion_norm_sign_boundary.1,
     ordinary_quaternion_norm_sign_boundary.2⟩
 
-end InfoGeometry.Physics.Section02FundamentalStructures
+end Section02FundamentalStructures
 
 end noncomputable section

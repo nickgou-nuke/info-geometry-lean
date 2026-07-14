@@ -17,7 +17,7 @@ picture:
 
 noncomputable section
 
-namespace InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+namespace BogoliubovWeylChemicalPotential
 
 open InfoGeometry.Physics.SupergradedCuntzBdG
 open InfoGeometry.Physics.HestenesCuntzPhaseSpace
@@ -150,6 +150,6 @@ theorem bogoliubov_weyl_chemical_potential_synthesis
   · exact inertial_frame_finite_weyl_unmixed.1
   · exact inertial_frame_finite_weyl_unmixed.2
 
-end InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+end BogoliubovWeylChemicalPotential
 
 end noncomputable section

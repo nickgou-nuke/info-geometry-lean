@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.ChiralNullSpaceBridge
 import InfoGeometry.Canonical.SuperKMS_Equilibrium
 
-namespace InfoGeometry.Canonical.ProjectiveCCR
+namespace ProjectiveCCR
 
 open InfoGeometry.Canonical.ChiralNullSpaceBridge
 open InfoGeometry.Canonical.TopologicalGapShadow
@@ -55,4 +55,4 @@ end ProjectiveBoundaryPacket
 
 end Core
 
-end InfoGeometry.Canonical.ProjectiveCCR
+end ProjectiveCCR

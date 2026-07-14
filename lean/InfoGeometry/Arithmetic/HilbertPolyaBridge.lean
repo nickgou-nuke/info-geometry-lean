@@ -86,7 +86,7 @@ critical line. Its eigenvalues t satisfy ζ(1/2 + it) = 0.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.HilbertPolyaBridge
+namespace HilbertPolyaBridge
 
 /- ## The Three Operators — All One -/
 
@@ -154,4 +154,4 @@ THE HILBERT-PÓLYA OPERATOR:
     different physical angles.
 -/
 
-end InfoGeometry.Arithmetic.HilbertPolyaBridge
+end HilbertPolyaBridge

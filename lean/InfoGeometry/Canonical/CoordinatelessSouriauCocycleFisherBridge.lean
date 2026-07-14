@@ -20,7 +20,7 @@ Theorems here are therefore bridge theorems: they prove reduction, symmetry,
 and nonnegativity only from supplied cocycle-correction hypotheses.
 -/
 
-namespace InfoGeometry.Canonical.CoordinatelessSouriauCocycleFisherBridge
+namespace CoordinatelessSouriauCocycleFisherBridge
 
 open InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge
 open InfoGeometry.Canonical.SouriauThermodynamics
@@ -233,4 +233,4 @@ end FiniteSouriauFisherCocycleCorrection
 
 end FiniteSouriauShadow
 
-end InfoGeometry.Canonical.CoordinatelessSouriauCocycleFisherBridge
+end CoordinatelessSouriauCocycleFisherBridge

@@ -23,7 +23,7 @@ It does not assert any prime-number or Riemann-zeta theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Analysis.CliffordWaveletTransform
+namespace CliffordWaveletTransform
 
 /-- Abstract real Clifford target with a distinguished blade squaring to `-1`.
 
@@ -94,4 +94,4 @@ theorem reconstruction_waveletTransform
 
 end CliffordWaveletModel
 
-end InfoGeometry.Analysis.CliffordWaveletTransform
+end CliffordWaveletTransform

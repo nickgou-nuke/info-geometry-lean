@@ -23,7 +23,7 @@ operator limits remain outside this finite spine.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
+namespace RealDoubledCliffordFiniteSpine
 
 open scoped TensorProduct
 open InfoGeometry.Krein
@@ -225,4 +225,4 @@ theorem cl44_as_splitBottStep_eq_owner :
     cl44_as_splitBottStep = InfoGeometry.CliffordTower.clsplit_succ_equiv 3 :=
   rfl
 
-end InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
+end RealDoubledCliffordFiniteSpine

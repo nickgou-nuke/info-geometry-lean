@@ -27,7 +27,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
+namespace PrimeLeeYangLargeDeviation
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
@@ -254,4 +254,4 @@ theorem largeDeviationPrinciple
 
 end PrimeChainLargeDeviationWitness
 
-end InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
+end PrimeLeeYangLargeDeviation

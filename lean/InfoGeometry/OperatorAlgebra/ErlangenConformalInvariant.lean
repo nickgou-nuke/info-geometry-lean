@@ -66,7 +66,7 @@ regularization/continuity/completion data.
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
+namespace ErlangenConformalInvariant
 
 /--
 An action of a group G on an algebra A by algebra automorphisms.
@@ -174,4 +174,4 @@ end EquivariantHom
  separate regularization/continuity/completion owner lane.]
 -/
 
-end InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
+end ErlangenConformalInvariant

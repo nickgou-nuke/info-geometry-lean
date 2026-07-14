@@ -14,7 +14,7 @@ multiplication, and the closed theorems are trace/commutator consequences.
 No global axioms are introduced.
 -/
 
-namespace InfoGeometry.Canonical.CyclicCocycleTwistedSectors
+namespace CyclicCocycleTwistedSectors
 
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℂ
 
@@ -107,4 +107,4 @@ theorem twistedSectorIndex_antisymm_at_flat_boundary
   rw [twistedSectorIndex_vanishes_at_flat_boundary tilt D P₀ P₁ hcomm₁]
   simp
 
-end InfoGeometry.Canonical.CyclicCocycleTwistedSectors
+end CyclicCocycleTwistedSectors

@@ -3,7 +3,7 @@ import InfoGeometry.Algebra.HessianThermodynamicManifold
 
 open InfoGeometry.Algebra.HessianThermodynamicManifold
 
-namespace InfoGeometry.Canonical.DeRhamFenchelLegendre
+namespace DeRhamFenchelLegendre
 
 /-!
 # De Rham Fenchel-Legendre Duality
@@ -66,4 +66,4 @@ theorem legendre_submanifold_lagrangian {V : Type _} {R : Type _} [AddCommGroup 
   rw [pair.eta_eq_d0_psi]
   exact DeRhamComplex.d_squared_zero ψ x y
 
-end InfoGeometry.Canonical.DeRhamFenchelLegendre
+end DeRhamFenchelLegendre

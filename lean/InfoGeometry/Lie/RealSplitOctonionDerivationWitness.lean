@@ -13,7 +13,7 @@ classification.
 
 noncomputable section
 
-namespace InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+namespace RealSplitOctonionDerivationWitness
 
 open scoped BigOperators
 
@@ -119,4 +119,4 @@ theorem rot01Real_nonzero_on_up0 : rot01Real up0 ≠ 0 := by
   change -1 = 0 at h1
   norm_num at h1
 
-end InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+end RealSplitOctonionDerivationWitness

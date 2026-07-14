@@ -22,7 +22,7 @@ No concrete braid matrices.
 No Solovay--Kitaev or fault-tolerance claim.
 -/
 
-namespace InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+namespace FiniteFibonacciMonodromyInterface
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
@@ -144,4 +144,4 @@ theorem electronBlindBlockDiagonalAction_preserves_computational {N : ℕ} {NC :
   blockDiagonalBraidWordAction_preserves_computational
     onComputational onNonComputational w hx
 
-end InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+end FiniteFibonacciMonodromyInterface

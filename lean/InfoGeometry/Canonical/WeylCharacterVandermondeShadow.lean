@@ -25,7 +25,7 @@ It does **not** prove:
 * Type III / AQFT / operator-trace statements.
 -/
 
-namespace InfoGeometry.Canonical.WeylCharacterVandermondeShadow
+namespace WeylCharacterVandermondeShadow
 
 open InfoGeometry.Canonical.Spin44CharacterShadow
 open InfoGeometry.Canonical.VandermondeExclusionBridge
@@ -139,4 +139,4 @@ end D4CharacterVandermondePacket
 
 end D4Packet
 
-end InfoGeometry.Canonical.WeylCharacterVandermondeShadow
+end WeylCharacterVandermondeShadow

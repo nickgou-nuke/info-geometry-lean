@@ -11,7 +11,7 @@ readout theorem. The physical resonance statement is an explicit field of
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.TransportObservable
+namespace TransportObservable
 
 open InfoGeometry.Canonical.DrazinAnomaly
 
@@ -96,4 +96,4 @@ theorem majorana_conductance_peak_of_abs_index_eq_one
 
 end AndreevDrazinReadout
 
-end InfoGeometry.Canonical.TransportObservable
+end TransportObservable

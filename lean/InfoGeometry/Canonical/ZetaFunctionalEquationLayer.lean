@@ -32,7 +32,7 @@ References:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZetaFunctionalEquationLayer
+namespace ZetaFunctionalEquationLayer
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -442,4 +442,4 @@ structure CayleyDiskZeroLocationTarget where
   /-- Guardrail: constructing this packet requires a proof of RH. -/
   no_unconditional_RH_claim_guard : Type*
 
-end InfoGeometry.Canonical.ZetaFunctionalEquationLayer
+end ZetaFunctionalEquationLayer

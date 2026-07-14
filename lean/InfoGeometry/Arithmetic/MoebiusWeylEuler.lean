@@ -63,7 +63,7 @@ This IS the affine projective closure: Bosons × Möbius = 1.
 
 open Complex
 
-namespace InfoGeometry.Arithmetic.MoebiusWeylEuler
+namespace MoebiusWeylEuler
 
 open BostConnesSystem
 open PrimonGasPartition
@@ -235,4 +235,4 @@ together force the zeros to the critical line.
 | Zeros on critical line     | Dikin + duality + Weyl       | (structural consequence)     |
 -/
 
-end InfoGeometry.Arithmetic.MoebiusWeylEuler
+end MoebiusWeylEuler

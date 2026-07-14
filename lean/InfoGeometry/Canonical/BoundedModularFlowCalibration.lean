@@ -18,7 +18,7 @@ operator `K̂_β` is the same calibrated generator.  Any KMS-like condition is
 kept as explicit witness data.
 -/
 
-namespace InfoGeometry.Canonical.BoundedModularFlowCalibration
+namespace BoundedModularFlowCalibration
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.SouriauModularHamiltonianBridge
@@ -220,4 +220,4 @@ end Calibration
 
 end Core
 
-end InfoGeometry.Canonical.BoundedModularFlowCalibration
+end BoundedModularFlowCalibration

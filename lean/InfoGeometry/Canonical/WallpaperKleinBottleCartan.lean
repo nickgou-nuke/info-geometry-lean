@@ -14,7 +14,7 @@ cell.  Full crystallographic wallpaper-group classification, Pin(5,5) bundle
 construction, and global Cartan geometry remain explicit certificate layers.
 -/
 
-namespace InfoGeometry.Canonical.WallpaperKleinBottleCartan
+namespace WallpaperKleinBottleCartan
 
 open InfoGeometry.Canonical.HolographicSouriauReconstruction
 
@@ -188,4 +188,4 @@ def pin55WallpaperSocketOfPremises
 
 end
 
-end InfoGeometry.Canonical.WallpaperKleinBottleCartan
+end WallpaperKleinBottleCartan

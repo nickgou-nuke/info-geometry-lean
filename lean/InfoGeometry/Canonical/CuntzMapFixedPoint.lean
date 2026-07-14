@@ -27,7 +27,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.CuntzMapFixedPoint
+namespace CuntzMapFixedPoint
 
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 
@@ -114,4 +114,4 @@ theorem discreteCuntzStep_apply (X : Op) :
 
 end KMSSymmetricState
 
-end InfoGeometry.Canonical.CuntzMapFixedPoint
+end CuntzMapFixedPoint

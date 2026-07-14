@@ -19,7 +19,7 @@ import Mathlib.Data.Finset.Basic
 \]
 -/
 
-namespace InfoGeometry.Physics.D4Triality
+namespace D4Triality
 
 open InfoGeometry.Physics.ZornMatrixSU3
 
@@ -131,4 +131,4 @@ theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAct
     ColorPermutationAction.apply τ (tripotent Z) = tripotent (ColorPermutationAction.apply τ Z) := by
   simp [ColorPermutationAction.apply, tripotent]
 
-end InfoGeometry.Physics.D4Triality
+end D4Triality

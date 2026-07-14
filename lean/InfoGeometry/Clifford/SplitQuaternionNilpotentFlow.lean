@@ -23,7 +23,7 @@ functional calculus, Virasoro/Dirac limit, or topological ring structure on the
 split quaternions beyond the explicit coordinatewise `Tendsto` predicate below.
 -/
 
-namespace InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+namespace SplitQuaternionNilpotentFlow
 
 @[simp] theorem sq_add_def (q r : SplitQuaternion) : q + r = sqAdd q r := rfl
 @[simp] theorem sq_mul_def (q r : SplitQuaternion) : q * r = sqMul q r := rfl
@@ -157,4 +157,4 @@ prove a general Clifford analytic completion or differential geometric flow.
 def split_quaternion_general_analytic_completion_debt : String :=
   "Open: extend the finite nilpotent flow to a genuine analytic completion theorem."
 
-end InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+end SplitQuaternionNilpotentFlow

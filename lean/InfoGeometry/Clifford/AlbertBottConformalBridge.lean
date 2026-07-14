@@ -27,7 +27,7 @@ The repository keeps those lanes separate.
 
 open scoped TensorProduct
 
-namespace InfoGeometry.Clifford.AlbertBottConformalBridge
+namespace AlbertBottConformalBridge
 
 open InfoGeometry.Canonical.AlbertCayleyDickson
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -178,4 +178,4 @@ theorem albert_bott_conformal_route :
   refine ⟨splitCl44_projective_null_nonempty, ?_⟩
   exact conformal_null_pair_debt
 
-end InfoGeometry.Clifford.AlbertBottConformalBridge
+end AlbertBottConformalBridge

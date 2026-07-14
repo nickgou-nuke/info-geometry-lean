@@ -29,7 +29,7 @@ RH. It is a proof-architecture socket:
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
+namespace ZetaFunctionalEquationDualitySocket
 
 open InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 
@@ -267,4 +267,4 @@ theorem prime_holonomy_inverse_eq_adjoint
 
 end FunctionalEquationZetaBraneSocket
 
-end InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
+end ZetaFunctionalEquationDualitySocket

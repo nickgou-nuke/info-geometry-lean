@@ -30,7 +30,7 @@ concrete finite-stage indexing witness into the detector premise needed for the
 proper-carrier self-dual cone colimit theorem.
 -/
 
-namespace InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector
+namespace ProperCarrierStageDetector
 
 open InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 open InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
@@ -120,4 +120,4 @@ theorem properCarrier_selfDualCone_extends_to_univ_of_stageIndex
   simpa [hUnion] using
     properCarrier_selfDualCone_extends_of_stageIndex pairing K hmono hself hstage
 
-end InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector
+end ProperCarrierStageDetector

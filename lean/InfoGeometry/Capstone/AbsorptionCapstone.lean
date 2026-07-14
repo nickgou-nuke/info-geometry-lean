@@ -17,7 +17,7 @@ open InfoGeometry.Canonical.SplitCliffordTensorBridge
 
 noncomputable section
 
-namespace InfoGeometry.Capstone.AbsorptionCapstone
+namespace AbsorptionCapstone
 
 /-! ## [1] Absorption —————————————————————————— ——— -/
 
@@ -160,6 +160,6 @@ noncomputable def absorption_capstone_unified : AbsorptionRoof where
     intro P hTail z
     exact tail_predicate_lifts_to_infinity (P := P) hTail z
 
-end InfoGeometry.Capstone.AbsorptionCapstone
+end AbsorptionCapstone
 
 end

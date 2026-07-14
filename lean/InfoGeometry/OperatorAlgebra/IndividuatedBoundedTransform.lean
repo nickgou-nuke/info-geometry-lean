@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
+namespace IndividuatedBoundedTransform
 
 /-! ## 1. Scalar bounded transform -/
 
@@ -220,4 +220,4 @@ theorem operatorBoundedTransform_packet
       star B.D = B.D := by
   exact ⟨operatorBoundedTransformOwnerTarget Op B, B.D_selfAdjoint⟩
 
-end InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
+end IndividuatedBoundedTransform

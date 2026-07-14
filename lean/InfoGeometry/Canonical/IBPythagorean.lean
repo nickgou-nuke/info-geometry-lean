@@ -7,7 +7,7 @@ import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 open MeasureTheory
 open ProbabilityTheory
 
-namespace InfoGeometry.Canonical.IBPythagorean
+namespace IBPythagorean
 
 open InfoGeometry.Canonical.IBFreeEnergy
 open InfoGeometry.Canonical.IBFunctional
@@ -582,4 +582,4 @@ theorem IB_next_marginal_descent_of_pythagorean
     (encoder := IBNextEncoder q_n β D hInt)
     (hKL_old := hKL_current) (hKL_new := hKL_next) h).descent
 
-end InfoGeometry.Canonical.IBPythagorean
+end IBPythagorean

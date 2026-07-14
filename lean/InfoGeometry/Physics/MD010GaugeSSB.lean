@@ -27,7 +27,7 @@ counting, hierarchy generation, Yukawa physics, or anomaly cancellation.
 
 noncomputable section
 
-namespace InfoGeometry.Physics.MD010GaugeSSB
+namespace MD010GaugeSSB
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
@@ -199,6 +199,6 @@ theorem repaired_MD010_gauge_ssb_packet
     quaternion_phase_metric_invariant hunit q,
     density_covariantDerivative_zero_connection dRho rho⟩
 
-end InfoGeometry.Physics.MD010GaugeSSB
+end MD010GaugeSSB
 
 end noncomputable section

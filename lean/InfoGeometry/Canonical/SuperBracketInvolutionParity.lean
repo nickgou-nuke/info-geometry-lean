@@ -15,7 +15,7 @@ No witness packet.
 No wrapper namespace over another theorem surface.
 -/
 
-namespace InfoGeometry.Canonical.SuperBracketInvolutionParity
+namespace SuperBracketInvolutionParity
 
 section RingStage
 
@@ -259,4 +259,4 @@ theorem superBracket_odd_odd_self_eq_zero_of_square_zero
 
 end RingStage
 
-end InfoGeometry.Canonical.SuperBracketInvolutionParity
+end SuperBracketInvolutionParity

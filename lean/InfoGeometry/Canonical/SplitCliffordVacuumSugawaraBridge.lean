@@ -14,7 +14,7 @@ proved interfaces and readouts.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
+namespace SplitCliffordVacuumSugawaraBridge
 
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
@@ -118,4 +118,4 @@ theorem chargedFock_external_sugawara_vacuum_highest_weight_packet
         (VirasoroProject.ChargedFockSpace.vacuum 𝕜 α) = 0) :=
   chargedFock_sugawara_vacuum_highest_weight_packet (𝕜 := 𝕜) α
 
-end InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
+end SplitCliffordVacuumSugawaraBridge

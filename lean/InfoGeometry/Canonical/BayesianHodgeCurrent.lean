@@ -30,7 +30,7 @@ this finite file.
 
 open Matrix
 
-namespace InfoGeometry.Canonical.BayesianHodgeCurrent
+namespace BayesianHodgeCurrent
 
 open InfoGeometry.Canonical.MaximumCaliberKLSplit
 open InfoGeometry.Topology.EckmannDiscreteHodge
@@ -191,4 +191,4 @@ theorem entropyLoopAmplitude_swap
 
 end
 
-end InfoGeometry.Canonical.BayesianHodgeCurrent
+end BayesianHodgeCurrent

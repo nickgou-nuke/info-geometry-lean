@@ -21,7 +21,7 @@ encoded without division by the equations:
 No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Projective.SplitOctonions.SplitOctonionsLegendre
+namespace SplitOctonionsLegendre
 
 /--
 Dually-flat metric inversion, purely algebraic.
@@ -73,4 +73,4 @@ theorem zornSlice_metric_inversion_right
   rw [mul_comm]
   exact zornSlice_metric_inversion a eta g gStar hLegendre hPrimal hDual
 
-end InfoGeometry.Projective.SplitOctonions.SplitOctonionsLegendre
+end SplitOctonionsLegendre

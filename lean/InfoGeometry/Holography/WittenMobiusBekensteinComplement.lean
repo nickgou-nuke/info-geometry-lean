@@ -18,7 +18,7 @@ classification, or `O(5,5)` theorem is asserted here.
 
 noncomputable section
 
-namespace InfoGeometry.Holography.WittenMobiusBekensteinComplement
+namespace WittenMobiusBekensteinComplement
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.GrandUnification.UHF
@@ -81,6 +81,6 @@ theorem finite_wittenMobius_cuntzHorizon_bekensteinLogTwo
     information_preservation (A := A) X,
     bekensteinHawkingEntropy_eq_dyadicEntropyQuantum hG harea⟩
 
-end InfoGeometry.Holography.WittenMobiusBekensteinComplement
+end WittenMobiusBekensteinComplement
 
 end noncomputable section

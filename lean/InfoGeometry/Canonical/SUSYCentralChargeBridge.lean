@@ -22,7 +22,7 @@ We store `2c` as an integer to avoid rational arithmetic:
 * one `N = 1` boson-Majorana multiplet contributes `2c = 3`.
 -/
 
-namespace InfoGeometry.Canonical.SUSYCentralChargeBridge
+namespace SUSYCentralChargeBridge
 
 /-- Twice the central charge of `n` real chiral Majorana channels. -/
 def twiceCentralMajorana (n : Nat) : Int :=
@@ -57,4 +57,4 @@ theorem twiceCentralN1Multiplet_eq_three_mul (n : Nat) :
   simp [twiceCentralN1Multiplet, twiceCentralMajorana, twiceCentralBoson]
   ring
 
-end InfoGeometry.Canonical.SUSYCentralChargeBridge
+end SUSYCentralChargeBridge

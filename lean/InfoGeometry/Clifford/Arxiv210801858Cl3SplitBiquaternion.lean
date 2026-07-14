@@ -29,7 +29,7 @@ symmetry, Higgs coupling, dark-matter physics, generation counting, `Cl(7)`
 bioctonion classification, or exceptional-Jordan/E₆ physics.
 -/
 
-namespace InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
+namespace Arxiv210801858Cl3SplitBiquaternion
 
 /-- Complex dimension of the finite `Cl(3)` / split-biquaternion carrier. -/
 theorem cl3_complex_dimension_eight :
@@ -78,4 +78,4 @@ theorem arxiv210801858_cl3_split_biquaternion_packet :
   exact ⟨cl3_complex_dimension_eight, split_biquaternion_product_dimension_eight,
     chirality_block_split, left_projector_block, right_projector_block⟩
 
-end InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
+end Arxiv210801858Cl3SplitBiquaternion

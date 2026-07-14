@@ -22,7 +22,7 @@ open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.CubicJordanFreudenthal
+namespace CubicJordanFreudenthal
 
 /-- Cyclic shift of Albert matrix entries. -/
 def cyclicShift (X : AlbertMatrix) : AlbertMatrix :=
@@ -110,4 +110,4 @@ theorem freudenthal_architecture :
   exact ⟨freudenthal_diagonal, cyclicShift_three, cyclicShift_injective,
     adjointQuad_polarization⟩
 
-end InfoGeometry.Algebra.CubicJordanFreudenthal
+end CubicJordanFreudenthal

@@ -22,7 +22,7 @@ and for every finite iterate `φ^[n]`:
   (φ^[n](Q+R))² = φ^[n]H + φ^[n]Z
 -/
 
-namespace InfoGeometry.Algebra.FiniteN2Induction
+namespace FiniteN2Induction
 
 variable {A B : Type*} [Ring A] [Ring B]
 
@@ -157,4 +157,4 @@ theorem iterateEnd_preserves_n2_square_closure
     map_n2_supercharge_square_eq_even_plus_central
       (iterateEnd φ n) Q R H Z hQ hR hQR
 
-end InfoGeometry.Algebra.FiniteN2Induction
+end FiniteN2Induction

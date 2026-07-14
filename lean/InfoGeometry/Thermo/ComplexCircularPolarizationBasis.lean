@@ -21,7 +21,7 @@ No zeta claim.
 
 noncomputable section
 
-namespace InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+namespace ComplexCircularPolarizationBasis
 
 /-- Circular-plus coordinate `s + s̄`. -/
 @[rep_depth thermo]
@@ -94,4 +94,4 @@ theorem complexBoltzmannWeight_eq_circular
     ring
   rw [hs, ← Complex.exp_add]
 
-end InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+end ComplexCircularPolarizationBasis

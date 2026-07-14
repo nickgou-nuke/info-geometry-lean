@@ -19,7 +19,7 @@ Out of scope:
   GNS-quotient closure theorem.
 -/
 
-namespace InfoGeometry.Canonical.CantorSplitNullExternalAudit
+namespace CantorSplitNullExternalAudit
 
 open InfoGeometry.Canonical.CantorSplitNullBridge
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
@@ -155,4 +155,4 @@ theorem finite_audit_plus_bridge_packet :
   · simpa using addressNullGenerator_child_detZ_zero ([] : FiniteBinaryWord) true
   · simpa using child_false_true_polar_pair ([] : FiniteBinaryWord)
 
-end InfoGeometry.Canonical.CantorSplitNullExternalAudit
+end CantorSplitNullExternalAudit

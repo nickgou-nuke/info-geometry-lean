@@ -27,7 +27,7 @@ No von Neumann factor theorem.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.AFRecursiveLimitBridge
+namespace AFRecursiveLimitBridge
 
 open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -141,4 +141,4 @@ theorem readback
 
 end Tower
 
-end InfoGeometry.Canonical.AFRecursiveLimitBridge
+end AFRecursiveLimitBridge

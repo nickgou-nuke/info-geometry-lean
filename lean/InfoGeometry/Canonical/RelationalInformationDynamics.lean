@@ -19,7 +19,7 @@ This file does not introduce a new scalar facade. It works directly with:
 - and a concrete realization of the abstract relational-information datum.
 -/
 
-namespace InfoGeometry.Canonical.RelationalInformationDynamics
+namespace RelationalInformationDynamics
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.StateDependentTransport
@@ -832,4 +832,4 @@ theorem operatorInformationPhaseReadout_eq_metric_comp_modularComplexI
 
 end LightweightTheorems
 
-end InfoGeometry.Canonical.RelationalInformationDynamics
+end RelationalInformationDynamics

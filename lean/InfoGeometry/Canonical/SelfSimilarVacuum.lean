@@ -21,7 +21,7 @@ A fixed point of $R$ satisfies $s_{n+1} = \text{refine}(s_n)$ for all $n$,
 which is the exact formal definition of a self-similar fractal vacuum state.
 -/
 
-namespace InfoGeometry.Canonical.SelfSimilarVacuum
+namespace SelfSimilarVacuum
 
 open InfoGeometry.Canonical.RefinementGaloisConnection
 open InfoGeometry.Canonical.SectorLattice
@@ -144,4 +144,4 @@ theorem greatestProjectionVacuum_isFixed :
     projectionR projectionR_hom.gfp = projectionR_hom.gfp :=
   projectionR_hom.map_gfp
 
-end InfoGeometry.Canonical.SelfSimilarVacuum
+end SelfSimilarVacuum

@@ -23,7 +23,7 @@ Zero sorries.
 
 noncomputable section
 
-namespace InfoGeometry.Topology.CantorBoundaryCuntzFamily
+namespace CantorBoundaryCuntzFamily
 
 open InfoGeometry.Topology.ParafermionIdentityRealization
 open InfoGeometry.External.Auto.UHFInductiveColimit
@@ -129,6 +129,6 @@ theorem cantor_boundary_cuntz_synthesis :
   · simpa using cuntz_ortho (0 : Fin 4) (0 : Fin 4)
   · exact cuntz_partition
 
-end InfoGeometry.Topology.CantorBoundaryCuntzFamily
+end CantorBoundaryCuntzFamily
 
 end noncomputable section

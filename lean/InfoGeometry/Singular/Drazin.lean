@@ -6,7 +6,7 @@ import InfoGeometry.Singular.MoorePenrose
 
 namespace Drazin
 
-open InfoGeometry.Singular.MoorePenrose
+open MoorePenrose
 
 section Drazin
 variable {R : Type*} [Ring R]

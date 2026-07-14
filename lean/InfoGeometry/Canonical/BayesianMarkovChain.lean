@@ -21,7 +21,7 @@ claim is asserted here.
 
 namespace BayesianMarkovChain
 
-open InfoGeometry.Canonical.TensorColimitExpectation
+open TensorColimitExpectation
 
 universe u v
 

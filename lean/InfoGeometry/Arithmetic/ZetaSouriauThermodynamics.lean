@@ -96,6 +96,20 @@ def complexGrandModeWeight
     (β : SouriauTemperature) (energy mu : ι → ℝ) (p : ι) : ℂ :=
   Complex.exp (-(β * ((energy p - mu p : ℝ) : ℂ)))
 
+lemma complexGrandModeWeight_ne_zero
+    (β : SouriauTemperature) (energy mu : ι → ℝ) (p : ι) :
+    complexGrandModeWeight β energy mu p ≠ 0 := by
+  unfold complexGrandModeWeight
+  exact Complex.exp_ne_zero _
+
+lemma complexGrandStateWeight_ne_zero
+    (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) :
+    InfoGeometry.Arithmetic.PrimonFinite.weight
+      (complexGrandModeWeight β energy mu) S ≠ 0 := by
+  exact InfoGeometry.Arithmetic.PrimonFinite.weight_ne_zero
+    (q := complexGrandModeWeight β energy mu) S
+    (fun p _hp => complexGrandModeWeight_ne_zero β energy mu p)
+
 section FiniteModes
 
 variable [DecidableEq ι]
@@ -151,6 +165,14 @@ theorem complexBosonGrandPartition_eq_prod_inv
     complexBosonGrandPartition modes β energy mu =
       ∏ p ∈ modes, (1 - complexGrandModeWeight β energy mu p)⁻¹ := by
   rfl
+
+omit [DecidableEq ι] in
+lemma complexBosonGrandPartition_ne_zero
+    (modes : Finset ι) (β : SouriauTemperature) (energy mu : ι → ℝ)
+    (h : ∀ p ∈ modes, (1 - complexGrandModeWeight β energy mu p) ≠ 0) :
+    complexBosonGrandPartition modes β energy mu ≠ 0 := by
+  exact InfoGeometry.Arithmetic.PrimonFinite.ZB_ne_zero
+    (modes := modes) (q := complexGrandModeWeight β energy mu) h
 
 /-- Finite boson/signed-fermion cancellation. -/
 theorem complexBoson_mul_signedFermionGrandSupertrace_eq_one
@@ -308,11 +330,25 @@ def complexGrandThermalWeight
     (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(β * grandEnergyC energy mu S))
 
+omit [DecidableEq ι] in
+lemma complexGrandThermalWeight_ne_zero
+    (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) :
+    complexGrandThermalWeight β energy mu S ≠ 0 := by
+  unfold complexGrandThermalWeight
+  exact Complex.exp_ne_zero _
+
 /-- Grand-canonical thermal-vacuum half-density. -/
 @[rep_depth thermo]
 def complexGrandThermalVacuumAmplitude
     (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(β / 2 * grandEnergyC energy mu S))
+
+omit [DecidableEq ι] in
+lemma complexGrandThermalVacuumAmplitude_ne_zero
+    (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) :
+    complexGrandThermalVacuumAmplitude β energy mu S ≠ 0 := by
+  unfold complexGrandThermalVacuumAmplitude
+  exact Complex.exp_ne_zero _
 
 /-- The complex thermal-vacuum amplitude squares to the Boltzmann weight. -/
 theorem complexGrandThermalVacuumAmplitude_mul_self_eq_weight
@@ -513,6 +549,10 @@ def zeroChemicalPotential (_p : ℕ) : ℝ :=
 def primeGrandModeWeight (β : ℂ) (p : ℕ) : ℂ :=
   complexGrandModeWeight β primeEnergy zeroChemicalPotential p
 
+lemma primeGrandModeWeight_ne_zero (β : ℂ) (p : ℕ) :
+    primeGrandModeWeight β p ≠ 0 := by
+  exact complexGrandModeWeight_ne_zero β primeEnergy zeroChemicalPotential p
+
 /-- Finite prime bosonic grand-canonical partition. -/
 @[rep_depth thermo]
 def finitePrimeBosonGrandPartition
@@ -525,6 +565,13 @@ theorem finitePrimeBosonGrandPartition_eq_prod
     finitePrimeBosonGrandPartition P β =
       ∏ p ∈ P.primes, (1 - primeGrandModeWeight β p)⁻¹ := by
   rfl
+
+lemma finitePrimeBosonGrandPartition_ne_zero
+    (P : PrimeRegister) (β : ℂ)
+    (h : ∀ p ∈ P.primes, (1 - primeGrandModeWeight β p) ≠ 0) :
+    finitePrimeBosonGrandPartition P β ≠ 0 := by
+  exact complexBosonGrandPartition_ne_zero
+    (modes := P.primes) (β := β) (energy := primeEnergy) (mu := zeroChemicalPotential) h
 
 /-- Finite prime signed/Möbius grand-canonical supertrace. -/
 @[rep_depth thermo]

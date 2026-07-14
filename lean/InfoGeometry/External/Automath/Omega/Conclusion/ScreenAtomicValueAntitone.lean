@@ -1,4 +1,4 @@
-import Omega.Conclusion.ScreenAuditGapSupermodularity
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenAuditGapSupermodularity
 import Mathlib.Tactic
 
 namespace Omega.Conclusion.ScreenAtomicValueAntitone

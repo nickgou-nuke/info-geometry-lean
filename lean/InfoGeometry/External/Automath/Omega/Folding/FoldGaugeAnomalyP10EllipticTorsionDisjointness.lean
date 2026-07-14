@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldGaugeAnomalyP10GaloisDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10GaloisDiscriminant
 
 namespace Omega.Folding
 

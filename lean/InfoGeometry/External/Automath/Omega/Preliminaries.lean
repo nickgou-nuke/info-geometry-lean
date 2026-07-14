@@ -1,1 +1,1 @@
-import Omega.Preliminaries.EmpiricalFrequencyBounds
+import InfoGeometry.External.Automath.Omega.Preliminaries.EmpiricalFrequencyBounds

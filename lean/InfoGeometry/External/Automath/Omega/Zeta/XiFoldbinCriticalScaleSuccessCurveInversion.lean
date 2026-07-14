@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinDegeneracyTailCapacityKinks
-import Omega.Zeta.XiFoldbinUnderresolutionTwoAtomicCurvatureMeasure
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinDegeneracyTailCapacityKinks
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinUnderresolutionTwoAtomicCurvatureMeasure
 
 namespace Omega.Zeta
 

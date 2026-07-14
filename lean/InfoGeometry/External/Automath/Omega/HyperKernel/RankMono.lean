@@ -1,7 +1,7 @@
 import Std
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Analysis
-import Omega.HyperKernel.Enum
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Analysis
+import InfoGeometry.External.Automath.Omega.HyperKernel.Enum
 
 namespace Omega.HyperKernel
 namespace RankMono

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeShiftPhaseVisibleTwoGenerator
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeShiftPhaseVisibleTwoGenerator
 
 namespace Omega.Conclusion
 

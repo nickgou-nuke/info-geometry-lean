@@ -1,8 +1,8 @@
 import Mathlib
-import Omega.Conclusion.BoundaryStokesStrictLinearHolography
-import Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
-import Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
-import Omega.Conclusion.LocalizedSolenoidCoprimeArtinMazurCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesStrictLinearHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedSolenoidCoprimeArtinMazurCompleteness
 
 namespace Omega.Conclusion
 

@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
-import Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
-import Omega.CircleDimension.LocalizedGsDualCompleteClassification
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedGsDualCompleteClassification
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.CircleDimension
 

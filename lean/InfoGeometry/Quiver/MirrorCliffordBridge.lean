@@ -8,6 +8,9 @@ CL(1,1)_L ⊗ CL(1,1)_R ≅ CL(2,2)
 
 import InfoGeometry.OperatorAlgebra.ChiralCompass
 import InfoGeometry.Quiver.BetheAnsatzXXZ
+import Mathlib.RingTheory.TensorProduct.Maps
+
+set_option linter.unusedSectionVars false
 
 open TensorProduct
 open InfoGeometry.ChiralCompass
@@ -23,7 +26,7 @@ swaps the Left and Right chiral compasses.
 -/
 def compassSwap :
     Cl11 R ⊗[R] Cl11 R ≃ₐ[R] Cl11 R ⊗[R] Cl11 R :=
-  TensorProduct.comm R (Cl11 R) (Cl11 R)
+  Algebra.TensorProduct.comm R (Cl11 R) (Cl11 R)
 
 /--
 The 3D Mirror Map operator on the full CL(2,2) conformal geometry.
@@ -53,7 +56,7 @@ The action of the Mirror Map on the moduli parameters.
 It exchanges the left and right compasses, which swaps
 Kähler and Equivariant parameters, and inverts q.
 -/
-def mirrorModuliMap (M : ChiralSheetModuli) : ChiralSheetModuli where
+noncomputable def mirrorModuliMap (M : ChiralSheetModuli) : ChiralSheetModuli where
   kahler_z := M.equivariant_a
   equivariant_a := M.kahler_z
   q := M.q⁻¹

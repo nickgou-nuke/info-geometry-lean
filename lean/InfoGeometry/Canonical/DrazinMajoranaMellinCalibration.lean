@@ -34,7 +34,7 @@ the Drazin readout with the Majorana and Mellin real parts.
 -/
 @[rep_depth operator]
 structure DrazinMajoranaMellinCalibration
-    (Obs ZeroMode NormReadout MellinWave MellinNorm : Type*)
+    (Obs ZeroMode NormReadout MellinWave MellinNorm : Type)
     [Ring Obs] [Star Obs] [SMul ℂ Obs] where
   drazin :
     InfoGeometry.Canonical.DrazinCentralizerErlangen.FinalDrazinFierzLaw Obs
@@ -55,7 +55,7 @@ structure DrazinMajoranaMellinCalibration
 
 namespace DrazinMajoranaMellinCalibration
 
-variable {Obs ZeroMode NormReadout MellinWave MellinNorm : Type*}
+variable {Obs ZeroMode NormReadout MellinWave MellinNorm : Type}
 variable [Ring Obs] [Star Obs] [SMul ℂ Obs]
 variable (B : DrazinMajoranaMellinCalibration
   Obs ZeroMode NormReadout MellinWave MellinNorm)
@@ -77,7 +77,7 @@ theorem drazin_readout_eq_mellin_realPart :
 theorem scalarReadout_on_criticalLine :
     InfoGeometry.Arithmetic.RHQuantumStabilityBridge.IsCriticalLineRealPart
       B.scalarReadout := by
-  simpa [B.majorana_readout] using B.majorana.normalizable_law
+  simpa [B.majorana_readout] using B.majorana.criticalLine
 
 end DrazinMajoranaMellinCalibration
 

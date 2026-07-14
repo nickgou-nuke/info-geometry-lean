@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiReverseKLSingleFrequencyRigidityEquivalences
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLSingleFrequencyRigidityEquivalences
 
 namespace Omega.Conclusion
 

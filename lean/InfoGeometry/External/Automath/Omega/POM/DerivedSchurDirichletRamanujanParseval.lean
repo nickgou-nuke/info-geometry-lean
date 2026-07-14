@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
-import Omega.POM.SchurDirichletTorsionFactorization
+import InfoGeometry.External.Automath.Omega.POM.SchurDirichletTorsionFactorization
 
 namespace Omega.POM
 

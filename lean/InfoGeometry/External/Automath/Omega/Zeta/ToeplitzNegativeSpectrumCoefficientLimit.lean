@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.PickPoissonCharpolyCoefficients
+import InfoGeometry.External.Automath.Omega.Zeta.PickPoissonCharpolyCoefficients
 
 open Filter
 open scoped Topology

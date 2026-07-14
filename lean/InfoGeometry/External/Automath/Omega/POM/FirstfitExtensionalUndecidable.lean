@@ -1,4 +1,4 @@
-import Omega.POM.SoftOrderFixedTempNondefinability
+import InfoGeometry.External.Automath.Omega.POM.SoftOrderFixedTempNondefinability
 
 namespace Omega.POM
 

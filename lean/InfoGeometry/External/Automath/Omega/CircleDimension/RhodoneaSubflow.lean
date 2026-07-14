@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.BiphaseAverageHaarPushforwardDensity
+import InfoGeometry.External.Automath.Omega.CircleDimension.BiphaseAverageHaarPushforwardDensity
 
 /-!
 # Rhodonea orbit as biphase average subflow seed values

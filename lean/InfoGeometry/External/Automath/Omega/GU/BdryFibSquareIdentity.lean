@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BoundaryLayer
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryLayer
 
 namespace Omega.GU.BdryFibSquareIdentity
 

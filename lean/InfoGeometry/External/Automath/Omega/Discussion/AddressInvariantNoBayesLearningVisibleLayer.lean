@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.OperatorAlgebra.FoldBayesPosteriorCollapse
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldBayesPosteriorCollapse
 
 namespace Omega.Discussion
 

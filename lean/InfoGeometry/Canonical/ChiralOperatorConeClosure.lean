@@ -342,10 +342,32 @@ theorem supercharge_mem_chiralOperatorCone
     CertifiedInverseKernel.toInformationCartanTriple] using
     (DrazinSupercharge.CertifiedInverseKernel.supercharge_isSpectralNonCompact (CIK := CIK))
 
+/-- The left chiral anomaly belongs to the spectral chiral cone. -/
+@[rep_depth krein]
+theorem chiralAnomaly_mem_chiralOperatorCone
+    (CIK : CertifiedInverseKernel E) :
+    IsInChiralOperatorCone CIK CIK.chiralAnomaly := by
+  simpa [IsInChiralOperatorCone,
+    CertifiedInverseKernel.IsSpectralNonCompact,
+    CertifiedInverseKernel.cartanTriple,
+    CertifiedInverseKernel.toInformationCartanTriple] using
+    CIK.chiralAnomaly_isSpectralNonCompact
+
+/-- The right chiral anomaly belongs to the spectral chiral cone. -/
+@[rep_depth krein]
+theorem rightChiralAnomaly_mem_chiralOperatorCone
+    (CIK : CertifiedInverseKernel E) :
+    IsInChiralOperatorCone CIK CIK.rightChiralAnomaly := by
+  simpa [IsInChiralOperatorCone,
+    CertifiedInverseKernel.IsSpectralNonCompact,
+    CertifiedInverseKernel.cartanTriple,
+    CertifiedInverseKernel.toInformationCartanTriple] using
+    CIK.rightChiralAnomaly_isSpectralNonCompact
+
 /--
 Anticommutator form of left-anomaly oddness with respect to `Γ_S`.
 
-This is the closed-form `χ_L` oddness witness used by compatibility adapters.
+This is the closed-form `χ_L` oddness identity used by compatibility adapters.
 -/
 @[rep_depth krein]
 theorem anticommutator_GammaS_chiralAnomaly_eq_zero
@@ -366,7 +388,7 @@ theorem anticommutator_GammaS_chiralAnomaly_eq_zero
 /--
 Anticommutator form of right-anomaly oddness with respect to `Γ_S`.
 
-This is the closed-form `χ_R` oddness witness used by compatibility adapters.
+This is the closed-form `χ_R` oddness identity used by compatibility adapters.
 -/
 @[rep_depth krein]
 theorem anticommutator_GammaS_rightChiralAnomaly_eq_zero
@@ -383,93 +405,6 @@ theorem anticommutator_GammaS_rightChiralAnomaly_eq_zero
         = CIK.GammaS * CIK.rightChiralAnomaly + -(CIK.GammaS * CIK.rightChiralAnomaly) := by
             rw [hAnti]
     _ = 0 := by simp
-
-/--
-Reified owner for the spectral Cartan chiral cone algebra on the certified
-Drazin lane.
-
-This packages theorem-by-theorem closure and commutator/anticommutator facts
-already proved from `CertifiedInverseKernel`.
--/
-@[rep_depth krein]
-structure SpectralChiralConeAlgebra (CIK : CertifiedInverseKernel E) where
-  commutator_P_D_GammaG_eq_sub_anomalies :
-    DrazinSupercharge.commutator CIK.spectralProjector CIK.GammaG
-      = CIK.rightChiralAnomaly - CIK.chiralAnomaly
-  commutator_P_D_dilationGap_eq_half_sub_anomalies :
-    DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap
-      = ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly)
-  anticommutator_GammaS_chiL_eq_zero :
-    DrazinSupercharge.anticommutator CIK.GammaS CIK.chiralAnomaly = 0
-  anticommutator_GammaS_chiR_eq_zero :
-    DrazinSupercharge.anticommutator CIK.GammaS CIK.rightChiralAnomaly = 0
-  chiL_mem_chiralCone :
-    IsInChiralOperatorCone CIK CIK.chiralAnomaly
-  chiR_mem_chiralCone :
-    IsInChiralOperatorCone CIK CIK.rightChiralAnomaly
-  supercharge_eq_commutator_P_D_GammaG :
-    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
-      = DrazinSupercharge.commutator CIK.spectralProjector CIK.GammaG
-  supercharge_mem_chiralCone :
-    IsInChiralOperatorCone CIK (DrazinSupercharge.CertifiedInverseKernel.supercharge CIK)
-  compact_commutator_closed :
-    ∀ {X Y : EndH},
-      CIK.IsSpectralCompact X →
-      IsInChiralOperatorCone CIK Y →
-      IsInChiralOperatorCone CIK (CertifiedInverseKernel.spectralCommutator X Y)
-
-/--
-Canonical constructor for the spectral chiral cone algebra from the certified
-inverse-kernel owner.
--/
-@[rep_depth krein]
-def SpectralChiralConeAlgebra.ofCertifiedInverseKernel
-    (CIK : CertifiedInverseKernel E) :
-    SpectralChiralConeAlgebra CIK where
-  commutator_P_D_GammaG_eq_sub_anomalies := by
-    simpa [DrazinSupercharge.commutator] using
-      CIK.spectralProjector_commutator_GammaG_eq_sub_anomalies
-  commutator_P_D_dilationGap_eq_half_sub_anomalies := by
-    simpa [DrazinSupercharge.commutator] using
-      CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
-  anticommutator_GammaS_chiL_eq_zero :=
-    anticommutator_GammaS_chiralAnomaly_eq_zero (CIK := CIK)
-  anticommutator_GammaS_chiR_eq_zero :=
-    anticommutator_GammaS_rightChiralAnomaly_eq_zero (CIK := CIK)
-  chiL_mem_chiralCone := by
-    simpa [IsInChiralOperatorCone,
-      CertifiedInverseKernel.IsSpectralNonCompact,
-      CertifiedInverseKernel.cartanTriple,
-      CertifiedInverseKernel.toInformationCartanTriple] using
-      CIK.chiralAnomaly_isSpectralNonCompact
-  chiR_mem_chiralCone := by
-    simpa [IsInChiralOperatorCone,
-      CertifiedInverseKernel.IsSpectralNonCompact,
-      CertifiedInverseKernel.cartanTriple,
-      CertifiedInverseKernel.toInformationCartanTriple] using
-      CIK.rightChiralAnomaly_isSpectralNonCompact
-  supercharge_eq_commutator_P_D_GammaG := by
-    simpa using
-      (DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_commutator_spectralProjector_GammaG
-        (CIK := CIK))
-  supercharge_mem_chiralCone :=
-    supercharge_mem_chiralOperatorCone (CIK := CIK)
-  compact_commutator_closed := by
-    intro X Y hX hY
-    exact spectralCommutator_compact_mem_chiralOperatorCone (CIK := CIK) hX hY
-
-/--
-Deprecated compatibility alias kept during migration to the reified owner
-`SpectralChiralConeAlgebra`.
--/
-abbrev ChiralConeCompatibilityData (CIK : CertifiedInverseKernel E) :=
-  SpectralChiralConeAlgebra CIK
-
-/-- Deprecated constructor alias for compatibility with existing adapters. -/
-def chiralConeCompatibilityData
-    (CIK : CertifiedInverseKernel E) :
-    ChiralConeCompatibilityData CIK :=
-  SpectralChiralConeAlgebra.ofCertifiedInverseKernel (CIK := CIK)
 
 end Core
 

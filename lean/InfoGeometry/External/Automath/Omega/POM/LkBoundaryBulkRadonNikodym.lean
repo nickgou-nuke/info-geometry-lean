@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.LkBoundarySpectralMeasureBeta32
+import InfoGeometry.External.Automath.Omega.POM.LkBoundarySpectralMeasureBeta32
 
 namespace Omega.POM
 

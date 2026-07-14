@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
 
 namespace Omega.Zeta
 

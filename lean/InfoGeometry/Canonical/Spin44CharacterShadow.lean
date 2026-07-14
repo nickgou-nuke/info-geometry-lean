@@ -106,13 +106,13 @@ noncomputable def halfSpinorDifferenceShadow (β : Cartan4) : ℝ :=
 @[rep_depth thermo]
 theorem evenMinus_card :
     (Finset.univ.filter fun ε : Fin 4 → Bool => EvenMinus ε).card = 8 := by
-  native_decide
+  decide
 
 /-- The odd D4 half-spinor sector has eight sign weights. -/
 @[rep_depth thermo]
 theorem oddMinus_card :
     (Finset.univ.filter fun ε : Fin 4 → Bool => OddMinus ε).card = 8 := by
-  native_decide
+  decide
 
 /-- The finite vector-minus-Dirac supertrace formula unfolds to its three character parts. -/
 @[rep_depth thermo]

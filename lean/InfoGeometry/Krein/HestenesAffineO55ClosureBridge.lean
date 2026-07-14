@@ -5,8 +5,6 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
 # InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 
@@ -22,10 +20,7 @@ The local purpose is theorem-safe:
 
 * record the affine null-root and central-extension directions as supplied
   bounded operators;
-* package explicit certificates for the `Cl(5,5)`, affine-extension, and
-  `O(5,5)` interpretation;
-* expose the statement `IsAffineClosure ↔ IsO55Invariant` as a supplied
-  certificate-level equivalence;
+* record the `Cl(5,5)`, affine-extension, and `O(5,5)` backend fields directly;
 * inherit Drazin affine-null-root readbacks and nilpotence from the already
   compiled `D4HurwitzArithmeticBridge`;
 * preserve Ω-volume and the 24 Hurwitz/D4 root atom readouts under the supplied
@@ -61,15 +56,15 @@ local instance affineO55IsScalarTower : IsScalarTower ℝ EndH EndH := inferInst
 /--
 Affine `O(5,5)` closure bridge over the installed CPT / D4-Hurwitz backend.
 
-The fields are intentionally witness-heavy.  A concrete backend supplies the
+The fields are explicit backend data. A concrete backend supplies the
 actual `Cl(5,5)` substrate and `O(5,5)` isometry law; this bridge proves only
-the local consequences that follow from those witnesses and from already-owned
+the local consequences that follow from those fields and from already-owned
 Hestenes--Krein, Drazin, and Ω-volume APIs.
 -/
 @[rep_depth krein]
-structure HestenesAffineO55ClosureBridge where
+structure Bridge where
   /-- CPT / `O(N,N)` duality layer over the D4/Hurwitz backend. -/
-  duality : HestenesCPTONNDualityBridge (E := E)
+  duality : _root_.InfoGeometry.Krein.HestenesCPTONNDualityBridge.Bridge (E := E)
 
   /-- Supplied bounded representative of the dynamic `Cl(5,5)` substrate. -/
   clifford55Substrate : EndH
@@ -106,16 +101,9 @@ structure HestenesAffineO55ClosureBridge where
         duality.arithmetic.hurwitzRoot (o55RootAction i)
 
 
-namespace HestenesAffineO55ClosureBridge
+namespace Bridge
 
-variable (B : HestenesAffineO55ClosureBridge (E := E))
-
-/-- Predicate readback for affine closure via Ω-volume invariance under `O(5,5)`. -/
-@[rep_depth projective]
-def IsAffineClosure : Prop :=
-  ∀ A : EndH,
-    B.duality.arithmetic.moebius.wilson.volume.volumeState (B.o55OperatorAction A) =
-      B.duality.arithmetic.moebius.wilson.volume.volumeState A
+variable (B : Bridge (E := E))
 
 /-- Predicate readback for `O(5,5)` invariance via Ω-volume. -/
 @[rep_depth projective]
@@ -123,12 +111,6 @@ def IsO55Invariant : Prop :=
   ∀ A : EndH,
     B.duality.arithmetic.moebius.wilson.volume.volumeState (B.o55OperatorAction A) =
       B.duality.arithmetic.moebius.wilson.volume.volumeState A
-
-/-- The theorem-safe form of: affine D4 closure requires the `O(5,5)` substrate. -/
-@[rep_depth projective]
-theorem affine_closure_requires_O55 :
-    B.IsAffineClosure ↔ B.IsO55Invariant :=
-  Iff.rfl
 
 /-- The supplied `O(5,5)` vector action preserves the Hestenes natural cone shadow. -/
 @[rep_depth krein]
@@ -232,7 +214,7 @@ theorem affineNullRootMinus_same_arrow_nilpotent (A C : EndH) :
         B.duality.arithmetic.affineNullRootMinus C = 0 :=
   B.duality.arithmetic.affineNullRootMinus_mul_affineNullRootMinus_eq_zero A C
 
-end HestenesAffineO55ClosureBridge
+end Bridge
 
 end Core
 

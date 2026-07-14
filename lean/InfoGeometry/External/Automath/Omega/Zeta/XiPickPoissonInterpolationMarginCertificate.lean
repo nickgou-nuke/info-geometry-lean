@@ -1,4 +1,4 @@
-import Omega.Zeta.PickPoissonMinSeparationLowerbound
+import InfoGeometry.External.Automath.Omega.Zeta.PickPoissonMinSeparationLowerbound
 
 namespace Omega.Zeta
 

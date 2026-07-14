@@ -1,5 +1,5 @@
-import Omega.Folding.FoldPressureFreezingThreshold
-import Omega.Zeta.XiFixedFreezingEscortRenyiSpectrumCollapse
+import InfoGeometry.External.Automath.Omega.Folding.FoldPressureFreezingThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiFixedFreezingEscortRenyiSpectrumCollapse
 
 namespace Omega.Zeta
 

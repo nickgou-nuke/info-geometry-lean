@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.POM.A2GutSpectralSplitting
+import InfoGeometry.External.Automath.Omega.POM.A2GutSpectralSplitting
 
 namespace Omega.POM
 

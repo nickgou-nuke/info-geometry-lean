@@ -1,4 +1,4 @@
-import Omega.Topos.PointwiseIrreducibility
+import InfoGeometry.External.Automath.Omega.Topos.PointwiseIrreducibility
 
 namespace Omega.Topos
 

@@ -1,5 +1,5 @@
-import Omega.GU.TerminalGamma6Rigidity
-import Omega.GU.Window6IntrinsicBracketFiniteIntegerReduction
+import InfoGeometry.External.Automath.Omega.GU.TerminalGamma6Rigidity
+import InfoGeometry.External.Automath.Omega.GU.Window6IntrinsicBracketFiniteIntegerReduction
 
 namespace Omega.GU
 

@@ -277,8 +277,12 @@ structure LocalToGlobalAnomalyDatum where
   /-- Global anomaly or stacking class. -/
   globalClass : GlobalAnomalyClass
 
-  /-- Proof-carrying compatibility between the local signs and global index. -/
-  compatibility : Prop
+  /-- Encoding of local four-bit Clifford addresses into the global index carrier. -/
+  indexMap : Z2FourCharge → globalClass.indexType
+
+  /-- Compatibility is the concrete equation relating the chosen local address to the global index. -/
+  indexMap_localCharge :
+    indexMap localCharge = globalClass.index
 
 namespace LocalToGlobalAnomalyDatum
 
@@ -289,10 +293,10 @@ theorem local_charge_is_four_bit :
     D.localCharge = D.localCharge :=
   rfl
 
-/-- The local-to-global bridge requires an explicit compatibility witness. -/
-theorem compatibility_is_extra :
-    D.compatibility → D.compatibility :=
-  id
+/-- The local-to-global bridge evaluates the supplied index map to the global index. -/
+theorem indexMap_localCharge_eq :
+    D.indexMap D.localCharge = D.globalClass.index :=
+  D.indexMap_localCharge
 
 end LocalToGlobalAnomalyDatum
 

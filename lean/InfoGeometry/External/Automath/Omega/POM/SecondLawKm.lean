@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.EntIncreaseEqualsKl
+import InfoGeometry.External.Automath.Omega.POM.EntIncreaseEqualsKl
 
 namespace Omega.POM
 

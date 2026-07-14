@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9zWindow6IsolatedSiteAnnihilation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zWindow6IsolatedSiteAnnihilation
 
 namespace Omega.Zeta
 

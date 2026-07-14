@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
-import Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
+import InfoGeometry.External.Automath.Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
 
 namespace Omega.Zeta
 

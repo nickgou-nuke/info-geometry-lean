@@ -1,4 +1,4 @@
-import Omega.SPG.TanakaIncrement
+import InfoGeometry.External.Automath.Omega.SPG.TanakaIncrement
 
 namespace Omega.SPG
 

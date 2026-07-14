@@ -1,4 +1,4 @@
-import Omega.Conclusion.ValuationIsometryClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.ValuationIsometryClassification
 
 namespace Omega.Conclusion
 

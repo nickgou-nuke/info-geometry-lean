@@ -1,4 +1,4 @@
-import Omega.GroupUnification.TiltedFreeEnergy
+import InfoGeometry.External.Automath.Omega.GroupUnification.TiltedFreeEnergy
 
 namespace Omega.GroupUnification
 

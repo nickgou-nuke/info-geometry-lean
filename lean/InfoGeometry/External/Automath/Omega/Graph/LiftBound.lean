@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Graph.LabeledGraph
+import InfoGeometry.External.Automath.Omega.Graph.LabeledGraph
 
 namespace Omega.Graph
 

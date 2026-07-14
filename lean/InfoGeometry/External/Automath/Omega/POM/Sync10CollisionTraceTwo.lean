@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.POM.Sync10CollisionTwoFixedpoints
+import InfoGeometry.External.Automath.Omega.POM.Sync10CollisionTwoFixedpoints
 
 namespace Omega.POM
 

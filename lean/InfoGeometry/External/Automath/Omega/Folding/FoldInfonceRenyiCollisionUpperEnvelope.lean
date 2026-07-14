@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
-import Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 
 namespace Omega.Folding
 

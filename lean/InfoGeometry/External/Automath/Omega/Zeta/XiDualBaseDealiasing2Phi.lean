@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Zeta.XiDualBaseDealiasingInjectiveEncoding
+import InfoGeometry.External.Automath.Omega.Zeta.XiDualBaseDealiasingInjectiveEncoding
 
 namespace Omega.Zeta
 

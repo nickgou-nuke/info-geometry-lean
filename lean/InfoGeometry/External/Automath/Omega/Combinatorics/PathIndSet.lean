@@ -4,7 +4,7 @@ import Mathlib.Data.Finset.Preimage
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Order.Fin.Basic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 /-! # Path-graph independent sets and Fibonacci numbers
 

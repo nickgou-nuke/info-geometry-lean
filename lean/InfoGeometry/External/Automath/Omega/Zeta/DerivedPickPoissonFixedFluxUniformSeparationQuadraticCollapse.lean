@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Zeta.DerivedPickPoissonClusteredQuadraticCoerciveLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedPickPoissonClusteredQuadraticCoerciveLowerBound
 
 namespace Omega.Zeta
 

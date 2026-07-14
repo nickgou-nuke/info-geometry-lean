@@ -1,4 +1,4 @@
-import Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.Folding.Window6
 
 namespace Omega.CircleDimension
 

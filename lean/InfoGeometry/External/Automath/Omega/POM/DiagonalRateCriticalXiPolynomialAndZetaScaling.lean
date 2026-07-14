@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Topology.Algebra.Polynomial
 import Mathlib.Topology.Basic
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateCriticalContinuousTimeGeneratorMaxent
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateCriticalContinuousTimeGeneratorMaxent
 
 namespace Omega.POM
 

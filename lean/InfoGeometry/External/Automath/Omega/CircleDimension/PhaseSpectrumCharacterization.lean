@@ -1,5 +1,5 @@
-import Omega.CircleDimension.CircleDim
-import Omega.CircleDimension.PhaseSpectrumMonoid
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseSpectrumMonoid
 
 namespace Omega.CircleDimension
 

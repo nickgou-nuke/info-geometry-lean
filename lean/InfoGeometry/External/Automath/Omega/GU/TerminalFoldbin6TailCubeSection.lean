@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
 
 namespace Omega.GU
 

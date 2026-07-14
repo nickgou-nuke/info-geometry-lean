@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiZGCountingPowerSavingError
-import Omega.Zeta.XiZGReciprocalHarmonicAsymptotic
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGCountingPowerSavingError
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGReciprocalHarmonicAsymptotic
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Folding.BinFoldGaugeDecomposition
+import InfoGeometry.External.Automath.Omega.Folding.BinFoldGaugeDecomposition
 
 namespace Omega.Folding
 

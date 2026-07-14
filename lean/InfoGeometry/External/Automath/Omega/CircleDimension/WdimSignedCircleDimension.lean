@@ -1,5 +1,5 @@
-import Omega.CircleDimension.OrthogonalAmalgamatedWdim
-import Omega.CircleDimension.SignedCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.OrthogonalAmalgamatedWdim
+import InfoGeometry.External.Automath.Omega.CircleDimension.SignedCircleDimension
 
 namespace Omega.CircleDimension
 

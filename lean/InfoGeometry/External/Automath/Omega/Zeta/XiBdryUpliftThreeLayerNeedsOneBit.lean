@@ -1,4 +1,4 @@
-import Omega.Zeta.BdryFreeInvolutionOddFiberObstructionMinCover
+import InfoGeometry.External.Automath.Omega.Zeta.BdryFreeInvolutionOddFiberObstructionMinCover
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.TwoScaleBinomialTransportSingularCircle
+import InfoGeometry.External.Automath.Omega.Zeta.TwoScaleBinomialTransportSingularCircle
 
 namespace Omega.Zeta
 

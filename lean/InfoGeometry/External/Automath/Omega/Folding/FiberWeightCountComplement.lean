@@ -1,6 +1,6 @@
-import Omega.Folding.FiberWeightCount
-import Omega.Folding.MomentRecurrence
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega
 

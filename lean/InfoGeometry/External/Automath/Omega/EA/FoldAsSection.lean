@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
 
 namespace Omega.EA.FoldAsSection
 

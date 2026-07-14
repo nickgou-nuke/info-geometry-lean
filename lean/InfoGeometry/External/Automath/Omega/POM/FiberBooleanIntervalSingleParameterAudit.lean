@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FenceMobiusRigidity
+import InfoGeometry.External.Automath.Omega.POM.FenceMobiusRigidity
 
 namespace Omega.POM
 

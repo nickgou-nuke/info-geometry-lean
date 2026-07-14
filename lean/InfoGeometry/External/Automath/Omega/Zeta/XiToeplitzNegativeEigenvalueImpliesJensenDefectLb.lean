@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
-import Omega.Zeta.JensenSoftThresholdLowerBound
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.JensenSoftThresholdLowerBound
 
 namespace Omega.Zeta
 

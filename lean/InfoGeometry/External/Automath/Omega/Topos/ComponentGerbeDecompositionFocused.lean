@@ -1,4 +1,4 @@
-import Omega.Topos.ComponentGerbeDecomposition
+import InfoGeometry.External.Automath.Omega.Topos.ComponentGerbeDecomposition
 
 namespace Omega.Topos
 

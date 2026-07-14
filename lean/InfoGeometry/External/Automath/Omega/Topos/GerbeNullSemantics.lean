@@ -1,5 +1,5 @@
 import Mathlib.Data.Set.Basic
-import Omega.Topos.NullTrichotomy
+import InfoGeometry.External.Automath.Omega.Topos.NullTrichotomy
 
 namespace Omega.Topos
 

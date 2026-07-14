@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SyncKernelMixingRate
+import InfoGeometry.External.Automath.Omega.Zeta.SyncKernelMixingRate
 
 namespace Omega.Zeta
 

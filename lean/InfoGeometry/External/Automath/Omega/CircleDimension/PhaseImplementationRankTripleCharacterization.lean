@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.CircleDimension.PhaseSpectrumCharacterization
-import Omega.Zeta.PhaseImplementationRankLimit
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseSpectrumCharacterization
+import InfoGeometry.External.Automath.Omega.Zeta.PhaseImplementationRankLimit
 
 namespace Omega.CircleDimension
 

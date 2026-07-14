@@ -40,7 +40,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 
 /-- Proposition bundled by the Erlangen/O(5,5) capstone theorem. -/
 def ErlangenO55Statement
-    (B : HestenesAffineO55ClosureBridge (E := E))
+    (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := E))
     (ξ : H₂)
     (_hNatural :
       ξ ∈
@@ -67,7 +67,7 @@ Erlangen/O(5,5) readout: the supplied O(5,5) action preserves the natural
 cone, the null cone, the Ω-volume state, and permutes Hurwitz roots.
 -/
 theorem erlangen_o55_invariants
-    (B : HestenesAffineO55ClosureBridge (E := E))
+    (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := E))
     (ξ : H₂)
     (hNatural :
       ξ ∈
@@ -217,7 +217,7 @@ def TrinityCapstoneStatement
     {E : Type 0}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace E)]
-    (B : HestenesAffineO55ClosureBridge (E := E))
+    (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := E))
     (ξ : InfoGeometry.Krein.DoubledSpace E)
     (hNatural :
       ξ ∈
@@ -247,7 +247,7 @@ theorem trinity_capstone_unified
     {E : Type 0}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace E)]
-    (B : HestenesAffineO55ClosureBridge (E := E))
+    (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := E))
     (ξ : InfoGeometry.Krein.DoubledSpace E)
     (hNatural :
       ξ ∈

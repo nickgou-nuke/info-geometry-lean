@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangCoverPrimitive
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangCoverPrimitive
 
 namespace Omega.Conclusion
 

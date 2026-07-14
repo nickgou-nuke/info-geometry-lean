@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ComputablePrefixNonidentifiabilityMultiplicity
+import InfoGeometry.External.Automath.Omega.CircleDimension.ComputablePrefixNonidentifiabilityMultiplicity
 
 namespace Omega.CircleDimension
 

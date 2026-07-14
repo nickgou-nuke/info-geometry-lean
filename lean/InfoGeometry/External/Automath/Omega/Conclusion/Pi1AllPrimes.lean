@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Prime.Basic
-import Omega.EA.FoldGroupoidAutPi1AllPrimes
+import InfoGeometry.External.Automath.Omega.EA.FoldGroupoidAutPi1AllPrimes
 
 namespace Omega.Conclusion
 

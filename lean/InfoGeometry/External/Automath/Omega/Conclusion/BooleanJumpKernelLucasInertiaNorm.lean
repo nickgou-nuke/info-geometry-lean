@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.BooleanBinaryJumpKernelsTensorSpectrum
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanBinaryJumpKernelsTensorSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 namespace Omega.Conclusion
 

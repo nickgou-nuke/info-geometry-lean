@@ -1,4 +1,4 @@
-import Omega.Zeta.CyclicFredholmRealization
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicFredholmRealization
 
 namespace Omega.Zeta
 

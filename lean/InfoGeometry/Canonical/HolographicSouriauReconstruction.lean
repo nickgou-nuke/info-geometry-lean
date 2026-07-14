@@ -51,12 +51,14 @@ def o55Metric : Mat10 ℚ :=
 /-- The split metric is its own inverse. -/
 theorem o55Metric_involutive :
     o55Metric * o55Metric = 1 := by
-  native_decide
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [o55Metric, Matrix.mul_apply]
 
 /-- The split metric is symmetric. -/
 theorem o55Metric_transpose :
     Matrix.transpose o55Metric = o55Metric := by
-  native_decide
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [o55Metric]
 
 /-- Rational Brillouin twist with `T^2 = -I`. -/
 def brillouinTwist2 : Mat2 ℚ :=
@@ -71,17 +73,20 @@ def brillouinGlide2 : Mat2 ℚ :=
 /-- The Brillouin twist is fermionic parity: `T^2 = -I`. -/
 theorem brillouinTwist2_sq :
     brillouinTwist2 * brillouinTwist2 = -1 := by
-  native_decide
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [brillouinTwist2, Matrix.mul_apply]
 
 /-- The glide is an involution. -/
 theorem brillouinGlide2_sq :
     brillouinGlide2 * brillouinGlide2 = 1 := by
-  native_decide
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [brillouinGlide2, Matrix.mul_apply]
 
 /-- The twist and glide anticommute, giving the Klein-bottle momentum cell. -/
 theorem brillouinGlide2_anticommutes_twist :
     brillouinGlide2 * brillouinTwist2 = -brillouinTwist2 * brillouinGlide2 := by
-  native_decide
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [brillouinGlide2, brillouinTwist2, Matrix.mul_apply]
 
 /-- Operator form of the glide-reflection law `K(TX) = -T(KX)`. -/
 theorem brillouin_glide_reflection_exact (X : Mat2 ℚ) :
@@ -127,22 +132,25 @@ def su3ChevalleyGenerator : Fin 8 → Mat3 ℚ
 /-- Every displayed color generator is traceless. -/
 theorem su3Chevalley_trace_zero (i : Fin 8) :
     Matrix.trace (su3ChevalleyGenerator i) = 0 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> simp [su3ChevalleyGenerator, su3E12, su3E21, su3E23, su3E32, su3E13, su3E31, su3H1, su3H2]
 
 /-- The scalar modular laser commutes with every displayed color generator. -/
 theorem su3Chevalley_dark_to_scalar_modular_laser (i : Fin 8) :
     matComm colorModularScalar3 (su3ChevalleyGenerator i) = 0 := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
+    simp [matComm, colorModularScalar3, su3ChevalleyGenerator, su3E12, su3E21, su3E23, su3E32, su3E13, su3E31, su3H1, su3H2]
 
 /-- Basic Chevalley bracket readout: `[E12,E23] = E13`. -/
 theorem su3Chevalley_E12_E23 :
     matComm su3E12 su3E23 = su3E13 := by
-  native_decide
+  ext a b <;> fin_cases a <;> fin_cases b <;>
+    simp [matComm, su3E12, su3E23, su3E13]
 
 /-- Second bracket readout: `[E21,E32] = -E31`. -/
 theorem su3Chevalley_E21_E32 :
     matComm su3E21 su3E32 = -su3E31 := by
-  native_decide
+  ext a b <;> fin_cases a <;> fin_cases b <;>
+    simp [matComm, su3E21, su3E32, su3E31]
 
 /-- Data-only five-grade carrier for a Pin-like split algebra. -/
 structure Pin55FiveGradeData (Op : Type u) [Ring Op] where

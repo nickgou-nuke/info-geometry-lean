@@ -1,4 +1,4 @@
-import Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
 
 namespace Omega.Folding
 

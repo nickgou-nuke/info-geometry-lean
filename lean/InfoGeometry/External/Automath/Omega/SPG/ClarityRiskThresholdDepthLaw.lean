@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SPG.BoundaryDimensionAeStabilization
-import Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryDimensionAeStabilization
+import InfoGeometry.External.Automath.Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
 
 namespace Omega.SPG
 

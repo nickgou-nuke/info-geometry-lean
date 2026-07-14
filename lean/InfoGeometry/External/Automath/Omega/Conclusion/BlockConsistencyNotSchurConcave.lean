@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityMajorizationSchurHardness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityMajorizationSchurHardness
 
 namespace Omega.Conclusion
 

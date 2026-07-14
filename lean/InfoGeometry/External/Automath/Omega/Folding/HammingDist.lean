@@ -1,7 +1,7 @@
-import Omega.Folding.MaxFiber
-import Omega.Folding.Defect
-import Omega.Combinatorics.FibonacciCube
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 
 /-! ### Hamming distance on binary words
 

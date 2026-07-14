@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInputDefectEntropy
-import Omega.SyncKernelWeighted.RealInput40GroundEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInputDefectEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40GroundEntropy
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.FrozenMomentSemigroupSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenMomentSemigroupSeeds
 
 namespace Omega.Conclusion
 

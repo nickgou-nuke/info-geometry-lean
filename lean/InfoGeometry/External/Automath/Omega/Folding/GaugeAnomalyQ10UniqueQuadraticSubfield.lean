@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyP10Degree
-import Omega.Folding.GaugeAnomalyQ10Tschirnhaus
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyP10Degree
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyQ10Tschirnhaus
 
 namespace Omega.Folding
 

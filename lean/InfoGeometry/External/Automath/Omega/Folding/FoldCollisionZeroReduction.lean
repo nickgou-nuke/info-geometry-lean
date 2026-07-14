@@ -1,4 +1,4 @@
-import Omega.Folding.FoldCollisionSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionSpectrum
 
 
 namespace Omega.Folding

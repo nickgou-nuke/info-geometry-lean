@@ -1,4 +1,13 @@
+import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Tactic
+
+open scoped BigOperators
+
+/-!
+# InfoGeometry.SuperMetriplectic.WeylCharacter
 -/
+
 structure WeylCharacterGibbsPacket (ι : Type*) [Fintype ι] where
   weightReadout : ι → ℝ
   degeneracy : ι → ℝ
@@ -106,6 +115,3 @@ theorem super_eq_ordinary_minus_two_fermionic
   ring
 
 end SuperWeylCharacterSplit
-
-/--
-BPS/Witten specialized character packet.

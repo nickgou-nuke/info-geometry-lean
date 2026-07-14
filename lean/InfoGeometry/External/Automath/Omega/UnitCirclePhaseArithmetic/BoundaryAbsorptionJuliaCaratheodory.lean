@@ -2,9 +2,9 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
-import Omega.Zeta.XiEndpointAbsorptionCoefficient
-import Omega.Zeta.XiEndpointJuliaIndicatorEqualsAbsorption
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAbsorptionCoefficient
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointJuliaIndicatorEqualsAbsorption
 
 namespace Complex
 

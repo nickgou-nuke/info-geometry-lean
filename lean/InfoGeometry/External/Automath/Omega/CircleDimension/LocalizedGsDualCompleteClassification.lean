@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizedDivisionPrimeFiberNoGrowth
-import Omega.CircleDimension.LocalizedGsEmbeddingOrder
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedDivisionPrimeFiberNoGrowth
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedGsEmbeddingOrder
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.CircleDimension
 

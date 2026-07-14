@@ -1,5 +1,5 @@
-import Omega.Zeta.FinitePartLogMPrimitiveOrbitClosedForm
-import Omega.Zeta.PsiTruncationBounds
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartLogMPrimitiveOrbitClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.PsiTruncationBounds
 
 namespace Omega.Zeta
 

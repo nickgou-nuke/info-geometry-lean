@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FibonacciAnomalyBlock
-import Omega.Folding.ZeckendorfSignature
-import Omega.Zeta.Window6RenyiDivergenceParityChargeRedundancy
+import InfoGeometry.External.Automath.Omega.Conclusion.FibonacciAnomalyBlock
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Zeta.Window6RenyiDivergenceParityChargeRedundancy
 
 namespace Omega.Conclusion
 

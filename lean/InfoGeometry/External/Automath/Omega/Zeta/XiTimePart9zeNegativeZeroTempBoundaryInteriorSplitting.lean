@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9zeNegativeZeroTemperatureFreezing
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zeNegativeZeroTemperatureFreezing
 
 namespace Omega.Zeta
 

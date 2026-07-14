@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyCumulant3
-import Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCumulant3
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
 
 namespace Omega.Folding
 

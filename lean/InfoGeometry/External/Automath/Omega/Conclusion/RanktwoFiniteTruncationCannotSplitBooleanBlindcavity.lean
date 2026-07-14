@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.RanktwoSmithBlindclassBooleanPrimeblockTorsor
+import InfoGeometry.External.Automath.Omega.Conclusion.RanktwoSmithBlindclassBooleanPrimeblockTorsor
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Log
-import Omega.SPG.RegisterLowerBound
-import Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.SPG.RegisterLowerBound
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
 
 namespace Omega.SPG
 

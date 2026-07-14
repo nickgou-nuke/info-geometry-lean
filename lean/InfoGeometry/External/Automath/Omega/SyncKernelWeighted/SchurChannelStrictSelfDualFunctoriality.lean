@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.KernelSelfDualCharacterSchur
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.KernelSelfDualCharacterSchur
 
 namespace Omega.SyncKernelWeighted
 

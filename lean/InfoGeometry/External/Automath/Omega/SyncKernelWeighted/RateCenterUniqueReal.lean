@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RateCurveCenterSliceAudit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RateCurveCenterSliceAudit
 
 namespace Omega.SyncKernelWeighted
 

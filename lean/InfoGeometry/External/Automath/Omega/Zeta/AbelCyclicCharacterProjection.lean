@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Zeta.AbelChannelEquipartitionCharacter
+import InfoGeometry.External.Automath.Omega.Zeta.AbelChannelEquipartitionCharacter
 
 namespace Omega.Zeta
 

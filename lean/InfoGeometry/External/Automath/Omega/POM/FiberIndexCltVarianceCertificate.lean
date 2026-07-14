@@ -1,4 +1,4 @@
-import Omega.POM.FiberIndexCltThermo
+import InfoGeometry.External.Automath.Omega.POM.FiberIndexCltThermo
 
 namespace Omega.POM
 

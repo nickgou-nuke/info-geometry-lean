@@ -1,4 +1,4 @@
-import Omega.POM.InfoncePartitionOptimalClosedForm
+import InfoGeometry.External.Automath.Omega.POM.InfoncePartitionOptimalClosedForm
 
 namespace Omega.POM
 

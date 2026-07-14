@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
-import Omega.EA.KernelOneSiteBernoulliClass
+import InfoGeometry.External.Automath.Omega.EA.KernelOneSiteBernoulliClass
 
 namespace Omega.EA
 

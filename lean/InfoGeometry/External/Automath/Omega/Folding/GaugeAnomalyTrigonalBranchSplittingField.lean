@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyTrigonalQ4Galois
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalQ4Galois
 
 namespace Omega.Folding
 

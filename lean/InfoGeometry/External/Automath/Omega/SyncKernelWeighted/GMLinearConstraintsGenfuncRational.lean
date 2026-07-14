@@ -1,4 +1,4 @@
-import Omega.EA.RationalGFLinearConstraints
+import InfoGeometry.External.Automath.Omega.EA.RationalGFLinearConstraints
 
 namespace Omega.SyncKernelWeighted
 

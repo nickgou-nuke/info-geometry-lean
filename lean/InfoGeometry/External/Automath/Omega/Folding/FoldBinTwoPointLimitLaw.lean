@@ -1,7 +1,7 @@
 import Mathlib
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 namespace Omega.Folding
 

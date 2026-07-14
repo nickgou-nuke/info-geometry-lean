@@ -1,4 +1,4 @@
-import Omega.Conclusion.QuadraticFieldRamification
+import InfoGeometry.External.Automath.Omega.Conclusion.QuadraticFieldRamification
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 

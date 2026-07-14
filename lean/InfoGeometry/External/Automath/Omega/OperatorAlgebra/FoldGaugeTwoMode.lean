@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldGaugeCommutantExplicit
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeCommutantExplicit
 
 namespace Omega.OperatorAlgebra
 

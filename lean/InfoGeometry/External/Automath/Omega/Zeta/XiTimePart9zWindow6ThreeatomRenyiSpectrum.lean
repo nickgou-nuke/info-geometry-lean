@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.FoldResidualTime.Window6FixedFreezingLaw
-import Omega.Zeta.Window6RenyiDivergenceParityChargeRedundancy
+import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6FixedFreezingLaw
+import InfoGeometry.External.Automath.Omega.Zeta.Window6RenyiDivergenceParityChargeRedundancy
 
 namespace Omega.Zeta
 

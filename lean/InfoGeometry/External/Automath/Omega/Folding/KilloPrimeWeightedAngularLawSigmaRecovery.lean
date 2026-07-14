@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Folding.KilloPrimeWeightedEllipticFingerprintClt
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeWeightedEllipticFingerprintClt
 
 namespace Omega.Folding
 

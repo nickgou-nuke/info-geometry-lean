@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComovingDefectBound
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingDefectBound
 
 namespace Omega.TypedAddressBiaxialCompletion
 

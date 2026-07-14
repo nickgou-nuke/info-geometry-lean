@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.S4V4CompatibleBiellipticPencilsExactlyThree
-import Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4CompatibleBiellipticPencilsExactlyThree
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
 
 namespace Omega.CircleDimension
 

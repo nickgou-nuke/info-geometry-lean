@@ -1,4 +1,4 @@
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 
 /-! ### Fibonacci Cube Graph
 

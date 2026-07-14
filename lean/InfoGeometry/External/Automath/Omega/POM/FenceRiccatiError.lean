@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Core.Fib
-import Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
 
 namespace Omega.POM
 

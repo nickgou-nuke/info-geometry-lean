@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Order.IntermediateValue
-import Omega.Zeta.ArityCollisionQuadraticClosed
+import InfoGeometry.External.Automath.Omega.Zeta.ArityCollisionQuadraticClosed
 
 namespace Omega.SyncKernelRealInput
 

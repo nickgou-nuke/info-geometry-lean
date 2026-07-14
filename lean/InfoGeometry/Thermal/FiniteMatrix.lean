@@ -114,6 +114,14 @@ lemma gibbsWeight_sum_one (H : Hamiltonian n) (β : ℝ) :
     ∑ i, H.gibbsWeight β i = 1 := by
   simpa [gibbsWeight] using InfoGeometry.MaxEnt.gibbs_sum_one (f := H.energy) (lam := β)
 
+lemma gibbsWeight_le_one (H : Hamiltonian n) (β : ℝ) (i : Fin n) :
+    H.gibbsWeight β i ≤ 1 := by
+  have hnonneg : ∀ j : Fin n, 0 ≤ H.gibbsWeight β j := fun j => H.gibbsWeight_nonneg β j
+  have hsum : ∑ j : Fin n, H.gibbsWeight β j = 1 := H.gibbsWeight_sum_one β
+  have hi_le_sum : H.gibbsWeight β i ≤ ∑ j : Fin n, H.gibbsWeight β j := by
+    exact Finset.single_le_sum (fun j _hj => hnonneg j) (Finset.mem_univ i)
+  simpa [hsum] using hi_le_sum
+
 /-- Diagonal log-density coefficients:
 `log pᵢ = -β Eᵢ - log Z(β)`. -/
 noncomputable def logDensityCoeff (H : Hamiltonian n) (β : ℝ) : Fin n → ℝ :=
@@ -137,6 +145,11 @@ omit [Nonempty (Fin n)] in
 @[simp] lemma densityMatrix_apply_diag (H : Hamiltonian n) (β : ℝ) (i : Fin n) :
     H.densityMatrix β i i = H.gibbsWeight β i := by
   simp [densityMatrix]
+
+lemma densityMatrix_apply_diag_le_one (H : Hamiltonian n) (β : ℝ) (i : Fin n) :
+    H.densityMatrix β i i ≤ 1 := by
+  rw [densityMatrix_apply_diag]
+  exact H.gibbsWeight_le_one β i
 
 omit [Nonempty (Fin n)] in
 @[simp] lemma densityMatrix_apply_offdiag (H : Hamiltonian n) (β : ℝ) {i j : Fin n} (h : i ≠ j) :

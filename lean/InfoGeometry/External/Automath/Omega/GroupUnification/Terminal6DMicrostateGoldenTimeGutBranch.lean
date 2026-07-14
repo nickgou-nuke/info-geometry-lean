@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.ZeckendorfCountClosure
-import Omega.GroupUnification.TerminalFamilyUpliftLock
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.GroupUnification.TerminalFamilyUpliftLock
 
 namespace Omega.GroupUnification
 

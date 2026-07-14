@@ -106,20 +106,28 @@ def pin55LiftOfWallpaperRoot : Fin 8 → Root5Q
 /-- Each displayed wallpaper root is the projection of its displayed `D₅` lift. -/
 theorem project_pin55LiftOfWallpaperRoot (i : Fin 8) :
     projectRoot2 (pin55LiftOfWallpaperRoot i) = wallpaperB2Root i := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> rfl
 
 /-- Each displayed lift is a genuine finite `D₅` root. -/
 theorem pin55LiftOfWallpaperRoot_isD5Root (i : Fin 8) :
     IsD5Root (pin55LiftOfWallpaperRoot i) := by
   fin_cases i
-  · refine ⟨0, 2, 0, 0, by decide, by native_decide⟩
-  · refine ⟨0, 2, 1, 0, by decide, by native_decide⟩
-  · refine ⟨1, 2, 0, 0, by decide, by native_decide⟩
-  · refine ⟨1, 2, 1, 0, by decide, by native_decide⟩
-  · refine ⟨0, 1, 0, 0, by decide, by native_decide⟩
-  · refine ⟨0, 1, 1, 1, by decide, by native_decide⟩
-  · refine ⟨0, 1, 0, 1, by decide, by native_decide⟩
-  · refine ⟨0, 1, 1, 0, by decide, by native_decide⟩
+  · refine ⟨0, 2, 0, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨0, 2, 1, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨1, 2, 0, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨1, 2, 1, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨0, 1, 0, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨0, 1, 1, 1, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨0, 1, 0, 1, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+  · refine ⟨0, 1, 1, 0, by decide, ?_⟩
+    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
 
 /-! ## Wallpaper action and Weyl lifts -/
 

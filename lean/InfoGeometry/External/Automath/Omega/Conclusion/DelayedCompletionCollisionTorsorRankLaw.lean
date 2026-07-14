@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenGraphicMatroidCorankSupermodularity
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenGraphicMatroidCorankSupermodularity
 
 namespace Omega.Conclusion
 

@@ -105,7 +105,5 @@ abbrev comm_D_K :=
 abbrev comm_P_K :=
   InfoGeometry.Canonical.ConformalSL2GeneratorBridge.comm_P_K
 
-abbrev ambient_group_is_O55 :=
-  InfoGeometry.Canonical.ConformalSL2GeneratorBridge.ambient_group_is_O55
 
 end InfoGeometry.Canonical.ConformalRapidityRosetta

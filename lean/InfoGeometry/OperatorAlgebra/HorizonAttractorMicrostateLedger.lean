@@ -72,12 +72,12 @@ structure HorizonAttractorMicrostateLedger
     Charge → Scalar
 
   /-- Attractor-style entropy law. -/
-  entropy_attractor_True :
+  entropy_attractor_law :
     ∀ s : State,
       entropyReadout s = entropyOfCharge (chargeReadout s)
 
   /-- Attractor-style central-charge law. -/
-  centralCharge_attractor_True :
+  centralCharge_attractor_law :
     ∀ s : State,
       centralCharge s = centralChargeOfCharge (chargeReadout s)
 
@@ -93,13 +93,13 @@ variable
 theorem entropyReadout_eq_entropyOfCharge
     (s : State) :
     L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) :=
-  L.entropy_attractor_True s
+  L.entropy_attractor_law s
 
 /-- The central-charge readout is determined by charge data. -/
 theorem centralCharge_eq_centralChargeOfCharge
     (s : State) :
     L.centralCharge s = L.centralChargeOfCharge (L.chargeReadout s) :=
-  L.centralCharge_attractor_True s
+  L.centralCharge_attractor_law s
 
 /-- Lemma 1: equal charge readouts give equal entropy-of-charge values. -/
 theorem entropyOfCharge_eq_of_chargeReadout_eq
@@ -162,7 +162,7 @@ structure HorizonMemoryRecoveryWitness
     State → Memory
 
   /-- Recovery law: the visible recovered memory equals the hidden memory. -/
-  recovery_True :
+  recovery_law :
     ∀ s : State,
       recoveredMemory s = L.hiddenMemory s
 
@@ -179,7 +179,7 @@ variable
 theorem recoveredMemory_eq_hiddenMemory
     (s : State) :
     R.recoveredMemory s = L.hiddenMemory s :=
-  R.recovery_True s
+  R.recovery_law s
 
 /-- Lemma 5: recovery transports hidden-memory equality to recovered-memory equality. -/
 theorem recoveredMemory_eq_of_hiddenMemory_eq

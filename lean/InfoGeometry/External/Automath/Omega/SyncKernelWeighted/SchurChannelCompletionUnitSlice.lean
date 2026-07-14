@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.SchurChannelStrictSelfDualFunctoriality
-import Omega.SyncKernelWeighted.WeightedCompletionQ
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SchurChannelStrictSelfDualFunctoriality
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedCompletionQ
 
 namespace Omega.SyncKernelWeighted
 

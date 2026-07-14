@@ -1,5 +1,5 @@
 import Mathlib.MeasureTheory.OuterMeasure.BorelCantelli
-import Omega.SPG.ScanProjectionBayesOptimality
+import InfoGeometry.External.Automath.Omega.SPG.ScanProjectionBayesOptimality
 
 open Filter
 

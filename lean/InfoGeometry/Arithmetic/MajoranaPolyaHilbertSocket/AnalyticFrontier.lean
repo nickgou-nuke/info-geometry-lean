@@ -18,7 +18,7 @@ commutator theorem.
 -/
 @[socket_debt_tag]
 structure EssentialSelfAdjointLimitSocket
-    (Operator : Type*) where
+    (Operator : Type) where
   diracCutoffSeq : ℕ → Operator
   essentialSelfAdjointLimit : Operator
 
@@ -31,7 +31,7 @@ divergent trace into a renormalized spectral Pfaffian.
 -/
 @[socket_debt_tag]
 structure ZetaRegularizedPfaffianSocket
-    (Operator ZetaReadout : Type*) where
+    (Operator ZetaReadout : Type) where
   diracSquare : Operator
   zetaRegularizedDet : ZetaReadout
 
@@ -44,7 +44,7 @@ not merely the inverse-zeta Witten character.
 -/
 @[socket_debt_tag]
 structure CompletedXiSuperdeterminantIdentitySocket
-    (DeterminantReadout CompletedXiReadout : Type*) where
+    (DeterminantReadout CompletedXiReadout : Type) where
   relativeSuperdeterminant : DeterminantReadout
   completedXiTarget : CompletedXiReadout
 
@@ -65,7 +65,7 @@ structure MBKAnalyticFrontier
       ArchimedeanReadout FinitePrimeReadout BoundaryData ScatteringMatrix
       ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout DeterminantReadout : Type*) where
+      ExplicitFormulaReadout DeterminantReadout : Type) where
   base_bridge :
     MajoranaPolyaHilbertBridge
       Carrier Operator Mode ZeroMode NormReadout

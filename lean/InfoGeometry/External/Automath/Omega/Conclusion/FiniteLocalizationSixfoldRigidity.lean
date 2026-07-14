@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.CircleDimension.PhaseSpectrumQuotient
-import Omega.Conclusion.LocalizedSolenoidCoprimeArtinMazurCompleteness
-import Omega.Zeta.LocalizedQuotientTorsionZetaEulerProduct
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseSpectrumQuotient
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedSolenoidCoprimeArtinMazurCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientTorsionZetaEulerProduct
 
 namespace Omega.Conclusion
 

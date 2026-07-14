@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartCyclicLiftDirichletMultipleSum
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftDirichletMultipleSum
 
 namespace Omega.Zeta
 

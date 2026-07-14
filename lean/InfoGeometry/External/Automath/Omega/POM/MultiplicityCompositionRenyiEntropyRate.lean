@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicityCompositionLogconvexLambdaq
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionLogconvexLambdaq
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingEvaluateAtFullRoots
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingEvaluateAtFullRoots
 
 namespace Omega.POM
 

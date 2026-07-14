@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.ToeplitzMetricSpectrumNormalForm
+import InfoGeometry.External.Automath.Omega.CircleDimension.ToeplitzMetricSpectrumNormalForm
 
 namespace Omega.Zeta
 

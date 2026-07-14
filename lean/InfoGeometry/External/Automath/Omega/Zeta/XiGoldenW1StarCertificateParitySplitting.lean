@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Kronecker.W1RightShiftedMinimizer
-import Omega.Zeta.XiGoldenW1TrueTwoPhaseLimit
+import InfoGeometry.External.Automath.Omega.Kronecker.W1RightShiftedMinimizer
+import InfoGeometry.External.Automath.Omega.Zeta.XiGoldenW1TrueTwoPhaseLimit
 
 namespace Omega.Zeta
 

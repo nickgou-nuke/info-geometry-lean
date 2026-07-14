@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.EndpointDirichletSymbolWeights
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointDirichletSymbolWeights
 
 namespace Omega.UnitCirclePhaseArithmetic
 

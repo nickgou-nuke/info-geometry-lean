@@ -2,8 +2,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.CollisionMomentStieltjesHankelPositivity
-import Omega.Conclusion.FoldOutputEntropyGaugeAffineIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.CollisionMomentStieltjesHankelPositivity
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldOutputEntropyGaugeAffineIdentity
 
 open Filter Topology
 

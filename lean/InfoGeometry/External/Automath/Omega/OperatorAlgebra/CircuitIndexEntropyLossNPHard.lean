@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitCondexpIndexMaxfiber
-import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitCondexpIndexMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
 
 namespace Omega.OperatorAlgebra
 

@@ -1,9 +1,9 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.BudgetCurveExactTailDifferenceReconstruction
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BudgetCurveExactTailDifferenceReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
 
 namespace Omega.Conclusion
 

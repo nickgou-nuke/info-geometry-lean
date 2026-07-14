@@ -1,4 +1,4 @@
-import Omega.GU.LogCmNoFixedLinearRecurrence
+import InfoGeometry.External.Automath.Omega.GU.LogCmNoFixedLinearRecurrence
 
 namespace Omega.GroupUnification
 

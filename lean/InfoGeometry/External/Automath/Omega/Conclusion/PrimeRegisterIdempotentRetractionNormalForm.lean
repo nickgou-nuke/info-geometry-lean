@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic
-import Omega.Folding.KilloPrimeRegisterIdempotentArithmetization
-import Omega.Zeta.IdempotentFixedIndexStratification
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeRegisterIdempotentArithmetization
+import InfoGeometry.External.Automath.Omega.Zeta.IdempotentFixedIndexStratification
 
 namespace Omega.Conclusion
 

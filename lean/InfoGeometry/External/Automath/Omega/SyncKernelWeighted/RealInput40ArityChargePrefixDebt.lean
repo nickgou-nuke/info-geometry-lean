@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ArityChargePrefixDebtStructure
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargePrefixDebtStructure
 
 namespace Omega.SyncKernelWeighted
 

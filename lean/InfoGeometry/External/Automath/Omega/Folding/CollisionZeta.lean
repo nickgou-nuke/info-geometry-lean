@@ -1,5 +1,5 @@
-import Omega.Folding.CollisionKernel
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 /-! ### Collision kernel trace powers (Zeta function data)
 

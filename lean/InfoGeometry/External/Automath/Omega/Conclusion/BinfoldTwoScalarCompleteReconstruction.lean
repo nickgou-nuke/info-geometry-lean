@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
 
 namespace Omega.Conclusion
 

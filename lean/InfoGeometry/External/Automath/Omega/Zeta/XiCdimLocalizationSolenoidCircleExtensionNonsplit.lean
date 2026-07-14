@@ -1,8 +1,8 @@
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
-import Omega.Zeta.XiCdimLocalizationQuotientSolenoidSurjections
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationQuotientSolenoidSurjections
 
 namespace Omega.Zeta
 

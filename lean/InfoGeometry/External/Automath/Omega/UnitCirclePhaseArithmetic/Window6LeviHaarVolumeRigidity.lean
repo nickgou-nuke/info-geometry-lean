@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.Window6CommonRefinementSMLevi
-import Omega.UnitCirclePhaseArithmetic.PhaseGateRank1VolumeRigidity
-import Omega.UnitCirclePhaseArithmetic.PhaseGateU1FixesSimpleScale
+import InfoGeometry.External.Automath.Omega.GroupUnification.Window6CommonRefinementSMLevi
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.PhaseGateRank1VolumeRigidity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.PhaseGateU1FixesSimpleScale
 
 namespace Omega.UnitCirclePhaseArithmetic
 

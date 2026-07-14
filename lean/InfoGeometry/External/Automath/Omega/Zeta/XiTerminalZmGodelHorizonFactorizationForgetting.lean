@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmTateHypercubeSingleLayerVisibility
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmTateHypercubeSingleLayerVisibility
 
 namespace Omega.Zeta
 

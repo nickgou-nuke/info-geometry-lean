@@ -1,4 +1,4 @@
-import Omega.Conclusion.Window6FiberGaugeLaplacianSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6FiberGaugeLaplacianSpectrum
 
 namespace Omega.Conclusion
 

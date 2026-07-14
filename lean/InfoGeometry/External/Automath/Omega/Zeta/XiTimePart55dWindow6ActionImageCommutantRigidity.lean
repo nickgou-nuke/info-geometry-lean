@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Matrix.Basic
-import Omega.Zeta.XiTimePart55dWindow6MicrostateHilbertGaugeSplitting
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart55dWindow6MicrostateHilbertGaugeSplitting
 
 namespace Omega.Zeta
 

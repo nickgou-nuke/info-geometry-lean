@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryParityBlindFiltration
-import Omega.Conclusion.Elementary2GroupMinimalTorusDimension
-import Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryParityBlindFiltration
+import InfoGeometry.External.Automath.Omega.Conclusion.Elementary2GroupMinimalTorusDimension
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
 
 namespace Omega.Conclusion
 

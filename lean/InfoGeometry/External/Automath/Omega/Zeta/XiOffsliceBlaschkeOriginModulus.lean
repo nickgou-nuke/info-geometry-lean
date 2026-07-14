@@ -1,4 +1,4 @@
-import Omega.Zeta.XiOffsliceRealpartSumLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsliceRealpartSumLaw
 
 namespace Omega.Zeta
 

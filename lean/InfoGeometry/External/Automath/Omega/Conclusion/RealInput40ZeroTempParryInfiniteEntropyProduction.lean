@@ -1,4 +1,4 @@
-import Omega.Conclusion.Realinput40AnalyticRegularityEndpointTypeSeparation
+import InfoGeometry.External.Automath.Omega.Conclusion.Realinput40AnalyticRegularityEndpointTypeSeparation
 
 namespace Omega.Conclusion
 

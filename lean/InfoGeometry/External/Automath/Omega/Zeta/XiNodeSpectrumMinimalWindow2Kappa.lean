@@ -1,4 +1,4 @@
-import Omega.Zeta.XiComovingScanHankelRankDefect
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingScanHankelRankDefect
 
 namespace Omega.Zeta
 

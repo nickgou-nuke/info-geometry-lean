@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.SPG.StokesGodelDimensionChain
+import InfoGeometry.External.Automath.Omega.SPG.StokesGodelDimensionChain
 
 namespace Omega.Conclusion
 

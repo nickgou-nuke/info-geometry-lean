@@ -1,4 +1,4 @@
-import Omega.Zeta.XiZGHardcoreConstantResidue
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGHardcoreConstantResidue
 
 namespace Omega.DerivedConsequences
 

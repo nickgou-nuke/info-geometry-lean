@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.IntermediateQuotientSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.IntermediateQuotientSeeds
 
 namespace Omega.Conclusion
 

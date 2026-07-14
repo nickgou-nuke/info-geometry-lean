@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.GroupUnification.EquivariantZ2LayerliftWreathRigidity
+import InfoGeometry.External.Automath.Omega.GroupUnification.EquivariantZ2LayerliftWreathRigidity
 
 namespace Omega.GroupUnification
 

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRefreshRenewalCoding
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshRenewalCoding
 
 namespace Omega.POM
 

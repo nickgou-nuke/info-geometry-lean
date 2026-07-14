@@ -1,7 +1,6 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 
 /-!
@@ -30,7 +29,6 @@ open scoped BigOperators
 namespace InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-open InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 open InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 
 variable {n : ℕ}
@@ -129,92 +127,5 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
       C.kappa * twoPrimeLogConvolutionCoeff C i j := by
   unfold PrimeFerromagneticChain.centeredOccupationCoupling twoPrimeLogConvolutionCoeff
   ring
-
-/-! ## Wick/Krein and Hurwitz limit sockets -/
-
-/--
-witness-gated (Native Closure Mandated: Closure Debt) sign bridge between Euclidean damping and Lee--Yang
-ferromagnetic sign.
-
-This records the Wick/Krein step as data.  The file does not turn a positive
-Euclidean heat kernel into a Lee--Yang theorem.
--/
-structure WickKreinSignBridge
-    (EuclideanWeight FerromagneticWeight KreinReadout : Type) where
-  euclideanWeight : EuclideanWeight
-  ferromagneticWeight : FerromagneticWeight
-  kreinReadout : KreinReadout
-  dampingSign : Prop
-  ferromagneticSign : Prop
-  wickKreinContinuation : Prop
-
-namespace WickKreinSignBridge
-
-variable {EuclideanWeight FerromagneticWeight KreinReadout : Type}
-variable (W : WickKreinSignBridge EuclideanWeight FerromagneticWeight KreinReadout)
-
-end WickKreinSignBridge
-
-/--
-witness-gated (Native Closure Mandated: Closure Debt) Hurwitz/Lee--Yang limit packet.
-
-This is the final analytic bridge:
-finite Lee--Yang stability plus nonvanishing renormalization plus locally
-uniform convergence to the completed-`xi` Cayley readout, with no surviving
-spurious zeros.
--/
-@[socket_debt_tag, rep_depth operator]
-structure HurwitzLeeYangXiLimitPacket
-    (CompletedXiReadout RenormalizationReadout LimitReadout : Type) where
-  completedXiReadout : CompletedXiReadout
-  renormalizationReadout : RenormalizationReadout
-  limitReadout : LimitReadout
-  finiteLeeYangStability : Prop
-  nonvanishingRenormalization : Prop
-  locallyUniformXiLimit : Prop
-  noSpuriousZeros : Prop
-  hurwitzTransfer : Prop
-
-namespace HurwitzLeeYangXiLimitPacket
-
-variable {CompletedXiReadout RenormalizationReadout LimitReadout : Type}
-variable (H : HurwitzLeeYangXiLimitPacket
-  CompletedXiReadout RenormalizationReadout LimitReadout)
-
-end HurwitzLeeYangXiLimitPacket
-
-/--
-Capstone packet joining finite Hopfield algebra, Wick/Krein sign bridge,
-Hurwitz transfer, zero-mode protection, and relative determinant/scattering.
--/
-structure HopfieldLimitBridgePacket
-    (CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-      EuclideanWeight FerromagneticWeight KreinReadout RenormalizationReadout
-      LimitReadout : Type) where
-  zeroModeProtection :
-    ZeroModeProtectionPacket
-      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-  wickKrein :
-    WickKreinSignBridge EuclideanWeight FerromagneticWeight KreinReadout
-  hurwitzLimit :
-    HurwitzLeeYangXiLimitPacket
-      CompletedXiReadout RenormalizationReadout LimitReadout
-  relativeDeterminant :
-    RelativeDeterminantScatteringPacket
-  /-- Final supplied law linking the analytic limit to the protected zero-mode lane. -/
-  limit_eq_protectedZeroModeReadout : Prop
-
-namespace HopfieldLimitBridgePacket
-
-variable {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-    EuclideanWeight FerromagneticWeight KreinReadout RenormalizationReadout
-    LimitReadout : Type}
-variable
-  (B : HopfieldLimitBridgePacket
-    CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-    EuclideanWeight FerromagneticWeight KreinReadout RenormalizationReadout
-    LimitReadout)
-
-end HopfieldLimitBridgePacket
 
 end InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

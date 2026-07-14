@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.CapacityMajorizationSchurHardness
-import Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityMajorizationSchurHardness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
 
 namespace Omega.Conclusion
 

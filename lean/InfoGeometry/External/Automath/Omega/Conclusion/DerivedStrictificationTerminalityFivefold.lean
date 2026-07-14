@@ -1,6 +1,6 @@
-import Omega.Conclusion.CompleteStrictificationDualCriterion
-import Omega.Conclusion.DerivedStrictificationPontryaginCompleteClassification
-import Omega.Conclusion.TqftGenusTowerTrivializationCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.CompleteStrictificationDualCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.DerivedStrictificationPontryaginCompleteClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusTowerTrivializationCriterion
 
 namespace Omega.Conclusion
 

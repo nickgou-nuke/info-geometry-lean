@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ab2LogcmShiftProjector
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab2LogcmShiftProjector
 
 namespace Omega.Zeta
 

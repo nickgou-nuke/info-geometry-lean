@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.FiniteKernelLatticeObstruction
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteKernelLatticeObstruction
 
 namespace Omega.Zeta
 

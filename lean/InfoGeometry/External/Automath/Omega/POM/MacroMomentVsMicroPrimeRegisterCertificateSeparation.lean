@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldPrimeCertificateVsItGapDiverges
+import InfoGeometry.External.Automath.Omega.Folding.FoldPrimeCertificateVsItGapDiverges
 
 namespace Omega.POM
 

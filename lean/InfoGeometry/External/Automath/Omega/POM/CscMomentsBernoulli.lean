@@ -1,4 +1,4 @@
-import Omega.POM.CscMomentsFiniteTraceInversion
+import InfoGeometry.External.Automath.Omega.POM.CscMomentsFiniteTraceInversion
 
 namespace Omega.POM
 

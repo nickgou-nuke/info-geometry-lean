@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.SolenoidFiberTorsor
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidFiberTorsor
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 namespace Omega.Conclusion
 

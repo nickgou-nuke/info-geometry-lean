@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StokesExplicitRelativeCohomologyBasis
+import InfoGeometry.External.Automath.Omega.CircleDimension.StokesExplicitRelativeCohomologyBasis
 
 namespace Omega.CircleDimension
 

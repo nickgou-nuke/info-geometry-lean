@@ -1,4 +1,4 @@
-import Omega.SyncKernelRealInput.GmEnergySumsetExponent
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GmEnergySumsetExponent
 import Mathlib.Tactic
 
 namespace Omega.SyncKernelRealInput

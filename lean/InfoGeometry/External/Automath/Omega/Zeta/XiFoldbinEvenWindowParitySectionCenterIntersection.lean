@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
-import Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
-import Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
 
 namespace Omega.Zeta
 

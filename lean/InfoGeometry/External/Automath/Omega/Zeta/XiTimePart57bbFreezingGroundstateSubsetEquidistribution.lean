@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.FrozenEscortTvRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenEscortTvRigidity
 
 namespace Omega.Zeta
 

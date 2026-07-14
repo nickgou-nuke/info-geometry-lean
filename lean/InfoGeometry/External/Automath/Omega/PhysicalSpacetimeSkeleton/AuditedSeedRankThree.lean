@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Diagonal
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.LocalSpaceQuadraticPositive
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.LocalSpaceQuadraticPositive
 
 namespace Omega.PhysicalSpacetimeSkeleton.AuditedSeedRankThree
 

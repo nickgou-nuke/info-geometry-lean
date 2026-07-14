@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.WitnessExtractionOptimalSuccess
+import InfoGeometry.External.Automath.Omega.POM.WitnessExtractionOptimalSuccess
 
 namespace Omega.POM
 

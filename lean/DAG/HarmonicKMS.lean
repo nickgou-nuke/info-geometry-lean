@@ -21,12 +21,12 @@ unit-cocycle layer.
 2. `eckmann_discrete_hodge`: Eckmann's discrete Hodge theorem at the Matrix level.
    If the Hodge Laplacian has nonzero determinant, it has trivial kernel.
 
-3. `betti1ZeroKernel_of_rank_full`: **The Betti1ZeroKernelHypothesis is now a
-   proved theorem**, not a placeholder. Proved from `EckmannHodge.eckmann_hodge_nullity`
-   (the general Eckmann discrete Hodge nullity theorem) + Array↔Matrix bridge.
+3. `betti1ZeroKernel_of_rank_full`: a rank-full Eckmann kernel theorem,
+   proved from `EckmannHodge.eckmann_hodge_nullity` plus the Array↔Matrix
+   bridge.
 
-4. `harmonic_chain_defines_KMS_state`: Under the kernel hypothesis, the
-   flow-unit cocycle is a Connes cocycle.
+4. `flowUnitCocycle_isConnesCocycle_for_flow`: the imported flow-unit cocycle
+   construction is a Connes cocycle for any additive modular flow.
 -/
 
 open Matrix
@@ -49,17 +49,6 @@ def zeroVectorLike (v : Array Rat) : Array Rat :=
 def Harmonic1Chain {α : Type} [BEq α] [Hashable α]
     (tc : TwoComplex α) (ψ : Array Rat) : Prop :=
   matVecMul (laplacian1 tc) ψ = zeroVectorLike ψ
-
-/--
-`Betti1ZeroKernelHypothesis tc` : the conjecture that betti1 = 0 implies
-the Hodge Laplacian has trivial kernel (at the Array level).
-
-**Status: PROVED** — see `betti1ZeroKernel_of_rank_full` below.
--/
-def Betti1ZeroKernelHypothesis {α : Type} [BEq α] [Hashable α]
-    (tc : TwoComplex α) : Prop :=
-  (betti1 tc).toNat = 0 →
-    ∀ ψ : Array Rat, Harmonic1Chain tc ψ → ψ = zeroVectorLike ψ
 
 /-! ## Matrix-valued boundary operators -/
 
@@ -137,7 +126,7 @@ theorem eckmann_discrete_hodge
     ψ = 0 :=
   trivial_kernel_of_det_ne_zero (laplacian1Matrix tc) h_det ψ h_harmonic
 
-/-! ## Betti1ZeroKernelHypothesis — now a proved theorem -/
+/-! ## Rank-full Eckmann kernel theorem -/
 
 /--
 **Array ↔ Matrix entrywise agreement for the Laplacian.**
@@ -242,9 +231,7 @@ lemma zero_fun_implies_zero_array {α} [BEq α] [Hashable α] (tc : TwoComplex �
     dsimp at h_fun
     exact h_fun
 
-/--
-**Betti1ZeroKernelHypothesis is a PROVED THEOREM (not a placeholder).**
-
+/-!
 Given a TwoComplex whose boundary matrices satisfy ∂₂∂₁ = 0 and
 rank(∂₁) + rank(∂₂) = n₁ (= number of edges = betti1 = 0 condition),
 the Array-level Hodge Laplacian has trivial kernel:
@@ -260,7 +247,6 @@ Proof chain:
   4. The zero Fin-function corresponds to the zero Array
      (`zero_array_implies_zero_fun`).
 
-This replaces the previous placeholder hypothesis with a fully proved theorem.
 -/
 theorem betti1ZeroKernel_of_rank_full
     {α : Type} [BEq α] [Hashable α]
@@ -283,8 +269,6 @@ theorem betti1ZeroKernel_of_rank_full
   exact zero_fun_implies_zero_array tc ψ hψ_size h_ψ'_zero
 
 /--
-**Betti1ZeroKernelHypothesis for concrete instances — fully proved.**
-
 Variant of `betti1ZeroKernel_of_rank_full` that uses the determinant
 path for concrete TwoComplex instances. The determinant is computable
 via `native_decide` (unlike `Matrix.rank` which involves `finrank`).
@@ -314,7 +298,7 @@ theorem betti1ZeroKernel_concrete
   -- Convert back to Array using the zero-function lemma
   exact zero_fun_implies_zero_array tc ψ hψ_size h_ψ'_zero
 
-/-! ## Theorems using the hypothesis (all proved, 0 sorries) -/
+/-! ## Consequences -/
 
 /--
 Self-adjoint exponential remainder ensures unitary modular flow.
@@ -325,33 +309,25 @@ theorem selfAdjoint_remainder_gives_unitary_modular_flow
     IsSelfAdjoint (exponentialRemainder K ε) :=
   exponentialRemainder_isSelfAdjoint hK ε
 
-/--
-Under the kernel hypothesis (now a proved theorem, not a placeholder),
-the flow-unit cocycle is a Connes cocycle for any supplied additive
-modular flow.
--/
-theorem harmonic_chain_defines_KMS_state
-    {α : Type} [BEq α] [Hashable α]
-    (tc : TwoComplex α)
-    (_h_kernel : Betti1ZeroKernelHypothesis tc)
-    (_h_betti1_zero : (betti1 tc).toNat = 0)
+/-- The flow-unit cocycle is a Connes cocycle for any supplied additive
+modular flow. -/
+theorem flowUnitCocycle_isConnesCocycle_for_flow
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (σ : AdditiveModularFlow (H := H)) :
     IsConnesCocycle σ (flowUnitCocycle (H := H) σ) := by
   exact flowUnitCocycle_isConnesCocycle (H := H) σ
 
-/--
-The Eckmann kernel lemma: apply the hypothesis to get the result.
-The hypothesis itself is now proved by `betti1ZeroKernel_of_rank_full`.
--/
-lemma dirac_kernel_trivial_at_betti1_zero
+/-- The Array-level harmonic edge chain is zero under the rank-full Eckmann
+boundary assumptions. -/
+lemma dirac_kernel_trivial_of_rank_full
     {α : Type} [BEq α] [Hashable α]
     (tc : TwoComplex α)
-    (h_kernel : Betti1ZeroKernelHypothesis tc)
-    (h_betti1_zero : (betti1 tc).toNat = 0)
-    (ψ : Array Rat)
+    (h_boundary_sq : boundary2Matrix tc * boundary1Matrix tc = 0)
+    (h_rank_full : (boundary1Matrix tc).rank + (boundary2Matrix tc).rank =
+      tc.edges.size)
+    (ψ : Array Rat) (hψ_size : ψ.size = tc.edges.size)
     (h_harmonic : Harmonic1Chain tc ψ) :
     ψ = zeroVectorLike ψ := by
-  exact h_kernel h_betti1_zero ψ h_harmonic
+  exact betti1ZeroKernel_of_rank_full tc h_boundary_sq h_rank_full ψ hψ_size h_harmonic
 
 end DAG.HarmonicKMS

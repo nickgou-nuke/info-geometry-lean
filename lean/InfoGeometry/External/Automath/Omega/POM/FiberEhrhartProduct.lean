@@ -1,5 +1,5 @@
-import Omega.POM.EhrhartEqualsOrderpolyShift
-import Omega.POM.FiberBirkhoffFenceIdealLattice
+import InfoGeometry.External.Automath.Omega.POM.EhrhartEqualsOrderpolyShift
+import InfoGeometry.External.Automath.Omega.POM.FiberBirkhoffFenceIdealLattice
 
 namespace Omega.POM
 

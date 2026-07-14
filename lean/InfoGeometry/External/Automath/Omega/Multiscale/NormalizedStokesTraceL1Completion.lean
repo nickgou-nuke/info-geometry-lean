@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
-import Omega.Multiscale.NormalizedIntegrationL1DefectInverseTower
+import InfoGeometry.External.Automath.Omega.Multiscale.NormalizedIntegrationL1DefectInverseTower
 
 namespace Omega.Multiscale
 

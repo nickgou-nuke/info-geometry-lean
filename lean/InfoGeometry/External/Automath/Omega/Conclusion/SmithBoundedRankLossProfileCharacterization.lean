@@ -1,5 +1,5 @@
 import Mathlib.Data.Multiset.Basic
-import Omega.Zeta.XiSmithLossSpectrumDiscreteCurvatureCompleteCharacterization
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossSpectrumDiscreteCurvatureCompleteCharacterization
 
 namespace Omega.Conclusion
 

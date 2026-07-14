@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Digits.Lemmas
 import Mathlib.Data.Fin.Tuple.Take
-import Omega.Zeta.XiCoherenceAffineSubcube
+import InfoGeometry.External.Automath.Omega.Zeta.XiCoherenceAffineSubcube
 
 namespace Omega.Zeta
 

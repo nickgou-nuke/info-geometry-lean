@@ -1,4 +1,4 @@
-import Omega.Zeta.CyclicDet
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicDet
 
 namespace Omega.Zeta
 

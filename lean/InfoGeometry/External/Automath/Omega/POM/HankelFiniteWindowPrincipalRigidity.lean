@@ -1,4 +1,4 @@
-import Omega.POM.HankelSyndromeModuleKernelEqualsMultiples
+import InfoGeometry.External.Automath.Omega.POM.HankelSyndromeModuleKernelEqualsMultiples
 
 namespace Omega.POM
 

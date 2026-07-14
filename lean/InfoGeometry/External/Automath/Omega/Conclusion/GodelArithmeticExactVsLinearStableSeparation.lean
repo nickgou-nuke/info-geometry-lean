@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
 
 namespace Omega.Conclusion
 

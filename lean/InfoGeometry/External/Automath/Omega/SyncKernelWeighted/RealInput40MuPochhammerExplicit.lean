@@ -2,10 +2,10 @@ import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput
-import Omega.SyncKernelWeighted.FinitePartMuPochhammerSpectralClosedForm
-import Omega.SyncKernelWeighted.MuPochhammerPhi1ExpMinusZ
-import Omega.SyncKernelWeighted.RealInput40Essential20
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.FinitePartMuPochhammerSpectralClosedForm
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerPhi1ExpMinusZ
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40Essential20
 
 namespace Omega.SyncKernelWeighted
 

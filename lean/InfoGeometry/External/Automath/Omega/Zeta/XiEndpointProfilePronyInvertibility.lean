@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointProfileCfiniteHankelRank
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointProfileCfiniteHankelRank
 
 namespace Omega.Zeta
 

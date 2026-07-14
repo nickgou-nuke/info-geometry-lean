@@ -1,4 +1,4 @@
-import Omega.Conclusion.ZeckendorfEulerWrappedPoissonFourier
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerWrappedPoissonFourier
 
 set_option linter.unusedVariables false
 

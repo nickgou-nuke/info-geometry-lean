@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Algebra.ContinuousMonoidHom
 import Mathlib.Topology.Connected.TotallyDisconnected
-import Omega.Conclusion.ConnectedToDiscreteConstant
+import InfoGeometry.External.Automath.Omega.Conclusion.ConnectedToDiscreteConstant
 
 namespace Omega.Conclusion
 

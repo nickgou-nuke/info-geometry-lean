@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
-import Omega.Multiscale.NormalizedStokesFiniteCoverInverseTower
-import Omega.Multiscale.NormalizedStokesTraceL1Completion
-import Omega.Multiscale.SolenoidStokesRadonMeasureRealization
+import InfoGeometry.External.Automath.Omega.Multiscale.NormalizedStokesFiniteCoverInverseTower
+import InfoGeometry.External.Automath.Omega.Multiscale.NormalizedStokesTraceL1Completion
+import InfoGeometry.External.Automath.Omega.Multiscale.SolenoidStokesRadonMeasureRealization
 
 namespace Omega.Multiscale
 

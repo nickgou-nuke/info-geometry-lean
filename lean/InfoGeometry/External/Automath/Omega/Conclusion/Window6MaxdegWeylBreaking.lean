@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6ShortLongDegeneracySplitting
-import Omega.Conclusion.Window6RootSplitDegeneracyCrossTable
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6ShortLongDegeneracySplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6RootSplitDegeneracyCrossTable
 
 namespace Omega.Conclusion
 

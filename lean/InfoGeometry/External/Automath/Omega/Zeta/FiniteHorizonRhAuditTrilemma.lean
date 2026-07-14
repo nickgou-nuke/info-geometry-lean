@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ebHorizonLedgerSeparationPrinciple
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ebHorizonLedgerSeparationPrinciple
 
 namespace Omega.Zeta
 

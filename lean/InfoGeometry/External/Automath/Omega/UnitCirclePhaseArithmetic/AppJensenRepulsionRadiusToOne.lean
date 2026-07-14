@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
 
 open Filter
 

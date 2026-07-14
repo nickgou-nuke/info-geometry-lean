@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StokesHomologyExactSplitting
+import InfoGeometry.External.Automath.Omega.CircleDimension.StokesHomologyExactSplitting
 
 namespace Omega.CircleDimension
 

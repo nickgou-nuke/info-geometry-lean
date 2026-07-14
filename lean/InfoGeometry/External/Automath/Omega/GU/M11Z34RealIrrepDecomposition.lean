@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.M11Z34CyclotomicRepresentationRigidity
+import InfoGeometry.External.Automath.Omega.GU.M11Z34CyclotomicRepresentationRigidity
 
 namespace Omega.GU
 

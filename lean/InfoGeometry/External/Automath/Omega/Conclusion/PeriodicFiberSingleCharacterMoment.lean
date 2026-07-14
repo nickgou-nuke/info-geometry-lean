@@ -1,4 +1,4 @@
-import Omega.Conclusion.PeriodicFiberAcceptanceRateNormalizedSharpSat
+import InfoGeometry.External.Automath.Omega.Conclusion.PeriodicFiberAcceptanceRateNormalizedSharpSat
 
 namespace Omega.Conclusion
 

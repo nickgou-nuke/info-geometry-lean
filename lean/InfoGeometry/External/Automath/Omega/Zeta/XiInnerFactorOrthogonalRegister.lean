@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiOrthogonalSliceStructure
+import InfoGeometry.External.Automath.Omega.Zeta.XiOrthogonalSliceStructure
 
 namespace Omega.Zeta
 

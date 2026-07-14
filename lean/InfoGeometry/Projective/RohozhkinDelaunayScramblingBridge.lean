@@ -98,7 +98,6 @@ Majorana/Fibonacci representation.
 structure RohozhkinHorizonFlowRealization (moving horizonDim : ℕ) where
   packet : RohozhkinProjectiveBraidPacket moving
   flowOf : RohozhkinPureBraidGroup moving → ModularTimeFlow horizonDim
-  compatibility : Prop
 
 /-- The finite flow attached to a pure braid by a supplied realization. -/
 def RohozhkinHorizonFlowRealization.flow {moving horizonDim : ℕ}

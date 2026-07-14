@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldSinglePowerdivAsymptoticStatisticalCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldSinglePowerdivAsymptoticStatisticalCompleteness
 
 namespace Omega.Conclusion
 

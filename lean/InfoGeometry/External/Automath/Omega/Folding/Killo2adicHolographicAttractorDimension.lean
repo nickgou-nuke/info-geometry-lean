@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Omega.Folding.Killo2adicHolographicExactCylinderSeparation
+import InfoGeometry.External.Automath.Omega.Folding.Killo2adicHolographicExactCylinderSeparation
 
 namespace Omega.Folding
 

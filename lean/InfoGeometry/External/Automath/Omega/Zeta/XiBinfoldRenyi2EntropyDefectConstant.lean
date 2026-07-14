@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.KilloFoldRenyi2UniformityGap
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldRenyi2UniformityGap
 
 namespace Omega.Zeta
 

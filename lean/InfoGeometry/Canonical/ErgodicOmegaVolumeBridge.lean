@@ -49,7 +49,7 @@ carrier and the standard-form volume carrier need not be definitionally the
 same type in every model.
 -/
 @[rep_depth transport]
-structure ErgodicOmegaVolumeBridge where
+structure Bridge where
   /-- Modular-flow/renormalization fixed-point owner. -/
   ergodic :
     OperatorErgodicFixedPointBridge (E := E) (LieAlgebra := LieAlgebra)
@@ -81,9 +81,9 @@ structure ErgodicOmegaVolumeBridge where
       omegaVolume.volumeState (toVolumeOperator (fixedOperatorOfWord w)) =
         NaturalConeVolumeBridge.localizedExpectation omegaVolume w
 
-namespace ErgodicOmegaVolumeBridge
+namespace Bridge
 
-variable (B : ErgodicOmegaVolumeBridge
+variable (B : Bridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra) (Word := Word))
 
 /-- The word fixed-point observable is modular-time fixed. -/
@@ -143,7 +143,7 @@ theorem fixedOperator_volume_eq_omega_kreinExpectation
     NaturalConeVolumeBridge.localizedExpectation_eq_omega_kreinExpectation
       B.omegaVolume w
 
-end ErgodicOmegaVolumeBridge
+end Bridge
 
 end Core
 

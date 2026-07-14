@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.PhaseResidual
-import Omega.TypedAddressBiaxialCompletion.ProjectiveOrganization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PhaseResidual
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ProjectiveOrganization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

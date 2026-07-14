@@ -1,4 +1,4 @@
-import Omega.Discussion.ChebyshevAdams
+import InfoGeometry.External.Automath.Omega.Discussion.ChebyshevAdams
 
 namespace Omega.Discussion
 

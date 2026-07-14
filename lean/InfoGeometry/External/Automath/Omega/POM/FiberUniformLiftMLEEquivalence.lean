@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.MaxentLift
+import InfoGeometry.External.Automath.Omega.POM.MaxentLift
 
 namespace Omega.POM
 

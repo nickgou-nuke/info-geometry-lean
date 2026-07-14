@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldbinComplexTemperatureZeroLattice
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinComplexTemperatureZeroLattice
 
 open Filter
 open scoped Topology

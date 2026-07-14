@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.PimsnerPopaWitnessBound
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.PimsnerPopaWitnessBound
 import Mathlib.Tactic
 
 namespace Omega.OperatorAlgebra

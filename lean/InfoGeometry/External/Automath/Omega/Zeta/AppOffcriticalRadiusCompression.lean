@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.CayleyDepthIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.CayleyDepthIdentity
 
 namespace Omega.Zeta
 

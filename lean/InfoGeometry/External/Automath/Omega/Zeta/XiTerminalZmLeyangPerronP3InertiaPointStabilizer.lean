@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangP3Mod3AlgebraicAutomatic
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangP3Mod3AlgebraicAutomatic
 
 namespace Omega.Zeta
 

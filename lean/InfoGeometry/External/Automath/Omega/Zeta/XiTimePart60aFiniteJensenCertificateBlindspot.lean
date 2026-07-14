@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart60aJensenDefectRadialMeasureInversion
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60aJensenDefectRadialMeasureInversion
 
 namespace Omega.Zeta
 

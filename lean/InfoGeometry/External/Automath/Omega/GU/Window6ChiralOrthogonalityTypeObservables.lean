@@ -1,4 +1,4 @@
-import Omega.GroupUnification.ChiralOrthogonalityTypeObservables
+import InfoGeometry.External.Automath.Omega.GroupUnification.ChiralOrthogonalityTypeObservables
 
 namespace Omega.GU
 

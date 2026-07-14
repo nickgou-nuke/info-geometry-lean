@@ -1,5 +1,5 @@
 import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.Defect
 
 open scoped BigOperators
 

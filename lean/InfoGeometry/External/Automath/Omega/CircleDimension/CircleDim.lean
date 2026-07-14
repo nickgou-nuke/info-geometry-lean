@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Fintype.EquivFin
-import Omega.Folding.CircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.CircleDimension
 
 /-! ### Circle dimension for abelian groups
 

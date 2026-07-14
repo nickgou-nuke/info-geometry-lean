@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.PrimeTraceIndexDuality
+import InfoGeometry.External.Automath.Omega.POM.PrimeTraceIndexDuality
 
 namespace Omega.POM
 

@@ -4,7 +4,6 @@ import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import Mathlib.CategoryTheory.Category.Preorder
 import Mathlib.CategoryTheory.Functor.Basic
 
-
 /-!
 # Navier-Stokes-Legendre Capstone
 
@@ -51,22 +50,7 @@ theorem contact_iff_collapsed_trace_zero (L : LegendreModel) (θ η : ℝ) (K : 
     η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 :=
   hContact
 
-/--
-**Global Navier-Stokes-Legendre Synthesis Theorem**
-
-Equates the vanishing of the Fenchel-Legendre gap (equilibrium in the thermodynamic base)
-to the divergence-free condition of the collapsed Madelung fluid state.
-
-*Physical Interpretation (Metriplectic / Souriau Limit):*
-In the framework of Metriplectic dynamics, state evolution decomposes into a symplectic
-(conservative/rotational) bracket and a metric (dissipative/gradient) bracket. Reaching the
-Fenchel-Legendre contact manifold corresponds to landing on a Souriau entropic sheet, which
-nullifies the dissipative gradient flow. When the radial flow orthogonal to the Souriau
-entropic sheets stops (that is, the irrotational flow of the metriplectic flow stops),
-the remaining evolution is purely unitary and rotational, acting as a norm-preserving
-unitary quantum rotor in the doubled Krein carrier. This halting of radial expansion
-translates geometrically to a divergence-free flow (zero trace).
--/
+/--\n**Global Navier-Stokes-Legendre Synthesis Theorem**\n\nEquates the vanishing of the Fenchel-Legendre gap (equilibrium in the thermodynamic base)\nto the divergence-free condition of the collapsed Madelung fluid state.\n\n*Physical Interpretation (Metriplectic / Souriau Limit):*\nIn the framework of Metriplectic dynamics, state evolution decomposes into a symplectic\n(conservative/rotational) bracket and a metric (dissipative/gradient) bracket. Reaching the\nFenchel-Legendre contact manifold corresponds to landing on a Souriau entropic sheet, which\nnullifies the dissipative gradient flow. When the radial flow orthogonal to the Souriau\nentropic sheets stops (that is, the irrotational flow of the metriplectic flow stops),\nthe remaining evolution is purely unitary and rotational, acting as a norm-preserving\nunitary quantum rotor in the doubled Krein carrier. This halting of radial expansion\ntranslates geometrically to a divergence-free flow (zero trace).\n-/
 theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
@@ -132,5 +116,3 @@ def kaluzaKleinLift (L : LegendreModel) (β : ℝ) (K : EndH)
   map {x y} f := homOfLE (le_refl _)
 
 end InfoGeometry.Capstone.NavierStokesLegendre
-
-end

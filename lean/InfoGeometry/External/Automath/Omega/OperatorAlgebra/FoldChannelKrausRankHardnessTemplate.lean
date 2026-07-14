@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldChannelChoiRankEqualsS2General
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldChannelChoiRankEqualsS2General
 
 namespace Omega.OperatorAlgebra
 

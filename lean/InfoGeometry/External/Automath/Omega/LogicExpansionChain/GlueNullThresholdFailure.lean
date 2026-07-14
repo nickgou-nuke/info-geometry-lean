@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.ThresholdCrossingGivesGlobal
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ThresholdCrossingGivesGlobal
 
 namespace Omega.LogicExpansionChain
 

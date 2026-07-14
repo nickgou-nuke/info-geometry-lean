@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Field.GeomSum
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.POM.FiberSpectrumPronyHankelRank
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankelRank
 
 open scoped BigOperators
 

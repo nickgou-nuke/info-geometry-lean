@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Core.WalshFourier
+import InfoGeometry.External.Automath.Omega.Core.WalshFourier
 
 namespace Omega.Zeta.WalshParseval
 

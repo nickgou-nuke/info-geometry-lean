@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Omega.Conclusion.FrozenEscortTvRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenEscortTvRigidity
 
 namespace Omega.Folding
 

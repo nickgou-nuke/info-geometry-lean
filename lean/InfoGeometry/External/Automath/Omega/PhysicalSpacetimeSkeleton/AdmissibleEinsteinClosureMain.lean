@@ -1,5 +1,5 @@
-import Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
-import Omega.PhysicalSpacetimeSkeleton.ProceduralGrandChain
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.ProceduralGrandChain
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

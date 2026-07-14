@@ -1,4 +1,4 @@
-import Omega.SPG.ScanErrorMeasure
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorMeasure
 
 open scoped BigOperators
 

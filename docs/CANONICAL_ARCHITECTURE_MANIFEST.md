@@ -21,7 +21,7 @@ The equivalence rigorously binds:
 3. **BCFW Residue Readout**
    * Records finite readouts inspired by on-shell residue bookkeeping.
    * Maps the thermodynamic potential to finite algebraic observables under explicit premises.
-   * *Status:* Conditional finite readout surface; analytic scattering-amplitude claims remain outside the closed core (`Projective/OnShellResidueBCFWBridge.lean`).
+   * *Status:* Conditional finite boundary surface; analytic scattering-amplitude claims remain outside the closed core (`Projective/OnShellResidueBCFWBridge.lean`).
 
 4. **Finite q-Dilation / Pachner Readout**
    * Records the conservative super-Cuntz boundary packet, modular edge dilation, q-deficit readout, and Delaunay/Pachner transfer lemmas.

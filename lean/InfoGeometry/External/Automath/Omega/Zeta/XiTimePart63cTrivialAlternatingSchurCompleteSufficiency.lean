@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.BigOperators
-import Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
 
 open scoped BigOperators
 

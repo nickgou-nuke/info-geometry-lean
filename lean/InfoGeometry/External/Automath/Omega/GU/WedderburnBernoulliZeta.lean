@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.GU.BernoulliZetaTower
+import InfoGeometry.External.Automath.Omega.GU.BernoulliZetaTower
 
 /-!
 # Wedderburn spectrum determines Bernoulli-zeta tower seed values

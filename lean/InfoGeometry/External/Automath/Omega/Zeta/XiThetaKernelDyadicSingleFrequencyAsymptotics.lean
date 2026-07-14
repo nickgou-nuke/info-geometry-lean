@@ -1,4 +1,4 @@
-import Omega.Zeta.XiThetaKernelDyadicDecompositionDoubleexpTail
+import InfoGeometry.External.Automath.Omega.Zeta.XiThetaKernelDyadicDecompositionDoubleexpTail
 
 namespace Omega.Zeta
 

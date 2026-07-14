@@ -76,11 +76,11 @@ theorem dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransporte
 Boundary upgrade of the transported defect lane.
 
 Once a boundary polarization is explicitly identified with the transported
-plus/minus defect slices, nonzero operatorial central charge yields a genuine
-zero mode together with a nontrivial Moore-Penrose/Drazin regularization
-package for the transported Dirac operator.
+plus/minus defect slices, nonzero operatorial central charge yields existence
+of a genuine zero mode together with a nontrivial Moore-Penrose/Drazin
+regularization package for the transported Dirac operator.
 -/
-noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+theorem exists_zero_mode_regularization_package_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (hX : ChiralFredholmSurface X)
@@ -94,14 +94,31 @@ noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_z
       PolarizationOdd (M := M) P0
         (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
     (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
-    ZeroModeRegularizationPackage (S := H₂)
-      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) := by
+    ∃ pkg : ZeroModeRegularizationPackage (S := H₂)
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t),
+      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) pkg.v = 0 ∧
+      pkg.v ≠ 0 ∧
+      IsMoorePenroseInverse
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+        pkg.reg.Q_MP ∧
+      IsDrazinInverse
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+        pkg.reg.Q_D pkg.reg.k ∧
+      MoorePenrose.IsMoorePenroseInverse.rightProjector
+          (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+          pkg.reg.Q_MP ≠ (1 : H₂ →L[ℝ] H₂) ∧
+      MoorePenrose.IsMoorePenroseInverse.leftProjector
+          (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+          pkg.reg.Q_MP ≠ (1 : H₂ →L[ℝ] H₂) ∧
+      Drazin.IsDrazinInverse.projection
+          (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+          pkg.reg.Q_D ≠ (1 : H₂ →L[ℝ] H₂) := by
   have hdim :
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus :=
     dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
       (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hCentral
   exact
-    zeroModeRegularizationPackage_of_dim_mismatch
+    exists_zero_mode_regularization_package_of_dim_mismatch
       (S := H₂) (M := M) P0
       (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) hodd hdim
 
@@ -126,16 +143,17 @@ theorem transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identified
     (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
     HasZeroMode (S := H₂)
       (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) := by
-  let pkg :=
-    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
-      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
+  rcases
+    exists_zero_mode_regularization_package_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral with
+    ⟨pkg, hzero, hne, _hMP, _hD, _hRight, _hLeft, _hDrazin⟩
   unfold HasZeroMode
   refine ((InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker).ne_bot_iff.mpr ?_
-  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
-  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
+  refine ⟨pkg.v, ?_, hne⟩
+  simpa [LinearMap.mem_ker] using hzero
 
 /--
-Witness form of the transported zero-mode consequence.
+Existential form of the transported zero-mode consequence.
 -/
 @[rep_depth transport, capstone]
 theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
@@ -155,11 +173,12 @@ theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identi
     ∃ v : H₂,
       v ∈ (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker
         ∧ v ≠ 0 := by
-  let pkg :=
-    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
-      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
-  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
-  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
+  rcases
+    exists_zero_mode_regularization_package_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral with
+    ⟨pkg, hzero, hne, _hMP, _hD, _hRight, _hLeft, _hDrazin⟩
+  refine ⟨pkg.v, ?_, hne⟩
+  simpa [LinearMap.mem_ker] using hzero
 
 end Core
 

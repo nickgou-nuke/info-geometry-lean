@@ -1,6 +1,6 @@
-import Omega.HyperKernel.SetStructure
-import Omega.HyperKernel.Enum
-import Omega.HyperKernel.AutoSeed
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Enum
+import InfoGeometry.External.Automath.Omega.HyperKernel.AutoSeed
 
 namespace Omega.HyperKernel.SetStructureChecksTiny
 

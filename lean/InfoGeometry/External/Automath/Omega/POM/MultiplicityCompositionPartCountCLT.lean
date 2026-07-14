@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.MultiplicityCompositionPartition
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartition
 
 namespace Omega.POM
 

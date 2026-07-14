@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.CoarsegrainingMajorizationSchur
-import Omega.POM.MicrocanonicalTwoTemperatureKktPowerLaw
+import InfoGeometry.External.Automath.Omega.POM.CoarsegrainingMajorizationSchur
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalTwoTemperatureKktPowerLaw
 
 namespace Omega.POM
 

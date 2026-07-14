@@ -1,4 +1,4 @@
-import Omega.GU.TerminalWindowRationalCommutantIdempotentRigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindowRationalCommutantIdempotentRigidity
 
 namespace Omega.GU
 

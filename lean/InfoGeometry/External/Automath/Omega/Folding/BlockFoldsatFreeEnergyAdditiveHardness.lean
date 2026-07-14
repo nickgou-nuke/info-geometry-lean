@@ -1,9 +1,15 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BlockFoldsatNpComplete
-import Omega.SPG.PolytimeCompleteInvariantImpliesPEqualsNP
+import InfoGeometry.External.Automath.Omega.Folding.BlockFoldsatNpComplete
+import InfoGeometry.External.Automath.Omega.SPG.PolytimeCompleteInvariantImpliesPEqualsNP
 
 namespace Omega.Folding
+
+/-- Threshold classifier extracted from an additive approximation to the free energy. -/
+noncomputable def block_foldsat_free_energy_additive_hardness_decide
+    {Hard Family : Type*} (encode : Hard → Family) (approx : Family → ℝ) :
+    Hard → Bool :=
+  fun x => decide (-Real.log 2 / 2 < approx (encode x))
 
 /-- Paper label: `cor:block-foldsat-free-energy-additive-hardness`. A uniform additive
 approximation with error strictly smaller than half the `log 2` spectral gap lets us threshold the
@@ -14,10 +20,14 @@ theorem paper_block_foldsat_free_energy_additive_hardness
     (hardPred : Hard → Prop) (encode : Hard → Family) (freeEnergy : Family → ℝ)
     (approx : Family → ℝ) (hUnsat : ∀ x, ¬ hardPred x → freeEnergy (encode x) ≤ -Real.log 2)
     (hSat : ∀ x, hardPred x → 0 ≤ freeEnergy (encode x))
-    (hApprox : ∀ y, |freeEnergy y - approx y| < Real.log 2 / 2) :
+    (hApprox : ∀ y, |freeEnergy y - approx y| < Real.log 2 / 2)
+    (hPoly :
+      Omega.SPG.PolynomialTimeMap
+        (block_foldsat_free_energy_additive_hardness_decide encode approx)) :
     Omega.SPG.PolytimeDecidable (α := Hard) hardPred ∧
       Omega.SPG.PEqualsNP (Formula := Hard) hardPred := by
-  let decideHard : Hard → Bool := fun x => decide (-Real.log 2 / 2 < approx (encode x))
+  let decideHard : Hard → Bool :=
+    block_foldsat_free_energy_additive_hardness_decide encode approx
   have _hD : D.npComplete := (paper_block_foldsat_np_complete D).2.2
   have hSpec : ∀ x, decideHard x = true ↔ hardPred x := by
     intro x
@@ -30,7 +40,7 @@ theorem paper_block_foldsat_free_energy_additive_hardness
         have hThreshold : -Real.log 2 / 2 < approx (encode x) := by
           have hFree : 0 ≤ freeEnergy (encode x) := hSat x hx
           linarith [Real.log_pos one_lt_two, hBounds.1]
-        simpa [decideHard] using hThreshold
+        simpa [decideHard, block_foldsat_free_energy_additive_hardness_decide] using hThreshold
     · constructor
       · intro hDecide
         have hBounds := abs_lt.mp (hApprox (encode x))
@@ -38,11 +48,11 @@ theorem paper_block_foldsat_free_energy_additive_hardness
           have hFree : freeEnergy (encode x) ≤ -Real.log 2 := hUnsat x hx
           linarith [Real.log_pos one_lt_two, hBounds.2]
         have hThreshold : -Real.log 2 / 2 < approx (encode x) := by
-          simpa [decideHard] using hDecide
+          simpa [decideHard, block_foldsat_free_energy_additive_hardness_decide] using hDecide
         linarith
       · intro hHard
         exact False.elim (hx hHard)
-  have hHard : Omega.SPG.PolytimeDecidable (α := Hard) hardPred := ⟨decideHard, trivial, hSpec⟩
+  have hHard : Omega.SPG.PolytimeDecidable (α := Hard) hardPred := ⟨decideHard, hPoly, hSpec⟩
   exact ⟨hHard, ⟨Omega.SPG.complement_polytime_decidable hHard, hHard⟩⟩
 
 end Omega.Folding

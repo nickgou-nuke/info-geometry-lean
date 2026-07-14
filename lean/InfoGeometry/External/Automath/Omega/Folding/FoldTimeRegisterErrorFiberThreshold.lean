@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega
 

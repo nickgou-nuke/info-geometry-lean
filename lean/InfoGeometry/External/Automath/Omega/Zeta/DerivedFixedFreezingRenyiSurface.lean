@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Zeta.XiFixedFreezingEscortBoundedObservableCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.XiFixedFreezingEscortBoundedObservableCollapse
 
 namespace Omega.Zeta
 

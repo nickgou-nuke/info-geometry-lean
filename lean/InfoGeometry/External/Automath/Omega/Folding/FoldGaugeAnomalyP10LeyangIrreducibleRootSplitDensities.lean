@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Perm
-import Omega.Folding.FoldGaugeAnomalyP10LeyangHChebotarevTripleProduct
-import Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10LeyangHChebotarevTripleProduct
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Folding.PhiSubshiftFactor
+import InfoGeometry.External.Automath.Omega.Folding.PhiSubshiftFactor
 
 namespace Omega.Folding
 

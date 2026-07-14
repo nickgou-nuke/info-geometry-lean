@@ -1,4 +1,4 @@
-import Omega.POM.FiniteSampleIndistinguishabilityPowerSums
+import InfoGeometry.External.Automath.Omega.POM.FiniteSampleIndistinguishabilityPowerSums
 
 namespace Omega.POM
 

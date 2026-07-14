@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LeyangOrthogonalDualImaginaryProjection
+import InfoGeometry.External.Automath.Omega.CircleDimension.LeyangOrthogonalDualImaginaryProjection
 
 namespace Omega.UnitCirclePhaseArithmetic
 

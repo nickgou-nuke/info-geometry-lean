@@ -1,4 +1,4 @@
-import Omega.GroupUnification.ParryEndpointCollapse
+import InfoGeometry.External.Automath.Omega.GroupUnification.ParryEndpointCollapse
 
 namespace Omega.GU.ParryEndpointCollapse
 

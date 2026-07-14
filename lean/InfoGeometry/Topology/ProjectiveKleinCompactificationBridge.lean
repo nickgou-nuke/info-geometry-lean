@@ -56,4 +56,34 @@ theorem projectiveKlein_refocusing_readout :
     ProjectiveKleinRefocusingPacket :=
   projectiveKleinRefocusingPacket
 
+/-- The projective Klein packet exposes the Möbius involution directly. -/
+theorem projectiveKlein_mobius_involutive :
+    Function.Involutive mobiusInv :=
+  (projectiveKleinRefocusingPacket).mobius_involutive
+
+/-- The projective Klein packet exposes the two-sheet swap law directly. -/
+theorem projectiveKlein_two_sheet_swap (x : HyperChart) :
+    twoSheet (mobiusInv x) = Prod.swap (twoSheet x) :=
+  (projectiveKleinRefocusingPacket).two_sheet_swap x
+
+/-- The projective Klein packet exposes the sign-triviality witness directly. -/
+theorem projectiveKlein_projective_sign_trivial :
+    ProjectivelyEqual I2 minusI2 :=
+  (projectiveKleinRefocusingPacket).projective_sign_trivial
+
+/-- The projective Klein packet exposes the Klein-bottle glide identity directly. -/
+theorem projectiveKlein_glide_reflection_identity :
+    twistA * parabolicB * twistA * parabolicB = I2 :=
+  (projectiveKleinRefocusingPacket).glide_reflection_identity
+
+/-- The projective Klein packet exposes the explicit Möbius refocusing law directly. -/
+theorem projectiveKlein_mobius_refocus (t : ℚ) :
+    mobiusS.mulVec ![t, 1] = ![-1, t] :=
+  (projectiveKleinRefocusingPacket).mobius_refocus t
+
+/-- The projective Klein packet exposes the quotient descent contract directly. -/
+theorem projectiveKlein_sign_kernel_trivial :
+    PSLDescentContract :=
+  (projectiveKleinRefocusingPacket).sign_kernel_trivial
+
 end InfoGeometry.Topology.ProjectiveKleinCompactificationBridge

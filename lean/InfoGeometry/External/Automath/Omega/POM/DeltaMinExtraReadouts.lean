@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.LinearAlgebra.Dimension.Finite
 import Mathlib.Tactic
-import Omega.POM.MomentResonance
+import InfoGeometry.External.Automath.Omega.POM.MomentResonance
 
 namespace Omega.POM
 

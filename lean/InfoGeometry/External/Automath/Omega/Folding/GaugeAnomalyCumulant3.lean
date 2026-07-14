@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyPressureCumulants5
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyPressureCumulants5
 
 namespace Omega.Folding
 

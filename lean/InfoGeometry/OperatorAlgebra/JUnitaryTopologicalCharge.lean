@@ -591,20 +591,28 @@ structure ChiralTopologicalChargeBridge
   chi_square :
     chi.comp chi = 1
 
-  /-- Model-specific compatibility between `J` and `chi`. -/
-  J_chi_compatibility : Prop
+  /-- The grading is `J`-unitary, so it carries the determinant obstruction. -/
+  chi_j_unitary :
+    IsJUnitary adjointDatum J chi
 
-  /--
-  Certificate that determinant charge detects chiral orientation in the
-  concrete model.
-  -/
-  charge_detects_chiral_orientation : Prop
+  /-- Chiral grading flips the `J`-orientation. -/
+  J_chi_anticommutes :
+    J.comp chi = -(chi.comp J)
 
 namespace ChiralTopologicalChargeBridge
 
 variable
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (B : ChiralTopologicalChargeBridge H)
+
+/-- The carrier-level grading bundled as a J-unitary operator. -/
+def gradingJUnitary : JUnitary B.adjointDatum B.J where
+  op := B.chi
+  is_junitary := B.chi_j_unitary
+
+/-- The determinant sign of the carrier-level chiral grading. -/
+def chiralTopologicalCharge : ℤ :=
+  JUnitary.determinantCharge B.detDatum B.gradingJUnitary
 
 /-- A J-unitary real endomorphism has determinant square one. -/
 theorem determinant_sq_eq_one
@@ -614,6 +622,29 @@ theorem determinant_sq_eq_one
     B.detDatum
     B.J_nondegenerate
     U
+
+/-- The determinant of the chiral grading is `+1` or `-1`. -/
+theorem grading_det_eq_one_or_neg_one :
+    B.detDatum.det B.chi = 1 ∨ B.detDatum.det B.chi = -1 := by
+  have hsq :
+      B.detDatum.det B.chi ^ 2 = 1 :=
+    JUnitary.det_sq_eq_one
+      B.detDatum
+      B.J_nondegenerate
+      B.gradingJUnitary
+  have hfactor :
+      (B.detDatum.det B.chi - 1) * (B.detDatum.det B.chi + 1) = 0 := by
+    nlinarith
+  rcases mul_eq_zero.mp hfactor with hminus | hplus
+  · left
+    nlinarith
+  · right
+    nlinarith
+
+/-- The stored chiral compatibility is the concrete anti-commutation equation. -/
+theorem J_chi_anticommutes_eq :
+    B.J.comp B.chi = -(B.chi.comp B.J) :=
+  B.J_chi_anticommutes
 
 end ChiralTopologicalChargeBridge
 

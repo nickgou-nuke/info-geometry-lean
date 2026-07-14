@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.HologramFullshiftTopologicalConjugacy
+import InfoGeometry.External.Automath.Omega.Conclusion.HologramFullshiftTopologicalConjugacy
 
 namespace Omega.Conclusion
 

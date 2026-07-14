@@ -1,4 +1,4 @@
-import Omega.POM.HoelderBridgeDispersionFromSq
+import InfoGeometry.External.Automath.Omega.POM.HoelderBridgeDispersionFromSq
 
 namespace Omega.POM
 

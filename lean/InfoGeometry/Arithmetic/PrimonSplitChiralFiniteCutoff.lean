@@ -38,13 +38,38 @@ def primeCutoff (Λ : ℕ) : Finset ℕ :=
 def chiralModeWeight (β ν : ℝ) (p : ℕ) : ℝ :=
   Real.exp (ν - β * primeEnergy p)
 
+lemma chiralModeWeight_pos (β ν : ℝ) (p : ℕ) :
+    0 < chiralModeWeight β ν p := by
+  unfold chiralModeWeight
+  exact Real.exp_pos _
+
 /-- Left chiral finite partition on a prime cutoff. -/
 def chiralPartitionLeft (Λ : ℕ) (β ν : ℝ) : ℝ :=
   Finset.prod (primeCutoff Λ) (fun p => 1 + chiralModeWeight β ν p)
 
+lemma chiralPartitionLeft_pos (Λ : ℕ) (β ν : ℝ) :
+    0 < chiralPartitionLeft Λ β ν := by
+  unfold chiralPartitionLeft
+  exact Finset.prod_pos (fun p _hp =>
+    add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (chiralModeWeight_pos β ν p)))
+
+lemma chiralPartitionLeft_ne_zero (Λ : ℕ) (β ν : ℝ) :
+    chiralPartitionLeft Λ β ν ≠ 0 :=
+  (chiralPartitionLeft_pos Λ β ν).ne'
+
 /-- Right chiral finite partition on a prime cutoff. -/
 def chiralPartitionRight (Λ : ℕ) (β ν : ℝ) : ℝ :=
   Finset.prod (primeCutoff Λ) (fun p => 1 + chiralModeWeight β ν p)
+
+lemma chiralPartitionRight_pos (Λ : ℕ) (β ν : ℝ) :
+    0 < chiralPartitionRight Λ β ν := by
+  unfold chiralPartitionRight
+  exact Finset.prod_pos (fun p _hp =>
+    add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (chiralModeWeight_pos β ν p)))
+
+lemma chiralPartitionRight_ne_zero (Λ : ℕ) (β ν : ℝ) :
+    chiralPartitionRight Λ β ν ≠ 0 :=
+  (chiralPartitionRight_pos Λ β ν).ne'
 
 /-- Split chiral finite partition in the idempotent basis. -/
 def chiralPartition (Λ : ℕ) (βL νL βR νR : ℝ) : ChiralScalar :=

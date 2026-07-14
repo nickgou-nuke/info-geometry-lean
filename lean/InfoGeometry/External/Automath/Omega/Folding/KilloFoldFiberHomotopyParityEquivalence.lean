@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberParityHomotopyEquivalence
+import InfoGeometry.External.Automath.Omega.POM.FiberParityHomotopyEquivalence
 
 namespace Omega.Folding
 

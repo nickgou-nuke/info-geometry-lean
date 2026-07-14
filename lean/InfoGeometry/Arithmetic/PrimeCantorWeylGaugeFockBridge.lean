@@ -37,7 +37,7 @@ Weyl-gauge normalization packet for the Cantor/Fock lane.
 The bridge is intentionally thin: it stores the projective Weyl calibration
 and the already-closed finite Cantor/Boolean bridge proofs.
 -/
-structure PrimeCantorWeylGaugeFockBridge
+structure Bridge
     (State : Type*) where
   /-- Projective Weyl-gauge normalization packet. -/
   weyl : ProjectiveWeylGaugeCalibration State
@@ -51,7 +51,7 @@ closed, and the Boolean/CAR bridge remains preserved.
 -/
 theorem normalizedWeylGauge_and_cantorFock
     {State : Type*}
-    (B : PrimeCantorWeylGaugeFockBridge State)
+    (B : Bridge State)
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
     B.weyl.totalReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u =
       B.weyl.weylScaleReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u *

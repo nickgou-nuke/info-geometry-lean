@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CdimPhaseCompressionPowerLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimPhaseCompressionPowerLaw
 
 namespace Omega.Conclusion
 

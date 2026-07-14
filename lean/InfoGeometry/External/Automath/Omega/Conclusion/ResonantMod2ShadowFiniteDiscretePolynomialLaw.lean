@@ -2,8 +2,8 @@ import Mathlib.Algebra.Group.ForwardDiff
 import Mathlib.Data.Finset.Interval
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.Mod2EPlusOnePowerPeriod
-import Omega.Conclusion.ResonanceWindowMod2BinomialCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.Mod2EPlusOnePowerPeriod
+import InfoGeometry.External.Automath.Omega.Conclusion.ResonanceWindowMod2BinomialCollapse
 
 namespace Omega.Conclusion
 

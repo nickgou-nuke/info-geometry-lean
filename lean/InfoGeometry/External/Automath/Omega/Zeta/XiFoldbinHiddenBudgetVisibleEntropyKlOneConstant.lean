@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldbinTwoPhaseFreeEnergyVariational
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinTwoPhaseFreeEnergyVariational
 import Mathlib.Tactic
 
 namespace Omega.Zeta

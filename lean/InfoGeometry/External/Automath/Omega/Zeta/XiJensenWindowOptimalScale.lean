@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.XiScaledShiftedJensenImpliesDeltaBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiScaledShiftedJensenImpliesDeltaBound
 
 namespace Omega.Zeta
 

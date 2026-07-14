@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedCollisionPressureSingularRing
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedCollisionPressureSingularRing
 
 namespace Omega.DerivedConsequences
 

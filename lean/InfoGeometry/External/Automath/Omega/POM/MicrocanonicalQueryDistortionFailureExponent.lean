@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalModuliInformationLdp
-import Omega.POM.MicrocanonicalQueryDistortionStrongConversePlane
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalModuliInformationLdp
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalQueryDistortionStrongConversePlane
 
 namespace Omega.POM
 

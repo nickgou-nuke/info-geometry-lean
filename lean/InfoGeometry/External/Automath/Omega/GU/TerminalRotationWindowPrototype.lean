@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalCutProjectToFoldHist
+import InfoGeometry.External.Automath.Omega.GU.TerminalCutProjectToFoldHist
 
 namespace Omega.GU
 

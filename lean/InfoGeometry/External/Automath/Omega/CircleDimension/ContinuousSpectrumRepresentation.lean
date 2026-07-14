@@ -1,4 +1,4 @@
-import Omega.CircleDimension.CommutativeVisibleAlgebra
+import InfoGeometry.External.Automath.Omega.CircleDimension.CommutativeVisibleAlgebra
 
 namespace Omega.CircleDimension
 

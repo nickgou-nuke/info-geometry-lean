@@ -1,4 +1,4 @@
-import Omega.Folding.KilloFoldResonanceGapSimpleModule
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldResonanceGapSimpleModule
 
 namespace Omega.Folding
 

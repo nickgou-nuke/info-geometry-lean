@@ -102,6 +102,21 @@ lemma routingEpsilon_eq_semantic_gap_abs {n : Nat}
   unfold routingEpsilon
   rw [routingChiralAnomaly_eq_semantic_coord_gap]
 
+/-- Vanishing routing scale is exactly balance between plus and minus masses. -/
+theorem routingEpsilon_eq_zero_iff_plusMass_eq_minusMass {n : Nat}
+    (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
+    routingEpsilon w label = 0 ↔ plusMass w label = minusMass w label := by
+  unfold routingEpsilon routingChiralAnomaly
+  rw [abs_eq_zero, sub_eq_zero]
+
+/-- Vanishing routing scale is exactly equality of the two semantic coordinates. -/
+theorem routingEpsilon_eq_zero_iff_semantic_coords_eq {n : Nat}
+    (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
+    routingEpsilon w label = 0 ↔
+      (cliffordSemanticState w label).1 = (cliffordSemanticState w label).2 := by
+  rw [routingEpsilon_eq_zero_iff_plusMass_eq_minusMass]
+  rw [cliffordSemanticState_fst_eq_plusMass, cliffordSemanticState_snd_eq_minusMass]
+
 section FromBistochastic
 
 variable {V : Type*} [NormedAddCommGroup V]
@@ -148,59 +163,17 @@ theorem exists_routingEpsilon_of_mem_doublyStochastic
   refine ⟨w, hw_nonneg, hw_sum, hw_matrix, ?_⟩
   exact routingEpsilon_le_one_of_simplex w label hw_nonneg hw_sum
 
-/--
-Chosen Birkhoff decomposition weights for a doubly-stochastic matrix.
--/
-noncomputable def sinkhornPermutationWeights
-    (M : SinkhornMatrix n)
-    (hM : M ∈ doublyStochastic ℝ (Fin n)) : PermMode n → ℝ :=
-  Classical.choose (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)
-
-/-- Lemma `sinkhornPermutationWeights_nonneg`. -/
-lemma sinkhornPermutationWeights_nonneg
-    (M : SinkhornMatrix n)
-    (hM : M ∈ doublyStochastic ℝ (Fin n)) :
-    ∀ σ, 0 ≤ sinkhornPermutationWeights n M hM σ := by
-  classical
-  exact (Classical.choose_spec (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)).1
-
-/-- Lemma `sinkhornPermutationWeights_sum_one`. -/
-lemma sinkhornPermutationWeights_sum_one
-    (M : SinkhornMatrix n)
-    (hM : M ∈ doublyStochastic ℝ (Fin n)) :
-    ∑ σ, sinkhornPermutationWeights n M hM σ = 1 := by
-  classical
-  exact (Classical.choose_spec (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)).2.1
-
-/-- Lemma `sinkhornPermutationWeights_decomposition`. -/
-lemma sinkhornPermutationWeights_decomposition
-    (M : SinkhornMatrix n)
-    (hM : M ∈ doublyStochastic ℝ (Fin n)) :
-    ∑ σ, sinkhornPermutationWeights n M hM σ • σ.permMatrix ℝ = M := by
-  classical
-  exact (Classical.choose_spec (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)).2.2
-
-/--
-Selected routing chiral scale `ε` for a doubly-stochastic matrix
-using the chosen Birkhoff coefficients.
--/
-noncomputable def selectedRoutingEpsilon
-    (M : SinkhornMatrix n)
-    (hM : M ∈ doublyStochastic ℝ (Fin n))
-    (label : PermMode n → CliffordLabel) : ℝ :=
-  routingEpsilon (sinkhornPermutationWeights n M hM) label
-
-/-- Lemma `selectedRoutingEpsilon_le_one`. -/
-lemma selectedRoutingEpsilon_le_one
+/-- Direct Birkhoff routing data for a doubly-stochastic matrix. -/
+theorem exists_routing_weights_epsilon_le_one
     (M : SinkhornMatrix n)
     (hM : M ∈ doublyStochastic ℝ (Fin n))
     (label : PermMode n → CliffordLabel) :
-    selectedRoutingEpsilon n M hM label ≤ 1 := by
-  unfold selectedRoutingEpsilon
-  exact routingEpsilon_le_one_of_simplex
-    (sinkhornPermutationWeights n M hM) label
-    (sinkhornPermutationWeights_nonneg (n := n) M hM)
-    (sinkhornPermutationWeights_sum_one (n := n) M hM)
+    ∃ w : PermMode n → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • σ.permMatrix ℝ = M ∧
+      routingEpsilon w label ≤ 1 :=
+  exists_routingEpsilon_of_mem_doublyStochastic (n := n) M hM label
 
 /--
 Sinkhorn trajectory constrained to remain in the Birkhoff polytope at every step.
@@ -209,48 +182,51 @@ structure DoublyStochasticSinkhornTrajectory where
   traj : SinkhornTrajectory n
   mem_doublyStochastic : ∀ k : Nat, traj.state k ∈ doublyStochastic ℝ (Fin n)
 
-/--
-Per-iteration selected routing chiral scale along a doubly-stochastic Sinkhorn trajectory.
--/
-noncomputable def trajectorySelectedRoutingEpsilon
-    (T : DoublyStochasticSinkhornTrajectory n) (k : Nat)
-    (label : PermMode n → CliffordLabel) : ℝ :=
-  selectedRoutingEpsilon n (T.traj.state k) (T.mem_doublyStochastic k) label
-
-/-- Lemma `trajectorySelectedRoutingEpsilon_le_one`. -/
-lemma trajectorySelectedRoutingEpsilon_le_one
+/-- Per-iteration Birkhoff routing data along a doubly-stochastic Sinkhorn trajectory. -/
+theorem exists_trajectory_routing_weights_epsilon_le_one
     (T : DoublyStochasticSinkhornTrajectory n) (k : Nat)
     (label : PermMode n → CliffordLabel) :
-    trajectorySelectedRoutingEpsilon n T k label ≤ 1 := by
-  unfold trajectorySelectedRoutingEpsilon
-  exact selectedRoutingEpsilon_le_one (n := n) (M := T.traj.state k)
-    (hM := T.mem_doublyStochastic k) label
+    ∃ w : PermMode n → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state k ∧
+      routingEpsilon w label ≤ 1 :=
+  exists_routing_weights_epsilon_le_one (n := n)
+    (M := T.traj.state k) (hM := T.mem_doublyStochastic k) label
 
 /--
 Combined Sinkhorn dynamic control:
 - phase Lyapunov is monotone across the step;
-- the selected routing chiral scale on the next iterate is bounded by `1`.
+- the Birkhoff routing chiral scale on the next iterate is bounded by `1`.
 -/
 theorem sinkhorn_dynamics_step_control
     (T : DoublyStochasticSinkhornTrajectory n) (k : Nat)
     (label : PermMode n → CliffordLabel) :
     trajectoryLyapunovNext n T.traj k ≤ trajectoryLyapunov n T.traj k ∧
-      trajectorySelectedRoutingEpsilon n T (k + 1) label ≤ 1 := by
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state (k + 1) ∧
+        routingEpsilon w label ≤ 1 := by
   refine ⟨trajectoryLyapunov_monotone (n := n) T.traj k, ?_⟩
-  exact trajectorySelectedRoutingEpsilon_le_one (n := n) T (k + 1) label
+  exact exists_trajectory_routing_weights_epsilon_le_one (n := n) T (k + 1) label
 
 /--
 Generator-level Sinkhorn dynamic control:
 - phase Radon-Nikodym log-barrier is monotone across the step;
-- the selected routing chiral scale on the next iterate is bounded by `1`.
+- the Birkhoff routing chiral scale on the next iterate is bounded by `1`.
 -/
 theorem sinkhorn_dynamics_generator_step_control
     (T : DoublyStochasticSinkhornTrajectory n) (k : Nat)
     (label : PermMode n → CliffordLabel) :
     trajectoryRNBarrierNext n T.traj k ≤ trajectoryRNBarrier n T.traj k ∧
-      trajectorySelectedRoutingEpsilon n T (k + 1) label ≤ 1 := by
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state (k + 1) ∧
+        routingEpsilon w label ≤ 1 := by
   refine ⟨trajectoryRNBarrier_monotone (n := n) T.traj k, ?_⟩
-  exact trajectorySelectedRoutingEpsilon_le_one (n := n) T (k + 1) label
+  exact exists_trajectory_routing_weights_epsilon_le_one (n := n) T (k + 1) label
 
 /--
 Constructive alternating Sinkhorn iterate from explicit positivity hypotheses.
@@ -321,9 +297,13 @@ theorem sinkhornIterate_step_control
     (k : Nat) (label : PermMode n → CliffordLabel) :
     trajectoryLyapunovNext n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) k
       ≤ trajectoryLyapunov n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) k ∧
-      trajectorySelectedRoutingEpsilon n
-        (sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal)
-        (k + 1) label ≤ 1 := by
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ =
+          (sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal).traj.state
+            (k + 1) ∧
+        routingEpsilon w label ≤ 1 := by
   simpa [sinkhornIterateDoublyStochasticTrajectory, sinkhornIterateTrajectory] using
     (sinkhorn_dynamics_step_control (n := n)
       (T := sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal)
@@ -342,9 +322,13 @@ theorem sinkhornIterate_generator_step_control
     (k : Nat) (label : PermMode n → CliffordLabel) :
     trajectoryRNBarrierNext n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) k
       ≤ trajectoryRNBarrier n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) k ∧
-      trajectorySelectedRoutingEpsilon n
-        (sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal)
-        (k + 1) label ≤ 1 := by
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ =
+          (sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal).traj.state
+            (k + 1) ∧
+        routingEpsilon w label ≤ 1 := by
   simpa [sinkhornIterateDoublyStochasticTrajectory, sinkhornIterateTrajectory] using
     (sinkhorn_dynamics_generator_step_control (n := n)
       (T := sinkhornIterateDoublyStochasticTrajectory (n := n) M0 hrow hcol hbal)

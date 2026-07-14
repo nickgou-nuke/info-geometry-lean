@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.MassSplittingMomentRoot
+import InfoGeometry.External.Automath.Omega.POM.MassSplittingMomentRoot
 
 open scoped BigOperators
 

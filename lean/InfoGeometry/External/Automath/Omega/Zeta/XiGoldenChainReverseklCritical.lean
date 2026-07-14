@@ -1,4 +1,4 @@
-import Omega.Zeta.XiReverseKLCriticalRigidityHaar
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLCriticalRigidityHaar
 
 namespace Omega.Zeta
 

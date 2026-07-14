@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenAuditGapSupermodularity
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenAuditGapSupermodularity
 
 namespace Omega.Conclusion
 

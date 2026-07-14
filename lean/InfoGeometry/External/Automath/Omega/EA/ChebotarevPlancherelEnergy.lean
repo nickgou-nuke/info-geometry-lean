@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.EA.ChebotarevFourier
+import InfoGeometry.External.Automath.Omega.EA.ChebotarevFourier
 
 namespace Omega.EA
 

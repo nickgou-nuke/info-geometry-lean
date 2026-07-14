@@ -8,8 +8,8 @@ Theorem-safe Drazin inverse readbacks for sums.
 
 This file proves the finite algebraic orthogonal-sum case over an arbitrary
 ring.  Banach-algebra generalized Drazin formulas involving quasinilpotents and
-infinite series are exposed only as witness packets, because their correctness
-requires analytic convergence/spectral hypotheses not present in `Ring`.
+infinite series are not represented here: their correctness requires analytic
+convergence/spectral hypotheses not present in `Ring`.
 -/
 
 noncomputable section
@@ -186,55 +186,5 @@ theorem orthogonal_sum_drazin_candidate_eq
   orthogonal_sum_isDrazinInverse ha hb horth
 
 end Ring
-
-/--
-Witness packet for Banach/generalized-Drazin sum formulas.
-
-This deliberately does not live as a `Ring` theorem: quasinilpotence, spectral
-idempotents, and infinite series need analytic convergence and Banach-algebra
-hypotheses.
--/
-@[rep_depth operator]
-structure GeneralizedDrazinBanachSumFormula
-    (Alg : Type*) where
-  a : Alg
-  b : Alg
-  ad : Alg
-  bd : Alg
-  spectralIdempotentA : Alg
-  spectralIdempotentB : Alg
-  candidate : Alg
-  hypotheses : Prop
-  convergenceWitness : Prop
-  generalizedDrazinInverseWitness : Prop
-
-namespace GeneralizedDrazinBanachSumFormula
-
-variable {Alg : Type*}
-variable (F : GeneralizedDrazinBanachSumFormula Alg)
-
-end GeneralizedDrazinBanachSumFormula
-
-/-- Pierce/Koliha block decomposition packet for computing generalized Drazin inverses. -/
-@[rep_depth operator]
-structure KolihaPierceDrazinBlockPacket
-    (Alg Block11 Block12 Block21 Block22 : Type*) where
-  a : Alg
-  ad : Alg
-  projector : Alg
-  regularBlock : Block11
-  upperRightBlock : Block12
-  lowerLeftBlock : Block21
-  singularBlock : Block22
-  regularBlockInvertibleWitness : Prop
-  singularBlockQuasinilpotentWitness : Prop
-  blockFormulaWitness : Prop
-
-namespace KolihaPierceDrazinBlockPacket
-
-variable {Alg Block11 Block12 Block21 Block22 : Type*}
-variable (P : KolihaPierceDrazinBlockPacket Alg Block11 Block12 Block21 Block22)
-
-end KolihaPierceDrazinBlockPacket
 
 end InfoGeometry.Canonical.DrazinSum

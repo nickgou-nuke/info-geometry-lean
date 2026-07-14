@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ZeroAnomPullbackExactness
+import InfoGeometry.External.Automath.Omega.POM.ZeroAnomPullbackExactness
 
 namespace Omega.POM
 

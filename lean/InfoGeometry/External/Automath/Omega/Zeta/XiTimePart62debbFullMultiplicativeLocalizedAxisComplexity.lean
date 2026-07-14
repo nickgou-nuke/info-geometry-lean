@@ -1,6 +1,6 @@
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart62debbFiniteLocalizationAxesNoFullMultiplicativeHost
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62debbFiniteLocalizationAxesNoFullMultiplicativeHost
 
 namespace Omega.Zeta
 

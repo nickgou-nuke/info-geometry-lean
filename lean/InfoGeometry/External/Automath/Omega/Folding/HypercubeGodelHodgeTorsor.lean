@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBoundaryStokesTorsorH1H1
-import Omega.Folding.HypercubeGodelStokesFluxBias
-import Omega.SPG.BoundaryMultigraphEffectiveResistanceMinEnergy
-import Omega.SPG.BoundaryMultigraphH1Cdim
+import InfoGeometry.External.Automath.Omega.Folding.FoldBoundaryStokesTorsorH1H1
+import InfoGeometry.External.Automath.Omega.Folding.HypercubeGodelStokesFluxBias
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryMultigraphEffectiveResistanceMinEnergy
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryMultigraphH1Cdim
 
 namespace Omega.Folding
 

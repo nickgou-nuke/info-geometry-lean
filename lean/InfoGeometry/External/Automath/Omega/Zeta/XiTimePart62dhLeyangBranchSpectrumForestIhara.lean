@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
-import Omega.Zeta.DerivedLeyangBranchsetIharaZeta
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBranchsetIharaZeta
 
 namespace Omega.Zeta
 

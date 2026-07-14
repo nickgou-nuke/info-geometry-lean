@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointJensenDefectH12GramKernel
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointJensenDefectH12GramKernel
 
 namespace Omega.Zeta
 

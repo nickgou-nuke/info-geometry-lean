@@ -107,6 +107,99 @@ theorem decomposition_theorem (M : ZornMatrix) :
     simpa [extractAntitriplet, mul_projector2, projector1_mul]
   simp [hx, hy]
 
+/-- Peirce readback of the `1_+` sector. -/
+theorem peirce_readback_plusplus (M : ZornMatrix) :
+    projector1 * M * projector1 =
+      ⟨M.a, 0, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩ := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+
+/-- Peirce readback of the `3` sector. -/
+theorem peirce_readback_plusminus (M : ZornMatrix) :
+    projector1 * M * projector2 =
+      ⟨0, 0, M.x, fun _ : Fin 3 => 0⟩ := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+
+/-- Peirce readback of the `3*` sector. -/
+theorem peirce_readback_minusplus (M : ZornMatrix) :
+    projector2 * M * projector1 =
+      ⟨0, 0, fun _ : Fin 3 => 0, M.y⟩ := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+
+/-- Peirce readback of the `1_-` sector. -/
+theorem peirce_readback_minusminus (M : ZornMatrix) :
+    projector2 * M * projector2 =
+      ⟨0, M.b, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩ := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+
+/-- The canonical projector sandwich brackets agree for the color sector. -/
+theorem peirce_bracketing (M : ZornMatrix) :
+    (projector1 * M) * projector2 = projector1 * (M * projector2) := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        first
+          | simp [projector1, projector2, mul, dotProduct, crossProduct,
+              InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+              InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+          | ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
+              InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+              InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+
+/-- The Peirce decomposition reconstructs the original Zorn matrix. -/
+theorem peirce_decomposition (M : ZornMatrix) :
+    M =
+      projector1 * M * projector1 +
+      projector1 * M * projector2 +
+      projector2 * M * projector1 +
+      projector2 * M * projector2 := by
+  cases M with
+  | mk a b x y =>
+      apply ext <;>
+      all_goals
+        simp [projector1, projector2, mul, add, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, add, dotProduct, crossProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+
 /-!
 ## 5. Real cross-product stabilizer
 -/

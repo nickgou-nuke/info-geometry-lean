@@ -1,5 +1,5 @@
 import Mathlib.Topology.Basic
-import Omega.EA.KernelEquilibriumPF
+import InfoGeometry.External.Automath.Omega.EA.KernelEquilibriumPF
 
 namespace Omega.EA
 

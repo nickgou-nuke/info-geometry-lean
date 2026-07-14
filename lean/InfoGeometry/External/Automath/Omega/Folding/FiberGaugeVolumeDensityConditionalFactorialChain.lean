@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Tactic
-import Omega.Folding.FiberGaugeVolumeChainFactorization
+import InfoGeometry.External.Automath.Omega.Folding.FiberGaugeVolumeChainFactorization
 
 namespace Omega.Folding
 

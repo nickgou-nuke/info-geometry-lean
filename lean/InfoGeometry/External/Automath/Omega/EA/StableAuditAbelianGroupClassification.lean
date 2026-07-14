@@ -1,4 +1,4 @@
-import Omega.EA.StableAuditAffineCoefficientCriterion
+import InfoGeometry.External.Automath.Omega.EA.StableAuditAffineCoefficientCriterion
 
 open scoped BigOperators
 

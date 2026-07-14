@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.POM.S5OrderedRatioDegree20
-import Omega.POM.S5TwoSubsetDegree10
-import Omega.Zeta.XiTerminalZmLeyangDeltaNodePreimageR10Wreath
+import InfoGeometry.External.Automath.Omega.POM.S5OrderedRatioDegree20
+import InfoGeometry.External.Automath.Omega.POM.S5TwoSubsetDegree10
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangDeltaNodePreimageR10Wreath
 
 namespace Omega.POM
 

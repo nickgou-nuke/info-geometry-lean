@@ -46,6 +46,22 @@ def finitePrimeBosonicInverseDenominator
     (q : PrimeLabel → R) : R :=
   ∏ p ∈ S, (1 - q p)⁻¹
 
+lemma finitePrimeWeylDenominator_ne_zero
+    {PrimeLabel R : Type*} [Field R]
+    (S : Finset PrimeLabel) (q : PrimeLabel → R)
+    (h : ∀ p ∈ S, (1 - q p) ≠ 0) :
+    finitePrimeWeylDenominator S q ≠ 0 := by
+  unfold finitePrimeWeylDenominator
+  exact Finset.prod_ne_zero_iff.mpr h
+
+lemma finitePrimeBosonicInverseDenominator_ne_zero
+    {PrimeLabel R : Type*} [Field R]
+    (S : Finset PrimeLabel) (q : PrimeLabel → R)
+    (h : ∀ p ∈ S, (1 - q p) ≠ 0) :
+    finitePrimeBosonicInverseDenominator S q ≠ 0 := by
+  unfold finitePrimeBosonicInverseDenominator
+  exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
+
 /-- The finite Weyl denominator is the signed fermion product. -/
 theorem finitePrimeWeylDenominator_eq_signedFermionPartition
     {PrimeLabel R : Type*} [CommRing R]

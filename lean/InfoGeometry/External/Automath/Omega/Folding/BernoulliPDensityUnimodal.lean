@@ -2,7 +2,7 @@ import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 import Mathlib.Topology.Order.IntermediateValue
 import Mathlib.Tactic
-import Omega.Folding.BayesKinkGeometry
+import InfoGeometry.External.Automath.Omega.Folding.BayesKinkGeometry
 
 noncomputable section
 

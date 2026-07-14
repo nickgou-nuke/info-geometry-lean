@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SingularRingFaithfulSemigroup
+import InfoGeometry.External.Automath.Omega.Conclusion.SingularRingFaithfulSemigroup
 
 namespace Omega.Conclusion
 

@@ -231,28 +231,28 @@ theorem primeGrandKMS_periodicity_condition
 /-- Souriau inverse temperature readout from the Massieu bridge. -/
 @[rep_depth transport]
 theorem beta_eq_realPart_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) :
+    (B : Bridge) :
     B.beta = B.temperature.s.re :=
   B.beta_eq_realPart_of_bridge
 
 /-- The Massieu potential is already the finite grand-canonical potential. -/
 @[rep_depth thermo]
 theorem massieu_eq_potential_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (θ : ℝ) :
+    (B : Bridge) (θ : ℝ) :
     B.massieuModel.massieu θ = B.packet.potential θ B.chemicalPotential :=
   B.massieu_eq_potential θ
 
 /-- The dual coordinate is the finite mean-shift readout. -/
 @[rep_depth thermo]
 theorem dualCoord_eq_meanShift_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (θ : ℝ) :
+    (B : Bridge) (θ : ℝ) :
     B.massieuModel.dualCoord θ = B.packet.meanShift θ B.chemicalPotential :=
   B.dualCoord_eq_meanShift_of_bridge θ
 
 /-- The temperature-regularized Hamiltonian defect is nonnegative. -/
 @[rep_depth thermo]
 theorem temperatureRegularizedHamiltonian_nonneg_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge)
+    (B : Bridge)
     (ε θ η : ℝ) (hε : 0 ≤ ε) :
     0 ≤ B.temperatureRegularizedHamiltonian ε θ η :=
   B.temperatureRegularizedHamiltonian_nonneg ε θ η hε
@@ -260,28 +260,28 @@ theorem temperatureRegularizedHamiltonian_nonneg_of_massieuBridge
 /-- The temperature-regularized Hamiltonian defect vanishes on contact. -/
 @[rep_depth thermo]
 theorem temperatureRegularizedHamiltonian_eq_zero_at_contact_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (ε θ : ℝ) :
+    (B : Bridge) (ε θ : ℝ) :
     B.temperatureRegularizedHamiltonian ε θ (B.massieuModel.dualCoord θ) = 0 :=
   B.temperatureRegularizedHamiltonian_eq_zero_at_contact ε θ
 
 /-- The Fenchel gap is nonnegative. -/
 @[rep_depth thermo]
 theorem fenchelGap_nonneg_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (θ η : ℝ) :
+    (B : Bridge) (θ η : ℝ) :
     0 ≤ B.massieuModel.fenchelGap θ η :=
   B.fenchelGap_nonneg θ η
 
 /-- The Fenchel gap vanishes on contact. -/
 @[rep_depth thermo]
 theorem fenchelGap_eq_zero_at_contact_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (θ : ℝ) :
+    (B : Bridge) (θ : ℝ) :
     B.massieuModel.fenchelGap θ (B.massieuModel.dualCoord θ) = 0 :=
   B.fenchelGap_eq_zero_at_contact θ
 
 /-- Canonical free energy expressed through the scaled entropy-energy contact form. -/
 @[rep_depth thermo]
 theorem canonicalFreeEnergy_eq_scaled_entropy_energy_of_massieuBridge
-    (B : PrimeGrandCanonicalMassieuBridge) (ε θ : ℝ) :
+    (B : Bridge) (ε θ : ℝ) :
     B.massieuModel.canonicalFreeEnergy ε θ =
       -ε * (B.massieuModel.canonicalEntropy θ -
         θ * B.massieuModel.canonicalEnergy θ) :=

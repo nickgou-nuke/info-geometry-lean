@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
 
 
 namespace Omega.Zeta

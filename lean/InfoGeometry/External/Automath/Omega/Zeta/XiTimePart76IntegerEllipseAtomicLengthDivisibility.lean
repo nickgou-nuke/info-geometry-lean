@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
 
 namespace Omega.Zeta
 

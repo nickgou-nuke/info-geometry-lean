@@ -36,7 +36,7 @@ constructed here.  The logarithm branch and log-det/vacuum-expectation identity
 are explicit model data.
 -/
 @[rep_depth krein]
-structure HestenesPhaseVolumeBridge
+structure Bridge
     (P : HestenesKreinKMSPacket (E := E))
     (V : HestenesKreinVacuum P) where
   /-- Multiplicative determinant/phase-volume channel on invertible operators. -/
@@ -58,11 +58,11 @@ structure HestenesPhaseVolumeBridge
       Real.log ((detUnits U : ℝˣ) : ℝ) =
         V.vacuumRealState (opLog (U : EndH))
 
-namespace HestenesPhaseVolumeBridge
+namespace Bridge
 
 variable {P : HestenesKreinKMSPacket (E := E)}
 variable {V : HestenesKreinVacuum P}
-variable (B : HestenesPhaseVolumeBridge P V)
+variable (B : Bridge P V)
 
 /-- Direct readback of the supplied Hestenes/Krein log-det formula. -/
 @[rep_depth krein]
@@ -165,7 +165,7 @@ theorem wignerJones_atom_sum_invariant
     _ = V.vacuumRealState (1 : EndH) := by rw [h_split]
     _ = 1 := V.vacuumRealState_id
 
-end HestenesPhaseVolumeBridge
+end Bridge
 
 end PhaseVolume
 

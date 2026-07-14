@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.POM.ReplicaSoftcoreWordTraceFibonacciFactorization
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreWordTraceFibonacciFactorization
 
 namespace Omega.POM
 

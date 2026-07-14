@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
-import Omega.Folding.GaugeAnomalyMuMinus1BranchClassification
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMuMinus1BranchClassification
 
 namespace Omega.Folding
 

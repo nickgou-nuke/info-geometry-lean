@@ -1,5 +1,5 @@
-import Omega.POM.BqIsSymqAndSpectrum
-import Omega.POM.BqTraceLucas
+import InfoGeometry.External.Automath.Omega.POM.BqIsSymqAndSpectrum
+import InfoGeometry.External.Automath.Omega.POM.BqTraceLucas
 
 namespace Omega.POM
 

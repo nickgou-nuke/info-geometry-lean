@@ -1,6 +1,6 @@
-import Omega.Conclusion.BinfoldFrozenEscortExactRecoveryPhaseTransition
-import Omega.Conclusion.EscortTwoStateClosure
-import Omega.Conclusion.FrozenBranchTwoScalarClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldFrozenEscortExactRecoveryPhaseTransition
+import InfoGeometry.External.Automath.Omega.Conclusion.EscortTwoStateClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenBranchTwoScalarClosure
 
 namespace Omega.Conclusion
 

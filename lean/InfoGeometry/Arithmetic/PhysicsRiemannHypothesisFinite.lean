@@ -44,12 +44,12 @@ theorem muPaper_twelve_square_obstruction : muPaper 12 = 0 := rfl
 /-- Divisor-sum cancellation for `n = 6`: `μ(1)+μ(2)+μ(3)+μ(6)=0`. -/
 theorem muPaper_divisor_sum_six :
     muPaper 1 + muPaper 2 + muPaper 3 + muPaper 6 = 0 := by
-  native_decide
+  decide
 
 /-- Divisor-sum cancellation for `n = 12`, including the square-obstruction divisors. -/
 theorem muPaper_divisor_sum_twelve :
     muPaper 1 + muPaper 2 + muPaper 3 + muPaper 4 + muPaper 6 + muPaper 12 = 0 := by
-  native_decide
+  decide
 
 /-- The divisor sum at `1` is the identity term, not a cancellation. -/
 theorem muPaper_divisor_sum_one : muPaper 1 = 1 := rfl
@@ -132,23 +132,23 @@ theorem finite_euler_product_two_three_k2_bound3 :
 /-- Prime-counting finite datum: there are four primes at most ten. -/
 theorem prime_count_le_ten :
     ((Finset.Icc 1 10).filter Nat.Prime).card = 4 := by
-  native_decide
+  decide
 
 /-- Prime-counting finite datum: there are ten primes at most thirty. -/
 theorem prime_count_le_thirty :
     ((Finset.Icc 1 30).filter Nat.Prime).card = 10 := by
-  native_decide
+  decide
 
 /-- Explicit finite prime list through thirty, matching the sieve count. -/
 theorem primes_le_thirty_list :
     (Finset.Icc 1 30).filter Nat.Prime =
       ({2, 3, 5, 7, 11, 13, 17, 19, 23, 29} : Finset ℕ) := by
-  native_decide
+  decide
 
 /-- Mertens finite datum through ten: `∑_{n≤10} μ(n) = -1` for the table above. -/
 theorem mertens_muPaper_ten :
     muPaper 1 + muPaper 2 + muPaper 3 + muPaper 4 + muPaper 5 +
       muPaper 6 + muPaper 7 + muPaper 8 + muPaper 9 + muPaper 10 = -1 := by
-  native_decide
+  decide
 
 end InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite

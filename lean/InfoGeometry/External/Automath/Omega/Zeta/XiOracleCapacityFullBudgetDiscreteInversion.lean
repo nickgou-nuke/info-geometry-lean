@@ -1,4 +1,4 @@
-import Omega.POM.OracleCapacityKinksSlopes
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityKinksSlopes
 
 /-- Paper label: `thm:xi-oracle-capacity-full-budget-discrete-inversion`. The full-budget
 finite oracle capacity curve has tail-count first differences, and the next discrete difference

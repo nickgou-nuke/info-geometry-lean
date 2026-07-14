@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.GcdimPolynomialRing
+import InfoGeometry.External.Automath.Omega.CircleDimension.GcdimPolynomialRing
 
 namespace Omega.CircleDimension
 

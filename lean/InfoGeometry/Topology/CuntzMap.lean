@@ -1,8 +1,6 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import Mathlib
 
-set_option linter.dupNamespace false
-
 /-!
 # Cuntz Map — Algebraic Two-Branch Transfer
 
@@ -35,7 +33,7 @@ The Cuntz map / canonical endomorphism of the Cuntz O₂ algebra.
 This is the Markov transfer operator — the discrete modular flow
 that generates time evolution on the Cantor boundary.
 -/
-def CuntzMap (C : CuntzO2Carrier Op) (X : Op) : Op :=
+def map (C : CuntzO2Carrier Op) (X : Op) : Op :=
   C.S_left * X * star C.S_left + C.S_right * X * star C.S_right
 
 /--
@@ -43,29 +41,29 @@ def CuntzMap (C : CuntzO2Carrier Op) (X : Op) : Op :=
 encoding probability conservation — the total probability mass
 redistributes across the two branches and sums to 1.
 -/
-theorem CuntzMap_unital (C : CuntzO2Carrier Op) :
-    CuntzMap Op C 1 = 1 := by
-  simpa [CuntzMap] using C.range_sum
+theorem map_unital (C : CuntzO2Carrier Op) :
+    map Op C 1 = 1 := by
+  simpa [map] using C.range_sum
 
 /--
 **Star-preserving:** Φ(X*) = Φ(X)*. The Cuntz map respects the
 *-involution, preserving the reality/observable structure of the
 algebra. This makes Φ a completely positive map.
 -/
-theorem CuntzMap_star (C : CuntzO2Carrier Op) (X : Op) :
-    CuntzMap Op C (star X) = star (CuntzMap Op C X) := by
-  unfold CuntzMap
+theorem map_star (C : CuntzO2Carrier Op) (X : Op) :
+    map Op C (star X) = star (map Op C X) := by
+  unfold map
   simp [star_add, star_mul, mul_assoc]
 
 /-- Additive real readout fixed by equal half-branch Cuntz scaling. -/
-theorem CuntzMap_real_fixed_point_of_half_branch_scaling
+theorem map_real_fixed_point_of_half_branch_scaling
     (C : CuntzO2Carrier Op)
     (φ : Op →+ ℝ)
     (X : Op)
     (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
     (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
-    φ (CuntzMap Op C X) = φ X := by
-  rw [CuntzMap, map_add, hleft, hright]
+    φ (map Op C X) = φ X := by
+  rw [map, map_add, hleft, hright]
   ring
 
 /--
@@ -75,7 +73,7 @@ The equality is data, not inferred from the Cuntz relations alone.
 -/
 structure DiscreteModularFlowWitness (C : CuntzO2Carrier Op) where
   sigma : Op → Op
-  sigma_eq_cuntzMap : ∀ X, sigma X = CuntzMap Op C X
+  sigma_eq_map : ∀ X, sigma X = map Op C X
 
 namespace DiscreteModularFlowWitness
 
@@ -83,9 +81,9 @@ variable {C : CuntzO2Carrier Op}
 variable (W : DiscreteModularFlowWitness Op C)
 
 /-- The witnessed discrete modular step evaluates as the Cuntz map. -/
-theorem apply_eq_cuntzMap (X : Op) :
-    W.sigma X = CuntzMap Op C X :=
-  W.sigma_eq_cuntzMap X
+theorem apply_eq_map (X : Op) :
+    W.sigma X = map Op C X :=
+  W.sigma_eq_map X
 
 /-- A half-branch real readout is fixed by a witnessed Cuntz modular step. -/
 theorem real_fixed_point_of_half_branch_scaling
@@ -94,8 +92,8 @@ theorem real_fixed_point_of_half_branch_scaling
     (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
     (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
     φ (W.sigma X) = φ X := by
-  rw [DiscreteModularFlowWitness.apply_eq_cuntzMap (Op := Op) (C := C) W X]
-  exact CuntzMap_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
+  rw [DiscreteModularFlowWitness.apply_eq_map (Op := Op) (C := C) W X]
+  exact map_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
 
 end DiscreteModularFlowWitness
 

@@ -1,4 +1,4 @@
-import Omega.POM.CoxeterMonodromyCyclotomic
+import InfoGeometry.External.Automath.Omega.POM.CoxeterMonodromyCyclotomic
 
 namespace Omega.POM
 

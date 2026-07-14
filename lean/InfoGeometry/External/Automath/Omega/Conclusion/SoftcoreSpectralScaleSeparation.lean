@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.SoftcoreKroneckerSympowerDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.SoftcoreKroneckerSympowerDecomposition
 
 namespace Omega.Conclusion
 

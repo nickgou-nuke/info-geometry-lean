@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicProfiniteCollapseToZhat
-import Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicProfiniteCollapseToZhat
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
 
 namespace Omega.Conclusion
 

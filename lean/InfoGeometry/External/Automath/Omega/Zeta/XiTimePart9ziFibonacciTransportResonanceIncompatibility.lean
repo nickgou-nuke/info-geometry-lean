@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 import Mathlib.Topology.Order.Basic
-import Omega.Folding.FoldResonanceLadderFibLucLimits
-import Omega.Zeta.XiGoldenW1TrueTwoPhaseLimit
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceLadderFibLucLimits
+import InfoGeometry.External.Automath.Omega.Zeta.XiGoldenW1TrueTwoPhaseLimit
 
 open Filter
 open scoped goldenRatio

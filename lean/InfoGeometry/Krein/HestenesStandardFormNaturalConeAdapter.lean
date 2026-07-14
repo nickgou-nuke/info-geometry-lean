@@ -30,15 +30,15 @@ realized by the supplied Hestenes/Krein carrier with:
 * the supplied Hestenes/Krein natural cone as the canonical cone.
 -/
 @[rep_depth krein]
-structure HestenesStandardFormNaturalConeAdapter where
+structure Adapter where
   /-- Hestenes/Krein natural-cone carrier. -/
   hestenes :
-    HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive)
-      (Op := Op)
+    _root_.InfoGeometry.Krein.HestenesKreinNaturalConeBridge.Bridge
+      (H := H) (NormalPositive := NormalPositive) (Op := Op)
 
-namespace HestenesStandardFormNaturalConeAdapter
+namespace Adapter
 
-variable (A : HestenesStandardFormNaturalConeAdapter (H := H)
+variable (A : Adapter (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
 
 /--
@@ -131,7 +131,7 @@ theorem toCanonical_J_fixes_coneVector
   NaturalConeStandardFormInterface.J_fixes_coneVector
     A.toCanonical ω (A.toCanonical_isNormalPositive ω)
 
-end HestenesStandardFormNaturalConeAdapter
+end Adapter
 
 /--
 Compatibility data for an already supplied canonical interface and an
@@ -144,8 +144,8 @@ recorded as realized by a Hestenes/Krein model without replacing it by
 @[rep_depth krein]
 structure CanonicalRealizedByHestenesKrein
     (S : NaturalConeStandardFormInterface Op H NormalPositive)
-    (B : HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive)
-      (Op := Op)) where
+    (B : _root_.InfoGeometry.Krein.HestenesKreinNaturalConeBridge.Bridge
+      (H := H) (NormalPositive := NormalPositive) (Op := Op)) where
   /-- The canonical action agrees pointwise with the Hestenes/Krein action. -/
   act_eq :
     ∀ (A : Op) (ξ : H), S.act A ξ = B.act A ξ
@@ -173,8 +173,8 @@ structure CanonicalRealizedByHestenesKrein
 namespace CanonicalRealizedByHestenesKrein
 
 variable {S : NaturalConeStandardFormInterface Op H NormalPositive}
-variable {B : HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive)
-  (Op := Op)}
+variable {B : _root_.InfoGeometry.Krein.HestenesKreinNaturalConeBridge.Bridge
+  (H := H) (NormalPositive := NormalPositive) (Op := Op)}
 
 /-- Readback: canonical evaluation is realized by the Hestenes/Krein evaluation. -/
 @[rep_depth krein]

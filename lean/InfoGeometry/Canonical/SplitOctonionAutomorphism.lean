@@ -1,5 +1,6 @@
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
 import InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
@@ -135,6 +136,50 @@ theorem preservesDetZ_one :
     PreservesDetZ (R := R) (1 : SplitOctonionAutCandidate R) := by
   intro x
   rfl
+
+/-- Every real split-octonion automorphism preserves the Zorn determinant. -/
+@[simp] theorem RealSplitOctonionAut.preserves_detZ
+    (φ : RealSplitOctonionAut) (x : SplitOctonionReal) :
+    ZornMatrix.detZ ((φ : SplitOctonionAutCandidate ℝ) x) =
+      ZornMatrix.detZ x := by
+  let ψ : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut :=
+    ⟨(φ : SplitOctonionAutCandidate ℝ), by
+      intro X Y
+      simpa [InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.IsRealZornCompositionAut,
+        InfoGeometry.Canonical.ZornMatrix.mul]
+        using φ.2.2 X Y⟩
+  exact InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realZornCompositionAut_preserves_det
+    (φ := ψ) x
+
+/-- Any real split-octonion automorphism preserves the Zorn null cone. -/
+@[simp] theorem RealSplitOctonionAut.preserves_null
+    (φ : RealSplitOctonionAut) (x : SplitOctonionReal) :
+    InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+      (InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3)
+      ((φ : SplitOctonionAutCandidate ℝ) x) ↔
+      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+        (InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3) x := by
+  unfold InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
+  constructor
+  · intro h
+    calc
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 x =
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+            InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+            ((φ : SplitOctonionAutCandidate ℝ) x) := by
+        symm
+        exact RealSplitOctonionAut.preserves_detZ φ x
+      _ = 0 := h
+  · intro h
+    calc
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
+          ((φ : SplitOctonionAutCandidate ℝ) x) =
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
+            InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 x := by
+        exact RealSplitOctonionAut.preserves_detZ φ x
+      _ = 0 := h
 
 /-- Canonical-chain readback into the exact computer-algebra real Lie packet. -/
 theorem realSplitOctonionLiePacket_readback :

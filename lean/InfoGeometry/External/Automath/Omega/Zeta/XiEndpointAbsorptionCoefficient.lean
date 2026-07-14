@@ -2,7 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointJuliaIndicatorEqualsAbsorption
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointJuliaIndicatorEqualsAbsorption
 
 namespace Omega.Zeta
 

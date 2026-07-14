@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.LogicExpansionChain.ChoiceSpectrumNoDefinableSelector
-import Omega.RecursiveAddressing.FocusedNonNullReadoutCriterion
-import Omega.RecursiveAddressing.ObserverIndexedNullStructural
-import Omega.Zeta.NullZ2DoublecoverMinDesingularization
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ChoiceSpectrumNoDefinableSelector
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.FocusedNonNullReadoutCriterion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedNullStructural
+import InfoGeometry.External.Automath.Omega.Zeta.NullZ2DoublecoverMinDesingularization
 
 namespace Omega.DerivedConsequences
 

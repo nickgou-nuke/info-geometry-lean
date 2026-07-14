@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
 
 theorem paper_xi_comoving_prefix_bit_budget_gain {δ δ0 γ : ℝ} (hδ0_pos : 0 < δ0)
     (hδ0_lt : δ0 < 1) (hδ : δ0 ≤ δ) (hδ_lt : δ < 1) :

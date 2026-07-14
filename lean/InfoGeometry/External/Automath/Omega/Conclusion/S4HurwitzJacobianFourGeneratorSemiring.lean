@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloS4Genus49JacobianComputableIsogeny
+import InfoGeometry.External.Automath.Omega.Folding.KilloS4Genus49JacobianComputableIsogeny
 
 namespace Omega.Conclusion
 

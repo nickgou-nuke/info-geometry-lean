@@ -1,8 +1,8 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
-import Omega.Zeta.XiTimePart9odEscortEscortFdivBinaryClosure
-import Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortEscortFdivBinaryClosure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
 
 namespace Omega.Conclusion
 

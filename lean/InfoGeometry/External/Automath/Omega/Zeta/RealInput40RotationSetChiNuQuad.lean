@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40RotationPolytope6V
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40RotationPolytope6V
 
 namespace Omega.Zeta
 

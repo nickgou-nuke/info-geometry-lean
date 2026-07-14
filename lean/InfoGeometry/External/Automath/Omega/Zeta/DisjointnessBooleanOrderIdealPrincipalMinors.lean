@@ -1,8 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import Omega.Zeta.BooleanDisjointnessZetaLDLT
-import Omega.Zeta.BooleanTwoLayerOrderIdealPrincipalMinor
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanDisjointnessZetaLDLT
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerOrderIdealPrincipalMinor
 
 namespace Omega.Zeta
 

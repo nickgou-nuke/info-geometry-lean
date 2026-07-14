@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldBinGaugeVolumeStieltjesSum
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeVolumeStieltjesSum
 
 namespace Omega.Folding
 

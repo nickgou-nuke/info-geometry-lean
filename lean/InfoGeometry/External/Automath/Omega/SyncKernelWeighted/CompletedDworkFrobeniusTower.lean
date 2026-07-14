@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.CompletedPrimeCongruence
-import Omega.SyncKernelWeighted.CompletedPrimitivePrimePowerDifferenceQuotient
-import Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CompletedPrimeCongruence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CompletedPrimitivePrimePowerDifferenceQuotient
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
 
 namespace Omega.SyncKernelWeighted
 

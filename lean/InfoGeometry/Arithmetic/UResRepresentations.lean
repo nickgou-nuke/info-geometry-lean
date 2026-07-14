@@ -65,12 +65,26 @@ For e^{-βH}: the operator is trace-class for β > 1, with eigenvalues p^{-β}.
 /-- The 1-particle energy of prime mode p: ε_p = log(p). -/
 noncomputable def primeEnergy (p : ℕ+) : ℝ := Real.log (p.val : ℝ)
 
+lemma primeEnergy_nonneg (p : ℕ+) :
+    0 ≤ primeEnergy p := by
+  unfold primeEnergy
+  exact Real.log_nonneg (by exact_mod_cast p.pos)
+
 /-
 The Boltzmann weight at inverse temperature β for prime p:
     e^{-β H}|p⟩ = p^{-β}|p⟩
 -/
 noncomputable def boltzmannWeight (β : ℝ) (p : ℕ+) : ℝ :=
   (p.val : ℝ) ^ (-β)
+
+lemma boltzmannWeight_pos (β : ℝ) (p : ℕ+) :
+    0 < boltzmannWeight β p := by
+  unfold boltzmannWeight
+  exact Real.rpow_pos_of_pos (by exact_mod_cast p.pos) _
+
+lemma boltzmannWeight_ne_zero (β : ℝ) (p : ℕ+) :
+    boltzmannWeight β p ≠ 0 :=
+  (boltzmannWeight_pos β p).ne'
 
 /- ## The Fredholm Determinants — Character Table of U_res -/
 

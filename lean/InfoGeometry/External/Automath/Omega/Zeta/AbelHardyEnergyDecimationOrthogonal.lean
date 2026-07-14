@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.AbelPolyphaseReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.AbelPolyphaseReconstruction
 
 namespace Omega.Zeta
 

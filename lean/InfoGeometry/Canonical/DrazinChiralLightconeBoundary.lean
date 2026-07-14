@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.DrazinProjectiveCliffordBridge
+import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.FiniteInvariantTransport
 
 /-!
@@ -69,24 +69,6 @@ theorem drazin_power_annihilates_defect_lane
       IsDrazinInverse.complementaryProjection a b * a ^ k = 0 :=
   ⟨IsDrazinInverse.power_mul_complementaryProjection_eq_zero h,
     IsDrazinInverse.complementaryProjection_mul_power_eq_zero h⟩
-
-/-- The Drazin defect projector packet: idempotent, orthogonal, and complementary. -/
-theorem drazin_defect_projector_packet
-    (h : IsDrazinInverse a b k) :
-    IsDrazinInverse.complementaryProjection a b *
-        IsDrazinInverse.complementaryProjection a b =
-      IsDrazinInverse.complementaryProjection a b ∧
-    IsDrazinInverse.projection a b *
-        IsDrazinInverse.complementaryProjection a b = 0 ∧
-    IsDrazinInverse.complementaryProjection a b *
-        IsDrazinInverse.projection a b = 0 ∧
-    IsDrazinInverse.projection a b +
-        IsDrazinInverse.complementaryProjection a b = (1 : R) := by
-  exact
-    ⟨drazin_defect_projector_idempotent h,
-     IsDrazinInverse.projection_mul_complementaryProjection h,
-     IsDrazinInverse.complementaryProjection_mul_projection h,
-     IsDrazinInverse.projection_add_complementaryProjection⟩
 
 end DrazinDefect
 

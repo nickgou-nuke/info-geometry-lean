@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
-import Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
 
 namespace Omega.Zeta
 

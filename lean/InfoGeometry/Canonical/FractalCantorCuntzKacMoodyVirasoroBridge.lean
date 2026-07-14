@@ -105,7 +105,7 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
 
   /-- The prime-mode spinor square-root dictionary. -/
   boost :
-    PrimeSpinorSquareRootPacket ℕ ℝ Op Op
+    PrimeSpinorSquareRootPacket ℕ ℝ
 
   /-- The canonical Majorana lift packet. -/
   majorana :

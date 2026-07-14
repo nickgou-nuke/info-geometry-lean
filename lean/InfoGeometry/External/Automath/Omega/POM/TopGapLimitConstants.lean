@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberSpectrum
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 /-!
 # Top spectral gap odd/even limit constants

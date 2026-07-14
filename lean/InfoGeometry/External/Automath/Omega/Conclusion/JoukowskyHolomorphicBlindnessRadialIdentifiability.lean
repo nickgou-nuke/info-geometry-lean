@@ -1,4 +1,4 @@
-import Omega.GU.RadialQuadraticIdentifiability
+import InfoGeometry.External.Automath.Omega.GU.RadialQuadraticIdentifiability
 
 namespace Omega.Conclusion
 

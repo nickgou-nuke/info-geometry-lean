@@ -5,8 +5,10 @@ namespace InfoGeometry.Categorical.FibonacciUniversalityColimit
 
 open InfoGeometry.Categorical.FibonacciBraidDirectLimit
 open InfoGeometry.Categorical.FibonacciBraidedTowerCone
+open InfoGeometry.Topological.FibonacciAnyons
 
-/-- The Fibonacci braid direct-limit Artin relation is the universality-colimit readout. -/
+/-- The finite-stage Fibonacci braid Artin relation transports to the algebraic
+direct-limit matrix images. -/
 theorem braid_limit_artin_relation_of_finite_stage
     {Stage : Nat → Type _} [∀ n : Nat, CommRing (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
@@ -21,7 +23,8 @@ theorem braid_limit_artin_relation_of_finite_stage
         limitBMatrix bond n q qInv τ sqrtτ :=
   limit_artin_relation_of_finite_stage bond n q qInv τ sqrtτ hArtin
 
-/-- Zorn maximal support is the colimit-side order-theoretic witness used by the tower lane. -/
+/-- Order-theoretic maximal-support readout for the tower lane, obtained from
+chain-union closure and nonemptiness. -/
 theorem zorn_maximal_support_readout
     (family : Set (Set ℕ))
     (chain_sUnion_mem : ∀ c ⊆ family, IsChain (· ⊆ ·) c → ⋃₀ c ∈ family)

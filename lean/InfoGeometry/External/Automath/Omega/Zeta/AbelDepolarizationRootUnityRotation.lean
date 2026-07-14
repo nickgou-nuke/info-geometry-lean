@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Field.GeomSum
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
+import InfoGeometry.External.Automath.Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
 
 namespace Omega.Zeta
 

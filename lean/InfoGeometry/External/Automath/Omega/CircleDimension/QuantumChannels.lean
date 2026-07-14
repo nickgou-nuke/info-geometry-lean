@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.QuantumEventProjections
+import InfoGeometry.External.Automath.Omega.CircleDimension.QuantumEventProjections
 
 namespace Omega.CircleDimension
 

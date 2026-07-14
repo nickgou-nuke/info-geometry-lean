@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.NoncontractibleLossMod6Explicit
-import Omega.Folding.FoldBinMaxFiberExponent
+import InfoGeometry.External.Automath.Omega.Conclusion.NoncontractibleLossMod6Explicit
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinMaxFiberExponent
 
 open Filter Topology
 open scoped goldenRatio

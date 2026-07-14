@@ -1,6 +1,6 @@
-import Omega.RecursiveAddressing.ObserverIndexedCommonRefinementDecidability
-import Omega.RecursiveAddressing.ObserverIndexedNoRetraction
-import Omega.RecursiveAddressing.ObserverIndexedValuePreservingNoCreation
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedCommonRefinementDecidability
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedNoRetraction
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedValuePreservingNoCreation
 
 namespace Omega.RecursiveAddressing
 

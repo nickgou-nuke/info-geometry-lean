@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Omega.Folding.OracleCapacityClosedForm
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
 
 namespace Omega.Folding
 

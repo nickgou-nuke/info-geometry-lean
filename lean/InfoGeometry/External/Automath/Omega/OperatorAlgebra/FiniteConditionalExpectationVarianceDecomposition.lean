@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FiniteConditionalExpectationPythagoras
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FiniteConditionalExpectationPythagoras
 
 open scoped BigOperators
 

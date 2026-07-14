@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
 
 namespace Omega.POM
 

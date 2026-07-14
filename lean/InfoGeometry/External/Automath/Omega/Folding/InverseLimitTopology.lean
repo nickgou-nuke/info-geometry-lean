@@ -1,6 +1,6 @@
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Topology.MetricSpace.PiNat
-import Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
 
 namespace Omega.X
 

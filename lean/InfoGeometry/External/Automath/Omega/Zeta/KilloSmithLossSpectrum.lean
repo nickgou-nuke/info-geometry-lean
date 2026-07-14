@@ -1,5 +1,5 @@
-import Omega.Zeta.SmithEntropyInvertsVpInvariants
-import Omega.Zeta.XiSmithLossMinimalBranchRegister
+import InfoGeometry.External.Automath.Omega.Zeta.SmithEntropyInvertsVpInvariants
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossMinimalBranchRegister
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.CircleDimension.ComovingDefectDeltaBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.ComovingDefectDeltaBound
 
 namespace Omega.Zeta.ComovingEnergyDeltaBound
 

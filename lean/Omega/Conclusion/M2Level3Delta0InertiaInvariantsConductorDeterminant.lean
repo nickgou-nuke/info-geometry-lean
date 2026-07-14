@@ -98,7 +98,8 @@ invariant dimensions, and the determinant is `1` because the nontrivial eigenval
 conjugate pairs. -/
 theorem paper_conclusion_m2_level3_delta0_inertia_invariants_conductor_determinant :
     ConclusionM2Level3Delta0InertiaInvariantsConductorDeterminantStatement := by
-  have _hOrder6 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys ⟨()⟩
+  have hchar := paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+    ⟨by constructor <;> native_decide⟩
   rcases paper_conclusion_m2_level3_delta0_inertia_siegel_charpoly with
     ⟨_, hSiegelTraceV24, hSiegelTraceV15, _, _⟩
   have hSiegelV24 :

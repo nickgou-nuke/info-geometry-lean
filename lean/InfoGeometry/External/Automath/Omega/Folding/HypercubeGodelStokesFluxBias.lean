@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryL1BiasMonotone
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryL1BiasMonotone
 
 namespace Omega.Folding
 

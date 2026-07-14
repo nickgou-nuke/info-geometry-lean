@@ -48,7 +48,7 @@ structure DrazinGreenData
   P_reg : Obs
   P_harm : Obs
   index : ℕ
-  drazin_True : IsDrazinInverse L LD index
+  hDrazin : IsDrazinInverse L LD index
   P_reg_def : P_reg = L * LD
   P_harm_def : P_harm = 1 - P_reg
   P_reg_self_adjoint : star P_reg = P_reg
@@ -64,7 +64,7 @@ variable (G : DrazinGreenData Obs)
 theorem P_reg_idempotent :
     G.P_reg * G.P_reg = G.P_reg := by
   rw [G.P_reg_def]
-  exact IsDrazinInverse.projection_is_idempotent G.drazin_True
+  exact IsDrazinInverse.projection_is_idempotent G.hDrazin
 
 /-- The harmonic/generalized-zero projector is idempotent. -/
 @[rep_depth operator]
@@ -72,13 +72,13 @@ theorem P_harm_idempotent :
     G.P_harm * G.P_harm = G.P_harm := by
   rw [G.P_harm_def, G.P_reg_def]
   simpa [IsDrazinInverse.complementaryProjection, IsDrazinInverse.projection] using
-    IsDrazinInverse.complementaryProjection_is_idempotent G.drazin_True
+    IsDrazinInverse.complementaryProjection_is_idempotent G.hDrazin
 
 /-- The Drazin Green operator commutes with the frequency operator on the core. -/
 @[rep_depth operator]
 theorem L_mul_LD_eq_LD_mul_L :
     G.L * G.LD = G.LD * G.L :=
-  G.drazin_True.comm
+  G.hDrazin.comm
 
 end DrazinGreenData
 
@@ -182,7 +182,7 @@ def toDrazinFrequencyData
   LD := G.LD
   harmonicProj := G.P_harm
   index := G.index
-  drazin_True := G.drazin_True
+  hDrazin := G.hDrazin
   harmonicProj_def := by
     rw [G.P_harm_def, G.P_reg_def]
   harmonic_self_adjoint := G.P_harm_self_adjoint

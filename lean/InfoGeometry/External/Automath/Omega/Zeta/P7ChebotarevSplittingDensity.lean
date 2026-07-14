@@ -3,7 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
 
 namespace Omega.Zeta
 

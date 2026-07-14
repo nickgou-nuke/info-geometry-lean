@@ -1,5 +1,5 @@
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
-import Omega.Zeta.GaugeGroupTripleDecomp
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.Zeta.GaugeGroupTripleDecomp
 
 namespace Omega.Conclusion
 

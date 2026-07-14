@@ -1,7 +1,7 @@
-import Omega.Conclusion.BinfoldEscortBlackwellEquivalence
-import Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
-import Omega.Conclusion.BinfoldMellinEscortSemigroup
-import Omega.Conclusion.Chi2RecoversFullPowerDivergenceFamily
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortBlackwellEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldMellinEscortSemigroup
+import InfoGeometry.External.Automath.Omega.Conclusion.Chi2RecoversFullPowerDivergenceFamily
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.MultiscaleRoughReadoutContinuity
-import Omega.EA.RoughVisibleDifferenceQuotientCertificate
+import InfoGeometry.External.Automath.Omega.EA.MultiscaleRoughReadoutContinuity
+import InfoGeometry.External.Automath.Omega.EA.RoughVisibleDifferenceQuotientCertificate
 
 namespace Omega.EA
 

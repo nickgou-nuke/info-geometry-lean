@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.Window6LieTraceless
-import Omega.GU.Window6PushEnvelopeCertificateUpgrade
+import InfoGeometry.External.Automath.Omega.GU.Window6LieTraceless
+import InfoGeometry.External.Automath.Omega.GU.Window6PushEnvelopeCertificateUpgrade
 
 namespace Omega.GU
 

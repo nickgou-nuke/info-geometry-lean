@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.StiffZeroHankelGoodReductionDimStability
+import InfoGeometry.External.Automath.Omega.POM.StiffZeroHankelGoodReductionDimStability
 
 namespace Omega.POM
 

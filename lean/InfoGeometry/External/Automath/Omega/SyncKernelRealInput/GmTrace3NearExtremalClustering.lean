@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.GMTrace3SpectralNormExtremal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMTrace3SpectralNormExtremal
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 import Mathlib.Tactic
-import Omega.POM.KLDefectIdentity
+import InfoGeometry.External.Automath.Omega.POM.KLDefectIdentity
 
 namespace Omega.POM
 

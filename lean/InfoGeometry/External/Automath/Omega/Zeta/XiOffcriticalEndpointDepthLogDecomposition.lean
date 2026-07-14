@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.OffcriticalQuadraticRadialCompression
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalQuadraticRadialCompression
 
 namespace Omega.Zeta
 

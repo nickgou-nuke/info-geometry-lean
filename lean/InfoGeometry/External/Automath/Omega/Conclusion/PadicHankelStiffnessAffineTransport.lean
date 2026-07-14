@@ -1,4 +1,4 @@
-import Omega.POM.ConclusionHankelShiftPadicPrecisionSlope
+import InfoGeometry.External.Automath.Omega.POM.ConclusionHankelShiftPadicPrecisionSlope
 
 namespace Omega.Conclusion
 

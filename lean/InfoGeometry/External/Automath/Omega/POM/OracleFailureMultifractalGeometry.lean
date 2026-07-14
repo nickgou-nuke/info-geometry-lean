@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Bounds.Basic
 import Mathlib.Tactic
-import Omega.POM.OracleFailureExponentDualityFromDoubleLdp
-import Omega.POM.OracleIwIuAffineTilt
+import InfoGeometry.External.Automath.Omega.POM.OracleFailureExponentDualityFromDoubleLdp
+import InfoGeometry.External.Automath.Omega.POM.OracleIwIuAffineTilt
 
 namespace Omega.POM
 

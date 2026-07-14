@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
 
 namespace Omega.OperatorAlgebra
 

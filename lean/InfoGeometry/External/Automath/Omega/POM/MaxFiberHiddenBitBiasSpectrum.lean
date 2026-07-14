@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Fibonacci
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.MaxFiberAchieversHiddenBitImbalance
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberAchieversHiddenBitImbalance
 
 open Filter
 open scoped Topology goldenRatio

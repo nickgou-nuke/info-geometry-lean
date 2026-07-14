@@ -21,7 +21,19 @@ structure CrystalAttentionHead (H : Type*) [NormedAddCommGroup H] [InnerProductS
                   ContinuousLinearMap.id ℂ H
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-variable (cah : CrystalAttentionHead H)
+
+/-- Extracts the attention-matrix expansion from the head. -/
+lemma attention_expansion (cah : CrystalAttentionHead H) :
+    cah.Attn_Op = cah.mod_sys.S_L ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_L) +
+      cah.mod_sys.S_R ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_R) :=
+  cah.h_lossless_attn
+
+/-- Extracts the Cuntz partition-of-unity expansion from the head. -/
+lemma cuntz_unity_expansion (cah : CrystalAttentionHead H) :
+    cah.mod_sys.S_L ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_L) +
+      cah.mod_sys.S_R ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_R) =
+        ContinuousLinearMap.id ℂ H :=
+  cah.h_cuntz_unity
 
 /--
 THEOREM: Attention Matrix Scale-Invariance.
@@ -29,13 +41,8 @@ Constructively proves that under the Cuntz partition of unity,
 the topological attention operator strictly commutes with the
 global identity, preventing semantic degradation or vector leakage.
 -/
-theorem topological_attention_is_invariant :
+theorem topological_attention_is_invariant (cah : CrystalAttentionHead H) :
     cah.Attn_Op = ContinuousLinearMap.id ℂ H := by
-  -- Extract the foundational Cuntz relations from the underlying modular system
-  have h_unity : cah.mod_sys.S_L ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_L) +
-                 cah.mod_sys.S_R ∘L (ContinuousLinearMap.adjoint cah.mod_sys.S_R) =
-                 ContinuousLinearMap.id ℂ H := by
-    exact cah.h_cuntz_unity
-  rw [cah.h_lossless_attn, h_unity]
+  rw [attention_expansion cah, cuntz_unity_expansion cah]
 
 end InfoGeometry.Cognitive.CrystalAttention

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.JoukowskyGodelLeadingCoeffRigidity
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelLeadingCoeffRigidity
 
 namespace Omega.Zeta
 

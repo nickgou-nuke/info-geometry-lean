@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Tactic
-import Omega.POM.KLPythagorasTower
+import InfoGeometry.External.Automath.Omega.POM.KLPythagorasTower
 
 namespace Omega.POM
 

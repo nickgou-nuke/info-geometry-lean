@@ -157,9 +157,9 @@ def amariChentsovTensor (p : Θ → InfoGeometry.FinProb α) : Prop :=
 structure alphaConnection (p : Θ → InfoGeometry.FinProb α) (αc : ℝ) where
   /-- Reference connection tensor `Γ⁰`. -/
   Gamma0 : ConnectionTensor Θ α
-  /-- Fiberwise Fisher normalization witness. -/
+  /-- Fiberwise Fisher normalization proof. -/
   fisherCompat : fisherMetric p
-  /-- Fiberwise Chentsov nonnegativity witness. -/
+  /-- Fiberwise Chentsov nonnegativity proof. -/
   chentsovCompat : amariChentsovTensor p
 
 namespace alphaConnection
@@ -180,8 +180,8 @@ noncomputable def mkFromReference
 noncomputable def Gamma (A : alphaConnection p αc) : ConnectionTensor Θ α :=
   alphaConnectionTensor A.Gamma0 p αc
 
-@[simp] lemma deformation_True (A : alphaConnection p αc) :
-    A.Gamma = alphaConnectionTensor A.Gamma0 p αc := rfl
+  @[simp] lemma Gamma_eq_alphaConnectionTensor (A : alphaConnection p αc) :
+      A.Gamma = alphaConnectionTensor A.Gamma0 p αc := rfl
 
 /-- Change `α` to `-α` while preserving the same reference tensor and compatibilities. -/
 noncomputable def dual (A : alphaConnection p αc) : alphaConnection p (-αc) where

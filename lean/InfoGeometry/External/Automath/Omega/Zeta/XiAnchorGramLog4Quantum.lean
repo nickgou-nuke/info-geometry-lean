@@ -1,4 +1,4 @@
-import Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
 
 namespace Omega.Zeta
 

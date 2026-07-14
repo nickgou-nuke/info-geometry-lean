@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.AbelMertensConstantUniversal
-import Omega.SyncKernelWeighted.MuPochhammerDecomposition
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.AbelMertensConstantUniversal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerDecomposition
 
 namespace Omega.SyncKernelWeighted
 

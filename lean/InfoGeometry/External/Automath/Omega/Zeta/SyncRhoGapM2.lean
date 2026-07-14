@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Zeta.CompletionEndpointJetDiffusion
+import InfoGeometry.External.Automath.Omega.Zeta.CompletionEndpointJetDiffusion
 
 namespace Omega.Zeta
 

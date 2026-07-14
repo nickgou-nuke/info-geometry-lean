@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldInfoNCELossSpectrumIdentifiability
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCELossSpectrumIdentifiability
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiJensenSingleRadiusBandExclusion
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenSingleRadiusBandExclusion
 
 namespace Omega.Zeta
 

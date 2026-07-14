@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateAcceptRefreshSeparationExact
-import Omega.POM.DiagonalRateAcceptRefreshSSTPGF
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSeparationExact
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSSTPGF
 
 namespace Omega.POM
 

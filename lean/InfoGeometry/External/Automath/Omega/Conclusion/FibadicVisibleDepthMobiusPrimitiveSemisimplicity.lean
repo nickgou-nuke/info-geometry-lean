@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicGcdConvolutionDiagonalization
-import Omega.Conclusion.FibadicVisibleDepthMobiusCount
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicGcdConvolutionDiagonalization
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicVisibleDepthMobiusCount
 
 namespace Omega.Conclusion
 

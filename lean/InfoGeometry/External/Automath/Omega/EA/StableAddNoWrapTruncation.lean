@@ -1,4 +1,4 @@
-import Omega.EA.AddressNaturality
+import InfoGeometry.External.Automath.Omega.EA.AddressNaturality
 
 namespace Omega.EA.StableAddNoWrapTruncation
 

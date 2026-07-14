@@ -1,13 +1,9 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3Incidence24IdentificationKillMinus4
-import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
-import Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3Incidence24IdentificationKillMinus4
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
 
 namespace Omega.Conclusion
-
-/-- Concrete wrapper datum for the audited order-`6` flag-local-system splitting package. -/
-structure conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data where
-  conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_witness : Unit := ()
 
 /-- The common summand is the image `QQ ⊕ V24` of the incidence map. -/
 abbrev conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_common_block :=
@@ -39,6 +35,25 @@ def conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_steinberg
 noncomputable def conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_steinberg_charpoly :
     Polynomial ℤ :=
   conclusion_m2_level3_xi_delta0_order6_charpolys_St
+
+/-- Concrete arithmetic witness for the order-`6` flag-local-system splitting package. -/
+def conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_certificate : Prop :=
+  conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_steinberg_rank = 81 ∧
+    conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_common_rank = 25 ∧
+    conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_klingen_rank = 15 ∧
+    conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_siegel_rank = 15
+
+/-- Concrete wrapper datum for the audited order-`6` flag-local-system splitting package. -/
+structure conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data where
+  conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_witness :
+    conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_certificate := by
+      constructor
+      · norm_num [conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_steinberg_rank]
+      · constructor
+        · norm_num [conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_common_rank]
+        · constructor
+          · norm_num [conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_klingen_rank]
+          · norm_num [conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_siegel_rank]
 
 /-- Concrete paper-facing formulation of the order-`6` orthogonal splitting wrapper. -/
 def conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_statement
@@ -79,7 +94,8 @@ theorem paper_conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6
     conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_statement D := by
   rcases paper_conclusion_m2_level3_incidence_24_identification_kill_minus4 with
     ⟨_, _, hker, hcoker, himage, hV24⟩
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      (D := ⟨by constructor <;> native_decide⟩) with
     ⟨_, _, _, _, hV15KlChar, hV15SiChar, _, _, _⟩
   rcases paper_conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly with
     ⟨_, _, _, _, _, _, hminusKl, _, hminusSi, _, _, _⟩

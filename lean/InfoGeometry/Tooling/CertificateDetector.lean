@@ -8,8 +8,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.SelfDualNormalConeBridge
 
-set_option linter.dupNamespace false
-
 open InfoGeometry.Projective
 
 /-
@@ -64,16 +62,19 @@ variable {E Functional : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable (S : StandardFormNormalConeLite (E := E) Functional)
 
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
 @[rep_depth operator]
 theorem coneVector_mem_naturalCone (ω : Functional) :
 S.coneVector ω ∈ S.naturalCone :=
 S.coneVector_mem ω
 
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
 @[rep_depth operator]
 theorem J_fixes_coneVector (ω : Functional) :
 S.J (S.coneVector ω) = S.coneVector ω :=
 S.J_fixes_naturalCone (S.coneVector_mem ω)
 
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem outward_normal_cone
 (ξ : E)
@@ -85,6 +86,7 @@ convexOutwardNormalCone S.naturalCone ξ = outwardConeOrthogonal S.naturalCone �
 ext η
 exact hnormal η
 
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem inward_normal_cone
 (ξ : E)
@@ -96,6 +98,7 @@ convexInwardNormalCone S.naturalCone ξ = inwardConeOrthogonal S.naturalCone ξ 
 ext η
 exact hnormal η
 
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem outwardNormalCone_coneVector
 (ω : Functional)
@@ -107,6 +110,7 @@ convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
 outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
 S.outward_normal_cone (S.coneVector ω) hnormal
 
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector
 (ω : Functional)
@@ -121,7 +125,7 @@ S.inward_normal_cone (S.coneVector ω) hnormal
 end StandardFormNormalConeLite
 
 @[rep_depth operator]
-structure SelfDualNormalConeBridge
+structure Bridge
 (Functional : Type*) where
 selfDualCone : SelfDualCone E
 standardForm :
@@ -129,11 +133,11 @@ StandardFormNormalConeLite (E := E) Functional
 naturalCone_eq_selfDualCone :
 standardForm.naturalCone = selfDualCone.cone
 
-namespace SelfDualNormalConeBridge
+namespace Bridge
 
 variable {E Functional : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable (B : SelfDualNormalConeBridge (E := E) (Functional := Functional))
+variable (B : Bridge (E := E) (Functional := Functional))
 
 @[rep_depth operator]
 theorem coneVector_mem_selfDualCone (ω : Functional) :
@@ -176,7 +180,7 @@ def positiveOrthant_selfDual
 SelfDualCone (EuclideanSpace ℝ α) :=
 positiveOrthant (α := α)
 
-end SelfDualNormalConeBridge
+end Bridge
 
 end Core
 

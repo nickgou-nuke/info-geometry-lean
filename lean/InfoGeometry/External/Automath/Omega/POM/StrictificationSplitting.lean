@@ -1,4 +1,4 @@
-import Omega.POM.CountertermAnomalyCancellation
+import InfoGeometry.External.Automath.Omega.POM.CountertermAnomalyCancellation
 
 namespace Omega.POM
 

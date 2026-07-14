@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.S5GaloisArithmetic
-import Omega.POM.S5TwoSubsetDegree10
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.POM.S5TwoSubsetDegree10
 
 namespace Omega.POM
 

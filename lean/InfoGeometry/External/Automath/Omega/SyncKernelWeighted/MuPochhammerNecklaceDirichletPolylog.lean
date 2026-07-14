@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Omega.Zeta.NecklaceCorrection
+import InfoGeometry.External.Automath.Omega.Zeta.NecklaceCorrection
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,5 +1,5 @@
 import Mathlib.GroupTheory.Perm.Sign
-import Omega.Folding.BinFoldGaugeM6
+import InfoGeometry.External.Automath.Omega.Folding.BinFoldGaugeM6
 
 namespace Omega.Folding
 

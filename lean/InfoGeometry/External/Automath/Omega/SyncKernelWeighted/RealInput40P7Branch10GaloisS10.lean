@@ -1,7 +1,7 @@
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40P7HyperellipticGenus4
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40P7HyperellipticGenus4
 
 namespace Omega.SyncKernelWeighted
 

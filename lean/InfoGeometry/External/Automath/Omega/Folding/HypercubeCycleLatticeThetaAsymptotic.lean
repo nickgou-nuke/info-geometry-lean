@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GraphCycleLatticeThetaModularInversion
-import Omega.SPG.HypercubeCycleLatticeGodelEllipsoidCounting
+import InfoGeometry.External.Automath.Omega.Folding.GraphCycleLatticeThetaModularInversion
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeCycleLatticeGodelEllipsoidCounting
 
 namespace Omega.Folding
 

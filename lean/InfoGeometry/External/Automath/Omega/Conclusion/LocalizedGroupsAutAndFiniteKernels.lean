@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
-import Omega.Zeta.LocalizedUnitAutomorphismGroupClassification
-import Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedUnitAutomorphismGroupClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
 
 namespace Omega.Conclusion
 

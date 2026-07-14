@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StarZ1sDualExtension
-import Omega.Conclusion.LeyangFiveBranchBodyAddressRademacherCumulants
-import Omega.Conclusion.SerrinWindow6MinimalAnomalyCertificate
+import InfoGeometry.External.Automath.Omega.CircleDimension.StarZ1sDualExtension
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangFiveBranchBodyAddressRademacherCumulants
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinWindow6MinimalAnomalyCertificate
 
 namespace Omega.Conclusion
 

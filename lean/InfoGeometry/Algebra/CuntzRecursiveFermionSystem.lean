@@ -1,4 +1,4 @@
-import InfoGeometry.Algebra.KawamuraCuntzCAR
+import InfoGeometry.Algebra
 
 namespace InfoGeometry.Algebra.CuntzRecursiveFermionSystem
 

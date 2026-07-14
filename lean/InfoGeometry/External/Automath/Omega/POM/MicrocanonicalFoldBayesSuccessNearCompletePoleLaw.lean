@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldBayesSuccessNearCompleteUniform
-import Omega.POM.MicrocanonicalFoldDominantPoleAsymptotics
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldBayesSuccessNearCompleteUniform
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldDominantPoleAsymptotics
 
 namespace Omega.POM
 

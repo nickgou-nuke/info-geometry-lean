@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberReconstructionRadiusCenterAntipodes
-import Omega.POM.PathIndSetPolyClosed
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionRadiusCenterAntipodes
+import InfoGeometry.External.Automath.Omega.POM.PathIndSetPolyClosed
 
 namespace Omega.Folding
 

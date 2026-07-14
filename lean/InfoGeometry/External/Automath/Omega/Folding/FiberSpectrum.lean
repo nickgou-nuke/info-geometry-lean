@@ -1,4 +1,4 @@
-import Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
 
 /-! ### Fiber spectrum: sorted distinct fiber multiplicities
 

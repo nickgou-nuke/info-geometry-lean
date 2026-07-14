@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldBayesSuccessNminusT
-import Omega.POM.MicrocanonicalFoldClassCount
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldBayesSuccessNminusT
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldClassCount
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
-import Omega.Conclusion.Period3FiberExactMultiplicity
-import Omega.Conclusion.SharpFiberCnfSharpPCompleteParsimonious
+import InfoGeometry.External.Automath.Omega.Conclusion.Period3FiberExactMultiplicity
+import InfoGeometry.External.Automath.Omega.Conclusion.SharpFiberCnfSharpPCompleteParsimonious
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.CanonicalSliceExactFixedpointCount
+import InfoGeometry.External.Automath.Omega.Conclusion.CanonicalSliceExactFixedpointCount
 
 namespace Omega.Zeta
 

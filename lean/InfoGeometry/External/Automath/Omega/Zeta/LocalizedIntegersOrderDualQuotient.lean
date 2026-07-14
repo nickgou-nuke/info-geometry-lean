@@ -1,5 +1,5 @@
-import Omega.CircleDimension.SolenoidOverTMorphismClassification
-import Omega.Zeta.LocalizedIntegersHomClassification
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidOverTMorphismClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersHomClassification
 
 namespace Omega.Zeta
 

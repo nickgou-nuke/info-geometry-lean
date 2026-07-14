@@ -1,3 +1,8 @@
+> Status: `verified active surface`
+> Audited: 2026-07-09
+> Note: Maintained against the live code surface.
+> See: [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 # The Tripartite Hypercomplex Synthesis: K-A-N and Möbius Flow
 
 This document explicitly records the exact mathematical alignment between generalized hypercomplex number systems, spacetime algebraic signatures, and topological flows formalized within the repository.

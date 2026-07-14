@@ -1,4 +1,4 @@
-import Omega.GU.Window6LieEnvelopeClosure
+import InfoGeometry.External.Automath.Omega.GU.Window6LieEnvelopeClosure
 
 namespace Omega.GU
 

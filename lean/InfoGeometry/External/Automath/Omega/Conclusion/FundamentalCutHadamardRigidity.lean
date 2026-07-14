@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Graph.FlowLatticeGramDeterminantTreeWeight
-import Omega.SPG.KirchhoffFundamentalCutCapacityHadamard
+import InfoGeometry.External.Automath.Omega.Graph.FlowLatticeGramDeterminantTreeWeight
+import InfoGeometry.External.Automath.Omega.SPG.KirchhoffFundamentalCutCapacityHadamard
 
 namespace Omega.Conclusion
 

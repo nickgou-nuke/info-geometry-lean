@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.A4TNewmanShortElimination
+import InfoGeometry.External.Automath.Omega.POM.A4TNewmanShortElimination
 
 namespace Omega.POM
 

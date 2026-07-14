@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermondeFiniteBlaschke
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermondeFiniteBlaschke
 
 namespace Omega.Zeta
 

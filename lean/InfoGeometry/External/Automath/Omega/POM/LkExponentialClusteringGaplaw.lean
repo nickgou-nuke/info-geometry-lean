@@ -1,4 +1,4 @@
-import Omega.POM.GreenKernelEntries
+import InfoGeometry.External.Automath.Omega.POM.GreenKernelEntries
 
 namespace Omega.POM
 

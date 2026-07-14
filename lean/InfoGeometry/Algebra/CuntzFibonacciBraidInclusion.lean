@@ -1,5 +1,6 @@
 import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Categorical.FibonacciUniversalityColimit
+import InfoGeometry.Canonical.YangBaxterProof
 
 open Matrix
 open Complex
@@ -11,16 +12,146 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
 
+private lemma tau_ne_zero : τ ≠ 0 := by
+  intro h
+  have hc : τ ^ 2 + τ = 1 := tau_sq_add_tau
+  rw [h] at hc
+  norm_num at hc
+
+private lemma s_ne_zero : s ≠ 0 := by
+  intro h
+  have hτ : τ = 0 := by
+    rw [← s_sq_eq_tau, h]
+    norm_num
+  exact tau_ne_zero hτ
+
+private lemma q_sq_ne_neg_one : q ^ 2 ≠ -1 := by
+  intro h
+  have h3 : q ^ 3 = -q := by
+    calc
+      q ^ 3 = q * q ^ 2 := by ring
+      _ = q * (-1) := by rw [h]
+      _ = -q := by ring
+  have h4 : q ^ 4 = 1 := by
+    calc
+      q ^ 4 = (q ^ 2) * (q ^ 2) := by ring
+      _ = (-1) * (-1) := by rw [h]
+      _ = 1 := by ring
+  have hc : q^4 - q^3 + q^2 - q + 1 = 0 := cyclotomic_relation
+  rw [h4, h3, h] at hc
+  norm_num at hc
+
+private lemma q_plus_q_cubed_ne_zero : q + q ^ 3 ≠ 0 := by
+  intro hsum
+  have hprod : q * (1 + q ^ 2) = 0 := by
+    calc
+      q * (1 + q ^ 2) = q + q ^ 3 := by ring
+      _ = 0 := hsum
+  rcases mul_eq_zero.mp hprod with hq | hfac
+  · exact (Complex.exp_ne_zero _) hq
+  · have hq2 : q ^ 2 = -1 := by
+      calc
+        q ^ 2 = (1 + q ^ 2) - 1 := by ring
+        _ = 0 - 1 := by rw [hfac]
+        _ = -1 := by ring
+    exact q_sq_ne_neg_one hq2
+
+/-- The Fibonacci generators `R` and `B = F R F` do not commute. -/
+lemma fibonacci_generators_noncommute : R * B ≠ B * R := by
+  intro h
+  have h01 := congr_fun (congr_fun h (0 : Fin 2)) (1 : Fin 2)
+  simp [R, B, F, Matrix.mul_apply, Fin.sum_univ_two] at h01
+  ring_nf at h01
+  have hmove :
+      -((q ^ 4)⁻¹ * τ * s * q ^ 3) + (q ^ 4)⁻¹ ^ 2 * τ * s -
+          ((q ^ 4)⁻¹ * τ * s * q ^ 3 - τ * s * q ^ 6) = 0 := by
+    exact sub_eq_zero.mpr h01
+  have hzero : τ * s * (q + q ^ 3) ^ 2 = 0 := by
+    calc
+      τ * s * (q + q ^ 3) ^ 2 =
+          -((q ^ 4)⁻¹ * τ * s * q ^ 3) + (q ^ 4)⁻¹ ^ 2 * τ * s -
+            ((q ^ 4)⁻¹ * τ * s * q ^ 3 - τ * s * q ^ 6) := by
+            rw [q_inv_four_eq_neg_q]
+            ring
+      _ = 0 := hmove
+  have hprod := mul_eq_zero.mp hzero
+  rcases hprod with hτs | hqq
+  · have hprodτs := mul_eq_zero.mp hτs
+    rcases hprodτs with hτ | hs
+    · exact tau_ne_zero hτ
+    · exact s_ne_zero hs
+  · exact q_plus_q_cubed_ne_zero (sq_eq_zero_iff.mp hqq)
+
 /-- The canonical embedding of `M_n(ℂ)` into the Cuntz algebra `O_n`. -/
 def matrixToCuntz (n : ℕ) (M : Matrix (Fin n) (Fin n) ℂ) : CuntzAlg n :=
   ∑ i : Fin n, ∑ j : Fin n, (algebraMap ℂ (CuntzAlg n) (M i j)) * (cuntzS n i * cuntzSdag n j)
 
+lemma matrixToCuntz_mul_term_comm (n : ℕ) (i k l j : Fin n) (M N : Matrix (Fin n) (Fin n) ℂ) :
+    (algebraMap ℂ (CuntzAlg n) (M i k) * (cuntzS n i * cuntzSdag n k)) *
+      (algebraMap ℂ (CuntzAlg n) (N l j) * (cuntzS n l * cuntzSdag n j)) =
+    algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+      (cuntzS n i * (cuntzSdag n k * cuntzS n l) * cuntzSdag n j) := by
+  have h1 : (cuntzS n i * cuntzSdag n k) * algebraMap ℂ (CuntzAlg n) (N l j) =
+      algebraMap ℂ (CuntzAlg n) (N l j) * (cuntzS n i * cuntzSdag n k) :=
+    (Algebra.commutes (N l j) (cuntzS n i * cuntzSdag n k)).symm
+  calc
+    (algebraMap ℂ (CuntzAlg n) (M i k) * (cuntzS n i * cuntzSdag n k)) *
+      (algebraMap ℂ (CuntzAlg n) (N l j) * (cuntzS n l * cuntzSdag n j))
+      = algebraMap ℂ (CuntzAlg n) (M i k) * ((cuntzS n i * cuntzSdag n k) *
+          algebraMap ℂ (CuntzAlg n) (N l j)) * (cuntzS n l * cuntzSdag n j) := by
+        simp only [mul_assoc]
+    _ = algebraMap ℂ (CuntzAlg n) (M i k) * (algebraMap ℂ (CuntzAlg n) (N l j) *
+          (cuntzS n i * cuntzSdag n k)) * (cuntzS n l * cuntzSdag n j) := by
+        rw [h1]
+    _ = (algebraMap ℂ (CuntzAlg n) (M i k) * algebraMap ℂ (CuntzAlg n) (N l j)) *
+          (cuntzS n i * cuntzSdag n k * (cuntzS n l * cuntzSdag n j)) := by
+        simp only [mul_assoc]
+    _ = algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+          (cuntzS n i * (cuntzSdag n k * cuntzS n l) * cuntzSdag n j) := by
+        rw [← map_mul]
+        simp only [mul_assoc]
+
+lemma matrixToCuntz_mul_ite_term (n : ℕ) (i k l j : Fin n) (M N : Matrix (Fin n) (Fin n) ℂ) :
+    algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+      (cuntzS n i * (if k = l then (1 : CuntzAlg n) else 0) * cuntzSdag n j) =
+    if k = l then algebraMap ℂ (CuntzAlg n) (M i k * N l j) * (cuntzS n i * cuntzSdag n j) else 0 := by
+  split_ifs
+  · simp
+  · simp
+
 /-- The embedding is an algebra homomorphism (preserves multiplication). -/
 theorem matrixToCuntz_mul (n : ℕ) (M N : Matrix (Fin n) (Fin n) ℂ) :
     matrixToCuntz n (M * N) = matrixToCuntz n M * matrixToCuntz n N := by
-  -- Follows from expanding the double sums and applying `cuntzSdag n k * cuntzS n l = δ_{kl}`.
-  -- This algebraic verification is deferred.
-  sorry
+  symm
+  calc
+    matrixToCuntz n M * matrixToCuntz n N
+      = (∑ i, ∑ k, algebraMap ℂ (CuntzAlg n) (M i k) * (cuntzS n i * cuntzSdag n k)) *
+        (∑ l, ∑ j, algebraMap ℂ (CuntzAlg n) (N l j) * (cuntzS n l * cuntzSdag n j)) := rfl
+    _ = ∑ i, ∑ k, ∑ l, ∑ j, (algebraMap ℂ (CuntzAlg n) (M i k) * (cuntzS n i * cuntzSdag n k)) *
+        (algebraMap ℂ (CuntzAlg n) (N l j) * (cuntzS n l * cuntzSdag n j)) := by
+      simp_rw [Finset.sum_mul, Finset.mul_sum]
+    _ = ∑ i, ∑ k, ∑ l, ∑ j, algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+        (cuntzS n i * (cuntzSdag n k * cuntzS n l) * cuntzSdag n j) := by
+      simp_rw [matrixToCuntz_mul_term_comm]
+    _ = ∑ i, ∑ k, ∑ l, ∑ j, algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+        (cuntzS n i * (if k = l then (1 : CuntzAlg n) else 0) * cuntzSdag n j) := by
+      simp_rw [cuntz_orthogonality]
+    _ = ∑ i, ∑ k, ∑ l, ∑ j, if k = l then algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+        (cuntzS n i * cuntzSdag n j) else 0 := by
+      simp_rw [matrixToCuntz_mul_ite_term]
+    _ = ∑ i, ∑ k, ∑ j, ∑ l, if k = l then algebraMap ℂ (CuntzAlg n) (M i k * N l j) *
+        (cuntzS n i * cuntzSdag n j) else 0 := by
+      congr 1; ext i; congr 1; ext k; rw [Finset.sum_comm]
+    _ = ∑ i, ∑ k, ∑ j, algebraMap ℂ (CuntzAlg n) (M i k * N k j) *
+        (cuntzS n i * cuntzSdag n j) := by
+      congr 1; ext i; congr 1; ext k; congr 1; ext j
+      rw [Finset.sum_ite_eq]
+      simp
+    _ = ∑ i, ∑ j, ∑ k, algebraMap ℂ (CuntzAlg n) (M i k * N k j) *
+        (cuntzS n i * cuntzSdag n j) := by
+      congr 1; ext i; rw [Finset.sum_comm]
+    _ = matrixToCuntz n (M * N) := by
+      simp_rw [matrixToCuntz, Matrix.mul_apply, map_sum, Finset.sum_mul]
 
 /-- The canonical trace density map from the Braid limit generators into O_2. -/
 def fibonacciBraidCuntzRepresentation :

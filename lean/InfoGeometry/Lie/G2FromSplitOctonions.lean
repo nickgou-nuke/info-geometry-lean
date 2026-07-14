@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationWitness
+import InfoGeometry.Lie.RealSplitOctonionG2Classification
 
 /-!
 # G₂ from Split Octonions - Honest Computational Summary
@@ -64,6 +65,36 @@ theorem bracket_closed {D₁ D₂ : DerivSpace} (hD1 : IsDeriv D₁) (hD2 : IsDe
 abbrev g2_dim : ℕ := 14
 
 theorem dim_is_14 : g2_dim = 14 := rfl
+
+/-- The exact computer-algebra packet records the same `14` dimension value. -/
+theorem g2_dim_eq_packet_derivationNullity :
+    g2_dim =
+      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationNullity := by
+  rfl
+
+/-- The exact packet records the same `14` value as the basis count. -/
+theorem g2_dim_eq_packet_basisCount :
+    g2_dim =
+      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.basisCount := by
+  rfl
+
+/-- The exact packet records the same `14` value as the Killing rank. -/
+theorem g2_dim_eq_packet_killingRank :
+    g2_dim =
+      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingRank := by
+  rfl
+
+/-- Packet-level `14` readback summary for the split-octonion `𝔤₂` lane. -/
+theorem g2_dim_packet_summary :
+    g2_dim = 14 ∧
+      g2_dim =
+        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationNullity ∧
+      g2_dim =
+        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.basisCount ∧
+      g2_dim =
+        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingRank := by
+  exact ⟨rfl, g2_dim_eq_packet_derivationNullity, g2_dim_eq_packet_basisCount,
+    g2_dim_eq_packet_killingRank⟩
 
 theorem decomposition_14_eq_8_plus_6 : g2_dim = 8 + 6 := by unfold g2_dim; norm_num
 

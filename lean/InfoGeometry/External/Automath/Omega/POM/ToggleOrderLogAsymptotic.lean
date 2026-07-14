@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
 
 namespace Omega.POM
 

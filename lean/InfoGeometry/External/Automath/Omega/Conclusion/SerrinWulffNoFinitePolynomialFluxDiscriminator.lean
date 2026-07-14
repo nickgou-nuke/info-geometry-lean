@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SerrinWulffFiniteOrderBoundaryMomentCamouflage
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinWulffFiniteOrderBoundaryMomentCamouflage
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiToeplitzPrincipalMinorDiscreteCurvatureRecovery
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzPrincipalMinorDiscreteCurvatureRecovery
 
 namespace Omega.Zeta
 

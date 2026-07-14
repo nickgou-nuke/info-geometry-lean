@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 import InfoGeometry.Canonical.OperatorProjectorMismatch
-import InfoGeometry.Canonical.MetricTransportWitness
+import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Holography.RyuTakayanagiEmergence
 import InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
 import Mathlib
@@ -17,46 +17,43 @@ namespace InfoGeometry.Canonical.EntanglementResidualOwner
 
 open InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 open InfoGeometry.Canonical.OperatorProjectorMismatch
-open InfoGeometry.Canonical.MetricTransportWitness
+open InfoGeometry.Canonical.MetricTransport
 
 variable {R Scalar : Type*} [Ring R] [Zero Scalar]
 
-/-- Transport prerequisite: mismatch transports covariantly once the metric witness is supplied. -/
+/-- Transport prerequisite: mismatch transports covariantly once metric transport is supplied. -/
 @[rep_depth transport]
 structure TransportedMismatchPrerequisite
     (P P' : ProjectorPair R) where
-  transport : MetricCompensatorWitness P P'
+  transport : SimilarityTransport P P'
 
 /-- The mismatch transports covariantly; zero requires an additional agreement witness. -/
 theorem transportedMismatch_covariant
     {P P' : ProjectorPair R}
     (W : TransportedMismatchPrerequisite P P') :
-    P'.mismatch = W.transport.transport.g * P.mismatch * W.transport.transport.gInv :=
-  W.transport.mismatch_transport
+    P'.mismatch = W.transport.g * P.mismatch * W.transport.gInv :=
+  mismatch_covariant_of_similarityTransport W.transport
 
-/-- Agreement after transport is an extra witness, not automatic. -/
+/-- Agreement after transport is extra data, not automatic. -/
 @[rep_depth transport]
-structure AgreementAfterTransportWitness
+structure AgreementAfterTransport
     (P P' : ProjectorPair R) where
   transport : TransportedMismatchPrerequisite P P'
-  transportedAgreement : Prop
-  transportedAgreementCertified : transportedAgreement → P'.ProjectorAgreement
+  transportedAgreement : P'.ProjectorAgreement
 
 /-- Transported agreement is enough to certify projector agreement. -/
 theorem transportedAgreement_implies_projectorAgreement
     {P P' : ProjectorPair R}
-    (W : AgreementAfterTransportWitness P P') :
-    W.transportedAgreement → P'.ProjectorAgreement :=
-  W.transportedAgreementCertified
+    (W : AgreementAfterTransport P P') :
+    P'.ProjectorAgreement :=
+  W.transportedAgreement
 
 /-- Agreement after transport can be read back as equality of the transported projectors. -/
 theorem transportedAgreement_implies_projectorEquality
     {P P' : ProjectorPair R}
-    (W : AgreementAfterTransportWitness P P') :
-    W.transportedAgreement → P'.PD = P'.PMP := by
-  intro h
-  have hAg : P'.ProjectorAgreement := W.transportedAgreementCertified h
-  exact (ProjectorPair.projectorAgreement_iff_eq (P := P')).1 hAg
+    (W : AgreementAfterTransport P P') :
+    P'.PD = P'.PMP :=
+  (ProjectorPair.projectorAgreement_iff_eq (P := P')).1 W.transportedAgreement
 
 /-- Positive compression witness for a projector/compression sector. -/
 @[rep_depth transport]

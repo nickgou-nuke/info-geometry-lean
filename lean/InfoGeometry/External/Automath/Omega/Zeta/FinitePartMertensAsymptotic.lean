@@ -1,4 +1,4 @@
-import Omega.Zeta.IntroFinitePart
+import InfoGeometry.External.Automath.Omega.Zeta.IntroFinitePart
 
 namespace Omega.Zeta
 

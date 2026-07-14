@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.RealInput40NilpotentIndex
-import Omega.SyncKernelWeighted.RealInput40ResetRegenerationConstants
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NilpotentIndex
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetRegenerationConstants
 
 namespace Omega.Conclusion
 

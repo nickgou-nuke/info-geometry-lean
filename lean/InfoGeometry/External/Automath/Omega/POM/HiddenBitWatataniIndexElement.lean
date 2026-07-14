@@ -1,5 +1,5 @@
-import Omega.Folding.FiberWeightCount
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
 
 namespace Omega.POM
 

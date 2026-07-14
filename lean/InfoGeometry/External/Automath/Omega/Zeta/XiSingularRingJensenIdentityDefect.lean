@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiCayleyTauConjugacyLogdiff
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyTauConjugacyLogdiff
 
 namespace Omega.Zeta
 

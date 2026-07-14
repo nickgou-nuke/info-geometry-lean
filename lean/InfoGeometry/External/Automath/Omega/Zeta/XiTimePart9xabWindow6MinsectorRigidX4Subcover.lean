@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.Folding.StableSyntax
-import Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
 
 namespace Omega.Zeta
 

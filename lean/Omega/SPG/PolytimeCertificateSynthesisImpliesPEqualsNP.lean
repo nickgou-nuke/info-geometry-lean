@@ -21,9 +21,10 @@ theorem polynomialTime_unsatByCertificateSynthesis {Formula Certificate : Type}
     (Synth : Formula → Certificate) (Ver : Certificate → AuditVerdict)
     (hSynth : PolynomialTimeMap Synth) (hVer : PolynomialTimeMap Ver) :
     PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver) := by
-  let _ := hSynth
-  let _ := hVer
-  trivial
+  have hComp : PolynomialTimeMap (fun φ => Ver (Synth φ)) :=
+    PolynomialTimeMap.comp hSynth hVer
+  simpa [unsatByCertificateSynthesis] using
+    (PolynomialTimeMap.decide_eq_const hComp AuditVerdict.pass)
 
 /-- The synthesized classifier decides `UNSAT` exactly when the offline verifier accepts the
 synthesized certificate. -/

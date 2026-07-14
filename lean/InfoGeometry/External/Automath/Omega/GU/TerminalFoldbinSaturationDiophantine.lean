@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Combinatorics.FibonacciCube
-import Omega.GU.Window6SaturationMaxfiberCanonicalXL
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.GU.Window6SaturationMaxfiberCanonicalXL
 
 namespace Omega.GU
 

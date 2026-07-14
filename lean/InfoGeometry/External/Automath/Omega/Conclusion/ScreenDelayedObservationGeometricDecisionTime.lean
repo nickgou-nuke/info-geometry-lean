@@ -1,5 +1,5 @@
-import Omega.Conclusion.ScreenLinearReadoutNullTrichotomyCollapse
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenLinearReadoutNullTrichotomyCollapse
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

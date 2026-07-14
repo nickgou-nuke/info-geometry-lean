@@ -3,8 +3,6 @@ import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
 
-set_option linter.dupNamespace false
-
 noncomputable section
 
 namespace InfoGeometry.Canonical.OperatorValuedSouriauFamily
@@ -19,7 +17,7 @@ Operator-valued Souriau family.
 also operatorial: `betaOperator : Obs`. Scalar beta/time coordinates are not the
 owner objects; they are chart/readout shadows supplied only after `eval`.
 -/
-structure OperatorValuedSouriauFamily
+structure Family
     (LieAlg Obs State Direction : Type*) where
   /-- Closed product/trace surface used by the modular-temperature duality. -/
   frobenius : OperatorFrobeniusClosure Obs
@@ -80,10 +78,10 @@ structure OperatorValuedSouriauFamily
   exponentialFamily_untraced_beta_eq_expWeight :
     exponentialFamily.untracedExponential betaOperator = expWeight
 
-namespace OperatorValuedSouriauFamily
+namespace Family
 
 variable {LieAlg Obs State Direction : Type*}
-variable (P : OperatorValuedSouriauFamily LieAlg Obs State Direction)
+variable (P : Family LieAlg Obs State Direction)
 
 /-- The existing operatorial exponential family has generator `K_B` at operator beta. -/
 theorem exponentialFamily_K_beta_eq_souriauGenerator_holds :
@@ -131,6 +129,6 @@ def betaSouriauAction : ℝ :=
 def timeSouriauAction : ℝ :=
   P.frobenius.pairing P.timeOperator P.souriauGenerator
 
-end OperatorValuedSouriauFamily
+end Family
 
 end InfoGeometry.Canonical.OperatorValuedSouriauFamily

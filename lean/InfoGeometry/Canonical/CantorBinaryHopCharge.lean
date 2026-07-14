@@ -53,7 +53,7 @@ theorem hopBit_involutive (b : Bool) :
 @[simp]
 theorem bitCharge_hopBit (b : Bool) :
     bitCharge (hopBit b) = bitCharge b + 1 := by
-  cases b <;> native_decide
+  cases b <;> decide
 
 /-- Binary words from the Cantor basis lane. -/
 abbrev CBinaryWord := InfoGeometry.Canonical.CantorCuntzBasis.BinaryWord

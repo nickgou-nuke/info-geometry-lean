@@ -1,5 +1,5 @@
-import Omega.SPG.GodelDoublelog
-import Omega.SPG.MinkowskiDimensionBoundaryFaceGrowthSandwich
+import InfoGeometry.External.Automath.Omega.SPG.GodelDoublelog
+import InfoGeometry.External.Automath.Omega.SPG.MinkowskiDimensionBoundaryFaceGrowthSandwich
 
 namespace Omega.SPG
 

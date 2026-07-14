@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartSingleLayerSquareRootTest
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartSingleLayerSquareRootTest
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.Folding.MomentRecurrence
-import Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.Window6
 
 /-! ### Window-6 q-moment spectrum and collision probability
 

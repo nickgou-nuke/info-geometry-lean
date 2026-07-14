@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Order.Filter.Basic
-import Omega.Conclusion.CycleRankSaturation
+import InfoGeometry.External.Automath.Omega.Conclusion.CycleRankSaturation
 
 namespace Omega.Conclusion
 

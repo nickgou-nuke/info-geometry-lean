@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.ZeroDispersionIdentifiability
+import InfoGeometry.External.Automath.Omega.Zeta.ZeroDispersionIdentifiability
 
 open scoped BigOperators
 

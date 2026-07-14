@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.PhaseChannelCrowdingLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.PhaseChannelCrowdingLowerBound
 
 namespace Omega.Conclusion
 

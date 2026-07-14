@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Polynomial.Basic
-import Omega.Folding.GaugeAnomalyTrigonalQ4Galois
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalQ4Galois
 
 namespace Omega.Folding
 

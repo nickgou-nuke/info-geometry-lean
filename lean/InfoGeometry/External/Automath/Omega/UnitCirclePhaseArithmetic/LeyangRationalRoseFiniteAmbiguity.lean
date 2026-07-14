@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangRationalRoseTorusProjection
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangRationalRoseTorusProjection
 
 namespace Omega.UnitCirclePhaseArithmetic
 

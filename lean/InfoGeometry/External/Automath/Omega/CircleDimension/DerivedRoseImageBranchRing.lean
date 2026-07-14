@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.RoseLaurentCharacterFiniteSingularRing
+import InfoGeometry.External.Automath.Omega.CircleDimension.RoseLaurentCharacterFiniteSingularRing
 
 namespace Omega.CircleDimension
 

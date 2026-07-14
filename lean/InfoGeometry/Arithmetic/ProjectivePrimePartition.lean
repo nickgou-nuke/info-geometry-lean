@@ -45,6 +45,14 @@ theorem projectivePrimePartition_nonneg
   simpa [projectivePrimePartition] using
     arithmeticPrimePartition_nonneg A (betaInvert u)
 
+/-- The projective prime partition is positive on supports containing a positive-weight state. -/
+lemma projectivePrimePartition_pos_of_mem_positive_weight
+    {A : Finset ℕ} {u : ℝ} {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    0 < projectivePrimePartition A u := by
+  exact arithmeticPrimeRestrictedPartition_pos_of_mem_positive_weight
+    (β := betaInvert u) hnA hΛ hn
+
 /--
 On the compact interval `(0, 1)`, the inverted temperature lies in the
 ordinary low-temperature regime `β > 1`.
@@ -92,6 +100,14 @@ theorem modularFlowReadout_nonneg
     0 ≤ C.modularFlowReadout (C.stateOfFinset A) u := by
   rw [C.flow_eq_projectivePrimePartition A u hu]
   exact projectivePrimePartition_nonneg A u
+
+/-- The calibrated modular flow readout is positive on supports containing a positive-weight state. -/
+lemma modularFlowReadout_pos_of_mem_positive_weight
+    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    0 < C.modularFlowReadout (C.stateOfFinset A) u := by
+  rw [C.flow_eq_projectivePrimePartition A u hu]
+  exact projectivePrimePartition_pos_of_mem_positive_weight hnA hΛ hn
 
 end ProjectivePrimeCalibration
 

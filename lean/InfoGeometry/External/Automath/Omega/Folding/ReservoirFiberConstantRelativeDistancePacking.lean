@@ -3,7 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.BlockReservoirEncoding
+import InfoGeometry.External.Automath.Omega.Folding.BlockReservoirEncoding
 
 namespace Omega.Folding
 

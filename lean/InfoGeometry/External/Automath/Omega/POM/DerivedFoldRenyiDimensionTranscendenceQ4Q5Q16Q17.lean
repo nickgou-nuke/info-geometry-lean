@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.DerivedFoldGoldenRationalPowerUnitObstruction
-import Omega.POM.MomentOddLagNeutrality
+import InfoGeometry.External.Automath.Omega.POM.DerivedFoldGoldenRationalPowerUnitObstruction
+import InfoGeometry.External.Automath.Omega.POM.MomentOddLagNeutrality
 
 namespace Omega.POM
 

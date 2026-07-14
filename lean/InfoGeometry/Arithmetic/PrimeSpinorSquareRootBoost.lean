@@ -1,6 +1,5 @@
 import Mathlib
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
-import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
@@ -16,7 +15,7 @@ This module formalizes the algebraic core of the corrected spinor dictionary:
   denominator.
 
 Analytic statements involving `p^t`, `p^{-s/2}`, infinite products, Riemann
-states, or zero-mode interpretations are kept behind witness interfaces.
+states, or zero-mode interpretations belong to their separate owner files.
 -/
 
 noncomputable section
@@ -266,119 +265,24 @@ theorem finiteMobiusSpinorAmplitude_union_of_disjoint
   rw [Finset.prod_union h]
   ring
 
-/-! ## 5. Witness gates for analytic spin lifts and zero modes -/
-
-/--
-Spin-lift/double-cover gate.
-
-The finite theorems above prove the square-root amplitude algebra.  Analytic
-readouts such as `p^t`, `p^{t/2}`, and a concrete boost representation are
-supplied by an owner model through this witness interface.
--/
-structure SpinLiftDoubleCoverGate
-    (PrimeLabel ScalarBoost SpinorBoost : Type*) where
-  scalarBoost : PrimeLabel → ScalarBoost
-  spinorBoost : PrimeLabel → SpinorBoost
-  SpinorSquaresTo : SpinorBoost → ScalarBoost → Prop
-  ProjectiveRatioMatches : SpinorBoost → ScalarBoost → Prop
-  square_law : ∀ p, SpinorSquaresTo (spinorBoost p) (scalarBoost p)
-  projective_ratio_law : ∀ p, ProjectiveRatioMatches (spinorBoost p) (scalarBoost p)
-
-namespace SpinLiftDoubleCoverGate
-
-/-- Explicit debt: analytic spin-lift squaring needs a concrete boost owner. -/
-theorem square
-    {PrimeLabel ScalarBoost SpinorBoost : Type*}
-    (G : SpinLiftDoubleCoverGate PrimeLabel ScalarBoost SpinorBoost)
-    (p : PrimeLabel) :
-    G.SpinorSquaresTo (G.spinorBoost p) (G.scalarBoost p) :=
-    G.square_law p
-
-/-- Explicit debt: projective-ratio matching needs a concrete boost owner. -/
-theorem projective_ratio
-    {PrimeLabel ScalarBoost SpinorBoost : Type*}
-    (G : SpinLiftDoubleCoverGate PrimeLabel ScalarBoost SpinorBoost)
-    (p : PrimeLabel) :
-    G.ProjectiveRatioMatches (G.spinorBoost p) (G.scalarBoost p) :=
-    G.projective_ratio_law p
-
-end SpinLiftDoubleCoverGate
-
-/--
-Three-square-root dictionary for one finite prime-mode model.
-
-It keeps separate:
-
-* spin lift of a boost: `spinLift² = scalarBoost`;
-* Dirac square root of arithmetic energy: `diracCoefficient² = energy`;
-* thermal spinor amplitude: `thermalAmplitude² = thermalWeight`.
--/
-structure PrimeThreeSquareRootDictionary
-    (PrimeLabel R : Type*) [Mul R] where
-  scalarBoost : PrimeLabel → R
-  spinLift : PrimeLabel → R
-  arithmeticEnergy : PrimeLabel → R
-  diracCoefficient : PrimeLabel → R
-  thermalWeight : PrimeLabel → R
-  thermalAmplitude : PrimeLabel → R
-  spinLiftSquare :
-    ∀ p : PrimeLabel, scalarBoost p = scalarWeightFromSpinor (spinLift p)
-  diracSquare :
-    ∀ p : PrimeLabel, arithmeticEnergy p = diracEnergyFromCoefficient (diracCoefficient p)
-  thermalSquare :
-    ∀ p : PrimeLabel, thermalWeight p = scalarWeightFromSpinor (thermalAmplitude p)
-
-namespace PrimeThreeSquareRootDictionary
-
-/-- Re-export of the spin-lift square law. -/
-theorem spin_lift_square
-    {PrimeLabel R : Type*} [Mul R]
-    (D : PrimeThreeSquareRootDictionary PrimeLabel R)
-    (p : PrimeLabel) :
-    D.scalarBoost p = scalarWeightFromSpinor (D.spinLift p) :=
-  D.spinLiftSquare p
-
-/-- Re-export of the Dirac coefficient square law. -/
-theorem dirac_square
-    {PrimeLabel R : Type*} [Mul R]
-    (D : PrimeThreeSquareRootDictionary PrimeLabel R)
-    (p : PrimeLabel) :
-    D.arithmeticEnergy p = diracEnergyFromCoefficient (D.diracCoefficient p) :=
-  D.diracSquare p
-
-/-- Re-export of the thermal amplitude square law. -/
-theorem thermal_square
-    {PrimeLabel R : Type*} [Mul R]
-    (D : PrimeThreeSquareRootDictionary PrimeLabel R)
-    (p : PrimeLabel) :
-    D.thermalWeight p = scalarWeightFromSpinor (D.thermalAmplitude p) :=
-  D.thermalSquare p
-
-end PrimeThreeSquareRootDictionary
-
 /--
 Majorana spinor readout packet.
 
-This packages the finite bit-flip layer together with the finite spinor
-bilinear layer, while leaving analytic zero-mode interpretations to the
-separate witness gate.
+This packages only the finite modes and amplitudes used by the finite spinor
+bilinear theorem.
 -/
 structure PrimeSpinorSquareRootPacket
-    (PrimeLabel R Operator ZeroReadout : Type*) [DecidableEq PrimeLabel] [CommRing R] where
+    (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R] where
   modes : Finset PrimeLabel
   amplitude : PrimeLabel → R
-  majoranaCAR : InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.PrimeMajoranaCARGate
-    PrimeLabel Operator
-  zeroModeGate : InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.MajoranaZeroModeGate
-    Operator Operator ZeroReadout
 
 namespace PrimeSpinorSquareRootPacket
 
 /-- Packet-level finite spinor bilinear partition theorem, proved from the owner theorem. -/
 theorem bilinear_partition
-    {PrimeLabel R Operator ZeroReadout : Type*}
+    {PrimeLabel R : Type*}
     [DecidableEq PrimeLabel] [CommRing R]
-    (P : PrimeSpinorSquareRootPacket PrimeLabel R Operator ZeroReadout) :
+    (P : PrimeSpinorSquareRootPacket PrimeLabel R) :
     finitePrimeSpinorBilinearProduct P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
         (fun p => scalarWeightFromSpinor (P.amplitude p)) :=

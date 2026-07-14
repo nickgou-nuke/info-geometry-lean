@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiSpectrumMi
-import Omega.POM.FiberIndsetFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiSpectrumMi
+import InfoGeometry.External.Automath.Omega.POM.FiberIndsetFactorization
 
 namespace Omega.Conclusion
 

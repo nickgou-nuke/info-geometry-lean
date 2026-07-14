@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldEquivalenceAutSemidir
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldEquivalenceAutSemidir
 
 namespace Omega.OperatorAlgebra
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiVisibleArithmeticFibonacciAdicProfiniteCoincidence
+import InfoGeometry.External.Automath.Omega.Zeta.XiVisibleArithmeticFibonacciAdicProfiniteCoincidence
 
 namespace Omega.Zeta
 

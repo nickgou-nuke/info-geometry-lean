@@ -51,8 +51,12 @@ structure CliffordLDPBridge
     (V : CliffordMajoranaVacuum D) where
   mertens_bounded_by_dispersion :
     ∀ N : ℕ, |(D.M N : ℝ)| ≤ V.dispersion_x N
-  dispersion_scaling : Prop
-  dispersion_scaling_certificate : dispersion_scaling
+  dispersion_scaling :
+    ∀ ε : ℝ, 0 < ε →
+      ∃ C : ℝ, 0 < C ∧
+        ∃ N0 : ℕ,
+          ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
+            V.dispersion_x N ≤ C * Real.rpow (N : ℝ) (1 / 2 + ε)
 
 /-- The gate object: all content is proof-carrying data, with no `True` target. -/
 @[rep_depth operator]
@@ -71,6 +75,21 @@ theorem mertens_bounded_by_dispersion
     (G : HeisenbergMertensGate D) (N : ℕ) :
     |(D.M N : ℝ)| ≤ G.vacuum.dispersion_x N :=
   G.bridge.mertens_bounded_by_dispersion N
+
+/--
+The gate exposes the supplied RH-scale dispersion bound as an explicit
+inequality, not as an arbitrary proof-carrying `Prop` socket.
+-/
+@[rep_depth operator]
+theorem dispersion_scaling
+    (G : HeisenbergMertensGate D) :
+    ∀ ε : ℝ, 0 < ε →
+      ∃ C : ℝ, 0 < C ∧
+        ∃ N0 : ℕ,
+          ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
+            G.vacuum.dispersion_x N ≤
+              C * Real.rpow (N : ℝ) (1 / 2 + ε) :=
+  G.bridge.dispersion_scaling
 
 /-- The gate exposes saturation of the Heisenberg lower bound. -/
 @[rep_depth operator]

@@ -1,9 +1,9 @@
 import Mathlib
-import Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
-import Omega.Conclusion.CapacityMajorizationSchurHardness
-import Omega.Folding.FoldInfoNCELossTowerNewtonPronyCompleteness
-import Omega.OperatorAlgebra.FoldCapacityCurveCompleteInvariant
-import Omega.OperatorAlgebra.FoldCapacityKinksEqualSpectrumLevels
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityMajorizationSchurHardness
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCELossTowerNewtonPronyCompleteness
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCapacityCurveCompleteInvariant
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCapacityKinksEqualSpectrumLevels
 
 namespace Omega.Conclusion
 

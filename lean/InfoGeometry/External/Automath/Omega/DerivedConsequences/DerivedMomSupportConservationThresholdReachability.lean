@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.AnomSwapLowerboundAndMomAmplify
+import InfoGeometry.External.Automath.Omega.POM.AnomSwapLowerboundAndMomAmplify
 
 namespace Omega.DerivedConsequences
 

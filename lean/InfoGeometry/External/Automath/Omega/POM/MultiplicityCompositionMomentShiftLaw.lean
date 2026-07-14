@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.MultiplicityCompositionMomentHierarchyRationalGrowth
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionMomentHierarchyRationalGrowth
 
 open Filter Topology
 

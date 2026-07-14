@@ -1,10 +1,10 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.Window6Collision
-import Omega.Folding.GaugeAnomalyMean
-import Omega.Folding.GaugeAnomalySecondFactorialFiniteClosed
-import Omega.Folding.GaugeAnomalySpectrumTomographyCertificateTriangle
-import Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMean
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySecondFactorialFiniteClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectrumTomographyCertificateTriangle
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
 
 namespace Omega.Conclusion
 

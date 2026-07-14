@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHellingerGramStrictTotalPositivity
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerGramStrictTotalPositivity
 
 namespace Omega.Zeta
 

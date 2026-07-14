@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SyncKernelWeighted.RealInput40TraceRecurrence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40TraceRecurrence
 
 namespace Omega.SyncKernelWeighted
 

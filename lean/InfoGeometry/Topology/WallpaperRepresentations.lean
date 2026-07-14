@@ -31,7 +31,7 @@ inductive WallpaperLattice
 
 /-- Exactly seventeen wallpaper-group symbols are represented. -/
 theorem wallpaperGroup_card : Fintype.card WallpaperGroup = 17 := by
-  native_decide
+  decide
 
 /-- Bravais lattice family of each wallpaper group. -/
 def latticeKind : WallpaperGroup → WallpaperLattice
@@ -164,14 +164,14 @@ def pointGroupClassLabels (P : WallpaperPointGroup) : List String :=
 /-- The number of conjugacy classes equals the number of irreps for each point group. -/
 theorem pointGroupClassLabels_length (P : WallpaperPointGroup) :
     (pointGroupClassLabels P).length = (pointGroupIrrepProfile P).total := by
-  cases P <;> native_decide
+  cases P <;> decide
 
 /-- Class size table matches character table column count for each point group. -/
 theorem pointGroupClassLabels_class_size_match (P : WallpaperPointGroup) :
     (pointGroupClassLabels P).length = match P with
     | .C1 => 1 | .C2 => 2 | .D1 => 2 | .V4 => 4 | .C4 => 4
     | .D4 => 5 | .C3 => 3 | .D3 => 3 | .C6 => 6 | .D6 => 6 := by
-  cases P <;> native_decide
+  cases P <;> decide
 
 /-- Little-group momentum orbit labels for each wallpaper group. -/
 structure MomentumOrbitLabel where

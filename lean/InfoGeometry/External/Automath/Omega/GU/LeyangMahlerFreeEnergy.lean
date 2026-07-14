@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
-import Omega.GU.JoukowskyGodelLeadingCoeffRigidity
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelLeadingCoeffRigidity
 
 namespace Omega.GU
 

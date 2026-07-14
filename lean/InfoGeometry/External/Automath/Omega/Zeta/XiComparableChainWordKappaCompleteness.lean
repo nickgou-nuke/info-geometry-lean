@@ -1,4 +1,4 @@
-import Omega.Zeta.XiChainIdempotentComparableFiniteGcdCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainIdempotentComparableFiniteGcdCollapse
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.Defect
 
 namespace Omega.Frontier
 

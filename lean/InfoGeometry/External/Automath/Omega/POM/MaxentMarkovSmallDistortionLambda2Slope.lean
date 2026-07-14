@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxentMarkovLaguerreSecularSpectrum
+import InfoGeometry.External.Automath.Omega.POM.MaxentMarkovLaguerreSecularSpectrum
 
 namespace Omega.POM
 

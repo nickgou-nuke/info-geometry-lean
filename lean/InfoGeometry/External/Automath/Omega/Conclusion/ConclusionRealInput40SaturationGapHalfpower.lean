@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40PressureFreezing
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40PressureFreezing
 
 namespace Omega.Conclusion
 

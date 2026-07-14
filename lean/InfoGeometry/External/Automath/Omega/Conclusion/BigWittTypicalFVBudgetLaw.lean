@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BigWittExactSpectralBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.BigWittExactSpectralBudget
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic
-import Omega.CircleDimension.S4EvenSubgroupFreeActionUnramifiedA4Lift
-import Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4EvenSubgroupFreeActionUnramifiedA4Lift
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPParryPressureChain
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPParryPressureChain
 
 namespace Omega.Folding
 

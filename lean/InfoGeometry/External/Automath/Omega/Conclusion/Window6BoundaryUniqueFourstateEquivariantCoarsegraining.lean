@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryC3DiagonalIrreducibleSplitting
-import Omega.Conclusion.Window6BoundaryTwoResidualBitsNongeometricNonrational
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryC3DiagonalIrreducibleSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryTwoResidualBitsNongeometricNonrational
 
 namespace Omega.Conclusion
 

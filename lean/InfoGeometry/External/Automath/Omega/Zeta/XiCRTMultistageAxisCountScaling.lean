@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.PrimeCounting
-import Omega.Zeta.XiCRTMultistageAxisAllocationAdditiveControl
+import InfoGeometry.External.Automath.Omega.Zeta.XiCRTMultistageAxisAllocationAdditiveControl
 
 open scoped BigOperators Nat.Prime
 

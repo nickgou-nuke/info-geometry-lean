@@ -39,7 +39,7 @@ from tools.infra.arango_gravity_context import source_excerpt  # noqa: E402
 from tools.infra.arango_raw_infotree_ingest import ArangoTarget  # noqa: E402
 
 
-SCHEMA = "info_geometry.causal_chiral_cone_prompt.v1"
+SCHEMA = "info_geometry.causal_chiral_cone_prompt.v2"
 
 
 def arango_target(repo_root: Path) -> ArangoTarget:
@@ -56,10 +56,28 @@ def resolve_decl(
     target: ArangoTarget,
     *,
     decl: str,
+    decls: str,
     raw_nodes: str,
     overlay_nodes: str,
     overlay_edges: str,
 ) -> dict[str, Any]:
+    authoritative = run_aql(
+        target,
+        """
+        FOR n IN @@decls
+          FILTER n.name == @decl
+          LIMIT 1
+          RETURN n
+        """,
+        {"@decls": decls, "decl": decl},
+    )
+    if authoritative:
+        return {
+            "node": authoritative[0],
+            "component": None,
+            "membership": None,
+            "authority": "decls",
+        }
     rows = run_aql(
         target,
         """
@@ -96,6 +114,95 @@ def resolve_decl(
     if not row.get("component"):
         raise SystemExit(f"declaration has no SCC membership in {overlay_edges}: {decl}")
     return row
+
+
+def traverse_decl_cone(
+    target: ArangoTarget,
+    *,
+    seed_id: str,
+    edge_collection: str,
+    direction: str,
+    depth: int,
+    limit: int,
+) -> list[dict[str, Any]]:
+    """Traverse the compiler-backed declaration graph directly."""
+    if direction not in {"OUTBOUND", "INBOUND"}:
+        raise ValueError(f"invalid traversal direction: {direction}")
+    return run_aql(
+        target,
+        f"""
+        FOR v, e, p IN 1..@depth {direction} @seed @@edges
+          OPTIONS {{ bfs: true, uniqueVertices: "global" }}
+          LIMIT @limit
+          RETURN {{
+            component: v,
+            edge: e,
+            depth: LENGTH(p.edges),
+            path_keys: p.vertices[*]._key,
+            path_ids: p.vertices[*]._id
+          }}
+        """,
+        {
+            "@edges": edge_collection,
+            "seed": seed_id,
+            "depth": depth,
+            "limit": limit,
+        },
+    )
+
+
+def traverse_multi_decl_cone(
+    target: ArangoTarget,
+    *,
+    seed_ids: list[str],
+    edge_collection: str,
+    depth: int,
+    limit: int,
+) -> list[dict[str, Any]]:
+    """Traverse the combined causal cone of several declaration apices."""
+    return run_aql(
+        target,
+        """
+        FOR seed IN @seeds
+          FOR v, e, p IN 1..@depth ANY seed @@edges
+            OPTIONS { bfs: true, uniqueVertices: "global" }
+            LIMIT @limit
+            RETURN {
+              seed: seed,
+              component: v,
+              edge: e,
+              depth: LENGTH(p.edges),
+              path_keys: p.vertices[*]._key,
+              path_ids: p.vertices[*]._id
+            }
+        """,
+        {
+            "@edges": edge_collection,
+            "seeds": seed_ids,
+            "depth": depth,
+            "limit": limit,
+        },
+    )
+
+
+def resolve_authoritative_decls(
+    target: ArangoTarget, *, decls: str, names: list[str]
+) -> list[dict[str, Any]]:
+    return run_aql(
+        target,
+        """
+        FOR name IN @names
+          LET row = FIRST(
+            FOR n IN @@decls
+              FILTER n.name == name
+              LIMIT 1
+              RETURN n
+          )
+          FILTER row != null
+          RETURN row
+        """,
+        {"@decls": decls, "names": names},
+    )
 
 
 def traverse_cone(
@@ -348,32 +455,43 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
     resolved = resolve_decl(
         target,
         decl=args.decl,
+        decls=args.decls_collection,
         raw_nodes=args.raw_nodes_collection,
         overlay_nodes=args.overlay_nodes_collection,
         overlay_edges=args.overlay_edges_collection,
     )
     apex_node = resolved["node"]
     apex_component = resolved["component"]
-    seed_id = str(apex_component["_id"])
+    if apex_component is not None:
+        seed_id = str(apex_component["_id"])
+        backward = traverse_cone(
+            target, seed_component_id=seed_id,
+            component_edges=args.component_edges_collection,
+            direction="OUTBOUND", depth=args.backward_depth,
+            limit=args.cone_limit,
+        )
+        forward = traverse_cone(
+            target, seed_component_id=seed_id,
+            component_edges=args.component_edges_collection,
+            direction="INBOUND", depth=args.forward_depth,
+            limit=args.cone_limit,
+        )
+    else:
+        seed_id = str(apex_node["_id"])
+        backward = traverse_decl_cone(
+            target, seed_id=seed_id, edge_collection=args.edges_collection,
+            direction="OUTBOUND", depth=args.backward_depth,
+            limit=args.cone_limit,
+        )
+        forward = traverse_decl_cone(
+            target, seed_id=seed_id, edge_collection=args.edges_collection,
+            direction="INBOUND", depth=args.forward_depth,
+            limit=args.cone_limit,
+        )
 
-    backward = traverse_cone(
-        target,
-        seed_component_id=seed_id,
-        component_edges=args.component_edges_collection,
-        direction="OUTBOUND",
-        depth=args.backward_depth,
-        limit=args.cone_limit,
-    )
-    forward = traverse_cone(
-        target,
-        seed_component_id=seed_id,
-        component_edges=args.component_edges_collection,
-        direction="INBOUND",
-        depth=args.forward_depth,
-        limit=args.cone_limit,
-    )
-
-    component_by_id: dict[str, dict[str, Any]] = {seed_id: apex_component}
+    component_by_id: dict[str, dict[str, Any]] = {
+        seed_id: apex_component or apex_node
+    }
     for row in backward + forward:
         component = row.get("component") or {}
         cid = component.get("_id")
@@ -382,13 +500,18 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
     component_ids = list(component_by_id)
     component_keys = [str(c.get("_key")) for c in component_by_id.values() if c.get("_key")]
 
-    members = component_members(
-        target,
-        component_ids=component_ids,
-        raw_nodes=args.raw_nodes_collection,
-        overlay_edges=args.overlay_edges_collection,
-        per_component_limit=args.members_per_component,
-    )
+    if apex_component is not None:
+        members = component_members(
+            target, component_ids=component_ids,
+            raw_nodes=args.raw_nodes_collection,
+            overlay_edges=args.overlay_edges_collection,
+            per_component_limit=args.members_per_component,
+        )
+    else:
+        members = [
+            {"component_id": cid, "members": [{"node": node}]}
+            for cid, node in component_by_id.items()
+        ]
     excerpts = add_source_excerpts(
         members,
         repo_root=repo_root,
@@ -412,11 +535,12 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
         "schema": SCHEMA,
         "apex": {
             "name": args.decl,
+            "authority": resolved.get("authority", "raw_info_nodes"),
             "raw_node_id": apex_node.get("_id"),
             "raw_node_key": apex_node.get("_key"),
-            "component_id": apex_component.get("_id"),
-            "component_key": apex_component.get("_key"),
-            "representative": apex_component.get("representative"),
+            "component_id": (apex_component or {}).get("_id"),
+            "component_key": (apex_component or {}).get("_key"),
+            "representative": (apex_component or apex_node).get("representative"),
             "node": apex_node,
             "component": apex_component,
         },
@@ -443,10 +567,68 @@ def build_packet(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, Any]:
+    repo_root = args.repo_root.resolve()
+    target = arango_target(repo_root)
+    apices = resolve_authoritative_decls(
+        target, decls=args.decls_collection, names=names
+    )
+    found = {str(row.get("name")): row for row in apices}
+    missing = [name for name in names if name not in found]
+    if missing:
+        raise SystemExit(f"declarations not found in {args.decls_collection}: {missing}")
+    seed_ids = [str(found[name]["_id"]) for name in names]
+    cone = traverse_multi_decl_cone(
+        target, seed_ids=seed_ids, edge_collection=args.edges_collection,
+        depth=max(args.backward_depth, args.forward_depth), limit=args.cone_limit,
+    )
+    by_node: dict[str, dict[str, Any]] = {
+        str(row["_id"]): row for row in apices
+    }
+    seeds_by_node: dict[str, set[str]] = {seed: {seed} for seed in seed_ids}
+    for row in cone:
+        node = row.get("component") or {}
+        node_id = str(node.get("_id"))
+        if node_id:
+            by_node[node_id] = node
+            seeds_by_node.setdefault(node_id, set()).add(str(row.get("seed")))
+    shared = [
+        {"node": node, "seed_count": len(seeds_by_node[node_id]),
+         "seeds": sorted(seeds_by_node[node_id])}
+        for node_id, node in by_node.items()
+        if len(seeds_by_node.get(node_id, set())) > 1
+    ]
+    members = [
+        {"component_id": node_id, "members": [{"node": node}]}
+        for node_id, node in by_node.items()
+    ]
+    excerpts = add_source_excerpts(
+        members, repo_root=repo_root, radius=args.source_radius,
+        max_total=args.max_source_excerpts,
+    )
+    return {
+        "schema": SCHEMA,
+        "mode": "multi-apex-multi-cone",
+        "apices": [{"name": name, "authority": "decls", "node": found[name]}
+                   for name in names],
+        "seeds": seed_ids,
+        "cone": cone,
+        "shared_nodes": shared,
+        "shared_node_count": len(shared),
+        "source_excerpts": excerpts,
+        "orientation": "ANY over authoritative declaration edges",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--decl", required=True, help="Fully qualified Lean declaration/proposition name.")
+    parser.add_argument("--decl", help="Single fully qualified Lean declaration/proposition name.")
+    parser.add_argument("--decl-multi", help="Comma-separated authoritative declaration apices.")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument("--decls-collection", default="decls",
+                        help="Authoritative compiler-backed declaration collection.")
+    parser.add_argument("--edges-collection", default="edges",
+                        help="Authoritative compiler-backed declaration edge collection.")
     parser.add_argument("--raw-nodes-collection", default="raw_info_nodes")
     parser.add_argument("--overlay-nodes-collection", default="topology_overlay")
     parser.add_argument("--overlay-edges-collection", default="topology_overlay_edges")
@@ -468,7 +650,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--md-out", type=Path)
     args = parser.parse_args(argv)
 
-    packet = build_packet(args)
+    if bool(args.decl) == bool(args.decl_multi):
+        parser.error("provide exactly one of --decl or --decl-multi")
+    if args.decl_multi:
+        names = [name.strip() for name in args.decl_multi.split(",") if name.strip()]
+        if len(names) < 2:
+            parser.error("--decl-multi requires at least two declarations")
+        packet = build_multi_packet(args, names)
+    else:
+        packet = build_packet(args)
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(json.dumps(packet, indent=2, sort_keys=True), encoding="utf-8")

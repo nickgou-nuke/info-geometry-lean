@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Conclusion.TwoAtomThreshold
-import Omega.Folding.FoldBinQuantileThresholdConstant
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoAtomThreshold
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinQuantileThresholdConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 namespace Omega.Conclusion
 

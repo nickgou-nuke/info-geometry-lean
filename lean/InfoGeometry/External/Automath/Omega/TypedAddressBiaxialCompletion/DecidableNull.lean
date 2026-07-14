@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.CompiledReadability
-import Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
-import Omega.TypedAddressBiaxialCompletion.NullExhaustive
-import Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CompiledReadability
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NullExhaustive
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
 
 namespace Omega.TypedAddressBiaxialCompletion
 

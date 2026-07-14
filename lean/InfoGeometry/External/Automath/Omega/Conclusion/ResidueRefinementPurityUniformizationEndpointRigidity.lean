@@ -1,4 +1,4 @@
-import Omega.POM.ResidueRefinementJensen
+import InfoGeometry.External.Automath.Omega.POM.ResidueRefinementJensen
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

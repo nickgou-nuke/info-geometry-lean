@@ -1,4 +1,4 @@
-import Omega.EA.StableAddComputable
+import InfoGeometry.External.Automath.Omega.EA.StableAddComputable
 
 namespace Omega.EA.StableAddNormalizationRealization
 

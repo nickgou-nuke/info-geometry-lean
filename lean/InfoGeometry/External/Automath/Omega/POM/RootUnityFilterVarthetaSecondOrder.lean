@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.POM.RootUnityFilterQ2Law
+import InfoGeometry.External.Automath.Omega.POM.RootUnityFilterQ2Law
 
 namespace Omega.POM
 

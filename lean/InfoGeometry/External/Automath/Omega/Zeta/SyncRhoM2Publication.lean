@@ -1,4 +1,4 @@
-import Omega.Zeta.SyncRhoM2ClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.SyncRhoM2ClosedForm
 
 namespace Omega.Zeta
 

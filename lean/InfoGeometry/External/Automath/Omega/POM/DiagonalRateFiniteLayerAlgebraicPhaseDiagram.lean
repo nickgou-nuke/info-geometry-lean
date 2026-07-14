@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateFiniteLayerAlgebraic
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateFiniteLayerAlgebraic
 
 namespace Omega.POM
 

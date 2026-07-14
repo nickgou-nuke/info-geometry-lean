@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart50dcProjectivePressurePerronLogconvex
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart50dcProjectivePressurePerronLogconvex
 
 namespace Omega.Zeta
 

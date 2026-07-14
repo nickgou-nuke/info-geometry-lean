@@ -1,4 +1,4 @@
-import Omega.Conclusion.Chi2RecoversFullPowerDivergenceFamily
+import InfoGeometry.External.Automath.Omega.Conclusion.Chi2RecoversFullPowerDivergenceFamily
 
 namespace Omega.Zeta
 

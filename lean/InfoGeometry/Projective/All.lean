@@ -18,6 +18,9 @@ import InfoGeometry.Projective.HorizonInformationScrambling
 import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
+import InfoGeometry.Projective.QuantumGrassmannian
+import InfoGeometry.Projective.QuantumTwistor
+import InfoGeometry.Projective.QuantumTwistorGauge
 import InfoGeometry.Projective.OnShellResidueBCFWBridge
 import InfoGeometry.Projective.DeRhamArnoldTwistorPenroseBridge
 import InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
@@ -31,7 +34,7 @@ import InfoGeometry.Projective.BostConnesZeta
 import InfoGeometry.Projective.BostConnesZetaIdentity
 import InfoGeometry.Projective.KreinAttention
 import InfoGeometry.Projective.KreinHodgeBridge
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding
+import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.LogSumIneq
 import InfoGeometry.Projective.KleinCrossRatioInvariant
@@ -47,6 +50,7 @@ import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Projective.KleinQuadricTime
 import InfoGeometry.Projective.PenroseSpinTilingConfig
 import InfoGeometry.Projective.KleinQuadricPlucker
+import InfoGeometry.Projective.BostConnesKleinPluckerBridge
 import InfoGeometry.Projective.KleinQuadricIncidence
 import InfoGeometry.Projective.NoncommutativeCrossRatio
 import InfoGeometry.Projective.Normalize
@@ -108,9 +112,7 @@ mutual owner replacements.
 Kernel-bridged finite closure manifest for this projective spike:
 
 - `InfoGeometry.Topology.WilsonLoopThermodynamics` supplies the conservative
-  loop-holonomy abstraction over thermodynamic flow words.
-- `InfoGeometry.Topology.BostConnesWilsonLoop` records conservative trace
-  readouts that keep Wilson/Bost-Connes steps explicit.
+  finite loop-holonomy abstraction over thermodynamic flow words.
 - `InfoGeometry.Projective.OnShellResidueBCFWBridge` provides finite BCFW
   residue readouts linked to the thermodynamic/flow theorem.
 - `InfoGeometry.Topology.GrandUnificationLinker` furnishes the DAG-edge

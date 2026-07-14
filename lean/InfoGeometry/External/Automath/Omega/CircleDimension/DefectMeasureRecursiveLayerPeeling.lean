@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComovingLayerPeeling
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingLayerPeeling
 
 namespace Omega.CircleDimension
 

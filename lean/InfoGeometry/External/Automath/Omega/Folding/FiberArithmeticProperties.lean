@@ -1,7 +1,7 @@
-import Omega.Folding.FiberArithmetic
-import Omega.Folding.MaxFiberTwoStep
-import Omega.Folding.FiberRing
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberTwoStep
+import InfoGeometry.External.Automath.Omega.Folding.FiberRing
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega
 

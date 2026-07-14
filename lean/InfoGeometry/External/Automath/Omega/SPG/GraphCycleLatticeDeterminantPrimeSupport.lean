@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Tactic
-import Omega.SPG.GraphEnergyShellLatticeCounting
+import InfoGeometry.External.Automath.Omega.SPG.GraphEnergyShellLatticeCounting
 
 namespace Omega.SPG
 

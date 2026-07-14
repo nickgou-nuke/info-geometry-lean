@@ -1,9 +1,9 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldBoundaryStokesTorsorH1H1
-import Omega.SPG.BoundaryMultigraphEffectiveResistanceMinEnergy
-import Omega.SPG.BoundaryMultigraphH1Cdim
-import Omega.SPG.HypercubeWeightedWalshStokes
+import InfoGeometry.External.Automath.Omega.Folding.FoldBoundaryStokesTorsorH1H1
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryMultigraphEffectiveResistanceMinEnergy
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryMultigraphH1Cdim
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeWeightedWalshStokes
 
 namespace Omega.SPG
 

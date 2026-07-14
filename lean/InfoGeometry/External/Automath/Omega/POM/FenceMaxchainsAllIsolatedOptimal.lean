@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.List.OfFn
 import Mathlib.Tactic
-import Omega.POM.FenceMaxchainsEuler
+import InfoGeometry.External.Automath.Omega.POM.FenceMaxchainsEuler
 
 namespace Omega.POM
 

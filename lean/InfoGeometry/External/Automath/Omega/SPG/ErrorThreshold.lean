@@ -1,3 +1,7 @@
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+import Mathlib.Data.Complex.Basic
+import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.Tactic
 
 /-! ### Relative error threshold sharpness
@@ -463,15 +467,64 @@ theorem paper_kappa_extended_values_package :
 end Omega.SPG
 
 
--- Paper: conj:spg-stokes-flux-current-automorphic-spectral-modularity
--- Source: sections/body/spg/sec__spg.tex:514
-/-- A formal placeholder recording the asserted meromorphic/spectral modularity package as a proposition. -/
-theorem stokesFluxCurrentAutomorphicSpectralModularity : True := by
-  trivial
+namespace Omega.SPG
 
+noncomputable section
 
--- Paper: conj:spg-stokes-flux-current-automorphic-spectral-modularity
--- Source: sections/body/spg/sec__spg.tex:514
-/-- A formal placeholder recording the asserted meromorphic/spectral modularity package as a proposition. -/
-theorem stokesFluxCurrentAutomorphicSpectralModularity' : True := by
-  trivial
+open scoped MatrixGroups
+open UpperHalfPlane
+
+abbrev SPGModularGroup := Matrix.SpecialLinearGroup (Fin 2) ℤ
+
+/-- The scalar automorphic factor `j(γ, τ) = cτ + d` for the integer modular group.
+
+This is the concrete geometric carrier available in the current repository.  It is
+not yet a meromorphic continuation or a spectral current. -/
+def spgAutomorphicFactor (γ : SPGModularGroup) (τ : UpperHalfPlane) : ℂ :=
+  (γ.1 1 0 : ℂ) * (τ : ℂ) + (γ.1 1 1 : ℂ)
+
+/-- The weight-`k` slash readout used by the modularity contract. -/
+def spgSlash (k : ℤ) (f : UpperHalfPlane → ℂ) (γ : SPGModularGroup)
+    (τ : UpperHalfPlane) : ℂ :=
+  (spgAutomorphicFactor γ τ) ^ k * f (γ • τ)
+
+/-- The automorphic factor is normalized at the identity. -/
+theorem spgAutomorphicFactor_one (τ : UpperHalfPlane) :
+    spgAutomorphicFactor 1 τ = 1 := by
+  unfold spgAutomorphicFactor
+  simp
+
+/-- The slash readout is normalized at the identity. -/
+theorem spgSlash_one (k : ℤ) (f : UpperHalfPlane → ℂ) (τ : UpperHalfPlane) :
+    spgSlash k f 1 τ = f τ := by
+  simp [spgSlash, spgAutomorphicFactor_one]
+
+/--
+Contract for the asserted Stokes-flux/current modularity package.
+
+The current repository does not define the paper's current, its meromorphic
+continuation, or its spectral realization.  Those are therefore explicit inputs;
+the only proved modular statement here is the typed weight-`k` transformation law.
+This structure is a contract boundary, not an existence theorem.
+-/
+structure StokesFluxCurrentAutomorphicSpectralContract where
+  current : UpperHalfPlane → ℂ
+  weight : ℤ
+  modularity : ∀ γ : SPGModularGroup, ∀ τ : UpperHalfPlane,
+    spgSlash weight current γ τ = current τ
+
+/-- Read the exact modularity law from an explicit contract. -/
+theorem stokesFluxCurrentAutomorphicSpectralModularity
+    (D : StokesFluxCurrentAutomorphicSpectralContract) :
+    ∀ γ : SPGModularGroup, ∀ τ : UpperHalfPlane,
+      spgSlash D.weight D.current γ τ = D.current τ :=
+  D.modularity
+
+/-- Identity normalization for any current satisfying the modularity contract. -/
+theorem stokesFluxCurrentAutomorphicSpectralModularity_identity
+    (D : StokesFluxCurrentAutomorphicSpectralContract) (τ : UpperHalfPlane) :
+    spgSlash D.weight D.current 1 τ = D.current τ :=
+  spgSlash_one D.weight D.current τ
+
+end
+end Omega.SPG

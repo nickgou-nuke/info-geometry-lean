@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldCleanAncillaReversibleDilation
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCleanAncillaReversibleDilation
 
 namespace Omega.OperatorAlgebra
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiSelfreciprocalEscapeJensen
+import InfoGeometry.External.Automath.Omega.Zeta.XiSelfreciprocalEscapeJensen
 
 namespace Omega.Zeta
 

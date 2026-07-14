@@ -1,7 +1,7 @@
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
-import Omega.Folding.KilloPrimeFreedomNonFinitizability
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeFreedomNonFinitizability
 
 namespace Omega.Zeta
 

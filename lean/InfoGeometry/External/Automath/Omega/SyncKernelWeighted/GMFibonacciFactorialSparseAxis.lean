@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Zeta.GmFibonacciSubtowerEntrypointCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.GmFibonacciSubtowerEntrypointCriterion
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Omega.Zeta.XiEndpointFluxFiniteCMVComputable
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointFluxFiniteCMVComputable
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.GU.RealInputLength2PrimitiveAtom
+import InfoGeometry.External.Automath.Omega.GU.RealInputLength2PrimitiveAtom
 
 namespace Omega.GU
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.StatisticalStability.ResidueClassification
+import InfoGeometry.External.Automath.Omega.StatisticalStability.ResidueClassification
 
 open scoped BigOperators
 

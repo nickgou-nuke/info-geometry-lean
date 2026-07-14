@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.Window6CommonRefinementSMLevi
-import Omega.GroupUnification.Window6LeviRigidityPatiSalam
+import InfoGeometry.External.Automath.Omega.GroupUnification.Window6CommonRefinementSMLevi
+import InfoGeometry.External.Automath.Omega.GroupUnification.Window6LeviRigidityPatiSalam
 
 namespace Omega.GroupUnification
 

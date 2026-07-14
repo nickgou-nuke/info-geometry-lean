@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldBinMinsectorDensityPhiMinus2
-import Omega.Folding.KilloFoldBinNormalizedGaugeDeficiency
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinMinsectorDensityPhiMinus2
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinNormalizedGaugeDeficiency
 
 open Filter
 open scoped Topology goldenRatio

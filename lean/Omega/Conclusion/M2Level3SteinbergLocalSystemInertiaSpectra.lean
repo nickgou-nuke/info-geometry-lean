@@ -74,7 +74,8 @@ multiplicities determine the traces of `τ` and `σ`. -/
 theorem paper_conclusion_m2_level3_steinberg_local_system_inertia_spectra
     (D : conclusion_m2_level3_steinberg_local_system_inertia_spectra_data) :
     conclusion_m2_level3_steinberg_local_system_inertia_spectra_statement D := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      (D := ⟨by constructor <;> native_decide⟩) with
     ⟨hklingen, hsiegel, _, _, _, _, hSt, _, _⟩
   refine ⟨hklingen, hsiegel, rfl, rfl, rfl, ?_, ?_, ?_, ?_⟩
   · norm_num [conclusion_m2_level3_steinberg_local_system_inertia_spectra_steinberg_rank,

@@ -1,5 +1,5 @@
-import Omega.Zeta.XiEndpointAbsorptionAdditiveTomography
-import Omega.Zeta.XiExtremeResonanceCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAbsorptionAdditiveTomography
+import InfoGeometry.External.Automath.Omega.Zeta.XiExtremeResonanceCriterion
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointAbsorptionCoefficient
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAbsorptionCoefficient
 
 namespace Omega.Zeta
 

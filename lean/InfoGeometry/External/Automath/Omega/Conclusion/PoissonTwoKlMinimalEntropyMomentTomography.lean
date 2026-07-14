@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonEntropyTomography
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonEntropyTomography
 
 namespace Omega.Conclusion
 

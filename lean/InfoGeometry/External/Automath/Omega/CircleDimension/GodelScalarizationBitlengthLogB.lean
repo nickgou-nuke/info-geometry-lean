@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.CircleDimension.PrefixPrimeLedgerConservation
-import Omega.CircleDimension.SignedCircleDimension
-import Omega.SPG.GodelizationEntropy
+import InfoGeometry.External.Automath.Omega.CircleDimension.PrefixPrimeLedgerConservation
+import InfoGeometry.External.Automath.Omega.CircleDimension.SignedCircleDimension
+import InfoGeometry.External.Automath.Omega.SPG.GodelizationEntropy
 
 namespace Omega.CircleDimension
 

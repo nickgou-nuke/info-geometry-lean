@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
 
 namespace Omega.Conclusion
 

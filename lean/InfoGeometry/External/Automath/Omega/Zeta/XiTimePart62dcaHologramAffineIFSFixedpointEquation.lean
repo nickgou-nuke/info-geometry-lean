@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart62dcHologramBernoulliExactDimensional
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62dcHologramBernoulliExactDimensional
 
 namespace Omega.Zeta
 

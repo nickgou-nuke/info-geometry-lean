@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComputableCertificateTemplate
-import Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
-import Omega.Zeta.XiOracleCollapseToeplitzPsdFiniteTruncation
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComputableCertificateTemplate
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiOracleCollapseToeplitzPsdFiniteTruncation
 
 namespace Omega.Conclusion
 

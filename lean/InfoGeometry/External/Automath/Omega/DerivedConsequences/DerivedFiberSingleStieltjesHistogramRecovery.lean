@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldConditionalExpectationSpectrumHistogram
-import Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectationSpectrumHistogram
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
 
 namespace Omega.DerivedConsequences
 

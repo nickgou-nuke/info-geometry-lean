@@ -1,6 +1,6 @@
-import Omega.Folding.Defect
-import Omega.Folding.MismatchLanguage
-import Omega.Folding.ModularTower
+import InfoGeometry.External.Automath.Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.MismatchLanguage
+import InfoGeometry.External.Automath.Omega.Folding.ModularTower
 
 namespace Omega
 

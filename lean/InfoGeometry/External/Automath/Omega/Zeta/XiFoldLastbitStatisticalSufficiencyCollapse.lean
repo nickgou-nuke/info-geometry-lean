@@ -1,4 +1,4 @@
-import Omega.GU.Window6BinfoldLastbitLecamEquivalence
+import InfoGeometry.External.Automath.Omega.GU.Window6BinfoldLastbitLecamEquivalence
 
 namespace Omega.Zeta
 

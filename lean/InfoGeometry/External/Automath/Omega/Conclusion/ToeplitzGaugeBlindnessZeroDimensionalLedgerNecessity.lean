@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.CdimArbitraryProfiniteKernel
-import Omega.Zeta.XiCarathPickKernelNormalizationRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimArbitraryProfiniteKernel
+import InfoGeometry.External.Automath.Omega.Zeta.XiCarathPickKernelNormalizationRigidity
 
 namespace Omega.Conclusion
 

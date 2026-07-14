@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.FiniteDefectCompleteReconstruction
-import Omega.Zeta.XiToeplitzNegativeInertiaMinimalSampling
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzNegativeInertiaMinimalSampling
 
 namespace Omega.Conclusion
 

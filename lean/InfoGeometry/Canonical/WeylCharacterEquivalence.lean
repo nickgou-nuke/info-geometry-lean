@@ -12,16 +12,16 @@ import InfoGeometry.Algebraic.SplitSuperGeometry
 /-!
 # InfoGeometry.Canonical.WeylCharacterEquivalence
 
-Proof-carrying Souriau/Weyl/prime-gas character surface.
+Finite Souriau/Weyl/prime-gas character surface.
 
 Corrected denominator boundary: the Weyl-denominator analogue is the finite
 fermionic parity supertrace and the analytic inverse zeta packet, not the
 bosonic zeta partition function.  The bosonic trace is the reciprocal product.
 
-This module records the safe boundary for the Souriau-Weyl partition corridor.
-It does not prove a general infinite-dimensional Weyl character formula, a
-Bost-Connes/Riemann theorem, or an unconditional statement that zeta is a Weyl
-denominator.  Those are represented as explicit witness packets.
+This module records the finite boundary for the Souriau-Weyl partition
+corridor.  The arithmetic Möbius coefficient is imported from
+`InfoGeometry.Canonical.ParityTraceWitness`, where it is defined from
+`ArithmeticFunction.moebius`.
 -/
 
 namespace InfoGeometry.Canonical.WeylCharacterEquivalence
@@ -78,7 +78,7 @@ structure PrimeRapidityEncoding (Φ : WeylRootSystem) where
   rootWeight_eq_primeRapidity : ∀ α,
     Φ.positiveRootWeight α = primeRapidity α
 
-/-- Proof-carrying bridge between a Weyl denominator and a prime Euler product. -/
+/-- Finite bridge between a Weyl denominator and a prime Euler product. -/
 @[rep_depth thermo]
 structure WeylDenominatorEulerProductBridge where
   rootSystem : WeylRootSystem
@@ -100,11 +100,6 @@ theorem weylDenominator_eq_primeEulerProduct :
 
 end WeylDenominatorEulerProductBridge
 
-/-- Abstract integer-valued Möbius coefficient for proof-carrying witnesses. -/
-@[rep_depth thermo]
-def mobiusCoefficient (_n : ℕ) : ℤ :=
-  0
-
 /-- Weyl signature equals the supplied Möbius coefficient on square-free integers. -/
 @[rep_depth thermo]
 structure ParityTraceWitness where
@@ -113,7 +108,8 @@ structure ParityTraceWitness where
   squareFree : ℕ → Prop
   squareFreeToWeyl : ∀ n, squareFree n → WeylGroup
   signature_eq_mobius : ∀ n (h : squareFree n),
-    signature (squareFreeToWeyl n h) = mobiusCoefficient n
+    signature (squareFreeToWeyl n h) =
+      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n
 
 namespace ParityTraceWitness
 
@@ -122,7 +118,8 @@ variable (P : ParityTraceWitness)
 @[rep_depth thermo]
 theorem mobius_eq_weyl_signature_on_squarefree
     (n : ℕ) (h : P.squareFree n) :
-    P.signature (P.squareFreeToWeyl n h) = mobiusCoefficient n :=
+    P.signature (P.squareFreeToWeyl n h) =
+      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n :=
   P.signature_eq_mobius n h
 
 end ParityTraceWitness
@@ -195,14 +192,14 @@ theorem parityWitness_signature_eq_mobius
     (n : ℕ)
     (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      mobiusCoefficient n := by
+      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n := by
   exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
 
 @[rep_depth thermo]
 theorem parity_trace_from_squarefree_witness
     (n : ℕ) (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      mobiusCoefficient n := by
+      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n := by
   exact P.parityWitness_signature_eq_mobius n h
 
 end SouriauWeylPartitionPacket
@@ -236,7 +233,8 @@ theorem weylDenominator_eulerProduct_isomorphic
 @[rep_depth thermo]
 theorem moebius_signature_equivalence
     (P : ParityTraceWitness) (n : ℕ) (h : P.squareFree n) :
-    P.signature (P.squareFreeToWeyl n h) = mobiusCoefficient n :=
+    P.signature (P.squareFreeToWeyl n h) =
+      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n :=
   P.mobius_eq_weyl_signature_on_squarefree n h
 
 /-- Souriau thermal evaluation of prime-indexed Weyl roots. -/
@@ -249,18 +247,13 @@ structure SouriauThermalPrimeEvaluation where
   p_neg_beta : ℝ
   e_neg_alpha_eq_p_neg_beta : e_neg_alpha = p_neg_beta
 
-/--
-Proof-carrying packet identifying inverse zeta with the prime-indexed Weyl
-denominator/parity-supertrace under Souriau thermal evaluation.
--/
+/-- Prime-indexed inverse-zeta/Weyl/parity-supertrace equality record. -/
 @[rep_depth thermo]
 structure InverseZetaWeylParitySupertrace where
   beta : ℝ
   inverseZetaValue : ℝ
   weylDenominatorValue : ℝ
   paritySupertrace : ℝ
-  thermalEvaluation : Type*
-  thermalEvaluationWitness : thermalEvaluation → SouriauThermalPrimeEvaluation
   inverseZeta_eq_weylDenominator : inverseZetaValue = weylDenominatorValue
   weylDenominator_eq_paritySupertrace : weylDenominatorValue = paritySupertrace
 
@@ -275,10 +268,7 @@ theorem inverseZeta_eq_weylDenominator_paritySupertrace :
 
 end InverseZetaWeylParitySupertrace
 
-/--
-Proof-carrying reciprocal relation between the zeta value and bosonic prime
-partition readout.
--/
+/-- Reciprocal relation between the zeta value and bosonic prime partition readout. -/
 @[rep_depth thermo]
 structure BosonicZetaPartitionReciprocal where
   beta : ℝ
@@ -304,7 +294,6 @@ and reciprocal bosonic-partition readouts for the prime-indexed Souriau lane.
 @[rep_depth thermo]
 structure PrimeIndexedSouriauThermalEvaluation where
   beta : ℝ
-  thermalEvaluationRule : Prop
   inverseZeta : ℝ
   primeIndexedWeylDenominator : ℝ
   paritySupertrace : ℝ
@@ -353,18 +342,21 @@ parity trace; bosonic and ordinary fermionic traces are kept separate.
 structure CorrectedSouriauWeylSupertracePacket where
   lattice : FormalPrimeRootSystem.FormalPrimeRootLattice
   p_neg_beta : ℕ → ℝ
-  parityTrace_is_denominator :
+
+@[rep_depth thermo]
+theorem finiteParityTrace_eq_weylDenominatorProduct
+    (lattice : FormalPrimeRootSystem.FormalPrimeRootLattice)
+    (p_neg_beta : ℕ → ℝ) :
     PrimeGasPartitions.finiteParityTrace lattice p_neg_beta =
-      FormalPrimeRootSystem.weylDenominatorProduct lattice p_neg_beta
-  bosonTrace_separate : Prop
-  fermionTrace_separate : Prop
+      FormalPrimeRootSystem.weylDenominatorProduct lattice p_neg_beta := by
+  rfl
 
 @[rep_depth thermo]
 theorem corrected_denominator_is_parity_supertrace
     (P : CorrectedSouriauWeylSupertracePacket) :
     PrimeGasPartitions.finiteParityTrace P.lattice P.p_neg_beta =
       FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
-  P.parityTrace_is_denominator
+  finiteParityTrace_eq_weylDenominatorProduct P.lattice P.p_neg_beta
 
 /--
 Split parity-supertrace compatibility packet for the Weyl denominator corridor.
@@ -408,9 +400,6 @@ This keeps the analytic and finite prime data untouched.
 structure SplitCorrectedSouriauWeylSupertracePacket where
   lattice : FormalPrimeRootSystem.FormalPrimeRootLattice
   p_neg_beta : ℕ → ℝ
-  parityTrace_is_denominator :
-    PrimeGasPartitions.finiteParityTrace lattice p_neg_beta =
-      FormalPrimeRootSystem.weylDenominatorProduct lattice p_neg_beta
   paritySupertrace : ℝ
   inverseZeta : ℝ
   inverseZeta_eq_paritySupertrace :
@@ -421,24 +410,6 @@ theorem split_corrected_denominator_is_parity_supertrace
     (P : SplitCorrectedSouriauWeylSupertracePacket) :
     PrimeGasPartitions.finiteParityTrace P.lattice P.p_neg_beta =
       FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
-  P.parityTrace_is_denominator
+  finiteParityTrace_eq_weylDenominatorProduct P.lattice P.p_neg_beta
 
 end InfoGeometry.Canonical.WeylCharacterEquivalence
-
-/-!
-Compatibility namespace for older theorem-facing names.  These declarations are
-kept proof-free/packetized and do not assert the analytic theorem.
--/
-namespace InfoGeometry.Canonical.WeylEquivalence
-
-/-- Symbolic Weyl denominator packet. -/
-@[rep_depth thermo]
-structure WeylDenominator (Roots : Set ℝ) where
-  denominator : ℝ
-
-/-- Symbolic prime-gas Euler-product readout. -/
-@[rep_depth thermo]
-def PrimeGasEulerProduct (_beta : ℝ) : ℝ :=
-  1
-
-end InfoGeometry.Canonical.WeylEquivalence

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.CoarsegrainingQuadraticStokesAreaRigidity
-import Omega.SPG.BoundaryMultigraphH1Cdim
+import InfoGeometry.External.Automath.Omega.Folding.CoarsegrainingQuadraticStokesAreaRigidity
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryMultigraphH1Cdim
 
 namespace Omega.Folding
 

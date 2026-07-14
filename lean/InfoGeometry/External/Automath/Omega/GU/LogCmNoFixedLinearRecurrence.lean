@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.GU.LogCmStableInverseExponentialSeparation
+import InfoGeometry.External.Automath.Omega.GU.LogCmStableInverseExponentialSeparation
 
 namespace Omega.GU
 

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.FreeMonoid.Basic
 import Mathlib.Tactic
-import Omega.POM.PrimeTraceShiftFreeMonoid
+import InfoGeometry.External.Automath.Omega.POM.PrimeTraceShiftFreeMonoid
 
 namespace Omega.POM
 

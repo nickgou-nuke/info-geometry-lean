@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
 
 namespace Omega.Folding
 

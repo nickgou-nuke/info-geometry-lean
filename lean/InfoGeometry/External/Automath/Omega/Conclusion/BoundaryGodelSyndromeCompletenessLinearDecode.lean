@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SPG.DyadicBoundarySyndromeFillability
-import Omega.SPG.LinearTimeBulkDecodeFromBoundary
+import InfoGeometry.External.Automath.Omega.SPG.DyadicBoundarySyndromeFillability
+import InfoGeometry.External.Automath.Omega.SPG.LinearTimeBulkDecodeFromBoundary
 
 namespace Omega.Conclusion
 

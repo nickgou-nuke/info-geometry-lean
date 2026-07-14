@@ -1,4 +1,4 @@
-import Omega.SPG.DyadicPolyclubeDiscreteIsoperimetry
+import InfoGeometry.External.Automath.Omega.SPG.DyadicPolyclubeDiscreteIsoperimetry
 
 namespace Omega.Conclusion
 

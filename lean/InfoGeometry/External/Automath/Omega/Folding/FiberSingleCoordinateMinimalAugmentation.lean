@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Folding.TranslationEquationOrbitSolutionSpace
-import Omega.Folding.TranslationKernelFourierSgM
+import InfoGeometry.External.Automath.Omega.Folding.TranslationEquationOrbitSolutionSpace
+import InfoGeometry.External.Automath.Omega.Folding.TranslationKernelFourierSgM
 
 namespace Omega.Folding
 

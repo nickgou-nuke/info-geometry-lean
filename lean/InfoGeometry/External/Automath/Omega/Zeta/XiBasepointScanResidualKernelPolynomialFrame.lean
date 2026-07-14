@@ -2,7 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiBasepointScanLeverageGapCodim1ClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanLeverageGapCodim1ClosedForm
 
 namespace Omega.Zeta
 

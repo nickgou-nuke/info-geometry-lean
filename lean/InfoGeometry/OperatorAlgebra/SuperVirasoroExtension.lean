@@ -40,17 +40,15 @@ structure VirasoroAlgebraDatum
   central_commutes_hyp :
     ∀ X : L, ⁅centralCharge, X⁆ = 0
 
-  /--
-  Virasoro bracket law.
-
-  Morally:
-  `[L_m,L_n] = (m-n)L_{m+n} + c/12 * (m^3-m) δ_{m+n,0}`.
-  -/
-  virasoro_bracket_law : Prop
-
-  /-- Proof of the bracket law. -/
-  virasoro_bracket_law_holds :
-    virasoro_bracket_law
+  /-- Virasoro mode bracket with central term. -/
+  virasoro_bracket :
+    ∀ m n : ℤ,
+      ⁅genL m, genL n⁆ =
+        (((m - n : ℤ) : ℝ) • genL (m + n)) +
+          (if m + n = 0 then
+            ((((m ^ 3 - m : ℤ) : ℝ) / 12) • centralCharge)
+          else
+            0)
 
 namespace VirasoroAlgebraDatum
 
@@ -63,6 +61,17 @@ theorem central_commutes
     (X : L) :
     ⁅V.centralCharge, X⁆ = 0 :=
   V.central_commutes_hyp X
+
+/-- Read back the supplied Virasoro bracket formula. -/
+theorem bracket_genL
+    (m n : ℤ) :
+    ⁅V.genL m, V.genL n⁆ =
+      (((m - n : ℤ) : ℝ) • V.genL (m + n)) +
+        (if m + n = 0 then
+          ((((m ^ 3 - m : ℤ) : ℝ) / 12) • V.centralCharge)
+        else
+          0) :=
+  V.virasoro_bracket m n
 
 end VirasoroAlgebraDatum
 
@@ -109,17 +118,34 @@ structure SuperVirasoroAlgebraDatum
   /-- Chiral supercharge modes. -/
   genG : ℚ → L
 
-  /--
-  Supercharge anticommutation law.
+  /-- Sector-dependent projection of a supercharge mode sum to a Virasoro mode. -/
+  superModeSum : ℚ → ℚ → ℤ
 
-  Morally:
-  `{G_r,G_s} = 2L_{r+s} + central term`.
-  -/
-  super_bracket_law : Prop
+  /-- Sector-dependent central coefficient in the odd/odd bracket. -/
+  superCentralCoefficient : ℚ → ℚ → ℝ
 
-  /-- Proof of the super bracket law. -/
-  super_bracket_law_holds :
-    super_bracket_law
+  /-- Supercharge odd/odd bracket formula with explicit sector data. -/
+  super_bracket :
+    ∀ r s : ℚ,
+      ⁅genG r, genG s⁆ =
+        (2 : ℝ) • bosonic.genL (superModeSum r s) +
+          superCentralCoefficient r s • bosonic.centralCharge
+
+namespace SuperVirasoroAlgebraDatum
+
+variable
+    {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+variable (S : SuperVirasoroAlgebraDatum L)
+
+/-- Read back the supplied odd/odd supercharge bracket formula. -/
+theorem bracket_genG
+    (r s : ℚ) :
+    ⁅S.genG r, S.genG s⁆ =
+      (2 : ℝ) • S.bosonic.genL (S.superModeSum r s) +
+        S.superCentralCoefficient r s • S.bosonic.centralCharge :=
+  S.super_bracket r s
+
+end SuperVirasoroAlgebraDatum
 
 /-! ## 4. Central charge bridge -/
 

@@ -1,4 +1,4 @@
-import Omega.Folding.S3Recurrence
+import InfoGeometry.External.Automath.Omega.Folding.S3Recurrence
 
 namespace Omega
 

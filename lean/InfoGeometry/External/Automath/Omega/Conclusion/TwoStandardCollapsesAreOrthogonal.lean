@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.CollisionFlowEquivalenceFullShift
-import Omega.POM.MertensNotFlowInvariant
+import InfoGeometry.External.Automath.Omega.POM.CollisionFlowEquivalenceFullShift
+import InfoGeometry.External.Automath.Omega.POM.MertensNotFlowInvariant
 
 namespace Omega.Conclusion
 

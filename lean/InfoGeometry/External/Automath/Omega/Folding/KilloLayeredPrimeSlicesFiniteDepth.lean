@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
 
 namespace Omega.Folding
 

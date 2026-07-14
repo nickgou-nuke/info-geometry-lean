@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.DyadicBoundaryCodeExactUniqueDecodingRadius
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryCodeExactUniqueDecodingRadius
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import InfoGeometry.Projective.KleinQuadricIncidence
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
-import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.KuzminCuntzPath
 
 /-!
@@ -160,7 +160,6 @@ structure RohozhkinPlabicInterface (moving : ℕ) where
   PlabicMove : Type
   moveOfGenerator :
     PureBraidGenerator (rohozhkinTotalPoints moving) → PlabicMove
-  compatibility : Prop
 
 /-- The Rohozhkin component of a plabic interface descends to the presented pure braid group. -/
 theorem rohozhkin_plabic_descent_packet {moving : ℕ}

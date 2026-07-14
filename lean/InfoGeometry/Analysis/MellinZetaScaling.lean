@@ -55,8 +55,8 @@ structure FiniteMellinScalingDatum
     ∀ (A : Finset ℕ) (g : ℕ → Func),
       Mellin (Finset.sum A g) = Finset.sum A (fun n => Mellin (g n))
 
-  /-- Dilation character law. -/
-  sample_law :
+  /-- Mellin readout of a scaled sample is multiplication by its weight. -/
+  Mellin_sample_eq_weight_mul :
     ∀ n f, Mellin (sample n f) = weight n * Mellin f
 
 namespace FiniteMellinScalingDatum
@@ -82,7 +82,7 @@ theorem finite_sample_sum_factor
         = Finset.sum A (fun n => D.weight n * D.Mellin f) := by
             refine Finset.sum_congr rfl ?_
             intro n hn
-            rw [D.sample_law n f]
+            rw [D.Mellin_sample_eq_weight_mul n f]
     _ = Finset.sum A (fun n => D.Mellin f * D.weight n) := by
           refine Finset.sum_congr rfl ?_
           intro n hn
@@ -112,7 +112,7 @@ theorem finite_sample_product_factor
         = ∏ n ∈ A, D.weight n * D.Mellin f := by
             refine Finset.prod_congr rfl ?_
             intro n hn
-            rw [D.sample_law n f]
+            rw [D.Mellin_sample_eq_weight_mul n f]
     _ = (∏ n ∈ A, D.weight n) * (∏ _n ∈ A, D.Mellin f) := by
           rw [Finset.prod_mul_distrib]
     _ = (∏ n ∈ A, D.weight n) * D.Mellin f ^ A.card := by

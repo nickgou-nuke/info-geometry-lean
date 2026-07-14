@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Sqrt
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
 
 namespace Omega.OperatorAlgebra
 

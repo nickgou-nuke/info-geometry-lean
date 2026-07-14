@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.GoldenSprtTailExponentChernoffIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtTailExponentChernoffIdentity
 
 namespace Omega.Conclusion
 

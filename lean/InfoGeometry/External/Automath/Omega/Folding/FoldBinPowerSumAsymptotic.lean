@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 namespace Omega.Folding
 

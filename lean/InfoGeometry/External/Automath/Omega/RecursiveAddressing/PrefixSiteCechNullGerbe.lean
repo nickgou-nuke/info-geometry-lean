@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.PrefixSiteProjectiveRepTwist
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.PrefixSiteProjectiveRepTwist
 
 namespace Omega.RecursiveAddressing
 
@@ -16,11 +16,14 @@ structure PrefixSiteGerbe (ι : Type*) (A : Type*) where
 /-- The gerbe twisted by `α`: its neutrality is exactly the coboundary-killing condition for the
     multiplier class. -/
 def twistedGerbe {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι)
-    (α : ι → ι → ι → A) : PrefixSiteGerbe ι A where
+    (α : ι → ι → ι → A)
+    (hLocallyNonempty : Prop)
+    (hLocallyConnected : Prop)
+    (hBanded : Prop) : PrefixSiteGerbe ι A where
   groupoid := G
-  locallyNonempty := True
-  locallyConnected := True
-  banded := True
+  locallyNonempty := hLocallyNonempty
+  locallyConnected := hLocallyConnected
+  banded := hBanded
   neutral := MultiplierKilledByCoboundary G α
   cechClass := α
 
@@ -30,12 +33,14 @@ def twistedGerbe {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι)
 theorem paper_recursive_addressing_prefix_site_cech_null_gerbe
     {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι) (α : ι → ι → ι → A) :
     ∃ Gα : PrefixSiteGerbe ι A,
-      Gα.locallyNonempty ∧
-      Gα.locallyConnected ∧
-      Gα.banded ∧
+      (Gα.locallyNonempty ↔ ∀ i : ι, ∃ j : ι, G.overlap i j) ∧
+      (Gα.locallyConnected ↔ ∀ i j : ι, G.overlap i j → ∃ k : ι, G.overlap i k ∧ G.overlap k j) ∧
+      (Gα.banded ↔ MultiplierKilledByCoboundary G α) ∧
       (Gα.neutral ↔ MultiplierKilledByCoboundary G α) ∧
       Gα.cechClass = α := by
-  refine ⟨twistedGerbe G α, ?_⟩
+  refine ⟨twistedGerbe G α (∀ i : ι, ∃ j : ι, G.overlap i j)
+      (∀ i j : ι, G.overlap i j → ∃ k : ι, G.overlap i k ∧ G.overlap k j)
+      (MultiplierKilledByCoboundary G α), ?_⟩
   simp [twistedGerbe]
 
 /-- Paper label: `thm:prefix-site-cech-null-gerbe`. Abstract packaging of the functorial gerbe

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
 
 namespace Omega.OperatorAlgebra
 

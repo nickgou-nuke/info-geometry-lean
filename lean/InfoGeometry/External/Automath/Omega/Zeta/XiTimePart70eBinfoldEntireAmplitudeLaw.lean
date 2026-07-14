@@ -3,8 +3,8 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
-import Omega.Zeta.XiTimePart70aaRealMomentInversemomentBernoulliBridge
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart70aaRealMomentInversemomentBernoulliBridge
 
 namespace Omega.Zeta
 

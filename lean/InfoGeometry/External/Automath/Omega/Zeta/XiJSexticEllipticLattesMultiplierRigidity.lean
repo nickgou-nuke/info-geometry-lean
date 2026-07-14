@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Zeta.XiJSexticEllipticLattesKleinMobius
+import InfoGeometry.External.Automath.Omega.Zeta.XiJSexticEllipticLattesKleinMobius
 
 namespace Omega.Zeta
 

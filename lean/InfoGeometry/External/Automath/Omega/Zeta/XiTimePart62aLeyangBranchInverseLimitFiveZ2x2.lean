@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalZmLeyangFiniteBranchRegular4aryAddress
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangFiniteBranchRegular4aryAddress
 
 namespace Omega.Zeta
 

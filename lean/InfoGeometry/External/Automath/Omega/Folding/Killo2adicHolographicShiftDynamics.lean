@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.Killo2adicHolographicCylinderEntropyDimension
-import Omega.Folding.KilloInfiniteStream2adicHolographicPoint
+import InfoGeometry.External.Automath.Omega.Folding.Killo2adicHolographicCylinderEntropyDimension
+import InfoGeometry.External.Automath.Omega.Folding.KilloInfiniteStream2adicHolographicPoint
 
 namespace Omega.Folding
 

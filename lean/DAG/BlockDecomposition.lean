@@ -43,19 +43,19 @@ def ofTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) : Block
     for i in [:n0] do
       for j in [:n1] do
         let row := mat[i]!
-        mat := mat.set! i (row.set! (n0 + j) b1t[i]![j]!)
+        mat := mat.set! i (row.set! (n0 + j) (b1t[i]!)[j]!)
     for i in [:n1] do
       for j in [:n0] do
         let row := mat[n0 + i]!
-        mat := mat.set! (n0 + i) (row.set! j b1[i]![j]!)
+        mat := mat.set! (n0 + i) (row.set! j (b1[i]!)[j]!)
     for i in [:n1] do
       for j in [:n2] do
         let row := mat[n0 + i]!
-        mat := mat.set! (n0 + i) (row.set! (n0 + n1 + j) b2t[i]![j]!)
+        mat := mat.set! (n0 + i) (row.set! (n0 + n1 + j) (b2t[i]!)[j]!)
     for i in [:n2] do
       for j in [:n1] do
         let row := mat[n0 + n1 + i]!
-        mat := mat.set! (n0 + n1 + i) (row.set! (n0 + j) b2[i]![j]!)
+        mat := mat.set! (n0 + n1 + i) (row.set! (n0 + j) (b2[i]!)[j]!)
     mat
   let Γ := Id.run do
     let mut mat := Array.replicate dim (Array.replicate dim (0 : Rat))
@@ -74,15 +74,15 @@ def ofTwoComplex {α : Type} [BEq α] [Hashable α] (tc : TwoComplex α) : Block
     for i in [:n0] do
       for j in [:n0] do
         let row := mat[i]!
-        mat := mat.set! i (row.set! j Δ₀[i]![j]!)
+        mat := mat.set! i (row.set! j (Δ₀[i]!)[j]!)
     for i in [:n1] do
       for j in [:n1] do
         let row := mat[n0 + i]!
-        mat := mat.set! (n0 + i) (row.set! (n0 + j) Δ₁[i]![j]!)
+        mat := mat.set! (n0 + i) (row.set! (n0 + j) (Δ₁[i]!)[j]!)
     for i in [:n2] do
       for j in [:n2] do
         let row := mat[n0 + n1 + i]!
-        mat := mat.set! (n0 + n1 + i) (row.set! (n0 + n1 + j) Δ₂[i]![j]!)
+        mat := mat.set! (n0 + n1 + i) (row.set! (n0 + n1 + j) (Δ₂[i]!)[j]!)
     mat
   { complex := tc
     dim := (n0, n1, n2)

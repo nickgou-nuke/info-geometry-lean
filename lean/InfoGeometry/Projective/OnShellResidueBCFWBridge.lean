@@ -3,7 +3,6 @@ import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
 import InfoGeometry.Topology.GrandUnificationLinker
 import InfoGeometry.Topology.ThermodynamicGauge
-import InfoGeometry.Topology.BostConnesWilsonLoop
 
 /-!
 # On-Shell Residue / BCFW Interface
@@ -40,10 +39,10 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamMotive
 open InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 open InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 
-/-! ## Local dlog residue readback -/
+/-! ## Local dlog residue boundary -/
 
 /-- The local `dlog` pole model around one Klein factor gives `2πi`. -/
-theorem local_dlog_residue_readout (R : ℝ) (hR : 0 < R) :
+theorem local_dlog_residue (R : ℝ) (hR : 0 < R) :
     (∮ z in C((0 : ℂ), R), grothendieck_dlog z) =
       (2 * Real.pi * Complex.I : ℂ) :=
   circleIntegral_grothendieck_dlog R hR
@@ -82,19 +81,17 @@ theorem arnold_relation_zero
 
 end ArnoldResidueRealization
 
-/-! ## Native Thermodynamic BCFW Readout -/
+/-! ## Native Thermodynamic BCFW boundary -/
 
 open InfoGeometry.Topology.GrandUnificationLinker
 open InfoGeometry.Topology.ThermodynamicGauge
-open InfoGeometry.Topology.BostConnesWilsonLoop
-
 /--
 Native finite BCFW-style readout from the closed DAG-flow theorem.
 
 This is exactly the theorem proved in `GrandUnificationLinker`, restated at the
 residue interface boundary. It does not compute a physical scattering amplitude.
 -/
-theorem residue_bcfw_readout
+theorem residue_bcfw
     {Op : Type*} [Ring Op] [Star Op]
     (jewel : QuantumJewel Op) :
     jewel.dag_edge * amplituhedron_volume_element jewel =
@@ -116,14 +113,14 @@ structure DiagramCompressionDatum where
   carrierCount_eq : carrierCount = 1
 
 /-- The bookkeeping carrier count is strictly smaller than the diagram count. -/
-theorem diagram_compression_count_readout
+theorem diagram_compression_count
     (D : DiagramCompressionDatum) :
     D.carrierCount < D.diagramCount := by
   rw [D.carrierCount_eq, D.diagramCount_eq]
   norm_num
 
 /-- The illustrative bookkeeping difference is `219`. -/
-theorem diagram_compression_difference_readout
+theorem diagram_compression_difference
     (D : DiagramCompressionDatum) :
     D.diagramCount - D.carrierCount = 219 := by
   simp [D.diagramCount_eq, D.carrierCount_eq]
@@ -154,8 +151,8 @@ theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ 
       InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.base.lines.line i) := by
   exact ⟨D.qStable.inWindow,
     ⟨D.qStable.stableEquiv⟩,
-    diagram_compression_count_readout D.compression,
-    residue_bcfw_readout jewel,
+    diagram_compression_count D.compression,
+    residue_bcfw jewel,
     D.base.lines.line_isKlein i⟩
 
 /--
@@ -174,7 +171,6 @@ def on_shell_q_residue_to_bost_connes_certificate
       trace (thermodynamic_curvature jewel.thermodynamic_flow) = zetaValue) :
     trace (finite_wilson_loop path) = zetaValue ∧
     trace (thermodynamic_curvature jewel.thermodynamic_flow) = zetaValue :=
-  InfoGeometry.Topology.BostConnesWilsonLoop.explicit_premises_resolve_both_readouts
-    jewel.thermodynamic_flow trace path zetaValue h_holonomy h_curvature
+  ⟨h_holonomy, h_curvature⟩
 
 end InfoGeometry.Projective.OnShellResidueBCFWBridge

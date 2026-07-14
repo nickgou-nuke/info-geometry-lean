@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.POM.MomentMod3TwoPhase
+import InfoGeometry.External.Automath.Omega.POM.MomentMod3TwoPhase
 
 namespace Omega.POM
 

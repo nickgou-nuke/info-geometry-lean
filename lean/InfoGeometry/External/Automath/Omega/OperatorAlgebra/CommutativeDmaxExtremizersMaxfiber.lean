@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
-import Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
 
 namespace Omega.OperatorAlgebra
 

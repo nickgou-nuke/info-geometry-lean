@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.HalfExponentNeedsExpMomentOrder
+import InfoGeometry.External.Automath.Omega.POM.HalfExponentNeedsExpMomentOrder
 
 open scoped BigOperators
 

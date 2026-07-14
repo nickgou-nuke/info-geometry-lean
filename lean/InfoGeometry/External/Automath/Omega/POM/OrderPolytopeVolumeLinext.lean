@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Factorial.Basic
-import Omega.POM.MaxchainsEqualsLinext
+import InfoGeometry.External.Automath.Omega.POM.MaxchainsEqualsLinext
 
 namespace Omega.POM
 

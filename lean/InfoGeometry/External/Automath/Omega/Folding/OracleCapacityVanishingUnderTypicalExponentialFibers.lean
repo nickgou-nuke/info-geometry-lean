@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Folding.OracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityClosedForm
 
 namespace Omega.Folding
 

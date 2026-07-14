@@ -74,6 +74,17 @@ theorem primitiveFiniteZetaPartition_nonneg
   intro n hn
   exact primitiveMellinKernel_nonneg n β
 
+/-- If the finite support contains a state above `1`, the restricted partition is positive. -/
+theorem primitiveFiniteZetaPartition_pos_of_mem_gt_one
+    {A : Finset ℕ} {β : ℝ} {n : ℕ} (hnA : n ∈ A) (hn : 1 < n) :
+    0 < primitiveFiniteZetaPartition A β := by
+  unfold primitiveFiniteZetaPartition
+  exact Finset.sum_pos'
+    (fun m _hm => primitiveMellinKernel_nonneg m β)
+    ⟨n, hnA, by
+      rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
+      exact Real.exp_pos _⟩
+
 /--
 On positive-weight states, the finite restricted partition is the ordinary
 Gibbs sum `∑ exp (-β log n)`.
@@ -134,6 +145,13 @@ theorem partition_nonneg
     (A : PrimitiveAdmissibleFinset) (β : ℝ) :
     0 ≤ A.partition β :=
   primitiveFiniteZetaPartition_nonneg A.support β
+
+/-- An admissible finite partition is positive when its support contains a state above `1`. -/
+theorem partition_pos_of_mem_gt_one
+    (A : PrimitiveAdmissibleFinset) {β : ℝ} {n : ℕ}
+    (hnA : n ∈ A.support) (hn : 1 < n) :
+    0 < A.partition β := by
+  exact primitiveFiniteZetaPartition_pos_of_mem_gt_one hnA hn
 
 /-- The admissible objective is the integrated finite partition. -/
 theorem objective_eq_integral_partition

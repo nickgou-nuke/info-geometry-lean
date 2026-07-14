@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldResonanceLadderFibLucLimits
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceLadderFibLucLimits
 
 open Filter
 open scoped goldenRatio

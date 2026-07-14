@@ -189,18 +189,6 @@ theorem sedenionBasis_cuntz_projection_packet
 
 variable {A : Type*} [CommRing A] [Invertible (2 : A)]
 
-/-- Tripotent Drazin support/null packet reused for the sector-defect lane. -/
-theorem tripotent_drazin_sector_packet (T : A) (hT : T ^ 3 = T) :
-    tripotentDrazinProjector T = T ^ 2 ∧
-      tripotentDrazinProjector T = P_plus T + P_minus T ∧
-      tripotentDrazinNullProjector T = P_zero T ∧
-      T * tripotentDrazinNullProjector T = 0 := by
-  exact ⟨
-    tripotent_drazin_projector_eq_square T,
-    tripotent_drazin_projector_eq_active_trifactor T,
-    tripotent_drazin_null_projector_eq_P_zero T,
-    tripotent_annihilates_drazin_null_projector T hT⟩
-
 /-- Combined finite bridge packet: sector count, bilinear split, and associator shadow. -/
 theorem sedenion_spinor_finite_digest_packet :
     1 + Fintype.card SteeringSector * 3 = 16 ∧

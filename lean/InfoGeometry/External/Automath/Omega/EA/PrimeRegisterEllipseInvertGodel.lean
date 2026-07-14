@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.EA.JoukowskyEllipse
+import InfoGeometry.External.Automath.Omega.EA.JoukowskyEllipse
 
 namespace Omega.EA
 

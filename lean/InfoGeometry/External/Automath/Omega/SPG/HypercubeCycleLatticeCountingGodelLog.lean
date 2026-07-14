@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SPG.HypercubeCycleLatticeGodelEllipsoidCounting
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeCycleLatticeGodelEllipsoidCounting
 
 namespace Omega.SPG
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Multiset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
 
 namespace Omega.Zeta
 

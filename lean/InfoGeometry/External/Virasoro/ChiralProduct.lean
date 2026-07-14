@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Codex
 -/
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import Mathlib.Algebra.Lie.DirectSum
+
+set_option linter.unusedSectionVars false
 
 /-!
 # Chiral product of the Virasoro algebra
@@ -156,31 +159,35 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
 @[simp] theorem lgenLeft_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
     ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
       (n - m : 𝕜) • lgenLeft (𝕜 := 𝕜) (n + m) := by
-  rw [lgenLeft_bracket, VirasoroAlgebra.lgen_bracket_of_ne_zero (𝕜 := 𝕜) n m h]
-  simp [lgenLeft, inLeft]
+  ext
+  · simp [inLeft, lgenLeft, VirasoroAlgebra.lgen_bracket, h]
+  · simp [inLeft, lgenLeft]
 
 /-- The right-sector generator bracket has no central term away from resonance. -/
 @[simp] theorem lgenRight_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
     ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
       (n - m : 𝕜) • lgenRight (𝕜 := 𝕜) (n + m) := by
-  rw [lgenRight_bracket, VirasoroAlgebra.lgen_bracket_of_ne_zero (𝕜 := 𝕜) n m h]
-  simp [lgenRight, inRight]
+  ext
+  · simp [inRight, lgenRight]
+  · simp [inRight, lgenRight, VirasoroAlgebra.lgen_bracket, h]
 
 /-- The left-sector generator bracket at resonance carries the central correction. -/
 @[simp] theorem lgenLeft_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
     ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
       (n - m : 𝕜) • lgenLeft (𝕜 := 𝕜) (n + m)
         + ((n^3 - n : 𝕜) / 12) • cgenLeft (𝕜 := 𝕜) := by
-  rw [lgenLeft_bracket, VirasoroAlgebra.lgen_bracket_of_add_eq_zero (𝕜 := 𝕜) n m h]
-  simp [lgenLeft, cgenLeft, inLeft]
+  ext
+  · simp [inLeft, lgenLeft, cgenLeft, VirasoroAlgebra.lgen_bracket, h]
+  · simp [inLeft, lgenLeft, cgenLeft]
 
 /-- The right-sector generator bracket at resonance carries the central correction. -/
 @[simp] theorem lgenRight_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
     ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
       (n - m : 𝕜) • lgenRight (𝕜 := 𝕜) (n + m)
         + ((n^3 - n : 𝕜) / 12) • cgenRight (𝕜 := 𝕜) := by
-  rw [lgenRight_bracket, VirasoroAlgebra.lgen_bracket_of_add_eq_zero (𝕜 := 𝕜) n m h]
-  simp [lgenRight, cgenRight, inRight]
+  ext
+  · simp [inRight, lgenRight, cgenRight]
+  · simp [inRight, lgenRight, cgenRight, VirasoroAlgebra.lgen_bracket, h]
 
 /-- The left and right central elements commute with everything in the product. -/
 @[simp] theorem cgenLeft_bracket (X : ChiralVirasoro 𝕜) :

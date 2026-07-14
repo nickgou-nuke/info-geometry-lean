@@ -7,9 +7,9 @@ import InfoGeometry.Topology.ThermodynamicGauge
 Conservative first-level scaffold for finite non-abelian Wilson-loop style
 transport over a finite thermodynamic flow packet.
 
-This module deliberately avoids analytic content. It only records
-finite-word algebra and explicit trace/curvature hypotheses that can be
-consumed by downstream files.
+This module deliberately avoids analytic content. It records finite-word
+algebra for transported loop words and the detailed-balance curvature
+collapse used by downstream files.
 -/
 
 namespace InfoGeometry.Topology.WilsonLoopThermodynamics
@@ -97,81 +97,6 @@ theorem finite_flow_wilson_loop_singleton
     (flow : CausalNonequilibriumFlow Op) (step : Op) :
     finite_flow_wilson_loop flow [step] = 1 + flowed_connection_step flow step := by
   simp [finite_flow_wilson_loop]
-
-/-- Explicit compatibility hypothesis comparing transported and static loop-word
-trace readouts. This keeps the Wilson/Bost-Connes bridge assumption-driven. -/
-structure FlowStaticHolonomyAgreement (flow : CausalNonequilibriumFlow Op)
-    [Algebra ℝ Op] (trace : Op →ₗ[ℝ] ℝ) where
-  agrees : ∀ word : LoopWord Op,
-    trace (LoopWord.flowHolonomy flow word) = trace (LoopWord.holonomy word)
-
-/-- Read back a supplied transported/static trace comparison on one finite word. -/
-theorem flow_static_holonomy_agreement_readout
-    [Algebra ℝ Op]
-    (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (agreement : FlowStaticHolonomyAgreement flow trace)
-    (word : LoopWord Op) :
-    trace (LoopWord.flowHolonomy flow word) = trace (LoopWord.holonomy word) :=
-  agreement.agrees word
-
-/-- Certificate carrying compatible finite flow-holonomy and curvature trace
-evaluations. The scalar is named `partitionZeta` because downstream
-Bost-Connes interfaces use it as a supplied partition readout; no analytic
-partition identity is asserted here. -/
-structure WilsonCurvatureTraceCertificate (flow : CausalNonequilibriumFlow Op)
-    [Algebra ℝ Op] (trace : Op →ₗ[ℝ] ℝ) where
-  partitionZeta : ℝ
-  path : LoopWord Op
-  holonomy_trace_eval : trace (LoopWord.flowHolonomy flow path) = partitionZeta
-  curvature_trace_eval : trace (thermodynamic_curvature flow) = partitionZeta
-
-/-- Readout schema from an explicit finite flow Wilson-loop trace premise. -/
-theorem reads_holonomy_of_premise
-    [Algebra ℝ Op] (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (path : LoopWord Op)
-    (partitionZeta : ℝ)
-    (holonomy_trace_eval : trace (LoopWord.flowHolonomy flow path) = partitionZeta) :
-    trace (LoopWord.flowHolonomy flow path) = partitionZeta :=
-  holonomy_trace_eval
-
-/-- Readout schema from an explicit finite curvature trace premise. -/
-theorem reads_curvature_of_premise
-    [Algebra ℝ Op] (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (partitionZeta : ℝ)
-    (curvature_trace_eval : trace (thermodynamic_curvature flow) = partitionZeta) :
-    trace (thermodynamic_curvature flow) = partitionZeta :=
-  curvature_trace_eval
-
-/-- Readout schema from a finite certificate packet carrying holonomy data. -/
-theorem reads_holonomy_of_certificate
-    [Algebra ℝ Op] (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (certificate : WilsonCurvatureTraceCertificate flow trace) :
-    trace (LoopWord.flowHolonomy flow certificate.path) = certificate.partitionZeta :=
-  certificate.holonomy_trace_eval
-
-/-- Readout schema from a finite certificate packet carrying curvature data. -/
-theorem reads_curvature_of_certificate
-    [Algebra ℝ Op] (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (certificate : WilsonCurvatureTraceCertificate flow trace) :
-    trace (thermodynamic_curvature flow) = certificate.partitionZeta :=
-  certificate.curvature_trace_eval
-
-/-- Curvature and holonomy traces match the same scalar under explicit premises. -/
-theorem reads_both_from_premises
-    [Algebra ℝ Op] (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (path : LoopWord Op)
-    (partitionZeta : ℝ)
-    (holonomy_trace_eval : trace (LoopWord.flowHolonomy flow path) = partitionZeta)
-    (curvature_trace_eval : trace (thermodynamic_curvature flow) = partitionZeta) :
-    trace (LoopWord.flowHolonomy flow path) =
-      trace (thermodynamic_curvature flow) := by
-  rw [holonomy_trace_eval, curvature_trace_eval]
 
 /-- Curvature vanishes under detailed balance of the thermodynamic flow. -/
 theorem curvature_vanishes_under_detailed_balance

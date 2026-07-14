@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComovingFingerprintUniqueness
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFingerprintUniqueness
 
 namespace Omega.TypedAddressBiaxialCompletion
 

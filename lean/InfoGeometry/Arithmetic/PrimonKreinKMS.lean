@@ -43,6 +43,11 @@ abbrev PrimeCutoff :=
 def primeModeWeight (β : ℝ) (p : ℕ) : ℝ :=
   PrimeSuperalgebra.primeWeight β p
 
+lemma primeModeWeight_pos (β : ℝ) (p : ℕ) :
+    0 < primeModeWeight β p := by
+  unfold primeModeWeight PrimeSuperalgebra.primeWeight
+  exact Real.exp_pos _
+
 /-- Finite ordinary fermionic square-free partition. -/
 def finiteFermionPartition (P : PrimeCutoff) (β : ℝ) : ℝ :=
   PrimeSuperalgebra.finiteFermionicSquarefreePartition P β
@@ -76,6 +81,23 @@ theorem finiteFermionSupertrace_eq_eulerProduct
   simpa [finiteFermionSupertrace, primeModeWeight,
     PrimeSuperalgebra.finitePrimeDenominator]
     using PrimeSuperalgebra.finitePrimeSupertrace_eq_denominator P β
+
+lemma finiteFermionPartition_pos (P : PrimeCutoff) (β : ℝ) :
+    0 < finiteFermionPartition P β := by
+  rw [finiteFermionPartition_eq_eulerProduct]
+  exact Finset.prod_pos (fun p _hp => by
+    exact add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (primeModeWeight_pos β p)))
+
+lemma finiteFermionPartition_ne_zero (P : PrimeCutoff) (β : ℝ) :
+    finiteFermionPartition P β ≠ 0 :=
+  (finiteFermionPartition_pos P β).ne'
+
+lemma finiteFermionSupertrace_ne_zero
+    (P : PrimeCutoff) (β : ℝ)
+    (h : ∀ p ∈ P.primes, (1 - primeModeWeight β p) ≠ 0) :
+    finiteFermionSupertrace P β ≠ 0 := by
+  rw [finiteFermionSupertrace_eq_eulerProduct]
+  exact Finset.prod_ne_zero_iff.mpr h
 
 /-! ## 2. Möbius as finite Krein/Fock signature -/
 

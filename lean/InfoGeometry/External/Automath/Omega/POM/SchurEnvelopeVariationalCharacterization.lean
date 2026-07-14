@@ -1,4 +1,4 @@
-import Omega.POM.SchurVarianceGrowthRateSpectralIdentity
+import InfoGeometry.External.Automath.Omega.POM.SchurVarianceGrowthRateSpectralIdentity
 
 namespace Omega.POM
 

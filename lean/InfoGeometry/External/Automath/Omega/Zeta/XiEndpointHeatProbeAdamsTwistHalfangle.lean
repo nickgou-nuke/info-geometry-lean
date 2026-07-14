@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointHeatProbeCyclotomicTargetExtraction
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointHeatProbeCyclotomicTargetExtraction
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
-import Omega.Conclusion.DyadicBoundaryGodelAdmissibleMultiplicativeLinearSubcode
-import Omega.Conclusion.DyadicBoundaryPathConsistencyQueryRankEqualsCheckRank
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryGodelAdmissibleMultiplicativeLinearSubcode
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryPathConsistencyQueryRankEqualsCheckRank
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.LocalizedDirectsumMatrixIsomorphismCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedDirectsumMatrixIsomorphismCriterion
 
 namespace Omega.Zeta
 

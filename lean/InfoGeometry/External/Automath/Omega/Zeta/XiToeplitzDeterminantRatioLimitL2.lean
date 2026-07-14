@@ -1,6 +1,6 @@
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic
-import Omega.Zeta.XiToeplitzCurvatureEnergyEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzCurvatureEnergyEquivalence
 
 namespace Omega.Zeta
 

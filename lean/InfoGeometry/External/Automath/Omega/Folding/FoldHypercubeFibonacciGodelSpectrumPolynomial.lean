@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldHypercubeFibonacciEpsEntropyUpper
+import InfoGeometry.External.Automath.Omega.Folding.FoldHypercubeFibonacciEpsEntropyUpper
 
 namespace Omega.Folding
 

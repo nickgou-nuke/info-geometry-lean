@@ -1,4 +1,4 @@
-import Omega.Zeta.SmithPadicLossSpectrumClassification
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPadicLossSpectrumClassification
 
 namespace Omega.Conclusion
 

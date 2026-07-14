@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.FibChebyshevParitySplitting
-import Omega.Zeta.CyclotomicSectorIdentity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.FibChebyshevParitySplitting
+import InfoGeometry.External.Automath.Omega.Zeta.CyclotomicSectorIdentity
 
 namespace Omega.UnitCirclePhaseArithmetic
 

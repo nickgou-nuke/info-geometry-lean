@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.GU.Window6B3C3VisibleSupportThreeLeviPlanes
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3VisibleSupportThreeLeviPlanes
 
 namespace Omega.GU
 

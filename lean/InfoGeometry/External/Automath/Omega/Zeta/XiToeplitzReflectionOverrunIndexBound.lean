@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
-import Omega.Zeta.XiHorizonReflectionFiniteWitness
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiHorizonReflectionFiniteWitness
 
 namespace Omega.Zeta
 

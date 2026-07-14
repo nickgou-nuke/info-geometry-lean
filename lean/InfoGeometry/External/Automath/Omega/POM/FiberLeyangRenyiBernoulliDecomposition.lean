@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Basic
 import Mathlib.Topology.Algebra.Ring.Basic
-import Omega.POM.FiberLeyangKlBernoulliDecomposition
+import InfoGeometry.External.Automath.Omega.POM.FiberLeyangKlBernoulliDecomposition
 
 namespace Omega.POM
 

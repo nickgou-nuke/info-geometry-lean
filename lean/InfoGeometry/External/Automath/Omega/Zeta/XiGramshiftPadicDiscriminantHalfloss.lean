@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHankelDeterminantGramshiftDiscriminantIdentity
-import Omega.Zeta.XiNodePolynomialGoodReductionDiscriminant
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelDeterminantGramshiftDiscriminantIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.XiNodePolynomialGoodReductionDiscriminant
 
 namespace Omega.Zeta
 

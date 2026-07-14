@@ -1,4 +1,4 @@
-import Omega.Zeta.BlaschkePointSpectrumCorrespondence
+import InfoGeometry.External.Automath.Omega.Zeta.BlaschkePointSpectrumCorrespondence
 
 namespace Omega.Zeta
 

@@ -6,7 +6,7 @@ Fibonacci fusion identity and strict submultiplicativity.
 
 Paper reference: lem:pom-fib-fusion-submultiplicativity, cor:pom-fib-component-fusion-gain
 -/
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega
 

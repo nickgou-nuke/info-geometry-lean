@@ -1,4 +1,4 @@
-import Omega.Core.Word
+import InfoGeometry.External.Automath.Omega.Core.Word
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
 

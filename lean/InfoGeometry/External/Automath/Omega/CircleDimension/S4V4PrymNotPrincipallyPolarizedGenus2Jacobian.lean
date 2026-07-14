@@ -1,4 +1,4 @@
-import Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Frontier.Assumptions
+import InfoGeometry.External.Automath.Omega.Frontier.Assumptions
 
 namespace Omega.Frontier
 

@@ -1,5 +1,5 @@
-import Omega.POM.ToggleOrder
-import Omega.POM.ToggleScanSignGeneralFiber
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanSignGeneralFiber
 
 namespace Omega.POM
 

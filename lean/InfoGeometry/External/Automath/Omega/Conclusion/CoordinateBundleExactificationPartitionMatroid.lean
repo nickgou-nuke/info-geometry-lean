@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.CoordinateBundleScreenCount
+import InfoGeometry.External.Automath.Omega.SPG.CoordinateBundleScreenCount
 
 namespace Omega.Conclusion
 

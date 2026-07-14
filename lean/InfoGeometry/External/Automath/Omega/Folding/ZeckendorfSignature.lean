@@ -1,4 +1,4 @@
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 import Mathlib.Data.Nat.Factorization.Defs
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.ZMod.Basic

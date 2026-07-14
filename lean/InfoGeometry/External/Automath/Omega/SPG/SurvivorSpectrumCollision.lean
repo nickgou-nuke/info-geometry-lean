@@ -1,4 +1,4 @@
-import Omega.SPG.SurvivorRenyiPressure
+import InfoGeometry.External.Automath.Omega.SPG.SurvivorRenyiPressure
 
 namespace Omega.SPG
 

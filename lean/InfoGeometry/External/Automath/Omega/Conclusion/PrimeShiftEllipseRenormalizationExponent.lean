@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Conclusion.ShiftCommutingAlgorithmsPolynomial
-import Omega.POM.MinimalIntegerizationFactorCokerExponent
+import InfoGeometry.External.Automath.Omega.Conclusion.ShiftCommutingAlgorithmsPolynomial
+import InfoGeometry.External.Automath.Omega.POM.MinimalIntegerizationFactorCokerExponent
 
 open scoped BigOperators
 

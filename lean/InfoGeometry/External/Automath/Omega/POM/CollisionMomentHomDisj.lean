@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Omega.POM.FiberIndsetFactorization
-import Omega.POM.IndsetPowerHomDisj
+import InfoGeometry.External.Automath.Omega.POM.FiberIndsetFactorization
+import InfoGeometry.External.Automath.Omega.POM.IndsetPowerHomDisj
 
 open scoped BigOperators
 

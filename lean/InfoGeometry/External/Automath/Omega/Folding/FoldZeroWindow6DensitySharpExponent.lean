@@ -2,10 +2,10 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Divisors
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.Entropy
-import Omega.Folding.FoldZeroDensitySparse
-import Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroDensitySparse
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
 
 open Filter Topology
 open scoped goldenRatio

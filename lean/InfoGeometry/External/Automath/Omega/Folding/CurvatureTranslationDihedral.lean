@@ -1,5 +1,5 @@
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
 
 namespace Omega
 

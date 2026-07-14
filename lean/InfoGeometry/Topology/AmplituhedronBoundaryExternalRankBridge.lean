@@ -70,7 +70,7 @@ def candidateExternalRank32BoundaryCertificate :
 /--
 A rank-32 boundary realization with attached external rank evidence.
 
-This remains a data bridge; it does not assert that `basisVector` is a de Rham
+This remains a data bridge; it does not assert that `carrierReadout` is a de Rham
 basis.
 -/
 structure ExternalRank32BoundaryRealization (Op : Type*) [Ring Op]
@@ -88,18 +88,13 @@ theorem external_rank32_boundary_realization_packet
         Fintype.card BoundaryRank32State ∧
       Fintype.card {s : BoundaryRank32State // IsChiralState s} = 16 ∧
       Fintype.card {s : BoundaryRank32State // IsAntiChiralState s} = 16 ∧
-      R.boundary.e12 * superAmplitudeVolume R.boundary =
-        R.boundary.e12 * R.boundary.e23 * R.boundary.omega31 +
-          R.boundary.e12 * R.boundary.e31 * R.boundary.omega12 ∧
-      R.boundary.e23 * superAmplitudeVolume R.boundary =
-        R.boundary.e23 * R.boundary.e12 * R.boundary.omega23 +
-          R.boundary.e23 * R.boundary.e31 * R.boundary.omega12 ∧
-      R.boundary.e31 * superAmplitudeVolume R.boundary =
-        R.boundary.e31 * R.boundary.e12 * R.boundary.omega23 +
-          R.boundary.e31 * R.boundary.e23 * R.boundary.omega31 := by
+      R.boundary.edge1 * R.boundary.edge2 * R.boundary.edge3 =
+        R.boundary.edge1 * R.boundary.edge3 * R.boundary.edge2 +
+          R.boundary.edge2 * R.boundary.edge1 * R.boundary.edge3 +
+          R.boundary.edge3 * R.boundary.edge1 * R.boundary.edge2 := by
   exact ⟨external_spin_tiled_rank_eq_boundary_card R.cert,
     chiralState_card,
     antiChiralState_card,
-    left_on_shell_factorization_packet R.boundary⟩
+    R.boundary.mixed_volume⟩
 
 end InfoGeometry.Topology.AmplituhedronBoundary

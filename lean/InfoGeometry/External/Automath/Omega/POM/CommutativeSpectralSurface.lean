@@ -1,4 +1,4 @@
-import Omega.POM.BivariateMomentZetaFredholm
+import InfoGeometry.External.Automath.Omega.POM.BivariateMomentZetaFredholm
 import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.Tactic
 

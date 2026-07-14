@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedLeyangProfiniteRigidity
-import Omega.Zeta.XiTerminalZmLeyangFiniteBranchRegular4aryAddress
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangProfiniteRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangFiniteBranchRegular4aryAddress
 
 namespace Omega.DerivedConsequences
 

@@ -74,42 +74,42 @@ theorem lowerRight_left_absorption (R : Spin32Matrix) :
 /-- Upper-left projection kills an incoming lower-left horizon from the left. -/
 theorem upperLeft_horizonDown_zero : upperLeft * horizonDown = 0 := by
   unfold upperLeft horizonDown
-  native_decide
+  decide
 
 /-- Lower-right projection kills an incoming upper-right horizon from the left. -/
 theorem lowerRight_horizonUp_zero : lowerRight * horizonUp = 0 := by
   unfold lowerRight horizonUp
-  native_decide
+  decide
 
 /-- Upper-left projection preserves the outgoing upper-right horizon. -/
 theorem upperLeft_horizonUp : upperLeft * horizonUp = horizonUp := by
   unfold upperLeft horizonUp
-  native_decide
+  decide
 
 /-- Lower-right projection preserves the incoming lower-left horizon. -/
 theorem lowerRight_horizonDown : lowerRight * horizonDown = horizonDown := by
   unfold lowerRight horizonDown
-  native_decide
+  decide
 
 /-- Upper-right horizon lands in the lower-right quadrant on the right. -/
 theorem horizonUp_lowerRight : horizonUp * lowerRight = horizonUp := by
   unfold horizonUp lowerRight
-  native_decide
+  decide
 
 /-- Lower-left horizon lands in the upper-left quadrant on the right. -/
 theorem horizonDown_upperLeft : horizonDown * upperLeft = horizonDown := by
   unfold horizonDown upperLeft
-  native_decide
+  decide
 
 /-- Upper-right horizon is killed by the upper-left quadrant on the right. -/
 theorem horizonUp_upperLeft_zero : horizonUp * upperLeft = 0 := by
   unfold horizonUp upperLeft
-  native_decide
+  decide
 
 /-- Lower-left horizon is killed by the lower-right quadrant on the right. -/
 theorem horizonDown_lowerRight_zero : horizonDown * lowerRight = 0 := by
   unfold horizonDown lowerRight
-  native_decide
+  decide
 
 /-- Finite kernel-checked packet for the split-octonional ideal projector surface. -/
 theorem splitOctonional_ideal_packet :

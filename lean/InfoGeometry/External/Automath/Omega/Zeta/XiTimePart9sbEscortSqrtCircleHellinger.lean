@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.Conclusion.BinfoldEscortSqrtCircleArc
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortSqrtCircleArc
 
 namespace Omega.Zeta
 

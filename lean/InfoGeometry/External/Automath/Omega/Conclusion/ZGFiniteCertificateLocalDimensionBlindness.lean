@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ZGFiniteCertificateFiberFullSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGFiniteCertificateFiberFullSpectrum
 
 namespace Omega.Conclusion
 

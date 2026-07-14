@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.TypeclassHammingBallVolumeVariational
-import Omega.POM.TypeclassRateDistortionMutualInformation
+import InfoGeometry.External.Automath.Omega.POM.TypeclassHammingBallVolumeVariational
+import InfoGeometry.External.Automath.Omega.POM.TypeclassRateDistortionMutualInformation
 
 namespace Omega.POM
 

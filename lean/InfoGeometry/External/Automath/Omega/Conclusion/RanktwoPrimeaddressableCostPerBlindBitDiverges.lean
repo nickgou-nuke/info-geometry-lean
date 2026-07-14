@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
-import Omega.Conclusion.RanktwoPrimeaddressableExactPrimorialOptimum
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
+import InfoGeometry.External.Automath.Omega.Conclusion.RanktwoPrimeaddressableExactPrimorialOptimum
 
 namespace Omega.Conclusion
 

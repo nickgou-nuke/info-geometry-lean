@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.FinitePartCyclicLiftMobiusInversion
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftMobiusInversion
 
 namespace Omega.Zeta
 

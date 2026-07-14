@@ -1,4 +1,4 @@
-import Omega.Conclusion.FibadicFiniteLayerGcdInvertibilityMobiusInverse
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicFiniteLayerGcdInvertibilityMobiusInverse
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
-import Omega.Conclusion.Q13Q15Z3ThreephasePeriodicShells
-import Omega.Conclusion.ResonanceWindowZ2HenselTailPeriodicity
-import Omega.POM.ResonanceMod6PeriodQ13Q15
+import InfoGeometry.External.Automath.Omega.Conclusion.Q13Q15Z3ThreephasePeriodicShells
+import InfoGeometry.External.Automath.Omega.Conclusion.ResonanceWindowZ2HenselTailPeriodicity
+import InfoGeometry.External.Automath.Omega.POM.ResonanceMod6PeriodQ13Q15
 
 namespace Omega.Conclusion
 

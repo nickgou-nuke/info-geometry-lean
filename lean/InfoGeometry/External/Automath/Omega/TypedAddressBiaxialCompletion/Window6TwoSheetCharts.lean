@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.BdryUpliftOrientationParity
-import Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
+import InfoGeometry.External.Automath.Omega.GU.BdryUpliftOrientationParity
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
 
 namespace Omega.TypedAddressBiaxialCompletion
 

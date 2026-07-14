@@ -1,4 +1,4 @@
-import Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
 
 namespace Omega
 

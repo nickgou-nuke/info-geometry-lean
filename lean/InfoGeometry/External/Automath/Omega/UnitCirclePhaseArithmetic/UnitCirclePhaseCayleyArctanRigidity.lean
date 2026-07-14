@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseMobiusLaw
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseMobiusLaw
 
 namespace Omega.UnitCirclePhaseArithmetic
 

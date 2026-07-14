@@ -1,4 +1,4 @@
-import Omega.Folding.FoldBinLastbitSufficientTV
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinLastbitSufficientTV
 
 namespace Omega.Zeta
 

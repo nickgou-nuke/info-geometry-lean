@@ -1,4 +1,4 @@
-import Omega.CircleDimension.BiphaseAverageFiberDiagonalAntidiagonal
+import InfoGeometry.External.Automath.Omega.CircleDimension.BiphaseAverageFiberDiagonalAntidiagonal
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic

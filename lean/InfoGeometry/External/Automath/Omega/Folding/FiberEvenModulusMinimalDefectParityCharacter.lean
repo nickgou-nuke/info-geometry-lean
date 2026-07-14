@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberConvolutionKernelZeroSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionKernelZeroSpectrum
 
 namespace Omega.Folding
 

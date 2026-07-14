@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloChainInteriorGodelGcdLcm
+import InfoGeometry.External.Automath.Omega.Folding.KilloChainInteriorGodelGcdLcm
 
 namespace Omega.Folding
 

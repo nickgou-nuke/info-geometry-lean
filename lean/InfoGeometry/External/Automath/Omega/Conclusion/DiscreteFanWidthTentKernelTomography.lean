@@ -1,4 +1,4 @@
-import Omega.Conclusion.DiscreteKinkMassHatKernelCurvature
+import InfoGeometry.External.Automath.Omega.Conclusion.DiscreteKinkMassHatKernelCurvature
 
 namespace Omega.Conclusion
 

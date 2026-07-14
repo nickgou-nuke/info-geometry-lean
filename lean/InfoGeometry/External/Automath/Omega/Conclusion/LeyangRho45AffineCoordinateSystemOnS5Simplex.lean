@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LeyangS5TwoChannelMinimalCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangS5TwoChannelMinimalCompleteness
 
 namespace Omega.Conclusion
 

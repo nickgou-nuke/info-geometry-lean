@@ -1,7 +1,7 @@
-import Omega.Zeta.FourthRegisterDichotomy
-import Omega.Zeta.OffcriticalVisibilityThresholdBitBudget
-import Omega.Zeta.XiNullThreeWay
-import Omega.Zeta.XiUniqueContinuousTransverseRegister
+import InfoGeometry.External.Automath.Omega.Zeta.FourthRegisterDichotomy
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalVisibilityThresholdBitBudget
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullThreeWay
+import InfoGeometry.External.Automath.Omega.Zeta.XiUniqueContinuousTransverseRegister
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.TimeWindowAsymptoticallyFullPhaseLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.TimeWindowAsymptoticallyFullPhaseLaw
 
 namespace Omega.Conclusion
 

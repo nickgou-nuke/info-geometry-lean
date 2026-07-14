@@ -1,8 +1,8 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.Folding.FiberArithmetic
-import Omega.GU.CongruenceM6IdempotentsFour
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.GU.CongruenceM6IdempotentsFour
 
 namespace Omega.Zeta
 

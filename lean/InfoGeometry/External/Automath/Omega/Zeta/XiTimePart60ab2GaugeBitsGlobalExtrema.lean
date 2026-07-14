@@ -2,7 +2,7 @@ import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Data.Nat.Factorial.BigOperators
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiAuditedEvenGaugeEntropyBalancedLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiAuditedEvenGaugeEntropyBalancedLowerBound
 
 namespace Omega.Zeta
 

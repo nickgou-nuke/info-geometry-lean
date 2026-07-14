@@ -72,24 +72,17 @@ variable (f : Module.End K V)
 
 set_option maxHeartbeats 800000
 
-/-- The native Jordan-Chevalley theorem yields a packaged split. -/
-def split [PerfectField K] : JordanChevalleySplit (f := f) := by
-  let h := Module.End.exists_isNilpotent_isSemisimple (f := f)
-  let n : Module.End K V := Classical.choose h
-  have hn_tail :
-      n ∈ Algebra.adjoin K {f} ∧
-        ∃ s ∈ Algebra.adjoin K {f}, IsNilpotent n ∧ s.IsSemisimple ∧ f = n + s :=
-    Classical.choose_spec h
-  let hSplit := hn_tail.2
-  let s : Module.End K V := Classical.choose hSplit
-  have hs_tail :
-      s ∈ Algebra.adjoin K {f} ∧ IsNilpotent n ∧ s.IsSemisimple ∧ f = n + s :=
-    Classical.choose_spec hSplit
-  have hn : n ∈ Algebra.adjoin K {f} := hn_tail.1
-  have hs : s ∈ Algebra.adjoin K {f} := hs_tail.1
-  have hnil : IsNilpotent n := hs_tail.2.1
-  have hss : s.IsSemisimple := hs_tail.2.2.1
-  have hsum : f = n + s := hs_tail.2.2.2
+/-- The native Jordan-Chevalley theorem yields existence of a packaged split. -/
+theorem exists_split [PerfectField K] :
+    ∃ B : JordanChevalleySplit (f := f),
+      IsSemisimpleEnd B.semisimple ∧
+      IsNilpotentEnd B.nilpotent ∧
+      Commute B.semisimple B.nilpotent ∧
+      B.semisimple ∈ Algebra.adjoin K {f} ∧
+      B.nilpotent ∈ Algebra.adjoin K {f} ∧
+      f = B.semisimple + B.nilpotent := by
+  rcases Module.End.exists_isNilpotent_isSemisimple (f := f) with
+    ⟨n, hn, s, hs, hnil, hss, hsum⟩
   have hscomm_f : Commute f s :=
     Algebra.commute_of_mem_adjoin_self (R := K) (a := f) (b := s) hs
   have hscomm_n : Commute s n :=
@@ -101,30 +94,34 @@ def split [PerfectField K] : JordanChevalleySplit (f := f) := by
           simpa [Set.mem_singleton_iff] using hb
         subst hb'
         exact hscomm_f.symm)
-  refine { semisimple := s
-          , nilpotent := n
-          , commute := hscomm_n
-          , semisimpleMem := hs
-          , nilpotentMem := hn
-          , sum_eq := ?_
-          , semisimpleLaw := hss
-          , nilpotentLaw := hnil }
-  simpa [add_comm] using hsum
+  let B : JordanChevalleySplit (f := f) :=
+    { semisimple := s
+      nilpotent := n
+      commute := hscomm_n
+      semisimpleMem := hs
+      nilpotentMem := hn
+      sum_eq := by simpa [add_comm] using hsum
+      semisimpleLaw := hss
+      nilpotentLaw := hnil }
+  exact ⟨B, hss, hnil, hscomm_n, hs, hn, by simpa [B, add_comm] using hsum⟩
 
+omit [FiniteDimensional K V] in
 /-- Readback: the nilpotent part is nilpotent. -/
-theorem nilpotentLaw_readback [PerfectField K] :
-    IsNilpotentEnd (split f).nilpotent := by
-  exact (split f).nilpotentLaw
+theorem nilpotentLaw_readback (B : JordanChevalleySplit (f := f)) :
+    IsNilpotentEnd B.nilpotent := by
+  exact B.nilpotentLaw
 
+omit [FiniteDimensional K V] in
 /-- Readback: the semisimple part is semisimple. -/
-theorem semisimpleLaw_readback [PerfectField K] :
-    IsSemisimpleEnd (split f).semisimple := by
-  exact (split f).semisimpleLaw
+theorem semisimpleLaw_readback (B : JordanChevalleySplit (f := f)) :
+    IsSemisimpleEnd B.semisimple := by
+  exact B.semisimpleLaw
 
+omit [FiniteDimensional K V] in
 /-- Readback: the split components commute. -/
-theorem commute_readback [PerfectField K] :
-    Commute (split f).semisimple (split f).nilpotent := by
-  exact (split f).commute
+theorem commute_readback (B : JordanChevalleySplit (f := f)) :
+    Commute B.semisimple B.nilpotent := by
+  exact B.commute
 
 omit [FiniteDimensional K V] in
 /-- Readback: the semisimple and nilpotent parts commute with any symmetry commuting with `f`. -/
@@ -142,11 +139,18 @@ def matrixEnd {n : Nat} (A : Matrix (Fin n) (Fin n) K) : Module.End K (Fin n →
   Matrix.toLin (Pi.basisFun K (Fin n)) (Pi.basisFun K (Fin n)) A
 
 /--
-Matrix-side Jordan-Chevalley witness on the standard complex carrier.
+Matrix-side Jordan-Chevalley existence theorem on the standard complex carrier.
 -/
-def matrixEnd_jordanChevalleySplit [PerfectField K] {n : Nat} (A : Matrix (Fin n) (Fin n) K) :
-    JordanChevalleySplit (f := matrixEnd A) :=
-  JordanChevalleySplit.split (f := matrixEnd A)
+theorem exists_matrixEnd_jordanChevalleySplit [PerfectField K] {n : Nat}
+    (A : Matrix (Fin n) (Fin n) K) :
+    ∃ B : JordanChevalleySplit (f := matrixEnd A),
+      IsSemisimpleEnd B.semisimple ∧
+      IsNilpotentEnd B.nilpotent ∧
+      Commute B.semisimple B.nilpotent ∧
+      B.semisimple ∈ Algebra.adjoin K {matrixEnd A} ∧
+      B.nilpotent ∈ Algebra.adjoin K {matrixEnd A} ∧
+      matrixEnd A = B.semisimple + B.nilpotent :=
+  JordanChevalleySplit.exists_split (f := matrixEnd A)
 
 end Core
 

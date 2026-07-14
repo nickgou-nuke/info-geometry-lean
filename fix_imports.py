@@ -1,26 +1,27 @@
 import os
+import re
 
-def fix_file(filepath):
-    with open(filepath, 'r') as f:
-        lines = f.read().splitlines()
+files = [
+    "ZornBraidScalingCovariance.lean",
+    "YangBaxterZornBridge.lean",
+    "ZornScalingFlow.lean",
+    "SplitOctonionBraidSU3.lean",
+    "YangBaxterQSwap.lean",
+    "B3PresentedGroup.lean"
+]
+
+prefix = "InfoGeometry.External.Auto."
+for f in files:
+    path = f"lean/InfoGeometry/External/Auto/{f}"
+    with open(path, "r") as f_obj:
+        content = f_obj.read()
     
-    new_lines = []
-    changed = False
-    for line in lines:
-        if line.startswith('import InfoGeometry.'):
-            mod = line.split()[1]
-            path = 'lean/' + mod.replace('.', '/') + '.lean'
-            if not os.path.exists(path):
-                print(f"Removing broken import {mod} from {filepath}")
-                changed = True
-                continue
-        new_lines.append(line)
+    # Replace the local imports
+    for dep in files:
+        dep_name = dep.replace(".lean", "")
+        # Find exact import matches
+        content = re.sub(f"import {dep_name}(\\n|\\r)", f"import {prefix}{dep_name}\\1", content)
         
-    if changed:
-        with open(filepath, 'w') as f:
-            f.write('\n'.join(new_lines) + '\n')
+    with open(path, "w") as f_obj:
+        f_obj.write(content)
 
-for root, _, files in os.walk('lean'):
-    for file in files:
-        if file.endswith('.lean'):
-            fix_file(os.path.join(root, file))

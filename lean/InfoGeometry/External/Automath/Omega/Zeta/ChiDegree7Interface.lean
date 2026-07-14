@@ -1,5 +1,5 @@
 import Mathlib.RingTheory.Polynomial.Basic
-import Omega.Zeta.RealInput40GeodesicDet
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40GeodesicDet
 
 namespace Omega.Zeta
 

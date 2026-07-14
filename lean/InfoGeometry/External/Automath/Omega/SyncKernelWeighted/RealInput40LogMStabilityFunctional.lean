@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40LogMTruncBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMTruncBound
 
 namespace Omega.SyncKernelWeighted
 

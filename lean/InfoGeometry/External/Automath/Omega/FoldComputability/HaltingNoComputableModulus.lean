@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SemanticEquivalenceUndecidable
-import Omega.Folding.HaltingNoComputableModulusSparseMoments
+import InfoGeometry.External.Automath.Omega.Conclusion.SemanticEquivalenceUndecidable
+import InfoGeometry.External.Automath.Omega.Folding.HaltingNoComputableModulusSparseMoments
 
 namespace Omega.FoldComputability
 

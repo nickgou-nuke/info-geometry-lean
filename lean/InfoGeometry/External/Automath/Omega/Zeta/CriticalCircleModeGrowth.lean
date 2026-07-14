@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.CriticalCircleDensityCalibration
+import InfoGeometry.External.Automath.Omega.Zeta.CriticalCircleDensityCalibration
 
 open scoped goldenRatio
 

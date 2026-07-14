@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.Tactic
-import Omega.Conclusion.MixedHiddenStateFiniteAbelianClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.MixedHiddenStateFiniteAbelianClassification
 
 namespace Omega.Conclusion
 

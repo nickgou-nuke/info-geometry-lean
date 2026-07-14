@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzLMI
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzLMI
 
 namespace Omega.DerivedConsequences
 

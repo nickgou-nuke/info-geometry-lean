@@ -92,6 +92,140 @@ instance : Mul (ZornMatrix R) where
 instance : One (ZornMatrix R) where
   one := { a := 1, b := 1, x := 0, y := 0 }
 
+/-! ## Diagonal Peirce projectors -/
+
+/-- Upper diagonal Zorn idempotent. -/
+def zornPlus : ZornMatrix R :=
+  { a := 1, b := 0, x := 0, y := 0 }
+
+/-- Lower diagonal Zorn idempotent. -/
+def zornMinus : ZornMatrix R :=
+  { a := 0, b := 1, x := 0, y := 0 }
+
+/-- Labels for the two diagonal Zorn Peirce idempotents. -/
+inductive ZornSign where
+  | plus
+  | minus
+  deriving DecidableEq, Repr
+
+/-- The two diagonal Peirce idempotents. -/
+def idempotent : ZornSign → ZornMatrix R
+  | .plus => zornPlus
+  | .minus => zornMinus
+
+/-- Double-sided Peirce component with explicit left bracketing. -/
+def peirceComponent (left right Z : ZornMatrix R) : ZornMatrix R :=
+  (left * Z) * right
+
+/-- The color/triplet Zorn Peirce block. -/
+def colorProject (Z : ZornMatrix R) : ZornMatrix R :=
+  peirceComponent zornPlus zornMinus Z
+
+/-- The anticolor/dual-triplet Zorn Peirce block. -/
+def anticolorProject (Z : ZornMatrix R) : ZornMatrix R :=
+  peirceComponent zornMinus zornPlus Z
+
+theorem zornPlus_idempotent :
+    zornPlus (R := R) * zornPlus (R := R) = zornPlus := by
+  ext i <;> simp [mul_def, zornPlus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+theorem zornMinus_idempotent :
+    zornMinus (R := R) * zornMinus (R := R) = zornMinus := by
+  ext i <;> simp [mul_def, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+theorem zornPlus_mul_zornMinus :
+    zornPlus (R := R) * zornMinus (R := R) = 0 := by
+  change zornPlus (R := R) * zornMinus (R := R) =
+    ({ a := 0, b := 0, x := 0, y := 0 } : ZornMatrix R)
+  ext i <;> simp [mul_def, zornPlus, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+theorem zornMinus_mul_zornPlus :
+    zornMinus (R := R) * zornPlus (R := R) = 0 := by
+  change zornMinus (R := R) * zornPlus (R := R) =
+    ({ a := 0, b := 0, x := 0, y := 0 } : ZornMatrix R)
+  ext i <;> simp [mul_def, zornPlus, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+theorem zornPlus_add_zornMinus :
+    zornPlus (R := R) + zornMinus (R := R) = 1 := by
+  change zornPlus (R := R) + zornMinus (R := R) =
+    ({ a := 1, b := 1, x := 0, y := 0 } : ZornMatrix R)
+  ext i <;> simp [zornPlus, zornMinus]
+
+/--
+For the diagonal Peirce idempotents, the two possible sandwich bracketings
+agree.  This theorem keeps nonassociativity explicit rather than silently
+rewriting arbitrary products.
+-/
+theorem peirce_bracketing
+    (i j : ZornSign) (Z : ZornMatrix R) :
+    ((idempotent (R := R) i * Z) * idempotent (R := R) j) =
+      (idempotent (R := R) i * (Z * idempotent (R := R) j)) := by
+  cases i <;> cases j <;> cases Z <;> ext k <;>
+    simp [mul_def, idempotent, zornPlus, zornMinus, mul, dot, cross]
+  any_goals fin_cases k <;> rfl
+
+/-- The upper diagonal Peirce component extracts the `a` scalar. -/
+theorem peirce_plus_plus_apply (Z : ZornMatrix R) :
+    peirceComponent (zornPlus (R := R)) zornPlus Z =
+      { a := Z.a, b := 0, x := 0, y := 0 } := by
+  cases Z
+  ext i <;> simp [peirceComponent, mul_def, zornPlus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+/-- The color Peirce component extracts the upper vector slot. -/
+theorem colorProject_apply (Z : ZornMatrix R) :
+    colorProject Z =
+      { a := 0, b := 0, x := Z.x, y := 0 } := by
+  cases Z
+  ext i <;> simp [colorProject, peirceComponent, mul_def, zornPlus, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+/-- The anticolor Peirce component extracts the lower vector slot. -/
+theorem anticolorProject_apply (Z : ZornMatrix R) :
+    anticolorProject Z =
+      { a := 0, b := 0, x := 0, y := Z.y } := by
+  cases Z
+  ext i <;> simp [anticolorProject, peirceComponent, mul_def, zornPlus, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+  · fin_cases i <;> rfl
+
+/-- The lower diagonal Peirce component extracts the `b` scalar. -/
+theorem peirce_minus_minus_apply (Z : ZornMatrix R) :
+    peirceComponent (zornMinus (R := R)) zornMinus Z =
+      { a := 0, b := Z.b, x := 0, y := 0 } := by
+  cases Z
+  ext i <;> simp [peirceComponent, mul_def, zornMinus, mul, dot, cross]
+  · fin_cases i <;> rfl
+
+/-- The color Peirce projection is idempotent. -/
+theorem colorProject_idempotent (Z : ZornMatrix R) :
+    colorProject (colorProject Z) = colorProject Z := by
+  rw [colorProject_apply, colorProject_apply]
+
+/-- The anticolor Peirce projection is idempotent. -/
+theorem anticolorProject_idempotent (Z : ZornMatrix R) :
+    anticolorProject (anticolorProject Z) = anticolorProject Z := by
+  rw [anticolorProject_apply, anticolorProject_apply]
+
+/-- The four Peirce components reconstruct the Zorn cell. -/
+theorem zorn_peirce_decomposition (Z : ZornMatrix R) :
+    Z = peirceComponent zornPlus zornPlus Z + colorProject Z +
+      anticolorProject Z + peirceComponent zornMinus zornMinus Z := by
+  cases Z
+  ext i <;>
+    simp [peirce_plus_plus_apply, colorProject_apply, anticolorProject_apply,
+      peirce_minus_minus_apply]
+
 /--
 The "Reduced Owner Surface" projection.
 Converts a Zorn matrix to a 2x2 matrix over R by discarding the vector parts.

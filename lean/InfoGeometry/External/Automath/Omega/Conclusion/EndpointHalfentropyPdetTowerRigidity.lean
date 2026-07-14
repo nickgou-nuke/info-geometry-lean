@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CriticalKernelTensorPdetHalfentropyParam
-import Omega.Conclusion.CriticalKernelSingleEigenpairRecoversDistribution
+import InfoGeometry.External.Automath.Omega.Conclusion.CriticalKernelTensorPdetHalfentropyParam
+import InfoGeometry.External.Automath.Omega.Conclusion.CriticalKernelSingleEigenpairRecoversDistribution
 
 namespace Omega.Conclusion
 

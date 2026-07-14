@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.Zeta.FinitePrimeSupportThreewayCdimSplit
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePrimeSupportThreewayCdimSplit
 
 namespace Omega.Zeta
 

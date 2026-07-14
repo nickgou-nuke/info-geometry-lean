@@ -29,7 +29,7 @@ In the repository, the safe compiled core is narrower:
 |---|---|---|
 | Thermodynamic finite flow | `lean/InfoGeometry/Topology/ThermodynamicGauge.lean` | `entropy_production` is the transition commutator; a supplied commutator equality identifies it with `d_ln_Q`; reciprocal scalar rescaling preserves the finite gauge word. |
 | DAG/chiral linker | `lean/InfoGeometry/Topology/GrandUnificationLinker.lean` | `global_isometry_preservation`; plus/minus nilpotent boundary collapse; explicit-premise entropy alignment. |
-| Residue/BCFW readout | `lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean` | `residue_bcfw_readout` restates the closed linker theorem; no stored `ResidueBCFWInterface` witness packet. |
+| Residue/BCFW boundary | `lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean` | `residue_bcfw` restates the closed linker theorem; no stored `ResidueBCFWInterface` witness packet. |
 | Local dlog residue | `lean/InfoGeometry/Projective/KleinQuadricGrothendieckDeRham.lean` | Existing circle-integral readout for the local `dlog` pole model. |
 
 ## Interpretation Boundary

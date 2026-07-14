@@ -1,4 +1,4 @@
-import Omega.POM.CharpolyModpA2Embedding
+import InfoGeometry.External.Automath.Omega.POM.CharpolyModpA2Embedding
 
 namespace Omega.POM
 

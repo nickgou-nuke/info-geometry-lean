@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartSingleQTorsionReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartSingleQTorsionReconstruction
 
 namespace Omega.Zeta
 

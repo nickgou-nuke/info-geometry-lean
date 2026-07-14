@@ -1,4 +1,4 @@
-import Omega.POM.ZetaEqualsOrderPoly
+import InfoGeometry.External.Automath.Omega.POM.ZetaEqualsOrderPoly
 
 namespace Omega.POM
 

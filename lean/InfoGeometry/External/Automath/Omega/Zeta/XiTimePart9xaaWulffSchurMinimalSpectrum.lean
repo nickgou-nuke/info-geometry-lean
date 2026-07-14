@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
 
 open scoped BigOperators
 

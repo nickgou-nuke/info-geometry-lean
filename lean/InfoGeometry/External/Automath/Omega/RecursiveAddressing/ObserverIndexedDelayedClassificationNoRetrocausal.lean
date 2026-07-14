@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.DelayedDecidabilityNoNewTruth
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.DelayedDecidabilityNoNewTruth
 
 namespace Omega.RecursiveAddressing
 

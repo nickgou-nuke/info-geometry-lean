@@ -5,7 +5,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.Perm.Cycle.Concrete
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 /-!
 # Cyclic Permutation Determinant

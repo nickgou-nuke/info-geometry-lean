@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLocalizedSolenoidPeriodicPointFormula
+import InfoGeometry.External.Automath.Omega.Zeta.XiLocalizedSolenoidPeriodicPointFormula
 
 namespace Omega.Zeta
 

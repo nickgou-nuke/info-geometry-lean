@@ -1,4 +1,4 @@
-import Omega.CircleDimension.MinimalRecordAxis
+import InfoGeometry.External.Automath.Omega.CircleDimension.MinimalRecordAxis
 
 namespace Omega.Discussion
 

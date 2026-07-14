@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.MomentBounds
-import Omega.Folding.StableSyntaxCounting
+import InfoGeometry.External.Automath.Omega.Folding.MomentBounds
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntaxCounting
 
 namespace Omega.POM
 

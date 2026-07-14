@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.JoukowskyProductAnalyticBlindnessMinimalRadialSufficiency
+import InfoGeometry.External.Automath.Omega.Conclusion.JoukowskyProductAnalyticBlindnessMinimalRadialSufficiency
 
 namespace Omega.Conclusion
 

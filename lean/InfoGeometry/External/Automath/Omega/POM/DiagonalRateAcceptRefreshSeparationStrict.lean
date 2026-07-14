@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAcceptRefreshSeparationExact
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSeparationExact
 
 namespace Omega.POM
 

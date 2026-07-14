@@ -101,25 +101,25 @@ def parity4 : Bool × Bool × Bool × Bool → ZMod 2
 theorem parity3_swap12 (x : Bool × Bool × Bool) :
     parity3 (swap12 x) = parity3 x := by
   rcases x with ⟨a, b, c⟩
-  cases a <;> cases b <;> cases c <;> native_decide
+  cases a <;> cases b <;> cases c <;> decide
 
 @[simp]
 theorem parity3_swap23 (x : Bool × Bool × Bool) :
     parity3 (swap23 x) = parity3 x := by
   rcases x with ⟨a, b, c⟩
-  cases a <;> cases b <;> cases c <;> native_decide
+  cases a <;> cases b <;> cases c <;> decide
 
 @[simp]
 theorem parity4_swap12₄ (x : Bool × Bool × Bool × Bool) :
     parity4 (swap12₄ x) = parity4 x := by
   rcases x with ⟨a, b, c, d⟩
-  cases a <;> cases b <;> cases c <;> cases d <;> native_decide
+  cases a <;> cases b <;> cases c <;> cases d <;> decide
 
 @[simp]
 theorem parity4_swap34₄ (x : Bool × Bool × Bool × Bool) :
     parity4 (swap34₄ x) = parity4 x := by
   rcases x with ⟨a, b, c, d⟩
-  cases a <;> cases b <;> cases c <;> cases d <;> native_decide
+  cases a <;> cases b <;> cases c <;> cases d <;> decide
 
 /--
 The three-mode braid word preserves Boolean occupation parity.

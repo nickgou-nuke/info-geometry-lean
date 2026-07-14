@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinDegeneracyTailCapacityKinks
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinDegeneracyTailCapacityKinks
 
 namespace Omega.Folding
 

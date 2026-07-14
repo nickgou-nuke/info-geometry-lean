@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoPointLimitLaw
-import Omega.Zeta.XiFoldLastbitStatisticalSufficiencyCollapse
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldLastbitStatisticalSufficiencyCollapse
 
 open scoped goldenRatio
 

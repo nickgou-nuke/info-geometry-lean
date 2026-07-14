@@ -1,6 +1,6 @@
 import Mathlib.Data.Finsupp.Basic
-import Omega.Folding.KilloEllipseDiagonalPrimeRegisterEquivalence
-import Omega.Folding.KilloPrimeFreedomNonFinitizability
+import InfoGeometry.External.Automath.Omega.Folding.KilloEllipseDiagonalPrimeRegisterEquivalence
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeFreedomNonFinitizability
 
 namespace Omega.Zeta
 

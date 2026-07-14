@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldbinDyadicCapacityCriticalWindowLimit
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinDyadicCapacityCriticalWindowLimit
 
 open scoped goldenRatio
 

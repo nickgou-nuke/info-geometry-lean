@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPronyDecisionVsReconstructionOneSampleGap
+import InfoGeometry.External.Automath.Omega.Zeta.XiPronyDecisionVsReconstructionOneSampleGap
 
 namespace Omega.Zeta
 

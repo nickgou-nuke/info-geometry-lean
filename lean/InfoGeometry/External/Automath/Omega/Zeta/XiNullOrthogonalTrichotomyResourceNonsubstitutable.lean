@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.RecursiveAddressing.NullAsH2Obstruction
-import Omega.Zeta.XiNullThreeWay
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.NullAsH2Obstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullThreeWay
 
 namespace Omega.Zeta
 

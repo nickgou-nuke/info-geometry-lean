@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Algebra.InfiniteSum.Real
-import Omega.Folding.KilloCurvatureSummableEventualInverseLimitLift
+import InfoGeometry.External.Automath.Omega.Folding.KilloCurvatureSummableEventualInverseLimitLift
 
 namespace Omega.Folding
 

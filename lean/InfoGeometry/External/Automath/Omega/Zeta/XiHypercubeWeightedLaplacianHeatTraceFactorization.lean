@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Tactic
-import Omega.Core.WalshFourier
+import InfoGeometry.External.Automath.Omega.Core.WalshFourier
 
 namespace Omega.Zeta
 

@@ -45,7 +45,11 @@ def ThermodynamicEquilibrium
     (T : DoublyStochasticSinkhornTrajectory n) : Prop :=
   ∀ k : Nat, ∀ label : PermMode n → CliffordLabel,
     trajectoryLyapunovNext n T.traj k ≤ trajectoryLyapunov n T.traj k ∧
-      trajectorySelectedRoutingEpsilon n T (k + 1) label ≤ 1
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state (k + 1) ∧
+        routingEpsilon w label ≤ 1
 
 /--
 Any doubly-stochastic Sinkhorn trajectory satisfies the thermodynamic equilibrium

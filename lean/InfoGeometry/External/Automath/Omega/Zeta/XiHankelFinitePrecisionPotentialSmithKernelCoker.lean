@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SmithPrefixSufficiency
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPrefixSufficiency
 
 namespace Omega.Zeta
 

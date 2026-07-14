@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.POM.BbitOracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.POM.BbitOracleCapacityClosedForm
 
 namespace Omega.POM
 

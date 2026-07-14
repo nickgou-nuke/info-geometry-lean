@@ -1,4 +1,4 @@
-import Omega.EA.ProjectionWordNormalForm
+import InfoGeometry.External.Automath.Omega.EA.ProjectionWordNormalForm
 
 namespace Omega.EA
 

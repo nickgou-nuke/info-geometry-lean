@@ -40,33 +40,40 @@ noncomputable def centeredOfComplex (s : ℂ) : ZetaCenteredChart :=
 
 /-- The antiunitary reflection on `ℂ` becomes the critical mirror on centered coordinates. -/
 theorem centeredOfComplex_antiunitaryCriticalReflection (s : ℂ) :
-    centeredOfComplex (antiunitaryCriticalReflection s) =
+    centeredOfComplex
+        (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s) =
       criticalMirror (centeredOfComplex s) := by
   apply ZetaCenteredChart.ext
   · simp [centeredOfComplex, toCentered, ofComplex, centeredSigma,
-      antiunitaryCriticalReflection, criticalMirror]
+      CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection,
+      criticalMirror]
     ring
   · simp [centeredOfComplex, toCentered, ofComplex,
-      antiunitaryCriticalReflection, criticalMirror]
+      CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection,
+      criticalMirror]
 
 /-- A complex antiunitary fixed point becomes a centered critical-mirror fixed point. -/
 theorem centered_fixed_of_complex_fixed
-    {s : ℂ} (hs : antiunitaryCriticalReflection s = s) :
+    {s : ℂ}
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalMirror (centeredOfComplex s) = centeredOfComplex s := by
   rw [← centeredOfComplex_antiunitaryCriticalReflection, hs]
 
 /-- Antiunitary fixed points lie on the critical line in centered coordinates. -/
 theorem centered_u_eq_zero_of_complex_fixed
-    {s : ℂ} (hs : antiunitaryCriticalReflection s = s) :
+    {s : ℂ}
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     (centeredOfComplex s).u = 0 := by
-  have hline : CriticalLine s :=
-    (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs.symm
-  simp [CriticalLine, centeredOfComplex, toCentered, ofComplex, centeredSigma] at hline ⊢
+  have hline : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s :=
+    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs
+  simp [CompletedZetaSouriauDInfinityThermodynamics.CriticalLine,
+    centeredOfComplex, toCentered, ofComplex, centeredSigma] at hline ⊢
   linarith
 
 /-- For antiunitary fixed points, the critical tangent projector is the identity. -/
 theorem criticalTangentProjector_eq_self_of_complex_fixed
-    {s : ℂ} (hs : antiunitaryCriticalReflection s = s) :
+    {s : ℂ}
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalTangentProjector (centeredOfComplex s) = centeredOfComplex s := by
   apply ZetaCenteredChart.ext
   · exact (centered_u_eq_zero_of_complex_fixed hs).symm
@@ -74,7 +81,8 @@ theorem criticalTangentProjector_eq_self_of_complex_fixed
 
 /-- For antiunitary fixed points, the critical normal projector vanishes. -/
 theorem criticalNormalProjector_eq_zero_of_complex_fixed
-    {s : ℂ} (hs : antiunitaryCriticalReflection s = s) :
+    {s : ℂ}
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalNormalProjector (centeredOfComplex s) = zero := by
   apply ZetaCenteredChart.ext
   · exact centered_u_eq_zero_of_complex_fixed hs
@@ -90,12 +98,15 @@ critical reflection.
 structure CompletedXiProjectorPacket where
   packet : CompletedZetaMassieuPacket
   anchor : ℂ
-  xi_anchor_fixed : antiunitaryCriticalReflection anchor = anchor
+  xi_anchor_fixed :
+    CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection anchor = anchor
 
 /-- The supplied anchor lies on the complex critical line. -/
 theorem xi_anchor_on_criticalLine (P : CompletedXiProjectorPacket) :
-    CriticalLine P.anchor := by
-  exact (fixed_antiunitaryCriticalReflection_iff_criticalLine P.anchor).mp P.xi_anchor_fixed.symm
+    CompletedZetaSouriauDInfinityThermodynamics.CriticalLine P.anchor := by
+  exact
+    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine
+      P.anchor).mp P.xi_anchor_fixed
 
 /-- The supplied anchor is fixed by the centered critical mirror. -/
 theorem xi_anchor_centered_fixed (P : CompletedXiProjectorPacket) :

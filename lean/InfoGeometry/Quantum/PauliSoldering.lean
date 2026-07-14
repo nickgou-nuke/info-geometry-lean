@@ -83,8 +83,10 @@ theorem solder_explicit (E px py pz : ℂ) :
 theorem casimir_as_determinant (E px py pz : ℂ) :
     (solder (E, px, py, pz)).det = E^2 - (px^2 + py^2 + pz^2) := by
   rw [solder_explicit]
-  simp [Matrix.det_fin_two, Complex.I_sq]
+  simp [Matrix.det_fin_two]
   ring_nf
+  rw [Complex.I_sq]
+  ring
 
 /-- Recover P_μ from P_spinor via Pauli trace: P_μ = ½ Tr(σ_μ · P) -/
 theorem inverse_pauli_trace (P_spinor : Matrix (Fin 2) (Fin 2) ℂ) :
@@ -121,13 +123,13 @@ theorem inverse_pauli_trace (P_spinor : Matrix (Fin 2) (Fin 2) ℂ) :
     have h10 : σ3 1 0 = (0 : ℂ) := rfl
     have h11 : σ3 1 1 = (-1 : ℂ) := rfl
     simp [Matrix.mul_apply, h00, h01, h10, h11, sub_eq_add_neg]
+  have h := (InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauli_recompose_eq_self P_spinor).symm
   simpa [solder, InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff0,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff1,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff2,
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliCoeff3,
-    h0, h1, h2, h3, Complex.I, sub_eq_add_neg] using
-    (InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauli_recompose_eq_self P_spinor).symm
+    h0, h1, h2, h3, sub_eq_add_neg, div_mul_eq_mul_div] using h
 
 /-! ## 4. Massless twistor factorization -/
 
@@ -141,14 +143,14 @@ def masslessMomentum (l0 l1 : ℂ) : ℂ × ℂ × ℂ × ℂ :=
 /-- For massless momentum: explicit rank-one solder matrix. -/
 theorem null_momentum_factorization (l0 l1 : ℂ) :
     solder (masslessMomentum l0 l1) =
-      !![2 * l0 * conj l0, 2 * l0 * conj l1;
-         2 * l1 * conj l0, 2 * l1 * conj l1] := by
+      !![2 * l0 * conj l0, 2 * l1 * conj l0;
+         2 * l0 * conj l1, 2 * l1 * conj l1] := by
   rw [solder_explicit]
   ext i j; fin_cases i <;> fin_cases j
-  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
-  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
-  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
-  · simp [masslessMomentum, Complex.I, sub_eq_add_neg]; ring
+  · simp [masslessMomentum, sub_eq_add_neg]; ring
+  · simp [masslessMomentum, sub_eq_add_neg]; ring_nf; rw [Complex.I_sq]; ring
+  · simp [masslessMomentum, sub_eq_add_neg]; ring_nf; rw [Complex.I_sq]; ring
+  · simp [masslessMomentum, sub_eq_add_neg]; ring
 
 /-- Null momentum has zero determinant -/
 theorem null_momentum_det_zero (l0 l1 : ℂ) :

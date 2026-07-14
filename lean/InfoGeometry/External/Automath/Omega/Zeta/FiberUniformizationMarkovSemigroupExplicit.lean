@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.FiberReflector
+import InfoGeometry.External.Automath.Omega.POM.FiberReflector
 
 namespace Omega.Zeta
 

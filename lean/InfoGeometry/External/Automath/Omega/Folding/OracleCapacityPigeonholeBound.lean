@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.POM.BbitOracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.POM.BbitOracleCapacityClosedForm
 
 namespace Omega.Folding
 

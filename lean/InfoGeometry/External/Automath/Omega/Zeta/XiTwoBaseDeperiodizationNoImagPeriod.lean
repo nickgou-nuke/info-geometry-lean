@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Tactic
-import Omega.Conclusion.TwoIncommensurableBasesDestroyVerticalLattice
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoIncommensurableBasesDestroyVerticalLattice
 
 namespace Omega.Zeta
 

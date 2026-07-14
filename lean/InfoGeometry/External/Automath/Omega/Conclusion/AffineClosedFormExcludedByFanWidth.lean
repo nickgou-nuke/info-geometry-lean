@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
-import Omega.Conclusion.DiscreteFanWidthTentKernelTomography
+import InfoGeometry.External.Automath.Omega.Conclusion.DiscreteFanWidthTentKernelTomography
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Logic.Relation
-import Omega.EA.RewriteTermination
+import InfoGeometry.External.Automath.Omega.EA.RewriteTermination
 
 namespace Omega.EA
 

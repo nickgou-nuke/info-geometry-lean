@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.FoldOutputEntropyGaugeAffineIdentity
-import Omega.OperatorAlgebra.FoldInfoNCEMILimit
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldOutputEntropyGaugeAffineIdentity
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCEMILimit
 
 open Filter Topology
 

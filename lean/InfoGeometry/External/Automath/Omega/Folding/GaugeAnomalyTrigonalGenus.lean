@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FirstTrigonalStructureGoldenRatio
-import Omega.Folding.GaugeAnomalyTrigonalS3GaloisClosure
+import InfoGeometry.External.Automath.Omega.Folding.FirstTrigonalStructureGoldenRatio
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalS3GaloisClosure
 
 /-!
 # Second trigonal structure: monodromy group and Galois closure genus

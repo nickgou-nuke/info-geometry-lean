@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40CollisionPressure
-import Omega.SyncKernelWeighted.RealInput40CollisionCumulants
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionPressure
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionCumulants
 
 namespace Omega.SyncKernelWeighted
 

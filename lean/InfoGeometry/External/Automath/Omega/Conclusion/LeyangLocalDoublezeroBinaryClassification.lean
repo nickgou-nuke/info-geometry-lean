@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
-import Omega.Zeta.XiLeyangTwoLeadingZerosExtrapolateUc
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangTwoLeadingZerosExtrapolateUc
 
 namespace Omega.Conclusion
 

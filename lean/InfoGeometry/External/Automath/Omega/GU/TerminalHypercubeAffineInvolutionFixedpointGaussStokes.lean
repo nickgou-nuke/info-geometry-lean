@@ -1,4 +1,4 @@
-import Omega.Core.WalshStokes
+import InfoGeometry.External.Automath.Omega.Core.WalshStokes
 import Mathlib.Tactic
 
 namespace Omega.GU

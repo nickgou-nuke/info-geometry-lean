@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.ResidueRefinementJensen
+import InfoGeometry.External.Automath.Omega.POM.ResidueRefinementJensen
 
 namespace Omega.POM
 

@@ -1,11 +1,11 @@
 import Mathlib.Tactic
-import Omega.POM.DelayMin
-import Omega.POM.MomentKernelExists
-import Omega.POM.MomentMinreal
-import Omega.POM.MomentResonance
-import Omega.POM.RenyiDimensionSpectrum
-import Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
-import Omega.Zeta.RealInput40TrivMechSplit
+import InfoGeometry.External.Automath.Omega.POM.DelayMin
+import InfoGeometry.External.Automath.Omega.POM.MomentKernelExists
+import InfoGeometry.External.Automath.Omega.POM.MomentMinreal
+import InfoGeometry.External.Automath.Omega.POM.MomentResonance
+import InfoGeometry.External.Automath.Omega.POM.RenyiDimensionSpectrum
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40TrivMechSplit
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.MaxFiberTwoStep
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberTwoStep
 
 namespace Omega.Folding.OverflowGapRate
 

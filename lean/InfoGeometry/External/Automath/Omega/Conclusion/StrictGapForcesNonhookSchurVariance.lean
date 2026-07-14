@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.HookChannelImpliesPartitionGapClosed
-import Omega.POM.SchurVarianceDecomposition
+import InfoGeometry.External.Automath.Omega.POM.HookChannelImpliesPartitionGapClosed
+import InfoGeometry.External.Automath.Omega.POM.SchurVarianceDecomposition
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Ring.GeomSum
 import Mathlib.Tactic
-import Omega.Folding.HaltingLeyangHolographicEncoding
+import InfoGeometry.External.Automath.Omega.Folding.HaltingLeyangHolographicEncoding
 
 namespace Omega.Folding
 

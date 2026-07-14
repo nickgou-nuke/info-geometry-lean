@@ -1,9 +1,9 @@
-import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Clifford.Soldering
 import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding
-
+import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 /-!
 # Twistor / Amplituhedron Bridge
 
@@ -51,7 +51,7 @@ open InfoGeometry.Twistor.Incidence
 open InfoGeometry.Projective.Twistor
 open InfoGeometry.Projective.ArnoldRelations
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
-open InfoGeometry.Projective.RohozhkinDelaunayBraiding
+open InfoGeometry.Topology.RohozhkinDelaunayBraiding
 open InfoGeometry.Topology.Delaunay
 
 /--
@@ -101,7 +101,7 @@ theorem rohozhkin_pentagon_face_identity_readout
             InfoGeometry.Topology.Delaunay.pentagonGamma1 zi zj zk zl zm =
               (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) :=
-  appendix_pentagon_matrix_identity_readout zi zj zk zl zm
+  appendixPentagonWord_matrix_eq_one zi zj zk zl zm
     h_il h_ik h_km h_jm h_jl
 
 /--

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.DyadicBoundaryGodelAdmissibleMultiplicativeLinearSubcode
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryGodelAdmissibleMultiplicativeLinearSubcode
 
 namespace Omega.Conclusion
 

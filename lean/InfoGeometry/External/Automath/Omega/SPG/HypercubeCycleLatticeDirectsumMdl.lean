@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.HypercubeCycleLatticeDirectsumCounting
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeCycleLatticeDirectsumCounting
 
 namespace Omega.SPG
 

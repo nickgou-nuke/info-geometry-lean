@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.KernelHardyRealEven
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.KernelHardyRealEven
 
 namespace Omega.UnitCirclePhaseArithmetic
 

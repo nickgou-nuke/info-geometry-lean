@@ -35,11 +35,11 @@ theorem cs_generic_orbit (X : Herm2x2Cs) (_hdet : X.det ≠ 0) :
 /-! ## 2. Coordinate strata for J₂(ℍ_s) [3+3 signature] -/
 
 theorem hs_null_orbit (X : JordanCayleyInversionHs.Herm2x2Hs) (hzero : X.det = 0) :
-    X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0 :=
+    X.mulTraceReversal.1 = 0 ∧ X.mulTraceReversal.2 = 0 :=
   JordanCayleyInversionHs.Herm2x2Hs.on_klein_quadric X hzero
 
 theorem hs_generic_orbit (X : JordanCayleyInversionHs.Herm2x2Hs) (_hdet : X.det ≠ 0) :
-    X.mulTraceReversal = { e11 := X.det, e22 := -X.det } :=
+    X.mulTraceReversal = (X.det, -X.det) :=
   JordanCayleyInversionHs.Herm2x2Hs.fundamental_identity X
 
 /-! ## 3. Coordinate strata for J₂(𝕆_s) [5+5 signature] -/
@@ -57,14 +57,14 @@ theorem os_generic_orbit (X : JordanCayleyInversionOs.Herm2x2Os) (_hdet : X.det 
 /-- Uniform null-locus diagonal-vanishing packet across the three coordinate models. -/
 theorem uniform_null_orbit :
   (∀ (X : Herm2x2Cs), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) ∧
-  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) ∧
+  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.det = 0 → X.mulTraceReversal.1 = 0 ∧ X.mulTraceReversal.2 = 0) ∧
   (∀ (X : JordanCayleyInversionOs.Herm2x2Os), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) :=
   ⟨fun X => cs_null_orbit X, fun X => hs_null_orbit X, fun X => os_null_orbit X⟩
 
 /-- Uniform diagonal trace-reversal determinant packet across the three coordinate models. -/
 theorem uniform_fundamental_identity :
   (∀ (X : Herm2x2Cs), X.mulTraceReversal = { e11 := X.det, e22 := -X.det }) ∧
-  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.mulTraceReversal = { e11 := X.det, e22 := -X.det }) ∧
+  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.mulTraceReversal = (X.det, -X.det)) ∧
   (∀ (X : JordanCayleyInversionOs.Herm2x2Os), X.mulTraceReversal = { e11 := X.det, e22 := -X.det }) :=
   ⟨Herm2x2Cs.fundamental_identity,
    JordanCayleyInversionHs.Herm2x2Hs.fundamental_identity,

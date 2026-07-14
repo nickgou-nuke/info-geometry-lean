@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimitiveCosetFourierFilter
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimitiveCosetFourierFilter
 
 namespace Omega.Conclusion
 

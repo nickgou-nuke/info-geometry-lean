@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.HaltingLeyangW1Barrier
+import InfoGeometry.External.Automath.Omega.Folding.HaltingLeyangW1Barrier
 
 namespace Omega.FoldComputability
 

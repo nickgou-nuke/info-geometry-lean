@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart63bLogcmPhiadicJetDeterminesEvenZeta
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63bLogcmPhiadicJetDeterminesEvenZeta
 
 namespace Omega.Zeta
 

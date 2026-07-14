@@ -1,4 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Algebra.Ring.MinimalAxioms
+import Mathlib.Algebra.Lie.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic
@@ -2079,6 +2081,12 @@ theorem smul_smul (r s : R) (D : Derivation (R := R)) :
   intro X
   ext i <;> simp [smul, ZornVectorMatrix.smul] <;> ring
 
+@[simp] theorem neg_eq_smul_neg_one (D : Derivation (R := R)) :
+    neg D = smul (-1 : R) D := by
+  apply ext
+  intro X
+  ext i <;> simp [neg, smul, ZornVectorMatrix.neg_eq_smul_neg_one]
+
 /-- Commutator bracket of derivations. -/
 def bracket (D E : Derivation (R := R)) : Derivation (R := R) where
   toFun := fun X => ZornVectorMatrix.sub (D (E X)) (E (D X))
@@ -2288,6 +2296,97 @@ def lieSurface : LieSurface (R := R) where
 @[simp] theorem lieSurface_bracketOp (D E : Derivation (R := R)) :
     (lieSurface (R := R)).bracketOp D E = bracket D E :=
   rfl
+
+instance : Add (Derivation (R := R)) := ⟨add⟩
+
+instance : Zero (Derivation (R := R)) := ⟨zero⟩
+
+instance : Neg (Derivation (R := R)) := ⟨neg⟩
+
+instance : Sub (Derivation (R := R)) := ⟨sub⟩
+
+instance : AddGroup (Derivation (R := R)) :=
+  AddGroup.ofLeftAxioms add_assoc zero_add add_left_neg
+
+instance : AddCommGroup (Derivation (R := R)) :=
+  AddCommGroup.mk add_comm
+
+instance : SMul R (Derivation (R := R)) := ⟨smul⟩
+
+instance : SemigroupAction R (Derivation (R := R)) :=
+  SemigroupAction.mk (by
+    intro r s D
+    change (r * s) • D = r • (s • D)
+    simpa using (smul_smul (r := r) (s := s) (D := D)).symm)
+
+instance : MulAction R (Derivation (R := R)) :=
+  MulAction.mk (by
+    intro D
+    change (1 : R) • D = D
+    simpa using (one_smul (D := D)))
+
+instance : DistribMulAction R (Derivation (R := R)) :=
+  DistribMulAction.mk (by
+    intro r
+    change r • (0 : Derivation (R := R)) = 0
+    simpa using (smul_zero (r := r))) (by
+    intro r D E
+    change r • (D + E) = r • D + r • E
+    simpa using (smul_add (r := r) (D := D) (E := E)))
+
+instance : Module R (Derivation (R := R)) :=
+  Module.mk (by
+    intro r s D
+    change (r + s) • D = r • D + s • D
+    simpa using (add_smul (r := r) (s := s) (D := D))) (by
+    intro D
+    change (0 : R) • D = 0
+    simpa using (zero_smul (D := D)))
+
+instance : LieRing (Derivation (R := R)) :=
+  { bracket := bracket
+    add_lie := bracket_add_left
+    lie_add := bracket_add_right
+    lie_self := bracket_self
+    leibniz_lie := by
+      intro D E F
+      have h1 : bracket E (bracket F D) = - bracket E (bracket D F) := by
+        have h1a : bracket E (bracket F D) =
+            bracket E (smul (-1 : R) (bracket D F)) := by
+          simpa [neg_eq_smul_neg_one] using congrArg (bracket E) (bracket_skew F D)
+        have h1b : bracket E (smul (-1 : R) (bracket D F)) =
+            - bracket E (bracket D F) := by
+          calc
+            bracket E (smul (-1 : R) (bracket D F)) =
+                smul (-1 : R) (bracket E (bracket D F)) := by
+              simpa using (bracket_smul_right (-1 : R) E (bracket D F))
+            _ = - bracket E (bracket D F) := by
+              rw [← neg_eq_smul_neg_one]
+              rfl
+        exact h1a.trans h1b
+      have h2 : bracket F (bracket D E) = - bracket (bracket D E) F := by
+        calc
+          bracket F (bracket D E) =
+              smul (-1 : R) (bracket (bracket D E) F) := by
+            simpa using (bracket_skew F (bracket D E))
+          _ = - bracket (bracket D E) F := by
+            rw [← neg_eq_smul_neg_one]
+            rfl
+      have h0 := bracket_jacobi D E F
+      rw [h1, h2] at h0
+      have h :
+          bracket D (bracket E F) +
+              (-(bracket E (bracket D F)) + -(bracket (bracket D E) F)) = 0 := by
+        simpa [add_assoc, add_left_comm, add_comm] using h0
+      have h' := eq_neg_of_add_eq_zero_left h
+      simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h'
+  }
+
+instance : LieAlgebra R (Derivation (R := R)) :=
+  LieAlgebra.mk (by
+    intro t D E
+    change bracket D (smul t E) = smul t (bracket D E)
+    simpa using (bracket_smul_right t D E))
 
 end Derivation
 

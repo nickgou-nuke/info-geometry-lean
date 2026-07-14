@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.CutFunctionSubmodular
+import InfoGeometry.External.Automath.Omega.SPG.CutFunctionSubmodular
 
 namespace Omega.Conclusion
 

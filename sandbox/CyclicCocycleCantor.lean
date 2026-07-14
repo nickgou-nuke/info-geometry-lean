@@ -11,10 +11,12 @@ open InfoGeometry.Topology.FractalCantorFockWitness.CantorBoundaryFunctionSpace
 
 ...
 
-#### BUCKET 1: CLOSED FINITE THEOREMS
+#### CLOSED FINITE THEOREMS
 
-- `boundedCommutator_tilt_dirac` — [D, tilt_j] is bounded (Clifford relation)
-- etc.
+This file currently exports the finite matrix chiral trace cancellation theorem
+below.  The abstract Cantor-boundary cocycle operators require actual
+definitions of the tilt/switch operators and cyclic cochains before theorem
+statements can be exported.
 -/
 
 namespace CyclicCocycleCantor
@@ -24,52 +26,6 @@ open InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 variable {Op H : Type*} [Ring Op] [StarRing Op]
   [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-
-/-!
-### Lemma 1: Bounded Commutator — Dirac with Tilt Operators
--/
-
-noncomputable def tilt_operator (T : CuntzCantorSpectralTriple Op H) (j : ℕ) : Op := sorry
-
-theorem boundedCommutator_tilt_dirac
-    (T : CuntzCantorSpectralTriple Op H) (j : ℕ) :
-    ∃ (B : H →L[ℂ] H), B = T.dirac * T.representedAction (tilt_operator T j) - T.representedAction (tilt_operator T j) * T.dirac := by
-  use T.dirac * T.representedAction (tilt_operator T j) - T.representedAction (tilt_operator T j) * T.dirac
-
-/-!
-### Lemma 2: Bounded Commutator — Dirac with Switch Operators
--/
-
-noncomputable def switch_operator (T : CuntzCantorSpectralTriple Op H) (j : ℕ) : Op := sorry
-
-theorem boundedCommutator_switch_dirac
-    (T : CuntzCantorSpectralTriple Op H) (j : ℕ) :
-    ∃ (B : H →L[ℂ] H), B = T.dirac * T.representedAction (switch_operator T j) - T.representedAction (switch_operator T j) * T.dirac := by
-  use T.dirac * T.representedAction (switch_operator T j) - T.representedAction (switch_operator T j) * T.dirac
-
-/--
-The grade-0 cyclic cocycle is the supertrace.
--/
-noncomputable def cyclicCocycle_grade0
-    (_T : CuntzCantorSpectralTriple Op H) (_a : Op) : ℂ := sorry
-
-theorem cyclicCocycle_grade0_trace (T : CuntzCantorSpectralTriple Op H) (a b : Op) :
-    cyclicCocycle_grade0 T (a * b) = cyclicCocycle_grade0 T (b * a) := sorry
-
-/--
-The grade-1 cyclic cocycle.
--/
-noncomputable def cyclicCocycle_grade1
-    (_T : CuntzCantorSpectralTriple Op H) (_a₀ _a₁ : Op) : ℂ := sorry
-
-theorem cyclicCocycle_cocycleIdentity
-    (T : CuntzCantorSpectralTriple Op H) (a b c : Op) :
-    cyclicCocycle_grade1 T (a * b) c - cyclicCocycle_grade1 T a (b * c) +
-    cyclicCocycle_grade1 T (c * a) b = 0 := sorry
-
-theorem moebiusIndex_eq_cyclicCocyclePairing
-    (T : CuntzCantorSpectralTriple Op H) (p : Op) (_hp : p * p = p) :
-    cyclicCocycle_grade1 T p p = 0 := sorry
 
 /-! ## Finite matrix chiral anomaly cancellation -/
 

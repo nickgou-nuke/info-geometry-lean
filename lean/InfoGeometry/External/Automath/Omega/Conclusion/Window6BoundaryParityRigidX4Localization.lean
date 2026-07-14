@@ -1,5 +1,5 @@
-import Omega.Conclusion.Window6BinarySuffixCylinderTrichotomy
-import Omega.Conclusion.Window6BoundaryQuotientCyclicCardinality
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BinarySuffixCylinderTrichotomy
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryQuotientCyclicCardinality
 
 namespace Omega.Conclusion
 

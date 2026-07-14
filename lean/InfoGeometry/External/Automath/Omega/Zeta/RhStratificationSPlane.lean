@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Zeta.CriticalCircleStateDimensionLB
-import Omega.Zeta.XiCriticalLineHorizonCircle
+import InfoGeometry.External.Automath.Omega.Zeta.CriticalCircleStateDimensionLB
+import InfoGeometry.External.Automath.Omega.Zeta.XiCriticalLineHorizonCircle
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiHankelPrimitiveGapVanishingCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelPrimitiveGapVanishingCriterion
 
 namespace Omega.Zeta
 

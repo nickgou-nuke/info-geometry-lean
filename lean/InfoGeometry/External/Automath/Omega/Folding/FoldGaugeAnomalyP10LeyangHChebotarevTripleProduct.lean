@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldGaugeAnomalyP10LeyangHTripleProduct
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10LeyangHTripleProduct
 
 namespace Omega.Folding
 

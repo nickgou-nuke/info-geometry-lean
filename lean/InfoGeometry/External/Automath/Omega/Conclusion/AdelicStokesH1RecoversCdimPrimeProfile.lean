@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 import Mathlib.Topology.Order.Basic
-import Omega.Conclusion.BoundaryStokesObservationMinimalDimension
-import Omega.Conclusion.PrimeRegisterFiberCdimDensity
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesObservationMinimalDimension
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterFiberCdimDensity
 
 namespace Omega.Conclusion
 

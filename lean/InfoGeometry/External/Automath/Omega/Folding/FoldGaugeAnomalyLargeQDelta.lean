@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyClt
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyClt
 
 namespace Omega.Folding
 

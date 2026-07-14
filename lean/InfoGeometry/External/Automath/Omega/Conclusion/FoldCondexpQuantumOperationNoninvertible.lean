@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldConditionalExpectation
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectation
 
 namespace Omega.Conclusion
 

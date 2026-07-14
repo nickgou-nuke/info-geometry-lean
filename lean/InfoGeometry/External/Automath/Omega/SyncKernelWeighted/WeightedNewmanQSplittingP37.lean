@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.WeightedNewmanQGaloisS37
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedNewmanQGaloisS37
 
 namespace Omega.SyncKernelWeighted
 

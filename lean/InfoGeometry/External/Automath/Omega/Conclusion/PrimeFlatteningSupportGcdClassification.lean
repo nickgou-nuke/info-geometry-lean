@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeCharacterEnergyCenteredVariance
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeCharacterEnergyCenteredVariance
 
 namespace Omega.Conclusion
 

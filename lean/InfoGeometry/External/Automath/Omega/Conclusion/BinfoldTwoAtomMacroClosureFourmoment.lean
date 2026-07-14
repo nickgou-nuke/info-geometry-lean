@@ -1,7 +1,7 @@
-import Omega.Conclusion.BinfoldMellinTwoStepLaw
-import Omega.Conclusion.BinfoldTwoConstantCompleteness
-import Omega.Conclusion.BinfoldUniformOutputTwoatomChoquet
-import Omega.Conclusion.FoldpiRanktwoFourMomentRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldMellinTwoStepLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoConstantCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldUniformOutputTwoatomChoquet
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldpiRanktwoFourMomentRigidity
 
 namespace Omega.Conclusion
 

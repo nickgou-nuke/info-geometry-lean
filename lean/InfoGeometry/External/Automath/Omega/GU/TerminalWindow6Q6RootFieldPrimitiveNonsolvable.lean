@@ -2,7 +2,7 @@ import Mathlib.GroupTheory.GroupAction.MultipleTransitivity
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.GroupTheory.Solvable
 import Mathlib.Tactic
-import Omega.GU.TerminalWindow6PushforwardCharpolyGalois
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6PushforwardCharpolyGalois
 
 namespace Omega.GU
 

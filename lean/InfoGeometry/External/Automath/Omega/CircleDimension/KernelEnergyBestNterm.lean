@@ -1,4 +1,4 @@
-import Omega.CircleDimension.KernelEnergyLaguerreParseval
+import InfoGeometry.External.Automath.Omega.CircleDimension.KernelEnergyLaguerreParseval
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Folding.MaxFiberTwoStep
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberTwoStep
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
 

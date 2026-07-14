@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6B3C3SphericalCubatureStrength5
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3SphericalCubatureStrength5
 
 namespace Omega.GU
 

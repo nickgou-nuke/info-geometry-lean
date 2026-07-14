@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6FamilyProjectionWequivariantUniqueness
+import InfoGeometry.External.Automath.Omega.GU.Window6FamilyProjectionWequivariantUniqueness
 
 open scoped BigOperators
 

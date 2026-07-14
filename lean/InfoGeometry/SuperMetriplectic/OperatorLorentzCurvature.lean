@@ -87,48 +87,6 @@ theorem modularFlow_eq_lorentzBoost
 end BisognanoWichmannModularLorentzPacket
 
 /--
-Drazin-core Lorentz protection packet.
-
-The generator annihilates the protected core projector on both sides, while the
-full modular/Lorentz flow fixes the protected core projector on both sides.
-This is the operatorial version of "the topological memory is boost-invariant":
-the infinitesimal generator kills it, and the finite flow leaves it unchanged.
--/
-@[rep_depth operator]
-structure DrazinCoreLorentzInvariancePacket where
-  drazinCoreProjector : EndH
-  modularGenerator : EndH
-  modularFlow : ℝ → EndH
-  generator_kills_core_left :
-    modularGenerator * drazinCoreProjector = 0
-  generator_kills_core_right :
-    drazinCoreProjector * modularGenerator = 0
-  flow_fixes_core_left :
-    ∀ τ : ℝ, modularFlow τ * drazinCoreProjector = drazinCoreProjector
-  flow_fixes_core_right :
-    ∀ τ : ℝ, drazinCoreProjector * modularFlow τ = drazinCoreProjector
-
-namespace DrazinCoreLorentzInvariancePacket
-
-/-- The modular/Lorentz generator annihilates the protected Drazin core. -/
-@[rep_depth operator]
-theorem modularGenerator_kills_core
-    (D : DrazinCoreLorentzInvariancePacket (E := E)) :
-    D.modularGenerator * D.drazinCoreProjector = 0
-      ∧ D.drazinCoreProjector * D.modularGenerator = 0 :=
-  ⟨D.generator_kills_core_left, D.generator_kills_core_right⟩
-
-/-- The finite modular/Lorentz flow fixes the protected Drazin core. -/
-@[rep_depth operator]
-theorem modularFlow_fixes_core
-    (D : DrazinCoreLorentzInvariancePacket (E := E)) (τ : ℝ) :
-    D.modularFlow τ * D.drazinCoreProjector = D.drazinCoreProjector
-      ∧ D.drazinCoreProjector * D.modularFlow τ = D.drazinCoreProjector :=
-  ⟨D.flow_fixes_core_left τ, D.flow_fixes_core_right τ⟩
-
-end DrazinCoreLorentzInvariancePacket
-
-/--
 Curvature packet from two modular/Lorentz directions.
 
 The "Riemann readout" is deliberately an operator-algebraic readout: it is the
@@ -193,7 +151,17 @@ structure OperatorLorentzCurvatureCapstone where
   gradeSplit : OperatorialCliffordFourierGradeSplit (E := E)
   boostX : BisognanoWichmannModularLorentzPacket (E := E)
   boostY : BisognanoWichmannModularLorentzPacket (E := E)
-  drazinCore : DrazinCoreLorentzInvariancePacket (E := E)
+  drazinCoreProjector : EndH
+  drazinCoreModularGenerator : EndH
+  drazinCoreModularFlow : ℝ → EndH
+  drazinCore_generator_kills_left :
+    drazinCoreModularGenerator * drazinCoreProjector = 0
+  drazinCore_generator_kills_right :
+    drazinCoreProjector * drazinCoreModularGenerator = 0
+  drazinCore_flow_fixes_left :
+    ∀ τ : ℝ, drazinCoreModularFlow τ * drazinCoreProjector = drazinCoreProjector
+  drazinCore_flow_fixes_right :
+    ∀ τ : ℝ, drazinCoreProjector * drazinCoreModularFlow τ = drazinCoreProjector
   curvature : ModularLorentzCommutatorCurvaturePacket (E := E)
   curvature_modularFlowX_matches_boostX :
     curvature.modularFlowX = boostX.modularFlow
@@ -219,19 +187,19 @@ theorem gradeSplit_eq_sum
 @[rep_depth operator]
 theorem drazinCore_generator_killed
     (C : OperatorLorentzCurvatureCapstone (E := E)) :
-    C.drazinCore.modularGenerator * C.drazinCore.drazinCoreProjector = 0
-      ∧ C.drazinCore.drazinCoreProjector * C.drazinCore.modularGenerator = 0 :=
-  C.drazinCore.modularGenerator_kills_core
+    C.drazinCoreModularGenerator * C.drazinCoreProjector = 0
+      ∧ C.drazinCoreProjector * C.drazinCoreModularGenerator = 0 :=
+  ⟨C.drazinCore_generator_kills_left, C.drazinCore_generator_kills_right⟩
 
 /-- The capstone Drazin core is fixed by finite modular/Lorentz flow. -/
 @[rep_depth operator]
 theorem drazinCore_flow_fixed
     (C : OperatorLorentzCurvatureCapstone (E := E)) (τ : ℝ) :
-    C.drazinCore.modularFlow τ * C.drazinCore.drazinCoreProjector =
-        C.drazinCore.drazinCoreProjector
-      ∧ C.drazinCore.drazinCoreProjector * C.drazinCore.modularFlow τ =
-        C.drazinCore.drazinCoreProjector :=
-  C.drazinCore.modularFlow_fixes_core τ
+    C.drazinCoreModularFlow τ * C.drazinCoreProjector =
+        C.drazinCoreProjector
+      ∧ C.drazinCoreProjector * C.drazinCoreModularFlow τ =
+        C.drazinCoreProjector :=
+  ⟨C.drazinCore_flow_fixes_left τ, C.drazinCore_flow_fixes_right τ⟩
 
 /--
 The capstone curvature/Riemann readout is the commutator of the two modular
@@ -273,12 +241,12 @@ theorem operator_lorentz_curvature_theorem
     C.gradeSplit.transformed =
         C.gradeSplit.scalarGrade + C.gradeSplit.vectorGrade
           + C.gradeSplit.bivectorGrade + C.gradeSplit.topologicalGrade
-      ∧ C.drazinCore.modularGenerator * C.drazinCore.drazinCoreProjector = 0
-      ∧ C.drazinCore.drazinCoreProjector * C.drazinCore.modularGenerator = 0
-      ∧ C.drazinCore.modularFlow τ * C.drazinCore.drazinCoreProjector =
-          C.drazinCore.drazinCoreProjector
-      ∧ C.drazinCore.drazinCoreProjector * C.drazinCore.modularFlow τ =
-          C.drazinCore.drazinCoreProjector
+      ∧ C.drazinCoreModularGenerator * C.drazinCoreProjector = 0
+      ∧ C.drazinCoreProjector * C.drazinCoreModularGenerator = 0
+      ∧ C.drazinCoreModularFlow τ * C.drazinCoreProjector =
+          C.drazinCoreProjector
+      ∧ C.drazinCoreProjector * C.drazinCoreModularFlow τ =
+          C.drazinCoreProjector
       ∧ C.curvature.riemannReadout s t =
           C.boostX.modularFlow s * C.boostY.modularFlow t
             - C.boostY.modularFlow t * C.boostX.modularFlow s

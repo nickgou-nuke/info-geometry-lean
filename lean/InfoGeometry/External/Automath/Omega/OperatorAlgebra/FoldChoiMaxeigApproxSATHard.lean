@@ -2,7 +2,7 @@ import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
 
 namespace Omega.OperatorAlgebra
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
+import InfoGeometry.External.Automath.Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
 
 namespace Omega.Zeta
 

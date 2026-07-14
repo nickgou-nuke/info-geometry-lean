@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloLeyangJointDensityExplicit
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangJointDensityExplicit
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Ring.Parity
-import Omega.Conclusion.ScreenBasisExchangeGraphGeodesicRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenBasisExchangeGraphGeodesicRigidity
 
 namespace Omega.Conclusion
 

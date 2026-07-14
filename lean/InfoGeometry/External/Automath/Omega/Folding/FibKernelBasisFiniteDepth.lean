@@ -1,6 +1,6 @@
 import Mathlib.Data.Finsupp.SMul
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterResidualLedgerGroup
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterResidualLedgerGroup
 
 namespace Omega.Folding
 

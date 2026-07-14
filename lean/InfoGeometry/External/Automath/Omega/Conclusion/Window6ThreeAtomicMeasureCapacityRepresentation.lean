@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6Collision
-import Omega.Conclusion.Window6RepresentationZetaCountRatio
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6RepresentationZetaCountRatio
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.GU.BdryOrientationBlockDecompositionOddVisibility
+import InfoGeometry.External.Automath.Omega.GU.BdryOrientationBlockDecompositionOddVisibility
 
 namespace Omega.GU
 

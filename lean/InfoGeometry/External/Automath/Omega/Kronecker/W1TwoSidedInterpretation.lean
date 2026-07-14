@@ -1,4 +1,4 @@
-import Omega.Kronecker.W1DenominatorClosedForm
+import InfoGeometry.External.Automath.Omega.Kronecker.W1DenominatorClosedForm
 import Mathlib.Tactic
 
 namespace Omega.Kronecker

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingH2
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingH2
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.CircleDimension
 

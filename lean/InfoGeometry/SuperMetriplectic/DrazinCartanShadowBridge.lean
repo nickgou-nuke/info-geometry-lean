@@ -94,18 +94,6 @@ theorem ownerTranslationCandidate_in_dissipativeRange :
   simpa [C.cartan.toCartanOnsagerSplit_dissipativeRange_eq_p] using
     C.ownerTranslationCandidate_in_cartan_p
 
-/--
-Combined packet for the Drazin-Cartan compatibility lane.
--/
-@[capstone, rep_depth transport]
-theorem drazin_cartan_shadow_packet :
-    (InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerCentralCandidate C.owner.U
-      ∈ (C.cartan.toCartanOnsagerSplit).S.𝔨)
-      ∧
-    (InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate C.owner.U
-      ∈ (C.cartan.toCartanOnsagerSplit).S.𝔭) := by
-  exact ⟨C.ownerCentralCandidate_in_cartan_k, C.ownerTranslationCandidate_in_cartan_p⟩
-
 end DrazinCartanCompatibility
 
 end Core

@@ -1,4 +1,4 @@
-import Omega.Conclusion.TimeAsAddressResolutionFiltration
+import InfoGeometry.External.Automath.Omega.Conclusion.TimeAsAddressResolutionFiltration
 
 namespace Omega.Conclusion
 

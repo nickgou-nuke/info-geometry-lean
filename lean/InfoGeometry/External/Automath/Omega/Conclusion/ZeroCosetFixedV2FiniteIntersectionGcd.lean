@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.TranslationKernelFourierSgM
+import InfoGeometry.External.Automath.Omega.Folding.TranslationKernelFourierSgM
 
 namespace Omega.Conclusion
 

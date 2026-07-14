@@ -1,4 +1,4 @@
-import Omega.GroupUnification.GroupJGFoldSquarefreeExternalization
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGFoldSquarefreeExternalization
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.StableAuditAffineCoefficientCriterion
+import InfoGeometry.External.Automath.Omega.EA.StableAuditAffineCoefficientCriterion
 
 namespace Omega.EA
 

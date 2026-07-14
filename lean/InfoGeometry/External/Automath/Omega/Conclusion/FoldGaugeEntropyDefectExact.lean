@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldGaugeVolumeDoubleExponentialLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldGaugeVolumeDoubleExponentialLaw
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.Sync10Regeneration
+import InfoGeometry.External.Automath.Omega.EA.Sync10Regeneration
 
 namespace Omega.EA
 

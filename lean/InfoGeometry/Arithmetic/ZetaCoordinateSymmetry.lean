@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Arithmetic.ZetaCoordinateSymmetryBase
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.ZetaDihedral
 

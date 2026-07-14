@@ -1,4 +1,4 @@
-import Omega.Folding.FoldSpectrumParityZero
+import InfoGeometry.External.Automath.Omega.Folding.FoldSpectrumParityZero
 
 namespace Omega.Folding
 

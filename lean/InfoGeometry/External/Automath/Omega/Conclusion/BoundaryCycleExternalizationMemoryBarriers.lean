@@ -1,7 +1,7 @@
-import Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
-import Omega.SPG.BoundaryCycleRankFromEntropy
-import Omega.SPG.BoundaryGaugeGroupoidCapacity
-import Omega.SPG.FixedAxisGodelOrderInformation
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryCycleRankFromEntropy
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGaugeGroupoidCapacity
+import InfoGeometry.External.Automath.Omega.SPG.FixedAxisGodelOrderInformation
 
 namespace Omega.Conclusion
 

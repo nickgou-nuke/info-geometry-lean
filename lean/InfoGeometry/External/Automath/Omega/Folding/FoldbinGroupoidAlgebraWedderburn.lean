@@ -1,6 +1,6 @@
-import Omega.Conclusion.Window6Collision
-import Omega.Conclusion.Window6FirstThreeMomentsRecoverWedderburnType
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6FirstThreeMomentsRecoverWedderburnType
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega.Folding
 

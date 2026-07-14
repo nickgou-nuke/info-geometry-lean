@@ -1,2 +1,2 @@
-import Omega.Principles.GoldenBranchFibonacciCoprime
-import Omega.Principles.GoldenBranchStarDiscrepancyAudit
+import InfoGeometry.External.Automath.Omega.Principles.GoldenBranchFibonacciCoprime
+import InfoGeometry.External.Automath.Omega.Principles.GoldenBranchStarDiscrepancyAudit

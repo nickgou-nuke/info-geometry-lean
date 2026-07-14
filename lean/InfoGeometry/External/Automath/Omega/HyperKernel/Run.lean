@@ -1,10 +1,10 @@
 import Std
-import Omega.HyperKernel.Spec
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Enum
-import Omega.HyperKernel.AutoSeed
-import Omega.HyperKernel.Closure
-import Omega.HyperKernel.Pretty
+import InfoGeometry.External.Automath.Omega.HyperKernel.Spec
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Enum
+import InfoGeometry.External.Automath.Omega.HyperKernel.AutoSeed
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Pretty
 
 namespace Omega.HyperKernel
 namespace Run

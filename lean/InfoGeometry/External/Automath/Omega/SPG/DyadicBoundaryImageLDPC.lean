@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SPG.DyadicCubicalBoundaryInjective
-import Omega.SPG.DyadicCubicalCellCount
+import InfoGeometry.External.Automath.Omega.SPG.DyadicCubicalBoundaryInjective
+import InfoGeometry.External.Automath.Omega.SPG.DyadicCubicalCellCount
 
 namespace Omega.SPG
 

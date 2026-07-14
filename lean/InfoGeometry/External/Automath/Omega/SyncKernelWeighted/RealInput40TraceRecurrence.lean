@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.ShiftDynamics
-import Omega.SyncKernelWeighted.RealInput40FibTensor
-import Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
 
 namespace Omega.SyncKernelWeighted
 

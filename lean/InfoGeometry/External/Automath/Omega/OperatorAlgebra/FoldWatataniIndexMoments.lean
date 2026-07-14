@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
 
 namespace Omega.OperatorAlgebra
 

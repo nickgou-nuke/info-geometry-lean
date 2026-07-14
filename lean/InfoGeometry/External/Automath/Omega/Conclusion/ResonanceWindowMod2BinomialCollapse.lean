@@ -1,9 +1,9 @@
 import Mathlib.Algebra.Group.ForwardDiff
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
-import Omega.Conclusion.FiniteFieldJordanExponentPeriodBound
-import Omega.Conclusion.Mod2EPlusOnePowerPeriod
+import InfoGeometry.External.Automath.Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteFieldJordanExponentPeriodBound
+import InfoGeometry.External.Automath.Omega.Conclusion.Mod2EPlusOnePowerPeriod
 
 namespace Omega.Conclusion
 

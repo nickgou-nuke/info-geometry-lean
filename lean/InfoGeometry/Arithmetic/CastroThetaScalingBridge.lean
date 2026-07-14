@@ -71,9 +71,27 @@ Poisson summation theorem is asserted here.
 def thetaWeight (l τ : ℝ) (n : ℤ) : ℝ :=
   Real.exp (-Real.pi * (n : ℝ) ^ 2 * Real.exp (l * τ))
 
+lemma thetaWeight_pos (l τ : ℝ) (n : ℤ) :
+    0 < thetaWeight l τ n := by
+  unfold thetaWeight
+  exact Real.exp_pos _
+
 /-- Finite Gauss-Jacobi-style theta sum over a supplied finite index set. -/
 def finiteTheta (S : Finset ℤ) (l τ : ℝ) : ℝ :=
   ∑ n ∈ S, thetaWeight l τ n
+
+lemma finiteTheta_nonneg (S : Finset ℤ) (l τ : ℝ) :
+    0 ≤ finiteTheta S l τ := by
+  unfold finiteTheta
+  exact Finset.sum_nonneg (fun n _hn => le_of_lt (thetaWeight_pos l τ n))
+
+lemma finiteTheta_pos_of_nonempty {S : Finset ℤ} (hS : S.Nonempty) (l τ : ℝ) :
+    0 < finiteTheta S l τ := by
+  unfold finiteTheta
+  rcases hS with ⟨n, hn⟩
+  exact Finset.sum_pos'
+    (fun m _hm => le_of_lt (thetaWeight_pos l τ m))
+    ⟨n, hn, thetaWeight_pos l τ n⟩
 
 /-- The finite theta weight is invariant under the paired duality `l,τ ↦ -l,-τ`. -/
 theorem thetaWeight_dual (l τ : ℝ) (n : ℤ) :

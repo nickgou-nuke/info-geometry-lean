@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40AtomicWittDirichletComb
-import Omega.SyncKernelWeighted.RealInput40LogMSplit
-import Omega.SyncKernelWeighted.RealInput40PrimeArtinSplitting
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40AtomicWittDirichletComb
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMSplit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimeArtinSplitting
 
 namespace Omega.SyncKernelWeighted
 

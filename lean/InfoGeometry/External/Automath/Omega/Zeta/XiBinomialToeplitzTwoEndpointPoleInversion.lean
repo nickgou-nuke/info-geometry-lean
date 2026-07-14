@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiBinomialToeplitzDominantPoleResponse
+import InfoGeometry.External.Automath.Omega.Zeta.XiBinomialToeplitzDominantPoleResponse
 
 namespace Omega.Zeta
 

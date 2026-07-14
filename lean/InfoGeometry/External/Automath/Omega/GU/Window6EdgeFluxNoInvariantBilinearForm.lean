@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.Window6EdgeFluxFullMatrixSaturation
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxFullMatrixSaturation
 
 namespace Omega.GU
 

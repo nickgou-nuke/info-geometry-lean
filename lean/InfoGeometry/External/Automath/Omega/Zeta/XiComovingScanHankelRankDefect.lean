@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
-import Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
+import InfoGeometry.External.Automath.Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
 
 namespace Omega.Zeta
 

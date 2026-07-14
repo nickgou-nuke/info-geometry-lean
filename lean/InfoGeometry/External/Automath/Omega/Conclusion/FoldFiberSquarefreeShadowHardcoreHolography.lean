@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldFiberFaceposetSquarefreeDivisibilityShadow
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldFiberFaceposetSquarefreeDivisibilityShadow
 
 open scoped BigOperators
 

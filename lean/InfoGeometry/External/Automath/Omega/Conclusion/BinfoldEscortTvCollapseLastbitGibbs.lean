@@ -1,7 +1,7 @@
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Algebra.Field
 import Mathlib.Tactic
-import Omega.Folding.KilloFoldBinEscortOnebitFisher
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinEscortOnebitFisher
 
 namespace Omega.Conclusion
 

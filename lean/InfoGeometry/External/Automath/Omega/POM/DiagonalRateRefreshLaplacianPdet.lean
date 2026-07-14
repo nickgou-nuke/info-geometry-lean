@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRefreshWeightedCayleyPrufer
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshWeightedCayleyPrufer
 
 namespace Omega.POM
 

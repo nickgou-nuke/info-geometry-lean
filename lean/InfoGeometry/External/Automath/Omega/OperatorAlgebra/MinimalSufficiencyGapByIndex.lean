@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CmiLowerBoundByIndexGap
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CmiLowerBoundByIndexGap
 
 namespace Omega.OperatorAlgebra
 

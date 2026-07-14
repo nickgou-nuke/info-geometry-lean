@@ -1,9 +1,9 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.POM.RealInput40ZetaFactorization
-import Omega.SyncKernelRealInput.TrivFactorPrimitivePolynomial
-import Omega.SyncKernelWeighted.RealInput40LogMTruncBound
-import Omega.SyncKernelWeighted.RealInput40LogMSplit
+import InfoGeometry.External.Automath.Omega.POM.RealInput40ZetaFactorization
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.TrivFactorPrimitivePolynomial
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMTruncBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMSplit
 
 namespace Omega.SyncKernelRealInput
 

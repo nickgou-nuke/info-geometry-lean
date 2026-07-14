@@ -1,4 +1,4 @@
-import Omega.Conclusion.ConclusionZgFullLocalDimensionSpectrumEveryCylinder
+import InfoGeometry.External.Automath.Omega.Conclusion.ConclusionZgFullLocalDimensionSpectrumEveryCylinder
 
 namespace Omega.Conclusion
 

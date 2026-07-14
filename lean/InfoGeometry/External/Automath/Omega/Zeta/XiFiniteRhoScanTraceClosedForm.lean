@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFiniteRhoScanTraceClosedFormDepthOnly
+import InfoGeometry.External.Automath.Omega.Zeta.XiFiniteRhoScanTraceClosedFormDepthOnly
 
 namespace Omega.Zeta
 

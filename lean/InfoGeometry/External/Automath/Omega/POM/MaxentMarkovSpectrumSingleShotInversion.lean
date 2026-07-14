@@ -1,4 +1,4 @@
-import Omega.POM.MaxentMarkovLaguerreSecularSpectrum
+import InfoGeometry.External.Automath.Omega.POM.MaxentMarkovLaguerreSecularSpectrum
 
 open scoped BigOperators
 

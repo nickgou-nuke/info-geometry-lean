@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Normed.Ring.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
-import Omega.Zeta.XiBasepointScanFullRankWeightGaugeInvariance
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanFullRankWeightGaugeInvariance
 
 namespace Omega.Conclusion
 

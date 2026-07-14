@@ -1,4 +1,4 @@
-import Omega.CircleDimension.DerivedChainArithmeticBooleanIntervalGeodesics
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedChainArithmeticBooleanIntervalGeodesics
 
 namespace Omega.Conclusion
 

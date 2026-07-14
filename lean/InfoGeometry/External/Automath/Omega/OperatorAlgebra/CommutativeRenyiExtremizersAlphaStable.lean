@@ -1,6 +1,6 @@
-import Omega.OperatorAlgebra.CommutativeDmaxExtremizersMaxfiber
-import Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
-import Omega.OperatorAlgebra.RenyiLossSpectrumCappedByIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CommutativeDmaxExtremizersMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.RenyiLossSpectrumCappedByIndex
 
 namespace Omega.OperatorAlgebra
 

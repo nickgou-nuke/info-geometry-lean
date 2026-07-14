@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.OddtailFiniteDepthScalarPadeJacobiRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.OddtailFiniteDepthScalarPadeJacobiRigidity
 
 namespace Omega.Zeta
 

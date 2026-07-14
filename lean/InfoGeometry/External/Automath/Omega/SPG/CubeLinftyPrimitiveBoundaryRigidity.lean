@@ -1,4 +1,4 @@
-import Omega.SPG.CubeLinftyPrimitiveExplicitMinimizer
+import InfoGeometry.External.Automath.Omega.SPG.CubeLinftyPrimitiveExplicitMinimizer
 
 namespace Omega.SPG
 

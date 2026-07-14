@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Ring.Parity
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.FiniteRh40
-import Omega.SyncKernelWeighted.PrimitiveOddEvenSqrtCancellation
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.FiniteRh40
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveOddEvenSqrtCancellation
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.ToeplitzNegativeSubspacePreservationThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeSubspacePreservationThreshold
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.TracePalindrome
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.TracePalindrome
 
 namespace Omega.SyncKernelWeighted
 

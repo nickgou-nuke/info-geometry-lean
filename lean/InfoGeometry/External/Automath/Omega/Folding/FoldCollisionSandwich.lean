@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldCollisionZeroReduction
-import Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionZeroReduction
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
 
 namespace Omega.Folding
 

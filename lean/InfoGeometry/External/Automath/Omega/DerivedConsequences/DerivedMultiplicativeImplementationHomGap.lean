@@ -1,5 +1,5 @@
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
-import Omega.Folding.KilloNoFiniteAdditiveRegisterLinearization
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.KilloNoFiniteAdditiveRegisterLinearization
 
 namespace Omega.DerivedConsequences
 

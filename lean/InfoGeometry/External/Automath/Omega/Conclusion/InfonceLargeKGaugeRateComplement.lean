@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.InfonceLargeKVisibleEntropyComplement
+import InfoGeometry.External.Automath.Omega.Conclusion.InfonceLargeKVisibleEntropyComplement
 
 open Filter Topology
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldCongruenceModSemirings
-import Omega.Folding.ModSemiringsKernelImageGcd
+import InfoGeometry.External.Automath.Omega.Folding.FoldCongruenceModSemirings
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsKernelImageGcd
 
 namespace Omega
 

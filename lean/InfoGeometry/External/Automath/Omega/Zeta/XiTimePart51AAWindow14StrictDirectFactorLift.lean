@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart51AADerivedCrossFibGcdFormula
-import Omega.Zeta.XiTimePart51AADoublingLucasExtension
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart51AADerivedCrossFibGcdFormula
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart51AADoublingLucasExtension
 
 namespace Omega.Zeta
 

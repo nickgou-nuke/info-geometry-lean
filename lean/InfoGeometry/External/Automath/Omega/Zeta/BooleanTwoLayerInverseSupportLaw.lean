@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.BooleanDisjointnessZetaLDLT
-import Omega.Zeta.BooleanTwoLayerSmithNormalForm
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanDisjointnessZetaLDLT
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerSmithNormalForm
 
 namespace Omega.Zeta
 

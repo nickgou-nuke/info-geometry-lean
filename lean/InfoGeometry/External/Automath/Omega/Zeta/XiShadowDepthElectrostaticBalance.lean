@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiShadowSpectrumInterlacing
+import InfoGeometry.External.Automath.Omega.Zeta.XiShadowSpectrumInterlacing
 
 open scoped BigOperators
 

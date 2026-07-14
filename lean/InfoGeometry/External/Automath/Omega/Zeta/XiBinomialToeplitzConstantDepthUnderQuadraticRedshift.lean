@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiBinomialToeplitzScaleDepthExchange
+import InfoGeometry.External.Automath.Omega.Zeta.XiBinomialToeplitzScaleDepthExchange
 
 namespace Omega.Zeta
 

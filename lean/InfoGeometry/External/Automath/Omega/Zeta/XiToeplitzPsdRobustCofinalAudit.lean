@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.CertificateLoop
-import Omega.Zeta.ToeplitzPsdCofinalSparsificationHereditary
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CertificateLoop
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzPsdCofinalSparsificationHereditary
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SmithLocalZetaPoleResidueHeadTriple
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithLocalZetaPoleResidueHeadTriple
 
 open scoped BigOperators
 

@@ -1,6 +1,6 @@
-import Omega.Folding.EndpointUnique
-import Omega.Folding.HammingDist
-import Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.EndpointUnique
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
 
 namespace Omega.Folding.EndpointMmMinusOneUnique
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.AitkenDelta2SquareConvergence
+import InfoGeometry.External.Automath.Omega.POM.AitkenDelta2SquareConvergence
 
 namespace Omega.POM
 

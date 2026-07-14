@@ -1,4 +1,4 @@
-import Omega.POM.SemConservativeOnSlice
+import InfoGeometry.External.Automath.Omega.POM.SemConservativeOnSlice
 
 namespace Omega.POM
 

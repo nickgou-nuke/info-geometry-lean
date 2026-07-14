@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BernoulliHalfFixedDefectFibonacciJordanFilter
-import Omega.Folding.BernoulliHalfFixedDefectGrowth
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliHalfFixedDefectFibonacciJordanFilter
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliHalfFixedDefectGrowth
 
 namespace Omega.Folding
 

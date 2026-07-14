@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
-import Omega.CircleDimension.ComovingHorizonScanFourierInversion
-import Omega.TypedAddressBiaxialCompletion.ComovingFingerprint
+import InfoGeometry.External.Automath.Omega.CircleDimension.ComovingHorizonScanFourierInversion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFingerprint
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Folding.ModularTower
+import InfoGeometry.External.Automath.Omega.Folding.ModularTower
 
 namespace Omega.POM
 

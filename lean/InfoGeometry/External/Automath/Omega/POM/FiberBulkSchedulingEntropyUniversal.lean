@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.FenceMaxchainsEuler
-import Omega.POM.OrderPolytopeVolumeLinext
+import InfoGeometry.External.Automath.Omega.POM.FenceMaxchainsEuler
+import InfoGeometry.External.Automath.Omega.POM.OrderPolytopeVolumeLinext
 
 namespace Omega.POM
 

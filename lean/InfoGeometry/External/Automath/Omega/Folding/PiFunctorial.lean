@@ -1,5 +1,5 @@
-import Omega.Folding.InverseLimit
-import Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.Folding.Defect
 
 namespace Omega.Folding
 

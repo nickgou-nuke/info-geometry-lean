@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.BCDiscreteJacobianStrictification
-import Omega.POM.BCDiscreteStokes
+import InfoGeometry.External.Automath.Omega.POM.BCDiscreteJacobianStrictification
+import InfoGeometry.External.Automath.Omega.POM.BCDiscreteStokes
 
 namespace Omega.Conclusion
 

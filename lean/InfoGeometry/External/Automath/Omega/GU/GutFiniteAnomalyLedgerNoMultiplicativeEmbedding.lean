@@ -1,4 +1,4 @@
-import Omega.GU.AnomalyLedgerNoMultiplicative
+import InfoGeometry.External.Automath.Omega.GU.AnomalyLedgerNoMultiplicative
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 

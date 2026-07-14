@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.DerivedDualfingerprintFrobeniusConditionalDecoupling
+import InfoGeometry.External.Automath.Omega.GroupUnification.DerivedDualfingerprintFrobeniusConditionalDecoupling
 
 namespace Omega.GroupUnification
 

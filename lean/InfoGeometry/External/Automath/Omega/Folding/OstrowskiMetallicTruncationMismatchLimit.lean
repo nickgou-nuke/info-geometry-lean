@@ -1,5 +1,5 @@
 import Mathlib.Data.Rat.Defs
-import Omega.Folding.OstrowskiMetallicTwoRuleNormalization
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiMetallicTwoRuleNormalization
 
 namespace Omega.Folding
 

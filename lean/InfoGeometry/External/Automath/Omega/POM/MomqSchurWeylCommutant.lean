@@ -1,4 +1,4 @@
-import Omega.POM.MomqPermutationSymmetry
+import InfoGeometry.External.Automath.Omega.POM.MomqPermutationSymmetry
 
 namespace Omega.POM
 

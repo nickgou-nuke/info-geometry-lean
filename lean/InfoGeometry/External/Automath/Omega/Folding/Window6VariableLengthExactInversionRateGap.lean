@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega.Folding
 

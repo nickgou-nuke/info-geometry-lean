@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiIntegratedDefectSumruleEndpointFlux
-import Omega.Zeta.XiSingleDefectThresholdSaturation
+import InfoGeometry.External.Automath.Omega.Zeta.XiIntegratedDefectSumruleEndpointFlux
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleDefectThresholdSaturation
 
 namespace Omega.Zeta
 

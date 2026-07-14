@@ -192,6 +192,16 @@ theorem gibbsWeight_sum_one (B : PrimeGrandCanonicalPacket) (β μ : ℝ) :
   simpa [PrimeGrandCanonicalPacket.gibbsWeight] using
     InfoGeometry.GrandCanonical.gibbsWeightGC_sum_one B.params β μ
 
+theorem gibbsWeight_nonneg (B : PrimeGrandCanonicalPacket) (β μ : ℝ) (S : State B) :
+    0 ≤ B.gibbsWeight β μ S := by
+  simpa [PrimeGrandCanonicalPacket.gibbsWeight] using
+    InfoGeometry.GrandCanonical.gibbsWeightGC_nonneg B.params β μ S
+
+theorem gibbsWeight_le_one (B : PrimeGrandCanonicalPacket) (β μ : ℝ) (S : State B) :
+    B.gibbsWeight β μ S ≤ 1 := by
+  simpa [PrimeGrandCanonicalPacket.gibbsWeight] using
+    InfoGeometry.GrandCanonical.gibbsWeightGC_le_one B.params β μ S
+
 theorem potential_deriv_beta_eq_neg_meanShift (B : PrimeGrandCanonicalPacket) (β μ : ℝ) :
     deriv (fun t => B.potential t μ) β = -B.meanShift β μ := by
   simpa [PrimeGrandCanonicalPacket.potential, PrimeGrandCanonicalPacket.meanShift] using
@@ -265,7 +275,67 @@ theorem spinodal2D_iff_det_eq_zero (B : PrimeGrandCanonicalPacket) (β μ : ℝ)
   simpa [PrimeGrandCanonicalPacket.spinodal2D, PrimeGrandCanonicalPacket.responseMatrix] using
     InfoGeometry.GrandCanonical.spinodal2D_iff_det_eq_zero B.params β μ
 
-/-! ## 4. Log-energy specialization -/
+/-! ## 4. Finite Euler-product readout -/
+
+/-- Finite Euler product associated to the prime grand-canonical packet. -/
+@[rep_depth thermo]
+def finiteEulerProduct (B : PrimeGrandCanonicalPacket) (β μ : ℝ) : ℝ :=
+  ∏ p ∈ B.P.primes, (1 + Real.exp (-β * (B.energyWeight p - μ)))
+
+/--
+A finite occupied-prime Gibbs factor is the product of its one-prime activities.
+-/
+lemma exp_neg_beta_stateEnergy_sub_mu_card
+    (lam : ℕ → ℝ) (β μ : ℝ) (S : Finset ℕ) :
+    Real.exp (-β * ((∑ p ∈ S, lam p) - μ * (S.card : ℝ))) =
+      ∏ p ∈ S, Real.exp (-β * (lam p - μ)) := by
+  have hsum : (∑ p ∈ S, (lam p - μ)) = (∑ p ∈ S, lam p) - μ * (S.card : ℝ) := by
+    rw [Finset.sum_sub_distrib]
+    simp [Finset.sum_const, nsmul_eq_mul]
+    ring
+  have harg : -β * ((∑ p ∈ S, lam p) - μ * (S.card : ℝ)) =
+      ∑ p ∈ S, -β * (lam p - μ) := by
+    rw [← hsum]
+    exact Finset.mul_sum S (fun p => lam p - μ) (-β)
+  rw [harg, Real.exp_sum]
+
+/--
+The finite prime grand-canonical Gibbs partition is the finite Euler product
+over one-prime occupation factors.
+-/
+theorem partition_eq_finiteEulerProduct (B : PrimeGrandCanonicalPacket) (β μ : ℝ) :
+    B.partition β μ = B.finiteEulerProduct β μ := by
+  classical
+  calc
+    B.partition β μ =
+        ∑ S : State B,
+          Real.exp (-β * ((∑ p ∈ S.1, B.energyWeight p) - μ * (S.1.card : ℝ))) := by
+            rfl
+    _ = ∑ S ∈ B.P.primes.powerset,
+          Real.exp (-β * ((∑ p ∈ S, B.energyWeight p) - μ * (S.card : ℝ))) := by
+            symm
+            exact Finset.sum_subtype
+              (s := B.P.primes.powerset)
+              (p := fun S : Finset ℕ => S ∈ B.P.primes.powerset)
+              (h := fun S => Iff.rfl)
+              (f := fun S => Real.exp (-β * ((∑ p ∈ S, B.energyWeight p) - μ * (S.card : ℝ))))
+    _ = ∑ S ∈ B.P.primes.powerset,
+          ∏ p ∈ S, Real.exp (-β * (B.energyWeight p - μ)) := by
+            refine Finset.sum_congr rfl ?_
+            intro S _hS
+            exact exp_neg_beta_stateEnergy_sub_mu_card B.energyWeight β μ S
+    _ = B.finiteEulerProduct β μ := by
+            exact (Finset.prod_one_add (s := B.P.primes)
+              (f := fun p => Real.exp (-β * (B.energyWeight p - μ)))).symm
+
+/-- The finite Massieu/log-partition potential is the logarithm of the Euler product. -/
+@[simp, rep_depth thermo]
+theorem potential_eq_log_finiteEulerProduct (B : PrimeGrandCanonicalPacket) (β μ : ℝ) :
+    B.potential β μ = Real.log (B.finiteEulerProduct β μ) := by
+  change Real.log (B.partition β μ) = Real.log (B.finiteEulerProduct β μ)
+  rw [partition_eq_finiteEulerProduct]
+
+/-! ## 5. Log-energy specialization -/
 
 /-- The logarithmic prime-energy specialization `lam p = log p`. -/
 @[rep_depth thermo]
@@ -277,6 +347,24 @@ def logPrimeEnergyWeight : ℕ → ℝ :=
 def logPrimePacket (P : PrimeRegister) : PrimeGrandCanonicalPacket where
   P := P
   energyWeight := logPrimeEnergyWeight
+
+/--
+The logarithmic prime Gibbs partition is the finite Euler product over
+`1 + exp(-β(log p - μ))`.
+-/
+theorem logPrimePacket_partition_eq_finiteEulerProduct (P : PrimeRegister) (β μ : ℝ) :
+    (logPrimePacket P).partition β μ =
+      ∏ p ∈ P.primes, (1 + Real.exp (-β * (Real.log (p : ℝ) - μ))) := by
+  simpa [logPrimePacket, logPrimeEnergyWeight, finiteEulerProduct] using
+    partition_eq_finiteEulerProduct (logPrimePacket P) β μ
+
+/-- The logarithmic prime Massieu potential is the log of the finite Euler product. -/
+@[simp, rep_depth thermo]
+theorem logPrimePacket_potential_eq_log_finiteEulerProduct (P : PrimeRegister) (β μ : ℝ) :
+    (logPrimePacket P).potential β μ =
+      Real.log (∏ p ∈ P.primes, (1 + Real.exp (-β * (Real.log (p : ℝ) - μ)))) := by
+  rw [potential_eq_log_finiteEulerProduct]
+  simp [logPrimePacket, logPrimeEnergyWeight, finiteEulerProduct]
 
 end PrimeGrandCanonicalPacket
 

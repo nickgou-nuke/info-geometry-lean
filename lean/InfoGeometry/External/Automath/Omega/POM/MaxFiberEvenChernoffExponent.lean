@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.GoldenCouplingUniqueness
+import InfoGeometry.External.Automath.Omega.POM.GoldenCouplingUniqueness
 
 namespace Omega.POM
 

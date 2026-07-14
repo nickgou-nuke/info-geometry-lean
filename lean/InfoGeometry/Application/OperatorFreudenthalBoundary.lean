@@ -153,7 +153,7 @@ def dictionaryOfFreudenthalChart
 Freudenthal boundary surgery packet.
 
 This is the next algebraic boundary: once the Freudenthal quartic collapses,
-a detector operator is required, together with a Drazin inverse witness.
+a detector operator is required, together with a Drazin inverse relation.
 -/
 structure FreudenthalBoundarySurgery
     {D : CubicJordanDatum J}
@@ -168,7 +168,9 @@ structure FreudenthalBoundarySurgery
   boundary_has_drazin :
     ∀ ρ : EndH,
       FreudenthalBoundary D (C.chargeOf ρ) →
-        DrazinWitness (detector ρ) (drazinInverseAtBoundary ρ)
+        InfoGeometry.Application.STUOperator.IsDrazinInverse
+          (detector ρ)
+          (drazinInverseAtBoundary ρ)
 
   /-- Core-compressed post-surgery state. -/
   postSurgeryState :

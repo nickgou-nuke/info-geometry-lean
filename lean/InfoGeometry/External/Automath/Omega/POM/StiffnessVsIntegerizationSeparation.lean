@@ -1,4 +1,4 @@
-import Omega.POM.MinimalIntegerizationFactorCokerExponent
+import InfoGeometry.External.Automath.Omega.POM.MinimalIntegerizationFactorCokerExponent
 
 namespace Omega.POM
 

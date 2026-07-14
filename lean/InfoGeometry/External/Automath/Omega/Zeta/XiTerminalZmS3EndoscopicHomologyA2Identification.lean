@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmS3EndoscopicPrymA2Coxeter
-import Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS3EndoscopicPrymA2Coxeter
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
 
 namespace Omega.Zeta
 

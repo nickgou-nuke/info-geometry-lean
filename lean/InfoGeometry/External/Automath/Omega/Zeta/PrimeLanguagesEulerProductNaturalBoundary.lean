@@ -1,4 +1,4 @@
-import Omega.Zeta.ETDSEulerProductNaturalBoundary
+import InfoGeometry.External.Automath.Omega.Zeta.ETDSEulerProductNaturalBoundary
 
 namespace Omega.Zeta
 

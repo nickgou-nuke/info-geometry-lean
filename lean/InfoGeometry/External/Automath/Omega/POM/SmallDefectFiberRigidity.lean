@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.LocalDefectGibbsVariational
+import InfoGeometry.External.Automath.Omega.POM.LocalDefectGibbsVariational
 
 namespace Omega.POM
 

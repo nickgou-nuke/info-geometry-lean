@@ -2,8 +2,8 @@ import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberConditionalReconstructionOddModulus
-import Omega.Folding.FiberSingleCoordinateAffineDifference
+import InfoGeometry.External.Automath.Omega.Folding.FiberConditionalReconstructionOddModulus
+import InfoGeometry.External.Automath.Omega.Folding.FiberSingleCoordinateAffineDifference
 
 namespace Omega.Folding
 

@@ -38,10 +38,11 @@ It records that the GW face-volume owner and the Hestenes/Jones owner use the
 same standard-form Ω-volume carrier.
 -/
 @[rep_depth krein]
-structure HestenesJonesGWVolumeBridge where
+structure Bridge where
   /-- Hestenes/Krein vacuum readout over Jones/Cantor atoms. -/
   jones :
-    HestenesJonesFiltrationBridge (H := H) (Word := Word)
+    _root_.InfoGeometry.Krein.HestenesJonesFiltrationBridge.Bridge
+      (H := H) (Word := Word)
 
   /-- Existing projective Weyl/GW face-volume bridge. -/
   gw :
@@ -53,10 +54,10 @@ structure HestenesJonesGWVolumeBridge where
   omegaVolume_eq :
     gw.omegaVolume = jones.omegaVolume
 
-namespace HestenesJonesGWVolumeBridge
+namespace Bridge
 
 variable (B :
-  HestenesJonesGWVolumeBridge
+  Bridge
     (H := H) (Functional := Functional) (State := State)
     (G := G) (T := T) (Target := Target) (Coeff := Coeff) (Word := Word))
 
@@ -89,7 +90,8 @@ theorem physicalVolume_eq_hestenesLocalizedExpectation
             B.physicalVolume_eq_localizedExpectation w
     _ = B.jones.vacuum.vacuumRealState
           (NaturalConeVolumeBridge.localizationOp B.jones.omegaVolume w) :=
-            HestenesJonesFiltrationBridge.localizedExpectation_eq_vacuumRealState B.jones w
+            _root_.InfoGeometry.Krein.HestenesJonesFiltrationBridge.Bridge.localizedExpectation_eq_vacuumRealState
+              B.jones w
 
 /-- Projective Weyl scale changes leave the GW physical volume unchanged. -/
 @[rep_depth krein]
@@ -111,7 +113,7 @@ theorem modularVolumePotential_eq_neg_log_vacuumRealState
         (B.jones.vacuum.vacuumRealState
           (NaturalConeVolumeBridge.wignerJonesAtom B.jones.omegaVolume w)) := by
   rw [B.omegaVolume_eq]
-  exact HestenesJonesFiltrationBridge.modularVolumePotential_eq_neg_log_vacuumRealState
+  exact _root_.InfoGeometry.Krein.HestenesJonesFiltrationBridge.Bridge.modularVolumePotential_eq_neg_log_vacuumRealState
     B.jones w
 
 /--
@@ -128,7 +130,7 @@ theorem total_projective_face_volume_is_unity
   rw [B.omegaVolume_eq]
   exact hLocalPartition
 
-end HestenesJonesGWVolumeBridge
+end Bridge
 
 end Core
 

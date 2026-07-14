@@ -1,5 +1,5 @@
-import Omega.DerivedConsequences.DerivedM2Level3Common24Defect15ExactSequence
-import Omega.DerivedConsequences.DerivedM2Level3Common24CrossboundaryStability
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedM2Level3Common24Defect15ExactSequence
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedM2Level3Common24CrossboundaryStability
 
 namespace Omega.Conclusion
 

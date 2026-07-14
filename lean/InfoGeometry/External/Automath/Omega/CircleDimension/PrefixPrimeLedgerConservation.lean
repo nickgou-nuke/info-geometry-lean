@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.CircleDimension.CircleDim
-import Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
 
 namespace Omega.CircleDimension
 

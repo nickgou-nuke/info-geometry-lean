@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinMaxFiberExponent
-import Omega.POM.MaxFiberEvenChernoffExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinMaxFiberExponent
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberEvenChernoffExponent
 
 open Filter Topology
 open scoped goldenRatio

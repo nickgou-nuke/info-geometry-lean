@@ -1,4 +1,4 @@
-import Omega.Topos.SheafLocalToGlobalAPAL
+import InfoGeometry.External.Automath.Omega.Topos.SheafLocalToGlobalAPAL
 
 namespace Omega.Topos.GluingFailureSheafLocalToGlobalAPAL
 

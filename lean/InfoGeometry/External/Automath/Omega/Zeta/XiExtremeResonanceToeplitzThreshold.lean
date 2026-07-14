@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzDetectionThreshold
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzDetectionThreshold
 
 namespace Omega.Zeta
 

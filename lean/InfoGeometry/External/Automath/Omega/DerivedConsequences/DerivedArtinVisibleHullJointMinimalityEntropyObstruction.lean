@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ArtinDeterminantMinimalVisibleQuotient
-import Omega.EA.ChebotarevSecondMainTermWitness
+import InfoGeometry.External.Automath.Omega.Conclusion.ArtinDeterminantMinimalVisibleQuotient
+import InfoGeometry.External.Automath.Omega.EA.ChebotarevSecondMainTermWitness
 
 namespace Omega.DerivedConsequences
 

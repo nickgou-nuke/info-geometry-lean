@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.OperatorAlgebra.FoldCapacityCurveCompleteInvariant
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCapacityCurveCompleteInvariant
 
 namespace Omega.OperatorAlgebra
 

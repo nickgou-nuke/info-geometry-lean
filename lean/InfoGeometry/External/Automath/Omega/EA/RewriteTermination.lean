@@ -1,5 +1,5 @@
 import Mathlib.Logic.Relation
-import Omega.Folding.Rewrite
+import InfoGeometry.External.Automath.Omega.Folding.Rewrite
 
 namespace Omega.EA
 

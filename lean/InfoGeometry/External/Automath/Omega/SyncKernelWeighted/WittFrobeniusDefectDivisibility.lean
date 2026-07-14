@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Expand
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
 
 namespace Omega.SyncKernelWeighted
 

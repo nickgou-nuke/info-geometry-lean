@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Basic
-import Omega.Conclusion.LocalizedDualPrimesupportFunctoriality
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedDualPrimesupportFunctoriality
 
 namespace Omega.Conclusion
 

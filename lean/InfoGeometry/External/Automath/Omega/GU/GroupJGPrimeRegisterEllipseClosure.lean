@@ -1,5 +1,5 @@
-import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
-import Omega.GU.JoukowskyAreaPreservingCayley
+import InfoGeometry.External.Automath.Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyAreaPreservingCayley
 import Mathlib.Tactic
 
 namespace Omega.GU

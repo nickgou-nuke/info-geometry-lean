@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Basic
-import Omega.Folding.BernoulliPJordanCriticalScaling
-import Omega.Folding.FoldBinRenyiRateCollapse
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPJordanCriticalScaling
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRenyiRateCollapse
 
 open Filter
 

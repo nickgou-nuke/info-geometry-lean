@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
 
 namespace Omega.GroupUnification
 

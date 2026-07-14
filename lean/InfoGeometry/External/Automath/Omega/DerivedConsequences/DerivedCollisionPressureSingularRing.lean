@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40CollisionPressure
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionPressure
 
 namespace Omega.DerivedConsequences
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.DerivedAffineReciprocity
+import InfoGeometry.External.Automath.Omega.Folding.DerivedAffineReciprocity
 
 open scoped BigOperators
 

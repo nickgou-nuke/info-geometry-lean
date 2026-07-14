@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.SymmDiff
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6MinReturnDelay
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6MinReturnDelay
 
 namespace Omega.GU
 

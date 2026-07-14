@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.C1CutFlux
-import Omega.SyncKernelWeighted.CarryFreeCoreBlock
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.C1CutFlux
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CarryFreeCoreBlock
 
 namespace Omega.SyncKernelWeighted
 

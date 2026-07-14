@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateAbsorbingLaguerreInterlacing
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingLaguerreInterlacing
 
 namespace Omega.POM
 

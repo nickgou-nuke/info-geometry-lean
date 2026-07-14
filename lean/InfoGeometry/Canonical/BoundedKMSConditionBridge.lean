@@ -56,10 +56,11 @@ and normality propositions.  The KMS boundary law is currently owned by
 `FlowDatum`.
 -/
 @[rep_depth thermo]
-structure BoundedKMSConditionBridge where
+structure Bridge where
   /-- Bounded Souriau/Drazin modular-flow calibration. -/
   boundedFlow :
-    BoundedModularFlowCalibration (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Inverse temperature. -/
   beta : ℝ
@@ -81,13 +82,14 @@ Minimal bounded KMS condition bridge.
 
 This narrows the explicit `state` and bare `KMSAnalyticCertificate` fields to a
 single `KMSState` for the bounded modular flow datum. The broader carrier
-remains available through `toBoundedKMSConditionBridge`.
+remains available through `toBridge`.
 -/
 @[rep_depth thermo]
 structure MinimalBoundedKMSConditionBridge where
   /-- Bounded Souriau/Drazin modular-flow calibration. -/
   boundedFlow :
-    BoundedModularFlowCalibration (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Inverse temperature. -/
   beta : ℝ
@@ -102,8 +104,8 @@ variable (B : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebr
 
 /-- Recover the legacy broad bounded KMS bridge from the integrated KMS state. -/
 @[rep_depth thermo]
-def toBoundedKMSConditionBridge :
-    BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) where
+def toBridge :
+    Bridge (E := E) (LieAlgebra := LieAlgebra) where
   boundedFlow := B.boundedFlow
   beta := B.beta
   state := B.kms.state
@@ -112,7 +114,7 @@ def toBoundedKMSConditionBridge :
 /-- The legacy state field is definitionally the state carried by the KMS state. -/
 @[rep_depth thermo]
 theorem state_eq_kms_state :
-    B.toBoundedKMSConditionBridge.state = B.kms.state :=
+    B.toBridge.state = B.kms.state :=
   rfl
 
 /--
@@ -132,19 +134,19 @@ Read back the same real-time invariance statement on the legacy broad bounded
 KMS bridge reconstructed from the integrated KMS state.
 -/
 @[rep_depth thermo]
-theorem toBoundedKMSConditionBridge_flow_invariant
+theorem toBridge_flow_invariant
     (t : ℝ) (A : EndH) :
-    B.toBoundedKMSConditionBridge.state.eval
+    B.toBridge.state.eval
         (B.boundedFlow.modularFlow.toFlowDatum.flow t A) =
-      B.toBoundedKMSConditionBridge.state.eval A := by
-  simpa [MinimalBoundedKMSConditionBridge.toBoundedKMSConditionBridge] using
+      B.toBridge.state.eval A := by
+  simpa [MinimalBoundedKMSConditionBridge.toBridge] using
     B.flow_invariant t A
 
 end MinimalBoundedKMSConditionBridge
 
-namespace BoundedKMSConditionBridge
+namespace Bridge
 
-variable (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))
+variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
 
 /-- The bounded modular flow as a plain operator-thermodynamic flow datum. -/
 @[rep_depth thermo]
@@ -194,7 +196,7 @@ the broad carrier already carries the state and analytic KMS boundary datum,
 but not the flow-invariance field required by `KMSState`.
 -/
 @[rep_depth thermo]
-def toMinimalBoundedKMSConditionBridge
+def toMinimal
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
@@ -209,20 +211,20 @@ def toMinimalBoundedKMSConditionBridge
 
 /-- The direct narrowed reverse route recovers the legacy state definitionally. -/
 @[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridge_state_eq
+theorem toMinimal_state_eq
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
-    (B.toMinimalBoundedKMSConditionBridge hInvariant).kms.state = B.state :=
+    (B.toMinimal hInvariant).kms.state = B.state :=
   rfl
 
 /-- The direct narrowed reverse route round-trips back to the broad bridge. -/
 @[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridge_toBoundedKMSConditionBridge
+theorem toMinimal_toBridge
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
-    (B.toMinimalBoundedKMSConditionBridge hInvariant).toBoundedKMSConditionBridge = B :=
+    (B.toMinimal hInvariant).toBridge = B :=
   rfl
 
 /--
@@ -230,13 +232,13 @@ Compatibility theorem: build the narrowed integrated KMS carrier from the broad
 bounded bridge once real-time flow invariance is supplied explicitly.
 -/
 @[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant
+theorem toMinimal_of_flow_invariant
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
     ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
       M.kms.state = B.state := by
-  exact ⟨B.toMinimalBoundedKMSConditionBridge hInvariant, rfl⟩
+  exact ⟨B.toMinimal hInvariant, rfl⟩
 
 /--
 The bounded KMS carrier inherits the Drazin regular-sector commutant stability
@@ -273,7 +275,7 @@ theorem partition_potential_flow_central
         (B.flowDatum.flow t A) :=
   B.boundedFlow.partition_potential_modularFlow_central hScale t A
 
-end BoundedKMSConditionBridge
+end Bridge
 
 end Core
 

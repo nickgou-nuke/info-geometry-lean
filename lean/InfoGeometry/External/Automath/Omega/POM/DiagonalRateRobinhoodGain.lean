@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateDualPotentialReverseOrder
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDualPotentialReverseOrder
 
 namespace Omega.POM
 

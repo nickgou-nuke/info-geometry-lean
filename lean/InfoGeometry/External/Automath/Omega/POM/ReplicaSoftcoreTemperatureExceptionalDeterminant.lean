@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.POM.ReplicaSoftcoreDet
-import Omega.POM.ReplicaSoftcoreTemperatureSqReduction
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreDet
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreTemperatureSqReduction
 
 namespace Omega.POM
 

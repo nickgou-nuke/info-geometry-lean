@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionPartCountCLT
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartCountCLT
 
 namespace Omega.POM
 

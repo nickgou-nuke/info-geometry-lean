@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPCumulantDenominatorLaw
-import Omega.Folding.BernoulliPDensityUnimodal
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPCumulantDenominatorLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPDensityUnimodal
 
 /-!
 # Bernoulli-p gamma global max

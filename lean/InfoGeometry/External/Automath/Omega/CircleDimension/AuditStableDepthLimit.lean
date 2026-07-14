@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 import Mathlib.Topology.Order.Basic
-import Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.Folding.Window6
 
 namespace Omega.CircleDimension
 

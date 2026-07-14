@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.TypedAddressBiaxialCompletion.BoundaryBlindspot
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryBlindspot
 
 namespace Omega.TypedAddressBiaxialCompletion
 

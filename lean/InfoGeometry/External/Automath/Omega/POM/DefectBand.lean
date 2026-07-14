@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Topology.Order.Basic
-import Omega.Folding.Entropy
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 open scoped goldenRatio
 open Filter Topology

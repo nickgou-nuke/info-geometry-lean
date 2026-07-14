@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingSetHitAndOccupancy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingSetHitAndOccupancy
 
 namespace Omega.POM
 

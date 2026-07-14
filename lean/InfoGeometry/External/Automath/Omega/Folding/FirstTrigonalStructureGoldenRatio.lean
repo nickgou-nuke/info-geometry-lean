@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyTrigonalDiscUFactorization
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalDiscUFactorization
 
 namespace Omega.Folding
 

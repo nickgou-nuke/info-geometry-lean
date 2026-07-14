@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicityCompositionExactConditionalIid
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionExactConditionalIid
 
 open scoped BigOperators
 

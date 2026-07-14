@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
 
 namespace Omega.GroupUnification
 

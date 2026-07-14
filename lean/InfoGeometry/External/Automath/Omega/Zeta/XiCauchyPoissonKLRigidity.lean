@@ -1,4 +1,4 @@
-import Omega.Zeta.PoissonCauchyMixtureT4OptimalityRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.PoissonCauchyMixtureT4OptimalityRigidity
 
 namespace Omega.Zeta
 

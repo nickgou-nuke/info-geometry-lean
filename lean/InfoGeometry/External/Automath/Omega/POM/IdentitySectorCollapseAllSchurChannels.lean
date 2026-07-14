@@ -1,5 +1,5 @@
-import Omega.POM.PartitionPressureKnapsack
-import Omega.POM.SchurTraceFiniteLaplacePrinciple
+import InfoGeometry.External.Automath.Omega.POM.PartitionPressureKnapsack
+import InfoGeometry.External.Automath.Omega.POM.SchurTraceFiniteLaplacePrinciple
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.JensenOffcriticalKinkLocalization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenOffcriticalKinkLocalization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

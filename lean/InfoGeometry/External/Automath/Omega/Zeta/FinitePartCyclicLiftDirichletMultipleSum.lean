@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartCyclicLiftReducedConstantClosed
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftReducedConstantClosed
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6InversionAnomalyInformationSeparation
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6InversionAnomalyInformationSeparation
 
 namespace Omega.Conclusion
 

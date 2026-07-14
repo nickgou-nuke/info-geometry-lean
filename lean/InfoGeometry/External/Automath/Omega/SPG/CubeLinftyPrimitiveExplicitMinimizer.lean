@@ -1,4 +1,4 @@
-import Omega.SPG.ExplicitMinimizer
+import InfoGeometry.External.Automath.Omega.SPG.ExplicitMinimizer
 
 namespace Omega.SPG
 

@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.OracleFailureExponentFromRenyiSpectrum
+import InfoGeometry.External.Automath.Omega.POM.OracleFailureExponentFromRenyiSpectrum
 
 namespace Omega.Folding
 

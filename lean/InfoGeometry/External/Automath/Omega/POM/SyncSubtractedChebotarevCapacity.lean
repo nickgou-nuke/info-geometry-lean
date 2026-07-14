@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.POM.ProfiniteCylinderCapacity
+import InfoGeometry.External.Automath.Omega.POM.ProfiniteCylinderCapacity
 
 namespace Omega.POM
 

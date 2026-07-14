@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ab4CentralSizeOperatorTwoTraceSpectralIdentification
-import Omega.Zeta.XiTimePart60ab4ExactSizebiasPushforwardLaw
-import Omega.Zeta.XiTimePart60ab4UniformFiberSpectrumTwoatomMomentClosure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab4CentralSizeOperatorTwoTraceSpectralIdentification
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab4ExactSizebiasPushforwardLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab4UniformFiberSpectrumTwoatomMomentClosure
 
 namespace Omega.Zeta
 

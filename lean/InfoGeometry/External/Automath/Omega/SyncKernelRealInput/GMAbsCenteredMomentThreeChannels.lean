@@ -1,4 +1,4 @@
-import Omega.SyncKernelRealInput.GMAbsCenteredOddMomentExtremal
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMAbsCenteredOddMomentExtremal
 import Mathlib.Tactic
 
 namespace Omega.SyncKernelRealInput

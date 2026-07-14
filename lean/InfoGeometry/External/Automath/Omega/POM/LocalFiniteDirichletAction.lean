@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiniteModulusStability
+import InfoGeometry.External.Automath.Omega.POM.FiniteModulusStability
 
 namespace Omega.POM
 

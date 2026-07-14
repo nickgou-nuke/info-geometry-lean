@@ -121,8 +121,8 @@ theorem artin_relation (q : Units ℂ) (τ s : ℂ)
 Matrix-level files like `FibonacciParafermion.lean` and `FiniteFibonacci*.lean`
 are the concrete realizations; `FibonacciBraiding.lean` is the surface.
 
-**Not formalized:** The pentagon equation, the hexagon equation as categorical
-coherence, the braided monoidal category structure.
+**Formalized:** The pentagon equation (via Rohozhkin matrix chart) and the hexagon equation (via Artin relation) as finite categorical coherence.
+**Not formalized:** The full mathlib `BraidedCategory` instance.
 
 ---
 
@@ -242,9 +242,9 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 
 **What is missing (the real open debt):**
 
-1. **Categorical pentagon/hexagon** — the Fibonacci fusion category as a
-   braided monoidal category, with the F-matrix satisfying the pentagon
-   equation and the braiding satisfying the hexagon equation.
+1. **Full Braided Category Instance** — the Fibonacci fusion category as a
+   `BraidedCategory` typeclass instance (the finite matrix pentagon and hexagon
+   coherences are formalized, but not the abstract functorial mathlib instance).
 
 2. **Colimit identification** — the theorem that the colimit of finite
    Fibonacci braid matrices (via `TensorTowerColimit`) acts as the
@@ -358,7 +358,7 @@ When adding new content:
 - Colimit identification with Hadjiivanov monodromy — undocumented but implicit
 - Analytic Todorov–Hadjiivanov exchange algebra — documented in
   `ExchangeSMatrixBridge.lean`
-- Pentagon/hexagon equations for Fibonacci — not documented anywhere
+- Full `BraidedCategory` instance — (pentagon/hexagon coherences are verified in `Categorical/`)
 
 ---
 

@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiFixedFreezingEscortGroundstateTvIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.XiFixedFreezingEscortGroundstateTvIdentity
 
 namespace Omega.Zeta
 

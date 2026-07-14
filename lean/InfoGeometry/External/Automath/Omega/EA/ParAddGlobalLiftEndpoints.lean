@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
-import Omega.EA.KernelPressureEndpoints
-import Omega.SyncKernelWeighted.IharaWittPrimitiveSpectrum
+import InfoGeometry.External.Automath.Omega.EA.KernelPressureEndpoints
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaWittPrimitiveSpectrum
 
 namespace Omega.EA
 

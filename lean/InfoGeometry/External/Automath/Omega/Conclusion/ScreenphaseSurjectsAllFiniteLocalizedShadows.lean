@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenPhaseObjectNotFinitelyLocalizable
-import Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenPhaseObjectNotFinitelyLocalizable
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.GU.TerminalWindow6PushforwardCommutantMasa
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6PushforwardCommutantMasa
 
 namespace Omega.GU
 

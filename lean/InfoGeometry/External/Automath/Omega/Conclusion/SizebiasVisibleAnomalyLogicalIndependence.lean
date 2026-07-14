@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.CompleteStrictificationDualCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.CompleteStrictificationDualCriterion
 
 open scoped BigOperators
 

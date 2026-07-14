@@ -1,5 +1,5 @@
-import Omega.SPG.ScanErrorDiscrete
-import Omega.SPG.NoiseBudget
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorDiscrete
+import InfoGeometry.External.Automath.Omega.SPG.NoiseBudget
 
 namespace Omega.SPG
 

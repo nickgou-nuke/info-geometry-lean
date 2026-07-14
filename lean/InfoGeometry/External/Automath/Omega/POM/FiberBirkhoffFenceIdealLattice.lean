@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
 
 namespace Omega.POM
 

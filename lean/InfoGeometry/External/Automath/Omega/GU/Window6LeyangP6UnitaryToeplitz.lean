@@ -1,4 +1,4 @@
-import Omega.GU.Window6P6ToeplitzCertificateChain
+import InfoGeometry.External.Automath.Omega.GU.Window6P6ToeplitzCertificateChain
 
 namespace Omega.GU
 

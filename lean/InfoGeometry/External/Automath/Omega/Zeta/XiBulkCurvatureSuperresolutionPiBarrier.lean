@@ -1,4 +1,4 @@
-import Omega.Zeta.XiBulkCurvatureExactDeconvolutionOperator
+import InfoGeometry.External.Automath.Omega.Zeta.XiBulkCurvatureExactDeconvolutionOperator
 
 namespace Omega.Zeta
 

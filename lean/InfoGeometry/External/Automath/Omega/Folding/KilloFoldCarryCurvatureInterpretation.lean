@@ -1,4 +1,4 @@
-import Omega.Folding.KilloFoldCarryDefectCocycleNonsplit
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldCarryDefectCocycleNonsplit
 
 namespace Omega
 

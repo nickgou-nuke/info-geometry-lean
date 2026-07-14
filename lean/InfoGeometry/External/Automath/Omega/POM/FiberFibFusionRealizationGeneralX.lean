@@ -1,4 +1,4 @@
-import Omega.POM.FiberCategoricalSymmetryFibonacciFusion
+import InfoGeometry.External.Automath.Omega.POM.FiberCategoricalSymmetryFibonacciFusion
 
 namespace Omega.POM
 

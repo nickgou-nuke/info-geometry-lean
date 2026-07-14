@@ -1,4 +1,4 @@
-import Omega.Zeta.IntroDensity
+import InfoGeometry.External.Automath.Omega.Zeta.IntroDensity
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterFixed2adicAmbientVsFiniteLedger
-import Omega.EA.DynamicPrimeRegisterBitlength
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterFixed2adicAmbientVsFiniteLedger
+import InfoGeometry.External.Automath.Omega.EA.DynamicPrimeRegisterBitlength
 
 namespace Omega.Conclusion
 

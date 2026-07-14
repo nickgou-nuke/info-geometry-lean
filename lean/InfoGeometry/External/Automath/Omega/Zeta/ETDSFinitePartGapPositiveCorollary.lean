@@ -1,4 +1,4 @@
-import Omega.Zeta.ETDSFinitePartGapPositive
+import InfoGeometry.External.Automath.Omega.Zeta.ETDSFinitePartGapPositive
 
 namespace Omega.Zeta
 

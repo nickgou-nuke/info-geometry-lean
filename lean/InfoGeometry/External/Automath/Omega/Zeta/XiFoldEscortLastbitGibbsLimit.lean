@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldbinEscortTvCollapseOnebitGibbs
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinEscortTvCollapseOnebitGibbs
 
 namespace Omega.Zeta
 

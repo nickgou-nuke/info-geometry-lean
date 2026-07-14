@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiBasepointScanRationalHerglotzPoleTomography
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanRationalHerglotzPoleTomography
 
 namespace Omega.Zeta
 

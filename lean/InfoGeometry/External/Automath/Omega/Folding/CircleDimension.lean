@@ -3,7 +3,7 @@ import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega
 

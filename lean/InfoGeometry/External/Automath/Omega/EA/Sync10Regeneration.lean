@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.SyncKernelResetWords
+import InfoGeometry.External.Automath.Omega.EA.SyncKernelResetWords
 
 namespace Omega.EA
 

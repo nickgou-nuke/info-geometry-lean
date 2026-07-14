@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.GodelDensityEstimatorDeterministicMeanApprox
+import InfoGeometry.External.Automath.Omega.Folding.GodelDensityEstimatorDeterministicMeanApprox
 
 open Filter
 open scoped Topology

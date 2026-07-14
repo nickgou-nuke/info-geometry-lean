@@ -1,4 +1,4 @@
-import Omega.GU.TerminalFoldbin6BitflipStabilityPolynomial
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BitflipStabilityPolynomial
 
 namespace Omega.GU
 

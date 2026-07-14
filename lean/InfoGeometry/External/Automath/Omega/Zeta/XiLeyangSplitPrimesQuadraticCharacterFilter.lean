@@ -1,6 +1,6 @@
 import Mathlib.Data.Int.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
 
 namespace Omega.Zeta
 

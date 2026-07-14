@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmPiRationalRootSpecializationEllipticImage
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmPiRationalRootSpecializationEllipticImage
 
 namespace Omega.Zeta
 

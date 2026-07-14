@@ -55,6 +55,15 @@ def ramanujanThermalBlock (n : ℕ) (α : ℝ) : ℝ :=
 def modularWeight (n : ℕ) (α : ℝ) : ℝ :=
   α ^ (-(n : ℝ))
 
+lemma modularWeight_pos {n : ℕ} {α : ℝ} (hα : 0 < α) :
+    0 < modularWeight n α := by
+  unfold modularWeight
+  exact Real.rpow_pos_of_pos hα _
+
+lemma modularWeight_ne_zero {n : ℕ} {α : ℝ} (hα : 0 < α) :
+    modularWeight n α ≠ 0 :=
+  (modularWeight_pos (n := n) hα).ne'
+
 /--
 The reflected modular weight, written without a real power of a negative base:
 `(-β)^{-n}` is represented as `(-1)^n * β^{-n}`.
@@ -106,6 +115,16 @@ theorem lambertTerm_positive_base (n : ℕ) (α : ℝ) (k : ℕ+) :
         ((k : ℝ) ^ (-(oddZetaIndex n : ℝ))) /
           (Real.exp (2 * α * (k : ℝ)) - 1) := by
   exact ⟨pnat_real_coe_pos k, rfl⟩
+
+lemma lambertTerm_pos {n : ℕ} {α : ℝ} (hα : 0 < α) (k : ℕ+) :
+    0 < lambertTerm n α k := by
+  unfold lambertTerm
+  have hk : 0 < (k : ℝ) := pnat_real_coe_pos k
+  have hbase : 0 < (k : ℝ) ^ (-(oddZetaIndex n : ℝ)) := Real.rpow_pos_of_pos hk _
+  have hexp_arg : 0 < 2 * α * (k : ℝ) := by nlinarith
+  have hden : 0 < Real.exp (2 * α * (k : ℝ)) - 1 := by
+    exact sub_pos.mpr ((Real.one_lt_exp_iff).mpr hexp_arg)
+  exact div_pos hbase hden
 
 /-- The reflected side uses the sign-factored beta weight by definition. -/
 theorem reflectedModularWeight_eq_sign_factored (n : ℕ) (β : ℝ) :

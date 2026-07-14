@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Folding.FoldBinEscortLastbit
-import Omega.Folding.FoldBinEscortTwoScaleResidual
-import Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinEscortLastbit
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinEscortTwoScaleResidual
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
 import Mathlib.Tactic
 
 /-!

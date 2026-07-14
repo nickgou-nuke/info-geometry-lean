@@ -1,7 +1,7 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Folding.FiberConvolutionInvertibilityDivisibility
-import Omega.Folding.FiberSubsetConvolution
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionInvertibilityDivisibility
+import InfoGeometry.External.Automath.Omega.Folding.FiberSubsetConvolution
 
 namespace Omega.Folding
 

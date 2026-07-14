@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
+import InfoGeometry.External.Automath.Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
 
 open scoped BigOperators
 

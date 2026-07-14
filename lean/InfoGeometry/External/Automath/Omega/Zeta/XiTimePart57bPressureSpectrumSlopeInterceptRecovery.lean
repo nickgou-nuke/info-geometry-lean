@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart57bPressureSpectrumDiscreteConvexityMonotoneExcess
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart57bPressureSpectrumDiscreteConvexityMonotoneExcess
 
 open Filter Topology
 

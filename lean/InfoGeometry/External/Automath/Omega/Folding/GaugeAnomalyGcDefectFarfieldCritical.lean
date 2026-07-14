@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyGcDefectFarfieldExpansion
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyGcDefectFarfieldExpansion
 
 namespace Omega.Folding
 

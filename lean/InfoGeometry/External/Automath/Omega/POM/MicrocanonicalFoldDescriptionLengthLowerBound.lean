@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldEntropy
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldEntropy
 
 namespace Omega.POM
 

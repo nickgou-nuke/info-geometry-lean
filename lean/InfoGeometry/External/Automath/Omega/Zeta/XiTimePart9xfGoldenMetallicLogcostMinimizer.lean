@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Zeta.GoldenMetallicSymbolBudgetEntropyOptimality
+import InfoGeometry.External.Automath.Omega.Zeta.GoldenMetallicSymbolBudgetEntropyOptimality
 
 namespace Omega.Zeta
 

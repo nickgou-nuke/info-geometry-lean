@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.GraphEnergyEllipsoidGodelCodelengthDual
+import InfoGeometry.External.Automath.Omega.SPG.GraphEnergyEllipsoidGodelCodelengthDual
 
 namespace Omega.SPG
 

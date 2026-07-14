@@ -1,4 +1,4 @@
-import Omega.GU.JoukowskyGodelPullbackFactorization
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelPullbackFactorization
 
 namespace Omega.GU
 

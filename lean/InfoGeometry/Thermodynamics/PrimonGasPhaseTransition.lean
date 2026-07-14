@@ -24,7 +24,7 @@ namespace InfoGeometry.Thermodynamics
 
 open Complex
 
-/--
+/-- 
 Finite symbolic readout for the zeta partition used by this phase-transition
 socket.  The analytic zeta function is owned by the arithmetic/Bost-Connes
 layers; this file only records the equality that a finite Primon-gas packet
@@ -59,7 +59,7 @@ def primonFreeEnergy (gas : PrimonGas) : ℂ :=
   -- This finite phase-transition layer keeps only the algebraic readout.
   -gas.partitionFunction
 
-/--
+/-- 
   The GUE (Gaussian Unitary Ensemble) Crystal Lattice.
   When the Primon Gas drops below the critical temperature (β = 1), 
   the continuous gauge symmetry spontaneously breaks, and the prime 
@@ -85,7 +85,7 @@ theorem default_gue_crystal_readout :
     HasGUECrystalReadout {} := by
   simp [HasGUECrystalReadout]
 
-/--
+/-- 
   The fundamental theorem of the Phase Transition.
   The points of crystallization are exactly the zeroes of the Zeta partition function.
   The imaginary part of the zeroes (the modular flow frequencies) dictates the 
@@ -99,7 +99,7 @@ def phase_transition_zeroes_eq_GUE : Prop :=
     zetaPartitionReadout gas.β = 0 ∧
       ∃ lattice : GUECrystalLattice, HasGUECrystalReadout lattice
 
-/--
+/-- 
 The finite phase-transition bridge is now a real logical chain:
 partition zero at the Primon packet transfers through the carried zeta equality,
 and the resulting point admits the canonical finite GUE readout packet.

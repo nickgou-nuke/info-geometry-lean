@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Group.ForwardDiff
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.POM.ModpDifferenceBinomialBasis
+import InfoGeometry.External.Automath.Omega.POM.ModpDifferenceBinomialBasis
 
 namespace Omega.POM
 

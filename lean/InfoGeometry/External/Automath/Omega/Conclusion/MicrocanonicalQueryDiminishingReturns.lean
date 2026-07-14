@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalInformationDoob
-import Omega.POM.MicrocanonicalInformationIdentity
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalInformationDoob
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalInformationIdentity
 
 namespace Omega.Conclusion
 

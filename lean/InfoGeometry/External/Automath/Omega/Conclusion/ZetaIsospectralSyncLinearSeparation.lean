@@ -1,5 +1,5 @@
-import Omega.Conclusion.AmbiguityShellSpectralInvisibility
-import Omega.Conclusion.AmbiguityShellZetaSyncSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellSpectralInvisibility
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellZetaSyncSplitting
 
 namespace Omega.Conclusion
 

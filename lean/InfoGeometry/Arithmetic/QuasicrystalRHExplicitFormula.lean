@@ -1,7 +1,12 @@
+import InfoGeometry.Arithmetic.SpectorPrimonGasBridge
 import Mathlib.Algebra.IsPrimePow
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
-import InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex
+
 import InfoGeometry.Arithmetic.ZetaPrimeFluctuationBridge
+import InfoGeometry.Arithmetic.PrimeBosonFermionGas
+import InfoGeometry.Probability.HomologicalProbability
+import InfoGeometry.Canonical.PrimonCoulombGas
+import InfoGeometry.Canonical.VandermondeExclusionBridge
 
 /-!
 # Repo-backed primon/quasicrystal/RH synthesis packet
@@ -18,8 +23,7 @@ codebase for:
 * finite Dyson/Vandermonde logarithmic repulsion.
 
 The global analytic claim “all zeta zeros are saddles of a free-energy
-quasicrystal potential” is represented only through already-existing packet
-hypotheses when such hypotheses are supplied.  The closed content below is
+quasicrystal potential” is not asserted here.  The closed content below is
 exactly the repo-backed Lean content imported above.
 -/
 
@@ -83,21 +87,6 @@ theorem critical_wave_squareRootEnvelope
     W.fullWave N = ((W.baselineEnvelope N : ℝ) : ℂ) * W.oscillatoryPhase N :=
   PrimeWaveEnvelope.fullWave_eq_baseline_mul_phase_of_critical W hcrit N
 
-/-- Repo-backed explicit-formula packet readout: when the packet supplies the
-analytic explicit formula and critical-zero condition, normal projections vanish
-for every supplied zero. -/
-theorem packet_normalProjection_vanishes
-    (P : ExplicitFormulaStabilityPacket) (ρ : P.zeros) :
-    (P.zeroReadout ρ).normalProjection = InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart.zero :=
-  P.normalProjection_vanishes ρ
-
-/-- Repo-backed packet readout: the square-root prime-counting envelope law is
-re-exported from a supplied explicit-formula stability packet. -/
-theorem packet_squareRootEnvelope_holds
-    (P : ExplicitFormulaStabilityPacket) :
-    InfoGeometry.Arithmetic.PrimeDistributionLaw.RHPrimeCountingErrorLaw :=
-  P.squareRootEnvelope_holds
-
 /-- Finite primon boson/signed-fermion Euler cancellation, routed through the
 compiled fact index. -/
 theorem finite_boson_signed_closure
@@ -106,7 +95,7 @@ theorem finite_boson_signed_closure
     (h : ∀ p ∈ S, 1 - x p ≠ 0) :
     InfoGeometry.Arithmetic.PrimeBosonFermionGas.bosonPartition S x *
         InfoGeometry.Arithmetic.PrimeBosonFermionGas.signedFermionPartition S x = 1 :=
-  InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex.boson_signed_closure S x h
+  InfoGeometry.Arithmetic.SpectorPrimonGasBridge.spector_finite_boson_signed_closure S x h
 
 /-- Finite free-energy minimization: nonnegative relative entropy implies the
 Gibbs state minimizes free energy. -/
@@ -116,7 +105,7 @@ theorem gibbs_kms_free_energy_minimizer
     (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
     (hβ : 0 < gk.beta) :
     gk.freeEnergy gk.gibbsState ≤ gk.freeEnergy ρ :=
-  InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex.gibbs_kms_free_energy_minimizer gk ρ hrel hβ
+  InfoGeometry.Probability.Homological.GibbsKMSPacket.freeEnergy_ge_gibbs_of_relativeEntropy_nonneg gk ρ hrel hβ
 
 /-- Finite Dyson/Vandermonde logarithmic repulsion bridge: for noncolliding
 finite nodes, the β=2 Dyson Hamiltonian is the external potential minus the
@@ -127,7 +116,7 @@ theorem finite_dyson_vandermonde_potential
     InfoGeometry.Canonical.PrimonCoulombGas.dyson_hamiltonian lam V =
       InfoGeometry.Canonical.PrimonCoulombGas.external_potential_energy lam V -
         Real.log ((InfoGeometry.Canonical.PrimonCoulombGas.vandermonde_product_abs lam) ^ 2) :=
-  InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex.finite_dyson_vandermonde_potential lam V hsep
+  InfoGeometry.Canonical.PrimonCoulombGas.dyson_to_vandermonde_bridge lam V hsep
 
 /-- Finite Vandermonde noncollision theorem. -/
 theorem finite_vandermonde_nonzero_iff_injective
@@ -135,7 +124,7 @@ theorem finite_vandermonde_nonzero_iff_injective
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
     W.determinant ≠ 0 ↔ Function.Injective W.nodes :=
-  InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex.finite_vandermonde_nonzero_iff_injective W
+  W.determinant_ne_zero_iff_injective
 
 /-- Finite node collision is exactly the zero locus of the Vandermonde determinant. -/
 theorem finite_vandermonde_zero_iff_collision
@@ -143,7 +132,7 @@ theorem finite_vandermonde_zero_iff_collision
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
     W.determinant = 0 ↔ ∃ i j : Fin n, W.nodes i = W.nodes j ∧ i ≠ j :=
-  InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex.finite_vandermonde_zero_iff_collision W
+  W.determinant_eq_zero_iff_collision
 
 /-- A small closed readback saying that this module is grounded in repo theorem
 surfaces rather than external prose: the unit has zero von-Mangoldt weight while

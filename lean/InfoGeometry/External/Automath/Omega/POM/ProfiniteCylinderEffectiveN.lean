@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.POM.ProfiniteCylinderCapacity
+import InfoGeometry.External.Automath.Omega.POM.ProfiniteCylinderCapacity
 
 namespace Omega.POM
 

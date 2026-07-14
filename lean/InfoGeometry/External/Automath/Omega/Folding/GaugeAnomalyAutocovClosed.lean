@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.AutocovarianceSeedValues
-import Omega.Folding.GaugeAnomalyFiniteVarianceClosed
-import Omega.Folding.GaugeAnomalyMean
+import InfoGeometry.External.Automath.Omega.Folding.AutocovarianceSeedValues
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyFiniteVarianceClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMean
 
 namespace Omega.Folding
 

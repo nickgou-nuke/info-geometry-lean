@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.Killo2adicHolographicAttractorDimension
+import InfoGeometry.External.Automath.Omega.Folding.Killo2adicHolographicAttractorDimension
 
 namespace Omega.Folding
 

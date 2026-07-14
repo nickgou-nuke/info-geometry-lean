@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Q13Q15Z3ThreephasePeriodicShells
-import Omega.Conclusion.ResonanceWindow
+import InfoGeometry.External.Automath.Omega.Conclusion.Q13Q15Z3ThreephasePeriodicShells
+import InfoGeometry.External.Automath.Omega.Conclusion.ResonanceWindow
 
 namespace Omega.Conclusion
 

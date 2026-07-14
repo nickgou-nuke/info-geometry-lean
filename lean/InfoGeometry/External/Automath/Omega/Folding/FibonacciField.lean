@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Field.ZMod
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega
 

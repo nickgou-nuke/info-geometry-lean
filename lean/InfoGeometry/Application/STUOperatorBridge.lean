@@ -4,7 +4,7 @@ InfoGeometry/Application/STUOperatorBridge.lean
 Operator-first STU / black-hole / qubit bridge.
 
 No coordinate amplitudes are primary here.  Coordinate hyperdeterminant
-formulas may be added later only through chart witnesses.
+formulas may be added later only through chart theorems.
 -/
 
 import Mathlib
@@ -26,14 +26,14 @@ local notation "EndH" => E →L[ℝ] E
 /-! ### 1. Drazin surgery as operator algebra -/
 
 /--
-Operator-level Drazin witness.
+Operator-level Drazin inverse relation.
 
 `A` is the singular or boundary operator.
 `D` is the Drazin inverse candidate.
 
 The fields are intentionally operator equations, not coordinate equations.
 -/
-structure DrazinWitness (A D : EndH) : Prop where
+structure IsDrazinInverse (A D : EndH) : Prop where
   drazin_outer :
     D * A * D = D
   commute :
@@ -72,7 +72,7 @@ theorem drazinNil_add_core
   exact drazinCore_add_nil A D
 
 theorem drazinCoreProjector_idempotent
-    {A D : EndH} (hD : DrazinWitness A D) :
+    {A D : EndH} (hD : IsDrazinInverse A D) :
     drazinCoreProjector A D * drazinCoreProjector A D =
       drazinCoreProjector A D := by
   unfold drazinCoreProjector
@@ -84,7 +84,7 @@ theorem drazinCoreProjector_idempotent
           rw [hD.drazin_outer]
 
 theorem drazinNilProjector_idempotent
-    {A D : EndH} (hD : DrazinWitness A D) :
+    {A D : EndH} (hD : IsDrazinInverse A D) :
     drazinNilProjector A D * drazinNilProjector A D =
       drazinNilProjector A D := by
   let P := drazinCoreProjector A D
@@ -105,7 +105,7 @@ theorem drazinNilProjector_idempotent
           simp
 
 theorem drazinCore_mul_nil
-    {A D : EndH} (hD : DrazinWitness A D) :
+    {A D : EndH} (hD : IsDrazinInverse A D) :
     drazinCoreProjector A D * drazinNilProjector A D = 0 := by
   let P := drazinCoreProjector A D
   have hP : P * P = P := drazinCoreProjector_idempotent hD
@@ -120,7 +120,7 @@ theorem drazinCore_mul_nil
       simp
 
 theorem drazinNil_mul_core
-    {A D : EndH} (hD : DrazinWitness A D) :
+    {A D : EndH} (hD : IsDrazinInverse A D) :
     drazinNilProjector A D * drazinCoreProjector A D = 0 := by
   let P := drazinCoreProjector A D
   have hP : P * P = P := drazinCoreProjector_idempotent hD
@@ -179,14 +179,14 @@ def entropyReadout
     (I : OperatorQuarticInvariant (E := E)) (ρ : EndH) : ℝ :=
   Real.pi * Real.sqrt |I.quartic ρ|
 
-/-! ### 3. Operator Fisher / Souriau metric witness -/
+/-! ### 3. Operator Fisher / Souriau metric structure -/
 
 /--
-Operator-level Fisher metric witness.
+Operator-level Fisher metric structure.
 
 The tangent space is the operator algebra `EndH`, not a coordinate vector space.
 -/
-structure OperatorFisherMetricWitness
+structure OperatorFisherMetric
     (I : OperatorQuarticInvariant (E := E)) where
   metric :
     EndH → (EndH →L[ℝ] (EndH →L[ℝ] ℝ))
@@ -210,12 +210,12 @@ structure OperatorFisherMetricWitness
 Operator gradient flow packet.
 
 This does not introduce coordinates.  It stores the vector field and its
-gradient witness at the operator level.
+gradient equation at the operator level.
 -/
 structure OperatorGradientFlow
     (I : OperatorQuarticInvariant (E := E)) where
   fisher :
-    OperatorFisherMetricWitness I
+    OperatorFisherMetric I
 
   vectorField :
     EndH → EndH
@@ -253,7 +253,7 @@ def drazinNilCompression
 Surgery packet at an operator boundary.
 
 `A` is the singular operator detecting the rank collapse.
-`D` is its Drazin inverse witness.
+`D` is its Drazin inverse relation.
 `ρ` is the state/operator being compressed.
 -/
 structure OperatorSurgeryPacket where
@@ -266,8 +266,8 @@ structure OperatorSurgeryPacket where
   drazinInverse :
     EndH
 
-  drazinWitness :
-    DrazinWitness singularOperator drazinInverse
+  drazin_inverse :
+    IsDrazinInverse singularOperator drazinInverse
 
   coreState :
     EndH :=
@@ -277,13 +277,13 @@ structure OperatorSurgeryPacket where
     EndH :=
       drazinNilCompression singularOperator drazinInverse state
 
-/-! ### 5. Black-hole/qubit dictionary as an operator witness -/
+/-! ### 5. Black-hole/qubit dictionary as an operator structure -/
 
 /--
 Operator-first black-hole/qubit dictionary.
 
 No amplitudes appear here.  The GHZ/W terminology is mediated by operator
-invariants and boundary witnesses.
+invariants and boundary predicates.
 -/
 structure BlackHoleQubitOperatorDictionary where
   invariant :
@@ -336,7 +336,7 @@ structure DecoherenceAsDrazinSurgery
   surgery_at_boundary :
     ∀ ρ : EndH,
       Dict.BoundaryOperator ρ →
-        DrazinWitness
+        IsDrazinInverse
           (detector ρ)
           (drazinInverseAtBoundary ρ)
 

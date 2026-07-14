@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyEndpointFib
-import Omega.Folding.GaugeAnomalyLdpRate
-import Omega.Folding.GaugeAnomalyRateCurveParam
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyEndpointFib
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyLdpRate
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveParam
 
 namespace Omega.Folding
 

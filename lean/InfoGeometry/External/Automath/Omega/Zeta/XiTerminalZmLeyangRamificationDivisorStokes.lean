@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTerminalZmLeyangEllipticStructure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangEllipticStructure
 
 namespace Omega.Zeta
 

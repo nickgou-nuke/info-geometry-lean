@@ -1,4 +1,4 @@
-import Omega.CircleDimension.FiniteLocalizationDirectsumPrimeLedgerExactSequence
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteLocalizationDirectsumPrimeLedgerExactSequence
 
 namespace Omega.CircleDimension
 

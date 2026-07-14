@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.POM.MesoscopicReversibleWindowStrictGap
+import InfoGeometry.External.Automath.Omega.POM.MesoscopicReversibleWindowStrictGap
 
 namespace Omega.POM
 

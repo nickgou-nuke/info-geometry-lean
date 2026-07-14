@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.RealInput40LocalCramerRightTailMoreCostly
-import Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40LocalCramerRightTailMoreCostly
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
 
 namespace Omega.Conclusion
 

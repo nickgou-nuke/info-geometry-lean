@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.Window6BoundaryDyadicDirectionFlag
+import InfoGeometry.External.Automath.Omega.GU.Window6BoundaryDyadicDirectionFlag
 
 namespace Omega.GU
 

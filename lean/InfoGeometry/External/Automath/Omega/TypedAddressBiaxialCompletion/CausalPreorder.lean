@@ -1,4 +1,4 @@
-import Omega.CircleDimension.CausalPreorder
+import InfoGeometry.External.Automath.Omega.CircleDimension.CausalPreorder
 
 namespace Omega.TypedAddressBiaxialCompletion.CausalPreorder
 

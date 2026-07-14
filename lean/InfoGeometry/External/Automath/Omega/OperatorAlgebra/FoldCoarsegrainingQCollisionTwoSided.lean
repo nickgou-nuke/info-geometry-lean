@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.POM.CapacityCollisionDataProcessing
+import InfoGeometry.External.Automath.Omega.POM.CapacityCollisionDataProcessing
 
 namespace Omega.OperatorAlgebra
 

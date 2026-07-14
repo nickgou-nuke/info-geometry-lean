@@ -1,6 +1,6 @@
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.CauchyDerivativeGramExponentialKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.CauchyDerivativeGramExponentialKernel
 
 namespace Omega.CircleDimension
 

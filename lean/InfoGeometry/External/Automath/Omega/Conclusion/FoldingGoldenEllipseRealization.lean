@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.PushforwardFullMatrix
+import InfoGeometry.External.Automath.Omega.Conclusion.PushforwardFullMatrix
 
 namespace Omega.Conclusion
 

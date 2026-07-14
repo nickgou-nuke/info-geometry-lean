@@ -1,4 +1,4 @@
-import Omega.Discussion.FoldRepresentationQCollisionLowerBound
+import InfoGeometry.External.Automath.Omega.Discussion.FoldRepresentationQCollisionLowerBound
 
 namespace Omega.Discussion
 

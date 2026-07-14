@@ -1,4 +1,4 @@
-import Omega.Zeta.PrimeLanguagesDFAPrimeRecallPrecision
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeLanguagesDFAPrimeRecallPrecision
 
 namespace Omega.Zeta
 

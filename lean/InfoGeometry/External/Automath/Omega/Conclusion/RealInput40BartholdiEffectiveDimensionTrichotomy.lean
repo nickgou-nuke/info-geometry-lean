@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40BartholdiDet
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40BartholdiDet
 
 namespace Omega.Conclusion
 

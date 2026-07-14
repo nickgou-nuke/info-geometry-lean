@@ -1,5 +1,5 @@
-import Omega.EA.OnlineDelayFold
-import Omega.POM.DoubleTransversalNormalForm
+import InfoGeometry.External.Automath.Omega.EA.OnlineDelayFold
+import InfoGeometry.External.Automath.Omega.POM.DoubleTransversalNormalForm
 
 namespace Omega.Conclusion
 

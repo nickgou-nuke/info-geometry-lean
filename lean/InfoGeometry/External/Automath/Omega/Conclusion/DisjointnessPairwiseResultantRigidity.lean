@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.DisjointnessPowerWordDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.DisjointnessPowerWordDecomposition
 
 namespace Omega.Conclusion
 

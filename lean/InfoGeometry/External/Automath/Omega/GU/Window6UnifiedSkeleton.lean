@@ -1,10 +1,10 @@
-import Omega.Conclusion.Window6Collision
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
-import Omega.GU.Window6BdryUpliftResidueStratification
-import Omega.GU.Window6ChiralCompressionHypercubeAdjacency
-import Omega.GU.Window6ChiralSectorQ4Spectrum
-import Omega.GU.ZeckendorfCountClosure
-import Omega.SyncKernelWeighted.RealInput40ArityChargeCoboundary
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.GU.Window6BdryUpliftResidueStratification
+import InfoGeometry.External.Automath.Omega.GU.Window6ChiralCompressionHypercubeAdjacency
+import InfoGeometry.External.Automath.Omega.GU.Window6ChiralSectorQ4Spectrum
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeCoboundary
 
 namespace Omega.GU
 

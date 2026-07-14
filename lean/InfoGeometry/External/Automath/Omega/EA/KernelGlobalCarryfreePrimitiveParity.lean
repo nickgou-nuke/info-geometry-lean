@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega.EA
 

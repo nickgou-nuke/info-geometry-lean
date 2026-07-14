@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9vkResonanceShadowFiniteStepPoleGeneration
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9vkResonanceShadowFiniteStepPoleGeneration
 
 open scoped BigOperators
 

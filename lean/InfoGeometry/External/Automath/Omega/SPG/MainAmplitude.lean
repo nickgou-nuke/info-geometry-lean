@@ -1,4 +1,4 @@
-import Omega.SPG.QuasistationaryAmbiguityAmplitudes
+import InfoGeometry.External.Automath.Omega.SPG.QuasistationaryAmbiguityAmplitudes
 
 namespace Omega.SPG
 

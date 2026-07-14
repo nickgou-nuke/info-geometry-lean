@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.GodelCoprimeInflation
-import Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.Folding.GodelCoprimeInflation
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
 
 namespace Omega.POM
 

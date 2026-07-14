@@ -1,4 +1,4 @@
-import Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
 
 /-! ### MaxFiber high-m values (m = 8, 9, 10)
 

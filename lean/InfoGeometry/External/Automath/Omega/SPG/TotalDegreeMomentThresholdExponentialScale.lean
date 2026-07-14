@@ -1,4 +1,4 @@
-import Omega.SPG.LinearMomentHolographyMinimalDimension
+import InfoGeometry.External.Automath.Omega.SPG.LinearMomentHolographyMinimalDimension
 
 namespace Omega.SPG
 

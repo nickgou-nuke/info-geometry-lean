@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.SPG.WeightedDiscreteFluxIdentity
+import InfoGeometry.External.Automath.Omega.SPG.WeightedDiscreteFluxIdentity
 
 namespace Omega.SPG
 

@@ -473,5 +473,6 @@ theorem odd_nilpotent_along_chain
   intro n
   have hodd : (C.Invariant n).is_odd (C.iterMap n x0) := C.odd_preserved_along_chain hx0 n
   exact (C.Invariant n).odd_nilpotency (C.iterMap n x0) hodd
+end FiniteInvariantChain
 
 end InfoGeometry.OperatorAlgebra.RecursiveSupercharge

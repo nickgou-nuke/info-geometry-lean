@@ -32,11 +32,11 @@ amplituhedron and not a proof that the current rank fixture computes an
 - `InfoGeometry.Projective.TwistorAmplituhedronBridge.arnold_mixed_relation_kernel_readout`
   exposes the finite Arnold kernel-annihilation readout at the same bridge
   layer.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.local_dlog_residue_readout`
+- `InfoGeometry.Projective.OnShellResidueBCFWBridge.local_dlog_residue`
   reuses the Klein `dlog` theorem to read out the local `2*pi*i` residue.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.bcfw_of_residue_balance`
+- `InfoGeometry.Projective.OnShellResidueBCFWBridge.residue_bcfw`
   exposes the residue-balance-to-BCFW implication as explicit data.
-- `InfoGeometry.Projective.OnShellResidueBCFWBridge.diagram_compression_count_readout`
+- `InfoGeometry.Projective.OnShellResidueBCFWBridge.diagram_compression_count`
   proves only the finite bookkeeping inequality for the supplied `220 -> 1`
   comparison.
 
@@ -62,11 +62,11 @@ Neither theorem proves the comparison.  They only keep downstream code honest
 about the required premise.
 
 ```lean
-bcfw_of_residue_balance
+residue_bcfw
 ```
 
 Use this when a separate residue owner supplies a three-pole global residue
-balance and an implication from that balance to the chosen BCFW readout.
+balance and an implication from that balance to the chosen BCFW boundary.
 
 ## Assumptions Required For The Next Lane
 

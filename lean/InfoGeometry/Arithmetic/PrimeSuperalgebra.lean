@@ -78,6 +78,13 @@ def finitePrimeSupertrace (P : PrimeCutoff) (β : ℝ) : ℝ :=
 def finitePrimeDenominator (P : PrimeCutoff) (β : ℝ) : ℝ :=
   ∏ p ∈ P.primes, (1 - primeWeight β p)
 
+lemma finitePrimeDenominator_ne_zero
+    (P : PrimeCutoff) (β : ℝ)
+    (h : ∀ p ∈ P.primes, (1 - primeWeight β p) ≠ 0) :
+    finitePrimeDenominator P β ≠ 0 := by
+  unfold finitePrimeDenominator
+  exact Finset.prod_ne_zero_iff.mpr h
+
 /--
 Unsigned finite fermionic square-free partition:
 
@@ -106,6 +113,13 @@ def finiteBosonicPrimePartition (P : PrimeCutoff) (β : ℝ) : ℝ :=
 /-- Finite signed-supertrace partition inverse. -/
 def finiteSignedPrimePartition (P : PrimeCutoff) (β : ℝ) : ℝ :=
   (finitePrimeDenominator P β)⁻¹
+
+lemma finiteBosonicPrimePartition_ne_zero
+    (P : PrimeCutoff) (β : ℝ)
+    (h : finitePrimeDenominator P β ≠ 0) :
+    finiteBosonicPrimePartition P β ≠ 0 := by
+  unfold finiteBosonicPrimePartition
+  exact inv_ne_zero h
 
 /--
 Finite full SUSY product readout.
@@ -235,6 +249,13 @@ theorem finiteComplexBosonPartition_empty
     finiteComplexBosonPartition (∅ : Finset Nat.Primes) s = 1 := by
   simp [finiteComplexBosonPartition]
 
+lemma finiteComplexBosonPartition_ne_zero
+    (S : Finset Nat.Primes) (s : ℂ)
+    (h : ∀ p ∈ S, (1 - complexPrimeWeight s p) ≠ 0) :
+    finiteComplexBosonPartition S s ≠ 0 := by
+  unfold finiteComplexBosonPartition
+  exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
+
 /--
 Finite fermionic Euler product identity:
 
@@ -264,6 +285,62 @@ theorem infiniteComplexBosonicEulerProduct_eq_riemannZeta
     infiniteComplexBosonicEulerProduct s = riemannZeta s := by
   simpa [infiniteComplexBosonicEulerProduct, complexPrimeWeight] using
     riemannZeta_eulerProduct_tprod hs
+
+/--
+Infinite positive-fermion ratio readout built from two bosonic Euler products.
+
+This is the honest infinite ratio lane for the square-free/positive fermion
+factor.  It is not a separate proof that `∏ₚ (1 + p^{-s})` converges; instead it
+uses the already-owned bosonic Euler products at `s` and `2s`.
+-/
+def infiniteComplexPositiveFermionZetaRatio (s : ℂ) : ℂ :=
+  infiniteComplexBosonicEulerProduct s *
+    (infiniteComplexBosonicEulerProduct ((2 : ℂ) * s))⁻¹
+
+/--
+Infinite order-`κ` parafermion ratio readout built from bosonic Euler products.
+
+This is the zeta-ratio owner surface for the expected parafermion identity;
+the direct infinite product and finite-to-infinite limit are deliberately not
+asserted here.
+-/
+def infiniteComplexParafermionZetaRatio (κ : ℕ) (s : ℂ) : ℂ :=
+  infiniteComplexBosonicEulerProduct s *
+    (infiniteComplexBosonicEulerProduct ((κ : ℂ) * s))⁻¹
+
+/--
+Positive-fermion infinite ratio readout equals `ζ(s) / ζ(2s)` on the convergence domain.
+-/
+theorem infiniteComplexPositiveFermionZetaRatio_eq_zeta_div_zeta_two
+    {s : ℂ}
+    (hs : 1 < s.re)
+    (hs2 : 1 < (((2 : ℂ) * s).re)) :
+    infiniteComplexPositiveFermionZetaRatio s =
+      riemannZeta s / riemannZeta ((2 : ℂ) * s) := by
+  unfold infiniteComplexPositiveFermionZetaRatio
+  rw [infiniteComplexBosonicEulerProduct_eq_riemannZeta hs,
+    infiniteComplexBosonicEulerProduct_eq_riemannZeta hs2]
+  rfl
+
+/--
+Order-`κ` parafermion infinite ratio readout equals `ζ(s) / ζ(κs)` on the convergence domain.
+-/
+theorem infiniteComplexParafermionZetaRatio_eq_zeta_div_zeta_mul
+    (κ : ℕ) {s : ℂ}
+    (hs : 1 < s.re)
+    (hκs : 1 < (((κ : ℂ) * s).re)) :
+    infiniteComplexParafermionZetaRatio κ s =
+      riemannZeta s / riemannZeta ((κ : ℂ) * s) := by
+  unfold infiniteComplexParafermionZetaRatio
+  rw [infiniteComplexBosonicEulerProduct_eq_riemannZeta hs,
+    infiniteComplexBosonicEulerProduct_eq_riemannZeta hκs]
+  rfl
+
+/-- The order-two parafermion ratio readout is the positive-fermion ratio readout. -/
+theorem infiniteComplexParafermionZetaRatio_two_eq_positiveFermion
+    (s : ℂ) :
+    infiniteComplexParafermionZetaRatio 2 s = infiniteComplexPositiveFermionZetaRatio s := by
+  rfl
 
 /--
 Reciprocal-zeta readout, stated as the inverse of the bosonic Euler product.

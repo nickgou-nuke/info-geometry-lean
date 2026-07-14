@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangChebyshevSemiconjugacy
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangChebyshevSemiconjugacy
 
 namespace Omega.UnitCirclePhaseArithmetic
 

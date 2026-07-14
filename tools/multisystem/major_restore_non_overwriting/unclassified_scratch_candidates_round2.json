@@ -1,0 +1,1019 @@
+[
+  {
+    "file": "archive/scratch_recovery/test_clifford.lean",
+    "lines": 96,
+    "imports": [
+      "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.Algebra.Category.Ring.Basic",
+      "Mathlib.Algebra.Category.Ring.FilteredColimits",
+      "Mathlib.CategoryTheory.Limits.HasLimits",
+      "Mathlib.CategoryTheory.Limits.Creates",
+      "Mathlib.Order.Bounds.Basic",
+      "Mathlib.Data.Real.Basic",
+      "InfoGeometry.Algebraic.SplitQuadraticForm",
+      "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+      "Mathlib.Data.Fin.Basic",
+      "Mathlib.Tactic"
+    ],
+    "decl_count": 8,
+    "decls": [
+      "V_inclusion",
+      "V_inclusion_is_isometry",
+      "Cl_bonding_map",
+      "Cl_bonding_map_of_le",
+      "Cl_bonding_map_of_le_self",
+      "Cl_bonding_map_of_le_comp",
+      "Cl_functor",
+      "CliffordInfinity"
+    ],
+    "sorries": 0,
+    "score": 108.8
+  },
+  {
+    "file": "archive/scratch_recovery/test4_fixed.lean",
+    "lines": 79,
+    "imports": [
+      "Mathlib.Data.Real.Basic",
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction",
+      "InfoGeometry.Geometry.RealUpperHalfPlane"
+    ],
+    "decl_count": 9,
+    "decls": [
+      "SL2R",
+      "a",
+      "b",
+      "c",
+      "d",
+      "denomSq_pos",
+      "toComplex",
+      "SL2R_det",
+      "toComplex_moebius"
+    ],
+    "sorries": 0,
+    "score": 101.95
+  },
+  {
+    "file": "archive/scratch_recovery/test4.lean",
+    "lines": 50,
+    "imports": [
+      "Mathlib.Data.Real.Basic",
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction",
+      "InfoGeometry.Geometry.RealUpperHalfPlane"
+    ],
+    "decl_count": 9,
+    "decls": [
+      "SL2R",
+      "a",
+      "b",
+      "c",
+      "d",
+      "denomSq",
+      "moebius",
+      "toComplex",
+      "toComplex_moebius"
+    ],
+    "sorries": 3,
+    "score": 85.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_grr.lean",
+    "lines": 78,
+    "imports": [
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.Algebra.Ring.Basic",
+      "Mathlib.Data.Real.Basic",
+      "Mathlib.Algebra.Module.Basic",
+      "Mathlib.Algebra.Algebra.Basic"
+    ],
+    "decl_count": 7,
+    "decls": [
+      "K0Group",
+      "CohomologyRing",
+      "K0Pushforward",
+      "CohomologyPushforward",
+      "ChernCharacter",
+      "ToddClass",
+      "GrothendieckRiemannRoch"
+    ],
+    "sorries": 0,
+    "score": 83.9
+  },
+  {
+    "file": "archive/scratch_recovery/test_functor.lean",
+    "lines": 70,
+    "imports": [
+      "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+      "Mathlib.CategoryTheory.Category.Preorder",
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+      "Mathlib.Data.Real.Basic"
+    ],
+    "decl_count": 6,
+    "decls": [
+      "V",
+      "V_inclusion_mn",
+      "Cl",
+      "Cl_bonding_map_mn",
+      "J",
+      "CliffordTowerFunctor"
+    ],
+    "sorries": 0,
+    "score": 73.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_comp.lean",
+    "lines": 53,
+    "imports": [
+      "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.Algebra.Category.Ring.Basic",
+      "Mathlib.Algebra.Category.Ring.FilteredColimits",
+      "Mathlib.Algebra.Category.Ring.Limits",
+      "Mathlib.Algebra.Category.Ring.Colimits",
+      "Mathlib.CategoryTheory.Limits.HasLimits",
+      "Mathlib.CategoryTheory.Limits.Creates",
+      "Mathlib.Order.Bounds.Basic",
+      "Mathlib.Data.Real.Basic",
+      "InfoGeometry.Algebraic.SplitQuadraticForm",
+      "Mathlib.Algebra.BigOperators.Group.Finset.Basic"
+    ],
+    "decl_count": 5,
+    "decls": [
+      "V_inclusion",
+      "V_inclusion_is_isometry",
+      "Cl_bonding_map",
+      "Cl_bonding_map_of_le",
+      "Cl_bonding_map_of_le_comp"
+    ],
+    "sorries": 2,
+    "score": 70.65
+  },
+  {
+    "file": "archive/scratch_recovery/test_q8_aut.lean",
+    "lines": 92,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Topology.D4TrialityQ8Equivalence"
+    ],
+    "decl_count": 5,
+    "decls": [
+      "triality_omega",
+      "triality_omega_order_three",
+      "triality_sigma",
+      "triality_sigma_order_two",
+      "triality_braiding_relation"
+    ],
+    "sorries": 0,
+    "score": 58.6
+  },
+  {
+    "file": "archive/scratch_recovery/temp_moebius.lean",
+    "lines": 91,
+    "imports": [
+      "InfoGeometry.Algebra.PrimeA1RootSystem",
+      "Mathlib.NumberTheory.ArithmeticFunction.Moebius",
+      "Mathlib.Data.Nat.Squarefree",
+      "Mathlib.Data.Nat.Factors",
+      "Mathlib.NumberTheory.ArithmeticFunction.Misc",
+      "Mathlib.Algebra.BigOperators.Ring.Finset",
+      "Mathlib.Tactic.SplitIfs"
+    ],
+    "decl_count": 4,
+    "decls": [
+      "weylToNat",
+      "weyl_toNat_ne_zero",
+      "weyl_toNat_squarefree",
+      "weyl_sign_eq_moebius"
+    ],
+    "sorries": 0,
+    "score": 58.55
+  },
+  {
+    "file": "archive/scratch_recovery/test_functor_proofs.lean",
+    "lines": 57,
+    "imports": [
+      "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+      "Mathlib.CategoryTheory.Category.Preorder",
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+      "Mathlib.Data.Real.Basic"
+    ],
+    "decl_count": 6,
+    "decls": [
+      "V",
+      "V_inclusion_mn",
+      "Cl",
+      "Cl_bonding_map_mn",
+      "J",
+      "CliffordTowerFunctor"
+    ],
+    "sorries": 3,
+    "score": 57.849999999999994
+  },
+  {
+    "file": "archive/scratch_recovery/scratch_test_isometry.lean",
+    "lines": 84,
+    "imports": [
+      "Mathlib.LinearAlgebra.CliffordAlgebra.Basic",
+      "Mathlib.Algebra.Category.AlgCat.Basic",
+      "Mathlib.Algebra.Category.Ring.Basic",
+      "Mathlib.Algebra.Category.Ring.FilteredColimits",
+      "Mathlib.CategoryTheory.Limits.HasLimits",
+      "Mathlib.CategoryTheory.Limits.Creates",
+      "Mathlib.Order.Bounds.Basic",
+      "Mathlib.Data.Real.Basic",
+      "InfoGeometry.Algebraic.SplitQuadraticForm",
+      "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+      "Mathlib.Data.Fin.Basic",
+      "Mathlib.Tactic"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "V_inclusion",
+      "V_inclusion_is_isometry"
+    ],
+    "sorries": 0,
+    "score": 50.2
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_mp.lean",
+    "lines": 156,
+    "imports": [
+      "Mathlib.Algebra.Ring.Basic",
+      "Mathlib.Algebra.Star.Basic",
+      "Mathlib.Analysis.InnerProductSpace.Adjoint",
+      "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+      "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+      "Mathlib.Analysis.Normed.Operator.Banach"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "IsMoorePenroseInverse",
+      "mk",
+      "exists_moorePenroseInverse_of_closedRange"
+    ],
+    "sorries": 0,
+    "score": 49.8
+  },
+  {
+    "file": "archive/scratch_recovery/test_dbrane.lean",
+    "lines": 68,
+    "imports": [
+      "Mathlib.Data.Matrix.Basic",
+      "InfoGeometry.Topology.Q8ModularFlowBridge",
+      "InfoGeometry.Topology.BuscherTDuality"
+    ],
+    "decl_count": 4,
+    "decls": [
+      "MatrixFactorization",
+      "pauli_momentum",
+      "pauli_adjugate",
+      "pauli_is_dbrane_factorization"
+    ],
+    "sorries": 0,
+    "score": 49.4
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_mp_final.lean",
+    "lines": 136,
+    "imports": [
+      "Mathlib.Algebra.Ring.Basic",
+      "Mathlib.Algebra.Star.Basic",
+      "Mathlib.Analysis.InnerProductSpace.Adjoint",
+      "Mathlib.Analysis.InnerProductSpace.Projection.Basic",
+      "Mathlib.Analysis.InnerProductSpace.Projection.Submodule",
+      "Mathlib.Analysis.Normed.Operator.Banach"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "IsMoorePenroseInverse",
+      "exists_moorePenroseInverse_of_closedRange"
+    ],
+    "sorries": 0,
+    "score": 38.8
+  },
+  {
+    "file": "archive/scratch_recovery/test_d4_brane.lean",
+    "lines": 46,
+    "imports": [
+      "Mathlib.Data.Matrix.Basic",
+      "Mathlib.LinearAlgebra.Matrix.NonsingularInverse",
+      "InfoGeometry.Topology.D4TrialityQ8Equivalence"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "D4_superpotential",
+      "D4MatrixFactorization",
+      "d4_factorization_respects_q8"
+    ],
+    "sorries": 0,
+    "score": 38.3
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_cbo_verification.lean",
+    "lines": 52,
+    "imports": [
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.Data.Matrix.Basic",
+      "Mathlib.LinearAlgebra.Matrix.ToLin",
+      "Mathlib.Analysis.InnerProductSpace.PiL2",
+      "Mathlib.Analysis.InnerProductSpace.Adjoint",
+      "Mathlib.Topology.Algebra.Module.FiniteDimension",
+      "InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "ketBasis",
+      "reproduce_failure"
+    ],
+    "sorries": 0,
+    "score": 36.6
+  },
+  {
+    "file": "archive/scratch_recovery/test_inj3.lean",
+    "lines": 26,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic",
+      "Mathlib.Algebra.Group.InjSurj"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "Foo",
+      "toProd",
+      "toProd_injective"
+    ],
+    "sorries": 0,
+    "score": 35.3
+  },
+  {
+    "file": "archive/scratch_recovery/test_inj2.lean",
+    "lines": 23,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic",
+      "Mathlib.Algebra.Group.InjSurj"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "Foo",
+      "toProd",
+      "toProd_injective"
+    ],
+    "sorries": 0,
+    "score": 35.15
+  },
+  {
+    "file": "archive/scratch_recovery/test_sum_prod.lean",
+    "lines": 16,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Arithmetic.SplitMajoranaPrimon"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "localParityEigenvalue",
+      "localHamiltonianEigenvalue",
+      "h_prod_test"
+    ],
+    "sorries": 0,
+    "score": 34.8
+  },
+  {
+    "file": "archive/scratch_recovery/test_inj.lean",
+    "lines": 18,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "Foo",
+      "toProd",
+      "toProd_injective"
+    ],
+    "sorries": 0,
+    "score": 32.9
+  },
+  {
+    "file": "archive/scratch_recovery/test_kawamura.lean",
+    "lines": 52,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Topology.CuntzCantorSpectralTriple",
+      "InfoGeometry.Algebra.KawamuraCuntzCAR"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "kawamuraZeta_star",
+      "kawamuraZeta_mul"
+    ],
+    "sorries": 0,
+    "score": 28.6
+  },
+  {
+    "file": "archive/scratch_recovery/test_limit.lean",
+    "lines": 44,
+    "imports": [
+      "InfoGeometry.Clifford.MatToCantorOperator",
+      "InfoGeometry.Clifford.RealCantorOpLimit",
+      "InfoGeometry.Clifford.Cl11TensorTowerLimit"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "fwdHom",
+      "revHom"
+    ],
+    "sorries": 0,
+    "score": 28.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_spectral.lean",
+    "lines": 33,
+    "imports": [
+      "Mathlib.Algebra.Polynomial.Roots",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+      "Mathlib.Data.Real.Basic"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "BernsteinSato",
+      "spectral_stability_step"
+    ],
+    "sorries": 0,
+    "score": 27.65
+  },
+  {
+    "file": "archive/scratch_recovery/test_equiv.lean",
+    "lines": 17,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic",
+      "Mathlib.Logic.Equiv.TransferInstance"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "Foo",
+      "toProd"
+    ],
+    "sorries": 0,
+    "score": 24.85
+  },
+  {
+    "file": "archive/scratch_recovery/test_equiv2.lean",
+    "lines": 17,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic",
+      "Mathlib.Algebra.Group.Equiv.Basic"
+    ],
+    "decl_count": 2,
+    "decls": [
+      "Foo",
+      "toProd"
+    ],
+    "sorries": 0,
+    "score": 24.85
+  },
+  {
+    "file": "archive/scratch_recovery/test_hom_proofs.lean",
+    "lines": 44,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth"
+    ],
+    "decl_count": 3,
+    "decls": [
+      "idxEquivCantorAddress",
+      "complexifyMat",
+      "map_mul_proof"
+    ],
+    "sorries": 3,
+    "score": 21.200000000000003
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_multiaffine_linearity.lean",
+    "lines": 52,
+    "imports": [
+      "Mathlib.Algebra.MvPolynomial.Basic",
+      "Mathlib.Algebra.MvPolynomial.Degrees",
+      "Mathlib.Algebra.MvPolynomial.CommRing",
+      "Mathlib.Data.Complex.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "multiaffine_linearity"
+    ],
+    "sorries": 0,
+    "score": 20.6
+  },
+  {
+    "file": "archive/scratch_recovery/test_reflector.lean",
+    "lines": 37,
+    "imports": [
+      "Mathlib.CategoryTheory.Category.Basic",
+      "Mathlib.CategoryTheory.Functor.Basic",
+      "Mathlib.CategoryTheory.Adjunction.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "repaired_type_is_minimal_and_sound"
+    ],
+    "sorries": 0,
+    "score": 17.85
+  },
+  {
+    "file": "archive/scratch_recovery/test_base_case_eval2.lean",
+    "lines": 32,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Canonical.JordanWignerCantorRepresentation"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "buildCantorRep_one_is_jw_rep"
+    ],
+    "sorries": 0,
+    "score": 15.6
+  },
+  {
+    "file": "archive/scratch_recovery/test_manual_hom.lean",
+    "lines": 23,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Canonical.JordanWignerCantorRepresentation"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "complexifyMat_mul_proof"
+    ],
+    "sorries": 0,
+    "score": 15.15
+  },
+  {
+    "file": "archive/scratch_recovery/check_depth.lean",
+    "lines": 13,
+    "imports": [
+      "InfoGeometry.Canonical.CasimirWeylDrazinContext",
+      "InfoGeometry.Meta.Architecture"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "main"
+    ],
+    "sorries": 0,
+    "score": 14.65
+  },
+  {
+    "file": "archive/scratch_recovery/test_addcomm.lean",
+    "lines": 30,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "Foo"
+    ],
+    "sorries": 0,
+    "score": 13.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_addcomm4.lean",
+    "lines": 23,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "Foo"
+    ],
+    "sorries": 0,
+    "score": 13.15
+  },
+  {
+    "file": "archive/scratch_recovery/test_addcomm2.lean",
+    "lines": 22,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "Foo"
+    ],
+    "sorries": 0,
+    "score": 13.1
+  },
+  {
+    "file": "archive/scratch_recovery/test_braid.lean",
+    "lines": 17,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "BraidGenerator"
+    ],
+    "sorries": 0,
+    "score": 12.85
+  },
+  {
+    "file": "archive/scratch_recovery/test_dot.lean",
+    "lines": 17,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "dotProduct_transpose_mulVec_eq"
+    ],
+    "sorries": 0,
+    "score": 12.85
+  },
+  {
+    "file": "archive/scratch_recovery/scratch_trace_axiom.lean",
+    "lines": 10,
+    "imports": [
+      "InfoGeometry.Canonical.ProjectiveCCR"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "check_vacuum"
+    ],
+    "sorries": 0,
+    "score": 12.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_derive.lean",
+    "lines": 6,
+    "imports": [
+      "Mathlib.Algebra.Module.Basic"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "Foo"
+    ],
+    "sorries": 0,
+    "score": 12.3
+  },
+  {
+    "file": "archive/scratch_recovery/test_base_case.lean",
+    "lines": 18,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Canonical.JordanWignerCantorRepresentation"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "buildCantorRep_one_is_jw_rep"
+    ],
+    "sorries": 1,
+    "score": 9.9
+  },
+  {
+    "file": "archive/scratch_recovery/scratch_bh_demo.lean",
+    "lines": 18,
+    "imports": [
+      "Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+      "Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+      "Mathlib.Data.Real.Basic"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 6.9
+  },
+  {
+    "file": "archive/scratch_recovery/test2.lean",
+    "lines": 10,
+    "imports": [
+      "Mathlib.Data.Real.Basic",
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.Tactic"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 6.5
+  },
+  {
+    "file": "archive/scratch_recovery/test3.lean",
+    "lines": 10,
+    "imports": [
+      "Mathlib.Data.Real.Basic",
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.Tactic"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 6.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_base_case_eval.lean",
+    "lines": 31,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Canonical.JordanWignerCantorRepresentation"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "buildCantorRep_one_is_jw_rep"
+    ],
+    "sorries": 2,
+    "score": 5.550000000000001
+  },
+  {
+    "file": "archive/scratch_recovery/test_limit2.lean",
+    "lines": 59,
+    "imports": [
+      "InfoGeometry.Clifford.RealCantorOpLimit"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 4.95
+  },
+  {
+    "file": "archive/scratch_recovery/check_identifiers.lean",
+    "lines": 19,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Quantum.RealMajorana"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 4.95
+  },
+  {
+    "file": "archive/scratch_recovery/debug_tags.lean",
+    "lines": 14,
+    "imports": [
+      "InfoGeometry.Canonical.CasimirWeylDrazinContext",
+      "InfoGeometry.Meta.Architecture"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 4.7
+  },
+  {
+    "file": "archive/scratch_recovery/test_limits.lean",
+    "lines": 7,
+    "imports": [
+      "Mathlib.Algebra.Category.Ring.Limits",
+      "Mathlib.CategoryTheory.Limits.HasLimits"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 4.35
+  },
+  {
+    "file": "archive/scratch_recovery/test_kldiv.lean",
+    "lines": 5,
+    "imports": [
+      "Mathlib.InformationTheory.KullbackLeibler.Basic",
+      "Mathlib.MeasureTheory.Measure.LogLikelihoodRatio"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 4.25
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_mp_test.lean",
+    "lines": 30,
+    "imports": [
+      "sandbox_mp_authoritative"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 3.5
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_test_zorn.lean",
+    "lines": 19,
+    "imports": [
+      "InfoGeometry.Canonical.DiracSouriauOperator"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.95
+  },
+  {
+    "file": "archive/scratch_recovery/test_ringhom.lean",
+    "lines": 10,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.5
+  },
+  {
+    "file": "archive/scratch_recovery/test_change.lean",
+    "lines": 6,
+    "imports": [
+      "InfoGeometry.External.Virasoro.CentralExtension"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.3
+  },
+  {
+    "file": "archive/scratch_recovery/test_ring_colimit.lean",
+    "lines": 6,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.3
+  },
+  {
+    "file": "archive/scratch_recovery/test_leRec.lean",
+    "lines": 5,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.25
+  },
+  {
+    "file": "archive/scratch_recovery/test_matrix_alg_hom.lean",
+    "lines": 5,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.25
+  },
+  {
+    "file": "archive/scratch_recovery/test_toLin.lean",
+    "lines": 5,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.25
+  },
+  {
+    "file": "archive/scratch_recovery/scratch_axioms.lean",
+    "lines": 4,
+    "imports": [
+      "InfoGeometry.Canonical.ProjectiveCCR"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/scratch_axioms_final.lean",
+    "lines": 4,
+    "imports": [
+      "InfoGeometry.Canonical.ChiralNullSpaceBridge"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_basis_map.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_basis_reindex.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_matrix_reindex.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_matrix_to_lin.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_toLinAlgHom.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/test_zeta.lean",
+    "lines": 4,
+    "imports": [
+      "Mathlib.NumberTheory.LSeries.RiemannZeta"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.2
+  },
+  {
+    "file": "archive/scratch_recovery/check_mul.lean",
+    "lines": 3,
+    "imports": [
+      "Mathlib.LinearAlgebra.Matrix.MulVec"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.15
+  },
+  {
+    "file": "archive/scratch_recovery/test_basis.lean",
+    "lines": 3,
+    "imports": [
+      "Mathlib.Analysis.InnerProductSpace.Basic"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 0,
+    "score": 2.15
+  },
+  {
+    "file": "archive/scratch_recovery/debug_ite.lean",
+    "lines": 11,
+    "imports": [
+      "InfoGeometry.OperatorAlgebra.AffineVirasoroBridge",
+      "InfoGeometry.External.Virasoro.VirasoroAlgebra",
+      "Mathlib.Algebra.GroupWithZero.Action.Defs"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 1,
+    "score": 1.5499999999999998
+  },
+  {
+    "file": "archive/scratch_recovery/test_phase.lean",
+    "lines": 27,
+    "imports": [
+      "Mathlib",
+      "InfoGeometry.Clifford.Cl11TensorTower"
+    ],
+    "decl_count": 0,
+    "decls": [],
+    "sorries": 1,
+    "score": 0.34999999999999964
+  },
+  {
+    "file": "archive/scratch_recovery/sandbox_ontology_check.lean",
+    "lines": 32,
+    "imports": [
+      "InfoGeometry.KK.DiracFredholmModule",
+      "InfoGeometry.Canonical.CertifiedInverseKernel"
+    ],
+    "decl_count": 1,
+    "decls": [
+      "testConstruct"
+    ],
+    "sorries": 8,
+    "score": -24.4
+  }
+]

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.BoundaryAbsorptionJuliaCaratheodory
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.BoundaryAbsorptionJuliaCaratheodory
 
 namespace Omega.UnitCirclePhaseArithmetic
 

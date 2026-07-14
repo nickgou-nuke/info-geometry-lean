@@ -40,6 +40,16 @@ This represents the action of the local number operator N_p on the state |S⟩.
 def localOccupation (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) : ℕ :=
   if p ∈ S then 1 else 0
 
+lemma localOccupation_nonneg (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
+    0 ≤ localOccupation p S := by
+  unfold localOccupation
+  split_ifs <;> norm_num
+
+lemma localOccupation_le_one (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
+    localOccupation p S ≤ 1 := by
+  unfold localOccupation
+  split_ifs <;> norm_num
+
 /-- Local occupation is `1` exactly when the prime is present in the state. -/
 theorem localOccupation_eq_one_iff_mem
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel) :
@@ -117,6 +127,7 @@ theorem gamma_eq_prod_localParity
       intro p hp
       simp [localParitySign, hp]
 
+omit [DecidableEq PrimeLabel] in
 /-- The global chirality is the square-free fermion parity `(-1)^F`. -/
 theorem Gamma_eq_negOne_pow_fermionNumber
     (S : SquareFreePrimeState PrimeLabel) :
@@ -131,6 +142,15 @@ def squareFreeEnergy
     (energy : PrimeLabel → ℝ)
     (S : SquareFreePrimeState PrimeLabel) : ℝ :=
   ∑ p ∈ S, energy p
+
+omit [DecidableEq PrimeLabel] in
+lemma squareFreeEnergy_nonneg
+    {energy : PrimeLabel → ℝ}
+    (S : SquareFreePrimeState PrimeLabel)
+    (henergy : ∀ p ∈ S, 0 ≤ energy p) :
+    0 ≤ squareFreeEnergy energy S := by
+  unfold squareFreeEnergy
+  exact Finset.sum_nonneg (fun p hp => henergy p hp)
 
 end SquareFreePrimeState
 

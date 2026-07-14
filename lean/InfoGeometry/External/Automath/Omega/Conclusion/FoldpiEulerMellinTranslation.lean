@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinGaugeConstantStirlingBernoulliHierarchy
-import Omega.Folding.FoldBinRecover2Pi
-import Omega.Folding.FoldNegativeMomentsCapacityMellin
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeConstantStirlingBernoulliHierarchy
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRecover2Pi
+import InfoGeometry.External.Automath.Omega.Folding.FoldNegativeMomentsCapacityMellin
 
 namespace Omega.Conclusion
 

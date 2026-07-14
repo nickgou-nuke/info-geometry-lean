@@ -1,4 +1,4 @@
-import Omega.SPG.PrefixMetric
+import InfoGeometry.External.Automath.Omega.SPG.PrefixMetric
 
 namespace Omega.SPG
 

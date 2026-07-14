@@ -1,8 +1,8 @@
 import Mathlib.GroupTheory.Perm.Closure
 import Mathlib.GroupTheory.Perm.Fin
 import Mathlib.Tactic
-import Omega.Zeta.SyncHatdeltaCurveDoubleCoverBranchGenus6
-import Omega.Zeta.SyncHatdeltaQuotientTripleCoverS3Discriminant
+import InfoGeometry.External.Automath.Omega.Zeta.SyncHatdeltaCurveDoubleCoverBranchGenus6
+import InfoGeometry.External.Automath.Omega.Zeta.SyncHatdeltaQuotientTripleCoverS3Discriminant
 
 namespace Omega.Zeta
 

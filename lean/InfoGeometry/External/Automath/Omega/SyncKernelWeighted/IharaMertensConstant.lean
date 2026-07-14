@@ -1,5 +1,5 @@
-import Omega.Zeta.AbelFinitePartMobiusZeta
-import Omega.Zeta.FinitePartMertensAsymptotic
+import InfoGeometry.External.Automath.Omega.Zeta.AbelFinitePartMobiusZeta
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartMertensAsymptotic
 
 namespace Omega.SyncKernelWeighted
 

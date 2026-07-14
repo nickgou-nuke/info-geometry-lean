@@ -50,6 +50,17 @@ theorem idempotent (h : IsDrazinInverse a b k) : b * a * b = b := h.2.1
 @[rep_depth krein]
 theorem power (h : IsDrazinInverse a b k) : a^(k + 1) * b = a^k := h.2.2
 
+/-- Ring equivalences transport Drazin inverse laws. -/
+@[rep_depth krein]
+theorem map_ringEquiv {S : Type*} [Ring S]
+    (e : R ≃+* S)
+    (h : IsDrazinInverse a b k) :
+    IsDrazinInverse (e a) (e b) k := by
+  refine mk ?_ ?_ ?_
+  · simpa using congrArg e h.comm
+  · simpa [mul_assoc] using congrArg e h.idempotent
+  · simpa using congrArg e h.power
+
 /-- Transport a canonical Drazin inverse proof to the singular Drazin API. -/
 private theorem toSingular (h : IsDrazinInverse a b k) :
     InfoGeometry.Singular.Drazin.IsDrazinInverse a b k := by

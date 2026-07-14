@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.Sync10Regeneration
-import Omega.EA.Sync10ResetWaitingTime
+import InfoGeometry.External.Automath.Omega.EA.Sync10Regeneration
+import InfoGeometry.External.Automath.Omega.EA.Sync10ResetWaitingTime
 
 namespace Omega.EA
 

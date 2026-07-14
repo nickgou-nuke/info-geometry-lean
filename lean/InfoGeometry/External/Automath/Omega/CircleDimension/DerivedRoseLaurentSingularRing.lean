@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.DerivedTwoTermLaurentSingularRing
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.DerivedTwoTermLaurentSingularRing
 
 namespace Omega.CircleDimension
 

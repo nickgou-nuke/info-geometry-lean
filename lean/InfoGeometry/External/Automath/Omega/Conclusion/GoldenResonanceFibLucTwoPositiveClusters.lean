@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedGoldenResonanceDiagonalMultiplierEssentialClusters
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedGoldenResonanceDiagonalMultiplierEssentialClusters
 
 open Filter
 

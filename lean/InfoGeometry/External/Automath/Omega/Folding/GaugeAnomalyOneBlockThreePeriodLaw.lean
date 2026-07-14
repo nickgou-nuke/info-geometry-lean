@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPEndpointExactFinite
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointExactFinite
 
 namespace Omega.Folding
 

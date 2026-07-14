@@ -27,7 +27,7 @@ fields.  Its cone-vector, readout, and Tomita-fixpoint laws are theorem-owner
 debt below.
 -/
 @[rep_depth krein]
-structure HestenesKreinNaturalConeBridge where
+structure Bridge where
   /-- Candidate standard-form natural positive cone. -/
   naturalCone : Set H
 
@@ -58,9 +58,9 @@ structure HestenesKreinNaturalConeBridge where
   Takesaki (2003), Theory of Operator Algebras II, §IX.1. -/
   naturalCone_self_dual_holds : naturalCone = {ξ | ∀ η ∈ naturalCone, ⟪ξ, η⟫_ℝ ≥ 0}
 
-namespace HestenesKreinNaturalConeBridge
+namespace Bridge
 
-variable (B : HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive)
+variable (B : Bridge (H := H) (NormalPositive := NormalPositive)
   (Op := Op))
 
 /-- Theorem owner: standard-form vector representative law. -/
@@ -114,7 +114,7 @@ theorem naturalCone_self_dual :
     B.naturalCone = {ξ | ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0} :=
   B.naturalCone_self_dual_holds
 
-end HestenesKreinNaturalConeBridge
+end Bridge
 
 /--
 Distinguished vacuum/state representative inside the supplied standard-form
@@ -127,7 +127,7 @@ state/weight representative.
 structure HestenesKreinNaturalConeVacuum where
   /-- Natural-cone carrier. -/
   natural :
-    HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive) (Op := Op)
+    Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op)
 
   /-- Vacuum vector `Ω`. -/
   Omega : H

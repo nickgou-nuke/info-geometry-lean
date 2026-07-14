@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ModeGramKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.ModeGramKernel
 
 namespace Omega.CircleDimension
 

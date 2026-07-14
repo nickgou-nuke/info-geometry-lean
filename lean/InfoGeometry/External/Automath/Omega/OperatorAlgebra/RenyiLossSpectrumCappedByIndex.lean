@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
 
 namespace Omega.OperatorAlgebra
 

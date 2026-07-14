@@ -1,4 +1,4 @@
-import Omega.Zeta.RecursiveZeroShadowingExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.RecursiveZeroShadowingExplicit
 
 namespace Omega.Zeta
 

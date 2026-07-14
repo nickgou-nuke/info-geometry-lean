@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.PrimorialBodycodePoleResidueInversion
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimorialBodycodePoleResidueInversion
 
 namespace Omega.Conclusion
 

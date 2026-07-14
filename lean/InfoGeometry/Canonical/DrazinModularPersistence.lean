@@ -14,7 +14,7 @@ Principle:
 * modular fixedness upgrades that support to a physical horizon;
 * horizon zero modes are observables localized on that Drazin horizon;
 * Fierz residual vanishing is not inferred from modular fixedness alone, but
-  from an explicit compatibility witness for horizon zero-mode channels.
+  from an explicit compatibility hypothesis for horizon zero-mode channels.
 
 This file is an abstract socket.  It does not replace the repo's concrete
 Drazin, modular-flow, or Fierz readout owners.
@@ -49,7 +49,7 @@ structure DrazinSupportData
   AD : Obs
   p : Obs
   index : ℕ
-  drazin_True : IsDrazinInverse A AD index
+  hDrazin : IsDrazinInverse A AD index
   p_def : p = A * AD
   p_self_adjoint : star p = p
 
@@ -58,13 +58,19 @@ namespace DrazinSupportData
 variable {Obs : Type*} [Ring Obs] [Star Obs]
 variable (D : DrazinSupportData Obs)
 
+/-- The stored support is exactly the canonical Drazin projection. -/
+@[rep_depth operator]
+theorem p_eq_projection :
+    D.p = IsDrazinInverse.projection D.A D.AD := by
+  simpa [IsDrazinInverse.projection] using D.p_def
+
 /-- The Drazin support is idempotent. -/
 @[rep_depth operator]
 theorem p_idempotent :
     D.p * D.p = D.p := by
   rw [D.p_def]
   simpa [IsDrazinInverse.projection] using
-    IsDrazinInverse.projection_is_idempotent D.drazin_True
+    IsDrazinInverse.projection_is_idempotent D.hDrazin
 
 /-- The Drazin complementary projector. -/
 @[rep_depth operator]
@@ -315,20 +321,20 @@ theorem invertible_transport
         exact (flow.flow t).map_one
 
 /--
-Drazin inverse covariance under modular transport, as an explicit certificate.
+Modular ring-equivalence transport preserves the Drazin inverse laws.
 
-The repo `ModularFlow` is a ring-equivalence flow, but it is not a star-flow in
-this socket.  Therefore this packet records the transported Drazin law without
-claiming transported self-adjointness of the support.
+This theorem is the owner-backed replacement for the former transport packet:
+the proof is the general Drazin ring-equivalence transport lemma applied to the
+modular flow automorphism.
 -/
 @[rep_depth operator]
-structure DrazinTransportCertificate
-    (Obs : Type*) [Ring Obs] [Star Obs]
+theorem modularFlow_transport_isDrazinInverse
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
-    (t : ℝ) where
-  transported_True :
-    IsDrazinInverse (flow.flow t D.A) (flow.flow t D.AD) D.index
+    (t : ℝ) :
+    IsDrazinInverse (flow.flow t D.A) (flow.flow t D.AD) D.index :=
+  IsDrazinInverse.map_ringEquiv (flow.flow t) D.hDrazin
 
 /--
 The transported Drazin support is the modular image of the original support.

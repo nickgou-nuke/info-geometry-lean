@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Tactic
-import Omega.CircleDimension.CayleyPoissonWindowIdentity
+import InfoGeometry.External.Automath.Omega.CircleDimension.CayleyPoissonWindowIdentity
 
 namespace Omega.CircleDimension
 

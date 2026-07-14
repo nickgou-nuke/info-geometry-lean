@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
-import Omega.POM.FiberSpectrumPronyHankel2rReconstruction
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankel2rReconstruction
 
 namespace Omega.POM
 

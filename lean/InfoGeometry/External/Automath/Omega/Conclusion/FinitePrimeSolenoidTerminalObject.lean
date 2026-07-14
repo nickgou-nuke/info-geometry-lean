@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StarZ1sDualExtension
-import Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
-import Omega.Zeta.XiCdimLocalizationSolenoidCircleExtensionNonsplit
-import Omega.Zeta.XiCdimLocalizationSolenoidNoNontrivialTorusInput
+import InfoGeometry.External.Automath.Omega.CircleDimension.StarZ1sDualExtension
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidCircleExtensionNonsplit
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidNoNontrivialTorusInput
 
 namespace Omega.Conclusion
 

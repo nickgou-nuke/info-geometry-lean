@@ -87,9 +87,9 @@ A finite system of split Clifford atoms.
 For each atom `i`, `e i` and `f i` are odd generators with opposite square
 signs, and `H i = e i * f i` is the associated local Cartan/chiral involution.
 
-The commuting laws for the `H i` are stored as proof-carrying fields.  This
-keeps the socket usable for graded tensor products without forcing one
-particular implementation of Koszul signs at this abstract layer.
+The commuting laws for the `H i` are explicit fields.  This keeps the interface
+usable for graded tensor products without forcing one particular implementation
+of Koszul signs at this abstract layer.
 -/
 structure SplitCliffordAtomSystem
     (ι Op : Type*) [Fintype ι] [Ring Op] where
@@ -280,7 +280,7 @@ The Cartan sector projector shape
 
 `∏ᵢ (1 / 2) • (1 + epsᵢ Hᵢ)`.
 
-This is a socket for the algebraic expression.  Idempotence/orthogonality
+This is the algebraic expression.  Idempotence/orthogonality
 requires the usual commuting projector hypotheses supplied by concrete models.
 -/
 def cartanProjector
@@ -418,13 +418,13 @@ abbrev Z16Charge : Type :=
   ZMod 16
 
 /--
-Bridge data relating local Clifford signs to a global anomaly or stacking
+Interface relating local Clifford signs to a global anomaly or stacking
 index.
 
 The fields are proof-carrying on purpose: `Z2^4` gives four independent local
 binary addresses, while `Z16` is a cyclic global stacking law.
 -/
-structure LocalToGlobalAnomalyDatum where
+structure LocalToGlobalAnomalyInterface where
   /-- Local admissible four-bit sectors. -/
   localCharge : Z2FourCharge → Prop
 
@@ -449,7 +449,7 @@ structure GlobalAnomalyClass where
   integerLift : ℤ
 
   /-- The cyclic class is the mod-16 reduction of the integer lift. -/
-  reduction_True :
+  reduction_eq :
     cyclicIndex = (integerLift : ZMod 16)
 
 
@@ -457,8 +457,8 @@ namespace GlobalAnomalyClass
 
 variable (G : GlobalAnomalyClass)
 
-/-- Forget a global anomaly class to the local-to-global compatibility socket. -/
-def toLocalToGlobalAnomalyDatum : LocalToGlobalAnomalyDatum where
+/-- Forget a global anomaly class to the local-to-global compatibility interface. -/
+def toLocalToGlobalAnomalyInterface : LocalToGlobalAnomalyInterface where
   localCharge := G.localSector
   globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
 
@@ -468,7 +468,7 @@ end GlobalAnomalyClass
 A DIII index calibration turns a local charge address type into a cyclic
 `ZMod 16` stacking index.
 
-This is a datum, not a theorem: a four-bit charge space and `Z16` both have
+This is an interface, not a theorem: a four-bit charge space and `Z16` both have
 sixteen elements in the motivating case, but they do not have the same group
 law.
 -/

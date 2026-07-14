@@ -1,4 +1,4 @@
-import Omega.Folding.FoldInfoNCETriangularInversionCollisionSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCETriangularInversionCollisionSpectrum
 
 namespace Omega.Zeta
 

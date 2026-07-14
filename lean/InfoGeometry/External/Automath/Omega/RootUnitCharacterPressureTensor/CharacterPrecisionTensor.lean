@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.RootUnitCharacterPressureTensor.RootUnitCharacterDiagonalization
+import InfoGeometry.External.Automath.Omega.RootUnitCharacterPressureTensor.RootUnitCharacterDiagonalization
 
 namespace Omega.RootUnitCharacterPressureTensor
 

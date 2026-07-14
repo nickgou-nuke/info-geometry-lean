@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangThreeLeadingZerosExtrapolateUcN6
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangThreeLeadingZerosExtrapolateUcN6
 
 namespace Omega.Zeta
 

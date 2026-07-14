@@ -25,10 +25,10 @@ namespace InfoGeometry.OperatorAlgebra.CPTChiralBranch
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 open InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
-/-! ## 1. CPT-calibrated Tomita/chiral branch -/
+/-! ## 1. CPT Tomita/chiral branch -/
 
 /--
-CPT branch of the modular chiral mirror.
+CPT algebraic branch of the modular chiral mirror.
 
 `tomita` records the algebra/commutant mirror.
 
@@ -36,6 +36,9 @@ CPT branch of the modular chiral mirror.
 
 `tomitaMirror_eq_J_conj` identifies the abstract Tomita mirror with
 conjugation by the same operator `J`.
+
+Representation-specific physical calibration belongs in the concrete owner
+file that proves it; this structure only carries the algebraic data used below.
 -/
 structure CPTChiralTomitaBranch
     (Op : Type*) [Ring Op] [Algebra ℝ Op] where
@@ -48,14 +51,6 @@ structure CPTChiralTomitaBranch
   /-- The abstract Tomita mirror is conjugation by `J`. -/
   tomitaMirror_eq_J_conj :
     ∀ x : Op, tomita.Jconj x = (mirror.J * x) * mirror.J
-
-  /-- Certificate that this `J` is calibrated as CPT/PCT reflection. -/
-  cpt_calibration :
-    Prop
-
-  /-- Certificate that CPT reverses modular time/orientation. -/
-  reverses_modular_flow :
-    Prop
 
 namespace CPTChiralTomitaBranch
 

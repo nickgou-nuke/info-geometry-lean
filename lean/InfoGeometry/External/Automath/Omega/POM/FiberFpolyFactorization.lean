@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.BigOperators
-import Omega.Combinatorics.FibonacciCube
-import Omega.POM.FiberReconstructionCartesianProduct
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionCartesianProduct
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xcSerrinLdpVacuum
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xcSerrinLdpVacuum
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.ZMod.Basic

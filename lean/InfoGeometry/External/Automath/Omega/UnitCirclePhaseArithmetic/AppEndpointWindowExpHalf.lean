@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Artanh
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppLegendreMomentTimefiber
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppLegendreMomentTimefiber
 
 namespace Omega.UnitCirclePhaseArithmetic
 

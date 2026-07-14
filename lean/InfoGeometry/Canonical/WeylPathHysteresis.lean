@@ -75,6 +75,24 @@ noncomputable def colThenRowUpdate
     (hrow : HasPositiveRowSums n (colNormalize n M hcol)) : Coupling n :=
   rowNormalize n (colNormalize n M hcol) hrow
 
+/-- Row-then-column update has zero column Lyapunov residual after the final column step. -/
+theorem rowThenColUpdate_colLyapunov_eq_zero
+    (M : Coupling n)
+    (hrow : HasPositiveRowSums n M)
+    (hcol : HasPositiveColSums n (rowNormalize n M hrow)) :
+    colLyapunov n (rowThenColUpdate n M hrow hcol) = 0 := by
+  exact colLyapunov_colNormalize_eq_zero (n := n)
+    (M := rowNormalize n M hrow) hcol
+
+/-- Column-then-row update has zero row Lyapunov residual after the final row step. -/
+theorem colThenRowUpdate_rowLyapunov_eq_zero
+    (M : Coupling n)
+    (hcol : HasPositiveColSums n M)
+    (hrow : HasPositiveRowSums n (colNormalize n M hcol)) :
+    rowLyapunov n (colThenRowUpdate n M hcol hrow) = 0 := by
+  exact rowLyapunov_rowNormalize_eq_zero (n := n)
+    (M := colNormalize n M hcol) hrow
+
 /-- Explicit update-order hysteresis predicate. -/
 def UpdateOrderHysteresis
     (M : Coupling n)

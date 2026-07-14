@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.BudgetOrthogonality
-import Omega.TypedAddressBiaxialCompletion.NullExhaustive
-import Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BudgetOrthogonality
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NullExhaustive
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
 
 namespace Omega.TypedAddressBiaxialCompletion
 

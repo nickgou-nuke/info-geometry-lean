@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ReadUsTypedPrecision
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ReadUsTypedPrecision
 
 
 namespace Omega.TypedAddressBiaxialCompletion

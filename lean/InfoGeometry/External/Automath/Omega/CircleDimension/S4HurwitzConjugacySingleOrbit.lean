@@ -1,8 +1,8 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.GroupTheory.Perm.Fin
 import Mathlib.Tactic
-import Omega.Folding.CollisionZetaOperator
-import Omega.Zeta.XiTerminalZmLeyangMonodromyS4
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangMonodromyS4
 
 namespace Omega.CircleDimension
 

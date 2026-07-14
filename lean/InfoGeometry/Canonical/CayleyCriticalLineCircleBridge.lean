@@ -190,8 +190,8 @@ theorem cayleyToFugacity_one_sub_eq_inv
 /-! ## Lee--Yang admissibility socket -/
 
 /--
-Data carrier for a possible Lee--Yang admissible determinant to RH-style
-critical-line statement through the Cayley transform.
+Data carrier for a possible Lee--Yang admissible determinant readout through
+the Cayley transform.
 
 The Lee--Yang circle theorem is not proved here. A concrete prime/Majorana
 system must prove admissibility, the determinant identification with completed
@@ -203,8 +203,6 @@ structure LeeYangCayleyRiemannWitness
   partitionFunction : PartitionFunction
   completedXiReadout : CompletedXiReadout
   zeroReadout : ZeroReadout
-  /-- Guardrail: this packet is not an unconditional proof of RH. -/
-  no_unconditional_RH_claim_guard : Type*
 
 namespace LeeYangCayleyRiemannWitness
 
@@ -213,7 +211,7 @@ end LeeYangCayleyRiemannWitness
 /-! ## Prime-gas Lee--Yang approximation socket -/
 
 /--
-witness-gated (Native Closure Mandated: Closure Debt) finite-volume Lee--Yang approximation scheme for the completed
+Finite-volume Lee--Yang approximation scheme for the completed
 Riemann determinant in Cayley fugacity coordinates.
 
 This records the exact missing theorem layer:
@@ -236,9 +234,6 @@ structure LeeYangPrimeApproximation
   renormalization : ℕ → ℂ → ℂ
   /-- The completed `xi` readout in Cayley fugacity coordinates. -/
   completedXiCayley : CompletedXiReadout
-
-  /-- Guardrail: this finite approximation packet is not itself RH. -/
-  no_unconditional_RH_claim_guard : Type*
 
 namespace LeeYangPrimeApproximation
 

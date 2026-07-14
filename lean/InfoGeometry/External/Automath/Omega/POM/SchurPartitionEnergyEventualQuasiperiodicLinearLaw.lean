@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.SchurPlancherelEnergyIdentity
+import InfoGeometry.External.Automath.Omega.POM.SchurPlancherelEnergyIdentity
 
 namespace Omega.POM
 

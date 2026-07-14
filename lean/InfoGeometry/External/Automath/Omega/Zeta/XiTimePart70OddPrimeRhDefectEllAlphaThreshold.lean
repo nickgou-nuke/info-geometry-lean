@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart70OddPrimeRhDefectSummableMass
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart70OddPrimeRhDefectSummableMass
 
 namespace Omega.Zeta
 

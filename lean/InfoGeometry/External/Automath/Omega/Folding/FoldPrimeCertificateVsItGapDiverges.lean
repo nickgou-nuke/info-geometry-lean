@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldLocalRewritePrimeCertificateBitInflation
-import Omega.Folding.FoldPrimeRegisterBitlengthOmegaMlogm
+import InfoGeometry.External.Automath.Omega.Folding.FoldLocalRewritePrimeCertificateBitInflation
+import InfoGeometry.External.Automath.Omega.Folding.FoldPrimeRegisterBitlengthOmegaMlogm
 
 namespace Omega.Folding
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.SPG.RegisterLowerBound
+import InfoGeometry.External.Automath.Omega.SPG.RegisterLowerBound
 
 namespace Omega.Conclusion
 

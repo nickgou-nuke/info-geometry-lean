@@ -1,4 +1,4 @@
-import Omega.Conclusion.PartialScreenTraceCutSpaceIdentification
+import InfoGeometry.External.Automath.Omega.Conclusion.PartialScreenTraceCutSpaceIdentification
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

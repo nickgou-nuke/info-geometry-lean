@@ -19,43 +19,6 @@ readouts carried by fields.
 namespace InfoGeometry.SuperMetriplectic
 
 /--
-Zeta/Pfaffian/Drazin index mapping.
-
-The Penrose-shell zeta residual is identified with the Drazin-core index and
-with the logarithmic Pfaffian readout.
--/
-structure DrazinPfaffianZetaIndexPacket where
-  penroseZetaZero : ℝ
-  drazinIndex : ℝ
-  logPfaffianDrazinCore : ℝ
-  penroseZetaZero_eq_drazinIndex :
-    penroseZetaZero = drazinIndex
-  drazinIndex_eq_logPfaffian :
-    drazinIndex = logPfaffianDrazinCore
-
-namespace DrazinPfaffianZetaIndexPacket
-
-/-- Penrose zeta residual equals the Drazin topological index. -/
-theorem zeta_eq_drazinIndex
-    (P : DrazinPfaffianZetaIndexPacket) :
-    P.penroseZetaZero = P.drazinIndex :=
-  P.penroseZetaZero_eq_drazinIndex
-
-/-- Drazin index equals the logarithmic Pfaffian readout. -/
-theorem drazinIndex_eq_logPfaffianReadout
-    (P : DrazinPfaffianZetaIndexPacket) :
-    P.drazinIndex = P.logPfaffianDrazinCore :=
-  P.drazinIndex_eq_logPfaffian
-
-/-- Penrose zeta residual directly equals the logarithmic Pfaffian readout. -/
-theorem zeta_eq_logPfaffian
-    (P : DrazinPfaffianZetaIndexPacket) :
-    P.penroseZetaZero = P.logPfaffianDrazinCore := by
-  rw [P.zeta_eq_drazinIndex, P.drazinIndex_eq_logPfaffianReadout]
-
-end DrazinPfaffianZetaIndexPacket
-
-/--
 Cosmological-constant map.
 
 `eightPiGInfo` is the scalar readout corresponding to `8πG_info`.
@@ -176,7 +139,13 @@ Full dark-energy/cosmological-constant capstone over information equilibrium.
 structure DarkEnergyMappingCapstone
     (ι : Type*) [Fintype ι] (State : Type*) where
   equilibrium : InformationEquilibriumCapstone ι State
-  zetaIndex : DrazinPfaffianZetaIndexPacket
+  penroseZetaZero : ℝ
+  drazinIndex : ℝ
+  logPfaffianDrazinCore : ℝ
+  penroseZetaZero_eq_drazinIndex :
+    penroseZetaZero = drazinIndex
+  drazinIndex_eq_logPfaffian :
+    drazinIndex = logPfaffianDrazinCore
   lambdaMap : CasimirToCosmologicalConstantMap
   friedmann : InformationalFriedmannAccelerationPacket
   darkEnergy : InformationalDarkEnergyPacket
@@ -215,11 +184,23 @@ theorem darkEnergy_eq_drazinIntegrity
       C.darkEnergy.drazinCoreIntegrityEnergy := by
   rw [C.darkEnergy.darkEnergy_eq_lambda, C.darkEnergy.drazinIntegrity_eq_lambda]
 
+/-- Penrose zeta residual equals the Drazin topological index. -/
+theorem zeta_eq_drazinIndex
+    (C : DarkEnergyMappingCapstone ι State) :
+    C.penroseZetaZero = C.drazinIndex :=
+  C.penroseZetaZero_eq_drazinIndex
+
+/-- Drazin index equals the logarithmic Pfaffian readout. -/
+theorem drazinIndex_eq_logPfaffianReadout
+    (C : DarkEnergyMappingCapstone ι State) :
+    C.drazinIndex = C.logPfaffianDrazinCore :=
+  C.drazinIndex_eq_logPfaffian
+
 /-- Penrose zeta residual is the Drazin/Pfaffian logarithmic index. -/
 theorem zeta_eq_logPfaffian
     (C : DarkEnergyMappingCapstone ι State) :
-    C.zetaIndex.penroseZetaZero = C.zetaIndex.logPfaffianDrazinCore :=
-  C.zetaIndex.zeta_eq_logPfaffian
+    C.penroseZetaZero = C.logPfaffianDrazinCore := by
+  rw [C.zeta_eq_drazinIndex, C.drazinIndex_eq_logPfaffianReadout]
 
 /-- In the BPS Friedmann gate, acceleration vanishes. -/
 theorem friedmann_acceleration_zero
@@ -241,7 +222,7 @@ equilibrium is the zero-acceleration balance against the Penrose shell.
 -/
 theorem dark_energy_mapping_theorem
     (C : DarkEnergyMappingCapstone ι State) :
-    C.zetaIndex.penroseZetaZero = C.zetaIndex.logPfaffianDrazinCore
+    C.penroseZetaZero = C.logPfaffianDrazinCore
       ∧ C.lambdaMap.lambdaInfo = C.equilibrium.lambdaInfo.lambdaInfo
       ∧ C.darkEnergy.darkEnergyReadout = C.lambdaMap.lambdaInfo
       ∧ C.darkEnergy.darkEnergyReadout =

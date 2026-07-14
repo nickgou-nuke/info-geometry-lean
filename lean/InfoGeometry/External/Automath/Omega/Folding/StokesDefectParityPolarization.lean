@@ -1,4 +1,4 @@
-import Omega.Folding.StokesDefectHaarMixing
+import InfoGeometry.External.Automath.Omega.Folding.StokesDefectHaarMixing
 
 namespace Omega.Folding
 

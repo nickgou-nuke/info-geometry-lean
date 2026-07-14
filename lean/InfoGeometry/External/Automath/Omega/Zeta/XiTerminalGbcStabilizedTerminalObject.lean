@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.BCQuotientUniversal
-import Omega.POM.BCVisibleQuotientEventualStability
+import InfoGeometry.External.Automath.Omega.POM.BCQuotientUniversal
+import InfoGeometry.External.Automath.Omega.POM.BCVisibleQuotientEventualStability
 
 namespace Omega.Zeta
 

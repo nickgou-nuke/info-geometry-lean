@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineRegisterBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineRegisterBudget
 
 namespace Omega.Conclusion
 

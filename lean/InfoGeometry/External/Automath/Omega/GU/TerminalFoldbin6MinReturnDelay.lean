@@ -1,4 +1,4 @@
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega.GU
 

@@ -173,35 +173,6 @@ theorem totalEntropyChange_nonnegative :
     InfoGeometry.SuperMetriplectic.UnifiedOwnerEntropyBridge.UnifiedOwnerTriadCompatibility.toCoadjointLeafEntropySplit_totalEntropyChange_nonnegative
       C.triad
 
-/--
-Combined packet for the conservative Drazin-projector/topological-constraint
-lane.
--/
-@[capstone, rep_depth transport]
-theorem drazin_projector_constraint_packet :
-    (C.topologicalConstraintProjector
-      = 1 - C.triad.triad.block.LΘΘ * C.triad.triad.block.drazin.aD)
-      ∧
-    (C.triad.defectReadout (ownerCentral C.triad.owner.U)
-      = C.topologicalConstraintProjector)
-      ∧
-    (ownerCentral C.triad.owner.U
-      ∈ (C.drazinCartan.cartan.toCartanOnsagerSplit).S.𝔨)
-      ∧
-    (∀ ψ : H₂, ψ ∈ C.topologicalConstraintCore →
-      InfoGeometry.Canonical.SuperchargeOddOddDecomposition.entropyProductionShadow
-        (ownerCentral C.triad.owner.U) ψ = 0)
-      ∧
-    (0 ≤
-      (InfoGeometry.SuperMetriplectic.UnifiedOwnerEntropyBridge.UnifiedOwnerTriadCompatibility.toCoadjointLeafEntropySplit
-        C.triad).totalEntropyChange) := by
-  refine ⟨C.topologicalConstraintProjector_eq_drazin_formula, ?_, ?_, ?_, ?_⟩
-  · exact C.defectReadout_eq_topologicalConstraintProjector
-  · exact C.ownerCentralCandidate_in_cartan_k
-  · intro ψ hψ
-    exact C.entropyProduction_vanishes_on_topologicalConstraintCore ψ hψ
-  · exact C.totalEntropyChange_nonnegative
-
 end DrazinProjectorConstraintCompatibility
 
 end Core

@@ -43,10 +43,11 @@ Calibration bridge from state-functional bounded-KMS ergodic fixed points to
 natural-cone `Ω`-localized face volumes.
 -/
 @[rep_depth transport]
-structure BoundedKMSErgodicOmegaVolumeBridge where
+structure Bridge where
   /-- State-functional bounded-KMS modular/renormalization fixed-point owner. -/
   ergodic :
-    BoundedKMSErgodicFixedPointBridge (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge.Bridge
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Standard-form `Ω`-expectation finite face-volume owner. -/
   omegaVolume :
@@ -63,7 +64,7 @@ structure BoundedKMSErgodicOmegaVolumeBridge where
   /-- Each word-observable is fixed by modular time and dyadic scale. -/
   fixedOperator_selfSimilar :
     ∀ w : Word,
-      BoundedKMSErgodicFixedPointBridge.IsSelfSimilarFixedPoint
+      BoundedKMSErgodicFixedPointBridge.Bridge.IsSelfSimilarFixedPoint
         ergodic (fixedOperatorOfWord w)
 
   /--
@@ -75,16 +76,16 @@ structure BoundedKMSErgodicOmegaVolumeBridge where
       omegaVolume.volumeState (toVolumeOperator (fixedOperatorOfWord w)) =
         NaturalConeVolumeBridge.localizedExpectation omegaVolume w
 
-namespace BoundedKMSErgodicOmegaVolumeBridge
+namespace Bridge
 
-variable (B : BoundedKMSErgodicOmegaVolumeBridge
+variable (B : Bridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra) (Word := Word))
 
 /-- The word fixed-point observable is modular-time fixed. -/
 @[rep_depth transport]
 theorem fixedOperator_isModularFixed
     (w : Word) :
-    BoundedKMSErgodicFixedPointBridge.IsModularFixed
+    BoundedKMSErgodicFixedPointBridge.Bridge.IsModularFixed
       B.ergodic (B.fixedOperatorOfWord w) :=
   (B.fixedOperator_selfSimilar w).1
 
@@ -92,7 +93,7 @@ theorem fixedOperator_isModularFixed
 @[rep_depth transport]
 theorem fixedOperator_isScaleFixed
     (w : Word) :
-    BoundedKMSErgodicFixedPointBridge.IsScaleFixed
+    BoundedKMSErgodicFixedPointBridge.Bridge.IsScaleFixed
       B.ergodic (B.fixedOperatorOfWord w) :=
   (B.fixedOperator_selfSimilar w).2
 
@@ -134,7 +135,7 @@ theorem fixedOperator_volume_eq_omega_kreinExpectation
     NaturalConeVolumeBridge.localizedExpectation_eq_omega_kreinExpectation
       B.omegaVolume w
 
-end BoundedKMSErgodicOmegaVolumeBridge
+end Bridge
 
 end Core
 

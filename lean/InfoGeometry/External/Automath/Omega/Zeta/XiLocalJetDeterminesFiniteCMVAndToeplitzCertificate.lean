@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiToeplitzDetVerblunsky
-import Omega.Zeta.XiVerblunskyFromLocalJet
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzDetVerblunsky
+import InfoGeometry.External.Automath.Omega.Zeta.XiVerblunskyFromLocalJet
 
 namespace Omega.Zeta
 

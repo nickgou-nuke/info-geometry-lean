@@ -1,4 +1,4 @@
-import Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
+import InfoGeometry.External.Automath.Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
 
 namespace Omega.Zeta
 

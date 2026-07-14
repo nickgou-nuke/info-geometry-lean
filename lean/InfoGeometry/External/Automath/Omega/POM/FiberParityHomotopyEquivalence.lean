@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberIndependenceComplexClassification
-import Omega.POM.FiberParityMod3
+import InfoGeometry.External.Automath.Omega.POM.FiberIndependenceComplexClassification
+import InfoGeometry.External.Automath.Omega.POM.FiberParityMod3
 
 namespace Omega.POM
 

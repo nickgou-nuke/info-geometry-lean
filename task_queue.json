@@ -418,18 +418,20 @@
     {
       "id": "pin_group_mathlib_inventory",
       "title": "pinGroup",
-      "status": "running",
+      "status": "done",
       "sympy_witness": false,
       "lean_proof": false,
-      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean"
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean",
+      "last_report": "artifacts/agent_orchestrator/20260708T193058Z_pin_group_mathlib_inventory.json"
     },
     {
       "id": "spin_group_mathlib_inventory",
       "title": "spinGroup",
-      "status": "running",
+      "status": "done",
       "sympy_witness": false,
       "lean_proof": false,
-      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean"
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/SpinGroup.lean",
+      "last_report": "artifacts/agent_orchestrator/20260708T193105Z_spin_group_mathlib_inventory.json"
     },
     {
       "id": "conjact_mathlib_inventory",
@@ -443,18 +445,20 @@
     {
       "id": "reverse_mathlib_inventory",
       "title": "reverse",
-      "status": "running",
+      "status": "done",
       "sympy_witness": false,
       "lean_proof": false,
-      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean"
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean",
+      "last_report": "artifacts/agent_orchestrator/20260708T193105Z_reverse_mathlib_inventory.json"
     },
     {
       "id": "involute_mathlib_inventory",
       "title": "involute",
-      "status": "running",
+      "status": "done",
       "sympy_witness": false,
       "lean_proof": false,
-      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean"
+      "external_ref": "Mathlib/LinearAlgebra/CliffordAlgebra/Conjugation.lean",
+      "last_report": "artifacts/agent_orchestrator/20260708T193105Z_involute_mathlib_inventory.json"
     },
     {
       "id": "star_mathlib_inventory",

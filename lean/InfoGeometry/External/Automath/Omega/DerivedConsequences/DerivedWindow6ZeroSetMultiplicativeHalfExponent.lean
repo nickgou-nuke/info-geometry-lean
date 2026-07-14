@@ -2,8 +2,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Divisors
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.Folding.FoldZeroWindow6DensitySharpExponent
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroWindow6DensitySharpExponent
 
 open Filter Topology
 open scoped goldenRatio

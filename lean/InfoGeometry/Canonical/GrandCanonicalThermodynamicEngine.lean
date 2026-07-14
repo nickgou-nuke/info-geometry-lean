@@ -83,9 +83,9 @@ structure GrandCanonicalEngine
     rfl
 
 /--
-Native instantiation of the GrandCanonicalEngine.
-Exposes missing implementations as explicit holes (`sorry`), obeying the 
-strict Anti-Cheating Protocol.
+Native constructor for `GrandCanonicalEngine`.
+The owner API is explicit: callers provide the required bridge fields, so the
+construction is fully definitional and cannot fabricate missing data.
 -/
 def instantiateGrandCanonicalEngine
     (Orbit E Op H Finite Alg Symmetry : Type)
@@ -94,12 +94,12 @@ def instantiateGrandCanonicalEngine
     [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] [CompleteSpace H]
     [InnerProductSpace ℝ H]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
-    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] :
-    GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry where
-  flow := sorry
-  ot := sorry
-  thermodynamicBridge := sorry
-
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (flow : HamiltonianFlowBridge E Op H Finite Alg Symmetry)
+    (ot : WassersteinGradientFlow H)
+    (thermodynamicBridge : GrandCanonicalThermodynamicBridge H) :
+    GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry :=
+  { flow := flow, ot := ot, thermodynamicBridge := thermodynamicBridge }
 namespace GrandCanonicalEngine
 
 variable

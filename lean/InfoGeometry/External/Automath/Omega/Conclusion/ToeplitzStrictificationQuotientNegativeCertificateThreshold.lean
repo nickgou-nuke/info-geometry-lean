@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
-import Omega.Conclusion.ToeplitzShortestNegativeCertificateTailRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzShortestNegativeCertificateTailRigidity
 
 namespace Omega.Conclusion
 

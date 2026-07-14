@@ -1,6 +1,6 @@
-import Omega.Folding.FoldGodelCarryConditionalEntropy
-import Omega.Folding.GodelFiniteDictionaryBitlength
-import Omega.Folding.MultinomialVpCarrySignature
+import InfoGeometry.External.Automath.Omega.Folding.FoldGodelCarryConditionalEntropy
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.Folding.MultinomialVpCarrySignature
 
 namespace Omega.Folding
 

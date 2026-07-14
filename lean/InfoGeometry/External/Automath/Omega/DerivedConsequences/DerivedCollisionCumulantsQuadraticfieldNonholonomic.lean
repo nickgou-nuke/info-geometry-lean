@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedCollisionPressureSingularRing
-import Omega.Folding.GaugeAnomalyCumulantsNotPrecursive
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedCollisionPressureSingularRing
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCumulantsNotPrecursive
 
 namespace Omega.DerivedConsequences
 

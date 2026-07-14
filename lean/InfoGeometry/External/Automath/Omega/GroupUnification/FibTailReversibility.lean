@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega.GroupUnification
 

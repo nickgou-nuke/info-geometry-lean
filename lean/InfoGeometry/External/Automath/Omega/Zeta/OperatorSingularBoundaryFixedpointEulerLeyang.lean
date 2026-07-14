@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.IharaWittPrimitiveSpectrum
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaWittPrimitiveSpectrum
 
 namespace Omega.Zeta
 

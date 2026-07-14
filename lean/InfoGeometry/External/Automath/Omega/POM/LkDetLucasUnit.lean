@@ -1,4 +1,4 @@
-import Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
 
 namespace Omega
 

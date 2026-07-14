@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.UnitCircleComovingFirstOrder
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCircleComovingFirstOrder
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
 

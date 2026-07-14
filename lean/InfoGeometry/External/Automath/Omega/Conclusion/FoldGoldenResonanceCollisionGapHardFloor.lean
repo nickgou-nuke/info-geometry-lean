@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FoldSinglepairVisibleObstructions
-import Omega.Conclusion.FoldbinRemoveMainResonancePeaksStillDiverges
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldSinglepairVisibleObstructions
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinRemoveMainResonancePeaksStillDiverges
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateStrictSchurConcavity
-import Omega.POM.DiagonalRateUniformGlobalMax
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateStrictSchurConcavity
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateUniformGlobalMax
 
 open scoped BigOperators
 

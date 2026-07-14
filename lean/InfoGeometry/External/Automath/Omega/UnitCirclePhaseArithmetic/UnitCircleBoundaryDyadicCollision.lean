@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.BoundaryAddressCollision
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryAddressCollision
 
 namespace Omega.UnitCirclePhaseArithmetic
 

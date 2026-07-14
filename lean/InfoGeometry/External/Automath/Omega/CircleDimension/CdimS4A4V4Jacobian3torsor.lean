@@ -1,4 +1,4 @@
-import Omega.CircleDimension.S4V4KummerTorsorGeneratedByExplicit3torsion
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4KummerTorsorGeneratedByExplicit3torsion
 
 namespace Omega.CircleDimension
 

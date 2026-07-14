@@ -1,4 +1,4 @@
-import Omega.Folding.FibKernelBasisFiniteDepth
+import InfoGeometry.External.Automath.Omega.Folding.FibKernelBasisFiniteDepth
 
 namespace Omega.Folding
 

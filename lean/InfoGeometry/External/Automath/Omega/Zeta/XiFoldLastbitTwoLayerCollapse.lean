@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoStateAsymptotic
-import Omega.Zeta.XiFoldLastbitStatisticalSufficiencyCollapse
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldLastbitStatisticalSufficiencyCollapse
 
 namespace Omega.Zeta
 

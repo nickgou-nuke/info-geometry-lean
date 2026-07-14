@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CompressionLadderSpin10
+import InfoGeometry.External.Automath.Omega.Conclusion.CompressionLadderSpin10
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.SyncKernelRealInput.MobiusCollapseMge2Ab
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.MobiusCollapseMge2Ab
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,4 +1,4 @@
-import Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
 
 namespace Omega.POM
 

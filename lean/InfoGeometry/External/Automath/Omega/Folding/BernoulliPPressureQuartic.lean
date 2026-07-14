@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Analytic.Constructions
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPParryPressureChain
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPParryPressureChain
 
 /-!
 # Bernoulli-p pressure quartic and CLT variance rate seed values

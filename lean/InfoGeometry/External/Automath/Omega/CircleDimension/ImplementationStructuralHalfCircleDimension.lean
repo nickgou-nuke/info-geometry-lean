@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.Folding.KilloNoFiniteAdditiveRegisterLinearization
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.Folding.KilloNoFiniteAdditiveRegisterLinearization
 
 namespace Omega.CircleDimension
 

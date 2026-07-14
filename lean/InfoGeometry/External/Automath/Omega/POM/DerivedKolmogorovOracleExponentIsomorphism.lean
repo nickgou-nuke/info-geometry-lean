@@ -1,4 +1,4 @@
-import Omega.POM.OracleCapacityKolmogorovSpectrum
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityKolmogorovSpectrum
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Combinatorics.GramDet
-import Omega.POM.KkEigenvalues
-import Omega.POM.KkGramDet
+import InfoGeometry.External.Automath.Omega.Combinatorics.GramDet
+import InfoGeometry.External.Automath.Omega.POM.KkEigenvalues
+import InfoGeometry.External.Automath.Omega.POM.KkGramDet
 
 namespace Omega.POM
 

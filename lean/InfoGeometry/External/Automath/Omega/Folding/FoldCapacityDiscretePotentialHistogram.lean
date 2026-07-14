@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
 
 namespace Omega.Folding
 

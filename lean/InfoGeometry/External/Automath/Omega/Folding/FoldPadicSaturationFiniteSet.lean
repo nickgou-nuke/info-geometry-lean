@@ -1,4 +1,4 @@
-import Omega.Folding.FoldPadicSaturationPrime
+import InfoGeometry.External.Automath.Omega.Folding.FoldPadicSaturationPrime
 
 namespace Omega.Folding
 

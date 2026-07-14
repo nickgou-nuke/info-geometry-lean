@@ -1,10 +1,10 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Conclusion.Window6BinarySuffixCylinderTrichotomy
-import Omega.Conclusion.Window6Collision
-import Omega.Conclusion.Window6OrdinaryBinaryStrictMajorization
-import Omega.Conclusion.Window6OutputBlindChannelDominates
-import Omega.Conclusion.Window6OutputChi2VisibleBlindOrthogonalSplitting
-import Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BinarySuffixCylinderTrichotomy
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OrdinaryBinaryStrictMajorization
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputBlindChannelDominates
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputChi2VisibleBlindOrthogonalSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloZGDirichletMatrixEuler
-import Omega.Zeta.DerivedZGNoScalarEulerProduct
+import InfoGeometry.External.Automath.Omega.Folding.KilloZGDirichletMatrixEuler
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGNoScalarEulerProduct
 
 namespace Omega.Conclusion
 

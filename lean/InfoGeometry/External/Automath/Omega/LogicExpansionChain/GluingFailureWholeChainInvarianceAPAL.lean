@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.WholeChainInvarianceAPAL
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.WholeChainInvarianceAPAL
 
 namespace Omega.LogicExpansionChain.GluingFailureWholeChainInvarianceAPAL
 

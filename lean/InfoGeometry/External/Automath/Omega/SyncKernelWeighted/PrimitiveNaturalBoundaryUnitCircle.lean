@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.MuPochhammerNecklaceExpansion
-import Omega.SyncKernelWeighted.PressureUnitCircleBranchAngles
-import Omega.SyncKernelWeighted.RealInput40PrimedirichletDenseBranch
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerNecklaceExpansion
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureUnitCircleBranchAngles
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimedirichletDenseBranch
 
 namespace Omega.SyncKernelWeighted
 

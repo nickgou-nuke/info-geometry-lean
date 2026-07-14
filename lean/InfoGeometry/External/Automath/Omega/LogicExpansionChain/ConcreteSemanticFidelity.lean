@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.SemanticFidelity
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.SemanticFidelity
 
 namespace Omega.LogicExpansionChain
 

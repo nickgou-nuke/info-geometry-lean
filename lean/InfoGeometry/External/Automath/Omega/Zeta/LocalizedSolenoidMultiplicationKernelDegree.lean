@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidCircleQuotientLifts
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Experiments.TVCertificateHist
-import Omega.Zeta.AuditableProfiniteChebotarevFinite
+import InfoGeometry.External.Automath.Omega.Experiments.TVCertificateHist
+import InfoGeometry.External.Automath.Omega.Zeta.AuditableProfiniteChebotarevFinite
 
 namespace Omega.Zeta
 

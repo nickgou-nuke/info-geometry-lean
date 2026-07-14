@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.Zeta.XiTimePart62daFibonacciSolenoidCofinalUniversal
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62daFibonacciSolenoidCofinalUniversal
 
 namespace Omega.Zeta
 

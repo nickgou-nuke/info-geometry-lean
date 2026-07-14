@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedHankelFiniteJetBadPrimeClosure
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedHankelFiniteJetBadPrimeClosure
 
 namespace Omega.Zeta
 

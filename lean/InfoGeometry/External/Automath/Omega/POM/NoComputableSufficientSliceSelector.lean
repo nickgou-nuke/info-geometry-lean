@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.FiniteAuditNFAnom
+import InfoGeometry.External.Automath.Omega.POM.FiniteAuditNFAnom
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.HypercubePhaseGridDense
-import Omega.Conclusion.JgSlitUniformizationOrthogonalCoordinates
-import Omega.Conclusion.TwoPrimeDenseOrbitHyperbolaLeaf
+import InfoGeometry.External.Automath.Omega.Conclusion.HypercubePhaseGridDense
+import InfoGeometry.External.Automath.Omega.Conclusion.JgSlitUniformizationOrthogonalCoordinates
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoPrimeDenseOrbitHyperbolaLeaf
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Order.Floor.Ring
 import Mathlib.Data.Nat.PrimeFin
 import Mathlib.Tactic
-import Omega.POM.PrimitiveDirichletBranchLatticeEssentialPrimeSpectrum
+import InfoGeometry.External.Automath.Omega.POM.PrimitiveDirichletBranchLatticeEssentialPrimeSpectrum
 
 namespace Omega.POM
 

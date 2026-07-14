@@ -1,0 +1,111 @@
+\documentclass[review]{elsarticle} % Standard Elsevier layout for NIMA
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\begin{document}
+
+\section{Theoretical Foundations and Mathematical Proofs}
+
+To establish the metrological validity of the proposed projective gamma spectrometry framework, we present two formal proofs. Theorem~\ref{thm:alpha} demonstrates the absolute immunity of the framework to atomic internal conversion dynamics. Theorem~\ref{thm:anscombe} mathematically justifies the homoscedastic coordinate transformation that optimizes the data stream for Orthogonal Distance Regression (ODR).
+
+\subsection{Proof 1: The Absolute $\alpha$-Invariance of the Projective Product}
+
+\begin{theorem}\label{thm:alpha}
+Let a nuclear system decay via an asymmetric two-gamma cascade through a short-lived intermediate state. The product of the linear projection coefficients $C_1 \cdot C_2$ extracted from the homogeneous coordinate space of the complex projective line ($\mathbb{C}P^1$) yields an absolute invariant that is strictly proportional to the nuclear source activity $A$ and the angular correlation function $W(\theta)$, exhibiting total independence from the internal conversion coefficients ($\alpha_1, \alpha_2$).
+\end{theorem}
+
+\begin{proof}
+Let $\alpha_1$ and $\alpha_2$ represent the total internal conversion coefficients for the first and second transitions of the cascading decay sequence, respectively. The corresponding gamma-ray emission probabilities, denoted as $P_{\gamma i}$, are defined according to standard branching mechanics:
+\begin{equation}
+    P_{\gamma 1} = \frac{1}{1+\alpha_1}, \quad P_{\gamma 2} = \frac{1}{1+\alpha_2}
+\end{equation}
+
+Let $\epsilon_1$ and $\epsilon_2$ define the total absolute detection efficiencies (comprising both intrinsic crystal response and geometric solid angle factors). The empirical true coincidence summing (TCS) peak intensity ($I_{\text{tcs}}$) and the uncorrupted, unsummed ``pure'' singles rates ($N_{\text{pure}, i}$) are formulated as:
+\begin{equation}
+    I_{\text{tcs}} = A \cdot \epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2} \cdot W(\theta)
+\end{equation}
+\begin{equation}
+    N_{\text{pure}, 1} = A \cdot \epsilon_1 P_{\gamma 1}
+\end{equation}
+\begin{equation}
+    N_{\text{pure}, 2} = A \cdot \epsilon_2 P_{\gamma 2}
+\end{equation}
+
+We define the scale-invariant internal reference coordinate $X \in \mathbb{C}P^1$ as the geometric square root of the coincidence intensity channel:
+\begin{equation}
+    X \equiv \sqrt{I_{\text{tcs}}} = \sqrt{A \cdot \epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2} \cdot W(\theta)}
+\end{equation}
+
+The linear generators $C_1$ and $C_2$ map this projective coordinate $X$ back onto the affine complex plane of the pure singles states such that $N_{\text{pure}, i} = C_i \cdot X$. Solving explicitly for the individual projection metrics yields:
+\begin{equation}
+    C_1 = \frac{N_{\text{pure}, 1}}{X} = \frac{A \cdot \epsilon_1 P_{\gamma 1}}{\sqrt{A \cdot \epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2} \cdot W(\theta)}} = \sqrt{\frac{A \cdot \epsilon_1 P_{\gamma 1}}{\epsilon_2 P_{\gamma 2} \cdot W(\theta)}}
+\end{equation}
+\begin{equation}
+    C_2 = \frac{N_{\text{pure}, 2}}{X} = \frac{A \cdot \epsilon_2 P_{\gamma 2}}{\sqrt{A \cdot \epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2} \cdot W(\theta)}} = \sqrt{\frac{A \cdot \epsilon_2 P_{\gamma 2}}{\epsilon_1 P_{\gamma 1} \cdot W(\theta)}}
+\end{equation}
+
+Evaluating the algebraic intersection through the direct product of these two independent linear coefficients:
+\begin{equation}
+    C_1 \cdot C_2 = \left( \sqrt{\frac{A \cdot \epsilon_1 P_{\gamma 1}}{\epsilon_2 P_{\gamma 2} \cdot W(\theta)}} \right) \cdot \left( \sqrt{\frac{A \cdot \epsilon_2 P_{\gamma 2}}{\epsilon_1 P_{\gamma 1} \cdot W(\theta)}} \right)
+\end{equation}
+
+Consolidating the radicands into a single topological expression:
+\begin{equation}
+    C_1 \cdot C_2 = \sqrt{ \frac{A^2 \cdot (\epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2})}{(\epsilon_2 P_{\gamma 2} \cdot \epsilon_1 P_{\gamma 1}) \cdot W(\theta)^2} }
+\end{equation}
+
+The compound efficiency and branching parameters $(\epsilon_1 P_{\gamma 1} \cdot \epsilon_2 P_{\gamma 2})$ appear symmetrically in both the numerator and the denominator, resulting in a perfect algebraic annihilation:
+\begin{equation}
+    C_1 \cdot C_2 = \sqrt{\frac{A^2}{W(\theta)^2}} = \frac{A}{W(\theta)}
+\end{equation}
+
+Rearranging terms to isolate the absolute nuclear disintegration rate ($A$) yields:
+\begin{equation}
+    A = C_1 \cdot C_2 \cdot W(\theta)
+\end{equation}
+As demonstrated, all parameters representing intrinsic crystal efficiencies, source-to-detector distances, solid angles, and internal conversion coefficients are eliminated from the metric, proving the theorem.
+\end{proof}
+
+\subsection{Proof 2: Anscombe Variance Stabilization of the Coincidence Scale}
+
+\begin{theorem}\label{thm:anscombe}
+Let the raw coincidence counting rate $I_{\text{tcs}}$ be a random variable dictated by quantum Poisson statistics. Selecting the projective coordinate transformation $X = \sqrt{I_{\text{tcs}}}$ mapping onto $\mathbb{C}P^1$ converts the fundamentally heteroscedastic counting noise into a homoscedastic distribution possessing a constant variance ($\sigma^2_X \approx 0.25$).
+\end{theorem}
+
+\begin{proof}
+By definition, a radiation counting stream obeying a Poisson distribution has an expected variance equal to its expected mean:
+\begin{equation}
+    \operatorname{E}[I_{\text{tcs}}] = \mu, \quad \operatorname{Var}(I_{\text{tcs}}) = \sigma^2_{I} = \mu
+\end{equation}
+
+Let $g(t)$ denote a smooth, continuous, non-linear transformation function applied to the statistical distribution. According to the first-order Taylor expansion framework (the Delta Method), the variance of the transformed variable can be approximated asymptotically by:
+\begin{equation}
+    \operatorname{Var}(g(I_{\text{tcs}})) \approx \left( \left. \frac{dg}{dt} \right|_{t=\mu} \right)^2 \cdot \operatorname{Var}(I_{\text{tcs}})
+\end{equation}
+
+We define our specific projective coordinate transformation function as $g(t) = \sqrt{t}$. Evaluating the first derivative with respect to $t$:
+\begin{equation}
+    \frac{dg}{dt} = \frac{d}{dt}(t^{1/2}) = \frac{1}{2}t^{-1/2} = \frac{1}{2\sqrt{t}}
+\end{equation}
+
+Substituting the derivative evaluated at the mean $\mu$, along with the intrinsic Poisson variance boundary $\operatorname{Var}(I_{\text{tcs}}) = \mu$, back into the Delta Method expansion:
+\begin{equation}
+    \operatorname{Var}(\sqrt{I_{\text{tcs}}}) \approx \left( \frac{1}{2\sqrt{\mu}} \right)^2 \cdot \mu
+\end{equation}
+
+Expanding the exponent:
+\begin{equation}
+    \operatorname{Var}(\sqrt{I_{\text{tcs}}}) \approx \left( \frac{1}{4\mu} \right) \cdot \mu = \frac{\mu}{4\mu} = 0.25
+\end{equation}
+The variance of the independent variable $X = \sqrt{I_{\text{tcs}}}$ converges strictly to $0.25$. The statistical noise profile is decoupled from the underlying magnitude of the count rate, validating the application of uniform weights ($W_x = 1/0.25 = 4.0$) within the maximum likelihood estimation matrix of the ODR engine.
+\end{proof}
+
+\end{document}
+
+
+

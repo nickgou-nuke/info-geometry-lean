@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldResonanceEntireLp
-import Omega.Folding.FoldResonanceImagAsymptoticTypePi
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceEntireLp
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceImagAsymptoticTypePi
 
 namespace Omega.Folding
 

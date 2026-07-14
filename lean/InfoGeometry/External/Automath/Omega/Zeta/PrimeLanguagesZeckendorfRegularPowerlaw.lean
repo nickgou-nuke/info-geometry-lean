@@ -1,4 +1,4 @@
-import Omega.Zeta.ETDSZeckendorfRegularPowerlaw
+import InfoGeometry.External.Automath.Omega.Zeta.ETDSZeckendorfRegularPowerlaw
 
 namespace Omega.Zeta
 

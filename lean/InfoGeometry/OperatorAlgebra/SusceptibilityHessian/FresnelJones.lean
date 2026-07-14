@@ -25,12 +25,6 @@ structure FresnelCoefficientReadout
   /-- p-polarized reflection amplitude. -/
   rp : State → ℂ
 
-  /-- Fresnel boundary law for the supplied material/interface model. -/
-  fresnel_law : Prop
-
-  fresnel_law_holds :
-    fresnel_law
-
 namespace FresnelCoefficientReadout
 
 variable {State : Type*}
@@ -53,18 +47,6 @@ structure StatePolarizationEigenResponse
 
   /-- Geometric/material response in the `p` channel. -/
   responseP : State → ℂ
-
-  /-- Certificate that `responseS` is the calibrated `s` eigen-response. -/
-  s_eigen_law : Prop
-
-  s_eigen_law_holds :
-    s_eigen_law
-
-  /-- Certificate that `responseP` is the calibrated `p` eigen-response. -/
-  p_eigen_law : Prop
-
-  p_eigen_law_holds :
-    p_eigen_law
 
 namespace StatePolarizationEigenResponse
 
@@ -126,7 +108,9 @@ def spJonesEventOfFresnel
   coeff0 := F.rs U
   coeff1 := F.rp U
   tag := V4Tag.id
-  coherence := F.fresnel_law
+  coherence :=
+    diagJones (F.rs U) (F.rp U) 0 1 = 0 ∧
+      diagJones (F.rs U) (F.rp U) 1 0 = 0
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}
@@ -162,6 +146,14 @@ def spJonesEventOfFresnel
     (U : State) :
     (spJonesEventOfFresnel F U).jones 1 1 = F.rp U := by
   simp [spJonesEventOfFresnel]
+
+/-- The canonical Fresnel/Jones event is coherently diagonal. -/
+theorem spJonesEventOfFresnel_coherence
+    {State : Type*}
+    (F : FresnelCoefficientReadout State)
+    (U : State) :
+    (spJonesEventOfFresnel F U).coherence := by
+  simp [spJonesEventOfFresnel, diagJones]
 
 /--
 A calibration connecting material response to a Jones optical event.

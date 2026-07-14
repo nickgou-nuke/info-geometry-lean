@@ -1,7 +1,7 @@
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.EndpointHorizonArcsineKLClosedForm
-import Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
+import InfoGeometry.External.Automath.Omega.Conclusion.EndpointHorizonArcsineKLClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
 
 namespace Omega.DerivedConsequences
 

@@ -1,4 +1,4 @@
-import Omega.CircleDimension.KernelRKHSFeatureMap
+import InfoGeometry.External.Automath.Omega.CircleDimension.KernelRKHSFeatureMap
 
 namespace Omega.TypedAddressBiaxialCompletion
 

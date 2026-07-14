@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BoundaryHodgeStokesOrthogonalDecomposition
-import Omega.Folding.FoldBoundaryStokesTorsorH1H1
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryHodgeStokesOrthogonalDecomposition
+import InfoGeometry.External.Automath.Omega.Folding.FoldBoundaryStokesTorsorH1H1
 
 open scoped BigOperators
 

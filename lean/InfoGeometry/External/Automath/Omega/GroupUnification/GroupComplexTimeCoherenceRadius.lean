@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.GroupUnification.GroupJGDiscriminantFactorization
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGDiscriminantFactorization
 
 namespace Omega.GroupUnification
 

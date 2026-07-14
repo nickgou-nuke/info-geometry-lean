@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.Conclusion67ScaleBootstrap
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.Conclusion67ScaleBootstrap
 
 namespace Omega.UnitCirclePhaseArithmetic
 

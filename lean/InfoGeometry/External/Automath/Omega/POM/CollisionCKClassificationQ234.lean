@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Folding.CollisionKernel
-import Omega.POM.CollisionCKFibonacci
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.POM.CollisionCKFibonacci
 
 namespace Omega.POM
 

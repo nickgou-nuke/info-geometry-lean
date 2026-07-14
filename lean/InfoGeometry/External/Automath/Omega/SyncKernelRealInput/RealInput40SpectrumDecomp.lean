@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.TrivFactorPrimitivePolynomial
-import Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.TrivFactorPrimitivePolynomial
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
 
 namespace Omega.SyncKernelRealInput
 

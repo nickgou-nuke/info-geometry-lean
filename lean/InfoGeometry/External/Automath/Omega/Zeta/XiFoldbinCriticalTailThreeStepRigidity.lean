@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Fibonacci
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 open Filter
 

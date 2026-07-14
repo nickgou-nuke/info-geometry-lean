@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangLissajousChebyshevResultant
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangLissajousChebyshevResultant
 
 namespace Omega.UnitCirclePhaseArithmetic
 

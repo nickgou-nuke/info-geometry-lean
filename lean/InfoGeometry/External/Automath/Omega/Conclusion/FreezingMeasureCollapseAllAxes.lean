@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.POM.EscortMaxfiberTvBound
-import Omega.POM.FiniteZeroTempEscortUniformMaxfiber
-import Omega.Zeta.DerivedFixedFreezingRenyiSurface
+import InfoGeometry.External.Automath.Omega.POM.EscortMaxfiberTvBound
+import InfoGeometry.External.Automath.Omega.POM.FiniteZeroTempEscortUniformMaxfiber
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedFixedFreezingRenyiSurface
 
 namespace Omega.Conclusion
 

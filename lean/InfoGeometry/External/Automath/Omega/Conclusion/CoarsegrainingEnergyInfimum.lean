@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.CoarsegrainingStokesBeckChevalley
+import InfoGeometry.External.Automath.Omega.Conclusion.CoarsegrainingStokesBeckChevalley
 
 namespace Omega.Conclusion
 

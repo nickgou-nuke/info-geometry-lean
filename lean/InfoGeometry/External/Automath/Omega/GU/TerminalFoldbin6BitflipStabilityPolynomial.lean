@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
 
 namespace Omega.GU
 

@@ -1,4 +1,4 @@
-import Omega.POM.PhiLogisticPosteriorGrid
+import InfoGeometry.External.Automath.Omega.POM.PhiLogisticPosteriorGrid
 
 open scoped BigOperators
 

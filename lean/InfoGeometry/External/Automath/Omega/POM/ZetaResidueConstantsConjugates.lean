@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.CollisionZetaOperator
-import Omega.POM.CollisionKernelDiscriminant
-import Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.POM.CollisionKernelDiscriminant
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
 
 namespace Omega.POM
 

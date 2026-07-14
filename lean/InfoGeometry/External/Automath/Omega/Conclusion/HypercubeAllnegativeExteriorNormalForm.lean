@@ -1,4 +1,4 @@
-import Omega.Conclusion.HypercubeAllnegativeExactCompression
+import InfoGeometry.External.Automath.Omega.Conclusion.HypercubeAllnegativeExactCompression
 
 namespace Omega.Conclusion
 

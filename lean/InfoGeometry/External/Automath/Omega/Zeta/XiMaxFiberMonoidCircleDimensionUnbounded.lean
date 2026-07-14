@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
-import Omega.Zeta.MinimalAuditChainPrimeSupport
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Zeta.MinimalAuditChainPrimeSupport
 
 namespace Omega.Zeta
 

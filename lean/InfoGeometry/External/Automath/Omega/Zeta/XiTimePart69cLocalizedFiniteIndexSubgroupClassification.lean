@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedFiniteIndexLatticeGcdLcmMobius
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedFiniteIndexLatticeGcdLcmMobius
 
 namespace Omega.Zeta
 

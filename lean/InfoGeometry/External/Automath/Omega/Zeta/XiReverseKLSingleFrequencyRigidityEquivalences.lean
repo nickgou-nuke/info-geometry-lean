@@ -1,4 +1,4 @@
-import Omega.Zeta.XiReverseKLSingleFrequencyExactMinimizer
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLSingleFrequencyExactMinimizer
 
 namespace Omega.Zeta
 

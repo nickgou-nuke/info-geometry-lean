@@ -1,5 +1,5 @@
-import Omega.SPG.DoubleBudgetAddressCapacity
-import Omega.POM.SyncSubtractedChebotarevZeckendorf
+import InfoGeometry.External.Automath.Omega.SPG.DoubleBudgetAddressCapacity
+import InfoGeometry.External.Automath.Omega.POM.SyncSubtractedChebotarevZeckendorf
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 

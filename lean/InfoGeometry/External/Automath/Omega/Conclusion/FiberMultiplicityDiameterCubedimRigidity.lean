@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.FiberReconstructionCartesianProduct
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionCartesianProduct
 
 namespace Omega.Conclusion
 

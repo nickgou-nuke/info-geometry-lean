@@ -1,5 +1,5 @@
-import Omega.CircleDimension.DerivedPrimeRegisterTripleComplexitySplitting
-import Omega.CircleDimension.SolenoidVersusFiniteAdditiveLinearization
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedPrimeRegisterTripleComplexitySplitting
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidVersusFiniteAdditiveLinearization
 
 namespace Omega.DerivedConsequences
 

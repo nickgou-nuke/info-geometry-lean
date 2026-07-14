@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionReplicaSoftcoreTransfer
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionReplicaSoftcoreTransfer
 
 namespace Omega.POM
 

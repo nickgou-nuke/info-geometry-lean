@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.TimefiberPoissonProjectionPrinciple
+import InfoGeometry.External.Automath.Omega.Zeta.TimefiberPoissonProjectionPrinciple
 
 namespace Omega.Zeta
 

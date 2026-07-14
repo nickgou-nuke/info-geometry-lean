@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalReplicaSoftcoreExceptionalPowerSumM2ClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalReplicaSoftcoreExceptionalPowerSumM2ClosedForm
 
 namespace Omega.Zeta
 

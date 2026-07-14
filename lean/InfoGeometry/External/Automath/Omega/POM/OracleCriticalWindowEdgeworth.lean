@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.OracleCriticalWindowGaussian
+import InfoGeometry.External.Automath.Omega.POM.OracleCriticalWindowGaussian
 
 namespace Omega.POM
 

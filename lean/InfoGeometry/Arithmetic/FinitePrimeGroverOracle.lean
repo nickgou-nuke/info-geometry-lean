@@ -33,6 +33,11 @@ def phaseSign
     (a : α) : ℝ :=
   if marked a then -1 else 1
 
+lemma phaseSign_ne_zero
+    {α : Type*} (marked : α → Prop) [DecidablePred marked] (a : α) :
+    phaseSign marked a ≠ 0 := by
+  by_cases h : marked a <;> simp [phaseSign, h]
+
 /-- Phase sign squares to `1`. -/
 @[simp]
 theorem phaseSign_sq
@@ -69,6 +74,19 @@ def finiteAmplitudeNormSq
     (A : Finset α)
     (amp : α → ℝ) : ℝ :=
   ∑ a ∈ A, amp a ^ 2
+
+lemma finiteAmplitudeNormSq_nonneg
+    {α : Type*} (A : Finset α) (amp : α → ℝ) :
+    0 ≤ finiteAmplitudeNormSq A amp := by
+  unfold finiteAmplitudeNormSq
+  exact Finset.sum_nonneg (fun a _ha => sq_nonneg (amp a))
+
+lemma finiteAmplitudeNormSq_phaseOracle_nonneg
+    {α : Type*} (A : Finset α)
+    (marked : α → Prop) [DecidablePred marked]
+    (amp : α → ℝ) :
+    0 ≤ finiteAmplitudeNormSq A (phaseOracle marked amp) :=
+  finiteAmplitudeNormSq_nonneg A (phaseOracle marked amp)
 
 /-- The phase oracle preserves the finite squared amplitude norm. -/
 theorem finiteAmplitudeNormSq_phaseOracle

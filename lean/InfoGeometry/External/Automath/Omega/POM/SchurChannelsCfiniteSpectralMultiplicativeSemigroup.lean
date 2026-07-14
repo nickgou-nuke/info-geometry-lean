@@ -1,4 +1,4 @@
-import Omega.POM.PartitionMonomialsSymmetricPowerRealizationBound
+import InfoGeometry.External.Automath.Omega.POM.PartitionMonomialsSymmetricPowerRealizationBound
 
 namespace Omega.POM
 

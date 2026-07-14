@@ -1,4 +1,4 @@
-import Omega.Zeta.ZetaSyntaxZeckendorfPrimesNotSofic
+import InfoGeometry.External.Automath.Omega.Zeta.ZetaSyntaxZeckendorfPrimesNotSofic
 
 namespace Omega.Zeta
 

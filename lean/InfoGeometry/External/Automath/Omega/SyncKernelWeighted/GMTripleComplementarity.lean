@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.GMEnergyExponentTwistCriterion
-import Omega.SyncKernelWeighted.GMajorArcRigidityAffineAutocorr
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMEnergyExponentTwistCriterion
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMajorArcRigidityAffineAutocorr
 
 namespace Omega.SyncKernelWeighted
 

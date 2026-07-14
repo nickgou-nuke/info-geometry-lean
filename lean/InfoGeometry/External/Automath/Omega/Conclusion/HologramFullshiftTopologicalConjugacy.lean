@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CanonicalFixedpointFullshiftConjugacy
+import InfoGeometry.External.Automath.Omega.Conclusion.CanonicalFixedpointFullshiftConjugacy
 
 namespace Omega.Conclusion
 

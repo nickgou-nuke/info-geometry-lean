@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryParityBlindFiltration
-import Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryParityBlindFiltration
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
 
 namespace Omega.TypedAddressBiaxialCompletion
 

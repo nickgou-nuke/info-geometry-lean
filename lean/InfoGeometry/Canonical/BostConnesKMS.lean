@@ -7,22 +7,22 @@ import InfoGeometry.Arithmetic.BostConnesSystem
 This module gives a theorem-owned projection-evaluation corridor for
 the Bost--Connes KMS state.
 
-The full analytic Bost--Connes theorem and the identity `ζβ = ζ(β)` are not
-proved here.  They are deliberately represented by an explicit normalization
-parameter `ζβ`; analytic Euler-product/zeta facts belong to the zeta bridge.
+The partition sum is identified with `Re ζ(β)` in the convergence domain
+`1 < β`.  A full C*-algebraic KMS state is not constructed here.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
-* `S_hom_one`, `S_hom_mul`, `S_one`, `S_mul`, `S_isometry`, and
-  `S_orthogonal` re-export the proof-carrying multiplicative Cuntz indexing
-  owner.
+* `S_hom_one`, `S_hom_mul`, `S_one`, `S_mul`, and `S_isometry` re-export the
+  proof-carrying multiplicative isometry indexing owner.
 * `S_list_prod`, `S_prime_power`, and `S_prime_power_list_prod` expose
   factorization-compatible readbacks for arbitrary multiplicative words and
   explicit prime-power decompositions.
 * `kmsProjectionWeight_eq` unfolds the normalized Boltzmann weight
   `n^{-β}/ζβ`.
-* `kms_evaluation_on_projections` proves the documented projection formula
-  `φ(S_n^* S_m) = δ_{n,m} n^{-β}/ζβ`.
+* `bostConnesPartition_eq_riemannZeta_re` proves the zeta identification.
+* `tsum_normalizedBostConnesWeight` proves total normalized mass one.
+* `kms_evaluation_on_projections` proves the range-matrix formula
+  `φ(S_n S_m^*) = δ_{n,m} n^{-β}/ζβ`.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
@@ -31,8 +31,6 @@ parameter `ζβ`; analytic Euler-product/zeta facts belong to the zeta bridge.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
-* Prove or import the analytic identification `ζβ = ζ(β)` in the convergence
-  half-plane.
 * Lift this projection readout from the algebraic Cuntz-indexed projection
   basis to a genuine C*-KMS state on the completed Bost--Connes algebra.
 -/
@@ -102,13 +100,6 @@ theorem S_prime_isometry (C : BostConnesCuntzSystem Op)
     star (S_prime C p) * S_prime C p = 1 := by
   simpa [S_prime] using
     S_isometry C (MultiplicativeIndexing.primePNat p (Fact.out : p.Prime))
-
-/-
-/-- Orthogonality of the Cuntz branches. -/
-theorem S_orthogonal (C : BostConnesCuntzSystem Op) (n m : ℕ+) :
-    star (S C n) * S C m = if n = m then 1 else 0 := by
-  simpa [S] using C.generator_orthogonal n m
--/
 
 /--
 Ordered multiplicative word readback.
@@ -187,11 +178,81 @@ theorem kmsProjectionWeight_eq (β ζβ : ℝ) (n : ℕ+) :
     kmsProjectionWeight β ζβ n = ((n : ℕ) : ℝ) ^ (-β) / ζβ :=
   rfl
 
+/-- The convergent Bost--Connes partition sum over positive integers. -/
+def bostConnesPartition (β : ℝ) : ℝ :=
+  ∑' n : ℕ+, ((n : ℕ) : ℝ) ^ (-β)
+
+/-- The Bost--Connes Boltzmann summand is summable when `1 < β`. -/
+theorem summable_bostConnesWeight (β : ℝ) (hβ : 1 < β) :
+    Summable (fun n : ℕ+ => ((n : ℕ) : ℝ) ^ (-β)) := by
+  have hbase : Summable (fun n : ℕ => (n : ℝ) ^ (-β)) :=
+    Real.summable_nat_rpow.mpr (by linarith)
+  have hsucc : Summable (fun n : ℕ => ((n + 1 : ℕ) : ℝ) ^ (-β)) :=
+    (summable_nat_add_iff 1).mpr hbase
+  rw [← summable_pnat_iff_summable_succ
+    (f := fun n : ℕ => (n : ℝ) ^ (-β))] at hsucc
+  exact hsucc
+
+/-- In the convergence domain, the real partition sum is `Re ζ(β)`. -/
+theorem bostConnesPartition_eq_riemannZeta_re (β : ℝ) (hβ : 1 < β) :
+    bostConnesPartition β = (riemannZeta (β : ℂ)).re := by
+  have hs : 1 < (β : ℂ).re := by simpa using hβ
+  have hsumC : Summable (fun n : ℕ => 1 / (n + 1 : ℂ) ^ (β : ℂ)) := by
+    have hbase : Summable (fun n : ℕ => 1 / (n : ℂ) ^ (β : ℂ)) :=
+      Complex.summable_one_div_nat_cpow.mpr hs
+    simpa [Nat.cast_add, Nat.cast_one] using (summable_nat_add_iff 1).mpr hbase
+  rw [bostConnesPartition]
+  change (∑' n : ℕ+, ((n : ℕ) : ℝ) ^ (-β)) = _
+  rw [tsum_pnat_eq_tsum_succ
+    (f := fun n : ℕ => (n : ℝ) ^ (-β))]
+  rw [zeta_eq_tsum_one_div_nat_add_one_cpow hs, Complex.re_tsum hsumC]
+  apply tsum_congr
+  intro n
+  have hcast : (n : ℂ) + 1 = (((n + 1 : ℕ) : ℝ) : ℂ) := by norm_num
+  rw [hcast, ← Complex.ofReal_cpow
+    (by positivity : 0 ≤ ((n + 1 : ℕ) : ℝ)) β]
+  norm_cast
+  rw [one_div, ← Real.rpow_neg (by positivity : 0 ≤ ((n + 1 : ℕ) : ℝ))]
+
+/-- The partition function is strictly positive for `1 < β`. -/
+theorem bostConnesPartition_pos (β : ℝ) (hβ : 1 < β) :
+    0 < bostConnesPartition β := by
+  rw [bostConnesPartition_eq_riemannZeta_re β hβ]
+  exact riemannZeta_re_pos_of_one_lt hβ
+
+/-- The canonically normalized positive-integer Boltzmann weight. -/
+def normalizedBostConnesWeight (β : ℝ) (n : ℕ+) : ℝ :=
+  ((n : ℕ) : ℝ) ^ (-β) / bostConnesPartition β
+
+/-- The normalized Boltzmann weights have total mass one for `1 < β`. -/
+theorem tsum_normalizedBostConnesWeight (β : ℝ) (hβ : 1 < β) :
+    ∑' n : ℕ+, normalizedBostConnesWeight β n = 1 := by
+  rw [show (∑' n : ℕ+, normalizedBostConnesWeight β n) =
+      (∑' n : ℕ+, ((n : ℕ) : ℝ) ^ (-β)) / bostConnesPartition β by
+        simp only [normalizedBostConnesWeight, tsum_div_const]]
+  change bostConnesPartition β / bostConnesPartition β = 1
+  exact div_self (ne_of_gt (bostConnesPartition_pos β hβ))
+
+/-- Every normalized Bost--Connes weight is strictly positive for `1 < β`. -/
+theorem normalizedBostConnesWeight_pos (β : ℝ) (hβ : 1 < β) (n : ℕ+) :
+    0 < normalizedBostConnesWeight β n := by
+  exact div_pos
+    (Real.rpow_pos_of_pos (by exact_mod_cast n.pos) (-β))
+    (bostConnesPartition_pos β hβ)
+
+/-- Every normalized Bost--Connes weight is at most one. -/
+theorem normalizedBostConnesWeight_le_one (β : ℝ) (hβ : 1 < β) (n : ℕ+) :
+    normalizedBostConnesWeight β n ≤ 1 := by
+  apply (div_le_one (bostConnesPartition_pos β hβ)).2
+  rw [bostConnesPartition]
+  exact (summable_bostConnesWeight β hβ).le_tsum n fun m _ =>
+    Real.rpow_nonneg (Nat.cast_nonneg m) (-β)
+
 /--
 Projection-level KMS readout.
 
 This is not packaged as a global state on all of `Op`; it is the closed
-projection-basis formula for `φ(S_n^* S_m)`.
+range-matrix formula for `φ(S_n S_m^*)`.
 -/
 def kmsProjectionReadout (β ζβ : ℝ) (n m : ℕ+) : ℝ :=
   if n = m then kmsProjectionWeight β ζβ n else 0
@@ -219,7 +280,7 @@ structure KMSProjectionState (C : BostConnesCuntzSystem Op) where
   ζβ : ℝ
   φ : Op → ℝ
   eval_projection :
-    ∀ n m : ℕ+, φ (star (S C n) * S C m) = kmsProjectionReadout β ζβ n m
+    ∀ n m : ℕ+, φ (S C n * star (S C m)) = kmsProjectionReadout β ζβ n m
 
 namespace KMSProjectionState
 
@@ -228,11 +289,11 @@ variable {C : BostConnesCuntzSystem Op}
 /--
 The documented Bost--Connes KMS projection evaluation:
 
-`φ(S_n^* S_m) = δ_{n,m} · n^{-β} / ζβ`.
+`φ(S_n S_m^*) = δ_{n,m} · n^{-β} / ζβ`.
 -/
 theorem kms_evaluation_on_projections
     (Φ : KMSProjectionState C) (n m : ℕ+) :
-    Φ.φ (star (S C n) * S C m) =
+    Φ.φ (S C n * star (S C m)) =
       if n = m then ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ else 0 := by
   rw [Φ.eval_projection n m]
   by_cases h : n = m
@@ -242,13 +303,13 @@ theorem kms_evaluation_on_projections
 /-- Diagonal version of `kms_evaluation_on_projections`. -/
 theorem kms_evaluation_on_diagonal_projection
     (Φ : KMSProjectionState C) (n : ℕ+) :
-    Φ.φ (star (S C n) * S C n) = ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ := by
+    Φ.φ (S C n * star (S C n)) = ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ := by
   simpa using Φ.kms_evaluation_on_projections n n
 
 /-- Off-diagonal version of `kms_evaluation_on_projections`. -/
 theorem kms_evaluation_on_off_diagonal_projection
     (Φ : KMSProjectionState C) {n m : ℕ+} (h : n ≠ m) :
-    Φ.φ (star (S C n) * S C m) = 0 := by
+    Φ.φ (S C n * star (S C m)) = 0 := by
   simpa [h] using Φ.kms_evaluation_on_projections n m
 
 /--
@@ -261,7 +322,7 @@ Kronecker/normalized-Boltzmann formula.
 -/
 theorem kms_evaluation_on_word_products
     (Φ : KMSProjectionState C) (ns ms : List ℕ+) :
-    Φ.φ (star (S C ns.prod) * S C ms.prod) =
+    Φ.φ (S C ns.prod * star (S C ms.prod)) =
       if ns.prod = ms.prod then
         (((ns.prod : ℕ+) : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ
       else 0 := by

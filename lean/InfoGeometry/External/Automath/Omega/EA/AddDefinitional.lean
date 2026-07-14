@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.Folding.FiberRing
+import InfoGeometry.External.Automath.Omega.Folding.FiberRing
 
 namespace Omega.EA
 

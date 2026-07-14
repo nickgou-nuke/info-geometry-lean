@@ -1,4 +1,4 @@
-import Omega.Zeta.XiBasepointScanCodim1ExactGreedyWeightIndependence
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanCodim1ExactGreedyWeightIndependence
 
 namespace Omega.Zeta
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Tactic
-import Omega.POM.LucasPrimeCongruence
-import Omega.POM.PrimitivePrimeLucas
+import InfoGeometry.External.Automath.Omega.POM.LucasPrimeCongruence
+import InfoGeometry.External.Automath.Omega.POM.PrimitivePrimeLucas
 
 namespace Omega.POM
 

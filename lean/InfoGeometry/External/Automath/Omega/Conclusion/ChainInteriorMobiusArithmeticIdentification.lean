@@ -1,5 +1,5 @@
-import Omega.Folding.KilloChainInteriorGodelGcdLcm
-import Omega.Zeta.XiChainInteriorBooleanMobiusCharacteristicMaxchains
+import InfoGeometry.External.Automath.Omega.Folding.KilloChainInteriorGodelGcdLcm
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorBooleanMobiusCharacteristicMaxchains
 
 namespace Omega.Conclusion
 

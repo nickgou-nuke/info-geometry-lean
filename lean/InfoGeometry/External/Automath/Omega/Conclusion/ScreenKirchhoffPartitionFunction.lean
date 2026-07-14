@@ -1,4 +1,4 @@
-import Omega.Conclusion.ScreenKirchhoffDeletionContraction
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenKirchhoffDeletionContraction
 
 namespace Omega.Conclusion
 

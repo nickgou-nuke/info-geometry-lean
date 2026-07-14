@@ -1,4 +1,4 @@
-import Omega.Topos.VisibleValueComponents
+import InfoGeometry.External.Automath.Omega.Topos.VisibleValueComponents
 
 namespace Omega.Topos
 

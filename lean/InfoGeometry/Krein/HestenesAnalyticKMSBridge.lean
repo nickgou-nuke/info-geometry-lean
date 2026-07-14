@@ -6,7 +6,6 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
 /-!
@@ -51,7 +50,7 @@ Hestenes-analytic KMS adapter.
 linear operator is `KLinear`, i.e. commutation with `K`.
 -/
 @[rep_depth krein]
-structure HestenesAnalyticKMSBridge where
+structure Bridge where
   /-- Operator flow, e.g. a modular flow, on doubled real observables. -/
   flow :
     OperatorFlow EndH
@@ -84,9 +83,9 @@ structure HestenesAnalyticKMSBridge where
   kms :
     KMSState EndH flow beta
 
-namespace HestenesAnalyticKMSBridge
+namespace Bridge
 
-variable (B : HestenesAnalyticKMSBridge (E := E))
+variable (B : Bridge (E := E))
 
 /-- Readback: the flow preserves Hestenes analyticity / real complex-linearity. -/
 @[rep_depth krein]
@@ -127,7 +126,7 @@ theorem kms_flow_invariant
     B.kms.state.eval (B.flow.flow t x) = B.kms.state.eval x :=
   B.kms.flow_invariant t x
 
-end HestenesAnalyticKMSBridge
+end Bridge
 
 end Core
 

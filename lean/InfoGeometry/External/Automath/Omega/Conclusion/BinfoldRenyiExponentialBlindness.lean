@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
-import Omega.GU.TimeUnitLogphiProtocol
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
+import InfoGeometry.External.Automath.Omega.GU.TimeUnitLogphiProtocol
 
 namespace Omega.Conclusion
 

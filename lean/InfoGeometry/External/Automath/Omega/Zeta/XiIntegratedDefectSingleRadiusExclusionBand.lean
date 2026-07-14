@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiOffcriticalCountBoundByIntegratedDefect
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffcriticalCountBoundByIntegratedDefect
 
 namespace Omega.Zeta
 

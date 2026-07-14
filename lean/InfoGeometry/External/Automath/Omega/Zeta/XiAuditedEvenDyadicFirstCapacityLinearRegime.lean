@@ -1,4 +1,4 @@
-import Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
+import InfoGeometry.External.Automath.Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
 
 namespace Omega.Zeta
 

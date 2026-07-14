@@ -59,6 +59,12 @@ theorem positiveGibbsWeight_nonneg
   unfold positiveGibbsWeight
   positivity
 
+lemma positiveGibbsWeight_pos
+    {State : Type*} (energy : State → ℝ) (β : ℝ) (s : State) :
+    0 < positiveGibbsWeight energy β s := by
+  unfold positiveGibbsWeight
+  positivity
+
 /-- Finite positive Gibbs partitions are nonnegative. -/
 theorem positivePartition_nonneg
     {State : Type*} [Fintype State]
@@ -67,6 +73,22 @@ theorem positivePartition_nonneg
     0 ≤ positivePartition energy β := by
   unfold positivePartition
   exact Finset.sum_nonneg (fun s _hs => positiveGibbsWeight_nonneg energy β s)
+
+lemma positivePartition_pos
+    {State : Type*} [Fintype State] [Nonempty State]
+    (energy : State → ℝ) (β : ℝ) :
+    0 < positivePartition energy β := by
+  unfold positivePartition
+  exact Finset.sum_pos (fun s _hs => positiveGibbsWeight_pos energy β s)
+    (Finset.univ_nonempty)
+
+lemma finiteGibbsDensity_nonneg
+    {State : Type*} [Fintype State]
+    (energy : State → ℝ) (β : ℝ) (s : State)
+    (hZ : 0 ≤ positivePartition energy β) :
+    0 ≤ finiteGibbsDensity energy β s := by
+  unfold finiteGibbsDensity
+  exact div_nonneg (positiveGibbsWeight_nonneg energy β s) hZ
 
 /-- If the finite partition is nonzero, the normalized Gibbs density sums to `1`. -/
 theorem finiteGibbsDensity_sum_eq_one
@@ -93,6 +115,10 @@ variable {State : Type*} [Fintype State] (P : PositiveGibbsKMSPacket State)
 
 /-- Derived partition function. -/
 def partition : ℝ := positivePartition P.energy P.beta
+
+lemma partition_pos [Nonempty State] :
+    0 < P.partition := by
+  exact positivePartition_pos P.energy P.beta
 
 /-- Derived state on observables. -/
 def state : (State → ℝ) → ℝ :=

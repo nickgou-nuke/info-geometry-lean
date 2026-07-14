@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.ZMod.Basic
-import Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
 
 namespace Omega.Conclusion
 

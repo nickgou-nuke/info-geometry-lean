@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.CircleDimension.PoissonCentralSliceKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonCentralSliceKernel
 
 namespace Omega.Conclusion
 

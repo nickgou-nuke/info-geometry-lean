@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Zeta.P7ChebotarevSplittingDensity
-import Omega.Zeta.XiTerminalZmLeyangMonodromyS4
-import Omega.Zeta.XiTerminalZmS4LanglandsFactorTorusRankConductorTable
+import InfoGeometry.External.Automath.Omega.Zeta.P7ChebotarevSplittingDensity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangMonodromyS4
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS4LanglandsFactorTorusRankConductorTable
 
 namespace Omega.Zeta
 

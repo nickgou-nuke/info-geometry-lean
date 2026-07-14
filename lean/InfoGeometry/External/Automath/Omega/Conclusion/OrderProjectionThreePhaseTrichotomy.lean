@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FreeEnergyGatesMonotonicityObstruction
-import Omega.POM.BooleanCircuitProjectionBudget
-import Omega.POM.FirstfitExtensionalUndecidable
-import Omega.POM.ValPolynomialSemantics
+import InfoGeometry.External.Automath.Omega.Conclusion.FreeEnergyGatesMonotonicityObstruction
+import InfoGeometry.External.Automath.Omega.POM.BooleanCircuitProjectionBudget
+import InfoGeometry.External.Automath.Omega.POM.FirstfitExtensionalUndecidable
+import InfoGeometry.External.Automath.Omega.POM.ValPolynomialSemantics
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Multiset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SmithEntropyMinDepth
+import InfoGeometry.External.Automath.Omega.Zeta.SmithEntropyMinDepth
 
 namespace Omega.Zeta
 

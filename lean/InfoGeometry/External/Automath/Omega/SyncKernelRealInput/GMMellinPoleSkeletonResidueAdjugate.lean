@@ -1,4 +1,4 @@
-import Omega.SyncKernelRealInput.GMMellinMeromorphicFingerprint
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMMellinMeromorphicFingerprint
 
 namespace Omega.SyncKernelRealInput
 

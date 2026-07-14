@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.BiaxialNonsubstitutable
-import Omega.TypedAddressBiaxialCompletion.BoundaryAddressCollision
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BiaxialNonsubstitutable
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryAddressCollision
 
 namespace Omega.TypedAddressBiaxialCompletion
 

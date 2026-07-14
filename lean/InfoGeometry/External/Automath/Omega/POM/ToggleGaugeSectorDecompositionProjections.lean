@@ -1,6 +1,6 @@
 import Mathlib
 import Mathlib.Tactic
-import Omega.POM.ToggleGaugeInvariantEndomorphismsC2Tensor
+import InfoGeometry.External.Automath.Omega.POM.ToggleGaugeInvariantEndomorphismsC2Tensor
 
 namespace Omega.POM
 

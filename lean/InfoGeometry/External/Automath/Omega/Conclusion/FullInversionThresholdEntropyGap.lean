@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FoldCapacityWedderburnExactBitThreshold
-import Omega.Conclusion.MaxentropyGapEqualsLogMaxfiber
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldCapacityWedderburnExactBitThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.MaxentropyGapEqualsLogMaxfiber
 
 namespace Omega.Conclusion
 

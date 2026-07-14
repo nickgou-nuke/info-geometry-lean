@@ -48,7 +48,7 @@ def concreteRotorFlowKlein
   rotorInv_zero := concreteRotorFlowKlein_rotorInv_zero
   rotor_left_inv := concreteRotorFlowKlein_rotor_left_inv
   rotor_right_inv := concreteRotorFlowKlein_rotor_right_inv
-  rotor_group_True := concreteRotorFlowKlein_rotor_group
+  rotor_group := concreteRotorFlowKlein_rotor_group
   fixedByFlow := concreteRotorFlowKlein_fixedByFlow D
   fixedByFlow_iff_monogenic := concreteRotorFlowKlein_fixedByFlow_iff_monogenic D
 

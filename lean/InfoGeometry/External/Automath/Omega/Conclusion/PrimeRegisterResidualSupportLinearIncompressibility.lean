@@ -1,4 +1,4 @@
-import Omega.Conclusion.LinearExternalizationLiminf
+import InfoGeometry.External.Automath.Omega.Conclusion.LinearExternalizationLiminf
 
 namespace Omega.Conclusion
 

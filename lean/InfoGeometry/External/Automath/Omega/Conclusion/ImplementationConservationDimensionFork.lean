@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
 
 namespace Omega.Conclusion
 

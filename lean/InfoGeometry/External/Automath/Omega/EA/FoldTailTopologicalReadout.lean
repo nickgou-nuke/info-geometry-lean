@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.EA.FoldGroupoidAut0RationalCohomology
+import InfoGeometry.External.Automath.Omega.EA.FoldGroupoidAut0RationalCohomology
 
 namespace Omega.EA
 

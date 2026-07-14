@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedLeyangArtinMazurZeta
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangArtinMazurZeta
 
 namespace Omega.Zeta
 

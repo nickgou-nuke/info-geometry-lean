@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangBranchCoverSquareRoot
-import Omega.UnitCirclePhaseArithmetic.LeyangLissajousSingularRingNormalForm
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangBranchCoverSquareRoot
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangLissajousSingularRingNormalForm
 
 namespace Omega.UnitCirclePhaseArithmetic
 

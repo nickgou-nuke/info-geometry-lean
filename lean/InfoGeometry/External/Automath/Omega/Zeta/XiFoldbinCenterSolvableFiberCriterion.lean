@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
 
 namespace Omega.Zeta
 

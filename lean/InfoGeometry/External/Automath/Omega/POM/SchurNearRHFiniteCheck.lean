@@ -1,4 +1,4 @@
-import Omega.POM.SchurNearRhLinearInequalityComplete
+import InfoGeometry.External.Automath.Omega.POM.SchurNearRhLinearInequalityComplete
 
 namespace Omega.POM
 

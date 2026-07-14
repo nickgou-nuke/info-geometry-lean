@@ -1,4 +1,4 @@
-import Omega.POM.SchurTomographyInversePartitionMonomials
+import InfoGeometry.External.Automath.Omega.POM.SchurTomographyInversePartitionMonomials
 
 namespace Omega.POM
 

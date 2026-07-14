@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.OperatorAlgebra.FoldInfoNCEBayesOpt
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCEBayesOpt
 
 open Filter Topology
 

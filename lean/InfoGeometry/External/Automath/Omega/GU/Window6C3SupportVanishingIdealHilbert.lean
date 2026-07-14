@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.Window6C3SupportCount
+import InfoGeometry.External.Automath.Omega.GU.Window6C3SupportCount
 
 namespace Omega.GU
 

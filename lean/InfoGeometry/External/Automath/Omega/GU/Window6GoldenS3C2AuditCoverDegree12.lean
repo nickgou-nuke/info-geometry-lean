@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
-import Omega.GU.Window6EdgeFluxCoarseMarkovGalois
-import Omega.GU.Window6GoldenS3C2C6PhaseSource
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxCoarseMarkovGalois
+import InfoGeometry.External.Automath.Omega.GU.Window6GoldenS3C2C6PhaseSource
 
 namespace Omega.GU
 

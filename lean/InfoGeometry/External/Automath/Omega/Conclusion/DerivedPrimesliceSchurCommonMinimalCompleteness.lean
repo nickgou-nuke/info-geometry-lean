@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Basic
-import Omega.POM.ProjectionAsPartitionPrimeRegister
-import Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
+import InfoGeometry.External.Automath.Omega.POM.ProjectionAsPartitionPrimeRegister
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
 
 namespace Omega.Conclusion
 

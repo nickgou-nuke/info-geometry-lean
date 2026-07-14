@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Data.Fin.SuccPredOrder
 import Mathlib.Order.Interval.Finset.Fin
-import Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
 
 namespace Omega
 

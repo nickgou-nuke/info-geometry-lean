@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Conclusion.ContinuousPressureFrontDominatesDiscreteCertificate
+import InfoGeometry.External.Automath.Omega.Conclusion.ContinuousPressureFrontDominatesDiscreteCertificate
 
 open Filter Topology
 

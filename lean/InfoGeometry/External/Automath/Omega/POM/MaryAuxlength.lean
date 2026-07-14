@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Nat.Log
-import Omega.POM.MaryAuxlengthSeeds
+import InfoGeometry.External.Automath.Omega.POM.MaryAuxlengthSeeds
 
 namespace Omega.POM
 

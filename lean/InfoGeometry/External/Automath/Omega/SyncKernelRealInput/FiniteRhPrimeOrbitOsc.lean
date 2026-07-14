@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40ResidueConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40ResidueConstant
 
 namespace Omega.SyncKernelRealInput
 

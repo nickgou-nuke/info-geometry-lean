@@ -4,11 +4,11 @@ import InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 /-!
 InfoGeometry/OperatorAlgebra/DrazinEntropyFunctional.lean
 
-Witness-gated Drazin entropy functional.
+Drazin entropy functional.
 
 This module formalizes the conservative statement:
 
-* Drazin data separates a regular/stable readout from nilpotent residue data;
+* Drazin data separate a regular/stable readout from nilpotent residue data;
 * entropy is not produced by Drazin inversion alone;
 * entropy is obtained only after a supplied stable-volume, trace, or finite
   microstate-count calibration.
@@ -29,7 +29,7 @@ A stable Drazin readout over a state space.
 
 `regularPart`, `nilpotentResidue`, and `drazinInverse` are intentionally carried
 as data. The law fields are proposition-valued predicates tied to the state and
-are accompanied by certificates on valid states.
+are accompanied by explicit proofs on valid states.
 -/
 structure DrazinStableReadout (Op State : Type*) where
   /-- Operator or algebra element attached to a state. -/
@@ -59,14 +59,14 @@ namespace DrazinStableReadout
 
 variable {Op State : Type*}
 
-/-- The supplied decomposition certificate is available on valid states. -/
+/-- The supplied decomposition proof is available on valid states. -/
 theorem decomposition_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
     D.decompositionLaw s :=
   D.decomposition_holds s hs
 
-/-- The supplied Drazin certificate is available on valid states. -/
+/-- The supplied Drazin proof is available on valid states. -/
 theorem drazin_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
@@ -272,40 +272,40 @@ theorem entropy_eq_kB_log_gwVolume
 end DrazinGWVolumeCalibration
 
 /--
-Operator-information extraction packet.
+Operator-information extraction tied directly to the Drazin readout.
 
-This packages the interpretation that Drazin regularization extracts the stable
-information-bearing component while retaining the nilpotent residue as an
-explicit boundary/singularity datum.
+The extracted stable component is explicitly the regular part, and the
+singular component is explicitly the nilpotent residue.  This avoids arbitrary
+proposition-valued law sockets that would not add mathematical content.
 -/
-structure DrazinInformationExtractionPacket (Op State Info Residue : Type*) where
+structure DrazinInformationExtraction (Op State : Type*) where
   readout : DrazinStableReadout Op State
-  stableInformation : State -> Info
-  singularResidue : State -> Residue
-  stableInformationLaw : State -> Prop
-  singularResidueLaw : State -> Prop
-  stableInformation_holds :
-    ∀ s : State, readout.valid s -> stableInformationLaw s
-  singularResidue_holds :
-    ∀ s : State, readout.valid s -> singularResidueLaw s
+  stableInformation : State -> Op
+  singularResidue : State -> Op
+  stableInformation_eq_regularPart :
+    ∀ s : State, readout.valid s ->
+      stableInformation s = readout.regularPart s
+  singularResidue_eq_nilpotentResidue :
+    ∀ s : State, readout.valid s ->
+      singularResidue s = readout.nilpotentResidue s
 
-namespace DrazinInformationExtractionPacket
+namespace DrazinInformationExtraction
 
-variable {Op State Info Residue : Type*}
-variable (P : DrazinInformationExtractionPacket Op State Info Residue)
+variable {Op State : Type*}
+variable (P : DrazinInformationExtraction Op State)
 
-/-- Stable information law is available on valid states. -/
-theorem stableInformation_holds_readback
+/-- Stable information is the regular Drazin readout on valid states. -/
+theorem stableInformation_eq_regularPart_readback
     (s : State) (hs : P.readout.valid s) :
-    P.stableInformationLaw s :=
-  P.stableInformation_holds s hs
+    P.stableInformation s = P.readout.regularPart s :=
+  P.stableInformation_eq_regularPart s hs
 
-/-- Singular residue law is available on valid states. -/
-theorem singularResidue_holds_readback
+/-- Singular residue is the nilpotent Drazin readout on valid states. -/
+theorem singularResidue_eq_nilpotentResidue_readback
     (s : State) (hs : P.readout.valid s) :
-    P.singularResidueLaw s :=
-  P.singularResidue_holds s hs
+    P.singularResidue s = P.readout.nilpotentResidue s :=
+  P.singularResidue_eq_nilpotentResidue s hs
 
-end DrazinInformationExtractionPacket
+end DrazinInformationExtraction
 
 end InfoGeometry.OperatorAlgebra

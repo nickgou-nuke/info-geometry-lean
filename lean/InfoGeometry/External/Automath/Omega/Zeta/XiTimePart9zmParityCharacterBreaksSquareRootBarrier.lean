@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart58aDirichletMinimalWitnessWorstExponent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart58aDirichletMinimalWitnessWorstExponent
 
 namespace Omega.Zeta
 

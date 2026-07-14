@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiJensenBoundaryPotentialFiniteDefectExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenBoundaryPotentialFiniteDefectExplicit
 
 namespace Omega.Zeta
 

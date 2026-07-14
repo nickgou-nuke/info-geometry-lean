@@ -1,4 +1,4 @@
-import Omega.POM.ThetaGodelizationPrimeValuationIsometry
+import InfoGeometry.External.Automath.Omega.POM.ThetaGodelizationPrimeValuationIsometry
 
 namespace Omega.POM
 

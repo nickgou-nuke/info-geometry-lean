@@ -1,4 +1,4 @@
-import Omega.DerivedConsequences.DerivedZGSimplePoleDensityResidue
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedZGSimplePoleDensityResidue
 
 namespace Omega.DerivedConsequences
 

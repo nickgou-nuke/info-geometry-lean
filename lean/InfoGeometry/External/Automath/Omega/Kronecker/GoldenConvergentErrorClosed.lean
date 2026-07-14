@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega.Kronecker
 

@@ -26,12 +26,24 @@ theorem ratio_converges_to_phi :
 theorem most_irrational_barrier : Irrational goldenRatio := by
   simpa [goldenRatio] using Real.goldenRatio_irrational
 
-/-- The prime-counting readout is kept as a heuristic placeholder here.
-    The asymptotic prime-distribution claim remains an open debt.
-    Currently a numerical witness in SymPy only.
-    Status: requires analytic number theory formalization. -/
-theorem prime_counting_on_lattice :
-    Tendsto (fun n : ℕ ↦ (π (latticeDimension n) : ℝ) / ((latticeDimension n : ℝ) / Real.log (latticeDimension n)))
-      atTop (nhds 1) := sorry
+theorem latticeDimension_tendsto_atTop : Tendsto latticeDimension atTop atTop := by
+  refine Nat.fib_mono.tendsto_atTop_atTop ?_
+  intro b
+  refine ⟨max b 5, ?_⟩
+  have hb : b ≤ max b 5 := le_max_left _ _
+  have h5 : 5 ≤ max b 5 := le_max_right _ _
+  exact le_trans hb (Nat.le_fib_self h5)
+
+/-- Conditional transport of the prime-counting asymptotic to the Fibonacci lattice.
+    This is the honest local theorem available in mathlib: if the prime-counting
+    asymptotic is supplied on `ℕ`, then it holds after reindexing by `latticeDimension`. -/
+theorem prime_counting_on_lattice
+    (h_pnt :
+      Tendsto (fun n : ℕ ↦ (π n : ℝ) / ((n : ℝ) / Real.log n)) atTop (nhds 1)) :
+    Tendsto
+      (fun n : ℕ ↦
+        (π (latticeDimension n) : ℝ) / ((latticeDimension n : ℝ) / Real.log (latticeDimension n)))
+      atTop (nhds 1) := by
+  simpa [latticeDimension] using h_pnt.comp latticeDimension_tendsto_atTop
 
 end InfoGeometry.Canonical.PrimeFibonacciLattice

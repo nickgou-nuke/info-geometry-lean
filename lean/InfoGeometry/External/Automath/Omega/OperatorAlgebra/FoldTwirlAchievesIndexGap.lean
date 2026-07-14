@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldOptimalDelinkingCurve
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOptimalDelinkingCurve
 
 namespace Omega.OperatorAlgebra
 

@@ -1,4 +1,4 @@
-import Omega.POM.DerivedFiberIndcomplexAlternatingWittenParity
+import InfoGeometry.External.Automath.Omega.POM.DerivedFiberIndcomplexAlternatingWittenParity
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldEscortLogMultiplicityTwoAtom
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldEscortLogMultiplicityTwoAtom
 
 namespace Omega.Zeta
 

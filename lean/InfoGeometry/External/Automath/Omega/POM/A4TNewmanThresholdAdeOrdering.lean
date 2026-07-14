@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.CollisionKernel
-import Omega.SyncKernelWeighted.WeightedNewmanThreshold
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedNewmanThreshold
 
 namespace Omega.POM
 

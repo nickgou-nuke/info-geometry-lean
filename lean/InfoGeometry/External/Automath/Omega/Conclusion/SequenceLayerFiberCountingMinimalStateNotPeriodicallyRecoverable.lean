@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Tactic
-import Omega.Conclusion.FoldHilbertRecognizable
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldHilbertRecognizable
 
 namespace Omega.Conclusion
 

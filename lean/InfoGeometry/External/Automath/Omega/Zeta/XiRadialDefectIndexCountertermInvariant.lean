@@ -1,6 +1,6 @@
-import Omega.Zeta.FiniteDefectCompleteReconstruction
-import Omega.Zeta.XiRadialStokesCurvatureCountertermObstruction
-import Omega.Zeta.XiSingleScaleRadialDeviationArcosh
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiRadialStokesCurvatureCountertermObstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleScaleRadialDeviationArcosh
 
 namespace Omega.Zeta
 

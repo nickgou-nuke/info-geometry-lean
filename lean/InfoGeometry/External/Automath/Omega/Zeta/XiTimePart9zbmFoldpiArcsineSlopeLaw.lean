@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9zbmFoldpiPointwiseSlopeRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zbmFoldpiPointwiseSlopeRigidity
 
 namespace Omega.Zeta
 

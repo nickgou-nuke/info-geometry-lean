@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberSignedIndexPeriodicity
+import InfoGeometry.External.Automath.Omega.POM.FiberSignedIndexPeriodicity
 
 namespace Omega.POM
 

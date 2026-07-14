@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic
-import Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
+import InfoGeometry.External.Automath.Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9xfGoldenMetallicLogcostMinimizer
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xfGoldenMetallicLogcostMinimizer
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Conclusion.Period3FiberExactMultiplicity
-import Omega.Folding.FixedFiberLedgerComplexity
+import InfoGeometry.External.Automath.Omega.Conclusion.Period3FiberExactMultiplicity
+import InfoGeometry.External.Automath.Omega.Folding.FixedFiberLedgerComplexity
 
 namespace Omega.Conclusion
 

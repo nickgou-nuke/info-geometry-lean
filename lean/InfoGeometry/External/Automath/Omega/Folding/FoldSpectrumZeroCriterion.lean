@@ -1,4 +1,4 @@
-import Omega.Folding.FoldSpectrumFactorization
+import InfoGeometry.External.Automath.Omega.Folding.FoldSpectrumFactorization
 
 open scoped BigOperators
 

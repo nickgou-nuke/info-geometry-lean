@@ -1,5 +1,5 @@
-import Omega.Zeta.Conclusion62MellinRational
-import Omega.Zeta.FiniteRhPhaseLift
+import InfoGeometry.External.Automath.Omega.Zeta.Conclusion62MellinRational
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteRhPhaseLift
 
 namespace Omega.Conclusion
 

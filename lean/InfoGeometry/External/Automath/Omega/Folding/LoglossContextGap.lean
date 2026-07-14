@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.EpsilonMachineStationaryFibonacciTail
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineStationaryFibonacciTail
 
 namespace Omega.Folding
 

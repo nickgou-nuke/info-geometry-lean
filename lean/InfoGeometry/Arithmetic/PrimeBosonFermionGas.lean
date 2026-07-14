@@ -33,6 +33,30 @@ def positiveFermionPartition (S : Finset ι) (x : ι → R) : R :=
 def bosonPartition (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 - x p)⁻¹
 
+omit [Field R] in
+lemma signedFermionPartition_pos
+    (S : Finset ι) (x : ι → ℝ)
+    (h : ∀ p ∈ S, 0 < 1 - x p) :
+    0 < signedFermionPartition S x := by
+  unfold signedFermionPartition
+  exact Finset.prod_pos h
+
+omit [Field R] in
+lemma positiveFermionPartition_pos
+    (S : Finset ι) (x : ι → ℝ)
+    (h : ∀ p ∈ S, 0 < 1 + x p) :
+    0 < positiveFermionPartition S x := by
+  unfold positiveFermionPartition
+  exact Finset.prod_pos h
+
+omit [Field R] in
+lemma bosonPartition_pos
+    (S : Finset ι) (x : ι → ℝ)
+    (h : ∀ p ∈ S, 0 < 1 - x p) :
+    0 < bosonPartition S x := by
+  unfold bosonPartition
+  exact Finset.prod_pos (fun p hp => inv_pos.mpr (h p hp))
+
 /--
 Finite boson × signed-fermion cancellation.
 

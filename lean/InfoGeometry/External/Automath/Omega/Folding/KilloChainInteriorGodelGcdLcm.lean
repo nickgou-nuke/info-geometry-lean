@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Tactic
-import Omega.Core.FiberLatticeSquarefree
+import InfoGeometry.External.Automath.Omega.Core.FiberLatticeSquarefree
 
 namespace Omega.Folding
 

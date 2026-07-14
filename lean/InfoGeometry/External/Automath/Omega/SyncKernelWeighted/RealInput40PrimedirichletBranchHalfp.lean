@@ -1,8 +1,8 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40PrimedirichletBranchInherit
-import Omega.SyncKernelRealInput.FiniteRh40
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimedirichletBranchInherit
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.FiniteRh40
 
 namespace Omega.SyncKernelWeighted
 

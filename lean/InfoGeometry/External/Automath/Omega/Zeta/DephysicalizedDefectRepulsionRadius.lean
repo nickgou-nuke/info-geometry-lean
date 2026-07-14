@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
-import Omega.UnitCirclePhaseArithmetic.AppJensenRepulsionRadiusToOne
-import Omega.UnitCirclePhaseArithmetic.AppJensenZeroRepulsionSubdisk
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenRepulsionRadiusToOne
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenZeroRepulsionSubdisk
 
 open Filter
 

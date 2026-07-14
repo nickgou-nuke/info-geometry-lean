@@ -1,7 +1,7 @@
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
-import Omega.GroupUnification.GroupJGFoldSquarefreeExternalization
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGFoldSquarefreeExternalization
 
 namespace Omega.GroupUnification
 

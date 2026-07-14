@@ -31,7 +31,8 @@ It packages these kernel-checked components:
 - conditional RH readout from supplied prime Lee-Yang witnesses;
 - finite Yang-Baxter matrix parameters;
 - finite Fibonacci golden-ratio and phase readouts;
-- combinatorial Dirac-sea vacuum and interface-step nilpotence.
+- combinatorial Dirac-sea vacuum and interface-step nilpotence;
+- verified categorical Fibonacci pentagon and hexagon coherence.
 
 The module also defines:
 
@@ -53,7 +54,6 @@ Do not claim the repository has proved any of the following unconditionally:
 - phase-space shattering onto the Cantor boundary as an analytic convergence
   theorem;
 - full Cuntz-to-Fibonacci boundary functor;
-- categorical Fibonacci pentagon and hexagon coherence;
 - full braided-category instance from the finite matrix readout;
 - unconditional RH/Lee-Yang theorem;
 - anomaly cancellation derived from the full analytic Bost-Connes system.
@@ -70,7 +70,6 @@ unless the owner theorem has been proved:
 - "zero-temperature crystallization is proved";
 - "the Bost-Connes partition function is formalized";
 - "the Cantor boundary crystallization theorem is axiom-free";
-- "Fibonacci pentagon/hexagon coherence is closed";
 - "RH follows from the prime Lee-Yang route" without saying `conditional`.
 
 ## Safe Wording
@@ -82,9 +81,9 @@ The repository currently contains a verified finite/local
 Souriau-Bost-Connes transition matrix. It packages owner-backed facts about
 finite prime Weyl denominators, Cayley critical-line readouts, finite
 Yang-Baxter parameters, finite Fibonacci matrix readouts, and the combinatorial
-Dirac-sea interface. The analytic Bost-Connes partition function,
-zero-temperature convergence, categorical Fibonacci coherence, and full
-boundary crystallization theorem remain explicit closure debt.
+Dirac-sea interface, and categorical Fibonacci pentagon/hexagon coherence.
+The analytic Bost-Connes partition function, zero-temperature convergence, 
+and full boundary crystallization theorem remain explicit closure debt.
 ```
 
 ## Current Build Gate
@@ -113,6 +112,5 @@ theorems:
   from the finite Weyl denominator.
 - Thermodynamic analysis owner lane: prove the `beta -> infinity` convergence.
 - Categorical owner lane: construct the Cuntz-to-Fibonacci boundary functor.
-- `Categorical/FibonacciBraiding.lean`: prove pentagon and hexagon coherence.
 - Boundary/anomaly owner lane: construct the boundary state required for a
   non-placeholder anomaly theorem.

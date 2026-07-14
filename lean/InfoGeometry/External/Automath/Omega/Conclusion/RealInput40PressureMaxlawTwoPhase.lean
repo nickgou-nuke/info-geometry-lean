@@ -1,5 +1,5 @@
-import Omega.Conclusion.RealInput40UVAtomCore
-import Omega.Conclusion.RealInput40UVPressureSilentPhase
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40UVAtomCore
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40UVPressureSilentPhase
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
 
 namespace Omega.SyncKernelWeighted
 

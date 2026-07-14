@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.DisjointnessGraphTensorPowerSpectrum
+import InfoGeometry.External.Automath.Omega.POM.DisjointnessGraphTensorPowerSpectrum
 
 namespace Omega.POM
 

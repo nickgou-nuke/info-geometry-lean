@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxentMarkovUniqueOptimalKernel
+import InfoGeometry.External.Automath.Omega.POM.MaxentMarkovUniqueOptimalKernel
 
 namespace Omega.POM
 

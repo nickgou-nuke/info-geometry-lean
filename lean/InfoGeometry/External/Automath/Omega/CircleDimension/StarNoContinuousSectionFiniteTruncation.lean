@@ -1,7 +1,7 @@
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
-import Omega.CircleDimension.FinitePrimeTruncationKernels
-import Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeTruncationKernels
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
 
 namespace Omega.CircleDimension
 

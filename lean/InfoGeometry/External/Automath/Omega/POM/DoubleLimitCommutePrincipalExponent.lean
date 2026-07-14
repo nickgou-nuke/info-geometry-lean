@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.POM.DoubleLimit
+import InfoGeometry.External.Automath.Omega.POM.DoubleLimit
 
 namespace Omega.POM
 

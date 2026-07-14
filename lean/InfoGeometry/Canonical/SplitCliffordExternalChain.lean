@@ -229,7 +229,7 @@ theorem lightconeSugawara_virasoro_mode_eq_rescaled_sum
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
     (n : ℤ)
     (hsum :
@@ -247,7 +247,7 @@ theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ)
     (hact :
@@ -265,7 +265,7 @@ theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ)
     (hact :
@@ -283,7 +283,7 @@ theorem lightconeSugawara_centralCharge_calibrated
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hcc : S.sugawara.bridge.centralCharge =
       S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber)) :

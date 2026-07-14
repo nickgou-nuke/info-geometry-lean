@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberSpectrumPronyHankel2rReconstruction
-import Omega.POM.HankelFinitePoleSpectralGap
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankel2rReconstruction
+import InfoGeometry.External.Automath.Omega.POM.HankelFinitePoleSpectralGap
 
 namespace Omega.POM
 

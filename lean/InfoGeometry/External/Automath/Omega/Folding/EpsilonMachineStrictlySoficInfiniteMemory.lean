@@ -1,8 +1,8 @@
 import Mathlib.Data.List.Infix
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.EpsilonMachineZeroRunLength
-import Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineZeroRunLength
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
 
 namespace Omega.Folding
 

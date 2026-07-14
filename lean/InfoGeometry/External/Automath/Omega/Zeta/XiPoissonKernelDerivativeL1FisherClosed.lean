@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiCauchyPoissonDerivativeEnergyClosedForm
-import Omega.Zeta.XiPoissonKernelDerivativeL2ClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonDerivativeEnergyClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonKernelDerivativeL2ClosedForm
 
 namespace Omega.Zeta
 

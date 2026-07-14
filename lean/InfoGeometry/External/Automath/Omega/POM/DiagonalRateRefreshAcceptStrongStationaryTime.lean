@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateAcceptRefreshSSTStrong
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSSTStrong
 
 namespace Omega.POM
 

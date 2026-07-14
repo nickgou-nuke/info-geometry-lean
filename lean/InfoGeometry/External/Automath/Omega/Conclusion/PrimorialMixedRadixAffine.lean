@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineNormalFormSemidirect
-import Omega.Conclusion.PrimorialMixedRadixSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineNormalFormSemidirect
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimorialMixedRadixSeeds
 
 namespace Omega.Conclusion.PrimorialMixedRadixAffine
 

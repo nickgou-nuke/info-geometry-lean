@@ -1,4 +1,4 @@
-import Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
 import Mathlib.Tactic
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Logic.Equiv.Fin.Basic

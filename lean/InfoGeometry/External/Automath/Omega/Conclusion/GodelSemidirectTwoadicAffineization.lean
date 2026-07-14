@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineNormalFormSemidirect
-import Omega.Conclusion.PrimeRegisterFixed2adicAmbientVsFiniteLedger
-import Omega.Conclusion.PrimorialMixedRadixAffine
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineNormalFormSemidirect
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterFixed2adicAmbientVsFiniteLedger
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimorialMixedRadixAffine
 
 namespace Omega.Conclusion
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6FiberEdgeCouplingDet
-import Omega.GU.Window6GreenKernelPstarValuationOne
-import Omega.GU.Window6KirchhoffGreenPadicLiftStability
+import InfoGeometry.External.Automath.Omega.GU.Window6FiberEdgeCouplingDet
+import InfoGeometry.External.Automath.Omega.GU.Window6GreenKernelPstarValuationOne
+import InfoGeometry.External.Automath.Omega.GU.Window6KirchhoffGreenPadicLiftStability
 
 namespace Omega.GU
 

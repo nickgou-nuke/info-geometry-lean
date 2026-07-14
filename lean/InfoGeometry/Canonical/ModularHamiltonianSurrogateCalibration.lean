@@ -35,9 +35,9 @@ that a supplied modular-flow action is calibrated to a supplied `K_sur` action
 on the chosen state carrier.
 -/
 @[rep_depth operator]
-structure ModularHamiltonianSurrogateCalibration where
+structure Calibration where
   /-- Bounded Drazin/MP supercharge modular-Hamiltonian surrogate. -/
-  bridge : SuperchargeModularHamiltonianBridge (E := E)
+  bridge : SuperchargeModularHamiltonianBridge.Bridge (E := E)
 
   /-- Supplied modular-flow action on the chosen state carrier. -/
   modularFlow : ℝ → State → State
@@ -57,9 +57,9 @@ structure ModularHamiltonianSurrogateCalibration where
   Ksur_calibrates_modularFlow :
     ∀ (t : ℝ) (s : State), modularFlow t s = KsurFlow t s
 
-namespace ModularHamiltonianSurrogateCalibration
+namespace Calibration
 
-variable (C : ModularHamiltonianSurrogateCalibration (E := E) (State := State))
+variable (C : Calibration (E := E) (State := State))
 
 /-- The calibrated bounded generator is exactly the bridge's `K_sur`. -/
 @[rep_depth operator]
@@ -162,7 +162,7 @@ theorem Ksur_regular_support_even_package :
     calibratedGenerator_mul_spectralComplementaryProjector_eq_zero C,
     calibratedGenerator_isSpectralCompact C⟩
 
-end ModularHamiltonianSurrogateCalibration
+end Calibration
 
 end Calibration
 

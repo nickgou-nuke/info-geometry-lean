@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega.GU
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldZeroCosetV2IntersectionRigidity
-import Omega.Folding.FoldZeroDyadicTowerDisjointFibonacciCosets
-import Omega.Folding.ZeroCosetUnion
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroCosetV2IntersectionRigidity
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroDyadicTowerDisjointFibonacciCosets
+import InfoGeometry.External.Automath.Omega.Folding.ZeroCosetUnion
 
 namespace Omega.Zeta
 

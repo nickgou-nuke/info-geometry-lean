@@ -1,4 +1,4 @@
-import Omega.POM.PrimitivePrimeLucas
+import InfoGeometry.External.Automath.Omega.POM.PrimitivePrimeLucas
 
 namespace Omega.SyncKernelWeighted
 

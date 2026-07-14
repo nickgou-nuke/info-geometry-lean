@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldZeroCosetV2IntersectionRigidity
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroCosetV2IntersectionRigidity
 
 namespace Omega.Folding
 

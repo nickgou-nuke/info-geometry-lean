@@ -85,7 +85,7 @@ def nonOrientableWeylCharge : Fin 2 → ZMod 2 :=
 theorem nonorientable_mod_two_charge_cancels :
     (∑ i : Fin 2, nonOrientableWeylCharge i) = 0 := by
   rw [Fin.sum_univ_two]
-  have h2 : (2 : ZMod 2) = 0 := by native_decide
+  have h2 : (2 : ZMod 2) = 0 := by decide
   calc
     nonOrientableWeylCharge 0 + nonOrientableWeylCharge 1 = (1 : ZMod 2) + 1 := by
       simp [nonOrientableWeylCharge]
@@ -95,7 +95,7 @@ theorem nonorientable_mod_two_charge_cancels :
 /-- More generally, two equal integer charges vanish after reduction modulo two. -/
 theorem same_integer_charge_mod_two_cancels (q : ℤ) :
     ((q : ZMod 2) + (q : ZMod 2)) = 0 := by
-  have h2 : (2 : ZMod 2) = 0 := by native_decide
+  have h2 : (2 : ZMod 2) = 0 := by decide
   calc
     (q : ZMod 2) + (q : ZMod 2) = (2 : ZMod 2) * (q : ZMod 2) := by ring
     _ = 0 := by rw [h2, zero_mul]

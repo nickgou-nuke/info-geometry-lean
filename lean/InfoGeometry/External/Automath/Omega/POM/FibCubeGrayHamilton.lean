@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Combinatorics.FibonacciCube
-import Omega.Combinatorics.FibonacciCubeGraph
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCubeGraph
 
 namespace Omega.POM
 

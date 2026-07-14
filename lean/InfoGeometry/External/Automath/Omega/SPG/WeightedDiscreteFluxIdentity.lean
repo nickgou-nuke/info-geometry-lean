@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Core.Word
-import Omega.SPG.CoarsegrainedCutFlux
+import InfoGeometry.External.Automath.Omega.Core.Word
+import InfoGeometry.External.Automath.Omega.SPG.CoarsegrainedCutFlux
 
 namespace Omega.SPG
 

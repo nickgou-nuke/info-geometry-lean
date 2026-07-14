@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.Period3FiberExactMultiplicity
+import InfoGeometry.External.Automath.Omega.Conclusion.Period3FiberExactMultiplicity
 
 namespace Omega.Conclusion
 

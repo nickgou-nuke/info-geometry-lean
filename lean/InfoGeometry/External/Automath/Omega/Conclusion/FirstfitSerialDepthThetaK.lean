@@ -1,4 +1,4 @@
-import Omega.POM.FractranFirstfitSerialDepth
+import InfoGeometry.External.Automath.Omega.POM.FractranFirstfitSerialDepth
 
 namespace Omega.Conclusion
 

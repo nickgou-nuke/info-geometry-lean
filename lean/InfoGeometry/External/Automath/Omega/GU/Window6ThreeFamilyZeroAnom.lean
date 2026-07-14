@@ -1,6 +1,6 @@
-import Omega.Conclusion.CompleteStrictificationDualCriterion
-import Omega.Conclusion.Window6BoundaryQuotientCyclicCardinality
-import Omega.GU.Window6LocalGeometryZeroAnomalyFamilyUniqueIntersection
+import InfoGeometry.External.Automath.Omega.Conclusion.CompleteStrictificationDualCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryQuotientCyclicCardinality
+import InfoGeometry.External.Automath.Omega.GU.Window6LocalGeometryZeroAnomalyFamilyUniqueIntersection
 
 namespace Omega.GU
 

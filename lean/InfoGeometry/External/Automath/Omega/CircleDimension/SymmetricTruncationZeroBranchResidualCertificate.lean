@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.SymmetricTruncationLoglogDepth
-import Omega.CircleDimension.SymmetricTruncationMultiplicativeRecursionGenerator
+import InfoGeometry.External.Automath.Omega.CircleDimension.SymmetricTruncationLoglogDepth
+import InfoGeometry.External.Automath.Omega.CircleDimension.SymmetricTruncationMultiplicativeRecursionGenerator
 
 namespace Omega.CircleDimension
 

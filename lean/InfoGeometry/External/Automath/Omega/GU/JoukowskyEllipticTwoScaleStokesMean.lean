@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
-import Omega.GU.JoukowskyGodelPullbackFactorization
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelPullbackFactorization
 
 namespace Omega.GU
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.TolerantTimewindowLedgerLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.TolerantTimewindowLedgerLowerBound
 
 namespace Omega.Conclusion
 

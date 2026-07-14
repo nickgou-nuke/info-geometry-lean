@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Span.Basic
-import Omega.Zeta.AbelianShadowDefect
-import Omega.Zeta.CyclicQuotientsOneDimensionalCharacters
+import InfoGeometry.External.Automath.Omega.Zeta.AbelianShadowDefect
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicQuotientsOneDimensionalCharacters
 
 namespace Omega.Zeta
 

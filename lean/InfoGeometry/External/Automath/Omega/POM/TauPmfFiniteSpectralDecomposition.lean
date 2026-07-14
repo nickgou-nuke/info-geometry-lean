@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.SymmetricDoubleThresholdPGFChebyshev
+import InfoGeometry.External.Automath.Omega.POM.SymmetricDoubleThresholdPGFChebyshev
 
 open scoped BigOperators
 

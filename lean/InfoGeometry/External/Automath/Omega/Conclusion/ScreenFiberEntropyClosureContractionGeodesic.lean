@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
-import Omega.Conclusion.ScreenEntropyAuditIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenEntropyAuditIdentity
 
 namespace Omega.Conclusion
 

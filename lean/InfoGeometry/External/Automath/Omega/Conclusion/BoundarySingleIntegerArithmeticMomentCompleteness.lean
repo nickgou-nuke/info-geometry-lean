@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SPG.BoundaryGodelFiniteMomentCompleteness
-import Omega.SPG.BoundaryGodelGcdLipschitzStability
-import Omega.SPG.BoundaryGodelMomentReadout
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelFiniteMomentCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelGcdLipschitzStability
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelMomentReadout
 
 namespace Omega.Conclusion
 

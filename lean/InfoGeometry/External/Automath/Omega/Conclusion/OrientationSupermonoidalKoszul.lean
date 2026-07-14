@@ -1,4 +1,4 @@
-import Omega.GroupUnification.BdryOrientationFunctorSymmetricMonoidalKoszul
+import InfoGeometry.External.Automath.Omega.GroupUnification.BdryOrientationFunctorSymmetricMonoidalKoszul
 
 namespace Omega.Conclusion
 

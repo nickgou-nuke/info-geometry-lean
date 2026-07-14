@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.EffectiveCosmologicalClosure
-import Omega.PhysicalSpacetimeSkeleton.ResourceStressEnergyPureTrace
-import Omega.PhysicalSpacetimeSkeleton.WeakFieldQuadraticHarmonicNormalForm
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.EffectiveCosmologicalClosure
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.ResourceStressEnergyPureTrace
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.WeakFieldQuadraticHarmonicNormalForm
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

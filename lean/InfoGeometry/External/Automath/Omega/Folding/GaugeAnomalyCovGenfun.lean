@@ -1,4 +1,4 @@
-import Omega.Folding.BernoulliPAutocovarianceGeneratingRational
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPAutocovarianceGeneratingRational
 
 namespace Omega.Folding
 

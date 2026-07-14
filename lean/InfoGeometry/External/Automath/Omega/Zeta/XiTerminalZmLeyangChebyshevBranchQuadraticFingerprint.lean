@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangChebyshevLinearizationOddNormalization
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangChebyshevLinearizationOddNormalization
 
 namespace Omega.Zeta
 

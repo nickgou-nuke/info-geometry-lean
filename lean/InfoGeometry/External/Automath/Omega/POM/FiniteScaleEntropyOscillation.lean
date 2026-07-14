@@ -1,5 +1,5 @@
-import Omega.POM.FoldInversionZeroRateStrongConverse
-import Omega.POM.MaxFiberSplitRatioFiniteScale
+import InfoGeometry.External.Automath.Omega.POM.FoldInversionZeroRateStrongConverse
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberSplitRatioFiniteScale
 import Mathlib.Tactic
 
 namespace Omega.POM

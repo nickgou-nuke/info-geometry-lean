@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalTwoTemperatureStrongDualitySensitivity
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalTwoTemperatureStrongDualitySensitivity
 import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
 import Mathlib.Tactic

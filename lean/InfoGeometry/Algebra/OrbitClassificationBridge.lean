@@ -60,7 +60,7 @@ theorem generic_orbit (X : Herm2x2Cs) (hdet : X.det ≠ 0) :
 /-- Uniform null-locus diagonal-vanishing packet across `C_s`, `H_s`, and integer `O_s`. -/
 theorem orbit_classification_uniform :
   (∀ (X : JordanCayleyInversionCs.Herm2x2Cs), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) ∧
-  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) ∧
+  (∀ (X : JordanCayleyInversionHs.Herm2x2Hs), X.det = 0 → X.mulTraceReversal.1 = 0 ∧ X.mulTraceReversal.2 = 0) ∧
   (∀ (X : JordanCayleyInversionOs.Herm2x2Os), X.det = 0 → X.mulTraceReversal.e11 = 0 ∧ X.mulTraceReversal.e22 = 0) :=
   OrbitClassification.uniform_null_orbit
 

@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
 
 namespace Omega.Zeta
 

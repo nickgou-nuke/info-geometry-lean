@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberBiasedBernoulliPushforwardHardcore
-import Omega.POM.FiberRewritePoissonBinomial
+import InfoGeometry.External.Automath.Omega.POM.FiberBiasedBernoulliPushforwardHardcore
+import InfoGeometry.External.Automath.Omega.POM.FiberRewritePoissonBinomial
 
 namespace Omega.POM
 

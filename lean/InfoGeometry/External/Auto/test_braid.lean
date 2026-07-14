@@ -45,23 +45,23 @@ variable (V : Type*) [AddCommGroup V] [Module k V]
 /-- The identity map on V ⊗ V -/
 def id_tensor : Module.End k (V ⊗[k] V) := LinearMap.id
 
-/-- R12 for the identity map is just the identity on (V ⊗ V) ⊗ V -/
 lemma R12_id : R12 k V (id_tensor k V) = LinearMap.id := by
-  sorry
+  dsimp [R12, id_tensor]
+  exact TensorProduct.map_id
 
-/-- R23 for the identity map is just the identity on V ⊗ (V ⊗ V) -/
 lemma R23_id : R23 k V (id_tensor k V) = LinearMap.id := by
-  sorry
+  dsimp [R23, id_tensor]
+  exact TensorProduct.map_id
 
-/-- R23_on_assoc for the identity map is the identity on (V ⊗ V) ⊗ V -/
 lemma R23_on_assoc_id : R23_on_assoc k V (id_tensor k V) = LinearMap.id := by
-  sorry
+  dsimp [R23_on_assoc]
+  rw [R23_id]
+  simp
 
-/-- The identity map satisfies the Yang-Baxter equation trivially. -/
 lemma yang_baxter_id : 
   (R12 k V (id_tensor k V)) ∘ₗ (R23_on_assoc k V (id_tensor k V)) ∘ₗ (R12 k V (id_tensor k V)) =
   (R23_on_assoc k V (id_tensor k V)) ∘ₗ (R12 k V (id_tensor k V)) ∘ₗ (R23_on_assoc k V (id_tensor k V)) := by
-  sorry
+  simp [R12_id, R23_on_assoc_id]
 
 /-- Concrete instantiation of a BraidGenerator using the identity map. -/
 def trivialBraidGenerator : BraidGenerator k V where

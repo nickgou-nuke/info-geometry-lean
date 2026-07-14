@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiSmithKernelDirichletEulerSinglePole
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithKernelDirichletEulerSinglePole
 
 namespace Omega.Zeta
 

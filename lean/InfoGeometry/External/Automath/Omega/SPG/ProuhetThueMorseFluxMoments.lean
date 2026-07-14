@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.SPG.ProuhetThueMorsePowerSum
+import InfoGeometry.External.Automath.Omega.SPG.ProuhetThueMorsePowerSum
 
 namespace Omega.SPG
 

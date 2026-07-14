@@ -72,11 +72,11 @@ def pointGroupCharacterTable (P : WallpaperPointGroup) : List (List String) :=
 /-- Character table row count equals number of irreps. -/
 theorem pointGroupCharacterTable_row_count (P : WallpaperPointGroup) :
     (pointGroupCharacterTable P).length = (pointGroupIrrepProfile P).total := by
-  cases P <;> native_decide
+  cases P <;> decide
 
 /-- Character table column count equals number of conjugacy classes. -/
 theorem pointGroupCharacterTable_col_count (P : WallpaperPointGroup) :
     ((pointGroupCharacterTable P).headD []).length = (pointGroupClassLabels P).length := by
-  cases P <;> native_decide
+  cases P <;> decide
 
 end InfoGeometry.Topology

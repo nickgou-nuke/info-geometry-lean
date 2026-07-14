@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Order.Filter.Basic
 import Mathlib.Tactic
-import Omega.Folding.GodelFiniteDictionaryBitlength
-import Omega.Zeta.XiAddressPrimeLedgerJointBudget
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.Zeta.XiAddressPrimeLedgerJointBudget
 
 namespace Omega.Zeta
 

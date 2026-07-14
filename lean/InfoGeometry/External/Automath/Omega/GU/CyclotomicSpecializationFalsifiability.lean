@@ -1,4 +1,4 @@
-import Omega.GU.CyclotomicGcdStability
+import InfoGeometry.External.Automath.Omega.GU.CyclotomicGcdStability
 
 namespace Omega.GU
 

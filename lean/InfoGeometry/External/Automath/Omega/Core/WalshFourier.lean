@@ -1,4 +1,4 @@
-import Omega.Core.WalshStokesSingleton
+import InfoGeometry.External.Automath.Omega.Core.WalshStokesSingleton
 import Mathlib.Tactic
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Data.Finset.SymmDiff

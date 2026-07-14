@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.BigOperators
-import Omega.POM.FibCubeThetaClassSize
+import InfoGeometry.External.Automath.Omega.POM.FibCubeThetaClassSize
 
 open scoped BigOperators
 

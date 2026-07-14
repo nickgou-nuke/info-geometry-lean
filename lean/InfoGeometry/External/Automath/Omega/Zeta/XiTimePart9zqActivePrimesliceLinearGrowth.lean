@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPrimeSliceNontrivialLayerExactMinimality
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimeSliceNontrivialLayerExactMinimality
 
 namespace Omega.Zeta
 

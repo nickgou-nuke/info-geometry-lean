@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.DerivedAuditedEvenMinsectorTopologicalPhase
-import Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
+import InfoGeometry.External.Automath.Omega.POM.DerivedAuditedEvenMinsectorTopologicalPhase
+import InfoGeometry.External.Automath.Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
 
 namespace Omega.Conclusion
 

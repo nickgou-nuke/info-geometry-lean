@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldbinGaugeInvariantRing
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldbinGaugeInvariantRing
 
 namespace Omega.OperatorAlgebra
 

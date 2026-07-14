@@ -1,4 +1,4 @@
-import Omega.Folding.GaugeAnomalyP10LeyangClassFunctionTensorIndependence
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyP10LeyangClassFunctionTensorIndependence
 
 namespace Omega.Folding
 

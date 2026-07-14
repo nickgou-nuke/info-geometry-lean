@@ -1,5 +1,5 @@
-import Omega.Conclusion.BalancedExternalizationOptimalRenyiEnergy
-import Omega.Conclusion.BalancedExternalizationSchurOptimality
+import InfoGeometry.External.Automath.Omega.Conclusion.BalancedExternalizationOptimalRenyiEnergy
+import InfoGeometry.External.Automath.Omega.Conclusion.BalancedExternalizationSchurOptimality
 
 namespace Omega.POM
 

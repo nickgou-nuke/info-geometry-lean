@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.PhiLogisticPosteriorGrid
+import InfoGeometry.External.Automath.Omega.POM.PhiLogisticPosteriorGrid
 
 namespace Omega.POM
 

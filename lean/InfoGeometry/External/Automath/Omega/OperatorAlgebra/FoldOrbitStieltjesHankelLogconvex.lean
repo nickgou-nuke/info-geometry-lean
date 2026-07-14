@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldOrbitMgfFiberFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOrbitMgfFiberFactorization
 
 namespace Omega.OperatorAlgebra
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SublinearExcitationFilterInsufficient
+import InfoGeometry.External.Automath.Omega.Conclusion.SublinearExcitationFilterInsufficient
 
 namespace Omega.Conclusion
 

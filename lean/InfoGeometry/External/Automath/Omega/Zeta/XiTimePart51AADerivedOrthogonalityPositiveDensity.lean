@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTimePart51AADerivedCrossFibGcdFormula
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart51AADerivedCrossFibGcdFormula
 
 namespace Omega.Zeta
 

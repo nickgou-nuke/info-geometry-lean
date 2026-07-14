@@ -1,7 +1,7 @@
-import Omega.POM.MomentOddLagNeutrality
-import Omega.Zeta.HankelRankMinimalLinearRealization
-import Omega.Zeta.HankelStiffnessBalance
-import Omega.Zeta.RealInput40RotationPolytopeShear
+import InfoGeometry.External.Automath.Omega.POM.MomentOddLagNeutrality
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.Zeta.HankelStiffnessBalance
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40RotationPolytopeShear
 
 namespace Omega.GU
 

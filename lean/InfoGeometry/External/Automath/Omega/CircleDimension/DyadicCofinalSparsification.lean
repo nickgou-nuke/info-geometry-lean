@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CertificateInverseLimitAddressing
+import InfoGeometry.External.Automath.Omega.CircleDimension.CertificateInverseLimitAddressing
 
 namespace Omega.CircleDimension
 

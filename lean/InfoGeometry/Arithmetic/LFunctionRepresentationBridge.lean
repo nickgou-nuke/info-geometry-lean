@@ -55,6 +55,15 @@ def twistedEulerProduct
     (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G) : ℂ :=
   ∏ p ∈ positiveRoots, (1 - twist.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s)⁻¹
 
+lemma twistedEulerProduct_ne_zero
+    {G : Type*} [Group G]
+    (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G)
+    (h : ∀ p ∈ positiveRoots,
+      1 - twist.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s ≠ 0) :
+    twistedEulerProduct positiveRoots temperature_s twist ≠ 0 := by
+  unfold twistedEulerProduct
+  exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
+
 /--
 The Twisted Souriau-Weyl Partition Bridge.
 Extends the base thermodynamic bridge with a local gauge field.
@@ -95,6 +104,13 @@ This is the generalized statistical sum of the twisted vacuum.
 def twistedPartitionFunction : ℂ :=
   ∏ p ∈ TB.base_bridge.positiveRoots, 
     (1 - TB.gauge.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s)⁻¹
+
+lemma twistedPartitionFunction_ne_zero
+    (h : ∀ p ∈ TB.base_bridge.positiveRoots,
+      1 - TB.gauge.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s ≠ 0) :
+    TB.twistedPartitionFunction ≠ 0 := by
+  unfold twistedPartitionFunction
+  exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
 
 /--
 Langlands Thermodynamic Equivalence (Functoriality).

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonCauchyMomentInversionByPhaseModes
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonCauchyMomentInversionByPhaseModes
 
 namespace Omega.CircleDimension
 

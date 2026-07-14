@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.DiscriminantSquareclass
+import InfoGeometry.External.Automath.Omega.GU.DiscriminantSquareclass
 
 namespace Omega.GU
 

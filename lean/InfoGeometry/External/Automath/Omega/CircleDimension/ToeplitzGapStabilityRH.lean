@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ToeplitzGapSchurContraction
+import InfoGeometry.External.Automath.Omega.CircleDimension.ToeplitzGapSchurContraction
 
 namespace Omega.CircleDimension
 

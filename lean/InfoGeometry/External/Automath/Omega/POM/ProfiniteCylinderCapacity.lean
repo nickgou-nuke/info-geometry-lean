@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.ProfiniteAxisChebotarev
+import InfoGeometry.External.Automath.Omega.POM.ProfiniteAxisChebotarev
 
 namespace Omega.POM
 

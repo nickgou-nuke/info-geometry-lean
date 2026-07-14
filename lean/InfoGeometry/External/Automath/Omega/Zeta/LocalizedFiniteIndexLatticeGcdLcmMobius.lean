@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedFiniteIndexLatticeClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedFiniteIndexLatticeClassification
 
 namespace Omega.Zeta
 

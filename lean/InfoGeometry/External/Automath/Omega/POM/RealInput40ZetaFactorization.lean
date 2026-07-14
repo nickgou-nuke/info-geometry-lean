@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.GlobalAssemblyZeta
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.EA.GlobalAssemblyZeta
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 namespace Omega.POM
 

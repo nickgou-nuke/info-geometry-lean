@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonKernelDerivativeL1Energy
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonKernelDerivativeL1Energy
 
 namespace Omega.CircleDimension
 

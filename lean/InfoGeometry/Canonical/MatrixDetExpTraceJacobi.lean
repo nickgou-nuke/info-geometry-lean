@@ -338,6 +338,30 @@ theorem hasDerivAt_det_matrixExpFlow (A : Matrix n n ℂ) (t : ℂ) :
     rw [det_matrixExpFlow_eq_det_mul_shift A t z]
   · ring
 
+/-- The constant matrix exponential flow has nonzero determinant at every time. -/
+theorem det_matrixExpFlow_ne_zero (A : Matrix n n ℂ) (t : ℂ) :
+    Matrix.det (matrixExpFlow A t) ≠ 0 := by
+  exact ((Matrix.isUnit_iff_isUnit_det (matrixExpFlow A t)).mp
+    (isUnit_matrixExpFlow A t)).ne_zero
+
+/--
+Logarithmic derivative of the determinant along a constant matrix-exponential
+flow.  This packages the branch-free `d log det` readout as `f' / f`.
+-/
+def detLogDerivative (A : Matrix n n ℂ) (t : ℂ) : ℂ :=
+  deriv (fun z : ℂ => Matrix.det (matrixExpFlow A z)) t /
+    Matrix.det (matrixExpFlow A t)
+
+/--
+Branch-free Jacobi/Liouville readout for the constant flow:
+`(d/dt det(exp(tA))) / det(exp(tA)) = trace A`.
+-/
+theorem detLogDerivative_matrixExpFlow_eq_trace (A : Matrix n n ℂ) (t : ℂ) :
+    detLogDerivative A t = Matrix.trace A := by
+  unfold detLogDerivative
+  rw [(hasDerivAt_det_matrixExpFlow A t).deriv]
+  field_simp [det_matrixExpFlow_ne_zero A t]
+
 /-- Determinant of the constant matrix exponential flow. -/
 theorem det_matrixExpFlow_eq_exp_trace_mul (A : Matrix n n ℂ) :
     ∀ t : ℂ,

@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Choose.Multinomial
-import Omega.POM.MicrocanonicalCoverTimeTailInclusionExclusion
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeTailInclusionExclusion
 
 namespace Omega.POM
 

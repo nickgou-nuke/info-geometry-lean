@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ArithmeticDoubleTransversalTerminalNormalForm
-import Omega.POM.ProjectionBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.ArithmeticDoubleTransversalTerminalNormalForm
+import InfoGeometry.External.Automath.Omega.POM.ProjectionBudget
 
 namespace Omega.Conclusion
 

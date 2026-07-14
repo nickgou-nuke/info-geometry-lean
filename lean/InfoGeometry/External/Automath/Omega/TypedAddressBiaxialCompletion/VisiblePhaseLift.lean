@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.MultiscaleThreshold
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.MultiscaleThreshold
 
 namespace Omega.TypedAddressBiaxialCompletion
 

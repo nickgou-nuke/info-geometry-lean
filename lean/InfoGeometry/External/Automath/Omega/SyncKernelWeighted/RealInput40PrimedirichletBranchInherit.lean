@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Analytic.Constructions
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40PrimedirichletDenseBranch
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimedirichletDenseBranch
 
 namespace Omega.SyncKernelWeighted
 

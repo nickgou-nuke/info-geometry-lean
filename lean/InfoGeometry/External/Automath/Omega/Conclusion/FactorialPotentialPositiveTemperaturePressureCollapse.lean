@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.Conclusion.ZeckendorfEulerPoissonBoundary
-import Omega.Conclusion.ZeckendorfEulerReindexing
-import Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerPoissonBoundary
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerReindexing
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
 
 namespace Omega.Conclusion
 

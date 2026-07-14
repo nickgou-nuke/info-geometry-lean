@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitSkFixedKSharpPComplete
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitSkFixedKSharpPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
 
 namespace Omega.OperatorAlgebra
 

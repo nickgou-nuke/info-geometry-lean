@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.SPG.PolycubeIsoperimetryUpper
+import InfoGeometry.External.Automath.Omega.SPG.PolycubeIsoperimetryUpper
 
 namespace Omega.SPG
 

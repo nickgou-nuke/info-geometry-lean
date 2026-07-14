@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Tactic
-import Omega.Zeta.PhaseLiftSpectralBound
-import Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
+import InfoGeometry.External.Automath.Omega.Zeta.PhaseLiftSpectralBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
 
 namespace Omega.Zeta
 

@@ -17,7 +17,7 @@ This is the precise shape of the millennium-style target:
 * the critical-line-to-RH implication is supplied by the analytic owner.
 -/
 structure CompletedXiHilbertPolyaReduction
-    (Operator : Type*) where
+    (Operator : Type) where
   selfAdjointOperator : Operator
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

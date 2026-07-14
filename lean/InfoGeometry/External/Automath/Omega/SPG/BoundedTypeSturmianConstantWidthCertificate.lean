@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega.SPG
 

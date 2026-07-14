@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Conclusion.HaltingValuationWalshLedgerUnification
+import InfoGeometry.External.Automath.Omega.Conclusion.HaltingValuationWalshLedgerUnification
 
 namespace Omega.DerivedConsequences
 

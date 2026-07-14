@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
-import Omega.Zeta.XiComovingPrefixEndpointBarrierLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingPrefixEndpointBarrierLaw
 
 namespace Omega.Conclusion
 

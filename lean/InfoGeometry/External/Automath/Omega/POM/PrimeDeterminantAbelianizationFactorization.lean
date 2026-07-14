@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.POM.PrimeDeterminant2x2FreeEncoding
-import Omega.POM.PrimeDeterminantEllipseLedger
+import InfoGeometry.External.Automath.Omega.POM.PrimeDeterminant2x2FreeEncoding
+import InfoGeometry.External.Automath.Omega.POM.PrimeDeterminantEllipseLedger
 
 namespace Omega.POM
 

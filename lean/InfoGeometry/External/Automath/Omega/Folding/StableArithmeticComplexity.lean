@@ -1,4 +1,4 @@
-import Omega.Folding.NormalizationComplexity
+import InfoGeometry.External.Automath.Omega.Folding.NormalizationComplexity
 
 namespace Omega.Folding
 

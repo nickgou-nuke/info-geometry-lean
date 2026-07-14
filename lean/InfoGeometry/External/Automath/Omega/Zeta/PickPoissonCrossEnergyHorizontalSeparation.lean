@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.PsiTruncationBounds
+import InfoGeometry.External.Automath.Omega.Zeta.PsiTruncationBounds
 
 open scoped BigOperators
 

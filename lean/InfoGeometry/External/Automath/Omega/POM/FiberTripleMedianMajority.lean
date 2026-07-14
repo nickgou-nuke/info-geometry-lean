@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.Fiber
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 
 /-!
 # Majority seed for the fiber triple median

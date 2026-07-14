@@ -1,4 +1,4 @@
-import Omega.Topos.IntrinsicHiddenStateLowerBound
+import InfoGeometry.External.Automath.Omega.Topos.IntrinsicHiddenStateLowerBound
 
 namespace Omega.Topos
 

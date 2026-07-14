@@ -1,4 +1,4 @@
-import Omega.Zeta.XiReverseKLChi2OptimalUnderLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLChi2OptimalUnderLowerBound
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Divisors
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6ZeroBlockDualHalfscaleLaw
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6ZeroBlockDualHalfscaleLaw
 
 open Filter Topology
 open scoped goldenRatio

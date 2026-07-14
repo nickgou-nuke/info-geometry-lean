@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalWindow6LocalUpliftAdmissibility
-import Omega.GU.ThreefoldRigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6LocalUpliftAdmissibility
+import InfoGeometry.External.Automath.Omega.GU.ThreefoldRigidity
 
 namespace Omega.GU
 

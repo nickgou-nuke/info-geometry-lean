@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40ResidueConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40ResidueConstant
 
 namespace Omega.SyncKernelRealInput
 

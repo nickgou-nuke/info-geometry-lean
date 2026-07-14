@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
-import Omega.UnitCirclePhaseArithmetic.HorocycleFoliationMinusOne
-import Omega.Zeta.OffcriticalHorocycleBusemann
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.HorocycleFoliationMinusOne
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalHorocycleBusemann
 
 namespace Omega.UnitCirclePhaseArithmetic
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.EllipsoidBoundaryFluxReconstruction
+import InfoGeometry.External.Automath.Omega.SPG.EllipsoidBoundaryFluxReconstruction
 
 namespace Omega.Conclusion
 

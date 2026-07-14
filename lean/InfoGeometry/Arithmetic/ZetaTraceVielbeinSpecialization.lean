@@ -33,6 +33,12 @@ def primeLocalJacobian (p : Nat.Primes) (s : ℂ) : ℂ :=
 def primeLocalVolumeFactor (p : Nat.Primes) (s : ℂ) : ℂ :=
   (primeLocalJacobian p s)⁻¹
 
+lemma primeLocalVolumeFactor_ne_zero {p : Nat.Primes} {s : ℂ}
+    (h : primeLocalJacobian p s ≠ 0) :
+    primeLocalVolumeFactor p s ≠ 0 := by
+  unfold primeLocalVolumeFactor
+  exact inv_ne_zero h
+
 /-- Local trace-log contribution to the effective action. -/
 def primeLocalEffectiveAction (p : Nat.Primes) (s : ℂ) : ℂ :=
   -Complex.log (primeLocalJacobian p s)
@@ -46,6 +52,11 @@ def zetaTraceEffectiveAction (s : ℂ) : ℂ :=
 /-- Exponentiated trace-log supervolume. -/
 def zetaTraceSupervolume (s : ℂ) : ℂ :=
   Complex.exp (zetaTraceEffectiveAction s)
+
+lemma zetaTraceSupervolume_ne_zero (s : ℂ) :
+    zetaTraceSupervolume s ≠ 0 := by
+  unfold zetaTraceSupervolume
+  exact Complex.exp_ne_zero _
 
 /-- Direct Euler-product supervolume. -/
 def zetaTraceEulerSupervolume (s : ℂ) : ℂ :=

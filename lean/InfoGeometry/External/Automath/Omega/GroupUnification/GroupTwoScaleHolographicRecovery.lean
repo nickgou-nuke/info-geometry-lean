@@ -1,5 +1,5 @@
 import Mathlib.Data.Int.Lemmas
-import Omega.GroupUnification.GroupTwoScaleHolographicRecoveryRadialSeparation
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupTwoScaleHolographicRecoveryRadialSeparation
 
 namespace Omega.GroupUnification
 

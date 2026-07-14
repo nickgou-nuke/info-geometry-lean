@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ChiGaugeWardNullmode
-import Omega.SyncKernelWeighted.RealInput40ChiMomentsFromHessian
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ChiGaugeWardNullmode
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ChiMomentsFromHessian
 
 namespace Omega.SyncKernelWeighted
 

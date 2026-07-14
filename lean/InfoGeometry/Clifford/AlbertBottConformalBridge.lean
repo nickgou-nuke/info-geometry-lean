@@ -7,7 +7,7 @@ import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 import InfoGeometry.Clifford.SplitCl44Complexification
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Projective.SplitCl44NullBoundary
-import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Projective.Twistor.Incidence
 
 /-!
 # Albert / Bott / conformal bridge

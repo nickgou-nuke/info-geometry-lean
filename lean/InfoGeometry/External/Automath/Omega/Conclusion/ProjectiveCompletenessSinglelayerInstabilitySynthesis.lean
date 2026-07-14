@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.CircleDimension.CertificateInverseLimitAddressing
-import Omega.SPG.DyadicTopInversionBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.CertificateInverseLimitAddressing
+import InfoGeometry.External.Automath.Omega.SPG.DyadicTopInversionBound
 
 namespace Omega.Conclusion
 

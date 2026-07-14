@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.EllipsoidIsoperimetricVariance
-import Omega.SPG.EllipsoidBoundaryFluxReconstruction
+import InfoGeometry.External.Automath.Omega.POM.EllipsoidIsoperimetricVariance
+import InfoGeometry.External.Automath.Omega.SPG.EllipsoidBoundaryFluxReconstruction
 
 namespace Omega.POM
 

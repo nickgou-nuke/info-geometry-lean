@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.CircleDimension.StarQDualExtension
+import InfoGeometry.External.Automath.Omega.CircleDimension.StarQDualExtension
 
 namespace Omega.CircleDimension
 

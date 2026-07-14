@@ -295,8 +295,6 @@ structure ProjectiveDrazinNullBoundary
   representative_in_defect : ∀ r, InDefectSupport D (representative r)
   /-- Representatives are Krein-null. -/
   representative_krein_null : ∀ r, IsKreinNull D (representative r)
-  /-- Quotient-by-scale witness for the ray carrier. -/
-  projective_identification : Prop
 
 /-- A single projective Drazin--Krein null ray with a structured representative. -/
 structure ProjectiveDrazinNullRay
@@ -308,8 +306,6 @@ structure ProjectiveDrazinNullRay
   representative : DrazinKreinNullVector D
   /-- Representative is nonzero. -/
   nonzero : representative.vector ≠ D.carrier.zero
-  /-- Quotient by nonzero real Weyl/projective scaling. -/
-  projectiveScaleWitness : Prop
 
 /-- A projective null ray has a boundary-null representative. -/
 theorem projectiveDrazinNullRay_is_boundary_null
@@ -357,10 +353,6 @@ structure DrazinNullConformalSymmetry
   affineChart : Type*
   /-- Weyl gauge carrier for representative rescaling. -/
   weylGauge : Type*
-  /-- Witness that legal symmetries preserve projective null rays. -/
-  preservesNullRaysWitness : Prop
-  /-- Witness that Weyl gauge changes representatives, not rays. -/
-  weylGaugeProjectiveWitness : Prop
 
 /-- Conformal maps preserve Drazin-defect Krein-null representatives. -/
 theorem conformal_map_preserves_boundary_null_ray
@@ -382,8 +374,6 @@ structure KMSWeightOnDrazinNullBoundary
   rayWeight : Ray → ℝ
   /-- Weights are nonnegative. -/
   rayWeight_nonnegative : ∀ r, 0 ≤ rayWeight r
-  /-- Guardrail: this is a nontracial volume/readout witness. -/
-  nontracialVolumeWitness : Prop
 
 /-- KMS/state/topological weighting on structured projective Drazin-null rays. -/
 structure KMSWeightOnProjectiveDrazinNullRays
@@ -399,28 +389,6 @@ structure KMSWeightOnProjectiveDrazinNullRays
   rayWeight : ProjectiveDrazinNullRay D → ℝ
   /-- Weights are nonnegative. -/
   rayWeight_nonnegative : ∀ r, 0 ≤ rayWeight r
-  /-- Guardrail: this replaces trace, determinant, and rank volume. -/
-  nontracialVolumeWitness : Prop
-
-/-- Complete packet for the Drazin--Krein null boundary construction. -/
-structure KreinDrazinNullBoundaryPacket where
-  K : Type*
-  Op : Type*
-  instRing : Ring Op
-  instSMul : SMul ℝ K
-  support : @KreinDrazinBoundarySupport K Op instRing
-  boundary : @ProjectiveDrazinNullBoundary K Op instRing instSMul support
-  conformalSymmetry : @DrazinNullConformalSymmetry K Op instRing support
-  kmsWeights : KMSWeightOnDrazinNullBoundary boundary.Ray
-  /-- Guardrail: defect support is not automatically the full light cone. -/
-  complement_vs_lightcone_guard : Prop
-  /-- Guardrail: Type III volume is not trace/determinant/rank. -/
-  no_trace_no_determinant_guard : Prop
-
-/-- Owner target for the null-boundary layer. -/
-structure KreinDrazinNullBoundaryTarget where
-  /-- Concrete packet witnessing the target. -/
-  packet : KreinDrazinNullBoundaryPacket
 
 /-! ## Minimal split API
 
@@ -429,13 +397,13 @@ This section gives the exact theorem-safe split:
 * Drazin data is algebraic and does not mention `sharp`.
 * Krein nullity is a carrier/form predicate.
 * The boundary is `P(Ran(H) ∩ Null_J)`.
-* Conformal preservation is witness-gated.
+* Conformal preservation is carried by explicit preservation fields.
 -/
 
 /-- Algebraic Drazin data with no Hilbert/Krein adjoint dependency. -/
 structure AlgebraicDrazinData
     (Op : Type*)
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ] where
+    [Ring Op] where
   /-- Operator being split. -/
   L : Op
   /-- Algebraic Drazin inverse candidate. -/
@@ -444,16 +412,34 @@ structure AlgebraicDrazinData
   H : Op
   /-- Drazin index. -/
   index : ℕ
-  /-- Algebraic commutation law. -/
-  commute : L * LD = LD * L
-  /-- Algebraic reflexivity law. -/
-  reflexive : LD * L * LD = LD
-  /-- Algebraic Drazin power law. -/
-  power_True : L ^ (index + 1) * LD = L ^ index
+  /-- Owner proof of the Drazin inverse laws. -/
+  isDrazinInverse : IsDrazinInverse L LD index
   /-- Complement definition `H = 1 - L Lᴰ`. -/
-  H_def : H = 1 - L * LD
-  /-- Complement idempotence. -/
-  H_idempotent : H * H = H
+  H_def : H = IsDrazinInverse.complementaryProjection L LD
+
+namespace AlgebraicDrazinData
+
+variable {Op : Type*} [Ring Op]
+variable (D : AlgebraicDrazinData Op)
+
+/-- The Drazin commutation law is read back from the owner predicate. -/
+theorem commute : D.L * D.LD = D.LD * D.L :=
+  D.isDrazinInverse.comm
+
+/-- The Drazin reflexivity law is read back from the owner predicate. -/
+theorem reflexive : D.LD * D.L * D.LD = D.LD :=
+  D.isDrazinInverse.idempotent
+
+/-- The Drazin power law is read back from the owner predicate. -/
+theorem power : D.L ^ (D.index + 1) * D.LD = D.L ^ D.index :=
+  D.isDrazinInverse.power
+
+/-- The complementary Drazin projector is idempotent by the owner theorem. -/
+theorem H_idempotent : D.H * D.H = D.H := by
+  rw [D.H_def]
+  exact IsDrazinInverse.complementaryProjection_is_idempotent D.isDrazinInverse
+
+end AlgebraicDrazinData
 
 namespace DoubledKreinCarrier
 
@@ -469,7 +455,7 @@ end DoubledKreinCarrier
 /-- Vector lies in the Drazin generalized-zero sector when `H v = v`. -/
 def InDrazinZeroSector
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (v : V) : Prop :=
@@ -478,7 +464,7 @@ def InDrazinZeroSector
 /-- A vector is both Drazin-zero and Krein-null. -/
 def IsDrazinKreinNullVector
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (v : V) : Prop :=
@@ -491,7 +477,7 @@ Mathematically: `P(Ran(1 - L Lᴰ) ∩ Null_J)`.
 -/
 structure DrazinKreinNullBoundary
     (V Op : Type*)
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op) where
   /-- Ray carrier. -/
@@ -503,8 +489,14 @@ structure DrazinKreinNullBoundary
   /-- Representatives lie in the Drazin--Krein null sector. -/
   representative_is_null :
     ∀ r : Ray, IsDrazinKreinNullVector K D (representative r)
-  /-- Abstract quotient by nonzero scale. -/
-  projective_identification : Prop
+
+/-- Krein adjoint data attached to a doubled carrier. -/
+def IsCarrierKreinAdjoint
+    {V Op : Type*}
+    (K : DoubledKreinCarrier V Op)
+    (sharp : Op → Op) : Prop :=
+  ∀ A v w, K.kreinForm (K.act A v) w =
+    K.kreinForm v (K.act (sharp A) w)
 
 /-- Krein adjoint data attached to a doubled carrier. -/
 structure CarrierKreinAdjointData
@@ -512,20 +504,41 @@ structure CarrierKreinAdjointData
     (K : DoubledKreinCarrier V Op) where
   /-- Krein adjoint on operators. -/
   sharp : Op → Op
-  /-- Defining adjoint law for the indefinite form. -/
-  adjoint_True :
-    ∀ A v w, K.kreinForm (K.act A v) w =
-      K.kreinForm v (K.act (sharp A) w)
+  /-- Defining adjoint predicate for the indefinite form. -/
+  isCarrierKreinAdjoint : IsCarrierKreinAdjoint K sharp
+
+namespace CarrierKreinAdjointData
+
+variable {V Op : Type*}
+variable {K : DoubledKreinCarrier V Op}
+variable (Adj : CarrierKreinAdjointData V Op K)
+
+/-- The Krein adjoint form identity supplied by the carrier predicate. -/
+theorem kreinForm_act_eq (A : Op) (v w : V) :
+    K.kreinForm (K.act A v) w =
+      K.kreinForm v (K.act (Adj.sharp A) w) :=
+  Adj.isCarrierKreinAdjoint A v w
+
+end CarrierKreinAdjointData
 
 /-- Krein compatibility of the algebraic Drazin complement. -/
 structure KreinCompatibleDrazinComplement
     (V Op : Type*)
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (Adj : CarrierKreinAdjointData V Op K) where
   /-- The generalized-zero projector respects the Krein polarization. -/
   H_krein_self_adjoint : Adj.sharp D.H = D.H
+
+/-- Predicate for preservation of the Krein form up to a scalar. -/
+def PreservesKreinFormUpToScale
+    {V Op : Type*}
+    (K : DoubledKreinCarrier V Op)
+    (U : Op)
+    (scale : ℝ) : Prop :=
+  ∀ v w : V, K.kreinForm (K.act U v) (K.act U w) =
+    scale * K.kreinForm v w
 
 /-- Conformal Krein symmetry: the form is preserved up to positive scale. -/
 structure KreinConformalSymmetry
@@ -537,15 +550,27 @@ structure KreinConformalSymmetry
   scale : ℝ
   /-- The scale is positive. -/
   scale_positive : 0 < scale
-  /-- Conformal law for the Krein form. -/
-  conformal_True :
-    ∀ v w : V, K.kreinForm (K.act U v) (K.act U w) =
-      scale * K.kreinForm v w
+  /-- Conformal predicate for the Krein form. -/
+  preservesKreinForm : PreservesKreinFormUpToScale K U scale
+
+namespace KreinConformalSymmetry
+
+variable {V Op : Type*}
+variable {K : DoubledKreinCarrier V Op}
+variable (U : KreinConformalSymmetry V Op K)
+
+/-- The conformal Krein form identity supplied by the symmetry predicate. -/
+theorem kreinForm_act_act_eq (v w : V) :
+    K.kreinForm (K.act U.U v) (K.act U.U w) =
+      U.scale * K.kreinForm v w :=
+  U.preservesKreinForm v w
+
+end KreinConformalSymmetry
 
 /-- Boundary-preservation witness for a conformal symmetry. -/
 structure PreservesDrazinKreinBoundary
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (U : KreinConformalSymmetry V Op K) where
@@ -560,7 +585,7 @@ structure PreservesDrazinKreinBoundary
 /-- Conformal symmetries preserving both cuts preserve Drazin--Krein null vectors. -/
 theorem conformal_symmetry_preserves_drazin_krein_null_vectors
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (U : KreinConformalSymmetry V Op K)
@@ -658,7 +683,7 @@ theorem hilbert_normal_vanishes_on_tangent
 /-- Normal/conormal obstruction data at a Drazin--Krein null boundary point. -/
 structure BoundaryNormalObstruction
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (x : V) where
@@ -672,7 +697,7 @@ structure BoundaryNormalObstruction
 /-- Orthogonality to every vector in the Drazin zero sector. -/
 def KreinOrthogonalToDrazinZeroSector
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (v : V) : Prop :=
@@ -686,7 +711,7 @@ This is stronger than mere Drazin-zero Krein nullity.
 -/
 def InRestrictedDrazinRadical
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
     (v : V) : Prop :=
@@ -695,7 +720,7 @@ def InRestrictedDrazinRadical
 /-- Restricted radical points are Drazin-zero. -/
 theorem restricted_radical_in_zero_sector
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     {K : DoubledKreinCarrier V Op}
     {D : AlgebraicDrazinData Op}
     {v : V}
@@ -706,7 +731,7 @@ theorem restricted_radical_in_zero_sector
 /-- Restricted radical points are Krein-null. -/
 theorem restricted_radical_is_krein_null
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     {K : DoubledKreinCarrier V Op}
     {D : AlgebraicDrazinData Op}
     {v : V}
@@ -717,7 +742,7 @@ theorem restricted_radical_is_krein_null
 /-- Restricted radical points are Drazin--Krein null vectors. -/
 theorem restricted_radical_is_drazin_krein_null
     {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     {K : DoubledKreinCarrier V Op}
     {D : AlgebraicDrazinData Op}
     {v : V}
@@ -726,25 +751,18 @@ theorem restricted_radical_is_drazin_krein_null
   ⟨restricted_radical_in_zero_sector hv, restricted_radical_is_krein_null hv⟩
 
 /--
-Normal/conormal witness for a projective Drazin--Krein null boundary.
+Normal/conormal data for a projective Drazin--Krein null boundary.
 
-This records the dual obstruction geometry: failure of nullity, leakage out of
-the Drazin-zero sector, and Weyl/anomaly scaling of conormals.
+This records the normal/conormal carrier over each projective ray.
 -/
 structure BoundaryNormalCone
     (V Op : Type*)
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
+    [Ring Op]
     (K : DoubledKreinCarrier V Op)
     (D : AlgebraicDrazinData Op)
-    (B : DrazinKreinNullBoundary V Op K D) where
+  (B : DrazinKreinNullBoundary V Op K D) where
   /-- Normal/conormal carrier over each projective ray. -/
   Normal : B.Ray → Type*
-  /-- Normal component detecting failure of the Krein-null constraint. -/
-  detects_failure_of_nullity : Prop
-  /-- Normal component detecting leakage out of the Drazin zero sector. -/
-  detects_failure_of_drazin_zero_sector : Prop
-  /-- Weyl scaling weight/anomaly channel on conormals. -/
-  weyl_scaling_weight : Prop
 
 
 end InfoGeometry.Canonical.KreinDrazinBoundarySupport

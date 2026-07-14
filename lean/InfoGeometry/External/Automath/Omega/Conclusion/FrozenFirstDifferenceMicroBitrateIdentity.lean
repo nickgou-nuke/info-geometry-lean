@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Conclusion.ConclusionFrozenFirstDifferenceRecoversMaxfiberExponent
-import Omega.Conclusion.DeepfrozenMicroescortOracleThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.ConclusionFrozenFirstDifferenceRecoversMaxfiberExponent
+import InfoGeometry.External.Automath.Omega.Conclusion.DeepfrozenMicroescortOracleThreshold
 
 open Filter
 open scoped Topology

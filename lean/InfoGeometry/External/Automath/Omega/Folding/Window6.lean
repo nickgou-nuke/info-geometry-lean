@@ -1,12 +1,12 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
-import Omega.Folding.FiberSpectrum
-import Omega.Folding.MaxFiberHigh
-import Omega.Folding.FiberArithmetic
-import Omega.Folding.MomentSum
-import Omega.Folding.BinFold
-import Omega.Folding.CollisionKernel
-import Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Folding.Defect
 
 /-! ### Window-6 invariants
 

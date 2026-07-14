@@ -1,4 +1,4 @@
-import Omega.Conclusion.TqftHighGenusBottomSpectrumPeeling
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftHighGenusBottomSpectrumPeeling
 
 namespace Omega.Conclusion
 

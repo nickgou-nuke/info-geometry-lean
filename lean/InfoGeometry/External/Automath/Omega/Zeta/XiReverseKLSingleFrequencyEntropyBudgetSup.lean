@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiReverseKLSingleFrequencyExactMinimizer
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLSingleFrequencyExactMinimizer
 
 namespace Omega.Zeta
 

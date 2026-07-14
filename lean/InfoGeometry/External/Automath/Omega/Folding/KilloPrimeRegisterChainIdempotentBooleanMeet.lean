@@ -1,4 +1,4 @@
-import Omega.Folding.KilloPrimeRegisterChainIdempotentBooleanRank
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeRegisterChainIdempotentBooleanRank
 
 namespace Omega.Folding
 

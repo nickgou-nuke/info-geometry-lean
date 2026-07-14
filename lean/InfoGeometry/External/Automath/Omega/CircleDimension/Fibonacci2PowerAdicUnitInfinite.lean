@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.OddDivisibilityTowerHolographicSeparation
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.CircleDimension.OddDivisibilityTowerHolographicSeparation
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega.CircleDimension
 

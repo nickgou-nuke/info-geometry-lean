@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
-import Omega.Zeta.XiToeplitzDiskpoleModulusClosedFormHighHeight
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzDiskpoleModulusClosedFormHighHeight
 
 namespace Omega.UnitCirclePhaseArithmetic
 

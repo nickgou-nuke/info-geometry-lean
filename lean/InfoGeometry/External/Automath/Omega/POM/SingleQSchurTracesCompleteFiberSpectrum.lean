@@ -1,6 +1,6 @@
 import Mathlib.Data.Multiset.Basic
-import Omega.POM.FiberSpectrumPronyHankel2rReconstruction
-import Omega.POM.HighorderSchurPackageDeterminesFullFiberMultiset
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankel2rReconstruction
+import InfoGeometry.External.Automath.Omega.POM.HighorderSchurPackageDeterminesFullFiberMultiset
 
 namespace Omega.POM
 

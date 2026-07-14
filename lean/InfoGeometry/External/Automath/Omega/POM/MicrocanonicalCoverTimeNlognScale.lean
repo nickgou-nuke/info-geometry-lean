@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.MicrocanonicalCoverTimeStrategyInvariance
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeStrategyInvariance
 
 namespace Omega.POM
 

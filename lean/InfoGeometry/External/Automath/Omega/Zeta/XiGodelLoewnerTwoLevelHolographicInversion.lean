@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiGodelLoewnerExteriorBoxLoewnerHolographicWeight
+import InfoGeometry.External.Automath.Omega.Zeta.XiGodelLoewnerExteriorBoxLoewnerHolographicWeight
 
 namespace Omega.Zeta
 

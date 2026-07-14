@@ -1,4 +1,4 @@
-import Omega.CircleDimension.AtomicDefectProny2KappaRecovery
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectProny2KappaRecovery
 import Mathlib.Tactic
 
 namespace Omega.TypedAddressBiaxialCompletion

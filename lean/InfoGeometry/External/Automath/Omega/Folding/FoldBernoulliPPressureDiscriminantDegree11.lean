@@ -1,5 +1,5 @@
-import Omega.Folding.BernoulliPPressureQuartic
-import Omega.Folding.GaugeAnomalyLeyangBranchU1
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPPressureQuartic
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyLeyangBranchU1
 
 namespace Omega.Folding
 

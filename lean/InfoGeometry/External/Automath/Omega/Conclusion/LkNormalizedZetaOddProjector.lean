@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.LkFixedIndexHardEdge
-import Omega.POM.LkSpectralZetaDirichlet
+import InfoGeometry.External.Automath.Omega.Conclusion.LkFixedIndexHardEdge
+import InfoGeometry.External.Automath.Omega.POM.LkSpectralZetaDirichlet
 
 open Filter
 

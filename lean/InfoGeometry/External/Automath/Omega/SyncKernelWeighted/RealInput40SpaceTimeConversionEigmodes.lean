@@ -1,5 +1,5 @@
-import Omega.SyncKernelRealInput.RealInput40DirectionalCouplingEigs
-import Omega.SyncKernelWeighted.RealInput40SpaceTimeConversionLaw
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40DirectionalCouplingEigs
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40SpaceTimeConversionLaw
 
 namespace Omega.SyncKernelWeighted
 

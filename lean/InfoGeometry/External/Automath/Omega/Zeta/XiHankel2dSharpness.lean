@@ -1,5 +1,5 @@
-import Omega.Zeta.DephysHankelFiniteAudit
-import Omega.Zeta.HankelWindowFiber1d
+import InfoGeometry.External.Automath.Omega.Zeta.DephysHankelFiniteAudit
+import InfoGeometry.External.Automath.Omega.Zeta.HankelWindowFiber1d
 
 namespace Omega.Zeta
 

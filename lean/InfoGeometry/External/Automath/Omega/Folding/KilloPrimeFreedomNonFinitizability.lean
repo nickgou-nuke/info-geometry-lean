@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterMonoidRealization
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterMonoidRealization
 
 namespace Omega.Folding
 

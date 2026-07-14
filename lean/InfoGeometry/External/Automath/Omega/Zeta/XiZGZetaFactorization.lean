@@ -1,5 +1,5 @@
-import Omega.Zeta.DerivedZGHardcoreFactorization
-import Omega.Zeta.XiZGAbelResidueLogDensity
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGHardcoreFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGAbelResidueLogDensity
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.POM.PrimeAxisVs2dExternalization
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.POM.PrimeAxisVs2dExternalization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

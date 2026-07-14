@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldBinGaugeConstantStirlingBernoulliHierarchy
-import Omega.Folding.FoldBinRecover2Pi
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeConstantStirlingBernoulliHierarchy
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRecover2Pi
 
 namespace Omega.Conclusion
 

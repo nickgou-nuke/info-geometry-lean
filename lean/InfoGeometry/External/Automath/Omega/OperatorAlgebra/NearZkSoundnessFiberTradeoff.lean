@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.SoundnessLowerBoundIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.SoundnessLowerBoundIndex
 import Mathlib.Tactic
 
 namespace Omega.OperatorAlgebra

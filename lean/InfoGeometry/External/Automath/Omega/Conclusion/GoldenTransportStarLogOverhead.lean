@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.Conclusion.RamanujanCollapse
-import Omega.Kronecker.W1FibonacciLimits
-import Omega.Kronecker.W1RightShiftedMinimizer
+import InfoGeometry.External.Automath.Omega.Conclusion.RamanujanCollapse
+import InfoGeometry.External.Automath.Omega.Kronecker.W1FibonacciLimits
+import InfoGeometry.External.Automath.Omega.Kronecker.W1RightShiftedMinimizer
 
 namespace Omega.Conclusion
 

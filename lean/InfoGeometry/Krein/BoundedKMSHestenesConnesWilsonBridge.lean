@@ -102,7 +102,7 @@ variable (B : BoundedKMSHestenesConnesWilsonBridge
 /-- The installed Hestenes--Connes--Wilson owner induced by the bounded KMS lane. -/
 @[rep_depth krein]
 def toHestenesConnesWilsonBridge :
-    HestenesConnesWilsonBridge (E := E) Word where
+    _root_.InfoGeometry.Krein.HestenesConnesWilsonBridge.Bridge (E := E) Word where
   kmsPacket := B.boundedVacuum.boundedHestenes.hestenes
   beta := B.boundedVacuum.boundedHestenes.boundedKMS.beta
   realState := B.boundedVacuum.boundedHestenes.realState

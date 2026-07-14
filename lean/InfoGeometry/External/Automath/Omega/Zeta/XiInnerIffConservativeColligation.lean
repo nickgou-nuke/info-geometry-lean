@@ -1,4 +1,4 @@
-import Omega.Zeta.XiHorizonConservativeRealization
+import InfoGeometry.External.Automath.Omega.Zeta.XiHorizonConservativeRealization
 
 namespace Omega.Zeta
 

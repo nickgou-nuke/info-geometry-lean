@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.BernoulliHalfLowTempCubicActivation
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliHalfLowTempCubicActivation
 
 namespace Omega.Folding
 

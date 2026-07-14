@@ -43,7 +43,8 @@ theorem paper_conclusion_m2_level3_delta0_deligne_residue_spectrum :
       12 + 6 + 6 = 24 ∧
       9 + 3 + 3 = 15 ∧
       3 + 6 + 6 = 15 := by
-  have _hOrder6 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩)
+  have hchar := paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+    ⟨by constructor <;> native_decide⟩
   have _hSiegel := paper_conclusion_m2_level3_delta0_inertia_siegel_charpoly
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, by norm_num, by norm_num, by norm_num⟩
   · norm_num [conclusion_m2_level3_delta0_deligne_residue_spectrum_V24_multiplicities]

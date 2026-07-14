@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.MetallicTwoStateSFT
-import Omega.Folding.OstrowskiMetallicTwoRuleNormalization
+import InfoGeometry.External.Automath.Omega.Folding.MetallicTwoStateSFT
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiMetallicTwoRuleNormalization
 
 namespace Omega.Folding
 

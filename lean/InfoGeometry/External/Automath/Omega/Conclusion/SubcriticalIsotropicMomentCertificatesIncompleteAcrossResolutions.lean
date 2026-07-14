@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryGodelVsIsotropicMomentExponentialIncompressibility
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelVsIsotropicMomentExponentialIncompressibility
 
 namespace Omega.Conclusion
 

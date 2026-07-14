@@ -1,4 +1,4 @@
-import Omega.Core.Word
+import InfoGeometry.External.Automath.Omega.Core.Word
 
 namespace Omega
 

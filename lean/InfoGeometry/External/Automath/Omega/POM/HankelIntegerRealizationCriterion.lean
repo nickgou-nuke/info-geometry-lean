@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.POM.HankelSmithMinimalDenominator
+import InfoGeometry.External.Automath.Omega.POM.HankelSmithMinimalDenominator
 
 namespace Omega.POM
 

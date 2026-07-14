@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.GoldenSprtTailExponentChernoffIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtTailExponentChernoffIdentity
 
 open Filter
 open scoped Topology goldenRatio

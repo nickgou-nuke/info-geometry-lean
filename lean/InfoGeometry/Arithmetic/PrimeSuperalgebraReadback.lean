@@ -137,6 +137,11 @@ def thermalPrimeFactor
     (p : ℕ) : ℂ :=
   (Real.exp (-β * Real.log (p : ℝ)) : ℂ)
 
+lemma thermalPrimeFactor_ne_zero (β : ℝ) (p : ℕ) :
+    thermalPrimeFactor β p ≠ 0 := by
+  unfold thermalPrimeFactor
+  exact_mod_cast (Real.exp_ne_zero _)
+
 /-- Finite thermal supertrace over a prime register. -/
 def finiteThermalSupertrace
     (P : FermionicPrimeRegister)

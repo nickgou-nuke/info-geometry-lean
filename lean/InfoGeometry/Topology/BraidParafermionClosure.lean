@@ -61,12 +61,12 @@ def z3Unit : ZMod 3 := 1
 /-- `3z_3=0`. -/
 theorem z3Unit_three_windings :
     z3Unit + z3Unit + z3Unit = 0 := by
-  native_decide
+  decide
 
 /-- `z_3\neq 0`. -/
 theorem z3Unit_nonzero :
     z3Unit ≠ 0 := by
-  native_decide
+  decide
 
 /-- `(\mathrm{Artin})\wedge(3z_3=0)\wedge(z_3\neq 0)`. -/
 theorem finite_braid_parafermion_closure (t : ℂ) :

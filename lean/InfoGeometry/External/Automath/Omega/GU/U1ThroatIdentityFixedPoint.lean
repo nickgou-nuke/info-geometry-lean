@@ -1,4 +1,4 @@
-import Omega.GU.U1ThroatIdentity
+import InfoGeometry.External.Automath.Omega.GU.U1ThroatIdentity
 
 namespace Omega.GU
 

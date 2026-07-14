@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.GmAffineSelfmapSpectralGap
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GmAffineSelfmapSpectralGap
 
 namespace Omega.SyncKernelRealInput
 

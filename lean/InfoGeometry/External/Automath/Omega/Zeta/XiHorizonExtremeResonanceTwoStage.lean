@@ -1,5 +1,5 @@
-import Omega.Zeta.XiHorizonEndpointAtomChristoffel
-import Omega.Zeta.XiHorizonReflectionFiniteWitness
+import InfoGeometry.External.Automath.Omega.Zeta.XiHorizonEndpointAtomChristoffel
+import InfoGeometry.External.Automath.Omega.Zeta.XiHorizonReflectionFiniteWitness
 
 open Filter
 open scoped Topology

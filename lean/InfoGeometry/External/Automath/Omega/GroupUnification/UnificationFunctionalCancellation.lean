@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.TwoChannelCollapse
+import InfoGeometry.External.Automath.Omega.GroupUnification.TwoChannelCollapse
 
 namespace Omega.GroupUnification.UnificationFunctionalCancellation
 

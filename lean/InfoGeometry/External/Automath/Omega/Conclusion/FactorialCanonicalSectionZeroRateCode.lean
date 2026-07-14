@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ZeckendorfEulerReindexing
-import Omega.Conclusion.ZeckendorfEulerSuperexponentialTail
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerReindexing
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerSuperexponentialTail
 
 namespace Omega.Conclusion
 

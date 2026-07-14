@@ -1,4 +1,4 @@
-import Omega.GU.PullbackBracketFromOperatorEnvelope
+import InfoGeometry.External.Automath.Omega.GU.PullbackBracketFromOperatorEnvelope
 
 namespace Omega.GU
 

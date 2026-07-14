@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.BooleanTwoLayerCokerAndModmKernelCount
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerCokerAndModmKernelCount
 
 namespace Omega.Zeta
 

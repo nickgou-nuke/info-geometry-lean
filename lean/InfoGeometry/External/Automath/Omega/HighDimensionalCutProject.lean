@@ -1,1 +1,1 @@
-import Omega.HighDimensionalCutProject.IndicatorSumRewrite
+import InfoGeometry.External.Automath.Omega.HighDimensionalCutProject.IndicatorSumRewrite

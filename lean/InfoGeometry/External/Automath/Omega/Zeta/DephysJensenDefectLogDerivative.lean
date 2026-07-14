@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.AppJensenDefectLogDerivative
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenDefectLogDerivative
 
 namespace Omega.Zeta
 

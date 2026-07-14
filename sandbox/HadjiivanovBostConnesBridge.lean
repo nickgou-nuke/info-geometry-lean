@@ -30,4 +30,18 @@ theorem logBlockPartitionFunction_vanishes (R : Type*) [CommRing R] :
   dsimp [logBlockPartitionFunction, standardLogBlock]
   simp [Matrix.trace_fin_two, jordanNilpotent]
 
+/--
+The bridge theorem connecting the Hadjiivanov log block partition function
+to the Bost-Connes KMS partition function.
+By tracking the anomalous dimensions, the total partition function separates
+into the chiral nilpotent anomaly (which vanishes) and the zeta function.
+-/
+theorem hadjiivanov_bostConnes_bridge (β : ℂ) :
+    AmplituhedronBostConnes.all_loop_integrand_bost_connes_kms_state β =
+    logBlockPartitionFunction ℂ + riemannZeta β := by
+  rw [AmplituhedronBostConnes.all_loop_integrand_bost_connes_kms_state]
+  have h : logBlockPartitionFunction ℂ = 0 := logBlockPartitionFunction_vanishes ℂ
+  rw [h]
+  simp
+
 end InfoGeometry.Physics.Hadjiivanov

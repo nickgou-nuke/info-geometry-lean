@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40TraceRecurrence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40TraceRecurrence
 
 namespace Omega.SyncKernelWeighted
 

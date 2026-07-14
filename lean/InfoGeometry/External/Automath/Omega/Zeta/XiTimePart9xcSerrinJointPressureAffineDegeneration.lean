@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xcSerrinLdpVacuum
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xcSerrinLdpVacuum
 
 namespace Omega.Zeta
 

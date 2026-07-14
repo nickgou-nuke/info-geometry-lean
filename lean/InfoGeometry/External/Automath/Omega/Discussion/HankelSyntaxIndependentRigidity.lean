@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.HankelNFShiftInvarianceAndPropagation
+import InfoGeometry.External.Automath.Omega.POM.HankelNFShiftInvarianceAndPropagation
 
 namespace Omega.Discussion
 

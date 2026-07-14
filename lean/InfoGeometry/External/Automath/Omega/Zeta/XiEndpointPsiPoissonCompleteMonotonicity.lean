@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointPsiPoissonShiftLoewnerMonotone
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointPsiPoissonShiftLoewnerMonotone
 
 namespace Omega.Zeta
 

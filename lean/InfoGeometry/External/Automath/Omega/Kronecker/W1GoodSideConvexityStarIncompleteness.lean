@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Kronecker.W1SingleBoxOptimalCentering
+import InfoGeometry.External.Automath.Omega.Kronecker.W1SingleBoxOptimalCentering
 
 namespace Omega.Kronecker
 

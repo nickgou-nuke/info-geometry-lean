@@ -45,25 +45,76 @@ def IsKleinCompatibleWallpaper (S : Mat2Q) : Prop :=
 /-- Every displayed wallpaper point symmetry is Klein-compatible. -/
 theorem wallpaperD4_is_klein_compatible (i : Fin 8) :
     IsKleinCompatibleWallpaper (wallpaperD4 i) := by
-  fin_cases i <;> constructor <;> native_decide
+  fin_cases i
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · left
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · left
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · left
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · left
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · right
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · right
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · right
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+  · constructor
+    · ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
+    · right
+      ext a b <;> fin_cases a <;> fin_cases b <;>
+        norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The displayed compatible symmetries preserve the fermionic square of the
 Brillouin twist under conjugation/action. -/
 theorem wallpaperD4_preserves_twist_square (i : Fin 8) :
     wallpaperD4 i * (brillouinTwist2 * brillouinTwist2) = -(wallpaperD4 i) := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
+    norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The four rotational elements commute with the twist. -/
 theorem wallpaperD4_rotations_commute (i : Fin 4) :
     wallpaperD4 ⟨i.val, by omega⟩ * brillouinTwist2 =
       brillouinTwist2 * wallpaperD4 ⟨i.val, by omega⟩ := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
+    norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The four reflection/glide elements anticommute with the twist. -/
 theorem wallpaperD4_reflections_anticommute (i : Fin 4) :
     wallpaperD4 ⟨i.val + 4, by omega⟩ * brillouinTwist2 =
       -brillouinTwist2 * wallpaperD4 ⟨i.val + 4, by omega⟩ := by
-  fin_cases i <;> native_decide
+  fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
+    norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- A finite classification certificate: an owner can identify any wallpaper
 point symmetry satisfying the Klein compatibility predicates with one of the

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Experiments.TVCertificateHist
+import InfoGeometry.External.Automath.Omega.Experiments.TVCertificateHist
 
 namespace Omega.Experiments.RotationMicrostateKLCertificate
 

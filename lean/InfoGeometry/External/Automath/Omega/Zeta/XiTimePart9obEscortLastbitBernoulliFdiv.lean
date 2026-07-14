@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9odEscortEscortFdivBinaryClosure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortEscortFdivBinaryClosure
 
 namespace Omega.Zeta
 

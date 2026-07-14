@@ -1,4 +1,4 @@
-import Omega.Zeta.CLTSpectral
+import InfoGeometry.External.Automath.Omega.Zeta.CLTSpectral
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Finsupp.Multiset
 import Mathlib.Tactic
-import Omega.GU.EllipticGateMinimalRegister
+import InfoGeometry.External.Automath.Omega.GU.EllipticGateMinimalRegister
 
 namespace Omega.GU
 

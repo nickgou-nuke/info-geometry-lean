@@ -2,8 +2,8 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.AtomicDefectProny2KappaRecovery
-import Omega.Zeta.XiEndpointJensenDefectH12GramKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectProny2KappaRecovery
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointJensenDefectH12GramKernel
 
 namespace Omega.Zeta
 

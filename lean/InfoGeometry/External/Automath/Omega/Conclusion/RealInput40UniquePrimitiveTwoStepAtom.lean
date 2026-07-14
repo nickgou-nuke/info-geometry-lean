@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.RealInput40RootUnityGhostCompletePrimitiveDegenerate
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40RootUnityGhostCompletePrimitiveDegenerate
 
 namespace Omega.Conclusion
 

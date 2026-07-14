@@ -2,8 +2,8 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Tactic
-import Omega.POM.CrossAnomMobiusAnovaDimensionTheory
-import Omega.POM.EulerDefectQuotientCoordinate
+import InfoGeometry.External.Automath.Omega.POM.CrossAnomMobiusAnovaDimensionTheory
+import InfoGeometry.External.Automath.Omega.POM.EulerDefectQuotientCoordinate
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiReverseKLSingleFrequencyLegendreFenchelClosed
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLSingleFrequencyLegendreFenchelClosed
 
 namespace Omega.Zeta
 

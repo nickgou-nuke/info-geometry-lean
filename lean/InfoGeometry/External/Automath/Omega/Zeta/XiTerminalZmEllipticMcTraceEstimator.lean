@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmEllipticFiberCountMeanTrace
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmEllipticFiberCountMeanTrace
 
 namespace Omega.Zeta
 

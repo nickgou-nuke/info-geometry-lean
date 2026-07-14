@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
-import Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldCenterExpectationIndexCollision2
 
 namespace Omega.Conclusion
 

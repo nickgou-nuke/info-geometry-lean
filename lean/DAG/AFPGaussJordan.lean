@@ -22,26 +22,30 @@ def swaprows (l k : Fin m) (A : Matrix (Fin m) (Fin n) ℚ) : Matrix (Fin m) (Fi
   λ r c => if r = l then A k c else if r = k then A l c else A r c
 
 def PivotFun (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ) (jj : ℕ) : Prop :=
-  (∀ i, i < m → f i ≤ jj) ∧
-  (∀ i, i < m → f i < jj → A ⟨i, by omega⟩ ⟨f i, by omega⟩ = 1) ∧
-  (∀ i i', i < m → f i < jj → i' < m → i' ≠ i → A ⟨i', by omega⟩ ⟨f i, by omega⟩ = 0) ∧
-  (∀ i j, i < m → j < f i → A ⟨i, by omega⟩ ⟨j, by omega⟩ = 0) ∧
-  (∀ i, i + 1 < m → f i < f (i + 1) ∨ f (i + 1) = jj)
+  ∃ h_jj : jj ≤ n,
+    (∀ i, i < m → f i ≤ jj) ∧
+    (∀ i (hi : i < m) (hfi : f i < jj), A ⟨i, hi⟩ ⟨f i, by omega⟩ = 1) ∧
+    (∀ i i' (hi : i < m) (hfi : f i < jj) (hi' : i' < m), i' ≠ i →
+      A ⟨i', hi'⟩ ⟨f i, by omega⟩ = 0) ∧
+    (∀ i (hi : i < m) (hfi : f i ≤ jj) j (hj : j < f i),
+      A ⟨i, hi⟩ ⟨j, by omega⟩ = 0) ∧
+    (∀ i, i + 1 < m → f i < f (i + 1) ∨ f (i + 1) = jj)
 
 -- Lemma 1: non-pivot rows are all zeros
 lemma non_pivot_rows_zero (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
     (hp : PivotFun A f n) (i : ℕ) (hi : i < m) (hfi : f i = n) (j : Fin n) :
     A ⟨i, hi⟩ j = 0 := by
-  rcases hp with ⟨_, _, _, h_left_zero, _⟩
+  rcases hp with ⟨_, _, _, _, h_left_zero, _⟩
   have hj_lt_n : j.val < n := j.2
   have hj_lt_fi : j.val < f i := by rw [hfi]; exact hj_lt_n
-  exact h_left_zero i hi j.val hj_lt_fi
+  exact h_left_zero i hi (by simpa [hfi] using (hp.2.1 i hi)) j.val hj_lt_fi
 
 -- Lemma 2: each pivot column f(i) of A is a standard basis vector e_i
 lemma pivot_column_is_std_basis (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
     (hp : PivotFun A f n) (i : ℕ) (hi : i < m) (hfi : f i < n) :
-    A ⟨i, hi⟩ ⟨f i, by omega⟩ = 1 ∧ ∀ (k : ℕ), k < m → k ≠ i → A ⟨k, by omega⟩ ⟨f i, by omega⟩ = 0 := by
-  rcases hp with ⟨_, h_pivot_one, h_pivot_zero, _, _⟩
+    A ⟨i, hi⟩ ⟨f i, by omega⟩ = 1 ∧ ∀ (k : ℕ) (hk : k < m), k ≠ i →
+      A ⟨k, hk⟩ ⟨f i, by omega⟩ = 0 := by
+  rcases hp with ⟨_, _, h_pivot_one, h_pivot_zero, _, _⟩
   exact ⟨h_pivot_one i hi hfi, λ k hk hne => h_pivot_zero i k hi hfi hk hne⟩
 
 -- Lemma 3: pivot rows of Aᵀ are standard basis vectors
@@ -50,14 +54,21 @@ lemma pivot_rows_transpose_are_std_basis (A : Matrix (Fin m) (Fin n) ℚ) (f : �
     (Aᵀ ⟨f i, by omega⟩) = (Pi.basisFun ℚ (Fin m)) ⟨i, hi⟩ := by
   ext k
   rcases pivot_column_is_std_basis A f hp i hi hfi with ⟨h_one, h_zero⟩
-  simp [h_one, h_zero k k.2]
+  classical
+  by_cases hki : k.val = i
+  · have hk : k = ⟨i, hi⟩ := Fin.ext hki
+    subst hk
+    simp [h_one]
+  · have hz := h_zero k.val k.2 hki
+    have hneq : k ≠ ⟨i, hi⟩ := by
+      intro hk
+      apply hki
+      exact congrArg Fin.val hk
+    simp [Pi.single_apply, hz, hneq]
 
 -- Lemma 4: pivot rows of A (the vectors A⟨i,·⟩ for i ∈ P) as a Finset
 def pivotRows (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ) : Finset (Fin n → ℚ) :=
-  (Finset.filter (λ i : ℕ => i < m ∧ f i < n) (Finset.range m)).image (λ i => A ⟨i, by
-    have hi := (Finset.mem_filter.mp (by
-      apply Finset.mem_filter.mpr; exact ⟨by omega, by omega⟩)).1
-    omega⟩)
+  (Finset.filter (λ i : Fin m => f i.val < n) Finset.univ).image A
 
 -- Helper: row i of A as a vector in Fin n → ℚ
 def rowVec (A : Matrix (Fin m) (Fin n) ℚ) (i : Fin m) : Fin n → ℚ := A i
@@ -82,19 +93,22 @@ lemma rank_transpose_le_pivot_card (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ →
   have h_span_eq : Submodule.span ℚ (Set.range (rowVec A)) = Submodule.span ℚ (rows : Set (Fin n → ℚ)) := by
     apply le_antisymm
     · -- Every row is either in rows (pivot) or zero → in span
+      apply Submodule.span_le.mpr
       intro v hv
       rcases Set.mem_range.mp hv with ⟨i, rfl⟩
       by_cases hfi : f i.val < n
       · apply Submodule.subset_span
         dsimp [pivotRowVecs]
+        change rowVec A i ∈ rows
         apply Finset.mem_image.mpr
         refine ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hfi⟩, rfl⟩
       · have hfi_eq_n : f i.val = n := by
-          have h_bound := hp.1 i.val i.2; omega
+          have h_bound := hp.2.1 i.val i.2; omega
         rw [non_pivot_rows_zero' A f hp i hfi_eq_n]
         exact Submodule.zero_mem _
     · -- rows ⊆ all rows, so span(rows) ⊆ span(all rows)
       exact Submodule.span_mono (λ v hv => by
+        change v ∈ rows at hv
         rcases Finset.mem_image.mp hv with ⟨i, _, rfl⟩
         exact Set.mem_range_self i)
   -- rank(Aᵀ) = finrank(range(Aᵀ.mulVecLin)) = finrank(column space of Aᵀ)
@@ -124,19 +138,23 @@ lemma rank_transpose_le_pivot_card (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ →
           -- So Aᵀ*x = Σ_i x_i * (A i) ∈ span of rows of A
           have h_sum : Aᵀ.mulVec x = ∑ i : Fin m, x i • (A i) := by
             ext j
-            simp [Matrix.mulVec, Matrix.dotProduct, Finset.mul_comm]
+            simp [Matrix.mulVec, dotProduct, smul_eq_mul, mul_comm]
+          simp only [Matrix.mulVecLin_apply]
           rw [h_sum]
           refine Submodule.sum_mem _ (λ i _ => ?_)
           apply Submodule.smul_mem _ (x i)
           apply Submodule.subset_span
           exact ⟨i, rfl⟩
         · -- ⊇ : each row of A = column i of Aᵀ = Aᵀ * e_i ∈ range
+          apply Submodule.span_le.mpr
           intro v hv; rcases Set.mem_range.mp hv with ⟨i, rfl⟩
           refine LinearMap.mem_range.mpr ⟨Pi.basisFun ℚ (Fin m) i, ?_⟩
           -- Aᵀ * e_i = column i of Aᵀ = row i of A
-          ext j; simp [Matrix.mulVec, Matrix.dotProduct, Pi.basisFun]
+          ext j; simp [Matrix.mulVec, dotProduct, Pi.basisFun]
       rw [h_range_eq]
-    _ = Module.finrank ℚ (Submodule.span ℚ (rows : Set (Fin n → ℚ))) := by rw [h_span_eq]
+    _ = Module.finrank ℚ (Submodule.span ℚ (rows : Set (Fin n → ℚ))) := by
+      simpa [rowVec] using congrArg
+        (fun S : Submodule ℚ (Fin n → ℚ) => Module.finrank ℚ S) h_span_eq
     _ ≤ rows.card := by
       -- finrank(span of a Finset) ≤ cardinality of Finset
       have h_finrank : Set.finrank ℚ (rows : Set (Fin n → ℚ)) ≤ rows.card :=
@@ -151,14 +169,20 @@ lemma pivot_card_le_rank (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
   let P : Finset (Fin m) := Finset.filter (λ i : Fin m => f i.val < n) Finset.univ
   have h_card_eq : (pivotRowVecs A f).card = P.card := by
     dsimp [pivotRowVecs, rowVec]
-    apply Finset.card_image_of_injective
-    intro i j h
+    apply (Finset.card_image_iff).2
+    intro i hi j hj h
     by_contra hne
-    have hfi : f i.val < n := (Finset.mem_filter.mp i.2).2
+    have hfi : f i.val < n :=
+      (Finset.mem_filter.mp (show i ∈ P from hi)).2
     have hpiv := pivot_column_is_std_basis A f hp i.val i.2 hfi
     have h1 : A i ⟨f i.val, by omega⟩ = 1 := hpiv.1
-    have h0 : A j ⟨f i.val, by omega⟩ = 0 := hpiv.2 j.val j.2 (Ne.symm hne)
+    have hne_val : i.val ≠ j.val := by
+      intro hval
+      apply hne
+      exact Fin.ext hval
+    have h0 : A j ⟨f i.val, by omega⟩ = 0 := hpiv.2 j.val j.2 (Ne.symm hne_val)
     have h_eq_entry := congrArg (λ r : Fin n → ℚ => r ⟨f i.val, by omega⟩) h
+    change A i ⟨f i.val, by omega⟩ = A j ⟨f i.val, by omega⟩ at h_eq_entry
     rw [h1, h0] at h_eq_entry; linarith
   rw [h_card_eq]
   -- For each i ∈ P, column f(i) of A = e_i (standard basis in Fin m → ℚ).
@@ -182,17 +206,26 @@ lemma pivot_card_le_rank (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
   let stdBasis : P → Fin m → ℚ := λ i => Pi.basisFun ℚ (Fin m) i.val
   have h_independent : LinearIndependent ℚ stdBasis := by
     -- A subset of a basis is independent
-    exact (Pi.basisFun ℚ (Fin m)).linearIndependent.comp (Subtype.val_injective)
+    exact (Pi.basisFun ℚ (Fin m)).linearIndependent.comp
+      (fun i : P => i.val) Subtype.val_injective
   -- Each stdBasis(i) = e_i = column f(i) of A ∈ A.mulVecLin.range.
   have h_mem : ∀ i : P, stdBasis i ∈ A.mulVecLin.range := by
     intro i
-    have hfi : f i.val.val < n := (Finset.mem_filter.mp i.val.2).2
+    have hfi : f i.val.val < n := (Finset.mem_filter.mp i.2).2
     have h_col_eq : stdBasis i = (λ k : Fin m => A k ⟨f i.val.val, hfi⟩) := by
       -- e_i(k) = if k = i then 1 else 0
       -- A k (f i) = if k = i then 1 else 0 (by Lemma 2)
       ext k
       rcases pivot_column_is_std_basis A f hp i.val.val i.val.2 hfi with ⟨h_one, h_zero⟩
-      simp [stdBasis, Pi.basisFun, h_one, h_zero k k.2]
+      classical
+      by_cases hki : k = i.val
+      · subst hki
+        simp [stdBasis, Pi.basisFun, h_one]
+      · have hz := h_zero k.val k.2 (by
+          intro h
+          apply hki
+          exact Fin.ext h)
+        simp [stdBasis, Pi.basisFun, hz, hki]
     rw [h_col_eq]
     -- column f(i) of A = A * e_{f(i)} where e_{f(i)} is the f(i)-th basis vector of Fin n → ℚ
     -- A.mulVec (e_{f(i)}) = column f(i) of A
@@ -214,8 +247,52 @@ lemma pivot_card_le_rank (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
     _ = Matrix.rank A := rfl
 
 -- Main theorem: rank = pivot count
+lemma pivotRows_card_eq_nat_filter (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
+    (hp : PivotFun A f n) :
+    (pivotRows A f).card =
+      (Finset.filter (λ i : ℕ => i < m ∧ f i < n) (Finset.range m)).card := by
+  let P : Finset (Fin m) := Finset.filter (λ i : Fin m => f i.val < n) Finset.univ
+  let Q : Finset ℕ := Finset.filter (λ i : ℕ => i < m ∧ f i < n) (Finset.range m)
+  have h_image : (pivotRows A f).card = P.card := by
+    dsimp [pivotRows]
+    apply (Finset.card_image_iff).2
+    intro i hi j hj h
+    by_contra hne
+    have hfi : f i.val < n := (Finset.mem_filter.mp (show i ∈ P from hi)).2
+    have hpiv := pivot_column_is_std_basis A f hp i.val i.2 hfi
+    have h1 : A i ⟨f i.val, by omega⟩ = 1 := hpiv.1
+    have hne_val : i.val ≠ j.val := by
+      intro hval
+      apply hne
+      exact Fin.ext hval
+    have h0 : A j ⟨f i.val, by omega⟩ = 0 := hpiv.2 j.val j.2 (Ne.symm hne_val)
+    have h_eq_entry := congrArg (λ r : Fin n → ℚ => r ⟨f i.val, by omega⟩) h
+    change A i ⟨f i.val, by omega⟩ = A j ⟨f i.val, by omega⟩ at h_eq_entry
+    rw [h1, h0] at h_eq_entry
+    linarith
+  have h_filter : P.card = Q.card := by
+    apply Finset.card_bij (fun i _ => i.val)
+    · intro i hi
+      have hfi := (Finset.mem_filter.mp (show i ∈ P from hi)).2
+      exact Finset.mem_filter.mpr ⟨Finset.mem_range.mpr i.isLt, ⟨i.isLt, hfi⟩⟩
+    · intro i hi j hj h
+      exact Fin.ext h
+    · intro b hb
+      have hb' := Finset.mem_filter.mp hb
+      refine ⟨⟨b, hb'.2.1⟩, ?_, rfl⟩
+      exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hb'.2.2⟩
+  simpa [Q] using h_image.trans h_filter
+
 theorem rank_rref_eq_pivot_count (A : Matrix (Fin m) (Fin n) ℚ) (f : ℕ → ℕ)
     (hp : PivotFun A f n) : Matrix.rank A = (Finset.filter (λ i : ℕ => i < m ∧ f i < n) (Finset.range m)).card :=
-  le_antisymm (rank_le_pivot_count A f hp) (pivot_count_le_rank A f hp)
+  let h_upper : Matrix.rank A ≤ (pivotRows A f).card := by
+    rw [← Matrix.rank_transpose A]
+    exact rank_transpose_le_pivot_card A f hp
+  let h_lower : (pivotRows A f).card ≤ Matrix.rank A := pivot_card_le_rank A f hp
+  have h_pivot : Matrix.rank A = (pivotRows A f).card := le_antisymm h_upper h_lower
+  calc
+    Matrix.rank A = (pivotRows A f).card := h_pivot
+    _ = (Finset.filter (λ i : ℕ => i < m ∧ f i < n) (Finset.range m)).card :=
+      pivotRows_card_eq_nat_filter A f hp
 
 end DAG.AFPGaussJordan

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.JGGodelLoglatticeApproximation
-import Omega.Conclusion.JgSlitUniformizationOrthogonalCoordinates
-import Omega.Conclusion.TwoPrimeDenseOrbitHyperbolaLeaf
+import InfoGeometry.External.Automath.Omega.Conclusion.JGGodelLoglatticeApproximation
+import InfoGeometry.External.Automath.Omega.Conclusion.JgSlitUniformizationOrthogonalCoordinates
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoPrimeDenseOrbitHyperbolaLeaf
 
 namespace Omega.Conclusion
 

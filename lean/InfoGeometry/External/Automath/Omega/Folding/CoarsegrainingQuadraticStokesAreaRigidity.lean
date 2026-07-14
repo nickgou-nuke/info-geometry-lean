@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.HypercubeBiasEllipsoidGodelLength
+import InfoGeometry.External.Automath.Omega.Folding.HypercubeBiasEllipsoidGodelLength
 
 namespace Omega.Folding
 

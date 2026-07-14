@@ -1,5 +1,5 @@
-import Omega.Folding.FiberSpectrum
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 
 /-! ### Binary Fold: folding integers via Zeckendorf projection -/
 

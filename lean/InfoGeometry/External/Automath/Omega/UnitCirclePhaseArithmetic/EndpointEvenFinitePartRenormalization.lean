@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.EndpointEvenTristateMatrix
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointEvenTristateMatrix
 
 namespace Omega.UnitCirclePhaseArithmetic
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ProjectivePressureHolderLogconvex
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePressureHolderLogconvex
 
 namespace Omega.POM
 

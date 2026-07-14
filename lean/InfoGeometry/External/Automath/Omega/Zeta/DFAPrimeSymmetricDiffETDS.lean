@@ -1,4 +1,4 @@
-import Omega.Zeta.DFAPrimeSymmetricDiff
+import InfoGeometry.External.Automath.Omega.Zeta.DFAPrimeSymmetricDiff
 
 namespace Omega.Zeta
 

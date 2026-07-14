@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.SyncKernelWeighted.RealInputDigitwiseSumLayer
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInputDigitwiseSumLayer
 
 namespace Omega.SyncKernelWeighted
 

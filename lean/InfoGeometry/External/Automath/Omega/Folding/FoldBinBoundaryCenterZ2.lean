@@ -1,5 +1,5 @@
-import Omega.Folding.BinFoldGaugeSign
-import Omega.Folding.BoundaryLayer
+import InfoGeometry.External.Automath.Omega.Folding.BinFoldGaugeSign
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryLayer
 
 namespace Omega.Folding
 

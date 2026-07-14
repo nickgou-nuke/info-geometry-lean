@@ -1,5 +1,5 @@
-import Omega.Conclusion.RealInput40ZeroTempQuarticConstantUnification
-import Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40ZeroTempQuarticConstantUnification
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
 
 open Filter Topology
 

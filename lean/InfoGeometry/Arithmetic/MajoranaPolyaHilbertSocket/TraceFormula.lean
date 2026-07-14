@@ -17,7 +17,7 @@ mechanism.
 @[socket_debt_tag]
 structure BosonFermionSuperdeterminantSocket
     (BosonicReadout FermionicReadout SuperdeterminantReadout
-      ZetaReadout InverseZetaReadout : Type*) where
+      ZetaReadout InverseZetaReadout : Type) where
   bosonicReadout : BosonicReadout
   fermionicReadout : FermionicReadout
   superdeterminantReadout : SuperdeterminantReadout
@@ -34,12 +34,11 @@ target must supply an Archimedean/local-infinity readout and a completion law.
 @[socket_debt_tag]
 structure ArchimedeanGammaFactorSocket
     (SpectralParameter ArchimedeanReadout FinitePrimeReadout
-      CompletedZetaReadout : Type*) where
+      CompletedZetaReadout : Type) where
   parameter : SpectralParameter
   archimedeanReadout : ArchimedeanReadout
   finitePrimeReadout : FinitePrimeReadout
   completedZetaReadout : CompletedZetaReadout
-  finitePrimes_alone_not_completed_guard : Type*
 
 namespace ArchimedeanGammaFactorSocket
 end ArchimedeanGammaFactorSocket
@@ -55,7 +54,7 @@ spectral zero data.
 @[socket_debt_tag]
 structure BoundaryScatteringDiscretizationSocket
     (BoundaryData ScatteringMatrix ContinuousSpectrum
-      DiscreteOrAbsorptionReadout PhaseShiftReadout : Type*) where
+      DiscreteOrAbsorptionReadout PhaseShiftReadout : Type) where
   boundaryData : BoundaryData
   scatteringMatrix : ScatteringMatrix
   continuousSpectrum : ContinuousSpectrum
@@ -72,7 +71,7 @@ formula recovers the Riemann--Weil explicit formula.
 @[socket_debt_tag]
 structure MBKHeatTraceExplicitFormulaSocket
     (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout : Type*) where
+      ExplicitFormulaReadout : Type) where
   heatTrace : HeatTrace
   bkHeatTrace : BKHeatTrace
   arithmeticHeatTrace : ArithmeticHeatTrace

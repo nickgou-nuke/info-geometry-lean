@@ -1,4 +1,4 @@
-import Omega.Zeta.NecklaceCorrection
+import InfoGeometry.External.Automath.Omega.Zeta.NecklaceCorrection
 
 open scoped BigOperators
 

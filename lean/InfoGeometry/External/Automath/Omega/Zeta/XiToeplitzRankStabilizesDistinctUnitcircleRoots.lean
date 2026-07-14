@@ -5,7 +5,7 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Vandermonde
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.BoundaryAbsorptionJuliaCaratheodory
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.BoundaryAbsorptionJuliaCaratheodory
 
 open Matrix
 open scoped BigOperators ComplexOrder

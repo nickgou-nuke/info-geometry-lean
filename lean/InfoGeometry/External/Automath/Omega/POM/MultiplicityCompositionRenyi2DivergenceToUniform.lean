@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionCollisionExponent
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionCollisionExponent
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PushforwardFullMatrix
-import Omega.Conclusion.Window6LowOrderTensorVacuum
+import InfoGeometry.External.Automath.Omega.Conclusion.PushforwardFullMatrix
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6LowOrderTensorVacuum
 
 namespace Omega.Conclusion
 

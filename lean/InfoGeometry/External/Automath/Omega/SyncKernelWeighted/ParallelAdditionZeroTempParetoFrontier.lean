@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.CarryFreeLeakage
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CarryFreeLeakage
 
 namespace Omega.SyncKernelWeighted
 

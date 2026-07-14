@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.OracleCapacityClosedForm
-import Omega.OperatorAlgebra.FoldUnlinkEvaluatesToCollisionMoment
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldUnlinkEvaluatesToCollisionMoment
 
 namespace Omega.OperatorAlgebra
 

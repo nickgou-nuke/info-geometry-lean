@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmDihedralDoubleDiscriminantLock
-import Omega.Zeta.XiTimePart9gLeyangCubicDiscriminant
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDihedralDoubleDiscriminantLock
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9gLeyangCubicDiscriminant
 
 namespace Omega.Zeta
 

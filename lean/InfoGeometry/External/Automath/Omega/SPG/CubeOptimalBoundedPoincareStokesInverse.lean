@@ -1,4 +1,4 @@
-import Omega.SPG.CubePoincareInverse
+import InfoGeometry.External.Automath.Omega.SPG.CubePoincareInverse
 
 namespace Omega.SPG
 

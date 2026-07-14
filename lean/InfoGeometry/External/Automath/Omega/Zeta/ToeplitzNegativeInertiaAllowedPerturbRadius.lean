@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.ToeplitzNegativeInertiaSpectralGapStability
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeInertiaSpectralGapStability
 
 namespace Omega.Zeta
 

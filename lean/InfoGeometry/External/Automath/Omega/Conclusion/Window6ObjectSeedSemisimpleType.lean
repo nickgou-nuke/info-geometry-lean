@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6FirstThreeMomentsRecoverWedderburnType
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6FirstThreeMomentsRecoverWedderburnType
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.AnchorFullRankWeightblindRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.AnchorFullRankWeightblindRigidity
 
 namespace Omega.Conclusion
 

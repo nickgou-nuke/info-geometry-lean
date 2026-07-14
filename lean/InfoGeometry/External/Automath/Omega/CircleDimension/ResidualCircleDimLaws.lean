@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ResidualCircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.ResidualCircleDim
 
 namespace Omega.CircleDimension.ResidualCircleDimLaws
 

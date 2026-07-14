@@ -24,8 +24,6 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
-set_option linter.dupNamespace false
-
 /-! ## 1. Abstract conformal compactification socket -/
 
 /--
@@ -114,7 +112,7 @@ structure TKKThreeGrading
   gPlus : Submodule ℝ L
 
   /-- The Lie algebra decomposes as `L = g₋₁ ⊕ g₀ ⊕ g₊₁`. -/
-  decomposition_True : ⊤ = gMinus ⊔ gZero ⊔ gPlus
+  decomposition_eq_top : ⊤ = gMinus ⊔ gZero ⊔ gPlus
 
   /-- `[g_-1, g_-1] = 0` for the short grading. -/
   bracket_minus_minus :
@@ -244,7 +242,7 @@ variable
 variable (T : TKKClosureDatum J L)
 
 /-- The TKK triple-product symmetry. -/
-theorem tkk_identity_holds
+theorem tkk_identity_eq
     (x y z : J) :
     ⁅⁅T.toMinus x, T.toPlus y⁆, T.toMinus z⁆ =
       ⁅⁅T.toMinus z, T.toPlus y⁆, T.toMinus x⁆ :=
@@ -289,7 +287,7 @@ structure TKKInfinitesimalAction
   This says the action is a Lie representation:
   `act [X,Y] = act X ∘ act Y - act Y ∘ act X`.
   -/
-  lie_action_True :
+  lie_action_compatibility :
     ∀ X Y : L,
       act ⁅X, Y⁆ =
         (act X).comp (act Y) - (act Y).comp (act X)
@@ -308,7 +306,7 @@ theorem act_lie
     (X Y : L) :
     A.act ⁅X, Y⁆ =
       (A.act X).comp (A.act Y) - (A.act Y).comp (A.act X) :=
-  A.lie_action_True X Y
+  A.lie_action_compatibility X Y
 
 end TKKInfinitesimalAction
 
@@ -761,7 +759,7 @@ This is the closed accounting ledger:
 * optional group-level lift;
 * closure-defect and Ricci-flux readout.
 -/
-structure TKKConformalClosure
+structure Closure
     (J V W L State Geometry : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup V] [Module ℝ V]
@@ -786,7 +784,7 @@ structure TKKConformalClosure
 
 
 
-namespace TKKConformalClosure
+namespace Closure
 
 variable
     {J V W L State Geometry : Type*}
@@ -797,42 +795,8 @@ variable
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
 
-variable (C : TKKConformalClosure J V W L State Geometry)
+variable (C : Closure J V W L State Geometry)
 
-
-
-/-- Ricci flux expands as curvature variation plus closure defect. -/
-theorem ricciFlux_def
-    (X : L)
-    (s : State) :
-    C.ricciFlux.ricciFlux X s =
-      C.ricciFlux.derivativeAlong.deriv
-        C.ricciFlux.curvatureReadout.curvature X s +
-      C.ricciFlux.closureDefect.defect X s :=
-  C.ricciFlux.ricciFlux_def X s
-
-/--
-The conformal anomaly (Ricci flux) is identified with the TKK closure defect
-when curvature is stationary along a generator `X`.
-
-This is the formal content of the Weyl anomaly theorem in the TKK framework:
-the trace anomaly of the stress tensor equals the failure of conformal
-invariance, expressed as the closure defect of the three-grading.
-
-**Literature**: Fradkin–Tseytlin, Phys. Lett. B 134 (1984) 187;
-Nakahara, Geometry, Topology and Physics §13.5.
--/
-theorem anomaly_is_closure_defect
-    (X : L)
-    (s : State)
-    (hstat :
-      C.ricciFlux.derivativeAlong.deriv
-        C.ricciFlux.curvatureReadout.curvature X s = 0) :
-    C.ricciFlux.ricciFlux X s = C.ricciFlux.closureDefect.defect X s :=
-  C.ricciFlux.ricciFlux_eq_defect_of_curvature_stationary X s hstat
-
-end TKKConformalClosure
+end Closure
 
 end InfoGeometry.OperatorAlgebra.TKKConformalClosure
-
-The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

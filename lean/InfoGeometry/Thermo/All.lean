@@ -6,6 +6,7 @@ import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
+import InfoGeometry.Thermo.JacobianBregmanBridge
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.KMSDetailedBalance
 import InfoGeometry.Thermo.MetalMirror

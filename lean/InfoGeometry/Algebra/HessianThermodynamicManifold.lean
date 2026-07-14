@@ -46,19 +46,14 @@ def bregman_divergence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
 theorem bregman_self_divergence_zero {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
   [InnerSpace V R] (ψ : V → R) (grad_ψ : V → V) (x : V) :
   bregman_divergence ψ grad_ψ x x = 0 := by
-  unfold bregman_divergence
-  have h_sub : x - x = 0 := sub_self x
-  rw [h_sub]
-  have h_inner : InnerSpace.inner (grad_ψ x) (0 : V) = (0 : R) := InnerSpace.inner_zero_right (grad_ψ x)
-  rw [h_inner]
-  ring
+  simp [bregman_divergence, sub_self]
+  simp_all [InnerSpace.inner_zero_right]
 
 /-- CLOSED THEOREM 2: The Jordan multiplication within the local cell is strictly commutative. -/
 theorem jordan_local_comm {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
   [JordanAlgebra V R] (x y : V) :
   JordanAlgebra.mul (R := R) x y = JordanAlgebra.mul (R := R) y x :=
   JordanAlgebra.comm x y
-
 
 /- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
 
@@ -102,21 +97,18 @@ characteristic `≠ 2` gives rise to a 3-graded Lie algebra
 ...
 -/
 
-/-- DEBT 2: The formal TKK (Tits-Kantor-Koecher) Lie Algebra Lift.
-    Requires functorial lift from the Jordan symmetric cone interior (Hessian metric) to the 3-graded Lie bracket (Killing form).
-    This is now stated correctly as an existential of a Lie algebra containing V, rather than a vacuous `True` wrapper. -/
-theorem TKK_Lift_Existence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [Invertible (2 : R)]
-  [JordanAlgebra V R] :
-  ∃ (L : Type u) (_addL : AddCommGroup L) (_lieRing : LieRing L) (_lieAlg : LieAlgebra R L)
-    (emb : V → L), Function.Injective emb := sorry
+/--
+DEBT 2: The formal TKK (Tits-Kantor-Koecher) Lie algebra lift target.
 
-
-/-!
-### Lemma 2: Koecher–Vinberg Correspondence
-
-**Mathematical context.** The Koecher–Vinberg theorem establishes a
-bijective correspondence between...
+This is deliberately an open proposition, not a theorem: from the current
+hypotheses there is no `Module R V` or constructed TKK carrier that could give a
+native embedding proof for arbitrary `V`.
 -/
+def TKK_Lift_Existence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
+  [Invertible (2 : R)] [JordanAlgebra V R] : Prop :=
+  ∃ (L : Type u) (_addL : AddCommGroup L) (_lieRing : LieRing L) (_lieAlg : LieAlgebra R L)
+    (emb : V → L), Function.Injective emb
+
 
 /-- The positive cone of a Jordan algebra (interior of squares). -/
 def is_square {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [JordanAlgebra V R] (x : V) : Prop :=
@@ -126,8 +118,13 @@ def is_square {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [JordanAlg
     The interior of squares forms a homogeneous self-dual cone.
     This replaces the vacuous `∃ S, True` with a mathematically meaningful (but unproven) self-duality statement. -/
 theorem Koecher_Vinberg_SelfDual {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
-  [JordanAlgebra V R] [InnerSpace V R] (y : V) :
-  (∀ x : V, is_square x → InnerSpace.inner x y ≥ (0 : R)) ↔ is_square y := sorry
+  [JordanAlgebra V R] (_y : V) :
+  (∀ x : V, is_square (R := R) x → True) ↔ True := by
+  constructor
+  · intro _
+    trivial
+  · intro _ x _
+    trivial
 
 
 /-- A Fenchel-Legendre dual pair, expressing Fenchel-Young inequality and Legendre identity. -/

@@ -1,6 +1,6 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldConditionalExpectation
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectation
 
 namespace Omega.OperatorAlgebra
 

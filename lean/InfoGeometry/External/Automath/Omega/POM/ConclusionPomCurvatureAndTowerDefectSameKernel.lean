@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.TowerDefectExactTvDuality
+import InfoGeometry.External.Automath.Omega.Conclusion.TowerDefectExactTvDuality
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalZmS4LanglandsFactorTorusRankConductorTable
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS4LanglandsFactorTorusRankConductorTable
 
 namespace Omega.Zeta
 

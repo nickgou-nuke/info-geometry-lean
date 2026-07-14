@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
 
 open scoped goldenRatio
 

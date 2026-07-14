@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.GroupoidCentralRenyiShannon
-import Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
+import InfoGeometry.External.Automath.Omega.Zeta.GroupoidCentralRenyiShannon
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
 
 namespace Omega.Zeta
 

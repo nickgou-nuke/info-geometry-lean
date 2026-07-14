@@ -1,8 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.POM.ProjectiveOperatorDegeneratesToMomentKernel
-import Omega.POM.ProjectivePressureHolderLogconvex
-import Omega.POM.ProjectivePressureZeroNormalization
+import InfoGeometry.External.Automath.Omega.POM.ProjectiveOperatorDegeneratesToMomentKernel
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePressureHolderLogconvex
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePressureZeroNormalization
 
 namespace Omega.POM
 

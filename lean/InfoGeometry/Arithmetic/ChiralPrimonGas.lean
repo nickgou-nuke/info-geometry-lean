@@ -95,6 +95,12 @@ theorem rightPart_coneBeta (beta0 rapidity : ℝ) :
 def modeWeight (beta nu : ℝ) (p : ℕ) : ℝ :=
   Real.exp (nu - beta * primeEnergy p)
 
+@[rep_depth thermo]
+lemma modeWeight_pos (beta nu : ℝ) (p : ℕ) :
+    0 < modeWeight beta nu p := by
+  unfold modeWeight
+  exact Real.exp_pos _
+
 /-- Mean occupation of a local mode. -/
 @[rep_depth thermo]
 def occupation (statistics : Statistics) (beta nu : ℝ) (p : ℕ) : ℝ :=
@@ -110,6 +116,21 @@ def occupation (statistics : Statistics) (beta nu : ℝ) (p : ℕ) : ℝ :=
   | .boson =>
       let z := modeWeight beta nu p
       z / (1 - z)
+
+@[rep_depth thermo]
+lemma occupation_fermion_pos (beta nu : ℝ) (p : ℕ) :
+    0 < occupation Statistics.fermion beta nu p := by
+  unfold occupation
+  by_cases hx : 0 ≤ beta * primeEnergy p - nu
+  · simp [hx]
+    positivity
+  · simp [hx]
+    positivity
+
+@[rep_depth thermo]
+lemma occupation_fermion_nonneg (beta nu : ℝ) (p : ℕ) :
+    0 ≤ occupation Statistics.fermion beta nu p :=
+  le_of_lt (occupation_fermion_pos beta nu p)
 
 /-- Local Massieu contribution. -/
 @[rep_depth thermo]

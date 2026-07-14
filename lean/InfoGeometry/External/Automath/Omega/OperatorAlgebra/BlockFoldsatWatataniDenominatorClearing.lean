@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.BlockFoldsatTraceCriterion
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.BlockFoldsatTraceCriterion
 
 namespace Omega.OperatorAlgebra
 

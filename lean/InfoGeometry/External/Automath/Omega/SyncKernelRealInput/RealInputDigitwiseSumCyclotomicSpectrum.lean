@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInputDigitwiseSumLayer
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInputDigitwiseSumLayer
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,4 +1,4 @@
-import Omega.GU.BdryZ2JumpUniqueness
+import InfoGeometry.External.Automath.Omega.GU.BdryZ2JumpUniqueness
 import Mathlib.Tactic
 
 namespace Omega.GU

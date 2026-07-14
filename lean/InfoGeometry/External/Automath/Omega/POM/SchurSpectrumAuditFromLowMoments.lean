@@ -1,4 +1,4 @@
-import Omega.POM.SchurCycleIndexTomography
+import InfoGeometry.External.Automath.Omega.POM.SchurCycleIndexTomography
 
 namespace Omega.POM
 

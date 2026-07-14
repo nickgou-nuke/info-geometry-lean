@@ -1,4 +1,4 @@
-import Omega.Multiscale.NormalizedStokesFiniteCoverInverseTower
+import InfoGeometry.External.Automath.Omega.Multiscale.NormalizedStokesFiniteCoverInverseTower
 
 namespace Omega.Multiscale
 

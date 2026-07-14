@@ -13,10 +13,9 @@ This module builds on the theorem-safe idempotent differential law from
 `p * d p * p = 0`.
 
 It defines the Berry connection `p_A * d p_A`, a curvature readout
-`p_A * d p_A * d p_A * p_A`, and a thermodynamic entropy packet
-for Hodge-Drazin Laplacian geometry.  It does not assert analytic trace, log,
-exponential, positivity, or Chern integration theorems beyond the concrete laws
-stored in each packet.
+`p_A * d p_A * d p_A * p_A`, and the supported-connection identities that
+follow from the idempotent differential law.  It does not assert analytic trace,
+log, exponential, positivity, entropy, or Chern integration theorems.
 -/
 
 noncomputable section
@@ -113,86 +112,5 @@ theorem harmonicBerryConnection_mul_HL_eq_zero :
   simpa [mul_assoc] using C.d_HL_off_diagonal D
 
 end LeanSafeCarrier
-
-/--
-Chern readout for a Drazin Berry curvature.
-
-Integration, trace, normalization constants, and cohomology classes are analytic
-or geometric model data, so the readout map and its value law are explicit
-fields.
--/
-@[rep_depth operator]
-structure DrazinBerryChernPacket
-    (Op : Type*) [Ring Op] where
-  carrier : LeanSafeCarrier Op
-  derivative : ExteriorDerivative Op
-  chernReadout : Op → ℝ
-  chernValue : ℝ
-  chern_law : chernReadout (carrier.berryCurvature derivative) = chernValue
-
-namespace DrazinBerryChernPacket
-
-variable {Op : Type*} [Ring Op]
-variable (P : DrazinBerryChernPacket Op)
-
-/-- Re-export of the supplied Chern readout law. -/
-@[rep_depth operator]
-theorem chern_readout_eq_value :
-    P.chernReadout (P.carrier.berryCurvature P.derivative) = P.chernValue :=
-  P.chern_law
-
-end DrazinBerryChernPacket
-
-/--
-Hodge-Drazin thermodynamic entropy packet.
-
-This records only the algebraic support law for the density and the finite
-entropy split. Since trace, exponential, logarithm, and positivity theory are
-not available in an arbitrary operator ring, no von Neumann entropy formula is
-asserted in this file.
--/
-@[rep_depth operator]
-structure HodgeDrazinThermodynamicEntropyPacket
-    (Op : Type*) [Ring Op] where
-  carrier : LeanSafeCarrier Op
-  beta : ℝ
-  density : Op
-  partitionFunction : ℝ
-  entropy : ℝ
-  horizonEntropy : ℝ
-  harmonicEntropy : ℝ
-
-  /-- The density is supported in the Drazin horizon sector on the left. -/
-  density_left_supported : carrier.p_A * density = density
-
-  /-- The density is supported in the Drazin horizon sector on the right. -/
-  density_right_supported : density * carrier.p_A = density
-
-  entropy_split_law : entropy = horizonEntropy + harmonicEntropy
-
-namespace HodgeDrazinThermodynamicEntropyPacket
-
-variable {Op : Type*} [Ring Op]
-variable (P : HodgeDrazinThermodynamicEntropyPacket Op)
-
-/-- Re-export of the supplied entropy split law. -/
-@[rep_depth operator]
-theorem entropy_eq_horizon_add_harmonic :
-    P.entropy = P.horizonEntropy + P.harmonicEntropy :=
-  P.entropy_split_law
-
-/-- The density is left-supported by the Drazin horizon sector. -/
-@[rep_depth operator]
-theorem density_left_supported_readback :
-    P.carrier.p_A * P.density = P.density :=
-  P.density_left_supported
-
-/-- The density is right-supported by the Drazin horizon sector. -/
-@[rep_depth operator]
-theorem density_right_supported_readback :
-    P.density * P.carrier.p_A = P.density :=
-  P.density_right_supported
-
-end HodgeDrazinThermodynamicEntropyPacket
 
 end InfoGeometry.Canonical.BerryDrazin

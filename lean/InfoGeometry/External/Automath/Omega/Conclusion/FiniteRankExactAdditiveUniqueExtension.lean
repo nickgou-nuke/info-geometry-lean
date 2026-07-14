@@ -1,4 +1,4 @@
-import Omega.Conclusion.CdimqUniqueExactExtension
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimqUniqueExactExtension
 
 namespace Omega.Conclusion
 

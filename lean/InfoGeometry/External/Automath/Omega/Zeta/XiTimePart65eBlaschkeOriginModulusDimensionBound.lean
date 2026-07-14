@@ -1,4 +1,4 @@
-import Omega.Zeta.XiOffsliceBlaschkeOriginModulus
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsliceBlaschkeOriginModulus
 
 namespace Omega.Zeta
 

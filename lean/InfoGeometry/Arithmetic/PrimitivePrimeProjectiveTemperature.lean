@@ -74,6 +74,28 @@ theorem arithmeticPrimeInvertedPartitionDensity_nonneg
   exact mul_nonneg (inv_nonneg.mpr (sq_nonneg u))
     (arithmeticPrimeRestrictedPartition_nonneg A (betaInvert u))
 
+/-- A finite von Mangoldt partition is positive if its support contains a positive-weight state. -/
+lemma arithmeticPrimeRestrictedPartition_pos_of_mem_positive_weight
+    {A : Finset ℕ} {β : ℝ} {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    0 < arithmeticPrimeRestrictedPartition A β := by
+  unfold arithmeticPrimeRestrictedPartition arithmeticPrimePartition
+  exact Finset.sum_pos'
+    (fun m _hm => mul_nonneg (realVonMangoldt_nonneg m) (primitiveMellinKernel_nonneg m β))
+    ⟨n, hnA, by
+      rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
+      exact mul_pos hΛ (Real.exp_pos _)⟩
+
+/-- The compact-coordinate density is positive under the same local support condition. -/
+lemma arithmeticPrimeInvertedPartitionDensity_pos_of_mem_positive_weight
+    {A : Finset ℕ} {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    0 < arithmeticPrimeInvertedPartitionDensity A u := by
+  unfold arithmeticPrimeInvertedPartitionDensity
+  exact mul_pos
+    (inv_pos.mpr (sq_pos_of_ne_zero (ne_of_gt hu.1)))
+    (arithmeticPrimeRestrictedPartition_pos_of_mem_positive_weight hnA hΛ hn)
+
 /--
 On positive-weight states, the finite von Mangoldt partition is the ordinary
 prime-weighted Gibbs sum.

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyDiscriminantFactorization
-import Omega.Folding.GaugeAnomalyQ19
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyDiscriminantFactorization
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyQ19
 
 namespace Omega.Folding
 

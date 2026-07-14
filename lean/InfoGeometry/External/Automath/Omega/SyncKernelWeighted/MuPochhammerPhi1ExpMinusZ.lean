@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.MuPochhammerNecklaceExpansion
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerNecklaceExpansion
 
 namespace Omega.SyncKernelWeighted
 

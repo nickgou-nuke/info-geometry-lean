@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart63bCyclicKernelLayerDivisorMobius
-import Omega.Zeta.XiTimePart63bQcycleHookSchurProjection
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63bCyclicKernelLayerDivisorMobius
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63bQcycleHookSchurProjection
 
 namespace Omega.Zeta
 

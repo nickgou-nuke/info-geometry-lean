@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.TemperatureKernelFreeEnergyHaltingEmbedding
+import InfoGeometry.External.Automath.Omega.Conclusion.TemperatureKernelFreeEnergyHaltingEmbedding
 
 namespace Omega.Conclusion
 

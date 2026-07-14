@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.GU.LogCmStableInverseExponentialSeparation
+import InfoGeometry.External.Automath.Omega.GU.LogCmStableInverseExponentialSeparation
 
 namespace Omega.Zeta
 

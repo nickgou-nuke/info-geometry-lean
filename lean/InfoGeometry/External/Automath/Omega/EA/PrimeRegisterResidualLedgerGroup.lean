@@ -1,7 +1,7 @@
 import Mathlib.Data.Finsupp.SMul
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterLocalMoves
-import Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterLocalMoves
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
 
 namespace Omega.EA
 

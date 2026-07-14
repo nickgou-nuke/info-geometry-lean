@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.RankoneCauchyOrthogonality
+import InfoGeometry.External.Automath.Omega.Conclusion.RankoneCauchyOrthogonality
 
 namespace Omega.Conclusion
 

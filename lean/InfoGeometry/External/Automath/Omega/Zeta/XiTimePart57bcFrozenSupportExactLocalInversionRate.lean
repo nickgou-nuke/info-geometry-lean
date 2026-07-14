@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldExactInversionUpperEndpointFreezingSlope
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldExactInversionUpperEndpointFreezingSlope
 
 open Filter
 

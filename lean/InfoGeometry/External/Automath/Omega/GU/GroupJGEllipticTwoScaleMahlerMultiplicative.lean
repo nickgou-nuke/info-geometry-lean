@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
-import Omega.GU.JoukowskyEllipticTwoScaleStokesMean
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyEllipticTwoScaleStokesMean
 
 namespace Omega.GU
 

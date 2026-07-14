@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.SignedCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.SignedCircleDimension
 
 namespace Omega.CircleDimension
 

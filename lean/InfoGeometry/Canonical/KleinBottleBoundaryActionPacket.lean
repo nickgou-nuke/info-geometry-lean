@@ -74,8 +74,8 @@ def glideReflection (M : Matrix (Fin 2) (Fin 2) â„¤) : Matrix (Fin 2) (Fin 2) â„
 
 @[simp] theorem glideReflection_infinity_to_zero :
     glideReflection L_spectator = P_zero := by
-  dsimp [glideReflection, CPT_local, P_zero, L_spectator]
-  decide
+  simpa [glideReflection_zero_to_infinity] using
+    (glideReflection_involutive P_zero)
 
 /-- Canonical finite packet for the Klein-bottle boundary lane. -/
 def canonicalPacket : BoundaryActionPacket where

@@ -1,4 +1,4 @@
-import Omega.Zeta.RealInput40BartholdiDet
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40BartholdiDet
 
 namespace Omega.Zeta
 

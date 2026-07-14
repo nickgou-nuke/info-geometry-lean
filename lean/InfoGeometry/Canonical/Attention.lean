@@ -78,4 +78,28 @@ lemma attentionWeights_sum_one
   simpa [attentionWeights] using
     gibbsWeight_sum_one (attentionParams q ctx matchForm) β
 
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Attention weights are pointwise nonnegative. -/
+lemma attentionWeights_nonneg
+    (q : S_plus)
+    (ctx : ContextWindow n S_minus V)
+    (matchForm : S_plus →ₗ[ℝ] S_minus →ₗ[ℝ] ℝ)
+    (β : ℝ) (i : Fin n) :
+    0 ≤ attentionWeights q ctx matchForm β i := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [attentionWeights] using
+    gibbsWeight_nonneg (attentionParams q ctx matchForm) β i
+
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Attention weights are pointwise bounded by one. -/
+lemma attentionWeights_le_one
+    (q : S_plus)
+    (ctx : ContextWindow n S_minus V)
+    (matchForm : S_plus →ₗ[ℝ] S_minus →ₗ[ℝ] ℝ)
+    (β : ℝ) (i : Fin n) :
+    attentionWeights q ctx matchForm β i ≤ 1 := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [attentionWeights] using
+    gibbsWeight_le_one (attentionParams q ctx matchForm) β i
+
 end InfoGeometry.Canonical.Attention

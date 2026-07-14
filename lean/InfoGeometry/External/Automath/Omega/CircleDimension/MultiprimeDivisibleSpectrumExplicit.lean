@@ -1,4 +1,4 @@
-import Omega.CircleDimension.MultiPrimeSpectrum
+import InfoGeometry.External.Automath.Omega.CircleDimension.MultiPrimeSpectrum
 
 namespace Omega.CircleDimension
 

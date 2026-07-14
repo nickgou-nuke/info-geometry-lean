@@ -61,13 +61,16 @@ section RoutingBounds
 variable {V : Type*} [NormedAddCommGroup V]
 variable (n : Nat) [Nonempty (Fin n)]
 
-/-- Lemma `switch_selectedRoutingEpsilon_le_one`. -/
-lemma switch_selectedRoutingEpsilon_le_one
+/-- Lemma `switch_exists_routing_weights_epsilon_le_one`. -/
+lemma switch_exists_routing_weights_epsilon_le_one
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
     (label : PermMode n → CliffordLabel) :
-    selectedRoutingEpsilon n (switchMatrix n β x)
-      (switchMatrix_mem_doublyStochastic (n := n) β x hcol) label ≤ 1 := by
-  exact selectedRoutingEpsilon_le_one (n := n) (M := switchMatrix n β x)
+    ∃ w : PermMode n → ℝ,
+      (∀ σ, 0 ≤ w σ) ∧
+      ∑ σ, w σ = 1 ∧
+      ∑ σ, w σ • σ.permMatrix ℝ = switchMatrix n β x ∧
+      routingEpsilon w label ≤ 1 := by
+  exact exists_routing_weights_epsilon_le_one (n := n) (M := switchMatrix n β x)
     (hM := switchMatrix_mem_doublyStochastic (n := n) β x hcol) label
 
 end RoutingBounds

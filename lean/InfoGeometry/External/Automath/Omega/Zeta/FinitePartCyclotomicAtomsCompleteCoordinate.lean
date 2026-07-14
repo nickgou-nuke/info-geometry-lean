@@ -1,5 +1,5 @@
-import Omega.Zeta.FinitePartCyclicLiftCyclotomicDivisorMobius
-import Omega.Zeta.FinitePartCyclicLiftSpectrumIdentifiability
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftCyclotomicDivisorMobius
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftSpectrumIdentifiability
 
 namespace Omega.Zeta
 

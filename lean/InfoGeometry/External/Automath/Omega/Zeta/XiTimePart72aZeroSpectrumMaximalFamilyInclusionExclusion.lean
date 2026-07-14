@@ -1,7 +1,7 @@
 import Mathlib.Combinatorics.Enumerative.InclusionExclusion
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart72aZeroSpectrumMaximalOddDivisibilityCompression
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart72aZeroSpectrumMaximalOddDivisibilityCompression
 
 open scoped BigOperators
 

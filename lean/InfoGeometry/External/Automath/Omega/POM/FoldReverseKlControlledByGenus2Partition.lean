@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ReverseKlBoundByDispersion
+import InfoGeometry.External.Automath.Omega.POM.ReverseKlBoundByDispersion
 
 namespace Omega.POM
 

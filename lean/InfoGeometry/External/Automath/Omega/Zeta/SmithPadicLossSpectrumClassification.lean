@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Multiset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SmithEntropyInvertsVpInvariants
+import InfoGeometry.External.Automath.Omega.Zeta.SmithEntropyInvertsVpInvariants
 
 namespace Omega.Zeta
 

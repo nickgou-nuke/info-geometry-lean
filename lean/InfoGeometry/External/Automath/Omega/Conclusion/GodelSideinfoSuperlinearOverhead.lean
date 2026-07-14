@@ -1,4 +1,4 @@
-import Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
 
 namespace Omega.Conclusion
 

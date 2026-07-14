@@ -1,5 +1,5 @@
-import Omega.Folding.Fiber
-import Omega.POM.IndependenceDpRadius2
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.POM.IndependenceDpRadius2
 
 namespace Omega.POM
 

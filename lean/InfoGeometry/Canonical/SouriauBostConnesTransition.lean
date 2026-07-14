@@ -20,14 +20,14 @@ theorem.  It records the owner-backed pieces that already compile:
 * finite reciprocal primon-product/evaluated-denominator identity;
 * algebraic tensor-factor separation for base/fiber operators;
 * Cayley critical-line/unit-circle readout through the prime Lee--Yang owner;
-* conditional RH readout through the existing witness-gated owner;
+* conditional RH readout through the existing prime Lee--Yang owner;
 * finite Yang--Baxter matrix readout;
 * finite Fibonacci golden-ratio and phase readouts;
 * combinatorial Dirac-sea interface nilpotence.
 
-The analytic Bost--Connes partition function, zero-temperature limit,
-Fibonacci categorical pentagon/hexagon coherence, and full boundary
-crystallisation statement remain explicit closure debt below.
+The analytic Bost--Connes partition function, zero-temperature state-space
+identification, Fibonacci categorical pentagon/hexagon coherence, and full
+boundary crystallisation theorem are outside this finite/local owner surface.
 -/
 
 noncomputable section
@@ -51,7 +51,7 @@ open FibonacciFusion
 structure BulkState where
   /-- Finite prime cutoff. -/
   primes : Finset ℕ
-  /-- Primality certificates for every prime in the cutoff. -/
+  /-- Primality proof for every prime in the cutoff. -/
   prime_mem : ∀ p ∈ primes, Nat.Prime p
   /-- Inverse temperature. -/
   beta : ℝ
@@ -128,27 +128,12 @@ theorem finite_primonPartition_eq_rpowProduct
       ∏ p ∈ bulk.primes, (1 - (p : ℝ) ^ (-bulk.beta))⁻¹ :=
   finitePrimonPartition_eq_rpowProduct bulk.rootLattice bulk.beta
 
-/-- Remaining analytic debt after the finite reciprocal product has been proved. -/
-@[rep_depth thermo, capstone]
-def inverseEulerProductIdentificationDebt : String :=
-  "Finite reciprocal product proved; extend it to the analytic inverse Euler-product partition theorem."
-
-/-- Remaining analytic Bost--Connes owner debt after the finite cutoff identity. -/
-@[rep_depth thermo, capstone]
-def analyticBostConnesPartitionDebt : String :=
-  "Extend the finite reciprocal primon product to the analytic Bost-Connes partition theorem."
-
-/-- Remaining Hilbert-space completion debt after algebraic tensor separation. -/
-@[rep_depth thermo, capstone]
-def hilbertCompletionTensorSeparationDebt : String :=
-  "Lift the algebraic/PiLp Cuntz tensor separation to bounded operators on the Hilbert completion."
-
 /--
 Algebraic tensor-factor separation for the Cuntz-base/fiber split.
 
 This closes the purely algebraic identity
 `(S ⊗ id) (id ⊗ K) = (id ⊗ K) (S ⊗ id)`.  The bounded Hilbert-completion
-version remains in `ConcreteHilbertCommutation` as explicit closure debt.
+commutation theorem is owned by `ConcreteHilbertCommutation.S_left_commutes_K_lp`.
 -/
 @[rep_depth thermo, capstone]
 theorem algebraic_tensor_factor_separation
@@ -170,37 +155,12 @@ theorem thermal_cayley_tendsto_boundary_one :
     Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1) :=
   Cayley.thermalCayley_tendsto_atTop_one
 
-/-- Remaining zero-temperature state-space debt after the real Cayley coordinate limit. -/
-@[rep_depth thermo, capstone]
-def zeroTemperatureCantorAccumulationDebt : String :=
-  "Upgrade the finite zero-temperature boundary package to an analytic Cantor accumulation theorem."
-
 /-- The concrete canonical V4-sewn Pauli boundary state has zero chiral index. -/
 @[rep_depth thermo, capstone]
 theorem concrete_canonical_sewn_boundary_anomaly_free :
     SouriauBostConnesClosureProofs.sewnChiralIndex
         SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0 :=
   SouriauBostConnesClosureProofs.canonical_sewn_boundary_chiral_index_vanishes
-
-/-- Remaining categorical boundary-functor debt after the finite label readout. -/
-@[rep_depth thermo, capstone]
-def cuntzFibonacciBoundaryFunctorDebt : String :=
-  "Construct the Cuntz-to-Fibonacci boundary functor, not just a finite label readout."
-
-/-- Remaining categorical owner debt for Fibonacci coherence. -/
-@[rep_depth thermo, capstone]
-def categoricalFibonacciCoherenceDebt : String :=
-  "Prove categorical Fibonacci pentagon and hexagon coherence in the categorical owner file."
-
-/-- Remaining full boundary anomaly debt after the concrete finite Pauli state. -/
-@[rep_depth thermo, capstone]
-def fullCantorBoundaryAnomalyLiftDebt : String :=
-  "Lift the concrete finite V4-sewn Pauli boundary state to the full Cantor/Hilbert boundary state."
-
-/-- Remaining quarantine debt for legacy anomaly surfaces. -/
-@[rep_depth thermo, capstone]
-def legacyKleinBottleQuarantineDebt : String :=
-  "Retire or quarantine legacy axiom-based KleinBottleSewing surfaces in favor of concrete closure owners."
 
 /-- Cayley compactification sends the critical line exactly to the unit circle. -/
 @[rep_depth thermo, capstone]
@@ -216,7 +176,7 @@ theorem cayley_reflection_eq_fugacity_inversion
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ :=
   riemannReflection_eq_fugacityInversion s
 
-/-- The RH route remains conditional on the supplied prime Lee--Yang witnesses. -/
+/-- The RH route remains conditional on the supplied prime Lee--Yang hypotheses. -/
 @[rep_depth thermo, capstone]
 theorem conditional_RH_from_supplied_primeLeeYang
     (Ξ : CompletedXiZeroPredicate)
@@ -364,27 +324,5 @@ theorem souriau_bost_connes_transition_verified
       (VerifiedTransitionMatrix
         (souriau_bost_connes_transition_Package P primesP β hβpos).bulk) :=
   ⟨verifiedTransitionMatrix _⟩
-
-/-! ## Explicit closure debt -/
-
-/-- Open closure debt for the analytic/categorical transition theorem. -/
-@[rep_depth thermo, capstone]
-def openClosureDebt : List String :=
-  [ "Construct the analytic Bost-Connes partition function in the repository owner lane."
-  , inverseEulerProductIdentificationDebt
-  , analyticBostConnesPartitionDebt
-  , hilbertCompletionTensorSeparationDebt
-  , zeroTemperatureCantorAccumulationDebt
-  , cuntzFibonacciBoundaryFunctorDebt
-  , categoricalFibonacciCoherenceDebt
-  , fullCantorBoundaryAnomalyLiftDebt
-  , legacyKleinBottleQuarantineDebt
-  ]
-
-/-- The capstone still has explicit open debt; it is not an analytic closure theorem. -/
-@[rep_depth thermo, capstone]
-theorem openClosureDebt_ne_nil :
-    openClosureDebt ≠ [] := by
-  decide
 
 end InfoGeometry.Canonical.SouriauBostConnesTransition

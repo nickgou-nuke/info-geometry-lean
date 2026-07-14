@@ -1,5 +1,5 @@
-import Omega.PhysicalSpacetimeSkeleton.KernelizationTemplate
-import Omega.RecursiveAddressing.NullAsLocalSectionObstruction
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.KernelizationTemplate
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.NullAsLocalSectionObstruction
 
 namespace Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion
 

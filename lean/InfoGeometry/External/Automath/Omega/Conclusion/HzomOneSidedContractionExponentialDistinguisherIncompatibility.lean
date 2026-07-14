@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LogsobolevMixingForcesCriticalLocalization
+import InfoGeometry.External.Automath.Omega.Conclusion.LogsobolevMixingForcesCriticalLocalization
 
 namespace Omega.Conclusion
 

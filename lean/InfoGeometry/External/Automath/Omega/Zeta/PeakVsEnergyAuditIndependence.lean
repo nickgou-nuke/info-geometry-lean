@@ -1,5 +1,5 @@
-import Omega.Zeta.XiDefectEntropyMassPeakDecoupling
-import Omega.Zeta.XiHankelHsEnergyClosedFormMassEnergy
+import InfoGeometry.External.Automath.Omega.Zeta.XiDefectEntropyMassPeakDecoupling
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelHsEnergyClosedFormMassEnergy
 
 namespace Omega.Zeta
 

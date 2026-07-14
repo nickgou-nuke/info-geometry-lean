@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
-import Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
 
 namespace Omega.CircleDimension
 

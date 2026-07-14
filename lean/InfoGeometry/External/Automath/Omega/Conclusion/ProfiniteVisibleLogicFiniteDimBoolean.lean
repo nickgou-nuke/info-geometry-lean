@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ConclusionFoldQuantumVisibleBooleanization
+import InfoGeometry.External.Automath.Omega.Conclusion.ConclusionFoldQuantumVisibleBooleanization
 
 namespace Omega.Conclusion
 

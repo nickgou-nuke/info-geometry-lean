@@ -1,4 +1,4 @@
-import Omega.POM.ThreeGenInterfaceNormalForm
+import InfoGeometry.External.Automath.Omega.POM.ThreeGenInterfaceNormalForm
 
 namespace Omega.POM
 

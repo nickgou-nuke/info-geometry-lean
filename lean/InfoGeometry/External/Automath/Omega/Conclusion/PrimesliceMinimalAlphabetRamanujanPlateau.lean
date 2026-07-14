@@ -1,9 +1,9 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
-import Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
-import Omega.Zeta.XiLayeredPrimesliceInventoryPrimeIndexFormula
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
+import InfoGeometry.External.Automath.Omega.Zeta.XiLayeredPrimesliceInventoryPrimeIndexFormula
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.POM.ProjectivePathAtomicPronyRank
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePathAtomicPronyRank
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.LeftCEDyadicDensity
+import InfoGeometry.External.Automath.Omega.Zeta.LeftCEDyadicDensity
 
 namespace Omega.Zeta
 

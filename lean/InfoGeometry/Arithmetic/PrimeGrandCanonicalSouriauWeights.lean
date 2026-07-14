@@ -43,6 +43,22 @@ def complexGrandModeWeight
     (energy mu : ℕ → ℝ) (p : ℕ) : ℂ :=
   Complex.exp (-(β.s * ((energy p - mu p : ℝ) : ℂ)))
 
+lemma complexGrandModeWeight_ne_zero
+    (β : InfoGeometry.Thermodynamics.SouriauTemperature)
+    (energy mu : ℕ → ℝ) (p : ℕ) :
+    complexGrandModeWeight β energy mu p ≠ 0 := by
+  unfold complexGrandModeWeight
+  exact Complex.exp_ne_zero _
+
+lemma complexGrandStateWeight_ne_zero
+    (β : InfoGeometry.Thermodynamics.SouriauTemperature)
+    (energy mu : ℕ → ℝ) (S : InfoGeometry.Arithmetic.PrimonFinite.FState ℕ) :
+    InfoGeometry.Arithmetic.PrimonFinite.weight
+      (complexGrandModeWeight β energy mu) S ≠ 0 := by
+  exact InfoGeometry.Arithmetic.PrimonFinite.weight_ne_zero
+    (q := complexGrandModeWeight β energy mu) S
+    (fun p _hp => complexGrandModeWeight_ne_zero β energy mu p)
+
 /-- Finite fermionic grand partition over a finite prime register. -/
 def complexFermionGrandPartition
     (P : PrimeRegister) (β : InfoGeometry.Thermodynamics.SouriauTemperature)
@@ -83,6 +99,13 @@ theorem complexBosonGrandPartition_eq_prod_inv
     complexBosonGrandPartition P β energy mu =
       ∏ p ∈ P.primes, (1 - complexGrandModeWeight β energy mu p)⁻¹ := by
   simp [complexBosonGrandPartition, ZB]
+
+lemma complexBosonGrandPartition_ne_zero
+    (P : PrimeRegister) (β : InfoGeometry.Thermodynamics.SouriauTemperature)
+    (energy mu : ℕ → ℝ)
+    (h : ∀ p ∈ P.primes, (1 - complexGrandModeWeight β energy mu p) ≠ 0) :
+    complexBosonGrandPartition P β energy mu ≠ 0 := by
+  exact ZB_ne_zero (modes := P.primes) (q := complexGrandModeWeight β energy mu) h
 
 theorem complexBoson_mul_signedFermionGrandSupertrace_eq_one
     (P : PrimeRegister) (β : InfoGeometry.Thermodynamics.SouriauTemperature)
@@ -149,6 +172,14 @@ theorem finitePrimeBosonGrandPartition_eq_prod
     finitePrimeBosonGrandPartition P β =
       ∏ p ∈ P.primes, (1 - complexGrandModeWeight β primeEnergy zeroChemicalPotential p)⁻¹ := by
   rfl
+
+lemma finitePrimeBosonGrandPartition_ne_zero
+    (P : PrimeRegister) (β : InfoGeometry.Thermodynamics.SouriauTemperature)
+    (h : ∀ p ∈ P.primes,
+      (1 - complexGrandModeWeight β primeEnergy zeroChemicalPotential p) ≠ 0) :
+    finitePrimeBosonGrandPartition P β ≠ 0 := by
+  exact complexBosonGrandPartition_ne_zero
+    (P := P) (β := β) (energy := primeEnergy) (mu := zeroChemicalPotential) h
 
 theorem finitePrimeSignedGrandSupertrace_eq_prod
     (P : PrimeRegister)

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.KilloKernelSizeGeneralModulus
+import InfoGeometry.External.Automath.Omega.Zeta.KilloKernelSizeGeneralModulus
 
 namespace Omega.Zeta
 

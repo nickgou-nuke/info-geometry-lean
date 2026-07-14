@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SPG.WalshDiscreteStokesHolography
+import InfoGeometry.External.Automath.Omega.SPG.WalshDiscreteStokesHolography
 
 namespace Omega.SPG
 

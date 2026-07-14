@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Conclusion.GoldenSprtOnebitAncillary
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtOnebitAncillary
 
 namespace Omega.Conclusion
 

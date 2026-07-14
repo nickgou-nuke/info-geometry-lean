@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40LengthMertens
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LengthMertens
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,4 +1,4 @@
-import Omega.POM.StarMomentKernelCompression
+import InfoGeometry.External.Automath.Omega.POM.StarMomentKernelCompression
 
 namespace Omega.POM
 

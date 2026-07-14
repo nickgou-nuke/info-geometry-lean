@@ -1,4 +1,4 @@
-import Omega.CircleDimension.VisiblePhaseResidualTriviality
+import InfoGeometry.External.Automath.Omega.CircleDimension.VisiblePhaseResidualTriviality
 
 namespace Omega.TypedAddressBiaxialCompletion
 

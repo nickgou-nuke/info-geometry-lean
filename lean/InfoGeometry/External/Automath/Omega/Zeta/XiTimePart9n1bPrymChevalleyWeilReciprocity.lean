@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9n1bFourGeneraRecoverHodgeVector
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9n1bFourGeneraRecoverHodgeVector
 
 namespace Omega.Zeta
 

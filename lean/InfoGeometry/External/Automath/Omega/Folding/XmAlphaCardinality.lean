@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Folding.OstrowskiDenominators
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiDenominators
 
 namespace Omega.Folding
 

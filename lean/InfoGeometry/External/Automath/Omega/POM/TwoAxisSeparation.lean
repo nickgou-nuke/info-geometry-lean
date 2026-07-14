@@ -2,9 +2,9 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Folding.Defect
-import Omega.Folding.FiberEntropySaturation
-import Omega.Folding.GaugeAnomalyDensity
+import InfoGeometry.External.Automath.Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.FiberEntropySaturation
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyDensity
 
 namespace Omega.POM
 

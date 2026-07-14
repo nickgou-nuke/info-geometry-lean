@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.CyclicLiftFiniteProbeEvasion
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicLiftFiniteProbeEvasion
 
 namespace Omega.Conclusion
 

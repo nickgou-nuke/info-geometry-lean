@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
 
 namespace Omega.Zeta
 

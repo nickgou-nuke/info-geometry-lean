@@ -1,4 +1,4 @@
-import Omega.POM.DeltaqQuadraticObservableMaxExponent
+import InfoGeometry.External.Automath.Omega.POM.DeltaqQuadraticObservableMaxExponent
 import Mathlib.Tactic
 
 namespace Omega.POM

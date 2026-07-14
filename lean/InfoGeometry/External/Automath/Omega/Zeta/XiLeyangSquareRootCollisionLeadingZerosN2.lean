@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangMplus1PointExtrapolateOptimal
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangMplus1PointExtrapolateOptimal
 
 namespace Omega.Zeta
 

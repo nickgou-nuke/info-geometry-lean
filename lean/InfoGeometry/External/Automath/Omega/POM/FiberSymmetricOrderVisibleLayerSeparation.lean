@@ -1,5 +1,5 @@
-import Omega.POM.FiberBirkhoffFenceIdealLattice
-import Omega.POM.ToggleOrbitCountCommutantIdentity
+import InfoGeometry.External.Automath.Omega.POM.FiberBirkhoffFenceIdealLattice
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountCommutantIdentity
 
 namespace Omega.POM
 

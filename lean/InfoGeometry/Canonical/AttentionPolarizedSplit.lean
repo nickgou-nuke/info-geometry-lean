@@ -114,6 +114,24 @@ theorem polarizedPlusAttentionWeights_sum_one
       (x := polarizedPlusLogits (E := E) (V := V) q ctx β))
 
 omit [AddCommMonoid V] [Module ℝ V] in
+-- theorem-class: closure
+/-- Positive-sheet split attention weights are pointwise nonnegative. -/
+theorem polarizedPlusAttentionWeights_nonneg
+    (q : E) (ctx : ContextWindow n E V) (β : ℝ) (i : Fin n) :
+    0 ≤ polarizedPlusAttentionWeights (E := E) (V := V) q ctx β i := by
+  unfold polarizedPlusAttentionWeights
+  exact softmax_nonneg _ i
+
+omit [AddCommMonoid V] [Module ℝ V] in
+-- theorem-class: closure
+/-- Positive-sheet split attention weights are pointwise bounded by one. -/
+theorem polarizedPlusAttentionWeights_le_one
+    (q : E) (ctx : ContextWindow n E V) (β : ℝ) (i : Fin n) :
+    polarizedPlusAttentionWeights (E := E) (V := V) q ctx β i ≤ 1 := by
+  unfold polarizedPlusAttentionWeights
+  exact softmax_le_one _ i
+
+omit [AddCommMonoid V] [Module ℝ V] in
 -- theorem-class: bridge
 /--
 The positive-sheet split softmax weights differ from Euclidean dot-product logits

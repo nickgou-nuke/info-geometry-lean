@@ -1,6 +1,6 @@
-import Omega.Folding.StableSyntax
-import Omega.Folding.FiberArithmetic
-import Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
 import Mathlib.Tactic
 
 open Omega X

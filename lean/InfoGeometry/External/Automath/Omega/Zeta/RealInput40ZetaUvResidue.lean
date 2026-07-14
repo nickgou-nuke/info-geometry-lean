@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import Omega.Zeta.RealInput40ZetaUvPressureDegree8
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40ZetaUvPressureDegree8
 
 namespace Omega.Zeta
 

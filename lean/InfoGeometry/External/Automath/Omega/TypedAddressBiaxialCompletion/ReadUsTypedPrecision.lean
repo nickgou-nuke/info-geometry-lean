@@ -1,7 +1,7 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ExplicitLifting
-import Omega.TypedAddressBiaxialCompletion.FrontInterface
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ExplicitLifting
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.FrontInterface
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega.Folding
 

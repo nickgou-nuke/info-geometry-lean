@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldLiftGlobalSignFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldLiftGlobalSignFactorization
 
 namespace Omega.OperatorAlgebra
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiProjectiveMomentRadiusSubmultiplicative
+import InfoGeometry.External.Automath.Omega.Zeta.XiProjectiveMomentRadiusSubmultiplicative
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3Closed
+import InfoGeometry.External.Automath.Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3Closed
 
 namespace Omega.Zeta
 

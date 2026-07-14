@@ -1,8 +1,8 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
-import Omega.Zeta.FiniteDefectCompleteReconstruction
-import Omega.Zeta.XiMarkovDerivativeDeterminantBadPrime
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiMarkovDerivativeDeterminantBadPrime
 
 namespace Omega.Zeta
 

@@ -73,7 +73,7 @@ def TrialityAction.inS3 (τ : TrialityAction) : Prop := τ ∈ S3Triality
 
 /-- `|S_3|=6`. -/
 theorem S3Triality_card : S3Triality.card = 6 := by
-  native_decide
+  decide
 
 /-- `\mathrm{Fin}\,3` permutation on Zorn matrices. -/
 structure ColorPermutationAction where

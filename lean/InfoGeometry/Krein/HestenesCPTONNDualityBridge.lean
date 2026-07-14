@@ -6,8 +6,6 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
 # InfoGeometry.Krein.HestenesCPTONNDualityBridge
 
@@ -64,7 +62,7 @@ operator-algebra automorphism standing for the selected `O(N,N)` or
 `O(N,N,ℤ)` duality move in the concrete backend.
 -/
 @[rep_depth krein]
-structure HestenesCPTONNDualityBridge where
+structure Bridge where
   /-- The arithmetic D4/Hurwitz backend already tied to Möbius and Ω-volume. -/
   arithmetic : D4HurwitzArithmeticBridge (E := E)
 
@@ -120,9 +118,9 @@ structure HestenesCPTONNDualityBridge where
         arithmetic.hurwitzRoot (onnRootAction i)
 
 
-namespace HestenesCPTONNDualityBridge
+namespace Bridge
 
-variable (B : HestenesCPTONNDualityBridge (E := E))
+variable (B : Bridge (E := E))
 
 /-- CPT conjugation on bounded doubled-space operators. -/
 @[rep_depth operator]
@@ -265,7 +263,7 @@ theorem total_hurwitz_root_expectation_onn_invariant :
             exact B.hurwitzRoot_expectation_onn_invariant i
     _ = 1 := B.arithmetic.total_hurwitz_root_expectation_is_unity
 
-end HestenesCPTONNDualityBridge
+end Bridge
 
 end Core
 

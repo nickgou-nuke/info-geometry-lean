@@ -1,4 +1,4 @@
-import Omega.Folding.PeriodicCompressionRatio
+import InfoGeometry.External.Automath.Omega.Folding.PeriodicCompressionRatio
 
 namespace Omega.Folding.PeriodicCountSandwich
 

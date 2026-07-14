@@ -1,6 +1,6 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
 
 namespace Omega.CircleDimension
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicOpenIdealFiniteQuotientClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicOpenIdealFiniteQuotientClassification
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
 
 namespace Omega.GroupUnification
 

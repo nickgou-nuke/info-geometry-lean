@@ -373,22 +373,21 @@ theorem map_idempotent_apply (ω : A →ₗ[R] R) :
     P.map (P.map ω) = P.map ω := by
   exact congrArg (fun F : (A →ₗ[R] R) →ₗ[R] (A →ₗ[R] R) => F ω) P.idempotent
 
-/-- The normalized state selected by the preservation witness. -/
-noncomputable def projectState (ω : AlgebraicState (R := R) (A := A)) :
-    AlgebraicState (R := R) (A := A) :=
-  Classical.choose (P.preserves_states ω)
+/-- State preservation is exposed as the structure's existential theorem, without selecting a state. -/
+theorem exists_projectState (ω : AlgebraicState (R := R) (A := A)) :
+    ∃ ω' : AlgebraicState (R := R) (A := A), P.map ω.toLinearMap = ω'.toLinearMap :=
+  P.preserves_states ω
 
-/-- The selected projected state has exactly the projected underlying functional. -/
-theorem projectState_toLinearMap (ω : AlgebraicState (R := R) (A := A)) :
-    P.map ω.toLinearMap = (P.projectState ω).toLinearMap :=
-  Classical.choose_spec (P.preserves_states ω)
-
-/-- The selected projected state is idempotent at the underlying-functional level. -/
-theorem projectState_idempotent_toLinearMap
-    (ω : AlgebraicState (R := R) (A := A)) :
-    (P.projectState (P.projectState ω)).toLinearMap =
-      (P.projectState ω).toLinearMap := by
-  rw [← P.projectState_toLinearMap (P.projectState ω), ← P.projectState_toLinearMap ω]
+/--
+Any two-step preserved-state chain collapses at the underlying-functional level
+by idempotence of the state-side projection.
+-/
+theorem projectState_idempotent_toLinearMap_of_preserved
+    (ω ω' ω'' : AlgebraicState (R := R) (A := A))
+    (hω' : P.map ω.toLinearMap = ω'.toLinearMap)
+    (hω'' : P.map ω'.toLinearMap = ω''.toLinearMap) :
+    ω''.toLinearMap = ω'.toLinearMap := by
+  rw [← hω'', ← hω']
   exact P.map_idempotent_apply ω.toLinearMap
 
 end GromovStateProjection

@@ -1,6 +1,6 @@
-import Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
-import Omega.Zeta.XiCompletedPolynomialPontryaginIndex
-import Omega.Zeta.XiToeplitzInertiaStabilizesToKappa
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
+import InfoGeometry.External.Automath.Omega.Zeta.XiCompletedPolynomialPontryaginIndex
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzInertiaStabilizesToKappa
 
 namespace Omega.Zeta
 

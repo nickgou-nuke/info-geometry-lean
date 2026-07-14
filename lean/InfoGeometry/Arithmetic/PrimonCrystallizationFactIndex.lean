@@ -1,4 +1,6 @@
-import InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula
+import InfoGeometry.Probability.HomologicalProbability
+import InfoGeometry.Canonical.PrimonCoulombGas
+import InfoGeometry.Canonical.VandermondeExclusionBridge
 import InfoGeometry.Arithmetic.PrimeLatticeGasVariational
 import InfoGeometry.Arithmetic.SpectorPrimonGasBridge
 
@@ -22,7 +24,7 @@ theorem gibbs_kms_free_energy_minimizer
     (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
     (hβ : 0 < gk.beta) :
     gk.freeEnergy gk.gibbsState ≤ gk.freeEnergy ρ :=
-  InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula.gibbs_kms_free_energy_minimizer gk ρ hrel hβ
+  InfoGeometry.Probability.Homological.GibbsKMSPacket.freeEnergy_ge_gibbs_of_relativeEntropy_nonneg gk ρ hrel hβ
 
 /-- Finite Dyson/Vandermonde logarithmic repulsion re-exported from the quasicrystal packet. -/
 theorem finite_dyson_vandermonde_potential
@@ -31,7 +33,7 @@ theorem finite_dyson_vandermonde_potential
     InfoGeometry.Canonical.PrimonCoulombGas.dyson_hamiltonian lam V =
       InfoGeometry.Canonical.PrimonCoulombGas.external_potential_energy lam V -
         Real.log ((InfoGeometry.Canonical.PrimonCoulombGas.vandermonde_product_abs lam) ^ 2) :=
-  InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula.finite_dyson_vandermonde_potential lam V hsep
+  InfoGeometry.Canonical.PrimonCoulombGas.dyson_to_vandermonde_bridge lam V hsep
 
 /-- Finite Vandermonde noncollision criterion re-exported from the quasicrystal packet. -/
 theorem finite_vandermonde_nonzero_iff_injective
@@ -39,7 +41,7 @@ theorem finite_vandermonde_nonzero_iff_injective
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
     W.determinant ≠ 0 ↔ Function.Injective W.nodes :=
-  InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula.finite_vandermonde_nonzero_iff_injective W
+  W.determinant_ne_zero_iff_injective
 
 /-- Finite Vandermonde collision locus re-exported from the quasicrystal packet. -/
 theorem finite_vandermonde_zero_iff_collision
@@ -47,7 +49,7 @@ theorem finite_vandermonde_zero_iff_collision
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
     W.determinant = 0 ↔ ∃ i j : Fin n, W.nodes i = W.nodes j ∧ i ≠ j :=
-  InfoGeometry.Arithmetic.QuasicrystalRHExplicitFormula.finite_vandermonde_zero_iff_collision W
+  W.determinant_eq_zero_iff_collision
 
 /-- Finite prime-lattice entropy maximizer re-exported from the lattice gas packet. -/
 theorem finite_prime_lattice_entropy_maximizer

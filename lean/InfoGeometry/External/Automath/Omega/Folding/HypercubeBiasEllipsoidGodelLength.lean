@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.WalshParseval
+import InfoGeometry.External.Automath.Omega.Zeta.WalshParseval
 
 namespace Omega.Folding
 

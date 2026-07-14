@@ -1,5 +1,5 @@
-import Omega.POM.CompleteHomogeneousPFInfty
-import Omega.POM.DiagonalRateAbsorbingDFR
+import InfoGeometry.External.Automath.Omega.POM.CompleteHomogeneousPFInfty
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingDFR
 
 namespace Omega.POM
 

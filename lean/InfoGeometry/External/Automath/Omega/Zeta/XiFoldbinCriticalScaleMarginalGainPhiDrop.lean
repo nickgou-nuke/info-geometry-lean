@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldbinCriticalScaleSuccessCurveInversion
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinCriticalScaleSuccessCurveInversion
 
 namespace Omega.Zeta
 

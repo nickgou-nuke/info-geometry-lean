@@ -178,6 +178,13 @@ theorem occupationGibbsWeight_nonneg
   unfold occupationGibbsWeight
   positivity
 
+omit [DecidableEq ι] in
+lemma occupationGibbsWeight_pos
+    (E : ModeEnergy ι) (β : ℝ) (x : Occupation ι) :
+    0 < occupationGibbsWeight E β x := by
+  unfold occupationGibbsWeight
+  exact Real.exp_pos _
+
 /-- The finite partition is nonnegative. -/
 theorem finitePartition_nonneg
     (E : ModeEnergy ι)
@@ -205,6 +212,16 @@ theorem one_le_finitePartition
       (fun x _hx => occupationGibbsWeight_nonneg E β x)
       (Finset.mem_univ (Occupation.empty : Occupation ι)))
 
+lemma finitePartition_pos
+    (E : ModeEnergy ι) (β : ℝ) :
+    0 < finitePartition E β := by
+  exact lt_of_lt_of_le zero_lt_one (one_le_finitePartition E β)
+
+lemma finitePartition_ne_zero
+    (E : ModeEnergy ι) (β : ℝ) :
+    finitePartition E β ≠ 0 :=
+  (finitePartition_pos E β).ne'
+
 /-! ## 3. Even/odd split of the finite supertrace -/
 
 /-- Even occupation states. -/
@@ -230,6 +247,18 @@ def oddPartition
     (β : ℝ) : ℝ :=
   Finset.sum oddOccupations (fun x =>
     occupationGibbsWeight E β x)
+
+lemma evenPartition_nonneg
+    (E : ModeEnergy ι) (β : ℝ) :
+    0 ≤ evenPartition E β := by
+  unfold evenPartition
+  exact Finset.sum_nonneg (fun x _hx => occupationGibbsWeight_nonneg E β x)
+
+lemma oddPartition_nonneg
+    (E : ModeEnergy ι) (β : ℝ) :
+    0 ≤ oddPartition E β := by
+  unfold oddPartition
+  exact Finset.sum_nonneg (fun x _hx => occupationGibbsWeight_nonneg E β x)
 
 /-- The finite superpartition is the even partition minus the odd partition. -/
 theorem finiteSuperPartition_eq_even_sub_odd
@@ -328,6 +357,12 @@ theorem FinitePrimeModeModel.partition_nonneg
     (β : ℝ) :
     0 ≤ M.partition β :=
   finitePartition_nonneg M.energy β
+
+lemma FinitePrimeModeModel.partition_pos
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (M : FinitePrimeModeModel ι) (β : ℝ) :
+    0 < M.partition β := by
+  exact finitePartition_pos M.energy β
 
 /-! ## 5. Finite prime-bit exterior denominator -/
 

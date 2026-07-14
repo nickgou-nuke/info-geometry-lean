@@ -3,8 +3,8 @@ import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Graph.TransferMatrix
-import Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
 
 namespace Omega.SyncKernelRealInput
 

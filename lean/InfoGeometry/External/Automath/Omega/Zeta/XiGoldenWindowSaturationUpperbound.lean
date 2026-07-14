@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.Tactic
-import Omega.Zeta.XiSingleDefectIntegratedClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleDefectIntegratedClosedForm
 
 namespace Omega.Zeta
 

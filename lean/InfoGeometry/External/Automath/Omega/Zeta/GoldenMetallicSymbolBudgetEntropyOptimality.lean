@@ -2,8 +2,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.MetallicTwoStateSFT
-import Omega.Kronecker.MetallicGap
+import InfoGeometry.External.Automath.Omega.Folding.MetallicTwoStateSFT
+import InfoGeometry.External.Automath.Omega.Kronecker.MetallicGap
 
 namespace Omega.Zeta
 

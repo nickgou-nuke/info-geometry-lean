@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.FailureWitnessSupport
-import Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.FailureWitnessSupport
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
 
 namespace Omega.TypedAddressBiaxialCompletion
 

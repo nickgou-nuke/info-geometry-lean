@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldCriticalCapacityThreephaseLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCriticalCapacityThreephaseLaw
 
 open scoped goldenRatio
 

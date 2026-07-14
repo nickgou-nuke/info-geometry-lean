@@ -1,5 +1,5 @@
-import Omega.Topos.IntrinsicCharacterDetection
-import Omega.Topos.CharacterBlindObstructions
+import InfoGeometry.External.Automath.Omega.Topos.IntrinsicCharacterDetection
+import InfoGeometry.External.Automath.Omega.Topos.CharacterBlindObstructions
 
 namespace Omega.Topos
 

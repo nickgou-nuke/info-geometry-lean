@@ -1,5 +1,5 @@
-import Omega.SyncKernelRealInput.GmSmithComputeObstructions
-import Omega.SyncKernelRealInput.GMImprovabilityIffD1
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GmSmithComputeObstructions
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMImprovabilityIffD1
 
 namespace Omega.SyncKernelRealInput
 

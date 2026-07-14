@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Int.Fib.Lemmas
 import Mathlib.Tactic
-import Omega.Folding.FoldResonanceDocagne
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceDocagne
 
 namespace Omega.Folding
 

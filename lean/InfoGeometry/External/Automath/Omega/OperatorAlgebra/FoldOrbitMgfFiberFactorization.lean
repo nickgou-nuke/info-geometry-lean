@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Rat.Defs
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
 
 namespace Omega.OperatorAlgebra
 

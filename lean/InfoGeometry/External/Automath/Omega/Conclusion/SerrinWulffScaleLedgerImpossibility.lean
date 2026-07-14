@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterMonoidRealization
-import Omega.Folding.KilloPrimeFreedomNonFinitizability
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterMonoidRealization
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeFreedomNonFinitizability
 
 namespace Omega.Conclusion
 

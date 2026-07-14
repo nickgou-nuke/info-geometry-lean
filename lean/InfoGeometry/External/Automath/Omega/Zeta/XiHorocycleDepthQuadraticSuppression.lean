@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
-import Omega.Zeta.OffcriticalHorocycleBusemann
-import Omega.Zeta.OffcriticalQuadraticRadialCompression
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalHorocycleBusemann
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalQuadraticRadialCompression
 
 namespace Omega.Zeta
 

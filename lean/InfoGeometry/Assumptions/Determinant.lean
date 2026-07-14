@@ -69,7 +69,3 @@ theorem jacobian_functoriality (R : Type u) (V : Type v)
   jacDet_comp R V f g
 
 end InfoGeometry.Assumptions.Determinant
-
-
-def modified_born_probability (Pi Pf : Projector K n) (S : SMatrix K n) : K :=
-  Matrix.trace (Pf.P * S.S * Pi.P)

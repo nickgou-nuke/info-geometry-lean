@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldDmaxCapacityEqualsLogIndex
 
 namespace Omega.Zeta
 

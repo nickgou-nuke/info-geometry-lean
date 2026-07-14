@@ -1,4 +1,4 @@
-import Omega.POM.FractranPrimecoreFinitePartialFunctionCategory
+import InfoGeometry.External.Automath.Omega.POM.FractranPrimecoreFinitePartialFunctionCategory
 
 namespace Omega.POM
 

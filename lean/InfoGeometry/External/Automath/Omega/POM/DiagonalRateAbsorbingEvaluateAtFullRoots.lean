@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingWronskianIdentitySecondary
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingWronskianIdentitySecondary
 
 namespace Omega.POM
 

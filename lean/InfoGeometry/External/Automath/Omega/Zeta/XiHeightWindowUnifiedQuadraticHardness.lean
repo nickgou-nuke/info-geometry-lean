@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.XiOptimalAllocationUnderProductBound
-import Omega.Zeta.XiTimeHorizonProductLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiOptimalAllocationUnderProductBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeHorizonProductLowerBound
 
 namespace Omega.Zeta
 

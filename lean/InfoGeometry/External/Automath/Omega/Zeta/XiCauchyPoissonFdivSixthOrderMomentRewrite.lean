@@ -1,5 +1,5 @@
-import Omega.Zeta.XiCauchyPoissonDensityRatioSecondOrderProfile
-import Omega.Zeta.XiCauchyPoissonSecondOrderShapeLimitNodeRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonDensityRatioSecondOrderProfile
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonSecondOrderShapeLimitNodeRigidity
 
 namespace Omega.Zeta
 

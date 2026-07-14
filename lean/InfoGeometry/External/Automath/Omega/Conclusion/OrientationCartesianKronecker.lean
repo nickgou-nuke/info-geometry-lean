@@ -1,4 +1,4 @@
-import Omega.GU.BdryOrientationCartesianProductExponentLaw
+import InfoGeometry.External.Automath.Omega.GU.BdryOrientationCartesianProductExponentLaw
 
 namespace Omega.Conclusion
 

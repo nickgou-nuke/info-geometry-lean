@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Sym
 import Mathlib.Tactic
-import Omega.Conclusion.PartitionPrimesliceDivisibilityValuationPaircount
+import InfoGeometry.External.Automath.Omega.Conclusion.PartitionPrimesliceDivisibilityValuationPaircount
 
 namespace Omega.Conclusion
 

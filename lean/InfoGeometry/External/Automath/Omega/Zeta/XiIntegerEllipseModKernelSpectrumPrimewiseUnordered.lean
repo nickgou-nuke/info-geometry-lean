@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart76IntegerEllipseAtomicLengthDivisibility
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart76IntegerEllipseAtomicLengthDivisibility
 
 namespace Omega.Zeta
 

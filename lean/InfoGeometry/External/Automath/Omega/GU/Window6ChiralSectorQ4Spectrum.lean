@@ -1,5 +1,5 @@
 import Mathlib.Data.Multiset.Basic
-import Omega.GU.Window6ChiralCompressionHypercubeAdjacency
+import InfoGeometry.External.Automath.Omega.GU.Window6ChiralCompressionHypercubeAdjacency
 
 namespace Omega.GU
 

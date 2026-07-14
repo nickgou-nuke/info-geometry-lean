@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedGoldenResonanceCompleteBernsteinPotential
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedGoldenResonanceCompleteBernsteinPotential
 
 namespace Omega.Conclusion
 

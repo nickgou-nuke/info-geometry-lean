@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.BoundaryEndpointHeat
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryEndpointHeat
 
 namespace Omega.TypedAddressBiaxialCompletion
 

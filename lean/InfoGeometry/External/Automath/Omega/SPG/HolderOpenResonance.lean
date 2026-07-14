@@ -1,4 +1,4 @@
-import Omega.SPG.MainResonance
+import InfoGeometry.External.Automath.Omega.SPG.MainResonance
 
 namespace Omega.SPG
 

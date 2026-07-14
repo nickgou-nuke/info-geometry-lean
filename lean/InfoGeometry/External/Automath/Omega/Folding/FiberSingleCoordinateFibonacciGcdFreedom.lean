@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberSingleCoordinateMinimalAugmentation
+import InfoGeometry.External.Automath.Omega.Folding.FiberSingleCoordinateMinimalAugmentation
 
 namespace Omega.Folding
 

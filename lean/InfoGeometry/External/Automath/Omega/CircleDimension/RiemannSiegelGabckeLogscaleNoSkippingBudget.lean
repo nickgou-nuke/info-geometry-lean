@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.CircleDimension.RiemannSiegelGabckeLogscaleOrthogonalRecursion
+import InfoGeometry.External.Automath.Omega.CircleDimension.RiemannSiegelGabckeLogscaleOrthogonalRecursion
 
 namespace Omega.CircleDimension
 

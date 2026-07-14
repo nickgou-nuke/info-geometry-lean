@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyBranchCurveXYExplicit
-import Omega.Folding.GaugeAnomalyTrigonalRamificationMu
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyBranchCurveXYExplicit
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalRamificationMu
 
 namespace Omega.Folding
 

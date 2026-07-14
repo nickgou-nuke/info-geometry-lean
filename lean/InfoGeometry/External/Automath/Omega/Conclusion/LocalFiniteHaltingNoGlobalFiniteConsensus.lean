@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.GlobalClockVanishing
+import InfoGeometry.External.Automath.Omega.Conclusion.GlobalClockVanishing
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionMod3ZeroOneDefectSharp
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionMod3ZeroOneDefectSharp
 
 open Filter
 open scoped Topology

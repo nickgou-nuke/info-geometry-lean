@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberReconstructionRadiusCenterAntipodes
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionRadiusCenterAntipodes
 
 namespace Omega.POM
 

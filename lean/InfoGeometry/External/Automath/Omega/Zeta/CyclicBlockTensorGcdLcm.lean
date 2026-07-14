@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Fin
 import Mathlib.LinearAlgebra.Matrix.Permutation
-import Omega.Zeta.CyclicDet
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicDet
 
 namespace Omega.Zeta
 

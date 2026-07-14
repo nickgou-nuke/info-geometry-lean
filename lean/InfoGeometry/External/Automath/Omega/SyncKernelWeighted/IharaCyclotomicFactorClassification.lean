@@ -1,8 +1,8 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.CharacterPhaseCyclotomicElimination
-import Omega.SyncKernelWeighted.IharaArtinFactorization
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CharacterPhaseCyclotomicElimination
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaArtinFactorization
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.WittDepthLineConvolution
-import Omega.SyncKernelWeighted.WittDepthEulerProduct
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.WittDepthLineConvolution
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittDepthEulerProduct
 
 namespace Omega.SyncKernelRealInput
 

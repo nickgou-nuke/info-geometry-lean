@@ -1,4 +1,4 @@
-import Omega.Topos.BranchDecomposition
+import InfoGeometry.External.Automath.Omega.Topos.BranchDecomposition
 
 namespace Omega.Topos
 

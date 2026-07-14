@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.CompletedPrimeCongruence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CompletedPrimeCongruence
 
 namespace Omega.SyncKernelWeighted
 

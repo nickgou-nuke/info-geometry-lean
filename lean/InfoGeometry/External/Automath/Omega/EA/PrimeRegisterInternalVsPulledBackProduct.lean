@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Factorization.Basic
-import Omega.EA.PrimeRegisterExternalLedgerOrbitInvariance
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterExternalLedgerOrbitInvariance
 
 namespace Omega.EA
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiComovingPrefixEndpointBarrierLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingPrefixEndpointBarrierLaw
 
 namespace Omega.Zeta
 

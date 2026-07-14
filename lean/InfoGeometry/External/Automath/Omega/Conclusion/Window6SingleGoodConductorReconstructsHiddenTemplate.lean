@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Totient
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Conclusion.Window6HiddenTemplatePrimegoodRamanujanFaultlaw
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6HiddenTemplatePrimegoodRamanujanFaultlaw
 
 namespace Omega.Conclusion
 

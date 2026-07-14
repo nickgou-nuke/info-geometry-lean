@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart71ZeroCosetFiniteIntersectionPairwiseCompatibility
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart71ZeroCosetFiniteIntersectionPairwiseCompatibility
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalCoverTimeTailInclusionExclusion
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeTailInclusionExclusion
 
 namespace Omega.POM
 

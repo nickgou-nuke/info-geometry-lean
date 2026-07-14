@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.Core.Fib
-import Omega.Folding.FoldZeroDensitySparse
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroDensitySparse
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega.Folding
 

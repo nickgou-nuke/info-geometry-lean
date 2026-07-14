@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Perm
-import Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
 
 namespace Omega.Zeta
 

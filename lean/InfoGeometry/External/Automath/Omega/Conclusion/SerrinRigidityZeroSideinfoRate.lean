@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SerrinRealizableMeanConeCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinRealizableMeanConeCollapse
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.SquarefreeMedianDistance
+import InfoGeometry.External.Automath.Omega.CircleDimension.SquarefreeMedianDistance
 
 namespace Omega.CircleDimension
 

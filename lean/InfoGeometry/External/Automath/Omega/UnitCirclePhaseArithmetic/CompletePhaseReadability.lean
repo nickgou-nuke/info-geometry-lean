@@ -1,4 +1,4 @@
-import Omega.CircleDimension.NonnullSectionCriterion
+import InfoGeometry.External.Automath.Omega.CircleDimension.NonnullSectionCriterion
 
 namespace Omega.UnitCirclePhaseArithmetic
 

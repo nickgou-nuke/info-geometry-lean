@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.PhaseResidual
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PhaseResidual
 
 namespace Omega.TypedAddressBiaxialCompletion
 

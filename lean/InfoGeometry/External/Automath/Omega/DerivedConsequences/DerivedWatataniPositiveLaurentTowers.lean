@@ -1,6 +1,6 @@
-import Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
-import Omega.Conclusion.TqftGenusHausdorffMomentSequence
-import Omega.DerivedConsequences.FiniteMomentsCompleteOperatorTopologyCapacity
+import InfoGeometry.External.Automath.Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusHausdorffMomentSequence
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.FiniteMomentsCompleteOperatorTopologyCapacity
 
 namespace Omega.DerivedConsequences
 

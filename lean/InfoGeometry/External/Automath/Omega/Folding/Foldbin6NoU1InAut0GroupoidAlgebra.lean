@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinM6FiberHist
-import Omega.Folding.FoldbinGroupoidAut0PuProduct
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinM6FiberHist
+import InfoGeometry.External.Automath.Omega.Folding.FoldbinGroupoidAut0PuProduct
 
 namespace Omega.Folding
 

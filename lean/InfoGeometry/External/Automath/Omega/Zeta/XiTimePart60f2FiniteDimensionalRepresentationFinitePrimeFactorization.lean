@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Zeta.XiCdimLocalizationSolenoidFiniteDimensionalUnitarySingleCharacterNormalForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidFiniteDimensionalUnitarySingleCharacterNormalForm
 
 namespace Omega.Zeta
 

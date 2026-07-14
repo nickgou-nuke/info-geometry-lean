@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Real.Pi.Wallis
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 import Mathlib.Data.Nat.Choose.Central
-import Omega.POM
+import InfoGeometry.External.Automath.Omega.POM
 
 open scoped BigOperators
 open intervalIntegral

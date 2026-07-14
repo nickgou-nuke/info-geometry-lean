@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
-import Omega.Conclusion.DyadicBoundaryGodelCodeParametersAndCheckRank
-import Omega.Conclusion.DyadicBoundaryPathConsistencyQueryRankEqualsCheckRank
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryGodelCodeParametersAndCheckRank
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryPathConsistencyQueryRankEqualsCheckRank
 
 namespace Omega.Conclusion
 

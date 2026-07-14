@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBound
 
 namespace Omega.GU
 

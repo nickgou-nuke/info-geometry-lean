@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
 
 namespace Omega.OperatorAlgebra
 

@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
 
 namespace Omega.SyncKernelWeighted
 

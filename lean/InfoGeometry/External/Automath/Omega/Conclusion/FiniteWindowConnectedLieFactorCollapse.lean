@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Topology.Connected.Basic
-import Omega.Conclusion.ConnectedToDiscreteConstant
+import InfoGeometry.External.Automath.Omega.Conclusion.ConnectedToDiscreteConstant
 
 namespace Omega.Conclusion
 

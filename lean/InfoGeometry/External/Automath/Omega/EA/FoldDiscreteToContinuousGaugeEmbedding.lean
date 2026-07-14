@@ -1,5 +1,5 @@
 import Mathlib.GroupTheory.Perm.Basic
-import Omega.EA.FoldGroupoidAutSemidirectPi0
+import InfoGeometry.External.Automath.Omega.EA.FoldGroupoidAutSemidirectPi0
 
 namespace Omega.EA
 

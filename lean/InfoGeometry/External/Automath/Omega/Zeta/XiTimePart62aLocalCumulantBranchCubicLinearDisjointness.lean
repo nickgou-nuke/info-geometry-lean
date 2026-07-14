@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
-import Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
 
 namespace Omega.Zeta
 

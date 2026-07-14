@@ -62,8 +62,10 @@ theorem computationalEvidenceInvariants_packet :
   exact ⟨rfl, rfl, rfl, rfl⟩
 
 /--
-A full classification certificate for `Aut(𝕆_s) = G₂(2)` over the existing
-Zorn split-octonion coordinate owner.
+A full classification certificate for
+`Aut_{ℝ-alg}(𝕆_s(ℝ)) = G₂^{split}(ℝ)` over the existing Zorn split-octonion
+coordinate owner.  The finite Chevalley group `G₂(2)` is a separate
+characteristic-two boundary lane and is not the target of this real statement.
 
 `Aut` and `G2` are explicit group carriers.  The multiplicative equivalence is
 part of the certificate, together with action laws proving that `Aut` really

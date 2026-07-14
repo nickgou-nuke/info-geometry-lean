@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.FibPellQuadratic
+import InfoGeometry.External.Automath.Omega.POM.FibPellQuadratic
 
 namespace Omega.POM
 

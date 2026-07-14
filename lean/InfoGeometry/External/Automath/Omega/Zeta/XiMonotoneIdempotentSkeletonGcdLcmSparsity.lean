@@ -1,7 +1,7 @@
 import Mathlib.Data.Set.PowersetCard
 import Mathlib.Tactic
-import Omega.Zeta.PrimeRegisterIdempotentExactCount
-import Omega.Zeta.XiChainIdempotentStarSaturationComparableGcd
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeRegisterIdempotentExactCount
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainIdempotentStarSaturationComparableGcd
 
 namespace Omega.Zeta
 

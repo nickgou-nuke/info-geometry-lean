@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitS2SharpPComplete
-import Omega.SPG.PolytimeCompleteInvariantImpliesPEqualsNP
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitS2SharpPComplete
+import InfoGeometry.External.Automath.Omega.SPG.PolytimeCompleteInvariantImpliesPEqualsNP
 
 namespace Omega.OperatorAlgebra
 
@@ -183,7 +183,11 @@ theorem paper_universal_compilable_collision_kernel_implies_p_np
     (steps : ℕ → ℕ)
     (hCompile :
       universal_compilable_collision_kernel_implies_p_np_compilation_hypothesis
-        compileDim compileMatrix compileLeft compileRight steps) :
+        compileDim compileMatrix compileLeft compileRight steps)
+    (hDecidePoly :
+      Omega.SPG.PolynomialTimeMap
+        (universal_compilable_collision_kernel_implies_p_np_decide_unsat
+          compileDim compileMatrix compileLeft compileRight steps)) :
     Omega.SPG.UNSATInP universal_compilable_collision_kernel_implies_p_np_unsat ∧
       Omega.SPG.PEqualsNP universal_compilable_collision_kernel_implies_p_np_unsat := by
   have hSpec :
@@ -198,7 +202,7 @@ theorem paper_universal_compilable_collision_kernel_implies_p_np
     refine ⟨
       universal_compilable_collision_kernel_implies_p_np_decide_unsat
         compileDim compileMatrix compileLeft compileRight steps,
-      trivial,
+      hDecidePoly,
       hSpec⟩
   have hSat :
       Omega.SPG.SATInP

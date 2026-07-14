@@ -1,4 +1,4 @@
-import Omega.Folding.YmSyncTail
+import InfoGeometry.External.Automath.Omega.Folding.YmSyncTail
 import Mathlib.Tactic
 
 namespace Omega.Folding

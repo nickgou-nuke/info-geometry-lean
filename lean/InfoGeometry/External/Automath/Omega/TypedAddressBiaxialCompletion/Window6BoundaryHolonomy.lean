@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.Window6AuditBoundaryCertificates
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6AuditBoundaryCertificates
 
 namespace Omega.TypedAddressBiaxialCompletion
 

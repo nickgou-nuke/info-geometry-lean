@@ -42,7 +42,7 @@ claims as theorem-like fields.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure BerryKeatingXPSource
-    (Carrier Operator Domain : Type*) where
+    (Carrier Operator Domain : Type) where
   berryKeating : BerryKeatingOperatorPacket Carrier Operator Domain
   primePeriods : ℕ → ℝ
 
@@ -55,7 +55,7 @@ compatibility without claiming a global operator theorem.
 -/
 @[rep_depth operator]
 structure BerryKeatingCantorDiracBridge
-    (Carrier Operator Domain : Type*)
+    (Carrier Operator Domain : Type)
     (P : PrimeCutoff) where
   berryKeating : BerryKeatingXPSource Carrier Operator Domain
   cantorDirac :

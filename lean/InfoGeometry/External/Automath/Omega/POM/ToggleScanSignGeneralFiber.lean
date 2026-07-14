@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FibCubeEdgeParity
+import InfoGeometry.External.Automath.Omega.POM.FibCubeEdgeParity
 
 namespace Omega.POM
 

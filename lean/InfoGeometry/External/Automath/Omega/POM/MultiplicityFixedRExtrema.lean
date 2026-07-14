@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicityFixedLREnvelope
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityFixedLREnvelope
 
 namespace Omega.POM.MultiplicityFixedRExtrema
 

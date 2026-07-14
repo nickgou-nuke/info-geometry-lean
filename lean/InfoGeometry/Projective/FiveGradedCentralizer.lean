@@ -140,7 +140,7 @@ def conformalInversion2 : FiveGradedConformalInversion (Fin 2) where
 def conformalPoleAxis2 (i : Fin 2) : Fin 2 → ℝ :=
   fun j => if j = i then 1 else 0
 
-/--
+/-- 
 The Möbius parity matrix sends the `-2` pole axis to the swapped `+2` pole
 axis, up to the central sign.
 -/
@@ -151,7 +151,7 @@ theorem mobiusParity2_negTwo_axis :
   fin_cases i <;> norm_num [Matrix.mulVec, mobiusParity2, conformalPoleAxis2,
     conformalInversion2, conformalPoleSwap2]
 
-/--
+/-- 
 The Möbius parity matrix sends the `+2` pole axis to the swapped `-2` pole
 axis.
 -/
@@ -171,7 +171,7 @@ def mobiusClosure2 : FiveGradedMobiusClosure 2 where
   gw_eq_trace := by
     rw [mobiusParity2_trace]
 
-/--
+/-- 
 The projective centralizer closure read off from the canonical two-pole
 five-grade inversion.
 -/

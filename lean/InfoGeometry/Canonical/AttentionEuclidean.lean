@@ -62,7 +62,29 @@ lemma euclideanAttentionWeights_sum_one
     (β : ℝ) :
     ∑ i, euclideanAttentionWeights q ctx β i = 1 := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
-  simpa [euclideanAttentionWeights] using 
+  simpa [euclideanAttentionWeights] using
     attentionWeights_sum_one q ctx euclideanMatchForm β
+
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Euclidean attention weights are pointwise nonnegative. -/
+lemma euclideanAttentionWeights_nonneg
+    (q : S)
+    (ctx : ContextWindow n S V)
+    (β : ℝ) (i : Fin n) :
+    0 ≤ euclideanAttentionWeights q ctx β i := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [euclideanAttentionWeights] using
+    attentionWeights_nonneg q ctx euclideanMatchForm β i
+
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Euclidean attention weights are pointwise bounded by one. -/
+lemma euclideanAttentionWeights_le_one
+    (q : S)
+    (ctx : ContextWindow n S V)
+    (β : ℝ) (i : Fin n) :
+    euclideanAttentionWeights q ctx β i ≤ 1 := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [euclideanAttentionWeights] using
+    attentionWeights_le_one q ctx euclideanMatchForm β i
 
 end InfoGeometry.Canonical.Attention

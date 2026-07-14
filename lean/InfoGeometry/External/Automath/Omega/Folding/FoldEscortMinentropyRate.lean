@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldEscortGroundstateConcentration
+import InfoGeometry.External.Automath.Omega.Folding.FoldEscortGroundstateConcentration
 
 namespace Omega.Folding
 

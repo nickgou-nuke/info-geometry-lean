@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldConditionalExpectation
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
-import Omega.OperatorAlgebra.FoldInvariantSubalgebra
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectation
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInvariantSubalgebra
 
 namespace Omega.OperatorAlgebra
 

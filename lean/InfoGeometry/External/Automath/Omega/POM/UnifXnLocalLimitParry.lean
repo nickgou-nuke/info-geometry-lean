@@ -1,4 +1,4 @@
-import Omega.POM.ParryOnesCLT
+import InfoGeometry.External.Automath.Omega.POM.ParryOnesCLT
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xNonabelianArtinChannelQuotientErasure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xNonabelianArtinChannelQuotientErasure
 
 namespace Omega.Zeta
 

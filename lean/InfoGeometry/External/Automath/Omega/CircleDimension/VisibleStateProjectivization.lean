@@ -1,5 +1,5 @@
-import Omega.CircleDimension.ProjectiveStateOrganization
-import Omega.CircleDimension.VisiblePhaseResidualTriviality
+import InfoGeometry.External.Automath.Omega.CircleDimension.ProjectiveStateOrganization
+import InfoGeometry.External.Automath.Omega.CircleDimension.VisiblePhaseResidualTriviality
 
 namespace Omega.CircleDimension
 

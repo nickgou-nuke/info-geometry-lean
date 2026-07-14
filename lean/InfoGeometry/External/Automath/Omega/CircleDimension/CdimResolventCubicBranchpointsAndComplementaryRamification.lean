@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.CdimS4V4KummerModelAndResolventRecovery
+import InfoGeometry.External.Automath.Omega.CircleDimension.CdimS4V4KummerModelAndResolventRecovery
 
 namespace Omega.CircleDimension
 

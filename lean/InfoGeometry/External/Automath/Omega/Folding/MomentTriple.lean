@@ -1,4 +1,4 @@
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 namespace Omega

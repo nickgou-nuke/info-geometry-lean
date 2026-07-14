@@ -1,5 +1,5 @@
-import Omega.Folding.FiberWeightCount
-import Omega.Folding.CollisionZeta
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZeta
 import Mathlib.Algebra.Order.Chebyshev
 
 namespace Omega

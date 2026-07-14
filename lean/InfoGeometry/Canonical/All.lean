@@ -113,6 +113,7 @@ import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
+import InfoGeometry.Canonical.BostConnesGibbsState
 import InfoGeometry.Canonical.BostConnesConformalBoundary
 import InfoGeometry.Canonical.GradedTraceBridge
 import InfoGeometry.Canonical.GradedTraceColimitBridge
@@ -187,7 +188,6 @@ import InfoGeometry.Canonical.FiveGradedTwistorIncidence
 import InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.BregmanTriality
-import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
 import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
@@ -377,6 +377,10 @@ import InfoGeometry.Cocycle.SplitQuaternionicJacobian
 import InfoGeometry.Canonical.ZornComposition
 import InfoGeometry.Canonical.ZornBasisTable
 import InfoGeometry.Canonical.SplitOctonionClassificationCore
+import InfoGeometry.Canonical.ZornCoordinateQuadraticRecovered
+import InfoGeometry.Canonical.CanonicalZornCompositionTriality
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordIsomorphism
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Lift
@@ -466,7 +470,6 @@ import InfoGeometry.Canonical.LeeYangAsanoNondegeneratePrep
 import InfoGeometry.Canonical.LeeYangAsanoFullReduction
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
-import InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace
@@ -554,7 +557,6 @@ import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinSpectralProjectorBridge
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.DrazinWeylConstructive
-import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Canonical.DualConnectionsFiniteExpFamily
 import InfoGeometry.Canonical.DunfordTaylor
@@ -773,7 +775,7 @@ import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Canonical.ManifoldDegreeIntegration
 import InfoGeometry.Canonical.ManifoldHomologyCore
 import InfoGeometry.Canonical.MeasureScaleShape
-import InfoGeometry.Canonical.MetricTransportWitness
+import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularCartanCantorSystem
 import InfoGeometry.Canonical.ModularCoproductFlux

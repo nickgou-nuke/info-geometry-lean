@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersCrossHomClassification
-import Omega.Zeta.LocalizedQuotientLedger
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersCrossHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientLedger
 
 namespace Omega.Zeta
 

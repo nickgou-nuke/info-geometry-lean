@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiWindow6C3QuadraticEnergyEquipartition
+import InfoGeometry.External.Automath.Omega.Zeta.XiWindow6C3QuadraticEnergyEquipartition
 
 namespace Omega.Zeta
 

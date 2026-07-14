@@ -1,6 +1,6 @@
 import Mathlib
 import Mathlib.Data.Finset.SymmDiff
-import Omega.Conclusion.BoundaryGodelDistanceDiscreteIsoperimetricLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelDistanceDiscreteIsoperimetricLaw
 
 namespace Omega.Conclusion
 

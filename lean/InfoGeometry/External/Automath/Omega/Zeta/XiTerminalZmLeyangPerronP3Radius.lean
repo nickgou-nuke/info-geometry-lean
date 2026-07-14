@@ -1,6 +1,6 @@
 import Mathlib.Order.Filter.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangP3V3LinearBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangP3V3LinearBound
 
 namespace Omega.Zeta
 

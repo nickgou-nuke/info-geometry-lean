@@ -1,7 +1,7 @@
 import Mathlib.Data.List.OfFn
 import Mathlib.Tactic
-import Omega.Folding.KilloInfiniteStream2adicHolographicPoint
-import Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
+import InfoGeometry.External.Automath.Omega.Folding.KilloInfiniteStream2adicHolographicPoint
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
 
 namespace Omega.Folding
 

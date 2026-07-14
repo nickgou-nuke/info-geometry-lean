@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LissajousMinimalSolenoidFactor
-import Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
-import Omega.CircleDimension.SolenoidFiberTorsor
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousMinimalSolenoidFactor
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidFiberTorsor
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.DerivedConsequences
 

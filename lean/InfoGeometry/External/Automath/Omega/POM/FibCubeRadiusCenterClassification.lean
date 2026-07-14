@@ -1,4 +1,4 @@
-import Omega.POM.FibCubeEccentricityClosedForm
+import InfoGeometry.External.Automath.Omega.POM.FibCubeEccentricityClosedForm
 
 namespace Omega.POM
 

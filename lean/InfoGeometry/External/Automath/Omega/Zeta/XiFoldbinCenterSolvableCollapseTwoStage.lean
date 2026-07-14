@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.FoldbinAuditedEvenMaximalSolvableQuotient
+import InfoGeometry.External.Automath.Omega.Zeta.FoldbinAuditedEvenMaximalSolvableQuotient
 
 namespace Omega.Zeta
 

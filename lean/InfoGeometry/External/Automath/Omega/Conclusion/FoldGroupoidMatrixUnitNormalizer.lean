@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldGroupoidMatrixUnitAutNormalizer
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGroupoidMatrixUnitAutNormalizer
 
 namespace Omega.Conclusion
 

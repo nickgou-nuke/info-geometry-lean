@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.EA.Conclusion72EnergyComplementarity
+import InfoGeometry.External.Automath.Omega.EA.Conclusion72EnergyComplementarity
 
 namespace Omega.EA
 

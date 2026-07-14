@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StokesExactSequenceDictionary
-import Omega.CircleDimension.SignedStokesCohomologicalCharacterization
+import InfoGeometry.External.Automath.Omega.CircleDimension.StokesExactSequenceDictionary
+import InfoGeometry.External.Automath.Omega.CircleDimension.SignedStokesCohomologicalCharacterization
 
 namespace Omega.CircleDimension
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinChi2Col
-import Omega.Folding.FoldBinEscortEscortKl
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinChi2Col
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinEscortEscortKl
 
 namespace Omega.Zeta
 

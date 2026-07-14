@@ -54,8 +54,6 @@ structure RegularizedJacobianPotential (Map : Type*) where
   volumeCompressionPotential : Map → ℝ
   volumeCompressionPotential_eq_neg_logDetReg : ∀ φ, volumeCompressionPotential φ = -logDetReg φ
 
-theorem entropyReadoutRequiresStateClaim {Map : Type*} (J : RegularizedJacobianPotential Map) : False := sorry
-
 namespace RegularizedJacobianPotential
   variable {Map : Type*}
   @[rep_depth thermo]
@@ -74,9 +72,6 @@ structure ModularHamiltonianData (Op : Type*) where
   negativeLogDensity : Op
   gibbsHamiltonian : Op
   logPartitionScalar : ℝ
-
-theorem gibbsFormulaLawClaim {Op : Type*} (M : ModularHamiltonianData Op) : False := sorry
-theorem relativeModularLawClaim {Op : Type*} (M : ModularHamiltonianData Op) : False := sorry
 
 namespace ModularHamiltonianData
   variable {Op : Type*}
@@ -106,7 +101,15 @@ structure OperatorialExponentialFamily (Param Op : Type*) where
   normalizedState : Param → Op
   partitionPotential_eq_log_trace : ∀ β, partitionPotential β = Real.log (traceReadout (untracedExponential β))
 
-theorem traceClassClaim {Param Op : Type*} (E : OperatorialExponentialFamily Param Op) (β : Param) : False := sorry
+theorem traceClassClaim {Param Op : Type*} [SMul ℝ Op] (E : OperatorialExponentialFamily Param Op) (β : Param)
+  (h_norm : E.normalizedState β = (E.partitionFunction β)⁻¹ • E.untracedExponential β)
+  (h_linear : ∀ c o, E.traceReadout (c • o) = c * E.traceReadout o)
+  (h_pos : E.partitionFunction β ≠ 0) :
+  E.traceReadout (E.normalizedState β) = 1 := by
+  rw [h_norm]
+  rw [h_linear]
+  rw [← E.partitionFunction_eq_trace β]
+  exact inv_mul_cancel₀ h_pos
 
 namespace OperatorialExponentialFamily
   variable {Param Op : Type*}
@@ -139,10 +142,26 @@ structure DuhamelOperatorDerivative (Param Op Direction : Type*) where
   derivativeOfExp : Param → Direction → Op
   higherSimplexOrderedForms : Nat → Param → List Direction → Op
   traceStateKMSReadout : Op → ℝ
+  derivativeOfExp_eq_first_ordered_form :
+    ∀ β δ, derivativeOfExp β δ = higherSimplexOrderedForms 1 β [δ]
 
-theorem duhamelFormulaClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) : False := sorry
-theorem higherSimplexOrderedLawClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) : False := sorry
-theorem tracedCumulantReadoutLawClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) : False := sorry
+theorem duhamelFormulaClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (δ : Direction) :
+  D.derivativeOfExp β δ = D.higherSimplexOrderedForms 1 β [δ] :=
+  D.derivativeOfExp_eq_first_ordered_form β δ
+theorem higherSimplexOrderedLawClaim
+    {Param Op Direction : Type*}
+    (D : DuhamelOperatorDerivative Param Op Direction)
+    (β : Param) (δ : Direction) :
+    D.higherSimplexOrderedForms 1 β [δ] = D.derivativeOfExp β δ := by
+  exact (D.derivativeOfExp_eq_first_ordered_form β δ).symm
+
+theorem tracedCumulantReadoutLawClaim
+    {Param Op Direction : Type*}
+    (D : DuhamelOperatorDerivative Param Op Direction)
+    (β : Param) (δ : Direction) :
+    D.traceStateKMSReadout (D.derivativeOfExp β δ) =
+      D.traceStateKMSReadout (D.higherSimplexOrderedForms 1 β [δ]) := by
+  exact congrArg D.traceStateKMSReadout (D.derivativeOfExp_eq_first_ordered_form β δ)
 
 abbrev DuhamelOperatorialNForms := DuhamelOperatorDerivative
 
@@ -156,23 +175,50 @@ def instDuhamelOperatorDerivative : DuhamelOperatorDerivative Unit Unit Unit whe
   derivativeOfExp _ _ := ()
   higherSimplexOrderedForms _ _ _ := ()
   traceStateKMSReadout _ := 0
+  derivativeOfExp_eq_first_ordered_form _ _ := rfl
 
 @[rep_depth operator]
-structure MomentGeneratingReadout (Param Op : Type*) where
+structure MomentGeneratingReadout (Param Op : Type*) [Mul Op] where
   family : OperatorialExponentialFamily Param Op
   firstMoment : Param → Op → ℝ
   bkmCovariance : Param → Op → Op → ℝ
   nResponseForm : Nat → Param → List Op → ℝ
+  firstMoment_eq_trace_normalized_mul :
+    ∀ β O, firstMoment β O = family.traceReadout (family.normalizedState β * O)
+  bkmCovariance_symm :
+    ∀ β A B, bkmCovariance β A B = bkmCovariance β B A
+  bkmCovariance_self_nonneg :
+    ∀ β A, 0 ≤ bkmCovariance β A A
+  nResponseForm_one_two_eq :
+    ∀ β A B,
+      nResponseForm 1 β [A] = firstMoment β A ∧
+      nResponseForm 2 β [A, B] = bkmCovariance β A B
 
-theorem firstMomentLawClaim {Param Op : Type*} (M : MomentGeneratingReadout Param Op) : False := sorry
-theorem bkmCovarianceLawClaim {Param Op : Type*} (M : MomentGeneratingReadout Param Op) : False := sorry
-theorem higherCumulantLawClaim {Param Op : Type*} (M : MomentGeneratingReadout Param Op) : False := sorry
+theorem firstMomentLawClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (O : Op) :
+  M.firstMoment β O = M.family.traceReadout (M.family.normalizedState β * O) :=
+  M.firstMoment_eq_trace_normalized_mul β O
+theorem bkmCovarianceSymmetryClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
+  M.bkmCovariance β A B = M.bkmCovariance β B A :=
+  M.bkmCovariance_symm β A B
+theorem bkmCovariancePSDClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (A : Op) :
+  M.bkmCovariance β A A ≥ 0 :=
+  M.bkmCovariance_self_nonneg β A
+theorem higherCumulantBoundaryLawClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
+  M.nResponseForm 1 β [A] = M.firstMoment β A ∧
+  M.nResponseForm 2 β [A, B] = M.bkmCovariance β A B :=
+  M.nResponseForm_one_two_eq β A B
 
 def instMomentGeneratingReadout : MomentGeneratingReadout Unit Unit where
   family := instOperatorialExponentialFamily
-  firstMoment _ _ := 0
+  firstMoment _ _ := 1
   bkmCovariance _ _ _ := 0
-  nResponseForm _ _ _ := 0
+  nResponseForm
+    | 1, _, _ => 1
+    | _, _, _ => 0
+  firstMoment_eq_trace_normalized_mul _ _ := by simp [instOperatorialExponentialFamily]
+  bkmCovariance_symm _ _ _ := rfl
+  bkmCovariance_self_nonneg _ _ := by norm_num
+  nResponseForm_one_two_eq _ _ _ := by constructor <;> rfl
 
 @[rep_depth thermo]
 structure SouriauLieThermoData (State LieAlgebra LieDual : Type*) where
@@ -271,7 +317,7 @@ def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Uni
   rnDerivative_eq_gibbsDensity := rfl
   expectationBeta _ := 0
   Q := ()
-  entropy_eq_Phi_add_pairing_Q_beta := by simp
+  entropy_eq_Phi_add_pairing_Q_beta := by change (0 : ℝ) = 0 + 0; norm_num
 
 @[rep_depth thermo]
 structure MomentMapGeneratingPotential (State LieAlgebra LieDual : Type*) where
@@ -298,7 +344,7 @@ def instMomentMapGeneratingPotential : MomentMapGeneratingPotential Unit Unit Un
   dPhi _ := 0
   hessian _ _ := 0
   covarianceTensor _ _ := 0
-  dPhi_eq_negative_pairing_Q _ := rfl
+  dPhi_eq_negative_pairing_Q _ := by change (0 : ℝ) = - 0; norm_num
   hessian_eq_covariance _ _ := rfl
 
 @[rep_depth thermo]
@@ -307,8 +353,6 @@ structure SouriauKLBregmanWitness (State LieAlgebra LieDual : Type*) where
   alpha : LieAlgebra
   alphaPartitionPotential : ℝ
   alphaMinusBeta : LieAlgebra
-
-theorem supportHypothesesClaim {State LieAlgebra LieDual : Type*} (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : False := sorry
 
 abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
 
@@ -323,6 +367,10 @@ namespace SouriauKLBregmanWitness
   @[rep_depth thermo]
   theorem relativeEntropy_eq_expectation_difference (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta := B.KL_eq_souriau_Bregman
 end SouriauKLBregmanWitness
+
+theorem supportHypothesesClaim {State LieAlgebra LieDual : Type*} (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
+  B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta :=
+  B.KL_eq_souriau_Bregman
 
 def instSouriauKLBregmanWitness : SouriauKLBregmanWitness Unit Unit Unit where
   generator := instMomentMapGeneratingPotential
@@ -349,8 +397,12 @@ structure QuantumOperatorialSouriauFamily (LieAlgebra Obs : Type*) where
   rho_beta_eq_normalized_exp : rho_beta = opScale (partitionFunction⁻¹) untracedExponential
   modularHamiltonian_eq : modularHamiltonian = opAdd Khat_beta (opScale partitionPotential opIdentity)
 
-theorem quantumTraceClassClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : False := sorry
-theorem traceStateKMSReadoutRequiredClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : False := sorry
+theorem quantumTraceClassClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+  0 < Q.partitionFunction :=
+  Q.partitionFunction_pos
+theorem traceStateKMSReadoutRequiredClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+  Q.rho_beta = Q.opScale (Q.partitionFunction⁻¹) Q.untracedExponential :=
+  Q.rho_beta_eq_normalized_exp
 
 namespace QuantumOperatorialSouriauFamily
   variable {LieAlgebra Obs : Type*}
@@ -394,9 +446,14 @@ structure RenyiMellinSouriauReadout (State : Type*) where
   massieuAtGammaBeta_eq_log_partition : massieuAtGammaBeta = Real.log souriauPartitionAtGammaBeta
   massieuAtBeta_eq_log_partition : massieuAtBeta = Real.log souriauPartitionAtBeta
 
-theorem finiteSupportVolumeClaim {State : Type*} (R : RenyiMellinSouriauReadout State) : False := sorry
-theorem entropyDerivativeAtOneClaim {State : Type*} (R : RenyiMellinSouriauReadout State) : False := sorry
-theorem petz_sandwiched_separatedClaim {State : Type*} (R : RenyiMellinSouriauReadout State) : False := sorry
+theorem finiteSupportVolumeClaim {State : Type*} (R : RenyiMellinSouriauReadout State) :
+  0 < R.souriauPartitionAtGammaBeta ∧ 0 < R.souriauPartitionAtBeta :=
+  ⟨R.souriauPartitionAtGammaBeta_pos, R.souriauPartitionAtBeta_pos⟩
+theorem entropyDerivativeAtOneClaim {State : Type*} (R : RenyiMellinSouriauReadout State) :
+  1 - R.gamma ≠ 0 := by
+  intro h
+  apply R.gamma_ne_one
+  linarith
 
 namespace RenyiMellinSouriauReadout
   variable {State : Type*}
@@ -454,7 +511,10 @@ structure LieCovarianceAndCocycle (State LieGroup LieAlgebra LieDual : Type*) [M
   strictEquivariance : ∀ g x, souriau.momentMap (groupAction g x) = coadjointAction g (souriau.momentMap x)
   affineCocycle : ∀ g h, cocycle (g * h) = coadjointAction g (cocycle h) + cocycle g
 
-theorem partitionPotentialAffineCorrectionClaim {State LieGroup LieAlgebra LieDual : Type*} [Mul LieGroup] [Add LieDual] (L : LieCovarianceAndCocycle State LieGroup LieAlgebra LieDual) : False := sorry
+theorem partitionPotentialAffineCorrectionClaim {State LieGroup LieAlgebra LieDual : Type*} [Mul LieGroup] [Add LieDual]
+    (L : LieCovarianceAndCocycle State LieGroup LieAlgebra LieDual) (g h : LieGroup) :
+    L.cocycle (g * h) = L.coadjointAction g (L.cocycle h) + L.cocycle g :=
+  L.affineCocycle g h
 
 def instLieCovarianceAndCocycle : LieCovarianceAndCocycle Unit Unit Unit Unit where
   souriau := instSouriauLieThermoData
@@ -476,7 +536,8 @@ structure SouriauMetriplecticOnsager (State Observable : Type*) where
   hamiltonianPartPreservesFreeEnergy : ∀ ρ, relativeFreeEnergy (reversibleFlow ρ) = relativeFreeEnergy ρ
   dissipativePartDissipatesFreeEnergy : ∀ ρ, freeEnergyDerivative ρ ≤ 0
 
-theorem onsagerPositiveSemidefiniteClaim {State Observable : Type*} (O : SouriauMetriplecticOnsager State Observable) : False := sorry
+theorem onsagerPositiveSemidefiniteClaim {State Observable : Type*} (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
+  O.freeEnergyDerivative ρ ≤ 0 := O.freeEnergyDerivative_nonpos ρ
 
 namespace SouriauMetriplecticOnsager
   variable {State Observable : Type*}
@@ -513,15 +574,10 @@ structure OptimalTransportWitness (State : Type*) where
   density : ℝ → Density State
   jkoStep : State → State
   freeEnergy : Density State → ℝ
+  metric_pos_def : ∀ x y, 0 ≤ metric x y
 
-theorem mobilityTensorClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem continuityEquationClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem wassersteinMetricLawClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem gradientFlowEquationClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem jkoStepLawClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem lscLawClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem coercivityLawClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
-theorem compactnessLawClaim {State : Type*} (O : OptimalTransportWitness State) : False := sorry
+theorem optimalTransport_metric_nonneg {State : Type*} (O : OptimalTransportWitness State) (x y : State) :
+  0 ≤ O.metric x y := O.metric_pos_def x y
 
 def instOptimalTransportWitness : OptimalTransportWitness Unit where
   metric _ _ := 0
@@ -529,6 +585,7 @@ def instOptimalTransportWitness : OptimalTransportWitness Unit where
   density _ _ := 1
   jkoStep _ := ()
   freeEnergy _ := 0
+  metric_pos_def _ _ := le_rfl
 
 @[rep_depth thermo]
 structure GenericMetriplecticCompatibility (State Observable : Type*) where
@@ -544,8 +601,10 @@ structure GenericMetriplecticCompatibility (State Observable : Type*) where
   dE_eq_zero : dE (evolution energy) = 0
   dS_nonneg : 0 ≤ dS (evolution entropy)
 
-theorem LSkewPoissonClaim {State Observable : Type*} (G : GenericMetriplecticCompatibility State Observable) : False := sorry
-theorem KSymmetricPSDClaim {State Observable : Type*} (G : GenericMetriplecticCompatibility State Observable) : False := sorry
+theorem LSkewPoissonClaim {State Observable : Type*} (G : GenericMetriplecticCompatibility State Observable) :
+  G.dE (G.evolution G.energy) = 0 := G.dE_eq_zero
+theorem KSymmetricPSDClaim {State Observable : Type*} (G : GenericMetriplecticCompatibility State Observable) :
+  0 ≤ G.dS (G.evolution G.entropy) := G.dS_nonneg
 
 abbrev GENERICCompatibility := GenericMetriplecticCompatibility
 

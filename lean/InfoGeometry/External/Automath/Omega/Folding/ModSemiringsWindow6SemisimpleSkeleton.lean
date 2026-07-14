@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.Folding.ModSemiringsAnnihilatorValuationLattice
-import Omega.Folding.ModSemiringsSquarefreeNilpotentBranch
-import Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsAnnihilatorValuationLattice
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsSquarefreeNilpotentBranch
+import InfoGeometry.External.Automath.Omega.Folding.Window6
 
 namespace Omega
 

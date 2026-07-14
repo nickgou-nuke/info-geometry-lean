@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.OracleCapacityKolmogorovSpectrum
-import Omega.POM.ReversibleExternalResidualKolmogorovLowerBound
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityKolmogorovSpectrum
+import InfoGeometry.External.Automath.Omega.POM.ReversibleExternalResidualKolmogorovLowerBound
 
 namespace Omega.Conclusion
 

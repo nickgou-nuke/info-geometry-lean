@@ -116,17 +116,15 @@ theorem virasoroIntegration_is_certified :
 
 /-- Minimal local readback for the Virasoro bracket on basis generators. -/
 theorem virasoroProject_lgen_readback (K : Type*) [Field K] [CharZero K] (n m : ℤ) :
-    basisBracket K (VirasoroBasis.L n) (VirasoroBasis.L m) =
-      (Finsupp.single (VirasoroBasis.L (n + m)) ((n - m : ℤ) : K) +
-        if n + m = 0 then
-          Finsupp.single VirasoroBasis.c (((n ^ 3 - n : ℤ) : K) / (12 : K))
-        else 0) := by
-  rfl
+    ⁅VirasoroProject.VirasoroAlgebra.lgen K n, VirasoroProject.VirasoroAlgebra.lgen K m⁆ =
+      (n - m : K) • VirasoroProject.VirasoroAlgebra.lgen K (n + m) +
+        if n + m = 0 then ((n ^ 3 - n : K) / 12) • VirasoroProject.VirasoroAlgebra.cgen K else 0 := by
+  exact VirasoroProject.VirasoroAlgebra.lgen_bracket (𝕜 := K) n m
 
 /-- Minimal local readback for the Virasoro central generator. -/
-theorem virasoroProject_cgen_readback (K : Type*) [Field K] [CharZero K] :
-    basisBracket K VirasoroBasis.c VirasoroBasis.c = 0 := by
-  rfl
+theorem virasoroProject_cgen_readback (K : Type*) [Field K] [CharZero K] (Z : VirasoroProject.VirasoroAlgebra K) :
+    ⁅VirasoroProject.VirasoroAlgebra.cgen K, Z⁆ = 0 := by
+  exact VirasoroProject.VirasoroAlgebra.cgen_bracket (𝕜 := K) Z
 
 /-- Legacy lower-camel compatibility alias. -/
 theorem virasoroProjectConductiveRouteTarget :

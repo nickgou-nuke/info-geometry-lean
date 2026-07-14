@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangInverseSquareDihedralUniqueness
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangInverseSquareDihedralUniqueness
 
 namespace Omega.UnitCirclePhaseArithmetic
 

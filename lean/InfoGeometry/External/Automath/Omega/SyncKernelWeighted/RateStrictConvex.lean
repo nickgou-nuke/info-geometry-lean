@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.SyncKernelCurvatureBilipschitz
-import Omega.SyncKernelWeighted.EdgeworthSixEight
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SyncKernelCurvatureBilipschitz
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.EdgeworthSixEight
 import Mathlib.Tactic
 
 namespace Omega.SyncKernelWeighted

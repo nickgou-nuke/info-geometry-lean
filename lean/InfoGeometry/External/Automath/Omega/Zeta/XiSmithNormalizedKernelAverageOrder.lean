@@ -1,4 +1,4 @@
-import Omega.Zeta.XiSmithNormalizedKernelPositiveFiniteEulerCorrection
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithNormalizedKernelPositiveFiniteEulerCorrection
 
 namespace Omega.Zeta
 

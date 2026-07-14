@@ -175,7 +175,9 @@ noncomputable def complexToRealK : ModuleCat ℂ ⥤ RealKVect where
     { V := W
       K :=
         { toFun := fun v => (Complex.I : ℂ) • v
-          map_add' := by simp
+          map_add' := by
+            intro v w
+            exact smul_add (Complex.I : ℂ) v w
           map_smul' := by
             intro r v
             simpa using (smul_comm (Complex.I : ℂ) r v) }
@@ -187,7 +189,6 @@ noncomputable def complexToRealK : ModuleCat ℂ ⥤ RealKVect where
     { hom := f.hom.restrictScalars ℝ
       comm := by
         ext v
-        change f.hom ((Complex.I : ℂ) • v) = (Complex.I : ℂ) • f.hom v
         simpa using (f.hom.map_smul (Complex.I : ℂ) v) }
   map_id W := by
     rfl
@@ -393,13 +394,9 @@ theorem rotor_mul (X : RealKVect) (θ₁ θ₂ : ℝ) :
   have hKsq_x : X.K (X.K x) = -x := by
     have := congrArg (fun T : X →ₗ[ℝ] X => T x) X.K_sq
     simpa using this
-  have h :
-      (rotor X θ₁).hom.comp (rotor X θ₂).hom x = (rotor X (θ₁ + θ₂)).hom x := by
-    simp [rotor, LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smul_apply,
-      LinearMap.id_apply, hKsq_x, Real.cos_add, Real.sin_add, smul_add, add_smul,
-      add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
-  simpa [smul_add, add_smul, add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm,
-    mul_assoc, sub_eq_add_neg] using h
+  simp [rotor, LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smul_apply,
+    LinearMap.id_apply, hKsq_x, Real.cos_add, Real.sin_add, smul_add, add_smul, smul_smul,
+    add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm, mul_assoc, sub_eq_add_neg]
 
 /--
 Rotor power: `R(θ)ⁿ = R(n·θ)`.
@@ -408,11 +405,13 @@ theorem rotor_pow_mul (X : RealKVect) (θ : ℝ) (n : ℕ) :
     (rotor X θ).hom ^ n = (rotor X ((n : ℝ) * θ)).hom := by
   induction n with
   | zero =>
-    simpa [rotor]
+    ext x <;> simp [rotor]
   | succ n ih =>
     rw [pow_succ, ih, Module.End.mul_eq_comp]
     have hmul := rotor_mul X ((n : ℝ) * θ) θ
-    have htheta : ((n : ℝ) * θ) + θ = ((n + 1 : ℕ) : ℝ) * θ := by ring_nf
+    have htheta : ((n : ℝ) * θ) + θ = ((n + 1 : ℕ) : ℝ) * θ := by
+      rw [Nat.cast_add, Nat.cast_one]
+      ring_nf
     simpa [htheta] using hmul
 
 /--
@@ -422,20 +421,16 @@ theorem nilpotent_binomial_expansion (X : RealKVect) (c : ℝ) (N : NilpotentHom
     (LinearMap.id + c • N.toHom.hom) ^ n = LinearMap.id + ((n : ℝ) * c) • N.toHom.hom := by
   induction n with
   | zero =>
-    simpa
+    ext x <;> simp
   | succ n ih =>
     rw [pow_succ, ih]
     ext x
     have h_nil : N.toHom.hom (N.toHom.hom x) = 0 := by
       have h := congrArg (fun T : X →ₗ[ℝ] X => T x) N.nilpotent
       simpa using h
-    have h :
-        (LinearMap.id + c • N.toHom.hom) ^ (n + 1) x =
-          (LinearMap.id + (((n + 1 : ℕ) : ℝ) * c) • N.toHom.hom) x := by
-      simp [LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.id_apply,
-        h_nil, add_smul, smul_add, mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc,
-        add_assoc, add_left_comm, sub_eq_add_neg]
-    simpa [pow_succ] using h
+    simpa [LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.id_apply,
+      h_nil, add_smul, smul_add, mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc,
+      add_assoc, add_left_comm, sub_eq_add_neg, smul_smul, add_comm]
 
 /--
 The binomial power theorem for the monodromy at a root of unity.
@@ -447,8 +442,21 @@ theorem monodromy_power_binomial (X : RealKVect) (h : ℝ) (N : NilpotentHom X) 
     (monodromyProjection X h N).hom ^ n =
       (rotor X (-2 * Real.pi * (n : ℝ) * h)).hom.comp
         (LinearMap.id + (-2 * Real.pi * (n : ℝ)) • N.toHom.hom) := by
-  -- BUCKET 3: Full proof uses rotor_mul and nilpotent_binomial_expansion
-  sorry
+  have hComm : Commute (rotor X (-2 * Real.pi * h)).hom
+      (LinearMap.id + (-2 * Real.pi : ℝ) • N.toHom.hom) := by
+    have hRN : (rotor X (-2 * Real.pi * h)).hom.comp N.toHom.hom =
+        N.toHom.hom.comp (rotor X (-2 * Real.pi * h)).hom :=
+      rotor_comp_nilpotent X (-2 * Real.pi * h) N
+    have hRNc : Commute (rotor X (-2 * Real.pi * h)).hom N.toHom.hom := by
+      simpa [Commute] using hRN
+    exact (Commute.one_right _).add_right (hRNc.smul_right (-2 * Real.pi))
+  change ((rotor X (-2 * Real.pi * h)).hom.comp
+    (LinearMap.id + (-2 * Real.pi : ℝ) • N.toHom.hom)) ^ n =
+      (rotor X (-2 * Real.pi * (n : ℝ) * h)).hom.comp
+        (LinearMap.id + (-2 * Real.pi * (n : ℝ)) • N.toHom.hom)
+  have hpow := Commute.mul_pow hComm n
+  rw [rotor_pow_mul, nilpotent_binomial_expansion] at hpow
+  simpa [Module.End.mul_eq_comp, mul_assoc, mul_comm, mul_left_comm, sub_eq_add_neg] using hpow
 
 /--
 The Hadjiivanov monodromy at complex `h` as an endomorphism of `monodromyCarrier`.

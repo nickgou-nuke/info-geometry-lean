@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryGodelExactnessInstabilityBifurcation
-import Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelExactnessInstabilityBifurcation
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
 
 namespace Omega.Conclusion
 

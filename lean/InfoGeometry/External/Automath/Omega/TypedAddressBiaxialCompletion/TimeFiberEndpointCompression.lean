@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
-import Omega.TypedAddressBiaxialCompletion.CayleyPreimageModulusCircle
-import Omega.TypedAddressBiaxialCompletion.JensenEndpointAngleWindow
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CayleyPreimageModulusCircle
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenEndpointAngleWindow
 
 namespace Omega.TypedAddressBiaxialCompletion
 

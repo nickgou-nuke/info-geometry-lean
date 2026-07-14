@@ -1,6 +1,6 @@
-import Omega.Zeta.DerivedZGHardcoreFactorization
-import Omega.Zeta.DerivedZGNoScalarEulerProduct
-import Omega.Zeta.XiZGHardcoreConstantResidue
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGHardcoreFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGNoScalarEulerProduct
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGHardcoreConstantResidue
 
 namespace Omega.DerivedConsequences
 

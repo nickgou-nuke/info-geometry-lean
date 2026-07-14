@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.Foldbin6BoundaryCliffordMaximalGradedSubalgebra
+import InfoGeometry.External.Automath.Omega.Folding.Foldbin6BoundaryCliffordMaximalGradedSubalgebra
 
 namespace Omega.Folding
 

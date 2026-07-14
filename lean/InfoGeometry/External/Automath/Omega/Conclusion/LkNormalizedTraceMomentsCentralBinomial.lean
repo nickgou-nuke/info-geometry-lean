@@ -1,4 +1,4 @@
-import Omega.Conclusion.LkCentralBinomialCatalanMoments
+import InfoGeometry.External.Automath.Omega.Conclusion.LkCentralBinomialCatalanMoments
 
 open Filter Topology
 

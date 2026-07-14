@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.NoncontractibleLossMod6Explicit
-import Omega.POM.FiberParityHomotopyEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.NoncontractibleLossMod6Explicit
+import InfoGeometry.External.Automath.Omega.POM.FiberParityHomotopyEquivalence
 
 namespace Omega.Conclusion
 

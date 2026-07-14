@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9tTopGapAffineCapacitySegment
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9tTopGapAffineCapacitySegment
 
 namespace Omega.Conclusion
 

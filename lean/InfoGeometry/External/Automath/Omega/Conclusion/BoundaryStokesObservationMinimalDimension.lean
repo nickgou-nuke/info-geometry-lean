@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Conclusion.BoundaryStokesStrictLinearHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesStrictLinearHolography
 
 namespace Omega.Conclusion
 

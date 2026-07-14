@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
 
 namespace Omega.Conclusion
 

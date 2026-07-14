@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiNullStatisticalRadius
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullStatisticalRadius
 
 namespace Omega.Zeta
 

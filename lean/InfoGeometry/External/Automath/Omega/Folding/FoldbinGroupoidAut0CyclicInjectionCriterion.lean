@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldbinGroupoidAut0Pi1TorsionExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldbinGroupoidAut0Pi1TorsionExponent
 
 namespace Omega.Folding
 

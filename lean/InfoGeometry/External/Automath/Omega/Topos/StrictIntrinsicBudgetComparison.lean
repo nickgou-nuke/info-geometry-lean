@@ -1,4 +1,4 @@
-import Omega.Topos.StrictToIntrinsicVisible
+import InfoGeometry.External.Automath.Omega.Topos.StrictToIntrinsicVisible
 
 namespace Omega.Topos
 

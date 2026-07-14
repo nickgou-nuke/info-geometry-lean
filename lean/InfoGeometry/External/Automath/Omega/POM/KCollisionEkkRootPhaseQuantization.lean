@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.POM.KCollisionRootFilter
-import Omega.Zeta.XiMittagLefflerKfoldZeroQuantization
+import InfoGeometry.External.Automath.Omega.POM.KCollisionRootFilter
+import InfoGeometry.External.Automath.Omega.Zeta.XiMittagLefflerKfoldZeroQuantization
 
 namespace Omega.POM
 

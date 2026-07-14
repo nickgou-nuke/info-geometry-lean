@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
-import Omega.UnitCirclePhaseArithmetic.AppHorizonWeylHerglotz
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonWeylHerglotz
 
 namespace Omega.UnitCirclePhaseArithmetic
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldJonesCommutatorRank2Spectrum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldJonesCommutatorRank2Spectrum
 
 namespace Omega.OperatorAlgebra
 

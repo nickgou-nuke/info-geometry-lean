@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.LengthModqChebotarev
-import Omega.Zeta.XiTimePart67CharacterProjectionTwistedSectors
+import InfoGeometry.External.Automath.Omega.Zeta.LengthModqChebotarev
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart67CharacterProjectionTwistedSectors
 
 namespace Omega.Conclusion
 

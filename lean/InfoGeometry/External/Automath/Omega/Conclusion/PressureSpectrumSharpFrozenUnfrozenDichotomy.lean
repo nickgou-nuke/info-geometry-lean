@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.OneOrderSaturationFreezesPressureRay
+import InfoGeometry.External.Automath.Omega.Conclusion.OneOrderSaturationFreezesPressureRay
 
 namespace Omega.Conclusion
 

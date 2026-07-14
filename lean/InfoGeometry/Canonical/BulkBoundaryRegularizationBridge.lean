@@ -155,12 +155,9 @@ theorem exists_nontrivial_regularization_pair_of_dim_mismatch
   · exact moorePenroseLeftProjector_ne_one_of_hasZeroMode hMP hZero
   · exact drazinProjection_ne_one_of_hasZeroMode hD hZero
 
-/--
-Structure-valued nontrivial regularization package extracted from the
-dimension-mismatch argument.
--/
+/-- Existence of a structured nontrivial regularization package. -/
 @[rep_depth operator]
-noncomputable def nontrivialRegularizationPackage_of_dim_mismatch
+theorem exists_nontrivial_regularization_package_of_dim_mismatch
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
     (Q : S →L[ℝ] S)
@@ -168,33 +165,31 @@ noncomputable def nontrivialRegularizationPackage_of_dim_mismatch
     (hdim :
       Module.finrank ℝ P0.plus
         ≠ Module.finrank ℝ P0.minus) :
-    NontrivialRegularizationPackage (S := S) Q := by
-  classical
-  let hReg :=
+    ∃ reg : NontrivialRegularizationPackage (S := S) Q,
+      IsMoorePenroseInverse Q reg.Q_MP ∧
+      IsDrazinInverse Q reg.Q_D reg.k ∧
+      IsMoorePenroseInverse.rightProjector Q reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsMoorePenroseInverse.leftProjector Q reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsDrazinInverse.projection Q reg.Q_D ≠ (1 : S →L[ℝ] S) := by
+  rcases
     exists_nontrivial_regularization_pair_of_dim_mismatch
-      (S := S) (M := M) P0 Q hodd hdim
-  let Q_MP := Classical.choose hReg
-  let hReg1 := Classical.choose_spec hReg
-  let Q_D := Classical.choose hReg1
-  let hReg2 := Classical.choose_spec hReg1
-  let k := Classical.choose hReg2
-  let hReg3 := Classical.choose_spec hReg2
-  exact
+      (S := S) (M := M) P0 Q hodd hdim with
+      ⟨Q_MP, Q_D, k, hMP, hD, hRight, hLeft, hDrazin⟩
+  refine
+    ⟨
     { Q_MP := Q_MP
       Q_D := Q_D
       k := k
-      hMP := hReg3.1
-      hD := hReg3.2.1
-      rightProjector_ne_one := hReg3.2.2.1
-      leftProjector_ne_one := hReg3.2.2.2.1
-      drazinProjection_ne_one := hReg3.2.2.2.2 }
+      hMP := hMP
+      hD := hD
+      rightProjector_ne_one := hRight
+      leftProjector_ne_one := hLeft
+      drazinProjection_ne_one := hDrazin },
+    hMP, hD, hRight, hLeft, hDrazin⟩
 
-/--
-Structure-valued zero-mode plus nontrivial regularization package extracted from
-the dimension-mismatch argument.
--/
+/-- Existence of a zero-mode package plus a nontrivial regularization package. -/
 @[rep_depth operator]
-noncomputable def zeroModeRegularizationPackage_of_dim_mismatch
+theorem exists_zero_mode_regularization_package_of_dim_mismatch
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
     (Q : S →L[ℝ] S)
@@ -202,19 +197,22 @@ noncomputable def zeroModeRegularizationPackage_of_dim_mismatch
     (hdim :
       Module.finrank ℝ P0.plus
         ≠ Module.finrank ℝ P0.minus) :
-    ZeroModeRegularizationPackage (S := S) Q := by
-  classical
-  let hZero := exists_zeroMode_of_dim_mismatch (M := M) P0 Q hodd hdim
-  let v := Classical.choose hZero
-  let hZeroSpec := Classical.choose_spec hZero
-  let reg :=
-    nontrivialRegularizationPackage_of_dim_mismatch
-      (S := S) (M := M) P0 Q hodd hdim
+    ∃ pkg : ZeroModeRegularizationPackage (S := S) Q,
+      Q pkg.v = 0 ∧ pkg.v ≠ 0 ∧
+      IsMoorePenroseInverse Q pkg.reg.Q_MP ∧
+      IsDrazinInverse Q pkg.reg.Q_D pkg.reg.k ∧
+      IsMoorePenroseInverse.rightProjector Q pkg.reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsMoorePenroseInverse.leftProjector Q pkg.reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsDrazinInverse.projection Q pkg.reg.Q_D ≠ (1 : S →L[ℝ] S) := by
+  rcases exists_zeroMode_of_dim_mismatch (M := M) P0 Q hodd hdim with
+    ⟨v, hv, hvne⟩
+  rcases
+    exists_nontrivial_regularization_package_of_dim_mismatch
+      (S := S) (M := M) P0 Q hodd hdim with
+    ⟨reg, hMP, hD, hRight, hLeft, hDrazin⟩
   exact
-    { v := v
-      v_zeroMode := hZeroSpec.1
-      v_ne_zero := hZeroSpec.2
-      reg := reg }
+    ⟨{ v := v, v_zeroMode := hv, v_ne_zero := hvne, reg := reg },
+      hv, hvne, hMP, hD, hRight, hLeft, hDrazin⟩
 
 /--
 Explicit witness version of the nontrivial regularization package.
@@ -235,9 +233,10 @@ theorem exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch
           IsMoorePenroseInverse.rightProjector Q Q_MP ≠ (1 : S →L[ℝ] S) ∧
           IsMoorePenroseInverse.leftProjector Q Q_MP ≠ (1 : S →L[ℝ] S) ∧
           IsDrazinInverse.projection Q Q_D ≠ (1 : S →L[ℝ] S) := by
-  let pkg :=
-    zeroModeRegularizationPackage_of_dim_mismatch
-      (S := S) (M := M) P0 Q hodd hdim
+  rcases
+    exists_zero_mode_regularization_package_of_dim_mismatch
+      (S := S) (M := M) P0 Q hodd hdim with
+    ⟨pkg, _hZero, _hNonzero, _hMP, _hD, _hRight, _hLeft, _hDrazin⟩
   exact
     ⟨pkg.v, pkg.v_zeroMode, pkg.v_ne_zero,
       pkg.reg.Q_MP, pkg.reg.Q_D, pkg.reg.k,
@@ -278,12 +277,12 @@ theorem dim_mismatch_of_nonzero_analyticalIndex_of_identifiedPolarization
   exact hdim
 
 /--
-Nonzero analytical index upgrades to the full zero-mode plus nontrivial
+Nonzero analytical index upgrades to existence of a zero-mode plus nontrivial
 regularization package for the bounded KK phase, provided the operatorial
 polarization is explicitly identified with the chiral kernel slices.
 -/
 @[rep_depth krein]
-noncomputable def zeroModeRegularizationPackage_of_nonzero_analyticalIndex_of_identifiedPolarization
+theorem exists_zero_mode_regularization_package_of_nonzero_analyticalIndex_of_identifiedPolarization
     (X : KasparovCycle A B S)
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
@@ -291,13 +290,19 @@ noncomputable def zeroModeRegularizationPackage_of_nonzero_analyticalIndex_of_id
     (hminus : P0.minus = KasparovCycle.chiralKernelSliceMinus X)
     (hodd : PolarizationOdd (M := M) P0 X.F)
     (hNonzero : X.analyticalIndex ≠ 0) :
-    ZeroModeRegularizationPackage (S := S) X.F := by
+    ∃ pkg : ZeroModeRegularizationPackage (S := S) X.F,
+      X.F pkg.v = 0 ∧ pkg.v ≠ 0 ∧
+      IsMoorePenroseInverse X.F pkg.reg.Q_MP ∧
+      IsDrazinInverse X.F pkg.reg.Q_D pkg.reg.k ∧
+      IsMoorePenroseInverse.rightProjector X.F pkg.reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsMoorePenroseInverse.leftProjector X.F pkg.reg.Q_MP ≠ (1 : S →L[ℝ] S) ∧
+      IsDrazinInverse.projection X.F pkg.reg.Q_D ≠ (1 : S →L[ℝ] S) := by
   have hdim :
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus :=
     dim_mismatch_of_nonzero_analyticalIndex_of_identifiedPolarization
       (X := X) (M := M) P0 hplus hminus hNonzero
   simpa using
-    zeroModeRegularizationPackage_of_dim_mismatch
+    exists_zero_mode_regularization_package_of_dim_mismatch
       (S := S) (M := M) P0 X.F hodd hdim
 
 end IndexResidue
@@ -352,12 +357,12 @@ theorem exists_nontrivial_regularization_pair_of_topologicalIndexZ2_eq_one_of_si
       (S := S) (M := M) (P0 := P0) Q hodd hdim
 
 /--
-Structure-valued turnkey regularization package for the concrete open-chain
+Existential turnkey regularization package for the concrete open-chain
 operator coming from a simplified boundary model in the `topologicalIndexZ2 = 1`
 phase.
 -/
 @[rep_depth operator]
-noncomputable def nontrivialRegularizationPackage_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
+theorem exists_nontrivial_regularization_package_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
     (localOp : KitaevCell → S →L[ℝ] S)
@@ -366,8 +371,21 @@ noncomputable def nontrivialRegularizationPackage_of_topologicalIndexZ2_eq_one_o
     (hPHS : ∀ c : KitaevCell,
       ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    NontrivialRegularizationPackage
-      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
+    ∃ reg : NontrivialRegularizationPackage
+      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain),
+      IsMoorePenroseInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain) reg.Q_MP ∧
+      IsDrazinInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain) reg.Q_D reg.k ∧
+      IsMoorePenroseInverse.rightProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) reg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      IsMoorePenroseInverse.leftProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) reg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      IsDrazinInverse.projection
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) reg.Q_D
+          ≠ (1 : S →L[ℝ] S) := by
   let Q := globalChainOperatorFromOpenChain (S := S) localOp chain
   have hodd :
       PolarizationOdd (M := M) P0 Q :=
@@ -386,16 +404,16 @@ noncomputable def nontrivialRegularizationPackage_of_topologicalIndexZ2_eq_one_o
       (hNegPhaseDimMismatch_of_boundaryLocalizationBridge
         (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hLoc)
   simpa [Q] using
-    nontrivialRegularizationPackage_of_dim_mismatch
+    exists_nontrivial_regularization_package_of_dim_mismatch
       (S := S) (M := M) (P0 := P0) Q hodd hdim
 
 /--
-Structure-valued zero-mode plus nontrivial regularization package for the
+Existential zero-mode plus nontrivial regularization package for the
 concrete open-chain operator coming from a simplified boundary model in the
 `topologicalIndexZ2 = 1` phase.
 -/
 @[rep_depth operator]
-noncomputable def zeroModeRegularizationPackage_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
+theorem exists_zero_mode_regularization_package_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
     (localOp : KitaevCell → S →L[ℝ] S)
@@ -404,8 +422,24 @@ noncomputable def zeroModeRegularizationPackage_of_topologicalIndexZ2_eq_one_of_
     (hPHS : ∀ c : KitaevCell,
       ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
     (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
-    ZeroModeRegularizationPackage
-      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
+    ∃ pkg : ZeroModeRegularizationPackage
+      (S := S) (globalChainOperatorFromOpenChain (S := S) localOp chain),
+      (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.v = 0 ∧
+      pkg.v ≠ 0 ∧
+      IsMoorePenroseInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.reg.Q_MP ∧
+      IsDrazinInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain)
+        pkg.reg.Q_D pkg.reg.k ∧
+      IsMoorePenroseInverse.rightProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.reg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      IsMoorePenroseInverse.leftProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.reg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      IsDrazinInverse.projection
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.reg.Q_D
+          ≠ (1 : S →L[ℝ] S) := by
   let Q := globalChainOperatorFromOpenChain (S := S) localOp chain
   have hodd :
       PolarizationOdd (M := M) P0 Q :=
@@ -424,7 +458,7 @@ noncomputable def zeroModeRegularizationPackage_of_topologicalIndexZ2_eq_one_of_
       (hNegPhaseDimMismatch_of_boundaryLocalizationBridge
         (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hLoc)
   simpa [Q] using
-    zeroModeRegularizationPackage_of_dim_mismatch
+    exists_zero_mode_regularization_package_of_dim_mismatch
       (S := S) (M := M) (P0 := P0) Q hodd hdim
 
 end Core

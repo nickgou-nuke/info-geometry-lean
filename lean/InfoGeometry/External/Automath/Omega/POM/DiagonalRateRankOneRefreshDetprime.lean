@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRankOneRefreshDeterminantCollapse
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRankOneRefreshDeterminantCollapse
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedBinfoldTvBayesConstants
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedBinfoldTvBayesConstants
 
 namespace Omega.Zeta
 

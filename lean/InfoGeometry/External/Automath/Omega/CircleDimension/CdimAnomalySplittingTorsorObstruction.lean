@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CdimAnomalyAffineRegularForm
+import InfoGeometry.External.Automath.Omega.CircleDimension.CdimAnomalyAffineRegularForm
 
 namespace Omega.CircleDimension
 

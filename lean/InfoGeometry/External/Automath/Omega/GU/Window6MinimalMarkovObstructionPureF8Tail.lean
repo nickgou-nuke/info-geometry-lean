@@ -1,5 +1,5 @@
-import Omega.GU.TerminalFoldbin6StrongLumpabilityBinaryWitness
-import Omega.GU.TerminalFoldbin6TwoPointFiberDirectionSpectrum
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6StrongLumpabilityBinaryWitness
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6TwoPointFiberDirectionSpectrum
 
 namespace Omega.GU
 

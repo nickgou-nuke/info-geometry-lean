@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenRelativeBettiRenyiFlatness
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenRelativeBettiRenyiFlatness
 
 namespace Omega.Conclusion
 

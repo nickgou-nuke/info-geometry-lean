@@ -1,5 +1,6 @@
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Topology.AmplituhedronBoundary
+import InfoGeometry.Topology.AmplituhedronBoundaryExternalDeRhamBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 import InfoGeometry.Topology.ArtinBraidRep
@@ -90,8 +91,13 @@ import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.GeneralizedCircleMobius
 import InfoGeometry.Topology.MobiusGeometry
+import InfoGeometry.Topology.MobiusSouriauThermodynamicFlow
+import InfoGeometry.Topology.ThermodynamicSL2MobiusFlow
+import InfoGeometry.Topology.MobiusRecoveredHelpers
+import InfoGeometry.Topology.MobiusNormalizationRecovered
+import InfoGeometry.Topology.MobiusThreeTransitiveRecovered
+import InfoGeometry.Topology.MobiusNonParabolicRecovered
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
-import InfoGeometry.Topology.BostConnesWilsonLoop
 import InfoGeometry.Topology.WallpaperRepresentations
 import InfoGeometry.Topology.WallpaperRepresentationTable
 import InfoGeometry.Topology.WallpaperMoebiusKMS
@@ -102,8 +108,8 @@ import InfoGeometry.Topology.BregmanDivergence
 
 3-way finite equivalence route currently formalized in this layer:
 
-1. `Projective.OnShellResidueBCFWBridge.residue_bcfw_readout`
-   (BCFW residue readout)
+1. `Projective.OnShellResidueBCFWBridge.residue_bcfw`
+   (BCFW residue boundary)
 2. `InfoGeometry.Topology.GrandUnificationLinker.global_isometry_preservation`
    (thermodynamic-flow/DAG compatibility)
 3. `InfoGeometry.Topology.GrandUnificationLinker.entropy_alignment`
@@ -112,7 +118,7 @@ import InfoGeometry.Topology.BregmanDivergence
 Kernel-native lemmas in this spike include:
 - thermodynamic curvature/entropy algebra in `ThermodynamicGauge`;
 - DAG-volume preservation and boundary collapses in `GrandUnificationLinker`;
-- finite Wilson-loop trace readouts in `BostConnesWilsonLoop`/`WilsonLoopThermodynamics`.
+- finite Wilson-loop transport readouts in `WilsonLoopThermodynamics`.
 - q-supergrading, finite edge-dilation, and explicit deficit readouts in
   `SuperCuntzDilationCurvature`.
 

@@ -20,7 +20,7 @@ witness `tools/sympy/osp12_spinor_bridge.py`:
 
 This module exports finite basis-level theorems and a global
 `SuperLieRing` instance. The full arbitrary-linear-combination proofs
-are broken down into reusable lemmas and missing holes are exposed as `sorry`.
+are broken down into reusable lemmas and checked directly by Lean.
 -/
 
 open InfoGeometry.Algebra
@@ -85,13 +85,35 @@ def EvenBasis : Set B := {B.H, B.Ep, B.Em}
 /-- Finite odd basis predicate. -/
 def OddBasis : Set B := {B.G1, B.G2}
 
-/-- The even coordinate span, kept as data for downstream readers. -/
-def evenPart : Submodule ℝ OSp12 :=
-  Submodule.span ℝ {basis B.H, basis B.Ep, basis B.Em}
+/-- The even coordinate part: the odd coordinates vanish. -/
+def evenPart : Submodule ℝ OSp12 where
+  carrier := {x | x B.G1 = 0 ∧ x B.G2 = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro x y hx hy
+    constructor <;> simp [Pi.add_apply, hx.1, hx.2, hy.1, hy.2]
+  smul_mem' := by
+    intro r x hx
+    constructor <;> simp [Pi.smul_apply, hx.1, hx.2]
 
-/-- The odd coordinate span, kept as data for downstream readers. -/
-def oddPart : Submodule ℝ OSp12 :=
-  Submodule.span ℝ {basis B.G1, basis B.G2}
+/-- The odd coordinate part: the even coordinates vanish. -/
+def oddPart : Submodule ℝ OSp12 where
+  carrier := {x | x B.H = 0 ∧ x B.Ep = 0 ∧ x B.Em = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro x y hx hy
+    constructor
+    · simp [Pi.add_apply, hx.1, hy.1]
+    constructor
+    · simp [Pi.add_apply, hx.2.1, hy.2.1]
+    · simp [Pi.add_apply, hx.2.2, hy.2.2]
+  smul_mem' := by
+    intro r x hx
+    constructor
+    · simp [Pi.smul_apply, hx.1]
+    constructor
+    · simp [Pi.smul_apply, hx.2.1]
+    · simp [Pi.smul_apply, hx.2.2]
 
 /-! ## 3. Bilinearity on the coordinate bracket -/
 
@@ -185,24 +207,70 @@ theorem bracket_G1_G2 : bracket (basis B.G1) (basis B.G2) = - basis B.H := by
 
 /-! ## 6. SuperLieRing Instance Lemmas -/
 
-lemma sup_even_odd : (evenPart : Submodule ℝ OSp12) ⊔ oddPart = ⊤ := sorry
+lemma sup_even_odd : (evenPart : Submodule ℝ OSp12) ⊔ oddPart = ⊤ := by
+  apply top_unique
+  intro x hx
+  let e : OSp12 :=
+    fun k =>
+      match k with
+      | B.H => x B.H
+      | B.Ep => x B.Ep
+      | B.Em => x B.Em
+      | B.G1 => 0
+      | B.G2 => 0
+  let o : OSp12 :=
+    fun k =>
+      match k with
+      | B.H => 0
+      | B.Ep => 0
+      | B.Em => 0
+      | B.G1 => x B.G1
+      | B.G2 => x B.G2
+  exact Submodule.mem_sup.mpr
+    ⟨e, by
+        change e B.G1 = 0 ∧ e B.G2 = 0
+        simp [e],
+      o, by
+        change o B.H = 0 ∧ o B.Ep = 0 ∧ o B.Em = 0
+        simp [o],
+      by
+        ext k <;> fin_cases k <;> simp [e, o, Pi.add_apply]⟩
 
-lemma even_odd_inter : (evenPart : Submodule ℝ OSp12) ⊓ oddPart = ⊥ := sorry
+lemma even_odd_inter : (evenPart : Submodule ℝ OSp12) ⊓ oddPart = ⊥ := by
+  apply le_antisymm
+  · intro x hx
+    rw [Submodule.mem_bot]
+    ext k <;> fin_cases k
+    · exact hx.2.1
+    · exact hx.2.2.1
+    · exact hx.2.2.2
+    · exact hx.1.1
+    · exact hx.1.2
+  · exact bot_le
 
 lemma even_even_skew (x y : OSp12) (hx : x ∈ evenPart) (hy : y ∈ evenPart) :
-    bracket x y = -bracket y x := sorry
+    bracket x y = -bracket y x := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, hx.1, hx.2, hy.1, hy.2] <;> ring
 
 lemma even_odd_skew (x y : OSp12) (hx : x ∈ evenPart) (hy : y ∈ oddPart) :
-    bracket x y = -bracket y x := sorry
+    bracket x y = -bracket y x := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, hx.1, hx.2, hy.1, hy.2.1, hy.2.2] <;> ring
 
 lemma odd_odd_symm (x y : OSp12) (hx : x ∈ oddPart) (hy : y ∈ oddPart) :
-    bracket x y = bracket y x := sorry
+    bracket x y = bracket y x := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, hx.1, hx.2.1, hx.2.2, hy.1, hy.2.1, hy.2.2] <;> ring
 
 lemma jacobi_even (x y z : OSp12) (hx : x ∈ evenPart) :
-    bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z) := sorry
+    bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z) := by
+  ext k <;> fin_cases k <;> simp [bracket, hx.1, hx.2] <;> ring
 
 lemma jacobi_odd_odd (x y z : OSp12) (hx : x ∈ oddPart) (hy : y ∈ oddPart) :
-    bracket x (bracket y z) = bracket (bracket x y) z - bracket y (bracket x z) := sorry
+    bracket x (bracket y z) = bracket (bracket x y) z - bracket y (bracket x z) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, hx.1, hx.2.1, hx.2.2, hy.1, hy.2.1, hy.2.2] <;> ring
 
 /-! ## 7. SuperLieRing Instance -/
 

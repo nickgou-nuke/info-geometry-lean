@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ProCdimZhatEmbeddingCharacterization
+import InfoGeometry.External.Automath.Omega.CircleDimension.ProCdimZhatEmbeddingCharacterization
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Core.WalshFourier
+import InfoGeometry.External.Automath.Omega.Core.WalshFourier
 
 namespace Omega.Conclusion
 

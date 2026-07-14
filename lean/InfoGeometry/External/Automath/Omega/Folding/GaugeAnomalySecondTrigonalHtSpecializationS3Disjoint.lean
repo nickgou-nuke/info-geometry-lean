@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
-import Omega.Folding.FoldGaugeAnomalyP9GaloisDiscriminant
-import Omega.Folding.GaugeAnomalySecondTrigonalStructureDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP9GaloisDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySecondTrigonalStructureDiscriminant
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiZGCountingPowerSavingError
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGCountingPowerSavingError
 
 namespace Omega.Zeta
 

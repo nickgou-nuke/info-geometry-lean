@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.YmSyncTailPfSharp
+import InfoGeometry.External.Automath.Omega.Folding.YmSyncTailPfSharp
 
 namespace Omega.Folding
 

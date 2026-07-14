@@ -1,4 +1,4 @@
-import Omega.Conclusion.FiniteStateGateFragmentDecidableOrderGateRole
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteStateGateFragmentDecidableOrderGateRole
 
 set_option linter.unusedVariables false
 

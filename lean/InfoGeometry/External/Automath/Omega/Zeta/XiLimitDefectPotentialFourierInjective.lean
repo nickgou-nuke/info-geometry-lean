@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Tactic
-import Omega.Zeta.XiLimitDefectPotentialRationalization
+import InfoGeometry.External.Automath.Omega.Zeta.XiLimitDefectPotentialRationalization
 
 namespace Omega.Zeta
 

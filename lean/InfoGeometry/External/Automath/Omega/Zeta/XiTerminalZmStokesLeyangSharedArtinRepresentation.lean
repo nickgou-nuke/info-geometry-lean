@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyTrigonalGenus
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalGenus
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
 
 namespace Omega.Zeta
 

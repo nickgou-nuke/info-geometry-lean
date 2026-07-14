@@ -57,14 +57,14 @@ local instance souriauModularHamiltonianIsScalarTower : IsScalarTower ℝ EndH E
 A minimal calibrated carrier connecting the bounded Drazin/supercharge modular
 Hamiltonian surrogate to a Souriau/free-energy/negative-log operator readout.
 
-This carrier is deliberately weaker than `SouriauModularHamiltonianBridge`: it
+This carrier is deliberately weaker than the calibrated bridge structure: it
 only records the calibrated origin statement `K_sur = F_Souriau` as external
 witness data.
 -/
 @[rep_depth operator]
 structure SouriauModularHamiltonianCarrier (BetaSource : Type*) where
   /-- The already-owned bounded Drazin/supercharge surrogate bridge. -/
-  superchargeBridge : SuperchargeModularHamiltonianBridge (E := E)
+  superchargeBridge : SuperchargeModularHamiltonianBridge.Bridge (E := E)
 
   /-- External Souriau beta/source coordinate. -/
   betaSource : BetaSource
@@ -100,9 +100,9 @@ The operator laws are explicit because `QuantumOperatorialSouriauFamily` keeps
 `opAdd`, `opScale`, and `opIdentity` abstract witness fields.
 -/
 @[rep_depth operator]
-structure SouriauModularHamiltonianBridge where
+structure Bridge where
   /-- The already-owned bounded Drazin/supercharge surrogate bridge. -/
-  superBridge : SuperchargeModularHamiltonianBridge (E := E)
+  superBridge : SuperchargeModularHamiltonianBridge.Bridge (E := E)
 
   /-- The operatorial Souriau family carrying `K̂_β`, `Φ(β)`, and `H_mod`. -/
   family : QuantumOperatorialSouriauFamily LieAlgebra EndH
@@ -119,9 +119,9 @@ structure SouriauModularHamiltonianBridge where
   /-- Concrete readback of the Souriau identity as the ambient operator unit. -/
   opIdentity_eq_one : family.opIdentity = (1 : EndH)
 
-namespace SouriauModularHamiltonianBridge
+namespace Bridge
 
-variable (B : SouriauModularHamiltonianBridge (E := E) (LieAlgebra := LieAlgebra))
+variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
 
 /-- Readback of the calibrated bare Souriau source. -/
 @[rep_depth operator]
@@ -143,7 +143,7 @@ theorem Khat_beta_eq_calibrated_regularRestrictedSuperHamiltonian :
       B.superBridge.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
           B.superBridge.CIK := by
-  rw [B.Khat_beta_eq_Ksur, B.superBridge.Ksur_True]
+  rw [B.Khat_beta_eq_Ksur, B.superBridge.Ksur_eq]
 
 /--
 The normalized Souriau modular Hamiltonian is the Drazin/supercharge surrogate
@@ -182,7 +182,7 @@ theorem modularHamiltonian_eq_calibrated_regularRestrictedSuperHamiltonian_add_p
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
             B.superBridge.CIK
         + B.family.partitionPotential • (1 : EndH) := by
-  rw [B.modularHamiltonian_eq_Ksur_add_partitionPotential_one, B.superBridge.Ksur_True]
+  rw [B.modularHamiltonian_eq_Ksur_add_partitionPotential_one, B.superBridge.Ksur_eq]
 
 /-- The Souriau bare generator is left-supported on the Drazin regular sector. -/
 @[rep_depth operator]
@@ -263,7 +263,7 @@ theorem modularHamiltonian_isSpectralCompact :
     CertifiedInverseKernel.toInformationCartanTriple] using
     B.modularHamiltonian_commutes_GammaS
 
-end SouriauModularHamiltonianBridge
+end Bridge
 
 end Core
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
 
 namespace Omega.Conclusion
 

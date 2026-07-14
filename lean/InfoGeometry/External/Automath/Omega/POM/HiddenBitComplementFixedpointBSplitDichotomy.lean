@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberWeightCount
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 
 namespace Omega.POM
 

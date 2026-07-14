@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FiniteLocalizationCircleQuotientProfiniteKernel
-import Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteLocalizationCircleQuotientProfiniteKernel
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
 
 namespace Omega.Conclusion
 

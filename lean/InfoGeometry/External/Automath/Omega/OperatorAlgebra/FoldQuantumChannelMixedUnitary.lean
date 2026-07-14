@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldQuantumChannelMixedUnitaryLowerBound
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelMixedUnitaryLowerBound
 
 namespace Omega.OperatorAlgebra
 

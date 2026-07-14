@@ -1,5 +1,5 @@
-import Omega.GU.M11Z34CyclotomicRepresentationRigidity
-import Omega.GU.TerminalWindow6LocalUpliftAdmissibility
+import InfoGeometry.External.Automath.Omega.GU.M11Z34CyclotomicRepresentationRigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6LocalUpliftAdmissibility
 
 namespace Omega.GU
 

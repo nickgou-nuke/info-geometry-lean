@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Folding.FoldHypercubeFibonacciGodelRadiusCount
+import InfoGeometry.External.Automath.Omega.Folding.FoldHypercubeFibonacciGodelRadiusCount
 
 namespace Omega.Folding
 

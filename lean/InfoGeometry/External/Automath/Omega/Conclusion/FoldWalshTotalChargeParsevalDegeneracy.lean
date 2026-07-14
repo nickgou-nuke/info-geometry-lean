@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FoldWalshGramSimplexSignatureSection
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldWalshGramSimplexSignatureSection
 
 open scoped BigOperators
 

@@ -1,5 +1,5 @@
 import Mathlib.Data.Matrix.Basic
-import Omega.GU.Window6EdgeFluxFullMatrixSaturation
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxFullMatrixSaturation
 
 namespace Omega.GU
 

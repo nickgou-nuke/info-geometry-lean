@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingFourierClosed
-import Omega.TypedAddressBiaxialCompletion.ComovingHankel
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFourierClosed
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingHankel
 
 namespace Omega.TypedAddressBiaxialCompletion
 

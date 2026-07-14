@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
 
 namespace Omega.UnitCirclePhaseArithmetic
 

@@ -1,4 +1,4 @@
-import Omega.Folding.FoldCriticalResonanceConstantIntegerLadder
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstantIntegerLadder
 
 namespace Omega.Folding
 

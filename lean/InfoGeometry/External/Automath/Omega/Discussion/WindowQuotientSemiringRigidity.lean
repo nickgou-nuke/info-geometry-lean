@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
 
 namespace Omega.Discussion
 

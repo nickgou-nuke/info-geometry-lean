@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Log
-import Omega.POM.ProjectionAsPartitionPrimeRegister
+import InfoGeometry.External.Automath.Omega.POM.ProjectionAsPartitionPrimeRegister
 
 namespace Omega.POM
 

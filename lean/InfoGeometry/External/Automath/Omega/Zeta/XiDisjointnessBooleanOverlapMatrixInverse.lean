@@ -1,5 +1,5 @@
-import Omega.Zeta.BooleanDisjointnessZetaLDLT
-import Omega.Zeta.XiBooleanTwoLayerSymmetricQuotientInverse
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanDisjointnessZetaLDLT
+import InfoGeometry.External.Automath.Omega.Zeta.XiBooleanTwoLayerSymmetricQuotientInverse
 
 namespace Omega.Zeta
 

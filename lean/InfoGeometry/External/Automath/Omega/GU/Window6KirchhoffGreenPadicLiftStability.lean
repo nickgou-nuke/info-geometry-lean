@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Mul
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6EdgeFluxCriticalGroupCyclic
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxCriticalGroupCyclic
 
 namespace Omega.GU
 

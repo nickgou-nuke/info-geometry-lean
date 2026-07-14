@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.KrylovHankelFibonacci
-import Omega.Conclusion.KrylovLowrankRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.KrylovHankelFibonacci
+import InfoGeometry.External.Automath.Omega.Conclusion.KrylovLowrankRigidity
 
 namespace Omega.Conclusion
 

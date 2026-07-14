@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.ComovingBitBudget
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.ComovingBitBudget
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv

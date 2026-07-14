@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedSolenoidMultiplicationKernelDegree
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidMultiplicationKernelDegree
 
 namespace Omega.Zeta
 

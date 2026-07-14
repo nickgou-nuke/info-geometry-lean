@@ -1,4 +1,4 @@
-import Omega.Zeta.XiShadowSpectrumTowerPrincipalMinors
+import InfoGeometry.External.Automath.Omega.Zeta.XiShadowSpectrumTowerPrincipalMinors
 
 namespace Omega.Zeta
 

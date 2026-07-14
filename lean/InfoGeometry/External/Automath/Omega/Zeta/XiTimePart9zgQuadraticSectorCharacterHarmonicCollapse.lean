@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9zgQuadraticSectorConditionalTensorAverage
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zgQuadraticSectorConditionalTensorAverage
 
 namespace Omega.Zeta
 

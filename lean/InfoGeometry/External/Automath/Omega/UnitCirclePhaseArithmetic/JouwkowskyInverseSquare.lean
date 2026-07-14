@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.LeyangJoukowskyInverseSquare
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangJoukowskyInverseSquare
 
 namespace Omega.UnitCirclePhaseArithmetic
 

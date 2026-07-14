@@ -1,3 +1,3 @@
-import Omega.HyperKernel.SeedCore
-import Omega.HyperKernel.SetStructureChecksLite
+import InfoGeometry.External.Automath.Omega.HyperKernel.SeedCore
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructureChecksLite
 

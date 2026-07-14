@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.ReadableTimeWordOverlapPD
+import InfoGeometry.External.Automath.Omega.CircleDimension.ReadableTimeWordOverlapPD
 
 namespace Omega.CircleDimension
 

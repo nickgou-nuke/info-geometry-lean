@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
-import Omega.Core.OdometerJoukowsky
-import Omega.SyncKernelWeighted.TracePalindrome
+import InfoGeometry.External.Automath.Omega.Core.OdometerJoukowsky
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.TracePalindrome
 
 namespace Omega.SyncKernelWeighted
 

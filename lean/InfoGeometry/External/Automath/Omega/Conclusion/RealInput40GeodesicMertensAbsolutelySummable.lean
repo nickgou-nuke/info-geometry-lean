@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40GeodesicMertens
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40GeodesicMertens
 
 namespace Omega.Conclusion
 

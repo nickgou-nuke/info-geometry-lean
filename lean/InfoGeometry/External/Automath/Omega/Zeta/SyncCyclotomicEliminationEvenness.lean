@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Totient
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SyncCyclotomicDegreeLaw
+import InfoGeometry.External.Automath.Omega.Zeta.SyncCyclotomicDegreeLaw
 
 namespace Omega.Zeta
 

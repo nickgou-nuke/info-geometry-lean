@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 namespace Omega.Zeta
 

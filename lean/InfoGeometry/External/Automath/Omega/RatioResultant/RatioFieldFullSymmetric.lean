@@ -1,8 +1,8 @@
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.Tactic
-import Omega.RatioResultant.RatioFieldSplitting
-import Omega.RatioResultant.RatioResultantDiscRigidity
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioFieldSplitting
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioResultantDiscRigidity
 
 namespace Omega.RatioResultant
 

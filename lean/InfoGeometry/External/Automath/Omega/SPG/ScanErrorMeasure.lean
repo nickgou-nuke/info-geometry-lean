@@ -1,6 +1,6 @@
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Probability.ProbabilityMassFunction.Basic
-import Omega.SPG.ScanErrorDiscrete
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorDiscrete
 
 open scoped BigOperators
 

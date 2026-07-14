@@ -1,4 +1,4 @@
-import Omega.SPG.UndecidableNoFiniteComputableCompleteInvariant
+import InfoGeometry.External.Automath.Omega.SPG.UndecidableNoFiniteComputableCompleteInvariant
 
 namespace Omega.Conclusion
 

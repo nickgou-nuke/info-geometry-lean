@@ -1,5 +1,5 @@
-import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
 
 namespace Omega.OperatorAlgebra
 

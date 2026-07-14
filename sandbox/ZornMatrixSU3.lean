@@ -136,12 +136,12 @@ theorem dotProduct_add_right (x y z : Fin 3 → ℝ) :
 theorem crossProduct_add_left (x y z : Fin 3 → ℝ) :
     crossProduct (x + y) z = crossProduct x z + crossProduct y z := by
   ext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, add_mul]
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, add_mul] <;> ring
 
 theorem crossProduct_add_right (x y z : Fin 3 → ℝ) :
     crossProduct x (y + z) = crossProduct x y + crossProduct x z := by
   ext i
-  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, mul_add]
+  fin_cases i <;> simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3, mul_add] <;> ring
 
 theorem dotProduct_smul_left (r : ℝ) (x y : Fin 3 → ℝ) :
     dotProduct (r • x) y = r * dotProduct x y := by

@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.PrimeRegisterGreenRankStratification
-import Omega.Zeta.PrimeRegisterMinimalIdealLeftZeroBand
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeRegisterGreenRankStratification
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeRegisterMinimalIdealLeftZeroBand
 
 namespace Omega.Conclusion
 

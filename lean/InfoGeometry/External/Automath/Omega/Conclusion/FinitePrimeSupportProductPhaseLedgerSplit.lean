@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StarZ1sDualExtension
-import Omega.Zeta.LocalizedQuotientLedger
+import InfoGeometry.External.Automath.Omega.CircleDimension.StarZ1sDualExtension
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientLedger
 
 namespace Omega.Conclusion
 

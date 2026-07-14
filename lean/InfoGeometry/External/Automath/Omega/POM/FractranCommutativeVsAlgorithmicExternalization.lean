@@ -1,7 +1,7 @@
 import Mathlib.GroupTheory.Abelianization.Defs
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic
-import Omega.POM.FractranPermutationEmbeddingLength
+import InfoGeometry.External.Automath.Omega.POM.FractranPermutationEmbeddingLength
 
 namespace Omega.POM
 

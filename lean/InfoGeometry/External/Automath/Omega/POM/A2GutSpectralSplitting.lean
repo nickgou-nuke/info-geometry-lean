@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.RowCol
 import Mathlib.Tactic
-import Omega.POM.A2GutCompletion
+import InfoGeometry.External.Automath.Omega.POM.A2GutCompletion
 
 namespace Omega.POM
 

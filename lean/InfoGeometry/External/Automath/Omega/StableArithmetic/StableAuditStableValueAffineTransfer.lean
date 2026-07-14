@@ -1,4 +1,4 @@
-import Omega.Folding.FiberRing
+import InfoGeometry.External.Automath.Omega.Folding.FiberRing
 
 /-!
 # Stable-value affine transfer audit wrapper

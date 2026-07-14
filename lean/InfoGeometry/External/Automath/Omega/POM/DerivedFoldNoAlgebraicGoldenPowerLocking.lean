@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.POM.DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17
-import Omega.POM.DerivedFoldPerronGoldenExponentTranscendenceQ4Q5Q16Q17
-import Omega.POM.DerivedFoldRenyiDimensionTranscendenceQ4Q5Q16Q17
+import InfoGeometry.External.Automath.Omega.POM.DerivedFoldNewmanGoldenExponentTranscendenceQ4Q16Q17
+import InfoGeometry.External.Automath.Omega.POM.DerivedFoldPerronGoldenExponentTranscendenceQ4Q5Q16Q17
+import InfoGeometry.External.Automath.Omega.POM.DerivedFoldRenyiDimensionTranscendenceQ4Q5Q16Q17
 
 namespace Omega.POM
 

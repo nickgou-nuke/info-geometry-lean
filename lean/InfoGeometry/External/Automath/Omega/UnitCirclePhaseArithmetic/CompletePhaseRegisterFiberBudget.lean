@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.RegisterFiberBudget
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.RegisterFiberBudget
 
 namespace Omega.UnitCirclePhaseArithmetic
 

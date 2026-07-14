@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedAtomicTwoSliceTomography
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedAtomicTwoSliceTomography
 
 namespace Omega.DerivedConsequences
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
-import Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
 
 open Filter
 open scoped Topology

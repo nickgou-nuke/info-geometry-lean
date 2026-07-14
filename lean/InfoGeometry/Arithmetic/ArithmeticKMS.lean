@@ -60,10 +60,28 @@ theorem arithmeticGibbsPartition_nonneg (A : Finset ℕ) (β : ℝ) :
   intro n hn
   exact arithmeticGibbsWeight_nonneg β n
 
+/-- Projective arithmetic Gibbs weights are nonnegative. -/
+lemma projectiveArithmeticGibbsWeight_nonneg (u : ℝ) (n : ℕ) :
+    0 ≤ projectiveArithmeticGibbsWeight u n := by
+  exact arithmeticGibbsWeight_nonneg (betaInvert u) n
+
 /-- Projective arithmetic Gibbs partitions are nonnegative. -/
 theorem projectiveArithmeticGibbsPartition_nonneg (A : Finset ℕ) (u : ℝ) :
     0 ≤ projectiveArithmeticGibbsPartition A u :=
   arithmeticGibbsPartition_nonneg A (betaInvert u)
+
+/-- If the finite support contains some `n > 1`, the projective Gibbs partition is positive. -/
+lemma projectiveArithmeticGibbsPartition_pos_of_mem_gt_one
+    (A : Finset ℕ) (u : ℝ) (h : ∃ n ∈ A, 1 < n) :
+    0 < projectiveArithmeticGibbsPartition A u := by
+  rcases h with ⟨n, hnA, hn⟩
+  unfold projectiveArithmeticGibbsPartition arithmeticGibbsPartition arithmeticGibbsWeight
+  refine Finset.sum_pos' ?_ ?_
+  · intro i hi
+    exact primitiveMellinKernel_nonneg i (betaInvert u)
+  · refine ⟨n, hnA, ?_⟩
+    rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
+    positivity
 
 /-- In the compact cold sector `u ∈ (0, 1)`, the corresponding `β` satisfies `1 < β`. -/
 theorem one_lt_beta_of_projective_cold {u : ℝ}
@@ -291,6 +309,14 @@ theorem projectiveModularFlowReadout_nonneg
     0 ≤ K.projectiveModularFlowReadout (K.stateOfFinset A) u := by
   rw [K.projectiveFlow_eq_gibbsPartition A u hu]
   exact projectiveArithmeticGibbsPartition_nonneg A u
+
+/-- The calibrated projective modular-flow readout is positive on supports containing `n > 1`. -/
+lemma projectiveModularFlowReadout_pos_of_mem_gt_one
+    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1)
+    (h : ∃ n ∈ A, 1 < n) :
+    0 < K.projectiveModularFlowReadout (K.stateOfFinset A) u := by
+  rw [K.projectiveFlow_eq_gibbsPartition A u hu]
+  exact projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u h
 
 end ProjectiveArithmeticKMSWitness
 

@@ -1,6 +1,6 @@
-import Omega.Conclusion.NoncontractibleLossMod6Explicit
-import Omega.DerivedConsequences.DerivedMaxNoncontractibleFiberNoExponentialPenalty
-import Omega.POM.ZeroTemperatureTwoTermExpansion
+import InfoGeometry.External.Automath.Omega.Conclusion.NoncontractibleLossMod6Explicit
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedMaxNoncontractibleFiberNoExponentialPenalty
+import InfoGeometry.External.Automath.Omega.POM.ZeroTemperatureTwoTermExpansion
 
 namespace Omega.Conclusion
 

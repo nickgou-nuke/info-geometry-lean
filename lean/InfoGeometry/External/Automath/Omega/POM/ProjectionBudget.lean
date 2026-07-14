@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.DoubleTransversalNormalForm
-import Omega.POM.ExtendedPrimitives
+import InfoGeometry.External.Automath.Omega.POM.DoubleTransversalNormalForm
+import InfoGeometry.External.Automath.Omega.POM.ExtendedPrimitives
 
 namespace Omega.POM
 

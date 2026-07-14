@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyDiscriminantFactorization
-import Omega.Folding.GaugeAnomalyP10Degree
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyDiscriminantFactorization
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyP10Degree
 
 namespace Omega.Folding
 

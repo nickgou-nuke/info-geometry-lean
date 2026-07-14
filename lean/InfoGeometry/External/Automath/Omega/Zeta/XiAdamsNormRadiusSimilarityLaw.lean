@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.Zeta.PhaseImplementationRankLimit
+import InfoGeometry.External.Automath.Omega.Zeta.PhaseImplementationRankLimit
 
 open Filter Topology
 

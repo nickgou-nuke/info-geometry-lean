@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SyncKernelWeighted.TraceCentralMomentsZero
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.TraceCentralMomentsZero
 
 open scoped BigOperators
 

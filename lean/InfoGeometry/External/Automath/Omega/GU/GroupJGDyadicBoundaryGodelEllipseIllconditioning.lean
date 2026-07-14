@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.GU.GodelConditionNumberIdentity
+import InfoGeometry.External.Automath.Omega.GU.GodelConditionNumberIdentity
 
 namespace Omega.GU
 

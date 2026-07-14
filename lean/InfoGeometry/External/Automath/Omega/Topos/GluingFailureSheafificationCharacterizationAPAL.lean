@@ -1,4 +1,4 @@
-import Omega.Topos.SheafificationCharacterizationAPAL
+import InfoGeometry.External.Automath.Omega.Topos.SheafificationCharacterizationAPAL
 
 namespace Omega.Topos.GluingFailureSheafificationCharacterizationAPAL
 

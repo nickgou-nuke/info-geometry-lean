@@ -1,5 +1,5 @@
-import Omega.Conclusion.Window6PinnedDatumToralCompletionEightsector
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6PinnedDatumToralCompletionEightsector
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
 
 namespace Omega.Conclusion
 

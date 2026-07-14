@@ -1,4 +1,4 @@
-import Omega.Conclusion.PrimeRegister
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegister
 
 namespace Omega.Conclusion
 

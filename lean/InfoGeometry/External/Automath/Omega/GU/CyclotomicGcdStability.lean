@@ -1,4 +1,4 @@
-import Omega.GU.CyclotomicSpecializationRigidity
+import InfoGeometry.External.Automath.Omega.GU.CyclotomicSpecializationRigidity
 
 namespace Omega.GU
 

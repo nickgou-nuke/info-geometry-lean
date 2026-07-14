@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.POM.MomentCamouflageFiniteOrders
+import InfoGeometry.External.Automath.Omega.POM.MomentCamouflageFiniteOrders
 
 namespace Omega.POM
 

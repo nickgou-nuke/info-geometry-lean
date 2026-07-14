@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizationHomCategoryClassification
-import Omega.CircleDimension.LocalizedDivisionPrimeFiberNoGrowth
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizationHomCategoryClassification
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedDivisionPrimeFiberNoGrowth
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.Conclusion
 

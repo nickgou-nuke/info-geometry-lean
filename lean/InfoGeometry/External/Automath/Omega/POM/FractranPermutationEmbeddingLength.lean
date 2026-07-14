@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Tactic
-import Omega.POM.FractranTwoPrimeDenominatorDfaCompile
+import InfoGeometry.External.Automath.Omega.POM.FractranTwoPrimeDenominatorDfaCompile
 
 namespace Omega.POM
 

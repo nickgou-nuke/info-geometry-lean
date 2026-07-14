@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart50dcPeriodicResidueRationalCoreOctic
-import Omega.Zeta.XiTimePart50dcAtomicPeriodicResidueCyclotomicShell
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart50dcPeriodicResidueRationalCoreOctic
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart50dcAtomicPeriodicResidueCyclotomicShell
 
 namespace Omega.Zeta
 

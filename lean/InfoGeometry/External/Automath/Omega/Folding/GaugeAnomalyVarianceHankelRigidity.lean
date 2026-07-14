@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyMeanHankelRigidity
-import Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMeanHankelRigidity
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
 
 namespace Omega.Folding
 

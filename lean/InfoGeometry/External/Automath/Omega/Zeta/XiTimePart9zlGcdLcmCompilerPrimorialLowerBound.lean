@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.CoprimeLedgerPrimorialOptimality
-import Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
 
 namespace Omega.Zeta
 

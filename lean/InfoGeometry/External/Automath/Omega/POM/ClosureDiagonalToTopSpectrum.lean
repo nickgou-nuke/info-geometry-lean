@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalCollapseQuadraticFreeEnergy
-import Omega.POM.DiagonalSubleadingTopDegeneracy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalCollapseQuadraticFreeEnergy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalSubleadingTopDegeneracy
 
 open Filter Topology
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointJensenSingleDefectAreaLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointJensenSingleDefectAreaLaw
 import Mathlib.Tactic
 
 namespace Omega.Zeta

@@ -23,7 +23,7 @@ Native DAG closure:
 * `DAG.chiralAnticommutes`;
 * `DAG.hodgeSummary`.
 
-This file is a doctrine/bridge map, not an analytic theorem.  It does not
+This file is an owner map and readout layer, not an analytic theorem.  It does not
 assert Type-III/KMS completion, Hilbert--Pólya, zeta continuation, or RH.
 -/
 
@@ -50,7 +50,7 @@ Status of a layer in the owner map.
 
 `nativeDAGClosure` means the concrete operator definition is already present
 in `lean/DAG`.  `canonicalBridge` means the interpretation lives in an
-`InfoGeometry.Canonical` bridge.  `socketed` means it is explicit debt.
+`InfoGeometry.Canonical` bridge.
 -/
 @[rep_depth operator]
 inductive OperatorOwnerStatus where
@@ -58,7 +58,6 @@ inductive OperatorOwnerStatus where
   | kreinOwner
   | canonicalBridge
   | finiteExteriorOwner
-  | socketed
   | notClaimed
 deriving DecidableEq, Repr
 
@@ -279,51 +278,22 @@ def dagHodgeSummary (tc : DAG.TwoComplex α) : DAG.HodgeSummary :=
 theorem dagHodgeSummary_eq (tc : DAG.TwoComplex α) :
     dagHodgeSummary tc = DAG.hodgeSummary tc := rfl
 
+/-- Direct readout: the DAG Hodge summary records the node count of the finite complex. -/
+@[rep_depth operator]
+theorem dagHodgeSummary_nodes (tc : DAG.TwoComplex α) :
+    (dagHodgeSummary tc).nodes = tc.base.toGraph.nodes.size := rfl
+
+/-- Direct readout: the DAG Hodge summary records the edge count of the finite complex. -/
+@[rep_depth operator]
+theorem dagHodgeSummary_edges (tc : DAG.TwoComplex α) :
+    (dagHodgeSummary tc).edges = tc.edges.size := rfl
+
+/-- Direct readout: the graph-Dirac matrix dimension is `#vertices + #edges`. -/
+@[rep_depth operator]
+theorem dagHodgeSummary_diracDim (tc : DAG.TwoComplex α) :
+    (dagHodgeSummary tc).diracDim =
+      tc.base.toGraph.nodes.size + tc.edges.size := rfl
+
 end DAGReadouts
-
-/-! ## Bridge doctrine packet -/
-
-/--
-Doctrine-level bridge packet.
-
-The DAG layer supplies native graph operators.  The InfoGeometry layer supplies
-Krein chirality and canonical Hodge/Dirac interpretation.  The finite exterior
-graph carrier supplies the finite Fock/Cantor specialization.
--/
-@[rep_depth operator]
-structure DAGHodgeOperatorBridgeDoctrine where
-  dagNativeGraphHodge : Prop
-  /-- **Open debt socket**: Krein chirality owner reference. Currently unused. -/
-  kreinChiralityOwner : Prop
-  /-- **Open debt socket**: canonical Hodge-Dirac bridge witness. Currently unused. -/
-  canonicalHodgeDiracBridge : Prop
-  /-- **Open debt socket**: finite exterior graph carrier. Currently unused. -/
-  finiteExteriorGraphCarrier : Prop
-  /-- **Open debt socket**: guard against infinite analytic claims. Currently unused. -/
-  noInfiniteAnalyticClaim : Prop
-
-namespace DAGHodgeOperatorBridgeDoctrine
-
-/-- The doctrine packet is a conjunction of its five exposed obligations. -/
-@[rep_depth operator]
-def closedSurface (D : DAGHodgeOperatorBridgeDoctrine) : Prop :=
-  D.dagNativeGraphHodge ∧
-  D.kreinChiralityOwner ∧
-  D.canonicalHodgeDiracBridge ∧
-  D.finiteExteriorGraphCarrier ∧
-  D.noInfiniteAnalyticClaim
-
-@[rep_depth operator]
-theorem closedSurface_intro
-    (D : DAGHodgeOperatorBridgeDoctrine)
-    (hDAG : D.dagNativeGraphHodge)
-    (hKrein : D.kreinChiralityOwner)
-    (hCanon : D.canonicalHodgeDiracBridge)
-    (hFinite : D.finiteExteriorGraphCarrier)
-    (hNoAnalytic : D.noInfiniteAnalyticClaim) :
-    D.closedSurface :=
-  ⟨hDAG, hKrein, hCanon, hFinite, hNoAnalytic⟩
-
-end DAGHodgeOperatorBridgeDoctrine
 
 end InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap

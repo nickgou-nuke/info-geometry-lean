@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.ClockPotentialCechCocycle
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.ClockPotentialCechCocycle
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

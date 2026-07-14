@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmS3RootRecoveryCoordinateAutomorphisms
-import Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS3RootRecoveryCoordinateAutomorphisms
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
 
 namespace Omega.DerivedConsequences
 

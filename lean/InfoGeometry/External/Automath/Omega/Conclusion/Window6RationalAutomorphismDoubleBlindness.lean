@@ -1,5 +1,5 @@
-import Omega.Conclusion.BoundaryPinningMemoryGap
-import Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryPinningMemoryGap
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
 
 namespace Omega.Conclusion
 

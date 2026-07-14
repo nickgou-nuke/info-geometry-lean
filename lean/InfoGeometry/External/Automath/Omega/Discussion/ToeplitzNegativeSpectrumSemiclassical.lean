@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
+import InfoGeometry.External.Automath.Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
 
 open scoped BigOperators
 

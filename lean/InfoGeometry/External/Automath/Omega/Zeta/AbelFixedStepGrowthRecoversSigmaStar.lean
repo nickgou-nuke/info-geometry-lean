@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Zeta.AbelResidueClassChannelRadiusSigmaStar
+import InfoGeometry.External.Automath.Omega.Zeta.AbelResidueClassChannelRadiusSigmaStar
 
 namespace Omega.Zeta
 

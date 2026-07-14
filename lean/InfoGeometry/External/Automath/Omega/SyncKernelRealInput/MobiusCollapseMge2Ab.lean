@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.MobiusCollapse
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.MobiusCollapse
 
 namespace Omega.SyncKernelRealInput
 

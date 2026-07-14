@@ -1,7 +1,7 @@
-import Omega.Conclusion.MixedCollisionOverlapMultisetRigidity
-import Omega.POM.ClosurePartitionToFullRecoveryCurve
-import Omega.POM.FiniteParetoLegendreCurvature
-import Omega.POM.OracleSuccessExponentTwoMeasureCompetition
+import InfoGeometry.External.Automath.Omega.Conclusion.MixedCollisionOverlapMultisetRigidity
+import InfoGeometry.External.Automath.Omega.POM.ClosurePartitionToFullRecoveryCurve
+import InfoGeometry.External.Automath.Omega.POM.FiniteParetoLegendreCurvature
+import InfoGeometry.External.Automath.Omega.POM.OracleSuccessExponentTwoMeasureCompetition
 
 namespace Omega.Conclusion
 

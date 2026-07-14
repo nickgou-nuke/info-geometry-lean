@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.AtomicDefectProny2KappaRecovery
-import Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectProny2KappaRecovery
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzPsdCoherenceHorizonThreshold
 
 namespace Omega.Conclusion
 

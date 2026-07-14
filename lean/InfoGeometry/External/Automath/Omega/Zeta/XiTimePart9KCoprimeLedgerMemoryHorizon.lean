@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.PrimeRegisterGodelFactorialPointwise
+import InfoGeometry.External.Automath.Omega.POM.PrimeRegisterGodelFactorialPointwise
 
 namespace Omega.Zeta
 

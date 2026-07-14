@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Order.Filter.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldPressureGroundstateBounds
+import InfoGeometry.External.Automath.Omega.Folding.FoldPressureGroundstateBounds
 
 open Filter Topology
 

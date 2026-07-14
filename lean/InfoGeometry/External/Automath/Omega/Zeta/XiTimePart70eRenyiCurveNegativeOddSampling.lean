@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinRenyiDivergenceLimit
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRenyiDivergenceLimit
 
 namespace Omega.Zeta
 

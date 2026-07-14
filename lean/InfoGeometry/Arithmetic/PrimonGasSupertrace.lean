@@ -35,11 +35,36 @@ def primonEnergy (n : ℕ) : ℝ :=
 def primonBoltzmannWeight (β : ℝ) (n : ℕ) : ℝ :=
   if n = 0 then 0 else Real.exp (-β * primonEnergy n)
 
+lemma primonBoltzmannWeight_nonneg (β : ℝ) (n : ℕ) :
+    0 ≤ primonBoltzmannWeight β n := by
+  unfold primonBoltzmannWeight
+  split_ifs
+  · norm_num
+  · exact Real.exp_nonneg _
+
+lemma primonBoltzmannWeight_pos_of_ne_zero {β : ℝ} {n : ℕ} (hn : n ≠ 0) :
+    0 < primonBoltzmannWeight β n := by
+  unfold primonBoltzmannWeight
+  simp [hn, Real.exp_pos]
+
 /-- `Z_B(A,\beta)`. -/
 def finiteBosonicPartition
     (A : Finset ℕ)
     (β : ℝ) : ℝ :=
   ∑ n ∈ A, primonBoltzmannWeight β n
+
+lemma finiteBosonicPartition_nonneg (A : Finset ℕ) (β : ℝ) :
+    0 ≤ finiteBosonicPartition A β := by
+  unfold finiteBosonicPartition
+  exact Finset.sum_nonneg (fun n _hn => primonBoltzmannWeight_nonneg β n)
+
+lemma finiteBosonicPartition_pos_of_mem_ne_zero
+    {A : Finset ℕ} {β : ℝ} {n : ℕ} (hnA : n ∈ A) (hn : n ≠ 0) :
+    0 < finiteBosonicPartition A β := by
+  unfold finiteBosonicPartition
+  exact Finset.sum_pos'
+    (fun m _hm => primonBoltzmannWeight_nonneg β m)
+    ⟨n, hnA, primonBoltzmannWeight_pos_of_ne_zero (β := β) hn⟩
 
 /-- `\mathrm{SqFree}`. -/
 def IsSquarefreeState (n : ℕ) : Prop :=
@@ -57,6 +82,12 @@ def finiteSquarefreePartition
   by
     classical
     exact ∑ n ∈ A.filter IsSquarefreeState, primonBoltzmannWeight β n
+
+lemma finiteSquarefreePartition_nonneg (A : Finset ℕ) (β : ℝ) :
+    0 ≤ finiteSquarefreePartition A β := by
+  classical
+  unfold finiteSquarefreePartition
+  exact Finset.sum_nonneg (fun n _hn => primonBoltzmannWeight_nonneg β n)
 
 /-- Supplied coefficient `\mu : \mathbb N\to\mathbb R`. -/
 structure MobiusCoefficient where
@@ -140,6 +171,14 @@ def bosonicPartition : ℝ :=
 /-- `Z_{\mathrm{sf}}`. -/
 def squarefreePartition : ℝ :=
   finiteSquarefreePartition P.support P.beta
+
+lemma bosonicPartition_nonneg :
+    0 ≤ P.bosonicPartition := by
+  exact finiteBosonicPartition_nonneg P.support P.beta
+
+lemma squarefreePartition_nonneg :
+    0 ≤ P.squarefreePartition := by
+  exact finiteSquarefreePartition_nonneg P.support P.beta
 
 /-- `\mathrm{Str}`. -/
 def supertrace : ℝ :=

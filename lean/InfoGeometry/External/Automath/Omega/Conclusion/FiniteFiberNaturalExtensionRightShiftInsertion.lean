@@ -1,4 +1,4 @@
-import Omega.Folding.KilloNaturalExtensionBranchRegister
+import InfoGeometry.External.Automath.Omega.Folding.KilloNaturalExtensionBranchRegister
 
 namespace Omega.Conclusion
 

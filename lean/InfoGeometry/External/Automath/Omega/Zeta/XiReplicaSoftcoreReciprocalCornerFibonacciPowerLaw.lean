@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.BqIsSymqAndSpectrum
-import Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
+import InfoGeometry.External.Automath.Omega.POM.BqIsSymqAndSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
 
 namespace Omega.Zeta
 

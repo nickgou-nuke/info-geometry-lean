@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
-import Omega.Zeta.AdamsBinomialProbeKernelToeplitzPsdEquivalence
-import Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.AdamsBinomialProbeKernelToeplitzPsdEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
 
 namespace Omega.Zeta
 

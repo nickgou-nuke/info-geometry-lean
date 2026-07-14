@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalZmCdimBidirectionalMiLoglaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmCdimBidirectionalMiLoglaw
 import Mathlib.Tactic
 
 namespace Omega.Zeta

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.OperatorAlgebra.FoldUniformLiftNllDecomposition
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldUniformLiftNllDecomposition
 
 namespace Omega.OperatorAlgebra
 

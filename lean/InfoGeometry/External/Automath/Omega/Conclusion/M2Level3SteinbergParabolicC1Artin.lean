@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
 
 namespace Omega.Conclusion
 
@@ -61,7 +61,8 @@ theorem paper_conclusion_m2_level3_steinberg_parabolic_c1_artin :
       conclusion_m2_level3_steinberg_parabolic_c1_artin_xi_neg_mult = 36 ∧
       conclusion_m2_level3_steinberg_parabolic_c1_artin_parabolic_c1 = (27, 18) ∧
       conclusion_m2_level3_steinberg_parabolic_c1_artin_tame_artin = (54, 36) := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys ⟨()⟩ with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      ⟨by constructor <;> native_decide⟩ with
     ⟨_, _, _, _, _, _, hSt, _, _⟩
   refine ⟨hSt, rfl, rfl, rfl, rfl, ?_, ?_⟩
   · norm_num [conclusion_m2_level3_steinberg_parabolic_c1_artin_parabolic_c1,

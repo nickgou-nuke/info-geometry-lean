@@ -1,4 +1,4 @@
-import Omega.Conclusion.NoConnectedU1DirectFactor
+import InfoGeometry.External.Automath.Omega.Conclusion.NoConnectedU1DirectFactor
 import Mathlib.Algebra.Group.Pi.Basic
 import Mathlib.Topology.Instances.AddCircle.Defs
 import Mathlib.Tactic

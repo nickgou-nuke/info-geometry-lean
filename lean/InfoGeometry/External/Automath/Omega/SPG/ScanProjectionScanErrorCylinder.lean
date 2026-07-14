@@ -1,4 +1,4 @@
-import Omega.SPG.ScanErrorDiscrete
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorDiscrete
 
 namespace Omega.SPG.ScanProjectionScanErrorCylinder
 

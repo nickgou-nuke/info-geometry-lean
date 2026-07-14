@@ -85,12 +85,3 @@ theorem finite_unitary_braiding_packet {n : ℕ}
   exact ⟨flow.is_unitary, flow.conserves_information state⟩
 
 end InfoGeometry.Projective.Scrambling
-
-
-theorem black_hole_fast_scrambling (state : HorizonMicrostates) :
-  IsUnitaryBraiding (ModularTimeFlow state) ∧ InformationIsConserved
-
--- LOST FRAGMENT RECOVERED FROM HIVE MEMORY --
-
-theorem black_hole_fast_scrambling (state : HorizonMicrostates) :
-  IsUnitaryBraiding (ModularTimeFlow state) ∧ InformationIsConserved

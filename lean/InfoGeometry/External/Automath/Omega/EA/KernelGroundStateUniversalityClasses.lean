@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
-import Omega.EA.KernelZeroTemp
+import InfoGeometry.External.Automath.Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
+import InfoGeometry.External.Automath.Omega.EA.KernelZeroTemp
 
 namespace Omega.EA
 

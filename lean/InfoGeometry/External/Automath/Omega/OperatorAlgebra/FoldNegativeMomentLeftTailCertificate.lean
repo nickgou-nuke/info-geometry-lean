@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
-import Omega.POM.FiberSpectrumPZLower
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPZLower
 
 namespace Omega.OperatorAlgebra
 

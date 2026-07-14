@@ -1,6 +1,6 @@
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic
-import Omega.Zeta.XiHellingerToeplitzSymbolPoisson
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerToeplitzSymbolPoisson
 
 namespace Omega.Zeta
 

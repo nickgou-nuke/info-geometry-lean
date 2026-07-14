@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ResetRegenerationConstants
-import Omega.SyncKernelWeighted.RealInput40ResetRegenerationTail
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetRegenerationConstants
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetRegenerationTail
 
 namespace Omega.SyncKernelWeighted
 

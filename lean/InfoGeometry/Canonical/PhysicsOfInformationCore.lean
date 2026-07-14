@@ -157,6 +157,28 @@ theorem bridge_semanticState_nonneg_of_nonneg_weights
       cliffordSemanticState_snd_eq_minusMass] using
       (minusMass_nonneg (w := P.weights) (label := P.labels) hw)
 
+/-- Under simplex routing weights, the first bridged semantic coordinate is bounded by one. -/
+theorem bridge_semanticState_fst_le_one_of_simplex
+    (P : PermutationPresentation n)
+    (hw_nonneg : ∀ σ : RoutingMode n, 0 ≤ P.weights σ)
+    (hMass : permutationTotalMass P = 1) :
+    (toCliffordPresentation P).semanticState.1 ≤ 1 := by
+  simpa [toCliffordPresentation, canonicalCliffordState, permutationCliffordSemanticState,
+    permutationTotalMass, RoutingMode] using
+    (cliffordSemanticState_fst_le_one_of_simplex (n := n) (w := P.weights)
+      (label := P.labels) hw_nonneg hMass)
+
+/-- Under simplex routing weights, the second bridged semantic coordinate is bounded by one. -/
+theorem bridge_semanticState_snd_le_one_of_simplex
+    (P : PermutationPresentation n)
+    (hw_nonneg : ∀ σ : RoutingMode n, 0 ≤ P.weights σ)
+    (hMass : permutationTotalMass P = 1) :
+    (toCliffordPresentation P).semanticState.2 ≤ 1 := by
+  simpa [toCliffordPresentation, canonicalCliffordState, permutationCliffordSemanticState,
+    permutationTotalMass, RoutingMode] using
+    (cliffordSemanticState_snd_le_one_of_simplex (n := n) (w := P.weights)
+      (label := P.labels) hw_nonneg hMass)
+
 /--
 Coordinate-sum mass law on the bridged Clifford presentation.
 -/

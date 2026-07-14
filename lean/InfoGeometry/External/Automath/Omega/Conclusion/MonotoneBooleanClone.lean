@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Tactic
-import Omega.Conclusion.FreeEnergyGatesMonotonicityObstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.FreeEnergyGatesMonotonicityObstruction
 
 /-!
 # Free energy gates equal monotone Boolean clone completeness seed values

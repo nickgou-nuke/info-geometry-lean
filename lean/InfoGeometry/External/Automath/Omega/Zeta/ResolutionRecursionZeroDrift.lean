@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Tactic
 import Mathlib.Topology.Order.IntermediateValue
-import Omega.Zeta.RecursiveZeroShadowingExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.RecursiveZeroShadowingExplicit
 
 namespace Omega.Zeta
 

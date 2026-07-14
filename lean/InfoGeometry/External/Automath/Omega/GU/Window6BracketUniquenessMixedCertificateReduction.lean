@@ -1,6 +1,6 @@
-import Omega.GU.TerminalGamma6Rigidity
-import Omega.GU.Window6IntrinsicBracketFiniteIntegerReduction
-import Omega.TypedAddressBiaxialCompletion.CertificateLoop
+import InfoGeometry.External.Automath.Omega.GU.TerminalGamma6Rigidity
+import InfoGeometry.External.Automath.Omega.GU.Window6IntrinsicBracketFiniteIntegerReduction
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CertificateLoop
 
 namespace Omega.GU
 

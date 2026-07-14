@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BoundaryHodgeStokesOrthogonalDecomposition
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryHodgeStokesOrthogonalDecomposition
 
 namespace Omega.Folding
 

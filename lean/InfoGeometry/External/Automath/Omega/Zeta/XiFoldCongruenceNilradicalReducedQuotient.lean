@@ -1,4 +1,4 @@
-import Omega.Folding.ModSemiringsSquarefreeNilpotentBranch
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsSquarefreeNilpotentBranch
 
 namespace Omega.Zeta
 

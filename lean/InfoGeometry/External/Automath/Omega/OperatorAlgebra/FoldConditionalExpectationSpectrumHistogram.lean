@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldConditionalExpectationSingularSpectrum
-import Omega.OperatorAlgebra.FoldOrbitSpectrumIdentifiabilityHistogram
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectationSingularSpectrum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOrbitSpectrumIdentifiabilityHistogram
 
 namespace Omega.OperatorAlgebra
 

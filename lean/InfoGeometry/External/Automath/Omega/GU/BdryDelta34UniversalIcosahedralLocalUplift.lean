@@ -1,4 +1,4 @@
-import Omega.GU.TerminalWindow6LocalUpliftAdmissibility
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6LocalUpliftAdmissibility
 
 namespace Omega.GU
 

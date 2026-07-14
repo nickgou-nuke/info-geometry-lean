@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.GodelPrimeBitlengthLowerBound
-import Omega.Conclusion.PrimeRegister
-import Omega.EA.DynamicPrimeRegisterBitlength
+import InfoGeometry.External.Automath.Omega.CircleDimension.GodelPrimeBitlengthLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegister
+import InfoGeometry.External.Automath.Omega.EA.DynamicPrimeRegisterBitlength
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Tactic
-import Omega.POM.FiberDispersionIndex
+import InfoGeometry.External.Automath.Omega.POM.FiberDispersionIndex
 
 namespace Omega.POM
 

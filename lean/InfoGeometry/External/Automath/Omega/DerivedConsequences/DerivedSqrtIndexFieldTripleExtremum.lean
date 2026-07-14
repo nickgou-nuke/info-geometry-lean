@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
-import Omega.OperatorAlgebra.FoldSqrtIndexFieldBasic
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldSqrtIndexFieldBasic
 
 namespace Omega.DerivedConsequences
 

@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.FiniteRhParityGeneral
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.FiniteRhParityGeneral
 
 namespace Omega.SyncKernelRealInput
 

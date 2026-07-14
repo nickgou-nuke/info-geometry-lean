@@ -1,8 +1,8 @@
 import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Tactic
-import Omega.Conclusion.RhsharpQAmplifiedAddressBarrier
-import Omega.Conclusion.SelfdualScaleMellinFiniteCodimInterpolation
-import Omega.Zeta.CyclicLiftFiniteProbeEvasion
+import InfoGeometry.External.Automath.Omega.Conclusion.RhsharpQAmplifiedAddressBarrier
+import InfoGeometry.External.Automath.Omega.Conclusion.SelfdualScaleMellinFiniteCodimInterpolation
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicLiftFiniteProbeEvasion
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.BinfoldCriticalCapacityThreephaseLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCriticalCapacityThreephaseLaw
 
 namespace Omega.Conclusion
 

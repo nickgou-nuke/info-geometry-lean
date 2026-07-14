@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
 
 namespace Omega.Zeta
 

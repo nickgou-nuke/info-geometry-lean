@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import Omega.CircleDimension.DerivedLissajousExactHistogramDyadicThreshold
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedLissajousExactHistogramDyadicThreshold
 
 /-- A deterministic `L`-bit reader can realize at most `2^L` visible buckets, so any injective
 restriction to a maximal Lissajous fiber forces the dyadic depth lower bound.

@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.Tactic
-import Omega.EA.ChiRigidityShadow
+import InfoGeometry.External.Automath.Omega.EA.ChiRigidityShadow
 
 namespace Omega.EA
 

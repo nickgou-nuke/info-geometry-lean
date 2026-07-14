@@ -1,7 +1,7 @@
-import Omega.Folding.CarryDefect
-import Omega.Folding.Defect
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.FiberRing
+import InfoGeometry.External.Automath.Omega.Folding.CarryDefect
+import InfoGeometry.External.Automath.Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FiberRing
 
 namespace Omega
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.AdamsBinomialProbeFourierDiagonalization
+import InfoGeometry.External.Automath.Omega.Zeta.AdamsBinomialProbeFourierDiagonalization
 
 namespace Omega.Conclusion
 

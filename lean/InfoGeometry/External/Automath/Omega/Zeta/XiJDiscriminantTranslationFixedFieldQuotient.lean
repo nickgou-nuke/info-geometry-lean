@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiJDiscriminant2IsogenyVelu
+import InfoGeometry.External.Automath.Omega.Zeta.XiJDiscriminant2IsogenyVelu
 
 namespace Omega.Zeta
 

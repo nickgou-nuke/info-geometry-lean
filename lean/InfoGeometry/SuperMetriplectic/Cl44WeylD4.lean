@@ -107,6 +107,14 @@ theorem positiveChirality_iff
 
 end D4SpinorWeight
 
+/-- Distribution of degeneracies for Weyl Character. -/
+structure Cl44WeylCharacterDistribution where
+  stressTensorDegeneracy : ℝ
+  centralChargeDegeneracy : ℝ
+  residualDegeneracy : ℝ
+  totalDegeneracy : ℝ
+  total_eq : totalDegeneracy = stressTensorDegeneracy + centralChargeDegeneracy + residualDegeneracy
+
 /--
 Cartan skeleton for the split `Cl(4,4)`/`Spin(4,4)` character lane.
 

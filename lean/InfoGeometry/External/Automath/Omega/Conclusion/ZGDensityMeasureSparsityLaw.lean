@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
-import Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
 
 open scoped BigOperators
 

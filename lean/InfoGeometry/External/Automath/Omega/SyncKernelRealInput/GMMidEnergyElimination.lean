@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.GMContinuousMajorArcControl
-import Omega.SyncKernelRealInput.GMEnergyWindowSaving
-import Omega.SyncKernelRealInput.GMRelativeGapAfterObstruction
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMContinuousMajorArcControl
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMEnergyWindowSaving
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMRelativeGapAfterObstruction
 
 namespace Omega.SyncKernelRealInput
 

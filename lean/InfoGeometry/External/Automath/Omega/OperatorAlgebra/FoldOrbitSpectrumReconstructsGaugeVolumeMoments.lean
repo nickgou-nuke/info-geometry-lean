@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldOrbitSpectrumIdentifiabilityHistogram
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOrbitSpectrumIdentifiabilityHistogram
 
 namespace Omega.OperatorAlgebra
 

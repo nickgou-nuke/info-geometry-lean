@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedSchurDirichletNonprincipalEnergyVariance
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedSchurDirichletNonprincipalEnergyVariance
 
 namespace Omega.DerivedConsequences
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryZ6NoGlobalFreeExtension
-import Omega.Folding.KilloPrimeFreedomNonFinitizability
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryZ6NoGlobalFreeExtension
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeFreedomNonFinitizability
 
 namespace Omega.Zeta
 

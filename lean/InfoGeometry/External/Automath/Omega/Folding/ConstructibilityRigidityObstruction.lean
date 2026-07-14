@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.Fiber
-import Omega.Folding.MicrostateResidualWindowReachability
-import Omega.Folding.Rewrite
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.MicrostateResidualWindowReachability
+import InfoGeometry.External.Automath.Omega.Folding.Rewrite
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
-import Omega.CircleDimension.CircleDim
-import Omega.Conclusion.CdimArbitraryProfiniteKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimArbitraryProfiniteKernel
 
 namespace Omega.Conclusion
 

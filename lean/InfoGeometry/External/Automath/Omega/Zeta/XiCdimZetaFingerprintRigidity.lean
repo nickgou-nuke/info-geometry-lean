@@ -1,4 +1,4 @@
-import Omega.CircleDimension.PrimeLedgerCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.CircleDimension.PrimeLedgerCompleteReconstruction
 
 namespace Omega.Zeta
 

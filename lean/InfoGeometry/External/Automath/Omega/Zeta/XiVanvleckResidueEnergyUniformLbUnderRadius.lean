@@ -1,4 +1,4 @@
-import Omega.Zeta.VanvleckResidueL2LowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.VanvleckResidueL2LowerBound
 
 namespace Omega.Zeta
 

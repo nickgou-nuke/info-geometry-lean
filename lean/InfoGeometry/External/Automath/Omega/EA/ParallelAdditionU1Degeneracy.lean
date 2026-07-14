@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.TimeSpaceCommuting
+import InfoGeometry.External.Automath.Omega.EA.TimeSpaceCommuting
 
 namespace Omega.EA
 

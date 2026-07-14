@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.DynamicPrimeRegisterConcatenation
+import InfoGeometry.External.Automath.Omega.EA.DynamicPrimeRegisterConcatenation
 
 namespace Omega.EA
 

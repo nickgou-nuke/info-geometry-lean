@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
-import Omega.Conclusion.DyadicBoundaryPrimeshellBooleanDivisorTomography
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelSyndromeCompletenessLinearDecode
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryPrimeshellBooleanDivisorTomography
 
 namespace Omega.Conclusion
 

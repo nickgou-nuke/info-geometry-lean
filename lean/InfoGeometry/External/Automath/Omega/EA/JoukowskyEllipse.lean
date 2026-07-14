@@ -1,8 +1,8 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-import Omega.EA.GodelLogBusemann
-import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+import InfoGeometry.External.Automath.Omega.EA.GodelLogBusemann
+import InfoGeometry.External.Automath.Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
 
 namespace Omega.EA.JoukowskyEllipse
 

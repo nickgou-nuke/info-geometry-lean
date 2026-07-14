@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Folding.FixedFiberLedgerComplexity
+import InfoGeometry.External.Automath.Omega.Folding.FixedFiberLedgerComplexity
 
 namespace Omega.Conclusion
 

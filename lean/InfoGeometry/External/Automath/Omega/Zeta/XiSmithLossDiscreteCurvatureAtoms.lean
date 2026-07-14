@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.KilloSmithLossSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.KilloSmithLossSpectrum
 
 namespace Omega.Zeta
 

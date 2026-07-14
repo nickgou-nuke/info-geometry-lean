@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleCodimensionExponentialDefect
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleCodimensionExponentialDefect
 
 namespace Omega.Conclusion
 

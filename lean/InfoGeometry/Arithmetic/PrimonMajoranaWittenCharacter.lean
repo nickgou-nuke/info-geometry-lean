@@ -39,6 +39,15 @@ def primonEnergy (p : ℕ) : ℝ :=
 def primonSpinAmplitude (s : ℝ) (p : ℕ) : ℝ :=
   Real.exp (-(s / 2) * primonEnergy p)
 
+lemma primonSpinAmplitude_pos (s : ℝ) (p : ℕ) :
+    0 < primonSpinAmplitude s p := by
+  unfold primonSpinAmplitude
+  exact Real.exp_pos _
+
+lemma primonSpinAmplitude_ne_zero (s : ℝ) (p : ℕ) :
+    primonSpinAmplitude s p ≠ 0 :=
+  (primonSpinAmplitude_pos s p).ne'
+
 /-- Local graded Euler/Witten factor `1 - exp (-s log p)`. -/
 def localWittenFactor (s : ℝ) (p : ℕ) : ℝ :=
   1 - Real.exp (-s * primonEnergy p)

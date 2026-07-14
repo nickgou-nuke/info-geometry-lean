@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.PcdimModpFormula
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PcdimModpFormula
 
 namespace Omega.UnitCirclePhaseArithmetic
 

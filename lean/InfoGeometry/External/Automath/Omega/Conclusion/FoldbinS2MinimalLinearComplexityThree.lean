@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 
 namespace Omega.Conclusion
 

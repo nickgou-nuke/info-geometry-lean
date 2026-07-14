@@ -1,7 +1,7 @@
 import Std
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Closure
-import Omega.HyperKernel.Pretty
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Pretty
 
 namespace Omega.HyperKernel
 namespace Analysis

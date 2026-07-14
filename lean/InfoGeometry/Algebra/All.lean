@@ -18,6 +18,9 @@ import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
 import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
+import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
+import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
+import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
 import InfoGeometry.Algebra.NoFaithfulAssociativeModel
 import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit
@@ -110,6 +113,9 @@ import InfoGeometry.Algebra.JordanCayleyOrbitStratification
 import InfoGeometry.Algebra.OrbitClassification
 import InfoGeometry.Algebra.OrbitClassificationBridge
 import InfoGeometry.Algebra.SplitOctonionIsomorphism
+import InfoGeometry.Algebra.KingdonHypebasis
+import InfoGeometry.Algebra.KingdonArtinBraidAction
+import InfoGeometry.Algebra.KingdonPeterssonIsotope
 import InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
 import InfoGeometry.Algebra.GeometricBridge
 import InfoGeometry.Algebra.JordanGradedWeight

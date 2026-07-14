@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberTruncatedMomentCompleteInversion
+import InfoGeometry.External.Automath.Omega.Folding.FiberTruncatedMomentCompleteInversion
 
 namespace Omega.Folding
 

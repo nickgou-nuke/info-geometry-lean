@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Folding.BernoulliPLdp
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPLdp
 
 namespace Omega.Folding
 

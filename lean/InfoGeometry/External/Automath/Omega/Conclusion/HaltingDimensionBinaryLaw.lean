@@ -1,4 +1,4 @@
-import Omega.Conclusion.HaltingValuationWalshLedgerUnification
+import InfoGeometry.External.Automath.Omega.Conclusion.HaltingValuationWalshLedgerUnification
 
 namespace Omega.Conclusion
 

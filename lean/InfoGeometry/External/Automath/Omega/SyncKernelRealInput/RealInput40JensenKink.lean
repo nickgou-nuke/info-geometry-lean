@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.FiniteRhJensenFreeEnergy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.FiniteRhJensenFreeEnergy
 
 namespace Omega.SyncKernelRealInput
 

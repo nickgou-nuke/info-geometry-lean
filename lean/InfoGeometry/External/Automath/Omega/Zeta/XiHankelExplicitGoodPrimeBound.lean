@@ -1,4 +1,4 @@
-import Omega.Zeta.HankelShortPrimeAvoidsBadset
+import InfoGeometry.External.Automath.Omega.Zeta.HankelShortPrimeAvoidsBadset
 
 namespace Omega.Zeta
 

@@ -149,43 +149,74 @@ theorem cl55_conformal_null_pair_preserved_along_ringHom_chain
       chainApply_ringHom_one φ n k
     simpa [uₖ, vₖ, hone] using hchain
 
-/--
-A finite-stage ring homomorphism transports the Drazin regular/defect projector
-packet and the Drazin-power annihilation identities.
--/
-theorem ringHom_transports_drazin_defect_packet
+/-- Ring homomorphisms preserve idempotence of the Drazin complementary projector. -/
+theorem ringHom_drazin_complementaryProjection_idempotent
     {R S : Type*} [Ring R] [Ring S]
     (f : R →+* S) {a b : R} {m : ℕ}
     (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
-    let P := InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b
-    let Q := InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b
-    f Q * f Q = f Q ∧
-      f P * f Q = 0 ∧
-      f Q * f P = 0 ∧
-      f P + f Q = 1 ∧
-      (f a) ^ m * f Q = 0 ∧
-      f Q * (f a) ^ m = 0 := by
-  intro P Q
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [Q] using congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
-  · simpa [P, Q] using congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
-  · simpa [P, Q] using congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
-  · simpa [P, Q] using congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
-        (a := a) (b := b))
-  · have h := congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
-    simpa [Q, map_pow] using h
-  · have h := congrArg f
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
-    simpa [Q, map_pow] using h
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+      * f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+      =
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b) := by
+  simpa using congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
+
+/-- Ring homomorphisms preserve left orthogonality of Drazin regular and defect projectors. -/
+theorem ringHom_drazin_projection_mul_complementaryProjection_eq_zero
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b)
+      * f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b) = 0 := by
+  simpa using congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
+
+/-- Ring homomorphisms preserve right orthogonality of Drazin regular and defect projectors. -/
+theorem ringHom_drazin_complementaryProjection_mul_projection_eq_zero
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+      * f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b) = 0 := by
+  simpa using congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
+
+/-- Ring homomorphisms preserve the Drazin projector partition of unity. -/
+theorem ringHom_drazin_projection_add_complementaryProjection_eq_one
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) (a b : R) :
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b)
+      + f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+      = 1 := by
+  simpa using congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+      (a := a) (b := b))
+
+/-- Ring homomorphisms preserve Drazin power annihilation on the left. -/
+theorem ringHom_drazin_power_mul_complementaryProjection_eq_zero
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    (f a) ^ m * f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+      = 0 := by
+  have h := congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
+  simpa [map_pow] using h
+
+/-- Ring homomorphisms preserve Drazin power annihilation on the right. -/
+theorem ringHom_drazin_complementaryProjection_mul_power_eq_zero
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    f (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b) * (f a) ^ m
+      = 0 := by
+  have h := congrArg f
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
+  simpa [map_pow] using h
 
 /--
 The transported finite alignment theorem: a target finite stage receives both a
-transported `Cl(5,5)` conformal null pair and a transported Drazin defect packet.
+transported `Cl(5,5)` conformal null pair and transported Drazin defect laws.
 -/
 theorem ringHom_transports_cl55_drazin_finite_alignment
     {R S B : Type*} [Ring R] [Ring S] [Ring B]
@@ -201,14 +232,34 @@ theorem ringHom_transports_cl55_drazin_finite_alignment
         f P + f Q = 1 ∧
         (f a) ^ m * f Q = 0 ∧
         f Q * (f a) ^ m = 0) := by
-  exact ⟨ringHom_image_contains_conformal_null_pair g,
-    ringHom_transports_drazin_defect_packet f hD⟩
+  refine ⟨ringHom_image_contains_conformal_null_pair g, ?_⟩
+  dsimp
+  exact
+    ⟨ringHom_drazin_complementaryProjection_idempotent f hD,
+      ringHom_drazin_projection_mul_complementaryProjection_eq_zero f hD,
+      ringHom_drazin_complementaryProjection_mul_projection_eq_zero f hD,
+      ringHom_drazin_projection_add_complementaryProjection_eq_one f a b,
+      ringHom_drazin_power_mul_complementaryProjection_eq_zero f hD,
+      ringHom_drazin_complementaryProjection_mul_power_eq_zero f hD⟩
 
-/--
-Finite chains of ring endomorphisms preserve the Drazin defect projector packet
-and the Drazin-power annihilation identities.
--/
-theorem drazin_defect_packet_preserved_along_ringHom_chain
+/-- Ring-hom chains preserve idempotence of the Drazin complementary projector. -/
+theorem chainApply_drazin_complementaryProjection_idempotent
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    Q * Q = Q := by
+  intro Q
+  simpa [Q] using
+    InfoGeometry.Canonical.FiniteInvariantTransport.idempotent_preserved_along_ringHom_chain
+      φ n k
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
+
+/-- Ring-hom chains preserve left orthogonality of Drazin regular and defect projectors. -/
+theorem chainApply_drazin_projection_mul_complementaryProjection_eq_zero
     {R : Type*} [Ring R]
     (φ : Nat → R →+* R) (n k : Nat)
     {a b : R} {m : ℕ}
@@ -219,56 +270,99 @@ theorem drazin_defect_packet_preserved_along_ringHom_chain
     let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
       (fun i x => φ i x) n k
         (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    P * Q = 0 := by
+  intro P Q
+  simpa [P, Q] using
+    InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+      φ n k
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
+
+/-- Ring-hom chains preserve right orthogonality of Drazin regular and defect projectors. -/
+theorem chainApply_drazin_complementaryProjection_mul_projection_eq_zero
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let P := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b)
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    Q * P = 0 := by
+  intro P Q
+  simpa [P, Q] using
+    InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+      φ n k
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
+
+/-- Ring-hom chains preserve the Drazin projector partition of unity. -/
+theorem chainApply_drazin_projection_add_complementaryProjection_eq_one
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat) (a b : R) :
+    let P := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b)
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    P + Q = 1 := by
+  intro P Q
+  have hsum := congrArg
+    (InfoGeometry.Canonical.FiniteInvariantTransport.chainApply (fun i x => φ i x) n k)
+    (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+      (a := a) (b := b))
+  have hone :
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i x => φ i x) n k (1 : R) = 1 :=
+    chainApply_ringHom_one φ n k
+  simpa [P, Q, chainApply_ringHom_add φ n k, hone] using hsum
+
+/-- Ring-hom chains preserve Drazin power annihilation on the left. -/
+theorem chainApply_drazin_power_mul_complementaryProjection_eq_zero
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
     let aₖ := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
       (fun i x => φ i x) n k a
-    Q * Q = Q ∧
-      P * Q = 0 ∧
-      Q * P = 0 ∧
-      P + Q = 1 ∧
-      aₖ ^ m * Q = 0 ∧
-      Q * aₖ ^ m = 0 := by
-  intro P Q aₖ
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [Q] using
-      InfoGeometry.Canonical.FiniteInvariantTransport.idempotent_preserved_along_ringHom_chain
-        φ n k
-        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
-  · simpa [P, Q] using
-      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
-        φ n k
-        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
-  · simpa [P, Q] using
-      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
-        φ n k
-        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
-  · have hsum := congrArg
-      (InfoGeometry.Canonical.FiniteInvariantTransport.chainApply (fun i x => φ i x) n k)
-      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
-        (a := a) (b := b))
-    have hone :
-        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
-          (fun i x => φ i x) n k (1 : R) = 1 :=
-      chainApply_ringHom_one φ n k
-    simpa [P, Q, chainApply_ringHom_add φ n k,
-      hone] using hsum
-  · have hann :=
-      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
-        φ n k
-        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
-    have hpowa :
-        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
-          (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
-      simpa [aₖ] using chainApply_ringHom_pow φ n k m a
-    simpa [Q, hpowa] using hann
-  · have hann :=
-      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
-        φ n k
-        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
-    have hpowa :
-        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
-          (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
-      simpa [aₖ] using chainApply_ringHom_pow φ n k m a
-    simpa [Q, hpowa] using hann
+    aₖ ^ m * Q = 0 := by
+  intro Q aₖ
+  have hann :=
+    InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+      φ n k
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
+  have hpowa :
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
+    simpa [aₖ] using chainApply_ringHom_pow φ n k m a
+  simpa [Q, hpowa] using hann
+
+/-- Ring-hom chains preserve Drazin power annihilation on the right. -/
+theorem chainApply_drazin_complementaryProjection_mul_power_eq_zero
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    let aₖ := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k a
+    Q * aₖ ^ m = 0 := by
+  intro Q aₖ
+  have hann :=
+    InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+      φ n k
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
+  have hpowa :
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
+    simpa [aₖ] using chainApply_ringHom_pow φ n k m a
+  simpa [Q, hpowa] using hann
 
 /--
 The split `Cl(5,5)` lightcone lane and Drazin defect lane align at the finite

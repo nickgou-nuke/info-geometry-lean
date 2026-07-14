@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
+import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeWittenCharacter
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation

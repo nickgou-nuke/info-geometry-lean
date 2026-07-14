@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityLambdaqLargeQAsymptotic
-import Omega.POM.MultiplicityLambdaqTaylorQ0
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityLambdaqLargeQAsymptotic
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityLambdaqTaylorQ0
 
 namespace Omega.POM
 

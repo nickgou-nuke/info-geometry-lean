@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyRateCurveParam
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveParam
 
 namespace Omega.Folding
 

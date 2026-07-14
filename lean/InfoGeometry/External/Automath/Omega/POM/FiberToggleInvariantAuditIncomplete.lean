@@ -1,4 +1,4 @@
-import Omega.POM.FiberSymmetricOrderVisibleLayerSeparation
+import InfoGeometry.External.Automath.Omega.POM.FiberSymmetricOrderVisibleLayerSeparation
 
 namespace Omega.POM
 

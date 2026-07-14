@@ -1,7 +1,7 @@
-import Omega.SyncKernelWeighted.GallavottiCohen
-import Omega.SyncKernelWeighted.GallavottiCohenSlopeInvolution
-import Omega.SyncKernelWeighted.PressureAnalyticRadius
-import Omega.SyncKernelWeighted.PressureTaylorRemainderCauchy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GallavottiCohen
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GallavottiCohenSlopeInvolution
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureAnalyticRadius
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureTaylorRemainderCauchy
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.BoundarySubcriticalPerturbationSecondOrderRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundarySubcriticalPerturbationSecondOrderRigidity
 
 namespace Omega.Conclusion
 

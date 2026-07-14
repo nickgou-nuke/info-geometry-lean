@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.AdditionCollisionSpectrumSoficMonotonePerron
+import InfoGeometry.External.Automath.Omega.POM.AdditionCollisionSpectrumSoficMonotonePerron
 
 namespace Omega.POM
 

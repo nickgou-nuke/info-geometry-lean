@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.CollisionCKClassificationQ234
+import InfoGeometry.External.Automath.Omega.POM.CollisionCKClassificationQ234
 
 namespace Omega.POM
 

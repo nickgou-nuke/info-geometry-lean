@@ -1,4 +1,4 @@
-import Omega.Zeta.DFAPrimeRecallPrecisionETDS
+import InfoGeometry.External.Automath.Omega.Zeta.DFAPrimeRecallPrecisionETDS
 
 namespace Omega.Zeta
 

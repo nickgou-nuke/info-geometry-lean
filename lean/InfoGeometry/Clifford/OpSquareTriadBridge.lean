@@ -24,6 +24,34 @@ open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Clifford.KoszulFoundation
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 
+/-- The basic trichotomy of square classes. -/
+inductive OpSquareClass
+  | elliptic
+  | parabolic
+  | hyperbolic
+deriving DecidableEq, Repr
+
+/-- Classify a real number into its sign class. -/
+def classifySquareValue (x : ℝ) : Option OpSquareClass :=
+  if x = -1 then some .elliptic
+  else if x = 0 then some .parabolic
+  else if x = 1 then some .hyperbolic
+  else none
+
+@[simp] theorem classifySquareValue_neg_one : classifySquareValue (-1) = some .elliptic := by
+  dsimp [classifySquareValue]
+  simp
+@[simp] theorem classifySquareValue_zero : classifySquareValue 0 = some .parabolic := by
+  dsimp [classifySquareValue]
+  -- We have to prove `if 0 = -1 then ...`
+  have h : (0 : ℝ) ≠ -1 := by norm_num
+  simp [h]
+@[simp] theorem classifySquareValue_one : classifySquareValue 1 = some .hyperbolic := by
+  dsimp [classifySquareValue]
+  have h1 : (1 : ℝ) ≠ -1 := by norm_num
+  have h2 : (1 : ℝ) ≠ 0 := by norm_num
+  simp [h1, h2]
+
 /-- The three scalar values `-1, 0, 1` attached to the local square classes. -/
 def opSquareScalar : OpSquareClass → ℝ
   | .elliptic => -1

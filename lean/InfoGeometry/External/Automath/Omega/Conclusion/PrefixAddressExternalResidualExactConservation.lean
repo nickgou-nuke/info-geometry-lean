@@ -1,4 +1,4 @@
-import Omega.Conclusion.AddressResidualTotalBitBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.AddressResidualTotalBitBudget
 
 namespace Omega.Conclusion
 

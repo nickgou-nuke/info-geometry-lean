@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
-import Omega.GroupUnification.Window6F8RepairBitNoBoundaryCovariantExtension
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
+import InfoGeometry.External.Automath.Omega.GroupUnification.Window6F8RepairBitNoBoundaryCovariantExtension
 
 namespace Omega.GroupUnification
 

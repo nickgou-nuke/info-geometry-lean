@@ -117,6 +117,26 @@ theorem weylWitness_updateOrderHysteresis :
   unfold UpdateOrderHysteresis
   exact weylWitness_rowThenCol_ne_colThenRow
 
+/-- The explicit row-then-column Weyl witness has zero column residual after its column step. -/
+theorem weylWitness_rowThenCol_colLyapunov_eq_zero :
+    colLyapunov 2
+      (rowThenColUpdate 2 weylOrderWitnessMatrix2
+        weylWitness_has_positive_rows
+        weylWitness_rowNormalize_has_positive_cols) = 0 := by
+  exact colLyapunov_colNormalize_eq_zero (n := 2)
+    (M := rowNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_rows)
+    weylWitness_rowNormalize_has_positive_cols
+
+/-- The explicit column-then-row Weyl witness has zero row residual after its row step. -/
+theorem weylWitness_colThenRow_rowLyapunov_eq_zero :
+    rowLyapunov 2
+      (colThenRowUpdate 2 weylOrderWitnessMatrix2
+        weylWitness_has_positive_cols
+        weylWitness_colNormalize_has_positive_rows) = 0 := by
+  exact rowLyapunov_rowNormalize_eq_zero (n := 2)
+    (M := colNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_cols)
+    weylWitness_colNormalize_has_positive_rows
+
 /-- Theorem: an explicit 2×2 gauge-order hysteresis witness exists. -/
 theorem exists_gaugeOrderHysteresis :
     ∃ (M : Coupling 2)

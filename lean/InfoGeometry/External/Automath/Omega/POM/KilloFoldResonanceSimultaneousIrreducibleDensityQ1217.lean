@@ -1,4 +1,4 @@
-import Omega.POM.KilloFoldResonanceProductGaloisQ1217
+import InfoGeometry.External.Automath.Omega.POM.KilloFoldResonanceProductGaloisQ1217
 
 namespace Omega.POM
 

@@ -103,8 +103,8 @@ variable [AddCommGroup V] [Module ℝ V]
 /--
 A supplied exponential eigen-flow.
 
-`flow_True` is the integrated calibration `Φ_t(X) = exp(tλ) X`.
-This is a socket, not an analytic ODE theorem.
+The integrated calibration is `Φ_t(X) = exp(tλ) X`.  This is a socket,
+not an analytic ODE theorem.
 -/
 @[rep_depth operator]
 structure ExponentialEigenFlow where

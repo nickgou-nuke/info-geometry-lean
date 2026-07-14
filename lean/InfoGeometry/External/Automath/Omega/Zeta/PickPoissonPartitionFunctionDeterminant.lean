@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
+import InfoGeometry.External.Automath.Omega.Zeta.XiPickPoissonPrincipalMinorsPartition
 
 open scoped BigOperators
 

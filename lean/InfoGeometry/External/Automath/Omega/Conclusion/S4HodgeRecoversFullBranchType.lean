@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.S4HodgeDeterminesFixedpointCounts
+import InfoGeometry.External.Automath.Omega.Conclusion.S4HodgeDeterminesFixedpointCounts
 
 namespace Omega.Conclusion
 

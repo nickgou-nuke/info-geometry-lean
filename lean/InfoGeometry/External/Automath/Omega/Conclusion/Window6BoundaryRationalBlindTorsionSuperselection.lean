@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
-import Omega.Conclusion.Window6BoundarySuperselectionC3OrbitStratification
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundarySuperselectionC3OrbitStratification
 
 namespace Omega.Conclusion
 

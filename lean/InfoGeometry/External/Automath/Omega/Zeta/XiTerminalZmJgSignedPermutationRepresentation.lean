@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Data.Fin.Tuple.Basic
-import Omega.Zeta.XiJGDiscriminantSquareclassInvariance
-import Omega.Zeta.XiTerminalZmDeltaNodeTangentParityLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiJGDiscriminantSquareclassInvariance
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDeltaNodeTangentParityLaw
 
 namespace Omega.Zeta
 

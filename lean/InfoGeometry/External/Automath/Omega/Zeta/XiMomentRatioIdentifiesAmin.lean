@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
+import InfoGeometry.External.Automath.Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
 
 namespace Omega.Zeta
 

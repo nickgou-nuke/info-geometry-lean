@@ -1,4 +1,4 @@
-import Omega.SPG.PressureGap
+import InfoGeometry.External.Automath.Omega.SPG.PressureGap
 
 namespace Omega.SPG
 

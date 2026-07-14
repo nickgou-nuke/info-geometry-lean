@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldClassCount
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldClassCount
 
 namespace Omega.POM
 

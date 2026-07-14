@@ -1,4 +1,4 @@
-import Omega.GroupUnification.ExactClock
+import InfoGeometry.External.Automath.Omega.GroupUnification.ExactClock
 
 namespace Omega.GroupUnification
 

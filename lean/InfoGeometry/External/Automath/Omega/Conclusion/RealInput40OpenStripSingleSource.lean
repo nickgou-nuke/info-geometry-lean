@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.RealInput40ZetaFactorization
+import InfoGeometry.External.Automath.Omega.POM.RealInput40ZetaFactorization
 
 namespace Omega.Conclusion
 

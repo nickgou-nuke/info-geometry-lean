@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.KilloFoldResonancePerronIndependenceQ12_17
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldResonancePerronIndependenceQ12_17
 
 namespace Omega.Folding
 

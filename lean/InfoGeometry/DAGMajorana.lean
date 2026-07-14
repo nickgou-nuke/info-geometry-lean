@@ -6,12 +6,11 @@ import DAG.Basic
 # DAG-Majorana Homomorphism — Projective Representation
 
 The DAG is the combinatorial shadow of a non-commutative Clifford algebra.
-Paths map to Majorana operators; commuting diamonds map to ±1 central residues.
+Paths map to Majorana operators; commuting diamonds may carry central residues.
 
   F: DAG paths → Majorana net operators
-  ω: central residue 2-cocycle, values in {±1}
+  ω: central residue readout, values in {±1}
   Spin = projective representation (360° → -1)
-  Non-orientable Klein bottle → Σω = 0 (anomaly_vanishes)
 -/
 
 noncomputable section
@@ -32,8 +31,8 @@ structure MajoranaNet (α : Type*) where
   anticomm : ∀ i j (x : V), gamma i (gamma j x) + gamma j (gamma i x) = (2 : ℝ) • x
 
 /--
-The DAG-Majorana homomorphism. Maps DAG paths to Majorana operators;
-central residues (±1) are the 2-cocycle obstructions to strict commutativity.
+The DAG-Majorana homomorphism. Maps DAG paths to Majorana operators and records
+central residue readouts in `{±1}`.
 -/
 structure DAGMajoranaHomomorphism
     (α : Type*) [BEq α] [Hashable α] where
@@ -43,25 +42,14 @@ structure DAGMajoranaHomomorphism
   edgeToOp : α → α → (net.V → net.V)
   /-- The edge map factors through Majorana generators. -/
   edgeToOp_eq : ∀ u v, edgeToOp u v = net.gamma u ∘ net.gamma v
-  /-- The central residue 2-cocycle: values in {±1}. -/
+  /-- The central residue readout: values in {±1}. -/
   centralResidue : α → α → ℤ
   residue_binary : ∀ u v, centralResidue u v = 1 ∨ centralResidue u v = -1
 
 /--
-**The central residue is a 2-cocycle of the projective representation.**
-
-Z₂-grading of the Clifford algebra = 1-groupoid:
-  0-cells: Majorana generators γ_i
-  1-cells: path compositions
-  2-cells: commuting diamonds → ±1 obstructions
-
-**Closure debt**: This theorem requires constructing the 2-cocycle proof
-from the DAG-Majorana homomorphism data. The docstring in earlier versions
-incorrectly cited `HexagonCocycle.lean` as the owner proof — that file
-proves the braided-category hexagon axiom, which is a categorically different
-statement. No owner proof currently exists for this claim.
+Direct readout of the defining `{±1}` range condition for the central residue.
 -/
-theorem central_residue_is_projective_cocycle
+theorem central_residue_binary
     (α : Type*) [BEq α] [Hashable α]
     (F : DAGMajoranaHomomorphism α) :
     ∀ u v : α, F.centralResidue u v = 1 ∨ F.centralResidue u v = -1 := by
@@ -69,18 +57,10 @@ theorem central_residue_is_projective_cocycle
   exact F.residue_binary u v
 
 /--
-**Total obstruction vanishes on non-orientable cycles.**
-
-On the Klein bottle throat, Σ ω = 0.
-
-**Closure debt**: This theorem requires proving that the sum of central
-residues around a non-orientable cycle vanishes. The docstring in earlier
-versions incorrectly cited `SouriauDiracHodgeCoupling.anomaly_vanishes` as
-the owner proof — that theorem proves a specific 2×2 matrix chiral anomaly
-identity, not the global DAG-Majorana claim. No owner proof currently
-exists for this statement.
+Same `{±1}` readout, provided under a name used by files that only need the
+residue range and do not assert a cycle-sum theorem.
 -/
-theorem total_obstruction_vanishes
+theorem central_residue_binary_for_obstruction_readout
     (α : Type*) [BEq α] [Hashable α]
     (F : DAGMajoranaHomomorphism α) :
     ∀ u v : α, F.centralResidue u v = 1 ∨ F.centralResidue u v = -1 := by

@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.GCD.Basic
 import Mathlib.Tactic
-import Omega.Folding.TranslationKernelFourierSgM
+import InfoGeometry.External.Automath.Omega.Folding.TranslationKernelFourierSgM
 
 namespace Omega.Zeta
 

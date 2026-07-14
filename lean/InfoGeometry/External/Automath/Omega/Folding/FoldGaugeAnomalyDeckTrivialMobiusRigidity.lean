@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyFirstTrigonalQ4S4
-import Omega.Folding.FoldGaugeAnomalyP10GaloisDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyFirstTrigonalQ4S4
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10GaloisDiscriminant
 
 namespace Omega.Folding
 

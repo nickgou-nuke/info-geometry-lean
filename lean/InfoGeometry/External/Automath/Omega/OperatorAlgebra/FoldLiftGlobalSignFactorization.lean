@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.GroupTheory.Perm.Sign
-import Omega.OperatorAlgebra.FoldFiberNormalizerWreath
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberNormalizerWreath
 
 namespace Omega.OperatorAlgebra
 

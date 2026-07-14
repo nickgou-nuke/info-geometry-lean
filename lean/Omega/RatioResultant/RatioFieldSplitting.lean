@@ -11,15 +11,7 @@ open Polynomial
 /-- Concrete seed data for the ratio-field splitting package. The statement proved below is
 independent of the payload; the structure exists only to match the paper-facing theorem signature
 required by the round. -/
-structure RatioFieldSplittingData (K : Type*) [Field K] where
-  dummy : Unit := ()
-
-namespace RatioFieldSplittingData
-
-/-- If a unit `ζ` satisfies `ζ^n = 1`, then the subgroup it generates is cyclic, its cardinality
-divides `n`, every element is an `n`th root of unity, and every polynomial factoring through
-`x^n` is invariant under the scaling `x ↦ ζx`. -/
-def field_splitting_statement {K : Type*} [Field K] (_D : RatioFieldSplittingData K) : Prop :=
+def field_splitting_statement {K : Type*} [Field K] : Prop :=
   ∀ n : ℕ, ∀ ζ : Kˣ, ζ ^ n = 1 →
     ∃ H : Subgroup Kˣ,
       H = Subgroup.zpowers ζ ∧
@@ -29,6 +21,12 @@ def field_splitting_statement {K : Type*} [Field K] (_D : RatioFieldSplittingDat
       ∀ p : K[X], ∀ x : K,
         Polynomial.eval (↑ζ * x) (p.comp (Polynomial.X ^ n)) =
           Polynomial.eval x (p.comp (Polynomial.X ^ n))
+
+structure RatioFieldSplittingData (K : Type*) [Field K] where
+  dummy : @field_splitting_statement K _ := by
+    exact paper_ratio_field_splitting
+
+namespace RatioFieldSplittingData
 
 end RatioFieldSplittingData
 
@@ -58,8 +56,8 @@ lemma generated_root_subgroup_nth_roots {K : Type*} [Field K] (n : ℕ) (ζ : K�
 cyclic of order dividing `n`, every one of its elements is again an `n`th root of unity, and any
 polynomial of the form `g(x^n)` is invariant under the scaling `x ↦ ζx`.
     prop:ratio-field-splitting -/
-theorem paper_ratio_field_splitting {K : Type*} [Field K] (D : RatioFieldSplittingData K) :
-    D.field_splitting_statement := by
+theorem paper_ratio_field_splitting {K : Type*} [Field K] :
+    @field_splitting_statement K _ := by
   intro n ζ hζ
   refine ⟨Subgroup.zpowers ζ, rfl, generated_root_subgroup_card_dvd n ζ hζ, ?_, ?_, ?_⟩
   · infer_instance

@@ -285,8 +285,8 @@ structure BostConnesKreinDiracHodgeTrace
   /-- Compatibility with the Bost-Connes KMS projection readout. -/
   trace_represented_projection :
     ∀ n m : ℕ+,
-      trace (B.rep (star (S C n) * S C m)) =
-        Φ.φ (star (S C n) * S C m)
+      trace (B.rep (S C n * star (S C m))) =
+        Φ.φ (S C n * star (S C m))
 
 namespace BostConnesKreinDiracHodgeTrace
 
@@ -302,7 +302,7 @@ variable (T : BostConnesKreinDiracHodgeTrace B Φ)
 /-- The represented Krein trace evaluates Bost-Connes projections by the KMS formula. -/
 theorem represented_projection_trace
     (n m : ℕ+) :
-    T.trace (B.rep (star (S C n) * S C m)) =
+    T.trace (B.rep (S C n * star (S C m))) =
       if n = m then (((n : ℕ+) : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ else 0 := by
   rw [T.trace_represented_projection n m]
   exact Φ.kms_evaluation_on_projections n m
@@ -522,8 +522,8 @@ structure BostConnesDiracHodgeTrace
   /-- Compatibility with the Bost-Connes KMS projection readout. -/
   trace_represented_projection :
     ∀ n m : ℕ+,
-      trace (B.rep (star (S C n) * S C m)) =
-        (Φ.φ (star (S C n) * S C m) : ℂ)
+      trace (B.rep (S C n * star (S C m))) =
+        (Φ.φ (S C n * star (S C m)) : ℂ)
 
 namespace BostConnesDiracHodgeTrace
 
@@ -538,7 +538,7 @@ variable (T : BostConnesDiracHodgeTrace B Φ)
 /-- The represented trace evaluates Bost-Connes projections by the KMS formula. -/
 theorem represented_projection_trace
     (n m : ℕ+) :
-    T.trace (B.rep (star (S C n) * S C m)) =
+    T.trace (B.rep (S C n * star (S C m))) =
       (if n = m then (((n : ℕ+) : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ else 0 : ℝ) := by
   rw [T.trace_represented_projection n m]
   exact_mod_cast Φ.kms_evaluation_on_projections n m

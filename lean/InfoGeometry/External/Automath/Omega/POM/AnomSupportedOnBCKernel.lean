@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Group.Basic
-import Omega.POM.BCQuotientUniversal
+import InfoGeometry.External.Automath.Omega.POM.BCQuotientUniversal
 
 namespace Omega.POM
 

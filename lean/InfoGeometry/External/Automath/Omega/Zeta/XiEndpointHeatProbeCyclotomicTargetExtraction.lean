@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.EndpointHeatProbeAdamsTwistRoots
+import InfoGeometry.External.Automath.Omega.Zeta.EndpointHeatProbeAdamsTwistRoots
 
 namespace Omega.Zeta
 

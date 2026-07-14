@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6HalfblockRecoversLucasDivisorLattice
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6HalfblockRecoversLucasDivisorLattice
 
 namespace Omega.DerivedConsequences
 

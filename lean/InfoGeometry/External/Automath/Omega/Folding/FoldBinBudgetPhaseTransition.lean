@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinQuantileThresholdConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinQuantileThresholdConstant
 
 open scoped goldenRatio
 

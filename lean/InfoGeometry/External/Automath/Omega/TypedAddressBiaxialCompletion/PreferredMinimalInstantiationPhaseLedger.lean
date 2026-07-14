@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.PhaseLedgerTemplate
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PhaseLedgerTemplate
 
 namespace Omega.TypedAddressBiaxialCompletion
 

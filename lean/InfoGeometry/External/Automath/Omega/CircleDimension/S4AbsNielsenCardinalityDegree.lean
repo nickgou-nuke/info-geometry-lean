@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.CircleDimension.S4HurwitzConjugacySingleOrbit
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4HurwitzConjugacySingleOrbit
 
 namespace Omega.CircleDimension
 

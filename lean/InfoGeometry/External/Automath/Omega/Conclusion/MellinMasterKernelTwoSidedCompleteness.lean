@@ -1,6 +1,6 @@
-import Omega.Conclusion.FoldbinMultiplicityMellinTwoSidedUnification
-import Omega.Conclusion.FoldbinMultiplicityMellinFiniteSupportRigidity
-import Omega.Conclusion.TqftHighGenusBottomSpectrumPeeling
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinMultiplicityMellinTwoSidedUnification
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinMultiplicityMellinFiniteSupportRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftHighGenusBottomSpectrumPeeling
 
 namespace Omega.Conclusion
 

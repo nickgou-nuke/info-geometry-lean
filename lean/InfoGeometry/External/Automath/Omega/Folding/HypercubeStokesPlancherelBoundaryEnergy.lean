@@ -1,5 +1,5 @@
-import Omega.Core.WalshFourier
-import Omega.Core.WalshStokes
+import InfoGeometry.External.Automath.Omega.Core.WalshFourier
+import InfoGeometry.External.Automath.Omega.Core.WalshStokes
 
 namespace Omega.Folding
 

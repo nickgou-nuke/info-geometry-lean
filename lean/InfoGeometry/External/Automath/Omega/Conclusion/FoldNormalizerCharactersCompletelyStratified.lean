@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldNormalizerAbelianizationLayeredCharacters
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldNormalizerAbelianizationLayeredCharacters
 
 open scoped BigOperators
 

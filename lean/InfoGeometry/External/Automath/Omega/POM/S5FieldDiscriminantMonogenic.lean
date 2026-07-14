@@ -1,12 +1,13 @@
 import Mathlib.Data.Finset.Insert
-import Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
 
 namespace Omega.POM
 
-/-- Chapter-local audited wrapper for the round-two index computation asserting that the Perron
-    field is monogenic. The arithmetic content used below is packaged in
-    `Omega.POM.S5GaloisArithmetic`. -/
-def K5Monogenic : Prop := True
+/-- The discriminant arithmetic actually proved for the `K_5` lane. -/
+def K5DiscriminantArithmetic : Prop :=
+  2 ^ 4 * 3 ^ 4 * 5 * 11 * 13 * 17383 = (16107783120 : ℕ) ∧
+    -(16107783120 : ℤ) < 0 ∧
+    ¬ ∃ k : ℤ, k * k = -(16107783120 : ℤ)
 
 /-- The exact discriminant of the Perron field `K_5`. -/
 def K5Discriminant : ℤ := -(16107783120 : ℤ)
@@ -20,17 +21,23 @@ def K5RamifiedPrimes : Finset ℕ := {2, 3, 5, 11, 13, 17383}
 /-- The reduced discriminant squareclass of `K_5`. -/
 def K5DiscriminantSquareclass : ℤ := -12428845
 
-/-- Paper-facing wrapper for the audited monogenicity and discriminant package of the Perron
-    field `K_5`.
-    prop:pom-s5-field-discriminant-monogenic -/
-theorem paper_pom_s5_field_discriminant_monogenic :
-    K5Monogenic ∧
+/-- The discriminant arithmetic package imported from `S5GaloisArithmetic`. -/
+theorem k5_discriminant_arithmetic :
+    K5DiscriminantArithmetic := by
+  exact ⟨Omega.POM.S5GaloisArithmetic.disc_factorization,
+    Omega.POM.S5GaloisArithmetic.disc_negative,
+    Omega.POM.S5GaloisArithmetic.disc_not_square⟩
+
+/-- Paper-facing discriminant package of the Perron field `K_5`.
+
+This theorem deliberately does not assert monogenicity: the imported owner file
+proves discriminant arithmetic seeds, not an integral-basis theorem.
+-/
+theorem paper_pom_s5_field_discriminant_arithmetic :
+    K5DiscriminantArithmetic ∧
       K5Discriminant = P5Discriminant ∧
       K5RamifiedPrimes = ({2, 3, 5, 11, 13, 17383} : Finset ℕ) ∧
       K5DiscriminantSquareclass = (-12428845 : ℤ) := by
-  have hfactor := Omega.POM.S5GaloisArithmetic.disc_factorization
-  have hneg := Omega.POM.S5GaloisArithmetic.disc_negative
-  have hsquare := Omega.POM.S5GaloisArithmetic.disc_not_square
-  refine ⟨trivial, rfl, rfl, rfl⟩
+  exact ⟨k5_discriminant_arithmetic, rfl, rfl, rfl⟩
 
 end Omega.POM

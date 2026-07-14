@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCauchyPoissonDensityRatioSecondOrderProfile
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonDensityRatioSecondOrderProfile
 
 namespace Omega.Zeta
 

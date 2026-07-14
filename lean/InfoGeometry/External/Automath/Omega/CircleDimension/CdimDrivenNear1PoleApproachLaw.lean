@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.POM.MultiAxisNear1PoleBarrier
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.POM.MultiAxisNear1PoleBarrier
 
 namespace Omega.CircleDimension
 

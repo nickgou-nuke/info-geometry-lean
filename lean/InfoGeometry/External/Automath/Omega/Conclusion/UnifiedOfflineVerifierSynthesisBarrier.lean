@@ -1,4 +1,4 @@
-import Omega.SPG.PolytimeCertificateSynthesisImpliesPEqualsNP
+import InfoGeometry.External.Automath.Omega.SPG.PolytimeCertificateSynthesisImpliesPEqualsNP
 
 namespace Omega.Conclusion
 

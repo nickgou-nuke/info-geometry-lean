@@ -1,5 +1,5 @@
-import Omega.Conclusion.StrictificationBilayerMeasureAffineGauge
-import Omega.POM.PwCountertermStrictificationCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.StrictificationBilayerMeasureAffineGauge
+import InfoGeometry.External.Automath.Omega.POM.PwCountertermStrictificationCriterion
 
 namespace Omega.Conclusion
 

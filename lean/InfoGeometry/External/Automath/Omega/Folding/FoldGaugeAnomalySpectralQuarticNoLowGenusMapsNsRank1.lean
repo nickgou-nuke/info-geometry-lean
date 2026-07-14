@@ -1,5 +1,5 @@
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianSimple
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianSimple
 import Mathlib.Tactic
 
 namespace Omega.Folding

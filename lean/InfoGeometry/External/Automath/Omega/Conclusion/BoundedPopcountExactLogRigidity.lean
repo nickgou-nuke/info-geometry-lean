@@ -1,4 +1,4 @@
-import Omega.Conclusion.BinarySparsityLogarithmicDeviation
+import InfoGeometry.External.Automath.Omega.Conclusion.BinarySparsityLogarithmicDeviation
 
 namespace Omega.Conclusion
 

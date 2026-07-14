@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.FoldResidualTime.Window6FixedFreezingLaw
+import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6FixedFreezingLaw
 
 namespace Omega.Zeta
 

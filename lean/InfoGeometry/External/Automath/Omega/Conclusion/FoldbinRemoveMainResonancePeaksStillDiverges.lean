@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
-import Omega.Conclusion.FoldSinglepairVisibleObstructions
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCollisionScaleForcesMaxfiberDivergence
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldSinglepairVisibleObstructions
 
 namespace Omega.Conclusion
 

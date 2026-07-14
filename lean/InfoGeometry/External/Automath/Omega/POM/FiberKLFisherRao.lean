@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberBiasedConditionalKlChain
+import InfoGeometry.External.Automath.Omega.POM.FiberBiasedConditionalKlChain
 
 namespace Omega.POM
 

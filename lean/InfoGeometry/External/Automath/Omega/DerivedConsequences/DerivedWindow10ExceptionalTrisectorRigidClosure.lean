@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.Window10TrisectorResourceOrthogonality
+import InfoGeometry.External.Automath.Omega.Conclusion.Window10TrisectorResourceOrthogonality
 
 namespace Omega.DerivedConsequences
 

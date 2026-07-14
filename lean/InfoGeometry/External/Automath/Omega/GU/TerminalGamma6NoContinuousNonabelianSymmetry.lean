@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalGamma6Rigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalGamma6Rigidity
 
 namespace Omega.GU
 

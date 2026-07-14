@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CertificateInverseLimitAddressing
-import Omega.CircleDimension.DyadicCofinalSparsification
+import InfoGeometry.External.Automath.Omega.CircleDimension.CertificateInverseLimitAddressing
+import InfoGeometry.External.Automath.Omega.CircleDimension.DyadicCofinalSparsification
 
 namespace Omega.Conclusion
 

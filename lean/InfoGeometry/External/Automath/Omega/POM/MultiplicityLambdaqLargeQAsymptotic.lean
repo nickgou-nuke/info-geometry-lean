@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicityCompositionRealQPressure
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionRealQPressure
 
 namespace Omega.POM
 

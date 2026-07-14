@@ -3,12 +3,6 @@ import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
-/-- Concrete certificate package for the Fibonacci product collision. -/
-structure conclusion_fiber_multiplicity_product_noninjective_data where
-  conclusion_fiber_multiplicity_product_noninjective_certificate : Unit := ()
-
-namespace conclusion_fiber_multiplicity_product_noninjective_data
-
 /-- Fibonacci product statistic on a finite list encoding a finite multiset of path lengths. -/
 def conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct
     (lengths : List ℕ) : ℕ :=
@@ -23,7 +17,7 @@ def conclusion_fiber_multiplicity_product_noninjective_tripleOneSpectrum : List 
   [1, 1, 1]
 
 /-- The explicit product collision `F_6 = F_3^3`. -/
-def productCollision (_D : conclusion_fiber_multiplicity_product_noninjective_data) : Prop :=
+def productCollision : Prop :=
   conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct
       conclusion_fiber_multiplicity_product_noninjective_singletonSpectrum =
     conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct
@@ -32,28 +26,23 @@ def productCollision (_D : conclusion_fiber_multiplicity_product_noninjective_da
         conclusion_fiber_multiplicity_product_noninjective_tripleOneSpectrum
 
 /-- The Fibonacci product statistic is not injective on finite spectra. -/
-def noninjective (_D : conclusion_fiber_multiplicity_product_noninjective_data) : Prop :=
+def noninjective : Prop :=
   ∃ A B : List ℕ,
     A ≠ B ∧
       conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct A =
         conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct B
 
 /-- Equal product multiplicity can identify spectra with different internal graph sizes. -/
-def losesGraphType (_D : conclusion_fiber_multiplicity_product_noninjective_data) : Prop :=
+def losesGraphType : Prop :=
   ∃ A B : List ℕ,
     A ≠ B ∧
       conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct A =
         conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct B ∧
       A.length ≠ B.length
 
-end conclusion_fiber_multiplicity_product_noninjective_data
-
-open conclusion_fiber_multiplicity_product_noninjective_data
-
 /-- Paper label: `prop:conclusion-fiber-multiplicity-product-noninjective`. -/
 theorem paper_conclusion_fiber_multiplicity_product_noninjective
-    (D : conclusion_fiber_multiplicity_product_noninjective_data) :
-    D.productCollision ∧ D.noninjective ∧ D.losesGraphType := by
+    : productCollision ∧ noninjective ∧ losesGraphType := by
   have hcollision :
       conclusion_fiber_multiplicity_product_noninjective_fibonacciProduct
           conclusion_fiber_multiplicity_product_noninjective_singletonSpectrum =

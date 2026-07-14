@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.Fibonacci2PowerAdicUnitInfinite
-import Omega.CircleDimension.FinitePrimeTruncationKernels
+import InfoGeometry.External.Automath.Omega.CircleDimension.Fibonacci2PowerAdicUnitInfinite
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeTruncationKernels
 
 namespace Omega.CircleDimension
 

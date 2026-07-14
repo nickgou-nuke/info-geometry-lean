@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
 
 namespace Omega.CircleDimension
 

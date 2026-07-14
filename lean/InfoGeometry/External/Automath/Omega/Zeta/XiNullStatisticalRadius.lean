@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.XiNullFiberEntropyWindow
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullFiberEntropyWindow
 
 namespace Omega.Zeta
 

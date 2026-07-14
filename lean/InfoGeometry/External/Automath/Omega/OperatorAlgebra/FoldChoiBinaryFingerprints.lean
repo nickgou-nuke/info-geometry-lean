@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldChoiMaxeigApproxSATHard
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiRenyiMoments
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldChoiMaxeigApproxSATHard
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiRenyiMoments
 
 namespace Omega.OperatorAlgebra
 

@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FkdetChiSectorFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FkdetChiSectorFactorization
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

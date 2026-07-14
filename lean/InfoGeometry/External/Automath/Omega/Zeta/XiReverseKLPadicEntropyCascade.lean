@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiReverseKLRadiusRenormalizationCyclicSymmetrization
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLRadiusRenormalizationCyclicSymmetrization
 
 open Filter
 open scoped BigOperators Topology

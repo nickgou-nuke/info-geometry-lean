@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Tactic
-import Omega.Zeta.CyclotomicSectorIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.CyclotomicSectorIdentity
 
 namespace Omega.Conclusion
 

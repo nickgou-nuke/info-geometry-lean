@@ -1,9 +1,9 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.CompletenessGapAudit
-import Omega.TypedAddressBiaxialCompletion.GlobalizationFlatness
-import Omega.TypedAddressBiaxialCompletion.NullFiber
-import Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
-import Omega.TypedAddressBiaxialCompletion.ReadableFiber
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CompletenessGapAudit
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.GlobalizationFlatness
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NullFiber
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ReadableFiber
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.GU.Window6FiberEdgeCouplingDet
+import InfoGeometry.External.Automath.Omega.GU.Window6FiberEdgeCouplingDet
 
 namespace Omega.GU
 

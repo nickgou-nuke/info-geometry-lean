@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmJgSignedPermutationRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmJgSignedPermutationRepresentation
 
 namespace Omega.Zeta
 

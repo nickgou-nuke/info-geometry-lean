@@ -1,5 +1,5 @@
-import Omega.UnitCirclePhaseArithmetic.EndpointOrthogonalDecomposition
-import Omega.Zeta.XiEndpointTwoSymbolJet
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointOrthogonalDecomposition
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointTwoSymbolJet
 
 namespace Omega.Zeta
 

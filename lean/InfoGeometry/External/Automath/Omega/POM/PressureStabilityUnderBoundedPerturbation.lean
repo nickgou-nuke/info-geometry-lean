@@ -1,4 +1,4 @@
-import Omega.POM.BoundedPerturbationInvariance
+import InfoGeometry.External.Automath.Omega.POM.BoundedPerturbationInvariance
 
 namespace Omega.POM
 

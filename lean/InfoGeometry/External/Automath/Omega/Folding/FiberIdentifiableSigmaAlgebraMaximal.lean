@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Folding.FiberConvolutionKernelInvertibility
-import Omega.Folding.FiberSubsetConvolution
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionKernelInvertibility
+import InfoGeometry.External.Automath.Omega.Folding.FiberSubsetConvolution
 
 namespace Omega.Folding
 

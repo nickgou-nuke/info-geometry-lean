@@ -1,4 +1,4 @@
-import Omega.Folding.MismatchLanguage
+import InfoGeometry.External.Automath.Omega.Folding.MismatchLanguage
 import Mathlib.Tactic
 
 namespace Omega.Folding

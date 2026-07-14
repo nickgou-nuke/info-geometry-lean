@@ -1,4 +1,4 @@
-import Omega.POM.LkContinuumNDDetCosh
+import InfoGeometry.External.Automath.Omega.POM.LkContinuumNDDetCosh
 
 namespace Omega.POM
 

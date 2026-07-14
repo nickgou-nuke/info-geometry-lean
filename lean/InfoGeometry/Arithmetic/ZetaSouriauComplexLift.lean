@@ -89,6 +89,12 @@ def modeWeight
     (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) : ℂ :=
   Complex.exp (-(s * ((E p - μ p : ℝ) : ℂ)))
 
+lemma modeWeight_ne_zero
+    (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
+    modeWeight s E μ p ≠ 0 := by
+  unfold modeWeight
+  exact Complex.exp_ne_zero _
+
 /-- Mode weight factored through the circular polarization basis. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem modeWeight_eq_circular
@@ -134,6 +140,18 @@ theorem circularMicrostateWeight_eq_microstateWeight [DecidableEq ι]
   simp [InfoGeometry.Arithmetic.PrimonFinite.weight,
     circularModeWeight_eq_modeWeight]
 
+lemma microstateWeight_ne_zero [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    microstateWeight s E μ S ≠ 0 := by
+  unfold microstateWeight
+  exact InfoGeometry.Arithmetic.PrimonFinite.weight_ne_zero
+    (q := modeWeight s E μ) S (fun p _hp => modeWeight_ne_zero s E μ p)
+
+lemma circularMicrostateWeight_ne_zero [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    circularMicrostateWeight s E μ S ≠ 0 := by
+  rw [circularMicrostateWeight_eq_microstateWeight]
+  exact microstateWeight_ne_zero s E μ S
 
 /-! ## 2. Split-chiral lift -/
 
@@ -276,6 +294,14 @@ theorem bosonPartition_eq_prod_inv
     bosonPartition modes s E μ =
       modes.prod (fun p => (1 - modeWeight s E μ p)⁻¹) := by
   rfl
+
+omit [DecidableEq ι] in
+lemma bosonPartition_ne_zero
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
+    (h : ∀ p ∈ modes, (1 - modeWeight s E μ p) ≠ 0) :
+    bosonPartition modes s E μ ≠ 0 := by
+  exact InfoGeometry.Arithmetic.PrimonFinite.ZB_ne_zero
+    (modes := modes) (q := modeWeight s E μ) h
 
 /-- Bosonic finite partition written in circular polarization coordinates. -/
 @[bridge_target_tag, rep_depth thermo]
@@ -517,6 +543,13 @@ def thermalWeight
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(s * hamiltonianC E μ S))
 
+omit [DecidableEq ι] in
+lemma thermalWeight_ne_zero
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    thermalWeight s E μ S ≠ 0 := by
+  unfold thermalWeight
+  exact Complex.exp_ne_zero _
+
 /-- Circular split of the complex thermal weight. -/
 @[rep_depth thermo]
 def circularThermalWeightPlus
@@ -547,6 +580,13 @@ theorem thermalWeight_circular_reconstruct
 def thermalVacuumAmplitude
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(s / 2 * hamiltonianC E μ S))
+
+omit [DecidableEq ι] in
+lemma thermalVacuumAmplitude_ne_zero
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    thermalVacuumAmplitude s E μ S ≠ 0 := by
+  unfold thermalVacuumAmplitude
+  exact Complex.exp_ne_zero _
 
 /-- Circular split of the thermal-vacuum amplitude. -/
 @[rep_depth thermo]
@@ -761,6 +801,10 @@ def zeroChemicalPotential (_p : ℕ) : ℝ :=
 def primeModeWeight (s : ℂ) (p : ℕ) : ℂ :=
   modeWeight s primeEnergy zeroChemicalPotential p
 
+lemma primeModeWeight_ne_zero (s : ℂ) (p : ℕ) :
+    primeModeWeight s p ≠ 0 := by
+  exact modeWeight_ne_zero s primeEnergy zeroChemicalPotential p
+
 /-- Finite prime bosonic partition. -/
 @[rep_depth thermo]
 def finitePrimeBosonPartition (P : PrimeRegister) (s : ℂ) : ℂ :=
@@ -778,6 +822,13 @@ theorem finitePrimeBosonPartition_eq_prod
     finitePrimeBosonPartition P s =
       P.primes.prod (fun p => (1 - primeModeWeight s p)⁻¹) := by
   rfl
+
+lemma finitePrimeBosonPartition_ne_zero
+    (P : PrimeRegister) (s : ℂ)
+    (h : ∀ p ∈ P.primes, (1 - primeModeWeight s p) ≠ 0) :
+    finitePrimeBosonPartition P s ≠ 0 := by
+  exact bosonPartition_ne_zero
+    (modes := P.primes) (s := s) (E := primeEnergy) (μ := zeroChemicalPotential) h
 
 /-- Product formula for finite prime signed/Möbius partition. -/
 @[bridge_target_tag, rep_depth thermo]

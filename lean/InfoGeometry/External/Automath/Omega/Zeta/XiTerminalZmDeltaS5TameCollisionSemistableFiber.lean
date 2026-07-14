@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmDeltaS5TameCollisionEtaleQuotientNodeLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDeltaS5TameCollisionEtaleQuotientNodeLaw
 
 namespace Omega.Zeta
 

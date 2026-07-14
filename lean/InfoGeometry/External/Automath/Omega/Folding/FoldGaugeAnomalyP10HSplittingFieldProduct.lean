@@ -1,4 +1,4 @@
-import Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
 
 namespace Omega.Folding
 

@@ -1,5 +1,5 @@
-import Omega.Folding.BinFold
-import Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
 import Mathlib.Tactic
 
 namespace Omega.GU

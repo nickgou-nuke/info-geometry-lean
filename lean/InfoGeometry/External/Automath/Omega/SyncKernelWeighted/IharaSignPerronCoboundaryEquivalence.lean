@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.IharaArtinFactorization
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaArtinFactorization
 
 namespace Omega.SyncKernelWeighted
 

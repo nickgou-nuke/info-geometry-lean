@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
 
 namespace Omega.TypedAddressBiaxialCompletion
 

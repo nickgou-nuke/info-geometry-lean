@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
 
 namespace Omega.Folding
 

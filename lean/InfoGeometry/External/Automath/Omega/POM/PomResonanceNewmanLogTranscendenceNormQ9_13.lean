@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ResonancePolelineExponentTranscendenceQ9_13
+import InfoGeometry.External.Automath.Omega.POM.ResonancePolelineExponentTranscendenceQ9_13
 
 namespace Omega.POM
 

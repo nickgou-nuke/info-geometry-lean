@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldClassCount
-import Omega.POM.ObliviousWidthSBranchingProgramCount
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldClassCount
+import InfoGeometry.External.Automath.Omega.POM.ObliviousWidthSBranchingProgramCount
 
 namespace Omega.POM
 

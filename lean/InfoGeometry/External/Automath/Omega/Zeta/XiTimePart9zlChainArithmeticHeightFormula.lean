@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart65dChainInteriorIntervalSquarefreeDivisorIsomorphism
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65dChainInteriorIntervalSquarefreeDivisorIsomorphism
 
 namespace Omega.Zeta
 

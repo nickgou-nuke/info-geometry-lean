@@ -2,8 +2,8 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 import Mathlib.Tactic
-import Omega.CircleDimension.PhaseRegisterCommonAssignments
-import Omega.CircleDimension.RegisterCircleModpFormula
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseRegisterCommonAssignments
+import InfoGeometry.External.Automath.Omega.CircleDimension.RegisterCircleModpFormula
 
 namespace Omega.CircleDimension
 

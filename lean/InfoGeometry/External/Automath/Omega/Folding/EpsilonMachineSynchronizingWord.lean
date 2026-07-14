@@ -1,4 +1,4 @@
-import Omega.Folding.EpsilonMachineFibMobius
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineFibMobius
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.DFAPrimeSymmetricDiffLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.DFAPrimeSymmetricDiffLowerBound
 
 namespace Omega.Zeta
 

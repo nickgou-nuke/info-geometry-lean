@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Int.Basic
 import Mathlib.Tactic
-import Omega.Zeta.BooleanBinaryJumpKernelsTensorSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanBinaryJumpKernelsTensorSpectrum
 
 namespace Omega.Zeta
 

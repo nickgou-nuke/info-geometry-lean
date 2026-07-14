@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.AdjacentPressureConvexity
+import InfoGeometry.External.Automath.Omega.POM.AdjacentPressureConvexity
 
 namespace Omega.POM
 

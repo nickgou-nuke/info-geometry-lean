@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTimeFiberMinimalDimension
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeFiberMinimalDimension
 
 namespace Omega.Zeta
 

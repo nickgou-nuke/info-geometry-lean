@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ZnToCircleInjectiveDenseSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.ZnToCircleInjectiveDenseSeeds
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.Folding.FoldGaugeAnomalyP10EllipticTorsionDisjointness
-import Omega.Folding.FoldGaugeAnomalyLeyangEllipticTorsionDisjointness
-import Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10EllipticTorsionDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyLeyangEllipticTorsionDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
 
 namespace Omega.Folding
 

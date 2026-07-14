@@ -1,6 +1,6 @@
 import Mathlib.Analysis.PSeries
 import Mathlib.Tactic
-import Omega.Conclusion.AdditiveScalarProcircleObstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.AdditiveScalarProcircleObstruction
 
 namespace Omega.Conclusion
 

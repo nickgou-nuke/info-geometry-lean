@@ -1,6 +1,6 @@
-import Omega.EA.CompositionPullback
-import Omega.EA.CompositionTwoLayer
-import Omega.EA.MulNoNewPrimitive
+import InfoGeometry.External.Automath.Omega.EA.CompositionPullback
+import InfoGeometry.External.Automath.Omega.EA.CompositionTwoLayer
+import InfoGeometry.External.Automath.Omega.EA.MulNoNewPrimitive
 
 namespace Omega.EA.ArithComposition
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.POM.FiberPosteriorEquivalenceActivityField
-import Omega.POM.FiberPosteriorEquivalenceModuli
+import InfoGeometry.External.Automath.Omega.POM.FiberPosteriorEquivalenceActivityField
+import InfoGeometry.External.Automath.Omega.POM.FiberPosteriorEquivalenceModuli
 
 namespace Omega.POM
 

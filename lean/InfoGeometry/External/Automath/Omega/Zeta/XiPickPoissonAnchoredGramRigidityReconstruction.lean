@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiGramshiftToeplitzCayleyLogBridge
-import Omega.Zeta.XiPickPoissonAnchoredTransverseSeparationInversion
+import InfoGeometry.External.Automath.Omega.Zeta.XiGramshiftToeplitzCayleyLogBridge
+import InfoGeometry.External.Automath.Omega.Zeta.XiPickPoissonAnchoredTransverseSeparationInversion
 
 namespace Omega.Zeta
 

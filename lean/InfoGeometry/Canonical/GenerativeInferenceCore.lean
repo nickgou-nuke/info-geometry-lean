@@ -148,6 +148,54 @@ lemma contextSemanticState_coord_sum_eq_weight_sum
   simpa [contextSemanticState, RoutingMode] using
     (cliffordSemanticState_coord_sum_eq_weight_sum G.routingWeights G.routingLabels)
 
+lemma plusChannelMass_nonneg
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ) :
+    0 ≤ plusChannelMass G := by
+  simpa [plusChannelMass] using
+    (plusMass_nonneg (n := n) (w := G.routingWeights) (label := G.routingLabels) hw_nonneg)
+
+lemma minusChannelMass_nonneg
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ) :
+    0 ≤ minusChannelMass G := by
+  simpa [minusChannelMass] using
+    (minusMass_nonneg (n := n) (w := G.routingWeights) (label := G.routingLabels) hw_nonneg)
+
+lemma plusChannelMass_le_one_of_simplex
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ)
+    (hw_sum : ∑ σ : RoutingMode n, G.routingWeights σ = 1) :
+    plusChannelMass G ≤ 1 := by
+  simpa [plusChannelMass, RoutingMode] using
+    (plusMass_le_one_of_simplex (n := n) (w := G.routingWeights)
+      (label := G.routingLabels) hw_nonneg hw_sum)
+
+lemma minusChannelMass_le_one_of_simplex
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ)
+    (hw_sum : ∑ σ : RoutingMode n, G.routingWeights σ = 1) :
+    minusChannelMass G ≤ 1 := by
+  simpa [minusChannelMass, RoutingMode] using
+    (minusMass_le_one_of_simplex (n := n) (w := G.routingWeights)
+      (label := G.routingLabels) hw_nonneg hw_sum)
+
+lemma contextSemanticState_fst_le_one_of_simplex
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ)
+    (hw_sum : ∑ σ : RoutingMode n, G.routingWeights σ = 1) :
+    (contextSemanticState G).1 ≤ 1 := by
+  rw [contextSemanticState_fst_eq_plusChannelMass]
+  exact plusChannelMass_le_one_of_simplex G hw_nonneg hw_sum
+
+lemma contextSemanticState_snd_le_one_of_simplex
+    (G : GenerativeInferenceDatum (n := n) (E := E))
+    (hw_nonneg : ∀ σ, 0 ≤ G.routingWeights σ)
+    (hw_sum : ∑ σ : RoutingMode n, G.routingWeights σ = 1) :
+    (contextSemanticState G).2 ≤ 1 := by
+  rw [contextSemanticState_snd_eq_minusChannelMass]
+  exact minusChannelMass_le_one_of_simplex G hw_nonneg hw_sum
+
 theorem bayesianChainAction_nonneg
     (G : GenerativeInferenceDatum (n := n) (E := E)) (N : ℕ) :
     0 ≤ bayesianChainAction G N := by

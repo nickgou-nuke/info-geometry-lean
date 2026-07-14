@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmGodelLeyangTropicalStripLattice
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmGodelLeyangTropicalStripLattice
 
 namespace Omega.Zeta
 

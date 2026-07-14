@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Topos.TerminalFibreNeutrality
+import InfoGeometry.External.Automath.Omega.Topos.TerminalFibreNeutrality
 
 namespace Omega.Topos
 

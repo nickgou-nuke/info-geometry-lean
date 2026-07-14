@@ -1,8 +1,8 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonEntropyTomography
-import Omega.TypedAddressBiaxialCompletion.BoundaryEndpointOrthogonal
-import Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonEntropyTomography
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryEndpointOrthogonal
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
 
 namespace Omega.TypedAddressBiaxialCompletion
 

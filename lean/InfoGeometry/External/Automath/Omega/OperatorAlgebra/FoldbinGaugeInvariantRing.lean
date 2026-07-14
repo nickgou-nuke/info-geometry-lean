@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Folding.BinFoldGaugeM6
-import Omega.Folding.Window6
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.Folding.BinFoldGaugeM6
+import InfoGeometry.External.Automath.Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
 
 namespace Omega.OperatorAlgebra
 

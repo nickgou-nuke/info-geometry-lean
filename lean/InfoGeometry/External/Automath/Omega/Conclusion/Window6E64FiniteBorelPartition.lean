@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Finset.Interval
 import Mathlib.Tactic
-import Omega.Conclusion.Window6HiddenStripFourlayerPartition
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6HiddenStripFourlayerPartition
 
 namespace Omega.Conclusion
 

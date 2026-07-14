@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 namespace Omega.POM
 

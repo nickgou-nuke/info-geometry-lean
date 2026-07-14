@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinOracleLinearThresholdExponent
-import Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinOracleLinearThresholdExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
 
 open scoped goldenRatio
 

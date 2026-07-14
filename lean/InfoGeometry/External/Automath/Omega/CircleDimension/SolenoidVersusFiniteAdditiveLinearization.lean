@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.FinitePrimeSupportNoRankoneAdditiveHost
-import Omega.CircleDimension.SolenoidTerminalPhaseSystem
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeSupportNoRankoneAdditiveHost
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidTerminalPhaseSystem
 
 namespace Omega.CircleDimension
 

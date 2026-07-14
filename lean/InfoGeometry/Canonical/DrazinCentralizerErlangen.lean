@@ -43,11 +43,9 @@ open InfoGeometry.OperatorAlgebra.Thermodynamics
 Publication-safe Drazin centralizer sanctuary.
 
 `horizon` already carries the projection-level facts used in this file:
-`p = A * AD`, Drazin laws, and `star p = p`.  The field
-`finite_compressed_weight_law` records the supplied proof of the extra
-state/weight finiteness proposition
-`finite_compressed_weight`
-condition needed to normalize a compressed state.
+`p = A * AD`, Drazin laws, and `star p = p`.  The compressed weight is not an
+extra arbitrary proposition: it is the concrete state readout `φ(p)` exposed by
+`compressedWeight` below.
 -/
 @[rep_depth operator]
 structure DrazinCentralizerSanctuary
@@ -63,10 +61,6 @@ structure DrazinCentralizerSanctuary
     DrazinSupportData Obs
   centralizer_horizon :
     ModularInvariantDrazinBoundary flow horizon
-  finite_compressed_weight :
-    Prop
-  finite_compressed_weight_law :
-    finite_compressed_weight
 
 /--
 Membership in the algebraic Drazin corner `p M p`, stated as a predicate.
@@ -110,6 +104,11 @@ namespace DrazinCentralizerSanctuary
 variable {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
 variable (S : DrazinCentralizerSanctuary Obs)
 
+/-- The compressed horizon weight is the expectation of the Drazin support. -/
+@[rep_depth operator]
+def compressedWeight : ℂ :=
+  S.state.expect S.horizon.p
+
 /-- The sanctuary horizon is modular fixed. -/
 @[rep_depth operator]
 theorem horizon_modular_fixed :
@@ -128,11 +127,11 @@ theorem horizon_idempotent :
     S.horizon.p * S.horizon.p = S.horizon.p :=
   DrazinSupportData.p_idempotent S.horizon
 
-/-- The compressed state/weight finiteness condition is explicit data. -/
+/-- Readback for the concrete compressed horizon weight. -/
 @[rep_depth operator]
-theorem finite_compressed_weight_readback :
-    S.finite_compressed_weight :=
-  S.finite_compressed_weight_law
+theorem compressedWeight_eq :
+    S.compressedWeight = S.state.expect S.horizon.p :=
+  rfl
 
 end DrazinCentralizerSanctuary
 
@@ -280,7 +279,7 @@ def IsStateRelativeWittenBalanced
 /--
 Final expectation-only Drazin/Fierz centralizer law.
 
-The field `residual_eq_zero_law` is explicitly supplied.  This prevents
+The field `residual_vanishes` is explicitly supplied.  This prevents
 laundering a Fierz identity through the centralizer hypothesis alone.
 -/
 @[rep_depth operator]
@@ -308,7 +307,7 @@ structure DrazinCentralizerFierzLaw
     ∀ ch : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel,
       coords.coord ch =
         centralizerExpectationFierzCoordinate state channels horizon ch
-  residual_eq_zero_law :
+  residual_vanishes :
     residual.residual coords = 0
 
 namespace DrazinCentralizerFierzLaw
@@ -344,7 +343,7 @@ theorem coords_are_expectation_readout
 @[rep_depth operator]
 theorem residual_eq_zero :
     K.residual.residual K.coords = 0 :=
-  K.residual_eq_zero_law
+  K.residual_vanishes
 
 end DrazinCentralizerFierzLaw
 
@@ -383,7 +382,7 @@ structure FinalDrazinFierzLaw
           channels
           sanctuary.horizon
           ch
-  residual_eq_zero_law :
+  residual_vanishes :
     residual.residual coords = 0
 
 namespace FinalDrazinFierzLaw
@@ -407,7 +406,7 @@ theorem coords_eq_expectation
 @[rep_depth operator]
 theorem residual_eq_zero :
     F.residual.residual F.coords = 0 :=
-  F.residual_eq_zero_law
+  F.residual_vanishes
 
 /-- The final law includes an explicit modular-fixed Drazin horizon. -/
 @[rep_depth operator]

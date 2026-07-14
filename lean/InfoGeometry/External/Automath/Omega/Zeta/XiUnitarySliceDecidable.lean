@@ -1,5 +1,5 @@
-import Omega.CircleDimension.UnitarySliceDecidable
-import Omega.Zeta.XiNullCompleteTrichotomyOffline
+import InfoGeometry.External.Automath.Omega.CircleDimension.UnitarySliceDecidable
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullCompleteTrichotomyOffline
 
 namespace Omega.Zeta
 

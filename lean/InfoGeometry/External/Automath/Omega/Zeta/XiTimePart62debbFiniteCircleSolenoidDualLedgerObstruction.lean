@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart62debbFinitePrimeSupportLocalizedAxisThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62debbFinitePrimeSupportLocalizedAxisThreshold
 
 namespace Omega.Zeta
 

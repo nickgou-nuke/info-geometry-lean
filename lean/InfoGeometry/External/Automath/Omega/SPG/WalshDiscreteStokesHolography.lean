@@ -1,5 +1,5 @@
-import Omega.Core.WalshStokes
-import Omega.Core.WalshFourier
+import InfoGeometry.External.Automath.Omega.Core.WalshStokes
+import InfoGeometry.External.Automath.Omega.Core.WalshFourier
 
 namespace Omega.SPG
 

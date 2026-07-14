@@ -1,5 +1,5 @@
-import Omega.Folding.BernoulliPRegenerationBivariatePGF
-import Omega.Folding.BernoulliPRegenerationTripleJointLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationBivariatePGF
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationTripleJointLaw
 
 namespace Omega.Folding
 

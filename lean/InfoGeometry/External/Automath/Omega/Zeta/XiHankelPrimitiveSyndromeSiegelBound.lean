@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.SiegelsLemma
-import Omega.Zeta.XiHankelCofactorSyndromeSingleCoordinate
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelCofactorSyndromeSingleCoordinate
 
 namespace Omega.Zeta
 

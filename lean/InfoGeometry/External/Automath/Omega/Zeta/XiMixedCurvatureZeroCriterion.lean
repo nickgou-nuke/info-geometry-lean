@@ -1,5 +1,5 @@
-import Omega.Zeta.XiTimeLengthCocycle
-import Omega.Zeta.XiTimeCentralExtensionUniversal
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeLengthCocycle
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeCentralExtensionUniversal
 
 namespace Omega.Zeta
 

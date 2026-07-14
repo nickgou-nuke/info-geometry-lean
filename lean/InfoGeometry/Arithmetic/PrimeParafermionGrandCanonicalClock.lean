@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Potential.Thermo
+import InfoGeometry.Information.DeRhamScore
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
 import InfoGeometry.Projective.KleinQuadricMonodromy
@@ -169,6 +170,18 @@ theorem finiteParafermionLocalFactor_three_eq_quotient
   rw [eq_div_iff h1]
   ring_nf
 
+/-- Finite geometric-series quotient form of the order-`κ` parafermion factor. -/
+theorem finiteParafermionLocalFactor_eq_quotient
+    (κ : ℕ) (x : ℂ) (hx : x ≠ 1) :
+    finiteParafermionLocalFactor κ x = (1 - x ^ κ) / (1 - x) := by
+  rw [finiteParafermionLocalFactor]
+  have h := geom_sum_eq (x := x) hx κ
+  rw [h]
+  have hx1 : x - 1 ≠ 0 := sub_ne_zero.mpr hx
+  have h1x : 1 - x ≠ 0 := sub_ne_zero.mpr hx.symm
+  field_simp [hx1, h1x]
+  ring
+
 @[simp]
 theorem finiteGrandParafermionPartition_empty
     (z s : ℂ)
@@ -199,6 +212,56 @@ theorem finiteGrandParafermion3Partition_empty
     (z s : ℂ) :
     finiteGrandParafermion3Partition (∅ : Finset Nat.Primes) z s = 1 := by
   simp [finiteGrandParafermion3Partition]
+
+lemma finiteGrandParafermionPartition_ne_zero
+    (S : Finset Nat.Primes) (z s : ℂ) (κ : ℕ)
+    (h : ∀ p ∈ S,
+      finiteParafermionLocalFactor κ (grandComplexPrimeWeight z s p) ≠ 0) :
+    finiteGrandParafermionPartition S z s κ ≠ 0 := by
+  unfold finiteGrandParafermionPartition
+  exact Finset.prod_ne_zero_iff.mpr h
+
+lemma finiteGrandBosonPartition_ne_zero
+    (S : Finset Nat.Primes) (z s : ℂ)
+    (h : ∀ p ∈ S, (1 - grandComplexPrimeWeight z s p) ≠ 0) :
+    finiteGrandBosonPartition S z s ≠ 0 := by
+  unfold finiteGrandBosonPartition
+  exact Finset.prod_ne_zero_iff.mpr (fun p hp => inv_ne_zero (h p hp))
+
+lemma finiteGrandSignedFermionSupertrace_ne_zero
+    (S : Finset Nat.Primes) (z s : ℂ)
+    (h : ∀ p ∈ S, (1 - grandComplexPrimeWeight z s p) ≠ 0) :
+    finiteGrandSignedFermionSupertrace S z s ≠ 0 := by
+  unfold finiteGrandSignedFermionSupertrace
+  exact Finset.prod_ne_zero_iff.mpr h
+
+lemma finiteGrandFermionPartition_ne_zero
+    (S : Finset Nat.Primes) (z s : ℂ)
+    (h : ∀ p ∈ S, (1 + grandComplexPrimeWeight z s p) ≠ 0) :
+    finiteGrandFermionPartition S z s ≠ 0 := by
+  unfold finiteGrandFermionPartition
+  exact Finset.prod_ne_zero_iff.mpr h
+
+lemma finiteGrandParafermion3Partition_ne_zero
+    (S : Finset Nat.Primes) (z s : ℂ)
+    (h : ∀ p ∈ S,
+      (1 + grandComplexPrimeWeight z s p + (grandComplexPrimeWeight z s p) ^ 2) ≠ 0) :
+    finiteGrandParafermion3Partition S z s ≠ 0 := by
+  unfold finiteGrandParafermion3Partition
+  exact Finset.prod_ne_zero_iff.mpr h
+
+/-- Product quotient form of a finite grand-canonical order-`κ` parafermion partition. -/
+theorem finiteGrandParafermionPartition_eq_quotientProduct
+    (S : Finset Nat.Primes) (z s : ℂ) (κ : ℕ)
+    (h : ∀ p ∈ S, grandComplexPrimeWeight z s p ≠ 1) :
+    finiteGrandParafermionPartition S z s κ =
+      ∏ p ∈ S,
+        (1 - (grandComplexPrimeWeight z s p) ^ κ) /
+          (1 - grandComplexPrimeWeight z s p) := by
+  unfold finiteGrandParafermionPartition
+  refine Finset.prod_congr rfl ?_
+  intro p hp
+  exact finiteParafermionLocalFactor_eq_quotient κ (grandComplexPrimeWeight z s p) (h p hp)
 
 theorem finiteGrandParafermionPartition_two_eq_fermionPartition
     (S : Finset Nat.Primes)
@@ -358,6 +421,36 @@ theorem massieu_eq_boltzmannEntropy_minus_scaled_shift
         beta * (energy - chemicalPotential * particleNumber) := by
   unfold boltzmannEntropyFromMassieu
   ring
+
+/--
+Actual logarithmic derivative of the finite parafermion partition in the fugacity coordinate.
+The slit-plane hypothesis is exactly the principal-branch condition for `Complex.log`.
+-/
+theorem deriv_z_parafermionMassieu_eq_partition_deriv_div
+    (S : Finset Nat.Primes) (z s : ℂ) (κ : ℕ)
+    (hdiff : DifferentiableAt ℂ (fun w => finiteGrandParafermionPartition S w s κ) z)
+    (hslit : finiteGrandParafermionPartition S z s κ ∈ Complex.slitPlane) :
+    deriv (fun w => parafermionMassieu S w s κ) z =
+      deriv (fun w => finiteGrandParafermionPartition S w s κ) z /
+        finiteGrandParafermionPartition S z s κ := by
+  unfold parafermionMassieu
+  exact complex_score_as_de_rham_potential
+    (fun w => finiteGrandParafermionPartition S w s κ) z hdiff hslit
+
+/-- The actual fugacity derivative of the dimensionless free energy is minus `d log Ξ`. -/
+theorem deriv_z_parafermionFreeEnergy_eq_neg_partition_deriv_div
+    (S : Finset Nat.Primes) (z s : ℂ) (κ : ℕ)
+    (hdiff : DifferentiableAt ℂ (fun w => finiteGrandParafermionPartition S w s κ) z)
+    (hslit : finiteGrandParafermionPartition S z s κ ∈ Complex.slitPlane) :
+    deriv (fun w => parafermionFreeEnergy S w s κ) z =
+      -(deriv (fun w => finiteGrandParafermionPartition S w s κ) z /
+        finiteGrandParafermionPartition S z s κ) := by
+  unfold parafermionFreeEnergy
+  change deriv (-(fun w => parafermionMassieu S w s κ)) z =
+    -(deriv (fun w => finiteGrandParafermionPartition S w s κ) z /
+      finiteGrandParafermionPartition S z s κ)
+  have hmass := deriv_z_parafermionMassieu_eq_partition_deriv_div S z s κ hdiff hslit
+  rw [deriv.neg, hmass]
 
 /--
 Calibration packet connecting the parafermion Massieu readout to the existing

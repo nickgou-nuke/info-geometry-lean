@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinGaugeVolumeStirling
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeVolumeStirling
 
 namespace Omega.Conclusion
 

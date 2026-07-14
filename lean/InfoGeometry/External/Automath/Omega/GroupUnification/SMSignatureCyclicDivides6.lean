@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 /-!
 # SM signature common cyclic identification divides 6

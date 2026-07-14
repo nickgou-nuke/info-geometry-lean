@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
-import Omega.SyncKernelWeighted.GMAffineInverseMajorArc
-import Omega.SyncKernelWeighted.GMPisanoPeriodCharacterDecay
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMAffineInverseMajorArc
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMPisanoPeriodCharacterDecay
 
 namespace Omega.SyncKernelWeighted
 

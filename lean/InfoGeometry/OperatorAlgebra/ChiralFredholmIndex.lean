@@ -35,17 +35,35 @@ structure FredholmIndexDatum
   /-- The Fredholm operator. -/
   operator : V →ₗ[ℝ] W
 
-  /-- Fredholmness certificate. -/
-  isFredholm : Prop
-
   /-- Analytic/Fredholm index. -/
   index : ℤ
 
-  /-- Finite kernel certificate. -/
-  kernelFinite : Prop
+  /-- The kernel of the operator is finite-dimensional. -/
+  kernelFinite :
+    FiniteDimensional ℝ (LinearMap.ker operator)
 
-  /-- Finite cokernel certificate. -/
-  cokernelFinite : Prop
+  /-- The cokernel quotient by the range is finite-dimensional. -/
+  cokernelFinite :
+    FiniteDimensional ℝ (W ⧸ LinearMap.range operator)
+
+namespace FredholmIndexDatum
+
+variable
+    {V W : Type*} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    (F : FredholmIndexDatum V W)
+
+/-- Read back the kernel finite-dimensionality carried by the Fredholm datum. -/
+theorem kernel_finite :
+    FiniteDimensional ℝ (LinearMap.ker F.operator) :=
+  F.kernelFinite
+
+/-- Read back the cokernel finite-dimensionality carried by the Fredholm datum. -/
+theorem cokernel_finite :
+    FiniteDimensional ℝ (W ⧸ LinearMap.range F.operator) :=
+  F.cokernelFinite
+
+end FredholmIndexDatum
 
 /-! ## 2. Chiral kernel-count shadow -/
 
@@ -176,12 +194,10 @@ structure ModularMirrorFredholmCompatibility
     J.comp F.chi = -(F.chi.comp J)
 
   /--
-  Dirac compatibility.
-
-  Depending on conventions, a concrete model may instead use `J D J = ±D`
-  or an opposite-algebra relation.  This field stores the chosen compatibility.
+  Dirac compatibility, recorded as the concrete sign choice used by the model.
   -/
-  J_D_compatibility : Prop
+  J_D_comm_or_anticomm :
+    J.comp F.D = F.D.comp J ∨ J.comp F.D = -(F.D.comp J)
 
   /--
   The mirror swaps the left and right Fredholm zero-mode counts.
@@ -217,6 +233,11 @@ theorem index_vanishes_if_mirror_fixed
     (hfixed : F.kernelCount.mirror.index = F.kernelCount.index) :
     F.kernelCount.index = 0 :=
   F.kernelCount.index_eq_zero_of_mirror_fixed hfixed
+
+/-- The stored mirror/Fredholm compatibility is an explicit sign equation. -/
+theorem J_D_comm_or_anticomm_eq :
+    M.J.comp F.D = F.D.comp M.J ∨ M.J.comp F.D = -(F.D.comp M.J) :=
+  M.J_D_comm_or_anticomm
 
 end ModularMirrorFredholmCompatibility
 

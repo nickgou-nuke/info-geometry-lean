@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.CarryFreeSkeletonThree
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CarryFreeSkeletonThree
 
 namespace Omega.SyncKernelWeighted
 

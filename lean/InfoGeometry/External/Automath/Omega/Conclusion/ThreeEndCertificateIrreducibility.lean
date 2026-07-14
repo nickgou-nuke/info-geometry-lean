@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ThreeEndCertificateOrthogonality
+import InfoGeometry.External.Automath.Omega.Conclusion.ThreeEndCertificateOrthogonality
 
 namespace Omega.Conclusion
 

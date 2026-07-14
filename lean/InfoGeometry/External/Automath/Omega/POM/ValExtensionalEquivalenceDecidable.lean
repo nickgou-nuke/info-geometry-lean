@@ -1,4 +1,4 @@
-import Omega.POM.ValPolynomialSemantics
+import InfoGeometry.External.Automath.Omega.POM.ValPolynomialSemantics
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTimePart9zoFibonacciCosineZerosWeylLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zoFibonacciCosineZerosWeylLaw
 
 namespace Omega.Zeta
 

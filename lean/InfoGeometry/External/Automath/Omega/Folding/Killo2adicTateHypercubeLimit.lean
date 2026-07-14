@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
 
 namespace Omega.Folding
 

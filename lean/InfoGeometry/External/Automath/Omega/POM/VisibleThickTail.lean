@@ -1,4 +1,4 @@
-import Omega.POM.ThickFiberEnvelope
+import InfoGeometry.External.Automath.Omega.POM.ThickFiberEnvelope
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.SyncKernelWeighted.RealInput40LogMTruncBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMTruncBound
 
 namespace Omega.SyncKernelRealInput
 

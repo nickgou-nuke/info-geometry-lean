@@ -23,14 +23,39 @@ namespace InfoGeometry.Arithmetic.PrimonThermodynamics
 noncomputable def bosonFactor (p : ℕ) (β : ℝ) : ℝ :=
   (1 - ((p : ℝ) ^ (-β)))⁻¹
 
+lemma bosonFactor_ne_zero {p : ℕ} {β : ℝ}
+    (h : (1 - ((p : ℝ) ^ (-β))) ≠ 0) :
+    bosonFactor p β ≠ 0 := by
+  unfold bosonFactor
+  exact inv_ne_zero h
+
 noncomputable def fermionFactor (p : ℕ) (β : ℝ) : ℝ :=
   1 + ((p : ℝ) ^ (-β))
+
+lemma fermionFactor_pos_of_pos {p : ℕ} {β : ℝ} (hp : 0 < p) :
+    0 < fermionFactor p β := by
+  unfold fermionFactor
+  have hpR : 0 < (p : ℝ) := by exact_mod_cast hp
+  positivity
 
 noncomputable def bosonPartition (S : Finset ℕ) (β : ℝ) : ℝ :=
   ∏ p ∈ S, bosonFactor p β
 
+lemma bosonPartition_ne_zero {S : Finset ℕ} {β : ℝ}
+    (h : ∀ p ∈ S, (1 - ((p : ℝ) ^ (-β))) ≠ 0) :
+    bosonPartition S β ≠ 0 := by
+  unfold bosonPartition
+  exact Finset.prod_ne_zero_iff.mpr
+    (fun p hp => bosonFactor_ne_zero (p := p) (β := β) (h p hp))
+
 noncomputable def fermionPartition (S : Finset ℕ) (β : ℝ) : ℝ :=
   ∏ p ∈ S, fermionFactor p β
+
+lemma fermionPartition_pos {S : Finset ℕ} {β : ℝ}
+    (hS : ∀ p ∈ S, 0 < p) :
+    0 < fermionPartition S β := by
+  unfold fermionPartition
+  exact Finset.prod_pos (fun p hp => fermionFactor_pos_of_pos (β := β) (hS p hp))
 
 /-- Supersymmetric partition: Z_s = Z_b · Z_f = Π (1 + p^{-β})/(1 - p^{-β}) -/
 noncomputable def superPartition (S : Finset ℕ) (β : ℝ) : ℝ :=

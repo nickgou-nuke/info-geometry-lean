@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6CyclicWeightThresholdRootLength
+import InfoGeometry.External.Automath.Omega.GU.Window6CyclicWeightThresholdRootLength
 
 namespace Omega.GU
 

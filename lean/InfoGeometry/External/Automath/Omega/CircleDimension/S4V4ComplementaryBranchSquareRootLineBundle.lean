@@ -1,4 +1,4 @@
-import Omega.CircleDimension.S4V4ComplementaryRamificationLinearEquivalence
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4ComplementaryRamificationLinearEquivalence
 
 namespace Omega.CircleDimension
 

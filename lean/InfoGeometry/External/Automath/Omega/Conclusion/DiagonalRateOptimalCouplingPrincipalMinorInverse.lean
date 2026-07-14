@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateScalarCollapse
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateScalarCollapse
 
 namespace Omega.Conclusion
 

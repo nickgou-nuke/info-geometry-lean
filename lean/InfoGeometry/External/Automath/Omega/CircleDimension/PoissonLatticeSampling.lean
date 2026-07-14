@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.KernelIntegerSamplingDualKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.KernelIntegerSamplingDualKernel
 
 namespace Omega.CircleDimension
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.OracleCapacityStieltjesInversionMellin
-import Omega.POM.SideinfoExactEntropy
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityStieltjesInversionMellin
+import InfoGeometry.External.Automath.Omega.POM.SideinfoExactEntropy
 
 namespace Omega.Folding
 

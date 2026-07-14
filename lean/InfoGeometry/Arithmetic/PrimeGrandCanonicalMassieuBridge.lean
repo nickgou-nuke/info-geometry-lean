@@ -47,7 +47,7 @@ to the thermodynamic inverse temperature by proof.
 at the chosen chemical potential.
 -/
 @[rep_depth transport]
-structure PrimeGrandCanonicalMassieuBridge where
+structure Bridge where
   packet : PrimeGrandCanonicalPacket
   temperature : SouriauTemperature
   beta : ℝ
@@ -59,9 +59,9 @@ structure PrimeGrandCanonicalMassieuBridge where
   dualCoord_eq_meanShift_proof :
     ∀ θ : ℝ, massieuModel.dualCoord θ = packet.meanShift θ chemicalPotential
 
-namespace PrimeGrandCanonicalMassieuBridge
+namespace Bridge
 
-variable (B : PrimeGrandCanonicalMassieuBridge)
+variable (B : Bridge)
 
 /-! ## 2. Bridge readouts -/
 
@@ -149,87 +149,6 @@ theorem fenchelGap_eq_zero_at_contact (θ : ℝ) :
     B.massieuModel.fenchelGap θ (B.massieuModel.dualCoord θ) = 0 :=
   B.massieuModel.fenchelGap_eq_zero_at_contact θ
 
-/-! ## 4. Prime-ensemble theorem wrappers -/
-
-/-- The finite partition function is positive. -/
-@[rep_depth thermo]
-theorem partition_pos (β μ : ℝ) :
-    0 < B.packet.partition β μ :=
-  B.packet.partition_pos β μ
-
-/-- The Gibbs weights normalize to one. -/
-@[rep_depth thermo]
-theorem gibbsWeight_sum_one (β μ : ℝ) :
-    ∑ S, B.packet.gibbsWeight β μ S = 1 :=
-  B.packet.gibbsWeight_sum_one β μ
-
-/-- β-derivative of the potential. -/
-@[rep_depth thermo]
-theorem potential_deriv_beta_eq_neg_meanShift (β μ : ℝ) :
-    deriv (fun t => B.packet.potential t μ) β = -B.packet.meanShift β μ :=
-  B.packet.potential_deriv_beta_eq_neg_meanShift β μ
-
-/-- μ-derivative of the potential. -/
-@[rep_depth thermo]
-theorem potential_deriv_mu_eq_beta_meanNumber (β μ : ℝ) :
-    deriv (fun t => B.packet.potential β t) μ = β * B.packet.meanNumber β μ :=
-  B.packet.potential_deriv_mu_eq_beta_meanNumber β μ
-
-/-- β response equals negative mean shift. -/
-@[rep_depth thermo]
-theorem betaResponse_eq_neg_meanShift (β μ : ℝ) :
-    B.packet.betaResponse β μ = -B.packet.meanShift β μ :=
-  B.packet.betaResponse_eq_neg_meanShift β μ
-
-/-- μ response equals β times the mean number. -/
-@[rep_depth thermo]
-theorem muResponse_eq_beta_meanNumber (β μ : ℝ) :
-    B.packet.muResponse β μ = β * B.packet.meanNumber β μ :=
-  B.packet.muResponse_eq_beta_meanNumber β μ
-
-/-- The ββ Hessian is the shift variance. -/
-@[rep_depth thermo]
-theorem betaHessian_eq_varianceShift (β μ : ℝ) :
-    B.packet.betaHessian β μ =
-      InfoGeometry.GrandCanonical.varianceShift B.packet.params β μ :=
-  B.packet.betaHessian_eq_varianceShift β μ
-
-/-- The μμ Hessian is the β²-scaled number variance. -/
-@[rep_depth thermo]
-theorem muHessian_eq_beta_sq_varianceNumber (β μ : ℝ) :
-    B.packet.muHessian β μ =
-      (β ^ (2 : ℕ)) * InfoGeometry.GrandCanonical.varianceNumber B.packet.params β μ :=
-  B.packet.muHessian_eq_beta_sq_varianceNumber β μ
-
-/-- Mixed Hessian symmetry on the finite grand-canonical surface. -/
-@[rep_depth thermo]
-theorem betaMuHessian_eq_muBetaHessian (β μ : ℝ) :
-    B.packet.betaMuHessian β μ = B.packet.muBetaHessian β μ :=
-  B.packet.betaMuHessian_eq_muBetaHessian β μ
-
-/-- The response matrix is symmetric. -/
-@[rep_depth thermo]
-theorem responseMatrix_symmetric (β μ : ℝ) :
-    InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric
-      (B.packet.responseMatrix β μ) :=
-  B.packet.responseMatrix_symmetric β μ
-
-/-- The response matrix is positive semidefinite when the diagonal minors are. -/
-@[rep_depth thermo]
-theorem responseMatrix_positiveSemidefinite (β μ : ℝ)
-    (hββ : 0 ≤ B.packet.betaHessian β μ)
-    (hμμ : 0 ≤ B.packet.muHessian β μ)
-    (hdet : 0 ≤ (B.packet.responseMatrix β μ).det) :
-    InfoGeometry.GrandCanonical.ResponseMatrix2.PositiveSemidefinite
-      (B.packet.responseMatrix β μ) :=
-  B.packet.responseMatrix_positiveSemidefinite β μ hββ hμμ hdet
-
-/-- The spinodal locus is the vanishing of the 2D response determinant. -/
-@[rep_depth thermo]
-theorem spinodal2D_iff_det_eq_zero (β μ : ℝ) :
-    B.packet.spinodal2D β μ ↔ (B.packet.responseMatrix β μ).det = 0 :=
-  B.packet.spinodal2D_iff_det_eq_zero β μ
-
-end PrimeGrandCanonicalMassieuBridge
+end Bridge
 
 end InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge

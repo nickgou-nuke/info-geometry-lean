@@ -33,7 +33,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
+
 
 /-! ## 1. Five-grade closure socket -/
 
@@ -505,7 +505,7 @@ structure SuperTKKDefectAbsorption
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    (R : TKKRicciFluxDatum L State Geometry) where
+    (R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry) where
   grading :
     FiveGrading L
 
@@ -538,7 +538,7 @@ variable
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    {R : TKKRicciFluxDatum L State Geometry}
+    {R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
 
 variable (A : SuperTKKDefectAbsorption L Odd State Geometry R)
 
@@ -744,7 +744,7 @@ structure BPSDefectBridge
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    {R : TKKRicciFluxDatum L State Geometry}
+    {R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
     (A : SuperTKKDefectAbsorption L Odd State Geometry R)
     (B : BPSCentralChargeLedger State) where
   /-- Linear readout evaluating the lifted defect as a scalar charge norm. -/
@@ -764,7 +764,7 @@ variable
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    {R : TKKRicciFluxDatum L State Geometry}
+    {R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
     {A : SuperTKKDefectAbsorption L Odd State Geometry R}
     {B : BPSCentralChargeLedger State}
 
@@ -813,7 +813,7 @@ def SuperTKKDefectAbsorptionOwnerTarget : Prop :=
     [AddCommGroup Odd] [Module ℝ Odd]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry],
-  ∀ R : TKKRicciFluxDatum L State Geometry,
+  ∀ R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry,
   ∀ A : SuperTKKDefectAbsorption L Odd State Geometry R,
   ∀ X : L,
   ∀ s : State,

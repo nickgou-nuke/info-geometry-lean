@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiSmithLossMinimalBranchRegister
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossMinimalBranchRegister
 
 namespace Omega.Zeta
 

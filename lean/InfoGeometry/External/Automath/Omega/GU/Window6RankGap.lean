@@ -1,7 +1,7 @@
-import Omega.Folding.BinFold
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Conclusion.Window6Collision
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
 

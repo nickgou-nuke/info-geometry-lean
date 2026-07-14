@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Perm.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
 
 namespace Omega.Conclusion
 

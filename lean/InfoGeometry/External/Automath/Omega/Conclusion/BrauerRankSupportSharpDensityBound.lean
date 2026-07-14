@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.EA.BrauerCongruenceSieveDensity
-import Omega.EA.BrauerXorLaw
+import InfoGeometry.External.Automath.Omega.EA.BrauerCongruenceSieveDensity
+import InfoGeometry.External.Automath.Omega.EA.BrauerXorLaw
 
 namespace Omega.Conclusion
 

@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CofinalSparsificationSemanticCompleteness
-import Omega.Conclusion.RejectNullFiniteNormalForm
-import Omega.Conclusion.ThreeEndCertificateJointSufficiencyMinimality
-import Omega.Conclusion.TypedCertificateInverseLimitRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.CofinalSparsificationSemanticCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.RejectNullFiniteNormalForm
+import InfoGeometry.External.Automath.Omega.Conclusion.ThreeEndCertificateJointSufficiencyMinimality
+import InfoGeometry.External.Automath.Omega.Conclusion.TypedCertificateInverseLimitRigidity
 
 namespace Omega.Conclusion
 

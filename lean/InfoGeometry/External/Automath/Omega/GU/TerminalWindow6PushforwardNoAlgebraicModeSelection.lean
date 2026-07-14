@@ -1,5 +1,5 @@
-import Omega.GU.TerminalWindow6PushforwardCommutantMasa
-import Omega.GU.TerminalWindow6PushforwardNoNonabelianCompactSymmetry
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6PushforwardCommutantMasa
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6PushforwardNoNonabelianCompactSymmetry
 
 namespace Omega.GU
 

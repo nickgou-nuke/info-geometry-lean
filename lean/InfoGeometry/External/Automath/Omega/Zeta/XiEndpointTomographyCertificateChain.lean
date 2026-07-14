@@ -1,5 +1,5 @@
-import Omega.Zeta.XiEndpointProfileCfiniteHankelRank
-import Omega.Zeta.XiFiniteDefectRhScanTraceEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointProfileCfiniteHankelRank
+import InfoGeometry.External.Automath.Omega.Zeta.XiFiniteDefectRhScanTraceEquivalence
 
 namespace Omega.Zeta
 

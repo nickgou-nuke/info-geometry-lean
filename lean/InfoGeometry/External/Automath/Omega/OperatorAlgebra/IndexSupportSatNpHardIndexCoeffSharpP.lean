@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.NpWatataniIndexSupportCharacterization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.NpWatataniIndexSupportCharacterization
 
 namespace Omega.OperatorAlgebra
 

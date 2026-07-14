@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiCdimSpectrumCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimSpectrumCompleteness
 
 namespace Omega.CircleDimension
 

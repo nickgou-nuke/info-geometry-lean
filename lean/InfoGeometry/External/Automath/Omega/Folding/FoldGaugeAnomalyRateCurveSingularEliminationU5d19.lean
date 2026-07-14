@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyRateCurveIndexIdealFormula
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveIndexIdealFormula
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.OddtailMinimalExactCompressorPointedUnitaryRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.OddtailMinimalExactCompressorPointedUnitaryRigidity
 
 namespace Omega.Conclusion
 

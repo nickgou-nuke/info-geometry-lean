@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldCriticalResonanceConstant
-import Omega.Folding.FoldMaxFiberFourier
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldMaxFiberFourier
 
 namespace Omega
 

@@ -1,5 +1,5 @@
-import Omega.OperatorAlgebra.FkdetChiSectorFactorization
-import Omega.OperatorAlgebra.FoldQuantumChannelWeakHopfGroupoid
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FkdetChiSectorFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelWeakHopfGroupoid
 
 open scoped BigOperators
 

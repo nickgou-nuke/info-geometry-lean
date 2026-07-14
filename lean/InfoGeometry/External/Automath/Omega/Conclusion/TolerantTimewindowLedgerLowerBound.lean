@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.TimeWindowCdimLedgerLowerBound
-import Omega.POM.FoldInversionZeroRateStrongConverse
+import InfoGeometry.External.Automath.Omega.Conclusion.TimeWindowCdimLedgerLowerBound
+import InfoGeometry.External.Automath.Omega.POM.FoldInversionZeroRateStrongConverse
 
 namespace Omega.Conclusion
 

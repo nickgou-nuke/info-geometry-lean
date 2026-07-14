@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.BdryZ2JumpUniqueness
+import InfoGeometry.External.Automath.Omega.GU.BdryZ2JumpUniqueness
 
 namespace Omega.RatioResultant
 

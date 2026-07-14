@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyJordanFingerprint
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyJordanFingerprint
 
 namespace Omega.Folding
 

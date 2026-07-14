@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
-import Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
 
 namespace Omega
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.XiUniqueContinuousTransverseRegister
-import Omega.Zeta.InfiniteDepthPrimeLedgerInfiniteRankObstruction
+import InfoGeometry.External.Automath.Omega.Zeta.XiUniqueContinuousTransverseRegister
+import InfoGeometry.External.Automath.Omega.Zeta.InfiniteDepthPrimeLedgerInfiniteRankObstruction
 
 namespace Omega.Zeta
 

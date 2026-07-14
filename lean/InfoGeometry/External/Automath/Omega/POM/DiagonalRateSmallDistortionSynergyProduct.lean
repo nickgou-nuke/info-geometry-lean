@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.SmallDistortionConstantTensorMultiplicative
+import InfoGeometry.External.Automath.Omega.POM.SmallDistortionConstantTensorMultiplicative
 
 namespace Omega.POM
 

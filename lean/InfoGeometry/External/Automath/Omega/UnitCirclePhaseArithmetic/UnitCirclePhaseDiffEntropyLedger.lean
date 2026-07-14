@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.UnitCirclePhaseArithmetic.UnitCircleComovingRadialBitComplexity
-import Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCircleComovingRadialBitComplexity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
 
 namespace Omega.UnitCirclePhaseArithmetic
 

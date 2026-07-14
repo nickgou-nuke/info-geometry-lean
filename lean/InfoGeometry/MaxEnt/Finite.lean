@@ -3,6 +3,7 @@ import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Basic
 import InfoGeometry.ExponentialFamily.Class
+import InfoGeometry.ExponentialFamily.Finite
 
 set_option linter.unusedSectionVars false
 
@@ -16,83 +17,6 @@ namespace InfoGeometry
 
 Combined primitives for finite exponential families and MaxEnt.
 -/
-
-namespace ExponentialFamily
-
-structure FiniteExponentialFamilyData (α : Type _) [Fintype α] where
-  base : ProbabilityDist α
-  stat : α → ℝ
-  base_pos : ∀ x, 0 < (base x).toReal
-
-variable {α : Type _} [Fintype α]
-
-noncomputable def familyPartition (F : FiniteExponentialFamilyData α) (θ : ℝ) : ℝ :=
-  ∑ x, (F.base x).toReal * Real.exp (θ * F.stat x)
-
-noncomputable def familyLogPartition (F : FiniteExponentialFamilyData α) (θ : ℝ) : ℝ :=
-  Real.log (familyPartition F θ)
-
-noncomputable def familyStatistic (F : FiniteExponentialFamilyData α) (x : α) (θ : ℝ) : ℝ :=
-  θ * F.stat x + Real.log ((F.base x).toReal)
-
-noncomputable def familyDensity (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) : ℝ :=
-  (F.base x).toReal * Real.exp (θ * F.stat x) / familyPartition F θ
-
-section Nonempty
-
-variable [Nonempty α]
-
-lemma familyPartition_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) :
-    0 < familyPartition F θ := by
-  unfold familyPartition
-  exact
-    Finset.sum_pos
-      (fun x _ => mul_pos (F.base_pos x) (Real.exp_pos _))
-      Finset.univ_nonempty
-
-lemma familyDensity_eq (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
-    familyDensity F θ x =
-    Real.exp (familyStatistic F x θ - familyLogPartition F θ) := by
-  unfold familyDensity familyStatistic familyLogPartition
-  have hZpos : 0 < familyPartition F θ := familyPartition_pos F θ
-  have hbpos : 0 < (F.base x).toReal := F.base_pos x
-  rw [Real.exp_sub, Real.exp_add]
-  rw [Real.exp_log hbpos, Real.exp_log hZpos]
-  simp [mul_comm]
-
-lemma familyDensity_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
-    0 < familyDensity F θ x := by
-  unfold familyDensity
-  exact div_pos
-    (mul_pos (F.base_pos x) (Real.exp_pos _))
-    (familyPartition_pos F θ)
-
-lemma familyNormalization (F : FiniteExponentialFamilyData α) (θ : ℝ) :
-    ∑ x, familyDensity F θ x = 1 := by
-  classical
-  unfold familyDensity familyPartition
-  have hZne : (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) ≠ 0 :=
-    ne_of_gt (by simpa [familyPartition] using familyPartition_pos F θ)
-  calc
-    ∑ x : α,
-      (F.base x).toReal * Real.exp (θ * F.stat x) /
-      (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y))
-        = (∑ x : α, (F.base x).toReal * Real.exp (θ * F.stat x)) /
-          (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) := by
-      rw [Finset.sum_div]
-    _ = 1 := by
-      exact div_self hZne
-
-noncomputable instance instFiniteExponentialFamilyData :
-    FiniteExponentialFamily α ℝ where
-  statistic := fun x θ => familyStatistic F x θ
-  logPartition := fun θ => familyLogPartition F θ
-  density := fun θ x => familyDensity F θ x
-  density_eq := fun θ x => familyDensity_eq F θ x
-  normalization := fun θ => familyNormalization F θ
-
-end Nonempty
-end ExponentialFamily
 
 namespace MaxEnt
 
@@ -201,16 +125,22 @@ noncomputable def gibbsMaxEntProblemOfExpectation
     intro i
     exact gibbs_nonneg f lam i
 
-/-- Existence of Lagrange multipliers matching feasible moments -/
-theorem exists_lam_of_feasible_expectation
+/--
+Open MaxEnt closure target: existence of a Lagrange multiplier matching a
+feasible one-dimensional moment.
+
+This is kept as a proposition target, not a proved theorem.  The current file
+does not provide the continuity/intermediate-value argument needed to promote
+the statement from feasibility data to a native Lean proof.
+-/
+def exists_lam_of_feasible_expectation
     (f : Fin n → ℝ) (expectationVal : ℝ)
     [Nonempty (Fin n)]
-    (p_opt : Fin n → ℝ)
-    (hp_opt_pos : ∀ i, 0 < p_opt i)
-    (hp_opt_norm : ∑ i, p_opt i = 1)
-    (hp_opt_exp : ∑ i, p_opt i * f i = expectationVal) :
-    ∃ lam : ℝ, gibbsExpectation f lam = expectationVal := by
-  sorry
+    (_p_opt : Fin n → ℝ)
+    (_hp_opt_pos : ∀ i, 0 < _p_opt i)
+    (_hp_opt_norm : ∑ i, _p_opt i = 1)
+    (_hp_opt_exp : ∑ i, _p_opt i * f i = expectationVal) : Prop :=
+  ∃ lam : ℝ, gibbsExpectation f lam = expectationVal
 
 end Finite
 
@@ -256,18 +186,11 @@ lemma partition_pos_of_fullSupport
     [Nonempty α]
     (hprior : J.FullSupportPrior) (lam : ι → ℝ) :
     0 < J.partition lam := by
-  classical
-  let x0 : α := Classical.choice ‹Nonempty α›
-  have hx0 :
-      0 < (J.prior x0).toReal * Real.exp (J.energy lam x0) := by
-    exact mul_pos (hprior x0) (Real.exp_pos _)
-  have hle :
-      (J.prior x0).toReal * Real.exp (J.energy lam x0) ≤ J.partition lam := by
-    unfold partition
-    exact Finset.single_le_sum
-      (fun y _hy => mul_nonneg (J.prior y).toReal_nonneg (le_of_lt (Real.exp_pos _)))
-      (by simp)
-  exact lt_of_lt_of_le hx0 hle
+  unfold partition
+  exact
+    Finset.sum_pos
+      (fun x _hx => mul_pos (hprior x) (Real.exp_pos _))
+      Finset.univ_nonempty
 
 lemma partition_ne_zero_of_fullSupport
     (J : FiniteJaynesProblem α ι)
@@ -350,17 +273,22 @@ def SatisfiesTargetMoments
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) : Prop :=
   ∀ i ∈ J.index, J.moment (J.gibbsDist lam hZ) (J.feature i) = J.target i
 
-/-- Missing general existence theorem for multidimensional MaxEnt matching moments -/
-theorem exists_satisfiesTargetMoments
+/--
+Open finite Jaynes closure target: existence of multipliers matching all target
+moments.
+
+This is deliberately a proposition target rather than a theorem; proving it
+requires the missing finite-dimensional convex duality/existence argument.
+-/
+def exists_satisfiesTargetMoments
     (J : FiniteJaynesProblem α ι)
     [Nonempty α]
-    (hprior : J.FullSupportPrior)
-    (P_opt : ProbabilityDist α)
-    (h_P_opt_full : ∀ x, 0 < (P_opt x).toReal)
-    (h_P_opt_moments : ∀ i ∈ J.index, J.moment P_opt (J.feature i) = J.target i) :
-    ∃ (lam : ι → ℝ) (hZ : J.partition lam ≠ 0),
-      J.SatisfiesTargetMoments lam hZ := by
-  sorry
+    (_hprior : J.FullSupportPrior)
+    (_P_opt : ProbabilityDist α)
+    (_h_P_opt_full : ∀ x, 0 < (_P_opt x).toReal)
+    (_h_P_opt_moments : ∀ i ∈ J.index, J.moment _P_opt (J.feature i) = J.target i) : Prop :=
+  ∃ (lam : ι → ℝ) (hZ : J.partition lam ≠ 0),
+    J.SatisfiesTargetMoments lam hZ
 
 lemma sum_prob_mul_energy
     (J : FiniteJaynesProblem α ι)

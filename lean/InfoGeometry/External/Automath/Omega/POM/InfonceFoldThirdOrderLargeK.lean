@@ -1,4 +1,4 @@
-import Omega.POM.BayesInfonceThirdOrderLargeK
+import InfoGeometry.External.Automath.Omega.POM.BayesInfonceThirdOrderLargeK
 
 namespace Omega.POM
 

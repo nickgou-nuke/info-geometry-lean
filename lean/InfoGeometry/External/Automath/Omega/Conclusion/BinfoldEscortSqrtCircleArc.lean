@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
 
 namespace Omega.Conclusion
 

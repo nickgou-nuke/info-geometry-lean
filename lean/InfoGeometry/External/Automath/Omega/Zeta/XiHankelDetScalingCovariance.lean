@@ -3,7 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Vandermonde
 import Mathlib.Tactic
-import Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
+import InfoGeometry.External.Automath.Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
 
 namespace Omega.Zeta
 

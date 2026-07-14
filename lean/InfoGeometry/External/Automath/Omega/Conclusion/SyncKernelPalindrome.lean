@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 /-!
 # Self-dual sync kernel palindrome law seed values

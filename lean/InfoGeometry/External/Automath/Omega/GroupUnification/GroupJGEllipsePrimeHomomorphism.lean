@@ -3,7 +3,7 @@ import Mathlib.Data.Finsupp.Basic
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.NumberTheory.PrimeCounting
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
 
 namespace Omega.GroupUnification
 

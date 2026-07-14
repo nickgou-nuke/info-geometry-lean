@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MultiAxisNear1PoleBarrier
-import Omega.SyncKernelWeighted.RealInput40SpaceTimeConversionLaw
+import InfoGeometry.External.Automath.Omega.POM.MultiAxisNear1PoleBarrier
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40SpaceTimeConversionLaw
 
 namespace Omega.POM
 

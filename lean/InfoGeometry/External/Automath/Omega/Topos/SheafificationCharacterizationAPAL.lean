@@ -1,4 +1,4 @@
-import Omega.Topos.SheafificationCharacterization
+import InfoGeometry.External.Automath.Omega.Topos.SheafificationCharacterization
 
 namespace Omega.Topos
 

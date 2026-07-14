@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart65dGodelTateSelfsimilarShiftCylinder
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65dGodelTateSelfsimilarShiftCylinder
 
 namespace Omega.Zeta
 

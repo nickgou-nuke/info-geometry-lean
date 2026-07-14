@@ -167,6 +167,4 @@ theorem mdpas_direct_limit_theorem
 
 end DirectLimitReadback
 
-end MDPASJMSouriauGlobalObstruction
-end Physics
-end InfoGeometry
+end InfoGeometry.Physics.MDPASJMSouriauGlobalObstruction

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiJoukowskyModsquareArcsineFixedwidth
+import InfoGeometry.External.Automath.Omega.Zeta.XiJoukowskyModsquareArcsineFixedwidth
 
 namespace Omega.Zeta
 

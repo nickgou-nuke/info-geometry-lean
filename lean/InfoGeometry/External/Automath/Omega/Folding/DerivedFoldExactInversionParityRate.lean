@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
-import Omega.Folding.DerivedFoldExactInversionDyadicThreshold
-import Omega.Folding.Entropy
-import Omega.POM.MaxAtomicWeightParitySecondOrder
+import InfoGeometry.External.Automath.Omega.Folding.DerivedFoldExactInversionDyadicThreshold
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.POM.MaxAtomicWeightParitySecondOrder
 
 open Filter
 open scoped goldenRatio

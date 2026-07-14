@@ -1,6 +1,6 @@
-import Omega.POM.DiagonalRateRefreshFundamentalMatrixRankone
-import Omega.POM.DiagonalRateRefreshHittingTimeMeanClosed
-import Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshFundamentalMatrixRankone
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimeMeanClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
 
 namespace Omega.POM
 

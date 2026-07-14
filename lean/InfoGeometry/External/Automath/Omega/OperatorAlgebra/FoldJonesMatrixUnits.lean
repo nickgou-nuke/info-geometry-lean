@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
 
 namespace Omega.OperatorAlgebra
 

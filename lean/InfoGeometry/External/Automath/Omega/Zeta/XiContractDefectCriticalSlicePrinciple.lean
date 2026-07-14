@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.ContractiveBoundaryZero
+import InfoGeometry.External.Automath.Omega.Zeta.ContractiveBoundaryZero
 
 namespace Omega.Zeta
 

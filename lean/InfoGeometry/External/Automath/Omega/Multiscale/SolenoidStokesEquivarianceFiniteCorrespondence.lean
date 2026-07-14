@@ -1,4 +1,4 @@
-import Omega.Multiscale.SolenoidFundamentalCurrentAndStokes
+import InfoGeometry.External.Automath.Omega.Multiscale.SolenoidFundamentalCurrentAndStokes
 
 namespace Omega.Multiscale
 

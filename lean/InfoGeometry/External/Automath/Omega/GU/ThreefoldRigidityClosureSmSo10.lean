@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.GU.NapLocalUpliftForcesSo10
-import Omega.GU.ThreefoldRigidity
+import InfoGeometry.External.Automath.Omega.GU.NapLocalUpliftForcesSo10
+import InfoGeometry.External.Automath.Omega.GU.ThreefoldRigidity
 
 namespace Omega.GU
 

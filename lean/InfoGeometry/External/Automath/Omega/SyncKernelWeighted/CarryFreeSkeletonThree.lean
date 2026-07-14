@@ -1,9 +1,9 @@
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.EA.CarryFreeZetaTrichotomy
-import Omega.SyncKernelWeighted.CarryFreeCoreBlock
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.EA.CarryFreeZetaTrichotomy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CarryFreeCoreBlock
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 namespace Omega.SyncKernelWeighted
 

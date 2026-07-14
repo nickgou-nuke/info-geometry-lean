@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiToeplitzDetVerblunsky
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzDetVerblunsky
 
 namespace Omega.Zeta
 

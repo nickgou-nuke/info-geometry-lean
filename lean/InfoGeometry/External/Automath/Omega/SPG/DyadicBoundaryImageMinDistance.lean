@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.DyadicBoundaryImageLDPC
+import InfoGeometry.External.Automath.Omega.SPG.DyadicBoundaryImageLDPC
 
 namespace Omega.SPG
 

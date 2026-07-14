@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPAutocovarianceGeneratingRational
-import Omega.Folding.GaugeAnomalyHankelJordanCertificate
-import Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPAutocovarianceGeneratingRational
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyHankelJordanCertificate
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
 
 namespace Omega.Folding
 

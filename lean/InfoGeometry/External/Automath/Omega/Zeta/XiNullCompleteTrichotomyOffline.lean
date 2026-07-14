@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.NullExhaustive
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NullExhaustive
 
 namespace Omega.Zeta
 

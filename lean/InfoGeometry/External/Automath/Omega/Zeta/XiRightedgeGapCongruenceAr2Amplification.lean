@@ -1,4 +1,4 @@
-import Omega.Zeta.XiAbelRightedgeGapAr2ExpError
+import InfoGeometry.External.Automath.Omega.Zeta.XiAbelRightedgeGapAr2ExpError
 import Mathlib.Tactic
 
 namespace Omega.Zeta

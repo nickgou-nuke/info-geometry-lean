@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPBitpairLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPBitpairLaw
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.LeyangArithmeticThreeChannelExactIndependence
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangArithmeticThreeChannelExactIndependence
 
 namespace Omega.Conclusion
 

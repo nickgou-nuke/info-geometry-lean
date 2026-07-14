@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BinGaugeVolume
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolume
 
 open scoped BigOperators
 

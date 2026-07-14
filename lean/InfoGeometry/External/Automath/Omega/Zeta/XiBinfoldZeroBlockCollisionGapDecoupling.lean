@@ -1,5 +1,5 @@
-import Omega.Folding.FoldZeroHalfIndexMultiple6
-import Omega.Zeta.XiBinfoldRenyi2EntropyDefectConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Zeta.XiBinfoldRenyi2EntropyDefectConstant
 
 namespace Omega.Zeta
 

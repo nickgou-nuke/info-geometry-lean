@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldMaxFiberFourier
+import InfoGeometry.External.Automath.Omega.Folding.FoldMaxFiberFourier
 
 open Filter
 open scoped Topology

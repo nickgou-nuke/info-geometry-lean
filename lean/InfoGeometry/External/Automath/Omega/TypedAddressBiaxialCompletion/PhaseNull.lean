@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.CompiledReadability
-import Omega.TypedAddressBiaxialCompletion.VisiblePhaseLift
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CompiledReadability
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.VisiblePhaseLift
 
 namespace Omega.TypedAddressBiaxialCompletion
 

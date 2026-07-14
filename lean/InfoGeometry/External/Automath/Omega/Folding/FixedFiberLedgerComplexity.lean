@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Core.Fib
-import Omega.POM.KLDefectIdentity
-import Omega.POM.MaxentLift
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.POM.KLDefectIdentity
+import InfoGeometry.External.Automath.Omega.POM.MaxentLift
 import Mathlib.Tactic
 
 namespace Omega

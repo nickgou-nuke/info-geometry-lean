@@ -1,4 +1,4 @@
-import Omega.EA.Wedderburn
+import InfoGeometry.External.Automath.Omega.EA.Wedderburn
 
 namespace Omega.POM
 

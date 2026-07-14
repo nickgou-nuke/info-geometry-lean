@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.S5GaloisArithmetic
-import Omega.Zeta.XiTerminalZmLeyangLinearTwistQuarticFamily
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangLinearTwistQuarticFamily
 
 namespace Omega.Zeta
 

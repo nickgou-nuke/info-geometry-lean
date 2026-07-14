@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleLogmodularityVisibleRank
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleLogmodularityVisibleRank
 
 namespace Omega.Conclusion
 

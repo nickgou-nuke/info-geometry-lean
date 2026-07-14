@@ -1,4 +1,4 @@
-import Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
 
 namespace Omega.Zeta
 

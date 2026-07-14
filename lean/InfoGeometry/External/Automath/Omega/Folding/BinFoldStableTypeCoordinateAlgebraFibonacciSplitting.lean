@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
 
 namespace Omega.Folding
 

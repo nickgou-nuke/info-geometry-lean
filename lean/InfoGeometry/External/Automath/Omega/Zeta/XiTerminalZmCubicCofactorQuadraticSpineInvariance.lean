@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmCubicCofactorDiscriminantKernelS3RigidityHeight
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmCubicCofactorDiscriminantKernelS3RigidityHeight
 
 namespace Omega.Zeta
 

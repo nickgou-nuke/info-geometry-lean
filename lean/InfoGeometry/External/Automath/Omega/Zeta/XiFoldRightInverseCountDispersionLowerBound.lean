@@ -1,4 +1,4 @@
-import Omega.Conclusion.SectionLedgerKL
+import InfoGeometry.External.Automath.Omega.Conclusion.SectionLedgerKL
 
 theorem paper_xi_fold_right_inverse_count_dispersion_lowerbound {X : Type*} [Fintype X]
     [Nonempty X] (d : X → ℕ) (N : ℕ) (Dsp : ℝ) (hN : 0 < N)

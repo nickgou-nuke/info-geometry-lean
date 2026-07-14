@@ -1,5 +1,5 @@
-import Omega.SPG.BayesFiniteMistakesSummable
-import Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
+import InfoGeometry.External.Automath.Omega.SPG.BayesFiniteMistakesSummable
+import InfoGeometry.External.Automath.Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
 
 namespace Omega.SPG
 

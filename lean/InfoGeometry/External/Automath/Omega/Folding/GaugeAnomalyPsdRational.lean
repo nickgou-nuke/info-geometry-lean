@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyCovGenfun
-import Omega.Folding.GaugeAnomalyCovarianceDistributionMoment
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCovGenfun
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCovarianceDistributionMoment
 
 namespace Omega.Folding
 

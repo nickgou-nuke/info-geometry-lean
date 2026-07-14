@@ -1,5 +1,5 @@
-import Omega.PhysicalSpacetimeSkeleton.GlobalGeometricObjects
-import Omega.PhysicalSpacetimeSkeleton.TerminalAdmissibleDomain
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.GlobalGeometricObjects
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.TerminalAdmissibleDomain
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

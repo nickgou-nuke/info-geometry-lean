@@ -1,4 +1,4 @@
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6GeoSignAntiinvariant16
-import Omega.GroupUnification.BdrySheetParityDiagonal
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6GeoSignAntiinvariant16
+import InfoGeometry.External.Automath.Omega.GroupUnification.BdrySheetParityDiagonal
 
 namespace Omega.GroupUnification
 

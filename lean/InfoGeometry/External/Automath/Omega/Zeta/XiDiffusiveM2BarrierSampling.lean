@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Zeta.AbelianDiffusiveChebotarevSufficient
+import InfoGeometry.External.Automath.Omega.Zeta.AbelianDiffusiveChebotarevSufficient
 
 namespace Omega.Zeta
 

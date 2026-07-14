@@ -1,4 +1,4 @@
-import Omega.CircleDimension.CauchyKernelDerivativeGramClosedForm
+import InfoGeometry.External.Automath.Omega.CircleDimension.CauchyKernelDerivativeGramClosedForm
 import Mathlib.Tactic
 
 namespace Omega.CircleDimension

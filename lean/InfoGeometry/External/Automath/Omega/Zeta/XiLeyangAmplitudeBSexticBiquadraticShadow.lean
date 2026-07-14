@@ -1,6 +1,6 @@
-import Omega.Zeta.XiLeyangSexticPerfectPowerCollapse
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
-import Omega.Zeta.XiTerminalZmLeyangEllipticUniqueCommonPrime
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangSexticPerfectPowerCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangEllipticUniqueCommonPrime
 
 namespace Omega.Zeta
 

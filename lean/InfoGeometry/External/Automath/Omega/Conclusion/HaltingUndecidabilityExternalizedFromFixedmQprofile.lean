@@ -1,8 +1,8 @@
-import Omega.Conclusion.MinLatchesLogStates
-import Omega.Conclusion.ReversibleAuxBitsBudget
-import Omega.Conclusion.SoftcoreFixedMQseriesRationalOgf
-import Omega.Conclusion.SoftcoreSpectralScaleSeparation
-import Omega.Conclusion.TemperatureKernelFreeEnergyNonapproximable
+import InfoGeometry.External.Automath.Omega.Conclusion.MinLatchesLogStates
+import InfoGeometry.External.Automath.Omega.Conclusion.ReversibleAuxBitsBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.SoftcoreFixedMQseriesRationalOgf
+import InfoGeometry.External.Automath.Omega.Conclusion.SoftcoreSpectralScaleSeparation
+import InfoGeometry.External.Automath.Omega.Conclusion.TemperatureKernelFreeEnergyNonapproximable
 
 namespace Omega.Conclusion
 

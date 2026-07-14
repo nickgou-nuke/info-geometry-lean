@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangEllipticFourBranchRecursion
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangEllipticFourBranchRecursion
 
 namespace Omega.Zeta
 

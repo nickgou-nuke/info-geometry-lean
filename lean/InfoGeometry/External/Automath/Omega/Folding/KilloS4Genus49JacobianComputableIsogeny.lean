@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyQuotientJacobiansIsotypic
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyQuotientJacobiansIsotypic
 
 namespace Omega.Folding
 

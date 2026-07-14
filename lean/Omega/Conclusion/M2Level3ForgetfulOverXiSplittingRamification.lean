@@ -4,7 +4,9 @@ namespace Omega.Conclusion
 
 /-- Concrete wrapper for the forgetful-map splitting statement over `Ξ`. -/
 structure conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data where
-  conclusion_m2_level3_forgetful_over_xi_splitting_ramification_witness : Unit := ()
+  conclusion_m2_level3_forgetful_over_xi_splitting_ramification_witness :
+    conclusion_m2_level3_forgetful_over_xi_splitting_ramification_statement := by
+      refine ⟨by decide, by decide, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 /-- The four lines in a fixed Siegel fiber over the bielliptic locus. -/
 inductive conclusion_m2_level3_forgetful_over_xi_splitting_ramification_line
@@ -52,7 +54,7 @@ def conclusion_m2_level3_forgetful_over_xi_splitting_ramification_generic_compon
 namespace conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data
 
 /-- Concrete paper-facing formulation of the splitting and ramification law. -/
-def statement (_D : conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data) : Prop :=
+def statement : Prop :=
   Fintype.card conclusion_m2_level3_forgetful_over_xi_splitting_ramification_line = 4 ∧
     conclusion_m2_level3_forgetful_over_xi_splitting_ramification_fixed_lines.card = 2 ∧
     conclusion_m2_level3_forgetful_over_xi_splitting_ramification_sigma
@@ -72,7 +74,7 @@ open conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data
 
 /-- Paper label: `thm:conclusion-m2-level3-forgetful-over-xi-splitting-ramification`. -/
 theorem paper_conclusion_m2_level3_forgetful_over_xi_splitting_ramification
-    (D : conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data) : D.statement := by
+    : statement := by
   refine ⟨by decide, by decide, rfl, rfl, rfl, rfl, rfl, rfl⟩
 
 end Omega.Conclusion

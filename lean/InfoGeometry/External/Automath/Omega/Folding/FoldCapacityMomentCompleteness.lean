@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.OracleCapacityTailEquivalence
-import Omega.Folding.OracleCapacityTailMoments
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityTailEquivalence
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityTailMoments
 
 namespace Omega.Folding
 

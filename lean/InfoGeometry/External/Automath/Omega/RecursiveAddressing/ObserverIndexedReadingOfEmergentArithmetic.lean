@@ -1,5 +1,5 @@
-import Omega.RecursiveAddressing.ObserverIndexedFiniteResolutionObjectEligibility
-import Omega.RecursiveAddressing.ObserverIndexedValuePreservingNoCreation
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedFiniteResolutionObjectEligibility
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedValuePreservingNoCreation
 
 namespace Omega.RecursiveAddressing
 

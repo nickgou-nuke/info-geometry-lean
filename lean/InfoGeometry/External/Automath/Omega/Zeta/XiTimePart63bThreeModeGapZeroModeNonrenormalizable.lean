@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Order.Basic
-import Omega.Zeta.XiTimePart9pChi2RanktwoResonantFloor
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9pChi2RanktwoResonantFloor
 
 namespace Omega.Zeta
 

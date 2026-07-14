@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.EscortTwoStateClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.EscortTwoStateClosure
 
 namespace Omega.Zeta
 

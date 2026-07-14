@@ -1,4 +1,4 @@
-import Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

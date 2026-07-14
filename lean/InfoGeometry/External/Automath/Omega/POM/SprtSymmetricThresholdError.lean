@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.GoldenSprtDeltaClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtDeltaClosure
 
 namespace Omega.POM
 

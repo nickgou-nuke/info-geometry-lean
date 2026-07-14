@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryDimensionUpper
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryDimensionUpper
 
 namespace Omega.SPG
 

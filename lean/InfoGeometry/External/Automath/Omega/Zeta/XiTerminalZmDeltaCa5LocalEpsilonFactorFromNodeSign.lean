@@ -1,5 +1,5 @@
-import Omega.Zeta.XiSemistableNodalFiberLocalEpsilonFactor
-import Omega.Zeta.XiTerminalZmDeltaCa5NodalSemistableJ
+import InfoGeometry.External.Automath.Omega.Zeta.XiSemistableNodalFiberLocalEpsilonFactor
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDeltaCa5NodalSemistableJ
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.CouplingExpectationBound
+import InfoGeometry.External.Automath.Omega.POM.CouplingExpectationBound
 
 namespace Omega.Kronecker
 

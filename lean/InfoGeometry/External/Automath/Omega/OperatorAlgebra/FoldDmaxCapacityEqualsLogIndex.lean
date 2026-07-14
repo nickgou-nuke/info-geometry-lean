@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
 
 namespace Omega.OperatorAlgebra
 

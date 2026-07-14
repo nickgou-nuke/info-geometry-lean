@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.MomentRecurrence
-import Omega.OperatorAlgebra.FoldInfoNCEFiniteKMomentFormula
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCEFiniteKMomentFormula
 
 namespace Omega.Folding
 

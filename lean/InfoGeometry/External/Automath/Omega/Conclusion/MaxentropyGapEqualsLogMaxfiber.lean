@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.MaxfiberEntropyGaugeFourmodeRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.MaxfiberEntropyGaugeFourmodeRigidity
 
 namespace Omega.Conclusion
 

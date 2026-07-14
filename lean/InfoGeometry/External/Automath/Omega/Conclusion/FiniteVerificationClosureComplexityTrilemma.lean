@@ -1,6 +1,6 @@
-import Omega.SPG.FiniteAuditBidirectionalCertificates
-import Omega.SPG.FiniteAuditNpCompleteBarrier
-import Omega.SPG.UndecidableNoFiniteComputableCompleteInvariant
+import InfoGeometry.External.Automath.Omega.SPG.FiniteAuditBidirectionalCertificates
+import InfoGeometry.External.Automath.Omega.SPG.FiniteAuditNpCompleteBarrier
+import InfoGeometry.External.Automath.Omega.SPG.UndecidableNoFiniteComputableCompleteInvariant
 
 namespace Omega.Conclusion
 

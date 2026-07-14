@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Folding.MetallicParetoFrontier
-import Omega.Folding.MetallicTwoStateSFT
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoFrontier
+import InfoGeometry.External.Automath.Omega.Folding.MetallicTwoStateSFT
 
 open Omega.Folding
 open Omega.Folding.MetallicParetoFrontier

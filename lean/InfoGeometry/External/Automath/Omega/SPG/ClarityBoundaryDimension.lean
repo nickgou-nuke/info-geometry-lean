@@ -1,4 +1,4 @@
-import Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
+import InfoGeometry.External.Automath.Omega.SPG.PrefixScanErrorBoundaryDimensionUpper
 
 namespace Omega.SPG
 

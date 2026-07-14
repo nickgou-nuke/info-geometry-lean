@@ -1,1 +1,1 @@
-import Omega.HyperKernel.SetStructureChecksTiny
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructureChecksTiny

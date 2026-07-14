@@ -1,9 +1,9 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
-import Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
-import Omega.Zeta.OffcriticalHorocycleBusemann
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppBusemannPoissonMinusOne
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalHorocycleBusemann
 
 namespace Omega.UnitCirclePhaseArithmetic
 

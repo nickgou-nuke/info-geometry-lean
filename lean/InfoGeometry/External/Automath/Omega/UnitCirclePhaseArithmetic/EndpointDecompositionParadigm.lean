@@ -1,10 +1,10 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Algebra.Polynomial.Eval.Defs
 import Mathlib.Tactic
-import Omega.Discussion.ChebyshevAdams
-import Omega.UnitCirclePhaseArithmetic.CompletionSubringUniqueAngle
-import Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
-import Omega.UnitCirclePhaseArithmetic.PrimitiveOddVanishUMinusOne
+import InfoGeometry.External.Automath.Omega.Discussion.ChebyshevAdams
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.CompletionSubringUniqueAngle
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.PrimitiveOddVanishUMinusOne
 
 namespace Omega.UnitCirclePhaseArithmetic
 

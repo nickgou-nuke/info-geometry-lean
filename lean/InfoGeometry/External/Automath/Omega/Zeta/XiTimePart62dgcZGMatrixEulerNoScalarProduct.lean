@@ -1,6 +1,6 @@
-import Omega.Folding.KilloZGDirichletMatrixEuler
-import Omega.Zeta.DerivedZGNoScalarEulerProduct
-import Omega.Zeta.XiZGAbelResidueLogDensity
+import InfoGeometry.External.Automath.Omega.Folding.KilloZGDirichletMatrixEuler
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGNoScalarEulerProduct
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGAbelResidueLogDensity
 
 namespace Omega.Zeta
 

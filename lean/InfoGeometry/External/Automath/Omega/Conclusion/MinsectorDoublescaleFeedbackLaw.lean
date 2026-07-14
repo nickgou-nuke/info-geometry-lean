@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
 
 namespace Omega.Conclusion
 

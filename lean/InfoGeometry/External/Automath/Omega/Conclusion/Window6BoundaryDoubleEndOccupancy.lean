@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Folding.BoundaryLayer
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryLayer
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
 
 namespace Omega.Conclusion
 

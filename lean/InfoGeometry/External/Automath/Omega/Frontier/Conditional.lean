@@ -1,7 +1,7 @@
-import Omega.Frontier.Certificates
-import Omega.Graph.Sofic
-import Omega.SPG.Clopen
-import Omega.SPG.ScanErrorMeasure
+import InfoGeometry.External.Automath.Omega.Frontier.Certificates
+import InfoGeometry.External.Automath.Omega.Graph.Sofic
+import InfoGeometry.External.Automath.Omega.SPG.Clopen
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorMeasure
 
 namespace Omega.Frontier
 

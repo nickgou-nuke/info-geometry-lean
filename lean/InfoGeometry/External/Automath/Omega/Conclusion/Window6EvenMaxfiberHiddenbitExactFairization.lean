@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
 
 namespace Omega.Conclusion
 

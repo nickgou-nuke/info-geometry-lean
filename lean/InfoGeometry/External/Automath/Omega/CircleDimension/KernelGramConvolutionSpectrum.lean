@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.CircleDimension.KernelIntegerTranslateRieszBounds
+import InfoGeometry.External.Automath.Omega.CircleDimension.KernelIntegerTranslateRieszBounds
 
 namespace Omega.CircleDimension
 

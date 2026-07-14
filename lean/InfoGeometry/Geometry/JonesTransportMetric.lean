@@ -40,27 +40,19 @@ def JonesTransportRealizes
 /--
 Admissibility for metric transport.
 
-A concrete model should restrict this to coherent/lossless/unitary or
-Krein-calibrated transports. Brewster projections generally fail this and
-belong to the boundary/dissipative layer.
--/
-def IsMetricAdmissibleJonesTransport
-    {Op : Type*} [Mul Op]
-    (J : OperatorialJonesDatum Op) : Prop :=
-  J.coherent
-
-/-- Metric admissibility is exactly the coherent Jones-transport branch. -/
-theorem metricAdmissible_iff_coherent
-    {Op : Type*} [Mul Op]
-    (J : OperatorialJonesDatum Op) :
-    IsMetricAdmissibleJonesTransport J ↔ J.coherent := by
-  rfl
-
-/--
 Metric reconstructed from operatorial Jones transport costs.
 -/
 structure JonesTransportMetricDatum
     (Op : Type*) [Mul Op] where
+  /--
+  Model-specific admissible transport predicate.
+
+  A concrete model can restrict this to lossless, Krein-calibrated, coherent, or
+  other theorem-owned transport classes. This file does not manufacture such a
+  class from an arbitrary certificate on `OperatorialJonesDatum`.
+  -/
+  admissible : OperatorialJonesDatum Op → Prop
+
   /-- Cost assigned to a Jones transport. -/
   cost : OperatorialJonesDatum Op → ℝ
 
@@ -89,7 +81,7 @@ structure JonesTransportMetricDatum
   distance_le_transport_cost :
     ∀ (J : OperatorialJonesDatum Op)
       (A B : ProjectivePolarizationState Op),
-      IsMetricAdmissibleJonesTransport J →
+      admissible J →
       JonesTransportRealizes J A B →
         distance A B ≤ cost J
 

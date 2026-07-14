@@ -1,5 +1,5 @@
-import Omega.Conclusion.BoundaryStokesObservationMinimalDimension
-import Omega.Conclusion.BoundaryStokesStrictLinearHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesObservationMinimalDimension
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesStrictLinearHolography
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.EA.ValInvariant
-import Omega.EA.ZeckendorfTransversal
+import InfoGeometry.External.Automath.Omega.EA.ValInvariant
+import InfoGeometry.External.Automath.Omega.EA.ZeckendorfTransversal
 
 namespace Omega.EA
 

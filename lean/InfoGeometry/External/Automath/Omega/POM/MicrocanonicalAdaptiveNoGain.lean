@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.KCollisionRootFilter
+import InfoGeometry.External.Automath.Omega.POM.KCollisionRootFilter
 
 namespace Omega.POM
 

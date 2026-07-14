@@ -1,4 +1,4 @@
-import Omega.Folding.VisibleValueOverflow
+import InfoGeometry.External.Automath.Omega.Folding.VisibleValueOverflow
 
 namespace Omega.POM
 

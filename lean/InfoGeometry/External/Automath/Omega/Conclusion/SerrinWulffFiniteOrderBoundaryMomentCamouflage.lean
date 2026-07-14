@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.ProuhetThueMorseFluxMoments
+import InfoGeometry.External.Automath.Omega.SPG.ProuhetThueMorseFluxMoments
 
 namespace Omega.Conclusion
 

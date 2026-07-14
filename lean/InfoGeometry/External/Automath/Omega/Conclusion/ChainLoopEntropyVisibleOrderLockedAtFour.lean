@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ChainLoopEntropySecondDifferenceDefectExpansion
+import InfoGeometry.External.Automath.Omega.Conclusion.ChainLoopEntropySecondDifferenceDefectExpansion
 
 open scoped BigOperators
 

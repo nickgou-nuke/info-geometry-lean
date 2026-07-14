@@ -1,4 +1,4 @@
-import Omega.Conclusion.FiniteVerificationClosureComplexityTrilemma
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteVerificationClosureComplexityTrilemma
 
 namespace Omega.Conclusion
 

@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPEndpointLdpRestated
-import Omega.Folding.BernoulliPParryPressureChain
-import Omega.Folding.GaugeAnomalyMean
-import Omega.Folding.GaugeAnomalyTauIntClosed
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointLdpRestated
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPParryPressureChain
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMean
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTauIntClosed
 
 namespace Omega.Folding
 

@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
-import Omega.CircleDimension.GodelPrimeBitlengthLowerBound
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
+import InfoGeometry.External.Automath.Omega.CircleDimension.GodelPrimeBitlengthLowerBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
 
 namespace Omega.CircleDimension
 

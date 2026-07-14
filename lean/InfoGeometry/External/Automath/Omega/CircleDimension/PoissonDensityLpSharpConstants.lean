@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.CircleDimension.PoissonConstantsSharpness
-import Omega.CircleDimension.PoissonDensityLinftyUniversalConstant
-import Omega.Zeta.XiPoissonSecondOrderTwoCosineChannels
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonConstantsSharpness
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonDensityLinftyUniversalConstant
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonSecondOrderTwoCosineChannels
 
 namespace Omega.CircleDimension
 

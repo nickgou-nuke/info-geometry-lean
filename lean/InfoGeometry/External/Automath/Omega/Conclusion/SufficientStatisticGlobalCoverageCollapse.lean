@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldgaugePiSufficientStatisticFiberObstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldgaugePiSufficientStatisticFiberObstruction
 
 namespace Omega.Conclusion
 

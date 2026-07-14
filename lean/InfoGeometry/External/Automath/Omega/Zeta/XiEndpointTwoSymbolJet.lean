@@ -1,10 +1,10 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.EndpointFourChannelChi4
-import Omega.CircleDimension.EndpointTristateSet
-import Omega.Discussion.ChebyshevAdams
-import Omega.UnitCirclePhaseArithmetic.EndpointDirichletSymbolWeights
-import Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
+import InfoGeometry.External.Automath.Omega.CircleDimension.EndpointFourChannelChi4
+import InfoGeometry.External.Automath.Omega.CircleDimension.EndpointTristateSet
+import InfoGeometry.External.Automath.Omega.Discussion.ChebyshevAdams
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointDirichletSymbolWeights
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
 
 namespace Omega.Zeta
 

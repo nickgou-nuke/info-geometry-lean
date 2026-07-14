@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Factorization.Basic
-import Omega.EA.PrimeRegisterOrbitFiberCoincidence
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterOrbitFiberCoincidence
 
 namespace Omega.EA
 

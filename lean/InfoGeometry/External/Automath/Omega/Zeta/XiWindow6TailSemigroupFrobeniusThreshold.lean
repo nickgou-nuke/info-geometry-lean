@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiWindow6TailSemigroupAperyThresholds
+import InfoGeometry.External.Automath.Omega.Zeta.XiWindow6TailSemigroupAperyThresholds
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.NonNullReadoutCriterionAPAL
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.NonNullReadoutCriterionAPAL
 
 namespace Omega.RecursiveAddressing.GluingFailureNonNullReadoutCriterionAPAL
 

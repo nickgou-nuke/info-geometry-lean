@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldOrbitTouchardLoworder
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOrbitTouchardLoworder
 
 namespace Omega.OperatorAlgebra
 

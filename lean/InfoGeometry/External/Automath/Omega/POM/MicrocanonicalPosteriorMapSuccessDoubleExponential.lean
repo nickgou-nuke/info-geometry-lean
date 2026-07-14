@@ -1,5 +1,5 @@
-import Omega.POM.MicrocanonicalFoldBayesSuccessNminusT
-import Omega.POM.MicrocanonicalPosteriorEntropyLinearLaw
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldBayesSuccessNminusT
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalPosteriorEntropyLinearLaw
 
 namespace Omega.POM
 

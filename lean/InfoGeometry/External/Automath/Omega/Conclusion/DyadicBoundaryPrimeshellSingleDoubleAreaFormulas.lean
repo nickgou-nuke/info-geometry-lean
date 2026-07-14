@@ -1,4 +1,4 @@
-import Omega.Conclusion.DyadicBoundaryPrimeshellBooleanDivisorTomography
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundaryPrimeshellBooleanDivisorTomography
 
 namespace Omega.Conclusion
 

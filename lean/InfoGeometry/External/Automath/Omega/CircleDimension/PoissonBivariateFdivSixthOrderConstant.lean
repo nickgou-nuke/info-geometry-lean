@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateSecondOrderCancellationRealizable
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateSecondOrderCancellationRealizable
 
 namespace Omega.CircleDimension
 

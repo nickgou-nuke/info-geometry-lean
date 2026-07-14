@@ -2,7 +2,7 @@ import Mathlib.Analysis.Convex.Jensen
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Tactic
-import Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
+import InfoGeometry.External.Automath.Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
 
 namespace Omega.Zeta
 

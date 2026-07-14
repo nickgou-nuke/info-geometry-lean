@@ -1,5 +1,5 @@
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.Zeta.ConclusionWedderburnThresholdHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.ConclusionWedderburnThresholdHolography
 
 namespace Omega.Zeta
 

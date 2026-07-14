@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPoissonLowerboundReverseKLL2
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonLowerboundReverseKLL2
 
 namespace Omega.Zeta
 

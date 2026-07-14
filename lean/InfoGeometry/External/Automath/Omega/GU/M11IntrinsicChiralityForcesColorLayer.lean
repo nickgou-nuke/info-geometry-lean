@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.GU.BoundaryDelta34TripleIdentity
-import Omega.GU.BoundaryTowerMinimalResonanceTripleSM
-import Omega.GU.Window6ChiralityAnchorMinimal
+import InfoGeometry.External.Automath.Omega.GU.BoundaryDelta34TripleIdentity
+import InfoGeometry.External.Automath.Omega.GU.BoundaryTowerMinimalResonanceTripleSM
+import InfoGeometry.External.Automath.Omega.GU.Window6ChiralityAnchorMinimal
 
 namespace Omega.GU
 

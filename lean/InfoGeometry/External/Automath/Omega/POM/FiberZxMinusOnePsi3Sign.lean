@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberSignedIndexMod3
-import Omega.POM.FiberSignedIndexPeriodicity
+import InfoGeometry.External.Automath.Omega.POM.FiberSignedIndexMod3
+import InfoGeometry.External.Automath.Omega.POM.FiberSignedIndexPeriodicity
 
 namespace Omega.POM
 

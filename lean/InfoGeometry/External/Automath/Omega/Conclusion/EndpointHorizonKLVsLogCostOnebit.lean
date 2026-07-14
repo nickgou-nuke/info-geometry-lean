@@ -1,4 +1,4 @@
-import Omega.Conclusion.EndpointHorizonArcsineKLClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.EndpointHorizonArcsineKLClosedForm
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

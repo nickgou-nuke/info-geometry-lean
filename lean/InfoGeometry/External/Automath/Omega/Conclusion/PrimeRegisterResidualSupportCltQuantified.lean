@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Order.Filter.Basic
-import Omega.Folding.GaugeAnomalyClt
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyClt
 
 namespace Omega.Conclusion
 

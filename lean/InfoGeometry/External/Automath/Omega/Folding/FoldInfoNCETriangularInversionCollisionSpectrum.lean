@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
 
 namespace Omega.Folding
 

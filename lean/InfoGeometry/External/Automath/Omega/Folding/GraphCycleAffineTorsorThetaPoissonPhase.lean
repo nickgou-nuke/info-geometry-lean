@@ -1,4 +1,4 @@
-import Omega.Folding.GraphCycleLatticeThetaModularInversion
+import InfoGeometry.External.Automath.Omega.Folding.GraphCycleLatticeThetaModularInversion
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 

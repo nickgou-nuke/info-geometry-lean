@@ -2,11 +2,11 @@ import InfoGeometry.Canonical.BostConnesKMS
 import Mathlib
 
 /-!
-# Graded Trace Compatibility — Structural Identity, Not Debt
+# Conditional Graded Trace Compatibility
 
-The `hTrace` compatibility between the Sugawara graded trace τL0
-and the Bost-Connes KMS projection readout is a STRUCTURAL DEFINITION,
-not a theorem requiring proof by induction.
+The `hTrace` theorem derives a scalar normalization identity from the explicit
+fields of `GradedTraceDatum`.  This file does not construct the Sugawara trace
+or prove those fields for a concrete operator representation.
 
 ## Convention
 
@@ -14,10 +14,10 @@ not a theorem requiring proof by induction.
 
 Then:
   τL0(1) = 1
-  τL0(S*_n·S_n) = n^{-β}    (L₀ shifted by log n)
+  τL0(S_n·S*_n) = n^{-β}    (L₀ shifted by log n)
 
 The Bost-Connes KMS projection readout:
-  Φ.φ(S*_n·S_m) = δ_{n,m}·n^{-β}/ζβ
+  Φ.φ(S_n·S*_m) = δ_{n,m}·n^{-β}/ζβ
 
 where ζβ = Σ_k k^{-β} is the partition function.
 
@@ -40,14 +40,14 @@ variable (C : BostConnesCuntzSystem Op)
 
 Properties:
   τL0(1) = 1                    (normalized)
-  τL0(S*_n·S_n) = n^{-β}         (L₀ shift by log n)
-  τL0(S*_n·S_m) = 0 for n ≠ m    (Cuntz orthogonality)
+  τL0(S_n·S*_n) = n^{-β}         (L₀ shift by log n)
+  τL0(S_n·S*_m) = 0 for n ≠ m    (diagonal matrix-coefficient readout)
 -/
 structure GradedTraceDatum (β : ℝ) where
   τL0 : Op → ℝ
   τL0_one : τL0 1 = 1
-  τL0_diag : ∀ n : ℕ+, τL0 (star (S C n) * S C n) = ((n : ℕ) : ℝ) ^ (-β)
-  τL0_off_diag : ∀ n m : ℕ+, n ≠ m → τL0 (star (S C n) * S C m) = 0
+  τL0_diag : ∀ n : ℕ+, τL0 (S C n * star (S C n)) = ((n : ℕ) : ℝ) ^ (-β)
+  τL0_off_diag : ∀ n m : ℕ+, n ≠ m → τL0 (S C n * star (S C m)) = 0
 
 /--
 **The structural bridge: ζβ = partition value.**
@@ -57,10 +57,10 @@ The normalization convention sets τL0(1) = 1, so ζβ appears
 only in the KMS projection readout Φ.φ = τL0 / ζβ.
 
 The bridge identity:
-  ζβ · Φ.φ(S*_n·S_m) = τL0(S*_n·S_m)
+  ζβ · Φ.φ(S_n·S*_m) = τL0(S_n·S*_m)
 -/
 def hTrace (τ : GradedTraceDatum Op C β) (ζβ : ℝ) (hζβ_pos : 0 < ζβ) :
-    ∀ n m : ℕ+, (ζβ * kmsProjectionReadout β ζβ n m) = τ.τL0 (star (S C n) * S C m) := by
+    ∀ n m : ℕ+, (ζβ * kmsProjectionReadout β ζβ n m) = τ.τL0 (S C n * star (S C m)) := by
   intro n m
   by_cases hnm : n = m
   · subst hnm
@@ -77,16 +77,16 @@ For the KMSProjectionState Φ with partition ζβ:
   Φ.φ = kmsProjectionReadout β ζβ
 
 And GradedTraceDatum gives:
-  τL0(S*_n·S_m) = n^{-β} (diagonal) or 0 (off-diagonal)
+  τL0(S_n·S*_m) = n^{-β} (diagonal) or 0 (off-diagonal)
 
 Recalling that:
   kmsProjectionReadout β ζβ n n = n^{-β}/ζβ
 
 We have:
-  Φ.φ(S*_n·S_n) = n^{-β}/ζβ
-  τL0(S*_n·S_n) = n^{-β}
+  Φ.φ(S_n·S*_n) = n^{-β}/ζβ
+  τL0(S_n·S*_n) = n^{-β}
 
-  ζβ · Φ.φ(S*_n·S_n) = ζβ · n^{-β}/ζβ = n^{-β} = τL0(S*_n·S_n)
+  ζβ · Φ.φ(S_n·S*_n) = ζβ · n^{-β}/ζβ = n^{-β} = τL0(S_n·S*_n)
 
 And for n ≠ m both are 0.
 
@@ -97,8 +97,8 @@ theorem structural_bridge_is_identity
     (τ : GradedTraceDatum Op C β) (ζβ : ℝ) (hζβ_pos : 0 < ζβ) (Φ : KMSProjectionState C)
     (hΦ_β : Φ.β = β) (hΦ_ζβ : Φ.ζβ = ζβ)
     (n m : ℕ+) :
-    τ.τL0 (star (S C n) * S C m) =
-      ζβ * Φ.φ (star (S C n) * S C m) := by
+    τ.τL0 (S C n * star (S C m)) =
+      ζβ * Φ.φ (S C n * star (S C m)) := by
   subst hΦ_β; subst hΦ_ζβ
   rw [Φ.eval_projection n m]
   exact (hTrace Op C τ Φ.ζβ hζβ_pos n m).symm

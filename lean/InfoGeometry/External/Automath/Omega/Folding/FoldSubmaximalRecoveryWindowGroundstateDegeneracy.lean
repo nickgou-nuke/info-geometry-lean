@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldFrozenMellinStieltjesBifurcation
+import InfoGeometry.External.Automath.Omega.Folding.FoldFrozenMellinStieltjesBifurcation
 
 open Filter
 open scoped Topology

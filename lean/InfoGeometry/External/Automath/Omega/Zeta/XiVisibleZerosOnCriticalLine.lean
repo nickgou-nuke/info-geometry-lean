@@ -1,4 +1,4 @@
-import Omega.Zeta.XiOffsetNullTypeSafety
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsetNullTypeSafety
 
 namespace Omega.Zeta
 

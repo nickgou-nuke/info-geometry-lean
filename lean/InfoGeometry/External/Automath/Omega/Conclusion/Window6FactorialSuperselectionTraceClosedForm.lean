@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.Window6CanonicalMicrostateBoundaryCharacterCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CanonicalMicrostateBoundaryCharacterCollapse
 
 namespace Omega.Conclusion
 

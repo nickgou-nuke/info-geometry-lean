@@ -33,12 +33,6 @@ structure ZeroModeSubtractionWitness where
   regulated_eq_subtract :
     ∀ t : ℝ, regulatedHeatKernel t = heatKernel t - vacuumMode
 
-/-- Witness that the Drazin core sits inside a chiral radiation packet. -/
-structure DrazinChiralSplitPacket (Q : EndH) where
-  cones : ChiralRadiationCones E
-  gap : GapDatum Q
-  zeroMode : ZeroModeSubtractionWitness
-
 omit [CompleteSpace E] in
 /-- The Drazin core is definitionally the kernel of the hopping operator. -/
 theorem drazinCore_eq_kernel (Q : EndH) :

@@ -1,4 +1,4 @@
-import Omega.Folding.FoldInfoNCELossTowerNewtonPronyCompleteness
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCELossTowerNewtonPronyCompleteness
 
 namespace Omega.POM
 

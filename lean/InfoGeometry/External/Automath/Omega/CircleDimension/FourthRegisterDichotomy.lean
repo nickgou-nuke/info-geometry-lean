@@ -1,4 +1,4 @@
-import Omega.Zeta.FourthRegisterDichotomy
+import InfoGeometry.External.Automath.Omega.Zeta.FourthRegisterDichotomy
 
 namespace Omega.CircleDimension
 

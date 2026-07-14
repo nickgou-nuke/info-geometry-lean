@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberSpectrumPronyHankelRank
-import Omega.POM.FiberSpectrumPronyHankelThresholdSharp
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankelRank
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankelThresholdSharp
 
 namespace Omega.POM
 

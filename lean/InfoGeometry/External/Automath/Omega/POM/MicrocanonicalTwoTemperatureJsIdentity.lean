@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalTwoTemperatureKktPowerLaw
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalTwoTemperatureKktPowerLaw
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 

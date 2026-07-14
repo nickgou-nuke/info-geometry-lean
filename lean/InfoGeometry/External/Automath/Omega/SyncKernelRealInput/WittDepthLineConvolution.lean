@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.KoenigsLinearizationWittDilation
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.KoenigsLinearizationWittDilation
 
 namespace Omega.SyncKernelRealInput
 

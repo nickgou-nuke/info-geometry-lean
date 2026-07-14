@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldInfoNCEAlphaLogClosedForm
-import Omega.OperatorAlgebra.FoldInfoNCELaplaceRenyiMomentExpansion
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEAlphaLogClosedForm
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCELaplaceRenyiMomentExpansion
 
 namespace Omega.Folding
 

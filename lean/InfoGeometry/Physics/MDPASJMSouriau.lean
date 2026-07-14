@@ -186,6 +186,4 @@ def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field
   normal_moment_readout := gyromagneticReadout_g_two
   spin_half_prequantization := spin_half_prequantized
 
-end MDPASJMSouriau
-end Physics
-end InfoGeometry
+end InfoGeometry.Physics.MDPASJMSouriau

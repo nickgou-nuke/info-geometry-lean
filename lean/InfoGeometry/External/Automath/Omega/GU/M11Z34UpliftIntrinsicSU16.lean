@@ -1,4 +1,4 @@
-import Omega.GU.M11Z34RealIrrepDecomposition
+import InfoGeometry.External.Automath.Omega.GU.M11Z34RealIrrepDecomposition
 
 namespace Omega.GU
 

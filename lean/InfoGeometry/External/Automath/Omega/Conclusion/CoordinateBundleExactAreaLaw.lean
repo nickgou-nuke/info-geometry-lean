@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
-import Omega.Conclusion.ScreenRelativeBettiRenyiFlatness
-import Omega.Conclusion.ScreenZeroErrorAuditTime
-import Omega.SPG.CoordinateBundleScreenCount
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenRelativeBettiRenyiFlatness
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenZeroErrorAuditTime
+import InfoGeometry.External.Automath.Omega.SPG.CoordinateBundleScreenCount
 
 namespace Omega.Conclusion
 

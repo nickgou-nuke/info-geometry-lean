@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.BdryFreeInvolutionOddFiberObstructionMinCover
-import Omega.Zeta.NullZ2SpectralSplittingDoublecover
+import InfoGeometry.External.Automath.Omega.Zeta.BdryFreeInvolutionOddFiberObstructionMinCover
+import InfoGeometry.External.Automath.Omega.Zeta.NullZ2SpectralSplittingDoublecover
 
 namespace Omega.Zeta
 

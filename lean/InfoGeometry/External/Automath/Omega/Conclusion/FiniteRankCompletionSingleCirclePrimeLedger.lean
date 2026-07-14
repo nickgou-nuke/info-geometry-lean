@@ -1,4 +1,4 @@
-import Omega.Folding.KilloLocalizationCircleDimensionPrimeLedgerSplitting
+import InfoGeometry.External.Automath.Omega.Folding.KilloLocalizationCircleDimensionPrimeLedgerSplitting
 
 namespace Omega.Conclusion
 

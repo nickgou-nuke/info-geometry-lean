@@ -106,13 +106,44 @@ theorem SamePositiveRay.trans {counts₁ counts₂ counts₃ : CountProfile}
 def finiteArithmeticWeight (counts : CountProfile) (s : ℝ) (n : ℕ) : ℝ :=
   counts n * primitiveMellinKernel n s
 
+lemma finiteArithmeticWeight_nonneg
+    {counts : CountProfile} (hcounts : ∀ n, 0 ≤ counts n) (s : ℝ) (n : ℕ) :
+    0 ≤ finiteArithmeticWeight counts s n := by
+  unfold finiteArithmeticWeight
+  exact mul_nonneg (hcounts n) (InfoGeometry.Arithmetic.primitiveMellinKernel_nonneg n s)
+
 /-- Finite-support arithmetic partition. -/
 def finiteArithmeticPartition (counts : CountProfile) (support : Finset ℕ) (s : ℝ) : ℝ :=
   Finset.sum support (fun n => finiteArithmeticWeight counts s n)
 
+lemma finiteArithmeticPartition_nonneg
+    {counts : CountProfile} (hcounts : ∀ n, 0 ≤ counts n) (support : Finset ℕ) (s : ℝ) :
+    0 ≤ finiteArithmeticPartition counts support s := by
+  unfold finiteArithmeticPartition
+  exact Finset.sum_nonneg (fun n _hn => finiteArithmeticWeight_nonneg hcounts s n)
+
+lemma finiteArithmeticPartition_pos_of_positive_count
+    {counts : CountProfile} {support : Finset ℕ} {s : ℝ} {n : ℕ}
+    (hcounts : ∀ n, 0 ≤ counts n) (hnS : n ∈ support) (hcount : 0 < counts n) (hn : 1 < n) :
+    0 < finiteArithmeticPartition counts support s := by
+  unfold finiteArithmeticPartition
+  exact Finset.sum_pos'
+    (fun m _hm => finiteArithmeticWeight_nonneg hcounts s m)
+    ⟨n, hnS, by
+      unfold finiteArithmeticWeight
+      rw [InfoGeometry.Arithmetic.primitiveMellinKernel_eq_exp_neg_mul_log hn]
+      exact mul_pos hcount (Real.exp_pos _)⟩
+
 /-- Finite-support normalized projective ray. -/
 def finiteArithmeticNormalizedRay (counts : CountProfile) (support : Finset ℕ) (s : ℝ) : CountProfile :=
   fun n => finiteArithmeticWeight counts s n / finiteArithmeticPartition counts support s
+
+lemma finiteArithmeticNormalizedRay_nonneg
+    {counts : CountProfile} {support : Finset ℕ} {s : ℝ}
+    (hcounts : ∀ n, 0 ≤ counts n) (hZ : 0 < finiteArithmeticPartition counts support s) (n : ℕ) :
+    0 ≤ finiteArithmeticNormalizedRay counts support s n := by
+  unfold finiteArithmeticNormalizedRay
+  exact div_nonneg (finiteArithmeticWeight_nonneg hcounts s n) (le_of_lt hZ)
 
 theorem finiteArithmeticWeight_scale_counts
     (counts : CountProfile) (_support : Finset ℕ) (s c : ℝ) (n : ℕ) :
@@ -178,6 +209,16 @@ theorem finiteArithmeticWeight_eq_partition_mul_normalizedRay
 /-- Sample-side finite partition readout. -/
 def sampleArithmeticPartition (draws : List ℕ) (s : ℝ) : ℝ :=
   finiteArithmeticPartition (sampleCountProfile draws) (sampleSupport draws) s
+
+lemma sampleCountProfile_nonneg (draws : List ℕ) (n : ℕ) :
+    0 ≤ sampleCountProfile draws n := by
+  unfold sampleCountProfile
+  exact_mod_cast Nat.zero_le (draws.count n)
+
+lemma sampleArithmeticPartition_nonneg (draws : List ℕ) (s : ℝ) :
+    0 ≤ sampleArithmeticPartition draws s := by
+  unfold sampleArithmeticPartition
+  exact finiteArithmeticPartition_nonneg (sampleCountProfile_nonneg draws) (sampleSupport draws) s
 
 /-- Sample-side normalized arithmetic shape. -/
 def sampleArithmeticShape (draws : List ℕ) (s : ℝ) : CountProfile :=

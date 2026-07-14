@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Conclusion.FundamentalCycleCmiDominatedByGlobalTreeEntropy
+import InfoGeometry.External.Automath.Omega.Conclusion.FundamentalCycleCmiDominatedByGlobalTreeEntropy
 
 namespace Omega.Conclusion
 

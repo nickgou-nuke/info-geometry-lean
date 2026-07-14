@@ -127,3 +127,18 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 - **Action**: Prefer division into focused helper lemmas rather than long monolithic proofs or oversized theorem packets.
 - **Reuse**: When a proof pattern or intermediate fact may be used again, expose it as a named lemma with a truthful scope instead of burying it inside one large proof.
 - **Structure**: New bridge files and owner repairs should take the smallest theorem-safe shape that improves downstream reuse and keeps local verification narrow.
+
+## The Colimit Continuum Mandate
+**CRITICAL**: The repository does NOT rely on classical measure theory or brute-force real analysis to cross from finite quantum models to the continuum. It strictly uses **Categorical Direct Inductive Colimits**.
+- **Action**: When formalizing infinite topological boundaries or physical limits, you MUST project finite algebraic models (e.g., Cuntz quotients, Plücker coordinates) natively through `UHFInductiveColimitBoundary.lean`, `TensorTowerColimit.lean`, and `ErlangenColimitResolution.lean`.
+- **Prohibition**: Do NOT hallucinate analytical continuations. Do NOT use physical rhetoric (like "CPT Symmetry" or "Gromov Non-Squeezing") to justify missing proofs. Physics concepts are strictly the shadows cast by the finite algebraic base being pushed through the $A_\infty$ colimit limit.
+
+## Structural Vacuum Prohibition
+**CRITICAL**: Do not dispatch subagents blindly into massive structural vacuums (e.g., files full of `False := sorry` claims).
+- **Action**: Before attempting any proofs in the Canonical or Topological subsystems, the parent Orchestrator MUST extract the pure algebraic math problem via Socratic discussion and formulate explicit, narrowly-typed `sorry` propositions based on existing finite algebraic structures.
+
+## Structural Dependency Lockdown Mandate
+**CRITICAL**: Behavioral rules ("do not edit dirty submodules") are insufficient. The environment MUST be structurally locked.
+- **Action**: All agents are structurally forbidden from editing or traversing the `.lake/packages/` directory. The entire directory must remain read-only (`chmod -R a-w .lake/packages`).
+- **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json` require explicit human approval. Agents shall NOT blindly run `lake update` or touch vendored dependency toolchains.
+- **Enforcement**: This is the difference between "should not happen" and "cannot happen." If an agent encounters a broken import, they must work within the currently pinned `v4.28.0` Mathlib cache instead of attempting to blindly pull or shift the toolchain manifest.

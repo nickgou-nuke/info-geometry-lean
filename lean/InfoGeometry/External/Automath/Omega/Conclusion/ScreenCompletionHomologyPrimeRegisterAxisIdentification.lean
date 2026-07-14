@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionScreenCorankAuditCostLaw
 
 namespace Omega.Conclusion
 

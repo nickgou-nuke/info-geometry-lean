@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryRigidity
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryRigidity
 
 namespace Omega.SPG
 

@@ -1,5 +1,5 @@
-import Omega.SPG.DyadicTopInversionBound
-import Omega.SPG.StokesGodelAlgorithmicHolographicCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.DyadicTopInversionBound
+import InfoGeometry.External.Automath.Omega.SPG.StokesGodelAlgorithmicHolographicCompleteness
 
 namespace Omega.Conclusion
 

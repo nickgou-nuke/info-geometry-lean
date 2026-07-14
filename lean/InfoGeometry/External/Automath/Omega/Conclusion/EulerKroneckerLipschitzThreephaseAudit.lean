@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.EulerKroneckerSixphaseTransportLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.EulerKroneckerSixphaseTransportLaw
 
 namespace Omega.Conclusion
 

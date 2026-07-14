@@ -1,10 +1,10 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.CompletedPrimitivePrimePowerDifferenceQuotient
-import Omega.SyncKernelWeighted.MuPochhammerNecklaceDirichletPolylog
-import Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
-import Omega.Zeta.NecklaceCorrection
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.CompletedPrimitivePrimePowerDifferenceQuotient
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerNecklaceDirichletPolylog
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittFrobeniusIteratedDescent
+import InfoGeometry.External.Automath.Omega.Zeta.NecklaceCorrection
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.TqftGenusTowerCompleteMultiplicityInvariant
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusTowerCompleteMultiplicityInvariant
 
 namespace Omega.Conclusion
 

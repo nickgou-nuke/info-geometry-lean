@@ -3,7 +3,7 @@ import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.Nat.Squarefree
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.ModSemiringsAnnihilatorValuationLattice
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsAnnihilatorValuationLattice
 
 namespace Omega
 

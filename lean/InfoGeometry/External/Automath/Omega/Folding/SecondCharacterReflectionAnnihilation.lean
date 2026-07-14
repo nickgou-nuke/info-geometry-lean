@@ -1,5 +1,5 @@
-import Omega.Folding.FiberWeightCountComplement
-import Omega.Folding.MomentBounds
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Folding.MomentBounds
 import Mathlib.Algebra.BigOperators.Intervals
 
 namespace Omega

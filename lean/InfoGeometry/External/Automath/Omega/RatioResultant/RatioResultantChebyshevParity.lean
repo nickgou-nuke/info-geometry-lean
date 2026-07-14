@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Tactic
-import Omega.RatioResultant.RatioResultantDiscRigidity
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioResultantDiscRigidity
 
 namespace Omega.RatioResultant
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPBitpairLaw
-import Omega.Folding.BernoulliPPressureQuartic
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPBitpairLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPPressureQuartic
 
 namespace Omega.Folding
 

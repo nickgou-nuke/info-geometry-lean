@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Complex.Basic
-import Omega.Zeta.CyclotomicSectorIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.CyclotomicSectorIdentity
 
 namespace Omega.Zeta
 

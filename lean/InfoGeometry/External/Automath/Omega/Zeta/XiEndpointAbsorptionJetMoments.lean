@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointAbsorptionKernelRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAbsorptionKernelRepresentation
 
 namespace Omega.Zeta
 

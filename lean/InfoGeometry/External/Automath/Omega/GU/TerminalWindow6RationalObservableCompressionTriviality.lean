@@ -1,5 +1,5 @@
-import Omega.GU.CongruenceM6IdempotentsFourRegistered
-import Omega.GU.Window6LowrankNeedsObservableCompression
+import InfoGeometry.External.Automath.Omega.GU.CongruenceM6IdempotentsFourRegistered
+import InfoGeometry.External.Automath.Omega.GU.Window6LowrankNeedsObservableCompression
 
 namespace Omega.GU
 

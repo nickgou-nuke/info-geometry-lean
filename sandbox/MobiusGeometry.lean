@@ -91,28 +91,572 @@ noncomputable def inv_f2 (z : ℂ) := z⁻¹
 noncomputable def dil_f3 (a b c d z : ℂ) := ((b * c - a * d) / c^2) * z
 noncomputable def trans_f4 (a c z : ℂ) := z + a / c
 
-lemma trans_preserves_circle (c : ℂ) (circ : GenCircle) :
-    ∃ circ' : GenCircle, ∀ z : ℂ, circ.contains z ↔ circ'.contains (z + c) := by sorry
+def trans_circle (c : ℂ) (circ : GenCircle) : GenCircle :=
+  let A' := circ.A
+  let B' := circ.B - (circ.A : ℂ) * conj c
+  let C' := circ.A * normSq c - 2 * (circ.B * c).re + circ.C
+  have h_valid : A' * C' < normSq B' := by
+    have h1 : normSq B' - A' * C' = normSq circ.B - circ.A * circ.C := by
+      change normSq (circ.B - (circ.A : ℂ) * conj c) - circ.A * (circ.A * normSq c - 2 * (circ.B * c).re + circ.C) = normSq circ.B - circ.A * circ.C
+      simp only [normSq_apply, sub_re, sub_im, mul_re, mul_im, conj_re, conj_im, ofReal_re, ofReal_im]
+      ring
+    linarith [circ.valid]
+  { A := A', B := B', C := C', valid := h_valid }
 
-lemma dil_preserves_circle (a : ℂ) (ha : a ≠ 0) (circ : GenCircle) :
-    ∃ circ' : GenCircle, ∀ z : ℂ, circ.contains z ↔ circ'.contains (a * z) := by sorry
+lemma trans_circle_contains (c : ℂ) (circ : GenCircle) (z : ℂ) :
+    circ.contains z ↔ (trans_circle c circ).contains (z + c) := by
+  have h_eq : (trans_circle c circ).A * normSq (z + c) + 2 * ((trans_circle c circ).B * (z + c)).re + (trans_circle c circ).C = circ.A * normSq z + 2 * (circ.B * z).re + circ.C := by
+    change circ.A * normSq (z + c) + 2 * ((circ.B - (circ.A : ℂ) * conj c) * (z + c)).re + (circ.A * normSq c - 2 * (circ.B * c).re + circ.C) = circ.A * normSq z + 2 * (circ.B * z).re + circ.C
+    simp only [normSq_apply, add_re, add_im, sub_re, sub_im, mul_re, mul_im, conj_re, conj_im, ofReal_re, ofReal_im]
+    ring
+  constructor
+  · intro hz; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0 at hz; change (trans_circle c circ).A * normSq (z + c) + 2 * ((trans_circle c circ).B * (z + c)).re + (trans_circle c circ).C = 0; rw [h_eq]; exact hz
+  · intro hz; change (trans_circle c circ).A * normSq (z + c) + 2 * ((trans_circle c circ).B * (z + c)).re + (trans_circle c circ).C = 0 at hz; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0; rw [← h_eq]; exact hz
 
-lemma inv_preserves_circle (circ : GenCircle) :
-    ∃ circ' : GenCircle, ∀ z : ℂ, z ≠ 0 → (circ.contains z ↔ circ'.contains z⁻¹) := by sorry
+def dil_circle (a : ℂ) (ha : a ≠ 0) (circ : GenCircle) : GenCircle :=
+  let A' := circ.A
+  let B' := circ.B * conj a
+  let C' := circ.C * normSq a
+  have h_normSq_a : 0 < normSq a := Complex.normSq_pos.mpr ha
+  have h_valid : A' * C' < normSq B' := by
+    have h1 : normSq B' = normSq circ.B * normSq a := by
+      change normSq (circ.B * conj a) = normSq circ.B * normSq a
+      rw [Complex.normSq_mul, Complex.normSq_conj]
+    have h2 : A' * C' = (circ.A * circ.C) * normSq a := by
+      change circ.A * (circ.C * normSq a) = (circ.A * circ.C) * normSq a
+      ring
+    rw [h1, h2]
+    exact mul_lt_mul_of_pos_right circ.valid h_normSq_a
+  { A := A', B := B', C := C', valid := h_valid }
 
-/-- Circle-Preserving Theorem:
-    A Möbius transformation maps a generalized circle to another generalized circle. -/
-theorem circle_preserving (M : MobiusTransform) (circ : GenCircle) :
-    ∃ circ' : GenCircle, ∀ z : RiemannSphere,
-      circ.containsExt z ↔ circ'.containsExt (M.eval z) := by
-  sorry
+lemma dil_circle_contains (a : ℂ) (ha : a ≠ 0) (circ : GenCircle) (z : ℂ) :
+    circ.contains z ↔ (dil_circle a ha circ).contains (a * z) := by
+  have h_eq : (dil_circle a ha circ).A * normSq (a * z) + 2 * ((dil_circle a ha circ).B * (a * z)).re + (dil_circle a ha circ).C = (circ.A * normSq z + 2 * (circ.B * z).re + circ.C) * normSq a := by
+    change circ.A * normSq (a * z) + 2 * ((circ.B * conj a) * (a * z)).re + (circ.C * normSq a) = (circ.A * normSq z + 2 * (circ.B * z).re + circ.C) * normSq a
+    simp only [normSq_apply, mul_re, mul_im, conj_re, conj_im, ofReal_re, ofReal_im]
+    ring
+  constructor
+  · intro hz; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0 at hz; change (dil_circle a ha circ).A * normSq (a * z) + 2 * ((dil_circle a ha circ).B * (a * z)).re + (dil_circle a ha circ).C = 0; rw [h_eq, hz, zero_mul]
+  · intro hz; change (dil_circle a ha circ).A * normSq (a * z) + 2 * ((dil_circle a ha circ).B * (a * z)).re + (dil_circle a ha circ).C = 0 at hz; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0; rw [h_eq] at hz
+    cases mul_eq_zero.mp hz with
+    | inl h => exact h
+    | inr h => exfalso; exact ne_of_gt (Complex.normSq_pos.mpr ha) h
+
+def inv_circle (circ : GenCircle) : GenCircle :=
+  let A' := circ.C
+  let B' := conj circ.B
+  let C' := circ.A
+  have h_valid : A' * C' < normSq B' := by
+    have h1 : normSq B' = normSq circ.B := by
+      change normSq (conj circ.B) = normSq circ.B
+      exact normSq_conj circ.B
+    have h2 : A' * C' = circ.A * circ.C := by
+      change circ.C * circ.A = circ.A * circ.C
+      ring
+    rw [h1, h2]
+    exact circ.valid
+  { A := A', B := B', C := C', valid := h_valid }
+
+lemma inv_circle_contains (circ : GenCircle) (z : ℂ) (hz : z ≠ 0) :
+    circ.contains z ↔ (inv_circle circ).contains z⁻¹ := by
+  have hz2_real : normSq z ≠ 0 := Complex.normSq_pos.mpr hz |> ne_of_gt
+  have h_eq : (inv_circle circ).A * normSq z⁻¹ + 2 * ((inv_circle circ).B * z⁻¹).re + (inv_circle circ).C = (circ.A * normSq z + 2 * (circ.B * z).re + circ.C) / normSq z := by
+    rw [eq_div_iff_mul_eq hz2_real]
+    change (circ.C * normSq z⁻¹ + 2 * (conj circ.B * z⁻¹).re + circ.A) * normSq z = circ.A * normSq z + 2 * (circ.B * z).re + circ.C
+    simp only [normSq_apply, add_re, add_im, mul_re, mul_im, conj_re, conj_im, inv_re, inv_im, ofReal_re, ofReal_im]
+    have h_denom : z.re ^ 2 + z.im ^ 2 ≠ 0 := by
+      have h : normSq z = z.re ^ 2 + z.im ^ 2 := by simp [normSq_apply]; ring
+      rw [← h]
+      exact hz2_real
+    field_simp
+    ring
+  constructor
+  · intro h_contains; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0 at h_contains; change (inv_circle circ).A * normSq z⁻¹ + 2 * ((inv_circle circ).B * z⁻¹).re + (inv_circle circ).C = 0; rw [h_eq, h_contains, zero_div]
+  · intro h_contains'; change (inv_circle circ).A * normSq z⁻¹ + 2 * ((inv_circle circ).B * z⁻¹).re + (inv_circle circ).C = 0 at h_contains'; change circ.A * normSq z + 2 * (circ.B * z).re + circ.C = 0
+    rw [h_eq] at h_contains'
+    have h_or := div_eq_zero_iff.mp h_contains'
+    cases h_or with
+    | inl h => exact h
+    | inr h => exfalso; exact hz2_real h
 
 lemma maps_to_01inf (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h13 : z1 ≠ z3) :
-    ∃ M : MobiusTransform, M.eval z1 = some 0 ∧ M.eval z2 = some 1 ∧ M.eval z3 = none := by sorry
+    ∃ M : MobiusTransform, M.eval z1 = some 0 ∧ M.eval z2 = some 1 ∧ M.eval z3 = none := by
+  cases z1 with
+  | none =>
+      cases z2 with
+      | none => exact (h12 rfl).elim
+      | some z2 =>
+          cases z3 with
+          | none => exact (h13 rfl).elim
+          | some z3 =>
+              have hz23 : z2 ≠ z3 := by
+                intro hz
+                exact h23 (by simpa [hz])
+              let M : MobiusTransform :=
+                { a := 0,
+                  b := z2 - z3,
+                  c := 1,
+                  d := -z3,
+                  det_ne_zero := by
+                    have hdet : (0 : ℂ) * (-z3) - (z2 - z3) * (1 : ℂ) = -(z2 - z3) := by ring
+                    rw [hdet]
+                    exact neg_ne_zero.mpr (sub_ne_zero.mpr hz23) }
+              refine ⟨M, ?_, ?_, ?_⟩
+              · simp [M, MobiusTransform.eval]
+              · have hden : z2 - z3 ≠ 0 := sub_ne_zero.mpr hz23
+                have hden' : z2 + -z3 ≠ 0 := by simpa using hden
+                have hq : (z2 - z3) / (z2 + -z3) = (1 : ℂ) := by
+                  simpa [sub_eq_add_neg] using congrArg id (div_self hden)
+                simp [M, MobiusTransform.eval, hden', hq]
+              · have hden0 : z3 + -z3 = 0 := by ring
+                simp [M, MobiusTransform.eval, hden0]
+  | some z1 =>
+      cases z2 with
+      | none =>
+          cases z3 with
+          | none => exact (h23 rfl).elim
+          | some z3 =>
+              have hz13 : z1 ≠ z3 := by
+                intro hz
+                exact h13 (by simpa [hz])
+              let M : MobiusTransform :=
+                { a := 1,
+                  b := -z1,
+                  c := 1,
+                  d := -z3,
+                  det_ne_zero := by
+                    have hdet : (1 : ℂ) * (-z3) - (-z1) * (1 : ℂ) = z1 - z3 := by ring
+                    rw [hdet]
+                    exact sub_ne_zero.mpr hz13 }
+              refine ⟨M, ?_, ?_, ?_⟩
+              · have hden : z1 - z3 ≠ 0 := sub_ne_zero.mpr hz13
+                have hden' : z1 + -z3 ≠ 0 := by simpa using hden
+                simp [M, MobiusTransform.eval, hden']
+              · simp [M, MobiusTransform.eval]
+              · have hden0 : z3 + -z3 = 0 := by ring
+                simp [M, MobiusTransform.eval, hden0]
+      | some z2 =>
+          cases z3 with
+          | none =>
+              have hz12 : z1 ≠ z2 := by
+                intro hz
+                exact h12 (by simpa [hz])
+              let M : MobiusTransform :=
+                { a := 1,
+                  b := -z1,
+                  c := 0,
+                  d := z2 - z1,
+                  det_ne_zero := by
+                    have hdet : (1 : ℂ) * (z2 - z1) - (-z1) * (0 : ℂ) = z2 - z1 := by ring
+                    rw [hdet]
+                    exact sub_ne_zero.mpr hz12.symm }
+              refine ⟨M, ?_, ?_, ?_⟩
+              · have hden : z2 - z1 ≠ 0 := sub_ne_zero.mpr hz12.symm
+                simp [M, MobiusTransform.eval, hden]
+              · have hden : z2 - z1 ≠ 0 := sub_ne_zero.mpr hz12.symm
+                have hsub : z2 + -z1 = z2 - z1 := by ring
+                have hq : (z2 + -z1) / (z2 - z1) = (1 : ℂ) := by
+                  rw [hsub]
+                  exact div_self hden
+                simp [M, MobiusTransform.eval, hden, hsub, hq]
+              · simp [M, MobiusTransform.eval]
+          | some z3 =>
+              have hz12 : z1 ≠ z2 := by
+                intro hz
+                exact h12 (by simpa [hz])
+              have hz23 : z2 ≠ z3 := by
+                intro hz
+                exact h23 (by simpa [hz])
+              have hz13 : z1 ≠ z3 := by
+                intro hz
+                exact h13 (by simpa [hz])
+              let M : MobiusTransform :=
+                { a := z2 - z3,
+                  b := -(z2 - z3) * z1,
+                  c := z2 - z1,
+                  d := -(z2 - z1) * z3,
+                  det_ne_zero := by
+                    have hdet :
+                        (z2 - z3) * (-(z2 - z1) * z3) - (-(z2 - z3) * z1) * (z2 - z1) =
+                          (z2 - z3) * (z2 - z1) * (z1 - z3) := by
+                      ring
+                    rw [hdet]
+                    exact mul_ne_zero
+                      (mul_ne_zero (sub_ne_zero.mpr hz23) (sub_ne_zero.mpr hz12.symm))
+                      (sub_ne_zero.mpr hz13) }
+              refine ⟨M, ?_, ?_, ?_⟩
+              · have hden1 : (z2 - z1) * z1 + (z1 - z2) * z3 ≠ 0 := by
+                  have hneq : (z2 - z1) * (z1 - z3) ≠ 0 := by
+                    exact mul_ne_zero (sub_ne_zero.mpr hz12.symm) (sub_ne_zero.mpr hz13)
+                  have hiden : (z2 - z1) * z1 + (z1 - z2) * z3 = (z2 - z1) * (z1 - z3) := by
+                    ring
+                  rw [hiden]
+                  exact hneq
+                have hnum : (z2 - z3) * z1 + (z3 - z2) * z1 = 0 := by ring
+                simp [M, MobiusTransform.eval, hden1, hnum]
+              · have hden2 : (z2 - z1) * z2 + (z1 - z2) * z3 ≠ 0 := by
+                  have hneq : (z2 - z1) * (z2 - z3) ≠ 0 := by
+                    exact mul_ne_zero (sub_ne_zero.mpr hz12.symm) (sub_ne_zero.mpr hz23)
+                  have hiden : (z2 - z1) * z2 + (z1 - z2) * z3 = (z2 - z1) * (z2 - z3) := by
+                    ring
+                  rw [hiden]
+                  exact hneq
+                have hq : ((z2 - z3) * z2 + (z3 - z2) * z1) / ((z2 - z1) * z2 + (z1 - z2) * z3) = 1 := by
+                  have hnumden :
+                      (z2 - z3) * z2 + (z3 - z2) * z1 = (z2 - z1) * z2 + (z1 - z2) * z3 := by
+                    ring
+                  rw [hnumden]
+                  exact div_self hden2
+                simp [M, MobiusTransform.eval, hden2, hq]
+              · have hden0 : (z2 - z1) * z3 + (z1 - z2) * z3 = 0 := by ring
+                simp [M, MobiusTransform.eval, hden0]
 
 lemma mobius_unique_01inf (M : MobiusTransform) (h0 : M.eval (some 0) = some 0)
     (h1 : M.eval (some 1) = some 1) (hinf : M.eval none = none) :
-    ∀ z, M.eval z = z := by sorry
+    ∀ z, M.eval z = z := by
+  have hc : M.c = 0 := by
+    dsimp [MobiusTransform.eval] at hinf
+    split_ifs at hinf with h
+    exact h
+  have hb : M.b = 0 := by
+    dsimp [MobiusTransform.eval] at h0
+    have hdenom : M.c * 0 + M.d = M.d := by ring
+    rw [hdenom] at h0
+    split_ifs at h0 with hd
+    have h0' := Option.some.inj h0
+    have hnum : M.a * 0 + M.b = M.b := by ring
+    rw [hnum] at h0'
+    exact div_eq_zero_iff.mp h0' |>.resolve_right hd
+  have had : M.a = M.d := by
+    dsimp [MobiusTransform.eval] at h1
+    have hdenom : M.c * 1 + M.d = M.d := by rw [hc, zero_mul, zero_add]
+    rw [hdenom] at h1
+    split_ifs at h1 with hd
+    have h1' := Option.some.inj h1
+    have hnum : M.a * 1 + M.b = M.a := by rw [hb, mul_one, add_zero]
+    rw [hnum] at h1'
+    have h1'' := (div_eq_iff_mul_eq hd).mp h1'
+    rw [one_mul] at h1''
+    exact h1''.symm
+  have hd_ne : M.d ≠ 0 := by
+    intro hd
+    have hdet := M.det_ne_zero
+    rw [hc, hb, hd, had, mul_zero, mul_zero, sub_zero] at hdet
+    exact hdet rfl
+  intro z
+  cases z with
+  | none =>
+      dsimp [MobiusTransform.eval]
+      rw [if_pos hc]
+  | some z' =>
+      dsimp [MobiusTransform.eval]
+      have hdenom : M.c * z' + M.d = M.d := by rw [hc, zero_mul, zero_add]
+      rw [hdenom]
+      have hnum : M.a * z' + M.b = M.d * z' := by rw [hb, had, add_zero]
+      rw [hnum]
+      rw [if_neg hd_ne]
+      congr 1
+      rw [mul_comm]
+      exact mul_div_cancel_right₀ z' hd_ne
+
+def inv (M : MobiusTransform) : MobiusTransform :=
+  { a := M.d,
+    b := -M.b,
+    c := -M.c,
+    d := M.a,
+    det_ne_zero := by
+      have h := M.det_ne_zero
+      dsimp
+      have h_ring : M.d * M.a - -M.b * -M.c = M.a * M.d - M.b * M.c := by ring
+      rw [h_ring]
+      exact h }
+
+def comp (M1 M2 : MobiusTransform) : MobiusTransform :=
+  { a := M1.a * M2.a + M1.b * M2.c,
+    b := M1.a * M2.b + M1.b * M2.d,
+    c := M1.c * M2.a + M1.d * M2.c,
+    d := M1.c * M2.b + M1.d * M2.d,
+    det_ne_zero := by
+      have h1 := M1.det_ne_zero
+      have h2 := M2.det_ne_zero
+      have h_ring : (M1.a * M2.a + M1.b * M2.c) * (M1.c * M2.b + M1.d * M2.d) -
+                    (M1.a * M2.b + M1.b * M2.d) * (M1.c * M2.a + M1.d * M2.c) =
+                    (M1.a * M1.d - M1.b * M1.c) * (M2.a * M2.d - M2.b * M2.c) := by ring
+      rw [h_ring]
+      exact mul_ne_zero h1 h2 }
+
+lemma eval_inv (M : MobiusTransform) (z : RiemannSphere) :
+    M.eval ((inv M).eval z) = z := by
+  cases z with
+  | none =>
+    change M.eval (if -M.c = 0 then none else some (M.d / -M.c)) = none
+    by_cases hc : M.c = 0
+    · have hmc : -M.c = 0 := by rw [hc, neg_zero]
+      rw [if_pos hmc]
+      change (if M.c = 0 then none else some (M.a / M.c)) = none
+      rw [if_pos hc]
+    · have hmc : -M.c ≠ 0 := by intro h; apply hc; exact neg_eq_zero.mp h
+      rw [if_neg hmc]
+      change (if M.c * (M.d / -M.c) + M.d = 0 then none else some _) = none
+      have h_denom : M.c * (M.d / -M.c) + M.d = 0 := by
+        field_simp; ring
+      rw [if_pos h_denom]
+  | some z' =>
+    change M.eval (if -M.c * z' + M.a = 0 then none else some ((M.d * z' + -M.b) / (-M.c * z' + M.a))) = some z'
+    by_cases h_inv_denom : -M.c * z' + M.a = 0
+    · rw [if_pos h_inv_denom]
+      have hc : M.c ≠ 0 := by
+        intro h
+        have ha : M.a = 0 := by
+          calc M.a = (-M.c * z' + M.a) + M.c * z' := by ring
+          _ = 0 + M.c * z' := by rw [h_inv_denom]
+          _ = 0 + 0 * z' := by rw [h]
+          _ = 0 := by ring
+        have h_det := M.det_ne_zero
+        rw [h, ha] at h_det
+        have h_zero : (0 : ℂ) * M.d - M.b * 0 = 0 := by ring
+        rw [h_zero] at h_det
+        exact h_det rfl
+      change (if M.c = 0 then none else some (M.a / M.c)) = some z'
+      rw [if_neg hc]
+      congr 1
+      have h_eq : M.a = M.c * z' := by
+        calc M.a = (-M.c * z' + M.a) + M.c * z' := by ring
+        _ = 0 + M.c * z' := by rw [h_inv_denom]
+        _ = M.c * z' := by ring
+      rw [h_eq]
+      have : M.c * z' / M.c = z' * M.c / M.c := by rw [mul_comm]
+      rw [this, mul_div_cancel_right₀ _ hc]
+    · rw [if_neg h_inv_denom]
+      change (if M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d = 0 then none else some _) = some z'
+      have h_denom : M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d ≠ 0 := by
+        intro h_zero
+        have h_det := M.det_ne_zero
+        have h_zero_mul : (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a) = 0 := by
+          rw [h_zero, zero_mul]
+        have h_simp : (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a) = M.a * M.d - M.b * M.c := by
+          calc (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a)
+            _ = M.c * (((M.d * z' + -M.b) / (-M.c * z' + M.a)) * (-M.c * z' + M.a)) + M.d * (-M.c * z' + M.a) := by ring
+            _ = M.c * (M.d * z' + -M.b) + M.d * (-M.c * z' + M.a) := by
+              rw [div_mul_cancel₀ _ h_inv_denom]
+            _ = M.a * M.d - M.b * M.c := by ring
+        rw [h_simp] at h_zero_mul
+        exact h_det h_zero_mul
+      rw [if_neg h_denom]
+      congr 1
+      have h_cross : (M.a * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.b) = z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) := by
+        have h1 : (M.a * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.b) * (-M.c * z' + M.a) = (M.a * M.d - M.b * M.c) * z' := by
+          calc (M.a * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.b) * (-M.c * z' + M.a)
+            _ = M.a * (((M.d * z' + -M.b) / (-M.c * z' + M.a)) * (-M.c * z' + M.a)) + M.b * (-M.c * z' + M.a) := by ring
+            _ = M.a * (M.d * z' + -M.b) + M.b * (-M.c * z' + M.a) := by rw [div_mul_cancel₀ _ h_inv_denom]
+            _ = (M.a * M.d - M.b * M.c) * z' := by ring
+        have h2 : z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a) = (M.a * M.d - M.b * M.c) * z' := by
+          calc z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a)
+            _ = z' * ((M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a)) := by ring
+            _ = z' * (M.c * (((M.d * z' + -M.b) / (-M.c * z' + M.a)) * (-M.c * z' + M.a)) + M.d * (-M.c * z' + M.a)) := by ring
+            _ = z' * (M.c * (M.d * z' + -M.b) + M.d * (-M.c * z' + M.a)) := by rw [div_mul_cancel₀ _ h_inv_denom]
+            _ = (M.a * M.d - M.b * M.c) * z' := by ring
+        have h3 : (M.a * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.b) * (-M.c * z' + M.a) = z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) * (-M.c * z' + M.a) := by
+          rw [h1, h2]
+        exact mul_right_cancel₀ h_inv_denom h3
+      calc (M.a * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.b) / (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d)
+        _ = (z' * (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d)) / (M.c * ((M.d * z' + -M.b) / (-M.c * z' + M.a)) + M.d) := by rw [h_cross]
+        _ = z' := by rw [mul_div_cancel_right₀ _ h_denom]
+
+lemma eval_comp (M1 M2 : MobiusTransform) (z : RiemannSphere) :
+    (comp M1 M2).eval z = M1.eval (M2.eval z) := by
+  cases z with
+  | none =>
+    change (if M1.c * M2.a + M1.d * M2.c = 0 then none else some ((M1.a * M2.a + M1.b * M2.c) / (M1.c * M2.a + M1.d * M2.c))) =
+           M1.eval (if M2.c = 0 then none else some (M2.a / M2.c))
+    by_cases h2c : M2.c = 0
+    · rw [if_pos h2c]
+      change (if M1.c * M2.a + M1.d * M2.c = 0 then none else some _) =
+             (if M1.c = 0 then none else some (M1.a / M1.c))
+      have hc : M1.c * M2.a + M1.d * M2.c = M1.c * M2.a := by rw [h2c, mul_zero, add_zero]
+      have ha : M1.a * M2.a + M1.b * M2.c = M1.a * M2.a := by rw [h2c, mul_zero, add_zero]
+      by_cases h1c : M1.c = 0
+      · have : M1.c * M2.a + M1.d * M2.c = 0 := by rw [hc, h1c, zero_mul]
+        rw [if_pos this, if_pos h1c]
+      · have h2a : M2.a ≠ 0 := by
+          intro ha_zero
+          have h_det2 := M2.det_ne_zero
+          rw [h2c, ha_zero, zero_mul, mul_zero, sub_zero] at h_det2
+          exact h_det2 rfl
+        have : M1.c * M2.a + M1.d * M2.c ≠ 0 := by
+          rw [hc]
+          exact mul_ne_zero h1c h2a
+        rw [if_neg this, if_neg h1c]
+        congr 1
+        change ((M1.a * M2.a + M1.b * M2.c) / (M1.c * M2.a + M1.d * M2.c)) = M1.a / M1.c
+        have num_eq : (M1.a * M2.a + M1.b * M2.c) = M1.a * M2.a := by rw [h2c, mul_zero, add_zero]
+        have den_eq : (M1.c * M2.a + M1.d * M2.c) = M1.c * M2.a := by rw [h2c, mul_zero, add_zero]
+        rw [num_eq, den_eq]
+        have cross : M1.a * M2.a / (M1.c * M2.a) = M1.a / M1.c := by
+          rw [eq_div_iff_mul_eq h1c]
+          calc M1.a * M2.a / (M1.c * M2.a) * M1.c
+            _ = M1.a * M2.a * M1.c / (M1.c * M2.a) := by rw [div_mul_eq_mul_div]
+            _ = M1.a * (M1.c * M2.a) / (M1.c * M2.a) := by ring_nf
+            _ = M1.a := by rw [mul_div_cancel_right₀ _ (mul_ne_zero h1c h2a)]
+        rw [cross]
+    · rw [if_neg h2c]
+      change (if M1.c * M2.a + M1.d * M2.c = 0 then none else some _) =
+             (if M1.c * (M2.a / M2.c) + M1.d = 0 then none else some _)
+      have h_denom : M1.c * (M2.a / M2.c) + M1.d = 0 ↔ M1.c * M2.a + M1.d * M2.c = 0 := by
+        constructor
+        · intro h
+          calc M1.c * M2.a + M1.d * M2.c
+            _ = (M1.c * (M2.a / M2.c) + M1.d) * M2.c := by
+              have : M1.c * (M2.a / M2.c) * M2.c = M1.c * M2.a := by
+                rw [mul_assoc, div_mul_cancel₀ _ h2c]
+              rw [add_mul, this]
+            _ = 0 * M2.c := by rw [h]
+            _ = 0 := zero_mul M2.c
+        · intro h
+          have h_eq : (M1.c * (M2.a / M2.c) + M1.d) * M2.c = 0 := by
+            calc (M1.c * (M2.a / M2.c) + M1.d) * M2.c
+              _ = M1.c * (M2.a / M2.c) * M2.c + M1.d * M2.c := by ring
+              _ = M1.c * M2.a + M1.d * M2.c := by
+                have : M1.c * (M2.a / M2.c) * M2.c = M1.c * M2.a := by
+                  rw [mul_assoc, div_mul_cancel₀ _ h2c]
+                rw [this]
+              _ = 0 := h
+          exact (mul_eq_zero.mp h_eq).resolve_right h2c
+      by_cases h_c_zero : M1.c * M2.a + M1.d * M2.c = 0
+      · rw [if_pos h_c_zero, if_pos (h_denom.mpr h_c_zero)]
+      · rw [if_neg h_c_zero, if_neg (mt h_denom.mp h_c_zero)]
+        congr 1
+        have h_c_zero' : M1.c * (M2.a / M2.c) + M1.d ≠ 0 := mt h_denom.mp h_c_zero
+        change ((M1.a * M2.a + M1.b * M2.c) / (M1.c * M2.a + M1.d * M2.c)) =
+               (M1.a * (M2.a / M2.c) + M1.b) / (M1.c * (M2.a / M2.c) + M1.d)
+        have num_eq : (M1.a * (M2.a / M2.c) + M1.b) = (M1.a * M2.a + M1.b * M2.c) / M2.c := by
+          rw [eq_div_iff_mul_eq h2c]
+          calc (M1.a * (M2.a / M2.c) + M1.b) * M2.c
+            _ = M1.a * (M2.a / M2.c) * M2.c + M1.b * M2.c := by ring
+            _ = M1.a * M2.a + M1.b * M2.c := by
+              have : M1.a * (M2.a / M2.c) * M2.c = M1.a * M2.a := by rw [mul_assoc, div_mul_cancel₀ _ h2c]
+              rw [this]
+        have den_eq : (M1.c * (M2.a / M2.c) + M1.d) = (M1.c * M2.a + M1.d * M2.c) / M2.c := by
+          rw [eq_div_iff_mul_eq h2c]
+          calc (M1.c * (M2.a / M2.c) + M1.d) * M2.c
+            _ = M1.c * (M2.a / M2.c) * M2.c + M1.d * M2.c := by ring
+            _ = M1.c * M2.a + M1.d * M2.c := by
+              have : M1.c * (M2.a / M2.c) * M2.c = M1.c * M2.a := by rw [mul_assoc, div_mul_cancel₀ _ h2c]
+              rw [this]
+        rw [num_eq, den_eq]
+        have cross : (M1.a * M2.a + M1.b * M2.c) / M2.c / ((M1.c * M2.a + M1.d * M2.c) / M2.c) = (M1.a * M2.a + M1.b * M2.c) / (M1.c * M2.a + M1.d * M2.c) := by
+          rw [div_div_div_cancel_right₀ h2c]
+        rw [cross]
+  | some z' =>
+    change (if (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0 then none else some _) =
+           M1.eval (if M2.c * z' + M2.d = 0 then none else some _)
+    by_cases h2_denom : M2.c * z' + M2.d = 0
+    · rw [if_pos h2_denom]
+      change (if (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0 then none else some _) =
+             (if M1.c = 0 then none else some (M1.a / M1.c))
+      have hc : (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = M1.c * (M2.a * z' + M2.b) := by
+        calc (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d)
+          _ = M1.c * (M2.a * z' + M2.b) + M1.d * (M2.c * z' + M2.d) := by ring
+          _ = M1.c * (M2.a * z' + M2.b) + M1.d * 0 := by rw [h2_denom]
+          _ = M1.c * (M2.a * z' + M2.b) := by ring
+      have ha : (M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d) = M1.a * (M2.a * z' + M2.b) := by
+        calc (M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d)
+          _ = M1.a * (M2.a * z' + M2.b) + M1.b * (M2.c * z' + M2.d) := by ring
+          _ = M1.a * (M2.a * z' + M2.b) + M1.b * 0 := by rw [h2_denom]
+          _ = M1.a * (M2.a * z' + M2.b) := by ring
+      by_cases h1c : M1.c = 0
+      · have : (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0 := by
+          rw [hc, h1c, zero_mul]
+        rw [if_pos this, if_pos h1c]
+      · have h2a : M2.a * z' + M2.b ≠ 0 := by
+          intro h_zero
+          have h_det2 := M2.det_ne_zero
+          have : (M2.a * z' + M2.b) * M2.c - (M2.c * z' + M2.d) * M2.a = M2.b * M2.c - M2.d * M2.a := by ring
+          rw [h_zero, h2_denom, zero_mul, zero_mul, zero_sub] at this
+          have h_det2_neg : M2.b * M2.c - M2.a * M2.d = 0 := by
+            calc M2.b * M2.c - M2.a * M2.d
+              _ = M2.b * M2.c - M2.d * M2.a := by ring
+              _ = -0 := this.symm
+              _ = 0 := neg_zero
+          have h_det2_pos : M2.a * M2.d - M2.b * M2.c = 0 := by
+            calc M2.a * M2.d - M2.b * M2.c
+              _ = - (M2.b * M2.c - M2.a * M2.d) := by ring
+              _ = - 0 := by rw [h_det2_neg]
+              _ = 0 := neg_zero
+          exact h_det2 h_det2_pos
+        have : (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) ≠ 0 := by
+          rw [hc]
+          exact mul_ne_zero h1c h2a
+        rw [if_neg this, if_neg h1c]
+        congr 1
+        change ((M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d)) / ((M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d)) = M1.a / M1.c
+        rw [hc, ha]
+        have : M1.a * (M2.a * z' + M2.b) / (M1.c * (M2.a * z' + M2.b)) = M1.a / M1.c := by
+          rw [mul_comm M1.a, mul_comm M1.c]
+          rw [mul_div_mul_left _ _ h2a]
+        exact this
+    · rw [if_neg h2_denom]
+      change (if (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0 then none else some _) =
+             (if M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d = 0 then none else some _)
+      have h_denom : M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d = 0 ↔ (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0 := by
+        constructor
+        · intro h
+          calc (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d)
+            _ = M1.c * (M2.a * z' + M2.b) + M1.d * (M2.c * z' + M2.d) := by ring
+            _ = (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d) * (M2.c * z' + M2.d) := by
+              have : M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) = M1.c * (M2.a * z' + M2.b) := by
+                rw [mul_assoc, div_mul_cancel₀ _ h2_denom]
+              rw [add_mul, this]
+            _ = 0 * (M2.c * z' + M2.d) := by rw [h]
+            _ = 0 := zero_mul _
+        · intro h
+          have h_eq : (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d) * (M2.c * z' + M2.d) = 0 := by
+            calc (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d) * (M2.c * z' + M2.d)
+              _ = M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) + M1.d * (M2.c * z' + M2.d) := by ring
+              _ = M1.c * (M2.a * z' + M2.b) + M1.d * (M2.c * z' + M2.d) := by
+                have : M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) = M1.c * (M2.a * z' + M2.b) := by
+                  rw [mul_assoc, div_mul_cancel₀ _ h2_denom]
+                rw [this]
+              _ = (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) := by ring
+              _ = 0 := h
+          exact (mul_eq_zero.mp h_eq).resolve_right h2_denom
+      by_cases h_c_zero : (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) = 0
+      · rw [if_pos h_c_zero, if_pos (h_denom.mpr h_c_zero)]
+      · rw [if_neg h_c_zero, if_neg (mt h_denom.mp h_c_zero)]
+        congr 1
+        change ((M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d)) / ((M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d)) =
+               (M1.a * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.b) / (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d)
+        have num_eq : (M1.a * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.b) = ((M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d)) / (M2.c * z' + M2.d) := by
+          rw [eq_div_iff_mul_eq h2_denom]
+          calc (M1.a * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.b) * (M2.c * z' + M2.d)
+            _ = M1.a * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) + M1.b * (M2.c * z' + M2.d) := by ring
+            _ = M1.a * (M2.a * z' + M2.b) + M1.b * (M2.c * z' + M2.d) := by
+              have : M1.a * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) = M1.a * (M2.a * z' + M2.b) := by
+                rw [mul_assoc, div_mul_cancel₀ _ h2_denom]
+              rw [this]
+            _ = (M1.a * M2.a + M1.b * M2.c) * z' + (M1.a * M2.b + M1.b * M2.d) := by ring
+        have den_eq : (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d) = ((M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d)) / (M2.c * z' + M2.d) := by
+          rw [eq_div_iff_mul_eq h2_denom]
+          calc (M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) + M1.d) * (M2.c * z' + M2.d)
+            _ = M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) + M1.d * (M2.c * z' + M2.d) := by ring
+            _ = M1.c * (M2.a * z' + M2.b) + M1.d * (M2.c * z' + M2.d) := by
+              have : M1.c * ((M2.a * z' + M2.b) / (M2.c * z' + M2.d)) * (M2.c * z' + M2.d) = M1.c * (M2.a * z' + M2.b) := by
+                rw [mul_assoc, div_mul_cancel₀ _ h2_denom]
+              rw [this]
+            _ = (M1.c * M2.a + M1.d * M2.c) * z' + (M1.c * M2.b + M1.d * M2.d) := by ring
+        rw [num_eq, den_eq]
+        rw [div_div_div_cancel_right₀ h2_denom]
+
+
+lemma inv_eval (M : MobiusTransform) (z : RiemannSphere) :
+    (inv M).eval (M.eval z) = z := by
+  have h := eval_inv (inv M) z
+  have h_eq : (inv (inv M)).eval z = M.eval z := by
+    cases z with
+    | none => dsimp [inv, MobiusTransform.eval]; simp only [neg_neg]
+    | some z' => dsimp [inv, MobiusTransform.eval]; simp only [neg_neg]
+  rw [h_eq] at h
+  exact h
 
 /-- The action of the Möbius group on the Riemann sphere is strictly 3-transitive.
     Any three distinct points determine a unique Möbius transformation
@@ -124,7 +668,75 @@ theorem strictly_three_transitive
       M.eval z1 = w1 ∧ M.eval z2 = w2 ∧ M.eval z3 = w3 ∧
       ∀ M' : MobiusTransform, M'.eval z1 = w1 ∧ M'.eval z2 = w2 ∧ M'.eval z3 = w3 →
         M.equiv M' := by
-  sorry
+  obtain ⟨M1, h1z1, h1z2, h1z3⟩ := maps_to_01inf z1 z2 z3 h12 h23 h13
+  obtain ⟨M2, h2w1, h2w2, h2w3⟩ := maps_to_01inf w1 w2 w3 g12 g23 g13
+  let M := comp (inv M2) M1
+  have hmz1 : M.eval z1 = w1 := by
+    calc M.eval z1 = (inv M2).eval (M1.eval z1) := eval_comp (inv M2) M1 z1
+      _ = (inv M2).eval (some 0) := by rw [h1z1]
+      _ = w1 := by
+        have h_inv : (inv M2).eval (M2.eval w1) = w1 := inv_eval M2 w1
+        rw [h2w1] at h_inv
+        exact h_inv
+  have hmz2 : M.eval z2 = w2 := by
+    calc M.eval z2 = (inv M2).eval (M1.eval z2) := eval_comp (inv M2) M1 z2
+      _ = (inv M2).eval (some 1) := by rw [h1z2]
+      _ = w2 := by
+        have h_inv : (inv M2).eval (M2.eval w2) = w2 := inv_eval M2 w2
+        rw [h2w2] at h_inv
+        exact h_inv
+  have hmz3 : M.eval z3 = w3 := by
+    calc M.eval z3 = (inv M2).eval (M1.eval z3) := eval_comp (inv M2) M1 z3
+      _ = (inv M2).eval none := by rw [h1z3]
+      _ = w3 := by
+        have h_inv : (inv M2).eval (M2.eval w3) = w3 := inv_eval M2 w3
+        rw [h2w3] at h_inv
+        exact h_inv
+  refine ⟨M, hmz1, hmz2, hmz3, ?_⟩
+  intro M' hM'
+  intro z
+  let M_test := comp M2 (comp M' (inv M1))
+  have ht0 : M_test.eval (some 0) = some 0 := by
+    calc M_test.eval (some 0) = M2.eval ((comp M' (inv M1)).eval (some 0)) := eval_comp M2 (comp M' (inv M1)) (some 0)
+      _ = M2.eval (M'.eval ((inv M1).eval (some 0))) := by rw [eval_comp M' (inv M1) (some 0)]
+      _ = M2.eval (M'.eval z1) := by
+        have h_inv : (inv M1).eval (M1.eval z1) = z1 := inv_eval M1 z1
+        rw [h1z1] at h_inv
+        rw [h_inv]
+      _ = M2.eval w1 := by rw [hM'.1]
+      _ = some 0 := h2w1
+  have ht1 : M_test.eval (some 1) = some 1 := by
+    calc M_test.eval (some 1) = M2.eval ((comp M' (inv M1)).eval (some 1)) := eval_comp M2 (comp M' (inv M1)) (some 1)
+      _ = M2.eval (M'.eval ((inv M1).eval (some 1))) := by rw [eval_comp M' (inv M1) (some 1)]
+      _ = M2.eval (M'.eval z2) := by
+        have h_inv : (inv M1).eval (M1.eval z2) = z2 := inv_eval M1 z2
+        rw [h1z2] at h_inv
+        rw [h_inv]
+      _ = M2.eval w2 := by rw [hM'.2.1]
+      _ = some 1 := h2w2
+  have htinf : M_test.eval none = none := by
+    calc M_test.eval none = M2.eval ((comp M' (inv M1)).eval none) := eval_comp M2 (comp M' (inv M1)) none
+      _ = M2.eval (M'.eval ((inv M1).eval none)) := by rw [eval_comp M' (inv M1) none]
+      _ = M2.eval (M'.eval z3) := by
+        have h_inv : (inv M1).eval (M1.eval z3) = z3 := inv_eval M1 z3
+        rw [h1z3] at h_inv
+        rw [h_inv]
+      _ = M2.eval w3 := by rw [hM'.2.2]
+      _ = none := h2w3
+  have h_id := mobius_unique_01inf M_test ht0 ht1 htinf
+  have h_M_eq_M' : ∀ y, M.eval y = M'.eval y := by
+    intro y
+    have h_z_eq : M_test.eval (M1.eval y) = M1.eval y := h_id (M1.eval y)
+    have h_z_expand : M_test.eval (M1.eval y) = M2.eval (M'.eval y) := by
+      calc M_test.eval (M1.eval y) = M2.eval ((comp M' (inv M1)).eval (M1.eval y)) := eval_comp M2 (comp M' (inv M1)) (M1.eval y)
+        _ = M2.eval (M'.eval ((inv M1).eval (M1.eval y))) := by rw [eval_comp M' (inv M1) (M1.eval y)]
+        _ = M2.eval (M'.eval y) := by rw [inv_eval M1 y]
+    rw [h_z_expand] at h_z_eq
+    calc M.eval y = (comp (inv M2) M1).eval y := rfl
+      _ = (inv M2).eval (M1.eval y) := eval_comp (inv M2) M1 y
+      _ = (inv M2).eval (M2.eval (M'.eval y)) := by rw [← h_z_eq]
+      _ = M'.eval y := inv_eval M2 (M'.eval y)
+  exact h_M_eq_M' z
 
 /-- A fixed point of a Möbius transformation is a point z on the Riemann sphere
     such that M.eval z = z. -/
@@ -339,32 +951,225 @@ theorem mobius_algebraic_decomposition (M : MobiusTransform) (hc : M.c ≠ 0) (z
     rw [mul_div_mul_left (M.a * z + M.b) (M.c * z + M.d) hc]
   rw [h_final]
 
-/-- The inverse Möbius transformation: f^{-1}(z) = (d*z - b) / (-c*z + a). -/
-def inv (M : MobiusTransform) : MobiusTransform :=
-  { a := M.d,
-    b := -M.b,
-    c := -M.c,
-    d := M.a,
-    det_ne_zero := by
-      have h := M.det_ne_zero
-      dsimp
-      have h_ring : M.d * M.a - -M.b * -M.c = M.a * M.d - M.b * M.c := by ring
-      rw [h_ring]
-      exact h }
-
 /-- The cross-ratio of four distinct finite points. -/
 noncomputable def cross_ratio (z1 z2 z3 z4 : ℂ) : ℂ :=
   ((z1 - z3) * (z2 - z4)) / ((z2 - z3) * (z1 - z4))
 
 /-- Extended cross-ratio handling infinity on the Riemann sphere. -/
 noncomputable def cross_ratio_ext (z1 z2 z3 z4 : RiemannSphere) : RiemannSphere :=
-  sorry
+  match z1, z2, z3, z4 with
+  | none, none, none, none => none
+  | none, none, none, some d => none
+  | none, none, some c, none => none
+  | none, none, some c, some d => some 1
+  | none, some b, none, none => none
+  | none, some b, none, some d => some 0
+  | none, some b, some c, none => none
+  | none, some b, some c, some d => if b - c = 0 then none else some ((b - d) / (b - c))
+  | some a, none, none, none => none
+  | some a, none, none, some d => none
+  | some a, none, some c, none => some 0
+  | some a, none, some c, some d => if a - d = 0 then none else some ((a - c) / (a - d))
+  | some a, some b, none, none => some 1
+  | some a, some b, none, some d => if a - d = 0 then none else some ((b - d) / (a - d))
+  | some a, some b, some c, none => if b - c = 0 then none else some ((a - c) / (b - c))
+  | some a, some b, some c, some d => if (b - c) * (a - d) = 0 then none else some (((a - c) * (b - d)) / ((b - c) * (a - d)))
+
+private noncomputable def proj_cross_ratio (p1 p2 p3 p4 : ℂ × ℂ) : RiemannSphere :=
+  let num := (p1.1 * p3.2 - p3.1 * p1.2) * (p2.1 * p4.2 - p4.1 * p2.2)
+  let den := (p2.1 * p3.2 - p3.1 * p2.2) * (p1.1 * p4.2 - p4.1 * p1.2)
+  if den = 0 then none else some (num / den)
+
+private noncomputable def to_proj (z : RiemannSphere) : ℂ × ℂ :=
+  match z with | none => (1, 0) | some z' => (z', 1)
+
+private lemma if_mul_eq_if (x y c : ℂ) (hc : c ≠ 0) :
+  (if x = 0 then (none : RiemannSphere) else some (y / x)) =
+  (if c * x = 0 then none else some ((c * y) / (c * x))) := by
+  by_cases h : x = 0
+  · have h2 : c * x = 0 := by rw [h, mul_zero]
+    rw [if_pos h, if_pos h2]
+  · have h2 : c * x ≠ 0 := mul_ne_zero hc h
+    rw [if_neg h, if_neg h2]
+    congr 1
+    rw [mul_div_mul_left y x hc]
+
+private lemma if_mul_eq_if_right (x y c : ℂ) (hc : c ≠ 0) :
+  (if x = 0 then (none : RiemannSphere) else some (y / x)) =
+  (if x * c = 0 then none else some ((y * c) / (x * c))) := by
+  by_cases h : x = 0
+  · have h2 : x * c = 0 := by rw [h, zero_mul]
+    rw [if_pos h, if_pos h2]
+  · have h2 : x * c ≠ 0 := mul_ne_zero h hc
+    rw [if_neg h, if_neg h2]
+    congr 1
+    rw [mul_div_mul_right y x hc]
 
 /-- Möbius transformations strictly preserve the extended cross-ratio. -/
 theorem cross_ratio_preserving (M : MobiusTransform) (z1 z2 z3 z4 : RiemannSphere) :
     cross_ratio_ext z1 z2 z3 z4 =
     cross_ratio_ext (M.eval z1) (M.eval z2) (M.eval z3) (M.eval z4) := by
-  sorry
+  have h_eq : ∀ w1 w2 w3 w4 : RiemannSphere, cross_ratio_ext w1 w2 w3 w4 = proj_cross_ratio (to_proj w1) (to_proj w2) (to_proj w3) (to_proj w4) := by
+    intro w1 w2 w3 w4
+    cases w1 <;> cases w2 <;> cases w3 <;> cases w4 <;> {
+      dsimp [cross_ratio_ext, proj_cross_ratio, to_proj]
+      simp only [mul_one, mul_zero, sub_zero, zero_sub, one_mul, zero_mul, sub_self, neg_mul_neg]
+      try {
+        have h_neg1 : (-1 : ℂ) ≠ 0 := by norm_num
+        rw [if_mul_eq_if _ _ (-1) h_neg1]
+      }
+      try {
+        have h_neg1 : (-1 : ℂ) ≠ 0 := by norm_num
+        rw [if_mul_eq_if_right _ _ (-1) h_neg1]
+      }
+      try {
+        by_cases h : (-1 : ℂ) = 0
+        · exfalso; revert h; norm_num
+        simp only [h, mul_eq_zero, false_or, or_false, if_false, div_self h]
+        have hz : (0 : ℂ) / -1 = 0 := by norm_num
+        rw [hz]
+      }
+      try {
+        by_cases h : (1 : ℂ) = 0
+        · exfalso; revert h; norm_num
+        simp only [h, mul_eq_zero, false_or, or_false, if_false, div_self h]
+      }
+      try {
+        congr 1
+        funext hc
+        congr 1
+        field_simp
+        ring
+      }
+      try rfl
+    }
+  
+  rw [h_eq z1 z2 z3 z4, h_eq (M.eval z1) (M.eval z2) (M.eval z3) (M.eval z4)]
+  let M_act (p : ℂ × ℂ) : ℂ × ℂ := (M.a * p.1 + M.b * p.2, M.c * p.1 + M.d * p.2)
+  
+  have h_eval_act : ∀ z : RiemannSphere, ∃ lam : ℂ, lam ≠ 0 ∧ (to_proj (M.eval z)).1 = lam * (M_act (to_proj z)).1 ∧ (to_proj (M.eval z)).2 = lam * (M_act (to_proj z)).2 := by
+    intro z
+    cases z with
+    | none =>
+      dsimp [MobiusTransform.eval, to_proj, M_act]
+      by_cases hc : M.c = 0
+      · rw [if_pos hc]
+        use (1 / M.a)
+        have ha : M.a ≠ 0 := by
+          intro h
+          have : M.a * M.d - M.b * M.c = 0 := by rw [h, hc]; ring
+          exact M.det_ne_zero this
+        constructor
+        · exact one_div_ne_zero ha
+        · constructor
+          · dsimp [to_proj]; have hx : (M.a * 1 + M.b * 0) = M.a := by ring
+            rw [hx, one_div, inv_mul_cancel₀ ha]
+          · dsimp [to_proj]; have hx : (M.c * 1 + M.d * 0) = M.c := by ring
+            rw [hx, hc, mul_zero]
+      · rw [if_neg hc]
+        use (1 / M.c)
+        constructor
+        · exact one_div_ne_zero hc
+        · constructor
+          · dsimp [to_proj]; have hx : (M.a * 1 + M.b * 0) = M.a := by ring
+            rw [hx, one_div, div_eq_inv_mul]
+          · dsimp [to_proj]; have hx : (M.c * 1 + M.d * 0) = M.c := by ring
+            rw [hx, one_div, inv_mul_cancel₀ hc]
+    | some z' =>
+      dsimp [MobiusTransform.eval, to_proj, M_act]
+      by_cases hd : M.c * z' + M.d = 0
+      · rw [if_pos hd]
+        use (1 / (M.a * z' + M.b))
+        have ha : M.a * z' + M.b ≠ 0 := by
+          intro h
+          have h1 : M.d * (M.a * z' + M.b) - M.b * (M.c * z' + M.d) = 0 := by rw [h, hd]; ring
+          have h2 : M.d * (M.a * z' + M.b) - M.b * (M.c * z' + M.d) = (M.a * M.d - M.b * M.c) * z' := by ring
+          rw [h2] at h1
+          have hz : z' = 0 := by
+            cases mul_eq_zero.mp h1 with
+            | inl hdet => exact (M.det_ne_zero hdet).elim
+            | inr hz => exact hz
+          rw [hz] at h hd
+          have hb : M.b = 0 := by
+            calc M.b = M.a * 0 + M.b := by ring
+                 _ = 0 := h
+          have hm_d : M.d = 0 := by
+            calc M.d = M.c * 0 + M.d := by ring
+                 _ = 0 := hd
+          have hdet : M.a * M.d - M.b * M.c = 0 := by rw [hb, hm_d]; ring
+          exact M.det_ne_zero hdet
+        constructor
+        · exact one_div_ne_zero ha
+        · constructor
+          · dsimp [to_proj]; have hx : (M.a * z' + M.b * 1) = M.a * z' + M.b := by ring
+            rw [hx, one_div, inv_mul_cancel₀ ha]
+          · dsimp [to_proj]; have hx : (M.c * z' + M.d * 1) = M.c * z' + M.d := by ring
+            rw [hx, hd, mul_zero]
+      · rw [if_neg hd]
+        use (1 / (M.c * z' + M.d))
+        constructor
+        · exact one_div_ne_zero hd
+        · constructor
+          · dsimp [to_proj]; have hx : (M.a * z' + M.b * 1) = M.a * z' + M.b := by ring
+            rw [hx, one_div, div_eq_inv_mul]
+          · dsimp [to_proj]; have hx : (M.c * z' + M.d * 1) = M.c * z' + M.d := by ring
+            rw [hx, one_div, inv_mul_cancel₀ hd]
+
+  rcases h_eval_act z1 with ⟨L1, hL1, hz1_1, hz1_2⟩
+  rcases h_eval_act z2 with ⟨L2, hL2, hz2_1, hz2_2⟩
+  rcases h_eval_act z3 with ⟨L3, hL3, hz3_1, hz3_2⟩
+  rcases h_eval_act z4 with ⟨L4, hL4, hz4_1, hz4_2⟩
+
+  have h_det : ∀ u v : ℂ × ℂ, (M_act u).1 * (M_act v).2 - (M_act v).1 * (M_act u).2 = (M.a * M.d - M.b * M.c) * (u.1 * v.2 - v.1 * u.2) := by
+    intro u v
+    dsimp [M_act]
+    ring
+
+  have h_diff : ∀ (u v : ℂ × ℂ) (Lu Lv : ℂ) (pu pv : ℂ × ℂ), pu.1 = Lu * (M_act u).1 → pu.2 = Lu * (M_act u).2 → pv.1 = Lv * (M_act v).1 → pv.2 = Lv * (M_act v).2 →
+    pu.1 * pv.2 - pv.1 * pu.2 = Lu * Lv * (M.a * M.d - M.b * M.c) * (u.1 * v.2 - v.1 * u.2) := by
+    intro u v Lu Lv pu pv hu1 hu2 hv1 hv2
+    rw [hu1, hu2, hv1, hv2]
+    have : (Lu * (M_act u).1) * (Lv * (M_act v).2) - (Lv * (M_act v).1) * (Lu * (M_act u).2) = Lu * Lv * ((M_act u).1 * (M_act v).2 - (M_act v).1 * (M_act u).2) := by ring
+    rw [this, h_det]
+    ring
+
+  have num_eq : ((to_proj (M.eval z1)).1 * (to_proj (M.eval z3)).2 - (to_proj (M.eval z3)).1 * (to_proj (M.eval z1)).2) *
+                ((to_proj (M.eval z2)).1 * (to_proj (M.eval z4)).2 - (to_proj (M.eval z4)).1 * (to_proj (M.eval z2)).2) =
+                (L1 * L2 * L3 * L4 * (M.a * M.d - M.b * M.c)^2) *
+                (((to_proj z1).1 * (to_proj z3).2 - (to_proj z3).1 * (to_proj z1).2) * ((to_proj z2).1 * (to_proj z4).2 - (to_proj z4).1 * (to_proj z2).2)) := by
+    rw [h_diff (to_proj z1) (to_proj z3) L1 L3 (to_proj (M.eval z1)) (to_proj (M.eval z3)) hz1_1 hz1_2 hz3_1 hz3_2]
+    rw [h_diff (to_proj z2) (to_proj z4) L2 L4 (to_proj (M.eval z2)) (to_proj (M.eval z4)) hz2_1 hz2_2 hz4_1 hz4_2]
+    ring
+
+  have den_eq : ((to_proj (M.eval z2)).1 * (to_proj (M.eval z3)).2 - (to_proj (M.eval z3)).1 * (to_proj (M.eval z2)).2) *
+                ((to_proj (M.eval z1)).1 * (to_proj (M.eval z4)).2 - (to_proj (M.eval z4)).1 * (to_proj (M.eval z1)).2) =
+                (L1 * L2 * L3 * L4 * (M.a * M.d - M.b * M.c)^2) *
+                (((to_proj z2).1 * (to_proj z3).2 - (to_proj z3).1 * (to_proj z2).2) * ((to_proj z1).1 * (to_proj z4).2 - (to_proj z4).1 * (to_proj z1).2)) := by
+    rw [h_diff (to_proj z2) (to_proj z3) L2 L3 (to_proj (M.eval z2)) (to_proj (M.eval z3)) hz2_1 hz2_2 hz3_1 hz3_2]
+    rw [h_diff (to_proj z1) (to_proj z4) L1 L4 (to_proj (M.eval z1)) (to_proj (M.eval z4)) hz1_1 hz1_2 hz4_1 hz4_2]
+    ring
+
+  let num1 := (((to_proj z1).1 * (to_proj z3).2 - (to_proj z3).1 * (to_proj z1).2) * ((to_proj z2).1 * (to_proj z4).2 - (to_proj z4).1 * (to_proj z2).2))
+  let den1 := (((to_proj z2).1 * (to_proj z3).2 - (to_proj z3).1 * (to_proj z2).2) * ((to_proj z1).1 * (to_proj z4).2 - (to_proj z4).1 * (to_proj z1).2))
+  let factor := (L1 * L2 * L3 * L4 * (M.a * M.d - M.b * M.c)^2)
+  have h_factor_ne_zero : factor ≠ 0 := by
+    refine mul_ne_zero ?_ (pow_ne_zero 2 M.det_ne_zero)
+    refine mul_ne_zero (mul_ne_zero (mul_ne_zero hL1 hL2) hL3) hL4
+
+  have h_proj_cr_eval : proj_cross_ratio (to_proj (M.eval z1)) (to_proj (M.eval z2)) (to_proj (M.eval z3)) (to_proj (M.eval z4)) =
+    if factor * den1 = 0 then none else some ((factor * num1) / (factor * den1)) := by
+    dsimp [proj_cross_ratio]
+    rw [num_eq, den_eq]
+  rw [h_proj_cr_eval]
+
+  dsimp [proj_cross_ratio]
+  by_cases hden : den1 = 0
+  · have hden2 : factor * den1 = 0 := by rw [hden, mul_zero]
+    rw [if_pos hden, if_pos hden2]
+  · have hden2 : factor * den1 ≠ 0 := mul_ne_zero h_factor_ne_zero hden
+    rw [if_neg hden, if_neg hden2]
+    congr 1
+    rw [mul_div_mul_left num1 den1 h_factor_ne_zero]
 
 /-- Four distinct points lie on a generalized circle if and only if their cross-ratio is strictly real. -/
 theorem cocircular_iff_real_cross_ratio (z1 z2 z3 z4 : ℂ) :
@@ -528,6 +1333,143 @@ theorem mobius_decomposition_alt (a b c d z : ℂ) (hc : c ≠ 0) (hz : z + d/c 
   have h_final : (c * (a * z + b)) / (c * (c * z + d)) = (a * z + b) / (c * z + d) := by
     rw [mul_div_mul_left (a * z + b) (c * z + d) hc]
   rw [h_final]
+
+
+
+/-- Circle-Preserving Theorem:
+    A Möbius transformation maps a generalized circle to another generalized circle. -/
+theorem circle_preserving (M : MobiusTransform) (circ : GenCircle) :
+    ∃ circ' : GenCircle, ∀ z : RiemannSphere,
+      circ.containsExt z ↔ circ'.containsExt (M.eval z) := by
+  by_cases hc : M.c = 0
+  · have hd : M.d ≠ 0 := by
+      intro h
+      have : M.a * M.d - M.b * M.c = 0 := by rw [h, hc]; ring
+      exact M.det_ne_zero this
+    have ha : M.a ≠ 0 := by
+      intro h
+      have : M.a * M.d - M.b * M.c = 0 := by rw [h, hc]; ring
+      exact M.det_ne_zero this
+    have had : M.a / M.d ≠ 0 := div_ne_zero ha hd
+    let C1 := dil_circle (M.a / M.d) had circ
+    let C2 := trans_circle (M.b / M.d) C1
+    use C2
+    intro z
+    cases z with
+    | none =>
+      dsimp [MobiusTransform.eval]
+      rw [if_pos hc]
+      change circ.A = 0 ↔ C2.A = 0
+      have hA : C2.A = circ.A := by rfl
+      rw [hA]
+    | some z' =>
+      dsimp [MobiusTransform.eval]
+      have hdenom : M.c * z' + M.d ≠ 0 := by rw [hc, zero_mul, zero_add]; exact hd
+      rw [if_neg hdenom]
+      change circ.contains z' ↔ C2.contains ((M.a * z' + M.b) / (M.c * z' + M.d))
+      have hz_eq : (M.a * z' + M.b) / (M.c * z' + M.d) = (M.a / M.d) * z' + M.b / M.d := by
+        rw [hc, zero_mul, zero_add]
+        have h_div : (M.a * z' + M.b) / M.d = (M.a * z') / M.d + M.b / M.d := add_div (M.a * z') M.b M.d
+        rw [h_div]
+        ring
+      rw [hz_eq]
+      have step1 := dil_circle_contains (M.a / M.d) had circ z'
+      have step2 := trans_circle_contains (M.b / M.d) C1 ((M.a / M.d) * z')
+      rw [step1, step2]
+  · have h_dil_ne_zero : ((M.b * M.c - M.a * M.d) / M.c ^ 2) ≠ 0 := by
+      intro h
+      have hc2 : M.c ^ 2 ≠ 0 := pow_ne_zero 2 hc
+      have h1 : M.b * M.c - M.a * M.d = 0 := (div_eq_zero_iff.mp h).resolve_right hc2
+      have h2 : M.a * M.d - M.b * M.c = 0 := by rw [sub_eq_zero] at h1 ⊢; rw [h1]
+      exact M.det_ne_zero h2
+    let C1 := trans_circle (M.d / M.c) circ
+    let C2 := inv_circle C1
+    let C3 := dil_circle ((M.b * M.c - M.a * M.d) / M.c ^ 2) h_dil_ne_zero C2
+    let C4 := trans_circle (M.a / M.c) C3
+    use C4
+    intro z
+    cases z with
+    | none =>
+      dsimp [MobiusTransform.eval]
+      rw [if_neg hc]
+      change circ.A = 0 ↔ C4.contains (M.a / M.c)
+      have hc4 : C4.contains (M.a / M.c) ↔ C3.C = 0 := by
+        have h := trans_circle_contains (M.a / M.c) C3 0
+        have h0 : 0 + M.a / M.c = M.a / M.c := zero_add (M.a / M.c)
+        rw [h0] at h
+        have hC : C3.contains 0 ↔ C3.C = 0 := by
+           change C3.A * normSq 0 + 2 * (C3.B * 0).re + C3.C = 0 ↔ C3.C = 0
+           have h_zero : C3.B * 0 = 0 := mul_zero C3.B
+           rw [h_zero, Complex.normSq_zero]
+           change C3.A * 0 + 2 * (0 : ℂ).re + C3.C = 0 ↔ C3.C = 0
+           simp
+        rw [hC] at h
+        exact h.symm
+      rw [hc4]
+      have hc3 : C3.C = C2.C * normSq ((M.b * M.c - M.a * M.d) / M.c ^ 2) := rfl
+      have hc2 : C2.C = C1.A := rfl
+      have hc1 : C1.A = circ.A := rfl
+      rw [hc3, hc2, hc1]
+      have h_norm : normSq ((M.b * M.c - M.a * M.d) / M.c ^ 2) ≠ 0 := Complex.normSq_pos.mpr h_dil_ne_zero |> ne_of_gt
+      constructor
+      · intro h; rw [h, zero_mul]
+      · intro h
+        cases mul_eq_zero.mp h with
+        | inl h1 => exact h1
+        | inr h2 => exfalso; exact h_norm (by exact_mod_cast h2)
+    | some z' =>
+      dsimp [MobiusTransform.eval]
+      by_cases hdenom : M.c * z' + M.d = 0
+      · rw [if_pos hdenom]
+        change circ.contains z' ↔ C4.A = 0
+        have hA : C4.A = C3.A := rfl
+        have hA3 : C3.A = C2.A := rfl
+        have hA2 : C2.A = C1.C := rfl
+        have hz'_eq : z' = - M.d / M.c := by
+          have : M.c * z' = - M.d := eq_neg_iff_add_eq_zero.mpr hdenom
+          have h_div : (M.c * z') / M.c = (- M.d) / M.c := by rw [this]
+          have h2 : (M.c * z') / M.c = z' := mul_div_cancel_left₀ z' hc
+          rw [h2] at h_div
+          exact h_div
+        rw [hA, hA3, hA2]
+        have h_step1 := trans_circle_contains (M.d / M.c) circ z'
+        have hz_plus_d_c : z' + M.d / M.c = 0 := by
+          have h1 : M.c * (z' + M.d / M.c) = 0 := by
+            calc M.c * (z' + M.d / M.c) = M.c * z' + M.c * (M.d / M.c) := mul_add _ _ _
+            _ = M.c * z' + M.d := by rw [mul_div_cancel₀ M.d hc]
+            _ = 0 := hdenom
+          cases mul_eq_zero.mp h1 with
+          | inl h => exfalso; exact hc h
+          | inr h => exact h
+        rw [hz_plus_d_c] at h_step1
+        have hC : C1.contains 0 ↔ C1.C = 0 := by
+           change C1.A * normSq 0 + 2 * (C1.B * 0).re + C1.C = 0 ↔ C1.C = 0
+           have h_zero : C1.B * 0 = 0 := mul_zero C1.B
+           rw [h_zero, Complex.normSq_zero]
+           change C1.A * 0 + 2 * (0 : ℂ).re + C1.C = 0 ↔ C1.C = 0
+           simp
+        rw [hC] at h_step1
+        exact h_step1
+      · rw [if_neg hdenom]
+        have hz_plus_d_c_ne_0 : z' + M.d / M.c ≠ 0 := by
+          intro h
+          have h1 : M.c * (z' + M.d / M.c) = 0 := by rw [h, mul_zero]
+          have h2 : M.c * z' + M.d = 0 := by
+            calc M.c * z' + M.d = M.c * z' + M.c * (M.d / M.c) := by rw [mul_div_cancel₀ M.d hc]
+            _ = M.c * (z' + M.d / M.c) := (mul_add _ _ _).symm
+            _ = 0 := h1
+          exact hdenom h2
+        change circ.contains z' ↔ C4.contains ((M.a * z' + M.b) / (M.c * z' + M.d))
+        have h_step1 := trans_circle_contains (M.d / M.c) circ z'
+        have h_step2 := inv_circle_contains C1 (z' + M.d / M.c) hz_plus_d_c_ne_0
+        have h_step3 := dil_circle_contains ((M.b * M.c - M.a * M.d) / M.c ^ 2) h_dil_ne_zero C2 (z' + M.d / M.c)⁻¹
+        have h_step4 := trans_circle_contains (M.a / M.c) C3 (((M.b * M.c - M.a * M.d) / M.c ^ 2) * (z' + M.d / M.c)⁻¹)
+        rw [h_step1, h_step2, h_step3, h_step4]
+        have h_inv : (z' + M.d / M.c)⁻¹ = 1 / (z' + M.d / M.c) := inv_eq_one_div _
+        rw [h_inv]
+        have h_alt := mobius_decomposition_alt M.a M.b M.c M.d z' hc hz_plus_d_c_ne_0
+        rw [add_comm] at h_alt
+        rw [← h_alt]
 
 /-- A real Möbius transformation corresponding to PGL(2, ℝ) acting on the real projective line. -/
 structure RealMobiusTransform where

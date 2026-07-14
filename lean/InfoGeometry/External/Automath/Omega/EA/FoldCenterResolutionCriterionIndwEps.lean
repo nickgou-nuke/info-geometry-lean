@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.FoldWindow6CenterThreeObservablesDimensionDefect
+import InfoGeometry.External.Automath.Omega.EA.FoldWindow6CenterThreeObservablesDimensionDefect
 
 namespace Omega.EA
 

@@ -1,4 +1,4 @@
-import Omega.Folding.FoldGaugeAnomalyP10P9ChebotarevIndependence
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10P9ChebotarevIndependence
 
 namespace Omega.Conclusion
 

@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.PhaseNull
-import Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PhaseNull
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosure
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
-import Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
 
 open Matrix
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.Period3FiberExactMultiplicity
-import Omega.Folding.IntermediateQuotientsBellProductDoubleExponential
+import InfoGeometry.External.Automath.Omega.Conclusion.Period3FiberExactMultiplicity
+import InfoGeometry.External.Automath.Omega.Folding.IntermediateQuotientsBellProductDoubleExponential
 
 namespace Omega.Conclusion
 

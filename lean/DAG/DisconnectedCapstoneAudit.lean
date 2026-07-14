@@ -98,7 +98,7 @@ def auditDisconnectedSCC
         return n
     if h.sccs[si]!.isEmpty then
       return Name.anonymous
-    return h.toGraph.nodes[h.sccs[si]![0]!]!
+    return h.toGraph.nodes[(h.sccs[si]!)[0]!]!
 
   let repCi := env.find? repName
   let repKind := repCi.map getDeclKind |>.getD "unknown"
@@ -185,7 +185,7 @@ def runAudit (env : Environment) (nsPrefix : String) : IO AuditPayload := do
             if !isGeneratedOrUnstableName n then
               return toString n
           if h.sccs[si]!.isEmpty then return "anonymous"
-          return toString h.toGraph.nodes[h.sccs[si]![0]!]!
+          return toString h.toGraph.nodes[(h.sccs[si]!)[0]!]!
         out := out.push rep
     out
 

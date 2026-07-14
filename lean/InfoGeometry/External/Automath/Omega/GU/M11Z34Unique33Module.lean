@@ -1,4 +1,4 @@
-import Omega.GU.M11Z34AugmentationIdealUnique
+import InfoGeometry.External.Automath.Omega.GU.M11Z34AugmentationIdealUnique
 
 namespace Omega.GU
 

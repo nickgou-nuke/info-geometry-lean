@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiJensenDefectNoisyThreepointCertificate
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenDefectNoisyThreepointCertificate
 
 namespace Omega.Zeta
 

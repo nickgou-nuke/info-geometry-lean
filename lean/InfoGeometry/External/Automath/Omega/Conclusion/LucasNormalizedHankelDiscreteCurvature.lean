@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 namespace Omega.Conclusion
 

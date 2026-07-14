@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Matrix.Adjugate
 import Mathlib.Tactic
-import Omega.Zeta.HankelMaximalMinorSyndromeNormalFormUniqueness
+import InfoGeometry.External.Automath.Omega.Zeta.HankelMaximalMinorSyndromeNormalFormUniqueness
 
 namespace Omega.Zeta
 

@@ -55,10 +55,11 @@ an operator mean/conditional expectation; this bridge only records fixed-sector
 laws and regular-support stability.
 -/
 @[rep_depth thermo]
-structure BoundedKMSErgodicFixedPointBridge where
+structure Bridge where
   /-- State-functional KMS socket for the bounded modular flow. -/
   kms :
-    BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedKMSConditionBridge.Bridge
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Supplied ergodic smoothing/conditional-expectation shadow. -/
   ergodicMean :
@@ -101,9 +102,9 @@ structure BoundedKMSErgodicFixedPointBridge where
         kms.boundedFlow.souriau.superBridge.CIK.spectralProjector * ergodicMean A =
           ergodicMean A * kms.boundedFlow.souriau.superBridge.CIK.spectralProjector
 
-namespace BoundedKMSErgodicFixedPointBridge
+namespace Bridge
 
-variable (B : BoundedKMSErgodicFixedPointBridge (E := E) (LieAlgebra := LieAlgebra))
+variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
 
 /-- Modular-time fixed predicate for the state-functional bounded KMS flow. -/
 @[rep_depth thermo]
@@ -160,7 +161,7 @@ theorem ergodicMean_mem_centralizerLike (A : EndH) :
   B.modularFixed_mem_centralizerLike
     (A := B.ergodicMean A) (B.ergodicMean_isModularFixed A)
 
-end BoundedKMSErgodicFixedPointBridge
+end Bridge
 
 end Core
 

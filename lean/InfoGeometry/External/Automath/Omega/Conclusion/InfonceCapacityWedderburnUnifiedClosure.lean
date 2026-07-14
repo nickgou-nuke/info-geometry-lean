@@ -1,5 +1,5 @@
-import Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
-import Omega.Zeta.ConclusionWedderburnThresholdHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.ConclusionWedderburnThresholdHolography
 
 namespace Omega.Conclusion
 

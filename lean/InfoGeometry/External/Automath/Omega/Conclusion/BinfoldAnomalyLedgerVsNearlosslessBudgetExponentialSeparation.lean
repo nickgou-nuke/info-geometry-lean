@@ -1,10 +1,10 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinMaxFiberExponent
-import Omega.GU.FoldBinMinDegeneracyFibNonpersistent
-import Omega.OperatorAlgebra.FoldGaugeGroupStructure
-import Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinMaxFiberExponent
+import InfoGeometry.External.Automath.Omega.GU.FoldBinMinDegeneracyFibNonpersistent
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGaugeGroupStructure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65BinfoldGaugeCenterAbelianizationExact
 
 open Filter Topology
 open scoped goldenRatio

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.MuPochhammerNecklaceDirichletPolylog
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerNecklaceDirichletPolylog
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.InductiveClosurePacket
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
+import InfoGeometry.OperatorAlgebra.SupergradedClosure
 
 noncomputable section
 
@@ -8,6 +9,7 @@ namespace InfoGeometry.Canonical.CantorCellInduction
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 open InfoGeometry.Canonical.InductiveClosurePacket
+open InfoGeometry.OperatorAlgebra.SupergradedClosure
 
 -- In a boolean/Cantor cube, an embedding of fields from P to P ∪ {p} is given by pull-back.
 -- But operators A : CubeField P R → CubeField P R can be extended to P ∪ {p}
@@ -32,7 +34,7 @@ structure CantorCellInductiveChain where
   Qsharp : ∀ n, chain.Stage n
   
   /-- The local cell at stage n is a valid supercharge closure -/
-  local_closure : ∀ n, SupergradedClosureAt (R := chain.Stage n) (Q n) (Qsharp n)
+  local_closure : ∀ n, @SupergradedClosureAt (chain.Stage n) _ (Q n) (Qsharp n)
   
   /-- The bonding maps exactly transport the supercharges -/
   bonding_preserves_Q : ∀ n, chain.Bonding n (Q n) = Q (n + 1)
@@ -49,7 +51,7 @@ structurally identical and valid at every single finite stage along the whole ch
 -/
 @[rep_depth transport]
 theorem global_finite_closure_stability (n : ℕ) :
-    SupergradedClosureAt (R := C.chain.Stage n) (C.Q n) (C.Qsharp n) := by
+    @SupergradedClosureAt (C.chain.Stage n) _ (C.Q n) (C.Qsharp n) := by
   -- This is technically just C.local_closure n, but we demonstrate
   -- that it perfectly aligns with iterMap transport.
   have h := C.local_closure n

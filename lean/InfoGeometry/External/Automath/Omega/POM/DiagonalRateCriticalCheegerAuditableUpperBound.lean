@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateCriticalContinuousTimeGeneratorMaxent
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateCriticalContinuousTimeGeneratorMaxent
 
 namespace Omega.POM
 

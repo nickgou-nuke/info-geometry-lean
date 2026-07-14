@@ -425,7 +425,7 @@ theorem finiteCommutingConnesPhase_add_time
   FiniteConnesCocycle.finiteCommutingConnesPhase_add_time ΔK s t i
 
 @[rep_depth thermo]
-theorem pathEntropy_eq_curvatureTrace_readout
+theorem pathEntropy_eq_curvatureTrace
     (D : FiniteSouriauDynamicsStageData ι Op) :
     D.pathPacket.pathEntropy =
       D.pathPacket.trace

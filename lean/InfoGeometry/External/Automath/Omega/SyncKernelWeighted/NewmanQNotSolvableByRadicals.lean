@@ -1,7 +1,7 @@
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.GroupTheory.Solvable
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.WeightedNewmanQGaloisS37
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedNewmanQGaloisS37
 
 namespace Omega.SyncKernelWeighted
 

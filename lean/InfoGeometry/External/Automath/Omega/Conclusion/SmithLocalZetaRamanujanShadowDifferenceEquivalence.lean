@@ -1,8 +1,8 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.SmithLocalZetaPoleResidueHeadTriple
-import Omega.Conclusion.SmithPprimaryRamanujanCutoffCompleteness
-import Omega.Conclusion.SmithRamanujanShadowSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithLocalZetaPoleResidueHeadTriple
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithPprimaryRamanujanCutoffCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithRamanujanShadowSeeds
 
 namespace Omega.Conclusion
 

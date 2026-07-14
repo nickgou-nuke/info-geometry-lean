@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.CatalanMoments
+import InfoGeometry.External.Automath.Omega.POM.CatalanMoments
 
 namespace Omega.POM
 

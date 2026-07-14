@@ -1,5 +1,5 @@
-import Omega.Zeta.HankelBadPrimeSelectionProbability
-import Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.Zeta.HankelBadPrimeSelectionProbability
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
 import Mathlib.Tactic
 
 namespace Omega.Zeta

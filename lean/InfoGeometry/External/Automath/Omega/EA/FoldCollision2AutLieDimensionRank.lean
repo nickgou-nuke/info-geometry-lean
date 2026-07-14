@@ -1,4 +1,4 @@
-import Omega.Folding.MomentTriple
+import InfoGeometry.External.Automath.Omega.Folding.MomentTriple
 
 namespace Omega.EA
 

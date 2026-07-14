@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldQuantumChannelCapacity
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiRenyiMutualInformation
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelCapacity
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiRenyiMutualInformation
 
 namespace Omega.OperatorAlgebra
 

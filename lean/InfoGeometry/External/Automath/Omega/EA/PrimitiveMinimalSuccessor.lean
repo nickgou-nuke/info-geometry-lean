@@ -1,5 +1,5 @@
-import Omega.EA.MulNoNewPrimitive
-import Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.EA.MulNoNewPrimitive
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
 
 namespace Omega.EA
 

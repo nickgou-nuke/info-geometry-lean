@@ -1,5 +1,5 @@
-import Omega.POM.NoGlobalComputableCanonicalRepresentative
-import Omega.POM.RewriteNormalformMinimalAudit
+import InfoGeometry.External.Automath.Omega.POM.NoGlobalComputableCanonicalRepresentative
+import InfoGeometry.External.Automath.Omega.POM.RewriteNormalformMinimalAudit
 
 namespace Omega.POM
 

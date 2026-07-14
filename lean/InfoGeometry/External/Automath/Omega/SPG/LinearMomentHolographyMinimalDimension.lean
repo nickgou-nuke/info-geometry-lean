@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
-import Omega.SPG.DyadicFiniteMomentCompleteness
-import Omega.SPG.ProuhetThueMorsePowerSum
+import InfoGeometry.External.Automath.Omega.SPG.DyadicFiniteMomentCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.ProuhetThueMorsePowerSum
 
 namespace Omega.SPG
 

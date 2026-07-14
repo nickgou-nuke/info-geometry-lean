@@ -1,6 +1,6 @@
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiSecularFamilyFullSymmetricGalois
+import InfoGeometry.External.Automath.Omega.Zeta.XiSecularFamilyFullSymmetricGalois
 
 namespace Omega.Zeta
 

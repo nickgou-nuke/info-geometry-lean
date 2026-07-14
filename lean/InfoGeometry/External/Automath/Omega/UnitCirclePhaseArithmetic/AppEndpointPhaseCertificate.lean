@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
-import Omega.UnitCirclePhaseArithmetic.AppEndpointPhaseCurrentOffcritical
-import Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppEndpointPhaseCurrentOffcritical
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppRhIffDiskZeroFree
 
 namespace Omega.UnitCirclePhaseArithmetic
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6CyclicMultiplicityThreeparameterNormalform
-import Omega.Conclusion.Window6CyclicMultiplicityTracelessTwochannelSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CyclicMultiplicityThreeparameterNormalform
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CyclicMultiplicityTracelessTwochannelSplitting
 
 namespace Omega.Conclusion
 

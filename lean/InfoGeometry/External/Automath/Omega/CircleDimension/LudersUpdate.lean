@@ -1,5 +1,5 @@
-import Omega.CircleDimension.BornPairing
-import Omega.CircleDimension.QuantumEventProjections
+import InfoGeometry.External.Automath.Omega.CircleDimension.BornPairing
+import InfoGeometry.External.Automath.Omega.CircleDimension.QuantumEventProjections
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.FiniteModeHardyRationalReproducibility
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteModeHardyRationalReproducibility
 
 namespace Omega.Conclusion
 

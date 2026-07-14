@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.AtomicDefectProny2KappaRecovery
-import Omega.CircleDimension.ComputablePrefixNonidentifiability
-import Omega.CircleDimension.AtomicDefectTwoFrequency4KappaRecovery
-import Omega.Zeta.ToeplitzNegativeInertiaSpectralGapStability
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectProny2KappaRecovery
+import InfoGeometry.External.Automath.Omega.CircleDimension.ComputablePrefixNonidentifiability
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectTwoFrequency4KappaRecovery
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeInertiaSpectralGapStability
 
 namespace Omega.Zeta
 

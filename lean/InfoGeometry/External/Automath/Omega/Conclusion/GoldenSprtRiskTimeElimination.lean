@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Omega.Conclusion.GoldenSprtDeltaClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtDeltaClosure
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.DiscreteUnitaryEvolution
+import InfoGeometry.External.Automath.Omega.CircleDimension.DiscreteUnitaryEvolution
 
 namespace Omega.CircleDimension
 

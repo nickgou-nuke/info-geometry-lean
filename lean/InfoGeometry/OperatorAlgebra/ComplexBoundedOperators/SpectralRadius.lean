@@ -164,10 +164,13 @@ structure SpectralRadiusMaxPacket {ι : Type*} [Fintype ι] [DecidableEq ι]
   /-- Spectral-radius upper bound on every spectral value. -/
   norm_le_radius : ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A
 
-/-- Native constructor for the spectral-radius maximum packet. -/
-def SpectralRadiusMaxPacket.ofNonempty {ι : Type*} [Fintype ι] [DecidableEq ι]
+/-- Native existence theorem for the spectral-radius maximum packet. -/
+theorem exists_spectralRadiusMaxPacket_ofNonempty {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℂ) (h : (matrixSpectrum A).Nonempty) :
-    SpectralRadiusMaxPacket A := by
+    ∃ P : SpectralRadiusMaxPacket A,
+      P.eigenvalue ∈ matrixSpectrum A ∧
+      ‖P.eigenvalue‖ = spectralRadius A ∧
+      ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A := by
   let S : Set ℝ := (fun z : ℂ => ‖z‖) '' matrixSpectrum A
   have hS : S.Finite := by
     simpa [S] using (matrixSpectrum_finite (A := A)).image (fun z : ℂ => ‖z‖)
@@ -176,16 +179,16 @@ def SpectralRadiusMaxPacket.ofNonempty {ι : Type*} [Fintype ι] [DecidableEq ι
     exact ⟨‖z‖, ⟨z, hz, rfl⟩⟩
   have hmem : ∃ z : ℂ, z ∈ matrixSpectrum A ∧ ‖z‖ = spectralRadius A := by
     simpa [S, spectralRadius] using (Set.Nonempty.csSup_mem hSn hS)
-  let z : ℂ := Classical.choose hmem
-  have hz : z ∈ matrixSpectrum A := (Classical.choose_spec hmem).1
-  have hzR : ‖z‖ = spectralRadius A := (Classical.choose_spec hmem).2
-  refine
+  rcases hmem with ⟨z, hz, hzR⟩
+  have hle : ∀ a ∈ matrixSpectrum A, ‖a‖ ≤ spectralRadius A := by
+    intro a ha
+    exact le_csSup hS.bddAbove ⟨a, ha, rfl⟩
+  let P : SpectralRadiusMaxPacket A :=
     { eigenvalue := z
       eigenvalue_mem := hz
       norm_eq_radius := hzR
-      norm_le_radius := ?_ }
-  intro a ha
-  exact le_csSup hS.bddAbove ⟨a, ha, rfl⟩
+      norm_le_radius := hle }
+  exact ⟨P, hz, hzR, hle⟩
 
 namespace SpectralRadiusMaxPacket
 

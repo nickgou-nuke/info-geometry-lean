@@ -91,6 +91,19 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
     client = ArangoClient(hosts=arango_endpoint())
     db = client.db(database, username=arango_username(), password=arango_password())
 
+    def valid_edge_batch(edges: list[dict]) -> list[dict]:
+        """Keep only edges whose two declaration endpoints exist."""
+        if not edges:
+            return []
+        query = """
+        FOR e IN @edges
+          LET from_doc = DOCUMENT(e._from)
+          LET to_doc = DOCUMENT(e._to)
+          FILTER from_doc != null AND to_doc != null
+          RETURN e
+        """
+        return list(db.aql.execute(query, bind_vars={"edges": edges}))
+
     # Ensure collections exist
     collections = {
         "decls": False,
@@ -102,13 +115,22 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
             print(f"[refresh-decl-graph] Created collection: {coll_name}")
 
     # Stream JSONL to ArangoDB
-    proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=None, text=True)
 
     decl_count = 0
     edge_count = 0
     batch_size = 5000
     decl_batch = []
     edge_batch = []
+    decl_first_batch = True
+    edge_first_batch = True
+
+    def import_batch(collection_name: str, batch: list[dict], first_batch: bool) -> None:
+        """Clear once, then replace duplicate keys without clearing prior batches."""
+        if first_batch:
+            db[collection_name].import_bulk(batch, overwrite=True)
+        else:
+            db[collection_name].import_bulk(batch, overwrite=False, on_duplicate="replace")
 
     try:
         for line in proc.stdout:
@@ -131,15 +153,10 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                     doc["kind"] = doc.get("kind", "type")
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
-                    # Filter edges to only keep those where both endpoints exist
-                    valid_edges = []
-                    for e in edge_batch:
-                        from_doc = db["decls"].get(e["_from"].split("/")[-1])
-                        to_doc = db["decls"].get(e["_to"].split("/")[-1])
-                        if from_doc and to_doc:
-                            valid_edges.append(e)
+                    valid_edges = valid_edge_batch(edge_batch)
                     if valid_edges:
-                        db["edges"].import_bulk(valid_edges, overwrite=True)
+                        import_batch("edges", valid_edges, edge_first_batch)
+                        edge_first_batch = False
                         edge_count += len(valid_edges)
                     edge_batch = []
             else:
@@ -148,31 +165,25 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                     doc["_key"] = "d_" + hashlib.sha256(doc["name"].encode()).hexdigest()[:40]
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
-                    db["decls"].import_bulk(decl_batch, overwrite=True)
+                    import_batch("decls", decl_batch, decl_first_batch)
+                    decl_first_batch = False
                     decl_count += len(decl_batch)
                     decl_batch = []
 
         # Flush remaining batches
         if decl_batch:
-            db["decls"].import_bulk(decl_batch, overwrite=True)
+            import_batch("decls", decl_batch, decl_first_batch)
             decl_count += len(decl_batch)
         if edge_batch:
-            # Filter edges to only keep those where both endpoints exist
-            valid_edges = []
-            for e in edge_batch:
-                from_doc = db["decls"].get(e["_from"].split("/")[-1])
-                to_doc = db["decls"].get(e["_to"].split("/")[-1])
-                if from_doc and to_doc:
-                    valid_edges.append(e)
+            valid_edges = valid_edge_batch(edge_batch)
             if valid_edges:
-                db["edges"].import_bulk(valid_edges, overwrite=True)
+                import_batch("edges", valid_edges, edge_first_batch)
                 edge_count += len(valid_edges)
             edge_batch = []
 
         proc.wait()
         if proc.returncode != 0:
-            stderr = proc.stderr.read()
-            print(f"[refresh-decl-graph] Indexer failed: {stderr}", file=sys.stderr)
+            print(f"[refresh-decl-graph] Indexer failed with exit code {proc.returncode}", file=sys.stderr)
             return proc.returncode
 
     except Exception as e:

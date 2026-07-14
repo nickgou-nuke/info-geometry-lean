@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Tactic
-import Omega.Core.OdometerJoukowsky
+import InfoGeometry.External.Automath.Omega.Core.OdometerJoukowsky
 
 namespace Omega.GroupUnification
 

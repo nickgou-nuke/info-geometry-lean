@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Conclusion.CanonicalSliceExactFixedpointCount
+import InfoGeometry.External.Automath.Omega.Conclusion.CanonicalSliceExactFixedpointCount
 
 namespace Omega.Conclusion
 

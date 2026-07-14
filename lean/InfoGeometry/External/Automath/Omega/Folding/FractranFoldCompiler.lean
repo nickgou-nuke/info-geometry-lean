@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.Rewrite
-import Omega.POM.FractranTwoPrimeDenominatorDfaCompile
+import InfoGeometry.External.Automath.Omega.Folding.Rewrite
+import InfoGeometry.External.Automath.Omega.POM.FractranTwoPrimeDenominatorDfaCompile
 
 namespace Omega.Folding
 

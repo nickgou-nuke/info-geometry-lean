@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.OrderSpatialization
+import InfoGeometry.External.Automath.Omega.POM.OrderSpatialization
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.BernoulliZetaTower
-import Omega.SyncKernelWeighted.FiniteRhSpectralAnnihilationFilter
+import InfoGeometry.External.Automath.Omega.GU.BernoulliZetaTower
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.FiniteRhSpectralAnnihilationFilter
 
 namespace Omega.DerivedConsequences
 

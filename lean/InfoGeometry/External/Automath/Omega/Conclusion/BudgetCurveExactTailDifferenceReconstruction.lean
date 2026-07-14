@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
 
 namespace Omega.Conclusion.BudgetCurveExactTailDifferenceReconstruction
 

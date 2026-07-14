@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.BCQuotientStrictify
+import InfoGeometry.External.Automath.Omega.POM.BCQuotientStrictify
 
 namespace Omega.Conclusion
 

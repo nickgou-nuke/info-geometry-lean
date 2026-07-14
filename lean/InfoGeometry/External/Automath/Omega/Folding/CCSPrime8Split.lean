@@ -1,4 +1,4 @@
-import Omega.Folding.CCSPrimeTelescope
+import InfoGeometry.External.Automath.Omega.Folding.CCSPrimeTelescope
 
 namespace Omega
 

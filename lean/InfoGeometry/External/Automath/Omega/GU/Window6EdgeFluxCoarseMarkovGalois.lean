@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.GU.Window6EdgeFluxMaxEntropyKernelUniqueness
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxMaxEntropyKernelUniqueness
 
 namespace Omega.GU
 

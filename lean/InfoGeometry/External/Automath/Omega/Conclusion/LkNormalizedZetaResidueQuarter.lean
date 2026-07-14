@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Conclusion.LkNormalizedZetaOddProjector
+import InfoGeometry.External.Automath.Omega.Conclusion.LkNormalizedZetaOddProjector
 
 namespace Omega.Conclusion
 

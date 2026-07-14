@@ -1,4 +1,4 @@
-import Omega.POM.FiberSpectrumStieltjesRigidityDeterminantSchatten
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumStieltjesRigidityDeterminantSchatten
 
 namespace Omega.POM
 

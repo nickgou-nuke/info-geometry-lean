@@ -1,7 +1,7 @@
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.Tactic
-import Omega.GU.BdryFoldGaugeSignAbelianization
-import Omega.GU.BdryUpliftOrientationParity
+import InfoGeometry.External.Automath.Omega.GU.BdryFoldGaugeSignAbelianization
+import InfoGeometry.External.Automath.Omega.GU.BdryUpliftOrientationParity
 
 namespace Omega.GU
 

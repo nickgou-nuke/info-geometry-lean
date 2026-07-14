@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
 
 namespace Omega.POM
 

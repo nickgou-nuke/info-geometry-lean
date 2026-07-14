@@ -1,4 +1,4 @@
-import Omega.GroupUnification.FreeEnergyComposition
+import InfoGeometry.External.Automath.Omega.GroupUnification.FreeEnergyComposition
 
 namespace Omega.GroupUnification
 

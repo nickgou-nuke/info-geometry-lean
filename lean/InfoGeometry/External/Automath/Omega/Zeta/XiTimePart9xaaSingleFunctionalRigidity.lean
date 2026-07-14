@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xaaWulffUniversalConvexEnvelope
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xaaWulffUniversalConvexEnvelope
 
 namespace Omega.Zeta
 

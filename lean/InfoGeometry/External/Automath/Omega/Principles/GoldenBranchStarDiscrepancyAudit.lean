@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Principles.GoldenBranchFibonacciCoprime
+import InfoGeometry.External.Automath.Omega.Principles.GoldenBranchFibonacciCoprime
 
 namespace Omega.Principles.GoldenBranchStarDiscrepancyAudit
 

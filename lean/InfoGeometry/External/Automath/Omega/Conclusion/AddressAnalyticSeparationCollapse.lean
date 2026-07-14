@@ -1,5 +1,5 @@
-import Omega.Conclusion.InverseLimitAddressFinitePrefixDeterminacy
-import Omega.Conclusion.JoukowskyHolomorphicBlindnessRadialIdentifiability
+import InfoGeometry.External.Automath.Omega.Conclusion.InverseLimitAddressFinitePrefixDeterminacy
+import InfoGeometry.External.Automath.Omega.Conclusion.JoukowskyHolomorphicBlindnessRadialIdentifiability
 
 namespace Omega.Conclusion
 

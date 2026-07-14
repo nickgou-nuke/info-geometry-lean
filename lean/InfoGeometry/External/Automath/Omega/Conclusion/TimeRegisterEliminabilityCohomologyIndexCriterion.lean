@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimeLengthCocycle
-import Omega.Zeta.XiTimeFiberMinimalDimension
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeLengthCocycle
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeFiberMinimalDimension
 
 namespace Omega.Conclusion
 

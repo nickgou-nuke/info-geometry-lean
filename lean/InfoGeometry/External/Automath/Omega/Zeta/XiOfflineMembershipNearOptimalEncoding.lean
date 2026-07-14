@@ -1,4 +1,4 @@
-import Omega.Zeta.XiOfflineMembershipGrassmannLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiOfflineMembershipGrassmannLowerBound
 import Mathlib.Tactic
 
 namespace Omega.Zeta

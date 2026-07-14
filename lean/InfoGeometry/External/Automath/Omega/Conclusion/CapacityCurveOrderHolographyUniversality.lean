@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.Conclusion.CapacityMajorizationSchurHardness
-import Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
-import Omega.Conclusion.Window6SemisimpleInvariantsFactorThroughCapacity
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityMajorizationSchurHardness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6SemisimpleInvariantsFactorThroughCapacity
 
 namespace Omega.Conclusion
 

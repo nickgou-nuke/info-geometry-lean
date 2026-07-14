@@ -1,4 +1,4 @@
-import Omega.POM.DeterministicCongruenceAuditThresholdOptimal
+import InfoGeometry.External.Automath.Omega.POM.DeterministicCongruenceAuditThresholdOptimal
 
 namespace Omega.POM
 

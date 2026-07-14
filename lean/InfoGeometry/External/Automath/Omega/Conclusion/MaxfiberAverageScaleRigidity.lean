@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
 
 open Filter
 open scoped Topology goldenRatio

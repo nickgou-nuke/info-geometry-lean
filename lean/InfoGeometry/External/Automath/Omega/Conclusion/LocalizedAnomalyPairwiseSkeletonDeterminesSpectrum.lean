@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.LocalizedPairwiseUnionWedgeBilinearization
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedPairwiseUnionWedgeBilinearization
 
 namespace Omega.Conclusion
 

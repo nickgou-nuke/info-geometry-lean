@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.RenyiHalfHellingerTensorAdditivity
+import InfoGeometry.External.Automath.Omega.POM.RenyiHalfHellingerTensorAdditivity
 
 open scoped BigOperators
 

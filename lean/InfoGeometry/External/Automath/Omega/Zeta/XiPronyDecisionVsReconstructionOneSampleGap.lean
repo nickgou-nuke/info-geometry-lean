@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermonde3Recovery
-import Omega.Zeta.XiPronyMomentMapJacobianDelta4
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde3Recovery
+import InfoGeometry.External.Automath.Omega.Zeta.XiPronyMomentMapJacobianDelta4
 
 namespace Omega.Zeta
 

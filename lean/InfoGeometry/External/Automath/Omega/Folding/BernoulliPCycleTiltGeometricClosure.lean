@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPCycleTiltSecondMomentsClosed
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPCycleTiltSecondMomentsClosed
 
 namespace Omega.Folding
 

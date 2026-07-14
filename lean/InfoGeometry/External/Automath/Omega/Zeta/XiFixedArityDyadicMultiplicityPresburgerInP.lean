@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinDigitDP
-import Omega.SPG
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinDigitDP
+import InfoGeometry.External.Automath.Omega.SPG
 
 namespace Omega.Zeta
 
@@ -20,6 +20,11 @@ structure FixedArityDyadicMultiplicityPresburgerData where
   satManyOneReduction : Prop
   slackLength_spec :
     ∀ x, (slackDigits x).length = Omega.Folding.foldBinDigitTailLength (sizeParameter x)
+  decideLanguage_polytime :
+    Omega.SPG.PolynomialTimeMap
+      (fun x : Input =>
+        presburgerEvaluator (sizeParameter x) (value x) (lastBit x)
+          (Omega.Folding.foldBinDigitDP (slackDigits x) (lastBit x)))
   language_spec :
     ∀ x,
       presburgerEvaluator (sizeParameter x) (value x) (lastBit x)
@@ -53,7 +58,8 @@ lemma decideLanguage_spec (D : FixedArityDyadicMultiplicityPresburgerData) (x : 
 
 lemma language_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerData) :
     Omega.SPG.PolytimeDecidable D.language := by
-  refine ⟨D.decideLanguage, trivial, ?_⟩
+  refine ⟨D.decideLanguage, ?_, ?_⟩
+  · simpa [decideLanguage, dyadicMultiplicity] using D.decideLanguage_polytime
   intro x
   exact D.decideLanguage_spec x
 

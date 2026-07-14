@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
-import Omega.EA.KernelGroundStateUniversalityClasses
-import Omega.EA.KernelPressureEndpoints
+import InfoGeometry.External.Automath.Omega.EA.KernelGlobalCarryfreeSpectralTrichotomy
+import InfoGeometry.External.Automath.Omega.EA.KernelGroundStateUniversalityClasses
+import InfoGeometry.External.Automath.Omega.EA.KernelPressureEndpoints
 
 namespace Omega.EA
 

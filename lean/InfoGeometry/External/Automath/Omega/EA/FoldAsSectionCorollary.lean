@@ -1,4 +1,4 @@
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega.EA
 

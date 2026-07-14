@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.UpdatesPreserveForcing
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.UpdatesPreserveForcing
 
 namespace Omega.LogicExpansionChain
 

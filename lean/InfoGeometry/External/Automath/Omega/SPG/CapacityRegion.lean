@@ -1,4 +1,4 @@
-import Omega.SPG.DoubleBudgetPoisson
+import InfoGeometry.External.Automath.Omega.SPG.DoubleBudgetPoisson
 
 namespace Omega.SPG
 

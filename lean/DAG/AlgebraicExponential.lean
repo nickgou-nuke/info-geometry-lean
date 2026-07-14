@@ -150,7 +150,7 @@ open InfoGeometry.Canonical.ModularNilpotentAutomorphism
 theorem matrix_modular_N_sq_zero :
     InfoGeometry.Canonical.SplitCliffordSourceWickBase.N *
         InfoGeometry.Canonical.SplitCliffordSourceWickBase.N =
-      (0 : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R) :=
+      (0 : InfoGeometry.Canonical.ModularNilpotentAutomorphism.M2R) :=
   N_sq_zero
 
 /-- Concrete algebraic exponential group law for the owner nilpotent flow. -/
@@ -160,14 +160,14 @@ theorem matrix_nilpotentFlow_mul (s t : ℝ) :
 
 /-- Concrete finite modular automorphism composition law. -/
 theorem matrix_modularAutomorphism_comp
-    (s t : ℝ) (A : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R) :
+    (s t : ℝ) (A : InfoGeometry.Canonical.ModularNilpotentAutomorphism.M2R) :
     modularAutomorphism s (modularAutomorphism t A) =
       modularAutomorphism (s + t) A :=
   modularAutomorphism_comp s t A
 
 /-- Concrete finite replacement for a BCH/exponential-series claim. -/
 theorem matrix_modularAutomorphism_exact_expansion
-    (t : ℝ) (A : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R) :
+    (t : ℝ) (A : InfoGeometry.Canonical.ModularNilpotentAutomorphism.M2R) :
     modularAutomorphism t A =
       A + t •
         (InfoGeometry.Canonical.SplitCliffordSourceWickBase.N * A -

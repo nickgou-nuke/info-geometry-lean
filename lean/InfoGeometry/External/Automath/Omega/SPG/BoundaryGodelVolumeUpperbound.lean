@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.AxialCoareaInequality
+import InfoGeometry.External.Automath.Omega.SPG.AxialCoareaInequality
 
 namespace Omega.SPG
 

@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.POM.MultiplicityCompositionPartition
-import Omega.POM.MultiplicityCompositionSharpMainTermConstant
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartition
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionSharpMainTermConstant
 
 namespace Omega.POM
 

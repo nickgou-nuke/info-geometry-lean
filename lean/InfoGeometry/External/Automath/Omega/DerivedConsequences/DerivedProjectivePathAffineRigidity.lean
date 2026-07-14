@@ -1,4 +1,4 @@
-import Omega.DerivedConsequences.DerivedProjectivePathGibbsCumulants
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedProjectivePathGibbsCumulants
 import Mathlib.Tactic
 
 namespace Omega.DerivedConsequences

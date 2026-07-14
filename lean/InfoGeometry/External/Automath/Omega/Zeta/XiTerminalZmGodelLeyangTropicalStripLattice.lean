@@ -1,5 +1,5 @@
-import Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
-import Omega.Zeta.XiDyadicZeroTracking
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
+import InfoGeometry.External.Automath.Omega.Zeta.XiDyadicZeroTracking
 
 namespace Omega.Zeta
 

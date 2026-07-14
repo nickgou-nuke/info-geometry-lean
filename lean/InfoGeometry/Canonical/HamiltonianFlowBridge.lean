@@ -76,9 +76,9 @@ Continuum Emergence from RG Stationary Flow.
 At the stationary scale, the informational potential is fixed, and spacetime
 emerges as a smooth manifold.
 
-MOTIVATION: Spacetime is the fixed-point geometry of the information flow. 
-This structure requires an explicit witness (hEmergence) that the emergent 
-Hessian manifold is exactly the result of the flow at the stationary scale.
+MOTIVATION: Spacetime is the fixed-point geometry of the information flow.
+The field `hEmergence` is the explicit equality identifying the emergent
+Hessian manifold with the flow value at the stationary scale.
 -/
 @[rep_depth transport, capstone]
 structure ContinuumEmergenceBridge where
@@ -155,7 +155,7 @@ seed is the same operator as the Bogoliubov connection generator, then the
 transported quasilattice operator at `t = 0` reads back exactly that seed.
 -/
 theorem majoranaDirac_as_quasilatticeDirac_zero
-    {Carrier Domain Mode : Type*}
+    {Carrier Domain Mode : Type}
     {E0 : Type} [NormedAddCommGroup E0] [InnerProductSpace ℝ E0] [CompleteSpace E0]
     (M : InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaBerryKeatingOperatorPacket
       Carrier (DoubledSpace E0 →L[ℝ] DoubledSpace E0) Domain Mode)

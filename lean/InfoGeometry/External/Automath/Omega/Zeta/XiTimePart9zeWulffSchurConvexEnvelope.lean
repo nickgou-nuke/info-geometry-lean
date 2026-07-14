@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9zeWulffSchurMinimalSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zeWulffSchurMinimalSpectrum
 
 open scoped BigOperators
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40ZetaUvSqrtvEigs
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40ZetaUvSqrtvEigs
 
 namespace Omega.SyncKernelRealInput
 

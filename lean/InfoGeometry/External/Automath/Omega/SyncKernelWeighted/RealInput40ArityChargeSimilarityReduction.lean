@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ArityChargeCoboundary
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeCoboundary
 
 namespace Omega.SyncKernelWeighted
 

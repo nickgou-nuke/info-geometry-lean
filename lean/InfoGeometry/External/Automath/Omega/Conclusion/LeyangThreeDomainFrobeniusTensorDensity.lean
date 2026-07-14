@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyP10HExplicitDensities
-import Omega.Zeta.XiTimePart62ebLeyangExternalAuditImmunity
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HExplicitDensities
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62ebLeyangExternalAuditImmunity
 
 namespace Omega.Conclusion
 

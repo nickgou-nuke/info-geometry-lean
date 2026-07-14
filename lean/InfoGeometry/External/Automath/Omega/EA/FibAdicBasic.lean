@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.EA.FibAdicTower
+import InfoGeometry.External.Automath.Omega.EA.FibAdicTower
 
 namespace Omega.EA
 

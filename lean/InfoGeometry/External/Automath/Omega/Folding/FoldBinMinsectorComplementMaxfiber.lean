@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 namespace Omega
 

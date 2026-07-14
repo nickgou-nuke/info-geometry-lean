@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.WeightedXiSingleExceptionPair
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedXiSingleExceptionPair
 
 namespace Omega.SyncKernelWeighted
 

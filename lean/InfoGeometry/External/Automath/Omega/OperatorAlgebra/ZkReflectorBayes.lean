@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.BayesInverseZK
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.BayesInverseZK
 
 namespace Omega.OperatorAlgebra
 

@@ -1,4 +1,4 @@
-import Omega.Folding.CollisionDecomp
+import InfoGeometry.External.Automath.Omega.Folding.CollisionDecomp
 
 namespace Omega
 

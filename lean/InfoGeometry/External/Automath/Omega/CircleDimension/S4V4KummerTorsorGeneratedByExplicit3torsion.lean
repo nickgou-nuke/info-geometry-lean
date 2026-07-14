@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.S4V4CompatibleBiellipticPencilsExactlyThree
-import Omega.CircleDimension.S4V4ComplementaryBranchSquareRootLineBundle
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4CompatibleBiellipticPencilsExactlyThree
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4ComplementaryBranchSquareRootLineBundle
 
 namespace Omega.CircleDimension
 

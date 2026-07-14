@@ -24,14 +24,15 @@ Carrier binding a KAN/lightcone affine socket to a supplied Sugawara mode-sum
 datum.
 -/
 @[rep_depth operator]
-structure LightConeSugawaraCalibration
+structure Calibration
     (E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   /-- KAN/Bogoliubov-shadowed lightcone affine-current socket. -/
   kanAffine :
-    KANLightConeAffineBridge E Finite Alg Bog Korth Asplit Nshear CartanDiag
+    InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge.Bridge
+      E Finite Alg Bog Korth Asplit Nshear CartanDiag
 
   /-- Supplied Sugawara normal-ordered mode-sum datum. -/
   sugawara :
@@ -41,7 +42,7 @@ structure LightConeSugawaraCalibration
   usesBridge :
     sugawara.bridge = kanAffine.affineLightCone.bridge
 
-namespace LightConeSugawaraCalibration
+namespace Calibration
 
 variable
     {E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*}
@@ -50,7 +51,7 @@ variable
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
 variable (S :
-  LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+  Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
 
 /--
 External compatibility law: the supplied Sugawara datum is calibrated
@@ -271,6 +272,6 @@ theorem sugawara_virasoro_acts_on_uMinusCurrent
   rw [hUse, hVir]
   exact S.kanAffine.virasoro_acts_on_uMinusCurrent m n hact
 
-end LightConeSugawaraCalibration
+end Calibration
 
 end InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration

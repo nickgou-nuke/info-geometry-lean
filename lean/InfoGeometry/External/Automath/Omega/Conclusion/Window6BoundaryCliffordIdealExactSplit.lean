@@ -1,12 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryTripleSpinorRigidity
-import Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryTripleSpinorRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
 
 namespace Omega.Conclusion
-
-/-- Concrete wrapper for the window-`6` boundary-Clifford ideal split. -/
-structure conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data where
-  conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_witness : Unit := ()
 
 /-- The three canonical boundary `M₂` summands singled out by the triple-spinor package. -/
 def conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_boundary_data :
@@ -35,6 +31,16 @@ def conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_bound
 /-- The remaining `M₂` blocks in the split quotient. -/
 def conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_quotient_m2_blocks :
     ℕ := 5
+
+/-- Concrete arithmetic witness for the boundary-Clifford ideal split. -/
+def conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_certificate : Prop :=
+  conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_boundary_m2_blocks = 3 ∧
+    conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_quotient_m2_blocks = 5
+
+/-- Concrete wrapper for the window-`6` boundary-Clifford ideal split. -/
+structure conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data where
+  conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_witness :
+    conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_certificate
 
 namespace conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data
 

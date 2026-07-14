@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Tactic
-import Omega.Zeta.XiHellingerKernelFourierSech2
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerKernelFourierSech2
 
 namespace Omega.Zeta
 

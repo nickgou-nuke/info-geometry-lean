@@ -7,45 +7,56 @@ namespace InfoGeometry.Kaehler
 
 open Set
 
+/-- 1. Define the Smooth Manifold -/
 class SmoothManifold (M : Type _) [TopologicalSpace M]
 
-structure PrincipalBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M]
-    [Group G] [TopologicalSpace G] where
+/-- 2. Define the Principal Bundle -/
+structure PrincipalBundle (M : Type _) (G : Type _) [TopologicalSpace M] [SmoothManifold M] [Group G] [TopologicalSpace G] where
   P : Type _
-  top : TopologicalSpace P
+  [top : TopologicalSpace P]
   proj : P → M
   action : G → P → P
-
-attribute [instance] PrincipalBundle.top
 
 variable {R : Type _} [CommRing R]
 variable {M : Type _} [TopologicalSpace M] [SmoothManifold M]
 variable {G : Type _} [TopologicalSpace G] [Group G]
 variable {g : Type _} [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g]
 
+/-- 3. Define the Connection -/
 class Connection (B : PrincipalBundle M G) where
+  /-- Parallel transport along loops -/
   parallel_transport : M → M → B.P → B.P
 
-class CurvatureForm (R : Type _) [CommRing R] (B : PrincipalBundle M G) [Connection B]
-    (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] where
+/-- 4. Define the Curvature Form -/
+class CurvatureForm (B : PrincipalBundle M G) [Connection B] (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] where
+  /-- Curvature form evaluates to elements in the Lie algebra g -/
   Omega : B.P → g
 
-def CurvatureSpan (R : Type _) [CommRing R] (B : PrincipalBundle M G) [Connection B]
-    (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g]
-    [CurvatureForm R B g] : Submodule R g :=
+/-- A mock type for loops in M based at x -/
+opaque Loop (M : Type _) [TopologicalSpace M] (x : M) : Type _
+
+/-- 5. Define Contractible loops (contracts to an internal point) -/
+opaque IsContractible {x : M} (gamma : Loop M x) : Prop
+
+/-- 6. Define the Holonomy Group -/
+opaque HolonomyGroup (B : PrincipalBundle M G) [Connection B] (p : B.P) : Subgroup G
+
+/-- The Lie algebra of the holonomy group -/
+opaque HolonomyLieAlgebra (B : PrincipalBundle M G) [Connection B] (p : B.P) (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] : LieSubalgebra R g
+
+/- Submodule spanned by curvature evaluated on the horizontal subspaces of the bundle. -/
+def CurvatureSpan (B : PrincipalBundle M G) [Connection B] [CurvatureForm (R := R) B g] :
+    Submodule R g :=
   Submodule.span R (Set.range (CurvatureForm.Omega (R := R) (B := B) (g := g)))
 
-@[simp] theorem CurvatureSpan_def (R : Type _) [CommRing R] (B : PrincipalBundle M G)
-    [Connection B] (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g]
-    [CurvatureForm R B g] :
-    CurvatureSpan (R := R) B g =
-      Submodule.span R (Set.range (CurvatureForm.Omega (R := R) (B := B) (g := g))) :=
-  rfl
+/-
+7. The Ambrose-Singer Theorem:
+For a principal bundle with a connection, the Lie algebra of the holonomy group
+(restricted to loops contracting to an internal point) is spanned by the curvature.
 
-/-!
-The Ambrose-Singer identification is still open in this repository surface.
-This file now keeps the owner API small and reusable, instead of carrying an
-unproven general theorem with placeholder proof terms.
+Open QMS debt: this file currently declares `HolonomyLieAlgebra` as an opaque root,
+with no constructive owner theorem relating it to `CurvatureSpan`.  Therefore the
+Ambrose-Singer equality is intentionally not exposed as a theorem surface here.
 -/
 
 end InfoGeometry.Kaehler

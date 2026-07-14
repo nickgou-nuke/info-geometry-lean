@@ -1,4 +1,4 @@
-import Omega.Folding.YmAmbiguityShellDag
+import InfoGeometry.External.Automath.Omega.Folding.YmAmbiguityShellDag
 
 namespace Omega.Folding
 

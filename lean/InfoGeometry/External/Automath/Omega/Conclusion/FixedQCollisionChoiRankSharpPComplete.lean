@@ -1,5 +1,5 @@
-import Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
-import Omega.OperatorAlgebra.CircuitKCollisionProjectorRankSharpPComplete
+import InfoGeometry.External.Automath.Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitKCollisionProjectorRankSharpPComplete
 
 namespace Omega.Conclusion
 

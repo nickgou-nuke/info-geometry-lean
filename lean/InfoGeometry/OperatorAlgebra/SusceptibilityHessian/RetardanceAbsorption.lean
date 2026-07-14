@@ -24,18 +24,6 @@ structure RetardanceReadout
   /-- Ellipticity readout. -/
   ellipticity : State → ℝ
 
-  /-- Retardance/ellipticity law. -/
-  retardance_law : Prop
-
-  retardance_law_holds :
-    retardance_law
-
-  /-- Ellipticity law, separated for modules that only need amplitude/shape data. -/
-  ellipticity_law : Prop
-
-  ellipticity_law_holds :
-    ellipticity_law
-
 namespace RetardanceReadout
 
 variable {State : Type*}
@@ -53,12 +41,6 @@ structure OpticalAbsorptionReadout
     (State : Type*) where
   /-- Absorption or heat readout. -/
   absorption : State → ℝ
-
-  /-- Absorption law. -/
-  absorption_law : Prop
-
-  absorption_law_holds :
-    absorption_law
 
 /--
 Full optical response calibration.
@@ -88,26 +70,13 @@ structure OpticalResponseCalibration
   absorption :
     OpticalAbsorptionReadout State
 
-  /-- Hessian controls local optical response. -/
-  hessian_controls_optical_response : Prop
-
-  hessian_controls_optical_response_holds :
-    hessian_controls_optical_response
-
-  /-- Absorption readout is calibrated to Bregman heat. -/
-  absorption_matches_bregman_heat : Prop
-
-  absorption_matches_bregman_heat_holds :
-    absorption_matches_bregman_heat
-
 /--
 Construct a full optical-response calibration using the canonical `s/p` Jones
 event induced by Fresnel coefficients.
 
 This eliminates the explicit Jones-event hypotheses in the coherent Fresnel
-lane.  The remaining assumptions are the genuinely external analytic/material
-calibrations: Hessian-to-susceptibility, retardance convention, absorption law,
-and Bregman heat law.
+lane.  The remaining analytic/material calibrations are carried by the concrete
+Hessian susceptibility, retardance, and absorption readouts themselves.
 -/
 def OpticalResponseCalibration.ofFresnel
     {State : Type*} [NormedAddCommGroup State] [NormedSpace ℝ State]
@@ -116,20 +85,12 @@ def OpticalResponseCalibration.ofFresnel
     {F : FresnelCoefficientReadout State}
     (hessianSusceptibility : HessianSusceptibilityCalibration State H M)
     (retardance : RetardanceReadout State)
-    (absorption : OpticalAbsorptionReadout State)
-    (hessian_controls_optical_response : Prop)
-    (hessian_controls_optical_response_holds : hessian_controls_optical_response)
-    (absorption_matches_bregman_heat : Prop)
-    (absorption_matches_bregman_heat_holds : absorption_matches_bregman_heat) :
+    (absorption : OpticalAbsorptionReadout State) :
     OpticalResponseCalibration State H M F where
   hessianSusceptibility := hessianSusceptibility
   jonesCalibration := jonesFromMaterialCalibrationOfFresnel M F
   retardance := retardance
   absorption := absorption
-  hessian_controls_optical_response := hessian_controls_optical_response
-  hessian_controls_optical_response_holds := hessian_controls_optical_response_holds
-  absorption_matches_bregman_heat := absorption_matches_bregman_heat
-  absorption_matches_bregman_heat_holds := absorption_matches_bregman_heat_holds
 
 namespace OpticalResponseCalibration
 
@@ -203,24 +164,6 @@ structure OpticalResponseEigenCalibration
   /-- Absorption/heat readout. -/
   absorption :
     OpticalAbsorptionReadout State
-
-  /-- Hessian controls local optical response. -/
-  hessian_controls_optical_response : Prop
-
-  hessian_controls_optical_response_holds :
-    hessian_controls_optical_response
-
-  /-- Absorption readout is calibrated to Bregman heat. -/
-  absorption_matches_bregman_heat : Prop
-
-  absorption_matches_bregman_heat_holds :
-    absorption_matches_bregman_heat
-
-  /-- Retardance/ellipticity is calibrated by the Hessian eigen-response. -/
-  hessian_controls_retardance : Prop
-
-  hessian_controls_retardance_holds :
-    hessian_controls_retardance
 
 namespace OpticalResponseEigenCalibration
 

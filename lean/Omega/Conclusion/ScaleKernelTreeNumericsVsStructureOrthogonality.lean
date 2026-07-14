@@ -25,10 +25,17 @@ def conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data.structu
     conclusion_scalekernel_tree_fourth_order_synchronization_scalar_order =
       conclusion_scalekernel_tree_fourth_order_synchronization_geometric_order
 
+/-- Paper-facing combined statement for the orthogonality wrapper. -/
+def conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data.statement : Prop :=
+  conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data.numericalAccelerationChangesOnlyMagnitude
+      (D := ⟨()⟩) ∧
+    conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data.structuralOrderRemainsFour
+      (D := ⟨()⟩)
+
 /-- Paper label: `cor:conclusion-scalekernel-tree-numerics-vs-structure-orthogonality`. -/
 theorem paper_conclusion_scalekernel_tree_numerics_vs_structure_orthogonality
     (D : conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data) :
-    D.numericalAccelerationChangesOnlyMagnitude ∧ D.structuralOrderRemainsFour := by
+    conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data.statement := by
   rcases paper_conclusion_scalekernel_tree_fourth_order_synchronization with
     ⟨hScalar, hGeometric, hSync, hKernel, hLoop⟩
   exact ⟨⟨hKernel, hLoop⟩, hScalar, hGeometric, hSync⟩

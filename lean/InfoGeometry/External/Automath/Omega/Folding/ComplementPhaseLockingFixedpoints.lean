@@ -1,5 +1,5 @@
-import Omega.Core.Fib
-import Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
 import Mathlib.GroupTheory.Perm.Support
 import Mathlib.Tactic
 

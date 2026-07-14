@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40NearCoboundarySVP
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40NearCoboundarySVP
 
 namespace Omega.SyncKernelRealInput
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiCauchyPoissonAllLpSharpScaling
-import Omega.Zeta.XiPoissonCauchyKlFourthOrderUniversality
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonAllLpSharpScaling
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonCauchyKlFourthOrderUniversality
 
 namespace Omega.Zeta
 

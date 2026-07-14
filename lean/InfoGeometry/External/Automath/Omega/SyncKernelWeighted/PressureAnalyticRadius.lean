@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.PressureBranchpointsDiscriminant
-import Omega.SyncKernelWeighted.PressureUnitRootModulusThreshold
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureBranchpointsDiscriminant
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureUnitRootModulusThreshold
 
 namespace Omega.SyncKernelWeighted
 

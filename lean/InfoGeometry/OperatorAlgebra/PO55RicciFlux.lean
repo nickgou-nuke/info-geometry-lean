@@ -80,8 +80,21 @@ structure ConformalBracketSocket
   specials_abelian :
     ∀ a b : Idx, bracket (K a) (K b) = 0
 
-  /-- The full Jacobi/regularity certificate is left to concrete models. -/
-  lie_regular : Prop
+  /-- Left additivity of the bracket. -/
+  bracket_add_left :
+    ∀ x y z : L, bracket (x + y) z = bracket x z + bracket y z
+
+  /-- Left scalar compatibility of the bracket. -/
+  bracket_smul_left :
+    ∀ (c : ℝ) (x y : L), bracket (c • x) y = c • bracket x y
+
+  /-- Jacobi identity for the conformal bracket socket. -/
+  jacobi :
+    ∀ x y z : L,
+      bracket x (bracket y z) +
+          bracket y (bracket z x) +
+          bracket z (bracket x y)
+        = 0
 
 namespace ConformalBracketSocket
 
@@ -163,8 +176,17 @@ structure ObservedTKKBracket
   /-- Bracket or commutator seen by the observed/coarse-grained model. -/
   observedBracket : Obs → Obs → Obs
 
-  /-- Regularity/domain certificate for the observed bracket. -/
-  observedBracket_regular : Prop
+  /-- Left additivity of the observed bracket. -/
+  observedBracket_add_left :
+    ∀ x y z : Obs,
+      observedBracket (x + y) z =
+        observedBracket x z + observedBracket y z
+
+  /-- Left scalar compatibility of the observed bracket. -/
+  observedBracket_smul_left :
+    ∀ (c : ℝ) (x y : Obs),
+      observedBracket (c • x) y =
+        c • observedBracket x y
 
 namespace ObservedTKKBracket
 
@@ -222,9 +244,6 @@ structure RicciFluxReadout
 
   readout_zero :
     ∀ x y : J, readout x y 0 = 0
-
-  /-- Certificate that this is the intended curvature/anomaly observable. -/
-  curvatureInterpretation : Prop
 
 namespace RicciFluxReadout
 
@@ -289,115 +308,10 @@ structure HiddenInertiaReadout
   positive_grade_probe_dark :
     ∀ x : J, probe (T.pos x) = probe 0
 
-  /-- Positive grade contributes to the inertial/gravitational ledger. -/
-  positive_grade_inertial : Prop
+  /-- Positive grade contributes nontrivially to the inertial/gravitational ledger. -/
+  positive_grade_inertial :
+    ∃ x : J, inertia x ≠ 0
 
-  /-- Stability under admissible PO(5,5)/TKK flow. -/
-  stable_under_admissible_flow : Prop
-
-
-/--
-Hidden conformal inertia hypothesis.
-
-The `g₊₁` / `e₊` / commutant-side sector is treated as a dark-inertia carrier
-only if it is invisible to ordinary probes but visible through gravitational or
-curvature readouts.
-
-This is intentionally a model hypothesis, not a theorem of `PO(5,5)` alone.
--/
-structure HiddenConformalInertia
-    (J L Probe Geometry : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L]
-    [AddCommGroup Geometry] [Module ℝ Geometry] where
-  /-- Negative/visible translation grade. -/
-  gMinus : J →ₗ[ℝ] L
-
-  /-- Positive/hidden special-conformal grade. -/
-  gPlus : J →ₗ[ℝ] L
-
-  /-- Grade-zero curvature/metric ledger. -/
-  gZeroReadout : L → Geometry
-
-  /-- Ordinary probe, e.g. electromagnetic or visible-sector readout. -/
-  probe : L → Probe
-
-  /-- Inertia/mass-like scalar readout. -/
-  inertia : J → ℝ
-
-  /-- Hidden sector is invisible to ordinary probes. -/
-  gPlus_probe_dark :
-    ∀ x : J, probe (gPlus x) = probe 0
-
-  /-- Hidden sector carries inertial content on selected states. -/
-  gPlus_inertial : Prop
-
-  /--
-  The hidden sector back-reacts through the conformal/TKK ledger.
-
-  This is where `[g₋₁,g₊₁] → g₀` becomes visible as curvature.
-  -/
-  cross_bracket_gravitationally_visible : Prop
-
-  /-- Stability under admissible modular/conformal flow. -/
-  stable_under_admissible_flow : Prop
-
-  /-- Phenomenological matching: lensing, clustering, CMB, etc. -/
-  phenomenology : Prop
-
-/--
-The positive-grade sector is a dark-matter candidate in a supplied model.
-
-This does not identify the sector with observed dark matter by definition.  It
-records the exact witness obligations: probe darkness, inertial content,
-gravitational visibility through the conformal ledger, stability, and
-phenomenological calibration.
--/
-structure IsDarkMatterCandidate
-    (J L Probe Geometry : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L]
-    [AddCommGroup Geometry] [Module ℝ Geometry]
-    (H : HiddenConformalInertia J L Probe Geometry) where
-  probe_dark :
-    ∀ x : J, H.probe (H.gPlus x) = H.probe 0
-
-  inertial : Prop
-
-  gravitationally_visible : Prop
-
-  stable : Prop
-
-  phenomenology : Prop
-
-namespace HiddenConformalInertia
-
-variable
-    {J L Probe Geometry : Type*}
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L]
-    [AddCommGroup Geometry] [Module ℝ Geometry]
-    (H : HiddenConformalInertia J L Probe Geometry)
-
-/-- Re-export: the positive grade is invisible to the chosen ordinary probe. -/
-theorem probe_dark
-    (x : J) :
-    H.probe (H.gPlus x) = H.probe 0 :=
-  H.gPlus_probe_dark x
-
-/--
-A fully witnessed hidden-conformal-inertia datum is a dark-matter candidate in
-that model.
--/
-def isDarkMatterCandidate :
-    IsDarkMatterCandidate J L Probe Geometry H where
-  probe_dark := H.gPlus_probe_dark
-  inertial := H.gPlus_inertial
-  gravitationally_visible := H.cross_bracket_gravitationally_visible
-  stable := H.stable_under_admissible_flow
-  phenomenology := H.phenomenology
-
-end HiddenConformalInertia
 
 /-! ## 6. Conformal height socket -/
 
@@ -414,12 +328,29 @@ structure ConformalHeightDatum
   stateDomain : Set (ConformalState55 Q)
   height : ConformalState55 Q → ℝ
 
-  height_pos :
-    ∀ X : ConformalState55 Q, X ∈ stateDomain → 0 < height X
+  /-- Logarithmic height coordinate on the chart. -/
+  logHeight : ConformalState55 Q → ℝ
 
+  /-- Height is the exponential of the chosen logarithmic height coordinate. -/
+  height_eq_exp_logHeight :
+    ∀ X : ConformalState55 Q, X ∈ stateDomain → height X = Real.exp (logHeight X)
 
-  /-- Compatibility with the chosen Weyl/log-radial coordinate. -/
-  log_height_compatibility : Prop
+namespace ConformalHeightDatum
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+    (H : ConformalHeightDatum W Q)
+
+/-- The conformal height is positive on the declared chart domain. -/
+theorem height_pos
+    (X : ConformalState55 Q)
+    (hX : X ∈ H.stateDomain) :
+    0 < H.height X := by
+  rw [H.height_eq_exp_logHeight X hX]
+  exact Real.exp_pos _
+
+end ConformalHeightDatum
 
 /--
 A Bilingual Poincaré metric socket over a conformal-height chart.
@@ -429,11 +360,16 @@ example `ds² = (dx² + dy²)/y²` on an upper-half-plane chart.
 -/
 structure BilingualPoincareMetricDatum
     (W : Type*) [AddCommGroup W] [Module ℝ W]
-    (Q : SplitQuadratic55 W) where
+  (Q : SplitQuadratic55 W) where
   height : ConformalHeightDatum W Q
   metricReadout : ConformalState55 Q → ConformalState55 Q → ℝ
-  conformal_covariance : Prop
-  nondegenerate_on_chart : Prop
-  boundary_is_projective_null_quadric : Prop
+
+  /-- Symmetry of the metric readout. -/
+  metric_symm :
+    ∀ X Y : ConformalState55 Q, metricReadout X Y = metricReadout Y X
+
+  /-- Nonnegativity of the diagonal readout on the chart domain. -/
+  metric_self_nonneg :
+    ∀ X : ConformalState55 Q, X ∈ height.stateDomain → 0 ≤ metricReadout X X
 
 end InfoGeometry.OperatorAlgebra

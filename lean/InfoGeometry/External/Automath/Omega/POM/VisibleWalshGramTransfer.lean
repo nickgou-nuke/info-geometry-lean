@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.VisibleWalshCommutatorDefect
+import InfoGeometry.External.Automath.Omega.POM.VisibleWalshCommutatorDefect
 
 namespace Omega.POM
 

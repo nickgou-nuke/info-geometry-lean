@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.POM.MicrocanonicalFoldEntropy
-import Omega.POM.MicrocanonicalFoldPosteriorCountAndProb
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldEntropy
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldPosteriorCountAndProb
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
-import Omega.Folding.InverseLimit
-import Omega.RecursiveAddressing.CompleteAddressReconstruction
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.CompleteAddressReconstruction
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

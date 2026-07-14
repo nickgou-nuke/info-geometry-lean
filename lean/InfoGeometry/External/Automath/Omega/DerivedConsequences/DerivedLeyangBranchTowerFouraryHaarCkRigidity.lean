@@ -1,5 +1,5 @@
-import Omega.DerivedConsequences.DerivedLeyangBranchsetHaarLimit
-import Omega.Zeta.DerivedLeyangBfCkRigidity
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedLeyangBranchsetHaarLimit
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBfCkRigidity
 
 namespace Omega.DerivedConsequences
 

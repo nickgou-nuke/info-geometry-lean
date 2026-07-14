@@ -2,8 +2,8 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
-import Omega.Zeta.LocalizedQuotientLedger
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientLedger
 
 namespace Omega.Zeta
 

@@ -3,8 +3,8 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermondeFiniteBlaschke
-import Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermondeFiniteBlaschke
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
 
 namespace Omega.Conclusion
 

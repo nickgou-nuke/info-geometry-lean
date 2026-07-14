@@ -1,4 +1,4 @@
-import Omega.Folding.FoldPrimeRegisterBitlengthOmegaMlogm
+import InfoGeometry.External.Automath.Omega.Folding.FoldPrimeRegisterBitlengthOmegaMlogm
 
 namespace Omega.Folding
 

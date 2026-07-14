@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CriticalKernelPdetUniformMinimizer
+import InfoGeometry.External.Automath.Omega.Conclusion.CriticalKernelPdetUniformMinimizer
 
 namespace Omega.Conclusion
 

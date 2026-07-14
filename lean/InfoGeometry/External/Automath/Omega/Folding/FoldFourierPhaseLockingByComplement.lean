@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
-import Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
 
 namespace Omega.Folding
 

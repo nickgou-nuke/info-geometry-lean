@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
-import Omega.SyncKernelWeighted.RealInput40TraceRecurrence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40TraceRecurrence
 
 namespace Omega.SyncKernelWeighted
 

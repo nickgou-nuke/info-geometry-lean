@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ConnectedToDiscreteConstant
+import InfoGeometry.External.Automath.Omega.Conclusion.ConnectedToDiscreteConstant
 
 namespace Omega.CircleDimension
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberBiasedPosteriorPoissonBinomial
+import InfoGeometry.External.Automath.Omega.POM.FiberBiasedPosteriorPoissonBinomial
 
 open scoped BigOperators
 

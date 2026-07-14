@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.CyclicDet
-import Omega.Zeta.ResolventTraceIntegerResidueNoncancel
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicDet
+import InfoGeometry.External.Automath.Omega.Zeta.ResolventTraceIntegerResidueNoncancel
 
 namespace Omega.Zeta
 

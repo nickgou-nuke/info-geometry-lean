@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 namespace Omega.Zeta
 

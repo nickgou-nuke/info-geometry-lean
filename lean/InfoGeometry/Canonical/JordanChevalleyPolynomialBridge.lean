@@ -43,26 +43,20 @@ def nilpotentPart {f : Module.End K V} (P : JordanChevalleyInterpolation f) :
     Module.End K V :=
   f - semisimplePart P
 
-/-!
-`jordanChevalleyInterpolation` is a real witness, not a `Nonempty` endpoint:
-it chooses a Jordan-Chevalley split and the polynomial whose evaluation at `f`
-is the semisimple component.
--/
-def jordanChevalleyInterpolation (f : Module.End K V) [PerfectField K] :
-    JordanChevalleyInterpolation f := by
-  let B : JordanChevalleySplit f :=
-    JordanChevalleySplit.split (f := f)
-  let hPoly := Algebra.adjoin_mem_exists_aeval (R := K) (x := f) B.semisimpleMem
-  let p : K[X] := Classical.choose hPoly
-  have hp : Polynomial.aeval f p = B.semisimple := Classical.choose_spec hPoly
-  exact ⟨B, p, hp⟩
-
-/-- The canonical interpolation witness reads its semisimple part as `p(f)`. -/
-theorem jordanChevalleyInterpolation_semisimple_eq
+/-- Jordan-Chevalley interpolation exists as an explicit existential theorem. -/
+theorem exists_jordanChevalleyInterpolation
     (f : Module.End K V) [PerfectField K] :
-    Polynomial.aeval f (jordanChevalleyInterpolation f).poly =
-      (jordanChevalleyInterpolation f).split.semisimple :=
-  (jordanChevalleyInterpolation f).semisimple_eq
+    ∃ P : JordanChevalleyInterpolation f,
+      Polynomial.aeval f P.poly = P.split.semisimple ∧
+      IsSemisimpleEnd P.split.semisimple ∧
+      IsNilpotentEnd P.split.nilpotent ∧
+      Commute P.split.semisimple P.split.nilpotent ∧
+      f = P.split.semisimple + P.split.nilpotent := by
+  rcases JordanChevalleySplit.exists_split (f := f) with
+    ⟨B, hss, hnil, hcomm, _hs, _hn, hsum⟩
+  rcases Algebra.adjoin_mem_exists_aeval (R := K) (x := f) B.semisimpleMem with
+    ⟨p, hp⟩
+  exact ⟨⟨B, p, hp⟩, hp, hss, hnil, hcomm, hsum⟩
 
 omit [FiniteDimensional K V] in
 /-- The semisimple interpolation commutes with every symmetry commuting with the Hamiltonian. -/

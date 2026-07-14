@@ -1,12 +1,21 @@
 import Mathlib.Tactic
-import Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
 
 namespace Omega.DerivedConsequences
+
+/-- Local arithmetic witness used to seed the boundary-sector isotypy package. -/
+def derived_window6_boundary_sector_groupalgebra_isotypy_witness : Prop :=
+  (2 : ℕ) ^ 3 = 8 ∧
+    Nat.factorial 2 = 2 ∧
+    Nat.factorial 3 = 6 ∧
+    Nat.factorial 4 = 24
 
 /-- Concrete bookkeeping for the eight boundary parity character sectors and the common interior
 group order singled out by the window-`6` boundary direct-factor refinement. -/
 structure derived_window6_boundary_sector_groupalgebra_isotypy_data where
-  witness : Unit := ()
+  witness : derived_window6_boundary_sector_groupalgebra_isotypy_witness := by
+    unfold derived_window6_boundary_sector_groupalgebra_isotypy_witness
+    norm_num
 
 /-- The eight boundary parity character sectors. -/
 def derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount : ℕ :=
@@ -71,5 +80,11 @@ theorem paper_derived_window6_boundary_sector_groupalgebra_isotypy
     norm_num [derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount,
       derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder,
       derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder]
+
+/-- The local arithmetic witness is explicit. -/
+theorem derived_window6_boundary_sector_groupalgebra_isotypy_witness_holds :
+    derived_window6_boundary_sector_groupalgebra_isotypy_witness := by
+  unfold derived_window6_boundary_sector_groupalgebra_isotypy_witness
+  norm_num
 
 end Omega.DerivedConsequences

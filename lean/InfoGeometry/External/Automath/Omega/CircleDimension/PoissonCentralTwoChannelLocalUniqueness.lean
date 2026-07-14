@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonCentralTwoChannelReconstruction
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonCentralTwoChannelReconstruction
 
 namespace Omega.CircleDimension
 

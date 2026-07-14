@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.List
 import Mathlib.Data.List.Range
 import Mathlib.Tactic
-import Omega.Zeta.XiCdimSpectrumCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimSpectrumCompleteness
 
 namespace Omega.Zeta
 

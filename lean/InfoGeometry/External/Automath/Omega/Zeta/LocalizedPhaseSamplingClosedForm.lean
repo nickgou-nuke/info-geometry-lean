@@ -1,4 +1,4 @@
-import Omega.Zeta.CdimLocalizationZetaAS
+import InfoGeometry.External.Automath.Omega.Zeta.CdimLocalizationZetaAS
 
 namespace Omega.Zeta
 

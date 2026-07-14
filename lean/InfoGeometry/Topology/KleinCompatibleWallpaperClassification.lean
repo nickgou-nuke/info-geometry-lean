@@ -88,14 +88,14 @@ theorem projectedD5Root_neg_mem (r : Root2Q)
     IsProjectedD5Root (-r) := by
   rcases hr with ⟨k, rfl⟩
   fin_cases k
-  · exact ⟨7, by native_decide⟩
-  · exact ⟨6, by native_decide⟩
-  · exact ⟨5, by native_decide⟩
-  · exact ⟨4, by native_decide⟩
-  · exact ⟨3, by native_decide⟩
-  · exact ⟨2, by native_decide⟩
-  · exact ⟨1, by native_decide⟩
-  · exact ⟨0, by native_decide⟩
+  · exact ⟨7, by decide⟩
+  · exact ⟨6, by decide⟩
+  · exact ⟨5, by decide⟩
+  · exact ⟨4, by decide⟩
+  · exact ⟨3, by decide⟩
+  · exact ⟨2, by decide⟩
+  · exact ⟨1, by decide⟩
+  · exact ⟨0, by decide⟩
 
 /--
 Every nonzero projection of a finite `D₅` root to the wallpaper plane lands in

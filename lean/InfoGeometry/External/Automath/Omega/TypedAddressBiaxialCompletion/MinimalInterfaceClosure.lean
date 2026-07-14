@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.CertificateLoop
-import Omega.TypedAddressBiaxialCompletion.UnifiedRejectionRule
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CertificateLoop
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.UnifiedRejectionRule
 
 namespace Omega.TypedAddressBiaxialCompletion
 

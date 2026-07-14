@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
-import Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.UnitCirclePhaseArithmetic.PhaseGateRank1VolumeRigidity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.PhaseGateRank1VolumeRigidity
 
 namespace Omega.UnitCirclePhaseArithmetic
 

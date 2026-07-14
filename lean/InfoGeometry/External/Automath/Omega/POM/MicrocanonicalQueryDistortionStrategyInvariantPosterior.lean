@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalCountSufficientStatisticPosteriorUniform
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCountSufficientStatisticPosteriorUniform
 
 namespace Omega.POM
 

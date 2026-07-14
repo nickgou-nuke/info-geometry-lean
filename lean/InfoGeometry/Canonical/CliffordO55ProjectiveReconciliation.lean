@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Algebraic.NarainOrthogonalCore
+import InfoGeometry.Clifford.SpinorRep
 
 /-!
 # Clifford / `O(5,5)` / Projective Reconciliation
@@ -72,6 +73,40 @@ def cl44_tensor_cl11_as_cl55 :
 theorem cl55_tensor_step_eq_owner :
     cl55_as_cl11_tensor_cl44 = splitCliffordTensorStepEquiv 4 :=
   rfl
+
+/--
+Compatibility between the split `Cl(4,4)` stage and the recursive stage-4
+spinor matrix basis.
+
+This is the source-backed generator-level readout: the recursive spinor
+representation is exactly the stage-4 carrier image of the split tower.
+-/
+theorem cl44_spinorMatrix4_basis_compatibility
+    (x : InfoGeometry.Clifford.SpinorRep.SplitSpace 4) :
+    InfoGeometry.Clifford.SpinorRep.spinorRepresentation 4
+        (CliffordAlgebra.ι
+          (InfoGeometry.Clifford.SpinorRep.SplitQuad 4) x) =
+      InfoGeometry.Clifford.SpinorRep.recursiveGamma 4 x := by
+  simpa using InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι 4 x
+
+/--
+Combined owner packet for the stage-4 recursive spinor basis and the stage-5
+`Cl(1,1)` tensor polarization.
+
+The first conjunct is the explicit spinor-basis compatibility theorem above;
+the second conjunct is the repo-owned `Cl(5,5)` tensor-step equality.
+-/
+theorem cl44_spinorMatrix4_and_cl55_tensor_polarization :
+    (∀ x : InfoGeometry.Clifford.SpinorRep.SplitSpace 4,
+      InfoGeometry.Clifford.SpinorRep.spinorRepresentation 4
+          (CliffordAlgebra.ι
+            (InfoGeometry.Clifford.SpinorRep.SplitQuad 4) x) =
+        InfoGeometry.Clifford.SpinorRep.recursiveGamma 4 x) ∧
+    (splitCl55_headCl11TensorCl44Equiv = splitCliffordTensorStepEquiv 4) := by
+  constructor
+  · intro x
+    simpa using InfoGeometry.Clifford.SpinorRep.spinorRepresentation_ι 4 x
+  · exact splitCl55_headCl11TensorCl44Equiv_eq_owner
 
 /--
 Finite `Cl(5,5)` window absorption in the direct limit:

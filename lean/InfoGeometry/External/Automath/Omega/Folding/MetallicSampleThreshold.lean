@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.MetallicParetoScaleLaw
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoScaleLaw
 
 namespace Omega.Folding
 

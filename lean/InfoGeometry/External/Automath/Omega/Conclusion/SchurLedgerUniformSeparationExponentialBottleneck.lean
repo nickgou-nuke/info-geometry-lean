@@ -1,4 +1,4 @@
-import Omega.Zeta.DerivedPickPoissonSchurLedgerAverageBottleneck
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedPickPoissonSchurLedgerAverageBottleneck
 
 namespace Omega.Conclusion
 

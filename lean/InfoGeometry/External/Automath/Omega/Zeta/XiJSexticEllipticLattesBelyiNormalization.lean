@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiJSexticEllipticLattesTMap
+import InfoGeometry.External.Automath.Omega.Zeta.XiJSexticEllipticLattesTMap
 
 namespace Omega.Zeta
 

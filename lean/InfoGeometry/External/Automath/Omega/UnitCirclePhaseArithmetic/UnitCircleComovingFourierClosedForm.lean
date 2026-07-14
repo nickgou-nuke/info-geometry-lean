@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComovingFourierClosed
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFourierClosed
 
 namespace Omega.UnitCirclePhaseArithmetic
 

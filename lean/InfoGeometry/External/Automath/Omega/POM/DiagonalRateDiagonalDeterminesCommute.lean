@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateDiagonalStatisticsComplete
-import Omega.POM.DiagonalRateRefreshHittingTimeMeanClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDiagonalStatisticsComplete
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimeMeanClosed
 
 namespace Omega.POM
 

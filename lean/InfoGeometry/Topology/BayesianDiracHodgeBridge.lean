@@ -153,11 +153,7 @@ variable {current : Fin n1 → ℝ}
 variable (C : CoexactEntropySector d1 current)
 
 /-- Coexact current has the supplied entropy-production readout. -/
-theorem entropy_current_readout : eckmannDot current current = C.entropyCurrent :=
-  C.readout
-
-/-- Coexact current has nonnegative quadratic intensity. -/
-theorem entropy_current_nonneg_of_readout : 0 ≤ C.entropyCurrent := by
+theorem entropy_current_nonneg : 0 ≤ C.entropyCurrent := by
   rw [← C.readout]
   exact eckmannDot_self_nonneg current
 
@@ -180,10 +176,6 @@ variable {d0 : Matrix (Fin n1) (Fin n0) ℝ}
 variable {d1 : Matrix (Fin n2) (Fin n1) ℝ}
 variable {current : Fin n1 → ℝ}
 variable (H : HarmonicTopologicalSector d0 d1 current)
-
-/-- Harmonic currents are in the supplied topologically protected sector. -/
-theorem protected_readout : H.topologicalProtected :=
-  H.harmonic_implies_protected H.harmonic_current
 
 /-- Harmonic currents are orthogonal to exact and coexact errors. -/
 theorem protected_orthogonal_to_local_errors

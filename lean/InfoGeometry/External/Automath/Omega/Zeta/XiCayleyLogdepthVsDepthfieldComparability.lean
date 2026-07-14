@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.CayleyOffsetDefectSpectrumBounds
+import InfoGeometry.External.Automath.Omega.Zeta.CayleyOffsetDefectSpectrumBounds
 
 namespace Omega.Zeta
 

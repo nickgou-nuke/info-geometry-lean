@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BlockReservoirEncoding
+import InfoGeometry.External.Automath.Omega.Folding.BlockReservoirEncoding
 
 namespace Omega.Folding
 

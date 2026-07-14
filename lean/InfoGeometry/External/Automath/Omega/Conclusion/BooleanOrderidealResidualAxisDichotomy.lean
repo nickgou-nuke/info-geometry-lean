@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BooleanOrderIdealOnebitParityDefect
+import InfoGeometry.External.Automath.Omega.Conclusion.BooleanOrderIdealOnebitParityDefect
 
 namespace Omega.Conclusion
 

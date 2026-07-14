@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CechCyclotomicQuantization
+import InfoGeometry.External.Automath.Omega.CircleDimension.CechCyclotomicQuantization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.Degree11GenericGaloisS11
-import Omega.Zeta.Degree11ParameterTDivisorDegree
+import InfoGeometry.External.Automath.Omega.Zeta.Degree11GenericGaloisS11
+import InfoGeometry.External.Automath.Omega.Zeta.Degree11ParameterTDivisorDegree
 
 namespace Omega.Zeta
 

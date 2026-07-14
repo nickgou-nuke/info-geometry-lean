@@ -1,5 +1,5 @@
-import Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
-import Omega.Conclusion.FreezingExtremalSkeletonTwoCoordinates
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.FreezingExtremalSkeletonTwoCoordinates
 
 namespace Omega.Conclusion
 

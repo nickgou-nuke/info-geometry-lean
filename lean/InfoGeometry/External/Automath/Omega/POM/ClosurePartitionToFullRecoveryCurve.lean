@@ -1,6 +1,6 @@
-import Omega.POM.CompleteHomogeneousLinearRecurrence
-import Omega.POM.FiniteSampleIndistinguishabilityPowerSums
-import Omega.POM.InvertWFromHomogeneousCurve
+import InfoGeometry.External.Automath.Omega.POM.CompleteHomogeneousLinearRecurrence
+import InfoGeometry.External.Automath.Omega.POM.FiniteSampleIndistinguishabilityPowerSums
+import InfoGeometry.External.Automath.Omega.POM.InvertWFromHomogeneousCurve
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.AutocovarianceSeedValues
-import Omega.Folding.BernoulliPCovarianceExplicitEvenOdd
-import Omega.Folding.GaugeAnomalyCovClosed
+import InfoGeometry.External.Automath.Omega.Folding.AutocovarianceSeedValues
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPCovarianceExplicitEvenOdd
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCovClosed
 
 namespace Omega.Folding
 

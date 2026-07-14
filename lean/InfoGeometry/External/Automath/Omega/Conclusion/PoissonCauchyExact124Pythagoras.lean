@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PoissonCauchyTracelessQuadrupoleFactorization
+import InfoGeometry.External.Automath.Omega.Conclusion.PoissonCauchyTracelessQuadrupoleFactorization
 
 namespace Omega.Conclusion
 

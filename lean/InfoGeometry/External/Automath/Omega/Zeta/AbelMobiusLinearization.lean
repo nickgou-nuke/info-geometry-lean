@@ -1,5 +1,5 @@
-import Omega.Zeta.AbelAnalyticRemainderDecimationCollapse
-import Omega.Zeta.AbelMobiusNeutralizationFormal
+import InfoGeometry.External.Automath.Omega.Zeta.AbelAnalyticRemainderDecimationCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.AbelMobiusNeutralizationFormal
 
 namespace Omega.Zeta
 

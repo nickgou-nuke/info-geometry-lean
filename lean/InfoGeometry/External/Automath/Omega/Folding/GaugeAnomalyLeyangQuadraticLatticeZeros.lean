@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyLeyangUniversalKernels
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyLeyangUniversalKernels
 
 namespace Omega.Folding
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 import Mathlib.Tactic
-import Omega.CircleDimension.UnitarySelfAdjointLog
+import InfoGeometry.External.Automath.Omega.CircleDimension.UnitarySelfAdjointLog
 
 namespace Omega.CircleDimension
 

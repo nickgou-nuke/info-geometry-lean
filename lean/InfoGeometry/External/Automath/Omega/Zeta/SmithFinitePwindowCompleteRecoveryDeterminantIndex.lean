@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.DetVpControlsRankDrop
-import Omega.Zeta.SmithPadicLossSpectrumClassification
+import InfoGeometry.External.Automath.Omega.Zeta.DetVpControlsRankDrop
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPadicLossSpectrumClassification
 
 namespace Omega.Zeta
 

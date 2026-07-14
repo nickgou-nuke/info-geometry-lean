@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.GmUniformTwistGapFromGcd
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GmUniformTwistGapFromGcd
 
 namespace Omega.SyncKernelRealInput
 

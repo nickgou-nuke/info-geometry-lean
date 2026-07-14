@@ -1,5 +1,5 @@
-import Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
-import Omega.Zeta.XiBasepointScanFullRankWeightGaugeInvariance
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanFullRankWeightGaugeInvariance
 
 namespace Omega.Zeta
 

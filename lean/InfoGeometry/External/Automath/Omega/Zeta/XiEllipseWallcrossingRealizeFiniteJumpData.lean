@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiSingularRingEllipseWallcrossingAtomicMeasure
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingularRingEllipseWallcrossingAtomicMeasure
 
 namespace Omega.Zeta
 

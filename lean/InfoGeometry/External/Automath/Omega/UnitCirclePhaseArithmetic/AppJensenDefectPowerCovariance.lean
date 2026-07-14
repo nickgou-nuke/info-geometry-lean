@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.JensenDefectPowerCovariance
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectPowerCovariance
 
 namespace Omega.UnitCirclePhaseArithmetic
 

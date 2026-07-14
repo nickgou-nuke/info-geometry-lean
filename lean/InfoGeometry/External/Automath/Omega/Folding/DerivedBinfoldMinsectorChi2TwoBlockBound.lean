@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinChi2Col
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinChi2Col
 
 namespace Omega.Folding
 

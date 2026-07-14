@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SPG.LpSuperellipsoidDecodingMultiplicativeNoiseStability
+import InfoGeometry.External.Automath.Omega.SPG.LpSuperellipsoidDecodingMultiplicativeNoiseStability
 
 namespace Omega.Conclusion
 

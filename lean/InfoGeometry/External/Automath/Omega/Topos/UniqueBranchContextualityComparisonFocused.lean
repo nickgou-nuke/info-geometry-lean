@@ -1,4 +1,4 @@
-import Omega.Topos.UniqueBranchContextualityComparison
+import InfoGeometry.External.Automath.Omega.Topos.UniqueBranchContextualityComparison
 
 namespace Omega.Topos
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
-import Omega.Zeta.LocalizedIntegersOrderDualQuotient
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersOrderDualQuotient
 
 namespace Omega.Zeta
 

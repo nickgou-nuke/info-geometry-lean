@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleExactMbitDropLaw
-import Omega.Conclusion.FinitePrimeSolenoidTerminalObject
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleExactMbitDropLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FinitePrimeSolenoidTerminalObject
 
 namespace Omega.Conclusion
 

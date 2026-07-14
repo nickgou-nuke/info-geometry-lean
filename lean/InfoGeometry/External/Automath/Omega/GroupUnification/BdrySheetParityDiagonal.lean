@@ -1,5 +1,5 @@
-import Omega.GroupUnification.Foldbin6GeoStabilizerZ2
-import Omega.GU.TerminalFoldbin6BdryUniqueGeoSelectedAxis
+import InfoGeometry.External.Automath.Omega.GroupUnification.Foldbin6GeoStabilizerZ2
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BdryUniqueGeoSelectedAxis
 
 namespace Omega.GroupUnification
 

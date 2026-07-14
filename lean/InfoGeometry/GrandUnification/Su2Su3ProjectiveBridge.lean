@@ -17,7 +17,6 @@ def grand_unification_matrix (T_leakage : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   ![![1, 0, 0],
     ![0, 1, T_leakage],
     ![0, 0, 1]]
-
 lemma sum_fin_3 {α : Type*} [AddCommMonoid α] (f : Fin 3 → α) : 
   ∑ i : Fin 3, f i = f 0 + f 1 + f 2 := by
   simp [Fin.sum_univ_succ, add_assoc]

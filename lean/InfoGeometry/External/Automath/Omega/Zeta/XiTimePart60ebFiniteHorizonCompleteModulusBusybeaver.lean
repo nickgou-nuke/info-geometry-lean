@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ebPurePhaseOffsliceBifurcation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ebPurePhaseOffsliceBifurcation
 
 namespace Omega.Zeta
 

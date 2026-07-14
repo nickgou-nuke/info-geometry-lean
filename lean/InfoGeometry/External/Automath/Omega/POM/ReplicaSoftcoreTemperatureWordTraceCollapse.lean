@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.ReplicaSoftcoreWordTracePowerSums
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreWordTracePowerSums
 
 namespace Omega.POM
 

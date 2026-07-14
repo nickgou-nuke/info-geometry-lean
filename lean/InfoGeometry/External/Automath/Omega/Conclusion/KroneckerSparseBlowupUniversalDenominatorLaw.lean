@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.EulerKroneckerThreepointTransportSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.EulerKroneckerThreepointTransportSpectrum
 
 namespace Omega.Conclusion
 

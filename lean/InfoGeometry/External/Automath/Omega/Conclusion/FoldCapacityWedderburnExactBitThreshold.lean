@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
-import Omega.Conclusion.CausalDepthBranchBudgetOrthogonality
+import InfoGeometry.External.Automath.Omega.Conclusion.CausalDepthBranchBudgetOrthogonality
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.FiniteRhSqrtResonanceGeneral
-import Omega.SyncKernelRealInput.RealInput40CollisionRhkWindow
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.FiniteRhSqrtResonanceGeneral
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40CollisionRhkWindow
 
 namespace Omega.SyncKernelRealInput
 

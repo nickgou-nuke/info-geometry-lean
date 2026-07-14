@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AlgebraicLdpDfiniteStokesCompression
+import InfoGeometry.External.Automath.Omega.Conclusion.AlgebraicLdpDfiniteStokesCompression
 
 namespace Omega.Conclusion
 

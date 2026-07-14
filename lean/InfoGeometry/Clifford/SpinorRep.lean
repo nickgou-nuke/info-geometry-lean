@@ -62,6 +62,37 @@ theorem appendAtom_mul {n : ℕ}
     Matrix.kronecker (A * C) (B * D)
   exact (Matrix.mul_kronecker_mul A C B D).symm
 
+theorem appendAtom_mul_assoc {n : ℕ}
+    (A C E : SplitGammaMatrix n)
+    (B D F : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom A B * (appendAtom C D * appendAtom E F) =
+      appendAtom (A * (C * E)) (B * (D * F)) := by
+  rw [appendAtom_mul (A := C) (C := E) (B := D) (D := F)]
+  rw [appendAtom_mul (A := A) (C := C * E) (B := B) (D := D * F)]
+
+theorem appendAtom_mul_assoc_left {n : ℕ}
+    (A C E : SplitGammaMatrix n)
+    (B D F : Matrix (Fin 2) (Fin 2) ℝ) :
+    (appendAtom A B * appendAtom C D) * appendAtom E F =
+      appendAtom ((A * C) * E) ((B * D) * F) := by
+  rw [appendAtom_mul, appendAtom_mul]
+
+@[simp] theorem appendAtom_zero_left {n : ℕ}
+    (B : Matrix (Fin 2) (Fin 2) ℝ) :
+    appendAtom (0 : SplitGammaMatrix n) B = 0 := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  simp [appendAtom_apply]
+
+@[simp] theorem appendAtom_zero_right {n : ℕ}
+    (A : SplitGammaMatrix n) :
+    appendAtom A (0 : Matrix (Fin 2) (Fin 2) ℝ) = 0 := by
+  ext i j
+  rcases i with ⟨i, a⟩
+  rcases j with ⟨j, b⟩
+  simp [appendAtom_apply]
+
 theorem splitHeadAtom_sq (x : ℝ × ℝ) :
     (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) *
       (x.1 • gammaPlusAtom + x.2 • gammaMinusAtom) =

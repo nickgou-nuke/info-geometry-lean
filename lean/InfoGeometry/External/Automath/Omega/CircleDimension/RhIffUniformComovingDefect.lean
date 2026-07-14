@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingUniformMinimization
-import Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingUniformMinimization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
 
 namespace Omega.CircleDimension
 

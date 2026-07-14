@@ -1,5 +1,5 @@
 import Std
-import Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
 
 namespace Omega.HyperKernel
 namespace Closure

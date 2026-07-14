@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldCondexpIndexMaxFiber
-import Omega.Zeta.DephysFoldStinespringSqrtLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldCondexpIndexMaxFiber
+import InfoGeometry.External.Automath.Omega.Zeta.DephysFoldStinespringSqrtLaw
 
 namespace Omega.Zeta
 

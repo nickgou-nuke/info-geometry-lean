@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonKLEighth
-import Omega.CircleDimension.PoissonSecondOrder
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonKLEighth
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonSecondOrder
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
-import Omega.Conclusion.GodelVsMinimalGap
-import Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
+import InfoGeometry.External.Automath.Omega.Conclusion.GodelVsMinimalGap
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
 
 namespace Omega.Conclusion
 

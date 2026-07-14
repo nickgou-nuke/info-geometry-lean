@@ -1,7 +1,7 @@
-import Omega.EA.ArithComposition
-import Omega.EA.FoldAsSectionCorollary
-import Omega.EA.ZeckendorfTransversal
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.EA.ArithComposition
+import InfoGeometry.External.Automath.Omega.EA.FoldAsSectionCorollary
+import InfoGeometry.External.Automath.Omega.EA.ZeckendorfTransversal
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega.EA
 

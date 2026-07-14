@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.DoubleSignCylinderTrigonalTransparency
+import InfoGeometry.External.Automath.Omega.Conclusion.DoubleSignCylinderTrigonalTransparency
 
 namespace Omega.Conclusion
 

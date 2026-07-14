@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateSmallDistortionSynergyK
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateSmallDistortionSynergyK
 
 namespace Omega.POM
 

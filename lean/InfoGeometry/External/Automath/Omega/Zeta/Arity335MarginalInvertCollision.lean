@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.Arity335CharacterEnergy
+import InfoGeometry.External.Automath.Omega.Zeta.Arity335CharacterEnergy
 
 namespace Omega.Zeta
 

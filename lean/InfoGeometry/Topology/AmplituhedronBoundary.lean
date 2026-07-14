@@ -27,3 +27,23 @@ Not closed here:
 -/
 
 namespace InfoGeometry.Topology.AmplituhedronBoundary
+
+/-- Three-point amplituhedron boundary packet. -/
+structure Amplituhedron3Point (Op : Type*) [Ring Op] where
+  edge1 : Op
+  edge2 : Op
+  edge3 : Op
+  channel1 : Op
+  channel2 : Op
+  channel3 : Op
+  square_zero_edge1 : edge1 * edge1 = 0
+  square_zero_edge2 : edge2 * edge2 = 0
+  square_zero_edge3 : edge3 * edge3 = 0
+  mixed_volume : edge1 * edge2 * edge3 = edge1 * edge3 * edge2 + edge2 * edge1 * edge3 + edge3 * edge1 * edge2
+
+/-- Three-point boundary packet with nilpotent edge operators and channel forms. -/
+structure AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] where
+  amp : Amplituhedron3Point Op
+  bcfw_readout : Prop
+
+end InfoGeometry.Topology.AmplituhedronBoundary

@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.GroupUnification.BdryS3ToS2BreakingByGeoAxis
+import InfoGeometry.External.Automath.Omega.GroupUnification.BdryS3ToS2BreakingByGeoAxis
 
 open Matrix
 

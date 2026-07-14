@@ -1,4 +1,4 @@
-import Omega.Topos.SheafificationRemovesGlueAPAL
+import InfoGeometry.External.Automath.Omega.Topos.SheafificationRemovesGlueAPAL
 
 namespace Omega.Topos.FocusedSheafificationRemovesGlueAPAL
 

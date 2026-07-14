@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6AdjointWeightMultiset
-import Omega.GU.Window6CyclicWeightThresholdRootLength
+import InfoGeometry.External.Automath.Omega.GU.Window6AdjointWeightMultiset
+import InfoGeometry.External.Automath.Omega.GU.Window6CyclicWeightThresholdRootLength
 
 namespace Omega.GU
 

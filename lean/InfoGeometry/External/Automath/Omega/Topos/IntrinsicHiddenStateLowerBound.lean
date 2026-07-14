@@ -1,4 +1,4 @@
-import Omega.SPG.RegisterLowerBound
+import InfoGeometry.External.Automath.Omega.SPG.RegisterLowerBound
 
 namespace Omega.Topos
 

@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.TowerDefectExactTvDuality
-import Omega.POM.BeckChevalleyAmgmDefectIdentity
-import Omega.POM.LocalDefectGibbsVariational
-import Omega.POM.SmallDefectFiberRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.TowerDefectExactTvDuality
+import InfoGeometry.External.Automath.Omega.POM.BeckChevalleyAmgmDefectIdentity
+import InfoGeometry.External.Automath.Omega.POM.LocalDefectGibbsVariational
+import InfoGeometry.External.Automath.Omega.POM.SmallDefectFiberRigidity
 
 namespace Omega.POM
 

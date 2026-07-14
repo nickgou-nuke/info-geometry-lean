@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
+import InfoGeometry.External.Automath.Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
 
 namespace Omega.Zeta
 

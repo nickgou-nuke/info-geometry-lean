@@ -358,52 +358,6 @@ def nilpotentPart : E →L[ℝ] E :=
   rw [IsDrazinInverse.nilpotent_eq_complementaryProjection_mul (h := CIK.hDrazin)] at hnil
   simpa [CertifiedInverseKernel.nilpotentProj, CertifiedInverseKernel.spectralComplementaryProjector] using hnil
 
-/--
-Canonical Drazin block-split packet.
-
-This is the Lean-level counterpart of the block intuition
-`A = diag(C, N)`: `core` is the regular Drazin lane, `nilpotent` is the
-singular/defect lane, and the mixed products vanish.
--/
-@[rep_depth operator]
-structure DrazinBlockSplitPacket where
-  P_D : E →L[ℝ] E
-  Q0 : E →L[ℝ] E
-  core : E →L[ℝ] E
-  nilpotent : E →L[ℝ] E
-  P_D_eq : P_D = CIK.drazinCoreProj
-  Q0_eq : Q0 = CIK.nilpotentProj
-  core_eq : core = CIK.corePart
-  nilpotent_eq : nilpotent = CIK.nilpotentPart
-  projector_split : P_D + Q0 = 1
-  base_split : CIK.A = core + nilpotent
-  core_mul_nilpotent : core * nilpotent = 0
-  nilpotent_mul_core : nilpotent * core = 0
-  commute_core_nilpotent : Commute core nilpotent
-  nilpotent_pow_zero :
-    ∀ {m : ℕ}, CIK.drazinIndex ≤ m + 1 → nilpotent ^ (m + 1) = 0
-
-/-- The canonical block-split packet attached to a certified inverse kernel. -/
-@[rep_depth operator]
-noncomputable def drazinBlockSplitPacket : DrazinBlockSplitPacket CIK where
-  P_D := CIK.drazinCoreProj
-  Q0 := CIK.nilpotentProj
-  core := CIK.corePart
-  nilpotent := CIK.nilpotentPart
-  P_D_eq := rfl
-  Q0_eq := rfl
-  core_eq := rfl
-  nilpotent_eq := rfl
-  projector_split := by
-    simp [CertifiedInverseKernel.drazinCoreProj, CertifiedInverseKernel.nilpotentProj]
-  base_split := CIK.A_eq_corePart_add_nilpotentPart
-  core_mul_nilpotent := CIK.corePart_mul_nilpotentPart_eq_zero
-  nilpotent_mul_core := CIK.nilpotentPart_mul_corePart_eq_zero
-  commute_core_nilpotent := CIK.corePart_commute_nilpotentPart
-  nilpotent_pow_zero := by
-    intro m hm
-    exact CIK.nilpotentPart_pow_succ_eq_zero_of_index_le hm
-
 end InfoGeometry.Canonical.CertifiedInverseKernel
 
 end Certified

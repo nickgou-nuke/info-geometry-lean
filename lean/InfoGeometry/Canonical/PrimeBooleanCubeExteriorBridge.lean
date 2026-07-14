@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
+import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 
 /-!
 # InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge

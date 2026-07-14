@@ -1,9 +1,9 @@
 import Mathlib.Tactic
-import Omega.Zeta.HankelRankMinimalLinearRealization
-import Omega.Zeta.XiHankelLiftingBranchCountAffineSolutionSpace
-import Omega.Zeta.XiHankelOfflineModularAuditThreshold
-import Omega.Zeta.XiHankelSigminLowerboundVandermondeSeparation
-import Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelLiftingBranchCountAffineSolutionSpace
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelOfflineModularAuditThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelSigminLowerboundVandermondeSeparation
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
 
 namespace Omega.Zeta
 

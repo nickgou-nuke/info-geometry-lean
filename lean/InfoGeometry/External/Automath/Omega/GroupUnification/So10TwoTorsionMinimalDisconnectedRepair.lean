@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.So10TwoTorsionCentralCollapseNecessity
+import InfoGeometry.External.Automath.Omega.GU.So10TwoTorsionCentralCollapseNecessity
 
 namespace Omega.GroupUnification
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.IntroBinaryPrecision
+import InfoGeometry.External.Automath.Omega.Zeta.IntroBinaryPrecision
 
 namespace Omega.Zeta
 

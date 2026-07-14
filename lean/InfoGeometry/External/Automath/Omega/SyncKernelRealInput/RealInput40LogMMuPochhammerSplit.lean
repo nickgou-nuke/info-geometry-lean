@@ -1,9 +1,9 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40ResidueConstant
-import Omega.SyncKernelWeighted.FinitePartMuPochhammerSpectralClosedForm
-import Omega.SyncKernelWeighted.MuPochhammerPhi1ExpMinusZ
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40ResidueConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.FinitePartMuPochhammerSpectralClosedForm
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.MuPochhammerPhi1ExpMinusZ
 
 namespace Omega.SyncKernelRealInput
 

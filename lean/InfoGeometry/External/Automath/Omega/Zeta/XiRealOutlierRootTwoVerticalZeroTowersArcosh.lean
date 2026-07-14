@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.XiSingleScaleRadialDeviationArcosh
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleScaleRadialDeviationArcosh
 
 namespace Omega.Zeta
 

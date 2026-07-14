@@ -66,6 +66,15 @@ def bitInteger (ε : P.Profile) : ℕ :=
 def bitEnergy (ε : P.Profile) : ℝ :=
   ∑ i : P.Index, if ε i then Real.log (P.prime i : ℝ) else 0
 
+lemma bitEnergy_nonneg (ε : P.Profile) :
+    0 ≤ P.bitEnergy ε := by
+  unfold bitEnergy
+  exact Finset.sum_nonneg (fun i _hi => by
+    by_cases h : ε i
+    · simp [h]
+      exact Real.log_nonneg (by exact_mod_cast (P.prime_isPrime i).one_le)
+    · simp [h])
+
 /-- Positive real value of every occupied-factor readout. -/
 theorem occupiedFactorReal_pos
     (ε : P.Profile) (i : P.Index) :
@@ -143,6 +152,23 @@ theorem bitFiniteZetaPartition_eq_exp_sum
   refine Finset.sum_congr rfl ?_
   intro ε hε
   exact P.primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy ε β (hS ε hε)
+
+lemma bitFiniteZetaPartition_nonneg
+    (S : Finset P.Profile) (β : ℝ)
+    (hS : ∀ ε ∈ S, 1 < P.bitInteger ε) :
+    0 ≤ P.bitFiniteZetaPartition S β := by
+  rw [P.bitFiniteZetaPartition_eq_exp_sum S β hS]
+  exact Finset.sum_nonneg (fun ε _hε => le_of_lt (Real.exp_pos _))
+
+lemma bitFiniteZetaPartition_pos_of_mem
+    {S : Finset P.Profile} {β : ℝ}
+    (hS : ∀ ε ∈ S, 1 < P.bitInteger ε)
+    {ε : P.Profile} (hε : ε ∈ S) :
+    0 < P.bitFiniteZetaPartition S β := by
+  rw [P.bitFiniteZetaPartition_eq_exp_sum S β hS]
+  exact Finset.sum_pos'
+    (fun η _hη => le_of_lt (Real.exp_pos _))
+    ⟨ε, hε, Real.exp_pos _⟩
 
 /-- Image support in arithmetic state space. -/
 def arithmeticSupportOfProfiles

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyP10UniqueQuadraticSubfield
-import Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10UniqueQuadraticSubfield
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
 
 namespace Omega.Folding
 

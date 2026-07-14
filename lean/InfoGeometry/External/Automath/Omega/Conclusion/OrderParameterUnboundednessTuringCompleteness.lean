@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FractranFiniteUpdateTableOneStep
+import InfoGeometry.External.Automath.Omega.POM.FractranFiniteUpdateTableOneStep
 
 namespace Omega.Conclusion
 

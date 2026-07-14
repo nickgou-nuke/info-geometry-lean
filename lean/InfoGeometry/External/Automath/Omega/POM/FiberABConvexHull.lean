@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Convex.Topology
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.POM.FenceMaxchainsEuler
+import InfoGeometry.External.Automath.Omega.POM.FenceMaxchainsEuler
 
 namespace Omega.POM
 

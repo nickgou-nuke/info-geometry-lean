@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.TranslationKernelFourierSgM
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.TranslationKernelFourierSgM
 
 namespace Omega.Conclusion
 

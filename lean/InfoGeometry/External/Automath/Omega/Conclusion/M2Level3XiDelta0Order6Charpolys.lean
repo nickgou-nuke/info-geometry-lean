@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiDelta0Order6Cycletypes
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Cycletypes
 
 namespace Omega.Conclusion
 
@@ -9,10 +9,6 @@ open Polynomial
 local notation "X" => (Polynomial.X : Polynomial ℤ)
 
 noncomputable section
-
-/-- Concrete wrapper for the audited order-`6` characteristic-polynomial statement. -/
-structure ConclusionM2Level3XiDelta0Order6CharpolysData where
-  conclusion_m2_level3_xi_delta0_order6_charpolys_witness : Unit := ()
 
 /-- The order-`6` cyclotomic factor `Φ₁(X) = X - 1`. -/
 def conclusion_m2_level3_xi_delta0_order6_charpolys_phi1 : Polynomial ℤ :=
@@ -76,6 +72,16 @@ def conclusion_m2_level3_xi_delta0_order6_charpolys_siegel_fiber : Polynomial �
     conclusion_m2_level3_xi_delta0_order6_charpolys_phi2 ^ 4 *
     conclusion_m2_level3_xi_delta0_order6_charpolys_phi3 ^ 8 *
     conclusion_m2_level3_xi_delta0_order6_charpolys_phi6 ^ 4
+
+/-- Concrete arithmetic witness for the audited order-`6` characteristic-polynomial statement. -/
+def conclusion_m2_level3_xi_delta0_order6_charpolys_certificate : Prop :=
+  conclusion_m2_level3_xi_delta0_order6_cycletypes_klingen_cycle_counts = (5, 4, 1, 4) ∧
+    conclusion_m2_level3_xi_delta0_order6_cycletypes_siegel_cycle_counts = (4, 0, 4, 4)
+
+/-- Concrete wrapper for the audited order-`6` characteristic-polynomial statement. -/
+structure ConclusionM2Level3XiDelta0Order6CharpolysData where
+  conclusion_m2_level3_xi_delta0_order6_charpolys_witness :
+    conclusion_m2_level3_xi_delta0_order6_charpolys_certificate
 
 namespace ConclusionM2Level3XiDelta0Order6CharpolysData
 
@@ -192,7 +198,7 @@ characteristic polynomials recorded as explicit products of cyclotomic factors. 
 theorem paper_conclusion_m2_level3_xi_delta0_order6_charpolys
     (D : ConclusionM2Level3XiDelta0Order6CharpolysData) : D.Holds := by
   rcases paper_conclusion_m2_level3_xi_delta0_order6_cycletypes
-      (D := ⟨()⟩) with ⟨_, _, _, hklingen, hsiegel, _⟩
+      (D := ⟨by constructor <;> native_decide⟩) with ⟨_, _, _, hklingen, hsiegel, _⟩
   exact ⟨hklingen, hsiegel, rfl, rfl, rfl, rfl, rfl,
     conclusion_m2_level3_xi_delta0_order6_charpolys_klingen_factorization,
     conclusion_m2_level3_xi_delta0_order6_charpolys_siegel_factorization⟩

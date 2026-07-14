@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartMertensAsymptotic
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartMertensAsymptotic
 import Mathlib.Tactic
 
 namespace Omega.SyncKernelWeighted

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
 
 /-!
 # Finite prime truncation homomorphism dimension seed values

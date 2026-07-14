@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterEllipseCompleteEquivalence
 
 namespace Omega.Conclusion
 

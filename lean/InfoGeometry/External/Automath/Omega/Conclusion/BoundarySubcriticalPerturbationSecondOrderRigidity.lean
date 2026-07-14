@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SPG.GodelDoublelogMinkowski
+import InfoGeometry.External.Automath.Omega.SPG.GodelDoublelogMinkowski
 
 namespace Omega.Conclusion
 

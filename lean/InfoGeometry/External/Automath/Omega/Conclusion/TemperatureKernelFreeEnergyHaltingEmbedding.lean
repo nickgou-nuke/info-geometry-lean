@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.SemanticEquivalenceUndecidable
+import InfoGeometry.External.Automath.Omega.Conclusion.SemanticEquivalenceUndecidable
 
 namespace Omega.Conclusion
 

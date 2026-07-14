@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9obEscortProductLecam
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9obEscortProductLecam
 
 namespace Omega.Zeta
 

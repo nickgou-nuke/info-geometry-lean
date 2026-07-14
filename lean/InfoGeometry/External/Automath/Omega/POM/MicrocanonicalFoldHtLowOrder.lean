@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalFoldHtFromPowerSums
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldHtFromPowerSums
 
 namespace Omega.POM
 

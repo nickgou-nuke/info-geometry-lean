@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart71ZeroCosetNerveFlag
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart71ZeroCosetNerveFlag
 
 namespace Omega.Zeta
 

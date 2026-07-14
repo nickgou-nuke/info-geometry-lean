@@ -1,5 +1,5 @@
-import Omega.UnitCirclePhaseArithmetic.DirichletDoubleDepthTranslation
-import Omega.Zeta.XiUniqueContinuousTransverseRegister
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.DirichletDoubleDepthTranslation
+import InfoGeometry.External.Automath.Omega.Zeta.XiUniqueContinuousTransverseRegister
 
 namespace Omega.UnitCirclePhaseArithmetic
 

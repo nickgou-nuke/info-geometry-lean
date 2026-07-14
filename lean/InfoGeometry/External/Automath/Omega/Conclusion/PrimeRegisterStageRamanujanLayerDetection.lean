@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SmithPrefixSufficiency
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPrefixSufficiency
 
 namespace Omega.Conclusion
 

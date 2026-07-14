@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.AdamsBinomialProbeDiscreteInversionEquispacedGrid
-import Omega.Zeta.XiCarathPickKernelNormalizationRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.AdamsBinomialProbeDiscreteInversionEquispacedGrid
+import InfoGeometry.External.Automath.Omega.Zeta.XiCarathPickKernelNormalizationRigidity
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.TqftGenusHausdorffMomentSequence
-import Omega.Conclusion.TqftGenusLogconvexity
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusHausdorffMomentSequence
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusLogconvexity
 
 namespace Omega.Conclusion
 

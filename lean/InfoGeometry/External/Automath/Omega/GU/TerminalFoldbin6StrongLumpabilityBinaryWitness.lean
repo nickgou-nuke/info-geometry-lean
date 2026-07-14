@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Zeckendorf
 import Mathlib.Tactic
-import Omega.Folding.ZeckendorfSignature
-import Omega.GU.TerminalFoldbin6StrongLumpabilityFails
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6StrongLumpabilityFails
 
 namespace Omega.GU
 

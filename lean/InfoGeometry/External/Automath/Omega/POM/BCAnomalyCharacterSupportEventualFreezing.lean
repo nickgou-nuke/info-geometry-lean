@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.QuotientGroup.Basic
 import Mathlib.Tactic
-import Omega.POM.BCVisibleQuotientEventualStability
+import InfoGeometry.External.Automath.Omega.POM.BCVisibleQuotientEventualStability
 
 namespace Omega.POM
 

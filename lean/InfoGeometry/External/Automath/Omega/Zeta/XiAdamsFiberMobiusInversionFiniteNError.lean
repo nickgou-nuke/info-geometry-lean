@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.AdamsFiberMobiusInversion
+import InfoGeometry.External.Automath.Omega.Zeta.AdamsFiberMobiusInversion
 
 open scoped ArithmeticFunction.Moebius BigOperators
 

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Powerset
-import Omega.Zeta.XiHypercubeWeightedLaplacianHeatTraceFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiHypercubeWeightedLaplacianHeatTraceFactorization
 
 namespace Omega.Zeta
 

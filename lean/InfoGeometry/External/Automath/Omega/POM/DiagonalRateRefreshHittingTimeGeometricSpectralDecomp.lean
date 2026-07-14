@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateAbsorbingGeometricMixture
-import Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingGeometricMixture
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
 import Mathlib.Tactic
 
 namespace Omega.POM

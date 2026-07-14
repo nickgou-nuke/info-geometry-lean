@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SyncKernelResetWordWaitingTimeGeneralIid
+import InfoGeometry.External.Automath.Omega.Zeta.SyncKernelResetWordWaitingTimeGeneralIid
 
 namespace Omega.Zeta
 

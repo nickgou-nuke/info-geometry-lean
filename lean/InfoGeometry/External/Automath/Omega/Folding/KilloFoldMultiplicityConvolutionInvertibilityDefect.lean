@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Basic
-import Omega.Folding.FiberConvolutionInvertibilityDivisibility
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionInvertibilityDivisibility
 
 namespace Omega.Folding
 

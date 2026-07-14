@@ -2,7 +2,7 @@ import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
 
 namespace Omega.SyncKernelRealInput
 

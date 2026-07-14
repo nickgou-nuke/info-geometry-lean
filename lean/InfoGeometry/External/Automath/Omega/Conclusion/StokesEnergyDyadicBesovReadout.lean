@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.StokesEnergyGeneralDegreeCascade
+import InfoGeometry.External.Automath.Omega.Conclusion.StokesEnergyGeneralDegreeCascade
 
 namespace Omega.Conclusion
 

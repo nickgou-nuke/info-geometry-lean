@@ -1,5 +1,5 @@
-import Omega.RecursiveAddressing.NullAsLocalSectionObstruction
-import Omega.RecursiveAddressing.ObserverIndexedNullStructural
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.NullAsLocalSectionObstruction
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedNullStructural
 
 namespace Omega.RecursiveAddressing
 

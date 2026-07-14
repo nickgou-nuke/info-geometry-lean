@@ -1,6 +1,6 @@
-import Omega.EA.FoldAsSectionCorollary
-import Omega.EA.MonoidQuotientIsN
-import Omega.EA.PrimeRegisterOrbitFiberCoincidence
+import InfoGeometry.External.Automath.Omega.EA.FoldAsSectionCorollary
+import InfoGeometry.External.Automath.Omega.EA.MonoidQuotientIsN
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterOrbitFiberCoincidence
 
 namespace Omega.EA
 

@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FoldQuantumProjectiveSimplexQuotient
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldQuantumProjectiveSimplexQuotient
 
 namespace Omega.Conclusion
 

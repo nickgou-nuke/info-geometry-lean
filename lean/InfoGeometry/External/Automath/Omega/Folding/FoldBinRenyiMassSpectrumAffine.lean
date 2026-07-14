@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinRenyiRateCollapse
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRenyiRateCollapse
 
 open Filter
 

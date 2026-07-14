@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldbinGroupoidAut0PuProduct
+import InfoGeometry.External.Automath.Omega.Folding.FoldbinGroupoidAut0PuProduct
 
 namespace Omega.Folding
 

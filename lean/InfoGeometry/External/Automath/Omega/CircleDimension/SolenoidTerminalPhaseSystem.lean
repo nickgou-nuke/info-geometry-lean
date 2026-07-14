@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizationUniversalProperty
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizationUniversalProperty
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxFiberPhaseHiddenBitMi
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberPhaseHiddenBitMi
 
 namespace Omega.POM
 

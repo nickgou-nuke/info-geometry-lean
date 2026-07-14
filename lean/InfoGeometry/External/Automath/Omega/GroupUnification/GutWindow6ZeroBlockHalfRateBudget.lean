@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.TerminalWindow6OneEightTwelveSplit
+import InfoGeometry.External.Automath.Omega.GroupUnification.TerminalWindow6OneEightTwelveSplit
 
 namespace Omega.GroupUnification
 

@@ -1,5 +1,5 @@
-import Omega.Folding.CollisionZeta
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZeta
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega
 

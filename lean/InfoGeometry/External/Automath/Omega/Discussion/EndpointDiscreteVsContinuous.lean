@@ -1,5 +1,5 @@
-import Omega.Discussion.ChebyshevAdams
-import Omega.Discussion.UniqueContinuousTransversal
+import InfoGeometry.External.Automath.Omega.Discussion.ChebyshevAdams
+import InfoGeometry.External.Automath.Omega.Discussion.UniqueContinuousTransversal
 
 namespace Omega.Discussion
 

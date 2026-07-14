@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryGodelizationHolographicDictionary
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelizationHolographicDictionary
 
 namespace Omega.SPG
 

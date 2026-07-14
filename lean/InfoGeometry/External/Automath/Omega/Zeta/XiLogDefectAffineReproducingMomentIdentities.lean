@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
 
 open scoped BigOperators
 

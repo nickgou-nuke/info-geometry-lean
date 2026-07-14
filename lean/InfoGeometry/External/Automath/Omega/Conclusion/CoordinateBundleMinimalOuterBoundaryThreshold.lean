@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleOuterBoundaryResidualRank
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleOuterBoundaryResidualRank
 
 namespace Omega.Conclusion
 

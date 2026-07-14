@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.FiniteAuditBidirectionalCertificates
+import InfoGeometry.External.Automath.Omega.SPG.FiniteAuditBidirectionalCertificates
 
 namespace Omega.SPG
 

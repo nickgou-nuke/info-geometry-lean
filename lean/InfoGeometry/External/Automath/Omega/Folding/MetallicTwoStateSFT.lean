@@ -3,7 +3,7 @@ import Mathlib.Data.Real.Sqrt
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Folding.MetallicCompressionLockingLambda2
+import InfoGeometry.External.Automath.Omega.Folding.MetallicCompressionLockingLambda2
 
 namespace Omega.Folding
 

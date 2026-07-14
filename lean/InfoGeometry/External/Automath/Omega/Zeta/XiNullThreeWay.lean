@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiAddressDefectLaw
-import Omega.Zeta.XiOffsetNullTypeSafety
-import Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
+import InfoGeometry.External.Automath.Omega.Zeta.XiAddressDefectLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsetNullTypeSafety
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
 
 namespace Omega.Zeta
 

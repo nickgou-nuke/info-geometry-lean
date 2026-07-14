@@ -1,5 +1,5 @@
-import Omega.GU.BoundaryDelta34TripleIdentity
-import Omega.GU.TerminalDeltaParityRule
+import InfoGeometry.External.Automath.Omega.GU.BoundaryDelta34TripleIdentity
+import InfoGeometry.External.Automath.Omega.GU.TerminalDeltaParityRule
 
 namespace Omega.GU
 

@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.POM.AdditiveFoldCollisionConvolutionFourier
-import Omega.POM.Renyi2NearUniform
-import Omega.POM.S2Plancherel
+import InfoGeometry.External.Automath.Omega.POM.AdditiveFoldCollisionConvolutionFourier
+import InfoGeometry.External.Automath.Omega.POM.Renyi2NearUniform
+import InfoGeometry.External.Automath.Omega.POM.S2Plancherel
 
 open Filter
 open scoped BigOperators Topology

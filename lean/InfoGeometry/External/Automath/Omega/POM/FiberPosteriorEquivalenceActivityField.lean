@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.FiberFullPosteriorUniformizationProductSource
+import InfoGeometry.External.Automath.Omega.POM.FiberFullPosteriorUniformizationProductSource
 
 namespace Omega.POM
 

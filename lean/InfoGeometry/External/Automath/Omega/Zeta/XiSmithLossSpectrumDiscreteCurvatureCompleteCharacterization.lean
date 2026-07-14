@@ -1,6 +1,6 @@
 import Mathlib.Data.Multiset.Basic
-import Omega.Zeta.SmithPadicLossSpectrumClassification
-import Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPadicLossSpectrumClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiAddressableGodelProductLowerBoundClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiAddressableGodelProductLowerBoundClassification
 
 namespace Omega.Zeta
 

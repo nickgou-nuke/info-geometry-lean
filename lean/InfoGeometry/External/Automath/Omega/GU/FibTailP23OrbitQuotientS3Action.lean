@@ -1,4 +1,4 @@
-import Omega.GU.FibTailP23S3ActionOnOrbitQuotient
+import InfoGeometry.External.Automath.Omega.GU.FibTailP23S3ActionOnOrbitQuotient
 
 /-!
 Compatibility wrapper for the R931 target path. The paper-facing theorem

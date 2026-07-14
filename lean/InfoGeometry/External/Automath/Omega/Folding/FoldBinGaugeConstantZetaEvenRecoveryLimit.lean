@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.ZetaValues
 import Mathlib.Tactic
-import Omega.Folding.FoldBinGaugeBernoulliExtractionOperator
-import Omega.Folding.KilloFoldBinNormalizedGaugeDeficiency
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeBernoulliExtractionOperator
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinNormalizedGaugeDeficiency
 
 namespace Omega.Folding
 

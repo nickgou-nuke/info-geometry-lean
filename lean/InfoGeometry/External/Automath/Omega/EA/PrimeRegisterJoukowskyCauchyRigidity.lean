@@ -1,6 +1,6 @@
 import Mathlib.Analysis.RCLike.Sqrt
 import Mathlib.Data.Complex.Basic
-import Omega.EA.JoukowskyEllipse
+import InfoGeometry.External.Automath.Omega.EA.JoukowskyEllipse
 
 namespace Omega.EA
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Data.Matrix.Reflection
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRankOneRefreshDeterminantCollapse
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRankOneRefreshDeterminantCollapse
 
 namespace Omega.POM
 

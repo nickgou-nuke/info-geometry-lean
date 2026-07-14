@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.SigmaNonexpansion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.SigmaNonexpansion
 
 namespace Omega.RecursiveAddressing
 

@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 # Anomaly Owner Map
 
 This bridge packages the repo's anomaly corridor as explicit owner-backed
-witnesses:
+proof surfaces:
 
 - Drazin / Moore-Penrose / dilation / projector mismatch
 - chiral anomaly / KMS stimulated-emission interpretation
@@ -99,11 +99,11 @@ theorem projector_noncommutativity_closure_packet
     (P : ConformalCanopyPackage (E := E) CCI.toConformalInference X) :
     DrazinMPProjectorCommutator CCI.toConformalInference ∧
       ProjectorMismatchAnomaly CCI.toConformalInference ∧
-      ConformalClosureWitness CCI.toConformalInference X := by
+      ConformalCanopyPackage (E := E) CCI.toConformalInference X := by
   refine ⟨?_, ?_, ?_⟩
   · exact commutator_eq_projector_obstruction CCI
   · exact anomaly_eq_commutator CCI.toConformalInference
-  · exact ⟨P⟩
+  · exact P
 
 
 

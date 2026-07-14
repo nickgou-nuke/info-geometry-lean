@@ -127,13 +127,11 @@ noncomputable def lightconeBarrierCarrier :
     volumeCompressionPotential := fun X => -Real.log (lightconePotential X)
     volumeCompressionPotential_eq_neg_logDetReg := by
       intro X
-      simp
-    entropyReadoutRequiresStateClaim := lightconeEntropyReadoutSupport }
+      simp }
 
 theorem lightconeBarrierCarrier_entropyReadoutRequiresStateClaim :
-    lightconeBarrierCarrier.entropyReadoutRequiresStateClaim := by
-  simpa [lightconeBarrierCarrier, lightconeEntropyReadoutSupport] using
-    lightcone_entropy_readout_support
+    lightconeEntropyReadoutSupport :=
+  lightcone_entropy_readout_support
 
 @[simp] theorem lightcone_barrier_equals_neg_logdet (X : Chiral3) :
     lightconeBarrierCarrier.volumeCompressionPotential X = -Real.log (lightconePotential X) := by

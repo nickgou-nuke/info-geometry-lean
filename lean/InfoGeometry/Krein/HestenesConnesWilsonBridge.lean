@@ -6,8 +6,6 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
 # InfoGeometry.Krein.HestenesConnesWilsonBridge
 
@@ -145,7 +143,7 @@ model can instantiate it by binary words at a fixed depth.  This bridge only
 requires a finite atom partition supplied by `StandardFormOmegaVolumeBridge`.
 -/
 @[rep_depth krein]
-structure HestenesConnesWilsonBridge
+structure Bridge
     (Word : Type*) [Fintype Word] [DecidableEq Word] where
   /-- Real Hestenes KMS packet on the doubled carrier. -/
   kmsPacket : HestenesKreinKMSPacket (E := H₂)
@@ -188,11 +186,11 @@ structure HestenesConnesWilsonBridge
       radonNikodymLog parent child =
         NaturalConeVolumeBridge.modularVolumeIncrement volume parent child
 
-namespace HestenesConnesWilsonBridge
+namespace Bridge
 
 variable {Word : Type*}
 variable [Fintype Word] [DecidableEq Word]
-variable (W : HestenesConnesWilsonBridge (E := E) Word)
+variable (W : Bridge (E := E) Word)
 
 /-- The volume state is the vacuum real state attached to the same `Ω`. -/
 @[rep_depth krein]
@@ -366,7 +364,7 @@ theorem total_wilson_atom_volume_is_unity :
     (∑ w : Word, NaturalConeVolumeBridge.atomExpectation W.volume w) = 1 :=
   NaturalConeVolumeBridge.total_expectation_is_unity W.volume
 
-end HestenesConnesWilsonBridge
+end Bridge
 
 end Core
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SPG.BoundaryGodelFiniteMomentCompleteness
-import Omega.SPG.LinearMomentHolographyMinimalDimension
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelFiniteMomentCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.LinearMomentHolographyMinimalDimension
 
 /-!
 # Single-integer vs linear moment holography gap seed values

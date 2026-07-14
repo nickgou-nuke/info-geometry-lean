@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldZeroWindow6DensitySharpExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroWindow6DensitySharpExponent
 
 open Filter
 open scoped Topology goldenRatio

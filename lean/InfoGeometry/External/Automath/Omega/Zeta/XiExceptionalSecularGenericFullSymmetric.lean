@@ -1,4 +1,4 @@
-import Omega.Zeta.XiSecularFamilyFullSymmetricGalois
+import InfoGeometry.External.Automath.Omega.Zeta.XiSecularFamilyFullSymmetricGalois
 
 namespace Omega.Zeta
 

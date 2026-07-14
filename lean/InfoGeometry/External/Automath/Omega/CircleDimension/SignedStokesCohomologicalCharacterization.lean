@@ -1,5 +1,5 @@
-import Omega.CircleDimension.StokesExactSequenceDictionary
-import Omega.CircleDimension.WdimSignedCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.StokesExactSequenceDictionary
+import InfoGeometry.External.Automath.Omega.CircleDimension.WdimSignedCircleDimension
 
 namespace Omega.CircleDimension
 

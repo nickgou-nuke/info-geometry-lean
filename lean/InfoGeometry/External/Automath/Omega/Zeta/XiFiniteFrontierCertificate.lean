@@ -1,4 +1,4 @@
-import Omega.POM.CostOptimizationDecidable
+import InfoGeometry.External.Automath.Omega.POM.CostOptimizationDecidable
 
 namespace Omega.Zeta
 

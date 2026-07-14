@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
-import Omega.POM.DerivedSchurDirichletRamanujanParseval
+import InfoGeometry.External.Automath.Omega.POM.DerivedSchurDirichletRamanujanParseval
 
 namespace Omega.DerivedConsequences
 

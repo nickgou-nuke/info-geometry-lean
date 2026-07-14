@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 namespace Omega.Zeta
 

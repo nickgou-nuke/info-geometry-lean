@@ -36,16 +36,16 @@ def q8ToV4 : QuaternionGroup 2 →* V4Group where
   map_one' := rfl
   map_mul' := by
     intro x y
-    fin_cases x <;> fin_cases y <;> native_decide
+    fin_cases x <;> fin_cases y <;> decide
 
 /-- The quotient map is surjective onto all four `V4` classes. -/
 theorem q8ToV4_surjective : Function.Surjective q8ToV4 := by
   intro v
   cases v with
-  | I => exact ⟨a 0, by native_decide⟩
-  | W1 => exact ⟨a 1, by native_decide⟩
-  | W2 => exact ⟨xa 0, by native_decide⟩
-  | W12 => exact ⟨xa 1, by native_decide⟩
+  | I => exact ⟨a 0, by decide⟩
+  | W1 => exact ⟨a 1, by decide⟩
+  | W2 => exact ⟨xa 0, by decide⟩
+  | W12 => exact ⟨xa 1, by decide⟩
 
 /-- The central element `a^2 = -1` dies in the quotient. -/
 theorem q8ToV4_central_two : q8ToV4 (a (2 : ZMod 4)) = V4Group.I := by

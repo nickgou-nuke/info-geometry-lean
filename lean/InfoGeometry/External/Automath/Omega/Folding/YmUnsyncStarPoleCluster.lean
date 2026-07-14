@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.YmAmbiguityMainSingularityStar
+import InfoGeometry.External.Automath.Omega.Folding.YmAmbiguityMainSingularityStar
 
 namespace Omega.Folding
 

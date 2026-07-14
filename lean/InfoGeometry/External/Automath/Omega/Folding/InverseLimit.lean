@@ -1,5 +1,5 @@
-import Omega.Folding.Fold
-import Omega.Folding.Value
+import InfoGeometry.External.Automath.Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.Value
 
 namespace Omega
 

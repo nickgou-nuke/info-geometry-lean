@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingFirstOrder
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Topos.LocalSectionCriterion
+import InfoGeometry.External.Automath.Omega.Topos.LocalSectionCriterion
 
 namespace Omega.TypedAddressBiaxialCompletion
 

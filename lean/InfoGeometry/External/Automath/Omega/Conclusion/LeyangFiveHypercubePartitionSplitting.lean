@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCartesianPowerLeyangDoubleAtomTangentClt
+import InfoGeometry.External.Automath.Omega.Zeta.XiCartesianPowerLeyangDoubleAtomTangentClt
 
 namespace Omega.Zeta
 

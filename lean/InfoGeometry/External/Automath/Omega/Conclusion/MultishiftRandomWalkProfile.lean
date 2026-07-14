@@ -1,4 +1,4 @@
-import Omega.Conclusion.MultishiftCommutingAlgorithmsPolynomial
+import InfoGeometry.External.Automath.Omega.Conclusion.MultishiftCommutingAlgorithmsPolynomial
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SPG.BulkBoundaryGodelDimensionSandwich
-import Omega.SPG.GodelDoublelogMinkowski
+import InfoGeometry.External.Automath.Omega.SPG.BulkBoundaryGodelDimensionSandwich
+import InfoGeometry.External.Automath.Omega.SPG.GodelDoublelogMinkowski
 
 namespace Omega.SPG
 

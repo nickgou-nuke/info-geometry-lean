@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Conclusion.AlphabetThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.AlphabetThreshold
 
 private lemma conclusion_linear_density_forces_minimal_event_alphabet_pow_bound :
     (4 : ℝ) ^ (4 : ℕ) < (2 / Real.goldenRatio : ℝ) ^ (27 : ℕ) := by

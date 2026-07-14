@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart65caFrozenMaxSectorOracleCapacityLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65caFrozenMaxSectorOracleCapacityLowerBound
 
 namespace Omega.Zeta
 

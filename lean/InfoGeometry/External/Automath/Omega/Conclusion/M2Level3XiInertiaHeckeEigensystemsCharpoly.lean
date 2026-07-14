@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiInertiaPermutationRamification
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiInertiaPermutationRamification
 
 namespace Omega.Conclusion
 

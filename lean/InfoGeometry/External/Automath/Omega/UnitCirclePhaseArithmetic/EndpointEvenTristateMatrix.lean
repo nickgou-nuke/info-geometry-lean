@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.EndpointZetaLChi4SymbolPair
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointZetaLChi4SymbolPair
 
 namespace Omega.UnitCirclePhaseArithmetic
 

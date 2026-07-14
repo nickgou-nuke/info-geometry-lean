@@ -1,4 +1,4 @@
-import Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
 
 namespace Omega.Zeta
 

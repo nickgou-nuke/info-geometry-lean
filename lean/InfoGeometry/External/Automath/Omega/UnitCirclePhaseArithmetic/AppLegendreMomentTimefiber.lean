@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Artanh
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.EndpointArcsineDuality
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointArcsineDuality
 
 namespace Omega.UnitCirclePhaseArithmetic
 

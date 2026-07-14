@@ -1,9 +1,9 @@
 import Mathlib.Data.Set.Countable
 import Mathlib.Tactic
-import Omega.Conclusion.ObserverHolonomyExactCohomologicalSplitting
-import Omega.Zeta.ConclusionPhiadicMellinPoleLatticeRigidity
-import Omega.Zeta.XiProjectivePressurePathHolderConvexity
-import Omega.Zeta.XiTimePart9wFiniteLocalizedAdditiveLedgerObstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.ObserverHolonomyExactCohomologicalSplitting
+import InfoGeometry.External.Automath.Omega.Zeta.ConclusionPhiadicMellinPoleLatticeRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiProjectivePressurePathHolderConvexity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9wFiniteLocalizedAdditiveLedgerObstruction
 
 namespace Omega.DerivedConsequences
 

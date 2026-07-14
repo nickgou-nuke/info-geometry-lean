@@ -223,7 +223,7 @@ theorem completedFunctional_conjugation_commute (s : ℂ) :
 /-- The completed-zeta antiunitary fixed locus is the critical line. -/
 @[rep_depth thermo]
 theorem completedAntiunitaryReflection_fixed_iff_criticalLine (s : ℂ) :
-    s = CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s ↔
+    CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s ↔
       CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s := by
   simpa [CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection] using
     (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine

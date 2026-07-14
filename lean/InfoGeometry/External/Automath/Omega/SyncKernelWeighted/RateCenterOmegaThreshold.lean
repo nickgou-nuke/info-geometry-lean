@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RateCenterRstarJetComplexity
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RateCenterRstarJetComplexity
 
 namespace Omega.SyncKernelWeighted
 

@@ -14,8 +14,8 @@
   2. Commutativity failures: adjacent swaps that change the computed function
   3. Anomaly accumulation: total commutativity failures along the normalization path
 -/
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Analysis
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Analysis
 
 namespace Omega.HyperKernel
 namespace Rewrite

@@ -131,66 +131,33 @@ theorem hasDrazinInverse_of_field {K : Type*} [Field K] (S : DiracSouriauSector 
   exact ⟨k, D, hD⟩
 
 /--
-Context carrying the explicit Drazin witness for one concrete Dirac-Souriau
-sector.  This is intentionally a context object, not a generalized closure
+Context carrying an explicit Drazin inverse for one concrete Dirac-Souriau
+sector. This is intentionally proof-carrying data, not a generalized closure
 claim about all block matrices.
 -/
 
-structure DrazinWitnessContext (S : DiracSouriauSector R) where
+structure DrazinInverseContext (S : DiracSouriauSector R) where
   k : ℕ
   D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R
   isDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k
 
 /--
-Construct the local Drazin witness context for any finite Dirac-Souriau sector
-over a field.  This removes the need to pass a local Drazin witness as an
-independent hypothesis in real/field-based downstream contexts.
+The field-level Drazin existence theorem supplies an explicit inverse context
+existentially. We do not choose a canonical stored inverse here.
 -/
 
-noncomputable def DrazinWitnessContext.ofField
+theorem exists_drazinInverseContext_of_field
     {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    DrazinWitnessContext S := by
-  let h := S.exists_drazinInverse
-  let k := Classical.choose h
-  let hDExists := Classical.choose_spec h
-  let D := Classical.choose hDExists
-  let hD := Classical.choose_spec hDExists
-  exact ⟨k, D, hD⟩
+    ∃ Ctxt : DrazinInverseContext S, S.HasDrazinInverse Ctxt.k := by
+  obtain ⟨k, D, hD⟩ := S.exists_drazinInverse
+  exact ⟨⟨k, D, hD⟩, ⟨D, hD⟩⟩
 
-/-- A Drazin witness context discharges the local hypothesis predicate. -/
+/-- A Drazin inverse context discharges the local hypothesis predicate. -/
 
 theorem hasDrazinInverse_of_context
-    {S : DiracSouriauSector R} (Ctxt : DrazinWitnessContext S) :
+    {S : DiracSouriauSector R} (Ctxt : DrazinInverseContext S) :
     S.HasDrazinInverse Ctxt.k := by
   exact ⟨Ctxt.D, Ctxt.isDrazin⟩
-
-/-- The constructed field witness context discharges the local Drazin predicate. -/
-
-theorem hasDrazinInverse_of_fieldContext
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
-  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
-
-/--
-The field-constructed Drazin witness context really packages the explicit
-inverse witness that appears in `exists_drazinInverse`.
--/
-theorem drazinWitnessContext_ofField_spec
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) K,
-      InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D
-        (DrazinWitnessContext.ofField S).k := by
-  exact ⟨(DrazinWitnessContext.ofField S).D,
-    (DrazinWitnessContext.ofField S).isDrazin⟩
-
-/--
-The local Drazin witness context discharges the existence predicate on the
-same index that it stores.
--/
-theorem hasDrazinInverse_of_fieldContext_spec
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
-  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
 
 /-- Unpack a Drazin hypothesis into its explicit witness. -/
 
@@ -207,12 +174,12 @@ assembled `4×4` block operator.  This is the source-safe invertible case:
 the Drazin index is `0`.
 -/
 
-def drazinWitnessContext_zero_of_twoSidedInverse
+def drazinInverseContext_zero_of_twoSidedInverse
     (S : DiracSouriauSector R)
     (D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R)
     (hSD : S.toMatrix * D = 1)
     (hDS : D * S.toMatrix = 1) :
-    DrazinWitnessContext S := by
+    DrazinInverseContext S := by
   refine ⟨0, D, ?_⟩
   exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk
     (by rw [hSD, hDS])
@@ -227,7 +194,7 @@ theorem hasDrazinInverse_zero_of_twoSidedInverse
     (hSD : S.toMatrix * D = 1)
     (hDS : D * S.toMatrix = 1) :
     S.HasDrazinInverse 0 := by
-  exact ⟨D, (drazinWitnessContext_zero_of_twoSidedInverse S D hSD hDS).isDrazin⟩
+  exact ⟨D, (drazinInverseContext_zero_of_twoSidedInverse S D hSD hDS).isDrazin⟩
 
 /--
 In the decoupled case `B = 0` (hence also `C = 0`), explicit two-sided
@@ -277,11 +244,11 @@ theorem hasDrazinInverse_zero_of_decoupled
   exact hasDrazinInverse_zero_of_twoSidedInverse S D hInv.1 hInv.2
 
 /--
-Constructive witness context for the decoupled `B = 0` lane with explicit block
-inverses. This exports the existing decoupled Drazin route as a proof-carrying
-witness object instead of only the proposition `HasDrazinInverse 0`.
+Constructive inverse context for the decoupled `B = 0` lane with explicit block
+inverses. This exports the existing decoupled Drazin route as proof-carrying
+data instead of only the proposition `HasDrazinInverse 0`.
 -/
-def drazinWitnessContext_zero_of_decoupled
+def drazinInverseContext_zero_of_decoupled
     (S : DiracSouriauSector R)
     (Ainv Kinv : Matrix (Fin 2) (Fin 2) R)
     (hB : S.B = 0)
@@ -289,12 +256,12 @@ def drazinWitnessContext_zero_of_decoupled
     (hA_left : Ainv * S.A = 1)
     (hK_right : S.K * Kinv = 1)
     (hK_left : Kinv * S.K = 1) :
-    DrazinWitnessContext S := by
+    DrazinInverseContext S := by
   let D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
     fromBlocks Ainv 0 0 Kinv
   have hInv :=
     toMatrix_has_twoSidedInverse_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left
-  exact drazinWitnessContext_zero_of_twoSidedInverse S D hInv.1 hInv.2
+  exact drazinInverseContext_zero_of_twoSidedInverse S D hInv.1 hInv.2
 
 /--
 The constructive decoupled witness context recovers the old proposition-level
@@ -309,9 +276,9 @@ theorem hasDrazinInverse_zero_of_decoupled_context
     (hK_right : S.K * Kinv = 1)
     (hK_left : Kinv * S.K = 1) :
     S.HasDrazinInverse
-      (drazinWitnessContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left).k := by
+      (drazinInverseContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left).k := by
   exact hasDrazinInverse_of_context
-    (drazinWitnessContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left)
+    (drazinInverseContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left)
 
 /--
 Definition-level supersymmetric stability.

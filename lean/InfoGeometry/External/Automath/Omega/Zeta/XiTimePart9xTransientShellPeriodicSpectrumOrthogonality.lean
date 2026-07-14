@@ -1,7 +1,7 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Folding.YmAmbiguityShellZetaFactorTrivial
-import Omega.Folding.YmSyncTailPfSharp
+import InfoGeometry.External.Automath.Omega.Folding.YmAmbiguityShellZetaFactorTrivial
+import InfoGeometry.External.Automath.Omega.Folding.YmSyncTailPfSharp
 
 namespace Omega.Zeta
 

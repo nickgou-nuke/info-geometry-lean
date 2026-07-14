@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic
-import Omega.Zeta.AppOffcriticalRadiusCompression
+import InfoGeometry.External.Automath.Omega.Zeta.AppOffcriticalRadiusCompression
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Std
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Enum
-import Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Enum
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
 
 namespace Omega.HyperKernel
 namespace AutoSeed

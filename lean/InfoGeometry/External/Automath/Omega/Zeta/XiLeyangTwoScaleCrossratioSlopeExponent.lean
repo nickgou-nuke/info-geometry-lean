@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangTwoScaleCrossratioInvariant
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangTwoScaleCrossratioInvariant
 
 namespace Omega.Zeta
 

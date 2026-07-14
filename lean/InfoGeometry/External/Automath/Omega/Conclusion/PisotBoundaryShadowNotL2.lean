@@ -1,6 +1,6 @@
 import Mathlib.Analysis.PSeries
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import Omega.Folding.FoldPisotBernoulliConvolutionRepresentation
+import InfoGeometry.External.Automath.Omega.Folding.FoldPisotBernoulliConvolutionRepresentation
 
 namespace Omega.Conclusion
 

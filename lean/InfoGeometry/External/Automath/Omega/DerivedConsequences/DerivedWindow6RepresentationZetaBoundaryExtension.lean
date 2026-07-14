@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
-import Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
-import Omega.Zeta.GaugeGroupTripleDecomp
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
+import InfoGeometry.External.Automath.Omega.Zeta.GaugeGroupTripleDecomp
 
 namespace Omega.DerivedConsequences
 

@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecificLimits.Basic
-import Omega.UnitCirclePhaseArithmetic.AppRHIffJensenDefectVanishingSequence
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppRHIffJensenDefectVanishingSequence
 
 open Filter
 

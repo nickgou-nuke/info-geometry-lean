@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.CommutativeRenyiExtremizersAlphaStable
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CommutativeRenyiExtremizersAlphaStable
 
 namespace Omega.Zeta
 

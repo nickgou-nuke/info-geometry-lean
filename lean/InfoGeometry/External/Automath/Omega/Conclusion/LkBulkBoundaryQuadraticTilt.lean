@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.POM.LkArcsineLaw
-import Omega.POM.LkBoundaryBulkRadonNikodym
-import Omega.POM.LkBoundarySpectralMeasureBeta32
+import InfoGeometry.External.Automath.Omega.POM.LkArcsineLaw
+import InfoGeometry.External.Automath.Omega.POM.LkBoundaryBulkRadonNikodym
+import InfoGeometry.External.Automath.Omega.POM.LkBoundarySpectralMeasureBeta32
 
 open Filter Topology
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Zeta.XiZGAbelResidueLogDensity
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGAbelResidueLogDensity
 
 namespace Omega.Conclusion
 

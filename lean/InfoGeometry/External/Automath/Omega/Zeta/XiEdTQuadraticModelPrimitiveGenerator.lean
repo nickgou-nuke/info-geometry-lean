@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiEdInftyFiberHalvingTangentIntegral
+import InfoGeometry.External.Automath.Omega.Zeta.XiEdInftyFiberHalvingTangentIntegral
 
 namespace Omega.Zeta
 

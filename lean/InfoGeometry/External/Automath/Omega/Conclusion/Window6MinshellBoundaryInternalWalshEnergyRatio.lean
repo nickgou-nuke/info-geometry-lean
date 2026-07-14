@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
 
 namespace Omega.Conclusion
 

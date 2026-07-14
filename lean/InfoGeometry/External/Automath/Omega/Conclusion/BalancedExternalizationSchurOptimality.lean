@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
 
 namespace Omega.Conclusion
 

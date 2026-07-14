@@ -1,5 +1,5 @@
-import Omega.SPG.BoundaryGodelSquareclassIsometry
-import Omega.SPG.BoundaryGodelizationHolographicDictionary
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelSquareclassIsometry
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelizationHolographicDictionary
 import Mathlib.Tactic
 
 namespace Omega.SPG

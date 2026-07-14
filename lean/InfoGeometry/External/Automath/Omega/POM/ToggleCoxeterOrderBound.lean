@@ -1,8 +1,8 @@
 import Mathlib.Data.List.OfFn
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberIndsetFactorization
-import Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.POM.FiberIndsetFactorization
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
 
 namespace Omega.POM
 

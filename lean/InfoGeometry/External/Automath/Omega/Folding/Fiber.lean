@@ -1,4 +1,4 @@
-import Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.Fold
 
 namespace Omega
 

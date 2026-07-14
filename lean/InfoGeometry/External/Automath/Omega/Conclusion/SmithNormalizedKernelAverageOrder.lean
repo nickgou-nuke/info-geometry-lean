@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.SmithNormalizedKernelPositiveFiniteEulerCorrection
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithNormalizedKernelPositiveFiniteEulerCorrection
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Folding.DerivedFoldMultiplicityZerofiberEnvelope
+import InfoGeometry.External.Automath.Omega.Folding.DerivedFoldMultiplicityZerofiberEnvelope
 
 namespace Omega.Folding
 

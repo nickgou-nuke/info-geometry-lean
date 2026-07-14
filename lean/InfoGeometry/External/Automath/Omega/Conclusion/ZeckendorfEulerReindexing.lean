@@ -2,7 +2,7 @@ import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 open scoped BigOperators
 

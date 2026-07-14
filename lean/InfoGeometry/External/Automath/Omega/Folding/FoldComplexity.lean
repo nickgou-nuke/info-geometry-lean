@@ -1,4 +1,4 @@
-import Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
 import Mathlib.Tactic
 
 namespace Omega.Folding

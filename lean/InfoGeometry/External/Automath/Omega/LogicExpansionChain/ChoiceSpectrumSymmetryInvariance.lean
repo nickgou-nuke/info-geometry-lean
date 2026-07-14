@@ -1,5 +1,5 @@
 import Mathlib.Data.Set.Function
-import Omega.LogicExpansionChain.ChoiceSpectrum
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ChoiceSpectrum
 
 namespace Omega.LogicExpansionChain
 

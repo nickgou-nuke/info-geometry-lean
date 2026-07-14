@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.WidomResultantCertificateDegreeBound
-import Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
+import InfoGeometry.External.Automath.Omega.Conclusion.WidomResultantCertificateDegreeBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangSquareRootCollisionLeadingZerosN2
 
 namespace Omega.Zeta
 

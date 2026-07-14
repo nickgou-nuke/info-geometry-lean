@@ -1,4 +1,4 @@
-import Omega.Folding.MomentBounds
+import InfoGeometry.External.Automath.Omega.Folding.MomentBounds
 
 namespace Omega.POM.FoldInjectivizationMinsideinfo
 

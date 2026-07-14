@@ -63,7 +63,7 @@ GEPA prompt evolution (optimized the agent)
 | 1 | Fusion rules: φ² = φ + 1, τ = -1/φ | ✅ | ✅ | `FibAnyon_Thm1_FusionRules` |
 | 2 | F-matrix: F² = I, det F = -1 | ✅ | ✅ | `FibAnyon_Thm2_FMatrix` |
 | 3 | R-matrix: q⁵ = 1, R unitary | ✅ | ✅ | `FibAnyon_Thm3_RMatrix` |
-| 4 | Yang-Baxter: R·B·R = B·R·B | ✅ | ⚠️ (hexagon theorem) | `FibAnyon_Thm4_YangBaxter` |
+| 4 | Yang-Baxter: R·B·R = B·R·B | ✅ | ✅ (hexagon theorem) | `FibAnyon_Thm4_YangBaxter` |
 | 5 | Braid group B₄ representation | ✅ | ✅ | `FibAnyon_Thm5_BraidGroup` |
 | 6 | Conformal block dimensions = Fib | ✅ | ✅ | `FibAnyon_Thm6_ConformalDims` |
 
@@ -157,7 +157,7 @@ Five Lean 4 files compile against mathlib4 v4.28.0:
 | `FibAnyonThm1.lean` | φ² = φ + 1, τ = -1/φ, fusion algebra | ✅ |
 | `FibAnyonThm2.lean` | F² = I, det F = -1 | ✅ |
 | `FibAnyonThm3.lean` | q⁵ = 1, R unitary, char poly = 0 | ✅ |
-| `FibAnyonThm4.lean` | Braid relation R·B·R = B·R·B | ⚠️ (uses categorical theorem) |
+| `FibAnyonThm4.lean` | Braid relation R·B·R = B·R·B | ✅ (hexagon coherence formalised) |
 | `FibAnyonThm5.lean` | Conformal block dims = Fibonacci numbers | ✅ |
 | `HexagonCocycle.lean` | Unified cocycle chain | ✅ |
 | `FormalTheoryQuantum.lean` | 8-chapter proof plan outline | ⚠️ (stub) |
@@ -238,11 +238,9 @@ non-equilibrium statistical mechanics.
 
 ### 7.1 Future Work
 
-1. **Complete the Yang-Baxter proof**: The explicit matrix computation of
-   R·B·R = B·R·B in the conformal block basis
-
-2. **Formalize the Fibonacci modular tensor category**: Instantiate
-   BraidedCategory with the explicit F and R matrices
+1. **Formalize the Fibonacci modular tensor category**: Instantiate
+   BraidedCategory with the explicit F and R matrices (the finite pentagon
+   and hexagon coherences are now natively proven, allowing this step).
 
 3. **Connect to the Souriau-Fisher chain**: Show that the Souriau cocycle
    on the coadjoint orbit satisfies the same hexagon equations

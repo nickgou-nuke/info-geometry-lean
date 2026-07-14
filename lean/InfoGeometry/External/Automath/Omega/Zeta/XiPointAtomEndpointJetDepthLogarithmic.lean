@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLocalJetDeterminesFiniteCMVAndToeplitzCertificate
+import InfoGeometry.External.Automath.Omega.Zeta.XiLocalJetDeterminesFiniteCMVAndToeplitzCertificate
 
 namespace Omega.Zeta
 

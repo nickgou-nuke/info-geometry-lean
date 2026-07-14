@@ -1,4 +1,4 @@
-import Omega.Conclusion.BoundaryReflectionDerivativeIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryReflectionDerivativeIdentity
 
 namespace Omega.Conclusion
 

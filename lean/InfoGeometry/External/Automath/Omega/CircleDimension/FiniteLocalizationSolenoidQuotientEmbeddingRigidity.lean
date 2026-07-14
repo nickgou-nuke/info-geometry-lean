@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.NoGlobalMultiplicativeLinearizationIntoFiniteLocalizationLedger
+import InfoGeometry.External.Automath.Omega.CircleDimension.NoGlobalMultiplicativeLinearizationIntoFiniteLocalizationLedger
 
 namespace Omega.CircleDimension
 

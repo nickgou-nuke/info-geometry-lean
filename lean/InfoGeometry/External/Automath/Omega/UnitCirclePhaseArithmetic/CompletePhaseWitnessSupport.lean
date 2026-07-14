@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.FailureWitnessSupport
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.FailureWitnessSupport
 
 namespace Omega.UnitCirclePhaseArithmetic
 

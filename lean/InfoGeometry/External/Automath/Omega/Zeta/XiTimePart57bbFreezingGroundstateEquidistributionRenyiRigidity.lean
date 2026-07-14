@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFixedFreezingEscortRenyiSpectrumCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.XiFixedFreezingEscortRenyiSpectrumCollapse
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40BartholdiEscapeInitialForms
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40BartholdiEscapeInitialForms
 
 namespace Omega.Conclusion
 

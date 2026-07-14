@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Padics.PadicIntegers
 import Mathlib.Tactic
-import Omega.CircleDimension.SolenoidKernelProductZp
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidKernelProductZp
 
 namespace Omega.CircleDimension
 

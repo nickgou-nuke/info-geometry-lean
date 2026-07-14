@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SyncCyclotomicEliminationLeadingCoefficientNorm
+import InfoGeometry.External.Automath.Omega.Zeta.SyncCyclotomicEliminationLeadingCoefficientNorm
 
 namespace Omega.Zeta
 

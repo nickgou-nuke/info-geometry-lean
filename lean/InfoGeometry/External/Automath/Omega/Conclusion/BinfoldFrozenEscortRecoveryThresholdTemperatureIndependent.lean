@@ -1,4 +1,4 @@
-import Omega.Conclusion.BinfoldFrozenEscortExactRecoveryPhaseTransition
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldFrozenEscortExactRecoveryPhaseTransition
 
 namespace Omega.Conclusion
 

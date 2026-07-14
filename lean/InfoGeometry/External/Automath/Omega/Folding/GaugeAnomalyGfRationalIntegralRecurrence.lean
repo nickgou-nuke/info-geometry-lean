@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
 
 namespace Omega.Folding
 

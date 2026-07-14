@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40Arity2dRigidityN2
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40Arity2dRigidityN2
 
 namespace Omega.Zeta
 

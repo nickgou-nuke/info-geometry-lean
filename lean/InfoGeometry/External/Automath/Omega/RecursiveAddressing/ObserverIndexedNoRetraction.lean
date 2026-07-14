@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.ObserverIndexedForcingMonotonicity
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedForcingMonotonicity
 
 namespace Omega.RecursiveAddressing
 

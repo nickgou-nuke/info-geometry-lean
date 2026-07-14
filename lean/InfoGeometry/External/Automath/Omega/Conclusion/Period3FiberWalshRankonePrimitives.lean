@@ -1,4 +1,4 @@
-import Omega.Conclusion.Period3FiberMobiusWalshTensorization
+import InfoGeometry.External.Automath.Omega.Conclusion.Period3FiberMobiusWalshTensorization
 
 namespace Omega.Conclusion
 

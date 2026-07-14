@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
-import Omega.UnitCirclePhaseArithmetic.AppHorizonSpectralMeasureAtomic
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonSpectralMeasureAtomic
 
 namespace Omega.UnitCirclePhaseArithmetic
 

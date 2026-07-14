@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Discussion.ToeplitzNegativeAtomThreshold
+import InfoGeometry.External.Automath.Omega.Discussion.ToeplitzNegativeAtomThreshold
 
 namespace Omega.Discussion
 

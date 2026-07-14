@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Canonical.Drazin
 import Mathlib
 
 /-!
@@ -16,7 +17,7 @@ the finite/bounded algebraic kernel used by the certified inverse-kernel lane:
 
 Concrete Drazin/Moore--Penrose owner data remain in `CertifiedInverseKernel`
 and `DrazinSupercharge`.  Type III realization, if any, is a separate analytic
-witness and is not asserted here.
+theorem or hypothesis and is not asserted here.
 -/
 
 namespace InfoGeometry.Canonical.DrazinLightConeDictionary
@@ -45,6 +46,32 @@ namespace ProjectorSplit
 
 variable {A : Type*} [Ring A]
 variable (S : ProjectorSplit A)
+
+/--
+The canonical Drazin projector and its complement form the projector split used
+by the light-cone dictionary.
+
+This is the direct owner link: the fields are discharged by
+`InfoGeometry.Canonical.Drazin.IsDrazinInverse` theorems, not by a separate
+transport packet.
+-/
+@[rep_depth operator]
+def ofDrazinInverse
+    {a b : A} {k : ℕ}
+    (h : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b k) :
+    ProjectorSplit A where
+  P := InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b
+  P0 := InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b
+  P_idem :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_is_idempotent h
+  P0_idem :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent h
+  P_add_P0 :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+  P_mul_P0 :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection h
+  P0_mul_P :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection h
 
 /-- Off-diagonal arrow from defect sector to regular sector. -/
 @[rep_depth operator]
@@ -202,54 +229,49 @@ theorem chiralGrading_mul_uMinus_mul_chiralGrading (X : A) :
 
 end ProjectorSplit
 
-/--
-Bounded Drazin/Moore--Penrose horizon surrogate.
+/-! ## Moore--Penrose light-cone readouts -/
 
-`PD/P0` are represented by `split.P/split.P0`; `PR` and `PL` are metric
-range/domain projectors.  The anomaly laws are explicit equations, not Type III
-claims.
--/
+/-- Right/range anomaly as a commutator with the regular projector. -/
 @[rep_depth operator]
-structure DrazinMPHorizonDatum (A : Type*) [Ring A] where
-  split : ProjectorSplit A
-  PR : A
-  PL : A
-  PR_idem : PR * PR = PR
-  PL_idem : PL * PL = PL
-  chiR : A
-  chiL : A
-  chiR_True : chiR = commutator split.P PR
-  chiL_True : chiL = commutator split.P PL
-  Q : A
-  Q_True : Q = chiR - chiL
+def mpChiR {A : Type*} [Ring A] (S : ProjectorSplit A) (PR : A) : A :=
+  commutator S.P PR
 
-namespace DrazinMPHorizonDatum
+/-- Left/domain anomaly as a commutator with the regular projector. -/
+@[rep_depth operator]
+def mpChiL {A : Type*} [Ring A] (S : ProjectorSplit A) (PL : A) : A :=
+  commutator S.P PL
 
-variable {A : Type*} [Ring A]
-variable (H : DrazinMPHorizonDatum A)
+/-- Net Moore--Penrose light-cone mismatch current. -/
+@[rep_depth operator]
+def mpSupercharge {A : Type*} [Ring A] (S : ProjectorSplit A) (PR PL : A) : A :=
+  mpChiR S PR - mpChiL S PL
 
 /-- Right/range anomaly as light-cone off-diagonal mismatch of `PR`. -/
 @[rep_depth operator]
-theorem chiR_eq_uPlus_sub_uMinus :
-    H.chiR = H.split.uPlus H.PR - H.split.uMinus H.PR := by
-  rw [H.chiR_True]
-  exact H.split.commutator_P_eq_uPlus_sub_uMinus H.PR
+theorem mpChiR_eq_uPlus_sub_uMinus
+    {A : Type*} [Ring A]
+    (S : ProjectorSplit A)
+    (PR : A) :
+    mpChiR S PR = S.uPlus PR - S.uMinus PR := by
+  exact S.commutator_P_eq_uPlus_sub_uMinus PR
 
 /-- Left/domain anomaly as light-cone off-diagonal mismatch of `PL`. -/
 @[rep_depth operator]
-theorem chiL_eq_uPlus_sub_uMinus :
-    H.chiL = H.split.uPlus H.PL - H.split.uMinus H.PL := by
-  rw [H.chiL_True]
-  exact H.split.commutator_P_eq_uPlus_sub_uMinus H.PL
+theorem mpChiL_eq_uPlus_sub_uMinus
+    {A : Type*} [Ring A]
+    (S : ProjectorSplit A)
+    (PL : A) :
+    mpChiL S PL = S.uPlus PL - S.uMinus PL := by
+  exact S.commutator_P_eq_uPlus_sub_uMinus PL
 
-/-- The supercharge is the net light-cone mismatch current. -/
+/-- The Moore--Penrose supercharge is the net light-cone mismatch current. -/
 @[rep_depth operator]
-theorem Q_eq_net_lightcone_mismatch :
-    H.Q =
-      (H.split.uPlus H.PR - H.split.uMinus H.PR)
-        - (H.split.uPlus H.PL - H.split.uMinus H.PL) := by
-  rw [H.Q_True, H.chiR_eq_uPlus_sub_uMinus, H.chiL_eq_uPlus_sub_uMinus]
-
-end DrazinMPHorizonDatum
+theorem mpSupercharge_eq_net_lightcone_mismatch
+    {A : Type*} [Ring A]
+    (S : ProjectorSplit A)
+    (PR PL : A) :
+    mpSupercharge S PR PL =
+      (S.uPlus PR - S.uMinus PR) - (S.uPlus PL - S.uMinus PL) := by
+  rw [mpSupercharge, mpChiR_eq_uPlus_sub_uMinus, mpChiL_eq_uPlus_sub_uMinus]
 
 end InfoGeometry.Canonical.DrazinLightConeDictionary

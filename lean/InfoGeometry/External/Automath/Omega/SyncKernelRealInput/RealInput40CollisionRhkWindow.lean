@@ -1,6 +1,6 @@
 import Mathlib.Topology.Order.IntermediateValue
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40CollisionAllReal
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40CollisionAllReal
 
 namespace Omega.SyncKernelRealInput
 

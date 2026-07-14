@@ -1,4 +1,4 @@
-import Omega.Folding.PhiConjugacyThreshold
+import InfoGeometry.External.Automath.Omega.Folding.PhiConjugacyThreshold
 import Mathlib.Tactic
 
 namespace Omega.Folding

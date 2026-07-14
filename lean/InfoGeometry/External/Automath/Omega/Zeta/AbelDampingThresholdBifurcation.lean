@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.AbelDampingSemigroupDissipation
-import Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
+import InfoGeometry.External.Automath.Omega.Zeta.AbelDampingSemigroupDissipation
+import InfoGeometry.External.Automath.Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
 
 namespace Omega.Zeta
 

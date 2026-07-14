@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.NoncontractibleLossMod6Explicit
-import Omega.Folding.CollisionZeta
+import InfoGeometry.External.Automath.Omega.Conclusion.NoncontractibleLossMod6Explicit
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZeta
 
 namespace Omega.Folding
 

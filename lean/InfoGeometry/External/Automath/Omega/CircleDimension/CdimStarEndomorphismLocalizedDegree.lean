@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizationHomCategoryClassification
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizationHomCategoryClassification
 
 namespace Omega.CircleDimension
 

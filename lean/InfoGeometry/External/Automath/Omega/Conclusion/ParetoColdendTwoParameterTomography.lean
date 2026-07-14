@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FixedResolutionParetoColdendLogCusp
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionParetoColdendLogCusp
 
 namespace Omega.Conclusion
 

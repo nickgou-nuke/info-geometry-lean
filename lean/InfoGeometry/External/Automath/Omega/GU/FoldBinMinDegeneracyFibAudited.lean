@@ -1,4 +1,4 @@
-import Omega.GU.MinSectorBudget
+import InfoGeometry.External.Automath.Omega.GU.MinSectorBudget
 
 namespace Omega.GU
 

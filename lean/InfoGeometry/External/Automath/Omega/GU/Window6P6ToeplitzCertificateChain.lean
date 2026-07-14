@@ -2,10 +2,10 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Algebra.Polynomial.Eval.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.Matrix.Basic
-import Omega.GU.TerminalFoldbin6PushforwardMarkov
-import Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
-import Omega.GU.Window6P6CompactnessPrinciple
-import Omega.TypedAddressBiaxialCompletion.CertificateLoop
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6PushforwardMarkov
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
+import InfoGeometry.External.Automath.Omega.GU.Window6P6CompactnessPrinciple
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CertificateLoop
 
 namespace Omega.GU
 

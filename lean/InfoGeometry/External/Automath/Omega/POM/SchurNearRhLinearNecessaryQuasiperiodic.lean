@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.SchurPartitionEnergyEventualQuasiperiodicLinearLaw
+import InfoGeometry.External.Automath.Omega.POM.SchurPartitionEnergyEventualQuasiperiodicLinearLaw
 
 namespace Omega.POM
 

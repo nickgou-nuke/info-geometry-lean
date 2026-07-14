@@ -1,4 +1,4 @@
-import Omega.Conclusion.PrimorialAxisSecondOrder
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimorialAxisSecondOrder
 
 namespace Omega.Conclusion
 

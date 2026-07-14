@@ -1,4 +1,4 @@
-import Omega.Folding.ModSemiringsUnitalAutomorphismRigidity
+import InfoGeometry.External.Automath.Omega.Folding.ModSemiringsUnitalAutomorphismRigidity
 
 namespace Omega
 

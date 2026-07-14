@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
-import Omega.UnitCirclePhaseArithmetic.FibUnitCircleUpliftIdentity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.FibUnitCircleUpliftIdentity
 
 namespace Omega.UnitCirclePhaseArithmetic
 

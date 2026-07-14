@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicGcdConvolutionDiagonalization
-import Omega.Conclusion.FibadicHaarConditionalExpectationConvolution
-import Omega.Conclusion.FibadicPrimitiveCentralIdempotents
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicGcdConvolutionDiagonalization
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicHaarConditionalExpectationConvolution
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicPrimitiveCentralIdempotents
 
 namespace Omega.Conclusion
 

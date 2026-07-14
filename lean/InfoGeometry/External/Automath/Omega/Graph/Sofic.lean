@@ -1,6 +1,6 @@
-import Omega.Core.No11
-import Omega.Folding.StableSyntax
-import Omega.Graph.LabeledGraph
+import InfoGeometry.External.Automath.Omega.Core.No11
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Graph.LabeledGraph
 
 namespace Omega.Graph
 

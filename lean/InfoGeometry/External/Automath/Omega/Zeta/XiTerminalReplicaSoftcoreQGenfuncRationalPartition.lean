@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 namespace Omega.Zeta
 

@@ -81,7 +81,8 @@ theorem boundary_squared_zero_K3 :
 /-- Readback: the owner `K₃` graph Dirac squares to the expected block Laplacian. -/
 theorem dirac_square_check_K3 :
     DAG.diracSquareCheck K3Complex = true :=
-  by native_decide
+  by
+    simpa [K3Complex] using DAG.dirac_square_check_triangle
 
 /-- Readback: the owner `K₃` Hodge Laplacians are self-adjoint. -/
 theorem laplacian_self_adjoint_K3 :
@@ -97,7 +98,7 @@ theorem chiral_anticommutes_K3 :
 /-- Readback: the triangle has no harmonic `1`-forms (`β₁ = 0`). -/
 theorem betti1_zero_K3 :
     DAG.betti1 K3Complex = 0 := by
-  native_decide
+  simpa [K3Complex] using DAG.betti1_zero_triangle
 
 /--
 Exact/coexact/harmonic interpretation packet for a discrete `1`-form on the

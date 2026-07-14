@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.TypeclassDiagonalCouplingSeeds
+import InfoGeometry.External.Automath.Omega.POM.TypeclassDiagonalCouplingSeeds
 
 namespace Omega.POM
 

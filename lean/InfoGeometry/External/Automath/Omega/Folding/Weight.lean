@@ -1,4 +1,4 @@
-import Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
 import Mathlib.Algebra.BigOperators.Fin
 
 namespace Omega

@@ -1,4 +1,4 @@
-import Omega.Zeta.DerivedZGHardcoreFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedZGHardcoreFactorization
 
 namespace Omega.Zeta
 

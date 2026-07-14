@@ -1,4 +1,4 @@
-import Omega.Conclusion.AtomicSurgeryFiniteCongruenceTomography
+import InfoGeometry.External.Automath.Omega.Conclusion.AtomicSurgeryFiniteCongruenceTomography
 
 namespace Omega.Conclusion
 

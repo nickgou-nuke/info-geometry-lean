@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmDihedralD4QuadraticSubfields
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDihedralD4QuadraticSubfields
 
 namespace Omega.Zeta
 

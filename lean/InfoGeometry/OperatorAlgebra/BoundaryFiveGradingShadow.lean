@@ -56,43 +56,43 @@ def Pminus : M2Z :=
 
 /-- `ε² = 1`. -/
 theorem eps_sq : eps * eps = 1 := by
-  native_decide
+  decide
 
 /-- `boost² = 1`. -/
 theorem boost_sq : boost * boost = 1 := by
-  native_decide
+  decide
 
 /-- The real boost/CPT axis anticommutes with chirality. -/
 theorem boost_eps_anticomm : boost * eps = -(eps * boost) := by
-  native_decide
+  decide
 
 /-- The generated real Hestenes phase axis squares to `-1`. -/
 theorem Kmod_sq : Kmod * Kmod = -1 := by
-  native_decide
+  decide
 
 /-- The positive chiral projector is idempotent. -/
 theorem Pplus_idempotent : Pplus * Pplus = Pplus := by
-  native_decide
+  decide
 
 /-- The negative chiral projector is idempotent. -/
 theorem Pminus_idempotent : Pminus * Pminus = Pminus := by
-  native_decide
+  decide
 
 /-- The chiral projectors resolve the identity. -/
 theorem Pplus_add_Pminus : Pplus + Pminus = 1 := by
-  native_decide
+  decide
 
 /-- Opposite chiral projectors are orthogonal. -/
 theorem Pplus_mul_Pminus : Pplus * Pminus = 0 := by
-  native_decide
+  decide
 
 /-- Opposite chiral projectors are orthogonal in the other order. -/
 theorem Pminus_mul_Pplus : Pminus * Pplus = 0 := by
-  native_decide
+  decide
 
 /-- Chiral parity is the difference of the two lightcone projectors. -/
 theorem eps_eq_Pplus_sub_Pminus : eps = Pplus - Pminus := by
-  native_decide
+  decide
 
 /-! ## 2. Tripotent boundary plus/minus/zero shadow -/
 
@@ -115,23 +115,23 @@ def zeroMode : Fin 3 → ℤ :=
 /-- The boundary grading is tripotent. -/
 theorem Ttri_tripotent : IsTripotent Ttri := by
   change Ttri * Ttri * Ttri = Ttri
-  native_decide
+  decide
 
 /-- The square of the tripotent is an idempotent support projector. -/
 theorem Ptrisupport_idempotent : Ptrisupport * Ptrisupport = Ptrisupport := by
-  native_decide
+  decide
 
 /-- The support projector preserves the tripotent on the right. -/
 theorem Ttri_mul_Ptrisupport : Ttri * Ptrisupport = Ttri := by
-  native_decide
+  decide
 
 /-- The support projector preserves the tripotent on the left. -/
 theorem Ptrisupport_mul_Ttri : Ptrisupport * Ttri = Ttri := by
-  native_decide
+  decide
 
 /-- The tripotent annihilates its zero-mode sector. -/
 theorem Ttri_annihilates_zeroMode : Ttri.mulVec zeroMode = 0 := by
-  native_decide
+  decide
 
 /-! ## 3. Five-grade matrix-unit bracket shadow -/
 
@@ -172,32 +172,32 @@ def gZeroMixedReadout : M5Z := mUnit5 1 1 - mUnit5 2 2
 /-- Same positive grade-one bracket lands in grade positive two. -/
 theorem pos_one_pos_one_bracket_eq_pos_two :
     commutator5 gPosOneB gPosOneA = gPosTwo := by
-  native_decide
+  decide
 
 /-- Same negative grade-one bracket lands in grade negative two. -/
 theorem neg_one_neg_one_bracket_eq_neg_two :
     commutator5 gNegOneA gNegOneB = gNegTwo := by
-  native_decide
+  decide
 
 /-- Mixed grade-one bracket lands in grade zero. -/
 theorem neg_one_pos_one_bracket_eq_zero_readout :
     commutator5 mixedNegOne mixedPosOne = gZeroMixedReadout := by
-  native_decide
+  decide
 
 /-- Grade zero acts on the positive grade-two representative. -/
 theorem zero_pos_two_bracket_eq_neg_pos_two :
     commutator5 gZeroDiag gPosTwo = -gPosTwo := by
-  native_decide
+  decide
 
 /-- Grade zero acts on the negative grade-two representative. -/
 theorem zero_neg_two_bracket_eq_neg_neg_two :
     commutator5 gZeroDiag gNegTwo = -gNegTwo := by
-  native_decide
+  decide
 
 /-- The positive extremal representative is abelian with itself. -/
 theorem pos_two_self_bracket_eq_zero :
     commutator5 gPosTwo gPosTwo = 0 := by
-  native_decide
+  decide
 
 /-- The finite synthesis theorem for the checked boundary shadow. -/
 theorem boundary_five_grading_shadow_synthesis :

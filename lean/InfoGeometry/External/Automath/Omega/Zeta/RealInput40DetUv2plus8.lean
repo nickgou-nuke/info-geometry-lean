@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40ZetaUvCoreZpmoneResonanceSurfaces
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40ZetaUvCoreZpmoneResonanceSurfaces
 
 namespace Omega.Zeta
 

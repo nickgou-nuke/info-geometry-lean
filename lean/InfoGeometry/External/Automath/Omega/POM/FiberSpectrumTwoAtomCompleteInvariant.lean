@@ -1,4 +1,4 @@
-import Omega.POM.FiberSpectrumFiniteReconstructionSharp
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumFiniteReconstructionSharp
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
-import Omega.TypedAddressBiaxialCompletion.BudgetOrthogonality
-import Omega.TypedAddressBiaxialCompletion.ThreeEndBudget
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BudgetOrthogonality
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ThreeEndBudget
 
 namespace Omega.Conclusion
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenMaxConditionalComplexityEqualsRank
-import Omega.SPG.CoordinateBundleScreenCount
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenMaxConditionalComplexityEqualsRank
+import InfoGeometry.External.Automath.Omega.SPG.CoordinateBundleScreenCount
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 namespace Omega.Conclusion
 

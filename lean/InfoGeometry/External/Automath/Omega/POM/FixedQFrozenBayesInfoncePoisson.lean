@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FixedQFrozenUniversalReversibleThreshold
+import InfoGeometry.External.Automath.Omega.POM.FixedQFrozenUniversalReversibleThreshold
 
 open Filter
 

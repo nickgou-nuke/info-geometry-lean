@@ -1,4 +1,4 @@
-import Omega.Core.Word
+import InfoGeometry.External.Automath.Omega.Core.Word
 import Mathlib.Tactic
 
 namespace Omega.Core

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SingleOmittedEdgePartialCorrelationBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.SingleOmittedEdgePartialCorrelationBudget
 
 namespace Omega.Conclusion
 

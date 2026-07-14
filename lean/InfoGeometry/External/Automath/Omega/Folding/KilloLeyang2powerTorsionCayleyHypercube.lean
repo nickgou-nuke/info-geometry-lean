@@ -2,8 +2,8 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.DyadicKernelCube
-import Omega.Core.WalshStokesSingleton
+import InfoGeometry.External.Automath.Omega.CircleDimension.DyadicKernelCube
+import InfoGeometry.External.Automath.Omega.Core.WalshStokesSingleton
 
 namespace Omega.Folding
 

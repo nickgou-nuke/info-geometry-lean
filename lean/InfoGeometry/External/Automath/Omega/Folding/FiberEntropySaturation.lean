@@ -2,7 +2,7 @@ import Mathlib.Analysis.Convex.Jensen
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega
 

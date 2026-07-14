@@ -1,4 +1,4 @@
-import Omega.EA.SyncKernelMealyMinimality
+import InfoGeometry.External.Automath.Omega.EA.SyncKernelMealyMinimality
 
 namespace Omega.SyncKernelWeighted
 

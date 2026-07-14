@@ -1,4 +1,4 @@
-import Omega.Conclusion.RankoneResultantDiscriminantClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.RankoneResultantDiscriminantClosedForm
 
 namespace Omega.Conclusion
 

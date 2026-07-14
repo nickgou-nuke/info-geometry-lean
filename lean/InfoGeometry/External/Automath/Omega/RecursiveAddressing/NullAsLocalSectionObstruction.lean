@@ -1,5 +1,5 @@
-import Omega.RecursiveAddressing.ObserverIndexedReadoutForcingCriterion
-import Omega.RecursiveAddressing.ReadoutSeparatednessNull
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedReadoutForcingCriterion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ReadoutSeparatednessNull
 
 namespace Omega.RecursiveAddressing
 

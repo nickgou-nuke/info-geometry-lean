@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedMaxNoncontractibleFiberNoExponentialPenalty
-import Omega.POM.DerivedFiberIndependencePolynomialMinusOneTrichotomy
-import Omega.POM.FiberParityHomotopyEquivalence
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedMaxNoncontractibleFiberNoExponentialPenalty
+import InfoGeometry.External.Automath.Omega.POM.DerivedFiberIndependencePolynomialMinusOneTrichotomy
+import InfoGeometry.External.Automath.Omega.POM.FiberParityHomotopyEquivalence
 
 namespace Omega.DerivedConsequences
 

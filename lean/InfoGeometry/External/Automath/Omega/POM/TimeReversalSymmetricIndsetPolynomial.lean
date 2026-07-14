@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FibonacciPolynomial
-import Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
 
 namespace Omega.POM
 

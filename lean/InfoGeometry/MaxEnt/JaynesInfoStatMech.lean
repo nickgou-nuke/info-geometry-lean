@@ -242,6 +242,14 @@ lemma gibbsProb_sum_one (H : DiagObservable n) (β : ℝ) :
           rfl
     _ = 1 := div_self hZne
 
+lemma gibbsProb_le_one (H : DiagObservable n) (β : ℝ) (i : Fin n) :
+    gibbsProb H β i ≤ 1 := by
+  have hnonneg : ∀ j : Fin n, 0 ≤ gibbsProb H β j := fun j => gibbsProb_nonneg H β j
+  have hsum : ∑ j : Fin n, gibbsProb H β j = 1 := gibbsProb_sum_one H β
+  have hi_le_sum : gibbsProb H β i ≤ ∑ j : Fin n, gibbsProb H β j := by
+    exact Finset.single_le_sum (fun j _hj => hnonneg j) (Finset.mem_univ i)
+  simpa [hsum] using hi_le_sum
+
 /-- Gibbs density matrix `ρ_β = diag(p_β)`. -/
 noncomputable def densityMatrix (H : DiagObservable n) (β : ℝ) : FinMat n :=
   diagMatrix (gibbsProb H β)
@@ -250,6 +258,11 @@ omit [Nonempty (Fin n)] in
 @[simp] lemma densityMatrix_diag (H : DiagObservable n) (β : ℝ) (i : Fin n) :
     densityMatrix H β i i = gibbsProb H β i := by
   simp [densityMatrix, diagMatrix]
+
+lemma densityMatrix_diag_le_one (H : DiagObservable n) (β : ℝ) (i : Fin n) :
+    densityMatrix H β i i ≤ 1 := by
+  rw [densityMatrix_diag]
+  exact gibbsProb_le_one H β i
 
 omit [Nonempty (Fin n)] in
 @[simp] lemma densityMatrix_offdiag

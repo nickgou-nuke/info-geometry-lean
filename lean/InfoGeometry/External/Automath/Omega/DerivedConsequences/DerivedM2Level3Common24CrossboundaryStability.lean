@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedM2Level3Common24Defect15ExactSequence
-import Omega.Zeta.XiTerminalZmS3EndoscopicPrymA2Coxeter
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedM2Level3Common24Defect15ExactSequence
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS3EndoscopicPrymA2Coxeter
 
 namespace Omega.DerivedConsequences
 

@@ -1,7 +1,7 @@
 import Mathlib
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.ResidualPushforwardKernelByFiberProbability
+import InfoGeometry.External.Automath.Omega.Folding.ResidualPushforwardKernelByFiberProbability
 
 namespace Omega.Folding
 

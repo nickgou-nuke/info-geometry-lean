@@ -1,4 +1,4 @@
-import Omega.Zeta.GaugeGroupTripleDecomp
+import InfoGeometry.External.Automath.Omega.Zeta.GaugeGroupTripleDecomp
 
 namespace Omega.Zeta
 

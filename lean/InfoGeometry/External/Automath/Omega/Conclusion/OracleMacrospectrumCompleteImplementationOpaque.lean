@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalFoldEntropy
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldEntropy
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryC3DiagonalIrreducibleSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryC3DiagonalIrreducibleSplitting
 
 namespace Omega.Zeta
 

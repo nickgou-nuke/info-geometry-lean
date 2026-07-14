@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldWreathAbelianizationCharacters
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWreathAbelianizationCharacters
 
 open scoped BigOperators
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Permutation
 import Mathlib.Tactic
-import Omega.CircleDimension.DerivedChainArithmeticMedianUniqueMinimizer
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedChainArithmeticMedianUniqueMinimizer
 
 namespace Omega.CircleDimension
 

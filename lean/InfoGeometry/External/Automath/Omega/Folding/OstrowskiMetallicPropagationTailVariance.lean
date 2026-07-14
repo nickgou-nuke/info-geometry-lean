@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.OstrowskiMetallicTruncationMismatchLimit
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiMetallicTruncationMismatchLimit
 
 namespace Omega.Folding
 

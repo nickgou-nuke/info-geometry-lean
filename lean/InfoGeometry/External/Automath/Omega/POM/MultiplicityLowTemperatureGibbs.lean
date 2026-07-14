@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.MultiplicityCompositionPartCountGeneralqLLT
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartCountGeneralqLLT
 
 namespace Omega.POM
 

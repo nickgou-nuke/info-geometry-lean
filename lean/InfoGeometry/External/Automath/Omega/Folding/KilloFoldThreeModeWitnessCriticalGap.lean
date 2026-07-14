@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.Folding.KilloFoldRenyi2UniformityGap
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldRenyi2UniformityGap
 
 open Filter
 open scoped Topology

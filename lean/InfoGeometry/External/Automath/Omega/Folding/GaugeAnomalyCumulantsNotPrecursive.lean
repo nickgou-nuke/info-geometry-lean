@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalySingularityLatticeNonholonomic
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySingularityLatticeNonholonomic
 
 namespace Omega.Folding
 

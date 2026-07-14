@@ -1,4 +1,4 @@
-import Omega.Zeta.XiEndpointDefectH12EnergyPoissonL2Dissipation
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointDefectH12EnergyPoissonL2Dissipation
 
 namespace Omega.Zeta
 

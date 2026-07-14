@@ -481,6 +481,18 @@ lemma phaseRNBarrierBefore_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n)
   cases phase <;>
     simp [phaseRNBarrierBefore, rowRNBarrier_nonneg, colRNBarrier_nonneg]
 
+/-- Lemma `phaseLyapunovAfter_nonneg`. -/
+lemma phaseLyapunovAfter_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n) :
+    0 ≤ phaseLyapunovAfter n phase M := by
+  cases phase <;>
+    simp [phaseLyapunovAfter, rowLyapunov_nonneg, colLyapunov_nonneg]
+
+/-- Lemma `phaseRNBarrierAfter_nonneg`. -/
+lemma phaseRNBarrierAfter_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n) :
+    0 ≤ phaseRNBarrierAfter n phase M := by
+  cases phase <;>
+    simp [phaseRNBarrierAfter, rowRNBarrier_nonneg, colRNBarrier_nonneg]
+
 /--
 Sinkhorn one-step Lyapunov contraction in the phase-aligned objective.
 -/
@@ -575,6 +587,26 @@ noncomputable def trajectoryRNBarrier (T : SinkhornTrajectory n) (k : Nat) : ℝ
 /-- Radon-Nikodym barrier objective after the step at iteration `k`. -/
 noncomputable def trajectoryRNBarrierNext (T : SinkhornTrajectory n) (k : Nat) : ℝ :=
   phaseRNBarrierAfter n (phaseAt k) (T.state (k + 1))
+
+/-- The pre-step Lyapunov objective of a Sinkhorn trajectory is nonnegative. -/
+theorem trajectoryLyapunov_nonneg (T : SinkhornTrajectory n) (k : Nat) :
+    0 ≤ trajectoryLyapunov n T k := by
+  exact phaseLyapunovBefore_nonneg (n := n) (phaseAt k) (T.state k)
+
+/-- The post-step Lyapunov objective of a Sinkhorn trajectory is nonnegative. -/
+theorem trajectoryLyapunovNext_nonneg (T : SinkhornTrajectory n) (k : Nat) :
+    0 ≤ trajectoryLyapunovNext n T k := by
+  exact phaseLyapunovAfter_nonneg (n := n) (phaseAt k) (T.state (k + 1))
+
+/-- The pre-step RN barrier of a Sinkhorn trajectory is nonnegative. -/
+theorem trajectoryRNBarrier_nonneg (T : SinkhornTrajectory n) (k : Nat) :
+    0 ≤ trajectoryRNBarrier n T k := by
+  exact phaseRNBarrierBefore_nonneg (n := n) (phaseAt k) (T.state k)
+
+/-- The post-step RN barrier of a Sinkhorn trajectory is nonnegative. -/
+theorem trajectoryRNBarrierNext_nonneg (T : SinkhornTrajectory n) (k : Nat) :
+    0 ≤ trajectoryRNBarrierNext n T k := by
+  exact phaseRNBarrierAfter_nonneg (n := n) (phaseAt k) (T.state (k + 1))
 
 /-- Every admissible Sinkhorn step has zero phase-aligned post-step Lyapunov objective. -/
 theorem trajectoryLyapunovNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
@@ -867,6 +899,7 @@ attribute [rep_depth operator]
   phaseRNBarrierBefore
   phaseRNBarrierAfter
   phaseRNBarrierBefore_nonneg
+  phaseRNBarrierAfter_nonneg
   sinkhornStep_phaseRNBarrierAfter_eq_zero
   sinkhornStep_phaseRNBarrier_monotone
   rn_barrier_row_step_eq_zero
@@ -880,14 +913,19 @@ attribute [rep_depth operator]
   phaseLyapunovBefore
   phaseLyapunovAfter
   phaseLyapunovBefore_nonneg
+  phaseLyapunovAfter_nonneg
   sinkhornStep_phaseLyapunovAfter_eq_zero
   sinkhornStep_phaseLyapunov_monotone
   trajectoryRNBarrier
   trajectoryRNBarrierNext
+  trajectoryRNBarrier_nonneg
+  trajectoryRNBarrierNext_nonneg
   trajectoryRNBarrierNext_eq_zero
   trajectoryRNBarrier_monotone
   trajectoryLyapunov
   trajectoryLyapunovNext
+  trajectoryLyapunov_nonneg
+  trajectoryLyapunovNext_nonneg
   trajectoryLyapunovNext_eq_zero
   trajectoryLyapunov_monotone
   negativeEntropy

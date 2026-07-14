@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
-import Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
-import Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangTwoBranchFieldsProductGalois
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
 
 namespace Omega.Folding
 

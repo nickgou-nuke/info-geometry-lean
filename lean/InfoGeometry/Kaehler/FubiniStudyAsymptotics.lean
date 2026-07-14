@@ -24,14 +24,7 @@ opaque FubiniStudyMetric (p : ℕ) : M → ℝ
 /-- The Poincaré form near the singularity -/
 opaque PoincareForm : M → ℝ
 
-/--
-Theorem 1.2 from Apredoaei, Ma, and Wang (2025).
-The quotient of the induced Fubini-Study metrics by Kodaira maps of high tensor powers `p` of the line bundle
-and the Poincaré form near the singularity grows polynomially uniformly as O(p^3) as p → ∞.
-
-This is an open closure debt: it must be strictly proven over the analytic geometric structures.
-Here we state it as an explicit comparison premise to avoid unverified proofs, following the repository mandate.
--/
+/--\nTheorem 1.2 from Apredoaei, Ma, and Wang (2025).\nThe quotient of the induced Fubini-Study metrics by Kodaira maps of high tensor powers `p` of the line bundle\nline bundle\nand the Poincaré form near the singularity grows polynomially uniformly as O(p^3) as p → ∞.\n\nThis is an open closure debt: it must be strictly proven over the analytic geometric structures.\nHere we state it as an explicit comparison premise to avoid unverified proofs, following the repositorymandate.\n-/
 theorem fubini_study_asymptotics (x : M)
     (hAsymp : (fun p : ℕ => FubiniStudyMetric p x / PoincareForm x) =O[atTop] (fun p : ℕ => (p : ℝ)^3)) :
     (fun p : ℕ => FubiniStudyMetric p x / PoincareForm x) =O[atTop] (fun p : ℕ => (p : ℝ)^3) :=

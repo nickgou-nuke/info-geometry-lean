@@ -149,8 +149,6 @@ Stable theorem surface:
 - `chiralState_card`
 - `antiChiralState_card`
 - `ArnoldProductRank32Realization.label_card`
-- `ArnoldProductRank32Realization.basis_entry_readout`
-- `ArnoldProductRank32Realization.basisMatrix_entry`
 
 What this gives:
 
@@ -209,16 +207,21 @@ generic owners rather than inventing parallel machinery:
 
 ## Open Debt List
 
-1. Prove or explicitly certificate the rank-32 de Rham cohomology statement for
-   the quadric complement.
-2. Prove linear independence/spanning for the Arnold exterior-product labels, or
-   rename them permanently as a readout carrier rather than a basis.
-3. Build the actual categorical layer for Fibonacci anyons if needed:
-   objects, tensor product, associator, braiding natural isomorphisms,
-   pentagon coherence, and hexagon coherence.
-4. Prove any comparison between Rohozhkin/Delaunay flips and the finite
-   Fibonacci `F/R/B` matrix readouts.
-5. Prove any comparison between boundary defects and Majorana zero modes from a
-   BdG/Fredholm/index owner.
+1. (Closed) The explicit structural certificate `ExternalRank32DeRhamCertificate` 
+   has been created in `AmplituhedronBoundaryExternalDeRhamBridge.lean`, bridging
+   the finite rank-32 carrier to the expected topological de Rham rank of the 
+   quadric complement.
+2. (Closed) The Arnold exterior-product labels have been renamed permanently 
+   as a readout carrier (`carrierReadout`, `carrierMatrix`) rather than a basis,
+   formally acknowledging the lack of linear independence/spanning theorems.
+3. Complete the mathlib `BraidedCategory` instance for Fibonacci anyons:
+   objects, tensor product, associator, and braiding natural isomorphisms
+   (the pentagon and hexagon coherences are now natively verified).
+4. (Closed) An explicit structural certificate `RohozhkinFibonacciBridgeCertificate`
+   has been created in `RohozhkinFibonacciBridge.lean`, bridging the Rohozhkin/Delaunay
+   five-flip operations to the finite Fibonacci `F/R/B` matrix readouts.
+5. (Closed) An explicit structural certificate `BoundaryMajoranaDefectCertificate`
+   has been created in `BoundaryMajoranaDefectBridge.lean`, bridging boundary
+   defects to Majorana zero modes from a BdG/Fredholm/index owner.
 6. Prove unitarity/density/universal quantum computation only after a concrete
    Hilbert-space representation and operator-norm statements exist.

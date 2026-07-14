@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.HzomCommutingPolarForcesCriticalLine
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.HzomCommutingPolarForcesCriticalLine
 
 namespace Omega.OperatorAlgebra
 

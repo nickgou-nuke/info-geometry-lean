@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
-import Omega.GU.TerminalFoldbin6TwoPointFiberDirectionSpectrum
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6TwoPointFiberDirectionSpectrum
 
 namespace Omega.GU
 

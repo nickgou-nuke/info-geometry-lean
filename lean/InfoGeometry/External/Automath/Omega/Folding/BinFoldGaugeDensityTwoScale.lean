@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BinFoldGaugeM6
-import Omega.Folding.BinGaugeVolumeStirlingSecondOrder
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.BinFoldGaugeM6
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolumeStirlingSecondOrder
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega.Folding
 

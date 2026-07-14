@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.SPG.GraphCycleLatticeWeightedDiscriminant
+import InfoGeometry.External.Automath.Omega.SPG.GraphCycleLatticeWeightedDiscriminant
 
 namespace Omega.SPG
 

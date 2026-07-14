@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Omega.Zeta.XiSingleDefectIntegratedClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleDefectIntegratedClosedForm
 
 namespace Omega.Zeta
 

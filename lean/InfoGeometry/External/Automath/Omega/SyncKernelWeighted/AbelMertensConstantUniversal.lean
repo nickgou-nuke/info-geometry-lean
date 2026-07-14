@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.AbelMertensUniversal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.AbelMertensUniversal
 
 namespace Omega.SyncKernelWeighted
 

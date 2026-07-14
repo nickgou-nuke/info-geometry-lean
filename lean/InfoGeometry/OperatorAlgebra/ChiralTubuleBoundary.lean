@@ -601,14 +601,18 @@ reflection eigenvalue.
 -/
 structure JonesRankCollapseEvent
     (Freq : Type*) where
+  eigenResponse :
+    InfoGeometry.OperatorAlgebra.SusceptibilityHessian.StatePolarizationEigenResponse Freq
   fresnel :
-    FresnelEigenCalibration Freq
+    InfoGeometry.OperatorAlgebra.SusceptibilityHessian.FresnelCoefficientReadout Freq
+  calibration :
+    InfoGeometry.OperatorAlgebra.SusceptibilityHessian.FresnelFromStateEigenResponse Freq eigenResponse fresnel
 
   frequency : Freq
 
   /-- p-channel collapse, e.g. Brewster reflection zero. -/
   p_channel_zero :
-    fresnel.eigenResponse.eigenvalue PolarizationMode.p frequency = 0
+    eigenResponse.responseP frequency = 0
 
   /-- Optional s-channel noncollapse certificate. -/
   s_channel_nonzero : Prop
@@ -620,16 +624,15 @@ variable (J : JonesRankCollapseEvent Freq)
 
 /-- At a Jones/Brewster rank-collapse event, the p-eigenvalue vanishes. -/
 theorem p_eigenvalue_eq_zero :
-    J.fresnel.eigenResponse.eigenvalue
-      PolarizationMode.p J.frequency = 0 :=
+    J.eigenResponse.responseP J.frequency = 0 :=
   J.p_channel_zero
 
 /-- The same event says the Fresnel `r_p` coefficient vanishes. -/
 theorem r_p_eq_zero :
-    J.fresnel.fresnel.r_p J.frequency = 0 := by
+    J.fresnel.rp J.frequency = 0 := by
   have h :=
-    J.fresnel.p_eigenvalue_is_r_p J.frequency
-  rw [← h]
+    J.calibration.rp_eq_responseP J.frequency
+  rw [h]
   exact J.p_channel_zero
 
 end JonesRankCollapseEvent

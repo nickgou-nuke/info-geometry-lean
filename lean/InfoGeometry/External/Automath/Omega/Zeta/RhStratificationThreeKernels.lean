@@ -1,6 +1,6 @@
-import Omega.Folding.CollisionZeta
-import Omega.Zeta.RealInput40GeodesicRamanujanMargin
-import Omega.Zeta.SyncKernelMixingRate
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZeta
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40GeodesicRamanujanMargin
+import InfoGeometry.External.Automath.Omega.Zeta.SyncKernelMixingRate
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AlgebraicLdpSinglevaluednessCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.AlgebraicLdpSinglevaluednessCriterion
 
 namespace Omega.Conclusion
 

@@ -81,7 +81,7 @@ theorem symmetryClosure_odd_odd_to_even
 theorem moebius_phase_axis_fixed
     {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Word : Type*} [Fintype Word] [DecidableEq Word]
-    (M : HestenesMoebiusClosureBridge (E := E) Word)
+    (M : _root_.InfoGeometry.Krein.HestenesMoebiusClosureBridge.Bridge (E := E) Word)
     (g : MoebiusParameter) :
     M.operatorAction g (InfoGeometry.Krein.clockAxis (E := E)) =
       InfoGeometry.Krein.clockAxis (E := E) :=
@@ -91,7 +91,7 @@ theorem moebius_phase_axis_fixed
 theorem moebius_preserves_hestenes_symmetry
     {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Word : Type*} [Fintype Word] [DecidableEq Word]
-    (M : HestenesMoebiusClosureBridge (E := E) Word)
+    (M : _root_.InfoGeometry.Krein.HestenesMoebiusClosureBridge.Bridge (E := E) Word)
     (g : MoebiusParameter) {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
     (hA : IsHestenesAnalyticSymmetry (E := E) A) :
     IsHestenesAnalyticSymmetry (E := E) (M.operatorAction g A) :=

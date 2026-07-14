@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Discussion.HypercubePotentialCurvatureControlledStrictification
-import Omega.Discussion.SquierCurvatureHolonomyStokes
+import InfoGeometry.External.Automath.Omega.Discussion.HypercubePotentialCurvatureControlledStrictification
+import InfoGeometry.External.Automath.Omega.Discussion.SquierCurvatureHolonomyStokes
 
 namespace Omega.Discussion
 

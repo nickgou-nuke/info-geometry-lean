@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 namespace Omega.Discussion
 

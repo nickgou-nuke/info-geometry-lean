@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyP10LeyangIrreducibleRootSplitDensities
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10LeyangIrreducibleRootSplitDensities
 
 namespace Omega.Folding
 

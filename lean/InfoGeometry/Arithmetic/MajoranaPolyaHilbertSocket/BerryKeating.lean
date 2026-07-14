@@ -16,47 +16,33 @@ Berry--Keating dilation sector, not to ordinary Fock-space summability of
 Dirichlet coefficients.
 -/
 structure MellinPlancherelCriticalLinePacket
-    (MellinWave MellinNorm : Type*) where
+    (MellinWave MellinNorm : Type) where
   realPart : ℝ
   imaginaryHeight : ℝ
   mellinWave : MellinWave
   mellinNorm : MellinNorm
-  bk_generalizedEigenvalue_law : IsCriticalLineRealPart realPart
-  selfAdjoint_forces_realEigenvalue_law : IsCriticalLineRealPart realPart
-  criticalLine_law : IsCriticalLineRealPart realPart
-  /-- Guardrail: ordinary Fock norm is not the analytic source. -/
-  ordinaryFockNorm_not_source_guard : Type*
+  realPart_eq_half : realPart = (1 / 2 : ℝ)
 
 namespace MellinPlancherelCriticalLinePacket
 
-variable {MellinWave MellinNorm : Type*}
+variable {MellinWave MellinNorm : Type}
 variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
-
-/-- Berry--Keating generalized-eigenvalue law. -/
-theorem bk_generalizedEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.bk_generalizedEigenvalue_law
-
-/-- Self-adjoint operators force real eigenvalues. -/
-theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.selfAdjoint_forces_realEigenvalue_law
 
 /-- The packet places the real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
-  exact P.criticalLine_law
+  simpa [IsCriticalLineRealPart] using P.realPart_eq_half
 
 /-- Concrete model: Mellin-Plancherel packet on the critical line Re(s) = 1/2.
-All three _law fields are rfl since IsCriticalLineRealPart (1/2) := (1/2 = 1/2). -/
-def mkCriticalLine (MellinWave MellinNorm : Type*)
-    (mellinWave : MellinWave) (mellinNorm : MellinNorm) (imaginaryHeight : ℝ)
-    (guard : Type*) : MellinPlancherelCriticalLinePacket MellinWave MellinNorm where
+The critical-line proof is definitional because `IsCriticalLineRealPart σ`
+is the equality `σ = 1 / 2`. -/
+def mkCriticalLine (MellinWave MellinNorm : Type)
+    (mellinWave : MellinWave) (mellinNorm : MellinNorm) (imaginaryHeight : ℝ) :
+    MellinPlancherelCriticalLinePacket MellinWave MellinNorm where
   realPart := 1/2
   imaginaryHeight := imaginaryHeight
   mellinWave := mellinWave
   mellinNorm := mellinNorm
-  bk_generalizedEigenvalue_law := by rfl
-  selfAdjoint_forces_realEigenvalue_law := by rfl
-  criticalLine_law := by rfl
-  ordinaryFockNorm_not_source_guard := guard
+  realPart_eq_half := by rfl
 
 end MellinPlancherelCriticalLinePacket
 
@@ -69,7 +55,7 @@ closure, boundary conditions, and self-adjoint extension data are analytic
 choices supplied by a concrete owner.
 -/
 structure BerryKeatingOperatorPacket
-    (Carrier Operator Domain : Type*) where
+    (Carrier Operator Domain : Type) where
   carrier : Carrier
   domain : Domain
   position : Operator
@@ -88,7 +74,7 @@ to be compared with zeta zero data.  The square-root normalization and
 split-Clifford/CAR compatibility are supplied as laws by the concrete model.
 -/
 structure MajoranaBerryKeatingOperatorPacket
-    (Carrier Operator Domain Mode : Type*) where
+    (Carrier Operator Domain Mode : Type) where
   berryKeating : BerryKeatingOperatorPacket Carrier Operator Domain
   majoranaMode : Mode → Operator
   thermalOperator : Mode → Operator

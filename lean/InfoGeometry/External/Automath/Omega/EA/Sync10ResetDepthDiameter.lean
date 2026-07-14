@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.Sync10ResetDepthSpectrum
+import InfoGeometry.External.Automath.Omega.EA.Sync10ResetDepthSpectrum
 
 namespace Omega.EA
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiJDiscriminantElliptic2TorsionMobius
+import InfoGeometry.External.Automath.Omega.Zeta.XiJDiscriminantElliptic2TorsionMobius
 import Mathlib.Tactic
 
 namespace Omega.Zeta

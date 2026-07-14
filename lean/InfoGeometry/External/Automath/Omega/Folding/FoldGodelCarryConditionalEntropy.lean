@@ -1,4 +1,4 @@
-import Omega.Folding.FiberGaugeVolumeIncrementConditionalShannonStirling
+import InfoGeometry.External.Automath.Omega.Folding.FiberGaugeVolumeIncrementConditionalShannonStirling
 
 namespace Omega.Folding
 

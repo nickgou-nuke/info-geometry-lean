@@ -40,7 +40,7 @@ No equality or preservation law is bundled between them; the projections below
 are the canonical readbacks used by later theorem-owner modules.
 -/
 @[rep_depth operator]
-structure KANLightConeAffineBridge
+structure Bridge
     (E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
@@ -55,7 +55,7 @@ structure KANLightConeAffineBridge
   affineLightCone :
     LightConeAffineCurrentBridge Finite Alg
 
-namespace KANLightConeAffineBridge
+namespace Bridge
 
 variable
     {E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*}
@@ -64,7 +64,7 @@ variable
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
 variable (B :
-  KANLightConeAffineBridge E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+  Bridge E Finite Alg Bog Korth Asplit Nshear CartanDiag)
 
 /-! ## KAN projection readbacks -/
 
@@ -234,6 +234,6 @@ theorem centralSelector_eq_zero_of_not_modeBalanced
   unfold IsModeBalanced at hNot
   simp [hNot]
 
-end KANLightConeAffineBridge
+end Bridge
 
 end InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge

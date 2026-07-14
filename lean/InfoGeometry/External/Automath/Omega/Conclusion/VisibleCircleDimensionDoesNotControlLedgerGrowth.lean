@@ -1,5 +1,5 @@
-import Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
-import Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedCofinalPrimeSupportUnboundedLedgerRank
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
 
 namespace Omega.Conclusion
 

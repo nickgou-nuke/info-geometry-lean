@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicativeUpgradeFatalAmplification
+import InfoGeometry.External.Automath.Omega.POM.MultiplicativeUpgradeFatalAmplification
 
 namespace Omega.POM
 

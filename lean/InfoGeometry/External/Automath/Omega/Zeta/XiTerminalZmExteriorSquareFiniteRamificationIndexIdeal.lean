@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmExteriorSquareCurveGenus2
-import Omega.Zeta.XiTerminalZmLeyangMonodromyS4
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmExteriorSquareCurveGenus2
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangMonodromyS4
 
 namespace Omega.Zeta
 

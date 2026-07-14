@@ -1,4 +1,4 @@
-import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+import InfoGeometry.External.Automath.Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
 
 namespace Omega.GU
 

@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.UnitCirclePhaseArithmetic.LeyangBranchCoverSquareRoot
-import Omega.UnitCirclePhaseArithmetic.LeyangPushforwardDensityAsymptotics
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangBranchCoverSquareRoot
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangPushforwardDensityAsymptotics
 
 namespace Omega.UnitCirclePhaseArithmetic
 

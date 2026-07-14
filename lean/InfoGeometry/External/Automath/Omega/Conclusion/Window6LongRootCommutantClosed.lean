@@ -1,4 +1,4 @@
-import Omega.Conclusion.Window6LongRootGeneratedAlgebraDoubleblock
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6LongRootGeneratedAlgebraDoubleblock
 
 namespace Omega.Conclusion
 

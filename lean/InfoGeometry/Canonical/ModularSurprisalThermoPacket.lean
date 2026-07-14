@@ -212,35 +212,6 @@ theorem canonicalDefectCentral_is_operatorial_defect_supported
   InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral_isDefectSupported
     (CIK := CIK)
 
-/--
-The operatorial super-Hamiltonian split is the existing Drazin decomposition
-`Q² = kinetic + defect-central`, exposed here as the modular-surprisal owner
-connection.
--/
-@[rep_depth operator]
-theorem superHamiltonian_operatorial_drazin_split_packet
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E) :
-    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK =
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart
-        (CIK := CIK)
-        + InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral CIK :=
-  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral
-    (CIK := CIK)
-
-/--
-Krein-depth wrapper of the same split. This is the doubled-real lane used by
-the Type III lambda and Mellin-shift modules.
--/
-@[rep_depth krein]
-theorem superHamiltonianK_operatorial_drazin_split_packet
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E) :
-    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK =
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK
-        (CIK := CIK)
-        + InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK :=
-  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK
-    (CIK := CIK)
-
 end OperatorialDrazinCentralSplit
 
 section DefectiveLogRadonNikodym

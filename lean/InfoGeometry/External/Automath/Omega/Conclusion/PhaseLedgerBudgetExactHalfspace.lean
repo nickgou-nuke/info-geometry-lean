@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineRegisterBudget
-import Omega.Conclusion.PhaseBudgetBinaryQuantization
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineRegisterBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.PhaseBudgetBinaryQuantization
 
 namespace Omega.Conclusion
 

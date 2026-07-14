@@ -1,4 +1,4 @@
-import Omega.Conclusion.CyclicZeckendorfPrimeRegularBias
+import InfoGeometry.External.Automath.Omega.Conclusion.CyclicZeckendorfPrimeRegularBias
 
 namespace Omega.Conclusion
 

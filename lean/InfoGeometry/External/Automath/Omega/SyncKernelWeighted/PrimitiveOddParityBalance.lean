@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.PrimitiveOddDiv
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveOddDiv
 
 namespace Omega.SyncKernelWeighted
 

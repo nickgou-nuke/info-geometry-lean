@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart65dChainInteriorDirichletMgfHoeffding
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart65dChainInteriorDirichletMgfHoeffding
 
 namespace Omega.Zeta
 

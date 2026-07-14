@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateFdivFourthOrderComplexM2
-import Omega.CircleDimension.PoissonBivariateFdivSixthOrderComplexM3
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateFdivFourthOrderComplexM2
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateFdivSixthOrderComplexM3
 
 namespace Omega.CircleDimension
 

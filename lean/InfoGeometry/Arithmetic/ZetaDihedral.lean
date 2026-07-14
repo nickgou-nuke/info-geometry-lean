@@ -91,7 +91,7 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
   have h_eq : s = antiunitaryCriticalReflection s := by
     simpa [gamma, tau, sigma, eq_comm] using h_stable
   have hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s := by
-    exact (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp h_eq
+    exact (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp h_eq.symm
   have hs' : s.re = (1 / 2 : ℝ) := by
     simpa [CompletedZetaSouriauDInfinityThermodynamics.CriticalLine] using hs
   apply Complex.ext

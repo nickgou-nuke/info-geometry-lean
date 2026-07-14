@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalHighMoments
-import Omega.POM.RenyiEndpoint
+import InfoGeometry.External.Automath.Omega.POM.DiagonalHighMoments
+import InfoGeometry.External.Automath.Omega.POM.RenyiEndpoint
 
 namespace Omega.POM
 

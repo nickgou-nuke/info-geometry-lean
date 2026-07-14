@@ -1,7 +1,7 @@
 import Mathlib.Data.Finite.Defs
 import Mathlib.Tactic
-import Omega.Zeta.DerivedMinimalCyclicAuditAxisZhatPrimeUnlocking
-import Omega.Zeta.LocalizedFinitePrimeAuditCylinderFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedMinimalCyclicAuditAxisZhatPrimeUnlocking
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedFinitePrimeAuditCylinderFactorization
 
 namespace Omega.DerivedConsequences
 

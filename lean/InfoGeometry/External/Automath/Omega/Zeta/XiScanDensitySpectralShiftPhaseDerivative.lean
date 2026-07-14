@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Probability.Distributions.Cauchy
 import Mathlib.Tactic
-import Omega.Zeta.XiDefectEntropyHyperbolicAreaLaw4pi
+import InfoGeometry.External.Automath.Omega.Zeta.XiDefectEntropyHyperbolicAreaLaw4pi
 
 namespace Omega.Zeta
 

@@ -24,12 +24,10 @@ noncomputable section
 
 namespace InfoGeometry.Geometry.TKKBregmanRicciBridge
 
-set_option linter.dupNamespace false
-
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
 open InfoGeometry.Geometry.OperatorBregmanDivergence
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorFenchelRegularCone
+open InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -50,7 +48,7 @@ The bridge supplies:
 * a scalar readout from the geometric Ricci-flux value;
 * the equality between scalar Ricci flux and the Bregman second variation.
 -/
-structure TKKBregmanRicciBridge
+structure Bridge
     (c : CertifiedModularReduction
       (E := InfoGeometry.Krein.DoubledSpace E))
     (ω :
@@ -88,7 +86,7 @@ structure TKKBregmanRicciBridge
         =
       D2.eval (modularBregmanEnergy (E := E) ω gradPhi F U)
 
-namespace TKKBregmanRicciBridge
+namespace Bridge
 
 variable
     {c : CertifiedModularReduction
@@ -104,7 +102,7 @@ variable
     {R : TKKRicciFluxDatum L State Geometry}
 
 variable
-    (B : TKKBregmanRicciBridge
+    (B : Bridge
       (E := E) c ω gradPhi F D2 L State Geometry R)
 
 /-- Re-export the TKK/Bregman bridge law. -/
@@ -174,7 +172,7 @@ theorem scalar_closureDefect_eq_bregman_of_curvature_stationary
   rw [hricci] at hflux
   exact hflux
 
-end TKKBregmanRicciBridge
+end Bridge
 
 /-! ## 2. Owner target -/
 
@@ -192,7 +190,7 @@ def TKKBregmanRicciBridgeOwnerTarget
     [AddCommGroup Geometry] [Module ℝ Geometry]
     (R : TKKRicciFluxDatum L State Geometry) : Prop :=
   Nonempty
-    (TKKBregmanRicciBridge
+    (Bridge
       (E := E) c ω gradPhi F D2 L State Geometry R)
 
 end InfoGeometry.Geometry.TKKBregmanRicciBridge

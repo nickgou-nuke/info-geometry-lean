@@ -9,8 +9,8 @@ surface that is already constructive:
 
 * a KMS boundary datum supplies the algebraic strip-boundary identity;
 * a closed geometric one-form supplies vanishing boundary integral by Stokes;
-* a detailed-balance packet packages both readouts without identifying them
-  unless a concrete model supplies that bridge.
+* a detailed-balance packet packages both readouts without adding an
+  uninterpreted calibration proposition.
 -/
 
 import InfoGeometry.Geometry.BilingualAnalyticity
@@ -163,12 +163,11 @@ KMS detailed-balance packet.
 It packages:
 
 * the algebraic KMS boundary identity;
-* a geometric closed-form/Stokes readout;
-* an explicit calibration law relating the chosen geometric form to the KMS
-  correlation form.
+* a geometric closed-form/Stokes readout.
 
-The calibration law remains model-specific; the boundary identity and Stokes
-vanishing theorems are constructive consequences.
+The boundary identity and Stokes vanishing theorems are constructive
+consequences.  Concrete models that identify the geometric form with a specific
+thermal correlation readout should add typed equations in their own owner file.
 -/
 structure KMSDetailedBalance
     (A Region Point Tangent Value : Type*)
@@ -181,14 +180,12 @@ structure KMSDetailedBalance
   /-- Closed geometric/Stokes detailed-balance form. -/
   form :
     KMSDetailedBalanceForm Region Point Tangent Value I
-  /-- Model-specific identification of geometric form with thermal readout. -/
-  form_calibration : Prop
 
 namespace KMSDetailedBalance
 
 /--
-A reduced KMS detailed-balance packet that omits the calibration law and its certificate.
-It carries only the algebraic KMS boundary data and the geometric form.
+A reduced KMS detailed-balance packet containing only the algebraic KMS boundary
+data and the geometric form.
 -/
 structure KMSDetailedBalanceCore
     (A Region Point Tangent Value : Type*)
@@ -198,8 +195,7 @@ structure KMSDetailedBalanceCore
   kms : KMSBoundaryData A
   form : KMSDetailedBalanceForm Region Point Tangent Value I
 
-/-- Construct a `KMSDetailedBalanceCore` from a full `KMSDetailedBalance` packet, discarding
-the calibration law and its proof. -/
+/-- Construct a `KMSDetailedBalanceCore` from a full `KMSDetailedBalance` packet. -/
 @[simp] def KMSDetailedBalance.toCore
     {A Region Point Tangent Value : Type*}
     [Mul A] [AddCommGroup Value] [Module ℝ Value]
@@ -215,10 +211,6 @@ variable
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
 variable (D : KMSDetailedBalance A Region Point Tangent Value I)
-
-/-- The stored calibration proposition. -/
-def form_calibration_holds : Prop :=
-  D.form_calibration
 
 /-- Algebraic KMS/detailed-balance boundary identity. -/
 theorem kms_boundary

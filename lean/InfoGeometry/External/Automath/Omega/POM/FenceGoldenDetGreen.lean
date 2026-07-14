@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.Entropy
-import Omega.POM.GreenKernelEntries
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.POM.GreenKernelEntries
 
 namespace Omega.POM
 

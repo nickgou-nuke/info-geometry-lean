@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldInfonceRenyiCollisionUpperEnvelope
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfonceRenyiCollisionUpperEnvelope
 
 open Filter
 open scoped Topology

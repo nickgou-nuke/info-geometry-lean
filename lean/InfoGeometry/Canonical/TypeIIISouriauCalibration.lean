@@ -49,14 +49,15 @@ offers the Tomita `δ = log Δ` bridge after a supplied proof that
 `exp(generator) = Δ`.
 -/
 @[rep_depth transport]
-structure TypeIIISouriauCalibration where
+structure Calibration where
   /-- Type-III modular data owner. -/
   typeIII :
     RealTypeIIIModularData (E := E)
 
   /-- Finite/bounded Souriau calibration over the doubled Hilbert carrier. -/
   souriau :
-    SouriauModularHamiltonianBridge (E := H₂) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.SouriauModularHamiltonianBridge.Bridge
+      (E := H₂) (LieAlgebra := LieAlgebra)
 
   /-- Calibration: the bounded surrogate is the Type-III modular generator. -/
   Ksur_eq_typeIII_modularGenerator :
@@ -69,9 +70,9 @@ structure TypeIIISouriauCalibration where
   exp_typeIII_modularGenerator_eq_modularOperator :
     NormedSpace.exp typeIII.modularGenerator = typeIII.rn.modularOperator
 
-namespace TypeIIISouriauCalibration
+namespace Calibration
 
-variable (C : TypeIIISouriauCalibration (E := E) (LieAlgebra := LieAlgebra))
+variable (C : Calibration (E := E) (LieAlgebra := LieAlgebra))
 
 /-- The bounded surrogate is the Type-III modular generator. -/
 @[rep_depth transport]
@@ -141,9 +142,8 @@ theorem modularGenerator_eq_neg_log_rn :
         InfoGeometry.Canonical.YangMillsContinuum.idEndH E :=
   C.typeIII.modularHamiltonian_eq_neg_log_rn
 
-end TypeIIISouriauCalibration
+end Calibration
 
 end Core
 
 end InfoGeometry.Canonical.TypeIIISouriauCalibration
-

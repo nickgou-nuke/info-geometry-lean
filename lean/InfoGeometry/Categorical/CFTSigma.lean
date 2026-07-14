@@ -7,7 +7,7 @@ import InfoGeometry.Categorical.CFTVirasoro
 namespace InfoGeometry.Categorical
 
 /-- The sigma-sector readout is the half-integer conformal spin scale. -/
-def sigmaWeight (n : ℤ) : ℝ :=
+noncomputable def sigmaWeight (n : ℤ) : ℝ :=
   (n : ℝ) / 2
 
 theorem sigmaWeight_double (n : ℤ) : 2 * sigmaWeight n = n := by

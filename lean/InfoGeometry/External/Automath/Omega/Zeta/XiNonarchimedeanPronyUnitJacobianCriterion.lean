@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermonde2
-import Omega.Zeta.XiNonarchimedeanPronyHenselNewtonInversion
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde2
+import InfoGeometry.External.Automath.Omega.Zeta.XiNonarchimedeanPronyHenselNewtonInversion
 
 namespace Omega.Zeta
 

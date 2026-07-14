@@ -1,4 +1,4 @@
-import Omega.POM.ParryTwoPointAlternating
+import InfoGeometry.External.Automath.Omega.POM.ParryTwoPointAlternating
 
 namespace Omega.POM
 

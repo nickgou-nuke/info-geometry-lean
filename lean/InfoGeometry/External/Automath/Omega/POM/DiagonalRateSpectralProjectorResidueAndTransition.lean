@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateSturmCauchyEigenbasis
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateSturmCauchyEigenbasis
 
 namespace Omega.POM
 

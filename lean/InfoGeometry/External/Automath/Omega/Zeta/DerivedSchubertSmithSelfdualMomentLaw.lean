@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiExteriorPowerSmithSchubert
+import InfoGeometry.External.Automath.Omega.Zeta.XiExteriorPowerSmithSchubert
 
 namespace Omega.Zeta
 

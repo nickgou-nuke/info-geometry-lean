@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiBulkBoundarySpeedMatching
+import InfoGeometry.External.Automath.Omega.Zeta.XiBulkBoundarySpeedMatching
 
 namespace Omega.Zeta
 

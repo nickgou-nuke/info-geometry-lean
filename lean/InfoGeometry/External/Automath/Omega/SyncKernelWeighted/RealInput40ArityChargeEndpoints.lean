@@ -1,10 +1,10 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40AlphaMax
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDerivativeQ0
-import Omega.SyncKernelWeighted.RealInput40ArityChargeZeroTempExpansion
-import Omega.SyncKernelWeighted.RealInput40GroundEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40AlphaMax
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDerivativeQ0
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeZeroTempExpansion
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40GroundEntropy
 
 namespace Omega.SyncKernelWeighted
 

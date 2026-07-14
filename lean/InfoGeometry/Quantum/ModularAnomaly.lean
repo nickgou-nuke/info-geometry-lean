@@ -19,6 +19,9 @@ import Mathlib.LinearAlgebra.Matrix.SchurComplement
 
 set_option linter.unusedSectionVars false
 
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instAddCommGroup
+attribute [-instance] InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instModule
+
 namespace InfoGeometry.Quantum.ModularAnomaly
 
 open InfoGeometry.Krein
@@ -108,7 +111,7 @@ theorem modularAnomalyGenerator_eq_commutator_shadow :
           ((U : X →L[ℝ] X).comp (M.sigma (-t) : X →L[ℝ] X)))
         (σGen.comp (U : X →L[ℝ] X) - (U : X →L[ℝ] X).comp σGen)
         0 :=
-    hasDerivAt_modularCocycle_inner (M := M) U σGen hSigma hSigmaNeg
+    hasDerivAt_modularCocycle_inner M U σGen hSigma hSigmaNeg
   have hFull :
       HasDerivAt
         (fun t => modularCocycle M U t)
@@ -143,7 +146,7 @@ theorem unified_anomaly_bridge
           ((U : X →L[ℝ] X).comp (M.sigma (-t) : X →L[ℝ] X)))
         (σGen.comp (U : X →L[ℝ] X) - (U : X →L[ℝ] X).comp σGen)
         0 :=
-    hasDerivAt_modularCocycle_inner (M := M) U σGen hFlow hFlowNeg
+    hasDerivAt_modularCocycle_inner M U σGen hFlow hFlowNeg
   have hFull :
       HasDerivAt
         (fun t => TopologicalMajoranaShadow.modularCocycle M U t)
@@ -170,7 +173,7 @@ theorem einstein_anomaly_is_modular_generator
           - (U : X →L[ℝ] X).comp (P_mp.comp P_d - P_d.comp P_mp)) := by
   subst hGen
   exact unified_anomaly_bridge
-    (M := M) (U := U) (σGen := (P_mp.comp P_d - P_d.comp P_mp)) hFlow hFlowNeg
+    M U (P_mp.comp P_d - P_d.comp P_mp) hFlow hFlowNeg
 
 end RosettaBridge
 
@@ -343,9 +346,9 @@ theorem modularAnomalyGenerator_eq_exp_commutator_shadow
         (σGen.comp (U : Xc →L[ℝ] Xc) - (U : Xc →L[ℝ] Xc).comp σGen)
         0 :=
     TopologicalMajoranaShadow.hasDerivAt_modularCocycle_inner
-      (M := topologicalShadowOfExp σGen hJConj)
-      (U := U)
-      (σGen := σGen)
+      (topologicalShadowOfExp σGen hJConj)
+      U
+      σGen
       hSigma
       hSigmaNeg
   have hFull :
@@ -470,8 +473,7 @@ private lemma smul_pow_even_of_sq_eq_id
     ∀ n : ℕ, (t • epsCLM) ^ (2 * n) = (t ^ (2 * n)) • (1 : Xc →L[ℝ] Xc)
   | 0 => by simp
   | n + 1 => by
-      have hSq' : epsCLM * epsCLM = (1 : Xc →L[ℝ] Xc) := by
-        simpa using hSq
+      have hSq' : epsCLM * epsCLM = (1 : Xc →L[ℝ] Xc) := hSq
       have hpow2 : (t • epsCLM) ^ 2 = (t ^ 2) • (1 : Xc →L[ℝ] Xc) := by
         rw [pow_two, smul_mul_assoc, mul_smul_comm, smul_smul, hSq']
         simp [pow_two]
@@ -592,7 +594,7 @@ theorem modularAnomalyGenerator_eq_concrete_commutator_shadow
       (U.symm : Xc →L[ℝ] Xc).comp
         (epsCLM.comp (U : Xc →L[ℝ] Xc) - (U : Xc →L[ℝ] Xc).comp epsCLM) := by
   apply TopologicalMajoranaShadow.modularAnomalyGenerator_eq_commutator_shadow
-    (M := M) (U := U) (σGen := epsCLM)
+    (U := U) (σGen := epsCLM)
   · simpa [hSigmaMap] using hasDerivAt_sigmaMap_zero epsCLM
   · simpa [hSigmaMap] using hasDerivAt_sigmaMap_neg_zero epsCLM
 

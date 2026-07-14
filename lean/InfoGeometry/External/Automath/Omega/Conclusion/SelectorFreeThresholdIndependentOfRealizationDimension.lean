@@ -1,4 +1,4 @@
-import Omega.Conclusion.SympowerExplicitCriticalOrder
+import InfoGeometry.External.Automath.Omega.Conclusion.SympowerExplicitCriticalOrder
 
 namespace Omega.Conclusion
 

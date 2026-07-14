@@ -1,6 +1,6 @@
-import Omega.Zeta.LocalizedSolenoidEndomorphismRing
-import Omega.Zeta.LocalizedUnitAutomorphismGroupClassification
-import Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidEndomorphismRing
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedUnitAutomorphismGroupClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
 
 namespace Omega.Zeta
 

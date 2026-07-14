@@ -48,10 +48,11 @@ kept separate from `bounded.flow : ℝ → EndH`, which is the bounded
 one-parameter operator family.
 -/
 @[rep_depth thermo]
-structure BoundedModularKMSBridge where
+structure Bridge where
   /-- Existing bounded-flow calibration owner. -/
   bounded :
-    BoundedModularFlowCalibration (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- OperatorThermodynamics-compatible flow on observables. -/
   operatorFlow :
@@ -80,9 +81,9 @@ structure BoundedModularKMSBridge where
   kms :
     KMSState EndH operatorFlow beta
 
-namespace BoundedModularKMSBridge
+namespace Bridge
 
-variable (B : BoundedModularKMSBridge (E := E) (LieAlgebra := LieAlgebra))
+variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
 
 /-- The KMS state is invariant under the operator-flow action. -/
 @[rep_depth thermo]
@@ -167,7 +168,7 @@ theorem operatorFlow_preserves_commuting_with_spectralProjector
     B.bounded.modularFlow_preserves_commuting_with_spectralProjector
       hFix A hComm t
 
-end BoundedModularKMSBridge
+end Bridge
 
 end Core
 

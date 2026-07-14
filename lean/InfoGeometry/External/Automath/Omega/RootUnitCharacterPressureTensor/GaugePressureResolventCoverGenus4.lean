@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugePressureResolventDiscIdentity
-import Omega.RootUnitCharacterPressureTensor.GaugePressureGenericGaloisS4
-import Omega.RootUnitCharacterPressureTensor.GaugePressureQuartic
+import InfoGeometry.External.Automath.Omega.Folding.GaugePressureResolventDiscIdentity
+import InfoGeometry.External.Automath.Omega.RootUnitCharacterPressureTensor.GaugePressureGenericGaloisS4
+import InfoGeometry.External.Automath.Omega.RootUnitCharacterPressureTensor.GaugePressureQuartic
 
 namespace Omega.RootUnitCharacterPressureTensor
 

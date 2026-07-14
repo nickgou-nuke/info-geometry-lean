@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ComovingBitBudget
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingBitBudget
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.Folding.FixedFiberLedgerComplexity
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.FixedFiberLedgerComplexity
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 import Mathlib.Data.Nat.Dist
 import Mathlib.Tactic
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiKreinSpectralShiftEqualsKL
+import InfoGeometry.External.Automath.Omega.Zeta.XiKreinSpectralShiftEqualsKL
 
 namespace Omega.Zeta
 

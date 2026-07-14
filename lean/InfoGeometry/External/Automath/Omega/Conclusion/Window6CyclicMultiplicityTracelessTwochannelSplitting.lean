@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6B3C3AnisotropyRankDrop
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6B3C3AnisotropyRankDrop
 
 namespace Omega.Conclusion
 

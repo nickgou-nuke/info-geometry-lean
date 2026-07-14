@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Basic
-import Omega.Folding.FoldGaugeAnomalyP9GaloisDiscriminant
-import Omega.Folding.GaugeAnomalySecondTrigonalHtSpecializationS3Disjoint
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP9GaloisDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySecondTrigonalHtSpecializationS3Disjoint
 
 namespace Omega.Conclusion
 

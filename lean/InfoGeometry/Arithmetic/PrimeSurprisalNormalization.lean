@@ -32,6 +32,18 @@ open InfoGeometry.Thermodynamics
 def normalizedWeight {α : Type*} (w : α → ℝ) (Z : ℝ) (a : α) : ℝ :=
   w a / Z
 
+lemma normalizedWeight_nonneg {α : Type*} {w : α → ℝ} {Z : ℝ}
+    (hZ : 0 ≤ Z) (hw : ∀ a, 0 ≤ w a) (a : α) :
+    0 ≤ normalizedWeight w Z a := by
+  unfold normalizedWeight
+  exact div_nonneg (hw a) hZ
+
+lemma normalizedWeight_pos {α : Type*} {w : α → ℝ} {Z : ℝ}
+    (hZ : 0 < Z) {a : α} (hw : 0 < w a) :
+    0 < normalizedWeight w Z a := by
+  unfold normalizedWeight
+  exact div_pos hw hZ
+
 /-- Surprisal associated to a normalized weight. -/
 def normalizedSurprisal {α : Type*} (w : α → ℝ) (Z : ℝ) (a : α) : ℝ :=
   -Real.log (normalizedWeight w Z a)
@@ -66,6 +78,18 @@ theorem normalizedSurprisal_eq_neg_log_weight_add_log_partition
 def primeProductWeight (q : ℕ → ℝ) (S : Finset ℕ) : ℝ :=
   S.prod q
 
+lemma primeProductWeight_pos {q : ℕ → ℝ} {S : Finset ℕ}
+    (hq : ∀ p ∈ S, 0 < q p) :
+    0 < primeProductWeight q S := by
+  unfold primeProductWeight
+  exact Finset.prod_pos hq
+
+lemma primeProductWeight_ne_zero {q : ℕ → ℝ} {S : Finset ℕ}
+    (hq : ∀ p ∈ S, q p ≠ 0) :
+    primeProductWeight q S ≠ 0 := by
+  unfold primeProductWeight
+  exact Finset.prod_ne_zero_iff.mpr hq
+
 /-- Surprisal of a finite prime-product weight. -/
 def primeProductSurprisal (q : ℕ → ℝ) (S : Finset ℕ) : ℝ :=
   -Real.log (primeProductWeight q S)
@@ -91,6 +115,11 @@ temperature `s`.
 -/
 def primeSouriauWeight (s : ℝ) (p : ℕ) : ℝ :=
   Real.exp (-s * Real.log p)
+
+lemma primeSouriauWeight_pos (s : ℝ) (p : ℕ) :
+    0 < primeSouriauWeight s p := by
+  unfold primeSouriauWeight
+  exact Real.exp_pos _
 
 /--
 For a real Souriau temperature, the finite prime-product surprisal is the
@@ -138,6 +167,11 @@ weight.
 -/
 def complexPrimeSouriauWeight (s : ℂ) (p : ℕ) : ℝ :=
   Real.exp (-(s.re) * Real.log p)
+
+lemma complexPrimeSouriauWeight_pos (s : ℂ) (p : ℕ) :
+    0 < complexPrimeSouriauWeight s p := by
+  unfold complexPrimeSouriauWeight
+  exact Real.exp_pos _
 
 /--
 Complex Souriau temperature specialization of the prime surprisal law.

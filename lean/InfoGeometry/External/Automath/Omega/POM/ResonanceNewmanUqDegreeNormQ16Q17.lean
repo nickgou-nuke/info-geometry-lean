@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.DerivedFoldRenyiDimensionTranscendenceQ4Q5Q16Q17
-import Omega.POM.ResonanceS13FrobeniusCycleCertificateQ16Q17
+import InfoGeometry.External.Automath.Omega.POM.DerivedFoldRenyiDimensionTranscendenceQ4Q5Q16Q17
+import InfoGeometry.External.Automath.Omega.POM.ResonanceS13FrobeniusCycleCertificateQ16Q17
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.SPG.NoiseBudget
+import InfoGeometry.External.Automath.Omega.SPG.NoiseBudget
 
 namespace Omega.SPG
 

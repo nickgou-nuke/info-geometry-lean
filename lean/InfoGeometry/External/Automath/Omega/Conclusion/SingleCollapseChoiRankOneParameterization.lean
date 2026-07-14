@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
+import InfoGeometry.External.Automath.Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
 
 namespace Omega.Conclusion
 

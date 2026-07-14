@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Tactic
-import Omega.POM.PartitionMobiusEventInversion
+import InfoGeometry.External.Automath.Omega.POM.PartitionMobiusEventInversion
 
 open scoped BigOperators
 

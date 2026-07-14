@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
 
 namespace Omega.GU
 

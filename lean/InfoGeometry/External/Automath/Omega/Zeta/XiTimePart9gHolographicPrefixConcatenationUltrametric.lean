@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CanonicalFixedpointFullshiftConjugacy
-import Omega.Zeta.XiTimePart9gHolographicPrefixIsometryOnLine
+import InfoGeometry.External.Automath.Omega.Conclusion.CanonicalFixedpointFullshiftConjugacy
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9gHolographicPrefixIsometryOnLine
 
 namespace Omega.Zeta
 

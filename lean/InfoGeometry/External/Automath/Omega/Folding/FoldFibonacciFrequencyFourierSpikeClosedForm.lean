@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.Core.Fib
-import Omega.Folding.FoldSpectrumFactorization
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FoldSpectrumFactorization
 
 namespace Omega.Folding
 

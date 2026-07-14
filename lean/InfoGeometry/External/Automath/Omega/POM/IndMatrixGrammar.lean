@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.IndependenceDpRadius2
+import InfoGeometry.External.Automath.Omega.POM.IndependenceDpRadius2
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.Near1Log2OverLogphiDInfinityTranscendence
+import InfoGeometry.External.Automath.Omega.Zeta.Near1Log2OverLogphiDInfinityTranscendence
 
 namespace Omega.Zeta
 

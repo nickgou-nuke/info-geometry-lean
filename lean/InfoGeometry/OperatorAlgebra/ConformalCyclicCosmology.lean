@@ -10,7 +10,7 @@ the operator-Erlangen boundary:
   transported by default;
 * projective null/conformal data survives only through an explicit crossover
   bridge;
-* hidden memory survives only when a separate recovery/residue witness is
+* hidden memory survives only when a separate recovery/residue interface is
   supplied.
 -/
 
@@ -35,7 +35,7 @@ Conformal crossover between two aeon ledgers.
 `Old` and `New` are not assumed to share an affine chart or a metric scale.
 They are related only through ambient conformal representatives in `W`.
 
-The key law says that a crossover pair is projectively identified after
+The key property says that a crossover pair is projectively identified after
 Möbius inversion of the old representative.
 -/
 structure AeonConformalCrossover
@@ -296,7 +296,7 @@ structure GenesisReentanglementBridge
     Grammar → Latent → Prop
 
   /-- The new carrier grammar is re-entangled into the new latent context. -/
-  reentanglement_True :
+  reentangles_on_crossover :
     ∀ o : Old, ∀ n : New,
       C.crossoverRel o n →
         reentangles
@@ -324,7 +324,7 @@ theorem old_grammar_reentangles
     B.reentangles
       (B.lightlikeGrammar.grammar (C.oldCarrier o))
       (B.latentOfNew n) := by
-  have hnew := B.reentanglement_True o n hcross
+  have hnew := B.reentangles_on_crossover o n hcross
   have hgrammar :
       B.lightlikeGrammar.grammar (C.newCarrier n) =
         B.lightlikeGrammar.grammar (C.oldCarrier o) :=
@@ -341,7 +341,7 @@ Optional residue bridge across a conformal crossover.
 
 This is deliberately separate from `AeonConformalCrossover`: conformal
 identification does not by itself prove that old hidden memory is recoverable
-in the new aeon.  Recovery requires this extra witness.
+in the new aeon. Recovery requires this extra interface.
 -/
 structure CrossoverMemoryRecoveryBridge
     {Old New W : Type*} [AddCommGroup W] [Module ℝ W]
@@ -359,8 +359,8 @@ structure CrossoverMemoryRecoveryBridge
   decode :
     Residue → Memory
 
-  /-- Faithful recovery law for crossover-related states. -/
-  recovery_True :
+  /-- Faithful recovery property for crossover-related states. -/
+  recovers_on_crossover :
     ∀ o : Old, ∀ n : New,
       C.crossoverRel o n →
         decode (newResidue n) = oldMemory o
@@ -381,7 +381,7 @@ theorem residue_recovers_old_memory
     {n : New}
     (hcross : C.crossoverRel o n) :
     B.decode (B.newResidue n) = B.oldMemory o :=
-  B.recovery_True o n hcross
+  B.recovers_on_crossover o n hcross
 
 end CrossoverMemoryRecoveryBridge
 

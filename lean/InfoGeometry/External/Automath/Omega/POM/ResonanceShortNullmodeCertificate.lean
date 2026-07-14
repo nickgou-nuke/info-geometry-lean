@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.HankelShortIntegerCertificate
+import InfoGeometry.External.Automath.Omega.POM.HankelShortIntegerCertificate
 
 namespace Omega.POM
 

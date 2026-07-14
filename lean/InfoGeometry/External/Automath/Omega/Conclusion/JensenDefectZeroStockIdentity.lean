@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.JensenDefectEnergyReverseklIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.JensenDefectEnergyReverseklIdentity
 
 namespace Omega.Conclusion
 

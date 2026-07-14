@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
-import Omega.POM.MultiplicityCompositionPartCountGeneralqLLT
-import Omega.POM.MultiplicityCompositionRealQPressure
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartCountGeneralqLLT
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionRealQPressure
 
 namespace Omega.POM
 

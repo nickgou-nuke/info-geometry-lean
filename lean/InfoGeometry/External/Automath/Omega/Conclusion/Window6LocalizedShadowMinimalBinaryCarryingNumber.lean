@@ -1,4 +1,4 @@
-import Omega.Conclusion.LocalizedShadowProductBinaryCarryingRank
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedShadowProductBinaryCarryingRank
 
 namespace Omega.Conclusion
 

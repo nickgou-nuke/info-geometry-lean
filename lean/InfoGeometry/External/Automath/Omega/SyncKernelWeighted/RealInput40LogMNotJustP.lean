@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.RealInput40IsobaricDriftCapacity
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40IsobaricDriftCapacity
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart50dcProjectivePressurePerronLogconvex
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart50dcProjectivePressurePerronLogconvex
 
 namespace Omega.Zeta
 

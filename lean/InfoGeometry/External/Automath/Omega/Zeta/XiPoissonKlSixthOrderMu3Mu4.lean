@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPoissonCauchyKlTwoTermExplicitCoeff
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonCauchyKlTwoTermExplicitCoeff
 
 namespace Omega.Zeta
 

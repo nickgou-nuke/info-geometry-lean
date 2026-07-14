@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Folding.KilloLeyangBranchGraphFullSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyangBranchGraphFullSpectrum
 
 namespace Omega.Folding
 

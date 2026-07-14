@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalZmReconstructW3FromSrg
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmReconstructW3FromSrg
 
 namespace Omega.Zeta
 

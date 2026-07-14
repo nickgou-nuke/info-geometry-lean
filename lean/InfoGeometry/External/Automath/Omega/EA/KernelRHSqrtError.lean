@@ -1,5 +1,5 @@
-import Omega.EA.KernelChebotarevExp
-import Omega.EA.KernelWeightedPrimeOrbit
+import InfoGeometry.External.Automath.Omega.EA.KernelChebotarevExp
+import InfoGeometry.External.Automath.Omega.EA.KernelWeightedPrimeOrbit
 import Mathlib.Tactic
 
 namespace Omega.EA

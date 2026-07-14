@@ -1,4 +1,4 @@
-import Omega.Zeta.XiLeyangImageFiveTorsionEliminationIrreducibilityDiscriminant
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangImageFiveTorsionEliminationIrreducibilityDiscriminant
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.PrefixSiteMinVisibleQuotient
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.PrefixSiteMinVisibleQuotient
 
 namespace Omega.RecursiveAddressing
 

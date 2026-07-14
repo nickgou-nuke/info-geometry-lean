@@ -211,7 +211,6 @@ theorem peirceJ_sq :
   decide
 
 
-
 theorem splitOctonion_foundation_packet :
     SplitOctonions.Multiplication.mulZ
         SplitOctonions.SymplecticFoundation.H
@@ -353,12 +352,7 @@ theorem peirceLadder_J_sq_neg_one :
   simpa [InfoGeometry.Algebra.PeirceLadder.J] using
     InfoGeometry.Algebra.Cl11Fermions.e₁_sq
 
-/--
-Finite bridge packet for the internal complex structures currently realized in-repo.
-
-It carries the actual linear equivalence data instead of an existence wrapper.
-It does not claim a full global representation identification between all these carriers.
--/
+/--\nFinite bridge packet for the internal complex structures currently realized in-repo.\n\nIt carries the actual linear equivalence data instead of an existence wrapper.\nIt does not claim a full global representation identification between all these carriers.\n-/
 structure FiniteComplexStructureBridgePacket where
   peirce_eq_cl11 :
     InfoGeometry.Algebra.PeirceLadder.J = InfoGeometry.Algebra.Cl11Fermions.e₁

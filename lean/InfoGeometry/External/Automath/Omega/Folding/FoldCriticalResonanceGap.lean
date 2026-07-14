@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Int.Fib.Lemmas
 import Mathlib.Tactic
-import Omega.Folding.FoldCollisionSpectrum
-import Omega.Folding.FoldCriticalResonanceConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstant
 
 namespace Omega.Folding
 

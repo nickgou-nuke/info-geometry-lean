@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingGeometricMixture
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingGeometricMixture
 
 namespace Omega.POM
 

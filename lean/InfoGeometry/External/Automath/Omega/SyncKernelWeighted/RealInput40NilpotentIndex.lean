@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40EssentialReduction
-import Omega.SyncKernelWeighted.RealInput40ResetWord
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40EssentialReduction
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetWord
 
 namespace Omega.SyncKernelWeighted
 

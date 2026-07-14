@@ -2,10 +2,10 @@ import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
-import Omega.Conclusion.Window6NoLinearFactorization
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6NoLinearFactorization
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
 
 namespace Omega.Conclusion
 

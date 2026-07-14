@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SPG.BoundaryGodelClarityExponentEquivalence
-import Omega.SPG.GodelDoublelogMinkowski
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelClarityExponentEquivalence
+import InfoGeometry.External.Automath.Omega.SPG.GodelDoublelogMinkowski
 
 namespace Omega.SPG
 

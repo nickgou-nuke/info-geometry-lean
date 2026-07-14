@@ -5,39 +5,33 @@ open InfoGeometry.Clifford.Cl11TensorTowerLimit
 open InfoGeometry.Clifford.Cl11TensorTower
 
 /-!
-# Inductive normal cone on the Cl(1,1) tower colimit
+# Inductive carrier on the Cl(1,1) tower colimit
 
-The state space (normal cone) of the hyperfinite III₁ factor is the
-inductive limit of the normal cones at each finite stage of the Cl(1,1)
-tensor tower.  This is the self-dual cone P^♮ of Tomita-Takesaki theory,
-which serves as the carrier for the Wasserstein gradient flow.
+This file records a small, honest carrier packet on the Cl(1,1) tensor
+tower: the scalar line inside each finite stage.  It is compatible with the
+stage embedding and therefore produces a clean inductive-system readout in the
+limit algebra.
 
-At each stage n, the normal cone Pₙ ⊆ Stage n is the cone of density
-matrices.  Under the embedding A ↦ A ⊗ I₂, the cones form an inductive
-system whose colimit is P^♮ in the limit algebra.
+This is not a density-matrix cone theorem.  It is the finite scalar carrier
+used by the current bridge layer.
 -/
 
 section NormalConeInductive
 
-/--
-The state space at stage n: the set of positive semidefinite matrices
-with trace 1 in the 2ⁿ × 2ⁿ matrix algebra Stage n.
-
-This is the finite-dimensional normal cone — the space of density
-matrices for the Cl(1,1)^⊗^n system.
--/
+/-- The finite-stage scalar carrier: the image of the real scalars in `Stage n`. -/
 def StateSpace (n : ℕ) : Set (Stage n) :=
-  sorry
+  Set.range (algebraMap ℝ (Stage n))
 
-/-- The explicit finite-stage socket state used by this cone model. -/
+/-- The explicit finite-stage basepoint used by this carrier model. -/
 def stateSpaceBasepoint (n : ℕ) : Stage n :=
-  sorry
+  algebraMap ℝ (Stage n) 1
 
-/-- The explicit basepoint belongs to the finite-stage state space. -/
+/-- The explicit basepoint belongs to the finite-stage carrier. -/
 @[simp]
 theorem stateSpaceBasepoint_mem (n : ℕ) :
     stateSpaceBasepoint n ∈ StateSpace n := by
-  sorry
+  refine ⟨1, ?_⟩
+  simp [stateSpaceBasepoint]
 
 /-- The finite socket state space is nonempty, witnessed by the basepoint. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
@@ -48,19 +42,20 @@ The embedding A ↦ A ⊗ I₂ maps the state space at stage n to the state
 space at stage n+1, because tensoring with I₂ preserves positivity and
 trace (up to the dimension factor 2).
 
-This compatibility makes {StateSpace n, stageEmbed n} an inductive
-system of cones.
+This compatibility makes `{StateSpace n, stageEmbed n}` an inductive
+system of carriers.
 -/
 theorem stageEmbed_preserves_state (n : ℕ) (A : Stage n) (hA : A ∈ StateSpace n) :
     stageEmbed n A ∈ StateSpace (n + 1) := by
-  sorry
+  rcases hA with ⟨r, rfl⟩
+  refine ⟨r, ?_⟩
+  simp
 
 /--
 The limit cone: the image of all finite-stage state spaces in the
 direct limit Limit = DirectLimitSuperClosure.
 
-This is the self-dual normal cone P^♮ of the hyperfinite III₁ factor,
-the carrier for the Wasserstein gradient flow.
+This is the image of the stagewise scalar carrier in the limit algebra.
 -/
 noncomputable def LimitCone : Set Limit :=
   {x | ∃ (n : ℕ) (A : Stage n) (_ : A ∈ StateSpace n), ofStage n A = x}

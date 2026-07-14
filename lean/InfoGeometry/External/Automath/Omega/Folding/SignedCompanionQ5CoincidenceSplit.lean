@@ -1,4 +1,4 @@
-import Omega.Folding.SignedCompanionLucasCertificate
+import InfoGeometry.External.Automath.Omega.Folding.SignedCompanionLucasCertificate
 
 namespace Omega
 

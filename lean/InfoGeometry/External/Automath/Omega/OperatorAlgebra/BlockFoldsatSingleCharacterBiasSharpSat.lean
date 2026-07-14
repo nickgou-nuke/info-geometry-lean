@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.BlockFoldsatTraceCriterion
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.BlockFoldsatTraceCriterion
 
 open scoped BigOperators
 

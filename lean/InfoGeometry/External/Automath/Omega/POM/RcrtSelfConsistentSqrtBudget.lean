@@ -1,4 +1,4 @@
-import Omega.POM.RcrtPressureReductionLaw
+import InfoGeometry.External.Automath.Omega.POM.RcrtPressureReductionLaw
 
 namespace Omega.POM
 

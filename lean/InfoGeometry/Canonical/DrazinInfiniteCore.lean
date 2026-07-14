@@ -759,52 +759,22 @@ variable [FiniteDimensional ℝ E]
 
 /--
 Finite-dimensional continuous-operator bridge into the Riesz-style package.
+The finite-dimensional Drazin existence theorem supplies the package
+existentially; this file does not choose a canonical inverse or index.
 -/
 @[rep_depth operator]
-noncomputable def rieszDrazinData_endCLM (T : E →L[ℝ] E) :
-    RieszDrazinData T := by
-  let h := DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
-      (E := E) T
-  let k := Classical.choose h
-  let hD_exists := Classical.choose_spec h
-  let D := Classical.choose hD_exists
-  have hD : Drazin.IsDrazinInverse T D k := Classical.choose_spec hD_exists
-  exact
+theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
+    ∃ h : RieszDrazinData T, Drazin.IsDrazinInverse T h.D h.k := by
+  rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
+      (E := E) T with ⟨k, D, hD⟩
+  let hpack : RieszDrazinData T :=
     { k := k
       D := D
       P := Drazin.IsDrazinInverse.projection T D
       hIsDrazin := hD
       hP := rfl }
-
-@[rep_depth operator]
-theorem rieszDrazinData_endCLM_isDrazinInverse (T : E →L[ℝ] E) :
-    Drazin.IsDrazinInverse T
-      (rieszDrazinData_endCLM (E := E) T).D
-      (rieszDrazinData_endCLM (E := E) T).k :=
-  (rieszDrazinData_endCLM (E := E) T).hIsDrazin
-
-/--
-Canonical finite-dimensional Riesz-Drazin package.
--/
-noncomputable def canonicalRieszDrazinData_endCLM (T : E →L[ℝ] E) :
-    RieszDrazinData T :=
-  rieszDrazinData_endCLM (E := E) T
-
-/-- Canonical finite-dimensional Drazin index. -/
-noncomputable def canonicalDrazinIndex_endCLM (T : E →L[ℝ] E) : ℕ :=
-  (canonicalRieszDrazinData_endCLM (E := E) T).k
-
-/-- Canonical finite-dimensional Drazin inverse. -/
-noncomputable def canonicalDrazinInverse_endCLM (T : E →L[ℝ] E) : E →L[ℝ] E :=
-  (canonicalRieszDrazinData_endCLM (E := E) T).D
-
-/-- Canonical finite-dimensional Drazin witness specification. -/
-theorem canonicalDrazinInverse_endCLM_spec (T : E →L[ℝ] E) :
-    Drazin.IsDrazinInverse T
-      (canonicalDrazinInverse_endCLM (E := E) T)
-      (canonicalDrazinIndex_endCLM (E := E) T) := by
-  simpa [canonicalDrazinInverse_endCLM, canonicalDrazinIndex_endCLM] using
-    (canonicalRieszDrazinData_endCLM (E := E) T).hIsDrazin
+  refine ⟨hpack, ?_⟩
+  simpa [hpack] using hD
 
 end FiniteDimensionalBridge
 

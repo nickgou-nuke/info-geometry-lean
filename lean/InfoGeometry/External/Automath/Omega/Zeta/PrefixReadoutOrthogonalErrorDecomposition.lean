@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Experiments.MarkovTVSampleComplexity
+import InfoGeometry.External.Automath.Omega.Experiments.MarkovTVSampleComplexity
 
 namespace Omega.Zeta
 

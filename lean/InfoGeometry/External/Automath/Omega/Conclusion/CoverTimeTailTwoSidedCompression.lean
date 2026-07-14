@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.MissingTypeFirstSecondMoments
+import InfoGeometry.External.Automath.Omega.Conclusion.MissingTypeFirstSecondMoments
 
 namespace Omega.Conclusion
 

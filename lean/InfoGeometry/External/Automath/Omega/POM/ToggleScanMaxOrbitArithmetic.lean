@@ -1,5 +1,5 @@
-import Omega.POM.ToggleScanLCMTensorization
-import Omega.POM.ToggleScanLinearMaxOrbit
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanLCMTensorization
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanLinearMaxOrbit
 
 namespace Omega.POM
 

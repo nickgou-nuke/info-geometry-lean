@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.BigOperators
-import Omega.Zeta.ClassFunctionLinearisation
+import InfoGeometry.External.Automath.Omega.Zeta.ClassFunctionLinearisation
 
 open scoped BigOperators
 

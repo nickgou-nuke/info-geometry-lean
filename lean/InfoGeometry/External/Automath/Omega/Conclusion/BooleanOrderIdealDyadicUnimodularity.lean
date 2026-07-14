@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.BooleanTwoLayerOrderIdealPrincipalMinor
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerOrderIdealPrincipalMinor
 
 namespace Omega.Conclusion
 

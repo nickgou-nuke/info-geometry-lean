@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiSolenoidPArtinMazurZeta
+import InfoGeometry.External.Automath.Omega.Zeta.XiSolenoidPArtinMazurZeta
 
 open scoped BigOperators
 

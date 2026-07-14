@@ -1,5 +1,5 @@
-import Omega.Conclusion.CofinalSparsificationSemanticCompleteness
-import Omega.Zeta.XiOracleCollapseToeplitzPsdFiniteTruncation
+import InfoGeometry.External.Automath.Omega.Conclusion.CofinalSparsificationSemanticCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.XiOracleCollapseToeplitzPsdFiniteTruncation
 
 namespace Omega.Conclusion
 

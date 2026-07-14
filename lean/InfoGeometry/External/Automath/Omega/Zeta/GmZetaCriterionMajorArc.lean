@@ -2,7 +2,7 @@ import Mathlib
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.GmFibonacciSubtowerEntrypointCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.GmFibonacciSubtowerEntrypointCriterion
 
 namespace Omega.Zeta
 

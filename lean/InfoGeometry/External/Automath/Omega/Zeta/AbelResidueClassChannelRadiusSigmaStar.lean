@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.AbelGrowthExponentCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.AbelGrowthExponentCriterion
 
 namespace Omega.Zeta
 

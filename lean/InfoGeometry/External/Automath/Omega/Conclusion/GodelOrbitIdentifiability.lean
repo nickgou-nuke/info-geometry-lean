@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterGodelOrbitSuperexpLoglaw
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterGodelOrbitSuperexpLoglaw
 
 namespace Omega.Conclusion
 

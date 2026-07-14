@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.POM.A4TCyclotomicAdjacencyInjection
-import Omega.POM.A4TAdeIntersectionTMinpolyDiscriminant
-import Omega.POM.A4TNewmanOcticFieldArithmetic
-import Omega.POM.E8SquareSpectrumCollapseTrace7
+import InfoGeometry.External.Automath.Omega.POM.A4TCyclotomicAdjacencyInjection
+import InfoGeometry.External.Automath.Omega.POM.A4TAdeIntersectionTMinpolyDiscriminant
+import InfoGeometry.External.Automath.Omega.POM.A4TNewmanOcticFieldArithmetic
+import InfoGeometry.External.Automath.Omega.POM.E8SquareSpectrumCollapseTrace7
 
 namespace Omega.POM
 

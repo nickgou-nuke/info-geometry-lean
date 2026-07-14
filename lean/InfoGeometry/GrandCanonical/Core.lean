@@ -80,6 +80,17 @@ lemma gibbsWeight_sum_one
                 (a := ∑ y : α, Real.exp (-β * params.energy y)))
     _ = 1 := by exact div_self hZne
 
+lemma gibbsWeight_le_one
+    (params : GrandCanonicalParams α) (β : ℝ) (x : α) :
+    gibbsWeight params β x ≤ 1 := by
+  have hnonneg : ∀ y : α, 0 ≤ gibbsWeight params β y :=
+    fun y => gibbsWeight_nonneg params β y
+  have hsum : ∑ y : α, gibbsWeight params β y = 1 :=
+    gibbsWeight_sum_one params β
+  have hx_le_sum : gibbsWeight params β x ≤ ∑ y : α, gibbsWeight params β y := by
+    exact Finset.single_le_sum (fun y _hy => hnonneg y) (Finset.mem_univ x)
+  simpa [hsum] using hx_le_sum
+
 /-- Mean energy under the Gibbs distribution. -/
 noncomputable def mean (params : GrandCanonicalParams α) (β : ℝ) : ℝ :=
   ∑ x, gibbsWeight params β x * params.energy x
@@ -478,6 +489,17 @@ lemma gibbsWeightGC_sum_one
                 (f := fun x => Real.exp (-β * shiftedEnergy params μ x))
                 (a := ∑ y : α, Real.exp (-β * shiftedEnergy params μ y)))
     _ = 1 := by exact div_self hZne
+
+lemma gibbsWeightGC_le_one
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    gibbsWeightGC params β μ x ≤ 1 := by
+  have hnonneg : ∀ y : α, 0 ≤ gibbsWeightGC params β μ y :=
+    fun y => gibbsWeightGC_nonneg params β μ y
+  have hsum : ∑ y : α, gibbsWeightGC params β μ y = 1 :=
+    gibbsWeightGC_sum_one params β μ
+  have hx_le_sum : gibbsWeightGC params β μ x ≤ ∑ y : α, gibbsWeightGC params β μ y := by
+    exact Finset.single_le_sum (fun y _hy => hnonneg y) (Finset.mem_univ x)
+  simpa [hsum] using hx_le_sum
 
 /-- Mean value of `E - μN` under the grand-canonical Gibbs state. -/
 noncomputable def meanShift

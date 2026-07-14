@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
-import Omega.Conclusion.PowerDivergenceSecondorderRecurrence
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
+import InfoGeometry.External.Automath.Omega.Conclusion.PowerDivergenceSecondorderRecurrence
 
 namespace Omega.Conclusion
 
@@ -9,8 +9,15 @@ noncomputable section
 
 /-- Concrete wrapper for recovering the golden constants and the full power-divergence family from
 the single `χ²` baseline constant. -/
+def conclusion_chi2_recovers_full_power_divergence_family_certificate : Prop :=
+  0 < Real.sqrt 5 ∧ 0 < Real.goldenRatio
+
+/-- Concrete wrapper for recovering the golden constants and the full power-divergence family from
+the single `χ²` baseline constant. -/
 structure conclusion_chi2_recovers_full_power_divergence_family_data where
-  conclusion_chi2_recovers_full_power_divergence_family_witness : Unit := ()
+    conclusion_chi2_recovers_full_power_divergence_family_witness :
+    conclusion_chi2_recovers_full_power_divergence_family_certificate := by
+      constructor <;> positivity
 
 /-- The distinguished `χ²` baseline constant from the binary escort package. -/
 noncomputable def conclusion_chi2_recovers_full_power_divergence_family_chi2_constant : ℝ :=

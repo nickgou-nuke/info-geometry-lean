@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberMultiplicityTraceMoments
 
 open scoped BigOperators
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Dynamics.PeriodicPts.Lemmas
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
 
 namespace Omega.Zeta
 

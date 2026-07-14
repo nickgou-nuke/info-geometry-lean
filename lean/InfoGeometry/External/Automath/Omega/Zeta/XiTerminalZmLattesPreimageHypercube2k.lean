@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Core.WalshStokesSingleton
+import InfoGeometry.External.Automath.Omega.Core.WalshStokesSingleton
 
 namespace Omega.Zeta
 

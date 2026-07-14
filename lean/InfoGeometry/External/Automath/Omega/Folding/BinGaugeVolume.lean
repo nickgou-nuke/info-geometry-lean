@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Tactic
-import Omega.Folding.BinGaugeVolumeStirlingSecondOrder
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolumeStirlingSecondOrder
 
 open scoped BigOperators
 

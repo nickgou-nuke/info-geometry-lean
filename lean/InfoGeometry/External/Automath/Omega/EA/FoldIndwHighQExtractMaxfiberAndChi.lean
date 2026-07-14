@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Max
 import Mathlib.Tactic
-import Omega.EA.ChiLayeredFiberSpectrumRecovery
+import InfoGeometry.External.Automath.Omega.EA.ChiLayeredFiberSpectrumRecovery
 
 namespace Omega.EA
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.PickPoissonInversePrincipalMinorsJacobi
-import Omega.Zeta.XiToeplitzNegativeSpectrumExponentialRate
+import InfoGeometry.External.Automath.Omega.Zeta.PickPoissonInversePrincipalMinorsJacobi
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzNegativeSpectrumExponentialRate
 
 open Filter
 open scoped BigOperators Topology

@@ -89,6 +89,13 @@ theorem weight_decomposition_z (X : Herm2x2Os) :
     (weightComponent X (-1))) (weightComponent X (-2))).z = X.z := by
   simp [add, weightComponent, zero]
 
+/-- The sum of all five weight components recovers the original element. -/
+theorem weight_decomposition (X : Herm2x2Os) :
+    add (add (add (add (weightComponent X 2) (weightComponent X 1)) (weightComponent X 0))
+    (weightComponent X (-1))) (weightComponent X (-2)) = X := by
+  cases X
+  simp [add, weightComponent, zero]
+
 /-! ## 3. Determinant interaction with weight decomposition -/
 
 theorem det_pure_plus2 (xi_plus : ℚ) :
@@ -129,6 +136,13 @@ inductive DetStratum (X : Herm2x2Os) : Type _ where
   | isZero    : X.xp = 0 → X.xm = 0 → (let z := X.z; z.a = 0 ∧ z.b = 0 ∧ z.x0 = 0 ∧ z.x1 = 0 ∧ z.x2 = 0 ∧ z.y0 = 0 ∧ z.y1 = 0 ∧ z.y2 = 0) → DetStratum X
   | isNull    : X.det = 0 → DetStratum X
   | isGeneric : X.det ≠ 0 → DetStratum X
+
+/-- Every element belongs to the null or generic determinant stratum. -/
+def det_stratum_exists (X : Herm2x2Os) : DetStratum X :=
+  if h : X.det = 0 then
+    DetStratum.isNull h
+  else
+    DetStratum.isGeneric h
 
 /--
 Refined orbit data for `J₂(𝕆ₛ)`: the determinant stratum together with

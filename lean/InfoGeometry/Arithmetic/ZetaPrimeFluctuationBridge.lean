@@ -13,11 +13,10 @@ The proved content is algebraic:
 * `u = σ - 1/2` is the scale-normal coordinate;
 * the critical mirror normal projector is `(u, 0)`;
 * if a zero is on the critical line, its normal projector vanishes;
-* in an explicit-formula packet, a supplied RH-centered-zero law re-exports the
-  supplied square-root prime-counting error law.
+* a critical wave has no scale-normal envelope.
 
 This file does not prove the Riemann explicit formula, RH, or any topological
-anomaly mechanism.  Those are represented as explicit hypothesis fields.
+anomaly mechanism.
 -/
 
 noncomputable section
@@ -105,7 +104,7 @@ theorem tangentProjection_eq_coord_of_critical
 
 end CenteredZeroReadout
 
-/-! ## Prime-fluctuation envelope packets -/
+/-! ## Prime-fluctuation envelope -/
 
 /--
 Algebraic envelope readout of a single explicit-formula wave.
@@ -150,48 +149,5 @@ theorem fullWave_eq_baseline_mul_phase_of_critical
   simp
 
 end PrimeWaveEnvelope
-
-/--
-Explicit-formula stability packet.
-
-The analytic work is deliberately explicit:
-
-* the explicit-formula bridge from zeta zeros to Chebyshev/prime-counting
-  fluctuations is not proved here;
-* `all_zeros_critical` supplies the RH-style centered-zero condition;
-* `squareRootEnvelopeLaw` supplies the resulting square-root error law.
--/
-structure ExplicitFormulaStabilityPacket where
-  zeros : Type*
-  zeroReadout : zeros → CenteredZeroReadout
-  all_zeros_critical : ∀ ρ : zeros, (zeroReadout ρ).OnCriticalLine
-  squareRootEnvelopeLaw : RHPrimeCountingErrorLaw
-  ExplicitFormulaHolds : Prop
-  explicit_formula_law : ExplicitFormulaHolds
-
-namespace ExplicitFormulaStabilityPacket
-
-/-- Every zero in the packet has zero normal projection. -/
-theorem normalProjection_vanishes
-    (P : ExplicitFormulaStabilityPacket) (ρ : P.zeros) :
-    (P.zeroReadout ρ).normalProjection = zero :=
-  CenteredZeroReadout.normalProjection_eq_zero_of_critical
-    (P.zeroReadout ρ) (P.all_zeros_critical ρ)
-
-/-- Debt surface for the missing explicit-formula theorem. -/
-theorem explicitFormula_holds (P : ExplicitFormulaStabilityPacket) :
-    P.ExplicitFormulaHolds :=
-  P.explicit_formula_law
-
-/--
-The packet re-exports the supplied RH-style square-root prime-counting error
-law.  This is the formal statement corresponding to “all fluctuation waves have
-the square-root envelope,” conditional on the packet's analytic inputs.
--/
-theorem squareRootEnvelope_holds (P : ExplicitFormulaStabilityPacket) :
-    RHPrimeCountingErrorLaw :=
-  P.squareRootEnvelopeLaw
-
-end ExplicitFormulaStabilityPacket
 
 end InfoGeometry.Arithmetic.ZetaPrimeFluctuationBridge

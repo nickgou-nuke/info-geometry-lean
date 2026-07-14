@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Group.Units.Basic
 import Mathlib.Algebra.Module.Basic
+import InfoGeometry.Twistor.PenroseTwistor
 
 /-!
 # Twistor incidence (abstract projective interface)
@@ -50,5 +51,30 @@ def Incidence (I : TwistorIncidenceDatum 𝕜 T D) : DualTwistor I → T → Pro
   I.incidence_scale_right u ξ Z
 
 end TwistorIncidenceDatum
+
+/-! ## Concrete Penrose null-projective owner
+
+The projective null twistor carrier is provided by the canonical Penrose
+twistor owner.  The explicit witness below is the nonzero vector
+`(1, 0, 1, 0)`, which is null for the `(2,2)` helicity form.
+-/
+
+abbrev PenroseProjectiveNullTwistor : Type :=
+  InfoGeometry.Twistor.PenroseTwistor.NullTwistorSpace
+
+noncomputable def penroseProjectiveNullTwistor_nonempty :
+    Nonempty PenroseProjectiveNullTwistor := by
+  let z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier :=
+    fun i => if i = 0 then 1 else if i = 2 then 1 else 0
+  have hz : z ≠ 0 := by
+    intro h
+    have h0 := congrFun h 0
+    simp [z] at h0
+  have hnull : InfoGeometry.Twistor.PenroseTwistor.helicity z = 0 := by
+    rw [InfoGeometry.Twistor.PenroseTwistor.helicity,
+      InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply]
+    norm_num [z, Fin.sum_univ_succ]
+    simp [z]
+  exact ⟨InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull⟩
 
 end InfoGeometry.Projective.Twistor

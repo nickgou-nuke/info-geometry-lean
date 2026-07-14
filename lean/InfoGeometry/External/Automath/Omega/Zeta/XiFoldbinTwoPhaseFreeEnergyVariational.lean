@@ -1,4 +1,4 @@
-import Omega.Zeta.XiJensenEntropyRegularizedVariational
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenEntropyRegularizedVariational
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic

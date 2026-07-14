@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppHorizonCoeffLocal
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonCoeffLocal
 
 namespace Omega.UnitCirclePhaseArithmetic
 

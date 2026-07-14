@@ -1,4 +1,4 @@
-import Omega.Topos.IntrinsicPureExtInitiality
+import InfoGeometry.External.Automath.Omega.Topos.IntrinsicPureExtInitiality
 
 namespace Omega.Topos
 

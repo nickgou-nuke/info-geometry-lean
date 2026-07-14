@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldMellinEscortSemigroup
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldMellinEscortSemigroup
 
 namespace Omega.Conclusion
 

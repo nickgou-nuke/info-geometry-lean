@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6Histogram64To21
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6Histogram64To21
 
 namespace Omega.GU
 

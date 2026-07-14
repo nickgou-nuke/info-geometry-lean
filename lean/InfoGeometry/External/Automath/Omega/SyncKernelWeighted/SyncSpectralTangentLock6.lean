@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.SyncKernelWeighted.RateCenterPerronDegreeMultiple6
-import Omega.SyncKernelWeighted.SyncSpectralTangentLock
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RateCenterPerronDegreeMultiple6
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SyncSpectralTangentLock
 
 namespace Omega.SyncKernelWeighted
 

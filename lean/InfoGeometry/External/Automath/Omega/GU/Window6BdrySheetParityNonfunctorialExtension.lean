@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.FreeInvolutionCount
+import InfoGeometry.External.Automath.Omega.GU.FreeInvolutionCount
 
 namespace Omega.GU
 

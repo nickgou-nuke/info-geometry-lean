@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberParityMod3
-import Omega.POM.ToggleScanSignGeneralFiber
+import InfoGeometry.External.Automath.Omega.POM.FiberParityMod3
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanSignGeneralFiber
 
 namespace Omega.POM
 

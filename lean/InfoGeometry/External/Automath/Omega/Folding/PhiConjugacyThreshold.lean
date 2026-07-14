@@ -1,4 +1,4 @@
-import Omega.Folding.PhiSlidingBlockCode
+import InfoGeometry.External.Automath.Omega.Folding.PhiSlidingBlockCode
 import Mathlib.Tactic
 
 namespace Omega.Folding

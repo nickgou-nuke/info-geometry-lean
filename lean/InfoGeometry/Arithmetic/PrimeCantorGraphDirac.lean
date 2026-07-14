@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Arithmetic.PrimeMajoranaCARGate
+import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 

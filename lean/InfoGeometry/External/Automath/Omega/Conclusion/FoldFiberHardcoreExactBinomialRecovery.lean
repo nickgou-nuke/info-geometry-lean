@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldFiberHardcoreAnnealedConservation
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldFiberHardcoreAnnealedConservation
 
 namespace Omega.Conclusion
 

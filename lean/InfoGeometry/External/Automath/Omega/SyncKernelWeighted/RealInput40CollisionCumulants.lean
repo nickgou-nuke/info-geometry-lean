@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
-import Omega.Zeta.ArityCollisionQuadraticClosed
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
+import InfoGeometry.External.Automath.Omega.Zeta.ArityCollisionQuadraticClosed
 
 namespace Omega.SyncKernelWeighted
 

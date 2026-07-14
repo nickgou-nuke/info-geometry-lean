@@ -1,6 +1,6 @@
-import Omega.Combinatorics.PathIndSet
-import Omega.Zeta.XiFoldFiberSquarefreePrimeExternalization
-import Omega.Zeta.XiSquarefreePrimeSupportMinGrowth
+import InfoGeometry.External.Automath.Omega.Combinatorics.PathIndSet
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldFiberSquarefreePrimeExternalization
+import InfoGeometry.External.Automath.Omega.Zeta.XiSquarefreePrimeSupportMinGrowth
 
 namespace Omega.Zeta
 

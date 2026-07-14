@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.KLLedgerTelescope
+import InfoGeometry.External.Automath.Omega.POM.KLLedgerTelescope
 
 namespace Omega.POM
 

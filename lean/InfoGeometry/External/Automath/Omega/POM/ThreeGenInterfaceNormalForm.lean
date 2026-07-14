@@ -1,4 +1,4 @@
-import Omega.POM.ThreeGenTermination
+import InfoGeometry.External.Automath.Omega.POM.ThreeGenTermination
 
 namespace Omega.POM
 

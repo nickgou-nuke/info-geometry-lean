@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.RankonePhasePrimeFiber
+import InfoGeometry.External.Automath.Omega.CircleDimension.RankonePhasePrimeFiber
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Kronecker.W1DenominatorClosedForm
+import InfoGeometry.External.Automath.Omega.Kronecker.W1DenominatorClosedForm
 
 namespace Omega.Kronecker
 

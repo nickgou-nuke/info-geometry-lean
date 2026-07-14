@@ -1,4 +1,4 @@
-import Omega.Zeta.XiNullStatisticalRadius
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullStatisticalRadius
 
 namespace Omega.Zeta
 

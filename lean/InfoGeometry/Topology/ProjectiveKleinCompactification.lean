@@ -68,22 +68,22 @@ theorem projective_identifies_central_sign :
 /-- The nontrivial central sign squares to the identity. -/
 theorem central_sign_square :
     minusI2 * minusI2 = I2 := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [minusI2, I2]
 
 /-- The twist generator is its own inverse. -/
 theorem twistA_square :
     twistA * twistA = I2 := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [twistA, I2]
 
 /-- The parabolic inverse is exact. -/
 theorem parabolicB_mul_inv :
     parabolicB * parabolicBInv = I2 := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [parabolicB, parabolicBInv, I2]
 
 /-- The inverse parabolic is exact on the other side as well. -/
 theorem parabolicB_inv_mul :
     parabolicBInv * parabolicB = I2 := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [parabolicB, parabolicBInv, I2]
 
 /--
 The orientation-reversing loop conjugates the parabolic translation into its
@@ -91,12 +91,12 @@ inverse. This is the finite algebraic form of the Klein-bottle glide twist.
 -/
 theorem twist_conjugates_parabolic :
     twistA * parabolicB * twistA = parabolicBInv := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [twistA, parabolicB, parabolicBInv]
 
 /-- Klein bottle presentation relation `a b a^{-1} b = I`, using `a^{-1}=a`. -/
 theorem klein_bottle_relation :
     twistA * parabolicB * twistA * parabolicB = I2 := by
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [twistA, parabolicB, I2]
 
 /-- The two order-two central signs are projectively equal. -/
 theorem projective_relation_respects_central_square :
@@ -114,7 +114,7 @@ theorem mobius_refocus_vector (t : ℚ) :
 theorem mobius_square_projectively_identity :
     ProjectivelyEqual (mobiusS * mobiusS) I2 := by
   right
-  native_decide
+  ext i j; fin_cases i <;> fin_cases j <;> norm_num [mobiusS, I2]
 
 /--
 Compact finite packet: the formula-level Klein projective data reduce to the

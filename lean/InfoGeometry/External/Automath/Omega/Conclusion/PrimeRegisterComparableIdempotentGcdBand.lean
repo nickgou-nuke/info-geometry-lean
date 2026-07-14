@@ -1,4 +1,4 @@
-import Omega.Zeta.XiChainIdempotentStarSaturationComparableGcd
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainIdempotentStarSaturationComparableGcd
 
 namespace Omega.Conclusion
 

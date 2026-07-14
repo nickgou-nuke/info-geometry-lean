@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiWindow6B3C3TightFrameFourthMomentNonsimilarity
+import InfoGeometry.External.Automath.Omega.Zeta.XiWindow6B3C3TightFrameFourthMomentNonsimilarity
 
 namespace Omega.Zeta
 

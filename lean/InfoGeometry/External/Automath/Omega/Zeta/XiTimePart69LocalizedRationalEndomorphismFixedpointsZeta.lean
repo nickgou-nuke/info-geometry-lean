@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedSolenoidEndomorphismRing
-import Omega.Zeta.XiLocalizedSolenoidPeriodicPointFormula
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedSolenoidEndomorphismRing
+import InfoGeometry.External.Automath.Omega.Zeta.XiLocalizedSolenoidPeriodicPointFormula
 
 namespace Omega.Zeta
 

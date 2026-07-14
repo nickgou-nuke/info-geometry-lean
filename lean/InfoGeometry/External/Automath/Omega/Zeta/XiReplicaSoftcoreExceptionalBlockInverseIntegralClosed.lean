@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Tactic
-import Omega.POM.ReplicaSoftcoreBinomialKernelInverse
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreBinomialKernelInverse
 
 namespace Omega.Zeta
 

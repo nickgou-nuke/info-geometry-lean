@@ -1,6 +1,6 @@
-import Omega.POM.DiagonalRateAcceptRefreshSSTPGF
-import Omega.POM.DiagonalRateRefreshAcceptStrongStationaryTime
-import Omega.POM.DiagonalRateResolventEntryClosedForm
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSSTPGF
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshAcceptStrongStationaryTime
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateResolventEntryClosedForm
 
 namespace Omega.POM
 

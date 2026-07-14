@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.OperatorAlgebra.FoldInfoNCEMILimit
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCEMILimit
 
 open Filter Topology
 

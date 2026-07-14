@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ActivatedBranchSimplePole
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ActivatedBranchSimplePole
 
 namespace Omega.SyncKernelWeighted
 

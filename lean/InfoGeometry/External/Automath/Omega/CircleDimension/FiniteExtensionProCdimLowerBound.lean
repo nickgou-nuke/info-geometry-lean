@@ -1,5 +1,5 @@
-import Omega.CircleDimension.CircleDim
-import Omega.CircleDimension.FiniteFiberMinPrimeRegisterAxes
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteFiberMinPrimeRegisterAxes
 
 namespace Omega.CircleDimension
 

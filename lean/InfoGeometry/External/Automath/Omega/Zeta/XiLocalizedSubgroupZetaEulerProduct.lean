@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedFiniteIndexLatticeGcdLcmMobius
-import Omega.Zeta.LocalizedQuotientTorsionZetaEulerProduct
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedFiniteIndexLatticeGcdLcmMobius
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientTorsionZetaEulerProduct
 
 namespace Omega.Zeta
 

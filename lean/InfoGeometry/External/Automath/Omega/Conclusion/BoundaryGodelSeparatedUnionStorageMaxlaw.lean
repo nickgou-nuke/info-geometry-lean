@@ -1,4 +1,4 @@
-import Omega.Conclusion.BoundaryGodelSeparatedUnionAdhesionMaxlaw
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryGodelSeparatedUnionAdhesionMaxlaw
 
 namespace Omega.Conclusion
 

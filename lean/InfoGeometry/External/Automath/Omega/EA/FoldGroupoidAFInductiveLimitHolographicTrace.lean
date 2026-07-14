@@ -1,5 +1,5 @@
-import Omega.Conclusion.FoldbinGroupoidTracialSimplex
-import Omega.EA.Wedderburn
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinGroupoidTracialSimplex
+import InfoGeometry.External.Automath.Omega.EA.Wedderburn
 
 namespace Omega.EA
 

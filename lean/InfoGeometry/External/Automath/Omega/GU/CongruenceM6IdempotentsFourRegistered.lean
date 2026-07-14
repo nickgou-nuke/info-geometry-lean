@@ -1,4 +1,4 @@
-import Omega.GU.CongruenceM6IdempotentsFour
+import InfoGeometry.External.Automath.Omega.GU.CongruenceM6IdempotentsFour
 
 namespace Omega.GU
 

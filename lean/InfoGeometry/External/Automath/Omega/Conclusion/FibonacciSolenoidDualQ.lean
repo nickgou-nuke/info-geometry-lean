@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Tactic
-import Omega.Zeta.GmFibonacciModuliCofinal
+import InfoGeometry.External.Automath.Omega.Zeta.GmFibonacciModuliCofinal
 
 namespace Omega.Conclusion
 

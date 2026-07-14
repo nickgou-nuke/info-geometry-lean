@@ -1,4 +1,4 @@
-import Omega.SPG.WeightedBoundaryDecomposition
+import InfoGeometry.External.Automath.Omega.SPG.WeightedBoundaryDecomposition
 
 open scoped BigOperators
 

@@ -1,4 +1,4 @@
-import Omega.Combinatorics.PathIndSet
+import InfoGeometry.External.Automath.Omega.Combinatorics.PathIndSet
 
 namespace Omega.Zeta
 

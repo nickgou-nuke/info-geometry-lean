@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.A4tUnitCircleSpectrumClassification
+import InfoGeometry.External.Automath.Omega.POM.A4tUnitCircleSpectrumClassification
 
 namespace Omega.POM
 

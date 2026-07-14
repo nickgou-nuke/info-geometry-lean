@@ -1,4 +1,5 @@
-import InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 
 /-!
 # InfoGeometry.Canonical.PrimeMertensDefectBoundary
@@ -10,7 +11,8 @@ magnetization estimate and the defect-free Lee--Yang limit packet.
 
 It does not prove Mertens bounds, the prime number theorem, a central limit
 theorem, a large-deviation principle, Lee--Yang stability, or RH.  Those claims
-remain explicit witness fields.
+must enter through theorem-backed hypotheses in the concrete owner files that
+prove them.
 -/
 
 noncomputable section
@@ -19,12 +21,11 @@ namespace InfoGeometry.Canonical.PrimeMertensDefectBoundary
 
 open scoped BigOperators
 
-open InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 
 /--
-Witness packet for the Mertens/random-walk boundary.
+Data packet for the Mertens/random-walk boundary.
 
 `mobiusMagnetization` is the macroscopic signed arithmetic readout, such as a
 Mertens-type partial sum.  `randomWalkScale` is the comparison scale, such as a
@@ -43,9 +44,6 @@ structure MertensDefectBoundary where
 
   /-- Predicate for exponents that would represent macroscopic defects. -/
   defectExponent : ℝ → Prop
-
-  /-- Guardrail: this boundary packet is not a proof of RH or Mertens. -/
-  no_unconditional_RH_claim_guard : Type
 
 namespace MertensDefectBoundary
 
@@ -107,7 +105,7 @@ structure MertensDefectReadout (D : MobiusMertensData) where
   freeEnergyGap : ℝ
 
 /--
-Large-deviation boundary witness for the Mertens defect.
+Conditional large-deviation boundary for the Mertens defect.
 
 `entropyDominatesDefect` is the formal socket for an LDP estimate saying that
 the entropy barrier beats the parity-defect cost.  The analytic implication from

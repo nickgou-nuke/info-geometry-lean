@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega.POM
 

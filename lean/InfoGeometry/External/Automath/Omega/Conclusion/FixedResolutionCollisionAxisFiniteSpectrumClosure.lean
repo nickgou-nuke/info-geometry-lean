@@ -1,7 +1,7 @@
-import Omega.Conclusion.CofinalPrimeSupportNoUniformBoundedRankLedger
-import Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
-import Omega.Conclusion.FixedresolutionTopdownPeeling
-import Omega.POM.FiberSpectrumFiniteReconstructionSharp
+import InfoGeometry.External.Automath.Omega.Conclusion.CofinalPrimeSupportNoUniformBoundedRankLedger
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedresolutionTopdownPeeling
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumFiniteReconstructionSharp
 
 namespace Omega.Conclusion
 

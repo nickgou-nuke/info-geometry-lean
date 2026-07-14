@@ -29,6 +29,22 @@ def associatorDefect (x y z : InfoGeometry.Canonical.ZornMatrix R) :
     InfoGeometry.Canonical.ZornMatrix R :=
   (x * y) * z - x * (y * z)
 
+/-- Left-regular action on the canonical Zorn carrier.
+
+This is an operator representation of multiplication, not an algebra
+homomorphism: its multiplication defect is the negative associator. -/
+def leftRegular (z : InfoGeometry.Canonical.ZornMatrix R) :
+    InfoGeometry.Canonical.ZornMatrix R →
+      InfoGeometry.Canonical.ZornMatrix R :=
+  fun x => z * x
+
+theorem leftRegular_mul_defect
+    (z w x : InfoGeometry.Canonical.ZornMatrix R) :
+    leftRegular z (leftRegular w x) -
+      leftRegular (z * w) x =
+        -associatorDefect z w x := by
+  simp [leftRegular, associatorDefect, sub_eq_add_neg]
+
 @[simp]
 theorem associatorDefect_apply
     (x y z : InfoGeometry.Canonical.ZornMatrix R) :

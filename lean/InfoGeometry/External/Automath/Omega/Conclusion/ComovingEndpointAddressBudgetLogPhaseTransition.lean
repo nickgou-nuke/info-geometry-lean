@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ComovingEndpointAddressBudgetPhaseTransition
+import InfoGeometry.External.Automath.Omega.Conclusion.ComovingEndpointAddressBudgetPhaseTransition
 
 namespace Omega.Conclusion
 

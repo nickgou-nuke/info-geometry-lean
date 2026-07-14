@@ -2,7 +2,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.RenyiHalfHellingerTensorAdditivity
+import InfoGeometry.External.Automath.Omega.POM.RenyiHalfHellingerTensorAdditivity
 
 open scoped BigOperators
 open intervalIntegral

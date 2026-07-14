@@ -8,7 +8,7 @@ which reversible modular motion stays on an entropy/Weyl leaf, while a
 dissipative JKO-style step is supplied as a transverse law.
 
 It does not construct coadjoint orbits, symplectic forms, KMS states, Tomita-
-Takesaki modular groups, or global Souriau thermodynamics.  Those claims remain
+Takesaki modular groups, or global Souriau thermodynamics. Those claims remain
 behind explicit witness fields or the existing canonical coadjoint-orbit
 theorem packets.
 -/
@@ -25,14 +25,12 @@ open InfoGeometry.Thermodynamics
 
 /-! ## 1. Abstract Souriau leaves -/
 
-/--
-A finite/projective Souriau leaf.
+/-- A finite/projective Souriau leaf.
 
 The leaf is represented only by the data needed by the current sidecar:
 membership, an entropy readout, and a Weyl-scale readout which are constant on
-the carrier.  This is not a construction of a coadjoint orbit or a symplectic
-form.
--/
+the carrier. This is not a construction of a coadjoint orbit or a symplectic
+form. -/
 structure SymplecticLeaf
     (State : Type*) where
   /-- States belonging to the leaf. -/
@@ -83,12 +81,10 @@ end SymplecticLeaf
 
 /-! ## 2. On-leaf modular flow -/
 
-/--
-Reversible on-leaf flow.
+/-- Reversible on-leaf flow.
 
-The field `preserves_leaf` is the only geometric law required here.  Entropy and
-Weyl-scale conservation are then consequences of the leaf constants.
--/
+The field `preserves_leaf` is the only geometric law required here. Entropy and
+Weyl-scale conservation are then consequences of the leaf constants. -/
 structure OnLeafModularFlow
     {State : Type*}
     (L : SymplecticLeaf State) where
@@ -110,27 +106,25 @@ theorem entropy_preserved
     (t : ℝ)
     {x : State}
     (hx : x ∈ L.carrier) :
-    L.entropyReadout (F.flow t x) = L.entropyReadout x :=
-  L.entropy_eq_of_mem (F.preserves_leaf t hx) hx
+    L.entropyReadout (F.flow t x) = L.entropyReadout x := by
+  exact L.entropy_eq_of_mem (F.preserves_leaf t hx) hx
 
 /-- Weyl scale is preserved by any supplied on-leaf flow. -/
 theorem weylScale_preserved
     (t : ℝ)
     {x : State}
     (hx : x ∈ L.carrier) :
-    L.weylScaleReadout (F.flow t x) = L.weylScaleReadout x :=
-  L.weylScale_eq_of_mem (F.preserves_leaf t hx) hx
+    L.weylScaleReadout (F.flow t x) = L.weylScaleReadout x := by
+  exact L.weylScale_eq_of_mem (F.preserves_leaf t hx) hx
 
 end OnLeafModularFlow
 
 /-! ## 3. Shape readouts and transverse JKO laws -/
 
-/--
-A readout which is constant on a Souriau leaf.
+/-- A readout which is constant on a Souriau leaf.
 
 This is the sidecar form of an invariant Itakura-Saito / shape-core readout.
-It is deliberately weaker than a global metric theorem.
--/
+It is deliberately weaker than a global metric theorem. -/
 structure LeafInvariantReadout
     {State : Type*}
     (L : SymplecticLeaf State) where
@@ -155,18 +149,16 @@ theorem readout_preserved_by_onLeafFlow
     (t : ℝ)
     {x : State}
     (hx : x ∈ L.carrier) :
-    R.readout (F.flow t x) = R.readout x :=
-  R.invariant_on_leaf (F.preserves_leaf t hx) hx
+    R.readout (F.flow t x) = R.readout x := by
+  exact R.invariant_on_leaf (F.preserves_leaf t hx) hx
 
 end LeafInvariantReadout
 
-/--
-Witness-gated transverse JKO-style step.
+/-- Witness-gated transverse JKO-style step.
 
-The sidecar does not prescribe what the transverse law is.  A concrete model may
+The sidecar does not prescribe what the transverse law is. A concrete model may
 use energy decrease, divergence decrease, entropy increase, or another
-projective/Weyl criterion, but it must supply the law explicitly.
--/
+projective/Weyl criterion, but it must supply the law explicitly. -/
 structure TransverseJKOFlow
     {State : Type*}
     (L : SymplecticLeaf State) where
@@ -197,16 +189,14 @@ end TransverseJKOFlow
 
 /-! ## 4. Closure-invariant leaves -/
 
-/--
-A closure/Tomita-style involution that preserves a Souriau leaf.
+/-- A closure/Tomita-style involution that preserves a Souriau leaf.
 
 This reuses the existing abstract `ClosureInvolution` and does not introduce a
-new modular group.
--/
+new modular group. -/
 structure ClosureInvariantLeaf
     {State : Type*}
     (L : SymplecticLeaf State) where
-  /-- Supplied closure/Tomita/Möbius involution. -/
+  /-- Supplied closure/Tomita/Mobius involution. -/
   closure : ClosureInvolution State
 
   /-- The closure sends leaf points to leaf points. -/
@@ -223,26 +213,24 @@ variable (C : ClosureInvariantLeaf L)
 theorem entropy_theta_eq
     {x : State}
     (hx : x ∈ L.carrier) :
-    L.entropyReadout (C.closure.theta x) = L.entropyReadout x :=
-  L.entropy_eq_of_mem (C.closure_preserves_leaf hx) hx
+    L.entropyReadout (C.closure.theta x) = L.entropyReadout x := by
+  exact L.entropy_eq_of_mem (C.closure_preserves_leaf hx) hx
 
 /-- Weyl scale survives the supplied closure involution on the leaf. -/
 theorem weylScale_theta_eq
     {x : State}
     (hx : x ∈ L.carrier) :
-    L.weylScaleReadout (C.closure.theta x) = L.weylScaleReadout x :=
-  L.weylScale_eq_of_mem (C.closure_preserves_leaf hx) hx
+    L.weylScaleReadout (C.closure.theta x) = L.weylScaleReadout x := by
+  exact L.weylScale_eq_of_mem (C.closure_preserves_leaf hx) hx
 
 end ClosureInvariantLeaf
 
 /-! ## 6. Positive-temperature specialization alias -/
 
-/--
-Positive-Souriau-temperature leaf alias.
+/-- Positive-Souriau-temperature leaf alias.
 
 This exposes the projective-temperature carrier without asserting that every
-positive temperature leaf is a coadjoint orbit.
--/
+positive temperature leaf is a coadjoint orbit. -/
 abbrev PositiveTemperatureLeaf :=
   SymplecticLeaf PositiveSouriauTemperature
 

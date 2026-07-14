@@ -1,4 +1,4 @@
-import Omega.Conclusion.LocalizedAnomalyPairwiseSkeletonDeterminesSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedAnomalyPairwiseSkeletonDeterminesSpectrum
 
 namespace Omega.Conclusion
 

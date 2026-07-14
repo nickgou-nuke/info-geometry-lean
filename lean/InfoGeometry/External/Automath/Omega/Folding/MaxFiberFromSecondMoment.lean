@@ -1,4 +1,4 @@
-import Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
 
 namespace Omega
 

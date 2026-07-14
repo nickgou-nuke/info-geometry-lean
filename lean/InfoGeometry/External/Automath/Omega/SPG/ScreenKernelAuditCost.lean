@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 /-!
 # Screen kernel audit cost

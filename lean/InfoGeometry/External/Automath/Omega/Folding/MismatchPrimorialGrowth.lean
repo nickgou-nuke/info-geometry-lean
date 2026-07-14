@@ -1,6 +1,6 @@
-import Omega.Folding.BayesKinkGeometry
-import Omega.Folding.GodelCoprimeInflation
-import Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.Folding.BayesKinkGeometry
+import InfoGeometry.External.Automath.Omega.Folding.GodelCoprimeInflation
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
 
 namespace Omega.Folding
 

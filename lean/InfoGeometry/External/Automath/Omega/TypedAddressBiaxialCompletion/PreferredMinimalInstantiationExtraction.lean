@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.InstantiationExtraction
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.InstantiationExtraction
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,4 +1,4 @@
-import Omega.EA.RewriteCore
+import InfoGeometry.External.Automath.Omega.EA.RewriteCore
 
 namespace Omega.EA
 

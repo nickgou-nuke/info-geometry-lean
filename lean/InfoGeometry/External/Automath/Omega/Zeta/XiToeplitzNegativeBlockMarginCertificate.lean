@@ -1,4 +1,4 @@
-import Omega.Zeta.XiToeplitzNegativeMarginVandermonde4Lowerbound
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzNegativeMarginVandermonde4Lowerbound
 
 namespace Omega.Zeta
 

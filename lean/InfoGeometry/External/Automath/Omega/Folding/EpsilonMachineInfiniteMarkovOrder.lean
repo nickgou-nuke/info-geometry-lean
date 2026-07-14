@@ -1,4 +1,4 @@
-import Omega.Folding.EpsilonMachineSynchronizingWord
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineSynchronizingWord
 
 namespace Omega.Folding
 

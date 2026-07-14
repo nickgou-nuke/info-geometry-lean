@@ -1,9 +1,9 @@
 import Std
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Analysis
-import Omega.HyperKernel.Closure
-import Omega.HyperKernel.Pretty
-import Omega.HyperKernel.SetStructure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Analysis
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Pretty
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructure
 
 namespace Omega.HyperKernel
 namespace Fiber

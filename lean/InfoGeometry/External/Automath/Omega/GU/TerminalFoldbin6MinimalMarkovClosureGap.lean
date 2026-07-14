@@ -1,6 +1,6 @@
-import Omega.GU.StrongLumpabilitySpectralFalsifier
-import Omega.GU.TerminalFoldbin6PushforwardMarkov
-import Omega.GU.Window6MinimalMarkovObstructionPureF8Tail
+import InfoGeometry.External.Automath.Omega.GU.StrongLumpabilitySpectralFalsifier
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6PushforwardMarkov
+import InfoGeometry.External.Automath.Omega.GU.Window6MinimalMarkovObstructionPureF8Tail
 
 namespace Omega.GU
 

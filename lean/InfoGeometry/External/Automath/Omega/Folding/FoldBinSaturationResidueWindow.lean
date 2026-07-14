@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldbinSaturationSectorThreshold
+import InfoGeometry.External.Automath.Omega.Folding.FoldbinSaturationSectorThreshold
 
 namespace Omega.Folding
 

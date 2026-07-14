@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SPG.DyadicBoundaryImageLDPC
-import Omega.SPG.DyadicBoundaryImageMinDistance
+import InfoGeometry.External.Automath.Omega.SPG.DyadicBoundaryImageLDPC
+import InfoGeometry.External.Automath.Omega.SPG.DyadicBoundaryImageMinDistance
 
 namespace Omega.SPG
 

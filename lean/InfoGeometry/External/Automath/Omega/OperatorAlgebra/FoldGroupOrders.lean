@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldFiberNormalizerWreath
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberNormalizerWreath
 
 namespace Omega.OperatorAlgebra
 

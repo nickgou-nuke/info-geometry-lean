@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
 
 namespace Omega.Conclusion
 
@@ -79,7 +79,8 @@ order-`6` Steinberg characteristic polynomial records equal `C₃` multiplicitie
 conductors, and determinant identities. -/
 theorem paper_conclusion_m2_level3_steinberg_regular_representation_rigidity :
     conclusion_m2_level3_steinberg_regular_representation_rigidity_statement := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys ⟨()⟩ with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      ⟨by constructor <;> native_decide⟩ with
     ⟨_hklingen, _hsiegel, _hscalar, _hV24, _hV15Kl, _hV15Si, hchar, _hKl, _hSi⟩
   refine ⟨rfl, rfl, rfl, ?_, rfl, rfl, rfl, ?_, rfl, rfl, rfl, rfl, ?_, hchar⟩
   · norm_num [conclusion_m2_level3_steinberg_regular_representation_rigidity_c3_regular_multiplicity,

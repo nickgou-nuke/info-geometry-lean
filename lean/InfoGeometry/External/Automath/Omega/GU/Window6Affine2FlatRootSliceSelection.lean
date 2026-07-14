@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
-import Omega.GU.Window6AffineFiberOrbitClassification
-import Omega.GU.Window6B3C3VisibleSupportThreeLeviPlanes
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.GU.Window6AffineFiberOrbitClassification
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3VisibleSupportThreeLeviPlanes
 
 namespace Omega.GU
 

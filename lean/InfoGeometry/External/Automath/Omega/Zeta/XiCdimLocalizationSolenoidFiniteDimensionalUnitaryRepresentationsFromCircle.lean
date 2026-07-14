@@ -1,8 +1,8 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
-import Omega.Zeta.XiCdimLocalizationSolenoidNoNontrivialTorusInput
-import Omega.Zeta.XiCdimLocalizationSolenoidTorusObservationSinglePhaseFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidNoNontrivialTorusInput
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidTorusObservationSinglePhaseFactorization
 
 namespace Omega.Zeta
 

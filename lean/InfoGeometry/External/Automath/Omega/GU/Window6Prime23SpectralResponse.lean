@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6FiberEdgeCouplingDet
-import Omega.GU.Window6GreenKernelPstarValuationOne
-import Omega.GU.Window6ResponseKernelMod23
+import InfoGeometry.External.Automath.Omega.GU.Window6FiberEdgeCouplingDet
+import InfoGeometry.External.Automath.Omega.GU.Window6GreenKernelPstarValuationOne
+import InfoGeometry.External.Automath.Omega.GU.Window6ResponseKernelMod23
 
 namespace Omega.GU
 

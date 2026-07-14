@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Fibonacci
 import Mathlib.Tactic
-import Omega.POM.MaxFiberHiddenBitBiasSpectrum
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberHiddenBitBiasSpectrum
 
 open Filter
 open scoped Topology goldenRatio

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalStreamingProgramRarity
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalStreamingProgramRarity
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.POM.GlobalPressureConvexityPublication
+import InfoGeometry.External.Automath.Omega.POM.GlobalPressureConvexityPublication
 
 namespace Omega.POM
 

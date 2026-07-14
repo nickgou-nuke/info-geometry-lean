@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.FoldPrimeGodelBitlengthSuperlinear
+import InfoGeometry.External.Automath.Omega.POM.FoldPrimeGodelBitlengthSuperlinear
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.HankelBadPrimeSelectionProbability
+import InfoGeometry.External.Automath.Omega.Zeta.HankelBadPrimeSelectionProbability
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiToeplitzInertiaStabilizesToKappa
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzInertiaStabilizesToKappa
 
 namespace Omega.Zeta
 

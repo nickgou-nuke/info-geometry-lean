@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.FocusedNonNullReadoutCriterion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.FocusedNonNullReadoutCriterion
 
 namespace Omega.RecursiveAddressing
 

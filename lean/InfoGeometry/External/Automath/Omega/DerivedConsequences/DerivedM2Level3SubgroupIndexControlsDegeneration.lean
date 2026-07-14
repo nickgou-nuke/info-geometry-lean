@@ -1,4 +1,4 @@
-import Omega.Conclusion.S4BoundaryTotalTorusRankConservation
+import InfoGeometry.External.Automath.Omega.Conclusion.S4BoundaryTotalTorusRankConservation
 
 namespace Omega.DerivedConsequences
 

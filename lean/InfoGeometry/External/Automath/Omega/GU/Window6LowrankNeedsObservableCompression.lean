@@ -1,4 +1,4 @@
-import Omega.GU.Window6LieEnvelopeExistenceUniqueness
+import InfoGeometry.External.Automath.Omega.GU.Window6LieEnvelopeExistenceUniqueness
 
 namespace Omega.GU
 

@@ -1,4 +1,4 @@
-import Omega.Topos.IntrinsicCharacterDetectionPublication
+import InfoGeometry.External.Automath.Omega.Topos.IntrinsicCharacterDetectionPublication
 
 namespace Omega.Topos
 

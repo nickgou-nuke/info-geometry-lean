@@ -353,12 +353,9 @@ This is the integration point for:
 * scalar Ricci-flux calibration.
 -/
 structure ConformalThermodynamicLedger
-    (Sys Comm Jordan V Wamb L State Geometry : Type*)
+    (Sys Comm L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
-    [AddCommGroup Jordan] [Module ℝ Jordan]
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup Wamb] [Module ℝ Wamb]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry] where
@@ -376,30 +373,27 @@ structure ConformalThermodynamicLedger
 
   /-- TKK conformal closure package. -/
   closure :
-    TKKConformalClosure Jordan V Wamb L State Geometry
+    TKKRicciFluxDatum L State Geometry
 
   /-- Bridge from heat to scalar TKK Ricci flux. -/
   heatRicciBridge :
     StinespringTKKRicciFluxBridge
       Sys Comm L State Geometry
-      bregman channel dilation closure.ricciFlux
+      bregman channel dilation closure
 
 namespace ConformalThermodynamicLedger
 
 variable
-    {Sys Comm Jordan V Wamb L State Geometry : Type*}
+    {Sys Comm L State Geometry : Type*}
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
-    [AddCommGroup Jordan] [Module ℝ Jordan]
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup Wamb] [Module ℝ Wamb]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
 
 variable (Λ :
   ConformalThermodynamicLedger
-    Sys Comm Jordan V Wamb L State Geometry)
+    Sys Comm L State Geometry)
 
 /--
 The conformal ledger identifies Bregman heat with scalarized TKK Ricci flux.
@@ -408,7 +402,7 @@ theorem heat_eq_tkk_ricci_flux
     (x : Sys) :
     heatLoss Λ.bregman Λ.channel x =
       scalarTKKRicciFlux
-        Λ.closure.ricciFlux
+        Λ.closure
         Λ.heatRicciBridge.scalarReadout
         (Λ.heatRicciBridge.generatorOf x)
         (Λ.heatRicciBridge.stateOf x) :=
@@ -423,7 +417,7 @@ theorem hidden_information_eq_tkk_ricci_flux
     Λ.heatRicciBridge.hiddenBridge.hiddenReadout.hiddenInfo
         (Λ.dilation.hiddenFlow x) =
       scalarTKKRicciFlux
-        Λ.closure.ricciFlux
+        Λ.closure
         Λ.heatRicciBridge.scalarReadout
         (Λ.heatRicciBridge.generatorOf x)
         (Λ.heatRicciBridge.stateOf x) :=
@@ -436,11 +430,11 @@ theorem heat_eq_scalar_curvature_variation_plus_defect
     (x : Sys) :
     heatLoss Λ.bregman Λ.channel x =
       Λ.heatRicciBridge.scalarReadout.scalar
-        (Λ.closure.ricciFlux.derivativeAlong.deriv
-            Λ.closure.ricciFlux.curvatureReadout.curvature
+        (Λ.closure.derivativeAlong.deriv
+            Λ.closure.curvatureReadout.curvature
             (Λ.heatRicciBridge.generatorOf x)
             (Λ.heatRicciBridge.stateOf x) +
-          Λ.closure.ricciFlux.closureDefect.defect
+          Λ.closure.closureDefect.defect
             (Λ.heatRicciBridge.generatorOf x)
             (Λ.heatRicciBridge.stateOf x)) :=
   Λ.heatRicciBridge.heat_eq_scalar_curvature_variation_plus_defect x
@@ -456,47 +450,41 @@ Once the conformal thermodynamic ledger is supplied, heat, hidden information,
 and scalarized TKK Ricci flux agree by the bridge laws.
 -/
 theorem conformalLedgerBridgeOwnerTarget :
-  ∀ (Sys Comm Jordan V Wamb L State Geometry : Type*)
+  ∀ (Sys Comm L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
-    [AddCommGroup Jordan] [Module ℝ Jordan]
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup Wamb] [Module ℝ Wamb]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry],
   ∀ Λ : ConformalThermodynamicLedger
-      Sys Comm Jordan V Wamb L State Geometry,
+      Sys Comm L State Geometry,
   ∀ x : Sys,
     heatLoss Λ.bregman Λ.channel x =
       scalarTKKRicciFlux
-        Λ.closure.ricciFlux
+        Λ.closure
         Λ.heatRicciBridge.scalarReadout
         (Λ.heatRicciBridge.generatorOf x)
         (Λ.heatRicciBridge.stateOf x) := by
-  intro Sys Comm Jordan V Wamb L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ Λ x
+  intro Sys Comm L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ Λ x
   exact Λ.heat_eq_tkk_ricci_flux x
 
 /-- Packet readout for one conformal thermodynamic ledger. -/
 theorem conformalLedgerBridge_packet
-    (Sys Comm Jordan V Wamb L State Geometry : Type*)
+    (Sys Comm L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
     [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
-    [AddCommGroup Jordan] [Module ℝ Jordan]
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup Wamb] [Module ℝ Wamb]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
     (Λ : ConformalThermodynamicLedger
-      Sys Comm Jordan V Wamb L State Geometry)
+      Sys Comm L State Geometry)
     (x : Sys) :
     heatLoss Λ.bregman Λ.channel x =
       scalarTKKRicciFlux
-        Λ.closure.ricciFlux
+        Λ.closure
         Λ.heatRicciBridge.scalarReadout
         (Λ.heatRicciBridge.generatorOf x)
         (Λ.heatRicciBridge.stateOf x) :=
-  conformalLedgerBridgeOwnerTarget Sys Comm Jordan V Wamb L State Geometry Λ x
+  conformalLedgerBridgeOwnerTarget Sys Comm L State Geometry Λ x
 
 end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

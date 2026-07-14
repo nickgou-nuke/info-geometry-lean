@@ -5,8 +5,6 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
 # InfoGeometry.Krein.HestenesMoebiusClosureBridge
 
@@ -90,10 +88,11 @@ binary words at a fixed depth, Jones tower atoms, or another finite boundary
 slice.  The Möbius action on that finite layer is supplied as a permutation.
 -/
 @[rep_depth krein]
-structure HestenesMoebiusClosureBridge
+structure Bridge
     (Word : Type*) [Fintype Word] [DecidableEq Word] where
   /-- Previously installed Hestenes--Connes--Wilson detailed-balance bridge. -/
-  wilson : HestenesConnesWilsonBridge (E := E) Word
+  wilson :
+    _root_.InfoGeometry.Krein.HestenesConnesWilsonBridge.Bridge (E := E) Word
 
   /-- Möbius action on vectors in the real doubled carrier. -/
   vectorAction : MoebiusParameter → H₂ → H₂
@@ -137,11 +136,11 @@ structure HestenesMoebiusClosureBridge
       wilson.wilsonHolonomy ((wordAction g) parent) ((wordAction g) child) =
         wilson.wilsonHolonomy parent child
 
-namespace HestenesMoebiusClosureBridge
+namespace Bridge
 
 variable {Word : Type*}
 variable [Fintype Word] [DecidableEq Word]
-variable (M : HestenesMoebiusClosureBridge (E := E) Word)
+variable (M : Bridge (E := E) Word)
 
 /-- Vacuum vector fixedness under the supplied Möbius action. -/
 @[rep_depth krein]
@@ -349,7 +348,7 @@ theorem connes_weyl_scale_moebius_closed
       M.wilson.radonNikodymLog parent child :=
   M.radonNikodymLog_moebius_invariant g parent child
 
-end HestenesMoebiusClosureBridge
+end Bridge
 
 end Core
 

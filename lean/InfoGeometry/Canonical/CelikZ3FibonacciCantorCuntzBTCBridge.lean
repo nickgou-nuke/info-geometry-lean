@@ -292,9 +292,11 @@ theorem finite_hexagon_shadow_from_celik (G : ExplicitZ3FibonacciBTCBridge A) :
             fibonacciBMatrix G.fibonacci.q G.fibonacci.tau G.fibonacci.sqrtTau := by
     have h := fibonacci_yang_baxter_from_celik G
     simpa [G.fibonacci.R_eq, G.fibonacci.B_eq] using h
-  exact InfoGeometry.Categorical.FibonacciBraiding.finite_hexagon_shadow
-    G.fibonacci.q G.fibonacci.tau G.fibonacci.sqrtTau
-    G.fibonacci.sqrt_sq G.fibonacci.tau_sq_add_tau hArtin
+  exact ⟨
+    InfoGeometry.Categorical.FibonacciBraiding.F_sq G.fibonacci.tau G.fibonacci.sqrtTau G.fibonacci.sqrt_sq G.fibonacci.tau_sq_add_tau,
+    InfoGeometry.Categorical.FibonacciBraiding.det_F G.fibonacci.tau G.fibonacci.sqrtTau G.fibonacci.sqrt_sq G.fibonacci.tau_sq_add_tau,
+    InfoGeometry.Categorical.FibonacciBraiding.B_eq_FRF G.fibonacci.q G.fibonacci.tau G.fibonacci.sqrtTau,
+    hArtin⟩
 
 end ExplicitZ3FibonacciBTCBridge
 

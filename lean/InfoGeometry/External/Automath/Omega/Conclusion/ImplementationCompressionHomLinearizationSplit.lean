@@ -1,5 +1,5 @@
-import Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
-import Omega.Folding.KilloPrimeFreedomNonFinitizability
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.KilloPrimeFreedomNonFinitizability
 
 namespace Omega.Conclusion
 

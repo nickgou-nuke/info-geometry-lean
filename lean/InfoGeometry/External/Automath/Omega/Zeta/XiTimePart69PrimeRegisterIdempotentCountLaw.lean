@@ -1,4 +1,4 @@
-import Omega.Zeta.PrimeRegisterIdempotentExactCount
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeRegisterIdempotentExactCount
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.JoukowskyEllipse
-import Omega.GU.HolomorphicMomentRigidity
+import InfoGeometry.External.Automath.Omega.EA.JoukowskyEllipse
+import InfoGeometry.External.Automath.Omega.GU.HolomorphicMomentRigidity
 
 namespace Omega.GU.RadialQuadraticIdentifiability
 

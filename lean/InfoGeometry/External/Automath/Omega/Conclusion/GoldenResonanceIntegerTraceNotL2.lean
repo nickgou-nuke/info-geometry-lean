@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.GoldenResonanceStrongRecurrenceLogarithmic
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenResonanceStrongRecurrenceLogarithmic
 
 namespace Omega.Conclusion
 

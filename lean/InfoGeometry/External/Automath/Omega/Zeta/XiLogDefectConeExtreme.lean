@@ -1,5 +1,5 @@
-import Omega.Zeta.XiDefectDensityConeChoquetExtreme
-import Omega.Zeta.XiLogdefectConeChoquetBauerCompleteness
+import InfoGeometry.External.Automath.Omega.Zeta.XiDefectDensityConeChoquetExtreme
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogdefectConeChoquetBauerCompleteness
 
 namespace Omega.Zeta
 

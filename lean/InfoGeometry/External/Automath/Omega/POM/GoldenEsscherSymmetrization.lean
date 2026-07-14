@@ -1,4 +1,4 @@
-import Omega.POM.GoldenLikelihoodRatioMartingales
+import InfoGeometry.External.Automath.Omega.POM.GoldenLikelihoodRatioMartingales
 
 namespace Omega.POM
 

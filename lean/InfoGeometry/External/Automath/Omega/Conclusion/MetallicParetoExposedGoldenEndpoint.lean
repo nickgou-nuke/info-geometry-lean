@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.MetallicLinearScalarizationThreshold
+import InfoGeometry.External.Automath.Omega.Folding.MetallicLinearScalarizationThreshold
 
 open scoped goldenRatio
 open Omega.Folding.MetallicParetoFrontier

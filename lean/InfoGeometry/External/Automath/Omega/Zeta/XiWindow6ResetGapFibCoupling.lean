@@ -1,4 +1,4 @@
-import Omega.Zeta.XiWindow6ResetGapMgfMoments
+import InfoGeometry.External.Automath.Omega.Zeta.XiWindow6ResetGapMgfMoments
 
 namespace Omega.Zeta
 

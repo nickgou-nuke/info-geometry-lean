@@ -1,4 +1,4 @@
-import Omega.POM.EntropyLossFactorChainExpansion
+import InfoGeometry.External.Automath.Omega.POM.EntropyLossFactorChainExpansion
 
 namespace Omega.POM
 

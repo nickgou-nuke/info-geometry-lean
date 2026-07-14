@@ -1,4 +1,4 @@
-import Omega.Conclusion.DerivedTorsionCamouflageEulerCdim
+import InfoGeometry.External.Automath.Omega.Conclusion.DerivedTorsionCamouflageEulerCdim
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.CircleDimension.FinitePrimeTruncationKernels
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeTruncationKernels
 
 namespace Omega.Conclusion
 

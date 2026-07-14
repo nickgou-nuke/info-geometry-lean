@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangTwoScaleCrossratioSlopeExponent
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangTwoScaleCrossratioSlopeExponent
 
 namespace Omega.Zeta
 

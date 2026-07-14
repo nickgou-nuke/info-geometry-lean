@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.FoldResidualTime.Window6FixedFreezingLaw
+import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6FixedFreezingLaw
 
 namespace Omega.DerivedConsequences
 

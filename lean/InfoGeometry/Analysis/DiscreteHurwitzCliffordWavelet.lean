@@ -177,21 +177,4 @@ structure CliffordCascadeSystem
   compactUniformUpgrade : Prop
   reconstructionExists : Prop
 
-namespace CliffordCascadeSystem
-
-variable {F : ParaunitaryCliffordFilterBank}
-variable (C : CliffordCascadeSystem F)
-
-@[rep_depth operator]
-theorem cascadeConvergesL2_law :
-    C.cascadeConvergesL2 → C.cascadeConvergesL2 :=
-  id
-
-@[rep_depth operator]
-theorem compactUniformUpgrade_law :
-    C.compactUniformUpgrade → C.compactUniformUpgrade :=
-  id
-
-end CliffordCascadeSystem
-
 end InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet

@@ -1,4 +1,4 @@
-import Omega.SPG.AxialScreenAreaLawAuditCost
+import InfoGeometry.External.Automath.Omega.SPG.AxialScreenAreaLawAuditCost
 
 namespace Omega.Conclusion
 

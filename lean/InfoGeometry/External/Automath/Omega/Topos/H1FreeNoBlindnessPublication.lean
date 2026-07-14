@@ -1,4 +1,4 @@
-import Omega.Topos.H1FreeNoBlindness
+import InfoGeometry.External.Automath.Omega.Topos.H1FreeNoBlindness
 
 namespace Omega.Topos
 

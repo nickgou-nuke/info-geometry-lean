@@ -15,6 +15,6 @@ universe v u
 structure InfinityTopos (C : Type u) [InfinityCategory C] where
   colim_complete : HasAllSmallColimits C
   descent : EffectiveEpis C
-  universe : ObjectClassifier C
+  has_universe : ObjectClassifier C
 
 end InfoGeometry.Categorical

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberRewriteIndependentSum
-import Omega.POM.PathIndsetThermoConstants
+import InfoGeometry.External.Automath.Omega.POM.FiberRewriteIndependentSum
+import InfoGeometry.External.Automath.Omega.POM.PathIndsetThermoConstants
 
 open scoped BigOperators
 

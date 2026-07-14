@@ -1,5 +1,5 @@
-import Omega.Zeta.XiTimePart9zWindow6HistogramFromThreeMoments
-import Omega.Zeta.XiTimePart9zWindow6ThreeatomHankelFlatness
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zWindow6HistogramFromThreeMoments
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zWindow6ThreeatomHankelFlatness
 
 namespace Omega.Zeta
 

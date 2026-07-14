@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiHankelNormalformCRTAdelicMultiplicity
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelNormalformCRTAdelicMultiplicity
 
 namespace Omega.Zeta
 

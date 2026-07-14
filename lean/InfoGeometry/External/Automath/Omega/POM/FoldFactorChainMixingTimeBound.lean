@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.FoldFactorChainDerivedInvariants
+import InfoGeometry.External.Automath.Omega.POM.FoldFactorChainDerivedInvariants
 
 namespace Omega.POM
 

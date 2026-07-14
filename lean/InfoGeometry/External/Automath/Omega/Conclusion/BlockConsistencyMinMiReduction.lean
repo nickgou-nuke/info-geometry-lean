@@ -1,4 +1,4 @@
-import Omega.Conclusion.BlockConstraintInformationCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.BlockConstraintInformationCollapse
 
 namespace Omega.Conclusion
 

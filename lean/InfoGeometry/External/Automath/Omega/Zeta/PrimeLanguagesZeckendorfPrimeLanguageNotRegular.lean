@@ -1,4 +1,4 @@
-import Omega.Zeta.ETDSZeckendorfPrimeLanguageNotRegular
+import InfoGeometry.External.Automath.Omega.Zeta.ETDSZeckendorfPrimeLanguageNotRegular
 
 namespace Omega.Zeta
 

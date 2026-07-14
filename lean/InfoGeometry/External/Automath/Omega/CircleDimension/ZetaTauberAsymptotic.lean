@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.CircleDimension.ZetaEulerPole
+import InfoGeometry.External.Automath.Omega.CircleDimension.ZetaEulerPole
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
 
 namespace Omega.GroupUnification
 

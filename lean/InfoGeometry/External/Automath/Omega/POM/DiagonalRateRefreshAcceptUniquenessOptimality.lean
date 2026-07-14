@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAcceptRefreshSSTStrong
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAcceptRefreshSSTStrong
 
 open scoped BigOperators
 

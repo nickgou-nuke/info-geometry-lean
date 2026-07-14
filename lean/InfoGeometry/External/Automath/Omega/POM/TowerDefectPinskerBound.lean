@@ -1,4 +1,4 @@
-import Omega.POM.TowerDefectCovarianceLaw
+import InfoGeometry.External.Automath.Omega.POM.TowerDefectCovarianceLaw
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.ZeroCosetFixedV2FiniteIntersectionGcd
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeroCosetFixedV2FiniteIntersectionGcd
 
 namespace Omega.Conclusion
 

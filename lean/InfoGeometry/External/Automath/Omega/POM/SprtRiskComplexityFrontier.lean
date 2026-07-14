@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.SprtSymmetricThresholdError
-import Omega.POM.SprtSymmetricThresholdMeanTime
+import InfoGeometry.External.Automath.Omega.POM.SprtSymmetricThresholdError
+import InfoGeometry.External.Automath.Omega.POM.SprtSymmetricThresholdMeanTime
 
 namespace Omega.POM
 

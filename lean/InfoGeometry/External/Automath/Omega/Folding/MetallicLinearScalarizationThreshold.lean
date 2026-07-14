@@ -1,9 +1,9 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.MetallicCompressionExtremum
-import Omega.Folding.MetallicParetoFrontier
-import Omega.Folding.MetallicParetoScaleLaw
+import InfoGeometry.External.Automath.Omega.Folding.MetallicCompressionExtremum
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoFrontier
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoScaleLaw
 
 open scoped goldenRatio
 open Omega.Folding.MetallicParetoFrontier

@@ -3,9 +3,9 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Graph.TransferMatrix
-import Omega.Core.Fib
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 /-!
 # Dynamical Zeta Functions

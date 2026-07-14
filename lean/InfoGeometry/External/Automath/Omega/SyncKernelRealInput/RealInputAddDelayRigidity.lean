@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.EA.Sync10UniformInputOutput
-import Omega.SyncKernelWeighted.OnlineDelayFromPlocal
-import Omega.SyncKernelWeighted.RealInput40ResetWord
+import InfoGeometry.External.Automath.Omega.EA.Sync10UniformInputOutput
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.OnlineDelayFromPlocal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetWord
 
 namespace Omega.SyncKernelRealInput
 

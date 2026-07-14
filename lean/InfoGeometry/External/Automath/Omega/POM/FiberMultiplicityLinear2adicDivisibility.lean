@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Factorization.Basic
-import Omega.POM.FiberMultiplicityV2Thresholds
+import InfoGeometry.External.Automath.Omega.POM.FiberMultiplicityV2Thresholds
 
 namespace Omega.POM
 

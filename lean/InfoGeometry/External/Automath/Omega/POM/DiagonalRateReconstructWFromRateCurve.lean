@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateScalarCollapse
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateScalarCollapse
 
 namespace Omega.POM
 

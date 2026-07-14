@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiReverseKLCyclicEnergyEquivalence
-import Omega.Zeta.XiReverseKLFourierGapPositiveKernelEnergy
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLCyclicEnergyEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLFourierGapPositiveKernelEnergy
 
 open scoped BigOperators
 

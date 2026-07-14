@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Kronecker.W1LipschitzReadout
+import InfoGeometry.External.Automath.Omega.Kronecker.W1LipschitzReadout
 
 namespace Omega.Zeta
 

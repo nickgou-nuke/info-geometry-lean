@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
-import Omega.GU.Window6B3C3UniqueQuarticDetector
-import Omega.GU.Window6DyadicBudget
-import Omega.GU.Window6SyzygyGramSpectrumDiscriminant
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3UniqueQuarticDetector
+import InfoGeometry.External.Automath.Omega.GU.Window6DyadicBudget
+import InfoGeometry.External.Automath.Omega.GU.Window6SyzygyGramSpectrumDiscriminant
 
 namespace Omega.Conclusion
 

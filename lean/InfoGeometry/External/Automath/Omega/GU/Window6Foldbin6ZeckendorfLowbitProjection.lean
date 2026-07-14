@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Fib.Zeckendorf
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
-import Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
-import Omega.GU.TerminalFoldbin6OffsetsReturnTimes
-import Omega.GU.TerminalOstrowskiZeckendorfBinfold
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6ThreeOffsetRigidity
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6OffsetsReturnTimes
+import InfoGeometry.External.Automath.Omega.GU.TerminalOstrowskiZeckendorfBinfold
 
 namespace Omega.GU
 

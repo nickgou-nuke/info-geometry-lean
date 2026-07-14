@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyLargeQDelta
-import Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyLargeQDelta
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMgfOrder4Recurrence
 
 namespace Omega.Folding
 

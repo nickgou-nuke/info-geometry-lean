@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingSetHitAndOccupancy
-import Omega.POM.DiagonalRateDiagonalClosureRankone
-import Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingSetHitAndOccupancy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDiagonalClosureRankone
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
 
 namespace Omega.POM
 

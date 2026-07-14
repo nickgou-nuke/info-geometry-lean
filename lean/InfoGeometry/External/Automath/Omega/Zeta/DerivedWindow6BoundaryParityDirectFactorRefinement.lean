@@ -1,5 +1,5 @@
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
-import Omega.Zeta.GaugeGroupTripleDecomp
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.Zeta.GaugeGroupTripleDecomp
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CdimRankShortExactAdditivity
-import Omega.CircleDimension.ShortExactAdditivity
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimRankShortExactAdditivity
+import InfoGeometry.External.Automath.Omega.CircleDimension.ShortExactAdditivity
 
 namespace Omega.Conclusion
 

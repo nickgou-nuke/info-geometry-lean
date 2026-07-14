@@ -1,7 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
-
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import Mathlib.Algebra.Category.ModuleCat.Basic
+import Mathlib.Algebra.Quaternion
 set_option synthInstance.maxHeartbeats 1000000
 namespace InfoGeometry.Capstone.BenamouBrenier
 
@@ -50,6 +51,115 @@ theorem jko_inductive_colimit_stabilization
     (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n) (n : ℕ) :
     (jkoBondingMap R M N_n) ^ n = 1 + n • N_n := by
   exact jko_operator_collapse R M N_n h_nil n
+
+/--
+The JKO sequence of fractional time steps forms a strict directed system
+(a functor from the poset ℕ to ModuleCat R) over the topological base algebra.
+-/
+def jkoFunctor (N_n : Module.End R M) : ℕ ⥤ ModuleCat R :=
+{ obj := fun _ => ModuleCat.of R M
+  map := fun {i j} h => 
+    ModuleCat.ofHom ((jkoBondingMap R M N_n) ^ (j - i))
+  map_id := by
+    intro X
+    have : X - X = 0 := Nat.sub_self X
+    rw [this, pow_zero]
+    rfl
+  map_comp := by
+    intro X Y Z f g
+    have h1 : X ≤ Y := leOfHom f
+    have h2 : Y ≤ Z := leOfHom g
+    have h3 : Z - X = (Z - Y) + (Y - X) := by omega
+    ext x
+    change ((jkoBondingMap R M N_n) ^ (Z - X)) x = ((jkoBondingMap R M N_n) ^ (Z - Y)) (((jkoBondingMap R M N_n) ^ (Y - X)) x)
+    rw [h3, pow_add]
+    rfl }
+
+lemma jkoFunctor_map_homOfLE_apply
+    (N_n : Module.End R M) {i j : ℕ} (h : i ≤ j) (x : M) :
+    (jkoFunctor R M N_n).map (CategoryTheory.homOfLE h) x =
+      ((jkoBondingMap R M N_n) ^ (j - i)) x := rfl
+
+theorem jkoFunctor_transport_apply
+    (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n)
+    {i j : ℕ} (h : i ≤ j) (x : M) :
+    (jkoFunctor R M N_n).map (CategoryTheory.homOfLE h) x =
+      x + ((j - i) • N_n) x := by
+  rw [jkoFunctor_map_homOfLE_apply]
+  simp only [jkoBondingMap]
+  rw [jko_operator_collapse (R := R) (M := M) N_n h_nil (j - i)]
+  simp
+
+theorem jkoFunctor_zero_to_apply
+    (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n) (n : ℕ) (x : M) :
+    (jkoFunctor R M N_n).map (CategoryTheory.homOfLE (Nat.zero_le n)) x =
+      x + (n • N_n) x := by
+  simpa using
+    (jkoFunctor_transport_apply R M N_n h_nil (i := 0) (j := n)
+      (Nat.zero_le n) x)
+
+theorem jkoFunctor_colimit_glue
+    (N_n : Module.End R M) [HasColimit (jkoFunctor R M N_n)] (n : ℕ) :
+    colimit.ι (jkoFunctor R M N_n) n =
+      (jkoFunctor R M N_n).map (CategoryTheory.homOfLE (Nat.le_succ n)) ≫
+        colimit.ι (jkoFunctor R M N_n) (n + 1) := by
+  symm
+  apply colimit.w
+
+theorem jkoFunctor_colimit_transport_apply
+    (N_n : Module.End R M) [HasColimit (jkoFunctor R M N_n)]
+    {i j : ℕ} (h : i ≤ j) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) i) x =
+      (colimit.ι (jkoFunctor R M N_n) j)
+        (((jkoFunctor R M N_n).map (CategoryTheory.homOfLE h)) x) := by
+  have hcol := colimit.w (jkoFunctor R M N_n) (CategoryTheory.homOfLE h)
+  have hx := congr_arg
+    (fun f : (jkoFunctor R M N_n).obj i ⟶ colimit (jkoFunctor R M N_n) => f x) hcol.symm
+  change (colimit.ι (jkoFunctor R M N_n) i) x =
+    (colimit.ι (jkoFunctor R M N_n) j)
+      (((jkoFunctor R M N_n).map (CategoryTheory.homOfLE h)) x) at hx
+  exact hx
+
+theorem jkoFunctor_colimit_glue_apply
+    (N_n : Module.End R M) [HasColimit (jkoFunctor R M N_n)] (n : ℕ) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) n) x =
+      (colimit.ι (jkoFunctor R M N_n) (n + 1))
+        (((jkoFunctor R M N_n).map (CategoryTheory.homOfLE (Nat.le_succ n))) x) := by
+  exact jkoFunctor_colimit_transport_apply R M N_n (Nat.le_succ n) x
+
+theorem jkoFunctor_colimit_transport_affine_apply
+    (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n)
+    [HasColimit (jkoFunctor R M N_n)] {i j : ℕ} (h : i ≤ j) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) i) x =
+      (colimit.ι (jkoFunctor R M N_n) j) (x + ((j - i) • N_n) x) := by
+  rw [jkoFunctor_colimit_transport_apply R M N_n h x]
+  rw [jkoFunctor_transport_apply R M N_n h_nil h x]
+
+theorem jkoFunctor_colimit_glue_bonding_apply
+    (N_n : Module.End R M) [HasColimit (jkoFunctor R M N_n)] (n : ℕ) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) n) x =
+      (colimit.ι (jkoFunctor R M N_n) (n + 1))
+        ((jkoBondingMap R M N_n) x) := by
+  rw [jkoFunctor_colimit_transport_apply R M N_n (Nat.le_succ n) x]
+  rw [jkoFunctor_map_homOfLE_apply]
+  simp [jkoBondingMap]
+
+theorem jkoFunctor_colimit_glue_affine_apply
+    (N_n : Module.End R M) [HasColimit (jkoFunctor R M N_n)] (n : ℕ) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) n) x =
+      (colimit.ι (jkoFunctor R M N_n) (n + 1)) (x + N_n x) := by
+  rw [jkoFunctor_colimit_transport_apply R M N_n (Nat.le_succ n) x]
+  rw [jkoFunctor_map_homOfLE_apply]
+  simp [jkoBondingMap]
+
+theorem jkoFunctor_zero_colimit_apply
+    (N_n : Module.End R M) (h_nil : JKO_Endomorphism R M N_n)
+    [HasColimit (jkoFunctor R M N_n)] (n : ℕ) (x : M) :
+    (colimit.ι (jkoFunctor R M N_n) 0) x =
+      (colimit.ι (jkoFunctor R M N_n) n) (x + (n • N_n) x) := by
+  simpa using
+    (jkoFunctor_colimit_transport_affine_apply R M N_n h_nil (i := 0) (j := n)
+      (Nat.zero_le n) x)
 
 end JKO
 
@@ -126,6 +236,15 @@ def TrivSqZeroExtDuhamel (n : ℕ) : DuhamelOperatorDerivative S (TrivSqZeroExt 
   traceStateKMSReadout _ := 0
   derivativeOfExp_eq_first_ordered_form _ _ := rfl
 
+/--
+Physical Test Instantiation: Exact Non-Commutative Expansion for the SE(3) Dual Quaternion Twist.
+Here the base algebra is Quaternion ℝ, and the kinematic twist evaluates identically.
+-/
+def DualQuaternionTest (A B : Quaternion ℝ) (n : ℕ) :
+    (inl A + inr B : TrivSqZeroExt (Quaternion ℝ) (Quaternion ℝ)) ^ n =
+    inl (A ^ n) + discreteDuhamelSum A B n := by
+  exact discrete_duhamel_expansion A B n
+
 end Bridge
 
 end InfoGeometry.Capstone.BenamouBrenierBridge
@@ -171,8 +290,9 @@ lemma diagEmbedSucc_pow (n : ℕ) (A : DiagAlg n) (k : ℕ) :
   | succ k ih =>
     rw [pow_succ, pow_succ, diagEmbedSucc_mul n (A ^ k) A, ih]
 
-/-- The exact discrete JKO convolutional expansion is completely structurally compatible
-with the UHF topological inductive limit boundary. The limit commutes exactly. -/
+/-- The finite-stage discrete Duhamel expansion is natural under the successor
+embedding of the diagonal UHF algebras. This is an algebraic stagewise identity;
+it does not assert a topological or analytic limit theorem. -/
 theorem uhf_duhamel_naturality (n : ℕ) (A B : DiagAlg n) (k : ℕ) :
     uhfTrivSqZeroExtEmbed n (discreteDuhamelSum A B k) =
     discreteDuhamelSum (diagEmbedSucc n A) (diagEmbedSucc n B) k := by

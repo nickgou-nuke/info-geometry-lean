@@ -1,4 +1,4 @@
-import Omega.Zeta.BooleanTwoLayerSmithNormalForm
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerSmithNormalForm
 
 namespace Omega.Zeta
 

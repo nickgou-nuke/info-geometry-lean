@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Omega.Folding.FoldSigmaPhiDiverges
+import InfoGeometry.External.Automath.Omega.Folding.FoldSigmaPhiDiverges
 
 open scoped BigOperators
 

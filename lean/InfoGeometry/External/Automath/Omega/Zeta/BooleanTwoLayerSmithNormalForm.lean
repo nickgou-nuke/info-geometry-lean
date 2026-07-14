@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.BooleanDisjointnessZetaLDLT
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanDisjointnessZetaLDLT
 
 namespace Omega.Zeta
 

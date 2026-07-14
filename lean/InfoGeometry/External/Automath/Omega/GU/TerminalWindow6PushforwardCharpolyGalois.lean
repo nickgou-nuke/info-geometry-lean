@@ -1,4 +1,4 @@
-import Omega.GU.TerminalFoldbin6PushforwardMarkov
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6PushforwardMarkov
 
 namespace Omega.GU
 

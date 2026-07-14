@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateUniformGlobalMax
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateUniformGlobalMax
 
 namespace Omega.POM
 

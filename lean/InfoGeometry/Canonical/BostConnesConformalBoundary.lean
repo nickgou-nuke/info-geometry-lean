@@ -110,9 +110,9 @@ theorem sugawaraTrace_kms_evaluation_on_projections
     (τL0 : Op → ℝ)
     (hTrace :
       ∀ n m : ℕ+,
-        τL0 (star (S C n) * S C m) = Φ.φ (star (S C n) * S C m))
+        τL0 (S C n * star (S C m)) = Φ.φ (S C n * star (S C m)))
     (n m : ℕ+) :
-    τL0 (star (S C n) * S C m) =
+    τL0 (S C n * star (S C m)) =
       if n = m then ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ else 0 := by
   rw [hTrace n m]
   exact Φ.kms_evaluation_on_projections n m
@@ -127,9 +127,9 @@ theorem sugawaraTrace_kms_evaluation_on_diagonal_projection
     (τL0 : Op → ℝ)
     (hTrace :
       ∀ n m : ℕ+,
-        τL0 (star (S C n) * S C m) = Φ.φ (star (S C n) * S C m))
+        τL0 (S C n * star (S C m)) = Φ.φ (S C n * star (S C m)))
     (n : ℕ+) :
-    τL0 (star (S C n) * S C n) = ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ := by
+    τL0 (S C n * star (S C n)) = ((n : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ := by
   simpa using sugawaraTrace_kms_evaluation_on_projections
     (C := C) Φ τL0 hTrace n n
 
@@ -143,9 +143,9 @@ theorem sugawaraTrace_kms_evaluation_on_word_products
     (τL0 : Op → ℝ)
     (hTrace :
       ∀ n m : ℕ+,
-        τL0 (star (S C n) * S C m) = Φ.φ (star (S C n) * S C m))
+        τL0 (S C n * star (S C m)) = Φ.φ (S C n * star (S C m)))
     (ns ms : List ℕ+) :
-    τL0 (star (S C ns.prod) * S C ms.prod) =
+    τL0 (S C ns.prod * star (S C ms.prod)) =
       if ns.prod = ms.prod then
         (((ns.prod : ℕ+) : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ
       else 0 := by
@@ -166,11 +166,11 @@ theorem sugawaraTrace_kms_evaluation_on_prime_power_word_products
     (τL0 : Op → ℝ)
     (hTrace :
       ∀ n m : ℕ+,
-        τL0 (star (S C n) * S C m) = Φ.φ (star (S C n) * S C m))
+        τL0 (S C n * star (S C m)) = Φ.φ (S C n * star (S C m)))
     (left right : List PrimePowerIndex) :
     τL0
-      (star (S C (left.map PrimePowerIndex.toPNat).prod) *
-        S C (right.map PrimePowerIndex.toPNat).prod) =
+      (S C (left.map PrimePowerIndex.toPNat).prod *
+        star (S C (right.map PrimePowerIndex.toPNat).prod)) =
       if (left.map PrimePowerIndex.toPNat).prod =
           (right.map PrimePowerIndex.toPNat).prod then
         ((((left.map PrimePowerIndex.toPNat).prod : ℕ+) : ℕ) : ℝ) ^ (-Φ.β) / Φ.ζβ

@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ZeroDimLedgerNoCircleReplacement
+import InfoGeometry.External.Automath.Omega.CircleDimension.ZeroDimLedgerNoCircleReplacement
 
 namespace Omega.CircleDimension
 

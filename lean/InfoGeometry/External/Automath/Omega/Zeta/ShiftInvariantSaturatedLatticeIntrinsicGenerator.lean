@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.ShiftInvariantSaturatedLatticePrincipalIdeal
+import InfoGeometry.External.Automath.Omega.Zeta.ShiftInvariantSaturatedLatticePrincipalIdeal
 
 namespace Omega.Zeta
 

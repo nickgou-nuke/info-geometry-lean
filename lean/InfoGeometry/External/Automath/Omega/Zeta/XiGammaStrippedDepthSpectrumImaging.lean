@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiBulkCurvatureMomentGeneratingFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiBulkCurvatureMomentGeneratingFactorization
 
 namespace Omega.Zeta
 

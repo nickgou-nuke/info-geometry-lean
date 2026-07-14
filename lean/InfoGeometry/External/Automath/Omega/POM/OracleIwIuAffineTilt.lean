@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.OracleFailureExponentDualityFromDoubleLdp
+import InfoGeometry.External.Automath.Omega.POM.OracleFailureExponentDualityFromDoubleLdp
 
 namespace Omega.POM
 

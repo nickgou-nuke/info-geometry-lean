@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenKernelSolenoidBicompletion
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenKernelSolenoidBicompletion
 
 namespace Omega.Conclusion
 

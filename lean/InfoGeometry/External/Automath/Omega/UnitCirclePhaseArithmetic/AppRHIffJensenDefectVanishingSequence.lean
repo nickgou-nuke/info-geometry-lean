@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
-import Omega.UnitCirclePhaseArithmetic.AppRHIffJensenDefectZero
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppRHIffJensenDefectZero
 
 open Filter
 

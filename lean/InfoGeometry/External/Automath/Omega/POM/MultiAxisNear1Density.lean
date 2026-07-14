@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Omega.POM.MinkowskiBudgetBarrier
+import InfoGeometry.External.Automath.Omega.POM.MinkowskiBudgetBarrier
 
 namespace Omega.POM
 

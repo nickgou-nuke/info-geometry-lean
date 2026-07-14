@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.EA.ChiRigidityShadow
-import Omega.EA.Wedderburn
-import Omega.EA.Z2x2JointSpectralMeasure
+import InfoGeometry.External.Automath.Omega.EA.ChiRigidityShadow
+import InfoGeometry.External.Automath.Omega.EA.Wedderburn
+import InfoGeometry.External.Automath.Omega.EA.Z2x2JointSpectralMeasure
 
 namespace Omega.EA
 

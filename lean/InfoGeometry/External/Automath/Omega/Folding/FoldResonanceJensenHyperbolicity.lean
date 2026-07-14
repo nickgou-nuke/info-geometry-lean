@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Polynomial.Basic
-import Omega.Folding.FoldCosineProductEntireRenormalizationZeros
+import InfoGeometry.External.Automath.Omega.Folding.FoldCosineProductEntireRenormalizationZeros
 
 namespace Omega.Folding
 

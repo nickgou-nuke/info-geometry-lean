@@ -1,5 +1,5 @@
-import Omega.SPG.GodelDoublelogMinkowski
-import Omega.SPG.RegularLanguageStokesDyadicZetaRationality
+import InfoGeometry.External.Automath.Omega.SPG.GodelDoublelogMinkowski
+import InfoGeometry.External.Automath.Omega.SPG.RegularLanguageStokesDyadicZetaRationality
 
 namespace Omega.Conclusion
 

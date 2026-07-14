@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AmbiguityShellSpectralInvisibility
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellSpectralInvisibility
 
 namespace Omega.Conclusion
 

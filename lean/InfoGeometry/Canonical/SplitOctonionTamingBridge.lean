@@ -108,27 +108,28 @@ end Triality
 
 section DrazinInformation
 
-variable {Op State Info Residue : Type*}
-variable (P : InfoGeometry.OperatorAlgebra.DrazinInformationExtractionPacket
-  Op State Info Residue)
+variable {Op State : Type*}
+variable (P : InfoGeometry.OperatorAlgebra.DrazinInformationExtraction Op State)
 
 /--
-The stable-information law is available on admissible states. In the split-octonion
-interpretation, this is the stable associative/tamed readout side.
+The stable-information readout is the Drazin regular part on admissible states.
+In the split-octonion interpretation, this is the stable associative/tamed
+readout side.
 -/
-theorem stableInformation_holds_on_state
+theorem stableInformation_eq_regularPart_on_state
     (s : State) (h_state : P.readout.valid s) :
-    P.stableInformationLaw s :=
-  P.stableInformation_holds s h_state
+    P.stableInformation s = P.readout.regularPart s :=
+  P.stableInformation_eq_regularPart s h_state
 
 /--
-The singular-residue law is available on admissible states. In the split-octonion
-interpretation, this is where null/nilpotent defect data are retained.
+The singular-residue readout is the Drazin nilpotent residue on admissible
+states. In the split-octonion interpretation, this is where null/nilpotent
+defect data are retained.
 -/
-theorem singularResidue_holds_on_state
+theorem singularResidue_eq_nilpotentResidue_on_state
     (s : State) (h_state : P.readout.valid s) :
-    P.singularResidueLaw s :=
-  P.singularResidue_holds s h_state
+    P.singularResidue s = P.readout.nilpotentResidue s :=
+  P.singularResidue_eq_nilpotentResidue s h_state
 
 end DrazinInformation
 

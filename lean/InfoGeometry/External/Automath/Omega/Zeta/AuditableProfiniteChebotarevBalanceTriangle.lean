@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.AuditableProfiniteChebotarevFinite
+import InfoGeometry.External.Automath.Omega.Zeta.AuditableProfiniteChebotarevFinite
 
 namespace Omega.Zeta
 

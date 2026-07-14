@@ -1,4 +1,4 @@
-import Omega.Graph.PhiGraph
+import InfoGeometry.External.Automath.Omega.Graph.PhiGraph
 import Mathlib.Tactic
 
 namespace Omega.Folding

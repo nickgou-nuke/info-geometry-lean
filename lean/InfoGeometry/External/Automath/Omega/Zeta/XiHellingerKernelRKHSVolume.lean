@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiHellingerKernelFourierSech2
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerKernelFourierSech2
 
 namespace Omega.Zeta
 

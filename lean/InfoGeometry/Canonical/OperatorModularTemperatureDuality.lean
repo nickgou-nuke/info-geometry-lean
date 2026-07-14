@@ -98,7 +98,7 @@ is the operator analogue of
 
 `Ψ(β) + Φ(K) = <β,K>`.
 -/
-structure OperatorModularTemperatureDuality (Op : Type*) where
+structure Duality (Op : Type*) where
   /-- Closed Frobenius operator algebra/readout surface. -/
   frobenius : OperatorFrobeniusClosure Op
 
@@ -144,7 +144,7 @@ structure OperatorModularTemperatureDuality (Op : Type*) where
         0 ≤ massieu + dualPotential - frobenius.pairing betaOperator K'
 
 variable {Op : Type*}
-variable (D : OperatorModularTemperatureDuality Op)
+variable (D : Duality Op)
 
 /-- The modular beta/K action is the Frobenius trace of their product. -/
 theorem action_eq_trace_product :
@@ -164,7 +164,7 @@ theorem contact_balance :
 theorem fenchel_gap_eq_zero_at_contact :
     D.massieu + D.dualPotential -
       D.frobenius.pairing D.betaOperator D.modularHamiltonian = 0 := by
-  rw [← OperatorModularTemperatureDuality.contact_balance D]
+  rw [← contact_balance D]
   ring
 
 /-- Re-export the supplied Fenchel-gap nonnegativity law. -/
@@ -193,7 +193,7 @@ structure ModularFlowOperatorDuality
     (H Op : Type*)
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
   /-- Operator duality packet. -/
-  duality : OperatorModularTemperatureDuality Op
+  duality : Duality Op
 
   /-- Carrier map into the doubled-space endomorphism algebra used by ConnesCocycle. -/
   toAlgebraEnd :
@@ -235,7 +235,7 @@ theorem contact_balance :
     M.duality.massieu + M.duality.dualPotential =
       M.duality.frobenius.pairing
         M.duality.betaOperator M.duality.modularHamiltonian :=
-  OperatorModularTemperatureDuality.contact_balance M.duality
+  InfoGeometry.Canonical.OperatorModularTemperatureDuality.contact_balance M.duality
 
 end ModularFlowOperatorDuality
 

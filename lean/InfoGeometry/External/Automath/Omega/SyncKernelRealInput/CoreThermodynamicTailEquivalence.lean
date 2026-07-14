@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40GroundEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40GroundEntropy
 
 namespace Omega.SyncKernelRealInput
 

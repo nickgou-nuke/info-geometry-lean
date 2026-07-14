@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.LeyangSixthNormIdentity3Torsion
-import Omega.CircleDimension.S4V4KummerTorsorGeneratedByExplicit3torsion
+import InfoGeometry.External.Automath.Omega.CircleDimension.LeyangSixthNormIdentity3Torsion
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4KummerTorsorGeneratedByExplicit3torsion
 
 namespace Omega.CircleDimension
 

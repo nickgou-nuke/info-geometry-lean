@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
-import Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenCountableCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
 
 namespace Omega.Zeta
 

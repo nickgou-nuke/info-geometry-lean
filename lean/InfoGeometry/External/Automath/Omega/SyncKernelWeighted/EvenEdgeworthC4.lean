@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.EdgeworthSixEight
-import Omega.SyncKernelWeighted.PrimitiveFiniteSym
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.EdgeworthSixEight
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveFiniteSym
 
 namespace Omega.SyncKernelWeighted
 

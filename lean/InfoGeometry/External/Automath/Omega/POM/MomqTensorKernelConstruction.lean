@@ -1,5 +1,5 @@
-import Omega.POM.FiberMultiplicityMatrixProduct
-import Omega.POM.MomqPermutationSymmetry
+import InfoGeometry.External.Automath.Omega.POM.FiberMultiplicityMatrixProduct
+import InfoGeometry.External.Automath.Omega.POM.MomqPermutationSymmetry
 
 namespace Omega.POM
 

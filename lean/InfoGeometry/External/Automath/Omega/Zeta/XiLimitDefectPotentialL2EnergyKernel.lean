@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiLimitDefectPotentialRationalization
+import InfoGeometry.External.Automath.Omega.Zeta.XiLimitDefectPotentialRationalization
 
 open scoped BigOperators
 

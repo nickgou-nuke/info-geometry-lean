@@ -1,4 +1,4 @@
-import Omega.GU.TerminalWindow6PushforwardCharpolyGalois
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6PushforwardCharpolyGalois
 
 namespace Omega.GU
 

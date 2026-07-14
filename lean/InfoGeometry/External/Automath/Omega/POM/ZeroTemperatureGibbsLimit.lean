@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.LowTemperatureThreeTermExpansion
+import InfoGeometry.External.Automath.Omega.POM.LowTemperatureThreeTermExpansion
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.ReciprocalPlusKernelRhImpliesToyRh
-import Omega.Zeta.XiEndpointAbsorptionAdamsRescaling
+import InfoGeometry.External.Automath.Omega.Zeta.ReciprocalPlusKernelRhImpliesToyRh
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAbsorptionAdamsRescaling
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizedGsEmbeddingOrder
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedGsEmbeddingOrder
 
 namespace Omega.CircleDimension
 

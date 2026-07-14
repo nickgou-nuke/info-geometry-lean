@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.FoldBinDigitDP
-import Omega.Folding.FoldBinFiberTail
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinDigitDP
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinFiberTail
 
 namespace Omega.Folding
 

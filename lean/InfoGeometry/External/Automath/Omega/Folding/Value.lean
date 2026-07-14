@@ -1,4 +1,4 @@
-import Omega.Folding.Weight
+import InfoGeometry.External.Automath.Omega.Folding.Weight
 
 namespace Omega
 

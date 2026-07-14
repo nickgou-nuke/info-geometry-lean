@@ -1,4 +1,4 @@
-import Omega.GU.BdryChiTwistedBinaryLabelExistence
+import InfoGeometry.External.Automath.Omega.GU.BdryChiTwistedBinaryLabelExistence
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.Tactic
 

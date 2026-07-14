@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FoldInversionZeroRateStrongConverse
+import InfoGeometry.External.Automath.Omega.POM.FoldInversionZeroRateStrongConverse
 
 namespace Omega.Folding
 

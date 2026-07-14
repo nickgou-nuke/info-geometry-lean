@@ -1,2 +1,0 @@
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding.AppendixPentagonWord
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding.Trajectory

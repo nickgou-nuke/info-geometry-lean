@@ -1,4 +1,4 @@
-import Omega.POM.TensorFoldResultantRecursion
+import InfoGeometry.External.Automath.Omega.POM.TensorFoldResultantRecursion
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.RqQinftyEndpoint
+import InfoGeometry.External.Automath.Omega.POM.RqQinftyEndpoint
 
 namespace Omega.POM
 

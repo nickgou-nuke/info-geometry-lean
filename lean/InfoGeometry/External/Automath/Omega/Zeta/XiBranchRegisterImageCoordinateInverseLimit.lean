@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
 
 namespace Omega.Zeta
 

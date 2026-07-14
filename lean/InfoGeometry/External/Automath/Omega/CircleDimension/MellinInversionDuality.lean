@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.MellinUnitarySlice
+import InfoGeometry.External.Automath.Omega.Zeta.MellinUnitarySlice
 
 namespace Omega.CircleDimension
 

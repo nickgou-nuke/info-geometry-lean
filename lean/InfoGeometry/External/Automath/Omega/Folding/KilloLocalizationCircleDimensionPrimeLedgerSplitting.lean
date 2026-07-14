@@ -1,5 +1,5 @@
-import Omega.CircleDimension.FiniteLocalizationDirectsumPrimeLedgerExactSequence
-import Omega.Zeta.LocalizedIntegersPadicKernelRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteLocalizationDirectsumPrimeLedgerExactSequence
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersPadicKernelRigidity
 
 namespace Omega.Folding
 

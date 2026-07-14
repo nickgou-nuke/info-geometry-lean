@@ -63,18 +63,6 @@ theorem caliber_eq_curvatureTrace :
     P.caliber = P.trace (thermodynamic_curvature P.flow) := by
   rw [P.caliber_eq_pathEntropy, P.pathEntropy_eq_curvatureTrace]
 
-/-- Read back the path entropy as the curvature trace. -/
-@[simp]
-theorem pathEntropy_eq_curvatureTrace_readout :
-    P.pathEntropy = P.trace (thermodynamic_curvature P.flow) :=
-  P.pathEntropy_eq_curvatureTrace
-
-/-- Read back the stored caliber as the path entropy. -/
-@[simp]
-theorem caliber_eq_pathEntropy_readout :
-    P.caliber = P.pathEntropy :=
-  P.caliber_eq_pathEntropy
-
 /-- Exact detailed balance forces the curvature readout to vanish. -/
 theorem pathEntropy_eq_zero_of_detailed_balance
     (hdb : entropy_production P.flow = 0) :
@@ -90,11 +78,6 @@ theorem caliber_eq_zero_of_detailed_balance
     P.caliber = 0 := by
   rw [P.caliber_eq_pathEntropy]
   exact P.pathEntropy_eq_zero_of_detailed_balance hdb
-
-/-- The path word is a finite trajectory readout. -/
-theorem path_readout :
-    P.path = P.path :=
-  rfl
 
 end MaximumCaliberPacket
 
@@ -115,15 +98,6 @@ structure MaximumCaliberOptimizer (Path : Type u) where
 namespace MaximumCaliberOptimizer
 
 variable {Path : Type u} (M : MaximumCaliberOptimizer Path)
-
-/-- Readback: the supplied MaxCal optimizer satisfies the path constraints. -/
-theorem feasible_readout : M.constraint M.optimizer :=
-  M.feasible
-
-/-- Readback: the supplied MaxCal optimizer maximizes the supplied caliber. -/
-theorem maximizes_readout (μ : Path → ℝ) (hμ : M.constraint μ) :
-    M.caliber μ ≤ M.caliber M.optimizer :=
-  M.maximizes μ hμ
 
 end MaximumCaliberOptimizer
 

@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.TypedReadoutPersistence
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.TypedReadoutPersistence
 
 namespace Omega.RecursiveAddressing.GluingFailureTypedReadoutPersistenceAPAL
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Zeckendorf
-import Omega.EA.InternalProductAddsValues
-import Omega.EA.PrimeRegisterFibValuation
-import Omega.Folding.Fold
-import Omega.Folding.Rewrite
+import InfoGeometry.External.Automath.Omega.EA.InternalProductAddsValues
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterFibValuation
+import InfoGeometry.External.Automath.Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.Rewrite
 
 namespace Omega.EA
 

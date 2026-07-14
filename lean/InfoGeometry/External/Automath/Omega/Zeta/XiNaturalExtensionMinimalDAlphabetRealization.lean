@@ -1,5 +1,5 @@
-import Omega.Folding.KilloNaturalExtensionBranchRegister
-import Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
+import InfoGeometry.External.Automath.Omega.Folding.KilloNaturalExtensionBranchRegister
+import InfoGeometry.External.Automath.Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
 
 namespace Omega.Zeta
 

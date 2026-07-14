@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SPG.CheegerStokes
-import Omega.SPG.CubeLinftyPrimitiveBoundaryRigidity
-import Omega.SPG.HypercubeGradientConsistency
+import InfoGeometry.External.Automath.Omega.SPG.CheegerStokes
+import InfoGeometry.External.Automath.Omega.SPG.CubeLinftyPrimitiveBoundaryRigidity
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeGradientConsistency
 
 namespace Omega.Conclusion
 

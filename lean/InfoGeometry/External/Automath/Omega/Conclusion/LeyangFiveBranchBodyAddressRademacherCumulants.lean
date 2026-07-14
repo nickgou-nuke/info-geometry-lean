@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.LeyangFiveHypercubePartitionSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangFiveHypercubePartitionSplitting
 
 namespace Omega.Conclusion
 

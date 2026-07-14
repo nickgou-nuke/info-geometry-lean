@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.LkChebyshevCharpoly
+import InfoGeometry.External.Automath.Omega.POM.LkChebyshevCharpoly
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Basic
-import Omega.Folding.BinGaugeVolume
-import Omega.Folding.FoldBinRenyiRateCollapse
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolume
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRenyiRateCollapse
 
 namespace Omega.GroupUnification
 

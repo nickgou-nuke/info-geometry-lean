@@ -196,7 +196,7 @@ section ModularHamiltonian
 structure WeylModularHamiltonianPhysicalReadoutCarrier
     (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   bridge :
-    InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge.SuperchargeModularHamiltonianBridge
+    InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge.Bridge
       (E := E)
 
 namespace WeylModularHamiltonianPhysicalReadoutCarrier
@@ -220,7 +220,7 @@ theorem Ksur_eq_calibrated :
       C.bridge.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
           C.bridge.CIK :=
-  C.bridge.Ksur_True
+  C.bridge.Ksur_eq
 
 end WeylModularHamiltonianPhysicalReadoutCarrier
 

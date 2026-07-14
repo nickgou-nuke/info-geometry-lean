@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Zeta.XiJDiscriminantMobiusRigidityCovariance
+import InfoGeometry.External.Automath.Omega.Zeta.XiJDiscriminantMobiusRigidityCovariance
 
 namespace Omega.Zeta
 

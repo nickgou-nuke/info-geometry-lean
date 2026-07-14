@@ -1,5 +1,5 @@
-import Omega.Conclusion.SerrinWulffScaleLedgerImpossibility
-import Omega.Zeta.XiTerminalGbcStabilizedTerminalObject
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinWulffScaleLedgerImpossibility
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalGbcStabilizedTerminalObject
 
 namespace Omega.Conclusion
 

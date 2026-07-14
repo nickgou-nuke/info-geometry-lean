@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FiberRamanujanShadowCapacityReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.FiberRamanujanShadowCapacityReconstruction
 
 namespace Omega.Conclusion
 

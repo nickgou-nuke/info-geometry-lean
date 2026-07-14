@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryGodelDimensionSeparatedUnionMax
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelDimensionSeparatedUnionMax
 
 namespace Omega.SPG
 

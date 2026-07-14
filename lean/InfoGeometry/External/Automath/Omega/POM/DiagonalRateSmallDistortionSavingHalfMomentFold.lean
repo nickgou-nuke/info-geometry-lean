@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
-import Omega.POM.RenyiHalfHellingerTensorAdditivity
+import InfoGeometry.External.Automath.Omega.POM.RenyiHalfHellingerTensorAdditivity
 
 open Filter Topology
 

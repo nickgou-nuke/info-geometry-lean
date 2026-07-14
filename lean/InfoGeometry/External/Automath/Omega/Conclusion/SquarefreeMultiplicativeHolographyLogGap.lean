@@ -1,4 +1,4 @@
-import Omega.POM.SufficientStatisticResidualNoninvertibility
+import InfoGeometry.External.Automath.Omega.POM.SufficientStatisticResidualNoninvertibility
 
 open scoped goldenRatio
 

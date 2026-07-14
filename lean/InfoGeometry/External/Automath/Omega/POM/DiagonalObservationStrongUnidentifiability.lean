@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalMomentFreeEnergyDegeneracy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalMomentFreeEnergyDegeneracy
 
 open Filter Topology
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6OffsetsReturnTimes
-import Omega.GU.TerminalResetEventsSturmian
-import Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6OffsetsReturnTimes
+import InfoGeometry.External.Automath.Omega.GU.TerminalResetEventsSturmian
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
 
 namespace Omega.GU
 

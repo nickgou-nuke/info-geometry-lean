@@ -1,8 +1,8 @@
-import Omega.Folding.MomentTriple
-import Omega.Folding.Weight
-import Omega.Core.Fib
-import Omega.Folding.CCSPrime8Split
-import Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Folding.MomentTriple
+import InfoGeometry.External.Automath.Omega.Folding.Weight
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.CCSPrime8Split
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
 import Mathlib.Logic.Function.Basic
 
 namespace Omega

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityNotMeasurableFromF8
 
 namespace Omega.GroupUnification
 

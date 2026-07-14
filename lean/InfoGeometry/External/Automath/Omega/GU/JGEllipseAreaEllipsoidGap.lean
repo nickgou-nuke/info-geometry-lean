@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.GU.GodelLorentzAlgebraization
+import InfoGeometry.External.Automath.Omega.GU.GodelLorentzAlgebraization
 
 namespace Omega.GU
 

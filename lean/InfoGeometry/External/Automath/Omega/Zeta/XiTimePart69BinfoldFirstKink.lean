@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart69AuditedEvenPurePigeonholeLinearPhase
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart69AuditedEvenPurePigeonholeLinearPhase
 
 namespace Omega.Zeta
 

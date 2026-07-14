@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Data.Complex.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Tactic
-import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+import InfoGeometry.External.Automath.Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
 
 namespace Omega.SyncKernelWeighted
 

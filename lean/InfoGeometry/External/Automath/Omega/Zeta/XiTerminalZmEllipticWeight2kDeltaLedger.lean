@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmEllipticWeightNCorrespondenceBidegreeDelta
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmEllipticWeightNCorrespondenceBidegreeDelta
 
 namespace Omega.Zeta
 

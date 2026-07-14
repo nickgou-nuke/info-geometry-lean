@@ -1,4 +1,4 @@
-import Omega.Topos.GerbeNullSemantics
+import InfoGeometry.External.Automath.Omega.Topos.GerbeNullSemantics
 
 namespace Omega.Topos
 

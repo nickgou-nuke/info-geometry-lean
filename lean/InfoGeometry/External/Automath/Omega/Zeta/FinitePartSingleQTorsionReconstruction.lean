@@ -1,4 +1,4 @@
-import Omega.Zeta.IntroCyclicReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.IntroCyclicReconstruction
 
 namespace Omega.Zeta
 

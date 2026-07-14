@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.ChebyshevAdamsFullyRational
-import Omega.UnitCirclePhaseArithmetic.CompletionSubringUniqueAngle
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.ChebyshevAdamsFullyRational
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.CompletionSubringUniqueAngle
 
 namespace Omega.SyncKernelWeighted
 

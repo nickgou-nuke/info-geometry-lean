@@ -1,4 +1,4 @@
-import Omega.Conclusion.SquarefreeRTLaminarNesting
+import InfoGeometry.External.Automath.Omega.Conclusion.SquarefreeRTLaminarNesting
 
 namespace Omega.Conclusion
 

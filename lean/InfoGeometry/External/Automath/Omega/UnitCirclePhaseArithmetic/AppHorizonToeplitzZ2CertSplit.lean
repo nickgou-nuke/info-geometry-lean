@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzZ2Splitting
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppHorizonToeplitzZ2Splitting
 
 namespace Omega.UnitCirclePhaseArithmetic
 

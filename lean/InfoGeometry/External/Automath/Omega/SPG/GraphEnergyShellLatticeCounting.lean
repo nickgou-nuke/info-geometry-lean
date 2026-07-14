@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Diagonal
 import Mathlib.Tactic
-import Omega.SPG.GraphCycleLatticeWeightedDiscriminant
+import InfoGeometry.External.Automath.Omega.SPG.GraphCycleLatticeWeightedDiscriminant
 
 namespace Omega.SPG
 

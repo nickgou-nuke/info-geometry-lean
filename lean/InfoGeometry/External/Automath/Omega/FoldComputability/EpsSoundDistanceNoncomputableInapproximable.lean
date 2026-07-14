@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.FoldComputability.EpsSoundDistanceHaltingSpectrum
+import InfoGeometry.External.Automath.Omega.FoldComputability.EpsSoundDistanceHaltingSpectrum
 
 namespace Omega.FoldComputability
 

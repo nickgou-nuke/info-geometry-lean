@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CoherenceTimeLowerBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.CoherenceTimeLowerBound
 
 namespace Omega.CircleDimension.CoherenceTimeBarrier2Pow
 

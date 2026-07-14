@@ -1,4 +1,4 @@
-import Omega.POM.NoGlobalComputableCanonicalRepresentative
+import InfoGeometry.External.Automath.Omega.POM.NoGlobalComputableCanonicalRepresentative
 
 namespace Omega.FoldComputability
 

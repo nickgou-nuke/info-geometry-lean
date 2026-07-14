@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.S4BoundaryTotalTorusRankConservation
+import InfoGeometry.External.Automath.Omega.Conclusion.S4BoundaryTotalTorusRankConservation
 
 namespace Omega.Conclusion
 

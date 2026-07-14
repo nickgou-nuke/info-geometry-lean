@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalySpectralVsAmplitudePrimes
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralVsAmplitudePrimes
 
 namespace Omega.Conclusion
 

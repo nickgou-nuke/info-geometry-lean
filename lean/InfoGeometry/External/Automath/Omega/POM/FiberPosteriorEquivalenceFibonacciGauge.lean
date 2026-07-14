@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberPosteriorEquivalenceActivityField
+import InfoGeometry.External.Automath.Omega.POM.FiberPosteriorEquivalenceActivityField
 
 namespace Omega.POM
 

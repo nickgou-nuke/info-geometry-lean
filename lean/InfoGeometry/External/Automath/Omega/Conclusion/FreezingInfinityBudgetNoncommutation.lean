@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
-import Omega.Zeta.DerivedFixedFreezingRenyiSurface
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedFixedFreezingRenyiSurface
 
 namespace Omega.Conclusion
 

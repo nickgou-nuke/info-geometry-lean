@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.SPG.GaugeGroupoidCircleLaw
+import InfoGeometry.External.Automath.Omega.SPG.GaugeGroupoidCircleLaw
 
 namespace Omega.SPG
 

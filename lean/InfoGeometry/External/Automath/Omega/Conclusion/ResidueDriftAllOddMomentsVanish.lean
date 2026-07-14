@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GroupUnification.ChiralOrthogonalityTypeObservables
+import InfoGeometry.External.Automath.Omega.GroupUnification.ChiralOrthogonalityTypeObservables
 
 namespace Omega.Conclusion
 

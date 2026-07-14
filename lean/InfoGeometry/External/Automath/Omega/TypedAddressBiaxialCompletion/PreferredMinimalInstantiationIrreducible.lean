@@ -1,6 +1,6 @@
 import Mathlib.Logic.IsEmpty.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.PreferredMinimalInstantiationExtraction
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PreferredMinimalInstantiationExtraction
 
 namespace Omega.TypedAddressBiaxialCompletion
 

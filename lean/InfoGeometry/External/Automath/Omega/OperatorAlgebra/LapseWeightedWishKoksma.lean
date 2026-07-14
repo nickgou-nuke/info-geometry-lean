@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.LapseTimeGaugeInvariance
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.LapseTimeGaugeInvariance
 import Mathlib.Tactic
 
 namespace Omega.OperatorAlgebra

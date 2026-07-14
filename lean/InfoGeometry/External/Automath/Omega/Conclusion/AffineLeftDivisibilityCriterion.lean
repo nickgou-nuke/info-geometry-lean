@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineNormalFormSemidirect
-import Omega.Conclusion.PrimorialPrefixArithmeticMatrixCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineNormalFormSemidirect
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimorialPrefixArithmeticMatrixCriterion
 
 namespace Omega.Conclusion
 

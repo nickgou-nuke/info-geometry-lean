@@ -148,7 +148,7 @@ theorem finite_braiding_input_readout
     F_sq τ s s_sq tau_sq_add_tau,
     det_F τ s s_sq tau_sq_add_tau,
     B_eq_FRF q τ s,
-    artin_relation q τ s artin⟩
+    artin⟩
 
 /-! ## Zorn/inductive-support readout -/
 

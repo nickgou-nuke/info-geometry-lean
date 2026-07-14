@@ -1,5 +1,5 @@
-import Omega.Folding.Fold
-import Omega.Folding.PhiSlidingBlockCode
+import InfoGeometry.External.Automath.Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.PhiSlidingBlockCode
 
 namespace Omega.Folding.PhiEquivariant
 

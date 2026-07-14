@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.POM.ReplicaSoftcoreWordTraceExtremal
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreWordTraceExtremal
 
 namespace Omega.POM
 

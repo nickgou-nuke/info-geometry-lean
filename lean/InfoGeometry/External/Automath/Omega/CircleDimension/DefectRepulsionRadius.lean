@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
-import Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
 
 namespace Omega.CircleDimension
 

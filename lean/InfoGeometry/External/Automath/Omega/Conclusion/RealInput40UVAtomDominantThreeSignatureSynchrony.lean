@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.RealInput40UVAtomCore
-import Omega.Conclusion.RealInput40UniquePrimitiveTwoStepAtom
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40UVAtomCore
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40UniquePrimitiveTwoStepAtom
 
 namespace Omega.Conclusion
 

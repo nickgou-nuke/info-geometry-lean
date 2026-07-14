@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xaaSingleFunctionalRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xaaSingleFunctionalRigidity
 
 namespace Omega.Zeta
 

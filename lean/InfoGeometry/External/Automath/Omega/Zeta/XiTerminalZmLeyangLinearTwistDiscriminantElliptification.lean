@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmEllipticWeightNCorrespondenceBidegreeDelta
-import Omega.Zeta.XiTerminalZmLeyangEllipticFourBranchRecursion
-import Omega.Zeta.XiTerminalZmLeyangEllipticStructure
-import Omega.Zeta.XiTerminalZmLeyangLinearTwistQuarticFamily
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmEllipticWeightNCorrespondenceBidegreeDelta
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangEllipticFourBranchRecursion
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangEllipticStructure
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangLinearTwistQuarticFamily
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
-import Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.RadialInformationProjectionLowerBound
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
 
 namespace Omega.CircleDimension
 

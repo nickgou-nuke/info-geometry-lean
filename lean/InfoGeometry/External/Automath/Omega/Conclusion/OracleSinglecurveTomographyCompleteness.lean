@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.OracleSigmaDeterminesTauOn01
+import InfoGeometry.External.Automath.Omega.POM.OracleSigmaDeterminesTauOn01
 
 namespace Omega.Conclusion
 

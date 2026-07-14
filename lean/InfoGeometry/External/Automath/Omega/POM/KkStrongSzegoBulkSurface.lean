@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.LkAreaLawQform
+import InfoGeometry.External.Automath.Omega.POM.LkAreaLawQform
 
 namespace Omega.POM
 

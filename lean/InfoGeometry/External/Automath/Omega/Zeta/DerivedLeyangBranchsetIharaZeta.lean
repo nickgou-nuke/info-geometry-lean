@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Tactic
-import Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedLeyangBranchsetAdjacencySpectrumHeatTrace
 
 open scoped BigOperators
 

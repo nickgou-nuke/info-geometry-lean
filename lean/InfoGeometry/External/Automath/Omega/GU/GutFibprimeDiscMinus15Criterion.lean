@@ -1,4 +1,4 @@
-import Omega.GU.FibPrimePisano
+import InfoGeometry.External.Automath.Omega.GU.FibPrimePisano
 
 namespace Omega.GU
 

@@ -1,4 +1,4 @@
-import Omega.CircleDimension.RegisterCircleModpFormula
+import InfoGeometry.External.Automath.Omega.CircleDimension.RegisterCircleModpFormula
 
 namespace Omega.TypedAddressBiaxialCompletion
 

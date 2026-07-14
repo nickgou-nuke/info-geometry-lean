@@ -1,5 +1,5 @@
-import Omega.Conclusion.StableSuccessorFaithfulSemigroup
-import Omega.Conclusion.WallisFiniteAdditiveLedgerImpossible
+import InfoGeometry.External.Automath.Omega.Conclusion.StableSuccessorFaithfulSemigroup
+import InfoGeometry.External.Automath.Omega.Conclusion.WallisFiniteAdditiveLedgerImpossible
 
 namespace Omega.Conclusion
 

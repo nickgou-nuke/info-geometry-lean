@@ -1,5 +1,5 @@
-import Omega.Folding.Fiber
-import Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
 
 namespace Omega.Folding
 

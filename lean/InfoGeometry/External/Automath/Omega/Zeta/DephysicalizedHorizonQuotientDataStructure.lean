@@ -1,5 +1,5 @@
-import Omega.Zeta.DephysMultiplicityIndexGapLinearCmi
-import Omega.Zeta.DephysPetzSufficiencyEquivalences
+import InfoGeometry.External.Automath.Omega.Zeta.DephysMultiplicityIndexGapLinearCmi
+import InfoGeometry.External.Automath.Omega.Zeta.DephysPetzSufficiencyEquivalences
 import Mathlib.Data.Set.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic

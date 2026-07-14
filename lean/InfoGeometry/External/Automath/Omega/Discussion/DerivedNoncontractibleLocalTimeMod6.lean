@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.NoncontractibleLossMod6Explicit
+import InfoGeometry.External.Automath.Omega.Conclusion.NoncontractibleLossMod6Explicit
 
 namespace Omega.Discussion
 

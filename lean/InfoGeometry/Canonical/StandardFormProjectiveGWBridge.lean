@@ -4,7 +4,6 @@ import InfoGeometry.Canonical.StandardFormNaturalConeBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
 import InfoGeometry.Meta.Architecture
 
-set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
 open scoped InnerProductSpace
@@ -50,7 +49,7 @@ not claim that a bare Type III factor determines a GW volume, nor that a Weyl
 gauge is canonical.
 -/
 @[rep_depth projective]
-structure StandardFormProjectiveGWBridge where
+structure Bridge where
   /-- Standard-form/natural-cone carrier for normal positive state geometry. -/
   standardCone :
     NaturalConeStandardFormInterface Unit H Functional
@@ -113,15 +112,15 @@ structure StandardFormProjectiveGWBridge where
       inverseWeylGauge (scaleState c s) = (c ^ 2)⁻¹ * inverseWeylGauge s
 
   /-- Physical volume is the product of intensity and inverse Weyl gauge. -/
-  physicalVolume_True :
+  physicalVolume_eq_gwIntensity_mul_inverseWeylGauge :
     ∀ s : State, physicalVolume s = gwIntensity s * inverseWeylGauge s
 
   /-- Optional backend certificate tying the standard-form sector to the state. -/
   standardForm_state_calibration : Prop
 
-namespace StandardFormProjectiveGWBridge
+namespace Bridge
 
-variable (B : StandardFormProjectiveGWBridge (H := H) (Functional := Functional)
+variable (B : Bridge (H := H) (Functional := Functional)
   (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
 
 /-- The selected normal functional has a standard-form natural-cone vector. -/
@@ -176,16 +175,16 @@ theorem physicalVolume_scale_invariant
     B.physicalVolume (B.scaleState c s)
         = B.gwIntensity (B.scaleState c s) *
             B.inverseWeylGauge (B.scaleState c s) := by
-            rw [B.physicalVolume_True]
+            rw [B.physicalVolume_eq_gwIntensity_mul_inverseWeylGauge]
     _ = (c ^ 2 * B.gwIntensity s) * ((c ^ 2)⁻¹ * B.inverseWeylGauge s) := by
             rw [B.gwIntensity_weight_two c s hc,
               B.inverseWeylGauge_weight_minus_two c s hc]
     _ = B.gwIntensity s * B.inverseWeylGauge s := by
             field_simp [hc2]
     _ = B.physicalVolume s := by
-            rw [B.physicalVolume_True]
+            rw [B.physicalVolume_eq_gwIntensity_mul_inverseWeylGauge]
 
-end StandardFormProjectiveGWBridge
+end Bridge
 
 /-! ## Binary-word natural-cone face extension -/
 
@@ -199,10 +198,10 @@ external witness; this file only transports its localization readback alongside
 the projective volume cancellation theorem.
 -/
 @[rep_depth projective]
-structure StandardFormProjectiveGWFaceBridge where
+structure FaceBridge where
   /-- Existing standard-form projective GW/Weyl bridge. -/
   base :
-    StandardFormProjectiveGWBridge (H := H) (Functional := Functional)
+    Bridge (H := H) (Functional := Functional)
       (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff)
 
   /-- Binary-word standard-form natural-cone face localization bridge. -/
@@ -212,9 +211,9 @@ structure StandardFormProjectiveGWFaceBridge where
   /-- Optional certificate tying the projective state to the localized face data. -/
   face_state_calibration : Prop
 
-namespace StandardFormProjectiveGWFaceBridge
+namespace FaceBridge
 
-variable (B : StandardFormProjectiveGWFaceBridge (H := H) (Functional := Functional)
+variable (B : FaceBridge (H := H) (Functional := Functional)
   (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
 
 /-- Binary-word localization operator inherited from the standard-form face bridge. -/
@@ -235,7 +234,7 @@ theorem cone_face_localization
     (w : TypeIIIModularCantorSystem.BinaryWord)
     {ξ : InfoGeometry.Krein.DoubledSpace H}
     (hξ : ξ ∈ B.faceBridge.naturalCone) :
-    StandardFormProjectiveGWFaceBridge.localizationOp B w ξ ∈
+    FaceBridge.localizationOp B w ξ ∈
       B.faceBridge.naturalCone :=
   BinaryWordModularFaceBridge.cone_face_localization B.faceBridge w hξ
 
@@ -244,9 +243,9 @@ theorem cone_face_localization
 theorem physicalVolume_scale_invariant
     (c : ℝ) (hc : c ≠ 0) (s : State) :
     B.base.physicalVolume (B.base.scaleState c s) = B.base.physicalVolume s :=
-  StandardFormProjectiveGWBridge.physicalVolume_scale_invariant B.base c hc s
+  Bridge.physicalVolume_scale_invariant B.base c hc s
 
-end StandardFormProjectiveGWFaceBridge
+end FaceBridge
 
 end Core
 

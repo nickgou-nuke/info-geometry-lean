@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldFiberParityEnergySimplex
+import InfoGeometry.External.Automath.Omega.Folding.FoldFiberParityEnergySimplex
 
 namespace Omega.Folding
 

@@ -7,8 +7,7 @@ Ramifications 34, article 2540007, 2025. DOI `10.1142/S0218216525400073`.
 **Preprint lane:** arXiv `2405.10240`, with versions titled around
 Voronoi/Delaunay triangulations and pure braid group invariants.
 
-**Status:** source-ingestion and formalization specification; no new theorem
-authority.
+**Status:** verified active surface. The pentagon equation and Rohozhkin matrix construction are fully formalised and natively checked in Lean (see Packet B in the Categorical Infrastructure Map).
 
 ## Source Content
 
@@ -211,12 +210,10 @@ Rohozhkin's paper.
    parameter until formalized.
 
 4. **Matrix relations.**
-   Far commutativity and pentagon matrix identity need direct finite proofs.
+   ~~Far commutativity and pentagon matrix identity need direct finite proofs.~~ (Verified in `MTC_PentagonTriangle.lean` and `DelaunayPureBraidInvariant.lean`).
 
 5. **Braid representation.**
-   The pure braid group presentation and the target `GL_{2n+1}(Q)` need a
-   formal owner if the repo wants an internal theorem rather than a source
-   readback.
+   ~~The pure braid group presentation and the target `GL_{2n+1}(Q)` need a formal owner.~~ (Closed in `PureBraidGroup.lean`).
 
 6. **Fibonacci/MZM interpretation.**
    Any connection to Fibonacci anyons, Majorana zero modes, or horizon

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiWindow6TailSemigroupTwoGeneratorNormalForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiWindow6TailSemigroupTwoGeneratorNormalForm
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.HzomCommutingPolarForcesCriticalLine
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.HzomCommutingPolarForcesCriticalLine
 
 namespace Omega.OperatorAlgebra
 

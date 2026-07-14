@@ -1,6 +1,6 @@
-import Omega.Folding.BernoulliPBitpairLaw
-import Omega.Folding.BernoulliPEndpointLdpRestated
-import Omega.Folding.BernoulliPPressureQuartic
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPBitpairLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointLdpRestated
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPPressureQuartic
 
 namespace Omega.Folding
 

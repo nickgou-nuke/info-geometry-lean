@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTimePart76IntegerEllipseAtomicLengthDivisibility
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart76IntegerEllipseAtomicLengthDivisibility
 
 namespace Omega.Zeta
 

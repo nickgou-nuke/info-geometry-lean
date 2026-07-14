@@ -8,7 +8,7 @@ This file crosses the categorical boundary for the graded-trace/KMS identity.
 
 `GradedTraceBridge` proves the normalized projection-level identity
 
-`τL0(S*_n S_m) = ζβ * Φ.φ(S*_n S_m)`.
+`τL0(S_n S*_m) = ζβ * Φ.φ(S_n S*_m)`.
 
 The theorem below transports any such identity through a compatible categorical
 cone into an algebraic direct limit.  It does not assert an analytic infinite

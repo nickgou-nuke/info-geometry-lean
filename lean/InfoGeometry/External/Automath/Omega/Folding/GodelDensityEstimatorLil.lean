@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.GodelDensityEstimatorCltEfficient
+import InfoGeometry.External.Automath.Omega.Folding.GodelDensityEstimatorCltEfficient
 
 open Filter
 open scoped Topology

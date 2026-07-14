@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.AdditionCollisionHoelderLowerBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.AdditionCollisionHoelderLowerBound
 
 namespace Omega.SyncKernelWeighted
 

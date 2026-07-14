@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Conclusion.ZGDivisibilitySeriesHardcoreCylinderMass
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGDivisibilitySeriesHardcoreCylinderMass
 
 namespace Omega.Conclusion
 

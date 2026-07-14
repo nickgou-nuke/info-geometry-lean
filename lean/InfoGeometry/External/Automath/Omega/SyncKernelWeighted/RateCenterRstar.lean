@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RateCurveCenterSliceAudit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RateCurveCenterSliceAudit
 
 namespace Omega.SyncKernelWeighted
 

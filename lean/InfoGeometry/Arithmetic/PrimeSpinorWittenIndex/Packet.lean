@@ -1,8 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Readout
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Pfaffian
-import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Guardrail
-import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 
 noncomputable section
 
@@ -12,22 +10,17 @@ open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 namespace InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 
 structure PrimeSpinorWittenIndexPacket
-  (PrimeLabel R Operator PfaffianReadout ZeroModeReadout : Type*)
+  (PrimeLabel R : Type*)
   [CommRing R] where
   modes : Finset PrimeLabel
   amplitude : PrimeLabel → R
-  majoranaCAR :
-    InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.PrimeMajoranaCARGate PrimeLabel Operator
-  wittenGate :
-    RealMajoranaWittenIndexGate Unit Operator PfaffianReadout ZeroModeReadout
 
 namespace PrimeSpinorWittenIndexPacket
 
 theorem finite_readout
-  {PrimeLabel R Operator PfaffianReadout ZeroModeReadout : Type*}
+  {PrimeLabel R : Type*}
   [CommRing R]
-  (P : PrimeSpinorWittenIndexPacket
-    PrimeLabel R Operator PfaffianReadout ZeroModeReadout) :
+  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) :
   finiteRealSpinorWittenReadout P.modes P.amplitude =
   finitePrimeWeylDenominator P.modes
     (fun p => scalarWeightFromSpinor (P.amplitude p)) := by
@@ -35,9 +28,9 @@ theorem finite_readout
     P.modes P.amplitude
 
 theorem PrimeSpinorWittenIndex
-  {PrimeLabel R Operator PfaffianReadout ZeroModeReadout : Type*}
+  {PrimeLabel R : Type*}
   [CommRing R]
-  (P : PrimeSpinorWittenIndexPacket PrimeLabel R Operator PfaffianReadout ZeroModeReadout) :
+  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) :
   finiteMajoranaPfaffianReadout P.modes P.amplitude =
     finiteRealSpinorWittenReadout P.modes P.amplitude ∧
   finiteRealSpinorWittenReadout P.modes P.amplitude =

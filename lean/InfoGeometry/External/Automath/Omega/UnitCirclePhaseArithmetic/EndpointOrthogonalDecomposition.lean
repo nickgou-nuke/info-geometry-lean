@@ -1,5 +1,5 @@
-import Omega.Discussion.ChebyshevAdams
-import Omega.UnitCirclePhaseArithmetic.ScaleLinearizationIdentityMultipliers
+import InfoGeometry.External.Automath.Omega.Discussion.ChebyshevAdams
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.ScaleLinearizationIdentityMultipliers
 
 namespace Omega.UnitCirclePhaseArithmetic
 

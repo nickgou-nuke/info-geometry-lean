@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.RiemannSiegelGabckeLocalZeroStability
+import InfoGeometry.External.Automath.Omega.CircleDimension.RiemannSiegelGabckeLocalZeroStability
 
 namespace Omega.CircleDimension
 

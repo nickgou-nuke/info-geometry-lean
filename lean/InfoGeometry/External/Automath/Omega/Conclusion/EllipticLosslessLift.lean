@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.EventEllipseGoldenMinimal
+import InfoGeometry.External.Automath.Omega.Conclusion.EventEllipseGoldenMinimal
 
 namespace Omega.Conclusion
 

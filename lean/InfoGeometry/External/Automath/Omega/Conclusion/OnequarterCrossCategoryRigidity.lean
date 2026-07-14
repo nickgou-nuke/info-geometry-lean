@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.HypercubeGradientConsistency
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeGradientConsistency
 
 namespace Omega.Conclusion
 

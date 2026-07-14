@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
-import Omega.TypedAddressBiaxialCompletion.Window6ExplicitFibers
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6AuditBudgetSplit
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6ExplicitFibers
 
 namespace Omega.Zeta
 

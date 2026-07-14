@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.DerivedHankelArithmeticAmbiguityLocalizesBadPrimes
-import Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedHankelArithmeticAmbiguityLocalizesBadPrimes
+import InfoGeometry.External.Automath.Omega.Zeta.XiEntropyGapExponentialSuppressionNonzeroFingerprint
 
 namespace Omega.Zeta
 

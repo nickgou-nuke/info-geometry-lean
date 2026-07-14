@@ -1,6 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.TemperatureKernelFreeEnergyHaltingEmbedding
+import InfoGeometry.External.Automath.Omega.Conclusion.TemperatureKernelFreeEnergyHaltingEmbedding
 
 namespace Omega.Conclusion
 

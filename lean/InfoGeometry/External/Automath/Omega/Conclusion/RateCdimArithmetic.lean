@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.AffineRegisterBudget
-import Omega.Conclusion.PrimeRegister
-import Omega.Conclusion.SubexponentialLedgerPhaseUniversality
+import InfoGeometry.External.Automath.Omega.Conclusion.AffineRegisterBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegister
+import InfoGeometry.External.Automath.Omega.Conclusion.SubexponentialLedgerPhaseUniversality
 
 namespace Omega.Conclusion
 

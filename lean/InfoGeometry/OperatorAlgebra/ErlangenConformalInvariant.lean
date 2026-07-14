@@ -64,8 +64,6 @@ Those require separate owner interfaces and, in the noncompact case, additional
 regularization/continuity/completion data.
 -/
 
-set_option linter.dupNamespace false
-
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant

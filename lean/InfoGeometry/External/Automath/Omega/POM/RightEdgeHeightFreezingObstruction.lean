@@ -1,4 +1,4 @@
-import Omega.POM.SpectrumRightEdgeSupportFunction
+import InfoGeometry.External.Automath.Omega.POM.SpectrumRightEdgeSupportFunction
 
 namespace Omega.POM
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Multiset.Count
 import Mathlib.Tactic
-import Omega.CircleDimension.FiniteProbeExtraction
-import Omega.Zeta.XiExteriorPowerGaussianBinomHilbert
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteProbeExtraction
+import InfoGeometry.External.Automath.Omega.Zeta.XiExteriorPowerGaussianBinomHilbert
 
 namespace Omega.DerivedConsequences
 

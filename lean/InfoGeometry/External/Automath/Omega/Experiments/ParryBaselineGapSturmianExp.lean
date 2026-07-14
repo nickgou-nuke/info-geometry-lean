@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Experiments.ParryBaselineGapSturmian
+import InfoGeometry.External.Automath.Omega.Experiments.ParryBaselineGapSturmian
 
 namespace Omega.Experiments.ParryBaselineGapSturmianExp
 

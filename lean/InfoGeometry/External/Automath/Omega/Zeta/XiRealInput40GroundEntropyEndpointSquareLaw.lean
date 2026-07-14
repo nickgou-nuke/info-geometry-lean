@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiRealInput40OutputFreezingPositiveEntropyHalffill
+import InfoGeometry.External.Automath.Omega.Zeta.XiRealInput40OutputFreezingPositiveEntropyHalffill
 
 namespace Omega.Zeta
 

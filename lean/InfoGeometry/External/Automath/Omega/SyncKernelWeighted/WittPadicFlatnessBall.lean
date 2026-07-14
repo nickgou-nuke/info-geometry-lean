@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.WittThetaDerivativeFilter
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittThetaDerivativeFilter
 
 namespace Omega.SyncKernelWeighted
 

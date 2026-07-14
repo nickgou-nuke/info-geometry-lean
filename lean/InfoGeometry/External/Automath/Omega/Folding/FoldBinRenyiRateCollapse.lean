@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Basic
-import Omega.Folding.Entropy
-import Omega.Folding.FoldBinTwoStateAsymptotic
-import Omega.Folding.FoldZeroUncertainty
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroUncertainty
 
 open Filter
 

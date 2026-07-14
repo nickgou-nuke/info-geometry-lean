@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
 
 namespace Omega.POM
 

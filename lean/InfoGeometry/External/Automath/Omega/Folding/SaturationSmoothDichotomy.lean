@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldPadicSaturationFiniteSet
-import Omega.Folding.TypicalFiberPolynomialSmoothness
+import InfoGeometry.External.Automath.Omega.Folding.FoldPadicSaturationFiniteSet
+import InfoGeometry.External.Automath.Omega.Folding.TypicalFiberPolynomialSmoothness
 
 namespace Omega.Folding
 

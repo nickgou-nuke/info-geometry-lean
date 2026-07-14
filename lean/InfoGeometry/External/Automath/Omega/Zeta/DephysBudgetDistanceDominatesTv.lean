@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DephysicalizedEpsSoundDominatesTv
+import InfoGeometry.External.Automath.Omega.Zeta.DephysicalizedEpsSoundDominatesTv
 
 namespace Omega.Zeta
 

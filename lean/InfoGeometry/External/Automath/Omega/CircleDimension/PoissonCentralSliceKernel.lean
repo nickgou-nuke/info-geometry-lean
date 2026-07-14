@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonCentralTwoChannelLocalUniqueness
-import Omega.CircleDimension.PoissonSymmetrization
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonCentralTwoChannelLocalUniqueness
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonSymmetrization
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.XiPwTypeSafetyNull
-import Omega.Zeta.XiUniqueContinuousTransverseRegister
+import InfoGeometry.External.Automath.Omega.Zeta.XiPwTypeSafetyNull
+import InfoGeometry.External.Automath.Omega.Zeta.XiUniqueContinuousTransverseRegister
 
 namespace Omega.Zeta
 

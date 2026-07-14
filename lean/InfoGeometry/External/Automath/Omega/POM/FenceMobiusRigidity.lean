@@ -1,7 +1,7 @@
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Fintype.Card
-import Omega.POM.FiberBirkhoffFenceIdealLattice
-import Omega.POM.FenceIntervalClosure
+import InfoGeometry.External.Automath.Omega.POM.FiberBirkhoffFenceIdealLattice
+import InfoGeometry.External.Automath.Omega.POM.FenceIntervalClosure
 
 namespace Omega.POM
 

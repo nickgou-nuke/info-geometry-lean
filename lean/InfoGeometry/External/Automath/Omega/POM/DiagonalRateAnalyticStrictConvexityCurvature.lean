@@ -1,4 +1,4 @@
-import Omega.POM.FiniteParetoLegendreCurvature
+import InfoGeometry.External.Automath.Omega.POM.FiniteParetoLegendreCurvature
 
 namespace Omega.POM
 

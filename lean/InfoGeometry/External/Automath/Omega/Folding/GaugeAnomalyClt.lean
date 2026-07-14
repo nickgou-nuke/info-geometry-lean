@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.GaugeAnomalyDensity
-import Omega.Folding.GaugeAnomalyFiniteVarianceClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyDensity
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyFiniteVarianceClosed
 
 namespace Omega.Folding
 

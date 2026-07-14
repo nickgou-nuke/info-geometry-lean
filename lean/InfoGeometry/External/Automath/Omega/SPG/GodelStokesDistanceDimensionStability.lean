@@ -1,4 +1,4 @@
-import Omega.SPG.BoundaryGodelGcdLipschitzStability
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelGcdLipschitzStability
 
 namespace Omega.SPG
 

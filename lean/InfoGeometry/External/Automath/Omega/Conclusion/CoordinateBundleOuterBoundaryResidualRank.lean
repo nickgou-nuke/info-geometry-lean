@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
-import Omega.SPG.CoordinateBundleScreenCount
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
+import InfoGeometry.External.Automath.Omega.SPG.CoordinateBundleScreenCount
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 namespace Omega.Conclusion
 

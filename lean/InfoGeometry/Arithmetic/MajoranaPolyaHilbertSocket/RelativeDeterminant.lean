@@ -17,7 +17,7 @@ not construct the operator, prove a Fredholm determinant identity, prove the
 Riemann--Weil explicit formula, or prove RH.
 -/
 structure RelativeMBKDeterminantScatteringPacket
-    (Operator ScatteringMatrix DeterminantReadout : Type*) where
+    (Operator ScatteringMatrix DeterminantReadout : Type) where
   diracCutoff : Operator
   diracFree : Operator
   relativeDeterminant : DeterminantReadout

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateDiagonalStatisticsComplete
-import Omega.POM.DiagonalRateSeparationSpectralResidue
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDiagonalStatisticsComplete
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateSeparationSpectralResidue
 
 namespace Omega.POM
 

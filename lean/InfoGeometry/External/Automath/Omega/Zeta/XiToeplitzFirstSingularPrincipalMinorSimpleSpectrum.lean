@@ -4,7 +4,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic
-import Omega.Zeta.XiToeplitzRankStabilizesDistinctUnitcircleRoots
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzRankStabilizesDistinctUnitcircleRoots
 
 open Matrix
 open scoped BigOperators ComplexOrder

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPEndpointLdpRestated
-import Omega.Folding.BernoulliPLdpCompressedCubicParametrization
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointLdpRestated
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPLdpCompressedCubicParametrization
 
 namespace Omega.Folding
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.SyncKernel3DHessianInverseExact
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SyncKernel3DHessianInverseExact
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Conclusion.HydrogenicPhaseblindAverageResidualBits
-import Omega.Conclusion.HydrogenicStrictTwolevelGaugeTower
-import Omega.Conclusion.HydrogenicVisibleClassRatioSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.HydrogenicPhaseblindAverageResidualBits
+import InfoGeometry.External.Automath.Omega.Conclusion.HydrogenicStrictTwolevelGaugeTower
+import InfoGeometry.External.Automath.Omega.Conclusion.HydrogenicVisibleClassRatioSplitting
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Conclusion.TqftGenusHausdorffMomentSequence
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusHausdorffMomentSequence
 
 namespace Omega.Conclusion
 

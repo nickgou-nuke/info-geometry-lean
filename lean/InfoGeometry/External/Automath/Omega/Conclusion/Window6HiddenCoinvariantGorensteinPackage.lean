@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldbinCoinvariantGorenstein
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldbinCoinvariantGorenstein
 
 namespace Omega.Conclusion
 

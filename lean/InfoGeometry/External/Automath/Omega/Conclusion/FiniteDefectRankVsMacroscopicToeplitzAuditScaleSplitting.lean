@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ToeplitzNegativeGeometryStrictificationOrthogonalSplit
-import Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzNegativeGeometryStrictificationOrthogonalSplit
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
 
 namespace Omega.Conclusion
 

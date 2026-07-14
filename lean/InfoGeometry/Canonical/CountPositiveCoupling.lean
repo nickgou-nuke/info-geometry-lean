@@ -101,6 +101,23 @@ where
 noncomputable def countInducedIterate (k : Nat) : SinkhornMatrix n :=
   (countInducedPositiveIterate (n := n) N k).M
 
+/-- Every count-induced Sinkhorn iterate remains entrywise positive. -/
+lemma countInducedIterate_entrywisePositive (k : Nat) :
+    EntrywisePositive n (countInducedIterate (n := n) N k) := by
+  exact (countInducedPositiveIterate (n := n) N k).pos
+
+/-- Every count-induced Sinkhorn iterate has positive row sums. -/
+lemma countInducedIterate_hasPositiveRowSums (k : Nat) :
+    HasPositiveRowSums n (countInducedIterate (n := n) N k) := by
+  exact entrywisePositive_hasPositiveRowSums (n := n)
+    (countInducedIterate_entrywisePositive (n := n) N k)
+
+/-- Every count-induced Sinkhorn iterate has positive column sums. -/
+lemma countInducedIterate_hasPositiveColSums (k : Nat) :
+    HasPositiveColSums n (countInducedIterate (n := n) N k) := by
+  exact entrywisePositive_hasPositiveColSums (n := n)
+    (countInducedIterate_entrywisePositive (n := n) N k)
+
 /-- Stepwise Sinkhorn law for the count-induced iterate. -/
 lemma countInducedIterate_step (k : Nat) :
     SinkhornStep n (phaseAt k)

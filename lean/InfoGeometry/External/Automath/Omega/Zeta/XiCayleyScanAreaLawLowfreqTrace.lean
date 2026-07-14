@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Zeta.XiCayleyModulusPoissonFourierFingerprint
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyModulusPoissonFourierFingerprint
 
 namespace Omega.Zeta
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.EA.Sync10UniformOutputCorr
-import Omega.EA.Sync10UniformStationary
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.EA.Sync10UniformOutputCorr
+import InfoGeometry.External.Automath.Omega.EA.Sync10UniformStationary
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 namespace Omega.POM
 

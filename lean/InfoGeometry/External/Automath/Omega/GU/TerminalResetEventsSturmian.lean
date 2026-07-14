@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.GU.TerminalSuccUniqueBranchMerge
-import Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.GU.TerminalSuccUniqueBranchMerge
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
 
 namespace Omega.GU
 

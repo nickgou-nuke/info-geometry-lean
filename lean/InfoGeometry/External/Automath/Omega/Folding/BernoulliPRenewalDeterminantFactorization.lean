@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPRegenerationBivariatePGF
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationBivariatePGF
 
 namespace Omega.Folding
 

@@ -44,7 +44,7 @@ structure InformationAffineKacMoodyCarrier
 
   /-- Lightcone Sugawara/affine socket. -/
   sugawaraBridge :
-    LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag
+    Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag
 
   /-- Map from finite current directions to Souriau source variations. -/
   toSource : Finite → Source

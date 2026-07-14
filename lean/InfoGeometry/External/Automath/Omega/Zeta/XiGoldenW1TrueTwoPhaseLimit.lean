@@ -1,6 +1,6 @@
-import Omega.Kronecker.GoldenConvergentErrorClosed
-import Omega.Kronecker.W1FibonacciLimits
-import Omega.Kronecker.W1LipschitzPushforward
+import InfoGeometry.External.Automath.Omega.Kronecker.GoldenConvergentErrorClosed
+import InfoGeometry.External.Automath.Omega.Kronecker.W1FibonacciLimits
+import InfoGeometry.External.Automath.Omega.Kronecker.W1LipschitzPushforward
 
 namespace Omega.Zeta
 

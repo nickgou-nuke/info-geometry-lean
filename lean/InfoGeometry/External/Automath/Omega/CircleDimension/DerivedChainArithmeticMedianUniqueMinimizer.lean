@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.SquarefreeMedianDistance
-import Omega.CircleDimension.SquarefreeMedianMetricEllipseRealization
+import InfoGeometry.External.Automath.Omega.CircleDimension.SquarefreeMedianDistance
+import InfoGeometry.External.Automath.Omega.CircleDimension.SquarefreeMedianMetricEllipseRealization
 
 namespace Omega.CircleDimension
 

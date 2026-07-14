@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.ResonanceDiscSquareclassIndependenceQ12Q17
+import InfoGeometry.External.Automath.Omega.Folding.ResonanceDiscSquareclassIndependenceQ12Q17
 
 namespace Omega.Folding
 

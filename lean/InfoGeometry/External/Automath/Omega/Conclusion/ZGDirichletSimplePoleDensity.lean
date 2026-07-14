@@ -1,5 +1,5 @@
-import Omega.Zeta.XiTimePart62aZGZetaNormalizedDensityLimit
-import Omega.Zeta.XiTimePart62dhZGDirichletDensityResidue
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62aZGZetaNormalizedDensityLimit
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62dhZGDirichletDensityResidue
 
 open Filter Topology
 

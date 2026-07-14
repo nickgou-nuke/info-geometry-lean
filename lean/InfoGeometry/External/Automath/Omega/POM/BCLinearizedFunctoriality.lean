@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.POM.BCBianchi
-import Omega.POM.BCDiscreteStokes
-import Omega.POM.BCUniformLiftPseudofunctor
+import InfoGeometry.External.Automath.Omega.POM.BCBianchi
+import InfoGeometry.External.Automath.Omega.POM.BCDiscreteStokes
+import InfoGeometry.External.Automath.Omega.POM.BCUniformLiftPseudofunctor
 
 namespace Omega.POM
 

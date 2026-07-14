@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangLissajousImmersionCriterion
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangLissajousImmersionCriterion
 
 namespace Omega.Zeta
 

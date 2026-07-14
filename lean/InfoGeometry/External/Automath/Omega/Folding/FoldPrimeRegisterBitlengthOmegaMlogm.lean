@@ -1,4 +1,4 @@
-import Omega.Folding.LocalRewriteLdpBarrier
+import InfoGeometry.External.Automath.Omega.Folding.LocalRewriteLdpBarrier
 
 namespace Omega.Folding
 

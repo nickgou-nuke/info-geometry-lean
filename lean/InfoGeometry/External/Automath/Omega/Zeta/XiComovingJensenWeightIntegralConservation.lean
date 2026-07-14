@@ -1,4 +1,4 @@
-import Omega.Zeta.XiLogDefectAffineReproducingMomentIdentities
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogDefectAffineReproducingMomentIdentities
 
 namespace Omega.Zeta
 

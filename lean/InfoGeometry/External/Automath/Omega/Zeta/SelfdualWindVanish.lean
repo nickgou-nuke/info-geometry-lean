@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SelfdualPressureInversion
+import InfoGeometry.External.Automath.Omega.Zeta.SelfdualPressureInversion
 
 namespace Omega.Zeta
 

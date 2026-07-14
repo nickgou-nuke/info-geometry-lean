@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterJoukowskyCauchyRigidity
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterJoukowskyCauchyRigidity
 
 namespace Omega.EA
 

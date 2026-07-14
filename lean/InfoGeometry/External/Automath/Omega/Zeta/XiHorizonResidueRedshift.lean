@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHorizonPoleResidueDepthStrength
+import InfoGeometry.External.Automath.Omega.Zeta.XiHorizonPoleResidueDepthStrength
 
 namespace Omega.Zeta
 

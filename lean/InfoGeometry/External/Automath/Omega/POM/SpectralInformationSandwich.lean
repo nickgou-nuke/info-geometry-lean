@@ -1,7 +1,7 @@
-import Omega.Conclusion.FrozenEscortTvRigidity
-import Omega.POM.EscortMaxfiberTvBound
-import Omega.POM.SecondOrderCollisionMinimaxErrSupportBound
-import Omega.POM.ShannonEntropySqueeze
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenEscortTvRigidity
+import InfoGeometry.External.Automath.Omega.POM.EscortMaxfiberTvBound
+import InfoGeometry.External.Automath.Omega.POM.SecondOrderCollisionMinimaxErrSupportBound
+import InfoGeometry.External.Automath.Omega.POM.ShannonEntropySqueeze
 
 namespace Omega.POM
 

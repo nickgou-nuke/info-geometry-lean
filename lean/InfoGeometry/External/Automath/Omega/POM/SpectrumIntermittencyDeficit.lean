@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.DispersionLqLowerBound
-import Omega.POM.SpectrumLegendreUpper
+import InfoGeometry.External.Automath.Omega.POM.DispersionLqLowerBound
+import InfoGeometry.External.Automath.Omega.POM.SpectrumLegendreUpper
 
 namespace Omega.POM
 

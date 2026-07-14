@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Tactic
-import Omega.GU.FibTailP23Orbits
-import Omega.GU.FibTailS3Closure
+import InfoGeometry.External.Automath.Omega.GU.FibTailP23Orbits
+import InfoGeometry.External.Automath.Omega.GU.FibTailS3Closure
 
 namespace Omega.GU
 

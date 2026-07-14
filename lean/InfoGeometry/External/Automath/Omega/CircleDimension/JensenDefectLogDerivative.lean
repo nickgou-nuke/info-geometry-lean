@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.JensenDefectLogDerivative
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectLogDerivative
 
 namespace Omega.CircleDimension
 

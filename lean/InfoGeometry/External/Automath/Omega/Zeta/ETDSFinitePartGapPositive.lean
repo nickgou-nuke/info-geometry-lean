@@ -1,4 +1,4 @@
-import Omega.Zeta.PsiTruncationBounds
+import InfoGeometry.External.Automath.Omega.Zeta.PsiTruncationBounds
 
 namespace Omega.Zeta
 

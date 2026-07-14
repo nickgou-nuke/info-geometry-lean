@@ -1,5 +1,5 @@
-import Omega.GU.TerminalFoldbin6InformationLossConstants
-import Omega.TypedAddressBiaxialCompletion.Window6ExplicitFibers
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6InformationLossConstants
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.Window6ExplicitFibers
 
 namespace Omega.TypedAddressBiaxialCompletion
 

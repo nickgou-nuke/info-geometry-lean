@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.POM.KkEigenvalues
-import Omega.POM.ZetaEqualsOrderPoly
+import InfoGeometry.External.Automath.Omega.POM.KkEigenvalues
+import InfoGeometry.External.Automath.Omega.POM.ZetaEqualsOrderPoly
 
 namespace Omega.POM
 

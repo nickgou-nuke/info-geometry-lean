@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ComovingDefectDeltaBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.ComovingDefectDeltaBound
 
 namespace Omega.UnitCirclePhaseArithmetic
 

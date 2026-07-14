@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
 
 namespace Omega.CircleDimension
 

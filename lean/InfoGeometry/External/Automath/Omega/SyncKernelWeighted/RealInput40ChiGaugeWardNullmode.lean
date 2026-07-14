@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ChiReparam4d
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ChiReparam4d
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyTrigonalRamificationMu
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalRamificationMu
 
 namespace Omega.Folding
 

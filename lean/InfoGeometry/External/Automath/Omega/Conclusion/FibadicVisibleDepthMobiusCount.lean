@@ -2,7 +2,7 @@ import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicOpenIdealFiniteQuotientClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicOpenIdealFiniteQuotientClassification
 
 namespace Omega.Conclusion
 

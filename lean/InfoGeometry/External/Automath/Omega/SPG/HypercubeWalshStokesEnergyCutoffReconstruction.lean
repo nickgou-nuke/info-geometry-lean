@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.Powerset
 import Mathlib.Tactic
-import Omega.SPG.HypercubeWeightedStokesSobolevEnergySpectrum
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeWeightedStokesSobolevEnergySpectrum
 
 namespace Omega.SPG
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHankelFinitePrecisionPotentialSmithKernelCoker
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelFinitePrecisionPotentialSmithKernelCoker
 
 namespace Omega.Zeta
 

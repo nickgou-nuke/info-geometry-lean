@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
 
 namespace Omega.Folding.ZeroFiberLinear
 

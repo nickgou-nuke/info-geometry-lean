@@ -1,8 +1,8 @@
-import Omega.HyperKernel.Enum
-import Omega.HyperKernel.Analysis
-import Omega.HyperKernel.AutoSeed
-import Omega.HyperKernel.Closure
-import Omega.HyperKernel.RankMono
+import InfoGeometry.External.Automath.Omega.HyperKernel.Enum
+import InfoGeometry.External.Automath.Omega.HyperKernel.Analysis
+import InfoGeometry.External.Automath.Omega.HyperKernel.AutoSeed
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.RankMono
 
 namespace Omega.HyperKernel
 namespace SeedCore

@@ -1,7 +1,7 @@
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Order.Basic
-import Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
-import Omega.Conclusion.CycleRankSaturation
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.CycleRankSaturation
 
 open Filter Topology
 

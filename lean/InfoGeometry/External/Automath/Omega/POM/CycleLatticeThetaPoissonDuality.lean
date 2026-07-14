@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Graph.FlowLatticeGramDeterminantTreeWeight
-import Omega.SPG.GraphCycleLatticeDeterminantPrimeSupport
-import Omega.SPG.GraphCycleLatticeLeyangPhasePolynomial
+import InfoGeometry.External.Automath.Omega.Graph.FlowLatticeGramDeterminantTreeWeight
+import InfoGeometry.External.Automath.Omega.SPG.GraphCycleLatticeDeterminantPrimeSupport
+import InfoGeometry.External.Automath.Omega.SPG.GraphCycleLatticeLeyangPhasePolynomial
 
 namespace Omega.POM
 

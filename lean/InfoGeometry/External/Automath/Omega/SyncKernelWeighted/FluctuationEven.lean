@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.GallavottiCohen
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GallavottiCohen
 
 namespace Omega.SyncKernelWeighted
 

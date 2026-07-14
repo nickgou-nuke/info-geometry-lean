@@ -1,6 +1,6 @@
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
-import InfoGeometry.Projective.RohozhkinDelaunayBraiding
+import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 
 /-!
 # Twistor / Amplituhedron Boundary Interface

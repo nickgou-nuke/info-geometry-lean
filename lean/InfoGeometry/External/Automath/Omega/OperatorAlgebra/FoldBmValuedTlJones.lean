@@ -1,5 +1,5 @@
-import Omega.OperatorAlgebra.FoldSqrtIndexFieldBasic
-import Omega.OperatorAlgebra.FoldUnlinkEvaluatesToCollisionMoment
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldSqrtIndexFieldBasic
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldUnlinkEvaluatesToCollisionMoment
 
 namespace Omega.OperatorAlgebra
 

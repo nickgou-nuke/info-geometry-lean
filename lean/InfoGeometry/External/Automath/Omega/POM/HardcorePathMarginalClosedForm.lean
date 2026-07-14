@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.POM.PathIndSetPolyClosed
+import InfoGeometry.External.Automath.Omega.POM.PathIndSetPolyClosed
 
 namespace Omega.POM
 

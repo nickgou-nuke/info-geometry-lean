@@ -1,6 +1,6 @@
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldBinOracleLinearThresholdExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinOracleLinearThresholdExponent
 
 open Filter
 

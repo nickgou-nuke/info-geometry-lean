@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.MinimalStateComplexityHalting
+import InfoGeometry.External.Automath.Omega.Conclusion.MinimalStateComplexityHalting
 
 namespace Omega.Conclusion
 

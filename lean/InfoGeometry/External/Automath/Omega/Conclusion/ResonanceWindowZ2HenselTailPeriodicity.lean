@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FiniteFieldJordanExponentPeriodBound
-import Omega.Conclusion.ResonanceWindowMod2BinomialCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteFieldJordanExponentPeriodBound
+import InfoGeometry.External.Automath.Omega.Conclusion.ResonanceWindowMod2BinomialCollapse
 
 namespace Omega.Conclusion
 

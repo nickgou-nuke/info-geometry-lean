@@ -1,5 +1,5 @@
-import Omega.Folding.NaivePrefixLift
-import Omega.Folding.SummableDefectsEventualCompatibility
+import InfoGeometry.External.Automath.Omega.Folding.NaivePrefixLift
+import InfoGeometry.External.Automath.Omega.Folding.SummableDefectsEventualCompatibility
 
 namespace Omega.Folding
 

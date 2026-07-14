@@ -1,4 +1,4 @@
-import Omega.POM.FiberMultivariateHolographicConservation
+import InfoGeometry.External.Automath.Omega.POM.FiberMultivariateHolographicConservation
 
 namespace Omega.Zeta
 

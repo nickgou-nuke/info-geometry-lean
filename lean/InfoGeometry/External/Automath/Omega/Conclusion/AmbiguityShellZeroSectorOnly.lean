@@ -1,8 +1,8 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
-import Omega.Conclusion.AmbiguityShellNilpotentIndexEqualsWindow
-import Omega.Conclusion.AmbiguityShellSpectralInvisibility
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellNilpotentIndexEqualsWindow
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellSpectralInvisibility
 
 namespace Omega.Conclusion
 

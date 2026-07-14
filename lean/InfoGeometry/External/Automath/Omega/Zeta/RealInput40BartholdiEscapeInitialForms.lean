@@ -1,4 +1,4 @@
-import Omega.Zeta.RealInput40BartholdiNewtonPuiseuxSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40BartholdiNewtonPuiseuxSpectrum
 import Mathlib.Tactic
 
 namespace Omega.Zeta

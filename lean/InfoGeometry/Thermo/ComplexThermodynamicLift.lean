@@ -264,4 +264,113 @@ theorem cayley_inverse_right
   ring
 
 
+/-! ## 5. Two-phase Yang--Lee algebra -/
+
+/-- Algebraic free-energy gap `ΔF = ΔE - T ΔS`. -/
+@[rep_depth thermo]
+def freeEnergyGap
+    (energyGap entropyGap temperature : ℂ) : ℂ :=
+  energyGap - temperature * entropyGap
+
+/-- The free-energy gap transparently decomposes into energy and entropy terms. -/
+@[rep_depth thermo]
+theorem freeEnergyGap_eq_energy_sub_temperature_mul_entropy
+    (energyGap entropyGap temperature : ℂ) :
+    freeEnergyGap energyGap entropyGap temperature =
+      energyGap - temperature * entropyGap := rfl
+
+/-- Two polarized complex phases contributing to a finite partition function. -/
+@[rep_depth thermo]
+def twoPhasePartition
+    (β Fplus Fminus : ℂ) : ℂ :=
+  Complex.exp (-β * Fplus) + Complex.exp (-β * Fminus)
+
+/-- Factorization by the `+` phase: `Z = exp(-βF₊)(1 + exp(-β(F₋-F₊)))`. -/
+@[rep_depth thermo]
+theorem twoPhasePartition_factor
+    (β Fplus Fminus : ℂ) :
+    twoPhasePartition β Fplus Fminus =
+      Complex.exp (-β * Fplus) *
+        (1 + Complex.exp (-β * (Fminus - Fplus))) := by
+  unfold twoPhasePartition
+  have hminus : Complex.exp (-β * Fminus) =
+      Complex.exp (-β * Fplus) * Complex.exp (-β * (Fminus - Fplus)) := by
+    rw [← Complex.exp_add]
+    congr 1
+    ring
+  rw [hminus]
+  ring
+
+/--
+Finite two-phase Yang--Lee zero criterion: cancellation occurs exactly when the
+relative Boltzmann factor is `-1`.
+-/
+@[rep_depth thermo]
+theorem twoPhasePartition_eq_zero_iff
+    (β Fplus Fminus : ℂ) :
+    twoPhasePartition β Fplus Fminus = 0 ↔
+      Complex.exp (-β * (Fminus - Fplus)) = -1 := by
+  have hfac := twoPhasePartition_factor β Fplus Fminus
+  have hnonzero : Complex.exp (-β * Fplus) ≠ 0 := Complex.exp_ne_zero _
+  constructor
+  · intro h
+    have hprod : Complex.exp (-β * Fplus) *
+        (1 + Complex.exp (-β * (Fminus - Fplus))) = 0 := by
+      rwa [hfac] at h
+    have hsum : 1 + Complex.exp (-β * (Fminus - Fplus)) = 0 :=
+      (mul_eq_zero.mp hprod).resolve_left hnonzero
+    rw [add_comm] at hsum
+    exact eq_neg_of_add_eq_zero_left hsum
+  · intro h
+    rw [hfac, h]
+    ring
+
+/--
+At a finite two-phase Yang--Lee zero, the complex free-energy difference has an
+odd imaginary Matsubara phase: `β(F₋ - F₊) = (2n+1)πi`.
+-/
+@[rep_depth thermo]
+theorem yangLeeZero_freeEnergyGap
+    {β Fplus Fminus : ℂ}
+    (hzero : twoPhasePartition β Fplus Fminus = 0) :
+    ∃ n : ℤ,
+      β * (Fminus - Fplus) =
+        (((2 * n + 1 : ℤ) : ℂ) * (Real.pi : ℂ) * Complex.I) := by
+  have hexpneg : Complex.exp (-β * (Fminus - Fplus)) = -1 :=
+    (twoPhasePartition_eq_zero_iff β Fplus Fminus).mp hzero
+  have hexp : Complex.exp (-β * (Fminus - Fplus)) =
+      Complex.exp ((Real.pi : ℂ) * Complex.I) :=
+    hexpneg.trans Complex.exp_pi_mul_I.symm
+  obtain ⟨n, hn⟩ := Complex.exp_eq_exp_iff_exists_int.mp hexp
+  refine ⟨-n - 1, ?_⟩
+  have hneg : β * (Fminus - Fplus) =
+      -(((Real.pi : ℂ) * Complex.I) + (n : ℂ) * (2 * (Real.pi : ℂ) * Complex.I)) := by
+    rw [← hn]
+    ring
+  rw [hneg]
+  simp only [Int.cast_add, Int.cast_sub, Int.cast_neg, Int.cast_mul, Int.cast_ofNat,
+    Int.cast_one]
+  ring
+
+/--
+For real nonzero inverse temperature, a finite two-phase Yang--Lee zero separates
+into equal real free energies and an odd destructive imaginary phase.
+-/
+@[rep_depth thermo]
+theorem yangLeeZero_realPhaseConditions
+    {β : ℝ} {Fplus Fminus : ℂ}
+    (hβ : β ≠ 0)
+    (hzero : twoPhasePartition (β : ℂ) Fplus Fminus = 0) :
+    ∃ n : ℤ,
+      (Fminus - Fplus).re = 0 ∧
+        β * (Fminus - Fplus).im = ((2 * n + 1 : ℤ) : ℝ) * Real.pi := by
+  obtain ⟨n, hn⟩ := yangLeeZero_freeEnergyGap hzero
+  refine ⟨n, ?_, ?_⟩
+  · have hre := congrArg Complex.re hn
+    simp at hre
+    simpa using hre.resolve_left hβ
+  · have him := congrArg Complex.im hn
+    simpa [mul_assoc, mul_comm, mul_left_comm] using him
+
+
 end InfoGeometry.Thermo.ComplexThermodynamicLift

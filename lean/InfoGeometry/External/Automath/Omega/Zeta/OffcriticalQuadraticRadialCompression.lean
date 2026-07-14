@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
-import Omega.Zeta.AppOffcriticalRadiusCompression
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.UnitCirclePhaseLogConditionNumbers
+import InfoGeometry.External.Automath.Omega.Zeta.AppOffcriticalRadiusCompression
 
 namespace Omega.Zeta
 

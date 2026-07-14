@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.ToyRh2TorsionSource
+import InfoGeometry.External.Automath.Omega.POM.ToyRh2TorsionSource
 
 namespace Omega.POM
 

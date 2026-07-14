@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.WidomResultantCertificateDegreeBound
-import Omega.Conclusion.WidomTameGeometryOneParameter
+import InfoGeometry.External.Automath.Omega.Conclusion.WidomResultantCertificateDegreeBound
+import InfoGeometry.External.Automath.Omega.Conclusion.WidomTameGeometryOneParameter
 
 namespace Omega.Conclusion
 

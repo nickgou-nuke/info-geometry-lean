@@ -10,7 +10,7 @@ the existing KKT/chiral operator lane.
 
 This file intentionally does not identify the finite matrix blocks with the
 KKT operators.  It records the exact context needed to use both surfaces
-together: a local Drazin witness for one Dirac-Souriau sector, and a certified
+together: a local Drazin inverse context for one Dirac-Souriau sector, and a certified
 inverse-kernel carrier whose supercharge already satisfies the KKT/chiral
 closure theorems.
 -/
@@ -34,25 +34,18 @@ KKT/chiral operator carrier.
 -/
 structure KKTChiralContext (S : DiracSouriauSector ℝ) where
   CIK : CertifiedInverseKernel E
-  drazin : DiracSouriauSector.DrazinWitnessContext S
+  drazin : DiracSouriauSector.DrazinInverseContext S
 
 /--
-Construct the KKT/chiral bridge context for a real finite Dirac-Souriau sector
-without requiring an externally supplied Drazin witness.  The Drazin component
-is built from the field-level finite-dimensional Drazin existence theorem.
+The field-level finite-dimensional Drazin existence theorem supplies a
+KKT/chiral bridge context existentially. It does not choose a hidden stored
+Drazin inverse.
 -/
-noncomputable def KKTChiralContext.ofField
+theorem exists_kktChiralContext_of_field
     (S : DiracSouriauSector ℝ) (CIK : CertifiedInverseKernel E) :
-    KKTChiralContext (E := E) S where
-  CIK := CIK
-  drazin := DiracSouriauSector.DrazinWitnessContext.ofField S
-
-/-- The field-constructed context carries the canonical Drazin witness. -/
-theorem hasDrazinInverse_of_kktChiralContext_ofField
-    (S : DiracSouriauSector ℝ) (CIK : CertifiedInverseKernel E) :
-    S.HasDrazinInverse
-      (KKTChiralContext.ofField (E := E) S CIK).drazin.k :=
-  DiracSouriauSector.hasDrazinInverse_of_fieldContext S
+    ∃ Ctxt : KKTChiralContext (E := E) S, S.HasDrazinInverse Ctxt.drazin.k := by
+  rcases DiracSouriauSector.exists_drazinInverseContext_of_field S with ⟨drazin, hdrazin⟩
+  exact ⟨⟨CIK, drazin⟩, hdrazin⟩
 
 /-- The context carries the local Dirac-Souriau Drazin hypothesis. -/
 theorem hasDrazinInverse_of_kktChiralContext

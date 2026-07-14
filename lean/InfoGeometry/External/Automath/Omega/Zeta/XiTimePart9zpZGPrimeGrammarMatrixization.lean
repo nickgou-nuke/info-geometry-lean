@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart62dgcZGMatrixEulerNoScalarProduct
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62dgcZGMatrixEulerNoScalarProduct
 
 namespace Omega.Zeta
 

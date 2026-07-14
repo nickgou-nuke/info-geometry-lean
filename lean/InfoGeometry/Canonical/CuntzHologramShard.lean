@@ -47,8 +47,8 @@ theorem branch_projections_sum_identity :
 
 /-- The Cuntz canonical endomorphism is unital: the whole is redistributed across the shards. -/
 theorem whole_redistributed_across_shards :
-    InfoGeometry.Topology.CuntzMap.CuntzMap Op C 1 = 1 :=
-  InfoGeometry.Topology.CuntzMap.CuntzMap_unital Op C
+    InfoGeometry.Topology.CuntzMap.map Op C 1 = 1 :=
+  InfoGeometry.Topology.CuntzMap.map_unital Op C
 
 /-- A half-branch readout is fixed by the Cuntz hologram transfer. -/
 theorem hologram_readout_fixed
@@ -56,7 +56,7 @@ theorem hologram_readout_fixed
     (X : Op)
     (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
     (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
-    φ (InfoGeometry.Topology.CuntzMap.CuntzMap Op C X) = φ X :=
-  InfoGeometry.Topology.CuntzMap.CuntzMap_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
+    φ (InfoGeometry.Topology.CuntzMap.map Op C X) = φ X :=
+  InfoGeometry.Topology.CuntzMap.map_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
 
 end InfoGeometry.Canonical.CuntzHologramShard

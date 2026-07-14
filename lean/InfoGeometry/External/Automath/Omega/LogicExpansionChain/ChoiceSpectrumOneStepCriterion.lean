@@ -1,5 +1,5 @@
-import Omega.LogicExpansionChain.ChoiceSpectrum
-import Omega.LogicExpansionChain.ChoiceSpectrumStandardForm
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ChoiceSpectrum
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ChoiceSpectrumStandardForm
 
 namespace Omega.LogicExpansionChain
 

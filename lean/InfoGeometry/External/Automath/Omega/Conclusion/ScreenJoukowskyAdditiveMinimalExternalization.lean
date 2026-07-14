@@ -1,4 +1,4 @@
-import Omega.Conclusion.ScreenExactBinaryAuditHomologicalBitBound
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenExactBinaryAuditHomologicalBitBound
 
 namespace Omega.Conclusion
 

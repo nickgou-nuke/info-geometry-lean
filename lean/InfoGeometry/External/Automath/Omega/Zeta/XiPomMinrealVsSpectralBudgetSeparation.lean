@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermonde2
-import Omega.Zeta.XiPronyMomentMapJacobianDelta4
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde2
+import InfoGeometry.External.Automath.Omega.Zeta.XiPronyMomentMapJacobianDelta4
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersPadicKernelRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersPadicKernelRigidity
 
 namespace Omega.Zeta
 

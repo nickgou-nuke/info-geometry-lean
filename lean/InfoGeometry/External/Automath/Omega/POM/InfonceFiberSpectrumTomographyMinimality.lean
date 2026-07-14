@@ -1,6 +1,6 @@
 import Mathlib.Topology.Algebra.Module.FiniteDimension
 import Mathlib.Tactic
-import Omega.POM.InfonceFiberSpectrumTomography
+import InfoGeometry.External.Automath.Omega.POM.InfonceFiberSpectrumTomography
 
 namespace Omega.POM
 

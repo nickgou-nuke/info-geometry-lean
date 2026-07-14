@@ -1,5 +1,5 @@
-import Omega.Folding.BitRecoveryFromLocalCongruenceData
-import Omega.Folding.RandomResidueDistribution
+import InfoGeometry.External.Automath.Omega.Folding.BitRecoveryFromLocalCongruenceData
+import InfoGeometry.External.Automath.Omega.Folding.RandomResidueDistribution
 
 namespace Omega.Folding
 

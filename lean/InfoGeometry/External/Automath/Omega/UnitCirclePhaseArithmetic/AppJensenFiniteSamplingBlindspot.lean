@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppJensenSingleZeroLowerBound
 
 namespace Omega.UnitCirclePhaseArithmetic
 

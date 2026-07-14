@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.RankoneSolenoidHeightClassification
+import InfoGeometry.External.Automath.Omega.CircleDimension.RankoneSolenoidHeightClassification
 
 namespace Omega.CircleDimension
 

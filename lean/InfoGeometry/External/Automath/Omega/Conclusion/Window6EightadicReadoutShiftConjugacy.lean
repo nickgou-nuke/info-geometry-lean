@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6GodelBase64InverseLimit
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6GodelBase64InverseLimit
 
 namespace Omega.Conclusion
 

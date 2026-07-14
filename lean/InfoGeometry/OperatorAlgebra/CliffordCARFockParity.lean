@@ -34,7 +34,7 @@ def fermionNumber {n : ℕ} (w : Occupation n) : ℕ :=
 /-! ### n = 0 — trivial vacuum -/
 
 theorem n0_total : Fintype.card (Occupation 0) = 1 := by
-  native_decide
+  decide
 
 theorem n0_fermionNumber (w : Occupation 0) : fermionNumber w = 0 := by
   simp [fermionNumber]
@@ -42,13 +42,13 @@ theorem n0_fermionNumber (w : Occupation 0) : fermionNumber w = 0 := by
 /-! ### n = 4 — the physical Cl(4,4) case -/
 
 theorem n4_total : Fintype.card (Occupation 4) = 16 := by
-  native_decide
+  decide
 
 theorem n4_even : Fintype.card {w : Occupation 4 // Even (fermionNumber w)} = 8 := by
-  native_decide
+  decide
 
 theorem n4_odd : Fintype.card {w : Occupation 4 // ¬ Even (fermionNumber w)} = 8 := by
-  native_decide
+  decide
 
 theorem n4_even_odd_equal :
     Fintype.card {w : Occupation 4 // Even (fermionNumber w)} =

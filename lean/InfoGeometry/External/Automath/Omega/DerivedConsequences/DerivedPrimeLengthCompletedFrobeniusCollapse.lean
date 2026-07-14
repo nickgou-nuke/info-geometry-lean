@@ -1,4 +1,4 @@
-import Omega.Zeta.DerivedPrimePowerDworkFrobeniusTower
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedPrimePowerDworkFrobeniusTower
 
 namespace Omega.DerivedConsequences
 

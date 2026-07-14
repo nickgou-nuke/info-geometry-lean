@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
 
 namespace Omega.Zeta
 

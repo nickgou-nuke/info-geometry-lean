@@ -1,4 +1,4 @@
-import Omega.POM.SchurPlancherelEnergyIdentity
+import InfoGeometry.External.Automath.Omega.POM.SchurPlancherelEnergyIdentity
 
 namespace Omega.POM
 

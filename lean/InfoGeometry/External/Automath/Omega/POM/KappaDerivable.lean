@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.KappaKlDecomposition
-import Omega.POM.MaxentLift
+import InfoGeometry.External.Automath.Omega.POM.KappaKlDecomposition
+import InfoGeometry.External.Automath.Omega.POM.MaxentLift
 
 namespace Omega.POM
 

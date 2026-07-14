@@ -1,4 +1,4 @@
-import Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
 
 namespace Omega.Zeta
 

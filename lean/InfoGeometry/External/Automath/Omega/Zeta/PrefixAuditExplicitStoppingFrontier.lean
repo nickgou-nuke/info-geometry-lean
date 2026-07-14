@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.PrefixReadoutOrthogonalErrorDecomposition
+import InfoGeometry.External.Automath.Omega.Zeta.PrefixReadoutOrthogonalErrorDecomposition
 
 namespace Omega.Zeta
 

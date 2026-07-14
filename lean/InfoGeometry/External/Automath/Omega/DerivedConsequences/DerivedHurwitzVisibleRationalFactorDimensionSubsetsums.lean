@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Interval
 import Mathlib.Data.List.Sublists
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedHurwitzVisibleRationalProjectionAlgebraNineChannels
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedHurwitzVisibleRationalProjectionAlgebraNineChannels
 
 namespace Omega.DerivedConsequences
 

@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9wBasicRootUnityErrorExponentToOne
 
 open Filter Topology
 open scoped goldenRatio

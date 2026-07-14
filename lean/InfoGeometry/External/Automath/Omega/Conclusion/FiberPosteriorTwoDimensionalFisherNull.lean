@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.VisibleFiniteTypeFibonacciCompleteAudit
-import Omega.POM.MicrocanonicalPosteriorModuliCLT
+import InfoGeometry.External.Automath.Omega.Conclusion.VisibleFiniteTypeFibonacciCompleteAudit
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalPosteriorModuliCLT
 
 namespace Omega.Conclusion
 

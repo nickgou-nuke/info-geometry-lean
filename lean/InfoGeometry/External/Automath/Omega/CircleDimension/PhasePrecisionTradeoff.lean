@@ -1,4 +1,4 @@
-import Omega.CircleDimension.PhaseSeparationPrecisionExponent
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseSeparationPrecisionExponent
 
 namespace Omega.CircleDimension.PhasePrecisionTradeoff
 

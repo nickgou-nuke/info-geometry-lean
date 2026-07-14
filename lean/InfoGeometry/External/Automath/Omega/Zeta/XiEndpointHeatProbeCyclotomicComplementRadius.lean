@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointHeatProbeRstarRegularVariationTail
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointHeatProbeRstarRegularVariationTail
 
 open Filter
 open scoped Topology

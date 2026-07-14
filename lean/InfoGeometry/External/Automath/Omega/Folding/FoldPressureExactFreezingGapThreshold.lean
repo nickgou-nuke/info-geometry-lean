@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.Folding.FoldPressureFreezingThreshold
+import InfoGeometry.External.Automath.Omega.Folding.FoldPressureFreezingThreshold
 
 namespace Omega.Folding
 

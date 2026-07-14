@@ -651,18 +651,21 @@ variable (S : TKKPO55ClosedSymmetry J L V W PinBase PinConf)
 
 /-- The TKK integration law is available. -/
 theorem tkk_integrates_to_projective_conformal_action :
-    S.tkkMobius.acts_on_projective_null_states_statement :=
-  S.tkkMobius.acts_on_projective_null_states_holds
+    S.tkkMobius.pinMobius.acts_on_projective_null_rays :=
+  S.tkkMobius.acts_on_projective_null_states
 
 /-- The Pin(5,5) reflection-lift law is available. -/
 theorem pin55_reflection_lift_matches_PO55 :
-    S.tkkMobius.full_reflection_sensitive_group_closure_statement :=
-  S.tkkMobius.full_reflection_sensitive_group_closure_holds
+    S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin ∧
+      S.tkkMobius.pinMobius.acts_on_projective_null_rays :=
+  S.tkkMobius.reflection_sensitive
 
 /-- The inversion grade-swap law is available. -/
-theorem inversion_swaps_tkk_outer_grades :
-    S.tkkMobius.positive_grade_is_inversion_conjugate_statement :=
-  S.tkkMobius.positive_grade_is_inversion_conjugate_holds
+theorem inversion_swaps_tkk_outer_grades
+    (x : J) :
+    S.tkkMobius.inversionClosure.inversion (S.tkkMobius.tkk.neg x) =
+      S.tkkMobius.tkk.pos x :=
+  S.tkkMobius.positive_is_inversion_conjugate x
 
 /-- The projective-null-state closure law is available. -/
 theorem projective_null_rays_are_closed_states :

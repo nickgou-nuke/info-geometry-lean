@@ -1,8 +1,8 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyMean
-import Omega.Folding.GaugeAnomalyTauIntClosed
-import Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMean
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTauIntClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyVarianceFiniteWindowClosed
 
 namespace Omega.Folding
 

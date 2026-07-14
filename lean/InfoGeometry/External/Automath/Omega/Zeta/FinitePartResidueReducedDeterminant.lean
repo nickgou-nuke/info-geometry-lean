@@ -1,5 +1,5 @@
-import Omega.Zeta.AbelFinitePartMobiusZeta
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Zeta.AbelFinitePartMobiusZeta
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 namespace Omega.Zeta
 

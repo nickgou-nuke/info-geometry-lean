@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.CapacityMajorizationSchurHardness
-import Omega.Folding.FoldCapacityGlobalExtremizersFixedMass
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityMajorizationSchurHardness
+import InfoGeometry.External.Automath.Omega.Folding.FoldCapacityGlobalExtremizersFixedMass
 
 namespace Omega.Conclusion
 

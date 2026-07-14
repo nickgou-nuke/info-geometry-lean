@@ -1,4 +1,4 @@
-import Omega.Conclusion.FibadicGcdConvolutionDiagonalization
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicGcdConvolutionDiagonalization
 
 namespace Omega.Conclusion
 

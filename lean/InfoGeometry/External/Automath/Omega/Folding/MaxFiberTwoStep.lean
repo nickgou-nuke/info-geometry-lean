@@ -1,5 +1,5 @@
-import Omega.Folding.MaxFiber
-import Omega.Folding.Value
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.Value
 
 namespace Omega
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Omega.Zeta.OffcriticalQuadraticRadialCompression
-import Omega.Zeta.XiOffsetNullTypeSafety
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalQuadraticRadialCompression
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsetNullTypeSafety
 
 namespace Omega.Zeta
 

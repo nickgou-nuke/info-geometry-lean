@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.GU.Window6DyadicBudget
-import Omega.GroupUnification.PatiSalamGlobalFormRigidity
-import Omega.GroupUnification.TerminalWindow6OneEightTwelveSplit
+import InfoGeometry.External.Automath.Omega.GU.Window6DyadicBudget
+import InfoGeometry.External.Automath.Omega.GroupUnification.PatiSalamGlobalFormRigidity
+import InfoGeometry.External.Automath.Omega.GroupUnification.TerminalWindow6OneEightTwelveSplit
 
 namespace Omega.GroupUnification
 

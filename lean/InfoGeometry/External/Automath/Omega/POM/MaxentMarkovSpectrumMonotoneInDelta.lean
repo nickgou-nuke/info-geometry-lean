@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.MaxentMarkovDiagonalPlusRankoneSpectrum
+import InfoGeometry.External.Automath.Omega.POM.MaxentMarkovDiagonalPlusRankoneSpectrum
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.A4TEvenSpectrumGammaInversion
+import InfoGeometry.External.Automath.Omega.POM.A4TEvenSpectrumGammaInversion
 
 namespace Omega.POM
 

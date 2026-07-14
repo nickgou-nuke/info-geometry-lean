@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTerminalZmJgCriticalSquareEvenSignDefect
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmJgCriticalSquareEvenSignDefect
 
 namespace Omega.Zeta
 

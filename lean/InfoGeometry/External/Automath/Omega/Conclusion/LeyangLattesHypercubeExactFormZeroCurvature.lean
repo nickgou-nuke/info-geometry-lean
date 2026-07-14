@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Core.Word
+import InfoGeometry.External.Automath.Omega.Core.Word
 
 open scoped BigOperators
 

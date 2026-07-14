@@ -1,5 +1,5 @@
-import Omega.SPG.ErrorThreshold
-import Omega.SPG.EllipsoidFluxDecodingPerturbationStability
+import InfoGeometry.External.Automath.Omega.SPG.ErrorThreshold
+import InfoGeometry.External.Automath.Omega.SPG.EllipsoidFluxDecodingPerturbationStability
 import Mathlib.Tactic
 
 namespace Omega.SPG

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberStokesEulerBoundaryObservability
+import InfoGeometry.External.Automath.Omega.POM.FiberStokesEulerBoundaryObservability
 
 namespace Omega.POM
 

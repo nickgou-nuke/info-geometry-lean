@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.CircleDimension.MedianThetaRigidityPrimeRatio
+import InfoGeometry.External.Automath.Omega.CircleDimension.MedianThetaRigidityPrimeRatio
 
 namespace Omega.CircleDimension
 

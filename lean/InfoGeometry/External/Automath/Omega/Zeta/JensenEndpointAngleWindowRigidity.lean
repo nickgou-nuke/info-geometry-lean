@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.JensenEndpointLocalization
-import Omega.Zeta.JensenQuadraticResolutionBarrier
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenEndpointLocalization
+import InfoGeometry.External.Automath.Omega.Zeta.JensenQuadraticResolutionBarrier
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FoldZeroPacketSynchronousVisibleSuppression
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldZeroPacketSynchronousVisibleSuppression
 
 namespace Omega.Zeta
 

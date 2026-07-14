@@ -1,4 +1,4 @@
-import Omega.Conclusion.ZGFinitePrefixShadowLocalDimensionBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGFinitePrefixShadowLocalDimensionBlindness
 
 namespace Omega.Conclusion
 

@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.VectorPotentialPhiMinusLdpParam
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.VectorPotentialPhiMinusLdpParam
 
 namespace Omega.SyncKernelWeighted
 

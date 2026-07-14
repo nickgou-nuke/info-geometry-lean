@@ -1,4 +1,4 @@
-import Omega.POM.ProjectivePressureZeroNormalization
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePressureZeroNormalization
 
 namespace Omega.Conclusion
 

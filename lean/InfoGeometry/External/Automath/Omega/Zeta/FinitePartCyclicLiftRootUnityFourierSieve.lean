@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartCyclicLiftTraceSieve
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftTraceSieve
 
 namespace Omega.Zeta
 

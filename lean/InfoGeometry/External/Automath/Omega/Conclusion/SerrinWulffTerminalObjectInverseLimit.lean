@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.VisiblePhaseLift
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.VisiblePhaseLift
 
 namespace Omega.Conclusion
 

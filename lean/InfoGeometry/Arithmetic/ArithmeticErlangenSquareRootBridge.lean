@@ -40,6 +40,27 @@ def finiteAmplitudeProduct
     (amp : α → R) : R :=
   ∏ a ∈ A, amp a
 
+lemma finiteAmplitudeProduct_nonneg
+    {α : Type*} (A : Finset α) (amp : α → ℝ)
+    (hamp : ∀ a ∈ A, 0 ≤ amp a) :
+    0 ≤ finiteAmplitudeProduct A amp := by
+  unfold finiteAmplitudeProduct
+  exact Finset.prod_nonneg (fun a ha => hamp a ha)
+
+lemma finiteAmplitudeProduct_pos
+    {α : Type*} (A : Finset α) (amp : α → ℝ)
+    (hamp : ∀ a ∈ A, 0 < amp a) :
+    0 < finiteAmplitudeProduct A amp := by
+  unfold finiteAmplitudeProduct
+  exact Finset.prod_pos hamp
+
+lemma finiteAmplitudeProduct_ne_zero
+    {α : Type*} (A : Finset α) (amp : α → ℝ)
+    (hamp : ∀ a ∈ A, amp a ≠ 0) :
+    finiteAmplitudeProduct A amp ≠ 0 := by
+  unfold finiteAmplitudeProduct
+  exact Finset.prod_ne_zero_iff.mpr hamp
+
 /--
 Finite product of probability weights.
 
@@ -50,6 +71,20 @@ def finiteProbabilityProduct
     (A : Finset α)
     (prob : α → R) : R :=
   ∏ a ∈ A, prob a
+
+lemma finiteProbabilityProduct_nonneg
+    {α : Type*} (A : Finset α) (prob : α → ℝ)
+    (hprob : ∀ a ∈ A, 0 ≤ prob a) :
+    0 ≤ finiteProbabilityProduct A prob := by
+  unfold finiteProbabilityProduct
+  exact Finset.prod_nonneg (fun a ha => hprob a ha)
+
+lemma finiteProbabilityProduct_pos
+    {α : Type*} (A : Finset α) (prob : α → ℝ)
+    (hprob : ∀ a ∈ A, 0 < prob a) :
+    0 < finiteProbabilityProduct A prob := by
+  unfold finiteProbabilityProduct
+  exact Finset.prod_pos hprob
 
 /-- Square of a finite product equals the product of local squares. -/
 theorem finiteAmplitudeProduct_sq

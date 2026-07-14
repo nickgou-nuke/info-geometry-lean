@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ToggleScanLinearMaxOrbit
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanLinearMaxOrbit
 
 namespace Omega.Conclusion
 

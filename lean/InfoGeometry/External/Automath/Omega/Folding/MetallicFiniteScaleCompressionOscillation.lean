@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.MetallicBinetClosedForm
-import Omega.Folding.MetallicCompressionLockingLambda2
+import InfoGeometry.External.Automath.Omega.Folding.MetallicBinetClosedForm
+import InfoGeometry.External.Automath.Omega.Folding.MetallicCompressionLockingLambda2
 
 namespace Omega.Folding
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Omega.Conclusion.SectionLedgerKL
+import InfoGeometry.External.Automath.Omega.Conclusion.SectionLedgerKL
 
 namespace Omega.Conclusion.SectionLedgerCapacityFunctional
 

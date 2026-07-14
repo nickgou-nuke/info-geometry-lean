@@ -1,4 +1,4 @@
-import Omega.POM.RqQinftyEndpoint
+import InfoGeometry.External.Automath.Omega.POM.RqQinftyEndpoint
 
 open Filter Topology
 

@@ -1,4 +1,4 @@
-import Omega.SPG.ScanProjectionBayesOptimality
+import InfoGeometry.External.Automath.Omega.SPG.ScanProjectionBayesOptimality
 
 namespace Omega.SPG
 

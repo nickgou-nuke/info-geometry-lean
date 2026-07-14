@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.LeyangEndpointPreimageCos2Spectrum
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangEndpointPreimageCos2Spectrum
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
-import Omega.Conclusion.ScreenAuditGapSupermodularity
-import Omega.SPG.ScreenKernelAuditCost
-import Omega.SPG.ScreenKernelConnectedComponents
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenAuditGapSupermodularity
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelAuditCost
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelConnectedComponents
 
 
 namespace Omega.Conclusion

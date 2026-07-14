@@ -2,9 +2,9 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.Folding.FoldEscortMinentropyRate
-import Omega.Folding.FoldPressureFreezingThreshold
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FoldEscortMinentropyRate
+import InfoGeometry.External.Automath.Omega.Folding.FoldPressureFreezingThreshold
 
 open Filter
 open scoped Topology

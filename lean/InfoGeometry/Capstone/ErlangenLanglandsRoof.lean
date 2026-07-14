@@ -44,8 +44,8 @@ export InfoGeometry.Capstone.FockCapstone
    splitCliffordInfinity_exists_of
    splitCliffordInfinity_boundary_expands
    splitCliffordInfinity_unbounded_representatives
-   CuntzMap_unital
-   CuntzMap_star
-   CuntzMap_real_fixed_point_of_half_branch_scaling)
+   map_unital
+   map_star
+   map_real_fixed_point_of_half_branch_scaling)
 
 end InfoGeometry.Capstone.ErlangenLanglandsRoof

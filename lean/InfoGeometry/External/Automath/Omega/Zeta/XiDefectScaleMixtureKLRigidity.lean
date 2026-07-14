@@ -1,4 +1,4 @@
-import Omega.Zeta.XiDefectScaleMixtureKLLeading
+import InfoGeometry.External.Automath.Omega.Zeta.XiDefectScaleMixtureKLLeading
 
 open Filter
 open scoped BigOperators Topology

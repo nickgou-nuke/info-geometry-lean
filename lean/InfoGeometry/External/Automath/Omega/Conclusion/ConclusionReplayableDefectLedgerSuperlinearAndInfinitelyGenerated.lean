@@ -1,5 +1,5 @@
-import Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
-import Omega.Zeta.LocalizedIntegersNoUniformFinitelyGeneratedLedger
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeIntegerizationSuperlinearBitlength
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersNoUniformFinitelyGeneratedLedger
 
 namespace Omega.Conclusion
 

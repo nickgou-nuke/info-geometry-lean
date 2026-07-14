@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.HzomCriticalZerosJointSpectrumComb
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.HzomCriticalZerosJointSpectrumComb
 
 namespace Omega.OperatorAlgebra
 

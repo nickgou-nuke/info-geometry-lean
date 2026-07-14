@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 import Mathlib.Tactic
-import Omega.POM.BeckChevalleyAmgmDefectIdentity
-import Omega.POM.MaxentLift
+import InfoGeometry.External.Automath.Omega.POM.BeckChevalleyAmgmDefectIdentity
+import InfoGeometry.External.Automath.Omega.POM.MaxentLift
 
 namespace Omega.POM
 

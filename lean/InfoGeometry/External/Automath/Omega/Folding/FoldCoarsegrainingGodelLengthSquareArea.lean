@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.CoarsegrainingQuadraticStokesAreaRigidity
-import Omega.Folding.FoldHypercubeGodelLengthEnergyUpperbound
+import InfoGeometry.External.Automath.Omega.Folding.CoarsegrainingQuadraticStokesAreaRigidity
+import InfoGeometry.External.Automath.Omega.Folding.FoldHypercubeGodelLengthEnergyUpperbound
 
 namespace Omega.Folding
 

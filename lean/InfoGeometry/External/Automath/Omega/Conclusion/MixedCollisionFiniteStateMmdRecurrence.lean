@@ -1,7 +1,7 @@
-import Omega.Conclusion.CriticalKernelSeparationCommonRecurrence
-import Omega.Conclusion.MixedCollisionOverlapMultisetRigidity
-import Omega.POM.MomentKernelExists
-import Omega.POM.MomentMinrecurrenceHankel
+import InfoGeometry.External.Automath.Omega.Conclusion.CriticalKernelSeparationCommonRecurrence
+import InfoGeometry.External.Automath.Omega.Conclusion.MixedCollisionOverlapMultisetRigidity
+import InfoGeometry.External.Automath.Omega.POM.MomentKernelExists
+import InfoGeometry.External.Automath.Omega.POM.MomentMinrecurrenceHankel
 
 namespace Omega.Conclusion
 

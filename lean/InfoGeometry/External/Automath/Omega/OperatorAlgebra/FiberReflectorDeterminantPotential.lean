@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmetic
-import Omega.POM.KernelSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.POM.KernelSpectrum
 
 namespace Omega.OperatorAlgebra
 

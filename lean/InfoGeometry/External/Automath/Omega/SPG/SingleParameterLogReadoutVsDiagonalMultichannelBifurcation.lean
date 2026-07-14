@@ -1,5 +1,5 @@
-import Omega.SPG.GodelBoundaryDecodingRelativeErrorThreshold
-import Omega.SPG.SingleParamLogReadoutPigeonhole
+import InfoGeometry.External.Automath.Omega.SPG.GodelBoundaryDecodingRelativeErrorThreshold
+import InfoGeometry.External.Automath.Omega.SPG.SingleParamLogReadoutPigeonhole
 import Mathlib.Tactic
 
 namespace Omega.SPG

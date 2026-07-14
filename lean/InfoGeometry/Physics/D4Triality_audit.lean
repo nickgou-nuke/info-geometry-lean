@@ -38,6 +38,7 @@ def TrialityPacket.ofBranch {R : Type*} (f : TrialityBranch → Fin 8 → R) : T
 
 structure TrialityAction where
   perm : Equiv.Perm TrialityBranch
+  deriving DecidableEq, Fintype
 
 def TrialityAction.apply {R : Type*} (τ : TrialityAction) (P : TrialityPacket R) : TrialityPacket R :=
   TrialityPacket.ofBranch fun b => P.branch (τ.perm b)
@@ -53,7 +54,7 @@ def S3Triality : Finset TrialityAction :=
 def TrialityAction.inS3 (τ : TrialityAction) : Prop := τ ∈ S3Triality
 
 theorem S3Triality_card : S3Triality.card = 6 := by
-  native_decide
+  decide
 
 structure ColorPermutationAction where
   perm : Equiv.Perm (Fin 3)

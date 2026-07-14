@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
-import Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
-import Omega.SyncKernelWeighted.RealInput40FibTensor
-import Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveSharpPhaseLimit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NonzeroSpectrumTracePrimitive
 
 namespace Omega.SyncKernelWeighted
 

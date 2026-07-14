@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimeLengthCocycle
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeLengthCocycle
 
 namespace Omega.Zeta
 

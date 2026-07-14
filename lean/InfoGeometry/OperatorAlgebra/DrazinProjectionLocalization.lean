@@ -329,21 +329,4 @@ theorem drazinDataAt_element_eq_weight (p : S.Point) :
 
 end SpectralDivisorStratification
 
-/-- Two-projection Drazin localization packet used by operator/GW bridges. -/
-structure TwoProjectionDrazinLocalizationPacket (A : Type*) [Ring A] [StarRing A] where
-  decomposition : RelativeCoreNilpotentDecomposition A
-  residueBlocks : DivisionResidueBlockPacket
-  drazin_localization_eq : decomposition.coreInv = decomposition.coreInv * decomposition.element * decomposition.coreInv
-
-namespace TwoProjectionDrazinLocalizationPacket
-
-variable {A : Type*} [Ring A] [StarRing A]
-variable (P : TwoProjectionDrazinLocalizationPacket A)
-
-/-- The packet exposes Drazin inverse data for its decomposition element. -/
-def drazinData : DrazinInverseData A :=
-  P.decomposition.toDrazinInverseData
-
-end TwoProjectionDrazinLocalizationPacket
-
 end InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization

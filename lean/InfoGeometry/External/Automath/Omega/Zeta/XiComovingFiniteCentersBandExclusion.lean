@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingDefectLatticeCertificateBandExclusion
 
 namespace Omega.Zeta
 

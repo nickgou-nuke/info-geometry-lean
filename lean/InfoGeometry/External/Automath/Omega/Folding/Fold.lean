@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.Zeckendorf
+import InfoGeometry.External.Automath.Omega.Folding.Zeckendorf
 
 namespace Omega
 

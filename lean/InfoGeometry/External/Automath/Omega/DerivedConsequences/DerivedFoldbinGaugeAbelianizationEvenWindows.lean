@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.POM.DerivedAuditedEvenMinsectorTopologicalPhase
-import Omega.Zeta.GaugeGroupTripleDecomp
+import InfoGeometry.External.Automath.Omega.POM.DerivedAuditedEvenMinsectorTopologicalPhase
+import InfoGeometry.External.Automath.Omega.Zeta.GaugeGroupTripleDecomp
 
 namespace Omega.DerivedConsequences
 

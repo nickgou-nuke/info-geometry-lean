@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryDoubleEndOccupancy
-import Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
-import Omega.Conclusion.Window6CompletionThreefoldIncompressibility
-import Omega.Conclusion.Window6NoLinearFactorization
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryDoubleEndOccupancy
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryZ6TorsorLocalGlobalMismatch
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CompletionThreefoldIncompressibility
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6NoLinearFactorization
 
 namespace Omega.Conclusion
 

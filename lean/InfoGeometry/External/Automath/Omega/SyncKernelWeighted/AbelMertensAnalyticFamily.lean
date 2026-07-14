@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Analytic.Constructions
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.IharaMertensConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaMertensConstant
 
 namespace Omega.SyncKernelWeighted
 

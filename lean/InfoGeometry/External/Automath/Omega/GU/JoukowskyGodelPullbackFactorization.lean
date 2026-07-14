@@ -1,4 +1,4 @@
-import Omega.GU.LeyangHolographicN2
+import InfoGeometry.External.Automath.Omega.GU.LeyangHolographicN2
 
 namespace Omega.GU
 

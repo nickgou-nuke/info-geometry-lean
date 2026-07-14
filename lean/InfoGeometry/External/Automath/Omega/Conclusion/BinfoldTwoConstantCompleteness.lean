@@ -1,5 +1,5 @@
-import Omega.Conclusion.BinfoldMellinEscortSemigroup
-import Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldMellinEscortSemigroup
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
 
 namespace Omega.Conclusion
 

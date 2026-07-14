@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateRefreshCountScgfDerivatives
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshCountScgfDerivatives
 import Mathlib.Tactic
 
 namespace Omega.POM

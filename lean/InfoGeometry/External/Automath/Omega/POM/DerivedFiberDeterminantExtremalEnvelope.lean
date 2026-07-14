@@ -1,8 +1,8 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Data.Real.Sqrt
-import Omega.POM.DerivedFiberSingleStieltjesHistogramRecovery
-import Omega.POM.FiberSpectrumStieltjesRigidityDeterminantSchatten
-import Omega.POM.ShannonEntropySqueeze
+import InfoGeometry.External.Automath.Omega.POM.DerivedFiberSingleStieltjesHistogramRecovery
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumStieltjesRigidityDeterminantSchatten
+import InfoGeometry.External.Automath.Omega.POM.ShannonEntropySqueeze
 
 namespace Omega.POM
 

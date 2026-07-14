@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldPosteriorCountAndProb
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldPosteriorCountAndProb
 
 namespace Omega.POM
 

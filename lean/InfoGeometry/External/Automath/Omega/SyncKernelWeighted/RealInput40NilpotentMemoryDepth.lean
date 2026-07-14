@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40NilpotentIndex
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NilpotentIndex
 
 namespace Omega.SyncKernelWeighted
 

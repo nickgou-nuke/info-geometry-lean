@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateAbsorbingHitPGF
-import Omega.POM.DiagonalRateAbsorbingLaguerreInterlacing
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingHitPGF
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingLaguerreInterlacing
 import Mathlib.Tactic
 
 namespace Omega.POM

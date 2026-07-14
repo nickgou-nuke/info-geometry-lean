@@ -343,4 +343,116 @@ theorem kleinPolar_projective_incidence
 
 end Plucker6
 
+/--
+Local converse on the affine `p01 ≠ 0` chart over a field.
+
+If the Klein relation holds and the `p01` coordinate is nonzero, then the
+Plücker point is represented by an explicit decomposable line.
+This is a chart theorem, not the global projective quotient converse.
+-/
+theorem kleinRel_exists_pluckerLine_of_p01_ne_zero
+    [Field R]
+    (P : Plucker6 R)
+    (hK : Plucker6.kleinQ P = 0)
+    (hp01 : P.p01 ≠ 0) :
+    ∃ X Y : Vec4 R, Plucker6.pluckerLine X Y = P := by
+  let X : Vec4 R :=
+    { x0 := 1, x1 := 0, x2 := -(P.p12 / P.p01), x3 := -(P.p13 / P.p01) }
+  let Y : Vec4 R :=
+    { x0 := 0, x1 := P.p01, x2 := P.p02, x3 := P.p03 }
+  refine ⟨X, Y, ?_⟩
+  apply Plucker6.ext <;> dsimp [X, Y, Plucker6.pluckerLine]
+  · ring_nf
+  · ring_nf
+  · ring_nf
+  · field_simp [hp01]
+    ring_nf
+  · field_simp [hp01]
+    ring_nf
+  · have hK' : P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0 := by
+      unfold Plucker6.kleinQ at hK
+      exact hK
+    have hmul : P.p01 * P.p23 = P.p02 * P.p13 - P.p03 * P.p12 := by
+      have h' :=
+        congrArg (fun t => t + P.p02 * P.p13 - P.p03 * P.p12) hK'
+      ring_nf at h'
+      exact h'
+    field_simp [hp01]
+    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc, mul_comm,
+      mul_left_comm, mul_assoc] using hmul.symm
+
+/--
+Local converse on the affine `p02 ≠ 0` chart over a field.
+
+If the Klein relation holds and the `p02` coordinate is nonzero, then the
+Plücker point is represented by an explicit decomposable line.
+This is a chart theorem, not the global projective quotient converse.
+-/
+theorem kleinRel_exists_pluckerLine_of_p02_ne_zero
+    [Field R]
+    (P : Plucker6 R)
+    (hK : Plucker6.kleinQ P = 0)
+    (hp02 : P.p02 ≠ 0) :
+    ∃ X Y : Vec4 R, Plucker6.pluckerLine X Y = P := by
+  let X : Vec4 R :=
+    { x0 := 1, x1 := P.p12 / P.p02, x2 := 0, x3 := -(P.p23 / P.p02) }
+  let Y : Vec4 R :=
+    { x0 := 0, x1 := P.p01, x2 := P.p02, x3 := P.p03 }
+  refine ⟨X, Y, ?_⟩
+  apply Plucker6.ext <;> dsimp [X, Y, Plucker6.pluckerLine]
+  · ring_nf
+  · ring_nf
+  · ring_nf
+  · field_simp [hp02]
+    ring_nf
+  · have hK' : P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0 := by
+      unfold Plucker6.kleinQ at hK
+      exact hK
+    have hmul : P.p02 * P.p13 = P.p01 * P.p23 + P.p03 * P.p12 := by
+      have h' := congrArg (fun t => t + P.p02 * P.p13) hK'
+      ring_nf at h'
+      exact h'.symm
+    field_simp [hp02]
+    simpa [add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm,
+      mul_assoc] using hmul.symm
+  · field_simp [hp02]
+    ring_nf
+
+/--
+Local converse on the affine `p03 ≠ 0` chart over a field.
+
+If the Klein relation holds and the `p03` coordinate is nonzero, then the
+Plücker point is represented by an explicit decomposable line.
+This is a chart theorem, not the global projective quotient converse.
+-/
+theorem kleinRel_exists_pluckerLine_of_p03_ne_zero
+    [Field R]
+    (P : Plucker6 R)
+    (hK : Plucker6.kleinQ P = 0)
+    (hp03 : P.p03 ≠ 0) :
+    ∃ X Y : Vec4 R, Plucker6.pluckerLine X Y = P := by
+  let X : Vec4 R :=
+    { x0 := 1, x1 := P.p13 / P.p03, x2 := P.p23 / P.p03, x3 := 0 }
+  let Y : Vec4 R :=
+    { x0 := 0, x1 := P.p01, x2 := P.p02, x3 := P.p03 }
+  refine ⟨X, Y, ?_⟩
+  apply Plucker6.ext <;> dsimp [X, Y, Plucker6.pluckerLine]
+  · ring_nf
+  · ring_nf
+  · ring_nf
+  · have hK' : P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0 := by
+      unfold Plucker6.kleinQ at hK
+      exact hK
+    have hmul : P.p03 * P.p12 = P.p02 * P.p13 - P.p01 * P.p23 := by
+      have h' := congrArg (fun t => t + P.p02 * P.p13 - P.p01 * P.p23) hK'
+      ring_nf at h'
+      simpa [sub_eq_add_neg, add_comm] using h'
+    field_simp [hp03]
+    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc, mul_comm,
+      mul_left_comm, mul_assoc] using hmul.symm
+  · field_simp [hp03]
+    ring_nf
+  · field_simp [hp03]
+    ring_nf
+
 end InfoGeometry.Projective.KleinQuadricPlucker

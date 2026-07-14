@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Conclusion.PrimitiveMinimalCarrierQuotient
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimitiveMinimalCarrierQuotient
 
 namespace Omega.Conclusion
 

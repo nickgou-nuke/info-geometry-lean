@@ -198,12 +198,6 @@ theorem caliber_eq_zero_of_detailed_balance_digest
     P.caliber = 0 :=
   MaximumCaliberPacket.caliber_eq_zero_of_detailed_balance P hdb
 
-theorem pathEntropy_eq_curvatureTrace_readout_digest
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (P : MaximumCaliberPacket Op) :
-    P.pathEntropy = P.trace (thermodynamic_curvature P.flow) :=
-  P.pathEntropy_eq_curvatureTrace_readout
-
 /-! ## 4. Scalarized prequantum scaling shadow -/
 
 theorem prequantum_holonomyScale_eq_omega_over_hbar_digest
@@ -311,10 +305,10 @@ theorem caliber_eq_zero_of_detailed_balance
   D.pathPacket.caliber_eq_zero_of_detailed_balance hdb'
 
 @[rep_depth thermo]
-theorem pathEntropy_eq_curvatureTrace_readout
+theorem pathEntropy_eq_curvatureTrace
     (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
     D.pathPacket.pathEntropy = D.pathPacket.trace (thermodynamic_curvature D.pathPacket.flow) :=
-  D.pathPacket.pathEntropy_eq_curvatureTrace_readout
+  D.pathPacket.pathEntropy_eq_curvatureTrace
 
 @[rep_depth thermo]
 theorem prequantum_connectionScale_smul
@@ -359,12 +353,12 @@ theorem entropy_eq_expectation_modularPotential
   (T.stage n).entropy_eq_expectation_modularPotential
 
 @[rep_depth thermo]
-theorem pathEntropy_eq_curvatureTrace_readout
+theorem pathEntropy_eq_curvatureTrace
     (T : FiniteMDPASJMTowerSeed ι Op State LieAlgebra LieDual) (n : ℕ) :
     (T.stage n).pathPacket.pathEntropy =
       (T.stage n).pathPacket.trace
         (thermodynamic_curvature (T.stage n).pathPacket.flow) :=
-  (T.stage n).pathEntropy_eq_curvatureTrace_readout
+  (T.stage n).pathPacket.pathEntropy_eq_curvatureTrace
 
 @[rep_depth thermo]
 theorem prequantum_covariantScale_smul
@@ -638,7 +632,7 @@ theorem stage_pathEntropy_curvature_identity
     (T.tower.stage n).pathPacket.pathEntropy =
       (T.tower.stage n).pathPacket.trace
         (thermodynamic_curvature (T.tower.stage n).pathPacket.flow) :=
-  (T.tower.stage n).pathEntropy_eq_curvatureTrace_readout
+  (T.tower.stage n).pathPacket.pathEntropy_eq_curvatureTrace
 
 /-- The direct-limit carrier is a genuine inhabited quotient type. -/
 theorem directLimitCarrier_nonempty

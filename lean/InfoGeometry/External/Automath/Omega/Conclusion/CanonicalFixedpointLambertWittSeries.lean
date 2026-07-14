@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Conclusion.CanonicalFixedpointPrimitiveMobius
+import InfoGeometry.External.Automath.Omega.Conclusion.CanonicalFixedpointPrimitiveMobius
 
 namespace Omega.Conclusion
 

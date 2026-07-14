@@ -1,4 +1,4 @@
-import Omega.POM.KLDefectIdentity
+import InfoGeometry.External.Automath.Omega.POM.KLDefectIdentity
 
 namespace Omega.Zeta
 

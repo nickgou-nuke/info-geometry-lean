@@ -1,5 +1,5 @@
-import Omega.Folding.FoldBinRecover2Pi
-import Omega.Zeta.XiTimePart70aUniformAverageLogdegTwoState
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRecover2Pi
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart70aUniformAverageLogdegTwoState
 
 namespace Omega.Zeta
 

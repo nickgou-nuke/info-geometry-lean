@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # InfoGeometry.ModularVolumePotential
 
-Theorem-safe witness surface for the modular thermodynamic layer:
+Theorem-safe data surface for the modular thermodynamic layer:
 
 * classical log-Radon–Nikodym potentials,
 * relative surprisal and KL-style divergence readouts,
@@ -67,10 +67,6 @@ structure RelativeSurprisalPacket where
 
   /-- Scalar divergence-like readout for each pair of states. -/
   klReadout : SourceState → ReferenceState → ℝ
-
-  /-- Placeholder law witness for KL readout reconstruction. -/
-  klReadout_eq :
-    ∀ μ η, klReadout μ η = klReadout μ η
 
 /--
 Finite/free-energy packet.
@@ -221,19 +217,6 @@ structure FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] where
   partition_eq :
     partition = ∑ s : S, spectrum.boltzmannFactor s * spectrum.spectralVolume s
 
-/-- Finite spectral-thermodynamic normalization target. -/
-def FiniteSpectralThermalNormalizationTarget (S : Type*) [Fintype S] : Prop :=
-  Nonempty (FiniteSpectralBoltzmannPartition S)
-
-/--
-Constructor for spectral thermal normalization data.
--/
-theorem constructSpectralThermalNormalizationTarget
-    (S : Type*) [Fintype S]
-    (Z : FiniteSpectralBoltzmannPartition S) :
-    FiniteSpectralThermalNormalizationTarget S :=
-  ⟨Z⟩
-
 /--
 Partition normalization identity in the explicit tilt form.
 
@@ -279,9 +262,9 @@ theorem constructFiniteSpectralThermodynamicNormalizationSchema
 /-!
 Modular thermodynamic subpacket for Boltzmann-normalized spectral volume.
 
-This packet is theorem-safe: it records explicit data and comparison witnesses
-for the Boltzmann tilt and normalization of spectral volume.  It does not
-assert analytic assumptions unless those are supplied as witness fields.
+This packet is theorem-safe: it records explicit finite-stage data for the
+Boltzmann tilt and normalization of spectral volume.  It does not assert
+analytic assumptions.
 -/
 structure SpectralThermalNormalizationPacket where
   /-- Energy/spectral parameter space. -/
@@ -305,37 +288,16 @@ structure SpectralThermalNormalizationPacket where
   partitionFunction : ℝ
   /-- Positivity of the normalization constant (`Z_β > 0`). -/
   partitionFunction_pos : 0 < partitionFunction
-  /-- Normalized spectral Gibbs/KMS-type state witness. -/
+  /-- Normalized spectral Gibbs/KMS-type state carrier. -/
   normalizedSpectralState : Type*
-  /-- Witness that the state is given by Boltzmann tilt of spectral volume. -/
-  boltzmannTiltWitness : Prop
-  /-- Logarithmic potential witness (`-log(dγ_β/dν_H) = βE + log Z_β`). -/
-  logarithmicPotentialWitness : Prop
-  /-- Free-energy / relative-entropy witness for the Gibbs minimizer identity. -/
-  freeEnergyIdentityWitness : Prop
-  /-- Optional Weyl-gauge witness recovering volume asymptotics from `Z_β`. -/
-  weylGaugeWitness : Prop
-  /-- Witness for the positivity/consistency of the Boltzmann tilt. -/
-  boltzmannTilt : Prop
-  /-- Explicit proof/certificate that the Boltzmann tilt is valid. -/
-  boltzmannTilt_proof : boltzmannTilt
-
-/-- Spectral thermal normalization target for a supplied packet. -/
-def SpectralThermalNormalizationTarget
-    (_P : SpectralThermalNormalizationPacket) : Prop := _P.boltzmannTilt
-
-/-- Constructor for spectral thermal normalization data. -/
-theorem constructSpectralThermalNormalizationPacketTarget
-    (_P : SpectralThermalNormalizationPacket) :
-    SpectralThermalNormalizationTarget _P := by
-  exact _P.boltzmannTilt_proof
 
 /--
 Modular transport bridge packet.
 
 This keeps the Connes-cocycle transport interpretation explicit at the
-structural level: it records two-state modular frames and an abstract
-transport datum between them.
+structural level: it records two-state modular frames and abstract transport
+carriers between them.  Finite Connes-cocycle transport theorems are owned by
+`InfoGeometry.GrandUnification.ModularTransport`.
 -/
 structure ModularTransportBridgePacket where
   /-- Von Neumann / operator-algebraic system carrier. -/
@@ -348,47 +310,16 @@ structure ModularTransportBridgePacket where
   targetWeight : StateWeightSpace
   /-- Modular flow attached to a state/weight. -/
   modularFlow : StateWeightSpace → Type*
-  /-- Connes cocycle / transport datum between two weights. -/
+  /-- Connes cocycle / transport carrier between two weights. -/
   connesCocycle : StateWeightSpace → StateWeightSpace → Type*
-  /-- Transport witness (e.g. `σ^target_t = Ad(u_t) ∘ σ^source_t`). -/
-  cocycleTransportWitness : Type*
-  cocycleTransport : cocycleTransportWitness
-  /-- Connes transport law witness. -/
-  cocycleTransportLaw : Type*
-  cocycleTransportLawWitness : cocycleTransportLaw
   /-- Log-potential / modular Hamiltonian on the transport path. -/
   modularPotential : Type*
-  modularPotentialWitness : modularPotential
-  /-- Relative-entropy or free-energy transport cost witness. -/
+  /-- Relative-entropy or free-energy transport cost carrier. -/
   transportFreeEnergy : Type*
-  transportFreeEnergyWitness : transportFreeEnergy
-  /-- Optional Berry/holonomy comparison witness. -/
+  /-- Optional Berry/holonomy comparison carrier. -/
   holonomyComparison : Type*
-  holonomyComparisonWitness : holonomyComparison
-  /-- Optional Ricci/Perelman transport comparison witness. -/
+  /-- Optional Ricci/Perelman transport comparison carrier. -/
   perelmanComparison : Type*
-  perelmanComparisonWitness : perelmanComparison
-
-/-- Modular transport bridge target for a supplied packet. -/
-structure ModularTransportBridgeTarget
-    (P : ModularTransportBridgePacket) where
-  cocycleTransport : P.cocycleTransportWitness
-  cocycleTransportLaw : P.cocycleTransportLaw
-  modularPotential : P.modularPotential
-  transportFreeEnergy : P.transportFreeEnergy
-  holonomyComparison : P.holonomyComparison
-  perelmanComparison : P.perelmanComparison
-
-/-- Debt: a real Connes-cocycle transport theorem has not been supplied here. -/
-def constructModularTransportBridgeTarget
-    (P : ModularTransportBridgePacket) :
-    ModularTransportBridgeTarget P where
-  cocycleTransport := P.cocycleTransport
-  cocycleTransportLaw := P.cocycleTransportLawWitness
-  modularPotential := P.modularPotentialWitness
-  transportFreeEnergy := P.transportFreeEnergyWitness
-  holonomyComparison := P.holonomyComparisonWitness
-  perelmanComparison := P.perelmanComparisonWitness
 
 /-!
 Normalize by the supplied modular reference data, with an explicit branch for
@@ -432,129 +363,46 @@ structure ModularVolumePotentialPacket where
 /-!
 Grand unification bridge packet.
 
-This packet is intentionally structural: it records that the classical,
-noncommutative modular, and spectral-volume layers are linked by explicit
-comparison witnesses, without asserting literal equalities between distinct
-formal systems.
+This packet is intentionally structural: it records the carriers and explicit
+comparison propositions for the classical, noncommutative modular, and
+spectral-volume layers without promoting those propositions to local theorems.
 -/
 structure ModularVolumeBridgePacket where
   ClassicalMeasureSpace : Type*
   VonNeumannSystem : Type*
   SpectralGeometry : Type*
-  /-- Classical reference volume/measure witness. -/
+  /-- Classical reference volume/measure carrier. -/
   classicalVolume : Type*
-  /-- Classical state/density witness. -/
+  /-- Classical state/density carrier. -/
   classicalState : Type*
-  /-- Logarithmic Radon–Nikodym potential witness. -/
+  /-- Logarithmic Radon–Nikodym potential carrier. -/
   classicalLogPotential : Type*
-  /-- Modular reference weight/state witness. -/
+  /-- Modular reference weight/state carrier. -/
   modularWeight : Type*
-  /-- Relative modular data witness (`[Dφ:Dψ]`, modular operators, etc.). -/
+  /-- Relative modular data carrier (`[Dφ:Dψ]`, modular operators, etc.). -/
   modularData : Type*
-  /-- Modular Hamiltonian / modular log-potential witness. -/
+  /-- Modular Hamiltonian / modular log-potential carrier. -/
   modularHamiltonian : Type*
-  /-- KL-divergence witness (written as `D_{KL}(μ|η)` in this layer). -/
+  /-- KL-divergence proposition (written as `D_{KL}(μ|η)` in this layer). -/
   klDivergence : Prop
-  /-- Araki entropy witness. -/
+  /-- Araki entropy carrier. -/
   arakiRelativeEntropy : Type*
-  /-- Free-energy witness. -/
+  /-- Free-energy proposition. -/
   freeEnergy : Prop
-  /-- Spectral volume / density-of-states witness. -/
+  /-- Spectral volume / density-of-states proposition. -/
   spectralVolume : Prop
-  /-- Weyl/volume asymptotic witness. -/
+  /-- Weyl/volume asymptotic proposition. -/
   weylVolumeGauge : Prop
-  /-- Spectral thermal normalization witness (`Z_β`) data. -/
+  /-- Spectral thermal normalization data (`Z_β`). -/
   spectralThermalNormalization : SpectralThermalNormalizationPacket
-  /-- Connes-cocycle transport witness data. -/
+  /-- Connes-cocycle transport data. -/
   modularTransport : ModularTransportBridgePacket
-  /-- Comparison witness linking KL and Araki entropy reductions. -/
+  /-- Comparison proposition linking KL and Araki entropy reductions. -/
   entropyComparison : Prop
-  /-- Comparison witness linking free energy to relative entropy. -/
+  /-- Comparison proposition linking free energy to relative entropy. -/
   freeEnergyComparison : Prop
-  /-- Comparison witness linking spectral volume and geometric volume asymptotics. -/
+  /-- Comparison proposition linking spectral volume and geometric volume asymptotics. -/
   spectralVolumeComparison : Prop
-  /-- Entropy/KL comparison certificate. -/
-  entropyComparisonLaw : entropyComparison
-  /-- Free-energy/relative entropy comparison certificate. -/
-  freeEnergyComparisonLaw : freeEnergyComparison
-  /-- Spectral/volume asymptotic comparison certificate. -/
-  spectralVolumeComparisonLaw : spectralVolumeComparison
-
-/-- Bridge target for the full modular-volume doctrine. -/
-def ModularVolumeBridgeTarget
-    (_P : ModularVolumeBridgePacket) : Prop :=
-  _P.entropyComparison ∧ _P.freeEnergyComparison ∧ _P.spectralVolumeComparison
-
-/-- Constructor from explicit bridge witnesses. -/
-theorem constructModularVolumeBridgeTarget
-    (_P : ModularVolumeBridgePacket) :
-    ModularVolumeBridgeTarget _P := by
-  exact
-    ⟨_P.entropyComparisonLaw, _P.freeEnergyComparisonLaw, _P.spectralVolumeComparisonLaw⟩
-
-/-!
-Tomita–Gromov bridge packet.
-
-This composes the modular-volume bridge, its spectral-thermal normalization,
-and modular transport into one structured integration surface.
--/
-structure TomitaGromovBridgePacket where
-  /-- Base modular-volume bridge witness. -/
-  modularVolume : ModularVolumeBridgePacket
-  /-- Boltzmann-normalized spectral witness. -/
-  spectralThermalNormalization : SpectralThermalNormalizationPacket
-  /-- Connes-cocycle transport witness. -/
-  modularTransport : ModularTransportBridgePacket
-  /-- Compatibility certificate for spectral normalization component. -/
-  spectralThermalNormalization_eq :
-    spectralThermalNormalization = modularVolume.spectralThermalNormalization
-  /-- Compatibility certificate for transport component. -/
-  modularTransport_eq :
-    modularTransport = modularVolume.modularTransport
-
-/-- Tomita–Gromov bridge target. -/
-def TomitaGromovBridgeTarget
-    (P : TomitaGromovBridgePacket) : Prop :=
-  P.spectralThermalNormalization = P.modularVolume.spectralThermalNormalization ∧
-    P.modularTransport = P.modularVolume.modularTransport
-
-/-- Constructor from explicit Tomita–Gromov bridge data. -/
-theorem constructTomitaGromovBridgeTarget
-    (P : TomitaGromovBridgePacket) :
-    TomitaGromovBridgeTarget P := by
-  exact ⟨P.spectralThermalNormalization_eq, P.modularTransport_eq⟩
-
-/--
-The owner-target shape is explicit per-layer witness compatibility.
--/
-def ModularVolumePotentialTarget
-    (_ln : LogRadonNikodymPacket) (_rs : RelativeSurprisalPacket)
-    (_ge : GibbsFreeEnergyPacket) (_mf : ModularFlowPacket)
-    (_sv : SupervolumePacket) (_gk : GKSLPacket) : Prop :=
-  (∃ _hln : ∀ μ x, _ln.logPotential μ x = -Real.log (_ln.relativeDensity μ x),
-    ∃ _hrs : ∀ μ η, _rs.klReadout μ η = _rs.klReadout μ η,
-    ∃ _hgw : ∀ s, _ge.gibbsWeight s =
-      Real.exp (-( _ge.inverseTemperature * _ge.energy s) - _ge.logPartitionConstant),
-    ∃ _hef : ∀ s, _ge.freeEnergy s = _ge.energy s + _ge.inverseTemperature⁻¹ * _ge.klToGibbs s,
-    ∃ _hst : ∀ x, _sv.supertrace x = _sv.evenTrace x - _sv.oddTrace x,
-    ∃ _hfd : ∀ ρ t, _gk.freeEnergyDecay ρ t,
-    ∃ _hfm : ∀ ρ t, 0 ≤ t → _gk.freeEnergyShadow (_gk.generator t ρ) ≤ _gk.freeEnergyShadow ρ,
-    _mf.modularFlow 0 _mf.modularState = _mf.modularFlow 0 _mf.modularState)
-
-/--
-Constructor that lifts explicit layer witnesses into the target shape.
--/
-theorem constructModularVolumePotentialTarget
-    (_ln : LogRadonNikodymPacket)
-    (_rs : RelativeSurprisalPacket)
-    (_ge : GibbsFreeEnergyPacket)
-    (_mf : ModularFlowPacket)
-    (_sv : SupervolumePacket)
-    (_gk : GKSLPacket) :
-    ModularVolumePotentialTarget _ln _rs _ge _mf _sv _gk := by
-  exact ⟨_ln.logPotential_eq, _rs.klReadout_eq, _ge.gibbsWeight_eq,
-    _ge.freeEnergy_eq, _sv.supertrace_eq, _gk.freeEnergyDecay_holds,
-    _gk.freeEnergy_monotone, rfl⟩
 
 namespace LogRadonNikodymPacket
 
@@ -565,16 +413,6 @@ namespace LogRadonNikodymPacket
   exact P.logPotential_eq μ x
 
 end LogRadonNikodymPacket
-
-namespace RelativeSurprisalPacket
-
-/-- KL readout reduction witness projection. -/
-theorem kl_eq_expectation_relativeLogPotential
-    (P : RelativeSurprisalPacket) (μ : P.SourceState) (η : P.ReferenceState) :
-    P.klReadout μ η = P.klReadout μ η := by
-  exact P.klReadout_eq μ η
-
-end RelativeSurprisalPacket
 
 namespace GibbsFreeEnergyPacket
 
@@ -626,193 +464,6 @@ theorem freeEnergyShadow_generator_le
   exact P.freeEnergy_monotone ρ t ht
 
 end GKSLPacket
-
-namespace SpectralThermalNormalizationPacket
-
-theorem boltzmannTilt_holds
-    (_P : SpectralThermalNormalizationPacket) :
-    _P.boltzmannTilt := by
-  exact _P.boltzmannTilt_proof
-
-end SpectralThermalNormalizationPacket
-
-namespace ModularTransportBridgePacket
-
-def cocycleTransport_holds
-    (_P : ModularTransportBridgePacket) :
-    ModularTransportBridgeTarget _P := by
-  exact constructModularTransportBridgeTarget _P
-
-end ModularTransportBridgePacket
-
-namespace ModularVolumeBridgePacket
-
-theorem entropyComparison_holds
-    (P : ModularVolumeBridgePacket) : P.entropyComparison := by
-  exact P.entropyComparisonLaw
-
-end ModularVolumeBridgePacket
-
-section ConcreteInstances
-
-/-- Concrete instance for LogRadonNikodymPacket -/
-def concreteLogRadonNikodymPacket : LogRadonNikodymPacket where
-  SampleSpace := Unit
-  ReferenceCarrier := Unit
-  StateCarrier := Unit
-  relativeDensity _ _ := 1
-  logPotential _ _ := 0
-  logPotential_eq _ _ := by simp
-  referenceVolume := ()
-  stateVolume := ()
-
-/-- Concrete instance for RelativeSurprisalPacket -/
-def concreteRelativeSurprisalPacket : RelativeSurprisalPacket where
-  SourceState := Unit
-  ReferenceState := Unit
-  relativeLogPotential _ _ _ := 0
-  klReadout _ _ := 0
-  klReadout_eq _ _ := rfl
-
-/-- Concrete instance for GibbsFreeEnergyPacket -/
-def concreteGibbsFreeEnergyPacket : GibbsFreeEnergyPacket where
-  StateSpace := Unit
-  inverseTemperature := 1
-  energy _ := 0
-  logPartitionConstant := 0
-  gibbsWeight _ := 1
-  gibbsState := ()
-  freeEnergy _ := 0
-  klToGibbs _ := 0
-  gibbsWeight_eq _ := by simp
-  freeEnergy_eq _ := by simp
-
-/-- Concrete instance for ModularFlowPacket -/
-def concreteModularFlowPacket : ModularFlowPacket where
-  AlgebraCarrier := Unit
-  StateCarrier := Unit
-  modularFlow _ _ := ()
-  modularHamiltonian _ := 0
-  connesCocycle _ _ := 0
-  relativeModularPotential _ _ := 0
-  hasTraceReference := True
-  tracePartition _ := 1
-  kmsPartition _ := 1
-  modularState := ()
-
-/-- Concrete instance for SupervolumePacket -/
-def concreteSupervolumePacket : SupervolumePacket where
-  GradedCarrier := Unit
-  EvenSector := Unit
-  OddSector := Unit
-  evenTrace _ := 0
-  oddTrace _ := 0
-  supertrace _ := 0
-  supertrace_eq _ := by simp
-
-/-- Concrete instance for GKSLPacket -/
-def concreteGKSLPacket : GKSLPacket where
-  StateCarrier := Unit
-  generator _ _ := ()
-  jumpIndex := Unit
-  anticommutator _ _ _ := ()
-  involution _ := ()
-  freeEnergyShadow _ := 0
-  freeEnergyDecay _ _ := True
-  freeEnergyDecay_holds _ _ := trivial
-  freeEnergy_monotone _ _ _ := by simp
-  equilibriumState := ()
-
-/-- Concrete instance for SpectralThermalNormalizationPacket -/
-def concreteSpectralThermalNormalizationPacket : SpectralThermalNormalizationPacket where
-  EnergySpace := Unit
-  SpectralGeometry := Unit
-  spectralVolume _ := 1
-  energy _ := 1
-  inverseTemperature := 1
-  inverseTemperature_pos := by norm_num
-  boltzmannPotential _ := 1
-  boltzmannPotential_eq _ := by simp
-  partitionFunction := 1
-  partitionFunction_pos := by norm_num
-  normalizedSpectralState := Unit
-  boltzmannTiltWitness := True
-  logarithmicPotentialWitness := True
-  freeEnergyIdentityWitness := True
-  weylGaugeWitness := True
-  boltzmannTilt := True
-  boltzmannTilt_proof := trivial
-
-/-- Concrete instance for ModularTransportBridgePacket -/
-def concreteModularTransportBridgePacket : ModularTransportBridgePacket where
-  VonNeumannSystem := Unit
-  StateWeightSpace := Unit
-  referenceWeight := ()
-  targetWeight := ()
-  modularFlow _ := Unit
-  connesCocycle _ _ := Unit
-  cocycleTransportWitness := Unit
-  cocycleTransport := ()
-  cocycleTransportLaw := Unit
-  cocycleTransportLawWitness := ()
-  modularPotential := Unit
-  modularPotentialWitness := ()
-  transportFreeEnergy := Unit
-  transportFreeEnergyWitness := ()
-  holonomyComparison := Unit
-  holonomyComparisonWitness := ()
-  perelmanComparison := Unit
-  perelmanComparisonWitness := ()
-
-/-- Concrete instance for ModularVolumeBridgePacket -/
-def concreteModularVolumeBridgePacket : ModularVolumeBridgePacket where
-  ClassicalMeasureSpace := Unit
-  VonNeumannSystem := Unit
-  SpectralGeometry := Unit
-  classicalVolume := Unit
-  classicalState := Unit
-  classicalLogPotential := Unit
-  modularWeight := Unit
-  modularData := Unit
-  modularHamiltonian := Unit
-  klDivergence := True
-  arakiRelativeEntropy := Unit
-  freeEnergy := True
-  spectralVolume := True
-  weylVolumeGauge := True
-  spectralThermalNormalization := concreteSpectralThermalNormalizationPacket
-  modularTransport := concreteModularTransportBridgePacket
-  entropyComparison := True
-  freeEnergyComparison := True
-  spectralVolumeComparison := True
-  entropyComparisonLaw := trivial
-  freeEnergyComparisonLaw := trivial
-  spectralVolumeComparisonLaw := trivial
-
-/-- Concrete instance for TomitaGromovBridgePacket -/
-def concreteTomitaGromovBridgePacket : TomitaGromovBridgePacket where
-  modularVolume := concreteModularVolumeBridgePacket
-  spectralThermalNormalization := concreteSpectralThermalNormalizationPacket
-  modularTransport := concreteModularTransportBridgePacket
-  spectralThermalNormalization_eq := rfl
-  modularTransport_eq := rfl
-
-/-- Integrated modular volume potential instantiation. -/
-theorem constructModularVolumePotential
-    : ModularVolumePotentialTarget
-        concreteLogRadonNikodymPacket
-        concreteRelativeSurprisalPacket
-        concreteGibbsFreeEnergyPacket
-        concreteModularFlowPacket
-        concreteSupervolumePacket
-        concreteGKSLPacket := by
-  exact constructModularVolumePotentialTarget
-    concreteLogRadonNikodymPacket
-    concreteRelativeSurprisalPacket
-    concreteGibbsFreeEnergyPacket
-    concreteModularFlowPacket
-    concreteSupervolumePacket
-    concreteGKSLPacket
 
 end ModularVolumePotential
 

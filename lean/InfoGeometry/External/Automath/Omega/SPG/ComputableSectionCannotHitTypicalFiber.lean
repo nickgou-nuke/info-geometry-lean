@@ -1,4 +1,4 @@
-import Omega.SPG.StokesGodelAlgorithmicHolographicCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.StokesGodelAlgorithmicHolographicCompleteness
 
 namespace Omega.SPG
 

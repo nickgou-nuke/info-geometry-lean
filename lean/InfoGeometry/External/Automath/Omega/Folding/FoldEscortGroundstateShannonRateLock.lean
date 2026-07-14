@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Basic
 import Mathlib.Tactic
-import Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
 
 open Filter
 open scoped Topology

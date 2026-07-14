@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import Omega.CircleDimension.PrefixPrimeLedgerConservation
+import InfoGeometry.External.Automath.Omega.CircleDimension.PrefixPrimeLedgerConservation
 
 namespace Omega.CircleDimension
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Data.Real.Basic
-import Omega.POM.FiberBiasedPosteriorPoissonBinomial
+import InfoGeometry.External.Automath.Omega.POM.FiberBiasedPosteriorPoissonBinomial
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
-import Omega.DerivedConsequences.DerivedFiniteAnomalyLedgerNoFaithfulMultiplicativeSkeleton
-import Omega.GU.TerminalCutProjectToFoldHist
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedFiniteAnomalyLedgerNoFaithfulMultiplicativeSkeleton
+import InfoGeometry.External.Automath.Omega.GU.TerminalCutProjectToFoldHist
 
 namespace Omega.DerivedConsequences
 

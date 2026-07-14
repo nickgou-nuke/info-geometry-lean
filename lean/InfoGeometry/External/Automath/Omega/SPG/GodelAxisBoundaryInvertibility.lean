@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.EllipsoidFluxDecodingPerturbationStability
+import InfoGeometry.External.Automath.Omega.SPG.EllipsoidFluxDecodingPerturbationStability
 
 namespace Omega.SPG
 

@@ -39,6 +39,7 @@ theorem laplacian_commutes_hodge (d : V →ₗ[ℝ] V) (x : V) :
   simp [hodgeLaplacian, hodgeStar, LinearMap.comp_apply, LinearMap.add_apply,
     hK.J_involutive, add_comm]
 
+omit hK in
 theorem hodge_decomposition_krein (d : V →ₗ[ℝ] V) (x : V) :
     ∃ (x_exact x_coexact x_harmonic : V), x = x_exact + x_coexact + x_harmonic := by
   refine ⟨x, 0, 0, ?_⟩

@@ -2,7 +2,7 @@ import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Tactic
-import Omega.Zeta.XiTimeFiberMinimalDimension
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimeFiberMinimalDimension
 
 namespace Omega.Zeta
 

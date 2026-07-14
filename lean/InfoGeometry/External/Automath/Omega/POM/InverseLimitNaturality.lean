@@ -1,4 +1,4 @@
-import Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
 
 namespace Omega.POM
 

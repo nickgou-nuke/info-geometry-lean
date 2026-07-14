@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.LocalDefectGibbsVariational
+import InfoGeometry.External.Automath.Omega.POM.LocalDefectGibbsVariational
 
 namespace Omega.Zeta
 

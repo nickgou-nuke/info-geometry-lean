@@ -1,5 +1,5 @@
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
-import Omega.Conclusion.CdimRankShortExactAdditivity
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimRankShortExactAdditivity
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.FiniteRhTriangleDict
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.FiniteRhTriangleDict
 
 namespace Omega.SyncKernelRealInput
 

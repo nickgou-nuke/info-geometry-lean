@@ -1,5 +1,5 @@
-import Omega.Folding.BoundaryLayer
-import Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryLayer
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
 
 open Omega X
 

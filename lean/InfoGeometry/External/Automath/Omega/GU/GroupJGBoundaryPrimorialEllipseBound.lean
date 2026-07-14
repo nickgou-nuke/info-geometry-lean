@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Folding.GodelFiniteDictionaryBitlength
-import Omega.GU.GodelLorentzAlgebraization
-import Omega.GU.JoukowskyAreaPreservingCayley
+import InfoGeometry.External.Automath.Omega.Folding.GodelFiniteDictionaryBitlength
+import InfoGeometry.External.Automath.Omega.GU.GodelLorentzAlgebraization
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyAreaPreservingCayley
 
 namespace Omega.GU
 

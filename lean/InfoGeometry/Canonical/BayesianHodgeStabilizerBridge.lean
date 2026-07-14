@@ -64,6 +64,84 @@ theorem bayesian_harmonic_stabilizer_readout
     hodge_orthogonal_protection d0 d1 hproj.2 hexact hcoexact
   exact ⟨hproj.1, hkernel, hchecks.1, hchecks.2, horth.1, horth.2⟩
 
+/-- The Bayesian update component of the stabilizer bridge is explicit. -/
+theorem bayesian_update_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    T prior = posterior :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).1
+
+/-- The stabilizer-kernel component of the bridge is explicit. -/
+theorem stabilizer_kernel_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    (stabilizerHamiltonian1 d0 d1).mulVec posterior = 0 :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).2.1
+
+/-- The closedness component of the bridge is explicit. -/
+theorem closed_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    d1.mulVec posterior = 0 :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).2.2.1
+
+/-- The coclosedness component of the bridge is explicit. -/
+theorem coclosed_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    d0.transpose.mulVec posterior = 0 :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).2.2.2.1
+
+/-- Orthogonality to the exact error sector is explicit. -/
+theorem exact_orthogonal_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    eckmannDot posterior exactErr = 0 :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).2.2.2.2.1
+
+/-- Orthogonality to the coexact error sector is explicit. -/
+theorem coexact_orthogonal_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {prior posterior exactErr coexactErr : EdgeCurrent n1}
+    (hproj :
+      BayesianProjectionReadout T (IsProtectedHarmonicCurrent d0 d1) prior posterior)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    eckmannDot posterior coexactErr = 0 :=
+  (bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact).2.2.2.2.2
+
 /--
 If the finite Bayesian update is stationary on a protected harmonic current,
 then the stationary current is in the Hodge kernel and is orthogonal to local
@@ -88,6 +166,58 @@ theorem stationary_bayesian_harmonic_current_protected
     bayesian_harmonic_stabilizer_readout d0 d1 T hproj hexact hcoexact
   rcases h with ⟨_, hkernel, _, _, hExactOrth, hCoexactOrth⟩
   exact ⟨hkernel, hExactOrth, hCoexactOrth⟩
+
+/-- The stationary current readout is explicit. -/
+theorem stationary_current_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {stationary exactErr coexactErr : EdgeCurrent n1}
+    (hstationary : T stationary = stationary)
+    (_hharmonic : IsProtectedHarmonicCurrent d0 d1 stationary)
+    (_hexact : IsExactOneForm d0 exactErr)
+    (_hcoexact : IsCoexactOneForm d1 coexactErr) :
+    T stationary = stationary :=
+  hstationary
+
+/-- The stationary stabilizer kernel readout is explicit. -/
+theorem stationary_stabilizer_kernel_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {stationary exactErr coexactErr : EdgeCurrent n1}
+    (hstationary : T stationary = stationary)
+    (hharmonic : IsProtectedHarmonicCurrent d0 d1 stationary)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    (stabilizerHamiltonian1 d0 d1).mulVec stationary = 0 :=
+  (stationary_bayesian_harmonic_current_protected d0 d1 T hstationary hharmonic hexact hcoexact).1
+
+/-- The stationary exact-sector orthogonality is explicit. -/
+theorem stationary_exact_orthogonal_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {stationary exactErr coexactErr : EdgeCurrent n1}
+    (hstationary : T stationary = stationary)
+    (hharmonic : IsProtectedHarmonicCurrent d0 d1 stationary)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    eckmannDot stationary exactErr = 0 :=
+  ((stationary_bayesian_harmonic_current_protected d0 d1 T hstationary hharmonic hexact hcoexact).2).1
+
+/-- The stationary coexact-sector orthogonality is explicit. -/
+theorem stationary_coexact_orthogonal_readout
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (T : CurrentUpdate n1)
+    {stationary exactErr coexactErr : EdgeCurrent n1}
+    (hstationary : T stationary = stationary)
+    (hharmonic : IsProtectedHarmonicCurrent d0 d1 stationary)
+    (hexact : IsExactOneForm d0 exactErr)
+    (hcoexact : IsCoexactOneForm d1 coexactErr) :
+    eckmannDot stationary coexactErr = 0 :=
+  ((stationary_bayesian_harmonic_current_protected d0 d1 T hstationary hharmonic hexact hcoexact).2).2
 
 end
 

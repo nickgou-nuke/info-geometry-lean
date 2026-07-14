@@ -1,5 +1,5 @@
-import Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
-import Omega.Zeta.XiChainInteriorGodelEulerMobiusFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorGodelEulerMobiusFactorization
 
 open scoped BigOperators
 

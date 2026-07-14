@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.CircleDimension.HilbertCarrier
+import InfoGeometry.External.Automath.Omega.CircleDimension.HilbertCarrier
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Basic
-import Omega.Conclusion.PhaseChannelCrowdingLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.PhaseChannelCrowdingLowerBound
 
 namespace Omega.Conclusion
 

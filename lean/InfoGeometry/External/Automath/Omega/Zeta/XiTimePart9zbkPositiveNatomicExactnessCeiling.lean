@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9zbkGaussianCompressorUniqueness
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zbkGaussianCompressorUniqueness
 
 namespace Omega.Zeta
 

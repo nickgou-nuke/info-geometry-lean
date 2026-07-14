@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
-import Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
+import InfoGeometry.External.Automath.Omega.Zeta.XiBasepointScanAnchorDetCauchyVandermonde
 
 namespace Omega.Zeta
 

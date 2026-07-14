@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.POM.OracleCapacityStieltjesInversionMellin
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityStieltjesInversionMellin
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitIndexGeKNPComplete
-import Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitIndexGeKNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
 
 namespace Omega.OperatorAlgebra
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Conclusion.Window6CyclicOrbitParitySuperselection
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CyclicOrbitParitySuperselection
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Zeta.HankelVandermonde2
-import Omega.Zeta.HankelVandermonde3
-import Omega.Zeta.HankelVandermonde4
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde2
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde3
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde4
 
 namespace Omega.Zeta
 

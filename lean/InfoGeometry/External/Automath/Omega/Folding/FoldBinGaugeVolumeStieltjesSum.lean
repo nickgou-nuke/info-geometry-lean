@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
-import Omega.Folding.BinGaugeVolume
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolume
 
 open scoped BigOperators
 

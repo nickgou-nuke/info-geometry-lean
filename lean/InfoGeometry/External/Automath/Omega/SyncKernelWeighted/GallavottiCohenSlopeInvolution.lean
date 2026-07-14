@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.Add
-import Omega.SyncKernelWeighted.GallavottiCohen
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GallavottiCohen
 
 namespace Omega.SyncKernelWeighted
 

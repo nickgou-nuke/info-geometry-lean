@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedHomAutCompleteClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedHomAutCompleteClassification
 
 namespace Omega.Zeta
 

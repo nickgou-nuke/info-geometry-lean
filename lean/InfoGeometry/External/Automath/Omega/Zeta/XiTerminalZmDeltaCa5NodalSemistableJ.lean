@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmDeltaCa5DiscriminantFactorizationSemistablePrimes
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmDeltaCa5DiscriminantFactorizationSemistablePrimes
 
 namespace Omega.Zeta
 

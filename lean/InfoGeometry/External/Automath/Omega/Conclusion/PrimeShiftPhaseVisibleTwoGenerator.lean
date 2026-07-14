@@ -1,6 +1,6 @@
 import Mathlib.Data.Finsupp.Weight
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
-import Omega.GU.TerminalOstrowskiZeckendorfBinfold
-import Omega.GU.TerminalTimeFactorMetallicUnique
-import Omega.GU.TimeUnitLogphiProtocol
+import InfoGeometry.External.Automath.Omega.GU.TerminalOstrowskiZeckendorfBinfold
+import InfoGeometry.External.Automath.Omega.GU.TerminalTimeFactorMetallicUnique
+import InfoGeometry.External.Automath.Omega.GU.TimeUnitLogphiProtocol
 
 namespace Omega.GU
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiChainInteriorBooleanMobiusCharacteristicMaxchains
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorBooleanMobiusCharacteristicMaxchains
 
 namespace Omega.Zeta
 

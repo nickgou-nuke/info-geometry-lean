@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.CollisionZetaOperator
-import Omega.Zeta.DynZeta
-import Omega.Zeta.XiProjectivePressurePathHolderConvexity
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Zeta.XiProjectivePressurePathHolderConvexity
 
 namespace Omega.Zeta
 

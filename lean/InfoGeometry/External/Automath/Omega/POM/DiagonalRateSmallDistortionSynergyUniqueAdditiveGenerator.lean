@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.RenyiHalfHellingerTensorAdditivity
+import InfoGeometry.External.Automath.Omega.POM.RenyiHalfHellingerTensorAdditivity
 
 namespace Omega.POM
 

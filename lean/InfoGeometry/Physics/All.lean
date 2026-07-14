@@ -1,3 +1,4 @@
+import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FisherKreinLorentz
 import InfoGeometry.Physics.FermionicAndreevReflection

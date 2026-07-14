@@ -1,4 +1,4 @@
-import Omega.Folding.FoldSigmaPhiDiverges
+import InfoGeometry.External.Automath.Omega.Folding.FoldSigmaPhiDiverges
 
 namespace Omega.Folding
 

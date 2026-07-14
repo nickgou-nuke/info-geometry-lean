@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberZxMinusOnePsi3Sign
-import Omega.POM.ToggleScanSignEdgeParity
+import InfoGeometry.External.Automath.Omega.POM.FiberZxMinusOnePsi3Sign
+import InfoGeometry.External.Automath.Omega.POM.ToggleScanSignEdgeParity
 
 namespace Omega.POM
 

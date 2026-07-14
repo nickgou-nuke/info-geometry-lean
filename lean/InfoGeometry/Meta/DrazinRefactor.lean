@@ -17,9 +17,9 @@ def legacyClassicalRieszName : Name :=
 def legacyInfiniteAssumptionsName : Name :=
   nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions"
 
-/-- Legacy packaged constructor surface. -/
+/-- Existential Riesz-Drazin data owner surface. -/
 def legacyCanonicalRieszDataName : Name :=
-  nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.canonicalRieszDrazinData_endCLM"
+  nameFromDotted "InfoGeometry.Canonical.DrazinInfiniteCore.exists_rieszDrazinData_endCLM"
 
 /-- Field projections used by witness-readback and projector-readback surfaces. -/
 def legacyProjectionTargets : Array Name :=

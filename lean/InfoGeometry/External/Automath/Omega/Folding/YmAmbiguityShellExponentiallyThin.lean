@@ -1,4 +1,4 @@
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic

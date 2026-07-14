@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.SPG.PrimeRegisterBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.SPG.PrimeRegisterBudgetLowerBound
 
 namespace Omega.SPG
 

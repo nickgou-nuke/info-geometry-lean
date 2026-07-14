@@ -347,7 +347,8 @@ trace, determinant, or canonical Type-III volume.
 structure StandardFormFaceWeylGWVolumeFusion where
   /-- Projective GW/Weyl bridge enriched with binary-word cone-face localization. -/
   projectiveFace :
-    StandardFormProjectiveGWFaceBridge (H := H) (Functional := Functional)
+    InfoGeometry.Canonical.StandardFormProjectiveGWBridge.FaceBridge
+      (H := H) (Functional := Functional)
       (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff)
 
   /-- Ω-expectation finite atom/face volume owner. -/
@@ -406,7 +407,7 @@ theorem physicalVolume_scale_invariant
     (c : ℝ) (hc : c ≠ 0) (s : State) :
     F.projectiveFace.base.physicalVolume (F.projectiveFace.base.scaleState c s) =
       F.projectiveFace.base.physicalVolume s :=
-  StandardFormProjectiveGWFaceBridge.physicalVolume_scale_invariant
+  StandardFormProjectiveGWBridge.FaceBridge.physicalVolume_scale_invariant
     F.projectiveFace c hc s
 
 end StandardFormFaceWeylGWVolumeFusion

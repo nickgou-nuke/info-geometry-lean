@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.KernelSelfDualSignTwist
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.KernelSelfDualSignTwist
 
 namespace Omega.SyncKernelWeighted
 

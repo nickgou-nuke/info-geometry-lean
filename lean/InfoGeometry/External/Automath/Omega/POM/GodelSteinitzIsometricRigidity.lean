@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MultiresolutionGodelTowerInjection
+import InfoGeometry.External.Automath.Omega.POM.MultiresolutionGodelTowerInjection
 
 namespace Omega.POM
 

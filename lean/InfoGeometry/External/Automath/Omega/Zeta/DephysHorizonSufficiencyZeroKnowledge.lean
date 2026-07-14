@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.DephysIdempotentMonadIProjection
+import InfoGeometry.External.Automath.Omega.Zeta.DephysIdempotentMonadIProjection
 
 namespace Omega.Zeta
 

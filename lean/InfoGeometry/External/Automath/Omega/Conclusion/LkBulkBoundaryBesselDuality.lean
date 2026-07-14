@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.LkArcsineLaw
+import InfoGeometry.External.Automath.Omega.POM.LkArcsineLaw
 
 namespace Omega.Conclusion
 

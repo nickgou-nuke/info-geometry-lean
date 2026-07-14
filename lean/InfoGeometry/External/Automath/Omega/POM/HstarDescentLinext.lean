@@ -1,5 +1,5 @@
-import Omega.POM.EhrhartEqualsOrderpolyShift
-import Omega.POM.OrderPolytopeVolumeLinext
+import InfoGeometry.External.Automath.Omega.POM.EhrhartEqualsOrderpolyShift
+import InfoGeometry.External.Automath.Omega.POM.OrderPolytopeVolumeLinext
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.PowerDivergenceSecondorderRecurrence
+import InfoGeometry.External.Automath.Omega.Conclusion.PowerDivergenceSecondorderRecurrence
 
 namespace Omega.Conclusion
 

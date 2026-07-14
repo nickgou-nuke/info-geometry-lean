@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Folding.FibKernelBasisFiniteDepth
+import InfoGeometry.External.Automath.Omega.Folding.FibKernelBasisFiniteDepth
 
 namespace Omega.Folding
 

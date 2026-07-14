@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6B3C3RootcloudIsotropicDesign
-import Omega.GU.Window6B3C3EuclideanCubature
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6B3C3RootcloudIsotropicDesign
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3EuclideanCubature
 
 namespace Omega.Zeta
 

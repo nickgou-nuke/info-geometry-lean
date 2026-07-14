@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Matrix.Adjugate
 import Mathlib.Tactic
-import Omega.POM.HankelRankMinimal
-import Omega.POM.StiffZeroHankelGoodReductionDimStability
+import InfoGeometry.External.Automath.Omega.POM.HankelRankMinimal
+import InfoGeometry.External.Automath.Omega.POM.StiffZeroHankelGoodReductionDimStability
 
 namespace Omega.POM
 

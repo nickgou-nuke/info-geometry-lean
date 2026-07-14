@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Kronecker.W1RightShiftedMinimizer
+import InfoGeometry.External.Automath.Omega.Kronecker.W1RightShiftedMinimizer
 
 namespace Omega.Kronecker
 

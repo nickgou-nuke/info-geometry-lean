@@ -1,5 +1,5 @@
-import Omega.POM.ToggleOrbitCountAsymptoticVolumeGroup
-import Omega.POM.ToggleOrbitCountEgfFactorization
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountAsymptoticVolumeGroup
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountEgfFactorization
 
 namespace Omega.POM
 

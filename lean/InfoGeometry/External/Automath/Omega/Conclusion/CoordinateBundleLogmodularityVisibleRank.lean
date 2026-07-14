@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
 
 namespace Omega.Conclusion
 

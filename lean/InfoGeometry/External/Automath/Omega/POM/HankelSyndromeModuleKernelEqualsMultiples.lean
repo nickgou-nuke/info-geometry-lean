@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberSpectrumPronyHankel2rReconstruction
+import InfoGeometry.External.Automath.Omega.POM.FiberSpectrumPronyHankel2rReconstruction
 
 namespace Omega.POM
 

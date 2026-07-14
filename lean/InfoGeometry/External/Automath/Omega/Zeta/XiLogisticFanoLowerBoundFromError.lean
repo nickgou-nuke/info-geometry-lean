@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FoldInversionZeroRateStrongConverse
-import Omega.Zeta.XiLogisticDivergenceDictionary
+import InfoGeometry.External.Automath.Omega.POM.FoldInversionZeroRateStrongConverse
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogisticDivergenceDictionary
 
 namespace Omega.Zeta
 

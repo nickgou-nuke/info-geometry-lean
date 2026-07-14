@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Folding.FibonacciPolynomial
-import Omega.UnitCirclePhaseArithmetic.FibUnitCircleUpliftIdentity
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.FibUnitCircleUpliftIdentity
 
 namespace Omega
 

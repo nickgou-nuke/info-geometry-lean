@@ -1,5 +1,5 @@
-import Omega.EA.KernelArtinFactorization
-import Omega.Zeta.XiTimePart64NonabelianQuotientEnergyLossExact
+import InfoGeometry.External.Automath.Omega.EA.KernelArtinFactorization
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart64NonabelianQuotientEnergyLossExact
 
 namespace Omega.Zeta
 

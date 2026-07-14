@@ -1,4 +1,4 @@
-import Omega.Conclusion.RealInput40BFJordanTowerSeparation
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40BFJordanTowerSeparation
 
 namespace Omega.Conclusion
 

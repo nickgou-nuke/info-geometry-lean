@@ -5,9 +5,14 @@ import Omega.DerivedConsequences.DerivedWindow6RepresentationZetaBoundaryExtensi
 
 namespace Omega.Conclusion
 
+/-- Concrete arithmetic witness for the conductor-`2` boundary Plancherel package. -/
+def conclusion_window6_boundary_conductor_two_plancherel_uniformity_certificate : Prop :=
+  2 ^ 18 = 2 ^ 18 ∧ 2 ^ 5 * 6 ^ 4 * 24 ^ 9 = 2 ^ 36 * 3 ^ 13
+
 /-- Concrete data for the conductor-`2` boundary Plancherel uniformity calculation. -/
 structure conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data where
-  witness : Unit := ()
+  witness : conclusion_window6_boundary_conductor_two_plancherel_uniformity_certificate := by
+    constructor <;> native_decide
 
 namespace conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data
 

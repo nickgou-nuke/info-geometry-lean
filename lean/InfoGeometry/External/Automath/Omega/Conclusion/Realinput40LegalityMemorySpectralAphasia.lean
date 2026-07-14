@@ -1,10 +1,10 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInput40SpectrumDecomp
-import Omega.SyncKernelWeighted.RealInput40Essential20
-import Omega.SyncKernelWeighted.RealInput40EssentialReduction
-import Omega.SyncKernelWeighted.RealInput40NilpotentIndex
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40SpectrumDecomp
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40Essential20
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40EssentialReduction
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40NilpotentIndex
 
 namespace Omega.Conclusion
 

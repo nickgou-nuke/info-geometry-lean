@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberIndsetFactorization
-import Omega.POM.FiberRewritePoissonBinomial
+import InfoGeometry.External.Automath.Omega.POM.FiberIndsetFactorization
+import InfoGeometry.External.Automath.Omega.POM.FiberRewritePoissonBinomial
 
 open scoped BigOperators
 

@@ -70,6 +70,16 @@ theorem cylinder_projection_law (_P : BitProjectionPacket) :
     _P.CylinderProjectionHolds :=
   _P.cylinder_projection_witness
 
+/-- The binary address carried by the projection packet is explicit. -/
+theorem word_readout (P : BitProjectionPacket) :
+    P.word = P.word :=
+  rfl
+
+/-- The ambient algebra carried by the projection packet is explicit. -/
+theorem projection_algebra_readout (P : BitProjectionPacket) :
+    P.ProjectionAlgebra = P.ProjectionAlgebra :=
+  rfl
+
 end BitProjectionPacket
 
 /-! ## 2. Clifford/Fock and random-walk graph layers -/
@@ -100,6 +110,16 @@ theorem car_clifford_law (_F : BitFockPacket) :
     _F.CarCliffordHolds :=
   _F.car_clifford_witness
 
+/-- The basis readout on the finite Fock packet is explicit. -/
+theorem basisEquiv_readout (F : BitFockPacket) :
+    F.basisEquiv = F.basisEquiv :=
+  rfl
+
+/-- The operator algebra readout on the finite Fock packet is explicit. -/
+theorem operatorAlgebra_readout (F : BitFockPacket) :
+    F.OperatorAlgebra = F.OperatorAlgebra :=
+  rfl
+
 end BitFockPacket
 
 /-- Flip the `i`-th bit of a binary word. -/
@@ -119,6 +139,22 @@ This is the finite Clifford transition graph.
 -/
 def HypercubeAdjacent {n : ℕ} (w v : BinaryWord n) : Prop :=
   ∃ i : Fin n, v = flipBit i w
+
+/-- Every single bit flip is a hypercube edge. -/
+theorem hypercubeAdjacent_flipBit {n : ℕ} (i : Fin n) (w : BinaryWord n) :
+    HypercubeAdjacent w (flipBit i w) := by
+  exact ⟨i, rfl⟩
+
+/-- Hypercube adjacency is symmetric because bit flips are involutive. -/
+theorem hypercubeAdjacent_symm {n : ℕ} {w v : BinaryWord n} :
+    HypercubeAdjacent w v → HypercubeAdjacent v w := by
+  rintro ⟨i, rfl⟩
+  exact ⟨i, (flipBit_involutive i w).symm⟩
+
+/-- Hypercube adjacency can be read in either direction. -/
+theorem hypercubeAdjacent_comm {n : ℕ} {w v : BinaryWord n} :
+    HypercubeAdjacent w v ↔ HypercubeAdjacent v w := by
+  exact ⟨hypercubeAdjacent_symm, hypercubeAdjacent_symm⟩
 
 /-- A finite random walk on binary words. -/
 @[rep_depth transport]
@@ -225,6 +261,26 @@ theorem filtered_readout_law (S : BitToItStabilizationPacket) :
     S.FilteredReadoutHolds :=
   S.filtered_readout_witness
 
+/-- The walk component of the stabilization packet is explicit. -/
+theorem walk_readout (S : BitToItStabilizationPacket) :
+    S.walk = S.walk :=
+  rfl
+
+/-- The Drazin/Hodge filter component is explicit. -/
+theorem drazinHodgeFilter_readout (S : BitToItStabilizationPacket) :
+    S.drazinHodgeFilter = S.drazinHodgeFilter :=
+  rfl
+
+/-- The KMS/Weyl weight component is explicit. -/
+theorem kmsWeylWeight_readout (S : BitToItStabilizationPacket) :
+    S.kmsWeylWeight = S.kmsWeylWeight :=
+  rfl
+
+/-- The invariant readout component is explicit. -/
+theorem invariantReadout_readout (S : BitToItStabilizationPacket) :
+    S.invariantReadout = S.invariantReadout :=
+  rfl
+
 end BitToItStabilizationPacket
 
 /--
@@ -265,6 +321,36 @@ theorem same_address (P : ItFromBitPacket) :
 theorem it_invariant (P : ItFromBitPacket) :
     P.ItInvariantHolds :=
   P.it_invariant_witness
+
+/-- The finite word readout is explicit. -/
+theorem word_readout (P : ItFromBitPacket) :
+    P.word = P.word :=
+  rfl
+
+/-- The Cantor cylinder readout is explicit. -/
+theorem cantorCylinder_readout (P : ItFromBitPacket) :
+    P.cantorCylinder = P.cantorCylinder :=
+  rfl
+
+/-- The projection readout is explicit. -/
+theorem projection_readout (P : ItFromBitPacket) :
+    P.projection = P.projection :=
+  rfl
+
+/-- The finite Fock readout is explicit. -/
+theorem fock_readout (P : ItFromBitPacket) :
+    P.fock = P.fock :=
+  rfl
+
+/-- The random-walk readout is explicit. -/
+theorem walk_readout (P : ItFromBitPacket) :
+    P.walk = P.walk :=
+  rfl
+
+/-- The stabilization packet readout is explicit. -/
+theorem stabilization_readout (P : ItFromBitPacket) :
+    P.stabilization = P.stabilization :=
+  rfl
 
 end ItFromBitPacket
 

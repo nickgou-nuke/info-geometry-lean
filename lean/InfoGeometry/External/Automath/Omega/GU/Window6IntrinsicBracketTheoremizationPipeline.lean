@@ -1,5 +1,5 @@
-import Omega.GU.Window6BracketUniquenessMixedCertificateReduction
-import Omega.GU.Window6IntrinsicBracketModpLiftCriterion
+import InfoGeometry.External.Automath.Omega.GU.Window6BracketUniquenessMixedCertificateReduction
+import InfoGeometry.External.Automath.Omega.GU.Window6IntrinsicBracketModpLiftCriterion
 
 namespace Omega.GU
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 /-!
 # Primitive prime-length orbit count via Lucas closed form

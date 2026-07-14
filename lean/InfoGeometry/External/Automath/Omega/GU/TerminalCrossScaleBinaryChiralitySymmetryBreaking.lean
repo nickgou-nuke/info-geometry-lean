@@ -1,4 +1,4 @@
-import Omega.GU.BdrySymmetricGroupSignTwistedLabelD2
+import InfoGeometry.External.Automath.Omega.GU.BdrySymmetricGroupSignTwistedLabelD2
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.Tactic
 

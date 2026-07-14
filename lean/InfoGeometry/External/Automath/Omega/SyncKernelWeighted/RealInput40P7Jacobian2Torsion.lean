@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40P7Branch10GaloisS10
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40P7Branch10GaloisS10
 
 namespace Omega.SyncKernelWeighted
 

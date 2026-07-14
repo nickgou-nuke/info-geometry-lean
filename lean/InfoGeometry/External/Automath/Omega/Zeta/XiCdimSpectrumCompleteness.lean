@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.List
 import Mathlib.Data.List.GetD
-import Omega.POM.FractranPrimeTranslation
-import Omega.Zeta.XiCdimLambdaClosedForm
+import InfoGeometry.External.Automath.Omega.POM.FractranPrimeTranslation
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLambdaClosedForm
 
 namespace Omega.Zeta
 

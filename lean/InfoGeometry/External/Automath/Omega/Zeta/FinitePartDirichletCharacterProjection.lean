@@ -1,4 +1,4 @@
-import Omega.Zeta.FinitePartDirichletCharacterInversionPrime
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartDirichletCharacterInversionPrime
 
 namespace Omega.Zeta
 

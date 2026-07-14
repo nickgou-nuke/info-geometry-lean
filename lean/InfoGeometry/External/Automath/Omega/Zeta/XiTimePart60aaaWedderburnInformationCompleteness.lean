@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.Conclusion.CapacityRamanujanPlateauLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityRamanujanPlateauLaw
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.SemanticEquivalenceUndecidable
+import InfoGeometry.External.Automath.Omega.Conclusion.SemanticEquivalenceUndecidable
 
 open Filter Topology
 

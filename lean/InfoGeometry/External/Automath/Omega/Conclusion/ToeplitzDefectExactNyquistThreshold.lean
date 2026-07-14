@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingPronyThreshold
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingPronyThreshold
 
 namespace Omega.Conclusion
 

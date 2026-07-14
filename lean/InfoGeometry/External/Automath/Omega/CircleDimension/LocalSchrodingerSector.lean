@@ -1,8 +1,8 @@
 import Mathlib
-import Omega.CircleDimension.LocalEuclideanSectorPositive
-import Omega.CircleDimension.SecondOrderPrincipalSymbol
-import Omega.CircleDimension.UnitarySelfAdjointLog
-import Omega.CircleDimension.WavefunctionAsCoordinate
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalEuclideanSectorPositive
+import InfoGeometry.External.Automath.Omega.CircleDimension.SecondOrderPrincipalSymbol
+import InfoGeometry.External.Automath.Omega.CircleDimension.UnitarySelfAdjointLog
+import InfoGeometry.External.Automath.Omega.CircleDimension.WavefunctionAsCoordinate
 
 namespace Omega.CircleDimension
 

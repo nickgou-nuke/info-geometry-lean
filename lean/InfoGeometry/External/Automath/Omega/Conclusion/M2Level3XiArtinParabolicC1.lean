@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
-import Omega.Conclusion.M2Level3XiDelta0Order6ParabolicSpectrum
-import Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6ParabolicSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
 
 namespace Omega.Conclusion
 
@@ -68,7 +68,8 @@ theorem paper_conclusion_m2_level3_xi_artin_parabolic_c1 :
     conclusion_m2_level3_xi_artin_parabolic_c1_V24 = ((6, 4), 8) ∧
       conclusion_m2_level3_xi_artin_parabolic_c1_V15_Kl = ((3, 4), 8) ∧
       conclusion_m2_level3_xi_artin_parabolic_c1_V15_Si = ((6, 2), 4) := by
-  have hdelta0 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys ⟨()⟩
+  have hdelta0 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+    ⟨by constructor <;> native_decide⟩
   have hparabolic := paper_conclusion_m2_level3_xi_delta0_order6_parabolic_spectrum
   have hxi := paper_conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly
   rcases hdelta0 with ⟨_, _, _, _, _, _, _, _, _⟩

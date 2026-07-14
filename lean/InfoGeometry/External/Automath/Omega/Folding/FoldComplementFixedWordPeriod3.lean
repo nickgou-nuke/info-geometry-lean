@@ -1,5 +1,5 @@
-import Omega.Folding.FiberWeightCountComplement
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega
 

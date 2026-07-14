@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointAtomSeparation
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointAtomSeparation
 
 open Filter
 open scoped Topology

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Ring.Int.Units
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
 
 namespace Omega.Zeta
 

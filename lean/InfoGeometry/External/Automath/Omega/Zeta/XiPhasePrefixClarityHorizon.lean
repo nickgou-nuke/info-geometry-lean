@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPhasePrefixCollisionLowerBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiPhasePrefixCollisionLowerBound
 
 namespace Omega.Zeta
 

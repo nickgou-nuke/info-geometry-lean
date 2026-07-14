@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ab2Window6BoundaryEightSuperselection
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab2Window6BoundaryEightSuperselection
 
 namespace Omega.Zeta
 

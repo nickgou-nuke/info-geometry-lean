@@ -1,9 +1,9 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyGcDefectFarfieldExpansion
-import Omega.Folding.GaugeAnomalyGcDefectSign
-import Omega.Folding.GaugeAnomalyLdpRate
-import Omega.Folding.GaugeAnomalyPressureCumulants5
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyGcDefectFarfieldExpansion
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyGcDefectSign
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyLdpRate
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyPressureCumulants5
 
 namespace Omega.Folding
 

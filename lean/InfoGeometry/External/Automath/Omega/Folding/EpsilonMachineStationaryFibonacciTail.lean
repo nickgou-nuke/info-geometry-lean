@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.EpsilonMachineFibMobius
-import Omega.Folding.EpsilonMachineSynchronizingWord
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineFibMobius
+import InfoGeometry.External.Automath.Omega.Folding.EpsilonMachineSynchronizingWord
 
 namespace Omega.Folding
 

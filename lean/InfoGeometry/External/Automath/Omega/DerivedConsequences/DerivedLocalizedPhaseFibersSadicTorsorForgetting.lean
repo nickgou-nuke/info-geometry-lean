@@ -1,5 +1,5 @@
-import Omega.CircleDimension.LissajousMinimalSolenoidFactor
-import Omega.CircleDimension.SolenoidFiberTorsor
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousMinimalSolenoidFactor
+import InfoGeometry.External.Automath.Omega.CircleDimension.SolenoidFiberTorsor
 
 namespace Omega.DerivedConsequences
 

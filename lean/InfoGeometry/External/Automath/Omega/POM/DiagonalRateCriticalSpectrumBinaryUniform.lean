@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateBinaryClosedForm
-import Omega.POM.DiagonalRateUniformClosedForm
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateBinaryClosedForm
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateUniformClosedForm
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.ResonanceQ16Q17DedekindFactorization
-import Omega.POM.ResonanceQ16Q17LinearlyDisjoint
+import InfoGeometry.External.Automath.Omega.POM.ResonanceQ16Q17DedekindFactorization
+import InfoGeometry.External.Automath.Omega.POM.ResonanceQ16Q17LinearlyDisjoint
 
 namespace Omega.POM
 

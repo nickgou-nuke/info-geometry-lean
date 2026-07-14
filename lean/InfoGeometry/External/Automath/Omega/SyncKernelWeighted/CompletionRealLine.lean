@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.UnitarySliceHalfPhaseLocking
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.UnitarySliceHalfPhaseLocking
 
 namespace Omega.SyncKernelWeighted
 

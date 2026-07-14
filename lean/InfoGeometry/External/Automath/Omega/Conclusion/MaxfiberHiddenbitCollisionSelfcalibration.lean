@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
-import Omega.Conclusion.OddMaxfiberHiddenbitTristateCrystal
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.OddMaxfiberHiddenbitTristateCrystal
 
 open Filter
 

@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.CircleDimension.DerivedLissajousExactHistogramDyadicThreshold
+import InfoGeometry.External.Automath.Omega.CircleDimension.DerivedLissajousExactHistogramDyadicThreshold
 
 namespace Omega.CircleDimension
 

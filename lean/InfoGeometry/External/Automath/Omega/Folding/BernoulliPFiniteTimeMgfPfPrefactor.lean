@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPDoobTransformClosed
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPDoobTransformClosed
 
 namespace Omega.Folding
 

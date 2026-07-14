@@ -50,10 +50,11 @@ model supplies it.  Its modular-flow and renormalization invariance are
 witness fields, not derived Type-III determinant claims.
 -/
 @[rep_depth projective]
-structure BoundedKMSErgodicWeylGWVolumeBridge where
+structure Bridge where
   /-- State-functional bounded-KMS fixed-point to `Ω`-volume adapter. -/
   ergodicOmega :
-    BoundedKMSErgodicOmegaVolumeBridge (E := E) (H := H)
+    InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge.Bridge
+      (E := E) (H := H)
       (LieAlgebra := LieAlgebra) (Word := Word)
 
   /-- Existing standard-form face to projective Weyl/GW physical-volume fusion. -/
@@ -81,13 +82,13 @@ structure BoundedKMSErgodicWeylGWVolumeBridge where
   -/
   phaseVolume_renorm_invariant_of_selfSimilar :
     ∀ A : EndE,
-      BoundedKMSErgodicFixedPointBridge.IsSelfSimilarFixedPoint
+      BoundedKMSErgodicFixedPointBridge.Bridge.IsSelfSimilarFixedPoint
         ergodicOmega.ergodic A →
         phaseVolume (ergodicOmega.ergodic.renorm A) = phaseVolume A
 
-namespace BoundedKMSErgodicWeylGWVolumeBridge
+namespace Bridge
 
-variable (B : BoundedKMSErgodicWeylGWVolumeBridge
+variable (B : Bridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra)
   (Functional := Functional) (State := State) (G := G) (T := T)
   (Target := Target) (Coeff := Coeff) (Word := Word))
@@ -117,7 +118,7 @@ theorem physicalVolume_eq_fixedOperatorVolume
       B.ergodicOmega.omegaVolume.volumeState
         (B.ergodicOmega.toVolumeOperator
           (B.ergodicOmega.fixedOperatorOfWord w)) := by
-        rw [BoundedKMSErgodicOmegaVolumeBridge.fixedOperator_volume_eq_localizedExpectation
+        rw [BoundedKMSErgodicOmegaVolumeBridge.Bridge.fixedOperator_volume_eq_localizedExpectation
           B.ergodicOmega w]
 
 /-- The word fixed-point phase-volume is invariant under bounded KMS time. -/
@@ -151,7 +152,7 @@ theorem fixedOperator_mem_centralizerLike
     (w : Word) :
     B.ergodicOmega.ergodic.centralizerLike
       (B.ergodicOmega.fixedOperatorOfWord w) :=
-  BoundedKMSErgodicOmegaVolumeBridge.fixedOperator_mem_centralizerLike
+  BoundedKMSErgodicOmegaVolumeBridge.Bridge.fixedOperator_mem_centralizerLike
     B.ergodicOmega w
 
 /-- The existing projective Weyl/GW physical-volume scale invariance is retained. -/
@@ -164,7 +165,7 @@ theorem physicalVolume_scale_invariant
   StandardFormFaceWeylGWVolumeFusion.physicalVolume_scale_invariant
     B.faceGW c hc s
 
-end BoundedKMSErgodicWeylGWVolumeBridge
+end Bridge
 
 end Core
 

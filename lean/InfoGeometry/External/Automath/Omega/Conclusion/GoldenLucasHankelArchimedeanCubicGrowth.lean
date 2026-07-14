@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.FiberMultiplicityDiameterCubedimRigidity
-import Omega.Conclusion.LucasPowerHankelClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.FiberMultiplicityDiameterCubedimRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.LucasPowerHankelClosedForm
 
 open scoped goldenRatio
 

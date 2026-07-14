@@ -1,4 +1,4 @@
-import Omega.Zeta.XiRootUnityFilterSingleClassInjection
+import InfoGeometry.External.Automath.Omega.Zeta.XiRootUnityFilterSingleClassInjection
 
 namespace Omega.Conclusion
 

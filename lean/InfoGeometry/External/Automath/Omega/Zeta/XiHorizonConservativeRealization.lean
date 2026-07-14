@@ -1,5 +1,5 @@
 import Mathlib.Analysis.Complex.Basic
-import Omega.CircleDimension.HorizonCarathSchurEquivalence
+import InfoGeometry.External.Automath.Omega.CircleDimension.HorizonCarathSchurEquivalence
 
 namespace Omega.Zeta
 

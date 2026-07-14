@@ -1,5 +1,5 @@
-import Omega.CircleDimension.PoissonKLMomentMatchingLeadingTerm
-import Omega.CircleDimension.PoissonKLQuadraticFormSpectral
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonKLMomentMatchingLeadingTerm
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonKLQuadraticFormSpectral
 
 namespace Omega.CircleDimension
 

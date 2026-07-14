@@ -1,4 +1,4 @@
-import Omega.Conclusion.ScreenMinimalExactExtensionContractionBasis
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenMinimalExactExtensionContractionBasis
 
 namespace Omega.Conclusion
 

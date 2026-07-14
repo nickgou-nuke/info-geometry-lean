@@ -76,6 +76,13 @@ theorem exteriorArithmeticHamiltonian_union_of_disjoint
   unfold exteriorArithmeticHamiltonian
   simpa using Finset.sum_union h
 
+lemma exteriorArithmeticHamiltonian_nonneg
+    {PrimeLabel : Type*} {E : PrimeLabel → ℝ} {S : FState PrimeLabel}
+    (hE : ∀ p ∈ S, 0 ≤ E p) :
+    0 ≤ exteriorArithmeticHamiltonian E S := by
+  unfold exteriorArithmeticHamiltonian
+  exact Finset.sum_nonneg (fun p hp => hE p hp)
+
 /-! ## 2. Exterior/OPE multiplication -/
 
 /--
@@ -206,6 +213,14 @@ def finiteArithmeticScaleDensity
     (modes : Finset PrimeLabel)
     (E q : PrimeLabel → ℝ) : ℝ :=
   ∑ p ∈ modes, E p * q p
+
+lemma finiteArithmeticScaleDensity_nonneg
+    {PrimeLabel : Type*} {modes : Finset PrimeLabel} {E q : PrimeLabel → ℝ}
+    (hE : ∀ p ∈ modes, 0 ≤ E p)
+    (hq : ∀ p ∈ modes, 0 ≤ q p) :
+    0 ≤ finiteArithmeticScaleDensity modes E q := by
+  unfold finiteArithmeticScaleDensity
+  exact Finset.sum_nonneg (fun p hp => mul_nonneg (hE p hp) (hq p hp))
 
 /--
 Central-charge interpretation guardrail.

@@ -18,6 +18,7 @@ model supplies that bridge.
 import Mathlib
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
+import InfoGeometry.Thermo.SusceptibilityHessian
 
 noncomputable section
 
@@ -25,6 +26,7 @@ namespace InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 
 open InfoGeometry.Optics.JonesCalibration
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
+open InfoGeometry.Thermo.SusceptibilityHessian
 
 /-! ## 1. Abstract Drazin split for a Brewster reflection -/
 
@@ -178,19 +180,20 @@ end BrewsterDrazinCalibration
 /-! ## 3. Hessian degeneracy bridge -/
 
 /--
-Bregman/Hessian degeneracy datum.
+Hessian degeneracy at a state, stated against the existing susceptibility
+Hessian owner.
 
-This is intentionally abstract. In a concrete optical material model, the
-Hessian may be the response/susceptibility metric induced by a Bregman or
-Legendre potential.
+The condition is the usual kernel formulation: a nonzero tangent vector is killed
+by the Hessian linear map at the state.
 -/
-structure HessianDegeneracyDatum
-    (State : Type*) where
-  /-- Degeneracy predicate for the thermodynamic/information Hessian. -/
-  IsDegenerate : State → Prop
-
-  /-- Singular direction/readout, for example the p-sector. -/
-  singularDirection : State → Prop
+def HessianDegenerateAt
+    {State Field Response : Type*}
+    [NormedAddCommGroup State] [NormedSpace ℝ State]
+    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
+    (H : HessianResponseDatum State Field Response)
+    (U : State) : Prop :=
+  ∃ v : State, v ≠ 0 ∧ H.hessian U v = 0
 
 /--
 Bridge saying that Hessian degeneracy is calibrated to Brewster collapse.
@@ -199,9 +202,12 @@ This is the safe replacement for the overstrong theorem
 “Hessian singularity automatically forces `r_p = 0`.”
 -/
 structure BrewsterHessianBridge
-    (Op State : Type*) [Ring Op]
+    (Op State Field Response : Type*) [Ring Op]
+    [NormedAddCommGroup State] [NormedSpace ℝ State]
+    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
     (C : BrewsterDrazinCalibration Op)
-    (H : HessianDegeneracyDatum State) where
+    (H : HessianResponseDatum State Field Response) where
   /-- State associated to the optical event. -/
   stateOfEvent : State
 
@@ -212,7 +218,7 @@ structure BrewsterHessianBridge
   with the Fresnel p-channel zero.
   -/
   hessian_degenerate_implies_brewster :
-    H.IsDegenerate stateOfEvent →
+    HessianDegenerateAt H stateOfEvent →
       IsBrewsterEvent C.event
 
   /--
@@ -222,20 +228,23 @@ structure BrewsterHessianBridge
   -/
   brewster_implies_hessian_degenerate :
     IsBrewsterEvent C.event →
-      H.IsDegenerate stateOfEvent
+      HessianDegenerateAt H stateOfEvent
 
 namespace BrewsterHessianBridge
 
-variable {Op State : Type*} [Ring Op]
+variable {Op State Field Response : Type*} [Ring Op]
+variable [NormedAddCommGroup State] [NormedSpace ℝ State]
+variable [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+variable [NormedAddCommGroup Response] [NormedSpace ℝ Response]
 variable {C : BrewsterDrazinCalibration Op}
-variable {H : HessianDegeneracyDatum State}
-variable (B : BrewsterHessianBridge Op State C H)
+variable {H : HessianResponseDatum State Field Response}
+variable (B : BrewsterHessianBridge Op State Field Response C H)
 
 /--
 If the calibrated Hessian degenerates, then the p-channel coefficient vanishes.
 -/
 theorem rp_zero_of_hessian_degenerate
-    (h : H.IsDegenerate B.stateOfEvent) :
+    (h : HessianDegenerateAt H B.stateOfEvent) :
     C.event.secondCoeff = 0 := by
   have hBrewster : IsBrewsterEvent C.event :=
     B.hessian_degenerate_implies_brewster h
@@ -245,7 +254,7 @@ theorem rp_zero_of_hessian_degenerate
 Under the bridge, Brewster collapse and Hessian degeneracy are equivalent.
 -/
 theorem hessian_degenerate_iff_brewster :
-    H.IsDegenerate B.stateOfEvent ↔ IsBrewsterEvent C.event := by
+    HessianDegenerateAt H B.stateOfEvent ↔ IsBrewsterEvent C.event := by
   constructor
   · exact B.hessian_degenerate_implies_brewster
   · exact B.brewster_implies_hessian_degenerate

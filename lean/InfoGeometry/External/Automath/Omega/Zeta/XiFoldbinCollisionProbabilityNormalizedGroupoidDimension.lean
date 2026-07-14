@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.Wedderburn
-import Omega.Folding.CollisionZeta
+import InfoGeometry.External.Automath.Omega.EA.Wedderburn
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZeta
 
 namespace Omega.Zeta
 

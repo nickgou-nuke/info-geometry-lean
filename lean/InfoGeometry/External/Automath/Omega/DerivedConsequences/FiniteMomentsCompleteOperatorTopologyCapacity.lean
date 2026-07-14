@@ -1,11 +1,11 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Conclusion.TqftGenusHausdorffMomentSequence
-import Omega.DerivedConsequences.DerivedProjectivePath2RMomentsRecoverSpectrum
-import Omega.OperatorAlgebra.FoldChannelChoiRankEqualsS2General
-import Omega.OperatorAlgebra.FoldWatataniIndexMoments
-import Omega.POM.OracleCapacityStieltjesInversionMellin
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusHausdorffMomentSequence
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedProjectivePath2RMomentsRecoverSpectrum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldChannelChoiRankEqualsS2General
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMoments
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityStieltjesInversionMellin
 
 namespace Omega.DerivedConsequences
 

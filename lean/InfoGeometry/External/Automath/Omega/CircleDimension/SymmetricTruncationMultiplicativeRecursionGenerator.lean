@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.SymmetricTruncationTailIdentity
+import InfoGeometry.External.Automath.Omega.CircleDimension.SymmetricTruncationTailIdentity
 
 namespace Omega.CircleDimension
 

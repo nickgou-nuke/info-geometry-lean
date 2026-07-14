@@ -1,4 +1,4 @@
-import Omega.GU.JGLeyangDoubleResultant
+import InfoGeometry.External.Automath.Omega.GU.JGLeyangDoubleResultant
 
 namespace Omega.EA
 

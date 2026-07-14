@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiCauchyPoissonSecondOrderShapeLimitNodeRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiCauchyPoissonSecondOrderShapeLimitNodeRigidity
 
 namespace Omega.Zeta
 

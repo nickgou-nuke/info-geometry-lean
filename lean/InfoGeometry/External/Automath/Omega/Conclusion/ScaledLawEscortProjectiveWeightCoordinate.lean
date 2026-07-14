@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ScaledLawEscortTwoKinkReweighting
+import InfoGeometry.External.Automath.Omega.Conclusion.ScaledLawEscortTwoKinkReweighting
 
 namespace Omega.Conclusion
 

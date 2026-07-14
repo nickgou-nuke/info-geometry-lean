@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9zbkPadeJacobiIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9zbkPadeJacobiIdentity
 
 namespace Omega.Zeta
 

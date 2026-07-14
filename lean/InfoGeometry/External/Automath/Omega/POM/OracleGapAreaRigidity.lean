@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.OracleGapAreaLawEnergy
+import InfoGeometry.External.Automath.Omega.POM.OracleGapAreaLawEnergy
 
 open MeasureTheory intervalIntegral
 

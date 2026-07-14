@@ -54,4 +54,26 @@ lemma lorentzianAttentionWeights_sum_one
   simpa [lorentzianAttentionWeights] using
     attentionWeights_sum_one q ctx splitB11 β
 
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Lorentzian attention weights are pointwise nonnegative. -/
+lemma lorentzianAttentionWeights_nonneg
+    (q : ℝ × ℝ)
+    (ctx : ContextWindow n (ℝ × ℝ) V)
+    (β : ℝ) (i : Fin n) :
+    0 ≤ lorentzianAttentionWeights q ctx β i := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [lorentzianAttentionWeights] using
+    attentionWeights_nonneg q ctx splitB11 β i
+
+omit [AddCommMonoid V] [Module ℝ V] in
+/-- Lorentzian attention weights are pointwise bounded by one. -/
+lemma lorentzianAttentionWeights_le_one
+    (q : ℝ × ℝ)
+    (ctx : ContextWindow n (ℝ × ℝ) V)
+    (β : ℝ) (i : Fin n) :
+    lorentzianAttentionWeights q ctx β i ≤ 1 := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
+  simpa [lorentzianAttentionWeights] using
+    attentionWeights_le_one q ctx splitB11 β i
+
 end InfoGeometry.Canonical.Attention

@@ -1,5 +1,5 @@
-import Omega.UnitCirclePhaseArithmetic.LeyangLissajousChebyshevResultant
-import Omega.UnitCirclePhaseArithmetic.LeyangRationalRoseTorusProjection
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangLissajousChebyshevResultant
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangRationalRoseTorusProjection
 
 namespace Omega.UnitCirclePhaseArithmetic
 

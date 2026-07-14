@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.EndpointZetaLChi4SymbolPair
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointZetaLChi4SymbolPair
 
 open Filter Topology
 

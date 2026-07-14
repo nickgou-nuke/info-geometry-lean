@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.POM.FiberLeyangUnitcircleLiftCyclotomic
-import Omega.POM.FiberPsiExponentMobiusReconstruct
+import InfoGeometry.External.Automath.Omega.POM.FiberLeyangUnitcircleLiftCyclotomic
+import InfoGeometry.External.Automath.Omega.POM.FiberPsiExponentMobiusReconstruct
 
 namespace Omega.Conclusion
 

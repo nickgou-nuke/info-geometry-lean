@@ -1,4 +1,4 @@
-import Omega.Zeta.SyncKernelPalindrome
+import InfoGeometry.External.Automath.Omega.Zeta.SyncKernelPalindrome
 
 namespace Omega.Zeta
 

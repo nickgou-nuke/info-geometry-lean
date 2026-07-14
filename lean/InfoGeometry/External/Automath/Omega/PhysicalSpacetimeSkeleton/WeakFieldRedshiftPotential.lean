@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
-import Omega.PhysicalSpacetimeSkeleton.LocalRedshift
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.LocalRedshift
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

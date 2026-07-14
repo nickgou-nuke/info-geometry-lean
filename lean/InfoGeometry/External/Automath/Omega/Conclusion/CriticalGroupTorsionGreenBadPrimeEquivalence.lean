@@ -1,5 +1,5 @@
-import Omega.Conclusion.ModpSingularityForcesGreenBadPrime
-import Omega.Conclusion.KirchhoffGreenDeterminantIdentity
+import InfoGeometry.External.Automath.Omega.Conclusion.ModpSingularityForcesGreenBadPrime
+import InfoGeometry.External.Automath.Omega.Conclusion.KirchhoffGreenDeterminantIdentity
 
 namespace Omega.Conclusion
 

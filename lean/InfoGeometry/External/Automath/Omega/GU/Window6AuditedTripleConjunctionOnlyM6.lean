@@ -1,7 +1,7 @@
-import Omega.GU.Double12ConstraintsUniqueIntersectionM6
-import Omega.GU.TerminalWindow6LocalUpliftAdmissibility
-import Omega.GU.ThreefoldRigidity
-import Omega.GU.Window6LocalGeometryZeroAnomalyFamilyUniqueIntersection
+import InfoGeometry.External.Automath.Omega.GU.Double12ConstraintsUniqueIntersectionM6
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6LocalUpliftAdmissibility
+import InfoGeometry.External.Automath.Omega.GU.ThreefoldRigidity
+import InfoGeometry.External.Automath.Omega.GU.Window6LocalGeometryZeroAnomalyFamilyUniqueIntersection
 
 namespace Omega.GU
 

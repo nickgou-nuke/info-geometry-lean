@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateDiagonalLogFeedback
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDiagonalLogFeedback
 
 namespace Omega.POM
 

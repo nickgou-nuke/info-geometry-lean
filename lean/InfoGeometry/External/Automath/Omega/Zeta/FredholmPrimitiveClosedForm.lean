@@ -1,4 +1,4 @@
-import Omega.Zeta.ETDSFinitePartPrimitiveClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.ETDSFinitePartPrimitiveClosedForm
 
 namespace Omega.Zeta
 

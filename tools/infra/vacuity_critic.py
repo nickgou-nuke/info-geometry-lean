@@ -580,7 +580,7 @@ def main() -> None:
             print("No new patterns discovered.")
     else:
         # Default: show current coverage on the test file
-        test_file = _REPO / "lean" / "InfoGeometry" / "Eval" / "ClosureDebtTest.lean"
+        test_file = _REPO / "tools" / "quality" / "fixtures" / "ClosureDebtTest.lean.fixture"
         if test_file.exists():
             report = critic.evaluate_coverage(test_file)
             print(f"Current evaluator coverage on ClosureDebtTest.lean:")

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalHankelStandardFormPadicLoss
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalHankelStandardFormPadicLoss
 
 namespace Omega.Zeta
 

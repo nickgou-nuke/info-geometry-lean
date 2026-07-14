@@ -69,7 +69,7 @@ The emergent spacetime geometry is an Erlangen invariant of the
 Cuntz boundary algebra.
 -/
 theorem erlangen_light_cone_is_invariant
-    (B : HestenesAffineO55ClosureBridge (E := ℝ))
+    (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := ℝ))
     (v : DoubledSpace ℝ)
     (hv : v ∈ HestenesNullCone B.duality.arithmetic.moebius.wilson.kmsPacket) :
     B.o55VectorAction v ∈

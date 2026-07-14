@@ -505,6 +505,12 @@ theorem theta_v4 : thetaOp v4 = u4 := by
   rw [step1, step2, step3, step4, step5, step6, step7, step8, step9, step10, step11, step12, step13, step14, step15, step16, step17, step18, step19, step20, step21, step22, step23, step24, step25, step26]
 
 
+theorem theta_J : thetaOp J = J := by
+  dsimp [thetaOp]
+  calc
+    - J * J * J = - (J * J) * J := by noncomm_ring
+    _ = - (-1 : Alg 5) * J := by rw [J_sq]
+    _ = J := by noncomm_ring
 theorem theta_mul (a b : Alg 5) : thetaOp (a * b) = thetaOp a * thetaOp b := by
   dsimp [thetaOp]
   calc

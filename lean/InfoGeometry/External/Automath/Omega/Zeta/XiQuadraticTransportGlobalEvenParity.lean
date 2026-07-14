@@ -1,4 +1,4 @@
-import Omega.Zeta.XiJGDiscriminantSquareclassInvariance
+import InfoGeometry.External.Automath.Omega.Zeta.XiJGDiscriminantSquareclassInvariance
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.POM.BbitOracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.POM.BbitOracleCapacityClosedForm
 
 namespace Omega
 

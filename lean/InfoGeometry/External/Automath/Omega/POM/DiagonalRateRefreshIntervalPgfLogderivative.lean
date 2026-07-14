@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateRefreshHoldingIntervalPgfHausdorff
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHoldingIntervalPgfHausdorff
 
 namespace Omega.POM
 

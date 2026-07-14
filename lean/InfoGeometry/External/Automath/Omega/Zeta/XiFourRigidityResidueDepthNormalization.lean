@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTwoBaseResidueRatioUniqueRecovery
+import InfoGeometry.External.Automath.Omega.Zeta.XiTwoBaseResidueRatioUniqueRecovery
 
 namespace Omega.Zeta
 

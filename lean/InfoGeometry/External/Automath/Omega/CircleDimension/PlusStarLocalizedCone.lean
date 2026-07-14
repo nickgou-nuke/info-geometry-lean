@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StarZ1sDualExtension
+import InfoGeometry.External.Automath.Omega.CircleDimension.StarZ1sDualExtension
 
 namespace Omega.CircleDimension
 

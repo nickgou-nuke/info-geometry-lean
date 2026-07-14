@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.CayleyDepthIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.CayleyDepthIdentity
 
 namespace Omega.Zeta
 

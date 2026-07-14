@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.PhiConjugacyThreshold
-import Omega.Zeta.DynZeta
+import InfoGeometry.External.Automath.Omega.Folding.PhiConjugacyThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.DynZeta
 
 namespace Omega.Conclusion
 

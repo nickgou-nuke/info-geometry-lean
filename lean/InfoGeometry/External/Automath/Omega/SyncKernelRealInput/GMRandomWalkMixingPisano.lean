@@ -3,7 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.GMPisanoPeriodCharacterDecay
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMPisanoPeriodCharacterDecay
 
 open scoped BigOperators
 

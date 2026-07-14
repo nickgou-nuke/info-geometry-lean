@@ -1,4 +1,4 @@
-import Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Dimension.StrongRankCondition

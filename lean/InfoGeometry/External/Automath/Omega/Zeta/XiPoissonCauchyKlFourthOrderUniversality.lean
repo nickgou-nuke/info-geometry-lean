@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.PoissonCauchyMixtureKLT4MinimalThird
+import InfoGeometry.External.Automath.Omega.Zeta.PoissonCauchyMixtureKLT4MinimalThird
 
 namespace Omega.Zeta
 

@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldBinRenyiRateCollapse
-import Omega.Zeta.XiFoldKappaGaugeFirstOrderConstants
-import Omega.Zeta.XiTimePart70adBinfoldRenyiEntropyConstantDrift
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinRenyiRateCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldKappaGaugeFirstOrderConstants
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart70adBinfoldRenyiEntropyConstantDrift
 
 open Filter
 

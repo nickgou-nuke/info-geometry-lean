@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelDeterminantalRadicalEqRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.HankelDeterminantalRadicalEqRigidity
 
 namespace Omega.Zeta
 

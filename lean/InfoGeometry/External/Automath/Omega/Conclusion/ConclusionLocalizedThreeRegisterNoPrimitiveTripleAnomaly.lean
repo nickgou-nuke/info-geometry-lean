@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.AnomalyQuadraticLaw
+import InfoGeometry.External.Automath.Omega.CircleDimension.AnomalyQuadraticLaw
 
 namespace Omega.Conclusion
 

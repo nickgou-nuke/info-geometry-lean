@@ -1,4 +1,4 @@
-import Omega.Discussion.HypercubeStokesFourierBinomial
+import InfoGeometry.External.Automath.Omega.Discussion.HypercubeStokesFourierBinomial
 
 namespace Omega.Discussion
 

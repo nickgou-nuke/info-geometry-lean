@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Tactic
-import Omega.Folding.AutocovarianceSeedValues
+import InfoGeometry.External.Automath.Omega.Folding.AutocovarianceSeedValues
 
 namespace Omega.Folding
 

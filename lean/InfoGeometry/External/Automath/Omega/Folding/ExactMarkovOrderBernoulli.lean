@@ -1,4 +1,4 @@
-import Omega.Folding.YmExactSFTOrder
+import InfoGeometry.External.Automath.Omega.Folding.YmExactSFTOrder
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Folding.InverseLimitTopology
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimitTopology
 
 namespace Omega.RecursiveAddressing.InverseLimitDeterminacy
 

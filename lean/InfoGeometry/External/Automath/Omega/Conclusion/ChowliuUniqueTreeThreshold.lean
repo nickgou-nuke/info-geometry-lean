@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ChowliuForcedEdgeThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.ChowliuForcedEdgeThreshold
 
 namespace Omega.Conclusion
 

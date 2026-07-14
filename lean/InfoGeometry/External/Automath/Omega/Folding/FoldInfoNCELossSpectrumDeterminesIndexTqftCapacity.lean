@@ -1,9 +1,9 @@
-import Omega.Folding.FoldInfoNCELossSpectrumIdentifiability
-import Omega.Folding.OracleCapacityWatataniIndexTraceFormula
-import Omega.Folding.Window6
-import Omega.OperatorAlgebra.FoldWatataniIndexMoments
-import Omega.POM.MacroMomentVsMicroPrimeRegisterCertificateSeparation
-import Omega.POM.OracleCapacityStieltjesInversionMellin
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCELossSpectrumIdentifiability
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityWatataniIndexTraceFormula
+import InfoGeometry.External.Automath.Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMoments
+import InfoGeometry.External.Automath.Omega.POM.MacroMomentVsMicroPrimeRegisterCertificateSeparation
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityStieltjesInversionMellin
 
 namespace Omega.Folding
 

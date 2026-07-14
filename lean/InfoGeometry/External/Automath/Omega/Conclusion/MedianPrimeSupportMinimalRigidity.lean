@@ -1,5 +1,5 @@
-import Omega.CircleDimension.MedianMinPrimeSpectrumCubeDimension
-import Omega.CircleDimension.MedianThetaRigidityPrimeRatio
+import InfoGeometry.External.Automath.Omega.CircleDimension.MedianMinPrimeSpectrumCubeDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.MedianThetaRigidityPrimeRatio
 
 namespace Omega.Conclusion
 

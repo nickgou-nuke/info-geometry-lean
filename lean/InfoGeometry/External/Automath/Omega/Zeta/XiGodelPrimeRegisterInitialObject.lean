@@ -1,4 +1,4 @@
-import Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGPrimeRegisterInitialObject
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.GodelSteinitzIsometricRigidity
+import InfoGeometry.External.Automath.Omega.POM.GodelSteinitzIsometricRigidity
 
 namespace Omega.POM
 

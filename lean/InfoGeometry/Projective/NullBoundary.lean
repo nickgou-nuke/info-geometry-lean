@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Twistor.PenroseTwistor
 import InfoGeometry.Projective.SplitOctonions
 
 /-!
@@ -114,7 +115,7 @@ open InfoGeometry.Twistor.PenroseTwistor
 
 /-- The Penrose twistor datum viewed as a generic projective-null datum. -/
 noncomputable def asProjectiveNullBoundaryDatum :
-    ProjectiveNullBoundaryDatum ℂ ℝ PenroseTwistorCarrier where
+    ProjectiveNullBoundaryDatum ℂ ℝ TwistorCarrier where
   q := InfoGeometry.Twistor.PenroseTwistor.helicity
   zero := 0
   scale := fun u Z => (u : ℂ) • Z

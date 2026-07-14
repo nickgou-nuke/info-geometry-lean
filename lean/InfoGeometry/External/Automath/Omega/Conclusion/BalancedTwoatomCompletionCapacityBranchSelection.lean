@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.GoldenBiasSecondOrderUniqueness
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenBiasSecondOrderUniqueness
 
 open scoped goldenRatio
 

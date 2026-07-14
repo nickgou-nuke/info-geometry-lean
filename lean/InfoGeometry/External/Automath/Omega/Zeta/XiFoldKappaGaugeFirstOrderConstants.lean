@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldbinGaugeDensityExactThermodynamicConstant
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinGaugeDensityExactThermodynamicConstant
 
 namespace Omega.Zeta
 

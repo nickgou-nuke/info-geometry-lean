@@ -3,10 +3,11 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Geometry.Manifold.IsManifold.Basic
 import Mathlib.Geometry.Manifold.MFDeriv.Defs
+import Mathlib.Geometry.Manifold.MFDeriv.SpecificFunctions
 import Mathlib.Geometry.Manifold.Instances.Real
 import Mathlib.Geometry.Manifold.ContMDiff.Basic
 
-open scoped Manifold Classical
+open scoped Manifold
 
 namespace InfoGeometry.Geometry
 
@@ -30,8 +31,6 @@ variable {M : Type*} [TopologicalSpace M] [ChartedSpace (ℝ × ℝ) M]
 structure ThermodynamicPotential (M : Type*) [TopologicalSpace M] [ChartedSpace (ℝ × ℝ) M] where
   ln_Q : M → ℝ
   smooth_potential : MDifferentiable 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, ℝ) ln_Q
-  closedGaugeWitness : Prop
-  closedGaugeCertified : closedGaugeWitness
 
 /-- Formalizing d ln Q as a smooth differential 1-form over the manifold. -/
 noncomputable def thermodynamicGaugeConnection
@@ -39,9 +38,26 @@ noncomputable def thermodynamicGaugeConnection
   -- Represented as the total differential (exterior derivative) of the log partition function
   mfderiv 𝓘(ℝ, ℝ × ℝ) 𝓘(ℝ, ℝ) Potential.ln_Q x
 
-/-- Theorem asserting the flatness and closure of the thermodynamic connection -/
+/-- The thermodynamic gauge connection is closed in this finite readout when its
+    differential vanishes pointwise. -/
 def IsClosedGaugeConnection (Potential : ThermodynamicPotential M) : Prop :=
-  Potential.closedGaugeWitness
+  ∀ x : M, thermodynamicGaugeConnection Potential x = 0
+
+/-- Constant log-partition potentials, backed by mathlib's `mfderiv_const`. -/
+noncomputable def constantThermodynamicPotential (c : ℝ) : ThermodynamicPotential M where
+  ln_Q := fun _ => c
+  smooth_potential := mdifferentiable_const
+
+/-- A constant thermodynamic potential has zero gauge connection. -/
+theorem thermodynamicGaugeConnection_constant (c : ℝ) (x : M) :
+    thermodynamicGaugeConnection (constantThermodynamicPotential (M := M) c) x = 0 := by
+  simp [thermodynamicGaugeConnection, constantThermodynamicPotential]
+
+/-- Constant log-partition potentials satisfy the concrete closed-connection predicate. -/
+theorem isClosedGaugeConnection_constant (c : ℝ) :
+    IsClosedGaugeConnection (constantThermodynamicPotential (M := M) c) := by
+  intro x
+  exact thermodynamicGaugeConnection_constant (M := M) c x
 
 /-- The Geometric-Thermodynamic Unification Theorem -/
 def AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
@@ -49,18 +65,20 @@ def AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
   -- Fusing the Amplituhedron canonical volume directly to the integrated thermodynamic gauge trace
   IsClosedGaugeConnection Potential ∧ Ω.omega Set.univ = β_critical
 
-/-- Closed gauge certification is read directly from the thermodynamic potential packet. -/
+/-- Closed gauge readout from an explicit zero-connection proof. -/
 theorem isClosedGaugeConnection_of_thermodynamicPotential
-    (Potential : ThermodynamicPotential M) :
+    (Potential : ThermodynamicPotential M)
+    (hClosed : ∀ x : M, thermodynamicGaugeConnection Potential x = 0) :
     IsClosedGaugeConnection Potential :=
-  Potential.closedGaugeCertified
+  hClosed
 
-/-- Gauge equivalence exposes both the closed-connection certificate and volume calibration. -/
+/-- Gauge equivalence combines an explicit closed-connection proof and volume calibration. -/
 theorem amplituhedronGaugeEquivalence_readout
     {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ)
+    (hClosed : IsClosedGaugeConnection Potential)
     (hVol : Ω.omega Set.univ = β_critical) :
     AmplituhedronGaugeEquivalence Ω Potential β_critical :=
-  ⟨Potential.closedGaugeCertified, hVol⟩
+  ⟨hClosed, hVol⟩
 
 end InfoGeometry.Geometry

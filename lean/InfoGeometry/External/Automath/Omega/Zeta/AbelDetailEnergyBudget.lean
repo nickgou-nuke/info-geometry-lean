@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.AbelHardyEnergyDecimationOrthogonal
-import Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
+import InfoGeometry.External.Automath.Omega.Zeta.AbelHardyEnergyDecimationOrthogonal
+import InfoGeometry.External.Automath.Omega.Zeta.AbelPowerbaseCovariancePolePowerMap
 
 namespace Omega.Zeta
 

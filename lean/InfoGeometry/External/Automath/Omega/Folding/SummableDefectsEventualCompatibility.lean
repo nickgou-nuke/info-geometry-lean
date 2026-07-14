@@ -1,4 +1,4 @@
-import Omega.Folding.SummableNatEventuallyZero
+import InfoGeometry.External.Automath.Omega.Folding.SummableNatEventuallyZero
 
 namespace Omega.Folding
 

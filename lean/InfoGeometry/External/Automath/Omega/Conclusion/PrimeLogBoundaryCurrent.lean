@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeLogUnweightedEulerRegular
-import Omega.Conclusion.PrimeLogZeroLyapunovCalibration
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeLogUnweightedEulerRegular
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeLogZeroLyapunovCalibration
 
 namespace Omega.Conclusion
 

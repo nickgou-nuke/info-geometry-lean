@@ -1,5 +1,6 @@
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 import InfoGeometry.OperatorAlgebra.TKKClosure
+import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 
@@ -48,6 +49,7 @@ namespace InfoGeometry.Canonical.InductiveInvarianceTKKPacket
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 open InfoGeometry.OperatorAlgebra
+open InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 
 /-! ## 1. TKK grading extraction from supergraded invariant data -/
 

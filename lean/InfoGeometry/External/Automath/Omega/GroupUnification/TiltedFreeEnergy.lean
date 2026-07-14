@@ -1,5 +1,5 @@
-import Omega.GroupUnification.FreeEnergyComposition
-import Omega.GroupUnification.TiltDynamics
+import InfoGeometry.External.Automath.Omega.GroupUnification.FreeEnergyComposition
+import InfoGeometry.External.Automath.Omega.GroupUnification.TiltDynamics
 
 namespace Omega.GroupUnification
 

@@ -5,7 +5,7 @@ namespace InfoGeometry.Topology.BregmanDivergence
 
 /-- A topological Bregman readout is the same one-dimensional Bregman divergence
 used by the convex core, viewed at the topology umbrella level. -/
-def topologicalBregmanDiv (F : ℝ → ℝ) (x y : ℝ) : ℝ :=
+noncomputable def topologicalBregmanDiv (F : ℝ → ℝ) (x y : ℝ) : ℝ :=
   InfoGeometry.bregmanDiv F x y
 
 /-- The topological Bregman divergence vanishes on the diagonal. -/

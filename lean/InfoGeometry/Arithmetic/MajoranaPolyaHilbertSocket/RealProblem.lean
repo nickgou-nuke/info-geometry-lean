@@ -16,7 +16,7 @@ separate witness data; it depends on the anticommutation of `ρ` with the real
 Berry--Keating block and on the Dirac-square law for `Q_Λ`.
 -/
 structure RealMajoranaBerryKeatingProblem
-    (Carrier Operator Mode Cutoff : Type*) where
+    (Carrier Operator Mode Cutoff : Type) where
   carrier : Carrier
   cutoff : Cutoff
   realBerryKeatingBlock : Operator

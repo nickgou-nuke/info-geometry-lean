@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40AlphaMax
-import Omega.SyncKernelWeighted.RealInput40PositiveEntropyFreezing
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40AlphaMax
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PositiveEntropyFreezing
 
 namespace Omega.Zeta
 

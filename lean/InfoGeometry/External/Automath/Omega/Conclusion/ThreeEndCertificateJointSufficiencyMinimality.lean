@@ -1,5 +1,5 @@
-import Omega.Conclusion.ReadusNullTrichotomyNormalForm
-import Omega.Conclusion.ThreeEndCertificateOrthogonality
+import InfoGeometry.External.Automath.Omega.Conclusion.ReadusNullTrichotomyNormalForm
+import InfoGeometry.External.Automath.Omega.Conclusion.ThreeEndCertificateOrthogonality
 
 namespace Omega.Conclusion
 

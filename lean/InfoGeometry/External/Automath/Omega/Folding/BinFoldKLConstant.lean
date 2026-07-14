@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.FoldBinTwoPointLimitLaw
-import Omega.Folding.FoldBinTwoStateAsymptotic
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoPointLimitLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinTwoStateAsymptotic
 
 namespace Omega.Folding
 

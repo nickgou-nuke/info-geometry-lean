@@ -1,4 +1,4 @@
-import Omega.RatioResultant.RatioFieldFullSymmetric
-import Omega.RatioResultant.RatioFieldSplitting
-import Omega.RatioResultant.RatioResultantChebyshevParity
-import Omega.RatioResultant.RatioResultantDiscRigidity
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioFieldFullSymmetric
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioFieldSplitting
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioResultantChebyshevParity
+import InfoGeometry.External.Automath.Omega.RatioResultant.RatioResultantDiscRigidity

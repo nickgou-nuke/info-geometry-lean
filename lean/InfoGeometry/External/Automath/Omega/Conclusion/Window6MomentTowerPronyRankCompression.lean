@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionCollisionRationalHankelRank
 
 namespace Omega.Conclusion
 

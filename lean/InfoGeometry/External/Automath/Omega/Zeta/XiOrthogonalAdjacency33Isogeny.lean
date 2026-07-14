@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiFlagFactorization12x4x3
+import InfoGeometry.External.Automath.Omega.Zeta.XiFlagFactorization12x4x3
 
 namespace Omega.Zeta
 

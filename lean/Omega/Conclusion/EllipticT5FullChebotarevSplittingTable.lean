@@ -9,10 +9,6 @@ structure conclusion_elliptic_t5_full_chebotarev_splitting_table_row where
   conclusion_elliptic_t5_full_chebotarev_splitting_table_class_count : ℕ
 deriving DecidableEq
 
-/-- Trivial carrier for the finite Chebotarev table certificate. -/
-structure conclusion_elliptic_t5_full_chebotarev_splitting_table_data where
-  conclusion_elliptic_t5_full_chebotarev_splitting_table_witness : Unit := ()
-
 /-- The 14 certified splitting rows for the `T₅` 24-point action. -/
 def conclusion_elliptic_t5_full_chebotarev_splitting_table_rows :
     List conclusion_elliptic_t5_full_chebotarev_splitting_table_row :=
@@ -47,7 +43,7 @@ def conclusion_elliptic_t5_full_chebotarev_splitting_table_densities : List ℚ 
 
 /-- Paper-facing finite certificate for the 14 splitting types and their densities. -/
 def conclusion_elliptic_t5_full_chebotarev_splitting_table_statement
-    (_D : conclusion_elliptic_t5_full_chebotarev_splitting_table_data) : Prop :=
+    : Prop :=
   conclusion_elliptic_t5_full_chebotarev_splitting_table_rows.length = 14 ∧
     (conclusion_elliptic_t5_full_chebotarev_splitting_table_rows.map
       (fun r => r.conclusion_elliptic_t5_full_chebotarev_splitting_table_class_count)).sum =
@@ -59,9 +55,8 @@ def conclusion_elliptic_t5_full_chebotarev_splitting_table_statement
         (1 : ℚ) / 20, (1 : ℚ) / 480]
 
 /-- Paper label: `thm:conclusion-elliptic-t5-full-chebotarev-splitting-table`. -/
-theorem paper_conclusion_elliptic_t5_full_chebotarev_splitting_table
-    (D : conclusion_elliptic_t5_full_chebotarev_splitting_table_data) :
-    conclusion_elliptic_t5_full_chebotarev_splitting_table_statement D := by
+theorem paper_conclusion_elliptic_t5_full_chebotarev_splitting_table :
+    conclusion_elliptic_t5_full_chebotarev_splitting_table_statement := by
   dsimp [conclusion_elliptic_t5_full_chebotarev_splitting_table_statement]
   native_decide
 

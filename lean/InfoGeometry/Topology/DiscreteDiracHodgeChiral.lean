@@ -126,16 +126,6 @@ theorem chirality_anticommutes_diracHodge_apply
           ext i
           simp [Matrix.mulVec, dotProduct, Finset.sum_neg_distrib]
 
-/-- Exact cochains have the expected witness readout. -/
-theorem exact_readout (d : EndCochain n) (x : Cochains n)
-    (h : IsExact d x) : ∃ y : Cochains n, d.mulVec y = x :=
-  h
-
-/-- Coexact cochains have the expected witness readout. -/
-theorem coexact_readout (δ : EndCochain n) (x : Cochains n)
-    (h : IsCoexact δ x) : ∃ y : Cochains n, δ.mulVec y = x :=
-  h
-
 /-! ## Degree-one graph/simplicial Hodge adapter -/
 
 /-- Degree-one exact forms in the Eckmann owner are coboundaries `d₀ u`. -/
@@ -147,21 +137,6 @@ def EckmannExact1 {n0 n1 : ℕ}
 def EckmannCoexact1 {n1 n2 : ℕ}
     (d1 : Matrix (Fin n2) (Fin n1) ℝ) (x : Fin n1 → ℝ) : Prop :=
   ∃ v : Fin n2 → ℝ, d1.transpose.mulVec v = x
-
-/-- The concrete degree-one Laplacian is exactly the Eckmann owner Laplacian. -/
-theorem eckmann_degree_one_laplacian_readout {n0 n1 n2 : ℕ}
-    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
-    (d1 : Matrix (Fin n2) (Fin n1) ℝ) :
-    eckmannLaplacian1 d0 d1 = d1.transpose * d1 + d0 * d0.transpose :=
-  rfl
-
-/-- The concrete degree-one harmonic predicate is the Eckmann closed/coclosed predicate. -/
-theorem eckmann_harmonic1_readout {n0 n1 n2 : ℕ}
-    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
-    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
-    (x : Fin n1 → ℝ) :
-    eckmannHarmonic1 d0 d1 x ↔ d1.mulVec x = 0 ∧ d0.transpose.mulVec x = 0 :=
-  Iff.rfl
 
 /-- Exact and coexact degree-one components are orthogonal when `d₁ d₀ = 0`. -/
 theorem eckmann_exact_orthogonal_coexact {n0 n1 n2 : ℕ}
@@ -175,6 +150,29 @@ theorem eckmann_exact_orthogonal_coexact {n0 n1 n2 : ℕ}
   rcases hx with ⟨u, rfl⟩
   rcases hy with ⟨v, rfl⟩
   exact eckmann_coboundary_orthogonal_coexact d0 d1 hComplex u v
+
+/-- Exact cochains are explicit images. -/
+theorem exact_readout (d : EndCochain n) (x : Cochains n)
+    (h : IsExact d x) : ∃ y : Cochains n, d.mulVec y = x := h
+
+/-- Coexact cochains are explicit images. -/
+theorem coexact_readout (δ : EndCochain n) (x : Cochains n)
+    (h : IsCoexact δ x) : ∃ y : Cochains n, δ.mulVec y = x := h
+
+/-- The degree-one Eckmann Laplacian expands to `d₁ᵀ d₁ + d₀ d₀ᵀ`. -/
+theorem eckmann_degree_one_laplacian_readout {n0 n1 n2 : ℕ}
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ) :
+    eckmannLaplacian1 d0 d1 = d1.transpose * d1 + d0 * d0.transpose :=
+  rfl
+
+/-- Degree-one harmonicity is the conjunction of closedness and coclosedness. -/
+theorem eckmann_harmonic1_readout {n0 n1 n2 : ℕ}
+    (d0 : Matrix (Fin n1) (Fin n0) ℝ)
+    (d1 : Matrix (Fin n2) (Fin n1) ℝ)
+    (x : Fin n1 → ℝ) :
+    eckmannHarmonic1 d0 d1 x ↔ d1.mulVec x = 0 ∧ d0.transpose.mulVec x = 0 :=
+  Iff.rfl
 
 end
 

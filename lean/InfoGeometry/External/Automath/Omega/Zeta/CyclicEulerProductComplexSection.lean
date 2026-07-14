@@ -1,4 +1,4 @@
-import Omega.Zeta.CyclicEulerProduct
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicEulerProduct
 
 namespace Omega.Zeta
 

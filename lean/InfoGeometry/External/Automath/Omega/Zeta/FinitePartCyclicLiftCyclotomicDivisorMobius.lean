@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Omega.Zeta.FinitePartCyclicLiftMobiusInversion
-import Omega.Zeta.FinitePartCyclicLiftReducedConstantClosed
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftMobiusInversion
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclicLiftReducedConstantClosed
 
 namespace Omega.Zeta
 

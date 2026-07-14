@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Factors
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
 
 namespace Omega.Folding
 

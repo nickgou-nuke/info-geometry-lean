@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Tactic
-import Omega.GU.Window6EdgeFluxSmithNonsimple
+import InfoGeometry.External.Automath.Omega.GU.Window6EdgeFluxSmithNonsimple
 
 namespace Omega.GU
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.LocalizedQuotientLedger
-import Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientLedger
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
 
 namespace Omega.Zeta
 

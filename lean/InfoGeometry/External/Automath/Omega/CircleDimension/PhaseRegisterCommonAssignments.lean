@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.BasicComputation
+import InfoGeometry.External.Automath.Omega.CircleDimension.BasicComputation
 
 namespace Omega.CircleDimension
 

@@ -1,7 +1,7 @@
 import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
 import Mathlib.RingTheory.Ideal.NatInt
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.AdditionCollisionQ2FullSymmetricGalois
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.AdditionCollisionQ2FullSymmetricGalois
 
 namespace Omega.SyncKernelRealInput
 

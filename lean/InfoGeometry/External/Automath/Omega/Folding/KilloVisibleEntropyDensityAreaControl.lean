@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.GaugeVolumeAreaComplementarity
+import InfoGeometry.External.Automath.Omega.SPG.GaugeVolumeAreaComplementarity
 
 namespace Omega.Folding
 

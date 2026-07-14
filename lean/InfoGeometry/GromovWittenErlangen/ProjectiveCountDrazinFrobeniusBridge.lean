@@ -73,10 +73,9 @@ inverse in the projective-count readout.
 -/
 @[rep_depth operator]
 theorem obstructionResidue_mul_regularInverse :
-    B.localizedBridge.fredholmDrazin.obstructionResidue *
-        B.localizedBridge.fredholmDrazin.regularInverse = 0 :=
-  LocalizedDrazinFrobeniusBridge.obstructionResidue_mul_regularInverse
-    B.localizedBridge
+    LocalizedDrazinFrobeniusBridge.obstructionResidue B.localizedBridge *
+        LocalizedDrazinFrobeniusBridge.regularInverse B.localizedBridge = 0 :=
+  LocalizedDrazinFrobeniusBridge.obstructionResidue_mul_regularInverse B.localizedBridge
 
 end ProjectiveCountDrazinFrobeniusBridge
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
-import Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
 
 open Filter
 

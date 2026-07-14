@@ -1,0 +1,36 @@
+{
+  "round3_inventory": {
+    "artifact": "tools/multisystem/major_restore_non_overwriting/non_scratch_recovery_candidates_round3.json",
+    "entries": 250,
+    "entries_with_sorry_count_positive": 81,
+    "entries_with_zero_sorries_recorded": 169,
+    "metadata_limitations": [
+      "no recorded source-class exclusions",
+      "no scan caps or timeout/error ledger",
+      "score ranks fragments but does not establish missingness",
+      "zero recorded sorries does not establish parse completeness or compilation"
+    ],
+    "metadata_present": false,
+    "missing_referenced_files": []
+  },
+  "schema_version": 1,
+  "scratch_inventory": {
+    "actual_archive_lean_files": 85,
+    "artifact": "tools/multisystem/major_restore_non_overwriting/scratch_recovery_inventory.json",
+    "duplicate_archive_entries": {},
+    "entries": 85,
+    "entries_with_candidate_live_hits": 26,
+    "entries_with_no_candidate_live_hits": 59,
+    "invalid_candidate_live_paths": [],
+    "metadata_limitations": [
+      "no recorded excluded paths",
+      "no byte/row caps",
+      "no timeout or error ledger",
+      "no truncation flags",
+      "candidate hits are filename-token matches, not semantic owner classifications"
+    ],
+    "metadata_present": false,
+    "missing_referenced_files": [],
+    "unreferenced_archive_lean_files": []
+  }
+}

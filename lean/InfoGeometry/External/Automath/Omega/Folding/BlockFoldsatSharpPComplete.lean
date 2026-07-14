@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Folding.BlockFoldsatNpComplete
+import InfoGeometry.External.Automath.Omega.Folding.BlockFoldsatNpComplete
 
 namespace Omega.Folding
 

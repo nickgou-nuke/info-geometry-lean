@@ -1,5 +1,5 @@
-import Omega.Folding.FoldCollisionZeroSparsityImpact
-import Omega.Folding.KilloFoldRenyi2UniformityGap
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionZeroSparsityImpact
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldRenyi2UniformityGap
 
 namespace Omega.Zeta
 

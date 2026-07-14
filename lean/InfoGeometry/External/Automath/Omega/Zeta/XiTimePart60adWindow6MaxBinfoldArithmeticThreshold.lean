@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinM6FiberHist
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinM6FiberHist
 
 namespace Omega.Zeta
 

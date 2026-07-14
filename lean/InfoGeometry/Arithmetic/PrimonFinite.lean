@@ -34,6 +34,14 @@ variable [DecidableEq ι] [CommRing R]
 def weight (q : ι → R) (S : FState ι) : R :=
   ∏ p ∈ S, q p
 
+omit [DecidableEq ι] in
+theorem weight_ne_zero [NoZeroDivisors R] [Nontrivial R]
+    (q : ι → R) (S : FState ι)
+    (h : ∀ p ∈ S, q p ≠ 0) :
+    weight q S ≠ 0 := by
+  unfold weight
+  exact Finset.prod_ne_zero_iff.mpr h
+
 /-- Fermion parity `(-1)^F`. -/
 def parity (S : FState ι) : R :=
   (-1 : R) ^ S.card
@@ -138,6 +146,14 @@ variable {K : Type*} [Field K]
 def ZB (modes : Finset ι) (q : ι → K) : K :=
   ∏ p ∈ modes, (1 - q p)⁻¹
 
+theorem ZB_ne_zero
+    (modes : Finset ι) (q : ι → K)
+    (h : ∀ p ∈ modes, (1 - q p) ≠ 0) :
+    ZB modes q ≠ 0 := by
+  unfold ZB
+  exact Finset.prod_ne_zero_iff.mpr
+    (fun p hp => inv_ne_zero (h p hp))
+
 /-- Local finite supersymmetric cancellation of bosonic and signed fermionic factors. -/
 theorem local_susy_cancellation
     (modes : Finset ι) (q : ι → K)
@@ -147,6 +163,15 @@ theorem local_susy_cancellation
     (Finset.prod_eq_one (s := modes)
       (f := fun p : ι => ((1 - q p)⁻¹ * (1 - q p)))
       (fun p hp => by simpa using inv_mul_cancel₀ (a := (1 - q p)) (h p hp)))
+
+theorem ZB_mul_STrF_eq_one [DecidableEq ι]
+    (modes : Finset ι) (q : ι → K)
+    (h : ∀ p ∈ modes, (1 - q p) ≠ 0) :
+    ZB modes q * STrF modes q = 1 := by
+  rw [STrF_eq_prod]
+  unfold ZB
+  rw [← Finset.prod_mul_distrib]
+  exact local_susy_cancellation modes q h
 
 end Bosonic
 

@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Filter.Basic
-import Omega.Conclusion.BinfoldGaugeCenterEventualTriviality
-import Omega.Conclusion.BinfoldRenyiRateCollapse
-import Omega.Conclusion.BinfoldTailOrderStatisticsSingleJumpCollapse
-import Omega.Conclusion.BinfoldTwoAtomInformationGeometryUniversality
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldGaugeCenterEventualTriviality
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldRenyiRateCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTailOrderStatisticsSingleJumpCollapse
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoAtomInformationGeometryUniversality
 
 open Filter
 

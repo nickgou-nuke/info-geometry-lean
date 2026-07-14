@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart62ccEventwordFreeAffineSubmonoid
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62ccEventwordFreeAffineSubmonoid
 
 namespace Omega.Zeta
 

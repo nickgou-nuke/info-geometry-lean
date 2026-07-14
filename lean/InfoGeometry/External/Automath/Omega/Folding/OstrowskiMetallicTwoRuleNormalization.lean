@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.OstrowskiDenominators
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiDenominators
 
 namespace Omega.Folding
 

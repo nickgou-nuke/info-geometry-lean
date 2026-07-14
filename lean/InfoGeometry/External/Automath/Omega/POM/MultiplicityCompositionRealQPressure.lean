@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionMomentHierarchyRationalGrowth
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionMomentHierarchyRationalGrowth
 
 namespace Omega.POM
 

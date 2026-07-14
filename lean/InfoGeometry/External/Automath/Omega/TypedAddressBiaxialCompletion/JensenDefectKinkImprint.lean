@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.JensenDefectKinkStructure
-import Omega.TypedAddressBiaxialCompletion.JensenOffcriticalKinkLocalization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectKinkStructure
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenOffcriticalKinkLocalization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

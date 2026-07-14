@@ -1,7 +1,7 @@
-import Omega.Conclusion.DivisorCompressedQaxisHilbertBoundedness
-import Omega.Conclusion.DivisorCompressedQaxisSquarerootThreshold
-import Omega.Conclusion.PrimeFlatteningSupportGcdClassification
-import Omega.Conclusion.RamanujanAtomicQAxisZetaStripping
+import InfoGeometry.External.Automath.Omega.Conclusion.DivisorCompressedQaxisHilbertBoundedness
+import InfoGeometry.External.Automath.Omega.Conclusion.DivisorCompressedQaxisSquarerootThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeFlatteningSupportGcdClassification
+import InfoGeometry.External.Automath.Omega.Conclusion.RamanujanAtomicQAxisZetaStripping
 
 namespace Omega.Conclusion
 

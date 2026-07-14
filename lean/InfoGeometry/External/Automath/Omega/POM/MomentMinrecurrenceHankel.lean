@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.HankelRankMinimal
-import Omega.POM.MomentKernelExists
+import InfoGeometry.External.Automath.Omega.POM.HankelRankMinimal
+import InfoGeometry.External.Automath.Omega.POM.MomentKernelExists
 
 open scoped BigOperators
 

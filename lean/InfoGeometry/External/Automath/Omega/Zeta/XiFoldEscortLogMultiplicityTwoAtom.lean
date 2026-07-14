@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
 
 namespace Omega.Zeta
 

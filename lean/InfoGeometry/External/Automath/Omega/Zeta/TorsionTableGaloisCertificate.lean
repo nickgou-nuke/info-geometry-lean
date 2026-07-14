@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Omega.Zeta.TorsionTableGaloisCovariance
+import InfoGeometry.External.Automath.Omega.Zeta.TorsionTableGaloisCovariance
 
 namespace Omega.Zeta
 

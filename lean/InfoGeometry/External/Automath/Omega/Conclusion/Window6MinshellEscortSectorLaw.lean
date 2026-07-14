@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6RootSplitDegeneracyCrossTable
-import Omega.FoldResidualTime.Window6FixedFreezingLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6RootSplitDegeneracyCrossTable
+import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6FixedFreezingLaw
 
 namespace Omega.Conclusion
 

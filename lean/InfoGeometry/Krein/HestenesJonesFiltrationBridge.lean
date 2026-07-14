@@ -41,7 +41,7 @@ on them.  It only identifies the trace-replacement readout:
 `ωΩ(p_w) = [p_w Ω, Ω]_J`.
 -/
 @[rep_depth krein]
-structure HestenesJonesFiltrationBridge where
+structure Bridge where
   /-- Hestenes/Krein KMS packet. -/
   packet :
     HestenesKreinKMSPacket (E := H₂)
@@ -52,7 +52,8 @@ structure HestenesJonesFiltrationBridge where
 
   /-- Core Hestenes phase-volume/log-det socket on units. -/
   phase :
-    HestenesPhaseVolumeBridge (E := H₂) packet vacuum
+    _root_.InfoGeometry.Krein.HestenesPhaseVolumeBridge.Bridge
+      (E := H₂) packet vacuum
 
   /-- Existing finite Wigner--Jones/Ω-volume owner. -/
   omegaVolume :
@@ -62,10 +63,10 @@ structure HestenesJonesFiltrationBridge where
   omega_eq_vacuum :
     omegaVolume.Omega = vacuum.omega
 
-namespace HestenesJonesFiltrationBridge
+namespace Bridge
 
 variable (B :
-  InfoGeometry.Krein.HestenesJonesFiltrationBridge.HestenesJonesFiltrationBridge
+  Bridge
     (H := H) (Word := Word))
 
 /-- The installed Ω-volume state agrees with the Hestenes vacuum real state. -/
@@ -173,24 +174,8 @@ theorem modularVolumeIncrement_eq_neg_log_vacuumRealState_ratio
           rw [B.atomExpectation_eq_vacuumRealState child,
             B.atomExpectation_eq_vacuumRealState parent]
 
-end HestenesJonesFiltrationBridge
+end Bridge
 
 end Core
 
 end InfoGeometry.Krein.HestenesJonesFiltrationBridge
-
-
-/-- The concrete n-depth representation map from the real Jordan-Wigner matrix tower
-to the complex Cantor endomorphisms. -/
-def buildCantorRep (n : ℕ) : MatStage n →ₐ[ℝ] CantorOp n := by
-  sorry
-
-/-- The concrete n-depth representation map satisfies the Jordan-Wigner constraints. -/
-theorem buildCantorRep_is_jw_rep (n : ℕ) :
-    IsJWCantorRepresentation n (buildCantorRep n) := by
-  sorry
-
-/-- The isomorphism theorem is closed by providing the concrete representation. -/
-theorem IsomorphismPreservesGenerators_closed (n : ℕ) :
-    ∃ ρ : MatStage n →ₐ[ℝ] CantorOp n, IsJWCantorRepresentation n ρ :=
-  ⟨buildCantorRep n, buildCantorRep_is_jw_rep n⟩

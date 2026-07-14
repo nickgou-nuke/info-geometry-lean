@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFoldLocalInformationDensityFirstOrderDiscreteLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldLocalInformationDensityFirstOrderDiscreteLaw
 
 namespace Omega.Zeta
 

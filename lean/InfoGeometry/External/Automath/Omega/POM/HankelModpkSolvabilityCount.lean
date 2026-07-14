@@ -1,4 +1,4 @@
-import Omega.Zeta.SmithLinearSolvabilityConstantFibers
+import InfoGeometry.External.Automath.Omega.Zeta.SmithLinearSolvabilityConstantFibers
 
 namespace Omega.POM
 

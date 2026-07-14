@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SoftcoreWeightMatrixExplicitInverse
-import Omega.POM.ReplicaSoftcoreWordTraceFibonacciFactorization
+import InfoGeometry.External.Automath.Omega.Conclusion.SoftcoreWeightMatrixExplicitInverse
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreWordTraceFibonacciFactorization
 
 namespace Omega.Conclusion
 

@@ -8,6 +8,10 @@ open DAG
 abbrev chainComplex : TwoComplex Nat :=
   canonicalChainComplex
 
+/-- Canonical triangle complex `0 → 1, 0 → 2, 1 → 2` reused from the Hodge owner file. -/
+abbrev triangleComplex : TwoComplex Nat :=
+  canonicalTriangleComplex
+
 /--
 On the canonical chain, the graph Dirac square is the explicit block-diagonal
 matrix `Δ₀ ⊕ (∂₁∂₁ᵀ)`.
@@ -63,6 +67,39 @@ theorem trace_D_sq_equals_trace_laplacians_chain :
     let Dsq := matMul D D
     matTrace Dsq = matTrace (laplacian0 chainComplex)
       + matTrace (matMul (boundary1 chainComplex) (matTranspose (boundary1 chainComplex))) := by
+  native_decide
+
+/--
+On the canonical triangle, the graph Dirac square is the explicit block-diagonal
+matrix `Δ₀ ⊕ (∂₁∂₁ᵀ)`.
+-/
+theorem dirac_squared_block_diagonal_triangle :
+    let D := graphDirac triangleComplex
+    matMul D D =
+      #[#[(2 : Rat), -1, -1, 0, 0, 0],
+        #[-1, 2, -1, 0, 0, 0],
+        #[-1, -1, 2, 0, 0, 0],
+        #[0, 0, 0, 2, 1, -1],
+        #[0, 0, 0, 1, 2, 1],
+        #[0, 0, 0, -1, 1, 2]] := by
+  native_decide
+
+/--
+On the canonical digon, the graph Dirac square is the explicit block-diagonal
+matrix `Δ₀ ⊕ (∂₁∂₁ᵀ)`.
+-/
+theorem dirac_squared_block_diagonal_digon :
+    let D := graphDirac canonicalDigonComplex
+    matMul D D =
+      #[#[(2 : Rat), -2, 0, 0],
+        #[-2, 2, 0, 0],
+        #[0, 0, 2, -2],
+        #[0, 0, -2, 2]] := by
+  native_decide
+
+/-- The owner-side executable check for the canonical triangle. -/
+theorem dirac_square_check_triangle :
+    diracSquareCheck triangleComplex = true := by
   native_decide
 
 end DAG.DiracLaplacian

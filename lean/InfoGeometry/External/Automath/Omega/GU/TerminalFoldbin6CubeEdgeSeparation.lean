@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbin6OnebitErrorDetecting
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6OnebitErrorDetecting
 
 namespace Omega.GU
 

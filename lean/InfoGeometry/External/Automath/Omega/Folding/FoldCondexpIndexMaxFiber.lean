@@ -1,6 +1,6 @@
-import Omega.Folding.MaxFiber
-import Omega.OperatorAlgebra.RenyiFlatnessSupEqualsLogIndex
-import Omega.POM.HiddenBitWatataniIndexElement
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.RenyiFlatnessSupEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.POM.HiddenBitWatataniIndexElement
 
 namespace Omega
 

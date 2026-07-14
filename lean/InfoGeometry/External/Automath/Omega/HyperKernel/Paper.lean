@@ -1,7 +1,7 @@
-import Omega.HyperKernel.SetStructure
-import Omega.HyperKernel.Fiber
-import Omega.HyperKernel.Geometry
-import Omega.HyperKernel.SetStructureChecksTiny
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Fiber
+import InfoGeometry.External.Automath.Omega.HyperKernel.Geometry
+import InfoGeometry.External.Automath.Omega.HyperKernel.SetStructureChecksTiny
 
 namespace Omega.HyperKernel.Paper
 

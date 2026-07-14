@@ -49,10 +49,11 @@ supplies it.  Its modular-flow and renormalization invariance are witness
 fields, not derived Type-III determinant claims.
 -/
 @[rep_depth projective]
-structure ErgodicWeylGWVolumeBridge where
+structure Bridge where
   /-- Ergodic fixed-point to `Ω`-volume adapter. -/
   ergodicOmega :
-    ErgodicOmegaVolumeBridge (E := E) (H := H)
+    _root_.InfoGeometry.Canonical.ErgodicOmegaVolumeBridge.Bridge
+      (E := E) (H := H)
       (LieAlgebra := LieAlgebra) (Word := Word)
 
   /-- Existing standard-form face to projective Weyl/GW physical-volume fusion. -/
@@ -84,9 +85,9 @@ structure ErgodicWeylGWVolumeBridge where
         ergodicOmega.ergodic A →
         phaseVolume (ergodicOmega.ergodic.renorm A) = phaseVolume A
 
-namespace ErgodicWeylGWVolumeBridge
+namespace Bridge
 
-variable (B : ErgodicWeylGWVolumeBridge
+variable (B : Bridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra)
   (Functional := Functional) (State := State) (G := G) (T := T)
   (Target := Target) (Coeff := Coeff) (Word := Word))
@@ -116,7 +117,7 @@ theorem physicalVolume_eq_fixedOperatorVolume
       B.ergodicOmega.omegaVolume.volumeState
         (B.ergodicOmega.toVolumeOperator
           (B.ergodicOmega.fixedOperatorOfWord w)) := by
-        rw [ErgodicOmegaVolumeBridge.fixedOperator_volume_eq_localizedExpectation
+        rw [_root_.InfoGeometry.Canonical.ErgodicOmegaVolumeBridge.Bridge.fixedOperator_volume_eq_localizedExpectation
           B.ergodicOmega w]
 
 /--
@@ -154,7 +155,8 @@ theorem fixedOperator_mem_centralizerLike
     (w : Word) :
     B.ergodicOmega.ergodic.centralizerLike
       (B.ergodicOmega.fixedOperatorOfWord w) :=
-  ErgodicOmegaVolumeBridge.fixedOperator_mem_centralizerLike B.ergodicOmega w
+  _root_.InfoGeometry.Canonical.ErgodicOmegaVolumeBridge.Bridge.fixedOperator_mem_centralizerLike
+    B.ergodicOmega w
 
 /-- The existing projective Weyl/GW physical-volume scale invariance is retained. -/
 @[rep_depth projective]
@@ -166,9 +168,8 @@ theorem physicalVolume_scale_invariant
   StandardFormFaceWeylGWVolumeFusion.physicalVolume_scale_invariant
     B.faceGW c hc s
 
-end ErgodicWeylGWVolumeBridge
+end Bridge
 
 end Core
 
 end InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
-

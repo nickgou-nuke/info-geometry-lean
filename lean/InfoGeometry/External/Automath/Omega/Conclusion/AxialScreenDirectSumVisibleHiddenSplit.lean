@@ -1,6 +1,6 @@
-import Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
-import Omega.Conclusion.FullInternalScreenGlobalComplementLaw
-import Omega.Conclusion.ScreenKolmogorovDeficitExactSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionAxialScreenCorankAreaLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FullInternalScreenGlobalComplementLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenKolmogorovDeficitExactSplitting
 
 namespace Omega.Conclusion
 

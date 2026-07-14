@@ -1,7 +1,7 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
 
 namespace Omega.Zeta
 

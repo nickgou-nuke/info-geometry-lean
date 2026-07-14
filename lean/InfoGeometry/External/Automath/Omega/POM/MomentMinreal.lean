@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.DeltaMinExtraReadouts
-import Omega.POM.MomentResonance
+import InfoGeometry.External.Automath.Omega.POM.DeltaMinExtraReadouts
+import InfoGeometry.External.Automath.Omega.POM.MomentResonance
 
 namespace Omega.POM
 

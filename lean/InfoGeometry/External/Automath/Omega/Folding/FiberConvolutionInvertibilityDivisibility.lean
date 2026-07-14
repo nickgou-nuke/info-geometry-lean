@@ -1,11 +1,11 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.FiberConvolutionKernelInvertibility
-import Omega.Folding.FiberConvolutionKernelZeroSpectrum
-import Omega.Folding.ShiftDynamics
-import Omega.Folding.TranslationEquationOrbitSolutionSpace
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionKernelInvertibility
+import InfoGeometry.External.Automath.Omega.Folding.FiberConvolutionKernelZeroSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.TranslationEquationOrbitSolutionSpace
 
 namespace Omega.Folding
 

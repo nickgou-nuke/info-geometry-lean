@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Omega.SyncKernelWeighted.PressureAnalyticRadiusDiscriminantFormula
-import Omega.SyncKernelWeighted.PressureUnitCircleBranchAngles
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureAnalyticRadiusDiscriminantFormula
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureUnitCircleBranchAngles
 
 namespace Omega.SyncKernelWeighted
 

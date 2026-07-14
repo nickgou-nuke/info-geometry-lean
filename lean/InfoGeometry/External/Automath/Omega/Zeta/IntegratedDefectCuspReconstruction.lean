@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Zeta.XiSingleDefectThresholdPhaseTransition
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleDefectThresholdPhaseTransition
 
 namespace Omega.Zeta
 

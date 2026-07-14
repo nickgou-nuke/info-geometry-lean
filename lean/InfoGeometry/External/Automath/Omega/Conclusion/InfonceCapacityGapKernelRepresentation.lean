@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldCapacityGapMellinStieltjesDuality
-import Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
+import InfoGeometry.External.Automath.Omega.Folding.FoldCapacityGapMellinStieltjesDuality
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEBayesInfoncePowerSumExpansion
 
 namespace Omega.Conclusion
 

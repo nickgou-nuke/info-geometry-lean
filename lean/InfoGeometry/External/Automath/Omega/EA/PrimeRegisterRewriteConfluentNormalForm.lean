@@ -1,6 +1,6 @@
 import Mathlib.Logic.Relation
-import Omega.EA.PrimeRegisterNormalFormUniqueness
-import Omega.EA.RewriteTermination
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterNormalFormUniqueness
+import InfoGeometry.External.Automath.Omega.EA.RewriteTermination
 
 namespace Omega.EA
 

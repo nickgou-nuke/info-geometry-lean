@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.VisibleJointHorizonSharp2d
+import InfoGeometry.External.Automath.Omega.Conclusion.VisibleJointHorizonSharp2d
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3Closed
-import Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3U1Positivity
+import InfoGeometry.External.Automath.Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3Closed
+import InfoGeometry.External.Automath.Omega.Zeta.TerminalZmTranslationTBranchDiscriminantC3U1Positivity
 
 namespace Omega.Zeta
 

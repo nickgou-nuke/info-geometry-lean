@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BinGaugeVolume
-import Omega.Folding.FiberEntropySaturation
-import Omega.Folding.FoldBinChi2Col
-import Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolume
+import InfoGeometry.External.Automath.Omega.Folding.FiberEntropySaturation
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinChi2Col
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
 
 open scoped BigOperators
 

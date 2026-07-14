@@ -1,5 +1,5 @@
-import Omega.POM.ResonanceMinpolyGaloisSdQ12Q15
-import Omega.POM.ResonanceGaloisS13Q16Q17
+import InfoGeometry.External.Automath.Omega.POM.ResonanceMinpolyGaloisSdQ12Q15
+import InfoGeometry.External.Automath.Omega.POM.ResonanceGaloisS13Q16Q17
 
 namespace Omega.POM
 

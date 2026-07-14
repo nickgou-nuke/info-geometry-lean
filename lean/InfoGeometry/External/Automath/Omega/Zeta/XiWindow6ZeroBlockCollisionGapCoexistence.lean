@@ -1,5 +1,5 @@
-import Omega.Folding.FoldZeroHalfIndexMultiple6
-import Omega.Zeta.XiFoldFibonacciCollisionGapPositiveFloor
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldFibonacciCollisionGapPositiveFloor
 
 namespace Omega.Zeta
 

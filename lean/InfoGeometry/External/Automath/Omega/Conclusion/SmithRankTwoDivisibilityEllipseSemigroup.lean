@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiKernelLossDivisibilityValuationRationalEuler
+import InfoGeometry.External.Automath.Omega.Zeta.XiKernelLossDivisibilityValuationRationalEuler
 
 namespace Omega.Conclusion
 

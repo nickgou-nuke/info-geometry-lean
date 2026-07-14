@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.SingletonConservativity
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.SingletonConservativity
 
 namespace Omega.LogicExpansionChain.FocusedSingletonConservativity
 

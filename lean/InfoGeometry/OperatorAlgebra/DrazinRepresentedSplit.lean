@@ -410,17 +410,4 @@ theorem drazinRepresentedSplitOwnerTarget
       W.defectLocus = C.defectLocus := by
   exact ⟨rfl, rfl, rfl, rfl, rfl⟩
 
-/-- Direct extraction packet from compatibility data. -/
-theorem drazinRepresentedSplit_packet
-    (Core Split Op : Type*)
-    [Ring Op] [Module ℝ Op]
-    (C : DrazinRepresentedSplitCompatibility Core Split Op) :
-    let W := C.toDrazinRepresentedSplit
-    W.coreRep = C.coreRep ∧
-      W.splitRep = C.splitRep ∧
-      W.circular = C.circular ∧
-      W.projectors = C.projectors ∧
-      W.defectLocus = C.defectLocus :=
-  drazinRepresentedSplitOwnerTarget Core Split Op C
-
 end InfoGeometry.OperatorAlgebra

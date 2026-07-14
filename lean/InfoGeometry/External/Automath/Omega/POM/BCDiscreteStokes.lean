@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.BCInformationStokesCoboundary
+import InfoGeometry.External.Automath.Omega.POM.BCInformationStokesCoboundary
 
 namespace Omega.POM
 

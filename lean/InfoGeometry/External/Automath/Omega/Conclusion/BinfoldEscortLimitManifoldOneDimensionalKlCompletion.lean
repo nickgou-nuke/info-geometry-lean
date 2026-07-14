@@ -1,5 +1,5 @@
-import Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
-import Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldTwoScalarCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
 
 namespace Omega.Conclusion
 

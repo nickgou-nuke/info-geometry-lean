@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyRateCurveSingularEliminationU5d19
-import Omega.Folding.GaugeAnomalyRateCurveDeltaDefect27
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyRateCurveSingularEliminationU5d19
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveDeltaDefect27
 
 namespace Omega.Folding
 

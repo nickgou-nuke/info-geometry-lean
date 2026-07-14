@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldBinGaugeConstantZetaEvenRecoveryLimit
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinGaugeConstantZetaEvenRecoveryLimit
 
 namespace Omega.Folding
 

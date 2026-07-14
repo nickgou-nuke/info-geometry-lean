@@ -1,5 +1,5 @@
-import Omega.Conclusion.ZGFiniteShadowDeterminesTruncatedMarkovProtocol
-import Omega.Conclusion.ZGShadowNonmultiplicativityNearestNeighbor
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGFiniteShadowDeterminesTruncatedMarkovProtocol
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGShadowNonmultiplicativityNearestNeighbor
 
 namespace Omega.Conclusion
 

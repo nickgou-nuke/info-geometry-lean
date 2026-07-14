@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalCoverTimeMean
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeMean
 
 namespace Omega.POM
 

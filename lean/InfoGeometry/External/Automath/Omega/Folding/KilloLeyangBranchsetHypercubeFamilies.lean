@@ -1,5 +1,5 @@
-import Omega.CircleDimension.DyadicKernelCube
-import Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
+import InfoGeometry.External.Automath.Omega.CircleDimension.DyadicKernelCube
+import InfoGeometry.External.Automath.Omega.Folding.KilloLeyang2powerTorsionCayleyHypercube
 
 namespace Omega.Folding
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPrimePhaseTorusDenseUniquelyErgodic
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimePhaseTorusDenseUniquelyErgodic
 
 namespace Omega.Zeta
 

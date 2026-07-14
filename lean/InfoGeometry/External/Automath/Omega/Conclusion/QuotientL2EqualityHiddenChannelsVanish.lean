@@ -1,5 +1,5 @@
-import Omega.OperatorAlgebra.FoldConditionalExpectationSingularSpectrum
-import Omega.OperatorAlgebra.FoldReynoldsRiskConvex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldConditionalExpectationSingularSpectrum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldReynoldsRiskConvex
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

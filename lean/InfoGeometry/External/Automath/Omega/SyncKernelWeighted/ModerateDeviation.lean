@@ -1,6 +1,6 @@
-import Omega.SyncKernelWeighted.AlphaEndpointSeries
-import Omega.SyncKernelWeighted.EdgeworthFourth
-import Omega.SyncKernelWeighted.PressureTaylorRemainderCauchy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.AlphaEndpointSeries
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.EdgeworthFourth
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureTaylorRemainderCauchy
 
 namespace Omega.SyncKernelWeighted
 

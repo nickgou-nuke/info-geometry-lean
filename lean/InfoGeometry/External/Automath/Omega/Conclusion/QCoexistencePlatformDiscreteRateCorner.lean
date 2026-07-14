@@ -1,4 +1,4 @@
-import Omega.Conclusion.DiscreteConvexBudgetKinkFan
+import InfoGeometry.External.Automath.Omega.Conclusion.DiscreteConvexBudgetKinkFan
 
 namespace Omega.Conclusion
 

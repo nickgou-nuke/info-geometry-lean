@@ -134,8 +134,10 @@ structure ChiralLightconeStage
   mirror_right_to_left :
     ∀ x : State, x ∈ rightCone → mirror x ∈ leftCone
 
-  /-- Interpretation law: the commutant cone is the hidden mirrored sector. -/
-  commutant_law : Prop
+  /-- The commutant cone is exactly the mirror image of the visible chiral rails. -/
+  commutant_eq_mirror_visible :
+    commutantCone =
+      {y : State | ∃ x : State, x ∈ leftCone ∪ rightCone ∧ y = mirror x}
 
 namespace ChiralLightconeStage
 
@@ -165,6 +167,14 @@ theorem right_mem_visible
     (hx : x ∈ S.rightCone) :
     x ∈ S.visibleCone :=
   Or.inr hx
+
+/-- Membership in the commutant cone is membership in the mirrored visible cone. -/
+theorem mem_commutant_iff_exists_visible_mirror
+    {y : State} :
+    y ∈ S.commutantCone ↔
+      ∃ x : State, x ∈ S.visibleCone ∧ y = S.mirror x := by
+  rw [S.commutant_eq_mirror_visible]
+  rfl
 
 end ChiralLightconeStage
 
@@ -223,12 +233,6 @@ structure StinespringTomitaClinch
       x ∈ stage.visibleCone →
         dilation.mirroredHiddenComponent x ∈ stage.commutantCone
 
-  /--
-  Calibration law: this is the intended Tomita/Stinespring interpretation of
-  absorption as hidden-sector transfer.
-  -/
-  clinch_law : Prop
-
 namespace StinespringTomitaClinch
 
 variable
@@ -270,6 +274,19 @@ theorem hidden_component_in_commutant
     (hx : x ∈ K.stage.visibleCone) :
     K.dilation.mirroredHiddenComponent x ∈ K.stage.commutantCone :=
   K.hidden_lands_in_commutant x hx
+
+/--
+For visible lightcone states, the mirrored hidden component is a mirror of a
+visible chiral state in the stage.
+-/
+theorem hidden_component_is_stage_mirror
+    {x : State}
+    (hx : x ∈ K.stage.visibleCone) :
+    ∃ v : State,
+      v ∈ K.stage.visibleCone ∧
+        K.dilation.mirroredHiddenComponent x = K.stage.mirror v :=
+  (K.stage.mem_commutant_iff_exists_visible_mirror).mp
+    (K.hidden_component_in_commutant hx)
 
 /--
 Visible absorption of a visible lightcone state is accounted for by a nonzero

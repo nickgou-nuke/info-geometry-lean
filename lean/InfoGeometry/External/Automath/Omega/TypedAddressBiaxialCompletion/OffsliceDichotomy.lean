@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.ExplicitLifting
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ExplicitLifting
 
 namespace Omega.TypedAddressBiaxialCompletion
 

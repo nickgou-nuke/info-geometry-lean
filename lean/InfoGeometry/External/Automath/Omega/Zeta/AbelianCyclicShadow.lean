@@ -1,4 +1,4 @@
-import Omega.Zeta.QuotientFunctoriality
+import InfoGeometry.External.Automath.Omega.Zeta.QuotientFunctoriality
 
 namespace Omega.Zeta
 

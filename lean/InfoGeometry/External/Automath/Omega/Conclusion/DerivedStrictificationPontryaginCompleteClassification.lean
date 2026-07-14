@@ -1,6 +1,6 @@
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Tactic
-import Omega.POM.BCPontryaginDualClassification
+import InfoGeometry.External.Automath.Omega.POM.BCPontryaginDualClassification
 
 namespace Omega.Conclusion
 

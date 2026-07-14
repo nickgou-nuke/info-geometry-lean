@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GroupUnification.FibLieResonanceGlobalClassification
+import InfoGeometry.External.Automath.Omega.GroupUnification.FibLieResonanceGlobalClassification
 
 namespace Omega.GroupUnification
 

@@ -5,14 +5,14 @@ namespace InfoGeometry.Canonical.HagedornKMSBoundary
 variable (β : ℝ)
 variable (chiral_anomaly : ℝ → ℝ)
 
-/-- Explicit scaling law for a concrete anomaly model.  This is a hypothesis,
-not a kernel axiom: arbitrary functions `ℝ → ℝ` need not satisfy it. -/
+/-- Explicit scaling condition for a concrete anomaly model. Arbitrary
+functions `ℝ → ℝ` need not satisfy it. -/
 def ModularAnomalyScaling (c : ℝ) : Prop :=
   ∀ b, chiral_anomaly b = c * (b - 1)
 
 /-- If a concrete anomaly model scales by `(β - 1)`, then it vanishes at
-`β = 1`.  This is the theorem-safe algebraic core only; no KMS/orientifold
-classification theorem is asserted. -/
+`β = 1`.  This is the theorem-safe algebraic core only; it does not claim a
+KMS/orientifold classification theorem. -/
 theorem hagedorn_anomaly_cancellation (c : ℝ)
     (h_scaling : ModularAnomalyScaling chiral_anomaly c)
     (h_hagedorn : β = 1) :

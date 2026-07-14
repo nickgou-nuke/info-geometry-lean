@@ -1,4 +1,4 @@
-import Omega.Conclusion.SemanticEquivalenceUndecidable
+import InfoGeometry.External.Automath.Omega.Conclusion.SemanticEquivalenceUndecidable
 
 namespace Omega.POM
 

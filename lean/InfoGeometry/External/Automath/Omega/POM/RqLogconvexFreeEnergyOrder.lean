@@ -1,4 +1,4 @@
-import Omega.POM.PressureSlopes
+import InfoGeometry.External.Automath.Omega.POM.PressureSlopes
 
 namespace Omega.POM
 

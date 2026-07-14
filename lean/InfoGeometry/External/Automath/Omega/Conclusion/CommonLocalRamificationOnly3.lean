@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLeyangSplitPrimesQuadraticCharacterFilter
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangSplitPrimesQuadraticCharacterFilter
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Int.Basic
 import Mathlib.Tactic
-import Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
 
 namespace Omega.Conclusion
 

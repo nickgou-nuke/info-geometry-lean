@@ -1,4 +1,4 @@
-import Omega.POM.MaxFiberEvenMajorityVote
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberEvenMajorityVote
 
 namespace Omega.POM
 

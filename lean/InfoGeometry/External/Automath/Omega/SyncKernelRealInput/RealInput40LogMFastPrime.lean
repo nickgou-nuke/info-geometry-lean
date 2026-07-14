@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.SyncKernelRealInput.RealInput40MertensTwoSeriesTail
-import Omega.SyncKernelRealInput.RealInput40ResidueConstant
-import Omega.SyncKernelRealInput.RealInput40VertSingleSeries
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40MertensTwoSeriesTail
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40ResidueConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40VertSingleSeries
 
 namespace Omega.SyncKernelRealInput
 

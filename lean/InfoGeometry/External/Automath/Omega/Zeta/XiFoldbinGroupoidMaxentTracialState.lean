@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FoldbinGroupoidTracialSimplex
-import Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinGroupoidTracialSimplex
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinGaugeEntropyOneNatLaw
 
 namespace Omega.Zeta
 

@@ -32,6 +32,107 @@ Important boundary:
   still contain hard-coded Arango settings; prefer the repo env loader and
   `hash_owner_map.py` / direct AQL snippets below.
 
+## Authoritative causal-cone graph path
+
+The compiler-backed declaration graph is the primary graph authority for causal-cone prompt construction:
+
+- `decls`: Lean declaration vertices emitted by the current declaration stream;
+- `edges`: typed declaration dependency edges emitted by the same stream;
+- `valueFingerprint.shapeHash`: AST/value structural hash carried by each declaration vertex.
+
+`tools/infra/arango_causal_chiral_cone_prompt.py` resolves declarations from
+`decls` first and traverses `edges` directly. It uses `raw_info_nodes` and SCC
+overlays as enrichment when matching RawInfoTree coverage exists. This keeps
+compiler-backed declarations queryable even when raw infotree coverage is
+incomplete.
+
+Authoritative-first probe:
+
+```bash
+python3 tools/infra/arango_causal_chiral_cone_prompt.py \\
+  --decl InfoGeometry.Algebra.G2.g2_twist_closure \\
+  --decls-collection decls \\
+  --edges-collection edges \\
+  --json-out /tmp/g2_twist_closure.packet.json
+```
+
+The packet records `apex.authority = "decls"` and preserves the declaration
+fingerprint fields in the apex node for subsequent ASTAQL grouping. The packet
+is navigation context; Lean source and kernel checks remain proof authority.
+
+For crossing concepts, use the multi-apex/multi-cone mode:
+
+```bash
+python3 tools/infra/arango_causal_chiral_cone_prompt.py \\
+  --decl-multi \\
+  'InfoGeometry.Algebra.G2.g2_twist_closure,InfoGeometry.Algebra.Cuntz.CuntzNAlgebra.isometry' \\
+  --backward-depth 4 \\
+  --forward-depth 4 \\
+  --json-out /tmp/cross-concepts.packet.json
+```
+
+This traverses `ANY` over the authoritative `edges` graph, preserves seed
+provenance for every cone row, and reports nodes reached from multiple apices
+as `shared_nodes`. It is the cross-concept bridge for identifying shared Lean
+prerequisites and missing connecting declarations.
+
+## Strict execution order: refresh, stream, then query by hash
+
+For ASTAQLHASH clone or sorry-equivalence work, do not query a stale database.
+Run the stages in this order and stop when a prerequisite fails:
+
+1. Verify the current Lean cache. Use an existing `dagIndexer` executable when
+   present; otherwise use the direct Lean runner. Do not trigger an unrelated
+   native dependency rebuild merely to create the convenience executable.
+2. Refresh the declaration graph with the streaming path.
+3. Verify that the streamed `decls` and `edges` collections are populated.
+4. Query Arango through `arango_causal_memory.py query`.
+5. Group candidate sorry-equivalents by `valueFingerprint.shapeHash` (not by a
+   textual grep or a linter label).
+6. Open the owner files for the returned class and run kernel checks before
+   making any closure or promotion claim.
+
+The pinned repository workflow does not run `lake update` as part of this
+sequence. Dependency and toolchain pins are compatibility state; refresh only
+the declaration graph and generated graph artifacts.
+
+Canonical streaming refresh:
+
+```bash
+# Prefer the existing executable; if it is absent, refresh_decl_graph.py
+# falls back to `lake env lean --run` without rebuilding native packages.
+python3 tools/infra/refresh_decl_graph.py \\
+  --stream \\
+  --run-mode exe \\
+  --skip-prebuild \\
+  --import-root InfoGeometry.All \\
+  --namespace InfoGeometry \\
+  --arango-db infogeometry
+```
+
+Canonical AQL wrapper query for candidate sorry-equivalence classes:
+
+```bash
+python3 tools/infra/arango_causal_memory.py query '
+FOR d IN decls
+  FILTER d.valueFingerprint != null
+  FILTER d.name LIKE "%sorry%"
+      OR d.name LIKE "%_True%"
+      OR d.name LIKE "%_certificate%"
+      OR d.name LIKE "%_witness%"
+  COLLECT hash = d.valueFingerprint.shapeHash INTO members
+  FILTER hash != null
+  RETURN {
+    valueShapeHash: hash,
+    declarations: members[*].d.name
+  }
+'
+```
+
+The returned classes are navigation evidence only. A class is not a proof of
+vacuity, equivalence, or unsoundness until the cited owner declarations are
+read and kernel-audited.
+
 ## Prerequisites
 
 ```bash

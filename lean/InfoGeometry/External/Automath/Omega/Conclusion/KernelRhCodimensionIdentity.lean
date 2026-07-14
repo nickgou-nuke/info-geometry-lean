@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.DeltaqHalfThresholdCriterion
+import InfoGeometry.External.Automath.Omega.POM.DeltaqHalfThresholdCriterion
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.FiniteFieldEquationalSaturation.Linearization
+import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.Linearization
 
 namespace Omega.FiniteFieldEquationalSaturation
 

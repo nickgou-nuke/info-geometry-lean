@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Zeta.PrimeLanguagesZeckendorfRegularPowerlaw
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeLanguagesZeckendorfRegularPowerlaw
 
 namespace Omega.Zeta
 

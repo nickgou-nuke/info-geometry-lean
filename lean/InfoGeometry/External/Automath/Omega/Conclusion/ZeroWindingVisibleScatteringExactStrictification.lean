@@ -1,4 +1,4 @@
-import Omega.Conclusion.StrictificationCharacterMeasurabilityRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.StrictificationCharacterMeasurabilityRigidity
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Fintype.Basic

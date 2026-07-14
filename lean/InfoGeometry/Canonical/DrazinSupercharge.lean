@@ -392,45 +392,6 @@ theorem drazinSupercharge_is_odd :
   rw [drazinSupercharge_eq_supercharge]
   exact supercharge_is_odd CIK
 
-/--
-Witness packet for the Drazin spectral projector, complementary projector,
-dilation gap, and odd supercharge surface.
--/
-@[rep_depth krein]
-structure DrazinSuperchargePacket where
-  P_D : EndH
-  Q0 : EndH
-  G : EndH
-  Q_D : EndH
-  P_D_eq : P_D = CIK.spectralProjector
-  Q0_eq : Q0 = (1 : EndH) - P_D
-  G_eq : G = CIK.dilationGap
-  Q_D_eq : Q_D = (2 : ℝ) • commutator P_D G
-  P_D_idempotent : P_D * P_D = P_D
-  Q0_idempotent : Q0 * Q0 = Q0
-  split_identity : P_D + Q0 = (1 : EndH)
-  left_orthogonal : P_D * Q0 = 0
-  right_orthogonal : Q0 * P_D = 0
-  odd : anticommutator CIK.toInformationCartanTriple.GammaS Q_D = 0
-
-/-- Canonical packet instantiating the Drazin supercharge surface from `CIK`. -/
-@[rep_depth krein]
-noncomputable def drazinSuperchargePacket : DrazinSuperchargePacket CIK where
-  P_D := drazinSpectralProjector CIK
-  Q0 := drazinComplementaryProjector CIK
-  G := drazinDilationGap CIK
-  Q_D := drazinSupercharge CIK
-  P_D_eq := rfl
-  Q0_eq := drazinComplementaryProjector_eq_one_sub_drazinSpectralProjector (CIK := CIK)
-  G_eq := rfl
-  Q_D_eq := rfl
-  P_D_idempotent := drazinSpectralProjector_idempotent (CIK := CIK)
-  Q0_idempotent := drazinComplementaryProjector_idempotent (CIK := CIK)
-  split_identity := drazinSpectralProjector_add_drazinComplementaryProjector (CIK := CIK)
-  left_orthogonal := drazinSpectralProjector_mul_drazinComplementaryProjector (CIK := CIK)
-  right_orthogonal := drazinComplementaryProjector_mul_drazinSpectralProjector (CIK := CIK)
-  odd := drazinSupercharge_is_odd (CIK := CIK)
-
 /-- Krein-depth bridge form of supercharge oddness. -/
 @[rep_depth krein]
 theorem supercharge_is_oddK :

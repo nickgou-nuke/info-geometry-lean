@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.EllipticGatePrimeSpectrumRigidity
+import InfoGeometry.External.Automath.Omega.GU.EllipticGatePrimeSpectrumRigidity
 
 namespace Omega.GU
 

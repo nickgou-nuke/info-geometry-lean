@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BoundaryLayer
-import Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Folding.BoundaryLayer
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
 
 namespace Omega.GU
 

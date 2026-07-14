@@ -1,5 +1,5 @@
-import Omega.Zeta.SmithPadicLossSpectrumClassification
-import Omega.Zeta.XiHankelNormalformCRTAdelicMultiplicity
+import InfoGeometry.External.Automath.Omega.Zeta.SmithPadicLossSpectrumClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelNormalformCRTAdelicMultiplicity
 
 namespace Omega.Zeta
 

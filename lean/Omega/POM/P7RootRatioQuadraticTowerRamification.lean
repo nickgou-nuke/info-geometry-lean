@@ -2,15 +2,6 @@ import Mathlib.Tactic
 
 namespace Omega.POM
 
-/-- Concrete certificate package for the ordered/unordered `P7` root-ratio quadratic tower.
-
-The projections below record the quadratic presentation in the split `a + b * sqrt(5)` model and
-the supplied norm/ramification certificate used by the paper statement. -/
-structure pom_p7_root_ratio_quadratic_tower_ramification_data where
-  pom_p7_root_ratio_quadratic_tower_ramification_certificate : Unit := ()
-
-namespace pom_p7_root_ratio_quadratic_tower_ramification_data
-
 /-- Multiplication in the quadratic presentation `Q[sqrt(d)]`, represented by pairs. -/
 def pom_p7_root_ratio_quadratic_tower_ramification_quadMul
     (d : ℚ) (x y : ℚ × ℚ) : ℚ × ℚ :=
@@ -28,7 +19,7 @@ def pom_p7_root_ratio_quadratic_tower_ramification_quadSub
 
 /-- The relative quadratic tower presentation: `rho = (s + sqrt(s^2 - 4)) / 2` satisfies
 `rho^2 - s * rho + 1 = 0` in the quadratic pair model. -/
-def quadraticTower (_D : pom_p7_root_ratio_quadratic_tower_ramification_data) : Prop :=
+def quadraticTower : Prop :=
   let s : ℚ := 3
   let d : ℚ := s ^ 2 - 4
   let rho : ℚ × ℚ := (s / 2, 1 / 2)
@@ -38,7 +29,7 @@ def quadraticTower (_D : pom_p7_root_ratio_quadratic_tower_ramification_data) : 
         (pom_p7_root_ratio_quadratic_tower_ramification_quadScale s rho) (1, 0)
 
 /-- The norm identity certificate from the integer factorization of `N(s^2 - 4)`. -/
-def normIdentity (_D : pom_p7_root_ratio_quadratic_tower_ramification_data) : Prop :=
+def normIdentity : Prop :=
   (-((2 : ℤ) ^ 8 * (3 : ℤ) ^ 2 * 985219) =
     -((2 : ℤ) ^ 8) * (3 : ℤ) ^ 2 * 985219)
 
@@ -52,36 +43,31 @@ def pom_p7_root_ratio_quadratic_tower_ramification_ramificationSupportSet : Fins
   {3, 985219}
 
 /-- Odd valuation support is contained in `{3, 985219}`. -/
-def ramificationSupport (_D : pom_p7_root_ratio_quadratic_tower_ramification_data) : Prop :=
+def ramificationSupport : Prop :=
   ∀ p : ℕ,
     Odd (pom_p7_root_ratio_quadratic_tower_ramification_ramificationExponent p) →
       p ∈ pom_p7_root_ratio_quadratic_tower_ramification_ramificationSupportSet
 
 /-- The prime `985219` occurs with odd certificate exponent, hence is ramified. -/
-def ramified985219 (_D : pom_p7_root_ratio_quadratic_tower_ramification_data) : Prop :=
+def ramified985219 : Prop :=
   Odd (pom_p7_root_ratio_quadratic_tower_ramification_ramificationExponent 985219)
-
-end pom_p7_root_ratio_quadratic_tower_ramification_data
-
-open pom_p7_root_ratio_quadratic_tower_ramification_data
 
 /-- Paper label: `prop:pom-p7-root-ratio-quadratic-tower-ramification`. -/
 theorem paper_pom_p7_root_ratio_quadratic_tower_ramification
-    (D : pom_p7_root_ratio_quadratic_tower_ramification_data) :
-    D.quadraticTower ∧ D.normIdentity ∧ D.ramificationSupport ∧ D.ramified985219 := by
+    : quadraticTower ∧ normIdentity ∧ ramificationSupport ∧ ramified985219 := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · norm_num [pom_p7_root_ratio_quadratic_tower_ramification_data.quadraticTower,
+  · norm_num [quadraticTower,
       pom_p7_root_ratio_quadratic_tower_ramification_quadMul,
       pom_p7_root_ratio_quadratic_tower_ramification_quadSub,
       pom_p7_root_ratio_quadratic_tower_ramification_quadScale]
-  · norm_num [pom_p7_root_ratio_quadratic_tower_ramification_data.normIdentity]
+  · norm_num [normIdentity]
   · intro p hp
     by_cases h985219 : p = 985219
     · simp [pom_p7_root_ratio_quadratic_tower_ramification_ramificationSupportSet, h985219]
     · by_cases h3 : p = 3
       · simp [pom_p7_root_ratio_quadratic_tower_ramification_ramificationSupportSet, h3]
       · simp [pom_p7_root_ratio_quadratic_tower_ramification_ramificationExponent, h985219, h3] at hp
-  · simp [pom_p7_root_ratio_quadratic_tower_ramification_data.ramified985219,
+  · simp [ramified985219,
       pom_p7_root_ratio_quadratic_tower_ramification_ramificationExponent]
 
 end Omega.POM

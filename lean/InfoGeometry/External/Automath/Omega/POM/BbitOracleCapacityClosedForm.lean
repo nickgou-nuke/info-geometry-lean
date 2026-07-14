@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.POM.SideinfoExactEntropy
+import InfoGeometry.External.Automath.Omega.POM.SideinfoExactEntropy
 
 namespace Omega.POM
 

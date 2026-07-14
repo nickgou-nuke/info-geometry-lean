@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 
 namespace Omega.Folding
 

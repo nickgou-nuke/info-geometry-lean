@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.DyadicBoundarySquareclassSyndromeUniqueFill
-import Omega.Conclusion.GodelArithmeticExactVsLinearStableSeparation
+import InfoGeometry.External.Automath.Omega.Conclusion.DyadicBoundarySquareclassSyndromeUniqueFill
+import InfoGeometry.External.Automath.Omega.Conclusion.GodelArithmeticExactVsLinearStableSeparation
 
 namespace Omega.Conclusion
 

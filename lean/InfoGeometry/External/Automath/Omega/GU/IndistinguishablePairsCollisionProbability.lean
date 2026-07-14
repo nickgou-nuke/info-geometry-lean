@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Tactic
-import Omega.GU.FixedPrecisionExponentialMultiplicity
+import InfoGeometry.External.Automath.Omega.GU.FixedPrecisionExponentialMultiplicity
 
 namespace Omega.GU
 

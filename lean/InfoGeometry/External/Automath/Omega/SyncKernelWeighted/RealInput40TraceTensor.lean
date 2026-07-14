@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.RealInput40PrimitiveLucas
-import Omega.SyncKernelWeighted.RealInput40TraceRecurrence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimitiveLucas
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40TraceRecurrence
 
 namespace Omega.SyncKernelWeighted
 

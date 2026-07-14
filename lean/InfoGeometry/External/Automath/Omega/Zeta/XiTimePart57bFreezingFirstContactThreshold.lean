@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldPressureFreezingThreshold
-import Omega.Zeta.XiTimePart57bPressureSpectrumDiscreteConvexityMonotoneExcess
+import InfoGeometry.External.Automath.Omega.Folding.FoldPressureFreezingThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart57bPressureSpectrumDiscreteConvexityMonotoneExcess
 
 namespace Omega.Zeta
 

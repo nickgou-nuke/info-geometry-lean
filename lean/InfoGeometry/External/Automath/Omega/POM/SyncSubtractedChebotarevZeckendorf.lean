@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.POM.SyncSubtractedChebotarevCapacity
+import InfoGeometry.External.Automath.Omega.POM.SyncSubtractedChebotarevCapacity
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
 import Mathlib.Tactic
 
 namespace Omega.Zeta

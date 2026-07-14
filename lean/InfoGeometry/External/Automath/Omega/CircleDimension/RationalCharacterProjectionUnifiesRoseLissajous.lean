@@ -1,5 +1,5 @@
-import Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
-import Omega.CircleDimension.RhodoneaSolenoidDesingularizedLift
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.RhodoneaSolenoidDesingularizedLift
 
 namespace Real
 

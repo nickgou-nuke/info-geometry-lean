@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.AbelDetailEnergyBudget
+import InfoGeometry.External.Automath.Omega.Zeta.AbelDetailEnergyBudget
 
 namespace Omega.Zeta
 

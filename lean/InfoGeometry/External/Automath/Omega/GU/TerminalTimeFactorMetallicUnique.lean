@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Kronecker.MetallicGap
+import InfoGeometry.External.Automath.Omega.Kronecker.MetallicGap
 
 namespace Omega.GU
 

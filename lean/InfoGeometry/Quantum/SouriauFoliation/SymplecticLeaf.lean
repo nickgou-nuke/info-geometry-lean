@@ -2,6 +2,8 @@
 InfoGeometry/Quantum/SouriauFoliation/SymplecticLeaf.lean
 -/
 
+import Mathlib.Data.Set.Basic
+import Mathlib.Data.Real.Basic
 noncomputable section
 
 namespace InfoGeometry.Quantum.SouriauFoliation
@@ -15,7 +17,7 @@ the carrier.  This is not a construction of a coadjoint orbit or a symplectic
 form.
 -/
 structure SymplecticLeaf
-    (State : Type*) where
+    (State : Type _) where
   /-- States belonging to the leaf. -/
   carrier : Set State
 
@@ -41,7 +43,7 @@ structure SymplecticLeaf
 
 namespace SymplecticLeaf
 
-variable {State : Type*}
+variable {State : Type _}
 variable (L : SymplecticLeaf State)
 
 /-- Two states on the same leaf have the same entropy readout. -/

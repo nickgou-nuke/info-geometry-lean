@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugePressureResolventDiscIdentity
+import InfoGeometry.External.Automath.Omega.Folding.GaugePressureResolventDiscIdentity
 
 namespace Omega.RootUnitCharacterPressureTensor
 

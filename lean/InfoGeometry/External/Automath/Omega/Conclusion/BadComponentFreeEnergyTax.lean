@@ -1,4 +1,4 @@
-import Omega.Conclusion.FixedBadComponentLayerSharpMainTerm
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedBadComponentLayerSharpMainTerm
 
 namespace Omega.Conclusion
 

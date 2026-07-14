@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldCriticalResonanceConstant
-import Omega.Folding.FoldPisotBernoulliConvolutionRepresentation
-import Omega.Folding.FoldResonanceEntireLp
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldPisotBernoulliConvolutionRepresentation
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceEntireLp
 
 namespace Omega.Folding
 

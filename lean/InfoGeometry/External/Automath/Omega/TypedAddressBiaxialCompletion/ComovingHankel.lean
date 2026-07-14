@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Diagonal
 import Mathlib.Tactic
-import Omega.CircleDimension.AtomicDefectHankelProny
+import InfoGeometry.External.Automath.Omega.CircleDimension.AtomicDefectHankelProny
 
 namespace Omega.TypedAddressBiaxialCompletion
 

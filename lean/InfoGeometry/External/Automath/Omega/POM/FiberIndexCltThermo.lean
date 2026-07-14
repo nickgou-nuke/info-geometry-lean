@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberIndexLdpThermo
+import InfoGeometry.External.Automath.Omega.POM.FiberIndexLdpThermo
 
 namespace Omega.POM
 

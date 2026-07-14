@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPCovarianceExplicitEvenOdd
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPCovarianceExplicitEvenOdd
 
 namespace Omega.Folding
 

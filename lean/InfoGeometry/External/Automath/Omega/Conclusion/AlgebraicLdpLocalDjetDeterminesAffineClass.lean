@@ -1,5 +1,5 @@
-import Omega.Conclusion.AlgebraicLDPAffineQuotientSinglevaluedness
-import Omega.Conclusion.AlgebraicLdpDfiniteStokesCompression
+import InfoGeometry.External.Automath.Omega.Conclusion.AlgebraicLDPAffineQuotientSinglevaluedness
+import InfoGeometry.External.Automath.Omega.Conclusion.AlgebraicLdpDfiniteStokesCompression
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberPsiExponentMobiusReconstruct
-import Omega.POM.PathIndsetLeyangCyclotomicParam
+import InfoGeometry.External.Automath.Omega.POM.FiberPsiExponentMobiusReconstruct
+import InfoGeometry.External.Automath.Omega.POM.PathIndsetLeyangCyclotomicParam
 
 namespace Omega
 

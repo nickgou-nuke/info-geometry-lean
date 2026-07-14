@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SyncHatdeltaCurveQuotientPlaneQuarticGenus3
+import InfoGeometry.External.Automath.Omega.Zeta.SyncHatdeltaCurveQuotientPlaneQuarticGenus3
 
 namespace Omega.Zeta
 

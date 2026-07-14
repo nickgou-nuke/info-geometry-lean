@@ -1,4 +1,4 @@
-import Omega.Zeta.DFADensityDichotomy
+import InfoGeometry.External.Automath.Omega.Zeta.DFADensityDichotomy
 
 namespace Omega.Zeta
 

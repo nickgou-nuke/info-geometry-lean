@@ -1,5 +1,5 @@
-import Omega.CircleDimension.S4A4QuotientIsLeyangCurve
-import Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4A4QuotientIsLeyangCurve
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
 
 namespace Omega.Folding
 

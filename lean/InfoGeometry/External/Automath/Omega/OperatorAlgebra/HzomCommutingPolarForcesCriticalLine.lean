@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.HzomCriticalZerosJointSpectrumComb
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.HzomCriticalZerosJointSpectrumComb
 
 namespace Omega.OperatorAlgebra
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.GroupUnification.BoundaryShift4UpliftIsomorphism
-import Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.GroupUnification.BoundaryShift4UpliftIsomorphism
+import InfoGeometry.External.Automath.Omega.GU.Window6AbelianizedParityChargeRootCartanSplitting
 
 namespace Omega.GU
 

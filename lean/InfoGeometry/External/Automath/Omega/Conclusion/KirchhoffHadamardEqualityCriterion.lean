@@ -1,4 +1,4 @@
-import Omega.Conclusion.FundamentalCutHadamardRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.FundamentalCutHadamardRigidity
 
 namespace Omega.Conclusion
 

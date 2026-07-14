@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Omega.Zeta.XiJensenBoundaryPotentialFiniteDefectExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenBoundaryPotentialFiniteDefectExplicit
 
 namespace Omega.Zeta
 

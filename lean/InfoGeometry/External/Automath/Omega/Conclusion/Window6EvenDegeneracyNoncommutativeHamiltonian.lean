@@ -1,4 +1,4 @@
-import Omega.Conclusion.Window6CoxeterFoldBlockNormalForm
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CoxeterFoldBlockNormalForm
 
 namespace Omega.Conclusion
 

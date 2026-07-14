@@ -1,5 +1,5 @@
-import Omega.Zeta.FiniteRhPhaseLiftArtin
-import Omega.Zeta.XiTimePart64CoverPerronRootTrivialChannel
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteRhPhaseLiftArtin
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart64CoverPerronRootTrivialChannel
 
 namespace Omega.Zeta
 

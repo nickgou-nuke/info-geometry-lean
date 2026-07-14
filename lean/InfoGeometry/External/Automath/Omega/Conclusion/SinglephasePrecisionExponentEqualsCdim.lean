@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.Conclusion.ZnToCircleInjectiveDenseSeeds
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.Conclusion.ZnToCircleInjectiveDenseSeeds
 
 namespace Omega.Conclusion
 

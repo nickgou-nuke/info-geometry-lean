@@ -1,4 +1,4 @@
-import Omega.Zeta.AutomaticDirichletMoment
+import InfoGeometry.External.Automath.Omega.Zeta.AutomaticDirichletMoment
 
 namespace Omega.Zeta
 

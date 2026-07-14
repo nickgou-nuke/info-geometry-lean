@@ -1,4 +1,4 @@
-import Omega.Frontier.NullTrichotomyLocalSection
+import InfoGeometry.External.Automath.Omega.Frontier.NullTrichotomyLocalSection
 
 namespace Omega.Frontier.RecursiveAddressingNullTrichotomyLocalSection
 

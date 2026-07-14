@@ -1,5 +1,5 @@
-import Omega.Conclusion.EllipticT5UniqueQuadraticSubfield
-import Omega.Zeta.XiLeyangImageFiveTorsionEliminationIrreducibilityDiscriminant
+import InfoGeometry.External.Automath.Omega.Conclusion.EllipticT5UniqueQuadraticSubfield
+import InfoGeometry.External.Automath.Omega.Zeta.XiLeyangImageFiveTorsionEliminationIrreducibilityDiscriminant
 
 namespace Omega.Conclusion
 

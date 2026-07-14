@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Conclusion.TQFTGenusLinearRecurrenceRecovery
-import Omega.Conclusion.TqftGenusLogconvexity
+import InfoGeometry.External.Automath.Omega.Conclusion.TQFTGenusLinearRecurrenceRecovery
+import InfoGeometry.External.Automath.Omega.Conclusion.TqftGenusLogconvexity
 
 namespace Omega.Conclusion
 

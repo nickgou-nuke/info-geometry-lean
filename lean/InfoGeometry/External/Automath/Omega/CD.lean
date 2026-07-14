@@ -1,2 +1,2 @@
-import Omega.CD.AnomalyCompressionOverhead
-import Omega.CD.PeriodicPointCount
+import InfoGeometry.External.Automath.Omega.CD.AnomalyCompressionOverhead
+import InfoGeometry.External.Automath.Omega.CD.PeriodicPointCount

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FenceRiccatiError
-import Omega.POM.ParrySurfaceDerivative
+import InfoGeometry.External.Automath.Omega.POM.FenceRiccatiError
+import InfoGeometry.External.Automath.Omega.POM.ParrySurfaceDerivative
 
 namespace Omega.POM
 

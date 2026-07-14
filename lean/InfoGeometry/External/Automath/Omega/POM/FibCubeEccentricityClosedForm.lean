@@ -1,5 +1,5 @@
-import Omega.POM.FibCubeEccentricityCore
-import Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.POM.FibCubeEccentricityCore
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
 import Mathlib.Tactic
 
 namespace Omega.POM

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateFdivFourthOrderConstant
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateFdivFourthOrderConstant
 
 namespace Omega.CircleDimension
 

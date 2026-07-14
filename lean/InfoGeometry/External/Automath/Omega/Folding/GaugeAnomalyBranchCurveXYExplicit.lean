@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyBranchpointRationalReduction
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyBranchpointRationalReduction
 
 namespace Omega.Folding
 

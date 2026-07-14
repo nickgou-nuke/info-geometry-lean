@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Folding.FoldNegativeMomentsCapacityMellin
+import InfoGeometry.External.Automath.Omega.Folding.FoldNegativeMomentsCapacityMellin
 
 namespace Omega.Folding
 

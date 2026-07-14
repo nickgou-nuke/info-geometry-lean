@@ -94,6 +94,34 @@ def rowSpace (K : Type*) [Semiring K] {m n : Nat}
     (A : FiniteMatrix K m n) : Submodule K (FiniteVector K n) :=
   listSpan K (rows A)
 
+/-- The row space of the identity matrix is the whole finite vector space. -/
+theorem rowSpace_identity_eq_top {K : Type*} [Semiring K] (n : Nat) :
+    rowSpace K (1 : FiniteMatrix K n n) = ⊤ := by
+  apply le_antisymm
+  · exact le_top
+  · intro x
+    let b : Module.Basis (Fin n) K (FiniteVector K n) := Pi.basisFun K (Fin n)
+    have hrows : ∀ i : Fin n, b i ∈ rows (1 : FiniteMatrix K n n) := by
+      intro i
+      rw [rows]
+      refine (List.mem_ofFn).2 ?_
+      refine ⟨i, ?_⟩
+      ext j
+      by_cases h : i = j <;> simp [b, Pi.basisFun, Matrix.one_apply, h]
+    rw [← b.sum_repr x]
+    classical
+    have hsum :
+        ∑ i, (b.repr x) i • b i ∈ rowSpace K (1 : FiniteMatrix K n n) := by
+      simpa using
+        (Submodule.sum_mem (rowSpace K (1 : FiniteMatrix K n n))
+          (t := Finset.univ) (f := fun i : Fin n => (b.repr x) i • b i) (by
+            intro i hi
+            exact Submodule.smul_mem _ _ (mem_listSpan_of_mem (K := K) (n := n)
+              (v := b i)
+              (vs := rows (1 : FiniteMatrix K n n))
+              (hrows i))))
+    simpa [b] using hsum
+
 /-- Column space of a finite matrix. -/
 def colSpace (K : Type*) [Semiring K] {m n : Nat}
     (A : FiniteMatrix K m n) : Submodule K (FiniteVector K m) :=

@@ -1,9 +1,9 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalPosteriorModuliCLT
-import Omega.POM.MicrocanonicalQueryDistortionStrongConversePlane
-import Omega.POM.WitnessExtractionOptimalSuccess
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalPosteriorModuliCLT
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalQueryDistortionStrongConversePlane
+import InfoGeometry.External.Automath.Omega.POM.WitnessExtractionOptimalSuccess
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Topology.Algebra.Module.ClosedSubmodule
-import Omega.CircleDimension.HilbertCarrier
+import InfoGeometry.External.Automath.Omega.CircleDimension.HilbertCarrier
 
 namespace Omega.CircleDimension
 

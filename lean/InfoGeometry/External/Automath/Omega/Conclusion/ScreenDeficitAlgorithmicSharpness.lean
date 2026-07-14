@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.ScreenMaxConditionalComplexityEqualsRank
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenMaxConditionalComplexityEqualsRank
 
 namespace Omega.Conclusion
 

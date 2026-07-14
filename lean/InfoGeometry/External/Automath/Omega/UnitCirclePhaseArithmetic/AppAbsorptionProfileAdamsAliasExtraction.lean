@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AbsorptionProfileFourierNewtonIdentifiability
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AbsorptionProfileFourierNewtonIdentifiability
 
 namespace Omega.UnitCirclePhaseArithmetic
 

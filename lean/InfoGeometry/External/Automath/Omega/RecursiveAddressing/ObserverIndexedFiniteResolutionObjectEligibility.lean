@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.ObserverIndexedReadoutForcingCriterion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedReadoutForcingCriterion
 
 namespace Omega.RecursiveAddressing
 

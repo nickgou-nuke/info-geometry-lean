@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.XiScaledShiftedCayleyDepthOptimalScale
+import InfoGeometry.External.Automath.Omega.Zeta.XiScaledShiftedCayleyDepthOptimalScale
 
 namespace Omega.Zeta
 

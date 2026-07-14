@@ -1,5 +1,5 @@
-import Omega.Conclusion.LeyangOffdiagonalTranspositionQuotient
-import Omega.Folding.FoldGaugeAnomalyQuotientJacobiansIsotypic
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangOffdiagonalTranspositionQuotient
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyQuotientJacobiansIsotypic
 
 namespace Omega.Conclusion
 

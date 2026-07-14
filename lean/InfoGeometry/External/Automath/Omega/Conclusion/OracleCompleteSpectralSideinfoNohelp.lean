@@ -1,4 +1,4 @@
-import Omega.Conclusion.OracleFixedHistogramNearExhaustiveQueryLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.OracleFixedHistogramNearExhaustiveQueryLowerBound
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

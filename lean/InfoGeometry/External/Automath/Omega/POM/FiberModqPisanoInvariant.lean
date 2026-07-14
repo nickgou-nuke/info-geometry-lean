@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega.POM
 

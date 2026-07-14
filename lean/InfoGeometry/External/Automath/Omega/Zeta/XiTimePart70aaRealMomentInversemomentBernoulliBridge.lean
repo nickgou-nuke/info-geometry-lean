@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
 
 namespace Omega.Zeta
 

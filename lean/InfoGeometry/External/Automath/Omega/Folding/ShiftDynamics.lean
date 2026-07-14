@@ -1,5 +1,5 @@
-import Omega.Folding.InverseLimitTopology
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimitTopology
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 namespace Omega.X
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart71ZeroSpectrumWeightedCliqueEuler
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart71ZeroSpectrumWeightedCliqueEuler
 
 namespace Omega.Zeta
 

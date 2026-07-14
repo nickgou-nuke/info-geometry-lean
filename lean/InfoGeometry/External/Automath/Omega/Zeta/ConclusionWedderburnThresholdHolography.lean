@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic
-import Omega.Conclusion.CapacityDeficitMellinBernsteinCompletion
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityDeficitMellinBernsteinCompletion
 
 namespace Omega.Zeta
 

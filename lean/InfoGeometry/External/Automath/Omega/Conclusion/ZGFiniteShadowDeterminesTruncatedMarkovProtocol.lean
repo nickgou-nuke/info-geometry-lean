@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
 
 namespace Omega.Conclusion
 

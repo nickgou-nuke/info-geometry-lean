@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldBinFiberTail
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinFiberTail
 
 namespace Omega.Conclusion
 

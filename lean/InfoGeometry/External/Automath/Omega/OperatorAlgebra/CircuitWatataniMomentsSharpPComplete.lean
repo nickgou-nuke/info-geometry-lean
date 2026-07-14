@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.CircuitS2SharpPComplete
-import Omega.OperatorAlgebra.FoldWatataniIndexMoments
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitS2SharpPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMoments
 
 namespace Omega.OperatorAlgebra
 

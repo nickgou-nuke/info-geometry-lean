@@ -1,4 +1,4 @@
-import Omega.Conclusion.CyclicZeckendorfSectorCharacterClosedForm
+import InfoGeometry.External.Automath.Omega.Conclusion.CyclicZeckendorfSectorCharacterClosedForm
 
 namespace Omega.Conclusion
 

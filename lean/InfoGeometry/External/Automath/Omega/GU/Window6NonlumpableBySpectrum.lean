@@ -1,5 +1,5 @@
-import Omega.GU.StrongLumpabilitySpectralFalsifier
-import Omega.GU.StrongLumpabilitySpectralRigidity
+import InfoGeometry.External.Automath.Omega.GU.StrongLumpabilitySpectralFalsifier
+import InfoGeometry.External.Automath.Omega.GU.StrongLumpabilitySpectralRigidity
 
 namespace Omega.GU.Window6NonlumpableBySpectrum
 

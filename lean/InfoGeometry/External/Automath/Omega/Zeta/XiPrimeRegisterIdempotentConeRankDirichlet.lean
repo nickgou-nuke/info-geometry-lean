@@ -1,5 +1,5 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Omega.Zeta.PrimeRegisterIdempotentExactCount
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeRegisterIdempotentExactCount
 
 open scoped BigOperators
 

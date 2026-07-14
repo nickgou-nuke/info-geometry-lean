@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimeRegisterHistoryInverseLimit
 
 open scoped BigOperators
 

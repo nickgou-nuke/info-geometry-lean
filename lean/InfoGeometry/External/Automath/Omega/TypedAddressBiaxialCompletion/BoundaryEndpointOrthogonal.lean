@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.BoundaryEndpointHeat
-import Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryEndpointHeat
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
 
 namespace Omega.TypedAddressBiaxialCompletion
 

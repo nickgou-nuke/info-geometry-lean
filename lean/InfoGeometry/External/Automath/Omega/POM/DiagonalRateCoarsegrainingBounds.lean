@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.BlockConsistencyRateBlockReduction
+import InfoGeometry.External.Automath.Omega.POM.BlockConsistencyRateBlockReduction
 
 namespace Omega.POM
 

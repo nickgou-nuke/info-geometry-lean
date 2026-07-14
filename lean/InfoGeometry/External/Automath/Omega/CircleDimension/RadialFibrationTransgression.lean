@@ -1,4 +1,4 @@
-import Omega.CircleDimension.SignedStokesCohomologicalCharacterization
+import InfoGeometry.External.Automath.Omega.CircleDimension.SignedStokesCohomologicalCharacterization
 
 namespace Omega.CircleDimension
 

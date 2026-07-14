@@ -44,28 +44,6 @@ def braiding_action_B (D : FreeProductData) (A B : PointedGroup) (b : B.carrier)
   letI := D.grp B.carrier A.carrier
   D.inl B.carrier A.carrier b
 
-/-- Readout theorem for Street's `A`-side pointed-group braiding action. -/
-theorem braiding_action_A_readout
-    (D : FreeProductData) (A B : PointedGroup) (a : A.carrier) :
-    braiding_action_A D A B a =
-      letI := A.grp
-      letI := B.grp
-      letI := D.grp B.carrier A.carrier
-      let b₀ := D.inl B.carrier A.carrier B.pt
-      let a' := D.inr B.carrier A.carrier a
-      b₀ * a' * b₀⁻¹ := by
-  rfl
-
-/-- Readout theorem for Street's `B`-side pointed-group braiding action. -/
-theorem braiding_action_B_readout
-    (D : FreeProductData) (A B : PointedGroup) (b : B.carrier) :
-    braiding_action_B D A B b =
-      letI := A.grp
-      letI := B.grp
-      letI := D.grp B.carrier A.carrier
-      D.inl B.carrier A.carrier b := by
-  rfl
-
 /-- Abstract group-level form of the conjugating half of Street's braiding. -/
 def conjugatingBraidAction {G : Type} [Group G] (base x : G) : G :=
   base * x * base⁻¹
@@ -105,14 +83,6 @@ def actionX : Carrier :=
 /-- The `B`-side action fixes the right input in the abstract group readout. -/
 def actionY : Carrier :=
   W.y
-
-/-- The abstract `A`-side action unfolds to the conjugation formula. -/
-theorem actionX_readout : W.actionX = W.base * W.x * W.base⁻¹ := by
-  rfl
-
-/-- The abstract `B`-side action is the identity readout on the right input. -/
-theorem actionY_readout : W.actionY = W.y := by
-  rfl
 
 end PointedGroupBraidWitness
 

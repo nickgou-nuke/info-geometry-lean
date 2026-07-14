@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.MomentTriple
-import Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
+import InfoGeometry.External.Automath.Omega.Folding.MomentTriple
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldQuantumChannelChoiCapacity
 
 namespace Omega.OperatorAlgebra
 

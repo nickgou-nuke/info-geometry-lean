@@ -1,4 +1,4 @@
-import Omega.Zeta.ZeroDispersionFiniteAtomBEps
+import InfoGeometry.External.Automath.Omega.Zeta.ZeroDispersionFiniteAtomBEps
 
 open scoped BigOperators
 

@@ -2871,25 +2871,6 @@ noncomputable def drazinDefectCandidate : EndH :=
   (2 : ℝ) •
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel
 
-/--
-Minimal pair readout of the new Drazin-lane: translation and central
-channels.  The defect witness is carried separately and proved equal to the
-central readout below.
--/
-@[rep_depth transport]
-noncomputable def drazinTranslationCentralDefectPacket : EndH × EndH :=
-  (drazinTranslationCandidate U, drazinCentralCandidate U)
-
-@[rep_depth transport]
-theorem drazinTranslationCentralDefectPacket_fst :
-    (drazinTranslationCentralDefectPacket U).1 = drazinTranslationCandidate U := by
-  rfl
-
-@[rep_depth transport]
-theorem drazinTranslationCentralDefectPacket_snd :
-    (drazinTranslationCentralDefectPacket U).2 = drazinCentralCandidate U := by
-  rfl
-
 /-- KKT-central and direct Drazin-defect channels coincide definitionally. -/
 @[rep_depth transport]
 theorem drazinCentralCandidate_eq_defectCandidate :

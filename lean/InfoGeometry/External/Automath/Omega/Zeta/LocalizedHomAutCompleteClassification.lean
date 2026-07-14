@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Ring.Int.Units
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersCrossHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersCrossHomClassification
 
 namespace Omega.Zeta
 

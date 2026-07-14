@@ -1,5 +1,5 @@
-import Omega.CircleDimension.LocalizationHomCategoryClassification
-import Omega.Zeta.LocalizedIntegersOrderDualQuotient
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizationHomCategoryClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersOrderDualQuotient
 
 namespace Omega.Conclusion
 

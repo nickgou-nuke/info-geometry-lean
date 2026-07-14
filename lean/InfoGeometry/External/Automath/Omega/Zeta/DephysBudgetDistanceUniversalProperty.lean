@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DephysBudgetDistanceDominatesTv
+import InfoGeometry.External.Automath.Omega.Zeta.DephysBudgetDistanceDominatesTv
 
 namespace Omega.Zeta
 

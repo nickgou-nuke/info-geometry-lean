@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberLeyangKlBernoulliDecomposition
+import InfoGeometry.External.Automath.Omega.POM.FiberLeyangKlBernoulliDecomposition
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiToeplitzPsdJetSemialgebraic
+import InfoGeometry.External.Automath.Omega.Zeta.XiToeplitzPsdJetSemialgebraic
 
 namespace Omega.Zeta
 

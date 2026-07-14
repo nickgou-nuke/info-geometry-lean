@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart63bFixedqSchurPacketExactInversion
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63bFixedqSchurPacketExactInversion
 
 namespace Omega.Zeta
 

@@ -13,7 +13,7 @@ This module is the narrow connector between two existing corridors:
 
 It deliberately does not identify factor overlap with the isotropic cone, and
 it does not assert any new `Cl(4,4)` classification theorem.  Concrete models
-must supply the two calibration certificates saying that their mirror-even
+must supply the two calibration proof fields saying that their mirror-even
 sector feeds the symmetric/Jordan observable readout and their mirror-odd
 sector feeds the antisymmetric/Lie generator readout.
 -/
@@ -30,7 +30,7 @@ variable {Op : Type _} [Ring Op]
 variable {H : Type}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
-/-! ## Bridge datum -/
+/-! ## Bridge data -/
 
 /--
 Proof-carrying bridge from Tomita-Cartan mirror parity to the repo-owned
@@ -45,12 +45,12 @@ The algebraic parity laws and the Jordan/Lie product identities are proved
 by the imported owner modules and re-exported below.
 -/
 @[rep_depth transport]
-structure TomitaCliffordJordanLieBridge where
+structure Bridge where
   /-- Tomita-style mirror involution on the algebraic operator lane. -/
   mirror : MirrorInvolution Op
 
-  /-- Split `Cl(4,4)` / TKK / Jordan-Lie packet. -/
-  packet : SplitCl44TKKJordanLiePacket (α := α) (H := H)
+  /-- Split `Cl(4,4)` / TKK / Jordan-Lie owner data. -/
+  jordanLie : SplitCl44TKKJordanLiePacket (α := α) (H := H)
 
   /--
   Calibration law: the compact/mirror-even sector feeds the symmetric
@@ -72,9 +72,9 @@ structure TomitaCliffordJordanLieBridge where
   noncompact_odd_feeds_lie :
     noncompactOddFeedsLie
 
-namespace TomitaCliffordJordanLieBridge
+namespace Bridge
 
-variable (B : TomitaCliffordJordanLieBridge (α := α) (Op := Op) (H := H))
+variable (B : Bridge (α := α) (Op := Op) (H := H))
 
 /-! ## Tomita-Cartan parity re-exports -/
 
@@ -98,71 +98,21 @@ theorem noncompactLift_mirror_odd
 @[rep_depth transport]
 theorem commutator_eq_two_smul_lieProduct :
     InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
-      B.packet.closure.gibbs.conformalGeometricTemperature
-      B.packet.closure.weylTemperature =
-        (2 : ℝ) • B.packet.closure.lieProductTemperatureWeyl :=
-  B.packet.fockCommutator_temperature_weyl_eq_two_smul_lieProduct
+      B.jordanLie.closure.gibbs.conformalGeometricTemperature
+      B.jordanLie.closure.weylTemperature =
+        (2 : ℝ) • B.jordanLie.closure.lieProductTemperatureWeyl :=
+  B.jordanLie.fockCommutator_temperature_weyl_eq_two_smul_lieProduct
 
 /-- The anticommutator channel is twice the symmetric Jordan product. -/
 @[rep_depth transport]
 theorem anticommutator_eq_two_smul_jordanProduct :
     InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
-      B.packet.closure.gibbs.conformalGeometricTemperature
-      B.packet.closure.weylTemperature =
-        (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl :=
-  B.packet.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct
+      B.jordanLie.closure.gibbs.conformalGeometricTemperature
+      B.jordanLie.closure.weylTemperature =
+        (2 : ℝ) • B.jordanLie.closure.jordanProductTemperatureWeyl :=
+  B.jordanLie.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct
 
-/-! ## Calibration re-exports -/
-
-/--
-Stored calibration: compact/mirror-even Tomita-Cartan parity feeds the
-symmetric observable/Jordan readout.
--/
-@[rep_depth transport]
-theorem compact_even_feeds_jordan_holds :
-    B.compactEvenFeedsJordan :=
-  B.compact_even_feeds_jordan
-
-/--
-Stored calibration: noncompact/mirror-odd Tomita-Cartan parity feeds the
-antisymmetric generator/Lie readout.
--/
-@[rep_depth transport]
-theorem noncompact_odd_feeds_lie_holds :
-    B.noncompactOddFeedsLie :=
-  B.noncompact_odd_feeds_lie
-
-/--
-Consolidated Tomita/Clifford/Jordan-Lie bridge packet.
-
-This theorem is intentionally narrow: it packages exactly the mirror parity
-facts, the repo-owned commutator/anticommutator readouts, and the two supplied
-calibration certificates.
--/
-@[rep_depth transport]
-theorem tomita_clifford_jordan_lie_packet
-    (x y : Op) :
-    B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x
-      ∧ B.mirror.mirror (B.mirror.noncompactLift y) = -B.mirror.noncompactLift y
-      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
-          B.packet.closure.gibbs.conformalGeometricTemperature
-          B.packet.closure.weylTemperature =
-            (2 : ℝ) • B.packet.closure.lieProductTemperatureWeyl
-      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
-          B.packet.closure.gibbs.conformalGeometricTemperature
-          B.packet.closure.weylTemperature =
-            (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl
-      ∧ B.compactEvenFeedsJordan
-      ∧ B.noncompactOddFeedsLie := by
-  exact
-    ⟨B.compactLift_mirror_even x,
-      B.noncompactLift_mirror_odd y,
-      B.commutator_eq_two_smul_lieProduct,
-      B.anticommutator_eq_two_smul_jordanProduct,
-      B.compact_even_feeds_jordan_holds,
-      B.noncompact_odd_feeds_lie_holds⟩
-
-end TomitaCliffordJordanLieBridge
+end Bridge
 
 /-! ## Owner target -/
 
@@ -173,23 +123,23 @@ Owner target for a concrete Tomita-Cartan parity to Clifford Jordan/Lie bridge.
 
 The target is not mere inhabitation of a socket.  A supplied bridge must read
 out the Tomita parity laws, the Clifford/TKK Jordan-Lie product laws, and the
-two calibration certificates.
+two calibration proof fields.
 -/
 def TomitaCliffordJordanLieBridgeOwnerTarget
     (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] : Prop :=
-  ∀ (B : TomitaCliffordJordanLieBridge.{uα, uOp, 0} (α := α) (Op := Op) (H := H))
+  ∀ (B : Bridge.{uα, uOp, 0} (α := α) (Op := Op) (H := H))
     (x y : Op),
     B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x
       ∧ B.mirror.mirror (B.mirror.noncompactLift y) = -B.mirror.noncompactLift y
       ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
-          B.packet.closure.gibbs.conformalGeometricTemperature
-          B.packet.closure.weylTemperature =
-            (2 : ℝ) • B.packet.closure.lieProductTemperatureWeyl
+          B.jordanLie.closure.gibbs.conformalGeometricTemperature
+          B.jordanLie.closure.weylTemperature =
+            (2 : ℝ) • B.jordanLie.closure.lieProductTemperatureWeyl
       ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
-          B.packet.closure.gibbs.conformalGeometricTemperature
-          B.packet.closure.weylTemperature =
-            (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl
+          B.jordanLie.closure.gibbs.conformalGeometricTemperature
+          B.jordanLie.closure.weylTemperature =
+            (2 : ℝ) • B.jordanLie.closure.jordanProductTemperatureWeyl
       ∧ B.compactEvenFeedsJordan
       ∧ B.noncompactOddFeedsLie
 
@@ -199,6 +149,12 @@ theorem tomitaCliffordJordanLieBridgeOwnerTarget
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] :
     TomitaCliffordJordanLieBridgeOwnerTarget α Op H := by
   intro B x y
-  exact B.tomita_clifford_jordan_lie_packet x y
+  exact
+    ⟨B.compactLift_mirror_even x,
+      B.noncompactLift_mirror_odd y,
+      B.commutator_eq_two_smul_lieProduct,
+      B.anticommutator_eq_two_smul_jordanProduct,
+      B.compact_even_feeds_jordan,
+      B.noncompact_odd_feeds_lie⟩
 
 end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

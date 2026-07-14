@@ -158,25 +158,16 @@ namespace MarkovDualOperator
 variable {L}
 variable (M : MarkovDualOperator L)
 
-/-- Readback: the observable Markov operator is unital. -/
-theorem unital_readout : M.T 1 = 1 :=
-  M.unital
-
 /-- Readback: the dual state update preserves normalization. -/
 theorem preserves_normalization (s : LimitState L) :
     (M.Tstar s).functional 1 = 1 :=
   (M.Tstar s).normalized
 
-/-- Readback of the duality between observable and state pictures. -/
-theorem duality_readout (s : LimitState L) (x : L.AInf) :
-    (M.Tstar s).functional x = s.functional (M.T x) :=
-  M.duality s x
-
 /-- A fixed state has stationary expectations under the observable Markov operator. -/
 theorem expectation_stationary_of_fixed
     {s : LimitState L} (hs : M.Tstar s = s) (x : L.AInf) :
     s.functional (M.T x) = s.functional x := by
-  rw [← M.duality_readout s x, hs]
+  rw [← M.duality s x, hs]
 
 /-- Iterating the dual Markov update. -/
 def iterateState : ℕ → LimitState L → LimitState L

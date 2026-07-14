@@ -1,6 +1,6 @@
-import Omega.Folding.BernoulliPLaws
-import Omega.Folding.GaugeAnomalyClt
-import Omega.Folding.GaugeAnomalyLdpRate
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPLaws
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyClt
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyLdpRate
 
 namespace Omega.Folding
 

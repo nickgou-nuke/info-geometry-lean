@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.LocalToGlobal
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.LocalToGlobal
 
 namespace Omega.LogicExpansionChain
 

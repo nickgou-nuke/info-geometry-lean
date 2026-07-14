@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

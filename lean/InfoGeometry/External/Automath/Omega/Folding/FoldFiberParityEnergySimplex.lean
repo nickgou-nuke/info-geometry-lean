@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.Folding.FoldFiberParityBiasRieszParsevalEnergy
+import InfoGeometry.External.Automath.Omega.Folding.FoldFiberParityBiasRieszParsevalEnergy
 
 namespace Omega.Folding
 

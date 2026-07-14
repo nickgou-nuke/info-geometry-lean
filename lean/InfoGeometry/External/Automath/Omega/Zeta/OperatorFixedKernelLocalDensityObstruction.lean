@@ -1,5 +1,5 @@
 import Mathlib.Topology.Separation.Basic
-import Omega.Zeta.CriticalLineGapEntropyRateZero
+import InfoGeometry.External.Automath.Omega.Zeta.CriticalLineGapEntropyRateZero
 
 open Filter
 open scoped Topology

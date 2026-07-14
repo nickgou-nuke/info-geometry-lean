@@ -3,7 +3,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Algebra.Order.Field
 import Mathlib.Tactic
-import Omega.Zeta.EnergyTailMassSeeds
+import InfoGeometry.External.Automath.Omega.Zeta.EnergyTailMassSeeds
 
 open Filter
 open scoped BigOperators Topology

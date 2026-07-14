@@ -1,4 +1,4 @@
-import Omega.Conclusion.ExtremeBiasFinitepartRhExponentDecoupling
+import InfoGeometry.External.Automath.Omega.Conclusion.ExtremeBiasFinitepartRhExponentDecoupling
 
 namespace Omega.Conclusion
 

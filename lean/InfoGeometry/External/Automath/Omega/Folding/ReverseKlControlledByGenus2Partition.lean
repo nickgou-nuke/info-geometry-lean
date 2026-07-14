@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Tactic
-import Omega.Folding.Fiber
-import Omega.POM.ReverseKlBoundByDispersion
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.POM.ReverseKlBoundByDispersion
 
 namespace Omega.Folding
 

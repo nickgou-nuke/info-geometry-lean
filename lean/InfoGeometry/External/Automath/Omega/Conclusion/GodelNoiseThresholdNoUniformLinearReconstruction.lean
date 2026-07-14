@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Conclusion.GodelAlgorithmicSufficiencyMetricInstabilitySeparation
-import Omega.SPG.NoiseBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.GodelAlgorithmicSufficiencyMetricInstabilitySeparation
+import InfoGeometry.External.Automath.Omega.SPG.NoiseBudget
 
 namespace Omega.Conclusion
 

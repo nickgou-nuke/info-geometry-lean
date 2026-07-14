@@ -1,4 +1,4 @@
-import Omega.Zeta.DerivedFixedFreezingRenyiSurface
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedFixedFreezingRenyiSurface
 
 namespace Omega.Zeta
 

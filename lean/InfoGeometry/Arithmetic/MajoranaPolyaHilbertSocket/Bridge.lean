@@ -24,7 +24,7 @@ structure MajoranaPolyaHilbertBridge
       ArchimedeanReadout FinitePrimeReadout BoundaryData ScatteringMatrix
       ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout : Type*) where
+      ExplicitFormulaReadout : Type) where
   berryKeatingBlock :
     BerryKeatingOperatorPacket Carrier Operator Mode
   majoranaDirac :
@@ -55,10 +55,6 @@ structure MajoranaPolyaHilbertBridge
     MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout
-  /-- Guardrail: `1 / ζ` is the Witten character, not the spectral-zero determinant. -/
-  witten_is_inverse_zeta_guard : Type*
-  /-- Guardrail: the continuous spectrum does not vanish, only the boundary/discrete sum. -/
-  continuous_spectrum_not_zero_guard : Type*
 
 /-! ## 6. MBK trace-formula completion packet -/
 
@@ -84,7 +80,7 @@ structure MajoranaBKTraceFormulaBridge
       ArchimedeanReadout FinitePrimeReadout BoundaryData ScatteringMatrix
       ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout : Type*) where
+      ExplicitFormulaReadout : Type) where
   base_bridge :
     MajoranaPolyaHilbertBridge
       Carrier Operator Mode ZeroMode NormReadout

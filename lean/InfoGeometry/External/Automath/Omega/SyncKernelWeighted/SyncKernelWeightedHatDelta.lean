@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.PrimitiveCompletionHatp
-import Omega.SyncKernelWeighted.WeightedCompletionQ
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveCompletionHatp
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WeightedCompletionQ
 
 namespace Omega.SyncKernelWeighted
 

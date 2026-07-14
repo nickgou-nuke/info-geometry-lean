@@ -35,6 +35,11 @@ def localPrimeWeight
     (i : P.Index) : ℝ :=
   Real.exp (-β * Real.log (P.prime i : ℝ))
 
+lemma localPrimeWeight_pos (β : ℝ) (i : P.Index) :
+    0 < localPrimeWeight P β i := by
+  unfold localPrimeWeight
+  exact Real.exp_pos _
+
 /-- Fermionic sign of a finite binary occupation profile. -/
 def fermionSign
     (ε : P.Profile) : ℝ :=
@@ -123,6 +128,23 @@ theorem fermionicSupertrace_eq_product
   rw [← Finset.prod_congr rfl (fun i _hi => hlocal i)]
   rw [← Finset.sum_prod_piFinset]
   rw [Fintype.piFinset_univ]
+
+lemma fermionicPartition_pos (β : ℝ) :
+    0 < fermionicPartition P β := by
+  rw [fermionicPartition_eq_product]
+  exact Finset.prod_pos (fun i _hi =>
+    add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (localPrimeWeight_pos P β i)))
+
+lemma fermionicPartition_ne_zero (β : ℝ) :
+    fermionicPartition P β ≠ 0 :=
+  (fermionicPartition_pos P β).ne'
+
+lemma fermionicSupertrace_ne_zero
+    (β : ℝ)
+    (h : ∀ i : P.Index, (1 - localPrimeWeight P β i) ≠ 0) :
+    fermionicSupertrace P β ≠ 0 := by
+  rw [fermionicSupertrace_eq_product]
+  exact Finset.prod_ne_zero_iff.mpr (fun i _hi => h i)
 
 /--
 Primitive Mellin/Gibbs readout for the same finite profile, re-exported from

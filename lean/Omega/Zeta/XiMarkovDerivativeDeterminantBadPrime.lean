@@ -8,17 +8,6 @@ namespace Omega.Zeta
 
 open Polynomial
 
-/-- Concrete one-state Markov data for the determinant/derivative bad-prime package. The Green
-kernel and its denominator are recorded explicitly so that the denominator obstruction can be
-stated without introducing any abstract shell assumptions. -/
-structure XiMarkovDerivativeDeterminantBadPrimeData where
-  greenKernel : Matrix (Fin 1) (Fin 1) ℚ
-  greenDenominator : ℤ
-  hgreenKernel : greenKernel = 1
-  hgreenDenominator : greenDenominator = 1
-
-namespace XiMarkovDerivativeDeterminantBadPrimeData
-
 /-- The one-state transition matrix. -/
 def transition : Matrix (Fin 1) (Fin 1) ℤ :=
   1
@@ -36,27 +25,30 @@ noncomputable def charpolyDerivativeAtOne : ℤ :=
   (transition.charpoly.derivative).eval 1
 
 /-- Bad primes are exactly those for which the determinant of `A` vanishes modulo `p`. -/
-def badPrime (_D : XiMarkovDerivativeDeterminantBadPrimeData) (p : ℕ) : Prop :=
+def badPrime (correction : Matrix (Fin 1) (Fin 1) ℤ) (p : ℕ) : Prop :=
   Nat.Prime p ∧ (((correction.det : ℤ) : ZMod p) = 0)
 
 /-- A double root at `1` modulo `p` is detected by vanishing of the derivative there. -/
-def doubleRootAtOne (_D : XiMarkovDerivativeDeterminantBadPrimeData) (p : ℕ) : Prop :=
+def doubleRootAtOne (charpolyDerivativeAtOne : ℤ) (p : ℕ) : Prop :=
   Nat.Prime p ∧ (((charpolyDerivativeAtOne : ℤ) : ZMod p) = 0)
 
 /-- Determinant/characteristic-polynomial derivative identity for the corrected matrix. -/
-def det_eq_charpoly_derivative (_D : XiMarkovDerivativeDeterminantBadPrimeData) : Prop :=
+def det_eq_charpoly_derivative (correction : Matrix (Fin 1) (Fin 1) ℤ)
+    (charpolyDerivativeAtOne : ℤ) : Prop :=
   correction.det = charpolyDerivativeAtOne
 
 /-- A prime is bad exactly when the characteristic polynomial has a double root at `1` modulo
 that prime. -/
-def bad_prime_iff_double_root (D : XiMarkovDerivativeDeterminantBadPrimeData) : Prop :=
-  ∀ p, Nat.Prime p → (D.badPrime p ↔ D.doubleRootAtOne p)
+def bad_prime_iff_double_root (correction : Matrix (Fin 1) (Fin 1) ℤ)
+    (charpolyDerivativeAtOne : ℤ) : Prop :=
+  ∀ p, Nat.Prime p → (badPrime correction p ↔ doubleRootAtOne charpolyDerivativeAtOne p)
 
 /-- If the Green kernel denominator vanishes modulo `p`, then `p` must already be bad for the
 corrected determinant. The first conjunct records that the chosen Green kernel is indeed `A⁻¹`. -/
-def green_denominator_obstruction (D : XiMarkovDerivativeDeterminantBadPrimeData) : Prop :=
-  D.greenKernel = ((correction.map (Int.castRingHom ℚ))⁻¹) ∧
-    ∀ p, Nat.Prime p → ((((D.greenDenominator : ℤ) : ZMod p) = 0) → D.badPrime p)
+def green_denominator_obstruction (greenKernel : Matrix (Fin 1) (Fin 1) ℚ)
+    (greenDenominator : ℤ) : Prop :=
+  greenKernel = ((correction.map (Int.castRingHom ℚ))⁻¹) ∧
+    ∀ p, Nat.Prime p → ((((greenDenominator : ℤ) : ZMod p) = 0) → badPrime correction p)
 
 lemma correction_eq_one :
     correction = (1 : Matrix (Fin 1) (Fin 1) ℤ) := by
@@ -78,28 +70,29 @@ lemma charpolyDerivativeAtOne_eq_one :
   rw [hchar]
   simp
 
-lemma det_eq_charpoly_derivative_holds (D : XiMarkovDerivativeDeterminantBadPrimeData) :
-    D.det_eq_charpoly_derivative := by
+lemma det_eq_charpoly_derivative_holds :
+    det_eq_charpoly_derivative correction charpolyDerivativeAtOne := by
   rw [det_eq_charpoly_derivative, correction_det_eq_one, charpolyDerivativeAtOne_eq_one]
 
-lemma bad_prime_iff_double_root_holds (D : XiMarkovDerivativeDeterminantBadPrimeData) :
-    D.bad_prime_iff_double_root := by
+lemma bad_prime_iff_double_root_holds :
+    bad_prime_iff_double_root correction charpolyDerivativeAtOne := by
   intro p hp
   constructor
   · intro hBad
     exact ⟨hp, by
       have hzero : (((correction.det : ℤ) : ZMod p) = 0) := hBad.2
-      rwa [D.det_eq_charpoly_derivative_holds] at hzero⟩
+      rwa [det_eq_charpoly_derivative_holds] at hzero⟩
   · intro hRoot
     exact ⟨hp, by
       have hzero : (((charpolyDerivativeAtOne : ℤ) : ZMod p) = 0) := hRoot.2
-      rwa [← D.det_eq_charpoly_derivative_holds] at hzero⟩
+      rwa [← det_eq_charpoly_derivative_holds] at hzero⟩
 
-lemma green_denominator_obstruction_holds (D : XiMarkovDerivativeDeterminantBadPrimeData) :
-    D.green_denominator_obstruction := by
+lemma green_denominator_obstruction_holds (greenKernel : Matrix (Fin 1) (Fin 1) ℚ)
+    (greenDenominator : ℤ) (hgreenKernel : greenKernel = 1) (hgreenDenominator : greenDenominator = 1) :
+    green_denominator_obstruction greenKernel greenDenominator := by
   refine ⟨?_, ?_⟩
   · calc
-      D.greenKernel = 1 := D.hgreenKernel
+      greenKernel = 1 := hgreenKernel
       _ = ((correction.map (Int.castRingHom ℚ))⁻¹) := by
             rw [correction_eq_one]
             simp
@@ -108,12 +101,8 @@ lemma green_denominator_obstruction_holds (D : XiMarkovDerivativeDeterminantBadP
     have hone : (((1 : ℤ) : ZMod p) ≠ 0) := by
       simp
     have : (((1 : ℤ) : ZMod p) = 0) := by
-      simp [D.hgreenDenominator] at hzero
+      simp [hgreenDenominator] at hzero
     exact False.elim (hone this)
-
-end XiMarkovDerivativeDeterminantBadPrimeData
-
-open XiMarkovDerivativeDeterminantBadPrimeData
 
 /-- In the one-state Markov model, the corrected determinant equals the derivative of the
 characteristic polynomial at `1`; therefore bad primes are exactly the primes for which `1` is a
@@ -121,10 +110,16 @@ double root modulo `p`, and any denominator obstruction for the Green kernel wou
 from the same bad-prime set.
     thm:xi-markov-derivative-determinant-bad-prime -/
 theorem paper_xi_markov_derivative_determinant_bad_prime
-    (D : XiMarkovDerivativeDeterminantBadPrimeData) :
-    D.det_eq_charpoly_derivative ∧ D.bad_prime_iff_double_root ∧ D.green_denominator_obstruction :=
+    (greenKernel : Matrix (Fin 1) (Fin 1) ℚ)
+    (greenDenominator : ℤ)
+    (hgreenKernel : greenKernel = 1)
+    (hgreenDenominator : greenDenominator = 1) :
+    det_eq_charpoly_derivative correction charpolyDerivativeAtOne ∧
+      bad_prime_iff_double_root correction charpolyDerivativeAtOne ∧
+      green_denominator_obstruction greenKernel greenDenominator :=
   by
-  exact ⟨D.det_eq_charpoly_derivative_holds, D.bad_prime_iff_double_root_holds,
-    D.green_denominator_obstruction_holds⟩
+  exact ⟨det_eq_charpoly_derivative_holds, bad_prime_iff_double_root_holds,
+    green_denominator_obstruction_holds greenKernel greenDenominator hgreenKernel
+      hgreenDenominator⟩
 
 end Omega.Zeta

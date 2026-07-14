@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.SyncKernelWeighted.WittThetaStableResidue
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittThetaStableResidue
 
 namespace Omega.Zeta
 

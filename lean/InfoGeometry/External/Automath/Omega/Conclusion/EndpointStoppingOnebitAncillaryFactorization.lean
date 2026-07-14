@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.GoldenSprtTerminalSignMinimalSufficiency
-import Omega.POM.ConclusionGoldenSprtEsscherBoundarySymmetry
+import InfoGeometry.External.Automath.Omega.Conclusion.GoldenSprtTerminalSignMinimalSufficiency
+import InfoGeometry.External.Automath.Omega.POM.ConclusionGoldenSprtEsscherBoundarySymmetry
 
 namespace Omega.Conclusion
 

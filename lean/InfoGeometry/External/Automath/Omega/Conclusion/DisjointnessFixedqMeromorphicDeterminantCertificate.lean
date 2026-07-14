@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.SchurComplement
-import Omega.Conclusion.DisjointnessFixedqSymmetricKrylovSector
+import InfoGeometry.External.Automath.Omega.Conclusion.DisjointnessFixedqSymmetricKrylovSector
 
 namespace Omega.Conclusion
 

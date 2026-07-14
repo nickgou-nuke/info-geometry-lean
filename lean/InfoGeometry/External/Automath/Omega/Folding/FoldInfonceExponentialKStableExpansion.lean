@@ -2,8 +2,8 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.FoldInfoNCEEntropyDegenerationSecondOrder
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEEntropyDegenerationSecondOrder
 
 namespace Omega.Folding
 

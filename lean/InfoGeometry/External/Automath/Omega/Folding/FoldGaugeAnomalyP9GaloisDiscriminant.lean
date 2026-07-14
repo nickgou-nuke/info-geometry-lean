@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalySecondTrigonalStructureDiscriminant
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySecondTrigonalStructureDiscriminant
 
 namespace Omega.Folding
 

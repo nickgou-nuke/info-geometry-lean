@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.FieldTheory.Finite.Basic
-import Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
 
 namespace Omega.POM.CentralizerDetMod5
 

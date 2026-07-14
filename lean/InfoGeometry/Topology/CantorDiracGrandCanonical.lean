@@ -185,6 +185,16 @@ theorem gibbsWeight_sum_one (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
   simpa [CantorGrandCanonicalPacket.gibbsWeight] using
     InfoGeometry.GrandCanonical.gibbsWeightGC_sum_one (params B) β μ
 
+theorem gibbsWeight_nonneg (B : CantorGrandCanonicalPacket) (β μ : ℝ) (w : State B) :
+    0 ≤ gibbsWeight B β μ w := by
+  simpa [CantorGrandCanonicalPacket.gibbsWeight] using
+    InfoGeometry.GrandCanonical.gibbsWeightGC_nonneg (params B) β μ w
+
+theorem gibbsWeight_le_one (B : CantorGrandCanonicalPacket) (β μ : ℝ) (w : State B) :
+    gibbsWeight B β μ w ≤ 1 := by
+  simpa [CantorGrandCanonicalPacket.gibbsWeight] using
+    InfoGeometry.GrandCanonical.gibbsWeightGC_le_one (params B) β μ w
+
 theorem potential_deriv_beta_eq_neg_meanShift (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
     deriv (fun t => potential B t μ) β = -meanShift B β μ := by
   simpa [CantorGrandCanonicalPacket.potential, CantorGrandCanonicalPacket.meanShift] using

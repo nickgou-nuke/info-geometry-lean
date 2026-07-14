@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.SymmetricTruncationTailIdentity
+import InfoGeometry.External.Automath.Omega.CircleDimension.SymmetricTruncationTailIdentity
 
 namespace Omega.CircleDimension
 

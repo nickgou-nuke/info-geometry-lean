@@ -1,9 +1,9 @@
-import Omega.Combinatorics.PathIndSet
-import Omega.Folding.Weight
-import Omega.Folding.Fold
-import Omega.Folding.MaxFiber
-import Omega.Folding.MaxFiberHigh
-import Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Combinatorics.PathIndSet
+import InfoGeometry.External.Automath.Omega.Folding.Weight
+import InfoGeometry.External.Automath.Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
 
 namespace Omega
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.List.Perm.Basic
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersCrossHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersCrossHomClassification
 
 open scoped BigOperators
 

@@ -36,7 +36,7 @@ local notation "EndH" => E →L[ℝ] E
 The Bridge connecting the Canonical Bogoliubov Flow with the Metriplectic RG Flow.
 -/
 @[rep_depth transport]
-structure BogoliubovRGFlowBridge 
+structure Bridge
     (E State LieGroup LieAlgebra LieDual Observable : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- The certified regular lane reduction. -/
@@ -60,7 +60,7 @@ Canonical Bogoliubov Flow on the continuum.
 def rg_fixed_point_is_pure_bogoliubov_flow
     {E State LieGroup LieAlgebra LieDual Observable : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (B : BogoliubovRGFlowBridge E State LieGroup LieAlgebra LieDual Observable)
+    (B : Bridge E State LieGroup LieAlgebra LieDual Observable)
     (FixedPoint : RGFixedPointEquilibrium State)
     (_hFixed : FixedPoint.gradientLogPartition_zero) :
     Prop :=

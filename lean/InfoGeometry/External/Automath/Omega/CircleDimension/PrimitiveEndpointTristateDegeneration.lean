@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.EndpointTristateSet
+import InfoGeometry.External.Automath.Omega.CircleDimension.EndpointTristateSet
 
 namespace Omega.CircleDimension
 

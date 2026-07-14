@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Fin
-import Omega.GU.TerminalFoldbin6Histogram64To21
-import Omega.GU.Window6RankGap
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6Histogram64To21
+import InfoGeometry.External.Automath.Omega.GU.Window6RankGap
 
 namespace Omega.GU
 

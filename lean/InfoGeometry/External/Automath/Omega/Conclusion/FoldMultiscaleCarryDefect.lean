@@ -2,7 +2,7 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.MultinomialVpCarrySignature
+import InfoGeometry.External.Automath.Omega.Folding.MultinomialVpCarrySignature
 
 namespace Omega.Conclusion
 

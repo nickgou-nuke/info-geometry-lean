@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiReverseKLAffineSecondVariationStrongConvex
-import Omega.Zeta.XiReverseKLCyclicEnergyEquivalence
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLAffineSecondVariationStrongConvex
+import InfoGeometry.External.Automath.Omega.Zeta.XiReverseKLCyclicEnergyEquivalence
 
 namespace Omega.Zeta
 

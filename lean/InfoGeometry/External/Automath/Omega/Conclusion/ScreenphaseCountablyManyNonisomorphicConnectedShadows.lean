@@ -2,8 +2,8 @@ import Mathlib.Data.Nat.PrimeFin
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Set.Countable
 import Mathlib.Tactic
-import Omega.Conclusion.FiniteLocalizedShadowExactTorsionSpectrum
-import Omega.Conclusion.ScreenphaseSurjectsAllFiniteLocalizedShadows
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteLocalizedShadowExactTorsionSpectrum
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenphaseSurjectsAllFiniteLocalizedShadows
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalFoldEntropy
-import Omega.POM.MicrocanonicalPosteriorModuliCLT
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldEntropy
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalPosteriorModuliCLT
 
 namespace Omega.POM
 

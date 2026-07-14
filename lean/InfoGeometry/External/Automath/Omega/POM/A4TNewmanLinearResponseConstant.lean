@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.A4TNewmanOcticFieldArithmetic
+import InfoGeometry.External.Automath.Omega.POM.A4TNewmanOcticFieldArithmetic
 
 namespace Omega.POM
 

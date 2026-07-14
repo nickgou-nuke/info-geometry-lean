@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyCovarianceRecurrenceIntegersHankelRank3
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCovarianceRecurrenceIntegersHankelRank3
 
 namespace Omega.Folding
 

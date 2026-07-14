@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalTwoTemperatureStrongDualitySensitivity
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalTwoTemperatureStrongDualitySensitivity
 
 namespace Omega.POM
 

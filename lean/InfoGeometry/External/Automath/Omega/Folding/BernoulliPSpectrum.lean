@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPParryPressureChain
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPParryPressureChain
 
 namespace Omega.Folding
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Zeta.GodelTateAddressPrimitivePeriodicCount
+import InfoGeometry.External.Automath.Omega.Zeta.GodelTateAddressPrimitivePeriodicCount
 
 namespace Omega.Zeta
 

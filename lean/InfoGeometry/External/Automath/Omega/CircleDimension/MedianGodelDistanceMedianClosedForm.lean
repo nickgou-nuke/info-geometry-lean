@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Squarefree
 import Mathlib.Tactic
-import Omega.CircleDimension.MobiusBipartiteColoring
-import Omega.CircleDimension.MedianThetaRigidityPrimeRatio
-import Omega.CircleDimension.SquarefreeMedianMetricEllipseRealization
+import InfoGeometry.External.Automath.Omega.CircleDimension.MobiusBipartiteColoring
+import InfoGeometry.External.Automath.Omega.CircleDimension.MedianThetaRigidityPrimeRatio
+import InfoGeometry.External.Automath.Omega.CircleDimension.SquarefreeMedianMetricEllipseRealization
 
 namespace Omega.CircleDimension
 

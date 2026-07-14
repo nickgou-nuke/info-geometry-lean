@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.RecursiveAddressing.ReadoutSeparatednessNull
-import Omega.Topos.LocalSectionCriterion
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ReadoutSeparatednessNull
+import InfoGeometry.External.Automath.Omega.Topos.LocalSectionCriterion
 
 namespace Omega.TypedAddressBiaxialCompletion
 

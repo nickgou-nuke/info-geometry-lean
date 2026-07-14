@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ParetoColdendCurvaturePole
-import Omega.Conclusion.RightEdgeVisiblePhasesSupportFunctionClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.ParetoColdendCurvaturePole
+import InfoGeometry.External.Automath.Omega.Conclusion.RightEdgeVisiblePhasesSupportFunctionClosure
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.Conclusion.BoundaryStokesObservationMinimalDimension
-import Omega.SPG.BoundaryGodelMomentReadout
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesObservationMinimalDimension
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelMomentReadout
 
 namespace Omega.Conclusion
 

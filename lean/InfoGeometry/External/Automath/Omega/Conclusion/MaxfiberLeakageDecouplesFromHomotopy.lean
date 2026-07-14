@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxNoncontractibleFiberMod6Phase
+import InfoGeometry.External.Automath.Omega.POM.MaxNoncontractibleFiberMod6Phase
 
 namespace Omega.Conclusion
 

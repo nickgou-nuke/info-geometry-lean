@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.IharaGapDegeneracy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaGapDegeneracy
 
 namespace Omega.SyncKernelWeighted
 

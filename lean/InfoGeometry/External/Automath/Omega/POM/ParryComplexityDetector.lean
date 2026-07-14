@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Experiments.ParryBaselineGapSturmian
-import Omega.Experiments.TVCertificateHist
+import InfoGeometry.External.Automath.Omega.Experiments.ParryBaselineGapSturmian
+import InfoGeometry.External.Automath.Omega.Experiments.TVCertificateHist
 
 namespace Omega.POM
 

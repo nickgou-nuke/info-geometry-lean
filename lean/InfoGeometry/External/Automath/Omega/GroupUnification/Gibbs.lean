@@ -1,4 +1,4 @@
-import Omega.GroupUnification.MarkovZeroVariance
+import InfoGeometry.External.Automath.Omega.GroupUnification.MarkovZeroVariance
 
 namespace Omega.GroupUnification
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Folding.KilloLayeredPrimeSlicesFiniteDepth
-import Omega.POM.CoprimeLedgerPrimorialOptimality
-import Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
+import InfoGeometry.External.Automath.Omega.Folding.KilloLayeredPrimeSlicesFiniteDepth
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
 
 namespace Omega.Zeta
 

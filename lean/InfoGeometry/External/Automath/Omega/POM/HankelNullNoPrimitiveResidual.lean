@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ResonanceHankelNullAllScales
+import InfoGeometry.External.Automath.Omega.POM.ResonanceHankelNullAllScales
 
 namespace Omega.POM
 

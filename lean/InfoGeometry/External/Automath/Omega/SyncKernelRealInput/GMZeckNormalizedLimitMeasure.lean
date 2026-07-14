@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
 
 namespace Omega.SyncKernelRealInput
 

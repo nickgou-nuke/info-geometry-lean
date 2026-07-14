@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldFibonacciCollisionGapPositiveFloor
-import Omega.Zeta.XiFoldbinKappaKlCollisionIdentityChain
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldFibonacciCollisionGapPositiveFloor
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinKappaKlCollisionIdentityChain
 
 namespace Omega.Zeta
 

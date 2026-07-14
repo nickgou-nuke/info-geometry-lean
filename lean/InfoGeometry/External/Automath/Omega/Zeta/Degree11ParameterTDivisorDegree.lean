@@ -1,4 +1,4 @@
-import Omega.Zeta.Degree11CyclicCubicNormalizationGenus3
+import InfoGeometry.External.Automath.Omega.Zeta.Degree11CyclicCubicNormalizationGenus3
 
 namespace Omega.Zeta
 

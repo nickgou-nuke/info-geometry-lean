@@ -362,17 +362,18 @@ end MinimalSouriauTomitaKMSContext
 
 namespace SouriauTomitaKMSContext
 
-/-- Convenience lemma: the `state` field equals the KMS state's `state`. -/
-@[rep_depth operator]
-theorem state_eq_kms_state_readback (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
-  C.kms.state = C.kms.state := rfl
-
 /-- The modular state is read directly from the KMS witness. -/
 @[rep_depth operator]
 def state (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
     InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge.AlgebraicState
       (H := H) :=
   C.kms.state
+
+/-- Convenience lemma: the derived `state` equals the KMS state's `state`. -/
+@[rep_depth operator]
+theorem state_eq_kms_state_readback (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    C.state = C.kms.state :=
+  rfl
 
 /-- Backward-compatible readback of the derived state. -/
 @[rep_depth operator]
@@ -413,7 +414,7 @@ theorem mk_of_kms
     preserving the standard-form carrier and the KMS identity.
 -/
 @[rep_depth operator]
-noncomputable def SouriauTomitaKMSContext.ofKMS
+noncomputable def ofKMS
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
     (beta : ℝ)
     (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
@@ -424,7 +425,7 @@ noncomputable def SouriauTomitaKMSContext.ofKMS
 
 /-- The `ofKMS` constructor reads back the same `state` definitionally. -/
 @[rep_depth operator]
-theorem SouriauTomitaKMSContext.state_eq_kms_state_ofKMS
+theorem state_eq_kms_state_ofKMS
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
     (beta : ℝ)
     (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :

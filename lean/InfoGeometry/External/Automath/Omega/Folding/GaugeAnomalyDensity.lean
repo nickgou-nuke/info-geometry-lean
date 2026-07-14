@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.BayesKinkGeometry
-import Omega.Folding.BernoulliPBitpairLaw
-import Omega.Folding.GaugeAnomalyMean
+import InfoGeometry.External.Automath.Omega.Folding.BayesKinkGeometry
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPBitpairLaw
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyMean
 
 namespace Omega.Folding
 

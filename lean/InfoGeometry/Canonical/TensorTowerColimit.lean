@@ -1,13 +1,15 @@
 import Mathlib
 
 /-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-- psi_comp_iota_seq: colimit commutativity by induction, using `psi_comm`
-- protected_states_survive_colimit: topological protection, using only the
-  finite-stage kernel witness
+#### BUCKET 1: CLOSED FINITE/STAGED THEOREMS
+- psi_comp_iota_seq: finite chain/cone compatibility by induction, using
+  `psi_comm`
+- protected_states_survive_colimit: conditional nonvanishing transport from an
+  explicit kernel-lifting hypothesis and a finite-stage protection predicate
 
 #### BUCKET 2: CONDITIONAL — requires the stated cone/kernel witnesses
-#### BUCKET 3: None.
+#### BUCKET 3: No theorem in this file asserts a universal-property, topological,
+or analytic colimit result.
 -/
 
 section TensorTowerColimit
@@ -42,10 +44,15 @@ variable (colimit_kernel : ∀ (n : ℕ) (x : A n), psi n x = 0 → ∃ m, iota_
 include colimit_kernel
 
 omit psi_comm in
+/-- Legacy name for the algebraic predicate that every finite-stage iterate
+remains nonzero. No topology is present in this definition. -/
 def IsTopologicallyProtected (n : ℕ) (x : A n) : Prop :=
   ∀ m, iota_seq A iota n m x ≠ 0
 
 omit psi_comm in
+/-- Under the explicit kernel-lifting hypothesis, stagewise nonvanishing
+implies nonvanishing of the target map. This is conditional algebraic transport,
+not a universal-property or analytic colimit theorem. -/
 theorem protected_states_survive_colimit (n : ℕ) (x : A n)
     (h_prot : IsTopologicallyProtected A iota n x) : psi n x ≠ 0 := by
   intro h_vanish

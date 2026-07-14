@@ -1,6 +1,6 @@
-import Omega.POM.MicrocanonicalCoverTimeNlognScale
-import Omega.POM.MicrocanonicalFoldWorstcaseQueryRigidity
-import Omega.Folding.CollisionZetaOperator
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeNlognScale
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalFoldWorstcaseQueryRigidity
+import InfoGeometry.External.Automath.Omega.Folding.CollisionZetaOperator
 
 namespace Omega.POM
 

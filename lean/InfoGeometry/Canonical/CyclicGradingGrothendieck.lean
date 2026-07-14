@@ -8,8 +8,6 @@ colimit interpretation.
 import Mathlib.Data.ZMod.Basic
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
-set_option linter.dupNamespace false
-
 noncomputable section
 
 namespace InfoGeometry.Canonical.CyclicGradingGrothendieck

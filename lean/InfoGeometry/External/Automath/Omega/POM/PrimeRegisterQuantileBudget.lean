@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.OrderSpatialization
-import Omega.POM.RCRTEpsilon
+import InfoGeometry.External.Automath.Omega.POM.OrderSpatialization
+import InfoGeometry.External.Automath.Omega.POM.RCRTEpsilon
 
 namespace Omega.POM
 

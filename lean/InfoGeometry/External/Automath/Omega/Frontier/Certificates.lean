@@ -1,7 +1,7 @@
-import Omega.Frontier.Assumptions
-import Omega.Folding.Rewrite
-import Omega.Folding.Fiber
-import Omega.SPG.ScanErrorDiscrete
+import InfoGeometry.External.Automath.Omega.Frontier.Assumptions
+import InfoGeometry.External.Automath.Omega.Folding.Rewrite
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.SPG.ScanErrorDiscrete
 
 namespace Omega.Frontier
 

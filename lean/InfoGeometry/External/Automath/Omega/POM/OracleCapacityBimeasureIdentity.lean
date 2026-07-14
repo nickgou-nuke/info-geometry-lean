@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.POM.BbitOracleCapacityClosedForm
-import Omega.POM.OracleCapacityStieltjesInversionMellin
+import InfoGeometry.External.Automath.Omega.POM.BbitOracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.POM.OracleCapacityStieltjesInversionMellin
 
 namespace Omega.POM
 

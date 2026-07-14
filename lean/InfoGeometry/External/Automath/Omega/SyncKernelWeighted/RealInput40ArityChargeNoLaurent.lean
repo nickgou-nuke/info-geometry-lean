@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.RealInput40Arity2dNonnegative
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40Arity2dNonnegative
 
 namespace Omega.SyncKernelWeighted
 

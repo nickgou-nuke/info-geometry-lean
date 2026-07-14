@@ -1,4 +1,4 @@
-import Omega.Conclusion.BinfoldEscortLimitManifoldOneDimensionalKlCompletion
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortLimitManifoldOneDimensionalKlCompletion
 
 namespace Omega.Conclusion
 

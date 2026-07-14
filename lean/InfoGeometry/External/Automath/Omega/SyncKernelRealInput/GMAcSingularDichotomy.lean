@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
 
 namespace Omega.SyncKernelRealInput
 

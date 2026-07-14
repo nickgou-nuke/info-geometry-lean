@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Zeta.AdamsBinomialProbeFourierDiagonalization
+import InfoGeometry.External.Automath.Omega.Zeta.AdamsBinomialProbeFourierDiagonalization
 
 namespace Omega.Zeta
 

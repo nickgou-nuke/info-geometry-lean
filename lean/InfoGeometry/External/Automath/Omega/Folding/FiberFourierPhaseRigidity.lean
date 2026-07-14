@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Folding.FiberWeightCountComplement
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCountComplement
 
 namespace Omega.Folding
 

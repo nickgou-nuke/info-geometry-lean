@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.HankelFinitefieldRandomCompletionNondegenerate
+import InfoGeometry.External.Automath.Omega.Zeta.HankelFinitefieldRandomCompletionNondegenerate
 
 namespace Omega.Conclusion
 

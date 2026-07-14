@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldPushforwardLift
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldPushforwardLift
 
 namespace Omega.OperatorAlgebra
 

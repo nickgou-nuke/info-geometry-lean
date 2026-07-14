@@ -26,8 +26,6 @@ namespace InfoGeometry.OperatorAlgebra.AndreevLedger
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
-set_option linter.dupNamespace false
-
 /-! ## 1. Andreev particle-hole closure ledger -/
 
 /--
@@ -38,7 +36,7 @@ This is a real doubled/BdG-style model. In the complex Hilbert-space
 presentation, particle-hole symmetry is antiunitary; here it is represented as
 a real-linear closure involution.
 -/
-structure AndreevLedger
+structure Ledger
     (V : Type*) [AddCommGroup V] [Module ℝ V]
     extends LinearClosureInvolution V where
   /-- Superconducting gap scale. -/
@@ -47,10 +45,10 @@ structure AndreevLedger
   /-- The gap is positive. -/
   delta_pos : 0 < delta
 
-namespace AndreevLedger
+namespace Ledger
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-variable (A : AndreevLedger V)
+variable (A : Ledger V)
 
 /-- Subgap energy condition. -/
 def SubgapEnergy
@@ -62,7 +60,7 @@ theorem zero_subgap :
     A.SubgapEnergy 0 := by
   simpa [SubgapEnergy] using A.delta_pos
 
-end AndreevLedger
+end Ledger
 
 /-! ## 2. Andreev reflection pair -/
 
@@ -77,7 +75,7 @@ The reverse identity is derived from involutivity.
 -/
 structure AndreevPair
     {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (A : AndreevLedger V) where
+    (A : Ledger V) where
   electron : V
   hole : V
   electron_to_hole :
@@ -86,7 +84,7 @@ structure AndreevPair
 namespace AndreevPair
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
-variable {A : AndreevLedger V}
+variable {A : Ledger V}
 
 variable (P : AndreevPair A)
 
@@ -158,7 +156,7 @@ so an energy-`ε` mode is sent to an energy-`-ε` mode.
 -/
 structure BdGHamiltonianLedger
     (V : Type*) [AddCommGroup V] [Module ℝ V]
-    extends AndreevLedger V where
+    extends Ledger V where
   /-- Real-linear BdG Hamiltonian. -/
   H : V →ₗ[ℝ] V
 
@@ -247,7 +245,7 @@ Construct a Majorana zero-mode witness from an Andreev pair, provided the
 diagonal mode is zero-energy for the supplied BdG Hamiltonian.
 -/
 def ofAndreevPair
-    (P : AndreevPair B.toAndreevLedger)
+    (P : AndreevPair B.toLedger)
     (hzero : B.IsZeroMode P.evenMajorana) :
     MajoranaZeroMode B where
   mode := P.evenMajorana
@@ -312,7 +310,7 @@ An Andreev electron/hole swap has a particle-hole fixed diagonal mode.
 -/
 theorem andreevLedgerOwnerTarget :
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
-  ∀ A : AndreevLedger V,
+  ∀ A : Ledger V,
   ∀ P : AndreevPair A,
     P.evenMajorana ∈ A.Fixed := by
   intro V _ _ A P
@@ -321,7 +319,7 @@ theorem andreevLedgerOwnerTarget :
 /-- Packet readout for an Andreev pair: the diagonal mode is fixed and self-conjugate. -/
 theorem andreevPair_majorana_packet
     {V : Type*} [AddCommGroup V] [Module ℝ V]
-    {A : AndreevLedger V} (P : AndreevPair A) :
+    {A : Ledger V} (P : AndreevPair A) :
     P.evenMajorana ∈ A.Fixed ∧
       A.theta P.evenMajorana = P.evenMajorana := by
   exact ⟨andreevLedgerOwnerTarget V A P, P.theta_evenMajorana_eq_evenMajorana⟩

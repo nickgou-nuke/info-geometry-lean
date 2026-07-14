@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Polynomial.Expand
 import Mathlib.Algebra.Ring.Parity
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.WittDworkCongruence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.WittDworkCongruence
 
 namespace Omega.SyncKernelWeighted
 

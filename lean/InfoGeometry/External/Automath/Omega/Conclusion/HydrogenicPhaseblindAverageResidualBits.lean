@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Conclusion.HydrogenicResidualAuditCapacity
+import InfoGeometry.External.Automath.Omega.Conclusion.HydrogenicResidualAuditCapacity
 
 namespace Omega.Conclusion
 

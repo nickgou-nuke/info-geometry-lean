@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
+import InfoGeometry.External.Automath.Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Data.Complex.Basic
-import Omega.SyncKernelWeighted.PrimitiveCompletionHatp
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveCompletionHatp
 
 namespace Omega.SyncKernelWeighted
 

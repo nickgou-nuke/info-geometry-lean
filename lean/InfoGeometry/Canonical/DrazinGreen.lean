@@ -12,7 +12,8 @@ algebraic obstruction statement for the canonical Drazin-Green representative:
 
 `A * (D * f) = f` iff the Drazin residue `Q_D * f` vanishes.
 
-Kernel/integral Green-function language is kept in a separate witness packet.
+Kernel/integral Green-function language is only stored as separate data unless
+a representation theorem is supplied by a stronger analytic owner.
 -/
 
 noncomputable section
@@ -135,39 +136,31 @@ theorem drazinGreen_solves_iff_residue_zero
 end Ring
 
 /--
-Analytic kernel packet for a Drazin Green operator.
+Analytic kernel data for a Drazin Green operator.
 
-This is extra structure: it says that the algebraic Drazin Green operator has a
-kernel representation on a chosen space.  The ring theorem above does not supply
-this analytic witness.
+This is extra data only: it stores a kernel candidate attached to an algebraic
+Drazin Green operator.  The ring theorem above does not prove that the kernel
+is an integral representation of the operator.
 -/
 @[rep_depth operator]
-structure DrazinGreenKernelPacket
+structure DrazinGreenKernelData
     (Space : Type*) (R : Type*) [Ring R] where
   A : R
   D : R
   index : ℕ
   hDrazin : IsDrazinInverse A D index
   GreenKernel : Space → Space → ℝ
-  kernelRepresentsGreen : Prop
-  kernelRepresentsGreen_law : kernelRepresentsGreen
 
-namespace DrazinGreenKernelPacket
+namespace DrazinGreenKernelData
 
 variable {Space : Type*} {R : Type*} [Ring R]
-variable (K : DrazinGreenKernelPacket Space R)
+variable (K : DrazinGreenKernelData Space R)
 
-/-- The packet's operator is a Drazin Green operator for its Drazin witness. -/
+/-- The stored operator is the Drazin Green operator for the stored Drazin inverse. -/
 @[rep_depth operator]
 def greenOperator : R :=
   DrazinGreenOperator K.A K.D
 
-/-- The supplied kernel representation witness is available only at this layer. -/
-@[rep_depth operator]
-theorem kernel_represents_green :
-    K.kernelRepresentsGreen :=
-    K.kernelRepresentsGreen_law
-
-end DrazinGreenKernelPacket
+end DrazinGreenKernelData
 
 end InfoGeometry.Canonical.DrazinGreen

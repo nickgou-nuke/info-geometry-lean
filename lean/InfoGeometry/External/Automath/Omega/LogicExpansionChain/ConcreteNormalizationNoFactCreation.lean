@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.NormalizationNoFactCreation
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.NormalizationNoFactCreation
 
 namespace Omega.LogicExpansionChain.ConcreteNormalizationNoFactCreation
 

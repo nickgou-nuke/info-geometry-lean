@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldBinMaxFiberExponent
-import Omega.Folding.OracleCapacityClosedForm
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinMaxFiberExponent
+import InfoGeometry.External.Automath.Omega.Folding.OracleCapacityClosedForm
 
 open Filter
 open scoped BigOperators Topology

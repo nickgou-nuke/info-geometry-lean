@@ -3,7 +3,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Algebra.Order.Field
 import Mathlib.Tactic
-import Omega.Zeta.AppOffcriticalRadiusCompression
+import InfoGeometry.External.Automath.Omega.Zeta.AppOffcriticalRadiusCompression
 
 open Filter
 open scoped Topology

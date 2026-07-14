@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart62debHologramAffineFullshiftConjugacy
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62debHologramAffineFullshiftConjugacy
 
 namespace Omega.Zeta
 

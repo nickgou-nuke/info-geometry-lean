@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
-import Omega.Folding.GaugeAnomalyQ19GaloisS19
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyQ19GaloisS19
 
 namespace Omega.Folding
 

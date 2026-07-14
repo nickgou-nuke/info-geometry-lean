@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Tactic
-import Omega.Conclusion.JGEllipseConditionNumberThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.JGEllipseConditionNumberThreshold
 
 namespace Omega.Conclusion.JGEllipseFixedEpsilonInformationBarrier
 

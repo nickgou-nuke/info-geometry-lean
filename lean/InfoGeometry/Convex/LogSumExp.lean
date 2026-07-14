@@ -97,4 +97,17 @@ theorem sum_softmax_eq_one (x : RN (n := n)) :
           rw [show (∑ i, Real.exp (x i)) = sumExp x by rfl]
           exact div_self (sumExp_pos x).ne'
 
+lemma softmax_nonneg (x : RN (n := n)) (i : n) :
+    0 ≤ softmax x i := by
+  unfold softmax
+  exact div_nonneg (le_of_lt (Real.exp_pos _)) (le_of_lt (sumExp_pos x))
+
+lemma softmax_le_one (x : RN (n := n)) (i : n) :
+    softmax x i ≤ 1 := by
+  have hnonneg : ∀ j : n, 0 ≤ softmax x j := fun j => softmax_nonneg x j
+  have hsum : ∑ j : n, softmax x j = 1 := sum_softmax_eq_one x
+  have hi_le_sum : softmax x i ≤ ∑ j : n, softmax x j := by
+    exact Finset.single_le_sum (fun j _hj => hnonneg j) (Finset.mem_univ i)
+  simpa [hsum] using hi_le_sum
+
 end InfoGeometry.Convex.LogSumExp

@@ -223,31 +223,4 @@ def RHPrimeCountingErrorLaw : Prop :=
       |(primeCounting N : ℝ) - pntCountingScale N| ≤
         C * Real.sqrt (N : ℝ) * Real.log (N : ℝ)
 
-/-- Bundle of the standard named asymptotic laws. -/
-structure PrimeDistributionAsymptoticPacket where
-  pnt_counting : PrimeNumberTheoremCountingLaw
-  chebyshev_psi : ChebyshevPsiAsymptoticLaw
-  chebyshev_theta : ChebyshevThetaAsymptoticLaw
-  residue_equidistribution : ∀ q : ℕ, 1 < q → ResidueEquidistributionLaw q
-
-namespace PrimeDistributionAsymptoticPacket
-
-/-- Re-export the PNT counting law carried by a packet. -/
-theorem pnt_counting_holds (P : PrimeDistributionAsymptoticPacket) :
-    PrimeNumberTheoremCountingLaw :=
-  P.pnt_counting
-
-/-- Re-export the Chebyshev `ψ` asymptotic law carried by a packet. -/
-theorem chebyshev_psi_holds (P : PrimeDistributionAsymptoticPacket) :
-    ChebyshevPsiAsymptoticLaw :=
-  P.chebyshev_psi
-
-/-- Re-export the residue equidistribution law carried by a packet. -/
-theorem residue_equidistribution_holds
-    (P : PrimeDistributionAsymptoticPacket) {q : ℕ} (hq : 1 < q) :
-    ResidueEquidistributionLaw q :=
-  P.residue_equidistribution q hq
-
-end PrimeDistributionAsymptoticPacket
-
 end InfoGeometry.Arithmetic.PrimeDistributionLaw

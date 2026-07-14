@@ -1,4 +1,4 @@
-import Omega.Folding.GaugeAnomalyPressure
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyPressure
 
 namespace Omega.Folding
 

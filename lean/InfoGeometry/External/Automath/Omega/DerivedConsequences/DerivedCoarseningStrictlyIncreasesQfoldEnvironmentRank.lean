@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Core.PowerInequality
-import Omega.OperatorAlgebra.DerivedCoarseningGenusSignLaw
+import InfoGeometry.External.Automath.Omega.Core.PowerInequality
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.DerivedCoarseningGenusSignLaw
 
 namespace Omega.DerivedConsequences
 

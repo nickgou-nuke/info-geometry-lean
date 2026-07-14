@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Tactic
-import Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGEllipsePrimeHomomorphism
 
 namespace Omega.GroupUnification
 

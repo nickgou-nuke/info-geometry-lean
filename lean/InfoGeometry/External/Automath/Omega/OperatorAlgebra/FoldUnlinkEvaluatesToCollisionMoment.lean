@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldWatataniIndexMoments
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMoments
 
 namespace Omega.OperatorAlgebra
 

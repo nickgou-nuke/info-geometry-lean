@@ -1,7 +1,7 @@
 import Mathlib.Data.Int.ModEq
 import Mathlib.Tactic
-import Omega.Folding.FoldCriticalResonanceConstantIntegerLadder
-import Omega.Folding.FoldMaxFiberFourier
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstantIntegerLadder
+import InfoGeometry.External.Automath.Omega.Folding.FoldMaxFiberFourier
 
 namespace Omega
 

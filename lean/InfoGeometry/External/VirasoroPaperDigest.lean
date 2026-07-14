@@ -1,4 +1,8 @@
 import Mathlib
+import InfoGeometry.External.Virasoro.Sugawara
+import InfoGeometry.External.Virasoro.AffineKacMoody
+import InfoGeometry.External.Virasoro.WittAlgebraCohomology
+import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 
 /-!

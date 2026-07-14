@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.List.Basic
 import Mathlib.Data.Nat.GCD.Basic
 import Mathlib.Tactic
-import Omega.Zeta.KilloSmithLossSpectrum
+import InfoGeometry.External.Automath.Omega.Zeta.KilloSmithLossSpectrum
 
 namespace Omega.Zeta
 

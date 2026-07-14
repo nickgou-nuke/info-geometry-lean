@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40CollisionCumulants
-import Omega.SyncKernelWeighted.RealInput40CollisionCumulantsHigher
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionCumulants
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionCumulantsHigher
 
 namespace Omega.SyncKernelWeighted
 

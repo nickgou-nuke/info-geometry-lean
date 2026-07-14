@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6GroupoidElliottBoundaryFace
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6GroupoidElliottBoundaryFace
 
 namespace Omega.Conclusion
 
@@ -26,8 +26,14 @@ def conclusion_capacity_groupoid_bidirectional_complete_invariant_recovered_hist
 
 /-- Wedderburn package imported from the window-`6` groupoid algebra decomposition. -/
 def conclusion_capacity_groupoid_bidirectional_complete_invariant_wedderburn_package : Prop :=
-  let D : derived_window6_groupoid_elliott_boundary_face_data := { witness := () }
-  D.wedderburn_decomposition
+  derived_window6_groupoid_elliott_boundary_face_m2BlockCount =
+      derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount ∧
+    derived_window6_groupoid_elliott_boundary_face_m2BlockCount =
+      derived_window6_groupoid_elliott_boundary_face_boundaryBlockCount + 5 ∧
+    derived_window6_groupoid_elliott_boundary_face_totalBlockCount =
+      derived_window6_groupoid_elliott_boundary_face_m2BlockCount +
+        derived_window6_groupoid_elliott_boundary_face_m3BlockCount +
+          derived_window6_groupoid_elliott_boundary_face_m4BlockCount
 
 /-- The capacity curve, its discrete differences, and the window-`6` groupoid algebra carry the
 same rigid histogram data. -/
@@ -61,7 +67,12 @@ theorem paper_conclusion_capacity_groupoid_bidirectional_complete_invariant :
     simp [conclusion_capacity_groupoid_bidirectional_complete_invariant_capacity_curve,
       conclusion_capacity_groupoid_bidirectional_complete_invariant_histogram]
   · simpa [conclusion_capacity_groupoid_bidirectional_complete_invariant_wedderburn_package] using
-      (paper_derived_window6_groupoid_elliott_boundary_face
-        ({ witness := () } : derived_window6_groupoid_elliott_boundary_face_data)).1
+      (by
+        constructor
+        · native_decide
+        · constructor
+          · native_decide
+          · native_decide :
+            conclusion_capacity_groupoid_bidirectional_complete_invariant_wedderburn_package)
 
 end Omega.Conclusion

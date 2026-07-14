@@ -1,6 +1,6 @@
-import Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
-import Omega.Zeta.XiTerminalZmExteriorSquareCurveGenus2
-import Omega.Zeta.XiTerminalZmS3EndoscopicHomologyA2Identification
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4JacobianPullbackKernelPrymSplitting
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmExteriorSquareCurveGenus2
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS3EndoscopicHomologyA2Identification
 
 namespace Omega.Zeta
 

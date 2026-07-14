@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Zeckendorf
 import Mathlib.Tactic
-import Omega.Folding.BinFold
-import Omega.Folding.MaxFiber
-import Omega.Folding.OstrowskiDenominators
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.Folding.OstrowskiDenominators
 
 namespace Omega.GU
 

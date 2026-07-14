@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GU.M11Canonical16ComplexModuleDetOne
+import InfoGeometry.External.Automath.Omega.GU.M11Canonical16ComplexModuleDetOne
 
 namespace Omega.GU
 

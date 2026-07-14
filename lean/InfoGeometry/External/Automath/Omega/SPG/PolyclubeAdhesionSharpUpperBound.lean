@@ -1,4 +1,4 @@
-import Omega.SPG.PolycubeAdhesion
+import InfoGeometry.External.Automath.Omega.SPG.PolycubeAdhesion
 
 namespace Omega.SPG
 

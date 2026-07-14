@@ -1,4 +1,4 @@
-import Omega.POM.FiberBiasedBernoulliPushforwardHardcore
+import InfoGeometry.External.Automath.Omega.POM.FiberBiasedBernoulliPushforwardHardcore
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.MetricTransportWitness
+import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauThermodynamics
 import Mathlib
@@ -32,7 +32,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
-open InfoGeometry.Canonical.MetricTransportWitness
+open InfoGeometry.Canonical.MetricTransport
 open InfoGeometry.Canonical.SouriauMetriplectic
 open InfoGeometry.Canonical.SouriauThermodynamics
 
@@ -237,18 +237,17 @@ theorem totalFlow_eq_add_at
 
 end SouriauMetriplecticOTFlow
 
-/--
-Compatibility gate connecting the projector-side metric transport witness and
-the probability-density transport witness.
--/
+  /--
+  Product data bundling projector-side metric transport and probability-density
+  transport.
+  -/
 @[rep_depth transport]
 structure MetricTransportCompatibility
     {R : Type*} [Ring R]
-    (P P' : ProjectorPair R)
-    (State : Type*) where
-  projectorTransport : MetricCompensatorWitness P P'
+  (P P' : ProjectorPair R)
+  (State : Type*) where
+  projectorTransport : SimilarityTransport P P'
   otWitness : OptimalTransportMetricWitness State
-  compatibility : Prop
 
 /-- The Radon-Nikodym derivative log(ρ/σ). -/
 noncomputable def logRadonNikodym (ρ σ : ℝ) : ℝ :=

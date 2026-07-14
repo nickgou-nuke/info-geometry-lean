@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldCongruenceUnitalAutomorphismRigidity
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.GMAffineInverseMajorArc
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMAffineInverseMajorArc
 
 namespace Omega.SyncKernelWeighted
 

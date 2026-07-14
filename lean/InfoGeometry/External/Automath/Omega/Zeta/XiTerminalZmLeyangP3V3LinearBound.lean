@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangP3RenormalizationHensel
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangP3RenormalizationHensel
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRefreshRewardCltVariance
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshRewardCltVariance
 
 namespace Omega.POM
 

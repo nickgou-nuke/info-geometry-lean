@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.LeyangOrthogonalDualPushforwardDensityFormula
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangOrthogonalDualPushforwardDensityFormula
 
 namespace Omega.UnitCirclePhaseArithmetic
 

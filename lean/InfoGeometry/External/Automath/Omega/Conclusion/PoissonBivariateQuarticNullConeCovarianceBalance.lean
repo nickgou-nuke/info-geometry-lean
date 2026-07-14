@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateFdivFourthOrderComplexM2
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateFdivFourthOrderComplexM2
 
 namespace Omega.Conclusion
 

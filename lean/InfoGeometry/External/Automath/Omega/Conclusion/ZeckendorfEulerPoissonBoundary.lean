@@ -2,8 +2,8 @@ import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ZeckendorfEulerSeeds
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerSeeds
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega.Conclusion
 

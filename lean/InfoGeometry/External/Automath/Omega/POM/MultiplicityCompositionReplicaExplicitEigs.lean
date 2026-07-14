@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionReplicaSoftcoreTransfer
-import Omega.POM.ReplicaSoftcoreTensorEigenbasis
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionReplicaSoftcoreTransfer
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreTensorEigenbasis
 
 namespace Omega.POM
 

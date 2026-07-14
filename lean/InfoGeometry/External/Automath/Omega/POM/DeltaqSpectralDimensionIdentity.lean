@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.DeltaqGoldenEnvelope
+import InfoGeometry.External.Automath.Omega.POM.DeltaqGoldenEnvelope
 
 namespace Omega.POM
 

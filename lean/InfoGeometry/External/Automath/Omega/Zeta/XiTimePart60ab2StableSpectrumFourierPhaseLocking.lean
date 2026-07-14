@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart60ab2StableSpectrumSelfreciprocalCenter
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab2StableSpectrumSelfreciprocalCenter
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.ZMod.Basic
 

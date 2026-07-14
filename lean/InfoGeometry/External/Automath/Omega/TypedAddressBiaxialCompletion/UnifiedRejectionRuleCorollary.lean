@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.CompletenessGapAudit
-import Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
-import Omega.TypedAddressBiaxialCompletion.UnifiedRejectionRule
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CompletenessGapAudit
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.UnifiedRejectionRule
 
 namespace Omega.TypedAddressBiaxialCompletion
 

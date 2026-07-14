@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingDualConnected
-import Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingDualConnected
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
 
 namespace Omega.DerivedConsequences
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.POM.RealInput40ZetaFactorization
-import Omega.SyncKernelWeighted.RealInput40LogMSplit
+import InfoGeometry.External.Automath.Omega.POM.RealInput40ZetaFactorization
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LogMSplit
 
 namespace Omega.POM
 

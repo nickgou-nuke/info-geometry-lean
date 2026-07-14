@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.Tactic
-import Omega.Zeta.RhStratificationSPlane
+import InfoGeometry.External.Automath.Omega.Zeta.RhStratificationSPlane
 
 namespace Omega.Zeta
 

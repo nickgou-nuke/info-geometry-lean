@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart60ab4ExactSizebiasPushforwardLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60ab4ExactSizebiasPushforwardLaw
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
 
 namespace Omega.POM
 

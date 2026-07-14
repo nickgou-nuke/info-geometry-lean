@@ -1,4 +1,4 @@
-import Omega.Folding.FoldZeroWindow6DensitySharpExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroWindow6DensitySharpExponent
 
 namespace Omega.Zeta
 

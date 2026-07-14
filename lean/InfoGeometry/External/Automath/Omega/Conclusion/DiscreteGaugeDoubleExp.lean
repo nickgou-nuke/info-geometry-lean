@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldCollisionSandwich
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionSandwich
 
 namespace Omega.Conclusion
 

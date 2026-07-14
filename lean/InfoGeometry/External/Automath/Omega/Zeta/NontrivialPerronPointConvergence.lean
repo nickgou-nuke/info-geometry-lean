@@ -1,4 +1,4 @@
-import Omega.Zeta.ClassMertensExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.ClassMertensExplicit
 
 namespace Omega.Zeta
 

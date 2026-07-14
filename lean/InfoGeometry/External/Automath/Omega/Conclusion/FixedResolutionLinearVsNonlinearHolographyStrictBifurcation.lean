@@ -1,6 +1,6 @@
-import Omega.Conclusion.BoundaryStokesStrictLinearHolography
-import Omega.Conclusion.LowTotalDegreeStokesFamilyNonseparation
-import Omega.SPG.MomentHolographyGap
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryStokesStrictLinearHolography
+import InfoGeometry.External.Automath.Omega.Conclusion.LowTotalDegreeStokesFamilyNonseparation
+import InfoGeometry.External.Automath.Omega.SPG.MomentHolographyGap
 
 namespace Omega.Conclusion
 

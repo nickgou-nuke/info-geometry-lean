@@ -16,7 +16,9 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "EndH" => E →L[ℝ] E
 
 structure ProjectiveBoundaryPacket (Q : EndH) where
-  split : DrazinChiralSplitPacket (E := E) Q
+  cones : ChiralRadiationCones E
+  gap : GapDatum Q
+  zeroMode : ZeroModeSubtractionWitness
   kms : SuperKMSEquilibriumState
 
 namespace ProjectiveBoundaryPacket
@@ -25,14 +27,14 @@ variable {Q : EndH}
 
 /-- The vacuum mode is normalized to one in the projective boundary packet. -/
 theorem vacuumMode_eq_one (B : ProjectiveBoundaryPacket Q) :
-    B.split.zeroMode.vacuumMode = 1 :=
-  B.split.zeroMode.vacuum_eq_one
+    B.zeroMode.vacuumMode = 1 :=
+  B.zeroMode.vacuum_eq_one
 
 /-- The regulated heat kernel is the vacuum-subtracted kernel. -/
 theorem regulatedHeatKernel_eq_subtract_one (B : ProjectiveBoundaryPacket Q) (t : ℝ) :
-    B.split.zeroMode.regulatedHeatKernel t =
-      B.split.zeroMode.heatKernel t - B.split.zeroMode.vacuumMode :=
-  B.split.zeroMode.regulated_eq_subtract t
+    B.zeroMode.regulatedHeatKernel t =
+      B.zeroMode.heatKernel t - B.zeroMode.vacuumMode :=
+  B.zeroMode.regulated_eq_subtract t
 
 omit [CompleteSpace E] in
 /-- The Drazin core is definitionally the kernel of the hopping operator. -/

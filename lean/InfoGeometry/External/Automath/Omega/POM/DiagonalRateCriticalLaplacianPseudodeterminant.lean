@@ -1,4 +1,4 @@
-import Omega.POM.CovarianceLaplacianPdetClosedForm
+import InfoGeometry.External.Automath.Omega.POM.CovarianceLaplacianPdetClosedForm
 
 namespace Omega.POM
 

@@ -32,7 +32,7 @@ open InfoGeometry.Convex
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C] [BraidedCategory C]
 
-/-- Mathlib's braided Yang-Baxter coherence specialized to one Fibonacci object. -/
+/-- Mathlib's braided Yang-Baxter coherence specialized to one object. -/
 theorem fibonacci_yang_baxter_iso (τ : C) :
     (α_ τ τ τ).symm ≪≫ whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫
       whiskerLeftIso τ (β_ τ τ) ≪≫ (α_ τ τ τ).symm ≪≫
@@ -42,7 +42,7 @@ theorem fibonacci_yang_baxter_iso (τ : C) :
             whiskerLeftIso τ (β_ τ τ) := by
   simpa using (CategoryTheory.BraidedCategory.yang_baxter_iso τ τ τ)
 
-/-- Mathlib's forward hexagon coherence specialized to one Fibonacci object. -/
+/-- Mathlib's forward hexagon coherence specialized to one object. -/
 theorem fibonacci_hexagon_forward_iso (τ : C) :
     α_ τ τ τ ≪≫ β_ τ (τ ⊗ τ) ≪≫ α_ τ τ τ =
       whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫ whiskerLeftIso τ (β_ τ τ) := by
@@ -68,7 +68,8 @@ variable {A : ℕ → Type uA} [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n
 variable {A_inf : Type uInf} [AddCommGroup A_inf] [Module R A_inf]
 
 omit [Invertible (2 : R)] in
-/-- Existing tensor-tower induction gives colimit commutativity. -/
+/-- Existing tensor-tower induction gives finite cone compatibility along the
+successor maps. -/
 theorem tower_psi_comp_iota_seq
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (psi : ∀ n, A n →ₗ[R] A_inf)
@@ -78,7 +79,9 @@ theorem tower_psi_comp_iota_seq
   psi_comp_iota_seq A iota A_inf psi psi_comm n m
 
 omit [Invertible (2 : R)] in
-/-- Protected tower states survive in a compatible colimit cone. -/
+/-- Stagewise nonvanishing is transported to the target map under the explicit
+kernel-lifting hypothesis. This wrapper preserves the categorical module's
+legacy API; it asserts no topology or universal-property result. -/
 theorem protected_state_survives
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (psi : ∀ n, A n →ₗ[R] A_inf)
@@ -117,7 +120,7 @@ theorem selfDual_positiveCone (K : SelfDualCone E) :
 
 /--
 Bundled theorem-only readout: braided Yang-Baxter, Zorn maximal support,
-tensor-tower colimit commutativity, tri-facet partition/idempotence, and
+finite tensor-tower cone compatibility, tri-facet partition/idempotence, and
 self-dual positive-cone equality all follow from the supplied owner hypotheses.
 -/
 theorem braided_zorn_colimit_trifacet_selfDual_readout

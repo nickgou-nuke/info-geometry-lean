@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Core.CoprimeSMul
+import InfoGeometry.External.Automath.Omega.Core.CoprimeSMul
 
 namespace Omega.POM
 

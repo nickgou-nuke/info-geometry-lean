@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.ChebyshevDworkCongruenceChain
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.ChebyshevDworkCongruenceChain
 
 namespace Omega.SyncKernelWeighted
 

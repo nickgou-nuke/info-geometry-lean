@@ -1,4 +1,4 @@
-import Omega.GroupUnification.UniversalQuadraticCoefficient
+import InfoGeometry.External.Automath.Omega.GroupUnification.UniversalQuadraticCoefficient
 
 namespace Omega.GroupUnification
 

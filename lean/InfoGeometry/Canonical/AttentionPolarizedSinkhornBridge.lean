@@ -53,6 +53,15 @@ theorem polarizedPlusAttentionMatrix_nonneg
     (queries := queries) (ctx := ctx) (β := β) (i := i) (j := j)]
   exact gibbsWeight_nonneg (polarizedPlusParams (E := E) (V := V) (queries i) ctx) β j
 
+omit [AddCommMonoid V] [Module ℝ V] in
+-- theorem-class: closure
+/-- Every entry of a polarized split attention matrix is bounded by one. -/
+theorem polarizedPlusAttentionMatrix_le_one
+    (queries : Fin n → E) (ctx : ContextWindow n E V) (β : ℝ) (i j : Fin n) :
+    polarizedPlusAttentionMatrix (E := E) (V := V) queries ctx β i j ≤ 1 := by
+  rw [polarizedPlusAttentionMatrix_apply]
+  exact polarizedPlusAttentionWeights_le_one (E := E) (V := V) (queries i) ctx β j
+
 -- theorem-class: closure
 /-- Every query row of the polarized split attention matrix is normalized. -/
 theorem polarizedPlusAttentionMatrix_row_sum_one

@@ -1,4 +1,4 @@
-import Omega.Conclusion.FibadicDepthRadialOperatorTraceDeterminant
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicDepthRadialOperatorTraceDeterminant
 
 namespace Omega.Conclusion
 

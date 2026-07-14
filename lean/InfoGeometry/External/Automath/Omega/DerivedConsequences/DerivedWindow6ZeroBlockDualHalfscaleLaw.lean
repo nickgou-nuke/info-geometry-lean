@@ -2,10 +2,10 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.NumberTheory.Divisors
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6ZeroSetMultiplicativeHalfExponent
-import Omega.Folding.FoldZeroHalfIndexMultiple6
-import Omega.Folding.FoldZeroWindow6DensitySharpExponent
-import Omega.Folding.StableSyntax
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6ZeroSetMultiplicativeHalfExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroWindow6DensitySharpExponent
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntax
 
 open Filter Topology
 open scoped goldenRatio

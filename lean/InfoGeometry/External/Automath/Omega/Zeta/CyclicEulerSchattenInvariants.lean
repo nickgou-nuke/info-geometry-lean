@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.CyclicEulerSpectralRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicEulerSpectralRigidity
 
 namespace Omega.Zeta
 

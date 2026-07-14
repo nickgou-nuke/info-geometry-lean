@@ -1,4 +1,4 @@
-import Omega.Zeta.ClassFunctionAdamsMobius
+import InfoGeometry.External.Automath.Omega.Zeta.ClassFunctionAdamsMobius
 
 open scoped BigOperators
 

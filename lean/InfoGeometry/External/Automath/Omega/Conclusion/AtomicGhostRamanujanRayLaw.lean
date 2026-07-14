@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.NumberTheory.Divisors
 import Mathlib.Tactic
-import Omega.Conclusion.AtomicPrimitiveRamanujanVisibilityLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.AtomicPrimitiveRamanujanVisibilityLaw
 
 open scoped BigOperators
 

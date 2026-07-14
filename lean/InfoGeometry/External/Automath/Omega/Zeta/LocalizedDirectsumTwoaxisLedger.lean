@@ -1,5 +1,5 @@
-import Omega.CircleDimension.CircleDim
-import Omega.Zeta.LocalizedDirectsumMatrixIsomorphismCriterion
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedDirectsumMatrixIsomorphismCriterion
 
 namespace Omega.Zeta
 

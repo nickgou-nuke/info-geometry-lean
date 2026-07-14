@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum
 
 open scoped BigOperators
 

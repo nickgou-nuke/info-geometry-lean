@@ -1,7 +1,7 @@
 import Mathlib.Data.Multiset.Basic
 import Mathlib.Tactic
-import Omega.Zeta.SmithEntropyInvertsVpInvariants
-import Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
+import InfoGeometry.External.Automath.Omega.Zeta.SmithEntropyInvertsVpInvariants
+import InfoGeometry.External.Automath.Omega.Zeta.XiSmithLossDiscreteCurvatureAtoms
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiRealInput40ZeroTempCoreAbelConstantSplitting
+import InfoGeometry.External.Automath.Omega.Zeta.XiRealInput40ZeroTempCoreAbelConstantSplitting
 
 namespace Omega.Zeta
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
-import Omega.SyncKernelWeighted.RealInput40PrimeArtinSplitting
-import Omega.SyncKernelWeighted.RealInput40PrimitiveLucasSimplified
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimeArtinSplitting
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40PrimitiveLucasSimplified
 
 namespace Omega.SyncKernelWeighted
 

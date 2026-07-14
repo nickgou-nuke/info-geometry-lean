@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Mul
 import Mathlib.Tactic
-import Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4V4PrymA2PolarizedIsogenyRigidity
 
 namespace Omega.Folding
 

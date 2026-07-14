@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldEscortSqrtCircleArc
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortSqrtCircleArc
 
 namespace Omega.Conclusion
 

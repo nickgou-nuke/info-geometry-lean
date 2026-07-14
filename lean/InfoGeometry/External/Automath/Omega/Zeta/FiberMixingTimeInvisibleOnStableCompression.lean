@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.FiberUniformizationMarkovSemigroupExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.FiberUniformizationMarkovSemigroupExplicit
 
 namespace Omega.Zeta
 

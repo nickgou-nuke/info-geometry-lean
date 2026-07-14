@@ -1,5 +1,5 @@
-import Omega.Folding.HammingDist
-import Omega.Folding.FiberFusion
+import InfoGeometry.External.Automath.Omega.Folding.HammingDist
+import InfoGeometry.External.Automath.Omega.Folding.FiberFusion
 import Mathlib.Tactic
 
 namespace Omega.POM

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.DiscSquareSubstitutionSplit
-import Omega.SyncKernelWeighted.PrimitiveCompletionHatp
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.DiscSquareSubstitutionSplit
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveCompletionHatp
 
 namespace Omega.SyncKernelWeighted
 

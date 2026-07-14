@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Factorization.Basic
-import Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
+import InfoGeometry.External.Automath.Omega.CircleDimension.LissajousPhaseCirclePrimeLedgerKernel
 
 namespace Omega.CircleDimension
 

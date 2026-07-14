@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.Tactic
-import Omega.POM.MomentMinreal
-import Omega.POM.RmomSound
+import InfoGeometry.External.Automath.Omega.POM.MomentMinreal
+import InfoGeometry.External.Automath.Omega.POM.RmomSound
 
 namespace Omega.POM
 

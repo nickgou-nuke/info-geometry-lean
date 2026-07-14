@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.SoftcoreFixedMQrecurrenceAnnihilator
+import InfoGeometry.External.Automath.Omega.Conclusion.SoftcoreFixedMQrecurrenceAnnihilator
 
 namespace Omega.Conclusion
 

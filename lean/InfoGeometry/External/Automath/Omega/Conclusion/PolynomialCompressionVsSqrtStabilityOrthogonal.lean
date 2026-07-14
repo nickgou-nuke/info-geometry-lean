@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SublinearExcitationFilterInsufficient
-import Omega.POM.PartitionMonomialsSymmetricPowerRealizationBound
+import InfoGeometry.External.Automath.Omega.Conclusion.SublinearExcitationFilterInsufficient
+import InfoGeometry.External.Automath.Omega.POM.PartitionMonomialsSymmetricPowerRealizationBound
 
 namespace Omega.Conclusion
 

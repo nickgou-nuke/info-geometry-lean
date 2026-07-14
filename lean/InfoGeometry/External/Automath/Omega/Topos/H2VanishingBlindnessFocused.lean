@@ -1,4 +1,4 @@
-import Omega.Topos.H2VanishingBlindness
+import InfoGeometry.External.Automath.Omega.Topos.H2VanishingBlindness
 
 namespace Omega.Topos
 

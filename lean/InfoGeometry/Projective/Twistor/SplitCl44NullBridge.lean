@@ -1,4 +1,4 @@
-import InfoGeometry.Projective.Twistor.Basic
+import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.SplitCl44NullBoundary
 
 /-!

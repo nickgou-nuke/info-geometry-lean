@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalFixedOrderFreezingThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalFixedOrderFreezingThreshold
 
 namespace Omega.Zeta
 

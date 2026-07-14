@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.CertificateLoop
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CertificateLoop
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
 
 namespace Omega.TypedAddressBiaxialCompletion
 

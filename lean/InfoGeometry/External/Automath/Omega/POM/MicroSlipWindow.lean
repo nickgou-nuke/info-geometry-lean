@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.MicrostateResidualWindowReachability
-import Omega.POM.IprojGapExact
-import Omega.POM.IprojMaxent
+import InfoGeometry.External.Automath.Omega.Folding.MicrostateResidualWindowReachability
+import InfoGeometry.External.Automath.Omega.POM.IprojGapExact
+import InfoGeometry.External.Automath.Omega.POM.IprojMaxent
 
 namespace Omega.POM
 

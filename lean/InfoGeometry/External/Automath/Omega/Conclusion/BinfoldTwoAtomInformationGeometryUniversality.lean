@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldbinLikelihoodRatioTwoAtomTransfer
 
 namespace Omega.Conclusion
 

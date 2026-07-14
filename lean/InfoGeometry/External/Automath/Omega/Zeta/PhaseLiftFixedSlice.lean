@@ -1,4 +1,4 @@
-import Omega.Zeta.UnitaryDeterminantZeroUnitCircle
+import InfoGeometry.External.Automath.Omega.Zeta.UnitaryDeterminantZeroUnitCircle
 
 namespace Omega.Zeta
 

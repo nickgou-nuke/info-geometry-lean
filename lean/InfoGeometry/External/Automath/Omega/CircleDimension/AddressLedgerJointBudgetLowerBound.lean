@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PrefixResidualRegisterCapacity
+import InfoGeometry.External.Automath.Omega.CircleDimension.PrefixResidualRegisterCapacity
 
 namespace Omega.CircleDimension
 

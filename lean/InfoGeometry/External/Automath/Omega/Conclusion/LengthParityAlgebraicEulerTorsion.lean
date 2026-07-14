@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.SyncKernelWeighted.RealInput40LengthMertens
-import Omega.SyncKernelWeighted.RealInput40LengthSignL1
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LengthMertens
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40LengthSignL1
 
 namespace Omega.Conclusion
 

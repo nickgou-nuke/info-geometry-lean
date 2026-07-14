@@ -1,7 +1,7 @@
-import Omega.Zeta.HankelDiscriminantUnavoidableBadPrimes
-import Omega.Zeta.XiHankelExplicitGoodPrimeBound
-import Omega.Zeta.XiHankelFinitefieldDeterministicCompletion
-import Omega.Zeta.XiHankelFinitefieldRandomCompletionLasVegasExpected
+import InfoGeometry.External.Automath.Omega.Zeta.HankelDiscriminantUnavoidableBadPrimes
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelExplicitGoodPrimeBound
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelFinitefieldDeterministicCompletion
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelFinitefieldRandomCompletionLasVegasExpected
 
 namespace Omega.Conclusion
 

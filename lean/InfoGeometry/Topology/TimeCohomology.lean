@@ -74,9 +74,6 @@ The integer time readout associated with a chosen winding-number packet.
 def time_readout (M : MonodromyWinding) : ℤ :=
   M.winding_number
 
-@[simp] theorem time_readout_eq_winding_number (M : MonodromyWinding) :
-  time_readout M = M.winding_number := rfl
-
 /--
 Tautological existence of an integer time label equal to the recorded winding.
 

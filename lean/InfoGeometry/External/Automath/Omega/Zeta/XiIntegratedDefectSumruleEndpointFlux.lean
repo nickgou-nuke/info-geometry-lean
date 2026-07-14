@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiComovingJensenDefectKernelDecomposition
-import Omega.Zeta.XiLimitDefectPotentialL1Sumrule
-import Omega.Zeta.XiSingleDefectIntegratedClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingJensenDefectKernelDecomposition
+import InfoGeometry.External.Automath.Omega.Zeta.XiLimitDefectPotentialL1Sumrule
+import InfoGeometry.External.Automath.Omega.Zeta.XiSingleDefectIntegratedClosedForm
 
 namespace Omega.Zeta
 

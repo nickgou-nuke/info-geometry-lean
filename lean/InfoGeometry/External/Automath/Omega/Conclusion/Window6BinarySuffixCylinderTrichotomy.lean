@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingOneParameterSubgroups
 
 open scoped BigOperators
 

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Zeta.LocalizedIntegersNoUniformFinitelyGeneratedLedger
-import Omega.Zeta.XiTimePart9saUniformBaselineFixedBinaryExperiment
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersNoUniformFinitelyGeneratedLedger
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9saUniformBaselineFixedBinaryExperiment
 
 namespace Omega.Conclusion
 

@@ -4,7 +4,6 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
 set_option autoImplicit false
-set_option linter.dupNamespace false
 
 /-!
 # InfoGeometry.Modular.PSL2Z
@@ -12,7 +11,7 @@ set_option linter.dupNamespace false
 #### BUCKET 1: CLOSED FINITE THEOREMS
 [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 [det2_neg, det2_mul, SL2Z neg/mul closure, R_refl, R_symm, R_trans,
- PSL2Z_setoid, mul_compat, PSL2Z_mul, PSL2Z_mk_neg_eq_mk]
+ projectiveSetoid, mul_compat, mul, mk_neg_eq_mk]
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
@@ -140,15 +139,15 @@ lemma R_trans {A B C : SL2Z} (hAB : R A B) (hBC : R B C) :
       rw [hAB, hBC]
       simp
 
-def PSL2Z_setoid : Setoid SL2Z where
+def projectiveSetoid : Setoid SL2Z where
   r := R
   iseqv := ⟨R_refl, @R_symm, @R_trans⟩
 
-def PSL2Z : Type :=
-  Quotient PSL2Z_setoid
+def Carrier : Type :=
+  Quotient projectiveSetoid
 
-def PSL2Z_mk (A : SL2Z) : PSL2Z :=
-  Quotient.mk PSL2Z_setoid A
+def mk (A : SL2Z) : Carrier :=
+  Quotient.mk projectiveSetoid A
 
 lemma mul_compat {A₁ A₂ B₁ B₂ : SL2Z}
     (hA : R A₁ A₂) (hB : R B₁ B₂) :
@@ -167,23 +166,23 @@ lemma mul_compat {A₁ A₂ B₁ B₂ : SL2Z}
     rw [hA, hB]
     exact SL2Z.neg_mul_neg A₂ B₂
 
-def PSL2Z_mul : PSL2Z → PSL2Z → PSL2Z :=
+def mul : Carrier → Carrier → Carrier :=
   Quotient.map₂
     (fun A B : SL2Z => A * B)
     (by
       intro A₁ A₂ hA B₁ B₂ hB
       exact mul_compat hA hB)
 
-instance : Mul PSL2Z where
-  mul := PSL2Z_mul
+instance : Mul Carrier where
+  mul := mul
 
 @[simp]
-theorem PSL2Z_mul_mk (A B : SL2Z) :
-    PSL2Z_mk (A * B) = PSL2Z_mk A * PSL2Z_mk B := by
+theorem mul_mk (A B : SL2Z) :
+    mk (A * B) = mk A * mk B := by
   rfl
 
-theorem PSL2Z_mk_neg_eq_mk (A : SL2Z) :
-    PSL2Z_mk (-A) = PSL2Z_mk A := by
+theorem mk_neg_eq_mk (A : SL2Z) :
+    mk (-A) = mk A := by
   exact Quotient.sound (Or.inr rfl)
 
 end InfoGeometry.Modular.PSL2Z

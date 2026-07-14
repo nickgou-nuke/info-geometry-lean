@@ -1,8 +1,8 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Tactic
-import Omega.EA.FoldGroupoidAut0RationalCohomology
-import Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.EA.FoldGroupoidAut0RationalCohomology
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
 
 namespace Omega.EA
 

@@ -54,46 +54,46 @@ structure GysinPortDatum (E B A : Type*) [AddCommGroup A] where
 structure GysinDegreeDatum (E B A : Type*) [AddCommGroup A] extends GysinPortDatum E B A where
   degree : ℤ
 
-def gysin_trivial_Epage {E B : Type*} {n : ℕ} (_HB : True) (_f : E → B)
-  (_e : True) (_A : Type*) [AddCommGroup _A] (r : ℕ) (p q : ℤ) (hq : q ≠ 0)
+def gysin_trivial_Epage {n : ℕ} (_A : Type*) [AddCommGroup _A]
+  (r : ℕ) (p q : ℤ) (hq : q ≠ 0)
   (hq' : q ≠ (n + 1 : ℤ)) :
     GysinTrivialEpageIndex n :=
   ⟨r, p, q, hq, hq'⟩
 
-def gysin_trivial_Epage2 {E B : Type*} {n : ℕ} (_HB : True) (_f : E → B)
-  (_e : True) (_A : Type*) [AddCommGroup _A] (r : ℕ) (p q : ℤ)
+def gysin_trivial_Epage2 {n : ℕ} (_A : Type*) [AddCommGroup _A]
+  (r : ℕ) (p q : ℤ)
   (hq : q > (n + 1 : ℤ)) :
     GysinAboveSphereRowIndex n :=
   ⟨r, p, q, hq⟩
 
-def gysin_sequence' {E B : Type*} {n : ℕ} (_HB : True) (f : E → B)
-  (_e : True) (A : Type*) [AddCommGroup A] : GysinPortDatum E B A :=
+def gysin_sequence' {E B : Type*} {n : ℕ} (f : E → B)
+  (A : Type*) [AddCommGroup A] : GysinPortDatum E B A :=
   ⟨n, f⟩
 
-def gysin_sequence'_zero {E B : Type*} {n : ℕ} (_HB : True) (f : E → B)
-  (_e : True) (A : Type*) [AddCommGroup A] (m : ℤ) :
+def gysin_sequence'_zero {E B : Type*} {n : ℕ} (f : E → B)
+  (A : Type*) [AddCommGroup A] (m : ℤ) :
     GysinDegreeDatum E B A :=
   ⟨⟨n, f⟩, m + n⟩
 
-def gysin_sequence'_one {E B : Type*} {n : ℕ} (_HB : True) (f : E → B)
-  (_e : True) (A : Type*) [AddCommGroup A] (m : ℤ) :
+def gysin_sequence'_one {E B : Type*} {n : ℕ} (f : E → B)
+  (A : Type*) [AddCommGroup A] (m : ℤ) :
     GysinDegreeDatum E B A :=
   ⟨⟨n, f⟩, m - 1⟩
 
-def gysin_sequence'_two {E B : Type*} {n : ℕ} (_HB : True) (f : E → B)
-  (_e : True) (A : Type*) [AddCommGroup A] (m : ℤ) :
+def gysin_sequence'_two {E B : Type*} {n : ℕ} (f : E → B)
+  (A : Type*) [AddCommGroup A] (m : ℤ) :
     GysinDegreeDatum E B A :=
   ⟨⟨n, f⟩, m + n + 1⟩
 
 @[simp]
-theorem gysin_trivial_Epage_row {E B : Type*} {n : ℕ} (HB : True) (f : E → B)
-  (e : True) (A : Type*) [AddCommGroup A] (r : ℕ) (p q : ℤ) (hq : q ≠ 0)
+theorem gysin_trivial_Epage_row {n : ℕ}
+  (A : Type*) [AddCommGroup A] (r : ℕ) (p q : ℤ) (hq : q ≠ 0)
   (hq' : q ≠ (n + 1 : ℤ)) :
-    (gysin_trivial_Epage HB f e A r p q hq hq').row = q :=
+    (gysin_trivial_Epage A r p q hq hq').row = q :=
   rfl
 
 @[simp]
-theorem gysin_sequence'_projection {E B : Type*} {n : ℕ} (HB : True) (f : E → B)
-  (e : True) (A : Type*) [AddCommGroup A] :
-    (gysin_sequence' (n := n) HB f e A).projection = f :=
+theorem gysin_sequence'_projection {E B : Type*} {n : ℕ} (f : E → B)
+  (A : Type*) [AddCommGroup A] :
+    (gysin_sequence' (n := n) f A).projection = f :=
   rfl

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.ShiftDynamics
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 namespace Omega.POM
 

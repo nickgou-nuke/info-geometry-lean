@@ -250,7 +250,7 @@ structure HodgeSummary where
   b1Hodge  : Nat  -- cross-check via Laplacian
   traceΔ0  : Rat  -- sum of vertex degrees (= 2 × edges)
   diracDim : Nat  -- dimension of the Dirac matrix
-  deriving Repr
+  deriving Repr, DecidableEq
 
 def hodgeSummary {α} [BEq α] [Hashable α] (tc : TwoComplex α) : HodgeSummary :=
   let n0 := tc.base.toGraph.nodes.size

@@ -1,5 +1,5 @@
 import Mathlib.Data.ZMod.Basic
-import Omega.Conclusion.FibadicProfiniteCollapseToZhat
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicProfiniteCollapseToZhat
 
 namespace Omega.Conclusion
 

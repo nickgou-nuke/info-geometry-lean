@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateAbsorbingFundamentalMatrixRankone
-import Omega.POM.DiagonalRateAbsorbingHitPGF
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingFundamentalMatrixRankone
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingHitPGF
 
 namespace Omega.POM
 

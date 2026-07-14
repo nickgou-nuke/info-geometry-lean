@@ -1,6 +1,6 @@
-import Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
-import Omega.EA.PrimeRegisterNormalFormUniqueness
-import Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterNormalFormUniqueness
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
 
 namespace Omega.EA
 

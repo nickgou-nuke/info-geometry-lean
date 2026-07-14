@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.FoldMultiplicityGroupAlgebra
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FoldMultiplicityGroupAlgebra
 
 namespace Omega.Folding
 

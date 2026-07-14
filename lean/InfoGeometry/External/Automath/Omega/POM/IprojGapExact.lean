@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.KLPythagorasUniform
+import InfoGeometry.External.Automath.Omega.POM.KLPythagorasUniform
 
 namespace Omega.POM
 

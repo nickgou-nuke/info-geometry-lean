@@ -1,6 +1,6 @@
 import Mathlib.Data.Set.Image
 import Mathlib.Tactic
-import Omega.Conclusion.SerrinSupportScreenRankAtmostOne
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinSupportScreenRankAtmostOne
 
 namespace Omega.Conclusion
 

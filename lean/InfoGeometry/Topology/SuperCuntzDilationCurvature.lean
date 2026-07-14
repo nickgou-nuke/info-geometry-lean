@@ -153,13 +153,6 @@ theorem qDeficit_zero_of_q_one_and_flat_volume
     qDeficit P = 0 := by
   simp [qDeficit, qWarpedVolume, hq, hvol]
 
-/-- Read back the explicit entropy-driven deficit hypothesis. -/
-theorem qDeficit_eq_entropy_of_drive
-    (P : SuperCuntzDilationPacket N Op)
-    (hdrive : IsEntropyDrivenDeficit P) :
-    qDeficit P = entropy_production P.flow :=
-  hdrive
-
 /-- Entropy-driven q-deficit equals `d_ln_Q` once the flow commutator is supplied. -/
 theorem qDeficit_eq_dlnQ_of_entropy_drive
     (P : SuperCuntzDilationPacket N Op)
@@ -171,6 +164,13 @@ theorem qDeficit_eq_dlnQ_of_entropy_drive
     qDeficit P = P.flow.d_ln_Q := by
   rw [hdrive]
   exact de_rham_potential_equals_entropy_production_of_commutator P.flow hcomm
+
+/-- Read back the explicit entropy-driven deficit hypothesis. -/
+theorem qDeficit_eq_entropy_of_drive
+    (P : SuperCuntzDilationPacket N Op)
+    (hdrive : IsEntropyDrivenDeficit P) :
+    qDeficit P = entropy_production P.flow :=
+  hdrive
 
 namespace DelaunayReadout
 

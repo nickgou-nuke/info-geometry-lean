@@ -1,4 +1,4 @@
-import Omega.Zeta.XiZGAbelResidueLogDensity
+import InfoGeometry.External.Automath.Omega.Zeta.XiZGAbelResidueLogDensity
 
 namespace Omega.Zeta
 

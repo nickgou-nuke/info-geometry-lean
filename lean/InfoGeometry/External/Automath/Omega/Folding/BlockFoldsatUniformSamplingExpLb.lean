@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.List.OfFn
 import Mathlib.Tactic
-import Omega.Folding.BlockReservoirEncoding
+import InfoGeometry.External.Automath.Omega.Folding.BlockReservoirEncoding
 
 namespace Omega.Folding
 

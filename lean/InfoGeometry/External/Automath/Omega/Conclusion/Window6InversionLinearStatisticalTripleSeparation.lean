@@ -1,6 +1,6 @@
-import Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
-import Omega.Conclusion.Window6NoLinearFactorization
-import Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityOrderedSpectrumInfoNCEEquivalence
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6NoLinearFactorization
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Topology.MetricSpace.PiNat
-import Omega.SPG.Cylinder
+import InfoGeometry.External.Automath.Omega.SPG.Cylinder
 
 namespace Omega.SPG
 

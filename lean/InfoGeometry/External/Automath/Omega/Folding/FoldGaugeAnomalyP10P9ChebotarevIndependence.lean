@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Folding.FoldGaugeAnomalyP10P9LinearDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10P9LinearDisjointness
 
 namespace Omega.Folding
 

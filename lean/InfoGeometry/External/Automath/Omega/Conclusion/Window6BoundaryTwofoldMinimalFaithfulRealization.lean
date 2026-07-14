@@ -1,5 +1,5 @@
-import Omega.Folding.FoldBinBoundaryCenterZ2
-import Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinBoundaryCenterZ2
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedWindow6BoundaryParityDirectFactorRefinement
 
 namespace Omega.Conclusion
 

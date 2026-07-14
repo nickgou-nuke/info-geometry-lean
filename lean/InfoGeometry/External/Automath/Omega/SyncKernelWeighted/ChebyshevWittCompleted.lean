@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.PrimitiveCompletionHatp
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PrimitiveCompletionHatp
 
 namespace Omega.SyncKernelWeighted
 

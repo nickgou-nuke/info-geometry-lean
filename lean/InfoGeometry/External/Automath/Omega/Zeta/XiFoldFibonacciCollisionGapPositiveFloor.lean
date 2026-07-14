@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
-import Omega.Zeta.Window6MicrostateBiasedFiberlawHerglotzClosedform
+import InfoGeometry.External.Automath.Omega.Zeta.AuditedEvenFirstCapacityKinkFibonacciJump
+import InfoGeometry.External.Automath.Omega.Zeta.Window6MicrostateBiasedFiberlawHerglotzClosedform
 
 namespace Omega.Zeta
 

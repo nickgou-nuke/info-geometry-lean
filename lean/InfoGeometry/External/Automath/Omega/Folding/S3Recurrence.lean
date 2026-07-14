@@ -1,4 +1,4 @@
-import Omega.Folding.EWTTelescope
+import InfoGeometry.External.Automath.Omega.Folding.EWTTelescope
 
 namespace Omega
 

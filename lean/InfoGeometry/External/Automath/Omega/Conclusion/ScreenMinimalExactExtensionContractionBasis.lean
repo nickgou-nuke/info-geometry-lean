@@ -1,6 +1,6 @@
 import Mathlib.Logic.Equiv.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ScreenDeficitUnitDescentChain
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenDeficitUnitDescentChain
 
 namespace Omega.Conclusion
 

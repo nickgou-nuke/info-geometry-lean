@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.CoprimeLedgerPrimorialOptimality
-import Omega.POM.PrimeDeterminantAbelianizationFactorization
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.POM.PrimeDeterminantAbelianizationFactorization
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.HiddenBitJumpCollisionIsomorphism
+import InfoGeometry.External.Automath.Omega.POM.HiddenBitJumpCollisionIsomorphism
 
 namespace Omega.POM
 

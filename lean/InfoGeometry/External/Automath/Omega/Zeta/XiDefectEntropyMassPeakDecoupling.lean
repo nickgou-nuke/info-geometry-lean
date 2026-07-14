@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Order.Floor.Ring
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiDefectEntropyPeakCompressibilityExtremal
+import InfoGeometry.External.Automath.Omega.Zeta.XiDefectEntropyPeakCompressibilityExtremal
 
 namespace Omega.Zeta
 

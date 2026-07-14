@@ -1,4 +1,4 @@
-import Omega.Zeta.XiPwNoContinuousHair
+import InfoGeometry.External.Automath.Omega.Zeta.XiPwNoContinuousHair
 
 namespace Omega.Zeta
 

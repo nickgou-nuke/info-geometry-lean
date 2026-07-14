@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.AmbiguityShellNilpotentIndexEqualsWindow
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellNilpotentIndexEqualsWindow
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.DerivedConsequences.DerivedPrimeLengthCompletedFrobeniusCollapse
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedPrimeLengthCompletedFrobeniusCollapse
 
 namespace Omega.Conclusion
 

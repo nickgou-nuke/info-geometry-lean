@@ -4,8 +4,8 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.Entropy
-import Omega.POM.SufficientStatisticResidualNoninvertibility
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.POM.SufficientStatisticResidualNoninvertibility
 
 namespace Omega.Conclusion
 

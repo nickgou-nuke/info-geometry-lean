@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CayleyChebyshevMode
-import Omega.CircleDimension.ModeParityVanish
+import InfoGeometry.External.Automath.Omega.CircleDimension.CayleyChebyshevMode
+import InfoGeometry.External.Automath.Omega.CircleDimension.ModeParityVanish
 
 namespace Omega.CircleDimension
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityLambdaqDerivativeGibbs
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityLambdaqDerivativeGibbs
 
 namespace Omega.POM
 

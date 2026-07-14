@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.VisibleNegativeSpectrumVandermondeEnergy
+import InfoGeometry.External.Automath.Omega.Conclusion.VisibleNegativeSpectrumVandermondeEnergy
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.IntegerBudgetCurveCompleteProfile
+import InfoGeometry.External.Automath.Omega.Conclusion.IntegerBudgetCurveCompleteProfile
 
 namespace Omega.Conclusion
 

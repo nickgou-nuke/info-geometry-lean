@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberPosteriorEquivalenceFibonacciGauge
+import InfoGeometry.External.Automath.Omega.POM.FiberPosteriorEquivalenceFibonacciGauge
 
 namespace Omega.POM
 

@@ -2,7 +2,7 @@ import Mathlib.Analysis.Calculus.Deriv.Abs
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Tactic
-import Omega.Conclusion.LeyangRho456WallPotentialIdentities
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangRho456WallPotentialIdentities
 
 namespace Omega.Conclusion
 

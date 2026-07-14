@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityMicrocanonicalEntropy
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityMicrocanonicalEntropy
 
 namespace Omega.POM
 

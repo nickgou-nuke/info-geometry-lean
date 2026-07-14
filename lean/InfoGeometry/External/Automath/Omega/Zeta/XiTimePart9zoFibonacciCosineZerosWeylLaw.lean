@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiFoldResonanceZeroCountSelfsimilarLinear
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldResonanceZeroCountSelfsimilarLinear
 
 namespace Omega.Zeta
 

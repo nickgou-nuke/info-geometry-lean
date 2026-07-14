@@ -1,4 +1,4 @@
-import Omega.Zeta.HankelVandermonde3Recovery
+import InfoGeometry.External.Automath.Omega.Zeta.HankelVandermonde3Recovery
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic

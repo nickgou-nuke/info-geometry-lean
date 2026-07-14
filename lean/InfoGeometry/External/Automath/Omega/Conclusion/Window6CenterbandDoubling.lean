@@ -1,4 +1,4 @@
-import Omega.Conclusion.Window6SigmaGeoFourblockNormalForm
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6SigmaGeoFourblockNormalForm
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
-import Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersConnectedRationalBlindness
 
 namespace Omega.Zeta
 

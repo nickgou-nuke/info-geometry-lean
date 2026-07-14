@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.EA.Wedderburn
-import Omega.OperatorAlgebra.FoldFiberNormalizerWreath
+import InfoGeometry.External.Automath.Omega.EA.Wedderburn
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldFiberNormalizerWreath
 
 namespace Omega.EA
 

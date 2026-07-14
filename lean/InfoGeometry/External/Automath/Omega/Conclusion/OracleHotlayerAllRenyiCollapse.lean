@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalEscortAllRenyiCollapse
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalEscortAllRenyiCollapse
 
 namespace Omega.Conclusion
 

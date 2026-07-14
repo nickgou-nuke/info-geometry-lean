@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.RealInputDefectEntropy
-import Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
-import Omega.SyncKernelWeighted.RealInput40ResetWord
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInputDefectEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40InputMemoryMarginal
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ResetWord
 
 namespace Omega.SyncKernelRealInput
 

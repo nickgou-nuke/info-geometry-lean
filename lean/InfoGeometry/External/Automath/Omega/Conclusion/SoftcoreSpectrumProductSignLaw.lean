@@ -1,4 +1,4 @@
-import Omega.Conclusion.SpectrumSignLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.SpectrumSignLaw
 
 namespace Omega.Conclusion
 

@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedLeyangCubicModelsCommonQuadraticResolvent
-import Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
-import Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
-import Omega.Zeta.XiTimePart9gLeyangCubicDiscriminant
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedLeyangCubicModelsCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmKappaSquareCubicFieldS3
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangSharedArtinRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9gLeyangCubicDiscriminant
 
 namespace Omega.DerivedConsequences
 

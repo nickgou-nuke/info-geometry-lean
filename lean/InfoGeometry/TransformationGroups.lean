@@ -41,12 +41,11 @@ lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
     (p : FinProb α)
     (hall : ∀ a b : α, p a = p b) :
     ∀ a : α, p a = 1 / (Fintype.card α : ℝ≥0∞) := by
-  classical
-  let a0 : α := Classical.choice (by infer_instance : Nonempty α)
-  let c : ℝ≥0∞ := p a0
+  intro a
+  let c : ℝ≥0∞ := p a
   have hc : ∀ a : α, p a = c := by
-    intro a
-    exact hall a a0
+    intro b
+    exact hall b a
   have hsum : (∑ a : α, p a) = (Fintype.card α : ℝ≥0∞) * c := by
     simp [hc, Finset.sum_const, nsmul_eq_mul]
   have hcard : (Fintype.card α : ℝ≥0∞) ≠ 0 := by
@@ -67,7 +66,6 @@ lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
         (Fintype.card α : ℝ≥0∞)⁻¹ := by
       simpa [mul_assoc] using hEq'
     simpa [hcancel] using hEq''
-  intro a
   calc
     p a = c := hc a
     _ = 1 / (Fintype.card α : ℝ≥0∞) := by

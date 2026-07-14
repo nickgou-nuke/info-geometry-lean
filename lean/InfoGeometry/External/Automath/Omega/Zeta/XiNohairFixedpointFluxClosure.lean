@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiEndpointPoissonWeightScaling
+import InfoGeometry.External.Automath.Omega.Zeta.XiEndpointPoissonWeightScaling
 
 namespace Omega.Zeta
 

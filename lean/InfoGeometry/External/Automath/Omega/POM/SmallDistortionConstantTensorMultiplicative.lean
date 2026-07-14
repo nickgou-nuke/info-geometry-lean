@@ -1,4 +1,4 @@
-import Omega.POM.RenyiHalfHellingerTensorAdditivity
+import InfoGeometry.External.Automath.Omega.POM.RenyiHalfHellingerTensorAdditivity
 
 namespace Omega.POM
 

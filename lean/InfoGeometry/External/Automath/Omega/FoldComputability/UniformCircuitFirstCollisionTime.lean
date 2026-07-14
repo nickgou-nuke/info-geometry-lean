@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.FoldComputability.HaltingNoUniformLearning
+import InfoGeometry.External.Automath.Omega.FoldComputability.HaltingNoUniformLearning
 
 namespace Omega.FoldComputability
 

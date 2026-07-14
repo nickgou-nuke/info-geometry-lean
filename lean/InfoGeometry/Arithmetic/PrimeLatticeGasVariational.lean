@@ -105,69 +105,6 @@ theorem grandPartition_eq_one_add_pow_primeSiteCount
     grandPartition M Z = (1 + Z.z) ^ primeSiteCount M := by
   rw [grandPartition_eq_closed, grandPartitionClosed, fintype_card_PrimeSites]
 
-/-! ## 3. Variational explicit-formula witness sockets -/
-
-/-- Witness packet for `\pi(M;\sigma)` and `\Omega(M;\sigma)`. -/
-structure PrimeCountingVariationalModel where
-  /-- Lattice cutoff. -/
-  M : ℕ
-  /-- Selected real part / variational parameter. -/
-  sigma : ℝ
-  /-- Supplied prime-counting approximation. -/
-  piApprox : ℝ
-  /-- Supplied approximate grand potential. -/
-  grandPotentialApprox : ℝ
-  /-- Guardrail: this packet is not an RH proof. -/
-  noRHClaimWitness : Type*
-  ExplicitFormulaHolds : Prop
-  ExtremumHolds : Prop
-  explicit_formula_law : ExplicitFormulaHolds
-  extremum_law : ExtremumHolds
-
-namespace PrimeCountingVariationalModel
-
-/-- Debt surface for the missing explicit-formula theorem. -/
-theorem explicitFormula_holds
-    (V : PrimeCountingVariationalModel) :
-    V.ExplicitFormulaHolds :=
-  V.explicit_formula_law
-
-/-- Debt surface for the missing variational-extremum theorem. -/
-theorem extremum_holds
-    (V : PrimeCountingVariationalModel) :
-    V.ExtremumHolds :=
-  V.extremum_law
-
-end PrimeCountingVariationalModel
-
-/-- `\sigma = 1/2` witness packet. -/
-structure VariationalCriticalLineGate where
-  /-- Selected variational parameter. -/
-  selectedSigma : ℝ
-  /-- Supplied certificate that the selected parameter is `1 / 2`. -/
-  selectedSigma_eq_half : selectedSigma = 1 / 2
-  /-- Guardrail: this gate is not an RH proof. -/
-  noRHClaimWitness : Type*
-
-/-- `\sigma = 1/2`. -/
-theorem selectedSigma_eq_half
-    (G : VariationalCriticalLineGate) :
-    G.selectedSigma = 1 / 2 :=
-  G.selectedSigma_eq_half
-
-/-- `\mathcal C_M` plus optional variational witnesses. -/
-structure PrimeLatticeGasVariationalPacket where
-  /-- Finite cutoff. -/
-  M : ℕ
-  /-- Fugacity data. -/
-  fugacity : Fugacity
-  /-- Optional supplied explicit-formula/variational model. -/
-  variationalModel : Option PrimeCountingVariationalModel
-  /-- Optional supplied critical-line selection gate. -/
-  criticalLineGate : Option VariationalCriticalLineGate
-  /-- Guardrail: no Euler-product zeta bridge is claimed here. -/
-  notEulerProductBridgeWitness : Type*
-
 /-- `H(q) \le H(\mathrm{gibbs})` on the zero-feature Jaynes feasible set. -/
 theorem primeLatticeGas_zeroFeature_entropy_maximizer
     (M : ℕ) :

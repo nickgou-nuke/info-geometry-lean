@@ -95,18 +95,6 @@ theorem dikin_metric_stability_in_core
   simpa [dikinMetricDistance, P_core] using
     sys.core_positive_definite x h_nonzero
 
-/--
-Bundled finite Dikin/Drazin closure: the Drazin core is idempotent, the null
-sector completes the identity, and the Dikin metric is positive on every
-nonzero core projection.
--/
-theorem dikin_drazin_closure_packet :
-    sys.P_core ∘L sys.P_core = sys.P_core ∧
-      sys.P_core + sys.P_null = ContinuousLinearMap.id ℂ E ∧
-      ∀ x : E, sys.P_core x ≠ 0 → 0 < dikinMetricDistance sys (sys.P_core x) :=
-  ⟨sys.coreProjector_idempotent, sys.core_null_partition,
-    sys.dikin_metric_stability_in_core⟩
-
 end DikinDrazinSystem
 
 end InfoGeometry.Canonical.DikinDrazinBridge

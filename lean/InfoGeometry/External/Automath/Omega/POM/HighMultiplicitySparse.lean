@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega.POM
 

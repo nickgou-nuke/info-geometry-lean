@@ -38,11 +38,13 @@ modeled in `RingCat` or `AlgebraCat` natively. Instead, we model the finite
 algebraic stages as a filtered functor `F : J ⥤ ModuleCat R` and define the
 continuum carrier as `colimit F`.
 
-The multiplication layer is kept theorem-honest: this file does not assert an
-automatic tensor/filtered-colimit descent theorem. It packages a descended
-bilinear multiplication as explicit witness data, together with compatibility
-against the finite-stage colimit injections. From that witness, finite
-nilpotence relations transport to the categorical colimit.
+The generic multiplication layer remains conditional because a family of
+stagewise bilinear maps alone does not imply compatibility with the bonding
+maps. This file packages the resulting operation only when that compatibility
+and descent have been supplied. The concrete sequential Zorn tower proves the
+bonding compatibility and performs the two tensor-colimit descents natively in
+`InfoGeometry.Categorical.ZornUHFColimit`; its `colimit_mul_ι_same_stage`
+theorem is the finite-stage readback authority.
 
 ## Audit Protocol Map
 
@@ -54,10 +56,10 @@ nilpotence relations transport to the categorical colimit.
     multiplication on the colimit.
   - `colimit_square_zero_of_stage`: finite square-zero relations transport
     through the witnessed colimit multiplication.
-- **BUCKET 3: OPEN CLOSURE DEBT**:
-  - Prove the multiplication witness from Mathlib's tensor/filtered-colimit API
-    for concrete Zorn towers, then optionally install a `NonUnitalNonAssocRing`
-    or algebra instance.
+- **BUCKET 3: GENERIC CLOSURE DEBT**:
+  - Replace this compatibility wrapper for arbitrary filtered index categories
+    by explicit bonding naturality and a generic two-variable tensor descent.
+  - The concrete sequential Zorn tower is already closed in `ZornUHFColimit`.
 -/
 
 namespace InfoGeometry.Categorical.ZornBraidColimit

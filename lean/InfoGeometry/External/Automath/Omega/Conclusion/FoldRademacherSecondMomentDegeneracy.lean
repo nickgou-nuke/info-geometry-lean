@@ -1,4 +1,4 @@
-import Omega.Conclusion.FoldWalshTotalChargeParsevalDegeneracy
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldWalshTotalChargeParsevalDegeneracy
 
 namespace Omega.Conclusion
 

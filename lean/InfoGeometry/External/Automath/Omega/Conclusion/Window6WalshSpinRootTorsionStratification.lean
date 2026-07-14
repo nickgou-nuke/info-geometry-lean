@@ -1,7 +1,7 @@
-import Omega.Conclusion.Window6AnomalyToralQuotientMod2Recovery
-import Omega.Conclusion.Window6CoxeterSpectrumRootCountRecovery
-import Omega.Conclusion.Window6MinimalFiberSpinHypercube
-import Omega.Conclusion.Window6PinnedDatumToralCompletionEightsector
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6AnomalyToralQuotientMod2Recovery
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6CoxeterSpectrumRootCountRecovery
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalFiberSpinHypercube
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6PinnedDatumToralCompletionEightsector
 
 namespace Omega.Conclusion
 

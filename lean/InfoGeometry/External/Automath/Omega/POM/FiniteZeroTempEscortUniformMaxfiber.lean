@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FrozenEscortTvRigidity
-import Omega.POM.EscortMaxfiberTvBound
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenEscortTvRigidity
+import InfoGeometry.External.Automath.Omega.POM.EscortMaxfiberTvBound
 
 namespace Omega.POM
 

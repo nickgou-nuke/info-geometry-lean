@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.ReadUsDeterministicTristate
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ReadUsDeterministicTristate
 
 namespace Omega.Zeta
 

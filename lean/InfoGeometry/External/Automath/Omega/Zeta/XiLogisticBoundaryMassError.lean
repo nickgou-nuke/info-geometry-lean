@@ -1,4 +1,4 @@
-import Omega.Zeta.XiLogisticMulticlassMapError
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogisticMulticlassMapError
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
 

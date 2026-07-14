@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHellingerToeplitzDense2xLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerToeplitzDense2xLaw
 
 namespace Omega.Zeta
 

@@ -1,10 +1,10 @@
-import Omega.CircleDimension.BornPairing
-import Omega.CircleDimension.CompositeHilbertCarrier
-import Omega.CircleDimension.ContinuousSpectrumRepresentation
-import Omega.CircleDimension.ContinuousUnitaryGroup
-import Omega.CircleDimension.DiscreteUnitaryEvolution
-import Omega.CircleDimension.Entanglement
-import Omega.CircleDimension.QuantumChannels
+import InfoGeometry.External.Automath.Omega.CircleDimension.BornPairing
+import InfoGeometry.External.Automath.Omega.CircleDimension.CompositeHilbertCarrier
+import InfoGeometry.External.Automath.Omega.CircleDimension.ContinuousSpectrumRepresentation
+import InfoGeometry.External.Automath.Omega.CircleDimension.ContinuousUnitaryGroup
+import InfoGeometry.External.Automath.Omega.CircleDimension.DiscreteUnitaryEvolution
+import InfoGeometry.External.Automath.Omega.CircleDimension.Entanglement
+import InfoGeometry.External.Automath.Omega.CircleDimension.QuantumChannels
 
 namespace Omega.CircleDimension
 

@@ -50,4 +50,16 @@ theorem artin_relations_readout {K V : Type*} [Semiring K] [AddCommMonoid V] [Mo
     AdjacentBraidLaw ρ ∧ FarBraidLaw ρ :=
   hρ
 
+/-- The explicit Artin predicate exposes the adjacent braid law directly. -/
+theorem artin_adjacent_readout {K V : Type*} [Semiring K] [AddCommMonoid V] [Module K V]
+    (ρ : ArtinBraidRepData K V) (hρ : IsArtinBraidRep ρ) :
+    AdjacentBraidLaw ρ :=
+  (artin_relations_readout ρ hρ).1
+
+/-- The explicit Artin predicate exposes the far-commutativity law directly. -/
+theorem artin_far_readout {K V : Type*} [Semiring K] [AddCommMonoid V] [Module K V]
+    (ρ : ArtinBraidRepData K V) (hρ : IsArtinBraidRep ρ) :
+    FarBraidLaw ρ :=
+  (artin_relations_readout ρ hρ).2
+
 end InfoGeometry.Topology.ArtinBraid

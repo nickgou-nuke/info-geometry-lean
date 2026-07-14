@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCdimLambdaClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLambdaClosedForm
 
 namespace Omega.Zeta
 

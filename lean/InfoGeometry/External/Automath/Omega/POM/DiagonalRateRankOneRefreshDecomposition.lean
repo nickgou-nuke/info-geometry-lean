@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateKeepResampleChannel
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateKeepResampleChannel
 
 namespace Omega.POM
 

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LucasNormalizedHankelDiscreteCurvature
-import Omega.Conclusion.SmithPrimepowerHessianInversion
-import Omega.Conclusion.SmithRamanujanShadowSeeds
+import InfoGeometry.External.Automath.Omega.Conclusion.LucasNormalizedHankelDiscreteCurvature
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithPrimepowerHessianInversion
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithRamanujanShadowSeeds
 
 namespace Omega.Conclusion
 

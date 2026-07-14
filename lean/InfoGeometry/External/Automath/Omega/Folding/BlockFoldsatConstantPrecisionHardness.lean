@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.BlockFoldsatNpComplete
+import InfoGeometry.External.Automath.Omega.Folding.BlockFoldsatNpComplete
 
 namespace Omega.Folding
 

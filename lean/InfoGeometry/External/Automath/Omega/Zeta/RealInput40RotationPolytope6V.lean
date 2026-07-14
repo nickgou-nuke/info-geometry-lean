@@ -1,6 +1,6 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Zeta.RealInput40RotationPolytopeShear
+import InfoGeometry.External.Automath.Omega.Zeta.RealInput40RotationPolytopeShear
 
 namespace Omega.Zeta
 

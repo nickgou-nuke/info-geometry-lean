@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppCayleyUpperhalfDisk
 
 namespace Omega.Zeta
 

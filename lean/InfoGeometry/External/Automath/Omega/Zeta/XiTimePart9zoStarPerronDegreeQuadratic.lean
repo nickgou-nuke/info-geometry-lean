@@ -1,7 +1,7 @@
 import Mathlib
-import Omega.POM.MomentMinreal
-import Omega.POM.StarMomentKernelCompression
-import Omega.Zeta.HankelRankMinimalLinearRealization
+import InfoGeometry.External.Automath.Omega.POM.MomentMinreal
+import InfoGeometry.External.Automath.Omega.POM.StarMomentKernelCompression
+import InfoGeometry.External.Automath.Omega.Zeta.HankelRankMinimalLinearRealization
 
 namespace Omega.Zeta
 

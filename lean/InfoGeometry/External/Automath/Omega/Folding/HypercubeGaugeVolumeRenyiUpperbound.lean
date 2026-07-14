@@ -1,5 +1,5 @@
-import Omega.Folding.BinGaugeVolume
-import Omega.Folding.FiberEntropySaturation
+import InfoGeometry.External.Automath.Omega.Folding.BinGaugeVolume
+import InfoGeometry.External.Automath.Omega.Folding.FiberEntropySaturation
 
 namespace Omega.Folding
 

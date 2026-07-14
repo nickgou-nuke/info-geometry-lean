@@ -1,4 +1,4 @@
-import Omega.Folding.CircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.CircleDimension
 
 namespace Omega.CircleDimension
 

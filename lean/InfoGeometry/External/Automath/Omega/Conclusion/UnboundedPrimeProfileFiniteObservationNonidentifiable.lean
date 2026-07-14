@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.AdelicStokesH1RecoversCdimPrimeProfile
+import InfoGeometry.External.Automath.Omega.Conclusion.AdelicStokesH1RecoversCdimPrimeProfile
 
 namespace Omega.Conclusion
 

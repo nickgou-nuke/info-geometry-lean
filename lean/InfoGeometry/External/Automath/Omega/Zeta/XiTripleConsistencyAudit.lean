@@ -1,6 +1,6 @@
-import Omega.LogicExpansionChain.ConcreteSemanticFidelity
-import Omega.Zeta.HankelDeterminantalRadicalEqRigidity
-import Omega.Zeta.LocalizedIntegersPadicKernelRigidity
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.ConcreteSemanticFidelity
+import InfoGeometry.External.Automath.Omega.Zeta.HankelDeterminantalRadicalEqRigidity
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersPadicKernelRigidity
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.ComovingHankel
-import Omega.TypedAddressBiaxialCompletion.CommonDefectKernel
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ComovingHankel
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.CommonDefectKernel
 
 namespace Omega.TypedAddressBiaxialCompletion
 

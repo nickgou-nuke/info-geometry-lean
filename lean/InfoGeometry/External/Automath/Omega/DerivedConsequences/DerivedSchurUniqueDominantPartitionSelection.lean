@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DerivedSchurTopLayerCriterion
+import InfoGeometry.External.Automath.Omega.POM.DerivedSchurTopLayerCriterion
 
 namespace Omega.DerivedConsequences
 

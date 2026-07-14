@@ -35,6 +35,77 @@ structure Herm2x2OsQ where
 
 namespace Herm2x2OsQ
 
+def zero : Herm2x2OsQ := ⟨0, 0, 0⟩
+instance : Zero Herm2x2OsQ := ⟨zero⟩
+
+def add (X Y : Herm2x2OsQ) : Herm2x2OsQ :=
+  ⟨X.xp + Y.xp, X.xm + Y.xm, X.z + Y.z⟩
+instance : Add Herm2x2OsQ := ⟨add⟩
+
+def neg (X : Herm2x2OsQ) : Herm2x2OsQ := ⟨-X.xp, -X.xm, -X.z⟩
+instance : Neg Herm2x2OsQ := ⟨neg⟩
+
+def smul (c : ℚ) (X : Herm2x2OsQ) : Herm2x2OsQ :=
+  ⟨c * X.xp, c * X.xm, c • X.z⟩
+instance : SMul ℚ Herm2x2OsQ := ⟨smul⟩
+
+@[simp] theorem zero_xp : (0 : Herm2x2OsQ).xp = 0 := rfl
+@[simp] theorem zero_xm : (0 : Herm2x2OsQ).xm = 0 := rfl
+@[simp] theorem zero_z : (0 : Herm2x2OsQ).z = 0 := rfl
+@[simp] theorem add_xp (X Y : Herm2x2OsQ) : (X + Y).xp = X.xp + Y.xp := rfl
+@[simp] theorem add_xm (X Y : Herm2x2OsQ) : (X + Y).xm = X.xm + Y.xm := rfl
+@[simp] theorem add_z (X Y : Herm2x2OsQ) : (X + Y).z = X.z + Y.z := rfl
+@[simp] theorem neg_xp (X : Herm2x2OsQ) : (-X).xp = -X.xp := rfl
+@[simp] theorem neg_xm (X : Herm2x2OsQ) : (-X).xm = -X.xm := rfl
+@[simp] theorem neg_z (X : Herm2x2OsQ) : (-X).z = -X.z := rfl
+@[simp] theorem smul_xp (c : ℚ) (X : Herm2x2OsQ) : (c • X).xp = c * X.xp := rfl
+@[simp] theorem smul_xm (c : ℚ) (X : Herm2x2OsQ) : (c • X).xm = c * X.xm := rfl
+@[simp] theorem smul_z (c : ℚ) (X : Herm2x2OsQ) : (c • X).z = c • X.z := rfl
+
+@[ext] theorem ext {X Y : Herm2x2OsQ}
+    (hxp : X.xp = Y.xp) (hxm : X.xm = Y.xm) (hz : X.z = Y.z) : X = Y := by
+  cases X
+  cases Y
+  simp_all
+
+instance : AddCommGroup Herm2x2OsQ where
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  add_assoc X Y Z := by
+    cases X; cases Y; cases Z
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.add, SplitO.add, add_assoc]
+  zero_add X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.zero, Herm2x2OsQ.add, SplitO.zero, SplitO.add]
+  add_zero X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.zero, Herm2x2OsQ.add, SplitO.zero, SplitO.add]
+  neg_add_cancel X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.zero, Herm2x2OsQ.add, Herm2x2OsQ.neg, SplitO.zero, SplitO.add, SplitO.neg]
+  add_comm X Y := by
+    cases X; cases Y
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.add, SplitO.add, add_comm]
+
+instance : Module ℚ Herm2x2OsQ where
+  one_smul X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, SplitO.smul]
+  mul_smul c d X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, SplitO.smul, mul_assoc]
+  smul_zero c := by
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, Herm2x2OsQ.zero, SplitO.smul, SplitO.zero]
+  smul_add c X Y := by
+    cases X; cases Y
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, Herm2x2OsQ.add, SplitO.smul, SplitO.add, mul_add]
+  add_smul c d X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, Herm2x2OsQ.add, SplitO.smul, SplitO.add, add_mul]
+  zero_smul X := by
+    cases X
+    apply Herm2x2OsQ.ext <;> simp [Herm2x2OsQ.smul, Herm2x2OsQ.zero, SplitO.smul, SplitO.zero]
+
 /-- Determinant: det(X) = ξ₊·ξ₋ - ‖Z‖².  This is the (5,5) quadratic form. -/
 def det (X : Herm2x2OsQ) : ℚ :=
   X.xp * X.xm - SplitO.norm X.z

@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.ComplementaryGoldenBernoulliDivergence
+import InfoGeometry.External.Automath.Omega.POM.ComplementaryGoldenBernoulliDivergence
 
 namespace Omega.POM
 

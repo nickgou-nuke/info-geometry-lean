@@ -1,10 +1,10 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
-import Omega.UnitCirclePhaseArithmetic.EndpointOrthogonalDecomposition
-import Omega.Zeta.OffcriticalQuadraticRadialCompression
-import Omega.Zeta.XiOffsetNullTypeSafety
-import Omega.Zeta.XiUniqueContinuousTransverseRegister
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppEndpointBlaschkeRadialAbsorption
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointOrthogonalDecomposition
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalQuadraticRadialCompression
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsetNullTypeSafety
+import InfoGeometry.External.Automath.Omega.Zeta.XiUniqueContinuousTransverseRegister
 
 namespace Omega.Zeta
 

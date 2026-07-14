@@ -1,4 +1,4 @@
-import Omega.EA.KernelGroundStateUniversalityClasses
+import InfoGeometry.External.Automath.Omega.EA.KernelGroundStateUniversalityClasses
 
 namespace Omega.EA
 

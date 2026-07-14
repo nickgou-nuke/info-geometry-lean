@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterKStretchDensityCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterKStretchDensityCriterion
 
 namespace Omega.Conclusion
 

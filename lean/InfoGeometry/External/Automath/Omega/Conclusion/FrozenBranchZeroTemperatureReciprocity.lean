@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FrozenBranchTwoScalarClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenBranchTwoScalarClosure
 
 namespace Omega.Conclusion
 

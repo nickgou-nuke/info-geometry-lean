@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalGamma6DiameterSimpleSpectrum
+import InfoGeometry.External.Automath.Omega.GU.TerminalGamma6DiameterSimpleSpectrum
 
 namespace Omega.GU
 

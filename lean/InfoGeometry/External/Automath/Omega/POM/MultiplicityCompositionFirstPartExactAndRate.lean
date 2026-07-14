@@ -1,5 +1,5 @@
-import Omega.POM.MultiplicityCompositionExactConditionalIid
-import Omega.POM.MultiplicityCompositionPartition
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionExactConditionalIid
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionPartition
 
 namespace Omega.POM
 

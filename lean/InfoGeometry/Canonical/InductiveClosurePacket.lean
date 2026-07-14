@@ -1,11 +1,15 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
+import InfoGeometry.OperatorAlgebra.SupergradedClosure
+import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.InductiveClosurePacket
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
+open InfoGeometry.OperatorAlgebra.SupergradedClosure
+open InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 
 /--
 The inductive chain representing the local-to-global hierarchy.

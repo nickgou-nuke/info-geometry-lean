@@ -20,11 +20,11 @@ deriving DecidableEq
 
 structure DepNode where
   name : String
-  certificateFields : List CertificateField
+  fields : List InspectionField
   dependencies : List (String × EdgeLabel)
 
 def DepNode.toDeclaration (n : DepNode) : InspectedDeclaration :=
-  ⟨n.name, n.certificateFields⟩
+  ⟨n.name, n.fields⟩
 
 def DepNode.passes (n : DepNode) : Bool :=
   VacuityCritic.passes n.toDeclaration
@@ -32,11 +32,11 @@ def DepNode.passes (n : DepNode) : Bool :=
 def DepNode.hasHoleEdge (n : DepNode) : Bool :=
   n.dependencies.any fun (_, label) => label == EdgeLabel.hole
 
-def DepNode.hasCertificateHole (n : DepNode) : Bool :=
+def DepNode.hasInspectionHole (n : DepNode) : Bool :=
   n.passes == false
 
 def DepNode.hasAnyHole (n : DepNode) : Bool :=
-  n.hasCertificateHole || n.hasHoleEdge
+  n.hasInspectionHole || n.hasHoleEdge
 
 structure PipelineState where
   nodes : List DepNode
@@ -51,7 +51,7 @@ lemma passes_ignores_deps (n : DepNode) (deps : List (String × EdgeLabel)) :
 /-! Section 2: Pipeline Stage Signatures -/
 
 def stage_extractDAG (declarations : List String) : List DepNode :=
-  declarations.map fun name => { name, certificateFields := [], dependencies := [] }
+  declarations.map fun name => { name, fields := [], dependencies := [] }
 
 def stage_orient (dag : List DepNode) : List DepNode :=
   dag.map fun node =>
@@ -65,9 +65,9 @@ def stage_detect (dag : List DepNode) : List String :=
 
 def stage_verdict (holes : List String) : String :=
   if holes.isEmpty then
-    "All declarations pass inspection. No certificate holes detected."
+    "All declarations pass inspection. No inspection holes detected."
   else
-    " Detected " ++ toString holes.length ++ " certificate hole(s): "
+    " Detected " ++ toString holes.length ++ " inspection hole(s): "
       ++ holes.foldl (fun acc h => acc ++ h ++ " ") ""
 
 def runPipeline (declarations : List String) : PipelineState :=
@@ -79,8 +79,9 @@ def runPipeline (declarations : List String) : PipelineState :=
 
 /-! Section 3: Stable Bridge Theorem -/
 
-theorem spec_bridge_holds (r : InspectedDeclaration) :
-    VacuityCritic.passes r = true := sorry
+theorem empty_inspection_fails (name : String) :
+    VacuityCritic.passes ({ name := name, fields := [] } : InspectedDeclaration) = false := by
+  exact VacuityCritic.passes_empty_fields name
 
 lemma length_filter_eq_sum_map_bool {alpha : Type} (l : List alpha) (p : alpha -> Bool) :
     (l.filter p).length = (l.map (fun x => if p x then (1 : Nat) else 0)).sum := by
@@ -93,16 +94,28 @@ lemma length_filter_eq_sum_map_bool {alpha : Type} (l : List alpha) (p : alpha -
       · have hp' : p h = false := Bool.eq_false_iff.mpr hp
         simp [hp', ih]
 
+lemma detect_extract_orient_eq_self (declarations : List String) :
+    stage_detect (stage_orient (stage_extractDAG declarations)) = declarations := by
+  induction declarations with
+  | nil =>
+      simp [stage_extractDAG, stage_orient, stage_detect]
+  | cons head tail ih =>
+      simpa [stage_extractDAG, stage_orient, stage_detect, DepNode.hasAnyHole,
+        DepNode.hasInspectionHole, DepNode.hasHoleEdge, DepNode.passes,
+        DepNode.toDeclaration, VacuityCritic.passes,
+        InspectedDeclaration.hasInspectablePayload,
+        InspectedDeclaration.fieldsPass] using congrArg (List.cons head) ih
+
 lemma detect_eq_filter_not_pass (declarations : List String) :
     stage_detect (stage_orient (stage_extractDAG declarations)) =
-    declarations.filter fun s => not (passes (⟨s, []⟩ : InspectedDeclaration)) := by
-  simp [stage_extractDAG, stage_orient, stage_detect, DepNode.hasAnyHole,
-    DepNode.hasCertificateHole, DepNode.hasHoleEdge, DepNode.passes,
-    DepNode.toDeclaration, VacuityCritic.passes]
+    declarations.filter fun s => not (passes ({ name := s, fields := [] } : InspectedDeclaration)) := by
+  rw [detect_extract_orient_eq_self]
+  simp [VacuityCritic.passes, InspectedDeclaration.hasInspectablePayload,
+    InspectedDeclaration.fieldsPass]
 
 /-! Section 4: Missing Theorem Holes
 (spec_total_holes_agrees, tri_facet_unified, exact_coexact_annihilate,
 delta_projector_eq_causal_delta) require delta_proj, detect, d, delta, O
-from a certificate-detector / scalar-causal module not yet implemented. -/
+from an inspection-detector / scalar-causal module not yet implemented. -/
 
 end InfoGeometry.Tooling.PipelineSpec

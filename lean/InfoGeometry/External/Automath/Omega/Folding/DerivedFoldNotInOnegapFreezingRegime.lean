@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.DerivedFoldTopTwoSameSlope
+import InfoGeometry.External.Automath.Omega.Folding.DerivedFoldTopTwoSameSlope
 
 namespace Omega
 

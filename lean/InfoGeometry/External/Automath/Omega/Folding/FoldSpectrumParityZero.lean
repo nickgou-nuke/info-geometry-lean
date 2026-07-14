@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldMultiplicityGroupAlgebra
+import InfoGeometry.External.Automath.Omega.Folding.FoldMultiplicityGroupAlgebra
 
 open scoped BigOperators
 

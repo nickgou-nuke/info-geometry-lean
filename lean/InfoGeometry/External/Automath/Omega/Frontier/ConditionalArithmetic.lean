@@ -1,6 +1,6 @@
-import Omega.Frontier.ConditionalSPG
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.FiberRing
+import InfoGeometry.External.Automath.Omega.Frontier.ConditionalSPG
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.FiberRing
 
 namespace Omega.Frontier
 

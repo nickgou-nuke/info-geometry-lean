@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloVisibleEntropyDensityAreaControl
-import Omega.SPG.PrimeRegisterBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.Folding.KilloVisibleEntropyDensityAreaControl
+import InfoGeometry.External.Automath.Omega.SPG.PrimeRegisterBudgetLowerBound
 
 namespace Omega.Folding
 

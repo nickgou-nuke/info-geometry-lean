@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.Zeta.AppOffcriticalRadiusCompression
-import Omega.Zeta.XiJensenSingleRadiusBandExclusion
+import InfoGeometry.External.Automath.Omega.Zeta.AppOffcriticalRadiusCompression
+import InfoGeometry.External.Automath.Omega.Zeta.XiJensenSingleRadiusBandExclusion
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.BoundaryM10B3C3RigidFourBlockSplit
+import InfoGeometry.External.Automath.Omega.GU.BoundaryM10B3C3RigidFourBlockSplit
 
 namespace Omega.GU
 

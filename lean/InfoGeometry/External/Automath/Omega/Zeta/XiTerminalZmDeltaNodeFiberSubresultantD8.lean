@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangDeltaNodePreimageR10Wreath
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangDeltaNodePreimageR10Wreath
 
 namespace Omega.Zeta
 

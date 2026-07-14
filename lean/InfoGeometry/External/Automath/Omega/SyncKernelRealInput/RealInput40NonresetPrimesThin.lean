@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SyncKernelRealInput.RealInputDefectEntropy
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInputDefectEntropy
 
 namespace Omega.SyncKernelRealInput
 

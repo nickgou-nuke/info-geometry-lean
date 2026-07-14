@@ -16,6 +16,7 @@ import DAG.Impact
 import DAG.JsonInstances
 import DAG.KernelExtract
 import DAG.MatrixRepresentation
+import DAG.PHOASExpressionLayerWalk
 import DAG.SCC
 import DAG.Search
 import DAG.SearchCore

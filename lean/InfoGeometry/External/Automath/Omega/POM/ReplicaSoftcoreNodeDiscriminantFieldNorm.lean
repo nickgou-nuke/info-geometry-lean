@@ -1,4 +1,4 @@
-import Omega.POM.ReplicaSoftcoreAlternatingVandermondeFibonacciProduct
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcoreAlternatingVandermondeFibonacciProduct
 
 namespace Omega.POM
 

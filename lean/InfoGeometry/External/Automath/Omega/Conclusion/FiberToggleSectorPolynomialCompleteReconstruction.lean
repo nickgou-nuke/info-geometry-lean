@@ -1,8 +1,8 @@
 import Mathlib.Data.Int.Fib.Lemmas
 import Mathlib.Tactic
-import Omega.Conclusion.FiberToggleBooleanSpectrumPolynomial
-import Omega.POM.FiberReconstructionAutGroup
-import Omega.POM.FiberReconstructionCartesianProduct
+import InfoGeometry.External.Automath.Omega.Conclusion.FiberToggleBooleanSpectrumPolynomial
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionAutGroup
+import InfoGeometry.External.Automath.Omega.POM.FiberReconstructionCartesianProduct
 
 namespace Omega.Conclusion
 

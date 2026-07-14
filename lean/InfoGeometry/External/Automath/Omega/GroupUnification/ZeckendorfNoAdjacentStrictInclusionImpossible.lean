@@ -1,6 +1,6 @@
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Finset.Basic
-import Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
 
 namespace Omega.GroupUnification
 

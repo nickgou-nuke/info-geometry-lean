@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ShiftCommutingAlgorithmsPolynomial
+import InfoGeometry.External.Automath.Omega.Conclusion.ShiftCommutingAlgorithmsPolynomial
 
 namespace Omega.Conclusion
 

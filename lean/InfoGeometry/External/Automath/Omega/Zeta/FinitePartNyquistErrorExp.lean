@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.FinitePartNyquistParsevalAliasing
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartNyquistParsevalAliasing
 
 namespace Omega.Zeta
 

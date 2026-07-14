@@ -474,15 +474,19 @@ theorem charPoly_factorized_native (A : Matrix (Fin n) (Fin n) ℂ) :
       simp
     simpa [r, hcard] using (Multiset.length_toList r)
 
-/-- Native constructor for the factorization packet. -/
-noncomputable def ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) : CharPolyFactorizationPacket n := by
-  classical
-  let h := charPoly_factorized_native (n := n) A
-  refine
-    { A := A
-      roots := Classical.choose h
-      factorization := (Classical.choose_spec h).1
-      length_eq := (Classical.choose_spec h).2 }
+/-- Native existence theorem for the factorization packet. -/
+theorem exists_factorizationPacket_ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) :
+    ∃ P : CharPolyFactorizationPacket n,
+      P.A = A ∧
+      charPoly P.A = P.roots.foldr (fun a p => (X - C a) * p) 1 ∧
+      P.roots.length = n := by
+  rcases charPoly_factorized_native (n := n) A with ⟨roots, hfactor, hlen⟩
+  exact
+    ⟨{ A := A
+       roots := roots
+       factorization := hfactor
+       length_eq := hlen },
+      rfl, hfactor, hlen⟩
 
 /-- Projection corresponding to AFP `char_poly_factorized`. -/
 theorem charPoly_factorized {n : Nat} (P : CharPolyFactorizationPacket n) :

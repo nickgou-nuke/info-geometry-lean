@@ -160,21 +160,31 @@ def trivialOperatorSurface (V : Type*) [AddCommGroup V] [Module ℝ V] : Operato
   Em := 0
   G1 := 0
   G2 := 0
-  H_even := sorry
-  Ep_even := sorry
-  Em_even := sorry
-  G1_odd := sorry
-  G2_odd := sorry
-  H_Ep := sorry
-  H_Em := sorry
-  Ep_Em := sorry
-  H_G1 := sorry
-  H_G2 := sorry
-  Ep_G2 := sorry
-  Em_G1 := sorry
-  G1_G1 := sorry
-  G2_G2 := sorry
-  G1_G2 := sorry
+  H_even := by simp
+  Ep_even := by simp
+  Em_even := by simp
+  G1_odd := by simp
+  G2_odd := by simp
+  H_Ep := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  H_Em := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  Ep_Em := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  H_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  H_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  Ep_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  Em_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.commutator]
+  G1_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
+  G2_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
+  G1_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
 
 end OperatorSurface
 

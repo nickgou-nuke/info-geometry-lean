@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.AnomalyFunctorialSplittingObstructionRge2Tor
+import InfoGeometry.External.Automath.Omega.CircleDimension.AnomalyFunctorialSplittingObstructionRge2Tor
 
 namespace Omega.CircleDimension
 

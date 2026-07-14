@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.SpecialFunctions.Stirling
 import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 import Mathlib.Tactic
-import Omega.Conclusion.ZeckendorfEulerReindexing
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeckendorfEulerReindexing
 
 open scoped BigOperators
 

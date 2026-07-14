@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.TwoParamDisjointnessFullSpectrumSecular
-import Omega.Zeta.XiTwoParamDisjointnessResultantIntegerFibonacci
+import InfoGeometry.External.Automath.Omega.Zeta.TwoParamDisjointnessFullSpectrumSecular
+import InfoGeometry.External.Automath.Omega.Zeta.XiTwoParamDisjointnessResultantIntegerFibonacci
 
 namespace Omega.Zeta
 

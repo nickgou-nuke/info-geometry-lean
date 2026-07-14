@@ -1,5 +1,5 @@
 import Mathlib.Data.Matrix.Action
-import Omega.Folding.StableSyntaxTerminalRecursion
+import InfoGeometry.External.Automath.Omega.Folding.StableSyntaxTerminalRecursion
 
 open Matrix
 

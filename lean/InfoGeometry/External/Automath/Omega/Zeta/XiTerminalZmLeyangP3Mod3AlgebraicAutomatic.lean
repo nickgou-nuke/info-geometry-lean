@@ -2,7 +2,7 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmLeyangPerronP3SemistableDegreeDrop
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangPerronP3SemistableDegreeDrop
 
 namespace Omega.Zeta
 

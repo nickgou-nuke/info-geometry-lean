@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Fib.Basic
-import Omega.GU.Double12ConstraintsUniqueIntersectionM6
-import Omega.GU.Window6DoubleLock12
+import InfoGeometry.External.Automath.Omega.GU.Double12ConstraintsUniqueIntersectionM6
+import InfoGeometry.External.Automath.Omega.GU.Window6DoubleLock12
 
 namespace Omega.Conclusion
 

@@ -173,13 +173,13 @@ def singleQubitFullPath (bit : Bool) : List FibonacciCharge :=
 theorem singleQubitFullPath_false :
     singleQubitFullPath false =
       [bitCharge false, bitCharge true, bitCharge false, bitCharge true, bitCharge false] := by
-  native_decide
+  simp [singleQubitFullPath, computationalPath, bitCharge, List.finRange]
 
 @[simp]
 theorem singleQubitFullPath_true :
     singleQubitFullPath true =
       [bitCharge false, bitCharge true, bitCharge true, bitCharge true, bitCharge false] := by
-  native_decide
+  simp [singleQubitFullPath, computationalPath, bitCharge, List.finRange]
 
 /-- The finite one-qubit computational basis has two vectors. -/
 theorem singleQubit_computationalVector_card :

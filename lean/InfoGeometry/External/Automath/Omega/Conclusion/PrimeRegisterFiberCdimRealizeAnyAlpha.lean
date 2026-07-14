@@ -2,7 +2,7 @@ import Mathlib.Algebra.Order.Floor.Semiring
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Topology.Order.LiminfLimsup
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterFiberCdimDensity
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterFiberCdimDensity
 
 namespace Omega.Conclusion
 

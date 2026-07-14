@@ -1,4 +1,4 @@
-import Omega.GroupUnification.Window6CommonRefinementSMLevi
+import InfoGeometry.External.Automath.Omega.GroupUnification.Window6CommonRefinementSMLevi
 
 namespace Omega.GroupUnification
 

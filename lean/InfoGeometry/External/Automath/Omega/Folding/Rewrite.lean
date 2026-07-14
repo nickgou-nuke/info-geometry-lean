@@ -3,7 +3,7 @@ import Mathlib.Data.Finsupp.Order
 import Mathlib.Data.Prod.Lex
 import Mathlib.Logic.Relation
 import Mathlib.Tactic
-import Omega.Folding.InverseLimit
+import InfoGeometry.External.Automath.Omega.Folding.InverseLimit
 
 namespace Omega
 

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DerivedWindow6GaugeVolumeDefectIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedWindow6GaugeVolumeDefectIdentity
 
 namespace Omega.Conclusion
 

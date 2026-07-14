@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedProjectivePressureSecantRigidity
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedProjectivePressureSecantRigidity
 
 namespace Omega.DerivedConsequences
 

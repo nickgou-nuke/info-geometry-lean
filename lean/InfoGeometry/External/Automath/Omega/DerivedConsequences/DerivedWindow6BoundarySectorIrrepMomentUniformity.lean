@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
 
 namespace Omega.DerivedConsequences
 
@@ -34,24 +34,6 @@ theorem paper_derived_window6_boundary_sector_irrep_moment_uniformity :
         (derived_window6_boundary_sector_irrep_moment_uniformity_secondMoment χ : ℚ) /
             derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder =
           1 / 8) := by
-  have hIsotypy :=
-    paper_derived_window6_boundary_sector_groupalgebra_isotypy
-      ({ witness := () } :
-        derived_window6_boundary_sector_groupalgebra_isotypy_data)
-  have hUniform :
-      derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount = 8 ∧
-        derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder *
-            derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount =
-          derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder :=
-    hIsotypy.2.2
-  have hCount :
-      derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount = 8 := hUniform.1
-  have hTotal :
-      derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount *
-          derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder =
-        derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder := by
-    rw [hCount]
-    simpa [Nat.mul_comm] using hUniform.2.symm
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro χ
     refine ⟨rfl, ?_⟩
@@ -60,26 +42,15 @@ theorem paper_derived_window6_boundary_sector_irrep_moment_uniformity :
   · intro χ ψ
     exact ⟨rfl, rfl⟩
   · intro χ
-    simpa [derived_window6_boundary_sector_irrep_moment_uniformity_secondMoment] using hTotal
+    simpa [derived_window6_boundary_sector_irrep_moment_uniformity_secondMoment] using
+      (show derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount *
+          derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder =
+        derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder by
+        native_decide)
   · intro χ
-    have hTotalQ :
-        ((derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount *
-            derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder : ℕ) : ℚ) =
-          derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder := by
-      exact_mod_cast hTotal
-    have hInteriorPosNat :
-        0 < derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder := by
-      norm_num [derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder]
-    have hInteriorPos :
-        (0 : ℚ) <
-          derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder := by
-      exact_mod_cast hInteriorPosNat
-    have hInteriorNe :
-        (derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder : ℚ) ≠ 0 := by
-      exact ne_of_gt hInteriorPos
-    rw [← hTotalQ, hCount, derived_window6_boundary_sector_irrep_moment_uniformity_secondMoment]
-    rw [Nat.cast_mul]
-    field_simp [hInteriorNe]
-    norm_num
+    simpa [derived_window6_boundary_sector_irrep_moment_uniformity_secondMoment] using
+      (show (derived_window6_boundary_sector_groupalgebra_isotypy_interiorGroupOrder : ℚ) /
+          derived_window6_boundary_sector_groupalgebra_isotypy_totalGroupOrder = 1 / 8 by
+        native_decide)
 
 end Omega.DerivedConsequences

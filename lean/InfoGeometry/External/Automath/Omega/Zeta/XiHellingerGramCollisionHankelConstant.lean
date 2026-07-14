@@ -1,4 +1,4 @@
-import Omega.Zeta.XiHellingerHankelConstantRationality
+import InfoGeometry.External.Automath.Omega.Zeta.XiHellingerHankelConstantRationality
 
 namespace Omega.Zeta
 

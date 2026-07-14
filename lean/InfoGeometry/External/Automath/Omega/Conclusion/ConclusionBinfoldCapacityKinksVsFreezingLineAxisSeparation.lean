@@ -1,5 +1,5 @@
-import Omega.Conclusion.BinfoldCriticalBudgetDoubleKinkLaw
-import Omega.Conclusion.FrozenMomentSpectrumSemigroupLinearization
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldCriticalBudgetDoubleKinkLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.FrozenMomentSpectrumSemigroupLinearization
 
 namespace Omega.Conclusion
 

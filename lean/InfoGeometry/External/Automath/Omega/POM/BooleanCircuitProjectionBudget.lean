@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ValMonotoneBooleanNand
+import InfoGeometry.External.Automath.Omega.POM.ValMonotoneBooleanNand
 
 namespace Omega.POM
 

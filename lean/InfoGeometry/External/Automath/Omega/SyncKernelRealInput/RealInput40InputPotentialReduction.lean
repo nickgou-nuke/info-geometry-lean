@@ -1,6 +1,6 @@
-import Omega.SyncKernelRealInput.CoreThermodynamicTailEquivalence
-import Omega.SyncKernelRealInput.InputMeasureRigid
-import Omega.SyncKernelWeighted.RealInput40CollisionPressure
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.CoreThermodynamicTailEquivalence
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.InputMeasureRigid
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40CollisionPressure
 
 namespace Omega.SyncKernelRealInput
 

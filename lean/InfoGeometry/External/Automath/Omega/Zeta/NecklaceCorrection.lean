@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Tactic
-import Omega.Zeta.EvenLengthCorrection
+import InfoGeometry.External.Automath.Omega.Zeta.EvenLengthCorrection
 
 open scoped BigOperators
 

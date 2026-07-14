@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
 
 namespace Omega.UnitCirclePhaseArithmetic
 

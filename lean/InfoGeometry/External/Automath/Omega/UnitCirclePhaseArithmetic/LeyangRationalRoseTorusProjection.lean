@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Zeta.UnitaryDeterminantZeroUnitCircle
+import InfoGeometry.External.Automath.Omega.Zeta.UnitaryDeterminantZeroUnitCircle
 
 namespace Omega.UnitCirclePhaseArithmetic
 

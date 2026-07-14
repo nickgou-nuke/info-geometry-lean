@@ -1,4 +1,4 @@
-import Omega.POM.ProjTropicalMinmean
+import InfoGeometry.External.Automath.Omega.POM.ProjTropicalMinmean
 
 namespace Omega.Zeta
 

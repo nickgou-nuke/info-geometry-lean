@@ -3,7 +3,7 @@ import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Data.PNat.Notation
 import Mathlib.Tactic
 
-import Omega.UnitCirclePhaseArithmetic.ScaleLinearizationIdentityMultipliers
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.ScaleLinearizationIdentityMultipliers
 
 open scoped BigOperators
 

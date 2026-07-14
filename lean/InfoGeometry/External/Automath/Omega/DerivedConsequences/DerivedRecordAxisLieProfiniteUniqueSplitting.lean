@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.FiniteLocalizationSolenoidQuotientEmbeddingRigidity
-import Omega.CircleDimension.MinimalRecordAxis
-import Omega.CircleDimension.UniversalSolenoidFullPrimeKernel
-import Omega.Zeta.PrimeSupportKernelGaloisCorrespondence
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteLocalizationSolenoidQuotientEmbeddingRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.MinimalRecordAxis
+import InfoGeometry.External.Automath.Omega.CircleDimension.UniversalSolenoidFullPrimeKernel
+import InfoGeometry.External.Automath.Omega.Zeta.PrimeSupportKernelGaloisCorrespondence
 
 namespace Omega.DerivedConsequences
 

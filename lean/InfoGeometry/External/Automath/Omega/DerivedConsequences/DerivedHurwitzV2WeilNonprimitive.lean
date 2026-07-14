@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmResolventCubicNoCmMaxEnd
-import Omega.Zeta.XiTerminalZmS3EndoscopicHomologyA2Identification
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmResolventCubicNoCmMaxEnd
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS3EndoscopicHomologyA2Identification
 
 namespace Omega.DerivedConsequences
 

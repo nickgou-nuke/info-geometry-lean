@@ -1,4 +1,4 @@
-import Omega.EA.CompositionPullback
+import InfoGeometry.External.Automath.Omega.EA.CompositionPullback
 
 namespace Omega.EA.CompositionPullbackSeeds
 

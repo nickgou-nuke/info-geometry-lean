@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.CandidateSetMonotone
-import Omega.Folding.PhiConjugacyThreshold
-import Omega.Folding.SyncDelay
+import InfoGeometry.External.Automath.Omega.Folding.CandidateSetMonotone
+import InfoGeometry.External.Automath.Omega.Folding.PhiConjugacyThreshold
+import InfoGeometry.External.Automath.Omega.Folding.SyncDelay
 
 namespace Omega.Folding
 

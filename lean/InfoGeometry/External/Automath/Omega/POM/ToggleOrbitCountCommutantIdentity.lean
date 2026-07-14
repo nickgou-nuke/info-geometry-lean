@@ -1,4 +1,4 @@
-import Omega.POM.ToggleOrbitCountBellProduct
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountBellProduct
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.SyncKernelRealInput.GMProfiniteHaarDichotomy
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMProfiniteHaarDichotomy
 
 namespace Omega.SyncKernelRealInput
 

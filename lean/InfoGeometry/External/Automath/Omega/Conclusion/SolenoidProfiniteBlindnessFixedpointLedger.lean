@@ -1,5 +1,5 @@
-import Omega.Conclusion.ConnectedToDiscreteConstant
-import Omega.Zeta.LocalizedQuotientLedger
+import InfoGeometry.External.Automath.Omega.Conclusion.ConnectedToDiscreteConstant
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedQuotientLedger
 
 namespace Omega.Conclusion
 

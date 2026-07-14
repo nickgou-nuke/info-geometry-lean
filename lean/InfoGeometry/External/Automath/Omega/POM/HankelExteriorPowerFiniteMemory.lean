@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.Charpoly.Basic
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.Tactic
-import Omega.POM.HankelExteriorPowerPropagation
+import InfoGeometry.External.Automath.Omega.POM.HankelExteriorPowerPropagation
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.MinimalRecordAxis
+import InfoGeometry.External.Automath.Omega.CircleDimension.MinimalRecordAxis
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.Folding.Killo2adicHolographicPrefixClassification
+import InfoGeometry.External.Automath.Omega.Folding.Killo2adicHolographicPrefixClassification
 
 namespace Omega.Folding
 

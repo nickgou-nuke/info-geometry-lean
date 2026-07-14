@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.Conclusion.DiscreteCertificateFrontGeneralizedInverse
+import InfoGeometry.External.Automath.Omega.Conclusion.DiscreteCertificateFrontGeneralizedInverse
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.BqIsSymqAndSpectrum
+import InfoGeometry.External.Automath.Omega.POM.BqIsSymqAndSpectrum
 
 namespace Omega.POM
 

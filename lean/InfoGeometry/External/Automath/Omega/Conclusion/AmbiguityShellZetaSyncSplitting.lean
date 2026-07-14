@@ -1,8 +1,8 @@
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
-import Omega.Conclusion.AmbiguityShellJordanChainGraphLift
-import Omega.Folding.SyncDelay
+import InfoGeometry.External.Automath.Omega.Conclusion.AmbiguityShellJordanChainGraphLift
+import InfoGeometry.External.Automath.Omega.Folding.SyncDelay
 
 namespace Omega.Conclusion
 

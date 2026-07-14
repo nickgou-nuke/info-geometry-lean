@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.HzomLogsobolevZeroBand
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.HzomLogsobolevZeroBand
 
 namespace Omega.Conclusion
 

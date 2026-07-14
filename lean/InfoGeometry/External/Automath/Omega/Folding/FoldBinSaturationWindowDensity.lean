@@ -1,4 +1,4 @@
-import Omega.Folding.FoldBinSaturation
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinSaturation
 
 namespace Omega
 

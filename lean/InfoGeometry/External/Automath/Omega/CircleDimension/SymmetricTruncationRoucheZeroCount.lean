@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.SymmetricTruncationExplicitError
+import InfoGeometry.External.Automath.Omega.CircleDimension.SymmetricTruncationExplicitError
 
 namespace Omega.CircleDimension
 

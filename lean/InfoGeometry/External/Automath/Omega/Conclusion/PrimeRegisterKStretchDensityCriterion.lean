@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PrimeRegisterFiberCdimDensity
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegisterFiberCdimDensity
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.POM.KCollisionMittagLefflerScaling
+import InfoGeometry.External.Automath.Omega.POM.KCollisionMittagLefflerScaling
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Topos.NullTrichotomy
+import InfoGeometry.External.Automath.Omega.Topos.NullTrichotomy
 
 namespace Omega.Frontier.NullTrichotomyLocalSection
 

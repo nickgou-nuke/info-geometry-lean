@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LmaxPrimeProgrammability
+import InfoGeometry.External.Automath.Omega.Conclusion.LmaxPrimeProgrammability
 
 namespace Omega.Conclusion
 

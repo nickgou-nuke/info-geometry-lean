@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.Nat.Factorization.Induction
-import Omega.Conclusion.LogRigidityUnderTropical
+import InfoGeometry.External.Automath.Omega.Conclusion.LogRigidityUnderTropical
 
 namespace Omega.Conclusion
 

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldFiberParityBiasRieszParsevalEnergy
+import InfoGeometry.External.Automath.Omega.Folding.FoldFiberParityBiasRieszParsevalEnergy
 
 open scoped BigOperators
 

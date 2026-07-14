@@ -1,5 +1,5 @@
 import Mathlib.Data.Nat.Fib.Zeckendorf
-import Omega.Folding.Value
+import InfoGeometry.External.Automath.Omega.Folding.Value
 
 namespace Omega
 

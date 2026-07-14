@@ -1,4 +1,4 @@
-import Omega.Zeta.Near1PoleDiffusiveSp
+import InfoGeometry.External.Automath.Omega.Zeta.Near1PoleDiffusiveSp
 
 namespace Omega.Zeta
 

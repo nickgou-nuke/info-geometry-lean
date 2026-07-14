@@ -110,19 +110,19 @@ instance : Inv Q8Elt := ⟨inv⟩
 
 theorem mul_assoc : ∀ a b c : Q8Elt, (a * b) * c = a * (b * c) := by
   intro a b c
-  cases a <;> cases b <;> cases c <;> native_decide
+  cases a <;> cases b <;> cases c <;> decide
 
 theorem one_mul : ∀ a : Q8Elt, (1 : Q8Elt) * a = a := by
   intro a
-  cases a <;> native_decide
+  cases a <;> decide
 
 theorem mul_one : ∀ a : Q8Elt, a * (1 : Q8Elt) = a := by
   intro a
-  cases a <;> native_decide
+  cases a <;> decide
 
 theorem inv_mul_cancel : ∀ a : Q8Elt, a⁻¹ * a = (1 : Q8Elt) := by
   intro a
-  cases a <;> native_decide
+  cases a <;> decide
 
 instance : Group Q8Elt where
   one := p1
@@ -135,43 +135,43 @@ instance : Group Q8Elt where
 
 /-- The central sign `-1` is order two. -/
 theorem m1_sq : m1 * m1 = (1 : Q8Elt) := by
-  native_decide
+  decide
 
 /-- The `i`, `j`, `k` basis elements square to `-1`. -/
 theorem i_sq : i * i = m1 := by
-  native_decide
+  decide
 
 theorem j_sq : j * j = m1 := by
-  native_decide
+  decide
 
 theorem k_sq : k * k = m1 := by
-  native_decide
+  decide
 
 /-- The standard quaternion multiplication table on the generators. -/
 theorem ij_eq_k : i * j = k := by
-  native_decide
+  decide
 
 theorem ji_eq_mk : j * i = mk := by
-  native_decide
+  decide
 
 theorem jk_eq_i : j * k = i := by
-  native_decide
+  decide
 
 theorem kj_eq_mi : k * j = mi := by
-  native_decide
+  decide
 
 theorem ki_eq_j : k * i = j := by
-  native_decide
+  decide
 
 theorem ik_eq_mj : i * k = mj := by
-  native_decide
+  decide
 
 /-- The central sign commutes with everything. -/
 theorem m1_mul (a : Q8Elt) : m1 * a = neg a := by
-  cases a <;> native_decide
+  cases a <;> decide
 
 theorem mul_m1 (a : Q8Elt) : a * m1 = neg a := by
-  cases a <;> native_decide
+  cases a <;> decide
 
 end Q8Elt
 
@@ -191,7 +191,7 @@ def q8ToV4 : Q8Elt → V4Group
 /-- The quotient map is multiplicative. -/
 theorem q8ToV4_mul (a b : Q8Elt) :
     q8ToV4 (a * b) = q8ToV4 a * q8ToV4 b := by
-  cases a <;> cases b <;> native_decide
+  cases a <;> cases b <;> decide
 
 /-- The central sign lands in the identity coset. -/
 theorem q8ToV4_m1 : q8ToV4 m1 = V4Group.I := by
@@ -211,7 +211,7 @@ theorem q8ToV4_surjective : Function.Surjective q8ToV4 := by
 theorem q8ToV4_kernel :
     ∀ a : Q8Elt, q8ToV4 a = V4Group.I ↔ a = p1 ∨ a = m1 := by
   intro a
-  cases a <;> native_decide
+  cases a <;> decide
 
 /-- The finite central-extension packet `1 → ±1 → Q₈ → V₄ → 1`. -/
 theorem q8_central_extension_packet :

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.CommutativePrimeRegisterOrderNonrecoverable
-import Omega.POM.PrimeDeterminant2x2FreeEncoding
+import InfoGeometry.External.Automath.Omega.POM.CommutativePrimeRegisterOrderNonrecoverable
+import InfoGeometry.External.Automath.Omega.POM.PrimeDeterminant2x2FreeEncoding
 
 namespace Omega.POM.PrimeAxisVs2dExternalization
 

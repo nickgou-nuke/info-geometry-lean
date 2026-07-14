@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmetic
-import Omega.Folding.FoldbinTailcountBoundFromS2
-import Omega.Folding.MomentSum
-import Omega.GU.Window6FoldbinGaugeLowDegreeHomology
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FoldbinTailcountBoundFromS2
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.GU.Window6FoldbinGaugeLowDegreeHomology
 
 namespace Omega.Folding
 

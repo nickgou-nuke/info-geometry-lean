@@ -17,12 +17,11 @@ critical line in the Berry--Keating program is instead a unitary Mellin
 normalization statement.
 -/
 structure FockVsMellinNormalizabilityGuard
-    (FockState MellinState FockNorm MellinNorm : Type*) where
+    (FockState MellinState FockNorm MellinNorm : Type) where
   fockState : FockState
   mellinState : MellinState
   fockNorm : FockNorm
   mellinNorm : MellinNorm
-  criticalLine_not_from_ordinaryFockNorm_guard : Type*
 
 /--
 Majorana zero-mode normalizability packet.
@@ -32,28 +31,34 @@ the theorem-safe critical-line predicate is only the algebraic condition
 `realPart = 1/2`.
 -/
 structure MajoranaZeroModeNormalizabilityPacket
-    (ZeroMode NormReadout : Type*) where
+    (ZeroMode NormReadout : Type) where
   realPart : ℝ
   imaginaryHeight : ℝ
   zeroMode : ZeroMode
   normReadout : NormReadout
-  /-- Normalizability defined as the algebraic critical-line condition Re(s) = 1/2. -/
-  normalizable_law : IsCriticalLineRealPart realPart
+  realPart_eq_half : realPart = (1 / 2 : ℝ)
 
 namespace MajoranaZeroModeNormalizabilityPacket
 
 /-- Concrete model: zero-mode packet on the critical line Re(s) = 1/2.
 
-The critical-line/normalizability part is definitional
-because `normalizable_law` is `IsCriticalLineRealPart realPart`. -/
-def mkCriticalLine (ZeroMode NormReadout : Type*)
+The critical-line part is definitional because `IsCriticalLineRealPart σ`
+is the equality `σ = 1 / 2`. -/
+def mkCriticalLine (ZeroMode NormReadout : Type)
     (zeroMode : ZeroMode) (normReadout : NormReadout) (imaginaryHeight : ℝ) :
     MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout where
   realPart := 1/2
   imaginaryHeight := imaginaryHeight
   zeroMode := zeroMode
   normReadout := normReadout
-  normalizable_law := by rfl
+  realPart_eq_half := by rfl
+
+variable {ZeroMode NormReadout : Type}
+variable (P : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout)
+
+/-- The packet places the zero-mode real part on the critical line. -/
+theorem criticalLine : IsCriticalLineRealPart P.realPart := by
+  simpa [IsCriticalLineRealPart] using P.realPart_eq_half
 
 end MajoranaZeroModeNormalizabilityPacket
 
@@ -66,7 +71,7 @@ separates zeros of zeta from singularities of reciprocal zeta.
 -/
 @[socket_debt_tag]
 structure MajoranaPfaffianZetaSpectralSocket
-    (SpectralParameter PfaffianReadout ZetaReadout : Type*) where
+    (SpectralParameter PfaffianReadout ZetaReadout : Type) where
   parameter : SpectralParameter
   pfaffianReadout : PfaffianReadout
   zetaReadout : ZetaReadout
@@ -84,7 +89,7 @@ function on the critical line, commonly written `Ξ(t) = ξ(1/2 + it)`.
 @[socket_debt_tag]
 structure WittenCharacterVsCompletedXiSocket
     (SpectralParameter WittenCharacter CompletedXiReadout
-      SpectralPfaffianReadout : Type*) where
+      SpectralPfaffianReadout : Type) where
   parameter : SpectralParameter
   wittenCharacter : WittenCharacter
   completedXi : CompletedXiReadout

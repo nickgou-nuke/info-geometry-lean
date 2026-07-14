@@ -1,5 +1,5 @@
 import Mathlib.Data.Real.Basic
-import Omega.Discussion.FramepotentialSffToHszk
+import InfoGeometry.External.Automath.Omega.Discussion.FramepotentialSffToHszk
 
 namespace Omega.Discussion
 

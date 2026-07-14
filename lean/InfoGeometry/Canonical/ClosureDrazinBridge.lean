@@ -22,13 +22,13 @@ local notation "EndH" => E →L[ℝ] E
 /--
 A non-circular closure package for the chiral/Drazin lane.
 
-This is a thin adapter layer over the reified spectral owner
-`SpectralChiralConeAlgebra`.
+This stores only the certified inverse-kernel owner.  The chiral closure facts
+below are read directly from `CertifiedInverseKernel` and
+`ChiralOperatorConeClosure`, without an intermediate proof packet.
 -/
 @[rep_depth krein]
 structure ConstructiveClosureDrazinData where
   kernel : CertifiedInverseKernel E
-  chiralAlgebra : SpectralChiralConeAlgebra kernel
 
 namespace ConstructiveClosureDrazinData
 
@@ -44,52 +44,57 @@ def toDPDKKT : DPDKKT E :=
 theorem commutator_P_D_GammaG_eq_sub_anomalies :
     DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG
       = C.kernel.rightChiralAnomaly - C.kernel.chiralAnomaly :=
-  C.chiralAlgebra.commutator_P_D_GammaG_eq_sub_anomalies
+  by
+    simpa [DrazinSupercharge.commutator] using
+      C.kernel.spectralProjector_commutator_GammaG_eq_sub_anomalies
 
 /-- Closure identity: `[P_D, G] = (1/2)(χ_R - χ_L)`. -/
 @[rep_depth krein]
 theorem commutator_P_D_dilationGap_eq_half_sub_anomalies :
     DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.dilationGap
       = ((2 : ℝ)⁻¹) • (C.kernel.rightChiralAnomaly - C.kernel.chiralAnomaly) :=
-  C.chiralAlgebra.commutator_P_D_dilationGap_eq_half_sub_anomalies
+  by
+    simpa [DrazinSupercharge.commutator] using
+      C.kernel.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
 
 /-- Left anomaly is odd with respect to `Γ_S` in anticommutator form. -/
 @[rep_depth krein]
 theorem anticommutator_GammaS_chiL_eq_zero :
     DrazinSupercharge.anticommutator C.kernel.GammaS C.kernel.chiralAnomaly = 0 :=
-  C.chiralAlgebra.anticommutator_GammaS_chiL_eq_zero
+  anticommutator_GammaS_chiralAnomaly_eq_zero (CIK := C.kernel)
 
 /-- Right anomaly is odd with respect to `Γ_S` in anticommutator form. -/
 @[rep_depth krein]
 theorem anticommutator_GammaS_chiR_eq_zero :
     DrazinSupercharge.anticommutator C.kernel.GammaS C.kernel.rightChiralAnomaly = 0 :=
-  C.chiralAlgebra.anticommutator_GammaS_chiR_eq_zero
+  anticommutator_GammaS_rightChiralAnomaly_eq_zero (CIK := C.kernel)
 
 /-- Left anomaly belongs to the spectral chiral cone. -/
 @[rep_depth krein]
 theorem chiL_mem_chiralCone :
     IsInChiralOperatorCone C.kernel C.kernel.chiralAnomaly :=
-  C.chiralAlgebra.chiL_mem_chiralCone
+  chiralAnomaly_mem_chiralOperatorCone (CIK := C.kernel)
 
 /-- Right anomaly belongs to the spectral chiral cone. -/
 @[rep_depth krein]
 theorem chiR_mem_chiralCone :
     IsInChiralOperatorCone C.kernel C.kernel.rightChiralAnomaly :=
-  C.chiralAlgebra.chiR_mem_chiralCone
+  rightChiralAnomaly_mem_chiralOperatorCone (CIK := C.kernel)
 
 /-- Canonical odd generator identity: `Q = [P_D, Γ_G]`. -/
 @[rep_depth krein]
 theorem supercharge_eq_commutator_P_D_GammaG :
     DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel
       = DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG :=
-  C.chiralAlgebra.supercharge_eq_commutator_P_D_GammaG
+  DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_commutator_spectralProjector_GammaG
+    (CIK := C.kernel)
 
 /-- The canonical odd generator lies in the spectral chiral cone. -/
 @[rep_depth krein]
 theorem supercharge_mem_chiralCone :
     IsInChiralOperatorCone C.kernel
       (DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel) :=
-  C.chiralAlgebra.supercharge_mem_chiralCone
+  supercharge_mem_chiralOperatorCone (CIK := C.kernel)
 
 /--
 Closure-level chiral-supertrace cancellation for the Drazin odd generator.
@@ -128,10 +133,10 @@ theorem spectralCommutator_compact_mem_chiralCone
     (hX : C.kernel.IsSpectralCompact X)
     (hY : IsInChiralOperatorCone C.kernel Y) :
     IsInChiralOperatorCone C.kernel (CertifiedInverseKernel.spectralCommutator X Y) :=
-  C.chiralAlgebra.compact_commutator_closed hX hY
+  spectralCommutator_compact_mem_chiralOperatorCone (CIK := C.kernel) hX hY
 
 /--
-Compatibility adapter from closure-gathered data to the witness-free
+Compatibility adapter from closure-gathered data to the direct
 constructive Riesz owner in `DrazinInfiniteCore`.
 -/
 @[rep_depth krein]
@@ -200,35 +205,7 @@ theorem exists_drazinInverse_of_constructiveClosure :
     exists_drazinInverse_of_constructiveRieszDecompositionAtZero
       (hR := C.toConstructiveRieszDecompositionAtZero)
 
-/--
-Thin adapter from the reified spectral chiral owner into
-`ConstructiveClosureDrazinData`.
--/
-@[rep_depth krein]
-def ofSpectralChiralConeAlgebra
-    (CIK : CertifiedInverseKernel E)
-    (Aχ : SpectralChiralConeAlgebra CIK) :
-    ConstructiveClosureDrazinData (E := E) where
-  kernel := CIK
-  chiralAlgebra := Aχ
-
 end ConstructiveClosureDrazinData
-
-/-- Canonical constructor from the certified Drazin owner surface. -/
-@[rep_depth krein]
-def ConstructiveClosureDrazinData.ofCertifiedInverseKernel
-    (CIK : CertifiedInverseKernel E) :
-    ConstructiveClosureDrazinData (E := E) :=
-  ConstructiveClosureDrazinData.ofSpectralChiralConeAlgebra
-    (CIK := CIK)
-    (Aχ := SpectralChiralConeAlgebra.ofCertifiedInverseKernel (CIK := CIK))
-
-/-- Existence wrapper for the non-circular closure package. -/
-@[rep_depth krein]
-theorem exists_constructiveClosureDrazinData
-    (CIK : CertifiedInverseKernel E) :
-    ∃ C : ConstructiveClosureDrazinData (E := E), C.kernel = CIK := by
-  refine ⟨ConstructiveClosureDrazinData.ofCertifiedInverseKernel (CIK := CIK), rfl⟩
 
 end Core
 

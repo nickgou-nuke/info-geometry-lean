@@ -1,6 +1,6 @@
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart62aZGSimplePoleDensityResidue
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62aZGSimplePoleDensityResidue
 
 open Filter Topology
 

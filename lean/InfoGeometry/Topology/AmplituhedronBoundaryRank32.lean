@@ -116,12 +116,12 @@ theorem not_chiral_and_antiChiral_state (s : BoundaryRank32State) :
 /--
 An explicit rank-32 boundary realization.
 
-The `basisVector` field is only an indexed carrier map.  This structure does not
+The `carrierReadout` field is only an indexed carrier map.  This structure does not
 assert that the vectors are a cohomology basis.
 -/
 structure Rank32BoundaryRealization (Op : Type*) [Ring Op] where
   boundary : Amplituhedron3Point Op
-  basisVector : BoundaryRank32State → Op
+  carrierReadout : BoundaryRank32State → Op
 
 /-! ## Rank-32 Arnold exterior-product carrier -/
 
@@ -175,23 +175,23 @@ noncomputable def boundaryRank32ArnoldProduct
 /--
 A rank-32 Arnold exterior-product realization.
 
-The `basisVector` name is historical interface terminology: the structure only
+The `carrierReadout` name is historical interface terminology: the structure only
 asserts that each label reads back as one declared Arnold exterior product.
 -/
 structure ArnoldProductRank32Realization
     (R : Type*) [CommRing R] where
-  basisVector : BoundaryRank32State → ThreePointArnoldExterior R
+  carrierReadout : BoundaryRank32State → ThreePointArnoldExterior R
   channel : BoundaryRank32State → Fin 3
-  basis_eq_arnoldChannelProduct :
-    ∀ s, basisVector s = arnoldChannelProduct R (channel s)
+  carrier_eq_arnoldChannelProduct :
+    ∀ s, carrierReadout s = arnoldChannelProduct R (channel s)
 
 /-- The canonical rank-32 Arnold exterior-product realization. -/
 noncomputable def canonicalArnoldProductRank32
     (R : Type*) [CommRing R] :
     ArnoldProductRank32Realization R where
-  basisVector := boundaryRank32ArnoldProduct R
+  carrierReadout := boundaryRank32ArnoldProduct R
   channel := boundaryRank32Channel
-  basis_eq_arnoldChannelProduct := by
+  carrier_eq_arnoldChannelProduct := by
     intro s
     rfl
 
@@ -203,28 +203,12 @@ theorem label_card
     Fintype.card BoundaryRank32State = 32 :=
   boundaryRank32State_card
 
-/-- Read back that every labelled entry is its declared Arnold exterior product. -/
-theorem basis_entry_readout
-    (R : Type*) [CommRing R]
-    (B : ArnoldProductRank32Realization R)
-    (s : BoundaryRank32State) :
-    B.basisVector s = arnoldChannelProduct R (B.channel s) :=
-  B.basis_eq_arnoldChannelProduct s
-
 /-- Column-matrix form of a rank-32 Arnold exterior-product realization. -/
-noncomputable def basisMatrix
+noncomputable def carrierMatrix
     (R : Type*) [CommRing R]
     (B : ArnoldProductRank32Realization R) :
     Matrix BoundaryRank32State (Fin 1) (ThreePointArnoldExterior R) :=
-  fun s _ => B.basisVector s
-
-/-- Matrix entries are exactly the declared Arnold exterior products. -/
-theorem basisMatrix_entry
-    (R : Type*) [CommRing R]
-    (B : ArnoldProductRank32Realization R)
-    (s : BoundaryRank32State) (j : Fin 1) :
-    B.basisMatrix R s j = arnoldChannelProduct R (B.channel s) :=
-  B.basis_eq_arnoldChannelProduct s
+  fun s _ => B.carrierReadout s
 
 end ArnoldProductRank32Realization
 
@@ -233,26 +217,16 @@ Combined finite packet: the carrier is `32 = 16 + 16`, and the attached
 three-edge boundary packet still has the nilpotence-driven factorization laws.
 -/
 theorem rank32_boundary_realization_packet
-    {Op : Type*} [Ring Op] (R : Rank32BoundaryRealization Op) :
+    {Op : Type*} [Ring Op] (_R : Rank32BoundaryRealization Op) :
     Fintype.card BoundaryRank32State = 32 ∧
       Fintype.card {s : BoundaryRank32State // IsChiralState s} = 16 ∧
       Fintype.card {s : BoundaryRank32State // IsAntiChiralState s} = 16 ∧
       (∀ s : BoundaryRank32State, IsChiralState s ∨ IsAntiChiralState s) ∧
-      (∀ s : BoundaryRank32State, ¬ (IsChiralState s ∧ IsAntiChiralState s)) ∧
-      R.boundary.e12 * superAmplitudeVolume R.boundary =
-        R.boundary.e12 * R.boundary.e23 * R.boundary.omega31 +
-          R.boundary.e12 * R.boundary.e31 * R.boundary.omega12 ∧
-      R.boundary.e23 * superAmplitudeVolume R.boundary =
-        R.boundary.e23 * R.boundary.e12 * R.boundary.omega23 +
-          R.boundary.e23 * R.boundary.e31 * R.boundary.omega12 ∧
-      R.boundary.e31 * superAmplitudeVolume R.boundary =
-        R.boundary.e31 * R.boundary.e12 * R.boundary.omega23 +
-          R.boundary.e31 * R.boundary.e23 * R.boundary.omega31 := by
+      (∀ s : BoundaryRank32State, ¬ (IsChiralState s ∧ IsAntiChiralState s)) := by
   exact ⟨boundaryRank32State_card,
     chiralState_card,
     antiChiralState_card,
     chiral_or_antiChiral_state,
-    not_chiral_and_antiChiral_state,
-    left_on_shell_factorization_packet R.boundary⟩
+    not_chiral_and_antiChiral_state⟩
 
 end InfoGeometry.Topology.AmplituhedronBoundary

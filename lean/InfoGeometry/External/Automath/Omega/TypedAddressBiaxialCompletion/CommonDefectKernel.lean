@@ -1,4 +1,4 @@
-import Omega.Zeta.FiniteDefectCompleteReconstruction
+import InfoGeometry.External.Automath.Omega.Zeta.FiniteDefectCompleteReconstruction
 
 namespace Omega.TypedAddressBiaxialCompletion
 

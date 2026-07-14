@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6B3C3RootcloudIsotropicDesign
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6B3C3RootcloudIsotropicDesign
 
 namespace Omega.DerivedConsequences
 

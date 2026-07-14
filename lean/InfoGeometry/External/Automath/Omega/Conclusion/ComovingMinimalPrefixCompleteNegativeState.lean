@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
-import Omega.Conclusion.ToeplitzStrictificationQuotientNegativeCertificateThreshold
-import Omega.Conclusion.ToeplitzNegativeGeometryStrictificationOrthogonalSplit
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzStrictificationQuotientNegativeCertificateThreshold
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzNegativeGeometryStrictificationOrthogonalSplit
 
 namespace Omega.Conclusion
 

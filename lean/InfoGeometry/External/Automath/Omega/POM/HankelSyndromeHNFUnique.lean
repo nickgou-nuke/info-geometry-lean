@@ -1,4 +1,4 @@
-import Omega.POM.HankelSyndromeModuleRankAndGenerators
+import InfoGeometry.External.Automath.Omega.POM.HankelSyndromeModuleRankAndGenerators
 
 namespace Omega.POM
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.MaxfiberHiddenbitSufficiencyVsIdentifiabilitySplit
-import Omega.Conclusion.OddMaxfiberHiddenbitTristateCrystal
-import Omega.Conclusion.Window6EvenMaxfiberHiddenbitExactFairization
+import InfoGeometry.External.Automath.Omega.Conclusion.MaxfiberHiddenbitSufficiencyVsIdentifiabilitySplit
+import InfoGeometry.External.Automath.Omega.Conclusion.OddMaxfiberHiddenbitTristateCrystal
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6EvenMaxfiberHiddenbitExactFairization
 
 namespace Omega.Conclusion
 

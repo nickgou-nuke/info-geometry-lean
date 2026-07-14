@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
-import Omega.OperatorAlgebra.RenyiFlatnessSupEqualsLogIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldWatataniIndexMultiplicityField
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.RenyiFlatnessSupEqualsLogIndex
 
 namespace Omega.OperatorAlgebra
 

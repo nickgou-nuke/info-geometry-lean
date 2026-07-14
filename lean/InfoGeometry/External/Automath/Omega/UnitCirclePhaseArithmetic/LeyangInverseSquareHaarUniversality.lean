@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.UnitCirclePhaseArithmetic.LeyangPushforwardDensityFormula
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangPushforwardDensityFormula
 
 namespace Omega.UnitCirclePhaseArithmetic
 

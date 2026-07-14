@@ -1,9 +1,9 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Finset.Card
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.BinFold
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 /-!
 # Bounded Prime-Register Gödel Lift

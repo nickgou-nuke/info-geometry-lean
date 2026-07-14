@@ -1,4 +1,4 @@
-import Omega.SPG.Clopen
+import InfoGeometry.External.Automath.Omega.SPG.Clopen
 
 namespace Omega.SPG
 

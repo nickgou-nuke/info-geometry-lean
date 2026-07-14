@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.LpSuperellipsoidBoundaryVolumeDecoding
+import InfoGeometry.External.Automath.Omega.SPG.LpSuperellipsoidBoundaryVolumeDecoding
 
 namespace Omega.Conclusion
 

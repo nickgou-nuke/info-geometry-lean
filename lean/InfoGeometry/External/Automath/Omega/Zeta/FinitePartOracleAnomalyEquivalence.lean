@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.FinitePartResidueDriftTrichotomy
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartResidueDriftTrichotomy
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
-import Omega.GroupUnification.BdryOrientationParityUplift
-import Omega.GroupUnification.BdryThreeLayerSymmetricBinaryLiftWreathQuotient
+import InfoGeometry.External.Automath.Omega.GroupUnification.BdryOrientationParityUplift
+import InfoGeometry.External.Automath.Omega.GroupUnification.BdryThreeLayerSymmetricBinaryLiftWreathQuotient
 
 namespace Omega.GroupUnification
 

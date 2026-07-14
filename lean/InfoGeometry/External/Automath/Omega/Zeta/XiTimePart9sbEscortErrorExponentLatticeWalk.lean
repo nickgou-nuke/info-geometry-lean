@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9sbEscortChernoffSaddle
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9sbEscortChernoffSaddle
 
 namespace Omega.Zeta
 

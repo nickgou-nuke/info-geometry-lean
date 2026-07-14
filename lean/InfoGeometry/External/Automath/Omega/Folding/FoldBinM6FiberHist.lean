@@ -1,5 +1,5 @@
-import Omega.Folding.BinFold
-import Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
+import InfoGeometry.External.Automath.Omega.Folding.BinFold
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6BoundaryPureF9Alias
 
 open Omega.GU
 

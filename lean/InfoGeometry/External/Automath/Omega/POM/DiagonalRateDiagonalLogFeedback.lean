@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateEulerDiagonalIdentity
-import Omega.POM.FiniteParetoLegendreCurvature
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateEulerDiagonalIdentity
+import InfoGeometry.External.Automath.Omega.POM.FiniteParetoLegendreCurvature
 
 namespace Omega.POM
 

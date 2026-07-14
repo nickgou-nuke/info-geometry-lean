@@ -1,4 +1,4 @@
-import Omega.Zeta.XiModularFlowEqualsTimeCocycle
+import InfoGeometry.External.Automath.Omega.Zeta.XiModularFlowEqualsTimeCocycle
 
 namespace Omega.Zeta
 

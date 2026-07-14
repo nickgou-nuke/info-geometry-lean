@@ -43,6 +43,13 @@ def PrimeBitState (L : PrimeBitLattice) :=
 def primeBitEnergy (_L : PrimeBitLattice) (ε : Finset ℕ) : ℝ :=
   Finset.sum ε (fun p => Real.log p)
 
+lemma primeBitEnergy_nonneg (L : PrimeBitLattice) (ε : PrimeBitState L) :
+    0 ≤ primeBitEnergy L ε.1 := by
+  unfold primeBitEnergy
+  exact Finset.sum_nonneg (fun p hp => by
+    have hp1 : (1 : ℕ) ≤ p := le_of_lt (L.isPrime p (ε.2 hp)).one_lt
+    exact Real.log_nonneg (by exact_mod_cast hp1))
+
 /-- Integer readout `N(ε)=∏ p` on bit-states. -/
 def primeBitInteger (L : PrimeBitLattice) (ε : PrimeBitState L) : ℕ :=
   Finset.prod ε.1 (fun p => p)
@@ -119,6 +126,16 @@ theorem primeBitFermionicPartition_eq_factorizedRealRpow
         exact_mod_cast (Nat.Prime.pos (L.isPrime p (by simpa using hp))
 )
       rw [Real.exp_log hp0]
+
+lemma primeBitFermionicPartition_pos (L : PrimeBitLattice) (β : ℝ) :
+    0 < primeBitFermionicPartition L β := by
+  rw [primeBitFermionicPartition_eq_factorizedProduct]
+  exact Finset.prod_pos (fun p _hp => by
+    exact add_pos_of_pos_of_nonneg zero_lt_one (le_of_lt (Real.exp_pos _)))
+
+lemma primeBitFermionicPartition_ne_zero (L : PrimeBitLattice) (β : ℝ) :
+    primeBitFermionicPartition L β ≠ 0 :=
+  (primeBitFermionicPartition_pos L β).ne'
 
 end
 end InfoGeometry.Arithmetic

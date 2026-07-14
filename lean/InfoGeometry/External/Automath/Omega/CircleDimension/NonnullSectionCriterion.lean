@@ -1,5 +1,5 @@
-import Omega.TypedAddressBiaxialCompletion.NullFiber
-import Omega.TypedAddressBiaxialCompletion.ReadableFiber
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NullFiber
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ReadableFiber
 
 namespace Omega.CircleDimension
 

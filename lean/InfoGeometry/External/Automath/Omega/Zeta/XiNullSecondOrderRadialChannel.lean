@@ -1,6 +1,6 @@
-import Omega.TypedAddressBiaxialCompletion.VisibleReadPartial
-import Omega.Zeta.OffcriticalQuadraticRadialCompression
-import Omega.Zeta.XiOffsetNullTypeSafety
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.VisibleReadPartial
+import InfoGeometry.External.Automath.Omega.Zeta.OffcriticalQuadraticRadialCompression
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffsetNullTypeSafety
 
 namespace Omega.Zeta
 

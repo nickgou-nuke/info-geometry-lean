@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FiberArithmeticProperties
-import Omega.Folding.Window6
-import Omega.GU.ZeckendorfCountClosure
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmeticProperties
+import InfoGeometry.External.Automath.Omega.Folding.Window6
+import InfoGeometry.External.Automath.Omega.GU.ZeckendorfCountClosure
 
 namespace Omega.GU
 

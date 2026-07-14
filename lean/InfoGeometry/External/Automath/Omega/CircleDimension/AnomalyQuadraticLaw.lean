@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.TensorHomExtLaws
+import InfoGeometry.External.Automath.Omega.CircleDimension.TensorHomExtLaws
 
 namespace Omega.CircleDimension
 

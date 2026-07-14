@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic
-import Omega.Zeta.XiAddressableGodelProductLowerBoundClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiAddressableGodelProductLowerBoundClassification
 
 namespace Omega.Zeta
 

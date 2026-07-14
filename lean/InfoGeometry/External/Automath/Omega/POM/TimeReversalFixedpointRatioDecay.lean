@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.ShiftDynamics
-import Omega.POM.ToggleOrder
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrder
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 namespace Omega.POM
 

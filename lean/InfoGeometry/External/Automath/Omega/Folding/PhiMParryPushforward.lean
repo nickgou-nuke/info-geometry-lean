@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GmFischerCover
+import InfoGeometry.External.Automath.Omega.Folding.GmFischerCover
 
 namespace Omega.Folding
 

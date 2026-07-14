@@ -3,8 +3,8 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
-import Omega.Zeta.XiTimePart9odEscortTvCollapseExactBlockWeights
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortTvCollapseBlockUniform
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9odEscortTvCollapseExactBlockWeights
 
 namespace Omega.Zeta
 

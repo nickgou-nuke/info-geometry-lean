@@ -1,4 +1,4 @@
-import Omega.CircleDimension.FiniteFiberAuditExponent
+import InfoGeometry.External.Automath.Omega.CircleDimension.FiniteFiberAuditExponent
 
 namespace Omega.CircleDimension
 

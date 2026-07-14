@@ -1,5 +1,5 @@
 import Mathlib.Topology.Basic
-import Omega.POM.LkShiftedDetFreeEnergy
+import InfoGeometry.External.Automath.Omega.POM.LkShiftedDetFreeEnergy
 
 namespace Omega.POM
 

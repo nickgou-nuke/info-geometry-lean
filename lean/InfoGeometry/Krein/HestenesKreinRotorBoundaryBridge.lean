@@ -43,11 +43,11 @@ Compatibility bridge exposing the Hestenes-Krein thermal boundary as real
 rotor periodicity rather than as a primitive complex-analytic KMS statement.
 
 The existing `HestenesKreinKMSPacket` remains the implementation owner for
-phase-axis compatibility and rotor conjugation.  This wrapper gives downstream
-modules a KMS-free name for the same real boundary socket.
+phase-axis compatibility and rotor conjugation.  This owner surface gives
+downstream modules a KMS-free name for the same real boundary socket.
 -/
 @[rep_depth krein]
-structure HestenesKreinRotorBoundaryBridge where
+structure Bridge where
   /-- Real Hestenes-Krein packet with phase axis, rotor, and observable flow. -/
   packet :
     HestenesKreinKMSPacket (E := E)
@@ -64,9 +64,9 @@ structure HestenesKreinRotorBoundaryBridge where
   rotor_boundary_holds :
     RealRotorBoundary packet period realState
 
-namespace HestenesKreinRotorBoundaryBridge
+namespace Bridge
 
-variable (B : HestenesKreinRotorBoundaryBridge (E := E))
+variable (B : Bridge (E := E))
 
 /-- Readback of the real rotor boundary law. -/
 @[rep_depth krein]
@@ -118,7 +118,7 @@ theorem rotor_preserves_krein_null
       (B.packet.rotor t ξ) (B.packet.rotor t ξ) = 0 :=
   B.packet.modular_rotor_preserves_null_cone t hξ
 
-end HestenesKreinRotorBoundaryBridge
+end Bridge
 
 /--
 Vacuum specialization of the Hestenes-Krein real rotor boundary.
@@ -157,7 +157,7 @@ theorem vacuum_rotor_boundary
 /-- Build the non-vacuum rotor-boundary bridge from the vacuum readout. -/
 @[rep_depth krein]
 def toRotorBoundaryBridge :
-    HestenesKreinRotorBoundaryBridge (E := E) where
+    Bridge (E := E) where
   packet := P
   period := B.period
   realState := B.vacuum.vacuumRealState

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiLogDefectAffineReproducingMomentIdentities
-import Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogDefectAffineReproducingMomentIdentities
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.FinitePartDirichletCharacterInversionPrime
-import Omega.Zeta.FinitePartDirichletTorsionGaussExpansion
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartDirichletCharacterInversionPrime
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartDirichletTorsionGaussExpansion
 
 open scoped BigOperators
 

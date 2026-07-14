@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedHurwitzGenus49SquareCubeLocking
-import Omega.DerivedConsequences.DerivedHurwitzV2WeilNonprimitive
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedHurwitzGenus49SquareCubeLocking
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedHurwitzV2WeilNonprimitive
 
 namespace Omega.DerivedConsequences
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.FoldgaugePiZeroRadiusOddGerm
+import InfoGeometry.External.Automath.Omega.Conclusion.FoldgaugePiZeroRadiusOddGerm
 
 namespace Omega.Conclusion
 

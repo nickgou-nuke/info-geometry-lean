@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
-import Omega.Folding.HolographicRateConservation
+import InfoGeometry.External.Automath.Omega.Folding.HolographicRateConservation
 
 namespace Omega.Zeta
 

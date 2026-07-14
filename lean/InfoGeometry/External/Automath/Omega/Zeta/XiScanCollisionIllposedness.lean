@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiComovingScanHankelRankDefect
-import Omega.Zeta.XiScanMinSeparationLocalBilipschitz
+import InfoGeometry.External.Automath.Omega.Zeta.XiComovingScanHankelRankDefect
+import InfoGeometry.External.Automath.Omega.Zeta.XiScanMinSeparationLocalBilipschitz
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
-import Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
+import InfoGeometry.External.Automath.Omega.Conclusion.BinfoldEscortCsiszarBlackwellPhi
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoAtomScalarRecoveryAlpha2
 
 namespace Omega.Conclusion
 

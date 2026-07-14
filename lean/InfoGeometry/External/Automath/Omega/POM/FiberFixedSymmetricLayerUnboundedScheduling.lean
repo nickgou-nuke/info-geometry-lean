@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FiberBulkSchedulingEntropyUniversal
+import InfoGeometry.External.Automath.Omega.POM.FiberBulkSchedulingEntropyUniversal
 
 namespace Omega.POM
 

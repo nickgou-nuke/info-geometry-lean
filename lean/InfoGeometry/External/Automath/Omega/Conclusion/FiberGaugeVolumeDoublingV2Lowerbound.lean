@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Nat.Digits.Defs
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberGaugeVolumeDoublingV2DigitSum
+import InfoGeometry.External.Automath.Omega.Folding.FiberGaugeVolumeDoublingV2DigitSum
 
 namespace Omega.Conclusion
 

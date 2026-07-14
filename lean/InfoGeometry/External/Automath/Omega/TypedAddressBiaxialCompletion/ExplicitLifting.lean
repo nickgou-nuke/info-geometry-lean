@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.ObserverIndexedExplicitLifting
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.ObserverIndexedExplicitLifting
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.FiberIndependenceComplexClassification
-import Omega.POM.FiberStokesEulerBoundaryObservability
+import InfoGeometry.External.Automath.Omega.POM.FiberIndependenceComplexClassification
+import InfoGeometry.External.Automath.Omega.POM.FiberStokesEulerBoundaryObservability
 
 namespace Omega.POM
 

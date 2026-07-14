@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.QuadraticFieldRamification
-import Omega.POM.S5GaloisArithmetic
+import InfoGeometry.External.Automath.Omega.Conclusion.QuadraticFieldRamification
+import InfoGeometry.External.Automath.Omega.POM.S5GaloisArithmetic
 
 namespace Omega.Conclusion
 

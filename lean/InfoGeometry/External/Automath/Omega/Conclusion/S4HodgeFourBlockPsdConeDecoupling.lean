@@ -1,4 +1,4 @@
-import Omega.Conclusion.S4InvariantHermitianConeProduct
+import InfoGeometry.External.Automath.Omega.Conclusion.S4InvariantHermitianConeProduct
 
 namespace Omega.Conclusion
 

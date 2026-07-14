@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
+import InfoGeometry.External.Automath.Omega.Zeta.XiVisibleArithmeticFibonacciCofinalQuotients
 
 namespace Omega.Zeta
 

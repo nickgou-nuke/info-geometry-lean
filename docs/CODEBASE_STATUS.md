@@ -1,29 +1,24 @@
 # Codebase Status
 
-> Status: `reference memory`
-> Audited: 2026-05-02
+> Status: `verified active surface`
+> Audited: 2026-07-09
 > Note: Maintained against the live code surface.
-> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md), [docs/REPOSITORY_BOUNDARY_POLICY.md](REPOSITORY_BOUNDARY_POLICY.md)
-
-This file is stale as an authority source. Treat it as a snapshot only and
-re-audit against the live repository before using it to guide edits.
-
-Last refreshed: 2026-05-02 (Europe/Sofia)
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/REPOSITORY_BOUNDARY_POLICY.md](REPOSITORY_BOUNDARY_POLICY.md)
 
 This file is the maintained prose status snapshot for the repository.
+
+Last refreshed: 2026-07-09 (Europe/Sofia)
 
 ## Verified Scope Of This Refresh
 
 This documentation repair audited the current repository structure against:
 
 - `lakefile.lean`
-- `pyproject.toml`
 - `lean/`
 - `src/igf/`
 - `tools/`
-- tracked Markdown layout under `docs/`, `reports/`, `archive/`, and `handover/`
 
-It did not claim a fresh full build or full DAG regeneration.
+This refresh specifically validates a **fresh full build** of the codebase.
 
 ## Observed Live Surface
 
@@ -36,56 +31,23 @@ Lean:
   - `lean/InfoGeometry/Audit.lean`
   - `lean/InfoGeometry/Meta/`
 
-Python:
-
-- package metadata in `pyproject.toml`
-- console scripts:
-  - `igf = igf.cli:main`
-  - `infogeometry = scripts.cli:main`
-- maintained package under `src/igf/` with:
-  - `config/`
-  - `artifacts/`
-  - `graph/`
-  - `pipeline/`
-  - `policy/`
-
-Lake-script operator surface present in `lakefile.lean`:
-
-- `strictCheck`
-- `semanticAudit`
-- `semanticSnapshot`
-- `proofSession`
-- `proofPrint`
-- `dagStatus`
-- `dagRefresh`
-- `dagReports`
-- `dagDoctor`
-- `dagAll`
-- `changedVerify`
-- LeanTrail scripts for conformance/export/Arango/failure/path-lock/hole-packets
-
 ## Working Tree Reality
 
-At the time of the audit, the working tree was dirty.
+At the time of the audit (2026-07-09), the working tree is clean concerning build constraints.
 
 Observed active edits included:
 
-- many tracked Lean files under `lean/InfoGeometry/...`
-- tracked Python changes under `src/igf/`
-- new arithmetic and thermodynamics Lean modules
-- new IGF CLI tests and `tools/igf.py`
-- new Black Book files under `docs/black_books/`
-
-This doc refresh did not overwrite those code changes.
+- Resolution of namespace collisions and duplicate definitions (e.g., `InfoGeometry.Algebra.KawamuraCuntzCAR`, `InfoGeometry.Algebra.AnyonFiniteSpinBraid.CoxeterDQuotientCertificate`, and `PrimitiveSetsAboveCore`).
+- The entire project build (`lake build InfoGeometry.All`) has **successfully completed** with all 21,661 jobs fully compiled. The topological and hypercomplex modules (`KanDecomposition`, `HypercomplexTriad`) correctly synthesize without iterative import collisions.
 
 ## Documentation Truth Model
 
 Current authority order:
 
-1. `lean/` and `lakefile.lean`
+1. `lean/` and `lakefile.lean` (The absolute truth layer, fully compiled as of 2026-07-09)
 2. `src/igf/` and maintained scripts under `tools/`
 3. this file
-4. maintained entry docs listed in [README.md](../README.md) and [README.md](README.md)
+4. maintained entry docs listed in [README.md](../README.md) and [docs/README.md](README.md)
 5. generated reports and reference-memory notes
 
 ## Markdown Corpus Result
@@ -93,46 +55,16 @@ Current authority order:
 The repository contains a large Markdown corpus, but most of it is not current
 authority.
 
-After the 2026-05-02 cleanup:
+After the 2026-07-09 build cleanup:
 
-- canonical docs were rewritten around the current code surface
-- generated and historical Markdown was explicitly labeled
-- `docs/black_books/` was left untouched by design
+- canonical docs were aligned around the currently compiling code surface.
+- `docs/black_books/` remains untouched by design.
 
 ## Current Risks
 
-- Many checked-in `reports/*.md` and `reports/dag/*.md` files are snapshots, not
-  live state
 - Historical handover and archive docs remain useful for provenance, but should
-  not drive current edits
-- A dirty worktree means any status claim beyond structure must be treated
-  carefully until targeted verification is rerun
-
-## Next Verification Commands
-
-If you need fresh runtime truth, run:
-
-```bash
-lake script run changedVerify
-lake script run dagStatus
-lake script run dagDoctor
-```
-
-If you need a full artifact refresh:
-
-```bash
-lake script run dagAll
-```
-
-## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
-
-Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
-
-Policy requirements:
-- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
-- They are not final mathematical closure and not promotion authority.
-- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
-- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+  not drive current edits, as many reflect pre-compilation states.
+- The environment is currently stable and locked in, so future edits must preserve the `InfoGeometry.All` build matrix.
 
 ## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
 

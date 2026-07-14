@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.OrthogonalSlice
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.OrthogonalSlice
 
 namespace Omega.TypedAddressBiaxialCompletion
 

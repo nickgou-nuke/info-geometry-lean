@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.MaxFiberAchieversHiddenBitProbSpectrum
-import Omega.POM.MaxFiberAchieversHiddenBitImbalance
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberAchieversHiddenBitProbSpectrum
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberAchieversHiddenBitImbalance
 
 namespace Omega.POM
 

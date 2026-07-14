@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SyncActionGap
+import InfoGeometry.External.Automath.Omega.Zeta.SyncActionGap
 
 namespace Omega.Zeta
 

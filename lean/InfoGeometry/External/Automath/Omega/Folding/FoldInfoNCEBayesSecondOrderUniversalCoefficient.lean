@@ -1,4 +1,4 @@
-import Omega.Folding.FoldInfoNCEEntropyDegenerationSecondOrder
+import InfoGeometry.External.Automath.Omega.Folding.FoldInfoNCEEntropyDegenerationSecondOrder
 
 open scoped BigOperators
 

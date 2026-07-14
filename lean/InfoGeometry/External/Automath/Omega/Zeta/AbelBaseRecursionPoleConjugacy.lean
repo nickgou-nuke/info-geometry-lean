@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
-import Omega.Zeta.CyclotomicSectorIdentity
+import InfoGeometry.External.Automath.Omega.Zeta.CyclotomicSectorIdentity
 
 namespace Omega.Zeta
 

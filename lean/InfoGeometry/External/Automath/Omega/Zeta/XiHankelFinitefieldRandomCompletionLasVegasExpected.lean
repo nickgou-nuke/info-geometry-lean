@@ -1,4 +1,4 @@
-import Omega.Zeta.HankelFinitefieldRandomCompletionNondegenerate
+import InfoGeometry.External.Automath.Omega.Zeta.HankelFinitefieldRandomCompletionNondegenerate
 import Mathlib.Tactic
 
 namespace Omega.Zeta

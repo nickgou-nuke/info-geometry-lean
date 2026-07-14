@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.InverseLimitDeterminacy
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.InverseLimitDeterminacy
 
 namespace Omega.RecursiveAddressing
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SPG.DyadicFiniteMomentCompleteness
+import InfoGeometry.External.Automath.Omega.SPG.DyadicFiniteMomentCompleteness
 
 namespace Omega.Conclusion
 

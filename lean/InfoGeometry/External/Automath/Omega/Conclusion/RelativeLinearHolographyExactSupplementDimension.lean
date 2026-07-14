@@ -1,4 +1,4 @@
-import Omega.Conclusion.CoordinateBundleLogmodularityVisibleRank
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleLogmodularityVisibleRank
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianL13
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianL13
 
 namespace Omega.Folding
 

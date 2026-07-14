@@ -1,4 +1,4 @@
-import Omega.Topos.NullClassificationUnderRefinement
+import InfoGeometry.External.Automath.Omega.Topos.NullClassificationUnderRefinement
 
 namespace Omega.Topos.NullClassificationUnderRefinementAPAL
 

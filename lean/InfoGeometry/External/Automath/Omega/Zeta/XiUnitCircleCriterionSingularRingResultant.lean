@@ -1,5 +1,5 @@
-import Omega.Zeta.XiSatakeTraceEllipseTemperedSegment
-import Omega.Zeta.XiSelfreciprocalEscapeJensen
+import InfoGeometry.External.Automath.Omega.Zeta.XiSatakeTraceEllipseTemperedSegment
+import InfoGeometry.External.Automath.Omega.Zeta.XiSelfreciprocalEscapeJensen
 
 namespace Omega.Zeta
 

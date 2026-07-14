@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Tactic
-import Omega.POM.VisibleWalshCommutatorDefect
+import InfoGeometry.External.Automath.Omega.POM.VisibleWalshCommutatorDefect
 
 namespace Omega.Conclusion
 

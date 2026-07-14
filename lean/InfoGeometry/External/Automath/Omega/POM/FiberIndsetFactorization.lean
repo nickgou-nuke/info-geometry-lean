@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.BigOperators
-import Omega.POM.FiberBirkhoffFenceIdealLattice
+import InfoGeometry.External.Automath.Omega.POM.FiberBirkhoffFenceIdealLattice
 
 open scoped BigOperators
 

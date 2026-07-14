@@ -1,5 +1,5 @@
-import Omega.Frontier.Conditional
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Frontier.Conditional
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega.Frontier
 

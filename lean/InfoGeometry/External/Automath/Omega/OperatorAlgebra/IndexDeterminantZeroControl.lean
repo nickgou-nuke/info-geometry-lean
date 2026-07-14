@@ -1,6 +1,6 @@
-import Omega.OperatorAlgebra.BayesInverseZK
-import Omega.OperatorAlgebra.FkdetChiSectorFactorization
-import Omega.OperatorAlgebra.SoundnessLowerBoundIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.BayesInverseZK
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FkdetChiSectorFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.SoundnessLowerBoundIndex
 
 namespace Omega.OperatorAlgebra
 

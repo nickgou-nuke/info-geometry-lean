@@ -1,6 +1,6 @@
 import Mathlib.Logic.Encodable.Basic
-import Omega.CircleDimension.CircleDim
-import Omega.SPG.ScreenKernelAuditCost
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.SPG.ScreenKernelAuditCost
 
 namespace Omega.SPG.PartialBoundaryGodelAuditOptimal
 

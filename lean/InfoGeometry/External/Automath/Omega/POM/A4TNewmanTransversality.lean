@@ -1,6 +1,6 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
-import Omega.POM.A4TNewmanThresholdAdeOrdering
+import InfoGeometry.External.Automath.Omega.POM.A4TNewmanThresholdAdeOrdering
 
 namespace Omega.POM
 

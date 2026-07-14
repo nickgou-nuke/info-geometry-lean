@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.CollisionCKFibonacci
+import InfoGeometry.External.Automath.Omega.POM.CollisionCKFibonacci
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart9xaaLowfiberAnomalyTax
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xaaLowfiberAnomalyTax
 
 namespace Omega.Zeta
 

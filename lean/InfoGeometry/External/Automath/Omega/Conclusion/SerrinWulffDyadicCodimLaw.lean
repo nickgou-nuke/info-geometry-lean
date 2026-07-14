@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
-import Omega.Conclusion.BoundarySubcriticalPerturbationSecondOrderRigidity
-import Omega.Conclusion.SerrinRealizableMeanConeCollapse
-import Omega.SPG.DyadicOuterApproxStokesGainMinkowskiReadout
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundarySubcriticalPerturbationSecondOrderRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.SerrinRealizableMeanConeCollapse
+import InfoGeometry.External.Automath.Omega.SPG.DyadicOuterApproxStokesGainMinkowskiReadout
 
 namespace Omega.Conclusion
 

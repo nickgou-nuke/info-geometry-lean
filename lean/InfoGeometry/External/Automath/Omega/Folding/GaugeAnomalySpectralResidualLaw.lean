@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyFiniteVarianceClosed
-import Omega.Folding.GaugeAnomalyHankelJordanCertificate
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyFiniteVarianceClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyHankelJordanCertificate
 
 namespace Omega.Folding
 

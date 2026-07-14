@@ -1,13 +1,14 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6BoundaryConductorTwoZetaFlatness
-import Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
-import Omega.DerivedConsequences.DerivedWindow6RepresentationZetaBoundaryExtension
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryConductorTwoZetaFlatness
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6BoundarySectorGroupalgebraIsotypy
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6RepresentationZetaBoundaryExtension
 
 namespace Omega.Conclusion
 
 /-- Concrete data for the conductor-`2` boundary Plancherel uniformity calculation. -/
 structure conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data where
-  witness : Unit := ()
+  witness : paper_conclusion_boundary_parity_three_layer_blind_filtration := by
+    exact paper_conclusion_boundary_parity_three_layer_blind_filtration
 
 namespace conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.List.Sort
 import Mathlib.Data.Nat.Dist
 import Mathlib.Tactic
-import Omega.Folding.Fold
-import Omega.Folding.ZeckendorfSignature
+import InfoGeometry.External.Automath.Omega.Folding.Fold
+import InfoGeometry.External.Automath.Omega.Folding.ZeckendorfSignature
 
 namespace Omega.GU
 

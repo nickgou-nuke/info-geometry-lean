@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.StokesEnergyCellSamplingConcentration
-import Omega.Conclusion.StokesEnergyH1SecondOrder
+import InfoGeometry.External.Automath.Omega.Conclusion.StokesEnergyCellSamplingConcentration
+import InfoGeometry.External.Automath.Omega.Conclusion.StokesEnergyH1SecondOrder
 
 namespace Omega.Conclusion
 

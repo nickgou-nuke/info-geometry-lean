@@ -1,9 +1,9 @@
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedZGSimplePoleDensityResidue
-import Omega.Folding.FoldCollisionZeroReduction
-import Omega.GU.BulkResonanceDeficit
-import Omega.POM.CompleteHomogeneousPFInfty
-import Omega.POM.FiberSymmetricOrderVisibleLayerSeparation
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedZGSimplePoleDensityResidue
+import InfoGeometry.External.Automath.Omega.Folding.FoldCollisionZeroReduction
+import InfoGeometry.External.Automath.Omega.GU.BulkResonanceDeficit
+import InfoGeometry.External.Automath.Omega.POM.CompleteHomogeneousPFInfty
+import InfoGeometry.External.Automath.Omega.POM.FiberSymmetricOrderVisibleLayerSeparation
 
 namespace Omega.DerivedConsequences
 

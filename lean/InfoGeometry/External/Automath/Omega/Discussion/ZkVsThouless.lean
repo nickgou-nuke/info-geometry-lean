@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Discussion.FramepotentialSffToHszk
-import Omega.Discussion.TwoDesignDecouplingHSZK
+import InfoGeometry.External.Automath.Omega.Discussion.FramepotentialSffToHszk
+import InfoGeometry.External.Automath.Omega.Discussion.TwoDesignDecouplingHSZK
 
 namespace Omega.Discussion
 

@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDetClosed
-import Omega.SyncKernelWeighted.RealInput40FactorSqrtuEigs
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDetClosed
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FactorSqrtuEigs
 
 namespace Omega.SyncKernelWeighted
 

@@ -1,8 +1,8 @@
 import Mathlib.Data.Nat.Digits.Lemmas
 import Mathlib.Tactic
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Omega.Folding.FiberArithmetic
-import Omega.Folding.MultinomialVpCarrySignature
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.MultinomialVpCarrySignature
 
 namespace Omega.Folding
 

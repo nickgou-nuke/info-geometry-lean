@@ -1,4 +1,4 @@
-import Omega.EA.AddAsFold
+import InfoGeometry.External.Automath.Omega.EA.AddAsFold
 
 namespace Omega.EA
 

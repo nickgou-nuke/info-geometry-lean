@@ -45,7 +45,8 @@ typically supplied as an adjoint action `A ↦ U_t A U_{-t}`.
 structure BoundedKMSConditionBridge where
   /-- Bounded modular-flow calibration over the Souriau/Drazin surrogate. -/
   bounded :
-    BoundedModularFlowCalibration (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Observable-level KMS/modular action. -/
   kmsFlow : ℝ → EndH → EndH

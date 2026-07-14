@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ZGPrimePairShadowCorrelationLaw
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGPrimePairShadowCorrelationLaw
 
 namespace Omega.Conclusion
 

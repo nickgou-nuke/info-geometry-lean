@@ -1,6 +1,6 @@
 import Mathlib.Data.List.Nodup
-import Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
-import Omega.EA.RewriteTermination
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterMultiplicativeNormalizationAdditiveIso
+import InfoGeometry.External.Automath.Omega.EA.RewriteTermination
 
 namespace Omega.EA
 

@@ -1,4 +1,6 @@
 import InfoGeometry.SuperMetriplectic.Cl44WeylD4
+import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.SuperMetriplectic.SupertraceBodyBridge
 
 /-!
 # Functional Definition: Metriplectic Information Super-Gas
@@ -145,7 +147,7 @@ end BPSEquationOfStateLimit
 Final functional capstone for the scalar/body information super-gas.
 -/
 structure InformationSuperGasCapstone (ι : Type*) [Fintype ι] where
-  characterCapstone : AdaptedBasisWeylCharacterCapstone ι
+  characterCapstone : WeylCharacterFormulaShadow ι
   d4Skeleton : Cl44D4CartanCharacterSkeleton
   dominantBPS : Cl44BPSDominantCharacterPacket
   functional : InformationSuperGasFunctional
@@ -198,7 +200,7 @@ theorem bps_pressure_eq_charge
 theorem body_entropy_nonnegative
     (C : InformationSuperGasCapstone ι) :
     0 ≤ C.entropyBody.production :=
-  C.entropyBody.body_second
+  C.entropyBody.body_second_law
 
 /-- The raw supertrace channel is signed, not the second-law order by itself. -/
 theorem supertrace_signed

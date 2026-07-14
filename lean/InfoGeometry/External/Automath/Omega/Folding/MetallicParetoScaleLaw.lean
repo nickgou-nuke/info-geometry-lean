@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.MetallicParetoFrontier
-import Omega.Folding.MetallicIntegerScalarizationThreshold
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoFrontier
+import InfoGeometry.External.Automath.Omega.Folding.MetallicIntegerScalarizationThreshold
 
 namespace Omega.Folding
 

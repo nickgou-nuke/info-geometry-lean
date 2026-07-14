@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.DeltaqSpectralDimensionIdentity
+import InfoGeometry.External.Automath.Omega.POM.DeltaqSpectralDimensionIdentity
 
 namespace Omega.POM
 

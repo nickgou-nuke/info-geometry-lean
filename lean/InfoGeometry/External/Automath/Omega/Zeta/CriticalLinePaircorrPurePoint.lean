@@ -1,4 +1,4 @@
-import Omega.Zeta.PhaseCombPoleCounting
+import InfoGeometry.External.Automath.Omega.Zeta.PhaseCombPoleCounting
 import Mathlib.Data.Set.Countable
 import Mathlib.Tactic
 

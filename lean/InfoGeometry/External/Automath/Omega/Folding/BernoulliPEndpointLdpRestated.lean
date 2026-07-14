@@ -1,4 +1,4 @@
-import Omega.Folding.BernoulliPEndpointExactFinite
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointExactFinite
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 

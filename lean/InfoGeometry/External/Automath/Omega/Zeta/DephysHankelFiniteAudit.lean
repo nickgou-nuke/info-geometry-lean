@@ -1,5 +1,5 @@
-import Omega.POM.MomentMinreal
-import Omega.Zeta.HankelMaximalMinorSyndromeNormalFormUniqueness
+import InfoGeometry.External.Automath.Omega.POM.MomentMinreal
+import InfoGeometry.External.Automath.Omega.Zeta.HankelMaximalMinorSyndromeNormalFormUniqueness
 
 namespace Omega.Zeta
 

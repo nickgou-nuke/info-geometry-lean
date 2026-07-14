@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.LocalClockPotential
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.LocalClockPotential
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

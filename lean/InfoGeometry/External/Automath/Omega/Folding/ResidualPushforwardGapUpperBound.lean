@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Folding.FoldCriticalResonanceConstantExpRate
-import Omega.Folding.FoldPairedStepDirichletCharacterIdentity
-import Omega.Folding.ResidualPushforwardKernelByFiberProbability
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstantExpRate
+import InfoGeometry.External.Automath.Omega.Folding.FoldPairedStepDirichletCharacterIdentity
+import InfoGeometry.External.Automath.Omega.Folding.ResidualPushforwardKernelByFiberProbability
 
 namespace Omega.Folding
 

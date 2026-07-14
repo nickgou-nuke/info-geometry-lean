@@ -1,7 +1,7 @@
-import Omega.SyncKernelWeighted.RealInput40Arity2dNonnegative
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBound
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDegreeBound
-import Omega.SyncKernelWeighted.RealInput40ArityChargeDetClosed
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40Arity2dNonnegative
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDegreeBound
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ArityChargeDetClosed
 
 namespace Omega.Conclusion
 

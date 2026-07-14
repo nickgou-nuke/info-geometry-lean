@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
+import InfoGeometry.External.Automath.Omega.GU.GroupJGPrimeRegisterPhaseBohrDense
 
 namespace Omega.Conclusion
 

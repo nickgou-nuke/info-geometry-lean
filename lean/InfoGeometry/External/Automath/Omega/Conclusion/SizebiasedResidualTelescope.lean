@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.ZeroSizebiasedResidualLayerwiseRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.ZeroSizebiasedResidualLayerwiseRigidity
 
 open scoped BigOperators
 

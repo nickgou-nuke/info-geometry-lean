@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.DerivedBinfoldAverageLogPotentialConstant
+import InfoGeometry.External.Automath.Omega.Folding.DerivedBinfoldAverageLogPotentialConstant
 
 namespace Omega.DerivedConsequences
 

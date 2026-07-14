@@ -103,6 +103,14 @@ lemma gibbsWeight_sum_one (H : Fin n → ℝ) (β : ℝ) :
     _ = 1 := by
           exact div_self hZne
 
+lemma gibbsWeight_le_one (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
+    gibbsWeight H β i ≤ 1 := by
+  have hnonneg : ∀ j : Fin n, 0 ≤ gibbsWeight H β j := fun j => gibbsWeight_nonneg H β j
+  have hsum : ∑ j : Fin n, gibbsWeight H β j = 1 := gibbsWeight_sum_one H β
+  have hi_le_sum : gibbsWeight H β i ≤ ∑ j : Fin n, gibbsWeight H β j := by
+    exact Finset.single_le_sum (fun j _hj => hnonneg j) (Finset.mem_univ i)
+  simpa [hsum] using hi_le_sum
+
 lemma gibbsWeight_eq_exp_logDensity (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
     gibbsWeight H β i = Real.exp (logDensityEntry H β i) := by
   unfold gibbsWeight logDensityEntry
@@ -190,6 +198,11 @@ lemma gibbs_detailedBalance_entry
 lemma gibbsDensity_diag_pos (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
     0 < gibbsDensity H β i i := by
   simpa [gibbsDensity] using gibbsWeight_pos H β i
+
+/-- Diagonal entries of Gibbs density are bounded by one. -/
+lemma gibbsDensity_diag_le_one (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
+    gibbsDensity H β i i ≤ 1 := by
+  simpa [gibbsDensity] using gibbsWeight_le_one H β i
 
 /-- Log-density exponentiates back to Gibbs diagonal entries. -/
 lemma logDensityOp_exp_entry (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :

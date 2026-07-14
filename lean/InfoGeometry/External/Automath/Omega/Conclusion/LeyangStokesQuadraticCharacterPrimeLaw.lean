@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedLeyangCubicModelsCommonQuadraticResolvent
-import Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedLeyangCubicModelsCommonQuadraticResolvent
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmStokesLeyangCommonQuadraticResolvent
 
 namespace Omega.Conclusion
 

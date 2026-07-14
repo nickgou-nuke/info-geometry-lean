@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.POM.FiberGeodesicLinearExtension
-import Omega.POM.FenceVolumeLog2Pi
+import InfoGeometry.External.Automath.Omega.POM.FiberGeodesicLinearExtension
+import InfoGeometry.External.Automath.Omega.POM.FenceVolumeLog2Pi
 
 namespace Omega.POM
 

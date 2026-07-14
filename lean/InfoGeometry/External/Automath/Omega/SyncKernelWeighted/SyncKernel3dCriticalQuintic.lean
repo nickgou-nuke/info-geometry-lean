@@ -1,6 +1,6 @@
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.SyncKernel3dCriticalWHalf
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SyncKernel3dCriticalWHalf
 
 namespace Omega.SyncKernelWeighted
 

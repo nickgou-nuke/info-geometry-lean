@@ -95,37 +95,37 @@ theorem polarizationOdd_F_of_chiralityPolarization_eq_kkChirality
     InfoGeometry.KK.RealSplitKreinKasparovCycle.chirality] using
     X.dirac_anticommutes_chirality
 
+omit [FiniteDimensional ℝ S] in
 /--
 If both chiral kernel slices are explicitly identified with the canonical
 Majorana chirality polarization and are both nontrivial, then the bounded KK
 phase carries an explicit Weyl-plus/Weyl-minus zero-mode pair.
 -/
 @[rep_depth krein]
-noncomputable def weylBoundarySpinorPair_of_nontrivial_chiralKernelSlices_of_identifiedChirality
+theorem exists_weyl_boundary_spinor_pair_of_nontrivial_chiralKernelSlices_of_identifiedChirality
     (X : KasparovCycle A B S)
     (M : RealMajoranaDatum (S := S))
     (hplus : M.chiralityPolarization.plus = KasparovCycle.chiralKernelSlicePlus X)
     (hminus : M.chiralityPolarization.minus = KasparovCycle.chiralKernelSliceMinus X)
     (hplus_ne : KasparovCycle.chiralKernelSlicePlus X ≠ ⊥)
     (hminus_ne : KasparovCycle.chiralKernelSliceMinus X ≠ ⊥) :
-    WeylBoundarySpinorPair (S := S) M X.F := by
-  classical
+    ∃ spinors : WeylBoundarySpinorPair (S := S) M X.F,
+      spinors.psiPlus ≠ 0 ∧
+      spinors.psiMinus ≠ 0 ∧
+      M.J spinors.psiPlus = spinors.psiPlus ∧
+      M.J spinors.psiMinus = -spinors.psiMinus ∧
+      X.F spinors.psiPlus = 0 ∧
+      X.F spinors.psiMinus = 0 := by
   have hplus_ne' : M.chiralityPolarization.plus ≠ ⊥ := by
     rw [hplus]
     exact hplus_ne
   have hminus_ne' : M.chiralityPolarization.minus ≠ ⊥ := by
     rw [hminus]
     exact hminus_ne
-  let hplus_witness := (M.chiralityPolarization.plus).ne_bot_iff.mp hplus_ne'
-  let ψplus := Classical.choose hplus_witness
-  let hplus_witness_spec := Classical.choose_spec hplus_witness
-  let hminus_witness := (M.chiralityPolarization.minus).ne_bot_iff.mp hminus_ne'
-  let ψminus := Classical.choose hminus_witness
-  let hminus_witness_spec := Classical.choose_spec hminus_witness
-  have hψplus_mem : ψplus ∈ M.chiralityPolarization.plus := hplus_witness_spec.1
-  have hψplus_ne : ψplus ≠ 0 := hplus_witness_spec.2
-  have hψminus_mem : ψminus ∈ M.chiralityPolarization.minus := hminus_witness_spec.1
-  have hψminus_ne : ψminus ≠ 0 := hminus_witness_spec.2
+  rcases (M.chiralityPolarization.plus).ne_bot_iff.mp hplus_ne' with
+    ⟨ψplus, hψplus_mem, hψplus_ne⟩
+  rcases (M.chiralityPolarization.minus).ne_bot_iff.mp hminus_ne' with
+    ⟨ψminus, hψminus_mem, hψminus_ne⟩
   have hψplus_slice : ψplus ∈ KasparovCycle.chiralKernelSlicePlus X := by
     rw [← hplus]
     exact hψplus_mem
@@ -140,26 +140,34 @@ noncomputable def weylBoundarySpinorPair_of_nontrivial_chiralKernelSlices_of_ide
     simpa using hψplus_mem
   have hψminus_mem_weyl : ψminus ∈ M.weylMinus := by
     simpa using hψminus_mem
-  exact
+  have hψplus_weyl :
+      M.J ψplus = ψplus := by
+    simpa using (M.mem_weylPlus_iff ψplus).mp hψplus_mem_weyl
+  have hψminus_weyl :
+      M.J ψminus = -ψminus := by
+    simpa using (M.mem_weylMinus_iff ψminus).mp hψminus_mem_weyl
+  let spinors : WeylBoundarySpinorPair (S := S) M X.F :=
     { psiPlus := ψplus
       psiMinus := ψminus
       psiPlus_ne_zero := hψplus_ne
       psiMinus_ne_zero := hψminus_ne
-      psiPlus_weyl := by
-        simpa using (M.mem_weylPlus_iff ψplus).mp hψplus_mem_weyl
-      psiMinus_weyl := by
-        simpa using (M.mem_weylMinus_iff ψminus).mp hψminus_mem_weyl
+      psiPlus_weyl := hψplus_weyl
+      psiMinus_weyl := hψminus_weyl
       psiPlus_zeroMode := hψplus_zero
       psiMinus_zeroMode := hψminus_zero }
+  exact
+    ⟨spinors,
+      hψplus_ne, hψminus_ne, hψplus_weyl, hψminus_weyl,
+      hψplus_zero, hψminus_zero⟩
 
 /--
 Nonzero analytical index, together with explicit identification of the
-chirality polarization and nontriviality of both chiral slices, yields the full
-Weyl boundary spinor plus nontrivial regularization package for the bounded KK
-phase.
+chirality polarization and nontriviality of both chiral slices, yields existence
+of a Weyl boundary spinor plus nontrivial regularization package for the bounded
+KK phase.
 -/
 @[rep_depth krein]
-noncomputable def majoranaKitaevSpinorRegularizationPackage_of_nonzero_analyticalIndex_of_identifiedChiralKernelSlices
+theorem exists_majorana_kitaev_spinor_regularization_package_of_nonzero_analyticalIndex_of_identifiedChiralKernelSlices
     (X : KasparovCycle A B S)
     (M : RealMajoranaDatum (S := S))
     (hJ : M.J = InfoGeometry.Krein.KreinGradedModule.gradeCLM (H := S))
@@ -168,18 +176,29 @@ noncomputable def majoranaKitaevSpinorRegularizationPackage_of_nonzero_analytica
     (hplus_ne : KasparovCycle.chiralKernelSlicePlus X ≠ ⊥)
     (hminus_ne : KasparovCycle.chiralKernelSliceMinus X ≠ ⊥)
     (hNonzero : X.analyticalIndex ≠ 0) :
-    MajoranaKitaevSpinorRegularizationPackage (S := S) M X.F := by
-  let spinors :=
-    weylBoundarySpinorPair_of_nontrivial_chiralKernelSlices_of_identifiedChirality
-      (X := X) (M := M) hplus hminus hplus_ne hminus_ne
-  let reg :=
-    zeroModeRegularizationPackage_of_nonzero_analyticalIndex_of_identifiedPolarization
+    ∃ pkg : MajoranaKitaevSpinorRegularizationPackage (S := S) M X.F,
+      IsMoorePenroseInverse X.F pkg.Q_MP ∧
+      IsDrazinInverse X.F pkg.Q_D pkg.k ∧
+      MoorePenrose.IsMoorePenroseInverse.rightProjector X.F pkg.Q_MP
+        ≠ (1 : S →L[ℝ] S) ∧
+      MoorePenrose.IsMoorePenroseInverse.leftProjector X.F pkg.Q_MP
+        ≠ (1 : S →L[ℝ] S) ∧
+      Drazin.IsDrazinInverse.projection X.F pkg.Q_D
+        ≠ (1 : S →L[ℝ] S) := by
+  rcases
+    exists_weyl_boundary_spinor_pair_of_nontrivial_chiralKernelSlices_of_identifiedChirality
+      (X := X) (M := M) hplus hminus hplus_ne hminus_ne with
+    ⟨spinors, _hψplus_ne, _hψminus_ne, _hψplus_weyl, _hψminus_weyl,
+      _hψplus_zero, _hψminus_zero⟩
+  rcases
+    exists_zero_mode_regularization_package_of_nonzero_analyticalIndex_of_identifiedPolarization
       (X := X) (M := M) (P0 := M.chiralityPolarization)
       hplus hminus
       (polarizationOdd_F_of_chiralityPolarization_eq_kkChirality
         (X := X) (M := M) hJ)
-      hNonzero
-  exact
+      hNonzero with
+    ⟨reg, _hZero, _hNonzero, hMP, hD, hRight, hLeft, hDrazin⟩
+  let pkg : MajoranaKitaevSpinorRegularizationPackage (S := S) M X.F :=
     { spinors := spinors
       Q_MP := reg.reg.Q_MP
       Q_D := reg.reg.Q_D
@@ -189,12 +208,15 @@ noncomputable def majoranaKitaevSpinorRegularizationPackage_of_nonzero_analytica
       rightProjector_ne_one := reg.reg.rightProjector_ne_one
       leftProjector_ne_one := reg.reg.leftProjector_ne_one
       drazinProjection_ne_one := reg.reg.drazinProjection_ne_one }
+  exact ⟨pkg, hMP, hD, hRight, hLeft, hDrazin⟩
 
 end IndexResidue
 
+omit [FiniteDimensional ℝ S] in
 /--
 Topological Kitaev phase plus a simplified boundary model in the chirality
-polarization yields explicit Weyl boundary spinor zero modes.
+polarization yields an explicit Weyl boundary spinor pair for the global
+open-chain operator.
 -/
 @[rep_depth krein]
 noncomputable def weylBoundarySpinorPair_of_simplifiedBoundaryModel
@@ -211,17 +233,70 @@ noncomputable def weylBoundarySpinorPair_of_simplifiedBoundaryModel
   let hPair :=
     boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
       (M := M) (P0 := M.chiralityPolarization) localOp chain hTopo hSimple
-  refine
+  have hPlusWeyl :
+      M.J hPair.psiPlus = hPair.psiPlus := by
+    simpa using (M.mem_weylPlus_iff hPair.psiPlus).mp hPair.psiPlus_mem
+  have hMinusWeyl :
+      M.J hPair.psiMinus = -hPair.psiMinus := by
+    simpa using (M.mem_weylMinus_iff hPair.psiMinus).mp hPair.psiMinus_mem
+  exact
     { psiPlus := hPair.psiPlus
       psiMinus := hPair.psiMinus
       psiPlus_ne_zero := hPair.psiPlus_ne_zero
       psiMinus_ne_zero := hPair.psiMinus_ne_zero
-      psiPlus_weyl := ?_
-      psiMinus_weyl := ?_
+      psiPlus_weyl := hPlusWeyl
+      psiMinus_weyl := hMinusWeyl
       psiPlus_zeroMode := hPair.psiPlus_zeroMode
       psiMinus_zeroMode := hPair.psiMinus_zeroMode }
-  · simpa using (M.mem_weylPlus_iff hPair.psiPlus).mp hPair.psiPlus_mem
-  · simpa using (M.mem_weylMinus_iff hPair.psiMinus).mp hPair.psiMinus_mem
+
+omit [FiniteDimensional ℝ S] in
+/--
+Topological Kitaev phase plus a simplified boundary model in the chirality
+polarization yields explicit Weyl boundary spinor zero modes.
+-/
+@[rep_depth krein]
+theorem exists_weyl_boundary_spinor_pair_of_simplifiedBoundaryModel
+    (M : RealMajoranaDatum (S := S))
+    (localOp : KitaevCell → S →L[ℝ] S)
+    (chain : List KitaevCell)
+    (hTopo : topologicalIndexZ2 chain = 1)
+    (_hPHS : ∀ c : KitaevCell,
+      ParticleHoleSymmetric (M := M) (P0 := M.chiralityPolarization) (localOp c))
+    (hSimple :
+      SimplifiedBoundaryModel (M := M) (P0 := M.chiralityPolarization) localOp chain) :
+    ∃ spinors : WeylBoundarySpinorPair
+        (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain),
+      spinors.psiPlus ≠ 0 ∧
+      spinors.psiMinus ≠ 0 ∧
+      M.J spinors.psiPlus = spinors.psiPlus ∧
+      M.J spinors.psiMinus = -spinors.psiMinus ∧
+      (globalChainOperatorFromOpenChain (S := S) localOp chain) spinors.psiPlus = 0 ∧
+      (globalChainOperatorFromOpenChain (S := S) localOp chain) spinors.psiMinus = 0 := by
+  let hPair :=
+    boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
+      (M := M) (P0 := M.chiralityPolarization) localOp chain hTopo hSimple
+  have hPlusWeyl :
+      M.J hPair.psiPlus = hPair.psiPlus := by
+    simpa using (M.mem_weylPlus_iff hPair.psiPlus).mp hPair.psiPlus_mem
+  have hMinusWeyl :
+      M.J hPair.psiMinus = -hPair.psiMinus := by
+    simpa using (M.mem_weylMinus_iff hPair.psiMinus).mp hPair.psiMinus_mem
+  let spinors :
+      WeylBoundarySpinorPair
+        (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
+    { psiPlus := hPair.psiPlus
+      psiMinus := hPair.psiMinus
+      psiPlus_ne_zero := hPair.psiPlus_ne_zero
+      psiMinus_ne_zero := hPair.psiMinus_ne_zero
+      psiPlus_weyl := hPlusWeyl
+      psiMinus_weyl := hMinusWeyl
+      psiPlus_zeroMode := hPair.psiPlus_zeroMode
+      psiMinus_zeroMode := hPair.psiMinus_zeroMode }
+  exact
+    ⟨spinors,
+      hPair.psiPlus_ne_zero, hPair.psiMinus_ne_zero,
+      hPlusWeyl, hMinusWeyl,
+      hPair.psiPlus_zeroMode, hPair.psiMinus_zeroMode⟩
 
 /--
 The same topological/simplified-boundary hypotheses yield a genuinely
@@ -257,12 +332,12 @@ theorem exists_nontrivial_regularization_pair_of_simplifiedBoundaryModel
       localOp chain hTopo hPHS hSimple
 
 /--
-Canonical unification package for the stable Majorana/Kitaev/Weyl corridor:
-topological phase data yields Weyl boundary spinors and a nonidentity
-generalized-inverse package for the same global chain operator.
+Existence of the stable Majorana/Kitaev/Weyl corridor package: topological phase
+data yields Weyl boundary spinors and a nonidentity generalized-inverse package
+for the same global chain operator.
 -/
 @[rep_depth krein]
-noncomputable def majoranaKitaevSpinorRegularizationPackage_of_simplifiedBoundaryModel
+theorem exists_majorana_kitaev_spinor_regularization_package_of_simplifiedBoundaryModel
     (M : RealMajoranaDatum (S := S))
     (localOp : KitaevCell → S →L[ℝ] S)
     (chain : List KitaevCell)
@@ -271,17 +346,36 @@ noncomputable def majoranaKitaevSpinorRegularizationPackage_of_simplifiedBoundar
       ParticleHoleSymmetric (M := M) (P0 := M.chiralityPolarization) (localOp c))
     (hSimple :
       SimplifiedBoundaryModel (M := M) (P0 := M.chiralityPolarization) localOp chain) :
-    MajoranaKitaevSpinorRegularizationPackage
-      (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
+    ∃ pkg : MajoranaKitaevSpinorRegularizationPackage
+        (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain),
+      IsMoorePenroseInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.Q_MP ∧
+      IsDrazinInverse
+        (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.Q_D pkg.k ∧
+      MoorePenrose.IsMoorePenroseInverse.rightProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      MoorePenrose.IsMoorePenroseInverse.leftProjector
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.Q_MP
+          ≠ (1 : S →L[ℝ] S) ∧
+      Drazin.IsDrazinInverse.projection
+          (globalChainOperatorFromOpenChain (S := S) localOp chain) pkg.Q_D
+          ≠ (1 : S →L[ℝ] S) := by
   let Q := globalChainOperatorFromOpenChain (S := S) localOp chain
-  let spinors :=
-    weylBoundarySpinorPair_of_simplifiedBoundaryModel
+  rcases
+    exists_weyl_boundary_spinor_pair_of_simplifiedBoundaryModel
       (S := S) M localOp chain hTopo hPHS hSimple
-  let reg :=
-    nontrivialRegularizationPackage_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
+    with
+    ⟨spinors, _hψplus_ne, _hψminus_ne, _hψplus_weyl, _hψminus_weyl,
+      _hψplus_zero, _hψminus_zero⟩
+  rcases
+    exists_nontrivial_regularization_package_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
       (S := S) (M := M) (P0 := M.chiralityPolarization)
-      localOp chain hTopo hPHS hSimple
-  exact
+      localOp chain hTopo hPHS hSimple with
+    ⟨reg, hMP, hD, hRight, hLeft, hDrazin⟩
+  let pkg :
+      MajoranaKitaevSpinorRegularizationPackage
+        (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
     { spinors := by simpa [Q] using spinors
       Q_MP := reg.Q_MP
       Q_D := reg.Q_D
@@ -291,6 +385,7 @@ noncomputable def majoranaKitaevSpinorRegularizationPackage_of_simplifiedBoundar
       rightProjector_ne_one := reg.rightProjector_ne_one
       leftProjector_ne_one := reg.leftProjector_ne_one
       drazinProjection_ne_one := reg.drazinProjection_ne_one }
+  exact ⟨pkg, hMP, hD, hRight, hLeft, hDrazin⟩
 
 end Core
 

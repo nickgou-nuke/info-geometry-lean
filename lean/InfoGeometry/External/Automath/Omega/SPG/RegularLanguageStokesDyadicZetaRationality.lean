@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Algebra.Field.GeomSum
-import Omega.SPG.DyadicFluxZetaMinkowskiPole
+import InfoGeometry.External.Automath.Omega.SPG.DyadicFluxZetaMinkowskiPole
 
 namespace Omega.SPG
 

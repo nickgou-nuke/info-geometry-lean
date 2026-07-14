@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.GU.DiscriminantWedge2Square
-import Omega.GU.JoukowskyGodelLeadingCoeffRigidity
-import Omega.GU.JoukowskyGodelPullbackFactorization
+import InfoGeometry.External.Automath.Omega.GU.DiscriminantWedge2Square
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelLeadingCoeffRigidity
+import InfoGeometry.External.Automath.Omega.GU.JoukowskyGodelPullbackFactorization
 
 namespace Omega.GU
 

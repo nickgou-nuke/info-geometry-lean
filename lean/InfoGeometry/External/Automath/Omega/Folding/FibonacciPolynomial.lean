@@ -5,7 +5,7 @@ import Mathlib.Algebra.Polynomial.Degree.Operations
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Tactic.LinearCombination
-import Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.Fib
 
 namespace Omega
 

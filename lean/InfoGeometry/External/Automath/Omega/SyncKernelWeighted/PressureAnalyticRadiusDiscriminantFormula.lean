@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.PressureAnalyticRadius
-import Omega.SyncKernelWeighted.PressureBranchpointsDiscriminant
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureAnalyticRadius
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.PressureBranchpointsDiscriminant
 
 namespace Omega.SyncKernelWeighted
 

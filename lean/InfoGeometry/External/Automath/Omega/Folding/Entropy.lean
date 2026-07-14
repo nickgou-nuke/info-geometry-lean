@@ -4,9 +4,9 @@ import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
 import Mathlib.InformationTheory.KullbackLeibler.Basic
 import Mathlib.MeasureTheory.Measure.Tilted
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.CircleDimension
-import Omega.Folding.ShiftDynamics
-import Omega.Folding.MomentBounds
+import InfoGeometry.External.Automath.Omega.Folding.CircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.MomentBounds
 
 open scoped goldenRatio
 open Filter Topology

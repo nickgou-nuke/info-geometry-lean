@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.POM.BivariateSystemIdentificationFiniteWindow
+import InfoGeometry.External.Automath.Omega.POM.BivariateSystemIdentificationFiniteWindow
 
 namespace Omega.POM
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiRamificationPushforward
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiRamificationPushforward
 
 namespace Omega.Conclusion
 

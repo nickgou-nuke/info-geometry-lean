@@ -2,7 +2,7 @@ import Mathlib.GroupTheory.Perm.Basic
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.GroupTheory.SpecificGroups.Alternating
 import Mathlib.Tactic
-import Omega.POM.A4TNewmanOcticFieldArithmetic
+import InfoGeometry.External.Automath.Omega.POM.A4TNewmanOcticFieldArithmetic
 
 namespace Omega.POM
 

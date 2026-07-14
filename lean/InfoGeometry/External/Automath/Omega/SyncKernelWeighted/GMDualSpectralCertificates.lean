@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
-import Omega.SyncKernelWeighted.GMResidualOpnormGramEquivalence
-import Omega.SyncKernelWeighted.GMTrace3SpectralNormExtremal
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.GMSoficZeckLinearConstraintsPF
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMResidualOpnormGramEquivalence
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.GMTrace3SpectralNormExtremal
 
 namespace Omega.SyncKernelWeighted
 

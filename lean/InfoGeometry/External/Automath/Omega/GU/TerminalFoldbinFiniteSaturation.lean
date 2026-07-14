@@ -1,6 +1,6 @@
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic
-import Omega.GU.TerminalFoldbinSaturationDiophantine
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbinSaturationDiophantine
 
 namespace Omega.GU
 

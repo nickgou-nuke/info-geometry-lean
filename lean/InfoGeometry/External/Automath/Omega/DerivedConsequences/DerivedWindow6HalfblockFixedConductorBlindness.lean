@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Nat.Totient
 import Mathlib.Tactic
-import Omega.DerivedConsequences.DerivedWindow6HalfblockRecoversLucasDivisorLattice
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedWindow6HalfblockRecoversLucasDivisorLattice
 
 namespace Omega.DerivedConsequences
 

@@ -36,6 +36,15 @@ abbrev ClInfty : Type :=
 abbrev Cl_infty : Type :=
   ClInfty
 
+noncomputable instance : Module ℝ Cl_infty :=
+  DirectLimit.instModule
+
+noncomputable instance : SMul ℝ Cl_infty :=
+  (inferInstance : Module ℝ Cl_infty).toSMul
+
+noncomputable instance : HSMul ℝ Cl_infty Cl_infty :=
+  instHSMul
+
 /-- Canonical map from a finite split Clifford stage into the direct limit. -/
 @[rep_depth krein]
 def ofStage (n : ℕ) : SplitClNNAlg n →+* Cl_infty :=
@@ -176,30 +185,10 @@ theorem clInfinity_parabolic_pow (r : ℝ) (n : ℕ) :
       1 + r • clInfinityNilpotentShield = ofStage 1 (1 + r • finiteNilpotentShield) := by
     have hsmul :
         r • clInfinityNilpotentShield = ofStage 1 (r • finiteNilpotentShield) := by
-      simpa [clInfinityNilpotentShield] using
-        (ofStage_smul 1 r finiteNilpotentShield).symm
+      rw [clInfinityNilpotentShield, ofStage_smul]
     rw [ofStage_add, ofStage_one, hsmul]
   rw [hrepr, ← ofStage_pow, finiteNilpotentShield_parabolic_pow]
   rw [ofStage_add, ofStage_one, ofStage_smul]
   rfl
 
 end InfoGeometry.Clifford.CliffordBott
-
-
-/-- The recursive sequence reducing Cl(5,5) to 5 explicit Bott cells. -/
-@[rep_depth krein]
-theorem cl55_bott_reduction_sequence :
-    Nonempty (SplitClNNAlg 5 ≃ₐ[ℝ] SplitClNNTensorStep 4) ∧
-    Nonempty (SplitClNNAlg 4 ≃ₐ[ℝ] SplitClNNTensorStep 3) ∧
-    Nonempty (SplitClNNAlg 3 ≃ₐ[ℝ] SplitClNNTensorStep 2) ∧
-    Nonempty (SplitClNNAlg 2 ≃ₐ[ℝ] SplitClNNTensorStep 1) := by
-  exact ⟨ ... ⟩
-
-/-- 
-The Conjugation Anomaly Closure Theorem:
-By decomposing the 10-dimensional real doubled space Cl(5,5) into 5 exact Bott 
-cells, the conjugation anomaly evaluates locally within each Cl(1,1) cell.
--/
-theorem cl55_bott_anomaly_closure_achieved :
-    Nonempty (SplitClNNAlg 5 ≃ₐ[ℝ] SplitClNNTensorStep 4) :=
-  ⟨splitCliffordTensorStepEquiv 4⟩

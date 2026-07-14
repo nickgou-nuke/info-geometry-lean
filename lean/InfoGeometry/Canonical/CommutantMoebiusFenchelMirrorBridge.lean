@@ -62,7 +62,7 @@ identification theorem for the infinite CAR commutant or a global Cuntz
 @[rep_depth krein]
 theorem finite_commutant_moebius_fenchel_mirror_o55_window
     (M :
-      InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesMoebiusClosureBridge
+      InfoGeometry.Krein.HestenesMoebiusClosureBridge.Bridge
         (E := E) Word)
     (mobius :
       InfoGeometry.Krein.HestenesMoebiusClosureBridge.MoebiusParameter)
@@ -138,7 +138,7 @@ twisted index.
 theorem supplied_o55_and_dirac_hodge_trace_window
     [InfoGeometry.Krein.KreinSpace H₂]
     (B :
-      InfoGeometry.Krein.HestenesAffineO55ClosureBridge.HestenesAffineO55ClosureBridge
+      InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge
         (E := E))
     (ξ : H₂)
     (hNatural :

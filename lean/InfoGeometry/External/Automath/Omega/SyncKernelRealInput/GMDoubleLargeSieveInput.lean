@@ -1,4 +1,4 @@
-import Omega.Zeta.Conclusion74DoubleLargeSieveInput
+import InfoGeometry.External.Automath.Omega.Zeta.Conclusion74DoubleLargeSieveInput
 
 namespace Omega.SyncKernelRealInput
 

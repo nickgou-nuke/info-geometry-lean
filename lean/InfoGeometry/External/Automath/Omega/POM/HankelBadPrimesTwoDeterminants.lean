@@ -1,4 +1,4 @@
-import Omega.POM.HankelDeterminantGeometricLaw
+import InfoGeometry.External.Automath.Omega.POM.HankelDeterminantGeometricLaw
 
 namespace Omega.POM
 

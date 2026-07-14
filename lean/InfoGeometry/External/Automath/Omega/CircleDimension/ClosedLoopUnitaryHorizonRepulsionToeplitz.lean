@@ -1,8 +1,8 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.DefectRepulsionRadius
-import Omega.CircleDimension.DyadicCofinalSparsification
-import Omega.CircleDimension.UnitarySliceDecidable
-import Omega.Zeta.ToeplitzPsdCofinalSparsificationHereditary
+import InfoGeometry.External.Automath.Omega.CircleDimension.DefectRepulsionRadius
+import InfoGeometry.External.Automath.Omega.CircleDimension.DyadicCofinalSparsification
+import InfoGeometry.External.Automath.Omega.CircleDimension.UnitarySliceDecidable
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzPsdCofinalSparsificationHereditary
 
 namespace Omega.CircleDimension
 

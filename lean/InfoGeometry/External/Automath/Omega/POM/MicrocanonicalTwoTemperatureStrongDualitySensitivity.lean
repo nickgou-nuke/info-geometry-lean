@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalTwoTemperatureJsIdentity
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalTwoTemperatureJsIdentity
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Tactic
 

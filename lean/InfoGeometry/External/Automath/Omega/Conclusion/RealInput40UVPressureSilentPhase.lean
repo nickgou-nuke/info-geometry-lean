@@ -1,4 +1,4 @@
-import Omega.Conclusion.RealInput40UVAtomCore
+import InfoGeometry.External.Automath.Omega.Conclusion.RealInput40UVAtomCore
 
 namespace Omega.Conclusion
 

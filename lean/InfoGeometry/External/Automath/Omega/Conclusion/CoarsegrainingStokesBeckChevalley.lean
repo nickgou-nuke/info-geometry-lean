@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.StokesSteinWeightedGraphMinflow
+import InfoGeometry.External.Automath.Omega.Conclusion.StokesSteinWeightedGraphMinflow
 
 namespace Omega.Conclusion
 

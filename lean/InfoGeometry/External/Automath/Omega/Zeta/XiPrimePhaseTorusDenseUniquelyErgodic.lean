@@ -3,7 +3,7 @@ import Mathlib.Data.Nat.Prime.Int
 import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Topology.Instances.AddCircle.DenseSubgroup
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingObservableClosureDichotomy
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingObservableClosureDichotomy
 
 namespace Omega.Zeta
 

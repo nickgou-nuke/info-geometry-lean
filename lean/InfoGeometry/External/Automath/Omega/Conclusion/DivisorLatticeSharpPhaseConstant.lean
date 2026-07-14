@@ -1,5 +1,5 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Base
-import Omega.Conclusion.PrimeRegister
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegister
 
 /-!
 # Divisor-lattice sharp phase constant

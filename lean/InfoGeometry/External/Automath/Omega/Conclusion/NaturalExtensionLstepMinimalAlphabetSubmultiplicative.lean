@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Tactic
-import Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
+import InfoGeometry.External.Automath.Omega.Zeta.LayeredPrimesliceLocalAlphabetFibermax
 
 namespace Omega.Conclusion
 

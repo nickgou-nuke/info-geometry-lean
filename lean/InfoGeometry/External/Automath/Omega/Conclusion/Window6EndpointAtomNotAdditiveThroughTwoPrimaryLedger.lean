@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Conclusion.BoundaryParityAnomalyGap
-import Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryParityAnomalyGap
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6BoundaryParityDirectSummandRationalBlindness
 
 namespace Omega.Conclusion
 

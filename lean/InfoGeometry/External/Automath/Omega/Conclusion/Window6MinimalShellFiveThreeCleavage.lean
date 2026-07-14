@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
-import Omega.GU.Window6AdjointWeightMultiset
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6MinimalShellRigidSubcoverRootSlice
+import InfoGeometry.External.Automath.Omega.GU.Window6AdjointWeightMultiset
 
 namespace Omega.Conclusion
 

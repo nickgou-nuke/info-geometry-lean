@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.BernoulliZetaTower
+import InfoGeometry.External.Automath.Omega.GU.BernoulliZetaTower
 
 namespace Omega.GU
 

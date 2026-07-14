@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxentMarkovSpectrumSingleShotInversion
+import InfoGeometry.External.Automath.Omega.POM.MaxentMarkovSpectrumSingleShotInversion
 
 open scoped BigOperators
 

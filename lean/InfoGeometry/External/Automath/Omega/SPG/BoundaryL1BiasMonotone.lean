@@ -1,5 +1,5 @@
 import Mathlib.Data.Int.NatAbs
-import Omega.SPG.CoarsegrainedCutFlux
+import InfoGeometry.External.Automath.Omega.SPG.CoarsegrainedCutFlux
 
 namespace Omega.SPG
 

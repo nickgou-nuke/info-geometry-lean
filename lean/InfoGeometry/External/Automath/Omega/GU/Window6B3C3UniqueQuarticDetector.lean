@@ -1,4 +1,4 @@
-import Omega.GU.Window6B3C3QuarticRankoneHarmonicDetector
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3QuarticRankoneHarmonicDetector
 
 namespace Omega.GU
 

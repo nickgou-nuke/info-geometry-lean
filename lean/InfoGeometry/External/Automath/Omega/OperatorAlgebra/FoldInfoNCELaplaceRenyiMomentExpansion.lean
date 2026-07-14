@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldInfoNCEFiniteKMomentFormula
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldInfoNCEFiniteKMomentFormula
 
 namespace Omega.OperatorAlgebra
 

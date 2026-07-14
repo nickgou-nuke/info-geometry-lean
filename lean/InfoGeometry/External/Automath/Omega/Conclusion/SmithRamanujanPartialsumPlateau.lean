@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.SmithRamanujanShadowInversion
+import InfoGeometry.External.Automath.Omega.Conclusion.SmithRamanujanShadowInversion
 
 namespace Omega.Conclusion
 

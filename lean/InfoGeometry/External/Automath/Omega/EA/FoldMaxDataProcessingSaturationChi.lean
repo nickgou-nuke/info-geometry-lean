@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.EA.CentralIdempotentsRecovery
+import InfoGeometry.External.Automath.Omega.EA.CentralIdempotentsRecovery
 
 namespace Omega.EA
 

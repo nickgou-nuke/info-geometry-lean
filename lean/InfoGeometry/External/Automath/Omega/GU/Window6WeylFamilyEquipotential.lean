@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6FamilyFibration15plus1
+import InfoGeometry.External.Automath.Omega.GU.Window6FamilyFibration15plus1
 
 namespace Omega.GU
 

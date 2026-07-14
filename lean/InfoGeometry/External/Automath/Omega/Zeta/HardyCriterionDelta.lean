@@ -1,4 +1,4 @@
-import Omega.Zeta.DampedPoles
+import InfoGeometry.External.Automath.Omega.Zeta.DampedPoles
 
 namespace Omega.Zeta
 

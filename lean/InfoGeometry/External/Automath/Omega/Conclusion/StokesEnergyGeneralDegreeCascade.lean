@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.StokesEnergyDyadicMartingale
+import InfoGeometry.External.Automath.Omega.Conclusion.StokesEnergyDyadicMartingale
 
 namespace Omega.Conclusion
 

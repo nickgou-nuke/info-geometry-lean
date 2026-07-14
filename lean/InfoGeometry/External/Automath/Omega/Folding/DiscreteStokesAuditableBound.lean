@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.Folding.Defect
+import InfoGeometry.External.Automath.Omega.Folding.Defect
 
 namespace Omega.Folding
 

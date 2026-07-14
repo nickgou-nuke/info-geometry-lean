@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.StokesExactSequenceDictionary
+import InfoGeometry.External.Automath.Omega.CircleDimension.StokesExactSequenceDictionary
 
 namespace Omega.CircleDimension
 

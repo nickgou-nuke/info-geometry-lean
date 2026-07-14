@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Graph.TransferMatrix
-import Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
+import InfoGeometry.External.Automath.Omega.Graph.TransferMatrix
+import InfoGeometry.External.Automath.Omega.Zeta.XiBqPowerEntrywiseFibonacciBinomial
 
 namespace Omega.POM
 

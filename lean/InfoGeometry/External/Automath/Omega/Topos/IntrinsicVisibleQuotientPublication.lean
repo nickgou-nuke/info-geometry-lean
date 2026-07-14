@@ -1,4 +1,4 @@
-import Omega.Topos.IntrinsicVisibleQuotient
+import InfoGeometry.External.Automath.Omega.Topos.IntrinsicVisibleQuotient
 
 namespace Omega.Topos
 

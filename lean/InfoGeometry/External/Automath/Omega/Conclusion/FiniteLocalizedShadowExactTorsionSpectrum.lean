@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Zeta.TorsionExactOrderLedgerSeeds
+import InfoGeometry.External.Automath.Omega.Zeta.TorsionExactOrderLedgerSeeds
 
 namespace Omega.Conclusion
 

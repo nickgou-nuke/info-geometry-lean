@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Tactic
-import Omega.Folding.FiberTruncatedMomentCompleteInversion
-import Omega.Folding.FoldNegativeMomentsCapacityMellin
+import InfoGeometry.External.Automath.Omega.Folding.FiberTruncatedMomentCompleteInversion
+import InfoGeometry.External.Automath.Omega.Folding.FoldNegativeMomentsCapacityMellin
 
 namespace Omega.Conclusion
 

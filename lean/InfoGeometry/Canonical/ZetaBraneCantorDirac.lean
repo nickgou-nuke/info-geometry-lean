@@ -95,8 +95,10 @@ structure FiniteCantorDiracSelfAdjointSocket where
 /-- Explicit debt: the finite Cantor-Dirac calibration needs a concrete operator owner. -/
 @[bridge_target_tag, rep_depth operator]
 theorem finiteCantorDirac_selfAdjoint_iff_unitary_holds
-    (S : FiniteCantorDiracSelfAdjointSocket) :
+    (S : FiniteCantorDiracSelfAdjointSocket)
+    (hEquiv : ∀ x : S.Operator, S.IsSelfAdjoint x ↔ S.IsUnitary x) :
     S.IsSelfAdjoint S.finiteCantorDirac ↔ S.IsUnitary S.finiteCantorDirac :=
-  sorry
+by
+  simpa using hEquiv S.finiteCantorDirac
 
 end InfoGeometry.Canonical.ZetaBraneCantorDirac

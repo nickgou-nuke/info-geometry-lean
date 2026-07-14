@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.AppOffcriticalRadiusHighHeight
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.AppOffcriticalRadiusHighHeight
 
 open Filter
 

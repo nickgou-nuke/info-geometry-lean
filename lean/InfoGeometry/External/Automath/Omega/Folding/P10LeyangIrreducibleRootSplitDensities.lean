@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyP10LeyangChebotarevProductLaw
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyP10LeyangChebotarevProductLaw
 
 namespace Omega.Folding
 

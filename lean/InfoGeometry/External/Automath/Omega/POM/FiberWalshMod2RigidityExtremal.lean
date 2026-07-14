@@ -3,7 +3,7 @@ import Mathlib.Data.Int.NatAbs
 import Mathlib.Data.List.Count
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Tactic
-import Omega.POM.FiberWalshSignatureRademacher
+import InfoGeometry.External.Automath.Omega.POM.FiberWalshSignatureRademacher
 
 namespace Omega.POM
 

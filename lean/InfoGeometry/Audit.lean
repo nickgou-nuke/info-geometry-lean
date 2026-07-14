@@ -11,9 +11,10 @@ def printDebt : CoreM Unit := do
   for (name, info) in env.constants do
     -- Only look at definitions in this package
     if name.getRoot == `InfoGeometry then
-      if let some type := info.type? then
-        if info.isAxiom then
-          axiomDecls := axiomDecls.push name
+      match info with
+      | .axiomInfo _ => axiomDecls := axiomDecls.push name
+      | _ => pure ()
+      
       if let some value := info.value? then
         if value.containsConst (fun n => n == `sorryAx) then
           sorryDecls := sorryDecls.push name
@@ -26,4 +27,4 @@ def printDebt : CoreM Unit := do
   for decl in axiomDecls do
     IO.println s!"  - {decl}"
 
-#eval printDebt
+#eval! printDebt

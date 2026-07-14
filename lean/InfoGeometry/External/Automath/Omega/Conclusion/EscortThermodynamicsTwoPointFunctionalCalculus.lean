@@ -1,6 +1,6 @@
 import Mathlib
-import Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
-import Omega.Zeta.XiFoldEscortLogMultiplicityTwoAtom
+import InfoGeometry.External.Automath.Omega.Folding.KilloFoldBinEscortRenyiLogisticGeometry
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldEscortLogMultiplicityTwoAtom
 
 namespace Omega.Conclusion
 

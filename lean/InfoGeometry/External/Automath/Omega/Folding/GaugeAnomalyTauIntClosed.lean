@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.AutocovarianceSeedValues
+import InfoGeometry.External.Automath.Omega.Folding.AutocovarianceSeedValues
 
 namespace Omega.Folding
 

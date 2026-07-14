@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateDiagonalLaguerreDeterminant
-import Omega.POM.DiagonalRateRefreshCountRenewalLLNCLT
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateDiagonalLaguerreDeterminant
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshCountRenewalLLNCLT
 import Mathlib.Tactic
 
 namespace Omega.POM

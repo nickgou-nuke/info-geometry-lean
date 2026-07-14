@@ -1,7 +1,7 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.GroupTheory.OrderOfElement
 import Mathlib.Tactic
-import Omega.GU.Window6BdryUpliftResidueStratification
+import InfoGeometry.External.Automath.Omega.GU.Window6BdryUpliftResidueStratification
 
 namespace Omega.GU
 

@@ -1,8 +1,8 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Experiments.TVCertificateHist
-import Omega.Folding.MetallicParetoFrontier
-import Omega.Folding.MetallicTwoStateSFT
+import InfoGeometry.External.Automath.Omega.Experiments.TVCertificateHist
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoFrontier
+import InfoGeometry.External.Automath.Omega.Folding.MetallicTwoStateSFT
 
 open scoped goldenRatio
 open Omega.Folding.MetallicParetoFrontier

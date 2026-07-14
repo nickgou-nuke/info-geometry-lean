@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.BCUniformLiftPseudofunctor
+import InfoGeometry.External.Automath.Omega.POM.BCUniformLiftPseudofunctor
 
 namespace Omega.POM
 

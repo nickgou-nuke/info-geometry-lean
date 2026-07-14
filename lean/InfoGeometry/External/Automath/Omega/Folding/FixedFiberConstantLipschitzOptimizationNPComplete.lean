@@ -1,4 +1,4 @@
-import Omega.Folding.FixedFiberLipschitzOptimization
+import InfoGeometry.External.Automath.Omega.Folding.FixedFiberLipschitzOptimization
 
 namespace Omega
 

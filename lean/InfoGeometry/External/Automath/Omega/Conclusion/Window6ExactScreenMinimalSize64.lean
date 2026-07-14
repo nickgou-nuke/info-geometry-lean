@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.ExactScreenMinimaAreMatroidBases
+import InfoGeometry.External.Automath.Omega.SPG.ExactScreenMinimaAreMatroidBases
 
 namespace Omega.Conclusion
 

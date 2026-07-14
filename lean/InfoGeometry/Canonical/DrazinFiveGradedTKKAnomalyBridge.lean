@@ -30,8 +30,8 @@ open InfoGeometry.Canonical.DrazinSupercharge
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.DrazinCentralChargeBridge
 open InfoGeometry.Canonical.CentralChargeAnomaly
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
 open InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
+open InfoGeometry.OperatorAlgebra.TKKConformalClosure
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 open InfoGeometry.KK
 open InfoGeometry.KK.RealSplitKreinKasparovCycle
@@ -70,8 +70,8 @@ structure DrazinTKKAnomalyCalibration
     (CIK : CertifiedInverseKernel H₂)
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (hX : ChiralFredholmSurface X)
-    (TKK_A : AnomalyClosureDefectDatum L State Geometry)
-    (TKK_R : TKKRicciFluxDatum L State Geometry)
+    (TKK_A : InfoGeometry.OperatorAlgebra.TKKConformalClosure.AnomalyClosureDefectDatum L State Geometry)
+    (TKK_R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry)
     (G : FiveGrading L)
     (Absorp : TKKDefectAbsorbedInPlusTwo L State Geometry TKK_R G) where
   /-- Readout translating the Drazin endomorphism shadow into TKK geometry. -/
@@ -86,16 +86,18 @@ structure DrazinTKKAnomalyCalibration
   /-- The anomaly datum and Ricci-flux datum use the same closure defect. -/
   defect_alignment :
     ∀ (X_L : L) (s : State),
-      TKKClosureDefect.defect TKK_A.closureDefect X_L s =
-        TKKClosureDefect.defect TKK_R.closureDefect X_L s
+      InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
+          TKK_A.closureDefect X_L s =
+        InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
+          TKK_R.closureDefect X_L s
 
 namespace DrazinTKKAnomalyCalibration
 
 variable {CIK : CertifiedInverseKernel H₂}
 variable {X : RealSplitKreinDiracFredholmModule A B H₂}
 variable {hX : ChiralFredholmSurface X}
-variable {TKK_A : AnomalyClosureDefectDatum L State Geometry}
-variable {TKK_R : TKKRicciFluxDatum L State Geometry}
+variable {TKK_A : InfoGeometry.OperatorAlgebra.TKKConformalClosure.AnomalyClosureDefectDatum L State Geometry}
+variable {TKK_R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
 variable {G : FiveGrading L}
 variable {Absorp : TKKDefectAbsorbedInPlusTwo L State Geometry TKK_R G}
 
@@ -107,7 +109,9 @@ theorem operatorial_shadow_eq_closure_defect
     (s : State) :
     DrazinTKKAnomalyCalibration.shadowReadout calib
         (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) =
-      TKKClosureDefect.defect (AnomalyClosureDefectDatum.closureDefect TKK_A) X_L s :=
+      InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
+        (InfoGeometry.OperatorAlgebra.TKKConformalClosure.AnomalyClosureDefectDatum.closureDefect TKK_A)
+        X_L s :=
   (DrazinTKKAnomalyCalibration.shadow_calibrates_anomaly calib X_L s).trans
     (TKK_A.anomaly_eq_defect X_L s)
 
@@ -149,12 +153,14 @@ theorem ricciFlux_eq_operatorial_shadow_of_curvature_stationary
       TKK_R.derivativeAlong.deriv TKK_R.curvatureReadout.curvature X_L s = 0) :
     TKK_R.ricciFlux X_L s =
       DrazinTKKAnomalyCalibration.shadowReadout calib
-        (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
-  have hflux :
+        (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :=
+  let hflux :
       TKK_R.ricciFlux X_L s =
-        TKKClosureDefect.defect (TKKRicciFluxDatum.closureDefect TKK_R) X_L s := by
-    rw [TKK_R.ricciFlux_def X_L s, hstat, zero_add]
-  exact hflux.trans
+        InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKClosureDefect.defect
+          (InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum.closureDefect TKK_R)
+          X_L s :=
+    TKK_R.ricciFlux_eq_defect_of_curvature_stationary X_L s hstat
+  hflux.trans
     ((DrazinTKKAnomalyCalibration.defect_alignment calib X_L s).symm.trans
       (operatorial_shadow_eq_closure_defect calib X_L s).symm)
 

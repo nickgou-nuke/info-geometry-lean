@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.Tactic
-import Omega.SPG.BoundaryCycleAuditQueryLowerBound
-import Omega.SPG.BoundaryCycleRankFromEntropy
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryCycleAuditQueryLowerBound
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryCycleRankFromEntropy
 
 namespace Omega.SPG
 

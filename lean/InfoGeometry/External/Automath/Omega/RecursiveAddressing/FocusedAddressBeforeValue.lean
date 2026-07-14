@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.AddressBeforeValue
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.AddressBeforeValue
 
 namespace Omega.RecursiveAddressing.FocusedAddressBeforeValue
 

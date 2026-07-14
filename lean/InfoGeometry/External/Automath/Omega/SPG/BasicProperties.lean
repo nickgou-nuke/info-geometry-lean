@@ -1,4 +1,4 @@
-import Omega.SPG.ClarityMonotone
+import InfoGeometry.External.Automath.Omega.SPG.ClarityMonotone
 
 open Omega.SPG.ScanProjectionBayesOptimality
 

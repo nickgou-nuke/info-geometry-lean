@@ -1,4 +1,4 @@
-import Omega.CircleDimension.RiemannSiegelGabckeCompactifiedQuadraticGain
+import InfoGeometry.External.Automath.Omega.CircleDimension.RiemannSiegelGabckeCompactifiedQuadraticGain
 
 namespace Omega.Conclusion
 

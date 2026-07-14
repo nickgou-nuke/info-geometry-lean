@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.GravitationalScalarUniqueness
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.GravitationalScalarUniqueness
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

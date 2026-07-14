@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Card
-import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
-import Omega.OperatorAlgebra.NpWatataniIndexSupportCharacterization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.NpWatataniIndexSupportCharacterization
 
 namespace Omega.OperatorAlgebra
 

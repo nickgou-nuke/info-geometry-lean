@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.SyncHatdeltaCurveDoubleCoverBranchGenus6
+import InfoGeometry.External.Automath.Omega.Zeta.SyncHatdeltaCurveDoubleCoverBranchGenus6
 
 namespace Omega.Zeta
 

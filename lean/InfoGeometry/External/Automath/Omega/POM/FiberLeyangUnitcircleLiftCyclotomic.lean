@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Complex.Norm
 import Mathlib.Tactic
-import Omega.POM.LeyangLiftMobiusInvolutionFunctorial
-import Omega.POM.PathIndsetLeyangCyclotomicParam
+import InfoGeometry.External.Automath.Omega.POM.LeyangLiftMobiusInvolutionFunctorial
+import InfoGeometry.External.Automath.Omega.POM.PathIndsetLeyangCyclotomicParam
 
 namespace Omega.POM
 

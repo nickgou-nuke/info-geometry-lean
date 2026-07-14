@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.KilloZGDirichletMatrixEuler
+import InfoGeometry.External.Automath.Omega.Folding.KilloZGDirichletMatrixEuler
 
 namespace Omega.Zeta
 

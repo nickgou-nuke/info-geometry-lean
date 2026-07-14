@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.AbelMertensAnalyticFamily
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.AbelMertensAnalyticFamily
 
 namespace Omega.SyncKernelWeighted
 

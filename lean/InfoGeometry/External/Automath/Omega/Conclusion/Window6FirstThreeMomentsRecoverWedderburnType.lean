@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6ThreeMomentSpectrumInversion
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6ThreeMomentSpectrumInversion
 
 namespace Omega.Conclusion
 

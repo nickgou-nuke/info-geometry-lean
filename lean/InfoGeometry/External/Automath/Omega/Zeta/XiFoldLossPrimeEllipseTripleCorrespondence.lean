@@ -1,4 +1,4 @@
-import Omega.GroupUnification.GroupJGFoldPrimeEllipseTriple
+import InfoGeometry.External.Automath.Omega.GroupUnification.GroupJGFoldPrimeEllipseTriple
 
 namespace Omega.Zeta
 

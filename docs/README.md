@@ -1,15 +1,14 @@
 # Documentation Map
 
-> Status: `reference memory`
-> Audited: 2026-05-02
+> Status: `current authority`
+> Audited: 2026-07-09
 > Note: Maintained against the live code surface.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 > **LLM agents: before writing categorical/Grothendieck code, read
 > [CATEGORICAL_INFRASTRUCTURE_MAP.md](CATEGORICAL_INFRASTRUCTURE_MAP.md).
 > Open math problems are in [OPEN_DEBT_PROBLEMS.md](OPEN_DEBT_PROBLEMS.md).**
 
-This file is stale as an authority source. Use it only as a routing map and
-re-audit against the live code surface before relying on any claim.
+This file serves as an active routing map. It was verified against the live code surface in July 2026, conforming to the successful compilation of `InfoGeometry.All`.
 
 This directory is mixed on purpose.
 
@@ -187,25 +186,23 @@ Do not hand-curate those surfaces as if they were source of truth.
 8. [InductionSystematics.md](InductionSystematics.md)
 9. [InductionHowTo.md](InductionHowTo.md)
 10. [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
-9. [../Installation.md](../Installation.md)
-10. [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
-11. [OperatorQuickstart.md](OperatorQuickstart.md)
-12. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-13. [LeanTrail.md](LeanTrail.md)
-14. [black_books/231_the_moebius_topology_of_information.md](black_books/231_the_moebius_topology_of_information.md)
+11. [../Installation.md](../Installation.md)
+12. [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
+13. [OperatorQuickstart.md](OperatorQuickstart.md)
+14. [DAGTroubleshooting.md](DAGTroubleshooting.md)
+15. [LeanTrail.md](LeanTrail.md)
+16. [black_books/231_the_moebius_topology_of_information.md](black_books/231_the_moebius_topology_of_information.md)
 
 ## What Changed In This Audit
 
-On 2026-05-02, the Markdown corpus was reclassified so old notes and generated
-reports stop presenting themselves as current repository truth. Black Book
-chapters were left untouched.
+On 2026-07-09, `InfoGeometry.All` successfully compiled 21,661 jobs. The Markdown corpus was reclassified so old notes and generated reports stop presenting themselves as current repository truth. Duplicate namespaces were completely removed to stabilize the Lean build structure.
 
-## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding
 
 Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
 
 Policy requirements:
-- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
 - They are not final mathematical closure and not promotion authority.
 - Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
 - When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

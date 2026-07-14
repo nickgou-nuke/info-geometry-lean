@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
+import InfoGeometry.External.Automath.Omega.Zeta.XiHankelSpikeSingularSpectrumSeparation
 
 namespace Omega.Zeta
 

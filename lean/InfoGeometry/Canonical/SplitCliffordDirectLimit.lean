@@ -157,6 +157,15 @@ instance splitCliffordDirectedSystem :
 @[rep_depth krein]
 abbrev SplitCliffordInfinity := _root_.DirectLimit SplitClNNAlg (fun m n h => splitCliffordMap m n h)
 
+noncomputable instance : Module ℝ SplitCliffordInfinity :=
+  DirectLimit.instModule
+
+noncomputable instance : SMul ℝ SplitCliffordInfinity :=
+  (inferInstance : Module ℝ SplitCliffordInfinity).toSMul
+
+noncomputable instance : HSMul ℝ SplitCliffordInfinity SplitCliffordInfinity :=
+  instHSMul
+
 @[rep_depth krein]
 theorem splitCliffordInfinity_exists_of [Nonempty ℕ] [IsDirectedOrder ℕ]
     (z : SplitCliffordInfinity) :

@@ -5,7 +5,7 @@ namespace InfoGeometry.Information
 
 /-- A simple information-theoretic localization packet built from a one-dimensional
 Bregman divergence and a pointwise residual. -/
-def bergmanLocalization (F : ℝ → ℝ) (x y : ℝ) : ℝ :=
+noncomputable def bergmanLocalization (F : ℝ → ℝ) (x y : ℝ) : ℝ :=
   InfoGeometry.bregmanDiv F x y
 
 /-- The localization packet vanishes on the diagonal. -/

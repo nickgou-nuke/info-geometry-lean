@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.Window6ChiralSectorQ4Spectrum
+import InfoGeometry.External.Automath.Omega.GU.Window6ChiralSectorQ4Spectrum
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
-import Omega.Zeta.XiFlagFactorization12x4x3
-import Omega.Zeta.XiTerminalZmBlockOrbitsSymplecticOrthogonalitySrg
-import Omega.Zeta.XiTerminalZmPistarFiberEqualsFourLinesThroughPoint
+import InfoGeometry.External.Automath.Omega.Zeta.XiFlagFactorization12x4x3
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmBlockOrbitsSymplecticOrthogonalitySrg
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmPistarFiberEqualsFourLinesThroughPoint
 
 namespace Omega.Zeta
 

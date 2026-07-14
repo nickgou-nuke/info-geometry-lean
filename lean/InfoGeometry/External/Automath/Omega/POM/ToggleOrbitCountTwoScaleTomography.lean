@@ -1,8 +1,8 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.POM.ToggleOrbitCountAsymptoticVolumeGroup
-import Omega.POM.ToggleOrbitCountCommutantIdentity
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountAsymptoticVolumeGroup
+import InfoGeometry.External.Automath.Omega.POM.ToggleOrbitCountCommutantIdentity
 
 namespace Omega.POM
 

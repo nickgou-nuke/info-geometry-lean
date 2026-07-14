@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Fintype.Pi
-import Omega.GU.SideInformationBitLowerBound
+import InfoGeometry.External.Automath.Omega.GU.SideInformationBitLowerBound
 
 namespace Omega.Conclusion
 

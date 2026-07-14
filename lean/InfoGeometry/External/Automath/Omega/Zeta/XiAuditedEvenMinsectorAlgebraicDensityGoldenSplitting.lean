@@ -1,4 +1,4 @@
-import Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
 import Mathlib.Tactic
 
 open Filter

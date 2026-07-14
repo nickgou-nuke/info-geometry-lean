@@ -1,6 +1,6 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
+import InfoGeometry.External.Automath.Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
 
 namespace Omega.Conclusion
 

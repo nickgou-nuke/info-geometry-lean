@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.FoldBinOracleCriticalProfile
+import InfoGeometry.External.Automath.Omega.Folding.FoldBinOracleCriticalProfile
 
 open Filter
 open scoped Topology goldenRatio

@@ -1,5 +1,5 @@
-import Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
-import Omega.Folding.KilloEllipseDiagonalPrimeRegisterEquivalence
+import InfoGeometry.External.Automath.Omega.CircleDimension.ImplementationStructuralHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.Folding.KilloEllipseDiagonalPrimeRegisterEquivalence
 
 namespace Omega.Conclusion
 

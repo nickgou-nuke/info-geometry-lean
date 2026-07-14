@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateEntropyDissipationAsymptoticsRigidity
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateEntropyDissipationAsymptoticsRigidity
 
 namespace Omega.CircleDimension
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
+import InfoGeometry.External.Automath.Omega.Conclusion.QfoldChannelChoiRankEqualsQcollision
 
 namespace Omega.Conclusion
 

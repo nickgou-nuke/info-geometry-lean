@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Order.Monotone.Basic
 import Mathlib.Tactic
-import Omega.Folding.YmAmbiguityShellLowEntropy
+import InfoGeometry.External.Automath.Omega.Folding.YmAmbiguityShellLowEntropy
 
 namespace Omega.Folding
 

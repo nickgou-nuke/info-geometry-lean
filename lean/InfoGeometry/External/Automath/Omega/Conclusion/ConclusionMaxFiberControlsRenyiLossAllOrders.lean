@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
-import Omega.OperatorAlgebra.RenyiLossSpectrumCappedByIndex
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldIndexExtremalEntropyLossMaxfiber
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.RenyiLossSpectrumCappedByIndex
 
 namespace Omega.Conclusion
 

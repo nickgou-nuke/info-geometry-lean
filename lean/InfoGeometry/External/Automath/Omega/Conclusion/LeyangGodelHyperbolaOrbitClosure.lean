@@ -1,5 +1,5 @@
 import Mathlib.Topology.Closure
-import Omega.Conclusion.JGGodelDenseOrbitsOnHyperbolaLeaf
+import InfoGeometry.External.Automath.Omega.Conclusion.JGGodelDenseOrbitsOnHyperbolaLeaf
 
 namespace Omega.Conclusion
 

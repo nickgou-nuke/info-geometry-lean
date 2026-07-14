@@ -3,7 +3,7 @@ import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Nat.Factors
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
-import Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
+import InfoGeometry.External.Automath.Omega.Zeta.LocalizedIntegersEndomorphismAutomorphismExplicit
 
 namespace Omega.Zeta
 

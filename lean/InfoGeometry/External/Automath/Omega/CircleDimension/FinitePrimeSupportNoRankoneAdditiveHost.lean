@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeSupportMultiplicativeHalfCircleDimension
 
 namespace Omega.CircleDimension
 

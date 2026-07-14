@@ -1,5 +1,5 @@
-import Omega.SyncKernelWeighted.IharaMertensConstant
-import Omega.SyncKernelWeighted.RealInput40FibTensor
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.IharaMertensConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40FibTensor
 
 namespace Omega.SyncKernelWeighted
 

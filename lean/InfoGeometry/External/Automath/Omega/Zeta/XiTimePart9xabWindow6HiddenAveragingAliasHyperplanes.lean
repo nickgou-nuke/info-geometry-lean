@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart9xabWindow6LocalFourierMultipliersExactZeroSet
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart9xabWindow6LocalFourierMultipliersExactZeroSet
 
 namespace Omega.Zeta
 

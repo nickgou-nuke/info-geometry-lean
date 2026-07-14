@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MomentMinreal
+import InfoGeometry.External.Automath.Omega.POM.MomentMinreal
 
 open scoped BigOperators
 

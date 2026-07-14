@@ -1,4 +1,4 @@
-import Omega.Topos.H1VanishingClassTrivializing
+import InfoGeometry.External.Automath.Omega.Topos.H1VanishingClassTrivializing
 
 namespace Omega.Topos
 

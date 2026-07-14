@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.EllipsoidIsoperimetricVariance
+import InfoGeometry.External.Automath.Omega.POM.EllipsoidIsoperimetricVariance
 
 namespace Omega.POM
 

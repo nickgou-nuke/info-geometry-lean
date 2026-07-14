@@ -1,11 +1,7 @@
 import Mathlib.Tactic
-import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
+import InfoGeometry.External.Automath.Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
 
 namespace Omega.Conclusion
-
-/-- Concrete wrapper for the Steinberg local-system inertia spectra package. -/
-structure conclusion_m2_level3_steinberg_local_system_inertia_spectra_data where
-  conclusion_m2_level3_steinberg_local_system_inertia_spectra_witness : Unit := ()
 
 /-- Rank of the edge module in the audited incidence model. -/
 def conclusion_m2_level3_steinberg_local_system_inertia_spectra_edge_rank : ℕ :=
@@ -50,6 +46,31 @@ noncomputable def conclusion_m2_level3_steinberg_local_system_inertia_spectra_ch
     Polynomial ℤ :=
   conclusion_m2_level3_xi_delta0_order6_charpolys_St
 
+/-- Concrete arithmetic witness for the Steinberg local-system inertia spectra package. -/
+def conclusion_m2_level3_steinberg_local_system_inertia_spectra_certificate : Prop :=
+  conclusion_m2_level3_steinberg_local_system_inertia_spectra_edge_rank = 120 ∧
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_vertex_rank = 40 ∧
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_augmentation_rank = 1 ∧
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_steinberg_rank = 81 ∧
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_tau_trace = 0 ∧
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_sigma_trace = 9
+
+/-- Concrete wrapper for the Steinberg local-system inertia spectra package. -/
+structure conclusion_m2_level3_steinberg_local_system_inertia_spectra_data where
+  conclusion_m2_level3_steinberg_local_system_inertia_spectra_witness :
+    conclusion_m2_level3_steinberg_local_system_inertia_spectra_certificate := by
+      constructor
+      · native_decide
+      · constructor
+        · native_decide
+        · constructor
+          · native_decide
+          · constructor
+            · native_decide
+            · constructor
+              · native_decide
+              · native_decide
+
 /-- Concrete paper-facing formulation of the inertia spectrum package. -/
 def conclusion_m2_level3_steinberg_local_system_inertia_spectra_statement
     (_D : conclusion_m2_level3_steinberg_local_system_inertia_spectra_data) : Prop :=
@@ -74,7 +95,8 @@ multiplicities determine the traces of `τ` and `σ`. -/
 theorem paper_conclusion_m2_level3_steinberg_local_system_inertia_spectra
     (D : conclusion_m2_level3_steinberg_local_system_inertia_spectra_data) :
     conclusion_m2_level3_steinberg_local_system_inertia_spectra_statement D := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      (D := ⟨by constructor <;> native_decide⟩) with
     ⟨hklingen, hsiegel, _, _, _, _, hSt, _, _⟩
   refine ⟨hklingen, hsiegel, rfl, rfl, rfl, ?_, ?_, ?_, ?_⟩
   · norm_num [conclusion_m2_level3_steinberg_local_system_inertia_spectra_steinberg_rank,

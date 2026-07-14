@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.XiAdamsNormRadiusSimilarityLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiAdamsNormRadiusSimilarityLaw
 
 namespace Omega.Zeta
 

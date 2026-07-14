@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.ClockTransportEquation
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.ClockTransportEquation
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

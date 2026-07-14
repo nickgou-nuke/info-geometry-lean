@@ -1,9 +1,9 @@
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.BayesKinkGeometry
-import Omega.Folding.BernoulliPEndpointLdpRestated
-import Omega.Folding.BernoulliPPressureQuartic
+import InfoGeometry.External.Automath.Omega.Folding.BayesKinkGeometry
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPEndpointLdpRestated
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPPressureQuartic
 
 namespace Omega.Folding
 

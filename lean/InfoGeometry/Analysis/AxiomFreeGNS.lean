@@ -27,7 +27,7 @@ debt.
     ✅ S_left·K = K·S_left, S_right·K = K·S_right proved
 
   This file (AxiomFreeGNS):
-    ✅ Cyclic vector Ω = δ_∅ (defined explicitly)
+    ✅ Concrete plus-cylinder vector Ω (defined explicitly)
     ✅ KMS state laws exposed as explicit predicates and theorem hypotheses
     ✅ GNS inner product and Hilbert-space readback defined from that structure
     📐 Concrete C*-KMS state construction remains an existence theorem
@@ -83,20 +83,35 @@ theorem branch_weight_one_half
 
 /-! ## 1. The cyclic vector and KMS state -/
 
-/-- The empty word ∅ = (plus, plus, plus, ...). -/
-noncomputable def emptyWord : BaseIndex :=
+/-- The plus boundary word `(plus, plus, plus, ...)`. -/
+def emptyWord : BaseIndex :=
   fun _ => BinarySector.plus
 
 /--
-The cyclic vector Ω = δ_∅: the Dirac delta at the empty word.
+The concrete first-cylinder vector Ω.
 
-This is the GNS vacuum vector.  On the concrete Hilbert space
-H = BaseIndex → Fiber, Ω is the function that is (1,0) at ∅
-and 0 elsewhere.  We define it via choice because equality on
-infinite sequences is not decidable in Lean.
+On the concrete carrier `H = BaseIndex → Fiber`, Ω is `(1,0)` on the
+`plus` cylinder and `(0,0)` on the `minus` cylinder.  This is intentionally a
+finite-prefix vector, not a point mass at a single infinite word: equality of
+infinite words is not decidable in this carrier.
 -/
-noncomputable def omega : H :=
-  Classical.choice (inferInstance : Nonempty H)
+def omega : H :=
+  fun x => if head x = BinarySector.plus then (1, 0) else (0, 0)
+
+@[simp]
+theorem head_emptyWord : head emptyWord = BinarySector.plus := rfl
+
+@[simp]
+theorem omega_emptyWord : omega emptyWord = (1, 0) := by
+  simp [omega, emptyWord, head]
+
+theorem omega_of_head_plus {x : BaseIndex} (h : head x = BinarySector.plus) :
+    omega x = (1, 0) := by
+  simp [omega, h]
+
+theorem omega_of_head_minus {x : BaseIndex} (h : head x = BinarySector.minus) :
+    omega x = (0, 0) := by
+  simp [omega, h]
 
 /-- State carrier on the concrete Cuntz operator lane. -/
 structure CuntzKMSState where
@@ -166,7 +181,7 @@ theorem gnsInner_pos (Φ : CuntzKMSState) (h : QuadraticPositive Φ.phi) (A : H 
   h A
 
 /--
-The GNS Hilbert space is H itself, with cyclic vector Ω = δ_∅.
+The GNS Hilbert-space readback is the concrete carrier `H` itself.
 
 The GNS representation π(A) = A is the left regular representation.
 -/

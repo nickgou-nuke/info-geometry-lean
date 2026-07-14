@@ -81,13 +81,28 @@ theorem criticalMirror_fixed_iff_centeredCriticalLine (x : CenteredChart) :
 def criticalLineWeight (L : ℝ) : ℂ :=
   (Real.exp (-(1 / 2 : ℝ) * L) : ℂ)
 
+lemma criticalLineWeight_ne_zero (L : ℝ) :
+    criticalLineWeight L ≠ 0 := by
+  unfold criticalLineWeight
+  exact_mod_cast (Real.exp_ne_zero _)
+
 /-- Scale-normal envelope `exp(-uL)`. -/
 def scaleEnvelope (L u : ℝ) : ℂ :=
   (Real.exp (-u * L) : ℂ)
 
+lemma scaleEnvelope_ne_zero (L u : ℝ) :
+    scaleEnvelope L u ≠ 0 := by
+  unfold scaleEnvelope
+  exact_mod_cast (Real.exp_ne_zero _)
+
 /-- Tangential phase wave `exp(-ivL)`. -/
 def phaseWave (L v : ℝ) : ℂ :=
   Complex.exp (-(v * L : ℝ) * Complex.I)
+
+lemma phaseWave_ne_zero (L v : ℝ) :
+    phaseWave L v ≠ 0 := by
+  unfold phaseWave
+  exact Complex.exp_ne_zero _
 
 /--
 Factored Dirichlet mode for `L = log n`:
@@ -95,6 +110,13 @@ Factored Dirichlet mode for `L = log n`:
 -/
 def centeredDirichletMode (L : ℝ) (x : CenteredChart) : ℂ :=
   criticalLineWeight L * scaleEnvelope L x.u * phaseWave L x.v
+
+lemma centeredDirichletMode_ne_zero (L : ℝ) (x : CenteredChart) :
+    centeredDirichletMode L x ≠ 0 := by
+  unfold centeredDirichletMode
+  exact mul_ne_zero
+    (mul_ne_zero (criticalLineWeight_ne_zero L) (scaleEnvelope_ne_zero L x.u))
+    (phaseWave_ne_zero L x.v)
 
 @[simp] theorem scaleEnvelope_zero (L : ℝ) :
     scaleEnvelope L 0 = 1 := by
@@ -142,6 +164,12 @@ def finiteDirichletReadout {ι : Type*}
 /-- Finite Euler factor in centered coordinates. -/
 def finiteEulerFactor (L : ℝ) (x : CenteredChart) : ℂ :=
   (1 - centeredDirichletMode L x)⁻¹
+
+lemma finiteEulerFactor_ne_zero {L : ℝ} {x : CenteredChart}
+    (h : 1 - centeredDirichletMode L x ≠ 0) :
+    finiteEulerFactor L x ≠ 0 := by
+  unfold finiteEulerFactor
+  exact inv_ne_zero h
 
 /-- Finite Euler-product readout in centered coordinates. -/
 def finiteEulerProduct {ι : Type*}

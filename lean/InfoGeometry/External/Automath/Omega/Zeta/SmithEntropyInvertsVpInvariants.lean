@@ -1,4 +1,4 @@
-import Omega.Zeta.SmithEntropyMinDepth
+import InfoGeometry.External.Automath.Omega.Zeta.SmithEntropyMinDepth
 
 namespace Omega.Zeta
 

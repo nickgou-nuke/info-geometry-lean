@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Tactic
-import Omega.CircleDimension.ArithmeticSingularRingPrimeFrequencyCharacterEval
+import InfoGeometry.External.Automath.Omega.CircleDimension.ArithmeticSingularRingPrimeFrequencyCharacterEval
 
 namespace Omega.CircleDimension
 

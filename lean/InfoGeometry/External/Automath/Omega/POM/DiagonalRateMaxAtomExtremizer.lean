@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.DiagonalRateSchurConcavity
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateSchurConcavity
 
 open scoped BigOperators
 

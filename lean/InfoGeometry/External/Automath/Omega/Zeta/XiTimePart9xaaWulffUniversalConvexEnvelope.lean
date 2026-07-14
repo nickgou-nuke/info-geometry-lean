@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart64baFoldMultiplicityMajorizationBalancing
 
 namespace Omega.Zeta
 

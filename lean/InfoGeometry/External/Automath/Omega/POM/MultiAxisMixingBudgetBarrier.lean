@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MinkowskiBudgetBarrier
+import InfoGeometry.External.Automath.Omega.POM.MinkowskiBudgetBarrier
 
 namespace Omega.POM
 

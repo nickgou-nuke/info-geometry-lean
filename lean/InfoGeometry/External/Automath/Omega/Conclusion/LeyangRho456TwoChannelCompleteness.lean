@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LeyangRho456AtomicWallIdentities
-import Omega.Conclusion.LeyangRho45AffineCoordinateSystemOnS5Simplex
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangRho456AtomicWallIdentities
+import InfoGeometry.External.Automath.Omega.Conclusion.LeyangRho45AffineCoordinateSystemOnS5Simplex
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.SPG.GodelPrimeDensityHolographyCLT
+import InfoGeometry.External.Automath.Omega.SPG.GodelPrimeDensityHolographyCLT
 
 namespace Omega.SPG
 

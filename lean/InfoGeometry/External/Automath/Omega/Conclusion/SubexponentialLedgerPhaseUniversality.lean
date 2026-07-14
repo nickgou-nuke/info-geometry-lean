@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.PhaseBudgetBinaryQuantization
-import Omega.Conclusion.PhaseLedgerBudgetExactHalfspace
+import InfoGeometry.External.Automath.Omega.Conclusion.PhaseBudgetBinaryQuantization
+import InfoGeometry.External.Automath.Omega.Conclusion.PhaseLedgerBudgetExactHalfspace
 
 namespace Omega.Conclusion
 

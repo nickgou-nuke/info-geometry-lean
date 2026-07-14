@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Folding.FoldZeroDivisorTripleReduction
-import Omega.Folding.FoldZeroHalfIndexMultiple6
-import Omega.Folding.FoldZeroWindow6DensitySharpExponent
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroDivisorTripleReduction
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroHalfIndexMultiple6
+import InfoGeometry.External.Automath.Omega.Folding.FoldZeroWindow6DensitySharpExponent
 
 namespace Omega.Zeta
 

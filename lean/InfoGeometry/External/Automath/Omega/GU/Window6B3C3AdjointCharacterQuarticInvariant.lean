@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.GU.Window6AdjointWeightMultiset
-import Omega.GU.Window6B3C3QuarticDefectOnedim
+import InfoGeometry.External.Automath.Omega.GU.Window6AdjointWeightMultiset
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3QuarticDefectOnedim
 
 namespace Omega.GU
 

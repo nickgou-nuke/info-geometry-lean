@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Tactic
-import Omega.Conclusion.CayleyModulusPoissonPrimitive
-import Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
+import InfoGeometry.External.Automath.Omega.Conclusion.CayleyModulusPoissonPrimitive
+import InfoGeometry.External.Automath.Omega.Zeta.XiLogdefectBandpassPoissonRepresentation
 
 namespace Omega.Zeta
 

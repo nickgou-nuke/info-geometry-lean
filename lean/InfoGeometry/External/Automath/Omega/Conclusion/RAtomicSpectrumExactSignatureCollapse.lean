@@ -1,4 +1,4 @@
-import Omega.Conclusion.FixedResolutionNontrivialCollisionMinimalCompleteStatistic
+import InfoGeometry.External.Automath.Omega.Conclusion.FixedResolutionNontrivialCollisionMinimalCompleteStatistic
 
 namespace Omega.Conclusion
 

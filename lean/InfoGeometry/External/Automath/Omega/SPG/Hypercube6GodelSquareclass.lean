@@ -1,5 +1,5 @@
-import Omega.SPG.SquareclassChainComplex
-import Omega.SPG.SquareclassHammingIsometry
+import InfoGeometry.External.Automath.Omega.SPG.SquareclassChainComplex
+import InfoGeometry.External.Automath.Omega.SPG.SquareclassHammingIsometry
 import Mathlib.Tactic
 
 namespace Omega.SPG

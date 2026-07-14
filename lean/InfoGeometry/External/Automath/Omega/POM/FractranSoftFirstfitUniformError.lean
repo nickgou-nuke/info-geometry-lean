@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.POM.FractranSoftFirstfitAnalyticDominance
+import InfoGeometry.External.Automath.Omega.POM.FractranSoftFirstfitAnalyticDominance
 
 namespace Omega.POM
 

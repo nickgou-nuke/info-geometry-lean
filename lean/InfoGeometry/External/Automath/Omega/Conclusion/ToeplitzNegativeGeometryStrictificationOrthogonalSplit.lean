@@ -2,10 +2,10 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.ToeplitzShortestNegativeCertificateTailRigidity
-import Omega.Conclusion.VisibleJointHorizonSharp2d
-import Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
-import Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzShortestNegativeCertificateTailRigidity
+import InfoGeometry.External.Automath.Omega.Conclusion.VisibleJointHorizonSharp2d
+import InfoGeometry.External.Automath.Omega.Conclusion.ToeplitzGaugeBlindnessZeroDimensionalLedgerNecessity
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
 
 namespace Omega.Conclusion
 

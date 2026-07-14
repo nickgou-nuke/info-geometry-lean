@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.StateTheoryMonotonicity
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.StateTheoryMonotonicity
 
 namespace Omega.LogicExpansionChain
 

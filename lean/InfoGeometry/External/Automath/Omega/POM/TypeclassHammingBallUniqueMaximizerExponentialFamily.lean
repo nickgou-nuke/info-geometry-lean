@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.TypeclassDiagonalMassMonotone
-import Omega.POM.TypeclassKeepResampleChannel
+import InfoGeometry.External.Automath.Omega.POM.TypeclassDiagonalMassMonotone
+import InfoGeometry.External.Automath.Omega.POM.TypeclassKeepResampleChannel
 
 namespace Omega.POM
 

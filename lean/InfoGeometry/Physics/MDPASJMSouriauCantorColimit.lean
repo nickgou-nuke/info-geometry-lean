@@ -264,6 +264,4 @@ theorem curvature_cantor_address_compatible
 
 end MDPASCantorAddressSystem
 
-end MDPASJMSouriauCantorColimit
-end Physics
-end InfoGeometry
+end InfoGeometry.Physics.MDPASJMSouriauCantorColimit

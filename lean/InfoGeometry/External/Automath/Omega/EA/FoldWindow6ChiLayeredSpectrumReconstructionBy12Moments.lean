@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.Z2x2JointSpectralMeasure
+import InfoGeometry.External.Automath.Omega.EA.Z2x2JointSpectralMeasure
 
 namespace Omega.EA
 

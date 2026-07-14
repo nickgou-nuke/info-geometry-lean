@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityEnergyLdpUnderPL
-import Omega.POM.MultiplicityLambdaqDerivativeGibbs
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityEnergyLdpUnderPL
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityLambdaqDerivativeGibbs
 
 namespace Omega.POM
 

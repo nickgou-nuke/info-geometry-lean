@@ -1,4 +1,4 @@
-import Omega.SPG.CubePotentialCurl
+import InfoGeometry.External.Automath.Omega.SPG.CubePotentialCurl
 
 namespace Omega.SPG
 

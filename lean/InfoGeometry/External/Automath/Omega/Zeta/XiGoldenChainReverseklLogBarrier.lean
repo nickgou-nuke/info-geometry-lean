@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Zeta.XiIntegratedDefectGoldenAsymptotics
+import InfoGeometry.External.Automath.Omega.Zeta.XiIntegratedDefectGoldenAsymptotics
 
 open Filter
 open scoped Topology

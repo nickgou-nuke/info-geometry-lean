@@ -7,8 +7,6 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
 # InfoGeometry.Krein.HestenesD4HurwitzBridge
 
@@ -170,7 +168,8 @@ from the already-owned atom partition and projector-arrow API.
 @[rep_depth krein]
 structure D4HurwitzArithmeticBridge where
   /-- Sealed Möbius/Connes/Wilson bridge over a 24-atom layer. -/
-  moebius : HestenesMoebiusClosureBridge (E := E) (Fin 24)
+  moebius :
+    _root_.InfoGeometry.Krein.HestenesMoebiusClosureBridge.Bridge (E := E) (Fin 24)
 
   /-- Generic Drazin projector split used for affine null-root arrows. -/
   drazinSplit : ProjectorSplit EndH

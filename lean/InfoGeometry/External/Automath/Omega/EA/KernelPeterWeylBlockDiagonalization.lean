@@ -1,4 +1,4 @@
-import Omega.EA.FoldGroupoidAFInductiveLimitHolographicTrace
+import InfoGeometry.External.Automath.Omega.EA.FoldGroupoidAFInductiveLimitHolographicTrace
 
 namespace Omega.EA
 

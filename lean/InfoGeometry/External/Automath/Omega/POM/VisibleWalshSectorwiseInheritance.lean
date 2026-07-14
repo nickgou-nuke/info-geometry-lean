@@ -2,8 +2,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Module.BigOperators
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.POM.FoldFactorChainDerivedInvariants
-import Omega.POM.VisibleWalshCommutatorDefect
+import InfoGeometry.External.Automath.Omega.POM.FoldFactorChainDerivedInvariants
+import InfoGeometry.External.Automath.Omega.POM.VisibleWalshCommutatorDefect
 
 namespace Omega.POM
 

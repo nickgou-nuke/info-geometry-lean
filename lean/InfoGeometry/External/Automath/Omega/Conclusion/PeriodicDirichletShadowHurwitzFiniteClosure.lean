@@ -1,4 +1,4 @@
-import Omega.StatisticalStability.PeriodicDirichletSeriesHurwitzDecomposition
+import InfoGeometry.External.Automath.Omega.StatisticalStability.PeriodicDirichletSeriesHurwitzDecomposition
 
 open scoped BigOperators
 open Omega.StatisticalStability

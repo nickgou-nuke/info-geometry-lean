@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Zeta.XiJSexticEllipticLattesBelyiNormalization
+import InfoGeometry.External.Automath.Omega.Zeta.XiJSexticEllipticLattesBelyiNormalization
 
 namespace Omega.Zeta
 

@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.IndexSubmultiplicativityCommutingSquare
-import Omega.OperatorAlgebra.JonesScalarEqualsExpMinusGap
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.IndexSubmultiplicativityCommutingSquare
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.JonesScalarEqualsExpMinusGap
 
 namespace Omega.OperatorAlgebra
 

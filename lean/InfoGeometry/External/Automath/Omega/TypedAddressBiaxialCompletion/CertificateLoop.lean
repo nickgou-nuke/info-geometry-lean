@@ -1,8 +1,8 @@
 import Mathlib.Tactic
 import Mathlib.Data.Real.Sqrt
-import Omega.CircleDimension.UnitarySliceDecidable
-import Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
-import Omega.TypedAddressBiaxialCompletion.ThreeEndBudget
+import InfoGeometry.External.Automath.Omega.CircleDimension.UnitarySliceDecidable
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.ThreeEndBudget
 
 namespace Omega.TypedAddressBiaxialCompletion
 

@@ -1,5 +1,5 @@
-import Omega.Conclusion.CoordinateBundleAllMinimalExactificationsSpanningTrees
-import Omega.Conclusion.ScreenKirchhoffPartitionFunction
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleAllMinimalExactificationsSpanningTrees
+import InfoGeometry.External.Automath.Omega.Conclusion.ScreenKirchhoffPartitionFunction
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryCycleRankExternalInfoLowerBound
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.CyclicPTypicalFrobeniusVerschiebung
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicPTypicalFrobeniusVerschiebung
 
 namespace Omega.Conclusion
 

@@ -38,10 +38,14 @@ analytical index invariance along a Dirac/grading family.
 def SinkhornRicciIndexInvariant
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V) : Prop :=
+  (D Γ : ℝ → Endomorphism V) : Prop :=
   (∀ k : Nat, ∀ label : PermMode n → CliffordLabel,
     trajectoryLyapunovNext n T.traj k ≤ trajectoryLyapunov n T.traj k ∧
-      trajectorySelectedRoutingEpsilon n T (k + 1) label ≤ 1)
+      ∃ w : PermMode n → ℝ,
+        (∀ σ, 0 ≤ w σ) ∧
+        ∑ σ, w σ = 1 ∧
+        ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state (k + 1) ∧
+        routingEpsilon w label ≤ 1)
     ∧ (∀ s : ℝ, flow s = 0)
     ∧ IndexInvariantAlong D Γ
 
@@ -56,7 +60,11 @@ theorem SinkhornRicciIndexInvariant.mk_components
     (D Γ : ℝ → Endomorphism V)
     (hSinkhorn : ∀ k : Nat, ∀ label : PermMode n → CliffordLabel,
       trajectoryLyapunovNext n T.traj k ≤ trajectoryLyapunov n T.traj k ∧
-        trajectorySelectedRoutingEpsilon n T (k + 1) label ≤ 1)
+        ∃ w : PermMode n → ℝ,
+          (∀ σ, 0 ≤ w σ) ∧
+          ∑ σ, w σ = 1 ∧
+          ∑ σ, w σ • σ.permMatrix ℝ = T.traj.state (k + 1) ∧
+          routingEpsilon w label ≤ 1)
     (hRicciZero : ∀ s : ℝ, flow s = 0)
     (hIndex : IndexInvariantAlong D Γ) :
     SinkhornRicciIndexInvariant n T flow D Γ := by

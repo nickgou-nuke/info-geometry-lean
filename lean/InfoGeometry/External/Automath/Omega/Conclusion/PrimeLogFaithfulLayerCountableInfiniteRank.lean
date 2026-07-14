@@ -1,4 +1,4 @@
-import Omega.Zeta.InfiniteDepthPrimeLedgerInfiniteRankObstruction
+import InfoGeometry.External.Automath.Omega.Zeta.InfiniteDepthPrimeLedgerInfiniteRankObstruction
 
 namespace Omega.Conclusion
 

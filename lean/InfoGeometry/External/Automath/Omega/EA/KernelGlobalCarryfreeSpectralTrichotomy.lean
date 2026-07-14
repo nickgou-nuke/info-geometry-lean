@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.GlobalAssemblyZeta
+import InfoGeometry.External.Automath.Omega.EA.GlobalAssemblyZeta
 
 namespace Omega.EA
 

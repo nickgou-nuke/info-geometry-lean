@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyEndpointFib
-import Omega.Folding.GaugeAnomalyPressure
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyEndpointFib
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyPressure
 
 namespace Omega.Folding
 

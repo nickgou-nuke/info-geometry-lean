@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateRateCurveIdentifiability
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRateCurveIdentifiability
 
 namespace Omega.POM
 

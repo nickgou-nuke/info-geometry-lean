@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.FoldCriticalResonanceConstant
-import Omega.Folding.FoldResonanceTruncationError
+import InfoGeometry.External.Automath.Omega.Folding.FoldCriticalResonanceConstant
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceTruncationError
 
 open scoped goldenRatio
 

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTerminalReplicaSoftcoreQGenfuncRationalPartition
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalReplicaSoftcoreQGenfuncRationalPartition
 
 namespace Omega.Conclusion
 

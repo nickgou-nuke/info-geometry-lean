@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Experiments.MarkovTVSampleComplexity
-import Omega.Zeta.AuditableProfiniteChebotarevTradeoff
+import InfoGeometry.External.Automath.Omega.Experiments.MarkovTVSampleComplexity
+import InfoGeometry.External.Automath.Omega.Zeta.AuditableProfiniteChebotarevTradeoff
 
 namespace Omega.Zeta
 

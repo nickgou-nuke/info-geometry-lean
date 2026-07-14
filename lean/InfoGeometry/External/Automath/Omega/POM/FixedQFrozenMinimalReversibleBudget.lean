@@ -2,8 +2,8 @@ import Mathlib.Algebra.Order.Floor.Semiring
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Tactic
-import Omega.Folding.MaxFiber
-import Omega.POM.FixedQFrozenUniversalReversibleThreshold
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiber
+import InfoGeometry.External.Automath.Omega.POM.FixedQFrozenUniversalReversibleThreshold
 
 namespace Omega.POM
 

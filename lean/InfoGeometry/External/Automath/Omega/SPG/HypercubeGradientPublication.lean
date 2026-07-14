@@ -1,4 +1,4 @@
-import Omega.SPG.HypercubeGradientConsistency
+import InfoGeometry.External.Automath.Omega.SPG.HypercubeGradientConsistency
 
 namespace Omega.SPG
 

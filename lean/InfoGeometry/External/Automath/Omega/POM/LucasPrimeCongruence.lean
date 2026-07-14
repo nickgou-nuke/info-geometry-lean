@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Data.Nat.Fib.Basic
 import Mathlib.Data.ZMod.Basic
-import Omega.Zeta.LucasBarrier
+import InfoGeometry.External.Automath.Omega.Zeta.LucasBarrier
 
 /-! ### Lucas prime congruence and Wieferich fingerprint
 

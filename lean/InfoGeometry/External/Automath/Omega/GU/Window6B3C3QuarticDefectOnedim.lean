@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.Window6B3C3TriaxialSelectionIdealFactorization
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3TriaxialSelectionIdealFactorization
 
 namespace Omega.GU
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.LocalizedCechCompletenessFiniteCover
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedCechCompletenessFiniteCover
 
 namespace Omega.Conclusion
 

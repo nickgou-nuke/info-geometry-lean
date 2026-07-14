@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.HookChannelLeadingTermCancellation
+import InfoGeometry.External.Automath.Omega.POM.HookChannelLeadingTermCancellation
 
 namespace Omega.POM
 

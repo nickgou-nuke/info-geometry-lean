@@ -1,4 +1,4 @@
-import Omega.CircleDimension.HilbertQuantumMainClosure
+import InfoGeometry.External.Automath.Omega.CircleDimension.HilbertQuantumMainClosure
 
 namespace Omega.CircleDimension
 

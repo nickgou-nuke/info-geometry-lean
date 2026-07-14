@@ -1,6 +1,6 @@
 import Mathlib.GroupTheory.Perm.Basic
-import Omega.Combinatorics.FibonacciCube
-import Omega.POM.FiberIndsetFactorization
+import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
+import InfoGeometry.External.Automath.Omega.POM.FiberIndsetFactorization
 
 namespace Omega.POM
 

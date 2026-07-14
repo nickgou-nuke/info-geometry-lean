@@ -136,6 +136,47 @@ def rangeProjection (C : CuntzMultiplicativeIndexing Op) (n : ℕ+) : Op :=
     (n : ℕ+) : star (C.rangeProjection n) = C.rangeProjection n := by
   simp [rangeProjection]
 
+/-- Least common multiple in the positive-natural index monoid. -/
+def pnatLcm (n m : ℕ+) : ℕ+ :=
+  ⟨Nat.lcm n m, Nat.lcm_pos n.pos m.pos⟩
+
+@[simp] theorem pnatLcm_val (n m : ℕ+) :
+    (pnatLcm n m).val = Nat.lcm n.val m.val :=
+  rfl
+
+theorem pnatLcm_comm (n m : ℕ+) : pnatLcm n m = pnatLcm m n := by
+  exact Subtype.ext (Nat.lcm_comm n m)
+
+/--
+The range projections of a concrete multiplicative-isometry representation
+commute pairwise.  This is deliberately an external predicate rather than a
+field of `CuntzMultiplicativeIndexing`: isometry and multiplicativity alone do
+not imply it.
+-/
+def RangeProjectionsCommute (C : CuntzMultiplicativeIndexing Op) : Prop :=
+  ∀ n m : ℕ+, Commute (C.rangeProjection n) (C.rangeProjection m)
+
+/--
+The Nica meet law for positive-integer indexed range projections.  In a
+concrete Bost--Connes representation, the product of the `n` and `m` range
+projections is the range projection indexed by `lcm n m`.
+
+This is a predicate on a representation, not an additional owner axiom.
+-/
+def IsNicaCovariant (C : CuntzMultiplicativeIndexing Op) : Prop :=
+  ∀ n m : ℕ+,
+    C.rangeProjection n * C.rangeProjection m =
+      C.rangeProjection (pnatLcm n m)
+
+/-- Nica covariance implies pairwise commutativity of the range projections. -/
+theorem rangeProjectionsCommute_of_isNicaCovariant
+    (C : CuntzMultiplicativeIndexing Op) (hNica : IsNicaCovariant C) :
+    RangeProjectionsCommute C := by
+  intro n m
+  show C.rangeProjection n * C.rangeProjection m =
+    C.rangeProjection m * C.rangeProjection n
+  rw [hNica n m, hNica m n, pnatLcm_comm]
+
 /-- Prime generators inherit the isometry law. -/
 theorem prime_generator_isometry (C : CuntzMultiplicativeIndexing Op)
     (p : ℕ) [Fact p.Prime] :

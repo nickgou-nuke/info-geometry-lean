@@ -1,4 +1,4 @@
-import Omega.SyncKernelWeighted.RealInput40OutputMirrorBranch
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40OutputMirrorBranch
 
 namespace Omega.SyncKernelWeighted
 

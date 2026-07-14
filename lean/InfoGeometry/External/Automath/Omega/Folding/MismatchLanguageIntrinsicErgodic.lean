@@ -1,5 +1,5 @@
-import Omega.Folding.MismatchLanguage
-import Omega.Folding.GmFischerCover
+import InfoGeometry.External.Automath.Omega.Folding.MismatchLanguage
+import InfoGeometry.External.Automath.Omega.Folding.GmFischerCover
 import Mathlib.Tactic
 
 namespace Omega.Folding

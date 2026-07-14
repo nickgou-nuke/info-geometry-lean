@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalCollapseQuadraticFreeEnergy
+import InfoGeometry.External.Automath.Omega.POM.DiagonalCollapseQuadraticFreeEnergy
 
 open Filter Topology
 

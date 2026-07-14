@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic
-import Omega.POM.ExcitationFilterLinearBound
-import Omega.POM.FirstVariationFidelityRHBreaking
+import InfoGeometry.External.Automath.Omega.POM.ExcitationFilterLinearBound
+import InfoGeometry.External.Automath.Omega.POM.FirstVariationFidelityRHBreaking
 
 namespace Omega.POM
 

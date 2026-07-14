@@ -75,17 +75,36 @@ structure LFunctionHamiltonianFlowBridge
     packet.beta = coadjointFlow.flow.partition.temperature
 
 /--
-Concrete instantiation of the LFunctionHamiltonianFlowBridge
-to ensure it is not a vacuous shape, with missing parts exposed as `sorry`.
+Debt marker for a concrete instantiation of the LFunctionHamiltonianFlowBridge.
 -/
-def instantiateLFunctionHamiltonianFlowBridge :
-    LFunctionHamiltonianFlowBridge Orbit G E Op H Finite Alg := {
-  coadjointFlow := sorry
-  twistedPacket := sorry
-  packet := sorry
-  packet_beta_eq_twisted := sorry
-  packet_beta_eq_flow := sorry
-}
+structure LFunctionHamiltonianFlowBridgeDebt
+    (Orbit G E Op H Finite Alg : Type)
+    [Group G]
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
+    [Ring Op] [StarRing Op]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] [CompleteSpace H]
+    [InnerProductSpace ℝ H]
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
+  /-- Missing coadjoint flow instantiation. -/
+  coadjointFlow :
+    CantorCoadjointHamiltonianFlowBridge Orbit E Op H Finite Alg
+
+  /-- Missing twisted arithmetic packet instantiation. -/
+  twistedPacket :
+    TwistedSouriauWeylBridge G E Op H Finite Alg
+
+  /-- Missing partition packet instantiation. -/
+  packet :
+    SouriauWeylPartitionPacket G
+
+  /-- Missing equality between packet beta and twisted temperature. -/
+  packet_beta_eq_twisted :
+    packet.beta = twistedPacket.base_bridge.temperature
+
+  /-- Missing equality between packet beta and flow temperature. -/
+  packet_beta_eq_flow :
+    packet.beta = coadjointFlow.flow.partition.temperature
 
 namespace LFunctionHamiltonianFlowBridge
 

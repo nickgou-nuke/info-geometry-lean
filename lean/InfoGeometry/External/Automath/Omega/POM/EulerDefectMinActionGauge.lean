@@ -1,4 +1,4 @@
-import Omega.POM.EulerDefectOrthogonalPythagoras
+import InfoGeometry.External.Automath.Omega.POM.EulerDefectOrthogonalPythagoras
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
-import Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.BoundaryJointSufficiency
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.NonNullRequiresThreeAxes
 
 namespace Omega.TypedAddressBiaxialCompletion
 

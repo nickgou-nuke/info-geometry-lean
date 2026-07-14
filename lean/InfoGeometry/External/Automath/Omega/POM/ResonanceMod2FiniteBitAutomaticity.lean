@@ -1,8 +1,8 @@
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
-import Omega.POM.Mod2DifferenceBinomialBasis
-import Omega.POM.Mod2ShadowEventualPeriodBound
+import InfoGeometry.External.Automath.Omega.Conclusion.F2BinomialBasisFromDeltaNilpotent
+import InfoGeometry.External.Automath.Omega.POM.Mod2DifferenceBinomialBasis
+import InfoGeometry.External.Automath.Omega.POM.Mod2ShadowEventualPeriodBound
 
 namespace Omega.POM
 

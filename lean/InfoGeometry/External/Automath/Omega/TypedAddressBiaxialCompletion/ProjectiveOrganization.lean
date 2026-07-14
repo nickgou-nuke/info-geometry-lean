@@ -1,4 +1,4 @@
-import Omega.CircleDimension.ProjectiveStateOrganization
+import InfoGeometry.External.Automath.Omega.CircleDimension.ProjectiveStateOrganization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

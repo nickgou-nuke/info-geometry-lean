@@ -2,8 +2,8 @@ import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.Sets
 import Mathlib.Data.Fintype.Sum
-import Omega.Core.Fib
-import Omega.Core.No11
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Core.No11
 
 namespace Omega
 

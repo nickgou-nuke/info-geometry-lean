@@ -1,7 +1,7 @@
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Algebra.Polynomial.Basic
 import Mathlib.Tactic
-import Omega.Conclusion.FibadicCyclotomicPacketDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.FibadicCyclotomicPacketDecomposition
 
 namespace Omega.Conclusion
 

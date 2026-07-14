@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.KilloS4BurnsideKaniRosenPrymSquare
-import Omega.CircleDimension.S4EvenSubgroupFreeActionUnramifiedA4Lift
+import InfoGeometry.External.Automath.Omega.CircleDimension.KilloS4BurnsideKaniRosenPrymSquare
+import InfoGeometry.External.Automath.Omega.CircleDimension.S4EvenSubgroupFreeActionUnramifiedA4Lift
 
 namespace Omega.CircleDimension
 

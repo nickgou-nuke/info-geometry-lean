@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Card
-import Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
-import Omega.Conclusion.FullInternalScreenGlobalComplementLaw
-import Omega.SPG.FullInternalScreenOneDefectBoundaryClosure
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundleKernelSlabDecomposition
+import InfoGeometry.External.Automath.Omega.Conclusion.FullInternalScreenGlobalComplementLaw
+import InfoGeometry.External.Automath.Omega.SPG.FullInternalScreenOneDefectBoundaryClosure
 
 namespace Omega.Conclusion
 

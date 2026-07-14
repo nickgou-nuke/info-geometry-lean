@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart60acbConstantFiberFreeGroupActionCriterion
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart60acbConstantFiberFreeGroupActionCriterion
 import Mathlib.Tactic
 
 namespace Omega.Zeta

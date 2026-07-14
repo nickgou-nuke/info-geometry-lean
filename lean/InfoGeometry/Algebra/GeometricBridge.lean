@@ -31,7 +31,7 @@ theorem cs_klein_quadric (X : JordanCayleyInversionCs.Herm2x2Cs) (x1 x2 x3 x4 : 
 
 theorem hs_fundamental_identity :
   ∀ (X : JordanCayleyInversionHs.Herm2x2Hs),
-    X.mulTraceReversal = { e11 := X.det, e22 := -X.det } :=
+    X.mulTraceReversal = (X.det, -X.det) :=
   JordanCayleyInversionHs.Herm2x2Hs.fundamental_identity
 
 theorem hs_klein_quadric (X : JordanCayleyInversionHs.Herm2x2Hs) (x1 x2 x3 x4 x5 x6 : ℚ)

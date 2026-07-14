@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.NumberTheory.Real.GoldenRatio
-import Omega.Folding.Entropy
-import Omega.Folding.FiberWeightCount
+import InfoGeometry.External.Automath.Omega.Folding.Entropy
+import InfoGeometry.External.Automath.Omega.Folding.FiberWeightCount
 
 open Filter Topology
 open scoped goldenRatio

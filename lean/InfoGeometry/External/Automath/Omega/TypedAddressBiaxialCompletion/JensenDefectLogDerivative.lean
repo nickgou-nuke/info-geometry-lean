@@ -1,8 +1,8 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
-import Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.HorizonPurityRepulsion
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.JensenDefectFiniteization
 
 namespace Omega.TypedAddressBiaxialCompletion
 

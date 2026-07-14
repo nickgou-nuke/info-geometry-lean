@@ -119,7 +119,7 @@ variable (B : BoundedKMSHestenesMoebiusClosureBridge
 /-- The installed Möbius closure owner induced by the bounded KMS lane. -/
 @[rep_depth krein]
 def toHestenesMoebiusClosureBridge :
-    HestenesMoebiusClosureBridge (E := E) Word where
+    _root_.InfoGeometry.Krein.HestenesMoebiusClosureBridge.Bridge (E := E) Word where
   wilson := B.boundedWilson.toHestenesConnesWilsonBridge
   vectorAction := B.vectorAction
   vectorAction_krein_isometry := B.vectorAction_krein_isometry

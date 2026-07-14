@@ -1,5 +1,5 @@
-import Omega.CircleDimension.FinitePrimeTruncationKernels
-import Omega.CircleDimension.LocalizedGsEmbeddingOrder
+import InfoGeometry.External.Automath.Omega.CircleDimension.FinitePrimeTruncationKernels
+import InfoGeometry.External.Automath.Omega.CircleDimension.LocalizedGsEmbeddingOrder
 
 namespace Omega.CircleDimension
 

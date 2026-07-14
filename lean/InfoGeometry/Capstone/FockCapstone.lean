@@ -47,10 +47,10 @@ export InfoGeometry.Canonical.SplitCliffordDirectLimit
    splitCliffordInfinity_has_representative_beyond_cl55_window)
 
 export InfoGeometry.Topology.CuntzMap
-  (CuntzMap_unital
-   CuntzMap_star
-   CuntzMap_real_fixed_point_of_half_branch_scaling
-   DiscreteModularFlowWitness.apply_eq_cuntzMap
+  (map_unital
+   map_star
+   map_real_fixed_point_of_half_branch_scaling
+   DiscreteModularFlowWitness.apply_eq_map
    DiscreteModularFlowWitness.real_fixed_point_of_half_branch_scaling)
 
 export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone

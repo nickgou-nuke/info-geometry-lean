@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.BooleanTwoLayerInverseSupportLaw
+import InfoGeometry.External.Automath.Omega.Zeta.BooleanTwoLayerInverseSupportLaw
 
 namespace Omega.Zeta
 

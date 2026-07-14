@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRefreshCountRenewalLLNCLT
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshCountRenewalLLNCLT
 
 namespace Omega.POM
 

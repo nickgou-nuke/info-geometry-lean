@@ -1,6 +1,6 @@
-import Omega.Zeta.XiNullCompleteTrichotomyOffline
-import Omega.Zeta.XiOffcriticalFalsifiableRestatement
-import Omega.Zeta.XiPwNoContinuousHair
+import InfoGeometry.External.Automath.Omega.Zeta.XiNullCompleteTrichotomyOffline
+import InfoGeometry.External.Automath.Omega.Zeta.XiOffcriticalFalsifiableRestatement
+import InfoGeometry.External.Automath.Omega.Zeta.XiPwNoContinuousHair
 
 namespace Omega.Zeta
 

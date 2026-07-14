@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.TypedAddressBiaxialCompletion.MinimalInterference
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.MinimalInterference
 
 namespace Omega.CircleDimension
 

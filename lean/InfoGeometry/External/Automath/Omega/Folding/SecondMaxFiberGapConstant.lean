@@ -1,7 +1,7 @@
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.FiberSpectrum
-import Omega.Folding.MaxFiberHigh
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.MaxFiberHigh
 
 namespace Omega
 

@@ -1,5 +1,5 @@
-import Omega.Zeta.DerivedHankelEntropyGapCodimOneCollapse
-import Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
+import InfoGeometry.External.Automath.Omega.Zeta.DerivedHankelEntropyGapCodimOneCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.ToeplitzNegativeSpectrumProductDetHankelSquare
 
 namespace Omega.Zeta
 

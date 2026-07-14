@@ -1,4 +1,4 @@
-import Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.OffsliceDichotomy
 
 namespace Omega.Zeta
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.AFEPosteriorSigmaConstraint
+import InfoGeometry.External.Automath.Omega.CircleDimension.AFEPosteriorSigmaConstraint
 
 namespace Omega.CircleDimension
 

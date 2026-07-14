@@ -1,9 +1,9 @@
-import Omega.Folding.FoldGaugeAnomalyFieldEqualityUMuB
-import Omega.Folding.GaugeAnomalyRateCurveIndexIdealFormula
-import Omega.Folding.GaugeAnomalyRateCurveParam
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
-import Omega.Folding.GaugeAnomalySpectralQuarticJacobianL13
-import Omega.Folding.GaugeAnomalyTrigonalRamificationMu
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyFieldEqualityUMuB
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveIndexIdealFormula
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyRateCurveParam
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianEndomorphism
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalySpectralQuarticJacobianL13
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyTrigonalRamificationMu
 
 namespace Omega.Folding
 

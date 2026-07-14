@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCdimKolmResidualGap
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimKolmResidualGap
 
 namespace Omega.Zeta
 

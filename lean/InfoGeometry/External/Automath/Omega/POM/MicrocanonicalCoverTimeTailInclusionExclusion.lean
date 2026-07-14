@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MicrocanonicalAdaptiveNoGain
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalAdaptiveNoGain
 
 namespace Omega.POM
 

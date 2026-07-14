@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Sort
 import Mathlib.Tactic
-import Omega.POM.CoprimeLedgerPrimorialOptimality
+import InfoGeometry.External.Automath.Omega.POM.CoprimeLedgerPrimorialOptimality
 
 namespace Omega.Folding
 

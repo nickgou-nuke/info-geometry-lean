@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
+import InfoGeometry.External.Automath.Omega.Zeta.XiCdimLocalizationSolenoidContinuousHomClassification
 
 namespace Omega.Zeta
 

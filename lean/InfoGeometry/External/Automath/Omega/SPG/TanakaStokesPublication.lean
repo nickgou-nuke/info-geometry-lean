@@ -1,4 +1,4 @@
-import Omega.SPG.TanakaStokes
+import InfoGeometry.External.Automath.Omega.SPG.TanakaStokes
 
 open scoped BigOperators
 

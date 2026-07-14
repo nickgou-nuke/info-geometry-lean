@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.Conclusion66GramRamanujanDecomposition
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.Conclusion66GramRamanujanDecomposition
 
 namespace Omega.UnitCirclePhaseArithmetic
 

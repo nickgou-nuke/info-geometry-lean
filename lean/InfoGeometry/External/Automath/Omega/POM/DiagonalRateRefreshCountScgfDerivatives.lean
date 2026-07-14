@@ -1,5 +1,5 @@
-import Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
-import Omega.POM.DiagonalRateRefreshRegenerationIidExpansion
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimePGFClosed
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshRegenerationIidExpansion
 import Mathlib.Tactic
 
 namespace Omega.POM

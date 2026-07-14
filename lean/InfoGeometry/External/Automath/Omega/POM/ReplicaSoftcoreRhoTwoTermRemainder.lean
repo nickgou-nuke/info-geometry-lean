@@ -1,4 +1,4 @@
-import Omega.POM.ReplicaSoftcorePerronFibonacciFixedPoint
+import InfoGeometry.External.Automath.Omega.POM.ReplicaSoftcorePerronFibonacciFixedPoint
 import Mathlib.Tactic
 
 namespace Omega.POM

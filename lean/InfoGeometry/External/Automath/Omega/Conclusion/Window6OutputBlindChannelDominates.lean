@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6OutputChi2VisibleBlindOrthogonalSplitting
-import Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputChi2VisibleBlindOrthogonalSplitting
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6OutputKLExactGcdChainSplitting
 
 namespace Omega.Conclusion
 

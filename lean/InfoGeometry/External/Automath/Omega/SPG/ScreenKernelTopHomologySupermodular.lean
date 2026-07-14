@@ -1,4 +1,4 @@
-import Omega.SPG.ScreenRankMatroidSupermodularity
+import InfoGeometry.External.Automath.Omega.SPG.ScreenRankMatroidSupermodularity
 
 namespace Omega.SPG
 

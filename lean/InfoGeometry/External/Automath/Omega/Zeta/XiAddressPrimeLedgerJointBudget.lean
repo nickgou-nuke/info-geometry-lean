@@ -1,4 +1,4 @@
-import Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.AddressLedgerJointBudgetLowerBound
 
 namespace Omega.Zeta
 

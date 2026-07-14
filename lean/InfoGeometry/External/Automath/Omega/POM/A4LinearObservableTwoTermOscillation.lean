@@ -1,4 +1,4 @@
-import Omega.POM.A4TracePrimitiveTwoTerm
+import InfoGeometry.External.Automath.Omega.POM.A4TracePrimitiveTwoTerm
 
 namespace Omega.POM
 

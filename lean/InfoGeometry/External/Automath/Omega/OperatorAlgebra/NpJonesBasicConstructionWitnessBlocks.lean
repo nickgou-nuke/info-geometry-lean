@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldBasicConstructionPairGroupoid
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldBasicConstructionPairGroupoid
 
 namespace Omega.OperatorAlgebra
 

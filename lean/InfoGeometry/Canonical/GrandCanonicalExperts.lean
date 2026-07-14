@@ -159,6 +159,44 @@ lemma cliffordSemanticState_nonneg_of_nonneg_weights {n : Nat}
   · simpa [cliffordSemanticState_fst_eq_plusMass] using plusMass_nonneg hw
   · simpa [cliffordSemanticState_snd_eq_minusMass] using minusMass_nonneg hw
 
+/-- Plus-labeled simplex mass is bounded by one. -/
+lemma plusMass_le_one_of_simplex {n : Nat}
+    {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
+    (hw_nonneg : ∀ σ, 0 ≤ w σ) (hw_sum : ∑ σ, w σ = 1) :
+    plusMass w label ≤ 1 := by
+  have hplus_nonneg : 0 ≤ plusMass w label := plusMass_nonneg hw_nonneg
+  have hminus_nonneg : 0 ≤ minusMass w label := minusMass_nonneg hw_nonneg
+  have hsum_pm : plusMass w label + minusMass w label = 1 := by
+    rw [plusMass_add_minusMass_eq_sum, hw_sum]
+  linarith
+
+/-- Minus-labeled simplex mass is bounded by one. -/
+lemma minusMass_le_one_of_simplex {n : Nat}
+    {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
+    (hw_nonneg : ∀ σ, 0 ≤ w σ) (hw_sum : ∑ σ, w σ = 1) :
+    minusMass w label ≤ 1 := by
+  have hplus_nonneg : 0 ≤ plusMass w label := plusMass_nonneg hw_nonneg
+  have hminus_nonneg : 0 ≤ minusMass w label := minusMass_nonneg hw_nonneg
+  have hsum_pm : plusMass w label + minusMass w label = 1 := by
+    rw [plusMass_add_minusMass_eq_sum, hw_sum]
+  linarith
+
+/-- The first semantic coordinate of a simplex-weighted Clifford state is bounded by one. -/
+lemma cliffordSemanticState_fst_le_one_of_simplex {n : Nat}
+    {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
+    (hw_nonneg : ∀ σ, 0 ≤ w σ) (hw_sum : ∑ σ, w σ = 1) :
+    (cliffordSemanticState w label).1 ≤ 1 := by
+  rw [cliffordSemanticState_fst_eq_plusMass]
+  exact plusMass_le_one_of_simplex hw_nonneg hw_sum
+
+/-- The second semantic coordinate of a simplex-weighted Clifford state is bounded by one. -/
+lemma cliffordSemanticState_snd_le_one_of_simplex {n : Nat}
+    {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
+    (hw_nonneg : ∀ σ, 0 ≤ w σ) (hw_sum : ∑ σ, w σ = 1) :
+    (cliffordSemanticState w label).2 ≤ 1 := by
+  rw [cliffordSemanticState_snd_eq_minusMass]
+  exact minusMass_le_one_of_simplex hw_nonneg hw_sum
+
 /-! ## Graded Superalgebra Layer -/
 
 /-- `ℤ₂`-parity for split Clifford labels (`plus` even, `minus` odd). -/

@@ -1,4 +1,4 @@
-import Omega.Folding.BernoulliPRegenerationTripleJointLaw
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationTripleJointLaw
 
 namespace Omega.Folding
 

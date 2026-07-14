@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Tactic
-import Omega.Zeta.XiPrimeShellQuasiOrthogonality
+import InfoGeometry.External.Automath.Omega.Zeta.XiPrimeShellQuasiOrthogonality
 
 namespace Omega.Zeta
 

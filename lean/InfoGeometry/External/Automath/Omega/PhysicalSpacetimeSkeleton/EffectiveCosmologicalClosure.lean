@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
+import InfoGeometry.External.Automath.Omega.PhysicalSpacetimeSkeleton.AdmissibleGlobalEinsteinEquation
 
 namespace Omega.PhysicalSpacetimeSkeleton
 

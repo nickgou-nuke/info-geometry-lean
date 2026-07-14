@@ -1,4 +1,4 @@
-import Omega.Conclusion.LogRigidityUnderTropical
+import InfoGeometry.External.Automath.Omega.Conclusion.LogRigidityUnderTropical
 
 namespace Omega.Conclusion
 

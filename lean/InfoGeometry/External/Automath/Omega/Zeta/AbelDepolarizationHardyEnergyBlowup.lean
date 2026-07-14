@@ -2,7 +2,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Topology.Algebra.Order.Field
 import Mathlib.Tactic
-import Omega.Zeta.AbelDetailEnergyBudget
+import InfoGeometry.External.Automath.Omega.Zeta.AbelDetailEnergyBudget
 
 open Filter
 open scoped Topology BigOperators

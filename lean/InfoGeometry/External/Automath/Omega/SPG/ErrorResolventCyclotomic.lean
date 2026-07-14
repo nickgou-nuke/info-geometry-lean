@@ -1,4 +1,4 @@
-import Omega.SPG.FirstEntryEscapeRate
+import InfoGeometry.External.Automath.Omega.SPG.FirstEntryEscapeRate
 
 namespace Omega.SPG
 

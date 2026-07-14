@@ -1,8 +1,6 @@
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Meta.Architecture
 
-set_option linter.dupNamespace false
-
 open scoped InnerProductSpace
 
 namespace InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
@@ -30,7 +28,7 @@ claim a Type-III realization. It only calibrates the already-owned even
 regular-support Hamiltonian `P_D * Q² * P_D` by a positive real energy unit.
 -/
 @[rep_depth krein]
-structure SuperchargeModularHamiltonianBridge where
+structure Bridge where
   CIK : CertifiedInverseKernel E
 
   /-- Positive calibration unit converting the even super-Hamiltonian to a modular scale. -/
@@ -44,14 +42,14 @@ structure SuperchargeModularHamiltonianBridge where
   The surrogate modular Hamiltonian is exactly the calibrated regular-support
   compression of the Drazin/MP supercharge Hamiltonian.
   -/
-  Ksur_True :
+  Ksur_eq :
     Ksur =
       modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian CIK
 
-namespace SuperchargeModularHamiltonianBridge
+namespace Bridge
 
-variable (H : SuperchargeModularHamiltonianBridge (E := E))
+variable (H : Bridge (E := E))
 
 /-- Readback of the defining calibration law. -/
 @[rep_depth krein]
@@ -59,13 +57,13 @@ theorem Ksur_eq_calibrated_regularRestrictedSuperHamiltonian :
     H.Ksur =
       H.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK :=
-  H.Ksur_True
+  H.Ksur_eq
 
 /-- Left regular-support invariance: `P_D * K_sur = K_sur`. -/
 @[rep_depth krein]
 theorem spectralProjector_mul_Ksur :
     H.CIK.spectralProjector * H.Ksur = H.Ksur := by
-  rw [H.Ksur_True]
+  rw [H.Ksur_eq]
   calc
     H.CIK.spectralProjector *
         (H.modularEnergyUnit •
@@ -86,7 +84,7 @@ theorem spectralProjector_mul_Ksur :
 @[rep_depth krein]
 theorem Ksur_mul_spectralProjector :
     H.Ksur * H.CIK.spectralProjector = H.Ksur := by
-  rw [H.Ksur_True]
+  rw [H.Ksur_eq]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)
@@ -107,7 +105,7 @@ theorem Ksur_mul_spectralProjector :
 @[rep_depth krein]
 theorem spectralComplementaryProjector_mul_Ksur_eq_zero :
     H.CIK.spectralComplementaryProjector * H.Ksur = 0 := by
-  rw [H.Ksur_True]
+  rw [H.Ksur_eq]
   calc
     H.CIK.spectralComplementaryProjector *
         (H.modularEnergyUnit •
@@ -127,7 +125,7 @@ theorem spectralComplementaryProjector_mul_Ksur_eq_zero :
 @[rep_depth krein]
 theorem Ksur_mul_spectralComplementaryProjector_eq_zero :
     H.Ksur * H.CIK.spectralComplementaryProjector = 0 := by
-  rw [H.Ksur_True]
+  rw [H.Ksur_eq]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)
@@ -147,7 +145,7 @@ theorem Ksur_mul_spectralComplementaryProjector_eq_zero :
 @[rep_depth krein]
 theorem Ksur_commutes_GammaS :
     H.Ksur * H.CIK.GammaS = H.CIK.GammaS * H.Ksur := by
-  rw [H.Ksur_True]
+  rw [H.Ksur_eq]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)
@@ -181,6 +179,6 @@ theorem Ksur_isSpectralCompact :
     CertifiedInverseKernel.toInformationCartanTriple] using
     Ksur_commutes_GammaS H
 
-end SuperchargeModularHamiltonianBridge
+end Bridge
 
 end InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge

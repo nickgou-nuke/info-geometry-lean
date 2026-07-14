@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.SelfDualNormalForm1pmu
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.SelfDualNormalForm1pmu
 
 namespace Omega.SyncKernelWeighted
 

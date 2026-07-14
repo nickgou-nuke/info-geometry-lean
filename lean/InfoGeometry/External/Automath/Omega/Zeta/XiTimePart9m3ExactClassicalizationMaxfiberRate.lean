@@ -1,4 +1,4 @@
-import Omega.Zeta.XiFullMicrostateExactInversionBitrateThreshold
+import InfoGeometry.External.Automath.Omega.Zeta.XiFullMicrostateExactInversionBitrateThreshold
 
 namespace Omega.Zeta
 

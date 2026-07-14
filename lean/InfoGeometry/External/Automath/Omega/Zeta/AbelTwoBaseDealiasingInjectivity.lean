@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Real.Irrational
-import Omega.Conclusion.TwoIncommensurableBasesDestroyVerticalLattice
+import InfoGeometry.External.Automath.Omega.Conclusion.TwoIncommensurableBasesDestroyVerticalLattice
 
 namespace Omega.Zeta
 

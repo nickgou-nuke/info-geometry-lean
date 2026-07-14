@@ -148,33 +148,4 @@ theorem drazinGreen_mul_A_eq_drazinProjector
 
 end DrazinGreenEnd
 
-/--
-A Drazin Green kernel witness.
-
-This is extra analytic structure: it says that the Drazin Green operator has an
-integral/distributional kernel representation.  The algebraic `DrazinGreen`
-theorems above do not supply such a witness.
--/
-structure DrazinGreenKernelPacket where
-  /-- Base space of variables. -/
-  Space : Type*
-  /-- Function or distribution space. -/
-  FunctionSpace : Type*
-  /-- Operator whose singular inverse is being studied. -/
-  Operator : Type*
-  /-- Drazin Green operator. -/
-  GreenOperator : Type*
-  /-- Drazin core projector. -/
-  CoreProjector : Type*
-  /-- Drazin residue projector. -/
-  ResidueProjector : Type*
-  /-- Green kernel, if available. -/
-  GreenKernel : Space → Space → Type*
-  /-- Witness that the kernel represents the Green operator. -/
-  kernelRepresentsGreenOperator : Type*
-  /-- Witness that applying the operator to the Green kernel gives the core projector. -/
-  operatorAppliedToKernelGivesCoreProjector : Type*
-  /-- Witness that the residue projector is the obstruction/zero-mode sector. -/
-  residueObstructionWitness : Type*
-
 end InfoGeometry.Singular.Drazin

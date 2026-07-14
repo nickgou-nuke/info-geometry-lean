@@ -1,4 +1,4 @@
-import Omega.Discussion.LambdaEquivariantPrimitive
+import InfoGeometry.External.Automath.Omega.Discussion.LambdaEquivariantPrimitive
 
 namespace Omega.Discussion
 

@@ -1,7 +1,7 @@
 import Mathlib.Data.Finset.Prod
 import Mathlib.Tactic
-import Omega.Folding.FoldGaugeAnomalyP10HChebotarevProductLaw
-import Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HChebotarevProductLaw
+import InfoGeometry.External.Automath.Omega.Folding.FoldGaugeAnomalyP10HLinearDisjointness
 
 namespace Omega.Folding
 

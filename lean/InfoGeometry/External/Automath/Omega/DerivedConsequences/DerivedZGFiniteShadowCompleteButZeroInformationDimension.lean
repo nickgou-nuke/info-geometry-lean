@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
-import Omega.Conclusion.ZGFinitePrimorialShadowCylinderRecovery
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGDensityExactInhomogeneousMarkov
+import InfoGeometry.External.Automath.Omega.Conclusion.ZGFinitePrimorialShadowCylinderRecovery
 
 namespace Omega.DerivedConsequences
 

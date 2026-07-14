@@ -1,7 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.GU.Window6B3C3EuclideanCubature
-import Omega.GU.Window6B3C3QuarticRankoneHarmonicDetector
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3EuclideanCubature
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3QuarticRankoneHarmonicDetector
 
 namespace Omega.GU
 

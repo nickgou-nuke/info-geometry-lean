@@ -1,4 +1,4 @@
-import Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
+import InfoGeometry.External.Automath.Omega.Zeta.XiCayleyJoukowskyHarmonicMeasureEllipse
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.CompleteStrictificationDualCriterion
+import InfoGeometry.External.Automath.Omega.Conclusion.CompleteStrictificationDualCriterion
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.DiagonalRateRefreshHittingTimeGeometricSpectralDecomp
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateRefreshHittingTimeGeometricSpectralDecomp
 
 namespace Omega.POM
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Tactic
-import Omega.SPG.PrimeRegisterBudgetLowerBound
+import InfoGeometry.External.Automath.Omega.SPG.PrimeRegisterBudgetLowerBound
 
 namespace Omega.SPG
 

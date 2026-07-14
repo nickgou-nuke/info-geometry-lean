@@ -1,4 +1,4 @@
-import Omega.POM.ProjectivePathAtomicPronyRank
+import InfoGeometry.External.Automath.Omega.POM.ProjectivePathAtomicPronyRank
 import Mathlib.Tactic
 
 namespace Omega.DerivedConsequences

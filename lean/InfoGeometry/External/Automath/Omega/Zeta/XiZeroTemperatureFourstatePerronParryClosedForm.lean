@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40ZeroTempGroundSftParryClosedForm
-import Omega.Zeta.XiZeroTemperatureFourstateDeterminantStateMinimality
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40ZeroTempGroundSftParryClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiZeroTemperatureFourstateDeterminantStateMinimality
 
 namespace Omega.Zeta
 

@@ -1,4 +1,4 @@
-import Omega.Conclusion.Window6Collision
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6Collision
 import Mathlib.Tactic
 
 namespace Omega.Conclusion

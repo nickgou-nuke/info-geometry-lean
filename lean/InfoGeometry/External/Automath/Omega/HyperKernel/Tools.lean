@@ -1,5 +1,5 @@
-import Omega.HyperKernel.Run
-import Omega.HyperKernel.AnalyzeRun
-import Omega.HyperKernel.Rewrite
-import Omega.HyperKernel.NormalForm
+import InfoGeometry.External.Automath.Omega.HyperKernel.Run
+import InfoGeometry.External.Automath.Omega.HyperKernel.AnalyzeRun
+import InfoGeometry.External.Automath.Omega.HyperKernel.Rewrite
+import InfoGeometry.External.Automath.Omega.HyperKernel.NormalForm
 

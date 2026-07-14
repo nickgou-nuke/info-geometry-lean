@@ -1,4 +1,4 @@
-import Omega.EA.Sync10ResetWaitingTime
+import InfoGeometry.External.Automath.Omega.EA.Sync10ResetWaitingTime
 
 namespace Omega.EA
 

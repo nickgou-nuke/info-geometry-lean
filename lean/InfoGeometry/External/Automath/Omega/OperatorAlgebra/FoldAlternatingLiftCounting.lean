@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.GroupTheory.Perm.Sign
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldLiftGlobalSignFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldLiftGlobalSignFactorization
 
 namespace Omega.OperatorAlgebra
 

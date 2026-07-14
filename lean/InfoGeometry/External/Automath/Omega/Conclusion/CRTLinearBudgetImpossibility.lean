@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.CircleDimension.GodelPrimeBitlengthLowerBound
+import InfoGeometry.External.Automath.Omega.CircleDimension.GodelPrimeBitlengthLowerBound
 
 namespace Omega.Conclusion
 

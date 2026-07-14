@@ -1,4 +1,4 @@
-import Omega.POM.MultiplicityCompositionMod3ZeroOneDefectSharp
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionMod3ZeroOneDefectSharp
 
 namespace Omega.POM
 

@@ -1,4 +1,4 @@
-import Omega.RecursiveAddressing.NullAsLocalSectionObstruction
+import InfoGeometry.External.Automath.Omega.RecursiveAddressing.NullAsLocalSectionObstruction
 
 namespace Omega.CircleDimension.UnitarySliceDecidable
 

@@ -173,30 +173,13 @@ theorem chiralCharge_J
 end ModularChiralCPTMirror
 
 /--
-Branch-level package for the local chiral-flipping CPT mirror.
-
-The analytic Tomita and QFT/CPT facts remain proof-carrying certificates.
--/
-structure ModularChiralCPTBranch
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
-  /-- Chiral-flipping modular/CPT mirror. -/
-  mirror :
-    ModularChiralCPTMirror H
-
-  tomita_mirror_law : Prop
-
-  modular_time_reversal_law : Prop
-
-  cpt_interpretation_law : Prop
-
-/--
-CPT/PCT symmetry branch datum.
+Real-linear CPT/PCT symmetry branch.
 
 `J` is the modular/CPT mirror, `K` is the phase axis, and `chi` is the chiral
 grading.  The phase reversal and chiral sign are separate fields: reversing
 the phase axis does not automatically force chirality to flip.
 -/
-structure Datum
+structure RealLinearCPTBranch
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   /-- Modular mirror / CPT reflection. -/
   J : EndR H
@@ -231,20 +214,12 @@ structure Datum
     J.comp chi =
       chiralSignToReal chiralSign • (chi.comp J)
 
-  /-- Modular/CPT time reversal, for example `J Δ J = Δ⁻¹`. -/
-  modular_time_reversal :
-    Prop
-
-  /-- Physical interpretation certificate: this modular mirror is the CPT/PCT branch. -/
-  cpt_interpretation :
-    Prop
-
-namespace Datum
+namespace RealLinearCPTBranch
 
 variable
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
 
-variable (C : Datum H)
+variable (C : RealLinearCPTBranch H)
 
 /-- Left chiral projector, `(1 + χ) / 2`. -/
 def P_left : EndR H :=
@@ -359,7 +334,7 @@ theorem conj_P_right_of_flips
   have hs := congrArg (fun T : EndR H => T (C.J v)) (C.swaps_P_right_of_flips h)
   simpa [ContinuousLinearMap.comp_apply, C.J_square_apply] using hs
 
-end Datum
+end RealLinearCPTBranch
 
 /-! ## 3. Algebraic CPT branch -/
 
@@ -367,9 +342,9 @@ end Datum
 A calibrated modular-CPT branch in an abstract real operator algebra.
 
 This packages the Tomita/CPT mirror, the modular sign, the emergent Hestenes
-phase axis, and the chirality-flipping KO sign.  The Tomita and physical CPT
-interpretations remain certificates: this is the algebraic mechanism, not a
-standalone CPT theorem.
+phase axis, and the chirality-flipping KO sign.  This is the algebraic
+mechanism; representation-specific Tomita or physical CPT calibration belongs
+in the concrete owner file that proves it.
 -/
 structure CPTBranch
     (Op : Type*) [Ring Op] [Algebra ℝ Op] where
@@ -412,14 +387,6 @@ structure CPTBranch
   /-- The emergent phase squares to `-1`. -/
   Kmod_square :
     Kmod * Kmod = -1
-
-  /-- Tomita algebra/commutant mirror certificate, intended as `J M J = M′`. -/
-  tomita_commutant_mirror :
-    Prop
-
-  /-- Physical CPT/PCT calibration certificate for the concrete model. -/
-  cpt_calibration :
-    Prop
 
 namespace CPTBranch
 
@@ -570,11 +537,11 @@ structure CPTAlgebraCommutantBranch
   /-- Multiplicative/additive CPT mirror on represented operators. -/
   alphaJ : Op →+* Op
 
-  /-- Tomita routing certificate: algebra-side elements mirror into the commutant. -/
+  /-- Tomita routing hypothesis: algebra-side elements mirror into the commutant. -/
   alphaJ_maps_algebra_to_commutant :
     ∀ a : Op, InAlgebra a → InCommutant (alphaJ a)
 
-  /-- Chiral-flip certificate: the left projector mirrors to the right projector. -/
+  /-- Chiral-flip hypothesis: the left projector mirrors to the right projector. -/
   alphaJ_P_left :
     alphaJ P_left = P_right
 
@@ -621,14 +588,10 @@ end CPTAlgebraCommutantBranch
 /--
 Integrated CPT symmetry branch.
 
-This branch identifies the modular mirror from the modular sign/CPT datum with
-the mirror in the real-linear chiral mirror datum.
-
-It is deliberately proof-carrying.  Not every modular conjugation flips
-chirality, and not every modular mirror has already been physically calibrated
-as CPT/PCT reflection.
+This branch identifies the modular mirror from the modular-sign CPT structure
+with the mirror in the real-linear chiral mirror structure.
 -/
-structure CPTSymmetryBranchDatum
+structure IntegratedCPTSymmetryBranch
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
   /--
   Modular sign/CPT algebra:
@@ -639,7 +602,7 @@ structure CPTSymmetryBranchDatum
     ModularSignCPTDatum H
 
   /--
-  Chiral mirror datum:
+  Chiral mirror structure:
 
   `chi² = 1` and `J chi = -chi J`.
   -/
@@ -659,34 +622,12 @@ structure CPTSymmetryBranchDatum
   J_metric_preserving :
     RealLinear.ModularChiralMirrorDatum.MetricPreserving chiralMirror.J
 
-  /--
-  Tomita routing certificate, morally `J M J = M′`.
-
-  This is representation-specific and therefore remains proof-carrying.
-  -/
-  tomita_algebra_commutant_routing :
-    Prop
-
-  /--
-  CPT/time-reflection certificate, morally saying that `J` reverses the modular
-  flow or modular Hamiltonian orientation.
-  -/
-  J_reverses_modular_time :
-    Prop
-
-  /--
-  Physical calibration certificate saying that this modular mirror is being used
-  as the CPT/PCT symmetry of the represented model.
-  -/
-  physical_CPT_calibration :
-    Prop
-
-namespace CPTSymmetryBranchDatum
+namespace IntegratedCPTSymmetryBranch
 
 variable
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
-variable (C : CPTSymmetryBranchDatum H)
+variable (C : IntegratedCPTSymmetryBranch H)
 
 /-! ### Modular sign and phase consequences -/
 
@@ -795,21 +736,21 @@ theorem CPT_exchanges_chiral_sectors :
     C.chiralCharge_CPT
   ⟩
 
-end CPTSymmetryBranchDatum
+end IntegratedCPTSymmetryBranch
 
 /-! ## 6. Owner targets -/
 
 /--
 Owner target for the integrated CPT symmetry branch.
 
-The branch is witness-gated: once the modular sign/CPT datum, chiral mirror
-datum, and calibration fields are supplied, the left/right exchange and charge
-flip laws are theorems.
+Once the modular-sign CPT structure, chiral mirror structure, and calibration
+fields are supplied, the left/right exchange and charge flip statements are
+theorems.
 -/
 @[owner_target_tag]
 def CPTSymmetryBranchOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
-  ∀ C : CPTSymmetryBranchDatum H,
+  ∀ C : IntegratedCPTSymmetryBranch H,
     C.modularCPT.J.comp C.chiralMirror.Pleft =
         C.chiralMirror.Pright.comp C.modularCPT.J ∧
     C.modularCPT.J.comp C.chiralMirror.Pright =
@@ -826,28 +767,5 @@ theorem cptSymmetryBranchOwnerTarget :
     CPTSymmetryBranchOwnerTarget := by
   intro H _ _ C
   exact C.CPT_exchanges_chiral_sectors
-
-/-- Owner target for supplying the calibrated abstract algebraic CPT branch. -/
-structure CPTBranchOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℝ Op] where
-  /-- The calibrated algebraic CPT branch owned by this target. -/
-  branch : CPTBranch Op
-
-namespace CPTBranchOwnerTarget
-
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-
-/-- Read back the carried CPT branch. -/
-def toBranch
-    (T : CPTBranchOwnerTarget Op) :
-    CPTBranch Op :=
-  T.branch
-
-@[simp] theorem toBranch_mk
-    (C : CPTBranch Op) :
-    toBranch (CPTBranchOwnerTarget.mk C) = C :=
-  rfl
-
-end CPTBranchOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.CPTSymmetryBranch

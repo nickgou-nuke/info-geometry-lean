@@ -1,6 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.EndpointOddChebyshevIdentity
 
 namespace Omega.UnitCirclePhaseArithmetic
 

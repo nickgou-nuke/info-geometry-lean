@@ -1,5 +1,5 @@
-import Omega.Zeta.FoldbinShannonDeficitConstantClosedForm
-import Omega.Zeta.XiFoldbinPushforwardUniformTwoAtomLedger
+import InfoGeometry.External.Automath.Omega.Zeta.FoldbinShannonDeficitConstantClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiFoldbinPushforwardUniformTwoAtomLedger
 
 namespace Omega.Zeta
 

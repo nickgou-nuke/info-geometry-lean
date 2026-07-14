@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.BCDiscreteJacobianStrictification
+import InfoGeometry.External.Automath.Omega.POM.BCDiscreteJacobianStrictification
 
 namespace Omega.POM
 

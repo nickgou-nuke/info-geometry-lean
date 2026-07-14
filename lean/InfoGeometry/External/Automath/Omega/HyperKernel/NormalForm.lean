@@ -12,10 +12,10 @@
   A sorted word corresponds to the paper's normal form: all LIFT gates first,
   then PROJ gates, then E gates.
 -/
-import Omega.HyperKernel.Op
-import Omega.HyperKernel.Closure
-import Omega.HyperKernel.Analysis
-import Omega.HyperKernel.Pretty
+import InfoGeometry.External.Automath.Omega.HyperKernel.Op
+import InfoGeometry.External.Automath.Omega.HyperKernel.Closure
+import InfoGeometry.External.Automath.Omega.HyperKernel.Analysis
+import InfoGeometry.External.Automath.Omega.HyperKernel.Pretty
 
 namespace Omega.HyperKernel
 namespace NormalForm

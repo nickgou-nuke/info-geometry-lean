@@ -1,6 +1,6 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.Tactic
-import Omega.Zeta.DephysicalizedHorizonQuotientDataStructure
+import InfoGeometry.External.Automath.Omega.Zeta.DephysicalizedHorizonQuotientDataStructure
 
 namespace Omega.Zeta
 

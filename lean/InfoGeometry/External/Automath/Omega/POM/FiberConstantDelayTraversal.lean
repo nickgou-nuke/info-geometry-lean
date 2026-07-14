@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FibCubeGrayHamilton
+import InfoGeometry.External.Automath.Omega.POM.FibCubeGrayHamilton
 
 namespace Omega.POM
 

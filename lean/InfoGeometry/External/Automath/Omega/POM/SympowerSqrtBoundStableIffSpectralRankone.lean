@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
-import Omega.POM.SympowerSqrtBoundInstability
+import InfoGeometry.External.Automath.Omega.POM.SympowerSqrtBoundInstability
 
 namespace Omega.POM
 

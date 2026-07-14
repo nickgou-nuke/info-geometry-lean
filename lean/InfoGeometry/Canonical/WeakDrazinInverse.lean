@@ -13,10 +13,11 @@ The paper defines a weak Drazin inverse `(d)` of a square matrix `A` of index
   B A^(k+1) = A^k.
 ```
 
-Additional adjectives are encoded by explicit certificates: projective,
-commuting, and minimal-rank.  This file proves the elementary algebraic
-readouts and keeps Jordan/Drazin decomposition, characteristic-polynomial, and
-Markov-chain applications as owner-supplied certificates.
+Additional adjectives are encoded by explicit matrix equations: projective,
+commuting, and minimal-rank.  This file proves only the elementary algebraic
+readouts present in those equations.  Jordan/Drazin decomposition,
+characteristic-polynomial, and Markov-chain applications require separate
+owner definitions before they can be promoted to theorem surfaces.
 -/
 
 namespace InfoGeometry.Canonical.WeakDrazinInverse
@@ -32,20 +33,20 @@ def IsWeakDrazinAt {R : Type u} [Semiring R]
     (A B : Matrix (Fin n) (Fin n) R) (k : ℕ) : Prop :=
   B * A ^ (k + 1) = A ^ k
 
-/-- Projective weak Drazin socket.  The range equality is an explicit certificate. -/
+/-- Projective weak Drazin relation with an explicit idempotent projection. -/
 structure ProjectiveWeakDrazin {R : Type u} [Semiring R]
     (A B AD : Matrix (Fin n) (Fin n) R) (k : ℕ) where
   weak : IsWeakDrazinAt A B k
-  rangeProjectionAgreement : Prop
-  projective_readout : rangeProjectionAgreement
+  AD_eq : AD = A * B
+  AD_idempotent : AD * AD = AD
 
-/-- Commuting weak Drazin socket. -/
+/-- Commuting weak Drazin relation. -/
 structure CommutingWeakDrazin {R : Type u} [Semiring R]
     (A B : Matrix (Fin n) (Fin n) R) (k : ℕ) where
   weak : IsWeakDrazinAt A B k
   commutes : A * B = B * A
 
-/-- Minimal-rank weak Drazin socket; rank is an owner-supplied natural readout. -/
+/-- Minimal-rank weak Drazin relation; the compared ranks are explicit natural readouts. -/
 structure MinimalRankWeakDrazin {R : Type u} [Semiring R]
     (A B AD : Matrix (Fin n) (Fin n) R) (k : ℕ) where
   weak : IsWeakDrazinAt A B k
@@ -70,6 +71,16 @@ theorem cd_readout (C : CommutingWeakDrazin A B k) :
   cases C with
   | mk weak commutes => exact ⟨weak, commutes⟩
 
+/-- A commuting weak Drazin structure exposes the weak relation directly. -/
+theorem weak_readout (C : CommutingWeakDrazin A B k) :
+    IsWeakDrazinAt A B k :=
+  (cd_readout (A := A) (B := B) (k := k) C).1
+
+/-- A commuting weak Drazin structure exposes the commutation relation directly. -/
+theorem commutes_readout (C : CommutingWeakDrazin A B k) :
+    A * B = B * A :=
+  (cd_readout (A := A) (B := B) (k := k) C).2
+
 end CommutingWeakDrazin
 
 namespace MinimalRankWeakDrazin
@@ -83,75 +94,104 @@ theorem md_readout :
     IsWeakDrazinAt A B k ∧ M.rankB = M.rankAD :=
   ⟨M.weak, M.minimalRank⟩
 
+/-- A minimal-rank weak Drazin structure exposes the weak relation directly. -/
+theorem weak_readout (M : MinimalRankWeakDrazin A B AD k) :
+    IsWeakDrazinAt A B k :=
+  (md_readout (A := A) (B := B) (AD := AD) (k := k) M).1
+
+/-- A minimal-rank weak Drazin structure exposes the rank equality directly. -/
+theorem rank_readout (M : MinimalRankWeakDrazin A B AD k) :
+    M.rankB = M.rankAD :=
+  (md_readout (A := A) (B := B) (AD := AD) (k := k) M).2
+
 end MinimalRankWeakDrazin
 
-/-- Campbell--Meyer block normal form socket for Theorem 1. -/
-structure BlockWeakDrazinNormalForm {R : Type u} [Semiring R]
+/-- Polynomial weak Drazin relation with the polynomial evaluator exposed. -/
+structure PolynomialWeakDrazin {R : Type u} [CommSemiring R]
     (A B : Matrix (Fin n) (Fin n) R) (k : ℕ) where
-  blockDecomposition : Prop
-  weakBlockShape : Prop
-  block_implies_weak : blockDecomposition → weakBlockShape → IsWeakDrazinAt A B k
-  hasBlockDecomposition : blockDecomposition
-  hasWeakBlockShape : weakBlockShape
-
-namespace BlockWeakDrazinNormalForm
-
-variable {R : Type u} [Semiring R]
-variable {A B : Matrix (Fin n) (Fin n) R} {k : ℕ}
-/-- The supplied Campbell--Meyer block shape yields a weak Drazin inverse. -/
-theorem weak_from_block (N : BlockWeakDrazinNormalForm A B k) : IsWeakDrazinAt A B k := by
-  cases N with
-  | mk blockDecomposition weakBlockShape block_implies_weak hasBlockDecomposition hasWeakBlockShape =>
-      exact block_implies_weak hasBlockDecomposition hasWeakBlockShape
-
-end BlockWeakDrazinNormalForm
-
-/-- Polynomial/Souriau--Frame computation socket for Theorems 4 and 5. -/
-structure PolynomialWeakDrazinCertificate {R : Type u} [Semiring R]
-    (A B : Matrix (Fin n) (Fin n) R) (k : ℕ) where
-  polynomialIdentity : Prop
-  polynomialDefinesB : Prop
+  p : Polynomial R
+  B_eq_eval :
+    B = p.eval₂ (algebraMap R (Matrix (Fin n) (Fin n) R)) A
+  weak : IsWeakDrazinAt A B k
   commutes : A * B = B * A
-  polynomial_implies_weak : polynomialIdentity → polynomialDefinesB → IsWeakDrazinAt A B k
-  hasPolynomialIdentity : polynomialIdentity
-  hasPolynomialDefinesB : polynomialDefinesB
 
-namespace PolynomialWeakDrazinCertificate
+namespace ProjectiveWeakDrazin
 
 variable {R : Type u} [Semiring R]
+variable {A B AD : Matrix (Fin n) (Fin n) R} {k : ℕ}
+
+/-- Projective weak Drazin readout: weak relation plus the explicit idempotent projection. -/
+theorem projective_readout (P : ProjectiveWeakDrazin A B AD k) :
+    IsWeakDrazinAt A B k ∧ AD = A * B ∧ AD * AD = AD := by
+  cases P with
+  | mk weak AD_eq AD_idempotent =>
+      exact ⟨weak, AD_eq, AD_idempotent⟩
+
+/-- A projective weak Drazin structure exposes the weak relation directly. -/
+theorem weak_readout (P : ProjectiveWeakDrazin A B AD k) :
+    IsWeakDrazinAt A B k :=
+  (projective_readout (A := A) (B := B) (AD := AD) (k := k) P).1
+
+/-- A projective weak Drazin structure exposes the idempotent projection equation directly. -/
+theorem projection_eq_readout (P : ProjectiveWeakDrazin A B AD k) :
+    AD = A * B :=
+  (projective_readout (A := A) (B := B) (AD := AD) (k := k) P).2.1
+
+/-- A projective weak Drazin structure exposes the idempotence equation directly. -/
+theorem idempotent_readout (P : ProjectiveWeakDrazin A B AD k) :
+    AD * AD = AD :=
+  (projective_readout (A := A) (B := B) (AD := AD) (k := k) P).2.2
+
+end ProjectiveWeakDrazin
+
+namespace PolynomialWeakDrazin
+
+variable {R : Type u} [CommSemiring R]
 variable {A B : Matrix (Fin n) (Fin n) R} {k : ℕ}
-/-- The polynomial certificate yields a commuting weak Drazin inverse. -/
-theorem commuting_weak_readout (P : PolynomialWeakDrazinCertificate A B k) :
+
+/-- The polynomial weak Drazin relation yields a commuting weak Drazin inverse. -/
+theorem commuting_weak_readout (P : PolynomialWeakDrazin A B k) :
     IsWeakDrazinAt A B k ∧ A * B = B * A := by
   cases P with
-  | mk polynomialIdentity polynomialDefinesB commutes polynomial_implies_weak
-      hasPolynomialIdentity hasPolynomialDefinesB =>
-      exact ⟨polynomial_implies_weak hasPolynomialIdentity hasPolynomialDefinesB,
-        commutes⟩
+  | mk p B_eq_eval weak commutes =>
+      exact ⟨weak, commutes⟩
 
-end PolynomialWeakDrazinCertificate
+/-- A polynomial weak Drazin structure exposes the weak relation directly. -/
+theorem weak_readout (P : PolynomialWeakDrazin A B k) :
+    IsWeakDrazinAt A B k :=
+  (commuting_weak_readout (A := A) (B := B) (k := k) P).1
 
-/-- Markov-chain weak-Drazin socket for Campbell--Meyer Theorem 8. -/
-structure MarkovWeakDrazinReadout {R : Type u} [Ring R]
-    (A B AD : Matrix (Fin n) (Fin n) R) (k : ℕ) where
+/-- A polynomial weak Drazin structure exposes the commutation relation directly. -/
+theorem commutes_readout (P : PolynomialWeakDrazin A B k) :
+    A * B = B * A :=
+  (commuting_weak_readout (A := A) (B := B) (k := k) P).2
+
+end PolynomialWeakDrazin
+
+/-- Markov-chain weak-Drazin projection comparison as a concrete matrix equality. -/
+structure MarkovWeakDrazinProjection {R : Type u} [Ring R]
+    (A B groupInverseProjection : Matrix (Fin n) (Fin n) R) (k : ℕ) where
   weak : IsWeakDrazinAt A B k
-  groupInverseProjection : Matrix (Fin n) (Fin n) R
-  weakProjection : Matrix (Fin n) (Fin n) R := 1 - B * A
-  stationaryRowsAgree : Prop
+  weakProjection : Matrix (Fin n) (Fin n) R
+  weakProjection_eq_formula : weakProjection = 1 - B * A
   projection_eq_groupProjection : weakProjection = groupInverseProjection
-  theorem8_readout : weakProjection = groupInverseProjection → stationaryRowsAgree
 
-namespace MarkovWeakDrazinReadout
+namespace MarkovWeakDrazinProjection
 
 variable {R : Type u} [Ring R]
-variable {A B AD : Matrix (Fin n) (Fin n) R} {k : ℕ}
-variable (M : MarkovWeakDrazinReadout A B AD k)
+variable {A B groupInverseProjection : Matrix (Fin n) (Fin n) R} {k : ℕ}
+variable (M : MarkovWeakDrazinProjection A B groupInverseProjection k)
 
-/-- The weak-Drazin projection has the supplied stationary-row readout. -/
-theorem stationary_rows_readout : M.stationaryRowsAgree :=
-  M.theorem8_readout M.projection_eq_groupProjection
+/-- The weak-Drazin projection agrees with the supplied group-inverse projection. -/
+theorem projection_readout : M.weakProjection = groupInverseProjection :=
+  M.projection_eq_groupProjection
 
-end MarkovWeakDrazinReadout
+/-- The stored weak projection is the explicit matrix formula `1 - B * A`. -/
+theorem weakProjection_formula :
+    M.weakProjection = 1 - B * A :=
+  M.weakProjection_eq_formula
+
+end MarkovWeakDrazinProjection
 
 end
 

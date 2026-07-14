@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.ZMod.Basic
-import Omega.Conclusion.CoordinateBundlePosteriorHypercubeFactorization
+import InfoGeometry.External.Automath.Omega.Conclusion.CoordinateBundlePosteriorHypercubeFactorization
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.BernoulliPCycleTiltSecondMomentsClosed
-import Omega.Folding.BernoulliPRegenerationPGF
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPCycleTiltSecondMomentsClosed
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationPGF
 
 namespace Omega.Folding
 

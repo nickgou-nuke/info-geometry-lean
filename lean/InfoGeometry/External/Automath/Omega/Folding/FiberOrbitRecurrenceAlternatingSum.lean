@@ -2,7 +2,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Tactic
-import Omega.Folding.FiberSingleCoordinateAffineDifference
+import InfoGeometry.External.Automath.Omega.Folding.FiberSingleCoordinateAffineDifference
 
 namespace Omega.Folding
 

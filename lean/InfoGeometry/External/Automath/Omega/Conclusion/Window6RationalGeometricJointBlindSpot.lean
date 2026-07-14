@@ -1,4 +1,4 @@
-import Omega.Conclusion.BoundaryParityBlindFiltration
+import InfoGeometry.External.Automath.Omega.Conclusion.BoundaryParityBlindFiltration
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
-import Omega.SPG.BoundaryGodelMomentReadout
-import Omega.SPG.BoundaryGodelGcdLipschitzStability
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelMomentReadout
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelGcdLipschitzStability
 import Mathlib.Tactic
 
 namespace Omega.SPG

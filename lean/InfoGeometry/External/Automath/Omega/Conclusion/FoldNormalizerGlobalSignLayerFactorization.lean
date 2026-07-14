@@ -1,4 +1,4 @@
-import Omega.OperatorAlgebra.FoldGlobalSignUniqueDecomposition
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldGlobalSignUniqueDecomposition
 
 namespace Omega.Conclusion
 

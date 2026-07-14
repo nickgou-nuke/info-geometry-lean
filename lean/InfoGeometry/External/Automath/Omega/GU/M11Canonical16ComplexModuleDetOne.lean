@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
-import Omega.GU.M11Z34RotationPartComplexStructure
+import InfoGeometry.External.Automath.Omega.GU.M11Z34RotationPartComplexStructure
 
 open scoped BigOperators
 

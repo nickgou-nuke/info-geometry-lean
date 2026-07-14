@@ -1,4 +1,4 @@
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 /-! ### CommRing instance for X m
 

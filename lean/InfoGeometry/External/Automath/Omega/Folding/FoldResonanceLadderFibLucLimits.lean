@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
-import Omega.Folding.FoldResonanceLadderFibonacciDirectionalLimit
+import InfoGeometry.External.Automath.Omega.Folding.FoldResonanceLadderFibonacciDirectionalLimit
 
 open Filter
 open scoped Topology goldenRatio

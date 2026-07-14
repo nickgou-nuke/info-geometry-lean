@@ -1,5 +1,5 @@
-import Omega.GU.Window6B3C3AdjointSecondMomentIsotropy
-import Omega.GU.Window6VisibleCartanQuotientSyzygySplitting
+import InfoGeometry.External.Automath.Omega.GU.Window6B3C3AdjointSecondMomentIsotropy
+import InfoGeometry.External.Automath.Omega.GU.Window6VisibleCartanQuotientSyzygySplitting
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic

@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Zeta.XiTerminalZmLeyangRamificationDivisorStokes
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmLeyangRamificationDivisorStokes
 
 namespace Omega.Zeta
 

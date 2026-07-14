@@ -1,4 +1,4 @@
-import Omega.CircleDimension.PhaseSpectrumQuotient
+import InfoGeometry.External.Automath.Omega.CircleDimension.PhaseSpectrumQuotient
 
 namespace Omega.Conclusion
 

@@ -111,13 +111,13 @@ theorem caliber_eq_zero_of_detailed_balance
     D.thermodynamic.pathPacket.caliber = 0 :=
   D.thermodynamic.caliber_eq_zero_of_detailed_balance hdb
 
-/-- The finite path entropy is the curvature trace readout. -/
-theorem pathEntropy_eq_curvatureTrace_readout
+/-- The finite path entropy is the curvature trace. -/
+theorem pathEntropy_eq_curvatureTrace
     (D : FiniteMDPASPaperPacket ι Op State LieAlgebra LieDual) :
     D.thermodynamic.pathPacket.pathEntropy =
       D.thermodynamic.pathPacket.trace
         (thermodynamic_curvature D.thermodynamic.pathPacket.flow) :=
-  D.thermodynamic.pathEntropy_eq_curvatureTrace_readout
+  D.thermodynamic.pathPacket.pathEntropy_eq_curvatureTrace
 
 /-- The packet's prequantum holonomy scale is `ω / ħ`. -/
 theorem prequantum_holonomyScale_eq_omega_over_hbar

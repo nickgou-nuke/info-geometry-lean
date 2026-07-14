@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiTerminalZmS4PrymTorusRankLayering
+import InfoGeometry.External.Automath.Omega.Zeta.XiTerminalZmS4PrymTorusRankLayering
 
 namespace Omega.Zeta
 

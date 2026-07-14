@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.GU.TerminalFoldbin6StrongLumpabilityFails
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6StrongLumpabilityFails
 
 namespace Omega.GU
 

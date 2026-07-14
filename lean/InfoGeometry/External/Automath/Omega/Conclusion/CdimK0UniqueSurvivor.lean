@@ -1,5 +1,5 @@
-import Omega.Conclusion.FiniteRankExactAdditiveUniqueExtension
-import Omega.CircleDimension.ShortExactAdditivity
+import InfoGeometry.External.Automath.Omega.Conclusion.FiniteRankExactAdditiveUniqueExtension
+import InfoGeometry.External.Automath.Omega.CircleDimension.ShortExactAdditivity
 
 namespace Omega.Conclusion
 

@@ -1,6 +1,6 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
-import Omega.Folding.FibonacciPolynomial
+import InfoGeometry.External.Automath.Omega.Folding.FibonacciPolynomial
 
 namespace Omega.UnitCirclePhaseArithmetic
 

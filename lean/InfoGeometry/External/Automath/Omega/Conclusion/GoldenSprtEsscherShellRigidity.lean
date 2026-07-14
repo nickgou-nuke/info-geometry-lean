@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.ConclusionGoldenSprtEsscherBoundarySymmetry
+import InfoGeometry.External.Automath.Omega.POM.ConclusionGoldenSprtEsscherBoundarySymmetry
 
 namespace Omega.Conclusion
 

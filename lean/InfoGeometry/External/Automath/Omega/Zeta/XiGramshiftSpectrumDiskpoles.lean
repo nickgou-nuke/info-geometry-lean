@@ -1,4 +1,4 @@
-import Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
+import InfoGeometry.External.Automath.Omega.Zeta.XiDepthHankelDeterminantVandermondeSquare
 
 namespace Omega.Zeta
 

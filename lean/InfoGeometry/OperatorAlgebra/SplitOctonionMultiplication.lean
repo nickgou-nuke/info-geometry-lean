@@ -137,6 +137,29 @@ theorem commutator_leak_extraction (X Y : SplitOct) :
 /-- Coordinate associator `(xy)z - x(yz)`. -/
 def associator (X Y Z : SplitOct) : SplitOct := subZ (mulZ (mulZ X Y) Z) (mulZ X (mulZ Y Z))
 
+/-- Left-regular action on the true nonassociative `SplitOct` carrier. -/
+def leftRegular (X : SplitOct) : SplitOct → SplitOct :=
+  fun Y => mulZ X Y
+
+/-- The failure of left-regular multiplication to be multiplicative is the
+negative of the explicit associator. -/
+theorem leftRegular_mul_defect (X Y Z : SplitOct) :
+    subZ (leftRegular X (leftRegular Y Z))
+        (leftRegular (mulZ X Y) Z) =
+      negZ (associator X Y Z) := by
+  cases X with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+    cases Y with
+    | mk c d u0 u1 u2 v0 v1 v2 =>
+      cases Z with
+      | mk e f r0 r1 r2 s0 s1 s2 =>
+        ext <;> simp [leftRegular, associator, mulZ, subZ, negZ]
+
+/-- Left-regular multiplication inherits norm composition from `mulZ`. -/
+theorem leftRegular_normZ_mul (X Y : SplitOct) :
+    normZ (leftRegular X Y) = normZ X * normZ Y := by
+  simp [leftRegular, normZ_mul]
+
 /-- First diagonal idempotent. -/
 def ePlus : SplitOct := ⟨1, 0, 0, 0, 0, 0, 0, 0⟩
 
@@ -713,6 +736,21 @@ theorem conjZ_down (i : Fin 3) : conjZ (down i) = negZ (down i) := by
 theorem conjZ_mulZ (X Y : SplitOct) :
     conjZ (mulZ X Y) = mulZ (conjZ Y) (conjZ X) := by
   ext <;> simp [conjZ, mulZ] <;> ring_nf
+
+/-- Left alternative cancellation. -/
+theorem left_alternative_cancellation (X Y : SplitOct) : 
+    mulZ (conjZ X) (mulZ X Y) = mulZ (scalarZ (detZ X)) Y := by
+  ext <;> simp [mulZ, conjZ, scalarZ, detZ] <;> ring_nf
+
+/-- Right alternative cancellation. -/
+theorem right_alternative_cancellation (X Y : SplitOct) : 
+    mulZ (mulZ Y X) (conjZ X) = mulZ (scalarZ (detZ X)) Y := by
+  ext <;> simp [mulZ, conjZ, scalarZ, detZ] <;> ring_nf
+
+/-- Middle Moufang identity for the split octonions. -/
+theorem moufang_identity (X Y Z : SplitOct) : 
+    mulZ (mulZ X Y) (mulZ Z X) = mulZ X (mulZ (mulZ Y Z) X) := by
+  ext <;> simp [mulZ] <;> ring_nf
 
 /-- Closed kernel packet for the true split-octonion basis multiplication surface. -/
 theorem splitOctonion_multiplication_packet :

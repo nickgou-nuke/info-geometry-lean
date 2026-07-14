@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.DerivedFoldMultiplicityConvexOrderExtremal
+import InfoGeometry.External.Automath.Omega.Folding.DerivedFoldMultiplicityConvexOrderExtremal
 
 namespace Omega.Folding
 

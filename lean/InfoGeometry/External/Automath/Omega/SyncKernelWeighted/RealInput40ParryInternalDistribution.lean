@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SyncKernelWeighted.RealInput40Essential20
+import InfoGeometry.External.Automath.Omega.SyncKernelWeighted.RealInput40Essential20
 
 namespace Omega.SyncKernelWeighted
 

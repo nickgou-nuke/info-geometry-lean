@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Omega.SyncKernelRealInput.MobiusCollapse
-import Omega.SyncKernelRealInput.RealInput40MertensConstant
-import Omega.SyncKernelRealInput.RealInput40MertensTwoSeriesTail
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.MobiusCollapse
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40MertensConstant
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40MertensTwoSeriesTail
 
 namespace Omega.SyncKernelRealInput
 

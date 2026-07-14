@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BalancedExternalizationSchurOptimality
+import InfoGeometry.External.Automath.Omega.Conclusion.BalancedExternalizationSchurOptimality
 
 open scoped BigOperators
 

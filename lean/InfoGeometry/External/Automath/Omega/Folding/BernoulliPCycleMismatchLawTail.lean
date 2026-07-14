@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Topology.Order.IntermediateValue
-import Omega.Folding.BernoulliPRegenerationBivariatePGF
+import InfoGeometry.External.Automath.Omega.Folding.BernoulliPRegenerationBivariatePGF
 
 namespace Omega.Folding
 

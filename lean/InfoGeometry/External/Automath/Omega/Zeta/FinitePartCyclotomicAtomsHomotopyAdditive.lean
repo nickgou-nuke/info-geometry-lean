@@ -1,5 +1,5 @@
 import Mathlib.Topology.Basic
-import Omega.Zeta.FinitePartCyclotomicAtomsCompleteCoordinate
+import InfoGeometry.External.Automath.Omega.Zeta.FinitePartCyclotomicAtomsCompleteCoordinate
 
 namespace Omega.Zeta
 

@@ -173,28 +173,6 @@ theorem localParity_commutes_d_offdiag
 end WeylGaugeTiltSwitchNormalization
 
 /--
-Finite Klein-string dressing data.
-
-This is the extra ordered dressing convention needed if one wants a global
-finite CAR system from the commuting local normalized atoms.
--/
-@[rep_depth thermo]
-structure FiniteKleinDressing
-    (Idx Raw Op : Type*) [LinearOrder Idx] [Ring Op]
-    (N : WeylGaugeTiltSwitchNormalization Idx Raw Op) where
-  support : Finset Idx
-  K : Idx → Op
-  C : Idx → Op
-  D : Idx → Op
-
-  C_eq : ∀ p, C p = K p * N.c p
-  D_eq : ∀ p, D p = K p * N.d p
-
-  C_C_anticomm : Prop
-  D_D_anticomm : Prop
-  C_D_anticomm : Prop
-
-/--
 Boolean cube to square-free exterior carrier.
 
 The Boolean vertex is already a square-free finite subset of the ambient prime
@@ -232,55 +210,5 @@ theorem toSquareFreePrimeState_Gamma_eq_globalChirality
   rw [SquareFreePrimeState.Gamma_eq_negOne_pow_fermionNumber]
   rw [PrimeBooleanCube.globalChirality_vertex_eq_fermionParity P v]
   rfl
-
-/--
-The normalized causal-cone carrier maps into the finite Cantor/Fock readout
-lane and preserves the existing finite readouts.
--/
-@[rep_depth thermo]
-structure PrimeWeylGaugeCantorFockBridge
-    (Raw Op : Type*) [Ring Op] where
-  normalized : WeylGaugeTiltSwitchNormalization ℕ Raw Op
-  P : PrimeRegister
-  vertex : Vertex P
-  exteriorState : SquareFreePrimeState ℕ
-  exteriorState_eq : exteriorState = toSquareFreePrimeState vertex
-
-namespace PrimeWeylGaugeCantorFockBridge
-
-variable {Raw Op : Type*} [Ring Op]
-variable (B : PrimeWeylGaugeCantorFockBridge Raw Op)
-
-/-- The normalized local split-Majorana atom. -/
-theorem normalized_local_splitMajoranaAtom (p : ℕ) :
-    B.normalized.c p * B.normalized.c p = 1 ∧
-    B.normalized.d p * B.normalized.d p = -1 ∧
-    B.normalized.c p * B.normalized.d p + B.normalized.d p * B.normalized.c p = 0 := by
-  exact ⟨B.normalized.c_sq p, B.normalized.d_sq p, B.normalized.c_d_anticomm_same p⟩
-
-/-- The exterior readout preserves fermion number. -/
-theorem exteriorState_fermionNumber_eq (v : Vertex B.P) :
-    SquareFreePrimeState.fermionNumber (toSquareFreePrimeState v) = v.val.card :=
-  toSquareFreePrimeState_fermionNumber_eq v
-
-/-- The exterior readout preserves local parity sign. -/
-theorem exteriorState_localParitySign_eq (v : Vertex B.P) (p : ℕ) :
-    SquareFreePrimeState.localParitySign p (toSquareFreePrimeState v) =
-      PrimeBooleanCube.localParity p v.val :=
-  toSquareFreePrimeState_localParitySign_eq v p
-
-/-- The exterior readout preserves global chirality. -/
-theorem exteriorState_Gamma_eq_globalChirality (v : Vertex B.P) :
-    SquareFreePrimeState.Gamma (toSquareFreePrimeState v) =
-      PrimeBooleanCube.globalChirality B.P v.val :=
-  toSquareFreePrimeState_Gamma_eq_globalChirality v
-
-/-- Möbius readout delegates to the existing Boolean-cube owner. -/
-theorem vertex_mobius_eq_globalChirality (v : Vertex B.P) :
-    ArithmeticFunction.moebius (PrimeBooleanCube.representedNat v) =
-      PrimeBooleanCube.globalChirality B.P v.val :=
-  PrimeBooleanCube.mobius_representedNat_eq_globalChirality B.P v
-
-end PrimeWeylGaugeCantorFockBridge
 
 end InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge

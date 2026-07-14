@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Conclusion.BigWittExactSpectralBudget
-import Omega.Conclusion.PrimeRegister
+import InfoGeometry.External.Automath.Omega.Conclusion.BigWittExactSpectralBudget
+import InfoGeometry.External.Automath.Omega.Conclusion.PrimeRegister
 
 namespace Omega.Conclusion
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.FibCubeAntipodeCount
+import InfoGeometry.External.Automath.Omega.POM.FibCubeAntipodeCount
 
 namespace Omega.POM
 

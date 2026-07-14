@@ -1,4 +1,4 @@
-import Omega.LogicExpansionChain.LiftedPointwiseSoundness
+import InfoGeometry.External.Automath.Omega.LogicExpansionChain.LiftedPointwiseSoundness
 
 namespace Omega.LogicExpansionChain
 

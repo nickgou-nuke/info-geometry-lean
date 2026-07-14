@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Folding.GaugeAnomalyCovClosed
+import InfoGeometry.External.Automath.Omega.Folding.GaugeAnomalyCovClosed
 
 namespace Omega.Folding
 

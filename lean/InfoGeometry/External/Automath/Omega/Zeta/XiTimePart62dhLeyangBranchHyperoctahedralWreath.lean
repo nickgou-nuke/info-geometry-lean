@@ -1,4 +1,4 @@
-import Omega.Zeta.XiTimePart62dLeyangBranchGraphAutomorphismWreath
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62dLeyangBranchGraphAutomorphismWreath
 
 namespace Omega.Zeta
 

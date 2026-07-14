@@ -1,4 +1,4 @@
-import Omega.GU.TerminalFoldbin6NoLinearKernel
+import InfoGeometry.External.Automath.Omega.GU.TerminalFoldbin6NoLinearKernel
 
 namespace Omega
 

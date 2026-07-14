@@ -56,7 +56,8 @@ the Hestenes observable flow with the bounded modular flow datum.
 structure BoundedKMSHestenesBridge where
   /-- Bounded Souriau/Drazin state-functional KMS socket. -/
   boundedKMS :
-    BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)
+    InfoGeometry.Canonical.BoundedKMSConditionBridge.Bridge
+      (E := E) (LieAlgebra := LieAlgebra)
 
   /-- Hestenes/Krein real-form modular packet. -/
   hestenes :

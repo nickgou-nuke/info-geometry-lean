@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Zeta.XiPoissonKlSixthOrderMu3Mu4
+import InfoGeometry.External.Automath.Omega.Zeta.XiPoissonKlSixthOrderMu3Mu4
 
 namespace Omega.Conclusion
 

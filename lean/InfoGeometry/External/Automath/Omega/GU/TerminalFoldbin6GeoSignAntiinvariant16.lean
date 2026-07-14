@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.GU.TerminalWindow6GeoFixedSubalgebraWedderburn
+import InfoGeometry.External.Automath.Omega.GU.TerminalWindow6GeoFixedSubalgebraWedderburn
 
 namespace Omega.GU
 

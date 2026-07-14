@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.Window6QmomentTripleGeometry
+import InfoGeometry.External.Automath.Omega.Conclusion.Window6QmomentTripleGeometry
 
 namespace Omega.Conclusion
 

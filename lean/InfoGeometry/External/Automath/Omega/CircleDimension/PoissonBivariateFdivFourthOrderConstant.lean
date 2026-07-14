@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.PoissonBivariateSecondOrderNormalForm
-import Omega.CircleDimension.PoissonKernelDerivativeL1Energy
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonBivariateSecondOrderNormalForm
+import InfoGeometry.External.Automath.Omega.CircleDimension.PoissonKernelDerivativeL1Energy
 
 namespace Omega.CircleDimension
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.CircleDim
-import Omega.TypedAddressBiaxialCompletion.PhaseLedgerTemplate
+import InfoGeometry.External.Automath.Omega.CircleDimension.CircleDim
+import InfoGeometry.External.Automath.Omega.TypedAddressBiaxialCompletion.PhaseLedgerTemplate
 
 namespace Omega.TypedAddressBiaxialCompletion
 

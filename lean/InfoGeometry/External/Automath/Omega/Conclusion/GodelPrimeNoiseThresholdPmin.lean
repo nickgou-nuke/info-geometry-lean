@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.SPG.ErrorThreshold
+import InfoGeometry.External.Automath.Omega.SPG.ErrorThreshold
 
 namespace Omega.Conclusion
 

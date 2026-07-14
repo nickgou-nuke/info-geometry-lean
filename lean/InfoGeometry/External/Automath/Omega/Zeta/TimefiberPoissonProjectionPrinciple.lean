@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.Zeta.CayleyTimefiberPoissonCollapse
+import InfoGeometry.External.Automath.Omega.Zeta.CayleyTimefiberPoissonCollapse
 
 namespace Omega.Zeta
 

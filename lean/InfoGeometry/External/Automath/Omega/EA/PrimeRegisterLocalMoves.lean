@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.EA.PrimeRegisterFibValuation
+import InfoGeometry.External.Automath.Omega.EA.PrimeRegisterFibValuation
 
 namespace Omega.EA.PrimeRegisterLocalMoves
 

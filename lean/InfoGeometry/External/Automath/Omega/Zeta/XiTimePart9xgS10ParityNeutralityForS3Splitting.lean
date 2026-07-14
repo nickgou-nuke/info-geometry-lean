@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic
-import Omega.Zeta.XiTimePart62eaDualfingerprintBooleanStrongProductLaw
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart62eaDualfingerprintBooleanStrongProductLaw
 
 namespace Omega.Zeta
 

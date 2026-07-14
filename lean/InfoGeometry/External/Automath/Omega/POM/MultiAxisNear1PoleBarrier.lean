@@ -1,7 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
-import Omega.POM.MinkowskiBudgetBarrier
-import Omega.POM.MultiAxisMixingBudgetBarrier
+import InfoGeometry.External.Automath.Omega.POM.MinkowskiBudgetBarrier
+import InfoGeometry.External.Automath.Omega.POM.MultiAxisMixingBudgetBarrier
 
 namespace Omega.POM
 

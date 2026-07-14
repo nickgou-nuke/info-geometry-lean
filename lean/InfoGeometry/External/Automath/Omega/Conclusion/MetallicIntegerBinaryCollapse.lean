@@ -2,10 +2,10 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.Folding.MetallicCompressionExtremum
-import Omega.Folding.MetallicIntegerScalarizationThreshold
-import Omega.Folding.MetallicParetoFrontier
-import Omega.Folding.MetallicTwoStateSFT
+import InfoGeometry.External.Automath.Omega.Folding.MetallicCompressionExtremum
+import InfoGeometry.External.Automath.Omega.Folding.MetallicIntegerScalarizationThreshold
+import InfoGeometry.External.Automath.Omega.Folding.MetallicParetoFrontier
+import InfoGeometry.External.Automath.Omega.Folding.MetallicTwoStateSFT
 
 open scoped goldenRatio
 open Omega.Folding.MetallicParetoFrontier

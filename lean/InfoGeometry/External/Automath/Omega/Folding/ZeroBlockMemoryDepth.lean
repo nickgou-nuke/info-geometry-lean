@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Archimedean
 import Mathlib.Tactic
-import Omega.Core.Fib
-import Omega.Folding.ZeroBlockMinimaxAbsError
+import InfoGeometry.External.Automath.Omega.Core.Fib
+import InfoGeometry.External.Automath.Omega.Folding.ZeroBlockMinimaxAbsError
 
 namespace Omega.Folding
 

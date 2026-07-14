@@ -1,8 +1,8 @@
-import Omega.Folding.MomentSum
-import Omega.Folding.FiberSpectrum
-import Omega.Folding.MomentRecurrence
-import Omega.Folding.MomentTriple
-import Omega.Folding.FiberArithmetic
+import InfoGeometry.External.Automath.Omega.Folding.MomentSum
+import InfoGeometry.External.Automath.Omega.Folding.FiberSpectrum
+import InfoGeometry.External.Automath.Omega.Folding.MomentRecurrence
+import InfoGeometry.External.Automath.Omega.Folding.MomentTriple
+import InfoGeometry.External.Automath.Omega.Folding.FiberArithmetic
 
 namespace Omega.EA
 

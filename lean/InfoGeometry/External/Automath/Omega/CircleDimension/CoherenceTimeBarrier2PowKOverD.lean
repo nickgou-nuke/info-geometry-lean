@@ -1,5 +1,5 @@
-import Omega.CircleDimension.CoherenceTimeBarrier2Pow
-import Omega.CircleDimension.CoherenceTimeLowerBoundMOneOverD
+import InfoGeometry.External.Automath.Omega.CircleDimension.CoherenceTimeBarrier2Pow
+import InfoGeometry.External.Automath.Omega.CircleDimension.CoherenceTimeLowerBoundMOneOverD
 
 namespace Omega.CircleDimension
 

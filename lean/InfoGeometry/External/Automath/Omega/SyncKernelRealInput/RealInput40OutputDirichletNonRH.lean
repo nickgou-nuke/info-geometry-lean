@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
-import Omega.SyncKernelRealInput.DirichletModulusDiffusionBarrier
-import Omega.SyncKernelRealInput.RealInput40PrimitiveOrbitsMobiusSqrt
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.DirichletModulusDiffusionBarrier
+import InfoGeometry.External.Automath.Omega.SyncKernelRealInput.RealInput40PrimitiveOrbitsMobiusSqrt
 
 namespace Omega.SyncKernelRealInput
 

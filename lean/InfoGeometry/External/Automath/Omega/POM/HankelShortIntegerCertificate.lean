@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.HankelSyndromeGapRankDefect
+import InfoGeometry.External.Automath.Omega.POM.HankelSyndromeGapRankDefect
 
 namespace Omega.POM
 

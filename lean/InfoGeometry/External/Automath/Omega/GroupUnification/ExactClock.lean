@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.GoldenRatio
 import Mathlib.Tactic
-import Omega.GroupUnification.ParryEndpointCollapse
+import InfoGeometry.External.Automath.Omega.GroupUnification.ParryEndpointCollapse
 
 namespace Omega.GroupUnification
 

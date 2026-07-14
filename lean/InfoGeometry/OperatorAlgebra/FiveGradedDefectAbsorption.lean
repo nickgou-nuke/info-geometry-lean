@@ -26,7 +26,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
 
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
+
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 /-! ## 1. Five-grade routing consequences -/
@@ -156,7 +156,7 @@ structure TKKDefectAbsorbedInPlusTwo
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    (R : TKKRicciFluxDatum L State Geometry)
+    (R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry)
     (G : FiveGrading L) where
   /-- Grade-two representative of the TKK closure defect. -/
   defectToPlusTwo : L → State → L
@@ -179,7 +179,7 @@ variable
     {State Geometry : Type*}
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    {R : TKKRicciFluxDatum L State Geometry}
+    {R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry}
     {G : FiveGrading L}
 
 variable (A : TKKDefectAbsorbedInPlusTwo L State Geometry R G)

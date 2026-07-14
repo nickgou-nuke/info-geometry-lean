@@ -208,5 +208,124 @@ theorem S_left_commutes_K (ψ : H E) :
   apply PiLp.ext
   intro x
   exact S_left_commutes_K_apply (E := E) ψ x
+/--
+The analytic Hilbert completion carrier for the boundary function space.
+-/
+abbrev H_lp (E : Type 0) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  lp (fun _ : BinaryCantorBoundary => DoubledSpace E) 2
+
+def S_left_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
+  if headBoundary x = BinarySector.plus then ψ (tailBoundary x) else 0
+
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+lemma S_left_raw_norm (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) :
+    ‖S_left_raw ψ x‖ = if headBoundary x = BinarySector.plus then ‖ψ (tailBoundary x)‖ else 0 := by
+  unfold S_left_raw
+  split_ifs
+  · rfl
+  · rw [norm_zero]
+
+def plusEquiv : BinaryCantorBoundary ≃ { x : BinaryCantorBoundary // headBoundary x = BinarySector.plus } where
+  toFun x := ⟨prefixBoundary BinarySector.plus x, rfl⟩
+  invFun y := tailBoundary y.1
+  left_inv x := by
+    ext n
+    rfl
+  right_inv y := by
+    ext n
+    cases n
+    · exact y.2.symm
+    · rfl
+
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+lemma summable_S_left_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (h : Summable fun x => ‖ψ x‖ ^ (2 : ℝ)) :
+    Summable fun x => ‖S_left_raw ψ x‖ ^ (2 : ℝ) := by
+  have h_split := @summable_subtype_and_compl ℝ BinaryCantorBoundary _ _ _ (fun x => ‖S_left_raw ψ x‖ ^ (2 : ℝ)) _ {x | headBoundary x = BinarySector.plus}
+  rw [← h_split]
+  constructor
+  · have heq : (fun (y : {x // headBoundary x = BinarySector.plus}) => ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) =
+               (fun x : BinaryCantorBoundary => ‖ψ x‖ ^ (2 : ℝ)) ∘ plusEquiv.symm := by
+      ext y
+      dsimp [plusEquiv]
+      rw [S_left_raw_norm]
+      have hy : headBoundary y.1 = BinarySector.plus := y.2
+      rw [if_pos hy]
+    change Summable (fun (y : {x // headBoundary x = BinarySector.plus}) => ‖S_left_raw ψ y.1‖ ^ (2 : ℝ))
+    rw [heq]
+    exact (Equiv.summable_iff plusEquiv.symm).mpr h
+  · have heq_zero : (fun (y : {x // x ∉ {x | headBoundary x = BinarySector.plus}}) => ‖S_left_raw ψ y.1‖ ^ (2 : ℝ)) = 0 := by
+      ext y
+      dsimp
+      rw [S_left_raw_norm]
+      have hy : headBoundary y.1 ≠ BinarySector.plus := y.2
+      rw [if_neg hy]
+      exact Real.zero_rpow two_ne_zero
+    change Summable (fun (y : {x // x ∉ {x | headBoundary x = BinarySector.plus}}) => ‖S_left_raw ψ y.1‖ ^ (2 : ℝ))
+    rw [heq_zero]
+    exact summable_zero
+
+/--
+The bounded continuous linear branch operator on the true Hilbert completion.
+-/
+def S_left_lp (ψ : H_lp E) : H_lp E :=
+  ⟨S_left_raw ψ, by
+    apply memℓp_gen
+    have h1 : (2 : ENNReal).toReal = 2 := rfl
+    rw [h1]
+    have h2 : Memℓp ψ.1 2 := ψ.prop
+    have h3 := (memℓp_gen_iff zero_lt_two).mp h2
+    rw [h1] at h3
+    exact summable_S_left_raw ψ h3⟩
+
+def K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (x : BinaryCantorBoundary) : DoubledSpace E :=
+  clockAxis (E := E) (ψ x)
+
+
+lemma complex_i_norm (u : DoubledSpace E) :
+    ‖complex_i (E := E) u‖ = ‖u‖ := by
+  have hnn : ‖complex_i (E := E) u‖₊ = ‖u‖₊ := by
+    have htop : (2 : ENNReal) ≠ ⊤ := by norm_num
+    rw [WithLp.prod_nnnorm_eq_add (p := (2 : ENNReal)) htop]
+    rw [WithLp.prod_nnnorm_eq_add (p := (2 : ENNReal)) htop]
+    simp [complex_i_apply, add_comm]
+  exact congrArg (fun x : NNReal => (x : ℝ)) hnn
+
+lemma summable_K_raw (ψ : BinaryCantorBoundary → DoubledSpace E) (h : Summable fun x => ‖ψ x‖ ^ (2 : ℝ)) :
+    Summable fun x => ‖K_raw ψ x‖ ^ (2 : ℝ) := by
+  have h_eq : (fun x => ‖K_raw ψ x‖ ^ (2 : ℝ)) = (fun x => ‖ψ x‖ ^ (2 : ℝ)) := by
+    ext x
+    dsimp [K_raw]
+    rw [complex_i_norm]
+  rw [h_eq]
+  exact h
+
+/--
+The bounded continuous linear charge conjugation operator on the true Hilbert completion.
+-/
+def K_lp (ψ : H_lp E) : H_lp E :=
+  ⟨K_raw ψ, by
+    apply memℓp_gen
+    have h1 : (2 : ENNReal).toReal = 2 := rfl
+    rw [h1]
+    have h2 : Memℓp ψ.1 2 := ψ.prop
+    have h3 := (memℓp_gen_iff zero_lt_two).mp h2
+    rw [h1] at h3
+    exact summable_K_raw ψ h3⟩
+
+/--
+Lift the pointwise commutation here from the `PiLp` carrier to equality of
+continuous linear maps on the Hilbert completion.
+-/
+@[rep_depth operator]
+theorem S_left_commutes_K_lp (ψ : H_lp E) :
+    S_left_lp (K_lp ψ) = K_lp (S_left_lp ψ) := by
+  apply Subtype.ext
+  funext x
+  dsimp [S_left_lp, K_lp, S_left_raw, K_raw]
+  split_ifs
+  · rfl
+  · exact (map_zero (clockAxis (E := E))).symm
 
 end InfoGeometry.Canonical.ConcreteHilbertCommutation

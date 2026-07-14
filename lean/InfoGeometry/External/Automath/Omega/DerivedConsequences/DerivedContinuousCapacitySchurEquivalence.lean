@@ -1,7 +1,7 @@
 import Mathlib.Data.Fintype.Card
-import Omega.Conclusion.CapacityFiniteCompleteness
-import Omega.POM.InvertWFromHomogeneousCurve
-import Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
+import InfoGeometry.External.Automath.Omega.Conclusion.CapacityFiniteCompleteness
+import InfoGeometry.External.Automath.Omega.POM.InvertWFromHomogeneousCurve
+import InfoGeometry.External.Automath.Omega.Zeta.XiTimePart63cSchurCauchyMasterKernel
 
 namespace Omega.DerivedConsequences
 

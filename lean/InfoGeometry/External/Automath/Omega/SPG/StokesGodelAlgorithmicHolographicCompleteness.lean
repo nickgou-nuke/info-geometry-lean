@@ -1,5 +1,5 @@
-import Omega.SPG.BoundaryGodelizationHolographicDictionary
-import Omega.SPG.DyadicCubicalBoundaryInjective
+import InfoGeometry.External.Automath.Omega.SPG.BoundaryGodelizationHolographicDictionary
+import InfoGeometry.External.Automath.Omega.SPG.DyadicCubicalBoundaryInjective
 
 namespace Omega.SPG
 

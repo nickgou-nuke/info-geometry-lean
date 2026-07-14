@@ -1,5 +1,5 @@
 import Mathlib.Data.Fintype.Perm
-import Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
+import InfoGeometry.External.Automath.Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
 
 namespace Omega.Zeta
 

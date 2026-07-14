@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.Fiber
-import Omega.POM.SecondOrderCollisionCommonBottleneck
+import InfoGeometry.External.Automath.Omega.Folding.Fiber
+import InfoGeometry.External.Automath.Omega.POM.SecondOrderCollisionCommonBottleneck
 
 open scoped BigOperators
 

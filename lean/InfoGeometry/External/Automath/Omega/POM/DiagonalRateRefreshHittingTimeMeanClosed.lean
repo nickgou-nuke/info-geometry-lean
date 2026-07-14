@@ -1,4 +1,4 @@
-import Omega.POM.DiagonalRateAbsorbingMeanHitTime
+import InfoGeometry.External.Automath.Omega.POM.DiagonalRateAbsorbingMeanHitTime
 
 namespace Omega.POM
 

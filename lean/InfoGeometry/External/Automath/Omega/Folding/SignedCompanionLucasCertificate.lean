@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.Folding.CollisionKernel
-import Omega.Folding.ShiftDynamics
+import InfoGeometry.External.Automath.Omega.Folding.CollisionKernel
+import InfoGeometry.External.Automath.Omega.Folding.ShiftDynamics
 
 namespace Omega
 

@@ -1,4 +1,4 @@
-import Omega.DerivedConsequences.DerivedHaltingResolutionLocalfactorSynchronization
+import InfoGeometry.External.Automath.Omega.DerivedConsequences.DerivedHaltingResolutionLocalfactorSynchronization
 
 namespace Omega.Conclusion
 

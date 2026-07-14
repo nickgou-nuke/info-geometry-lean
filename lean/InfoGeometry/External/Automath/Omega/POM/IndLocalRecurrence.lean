@@ -1,4 +1,4 @@
-import Omega.POM.IndMatrixGrammar
+import InfoGeometry.External.Automath.Omega.POM.IndMatrixGrammar
 
 namespace Omega.POM
 

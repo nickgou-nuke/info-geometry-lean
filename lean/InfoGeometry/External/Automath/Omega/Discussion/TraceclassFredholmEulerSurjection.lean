@@ -1,4 +1,4 @@
-import Omega.Zeta.CyclicEulerProductComplexSection
+import InfoGeometry.External.Automath.Omega.Zeta.CyclicEulerProductComplexSection
 
 namespace Omega.Discussion
 

@@ -1,6 +1,6 @@
 import Mathlib.Tactic
-import Omega.POM.MultiplicityCompositionMod3Sparsity
-import Omega.POM.MultiplicityCompositionSharpMainTermConstant
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionMod3Sparsity
+import InfoGeometry.External.Automath.Omega.POM.MultiplicityCompositionSharpMainTermConstant
 
 namespace Omega.POM
 

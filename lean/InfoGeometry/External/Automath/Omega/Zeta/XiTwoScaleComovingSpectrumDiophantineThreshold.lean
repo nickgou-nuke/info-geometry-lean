@@ -1,6 +1,6 @@
 import Mathlib.NumberTheory.Real.Irrational
 import Mathlib.Tactic
-import Omega.Zeta.XiGridScanDiophantineDealiasingStability
+import InfoGeometry.External.Automath.Omega.Zeta.XiGridScanDiophantineDealiasingStability
 
 namespace Omega.Zeta
 

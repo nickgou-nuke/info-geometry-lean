@@ -1,5 +1,5 @@
 import Mathlib
-import Omega.Conclusion.LkFixedIndexHardEdge
+import InfoGeometry.External.Automath.Omega.Conclusion.LkFixedIndexHardEdge
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.POM.ProjectiveOperatorDegeneratesToMomentKernel
+import InfoGeometry.External.Automath.Omega.POM.ProjectiveOperatorDegeneratesToMomentKernel
 
 namespace Omega.Conclusion
 

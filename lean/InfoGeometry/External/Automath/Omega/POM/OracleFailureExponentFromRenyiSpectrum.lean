@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.MaxFiberPublication
+import InfoGeometry.External.Automath.Omega.POM.MaxFiberPublication
 
 namespace Omega.POM
 

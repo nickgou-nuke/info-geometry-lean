@@ -7,6 +7,8 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.O55TKKAnomalyAnnihilation
 
+open InfoGeometry.OperatorAlgebra.TKKConformalClosure
+
 /-!
 # Finite `O(5,5)` / TKK anomaly-annihilation ledger
 
@@ -70,7 +72,7 @@ end FiniteO55AnomalyLedger
 
 namespace TKKFinite
 
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
+
 
 variable {L : Type*}
 variable [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
@@ -121,7 +123,7 @@ variable [KreinSpace (DoubledSpace E)]
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-variable (B : HestenesAffineO55ClosureBridge (E := E))
+variable (B : _root_.InfoGeometry.Krein.HestenesAffineO55ClosureBridge.Bridge (E := E))
 
 /-- Ω-volume anomaly residual vanishes under the supplied `O(5,5)` operator action. -/
 @[rep_depth operator]

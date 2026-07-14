@@ -1,7 +1,7 @@
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import Omega.Conclusion.DerivedT5BurnsideMoments
-import Omega.Conclusion.EllipticT5SolvabilityAndTotalSplittingDensity
+import InfoGeometry.External.Automath.Omega.Conclusion.DerivedT5BurnsideMoments
+import InfoGeometry.External.Automath.Omega.Conclusion.EllipticT5SolvabilityAndTotalSplittingDensity
 
 namespace Omega.Conclusion
 

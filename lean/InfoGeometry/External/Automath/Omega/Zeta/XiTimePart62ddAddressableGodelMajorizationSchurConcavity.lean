@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.POM.CoarsegrainingMajorizationSchur
+import InfoGeometry.External.Automath.Omega.POM.CoarsegrainingMajorizationSchur
 
 namespace Omega.Zeta
 

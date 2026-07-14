@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Combinatorics.Enumerative.Stirling
 import Mathlib.Tactic
-import Omega.OperatorAlgebra.FoldOrbitMgfFiberFactorization
+import InfoGeometry.External.Automath.Omega.OperatorAlgebra.FoldOrbitMgfFiberFactorization
 
 namespace Omega.OperatorAlgebra
 

@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.LocalizedGroupsMayerVietoris
+import InfoGeometry.External.Automath.Omega.Conclusion.LocalizedGroupsMayerVietoris
 
 namespace Omega.Conclusion
 

@@ -1,4 +1,4 @@
-import Omega.POM.MicrocanonicalCoverTimeNlognScale
+import InfoGeometry.External.Automath.Omega.POM.MicrocanonicalCoverTimeNlognScale
 
 namespace Omega.POM
 

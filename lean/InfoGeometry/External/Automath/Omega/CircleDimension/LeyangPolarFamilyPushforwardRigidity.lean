@@ -1,4 +1,4 @@
-import Omega.UnitCirclePhaseArithmetic.LeyangHaarPushforwardDensity
+import InfoGeometry.External.Automath.Omega.UnitCirclePhaseArithmetic.LeyangHaarPushforwardDensity
 
 namespace Omega.CircleDimension
 

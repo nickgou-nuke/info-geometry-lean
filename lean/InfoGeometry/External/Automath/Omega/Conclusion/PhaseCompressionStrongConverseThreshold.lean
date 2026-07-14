@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Omega.Conclusion.CdimPhaseCompressionBitLowerBound
+import InfoGeometry.External.Automath.Omega.Conclusion.CdimPhaseCompressionBitLowerBound
 
 namespace Omega.Conclusion
 

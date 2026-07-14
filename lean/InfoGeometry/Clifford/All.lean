@@ -18,6 +18,7 @@ import InfoGeometry.Clifford.CliffordTowerFunctor
 import InfoGeometry.Clifford.QuadraticPolarBridge
 import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Clifford.JordanWignerBridge
@@ -93,6 +94,9 @@ import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
 import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
 import InfoGeometry.Clifford.ConformalSpinorBridge.SuperLieRingInstance
+import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Clifford.Clifford55AnomalyOSP
+import InfoGeometry.Clifford.D4Cl11Tripotent
 
 namespace InfoGeometry
 

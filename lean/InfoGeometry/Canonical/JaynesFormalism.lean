@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.JaynesLDDSBridge
 import InfoGeometry.Canonical.JaynesInductiveLimitBridge
 import InfoGeometry.Canonical.JaynesCategoricalInductionBridge
+import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.MaxEnt.DualBridge
@@ -29,12 +30,12 @@ namespace JaynesFormalism
 open Finset
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
 open InfoGeometry.Canonical.JaynesCategoricalInductionBridge
-open InfoGeometry.Canonical.JaynesLDDSCentering
+open JaynesLDDSCentering
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
 open InfoGeometry.Canonical.FiniteJaynesFormalism
 open InfoGeometry.MaxEnt.Finite
-open InfoGeometry.MaxEnt.JaynesRNMaxEnt
+open JaynesRNMaxEnt
 open InfoGeometry.MaxEnt
 
 export InfoGeometry.MaxEnt (
@@ -52,7 +53,7 @@ export InfoGeometry.MaxEnt (
   gibbsMaxEntProblemOfExpectation
 )
 
-export InfoGeometry.MaxEnt.JaynesRNMaxEnt (
+export JaynesRNMaxEnt (
   MomentFamily
   Satisfies
   SatisfiesIntegrable
@@ -135,47 +136,6 @@ export InfoGeometry.Canonical.JaynesInductiveLimitBridge (
 )
 
 variable {ι : Type*} [Fintype ι]
-
-/-- A compact finite Jaynes packet: reference profile, observation profile, and equal mass. -/
-structure FiniteJaynesPacket (ι : Type*) [Fintype ι] where
-  reference : FiniteReferenceState ι
-  observation : FiniteProfile ι
-  equal_mass :
-    FiniteReferenceStateOps.observationMass reference observation =
-      FiniteReferenceStateOps.referenceMass reference
-  positive : FiniteReferenceStateOps.IsPositive reference
-
-namespace FiniteJaynesPacket
-
-variable (P : FiniteJaynesPacket ι)
-
-/-- The packet as a centered-score datum in the LDDS-centering surface. -/
-noncomputable def toFiniteLDDSDatum : JaynesLDDSCentering.FiniteLDDSDatum ι :=
-  FiniteReferenceStateOps.toFiniteLDDSDatum P.reference P.observation
-
-/-- The packet has zero total centered score against its own reference. -/
-theorem centeredScore_sum_zero :
-    (∑ i : ι, P.reference.weight i *
-      FiniteReferenceStateOps.relativeCenteredScore P.reference P.observation i) = 0 := by
-  exact InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.ref_weighted_centeredRelativeDensity_eq_zero_of_equal_mass
-    P.reference P.observation (fun i => ne_of_gt (P.positive i)) P.equal_mass
-
-/-- The packet's LDDS datum has the same centered score readout. -/
-theorem ldds_centeredScore_eq_relativeCenteredScore (i : ι) :
-    (P.toFiniteLDDSDatum).centeredScore i =
-      FiniteReferenceStateOps.relativeCenteredScore P.reference P.observation i :=
-  FiniteReferenceStateOps.ldds_centeredScore_eq_relativeCenteredScore
-    P.reference P.observation i
-
-/-- The packet's LDDS weighted centered score is the reference-weighted relative score. -/
-theorem ldds_weightedCenteredScore_eq (i : ι) :
-    (P.toFiniteLDDSDatum).weightedCenteredScore i =
-      P.reference.weight i *
-        FiniteReferenceStateOps.relativeCenteredScore P.reference P.observation i :=
-  FiniteReferenceStateOps.ldds_weightedCenteredScore_eq
-    P.reference P.observation i
-
-end FiniteJaynesPacket
 
 /-- Jaynes finite entropy decomposes into Shannon entropy plus KL divergence. -/
 theorem finiteCrossEntropy_eq_finiteShannonEntropy_add_KL

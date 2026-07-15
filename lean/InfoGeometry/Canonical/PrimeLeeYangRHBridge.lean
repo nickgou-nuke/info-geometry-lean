@@ -24,8 +24,8 @@ noncomputable section
 
 namespace PrimeLeeYangRHBridge
 
-open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
+open CayleyCriticalLineCircleBridge
+open PrimeLeeYangFerromagnet
 
 /-- Cayley map sending the Riemann critical line to the Lee--Yang unit circle. -/
 @[rep_depth operator]

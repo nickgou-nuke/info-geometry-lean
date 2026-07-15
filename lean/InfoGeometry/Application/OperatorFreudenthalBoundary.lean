@@ -19,7 +19,7 @@ open scoped InnerProductSpace
 
 namespace OperatorFreudenthalBoundary
 
-open InfoGeometry.Exceptional.Freudenthal
+open Freudenthal
 open InfoGeometry.Application.STUOperator
 
 section Hilbert

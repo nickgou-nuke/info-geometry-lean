@@ -24,7 +24,7 @@ namespace SplitCliffordDirectLimit
 
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.ClNN
-open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open SplitCliffordTensorBridge
 
 /-- Canonical one-step embedding of the split tower into the next split stage. -/
 @[rep_depth krein]

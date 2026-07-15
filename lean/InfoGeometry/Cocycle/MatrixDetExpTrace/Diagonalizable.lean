@@ -35,7 +35,7 @@ theorem det_exp_eq_exp_trace_of_units_diagonal
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
 
 /--
 Short PR-style name for the explicit unit-diagonalizable
@@ -47,7 +47,7 @@ theorem det_exp_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- Complex determinant/exponential trace law from an explicit diagonalization equality. -/
@@ -57,7 +57,7 @@ theorem det_exp_eq_exp_trace_of_is_units_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- H¹ cocycle-lane name for the explicit diagonalization theorem. -/

@@ -16,9 +16,10 @@ This module avoids extra algebraic typeclass assumptions and formalizes:
 
 namespace ParabolicContractionBridge
 
-open InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator
+open GeneralizedOperatorChiral
+open GeneralizedOperator
 
-abbrev ParOp := InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator 0
+abbrev ParOp := GeneralizedOperator 0
 
 def poissonParabolic : ParOp → ParOp → ParOp := fun _ _ => zero
 def metricParabolic : ParOp → ParOp → ParOp := fun A B => mul A B
@@ -26,31 +27,31 @@ def leibnizParabolic : ParOp → ParOp → ParOp := fun A B => add (poissonParab
 
 theorem metricParabolic_symm (A B : ParOp) :
   metricParabolic A B = metricParabolic B A := by
-  apply InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.ext <;>
+  apply GeneralizedOperator.ext <;>
   dsimp [metricParabolic, mul] <;> ring
 
 theorem leibnizParabolic_eq_metric (A B : ParOp) :
   leibnizParabolic A B = metricParabolic A B := by
-  apply InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.ext <;>
+  apply GeneralizedOperator.ext <;>
   dsimp [leibnizParabolic, poissonParabolic, metricParabolic, add, zero] <;> ring
 
 theorem metricParabolic_kernel_nilpotent (χ : ℝ) :
   metricParabolic ({ scalar := (0 : ℝ), directional := χ } : ParOp)
       ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero := by
   simpa [metricParabolic] using
-    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolic_pure_square_zero χ)
+    (GeneralizedOperator.parabolic_pure_square_zero χ)
 
 
 theorem parabolicExp_pure_composition (χ₁ χ₂ : ℝ) :
-  InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+  GeneralizedOperator.parabolicExp
     ({ scalar := (0 : ℝ), directional := χ₁ + χ₂ } : ParOp)
     =
     metricParabolic
-    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+    (GeneralizedOperator.parabolicExp
       ({ scalar := (0 : ℝ), directional := χ₁ } : ParOp))
-    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+    (GeneralizedOperator.parabolicExp
       ({ scalar := (0 : ℝ), directional := χ₂ } : ParOp)) := by
   simpa [metricParabolic] using
-    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp_pure_nilpotent_add χ₁ χ₂)
+    (GeneralizedOperator.parabolicExp_pure_nilpotent_add χ₁ χ₂)
 
 end ParabolicContractionBridge

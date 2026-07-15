@@ -17,7 +17,7 @@ this file.
 
 namespace ZetaJuliaYangBaxterBridge
 
-open InfoGeometry.Canonical.YangBaxterProof
+open YangBaxterProof
 
 /-- The golden ratio φ = (1 + √5)/2, the Lyapunov exponent of the
     Julia set of ζ(s) and the growth rate of the Fib(n) lattice. -/

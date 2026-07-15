@@ -21,7 +21,7 @@ noncomputable section
 namespace HoradamIonGeneratingSlice
 
 open Finset
-open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
+open HoradamIonMatrixMethods
 
 variable {R : Type*} [CommRing R]
 

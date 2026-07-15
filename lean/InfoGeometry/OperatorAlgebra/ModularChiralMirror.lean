@@ -22,7 +22,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace ModularChiralMirror
+namespace InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 /-! ## 1. Chiral half-projectors -/
 

@@ -23,34 +23,34 @@ open scoped Classical
 
 namespace CliffordBridge
 
-open InfoGeometry.Twistor.PenroseTwistor
+open PenroseTwistor
 
 abbrev TwistorClifford : Type :=
-  CliffordAlgebra twistorRealQuadraticForm
+  CliffordAlgebra PenroseTwistor.twistorRealQuadraticForm
 
 /-- The Penrose real bilinear readout polarizes to the underlying quadratic form. -/
 theorem twistorRealQuadraticForm_polar (z w : TwistorCarrier) :
-    QuadraticMap.polar twistorRealQuadraticForm z w
-      = twistorRealBilinear z w + twistorRealBilinear w z := by
-  simpa [twistorRealQuadraticForm] using
+    QuadraticMap.polar PenroseTwistor.twistorRealQuadraticForm z w
+      = PenroseTwistor.twistorRealBilinear z w + PenroseTwistor.twistorRealBilinear w z := by
+  simpa [PenroseTwistor.twistorRealQuadraticForm] using
     (LinearMap.BilinMap.polar_toQuadraticMap
-      (R := ℝ) (M := TwistorCarrier) (N := ℝ) (B := twistorRealBilinear) z w)
+      (R := ℝ) (M := TwistorCarrier) (N := ℝ) (B := PenroseTwistor.twistorRealBilinear) z w)
 
 /-- The Clifford anticommutator reads back the polar form of the Penrose substrate. -/
 @[simp] theorem twistorClifford_ι_mul_ι_add_swap_eq_polar
     (z w : TwistorCarrier) :
-    CliffordAlgebra.ι twistorRealQuadraticForm z * CliffordAlgebra.ι twistorRealQuadraticForm w
-      + CliffordAlgebra.ι twistorRealQuadraticForm w * CliffordAlgebra.ι twistorRealQuadraticForm z
-        = algebraMap ℝ TwistorClifford (QuadraticMap.polar twistorRealQuadraticForm z w) := by
+    CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm z * CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm w
+      + CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm w * CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm z
+        = algebraMap ℝ TwistorClifford (QuadraticMap.polar PenroseTwistor.twistorRealQuadraticForm z w) := by
   simpa [TwistorClifford] using
-    (CliffordAlgebra.ι_mul_ι_add_swap (Q := twistorRealQuadraticForm) z w)
+    (CliffordAlgebra.ι_mul_ι_add_swap (Q := PenroseTwistor.twistorRealQuadraticForm) z w)
 
 /-- The Clifford anticommutator reads back the explicit Penrose bilinear readout. -/
 @[simp] theorem twistorClifford_ι_mul_ι_add_swap_eq_bilinear
     (z w : TwistorCarrier) :
-    CliffordAlgebra.ι twistorRealQuadraticForm z * CliffordAlgebra.ι twistorRealQuadraticForm w
-      + CliffordAlgebra.ι twistorRealQuadraticForm w * CliffordAlgebra.ι twistorRealQuadraticForm z
-        = algebraMap ℝ TwistorClifford (twistorRealBilinear z w + twistorRealBilinear w z) := by
+    CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm z * CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm w
+      + CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm w * CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm z
+        = algebraMap ℝ TwistorClifford (PenroseTwistor.twistorRealBilinear z w + PenroseTwistor.twistorRealBilinear w z) := by
   rw [twistorClifford_ι_mul_ι_add_swap_eq_polar, twistorRealQuadraticForm_polar]
 
 /--
@@ -60,13 +60,13 @@ This is the honest equivariance socket: it states exactly the preservation law
 that is needed before `CliffordAlgebra.map` can be applied.
 -/
 structure TwistorQuadraticEquivariance (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier) : Prop where
-  preserves : ∀ z, twistorRealQuadraticForm (f z) = twistorRealQuadraticForm z
+  preserves : ∀ z, PenroseTwistor.twistorRealQuadraticForm (f z) = PenroseTwistor.twistorRealQuadraticForm z
 
 /-- Convert a quadratic-equivariant linear equivalence into a mathlib isometry. -/
 def toTwistorQuadraticIsometry
     (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
     (h : TwistorQuadraticEquivariance f) :
-    twistorRealQuadraticForm →qᵢ twistorRealQuadraticForm where
+    PenroseTwistor.twistorRealQuadraticForm →qᵢ PenroseTwistor.twistorRealQuadraticForm where
   __ := f.toLinearMap
   map_app' := h.preserves
 
@@ -80,8 +80,8 @@ noncomputable def twistorCliffordMap
 @[simp] theorem twistorCliffordMap_apply_ι
     (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
     (h : TwistorQuadraticEquivariance f) (z : TwistorCarrier) :
-    twistorCliffordMap f h (CliffordAlgebra.ι twistorRealQuadraticForm z)
-      = CliffordAlgebra.ι twistorRealQuadraticForm (f z) := by
+    twistorCliffordMap f h (CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm z)
+      = CliffordAlgebra.ι PenroseTwistor.twistorRealQuadraticForm (f z) := by
   rw [twistorCliffordMap, CliffordAlgebra.map_apply_ι]
   rfl
 

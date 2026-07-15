@@ -21,10 +21,11 @@ Out of scope:
 
 namespace CantorSplitNullBridge
 
-open InfoGeometry.Algebra.Zorn.ConcreteComposition
-open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
-open InfoGeometry.Canonical.TypeIIIModularCantorSystem
-open InfoGeometry.Canonical.SplitZornNullBoundary
+open ConcreteComposition
+open ConcreteComposition.ZornCell
+open TypeIIIModularCantorSystem
+open TypeIIIModularCantorSystem.BinaryWord
+open SplitZornNullBoundary
 
 abbrev FiniteBinaryWord := BinaryWord
 
@@ -136,29 +137,29 @@ def addressNullGenerator (w : FiniteBinaryWord) : ZornCell ℝ :=
     addressNullGenerator [] = (0 : ZornCell ℝ) := rfl
 
 @[simp] theorem addressNullGenerator_child (w : FiniteBinaryWord) (b : Bool) :
-    addressNullGenerator (BinaryWord.child w b) = bitNullGenerator b := by
-  simp [addressNullGenerator, BinaryWord.child]
+    addressNullGenerator (child w b) = bitNullGenerator b := by
+  simp [addressNullGenerator, child]
 
 /-- Every one-step child address lands in a nonzero split-null generator. -/
 theorem addressNullGenerator_child_ne_zero (w : FiniteBinaryWord) (b : Bool) :
-    addressNullGenerator (BinaryWord.child w b) ≠ (0 : ZornCell ℝ) := by
+    addressNullGenerator (child w b) ≠ (0 : ZornCell ℝ) := by
   simpa [addressNullGenerator_child] using bitNullGenerator_ne_zero b
 
 /-- Every one-step child address lands in the split null cone. -/
 theorem addressNullGenerator_child_detZ_zero (w : FiniteBinaryWord) (b : Bool) :
-    detZ (addressNullGenerator (BinaryWord.child w b)) = 0 := by
+    detZ (addressNullGenerator (child w b)) = 0 := by
   simp [addressNullGenerator_child]
 
 /-- Every one-step child address is square-zero. -/
 theorem addressNullGenerator_child_sq_zero (w : FiniteBinaryWord) (b : Bool) :
-    addressNullGenerator (BinaryWord.child w b) *
-      addressNullGenerator (BinaryWord.child w b) = (0 : ZornCell ℝ) := by
+    addressNullGenerator (child w b) *
+      addressNullGenerator (child w b) = (0 : ZornCell ℝ) := by
   simp [addressNullGenerator_child]
 
 /-- Every one-step child address is self-orthogonal for the split polar form. -/
 theorem addressNullGenerator_child_polar_self_zero (w : FiniteBinaryWord) (b : Bool) :
-    polarZ (addressNullGenerator (BinaryWord.child w b))
-      (addressNullGenerator (BinaryWord.child w b)) = 0 := by
+    polarZ (addressNullGenerator (child w b))
+      (addressNullGenerator (child w b)) = 0 := by
   simp [addressNullGenerator_child]
 
 /-- The two bit-controlled split-null directions form a concrete hyperbolic pair. -/
@@ -168,26 +169,26 @@ theorem addressNullGenerator_child_polar_self_zero (w : FiniteBinaryWord) (b : B
 
 /-- The false/true child generators form the same hyperbolic pair. -/
 @[simp] theorem child_false_true_polar_pair (w : FiniteBinaryWord) :
-    polarZ (addressNullGenerator (BinaryWord.child w false))
-      (addressNullGenerator (BinaryWord.child w true)) = -1 := by
+    polarZ (addressNullGenerator (child w false))
+      (addressNullGenerator (child w true)) = -1 := by
   simp [addressNullGenerator_child, topRight_bottomLeft_polar_pair]
 
 /-- Closed finite packet for the Cantor/split-null bridge. -/
 theorem cantor_split_null_bridge_packet (w : FiniteBinaryWord) :
-    addressNullGenerator (BinaryWord.child w false) ≠ (0 : ZornCell ℝ) ∧
-      addressNullGenerator (BinaryWord.child w true) ≠ (0 : ZornCell ℝ) ∧
-      detZ (addressNullGenerator (BinaryWord.child w false)) = 0 ∧
-      detZ (addressNullGenerator (BinaryWord.child w true)) = 0 ∧
-      addressNullGenerator (BinaryWord.child w false) *
-          addressNullGenerator (BinaryWord.child w false) = (0 : ZornCell ℝ) ∧
-      addressNullGenerator (BinaryWord.child w true) *
-          addressNullGenerator (BinaryWord.child w true) = (0 : ZornCell ℝ) ∧
-      polarZ (addressNullGenerator (BinaryWord.child w false))
-          (addressNullGenerator (BinaryWord.child w false)) = 0 ∧
-      polarZ (addressNullGenerator (BinaryWord.child w true))
-          (addressNullGenerator (BinaryWord.child w true)) = 0 ∧
-      polarZ (addressNullGenerator (BinaryWord.child w false))
-          (addressNullGenerator (BinaryWord.child w true)) = -1 := by
+    addressNullGenerator (child w false) ≠ (0 : ZornCell ℝ) ∧
+      addressNullGenerator (child w true) ≠ (0 : ZornCell ℝ) ∧
+      detZ (addressNullGenerator (child w false)) = 0 ∧
+      detZ (addressNullGenerator (child w true)) = 0 ∧
+      addressNullGenerator (child w false) *
+          addressNullGenerator (child w false) = (0 : ZornCell ℝ) ∧
+      addressNullGenerator (child w true) *
+          addressNullGenerator (child w true) = (0 : ZornCell ℝ) ∧
+      polarZ (addressNullGenerator (child w false))
+          (addressNullGenerator (child w false)) = 0 ∧
+      polarZ (addressNullGenerator (child w true))
+          (addressNullGenerator (child w true)) = 0 ∧
+      polarZ (addressNullGenerator (child w false))
+          (addressNullGenerator (child w true)) = -1 := by
   exact ⟨addressNullGenerator_child_ne_zero w false,
     addressNullGenerator_child_ne_zero w true,
     addressNullGenerator_child_detZ_zero w false,

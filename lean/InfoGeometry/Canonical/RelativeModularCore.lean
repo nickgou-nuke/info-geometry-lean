@@ -19,8 +19,8 @@ standard-form von Neumann algebra package. Those belong in later owner files.
 namespace RelativeModularCore
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.Canonical.StandardFormCore
+open RelativePotentialCore
+open StandardFormCore
 
 section RelativeStates
 

@@ -24,7 +24,7 @@ noncomputable section
 namespace SplitOctonionG2TwoClassificationBoundary
 
 open InfoGeometry.Algebra.Zorn
-open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
+open G2TrifactorSU3
 
 variable {R : Type*} [CommRing R]
 
@@ -66,18 +66,17 @@ theorem preserves_null_cone
 
 /-- If the composition datum uses the repository canonical product, the candidate is OP-stabilizing. -/
 theorem isOPStabilizing_for_canonical_zMul
-    (hcp : cp.mulZ = zMul (R := R)) :
-    IsOPStabilizingCompositionMap (R := R) C.map := by
-  constructor
-  · intro X Y
-    change C.map (zMul X Y) = zMul (C.map X) (C.map Y)
-    rw [← hcp]
-    exact C.map_mulZ X Y
-  · exact ⟨C.map_OP1, C.map_OP2⟩
+    (hcp : cp.mulZ = zMul) :
+    IsOPStabilizingCompositionMap C.map := by
+  refine ⟨?_, C.map_OP1, C.map_OP2⟩
+  intro X Y
+  change C.map (zMul X Y) = zMul (C.map X) (C.map Y)
+  rw [← hcp]
+  exact C.map_mulZ X Y
 
 /-- Under the canonical-product hypothesis, the candidate preserves the color slot. -/
 theorem preserves_colorPart_of_canonical_zMul
-    (hcp : cp.mulZ = zMul (R := R))
+    (hcp : cp.mulZ = zMul)
     (X : ZornMatrix R) :
     C.map (colorPart X) = colorPart (C.map X) := by
   exact op_stabilizer_preserves_colorPart C.map
@@ -85,7 +84,7 @@ theorem preserves_colorPart_of_canonical_zMul
 
 /-- Under the canonical-product hypothesis, the candidate preserves the anticolor slot. -/
 theorem preserves_anticolorPart_of_canonical_zMul
-    (hcp : cp.mulZ = zMul (R := R))
+    (hcp : cp.mulZ = zMul)
     (X : ZornMatrix R) :
     C.map (anticolorPart X) = anticolorPart (C.map X) := by
   exact op_stabilizer_preserves_anticolorPart C.map
@@ -93,7 +92,7 @@ theorem preserves_anticolorPart_of_canonical_zMul
 
 /-- Conditional packet of the finite obligations supplied by a candidate. -/
 theorem conditional_g2two_boundary_packet
-    (hcp : cp.mulZ = zMul (R := R)) :
+    (hcp : cp.mulZ = zMul) :
     (∀ X Y : ZornMatrix R, C.map (cp.mulZ X Y) = cp.mulZ (C.map X) (C.map Y)) ∧
       (∀ X : ZornMatrix R,
         ZornMatrix.detZ cp.toCrossProduct3 (C.map X) =

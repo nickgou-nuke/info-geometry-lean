@@ -16,7 +16,7 @@ open Matrix
 
 namespace SL2FiveGradingExample
 
-open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+open FiveGradedInformationLedger
 
 /-! ## 1. The Lie algebra 𝔰𝔩₂(ℝ) -/
 

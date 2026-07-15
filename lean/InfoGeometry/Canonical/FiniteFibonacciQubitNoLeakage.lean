@@ -22,9 +22,9 @@ No Solovay--Kitaev or fault-tolerance theorem.
 
 namespace FiniteFibonacciQubitNoLeakage
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
-open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciPailRopeQubits
+open FiniteFibonacciLowAnyonMatrices
 
 /-- Symbolic quantum-dimension labels used in the truncated `q`-spin picture. -/
 inductive TruncatedQSpin where
@@ -65,7 +65,7 @@ noncomputable def oneQubitGeneratorMatrix
     (qNeg4 q3 : ℂ) (B : BBlockEntries) :
     OneQubitBraidGenerator → Matrix (Fin 2) (Fin 2) ℂ
   | OneQubitBraidGenerator.b1 => !![qNeg4, 0; 0, q3]
-  | OneQubitBraidGenerator.b2 => B.matrix
+  | OneQubitBraidGenerator.b2 => BBlockEntries.matrix B
   | OneQubitBraidGenerator.b3 => !![qNeg4, 0; 0, q3]
 
 /-- The first and last one-qubit braid generators have the same diagonal readout. -/
@@ -80,7 +80,11 @@ inductive TwoQubitSixAnyonLabel where
   | computational : ComputationalVector 2 → TwoQubitSixAnyonLabel
   /-- The unique non-computational label in the six-anyon example. -/
   | nc : TwoQubitSixAnyonLabel
-  deriving DecidableEq
+  deriving Repr
+
+noncomputable instance : DecidableEq TwoQubitSixAnyonLabel := by
+  classical
+  infer_instance
 
 namespace TwoQubitSixAnyonLabel
 

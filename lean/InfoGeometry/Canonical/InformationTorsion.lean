@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.SpectralInference
 namespace InformationTorsion
 
 open InfoGeometry.Convex
-open InfoGeometry.Canonical.SpectralInference
+open SpectralInference
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 

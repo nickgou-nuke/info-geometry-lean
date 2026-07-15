@@ -27,7 +27,7 @@ namespace DrazinKreinCompatibility
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Drazin
-open InfoGeometry.Canonical.DrazinInfiniteCore
+open DrazinInfiniteCore
 open InfoGeometry.Krein
 
 variable {E : Type*}

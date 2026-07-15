@@ -14,7 +14,7 @@ matrix models should map out of these quotients; they are not the definition.
 
 noncomputable section
 
-namespace CuntzTensorQuotient
+namespace InfoGeometry.Algebra.CuntzTensorQuotient
 
 /-- Formal Cuntz generators: `false` is `Sᵢ`, `true` is `Sᵢ†`. -/
 abbrev CuntzGen (n : ℕ) := Fin n × Bool
@@ -338,4 +338,4 @@ theorem cuntz_complete_projector_system (n : ℕ) :
     cuntz_range_projectors_commute n, cuntz_range_projector_star n,
     cuntz_ranges_sum_one n⟩
 
-end CuntzTensorQuotient
+end InfoGeometry.Algebra.CuntzTensorQuotient

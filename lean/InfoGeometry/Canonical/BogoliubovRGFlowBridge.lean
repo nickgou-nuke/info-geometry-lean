@@ -24,8 +24,9 @@ noncomputable section
 
 namespace BogoliubovRGFlowBridge
 
-open InfoGeometry.Canonical.BogoliubovOptimalTransport
-open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+open InfoGeometry.Canonical
+open BogoliubovOptimalTransport
+open SouriauMetriplecticOptimalTransport
 
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

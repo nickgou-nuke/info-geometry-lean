@@ -6,8 +6,8 @@ namespace MongeAmpereCramerRao
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.MoE
-open InfoGeometry.Canonical.BekensteinBound
-open InfoGeometry.Canonical.RicciMongeAmpere
+open BekensteinBound
+open RicciMongeAmpere
 
 section CramerRaoMetric
 

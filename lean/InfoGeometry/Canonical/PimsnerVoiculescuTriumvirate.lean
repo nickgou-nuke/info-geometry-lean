@@ -7,9 +7,9 @@ noncomputable section
 namespace InfoGeometry.Canonical.PimsnerVoiculescu
 
 open InfoGeometry.GrandUnification.UHF
-open InfoGeometry.Canonical.PrimitiveCuntzIsometry
-open InfoGeometry.Canonical.PrimitiveCuntzCohomology
-open InfoGeometry.Canonical.UHFCohomology
+open PrimitiveCuntzIsometry
+open PrimitiveCuntzCohomology
+open UHFCohomology
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 variable [UHF : UHFAlgebra A]

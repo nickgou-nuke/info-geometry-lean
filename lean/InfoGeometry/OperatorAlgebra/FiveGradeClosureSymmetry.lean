@@ -21,7 +21,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
 
-open InfoGeometry.OperatorAlgebra.ClosureInvolution
+open ClosureInvolution
 
 /--
 A closure symmetry compatible with a five-grading.

@@ -24,9 +24,9 @@ No non-diagonal `B` matrix.
 
 namespace FiniteFibonacciFourAnyonPaperBridge
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
-open InfoGeometry.Canonical.FiniteFibonacciFourPointBlocks
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciFourAnyonBlocks
+open FiniteFibonacciFourPointBlocks
 
 /-- The four-anyon channel basis has exactly two elements. -/
 theorem fourAnyonChannel_card :

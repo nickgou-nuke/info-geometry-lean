@@ -11,7 +11,7 @@ import Mathlib
 
 noncomputable section
 
-namespace KreinIsotropicCone
+namespace InfoGeometry.Geometry.KreinIsotropicCone
 
 /--
 A quadratic Krein readout on a real carrier.
@@ -246,4 +246,4 @@ theorem defectToIsotropicOwnerTarget
     (fun a ha => W.defect_mem_isotropic ha),
     (fun a ha => W.defect_q_zero ha)⟩
 
-end KreinIsotropicCone
+end InfoGeometry.Geometry.KreinIsotropicCone

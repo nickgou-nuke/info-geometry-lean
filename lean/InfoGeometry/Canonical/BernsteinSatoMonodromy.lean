@@ -1,8 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.DeRhamFenchelLegendre
 
-open InfoGeometry.Algebra.HessianThermodynamicManifold
-open InfoGeometry.Canonical.DeRhamFenchelLegendre
+open HessianThermodynamicManifold
+open DeRhamFenchelLegendre
 
 namespace InfoGeometry.Canonical
 

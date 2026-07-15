@@ -18,7 +18,8 @@ gauge-fixing contribution selecting the normalized slice of the density ray.
 
 namespace InfoGeometry.Canonical.JaynesRNMaxEnt
 
-open InfoGeometry.MaxEnt.JaynesRNMaxEnt
+open _root_.JaynesRNMaxEnt
+open RelativePotentialScalarBridge
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 variable (μ₀ : Measure Ω) [IsProbabilityMeasure μ₀]
@@ -39,22 +40,22 @@ theorem scalarModularPotential_exp_potential_div_partition
     (lam : ι → ℝ)
     (hInt : PartitionIntegrable (μ₀ := μ₀) (C := C) lam)
     (x : Ω) :
-    InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
-        (Real.exp (potential (C := C) lam x) /
+    scalarModularPotential
+        (Real.exp (_root_.JaynesRNMaxEnt.potential (C := C) lam x) /
           partitionFunction (μ₀ := μ₀) (C := C) lam)
         (div_pos (Real.exp_pos _)
           (by
             simpa [partitionFunction, PartitionIntegrable] using
               (MeasureTheory.integral_exp_pos
                 (μ := μ₀)
-                (f := potential (C := C) lam)
+                (f := _root_.JaynesRNMaxEnt.potential (C := C) lam)
                 hInt)))
       =
-        -(potential (C := C) lam x) +
+        -(_root_.JaynesRNMaxEnt.potential (C := C) lam x) +
           Real.log (partitionFunction (μ₀ := μ₀) (C := C) lam) := by
   have hZpos : 0 < partitionFunction (μ₀ := μ₀) (C := C) lam :=
     partitionFunction_pos (μ₀ := μ₀) (C := C) lam hInt
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [scalarModularPotential_eq_neg_log]
   rw [Real.log_div (Real.exp_pos _).ne'
       hZpos.ne',
     Real.log_exp]
@@ -75,7 +76,7 @@ theorem neg_log_rnDeriv_gibbsMeasure_toReal_eq_neg_potential_add_logPartition
       -Real.log (((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal))
       =ᵐ[μ₀]
         fun x =>
-          -(potential (C := C) lam x) +
+          -(_root_.JaynesRNMaxEnt.potential (C := C) lam x) +
             Real.log (partitionFunction (μ₀ := μ₀) (C := C) lam) := by
   have hZpos : 0 < partitionFunction (μ₀ := μ₀) (C := C) lam :=
     partitionFunction_pos (μ₀ := μ₀) (C := C) lam hInt
@@ -95,7 +96,7 @@ modular content from the normalization chosen on the positive ray.
 theorem potential_eq_log_rnDeriv_gibbsMeasure_toReal_add_logPartition
     (lam : ι → ℝ)
     (hInt : PartitionIntegrable (μ₀ := μ₀) (C := C) lam) :
-    (potential (C := C) lam)
+    (_root_.JaynesRNMaxEnt.potential (C := C) lam)
       =ᵐ[μ₀]
         fun x =>
           Real.log (((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal) +

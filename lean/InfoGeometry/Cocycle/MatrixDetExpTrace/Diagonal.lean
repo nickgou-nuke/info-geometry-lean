@@ -34,14 +34,14 @@ theorem complex_exp_sum
 theorem det_exp_diagonal_eq_exp_trace {n : ℕ} (v : Fin n → ℝ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace v
+  MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace v
 
 /-- Complex diagonal determinant/exponential trace law over any finite index type. -/
 theorem det_exp_diagonal_eq_exp_trace_complex
     {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
+  MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
 
 /-- Short PR-style name for the complex diagonal determinant/exponential trace law. -/
 theorem det_exp_diagonal

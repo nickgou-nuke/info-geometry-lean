@@ -24,7 +24,7 @@ No concrete non-diagonal `B` matrix.
 
 namespace FiniteFibonacciFourAnyonBlocks
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+open FiniteFibonacciComputationalSpace
 
 /-- The two fusion/conformal-block channels for four Fibonacci anyons. -/
 inductive FourAnyonChannel where

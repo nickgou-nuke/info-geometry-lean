@@ -33,8 +33,8 @@ noncomputable section
 namespace BudinichMaximumCliquePureSpinor
 
 open InfoGeometry.Twistor
-open BudinichCliqueSpinor
-open BudinichSpinorsNullVectors
+open InfoGeometry.Clifford.BudinichCliqueSpinor
+open InfoGeometry.Clifford.BudinichSpinorsNullVectors
 
 variable {α : Type*}
 
@@ -64,19 +64,19 @@ abbrev graphCliqueGramReadout (G : SimpleGraph α) [DecidableEq α] [DecidableRe
 theorem isClique_iff_isGramClique
     (G : SimpleGraph α) [DecidableEq α] [DecidableRel G.Adj] (s : Set α) :
     G.IsClique s ↔ IsGramClique G s :=
-  BudinichCliqueSpinor.isClique_iff_isGramClique G s
+  InfoGeometry.Clifford.BudinichCliqueSpinor.isClique_iff_isGramClique G s
 
 /-- Finite-clique version of the Gram criterion. -/
 theorem isClique_finset_iff_isFinsetGramClique
     (G : SimpleGraph α) [DecidableEq α] [DecidableRel G.Adj] (s : Finset α) :
     G.IsClique (s : Set α) ↔ IsFinsetGramClique G s :=
-  BudinichCliqueSpinor.isClique_finset_iff_isFinsetGramClique G s
+  InfoGeometry.Clifford.BudinichCliqueSpinor.isClique_finset_iff_isFinsetGramClique G s
 
 /-- Maximum clique cardinality is equivalent to maximum Gram-clique cardinality. -/
 theorem maximumCliqueCard_iff_maximumGramCliqueCard
     (G : SimpleGraph α) [DecidableEq α] [DecidableRel G.Adj] (k : ℕ) :
     IsMaximumCliqueCard G k ↔ IsMaximumGramCliqueCard G k :=
-  BudinichCliqueSpinor.maximumCliqueCard_iff_maximumGramCliqueCard G k
+  InfoGeometry.Clifford.BudinichCliqueSpinor.maximumCliqueCard_iff_maximumGramCliqueCard G k
 
 /-! ## 2. Pure-spinor side: explicit null line and projective null ray -/
 
@@ -242,7 +242,7 @@ def ofMaximumClique (P : MaximumCliqueFinsetPacket (α := Fin n) G) :
   pairwiseNull := by
     intro i hi j hj hne
     have hclique : G.IsClique (P.clique : Set (Fin n)) := P.isMaximum.isClique
-    exact (BudinichCliqueSpinor.finsetClique_iff_budinichVectors_pairwise_null
+    exact (InfoGeometry.Clifford.BudinichCliqueSpinor.finsetClique_iff_budinichVectors_pairwise_null
       (n := n) G P.clique).1 hclique i hi j hj hne
 
 /-- The saturated packet remembers the maximum clique card. -/
@@ -256,7 +256,7 @@ theorem pairwiseNull_iff_clique
     G.IsClique (s : Set (Fin n)) ↔
       ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
         wittPairing (budinichGraphVector G i) (budinichGraphVector G j) = 0 :=
-  BudinichCliqueSpinor.finsetClique_iff_budinichVectors_pairwise_null G s
+  InfoGeometry.Clifford.BudinichCliqueSpinor.finsetClique_iff_budinichVectors_pairwise_null G s
 
 end SaturatedCliqueVectorPacket
 

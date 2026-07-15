@@ -19,12 +19,12 @@ noncomputable section
 
 namespace GellMannParafermionSolder
 
-open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
-open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
-open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
-open InfoGeometry.Physics.SupergradedCuntzBdG
-open InfoGeometry.Physics.GellMannSU3
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
+open BogoliubovSU3ParafermionProofChain
+open BogoliubovSU3ParafermionWeld
+open BogoliubovWeylChemicalPotential
+open SupergradedCuntzBdG
+open GellMannSU3
+open AlgebraicCuntzQuotient
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
@@ -32,25 +32,25 @@ abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
 /-- A concrete realization of the finite Cuntz/BdG parafermion stage in an
 additive complex vector space.  This is the exact place where a Hilbert/Fock/C⋆
 representation can later be inserted. -/
-structure ParafermionRealization (V : Type*) [AddCommGroup V] [Module ℂ V] where
+structure ParafermionRealization (V : Type*) [AddCommMonoid V] [Module ℂ V] where
   map : ParafermionStage4 → V
 
 /-- The realized 3+1 parafermion color spinor: three color components plus one
 singlet component. -/
-def realizedParafermionColorSpinor4 {V : Type*} [AddCommGroup V] [Module ℂ V]
+def realizedParafermionColorSpinor4 {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) : ColorSpinor4 V :=
   (fun i : Fin 3 => R.map (bdgMajoranaPlusColorSpinor4.1 i),
     R.map bdgMajoranaPlusColorSpinor4.2)
 
 /-- The Gell-Mann soldering map: a color generator acts on the realized
 parafermion 3+1 spinor through the fundamental color action on the triplet lane. -/
-def gellMannParafermionSolder {V : Type*} [AddCommGroup V] [Module ℂ V]
+def gellMannParafermionSolder {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (A : M3C) : ColorSpinor4 V :=
   colorLieAction4 A (realizedParafermionColorSpinor4 R)
 
 /-- Component formula for the soldered color lanes. -/
 theorem gellMannParafermionSolder_color_apply
-    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (A : M3C) (i : Fin 3) :
     (gellMannParafermionSolder R A).1 i =
       ∑ j : Fin 3, A i j • R.map (bdgMajoranaPlusColorSpinor4.1 j) := by
@@ -58,14 +58,14 @@ theorem gellMannParafermionSolder_color_apply
 
 /-- The singlet lane is infinitesimally color-neutral. -/
 theorem gellMannParafermionSolder_singlet_zero
-    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (A : M3C) :
     (gellMannParafermionSolder R A).2 = 0 := by
   rfl
 
 /-- The soldered action represents matrix multiplication by composition. -/
 theorem gellMannParafermionSolder_mul
-    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (A B : M3C) :
     gellMannParafermionSolder R (A * B) =
       colorLieAction4 A (gellMannParafermionSolder R B) := by
@@ -119,7 +119,7 @@ def frameSolderedBraid {V : Type*} [SMul ℂ V]
 /-- Chemical potential shifts the braid phase on the soldered realized
 parafermion spinor by `exp(β δμ Q)`. -/
 theorem frameSolderedBraid_mu_shift
-    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (F : BogoliubovInertialFrame) (δμ : ℝ) :
     frameSolderedBraid { F with μ := F.μ + δμ } (realizedParafermionColorSpinor4 R) =
       qBraid4 (qRapidity (F.β * δμ * F.Q))

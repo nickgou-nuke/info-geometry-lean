@@ -3,7 +3,7 @@ import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 
 namespace BraidedMonoidal
 
-open InfoGeometry.Topology.PointedGroups
+open PointedGroups
 
 /-- Concrete algebraic left-hexagon shadow for conjugating braid action. -/
 def ConjugationLeftHexagon {G : Type} [Group G] (base x y : G) : Prop :=

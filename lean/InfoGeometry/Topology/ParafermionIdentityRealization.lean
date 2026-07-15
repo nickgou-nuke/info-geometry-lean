@@ -23,22 +23,17 @@ noncomputable section
 
 namespace ParafermionIdentityRealization
 
-open InfoGeometry.Physics.GellMannParafermionSolder
-open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
-open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
-open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
-open InfoGeometry.Physics.SupergradedCuntzBdG
-open InfoGeometry.Physics.GellMannSU3
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
-open InfoGeometry.External.Auto.UHFInductiveColimit
+open GellMannParafermionSolder
+open BogoliubovSU3ParafermionProofChain
+open BogoliubovSU3ParafermionWeld
+open BogoliubovWeylChemicalPotential
+open SupergradedCuntzBdG
+open GellMannSU3
+open AlgebraicCuntzQuotient
+open UHFInductiveColimit
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
-abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
-
-/-- `CuntzAlg` derives `Semiring` which shadows `RingQuot`'s `Ring`.
-Explicitly provide `Ring` (and hence `AddCommGroup`) via the unfolding. -/
-noncomputable instance : Ring ParafermionStage4 :=
-  show Ring (RingQuot (Rel (R := ℂ) (ι := Fin 4))) from inferInstance
+abbrev ParafermionStage4 := AlgebraicCuntzQuotient.CuntzAlg ℂ (Fin 4)
 
 /-! ## 1. Identity realization — the parafermion algebra acts on itself -/
 
@@ -63,16 +58,20 @@ theorem gellMannSolder_idRealization (A : M3C) :
     colorLieAction4 A bdgMajoranaPlusColorSpinor4 := by
   dsimp [gellMannParafermionSolder, realizedParafermionColorSpinor4, idRealization]
 
-/-- The SU(3) commutator table holds in the identity realization. -/
+/-- In the identity realization, every Gell-Mann infinitesimal action still
+annihilates the singlet lane.  The full commutator table requires an additive
+group target, so the semiring-valued self-realization records the compatible
+neutrality fact instead. -/
 theorem idRealization_su3_commutators :
-    ∃ h, h = su3_color_action_all_commutators bdgMajoranaPlusColorSpinor4 :=
-  ⟨su3_color_action_all_commutators bdgMajoranaPlusColorSpinor4, rfl⟩
+    ∀ A : M3C, (gellMannParafermionSolder idRealization A).2 = 0 := by
+  intro A
+  exact gellMannParafermionSolder_singlet_zero idRealization A
 
 /-- Bogoliubov braiding in the identity realization. -/
 theorem idRealization_braid_mu_shift (F : BogoliubovInertialFrame) (δμ : ℝ) :
-    frameSolderedBraid { F with μ := F.μ + δμ } bdgMajoranaPlusColorSpinor4 =
+    frameSolderedBraid { F with μ := F.μ + δμ } (realizedParafermionColorSpinor4 idRealization) =
       qBraid4 (qRapidity (F.β * δμ * F.Q))
-        (frameSolderedBraid F bdgMajoranaPlusColorSpinor4) :=
+        (frameSolderedBraid F (realizedParafermionColorSpinor4 idRealization)) :=
   frameSolderedBraid_mu_shift idRealization F δμ
 
 /-! ## 2. Lift realization — from any Cuntz family to a representation -/

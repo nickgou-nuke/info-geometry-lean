@@ -65,13 +65,13 @@ This follows from Ω(p^k) = k (proved in `PrimeFactorCount.lean`).
 -/
 theorem liouville_prime_pow_eq_one_of_even (p : ℕ+) (hp : Nat.Prime p.val) {k : ℕ} (hk : Even k) :
     liouville (p ^ k) = 1 := by
-  rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
+  rw [liouville, InfoGeometry.Arithmetic.BostConnesSystem.Omega_prime_pow p.val k hp]
   rcases hk with ⟨m, hm⟩
   rw [hm, ← two_mul, pow_mul, show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow]
 
 theorem liouville_prime_pow_eq_neg_one_of_odd (p : ℕ+) (hp : Nat.Prime p.val) {k : ℕ} (hk : Odd k) :
     liouville (p ^ k) = -1 := by
-  rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
+  rw [liouville, InfoGeometry.Arithmetic.BostConnesSystem.Omega_prime_pow p.val k hp]
   rcases hk with ⟨m, hm⟩
   rw [hm, pow_succ, pow_mul (a := (-1 : ℤ)) (m := 2),
     show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow, one_mul]

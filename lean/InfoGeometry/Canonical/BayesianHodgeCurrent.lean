@@ -32,9 +32,9 @@ open Matrix
 
 namespace BayesianHodgeCurrent
 
-open InfoGeometry.Canonical.MaximumCaliberKLSplit
-open InfoGeometry.Topology.EckmannDiscreteHodge
-open InfoGeometry.Topology.DiscreteHodgeStabilizer
+open MaximumCaliberKLSplit
+open EckmannDiscreteHodge
+open DiscreteHodgeStabilizer
 
 noncomputable section
 

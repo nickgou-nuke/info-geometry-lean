@@ -17,8 +17,8 @@ explicit projector-level consequences for the recovered Drazin witness:
 
 namespace DrazinSpectralProjectorBridge
 
-open InfoGeometry.Canonical.DrazinInfiniteCore
-open InfoGeometry.Canonical.DrazinSpectralBridge
+open DrazinInfiniteCore
+open DrazinSpectralBridge
 open InfoGeometry.Canonical.Drazin
 
 variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace 𝕂 E]

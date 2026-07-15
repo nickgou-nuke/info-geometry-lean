@@ -48,7 +48,7 @@ structure Z2GlideReflectionPacket where
   If the concrete matrix trace closes under the glide reflection, 
   we can satisfy the `orientationReversingProjection` proposition in the orientifold model.
 -/
-def connect_to_orientifold (Z2 : Z2GlideReflectionPacket) : InfoGeometry.Canonical.KleinBottleOrientifold.KleinBottleOrientifold :=
+def connect_to_orientifold (Z2 : Z2GlideReflectionPacket) : KleinBottleOrientifold.KleinBottleOrientifold :=
   { V4_Weyl := Z2.P_parity = Z2.P_parity,
     V4_tensor_V4 := Z2.P_parity = Z2.P_parity,
     V4_tensor_V4_tensor_V4 := Z2.P_parity = Z2.P_parity,

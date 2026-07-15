@@ -22,8 +22,8 @@ and finite monodromy interfaces already present in the repository.
 
 namespace FiniteFibonacciFourPointBlocks
 
-open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
-open InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+open FiniteFibonacciAnyonBraiding
+open FiniteFibonacciMonodromyInterface
 
 /-- The finite `Φ`-basis for the four-point sector: two basis components. -/
 abbrev PhiBasis : Type :=

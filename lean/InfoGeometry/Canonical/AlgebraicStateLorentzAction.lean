@@ -7,8 +7,8 @@ open scoped InnerProductSpace
 
 namespace AlgebraicStateLorentzAction
 
-open InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
-open InfoGeometry.Canonical.Cl11LorentzAction
+open AlgebraicStateFunctionalBridge
+open Cl11LorentzAction
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Quantum
 open InfoGeometry.Krein

@@ -393,7 +393,6 @@ import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 import InfoGeometry.Canonical.CanonicalZornCliffordIsomorphism
 import InfoGeometry.Canonical.CanonicalZornRealComplexSpinBaseChange
 import InfoGeometry.Canonical.CanonicalZornRealSpinTrialityClosure
-import InfoGeometry.Canonical.CanonicalZornSpinChirality
 import InfoGeometry.Canonical.CanonicalZornSpinRelatedFiber
 import InfoGeometry.Canonical.CanonicalZornSpinVectorAction
 import InfoGeometry.Canonical.CanonicalZornIntegralTrialityEquivariance
@@ -927,7 +926,6 @@ import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.SelfDualCone
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
-import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Canonical.KapranovZetaSeries
 import InfoGeometry.Canonical.HasseWeilZetaPointCounts
 import InfoGeometry.Canonical.HasseWeilEllipticBounds
@@ -1272,6 +1270,16 @@ import InfoGeometry.Canonical.SpinStatisticsBridge
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 import InfoGeometry.Canonical.ConfigurationSpaceColimit
 import InfoGeometry.Canonical.MasterSynthesis
+import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
+import InfoGeometry.Canonical.BiquaternionKANnilpotent
+import InfoGeometry.Canonical.NilpotentItakuraSaito
+import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
+import InfoGeometry.Canonical.BiquaternionLaplaceResolvent
+import InfoGeometry.Canonical.BiquaternionLogarithmMonodromy
+import InfoGeometry.Canonical.BiquaternionCliffordIso
+import InfoGeometry.Canonical.BiquaternionExpClosure
+import InfoGeometry.Canonical.BuresMetricClosedCartography
+import InfoGeometry.Canonical.BuresInformationGeodesicFlow
 
 namespace InfoGeometry
 

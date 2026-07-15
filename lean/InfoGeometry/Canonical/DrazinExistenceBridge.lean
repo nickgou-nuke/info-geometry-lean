@@ -14,7 +14,7 @@ Drazin predicate used by the regularization/capstone lanes.
 
 namespace DrazinExistenceBridge
 
-open InfoGeometry.Singular
+open Drazin
 
 /--
 Translate a singular-lane Drazin witness into the canonical Drazin predicate.
@@ -22,7 +22,7 @@ Translate a singular-lane Drazin witness into the canonical Drazin predicate.
 theorem canonical_isDrazinInverse_of_singular
     {R : Type*} [Ring R]
     {A D : R} {k : ℕ}
-    (h : InfoGeometry.Singular.Drazin.IsDrazinInverse A D k) :
+    (h : IsDrazinInverse A D k) :
     InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k := by
   refine InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_
   · exact h.2.1
@@ -36,8 +36,8 @@ theorem singular_isDrazinInverse_of_canonical
     {R : Type*} [Ring R]
     {A D : R} {k : ℕ}
     (h : InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k) :
-    InfoGeometry.Singular.Drazin.IsDrazinInverse A D k := by
-  refine InfoGeometry.Singular.Drazin.IsDrazinInverse.mk ?_ ?_ ?_
+    IsDrazinInverse A D k := by
+  refine IsDrazinInverse.mk ?_ ?_ ?_
   · exact h.2.1
   · exact h.1
   · exact h.2.2.symm
@@ -52,8 +52,8 @@ theorem exists_canonicalDrazinInverse_global
     (A : Module.End K V) :
     ∃ (k : ℕ) (D : Module.End K V),
       InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k := by
-  rcases InfoGeometry.Singular.Drazin.exists_drazinInverse_global
-      (K := K) (V := V) (A := A) with ⟨k, D, hD⟩
+  rcases exists_drazinInverse_global (K := K) (V := V) (A := A) with
+    ⟨k, D, hD⟩
   exact ⟨k, D, canonical_isDrazinInverse_of_singular hD⟩
 
 /--

@@ -25,6 +25,11 @@ noncomputable section
 
 namespace JonesCalibration
 
+open FiniteJonesModel
+open TopologicalSnap
+
+open FiniteJonesModel
+
 /-! ## 1. Optical eigenchannels -/
 
 /--
@@ -194,21 +199,21 @@ Older operator-algebra modules use this name through `JonesCalibration`; the
 implementation remains owned by `Optics/FiniteJonesModel`.
 -/
 abbrev JonesMat :=
-  InfoGeometry.Optics.FiniteJonesModel.JonesMat
+  FiniteJonesModel.JonesMat
 
 /--
 Diagonal Jones matrix, re-exported from the finite Jones owner.
 -/
 def diagJones (a b : ℂ) : JonesMat :=
-  InfoGeometry.Optics.FiniteJonesModel.diagJones a b
+  FiniteJonesModel.diagJones a b
 
 /-- `s`-channel projector, re-exported from the finite Jones owner. -/
 def sProjector : JonesMat :=
-  InfoGeometry.Optics.FiniteJonesModel.sProjector
+  FiniteJonesModel.sProjector
 
 /-- `p`-channel projector, re-exported from the finite Jones owner. -/
 def pProjector : JonesMat :=
-  InfoGeometry.Optics.FiniteJonesModel.pProjector
+  FiniteJonesModel.pProjector
 
 /-- Polarization basis used by the finite Jones event layer. -/
 inductive PolarizationBasis where
@@ -733,8 +738,7 @@ into a flat/unpolarized sector unless the charge is trivial.
 structure JonesObstructionFlow
     (State Charge : Type*) [Zero Charge] where
   obstructionFlow :
-    InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow
-      State Charge
+    TopologicalSnap.ConservedObstructionFlow State Charge
 
 
 namespace JonesObstructionFlow

@@ -17,7 +17,7 @@ noncomputable section
 
 namespace VirasoroProjectBridge
 
-open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+open AffineVirasoroBridge
 open VirasoroProject
 
 /--

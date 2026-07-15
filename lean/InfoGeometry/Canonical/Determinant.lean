@@ -12,8 +12,7 @@ Canonical determinant/group surface for linear equivalences.
 namespace Determinant
 
 open InfoGeometry.Canonical
-open InfoGeometry.Volume.Base
-open InfoGeometry.Volume.LogPotential
+open Base LogPotential
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 

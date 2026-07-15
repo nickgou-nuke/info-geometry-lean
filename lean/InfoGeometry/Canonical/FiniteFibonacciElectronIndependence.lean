@@ -28,8 +28,8 @@ No Laughlin-factor braid-matrix derivation.
 namespace FiniteFibonacciElectronIndependence
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+open FiniteFibonacciFusionMatrix
+open FiniteFibonacciMonodromyInterface
 
 /-- Symmetry under swapping the first two anyon labels from an explicit permutation-invariance hypothesis. -/
 theorem electronFactor_swap01_invariant {ElectronData Value : Type*}

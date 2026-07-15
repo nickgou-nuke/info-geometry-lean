@@ -33,7 +33,7 @@ Witnessed by: tools/sympy/freudenthal_identity.py,
 tools/gap/g2_twisted_braiding_roots.g.
 -/
 
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 noncomputable section

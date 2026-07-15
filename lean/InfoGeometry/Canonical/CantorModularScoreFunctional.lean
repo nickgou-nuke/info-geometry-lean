@@ -25,7 +25,7 @@ namespace CantorModularScoreFunctional
 
 open scoped BigOperators
 open Finset
-open InfoGeometry.Canonical.CantorCylinderLattice
+open CantorCylinderLattice
 
 noncomputable section
 

@@ -21,6 +21,8 @@ double-cover theorem, CCC, analytic conformality, or global conformal inversion.
 
 namespace SpinorOrbitStratum
 
+open Pin55Formal
+
 variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 
@@ -76,28 +78,28 @@ abbrev Vec55 := Fin 10 → ℚ
 
 /-- Zero/null/generic stratum for the concrete `q55` coordinate form. -/
 abbrev Q55Stratum (x : Vec55) : Prop :=
-  OrbitStratum InfoGeometry.Physics.Pin55Formal.q55 x
+  OrbitStratum q55 x
 
 /-- Concrete `q55` trichotomy. -/
 theorem q55_orbit_classify_trichotomy (x : Vec55) :
     (x = 0) ∨
-      (x ≠ 0 ∧ InfoGeometry.Physics.Pin55Formal.q55 x = 0) ∨
-        (InfoGeometry.Physics.Pin55Formal.q55 x ≠ 0) :=
-  orbit_classify_trichotomy InfoGeometry.Physics.Pin55Formal.q55 x
+      (x ≠ 0 ∧ q55 x = 0) ∨
+        (q55 x ≠ 0) :=
+  orbit_classify_trichotomy q55 x
 
 /-- Concrete `q55` stratum classifier. -/
 def classifyQ55Orbit (x : Vec55) : Q55Stratum x :=
-  classifyOrbit InfoGeometry.Physics.Pin55Formal.q55 x
+  classifyOrbit q55 x
 
 /-- The positive basis vector `ε₀` is generic for `q55`. -/
 theorem q55_epsilon0_isGeneric :
-    Q55Stratum InfoGeometry.Physics.Pin55Formal.ε₀ := by
-  exact OrbitStratum.isGeneric (by simp [InfoGeometry.Physics.Pin55Formal.q55_ε₀])
+    Q55Stratum ε₀ := by
+  exact OrbitStratum.isGeneric (by simp [q55_ε₀])
 
 /-- The negative basis vector `ε₅` is generic for `q55`. -/
 theorem q55_epsilon5_isGeneric :
-    Q55Stratum InfoGeometry.Physics.Pin55Formal.ε₅ := by
-  exact OrbitStratum.isGeneric (by simp [InfoGeometry.Physics.Pin55Formal.q55_ε₅])
+    Q55Stratum ε₅ := by
+  exact OrbitStratum.isGeneric (by simp [q55_ε₅])
 
 /-! ## Stratum preservation under quadratic-value preserving maps -/
 
@@ -147,13 +149,13 @@ theorem q55NegAll_reflect_zero {x : Vec55} : q55NegAll x = 0 → x = 0 := by
 
 /-- Coordinatewise negation preserves the concrete split `(5,5)` quadratic form. -/
 theorem q55NegAll_preserves_q55 (x : Vec55) :
-    InfoGeometry.Physics.Pin55Formal.q55 (q55NegAll x) =
-      InfoGeometry.Physics.Pin55Formal.q55 x := by
-  simp [InfoGeometry.Physics.Pin55Formal.q55, q55NegAll]
+    q55 (q55NegAll x) =
+      q55 x := by
+  simp [q55, q55NegAll]
 
 /-- Coordinatewise negation preserves the zero/null/generic strata for `q55`. -/
 theorem q55NegAll_preserves_orbit_strata :
-    PreservesOrbitStrata InfoGeometry.Physics.Pin55Formal.q55 q55NegAll where
+    PreservesOrbitStrata q55 q55NegAll where
   map_zero := q55NegAll_zero
   reflect_zero := by
     intro x hx

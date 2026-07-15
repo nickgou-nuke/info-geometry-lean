@@ -21,7 +21,7 @@ noncomputable section
 
 namespace RHQuantumStabilityBridge
 
-open InfoGeometry.Arithmetic.FinitePrimeGroverOracle
+open FinitePrimeGroverOracle
 
 /-! ## 1. Finite fluctuation logic -/
 

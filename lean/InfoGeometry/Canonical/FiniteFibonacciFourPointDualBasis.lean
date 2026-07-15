@@ -24,7 +24,7 @@ No non-diagonal braid matrix.
 
 namespace FiniteFibonacciFourPointDualBasis
 
-open InfoGeometry.Canonical.FiniteFibonacciFourPointBlocks
+open FiniteFibonacciFourPointBlocks
 
 /--
 Symbolic fusion data for the `n = 4` Fibonacci sector.
@@ -80,7 +80,7 @@ theorem fusionMatrix_mul_self (D : FusionData) :
 
 /-- The finite `Φ`-to-`Θ` basis change on coordinate pairs. -/
 def fusionTransform (D : FusionData) : PhiBasis → PhiBasis
-  | v => (D.tau * v.1 + D.s * v.2, D.s * v.1 - D.tau * v.2)
+  | (x, y) => (D.tau * x + D.s * y, D.s * x - D.tau * y)
 
 /-- The first `Θ` basis vector in the symbolic fusion basis. -/
 def theta0 (D : FusionData) : PhiBasis :=

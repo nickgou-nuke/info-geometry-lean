@@ -23,8 +23,12 @@ The adjunction is: `refine a ≤ b ↔ a ≤ coarse b`.
 
 namespace RefinementGaloisConnection
 
-open InfoGeometry.Canonical.CantorCylinderLattice
-open InfoGeometry.Canonical.SectorLattice
+open CantorCylinderLattice
+
+abbrev BinaryWord (n : ℕ) := CantorCylinderLattice.BinaryWord n
+abbrev KreinSector := KreinProjectorLattice.KreinSector
+abbrev Sector (n : ℕ) := Set (BinaryWord n) × KreinSector
+abbrev ProjectionAssignment (n : ℕ) := BinaryWord n → KreinSector
 
 /-! ## 1. Spatial Refinement and Coarse-Graining -/
 
@@ -60,11 +64,13 @@ theorem spatial_galois_connection (n : ℕ) :
 /-! ## 2. Sector Refinement and Coarse-Graining -/
 
 /-- Refines a sector from level `n` to `n+1`, leaving the Krein chirality unchanged. -/
-def refineSector {n : ℕ} (s : Sector n) : Sector (n + 1) :=
+def refineSector {n : ℕ} (s : Sector n) :
+    Sector (n + 1) :=
   (refineSpatial s.1, s.2)
 
 /-- Coarse-grains a sector from level `n+1` to `n`, leaving the Krein chirality unchanged. -/
-def coarseSector {n : ℕ} (s : Sector (n + 1)) : Sector n :=
+def coarseSector {n : ℕ} (s : Sector (n + 1)) :
+    Sector n :=
   (coarseSpatial s.1, s.2)
 
 /-- The full sector Galois connection: `refineSector ⊣ coarseSector`. -/
@@ -78,12 +84,14 @@ theorem sector_galois_connection (n : ℕ) :
 /-! ## 3. Order Properties -/
 
 /-- Refinement preserves arbitrary joins (iSup). -/
-theorem refineSector_iSup {n : ℕ} {ι : Type*} (f : ι → Sector n) :
+theorem refineSector_iSup {n : ℕ} {ι : Type*}
+    (f : ι → Sector n) :
     refineSector (⨆ i, f i) = ⨆ i, refineSector (f i) :=
   (sector_galois_connection n).l_iSup
 
 /-- Coarse-graining preserves arbitrary meets (iInf). -/
-theorem coarseSector_iInf {n : ℕ} {ι : Type*} (f : ι → Sector (n + 1)) :
+theorem coarseSector_iInf {n : ℕ} {ι : Type*}
+    (f : ι → Sector (n + 1)) :
     coarseSector (⨅ i, f i) = ⨅ i, coarseSector (f i) :=
   (sector_galois_connection n).u_iInf
 

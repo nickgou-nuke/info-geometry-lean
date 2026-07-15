@@ -10,7 +10,7 @@ resolving dilation.
 
 namespace DilationKKTBridge
 
-open InfoGeometry.Canonical.OperatorProjectorMismatch
+open OperatorProjectorMismatch
 
 variable {V W R : Type*} [Ring R]
 

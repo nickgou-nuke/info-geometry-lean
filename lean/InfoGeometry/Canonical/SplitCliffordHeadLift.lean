@@ -20,7 +20,7 @@ is already present on the recursive head channel:
 
 namespace SplitCliffordHeadLift
 
-open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open SplitCliffordTensorBridge
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.CliffordTower
 

@@ -12,9 +12,9 @@ open CategoryTheory
 open CategoryTheory.Limits
 open MonoidalCategory
 open scoped MonoidalCategory
-open InfoGeometry.Canonical.UHFInductiveColimitBoundary
-open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Physics.YangBaxterZornBridge
+open UHFInductiveColimitBoundary
+open SplitOctonionBraidSU3
+open YangBaxterZornBridge
 
 abbrev FinZorn := Fin 8 → ℂ
 abbrev ZornStage (n : ℕ) := BitWord n → FinZorn

@@ -81,7 +81,7 @@ end YangBaxter
 
 section FibonacciMatrixReadout
 
-open InfoGeometry.Canonical.YangBaxterProof
+open YangBaxterProof
 
 /--
 The concrete Fibonacci anyon matrix braid relation from the repository owner

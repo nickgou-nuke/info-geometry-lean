@@ -55,11 +55,11 @@ The group inverse equations are equivalent to the repository's Drazin laws at
 index one.
 -/
 theorem groupInverse_iff_drazin_index_one {a x : R} :
-    IsGroupInverse a x ↔ Drazin.IsDrazinInverse a x 1 := by
+    IsGroupInverse a x ↔ InfoGeometry.Canonical.Drazin.IsDrazinInverse a x 1 := by
   constructor
   · intro h
     rcases h with ⟨haxa, hxax, hcomm⟩
-    refine Drazin.IsDrazinInverse.mk hcomm hxax ?_
+    refine InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk hcomm hxax ?_
     calc
       a ^ (1 + 1) * x = a * a * x := by simp [pow_two]
       _ = a * (a * x) := by rw [mul_assoc]
@@ -70,39 +70,41 @@ theorem groupInverse_iff_drazin_index_one {a x : R} :
     constructor
     · calc
         a * x * a = a * (x * a) := by rw [mul_assoc]
-        _ = a * (a * x) := by rw [h.comm]
+        _ = a * (a * x) := by rw [InfoGeometry.Canonical.Drazin.IsDrazinInverse.comm h]
         _ = a * a * x := by rw [mul_assoc]
         _ = a ^ (1 + 1) * x := by simp [pow_two]
-        _ = a := by simpa using h.power
+        _ = a := by simpa using InfoGeometry.Canonical.Drazin.IsDrazinInverse.power h
     constructor
-    · exact h.idempotent
-    · exact h.comm
+    · exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.idempotent h
+    · exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.comm h
 
 /-- A group inverse gives an index-one Drazin inverse. -/
 theorem IsGroupInverse.toDrazin {a x : R} (h : IsGroupInverse a x) :
-    Drazin.IsDrazinInverse a x 1 :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse a x 1 :=
   groupInverse_iff_drazin_index_one.mp h
 
 /-- An index-one Drazin inverse is a Hartwig group inverse. -/
 theorem IsGroupInverse.ofDrazin {a x : R}
-    (h : Drazin.IsDrazinInverse a x 1) :
+    (h : InfoGeometry.Canonical.Drazin.IsDrazinInverse a x 1) :
     IsGroupInverse a x :=
   groupInverse_iff_drazin_index_one.mpr h
 
 /-- The regular support `A A#` is idempotent. -/
 theorem regularIdempotent_idempotent {a x : R} (h : IsGroupInverse a x) :
     regularIdempotent a x * regularIdempotent a x = regularIdempotent a x := by
-  exact Drazin.IsDrazinInverse.projection_is_idempotent h.toDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_is_idempotent
+    (IsGroupInverse.toDrazin h)
 
 /-- Hartwig's principal idempotent `Z = 1 - A A#` is idempotent. -/
 theorem principalIdempotent_idempotent {a x : R} (h : IsGroupInverse a x) :
     principalIdempotent a x * principalIdempotent a x = principalIdempotent a x := by
-  exact Drazin.IsDrazinInverse.complementaryProjection_is_idempotent h.toDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent
+    (IsGroupInverse.toDrazin h)
 
 /-- The principal idempotent is the Drazin complementary projector. -/
 theorem principalIdempotent_eq_drazin_complement {a x : R} :
     principalIdempotent a x =
-      Drazin.IsDrazinInverse.complementaryProjection a x :=
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a x :=
   rfl
 
 /-- `A` kills the zero-root principal idempotent on the left. -/
@@ -209,7 +211,7 @@ theorem hartwig_formula_candidate_isGroupInverse :
 
 /-- Therefore the same formula is the index-one Drazin inverse. -/
 theorem hartwig_formula_candidate_isDrazinInverse :
-    Drazin.IsDrazinInverse hartwigA hartwigFormulaCandidate 1 :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse hartwigA hartwigFormulaCandidate 1 :=
   IsGroupInverse.toDrazin hartwig_formula_candidate_isGroupInverse
 
 /-- The regular idempotent `A A#` selects the regular `2,3` eigenspaces. -/

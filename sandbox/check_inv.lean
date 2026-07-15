@@ -1,0 +1,2 @@
+import InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
+#check HodgePacket

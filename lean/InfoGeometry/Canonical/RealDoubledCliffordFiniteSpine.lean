@@ -27,6 +27,7 @@ namespace RealDoubledCliffordFiniteSpine
 
 open scoped TensorProduct
 open InfoGeometry.Krein
+open InfoGeometry.Clifford
 
 section Doubled
 
@@ -114,80 +115,80 @@ end Doubled
 
 /-- Split `(1,1)` vector carrier used by the matrix model. -/
 @[rep_depth krein]
-abbrev Cl11Vec := InfoGeometry.Clifford.Cl11Matrix.Vec11
+abbrev Cl11Vec := Cl11Matrix.Vec11
 
 /-- Real `2 × 2` matrix carrier. -/
 @[rep_depth krein]
-abbrev Mat2R := InfoGeometry.Clifford.Cl11Matrix.Mat2
+abbrev Mat2R := Cl11Matrix.Mat2
 
 /-- Split quadratic form for `Cl(1,1)`. -/
 @[rep_depth krein]
-noncomputable abbrev q11 := InfoGeometry.Clifford.Cl11Matrix.q11
+noncomputable abbrev q11 := Cl11Matrix.q11
 
 /-- Real matrix model `Cl(1,1) ≃ M₂(ℝ)`, projected from `Cl11Matrix`. -/
 @[rep_depth krein]
 noncomputable abbrev cl11EquivMat :
     CliffordAlgebra q11 ≃ₐ[ℝ] Mat2R :=
-  InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat
+  Cl11Matrix.cl11EquivMat
 
 /-- The real matrix model is exactly the owner equivalence. -/
 @[rep_depth krein]
 theorem cl11EquivMat_eq_owner :
-    cl11EquivMat = InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat :=
+    cl11EquivMat = Cl11Matrix.cl11EquivMat :=
   rfl
 
 /-- Split `Cl(n,n)` carrier, projected from `Clifford.ClNN`. -/
 @[rep_depth krein]
-abbrev SplitCarrier (n : ℕ) := InfoGeometry.Clifford.ClNN.Carrier n
+abbrev SplitCarrier (n : ℕ) := ClNN.Carrier n
 
 /-- Split `Cl(n,n)` quadratic form, projected from `Clifford.ClNN`. -/
 @[rep_depth krein]
-noncomputable abbrev SplitQuad (n : ℕ) := InfoGeometry.Clifford.ClNN.Quad n
+noncomputable abbrev SplitQuad (n : ℕ) := ClNN.Quad n
 
 /-- Split `Cl(n,n)` algebra, projected from `Clifford.ClNN`. -/
 @[rep_depth krein]
-abbrev SplitClifford (n : ℕ) := InfoGeometry.Clifford.ClNN.Alg n
+abbrev SplitClifford (n : ℕ) := ClNN.Alg n
 
 /-- Head null mode `u_-` in the recursive split tower. -/
 @[rep_depth krein]
 noncomputable abbrev headNullMinus (n : ℕ) :=
-  InfoGeometry.Clifford.ClNN.headNullMinus n
+  ClNN.headNullMinus n
 
 /-- Head null mode `u_+` in the recursive split tower. -/
 @[rep_depth krein]
 noncomputable abbrev headNullPlus (n : ℕ) :=
-  InfoGeometry.Clifford.ClNN.headNullPlus n
+  ClNN.headNullPlus n
 
 /-- The `u_-` head mode is isotropic. -/
 @[rep_depth krein]
 theorem headNullMinus_isotropic (n : ℕ) :
     SplitQuad (n + 1) (headNullMinus n) = 0 :=
-  InfoGeometry.Clifford.ClNN.headNullMinus_isotropic n
+  ClNN.headNullMinus_isotropic n
 
 /-- The `u_+` head mode is isotropic. -/
 @[rep_depth krein]
 theorem headNullPlus_isotropic (n : ℕ) :
     SplitQuad (n + 1) (headNullPlus n) = 0 :=
-  InfoGeometry.Clifford.ClNN.headNullPlus_isotropic n
+  ClNN.headNullPlus_isotropic n
 
 /-- The recursive split head null modes satisfy the CAR normalization. -/
 @[rep_depth krein]
 theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap (n : ℕ) :
-    InfoGeometry.Clifford.ClNN.gammaHeadNullMinus n *
-        InfoGeometry.Clifford.ClNN.gammaHeadNullPlus n
-      + InfoGeometry.Clifford.ClNN.gammaHeadNullPlus n *
-        InfoGeometry.Clifford.ClNN.gammaHeadNullMinus n = 1 :=
-  InfoGeometry.Clifford.ClNN.gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap n
+    ClNN.gammaHeadNullMinus n *
+        ClNN.gammaHeadNullPlus n
+      + ClNN.gammaHeadNullPlus n *
+        ClNN.gammaHeadNullMinus n = 1 :=
+  ClNN.gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap n
 
 /-- Split Bott carrier alias. -/
 @[rep_depth krein]
 abbrev SplitBottCarrier (n : ℕ) :=
-  InfoGeometry.Clifford.BottPeriodicity.SplitBottCarrier n
+  BottPeriodicity.SplitBottCarrier n
 
 /-- Split Bott Clifford algebra alias. -/
 @[rep_depth krein]
 abbrev SplitBottClifford (n : ℕ) :=
-  InfoGeometry.Clifford.BottPeriodicity.SplitBottClifford n
+  BottPeriodicity.SplitBottClifford n
 
 /-- One-step split Bott factorization. -/
 @[rep_depth krein]
@@ -196,18 +197,18 @@ noncomputable abbrev splitBottStep (n : ℕ) :
       ≃ₐ[ℝ]
         (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11 ᵍ⊗[ℝ]
           CliffordAlgebra.evenOdd
-            (InfoGeometry.Clifford.BottPeriodicity.SplitBottQuad n)) :=
-  InfoGeometry.Clifford.BottPeriodicity.splitBottStep n
+            (BottPeriodicity.SplitBottQuad n)) :=
+  BottPeriodicity.splitBottStep n
 
 /-- The split Bott step is exactly the tower owner theorem. -/
 @[rep_depth krein]
 theorem splitBottStep_eq_owner (n : ℕ) :
-    splitBottStep n = InfoGeometry.CliffordTower.clsplit_succ_equiv n :=
-  rfl
+    BottPeriodicity.splitBottStep n = InfoGeometry.CliffordTower.clsplit_succ_equiv n :=
+  BottPeriodicity.splitBottStep_eq_clsplit_succ_equiv n
 
 /-- The repo's split `Cl(4,4)` object. -/
 @[rep_depth krein]
-abbrev Cl44 := InfoGeometry.Clifford.BottPeriodicity.Cl44
+abbrev Cl44 := BottPeriodicity.Cl44
 
 /-- `Cl(4,4)` as one split Bott step over `Cl(3,3)`. -/
 @[rep_depth krein]
@@ -216,13 +217,13 @@ noncomputable abbrev cl44_as_splitBottStep :
       ≃ₐ[ℝ]
         (CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11 ᵍ⊗[ℝ]
           CliffordAlgebra.evenOdd
-            (InfoGeometry.Clifford.BottPeriodicity.SplitBottQuad 3)) :=
-  InfoGeometry.Clifford.BottPeriodicity.cl44_as_splitBottStep
+            (BottPeriodicity.SplitBottQuad 3)) :=
+  BottPeriodicity.cl44_as_splitBottStep
 
 /-- The `Cl(4,4)` split Bott projection is exactly the owner theorem. -/
 @[rep_depth krein]
 theorem cl44_as_splitBottStep_eq_owner :
-    cl44_as_splitBottStep = InfoGeometry.CliffordTower.clsplit_succ_equiv 3 :=
-  rfl
+    BottPeriodicity.cl44_as_splitBottStep = InfoGeometry.CliffordTower.clsplit_succ_equiv 3 :=
+  BottPeriodicity.cl44_as_splitBottStep_eq_owner
 
 end RealDoubledCliffordFiniteSpine

@@ -54,7 +54,7 @@ Krein space is asserted here; this is the closed algebraic projector layer.
 
 namespace FundamentalSymmetryProjectors
 
-open InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
+open HodgeStarSelfDualAlgebra
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 

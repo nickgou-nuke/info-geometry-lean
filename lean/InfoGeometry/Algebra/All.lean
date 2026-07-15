@@ -21,6 +21,7 @@ import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
+import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Algebra.NoFaithfulAssociativeModel
 import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit
@@ -88,6 +89,8 @@ import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
+import InfoGeometry.Algebra.PauliQuaternionSplitComparison
+import InfoGeometry.Algebra.BiquaternionSplitBiquaternionSignatures
 import InfoGeometry.Algebra.SplitQuaternionFlows
 import InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
 import InfoGeometry.Algebra.AiStudioNativeMathlibFindings

@@ -25,7 +25,7 @@ No concrete proof of all Artin relations.
 namespace FiniteFibonacciGeneralBraidGenerators
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
+open FiniteFibonacciLowAnyonMatrices
 
 /-- Shifted Fibonacci dimension `dₙ` with `d₂ = d₃ = 1`. -/
 def fibonacciBlockDimension (n : ℕ) : ℕ :=

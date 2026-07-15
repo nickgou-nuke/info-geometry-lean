@@ -3,8 +3,8 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 
 namespace HeatKernel
 
-open InfoGeometry.Canonical.RicciMongeAmpere
-open InfoGeometry.Canonical.SpectralInference
+open RicciMongeAmpere
+open SpectralInference
 open InfoGeometry.Convex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

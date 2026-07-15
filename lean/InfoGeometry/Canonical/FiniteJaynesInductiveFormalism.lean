@@ -26,9 +26,9 @@ No AF/von-Neumann/state uniqueness theorem.
 namespace FiniteJaynesInductiveFormalism
 
 open Finset
-open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
-open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
-open InfoGeometry.Canonical.FiniteJaynesFormalism
+open FiniteJaynesCenteredScoreBridge
+open FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
+open FiniteJaynesFormalism
 
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
 

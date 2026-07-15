@@ -18,7 +18,7 @@ finite algebraic data before being transported.
 
 noncomputable section
 
-namespace InfiniteInductiveSUSY
+namespace InfoGeometry.Algebra.InfiniteInductiveSUSY
 
 open InfoGeometry.Algebra.FiniteInductiveSUSY
 
@@ -186,4 +186,4 @@ theorem limit_image_inductive_susy_closure
       limit_image_dirac_square_closure_chain
         φ ι Q R H Z hQ0 hR0 hclosure0 hQstep hRstep hHstep hZstep n⟩
 
-end InfiniteInductiveSUSY
+end InfoGeometry.Algebra.InfiniteInductiveSUSY

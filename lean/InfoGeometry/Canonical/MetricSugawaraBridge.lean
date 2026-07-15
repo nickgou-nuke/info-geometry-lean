@@ -16,7 +16,7 @@ the finite-channel operator formula in a repo-native form.
 namespace MetricSugawaraBridge
 
 open scoped BigOperators
-open InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+open CurrentSugawaraMetricDatum
 open CurrentMetricDatum
 
 variable {𝕜 I V : Type*}

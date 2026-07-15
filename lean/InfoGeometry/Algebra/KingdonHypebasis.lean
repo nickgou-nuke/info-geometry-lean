@@ -72,8 +72,8 @@ theorem projector2_mul_hypeL : projector2 * hypeL = -projector2 := by
     InfoGeometry.Physics.ZornMatrixSU3.projector1,
     basisVec, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
   ext i <;> fin_cases i <;> simp
 
 @[simp] theorem realization_diagonalLower :
@@ -83,8 +83,8 @@ theorem projector2_mul_hypeL : projector2 * hypeL = -projector2 := by
     InfoGeometry.Physics.ZornMatrixSU3.projector2,
     basisVec, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
   ext i <;> fin_cases i <;> simp
 
 @[simp] theorem realization_hypeL :

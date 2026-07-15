@@ -5,9 +5,9 @@ open scoped InnerProductSpace
 
 namespace AlgebraicStateEmergence
 
-open InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
-open InfoGeometry.Canonical.Cl11LorentzAction
-open InfoGeometry.Canonical.AlgebraicStateLorentzAction
+open AlgebraicStateFunctionalBridge
+open Cl11LorentzAction
+open AlgebraicStateLorentzAction
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Quantum
 open InfoGeometry.Krein

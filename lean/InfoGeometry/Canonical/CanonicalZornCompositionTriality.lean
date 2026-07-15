@@ -25,7 +25,7 @@ noncomputable section
 
 namespace CanonicalZornCompositionTriality
 
-open InfoGeometry.Physics.SplitOctonionBraidSU3
+open SplitOctonionBraidSU3
 
 /-- Eight canonical complex coordinates of a Zorn element. -/
 def zornCoordinates (X : Zorn) : Fin 8 → ℂ :=

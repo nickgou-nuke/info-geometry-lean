@@ -22,7 +22,7 @@ once a normalization witness is supplied.
 namespace AlgebraicStateFunctionalBridge
 
 open InfoGeometry.Volume.ConnesCocycle
-open InfoGeometry.Canonical.StandardFormCore
+open StandardFormCore
 open InfoGeometry.Krein
 
 section Core

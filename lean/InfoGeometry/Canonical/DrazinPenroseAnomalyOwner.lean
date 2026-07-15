@@ -9,7 +9,7 @@ interpretations require a separate realization witness.
 
 namespace DrazinPenroseAnomalyOwner
 
-open InfoGeometry.Canonical.OperatorProjectorMismatch
+open OperatorProjectorMismatch
 
 variable {R : Type*} [Ring R]
 

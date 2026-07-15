@@ -14,7 +14,7 @@ noncomputable section
 
 namespace BaryonAsymmetryWitness
 
-open InfoGeometry.OperatorAlgebra.AndreevBoundary
+open AndreevBoundary
 
 /--
 Baryon-asymmetry accounting datum.

@@ -40,8 +40,8 @@ noncomputable section
 namespace SedenionSpinorCuntzDrazinBridge
 
 open InfoGeometry.Algebra.Cuntz
-open InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
-open InfoGeometry.Canonical.TrifactorDecomposition
+open DrazinTripotentTrifactorBridge
+open TrifactorDecomposition
 
 /-! ## Steering-sector bookkeeping -/
 

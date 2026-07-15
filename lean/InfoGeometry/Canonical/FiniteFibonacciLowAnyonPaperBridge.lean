@@ -23,7 +23,7 @@ No `n = 7` or `n = 8` matrix claim.
 
 namespace FiniteFibonacciLowAnyonPaperBridge
 
-open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
+open FiniteFibonacciLowAnyonMatrices
 
 /-- The `n = 5` basis has three channels. -/
 theorem sectionSix_basis5_card :
@@ -43,18 +43,18 @@ theorem sectionSix_n5_endpoint_templates (qNeg4 q3 : ℂ) :
 
 /-- The `n = 5` middle braid contains the symbolic `B` block in the lower-right sector. -/
 theorem sectionSix_n5_b2_lower_block (q3 : ℂ) (B : BBlockEntries) :
-    pi5_b2 q3 B 1 1 = B.B00 ∧
-      pi5_b2 q3 B 1 2 = B.B01 ∧
-      pi5_b2 q3 B 2 1 = B.B10 ∧
-      pi5_b2 q3 B 2 2 = B.B11 :=
+    pi5_b2 q3 B 1 1 = BBlockEntries.B00 B ∧
+      pi5_b2 q3 B 1 2 = BBlockEntries.B01 B ∧
+      pi5_b2 q3 B 2 1 = BBlockEntries.B10 B ∧
+      pi5_b2 q3 B 2 2 = BBlockEntries.B11 B :=
   pi5_b2_lower_block q3 B
 
 /-- The `n = 5` outer braid contains the same symbolic `B` block on coordinates `0` and `2`. -/
 theorem sectionSix_n5_b3_outer_block (q3 : ℂ) (B : BBlockEntries) :
-    pi5_b3 q3 B 0 0 = B.B00 ∧
-      pi5_b3 q3 B 0 2 = B.B01 ∧
-      pi5_b3 q3 B 2 0 = B.B10 ∧
-      pi5_b3 q3 B 2 2 = B.B11 :=
+    pi5_b3 q3 B 0 0 = BBlockEntries.B00 B ∧
+      pi5_b3 q3 B 0 2 = BBlockEntries.B01 B ∧
+      pi5_b3 q3 B 2 0 = BBlockEntries.B10 B ∧
+      pi5_b3 q3 B 2 2 = BBlockEntries.B11 B :=
   pi5_b3_outer_block q3 B
 
 /-- An assumed `n = 5` middle Artin matrix identity is re-expressed unchanged. -/
@@ -74,14 +74,14 @@ theorem sectionSix_n6_endpoint_templates (qNeg4 q3 : ℂ) :
 
 /-- The `n = 6` middle braid repeats the same `B` block twice. -/
 theorem sectionSix_n6_repeated_B_blocks (q3 : ℂ) (B : BBlockEntries) :
-    pi6_b2 q3 B 0 0 = B.B00 ∧
-      pi6_b2 q3 B 0 1 = B.B01 ∧
-      pi6_b2 q3 B 1 0 = B.B10 ∧
-      pi6_b2 q3 B 1 1 = B.B11 ∧
-      pi6_b2 q3 B 3 3 = B.B00 ∧
-      pi6_b2 q3 B 3 4 = B.B01 ∧
-      pi6_b2 q3 B 4 3 = B.B10 ∧
-      pi6_b2 q3 B 4 4 = B.B11 :=
+    pi6_b2 q3 B 0 0 = BBlockEntries.B00 B ∧
+      pi6_b2 q3 B 0 1 = BBlockEntries.B01 B ∧
+      pi6_b2 q3 B 1 0 = BBlockEntries.B10 B ∧
+      pi6_b2 q3 B 1 1 = BBlockEntries.B11 B ∧
+      pi6_b2 q3 B 3 3 = BBlockEntries.B00 B ∧
+      pi6_b2 q3 B 3 4 = BBlockEntries.B01 B ∧
+      pi6_b2 q3 B 4 3 = BBlockEntries.B10 B ∧
+      pi6_b2 q3 B 4 4 = BBlockEntries.B11 B :=
   pi6_b2_repeated_B_blocks q3 B
 
 /-- The `n = 6` endpoint braid `b₅` is diagonal with two `q⁻⁴` and three `q³` entries. -/

@@ -14,7 +14,7 @@ This is a finite witness layer:
 
 namespace SpinorLieDerivative
 
-open InfoGeometry.Canonical.CoordinateFreeSouriau
+open CoordinateFreeSouriau
 
 section
 

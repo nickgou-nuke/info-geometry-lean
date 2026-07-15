@@ -5,9 +5,9 @@ noncomputable section
 
 namespace G2TrifactorColorBridge
 
-open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
-open InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
-open InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer.BektasMatrix
+open G2TrifactorSU3
+open SplitOctonionsColorStabilizer
+open BektasMatrix
 open Quaternion
 
 /-!

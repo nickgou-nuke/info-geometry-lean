@@ -5,6 +5,8 @@ import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 set_option autoImplicit false
 
+open NilpotentFiniteProductLimit
+
 namespace NilpotentModularAutomorphism
 
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
@@ -118,10 +120,10 @@ completion claim is made here.
 theorem exponential_flow_truncation
   {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] (N : A) (T : ℝ) (hN : N * N = 0) :
   Filter.Tendsto
-    (fun n : ℕ => InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_prod_seq T N n)
+    (fun n : ℕ => finite_prod_seq T N n)
     Filter.atTop
-    (nhds (InfoGeometry.Algebra.NilpotentFiniteProductLimit.nilpotent_exp T N)) :=
-  InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_to_infinite_limit T N hN
+    (nhds (nilpotent_exp T N)) :=
+  finite_to_infinite_limit T N hN
 
 end NilpotentModularAutomorphism
 

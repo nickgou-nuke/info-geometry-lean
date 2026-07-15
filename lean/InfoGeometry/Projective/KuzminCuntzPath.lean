@@ -18,7 +18,7 @@ No full C*-isomorphism theorem is proved in this file; those analytical claims a
 kept as an explicit premise via the `toCuntzToeplitz` field.
 -/
 
-namespace KuzminCuntzPath
+namespace InfoGeometry.Projective.KuzminCuntzPath
 
 open InfoGeometry.Algebra.QCCR.Kuzmin
 open InfoGeometry.Algebra.CuntzTensorQuotient
@@ -144,4 +144,4 @@ theorem path_packet_is_explicit
     P.seed.q = P.q := by
   simp [P.q_norm]
 
-end KuzminCuntzPath
+end InfoGeometry.Projective.KuzminCuntzPath

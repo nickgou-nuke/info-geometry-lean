@@ -29,8 +29,9 @@ Spector-style physical supersymmetry theorem.
 
 namespace DrazinTripotentTrifactorBridge
 
-open InfoGeometry.Singular.Drazin
-open InfoGeometry.Canonical.TrifactorDecomposition
+open Drazin
+open TrifactorDecomposition
+open TriFacetGeometry
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
@@ -72,15 +73,14 @@ theorem tripotent_drazin_projector_idempotent
   rw [tripotent_drazin_projector_eq_square]
   calc
     T ^ 2 * T ^ 2 = T ^ 4 := by ring
-    _ = T ^ 2 := InfoGeometry.Canonical.TriFacetGeometry.T_pow4 T hT
+    _ = T ^ 2 := TriFacetGeometry.T_pow4 T hT
 
 /-- The Drazin support projector is exactly the active `P_plus + P_minus` sector. -/
 theorem tripotent_drazin_projector_eq_active_trifactor
     (T : R) :
     tripotentDrazinProjector T = P_plus T + P_minus T := by
   rw [tripotent_drazin_projector_eq_square]
-  unfold P_plus P_minus InfoGeometry.Canonical.TriFacetGeometry.P_hyp
-    InfoGeometry.Canonical.TriFacetGeometry.P_ell
+  unfold P_plus P_minus P_hyp P_ell
   calc
     T ^ 2 =
         (⅟(2 : R) * (2 : R)) * T ^ 2 := by

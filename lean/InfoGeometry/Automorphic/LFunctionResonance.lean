@@ -26,7 +26,7 @@ noncomputable section
 
 namespace LFunctionResonance
 
-open InfoGeometry.Automorphic.SiegelResonance
+open SiegelResonance
 
 universe uBulk uBoundary uHecke
 

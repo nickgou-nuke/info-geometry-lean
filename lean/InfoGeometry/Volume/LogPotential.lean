@@ -38,3 +38,7 @@ theorem logAbsVolume_add (f g : V ≃ₗ[ℝ] V) :
   · exact abs_ne_zero.mpr (Units.ne_zero _)
 
 end LogPotential
+
+namespace InfoGeometry.Volume.LogPotential
+
+end InfoGeometry.Volume.LogPotential

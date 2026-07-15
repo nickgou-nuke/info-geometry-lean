@@ -21,7 +21,7 @@ central-charge theorem.  Those require separate owner interfaces and proofs.
 
 namespace FiniteToInfiniteTransitionSOP
 
-open InfoGeometry.Meta.InductiveInvariantPacket
+open InductiveInvariantPacket
 
 namespace StarRingHom
 
@@ -126,14 +126,14 @@ both facts hold at the transported image: closure is image-local, and the readou
 has exactly the original value.
 -/
 theorem finite_chain_closure_and_readout
-    (I : InfoGeometry.Meta.InductiveInvariantPacket.SupergradedClosureAt A)
+    (I : InductiveInvariantPacket.SupergradedClosureAt A)
     (readout : A → R) (φ : Nat → StarRingHom A A)
     (hstable : ∀ n x, readout (φ n x) = readout x)
     (n k : Nat) :
-    InfoGeometry.Meta.InductiveInvariantPacket.SupergradedClosureAt.ImageClosure
+    InductiveInvariantPacket.SupergradedClosureAt.ImageClosure
       I (StarRingHom.chain φ n k) ∧
       readout (StarRingHom.chain φ n k I.C) = readout I.C := by
-  exact ⟨InfoGeometry.Meta.InductiveInvariantPacket.SupergradedClosureAt.chain_image_closure I φ n k,
+  exact ⟨InductiveInvariantPacket.SupergradedClosureAt.chain_image_closure I φ n k,
     StarRingHom.readout_stable_along_finite_chain readout φ hstable n k I.C⟩
 
 end SupergradedClosureAt

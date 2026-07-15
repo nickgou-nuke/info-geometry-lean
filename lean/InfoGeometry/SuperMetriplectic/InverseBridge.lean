@@ -40,7 +40,7 @@ A scalar Drazin witness is an honest Drazin inverse witness on `ℝ`.
 theorem toIsDrazinInverse
     (D : InfoGeometry.SuperMetriplectic.ScalarDrazinInverse) :
     Drazin.IsDrazinInverse D.a D.aD D.index := by
-  exact Drazin.IsDrazinInverse.mk D.commute D.reflexive D.spectral
+  exact Drazin.IsDrazinInverse.mk D.reflexive D.commute D.spectral.symm
 
 /--
 The hidden scalar block of a `ScalarSchurDrazinBlock` carries a certified

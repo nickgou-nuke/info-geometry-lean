@@ -12,7 +12,7 @@ claims are deliberately not asserted here.
 -/
 
 open InfoGeometry.Algebra.CPT
-open InfoGeometry.OperatorAlgebra.CliffordCAR
+open CliffordCAR
 
 noncomputable section
 

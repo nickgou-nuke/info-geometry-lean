@@ -2,7 +2,7 @@ import InfoGeometry.Causal.ProofDAGRepresentation
 
 namespace ProofGraphExteriorCalculus
 
-open InfoGeometry.Causal.ProofDAGRepresentation
+open ProofDAGRepresentation
 
 /-!
 # Proof graph exterior-calculus surface

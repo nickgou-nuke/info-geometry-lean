@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.SplitCliffordTensorBridge
 
 namespace O55BottAnomalyClosure
 
-open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open SplitCliffordTensorBridge
 open InfoGeometry.CliffordTower
 
 /-!

@@ -11,7 +11,7 @@ Concrete logarithmic relative-volume identities for
 
 namespace RelativeVolume
 
-open InfoGeometry.Algebra.Zorn.ConcreteComposition
+open ConcreteComposition
 open ZornCell
 
 /-- Negative logarithmic Zorn volume potential. -/

@@ -26,7 +26,7 @@ open scoped BigOperators
 
 namespace PrimeMajoranaWittenCharacter
 
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open PrimeBitWittenIndex
 
 /-- Two-state finite occupancy of a prime mode. -/
 inductive Occupancy where

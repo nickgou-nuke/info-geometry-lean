@@ -22,7 +22,7 @@ scalars and no Euclidean proxy carrier. The owner surface consists of:
 
 namespace BogoliubovTransport
 
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 open InfoGeometry.Krein
 open scoped InnerProductSpace
 

@@ -39,9 +39,9 @@ noncomputable section
 
 namespace ZetaChiralConeAlgebra
 
-open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
-open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
-open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
+open ZetaCoordinateSymmetry
+open ZetaAffineChart
+open ZetaCenteredChart
 
 /-- A zeta-like scalar readout on centered coordinates. -/
 abbrev ZetaReadout : Type :=

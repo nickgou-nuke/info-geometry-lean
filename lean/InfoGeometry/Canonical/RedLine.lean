@@ -56,7 +56,7 @@ export InfoGeometry.Jordan (
   logDetBregman
 )
 
-export InfoGeometry.Volume.LogPotential (
+export LogPotential (
   LogAbsVolume
   logAbsVolume_add
 )
@@ -69,7 +69,7 @@ export InfoGeometry.Thermo (
   freeEnergyFromLogDet_eq_internal_sub_scale_entropy
 )
 
-export InfoGeometry.Canonical.LogSumExp (
+export LogSumExp (
   logSumExpPartition
   logSumExp
   logSumExpScaledPartition
@@ -77,7 +77,7 @@ export InfoGeometry.Canonical.LogSumExp (
   logSumExp_eq_log_partition
 )
 
-export InfoGeometry.Canonical.JaynesRNMaxEnt (
+export JaynesRNMaxEnt (
   MomentFamily
   objectiveKL
   potential
@@ -88,8 +88,11 @@ export InfoGeometry.Canonical.JaynesRNMaxEnt (
   GibbsMinimizesKL
 )
 
-export InfoGeometry.Canonical.JaynesRNMaxEnt (
+export JaynesRNMaxEnt (
   partitionFunction_pos
+)
+
+export InfoGeometry.Canonical.JaynesRNMaxEnt (
   scalarModularPotential_exp_potential_div_partition
   neg_log_rnDeriv_gibbsMeasure_toReal_eq_neg_potential_add_logPartition
   potential_eq_log_rnDeriv_gibbsMeasure_toReal_add_logPartition
@@ -124,7 +127,7 @@ export InfoGeometry.Canonical.RicciMongeAmpere (
   scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
 )
 
-export InfoGeometry.MeasureProjective (
+export MeasureProjective (
   UState
   NonzeroUState
   SameRay
@@ -137,7 +140,7 @@ export InfoGeometry.MeasureProjective (
   self_eq_mass_smul_normalize
 )
 
-export InfoGeometry.MeasureProjective.ProjectiveState (
+export MeasureProjective.ProjectiveState (
   normalize
   logGenerator
   logGeneratorClass
@@ -160,7 +163,7 @@ export InfoGeometry.MeasureProjective.Normalized (
   logPotential_pmf_self_ae
 )
 
-export InfoGeometry.MeasureProjective (
+export MeasureProjective (
   logPotential_smul_left_ae
   logPotential_smul_right_ae
 )
@@ -178,7 +181,7 @@ export InfoGeometry.Canonical.PositiveRayCore (
   gaugeSection_eq_exp_neg_modularPotential
 )
 
-export InfoGeometry.Canonical.RelativePotentialCore (
+export RelativePotentialCore (
   representativeRelativeDensity
   representativeRelativeLogDensity
   representativeModularPotential

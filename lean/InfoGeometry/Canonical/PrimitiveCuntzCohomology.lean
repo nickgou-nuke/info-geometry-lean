@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.PrimitiveCuntzIsometry
 
 open InfoGeometry.GrandUnification.UHF
-open InfoGeometry.Canonical.PrimitiveCuntzIsometry
+open PrimitiveCuntzIsometry
 
 noncomputable section
 

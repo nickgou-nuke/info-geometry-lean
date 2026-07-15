@@ -385,12 +385,12 @@ lemma relativeVolumeChangeRN_eq_exp_logJacobian
 lemma kahlerPotentialRN_eq_scalarModularPotential_relativeVolumeChangeRN
     (M : SinkhornMatrix n) :
     kahlerPotentialRN n M =
-      InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+      RelativePotentialScalarBridge.scalarModularPotential
         (relativeVolumeChangeRN n M)
         (by
           unfold relativeVolumeChangeRN
           exact Real.exp_pos _) := by
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
   unfold relativeVolumeChangeRN
   simp
 

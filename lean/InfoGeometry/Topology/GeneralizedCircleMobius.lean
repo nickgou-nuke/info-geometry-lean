@@ -106,7 +106,7 @@ theorem image_is_generalized_circle
     (g : GeneralizedCircle) (a b c d : ℂ) (h_det : a * d - b * c ≠ 0) :
     image_A g a b c d * image_C g a b c d < Complex.normSq (image_B g a b c d) := by
   rw [image_A_formula, image_B_formula, image_C_formula]
-  exact InfoGeometry.Categorical.MobiusCircleAlgebra.GeneralizedCircle.image_is_generalized_circle
+  exact MobiusCircleAlgebra.GeneralizedCircle.image_is_generalized_circle
       (g := ⟨g.A, g.B, g.C, g.h_disc⟩) (a := a) (b := b) (c := c) (d := d) h_det
 
 end GeneralizedCircle

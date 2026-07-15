@@ -14,7 +14,8 @@ No automatic anomaly deletion and no automatic conformal-gravity closure claim.
 
 namespace MetricTransport
 
-open InfoGeometry.Canonical.OperatorProjectorMismatch
+open OperatorProjectorMismatch
+open OperatorProjectorMismatch.ProjectorPair
 
 variable {R : Type*} [Ring R]
 

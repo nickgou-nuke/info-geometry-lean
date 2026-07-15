@@ -10,8 +10,8 @@ open ProbabilityTheory
 
 namespace IBIteration
 
-open InfoGeometry.Canonical.IBFunctional
-open InfoGeometry.Canonical.IBMeasure
+open IBFunctional
+open IBMeasure
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

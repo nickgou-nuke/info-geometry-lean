@@ -26,8 +26,9 @@ one-step Bott factorization as the repo-native recursive statement:
 
 namespace SplitCliffordTensorBridge
 
-open InfoGeometry.Canonical.BottPeriodicity
-open InfoGeometry.Canonical.ClNNBottBridge
+open BottPeriodicity
+open ClNNBottBridge
+open TomitaTakesaki
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.CliffordTower
 
@@ -63,17 +64,17 @@ supergraded `⟨1, ε, J, Jε⟩` package before any tensor expansion.
 -/
 @[rep_depth krein] theorem doubledHeadAtom_supergradedLiePackage :
     InfoGeometry.Krein.isEven (E := E)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E)) ∧
+        (TomitaTakesaki.modularConjugationJ (E := E)) ∧
       InfoGeometry.Krein.isOdd (E := E)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E)) ∧
+        (TomitaTakesaki.modularSignEpsilon (E := E)) ∧
       InfoGeometry.Krein.isOdd (E := E)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)) ∧
-      (InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E)).comp
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E))
-        + (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E)).comp
-            (InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E)) = 0 := by
+        (TomitaTakesaki.modularComplexI (E := E)) ∧
+      (TomitaTakesaki.modularConjugationJ (E := E)).comp
+          (TomitaTakesaki.modularSignEpsilon (E := E))
+        + (TomitaTakesaki.modularSignEpsilon (E := E)).comp
+            (TomitaTakesaki.modularConjugationJ (E := E)) = 0 := by
   simpa using
-    (InfoGeometry.Canonical.TomitaTakesaki.modularCPT_supergraded_lie_package (E := E))
+    (TomitaTakesaki.modularCPT_supergraded_lie_package (E := E))
 
 /--
 Owner-name form of the doubled split `Cl(1,1)` supergraded package on the root
@@ -90,9 +91,9 @@ Owner-name form of the doubled split `Cl(1,1)` supergraded package on the root
           (InfoGeometry.Krein.spectral_epsilon (E := E))
         + (InfoGeometry.Krein.spectral_epsilon (E := E)).comp
             (InfoGeometry.Krein.modular_j (E := E)) = 0 := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j,
-    InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon,
-    InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j,
+    TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon,
+    TomitaTakesaki.modularComplexI_eq_complex_i] using
     (doubledHeadAtom_supergradedLiePackage (E := E))
 
 /--

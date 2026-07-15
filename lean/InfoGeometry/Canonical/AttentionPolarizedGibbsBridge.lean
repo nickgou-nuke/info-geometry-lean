@@ -11,7 +11,8 @@ distribution of the induced polarized split score.
 
 namespace InfoGeometry.Canonical.Attention
 
-open InfoGeometry.Convex.LogSumExp
+open _root_.Attention
+open LogSumExp
 open InfoGeometry.GrandCanonical
 open scoped BigOperators
 

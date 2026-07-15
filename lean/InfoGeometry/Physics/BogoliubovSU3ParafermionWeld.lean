@@ -21,11 +21,11 @@ noncomputable section
 
 namespace BogoliubovSU3ParafermionWeld
 
-open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
-open InfoGeometry.Physics.SupergradedCuntzBdG
-open InfoGeometry.Physics.GellMannSU3
-open InfoGeometry.Physics.ColorCARStandardModel
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
+open BogoliubovWeylChemicalPotential
+open SupergradedCuntzBdG
+open GellMannSU3
+open ColorCARStandardModel
+open AlgebraicCuntzQuotient
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)

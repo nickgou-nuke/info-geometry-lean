@@ -31,8 +31,8 @@ namespace PrimeSuperalgebraReadback
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
-open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+open PrimeBitWittenIndex
+open MobiusDirichletInverseBridge
 
 /-! ## 1. Fermionic prime-bit supersector -/
 

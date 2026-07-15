@@ -17,8 +17,8 @@ quadrics.
 
 namespace QuadricSliceSignPacket
 
-open InfoGeometry.Projective.Quadrics.AffineSlices
-open InfoGeometry.Projective.Quadrics.SignatureDeterminant
+open AffineSlices
+open SignatureDeterminant
 
 /--
 Finite projective-quadric packet:

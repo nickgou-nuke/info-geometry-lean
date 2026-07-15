@@ -22,7 +22,7 @@ No claim that these templates are derived from hypergeometric formulas here.
 namespace FiniteFibonacciSparseLowAnyonPaperBridge
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
+open FiniteFibonacciSparseLowAnyonMatrices
 
 /-- The `n = 7` basis has eight channels. -/
 theorem sectionSix_basis7_card :
@@ -61,17 +61,17 @@ theorem sectionSix_pi8_b7_phase (qNeg4 q3 : ℂ) :
 /-- The first interior `n = 7` braid has a `B` block on coordinates `(1, 2)`. -/
 theorem sectionSix_pi7_b2_first_block
     (q3 : ℂ)
-    (B : InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices.BBlockEntries) :
+    (B : FiniteFibonacciLowAnyonMatrices.BBlockEntries) :
     pi7_b2 q3 B 1 1 = B.B00 ∧ pi7_b2 q3 B 1 2 = B.B01 ∧
       pi7_b2 q3 B 2 1 = B.B10 ∧ pi7_b2 q3 B 2 2 = B.B11 :=
-  InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices.pi7_b2_first_block q3 B
+  pi7_b2_first_block q3 B
 
 /-- The `n = 8` generator `b₆` has a `B` block on coordinates `(0, 8)`. -/
 theorem sectionSix_pi8_b6_first_block
     (q3 : ℂ)
-    (B : InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices.BBlockEntries) :
+    (B : FiniteFibonacciLowAnyonMatrices.BBlockEntries) :
     pi8_b6 q3 B 0 0 = B.B00 ∧ pi8_b6 q3 B 0 8 = B.B01 ∧
       pi8_b6 q3 B 8 0 = B.B10 ∧ pi8_b6 q3 B 8 8 = B.B11 :=
-  InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices.pi8_b6_first_block q3 B
+  pi8_b6_first_block q3 B
 
 end FiniteFibonacciSparseLowAnyonPaperBridge

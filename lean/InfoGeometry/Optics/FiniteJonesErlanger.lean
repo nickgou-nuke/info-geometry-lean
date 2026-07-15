@@ -18,7 +18,7 @@ noncomputable section
 
 namespace FiniteJonesErlanger
 
-open InfoGeometry.Optics.FiniteJonesModel
+open FiniteJonesModel
 
 /-! ## 1. Invertible transport and conjugation -/
 

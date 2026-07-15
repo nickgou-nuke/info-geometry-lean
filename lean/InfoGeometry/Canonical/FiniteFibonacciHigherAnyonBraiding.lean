@@ -29,8 +29,8 @@ No proof of Artin relations for all `n`.
 
 namespace FiniteFibonacciHigherAnyonBraiding
 
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+open FiniteFibonacciFusionMatrix
+open FiniteFibonacciElectronIndependence
 
 /-- Adjacent labels are admissible exactly when they are not both `0`. -/
 def AdjacentAdmissible (a b : Bool) : Prop :=

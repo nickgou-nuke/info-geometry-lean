@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Clifford.LogCftMonodromy
 
-open CategoryTheory InfoGeometry.Clifford.LogCftMonodromy
+open CategoryTheory LogCftMonodromy
 
 /-!
 # InfoGeometry.Quantum.RealKCategory

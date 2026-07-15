@@ -28,7 +28,7 @@ by a prime flips the "fermion parity" (Liouville sign).
 
 open scoped ArithmeticFunction.Omega
 
-namespace BostConnesSystem
+namespace InfoGeometry.Arithmetic.BostConnesSystem
 
 /-!
 ## Positive-index multiplicative generators for Bost--Connes lanes
@@ -313,4 +313,4 @@ theorem liouville_sq' (n : ℕ) (_hn : n ≥ 1) : liouville (n ^ 2) = 1 := by
     rw [ArithmeticFunction.cardFactors_pow, mul_comm]
   rw [this, pow_mul, show ((-1 : ℤ)^2) = 1 by norm_num, one_pow]
 
-end BostConnesSystem
+end InfoGeometry.Arithmetic.BostConnesSystem

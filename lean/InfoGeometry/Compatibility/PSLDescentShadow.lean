@@ -10,9 +10,9 @@ import InfoGeometry.Canonical.PSLDescent
 
 namespace InfoGeometry.Compatibility
 
-abbrev PSLDescentContract := InfoGeometry.Canonical.PSLDescent.PSLDescentContract
+abbrev PSLDescentContract := PSLDescent.PSLDescentContract
 
 theorem pslDescentContract : PSLDescentContract :=
-  InfoGeometry.Canonical.PSLDescent.pslDescentContract
+  PSLDescent.pslDescentContract
 
 end InfoGeometry.Compatibility

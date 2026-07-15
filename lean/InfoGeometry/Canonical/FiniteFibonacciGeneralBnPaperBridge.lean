@@ -31,16 +31,16 @@ No analytic continuation.
 
 namespace FiniteFibonacciGeneralBnPaperBridge
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
-open InfoGeometry.Canonical.FiniteFibonacciHigherAnyonPaperBridge
-open InfoGeometry.Canonical.FiniteFibonacciRegisterWords
-open InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
-open InfoGeometry.Canonical.FiniteFibonacciRegisterWords
-open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
-open InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
-open InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonPaperBridge
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciFusionMatrix
+open FiniteFibonacciHigherAnyonBraiding
+open FiniteFibonacciHigherAnyonPaperBridge
+open FiniteFibonacciRegisterWords
+open FiniteFibonacciRegisterSubgroup
+open FiniteFibonacciRegisterWords
+open FiniteFibonacciLowAnyonMatrices
+open FiniteFibonacciSparseLowAnyonMatrices
+open FiniteFibonacciSparseLowAnyonPaperBridge
 
 /-- The general recursive basis step from the paper's Section 7. -/
 theorem general_recursiveBasis_step (k : ℕ) :

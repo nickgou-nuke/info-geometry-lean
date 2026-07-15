@@ -31,8 +31,8 @@ section Core
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-local notation "Xc" => cl11DoubledCore E
-local notation "H₂" => DoubledSpace E
+local notation "Xc" => RealMajoranaCategory.cl11DoubledCore E
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 
 /--
 Canonical doubled-carrier supercharge multiplet.
@@ -139,7 +139,8 @@ theorem modular_eq_epsilonSupercharge :
 @[rep_depth krein]
 theorem phaseChannel_eq_complexI :
     (inst (E := E)).phaseChannel = (complex_i (E := E)).toLinearMap :=
-  SuperchargeMultiplet.phaseChannel_eq_complexI (E := E) (inst (E := E))
+  by
+    simpa using SuperchargeMultiplet.phaseChannel_eq_complexI (M := inst (E := E))
 
 /-- The canonical parity and modular supercharges anticommute. -/
 @[rep_depth krein]
@@ -147,8 +148,9 @@ theorem parity_modular_anticommutator_eq_zero :
     RealMajoranaCategory.anticommutator
         (inst (E := E)).parity.Q
         (inst (E := E)).modular.Q.toLinearMap
-      = 0 :=
-  SuperchargeMultiplet.parity_modular_anticommutator_eq_zero (E := E) (inst (E := E))
+      = 0 := by
+  simpa using
+    SuperchargeMultiplet.parity_modular_anticommutator_eq_zero (M := inst (E := E))
 
 /-- The canonical parity supercharge Hamiltonian is the identity on the doubled core. -/
 @[rep_depth krein]
@@ -169,8 +171,8 @@ theorem modular_hamiltonian_eq_id :
 theorem phaseChannel_sq_eq_neg_id :
     (inst (E := E)).phaseChannel.comp (inst (E := E)).phaseChannel
       =
-    -((LinearMap.id : Xc →ₗ[ℝ] Xc)) :=
-  SuperchargeMultiplet.phaseChannel_sq_eq_neg_id (E := E) (inst (E := E))
+    -((LinearMap.id : Xc →ₗ[ℝ] Xc)) := by
+  simpa using SuperchargeMultiplet.phaseChannel_sq_eq_neg_id (M := inst (E := E))
 
 end canonicalSuperchargeMultiplet
 

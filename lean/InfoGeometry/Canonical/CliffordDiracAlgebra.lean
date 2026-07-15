@@ -107,7 +107,7 @@ end OddUnder
 
 namespace HodgeDirac
 
-open InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
+open HodgeHelmholtzKreinDecomposition
 
 variable {R : Type*} [Ring R] {W : Type*} [AddCommGroup W] [Module R W]
 
@@ -191,7 +191,7 @@ theorem odd_square_commutes_hodge {W : Type*} [AddCommGroup W] [Module ℝ W]
     have hOddNeg : -(J * N) = N * J := by
       simpa using congrArg Neg.neg hOdd
     simpa [neg_neg] using hOddNeg.symm
-  exact InfoGeometry.Canonical.HodgeDiracLaplacianBridge.dirac_sq_commutes_hodge J N hAnti
+  exact HodgeDiracLaplacianBridge.dirac_sq_commutes_hodge J N hAnti
 
 end CarrierBridge
 

@@ -1,4 +1,6 @@
 import InfoGeometry.Algebra.KingdonAlgebra
+import InfoGeometry.Canonical.ZornVectorMatrixExplicit
+import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.LinearAlgebra.StdBasis
@@ -7,10 +9,38 @@ import Mathlib.LinearAlgebra.StdBasis
 # The real split octonion as a three-dimensional Kingdon target
 -/
 
+namespace InfoGeometry.Canonical.ZornVectorMatrixExplicit
+
 namespace KingdonSplitOctonion
 
 open InfoGeometry.Algebra.Kingdon
 open InfoGeometry.Physics.ZornMatrixSU3
+
+def toZornVectorMatrix (M : ZornMatrix) : InfoGeometry.Algebra.ZornVectorMatrix ℝ :=
+  ⟨M.a, M.x, M.y, M.b⟩
+
+theorem toZornVectorMatrix_injective : Function.Injective toZornVectorMatrix := by
+  intro X Y h
+  cases X
+  cases Y
+  cases h
+  rfl
+
+theorem toZornVectorMatrix_mul (X Y : ZornMatrix) :
+    toZornVectorMatrix (X * Y) = InfoGeometry.Algebra.ZornVectorMatrix.mul (toZornVectorMatrix X) (toZornVectorMatrix Y) := by
+  rcases X with ⟨X_a, X_b, X_x, X_y⟩
+  rcases Y with ⟨Y_a, Y_b, Y_x, Y_y⟩
+  dsimp [Mul.mul, toZornVectorMatrix]
+  unfold InfoGeometry.Algebra.ZornVectorMatrix.mul
+  ext <;> try (rename_i i; fin_cases i)
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3, InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3, InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three] <;> try ring
 
 instance : NonAssocRing ZornMatrix where
   zero_mul := zero_mul_zorn
@@ -44,43 +74,88 @@ instance : SMulCommClass ℝ ZornMatrix ZornMatrix where
 
 macro "zorn_ring" : tactic =>
   `(tactic|
-    (simp [mul, Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring))
+    (simp only [mul_a, mul_b, mul_x, mul_y, add_a, add_b, add_x, add_y,
+      neg_a, neg_b, neg_x, neg_y, smul_a, smul_b, smul_x, smul_y,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_comm,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_zero_left,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_zero_right,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_add_left,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_add_right,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_left,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_right,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_self,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_zero_left,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_zero_right,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_add_left,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_add_right,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_smul_left,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_smul_right,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_crossProduct_left,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct_crossProduct_right,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct_triple] <;> ring_nf))
+
+theorem zornVectorMatrix_eq_of_associator_eq_zero {X Y Z : InfoGeometry.Algebra.ZornVectorMatrix ℝ}
+    (h : InfoGeometry.Algebra.ZornVectorMatrix.associator X Y Z = InfoGeometry.Algebra.ZornVectorMatrix.zero) :
+    InfoGeometry.Algebra.ZornVectorMatrix.mul (InfoGeometry.Algebra.ZornVectorMatrix.mul X Y) Z = InfoGeometry.Algebra.ZornVectorMatrix.mul X (InfoGeometry.Algebra.ZornVectorMatrix.mul Y Z) := by
+  ext i
+  · have ha := congrArg InfoGeometry.Algebra.ZornVectorMatrix.a h
+    simp [InfoGeometry.Algebra.ZornVectorMatrix.associator, InfoGeometry.Algebra.ZornVectorMatrix.sub, InfoGeometry.Algebra.ZornVectorMatrix.add, InfoGeometry.Algebra.ZornVectorMatrix.neg, InfoGeometry.Algebra.ZornVectorMatrix.zero] at ha
+    linarith
+  · have hv := congrArg (fun M => M.v i) h
+    simp [InfoGeometry.Algebra.ZornVectorMatrix.associator, InfoGeometry.Algebra.ZornVectorMatrix.sub, InfoGeometry.Algebra.ZornVectorMatrix.add, InfoGeometry.Algebra.ZornVectorMatrix.neg, InfoGeometry.Algebra.ZornVectorMatrix.zero] at hv
+    linarith
+  · have hw := congrArg (fun M => M.w i) h
+    simp [InfoGeometry.Algebra.ZornVectorMatrix.associator, InfoGeometry.Algebra.ZornVectorMatrix.sub, InfoGeometry.Algebra.ZornVectorMatrix.add, InfoGeometry.Algebra.ZornVectorMatrix.neg, InfoGeometry.Algebra.ZornVectorMatrix.zero] at hw
+    linarith
+  · have hb := congrArg InfoGeometry.Algebra.ZornVectorMatrix.b h
+    simp [InfoGeometry.Algebra.ZornVectorMatrix.associator, InfoGeometry.Algebra.ZornVectorMatrix.sub, InfoGeometry.Algebra.ZornVectorMatrix.add, InfoGeometry.Algebra.ZornVectorMatrix.neg, InfoGeometry.Algebra.ZornVectorMatrix.zero] at hb
+    linarith
 
 /-- The concrete real Zorn split-octonion multiplication is left alternative. -/
 theorem zorn_left_alternative (X Y : ZornMatrix) : (X * X) * Y = X * (X * Y) := by
-  rcases X with ⟨a, b, x, y⟩
-  rcases Y with ⟨c, d, u, v⟩
-  ext
-  · zorn_ring
-  · zorn_ring
-  · rename_i i; fin_cases i <;> zorn_ring
-  · rename_i i; fin_cases i <;> zorn_ring
+  apply toZornVectorMatrix_injective
+  rw [toZornVectorMatrix_mul, toZornVectorMatrix_mul, toZornVectorMatrix_mul, toZornVectorMatrix_mul]
+  exact zornVectorMatrix_eq_of_associator_eq_zero
+    (InfoGeometry.Algebra.ZornVectorMatrix.associator_left_alternative (toZornVectorMatrix X) (toZornVectorMatrix Y))
 
 /-- The concrete real Zorn split-octonion multiplication is right alternative. -/
 theorem zorn_right_alternative (X Y : ZornMatrix) : (Y * X) * X = Y * (X * X) := by
-  rcases X with ⟨a, b, x, y⟩
-  rcases Y with ⟨c, d, u, v⟩
-  ext
-  · zorn_ring
-  · zorn_ring
-  · rename_i i; fin_cases i <;> zorn_ring
-  · rename_i i; fin_cases i <;> zorn_ring
+  apply toZornVectorMatrix_injective
+  rw [toZornVectorMatrix_mul, toZornVectorMatrix_mul, toZornVectorMatrix_mul, toZornVectorMatrix_mul]
+  exact zornVectorMatrix_eq_of_associator_eq_zero
+    (InfoGeometry.Algebra.ZornVectorMatrix.associator_right_alternative (toZornVectorMatrix Y) (toZornVectorMatrix X))
 
 abbrev ThreeSpace := Fin 3 → ℝ
 
 /-- Twice the Euclidean dot form, matching the Kingdon anticommutator normalization. -/
 def formedBilin : LinearMap.BilinForm ℝ ThreeSpace :=
-  LinearMap.mk₂ ℝ (fun u v => 2 * Physics.ZornMatrixSU3.dotProduct u v)
-    (fun u v w => by simp [Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring)
-    (fun r u v => by simp [Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring)
-    (fun u v w => by simp [Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring)
-    (fun r u v => by simp [Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring)
+  LinearMap.mk₂ ℝ (fun u v => 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v)
+    (fun u v w => by
+      have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_add_left u v w
+      change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct (u + v) w =
+        2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u w +
+        2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct v w
+      rw [h]
+      ring)
+    (fun r u v => by
+      have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_left r u v
+      change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct (r • u) v =
+        r * (2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v)
+      rw [h]
+      ring)
+    (fun u v w => by
+      have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_add_right u v w
+      change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u (v + w) =
+        2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v +
+        2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u w
+      rw [h]
+      ring)
+    (fun r u v => by
+      have h := InfoGeometry.Physics.ZornMatrixSU3.dotProduct_smul_right r u v
+      change 2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u (r • v) =
+        r * (2 * InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v)
+      rw [h]
+      ring)
 
 /-- Symmetric three-space insertion into the off-diagonal Zorn coordinates. -/
 def generator : ThreeSpace →ₗ[ℝ] ZornMatrix where
@@ -93,55 +168,59 @@ theorem generator_quadratic (u v : ThreeSpace) :
     generator u * generator v + generator v * generator u =
       formedBilin u v • (1 : ZornMatrix) := by
   ext
-  · simp [generator, formedBilin, mul, add, smul, Physics.ZornMatrixSU3.dotProduct,
-      crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · simp [generator, formedBilin, mul, add, smul, Physics.ZornMatrixSU3.dotProduct,
-      crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [generator, formedBilin, mul, add, smul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [generator, formedBilin, mul, add, smul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+  · simp [generator, formedBilin, mul, add, smul, mul_eq_owner, add_eq_owner, smul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · simp [generator, formedBilin, mul, add, smul, mul_eq_owner, add_eq_owner, smul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · rename_i i; fin_cases i <;> simp [generator, formedBilin, mul, add, smul, mul_eq_owner, add_eq_owner, smul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · rename_i i; fin_cases i <;> simp [generator, formedBilin, mul, add, smul, mul_eq_owner, add_eq_owner, smul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
 
 /-- The concrete generators collectively anti-associate. -/
 theorem generator_antiassociate (u v w : ThreeSpace) :
     (generator u * generator v) * generator w =
       generator w * (generator v * generator u) := by
   ext
-  · simp [generator, mul, Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · simp [generator, mul, Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [generator, mul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [generator, mul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+  · simp [generator, mul, mul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · simp [generator, mul, mul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · rename_i i; fin_cases i <;> simp [generator, mul, mul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
+  · rename_i i; fin_cases i <;> simp [generator, mul, mul_eq_owner,
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+      InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+      ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> ring_nf
 
 /-- The universal Kingdon homomorphism into the real Zorn split octonions. -/
 noncomputable def realization :
-    Kingdon.Algebra ℝ ThreeSpace formedBilin →+* ZornMatrix :=
-  Kingdon.Algebra.liftOfLinear formedBilin generator
+    InfoGeometry.Algebra.Kingdon.Algebra ℝ ThreeSpace formedBilin →+* ZornMatrix :=
+  InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear formedBilin generator
     zorn_left_alternative zorn_right_alternative
     generator_quadratic generator_antiassociate
 
 @[simp] theorem realization_ι (v : ThreeSpace) :
-    realization (Kingdon.Algebra.ι formedBilin v) = generator v := by
-  exact Kingdon.Algebra.liftOfLinear_ι formedBilin generator
+    realization (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v) = generator v := by
+  exact InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear_ι formedBilin generator
     zorn_left_alternative zorn_right_alternative
     generator_quadratic generator_antiassociate v
 
-abbrev AbstractKingdon := Kingdon.Algebra ℝ ThreeSpace formedBilin
+abbrev AbstractKingdon := InfoGeometry.Algebra.Kingdon.Algebra ℝ ThreeSpace formedBilin
 
 def basisVec (i : Fin 3) : ThreeSpace := fun j => if j = i then 1 else 0
 
@@ -151,14 +230,14 @@ theorem threeSpace_eq_basis_sum (v : ThreeSpace) :
   fin_cases i <;> simp [basisVec]
 
 noncomputable def scalar (r : ℝ) : AbstractKingdon :=
-  Kingdon.Algebra.mk formedBilin (Unitization.inl r)
+  InfoGeometry.Algebra.Kingdon.Algebra.mk formedBilin (Unitization.inl r)
 
 noncomputable def basisGenerator (i : Fin 3) : AbstractKingdon :=
-  Kingdon.Algebra.ι formedBilin (basisVec i)
+  InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec i)
 
 theorem scalar_eq_smul_one (r : ℝ) : scalar r = r • (1 : AbstractKingdon) := by
   simpa [scalar] using
-    (Kingdon.Algebra.scalar_mul formedBilin r (1 : AbstractKingdon))
+    (InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin r (1 : AbstractKingdon))
 
 @[simp] theorem scalar_zero : scalar 0 = 0 := by
   simp [scalar]
@@ -166,12 +245,11 @@ theorem scalar_eq_smul_one (r : ℝ) : scalar r = r • (1 : AbstractKingdon) :=
 theorem formedBilin_basisVec (i j : Fin 3) :
     formedBilin (basisVec i) (basisVec j) = if i = j then 2 else 0 := by
   fin_cases i <;> fin_cases j <;>
-    simp [formedBilin, basisVec, Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    simp [formedBilin, basisVec, Fin.sum_univ_three, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3]
 
 theorem basisGenerator_sq (i : Fin 3) :
     basisGenerator i * basisGenerator i = 1 := by
-  have h := Kingdon.Algebra.quadratic formedBilin (basisVec i) (basisVec i)
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.quadratic formedBilin (basisVec i) (basisVec i)
   rw [formedBilin_basisVec, if_pos rfl] at h
   change basisGenerator i * basisGenerator i + basisGenerator i * basisGenerator i = scalar 2 at h
   rw [scalar_eq_smul_one] at h
@@ -183,7 +261,7 @@ theorem basisGenerator_sq (i : Fin 3) :
 
 theorem basisGenerator_anticomm {i j : Fin 3} (hij : i ≠ j) :
     basisGenerator i * basisGenerator j = -(basisGenerator j * basisGenerator i) := by
-  have h := Kingdon.Algebra.quadratic formedBilin (basisVec i) (basisVec j)
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.quadratic formedBilin (basisVec i) (basisVec j)
   rw [formedBilin_basisVec, if_neg hij] at h
   change basisGenerator i * basisGenerator j + basisGenerator j * basisGenerator i = scalar 0 at h
   rw [scalar_zero] at h
@@ -210,23 +288,23 @@ theorem basisBivector_sq {i j : Fin 3} (hij : i ≠ j) :
   have hyy : y * y = 1 := basisGenerator_sq j
   have hqx : q * x = -y := by
     calc
-      q * x = x * (y * x) := Kingdon.Algebra.flexible formedBilin x y
+      q * x = x * (y * x) := InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin x y
       _ = x * (-q) := by rw [hyx]
       _ = -(x * q) := mul_neg_abstract x q
       _ = -((x * x) * y) := by
-        rw [Kingdon.Algebra.alternative_left formedBilin x y]
+        rw [InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin x y]
       _ = -y := by rw [hxx, one_mul]
   have hqy : q * y = x := by
     calc
-      q * y = x * (y * y) := Kingdon.Algebra.alternative_right formedBilin y x
+      q * y = x * (y * y) := InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin y x
       _ = x := by rw [hyy, mul_one]
   have hyq : y * q = -x := by
     calc
-      y * q = (y * x) * y := (Kingdon.Algebra.flexible formedBilin y x).symm
+      y * q = (y * x) * y := (InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin y x).symm
       _ = (-q) * y := by rw [hyx]
       _ = -(q * y) := neg_mul_abstract q y
       _ = -x := by rw [hqy]
-  have h := Kingdon.Algebra.associator_swap12 formedBilin q y x
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin q y x
   rw [hqy, hxx, hyx] at h
   rw [mul_neg_abstract, hqx, hyq, neg_mul_abstract, mul_neg_abstract,
     hxx, hyy] at h
@@ -237,33 +315,39 @@ theorem basisBivector_sq {i j : Fin 3} (hij : i ≠ j) :
 
 @[simp] theorem realization_scalar (r : ℝ) :
     realization (scalar r) = r • (1 : ZornMatrix) := by
-  unfold realization scalar Kingdon.Algebra.liftOfLinear
-  rw [Kingdon.Algebra.lift_mk]
-  simp [Kingdon.Algebra.ambientLift, InfoGeometry.Physics.ZornMatrixSU3.add,
+  unfold realization scalar InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.lift_mk]
+  simp [InfoGeometry.Algebra.Kingdon.Algebra.ambientLift, InfoGeometry.Physics.ZornMatrixSU3.add,
     InfoGeometry.Physics.ZornMatrixSU3.smul]
+
+theorem realization_smul (r : ℝ) (x : AbstractKingdon) :
+    realization (r • x) = r • realization x := by
+  change realization (scalar r * x) = r • realization x
+  rw [map_mul, realization_scalar, InfoGeometry.Physics.ZornMatrixSU3.smul_mul_zorn,
+    one_mul]
 
 noncomputable def scale (r : ℝ) (x : AbstractKingdon) : AbstractKingdon := scalar r * x
 
 /-- Products of symmetric generators span the antisymmetric off-diagonal space. -/
 noncomputable def anti (v : ThreeSpace) : AbstractKingdon :=
-  scale (v 0) (Kingdon.Algebra.ι formedBilin (basisVec 1) *
-    Kingdon.Algebra.ι formedBilin (basisVec 2)) +
-  scale (v 1) (Kingdon.Algebra.ι formedBilin (basisVec 2) *
-    Kingdon.Algebra.ι formedBilin (basisVec 0)) +
-  scale (v 2) (Kingdon.Algebra.ι formedBilin (basisVec 0) *
-    Kingdon.Algebra.ι formedBilin (basisVec 1))
+  scale (v 0) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 1) *
+    InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 2)) +
+  scale (v 1) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 2) *
+    InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 0)) +
+  scale (v 2) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 0) *
+    InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin (basisVec 1))
 
 noncomputable def upper (v : ThreeSpace) : AbstractKingdon :=
-  scale ((2 : ℝ)⁻¹) (Kingdon.Algebra.ι formedBilin v - anti v)
+  scale ((2 : ℝ)⁻¹) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v - anti v)
 
 noncomputable def lower (v : ThreeSpace) : AbstractKingdon :=
-  scale ((2 : ℝ)⁻¹) (Kingdon.Algebra.ι formedBilin v + anti v)
+  scale ((2 : ℝ)⁻¹) (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v + anti v)
 
 theorem scale_eq_smul (r : ℝ) (x : AbstractKingdon) : scale r x = r • x := by
-  exact Kingdon.Algebra.scalar_mul formedBilin r x
+  exact InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin r x
 
 @[simp] theorem smul_zero_abstract (r : ℝ) : r • (0 : AbstractKingdon) = 0 := by
-  rw [← Kingdon.Algebra.scalar_mul, mul_zero]
+  rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, mul_zero]
 
 theorem scale_mul_scale (r s : ℝ) (x y : AbstractKingdon) :
     scale r x * scale s y = scale (r * s) (x * y) := by
@@ -287,7 +371,7 @@ theorem scale_add (r : ℝ) (x y : AbstractKingdon) :
   simp [anti, basisVec, scale, scalar, basisGenerator]
 
 @[simp] theorem scalar_add (r s : ℝ) : scalar (r + s) = scalar r + scalar s := by
-  simp [scalar, Unitization.inl_add, Kingdon.Algebra.mk_add]
+  simp [scalar, Unitization.inl_add, InfoGeometry.Algebra.Kingdon.Algebra.mk_add]
 
 theorem scale_coeff_add (r s : ℝ) (x : AbstractKingdon) :
     scale (r + s) x = scale r x + scale s x := by
@@ -308,25 +392,25 @@ theorem sub_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
   abel
 
 @[simp] theorem upper_add (u v : ThreeSpace) : upper (u + v) = upper u + upper v := by
-  simp only [upper, Kingdon.Algebra.ι_add, anti_add]
+  simp only [upper, InfoGeometry.Algebra.Kingdon.Algebra.ι_add, anti_add]
   calc
     scale (2 : ℝ)⁻¹
-        (Kingdon.Algebra.ι formedBilin u + Kingdon.Algebra.ι formedBilin v -
+        (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u + InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v -
           (anti u + anti v)) =
       scale (2 : ℝ)⁻¹
-        ((Kingdon.Algebra.ι formedBilin u - anti u) +
-          (Kingdon.Algebra.ι formedBilin v - anti v)) := by congr 1 <;> abel
+        ((InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u - anti u) +
+          (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v - anti v)) := by congr 1 <;> abel
     _ = _ := (scale_add _ _ _).symm
 
 @[simp] theorem lower_add (u v : ThreeSpace) : lower (u + v) = lower u + lower v := by
-  simp only [lower, Kingdon.Algebra.ι_add, anti_add]
+  simp only [lower, InfoGeometry.Algebra.Kingdon.Algebra.ι_add, anti_add]
   calc
     scale (2 : ℝ)⁻¹
-        (Kingdon.Algebra.ι formedBilin u + Kingdon.Algebra.ι formedBilin v +
+        (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u + InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v +
           (anti u + anti v)) =
       scale (2 : ℝ)⁻¹
-        ((Kingdon.Algebra.ι formedBilin u + anti u) +
-          (Kingdon.Algebra.ι formedBilin v + anti v)) := by congr 1 <;> abel
+        ((InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u + anti u) +
+          (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v + anti v)) := by congr 1 <;> abel
     _ = _ := (scale_add _ _ _).symm
 
 @[simp] theorem anti_smul (r : ℝ) (v : ThreeSpace) :
@@ -336,14 +420,14 @@ theorem sub_smul_abstract (r s : ℝ) (x : AbstractKingdon) :
 
 @[simp] theorem upper_smul (r : ℝ) (v : ThreeSpace) :
     upper (r • v) = r • upper v := by
-  simp only [upper, Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
-  rw [Kingdon.Algebra.scalar_mul]
+  simp only [upper, InfoGeometry.Algebra.Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul]
   simp [smul_sub, smul_smul, mul_comm]
 
 @[simp] theorem lower_smul (r : ℝ) (v : ThreeSpace) :
     lower (r • v) = r • lower v := by
-  simp only [lower, Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
-  rw [Kingdon.Algebra.scalar_mul]
+  simp only [lower, InfoGeometry.Algebra.Kingdon.Algebra.ι_smul, anti_smul, scale_eq_smul]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul]
   simp [smul_add, smul_smul, mul_comm]
 
 theorem smul_scalar (r s : ℝ) :
@@ -378,20 +462,50 @@ theorem lower_eq_basis_sum (v : ThreeSpace) :
       rw [← threeSpace_eq_basis_sum v]
     _ = _ := by rw [lower_add, lower_add, lower_smul, lower_smul, lower_smul]
 
+@[simp] theorem realization_upper_basisVec_zero :
+    realization (upper (basisVec 0)) = ⟨0, 0, basisVec 0, 0⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [upper, anti_basisVec_zero, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
+@[simp] theorem realization_upper_basisVec_one :
+    realization (upper (basisVec 1)) = ⟨0, 0, basisVec 1, 0⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [upper, anti_basisVec_one, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
+@[simp] theorem realization_upper_basisVec_two :
+    realization (upper (basisVec 2)) = ⟨0, 0, basisVec 2, 0⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [upper, anti_basisVec_two, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
+@[simp] theorem realization_lower_basisVec_zero :
+    realization (lower (basisVec 0)) = ⟨0, 0, 0, basisVec 0⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [lower, anti_basisVec_zero, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
+@[simp] theorem realization_lower_basisVec_one :
+    realization (lower (basisVec 1)) = ⟨0, 0, 0, basisVec 1⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [lower, anti_basisVec_one, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
+@[simp] theorem realization_lower_basisVec_two :
+    realization (lower (basisVec 2)) = ⟨0, 0, 0, basisVec 2⟩ := by
+  ext i <;> (try fin_cases i) <;> simp [lower, anti_basisVec_two, scale_eq_smul, realization_smul,
+    realization_ι, basisGenerator, generator, basisVec, InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3] <;> try ring
+
 theorem upper_add_lower (v : ThreeSpace) :
-    upper v + lower v = Kingdon.Algebra.ι formedBilin v := by
+    upper v + lower v = InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v := by
   simp only [upper, lower, scale, scalar]
-  rw [Kingdon.Algebra.scalar_mul, Kingdon.Algebra.scalar_mul, smul_sub, smul_add]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, smul_sub, smul_add]
   calc
-    (2 : ℝ)⁻¹ • Kingdon.Algebra.ι formedBilin v - (2 : ℝ)⁻¹ • anti v +
-        ((2 : ℝ)⁻¹ • Kingdon.Algebra.ι formedBilin v + (2 : ℝ)⁻¹ • anti v) =
-      ((2 : ℝ)⁻¹ • Kingdon.Algebra.ι formedBilin v +
-        (2 : ℝ)⁻¹ • Kingdon.Algebra.ι formedBilin v) := by abel
-    _ = Kingdon.Algebra.ι formedBilin
+    (2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v - (2 : ℝ)⁻¹ • anti v +
+        ((2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v + (2 : ℝ)⁻¹ • anti v) =
+      ((2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v +
+        (2 : ℝ)⁻¹ • InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v) := by abel
+    _ = InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin
         (((2 : ℝ)⁻¹ • v) + ((2 : ℝ)⁻¹ • v)) := by
-      rw [Kingdon.Algebra.ι_add, Kingdon.Algebra.ι_smul,
-        Kingdon.Algebra.scalar_mul]
-    _ = Kingdon.Algebra.ι formedBilin v := by
+      rw [InfoGeometry.Algebra.Kingdon.Algebra.ι_add, InfoGeometry.Algebra.Kingdon.Algebra.ι_smul,
+        InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul]
+    _ = InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v := by
       congr 1
       ext i
       simp
@@ -399,23 +513,17 @@ theorem upper_add_lower (v : ThreeSpace) :
 
 @[simp] theorem realization_upper (v : ThreeSpace) :
     realization (upper v) = ⟨0, 0, v, 0⟩ := by
-  ext <;> simp [upper, anti, scale, basisVec, generator,
-    InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add,
-    InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul,
-    Physics.ZornMatrixSU3.dotProduct, crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
-  all_goals rename_i i; fin_cases i <;> norm_num <;> try rfl <;> ring
+  rw [upper_eq_basis_sum]
+  simp [realization_smul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul]
+  congr
+  exact (threeSpace_eq_basis_sum v).symm
 
 @[simp] theorem realization_lower (v : ThreeSpace) :
     realization (lower v) = ⟨0, 0, 0, v⟩ := by
-  ext <;> simp [lower, anti, scale, basisVec, generator,
-    InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.add,
-    InfoGeometry.Physics.ZornMatrixSU3.neg, InfoGeometry.Physics.ZornMatrixSU3.smul,
-    Physics.ZornMatrixSU3.dotProduct, crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
-  all_goals rename_i i; fin_cases i <;> norm_num <;> try rfl <;> ring
+  rw [lower_eq_basis_sum]
+  simp [realization_smul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul]
+  congr
+  exact (threeSpace_eq_basis_sum v).symm
 
 noncomputable def diagonalUpper : AbstractKingdon := upper (basisVec 0) * lower (basisVec 0)
 
@@ -445,7 +553,7 @@ theorem diagonalUpper_add_diagonalLower : diagonalUpper + diagonalLower = 1 := b
 theorem basisBivector_anticomm_third {i j k : Fin 3} (hij : i ≠ j) :
     (basisGenerator i * basisGenerator j) * basisGenerator k =
       -(basisGenerator k * (basisGenerator i * basisGenerator j)) := by
-  have h := Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec j) (basisVec k)
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec j) (basisVec k)
   change (basisGenerator i * basisGenerator j) * basisGenerator k =
     basisGenerator k * (basisGenerator j * basisGenerator i) at h
   rw [basisGenerator_anticomm hij.symm, mul_neg_abstract] at h
@@ -453,22 +561,22 @@ theorem basisBivector_anticomm_third {i j k : Fin 3} (hij : i ≠ j) :
 
 theorem basisBivector_mul_right (i j : Fin 3) :
     (basisGenerator i * basisGenerator j) * basisGenerator j = basisGenerator i := by
-  rw [Kingdon.Algebra.alternative_right formedBilin, basisGenerator_sq, mul_one]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin, basisGenerator_sq, mul_one]
 
 theorem basisGenerator_mul_leftBivector (i j : Fin 3) :
     basisGenerator i * (basisGenerator i * basisGenerator j) = basisGenerator j := by
-  rw [← Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
+  rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
 
 theorem basisBivector_mul_left {i j : Fin 3} (hij : i ≠ j) :
     (basisGenerator i * basisGenerator j) * basisGenerator i = -basisGenerator j := by
-  rw [Kingdon.Algebra.flexible formedBilin,
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin,
     basisGenerator_anticomm hij.symm, mul_neg_abstract,
-    ← Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
+    ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
 
 theorem basisGenerator_mul_rightBivector {i j : Fin 3} (hij : i ≠ j) :
     basisGenerator i * (basisGenerator j * basisGenerator i) = -basisGenerator j := by
   rw [basisGenerator_anticomm hij.symm, mul_neg_abstract,
-    ← Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
+    ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin, basisGenerator_sq, one_mul]
 
 theorem basisGenerator_mul_bivector_swap {i j k : Fin 3} (hij : i ≠ j) :
     basisGenerator i * (basisGenerator j * basisGenerator k) =
@@ -478,10 +586,10 @@ theorem basisGenerator_mul_bivector_swap {i j k : Fin 3} (hij : i ≠ j) :
   let c := basisGenerator k
   have hba : b * a = -(a * b) := basisGenerator_anticomm hij.symm
   have h₁ : (a * b) * c = c * (b * a) := by
-    exact Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec j) (basisVec k)
+    exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec j) (basisVec k)
   have h₂ : (b * a) * c = c * (a * b) := by
-    exact Kingdon.Algebra.antiassociate formedBilin (basisVec j) (basisVec i) (basisVec k)
-  have hs := Kingdon.Algebra.associator_swap12 formedBilin a b c
+    exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin (basisVec j) (basisVec i) (basisVec k)
+  have hs := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin a b c
   rw [h₁, h₂, hba, mul_neg_abstract] at hs
   abel_nf at hs
   have hs' : -(c * (a * b)) + -(a * (b * c)) =
@@ -498,7 +606,7 @@ theorem basisTrivector_mul_middle {i j k : Fin 3} (hij : i ≠ j) :
   have h₃ :
       (basisGenerator i * basisGenerator k) * basisGenerator j =
         basisGenerator j * (basisGenerator k * basisGenerator i) := by
-    exact Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec k) (basisVec j)
+    exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin (basisVec i) (basisVec k) (basisVec j)
   calc
     (basisGenerator i * (basisGenerator j * basisGenerator k)) * basisGenerator j =
         (-(basisGenerator j * (basisGenerator i * basisGenerator k))) *
@@ -507,19 +615,19 @@ theorem basisTrivector_mul_middle {i j k : Fin 3} (hij : i ≠ j) :
           basisGenerator j) := neg_mul_abstract _ _
     _ = -(basisGenerator j *
           ((basisGenerator i * basisGenerator k) * basisGenerator j)) := by
-      rw [Kingdon.Algebra.flexible formedBilin]
+      rw [InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin]
     _ = -(basisGenerator j *
           (basisGenerator j * (basisGenerator k * basisGenerator i))) := by rw [h₃]
     _ = -((basisGenerator j * basisGenerator j) *
           (basisGenerator k * basisGenerator i)) := by
-      rw [Kingdon.Algebra.alternative_left formedBilin]
+      rw [InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin]
     _ = -(basisGenerator k * basisGenerator i) := by rw [basisGenerator_sq, one_mul]
 
 theorem basisTrivector_mul_bivector {i j k : Fin 3} (hij : i ≠ j) :
     (basisGenerator i * (basisGenerator j * basisGenerator k)) *
         (basisGenerator k * basisGenerator i) =
       -basisGenerator j := by
-  rw [Kingdon.Algebra.middle_moufang]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang]
   rw [basisBivector_mul_right]
   exact basisGenerator_mul_rightBivector hij
 
@@ -531,20 +639,20 @@ theorem basisBivector_chain_forward {i j k : Fin 3}
   rw [basisGenerator_anticomm hij,
     basisGenerator_anticomm hjk]
   rw [neg_mul_abstract, mul_neg_abstract, neg_neg]
-  rw [Kingdon.Algebra.middle_moufang]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang]
   rw [basisBivector_anticomm_third hik,
     mul_neg_abstract,
-    ← Kingdon.Algebra.alternative_left formedBilin,
+    ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
     basisGenerator_sq, one_mul]
 
 theorem basisBivector_chain_reverse {i j k : Fin 3} (hki : k ≠ i) :
     (basisGenerator j * basisGenerator k) *
         (basisGenerator i * basisGenerator j) =
       basisGenerator i * basisGenerator k := by
-  rw [Kingdon.Algebra.middle_moufang]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang]
   rw [basisBivector_anticomm_third hki,
     mul_neg_abstract,
-    ← Kingdon.Algebra.alternative_left formedBilin,
+    ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
     basisGenerator_sq, one_mul,
     basisGenerator_anticomm hki, neg_neg]
 
@@ -588,12 +696,12 @@ theorem distinguished_bivector_anticomm :
 @[simp] theorem diagonalUpper_mul_diagonalLower :
     diagonalUpper * diagonalLower = 0 := by
   unfold diagonalUpper diagonalLower
-  rw [Kingdon.Algebra.middle_moufang, lower_basisVec_zero_sq, zero_mul, mul_zero]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang, lower_basisVec_zero_sq, zero_mul, mul_zero]
 
 @[simp] theorem diagonalLower_mul_diagonalUpper :
     diagonalLower * diagonalUpper = 0 := by
   unfold diagonalLower diagonalUpper
-  rw [Kingdon.Algebra.middle_moufang, upper_basisVec_zero_sq, zero_mul, mul_zero]
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang, upper_basisVec_zero_sq, zero_mul, mul_zero]
 
 @[simp] theorem diagonalUpper_sq : diagonalUpper * diagonalUpper = diagonalUpper := by
   have h := congrArg (fun a : AbstractKingdon => diagonalUpper * a)
@@ -853,7 +961,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 @[simp] theorem upper_basisVec_zero_mul_diagonalUpper :
     upper (basisVec 0) * diagonalUpper = 0 := by
   unfold diagonalUpper
-  rw [← Kingdon.Algebra.alternative_left formedBilin,
+  rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
     upper_basisVec_zero_sq, zero_mul]
 
 @[simp] theorem upper_basisVec_one_mul_diagonalUpper :
@@ -874,7 +982,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
       simpa [a, b, c, q, t] using
         (basisGenerator_mul_bivector_swap
           (i := (0 : Fin 3)) (j := 1) (k := 2) (by decide))]
-    rw [mul_neg_abstract, ← Kingdon.Algebra.alternative_left,
+    rw [mul_neg_abstract, ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left,
       basisGenerator_sq, one_mul]
     rw [show -(a * c) = r by
       rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)]
@@ -897,14 +1005,14 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     calc
       r * b = b * (a * c) := by
         simpa [a, b, c, r] using
-          (Kingdon.Algebra.antiassociate formedBilin
+          (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
             (basisVec 2) (basisVec 0) (basisVec 1))
       _ = -t := by
         rw [show a * c = -r by
           rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)],
           mul_neg_abstract, ← htbr]
   have hrt : r * t = b := by
-    rw [htbr, ← Kingdon.Algebra.flexible, hrb,
+    rw [htbr, ← InfoGeometry.Algebra.Kingdon.Algebra.flexible, hrb,
       neg_mul_abstract, htbiv, neg_neg]
   have hright : (a - q) * (a + q) = (1 + t) + (1 + t) := by
     simp only [sub_mul, mul_add]
@@ -946,23 +1054,23 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     have hbac : b * (a * c) = -(b * (c * a)) := by
       rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2), mul_neg_abstract]
     rw [hbac, mul_neg_abstract, neg_neg]
-    rw [← Kingdon.Algebra.left_moufang]
-    rw [Kingdon.Algebra.flexible formedBilin]
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.left_moufang]
+    rw [InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin]
     rw [basisGenerator_mul_rightBivector (by decide : (2 : Fin 3) ≠ 1)]
     rw [neg_mul_abstract,
       basisGenerator_anticomm (by decide : (1 : Fin 3) ≠ 0), neg_neg]
   have hrt : r * t = c := by
-    have hm := Kingdon.Algebra.middle_moufang formedBilin a b (-q)
+    have hm := InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang formedBilin a b (-q)
     rw [neg_mul_abstract, hqa, neg_neg] at hm
     rw [hm]
     rw [mul_neg_abstract]
-    rw [← Kingdon.Algebra.alternative_left formedBilin,
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
       basisGenerator_sq, one_mul]
     rw [neg_mul_abstract]
     rw [basisGenerator_anticomm (by decide : (2 : Fin 3) ≠ 0), mul_neg_abstract]
     change -(a * -(a * c)) = c
     simp only [mul_neg_abstract, neg_neg]
-    rw [← Kingdon.Algebra.alternative_left formedBilin,
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
       basisGenerator_sq, one_mul]
   have hright : (a - q) * (a + q) = (1 + t) + (1 + t) := by
     simp only [sub_mul, mul_add]
@@ -985,7 +1093,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 @[simp] theorem diagonalLower_mul_upper_basisVec_zero :
     diagonalLower * upper (basisVec 0) = 0 := by
   unfold diagonalLower
-  rw [Kingdon.Algebra.alternative_right formedBilin,
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin,
     upper_basisVec_zero_sq, mul_zero]
 
 @[simp] theorem diagonalLower_mul_upper_basisVec_one :
@@ -1123,7 +1231,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 @[simp] theorem diagonalUpper_mul_lower_basisVec_zero :
     diagonalUpper * lower (basisVec 0) = 0 := by
   unfold diagonalUpper
-  rw [Kingdon.Algebra.alternative_right formedBilin,
+  rw [InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin,
     lower_basisVec_zero_sq, mul_zero]
 
 @[simp] theorem diagonalUpper_mul_lower_basisVec_one :
@@ -1155,7 +1263,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     (((e - q) * (e + q)) * (a + b * e)) = 0
   rw [hP, smul_mul_assoc, hzero]
   have hz : (2 : ℝ) • (0 : AbstractKingdon) = 0 := by
-    rw [← Kingdon.Algebra.scalar_mul, mul_zero]
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul, mul_zero]
   rw [hz]
   simp [scale]
 
@@ -1209,7 +1317,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 @[simp] theorem lower_basisVec_zero_mul_diagonalLower :
     lower (basisVec 0) * diagonalLower = 0 := by
   unfold diagonalLower
-  rw [← Kingdon.Algebra.alternative_left formedBilin,
+  rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
     lower_basisVec_zero_sq, zero_mul]
 
 @[simp] theorem lower_basisVec_one_mul_diagonalLower :
@@ -1230,7 +1338,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
       simpa [a, b, c, q, t] using
         (basisGenerator_mul_bivector_swap
           (i := (0 : Fin 3)) (j := 1) (k := 2) (by decide))]
-    rw [mul_neg_abstract, ← Kingdon.Algebra.alternative_left,
+    rw [mul_neg_abstract, ← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left,
       basisGenerator_sq, one_mul]
     rw [show -(a * c) = r by
       rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)]
@@ -1253,14 +1361,14 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     calc
       r * b = b * (a * c) := by
         simpa [a, b, c, r] using
-          (Kingdon.Algebra.antiassociate formedBilin
+          (InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin
             (basisVec 2) (basisVec 0) (basisVec 1))
       _ = -t := by
         rw [show a * c = -r by
           rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2)],
           mul_neg_abstract, ← htbr]
   have hrt : r * t = b := by
-    rw [htbr, ← Kingdon.Algebra.flexible, hrb,
+    rw [htbr, ← InfoGeometry.Algebra.Kingdon.Algebra.flexible, hrb,
       neg_mul_abstract, htbiv, neg_neg]
   have hright : (a + q) * (a - q) = (1 - t) + (1 - t) := by
     simp only [add_mul, sub_eq_add_neg, mul_add]
@@ -1302,23 +1410,23 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
     have hbac : b * (a * c) = -(b * (c * a)) := by
       rw [basisGenerator_anticomm (by decide : (0 : Fin 3) ≠ 2), mul_neg_abstract]
     rw [hbac, mul_neg_abstract, neg_neg]
-    rw [← Kingdon.Algebra.left_moufang]
-    rw [Kingdon.Algebra.flexible formedBilin]
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.left_moufang]
+    rw [InfoGeometry.Algebra.Kingdon.Algebra.flexible formedBilin]
     rw [basisGenerator_mul_rightBivector (by decide : (2 : Fin 3) ≠ 1)]
     rw [neg_mul_abstract,
       basisGenerator_anticomm (by decide : (1 : Fin 3) ≠ 0), neg_neg]
   have hrt : r * t = c := by
-    have hm := Kingdon.Algebra.middle_moufang formedBilin a b (-q)
+    have hm := InfoGeometry.Algebra.Kingdon.Algebra.middle_moufang formedBilin a b (-q)
     rw [neg_mul_abstract, hqa, neg_neg] at hm
     rw [hm]
     rw [mul_neg_abstract]
-    rw [← Kingdon.Algebra.alternative_left formedBilin,
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
       basisGenerator_sq, one_mul]
     rw [neg_mul_abstract]
     rw [basisGenerator_anticomm (by decide : (2 : Fin 3) ≠ 0), mul_neg_abstract]
     change -(a * -(a * c)) = c
     simp only [mul_neg_abstract, neg_neg]
-    rw [← Kingdon.Algebra.alternative_left formedBilin,
+    rw [← InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin,
       basisGenerator_sq, one_mul]
   have hright : (a + q) * (a - q) = (1 - t) + (1 - t) := by
     simp only [add_mul, sub_eq_add_neg, mul_add]
@@ -1428,7 +1536,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem diagonalUpper_mul_upper_mul_lower (u v : ThreeSpace) :
     diagonalUpper * (upper u * lower v) = upper u * lower v := by
-  have h := Kingdon.Algebra.associator_swap12 formedBilin
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin
     diagonalUpper (upper u) (lower v)
   simp only [diagonalUpper_mul_upper, upper_mul_diagonalUpper,
     diagonalUpper_mul_lower, zero_mul, mul_zero, sub_zero, neg_zero] at h
@@ -1436,7 +1544,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem diagonalUpper_mul_lower_mul_upper (v u : ThreeSpace) :
     diagonalUpper * (lower v * upper u) = 0 := by
-  have h := Kingdon.Algebra.associator_swap12 formedBilin
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin
     diagonalUpper (lower v) (upper u)
   simp only [diagonalUpper_mul_lower, lower_mul_diagonalUpper,
     diagonalUpper_mul_upper, zero_mul, sub_self, neg_zero] at h
@@ -1444,7 +1552,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem diagonalLower_mul_upper_mul_lower (u v : ThreeSpace) :
     diagonalLower * (upper u * lower v) = 0 := by
-  have h := Kingdon.Algebra.associator_swap12 formedBilin
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin
     diagonalLower (upper u) (lower v)
   simp only [diagonalLower_mul_upper, upper_mul_diagonalLower,
     diagonalLower_mul_lower, zero_mul, sub_self, neg_zero] at h
@@ -1452,7 +1560,7 @@ theorem lowerBasisSquareOfAnti {i j k : Fin 3} (hjk : j ≠ k)
 
 @[simp] theorem diagonalLower_mul_lower_mul_upper (v u : ThreeSpace) :
     diagonalLower * (lower v * upper u) = lower v * upper u := by
-  have h := Kingdon.Algebra.associator_swap12 formedBilin
+  have h := InfoGeometry.Algebra.Kingdon.Algebra.associator_swap12 formedBilin
     diagonalLower (lower v) (upper u)
   simp only [diagonalLower_mul_lower, lower_mul_diagonalLower,
     diagonalLower_mul_upper, zero_mul, mul_zero, sub_zero, neg_zero] at h
@@ -1678,15 +1786,15 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
       using anti_basisVec_two)
 
 @[simp] theorem upper_mul_upper (u v : ThreeSpace) :
-    upper u * upper v = lower (crossProduct u v) := by
+    upper u * upper v = lower (InfoGeometry.Physics.ZornMatrixSU3.crossProduct u v) := by
   rw [upper_eq_basis_sum u, upper_eq_basis_sum v, lower_eq_basis_sum]
-  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+  simp [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     upper_basisVec_zero_sq, upper_basisVec_one_sq, upper_basisVec_two_sq,
     upper_basisVec_zero_mul_one, upper_basisVec_zero_mul_two,
     upper_basisVec_one_mul_zero, upper_basisVec_one_mul_two,
     upper_basisVec_two_mul_zero, upper_basisVec_two_mul_one,
-    smul_zero_abstract]
-  simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+    ZornVectorMatrixExplicit.cross3]
   simp only [smul_smul]
   ring_nf
   simp only [sub_smul_abstract, add_smul_abstract]
@@ -1695,15 +1803,15 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
   abel_nf
 
 @[simp] theorem lower_mul_lower (u v : ThreeSpace) :
-    lower u * lower v = -upper (crossProduct u v) := by
+    lower u * lower v = -upper (InfoGeometry.Physics.ZornMatrixSU3.crossProduct u v) := by
   rw [lower_eq_basis_sum u, lower_eq_basis_sum v, upper_eq_basis_sum]
-  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+  simp [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     lower_basisVec_zero_sq, lower_basisVec_one_sq, lower_basisVec_two_sq,
     lower_basisVec_zero_mul_one, lower_basisVec_zero_mul_two,
     lower_basisVec_one_mul_zero, lower_basisVec_one_mul_two,
     lower_basisVec_two_mul_zero, lower_basisVec_two_mul_one,
-    smul_zero_abstract]
-  simp [crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
+    ZornVectorMatrixExplicit.cross3]
   simp only [smul_smul]
   ring_nf
   simp only [sub_smul_abstract, add_smul_abstract]
@@ -1713,9 +1821,9 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
 
 @[simp] theorem upper_mul_lower (u v : ThreeSpace) :
     upper u * lower v =
-      Physics.ZornMatrixSU3.dotProduct u v • diagonalUpper := by
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v • diagonalUpper := by
   rw [upper_eq_basis_sum u, lower_eq_basis_sum v]
-  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+  simp [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     upper_basisVec_mul_lower_basisVec,
     upper_basisVec_zero_mul_lower_basisVec_one,
     upper_basisVec_zero_mul_lower_basisVec_two,
@@ -1723,9 +1831,8 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
     upper_basisVec_one_mul_lower_basisVec_two,
     upper_basisVec_two_mul_lower_basisVec_zero,
     upper_basisVec_two_mul_lower_basisVec_one,
-    smul_zero_abstract]
-  simp [Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+    ZornVectorMatrixExplicit.dot3]
   repeat rw [add_smul_abstract] <;>
     simp only [smul_smul] <;> ring_nf <;> abel_nf
   repeat rw [add_smul_abstract]
@@ -1733,9 +1840,9 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
 
 @[simp] theorem lower_mul_upper (u v : ThreeSpace) :
     lower u * upper v =
-      Physics.ZornMatrixSU3.dotProduct u v • diagonalLower := by
+      InfoGeometry.Physics.ZornMatrixSU3.dotProduct u v • diagonalLower := by
   rw [lower_eq_basis_sum u, upper_eq_basis_sum v]
-  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
+  simp [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
     lower_basisVec_mul_upper_basisVec,
     lower_basisVec_zero_mul_upper_basisVec_one,
     lower_basisVec_zero_mul_upper_basisVec_two,
@@ -1743,9 +1850,8 @@ theorem lowerBasisUpperProductReverse {i j k : Fin 3}
     lower_basisVec_one_mul_upper_basisVec_two,
     lower_basisVec_two_mul_upper_basisVec_zero,
     lower_basisVec_two_mul_upper_basisVec_one,
-    smul_zero_abstract]
-  simp [Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    smul_zero_abstract, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+    ZornVectorMatrixExplicit.dot3]
   repeat rw [add_smul_abstract] <;>
     simp only [smul_smul] <;> ring_nf <;> abel_nf
   repeat rw [add_smul_abstract]
@@ -1789,35 +1895,21 @@ noncomputable def preimageAddHom : ZornMatrix →+ AbstractKingdon where
 
 @[simp] theorem preimageAddHom_apply (X : ZornMatrix) : preimageAddHom X = preimage X := rfl
 
+@[simp] theorem realization_diagonalUpper : realization diagonalUpper = ⟨1, 0, 0, 0⟩ := by
+  change realization (upper (basisVec 0) * lower (basisVec 0)) = ⟨1, 0, 0, 0⟩
+  rw [map_mul, realization_upper_basisVec_zero, realization_lower_basisVec_zero]
+  ext i <;> (try fin_cases i) <;> simp [InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3, basisVec]
+
+@[simp] theorem realization_diagonalLower : realization diagonalLower = ⟨0, 1, 0, 0⟩ := by
+  change realization (lower (basisVec 0) * upper (basisVec 0)) = ⟨0, 1, 0, 0⟩
+  rw [map_mul, realization_lower_basisVec_zero, realization_upper_basisVec_zero]
+  ext i <;> (try fin_cases i) <;> simp [InfoGeometry.Physics.ZornMatrixSU3.mul, InfoGeometry.Physics.ZornMatrixSU3.dotProduct, InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3, basisVec]
+
 @[simp] theorem realization_preimage (X : ZornMatrix) : realization (preimage X) = X := by
-  rcases X with ⟨a, b, x, y⟩
-  ext
-  · simp [preimage, diagonalUpper, diagonalLower, upper, lower, anti, scale,
-      basisVec, generator, InfoGeometry.Physics.ZornMatrixSU3.mul,
-      InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg,
-      InfoGeometry.Physics.ZornMatrixSU3.smul, Physics.ZornMatrixSU3.dotProduct,
-      crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · simp [preimage, diagonalUpper, diagonalLower, upper, lower, anti, scale,
-      basisVec, generator, InfoGeometry.Physics.ZornMatrixSU3.mul,
-      InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg,
-      InfoGeometry.Physics.ZornMatrixSU3.smul, Physics.ZornMatrixSU3.dotProduct,
-      crossProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [preimage, diagonalUpper, diagonalLower,
-      upper, lower, anti, scale, basisVec, generator, InfoGeometry.Physics.ZornMatrixSU3.mul,
-      InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg,
-      InfoGeometry.Physics.ZornMatrixSU3.smul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [preimage, diagonalUpper, diagonalLower,
-      upper, lower, anti, scale, basisVec, generator, InfoGeometry.Physics.ZornMatrixSU3.mul,
-      InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.neg,
-      InfoGeometry.Physics.ZornMatrixSU3.smul,
-      Physics.ZornMatrixSU3.dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+  simp only [preimage, map_add, realization_smul, scalar_eq_smul_one, scale_eq_smul,
+    realization_diagonalUpper, realization_diagonalLower,
+    realization_upper, realization_lower, map_one]
+  ext i <;> simp [InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.one] <;> ring
 
 @[simp] theorem preimage_one : preimage 1 = 1 := by
   simp [preimage, upper, lower, anti, scale, scalar]
@@ -1888,7 +1980,7 @@ noncomputable def normalForm (x : AbstractKingdon) : AbstractKingdon :=
   preimage (realization x)
 
 @[simp] theorem normalForm_ι (v : ThreeSpace) :
-    normalForm (Kingdon.Algebra.ι formedBilin v) = Kingdon.Algebra.ι formedBilin v := by
+    normalForm (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v) = InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v := by
   rw [normalForm, realization_ι]
   simp [preimage, generator, scale, scalar, upper_add_lower]
 
@@ -1899,55 +1991,55 @@ noncomputable def normalForm (x : AbstractKingdon) : AbstractKingdon :=
 
 theorem preimageHom_comp_realization :
     preimageHom.comp realization = RingHom.id AbstractKingdon := by
-  let θ := Kingdon.Algebra.ιLinear formedBilin
-  let canonical := Kingdon.Algebra.liftOfLinear formedBilin θ
-    (Kingdon.Algebra.alternative_left formedBilin)
-    (Kingdon.Algebra.alternative_right formedBilin)
+  let θ := InfoGeometry.Algebra.Kingdon.Algebra.ιLinear formedBilin
+  let canonical := InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear formedBilin θ
+    (InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin)
+    (InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin)
     (by
       intro u v
-      change Kingdon.Algebra.ι formedBilin u * Kingdon.Algebra.ι formedBilin v +
-        Kingdon.Algebra.ι formedBilin v * Kingdon.Algebra.ι formedBilin u =
+      change InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v +
+        InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u =
         formedBilin u v • (1 : AbstractKingdon)
-      rw [← Kingdon.Algebra.scalar_mul formedBilin, mul_one]
-      exact Kingdon.Algebra.quadratic formedBilin u v)
+      rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin, mul_one]
+      exact InfoGeometry.Algebra.Kingdon.Algebra.quadratic formedBilin u v)
     (by
       intro u v w
-      exact Kingdon.Algebra.antiassociate formedBilin u v w)
+      exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin u v w)
   have hsection : preimageHom.comp realization = canonical := by
-    apply Kingdon.Algebra.liftOfLinear_unique formedBilin θ
-      (Kingdon.Algebra.alternative_left formedBilin)
-      (Kingdon.Algebra.alternative_right formedBilin)
+    apply InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear_unique formedBilin θ
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin)
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin)
       (by
         intro u v
-        change Kingdon.Algebra.ι formedBilin u * Kingdon.Algebra.ι formedBilin v +
-          Kingdon.Algebra.ι formedBilin v * Kingdon.Algebra.ι formedBilin u =
+        change InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v +
+          InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u =
           formedBilin u v • (1 : AbstractKingdon)
-        rw [← Kingdon.Algebra.scalar_mul formedBilin, mul_one]
-        exact Kingdon.Algebra.quadratic formedBilin u v)
+        rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin, mul_one]
+        exact InfoGeometry.Algebra.Kingdon.Algebra.quadratic formedBilin u v)
       (by
         intro u v w
-        exact Kingdon.Algebra.antiassociate formedBilin u v w)
+        exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin u v w)
     · intro r
       change normalForm (scalar r) = r • (1 : AbstractKingdon)
       rw [normalForm_scalar, scalar_eq_smul_one]
     · intro v
-      change normalForm (Kingdon.Algebra.ι formedBilin v) = θ v
+      change normalForm (InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v) = θ v
       rw [normalForm_ι]
       rfl
   have hid : RingHom.id AbstractKingdon = canonical := by
-    apply Kingdon.Algebra.liftOfLinear_unique formedBilin θ
-      (Kingdon.Algebra.alternative_left formedBilin)
-      (Kingdon.Algebra.alternative_right formedBilin)
+    apply InfoGeometry.Algebra.Kingdon.Algebra.liftOfLinear_unique formedBilin θ
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin)
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin)
       (by
         intro u v
-        change Kingdon.Algebra.ι formedBilin u * Kingdon.Algebra.ι formedBilin v +
-          Kingdon.Algebra.ι formedBilin v * Kingdon.Algebra.ι formedBilin u =
+        change InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v +
+          InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin v * InfoGeometry.Algebra.Kingdon.Algebra.ι formedBilin u =
           formedBilin u v • (1 : AbstractKingdon)
-        rw [← Kingdon.Algebra.scalar_mul formedBilin, mul_one]
-        exact Kingdon.Algebra.quadratic formedBilin u v)
+        rw [← InfoGeometry.Algebra.Kingdon.Algebra.scalar_mul formedBilin, mul_one]
+        exact InfoGeometry.Algebra.Kingdon.Algebra.quadratic formedBilin u v)
       (by
         intro u v w
-        exact Kingdon.Algebra.antiassociate formedBilin u v w)
+        exact InfoGeometry.Algebra.Kingdon.Algebra.antiassociate formedBilin u v w)
     · intro r
       change scalar r = r • (1 : AbstractKingdon)
       exact scalar_eq_smul_one r
@@ -1971,13 +2063,6 @@ theorem realization_ker_eq_bot : RingCon.ker realization = ⊥ := by
   rw [RingCon.ker_apply]
   simp only [realization_injective.eq_iff]
   rfl
-
-@[simp] theorem realization_smul (r : ℝ) (x : AbstractKingdon) :
-    realization (r • x) = r • realization x := by
-  change realization (scalar r * x) = r • realization x
-  rw [map_mul, realization_scalar,
-    InfoGeometry.Physics.ZornMatrixSU3.smul_mul_zorn,
-    one_mul]
 
 noncomputable def kingdonZornEquiv : AbstractKingdon ≃+* ZornMatrix :=
   RingEquiv.ofBijective realization ⟨realization_injective, realization_surjective⟩
@@ -2080,8 +2165,8 @@ theorem kingdonConjugate_mul (x y : AbstractKingdon) :
     InfoGeometry.Physics.ZornMatrixSU3.mul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
   all_goals (try fin_cases i)
   all_goals try simp
   all_goals ring_nf
@@ -2196,10 +2281,10 @@ theorem kingdonPolar_coordinate (x y : AbstractKingdon) :
          (realization x).x (realization y).y -
        InfoGeometry.Physics.ZornMatrixSU3.dotProduct
          (realization y).x (realization x).y) / 2 := by
-  simp [kingdonPolar, kingdonNorm, norm, map_add,
+  simp [kingdonPolar, kingdonNorm, InfoGeometry.Physics.ZornMatrixSU3.norm, map_add,
     InfoGeometry.Physics.ZornMatrixSU3.add,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
   ring
 
 theorem kingdonPolar_add_left (x y z : AbstractKingdon) :
@@ -2207,7 +2292,7 @@ theorem kingdonPolar_add_left (x y z : AbstractKingdon) :
   rw [kingdonPolar_coordinate, kingdonPolar_coordinate, kingdonPolar_coordinate]
   simp [map_add, InfoGeometry.Physics.ZornMatrixSU3.add,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
   ring
 
 theorem kingdonPolar_smul_left (r : ℝ) (x y : AbstractKingdon) :
@@ -2215,7 +2300,7 @@ theorem kingdonPolar_smul_left (r : ℝ) (x y : AbstractKingdon) :
   rw [kingdonPolar_coordinate, kingdonPolar_coordinate]
   simp [realization_smul, InfoGeometry.Physics.ZornMatrixSU3.smul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
   ring
 
 theorem kingdonPolar_add_right (x y z : AbstractKingdon) :
@@ -2245,25 +2330,25 @@ theorem kingdonPolar_nondegenerate (x : AbstractKingdon)
     have ha := h (preimage ⟨0, 1, 0, 0⟩)
     rw [kingdonPolar_coordinate] at ha
     simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3] at ha
+      ZornVectorMatrixExplicit.dot3] at ha
     linarith
   · rw [map_zero]
     change (realization x).b = 0
     have hb := h (preimage ⟨1, 0, 0, 0⟩)
     rw [kingdonPolar_coordinate] at hb
     simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3] at hb
+      ZornVectorMatrixExplicit.dot3] at hb
     linarith
   · funext i
     have hx := h (preimage ⟨0, 0, 0, basisVec i⟩)
     rw [kingdonPolar_coordinate] at hx
     fin_cases i <;> simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3, basisVec] at hx ⊢ <;> linarith
+      ZornVectorMatrixExplicit.dot3, basisVec] at hx ⊢ <;> linarith
   · funext i
     have hy := h (preimage ⟨0, 0, basisVec i, 0⟩)
     rw [kingdonPolar_coordinate] at hy
     fin_cases i <;> simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3, basisVec] at hy ⊢ <;> linarith
+      ZornVectorMatrixExplicit.dot3, basisVec] at hy ⊢ <;> linarith
 
 /-- Explicit diagonalization of the transported norm with four positive and
 four negative square coordinates. -/
@@ -2277,8 +2362,8 @@ theorem kingdonNorm_signature_four_four (x : AbstractKingdon) :
       ((realization x).x 0 + (realization x).y 0) ^ 2 / 4 -
       ((realization x).x 1 + (realization x).y 1) ^ 2 / 4 -
       ((realization x).x 2 + (realization x).y 2) ^ 2 / 4 := by
-  simp [kingdonNorm, norm, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+  simp [kingdonNorm, InfoGeometry.Physics.ZornMatrixSU3.norm, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+    ZornVectorMatrixExplicit.dot3]
   ring
 
 theorem add_conjugate_eq_trace_smul_one (x : AbstractKingdon) :
@@ -2294,13 +2379,12 @@ theorem mul_conjugate_eq_norm_smul_one (x : AbstractKingdon) :
     x * kingdonConjugate x = kingdonNorm x • (1 : AbstractKingdon) := by
   apply realization_injective
   rw [map_mul, realization_kingdonConjugate, realization_smul, map_one]
-  ext i <;> simp [kingdonNorm, norm, conjugate,
+  ext i <;> simp [kingdonNorm, InfoGeometry.Physics.ZornMatrixSU3.norm, conjugate,
     InfoGeometry.Physics.ZornMatrixSU3.mul,
     InfoGeometry.Physics.ZornMatrixSU3.smul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3]
   all_goals (try fin_cases i)
   all_goals try simp
   all_goals ring_nf
@@ -2309,13 +2393,12 @@ theorem conjugate_mul_eq_norm_smul_one (x : AbstractKingdon) :
     kingdonConjugate x * x = kingdonNorm x • (1 : AbstractKingdon) := by
   apply realization_injective
   rw [map_mul, realization_kingdonConjugate, realization_smul, map_one]
-  ext i <;> simp [kingdonNorm, norm, conjugate,
+  ext i <;> simp [kingdonNorm, InfoGeometry.Physics.ZornMatrixSU3.norm, conjugate,
     InfoGeometry.Physics.ZornMatrixSU3.mul,
     InfoGeometry.Physics.ZornMatrixSU3.smul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3, ZornVectorMatrixExplicit.cross3]
   all_goals (try fin_cases i)
   all_goals try simp
   all_goals ring_nf

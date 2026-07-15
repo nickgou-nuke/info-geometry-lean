@@ -18,9 +18,9 @@ n→∞ (over all primes), this converges to the Riemann zeta function.
 
 Reference: Bost–Connes (1995), Section 2.
 -/
-open InfoGeometry.Algebra.CuntzPrimonHamiltonian
-open InfoGeometry.Algebra.CuntzSpectralCalculus
-open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzPrimonHamiltonian
+open CuntzSpectralCalculus
+open CuntzTensorQuotient
 
 noncomputable section
 

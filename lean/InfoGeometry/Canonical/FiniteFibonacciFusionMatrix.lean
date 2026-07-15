@@ -33,7 +33,7 @@ No proof that a concrete complex root `q = exp(iπ/5)` satisfies the braid relat
 namespace FiniteFibonacciFusionMatrix
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
+open FiniteFibonacciFourAnyonBlocks
 
 /-- The Fibonacci fusion matrix `F = [[τ, s], [s, -τ]]`. -/
 noncomputable def fibonacciFusionMatrix (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=

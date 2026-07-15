@@ -8,6 +8,8 @@ noncomputable section
 
 open scoped TensorProduct DirectSum Matrix Kronecker
 open Matrix
+open FiniteTensorDeterminantStabilization
+open TensorAlgebraCanonical
 
 namespace Cl11TensorTower
 
@@ -384,8 +386,7 @@ def normalizedTrace (n : ℕ) (A : MatStage n) : ℝ :=
 
 /-- Binary-volume normalized logarithmic determinant readout. -/
 def normalizedLogAbsDet (n : ℕ) (A : MatStage n) : ℝ :=
-  InfoGeometry.Algebra.FiniteTensorDeterminantStabilization.normalizedLogDet n
-    (Real.log |Matrix.det A|)
+  normalizedLogDet n (Real.log |Matrix.det A|)
 
 @[simp] theorem matStageEmbed_logAbsDet_double (n : ℕ) (A : MatStage n) :
     Real.log |Matrix.det (matStageEmbed n A)| = 2 * Real.log |Matrix.det A| := by
@@ -395,8 +396,7 @@ def normalizedLogAbsDet (n : ℕ) (A : MatStage n) : ℝ :=
 @[simp] theorem normalizedLogAbsDet_matStageEmbed (n : ℕ) (A : MatStage n) :
     normalizedLogAbsDet (n + 1) (matStageEmbed n A) = normalizedLogAbsDet n A := by
   unfold normalizedLogAbsDet
-  exact InfoGeometry.Algebra.FiniteTensorDeterminantStabilization.normalizedLogDet_tensor_embedding_stable
-    n (matStageEmbed_logAbsDet_double n A)
+  exact normalizedLogDet_tensor_embedding_stable n (matStageEmbed_logAbsDet_double n A)
 
 /-- Wigner-Johnson symmetry atoms live in degree `1` of the tensor algebra on `Vec11`. -/
 abbrev SymmetryAtom : Type := InfoGeometry.Clifford.Cl11Matrix.Vec11
@@ -404,27 +404,22 @@ abbrev SymmetryAtom : Type := InfoGeometry.Clifford.Cl11Matrix.Vec11
 abbrev SymmetryWord : Type := TensorAlgebra ℝ SymmetryAtom
 
 abbrev atom : SymmetryAtom →ₗ[ℝ] SymmetryWord :=
-  InfoGeometry.Algebra.TensorAlgebraCanonical.includeLinear
+  includeLinear
 
 /-- Finite symmetry word as a tensor word of length `n`. -/
 def word (n : ℕ) (x : Fin n → SymmetryAtom) : SymmetryWord :=
   TensorAlgebra.tprod ℝ SymmetryAtom n x
 
 @[simp] theorem atom_toTensorPowerSum (x : SymmetryAtom) :
-    InfoGeometry.Algebra.TensorAlgebraCanonical.toTensorPowerSum (R := ℝ) (M := SymmetryAtom)
-        (atom x) =
+    toTensorPowerSum (R := ℝ) (M := SymmetryAtom) (atom x) =
       DirectSum.of (fun n : ℕ => ⨂[ℝ]^n SymmetryAtom) 1 (PiTensorProduct.tprod ℝ fun _ : Fin 1 => x) := by
-  simp [atom, InfoGeometry.Algebra.TensorAlgebraCanonical.includeLinear,
-    InfoGeometry.Algebra.TensorAlgebraCanonical.toTensorPowerSum_include
-      (R := ℝ) (M := SymmetryAtom) x]
+  simp [atom, includeLinear, toTensorPowerSum_include (R := ℝ) (M := SymmetryAtom) x]
 
 @[simp] theorem word_toTensorPowerSum {n : ℕ} (x : Fin n → SymmetryAtom) :
-    InfoGeometry.Algebra.TensorAlgebraCanonical.toTensorPowerSum (R := ℝ) (M := SymmetryAtom)
-        (word n x) =
+    toTensorPowerSum (R := ℝ) (M := SymmetryAtom) (word n x) =
       DirectSum.of (fun m : ℕ => ⨂[ℝ]^m SymmetryAtom) n (PiTensorProduct.tprod ℝ x) := by
   simpa [word] using
-    InfoGeometry.Algebra.TensorAlgebraCanonical.toTensorPowerSum_tprod
-      (R := ℝ) (M := SymmetryAtom) x
+    toTensorPowerSum_tprod (R := ℝ) (M := SymmetryAtom) x
 
 @[elab_as_elim]
 theorem symmetryWord_induction {C : SymmetryWord → Prop}
@@ -433,7 +428,7 @@ theorem symmetryWord_induction {C : SymmetryWord → Prop}
     (h_mul : ∀ a b : SymmetryWord, C a → C b → C (a * b))
     (h_add : ∀ a b : SymmetryWord, C a → C b → C (a + b))
     (a : SymmetryWord) : C a := by
-  exact InfoGeometry.Algebra.TensorAlgebraCanonical.tensorAlgebra_induction
+  exact tensorAlgebra_induction
     (R := ℝ) (M := SymmetryAtom) h_scalar h_atom h_mul h_add a
 
 end Cl11TensorTower

@@ -27,7 +27,7 @@ Cuntz--Toeplitz algebra, or Kuzmin's analytic classification theorem.
 
 namespace KuzminColimit
 
-open InfoGeometry.Canonical.InductiveColimitBridge
+open InductiveColimitBridge
 
 universe u v
 

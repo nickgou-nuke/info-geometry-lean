@@ -18,7 +18,7 @@ when the bonding map is surjective.
 The infinite limit requires a separate completion/continuity interface.
 -/
 
-namespace InductiveInvariantPacket
+namespace InfoGeometry.Meta.InductiveInvariantPacket
 
 /--
 A star-preserving ring homomorphism.
@@ -299,4 +299,4 @@ def map_global_closure_of_surjective
 
 end SupergradedClosureAt
 
-end InductiveInvariantPacket
+end InfoGeometry.Meta.InductiveInvariantPacket

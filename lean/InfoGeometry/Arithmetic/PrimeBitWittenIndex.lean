@@ -212,7 +212,7 @@ theorem finite_divisor_mobius_sum_cancel
 /-- The prime register as a finite prime root lattice. -/
 @[rep_depth thermo]
 def primeRootLattice (P : PrimeRegister) :
-    InfoGeometry.Canonical.FormalPrimeRootSystem.FormalPrimeRootLattice where
+    FormalPrimeRootSystem.FormalPrimeRootLattice where
   primes := P.primes
   prime_mem := P.prime_mem
 
@@ -225,12 +225,12 @@ formula, specialized to the existing prime cutoff carrier.
 @[rep_depth thermo]
 theorem finite_prime_weyl_denominator_identity
     (P : PrimeRegister) (x : ℕ → ℝ) :
-    InfoGeometry.Canonical.FormalPrimeRootSystem.weylDenominatorProduct
+    FormalPrimeRootSystem.weylDenominatorProduct
       (primeRootLattice P) x =
-    InfoGeometry.Canonical.FormalPrimeRootSystem.weylAlternatingSum
+    FormalPrimeRootSystem.weylAlternatingSum
       (primeRootLattice P) x := by
   simpa [primeRootLattice] using
-    (InfoGeometry.Canonical.FormalPrimeRootSystem.finite_prime_weyl_denominator
+    (FormalPrimeRootSystem.finite_prime_weyl_denominator
       (L := primeRootLattice P) x)
 
 end PrimeBitWittenIndex

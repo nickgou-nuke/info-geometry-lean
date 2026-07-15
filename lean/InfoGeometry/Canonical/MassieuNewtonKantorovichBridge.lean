@@ -12,10 +12,10 @@ Bridge theorem linking:
 
 namespace MassieuNewtonKantorovichBridge
 
-open InfoGeometry.Canonical.MassieuOptimalTransport
+open MassieuOptimalTransport
 open InfoGeometry.Foundations.NewtonKantorovichBase
-open InfoGeometry.Foundations.NewtonKantorovichRoots
-open InfoGeometry.Foundations.NewtonKantorovichSequence
+open NewtonKantorovichRoots
+open NewtonKantorovichSequence
 
 /--
 Composed bridge:

@@ -32,7 +32,7 @@ namespace QCCRSupergradingBridge
 
 open InfoGeometry.Algebra.Cuntz
 open InfoGeometry.Algebra.SupergradedSUSY
-open InfoGeometry.Canonical.MobiusChiralClosure
+open MobiusChiralClosure
 
 /-! ## 1. The q-CCR algebra structure -/
 

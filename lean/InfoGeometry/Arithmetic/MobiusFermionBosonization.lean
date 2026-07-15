@@ -27,7 +27,7 @@ open scoped BigOperators
 
 namespace MobiusFermionBosonization
 
-open InfoGeometry.Arithmetic.PrimonFinite
+open PrimonFinite
 
 /-! ## 1. Charge/energy separation -/
 

@@ -13,7 +13,7 @@ open CategoryTheory
 
 noncomputable section
 
-namespace InfoGeometry.Quantum.RealKCategory
+namespace RealKCategory
 namespace RealKVect
 
 /-- The two-dimensional complex monodromy space, seen as a `RealKVect` object. -/
@@ -61,4 +61,4 @@ theorem monodromyProjection_hom (X : RealKVect) (h : ℝ) (N : NilpotentHom X) :
   rfl
 
 end RealKVect
-end InfoGeometry.Quantum.RealKCategory
+end RealKCategory

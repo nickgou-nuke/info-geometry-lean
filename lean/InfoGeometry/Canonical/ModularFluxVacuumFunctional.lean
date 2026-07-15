@@ -67,7 +67,7 @@ end InnerProduct
 section ConcreteM2Seed
 
 open Matrix
-open InfoGeometry.Canonical.SplitCliffordSourceWickBase
+open SplitCliffordSourceWickBase
 
 /-- Local concrete matrix carrier for the finite seed. -/
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ

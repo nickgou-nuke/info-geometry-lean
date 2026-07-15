@@ -9,9 +9,9 @@ open ProbabilityTheory
 
 namespace IBPythagorean
 
-open InfoGeometry.Canonical.IBFreeEnergy
-open InfoGeometry.Canonical.IBFunctional
-open InfoGeometry.Canonical.IBIteration
+open IBFreeEnergy
+open IBFunctional
+open IBIteration
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

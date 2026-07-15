@@ -20,7 +20,7 @@ This file proves the exact closure facts needed later for the generalized
 inverse and Fredholm corridors.
 -/
 
-namespace KKTCore
+namespace InfoGeometry.Canonical.KKTCore
 
 open InfoGeometry.Cartan
 open InfoGeometry.Quantum
@@ -735,4 +735,4 @@ theorem chiral_superclosure_packet
 
 end Core
 
-end KKTCore
+end InfoGeometry.Canonical.KKTCore

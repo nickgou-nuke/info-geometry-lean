@@ -57,7 +57,7 @@ theorem Drazin_isWeakDrazin {R : Type*} [Ring R] {a b : R} {k : ℕ}
   have hcomm : Commute b a := h.comm.symm
   calc
     b * a ^ (k + 1) = a ^ (k + 1) * b := (hcomm.pow_right (k + 1)).eq
-    _ = a ^ k := h.power
+    _ = a ^ k := h.2.2.symm
 
 /-! ## Exact `diag(2,N₂)` packet -/
 

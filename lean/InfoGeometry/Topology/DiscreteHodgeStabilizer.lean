@@ -41,7 +41,7 @@ namespace DiscreteHodgeStabilizer
 
 noncomputable section
 
-open InfoGeometry.Topology.EckmannDiscreteHodge
+open EckmannDiscreteHodge
 
 variable {n0 n1 n2 : ℕ}
 

@@ -17,7 +17,7 @@ noncomputable section
 
 namespace SL2SpinorLadder
 
-open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+open FiveGradedInformationLedger
 
 abbrev Alg : Type := ℝ × ℝ × ℝ × ℝ × ℝ
 

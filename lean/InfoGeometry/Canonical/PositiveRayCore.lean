@@ -19,7 +19,7 @@ This is the projective positive-state spine underneath normalized counts,
 relative densities, RN/Jacobian volume factors, and modular lifts.
 -/
 
-namespace PositiveRayCore
+namespace InfoGeometry.Canonical.PositiveRayCore
 
 universe u
 
@@ -119,4 +119,4 @@ noncomputable def modularPotential (q : PositiveRay α) : α → ℝ :=
 
 end FiniteOrthant
 
-end PositiveRayCore
+end InfoGeometry.Canonical.PositiveRayCore

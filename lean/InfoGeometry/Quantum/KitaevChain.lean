@@ -15,8 +15,8 @@ namespace KitaevChain
 
 open InfoGeometry.Krein
 
-open InfoGeometry.Quantum.RealMajoranaCategory
-open InfoGeometry.Volume.Pfaffian
+open RealMajoranaCategory
+open Pfaffian
 
 /-- A Kitaev cell: a real Majorana core with a skew channel operator. -/
 structure KitaevCell where
@@ -51,7 +51,7 @@ noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
   let _ : CompleteSpace c.core.V := c.instComp
   let _ : KreinSpace c.core.V := c.instKrein
   let _ : FiniteDimensional ℝ c.core.V := c.instFinite
-  exact InfoGeometry.Volume.Pfaffian.pfaffian (H := c.core.V) c.pairing
+  exact Pfaffian.pfaffian (H := c.core.V) c.pairing
 
 /-- Macroscopic volume proxy: product of microscopic cell Pfaffians. -/
 noncomputable def macroscopicVolume (chain : List KitaevCell) : ℝ :=

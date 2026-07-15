@@ -14,7 +14,7 @@ more invariant implementation, to `exp(-⟨α_p, β⟩)`).
 namespace SouriauThermalEvaluation
 
 open scoped BigOperators
-open InfoGeometry.Canonical.FormalPrimeRootSystem
+open FormalPrimeRootSystem
 
 set_option linter.dupNamespace false in
 /-- Souriau thermal evaluation rule for a finite prime cutoff. -/

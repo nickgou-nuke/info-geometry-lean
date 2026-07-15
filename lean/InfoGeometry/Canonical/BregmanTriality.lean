@@ -6,7 +6,7 @@ import InfoGeometry.Convex.HessianGeometry
 namespace BregmanTriality
 
 open InfoGeometry.Canonical.GrandUnification
-open InfoGeometry.Canonical.Triality
+open Triality
 open InfoGeometry.Convex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

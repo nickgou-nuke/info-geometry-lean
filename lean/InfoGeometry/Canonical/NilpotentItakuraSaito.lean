@@ -12,12 +12,12 @@ without asserting analytic or continuum claims.
 
 noncomputable section
 
-namespace NilpotentItakuraSaito
+namespace InfoGeometry.Canonical.NilpotentItakuraSaito
 
 open Matrix
-open InfoGeometry.Canonical.BiquaternionKANnilpotent
+open BiquaternionKANnilpotent
 
-abbrev M2C := InfoGeometry.Canonical.BiquaternionKANnilpotent.M2C
+abbrev M2C := BiquaternionKANnilpotent.M2C
 
 /-- The concrete nilpotent Jordan/KAN boundary mode reused from the restored
 KAN nilpotent owner. -/
@@ -80,6 +80,6 @@ theorem nilpotent_itakura_saito_synthesis
     fun eps => scaled_nilItakuraSaito_zero eps S.K,
     S.nilpotent, hI, hK, hNonInv, hMassless, hPara⟩
 
-end NilpotentItakuraSaito
+end InfoGeometry.Canonical.NilpotentItakuraSaito
 
 end noncomputable section

@@ -27,10 +27,10 @@ namespace RelativeModularSingularization
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativeModularCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
+open RelativeModularCore
+open RelativePotentialCore
+open RelativeModularOperator
+open _root_.JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 

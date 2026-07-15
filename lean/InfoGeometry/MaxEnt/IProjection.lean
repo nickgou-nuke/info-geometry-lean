@@ -65,7 +65,7 @@ theorem toReal_klDiv_eq_sum_log_ratio
   have h_mass : P.toMeasure Set.univ = Q.toMeasure Set.univ := by
     simp
   rw [InformationTheory.toReal_klDiv_of_measure_eq h_ac h_mass]
-  have h_rn := InfoGeometry.Measure.DiscreteRN.rnDeriv_pmf_eq_div P Q h_ac
+  have h_rn := DiscreteRN.rnDeriv_pmf_eq_div P Q h_ac
   have h_int :
       (∫ x, llr P.toMeasure Q.toMeasure x ∂P.toMeasure)
         =

@@ -25,7 +25,7 @@ namespace ChiralTensorRecoupling
 
 open Matrix
 open TensorProduct
-open InfoGeometry.Physics.ChiralCausalCone
+open ChiralCausalCone
 
 set_option maxHeartbeats 1200000
 set_option synthInstance.maxHeartbeats 1000000
@@ -461,7 +461,7 @@ Clifford generators `eps, J, CPT`. Substituting, `e` factors entirely
 through the complexified Cl(1,1) atom. This closes the GEPA loop from
 `SplitClifford.carAnn/carCre` to the 4-cell τ-ideal stability spine. -/
 
-open InfoGeometry.Physics.CPTAtom
+open CPTAtom
 
 /-- The TL generator `e` factors through the complexified Cl(1,1) atom.
 Expressed in terms of `eps_c = complexifyCl11 eps`, `J_c = complexifyCl11 J`,
@@ -492,6 +492,83 @@ theorem e_factors_through_cl11_atom :
     TensorProduct.sub_tmul, TensorProduct.tmul_sub, TensorProduct.smul_tmul,
     TensorProduct.tmul_smul, smul_add, add_smul, smul_sub, sub_smul]
   module
+
+/-! ## Finite recoupling coefficient packets -/
+
+namespace BashoreIntertwinerQubit
+
+/-- Six computational-basis indices supporting the two intertwiner vectors. -/
+def intertwinerSupport : List ℕ := [3, 5, 6, 9, 10, 12]
+
+/-- First rational intertwiner coefficient vector. -/
+def coeffZeroI : ℕ → ℚ
+  | 5 => 1 / 2
+  | 6 => -1 / 2
+  | 9 => -1 / 2
+  | 10 => 1 / 2
+  | _ => 0
+
+/-- Unnormalized second rational intertwiner coefficient vector. -/
+def coeffOneIRaw : ℕ → ℚ
+  | 3 => 1
+  | 12 => 1
+  | 5 => -1 / 2
+  | 6 => -1 / 2
+  | 9 => -1 / 2
+  | 10 => -1 / 2
+  | _ => 0
+
+/-- Dot product restricted to the six support indices. -/
+def supportDot (a b : ℕ → ℚ) : ℚ :=
+  (intertwinerSupport.map (fun n => a n * b n)).sum
+
+@[simp] theorem intertwiner_support_length : intertwinerSupport.length = 6 := rfl
+
+theorem coeffZeroI_norm : supportDot coeffZeroI coeffZeroI = 1 := by
+  norm_num [supportDot, intertwinerSupport, coeffZeroI]
+
+theorem coeffOneIRaw_norm : supportDot coeffOneIRaw coeffOneIRaw = 3 := by
+  norm_num [supportDot, intertwinerSupport, coeffOneIRaw]
+
+theorem coeffZeroI_coeffOneIRaw_orthogonal :
+    supportDot coeffZeroI coeffOneIRaw = 0 := by
+  norm_num [supportDot, intertwinerSupport, coeffZeroI, coeffOneIRaw]
+
+end BashoreIntertwinerQubit
+
+namespace TwoQubitSchurCoefficients
+
+/-- Computational basis indices for two qubits. -/
+def basis : List ℕ := [0, 1, 2, 3]
+
+/-- Raw singlet coefficient vector `|01⟩ - |10⟩`. -/
+def singletRaw : ℕ → ℚ
+  | 1 => 1
+  | 2 => -1
+  | _ => 0
+
+/-- Raw zero-weight triplet coefficient vector `|01⟩ + |10⟩`. -/
+def tripletZeroRaw : ℕ → ℚ
+  | 1 => 1
+  | 2 => 1
+  | _ => 0
+
+/-- Dot product over the four computational basis indices. -/
+def dot (a b : ℕ → ℚ) : ℚ := (basis.map (fun n => a n * b n)).sum
+
+@[simp] theorem basis_length : basis.length = 4 := rfl
+
+@[simp] theorem singlet_raw_norm : dot singletRaw singletRaw = 2 := by
+  norm_num [dot, basis, singletRaw]
+
+@[simp] theorem triplet_zero_raw_norm : dot tripletZeroRaw tripletZeroRaw = 2 := by
+  norm_num [dot, basis, tripletZeroRaw]
+
+@[simp] theorem singlet_triplet_zero_orthogonal :
+    dot singletRaw tripletZeroRaw = 0 := by
+  norm_num [dot, basis, singletRaw, tripletZeroRaw]
+
+end TwoQubitSchurCoefficients
 
 #check e_factors_through_cl11_atom
 

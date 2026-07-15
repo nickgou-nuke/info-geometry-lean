@@ -9,9 +9,9 @@ universe u
 
 namespace SplitCliffordAtom
 
-abbrev RealMajoranaCore := InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore
-abbrev RealMajoranaCore.Hom := InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.Hom
-abbrev RealKCategory := InfoGeometry.Quantum.RealKCategory.RealKVect
+abbrev RealMajoranaCore := RealMajoranaCategory.RealMajoranaCore
+abbrev RealMajoranaCore.Hom := RealMajoranaCategory.RealMajoranaCore.Hom
+abbrev RealKCategory := RealKCategory.RealKVect
 
 /--
 Equivariant split-Clifford atom: a real carrier with the primitive Majorana core
@@ -128,7 +128,7 @@ noncomputable def atomEquivCore : Atom ≌ RealMajoranaCore where
 
 /-- Forget atom structure down to the real `K`-vector layer. -/
 noncomputable def toRealKVect : Atom ⥤ RealKCategory :=
-  forgetToCore ⋙ InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.toRealKVect
+  forgetToCore ⋙ RealMajoranaCategory.RealMajoranaCore.toRealKVect
 
 end Atom
 

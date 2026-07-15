@@ -20,8 +20,8 @@ noncomputable section
 namespace HestenesCuntzPhaseSpace
 
 open Matrix
-open InfoGeometry.Physics.ChiralPoincareSouriauBridge
-open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+open ChiralPoincareSouriauBridge
+open HestenesCuntzSpacetimeAlgebra
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 

@@ -21,7 +21,7 @@ noncomputable section
 namespace JonesBraidB3
 
 open Matrix
-open InfoGeometry.External.Auto.TLChain
+open TLChain
 
 /-- First braid generator: s₀ = i·(I - e₀). -/
 def s0 : Matrix (Fin 8) (Fin 8) ℂ :=
@@ -71,7 +71,8 @@ theorem artin_braid_relation : s0 * s1 * s0 = s1 * s0 * s1 := by
           (e0 - (2 : ℂ) • e0 - e1 * e0 + e0) := by
         rw [e0_sq, e0_mul_e1_mul_e0]
       _ = ((1 : Matrix (Fin 8) (Fin 8) ℂ) - e0 - e1 + e0 * e1) - (-(e1 * e0)) := by
-        simp [two_smul]; abel
+        simp [two_smul]
+        abel_nf
       _ = (1 : Matrix (Fin 8) (Fin 8) ℂ) - e0 - e1 + e0 * e1 + e1 * e0 := by
         abel
       _ = (1 : Matrix (Fin 8) (Fin 8) ℂ) - e1 - e0 + e1 * e0 + e0 * e1 := by

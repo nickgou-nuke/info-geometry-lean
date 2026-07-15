@@ -4,7 +4,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.LLM
 
-open InfoGeometry.Canonical.Triality
+open Triality
 
 /--
 Causal-mask interface over token indices.
@@ -94,7 +94,7 @@ lemma maskedPreOutput_eq_base_preOutput_of_allows_all
     (hAll : ∀ q i, M.causalMask.allow q i) (q : Q) :
     M.maskedPreOutput q = M.base.attn.preOutput q := by
   funext h
-  unfold maskedPreOutput InfoGeometry.Canonical.Triality.MultiHeadGeometricAttention.preOutput
+  unfold maskedPreOutput MultiHeadGeometricAttention.preOutput
   refine Finset.sum_congr rfl ?_
   intro i hi
   simp [maskedHeadWeight, hAll q i]
@@ -105,7 +105,7 @@ lemma maskedAttentionOut_eq_base_attentionOut_of_allows_all
     M.maskedAttentionOut q = M.base.attentionOut q := by
   unfold maskedAttentionOut TransformerBlock.attentionOut
   rw [maskedPreOutput_eq_base_preOutput_of_allows_all (M := M) hAll q]
-  simp [InfoGeometry.Canonical.Triality.MultiHeadGeometricAttention.output_def]
+  simp [MultiHeadGeometricAttention.output_def]
 
 lemma run_eq_base_run_of_allows_all
     (M : MaskedTransformerBlock (Q := Q) (K := K) (Vh := Vh) (Vout := Vout) (ι := ι) n)

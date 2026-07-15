@@ -14,7 +14,7 @@ defects, then exact KMS closure forces the concrete cocycle generator lift.
 namespace InfoGeometry.Canonical.KMSCocycleBridge
 
 open InfoGeometry.Canonical.MoE
-open InfoGeometry.Canonical.BekensteinBound
+open BekensteinBound
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Volume.ConnesCocycle
 

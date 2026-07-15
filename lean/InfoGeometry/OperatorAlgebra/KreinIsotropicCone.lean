@@ -9,11 +9,14 @@ detection predicates, not the primitive definition of the cone.
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section
 
 namespace KreinIsotropicCone
+
+open InfoGeometry.OperatorAlgebra
 
 /-! ## 1. Quadratic Krein cone sockets -/
 

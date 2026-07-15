@@ -6,8 +6,8 @@ open scoped InnerProductSpace
 
 namespace BogoliubovClosedForms
 
-open InfoGeometry.Canonical.BogoliubovTransport
-open InfoGeometry.Canonical.TomitaTakesaki
+open BogoliubovTransport
+open TomitaTakesaki
 open InfoGeometry.Krein
 
 section Basic

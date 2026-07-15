@@ -3,7 +3,7 @@ import InfoGeometry.Categorical.FibonacciBraiding
 namespace FibonacciHexagon
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+open FiniteFibonacciFusionMatrix
 
 /--
 Finite Fibonacci hexagon shadow.

@@ -1,6 +1,7 @@
 import InfoGeometry.Section8
 import InfoGeometry.Section12
 import InfoGeometry.Canonical.EmergentGravity
+import InfoGeometry.Canonical.BiquaternionSU2
 
 /-
 Biquaternion torsion bridge.
@@ -27,7 +28,7 @@ namespace BiquaternionTorsionBridge
 
 open Complex
 
-abbrev Biquaternion := InfoGeometry.Canonical.EmergentGravity.Biquaternion
+abbrev Biquaternion := InfoGeometry.Canonical.Biquaternions.Biquaternion
 
 /-- Coefficient-wise lift of a real quaternion into the biquaternion channel. -/
 def liftQuatToBiquaternion (q : Section8.Quat) : Biquaternion :=
@@ -76,22 +77,22 @@ structure CondensateBiquaternionLift (T : Type*) [AddCommGroup T] [Module ℝ T]
 /-- The emergent condensate torsion readout lifted to the biquaternion channel. -/
 def condensateBiquaternionTorsion
     {V T : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup T] [Module ℝ T]
-    (condensate : InfoGeometry.Canonical.EmergentGravity.SpinorCondensate V)
+    (condensate : EmergentGravity.SpinorCondensate V)
     (sigma_phi : V)
-    (st : InfoGeometry.Canonical.EmergentGravity.SpinorTorsion V T)
+    (st : EmergentGravity.SpinorTorsion V T)
     (lift : CondensateBiquaternionLift T) : Biquaternion :=
-  lift.toBiquat (InfoGeometry.Canonical.EmergentGravity.condensate_torsion condensate sigma_phi st)
+  lift.toBiquat (EmergentGravity.condensate_torsion condensate sigma_phi st)
 
 /-- If the torsion source is zero, the biquaternion readout vanishes. -/
 theorem condensateBiquaternionTorsion_zero
     {V T : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup T] [Module ℝ T]
-    (condensate : InfoGeometry.Canonical.EmergentGravity.SpinorCondensate V)
+    (condensate : EmergentGravity.SpinorCondensate V)
     (sigma_phi : V)
-    (st : InfoGeometry.Canonical.EmergentGravity.SpinorTorsion V T)
+    (st : EmergentGravity.SpinorTorsion V T)
     (lift : CondensateBiquaternionLift T)
     (hT : st.torsion_map condensate.bar_phi sigma_phi = 0) :
     condensateBiquaternionTorsion condensate sigma_phi st lift = 0 := by
-  simp [condensateBiquaternionTorsion, InfoGeometry.Canonical.EmergentGravity.condensate_torsion,
+  simp [condensateBiquaternionTorsion, EmergentGravity.condensate_torsion,
     hT, lift.map_zero]
 
 end BiquaternionTorsionBridge

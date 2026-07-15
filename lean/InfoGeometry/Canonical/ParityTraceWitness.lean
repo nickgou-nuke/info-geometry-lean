@@ -17,8 +17,8 @@ namespace ParityTraceWitness
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
-open InfoGeometry.Canonical.FormalPrimeRootSystem
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open FormalPrimeRootSystem
+open PrimeBitWittenIndex
 
 /-- Integer sign attached to a finite subset state. -/
 @[rep_depth thermo]

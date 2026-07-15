@@ -9,7 +9,7 @@ split-octonion adjugate and both products collapse to the scalar determinant
 cell.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
+namespace ConcreteComposition
 namespace ZornCell
 
 variable {R : Type*} [CommRing R]
@@ -106,4 +106,4 @@ theorem inverseCandidate_packet
   exact ⟨inverseCandidate_left X h, inverseCandidate_right X h⟩
 
 end ZornCell
-end InfoGeometry.Algebra.Zorn.ConcreteComposition
+end ConcreteComposition

@@ -15,8 +15,8 @@ channels as a typed readout interface and connects that interface to
 
 namespace FierzReadout
 
-open InfoGeometry.Quantum.Fierz
-open InfoGeometry.Canonical.QuantumPresentation
+open Fierz
+open QuantumPresentation
 
 /--
 Typed Fierz readout package.

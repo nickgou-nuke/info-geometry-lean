@@ -3,10 +3,10 @@ import InfoGeometry.Canonical.RicciMongeAmpere
 
 namespace ChiralEinsteinBridge
 
-open InfoGeometry.Canonical.ChiralAnomaly
+open ChiralAnomaly
 open InfoGeometry.Canonical.MoE
-open InfoGeometry.Canonical.KaehlerGeometry
-open InfoGeometry.Canonical.RicciMongeAmpere
+open KaehlerGeometry
+open RicciMongeAmpere
 
 section EinsteinSource
 
@@ -98,12 +98,12 @@ def SatisfiesAnomalyDrivenKaehlerRicciFlow
 /-- Canonical scalar-Ricci naming alias for anomaly-driven evolution law. -/
 abbrev SatisfiesAnomalyDrivenScalarRicciFlow
     (flow : ScalarRicciFlow E) (A : ℝ → ℝ) : Prop :=
-  SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow A
+  SatisfiesAnomalyDrivenKaehlerRicciFlow flow A
 
 /-- Lemma `anomalyDriven_zeroSource_iff_normalized`. -/
 lemma anomalyDriven_zeroSource_iff_normalized
     (flow : ScalarRicciFlow E) :
-    SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow (fun _ => 0)
+    SatisfiesAnomalyDrivenKaehlerRicciFlow flow (fun _ => 0)
       ↔ SatisfiesNormalizedKaehlerRicciFlow (E := E) flow := by
   constructor <;> intro h s <;> simpa [SatisfiesAnomalyDrivenKaehlerRicciFlow] using h s
 
@@ -112,7 +112,7 @@ At RG fixed point (`β_R = 0`), the scalar curvature equals the anomaly source.
 -/
 theorem anomalyDriven_fixedpoint_tracks_source
     (flow : ScalarRicciFlow E) (A : ℝ → ℝ)
-    (hFlow : SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow A)
+    (hFlow : SatisfiesAnomalyDrivenKaehlerRicciFlow flow A)
     (hFixed : ∀ s, scalarRicciBetaFunction (E := E) flow s = 0) :
     ∀ s, flow s = A s := by
   intro s
@@ -153,7 +153,7 @@ the scalar curvature is exactly the chiral scale `ε`.
 theorem anomalyDriven_fixedpoint_eq_inverseEpsilon
     (flow : ScalarRicciFlow E)
     (a a_mp a_d : R)
-    (hFlow : SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow
+    (hFlow : SatisfiesAnomalyDrivenKaehlerRicciFlow flow
       (inverseEpsilonSource a a_mp a_d))
     (hFixed : ∀ s, scalarRicciBetaFunction (E := E) flow s = 0) :
     ∀ s, flow s = epsilon a a_mp a_d := by

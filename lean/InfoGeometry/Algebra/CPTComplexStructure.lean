@@ -35,7 +35,7 @@ Witnessed by: `formalizations/cpt_compass_evidence.py` (SymPy+Clifford),
 `formalizations/cpt_compass_gap.g` (GAP), `Cl11Fermions.lean`.
 -/
 
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 
 noncomputable section
 

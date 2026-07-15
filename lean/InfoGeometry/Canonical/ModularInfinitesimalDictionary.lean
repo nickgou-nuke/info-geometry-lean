@@ -35,7 +35,7 @@ finite file.
 
 namespace InfoGeometry.Canonical.ModularInfinitesimal
 
-open InfoGeometry.Topology.ThermodynamicGauge
+open ThermodynamicGauge
 
 noncomputable section
 

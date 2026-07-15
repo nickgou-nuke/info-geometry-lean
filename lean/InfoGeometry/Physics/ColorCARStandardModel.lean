@@ -26,13 +26,10 @@ namespace ColorCARStandardModel
 
 open Matrix
 open TensorProduct
-open InfoGeometry.Physics.ChiralCausalCone
-open InfoGeometry.Physics.ChiralTensorRecoupling
-open InfoGeometry.Physics.BraidIdealDescent
-open InfoGeometry.Physics.ChiralTLDescent
-
-set_option maxHeartbeats 1200000
-set_option synthInstance.maxHeartbeats 1000000
+open ChiralCausalCone
+open ChiralTensorRecoupling
+open BraidIdealDescent
+open ChiralTLDescent
 
 /-! ## CAR submodule — τ-ideal stability
 
@@ -49,7 +46,8 @@ def R_CAR : Submodule ℂ SpinPair :=
 /-- The TL generator `e` is in `R_CAR`. Each of X, Y, Z is a basis element
 or linear combination thereof. -/
 theorem e_mem_R_CAR : e ∈ R_CAR := by
-  dsimp [R_CAR, e, X, Y, Z]
+  dsimp [R_CAR, ChiralTensorRecoupling.e, ChiralTensorRecoupling.X,
+    ChiralTensorRecoupling.Y, ChiralTensorRecoupling.Z]
   -- X = σ⁺⊗σ⁻ is the 1st basis element
   have hX : σPlus ⊗ₜ[ℂ] σMinus ∈ Submodule.span ℂ
       {σPlus ⊗ₜ[ℂ] σMinus, σMinus ⊗ₜ[ℂ] σPlus, (1 : M2C) ⊗ₜ[ℂ] (1 : M2C), σ3c ⊗ₜ[ℂ] σ3c} := by
@@ -98,6 +96,36 @@ fermions = one minimal left ideal of `Cl(6)`. -/
 /-- Three copies of the CAR algebra: triple tensor product of M2C. -/
 abbrev CAR3 : Type := M2C ⊗[ℂ] M2C ⊗[ℂ] M2C
 
+/- Bind the native Mathlib tensor-algebra instances explicitly at each layer. -/
+local instance spinPairSemiring : Semiring SpinPair :=
+  Algebra.TensorProduct.instSemiring
+local instance spinPairRing : Ring SpinPair :=
+  Algebra.TensorProduct.instRing
+local instance spinPairNonAssocSemiring : NonAssocSemiring SpinPair :=
+  spinPairSemiring.toNonAssocSemiring
+local instance spinPairNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring SpinPair :=
+  spinPairSemiring.toNonUnitalNonAssocSemiring
+local instance spinPairNonAssocRing : NonAssocRing SpinPair :=
+  spinPairRing.toNonAssocRing
+local instance spinPairNonUnitalNonAssocRing : NonUnitalNonAssocRing SpinPair :=
+  spinPairRing.toNonAssocRing.toNonUnitalNonAssocRing
+local instance spinPairAlgebra : Algebra ℂ SpinPair :=
+  Algebra.TensorProduct.instAlgebra
+local instance car3Semiring : Semiring CAR3 :=
+  Algebra.TensorProduct.instSemiring
+local instance car3Ring : Ring CAR3 :=
+  Algebra.TensorProduct.instRing
+local instance car3NonAssocSemiring : NonAssocSemiring CAR3 :=
+  car3Semiring.toNonAssocSemiring
+local instance car3NonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring CAR3 :=
+  car3Semiring.toNonUnitalNonAssocSemiring
+local instance car3NonAssocRing : NonAssocRing CAR3 :=
+  car3Ring.toNonAssocRing
+local instance car3NonUnitalNonAssocRing : NonUnitalNonAssocRing CAR3 :=
+  car3Ring.toNonAssocRing.toNonUnitalNonAssocRing
+local instance car3Algebra : Algebra ℂ CAR3 :=
+  Algebra.TensorProduct.instAlgebra
+
 /-- CAR annihilation operator σ⁺ on factor i ∈ {0,1,2}. -/
 def carAnn0 : CAR3 := σPlus ⊗ₜ[ℂ] (1 : M2C) ⊗ₜ[ℂ] (1 : M2C)
 def carAnn1 : CAR3 := (1 : M2C) ⊗ₜ[ℂ] σPlus ⊗ₜ[ℂ] (1 : M2C)
@@ -145,11 +173,9 @@ def numberOp0 : CAR3 := carAnn0 * carCre0
 def numberOp1 : CAR3 := carAnn1 * carCre1
 def numberOp2 : CAR3 := carAnn2 * carCre2
 
-/-- The key matrix lemma: `(σ⁺σ⁻)² = σ⁺σ⁻` in M₂(ℂ).
-σ⁺σ⁻ = diag(1,0) is a projector — 2×2 finite computation. -/
+/-- The key matrix lemma is the existing positive-chirality projector theorem. -/
 private lemma σPlus_mul_σMinus_sq : (σPlus * σMinus) * (σPlus * σMinus) = σPlus * σMinus := by
-  rw [σPlus_mul_σMinus]
-  ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  simpa [PPlus] using PPlus_idempotent
 
 /-! ## Chiral numbers `N₊ = σ⁺σ⁻`, `N₋ = σ⁻σ⁺`
 
@@ -165,29 +191,21 @@ def N_minus : M2C := σMinus * σPlus
 
 /-- Sum is identity: `N₊ + N₋ = I`. The chiral projectors partition unity. -/
 theorem N_plus_add_N_minus : N_plus + N_minus = (1 : M2C) := by
-  dsimp [N_plus, N_minus]
-  rw [σPlus_mul_σMinus, σMinus_mul_σPlus]
-  ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  simpa [N_plus, N_minus, PPlus, PMinus] using PPlus_add_PMinus
 
 /-- Difference is the CPT compass: `N₊ - N₋ = σ₃`. The Cartan grading
 operator is the difference of the chiral occupation numbers. -/
 theorem N_plus_sub_N_minus : N_plus - N_minus = σ3c := by
-  dsimp [N_plus, N_minus]
-  rw [σPlus_mul_σMinus, σMinus_mul_σPlus]
-  ext i j; fin_cases i <;> fin_cases j <;> norm_num [σ3c]
+  simpa [N_plus, N_minus, PPlus, PMinus] using PPlus_sub_PMinus
 
 /-- Orthogonality: `N₊ * N₋ = 0`. The occupied and empty projectors are
 orthogonal — a state cannot be both. -/
 theorem N_plus_mul_N_minus : N_plus * N_minus = (0 : M2C) := by
-  dsimp [N_plus, N_minus]
-  rw [σPlus_mul_σMinus, σMinus_mul_σPlus]
-  ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  simpa [N_plus, N_minus, PPlus, PMinus] using PPlus_PMinus_orthogonal
 
 /-- Orthogonality: `N₋ * N₊ = 0`. Symmetric. -/
 theorem N_minus_mul_N_plus : N_minus * N_plus = (0 : M2C) := by
-  dsimp [N_plus, N_minus]
-  rw [σPlus_mul_σMinus, σMinus_mul_σPlus]
-  ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  simpa [N_plus, N_minus, PPlus, PMinus] using PMinus_PPlus_orthogonal
 
 /-- Number operator idempotence: `N₀² = N₀`.
 Lifts the 2×2 projector identity to the triple tensor product. -/

@@ -21,7 +21,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
-namespace ProjectiveFoundation
+namespace InfoGeometry.Canonical.ProjectiveFoundation
 
 open scoped LinearAlgebra.Projectivization
 
@@ -812,4 +812,4 @@ theorem projective_comp
 
 end KreinProjectiveCarrier
 
-end ProjectiveFoundation
+end InfoGeometry.Canonical.ProjectiveFoundation

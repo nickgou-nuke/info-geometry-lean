@@ -25,8 +25,8 @@ noncomputable section
 
 namespace CantorBoundaryCuntzFamily
 
-open InfoGeometry.Topology.ParafermionIdentityRealization
-open InfoGeometry.External.Auto.UHFInductiveColimit
+open ParafermionIdentityRealization
+open UHFInductiveColimit
 
 /-- The Cantor boundary over a finite alphabet of `N` symbols. -/
 def CantorBoundaryN (N : ℕ) : Type := ℕ → Fin N
@@ -114,7 +114,7 @@ def c4CuntzFamily : CuntzFamilyOn C4Functions where
 as symbol-shift operators on functions over infinite 4-ary sequences.
 This gives the analytic boundary model as a fully explicit Fock representation. -/
 def c4Realization :
-    InfoGeometry.Physics.GellMannParafermionSolder.ParafermionRealization C4Functions :=
+    GellMannParafermionSolder.ParafermionRealization C4Functions :=
   cuntzFamilyRealization C4Functions c4CuntzFamily (fun (_ : C4Boundary) => (0 : ℂ))
 
 /-- Synthesis: the Cuntz relations hold exactly on the full Cantor boundary.

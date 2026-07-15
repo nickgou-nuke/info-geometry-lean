@@ -214,3 +214,7 @@ def GibbsMinimizesKL
   gibbs_minimizes_kl (μ₀ := μ₀) C lam hInt hFeas
 
 end JaynesRNMaxEnt
+
+namespace InfoGeometry.MaxEnt.JaynesRNMaxEnt
+
+end InfoGeometry.MaxEnt.JaynesRNMaxEnt

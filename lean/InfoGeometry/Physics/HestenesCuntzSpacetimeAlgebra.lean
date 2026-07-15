@@ -23,8 +23,8 @@ noncomputable section
 namespace HestenesCuntzSpacetimeAlgebra
 
 open Matrix
-open InfoGeometry.Physics.ChiralPoincareSouriauBridge
-open InfoGeometry.Physics.LorentzChiralCuntzBridge
+open ChiralPoincareSouriauBridge
+open LorentzChiralCuntzBridge
 
 /-- Hestenes paravector/operator representative of a complexified four-vector. -/
 def spacetimeVectorOperator (P : FourMomentum) : M2C := pauliMomentum P

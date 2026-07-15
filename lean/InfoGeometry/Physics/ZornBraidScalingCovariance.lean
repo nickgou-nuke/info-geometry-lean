@@ -1,5 +1,5 @@
-import InfoGeometry.Physics.YangBaxterZornBridge
-import InfoGeometry.Physics.ZornScalingFlow
+import InfoGeometry.External.Auto.YangBaxterZornBridge
+import InfoGeometry.External.Auto.ZornScalingFlow
 
 /-!
 # Scaling covariance of the Zorn braid representation
@@ -24,8 +24,8 @@ noncomputable section
 namespace ZornBraidScalingCovariance
 
 open Matrix
-open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Physics.YangBaxterZornBridge
+open SplitOctonionBraidSU3
+open YangBaxterZornBridge
 
 /-- Left multiplication by an arbitrary canonical Zorn element in `Fin 8` coordinates. -/
 def leftRegularMatrix (X : Zorn) : Matrix (Fin 8) (Fin 8) ℂ :=

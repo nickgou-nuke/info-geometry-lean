@@ -1,5 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
+import InfoGeometry.Arithmetic.PrimonFinite
+import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
@@ -24,7 +26,9 @@ open scoped BigOperators
 
 namespace PrimeSpinorSquareRootBoost
 
-open InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
+open PrimeWeylDenominatorBridge
+open MobiusFermionBosonization
+open PrimonFinite
 
 /-! ## 1. Two-component prime spinors -/
 
@@ -175,12 +179,12 @@ theorem finitePrimeSpinorBilinearProduct_eq_mobiusFermionPartition_squareWeights
     (modes : Finset PrimeLabel)
     (a : PrimeLabel → R) :
     finitePrimeSpinorBilinearProduct modes a =
-      InfoGeometry.Arithmetic.MobiusFermionBosonization.finiteMobiusFermionGradedPartition
+      finiteMobiusFermionGradedPartition
         modes
         (fun p => scalarWeightFromSpinor (a p)) := by
   rw [finitePrimeSpinorBilinearProduct_eq_weylDenominator_squareWeights]
   exact
-    (InfoGeometry.Arithmetic.MobiusFermionBosonization.finiteMobiusFermionGradedPartition_eq_denominator
+    (finiteMobiusFermionGradedPartition_eq_denominator
       modes
       (fun p => scalarWeightFromSpinor (a p))).symm
 
@@ -196,7 +200,7 @@ def finiteMobiusSpinorAmplitude
     {PrimeLabel R : Type*} [CommRing R]
     (a : PrimeLabel → R)
     (S : Finset PrimeLabel) : R :=
-  InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S * ∏ p ∈ S, a p
+  parity (R := R) S * ∏ p ∈ S, a p
 
 /-- Unsigned square-free spinor amplitude. -/
 def finiteUnsignedSpinorAmplitude
@@ -219,9 +223,9 @@ theorem finiteUnsignedSpinorAmplitude_sq_eq_weight_squareWeights
 theorem parity_mul_self_eq_one
     {PrimeLabel R : Type*} [CommRing R]
     (S : Finset PrimeLabel) :
-    InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S *
-      InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S = 1 := by
-  unfold InfoGeometry.Arithmetic.PrimonFinite.parity
+    parity (R := R) S *
+      parity (R := R) S = 1 := by
+  unfold parity
   rw [← pow_add]
   have hcard : S.card + S.card = 2 * S.card := by omega
   rw [hcard, pow_mul]
@@ -239,11 +243,11 @@ theorem finiteMobiusSpinorAmplitude_sq_eq_weight_squareWeights
       ∏ p ∈ S, scalarWeightFromSpinor (a p) := by
   unfold finiteMobiusSpinorAmplitude
   calc
-    (InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S * ∏ p ∈ S, a p) *
-        (InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S * ∏ p ∈ S, a p)
+    (parity (R := R) S * ∏ p ∈ S, a p) *
+        (parity (R := R) S * ∏ p ∈ S, a p)
         =
-          (InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S *
-            InfoGeometry.Arithmetic.PrimonFinite.parity (R := R) S) *
+          (parity (R := R) S *
+            parity (R := R) S) *
               ((∏ p ∈ S, a p) * (∏ p ∈ S, a p)) := by
             ring
     _ = ∏ p ∈ S, scalarWeightFromSpinor (a p) := by
@@ -261,7 +265,7 @@ theorem finiteMobiusSpinorAmplitude_union_of_disjoint
   finiteMobiusSpinorAmplitude a (S ∪ T) =
       finiteMobiusSpinorAmplitude a S * finiteMobiusSpinorAmplitude a T := by
   unfold finiteMobiusSpinorAmplitude
-  rw [InfoGeometry.Arithmetic.MobiusFermionBosonization.parity_union_of_disjoint h]
+  rw [parity_union_of_disjoint h]
   rw [Finset.prod_union h]
   ring
 

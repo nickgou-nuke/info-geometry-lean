@@ -26,9 +26,9 @@ No analytic braid computation.
 namespace FiniteFibonacciElectronPaperBridge
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+open FiniteFibonacciElectronIndependence
+open FiniteFibonacciFusionMatrix
+open FiniteFibonacciMonodromyInterface
 
 /-- The allowed electron count in the section-4 sector is a multiple of three. -/
 theorem electronCount_three_dvd (r : ℕ) :
@@ -69,15 +69,13 @@ theorem fibonacciFusionMatrixWithElectrons_sq
     (r : ℕ) {τ root : ℂ} (hroot : root ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
     fibonacciFusionMatrixWithElectrons r τ root *
         fibonacciFusionMatrixWithElectrons r τ root = 1 :=
-  InfoGeometry.Canonical.FiniteFibonacciElectronIndependence.fibonacciFusionMatrixWithElectrons_sq
-    r hroot hτ
+  FiniteFibonacciElectronIndependence.fibonacciFusionMatrixWithElectrons_sq r hroot hτ
 
 /-- The electron-sector fusion matrix has determinant `-1` in every `r` sector. -/
 theorem det_fibonacciFusionMatrixWithElectrons
     (r : ℕ) {τ root : ℂ} (hroot : root ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :
     (fibonacciFusionMatrixWithElectrons r τ root).det = -1 :=
-  InfoGeometry.Canonical.FiniteFibonacciElectronIndependence.det_fibonacciFusionMatrixWithElectrons
-    r hroot hτ
+  FiniteFibonacciElectronIndependence.det_fibonacciFusionMatrixWithElectrons r hroot hτ
 
 /-- The electron-sector middle braid matrix is the `F R F` conjugate. -/
 theorem fibonacciBMatrixWithElectrons_eq_FRF
@@ -86,8 +84,7 @@ theorem fibonacciBMatrixWithElectrons_eq_FRF
       fibonacciFusionMatrixWithElectrons r τ root *
         fibonacciRMatrixWithElectrons r q *
           fibonacciFusionMatrixWithElectrons r τ root :=
-  InfoGeometry.Canonical.FiniteFibonacciElectronIndependence.fibonacciBMatrixWithElectrons_eq_FRF
-    r q τ root
+  FiniteFibonacciElectronIndependence.fibonacciBMatrixWithElectrons_eq_FRF r q τ root
 
 /-- A base-sector Artin matrix identity transports unchanged to every electron sector. -/
 theorem fibonacciWithElectrons_artin_from_matrix_identity

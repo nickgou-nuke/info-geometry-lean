@@ -1,4 +1,4 @@
-import InfoGeometry.ProjectiveFoundation
+import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 

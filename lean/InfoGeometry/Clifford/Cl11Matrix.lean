@@ -22,7 +22,7 @@ open scoped Matrix
 open scoped Quaternion
 open FiniteDimensional
 
-namespace Cl11Matrix
+namespace InfoGeometry.Clifford.Cl11Matrix
 
 abbrev Vec11 : Type := ℝ × ℝ
 abbrev Mat2  : Type := Matrix (Fin 2) (Fin 2) ℝ
@@ -133,4 +133,4 @@ noncomputable def cl11EquivMat : CliffordAlgebra q11 ≃ₐ[ℝ] Mat2 :=
     · -- Surjectivity
       exact cl11ToMat_surjective)
 
-end Cl11Matrix
+end InfoGeometry.Clifford.Cl11Matrix

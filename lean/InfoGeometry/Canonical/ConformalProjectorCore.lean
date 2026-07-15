@@ -14,9 +14,9 @@ namespace InfoGeometry.Canonical.ConformalUnification
 
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
-open InfoGeometry.Canonical.SpectralInference
+open SpectralInference
 open InfoGeometry.Canonical.KKTCore
-open InfoGeometry.Canonical.AnomalyGauge
+open AnomalyGauge
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -991,9 +991,9 @@ Finite-dimensional constructor: any certified spectral triple induces a
 `CertifiedConformalInference` package on the same base Dirac operator.
 -/
 theorem exists_of_spectralTriple
-    (ST : InfoGeometry.Canonical.SpectralInference.SpectralTriple E) :
+    (ST : SpectralInference.SpectralTriple E) :
     ∃ CCI : CertifiedConformalInference E, CCI.A = ST.D := by
-  rcases InfoGeometry.Canonical.SpectralInference.CertifiedChiralSpectralTriple.exists_of_spectralTriple
+  rcases SpectralInference.CertifiedChiralSpectralTriple.exists_of_spectralTriple
       (E := E) ST with ⟨CCST, hST⟩
   subst hST
   refine ⟨
@@ -1005,7 +1005,7 @@ theorem exists_of_spectralTriple
 Finite-dimensional constructor specialized to `InfoSpectralTriple`.
 -/
 theorem exists_of_infoSpectralTriple
-    (IST : InfoGeometry.Canonical.SpectralInference.InfoSpectralTriple E) :
+    (IST : SpectralInference.InfoSpectralTriple E) :
     ∃ CCI : CertifiedConformalInference E, CCI.A = IST.D :=
   exists_of_spectralTriple (E := E) IST.toSpectralTriple
 

@@ -7,8 +7,6 @@ set_option linter.dupNamespace false
 
 namespace LightConeAffineCurrentBridge
 
-open InfoGeometry.OperatorAlgebra
-
 /--
 Affine-current socket for lightcone-arrow modes.
 

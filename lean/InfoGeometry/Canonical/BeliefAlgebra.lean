@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.InformationTorsion
 
 namespace BeliefAlgebra
 
-open InfoGeometry.Canonical.InformationTorsion
+open InformationTorsion
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 

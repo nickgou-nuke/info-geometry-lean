@@ -9,7 +9,7 @@ Thin bridge exports for the finite tilt Dirac shell.
 
 namespace FiniteTiltDiracShellBridge
 
-open InfoGeometry.Clifford.FiniteTiltDiracShell
+open FiniteTiltDiracShell
 
 @[rep_depth operator]
 theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge :
@@ -20,16 +20,15 @@ theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge :
 structure FiniteTiltDiracShellBridgeOwnerTarget where
   shell_square :
     ∀ m : ℝ,
-      finiteTiltDiracShell m * finiteTiltDiracShell m =
-        (m ^ 2 : ℝ) • (1 : Mat2)
+      finiteTiltDiracShell m * finiteTiltDiracShell m = (m ^ 2 : ℝ) • (1 : Mat2)
   current_density_eq :
     finiteTiltCurrentDensity = finiteTiltBoundaryCurrent
 
 @[rep_depth operator]
-theorem finiteTiltDiracShellBridgeOwnerTarget :
+def finiteTiltDiracShellBridgeOwnerTarget :
     FiniteTiltDiracShellBridgeOwnerTarget := by
   exact
-    { shell_square := finiteTiltDiracShellOwnerTarget_shell_square
+    { shell_square := finiteTiltDiracShell_sq
       current_density_eq := finiteTiltCurrentDensity_eq_boundaryCurrent_bridge }
 
 @[rep_depth operator]

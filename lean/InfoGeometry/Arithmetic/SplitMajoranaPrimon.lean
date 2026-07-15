@@ -30,7 +30,7 @@ namespace SplitMajoranaPrimon
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open PrimeBitWittenIndex
 
 /--
 Witness packet for one split-Majorana mode.

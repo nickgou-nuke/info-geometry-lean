@@ -3,7 +3,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 
 namespace CurvatureRGFlow
 
-open InfoGeometry.Canonical.RGFlow
+open RGFlow
 open InfoGeometry.Convex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]

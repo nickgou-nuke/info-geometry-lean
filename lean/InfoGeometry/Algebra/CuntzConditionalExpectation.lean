@@ -19,8 +19,8 @@ All proofs are genuine algebraic computations using the contraction lemmas.
 Zero sorries.
 -/
 
-open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzContractionLemmas
+open CuntzTensorQuotient
+open CuntzContractionLemmas
 
 noncomputable section
 

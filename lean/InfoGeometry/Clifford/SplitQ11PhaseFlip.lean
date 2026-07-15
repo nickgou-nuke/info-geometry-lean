@@ -13,7 +13,7 @@ This file works only with the quadratic space `ℝ × ℝ`, its split form
 BdG, DIII, or the Bott tower.
 -/
 
-namespace SplitQ11PhaseFlip
+namespace InfoGeometry.Clifford.SplitQ11PhaseFlip
 
 open InfoGeometry.Clifford
 
@@ -198,4 +198,4 @@ noncomputable def phaseFlipAlg : Alg ≃ₐ[ℝ] Alg :=
     phaseFlipAlg nullPlus = nullMinus := by
   simp [phaseFlipAlg, nullMinus, nullPlus, phaseFlip_apply, nullMinusVec, nullPlusVec]
 
-end SplitQ11PhaseFlip
+end InfoGeometry.Clifford.SplitQ11PhaseFlip

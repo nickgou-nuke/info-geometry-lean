@@ -29,15 +29,15 @@ noncomputable section
 namespace ComplexStarCuntzRedesign
 
 open scoped TensorProduct
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
+open AlgebraicCuntzQuotient
 
 /-! ## Real source star as a real star module -/
 
 instance realCuntzStarModule {ι : Type*} [Fintype ι] [DecidableEq ι] :
     StarModule ℝ (CuntzAlg ℝ ι) where
   star_smul r x := by
-    simp [Algebra.smul_def, InfoGeometry.Topology.AlgebraicCuntzQuotient.star_mul,
-      InfoGeometry.Topology.AlgebraicCuntzQuotient.star_algebraMap, Algebra.commutes]
+    simp [Algebra.smul_def, AlgebraicCuntzQuotient.star_mul,
+      AlgebraicCuntzQuotient.star_algebraMap, Algebra.commutes]
 
 /-! ## Genuine complexified Cuntz star algebra -/
 

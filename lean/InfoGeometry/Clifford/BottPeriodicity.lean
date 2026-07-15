@@ -18,7 +18,7 @@ does not assert the full real eightfold classification, nor the unproved matrix
 classification `Cl(n,n) ≃ M(2^n, ℝ)` for all `n`.
 -/
 
-namespace BottPeriodicity
+namespace InfoGeometry.Clifford.BottPeriodicity
 
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.CliffordTower
@@ -102,4 +102,4 @@ theorem cl55_as_splitBottStep_eq_owner :
     cl55_as_splitBottStep = clsplit_succ_equiv 4 :=
   rfl
 
-end BottPeriodicity
+end InfoGeometry.Clifford.BottPeriodicity

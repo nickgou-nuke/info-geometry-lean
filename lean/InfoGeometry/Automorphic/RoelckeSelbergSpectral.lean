@@ -24,7 +24,7 @@ noncomputable section
 
 namespace RoelckeSelbergSpectral
 
-open InfoGeometry.Automorphic.SiegelResonance
+open SiegelResonance
 
 universe uBulk uBoundary uHecke
 

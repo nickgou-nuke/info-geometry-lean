@@ -26,8 +26,8 @@ No spectral theorem, Tomita theorem, or analytic completion.
 namespace FiniteJaynesFormalism
 
 open Finset
-open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
-open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
+open FiniteJaynesCenteredScoreBridge
+open FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
 
 variable {ι : Type*} [Fintype ι]
 

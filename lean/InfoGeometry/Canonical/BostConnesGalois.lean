@@ -38,7 +38,7 @@ noncomputable section
 
 namespace BostConnesGalois
 
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesKMS
 open InfoGeometry.Arithmetic.BostConnesSystem
 
 /-! ### 1. The Commutative Subalgebra (≅ C(Ẑ)) -/

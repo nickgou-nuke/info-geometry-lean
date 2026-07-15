@@ -19,8 +19,8 @@ This file stays intentionally finite and support-compressed:
 namespace ConnesCocycleDeltaPrimaryBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.Canonical.RelativeModularSingularization
+open RelativeModularOperator
+open RelativeModularSingularization
 open InfoGeometry.Volume.ConnesCocycle
 
 section TypeIIIToFiniteSupport

@@ -17,7 +17,7 @@ namespace RohozhkinDelaunayBraiding
 open InfoGeometry.Topology.Delaunay
 open InfoGeometry.Topology.PureBraid
 open InfoGeometry.Topology.RohozhkinBoundary
-open InfoGeometry.Topology.RohozhkinRepresentation
+open RohozhkinRepresentation
 
 /-- The Appendix A five-flip word in the `n = 1` Delaunay presentation layer. -/
 noncomputable def appendixPentagonWord
@@ -33,7 +33,7 @@ theorem appendixPentagonWord_matrix_eq_one
     (h_km : zk - zm ≠ 0)
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0) :
-    Delaunay.rohozhkinMatrix
+    rohozhkinMatrix
       (appendixPentagonWord zi zj zk zl zm
         (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
           pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
@@ -41,7 +41,7 @@ theorem appendixPentagonWord_matrix_eq_one
             (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) := by
   simpa [appendixPentagonWord] using
-    (Delaunay.tiling_pentagon_braid_readout zi zj zk zl zm
+    (tiling_pentagon_braid_readout zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl
       ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
       (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
@@ -62,7 +62,7 @@ theorem appendixPentagonWord_equiv_empty
     (h_km : zk - zm ≠ 0)
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0) :
-    Delaunay.DelaunayEquiv
+    DelaunayEquiv
       (appendixPentagonWord zi zj zk zl zm
         (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
           pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
@@ -75,7 +75,7 @@ theorem appendixPentagonWord_equiv_empty
              (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) } :
          DelaunayFlipWord 1) := by
   simpa [appendixPentagonWord] using
-    (Delaunay.appendix_pentagon_delaunay_equiv zi zj zk zl zm
+    (appendix_pentagon_delaunay_equiv zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl
       ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
       (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *

@@ -10,6 +10,7 @@ import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.UniversalEnveloping
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace InfoGeometry.NuclearHamiltonian
 
@@ -93,6 +94,86 @@ def HTKK {V : Type*} [AddCommMonoid V] [Module R V] [TrialityProjector R V]
     (omega A Delta : R)
     (N_osc C2 : V →ₗ[R] V) : V →ₗ[R] V :=
   omega • N_osc + A • C2 + Delta • TrialityProjector.Pi
+
+/-! ## Rotational-vibrational spectroscopy model -/
+
+/-- Parameters of a rotational-vibrational spectroscopy energy model. -/
+structure SpectroscopyParams where
+  chiS3 : ℝ
+  kleinPartition : ℝ
+  hbarOmegaVac : ℝ
+  Arot : ℝ
+  Brot : ℝ
+  decoupling : ℝ
+  inertiaFactor : ℝ
+  coriolisParity : ℝ
+
+/-- Spectroscopic quantum-number labels. -/
+structure SpectroscopyQuantumNumbers where
+  nPlus : ℕ
+  nMinus : ℕ
+  J : ℝ
+  K : ℝ
+  p : ℕ
+
+/-- Indicator of the `K = 1/2` Coriolis band. -/
+noncomputable def deltaKHalf (K : ℝ) : ℝ := if K = (1 / 2 : ℝ) then 1 else 0
+
+@[simp] theorem deltaKHalf_half : deltaKHalf (1 / 2 : ℝ) = 1 := by
+  simp [deltaKHalf]
+
+/-- Logarithmic contribution of the finite label `p`. -/
+noncomputable def spectroscopyTopologicalEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  |P.chiS3| / P.kleinPartition * Real.log Q.p
+
+/-- Two-lane vibrational contribution including zero-point energy. -/
+noncomputable def spectroscopyVibrationalEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  P.hbarOmegaVac * ((Q.nPlus : ℝ) + (Q.nMinus : ℝ) + 1)
+
+/-- Axially symmetric rotational contribution. -/
+noncomputable def spectroscopyRotationalEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  P.Arot * (Q.J * (Q.J + 1) - Q.K ^ 2)
+
+/-- Coriolis contribution in the `K = 1/2` band. -/
+noncomputable def spectroscopyCoriolisEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  P.coriolisParity * P.decoupling * P.inertiaFactor *
+    (Q.J + 1 / 2) * deltaKHalf Q.K
+
+/-- Sum of the four spectroscopy energy components. -/
+noncomputable def spectroscopyTotalEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  spectroscopyTopologicalEnergy P Q + spectroscopyVibrationalEnergy P Q +
+    spectroscopyRotationalEnergy P Q + spectroscopyCoriolisEnergy P Q
+
+/-- Asymmetric-rotor presentation of the spectroscopy energy. -/
+noncomputable def spectroscopyUnifiedEnergy
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers) : ℝ :=
+  (|P.chiS3| / P.kleinPartition * Real.log Q.p + P.hbarOmegaVac) +
+    P.hbarOmegaVac * ((Q.nPlus : ℝ) + (Q.nMinus : ℝ)) +
+    P.Arot * (Q.J * (Q.J + 1)) +
+    (P.Brot - P.Arot) * Q.K ^ 2 + spectroscopyCoriolisEnergy P Q
+
+/-- At `Brot = 0`, the asymmetric-rotor and decomposed energies agree. -/
+theorem spectroscopyUnifiedEnergy_eq_total_of_Brot_zero
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers)
+    (hB : P.Brot = 0) :
+    spectroscopyUnifiedEnergy P Q = spectroscopyTotalEnergy P Q := by
+  simp [spectroscopyUnifiedEnergy, spectroscopyTotalEnergy,
+    spectroscopyTopologicalEnergy, spectroscopyVibrationalEnergy,
+    spectroscopyRotationalEnergy, hB]
+  ring
+
+/-- The Coriolis contribution vanishes away from the selected band. -/
+theorem spectroscopyCoriolisEnergy_off_band
+    (P : SpectroscopyParams) (Q : SpectroscopyQuantumNumbers)
+    (hK : Q.K ≠ (1 / 2 : ℝ)) :
+    spectroscopyCoriolisEnergy P Q = 0 := by
+  rw [spectroscopyCoriolisEnergy, deltaKHalf, if_neg hK]
+  ring
 
 /-! ## 5. Electromagnetic Transitions and Lifetimes -/
 

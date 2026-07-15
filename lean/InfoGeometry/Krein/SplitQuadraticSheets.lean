@@ -5,6 +5,9 @@ open scoped InnerProductSpace
 
 namespace SplitQuadraticSheets
 
+open InfoGeometry.Krein
+open SplitQuadratic
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E

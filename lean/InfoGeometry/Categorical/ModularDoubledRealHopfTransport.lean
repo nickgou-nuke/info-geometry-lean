@@ -28,7 +28,7 @@ universe u v wV wS wQ
 
 namespace ModularDoubledRealHopfTransport
 
-open InfoGeometry.Categorical.ModularDoubledRealHopfFibration
+open ModularDoubledRealHopfFibration
 
 /-! ## 1-cocycle transport -/
 
@@ -67,7 +67,7 @@ end TransportCocycle
 
 /-! ## Soldered vector/spinor/quaternion transport channels -/
 
-open ModularDoubledRealHopf
+open ModularDoubledRealHopfFibration
 
 /--
 Three soldered transport channels over one modular doubled-real fibration.

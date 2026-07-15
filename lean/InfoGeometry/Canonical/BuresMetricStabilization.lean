@@ -22,8 +22,8 @@ for those claims:
 
 namespace BuresMetricStabilization
 
-open InfoGeometry.Canonical.TensorColimitExpectation
-open InfoGeometry.Thermo.BuresWassersteinKMSCost
+open TensorColimitExpectation
+open BuresWassersteinKMSCost
 
 universe u v w
 
@@ -40,7 +40,7 @@ limit-state carrier.  The fields `rho` and `sigma` select a compatible pair of
 local positive states whose Bures/Wasserstein cost is tracked through the tower.
 -/
 structure BuresMetricStabilizationBridge
-    (L : TensorInductiveLimit (R := R) (A := A) bond) where
+    (L : TensorColimitExpectation.TensorInductiveLimit (R := R) (A := A) bond) where
   family : CompatibleFunctionalFamily (R := R) (A := A) bond
   globalFunctional : L.LimitFunctional
   extendsFamily : L.ExtendsFamily family globalFunctional
@@ -77,7 +77,7 @@ structure BuresMetricStabilizationBridge
 
 namespace BuresMetricStabilizationBridge
 
-variable {L : TensorInductiveLimit (R := R) (A := A) bond}
+variable {L : TensorColimitExpectation.TensorInductiveLimit (R := R) (A := A) bond}
 variable (B : BuresMetricStabilizationBridge L)
 
 /-- The supplied global functional recovers the finite family at every stage. -/

@@ -14,9 +14,9 @@ Legendre/Fenchel duality data.
 namespace ActionDuality
 
 open InfoGeometry.Geometry
-open InfoGeometry.Canonical.QFTTDFTLaunchpad
-open InfoGeometry.Canonical.HeatKernel
-open InfoGeometry.Canonical.SpectralInference
+open QFTTDFTLaunchpad
+open HeatKernel
+open SpectralInference
 
 variable {Θ : Type*}
   [NormedAddCommGroup Θ] [InnerProductSpace ℝ Θ] [CompleteSpace Θ]

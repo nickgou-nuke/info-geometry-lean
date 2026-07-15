@@ -2,7 +2,8 @@ import InfoGeometry.Clifford.Cl44Witt
 
 namespace Cl44Spinors
 
-open InfoGeometry.Clifford.Cl44Witt
+open Cl44Witt
+open InfoGeometry.Clifford
 
 /--
 Primitive vacuum idempotent built from the Witt basis.

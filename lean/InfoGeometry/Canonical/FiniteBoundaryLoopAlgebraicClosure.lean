@@ -22,9 +22,9 @@ No conformal boundary field theory.
 
 namespace FiniteBoundaryLoopAlgebraicClosure
 
-open InfoGeometry.Canonical.FiniteMajoranaBraiding
-open InfoGeometry.Canonical.BoundaryLoopSuperClosure
-open InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
+open FiniteMajoranaBraiding
+open BoundaryLoopSuperClosure
+open CayleyMobiusBoundaryBraidClosure
 
 /-- A finite boundary algebraic-closure packet is just a boundary-loop packet. -/
 abbrev FiniteBoundaryAlgebraicClosurePacket := BoundaryLoopClosurePacket

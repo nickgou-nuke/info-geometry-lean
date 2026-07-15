@@ -16,6 +16,7 @@ noncomputable section
 namespace GammaMatrices
 
 open Matrix
+open InfoGeometry.Clifford
 
 /-- Recursive tensor index for the real `2^n` spinor stage. -/
 def TensorIndex : ℕ → Type
@@ -40,55 +41,55 @@ abbrev SplitGammaMatrix (n : ℕ) :=
 
 /-- Positive split generator, inherited from the proven `Cl(1,1)` matrix atom. -/
 abbrev gammaPlus : Matrix (Fin 2) (Fin 2) ℝ :=
-  InfoGeometry.Clifford.Cl11Matrix.Eplus
+  Cl11Matrix.Eplus
 
 /-- Negative split generator, inherited from the proven `Cl(1,1)` matrix atom. -/
 abbrev gammaMinus : Matrix (Fin 2) (Fin 2) ℝ :=
-  InfoGeometry.Clifford.Cl11Matrix.Eminus
+  Cl11Matrix.Eminus
 
 /-- Local grading/chirality atom `γ₊γ₋`. -/
 abbrev gamma12 : Matrix (Fin 2) (Fin 2) ℝ :=
-  InfoGeometry.Clifford.Cl11Matrix.J1
+  Cl11Matrix.J1
 
 @[simp] theorem gammaPlus_sq :
     gammaPlus * gammaPlus = (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
-  InfoGeometry.Clifford.Cl11Matrix.Eplus_sq
+  Cl11Matrix.Eplus_sq
 
 @[simp] theorem gammaMinus_sq :
     gammaMinus * gammaMinus = -1 • (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
-  InfoGeometry.Clifford.Cl11Matrix.Eminus_sq
+  Cl11Matrix.Eminus_sq
 
 @[simp] theorem gamma12_sq :
     gamma12 * gamma12 = (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
-  InfoGeometry.Clifford.Cl11Matrix.J1_sq
+  Cl11Matrix.J1_sq
 
 /-- Readback of the chirality atom as the product of the split generators. -/
 theorem gamma12_eq :
     gamma12 = gammaPlus * gammaMinus :=
-  (InfoGeometry.Clifford.Cl11Matrix.Eplus_mul_Eminus).symm
+  (Cl11Matrix.Eplus_mul_Eminus).symm
 
 theorem gammaPlus_gammaMinus_anticomm :
     gammaPlus * gammaMinus + gammaMinus * gammaPlus =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [gammaPlus, gammaMinus, InfoGeometry.Clifford.Cl11Matrix.Eplus,
-      InfoGeometry.Clifford.Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
+    simp [gammaPlus, gammaMinus, Cl11Matrix.Eplus,
+      Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
       Fin.sum_univ_two]
 
 theorem gamma12_gammaPlus_anticomm :
     gamma12 * gammaPlus + gammaPlus * gamma12 =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [gamma12, gammaPlus, InfoGeometry.Clifford.Cl11Matrix.J1,
-      InfoGeometry.Clifford.Cl11Matrix.Eplus, Matrix.mul_apply, Matrix.add_apply,
+    simp [gamma12, gammaPlus, Cl11Matrix.J1,
+      Cl11Matrix.Eplus, Matrix.mul_apply, Matrix.add_apply,
       Fin.sum_univ_two]
 
 theorem gamma12_gammaMinus_anticomm :
     gamma12 * gammaMinus + gammaMinus * gamma12 =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [gamma12, gammaMinus, InfoGeometry.Clifford.Cl11Matrix.J1,
-      InfoGeometry.Clifford.Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
+    simp [gamma12, gammaMinus, Cl11Matrix.J1,
+      Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
       Fin.sum_univ_two]
 
 end GammaMatrices

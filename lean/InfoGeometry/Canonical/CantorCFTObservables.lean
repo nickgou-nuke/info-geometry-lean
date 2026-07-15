@@ -17,7 +17,7 @@ noncomputable section
 
 namespace CantorCFTObservables
 
-open InfoGeometry.OperatorAlgebra
+open AffineVirasoroBridge
 
 /-! ### 1. Central charge from the Sugawara bridge -/
 

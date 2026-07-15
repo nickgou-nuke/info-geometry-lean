@@ -20,8 +20,8 @@ noncomputable section
 
 namespace TorsionSpinorGammaBridge
 
-open InfoGeometry.Clifford.DiracPauliGamma
-open InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
+open DiracPauliGamma
+open TorsionSpinorEinsteinFinite
 
 abbrev Idx : Type := Fin 4
 

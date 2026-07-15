@@ -4,6 +4,7 @@ import InfoGeometry.Meta.StrictDef
 import InfoGeometry.Meta.Trust
 
 open Lean Meta Elab Command Term
+open InfoGeometry.Meta
 
 namespace StrictSurface
 

@@ -12,10 +12,10 @@ This file records the honest real split-Bott architecture used in the repo:
 It is not a complexification claim.
 -/
 
-namespace ConformalLift55
+namespace InfoGeometry.Clifford.ConformalLift55
 
 open InfoGeometry.CliffordTower
-open InfoGeometry.Clifford.BottPeriodicity
+open BottPeriodicity
 
 /-- The repo-owned split `Cl(4,4)` stage. -/
 abbrev Cl44 := SplitBottClifford 4
@@ -93,4 +93,4 @@ theorem conformalNullPair_exists :
       norm_num
     exact hpair.trans hnorm
 
-end ConformalLift55
+end InfoGeometry.Clifford.ConformalLift55

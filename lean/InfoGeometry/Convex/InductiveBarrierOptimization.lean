@@ -23,8 +23,8 @@ barrier iteration converges to an optimizer.
 
 namespace InductiveBarrierOptimization
 
-open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
-open InfoGeometry.Canonical.InductiveOperatorTaylorClosure
+open SymmetryClosureConformalBlocks
+open InductiveOperatorTaylorClosure
 
 /-! ## Generic finite barrier iterations -/
 

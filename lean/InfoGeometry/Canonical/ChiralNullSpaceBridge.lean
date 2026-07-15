@@ -14,8 +14,8 @@ It does not claim a generalized inverse theorem or a spectral theorem.
 
 namespace ChiralNullSpaceBridge
 
-open InfoGeometry.Canonical.TopologicalGapShadow
-open InfoGeometry.Canonical.ChiralRadiationCones
+open TopologicalGapShadow
+open ChiralRadiationCones
 
 section Core
 

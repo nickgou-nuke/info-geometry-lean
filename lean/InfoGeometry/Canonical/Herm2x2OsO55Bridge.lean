@@ -11,7 +11,8 @@ coordinate readout and its determinant identity, but does not claim a rational
 linear equivalence until an explicit rational base-change carrier is introduced.
 -/
 
-open InfoGeometry.Algebra.JordanCayleyInversionOs
+open JordanCayleyInversionOs
+open Pin55Formal
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 namespace Herm2x2OsO55Bridge
@@ -31,14 +32,14 @@ def toVec55 (X : Herm2x2Os) : Fin 10 → ℚ :=
 
 /-- The Zorn determinant is exactly the canonical split `(5,5)` quadratic form. -/
 theorem det_eq_q55_toVec55 (X : Herm2x2Os) :
-    X.det = InfoGeometry.Physics.Pin55Formal.q55 (toVec55 X) := by
-  unfold Herm2x2Os.det toVec55 InfoGeometry.Physics.Pin55Formal.q55
+    X.det = q55 (toVec55 X) := by
+  unfold Herm2x2Os.det toVec55 q55
   simp [QuadraticMap.proj, zornNormℚ]
   ring
 
 /-- The same compatibility with the orientation used by the quadratic-form API. -/
 theorem q55_toVec55_eq_det (X : Herm2x2Os) :
-    InfoGeometry.Physics.Pin55Formal.q55 (toVec55 X) = X.det :=
+    q55 (toVec55 X) = X.det :=
   (det_eq_q55_toVec55 X).symm
 
 end Herm2x2OsO55Bridge

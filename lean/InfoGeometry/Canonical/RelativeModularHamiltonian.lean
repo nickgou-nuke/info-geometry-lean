@@ -25,9 +25,9 @@ Methodological contract:
 namespace RelativeModularHamiltonian
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
+open RelativePotentialCore
+open RelativeModularOperator
+open JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 

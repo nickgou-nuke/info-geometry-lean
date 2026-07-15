@@ -16,9 +16,9 @@ symmetry atoms perfectly satisfies the generic abstract colimit architecture.
 
 namespace CPTTensorColimitIdentification
 
-open InfoGeometry.Clifford.Cl11TensorTower
-open InfoGeometry.Clifford.Cl11TensorTowerLimit
-open InfoGeometry.Canonical.TensorColimitExpectation
+open Cl11TensorTower
+open Cl11TensorTowerLimit
+open TensorColimitExpectation
 
 /-!
 ## Algebraic Morphism Instantiations

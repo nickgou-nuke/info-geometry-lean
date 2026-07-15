@@ -20,6 +20,10 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.Determinant
 
+open _root_.SpectralInference
+open _root_.Base
+open _root_.LogPotential
+
 universe v
 
 section GLReal
@@ -189,7 +193,7 @@ end SpectralZetaLogDetData
 
 /-- Canonical zeta package extracted from a regularized spectral triple. -/
 noncomputable def spectralZetaLogDetDataOfRegularizedTriple
-    (RST : InfoGeometry.Canonical.SpectralInference.RegularizedSpectralTriple E)
+    (RST : RegularizedSpectralTriple E)
     (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) where
   regularizedOp := RST.DD
   cutoff := Λ
@@ -197,27 +201,27 @@ noncomputable def spectralZetaLogDetDataOfRegularizedTriple
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem spectralZetaLogDetDataOfRegularizedTriple_logDet
-    (RST : InfoGeometry.Canonical.SpectralInference.RegularizedSpectralTriple E)
+    (RST : RegularizedSpectralTriple E)
     (Λ : ℝ) (hΛ : Λ ≠ 0) :
     (spectralZetaLogDetDataOfRegularizedTriple (E := E) RST Λ hΛ).logDet
-      = InfoGeometry.Canonical.SpectralInference.RegularizedSpectralTriple.spectralAction
+      = RegularizedSpectralTriple.spectralAction
           (RST := RST) Λ := rfl
 
 /-- Canonical zeta package extracted from a chiral regularized spectral triple. -/
 noncomputable def spectralZetaLogDetDataOfChiralTriple
-    (CST : InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple E)
+    (CST : ChiralSpectralTriple E)
     (Λ : ℝ) (hΛ : Λ ≠ 0) : SpectralZetaLogDetData (E := E) where
   regularizedOp :=
-    CST.DD + InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon CST • 1
+    CST.DD + ChiralSpectralTriple.epsilon CST • 1
   cutoff := Λ
   cutoff_ne_zero := hΛ
 
 omit [FiniteDimensional ℝ E] in
 @[simp] theorem spectralZetaLogDetDataOfChiralTriple_logDet
-    (CST : InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple E)
+    (CST : ChiralSpectralTriple E)
     (Λ : ℝ) (hΛ : Λ ≠ 0) :
     (spectralZetaLogDetDataOfChiralTriple (E := E) CST Λ hΛ).logDet
-      = InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.chiralSpectralAction
+      = ChiralSpectralTriple.chiralSpectralAction
           (CST := CST) Λ := rfl
 
 end OperatorSpectral
@@ -248,27 +252,27 @@ variable {W : Type _} [AddCommGroup W] [Module ℝ W]
 
 /-- Zeta entrypoint for the universal additive log-volume potential. -/
 noncomputable def zetaRegularizedLogVolume (g : W ≃ₗ[ℝ] W) : ℝ :=
-  Real.log (|((InfoGeometry.Volume.Base.VolumeHom g : ℝˣ) : ℝ)|)
+  Real.log (|((VolumeHom g : ℝˣ) : ℝ)|)
 
 @[simp] theorem zetaRegularizedLogVolume_eq_logAbsVolume
     (g : W ≃ₗ[ℝ] W) :
     zetaRegularizedLogVolume (W := W) g =
-      InfoGeometry.Volume.LogPotential.LogAbsVolume g := rfl
+      LogAbsVolume g := rfl
 
 theorem zetaRegularizedLogVolume_add
     (f g : W ≃ₗ[ℝ] W) :
     zetaRegularizedLogVolume (W := W) (f.trans g)
       = zetaRegularizedLogVolume (W := W) f + zetaRegularizedLogVolume (W := W) g := by
-  simpa [zetaRegularizedLogVolume, InfoGeometry.Volume.LogPotential.LogAbsVolume] using
-    (InfoGeometry.Volume.LogPotential.logAbsVolume_add (f := f) (g := g))
+  simpa [zetaRegularizedLogVolume, LogAbsVolume] using
+    (logAbsVolume_add (f := f) (g := g))
 
 /-- Capstone-facing bridge: discharge universal log-volume additivity from zeta API. -/
 theorem capstone_logAbsVolume_add_from_zeta
     (f g : W ≃ₗ[ℝ] W) :
-    InfoGeometry.Volume.LogPotential.LogAbsVolume (f.trans g)
-      = InfoGeometry.Volume.LogPotential.LogAbsVolume f
-        + InfoGeometry.Volume.LogPotential.LogAbsVolume g :=
-  InfoGeometry.Volume.LogPotential.logAbsVolume_add (f := f) (g := g)
+    LogAbsVolume (f.trans g)
+      = LogAbsVolume f
+        + LogAbsVolume g :=
+  logAbsVolume_add (f := f) (g := g)
 
 end UniversalVolumeBridge
 

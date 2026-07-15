@@ -2,7 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
-import InfoGeometry.Section5
+import InfoGeometry.Clifford.DiracPauliGamma
 import InfoGeometry.Section12
 
 /-!
@@ -35,8 +35,9 @@ noncomputable section
 namespace Section21
 
 open Matrix
+open DiracPauliGamma
 
-abbrev DiracMatrix := Section5.DiracMatrix
+abbrev DiracMatrix := DiracPauliGamma.DiracMatrix
 abbrev SpinMat := Section12.SpinMat
 abbrev SpinConnection := Section12.SpinConnection
 
@@ -69,7 +70,7 @@ theorem inducedMetric_symmetric (e : Vielbein) (mu nu : Fin 4) :
 
 /-- Gamma bivector/commutator matrix with the source's `1/2 [γ_mu, γ_nu]` convention. -/
 def gammaSigma (mu nu : Fin 4) : DiracMatrix :=
-  (1 / 2 : ℂ) • (Section5.γ mu * Section5.γ nu - Section5.γ nu * Section5.γ mu)
+  (1 / 2 : ℂ) • (gamma mu * gamma nu - gamma nu * gamma mu)
 
 /-- The finite gamma commutator bivector is antisymmetric. -/
 theorem gammaSigma_antisymmetric (mu nu : Fin 4) :

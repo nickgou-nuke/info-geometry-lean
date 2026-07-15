@@ -21,7 +21,7 @@ namespace MobiusDirichletInverseBridge
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open PrimeBitWittenIndex
 
 /--
 Finite Möbius Dirichlet polynomial over the squarefree states of a prime

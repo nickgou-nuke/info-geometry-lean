@@ -19,7 +19,7 @@ Cartan hop and the null Clifford/CAR pair.
 namespace SplitCartanHopWittBridge
 
 open InfoGeometry.Clifford.ClNN
-open InfoGeometry.Clifford.ClNNBilinear
+open ClNNBilinear
 open InfoGeometry.CliffordTower
 
 /-! ## Vector-side anti-diagonal Cartan hop -/
@@ -78,7 +78,7 @@ theorem headCartanHop_bilinear_skew
   rcases x with ⟨⟨a, b⟩, xs⟩
   rcases y with ⟨⟨c, d⟩, ys⟩
   rw [headCartanHop_apply, headCartanHop_apply]
-  simp [hyperbolicBilinear, splitB11_apply]
+  simp [hyperbolicBilinear, InfoGeometry.Clifford.splitB11_apply]
 
 /--
 On the selected head plane, the anti-diagonal hop flips the sign of the split

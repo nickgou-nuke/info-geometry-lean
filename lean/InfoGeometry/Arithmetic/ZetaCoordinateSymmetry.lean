@@ -24,7 +24,7 @@ noncomputable section
 namespace ZetaCoordinateSymmetry
 
 open Complex
-open InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
+open CompletedZetaSouriauDInfinityThermodynamics
 
 /-! ## Affine chart for the zeta plane -/
 

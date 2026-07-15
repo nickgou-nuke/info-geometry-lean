@@ -29,8 +29,8 @@ closure theorem, and no GNS quotient/null-ideal identification is claimed here.
 
 namespace SplitZornNullBoundary
 
-open InfoGeometry.Algebra.Zorn.ConcreteComposition
-open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
+open ConcreteComposition
+open ConcreteComposition.ZornCell
 
 /-- Coordinatewise zero Zorn cell over `ℝ`, used only as a finite boundary witness. -/
 def zornZero : ZornCell ℝ where

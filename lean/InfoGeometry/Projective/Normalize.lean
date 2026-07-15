@@ -6,7 +6,7 @@ import InfoGeometry.Projective.Bridge
 Normalization of positive measures modulo projective ray equivalence.
 -/
 
-namespace Normalize
+namespace InfoGeometry.Projective.Normalize
 
 section NormalizeOnProj
 
@@ -59,6 +59,8 @@ noncomputable def normalizeOnProj : PositiveMeasure.Proj (α := α) → Positive
 
 end NormalizeOnProj
 
+end InfoGeometry.Projective.Normalize
+
 namespace InfoGeometry.PositiveMeasure
 
 section NormalizeCompat
@@ -87,5 +89,3 @@ noncomputable abbrev normalizeOnProj : InfoGeometry.PositiveMeasure.Proj (α := 
 end NormalizeCompat
 
 end InfoGeometry.PositiveMeasure
-
-end Normalize

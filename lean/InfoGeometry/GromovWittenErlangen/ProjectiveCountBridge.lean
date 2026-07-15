@@ -22,7 +22,7 @@ open scoped BigOperators
 
 namespace ProjectiveCountBridge
 
-open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
+open PrimitiveProjectiveRays
 
 /--
 Projective count substrate for a GW localization packet.

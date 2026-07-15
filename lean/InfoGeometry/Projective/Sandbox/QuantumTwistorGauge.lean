@@ -5,8 +5,8 @@ import Mathlib.Algebra.RingQuot
 
 namespace QuantumTwistorGauge
 
-open InfoGeometry.Projective.QuantumGrassmannian
-open InfoGeometry.Projective.QuantumTwistor
+open QuantumGrassmannian
+open QuantumTwistor
 
 variable (R : Type*) [Field R] (q : R) (u : R)
 
@@ -115,8 +115,8 @@ noncomputable def gaugeCoordinateRing : coordinateRing R q →ₐ[R] coordinateR
   map_add' x y := Subtype.ext (map_add (gaugeAlgHom R q u) x.1 y.1)
   commutes' r := Subtype.ext (AlgHom.commutes (gaugeAlgHom R q u) r)
 
-noncomputable def gauge_covariance (P : QuantumPluckerGenerator (coordinateRing R q)) :
-    QuantumPluckerGenerator (coordinateRing R q) :=
+noncomputable def gauge_covariance (P : QuantumTwistor.QuantumPluckerGenerator (coordinateRing R q)) :
+    QuantumTwistor.QuantumPluckerGenerator (coordinateRing R q) :=
   { p01 := gaugeCoordinateRing R q u P.p01
     p02 := gaugeCoordinateRing R q u P.p02
     p03 := gaugeCoordinateRing R q u P.p03
@@ -125,33 +125,33 @@ noncomputable def gauge_covariance (P : QuantumPluckerGenerator (coordinateRing 
     p23 := gaugeCoordinateRing R q u P.p23 }
 
 theorem gauge_covariance_p01 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p01 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p01.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p01 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p01.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(0, 1), by decide⟩
 
 theorem gauge_covariance_p02 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p02 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p02.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p02 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p02.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(0, 2), by decide⟩
 
 theorem gauge_covariance_p03 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p03 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p03.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p03 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p03.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(0, 3), by decide⟩
 
 theorem gauge_covariance_p12 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p12 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p12.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p12 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p12.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(1, 2), by decide⟩
 
 theorem gauge_covariance_p13 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p13 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p13.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p13 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p13.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(1, 3), by decide⟩
 
 theorem gauge_covariance_p23 :
-    (gaugeCoordinateRing R q u (quantumPluckerMap R q).p23 : QuantumMatrixAlgebra R q) =
-    (u ^ 2) • (quantumPluckerMap R q).p23.1 := by
+    (gaugeCoordinateRing R q u (QuantumTwistor.quantumPluckerMap R q).p23 : QuantumMatrixAlgebra R q) =
+    (u ^ 2) • (QuantumTwistor.quantumPluckerMap R q).p23.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(2, 3), by decide⟩
 
 end QuantumTwistorGauge

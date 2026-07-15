@@ -25,7 +25,7 @@ noncomputable section
 namespace LorentzChiralCuntzBridge
 
 open Matrix
-open InfoGeometry.Physics.ChiralPoincareSouriauBridge
+open ChiralPoincareSouriauBridge
 
 /-- The finite chiral Lorentz spin group used here: concrete `SL(2,ℂ)`. -/
 abbrev SL2C := Matrix.SpecialLinearGroup (Fin 2) ℂ

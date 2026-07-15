@@ -2,8 +2,8 @@ import InfoGeometry.Canonical.PerelmanWCore
 
 namespace InfoGeometry.Canonical.PerelmanW
 
-open InfoGeometry.Canonical.RicciMongeAmpere
-open InfoGeometry.Canonical.SpectralInference
+open RicciMongeAmpere
+open SpectralInference
 
 section SpinorialBridge
 

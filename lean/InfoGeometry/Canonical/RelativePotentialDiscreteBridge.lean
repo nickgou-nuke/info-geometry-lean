@@ -21,8 +21,9 @@ open scoped BigOperators ENNReal
 namespace RelativePotentialDiscreteBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.MeasureProjective
+open RelativePotentialCore
+open MeasureProjective
+open GeneratorBridge
 open InfoGeometry.MeasureProjective.Normalized
 open MeasureTheory
 
@@ -142,7 +143,7 @@ theorem projectiveLogGenerator_eq_relativeModularPotential_ae
           (pmfToProjectiveState P)
         =ᶠ[ae P.toMeasure]
           fun a => -Real.log ((P a).toReal / (Q a).toReal) :=
-    InfoGeometry.MeasureProjective.GeneratorBridge.logGenerator_pmf_eq_log_div P Q
+    logGenerator_pmf_eq_log_div P Q
       (gaugeSectionFinProb_absolutelyContinuous (α := α) q q0)
   have hgen' :
       ProjectiveState.logGenerator

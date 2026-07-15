@@ -5,7 +5,7 @@ open MeasureTheory
 
 namespace IBFunctional
 
-open InfoGeometry.Canonical.IBFreeEnergy
+open IBFreeEnergy
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

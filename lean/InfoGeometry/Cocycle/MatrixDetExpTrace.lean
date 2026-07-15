@@ -55,14 +55,14 @@ theorem det_exp_eq_exp_trace_real
 theorem det_exp_diagonal_eq_exp_trace {n : ℕ} (v : Fin n → ℝ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace v
+  MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace v
 
 /-- Complex diagonal determinant/exponential trace law over any finite index type. -/
 theorem det_exp_diagonal_eq_exp_trace_complex
     {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
+  MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
 
 /-- Short PR-style name for the complex diagonal determinant/exponential trace law. -/
 theorem det_exp_diagonal
@@ -84,7 +84,7 @@ theorem det_exp_eq_exp_trace_of_units_diagonal
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
 
 /--
 Short PR-style name for the explicit unit-diagonalizable
@@ -96,7 +96,7 @@ theorem det_exp_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- Complex determinant/exponential trace law from an explicit diagonalization equality. -/
@@ -106,7 +106,7 @@ theorem det_exp_eq_exp_trace_of_is_units_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- Complex determinant/exponential trace law for upper-triangular matrices. -/
@@ -115,7 +115,7 @@ theorem det_exp_eq_exp_trace_of_upperTriangular
     (A : Matrix ι ι ℂ) (hA : A.BlockTriangular id) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_upperTriangular A hA
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_upperTriangular A hA
 
 /--
 Complex determinant/exponential trace law for matrices explicitly conjugate to
@@ -130,7 +130,7 @@ theorem det_exp_eq_exp_trace_of_units_upperTriangular
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * T * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_upperTriangular
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_upperTriangular
     U T hT
 
 /--
@@ -144,7 +144,7 @@ theorem det_exp_eq_exp_trace_of_is_units_upperTriangular
     (hA : A = (U : Matrix ι ι ℂ) * T * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_upperTriangular
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_upperTriangular
     A U T hT hA
 
 /--
@@ -159,7 +159,7 @@ theorem det_exp_eq_exp_trace_of_isHermitian
     (A : Matrix ι ι ℂ) (hA : A.IsHermitian) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_isHermitian A hA
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_isHermitian A hA
 
 /-- H¹ cocycle-lane name for the unrestricted complex determinant/log-volume theorem. -/
 theorem h1_det_exp_trace

@@ -14,7 +14,7 @@ scaling engine updates the expectation readout through the cone-vector carrier.
 
 namespace StandardFormExpectationUpdate
 
-open InfoGeometry.Canonical.StandardFormNaturalConeBridge
+open StandardFormNaturalConeBridge
 
 /--
 A standard-form expectation-update carrier.
@@ -93,7 +93,7 @@ theorem J_fixes_scaled_coneVector
     (hω : B.standardForm.isNormalPositive ω) :
     B.standardForm.J (B.composeModularScale n (B.standardForm.coneVector ω)) =
       B.composeModularScale n (B.standardForm.coneVector ω) := by
-  apply B.standardForm.J_fixes_cone
+  apply B.standardForm.J_fixes_cone_of_mem
   exact B.composeModularScale_coneVector_mem n ω hω
 
 end StandardFormExpectationUpdateBridge

@@ -1,97 +1,242 @@
-import InfoGeometry.Clifford.Cl11Quaternion
-import InfoGeometry.Clifford.Cl11Matrix
-import InfoGeometry.Clifford.SplitQ11CausalCone
-import InfoGeometry.Clifford.SplitQ11Projectors
-import InfoGeometry.Canonical.CantorCylinderLattice
-import InfoGeometry.Canonical.SectorLattice
-import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
-import InfoGeometry.Canonical.SplitCliffordDirectLimit
-import InfoGeometry.External.Virasoro.AffineKacMoody
-import InfoGeometry.External.Virasoro.FockSpaceSugawara
-import InfoGeometry.External.Virasoro.HeisenbergAlgebra
-import InfoGeometry.External.Virasoro.VirasoroAlgebra
-
-open scoped InnerProductSpace
+import InfoGeometry.Clifford.SplitQ11
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.Tactic.Module
 
 /-!
 # InfoGeometry.Canonical.CliffordCantorModeHierarchy
 
-Verified theorem-owner packet for the corrected chain:
+Local split `Cl(1,1)` seed facts for the corrected hierarchy corridor.
 
-`Cl(1,1) -> finite split Clifford tower -> Cantor idempotent refinement ->
-direct limit -> mode/central-extension layer`.
-
-The finite split seed, fixed matrix-facing causal-cone closure, Cantor
-refinement, and split-tower direct-limit facts are proved inside the repository.
-The Heisenberg, affine Kac-Moody, and Virasoro laws are imported directly from
-their theorem-owner modules; they are not derived from the finite matrix tower
-alone.
+This file owns only the finite split-quaternion and projector surface that is
+kernel-backed in the repository.
 -/
 
 namespace CliffordCantorModeHierarchy
 
-open InfoGeometry.Canonical.CantorCylinderLattice
-open InfoGeometry.Canonical.KreinProjectorLattice
-open InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
-open InfoGeometry.Canonical.SectorLattice
-open InfoGeometry.Canonical.SplitCliffordDirectLimit
-open InfoGeometry.Clifford.SplitQ11PhaseFlip
-open InfoGeometry.Clifford.SplitQ11Projectors
-open InfoGeometry.Clifford.ClNN
-open InfoGeometry.CliffordTower
-open InfoGeometry.Krein
-open VirasoroProject
+open InfoGeometry.Clifford
 
-section LocalSeed
+abbrev Alg := CliffordAlgebra splitQ11
+
+/-- The `J` generator of the split `Cl(1,1)` atom. -/
+noncomputable def jGen : Alg :=
+  CliffordAlgebra.ι splitQ11 (1, 0)
+
+/-- The `K` generator of the split `Cl(1,1)` atom. -/
+noncomputable def kGen : Alg :=
+  CliffordAlgebra.ι splitQ11 (0, 1)
+
+/-- The pseudoscalar `ε = JK`. -/
+noncomputable def epsGen : Alg :=
+  jGen * kGen
+
+/-- The lightlike `u_-` vector in the split head factor. -/
+noncomputable def nullMinusVec : ℝ × ℝ :=
+  ((1 / 2 : ℝ), (1 / 2 : ℝ))
+
+/-- The lightlike `u_+` vector in the split head factor. -/
+noncomputable def nullPlusVec : ℝ × ℝ :=
+  ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))
+
+/-- The lifted `u_-` Clifford generator. -/
+noncomputable def nullMinus : Alg :=
+  CliffordAlgebra.ι splitQ11 nullMinusVec
+
+/-- The lifted `u_+` Clifford generator. -/
+noncomputable def nullPlus : Alg :=
+  CliffordAlgebra.ι splitQ11 nullPlusVec
+
+/-- The negative `ε` spectral projector. -/
+noncomputable def epsMinusProjector : Alg :=
+  nullMinus * nullPlus
+
+/-- The positive `ε` spectral projector. -/
+noncomputable def epsPlusProjector : Alg :=
+  nullPlus * nullMinus
 
 /-- Prose-facing square-minus split-quaternion unit. -/
-@[rep_depth krein]
 noncomputable def splitQuaternionI : Alg :=
-  InfoGeometry.Clifford.SplitQ11CausalCone.splitQuaternionI
+  kGen
 
 /-- Prose-facing first square-plus split-quaternion unit. -/
-@[rep_depth krein]
 noncomputable def splitQuaternionJ : Alg :=
-  InfoGeometry.Clifford.SplitQ11CausalCone.splitQuaternionJ
+  epsGen
 
 /-- Prose-facing second square-plus split-quaternion unit. -/
-@[rep_depth krein]
 noncomputable def splitQuaternionK : Alg :=
-  InfoGeometry.Clifford.SplitQ11CausalCone.splitQuaternionK
+  jGen
 
-/--
-The exact split-quaternion presentation from the prose, expressed through the
-repo's local `Cl(1,1)` names.
--/
-@[rep_depth krein]
-theorem split_quaternion_basis_laws :
+@[simp] theorem jGen_sq :
+    jGen * jGen = 1 := by
+  simp [jGen, splitQ11_apply]
+
+@[simp] theorem kGen_sq :
+    kGen * kGen = -(1 : Alg) := by
+  simp [kGen, splitQ11_apply]
+
+@[simp] theorem jGen_mul_kGen_add_swap :
+    jGen * kGen + kGen * jGen = 0 := by
+  have hpolar : QuadraticMap.polar splitQ11 ((1 : ℝ), 0) ((0 : ℝ), 1) = 0 := by
+    simp [QuadraticMap.polar, splitQ11_apply]
+  simpa [jGen, kGen, hpolar] using
+    (CliffordAlgebra.ι_mul_ι_add_swap
+      (Q := splitQ11) ((1 : ℝ), 0) ((0 : ℝ), 1))
+
+@[simp] theorem kGen_mul_jGen :
+    kGen * jGen = -epsGen := by
+  exact eq_neg_of_add_eq_zero_left (by
+    simp [epsGen, add_comm, jGen_mul_kGen_add_swap])
+
+@[simp] theorem epsGen_mul_kGen :
+    epsGen * kGen = -jGen := by
+  unfold epsGen
+  calc
+    (jGen * kGen) * kGen = jGen * (kGen * kGen) := by rw [mul_assoc]
+    _ = -jGen := by simp [kGen_sq]
+
+@[simp] theorem kGen_mul_epsGen :
+    kGen * epsGen = jGen := by
+  unfold epsGen
+  calc
+    kGen * (jGen * kGen) = (kGen * jGen) * kGen := by rw [← mul_assoc]
+    _ = (-epsGen) * kGen := by rw [kGen_mul_jGen]
+    _ = -(epsGen * kGen) := by simp
+    _ = jGen := by rw [epsGen_mul_kGen]; simp
+
+@[simp] theorem epsGen_sq :
+    epsGen * epsGen = 1 := by
+  unfold epsGen
+  calc
+    (jGen * kGen) * (jGen * kGen)
+        = jGen * (kGen * (jGen * kGen)) := by simp [mul_assoc]
+    _ = jGen * (kGen * epsGen) := by rfl
+    _ = jGen * jGen := by rw [kGen_mul_epsGen]
+    _ = 1 := by simp [jGen_sq]
+
+@[simp] theorem nullMinus_eq_half_jGen_add_kGen :
+    nullMinus = (1 / 2 : ℝ) • (jGen + kGen) := by
+  have hvec :
+      nullMinusVec = (1 / 2 : ℝ) • ((1 : ℝ), 0) + (1 / 2 : ℝ) • ((0 : ℝ), 1) := by
+    ext <;> norm_num [nullMinusVec]
+  rw [nullMinus, hvec, LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+  simp [jGen, kGen, smul_add]
+
+@[simp] theorem nullPlus_eq_half_jGen_sub_kGen :
+    nullPlus = (1 / 2 : ℝ) • (jGen - kGen) := by
+  have hvec :
+      nullPlusVec = (1 / 2 : ℝ) • ((1 : ℝ), 0) - (1 / 2 : ℝ) • ((0 : ℝ), 1) := by
+    ext <;> norm_num [nullPlusVec]
+  rw [nullPlus, hvec, sub_eq_add_neg, LinearMap.map_add, LinearMap.map_smul,
+    LinearMap.map_neg, LinearMap.map_smul]
+  simp [jGen, kGen, sub_eq_add_neg, smul_add]
+
+@[simp] theorem nullMinus_sq :
+    nullMinus * nullMinus = 0 := by
+  rw [nullMinus, CliffordAlgebra.ι_sq_scalar]
+  simp [nullMinusVec, splitQ11_apply]
+
+@[simp] theorem nullPlus_sq :
+    nullPlus * nullPlus = 0 := by
+  rw [nullPlus, CliffordAlgebra.ι_sq_scalar]
+  simp [nullPlusVec, splitQ11_apply]
+
+@[simp] theorem nullMinus_mul_nullPlus_add_swap :
+    nullMinus * nullPlus + nullPlus * nullMinus = 1 := by
+  have hpolar : QuadraticMap.polar splitQ11 nullMinusVec nullPlusVec = 1 := by
+    simp [QuadraticMap.polar, nullMinusVec, nullPlusVec, splitQ11_apply]
+    norm_num
+  simpa [nullMinus, nullPlus, hpolar] using
+    (CliffordAlgebra.ι_mul_ι_add_swap
+      (Q := splitQ11) nullMinusVec nullPlusVec)
+
+@[simp] theorem epsMinusProjector_eq_half_one_sub_eps :
+    epsMinusProjector = (1 / 2 : ℝ) • ((1 : Alg) - epsGen) := by
+  unfold epsMinusProjector
+  rw [nullMinus_eq_half_jGen_add_kGen, nullPlus_eq_half_jGen_sub_kGen]
+  simp [sub_eq_add_neg, add_mul, mul_add, smul_add,
+    kGen_mul_jGen, jGen_sq, kGen_sq, epsGen]
+  module
+
+@[simp] theorem epsPlusProjector_eq_half_one_add_eps :
+    epsPlusProjector = (1 / 2 : ℝ) • ((1 : Alg) + epsGen) := by
+  unfold epsPlusProjector
+  rw [nullPlus_eq_half_jGen_sub_kGen, nullMinus_eq_half_jGen_add_kGen]
+  simp [sub_eq_add_neg, add_mul, mul_add, smul_add,
+    kGen_mul_jGen, jGen_sq, kGen_sq, epsGen]
+  module
+
+@[simp] theorem epsMinusProjector_add_epsPlusProjector :
+    epsMinusProjector + epsPlusProjector = 1 := by
+  unfold epsMinusProjector epsPlusProjector
+  simpa [add_comm] using nullMinus_mul_nullPlus_add_swap
+
+@[simp] theorem epsMinusProjector_mul_epsPlusProjector :
+    epsMinusProjector * epsPlusProjector = 0 := by
+  rw [epsMinusProjector_eq_half_one_sub_eps, epsPlusProjector_eq_half_one_add_eps]
+  simp [sub_eq_add_neg, add_mul, mul_add, smul_add, epsGen_sq]
+  module
+
+@[simp] theorem epsPlusProjector_mul_epsMinusProjector :
+    epsPlusProjector * epsMinusProjector = 0 := by
+  rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
+  simp [sub_eq_add_neg, add_mul, mul_add, smul_add, epsGen_sq]
+  module
+
+@[simp] theorem epsMinusProjector_idempotent :
+    epsMinusProjector * epsMinusProjector = epsMinusProjector := by
+  have h :
+      epsMinusProjector = epsMinusProjector * epsMinusProjector := by
+    calc
+      epsMinusProjector
+          = epsMinusProjector * (epsMinusProjector + epsPlusProjector) := by
+              rw [epsMinusProjector_add_epsPlusProjector, mul_one]
+      _ = epsMinusProjector * epsMinusProjector +
+          epsMinusProjector * epsPlusProjector := by
+              rw [mul_add]
+      _ = epsMinusProjector * epsMinusProjector := by
+              rw [epsMinusProjector_mul_epsPlusProjector, add_zero]
+  exact h.symm
+
+@[simp] theorem epsPlusProjector_idempotent :
+    epsPlusProjector * epsPlusProjector = epsPlusProjector := by
+  have h :
+      epsPlusProjector = epsPlusProjector * epsPlusProjector := by
+    calc
+      epsPlusProjector
+          = epsPlusProjector * (epsMinusProjector + epsPlusProjector) := by
+              rw [epsMinusProjector_add_epsPlusProjector, mul_one]
+      _ = epsPlusProjector * epsMinusProjector +
+          epsPlusProjector * epsPlusProjector := by
+              rw [mul_add]
+      _ = epsPlusProjector * epsPlusProjector := by
+              rw [epsPlusProjector_mul_epsMinusProjector, zero_add]
+  exact h.symm
+
+@[simp] theorem split_quaternion_basis_laws :
     splitQuaternionI * splitQuaternionI = -(1 : Alg)
       ∧ splitQuaternionJ * splitQuaternionJ = (1 : Alg)
       ∧ splitQuaternionK * splitQuaternionK = (1 : Alg)
       ∧ splitQuaternionI * splitQuaternionJ = splitQuaternionK
       ∧ splitQuaternionJ * splitQuaternionI = -splitQuaternionK := by
-  simpa [splitQuaternionI, splitQuaternionJ, splitQuaternionK] using
-    InfoGeometry.Clifford.SplitQ11CausalCone.split_quaternion_basis_laws
+  exact ⟨by simp [splitQuaternionI], by simp [splitQuaternionJ],
+    by simp [splitQuaternionK], by simp [splitQuaternionI, splitQuaternionJ, splitQuaternionK],
+    by simp [splitQuaternionI, splitQuaternionJ, splitQuaternionK]⟩
 
 /-- The split-null commutator in the local `Cl(1,1)` seed is the `ε` axis. -/
-@[rep_depth krein]
 theorem splitNull_commutator_eq_eps :
     nullPlus * nullMinus - nullMinus * nullPlus = epsGen := by
-  change epsPlusProjector - epsMinusProjector = epsGen
-  rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
-  module
+  calc
+    nullPlus * nullMinus - nullMinus * nullPlus
+        = epsPlusProjector - epsMinusProjector := by rfl
+    _ = epsGen := by
+      rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
+      rw [← smul_sub]
+      simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+      rw [← add_smul]
+      norm_num
 
 /--
-Finite local seed for the split-quaternion/`Cl(1,1)` block:
-
-* one generator squares to `+1`, the phase generator squares to `-1`;
-* the pseudoscalar `ε` squares to `1`;
-* the split-null elements are nilpotent;
-* their anticommutator is `1`;
-* their commutator is the Krein sector axis;
-* the two `ε`-sector projectors are complementary idempotents.
+Finite local seed for the split-quaternion/`Cl(1,1)` block.
 -/
-@[rep_depth krein]
 theorem local_split_quaternion_seed_laws :
     jGen * jGen = (1 : Alg)
       ∧ kGen * kGen = -(1 : Alg)
@@ -107,7 +252,6 @@ theorem local_split_quaternion_seed_laws :
     epsMinusProjector_idempotent, epsPlusProjector_idempotent⟩
 
 /-- Null products and the `p± = (1 ± ε) / 2` projector formulas. -/
-@[rep_depth krein]
 theorem local_null_projector_formula_laws :
     nullPlus * nullMinus = epsPlusProjector
       ∧ nullMinus * nullPlus = epsMinusProjector
@@ -115,308 +259,10 @@ theorem local_null_projector_formula_laws :
       ∧ epsMinusProjector = (1 / 2 : ℝ) • ((1 : Alg) - epsGen)
       ∧ nullPlus * nullMinus + nullMinus * nullPlus = (1 : Alg)
       ∧ nullPlus * nullMinus - nullMinus * nullPlus = epsGen := by
-  exact ⟨rfl, rfl, epsPlusProjector_eq_half_one_add_eps,
+  exact ⟨rfl, rfl,
+    epsPlusProjector_eq_half_one_add_eps,
     epsMinusProjector_eq_half_one_sub_eps,
     by simpa [add_comm] using nullMinus_mul_nullPlus_add_swap,
     splitNull_commutator_eq_eps⟩
-
-end LocalSeed
-
-section LocalLieReadout
-
-/-- The Krein axis acts with weight `+1` on the positive null generator. -/
-@[rep_depth krein]
-theorem epsGen_mul_nullPlus :
-    epsGen * nullPlus = nullPlus := by
-  rw [nullPlus_eq_half_jGen_sub_kGen]
-  simp [mul_sub]
-  module
-
-/-- Right multiplication by the Krein axis gives the opposite weight on `u₊`. -/
-@[rep_depth krein]
-theorem nullPlus_mul_epsGen :
-    nullPlus * epsGen = -nullPlus := by
-  rw [nullPlus_eq_half_jGen_sub_kGen]
-  simp [sub_mul]
-  module
-
-/-- Local `sl₂`-style weight relation `[ε, u₊] = 2u₊`. -/
-@[rep_depth krein]
-theorem epsGen_commutator_nullPlus :
-    epsGen * nullPlus - nullPlus * epsGen = (2 : ℝ) • nullPlus := by
-  rw [epsGen_mul_nullPlus, nullPlus_mul_epsGen]
-  module
-
-/-- The Krein axis acts with weight `-1` on the negative null generator. -/
-@[rep_depth krein]
-theorem epsGen_mul_nullMinus :
-    epsGen * nullMinus = -nullMinus := by
-  rw [nullMinus_eq_half_jGen_add_kGen]
-  simp [mul_add]
-
-/-- Right multiplication by the Krein axis gives the opposite weight on `u₋`. -/
-@[rep_depth krein]
-theorem nullMinus_mul_epsGen :
-    nullMinus * epsGen = nullMinus := by
-  rw [nullMinus_eq_half_jGen_add_kGen]
-  simp [add_mul]
-  module
-
-/-- Local `sl₂`-style weight relation `[ε, u₋] = -2u₋`. -/
-@[rep_depth krein]
-theorem epsGen_commutator_nullMinus :
-    epsGen * nullMinus - nullMinus * epsGen = (-2 : ℝ) • nullMinus := by
-  rw [epsGen_mul_nullMinus, nullMinus_mul_epsGen]
-  module
-
-end LocalLieReadout
-
-section MatrixBaseCase
-
-/--
-The split-quaternion leg of the base case:
-`Cl(1,1) ≃ ℍ[ℝ, 1, 0, -1]` in the convention used by
-`InfoGeometry.Clifford.Cl11Quaternion`.
--/
-@[rep_depth krein]
-theorem cl11_split_quaternion_base_case :
-    Nonempty
-      (InfoGeometry.Clifford.Cl11Quaternion.Cl11
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Quaternion.Hsplit) :=
-  ⟨CliffordAlgebraQuaternion.equiv
-    (R := ℝ) (c₁ := (1 : ℝ)) (c₂ := (-1 : ℝ))⟩
-
-/-- The split-quaternion algebra has the proved concrete `2 × 2` real matrix model. -/
-@[rep_depth krein]
-theorem split_quaternion_matrix_base_case :
-    Nonempty
-      (InfoGeometry.Clifford.Cl11Quaternion.Hsplit
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Quaternion.Mat₂ ℝ) :=
-  ⟨InfoGeometry.Clifford.Cl11Quaternion.quatEquivMat⟩
-
-/-- The finite base case has the proved real Pauli matrix model `Cl(1,1) ≃ M₂(ℝ)`. -/
-@[rep_depth krein]
-theorem cl11_matrix_base_case :
-    Nonempty
-      (CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Matrix.Mat2) :=
-  ⟨InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat⟩
-
-end MatrixBaseCase
-
-section RecursiveTower
-
-/--
-Each finite recursive step is the finite-spine owner split Bott factorization.
--/
-@[rep_depth krein]
-theorem finite_split_clifford_recursive_step (n : ℕ) :
-    splitBottStep n = InfoGeometry.CliffordTower.clsplit_succ_equiv n :=
-  splitBottStep_eq_owner n
-
-/-- The split Clifford direct limit has arbitrarily deep finite representatives. -/
-@[rep_depth krein]
-theorem split_direct_limit_has_arbitrarily_deep_representatives
-    (z : SplitCliffordInfinity) :
-    ∀ N : ℕ, ∃ n ≥ N, ∃ x,
-      DirectLimit.Module.of ℝ ℕ _
-        (fun m n h => splitCliffordMap m n h) n x = z :=
-  splitCliffordInfinity_unbounded_representatives z
-
-end RecursiveTower
-
-section CantorRefinement
-
-/-- Ring-valued characteristic idempotents implement binary Cantor refinement. -/
-@[rep_depth krein]
-theorem cantor_cylinder_indicator_refinement
-    {n : ℕ} (w : BinaryWord n) :
-    setIndicator ℝ ({v : BinaryWord (n + 1) | truncateWord v = w}) =
-      cylinderIndicator ℝ (leftChild w) + cylinderIndicator ℝ (rightChild w) :=
-  cylinderIndicator_refinement (R := ℝ) w
-
-/-- Singleton Cantor cylinder indicators are idempotents in the finite function algebra. -/
-@[rep_depth krein]
-theorem cantor_cylinder_indicator_idempotent
-    {n : ℕ} (w : BinaryWord n) :
-    IsIdempotentElem (cylinderIndicator ℝ w) :=
-  cylinderIndicator_idempotent (R := ℝ) w
-
-end CantorRefinement
-
-section CombinedSectorProjectors
-
-/--
-The local Krein projector lattice recovers the involutive sector axis.
-This is the finite idempotent-to-involution correspondence used by the sector tree.
--/
-@[rep_depth krein]
-theorem local_krein_lattice_involution_sq :
-    KreinSector.kreinInvolution * KreinSector.kreinInvolution = (1 : Alg) :=
-  KreinSector.kreinInvolution_sq
-
-/-- Elementary combined Cantor-Krein sector assignments evaluate to idempotents. -/
-@[rep_depth krein]
-theorem elementary_cantor_krein_sector_idempotent
-    {n : ℕ} (w : BinaryWord n) (k : KreinSector) :
-    IsIdempotentElem (projectionAssignmentToAlg (elementaryProjectionAssignment w k)) :=
-  elementaryProjectionAssignment_idempotent w k
-
-/--
-The combined sector projector refines by splitting the Cantor cell into its two
-children while keeping the same local Krein sector.
--/
-@[rep_depth krein]
-theorem elementary_cantor_krein_sector_refinement
-    {n : ℕ} (w : BinaryWord n) (k : KreinSector) :
-    refineProjectionAssignment (elementaryProjectionAssignment w k) =
-      elementaryProjectionAssignment (leftChild w) k ⊔
-        elementaryProjectionAssignment (rightChild w) k :=
-  refineProjectionAssignment_elementary w k
-
-end CombinedSectorProjectors
-
-section TheoremPacket
-
-/--
-The corrected hierarchy as a single theorem-level packet.
-
-The first fields are finite/local or direct-limit facts.  The last fields cite
-the imported theorem-owner definitions and laws for Heisenberg, affine
-Kac-Moody, Virasoro, and Sugawara.
--/
-structure CliffordCantorModeHierarchyPacket (n : ℕ) (m q : ℤ) : Prop where
-  split_quaternion_basis :
-    splitQuaternionI * splitQuaternionI = -(1 : Alg)
-      ∧ splitQuaternionJ * splitQuaternionJ = (1 : Alg)
-      ∧ splitQuaternionK * splitQuaternionK = (1 : Alg)
-      ∧ splitQuaternionI * splitQuaternionJ = splitQuaternionK
-      ∧ splitQuaternionJ * splitQuaternionI = -splitQuaternionK
-  local_seed :
-    jGen * jGen = (1 : Alg)
-      ∧ kGen * kGen = -(1 : Alg)
-      ∧ epsGen * epsGen = (1 : Alg)
-      ∧ nullPlus * nullPlus = 0
-      ∧ nullMinus * nullMinus = 0
-      ∧ nullMinus * nullPlus + nullPlus * nullMinus = (1 : Alg)
-      ∧ nullPlus * nullMinus - nullMinus * nullPlus = epsGen
-      ∧ epsMinusProjector * epsMinusProjector = epsMinusProjector
-      ∧ epsPlusProjector * epsPlusProjector = epsPlusProjector
-  local_null_projectors :
-    nullPlus * nullMinus = epsPlusProjector
-      ∧ nullMinus * nullPlus = epsMinusProjector
-      ∧ epsPlusProjector = (1 / 2 : ℝ) • ((1 : Alg) + epsGen)
-      ∧ epsMinusProjector = (1 / 2 : ℝ) • ((1 : Alg) - epsGen)
-      ∧ nullPlus * nullMinus + nullMinus * nullPlus = (1 : Alg)
-      ∧ nullPlus * nullMinus - nullMinus * nullPlus = epsGen
-  local_lie_readout :
-    epsGen * nullPlus - nullPlus * epsGen = (2 : ℝ) • nullPlus
-      ∧ epsGen * nullMinus - nullMinus * epsGen = (-2 : ℝ) • nullMinus
-  fixed_local_causal_cone :
-    InfoGeometry.Clifford.SplitQ11CausalCone.LocalCausalConeClosure
-  matrix_base_case :
-    Nonempty
-      (CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Matrix.Mat2)
-  split_quaternion_base_case :
-    Nonempty
-      (InfoGeometry.Clifford.Cl11Quaternion.Cl11
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Quaternion.Hsplit)
-  split_quaternion_matrix_case :
-    Nonempty
-      (InfoGeometry.Clifford.Cl11Quaternion.Hsplit
-        ≃ₐ[ℝ] InfoGeometry.Clifford.Cl11Quaternion.Mat₂ ℝ)
-  finite_tower_step :
-    splitBottStep n = InfoGeometry.CliffordTower.clsplit_succ_equiv n
-  direct_limit_representatives :
-    ∀ z : SplitCliffordInfinity, ∀ N : ℕ, ∃ n ≥ N, ∃ x,
-      DirectLimit.Module.of ℝ ℕ _
-        (fun m n h => splitCliffordMap m n h) n x = z
-  cantor_refinement :
-    ∀ w : BinaryWord n,
-      setIndicator ℝ ({v : BinaryWord (n + 1) | truncateWord v = w}) =
-        cylinderIndicator ℝ (leftChild w) + cylinderIndicator ℝ (rightChild w)
-  combined_sector_refinement :
-    ∀ (w : BinaryWord n) (k : KreinSector),
-      refineProjectionAssignment (elementaryProjectionAssignment w k) =
-        elementaryProjectionAssignment (leftChild w) k ⊔
-          elementaryProjectionAssignment (rightChild w) k
-  combined_sector_idempotent :
-    ∀ (w : BinaryWord n) (k : KreinSector),
-      IsIdempotentElem (projectionAssignmentToAlg (elementaryProjectionAssignment w k))
-  local_krein_involution :
-    KreinSector.kreinInvolution * KreinSector.kreinInvolution = (1 : Alg)
-  heisenberg_central_extension_definition :
-    HeisenbergAlgebra ℝ =
-      LieTwoCocycle.CentralExtension (AbelianLieAlgebraOn.heisenbergCocycle ℝ)
-  heisenberg_mode_eq :
-    ⁅HeisenbergAlgebra.jgen ℝ m, HeisenbergAlgebra.jgen ℝ q⁆
-      = if m + q = 0 then (m : ℝ) • HeisenbergAlgebra.kgen ℝ else 0
-  heisenberg_cocycle_nontrivial :
-    AbelianLieAlgebraOn.heisenbergCocycle ℝ ≠ 0
-      ∧ (AbelianLieAlgebraOn.heisenbergCocycle ℝ).cohomologyClass ≠ 0
-  kac_moody_central_extension_definition :
-    ∀ (𝓰 : Type) [LieRing 𝓰] [LieAlgebra ℝ 𝓰]
-      (Φ : LinearMap.BilinForm ℝ 𝓰)
-      (hΦ : Φ.lieInvariant 𝓰) (hΦs : Φ.IsSymm),
-        AffineKacMoody ℝ 𝓰 Φ hΦ hΦs =
-          LieTwoCocycle.CentralExtension (affineKacMoodyCocycle ℝ 𝓰 Φ hΦ hΦs)
-  virasoro_central_extension_definition :
-    VirasoroAlgebra ℝ =
-      LieTwoCocycle.CentralExtension (WittAlgebra.virasoroCocycle ℝ)
-  virasoro_mode_eq :
-    ⁅VirasoroAlgebra.lgen ℝ m, VirasoroAlgebra.lgen ℝ q⁆
-      = (m - q : ℝ) • VirasoroAlgebra.lgen ℝ (m + q)
-        + if m + q = 0 then ((m ^ 3 - m : ℝ) / 12) • VirasoroAlgebra.cgen ℝ else 0
-  virasoro_cocycle_nontrivial :
-    (WittAlgebra.virasoroCocycle ℝ).cohomologyClass ≠ 0
-  sugawara_central_charge_one :
-    ∀ (α : ℝ) (v : ChargedFockSpace ℝ α),
-      ChargedFockSpace.sugawaraRepresentation ℝ α (VirasoroAlgebra.cgen ℝ) v = v
-
-/--
-Proof-backed construction of the corrected finite-to-mode hierarchy packet.
--/
-@[rep_depth transport]
-theorem cliffordCantorModeHierarchyPacket
-    (n : ℕ) (m q : ℤ) :
-    CliffordCantorModeHierarchyPacket n m q := by
-  refine
-    { split_quaternion_basis := split_quaternion_basis_laws
-      local_seed := local_split_quaternion_seed_laws
-      local_null_projectors := local_null_projector_formula_laws
-      local_lie_readout := ⟨epsGen_commutator_nullPlus, epsGen_commutator_nullMinus⟩
-      fixed_local_causal_cone :=
-        InfoGeometry.Clifford.SplitQ11CausalCone.localCausalConeClosure
-      matrix_base_case := cl11_matrix_base_case
-      split_quaternion_base_case := cl11_split_quaternion_base_case
-      split_quaternion_matrix_case := split_quaternion_matrix_base_case
-      finite_tower_step := finite_split_clifford_recursive_step n
-      direct_limit_representatives := split_direct_limit_has_arbitrarily_deep_representatives
-      cantor_refinement := ?_
-      combined_sector_refinement := ?_
-      combined_sector_idempotent := ?_
-      local_krein_involution := local_krein_lattice_involution_sq
-      heisenberg_central_extension_definition := rfl
-      heisenberg_mode_eq := HeisenbergAlgebra.lie_jgen ℝ m q
-      heisenberg_cocycle_nontrivial :=
-        AbelianLieAlgebraOn.heisenbergCocycle_nontriviality ℝ
-      kac_moody_central_extension_definition := ?_
-      virasoro_central_extension_definition := rfl
-      virasoro_mode_eq := VirasoroAlgebra.lgen_bracket ℝ m q
-      virasoro_cocycle_nontrivial :=
-        WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero ℝ
-      sugawara_central_charge_one :=
-        ChargedFockSpace.sugawaraRepresentation_cgen_apply ℝ }
-  · intro w
-    exact cantor_cylinder_indicator_refinement w
-  · intro w k
-    exact elementary_cantor_krein_sector_refinement w k
-  · intro w k
-    exact elementary_cantor_krein_sector_idempotent w k
-  · intro 𝓰 _ _ Φ hΦ hΦs
-    rfl
-
-end TheoremPacket
 
 end CliffordCantorModeHierarchy

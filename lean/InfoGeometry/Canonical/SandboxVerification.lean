@@ -6,7 +6,7 @@ import Mathlib.Analysis.Normed.Algebra.Exponential
 namespace SandboxVerification
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.RealBdG
+open RealBdG
 
 section Basic
 

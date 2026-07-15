@@ -33,7 +33,7 @@ interpretation.
 
 namespace EvansHarmonicTrap
 
-open InfoGeometry.GrandUnification.HodgeTrifactorBridge
+open HodgeTrifactorBridge
 
 /-! ## Three finite charge labels -/
 

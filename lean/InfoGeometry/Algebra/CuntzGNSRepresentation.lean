@@ -20,10 +20,10 @@ All proofs are genuine algebraic computations on the diagonal subalgebra.
 The analytic Hilbert-space completion is documented debt.
 -/
 
-open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzKMSState
-open InfoGeometry.Algebra.CuntzConditionalExpectation
-open InfoGeometry.Prequantum.AlgebraicGNSState
+open CuntzTensorQuotient
+open CuntzKMSState
+open CuntzConditionalExpectation
+open AlgebraicGNSState
 open scoped ComplexConjugate
 
 noncomputable section

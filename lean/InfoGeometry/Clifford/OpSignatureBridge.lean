@@ -18,8 +18,8 @@ This file is deliberately thin: it reuses the theorem-owned triad, the concrete
 
 namespace OpSignatureBridge
 
-open InfoGeometry.Algebra.HypercomplexTriad
-open InfoGeometry.Clifford.KoszulFoundation
+open HypercomplexTriad
+open KoszulFoundation
 
 /-- Symbolic operator-square signature. -/
 inductive OpSignature where
@@ -60,9 +60,9 @@ def toStructuralParity : OpSignature → OpParity
 
 /-- Concrete `1|1` block-channel selected by the signature lane. -/
 def toSupermatrixBlock : OpSignature → Mat2
-  | .elliptic => InfoGeometry.Algebra.SupermatrixKoszul.evenBlock 1 1
-  | .parabolic => InfoGeometry.Algebra.SupermatrixKoszul.oddBlock 1 0
-  | .hyperbolic => InfoGeometry.Algebra.SupermatrixKoszul.oddBlock 1 1
+  | .elliptic => SupermatrixKoszul.evenBlock 1 1
+  | .parabolic => SupermatrixKoszul.oddBlock 1 0
+  | .hyperbolic => SupermatrixKoszul.oddBlock 1 1
 
 /--
 A 1D quadratic form encoding the sign choice for the Clifford bridge.

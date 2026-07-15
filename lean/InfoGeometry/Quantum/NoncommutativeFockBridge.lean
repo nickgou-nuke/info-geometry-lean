@@ -17,7 +17,7 @@ namespace NoncommutativeFockBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
-open InfoGeometry.Quantum.RealMajorana
+open RealMajorana
 
 open scoped InnerProductSpace
 

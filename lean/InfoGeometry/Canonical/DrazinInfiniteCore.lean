@@ -11,7 +11,7 @@ import InfoGeometry.Meta.Architecture
 Infinite-dimensional operator core for the canonical Drazin lane.
 
 This file separates:
-- algebraic owner predicate: `Drazin.IsDrazinInverse`,
+- algebraic owner predicate: `InfoGeometry.Canonical.Drazin.IsDrazinInverse`,
 - spectral/ascent-descent/Riesz interfaces (assumption surfaces),
 - constructive finite-dimensional bridge into a Riesz-style package.
 -/
@@ -28,12 +28,12 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 /-- Kernel stabilization at index `k` (ascent interface). -/
 @[rep_depth operator]
 def AscentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
-  Algebraic.Fitting.AscentStabilized T k
+  Fitting.AscentStabilized T k
 
 /-- Range stabilization at index `k` (descent interface). -/
 @[rep_depth operator]
 def DescentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
-  Algebraic.Fitting.DescentStabilized T k
+  Fitting.DescentStabilized T k
 
 /-- Finite ascent/descent witness at the spectral point `0`. -/
 @[rep_depth operator]
@@ -42,7 +42,7 @@ structure HasFiniteAscentDescentAtZero (T : Module.End K V) where
   ascent : AscentAtZero T k
   descent : DescentAtZero T k
   D : Module.End K V
-  hIsDrazin : Drazin.IsDrazinInverse T D k
+  hIsDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse T D k
 
 variable {T TD : Module.End K V} {k m : ℕ}
 
@@ -51,7 +51,7 @@ Descent stabilization from a canonical Drazin witness at any step `m ≥ k`.
 -/
 @[rep_depth operator]
 theorem descentAtZero_of_isDrazinInverse_le
-    (hD : Drazin.IsDrazinInverse T TD k)
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k)
     (hm : k ≤ m) :
     DescentAtZero T m := by
   apply le_antisymm
@@ -59,7 +59,7 @@ theorem descentAtZero_of_isDrazinInverse_le
     rcases hy with ⟨x, rfl⟩
     refine ⟨TD x, ?_⟩
     have hPow : T ^ (m + 1) * TD = T ^ m :=
-      Drazin.IsDrazinInverse.power_le hD hm
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_le hD hm
     simpa using congrArg (fun f : Module.End K V => f x) hPow
   · intro y hy
     rcases hy with ⟨x, rfl⟩
@@ -71,7 +71,7 @@ Ascent stabilization from a canonical Drazin witness at any step `m ≥ k`.
 -/
 @[rep_depth operator]
 theorem ascentAtZero_of_isDrazinInverse_le
-    (hD : Drazin.IsDrazinInverse T TD k)
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k)
     (hm : k ≤ m) :
     AscentAtZero T m := by
   apply le_antisymm
@@ -89,8 +89,8 @@ theorem ascentAtZero_of_isDrazinInverse_le
     have hx0 : (T ^ (m + 1)) x = 0 := by
       simpa [LinearMap.mem_ker] using hx
     have hPow : T ^ (m + 1) * TD = T ^ m :=
-      Drazin.IsDrazinInverse.power_le hD hm
-    have hCommute : Commute T TD := Drazin.IsDrazinInverse.comm hD
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_le hD hm
+    have hCommute : Commute T TD := InfoGeometry.Canonical.Drazin.IsDrazinInverse.comm hD
     have hPowComm : T ^ (m + 1) * TD = TD * T ^ (m + 1) :=
       (hCommute.pow_left (m + 1)).eq
     have hLeft : TD * T ^ (m + 1) = T ^ m := by
@@ -107,14 +107,14 @@ theorem ascentAtZero_of_isDrazinInverse_le
 /-- Descent stabilization at the canonical Drazin index. -/
 @[rep_depth operator]
 theorem descentAtZero_of_isDrazinInverse
-    (hD : Drazin.IsDrazinInverse T TD k) :
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k) :
     DescentAtZero T k :=
   descentAtZero_of_isDrazinInverse_le (T := T) (TD := TD) (k := k) (m := k) hD le_rfl
 
 /-- Ascent stabilization at the canonical Drazin index. -/
 @[rep_depth operator]
 theorem ascentAtZero_of_isDrazinInverse
-    (hD : Drazin.IsDrazinInverse T TD k) :
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k) :
     AscentAtZero T k :=
   ascentAtZero_of_isDrazinInverse_le (T := T) (TD := TD) (k := k) (m := k) hD le_rfl
 
@@ -123,7 +123,7 @@ Canonical Drazin witness induces a finite ascent/descent witness at zero.
 -/
 @[rep_depth operator]
 def finiteAscentDescentAtZero_of_isDrazinInverse
-    (hD : Drazin.IsDrazinInverse T TD k) :
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k) :
     HasFiniteAscentDescentAtZero T where
   k := k
   ascent := ascentAtZero_of_isDrazinInverse (T := T) (TD := TD) (k := k) hD
@@ -137,7 +137,7 @@ Finite ascent/descent interface yields a canonical Drazin witness.
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent
     (h : HasFiniteAscentDescentAtZero T) :
-    ∃ k' TD', Drazin.IsDrazinInverse T TD' k' :=
+    ∃ k' TD', InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD' k' :=
   ⟨h.k, h.D, h.hIsDrazin⟩
 
 /--
@@ -147,7 +147,7 @@ store a witness.
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent_readback
     (h : HasFiniteAscentDescentAtZero T) :
-    ∃ k' TD', Drazin.IsDrazinInverse T TD' k' :=
+    ∃ k' TD', InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD' k' :=
   ⟨h.k, h.D, h.hIsDrazin⟩
 
 /--
@@ -157,12 +157,12 @@ Algebraically construct the Drazin inverse from stabilized ascent and descent.
 @[rep_depth operator]
 theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
     (ha : AscentAtZero T k) (hd : DescentAtZero T k) :
-    ∃ TD, Drazin.IsDrazinInverse T TD k := by
+    ∃ TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k := by
   let Ker : Submodule K V := (T ^ k).ker
   let Ran : Submodule K V := (T ^ k).range
 
   have hk : IsCompl Ker Ran :=
-    Algebraic.Fitting.isCompl_ker_pow_range_pow (T := T) (k := k) ha hd
+    Fitting.isCompl_ker_pow_range_pow (T := T) (k := k) ha hd
 
   let πRan : V →ₗ[K] Ran := Ran.linearProjOfIsCompl Ker hk.symm
 
@@ -183,7 +183,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
 
   have hTR_surj : Function.Surjective TR := by
     intro y
-    rcases Algebraic.Fitting.surjective_on_range (T := T) (k := k) hd y.1 y.2 with
+    rcases Fitting.surjective_on_range (T := T) (k := k) hd y.1 y.2 with
       ⟨x, hx, hTx⟩
     refine ⟨⟨x, hx⟩, ?_⟩
     apply Subtype.ext
@@ -199,7 +199,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
         T (x.1 - y.1) = T x.1 - T y.1 := by simp [map_sub]
         _ = 0 := by simp [hxy_val]
     have h_sub_eq_zero : x.1 - y.1 = 0 :=
-      Algebraic.Fitting.injective_on_range (T := T) (k := k) ha hd
+      Fitting.injective_on_range (T := T) (k := k) ha hd
         (x.1 - y.1) (Submodule.sub_mem Ran x.2 y.2) hT_sub
     exact sub_eq_zero.mp h_sub_eq_zero
 
@@ -326,7 +326,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
       _ = (T ^ k) * P := by rw [hT_mul_D]
       _ = T ^ k := hTk_mul_P
 
-  exact ⟨D, Drazin.IsDrazinInverse.mk hComm hIdem hPow⟩
+  exact ⟨D, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk hComm hIdem hPow⟩
 
 /--
 Constructive finite ascent/descent bridge:
@@ -336,7 +336,7 @@ stored witness field from the interface package).
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent_constructive
     (h : HasFiniteAscentDescentAtZero T) :
-    ∃ k' TD', Drazin.IsDrazinInverse T TD' k' := by
+    ∃ k' TD', InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD' k' := by
   rcases exists_drazinInverse_of_fitting (T := T) (k := h.k) h.ascent h.descent with
     ⟨TD, hD⟩
   exact ⟨h.k, TD, hD⟩
@@ -369,8 +369,8 @@ structure HasClassicalRieszDecompositionAtZero (T : E →L[𝕂] E) where
   PT_comm : T * P = P * T
   k : ℕ
   D : E →L[𝕂] E
-  hIsDrazin : Drazin.IsDrazinInverse T D k
-  hP : P = Drazin.IsDrazinInverse.projection T D
+  hIsDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse T D k
+  hP : P = InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T D
 
 /--
 Generalized Riesz-style interface at `0` for a bounded operator.
@@ -521,8 +521,8 @@ for its stored inverse, without first re-expanding through the Riesz package.
 theorem isDrazinInverse_of_constructiveDrazinData
     {T : E →L[𝕂] E}
     (h : ConstructiveDrazinData (𝕂 := 𝕂) T) :
-    Drazin.IsDrazinInverse T h.inverse h.k := by
-  refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse T h.inverse h.k := by
+  refine InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_
   · calc
       T * h.inverse = h.projector := h.right_inverse_on_regular
       _ = h.inverse * T := h.left_inverse_on_regular.symm
@@ -547,7 +547,7 @@ witness without first converting to a constructive Riesz package.
 theorem exists_drazinInverse_of_constructiveDrazinData
     {T : E →L[𝕂] E}
     (h : ConstructiveDrazinData (𝕂 := 𝕂) T) :
-    ∃ k TD, Drazin.IsDrazinInverse T TD k :=
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k :=
   ⟨h.k, h.inverse, isDrazinInverse_of_constructiveDrazinData (𝕂 := 𝕂) h⟩
 
 /--
@@ -557,9 +557,9 @@ Constructive Riesz decomposition at `0` yields a canonical Drazin witness.
 theorem exists_drazinInverse_of_constructiveRieszDecompositionAtZero
     {T : E →L[𝕂] E}
     (hR : ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T) :
-    ∃ k TD, Drazin.IsDrazinInverse T TD k := by
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k := by
   refine ⟨hR.k, constructiveDrazinCandidate hR, ?_⟩
-  exact Drazin.IsDrazinInverse.mk
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk
     (constructiveDrazinCandidate_comm (hR := hR))
     (constructiveDrazinCandidate_inner (hR := hR))
     (constructiveDrazinCandidate_power (hR := hR))
@@ -581,30 +581,30 @@ def constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
   left_inverse_on_regular := by
     calc
       h.D * T = T * h.D := h.hIsDrazin.comm.symm
-      _ = Drazin.IsDrazinInverse.projection T h.D := by rfl
+      _ = InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D := by rfl
       _ = h.P := h.hP.symm
   right_inverse_on_regular := by
     calc
-      T * h.D = Drazin.IsDrazinInverse.projection T h.D := by rfl
+      T * h.D = InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D := by rfl
       _ = h.P := h.hP.symm
   S_supported_on_regular_left := by
     calc
-      h.D * h.P = h.D * Drazin.IsDrazinInverse.projection T h.D := by rw [h.hP]
+      h.D * h.P = h.D * InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D := by rw [h.hP]
       _ = h.D := by
-            simpa [Drazin.IsDrazinInverse.projection, mul_assoc] using
+            simpa [InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection, mul_assoc] using
               h.hIsDrazin.idempotent
   S_supported_on_regular_right := by
     calc
-      h.P * h.D = Drazin.IsDrazinInverse.projection T h.D * h.D := by rw [h.hP]
-      _ = h.D * Drazin.IsDrazinInverse.projection T h.D := by
-            simpa using Drazin.IsDrazinInverse.projection_comm (h := h.hIsDrazin)
+      h.P * h.D = InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D * h.D := by rw [h.hP]
+      _ = h.D * InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D := by
+            simpa using InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_comm (h := h.hIsDrazin)
       _ = h.D := by
-            simpa [Drazin.IsDrazinInverse.projection, mul_assoc] using
+            simpa [InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection, mul_assoc] using
               h.hIsDrazin.idempotent
   nilpotent_on_complement := by
     calc
       T ^ h.k * (1 - h.P)
-          = T ^ h.k * (1 - Drazin.IsDrazinInverse.projection T h.D) := by rw [h.hP]
+          = T ^ h.k * (1 - InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T h.D) := by rw [h.hP]
       _ = T ^ h.k * (1 - T * h.D) := by rfl
       _ = T ^ h.k - T ^ h.k * (T * h.D) := by rw [mul_sub, mul_one]
       _ = T ^ h.k - T ^ (h.k + 1) * h.D := by rw [pow_succ, mul_assoc]
@@ -644,7 +644,7 @@ canonical Drazin witness attached to their classical Riesz field.
 theorem isDrazinInverse_of_drazinInfiniteAssumptions
     {T : E →L[𝕂] E}
     (h : DrazinInfiniteAssumptions (𝕂 := 𝕂) T) :
-    Drazin.IsDrazinInverse T h.classical_riesz.D h.classical_riesz.k :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse T h.classical_riesz.D h.classical_riesz.k :=
   h.classical_riesz.hIsDrazin
 
 /--
@@ -656,7 +656,7 @@ as a separate theorem argument.
 theorem exists_drazinInverse_of_drazinInfiniteAssumptions
     {T : E →L[𝕂] E}
     (h : DrazinInfiniteAssumptions (𝕂 := 𝕂) T) :
-    ∃ k TD, Drazin.IsDrazinInverse T TD k :=
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k :=
   exists_drazinInverse_of_constructiveRieszDecompositionAtZero
     (hR := constructiveRieszDecompositionAtZero_of_drazinInfiniteAssumptions
       (𝕂 := 𝕂) h)
@@ -668,7 +668,7 @@ Classical Riesz decomposition immediately yields the canonical Drazin witness.
 theorem isDrazinInverse_of_hasClassicalRieszDecompositionAtZero
     {T : E →L[𝕂] E}
     (h : HasClassicalRieszDecompositionAtZero (𝕂 := 𝕂) T) :
-    Drazin.IsDrazinInverse T h.D h.k :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse T h.D h.k :=
   h.hIsDrazin
 
 /--
@@ -678,7 +678,7 @@ Classical Riesz decomposition interface yields a canonical Drazin witness.
 theorem exists_drazinInverse_of_rieszDecomposition
     {T : E →L[𝕂] E}
     (h : HasClassicalRieszDecompositionAtZero (𝕂 := 𝕂) T) :
-    ∃ k TD, Drazin.IsDrazinInverse T TD k :=
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD k :=
   exists_drazinInverse_of_constructiveRieszDecompositionAtZero
     (hR := constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero h)
 
@@ -698,8 +698,8 @@ structure RieszDrazinData (T : R) where
   k : ℕ
   D : R
   P : R
-  hIsDrazin : Drazin.IsDrazinInverse T D k
-  hP : P = Drazin.IsDrazinInverse.projection T D
+  hIsDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse T D k
+  hP : P = InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T D
 
 variable {T : R}
 
@@ -707,7 +707,7 @@ variable {T : R}
 @[rep_depth operator]
 theorem isDrazinInverse_of_riesz
     (h : RieszDrazinData T) :
-    Drazin.IsDrazinInverse T h.D h.k :=
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse T h.D h.k :=
   h.hIsDrazin
 
 /-- The regular projector in a Riesz package is idempotent. -/
@@ -716,12 +716,12 @@ theorem projector_idempotent_of_riesz
     (h : RieszDrazinData T) :
     h.P * h.P = h.P := by
   rw [h.hP]
-  exact Drazin.IsDrazinInverse.projection_is_idempotent h.hIsDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_is_idempotent h.hIsDrazin
 
 /-- Complementary projector attached to a Riesz package. -/
 @[rep_depth operator]
 def complementaryProjector (h : RieszDrazinData T) : R :=
-  Drazin.IsDrazinInverse.complementaryProjection T h.D
+  InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection T h.D
 
 /-- Complementary projector in a Riesz package is idempotent. -/
 @[rep_depth operator]
@@ -729,7 +729,7 @@ theorem complementaryProjector_idempotent_of_riesz
     (h : RieszDrazinData T) :
     complementaryProjector h * complementaryProjector h = complementaryProjector h := by
   unfold complementaryProjector
-  exact Drazin.IsDrazinInverse.complementaryProjection_is_idempotent h.hIsDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent h.hIsDrazin
 
 /-- Regular/complementary projectors are left-orthogonal. -/
 @[rep_depth operator]
@@ -738,7 +738,7 @@ theorem projector_mul_complementaryProjector_of_riesz
     h.P * complementaryProjector h = 0 := by
   rw [h.hP]
   unfold complementaryProjector
-  exact Drazin.IsDrazinInverse.projection_mul_complementaryProjection h.hIsDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection h.hIsDrazin
 
 /-- Regular/complementary projectors are right-orthogonal. -/
 @[rep_depth operator]
@@ -747,7 +747,7 @@ theorem complementaryProjector_mul_projector_of_riesz
     complementaryProjector h * h.P = 0 := by
   rw [h.hP]
   unfold complementaryProjector
-  exact Drazin.IsDrazinInverse.complementaryProjection_mul_projection h.hIsDrazin
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection h.hIsDrazin
 
 end RieszData
 
@@ -764,13 +764,13 @@ existentially; this file does not choose a canonical inverse or index.
 -/
 @[rep_depth operator]
 theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
-    ∃ h : RieszDrazinData T, Drazin.IsDrazinInverse T h.D h.k := by
+    ∃ h : RieszDrazinData T, InfoGeometry.Canonical.Drazin.IsDrazinInverse T h.D h.k := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
       (E := E) T with ⟨k, D, hD⟩
   let hpack : RieszDrazinData T :=
     { k := k
       D := D
-      P := Drazin.IsDrazinInverse.projection T D
+      P := InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection T D
       hIsDrazin := hD
       hP := rfl }
   refine ⟨hpack, ?_⟩

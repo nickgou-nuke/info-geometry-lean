@@ -19,11 +19,11 @@ noncomputable section
 
 namespace BogoliubovSU3ParafermionProofChain
 
-open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
-open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
-open InfoGeometry.Physics.SupergradedCuntzBdG
-open InfoGeometry.Physics.GellMannSU3
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
+open BogoliubovWeylChemicalPotential
+open BogoliubovSU3ParafermionWeld
+open SupergradedCuntzBdG
+open GellMannSU3
+open AlgebraicCuntzQuotient
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
@@ -34,12 +34,12 @@ abbrev ColorSpinor4 (V : Type*) := (Fin 3 → V) × V
 
 /-- Infinitesimal SU(3) color action on a four-component spinor: fundamental
 matrix action on the triplet and zero action on the singlet. -/
-def colorLieAction4 {V : Type*} [AddCommGroup V] [Module ℂ V]
+def colorLieAction4 {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (A : M3C) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
   (fun i => ∑ j : Fin 3, A i j • ψ.1 j, 0)
 
 /-- Matrix multiplication is represented by composition of color actions. -/
-theorem colorLieAction4_mul {V : Type*} [AddCommGroup V] [Module ℂ V]
+theorem colorLieAction4_mul {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (A B : M3C) (ψ : ColorSpinor4 V) :
     colorLieAction4 (A * B) ψ = colorLieAction4 A (colorLieAction4 B ψ) := by
   ext i <;> simp [colorLieAction4, Matrix.mul_apply, Finset.sum_smul, Finset.smul_sum]

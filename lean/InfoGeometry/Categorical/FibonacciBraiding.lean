@@ -14,7 +14,7 @@ construction, or universal topological quantum-computing theorem.
 namespace FibonacciBraiding
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+open FiniteFibonacciFusionMatrix
 
 /-- The finite Fibonacci fusion matrix is involutive under the explicit scalar relations. -/
 theorem F_sq (τ s : ℂ) (s_sq : s ^ 2 = τ) (tau_sq_add_tau : τ ^ 2 + τ = 1) :

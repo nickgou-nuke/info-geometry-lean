@@ -23,10 +23,10 @@ This file stays at the doubled/Krein level:
 namespace GeneralizedMetricCore
 
 open InfoGeometry.Cartan
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 open InfoGeometry.Krein
-open InfoGeometry.Krein.PolarizedSector
-open InfoGeometry.Krein.SplitQuadraticSheets
+open PolarizedSector
+open SplitQuadraticSheets
 
 section Core
 

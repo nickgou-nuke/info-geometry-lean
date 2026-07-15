@@ -23,8 +23,8 @@ rewrite layer.
 
 namespace FiniteFibonacciAnyonBraiding
 
-open InfoGeometry.Canonical.FiniteMajoranaBraiding
-open InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
+open FiniteMajoranaBraiding
+open FiniteMajoranaProjectiveBraiding
 
 /-- Fibonacci topological charges: vacuum `one` and Fibonacci anyon `eps`. -/
 inductive FibonacciCharge where
@@ -100,20 +100,20 @@ theorem card_fibonacciComputationalSpace (N : ℕ) :
   rw [Fintype.card_fin, vacuumFusionDimension_two_mul_add_two]
 
 /-- Fibonacci braid words use the same finite neighboring-exchange words. -/
-abbrev FibonacciBraidWord := BraidWord
+abbrev FibonacciBraidWord := List ℕ
 
 /-- A finite projective Fibonacci braid phase assignment. -/
-abbrev FibonacciBraidPhase := BraidPhase
+abbrev FibonacciBraidPhase := List ℕ → Units ℂ
 
 /-- Evaluation-factored Fibonacci phases. -/
 def fibonacciPhaseOfEval (χ : Equiv.Perm ℕ → Units ℂ) : FibonacciBraidPhase :=
-  phaseOfEval χ
+  fun w => χ (FiniteMajoranaBraiding.evalBraidWord w)
 
 /-- Finite projective Fibonacci braid gate readout. -/
 def fibonacciProjectiveGate (Gate : Type*) [SMul (Units ℂ) Gate]
     (phase : FibonacciBraidPhase) (readout : Equiv.Perm ℕ → Gate)
     (w : FibonacciBraidWord) : Gate :=
-  projectiveBraidGate Gate phase readout w
+  phase w • readout (FiniteMajoranaBraiding.evalBraidWord w)
 
 /-- Projective Fibonacci gates are invariant under the adjacent braid rewrite. -/
 theorem fibonacciProjectiveGate_braid_rewrite_of_phase
@@ -124,7 +124,8 @@ theorem fibonacciProjectiveGate_braid_rewrite_of_phase
       phase (left ++ [i + 1, i, i + 1] ++ right)) :
     fibonacciProjectiveGate Gate phase readout (left ++ [i, i + 1, i] ++ right) =
       fibonacciProjectiveGate Gate phase readout (left ++ [i + 1, i, i + 1] ++ right) := by
-  exact projectiveBraidGate_braid_rewrite_of_phase Gate phase readout i left right hphase
+  unfold fibonacciProjectiveGate
+  rw [hphase, FiniteMajoranaBraiding.evalBraidWord_braid_rewrite]
 
 /-- Projective Fibonacci gates are invariant under separated commutation. -/
 theorem fibonacciProjectiveGate_commute_rewrite_of_phase
@@ -135,7 +136,8 @@ theorem fibonacciProjectiveGate_commute_rewrite_of_phase
       phase (left ++ [j, i] ++ right)) :
     fibonacciProjectiveGate Gate phase readout (left ++ [i, j] ++ right) =
       fibonacciProjectiveGate Gate phase readout (left ++ [j, i] ++ right) := by
-  exact projectiveBraidGate_commute_rewrite_of_phase Gate phase readout hsep left right hphase
+  unfold fibonacciProjectiveGate
+  rw [hphase, FiniteMajoranaBraiding.evalBraidWord_commute_rewrite hsep]
 
 /-- Evaluation-factored projective Fibonacci gates are invariant under the braid rewrite. -/
 theorem fibonacciProjectiveGate_braid_rewrite_of_evalPhase
@@ -146,7 +148,8 @@ theorem fibonacciProjectiveGate_braid_rewrite_of_evalPhase
         (left ++ [i, i + 1, i] ++ right) =
       fibonacciProjectiveGate Gate (fibonacciPhaseOfEval χ) readout
         (left ++ [i + 1, i, i + 1] ++ right) := by
-  exact projectiveBraidGate_braid_rewrite_of_evalPhase Gate χ readout i left right
+  unfold fibonacciProjectiveGate fibonacciPhaseOfEval
+  rw [FiniteMajoranaBraiding.evalBraidWord_braid_rewrite]
 
 /-- Evaluation-factored projective Fibonacci gates are invariant under separated commutation. -/
 theorem fibonacciProjectiveGate_commute_rewrite_of_evalPhase
@@ -155,6 +158,7 @@ theorem fibonacciProjectiveGate_commute_rewrite_of_evalPhase
     {i j : ℕ} (hsep : i + 1 < j) (left right : FibonacciBraidWord) :
     fibonacciProjectiveGate Gate (fibonacciPhaseOfEval χ) readout (left ++ [i, j] ++ right) =
       fibonacciProjectiveGate Gate (fibonacciPhaseOfEval χ) readout (left ++ [j, i] ++ right) := by
-  exact projectiveBraidGate_commute_rewrite_of_evalPhase Gate χ readout hsep left right
+  unfold fibonacciProjectiveGate fibonacciPhaseOfEval
+  rw [FiniteMajoranaBraiding.evalBraidWord_commute_rewrite hsep]
 
 end FiniteFibonacciAnyonBraiding

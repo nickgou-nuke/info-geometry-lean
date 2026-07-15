@@ -13,7 +13,7 @@ noncomputable section
 
 namespace STUDatum
 
-open InfoGeometry.Exceptional.Freudenthal
+open Freudenthal
 
 /-- The STU diagonal carrier space `ℝ ⊕ ℝ ⊕ ℝ`. -/
 abbrev STUCarrier := Fin 3 → ℝ
@@ -41,6 +41,26 @@ def stuTraceBilin : STUCarrier →ₗ[ℝ] STUCarrier →ₗ[ℝ] ℝ where
     ext y
     simp [Pi.smul_apply]
     ring
+
+/-- Unary coordinate trace on the STU carrier. -/
+def stuTrace : STUCarrier →ₗ[ℝ] ℝ where
+  toFun x := x 0 + x 1 + x 2
+  map_add' := by
+    intro x y
+    simp [Pi.add_apply]
+    ring
+  map_smul' := by
+    intro c x
+    simp [Pi.smul_apply]
+    ring
+
+@[simp] theorem stuTrace_apply (x : STUCarrier) :
+    stuTrace x = x 0 + x 1 + x 2 :=
+  rfl
+
+@[simp] theorem stuTrace_single_zero (r : ℝ) :
+    stuTrace (Pi.single 0 r : STUCarrier) = r := by
+  simp [stuTrace]
 
 /-- Cubic norm: `N(x) = x₀x₁x₂`. -/
 def stuNormCubic (x : STUCarrier) : ℝ :=

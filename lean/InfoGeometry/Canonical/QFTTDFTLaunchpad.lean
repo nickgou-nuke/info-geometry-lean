@@ -16,7 +16,7 @@ consumers:
 namespace QFTTDFTLaunchpad
 
 open InfoGeometry.Geometry
-open InfoGeometry.Canonical.RGFlow
+open RGFlow
 
 
 section TDFT

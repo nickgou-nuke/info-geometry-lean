@@ -28,8 +28,7 @@ open scoped BigOperators
 
 namespace PrimeLeeYangHopfieldLimitBridge
 
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-open InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
+open PrimeLeeYangFerromagneticChain
 
 variable {n : ℕ}
 variable (C : PrimeFerromagneticChain n)

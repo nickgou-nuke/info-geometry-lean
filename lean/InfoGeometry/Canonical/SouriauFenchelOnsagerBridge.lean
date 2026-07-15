@@ -36,7 +36,7 @@ models.
 
 namespace SouriauFenchelOnsagerBridge
 
-open InfoGeometry.Canonical.SouriauThermodynamics
+open SouriauThermodynamics
 open InfoGeometry.Canonical.SouriauMetriplectic
 
 variable {α : Type _}
@@ -373,7 +373,7 @@ diagonal at the selected Souriau basepoint.
 theorem primalBregman_self_at_bridge_base :
     C.model.primalBregman C.theta C.theta = 0 := by
   unfold InfoGeometry.LogPotential.LegendreModel.primalBregman
-  simp [InfoGeometry.LogPotential.bregman, InfoGeometry.bregmanDiv]
+  simp [InfoGeometry.Volume.LogPotential.bregman, InfoGeometry.bregmanDiv]
 
 /--
 Transverse Fenchel defect readout at the Souriau bridge basepoint.

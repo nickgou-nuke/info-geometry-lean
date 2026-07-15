@@ -3,7 +3,7 @@ import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 namespace InfoGeometry.Canonical.PerelmanW
 
-open InfoGeometry.Canonical.RicciMongeAmpere
+open RicciMongeAmpere
 
 section Core
 

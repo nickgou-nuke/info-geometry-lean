@@ -18,7 +18,7 @@ noncomputable section
 namespace O55FiveGradeWeights
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
-open InfoGeometry.Algebra.FiveGradedTKK
+open FiveGradedTKK
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 -- Weight constants (matching the Python script output)

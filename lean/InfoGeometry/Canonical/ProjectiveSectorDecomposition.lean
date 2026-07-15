@@ -13,7 +13,7 @@ existing pointed projective sectors away from the distinguished vacuum.
 namespace ProjectiveSectorDecomposition
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.ProjectiveSplitQ11Realization
+open ProjectiveSplitQ11Realization
 
 variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

@@ -21,7 +21,7 @@ namespace InfoGeometry.Quantum
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -61,15 +61,15 @@ noncomputable def canonical : Cl11Dictionary E where
 
 @[simp] theorem canonical_eps_eq_spectral_epsilon :
     (canonical (E := E)).ε = spectral_epsilon (E := E) := by
-  rfl
+  simp [canonical, modularSignEpsilon_eq_spectral_epsilon]
 
 @[simp] theorem canonical_J_eq_modular_j :
     (canonical (E := E)).J = modular_j (E := E) := by
-  rfl
+  simp [canonical, modularConjugationJ_eq_modular_j]
 
 @[simp] theorem canonical_K_eq_complex_i :
     (canonical (E := E)).K = complex_i (E := E) := by
-  simp [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simp [canonical, modularComplexI_eq_complex_i]
 
 /-- The canonical chirality atom is the Tomita-named modular sign `ε`. -/
 @[simp] theorem canonical_eps_eq_modularSignEpsilon :
@@ -111,35 +111,35 @@ noncomputable def canonical : Cl11Dictionary E where
 @[simp] theorem canonical_eps_comp_J :
     ((canonical (E := E)).ε).comp ((canonical (E := E)).J) =
       -((canonical (E := E)).K) := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (spectral_epsilon_comp_modular_j (E := E))
 
 /-- Multiplication by `J` sends the phase atom back to the sign atom. -/
 @[simp] theorem canonical_J_comp_K :
     ((canonical (E := E)).J).comp ((canonical (E := E)).K) =
       (canonical (E := E)).ε := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (modular_j_comp_complex_i (E := E))
 
 /-- Right multiplication by `J` sends the phase atom to minus the sign atom. -/
 @[simp] theorem canonical_K_comp_J :
     ((canonical (E := E)).K).comp ((canonical (E := E)).J) =
       -((canonical (E := E)).ε) := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_comp_modular_j (E := E))
 
 /-- Multiplication by `ε` sends the phase atom to minus the conjugation atom. -/
 @[simp] theorem canonical_eps_comp_K :
     ((canonical (E := E)).ε).comp ((canonical (E := E)).K) =
       -((canonical (E := E)).J) := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (spectral_epsilon_comp_complex_i (E := E))
 
 /-- Right multiplication by `ε` sends the phase atom back to conjugation. -/
 @[simp] theorem canonical_K_comp_eps :
     ((canonical (E := E)).K).comp ((canonical (E := E)).ε) =
       (canonical (E := E)).J := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_comp_spectral_epsilon (E := E))
 
 /-- The modular sign is block-diagonal on the doubled real carrier. -/
@@ -155,7 +155,7 @@ noncomputable def canonical : Cl11Dictionary E where
 /-- The composite `Jε` is the signed off-block phase axis. -/
 @[simp] theorem canonical_K_to_doubled (x ξ : E) :
     (canonical (E := E)).K (to_doubled x ξ : H₂) = to_doubled (-ξ) x := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simpa [canonical, modularComplexI_eq_complex_i]
     using (complex_i_to_doubled (E := E) x ξ)
 
 /-- The canonical conjugation atom is even for the modular block grading. -/
@@ -220,7 +220,7 @@ noncomputable def phaseObservable (ψ : H₂) : ℝ :=
     (ψ : H₂) :
     phaseObservable (E := E) ψ =
       operatorObservable (E := E) ψ ψ (complex_i (E := E)) := by
-  simp [phaseObservable, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simp [phaseObservable, modularComplexI_eq_complex_i]
 
 /-- 
 **Spinor Normalization**:

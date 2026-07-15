@@ -17,8 +17,8 @@ noncomputable section
 
 namespace ProjectiveEntropy
 
-open InfoGeometry.Thermodynamics.ProjectiveTemperature
-open InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
+open ProjectiveTemperature
+open PrimitivePrimeProjectiveTemperature
 
 /-! ## 1. Relative density comparison socket -/
 

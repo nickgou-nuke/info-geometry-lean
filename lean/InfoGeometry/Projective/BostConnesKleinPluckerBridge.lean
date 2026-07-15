@@ -3,9 +3,9 @@ import InfoGeometry.Projective.KleinQuadricPlucker
 
 namespace BostConnesKleinPluckerBridge
 
-open InfoGeometry.Arithmetic.BostConnesSystem
-open InfoGeometry.Canonical.BostConnesKMS
-open InfoGeometry.Projective.KleinQuadricPlucker
+open BostConnesSystem
+open BostConnesKMS
+open KleinQuadricPlucker
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : BostConnesCuntzSystem Op)

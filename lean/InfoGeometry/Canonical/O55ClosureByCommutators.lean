@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.AssociativeSuperBracket
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
 
 /-!
@@ -39,6 +40,7 @@ namespace O55ClosureByCommutators
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Clifford.ClNN
+open InfoGeometry.Canonical.AssociativeSuperBracket
 
 /-- The primitive null-generator packet. -/
 theorem null_generator_packet :

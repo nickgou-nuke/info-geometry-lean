@@ -24,7 +24,7 @@ noncomputable section
 namespace InfoGeometry
 namespace GromovWittenErlangen
 
-open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
+open DrazinProjectionLocalization
 
 /--
 Localized Drazin-Frobenius readout.

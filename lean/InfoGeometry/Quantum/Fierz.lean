@@ -22,26 +22,26 @@ open InfoGeometry.Quantum
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- **Information Scalar Channel**: $S(\psi) = \langle \psi, J \psi \rangle = 2 \langle x, \xi \rangle$. -/
-noncomputable def infoScalar (ψ : Krein.DoubledSpace E) : ℝ :=
+noncomputable def infoScalar (ψ : DoubledSpace E) : ℝ :=
   hessian_indefinite_form (E := E) ψ ψ
 
 /-- **Information Symplectic Channel**: $\omega(\psi) = \langle \psi, \epsilon \psi \rangle = \|x\|^2 - \|\xi\|^2$. -/
-noncomputable def infoSymplectic (ψ : Krein.DoubledSpace E) : ℝ :=
+noncomputable def infoSymplectic (ψ : DoubledSpace E) : ℝ :=
   inducedSymplecticForm (E := E) ψ ψ
 
 /-- **Information Hilbert Channel**: $H(\psi) = \langle \psi, \psi \rangle = \|x\|^2 + \|\xi\|^2$. -/
-noncomputable def infoHilbert (ψ : Krein.DoubledSpace E) : ℝ :=
+noncomputable def infoHilbert (ψ : DoubledSpace E) : ℝ :=
   inner ℝ (WithLp.fst ψ) (WithLp.fst ψ) + inner ℝ (WithLp.snd ψ) (WithLp.snd ψ)
 
 /-- **Information Area (Uncertainty)**: The squared area spanned by the data and model components.
 Identified with the Gram determinant of the state components. -/
-noncomputable def infoArea (ψ : Krein.DoubledSpace E) : ℝ :=
+noncomputable def infoArea (ψ : DoubledSpace E) : ℝ :=
   inner ℝ (WithLp.fst ψ) (WithLp.fst ψ) * inner ℝ (WithLp.snd ψ) (WithLp.snd ψ) -
     (inner ℝ (WithLp.fst ψ) (WithLp.snd ψ))^2
 
 /-! ### The Informational Fierz Identity -/
 
-private lemma hessian_indefinite_form_explicit (u v : Krein.DoubledSpace E) :
+private lemma hessian_indefinite_form_explicit (u v : DoubledSpace E) :
     hessian_indefinite_form (E := E) u v
       = inner ℝ (WithLp.fst u) (WithLp.fst v) - inner ℝ (WithLp.snd u) (WithLp.snd v) := by
   unfold hessian_indefinite_form
@@ -60,7 +60,7 @@ scalar and symplectic channels, with the remainder being the information uncerta
 
 $H(\psi)^2 = S(\psi)^2 + \omega(\psi)^2 + 4 \cdot \text{Area}(\psi)$
 -/
-theorem information_fierz_identity (ψ : Krein.DoubledSpace E) :
+theorem information_fierz_identity (ψ : DoubledSpace E) :
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 + 4 * (infoArea ψ) := by
   have hS : infoScalar (E := E) ψ
       = inner ℝ (WithLp.fst ψ) (WithLp.fst ψ) - inner ℝ (WithLp.snd ψ) (WithLp.snd ψ) := by
@@ -81,10 +81,10 @@ theorem information_fierz_identity (ψ : Krein.DoubledSpace E) :
 A belief state is 'Majorana' if its data and model components are perfectly aligned
 (zero uncertainty/area). For such states, the conservation identity simplifies to a sum of squares.
 -/
-def IsMajoranaBelief (ψ : Krein.DoubledSpace E) : Prop :=
+def IsMajoranaBelief (ψ : DoubledSpace E) : Prop :=
   infoArea ψ = 0
 
-theorem information_fierz_majorana (ψ : Krein.DoubledSpace E) (hM : IsMajoranaBelief ψ) :
+theorem information_fierz_majorana (ψ : DoubledSpace E) (hM : IsMajoranaBelief ψ) :
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 := by
   rw [information_fierz_identity (E := E) ψ, hM]
   ring

@@ -25,8 +25,8 @@ Direct connection to the truncated thermal state from `CuntzThermalState.lean`:
   Tr(exp_N(-βH)) = Σ_i Σ_{k=0}^N (-β·log p_i)^k/k!
   has finite-mode coefficient sum Σ_i Σ_k (-β·log p_i)^k/k!.
 -/
-open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzPrimonHamiltonian
+open CuntzTensorQuotient
+open CuntzPrimonHamiltonian
 
 noncomputable section
 

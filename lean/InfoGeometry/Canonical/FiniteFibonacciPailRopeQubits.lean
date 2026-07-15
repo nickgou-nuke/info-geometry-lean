@@ -28,8 +28,8 @@ No physical fault-tolerance theorem.
 
 namespace FiniteFibonacciPailRopeQubits
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciElectronIndependence
 
 /-- The two local computational configurations: triangular pail and double rope. -/
 inductive PailRope where

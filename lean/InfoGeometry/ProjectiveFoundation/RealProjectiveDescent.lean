@@ -7,12 +7,15 @@ No complex imports.
 
 import Mathlib.Algebra.Group.Action.End
 import Mathlib.GroupTheory.QuotientGroup.Defs
+import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.ProjectiveFoundation
 import InfoGeometry.Geometry.RealMoebiusAction
 
 noncomputable section
 
 open scoped MatrixGroups
+open InfoGeometry.Geometry
+open PSLDescent
 
 namespace InfoGeometry.ProjectiveFoundation
 
@@ -63,21 +66,21 @@ The real projective action is obtained from the real `SL(2,ℝ)` action once
 its center-triviality has been proved in the real coordinate model.
 -/
 instance instPSL2RRealAction
-    [MulAction SL2R RealUpperHalfPlane]
-    [CenterActsTrivially SL2R RealUpperHalfPlane] :
-    MulAction PSL2R RealUpperHalfPlane :=
+    [MulAction InfoGeometry.Geometry.SL2R RealUpperHalfPlane]
+    [CenterActsTrivially InfoGeometry.Geometry.SL2R RealUpperHalfPlane] :
+    MulAction PSLDescent.PSL2R RealUpperHalfPlane :=
   CenterActsTrivially.centerQuotientMulAction
-    (G := SL2R) (X := RealUpperHalfPlane)
+    (G := InfoGeometry.Geometry.SL2R) (X := RealUpperHalfPlane)
 
 /--
 The arithmetic real projective action is the corresponding descent for
 `SL(2,ℤ)`.
 -/
 instance instPSL2ZRealAction
-    [MulAction SL2Z RealUpperHalfPlane]
-    [CenterActsTrivially SL2Z RealUpperHalfPlane] :
-    MulAction PSL2Z RealUpperHalfPlane :=
+    [MulAction InfoGeometry.Geometry.SL2Z RealUpperHalfPlane]
+    [CenterActsTrivially InfoGeometry.Geometry.SL2Z RealUpperHalfPlane] :
+    MulAction PSLDescent.PSL2Z RealUpperHalfPlane :=
   CenterActsTrivially.centerQuotientMulAction
-    (G := SL2Z) (X := RealUpperHalfPlane)
+    (G := InfoGeometry.Geometry.SL2Z) (X := RealUpperHalfPlane)
 
 end InfoGeometry.ProjectiveFoundation

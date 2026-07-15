@@ -3,7 +3,7 @@ import InfoGeometry.Krein.HilbertBridge
 
 open scoped InnerProductSpace
 
-namespace SuperAnomaly
+namespace InfoGeometry.Canonical.SuperAnomaly
 
 open InfoGeometry.Krein
 open KreinGradedModule
@@ -87,4 +87,4 @@ lemma graded_weight_anticommutator {A B : EndH H}
 
 end SuperWeightLike
 
-end SuperAnomaly
+end InfoGeometry.Canonical.SuperAnomaly

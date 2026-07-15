@@ -27,7 +27,7 @@ open scoped BigOperators
 
 namespace PrimeLeeYangFerromagnet
 
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+open PrimeLeeYangFerromagneticChain
 
 /--
 Finite prime-chain data.

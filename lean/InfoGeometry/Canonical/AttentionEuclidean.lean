@@ -36,55 +36,55 @@ variable {n : ℕ} [Fact (0 < n)]
 /-- Standard Attention Params. -/
 noncomputable abbrev euclideanAttentionParams
     (q : S)
-    (ctx : ContextWindow n S V) :
+    (ctx : _root_.Attention.ContextWindow n S V) :
     InfoGeometry.GrandCanonical.GrandCanonicalParams (Fin n) :=
-  attentionParams q ctx euclideanMatchForm
+  _root_.Attention.attentionParams q ctx euclideanMatchForm
 
 /-- Standard Attention Weights (Softmax). -/
 noncomputable abbrev euclideanAttentionWeights
     (q : S)
-    (ctx : ContextWindow n S V)
+    (ctx : _root_.Attention.ContextWindow n S V)
     (β : ℝ) (i : Fin n) : ℝ :=
-  attentionWeights q ctx euclideanMatchForm β i
+  _root_.Attention.attentionWeights q ctx euclideanMatchForm β i
 
 /-- Standard Attention Head output. -/
 noncomputable abbrev euclideanAttentionHead
     (q : S)
-    (ctx : ContextWindow n S V)
+    (ctx : _root_.Attention.ContextWindow n S V)
     (β : ℝ) : V :=
-  attentionHead q ctx euclideanMatchForm β
+  _root_.Attention.attentionHead q ctx euclideanMatchForm β
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Theorem: Standard Attention is rigorously normalized. -/
 lemma euclideanAttentionWeights_sum_one
     (q : S)
-    (ctx : ContextWindow n S V)
+    (ctx : _root_.Attention.ContextWindow n S V)
     (β : ℝ) :
     ∑ i, euclideanAttentionWeights q ctx β i = 1 := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [euclideanAttentionWeights] using
-    attentionWeights_sum_one q ctx euclideanMatchForm β
+    _root_.Attention.attentionWeights_sum_one q ctx euclideanMatchForm β
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Euclidean attention weights are pointwise nonnegative. -/
 lemma euclideanAttentionWeights_nonneg
     (q : S)
-    (ctx : ContextWindow n S V)
+    (ctx : _root_.Attention.ContextWindow n S V)
     (β : ℝ) (i : Fin n) :
     0 ≤ euclideanAttentionWeights q ctx β i := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [euclideanAttentionWeights] using
-    attentionWeights_nonneg q ctx euclideanMatchForm β i
+    _root_.Attention.attentionWeights_nonneg q ctx euclideanMatchForm β i
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Euclidean attention weights are pointwise bounded by one. -/
 lemma euclideanAttentionWeights_le_one
     (q : S)
-    (ctx : ContextWindow n S V)
+    (ctx : _root_.Attention.ContextWindow n S V)
     (β : ℝ) (i : Fin n) :
     euclideanAttentionWeights q ctx β i ≤ 1 := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [euclideanAttentionWeights] using
-    attentionWeights_le_one q ctx euclideanMatchForm β i
+    _root_.Attention.attentionWeights_le_one q ctx euclideanMatchForm β i
 
 end InfoGeometry.Canonical.Attention

@@ -22,11 +22,11 @@ open Matrix
 
 namespace BayesianMarkovHodgeBridge
 
-open InfoGeometry.Canonical.BayesianMarkovChain
-open InfoGeometry.Canonical.BayesianMarkovChain.TensorLimitStateSpace
-open InfoGeometry.Canonical.TensorColimitExpectation
-open InfoGeometry.Topology.EckmannDiscreteHodge
-open InfoGeometry.Topology.DiscreteHodgeStabilizer
+open BayesianMarkovChain
+open BayesianMarkovChain.TensorLimitStateSpace
+open TensorColimitExpectation
+open EckmannDiscreteHodge
+open DiscreteHodgeStabilizer
 
 universe u v
 

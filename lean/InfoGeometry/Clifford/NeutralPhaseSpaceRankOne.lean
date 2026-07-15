@@ -17,7 +17,7 @@ Clifford algebra level.
 
 namespace NeutralPhaseSpaceRankOne
 
-open InfoGeometry.Clifford.NeutralPhaseSpaceCore
+open NeutralPhaseSpaceCore
 
 /-- Projection `ℝ* → ℝ` by evaluation at `1`. -/
 @[rep_depth krein]

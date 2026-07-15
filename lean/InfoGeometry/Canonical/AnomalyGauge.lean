@@ -15,8 +15,8 @@ degenerate causal boundary.
 
 namespace AnomalyGauge
 
-open InfoGeometry.Singular.MoorePenrose
-open InfoGeometry.Singular.Drazin
+open MoorePenrose
+open Drazin
 open InfoGeometry.Singular.Architecture
 open InfoGeometry.Krein
 

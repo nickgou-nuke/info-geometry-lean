@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace ModularSignCPT
+namespace InfoGeometry.OperatorAlgebra.ModularSignCPT
 
 /-! ## 0. Bounded real operator notation -/
 

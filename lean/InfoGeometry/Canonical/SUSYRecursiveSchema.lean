@@ -11,7 +11,7 @@ from `SuperAlgebraEquilibrium`.
 namespace SUSYRecursiveSchema
 
 open Matrix
-open InfoGeometry.Canonical.SuperAlgebraEquilibrium
+open SuperAlgebraEquilibrium
 
 abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 

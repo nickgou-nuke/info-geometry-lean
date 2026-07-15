@@ -13,7 +13,7 @@ Executable Newton--Kantorovich majorant step and first sequence-level lemmas.
 namespace NewtonKantorovichSequence
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
-open InfoGeometry.Foundations.NewtonKantorovichRoots
+open NewtonKantorovichRoots
 
 noncomputable section
 

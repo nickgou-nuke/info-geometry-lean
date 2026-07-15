@@ -29,7 +29,7 @@ set_option autoImplicit false
 
 namespace TomitaTakesakiTrifactor
 
-open InfoGeometry.Canonical.CoordinateFreeConnectionChannels
+open CoordinateFreeConnectionChannels
 
 universe u
 
@@ -158,7 +158,7 @@ end MirrorAndJacobi
 
 section Trifactor
 
-open InfoGeometry.Canonical.TrifactorDecomposition
+open TrifactorDecomposition
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 

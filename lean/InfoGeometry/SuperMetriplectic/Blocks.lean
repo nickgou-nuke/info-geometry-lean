@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.Axioms
+import InfoGeometry.Canonical.AssociativeSuperBracket
 
 /-!
 # Supergraded Metriplectic Block Packets

@@ -15,7 +15,7 @@ This is theorem-only and algebraic:
 
 namespace VirasoroCasimirCentralChargeReadback
 
-open InfoGeometry.Canonical.HypercomplexTriadVirasoroBridge
+open HypercomplexTriadVirasoroBridge
 
 /--
 A compact readback packet over a Virasoro cocycle/Casimir datum.
@@ -69,16 +69,18 @@ theorem cocycle_two_neg_two
     (P : CentralChargeReadbackPacket A) :
     P.datum.cocycle 2 (-2) = P.datum.centralCharge / 2 := by
   have h := P.cocycle_on_opposite_modes 2
-  norm_num at h
-  linarith
+  have h' := h
+  ring_nf at h'
+  simpa using h'
 
 /-- The mode-(-2) opposite-mode cocycle is exactly `-c/2`. -/
 theorem cocycle_neg_two_two
     (P : CentralChargeReadbackPacket A) :
     P.datum.cocycle (-2) 2 = -(P.datum.centralCharge / 2) := by
   have h := P.cocycle_on_opposite_modes (-2)
-  norm_num at h
-  linarith
+  have h' := h
+  ring_nf at h'
+  simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h'
 
 /-- Virasoro bracket readback at arbitrary pair `(m,n)`. -/
 theorem virasoro_bracket_readback

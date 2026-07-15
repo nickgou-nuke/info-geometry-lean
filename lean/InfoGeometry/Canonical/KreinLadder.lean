@@ -6,13 +6,13 @@ import InfoGeometry.Krein.DoubledSpace
 namespace KreinLadder
 
 open InfoGeometry.Canonical.Drazin
-open InfoGeometry.Canonical.SpectralInference
+open SpectralInference
 open InfoGeometry.Krein
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /-- Canonical doubled carrier used by ladder operators. -/
-abbrev DoubledSpace (E : Type*) := Krein.DoubledSpace E
+abbrev DoubledSpace (E : Type*) := InfoGeometry.Krein.DoubledSpace E
 
 /--
 The Drazin projection onto the non-singular information subspace.

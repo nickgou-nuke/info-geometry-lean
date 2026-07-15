@@ -15,17 +15,16 @@ already owns for the Hurwitz/split-Hurwitz corridor.
 namespace Hurwitz3DGeometricAlgebra
 
 open scoped TensorProduct
-open InfoGeometry.Canonical.AlbertCayleyDickson
-open InfoGeometry.Algebra.Zorn.ConcreteComposition
+open AlbertCayleyDickson
+open ConcreteComposition
 
 theorem cl11_pseudoscalar_sq :
-    InfoGeometry.Clifford.Hestenes.Pseudoscalar *
-      InfoGeometry.Clifford.Hestenes.Pseudoscalar = 1 := by
-  simpa using InfoGeometry.Clifford.Hestenes.pseudoscalar_sq
+    Hestenes.Pseudoscalar * Hestenes.Pseudoscalar = 1 := by
+  simpa using Hestenes.pseudoscalar_sq
 
 noncomputable def cl11_equiv_mat2 :
-    InfoGeometry.Clifford.Cl11Quaternion.Cl11 ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
-  InfoGeometry.Clifford.Cl11Quaternion.cliffordEquivMat
+    Cl11Quaternion.Cl11 ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
+  Cl11Quaternion.cliffordEquivMat
 
 theorem splitOctonion_has_nonzero_zero_divisors :
     ∃ x y : SplitOctonion ℝ,
@@ -38,16 +37,14 @@ theorem splitOctonion_has_nonzero_zero_divisors :
           (A := SplitQuaternion ℝ))
 
 theorem zorn_det_mul
-    (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℝ) :
-    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ (X * Y) =
-      InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ X *
-      InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ Y := by
+    (X Y : ZornCell ℝ) :
+    ZornCell.detZ (X * Y) = ZornCell.detZ X * ZornCell.detZ Y := by
   simpa using
-    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ_mul X Y
+    ZornCell.detZ_mul X Y
 
 noncomputable def cl44_complexification_equiv :
-    InfoGeometry.Clifford.SplitCl44Complexification.Cl44Complex ≃ₐ[ℂ]
+    SplitCl44Complexification.Cl44Complex ≃ₐ[ℂ]
       ℂ ⊗[ℝ] InfoGeometry.Clifford.BottPeriodicity.Cl44 :=
-  InfoGeometry.Clifford.SplitCl44Complexification.cl44ComplexificationEquiv
+  SplitCl44Complexification.cl44ComplexificationEquiv
 
 end Hurwitz3DGeometricAlgebra

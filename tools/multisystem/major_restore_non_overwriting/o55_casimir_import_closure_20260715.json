@@ -1,0 +1,1971 @@
+{
+  "schema": "archive-import-closure-v1",
+  "generated_at": "2026-07-14T22:15:41.681628+00:00",
+  "source_commit": "ea2e4c7ac662cc9270a42bc446e3c8278c8c656f",
+  "root_module": "O55CasimirIsospinHamiltonian",
+  "coverage": {
+    "modules": 74,
+    "edges": 170,
+    "unresolved": [],
+    "caps": null,
+    "truncated": false
+  },
+  "summary": {
+    "archive_frontier": 12,
+    "archive_dependent": 62
+  },
+  "topological_modules": [
+    {
+      "order": 1,
+      "module": "WeylSU3ColorSymmetry",
+      "archive_path": "proofs/WeylSU3ColorSymmetry.lean",
+      "sha256": "c6baebf73402a0f218316b55846f81fbed9215f98a1c0cdc4f0c14779c0e9d07",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "WeylSU3ColorSymmetry",
+          "to": "BogoliubovSU3ParafermionProofChain",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovSU3ParafermionProofChain.lean"
+        },
+        {
+          "from": "WeylSU3ColorSymmetry",
+          "to": "SplitOctonionBraidSU3",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/SplitOctonionBraidSU3.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 2,
+      "module": "B3RepresentationBridge",
+      "archive_path": "proofs/B3RepresentationBridge.lean",
+      "sha256": "aea64584320fc2940b58cf3fc6e64a3cef2c28628657513316dc5294bb86053b",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "B3RepresentationBridge",
+          "to": "B3PresentedGroup",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/B3PresentedGroup.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 3,
+      "module": "BogoliubovBraidGraphWeld",
+      "archive_path": "proofs/BogoliubovBraidGraphWeld.lean",
+      "sha256": "7517dee5303ccb794778cb1da9e723717c0b41f1cfc8013270fad3a8f250d6cb",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "BogoliubovBraidGraphWeld",
+          "to": "BogoliubovSU3ParafermionProofChain",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovSU3ParafermionProofChain.lean"
+        },
+        {
+          "from": "BogoliubovBraidGraphWeld",
+          "to": "B3RepresentationBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "BogoliubovBraidGraphWeld",
+          "to": "YangBaxterQSwap",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/YangBaxterQSwap.lean"
+        },
+        {
+          "from": "BogoliubovBraidGraphWeld",
+          "to": "BraidIdealDescent",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BraidIdealDescent.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 4,
+      "module": "SU3LoopBraidDuality",
+      "archive_path": "proofs/SU3LoopBraidDuality.lean",
+      "sha256": "5b2db8ac9fb37483106859295f63f9f9edd7d1d4eee5dc6b8f1f8e6e6b7c5609",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "GellMannSU3",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/GellMannSU3.lean"
+        },
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "WeylSU3ColorSymmetry",
+          "resolution": "archive"
+        },
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "CantorBoundaryCuntzFamily",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Topology/CantorBoundaryCuntzFamily.lean"
+        },
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "JonesBraidB3",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/JonesBraidB3.lean"
+        },
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "SupergradedCuntzBdG",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/SupergradedCuntzBdG.lean"
+        },
+        {
+          "from": "SU3LoopBraidDuality",
+          "to": "BogoliubovBraidGraphWeld",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 5,
+      "module": "S3ColorSpinorDecomposition",
+      "archive_path": "proofs/S3ColorSpinorDecomposition.lean",
+      "sha256": "85688020c8e1fa3355ebfb2747bb44812b21b77f4ad734f8eb51add76d7d3077",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "S3ColorSpinorDecomposition",
+          "to": "WeylSU3ColorSymmetry",
+          "resolution": "archive"
+        },
+        {
+          "from": "S3ColorSpinorDecomposition",
+          "to": "GellMannParafermionSolder",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/GellMannParafermionSolder.lean"
+        },
+        {
+          "from": "S3ColorSpinorDecomposition",
+          "to": "BogoliubovBraidGraphWeld",
+          "resolution": "archive"
+        },
+        {
+          "from": "S3ColorSpinorDecomposition",
+          "to": "SU3LoopBraidDuality",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 6,
+      "module": "RegularizationCayleyPipeline",
+      "archive_path": "proofs/RegularizationCayleyPipeline.lean",
+      "sha256": "90fba4c75859cc5eec672fa982e44ac3c98b73ddce33332b62bd5730f52fc88d",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [],
+      "placeholder_hits": 1,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 7,
+      "module": "JaynesLDDPGNSColimit",
+      "archive_path": "proofs/JaynesLDDPGNSColimit.lean",
+      "sha256": "8c26a02f85d5de557ef327edb2c86351179dab39ea25e7eacf8e70ddc862265b",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "JaynesLDDPGNSColimit",
+          "to": "UHFInductiveColimit",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/UHFInductiveColimit.lean"
+        },
+        {
+          "from": "JaynesLDDPGNSColimit",
+          "to": "RegularizationCayleyPipeline",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 8,
+      "module": "ColorConfinementGNS",
+      "archive_path": "proofs/ColorConfinementGNS.lean",
+      "sha256": "c4c745388cfea944503b438038def6691ad2459f194c9c2d885ae5acc6ee4fff",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ColorConfinementGNS",
+          "to": "S3ColorSpinorDecomposition",
+          "resolution": "archive"
+        },
+        {
+          "from": "ColorConfinementGNS",
+          "to": "JaynesLDDPGNSColimit",
+          "resolution": "archive"
+        },
+        {
+          "from": "ColorConfinementGNS",
+          "to": "SU3LoopBraidDuality",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 9,
+      "module": "WeakIsospinSU2",
+      "archive_path": "proofs/WeakIsospinSU2.lean",
+      "sha256": "cd752675bf1ff417a7e61169e00273e2b100b56fed1ccfeb01cb4e9adcadefe5",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "WeakIsospinSU2",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 10,
+      "module": "ChiralAffineBogoliubovWeld",
+      "archive_path": "proofs/ChiralAffineBogoliubovWeld.lean",
+      "sha256": "72d85ac9a3be515960780ce043793447db75cda105936f93157567e74c972dda",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChiralAffineBogoliubovWeld",
+          "to": "SupergradedCuntzBdG",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/SupergradedCuntzBdG.lean"
+        },
+        {
+          "from": "ChiralAffineBogoliubovWeld",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        },
+        {
+          "from": "ChiralAffineBogoliubovWeld",
+          "to": "BogoliubovWeylChemicalPotential",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovWeylChemicalPotential.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 11,
+      "module": "ChiralIsospinEOMSU2",
+      "archive_path": "proofs/ChiralIsospinEOMSU2.lean",
+      "sha256": "1f517785b425854a4a3bcb2bcc815356fb0a5d41d358af1f58afecda8bedf176",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChiralIsospinEOMSU2",
+          "to": "ColorConfinementGNS",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChiralIsospinEOMSU2",
+          "to": "WeakIsospinSU2",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChiralIsospinEOMSU2",
+          "to": "ChiralAffineBogoliubovWeld",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 12,
+      "module": "ContinuumAsColimitCounting",
+      "archive_path": "proofs/ContinuumAsColimitCounting.lean",
+      "sha256": "6dbfcfc8ad7a98b86126f4fcea0714031f7d853ad76694cf8c47b15e5545a8ef",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ContinuumAsColimitCounting",
+          "to": "JaynesLDDPGNSColimit",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 13,
+      "module": "MajoranaPrimonSpectralBridge",
+      "archive_path": "proofs/MajoranaPrimonSpectralBridge.lean",
+      "sha256": "43278a72afeede70e45e028984b982bb5e0b02ad4fddaf30dd789ce99ed8b67e",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "MajoranaPrimonSpectralBridge",
+          "to": "SupergradedCuntzBdG",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/SupergradedCuntzBdG.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 14,
+      "module": "PrimonBosonFermionDuality",
+      "archive_path": "proofs/PrimonBosonFermionDuality.lean",
+      "sha256": "344081ae0c9c5a9c0fc637746b18bf73bff320d8e01c35f0e7b66bde8d9138e0",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "PrimonBosonFermionDuality",
+          "to": "BosonicPrimonPartition",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/BosonicPrimonPartition.lean"
+        },
+        {
+          "from": "PrimonBosonFermionDuality",
+          "to": "FermionicPrimonPartition",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/FermionicPrimonPartition.lean"
+        },
+        {
+          "from": "PrimonBosonFermionDuality",
+          "to": "MajoranaPrimonSpectralBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 15,
+      "module": "PrimonFlavorCKM",
+      "archive_path": "proofs/PrimonFlavorCKM.lean",
+      "sha256": "cacdb49fc5f0565e5c3be87aa119f4e22f73d6e5eb4e39351250063c1d5fc235",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "PrimonFlavorCKM",
+          "to": "ChiralIsospinEOMSU2",
+          "resolution": "archive"
+        },
+        {
+          "from": "PrimonFlavorCKM",
+          "to": "PrimonCuntzTower",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/PrimonCuntzTower.lean"
+        },
+        {
+          "from": "PrimonFlavorCKM",
+          "to": "ContinuumAsColimitCounting",
+          "resolution": "archive"
+        },
+        {
+          "from": "PrimonFlavorCKM",
+          "to": "PrimonBosonFermionDuality",
+          "resolution": "archive"
+        },
+        {
+          "from": "PrimonFlavorCKM",
+          "to": "MajoranaPrimonSpectralBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 16,
+      "module": "DikinGoutevTonevBridge",
+      "archive_path": "proofs/DikinGoutevTonevBridge.lean",
+      "sha256": "9e13375cfc330372dd950c3216e049b169e0dc23f8a888e52b834fdb155bf22c",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "DikinGoutevTonevBridge",
+          "to": "KreinMoorePenrose",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/KreinMoorePenrose.lean"
+        },
+        {
+          "from": "DikinGoutevTonevBridge",
+          "to": "InformationGeometricCutoff",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/InformationGeometricCutoff.lean"
+        },
+        {
+          "from": "DikinGoutevTonevBridge",
+          "to": "SouriauOperatorThermodynamics",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/SouriauOperatorThermodynamics.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 17,
+      "module": "GoutevTonevPrinciple",
+      "archive_path": "proofs/GoutevTonevPrinciple.lean",
+      "sha256": "f79d1e7c31d49c9792cc746e35bec0a5eba5ef08ba0ead1b594cfeacdf263553",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "GoutevTonevPrinciple",
+          "to": "SouriauOperatorThermodynamics",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/SouriauOperatorThermodynamics.lean"
+        },
+        {
+          "from": "GoutevTonevPrinciple",
+          "to": "InformationGeometricCutoff",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/InformationGeometricCutoff.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 18,
+      "module": "AffineDynkinGoutevTonev",
+      "archive_path": "proofs/AffineDynkinGoutevTonev.lean",
+      "sha256": "16d53ddd5abbaa2ce9721594345fe05b5d51ce5c399d001715703b779f6238bc",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "AffineDynkinGoutevTonev",
+          "to": "iR",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/iR.lean"
+        },
+        {
+          "from": "AffineDynkinGoutevTonev",
+          "to": "GoutevTonevPrinciple",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 19,
+      "module": "RescaledPhaseVolumeCanonical",
+      "archive_path": "proofs/RescaledPhaseVolumeCanonical.lean",
+      "sha256": "35d7ba6ffcd690908ca0131caf202819b1b6a4c7205a3ad97629302ea2904e11",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "RescaledPhaseVolumeCanonical",
+          "to": "BogoliubovWeylChemicalPotential",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovWeylChemicalPotential.lean"
+        },
+        {
+          "from": "RescaledPhaseVolumeCanonical",
+          "to": "InformationGeometricCutoff",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/InformationGeometricCutoff.lean"
+        },
+        {
+          "from": "RescaledPhaseVolumeCanonical",
+          "to": "AffineDynkinGoutevTonev",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 20,
+      "module": "DikinOnsagerCramerRaoOperator",
+      "archive_path": "proofs/DikinOnsagerCramerRaoOperator.lean",
+      "sha256": "381a82871925c839569fd003ab9743eed2a0ce0b9673a6eaaec65552684e88e8",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "DikinOnsagerCramerRaoOperator",
+          "to": "PrimonFlavorCKM",
+          "resolution": "archive"
+        },
+        {
+          "from": "DikinOnsagerCramerRaoOperator",
+          "to": "DikinGoutevTonevBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "DikinOnsagerCramerRaoOperator",
+          "to": "SouriauOperatorThermodynamics",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/SouriauOperatorThermodynamics.lean"
+        },
+        {
+          "from": "DikinOnsagerCramerRaoOperator",
+          "to": "RescaledPhaseVolumeCanonical",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 21,
+      "module": "Q8NuclearChirality",
+      "archive_path": "proofs/Q8NuclearChirality.lean",
+      "sha256": "374cf2e57adee155799c27847925828a6c3d4b9996a24319780e04250c3b0deb",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "Q8NuclearChirality",
+          "to": "WeakIsospinSU2",
+          "resolution": "archive"
+        },
+        {
+          "from": "Q8NuclearChirality",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        },
+        {
+          "from": "Q8NuclearChirality",
+          "to": "ChiralAffineBogoliubovWeld",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 22,
+      "module": "HillWheelerProjection",
+      "archive_path": "proofs/HillWheelerProjection.lean",
+      "sha256": "47c6ce9423570e4e606c49e2d0d98fffba21e1eb4b3d6c1b7352ae52105175e5",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "HillWheelerProjection",
+          "to": "MajoranaPrimonSpectralBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "HillWheelerProjection",
+          "to": "PrimonBosonFermionDuality",
+          "resolution": "archive"
+        },
+        {
+          "from": "HillWheelerProjection",
+          "to": "CantorBoundaryCuntzFamily",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Topology/CantorBoundaryCuntzFamily.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 23,
+      "module": "MirrorNucleiIsospinGNS",
+      "archive_path": "proofs/MirrorNucleiIsospinGNS.lean",
+      "sha256": "7ab4746c368014f1646bcd6516cdd3111fa5870d7013dd568b54f4449c2773a7",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "MirrorNucleiIsospinGNS",
+          "to": "Q8NuclearChirality",
+          "resolution": "archive"
+        },
+        {
+          "from": "MirrorNucleiIsospinGNS",
+          "to": "HillWheelerProjection",
+          "resolution": "archive"
+        },
+        {
+          "from": "MirrorNucleiIsospinGNS",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 24,
+      "module": "GoutevTonevNuclearHamiltonian",
+      "archive_path": "proofs/GoutevTonevNuclearHamiltonian.lean",
+      "sha256": "c472925077616dc1fe152868b1d841943fd6d55c1c64fc25b5031897509b6500",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "ChiralIsospinEOMSU2",
+          "resolution": "archive"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "PrimonCuntzTower",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/PrimonCuntzTower.lean"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "AlgebraicCuntzQuotient",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/AlgebraicCuntzQuotient.lean"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "DikinOnsagerCramerRaoOperator",
+          "resolution": "archive"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "FixedLineRiemannKlein",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/FixedLineRiemannKlein.lean"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "BogoliubovSU3ParafermionWeld",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovSU3ParafermionWeld.lean"
+        },
+        {
+          "from": "GoutevTonevNuclearHamiltonian",
+          "to": "MirrorNucleiIsospinGNS",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 25,
+      "module": "HamiltonianCoriolisLieDynamics",
+      "archive_path": "proofs/HamiltonianCoriolisLieDynamics.lean",
+      "sha256": "485dc7a87b80f3970ff0d6ad02be167b216c3c183b9e99a5390bca7d0d0ac87e",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "HamiltonianCoriolisLieDynamics",
+          "to": "GoutevTonevNuclearHamiltonian",
+          "resolution": "archive"
+        },
+        {
+          "from": "HamiltonianCoriolisLieDynamics",
+          "to": "CoherentOrbitalPrecession",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/CoherentOrbitalPrecession.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 26,
+      "module": "ValencePairEnergyLevels",
+      "archive_path": "proofs/ValencePairEnergyLevels.lean",
+      "sha256": "85b8c39e25d4ea9f2806adc30532081a323a757175e85eff66bb80d04aa7d7ba",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ValencePairEnergyLevels",
+          "to": "HamiltonianCoriolisLieDynamics",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 27,
+      "module": "MirrorValencePairCalibration",
+      "archive_path": "proofs/MirrorValencePairCalibration.lean",
+      "sha256": "ce049bd3c6aaba9586eb9d009e1c46c1a58817d7f9ee447cf8898f22cc514271",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "MirrorValencePairCalibration",
+          "to": "ValencePairEnergyLevels",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 28,
+      "module": "NuclearChartSquareCalibration",
+      "archive_path": "proofs/NuclearChartSquareCalibration.lean",
+      "sha256": "62998cba2a150efbaae373b0b3f69fd9d7fdebeebdbd574860f46d774713c2af",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NuclearChartSquareCalibration",
+          "to": "MirrorValencePairCalibration",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 29,
+      "module": "SmithHatIsingDuality",
+      "archive_path": "proofs/SmithHatIsingDuality.lean",
+      "sha256": "664307cb02b9c34ef1081b01fae61358c13e968e94ceba7b7a927b2a8b4dcb7c",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "SmithHatIsingDuality",
+          "to": "ProjectiveWallpaperGaugePSA",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ProjectiveWallpaperGaugePSA.lean"
+        },
+        {
+          "from": "SmithHatIsingDuality",
+          "to": "PentagonPenroseWallpaperFractal",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/PentagonPenroseWallpaperFractal.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 30,
+      "module": "QCDScaleExtraction",
+      "archive_path": "proofs/QCDScaleExtraction.lean",
+      "sha256": "709eeaa2062ee70848f681a6ae945adcb7b3169da172432c34ee26693b091441",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "QCDScaleExtraction",
+          "to": "DikinOnsagerCramerRaoOperator",
+          "resolution": "archive"
+        },
+        {
+          "from": "QCDScaleExtraction",
+          "to": "ColorConfinementGNS",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 31,
+      "module": "GNSModularObservables",
+      "archive_path": "proofs/GNSModularObservables.lean",
+      "sha256": "40b65dfa9477c0d137db45f9d0aceb83334fad8238f32ad00e404c1d12f2df8a",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "GNSModularObservables",
+          "to": "QCDScaleExtraction",
+          "resolution": "archive"
+        },
+        {
+          "from": "GNSModularObservables",
+          "to": "FierzIdentities",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/FierzIdentities.lean"
+        },
+        {
+          "from": "GNSModularObservables",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 32,
+      "module": "NonIsoConf3DeRhamCooperad",
+      "archive_path": "proofs/NonIsoConf3DeRhamCooperad.lean",
+      "sha256": "3091e2d19ac13c57bb58b85a307a506323382ea41489902dccd0caf98105f985",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NonIsoConf3DeRhamCooperad",
+          "to": "QuadraticConfiguration3",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/QuadraticConfiguration3.lean"
+        },
+        {
+          "from": "NonIsoConf3DeRhamCooperad",
+          "to": "NonIsoConf3OrlikSolomon",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/NonIsoConf3OrlikSolomon.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 33,
+      "module": "NonIsoConf3QuadricD4Model",
+      "archive_path": "proofs/NonIsoConf3QuadricD4Model.lean",
+      "sha256": "81f2de23678108fa227f4f4ff0f33e416be5cb510d35af5ebb4b7c8bcd318f21",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NonIsoConf3QuadricD4Model",
+          "to": "NonIsoConf3OrlikSolomon",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/NonIsoConf3OrlikSolomon.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 34,
+      "module": "NonIsoConf3QuadricD4PointCount",
+      "archive_path": "proofs/NonIsoConf3QuadricD4PointCount.lean",
+      "sha256": "5f31db99ecd152fab5018f10d21183377dd19419a6e578bc1d25bb83959784bf",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NonIsoConf3QuadricD4PointCount",
+          "to": "NonIsoConf3QuadricD4Model",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 35,
+      "module": "DupontHypersurfaceOSModel",
+      "archive_path": "proofs/DupontHypersurfaceOSModel.lean",
+      "sha256": "4a046ed8535bfee1f8c7e4953243afa5ce6ef85c7ec9b539925d799b437182eb",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "DupontHypersurfaceOSModel",
+          "to": "NonIsoConf3QuadricD4PointCount",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 36,
+      "module": "PenroseSpinIncidenceTessellation",
+      "archive_path": "proofs/PenroseSpinIncidenceTessellation.lean",
+      "sha256": "e5d13dd576228e381013f9f9449089f4509f6f8d02bc95a4715229e9e33551ba",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "PenroseSpinIncidenceTessellation",
+          "to": "PenroseSpinTilingConfig",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Projective/PenroseSpinTilingConfig.lean"
+        },
+        {
+          "from": "PenroseSpinIncidenceTessellation",
+          "to": "NonIsoConf3QuadricD4PointCount",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 37,
+      "module": "NonIsoConf3DupontGysinModel",
+      "archive_path": "proofs/NonIsoConf3DupontGysinModel.lean",
+      "sha256": "bf6e99fb02564bd35933bc66c99d886fea161be206a884f16d952c1f8ae3b5e8",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NonIsoConf3DupontGysinModel",
+          "to": "DupontHypersurfaceOSModel",
+          "resolution": "archive"
+        },
+        {
+          "from": "NonIsoConf3DupontGysinModel",
+          "to": "PenroseSpinIncidenceTessellation",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 38,
+      "module": "NonIsoConf3RankDecision",
+      "archive_path": "proofs/NonIsoConf3RankDecision.lean",
+      "sha256": "d5682636348f6c6a17090825692b8088fe1cee350853160cdf5ed12294f29414",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NonIsoConf3RankDecision",
+          "to": "NonIsoConf3DeRhamCooperad",
+          "resolution": "archive"
+        },
+        {
+          "from": "NonIsoConf3RankDecision",
+          "to": "NonIsoConf3DupontGysinModel",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 39,
+      "module": "LightConeConf3DeRhamCooperad",
+      "archive_path": "proofs/LightConeConf3DeRhamCooperad.lean",
+      "sha256": "cd681832a6df7b6671fb7b7bee15d5cf65d145300c1c309dfd28e129d3cdec43",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "LightConeConf3DeRhamCooperad",
+          "to": "NonIsoConf3DeRhamCooperad",
+          "resolution": "archive"
+        },
+        {
+          "from": "LightConeConf3DeRhamCooperad",
+          "to": "NonIsoConf3RankDecision",
+          "resolution": "archive"
+        },
+        {
+          "from": "LightConeConf3DeRhamCooperad",
+          "to": "VacuumCohomology",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/VacuumCohomology.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 40,
+      "module": "InfiniteLightConeConfColimit",
+      "archive_path": "proofs/InfiniteLightConeConfColimit.lean",
+      "sha256": "d00d8342b537e1609de2ff1bec09cb12b613b5cd8406be0b0ba5b40ed01f9fad",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "InfiniteLightConeConfColimit",
+          "to": "LightConeConf3DeRhamCooperad",
+          "resolution": "archive"
+        },
+        {
+          "from": "InfiniteLightConeConfColimit",
+          "to": "VacuumCohomology",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/VacuumCohomology.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 1
+    },
+    {
+      "order": 41,
+      "module": "BraidedCocycleWilsonEntropy",
+      "archive_path": "proofs/BraidedCocycleWilsonEntropy.lean",
+      "sha256": "4482ba6a218c5716de4ac388032461d097aee361d8c5362a4c684a7847de2caa",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "BraidedCocycleWilsonEntropy",
+          "to": "InfiniteLightConeConfColimit",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 1
+    },
+    {
+      "order": 42,
+      "module": "LightConeTripotentMatrixBridge",
+      "archive_path": "proofs/LightConeTripotentMatrixBridge.lean",
+      "sha256": "7f1e4425fcb2624c96f52e1c26b9c53dc58722fa9c574ce32c7a1282148ee0d8",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "LightConeTripotentMatrixBridge",
+          "to": "ChiralPoincareSouriauBridge",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralPoincareSouriauBridge.lean"
+        },
+        {
+          "from": "LightConeTripotentMatrixBridge",
+          "to": "LightConeConf3DeRhamCooperad",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 43,
+      "module": "QuadricConf3BraidingCooperadBridge",
+      "archive_path": "proofs/QuadricConf3BraidingCooperadBridge.lean",
+      "sha256": "3c70859c14852082b64c8d9e5438e452a180698a36c0fc1a8862ffeab4b6e4aa",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "QuadricConf3BraidingCooperadBridge",
+          "to": "LightConeConf3DeRhamCooperad",
+          "resolution": "archive"
+        },
+        {
+          "from": "QuadricConf3BraidingCooperadBridge",
+          "to": "VertexAlgebraBraidingCocycle",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/VertexAlgebraBraidingCocycle.lean"
+        },
+        {
+          "from": "QuadricConf3BraidingCooperadBridge",
+          "to": "BraidedCocycleWilsonEntropy",
+          "resolution": "archive"
+        },
+        {
+          "from": "QuadricConf3BraidingCooperadBridge",
+          "to": "VacuumCohomology",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/VacuumCohomology.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 44,
+      "module": "CooperadEnvironmentalRank32",
+      "archive_path": "proofs/CooperadEnvironmentalRank32.lean",
+      "sha256": "8bad12d634ad730e38381eea921bd7bf4c71ed1f63335bc4af9b748224126d12",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "CooperadEnvironmentalRank32",
+          "to": "QuadricConf3BraidingCooperadBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "CooperadEnvironmentalRank32",
+          "to": "VertexAlgebraBraidingCocycle",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/VertexAlgebraBraidingCocycle.lean"
+        },
+        {
+          "from": "CooperadEnvironmentalRank32",
+          "to": "LightConeTripotentMatrixBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 45,
+      "module": "ChemicalPotentialTKKGradeZero",
+      "archive_path": "proofs/ChemicalPotentialTKKGradeZero.lean",
+      "sha256": "774adc7d4c81f9e79903c50102e6e255bfc690794a69f170b78bbb75052d51fd",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChemicalPotentialTKKGradeZero",
+          "to": "CooperadEnvironmentalRank32",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChemicalPotentialTKKGradeZero",
+          "to": "TKKJordanPairData",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Canonical/TKKJordanPairData.lean"
+        },
+        {
+          "from": "ChemicalPotentialTKKGradeZero",
+          "to": "LightConeTripotentMatrixBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 46,
+      "module": "BlackHoleHolography",
+      "archive_path": "proofs/BlackHoleHolography.lean",
+      "sha256": "8e90c518a5fc22fc9ebac3036e114fd88169929c60a13f2b07287e1514ee14b8",
+      "resolution": "archive_frontier",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [],
+      "placeholder_hits": 1,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 47,
+      "module": "EinsteinThermodynamicBridge",
+      "archive_path": "proofs/EinsteinThermodynamicBridge.lean",
+      "sha256": "9d0fd4659f739a86d0bcf90bf4a38eb20ff4e42efc49ede38b6078dae7100c4e",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "EinsteinThermodynamicBridge",
+          "to": "InformationGeometricCutoff",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/InformationGeometricCutoff.lean"
+        },
+        {
+          "from": "EinsteinThermodynamicBridge",
+          "to": "BlackHoleHolography",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 48,
+      "module": "ChemicalPotentialMetricBridge",
+      "archive_path": "proofs/ChemicalPotentialMetricBridge.lean",
+      "sha256": "9d87821bebd4ba164406b6c3b6c668adec49019fbf3ceaf985187a323f002ce0",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChemicalPotentialMetricBridge",
+          "to": "ChemicalPotentialTKKGradeZero",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChemicalPotentialMetricBridge",
+          "to": "LightConeTripotentMatrixBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChemicalPotentialMetricBridge",
+          "to": "EinsteinThermodynamicBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 49,
+      "module": "ThermodynamicTKKBridge",
+      "archive_path": "proofs/ThermodynamicTKKBridge.lean",
+      "sha256": "3bf674866d4e91c8a380ab177b63f867fb9da506599bf27ffee14595464b5e97",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ThermodynamicTKKBridge",
+          "to": "ChemicalPotentialTKKGradeZero",
+          "resolution": "archive"
+        },
+        {
+          "from": "ThermodynamicTKKBridge",
+          "to": "BogoliubovWeylChemicalPotential",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/BogoliubovWeylChemicalPotential.lean"
+        },
+        {
+          "from": "ThermodynamicTKKBridge",
+          "to": "ChemicalPotentialMetricBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 50,
+      "module": "ChemicalPotentialDeRhamG0Bridge",
+      "archive_path": "proofs/ChemicalPotentialDeRhamG0Bridge.lean",
+      "sha256": "6be82eeb863cb7573334f1f99c2fba24a19ea90bb5b96288c46a81ee631d3587",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChemicalPotentialDeRhamG0Bridge",
+          "to": "ThermodynamicTKKBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChemicalPotentialDeRhamG0Bridge",
+          "to": "NonIsoConf3DeRhamCooperad",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 51,
+      "module": "ModularRadonNikodymJacobianBridge",
+      "archive_path": "proofs/ModularRadonNikodymJacobianBridge.lean",
+      "sha256": "f94dd027fb63213881bbf3446ce9e0baa2eeb7705e7a3d4d7546c8e61ee1a89d",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ModularRadonNikodymJacobianBridge",
+          "to": "ChemicalPotentialDeRhamG0Bridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "ModularRadonNikodymJacobianBridge",
+          "to": "ChemicalPotentialMetricBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "ModularRadonNikodymJacobianBridge",
+          "to": "ModularMonodromy",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ModularMonodromy.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 52,
+      "module": "ModularTimeDeRhamBridge",
+      "archive_path": "proofs/ModularTimeDeRhamBridge.lean",
+      "sha256": "ef354926301b349ddf798b8338ea62e2b5f047d0dd55810587c89cad1de85fab",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ModularTimeDeRhamBridge",
+          "to": "ModularRadonNikodymJacobianBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 53,
+      "module": "ModularParabolicTimeBridge",
+      "archive_path": "proofs/ModularParabolicTimeBridge.lean",
+      "sha256": "ab57d6a28374d52f1389df4318a865dff0727f8f46f5227b1935460a03d7426e",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ModularParabolicTimeBridge",
+          "to": "ModularTimeDeRhamBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 54,
+      "module": "EntropicChiralDeRhamFormalization",
+      "archive_path": "proofs/EntropicChiralDeRhamFormalization.lean",
+      "sha256": "6c5ae865556f54068ca7b1bbcf8f1fa903f52934b2830b5fb7d68179f2529979",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "EntropicChiralDeRhamFormalization",
+          "to": "BraidedCocycleWilsonEntropy",
+          "resolution": "archive"
+        },
+        {
+          "from": "EntropicChiralDeRhamFormalization",
+          "to": "LightConeTripotentMatrixBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "EntropicChiralDeRhamFormalization",
+          "to": "ModularItakuraBiquaternion",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ModularItakuraBiquaternion.lean"
+        },
+        {
+          "from": "EntropicChiralDeRhamFormalization",
+          "to": "ModularParabolicTimeBridge",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 55,
+      "module": "ChiralConeAlgebraFinality",
+      "archive_path": "proofs/ChiralConeAlgebraFinality.lean",
+      "sha256": "e734cb3abf629272e3e79cb766aa1d8dcaf216bd8d5b887700bdbe8098c38a90",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ChiralConeAlgebraFinality",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        },
+        {
+          "from": "ChiralConeAlgebraFinality",
+          "to": "GNSModularObservables",
+          "resolution": "archive"
+        },
+        {
+          "from": "ChiralConeAlgebraFinality",
+          "to": "EntropicChiralDeRhamFormalization",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 56,
+      "module": "WallpaperHolographicSelectionRules",
+      "archive_path": "proofs/WallpaperHolographicSelectionRules.lean",
+      "sha256": "6f49819dfba1be18d9738742edd9c3eb450ca619eb498e50bfbbf599ddd68121",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "WallpaperHolographicSelectionRules",
+          "to": "ChiralConeAlgebraFinality",
+          "resolution": "archive"
+        },
+        {
+          "from": "WallpaperHolographicSelectionRules",
+          "to": "MorandiWallpaperCohomology",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/MorandiWallpaperCohomology.lean"
+        },
+        {
+          "from": "WallpaperHolographicSelectionRules",
+          "to": "ProjectiveWallpaperGaugePSA",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ProjectiveWallpaperGaugePSA.lean"
+        },
+        {
+          "from": "WallpaperHolographicSelectionRules",
+          "to": "FixedLineRiemannKlein",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/FixedLineRiemannKlein.lean"
+        },
+        {
+          "from": "WallpaperHolographicSelectionRules",
+          "to": "ColorConfinementGNS",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 1
+    },
+    {
+      "order": 57,
+      "module": "KleinBrillouinRamanDynamics",
+      "archive_path": "proofs/KleinBrillouinRamanDynamics.lean",
+      "sha256": "598ef0d26828ca577209e483a2e73e3669efadbc5b35096d52237f45e94cd790",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "KleinBrillouinRamanDynamics",
+          "to": "WallpaperHolographicSelectionRules",
+          "resolution": "archive"
+        },
+        {
+          "from": "KleinBrillouinRamanDynamics",
+          "to": "ChiralIsospinEOMSU2",
+          "resolution": "archive"
+        },
+        {
+          "from": "KleinBrillouinRamanDynamics",
+          "to": "ModularParabolicTimeBridge",
+          "resolution": "archive"
+        },
+        {
+          "from": "KleinBrillouinRamanDynamics",
+          "to": "ProjectiveWallpaperGaugePSA",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ProjectiveWallpaperGaugePSA.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 1
+    },
+    {
+      "order": 58,
+      "module": "VacuumJonesKleinBirefringence",
+      "archive_path": "proofs/VacuumJonesKleinBirefringence.lean",
+      "sha256": "7f695345bdf6f680472a9a3cfb1a423c4a2fbc19cf0bc02a1a86851191a09e6e",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "VacuumJonesKleinBirefringence",
+          "to": "OpticalAndreevSpinor",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/OpticalAndreevSpinor.lean"
+        },
+        {
+          "from": "VacuumJonesKleinBirefringence",
+          "to": "ProjectiveKappaKleinMobius",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/ProjectiveKappaKleinMobius.lean"
+        },
+        {
+          "from": "VacuumJonesKleinBirefringence",
+          "to": "ChiralCausalCone",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralCausalCone.lean"
+        },
+        {
+          "from": "VacuumJonesKleinBirefringence",
+          "to": "ChiralIsospinEOMSU2",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 59,
+      "module": "TrappedHarmonicModes",
+      "archive_path": "proofs/TrappedHarmonicModes.lean",
+      "sha256": "e6db34e0b283fb6c08e23b8401662b01881109e42c89416cad7312d3bac46c7c",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "TrappedHarmonicModes",
+          "to": "KleinBrillouinRamanDynamics",
+          "resolution": "archive"
+        },
+        {
+          "from": "TrappedHarmonicModes",
+          "to": "VacuumJonesKleinBirefringence",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 60,
+      "module": "NuclearSpectroscopyEnergyLevels",
+      "archive_path": "proofs/NuclearSpectroscopyEnergyLevels.lean",
+      "sha256": "248384c8f94572bb9ace4bcd728fa7542ec2a378bd2bfda6ace87c9404896fba",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NuclearSpectroscopyEnergyLevels",
+          "to": "TrappedHarmonicModes",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 61,
+      "module": "NuclearWallpaperSpectraClassification",
+      "archive_path": "proofs/NuclearWallpaperSpectraClassification.lean",
+      "sha256": "231588492ad30ae239365ac11147ee0b91eaf25b77ae491a3e2529a5c9db0d0c",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "NuclearWallpaperSpectraClassification",
+          "to": "NuclearSpectroscopyEnergyLevels",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 62,
+      "module": "ClebschGordanPenroseNonequilibriumSpinGraph",
+      "archive_path": "proofs/ClebschGordanPenroseNonequilibriumSpinGraph.lean",
+      "sha256": "ad7d59f7f5204cb73f0226b5cb282340bef7bf7ce17931e3953a1dcb3befd269",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "ClebschGordanPenroseNonequilibriumSpinGraph",
+          "to": "NuclearWallpaperSpectraClassification",
+          "resolution": "archive"
+        },
+        {
+          "from": "ClebschGordanPenroseNonequilibriumSpinGraph",
+          "to": "ChiralTensorRecoupling",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/Physics/ChiralTensorRecoupling.lean"
+        },
+        {
+          "from": "ClebschGordanPenroseNonequilibriumSpinGraph",
+          "to": "PenroseSpinIncidenceTessellation",
+          "resolution": "archive"
+        },
+        {
+          "from": "ClebschGordanPenroseNonequilibriumSpinGraph",
+          "to": "BraidedCocycleWilsonEntropy",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 63,
+      "module": "BashoreSpinNetworkQubit",
+      "archive_path": "proofs/BashoreSpinNetworkQubit.lean",
+      "sha256": "51c3cf1b19e88c1502a84748f6a92a5a659688382c6a7f6aeb7d4a36e0432aad",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "BashoreSpinNetworkQubit",
+          "to": "SmithHatIsingDuality",
+          "resolution": "archive"
+        },
+        {
+          "from": "BashoreSpinNetworkQubit",
+          "to": "ClebschGordanPenroseNonequilibriumSpinGraph",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 64,
+      "module": "EastSU2EquivariantSpinNetworkCircuits",
+      "archive_path": "proofs/EastSU2EquivariantSpinNetworkCircuits.lean",
+      "sha256": "a38048c09e792cfc6d808cf3db2da42d1b07ff0caa587b815972876483b7b216",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "EastSU2EquivariantSpinNetworkCircuits",
+          "to": "BashoreSpinNetworkQubit",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 65,
+      "module": "QuaternionQuanticsBackendDigest",
+      "archive_path": "proofs/QuaternionQuanticsBackendDigest.lean",
+      "sha256": "8cd6adcc6ed4d1aa7cdaeb1fe17504b36bc7399561457098af7a0d9c06efdca2",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "QuaternionQuanticsBackendDigest",
+          "to": "EastSU2EquivariantSpinNetworkCircuits",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 66,
+      "module": "PenroseChiralNuclearTrainsumToy",
+      "archive_path": "proofs/PenroseChiralNuclearTrainsumToy.lean",
+      "sha256": "12763d885e9fbc4979bd6cc39fe5a6e9d3825c63d651164ad48adf8fb6b4e706",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "PenroseChiralNuclearTrainsumToy",
+          "to": "QuaternionQuanticsBackendDigest",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 67,
+      "module": "BoltzmannLnQTensorFlowToy",
+      "archive_path": "proofs/BoltzmannLnQTensorFlowToy.lean",
+      "sha256": "cb655ae7be07d6c985495381675c6790bd9ed4ab33e0dd85bfc97a0359ff85a4",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "BoltzmannLnQTensorFlowToy",
+          "to": "PenroseChiralNuclearTrainsumToy",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 68,
+      "module": "Mirror31PSLnQFlowToy",
+      "archive_path": "proofs/Mirror31PSLnQFlowToy.lean",
+      "sha256": "bb28111deff64d8457c1bdf121ae8a73b6aedbdc603b553b9806b552961308fc",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "Mirror31PSLnQFlowToy",
+          "to": "BoltzmannLnQTensorFlowToy",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 69,
+      "module": "GaugeLnQTensorNetworkToy",
+      "archive_path": "proofs/GaugeLnQTensorNetworkToy.lean",
+      "sha256": "1a43d025e5f24f7ce511d2d91603be61578c9c4425c02e4eeaa996b1d96159cd",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "GaugeLnQTensorNetworkToy",
+          "to": "Mirror31PSLnQFlowToy",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 70,
+      "module": "XanaduSpinNetworkCodeDigest",
+      "archive_path": "proofs/XanaduSpinNetworkCodeDigest.lean",
+      "sha256": "ea84726febe2c918104553974ba1577ad595475adfd911180e2daed53bcb8453",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "XanaduSpinNetworkCodeDigest",
+          "to": "GaugeLnQTensorNetworkToy",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 71,
+      "module": "SU2ValencePairVQE",
+      "archive_path": "proofs/SU2ValencePairVQE.lean",
+      "sha256": "e74620fdc4686c058d8c1ad262359cf955648f65e2f2b5428c289ca4c0995ef7",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "SU2ValencePairVQE",
+          "to": "NuclearChartSquareCalibration",
+          "resolution": "archive"
+        },
+        {
+          "from": "SU2ValencePairVQE",
+          "to": "XanaduSpinNetworkCodeDigest",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 72,
+      "module": "FrozenPin55ManifoldFlow",
+      "archive_path": "proofs/FrozenPin55ManifoldFlow.lean",
+      "sha256": "85666b5a3a60e5c519a432567ec6c7e17a0be235cc33657e6faf416a8cce8c1b",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "FrozenPin55ManifoldFlow",
+          "to": "SU2ValencePairVQE",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 73,
+      "module": "O55GradedGeneratorBasis",
+      "archive_path": "proofs/O55GradedGeneratorBasis.lean",
+      "sha256": "e63489d322a22614d201d2fae71a16bb8f003da8f91ea279becdef117ae3d94d",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "O55GradedGeneratorBasis",
+          "to": "FrozenPin55ManifoldFlow",
+          "resolution": "archive"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    },
+    {
+      "order": 74,
+      "module": "O55CasimirIsospinHamiltonian",
+      "archive_path": "proofs/O55CasimirIsospinHamiltonian.lean",
+      "sha256": "17640a22b6554a6bfe65bb3561b65b1dde529fd4c8f45b324787803f81fdb86d",
+      "resolution": "archive_dependent",
+      "selected_live_owner": null,
+      "all_live_owners": [],
+      "imports": [
+        {
+          "from": "O55CasimirIsospinHamiltonian",
+          "to": "SO55NullSU5KleinSpectral",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/SO55NullSU5KleinSpectral.lean"
+        },
+        {
+          "from": "O55CasimirIsospinHamiltonian",
+          "to": "O55GradedGeneratorBasis",
+          "resolution": "archive"
+        },
+        {
+          "from": "O55CasimirIsospinHamiltonian",
+          "to": "CasimirIsospinHamiltonian",
+          "resolution": "live",
+          "owner": "lean/InfoGeometry/External/Auto/CasimirIsospinHamiltonian.lean"
+        }
+      ],
+      "placeholder_hits": 0,
+      "true_claim_hits": 0,
+      "scaffold_comment_hits": 0
+    }
+  ]
+}

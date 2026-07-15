@@ -18,8 +18,8 @@ noncomputable section
 
 namespace TrifactorZetaBridge
 
-open InfoGeometry.Canonical.TrifactorDecomposition
-open InfoGeometry.Arithmetic.RiemannZetaEquivalences
+open TrifactorDecomposition
+open RiemannZetaEquivalences
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
@@ -28,8 +28,7 @@ variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 /-- The active projector `P_plus + P_minus` is exactly `T^2`. -/
 theorem active_projectors_sum_eq_square (T : R) :
     P_plus T + P_minus T = T ^ 2 := by
-  unfold P_plus P_minus InfoGeometry.Canonical.TriFacetGeometry.P_hyp
-    InfoGeometry.Canonical.TriFacetGeometry.P_ell
+  unfold P_plus P_minus TriFacetGeometry.P_hyp TriFacetGeometry.P_ell
   calc
     ⅟(2 : R) * (T ^ 2 + T) + ⅟(2 : R) * (T ^ 2 - T) =
         (⅟(2 : R) * (2 : R)) * T ^ 2 := by ring

@@ -21,7 +21,7 @@ noncomputable section
 open scoped MatrixGroups Modular
 open UpperHalfPlane
 
-namespace StabilizerAnomalies
+namespace InfoGeometry.Topological.StabilizerAnomalies
 
 abbrev SL2Z : Type := SL(2, ℤ)
 
@@ -138,9 +138,9 @@ theorem stabilizerAnomalyAtI_hom
       InfoGeometry.Canonical.ProjectiveFoundation.extractStabilizerHom
         C UpperHalfPlane.I stab hstab := rfl
 
-end StabilizerAnomalies
+end InfoGeometry.Topological.StabilizerAnomalies
 
-namespace StabilizerAnomalies
+namespace InfoGeometry.Topological.StabilizerAnomalies
 
 open InfoGeometry.Algebraic
 
@@ -190,4 +190,4 @@ theorem exactPhaseStabilizerAnomalyAtI_hom
           (exactModularBerryCocycle (R := R) (k := k) h))
         UpperHalfPlane.I stab hstab := rfl
 
-end StabilizerAnomalies
+end InfoGeometry.Topological.StabilizerAnomalies

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.ChiralRadiationCones
 
 namespace SuperKMS_Equilibrium
 
-open InfoGeometry.Canonical.ChiralRadiationCones
+open ChiralRadiationCones
 
 /--
 Supergraded algebra packet carrying even/odd sectors.

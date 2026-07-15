@@ -12,7 +12,7 @@ inductive limit of the finite-stage K-theories.
 
 namespace PenroseColimit
 
-open InfoGeometry.Canonical.InductiveColimitBridge
+open InductiveColimitBridge
 
 universe u
 

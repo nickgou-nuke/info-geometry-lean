@@ -1,6 +1,7 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
 
@@ -25,8 +26,8 @@ noncomputable section
 namespace SplitAlbert
 
 open scoped BigOperators
-open InfoGeometry.Exceptional.Freudenthal
-open InfoGeometry.Exceptional.STUDatum
+open Freudenthal
+open STUDatum
 
 /-- A 27-dimensional coordinate carrier for the split Albert route. -/
 abbrev SplitAlbertCarrier := Fin 9 → STUCarrier
@@ -50,6 +51,70 @@ def splitAlbertTraceBilin :
     intro c x
     ext y
     simp [Finset.mul_sum]
+
+/-- Unary coordinate trace on the split Albert route carrier. -/
+def splitAlbertTrace : SplitAlbertCarrier →ₗ[ℝ] ℝ where
+  toFun x := ∑ i : Fin 9, stuTrace (x i)
+  map_add' := by
+    intro x y
+    simp [stuTrace, Finset.sum_add_distrib]
+    ring
+  map_smul' := by
+    intro c x
+    simp [stuTrace, Finset.mul_sum]
+
+@[simp] theorem splitAlbertTrace_apply (x : SplitAlbertCarrier) :
+    splitAlbertTrace x = ∑ i : Fin 9, stuTrace (x i) :=
+  rfl
+
+/-- The trace-zero subspace of the split Albert route carrier. -/
+def splitAlbertTraceZero : Submodule ℝ SplitAlbertCarrier :=
+  LinearMap.ker splitAlbertTrace
+
+@[simp] theorem mem_splitAlbertTraceZero (x : SplitAlbertCarrier) :
+    x ∈ splitAlbertTraceZero ↔ splitAlbertTrace x = 0 := by
+  rfl
+
+/-- A simple coordinate witness with prescribed split-Albert trace. -/
+def splitAlbertTraceWitness (r : ℝ) : SplitAlbertCarrier :=
+  Pi.single 0 (Pi.single 0 r)
+
+@[simp] theorem splitAlbertTrace_traceWitness (r : ℝ) :
+    splitAlbertTrace (splitAlbertTraceWitness r) = r := by
+  classical
+  have h0 : ∑ x : Fin 9, splitAlbertTraceWitness r x 0 = r := by
+    rw [Finset.sum_eq_single 0]
+    · simp [splitAlbertTraceWitness]
+    · intro x _ hx
+      simp [splitAlbertTraceWitness, hx]
+    · simp [splitAlbertTraceWitness]
+  have h1 : ∑ x : Fin 9, splitAlbertTraceWitness r x 1 = 0 := by
+    rw [Finset.sum_eq_single 0]
+    · simp [splitAlbertTraceWitness]
+    · intro x _ hx
+      simp [splitAlbertTraceWitness, hx]
+    · simp [splitAlbertTraceWitness]
+  have h2 : ∑ x : Fin 9, splitAlbertTraceWitness r x 2 = 0 := by
+    rw [Finset.sum_eq_single 0]
+    · simp [splitAlbertTraceWitness]
+    · intro x _ hx
+      simp [splitAlbertTraceWitness, hx]
+    · simp [splitAlbertTraceWitness]
+  calc
+    splitAlbertTrace (splitAlbertTraceWitness r)
+        = (∑ x : Fin 9, splitAlbertTraceWitness r x 0)
+            + ∑ x : Fin 9, splitAlbertTraceWitness r x 1
+            + ∑ x : Fin 9, splitAlbertTraceWitness r x 2 := by
+              simp [splitAlbertTrace, stuTrace, Finset.sum_add_distrib]
+    _ = r + 0 + 0 := by rw [h0, h1, h2]
+    _ = r := by ring
+
+theorem splitAlbertTrace_surjective : Function.Surjective splitAlbertTrace := by
+  intro r
+  exact ⟨splitAlbertTraceWitness r, splitAlbertTrace_traceWitness r⟩
+
+theorem splitAlbertTrace_range_eq_top : LinearMap.range splitAlbertTrace = ⊤ := by
+  exact LinearMap.range_eq_top.2 splitAlbertTrace_surjective
 
 /-- Blockwise cubic norm on the split Albert route carrier. -/
 def splitAlbertNormCubic (x : SplitAlbertCarrier) : ℝ :=
@@ -123,5 +188,15 @@ def splitAlbertJordan : CubicJordanDatum SplitAlbertCarrier where
 theorem splitAlbertCarrier_finrank_eq_27 :
     Module.finrank ℝ SplitAlbertCarrier = 27 := by
   simp [SplitAlbertCarrier, STUCarrier, Module.finrank_pi_fintype]
+
+/-- The trace-zero subspace has codimension one. -/
+theorem splitAlbertTraceZero_finrank_eq_26 :
+    Module.finrank ℝ splitAlbertTraceZero = 26 := by
+  have h := LinearMap.finrank_range_add_finrank_ker splitAlbertTrace
+  rw [splitAlbertTrace_range_eq_top] at h
+  have h' : Module.finrank ℝ (LinearMap.ker splitAlbertTrace) = 26 := by
+    apply Nat.succ.inj
+    simpa [Nat.succ_eq_add_one, add_comm, splitAlbertCarrier_finrank_eq_27] using h
+  simpa [splitAlbertTraceZero] using h'
 
 end SplitAlbert

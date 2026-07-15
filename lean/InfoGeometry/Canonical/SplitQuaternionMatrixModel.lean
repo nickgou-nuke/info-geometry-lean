@@ -32,7 +32,7 @@ open scoped Matrix
 namespace SplitQuaternionMatrixModel
 
 open InfoGeometry.Clifford.Cl11Matrix
-open InfoGeometry.Clifford.SplitQ11CausalCone
+open SplitQ11CausalCone
 
 noncomputable section
 

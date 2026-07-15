@@ -1,4 +1,6 @@
 import InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore
+import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Algebra.KingdonSplitOctonion
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.GammaMatrices
 
@@ -73,16 +75,8 @@ def projector2 : ZornMatrix :=
 theorem projector1_projector2_orthogonal :
     projector1 * projector2 = zero ∧ projector2 * projector1 = zero := by
   constructor
-  · ext
-    · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero, dotProduct_zero_zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
-  · ext
-    · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
-    · simp [projector1, projector2, zero, crossProduct_zero_zero]
+  · ext <;> simp [projector1, projector2, zero, mul]
+  · ext <;> simp [projector1, projector2, zero, mul]
 
 theorem projector1_add_projector2 : projector1 + projector2 = one := by
   ext i <;> simp [projector1, projector2, one, add]
@@ -102,9 +96,9 @@ def extractScalars (M : ZornMatrix) : ℝ × ℝ :=
 theorem decomposition_theorem (M : ZornMatrix) :
     M = ⟨M.a, M.b, extractTriplet M, extractAntitriplet M⟩ := by
   have hx : extractTriplet M = M.x := by
-    simpa [extractTriplet, mul_projector1, mul_projector2, projector2_mul]
+    rw [extractTriplet, mul_projector1, projector2_mul]
   have hy : extractAntitriplet M = M.y := by
-    simpa [extractAntitriplet, mul_projector2, projector1_mul]
+    rw [extractAntitriplet, mul_projector2, projector1_mul]
   simp [hx, hy]
 
 /-- Peirce readback of the `1_+` sector. -/
@@ -116,11 +110,11 @@ theorem peirce_readback_plusplus (M : ZornMatrix) :
       apply ext <;>
       all_goals
         simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3] <;>
         try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3])
 
 /-- Peirce readback of the `3` sector. -/
 theorem peirce_readback_plusminus (M : ZornMatrix) :
@@ -131,11 +125,11 @@ theorem peirce_readback_plusminus (M : ZornMatrix) :
       apply ext <;>
       all_goals
         simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3] <;>
         try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3])
 
 /-- Peirce readback of the `3*` sector. -/
 theorem peirce_readback_minusplus (M : ZornMatrix) :
@@ -146,11 +140,11 @@ theorem peirce_readback_minusplus (M : ZornMatrix) :
       apply ext <;>
       all_goals
         simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3] <;>
         try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3])
 
 /-- Peirce readback of the `1_-` sector. -/
 theorem peirce_readback_minusminus (M : ZornMatrix) :
@@ -161,11 +155,11 @@ theorem peirce_readback_minusminus (M : ZornMatrix) :
       apply ext <;>
       all_goals
         simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3] <;>
         try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3])
 
 /-- The canonical projector sandwich brackets agree for the color sector. -/
 theorem peirce_bracketing (M : ZornMatrix) :
@@ -176,11 +170,11 @@ theorem peirce_bracketing (M : ZornMatrix) :
       all_goals
         first
           | simp [projector1, projector2, mul, dotProduct, crossProduct,
-              InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-              InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+              ZornVectorMatrixExplicit.dot3,
+              ZornVectorMatrixExplicit.cross3]
           | ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-              InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-              InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+              ZornVectorMatrixExplicit.dot3,
+              ZornVectorMatrixExplicit.cross3]
 
 /-- The Peirce decomposition reconstructs the original Zorn matrix. -/
 theorem peirce_decomposition (M : ZornMatrix) :
@@ -194,11 +188,21 @@ theorem peirce_decomposition (M : ZornMatrix) :
       apply ext <;>
       all_goals
         simp [projector1, projector2, mul, add, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;>
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3] <;>
         try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, add, dotProduct, crossProduct,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-          InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3])
+          ZornVectorMatrixExplicit.dot3,
+          ZornVectorMatrixExplicit.cross3])
+
+/-- The production Zorn multiplication is left alternative. -/
+theorem zorn_left_alternative (X Y : ZornMatrix) :
+    (X * X) * Y = X * (X * Y) := by
+  simpa using (InfoGeometry.Algebra.KingdonSplitOctonion.zorn_left_alternative X Y)
+
+/-- The production Zorn multiplication is right alternative. -/
+theorem zorn_right_alternative (X Y : ZornMatrix) :
+    (Y * X) * X = Y * (X * X) := by
+  simpa using (InfoGeometry.Algebra.KingdonSplitOctonion.zorn_right_alternative X Y)
 
 /-!
 ## 5. Real cross-product stabilizer
@@ -283,9 +287,9 @@ theorem eigenspace_decomposition (M : ZornMatrix) :
       ⟨⟨0, 0, x, fun _ : Fin 3 => 0⟩,
         ⟨0, 0, fun _ : Fin 3 => 0, y⟩,
         ⟨a, b, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩, ?_, ?_, ?_, ?_⟩
-    · ext <;> simp [gradingOperator]
-    · ext <;> simp [gradingOperator]
-    · ext <;> simp [gradingOperator]
+    · ext <;> simp [gradingOperator, neg]
+    · ext <;> simp [gradingOperator, neg]
+    · ext <;> simp [gradingOperator, neg]
     · ext <;> simp [add, zero, Pi.add_apply, add_assoc, add_left_comm, add_comm]
 
 /-!

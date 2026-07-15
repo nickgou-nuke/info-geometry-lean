@@ -24,7 +24,7 @@ The file is intentionally split into two theorem surfaces:
 namespace BogoliubovFockSuper
 
 open InfoGeometry.Quantum
-open InfoGeometry.Canonical.RicciMongeAmpere
+open RicciMongeAmpere
 open InfoGeometry.Krein
 
 /-! ## Projector-Super Branch -/
@@ -550,14 +550,14 @@ CAR is proved for transported real Majorana fields, while ladder operators are
 derived later from polarization choices.
 -/
 theorem car_realization_of_clifford
-    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
-    (T : InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform (S := DoubledSpace E) M) :
-    InfoGeometry.Quantum.RealMajorana.MajoranaCARWitness
+    (M : RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
+    (T : RealMajorana.RealBogoliubovTransform (S := DoubledSpace E) M) :
+    RealMajorana.MajoranaCARWitness
       (S := DoubledSpace E)
       (fun u v => inner ℝ u v)
-      (InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.transportGamma (T := T)) := by
+      (RealMajorana.RealBogoliubovTransform.transportGamma (T := T)) := by
   exact
-    InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.car_realization_of_clifford
+    RealMajorana.RealBogoliubovTransform.car_realization_of_clifford
       (T := T)
 
 /--
@@ -565,7 +565,7 @@ Any derived polarization split carries the constructive projector-super algebra.
 This is the ladder-level target associated to a chosen polarization, not a CAR pair.
 -/
 theorem projectorSuperPair_of_polarizationSplit
-    (A : InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit
+    (A : RealMajorana.KPolarization.PolarizationSplit
       (S := DoubledSpace E)) :
     IsProjectorSuperPair (E := E) A.Pminus A.Pplus := by
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -599,25 +599,25 @@ A `K`-compatible polarization yields a ladder-level projector-super pair by
 its canonical split presentation.
 -/
 theorem projectorSuperPair_of_ladderOfPolarization
-    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
-    (P : InfoGeometry.Quantum.RealMajorana.KPolarization (S := DoubledSpace E) M) :
+    (M : RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
+    (P : RealMajorana.KPolarization (S := DoubledSpace E) M) :
     IsProjectorSuperPair (E := E)
-      (InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization (M := M) P).Pminus
-      (InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization (M := M) P).Pplus := by
+      (RealMajorana.KPolarization.splitOfPolarization (M := M) P).Pminus
+      (RealMajorana.KPolarization.splitOfPolarization (M := M) P).Pplus := by
   exact
     projectorSuperPair_of_polarizationSplit (E := E)
-      (A := InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization (M := M) P)
+      (A := RealMajorana.KPolarization.splitOfPolarization (M := M) P)
 
 /--
 The canonical chirality polarization of a real Majorana datum induces the
 projector-super pair used as the ladder-level surface in the canonical file.
 -/
 theorem projectorSuperPair_of_chiralityPolarization
-    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := DoubledSpace E)) :
+    (M : RealMajorana.RealMajoranaDatum (S := DoubledSpace E)) :
     IsProjectorSuperPair (E := E)
-      (InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization
+      (RealMajorana.KPolarization.splitOfPolarization
         (M := M) M.chiralityPolarization).Pminus
-      (InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization
+      (RealMajorana.KPolarization.splitOfPolarization
         (M := M) M.chiralityPolarization).Pplus := by
   exact projectorSuperPair_of_ladderOfPolarization (E := E) M M.chiralityPolarization
 
@@ -628,8 +628,8 @@ CAR pair witness on doubled space.
 theorem isCARPair_of_linear_CARWitness
     (a adag : FockEnd E)
     (hLinearCAR :
-      InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
-        (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
+      RealMajoranaCategory.CARWitness
+        (RealMajoranaCategory.cl11DoubledCore E)
         a.toLinearMap adag.toLinearMap) :
     IsCARPair (E := E) a adag := by
   rcases hLinearCAR with ⟨haa, hdd, had⟩
@@ -638,37 +638,37 @@ theorem isCARPair_of_linear_CARWitness
     intro x
     have h := LinearMap.congr_fun haa x
     simpa [anticommutator,
-      InfoGeometry.Quantum.RealMajoranaCategory.anticommutator,
+      RealMajoranaCategory.anticommutator,
       ContinuousLinearMap.comp_apply] using h
   · apply ContinuousLinearMap.ext
     intro x
     have h := LinearMap.congr_fun hdd x
     simpa [anticommutator,
-      InfoGeometry.Quantum.RealMajoranaCategory.anticommutator,
+      RealMajoranaCategory.anticommutator,
       ContinuousLinearMap.comp_apply] using h
   · apply ContinuousLinearMap.ext
     intro x
     have h := LinearMap.congr_fun had x
     simpa [anticommutator,
-      InfoGeometry.Quantum.RealMajoranaCategory.anticommutator,
+      RealMajoranaCategory.anticommutator,
       ContinuousLinearMap.comp_apply] using h
 
 /-- Continuous doubled-space CAR annihilation operator from the concrete `Cl(1,1)` null mode `u_-`. -/
 noncomputable def cliffordConcreteAnnihilation : FockEnd E :=
   InfoGeometry.Krein.cl11RepLin (E := E)
-    (InfoGeometry.Quantum.RealMajoranaCategory.cl11_uMinus (E := E))
+    (RealMajoranaCategory.cl11_uMinus (E := E))
 
 /-- Continuous doubled-space CAR creation operator from the concrete `Cl(1,1)` null mode `u_+`. -/
 noncomputable def cliffordConcreteCreation : FockEnd E :=
   InfoGeometry.Krein.cl11RepLin (E := E)
-    (InfoGeometry.Quantum.RealMajoranaCategory.cl11_uPlus (E := E))
+    (RealMajoranaCategory.cl11_uPlus (E := E))
 
 @[simp] theorem cliffordConcreteAnnihilation_toLinearMap :
     (cliffordConcreteAnnihilation (E := E)).toLinearMap
-      = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).annihil := by
+      = (RealMajoranaCategory.ladderOfRealization
+          (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
+          (RealMajoranaCategory.cl11SplitCliffordDatum E)
+          (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).annihil := by
   apply LinearMap.ext
   intro w
   have hw : InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w) = w := by
@@ -682,29 +682,29 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
         (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
         = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • (WithLp.fst w)) := by
             simpa [cliffordConcreteAnnihilation,
-              InfoGeometry.Quantum.RealMajoranaCategory.cl11_uMinus,
+              RealMajoranaCategory.cl11_uMinus,
               sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
     _ = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.fst w) := by
           simp [hhalf]
-    _ = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).annihil
+    _ = (RealMajoranaCategory.ladderOfRealization
+          (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
+          (RealMajoranaCategory.cl11SplitCliffordDatum E)
+          (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).annihil
             (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) := by
           symm
-          simpa [InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization,
-            InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.majoranaField]
-            using InfoGeometry.Quantum.RealMajoranaCategory.cl11_majoranaField_uMinus_apply_to_doubled
+          simpa [RealMajoranaCategory.ladderOfRealization,
+            RealMajoranaCategory.SplitCliffordDatum.majoranaField]
+            using RealMajoranaCategory.cl11_majoranaField_uMinus_apply_to_doubled
               (E := E) (x := WithLp.fst w) (y := WithLp.snd w)
 
 @[simp] theorem cliffordConcreteCreation_toLinearMap :
     (cliffordConcreteCreation (E := E)).toLinearMap
-      = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).create := by
+      = (RealMajoranaCategory.ladderOfRealization
+          (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
+          (RealMajoranaCategory.cl11SplitCliffordDatum E)
+          (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).create := by
   apply LinearMap.ext
   intro w
   have hw : InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w) = w := by
@@ -718,21 +718,21 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
         (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w))
         = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • (WithLp.snd w)) (0 : E) := by
             simpa [cliffordConcreteCreation,
-              InfoGeometry.Quantum.RealMajoranaCategory.cl11_uPlus,
+              RealMajoranaCategory.cl11_uPlus,
               sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
     _ = InfoGeometry.Krein.to_doubled (WithLp.snd w) (0 : E) := by
           simp [hhalf]
-    _ = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
-          (InfoGeometry.Quantum.RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).create
+    _ = (RealMajoranaCategory.ladderOfRealization
+          (RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
+          (RealMajoranaCategory.cl11SplitCliffordDatum E)
+          (RealMajoranaCategory.cl11_concrete_ladder_realization (E := E))).create
             (InfoGeometry.Krein.to_doubled (WithLp.fst w) (WithLp.snd w)) := by
           symm
-          simpa [InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization,
-            InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.majoranaField]
-            using InfoGeometry.Quantum.RealMajoranaCategory.cl11_majoranaField_uPlus_apply_to_doubled
+          simpa [RealMajoranaCategory.ladderOfRealization,
+            RealMajoranaCategory.SplitCliffordDatum.majoranaField]
+            using RealMajoranaCategory.cl11_majoranaField_uPlus_apply_to_doubled
               (E := E) (x := WithLp.fst w) (y := WithLp.snd w)
 
 @[simp] lemma cliffordConcreteAnnihilation_apply_to_doubled (x y : E) :
@@ -745,7 +745,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
     cliffordConcreteAnnihilation (E := E) (InfoGeometry.Krein.to_doubled x y)
         = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x) := by
             simpa [cliffordConcreteAnnihilation,
-              InfoGeometry.Quantum.RealMajoranaCategory.cl11_uMinus,
+              RealMajoranaCategory.cl11_uMinus,
               sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) x y)
@@ -762,7 +762,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
     cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
         = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y) (0 : E) := by
             simpa [cliffordConcreteCreation,
-              InfoGeometry.Quantum.RealMajoranaCategory.cl11_uPlus,
+              RealMajoranaCategory.cl11_uPlus,
               sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) x y)
@@ -778,7 +778,7 @@ theorem cliffordConcreteIsCARPair :
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E)) := by
   apply isCARPair_of_linear_CARWitness (E := E)
-  simpa using (InfoGeometry.Quantum.RealMajoranaCategory.car_realization_of_clifford_concrete (E := E))
+  simpa using (RealMajoranaCategory.car_realization_of_clifford_concrete (E := E))
 
 end CliffordCAR
 
@@ -794,7 +794,7 @@ as a chemical-potential proxy.
 -/
 noncomputable def inducedChemicalPotential
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) : ℝ :=
   transportedEinsteinResidual (R := R) (K := K) (x := x)
@@ -803,7 +803,7 @@ noncomputable def inducedChemicalPotential
 /-- Canonical naming alias for the Einstein-induced scalar deformation scale. -/
 noncomputable abbrev einsteinInducedChemicalPotential
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) : ℝ :=
   inducedChemicalPotential R K x scalar Λ V Γ
@@ -811,7 +811,7 @@ noncomputable abbrev einsteinInducedChemicalPotential
 /-- Lemma `inducedChemicalPotential_eq_zero_of_vacuumTransported`. -/
 lemma inducedChemicalPotential_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
@@ -824,7 +824,7 @@ proxy.
 -/
 noncomputable def einsteinFockDeformation
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) :
     FockEnd E :=
@@ -833,7 +833,7 @@ noncomputable def einsteinFockDeformation
 /-- Canonical naming alias for the Einstein-induced scalar Fock deformation. -/
 noncomputable abbrev einsteinFockDeformationOperator
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) :
     FockEndomorphism E :=
@@ -842,7 +842,7 @@ noncomputable abbrev einsteinFockDeformationOperator
 /-- Lemma `einsteinFockDeformation_eq_zero_of_vacuumTransported`. -/
 lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
@@ -862,7 +862,7 @@ onto the existing even Einstein/Fock deformation seed.
 theorem anticommutator_bogoliubov_eq_einsteinFockDeformation_of_coeff_eq_inducedChemicalPotential
     (B : HyperbolicMixingParams)
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hCoeff :
@@ -882,7 +882,7 @@ Bogoliubov odd-odd bracket to vanish.
 theorem anticommutator_bogoliubov_eq_zero_of_coeff_eq_inducedChemicalPotential_of_vacuumTransported
     (B : HyperbolicMixingParams)
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hCoeff :
@@ -903,7 +903,7 @@ theorem anticommutator_bogoliubov_eq_zero_of_coeff_eq_inducedChemicalPotential_o
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
     (B : HyperbolicMixingParams) (H : FockEnd E)
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
@@ -920,7 +920,7 @@ lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
 lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
     (B : BogoliubovMixingParams) (H : FockEndomorphism E)
     (R : RicciTensor E)
-    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (K : KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
     (V : SplitVielbein K x) (Γ : SpinConnection K x V)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :

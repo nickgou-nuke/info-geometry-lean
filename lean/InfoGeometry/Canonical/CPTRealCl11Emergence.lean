@@ -29,10 +29,10 @@ noncomputable section
 
 namespace CPTRealCl11Emergence
 
-open InfoGeometry.Canonical.DiscreteCPTGroup
+open DiscreteCPTGroup
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
-open InfoGeometry.Clifford.SplitQ11Equivariance
+open SplitQ11Equivariance
 
 /-- The real split `Cl(1,1)` carrier used by the emergence seed. -/
 abbrev RealCl11 : Type :=

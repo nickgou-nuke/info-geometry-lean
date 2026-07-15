@@ -6,7 +6,7 @@ namespace TwistedGaussian
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.MoorePenrose
-open InfoGeometry.ExponentialFamily.Gaussian
+open Gaussian
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

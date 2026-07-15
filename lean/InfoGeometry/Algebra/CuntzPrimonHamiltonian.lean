@@ -8,7 +8,7 @@ With orthogonal projectors P_i = S_i Sdag_i, H = Σ ε_i P_i
 satisfies H^k = Σ ε_i^k P_i for any k ≥ 0.
 -/
 
-open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzTensorQuotient
 
 noncomputable section
 

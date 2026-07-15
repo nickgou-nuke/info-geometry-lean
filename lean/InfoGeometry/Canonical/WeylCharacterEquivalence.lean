@@ -27,6 +27,7 @@ corridor.  The arithmetic Möbius coefficient is imported from
 namespace WeylCharacterEquivalence
 
 open InfoGeometry.Algebraic.SplitSignature
+open ParityTraceWitness
 
 /-- Phantom-parameter alias for the thermodynamic temperature carrier. -/
 abbrev SouriauTemperature (_ : Type*) := InfoGeometry.Thermodynamics.SouriauTemperature
@@ -109,7 +110,7 @@ structure ParityTraceWitness where
   squareFreeToWeyl : ∀ n, squareFree n → WeylGroup
   signature_eq_mobius : ∀ n (h : squareFree n),
     signature (squareFreeToWeyl n h) =
-      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n
+      mobiusCoefficient n
 
 namespace ParityTraceWitness
 
@@ -119,7 +120,7 @@ variable (P : ParityTraceWitness)
 theorem mobius_eq_weyl_signature_on_squarefree
     (n : ℕ) (h : P.squareFree n) :
     P.signature (P.squareFreeToWeyl n h) =
-      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n :=
+      mobiusCoefficient n :=
   P.signature_eq_mobius n h
 
 end ParityTraceWitness
@@ -192,14 +193,14 @@ theorem parityWitness_signature_eq_mobius
     (n : ℕ)
     (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n := by
+      mobiusCoefficient n := by
   exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
 
 @[rep_depth thermo]
 theorem parity_trace_from_squarefree_witness
     (n : ℕ) (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n := by
+      mobiusCoefficient n := by
   exact P.parityWitness_signature_eq_mobius n h
 
 end SouriauWeylPartitionPacket
@@ -234,7 +235,7 @@ theorem weylDenominator_eulerProduct_isomorphic
 theorem moebius_signature_equivalence
     (P : ParityTraceWitness) (n : ℕ) (h : P.squareFree n) :
     P.signature (P.squareFreeToWeyl n h) =
-      InfoGeometry.Canonical.ParityTraceWitness.mobiusCoefficient n :=
+      mobiusCoefficient n :=
   P.mobius_eq_weyl_signature_on_squarefree n h
 
 /-- Souriau thermal evaluation of prime-indexed Weyl roots. -/

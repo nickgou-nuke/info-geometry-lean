@@ -7,8 +7,8 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 
-open InfoGeometry.Optics.JonesCalibration
-open InfoGeometry.OperatorAlgebra.StinespringDilation
+open JonesCalibration
+open StinespringDilation
 
 /-! ## 3. Fresnel/Jones coefficient calibration -/
 

@@ -33,7 +33,7 @@ proper-carrier detection and self-dual extension to the algebraic colimit.
 
 namespace ProperCarrierSelfDualConeExtension
 
-open InfoGeometry.OperatorAlgebra.SelfDualConeColimit
+open SelfDualConeColimit
 
 /--
 A stage detector upgrades dual positivity on the directed union to explicit

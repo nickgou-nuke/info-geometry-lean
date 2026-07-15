@@ -25,7 +25,7 @@ noncomputable section
 
 namespace BinaryCrystalWeylBlochBridge
 
-open InfoGeometry.Canonical.TypeIIIModularCantorSystem
+open TypeIIIModularCantorSystem
 
 /-- Binary-lattice carrier used by the symbolic crystal. -/
 @[rep_depth operator]

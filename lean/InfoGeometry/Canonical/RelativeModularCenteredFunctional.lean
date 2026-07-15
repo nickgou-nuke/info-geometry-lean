@@ -22,8 +22,8 @@ noncomputable section
 
 open scoped BigOperators
 open Finset
-open InfoGeometry.Canonical.CantorCylinderLattice
-open InfoGeometry.Canonical.CantorModularScoreFunctional
+open CantorCylinderLattice
+open CantorModularScoreFunctional
 section FiniteLocal
 
 variable {A : Type*} [Ring A] [Algebra ℝ A]
@@ -180,10 +180,9 @@ def cantorPointDensity (x : ℕ → Bool) (n : ℕ) : BinaryWord n → ℝ :=
 theorem cantorPointDensity_eq_pointDensity
     (x : ℕ → Bool) (n : ℕ) :
     cantorPointDensity (x := x) n =
-      InfoGeometry.Canonical.CantorModularScoreFunctional.pointDensity
-        (cantorPrefixWord (x := x) n) := by
+      pointDensity (cantorPrefixWord (x := x) n) := by
   funext w
-  simp [cantorPointDensity, InfoGeometry.Canonical.CantorModularScoreFunctional.pointDensity]
+  simp [cantorPointDensity, pointDensity]
 
 /-- Spikes for distinct prefixes are not scalar-identical unless the prefixes agree. -/
 theorem cantorPointDensity_smul_eq_prefix_eq
@@ -365,9 +364,8 @@ theorem cantorPathCentered_eq_eval_sub_uniform
 theorem cantorPathCentered_eq_scoreAt
     (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
     centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
-      InfoGeometry.Canonical.CantorModularScoreFunctional.scoreAt
-        (cantorPrefixWord (x := x) n) a := by
-  simpa [InfoGeometry.Canonical.CantorModularScoreFunctional.scoreAt] using
+      scoreAt (cantorPrefixWord (x := x) n) a := by
+  simpa [scoreAt] using
     (cantorPathCentered_eq_eval_sub_uniform (x := x) (n := n) (a := a))
 
 /-- Rewriting the centered functional as the finite centered-score functional in
@@ -375,10 +373,10 @@ theorem cantorPathCentered_eq_scoreAt
 theorem cantorPathCentered_eq_scoreAt_delta_sub_one
     (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
     centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
-      InfoGeometry.Canonical.CantorModularScoreFunctional.uniformMean (n := n)
+      uniformMean (n := n)
         (fun v => (cantorPointDensity (x := x) n v - 1) * a v) := by
   rw [cantorPathCentered_eq_scoreAt (x := x) (n := n) (a := a)]
-  rw [InfoGeometry.Canonical.CantorModularScoreFunctional.scoreAt_eq_uniformMean_delta_sub_one]
+  rw [scoreAt_eq_uniformMean_delta_sub_one]
   have hpd := cantorPointDensity_eq_pointDensity (x := x) (n := n)
   simpa [hpd]
 
@@ -436,10 +434,9 @@ theorem cantorPathCentered_eq_ref_delta_sub_one
 theorem cantorPathCenteredNet_centered_eq_scoreLinear
     (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
     ((cantorPathCenteredNet (x := x)).centered n) a =
-      InfoGeometry.Canonical.CantorModularScoreFunctional.scoreLinear
-        (cantorPrefixWord (x := x) n) a := by
+      scoreLinear (cantorPrefixWord (x := x) n) a := by
   change centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
-    InfoGeometry.Canonical.CantorModularScoreFunctional.scoreLinear (cantorPrefixWord (x := x) n) a
+    scoreLinear (cantorPrefixWord (x := x) n) a
   rw [cantorPathCentered_eq_scoreAt (x := x) (n := n) (a := a)]
   rfl
 
@@ -655,8 +652,7 @@ theorem cantorPathLocalMellinGreen_eq_scoreAt
     (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) (s : ℂ) :
     cantorPathLocalMellinGreen (x := x) n s a =
       cantorSpectralZeta s * Complex.ofReal
-        (InfoGeometry.Canonical.CantorModularScoreFunctional.scoreAt
-          (cantorPrefixWord (x := x) n) a) := by
+        (scoreAt (cantorPrefixWord (x := x) n) a) := by
   simp [cantorPathLocalMellinGreen, localMellinGreen, cantorPathCentered_eq_scoreAt]
 
 /-- The centered source term still vanishes on the unit for each local Mellin transform. -/

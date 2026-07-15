@@ -9,10 +9,10 @@ into the `QuantumPluckerGenerator` structure, explicitly identifying the FRT min
 with the physical twistor products $p_{ij} = \langle Z_i Z_j \rangle$.
 -/
 
-namespace QuantumTwistor
+namespace InfoGeometry.Projective.QuantumTwistor
 
 open InfoGeometry.Projective.QuantumGrassmannian
-open InfoGeometry.Projective.KleinQuadricPlucker
+open KleinQuadricPlucker
 
 universe u
 variable (R : Type u) [Field R]
@@ -79,4 +79,4 @@ theorem coe_scaledQuantumMinorCoordinate (u q : R) (p : QuantumMinorIndex) :
       (u ^ 2) • quantumMinor R q p :=
   scaledQuantumMinor_eq_weight_two R u q p
 
-end QuantumTwistor
+end InfoGeometry.Projective.QuantumTwistor

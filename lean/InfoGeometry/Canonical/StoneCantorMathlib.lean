@@ -25,7 +25,7 @@ noncomputable section
 namespace StoneCantorMathlib
 
 open Set
-open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open UHFInductiveColimitBoundary
 
 /-- The Cantor cylinder determined by a finite bitword. -/
 def prefixCylinder (n : ℕ) (w : BitWord n) : Set CantorBoundary :=

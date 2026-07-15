@@ -23,8 +23,8 @@ No universality or fault-tolerance claim.
 
 namespace FiniteFibonacciRegisterWords
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciRegisterSubgroup
 
 /-- Register-subgroup generators for `N + 1` qubits. -/
 inductive RegisterGenerator (N : ℕ) where

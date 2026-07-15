@@ -33,7 +33,7 @@ orientifold/string interpretations remain outside this file.
 namespace KleinBottleBoundaryActionPacket
 
 open Matrix
-open InfoGeometry.Canonical.CptBoundaryMobius
+open CptBoundaryMobius
 
 /-- Finite boundary packet: one `Z₂` sheet action plus one matrix boundary action. -/
 structure BoundaryActionPacket where

@@ -55,14 +55,14 @@ omit [CompleteSpace E] in
 lemma hasFDerivAt_krein_grad (u : H₂) :
     HasFDerivAt (fun x : H₂ => krein_grad (E := E) x) (krein_hessian (E := E)) u := by
   simpa [krein_grad, krein_hessian] using
-    (InfoGeometry.Krein.SplitQuadratic.hasFDerivAt_grad (E := E) u)
+    SplitQuadratic.hasFDerivAt_grad (E := E) u
 
 /-- The indefinite quadratic Krein potential differentiates to the Krein gradient. -/
 lemma hasFDerivAt_krein_potential (u : H₂) :
     HasFDerivAt (krein_potential (E := E))
       (InnerProductSpace.toDual ℝ H₂ (krein_grad (E := E) u)) u := by
   simpa [krein_potential, krein_grad, krein_form, InfoGeometry.Krein.hessian_indefinite_form] using
-    (InfoGeometry.Krein.SplitQuadratic.hasFDerivAt_potential (E := E) u)
+    SplitQuadratic.hasFDerivAt_potential (E := E) u
 
 /-- Explicit signature form: `⟪(x₁,x₂),(y₁,y₂)⟫ = ⟪x₁,y₁⟫ - ⟪x₂,y₂⟫`. -/
 lemma krein_form_explicit (u v : H₂) :

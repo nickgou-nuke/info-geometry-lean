@@ -25,8 +25,8 @@ No physical fault-tolerance claim.
 
 namespace FiniteFibonacciRegisterSubgroup
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciMonodromyInterface
 
 /-- The even braid generator acting on qubit position `k`: `b_{2(k+1)}`. -/
 def evenBraidIndex {N : ℕ} (k : Fin N) : ℕ :=

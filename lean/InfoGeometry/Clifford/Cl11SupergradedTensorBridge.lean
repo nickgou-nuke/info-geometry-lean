@@ -19,7 +19,7 @@ The point is simply: superbrackets transport through the owned tower step.
 
 open scoped TensorProduct
 
-namespace Cl11SupergradedTensorBridge
+namespace InfoGeometry.Clifford.Cl11SupergradedTensorBridge
 
 open InfoGeometry.Canonical.AssociativeSuperBracket
 open InfoGeometry.Canonical.SuperAnomaly
@@ -187,4 +187,4 @@ theorem cl11String_supergraded_tower_step
         + CliffordAlgebra.ι (Qsplit (n + 1)) y * CliffordAlgebra.ι (Qsplit (n + 1)) x := by
   rw [superBracket_odd_odd]
 
-end Cl11SupergradedTensorBridge
+end InfoGeometry.Clifford.Cl11SupergradedTensorBridge

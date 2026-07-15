@@ -20,8 +20,8 @@ noncomputable section
 namespace SupergradedCuntzBdG
 
 open scoped BigOperators
-open InfoGeometry.Topology.AlgebraicCuntzQuotient
-open InfoGeometry.Physics.ComplexStarCuntzRedesign
+open AlgebraicCuntzQuotient
+open ComplexStarCuntzRedesign
 
 /-! ## `ℤ₂` supergrading and superbracket -/
 

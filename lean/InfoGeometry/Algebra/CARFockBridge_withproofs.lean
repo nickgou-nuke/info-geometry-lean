@@ -15,8 +15,8 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.CARFockBridgeWithProofs
 
-open InfoGeometry.Algebra.FiniteSingleModeCAR
-open InfoGeometry.Arithmetic.PrimonFockTraceFinite
+open FiniteSingleModeCAR
+open PrimonFockTraceFinite
 
 /-- Concrete one-mode CAR packet: nilpotence plus `{c,c†}=1`. -/
 theorem one_mode_car_packet :

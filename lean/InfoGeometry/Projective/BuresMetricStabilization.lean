@@ -31,7 +31,7 @@ or GNS/Tomita modular theorem is asserted here.
 
 namespace BuresMetricStabilization
 
-open InfoGeometry.Canonical.TensorColimitExpectation
+open TensorColimitExpectation
 
 universe u v w
 

@@ -7,7 +7,7 @@ noncomputable section
 
 namespace ProjectiveCountsModularBridge
 
-open InfoGeometry.Canonical.RelativePotentialCountBridge
+open RelativePotentialCountBridge
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Krein
@@ -48,7 +48,7 @@ theorem positiveRescaleCounts_pos
     (hc : 0 < c)
     (counts : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i) :
-    ∀ i : Fin n, 0 < positiveRescaleCounts (n := n) c counts i := by
+    ∀ i : Fin n, 0 < positiveRescaleCounts c counts i := by
   intro i
   unfold positiveRescaleCounts
   exact mul_pos hc (hcounts i)
@@ -74,15 +74,15 @@ theorem projectiveCountRay_positiveRescale
     (counts : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i) :
     projectiveCountRay
-        (positiveRescaleCounts (n := n) c counts)
-        (positiveRescaleCounts_pos (n := n) c hc counts hcounts)
+        (positiveRescaleCounts c counts)
+        (positiveRescaleCounts_pos c hc counts hcounts)
       =
     projectiveCountRay counts hcounts := by
   unfold projectiveCountRay countRay
   let μ := positiveMeasureOfCounts counts hcounts
   let ν := positiveMeasureOfCounts
-    (positiveRescaleCounts (n := n) c counts)
-    (positiveRescaleCounts_pos (n := n) c hc counts hcounts)
+    (positiveRescaleCounts c counts)
+    (positiveRescaleCounts_pos c hc counts hcounts)
   have hsame : InfoGeometry.PositiveMeasure.SameRay μ ν := by
     refine ⟨(⟨c, hc⟩ : InfoGeometry.Stratum.PosGauge), ?_⟩
     ext i
@@ -99,11 +99,11 @@ theorem gaugeSection_projectiveCountRay_positiveRescale
     (hcounts : ∀ i : Fin n, 0 < counts i) :
     gaugeSection (α := Fin n)
         (projectiveCountRay
-          (positiveRescaleCounts (n := n) c counts)
-          (positiveRescaleCounts_pos (n := n) c hc counts hcounts))
+          (positiveRescaleCounts c counts)
+          (positiveRescaleCounts_pos c hc counts hcounts))
       =
     gaugeSection (α := Fin n) (projectiveCountRay counts hcounts) := by
-  rw [projectiveCountRay_positiveRescale (n := n) c hc counts hcounts]
+  rw [projectiveCountRay_positiveRescale c hc counts hcounts]
 
 end CountRays
 

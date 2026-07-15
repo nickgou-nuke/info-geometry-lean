@@ -20,7 +20,7 @@ it does not assert a full Schur-multiplier classification theorem.
 
 namespace V4Q8ProjectiveBridge
 
-open InfoGeometry.Topology.V4RootSystem
+open V4RootSystem
 
 /-- The finite `Q₈` carrier presented by eight named elements. -/
 inductive Q8Elt where

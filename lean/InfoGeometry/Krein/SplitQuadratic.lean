@@ -4,6 +4,7 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
+open InfoGeometry.Krein
 
 namespace SplitQuadratic
 

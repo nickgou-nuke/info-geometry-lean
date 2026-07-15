@@ -30,7 +30,7 @@ open scoped ENNReal
 
 namespace SpectralTriple
 
-open InfoGeometry.Geometry.PhaseErlanger
+open PhaseErlanger
 
 /-! ## 1. Basic bounded real operator notation -/
 

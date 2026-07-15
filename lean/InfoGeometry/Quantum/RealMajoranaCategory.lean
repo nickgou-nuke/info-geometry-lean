@@ -118,7 +118,7 @@ noncomputable instance : Category RealMajoranaCore where
 
 /-- Forgetful functor to the `K`-only category `RealKVect`. -/
 noncomputable def toRealKVect :
-    RealMajoranaCore ⥤ InfoGeometry.Quantum.RealKCategory.RealKVect where
+    RealMajoranaCore ⥤ RealKCategory.RealKVect where
   obj X :=
     { V := X
       K := X.K
@@ -127,11 +127,11 @@ noncomputable def toRealKVect :
     { hom := f.hom
       comm := f.comm_K }
   map_id X := by
-    apply InfoGeometry.Quantum.RealKCategory.RealKVect.Hom.ext
+    apply RealKCategory.RealKVect.Hom.ext
     ext x
     rfl
   map_comp f g := by
-    apply InfoGeometry.Quantum.RealKCategory.RealKVect.Hom.ext
+    apply RealKCategory.RealKVect.Hom.ext
     ext x
     rfl
 
@@ -758,7 +758,7 @@ noncomputable def forgetToCore : PolarizedMajorana ⥤ RealMajoranaCore where
 
 /-- Forget polarization and then forget down to the `K`-only real category. -/
 noncomputable def forgetToRealKVect :
-    PolarizedMajorana ⥤ InfoGeometry.Quantum.RealKCategory.RealKVect :=
+    PolarizedMajorana ⥤ RealKCategory.RealKVect :=
   forgetToCore ⋙ RealMajoranaCore.toRealKVect
 
 end PolarizedMajorana

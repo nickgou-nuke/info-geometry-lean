@@ -36,7 +36,7 @@ operators, KMS thermodynamics, CFT, or Riemann-hypothesis statements.
 
 namespace HodgeTrifactorBridge
 
-open InfoGeometry.Canonical.TrifactorDecomposition
+open TrifactorDecomposition
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {H : Type*} [AddCommGroup H] [Module R H]

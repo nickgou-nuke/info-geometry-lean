@@ -5,8 +5,8 @@ import InfoGeometry.Canonical.RGFlow
 namespace ChiralRGFlow
 
 open InfoGeometry.Canonical.MoorePenrose
-open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Canonical.RGFlow
+open SpectralInference
+open RGFlow
 open InfoGeometry.Canonical.Drazin
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]

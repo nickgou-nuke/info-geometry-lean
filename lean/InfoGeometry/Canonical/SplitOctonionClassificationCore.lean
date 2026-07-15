@@ -14,6 +14,8 @@ nonassociative `InfoGeometry.Canonical.ZornMatrix`.
 
 noncomputable section
 
+open InfoGeometry.Canonical
+
 namespace SplitOctonionClassificationCore
 
 open scoped BigOperators

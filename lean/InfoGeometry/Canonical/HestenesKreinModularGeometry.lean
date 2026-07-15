@@ -23,7 +23,7 @@ It provides the repository-native real/Krein interface:
 * modular Drazin/core projector with Krein compatibility and spectral boundary.
 -/
 
-namespace HestenesKreinModularGeometry
+namespace InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 noncomputable section
 
@@ -780,4 +780,4 @@ end HestenesKreinModularFredholmBridge
 
 end
 
-end HestenesKreinModularGeometry
+end InfoGeometry.Canonical.HestenesKreinModularGeometry

@@ -22,7 +22,7 @@ set_option linter.unusedSectionVars false
 
 namespace SuperchargeOddOddDecomposition
 
-open InfoGeometry.Canonical.SuperchargeHoppingBridge
+open SuperchargeHoppingBridge
 
 section Core
 

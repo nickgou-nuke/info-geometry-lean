@@ -26,7 +26,7 @@ open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 open InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
-open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
+open DrazinProjectionLocalization
 
 attribute [local instance] starRingOfComm
 

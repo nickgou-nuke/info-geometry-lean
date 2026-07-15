@@ -24,7 +24,8 @@ open scoped BigOperators
 
 namespace PrimeWeylDenominatorBridge
 
-open InfoGeometry.Arithmetic.PrimeBosonFermionGas
+open PrimeBosonFermionGas
+open PrimonFinite
 
 /-! ## 1. Finite prime Weyl denominator -/
 
@@ -95,8 +96,8 @@ theorem finitePrimeWeylDenominator_eq_finiteSupertrace
     (S : Finset PrimeLabel)
     (q : PrimeLabel → R) :
     finitePrimeWeylDenominator S q =
-      InfoGeometry.Arithmetic.PrimonFinite.STrF S q := by
-  exact (InfoGeometry.Arithmetic.PrimonFinite.STrF_eq_prod S q).symm
+      STrF S q := by
+  exact (STrF_eq_prod S q).symm
 
 /--
 Finite boson × Weyl-denominator cancellation.

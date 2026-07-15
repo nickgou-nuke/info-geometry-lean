@@ -20,9 +20,9 @@ No fault-tolerance theorem.
 
 namespace FiniteFibonacciAnyonRegister
 
-open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
-open InfoGeometry.Canonical.FiniteMajoranaBraiding
-open InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
+open FiniteFibonacciAnyonBraiding
+open FiniteMajoranaBraiding
+open FiniteMajoranaProjectiveBraiding
 
 /-- Finite computational register carried by `2N + 2` Fibonacci anyons. -/
 abbrev FibonacciAnyonRegister (N : ℕ) : Type :=

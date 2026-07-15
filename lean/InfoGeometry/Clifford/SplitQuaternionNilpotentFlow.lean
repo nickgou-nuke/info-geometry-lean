@@ -8,6 +8,7 @@ import Mathlib.Topology.Basic
 set_option autoImplicit false
 
 open Filter Topology
+open InfoGeometry.Clifford
 
 /-!
 # Split-quaternion nilpotent finite-product flow

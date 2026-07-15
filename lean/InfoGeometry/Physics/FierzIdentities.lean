@@ -17,7 +17,7 @@ Zero sorries, zero axioms. Canonical `kroneckerMap` + `fin_cases`.
 namespace FierzIdentities
 
 open Matrix
-open InfoGeometry.Physics.ChiralCausalCone
+open ChiralCausalCone
 
 /-- The swap operator on `M₂(ℂ) ⊗ₖ M₂(ℂ)` ≅ `M₄(ℂ)`.
 Exchanges the two tensor slots: `|ab⟩ ↦ |ba⟩`.

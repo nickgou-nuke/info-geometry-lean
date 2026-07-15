@@ -19,6 +19,8 @@ claim is asserted here.
 noncomputable section
 
 open scoped BigOperators
+open ErlangenJaynesGromov
+open OperatorErlangenSystem
 
 namespace JaynesFiniteState
 
@@ -26,7 +28,7 @@ universe uR uA uS uι
 
 abbrev AlgebraicStateRA (R : Type uR) (A : Type uA)
     [CommSemiring R] [Semiring A] [Algebra R A] :=
-  InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem.AlgebraicState
+  OperatorErlangenSystem.AlgebraicState
     (R := R) (A := A)
 
 abbrev FiniteObservableSample (R : Type uR) (A : Type uA) (ι : Type uι)
@@ -49,7 +51,7 @@ def finiteEmpiricalFunctional
     (weight : R)
     (sample : FiniteObservableSample R A ι) :
     A →ₗ[R] R :=
-  InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem.empiricalWeightedFunctional
+  OperatorErlangenSystem.empiricalWeightedFunctional
     (R := R) (A := A) (ι := ι) weight (fun i => (sample i).toLinearMap)
 
 @[simp]
@@ -59,7 +61,7 @@ theorem finiteEmpiricalFunctional_apply
     (a : A) :
     finiteEmpiricalFunctional weight sample a = weight * ∑ i, sample i a := by
   simp [finiteEmpiricalFunctional,
-    InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem.empiricalWeightedFunctional]
+    OperatorErlangenSystem.empiricalWeightedFunctional]
 
 @[simp]
 theorem finiteEmpiricalFunctional_map_add
@@ -89,7 +91,7 @@ def finiteEmpiricalState
     (sample : FiniteObservableSample R A ι)
     (hweight : weight * (Fintype.card ι : R) = 1) :
     AlgebraicStateRA R A :=
-  InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem.empiricalWeightedState
+  OperatorErlangenSystem.empiricalWeightedState
     (R := R) (A := A) (ι := ι) weight sample hweight
 
 @[simp]
@@ -99,8 +101,9 @@ theorem finiteEmpiricalState_apply
     (hweight : weight * (Fintype.card ι : R) = 1)
     (a : A) :
     finiteEmpiricalState weight sample hweight a = weight * ∑ i, sample i a := by
-  simp [finiteEmpiricalState,
-    InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem.empiricalWeightedState]
+  simpa [finiteEmpiricalState] using
+    OperatorErlangenSystem.empiricalWeightedState_apply
+      (R := R) (A := A) (ι := ι) weight sample hweight a
 
 @[simp]
 theorem finiteEmpiricalState_map_one
@@ -135,7 +138,7 @@ theorem finiteEmpiricalState_convex
 
 section Invariance
 
-variable (E : InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem R A S)
+variable (E : OperatorErlangenSystem R A S)
 
 /--
 If every sampled state is invariant under the symmetry semigroup, then the

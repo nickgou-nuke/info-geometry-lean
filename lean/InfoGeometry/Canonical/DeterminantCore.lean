@@ -78,4 +78,10 @@ theorem logAbsDet_mul (V : Type v)
     _ = logAbsDet V f + logAbsDet V g := by
           rfl
 
+/-- Inversion negates the logarithmic absolute determinant. -/
+@[simp] theorem logAbsDet_inv (V : Type v)
+    [Fintype V] [DecidableEq V] (f : «GL» ℝ V) :
+    logAbsDet V f⁻¹ = -logAbsDet V f := by
+  simp [logAbsDet]
+
 end InfoGeometry.Canonical.Determinant

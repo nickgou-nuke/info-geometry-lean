@@ -224,22 +224,21 @@ noncomputable def gaugeSection : ScoreRay (T := T) → FinProb T :=
 
 section ProjectiveState
 
-open InfoGeometry.MeasureProjective
-open InfoGeometry.MeasureProjective.ProjectiveState
-open InfoGeometry.MeasureProjective.Normalized
+open MeasureProjective
+open MeasureProjective.Normalized
 
 variable [MeasurableSpace T] [MeasurableSingletonClass T] [Nonempty T]
 
 /-- A concrete nonzero finite IB score slice viewed in the widened projective-state substrate. -/
-noncomputable def toProjectiveState (s : ScoreSlice (T := T)) : ProjectiveState T :=
+noncomputable def toProjectiveState (s : ScoreSlice (T := T)) : MeasureProjective.ProjectiveState T :=
   pmfToProjectiveState s.gaugeSection
 
 @[simp] theorem normalize_toProjectiveState (s : ScoreSlice (T := T)) :
-    ProjectiveState.normalize (toProjectiveState s) = pmfToProbMeasure s.gaugeSection := by
+    MeasureProjective.ProjectiveState.normalize (toProjectiveState s) = pmfToProbMeasure s.gaugeSection := by
   simp [toProjectiveState]
 
 /-- A projective IB score ray viewed in the widened nonnegative projective substrate. -/
-noncomputable def projectiveState : ScoreRay (T := T) → ProjectiveState T :=
+noncomputable def projectiveState : ScoreRay (T := T) → MeasureProjective.ProjectiveState T :=
   Quotient.lift
     (fun s : ScoreSlice (T := T) => toProjectiveState s)
     (by
@@ -256,7 +255,7 @@ noncomputable def projectiveState : ScoreRay (T := T) → ProjectiveState T :=
 
 @[simp] theorem normalize_projectiveState
     (q : ScoreRay (T := T)) :
-    ProjectiveState.normalize (projectiveState (T := T) q) =
+    MeasureProjective.ProjectiveState.normalize (projectiveState (T := T) q) =
       pmfToProbMeasure (gaugeSection (T := T) q) := by
   refine Quotient.inductionOn q ?_
   intro s
@@ -337,7 +336,7 @@ noncomputable def positiveRay : FullSupportScoreRay (T := T) → PositiveRay T :
       exact Quotient.sound <| FullSupportScoreSlice.sameRay_toPositiveMeasure (T := T) hs)
 
 @[simp] theorem positiveRay_mk (s : FullSupportScoreSlice (T := T)) :
-    positiveRay (T := T) (Quotient.mk (fullSupportScoreSliceSetoid (T := T)) s) = s.positiveRay := rfl
+    positiveRay (Quotient.mk _ s) = s.positiveRay := rfl
 
 end FullSupportScoreRay
 

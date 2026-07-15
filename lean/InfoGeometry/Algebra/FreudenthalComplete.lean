@@ -12,8 +12,8 @@ basis instances. The deleted generated 512-case surface contained false cases.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.Algebra.CubicJordanOs
-open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
+open CubicJordanOs
+open CubicJordanOs.AlbertMatrix
 
 noncomputable section
 

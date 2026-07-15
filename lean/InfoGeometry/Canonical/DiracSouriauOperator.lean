@@ -96,7 +96,7 @@ theorem exists_drazinInverse {K : Type*} [Field K] (S : DiracSouriauSector K) :
   let f : Module.End K ((Fin 2 ⊕ Fin 2) → K) := Matrix.toLin' M
   -- Use global existence for finite-dimensional endomorphisms
   obtain ⟨k, d, hd⟩ :=
-    InfoGeometry.Canonical.DrazinExistenceBridge.exists_canonicalDrazinInverse_global f
+    DrazinExistenceBridge.exists_canonicalDrazinInverse_global f
   -- Convert Endomorphism back to Matrix using LinearMap.toMatrix'
   let D := LinearMap.toMatrix' d
   refine ⟨k, D, ?_⟩

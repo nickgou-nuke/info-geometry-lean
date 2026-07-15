@@ -6,7 +6,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 
-namespace CartanDecomposition
+namespace InfoGeometry.Canonical.CartanDecomposition
 
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
@@ -744,4 +744,4 @@ end Exponential
 
 end InformationCartanTriple
 
-end CartanDecomposition
+end InfoGeometry.Canonical.CartanDecomposition

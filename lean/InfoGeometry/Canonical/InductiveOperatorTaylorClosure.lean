@@ -24,9 +24,8 @@ No topological completion.
 namespace InductiveOperatorTaylorClosure
 
 open Finset
-open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
-open InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
-open InfoGeometry.Canonical.SymmetryClosureConformalBlocks.SectorDecomposition
+open SymmetryClosureConformalBlocks
+open SymmetryClosureConformalBlocks.SectorDecomposition
 
 /-- A coefficient recursion for finite Taylor prefixes. -/
 structure TaylorCoefficientRecursion where
@@ -107,7 +106,11 @@ theorem noLeakage_operatorTaylorPrefix {D : SectorDecomposition V} {A : V →ₗ
 
 end SectorDecomposition
 
-namespace IntertwinesBy
+abbrev IntertwinesBy {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (K : V →ₗ[ℂ] V) (σ : ℂ) (A : V →ₗ[ℂ] V) : Prop :=
+  InfoGeometry.Canonical.SuperBracketHestenesKreinClosure.IntertwinesBy K σ A
+
+namespace TaylorIntertwines
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 variable {K A : V →ₗ[ℂ] V} {σ : ℂ}
@@ -121,9 +124,9 @@ theorem pow (hA : IntertwinesBy K σ A) (N : ℕ) :
       simp [LinearMap.comp_apply]
   | succ N ih =>
       rw [pow_succ, pow_succ]
-      exact IntertwinesBy.comp ih hA
+      exact InfoGeometry.Canonical.SuperBracketHestenesKreinClosure.IntertwinesBy.comp ih hA
 
-end IntertwinesBy
+end TaylorIntertwines
 
 /-- A homogeneous finite Taylor prefix uses coefficients only in one target grade. -/
 def HomogeneousCoefficientSupport (σ target : ℂ) (c : ℕ → ℂ) (N : ℕ) : Prop :=
@@ -154,11 +157,11 @@ theorem intertwines_operatorTaylorPrefix_of_homogeneous
             (Finset.mem_range.mpr (Nat.lt_trans (Finset.mem_range.mp hk) (Nat.lt_succ_self N)))
             hck)
       · have htarget : σ ^ N = target := hsupp N (by simp) hcN
-        have hpow := IntertwinesBy.pow hA N
+        have hpow := TaylorIntertwines.pow hA N
         have hterm : IntertwinesBy K target (c N • (A ^ N)) := by
-          simpa [htarget] using IntertwinesBy.smul (K := K) (A := A ^ N)
+          simpa [htarget] using InfoGeometry.Canonical.SuperBracketHestenesKreinClosure.IntertwinesBy.smul (K := K) (A := A ^ N)
             (σ := σ ^ N) (c := c N) hpow
-        exact IntertwinesBy.add (ih (by
+        exact InfoGeometry.Canonical.SuperBracketHestenesKreinClosure.IntertwinesBy.add (ih (by
           intro k hk hck
           exact hsupp k
             (Finset.mem_range.mpr (Nat.lt_trans (Finset.mem_range.mp hk) (Nat.lt_succ_self N)))

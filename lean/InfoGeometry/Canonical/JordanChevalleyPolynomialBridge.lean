@@ -17,7 +17,7 @@ namespace JordanChevalleyPolynomialBridge
 
 open scoped Polynomial
 open Polynomial
-open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge
+open JordanChevalleyBridge
 
 variable {K : Type*} [Field K]
 variable {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V]

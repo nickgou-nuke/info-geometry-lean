@@ -60,21 +60,21 @@ twistor owner.  The explicit witness below is the nonzero vector
 -/
 
 abbrev PenroseProjectiveNullTwistor : Type :=
-  InfoGeometry.Twistor.PenroseTwistor.NullTwistorSpace
+  PenroseTwistor.NullTwistorSpace
 
 noncomputable def penroseProjectiveNullTwistor_nonempty :
     Nonempty PenroseProjectiveNullTwistor := by
-  let z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier :=
+  let z : PenroseTwistor.TwistorCarrier :=
     fun i => if i = 0 then 1 else if i = 2 then 1 else 0
   have hz : z ≠ 0 := by
     intro h
     have h0 := congrFun h 0
     simp [z] at h0
-  have hnull : InfoGeometry.Twistor.PenroseTwistor.helicity z = 0 := by
-    rw [InfoGeometry.Twistor.PenroseTwistor.helicity,
-      InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply]
+  have hnull : PenroseTwistor.helicity z = 0 := by
+    rw [PenroseTwistor.helicity,
+      PenroseTwistor.twistorHermitian_apply]
     norm_num [z, Fin.sum_univ_succ]
     simp [z]
-  exact ⟨InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull⟩
+  exact ⟨PenroseTwistor.twistorMk z hz hnull⟩
 
 end InfoGeometry.Projective.Twistor

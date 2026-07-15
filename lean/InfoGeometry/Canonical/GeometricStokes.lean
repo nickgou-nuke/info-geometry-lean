@@ -28,7 +28,7 @@ noncomputable section
 
 namespace GeometricStokes
 
-open InfoGeometry.Canonical.GeometricMonodromy
+open GeometricMonodromy
 
 variable {AInf : Type*} [Ring AInf] [Algebra ℝ AInf]
 

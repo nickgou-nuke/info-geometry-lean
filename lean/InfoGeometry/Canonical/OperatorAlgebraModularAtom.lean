@@ -11,7 +11,7 @@ Tomita-Takesaki modular atom facts used by the operator-algebra bridge.
 namespace InfoGeometry.Canonical.OperatorAlgebraBridge
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 
 section ModularAtom
 

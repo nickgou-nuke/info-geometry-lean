@@ -26,7 +26,7 @@ namespace ChiralTensorMatrixBridge
 
 open Matrix
 open TensorProduct
-open InfoGeometry.Physics.ChiralTensorRecoupling
+open ChiralTensorRecoupling
 
 /-- The canonical algebra isomorphism `M₂(ℂ) ⊗ M₂(ℂ) ≅ M₄(ℂ)`.
 Maps the tensor product of 2×2 matrices to a 4×4 matrix indexed by `Fin 2 × Fin 2`. -/

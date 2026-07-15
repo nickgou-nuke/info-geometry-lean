@@ -19,10 +19,10 @@ This file is intentionally conservative:
 namespace RelativeModularCommutingLift
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.Canonical.RelativeModularHamiltonian
-open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
+open RelativePotentialCore
+open RelativeModularOperator
+open RelativeModularHamiltonian
+open JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 

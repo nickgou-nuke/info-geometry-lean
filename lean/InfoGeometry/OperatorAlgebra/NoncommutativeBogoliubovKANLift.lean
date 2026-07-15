@@ -27,7 +27,7 @@ open scoped ENNReal
 namespace NoncommutativeBogoliubovKANLift
 
 open InfoGeometry.OperatorAlgebra
-open InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
+open ConnesSpatialDerivative
 open InfoGeometry.Canonical
 
 /--

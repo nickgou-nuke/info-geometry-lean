@@ -22,7 +22,7 @@ It does not claim the full analytic Einstein-Cartan bootstrap.
 namespace QuaternionicEmergentGravityFoundation
 
 open scoped Matrix BigOperators
-open InfoGeometry.Clifford.DiracPauliGamma
+open DiracPauliGamma
 
 noncomputable section
 

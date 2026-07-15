@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+import InfoGeometry.Canonical.FiniteMajoranaBraiding
 
 /-!
 # InfoGeometry.Canonical.FiniteFibonacciMonodromyInterface
@@ -24,8 +25,8 @@ No Solovay--Kitaev or fault-tolerance claim.
 
 namespace FiniteFibonacciMonodromyInterface
 
-open InfoGeometry.Canonical.FiniteMajoranaBraiding
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
+open FiniteMajoranaBraiding
+open FiniteFibonacciComputationalSpace
 
 /-- The allowed electron count in the `Z₃` parafermion setting: a multiple of three. -/
 def electronCount (r : ℕ) : ℕ :=

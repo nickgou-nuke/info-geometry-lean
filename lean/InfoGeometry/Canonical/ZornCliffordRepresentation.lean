@@ -38,7 +38,7 @@ theorem zornConj_add (z1 z2 : ZornMatrix R) :
 
 theorem zornConj_smul (c : R) (z : ZornMatrix R) :
     zornConj (c • z) = c • zornConj z := by
-  ext <;> simp [zornConj] <;> try ring
+  ext <;> simp [zornConj]
 
 theorem mul_add' (z1 z2 z3 : ZornMatrix R) :
     z1 * (z2 + z3) = z1 * z2 + z1 * z3 := by

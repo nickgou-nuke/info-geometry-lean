@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.ErlangenInductiveClosure
 
-open InfoGeometry.Canonical.ErlangenInductiveClosure
+open ErlangenInductiveClosure
 
 namespace ErlangenColimitResolution
 

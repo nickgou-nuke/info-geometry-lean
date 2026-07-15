@@ -14,7 +14,7 @@ concrete product convention in this repository.  It does not claim any global
 group-identification theorem.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
+namespace ConcreteComposition
 namespace ZornCell
 
 deriving instance DecidableEq for ZornCell
@@ -167,4 +167,4 @@ theorem cross_sign_packet :
 
 end Basis8
 end ZornCell
-end InfoGeometry.Algebra.Zorn.ConcreteComposition
+end ConcreteComposition

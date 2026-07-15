@@ -23,7 +23,7 @@ flow.
 
 namespace InfoGeometry.Canonical.SouriauMetriplectic
 
-open InfoGeometry.Canonical.SouriauThermodynamics
+open SouriauThermodynamics
 open InfoGeometry.GrandCanonical
 
 variable {α : Type _}

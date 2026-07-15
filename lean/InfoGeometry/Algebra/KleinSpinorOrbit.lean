@@ -379,22 +379,19 @@ def Stabilizes (g : CsSL2) (ψ : CsSpinor) : Prop :=
 /-- Determinant-one matrices stabilize `(1,0)` exactly when the first column is `(1,0)`. -/
 theorem stabilizes_generic_iff (g : CsSL2) :
     Stabilizes g genericRep ↔ g.M.aa = Cs.one ∧ g.M.ba = Cs.zero := by
-  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
-    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_generic_iff g.M
+  simpa [Stabilizes, action] using KleinSpinorOrbit.stabilizes_generic_iff g.M
 
 /-- Determinant-one matrices stabilize `(E,0)` exactly by the two `E`-line equations. -/
 theorem stabilizes_null_iff (g : CsSL2) :
     Stabilizes g nullRep ↔ Cs.mul g.M.aa Cs.E = Cs.E ∧ Cs.mul g.M.ba Cs.E = Cs.zero := by
-  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
-    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_null_iff g.M
+  simpa [Stabilizes, action] using KleinSpinorOrbit.stabilizes_null_iff g.M
 
 /-- Determinant-one matrices stabilize `(E,E)` exactly by the two row-sum equations. -/
 theorem stabilizes_diagonalNull_iff (g : CsSL2) :
     Stabilizes g diagonalNullRep ↔
       Cs.add (Cs.mul g.M.aa Cs.E) (Cs.mul g.M.ab Cs.E) = Cs.E ∧
       Cs.add (Cs.mul g.M.ba Cs.E) (Cs.mul g.M.bb Cs.E) = Cs.E := by
-  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
-    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_diagonalNull_iff g.M
+  simpa [Stabilizes, action] using KleinSpinorOrbit.stabilizes_diagonalNull_iff g.M
 
 /-- Eq.-5.22-style local content: the generic upper-unipotent family is determinant-one
 and stabilizes the generic representative `(1,0)`. -/
@@ -443,7 +440,7 @@ theorem eq_5_22_generic_stabilizer_shape (g : CsSL2) :
   · intro hshape
     change CsMatrix2.action g.M genericRep = genericRep
     rw [hshape]
-    exact (InfoGeometry.Algebra.KleinSpinorOrbit.genericUnipotent_stabilizes g.M.ab).2
+    exact (KleinSpinorOrbit.genericUnipotent_stabilizes g.M.ab).2
 
 /-- Null stabilization by determinant-one matrices, reduced to two scalar row-sum equations
 on the `E` line. -/
@@ -479,8 +476,7 @@ theorem eq_5_23_null_first_column_Ebar_shape (g : CsSL2) :
 stabilizes the null representative `(E,0)`. -/
 theorem eq_5_23_null_Ebar_family_stabilizes (t : ℚ) :
     Stabilizes (nullEbarFamily t) nullRep := by
-  simpa [Stabilizes, action, nullEbarFamily]
-    using InfoGeometry.Algebra.KleinSpinorOrbit.nullEbarFamily_stabilizes t
+  simpa [Stabilizes, action, nullEbarFamily] using KleinSpinorOrbit.nullEbarFamily_stabilizes t
 
 /-- Eq.-5.24-style local content: for the diagonal null representative `(E,E)`,
 stabilization is the pair of row-sum equations on the `E` line. -/

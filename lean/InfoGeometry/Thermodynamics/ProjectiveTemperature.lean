@@ -27,7 +27,7 @@ open scoped BigOperators
 namespace ProjectiveTemperature
 
 open InfoGeometry.Arithmetic
-open InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
+open MobiusClosureFixedPoints
 
 /-! ## 1. Real temperature inversion -/
 

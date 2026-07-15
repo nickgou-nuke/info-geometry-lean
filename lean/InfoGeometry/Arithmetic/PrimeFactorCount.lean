@@ -36,6 +36,6 @@ For even k, λ(p^k) = 1. For odd k, λ(p^k) = -1.
 -/
 theorem liouville_prime_pow (p : ℕ+) (hp : Nat.Prime p.val) (k : ℕ) :
     liouville (p ^ k) = (-1 : ℤ) ^ k := by
-  rw [liouville, BostConnesSystem.Omega_prime_pow p.val k hp]
+  rw [liouville, InfoGeometry.Arithmetic.BostConnesSystem.Omega_prime_pow p.val k hp]
 
 end PrimeFactorCount

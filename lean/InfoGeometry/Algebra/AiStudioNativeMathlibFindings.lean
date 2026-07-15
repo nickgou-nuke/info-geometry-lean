@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.SL2CZhukovsky
 namespace AiStudioNativeMathlibFindings
 
 open Matrix
+open SL2CZhukovsky
 
 /-!
 # Native mathlib extraction of AI Studio algebraic findings
@@ -182,15 +183,14 @@ theorem native_unipotent_shear_packet {R : Type*} [CommRing R] (s t : R) :
 
 /-- Native mathlib characteristic-polynomial formula for a `2 × 2` complex matrix. -/
 theorem native_charPoly2x2_eq (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ) :
-    InfoGeometry.Canonical.SL2CZhukovsky.charPoly2x2 M x =
-      x ^ 2 - Matrix.trace M * x + InfoGeometry.Canonical.SL2CZhukovsky.det2x2 M := by
-  simpa using InfoGeometry.Canonical.SL2CZhukovsky.charPoly2x2_eq M x
+    charPoly2x2 M x = x ^ 2 - Matrix.trace M * x + det2x2 M := by
+  simpa using charPoly2x2_eq M x
 
 /-- Determinant-one specialization of the native `2 × 2` characteristic polynomial. -/
 theorem native_char_poly_eq_zhukovsky (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
-    (h_tr : Matrix.trace M = Tr) (h_det : InfoGeometry.Canonical.SL2CZhukovsky.det2x2 M = 1) :
-    InfoGeometry.Canonical.SL2CZhukovsky.charPoly2x2 M x = x ^ 2 - Tr * x + 1 := by
+    (h_tr : Matrix.trace M = Tr) (h_det : det2x2 M = 1) :
+    charPoly2x2 M x = x ^ 2 - Tr * x + 1 := by
   simpa [h_tr, h_det] using
-    (InfoGeometry.Canonical.SL2CZhukovsky.char_poly_eq_zhukovsky M x Tr h_tr h_det)
+    (char_poly_eq_zhukovsky M x Tr h_tr h_det)
 
 end AiStudioNativeMathlibFindings

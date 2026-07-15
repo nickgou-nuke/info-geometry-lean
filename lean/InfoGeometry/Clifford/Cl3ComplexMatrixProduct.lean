@@ -25,7 +25,7 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 set_option linter.unnecessarySimpa false
 
-namespace Cl3ComplexMatrixProduct
+namespace InfoGeometry.Clifford.Cl3ComplexMatrixProduct
 
 abbrev Vec3 : Type := ℂ × ℂ × ℂ
 abbrev Mat2C : Type := Matrix (Fin 2) (Fin 2) ℂ
@@ -450,4 +450,4 @@ lemma cl3ToProd_injective : Function.Injective cl3ToProd := by
 noncomputable def cl3EquivProdMat2C : CliffordAlgebra q3 ≃ₐ[ℂ] ProdMat2C :=
   AlgEquiv.ofBijective cl3ToProd ⟨cl3ToProd_injective, cl3ToProd_surjective⟩
 
-end Cl3ComplexMatrixProduct
+end InfoGeometry.Clifford.Cl3ComplexMatrixProduct

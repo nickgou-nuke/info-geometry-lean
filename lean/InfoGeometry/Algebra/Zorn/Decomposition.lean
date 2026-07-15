@@ -20,7 +20,7 @@ with `+` realized componentwise via `addZ`.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
+namespace ConcreteComposition
 namespace ZornCell
 
 variable {R : Type*} [CommRing R]
@@ -123,7 +123,7 @@ theorem cell_sector_decomposition (X : ZornCell R) :
   · simp [diagSector, offDiagSector, addZ]
 
 end ZornCell
-end InfoGeometry.Algebra.Zorn.ConcreteComposition
+end ConcreteComposition
 
 
 end

@@ -23,7 +23,7 @@ namespace InfoGeometry.Quantum
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 
 /--
 **Quantum Geometric Tensor (QGT)**:
@@ -60,7 +60,7 @@ def Ω (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.berry
 @[simp] theorem compat_complex_i
     (Q : QGT E) (u v : DoubledSpace E) :
     Q.berry u v = Q.metric (complex_i (E := E) u) v := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
     Q.compat u v
 
 /--

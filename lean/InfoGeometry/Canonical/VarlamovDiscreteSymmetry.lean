@@ -17,7 +17,7 @@ namespace InfoGeometry.Canonical
 
 namespace KreinDoubledAtom
 
-open InfoGeometry.Clifford.RealMod8Classification
+open RealMod8Classification
 
 /-- Varlamov grade involution `W`, realized by `epsilon`. -/
 def varlamovW (X : KreinDoubledAtom) : X →ₗ[ℝ] X :=
@@ -66,11 +66,11 @@ def varlamovSignatureOfSplitAtom : VarlamovSignature :=
   VarlamovSignature.ppm
 
 @[simp] theorem coverGroupKind_varlamovSignatureOfSplitAtom :
-    coverGroupKind varlamovSignatureOfSplitAtom = .D4 := by
+    coverGroupKind varlamovSignatureOfSplitAtom = DiscreteCoverGroupKind.D4 := by
   rfl
 
 @[simp] theorem cliffordianKind_varlamovSignatureOfSplitAtom :
-    cliffordianKind varlamovSignatureOfSplitAtom = .cliffordian := by
+    cliffordianKind varlamovSignatureOfSplitAtom = CliffordianKind.cliffordian := by
   rfl
 
 /--

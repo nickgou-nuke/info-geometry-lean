@@ -14,7 +14,7 @@ against the geometric involution `J`.
 
 namespace InfoGeometry.Quantum
 
-open InfoGeometry.Quantum.RealMajoranaCategory
+open RealMajoranaCategory
 
 namespace RealMajoranaCategory.RealMajoranaCore
 

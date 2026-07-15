@@ -5,7 +5,7 @@ import InfoGeometry.Projective.FiveGradedCentralizer
 namespace InfoGeometry.Canonical.Unification
 
 open InfoGeometry.Canonical
-open InfoGeometry.Topology.Metriplectic
+open Metriplectic
 open InfoGeometry.Projective.Closure
 
 /--

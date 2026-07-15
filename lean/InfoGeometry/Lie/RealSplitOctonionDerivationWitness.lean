@@ -15,6 +15,8 @@ noncomputable section
 
 namespace RealSplitOctonionDerivationWitness
 
+open RealSplitOctonionG2Classification
+
 open scoped BigOperators
 
 /-- The canonical real split-octonion carrier. -/
@@ -80,20 +82,20 @@ theorem rot01Real_deriv :
 
 /-- Native derivation witness packet on the real split-octonion carrier. -/
 structure RealSplitOctonionDerivationPacket where
-  status : InfoGeometry.Lie.RealSplitOctonionG2Classification.RealClassificationStatus
+  status : RealClassificationStatus
   derivation : (∀ X Y : SplitOctReal, rot01Real (X + Y) = rot01Real X + rot01Real Y) ∧
     (∀ X : SplitOctReal, rot01Real (-X) = - rot01Real X) ∧
       ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y
 
 /-- The canonical native packet for the real derivation witness. -/
 def realSplitOctonionDerivationPacket : RealSplitOctonionDerivationPacket where
-  status := InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus
+  status := currentRealClassificationStatus
   derivation := rot01Real_deriv
 
 /-- Readback for the native derivation witness packet. -/
 theorem realSplitOctonionDerivationPacket_packet :
     realSplitOctonionDerivationPacket.status =
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus ∧
+      currentRealClassificationStatus ∧
       realSplitOctonionDerivationPacket.derivation = rot01Real_deriv := by
   exact ⟨rfl, rfl⟩
 

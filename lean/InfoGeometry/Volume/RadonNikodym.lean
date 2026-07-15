@@ -11,11 +11,11 @@ Radon-Nikodym logarithms.  The RN readout is not supplied as a field: it is
 defined directly as `log |vol a|`.
 -/
 
-namespace RadonNikodym
+namespace InfoGeometry.Volume.RadonNikodym
 
 open InfoGeometry.Canonical
-open InfoGeometry.Volume.Base
-open InfoGeometry.Volume.LogPotential
+open Base
+open LogPotential
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -91,7 +91,7 @@ theorem rn_eq_additiveInvariant (a : A) :
 /-- Multiplicative chain rule for the scalar RN bridge. -/
 theorem rn_chain_rule (f g : A) :
     B.rn (f * g) = B.rn f + B.rn g :=
-  InfoGeometry.Volume.RadonNikodym.rn_chain_rule B.vol f g
+    InfoGeometry.Volume.RadonNikodym.rn_chain_rule B.vol f g
 
 end HasScalarRNBridge
 
@@ -116,7 +116,7 @@ wrapper group `Multiplicative ℝ`.
 -/
 noncomputable def toProjectiveRotorCocycle {A : Type*} [Group A]
     (vol : A →* ℝˣ) :
-    InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRotorCocycle
+    ProjectiveFoundation.ProjectiveRotorCocycle
       A PUnit (Multiplicative ℝ) where
   toFun a _ := Multiplicative.ofAdd (scalarRN vol a)
   map_one := by
@@ -138,4 +138,4 @@ noncomputable def toProjectiveRotorCocycle {A : Type*} [Group A]
         toProjectiveRotorCocycle vol b PUnit.unit := by
   simp [toProjectiveRotorCocycle, rn_chain_rule]
 
-end RadonNikodym
+end InfoGeometry.Volume.RadonNikodym

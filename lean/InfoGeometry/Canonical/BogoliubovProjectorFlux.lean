@@ -2,10 +2,10 @@ import InfoGeometry.Canonical.BogoliubovProjectorTransport
 
 namespace BogoliubovProjectorFlux
 
-open InfoGeometry.Canonical.BogoliubovTransport
-open InfoGeometry.Canonical.BogoliubovClosedForms
-open InfoGeometry.Canonical.BogoliubovProjectorTransport
-open InfoGeometry.Canonical.TomitaTakesaki
+open BogoliubovTransport
+open BogoliubovClosedForms
+open BogoliubovProjectorTransport
+open TomitaTakesaki
 open InfoGeometry.Krein
 
 section Basic

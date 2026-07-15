@@ -8,9 +8,8 @@ open scoped ENNReal
 
 namespace IBGaugeBridge
 
-open InfoGeometry.Canonical.IBMeasure
-open InfoGeometry.MeasureProjective
-open InfoGeometry.MeasureProjective.ProjectiveState
+open IBMeasure
+open MeasureProjective
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

@@ -14,7 +14,7 @@ noncomputable section
 
 namespace GNSFiniteSupportOperator
 
-open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport
+open GNSFiniteSupport
 
 variable {n : ℕ} (p : Fin n → Prop) [DecidablePred p]
 

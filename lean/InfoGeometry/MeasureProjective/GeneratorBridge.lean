@@ -8,8 +8,8 @@ set_option autoImplicit false
 namespace GeneratorBridge
 
 open MeasureTheory
-open InfoGeometry.MeasureProjective
-open InfoGeometry.Measure.DiscreteRN
+open MeasureProjective
+open DiscreteRN
 open InfoGeometry.MeasureProjective.Normalized
 
 variable {α : Type*} [MeasurableSpace α] [Nonempty α] [MeasurableSingletonClass α]

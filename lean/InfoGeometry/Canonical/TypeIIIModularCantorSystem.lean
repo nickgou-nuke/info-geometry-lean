@@ -28,7 +28,7 @@ packet, not constructed by functional calculus in this file.
 
 namespace TypeIIIModularCantorSystem
 
-open InfoGeometry.Canonical.StandardFormCore
+open StandardFormCore
 
 universe u v w
 

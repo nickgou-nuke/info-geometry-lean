@@ -23,7 +23,7 @@ cohomology identification are not claimed here.
 
 namespace MaximumCaliberKLSplit
 
-open InfoGeometry.Topology.ThermodynamicGauge
+open ThermodynamicGauge
 
 universe u v
 

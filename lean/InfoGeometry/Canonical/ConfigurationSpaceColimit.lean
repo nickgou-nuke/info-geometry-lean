@@ -13,7 +13,7 @@ infinite-dimensional de Rham cohomology limit.
 
 namespace ConfigurationSpaceColimit
 
-open InfoGeometry.Canonical.InductiveColimitBridge
+open InductiveColimitBridge
 
 universe u
 
@@ -75,7 +75,7 @@ theorem configuration_space_homotopical_stabilization
     (limit_arnold_readout : ∀ n x y, arnold_mixed_relation n x y → limit_arnold_relation (stable_toLimit n x) (arnold_toLimit n y))
     (n : ℕ) (x : CohomologyRing_n n) (y : ArnoldRelations_n n) (h_arnold : arnold_mixed_relation n x y) :
     limit_arnold_relation (stable_toLimit n x) (arnold_toLimit n y) :=
-  CompatibleFiniteEquivalenceTower.finite_equiv_to_colimit 
+  CompatibleFiniteEquivalenceTower.finite_equiv_to_colimit
     (configurationSpaceTower CohomologyRing_n fadell_neuwirth_pullback StableCohomology stable_toLimit stable_cone_comm 
                              ArnoldRelations_n arnold_bond StableArnold arnold_toLimit arnold_cone_comm 
                              arnold_mixed_relation arnold_compat limit_arnold_relation limit_arnold_readout) 

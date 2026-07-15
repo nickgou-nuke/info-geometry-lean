@@ -3,7 +3,7 @@ import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 namespace TriadicBogoliubovBridge
 
-open InfoGeometry.Canonical.BogoliubovTransport
+open BogoliubovTransport
 open InfoGeometry.Krein
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

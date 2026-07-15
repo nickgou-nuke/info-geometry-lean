@@ -25,7 +25,7 @@ open scoped BigOperators
 
 namespace PrimonLiouvilleWittenIndex
 
-open InfoGeometry.Arithmetic.PrimonFinite
+open PrimonFinite
 
 variable {PrimeLabel R : Type*}
 

@@ -21,7 +21,7 @@ asserted here.
 
 namespace FiniteDeterminantTower
 
-open InfoGeometry.Canonical.FiniteInvariantTransport
+open FiniteInvariantTransport
 
 /--
 If each finite bonding map squares a determinant-like readout, then after `k`

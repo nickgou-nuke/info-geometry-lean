@@ -28,17 +28,18 @@ Under that hypothesis:
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H] [KreinGradedModule H]
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (w : GradeEpsWitness X)
     (a : A) :
     IsGZero X.cl11 (X.π a) :=
   pi_isGZero_of_witness (X:=X) w a
 -/
 
-namespace RealSplitKKTBridge
+namespace InfoGeometry.KK.RealSplitKKTBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Krein
 open InfoGeometry.Krein.KreinGradedModule
+open InfoGeometry.KK
 
 section Core
 
@@ -99,7 +100,7 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
 @[rep_depth krein] theorem pi_isGZero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (w : GradeEpsWitness X)
     (a : A) :
     IsGZero X.cl11 (X.π a) :=
   pi_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq a
@@ -107,7 +108,7 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
 @[rep_depth krein] theorem rho_isGZero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (w : GradeEpsWitness X)
     (b : B) :
     IsGZero X.cl11 (X.ρ b) :=
   rho_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq b
@@ -115,17 +116,17 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
 @[rep_depth krein] theorem gZeroPart_F_eq_zero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
+    (w : GradeEpsWitness X) :
     gZeroPart X.cl11 X.F = 0 :=
   gZeroPart_F_eq_zero_of_gradeCLM_eq_eps (X := X) w.grade_eq
 
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
 @[rep_depth krein] theorem F_eq_gOnePart_add_gNegOnePart_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
+    (w : GradeEpsWitness X) :
     X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F :=
   F_eq_gOnePart_add_gNegOnePart_of_gradeCLM_eq_eps (X := X) w.grade_eq
 
 end Core
 
-end RealSplitKKTBridge
+end InfoGeometry.KK.RealSplitKKTBridge

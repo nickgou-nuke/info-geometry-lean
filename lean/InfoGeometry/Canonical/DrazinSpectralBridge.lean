@@ -19,7 +19,8 @@ into the bundled `DrazinInfiniteAssumptions` owner from
 
 namespace DrazinSpectralBridge
 
-open InfoGeometry.Canonical.DrazinInfiniteCore
+open InfoGeometry.Canonical
+open DrazinInfiniteCore
 
 variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace 𝕂 E]
 variable {T : E →L[𝕂] E}
@@ -126,9 +127,9 @@ from isolation at `0` plus finite ascent/descent, recover a Drazin witness.
 theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
     (_h : ZeroIsolatedInSpectrum T)
     (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    ∃ k TD, Drazin.IsDrazinInverse T.toLinearMap TD k := by
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k := by
   exact
-    InfoGeometry.Canonical.DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent_constructive
+    DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent_constructive
       (T := T.toLinearMap) hFinite
 
 /--
@@ -140,7 +141,7 @@ theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_package
     (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
     (_hClassical : HasClassicalRieszDecompositionAtZero T)
     (_hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
-    ∃ k TD, Drazin.IsDrazinInverse T.toLinearMap TD k := by
+    ∃ k TD, InfoGeometry.Canonical.Drazin.IsDrazinInverse T.toLinearMap TD k := by
   exact exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
     (T := T) h hFinite
 

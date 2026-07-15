@@ -25,9 +25,9 @@ relative modular potential.
 namespace RelativeModularOperator
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
-open InfoGeometry.Canonical.RelativeModularCore
-open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
+open RelativePotentialCore
+open RelativeModularCore
+open JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 
@@ -79,9 +79,9 @@ theorem RelativeStatePair.compose_modularOperator
     (R₁₂ R₂₃ : RelativeStatePair (Fin n)) (h : R₁₂.target = R₂₃.source) :
     RelativeStatePair.modularOperator (R₁₂.compose R₂₃)
       = RelativeStatePair.modularOperator R₁₂ * RelativeStatePair.modularOperator R₂₃ := by
-  rw [RelativeStatePair.modularOperator_eq_diagMatrix_density]
-  rw [RelativeStatePair.modularOperator_eq_diagMatrix_density]
-  rw [RelativeStatePair.modularOperator_eq_diagMatrix_density]
+  rw [RelativeModularOperator.RelativeStatePair.modularOperator_eq_diagMatrix_density]
+  rw [RelativeModularOperator.RelativeStatePair.modularOperator_eq_diagMatrix_density]
+  rw [RelativeModularOperator.RelativeStatePair.modularOperator_eq_diagMatrix_density]
   unfold diagMatrix
   rw [Matrix.diagonal_mul_diagonal]
   ext i j

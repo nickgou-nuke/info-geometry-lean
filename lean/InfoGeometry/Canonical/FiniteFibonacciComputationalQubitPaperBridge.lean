@@ -25,10 +25,10 @@ computational-space interface.
 
 namespace FiniteFibonacciComputationalQubitPaperBridge
 
-open InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
-open InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
-open InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
-open InfoGeometry.Canonical.FiniteFibonacciRegisterWords
+open FiniteFibonacciComputationalSpace
+open FiniteFibonacciPailRopeQubits
+open FiniteFibonacciRegisterSubgroup
+open FiniteFibonacciRegisterWords
 
 /-- The finite `N`-qubit computational space is `Fin N → Bool`. -/
 theorem computational_vector_def (N : ℕ) :
@@ -87,7 +87,7 @@ theorem registerWordBlockAction_preserves_computational_readback
     (hx : FibonacciBlockLabel.IsComputational x) :
     FibonacciBlockLabel.IsComputational
       (registerWordBlockAction r b onNonComputational w x) :=
-  InfoGeometry.Canonical.FiniteFibonacciRegisterWords.registerWordBlockAction_preserves_computational
+  FiniteFibonacciRegisterWords.registerWordBlockAction_preserves_computational
     r b onNonComputational w hx
 
 /-- The finite `N`-qubit computational sector is the combinatorial basis used in Section 8. -/

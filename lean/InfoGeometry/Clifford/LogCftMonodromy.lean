@@ -23,9 +23,9 @@ bridge to Clifford / signature machinery is through the already-owned
 namespace LogCftMonodromy
 
 open Matrix
-open InfoGeometry.Algebra.HypercomplexTriad
-open InfoGeometry.Algebra.SupermatrixKoszul
-open InfoGeometry.Clifford.OpSignatureBridge
+open HypercomplexTriad
+open SupermatrixKoszul
+open OpSignatureBridge
 
 /-- The carrier for a rank-two logarithmic pair. -/
 abbrev LogCftModule (K : Type*) := Fin 2 → K

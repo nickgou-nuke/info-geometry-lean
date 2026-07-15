@@ -112,7 +112,7 @@ end Core
 
 section SpectralBridge
 
-open InfoGeometry.Canonical.SpectralInference
+open SpectralInference
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

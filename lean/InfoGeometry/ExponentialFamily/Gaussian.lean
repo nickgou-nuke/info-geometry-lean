@@ -9,7 +9,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 namespace Gaussian
 
 open InfoGeometry.Convex
-open InfoGeometry.Canonical.Triality
+open Triality
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

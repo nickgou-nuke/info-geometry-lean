@@ -42,6 +42,8 @@ import InfoGeometry.Clifford.SpinorRep_REAL
 import InfoGeometry.Clifford.SignedPermutation
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.SplitQuaternion
+import InfoGeometry.Clifford.SplitBiquaternion
+import InfoGeometry.Clifford.SplitBiquaternionExponential
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
 import InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
 import InfoGeometry.Clifford.MonodromyFlowAdapter

@@ -16,7 +16,7 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace CuntzContractionLemmas
+namespace InfoGeometry.Algebra.CuntzContractionLemmas
 
 /-- Right contraction: S_i Sdag_j S_k = δ_{jk} S_i -/
 theorem right_contract (n : ℕ) (i j k : Fin n) :
@@ -84,4 +84,4 @@ theorem adjoint_partial_isometry (n : ℕ) (i : Fin n) :
   rw [left_contract n i i i]
   simp
 
-end CuntzContractionLemmas
+end InfoGeometry.Algebra.CuntzContractionLemmas

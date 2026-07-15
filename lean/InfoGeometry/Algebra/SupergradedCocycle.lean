@@ -16,7 +16,7 @@ super-anticommutator lane.
 namespace SupergradedCocycle
 
 open Module
-open InfoGeometry.Algebra.N2ModeCentralExtension
+open N2ModeCentralExtension
 open VirasoroProject
 
 universe u

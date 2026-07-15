@@ -8,7 +8,7 @@ import Mathlib.Tactic
 open scoped Matrix
 open scoped Kronecker
 
-namespace TowerMatrix
+namespace InfoGeometry.Clifford.TowerMatrix
 
 open Matrix
 
@@ -150,4 +150,4 @@ lemma Jn_transpose (J1 : Matrix (Fin 2) (Fin 2) ℝ) (hJ1t : J1ᵀ = J1) : ∀ n
       have ih : (kronPow J1 n)ᵀ = kronPow J1 n := Jn_transpose J1 hJ1t n
       rw [ih, hJ1t]
 
-end TowerMatrix
+end InfoGeometry.Clifford.TowerMatrix

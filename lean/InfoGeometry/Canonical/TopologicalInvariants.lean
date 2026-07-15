@@ -4,8 +4,8 @@ import Mathlib.LinearAlgebra.Dimension.Finite
 
 namespace TopologicalInvariants
 
-open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Canonical.InformationTorsion
+open SpectralInference
+open InformationTorsion
 open InfoGeometry.Convex
 
 section LoopLevel

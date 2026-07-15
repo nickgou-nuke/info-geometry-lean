@@ -25,7 +25,7 @@ Boundary:
 
 namespace ReducedStructureSpinCertifiedPacket
 
-open InfoGeometry.Algebra.SplitJordanSpinor
+open SplitJordanSpinor
 
 /-- Proof-carrying finite data parallel to `ReducedStructureSpinBoundary`. -/
 structure ReducedStructureSpinFinitePacket where

@@ -250,7 +250,7 @@ end RealAlgebraicState
 
 section CompatibleFiniteNet
 
-open InfoGeometry.Meta.MarkovJonesInduction
+open MarkovJonesInduction
 
 variable {A : Nat → Type*}
 variable [∀ n : Nat, Ring (A n)] [∀ n : Nat, Algebra ℝ (A n)]

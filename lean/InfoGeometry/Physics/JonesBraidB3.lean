@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Physics.TLChain
+import InfoGeometry.External.Auto.TLChain
 
 /-!
 # Jones Braid Representation of B₃ at Kauffman point A = i
@@ -21,7 +21,7 @@ noncomputable section
 namespace JonesBraidB3
 
 open Matrix
-open InfoGeometry.Physics.TLChain
+open TLChain
 
 /-- First braid generator: s₀ = i·(I - e₀). -/
 def s0 : Matrix (Fin 8) (Fin 8) ℂ :=

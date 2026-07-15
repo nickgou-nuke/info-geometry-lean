@@ -17,7 +17,7 @@ No Virasoro-origin theorem.
 namespace SplitCliffordCantorHop
 
 open Matrix
-open InfoGeometry.Canonical.SplitCliffordCantorFock
+open SplitCliffordCantorFock
 
 /-- Local binary hop on a Cantor bit. -/
 def hopBit (b : Bool) : Bool :=

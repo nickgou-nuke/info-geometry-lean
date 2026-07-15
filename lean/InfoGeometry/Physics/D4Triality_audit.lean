@@ -73,11 +73,11 @@ theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z :
     rw [show
         ZornMatrixSU3.dotProduct (fun i => Z.x (τ.perm i)) (fun i => Z.y (τ.perm i)) =
           ∑ i : Fin 3, Z.x (τ.perm i) * Z.y (τ.perm i) by
-        simp [ZornMatrixSU3.dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+        simp [ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
     rw [show
         ZornMatrixSU3.dotProduct Z.x Z.y = ∑ i : Fin 3, Z.x i * Z.y i by
-        simp [ZornMatrixSU3.dotProduct, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+        simp [ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
     exact Fintype.sum_bijective (fun i : Fin 3 => τ.perm i) τ.perm.bijective
       (fun i : Fin 3 => Z.x (τ.perm i) * Z.y (τ.perm i))

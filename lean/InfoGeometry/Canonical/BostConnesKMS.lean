@@ -40,7 +40,6 @@ open scoped BigOperators
 noncomputable section
 
 namespace BostConnesKMS
-
 open InfoGeometry.Arithmetic.BostConnesSystem
 
 /-! ## 1. Proof-carrying multiplicative Cuntz representation -/

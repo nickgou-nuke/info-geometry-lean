@@ -23,8 +23,8 @@ instantiates them.
 
 namespace KleinBottleOrientifold
 
-open InfoGeometry.Canonical.PrimeGasMaxEnt
-open InfoGeometry.Clifford.HestenesDirac
+open PrimeGasMaxEnt
+open HestenesDirac
 
 universe u
 
@@ -59,7 +59,7 @@ and the orientifold effect remains an explicit hypothesis block.
 @[rep_depth transport]
 structure OrientifoldPrimeGasPacket (D : PrimeGasJaynesData) where
   orientifold : KleinBottleOrientifold
-  primeGas : InfoGeometry.Canonical.PrimeGasMaxEnt.PrimeGasJaynesData.PrimeGasJaynesConjecture D
+  primeGas : PrimeGasJaynesData.PrimeGasJaynesConjecture D
   V4_projection : Prop
   fermionParity_projection : Prop
   moebiusSign : Prop

@@ -23,8 +23,8 @@ noncomputable section
 namespace YangBaxterZornBridge
 
 open Matrix
-open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Physics.YangBaxterQSwap
+open SplitOctonionBraidSU3
+open YangBaxterQSwap
 
 /-! ## 1. Zorn ↔ Fin 8 Phase Space Isomorphism -/
 

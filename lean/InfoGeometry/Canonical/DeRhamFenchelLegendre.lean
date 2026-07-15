@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 
-open InfoGeometry.Algebra.HessianThermodynamicManifold
+open HessianThermodynamicManifold
 
 namespace DeRhamFenchelLegendre
 

@@ -11253,7 +11253,6 @@ import InfoGeometry.Canonical.Hartwig1976SVDMoorePenroseBorder
 import InfoGeometry.Canonical.SouriauOperatorialLogPotentialFiniteReadback
 import InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
 import InfoGeometry.Canonical.AnalyticalIndexCapstone
-import InfoGeometry.Canonical.KleinMonodromyRepresentationSpace
 import InfoGeometry.Canonical.WeylA2ProductDivisibilityShadow
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
 import InfoGeometry.Canonical.ErlangenLanglandsConnesCapstone
@@ -12253,7 +12252,6 @@ import InfoGeometry.Canonical.BosonizationBoundary
 import InfoGeometry.Canonical.AQLInstanceMigration
 import InfoGeometry.Canonical.SouriauBetaField
 import InfoGeometry.Canonical.CPTCstarStateLimit
-import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Canonical.RealSpacetime4x4Closure
 import InfoGeometry.Canonical.ThermalIndividuation
 import InfoGeometry.Canonical.ParafermionCentralizer

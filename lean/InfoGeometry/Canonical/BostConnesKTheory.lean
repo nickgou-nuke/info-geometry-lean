@@ -13,7 +13,7 @@ equivalence, or C*-completion is constructed here.
 namespace BostConnesKTheory
 
 open InfoGeometry.Arithmetic.BostConnesSystem
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesKMS
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : BostConnesCuntzSystem Op)

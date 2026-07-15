@@ -21,6 +21,8 @@ namespace TriadBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.AssociativeSuperBracket
+open InverseBridge
+open EntropyShadowBridge
 
 /--
 Conservative capstone packet joining:
@@ -261,13 +263,13 @@ def defectReadout : ℝ :=
 @[rep_depth transport]
 theorem hiddenBlock_hasMoorePenroseShadow :
     MoorePenrose.IsMoorePenroseInverse B.triad.block.LΘΘ B.triad.block.penrose.aPlus := by
-  exact InfoGeometry.SuperMetriplectic.InverseBridge.hiddenBlock_hasMoorePenroseShadow B.triad.block
+  exact InverseBridge.hiddenBlock_hasMoorePenroseShadow B.triad.block
 
 /-- The hidden scalar block carries a certified Drazin shadow witness. -/
 @[rep_depth transport]
 theorem hiddenBlock_hasDrazinShadow :
     Drazin.IsDrazinInverse B.triad.block.LΘΘ B.triad.block.drazin.aD B.triad.block.drazin.index := by
-  exact InfoGeometry.SuperMetriplectic.InverseBridge.hiddenBlock_hasDrazinShadow B.triad.block
+  exact InverseBridge.hiddenBlock_hasDrazinShadow B.triad.block
 
 /-- Vanishing hidden-block projector mismatch kills the hidden scalar chiral anomaly. -/
 @[rep_depth transport]
@@ -275,18 +277,18 @@ theorem hiddenBlock_chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
     (hΔ : MoorePenrose.projectorMismatch B.triad.block.LΘΘ B.triad.block.drazin.aD B.triad.block.penrose.aPlus = 0) :
     hiddenBlockChiralAnomaly B = 0 := by
   simpa [hiddenBlockChiralAnomaly] using
-    (InfoGeometry.SuperMetriplectic.EntropyShadowBridge.hiddenBlock_chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
+    (EntropyShadowBridge.hiddenBlock_chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
       B.triad.block hΔ)
 
 /-- The scalar triad carries a coadjoint-leaf entropy split through the body packet. -/
 @[rep_depth transport]
 def toCoadjointLeafEntropySplit : InfoGeometry.SuperMetriplectic.CoadjointLeafEntropySplit :=
-  InfoGeometry.SuperMetriplectic.EntropyShadowBridge.toCoadjointLeafEntropySplit B.triad.entropy
+  EntropyShadowBridge.toCoadjointLeafEntropySplit B.triad.entropy
 
 @[rep_depth transport]
 theorem toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction :
     (toCoadjointLeafEntropySplit B).totalEntropyChange = B.triad.entropy.production := by
-  exact InfoGeometry.SuperMetriplectic.EntropyShadowBridge.toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction B.triad.entropy
+  exact EntropyShadowBridge.toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction B.triad.entropy
 
 /-- The carried chiral translation shadow is explicitly tied to the effective Schur metric. -/
 @[rep_depth transport]

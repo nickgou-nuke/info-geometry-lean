@@ -29,11 +29,11 @@ No fault-tolerance or physical FQH claim.
 
 namespace FibonacciBraiding
 
-open InfoGeometry.Canonical.FiniteMajoranaBraiding
-open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
-open InfoGeometry.Canonical.BoundaryLoopSuperClosure
+open FiniteMajoranaBraiding
+open FiniteFibonacciAnyonBraiding
+open FiniteFibonacciFusionMatrix
+open CayleyMobiusBoundaryBraidClosure
+open BoundaryLoopSuperClosure
 
 /-! ## Fibonacci fusion readbacks -/
 

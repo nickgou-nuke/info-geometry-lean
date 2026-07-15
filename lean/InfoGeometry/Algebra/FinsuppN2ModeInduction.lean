@@ -13,7 +13,7 @@ No analytic limit is asserted.  No wrapper/certificate/law fields are used.
 
 namespace FinsuppN2ModeInduction
 
-open InfoGeometry.Algebra.FiniteN2Induction
+open FiniteN2Induction
 
 variable {ι A : Type*} [Ring A]
 

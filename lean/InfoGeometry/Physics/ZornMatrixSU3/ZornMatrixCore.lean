@@ -132,76 +132,76 @@ def conjugate (M : ZornMatrix) : ZornMatrix :=
 theorem norm_conjugate (M : ZornMatrix) :
     norm (conjugate M) = norm M := by
   simpa [norm, conjugate, dotProduct] using
-    (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y))
+    (ZornVectorMatrixExplicit.zornNorm_conj (M.a, M.b, M.x, M.y))
 
 theorem norm_mul (M N : ZornMatrix) :
     norm (M * N) = norm M * norm N := by
   change
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
-      (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
+    ZornVectorMatrixExplicit.zornNorm
+      (ZornVectorMatrixExplicit.zornMul
         (M.a, M.b, M.x, M.y) (N.a, N.b, N.x, N.y)) =
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm (M.a, M.b, M.x, M.y) *
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm (N.a, N.b, N.x, N.y)
+      ZornVectorMatrixExplicit.zornNorm (M.a, M.b, M.x, M.y) *
+      ZornVectorMatrixExplicit.zornNorm (N.a, N.b, N.x, N.y)
   simpa [norm, dotProduct, crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul] using
-    (InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm_mul
+    ZornVectorMatrixExplicit.zornNorm,
+    ZornVectorMatrixExplicit.zornMul] using
+    (ZornVectorMatrixExplicit.zornNorm_mul
       (M.a, M.b, M.x, M.y) (N.a, N.b, N.x, N.y))
 
 @[simp] theorem zero_mul_zorn (M : ZornMatrix) : (0 : ZornMatrix) * M = 0 := by
   ext i <;>
     simp [dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+      ZornVectorMatrixExplicit.dot3,
+      ZornVectorMatrixExplicit.cross3]
   all_goals fin_cases i <;> norm_num
 
 @[simp] theorem mul_zero_zorn (M : ZornMatrix) : M * (0 : ZornMatrix) = 0 := by
   ext i <;>
     simp [dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+      ZornVectorMatrixExplicit.dot3,
+      ZornVectorMatrixExplicit.cross3]
   all_goals fin_cases i <;> norm_num
 
 theorem add_mul_zorn (M N P : ZornMatrix) : (M + N) * P = M * P + N * P := by
   ext
-  · simp [dotProduct, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring
-  · simp [dotProduct, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+  · simp [dotProduct, add_mul, mul_add, ZornVectorMatrixExplicit.dot3]; ring
+  · simp [dotProduct, add_mul, mul_add, ZornVectorMatrixExplicit.dot3]; ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, ZornVectorMatrixExplicit.cross3] <;> ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, ZornVectorMatrixExplicit.cross3] <;> ring
 
 theorem mul_add_zorn (M N P : ZornMatrix) : M * (N + P) = M * N + M * P := by
   ext
-  · simp [dotProduct, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring
-  · simp [dotProduct, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> ring
+  · simp [dotProduct, add_mul, mul_add, ZornVectorMatrixExplicit.dot3]; ring
+  · simp [dotProduct, add_mul, mul_add, ZornVectorMatrixExplicit.dot3]; ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, ZornVectorMatrixExplicit.cross3] <;> ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, ZornVectorMatrixExplicit.cross3] <;> ring
 
 theorem smul_mul_zorn (r : ℝ) (M N : ZornMatrix) : (r • M) * N = r • (M * N) := by
   ext
-  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; try ring
-  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; try ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
+  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, ZornVectorMatrixExplicit.dot3]; try ring
+  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, ZornVectorMatrixExplicit.dot3]; try ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, ZornVectorMatrixExplicit.cross3] <;> try ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, ZornVectorMatrixExplicit.cross3] <;> try ring
 
 theorem mul_smul_zorn (r : ℝ) (M N : ZornMatrix) : M * (r • N) = r • (M * N) := by
   ext
-  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; try ring
-  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]; try ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
-  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3] <;> try ring
+  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, ZornVectorMatrixExplicit.dot3]; try ring
+  · simp [dotProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, ZornVectorMatrixExplicit.dot3]; try ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, ZornVectorMatrixExplicit.cross3] <;> try ring
+  · rename_i i; fin_cases i <;> simp [crossProduct, add_smul, smul_add, add_mul, mul_add, smul_assoc, mul_assoc, mul_comm, mul_left_comm, ZornVectorMatrixExplicit.cross3] <;> try ring
 
 @[simp] theorem one_mul_zorn (M : ZornMatrix) : (1 : ZornMatrix) * M = M := by
   ext i <;>
     simp [dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+      ZornVectorMatrixExplicit.dot3,
+      ZornVectorMatrixExplicit.cross3]
   all_goals try fin_cases i <;> norm_num
 
 @[simp] theorem mul_one_zorn (M : ZornMatrix) : M * (1 : ZornMatrix) = M := by
   ext i <;>
     simp [dotProduct, crossProduct,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-      InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+      ZornVectorMatrixExplicit.dot3,
+      ZornVectorMatrixExplicit.cross3]
   all_goals try fin_cases i <;> norm_num
 
 end InfoGeometry.Physics.ZornMatrixSU3

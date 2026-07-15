@@ -9,7 +9,7 @@ open scoped ENNReal
 
 namespace IBFreeEnergy
 
-open InfoGeometry.Canonical.IBMeasure
+open IBMeasure
 
 variable {T : Type*} [MeasurableSpace T]
 

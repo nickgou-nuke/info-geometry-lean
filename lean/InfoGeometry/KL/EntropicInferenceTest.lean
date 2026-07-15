@@ -3,7 +3,8 @@ set_option linter.unusedSectionVars false
 
 namespace EntropicInferenceTest
 
-open InfoGeometry.EntropicInference
+open InfoGeometry
+open EntropicInference
 open scoped BigOperators
 
 inductive State
@@ -78,10 +79,10 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
       (∑ x : X, (marginal_x (X := X) (Θ := Θ) p x).toReal *
         (InfoGeometry.KL.kl_div (α := Θ)
           (cond_theta_given_x (X := X) (Θ := Θ) p x
-            (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+            (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
           (cond_theta_given_x (X := X) (Θ := Θ) q x
-            (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
-  simpa using InfoGeometry.EntropicInference.kl_chain_rule_toReal_strict p q hposp hposq
+            (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
+  simpa using kl_chain_rule_toReal_strict p q hposp hposq
 
 -- Constructive Jeffrey KL-Pythagorean decomposition in `toReal` form (no `KlChainRule` hypothesis).
 example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
@@ -93,12 +94,12 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
     (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
     (KL p q).toReal =
       (KL p (jeffrey_joint q (marginal_x p)
-        (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
       +
       (InfoGeometry.KL.kl_div (α := X)
         (marginal_x p).toMeasure
         (marginal_x q).toMeasure).toReal := by
-  simpa using InfoGeometry.EntropicInference.kl_pythagorean_jeffrey_toReal_strict
+  simpa using kl_pythagorean_jeffrey_toReal_strict
     (p := p) (q := q) (p_x := marginal_x p) hposp hposq rfl
 
 -- Constructive Jeffrey KL-Pythagorean decomposition in `ℝ≥0∞` form (no `KlChainRule` hypothesis).
@@ -111,12 +112,12 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
     (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
     KL p q =
       KL p (jeffrey_joint q (marginal_x p)
-        (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq))
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))
       +
       InfoGeometry.KL.kl_div (α := X)
         (marginal_x p).toMeasure
         (marginal_x q).toMeasure := by
-  simpa using InfoGeometry.EntropicInference.kl_pythagorean_jeffrey_strict
+  simpa using kl_pythagorean_jeffrey_strict
     (p := p) (q := q) (p_x := marginal_x p) hposp hposq rfl
 
 section StrictPositiveStateTests

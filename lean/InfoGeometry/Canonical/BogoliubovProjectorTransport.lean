@@ -5,9 +5,9 @@ import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 namespace BogoliubovProjectorTransport
 
-open InfoGeometry.Canonical.BogoliubovTransport
-open InfoGeometry.Canonical.BogoliubovClosedForms
-open InfoGeometry.Canonical.TomitaTakesaki
+open BogoliubovTransport
+open BogoliubovClosedForms
+open TomitaTakesaki
 open InfoGeometry.Krein
 
 section Basic
@@ -270,7 +270,7 @@ end Projectors
 
 section Sheets
 
-open InfoGeometry.Krein.SplitQuadraticSheets
+open SplitQuadraticSheets
 
 theorem epsilonBoost_preserves_plusSheet
     (t : ℝ) {u : H₂} (hu : u ∈ plusSheet (E := E)) :

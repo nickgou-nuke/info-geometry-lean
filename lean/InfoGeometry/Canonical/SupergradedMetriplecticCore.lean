@@ -69,7 +69,7 @@ with constant sign `1` and trivial degree.
 -/
 def ofUngraded
     {A : Type*} [Ring A]
-    (M : InfoGeometry.Canonical.MetriplecticCore.MetriplecticSystem A) :
+    (M : MetriplecticCore.MetriplecticSystem A) :
     SupergradedMetriplectic A (fun _ => (0 : ℤ)) where
   sign := fun _ _ => (1 : A)
   poisson := M.poisson

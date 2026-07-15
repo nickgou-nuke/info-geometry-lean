@@ -1732,10 +1732,10 @@ noncomputable abbrev TomitaCocycleEntropyPotential
     (u : ℝ → AlgebraEnd H)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (t : ℝ) : ℝ :=
   CocycleEntropyPotential (H := H)
-    (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
     u hBridge t
 
 /--
@@ -1750,7 +1750,7 @@ theorem topologicalBekensteinBound_of_tomitaGeneratorLift
     (T : SinkhornTrajectory n)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hLift :
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
@@ -1758,7 +1758,7 @@ theorem topologicalBekensteinBound_of_tomitaGeneratorLift
   simpa [TomitaCocycleEntropyPotential] using
     topologicalBekensteinBound_of_cocycleGeneratorLift
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T) (hBridge := hBridge) (hLift := hLift)
 
 /--
@@ -1773,7 +1773,7 @@ structure TomitaGeneratorLiftWitness
     (T : SinkhornTrajectory n) where
   hBridge :
     ScalarCocycleBridge (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
   hLift :
     CocycleGeneratorLift n T
       (TomitaCocycleEntropyPotential (H := H) u hBridge)
@@ -1807,7 +1807,7 @@ structure TomitaConnesCocycleGeneratorLiftWitness
     (T : SinkhornTrajectory n) where
   hCocycle :
     IsConnesCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       u
   tomita : TomitaGeneratorLiftWitness (n := n) (H := H) u T
 
@@ -1824,7 +1824,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycleGeneratorLiftWitness
     TopologicalBekensteinBound n T := by
   have _ :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u := W.hCocycle
   exact topologicalBekensteinBound_of_tomitaGeneratorLiftWitness
     (n := n) (H := H) (u := u) (T := T) W.tomita
@@ -1839,18 +1839,18 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift
     (T : SinkhornTrajectory n)
     (hCocycle :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hLift :
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
     TopologicalBekensteinBound n T := by
   have _ :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u := hCocycle
   exact topologicalBekensteinBound_of_tomitaGeneratorLift
     (n := n) (H := H) (u := u) (T := T) (hBridge := hBridge) (hLift := hLift)
@@ -1868,17 +1868,17 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_generatorLift
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_tomitaGeneratorLift
     (n := n) (H := H)
     (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (T := T)
     (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hLift := hLift)
 
 /--
@@ -1895,29 +1895,29 @@ theorem cocycleEntropyPotential_natMatch_of_tomitaFlowUnitConnesCocycle_generato
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
     ∀ k : Nat,
       TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k
         = trajectoryRNGeneratorPotential (n := n) T k := by
   simpa [TomitaCocycleEntropyPotential] using
     cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (T := T)
       (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
         (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (hLift := hLift)
 
 /--
@@ -1930,11 +1930,11 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
     (T : SinkhornTrajectory n)
     (hCocycle :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hMatch :
       ∀ k : Nat,
         TomitaCocycleEntropyPotential (H := H) u hBridge k
@@ -1943,7 +1943,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
   simpa [TomitaCocycleEntropyPotential] using
     topologicalBekensteinBound_of_connesCocycle_natMatch
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T)
       (hCocycle := hCocycle) (hBridge := hBridge) (hMatch := hMatch)
 
@@ -1958,13 +1958,13 @@ theorem topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitnes
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       u T) :
     TopologicalBekensteinBound n T := by
   simpa [TomitaCocycleEntropyPotential] using
     topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T) (W := W)
 
 /--
@@ -1977,16 +1977,16 @@ scalar bridge.
 theorem topologicalBekensteinBound_of_tomitaFlowUnitZeroNormalizedCocycleGeneratorWitness
     (T : SinkhornTrajectory n)
     (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       T) :
     TopologicalBekensteinBound n T := by
   simpa [TomitaCocycleEntropyPotential] using
     topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitness
       (n := n) (H := H)
       (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (T := T) (W := W)
 
 /--
@@ -1997,11 +1997,11 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
     (T : SinkhornTrajectory n)
     (hCocycle :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hLift :
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
@@ -2012,7 +2012,7 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
       hLift := hLift
       hZero := cocycleEntropyPotential_zero_of_connesCocycle
         (H := H)
-        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (u := u)
         (hCocycle := hCocycle) (hBridge := hBridge) }
 
@@ -2029,25 +2029,25 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_generatorLift_
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_tomitaFlowUnitZeroNormalizedCocycleGeneratorWitness
     (n := n) (H := H) (T := T)
     { hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       hLift := hLift
       hZero := cocycleEntropyPotential_zero_of_connesCocycle
         (H := H)
-        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
           (H := H)
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))) }
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))) }
 
 /--
 Tomita-specialized Casini-route cocycle-to-bound theorem.
@@ -2057,21 +2057,21 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
     (T : SinkhornTrajectory n)
     (hCocycle :
       IsConnesCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u)
     (hBridge :
       ScalarCocycleBridge (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (relEnt : RelativeEntropyProfile)
     (hCasini :
       CasiniIncrementBridge (n := n) (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         u hBridge T relEnt) :
     TopologicalBekensteinBound n T := by
   simpa [TomitaCocycleEntropyPotential] using
     topologicalBekensteinBound_of_connesCocycle_casiniIncrement
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge)
       (relEnt := relEnt) (hCasini := hCasini)
 
@@ -2087,22 +2087,22 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_natMatch
       ∀ k : Nat,
         TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k
           = trajectoryRNGeneratorPotential (n := n) T k) :
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
     (n := n) (H := H)
     (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (T := T)
     (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
       (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hMatch := hMatch)
 
 /--
@@ -2117,23 +2117,23 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_casiniIncremen
     (relEnt : RelativeEntropyProfile)
     (hCasini :
       CasiniIncrementBridge (n := n) (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         T relEnt) :
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
     (n := n) (H := H)
     (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (T := T)
     (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
       (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (relEnt := relEnt)
     (hCasini := hCasini)
 
@@ -2152,11 +2152,11 @@ structure TomitaFlowUnitMinimalCasiniWitness
   relEnt : RelativeEntropyProfile
   hCasini :
     MinimalCasiniIncrementBridge (n := n) (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       T relEnt
 
 /--
@@ -2171,17 +2171,17 @@ theorem cocycleGeneratorLift_of_tomitaFlowUnitMinimalCasiniWitness
     CocycleGeneratorLift n T
       (TomitaCocycleEntropyPotential (H := H)
         (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))) := by
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))) := by
   simpa [TomitaCocycleEntropyPotential] using
     cocycleGeneratorLift_of_minimalCasiniIncrementBridge
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (T := T) (relEnt := W.relEnt) W.hCasini
 
 /--
@@ -2198,9 +2198,9 @@ theorem cocycleEntropyPotential_natMatch_of_tomitaFlowUnitMinimalCasiniWitness
     ∀ k : Nat,
       TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k
         = trajectoryRNGeneratorPotential (n := n) T k := by
   exact cocycleEntropyPotential_natMatch_of_tomitaFlowUnitConnesCocycle_generatorLift
@@ -2221,12 +2221,12 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniW
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_minimalCasiniIncrement
     (n := n) (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
     (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (T := T)
     (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (relEnt := W.relEnt)
     (hCasini := W.hCasini)
 
@@ -2245,11 +2245,11 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniI
     (relEnt : RelativeEntropyProfile)
     (hCasini :
       MinimalCasiniIncrementBridge (n := n) (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         T relEnt) :
     TopologicalBekensteinBound n T := by
   exact topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniWitness
@@ -2269,35 +2269,35 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
     (relEnt : RelativeEntropyProfile)
     (hCasini :
       MinimalCasiniIncrementBridge (n := n) (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         T relEnt) :
     ∀ k : Nat,
       |TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (k + 1)
         - TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k|
         ≤ trajectoryRNBarrier n T k := by
   simpa [TomitaCocycleEntropyPotential] using
     cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrement
       (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (T := T)
       (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (relEnt := relEnt)
       (hCasini := hCasini)
 
@@ -2317,15 +2317,15 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
     ∀ k : Nat,
       |TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (k + 1)
         - TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k|
         ≤ trajectoryRNBarrier n T k := by
   exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocycle_minimalCasiniIncrement
@@ -2345,24 +2345,24 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
     (relEnt : RelativeEntropyProfile)
     (hCasini :
       CasiniIncrementBridge (n := n) (H := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         T relEnt) :
     ∀ k : Nat,
       |TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (k + 1)
         - TomitaCocycleEntropyPotential (H := H)
           (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
           k|
         ≤ trajectoryRNBarrier n T k := by
   exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocycle_minimalCasiniIncrement
@@ -2370,11 +2370,11 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
     (hCasini :=
       minimalCasiniIncrementBridge_of_casiniIncrementBridge
         (n := n) (H := H)
-        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         (T := T) (relEnt := relEnt) hCasini)
 
 end TomitaSpecialization

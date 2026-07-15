@@ -21,7 +21,7 @@ open scoped BigOperators
 namespace RelativePotentialCountBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativePotentialCore
+open RelativePotentialCore
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Krein
 
@@ -466,11 +466,11 @@ theorem gaugeSectionFinProb_countRay_apply_toReal
     (counts : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (i : Fin n) :
-    ((InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb
+    ((RelativePotentialDiscreteBridge.gaugeSectionFinProb
         (α := Fin n) (countRay counts hcounts) i).toReal)
       =
     counts i / countMass counts hcounts := by
-  rw [InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb_apply_toReal]
+  rw [RelativePotentialDiscreteBridge.gaugeSectionFinProb_apply_toReal]
   exact gaugeSection_countRay_apply (n := n) (counts := counts) (hcounts := hcounts) (i := i)
 
 @[simp] theorem relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
@@ -560,10 +560,10 @@ omit [Nonempty (Fin n)] in
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i) :
     countMassShift counts ref hcounts href =
-      InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+      RelativePotentialScalarBridge.scalarModularPotential
         (countRelativeVolumeChange counts ref hcounts href)
         (countRelativeVolumeChange_pos counts ref hcounts href) := by
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
   exact countMassShift_eq_neg_log_countRelativeVolumeChange counts ref hcounts href
 
 @[simp] theorem exp_neg_countMassShift_eq_countRelativeVolumeChange
@@ -573,7 +573,7 @@ omit [Nonempty (Fin n)] in
     Real.exp (-(countMassShift counts ref hcounts href)) =
       countRelativeVolumeChange counts ref hcounts href := by
   rw [countMassShift_eq_scalarModularPotential_relativeVolumeChange]
-  exact InfoGeometry.Canonical.RelativePotentialScalarBridge.exp_neg_scalarModularPotential_eq
+  exact RelativePotentialScalarBridge.exp_neg_scalarModularPotential_eq
     (countRelativeVolumeChange counts ref hcounts href)
     (countRelativeVolumeChange_pos counts ref hcounts href)
 
@@ -775,8 +775,8 @@ noncomputable def averagedProjectiveCountHamiltonian
           change
             -Real.log (projectiveCountDelta counts ref hcounts href i) =
               projectiveCountModularProfile counts ref hcounts href i
-          exact projectiveCountModularProfile_eq_neg_log_projectiveCountDelta
-            (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) i
+          exact (projectiveCountModularProfile_eq_neg_log_projectiveCountDelta
+            (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) i).symm
 
 @[simp] theorem averagedProjectiveCountHamiltonian_eq_averagedRawCountHamiltonian_sub_massShift
     (counts ref : RelativeCounts n)
@@ -842,7 +842,7 @@ theorem projectiveCountModularProfile_eq_raw_sub_massShift
     (i : Fin n) :
     projectiveCountModularProfile counts ref hcounts href i
       = relativeCountModularProfile n counts ref i
-        - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+        - RelativePotentialScalarBridge.scalarModularPotential
             (countRelativeVolumeChange counts ref hcounts href)
             (countRelativeVolumeChange_pos counts ref hcounts href) := by
   calc
@@ -852,7 +852,7 @@ theorem projectiveCountModularProfile_eq_raw_sub_massShift
             (n := n) (counts := counts) (ref := ref)
             (hcounts := hcounts) (href := href) (i := i)
     _ = relativeCountModularProfile n counts ref i
-          - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+          - RelativePotentialScalarBridge.scalarModularPotential
               (countRelativeVolumeChange counts ref hcounts href)
               (countRelativeVolumeChange_pos counts ref hcounts href) := by
           rw [countMassShift_eq_scalarModularPotential_relativeVolumeChange]
@@ -864,7 +864,7 @@ theorem projectiveCountModularProfile_eq_raw_sub_massShift
     (i : Fin n) :
     relativeModularPotential (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = relativeCountModularProfile n counts ref i
-        - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+        - RelativePotentialScalarBridge.scalarModularPotential
             (countRelativeVolumeChange counts ref hcounts href)
             (countRelativeVolumeChange_pos counts ref hcounts href) := by
   rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
@@ -953,14 +953,14 @@ count-side modular potential together with the expected global mass-shift.
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
-    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
-        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+    MeasureProjective.ProjectiveState.logGenerator
+        (RelativePotentialDiscreteBridge.toProjectiveState
           (α := Fin n) (countRay ref href))
-        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+        (RelativePotentialDiscreteBridge.toProjectiveState
           (α := Fin n) (countRay counts hcounts)) i
       = -relativeCountLogDensity n counts ref i
         - countMassShift counts ref hcounts href := by
-  rw [InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
+  rw [RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
     (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)]
   exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) (i := i)
@@ -971,16 +971,16 @@ theorem projectiveLogGenerator_countRay_eq_projectiveCountHamiltonianProfile
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
-    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
-        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+    MeasureProjective.ProjectiveState.logGenerator
+        (RelativePotentialDiscreteBridge.toProjectiveState
           (α := Fin n) (countRay ref href))
-        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+        (RelativePotentialDiscreteBridge.toProjectiveState
           (α := Fin n) (countRay counts hcounts)) i
       =
     projectiveCountHamiltonianProfile counts ref hcounts href i := by
   rw [projectiveCountHamiltonianProfile_eq_relativeModularPotential_countRay]
   exact
-    InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
+    RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
       (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)
 
 end PositiveCounts

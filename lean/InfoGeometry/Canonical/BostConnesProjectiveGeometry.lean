@@ -21,7 +21,7 @@ noncomputable section
 
 namespace BostConnesProjectiveGeometry
 
-open InfoGeometry.Canonical.BostConnesGalois
+open BostConnesGalois
 open FibonacciFusion
 
 /-! ### 1. Golden Ratio as Projective Invariant -/

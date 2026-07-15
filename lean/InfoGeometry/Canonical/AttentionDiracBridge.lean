@@ -18,7 +18,7 @@ that are currently justified in the repository:
 
 namespace AttentionDiracBridge
 
-open InfoGeometry.Canonical.Attention
+open Attention
 open scoped BigOperators
 
 section Core

@@ -16,8 +16,8 @@ noncomputable section
 
 namespace FibonacciFiveGradeBridge
 
-open InfoGeometry.Canonical.ConformalFiveGradeInversion
-open InfoGeometry.Canonical.FibonacciParafermionAtoms
+open ConformalFiveGradeInversion
+open FibonacciParafermionAtoms
 
 variable {L : Type*}
 

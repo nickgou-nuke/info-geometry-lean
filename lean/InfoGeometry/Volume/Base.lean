@@ -20,3 +20,7 @@ noncomputable def VolumeHom : (V ≃ₗ[ℝ] V) →* ℝˣ :=
   LinearEquiv.det
 
 end Base
+
+namespace InfoGeometry.Volume.Base
+
+end InfoGeometry.Volume.Base

@@ -6,8 +6,8 @@ import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 For H = Σ ε_i P_i, any polynomial p satisfies p(H) = Σ p(ε_i) P_i.
 -/
-open InfoGeometry.Algebra.CuntzPrimonHamiltonian
-open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzPrimonHamiltonian
+open CuntzTensorQuotient
 
 noncomputable section
 

@@ -19,8 +19,8 @@ noncomputable section
 namespace FibonacciParafermionFusionBridge
 
 open Matrix
-open InfoGeometry.Canonical.FibonacciParafermionAtoms
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+open FibonacciParafermionAtoms
+open FiniteFibonacciFusionMatrix
 
 /-- The real two-channel atom `F_matrix` is the real-coefficient specialization of the complex fusion matrix. -/
 theorem ofReal_F_matrix (a b : ℝ) :

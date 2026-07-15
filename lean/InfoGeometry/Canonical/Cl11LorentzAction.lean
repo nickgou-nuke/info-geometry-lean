@@ -18,7 +18,7 @@ This file states the Cartan-action facts in explicit algebraic form:
 namespace Cl11LorentzAction
 
 open InfoGeometry.Canonical.KKTCore
-open InfoGeometry.Canonical.KKTLorentzOrbitBridge
+open KKTLorentzOrbitBridge
 open InfoGeometry.Quantum
 
 section Core

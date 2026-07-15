@@ -21,7 +21,7 @@ noncomputable section
 
 namespace BuresWassersteinKMSCost
 
-open InfoGeometry.Geometry.BilingualAnalyticity
+open BilingualAnalyticity
 
 /-! ## 1. Positive state domain -/
 

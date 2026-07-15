@@ -13,7 +13,7 @@ namespace CliffordDictionaryTest
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
 open InfoGeometry.Quantum.Cl11Dictionary
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -42,17 +42,17 @@ This is the core QGT/Kähler identity for the real doubled carrier.
 -/
 theorem berry_on_phase_eq_metric_diag
     (Q : QGT E)
-    (h_skew : ∀ u v, Q.g (modularComplexI (E := E) u) v = - Q.g u (modularComplexI (E := E) v))
+    (h_skew : ∀ u v, Q.g (modularComplexI u) v = - Q.g u (modularComplexI v))
     (ψ : H₂) :
-    Q.Ω ψ (modularComplexI (E := E) ψ) = Q.g ψ ψ := by
+    Q.Ω ψ (modularComplexI ψ) = Q.g ψ ψ := by
   calc
-    Q.Ω ψ (modularComplexI (E := E) ψ)
-        = Q.g (modularComplexI (E := E) ψ) (modularComplexI (E := E) ψ) :=
-          Q.compat ψ (modularComplexI (E := E) ψ)
-    _ = - Q.g ψ (modularComplexI (E := E) (modularComplexI (E := E) ψ)) := by
-          simpa using h_skew ψ (modularComplexI (E := E) ψ)
+    Q.Ω ψ (modularComplexI ψ)
+        = Q.g (modularComplexI ψ) (modularComplexI ψ) :=
+          Q.compat ψ (modularComplexI ψ)
+    _ = - Q.g ψ (modularComplexI (modularComplexI ψ)) := by
+          simpa using h_skew ψ (modularComplexI ψ)
     _ = - Q.g ψ (-ψ) := by
-          have hsq : modularComplexI (E := E) (modularComplexI (E := E) ψ) = -ψ := by
+          have hsq : modularComplexI (modularComplexI ψ) = -ψ := by
             apply DoubledSpace.ext <;> simp [modularComplexI]
           rw [hsq]
     _ = Q.g ψ ψ := by simp

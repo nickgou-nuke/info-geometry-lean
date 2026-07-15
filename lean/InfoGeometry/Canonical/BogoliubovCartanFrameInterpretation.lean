@@ -27,7 +27,7 @@ namespace InfoGeometry.Canonical
 
 open scoped InnerProductSpace
 open InfoGeometry.Krein
-open InfoGeometry.Krein.PolarizedSector
+open PolarizedSector
 open KreinSpace NeutralSpace
 
 section BogoliubovCartanInterpretation

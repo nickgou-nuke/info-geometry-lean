@@ -8,7 +8,7 @@ set_option autoImplicit false
 
 namespace PipelineSpec
 
-open InfoGeometry.Tooling.VacuityCritic
+open VacuityCritic
 
 /-! Section 1: Pipeline Types -/
 

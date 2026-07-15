@@ -26,7 +26,7 @@ Authority note:
 namespace ClNNBottBridge
 
 open InfoGeometry.Clifford.ClNN
-open InfoGeometry.Canonical.BottPeriodicity
+open BottPeriodicity
 open InfoGeometry.CliffordTower
 
 @[rep_depth krein] theorem bottStep_headPair

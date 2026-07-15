@@ -24,7 +24,7 @@ No physical fault-tolerance claim.
 
 namespace FiniteFibonacciComputationalSpace
 
-open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
+open FiniteFibonacciAnyonBraiding
 
 /-- An `N`-qubit computational vector is an assignment of `N` bits. -/
 abbrev ComputationalVector (N : ℕ) : Type :=

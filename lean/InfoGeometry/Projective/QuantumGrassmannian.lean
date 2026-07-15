@@ -20,7 +20,7 @@ K-theory, or a concrete Bost--Connes representation is made here.
 
 noncomputable section
 
-namespace QuantumGrassmannian
+namespace InfoGeometry.Projective.QuantumGrassmannian
 
 universe u
 
@@ -377,4 +377,4 @@ theorem quantumPlucker (q : R) :
 
     abel
 
-end QuantumGrassmannian
+end InfoGeometry.Projective.QuantumGrassmannian

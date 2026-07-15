@@ -23,9 +23,9 @@ No Artin theorem for all `n`.
 
 namespace FiniteFibonacciHigherAnyonPaperBridge
 
-open InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
-open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
-open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
+open FiniteFibonacciHigherAnyonBraiding
+open FiniteFibonacciFusionMatrix
+open FiniteFibonacciElectronIndependence
 
 /-- A finite Fibonacci path code has no consecutive zero labels. -/
 theorem finiteFibonacciPathCode_noConsecutiveZero {m : ℕ} (α : Fin m → Bool)

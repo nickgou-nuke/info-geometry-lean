@@ -17,7 +17,7 @@ projective substrate.
 
 namespace ProjectiveStateCore
 
-export InfoGeometry.MeasureProjective (
+export MeasureProjective (
   UState
   NonzeroUState
   SameRay
@@ -30,7 +30,7 @@ export InfoGeometry.MeasureProjective (
   self_eq_mass_smul_normalize
 )
 
-export InfoGeometry.MeasureProjective.ProjectiveState (
+export MeasureProjective.ProjectiveState (
   normalize
   logGenerator
   logGeneratorClass

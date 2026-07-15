@@ -23,7 +23,7 @@ noncomputable section
 
 namespace AndreevBoundary
 
-open InfoGeometry.OperatorAlgebra.ClosureInvolution
+open ClosureInvolution
 
 /-! ## 1. Quasiparticle side labels -/
 
@@ -251,7 +251,7 @@ theorem transparent_of_fixed
 theorem electron_hole_diagonal_transparent :
     A.closure.theta (A.electron + A.hole) =
       A.electron + A.hole :=
-  A.transparent_of_fixed A.electron_hole_diagonal_fixed
+  transparent_of_fixed A A.electron_hole_diagonal_fixed
 
 /--
 The electron/hole imbalance is anti-fixed.

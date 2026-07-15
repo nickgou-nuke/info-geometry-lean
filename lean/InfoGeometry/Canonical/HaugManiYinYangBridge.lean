@@ -27,7 +27,7 @@ that any Riemann Hypothesis consequence follows from this representation.
 
 namespace HaugManiYinYangBridge
 
-open InfoGeometry.Krein.TomitaMatrixAtom
+open TomitaMatrixAtom
 
 set_option linter.unnecessarySeqFocus false
 

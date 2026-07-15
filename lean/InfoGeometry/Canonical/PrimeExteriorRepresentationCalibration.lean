@@ -15,8 +15,8 @@ noncomputable section
 
 namespace PrimeExteriorRepresentationCalibration
 
-open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-open InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
+open PrimeExteriorRepresentation
+open PrimeExteriorRepresentation.SquareFreePrimeState
 
 /-- Canonical re-export of the local occupation/membership readback. -/
 theorem canonicalLocalOccupation_eq_one_iff_mem

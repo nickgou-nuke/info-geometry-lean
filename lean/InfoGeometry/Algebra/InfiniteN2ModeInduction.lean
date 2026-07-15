@@ -27,7 +27,7 @@ hidden convergence assumptions.
 
 namespace InfiniteN2ModeInduction
 
-open InfoGeometry.Algebra.FiniteN2Induction
+open FiniteN2Induction
 
 variable {ι A : Type*} [Ring A]
 

@@ -18,7 +18,7 @@ open scoped Quaternion
 
 namespace Incidence
 
-open InfoGeometry.Clifford.Soldering
+open Soldering
 
 /-- A twistor is a pair of spinors (represented here as vectors in ℝ²). -/
 abbrev Twistor := (ℝ × ℝ) × (ℝ × ℝ)

@@ -14,7 +14,7 @@ graph-defined Dirac lane into `QuantumPresentation`.
 
 namespace GraphDiracPresentation
 
-open InfoGeometry.Canonical.QuantumPresentation
+open QuantumPresentation
 
 /--
 Graph-metric Dirac presentation package.

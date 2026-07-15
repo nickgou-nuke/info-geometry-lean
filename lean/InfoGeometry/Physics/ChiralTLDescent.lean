@@ -8,8 +8,8 @@ import InfoGeometry.Physics.BraidIdealDescent
 # Chiral TL Ideal Descent — projector and relation submodule
 
 Defines:
-- `Pchiral_matrix` : 4×4 normalized TL projector (using `InfoGeometry.External.Auto.TLChain.e4`)
-- `Pchiral_matrix_sq` : `Pchiral² = Pchiral` (proved via `ext` + `norm_num`)
+- `Pchiral_matrix` : 4×4 normalized TL projector (using `TLChain.e4`)
+- `Pchiral_matrix_sq` : `Pchiral² = Pchiral` (derived from `TLChain.e4_sq`)
 - `R_chiral` : tensor product relation submodule `span{e}` in `M₂⊗M₂`
   (correct type for `BraidIdealDescent.IsLeftTauIdeal`)
 - `chiral_left_tau_ideal` : `IsLeftTauIdeal R_chiral (qCrossMap i)` — proved.
@@ -26,25 +26,37 @@ namespace ChiralTLDescent
 
 open Matrix
 open TensorProduct
-open InfoGeometry.Physics.ChiralCausalCone
-open InfoGeometry.Physics.ChiralTensorRecoupling
-open InfoGeometry.Physics.ChiralTensorMatrixBridge
-open InfoGeometry.Physics.BraidIdealDescent
+open ChiralCausalCone
+open ChiralTensorRecoupling
+open ChiralTensorMatrixBridge
+open BraidIdealDescent
 
-set_option maxHeartbeats 1200000
-set_option synthInstance.maxHeartbeats 1000000
+/- Bind Mathlib's tensor-algebra structures explicitly.  Leaving these to
+global typeclass search is both slow and liable to explore irrelevant
+nonassociative instances. -/
+local instance spinPairSemiring : Semiring SpinPair :=
+  Algebra.TensorProduct.instSemiring
+local instance spinPairRing : Ring SpinPair :=
+  Algebra.TensorProduct.instRing
+local instance spinPairNonAssocSemiring : NonAssocSemiring SpinPair :=
+  spinPairSemiring.toNonAssocSemiring
+local instance spinPairNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring SpinPair :=
+  spinPairSemiring.toNonUnitalNonAssocSemiring
+local instance spinPairNonAssocRing : NonAssocRing SpinPair :=
+  spinPairRing.toNonAssocRing
+local instance spinPairNonUnitalNonAssocRing : NonUnitalNonAssocRing SpinPair :=
+  spinPairRing.toNonAssocRing.toNonUnitalNonAssocRing
+local instance spinPairAlgebra : Algebra ℂ SpinPair :=
+  Algebra.TensorProduct.instAlgebra
 
 /-- The normalized TL projector as a 4×4 matrix: `Pchiral = ½·e4`. -/
 def Pchiral_matrix : Matrix (Fin 4) (Fin 4) ℂ :=
-  (1/2 : ℂ) • InfoGeometry.External.Auto.TLChain.e4
+  (1/2 : ℂ) • TLChain.e4
 
-/-- `Pchiral_matrix² = Pchiral_matrix`. Same pattern as
-`InfoGeometry.External.Auto.TLChain.e4_sq`. -/
+/-- `Pchiral_matrix² = Pchiral_matrix`, by normalization of `TLChain.e4_sq`. -/
 theorem Pchiral_matrix_sq : Pchiral_matrix * Pchiral_matrix = Pchiral_matrix := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Pchiral_matrix, InfoGeometry.External.Auto.TLChain.e4, Matrix.mul_apply,
-      Fin.sum_univ_four, Matrix.smul_apply] <;> norm_num
+  rw [Pchiral_matrix, smul_mul_smul, TLChain.e4_sq]
+  norm_num [smul_smul]
 
 /-- The relation submodule in tensor product form: span of the TL generator `e`.
 Type: `Submodule ℂ (M₂ ⊗ M₂)` — matches `IsLeftTauIdeal` type signature. -/
@@ -65,7 +77,8 @@ lemma tauL_qCrossMap_on_pure_tmul (eta a b : M2C) :
 lemma tauL_qCrossMap_on_e (eta : M2C) :
     tauL (qCrossMap (K := ℂ) (H := M2C) (H_dual := M2C) Complex.I) (eta ⊗ₜ[ℂ] e) =
     Complex.I • (e ⊗ₜ[ℂ] eta) := by
-  unfold e X Y Z
+  unfold ChiralTensorRecoupling.e ChiralTensorRecoupling.X
+    ChiralTensorRecoupling.Y ChiralTensorRecoupling.Z
   simp [add_tmul, tmul_add, tmul_sub, sub_tmul,
     tauL_qCrossMap_on_pure_tmul, TensorProduct.smul_tmul, TensorProduct.tmul_smul,
     smul_add, smul_sub]

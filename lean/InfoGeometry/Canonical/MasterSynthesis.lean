@@ -13,13 +13,13 @@ MasterSynthesis is an owner-level synthesis packet that combines existing finite
 ledger identities with the existing GrandSynthesis closure scaffold.
 -/
 
-open InfoGeometry.Canonical.MasterFiniteBridgeLedger
-open InfoGeometry.Canonical.InfinitesimalDictionaryBridge
-open InfoGeometry.Canonical.KLDivergenceDecomposition
-open InfoGeometry.Canonical.MaximumCaliberKLSplit
-open InfoGeometry.Canonical.BuresMetricStabilization
-open InfoGeometry.Canonical.TensorColimitExpectation
-open InfoGeometry.Topology.ThermodynamicGauge
+open MasterFiniteBridgeLedger
+open InfinitesimalDictionaryBridge
+open KLDivergenceDecomposition
+open MaximumCaliberKLSplit
+open BuresMetricStabilization
+open TensorColimitExpectation
+open ThermodynamicGauge
 
 section FinitePacket
 

@@ -6,7 +6,7 @@ open Matrix
 
 namespace FibonacciBraidRepresentation
 
-open InfoGeometry.Topology.FibonacciFR
+open FibonacciFR
 
 /-- Braiding Generator B1 = R -/
 noncomputable def B1 (D : FibonacciData) : Matrix (Fin 2) (Fin 2) ℂ := R_matrix D

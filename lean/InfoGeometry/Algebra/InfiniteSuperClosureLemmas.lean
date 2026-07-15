@@ -14,7 +14,7 @@ finite stage.
 
 namespace InfiniteSuperClosureLemmas
 
-open InfoGeometry.Algebra.InductiveSuperClosureLemmas
+open InductiveSuperClosureLemmas
 
 universe u
 

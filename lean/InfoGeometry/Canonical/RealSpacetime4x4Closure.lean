@@ -13,7 +13,7 @@ noncomputable section
 
 namespace RealSpacetime4x4Closure
 
-open InfoGeometry.Clifford.HestenesDirac
+open HestenesDirac
 
 /-- 
 Realified Hermitian Pauli Slice (4x4 Spacetime).

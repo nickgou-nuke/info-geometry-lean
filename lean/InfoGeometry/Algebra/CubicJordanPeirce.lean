@@ -36,8 +36,8 @@ is equivalent to proving the Jacobi identity for the TKK construction.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.Algebra.CubicJordanOs
-open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
+open CubicJordanOs
+open CubicJordanOs.AlbertMatrix
 
 noncomputable section
 

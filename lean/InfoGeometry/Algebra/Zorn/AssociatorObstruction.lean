@@ -8,7 +8,7 @@ repository's concrete Zorn product.  The witness is expressed in the standard
 8-basis table `E11,E22,U1,U2,U3,V1,V2,V3`.
 -/
 
-namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
+namespace ConcreteComposition
 namespace ZornCell
 namespace Basis8
 
@@ -234,4 +234,4 @@ theorem commutator_jacobi_akivis_obstruction_packet :
 
 end Basis8
 end ZornCell
-end InfoGeometry.Algebra.Zorn.ConcreteComposition
+end ConcreteComposition

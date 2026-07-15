@@ -7,6 +7,8 @@ open scoped BigOperators ENNReal NNReal
 
 namespace EntropicInference
 
+open InfoGeometry
+
 /-!
 # Entropic Inference (Canonical implementation)
 
@@ -328,12 +330,12 @@ theorem kl_chain_rule_toReal_strict
   have h_joint :
       (kl p q).toReal = ∑ xt : X × Θ, (p xt).toReal * Real.log ((p xt).toReal / (q xt).toReal) := by
     simpa [kl, InfoGeometry.KL.kl_div] using
-      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio (P := p) (Q := q) hQ_joint)
+      (IProjection.toReal_klDiv_eq_sum_log_ratio (P := p) (Q := q) hQ_joint)
   have h_marg :
       (InfoGeometry.KL.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
         = ∑ x : X, (marginal_x p x).toReal * logx x := by
     simpa [logx, InfoGeometry.KL.kl_div] using
-      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
+      (IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := marginal_x p) (Q := marginal_x q) hQ_marg)
   have h_cond_each :
       ∀ x : X,
@@ -343,7 +345,7 @@ theorem kl_chain_rule_toReal_strict
         = ∑ θ : Θ, cp x θ * logc x θ := by
     intro x
     simpa [cp, logc, InfoGeometry.KL.kl_div] using
-      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
+      (IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := cond_theta_given_x p x (hp x))
         (Q := cond_theta_given_x q x (hq x))
         (hQ_cond x))
@@ -584,7 +586,7 @@ lemma kl_div_ne_top_of_right_toReal_pos
       simp [h0] at this
     exact (Set.disjoint_left.1 hQs' hxQ) hxS
   · exact
-      (InfoGeometry.MaxEnt.IProjection.integrable_of_fintype
+      (IProjection.integrable_of_fintype
         (f := MeasureTheory.llr P.toMeasure Q.toMeasure) (μ := P.toMeasure))
 
 /--

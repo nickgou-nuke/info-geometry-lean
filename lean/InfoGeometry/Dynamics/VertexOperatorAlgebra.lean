@@ -8,7 +8,7 @@ namespace InfoGeometry.Dynamics.VOA
 
 open Complex
 open InfoGeometry.GrandUnification.UHF
-open InfoGeometry.Canonical.PrimitiveCuntzIsometry
+open PrimitiveCuntzIsometry
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 variable [UHF : UHFAlgebra A]

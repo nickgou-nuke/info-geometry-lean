@@ -20,7 +20,7 @@ packets.
 namespace PrimeGasPartitions
 
 open scoped BigOperators
-open InfoGeometry.Canonical.FormalPrimeRootSystem
+open FormalPrimeRootSystem
 
 /-- Infinite Euler-product convergence witness with explicit zeta/parity channels. -/
 @[rep_depth thermo]

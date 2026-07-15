@@ -28,7 +28,7 @@ noncomputable section
 
 namespace SelfDualChiralConeBoundary
 
-open InfoGeometry.OperatorAlgebra.ClosureInvolution
+open ClosureInvolution
 
 set_option linter.dupNamespace false
 

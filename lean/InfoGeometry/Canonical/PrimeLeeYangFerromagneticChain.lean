@@ -31,7 +31,7 @@ open scoped BigOperators
 
 namespace PrimeLeeYangFerromagneticChain
 
-open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open CayleyCriticalLineCircleBridge
 
 /-! ## Spins -/
 

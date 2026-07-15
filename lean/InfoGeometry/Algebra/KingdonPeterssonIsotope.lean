@@ -51,8 +51,8 @@ noncomputable def peterssonCycle : AK ≃ₗ[ℝ] AK :=
     InfoGeometry.Physics.ZornMatrixSU3.mul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
   all_goals (try fin_cases i)
   all_goals try simp
   all_goals ring
@@ -72,7 +72,7 @@ noncomputable def peterssonCycle : AK ≃ₗ[ℝ] AK :=
   simp [InfoGeometry.Physics.ZornMatrixSU3.norm,
     zornCoordinatePermutation, permuteThree,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
   ring
 
 @[simp] theorem peterssonCycle_polar (x y : AK) :
@@ -150,8 +150,8 @@ theorem peterssonPolar_assoc (x y z : AK) :
     InfoGeometry.Physics.ZornMatrixSU3.mul,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
   ring
 
 theorem peterssonPolarBilin_assoc (x y z : AK) :

@@ -17,8 +17,8 @@ its missing representative and orbit proofs.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.Algebra.CubicJordanOs
-open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
+open CubicJordanOs
+open CubicJordanOs.AlbertMatrix
 
 noncomputable section
 

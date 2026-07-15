@@ -255,7 +255,7 @@ theorem exists_drazinInverse_global
     [FiniteDimensional ℝ E]
     (A : E →L[ℝ] E) :
     ∃ (k : ℕ) (B : E →L[ℝ] E), IsDrazinInverse A B k := by
-  rcases InfoGeometry.Singular.Drazin.exists_drazinInverse_global
+  rcases Drazin.exists_drazinInverse_global
       (K := ℝ) (V := E) (A := A.toLinearMap) with ⟨k, Blin, hDlin⟩
   let B : E →L[ℝ] E := LinearMap.toContinuousLinearMap Blin
   have hCommLin : A.toLinearMap * B.toLinearMap = B.toLinearMap * A.toLinearMap := by

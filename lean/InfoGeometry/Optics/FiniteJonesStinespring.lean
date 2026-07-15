@@ -21,7 +21,7 @@ noncomputable section
 
 namespace FiniteJonesStinespring
 
-open InfoGeometry.Optics.FiniteJonesModel
+open FiniteJonesModel
 
 /-! ## 1. Optical defect and gain -/
 

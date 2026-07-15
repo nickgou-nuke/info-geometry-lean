@@ -6,7 +6,8 @@ open scoped InnerProductSpace
 
 namespace PolarizedSector
 
-open InfoGeometry.Krein.SplitQuadraticSheets
+open InfoGeometry.Krein
+open SplitQuadraticSheets
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

@@ -58,8 +58,8 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
     zMul, InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
+    ZornVectorMatrixExplicit.dot3,
+    ZornVectorMatrixExplicit.cross3]
 
 @[simp] theorem physics_norm_eq_canonical_det (X : PhysicsZorn) :
     InfoGeometry.Physics.ZornMatrixSU3.norm X =
@@ -67,7 +67,7 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
   simp [InfoGeometry.Physics.ZornMatrixSU3.norm,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Canonical.ZornMatrix.dot,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
 
 noncomputable def kingdonCanonicalLinearEquiv :
     AbstractKingdon ≃ₗ[ℝ] CanonicalZorn :=

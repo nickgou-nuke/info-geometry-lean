@@ -23,6 +23,7 @@ background. Those require separate operatorial owner bridges.
 namespace GrandCanonicalGaugePotentialBridge
 
 open InfoGeometry.GrandCanonical
+open InfoGeometry.Canonical
 
 variable {α : Type _}
 
@@ -66,8 +67,7 @@ theorem chemicalPotentialGauge_add
   fun x => (chemicalPotentialGauge params).gaugeOf μ x
         + (chemicalPotentialGauge params).gaugeOf ν x := by
   funext x
-  simp [chemicalPotentialGauge]
-  ring_nf
+  simp [chemicalPotentialGauge, add_mul]
 
 /-- Grand-canonical kernel exponent in gauge-coupled form. -/
 @[rep_depth transport]
@@ -81,7 +81,7 @@ theorem grandCanonicalGaugeKernelExponent_eq
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
     grandCanonicalGaugeKernelExponent params β μ x =
       -β * shiftedEnergy params μ x := by
-  rfl
+  simp [grandCanonicalGaugeKernelExponent, shiftedEnergy, chemicalPotentialGauge, mul_sub]
 
 /-- Grand-canonical Massieu potential as the log-generating potential `log Z(β, μ)`. -/
 @[rep_depth transport]

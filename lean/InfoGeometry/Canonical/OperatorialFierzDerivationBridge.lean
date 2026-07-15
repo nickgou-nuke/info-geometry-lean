@@ -19,7 +19,7 @@ In the repository ontology:
   with the Modular derivation.
 -/
 
-open InfoGeometry.Canonical.FierzReadout
+open FierzReadout
 
 namespace InfoGeometry.Canonical.OperatorialFierz
 

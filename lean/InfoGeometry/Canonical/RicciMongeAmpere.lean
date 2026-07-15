@@ -13,9 +13,9 @@ open scoped BigOperators
 namespace RicciMongeAmpere
 
 open InfoGeometry.Convex
-open InfoGeometry.Canonical.CurvatureRGFlow
-open InfoGeometry.Canonical.KaehlerGeometry
-open InfoGeometry.Canonical.SpectralInference
+open CurvatureRGFlow
+open KaehlerGeometry
+open SpectralInference
 
 /-! ## Ricci Tensor and Einstein-Kähler scaffolding (Native Closure Mandated: Closure Debt) -/
 
@@ -754,11 +754,11 @@ private lemma metricLogDet_eq_log_mongeAmpereDensity
 lemma scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
     (H : HessianGeometry E) (x : E)
     (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
-    InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+    RelativePotentialScalarBridge.scalarModularPotential
         (mongeAmpereDensity H x)
         (mongeAmpereDensity_pos (H := H) (x := x) h_det)
       = -metricLogDet H x := by
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
   rw [← metricLogDet_eq_log_mongeAmpereDensity (H := H) (x := x) h_det]
 
 /-- Spectral-triple basepoint Monge-Ampère density. -/

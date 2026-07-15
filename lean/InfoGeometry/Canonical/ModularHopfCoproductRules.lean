@@ -21,7 +21,7 @@ No Virasoro central-charge theorem.
 namespace ModularHopfCoproductRules
 
 open scoped TensorProduct
-open InfoGeometry.Canonical.ModularCoproductFlux
+open ModularCoproductFlux
 
 section
 

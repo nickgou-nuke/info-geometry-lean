@@ -4,9 +4,9 @@ set_option linter.unusedVariables false
 
 namespace AnomalyInflow
 
-open InfoGeometry.Canonical.TopologicalInvariants
-open InfoGeometry.Canonical.HeatKernel
-open InfoGeometry.Canonical.SpectralInference
+open TopologicalInvariants
+open HeatKernel
+open SpectralInference
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 

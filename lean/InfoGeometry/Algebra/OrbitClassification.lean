@@ -16,9 +16,9 @@ conformality, or a global conformal inversion theorem.  They only say:
 * for every `X`, the diagonal packet equals `{ e11 := det X, e22 := -det X }`.
 -/
 
-open InfoGeometry.Algebra.JordanCayleyInversionCs
-open InfoGeometry.Algebra.JordanCayleyInversionHs
-open InfoGeometry.Algebra.JordanCayleyInversionOs
+open JordanCayleyInversionCs
+open JordanCayleyInversionHs
+open JordanCayleyInversionOs
 
 namespace OrbitClassification
 

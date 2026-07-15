@@ -21,7 +21,7 @@ No physical narrative is used as proof evidence; only operator identities.
 
 namespace DIIICommutatorInitialization
 
-open InfoGeometry.Canonical.RealBdG
+open RealBdG
 open InfoGeometry.Krein
 
 section Core

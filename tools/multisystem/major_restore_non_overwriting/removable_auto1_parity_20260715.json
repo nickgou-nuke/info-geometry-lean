@@ -1,0 +1,734 @@
+{
+  "schema": "removable-auto1-parity-v1",
+  "generated_at": "2026-07-14T21:44:24.998262+00:00",
+  "archive_root": "/media/goutev/SP DS72/auto-1",
+  "included_roots": [
+    "proofs/**/*.lean",
+    "scripts/**/*.lean",
+    "formal-theory.lean",
+    "formal-theory-quantum.lean"
+  ],
+  "excluded_components": [
+    ".git",
+    ".lake",
+    "__pycache__",
+    "build",
+    "dist",
+    "external",
+    "external_repos",
+    "node_modules",
+    "tools"
+  ],
+  "coverage": {
+    "archive_project_lean": 18,
+    "live_lean": 24317,
+    "errors": [],
+    "caps": null,
+    "truncated": false
+  },
+  "summary": {
+    "archive_only_basename": 11,
+    "basename_variant": 6,
+    "exact_live": 1
+  },
+  "ranked_zero_placeholder_candidates": [
+    {
+      "archive_path": "formal-theory-quantum.lean",
+      "sha256": "02585ba0ecefd99564749f133c8f2cdae23c749bdfcd5c54808322f91190db6c",
+      "bytes": 4664,
+      "lines": 136,
+      "declarations": [
+        "chapter1_quantum_sl2",
+        "chapter2_quasitriangular",
+        "chapter3_yang_baxter",
+        "chapter4_braided_category",
+        "chapter5_roots_of_unity",
+        "chapter6_fibonacci_mtc",
+        "chapter7_f_and_r",
+        "chapter8_hexagon"
+      ],
+      "placeholder_hits": 0,
+      "imports": [],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm5_braidgroup.lean",
+      "sha256": "43251bac5c4d1a39e39d60a40e8249cee4db6db3eb8a307356eb8c087ad7e475",
+      "bytes": 295,
+      "lines": 12,
+      "declarations": [
+        "BraidGroup",
+        "fib_braid_dim"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm1_fusion.lean",
+      "sha256": "4791f22905289397677e7d534b39285aff29c7c5a3a6bbf35ac6ddf4af58e97c",
+      "bytes": 354,
+      "lines": 21,
+      "declarations": [
+        "golden_eq",
+        "fib",
+        "fusion_dim"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm1_test.lean",
+      "sha256": "f3154f9b1a49e8e014859161da1f680dd2efc73f04c188ffa0a3682025d32955",
+      "bytes": 655,
+      "lines": 24,
+      "declarations": [
+        "h5sq",
+        "golden_identity"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm2_fmatrix.lean",
+      "sha256": "0dd9be6e64fedec8b4797640842855a1e5a7ed210f0d83ea198c2cb49e6eb0f7",
+      "bytes": 592,
+      "lines": 26,
+      "declarations": [
+        "F",
+        "F_squared",
+        "F_det"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm3_rmatrix.lean",
+      "sha256": "efc0d5224a724175b2cea5806161aaf89170d10f4e353c72fb3a57770f1d1fe5",
+      "bytes": 583,
+      "lines": 27,
+      "declarations": [
+        "q",
+        "q_fifth",
+        "R",
+        "R_unitary"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fib_category.lean",
+      "sha256": "ab1cba11a3d1d6df7aabd6ff1bc75d3b28313144cf68d13e5c67f99f562b460f",
+      "bytes": 892,
+      "lines": 33,
+      "declarations": [
+        "R_Fib",
+        "F_Fib",
+        "B_Fib",
+        "F_sq_id",
+        "F_det_neg_one",
+        "hexagon_holds",
+        "fib_yang_baxter"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm4_yangbaxter.lean",
+      "sha256": "1a604c9793272494e5e6252657818120b84ae106d9ca00642a3598e2e8d5e86a",
+      "bytes": 1304,
+      "lines": 39,
+      "declarations": [
+        "yang_baxter_eq",
+        "fib_anyon_yang_baxter"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "scripts/theorem-009.lean",
+      "sha256": "38f941908bace2a3c7198d640dc8b8a35ff5ca5962d8fbbe6573e5683e5fda1f",
+      "bytes": 1353,
+      "lines": 49,
+      "declarations": [
+        "A1_1_Cartan",
+        "delta",
+        "det_A1_1_zero",
+        "A_times_delta_zero",
+        "A_symmetric",
+        "delta_nonzero",
+        "kac_moody_A1_1_imaginary_root_delta"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm5.lean",
+      "sha256": "4edbd6b6d3fabc4579335bf2d18bd681bd96732b6740ed10e9f17458d3d01c5c",
+      "bytes": 566,
+      "lines": 25,
+      "declarations": [
+        "fib",
+        "conformalBlockDim",
+        "BraidGroup"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm5.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm5.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm3.lean",
+      "sha256": "be43110b7c0de518e221f63e2bc12cd30fe2e474c736def1217715d5f6b842b8",
+      "bytes": 1148,
+      "lines": 39,
+      "declarations": [
+        "q",
+        "q_fifth_power",
+        "q_ne_zero",
+        "R",
+        "R_det",
+        "R_char_poly_zero"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm3.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm3.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm2.lean",
+      "sha256": "5790ebcb2558b31355dbf8dd2dad2edd467218173e3bb591db01fb825281546c",
+      "bytes": 1527,
+      "lines": 59,
+      "declarations": [
+        "h5sq",
+        "golden",
+        "sqrt_",
+        "sqrt_",
+        "inv_phi_sq_plus_inv_phi",
+        "F",
+        "F_sq_eq_I",
+        "F_det"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm2.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm2.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm4.lean",
+      "sha256": "06eeab2b75e4460d9f7065eaa03a9391c7d6e3cad3aa53da9b7186a0e4bcac1b",
+      "bytes": 3224,
+      "lines": 92,
+      "declarations": [
+        "sqrt_",
+        "sqrt_",
+        "inv_phi_sq_plus_inv_phi_eq_one",
+        "q",
+        "q_fifth_power",
+        "cyclotomic_or_one",
+        "F",
+        "F_sq_eq_I",
+        "R",
+        "B",
+        "braid_relation"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm4.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm4.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/HexagonCocycle.lean",
+      "sha256": "4d2fa91a59f6abfe40c1bcf43465e2474fe3afaf619b0d2ffb0d4e821822cbb9",
+      "bytes": 3755,
+      "lines": 133,
+      "declarations": [
+        "hexagon_as_cocycle",
+        "hexagon_reverse_as_cocycle",
+        "braid_relation_from_hexagon",
+        "LegendreDuality",
+        "souriau_fisher_theorem",
+        "unified_cocycle_diagram",
+        "unification"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/HexagonCocycle.lean",
+        "lean/InfoGeometry/External/Auto/HexagonCocycle.lean"
+      ],
+      "classification": "basename_variant"
+    }
+  ],
+  "files": [
+    {
+      "archive_path": "formal-theory-quantum.lean",
+      "sha256": "02585ba0ecefd99564749f133c8f2cdae23c749bdfcd5c54808322f91190db6c",
+      "bytes": 4664,
+      "lines": 136,
+      "declarations": [
+        "chapter1_quantum_sl2",
+        "chapter2_quasitriangular",
+        "chapter3_yang_baxter",
+        "chapter4_braided_category",
+        "chapter5_roots_of_unity",
+        "chapter6_fibonacci_mtc",
+        "chapter7_f_and_r",
+        "chapter8_hexagon"
+      ],
+      "placeholder_hits": 0,
+      "imports": [],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "formal-theory.lean",
+      "sha256": "5942708da792f75648080281fac44cc2ba35ad83085d04e1cd578cf9f540f461",
+      "bytes": 2039,
+      "lines": 71,
+      "declarations": [
+        "virasoro_two_cocycle_classifies",
+        "connes_cocycle_property",
+        "bogoliubov_symplectic",
+        "legendre_souriau_duality",
+        "kac_moody_root_decomposition",
+        "zorn_pattern"
+      ],
+      "placeholder_hits": 1,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/External/Auto/formal-theory.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm1.lean",
+      "sha256": "14d83608042af499d77ed15eb55ba075db44f5e18f2847aeae6e9aae6fee7938",
+      "bytes": 1712,
+      "lines": 65,
+      "declarations": [
+        "h5sq",
+        "golden_identity",
+        "tau_mul_phi_eq_neg_one",
+        "tau_eq_neg_inv_phi",
+        "FibSector",
+        "fuse",
+        "dim_one",
+        "dim_tau",
+        "fusion_dim_identity"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [
+        "lean/InfoGeometry/External/Auto/FibAnyonThm1.lean"
+      ],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm1.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm1.lean"
+      ],
+      "classification": "exact_live"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm1_test.lean",
+      "sha256": "f3154f9b1a49e8e014859161da1f680dd2efc73f04c188ffa0a3682025d32955",
+      "bytes": 655,
+      "lines": 24,
+      "declarations": [
+        "h5sq",
+        "golden_identity"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm2.lean",
+      "sha256": "5790ebcb2558b31355dbf8dd2dad2edd467218173e3bb591db01fb825281546c",
+      "bytes": 1527,
+      "lines": 59,
+      "declarations": [
+        "h5sq",
+        "golden",
+        "sqrt_",
+        "sqrt_",
+        "inv_phi_sq_plus_inv_phi",
+        "F",
+        "F_sq_eq_I",
+        "F_det"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm2.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm2.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm3.lean",
+      "sha256": "be43110b7c0de518e221f63e2bc12cd30fe2e474c736def1217715d5f6b842b8",
+      "bytes": 1148,
+      "lines": 39,
+      "declarations": [
+        "q",
+        "q_fifth_power",
+        "q_ne_zero",
+        "R",
+        "R_det",
+        "R_char_poly_zero"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm3.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm3.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm4.lean",
+      "sha256": "06eeab2b75e4460d9f7065eaa03a9391c7d6e3cad3aa53da9b7186a0e4bcac1b",
+      "bytes": 3224,
+      "lines": 92,
+      "declarations": [
+        "sqrt_",
+        "sqrt_",
+        "inv_phi_sq_plus_inv_phi_eq_one",
+        "q",
+        "q_fifth_power",
+        "cyclotomic_or_one",
+        "F",
+        "F_sq_eq_I",
+        "R",
+        "B",
+        "braid_relation"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm4.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm4.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FibAnyonThm5.lean",
+      "sha256": "4edbd6b6d3fabc4579335bf2d18bd681bd96732b6740ed10e9f17458d3d01c5c",
+      "bytes": 566,
+      "lines": 25,
+      "declarations": [
+        "fib",
+        "conformalBlockDim",
+        "BraidGroup"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/FibAnyonThm5.lean",
+        "lean/InfoGeometry/External/Auto/FibAnyonThm5.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/FormalTheoryQuantum.lean",
+      "sha256": "a30b55f3eb5afa7bf96b7292c9d260721baf7bd2b5ae67a9cb0ec752f29cc57f",
+      "bytes": 5796,
+      "lines": 219,
+      "declarations": [
+        "QuantumSl2",
+        "Quasitriangular",
+        "yang_baxter_quantum",
+        "quantum_dim_nonzero",
+        "FibSimple",
+        "fusion",
+        "F_sq_eq_I",
+        "q_fifth_power",
+        "hexagon_forward_proven",
+        "hexagon_reverse_proven",
+        "unification"
+      ],
+      "placeholder_hits": 3,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/HexagonCocycle.lean",
+      "sha256": "4d2fa91a59f6abfe40c1bcf43465e2474fe3afaf619b0d2ffb0d4e821822cbb9",
+      "bytes": 3755,
+      "lines": 133,
+      "declarations": [
+        "hexagon_as_cocycle",
+        "hexagon_reverse_as_cocycle",
+        "braid_relation_from_hexagon",
+        "LegendreDuality",
+        "souriau_fisher_theorem",
+        "unified_cocycle_diagram",
+        "unification"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [
+        "lean/InfoGeometry/Fibonacci/HexagonCocycle.lean",
+        "lean/InfoGeometry/External/Auto/HexagonCocycle.lean"
+      ],
+      "classification": "basename_variant"
+    },
+    {
+      "archive_path": "proofs/fib_category.lean",
+      "sha256": "ab1cba11a3d1d6df7aabd6ff1bc75d3b28313144cf68d13e5c67f99f562b460f",
+      "bytes": 892,
+      "lines": 33,
+      "declarations": [
+        "R_Fib",
+        "F_Fib",
+        "B_Fib",
+        "F_sq_id",
+        "F_det_neg_one",
+        "hexagon_holds",
+        "fib_yang_baxter"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm1_fusion.lean",
+      "sha256": "4791f22905289397677e7d534b39285aff29c7c5a3a6bbf35ac6ddf4af58e97c",
+      "bytes": 354,
+      "lines": 21,
+      "declarations": [
+        "golden_eq",
+        "fib",
+        "fusion_dim"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm2_fmatrix.lean",
+      "sha256": "0dd9be6e64fedec8b4797640842855a1e5a7ed210f0d83ea198c2cb49e6eb0f7",
+      "bytes": 592,
+      "lines": 26,
+      "declarations": [
+        "F",
+        "F_squared",
+        "F_det"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm3_rmatrix.lean",
+      "sha256": "efc0d5224a724175b2cea5806161aaf89170d10f4e353c72fb3a57770f1d1fe5",
+      "bytes": 583,
+      "lines": 27,
+      "declarations": [
+        "q",
+        "q_fifth",
+        "R",
+        "R_unitary"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm4_yangbaxter.lean",
+      "sha256": "1a604c9793272494e5e6252657818120b84ae106d9ca00642a3598e2e8d5e86a",
+      "bytes": 1304,
+      "lines": 39,
+      "declarations": [
+        "yang_baxter_eq",
+        "fib_anyon_yang_baxter"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/fibanyon_thm5_braidgroup.lean",
+      "sha256": "43251bac5c4d1a39e39d60a40e8249cee4db6db3eb8a307356eb8c087ad7e475",
+      "bytes": 295,
+      "lines": 12,
+      "declarations": [
+        "BraidGroup",
+        "fib_braid_dim"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "proofs/formal-theory-quantum.lean",
+      "sha256": "a30b55f3eb5afa7bf96b7292c9d260721baf7bd2b5ae67a9cb0ec752f29cc57f",
+      "bytes": 5796,
+      "lines": 219,
+      "declarations": [
+        "QuantumSl2",
+        "Quasitriangular",
+        "yang_baxter_quantum",
+        "quantum_dim_nonzero",
+        "FibSimple",
+        "fusion",
+        "F_sq_eq_I",
+        "q_fifth_power",
+        "hexagon_forward_proven",
+        "hexagon_reverse_proven",
+        "unification"
+      ],
+      "placeholder_hits": 3,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    },
+    {
+      "archive_path": "scripts/theorem-009.lean",
+      "sha256": "38f941908bace2a3c7198d640dc8b8a35ff5ca5962d8fbbe6573e5683e5fda1f",
+      "bytes": 1353,
+      "lines": 49,
+      "declarations": [
+        "A1_1_Cartan",
+        "delta",
+        "det_A1_1_zero",
+        "A_times_delta_zero",
+        "A_symmetric",
+        "delta_nonzero",
+        "kac_moody_A1_1_imaginary_root_delta"
+      ],
+      "placeholder_hits": 0,
+      "imports": [
+        "import Mathlib"
+      ],
+      "exact_live_paths": [],
+      "basename_live_paths": [],
+      "classification": "archive_only_basename"
+    }
+  ]
+}

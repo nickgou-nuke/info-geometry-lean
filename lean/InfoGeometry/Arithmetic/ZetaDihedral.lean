@@ -22,7 +22,7 @@ open scoped BigOperators
 namespace ZetaDihedral
 
 open Complex
-open InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
+open CompletedZetaSouriauDInfinityThermodynamics
 
 /-- The functional-equation reflection `s ↦ 1 - s`. -/
 abbrev tau (s : ℂ) : ℂ :=
@@ -35,10 +35,6 @@ abbrev sigma (s : ℂ) : ℂ :=
 /-- The composite antiunitary reflection `s ↦ 1 - conj s`. -/
 abbrev gamma (s : ℂ) : ℂ :=
   antiunitaryCriticalReflection s
-
-/-- The critical line in the complex plane. -/
-abbrev CriticalLine (s : ℂ) : Prop :=
-  CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s
 
 /-! ## Group structure proofs -/
 
@@ -90,10 +86,10 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
     tau s = sigma s := by
   have h_eq : s = antiunitaryCriticalReflection s := by
     simpa [gamma, tau, sigma, eq_comm] using h_stable
-  have hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s := by
+  have hs : CriticalLine s := by
     exact (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp h_eq.symm
   have hs' : s.re = (1 / 2 : ℝ) := by
-    simpa [CompletedZetaSouriauDInfinityThermodynamics.CriticalLine] using hs
+    simpa [CriticalLine] using hs
   apply Complex.ext
   · have h_re : (1 - s.re : ℝ) = s.re := by
       nlinarith [hs']

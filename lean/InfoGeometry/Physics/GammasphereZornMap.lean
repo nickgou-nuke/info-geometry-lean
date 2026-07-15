@@ -135,7 +135,7 @@ theorem CED_state_determinant (ced : CEDMeasurement) :
     (Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 3)).ne'
   simp [CED_to_ZornState, InfoGeometry.Physics.ZornMatrixSU3.norm,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
+    ZornVectorMatrixExplicit.dot3]
   field_simp [hsqrt3_ne]
   nlinarith
 

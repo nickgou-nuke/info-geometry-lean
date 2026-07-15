@@ -17,7 +17,7 @@ noncomputable section
 namespace SteeringBivectorDetector
 
 open scoped BigOperators
-open InfoGeometry.Signal.ComplexRealification
+open ComplexRealification
 
 variable {ι : Type*} [Fintype ι]
 

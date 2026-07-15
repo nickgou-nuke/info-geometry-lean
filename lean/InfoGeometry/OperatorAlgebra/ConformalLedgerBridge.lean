@@ -31,8 +31,8 @@ noncomputable section
 
 namespace ConformalLedgerBridge
 
-open InfoGeometry.OperatorAlgebra.StinespringDilation
-open InfoGeometry.OperatorAlgebra.TKKConformalClosure
+open StinespringDilation
+open TKKConformalClosure
 
 /-! ## 1. Scalarization of TKK Ricci flux -/
 

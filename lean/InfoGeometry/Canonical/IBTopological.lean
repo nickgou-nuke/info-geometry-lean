@@ -7,7 +7,7 @@ open ProbabilityTheory
 
 namespace IBTopological
 
-open InfoGeometry.Canonical.IBMeasure
+open IBMeasure
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 variable (qT : Measure T) [IsProbabilityMeasure qT]

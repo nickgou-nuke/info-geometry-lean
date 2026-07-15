@@ -22,8 +22,8 @@ Markov semigroup construction is asserted here.
 
 namespace MaximumCaliberPath
 
-open InfoGeometry.Topology.ThermodynamicGauge
-open InfoGeometry.Topology.WilsonLoopThermodynamics
+open ThermodynamicGauge
+open WilsonLoopThermodynamics
 
 universe u
 

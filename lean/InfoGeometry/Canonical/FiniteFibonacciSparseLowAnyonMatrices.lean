@@ -22,7 +22,7 @@ No all-`n` Artin-relation proof.
 namespace FiniteFibonacciSparseLowAnyonMatrices
 
 open Matrix
-open InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
+open FiniteFibonacciLowAnyonMatrices
 
 /-- Channel index for the `d₇ = 8` basis. -/
 abbrev Basis7 := Fin 8
@@ -33,9 +33,9 @@ abbrev Basis8 := Fin 13
 /-- Entry contributed by one symbolic `B` block on coordinates `(a,b)`. -/
 def blockEntry? {d : ℕ} (B : BBlockEntries) (a b i j : Fin d) : Option ℂ :=
   if i = a then
-    if j = a then some B.B00 else if j = b then some B.B01 else some 0
+    if j = a then some (BBlockEntries.B00 B) else if j = b then some (BBlockEntries.B01 B) else some 0
   else if i = b then
-    if j = a then some B.B10 else if j = b then some B.B11 else some 0
+    if j = a then some (BBlockEntries.B10 B) else if j = b then some (BBlockEntries.B11 B) else some 0
   else if j = a ∨ j = b then
     some 0
   else
@@ -163,14 +163,14 @@ noncomputable def pi8_b7 (qNeg4 q3 : ℂ) (B : BBlockEntries) : Matrix Basis8 Ba
 
 /-- Example: `π₇(b₂)` has a `B` block on coordinates `(1,2)`. -/
 theorem pi7_b2_first_block (q3 : ℂ) (B : BBlockEntries) :
-    pi7_b2 q3 B 1 1 = B.B00 ∧ pi7_b2 q3 B 1 2 = B.B01 ∧
-      pi7_b2 q3 B 2 1 = B.B10 ∧ pi7_b2 q3 B 2 2 = B.B11 := by
+    pi7_b2 q3 B 1 1 = BBlockEntries.B00 B ∧ pi7_b2 q3 B 1 2 = BBlockEntries.B01 B ∧
+      pi7_b2 q3 B 2 1 = BBlockEntries.B10 B ∧ pi7_b2 q3 B 2 2 = BBlockEntries.B11 B := by
   simp [pi7_b2, sparseBraidMatrix, blockEntries?, blockEntry?]
 
 /-- Example: `π₈(b₆)` has a `B` block on coordinates `(0,8)`. -/
 theorem pi8_b6_first_block (q3 : ℂ) (B : BBlockEntries) :
-    pi8_b6 q3 B 0 0 = B.B00 ∧ pi8_b6 q3 B 0 8 = B.B01 ∧
-      pi8_b6 q3 B 8 0 = B.B10 ∧ pi8_b6 q3 B 8 8 = B.B11 := by
+    pi8_b6 q3 B 0 0 = BBlockEntries.B00 B ∧ pi8_b6 q3 B 0 8 = BBlockEntries.B01 B ∧
+      pi8_b6 q3 B 8 0 = BBlockEntries.B10 B ∧ pi8_b6 q3 B 8 8 = BBlockEntries.B11 B := by
   simp [pi8_b6, sparseBraidMatrix, blockEntries?, blockEntry?]
 
 end FiniteFibonacciSparseLowAnyonMatrices

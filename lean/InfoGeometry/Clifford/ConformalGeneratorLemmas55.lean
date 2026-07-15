@@ -559,4 +559,3 @@ theorem theta_D : thetaOp D = -D := by
   have h2 : -D5 + -D4 = -(D5 + D4) := by abel
   rw [h2]
 
-

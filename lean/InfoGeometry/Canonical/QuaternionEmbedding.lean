@@ -6,7 +6,7 @@ noncomputable section
 
 namespace QuaternionEmbedding
 
-open Complex InfoGeometry.Clifford.DiracPauliGamma
+open Complex DiracPauliGamma
 
 /-!
 # Quaternion Embedding into Clifford Algebra

@@ -138,7 +138,7 @@ lemma ibRNPotential_eq_scalarModularPotential_relativeVolumeChange
     (pTrajectory : Nat → Xib → FinProb Tib)
     (x0 : Xib) (t0 : Tib) (k : Nat) :
     ibRNPotential (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 k =
-      InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+      RelativePotentialScalarBridge.scalarModularPotential
         (ibRelativeVolumeChange
           (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 k)
         (by
@@ -148,7 +148,7 @@ lemma ibRNPotential_eq_scalarModularPotential_relativeVolumeChange
           exact ibRNDerivative_pos
             (Xib := Xib) (Yib := Yib) (Tib := Tib)
             (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0) (k := k)) := by
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
   exact ibRNPotential_eq_neg_log_relativeVolumeChange
     (Xib := Xib) (Yib := Yib) (Tib := Tib)
     (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0) (k := k)
@@ -196,10 +196,10 @@ lemma jacobianLogPotential_eq_scalarModularPotential
     (J : AlgebraEnd F)
     (hJ : LinearMap.det J.toLinearMap ≠ 0) :
     jacobianLogPotential (F := F) J =
-      InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+      RelativePotentialScalarBridge.scalarModularPotential
         (jacobianRelativeVolume (F := F) J)
         (jacobianRelativeVolume_pos_of_det_ne_zero (F := F) hJ) := by
-  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
   rfl
 
 /--

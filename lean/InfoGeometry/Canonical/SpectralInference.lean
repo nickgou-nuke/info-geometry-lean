@@ -14,6 +14,7 @@ import Mathlib.LinearAlgebra.Determinant
 namespace SpectralInference
 
 open InfoGeometry.Convex
+open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.MoorePenrose
 open scoped BigOperators
@@ -102,7 +103,7 @@ structure CertifiedRegularizedSpectralTriple (E : Type*) [NormedAddCommGroup E]
     extends SpectralTriple E where
   DD : E →L[ℝ] E
   index : ℕ
-  hDrazin : IsDrazinInverse D DD index
+  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse D DD index
 
 namespace RegularizedSpectralTriple
 
@@ -176,8 +177,8 @@ structure CertifiedChiralSpectralTriple (E : Type*) [NormedAddCommGroup E]
   DD : E →L[ℝ] E
   DP : E →L[ℝ] E
   drazinIndex : ℕ
-  hDrazin : IsDrazinInverse D DD drazinIndex
-  hMoorePenrose : IsMoorePenroseInverse D DP
+  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse D DD drazinIndex
+  hMoorePenrose : InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse D DP
 
 namespace ChiralSpectralTriple
 

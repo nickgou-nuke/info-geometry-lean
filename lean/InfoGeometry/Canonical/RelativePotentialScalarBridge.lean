@@ -13,7 +13,7 @@ representative-level modular-potential language rather than a separate ontology.
 
 namespace RelativePotentialScalarBridge
 
-open InfoGeometry.Canonical.RelativePotentialCore
+open RelativePotentialCore
 
 /-- Realize a strictly positive scalar as a positive measure on the singleton carrier. -/
 def scalarPositiveMeasure (r : ℝ) (hr : 0 < r) : InfoGeometry.PositiveMeasure Unit ℝ where

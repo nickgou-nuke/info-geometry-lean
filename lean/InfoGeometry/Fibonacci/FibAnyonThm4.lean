@@ -13,7 +13,7 @@ proof with a different root-of-unity convention.
 
 namespace FibAnyonThm4
 
-open InfoGeometry.Canonical.YangBaxterProof
+open YangBaxterProof
 
 /-- The Fibonacci scalar constraints used by the finite matrix owner. -/
 theorem fibonacci_scalar_packet :
@@ -32,7 +32,7 @@ theorem middle_braid_conjugation :
 
 /-- Concrete finite Fibonacci Artin/Yang-Baxter matrix relation. -/
 theorem braid_relation : R * B * R = B * R * B :=
-  InfoGeometry.Canonical.YangBaxterProof.braid_relation
+  YangBaxterProof.braid_relation
 
 /-- The archived theorem surface is backed by the owner scalar, fusion, and braid facts. -/
 theorem theorem4_packet :

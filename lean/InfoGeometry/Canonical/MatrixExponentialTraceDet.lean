@@ -423,7 +423,7 @@ theorem det_exp_diagonal_eq_exp_trace_complex
     {ι : Type*} [Fintype ι] [DecidableEq ι] (v : ι → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
+  MatrixExponentialTraceDet.det_exp_diagonal_eq_exp_trace_complex_fintype v
 
 /--
 Mathlib-style spelling for matrices explicitly diagonalized by a unit.
@@ -440,7 +440,7 @@ theorem det_exp_eq_exp_trace_of_units_diagonal
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
 
 /--
 Mathlib-style spelling for a complex matrix supplied with an explicit
@@ -452,7 +452,7 @@ theorem det_exp_eq_exp_trace_of_is_units_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /--
@@ -463,7 +463,7 @@ theorem det_exp_eq_exp_trace_of_upperTriangular
     (A : Matrix ι ι ℂ) (hA : A.BlockTriangular id) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_upperTriangular A hA
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_upperTriangular A hA
 
 /--
 Mathlib-style spelling for matrices explicitly conjugate to an upper-triangular
@@ -478,7 +478,7 @@ theorem det_exp_eq_exp_trace_of_units_upperTriangular
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * T * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_upperTriangular
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_upperTriangular
     U T hT
 
 /--
@@ -492,7 +492,7 @@ theorem det_exp_eq_exp_trace_of_is_units_upperTriangular
     (hA : A = (U : Matrix ι ι ℂ) * T * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_upperTriangular
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_upperTriangular
     A U T hT hA
 
 /--
@@ -504,6 +504,6 @@ theorem det_exp_eq_exp_trace_of_isHermitian
     (A : Matrix ι ι ℂ) (hA : A.IsHermitian) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_isHermitian A hA
+  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_isHermitian A hA
 
 end Matrix

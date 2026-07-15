@@ -177,6 +177,12 @@ theorem σMinus_sq : σMinus * σMinus = 0 := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [σMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- The two nilpotent chiral transition matrices have zero determinant. -/
+theorem chiral_transition_determinants_zero :
+    σPlus.det = 0 ∧ σMinus.det = 0 := by
+  constructor <;>
+    simp [σPlus, σMinus, Matrix.det_fin_two]
+
 /-! ## Commutator closure: the sl(2, ℂ) Lie algebra
 
 The chiral basis closes under commutation to form `sl(2, ℂ)`, the chiral half of the

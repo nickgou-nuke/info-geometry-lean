@@ -31,10 +31,10 @@ noncomputable section
 
 namespace SouriauMetriplecticOptimalTransport
 
-open InfoGeometry.Canonical.OperatorProjectorMismatch
-open InfoGeometry.Canonical.MetricTransport
+open OperatorProjectorMismatch
+open MetricTransport
 open InfoGeometry.Canonical.SouriauMetriplectic
-open InfoGeometry.Canonical.SouriauThermodynamics
+open SouriauThermodynamics
 
 /-- Phantom-parameter generalized temperature carrier used by this conservative packet. -/
 structure GeneralizedSouriauTemperature (LieAlgebra : Type*) where

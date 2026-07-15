@@ -24,7 +24,7 @@ No spectral, Tomita, or conformal-completion claim.
 namespace FiniteJaynesCenteredScoreBridge
 
 open Finset
-open InfoGeometry.Canonical.JaynesLDDSCentering
+open JaynesLDDSCentering
 
 /-- A finite profile over an arbitrary finite index type. -/
 abbrev FiniteProfile (ι : Type*) :=

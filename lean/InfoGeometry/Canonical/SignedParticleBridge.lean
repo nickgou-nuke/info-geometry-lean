@@ -18,7 +18,7 @@ It only records a controlled correspondence surface.
 namespace SignedParticleBridge
 
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.DrazinKreinCompatibility
+open DrazinKreinCompatibility
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Krein
 

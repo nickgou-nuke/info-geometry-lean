@@ -18,7 +18,7 @@ noncomputable section
 
 namespace BostConnesGibbsState
 
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesKMS
 
 /--
 The normalized Bost--Connes Gibbs probability mass function on positive

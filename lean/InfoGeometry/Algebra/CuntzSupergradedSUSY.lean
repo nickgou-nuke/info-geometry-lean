@@ -107,7 +107,7 @@ theorem supercharge_commutes_with_momentum :
 /-! ## Cuntz quotient supercharge algebra -/
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzSuperalgebra
+open CuntzSuperalgebra
 
 /-- Algebraic odd--odd anticommutator. -/
 def algebraicAnticommutator {A : Type*} [Mul A] [Add A] (x y : A) : A :=

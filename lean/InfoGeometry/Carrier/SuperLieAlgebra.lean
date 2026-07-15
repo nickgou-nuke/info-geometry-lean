@@ -22,7 +22,7 @@ noncomputable section
 
 namespace InfoGeometry.Carrier
 
-open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+open FiveGradedInformationLedger
 
 /--
 A **super Lie algebra** over ℝ is the carrier-level alias for `SuperLieRing`.

@@ -14,7 +14,7 @@ collapse used by downstream files.
 
 namespace WilsonLoopThermodynamics
 
-open InfoGeometry.Topology.ThermodynamicGauge
+open ThermodynamicGauge
 
 variable {Op : Type*} [Ring Op]
 

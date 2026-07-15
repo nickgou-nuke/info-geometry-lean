@@ -9,6 +9,7 @@ namespace InfoGeometry.Canonical
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Clifford.ClNN
+open ConformalProjectiveEmbedding55
 
 /--
 The projective conformal embedding F: R^{4,4} -> Cl(5,5).
@@ -49,18 +50,16 @@ theorem conformalProjectiveEmbedding_null
     rw [CliffordAlgebra.ι_sq_scalar, quad_tailLift 4 x]
     simp [Algebra.smul_def]
   have hF :
-      InfoGeometry.Clifford.ConformalProjectiveEmbedding55.F P xt (Quad 4 x) =
+      F P xt (Quad 4 x) =
         conformalProjectiveEmbedding P x := by
-    dsimp [InfoGeometry.Clifford.ConformalProjectiveEmbedding55.F,
-      InfoGeometry.Clifford.ConformalProjectiveEmbedding55.n_zero,
-      InfoGeometry.Clifford.ConformalProjectiveEmbedding55.n_infty,
+    dsimp [F, n_zero, n_infty,
       conformalProjectiveEmbedding, xt]
     rw [smul_smul, sub_eq_add_neg]
     have hs : (1 / 2 * Quad 4 x) * (-2 : ℝ) = -(Quad 4 x) := by ring
     rw [hs]
     simp [neg_smul]
   rw [← hF]
-  exact InfoGeometry.Clifford.ConformalProjectiveEmbedding55.F_sq_zero P xt (Quad 4 x)
+  exact F_sq_zero P xt (Quad 4 x)
     hx_ortho_u hx_ortho_v hx_sq
 
 

@@ -14,8 +14,8 @@ theorem surface for downstream numerical certification.
 namespace NewtonKantorovichCertificate
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
-open InfoGeometry.Foundations.NewtonKantorovichRoots
-open InfoGeometry.Foundations.NewtonKantorovichSequence
+open NewtonKantorovichRoots
+open NewtonKantorovichSequence
 
 /-- Discriminant safety under the standard Kantorovich threshold. -/
 theorem nk_discriminant_nonneg_of_half_threshold

@@ -20,7 +20,7 @@ quantization theorem without owner-side analytic hypotheses.
 
 namespace DeRhamSymplecticKKQuantizationLimit
 
-open InfoGeometry.Canonical.InductiveColimitBridge
+open InductiveColimitBridge
 
 universe u v w z
 

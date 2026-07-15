@@ -22,9 +22,9 @@ geometry; this file records the exact packet one would need to do so.
 
 namespace PrimeGeodesicEmergence
 
-open InfoGeometry.Canonical.KleinBottleOrientifold
-open InfoGeometry.Canonical.PrimeGasMaxEnt
-open InfoGeometry.Clifford.HestenesDirac
+open KleinBottleOrientifold
+open PrimeGasMaxEnt
+open HestenesDirac
 
 universe u
 
@@ -84,7 +84,7 @@ hypotheses.
 structure PrimeGeodesicEmergencePacket
     (D : PrimeGasJaynesData) (A : Type u) [Mul A] [One A] [Neg A] where
   primeGas :
-    InfoGeometry.Canonical.PrimeGasMaxEnt.PrimeGasJaynesData.PrimeGasJaynesConjecture D
+    PrimeGasJaynesData.PrimeGasJaynesConjecture D
   emergence : PrimeGeodesicEmergence A
   orbitEnergy_eq_log_label : emergence.orbit.energy = Real.log emergence.orbit.label
   primeOrbit : Nat.Prime emergence.orbit.label

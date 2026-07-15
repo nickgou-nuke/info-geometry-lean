@@ -11,10 +11,11 @@ parabolic transport class.
 
 namespace PhotonicScatteringParabolicBridge
 
-open InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator
-open InfoGeometry.Canonical.PhotonicParabolicChannel
+open GeneralizedOperatorChiral
+open GeneralizedOperator
+open PhotonicParabolicChannel
 
-abbrev ParOp := InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator 0
+abbrev ParOp := GeneralizedOperator 0
 
 /-- Minimal typed readout for a two-channel slab scattering model. -/
 structure ScatteringPair where
@@ -189,7 +190,7 @@ theorem slab_boundary_parabolic_implies_nilpotent
       _ = ChiralChannel.Parabolic := hBoundary.1
   have hChan : channelOfOmega Ω = ChiralChannel.Parabolic := by
     simpa [scatteringOfOmega] using hPlus
-  exact InfoGeometry.Canonical.PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
+  exact PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
 
 /--
 Stronger owner-side consequence:
@@ -214,12 +215,12 @@ theorem slab_entry_parabolic_implies_full_collapse
   have hChan : channelOfOmega Ω = ChiralChannel.Parabolic := by
     simpa [scatteringOfOmega] using hPlus
   have hNil : mul Ω Ω = zero :=
-    InfoGeometry.Canonical.PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
+    PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
   refine ⟨hNil, ?_, ?_⟩
   · exact hPlus
   · have hMinus : (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic := by
       simpa [scatteringOfOmega] using
-        InfoGeometry.Canonical.PhotonicParabolicChannel.chiral_collapse_to_parabolic Ω hNil
+        PhotonicParabolicChannel.chiral_collapse_to_parabolic Ω hNil
     exact hMinus
 
 end PhotonicScatteringParabolicBridge

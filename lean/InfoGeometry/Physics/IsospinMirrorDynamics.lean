@@ -47,6 +47,23 @@ structure MirrorPair where
 /-- Mass number of the mirror pair. -/
 def MirrorPair.A (mp : MirrorPair) : ℕ := mp.nuc1.A
 
+/-- Mirror partners have equal mass number. -/
+theorem MirrorPair.partner_mass_eq (mp : MirrorPair) :
+    mp.nuc2.A = mp.nuc1.A := by
+  simp only [Nucleus.A]
+  rw [← mp.mirror_cond_N, ← mp.mirror_cond_Z]
+  exact Nat.add_comm _ _
+
+/-- Integer-valued doubled isospin projection in the `N - Z` convention. -/
+def Nucleus.twoTz (n : Nucleus) : ℤ := (n.N : ℤ) - (n.Z : ℤ)
+
+/-- Doubled isospin projections of mirror partners sum to zero. -/
+theorem MirrorPair.twoTz_add_partner_twoTz (mp : MirrorPair) :
+    mp.nuc1.twoTz + mp.nuc2.twoTz = 0 := by
+  simp only [Nucleus.twoTz]
+  rw [← mp.mirror_cond_N, ← mp.mirror_cond_Z]
+  simp [sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+
 /-- Mirror Energy Difference (MED).
   The difference in excitation energy between analogue states in a mirror pair. -/
 def MED (E_exc1 E_exc2 : ℝ) : ℝ :=

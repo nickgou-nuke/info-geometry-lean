@@ -18,7 +18,7 @@ and local cancellations are natively preserved in the infinite target ring under
 
 set_option linter.unusedSectionVars false
 
-open InfoGeometry.Arithmetic.PrimonFinite
+open PrimonFinite
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
 namespace InfinitePrimonGasBostConnes

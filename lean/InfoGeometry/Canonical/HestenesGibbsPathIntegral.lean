@@ -20,7 +20,7 @@ This is a translator surface; it does not replace modular/KMS owners.
 namespace InfoGeometry.Canonical.PathIntegral
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+open SpectroscopicGaugeKMSBridge
 
 section Core
 
@@ -67,38 +67,38 @@ noncomputable def hestenesActionSplit
 /-- Total path surprisal from Jordan-like increments. -/
 @[rep_depth transport]
 noncomputable def pathSurprisal
-    (K : EndH) (path : TacticPath (E := E)) : ℝ :=
-  (path.map (fun step => (hestenesActionSplit (E := E) K step).2)).sum
+    (K : EndH) (path : List (TacticTransition (E := E))) : ℝ :=
+  (path.map (fun step => (hestenesActionSplit K step).2)).sum
 
 /-- Real Gibbs weight for a path ensemble element. -/
 @[rep_depth transport]
 noncomputable def gibbsWeight
-    (K : EndH) (path : TacticPath (E := E)) : ℝ :=
-  Real.exp (-pathSurprisal (E := E) K path)
+    (K : EndH) (path : List (TacticTransition (E := E))) : ℝ :=
+  Real.exp (-pathSurprisal K path)
 
 /-- Flat path predicate: all Jordan increments vanish. -/
 @[rep_depth transport]
 def IsFlatPath
-    (K : EndH) (path : TacticPath (E := E)) : Prop :=
-  ∀ step ∈ path, (hestenesActionSplit (E := E) K step).2 = 0
+    (K : EndH) (path : List (TacticTransition (E := E))) : Prop :=
+  ∀ step ∈ path, (hestenesActionSplit K step).2 = 0
 
 /-- Flat paths have zero total surprisal. -/
 @[rep_depth transport]
 theorem pathSurprisal_eq_zero_of_flat
-    (K : EndH) (path : TacticPath (E := E))
-    (hFlat : IsFlatPath (E := E) K path) :
-    pathSurprisal (E := E) K path = 0 := by
+    (K : EndH) (path : List (TacticTransition (E := E)))
+    (hFlat : IsFlatPath K path) :
+    pathSurprisal K path = 0 := by
   let _ : CompleteSpace E := inferInstance
   induction path with
   | nil =>
       simp [pathSurprisal]
   | cons step rest ih =>
-      have hStep : (hestenesActionSplit (E := E) K step).2 = 0 :=
+      have hStep : (hestenesActionSplit K step).2 = 0 :=
         hFlat step (by simp)
-      have hRestFlat : IsFlatPath (E := E) K rest := by
+      have hRestFlat : IsFlatPath K rest := by
         intro step' hmem
         exact hFlat step' (by simp [hmem])
-      have hRest : pathSurprisal (E := E) K rest = 0 := ih hRestFlat
+      have hRest : pathSurprisal K rest = 0 := ih hRestFlat
       simpa [pathSurprisal, hStep] using hRest
 
 /--
@@ -107,11 +107,11 @@ if every step is Jordan-flat, the Gibbs path weight is maximal (`1`).
 -/
 @[rep_depth transport]
 theorem gibbs_weight_maximized_for_flat_paths
-    (K : EndH) (path : TacticPath (E := E))
-    (hFlat : IsFlatPath (E := E) K path) :
-    gibbsWeight (E := E) K path = 1 := by
-  have hSurprisal : pathSurprisal (E := E) K path = 0 :=
-    pathSurprisal_eq_zero_of_flat (E := E) K path hFlat
+    (K : EndH) (path : List (TacticTransition (E := E)))
+    (hFlat : IsFlatPath K path) :
+    gibbsWeight K path = 1 := by
+  have hSurprisal : pathSurprisal K path = 0 :=
+    pathSurprisal_eq_zero_of_flat K path hFlat
   simp [gibbsWeight, hSurprisal]
 
 /--
@@ -128,8 +128,8 @@ Jordan-commuting transition has zero dissipative (entropy) increment.
 @[rep_depth transport]
 theorem entropy_increment_eq_zero_of_jordan_commute
     (K : EndH) (step : TacticTransition (E := E))
-    (hComm : JordanCommutesAt (E := E) K step) :
-    (hestenesActionSplit (E := E) K step).2 = 0 := by
+    (hComm : JordanCommutesAt K step) :
+    (hestenesActionSplit K step).2 = 0 := by
   let _ : CompleteSpace E := inferInstance
   have hEvalZero :
       step.source_state.state
@@ -143,24 +143,24 @@ If every step Jordan-commutes with `K`, the path is flat.
 -/
 @[rep_depth transport]
 theorem isFlatPath_of_jordan_commuting
-    (K : EndH) (path : TacticPath (E := E))
-    (hComm : ∀ step ∈ path, JordanCommutesAt (E := E) K step) :
-    IsFlatPath (E := E) K path := by
+    (K : EndH) (path : List (TacticTransition (E := E)))
+    (hComm : ∀ step ∈ path, JordanCommutesAt K step) :
+    IsFlatPath K path := by
   let _ : CompleteSpace E := inferInstance
   intro step hmem
-  exact entropy_increment_eq_zero_of_jordan_commute (E := E) K step (hComm step hmem)
+  exact entropy_increment_eq_zero_of_jordan_commute K step (hComm step hmem)
 
 /--
 Derived eikonal collapse from pointwise Jordan-commuting hypotheses.
 -/
 @[rep_depth transport]
 theorem gibbs_weight_maximized_of_jordan_commuting
-    (K : EndH) (path : TacticPath (E := E))
-    (hComm : ∀ step ∈ path, JordanCommutesAt (E := E) K step) :
-    gibbsWeight (E := E) K path = 1 := by
+    (K : EndH) (path : List (TacticTransition (E := E)))
+    (hComm : ∀ step ∈ path, JordanCommutesAt K step) :
+    gibbsWeight K path = 1 := by
   let _ : CompleteSpace E := inferInstance
-  exact gibbs_weight_maximized_for_flat_paths (E := E) K path
-    (isFlatPath_of_jordan_commuting (E := E) K path hComm)
+  exact gibbs_weight_maximized_for_flat_paths K path
+    (isFlatPath_of_jordan_commuting K path hComm)
 
 end Core
 

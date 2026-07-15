@@ -16,7 +16,7 @@ carrier is supplied.
 
 namespace CompactifiedThermalConeBridge
 
-open InfoGeometry.Canonical.StandardFormNaturalConeBridge
+open StandardFormNaturalConeBridge
 
 /--
 A compactified thermal operator acting on the standard-form natural cone.

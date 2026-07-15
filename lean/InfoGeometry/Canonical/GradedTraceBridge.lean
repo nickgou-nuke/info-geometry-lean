@@ -28,7 +28,7 @@ noncomputable section
 
 namespace GradedTraceBridge
 
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesKMS
 
 variable (Op : Type*) [Ring Op] [StarRing Op]
 variable (C : BostConnesCuntzSystem Op)

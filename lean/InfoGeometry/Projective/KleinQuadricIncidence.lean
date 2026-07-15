@@ -18,7 +18,7 @@ No wrappers. No `sorry`.
 
 namespace KleinQuadricIncidence
 
-open InfoGeometry.Projective.KleinQuadric
+open KleinQuadric
 
 namespace Plucker6
 

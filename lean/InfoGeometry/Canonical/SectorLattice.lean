@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.CantorCylinderLattice
 import InfoGeometry.Canonical.KreinProjectorLattice
+import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import Mathlib.Order.BooleanAlgebra.Basic
 
 /-!
@@ -21,9 +22,14 @@ physics takes place.
 
 namespace SectorLattice
 
-open InfoGeometry.Canonical.CantorCylinderLattice
-open InfoGeometry.Canonical.KreinProjectorLattice
-open InfoGeometry.Clifford.SplitQ11PhaseFlip
+open CantorCylinderLattice
+open KreinProjectorLattice
+open KreinProjectorLattice.KreinSector
+open InfoGeometry.Clifford
+open SplitQ11PhaseFlip
+
+/-- Local alias for the split `Cl(1,1)` carrier. -/
+abbrev SectorAlg := CliffordAlgebra InfoGeometry.Clifford.splitQ11
 
 /-! ## 1. Sector Type Definition -/
 
@@ -94,46 +100,74 @@ example (n : ℕ) : BooleanAlgebra (ProjectionAssignment n) := inferInstance
 noncomputable example (n : ℕ) : CompleteLattice (ProjectionAssignment n) := inferInstance
 
 /-- Evaluate a pointwise sector assignment as an actual finite function of split projectors. -/
-noncomputable def projectionAssignmentToAlg {n : ℕ}
-    (P : ProjectionAssignment n) : BinaryWord n → Alg :=
-  fun w => KreinSector.toAlg (P w)
+noncomputable def kreinMinusProjector : SectorAlg :=
+  nullMinus * nullPlus
+
+/-- The positive `ε` projector in the split `Cl(1,1)` algebra. -/
+noncomputable def kreinPlusProjector : SectorAlg :=
+  nullPlus * nullMinus
+
+/-- The negative projector is idempotent. -/
+theorem kreinMinusProjector_sq :
+    kreinMinusProjector * kreinMinusProjector = kreinMinusProjector := by
+  unfold kreinMinusProjector
+  calc
+    (nullMinus * nullPlus) * (nullMinus * nullPlus)
+      = nullMinus * (nullPlus * nullMinus) * nullPlus := by
+          rw [← mul_assoc, ← mul_assoc]
+    _ = nullMinus * (1 - nullMinus * nullPlus) * nullPlus := by
+          have hq : nullPlus * nullMinus = 1 - nullMinus * nullPlus := by
+            have hs := nullMinus_mul_nullPlus_add_swap
+            have h := congrArg (fun z : CliffordAlgebra splitQ11 => z - nullMinus * nullPlus) hs
+            simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h
+          rw [hq]
+    _ = (nullMinus * (1 - nullMinus * nullPlus)) * nullPlus := by rw [mul_assoc]
+    _ = (nullMinus * 1 - nullMinus * (nullMinus * nullPlus)) * nullPlus := by rw [mul_sub, mul_one]
+    _ = (nullMinus - nullMinus * (nullMinus * nullPlus)) * nullPlus := by simp
+    _ = (nullMinus - (nullMinus * nullMinus) * nullPlus) * nullPlus := by rw [mul_assoc]
+    _ = (nullMinus - 0 * nullPlus) * nullPlus := by rw [nullMinus_sq]
+    _ = nullMinus * nullPlus := by simp
+
+/-- The positive projector is idempotent. -/
+theorem kreinPlusProjector_sq :
+    kreinPlusProjector * kreinPlusProjector = kreinPlusProjector := by
+  unfold kreinPlusProjector
+  calc
+    (nullPlus * nullMinus) * (nullPlus * nullMinus)
+      = nullPlus * (nullMinus * nullPlus) * nullMinus := by
+          rw [← mul_assoc, ← mul_assoc]
+    _ = nullPlus * (1 - nullPlus * nullMinus) * nullMinus := by
+          have hq : nullMinus * nullPlus = 1 - nullPlus * nullMinus := by
+            have hs := nullMinus_mul_nullPlus_add_swap
+            have h := congrArg (fun z : CliffordAlgebra splitQ11 => z - nullPlus * nullMinus) hs
+            simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h
+          rw [hq]
+    _ = (nullPlus * (1 - nullPlus * nullMinus)) * nullMinus := by rw [mul_assoc]
+    _ = (nullPlus * 1 - nullPlus * (nullPlus * nullMinus)) * nullMinus := by rw [mul_sub, mul_one]
+    _ = (nullPlus - nullPlus * (nullPlus * nullMinus)) * nullMinus := by simp
+    _ = (nullPlus - (nullPlus * nullPlus) * nullMinus) * nullMinus := by rw [mul_assoc]
+    _ = (nullPlus - 0 * nullMinus) * nullMinus := by rw [nullPlus_sq]
+    _ = nullPlus * nullMinus := by simp
+
+noncomputable def kreinSectorToAlg : KreinSector → SectorAlg
+  | bot => 0
+  | minus => kreinMinusProjector
+  | plus => kreinPlusProjector
+  | top => 1
+
+noncomputable def projectionAssignmentToAlg {n : ℕ} (P : BinaryWord n → KreinSector) : BinaryWord n → SectorAlg :=
+  fun w => kreinSectorToAlg (P w)
 
 /-- Pointwise sector assignments evaluate to idempotents in the finite function algebra. -/
-theorem projectionAssignmentToAlg_idempotent {n : ℕ} (P : ProjectionAssignment n) :
+theorem projectionAssignmentToAlg_idempotent {n : ℕ} (P : BinaryWord n → KreinSector) :
     IsIdempotentElem (projectionAssignmentToAlg P) := by
   rw [IsIdempotentElem]
   funext w
-  simpa [projectionAssignmentToAlg, IsIdempotentElem] using
-    KreinSector.toAlg_idempotent (P w)
-
-/-- Pointwise meet evaluates to pointwise multiplication of split projectors. -/
-theorem projectionAssignmentToAlg_inf_eq_mul {n : ℕ}
-    (P Q : ProjectionAssignment n) :
-    projectionAssignmentToAlg (P ⊓ Q) =
-      projectionAssignmentToAlg P * projectionAssignmentToAlg Q := by
-  funext w
-  change KreinSector.toAlg (P w ⊓ Q w) = KreinSector.toAlg (P w) * KreinSector.toAlg (Q w)
-  exact KreinSector.toAlg_inf_eq_mul (P w) (Q w)
-
-/-- Pointwise join evaluates to the Boolean idempotent formula `p + q - p*q`. -/
-theorem projectionAssignmentToAlg_sup_eq_add_sub_mul {n : ℕ}
-    (P Q : ProjectionAssignment n) :
-    projectionAssignmentToAlg (P ⊔ Q) =
-      projectionAssignmentToAlg P + projectionAssignmentToAlg Q -
-        projectionAssignmentToAlg P * projectionAssignmentToAlg Q := by
-  funext w
-  change KreinSector.toAlg (P w ⊔ Q w) =
-    KreinSector.toAlg (P w) + KreinSector.toAlg (Q w) -
-      KreinSector.toAlg (P w) * KreinSector.toAlg (Q w)
-  exact KreinSector.toAlg_sup_eq_add_sub_mul (P w) (Q w)
-
-/-- Pointwise complement evaluates to `1 - p`. -/
-theorem projectionAssignmentToAlg_compl_eq_one_sub {n : ℕ}
-    (P : ProjectionAssignment n) :
-    projectionAssignmentToAlg Pᶜ = 1 - projectionAssignmentToAlg P := by
-  funext w
-  change KreinSector.toAlg (P w)ᶜ = 1 - KreinSector.toAlg (P w)
-  exact KreinSector.toAlg_compl_eq_one_sub (P w)
+  cases hP : P w with
+  | bot => simp [projectionAssignmentToAlg, kreinSectorToAlg, hP]
+  | minus => simpa [projectionAssignmentToAlg, kreinSectorToAlg, hP] using kreinMinusProjector_sq
+  | plus => simpa [projectionAssignmentToAlg, kreinSectorToAlg, hP] using kreinPlusProjector_sq
+  | top => simp [projectionAssignmentToAlg, kreinSectorToAlg, hP]
 
 /-- The elementary sector assignment supported at a single Cantor word. -/
 def elementaryProjectionAssignment {n : ℕ}
@@ -155,104 +189,6 @@ theorem elementaryProjectionAssignment_idempotent {n : ℕ}
     (w : BinaryWord n) (k : KreinSector) :
     IsIdempotentElem (projectionAssignmentToAlg (elementaryProjectionAssignment w k)) :=
   projectionAssignmentToAlg_idempotent _
-
-/-! ## 6. Explicit Cantor-Krein sector projectors -/
-
-/-- The Cantor cylinder idempotent lifted to the local split-Clifford algebra. -/
-noncomputable def cantorCylinderAlgFactor {n : ℕ} (w : BinaryWord n) : BinaryWord n → Alg :=
-  cylinderIndicator Alg w
-
-/-- Constant local Krein projector over a finite Cantor level. -/
-noncomputable def constantKreinProjector {n : ℕ} (k : KreinSector) : BinaryWord n → Alg :=
-  fun _ => KreinSector.toAlg k
-
-/--
-Concrete finite-function model of the combined sector projector
-`E_{n,w,k} = e_{n,w} · p_k`.
--/
-noncomputable def cantorKreinSectorProjector {n : ℕ}
-    (w : BinaryWord n) (k : KreinSector) : BinaryWord n → Alg :=
-  cantorCylinderAlgFactor w * constantKreinProjector k
-
-@[simp] theorem cantorCylinderAlgFactor_apply_self {n : ℕ}
-    (w : BinaryWord n) :
-    cantorCylinderAlgFactor w w = (1 : Alg) := by
-  simp [cantorCylinderAlgFactor, cylinderIndicator, cylinder]
-
-@[simp] theorem cantorCylinderAlgFactor_apply_of_ne {n : ℕ}
-    {v w : BinaryWord n} (h : v ≠ w) :
-    cantorCylinderAlgFactor w v = (0 : Alg) := by
-  simp [cantorCylinderAlgFactor, cylinderIndicator, cylinder, h]
-
-@[simp] theorem constantKreinProjector_apply {n : ℕ}
-    (k : KreinSector) (v : BinaryWord n) :
-    constantKreinProjector k v = KreinSector.toAlg k :=
-  rfl
-
-@[simp] theorem cantorKreinSectorProjector_apply_self {n : ℕ}
-    (w : BinaryWord n) (k : KreinSector) :
-    cantorKreinSectorProjector w k w = KreinSector.toAlg k := by
-  simp [cantorKreinSectorProjector]
-
-@[simp] theorem cantorKreinSectorProjector_apply_of_ne {n : ℕ}
-    {v w : BinaryWord n} (h : v ≠ w) (k : KreinSector) :
-    cantorKreinSectorProjector w k v = 0 := by
-  simp [cantorKreinSectorProjector, h]
-
-/--
-The explicit `χ_w · p_k` projector is the same finite-function object as the
-elementary pointwise sector assignment.
--/
-theorem cantorKreinSectorProjector_eq_projectionAssignmentToAlg {n : ℕ}
-    (w : BinaryWord n) (k : KreinSector) :
-    cantorKreinSectorProjector w k =
-      projectionAssignmentToAlg (elementaryProjectionAssignment w k) := by
-  funext v
-  by_cases h : v = w
-  · rw [h]
-    simp [cantorKreinSectorProjector, projectionAssignmentToAlg]
-  · calc
-      cantorKreinSectorProjector w k v = 0 := by
-        simp [cantorKreinSectorProjector, h]
-      _ = projectionAssignmentToAlg (elementaryProjectionAssignment w k) v := by
-        simp [projectionAssignmentToAlg, elementaryProjectionAssignment, h, KreinSector.toAlg]
-
-/-- Combined Cantor-Krein sector projectors are idempotent. -/
-theorem cantorKreinSectorProjector_idempotent {n : ℕ}
-    (w : BinaryWord n) (k : KreinSector) :
-    IsIdempotentElem (cantorKreinSectorProjector w k) := by
-  rw [cantorKreinSectorProjector_eq_projectionAssignmentToAlg]
-  exact elementaryProjectionAssignment_idempotent w k
-
-/-- Distinct Cantor cells give orthogonal combined sector projectors. -/
-theorem cantorKreinSectorProjector_mul_eq_zero_of_ne {n : ℕ}
-    {w₁ w₂ : BinaryWord n} (h : w₁ ≠ w₂) (k₁ k₂ : KreinSector) :
-    cantorKreinSectorProjector w₁ k₁ * cantorKreinSectorProjector w₂ k₂ = 0 := by
-  funext v
-  by_cases h₁ : v = w₁
-  · rw [h₁]
-    simp [cantorKreinSectorProjector, h]
-  · simp [cantorKreinSectorProjector, h₁]
-
-/-- Distinct elementary Cantor cells give orthogonal algebraic projectors. -/
-theorem elementaryProjectionAssignment_mul_eq_zero_of_ne {n : ℕ}
-    {w₁ w₂ : BinaryWord n} (h : w₁ ≠ w₂) (k₁ k₂ : KreinSector) :
-    projectionAssignmentToAlg (elementaryProjectionAssignment w₁ k₁) *
-      projectionAssignmentToAlg (elementaryProjectionAssignment w₂ k₂) = 0 := by
-  funext v
-  by_cases h₁ : v = w₁
-  · change KreinSector.toAlg (elementaryProjectionAssignment w₁ k₁ v) *
-        KreinSector.toAlg (elementaryProjectionAssignment w₂ k₂ v) = 0
-    rw [h₁, elementaryProjectionAssignment_self, elementaryProjectionAssignment_of_ne h]
-    change KreinSector.toAlg k₁ * (0 : Alg) = 0
-    simp
-  · change KreinSector.toAlg (elementaryProjectionAssignment w₁ k₁ v) *
-        KreinSector.toAlg (elementaryProjectionAssignment w₂ k₂ v) = 0
-    rw [elementaryProjectionAssignment_of_ne h₁]
-    change (0 : Alg) * KreinSector.toAlg (elementaryProjectionAssignment w₂ k₂ v) = 0
-    simp
-
-/-- Refinement pulls a pointwise sector assignment back along `truncateWord`. -/
 def refineProjectionAssignment {n : ℕ}
     (P : ProjectionAssignment n) : ProjectionAssignment (n + 1) :=
   fun v => P (truncateWord v)
@@ -297,25 +233,6 @@ theorem refineProjectionAssignment_elementary {n : ℕ}
       have hright : rightChild (truncateWord v) ≠ rightChild w := fun h =>
         hparent (rightChild_injective h)
       simp [refineProjectionAssignment, elementaryProjectionAssignment, hparent, hleft, hright]
-
-/--
-The concrete combined projector refines by splitting its Cantor cylinder into
-the two child projectors with the same local Krein sector.
--/
-theorem cantorKreinSectorProjector_refinement {n : ℕ}
-    (w : BinaryWord n) (k : KreinSector) :
-    projectionAssignmentToAlg (refineProjectionAssignment (elementaryProjectionAssignment w k)) =
-      cantorKreinSectorProjector (leftChild w) k +
-        cantorKreinSectorProjector (rightChild w) k := by
-  rw [refineProjectionAssignment_elementary,
-    projectionAssignmentToAlg_sup_eq_add_sub_mul]
-  rw [← cantorKreinSectorProjector_eq_projectionAssignmentToAlg,
-    ← cantorKreinSectorProjector_eq_projectionAssignmentToAlg]
-  have hzero :
-      cantorKreinSectorProjector (leftChild w) k *
-          cantorKreinSectorProjector (rightChild w) k = 0 :=
-    cantorKreinSectorProjector_mul_eq_zero_of_ne (leftChild_ne_rightChild w w) k k
-  simp [hzero]
 
 /--
 The join of the two elementary child sectors coarse-grains back to the parent

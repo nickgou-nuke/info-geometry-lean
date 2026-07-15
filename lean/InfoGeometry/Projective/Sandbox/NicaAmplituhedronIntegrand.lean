@@ -17,10 +17,10 @@ for the loop integrands.
 
 namespace NicaAmplituhedronIntegrand
 
-open InfoGeometry.Arithmetic.BostConnesSystem
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesSystem
+open BostConnesKMS
 open InfoGeometry.Projective.BostConnes
-open InfoGeometry.Projective.BostConnesKleinPluckerBridge
+open BostConnesKleinPluckerBridge
 
 variable {Op : Type*} [Ring Op] [StarRing Op] (C : BostConnesCuntzSystem Op)
 

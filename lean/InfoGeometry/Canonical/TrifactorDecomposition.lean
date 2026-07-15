@@ -18,7 +18,7 @@ external certificate, or analytic branch cut is used.
 
 namespace TrifactorDecomposition
 
-open InfoGeometry.Canonical.TriFacetGeometry
+open TriFacetGeometry
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 

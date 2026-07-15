@@ -21,8 +21,8 @@ noncomputable section
 
 namespace AffineVirasoroExceptionalBridge
 
-open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
-open InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
+open FiveGradedInformationLedger
+open SuperVirasoroExtension
 
 /-! ## 1. Exceptional/affine/Virasoro bridge -/
 

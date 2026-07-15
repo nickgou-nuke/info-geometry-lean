@@ -27,17 +27,17 @@ exact finite readback pattern showing how:
 
 namespace BayesianThermoMetricHodgeBridge
 
-open InfoGeometry.Canonical.InfinitesimalDictionaryBridge
-open InfoGeometry.Canonical.BayesianDiscreteHodgeBridge
-open InfoGeometry.Canonical.BayesianHodgeCurrent
-open InfoGeometry.Canonical.BayesianHodgeStabilizerBridge
-open InfoGeometry.Canonical.BuresMetricStabilization
-open InfoGeometry.Canonical.MaximumCaliberKLSplit
-open InfoGeometry.Canonical.MaximumCaliberPath
-open InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge
-open InfoGeometry.Canonical.TensorColimitExpectation
-open InfoGeometry.Topology.EckmannDiscreteHodge
-open InfoGeometry.Topology.DiscreteHodgeStabilizer
+open InfinitesimalDictionaryBridge
+open BayesianDiscreteHodgeBridge
+open BayesianHodgeCurrent
+open BayesianHodgeStabilizerBridge
+open BuresMetricStabilization
+open MaximumCaliberKLSplit
+open MaximumCaliberPath
+open DiscreteDiracHodgeChiralBridge
+open TensorColimitExpectation
+open EckmannDiscreteHodge
+open DiscreteHodgeStabilizer
 
 universe u v w
 

@@ -17,7 +17,7 @@ implemented as a derived real action through `K`.
 namespace RealBdG
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.TomitaTakesaki
+open TomitaTakesaki
 
 section Core
 

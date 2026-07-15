@@ -19,13 +19,13 @@ The theorem surface is intentionally small:
 
 namespace SplitBottPeriodicityBridge
 
-open InfoGeometry.Canonical.BottPeriodicity
-open InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
-open InfoGeometry.Clifford.SplitCl44Complexification
+open BottPeriodicity
+open RealDoubledCliffordFiniteSpine
+open SplitCl44Complexification
 
 /-- The split Bott tensor target at level `3`. -/
 abbrev BottTensor3 : Type :=
-  InfoGeometry.Canonical.BottPeriodicity.BottTensor 3
+  BottTensor 3
 
 /-- The `Cl(4,4)` anchor is exactly the split Bott step already owned by the tower. -/
 noncomputable abbrev cl44_as_splitBottStep_anchor :

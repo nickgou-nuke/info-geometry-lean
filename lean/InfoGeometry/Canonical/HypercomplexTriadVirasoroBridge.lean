@@ -21,7 +21,7 @@ def commutator {A : Type*} [Ring A] (X Y : A) : A :=
 
 section ConcreteTriad
 
-open InfoGeometry.Algebra.HypercomplexTriad
+open HypercomplexTriad
 
 /-- In the concrete `2×2` real triad, `[E, N] = 2N`. -/
 theorem commutator_E_N :

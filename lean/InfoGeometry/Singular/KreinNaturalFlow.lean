@@ -16,8 +16,8 @@ It keeps the API used by downstream singular-bridge modules.
 
 namespace InfoGeometry.Singular.Architecture
 
-open InfoGeometry.Singular.MoorePenrose
-open InfoGeometry.Singular.Drazin
+open MoorePenrose
+open Drazin
 open InfoGeometry.Krein
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

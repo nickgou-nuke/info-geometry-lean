@@ -21,8 +21,8 @@ automorphism induced by flipping the `K`-axis on the head factor:
 
 namespace SplitCliffordHeadPhaseFlip
 
-open InfoGeometry.Canonical.SplitCliffordHeadLift
-open InfoGeometry.Canonical.SplitCliffordTensorBridge
+open SplitCliffordHeadLift
+open SplitCliffordTensorBridge
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.SplitQ11PhaseFlip

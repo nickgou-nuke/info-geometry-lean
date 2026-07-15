@@ -5,8 +5,8 @@ open ProbabilityTheory
 
 namespace IBMonotonicity
 
-open InfoGeometry.Canonical.IBFunctional
-open InfoGeometry.Canonical.IBPythagorean
+open IBFunctional
+open IBPythagorean
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

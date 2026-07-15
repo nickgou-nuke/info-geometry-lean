@@ -77,6 +77,8 @@ import InfoGeometry.Physics.ParafermionDefectBridge
 import InfoGeometry.Physics.ElectronParafermionFlow
 import InfoGeometry.Physics.TopologicalStandardModelBridge
 import InfoGeometry.Physics.BostConnesThermalTime
+import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+import InfoGeometry.Physics.ChiralTensorRecoupling
 import InfoGeometry.Physics.ZornMatrixSU3
 import InfoGeometry.Physics.ZornTkkAnomalyCancellation
 import InfoGeometry.Physics.ZornTkkAlgebraicClosure

@@ -19,8 +19,8 @@ noncomputable section
 
 namespace BogoliubovWeylChemicalPotential
 
-open InfoGeometry.Physics.SupergradedCuntzBdG
-open InfoGeometry.Physics.HestenesCuntzPhaseSpace
+open SupergradedCuntzBdG
+open HestenesCuntzPhaseSpace
 
 /-- A finite Bogoliubov/inertial thermodynamic frame: `θ` is the extra
 inertial/Bogoliubov log-clock rapidity, while `(β,E,μ,Q)` are the
@@ -84,6 +84,17 @@ theorem frameWeylLogClock_mu_shift (F : BogoliubovInertialFrame) (δμ : ℝ) :
   cases F
   simp [frameWeylLogClock, frameGrandCanonicalRapidity,
     grandCanonicalRapidity_mu_shift]
+  ring
+
+/-- Simultaneous inertial-rapidity and chemical-potential translation of the
+Bogoliubov/Weyl log clock. -/
+theorem frameWeylLogClock_theta_mu_shift
+    (F : BogoliubovInertialFrame) (δθ δμ : ℝ) :
+    frameWeylLogClock { F with θ := F.θ + δθ, μ := F.μ + δμ } =
+      frameWeylLogClock F + δθ + F.β * δμ * F.Q := by
+  cases F
+  simp [frameWeylLogClock, frameGrandCanonicalRapidity,
+    SupergradedCuntzBdG.grandCanonicalRapidity]
   ring
 
 /-- Energy shifts translate the log-clock oppositely by `-β δE`. -/

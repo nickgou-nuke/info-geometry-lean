@@ -20,6 +20,7 @@ namespace PrimitiveSetHullKernelBridge
 
 open OrderDual
 open PrimitiveSpectrum
+open InfoGeometry.Arithmetic
 
 /-- The carrier set of primitive supports inside `Set ℕ`. -/
 def PrimitiveSetCarrier : Set (Set ℕ) := {A | PrimitiveSet A}

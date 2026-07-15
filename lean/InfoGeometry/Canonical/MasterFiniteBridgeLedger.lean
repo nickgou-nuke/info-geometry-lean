@@ -31,21 +31,21 @@ verified owner theorems into one compact ledger packet.
 
 namespace MasterFiniteBridgeLedger
 
-open InfoGeometry.Canonical.KLDivergenceDecomposition
-open InfoGeometry.Canonical.InfinitesimalDictionaryBridge
-open InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge
-open InfoGeometry.Canonical.BuresMetricStabilization
-open InfoGeometry.Canonical.MaximumCaliberPath
-open InfoGeometry.Canonical.MaximumCaliberKLSplit
-open InfoGeometry.Canonical.BayesianHodgeCurrent
-open InfoGeometry.Canonical.BayesianDiscreteHodgeBridge
-open InfoGeometry.Topology.ThermodynamicGauge
-open InfoGeometry.Topology.DiscreteHodgeStabilizer
-open InfoGeometry.Topology.EckmannDiscreteHodge
-open InfoGeometry.Canonical.KleinBottleWallpaper
-open InfoGeometry.Canonical.WallpaperPin55SummaryLedger
-open InfoGeometry.Canonical.WallpaperPin55RootCrossSection
-open InfoGeometry.Canonical.TensorColimitExpectation
+open KLDivergenceDecomposition
+open InfinitesimalDictionaryBridge
+open BayesianThermoMetricHodgeBridge
+open BuresMetricStabilization
+open MaximumCaliberPath
+open MaximumCaliberKLSplit
+open BayesianHodgeCurrent
+open BayesianDiscreteHodgeBridge
+open ThermodynamicGauge
+open DiscreteHodgeStabilizer
+open EckmannDiscreteHodge
+open KleinBottleWallpaper
+open WallpaperPin55SummaryLedger
+open WallpaperPin55RootCrossSection
+open TensorColimitExpectation
 
 universe u v w
 

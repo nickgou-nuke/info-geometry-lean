@@ -388,28 +388,28 @@ end SplitSuperGeometry
 namespace InfoGeometry.Algebraic.SplitSignature
 
 abbrev SplitCliffordEnd (n : ℕ) : Type :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.SplitCliffordEnd n
+  SplitSuperGeometry.SplitCliffordEnd n
 
 def cliffordParity (n : ℕ) : Cl_nn n ≃ₐ[ℝ] Cl_nn n :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.cliffordParity n
+  SplitSuperGeometry.cliffordParity n
 
 def parityOp (n : ℕ) : SplitCliffordEnd n :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.parityOp n
+  SplitSuperGeometry.parityOp n
 
 def cliffordSupertrace (n : ℕ) :
     SplitCliffordEnd n → ℝ :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.cliffordSupertrace n
+  SplitSuperGeometry.cliffordSupertrace n
 
 def superBerezinian (n : ℕ) :
     SplitCliffordEnd n → ℝ :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.superBerezinian n
+  SplitSuperGeometry.superBerezinian n
 
 def superVolumeAnomaly (n : ℕ) :
     SplitCliffordEnd n → ℝ :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.superVolumeAnomaly n
+  SplitSuperGeometry.superVolumeAnomaly n
 
 def superEffectiveAction (n : ℕ) :
     SplitCliffordEnd n → ℝ :=
-  InfoGeometry.Algebraic.SplitSuperGeometry.superEffectiveAction n
+  SplitSuperGeometry.superEffectiveAction n
 
 end InfoGeometry.Algebraic.SplitSignature

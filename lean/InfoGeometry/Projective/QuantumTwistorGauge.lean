@@ -11,7 +11,7 @@ Entry scaling descends through the FRT presentation to an algebra endomorphism o
 minor-generated coordinate ring, where each quantum Plücker generator has weight two.
 -/
 
-namespace QuantumTwistorGauge
+namespace InfoGeometry.Projective.QuantumTwistorGauge
 
 open InfoGeometry.Projective.QuantumGrassmannian
 open InfoGeometry.Projective.QuantumTwistor
@@ -184,4 +184,4 @@ theorem gauge_covariance_p23 :
     (u ^ 2) • (quantumPluckerMap R q).p23.1 := by
   exact gaugeAlgHom_quantumMinor R q u ⟨(2, 3), by decide⟩
 
-end QuantumTwistorGauge
+end InfoGeometry.Projective.QuantumTwistorGauge

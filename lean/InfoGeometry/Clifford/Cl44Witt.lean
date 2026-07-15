@@ -4,6 +4,7 @@ import InfoGeometry.Clifford.SplitQ44
 
 namespace Cl44Witt
 
+open InfoGeometry.Clifford
 open CliffordAlgebra
 
 noncomputable def eVec : Fin 4 → Fin 8 → ℝ
@@ -141,10 +142,10 @@ The three lemmas below package this explicitly for downstream finite-atom users.
 namespace Cl44Witt
 
 /-- Split annihilation generator for the finite `Cl(1,1)` seed. -/
-noncomputable abbrev a11 : Cl44 := a 0
+noncomputable abbrev a11 : InfoGeometry.Clifford.Cl44 := a 0
 
 /-- Split creation generator for the finite `Cl(1,1)` seed. -/
-noncomputable abbrev adag11 : Cl44 := adag 0
+noncomputable abbrev adag11 : InfoGeometry.Clifford.Cl44 := adag 0
 
 /-- Finite split `Cl(1,1)` nilpotency: `a11^2 = 0`. -/
 theorem cl11_a_sq_zero : a11 * a11 = 0 := by

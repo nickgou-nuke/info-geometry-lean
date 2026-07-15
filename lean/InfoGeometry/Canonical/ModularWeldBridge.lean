@@ -38,9 +38,9 @@ operator-lane composition.
 namespace ModularWeldBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.Canonical.TomitaTakesaki
-open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
+open RelativeModularOperator
+open TomitaTakesaki
+open JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.Volume.ConnesCocycle
 
 section FiniteWeld
@@ -57,7 +57,7 @@ object in the noncommutative modular architecture.
 noncomputable def relativeLogDensityOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
   diagMatrix (fun i =>
-    InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity (α := Fin n) q q0 i)
+    RelativePotentialCore.relativeLogDensity (α := Fin n) q q0 i)
 
 /-!
 L2→L3 weld on the finite diagnostic lane:
@@ -150,7 +150,7 @@ theorem relativeLogDensityOperator_self
   · subst hij
     rw [relativeLogDensityOperator, diagMatrix, Matrix.diagonal_apply_eq]
     exact
-      (InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_self
+      (RelativePotentialCore.relativeLogDensity_self
         (α := Fin n) (q := q) (a := i))
   · rw [Pi.zero_apply]
     rw [relativeLogDensityOperator, diagMatrix, Matrix.diagonal_apply_ne]
@@ -171,11 +171,11 @@ theorem relativeLogDensityOperator_cocycle
     rw [Matrix.add_apply, Matrix.diagonal_apply_eq, Matrix.diagonal_apply_eq,
       Matrix.diagonal_apply_eq]
     exact
-      InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_cocycle
+      RelativePotentialCore.relativeLogDensity_cocycle
         (q := q) (q0 := q0) (q1 := q1) (a := i)
-  · rw [Matrix.add_apply, Matrix.diagonal_apply_ne _ hij,
-      Matrix.diagonal_apply_ne _ hij, Matrix.diagonal_apply_ne _ hij]
-    simp
+  · rw [Matrix.add_apply]
+    simp only [Matrix.diagonal_apply_ne _ hij]
+    ring
 
 /-- Weld self-specialization: `Δ(q|q) = exp(0) = 1`. -/
 @[rep_depth operator]

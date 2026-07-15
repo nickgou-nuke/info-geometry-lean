@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.YangBaxterProof
 
+open YangBaxterProof
+
 noncomputable section
 
 /-══════════════════════════════════════════════════════════════════════
@@ -64,26 +66,21 @@ structure YangBaxterBypass where
   -- allowing forbidden symmetries (5-fold, 7-fold, ...)
 
 /-- The negated Fibonacci phase is a fifth root of unity. -/
-theorem neg_q_pow_five : (-InfoGeometry.Canonical.YangBaxterProof.q) ^ 5 = 1 := by
+theorem neg_q_pow_five : (-q) ^ 5 = 1 := by
   rw [neg_pow]
-  rw [InfoGeometry.Canonical.YangBaxterProof.q_pow_five]
+  rw [q_pow_five]
   norm_num
 
 /-- Owner-backed finite Fibonacci Yang-Baxter packet. -/
 def fibonacciYangBaxterBypass : YangBaxterBypass where
-  R := InfoGeometry.Canonical.YangBaxterProof.R
-  B := InfoGeometry.Canonical.YangBaxterProof.B
-  h_ybe := InfoGeometry.Canonical.YangBaxterProof.braid_relation
-  pentagon_root := -InfoGeometry.Canonical.YangBaxterProof.q
+  R := R
+  B := B
+  h_ybe := braid_relation
+  pentagon_root := -q
   h_pentagon := neg_q_pow_five
 
 theorem ybe_enables_pentagon :
-    InfoGeometry.Canonical.YangBaxterProof.R *
-        InfoGeometry.Canonical.YangBaxterProof.B *
-          InfoGeometry.Canonical.YangBaxterProof.R =
-      InfoGeometry.Canonical.YangBaxterProof.B *
-        InfoGeometry.Canonical.YangBaxterProof.R *
-          InfoGeometry.Canonical.YangBaxterProof.B :=
+    R * B * R = B * R * B :=
   fibonacciYangBaxterBypass.h_ybe
 
 /-══════════════════════════════════════════════════════════════════════

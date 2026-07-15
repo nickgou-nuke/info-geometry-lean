@@ -22,7 +22,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
 
-open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
+open DrazinProjectionLocalization
 
 /--
 A stable Drazin readout over a state space.

@@ -23,7 +23,7 @@ open scoped BigOperators
 namespace PrimitivePrimeProjectiveTemperature
 
 open InfoGeometry.Arithmetic
-open InfoGeometry.Thermodynamics.ProjectiveTemperature
+open ProjectiveTemperature
 
 /-! ## 1. Finite von Mangoldt partition under projective temperature -/
 

@@ -31,8 +31,8 @@ Zero global axioms. No claim of RH proof.
 
 namespace HilbertPolyaYangBaxterBoundary
 
-open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.YangBaxterProof
+open CayleyCriticalLineCircleBridge
+open YangBaxterProof
 
 /-! ### Cayley bijection — proved in CayleyCriticalLineCircleBridge -/
 

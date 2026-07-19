@@ -1,5 +1,7 @@
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.OpSignatureBridge
+import InfoGeometry.Clifford.OctonionParavectorBridge
+import InfoGeometry.Clifford.FanoOctonionParavector
 import InfoGeometry.Clifford.BottSupergradedCartanBridge
 import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
@@ -95,10 +97,12 @@ import InfoGeometry.Clifford.GeometricRotor
 import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
 import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
+import InfoGeometry.Clifford.TodorovInternalSpace
 import InfoGeometry.Clifford.ConformalSpinorBridge.SuperLieRingInstance
 import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Clifford.Clifford55AnomalyOSP
 import InfoGeometry.Clifford.D4Cl11Tripotent
+import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
 
 namespace InfoGeometry
 

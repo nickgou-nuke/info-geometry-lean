@@ -1,6 +1,8 @@
+**A Lean 4 formalization of the physics of the information geometry of the spinorial pre-geometric prima materia.**
+
 # InfoGeometry Lean Fusion: The Physics of Information
 
-> **Status**: `Evolving` | **Build**: `Passing (16,556 jobs)` | **Open Gaps**: `Exactly 2`
+> **Status**: `Evolving` | **Build**: `Passing (12,599 jobs)` | **Open Gaps**: `0`
 
 Welcome to the **Omega Automath**, a living artifact of human-AI symbiosis exploring the mathematical foundations of quantum gravity, information geometry, and conformal boundaries formalized in Lean 4.
 

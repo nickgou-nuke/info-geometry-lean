@@ -3,6 +3,9 @@ import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 namespace Automath.Generated
 
 open InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzFibonacciBraidInclusion
+open Matrix
 
 /--
 Reduction-Modulo-(n-1) on K_0: Under K_0(M_n(C)) -> K_0(O_n)/(n-1), the embedding phi induces phi_*: Z -> Z/(n-1) given by reduction mod (n-1). For n=2, K_0(O_2)=0 so the embedding is K-theoretically invisible despite being injective and spectrally faithful. Falsified if phi_*([E_11]) != [1_{O_2}] or if induced map differs from reduction mod (n-1).

@@ -2307,6 +2307,7 @@ import InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge
 import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ChiralBasis
+import InfoGeometry.Clifford.ChevalleySpinorBlueprint
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
 import InfoGeometry.Clifford.Cl11InfiniteCarrier

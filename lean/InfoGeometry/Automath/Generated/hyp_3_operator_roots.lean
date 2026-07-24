@@ -3,6 +3,9 @@ import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 namespace Automath.Generated
 
 open InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzFibonacciBraidInclusion
+open Matrix
 
 /--
 Infinitely Many Cuntz-Level Operator Roots: For every k>=2, phi(A) has roots in the matrix block R_0 = phi(r_0(A)) with R_0^k = phi(A). But the root set in O_n is strictly larger -- every unitary U in phi(O_n) with U^k=1 produces another root R_U = U R_0. There are infinitely many such distinct roots, including roots outside phi(M_n).

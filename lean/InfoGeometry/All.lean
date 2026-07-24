@@ -4483,9 +4483,6 @@ import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
 import InfoGeometry.Quantum.AZTenFoldCompleteClassification
 import InfoGeometry.Quantum.AZTenFoldFullPeriodicTable
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
-import InfoGeometry.Quantum.BRSTBoundaryCohomology
 import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 import InfoGeometry.Lie.BRSTCohomology
-import InfoGeometry.Quantum.MathieuMoonshineMockTheta
-import InfoGeometry.Canonical.ZwegersMockModularBridge
-import InfoGeometry.Quantum.LogJordanKreinCore
+import InfoGeometry.Canonical.LogJordanKreinCore

@@ -5,7 +5,7 @@ open InfoGeometry.Lie.Pin55KreinConformalBridge
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.ZwegersMockModularBridgeTest
+namespace InfoGeometry.Canonical.ZwegersMockModularBridge
 
 abbrev Vector32 := Fin 32 → ℝ
 
@@ -32,7 +32,8 @@ theorem zwegers_sign_factor_same (c v : Vector32) :
   ring
 
 theorem abs_sign_le_one (r : ℝ) : |Real.sign r| ≤ 1 := by
-  rcases Real.sign_apply r with h | h | h <;> rw [h] <;> norm_num
+  dsimp [Real.sign]
+  split_ifs <;> norm_num
 
 /-- Theorem: Zwegers sign factor is bounded in absolute value by 1 -/
 theorem zwegers_sign_factor_abs_le_one (c1 c2 v : Vector32) :
@@ -40,14 +41,8 @@ theorem zwegers_sign_factor_abs_le_one (c1 c2 v : Vector32) :
   dsimp [zwegersSignFactor]
   have h1 : |Real.sign (kreinInner16_16 c1 v)| ≤ 1 := abs_sign_le_one _
   have h2 : |Real.sign (kreinInner16_16 c2 v)| ≤ 1 := abs_sign_le_one _
-  have h_sub : |Real.sign (kreinInner16_16 c1 v) - Real.sign (kreinInner16_16 c2 v)| ≤ 2 := by
-    calc |Real.sign (kreinInner16_16 c1 v) - Real.sign (kreinInner16_16 c2 v)|
-      _ ≤ |Real.sign (kreinInner16_16 c1 v)| + |-Real.sign (kreinInner16_16 c2 v)| := abs_add _ _
-      _ = |Real.sign (kreinInner16_16 c1 v)| + |Real.sign (kreinInner16_16 c2 v)| := by rw [abs_neg]
-      _ ≤ 1 + 1 := by linarith [h1, h2]
-      _ = 2 := by norm_num
   rw [abs_div, abs_two]
-  linarith
+  linarith [abs_sub (Real.sign (kreinInner16_16 c1 v)) (Real.sign (kreinInner16_16 c2 v))]
 
 /-- Appell-Lerch Non-Holomorphic Shadow Structure over (16,16) Krein Space -/
 structure ZwegersIndefiniteThetaPacket where
@@ -61,4 +56,4 @@ theorem zwegers_indefinite_theta_packet_exists :
     Nonempty ZwegersIndefiniteThetaPacket :=
   ⟨⟨kreinInner16_16, kreinInner16_16_eq_B_krein, zwegersSignFactor, zwegers_sign_factor_same, zwegers_sign_factor_abs_le_one⟩⟩
 
-end InfoGeometry.Canonical.ZwegersMockModularBridgeTest
+end InfoGeometry.Canonical.ZwegersMockModularBridge

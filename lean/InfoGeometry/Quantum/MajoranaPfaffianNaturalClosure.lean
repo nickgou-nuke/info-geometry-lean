@@ -43,7 +43,7 @@ theorem split_anticommute :
     splitPos * splitNeg + splitNeg * splitPos = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [splitPos, splitNeg, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [splitPos, splitNeg]
 
 /-!
 # 2. The null basis and the CAR matrix units
@@ -83,7 +83,7 @@ theorem real_CAR :
     annihilationR * creationR + creationR * annihilationR = (1 : M2R) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [annihilationR, creationR, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [annihilationR, creationR]
 
 /-!
 # 3. Natural algebraic closure
@@ -118,13 +118,13 @@ theorem expand_matrixToSplitCoords (M : M2R) :
     expandSplitCoords (matrixToSplitCoords M) = M := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [expandSplitCoords, matrixToSplitCoords, splitPos, splitNeg, splitProd, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two] <;>
+    simp [expandSplitCoords, matrixToSplitCoords, splitPos, splitNeg, splitProd] <;>
     ring
 
 theorem matrixToSplitCoords_expand (c : SplitBasisCoords) :
     matrixToSplitCoords (expandSplitCoords c) = c := by
   ext <;>
-    simp [matrixToSplitCoords, expandSplitCoords, splitPos, splitNeg, splitProd, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two] <;>
+    simp [matrixToSplitCoords, expandSplitCoords, splitPos, splitNeg, splitProd] <;>
     ring
 
 /-!

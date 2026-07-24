@@ -4,6 +4,7 @@ namespace Automath.Generated
 
 open InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 open InfoGeometry.Algebra.GoldenMeanShift
+open InfoGeometry.Algebra.CuntzTensorQuotient
 
 /--
 Exact Fibonacci Functional Calculus: The embedding phi intertwines holomorphic functional calculus. For all k>=1, phi(A)^k = F_k phi(A) + F_{k-1} 1 = phi(A^k) where F_k are Fibonacci numbers. For all t in R, e^{t phi(A)} = a(t)phi(A) + b(t)1 = phi(e^{tA}) with a(t), b(t) given by Binet-type formulas.

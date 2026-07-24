@@ -4,6 +4,7 @@ namespace Automath.Generated
 
 open InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 open InfoGeometry.Canonical.YangBaxterProof
+open CuntzFibonacciBraidInclusion
 
 /--
 Yang-Baxter braid relation for Fibonacci representation in O_2

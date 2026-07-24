@@ -3,6 +3,9 @@ import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 namespace Automath.Generated
 
 open InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open CuntzFibonacciBraidInclusion
+open Matrix
 
 /--
 Relative shift endomorphism commutes with embedded matrix blocks in O_n

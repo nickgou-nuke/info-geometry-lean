@@ -4481,3 +4481,5 @@ import InfoGeometry.Neurosymbolic.SinkhornCramerRaoBridge
 import InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
 import InfoGeometry.Quantum.AZTenFoldCompleteClassification
+import InfoGeometry.Quantum.AZTenFoldFullPeriodicTable
+import InfoGeometry.Quantum.BRSTNambuGorkovNilpotentBridge

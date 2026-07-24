@@ -48,6 +48,6 @@ structure AZKTheoryPacket where
 /-- Main Theorem: Proof of existence of the Altland-Zirnbauer K-Theory Bridge Packet -/
 theorem altland_zirnbauer_ktheory_bridge_exists :
     Nonempty AZKTheoryPacket :=
-  ⟨⟨AZClass.D, rfl, PfaffianParity.topological, rfl, bottPeriodicityDim, rfl, InfoGeometry.Lie.Pin55KreinConformalBridge.B_krein_signature_nonzero⟩⟩
+  ⟨⟨AZClass.D, rfl, PfaffianParity.topological, rfl, bottPeriodicityDim, rfl, B_krein_signature_nonzero⟩⟩
 
 end InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge

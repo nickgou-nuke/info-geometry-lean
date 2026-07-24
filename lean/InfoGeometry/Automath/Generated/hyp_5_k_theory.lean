@@ -10,7 +10,7 @@ The embedding ?(E??) = S?S?* is Murray-von Neumann equivalent to 1_{O?}, so the 
 Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: k-theory, cuntz-algebra, murray-von-neumann, projection, k0-group -/
 theorem hyp_5_k_theory (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

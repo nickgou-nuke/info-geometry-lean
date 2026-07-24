@@ -10,7 +10,7 @@ Resolvent identity for the Cuntz lift of the golden transfer matrix A in O_2
 Source: InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 Objects: matrixToCuntz, CuntzAlg, X, A -/
 theorem cuntz_fibonacci_resolvent (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

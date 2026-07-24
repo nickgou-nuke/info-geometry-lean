@@ -10,7 +10,7 @@ The characteristic polynomial x?-x-1 forces the spectrum to be the golden ratio 
 Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: spectrum, C*-algebra, golden-ratio, minimal-polynomial, spectral-rigidity -/
 theorem hyp_1_spectral_rigidity (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

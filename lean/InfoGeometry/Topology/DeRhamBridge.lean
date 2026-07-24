@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.NilpotentItakuraSaito
 import Omega.CircleDimension.StokesHomologyExactSplitting
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Topology.BraidNegativeIdentityMonodromy
+import InfoGeometry.Canonical.BiquaternionKANnilpotent
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Defs
@@ -76,7 +77,7 @@ theorem thermodynamic_gauge_is_connection :
     minimal free resolution of the nilpotent cone. The condition `K² = 0`
     implies `d² = 0` in the de Rham complex, mirroring the Koszul duality
     between the nilpotent algebra and the de Rham complex. -/
-theorem nilpotent_itakura_realizes_d_squared_zero (K : BraidNegativeIdentityMonodromy.M2C) (hK : K * K = 0) :
+theorem nilpotent_itakura_realizes_d_squared_zero (K : M2C) (hK : K * K = 0) :
     (nilItakuraSaito K = 0) := by
   apply InfoGeometry.Canonical.NilpotentItakuraSaito.nilItakuraSaito_zero
 

@@ -177,33 +177,33 @@ theorem majorana2_selfAdjoint :
     simp [majorana2, splitNeg, Matrix.conjTranspose_apply]
 
 /-!
-# 5. Skew 2x2 BdG matrix, Pfaffian, and spectrum
+# 5. Two-Majorana coupling matrix and its Pfaffian
 -/
 
-def bdg2 (m : ℝ) : M2R :=
+def twoMajoranaCoupling (m : ℝ) : M2R :=
   !![0, m; -m, 0]
 
-def pfaffian2 (m : ℝ) : ℝ :=
+def twoMajoranaPfaffian (m : ℝ) : ℝ :=
   m
 
-theorem bdg2_eq_smul_splitNeg (m : ℝ) :
-    bdg2 m = m • splitNeg := by
+theorem twoMajoranaCoupling_eq_smul_splitNeg (m : ℝ) :
+    twoMajoranaCoupling m = m • splitNeg := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [bdg2, splitNeg]
+    simp [twoMajoranaCoupling, splitNeg]
 
-theorem det_bdg2 (m : ℝ) :
-    (bdg2 m).det = (pfaffian2 m)^2 := by
-  simp [bdg2, pfaffian2, Matrix.det_fin_two]
+theorem det_twoMajoranaCoupling (m : ℝ) :
+    (twoMajoranaCoupling m).det = (twoMajoranaPfaffian m)^2 := by
+  simp [twoMajoranaCoupling, twoMajoranaPfaffian, Matrix.det_fin_two]
   ring
 
-theorem det_bdg2_eq_zero_iff (m : ℝ) :
-    (bdg2 m).det = 0 ↔ pfaffian2 m = 0 := by
-  rw [det_bdg2 m]
+theorem det_twoMajoranaCoupling_eq_zero_iff (m : ℝ) :
+    (twoMajoranaCoupling m).det = 0 ↔ twoMajoranaPfaffian m = 0 := by
+  rw [det_twoMajoranaCoupling m]
   exact sq_eq_zero_iff
 
-theorem pfaffian2_eq_zero_iff (m : ℝ) :
-    pfaffian2 m = 0 ↔ m = 0 := by
+theorem twoMajoranaPfaffian_eq_zero_iff (m : ℝ) :
+    twoMajoranaPfaffian m = 0 ↔ m = 0 := by
   rfl
 
 end MajoranaPfaffianNaturalClosure

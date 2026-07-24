@@ -1,53 +1,39 @@
 import Mathlib
-import InfoGeometry.Lie.Pin55KreinConformalBridge
-import InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge
-
-open InfoGeometry.Lie.Pin55KreinConformalBridge
-open InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge
 
 namespace InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
 
-/-- Altland-Zirnbauer (AZ) 10-Fold Symmetry Classes -/
+/-!
+# Altland-Zirnbauer symmetry-class index
+
+This module defines only the ten symmetry-class labels.  It does not define
+Hamiltonians, antiunitary symmetries, stable phases, `KO` groups, or a
+classification theorem.
+
+The remaining theorem targets are independent:
+
+* define the class-D Pfaffian bulk invariant and identify it with the signs of
+  the Pfaffians at the particle-hole invariant momenta;
+* construct stable gapped phases and prove the one-dimensional class-D
+  homotopy classification;
+* define the half-space boundary index and prove bulk-boundary equality;
+* construct real `KO` groups and prove the genuine degree-eight Bott
+  equivalence.
+
+No spectral sequence or Fredholm model is part of the bare Bott-equivalence
+statement; either may later be used as proof machinery or a realization.
+-/
+
+/-- The ten Altland-Zirnbauer symmetry-class labels. -/
 inductive AZClass : Type
-  | A    : AZClass -- Complex unitary (no symmetries)
-  | AIII : AZClass -- Complex chiral
-  | AI   : AZClass -- Real orthogonal (T² = +1)
-  | BDI  : AZClass -- Real chiral (T² = +1, C² = +1)
-  | D    : AZClass -- Kitaev chain (T = 0, C² = +1, Pfaffian Z₂ invariant)
-  | DIII : AZClass -- Superconducting chiral (T² = -1, C² = +1)
-  | AII  : AZClass -- Symplectic (T² = -1)
-  | CII  : AZClass -- Symplectic chiral (T² = -1, C² = -1)
-  | C    : AZClass -- Spin-singlet superconductor (T = 0, C² = -1)
-  | CI   : AZClass -- Singlet chiral (T² = +1, C² = -1)
-
-/-- Dimension 1 Topological Invariant Type for Class D (Kitaev Chain) -/
-def ClassD_1D_Invariant : Type := PfaffianParity
-
-/-- 8-Fold Bott Periodicity dimension equivalence (d mod 8) -/
-def bottPeriodicityDim (d : ℕ) : ℕ :=
-  d % 8
-
-/-- Theorem: Dimension 1 (Kitaev chain) modulo 8 equals 1 -/
-theorem kitaev_dim_mod_eight :
-    bottPeriodicityDim 1 = 1 := rfl
-
-/-- Theorem: Dimension 9 (1D + 8D E₈ lattice shift) modulo 8 equals 1 (Bott Periodicity) -/
-theorem e8_shift_bott_periodicity :
-    bottPeriodicityDim (1 + 8) = 1 := rfl
-
-/-- Altland-Zirnbauer K-Theory Packet -/
-structure AZKTheoryPacket where
-  azClass : AZClass
-  h_class : azClass = AZClass.D
-  pfaffianParity : PfaffianParity
-  h_parity : pfaffianParity = PfaffianParity.topological
-  bottPeriodicity : ℕ → ℕ
-  h_bott : bottPeriodicity (1 + 8) = 1
-  kreinNonzero : B_krein_signature ≠ 0
-
-/-- Main Theorem: Proof of existence of the Altland-Zirnbauer K-Theory Bridge Packet -/
-theorem altland_zirnbauer_ktheory_bridge_exists :
-    Nonempty AZKTheoryPacket :=
-  ⟨⟨AZClass.D, rfl, PfaffianParity.topological, rfl, bottPeriodicityDim, rfl, B_krein_signature_nonzero⟩⟩
+  | A
+  | AIII
+  | AI
+  | BDI
+  | D
+  | DIII
+  | AII
+  | CII
+  | C
+  | CI
 
 end InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge

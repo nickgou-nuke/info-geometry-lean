@@ -32,22 +32,22 @@ theorem PHS_high_symm (xi : ℝ) :
 
 /-- Skew-Symmetric Majorana Basis Matrix A(k) = (0 xi; -xi 0) at high-symmetry points -/
 def A_Majorana_high_symm (xi : ℝ) : M2R :=
-  bdg2 xi
+  twoMajoranaCoupling xi
 
 theorem A_Majorana_high_symm_skew (xi : ℝ) :
     Matrix.transpose (A_Majorana_high_symm xi) = -A_Majorana_high_symm xi := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [A_Majorana_high_symm, bdg2, Matrix.transpose_apply]
+    simp [A_Majorana_high_symm, twoMajoranaCoupling, Matrix.transpose_apply]
 
 /-- Pfaffian of the high-symmetry Majorana matrix A(k) -/
 def pfaffian_high_symm (xi : ℝ) : ℝ :=
-  pfaffian2 xi
+  twoMajoranaPfaffian xi
 
 theorem det_A_eq_pfaffian_sq (xi : ℝ) :
     (A_Majorana_high_symm xi).det = (pfaffian_high_symm xi)^2 := by
   dsimp [A_Majorana_high_symm, pfaffian_high_symm]
-  exact det_bdg2 xi
+  exact det_twoMajoranaCoupling xi
 
 theorem det_H_high_symm (xi : ℝ) :
     (H_BdG_high_symm xi).det = -(xi^2) := by
@@ -67,13 +67,41 @@ theorem bulk_gap_iff (xi : ℝ) :
     have : xi^2 = 0 := by linarith
     exact h (sq_eq_zero_iff.mp this)
 
+/-- At a particle-hole invariant momentum, the explicit Pfaffian is nonzero
+exactly when the corresponding finite Hamiltonian is gapped. -/
+theorem pfaffian_high_symm_ne_zero_iff_bulk_gap (xi : ℝ) :
+    pfaffian_high_symm xi ≠ 0 ↔ (H_BdG_high_symm xi).det ≠ 0 := by
+  rw [bulk_gap_iff]
+  rfl
+
+/-- Bulk gaps at both particle-hole invariant momenta force both explicit
+Pfaffians to be nonzero. -/
+theorem highSymmetryPfaffians_nonzero_of_bulk_gaps
+    (mu t : ℝ)
+    (hzero : (H_BdG_high_symm (mu + t)).det ≠ 0)
+    (hpi : (H_BdG_high_symm (mu - t)).det ≠ 0) :
+    pfaffian_high_symm (mu + t) ≠ 0 ∧
+      pfaffian_high_symm (mu - t) ≠ 0 := by
+  exact ⟨(pfaffian_high_symm_ne_zero_iff_bulk_gap _).2 hzero,
+    (pfaffian_high_symm_ne_zero_iff_bulk_gap _).2 hpi⟩
+
 /-- Kitaev ℤ₂ Topological Pfaffian Invariant Product ν = Pf A(0) * Pf A(π) = (μ + t)(μ - t) = μ² - t² -/
 def kitaevPfaffianProduct (mu t : ℝ) : ℝ :=
   (pfaffian_high_symm (mu + t)) * (pfaffian_high_symm (mu - t))
 
+/-- Under both finite bulk-gap hypotheses, the explicit Pfaffian product cannot
+vanish. -/
+theorem kitaevPfaffianProduct_ne_zero_of_bulk_gaps
+    (mu t : ℝ)
+    (hzero : (H_BdG_high_symm (mu + t)).det ≠ 0)
+    (hpi : (H_BdG_high_symm (mu - t)).det ≠ 0) :
+    kitaevPfaffianProduct mu t ≠ 0 := by
+  rcases highSymmetryPfaffians_nonzero_of_bulk_gaps mu t hzero hpi with ⟨h0, hπ⟩
+  exact mul_ne_zero h0 hπ
+
 theorem kitaev_pfaffian_product_eq (mu t : ℝ) :
     kitaevPfaffianProduct mu t = mu^2 - t^2 := by
-  dsimp [kitaevPfaffianProduct, pfaffian_high_symm, pfaffian2]
+  dsimp [kitaevPfaffianProduct, pfaffian_high_symm, twoMajoranaPfaffian]
   ring
 
 /-- Topological Phase Criterion: When |μ| < |t|, the Pfaffian product is strictly negative (ν < 0) -/
@@ -102,8 +130,8 @@ theorem gap_closing_at_transition (mu t : ℝ) (h : mu^2 = t^2) :
     rw [det_H_high_symm, h2]
     ring
 
-/-- Certified Native Mathlib Class-D Topological Phase Structure -/
-structure ClassDTopologicalPhasePacket where
+/-- Finite parameter witness for the two high-symmetry Pfaffian signs and gaps. -/
+structure FiniteClassDPfaffianWitness where
   mu : ℝ
   t : ℝ
   h_topological : mu^2 < t^2
@@ -113,8 +141,8 @@ structure ClassDTopologicalPhasePacket where
   bulkGapZero : (H_BdG_high_symm (mu + t)).det ≠ 0
   bulkGapPi : (H_BdG_high_symm (mu - t)).det ≠ 0
 
-theorem class_D_topological_phase_exists :
-    Nonempty ClassDTopologicalPhasePacket := by
+theorem finiteClassDPfaffianWitness_exists :
+    Nonempty FiniteClassDPfaffianWitness := by
   refine ⟨⟨0, 1, by norm_num, -1, by norm_num, by norm_num, ?_, ?_⟩⟩
   · rw [det_H_high_symm]; norm_num
   · rw [det_H_high_symm]; norm_num

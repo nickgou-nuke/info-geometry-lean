@@ -164,6 +164,18 @@ theorem majorana_anticommute :
   fin_cases i <;> fin_cases j <;>
     simp [majorana1, majorana2, splitPos, splitNeg, Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem majorana1_selfAdjoint :
+    majorana1.conjTranspose = majorana1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [majorana1, splitPos, Matrix.conjTranspose_apply]
+
+theorem majorana2_selfAdjoint :
+    majorana2.conjTranspose = majorana2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [majorana2, splitNeg, Matrix.conjTranspose_apply]
+
 /-!
 # 5. Skew 2x2 BdG matrix, Pfaffian, and spectrum
 -/

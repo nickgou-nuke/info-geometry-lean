@@ -4484,3 +4484,4 @@ import InfoGeometry.Quantum.AZTenFoldCompleteClassification
 import InfoGeometry.Quantum.AZTenFoldFullPeriodicTable
 import InfoGeometry.Quantum.BRSTNambuGorkovNilpotentBridge
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
+import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant

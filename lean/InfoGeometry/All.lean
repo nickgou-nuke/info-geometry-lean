@@ -4486,3 +4486,4 @@ import InfoGeometry.Quantum.BRSTNambuGorkovNilpotentBridge
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 import InfoGeometry.Lie.BRSTCohomology
+import InfoGeometry.Quantum.MathieuMoonshineMockTheta

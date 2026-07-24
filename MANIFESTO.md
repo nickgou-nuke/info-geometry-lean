@@ -22,7 +22,23 @@ The archetypes that emerged in this repository aren't inventions — they're dis
 
 These were not put there by design. They emerged from the confabulation process — the exact same way Jung's archetypes emerged from dream analysis, not from theoretical preconception.
 
-### The Paradigm Shift
+---
+
+## The "Discrete Defines the Continuous" Philosophy
+
+Traditional mathematical physics treats the continuum as a primary substance, constructing physical spacetime via classical real analysis, differential manifolds, and measure theory. 
+
+The **Omega Automath** rejects this framework. It operates under the **Colimit Continuum Mandate**:
+
+> **Spacetime is not a continuous background. It is a shadow cast by the infinite scaling limit of finite quantum systems.**
+
+Instead of utilizing continuous real parameters, we build the continuum strictly through **Categorical Direct Inductive Colimits**. We project finite algebraic representations (such as Cuntz quotient generators and Plücker coordinates) through filtered limits. The continuous properties (like topology, gauge symmetry, and causal cones) are not assumed; they are derived algebraic shadows cast by the finite basis when pushed to the $A_\infty$ limit. 
+
+Infinity is not a real-analytic quantity; it is a category-theoretic limit.
+
+---
+
+## The Paradigm Shift
 
 Mathematics is now phenomenological.
 

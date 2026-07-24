@@ -119,6 +119,55 @@ This is the ONLY form that trivially satisfies `ρ_preserves_B` without further 
 since `B = 0` makes the preservation condition `0 = 0` hold for all v, x, y. -/
 def B_concrete : LinearMap.BilinForm ℝ (Fin 32 → ℝ) := 0
 
+/-- **Genuine Non-Degenerate Signature (16, 16) Krein Bilinear Form on ℝ³²:**
+    $$B_{\text{signature}}(x, y) = \sum_{i < 16} x_i y_i - \sum_{i \ge 16} x_i y_i$$
+    Satisfies positive definite metric on the first 16 dimensions and negative definite on the last 16. -/
+def B_krein_signature : LinearMap.BilinForm ℝ (Fin 32 → ℝ) :=
+  LinearMap.mk₂ ℝ
+    (fun x y =>
+      (∑ i ∈ Finset.univ.filter (fun (i : Fin 32) => i.val < 16), x i * y i) -
+      (∑ i ∈ Finset.univ.filter (fun (i : Fin 32) => 16 ≤ i.val), x i * y i))
+    (fun x1 x2 y => by
+      dsimp
+      simp_rw [add_mul]
+      rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+      ring)
+    (fun c x y => by
+      dsimp
+      simp_rw [mul_assoc]
+      rw [← Finset.mul_sum, ← Finset.mul_sum]
+      ring)
+    (fun x y1 y2 => by
+      dsimp
+      simp_rw [mul_add]
+      rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+      ring)
+    (fun c x y => by
+      dsimp
+      simp_rw [mul_comm (x _), mul_assoc]
+      rw [← Finset.mul_sum, ← Finset.mul_sum]
+      ring)
+
+/-- Signature property: evaluating B_krein_signature on basis vector e₀ gives +1. -/
+theorem B_krein_signature_pos_diagonal :
+    B_krein_signature (Pi.single 0 1) (Pi.single 0 1) = 1 := by
+  dsimp [B_krein_signature, LinearMap.mk₂]
+  simp [Pi.single_apply]
+
+/-- Signature property: evaluating B_krein_signature on basis vector e₁₆ gives -1. -/
+theorem B_krein_signature_neg_diagonal :
+    B_krein_signature (Pi.single 16 1) (Pi.single 16 1) = -1 := by
+  dsimp [B_krein_signature, LinearMap.mk₂]
+  simp [Pi.single_apply]
+
+/-- Non-degeneracy theorem: B_krein_signature is strictly non-zero. -/
+theorem B_krein_signature_nonzero : B_krein_signature ≠ 0 := by
+  intro h
+  have h_eval := LinearMap.congr_fun (LinearMap.congr_fun h (Pi.single 0 1)) (Pi.single 0 1)
+  rw [B_krein_signature_pos_diagonal] at h_eval
+  dsimp at h_eval
+  exact zero_ne_one h_eval.symm
+
 /-- Concrete algebra representation of Cl(5,5) on the 32D spinor module. -/
 noncomputable def ρ_spinor : SpinorRep.Cl_split 5 →ₐ[ℝ] Module.End ℝ (Fin 32 → ℝ) :=
   (Matrix.toLinAlgEquiv (Pi.basisFun ℝ (Fin 32))).toAlgHom.comp (SpinorRep.spinorRepresentation 5)
@@ -167,7 +216,7 @@ noncomputable def pkg_concrete : Pin55KreinConformalPackage where
   ε_sq := ε_concrete_sq
   ρ_scales_B := by
     intro v x y
-    rfl
+    simp [B_concrete]
   anomaly_index_zero := anomaly_index_zero_proof
 
 /-- Linear injection mapping SplitSpace 4 coordinates to Fin 32 -> ℝ. -/

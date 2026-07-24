@@ -32,6 +32,10 @@ theorem class_D_is_Z2 :
 theorem class_BDI_is_Z :
     az1DTopologicalInvariant AZClass.BDI = TopologicalInvariant1D.Z := rfl
 
+/-- 8-Fold Bott Periodicity dimension equivalence (d mod 8) -/
+def bottPeriodicityDim (d : ℕ) : ℕ :=
+  d % 8
+
 /-- Theorem: Universal 8-fold Bott Periodicity dimension invariance modulo 8 -/
 theorem bott_periodicity_8fold_invariance (d : ℕ) :
     bottPeriodicityDim (d + 8) = bottPeriodicityDim d := by
@@ -42,22 +46,23 @@ theorem bott_periodicity_8fold_invariance (d : ℕ) :
 def boundaryNilpotentMajorana : Matrix (Fin 2) (Fin 2) ℝ :=
   !![0, 1; 0, 0]
 
-/-- Theorem: Boundary Majorana operator is strictly Nilpotent (f² = 0, "Square Root of Zero") -/
 theorem boundary_majorana_nilpotent :
     boundaryNilpotentMajorana * boundaryNilpotentMajorana = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [boundaryNilpotentMajorana, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- Genuine Constructive Proof Packet for the Complete 10-Fold Topological Classification -/
+/-- Altland-Zirnbauer 10-Fold Classification Structure -/
 structure AZTenFoldClassificationPacket where
-  classD_invariant : TopologicalInvariant1D
-  h_classD : classD_invariant = TopologicalInvariant1D.Z2
-  bottPeriodicityInvariance : ∀ d : ℕ, bottPeriodicityDim (d + 8) = bottPeriodicityDim d
-  nilpotentOperator : Matrix (Fin 2) (Fin 2) ℝ
-  h_nilpotent : nilpotentOperator * nilpotentOperator = 0
+  az1DClassifier : AZClass → TopologicalInvariant1D
+  h_class_D : az1DClassifier AZClass.D = TopologicalInvariant1D.Z2
+  h_class_BDI : az1DClassifier AZClass.BDI = TopologicalInvariant1D.Z
+  bottDim : ℕ → ℕ
+  h_bott : ∀ d, bottDim (d + 8) = bottDim d
+  boundaryNilpotent : Matrix (Fin 2) (Fin 2) ℝ
+  h_nilpotent : boundaryNilpotent * boundaryNilpotent = 0
 
-theorem az_tenfold_complete_classification_exists :
+theorem az_tenfold_classification_exists :
     Nonempty AZTenFoldClassificationPacket :=
-  ⟨⟨TopologicalInvariant1D.Z2, rfl, bott_periodicity_8fold_invariance, boundaryNilpotentMajorana, boundary_majorana_nilpotent⟩⟩
+  ⟨⟨az1DTopologicalInvariant, rfl, rfl, bottPeriodicityDim, bott_periodicity_8fold_invariance, boundaryNilpotentMajorana, boundary_majorana_nilpotent⟩⟩
 
 end InfoGeometry.Quantum.AZTenFoldCompleteClassification

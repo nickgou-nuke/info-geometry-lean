@@ -73,6 +73,8 @@ Use these first:
 - [../README.md](../README.md)
 - [CONSTRUCTIVE_CLOSURE_MANDATE.md](CONSTRUCTIVE_CLOSURE_MANDATE.md)
 - [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+- [OPEN_DEBT_PROBLEMS.md](OPEN_DEBT_PROBLEMS.md)
+- [RESEARCH_AND_CHAINS_OF_THOUGHT.md](RESEARCH_AND_CHAINS_OF_THOUGHT.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [ModuleMap.md](ModuleMap.md)
 - [OperationalIntent.md](OperationalIntent.md)

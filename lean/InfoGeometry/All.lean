@@ -4487,3 +4487,4 @@ import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 import InfoGeometry.Lie.BRSTCohomology
 import InfoGeometry.Quantum.MathieuMoonshineMockTheta
+import InfoGeometry.Canonical.ZwegersMockModularBridge

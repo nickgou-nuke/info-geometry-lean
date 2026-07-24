@@ -30,7 +30,7 @@ def scan_file(filepath: Path) -> dict[str, Any] | None:
     except Exception:
         return None
     clean_content = re.sub(
-        r'/-.*?-/|--.*|"(?:[^"\\]|\\.)*"|«[^»]*»|`+[^`]*`+',
+        r'/-.*?-/|--.*|"(?:[^"\\]|\\.)*"|«[^»]*»|`+[^`\n]*`+|`[a-zA-Z_][a-zA-Z0-9._]*|[a-zA-Z0-9_.-]*\.(?:sorry|admit|axiom)[a-zA-Z0-9_.-]*|[a-zA-Z0-9_.-]*(?:sorry|admit|axiom)\.[a-zA-Z0-9_.-]*',
         lambda m: "".join("\n" if c == "\n" else " " for c in m.group(0)),
         content,
         flags=re.DOTALL

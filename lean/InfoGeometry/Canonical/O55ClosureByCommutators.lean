@@ -91,11 +91,6 @@ theorem theta_reflection_packet :
     thetaOp D = -D := by
   exact ⟨theta_u5, theta_v5, theta_u4, theta_v4, theta_D5, theta_D4, theta_D⟩
 
-/-- `θ` is involutive on the ambient `Cl(5,5)` carrier. -/
-theorem theta_involution_packet (x : Alg 5) :
-    thetaOp (thetaOp x) = x := by
-  exact theta_inv x
-
 /-- The repo-native `O(5,5)` closure-by-commutators packet. -/
 theorem o55_closure_by_commutators_capstone :
     (u5 * u5 = 0
@@ -124,6 +119,6 @@ theorem o55_closure_by_commutators_capstone :
       ∧ thetaOp D = -D)
     ∧ (∀ x : Alg 5, thetaOp (thetaOp x) = x) := by
   exact ⟨null_generator_packet, dilation_generator_def_packet, J_generator_def_packet,
-    J_square_packet, adjoint_closure_packet, theta_reflection_packet, theta_involution_packet⟩
+    J_square_packet, adjoint_closure_packet, theta_reflection_packet, theta_inv⟩
 
 end InfoGeometry.Canonical.O55ClosureByCommutators

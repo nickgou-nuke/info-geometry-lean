@@ -45,7 +45,7 @@ owner files.
 
 noncomputable section
 
-namespace BostConnesSymmetryBreaking
+namespace InfoGeometry.Canonical.BostConnesSymmetryBreaking
 
 open InfoGeometry.Canonical.BostConnesGalois
 open InfoGeometry.Canonical.BostConnesKMS
@@ -441,4 +441,4 @@ theorem normalCone_cocycle_limit_preserves_rational_phase_periodicity
     DAG.AnalyticBridge.connes_cocycle_at_limit s t, e_rep.e_periodic r, ?_⟩
   rw [e_rep.e_periodic r]
 
-end BostConnesSymmetryBreaking
+end InfoGeometry.Canonical.BostConnesSymmetryBreaking

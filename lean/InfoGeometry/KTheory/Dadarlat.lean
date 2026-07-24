@@ -16,7 +16,7 @@ open Classical
 
 noncomputable section
 
-namespace Dadarlat
+namespace InfoGeometry.KTheory.Dadarlat
 
 /--
 A subgroup H ≤ Q is *square-closed* if for all n : ℤ, n ≠ 0,
@@ -104,4 +104,4 @@ theorem automatic_triviality_classification
       C.model = KirchbergModel.OInfinityTensorUHF := by
   cases C.model <;> simp
 
-end Dadarlat
+end InfoGeometry.KTheory.Dadarlat

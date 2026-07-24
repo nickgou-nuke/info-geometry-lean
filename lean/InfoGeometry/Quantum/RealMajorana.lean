@@ -18,7 +18,7 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
 
-namespace RealMajorana
+namespace InfoGeometry.Quantum.RealMajorana
 
 open CategoryTheory
 
@@ -1171,4 +1171,4 @@ end PolarizedMajorana
 
 end Core
 
-end RealMajorana
+end InfoGeometry.Quantum.RealMajorana

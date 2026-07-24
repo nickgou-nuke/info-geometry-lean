@@ -22,12 +22,12 @@ Methodological contract:
 - scalar Hamiltonian readouts remain shadows of the operator owner.
 -/
 
-namespace RelativeModularHamiltonian
+namespace InfoGeometry.Canonical.RelativeModularHamiltonian
 
 open InfoGeometry.Canonical.PositiveRayCore
 open RelativePotentialCore
 open RelativeModularOperator
-open JaynesInfoStatMech.ThermalDiagonal
+open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 
@@ -149,4 +149,4 @@ theorem relativeModularHamiltonianExpectation_self
 
 end Finite
 
-end RelativeModularHamiltonian
+end InfoGeometry.Canonical.RelativeModularHamiltonian

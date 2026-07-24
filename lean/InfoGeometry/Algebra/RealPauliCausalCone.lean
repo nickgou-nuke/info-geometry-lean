@@ -4,7 +4,7 @@ import InfoGeometry.Clifford.SplitQuaternion
 
 set_option autoImplicit false
 
-namespace RealPauliCausalCone
+namespace InfoGeometry.Algebra.RealPauliCausalCone
 
 open InfoGeometry.Clifford
 
@@ -168,7 +168,7 @@ theorem density_interior_convex (A B : RealPauliOp) (p : ℝ) (hp0 : 0 ≤ p) (h
   · have h1p : 0 ≤ 1 - p := by linarith
     nlinarith [hx, hy, hz, hAd, hBd]
 
-end RealPauliCausalCone
+end InfoGeometry.Algebra.RealPauliCausalCone
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

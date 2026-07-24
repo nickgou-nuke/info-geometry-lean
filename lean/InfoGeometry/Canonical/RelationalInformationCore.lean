@@ -23,7 +23,7 @@ operatorial package. No background manifold, coordinate Hessian, or scalar
 Fisher metric is assumed here.
 -/
 
-namespace RelationalInformationCore
+namespace InfoGeometry.Canonical.RelationalInformationCore
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.StateDependentTransport
@@ -296,4 +296,4 @@ noncomputable def transportObstruction
 
 end Core
 
-end RelationalInformationCore
+end InfoGeometry.Canonical.RelationalInformationCore

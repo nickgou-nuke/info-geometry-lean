@@ -11,7 +11,7 @@ Finite metriplectic core:
 * first/second-law style structural readbacks.
 -/
 
-namespace MetriplecticCore
+namespace InfoGeometry.Canonical.MetriplecticCore
 
 /-- Ring commutator lane (Poisson-style finite algebraic seed). -/
 def commutator {A : Type*} [Ring A] (x y : A) : A :=
@@ -118,4 +118,4 @@ def commutatorAnticommutatorSystem
   hamiltonian_conserved := hHmetric
   entropy_casimir := hScasimir
 
-end MetriplecticCore
+end InfoGeometry.Canonical.MetriplecticCore

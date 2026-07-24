@@ -15,7 +15,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimonFockTraceFinite
+namespace InfoGeometry.Arithmetic.PrimonFockTraceFinite
 
 /-- Finite fermionic Fock basis: a Boolean occupation bit at each mode. -/
 abbrev FockState (n : ℕ) := Fin n → Bool
@@ -142,4 +142,4 @@ theorem primonFockTrace_eq_primeProduct (n : ℕ) (p : Fin n → ℕ) (β : ℝ)
   simpa [localBoltzmann] using
     fockTraceExp_eq_product n (fun i => Real.log (p i : ℝ)) β
 
-end PrimonFockTraceFinite
+end InfoGeometry.Arithmetic.PrimonFockTraceFinite

@@ -10,7 +10,7 @@ It is deliberately finite-stage only: no colimit, completion, extra data
 carrier, or analytic limit claim is introduced.
 -/
 
-namespace InductiveSuperClosureLemmas
+namespace InfoGeometry.Algebra.InductiveSuperClosureLemmas
 
 universe u
 
@@ -339,4 +339,4 @@ theorem mixedSuperClosure_all
 
 end Chain
 
-end InductiveSuperClosureLemmas
+end InfoGeometry.Algebra.InductiveSuperClosureLemmas

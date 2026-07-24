@@ -18,7 +18,7 @@ records the exact bridge needed by downstream finite/localized models:
 
 noncomputable section
 
-namespace MoorePenroseDivisionRank
+namespace InfoGeometry.OperatorAlgebra.MoorePenroseDivisionRank
 
 /--
 Calibration linking the Drazin stable volume to a Moore--Penrose projector
@@ -143,4 +143,4 @@ theorem entropy_nonneg_of_division_identity
 
 end MoorePenroseDivisionIdentityLaw
 
-end MoorePenroseDivisionRank
+end InfoGeometry.OperatorAlgebra.MoorePenroseDivisionRank

@@ -23,11 +23,11 @@ existing STU/Freudenthal proofs.
 
 noncomputable section
 
-namespace SplitAlbert
+namespace InfoGeometry.Canonical.SplitAlbert
 
 open scoped BigOperators
-open Freudenthal
-open STUDatum
+open InfoGeometry.Exceptional.Freudenthal
+open InfoGeometry.Exceptional.STUDatum
 
 /-- A 27-dimensional coordinate carrier for the split Albert route. -/
 abbrev SplitAlbertCarrier := Fin 9 → STUCarrier
@@ -199,4 +199,4 @@ theorem splitAlbertTraceZero_finrank_eq_26 :
     simpa [Nat.succ_eq_add_one, add_comm, splitAlbertCarrier_finrank_eq_27] using h
   simpa [splitAlbertTraceZero] using h'
 
-end SplitAlbert
+end InfoGeometry.Canonical.SplitAlbert

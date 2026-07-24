@@ -20,7 +20,7 @@ complexified split-octonion Zorn multiplication.
 
 noncomputable section
 
-namespace YangBaxterZornBridge
+namespace InfoGeometry.External.Auto.YangBaxterZornBridge
 
 open Matrix
 open SplitOctonionBraidSU3
@@ -419,4 +419,4 @@ theorem not_projectively_equivalent (q : ℂ) (hq : q ≠ 0) :
   have hzero : c₀ ^ 2 * (8 * q ^ 2) ≠ 0 := mul_ne_zero hc₀sq (mul_ne_zero (by norm_num) hqsq)
   exact hzero htrace
 
-end YangBaxterZornBridge
+end InfoGeometry.External.Auto.YangBaxterZornBridge

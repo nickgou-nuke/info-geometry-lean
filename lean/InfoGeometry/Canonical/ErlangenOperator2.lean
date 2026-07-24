@@ -23,7 +23,7 @@ not assert trajectory-level entropy production statements (`dS/dt = 0`).
 
 noncomputable section
 
-namespace ErlangenOperator2
+namespace InfoGeometry.Canonical.ErlangenOperator2
 
 /--
 A scalar functional is a generalized Casimir for a symmetry action if it is
@@ -128,4 +128,4 @@ theorem erlangen_operator_geometry_closure
 
 end ErlangenOperatorDatum
 
-end ErlangenOperator2
+end InfoGeometry.Canonical.ErlangenOperator2

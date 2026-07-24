@@ -28,7 +28,7 @@ that real LLM training reaches this finite witness.
 
 noncomputable section
 
-namespace ExceptionalPoints
+namespace InfoGeometry.CognitiveTopology.ExceptionalPoints
 
 open Matrix InfoGeometry.Topology.Wallpaper
 
@@ -96,6 +96,6 @@ theorem pg_relation_keeps_explicit_jordan_witness (p : Lattice2D) (lam : ℂ)
     (G (T_y p) = T_y.symm (G p)) ∧ IsMatrixExceptionalPoint (jordanBlock lam) lam := by
   exact ⟨h_pg, jordanBlock_is_matrixExceptionalPoint lam⟩
 
-end ExceptionalPoints
+end InfoGeometry.CognitiveTopology.ExceptionalPoints
 
 end noncomputable section

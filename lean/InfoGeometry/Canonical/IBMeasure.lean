@@ -10,7 +10,7 @@ set_option linter.unusedSectionVars false
 open MeasureTheory
 open scoped ENNReal
 
-namespace IBMeasure
+namespace InfoGeometry.Canonical.IBMeasure
 
 variable {T : Type*} [MeasurableSpace T]
 
@@ -200,4 +200,4 @@ end Gibbs
 
 end IB
 
-end IBMeasure
+end InfoGeometry.Canonical.IBMeasure

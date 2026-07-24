@@ -4,10 +4,10 @@ import Mathlib.Tactic
 
 open scoped InnerProductSpace
 
-namespace BogoliubovClosedForms
+namespace InfoGeometry.Canonical.BogoliubovClosedForms
 
 open BogoliubovTransport
-open TomitaTakesaki
+open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
 
 section Basic
@@ -177,7 +177,7 @@ theorem JBoost_eq_cosh_add_sinh_modular_j
     (t : ℝ) :
     JBoost (E := E) t
       = Real.cosh t • (1 : EndH) + Real.sinh t • modular_j (E := E) := by
-  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j] using
     JBoost_eq_cosh_add_sinh_J (E := E) t
 
 theorem epsilonBoost_eq_cosh_add_sinh_eps
@@ -191,7 +191,7 @@ theorem epsilonBoost_eq_cosh_add_sinh_spectral_epsilon
     (t : ℝ) :
     epsilonBoost (E := E) t
       = Real.cosh t • (1 : EndH) + Real.sinh t • spectral_epsilon (E := E) := by
-  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
     epsilonBoost_eq_cosh_add_sinh_eps (E := E) t
 
 theorem KRotation_eq_cos_add_sin_K
@@ -217,7 +217,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
 @[simp] theorem JBoost_apply_modular_j
     (t : ℝ) (ψ : H₂) :
     JBoost (E := E) t ψ = (Real.cosh t) • ψ + (Real.sinh t) • (modular_j (E := E) ψ) := by
-  simp [TomitaTakesaki.modularConjugationJ_eq_modular_j]
+  simp [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j]
 
 @[simp] theorem epsilonBoost_apply
     (t : ℝ) (ψ : H₂) :
@@ -230,7 +230,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
     (t : ℝ) (ψ : H₂) :
     epsilonBoost (E := E) t ψ =
       (Real.cosh t) • ψ + (Real.sinh t) • (spectral_epsilon (E := E) ψ) := by
-  simp [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon]
+  simp [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon]
 
 @[simp] theorem KRotation_apply
     (t : ℝ) (ψ : H₂) :
@@ -307,7 +307,7 @@ theorem kreinInner_KRotation_neg_left_KRotation_right
         (complex_i (E := E) : EndH) := by
             simp [InfoGeometry.Krein.clockAxis]
       _ = (modularComplexI (E := E) : EndH) := by
-            exact (TomitaTakesaki.modularComplexI_eq_complex_i (E := E)).symm
+            exact (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)).symm
   rw [KRotation_apply, KRotation_apply, Real.cos_neg, Real.sin_neg, neg_smul]
   rw [hClock]
   repeat rw [KreinSpace.kreinInner_add_left, KreinSpace.kreinInner_add_right]
@@ -315,8 +315,8 @@ theorem kreinInner_KRotation_neg_left_KRotation_right
   rw [show -(Real.sin t • modularComplexI (E := E) u) = (-Real.sin t) • modularComplexI (E := E) u by simp]
   rw [KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_add_right]
   repeat rw [KreinSpace.kreinInner_smul_right]
-  rw [TomitaTakesaki.modularComplexI_kreinInner_swap (E := E) u v]
-  rw [TomitaTakesaki.modularComplexI_kreinInner_comp (E := E) u v]
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_kreinInner_swap (E := E) u v]
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_kreinInner_comp (E := E) u v]
   ring_nf
   have hcossin : Real.cos t ^ 2 + Real.sin t ^ 2 = 1 := by
     nlinarith [Real.sin_sq_add_cos_sq t]
@@ -333,13 +333,13 @@ theorem epsilon_comp_epsilonBoost
   rw [epsilonBoost_eq_cosh_add_sinh_eps (E := E) t]
   apply ContinuousLinearMap.ext
   intro x
-  apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularSignEpsilon]
+  apply DoubledSpace.ext <;> simp [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon]
 
 theorem spectral_epsilon_comp_epsilonBoost
     (t : ℝ) :
     (spectral_epsilon (E := E)).comp (epsilonBoost (E := E) t)
       = (epsilonBoost (E := E) t).comp (spectral_epsilon (E := E)) := by
-  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
     epsilon_comp_epsilonBoost (E := E) t
 
 theorem epsilon_comp_JBoost
@@ -350,14 +350,14 @@ theorem epsilon_comp_JBoost
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularConjugationJ,
+    simp [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon, InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ,
       Real.cosh_neg, Real.sinh_neg]
 
 theorem spectral_epsilon_comp_JBoost
     (t : ℝ) :
     (spectral_epsilon (E := E)).comp (JBoost (E := E) t)
       = (JBoost (E := E) (-t)).comp (spectral_epsilon (E := E)) := by
-  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
     epsilon_comp_JBoost (E := E) t
 
 theorem epsilon_comp_KRotation
@@ -368,14 +368,14 @@ theorem epsilon_comp_KRotation
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [TomitaTakesaki.modularSignEpsilon,
+    simp [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon,
       Real.cos_neg, Real.sin_neg]
 
 theorem spectral_epsilon_comp_KRotation
     (t : ℝ) :
     (spectral_epsilon (E := E)).comp (KRotation (E := E) t)
       = (KRotation (E := E) (-t)).comp (spectral_epsilon (E := E)) := by
-  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
     epsilon_comp_KRotation (E := E) t
 
 
@@ -383,4 +383,4 @@ theorem spectral_epsilon_comp_KRotation
 
 end Basic
 
-end BogoliubovClosedForms
+end InfoGeometry.Canonical.BogoliubovClosedForms

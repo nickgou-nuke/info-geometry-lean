@@ -22,7 +22,7 @@ the Hestenes boost acting on the split vacuum.
 namespace InfoGeometry.Dynamics
 
 open InfoGeometry.Krein
-open ProjectorEquivariance
+open InfoGeometry.Canonical.ProjectorEquivariance
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

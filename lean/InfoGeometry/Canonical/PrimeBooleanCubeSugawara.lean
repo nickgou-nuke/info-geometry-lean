@@ -22,7 +22,7 @@ asserted here.
 
 noncomputable section
 
-namespace PrimeBooleanCubeSugawara
+namespace InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -135,4 +135,4 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
             (booleanCubeSugawaraPacket P v).bridge.dualCoxeterNumber) := by
   simp [booleanCubeSugawaraPacket]
 
-end PrimeBooleanCubeSugawara
+end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

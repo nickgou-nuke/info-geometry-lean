@@ -31,7 +31,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeCantorDiracOperator
+namespace InfoGeometry.Arithmetic.PrimeCantorDiracOperator
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex (PrimeRegister)
 
@@ -323,4 +323,4 @@ theorem occupancy_hamiltonian_eq_hamiltonian
 end FinitePrimeCantorDirac
 
 
-end PrimeCantorDiracOperator
+end InfoGeometry.Arithmetic.PrimeCantorDiracOperator

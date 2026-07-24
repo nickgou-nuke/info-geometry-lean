@@ -6,7 +6,7 @@ open InfoGeometry.Algebra.SplitOctonionQ
 open InfoGeometry.Algebra.JordanCayleyInversionOsQ
 open InfoGeometry.Algebra.SplitOctonionQ.SplitO
 
-namespace Herm2x2OsO55RationalBridge
+namespace InfoGeometry.Canonical.Herm2x2OsO55RationalBridge
 
 /-- Determinant-aligned `(4,4)` coordinates for the rational Zorn block. -/
 def toVec44ForDet (Z : SplitO) : Fin 8 → ℚ :=
@@ -256,4 +256,4 @@ theorem act55Q_preserves_det
   rw [det_eq_q55_toVec55Q, toVec55Q_act55Q, hA,
     det_eq_q55_toVec55Q]
 
-end Herm2x2OsO55RationalBridge
+end InfoGeometry.Canonical.Herm2x2OsO55RationalBridge

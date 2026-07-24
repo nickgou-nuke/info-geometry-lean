@@ -25,7 +25,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace PrimeBooleanCubeExteriorBridge
+namespace InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge
 
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
@@ -116,4 +116,4 @@ theorem boolState_to_finset_preserves_energy
   have hattach := Finset.sum_attach v.val (fun p : ℕ => Real.log p)
   simpa [exteriorEnergy, toExteriorState] using hmap'.trans hattach
 
-end PrimeBooleanCubeExteriorBridge
+end InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge

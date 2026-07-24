@@ -17,7 +17,7 @@ has Zorn reduced norm `t² - x² - y² - z²`, the same scalar readout as the
 Pauli determinant/Minkowski norm.
 -/
 
-namespace ParavectorZornBoundary
+namespace InfoGeometry.Geometry.ParavectorZornBoundary
 
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit
 open InfoGeometry.Geometry.PauliParavectorBridge
@@ -95,4 +95,4 @@ theorem zornBoundary_quadratic_rank (v : Minkowski4) :
       + zornNorm (zornBoundaryOfMinkowski4 v) • zornOne = 0 :=
   zornMul_self_quadratic_rank (zornBoundaryOfMinkowski4 v)
 
-end ParavectorZornBoundary
+end InfoGeometry.Geometry.ParavectorZornBoundary

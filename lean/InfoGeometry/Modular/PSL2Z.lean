@@ -25,7 +25,7 @@ set_option autoImplicit false
  It does not prove a U-duality theorem.]
 -/
 
-namespace PSL2Z
+namespace InfoGeometry.Modular.PSL2Z
 
 open Matrix
 
@@ -185,4 +185,4 @@ theorem mk_neg_eq_mk (A : SL2Z) :
     mk (-A) = mk A := by
   exact Quotient.sound (Or.inr rfl)
 
-end PSL2Z
+end InfoGeometry.Modular.PSL2Z

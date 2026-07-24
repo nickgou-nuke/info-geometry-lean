@@ -21,11 +21,14 @@ The API deliberately separates two layers:
 
 noncomputable section
 
-namespace ZornBraidScalingCovariance
+namespace InfoGeometry.Physics.ZornBraidScalingCovariance
+
+open InfoGeometry.External.Auto
 
 open Matrix
-open SplitOctonionBraidSU3
-open YangBaxterZornBridge
+open InfoGeometry.External.Auto
+open InfoGeometry.External.Auto.SplitOctonionBraidSU3
+open InfoGeometry.External.Auto.YangBaxterZornBridge
 
 /-- Left multiplication by an arbitrary canonical Zorn element in `Fin 8` coordinates. -/
 def leftRegularMatrix (X : Zorn) : Matrix (Fin 8) (Fin 8) ℂ :=
@@ -37,7 +40,7 @@ def leftRegularMatrix (X : Zorn) : Matrix (Fin 8) (Fin 8) ℂ :=
 def scaleMatrix (p : ℂˣ) : Matrix (Fin 8) (Fin 8) ℂ :=
   fun i j =>
     let e_j : Fin 8 → ℂ := fun x => if x = j then 1 else 0
-    zornToFin8 (ZornScalingFlow.zornScale p (fin8ToZorn e_j)) i
+    zornToFin8 (InfoGeometry.External.Auto.ZornScalingFlow.zornScale p (fin8ToZorn e_j)) i
 
 /-- The generic left-regular matrix acts by canonical Zorn multiplication. -/
 theorem leftRegularMatrix_mulVec (X : Zorn) (v : Fin 8 → ℂ) :
@@ -51,11 +54,11 @@ theorem leftRegularMatrix_mulVec (X : Zorn) (v : Fin 8 → ℂ) :
 /-- The scaling matrix acts by `zornScale` under the coordinate equivalence. -/
 theorem scaleMatrix_mulVec (p : ℂˣ) (v : Fin 8 → ℂ) :
     scaleMatrix p *ᵥ v =
-      zornToFin8 (ZornScalingFlow.zornScale p (fin8ToZorn v)) := by
+      zornToFin8 (InfoGeometry.External.Auto.ZornScalingFlow.zornScale p (fin8ToZorn v)) := by
   ext r
   fin_cases r <;>
     simp [scaleMatrix, Matrix.mulVec, dotProduct, zornToFin8,
-      fin8ToZorn, ZornScalingFlow.zornScale]
+      fin8ToZorn, InfoGeometry.External.Auto.ZornScalingFlow.zornScale]
 
 /-- The generic construction recovers the existing Clifford matrices. -/
 theorem leftRegularMatrix_Q_k (k : Fin 3) :
@@ -74,8 +77,8 @@ theorem scaleMatrix_mul_inv (p : ℂˣ) :
   funext v
   rw [← Matrix.mulVec_mulVec, scaleMatrix_mulVec, scaleMatrix_mulVec,
     fin8ToZorn_zornToFin8]
-  rw [ZornScalingFlow.zornScale_mul_parameter]
-  simp [ZornScalingFlow.zornScale_one, zornToFin8_fin8ToZorn]
+  rw [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_mul_parameter]
+  simp [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_one, zornToFin8_fin8ToZorn]
 
 /-- The inverse scaling matrix also composes on the other side. -/
 theorem scaleMatrix_inv_mul (p : ℂˣ) :
@@ -84,8 +87,8 @@ theorem scaleMatrix_inv_mul (p : ℂˣ) :
   funext v
   rw [← Matrix.mulVec_mulVec, scaleMatrix_mulVec, scaleMatrix_mulVec,
     fin8ToZorn_zornToFin8]
-  rw [ZornScalingFlow.zornScale_mul_parameter]
-  simp [ZornScalingFlow.zornScale_one, zornToFin8_fin8ToZorn]
+  rw [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_mul_parameter]
+  simp [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_one, zornToFin8_fin8ToZorn]
 
 /-- The scaling matrix packaged as an element of `GL₈(ℂ)`. -/
 def scaleUnit (p : ℂˣ) : GL8 where
@@ -101,30 +104,30 @@ left-regular representation.
 theorem scale_conjugates_left_regular
     (p : ℂˣ) (hp : (p : ℂ) ^ 6 = 1) (X : Zorn) :
     scaleMatrix p * leftRegularMatrix X * scaleMatrix p⁻¹ =
-      leftRegularMatrix (ZornScalingFlow.zornScale p X) := by
+      leftRegularMatrix (InfoGeometry.External.Auto.ZornScalingFlow.zornScale p X) := by
   apply Matrix.mulVec_injective
   funext v
   simp only [← Matrix.mulVec_mulVec]
   rw [scaleMatrix_mulVec, leftRegularMatrix_mulVec, scaleMatrix_mulVec,
     fin8ToZorn_zornToFin8, fin8ToZorn_zornToFin8,
-    ZornScalingFlow.zornScale_zornMul_of_pow_six_eq_one p hp]
-  rw [ZornScalingFlow.zornScale_mul_parameter]
-  simp [ZornScalingFlow.zornScale_one]
+    InfoGeometry.External.Auto.ZornScalingFlow.zornScale_zornMul_of_pow_six_eq_one p hp]
+  rw [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_mul_parameter]
+  simp [InfoGeometry.External.Auto.ZornScalingFlow.zornScale_one]
   rw [leftRegularMatrix_mulVec]
 
 /-- The scaled Clifford generator is its explicit `+2` and `-2` weight decomposition. -/
 def scaledQ (p : ℂˣ) (k : Fin 3) : Zorn :=
-  ZornScalingFlow.zornScale p (Q_k k)
+  InfoGeometry.External.Auto.ZornScalingFlow.zornScale p (Q_k k)
 
 /-- The scaled unnormalized braid generator. -/
 def scaledR (p : ℂˣ) (k : Fin 3) : Zorn :=
-  ZornScalingFlow.zornScale p (R_k k)
+  InfoGeometry.External.Auto.ZornScalingFlow.zornScale p (R_k k)
 
 theorem scaledQ_formula (p : ℂˣ) (k : Fin 3) :
     scaledQ p k =
       zornAdd (zornSmul ((p : ℂ) ^ 2) (E_k k))
         (zornSmul (((p : ℂ)⁻¹) ^ 2) (F_k k)) := by
-  exact ZornScalingFlow.zornScale_Q_k p k
+  exact InfoGeometry.External.Auto.ZornScalingFlow.zornScale_Q_k p k
 
 /-- The existing braid matrix is carried to left multiplication by `scaledR`. -/
 theorem scale_conjugates_LeftMulR
@@ -278,6 +281,6 @@ theorem scaled_leftMul_braid
   rw [scaledBraidGen1_val p hp, scaledBraidGen2_val p hp] at h
   simpa only using h
 
-end ZornBraidScalingCovariance
+end InfoGeometry.Physics.ZornBraidScalingCovariance
 
 end noncomputable section

@@ -22,7 +22,7 @@ relation constructors, avoiding nested tensor-product associator bookkeeping.
 
 noncomputable section
 
-namespace AlgebraicCuntzQuotient
+namespace InfoGeometry.Topology.AlgebraicCuntzQuotient
 
 open TensorAlgebra
 
@@ -379,4 +379,4 @@ end Star
 #check lift_S
 #check lift_T
 
-end AlgebraicCuntzQuotient
+end InfoGeometry.Topology.AlgebraicCuntzQuotient

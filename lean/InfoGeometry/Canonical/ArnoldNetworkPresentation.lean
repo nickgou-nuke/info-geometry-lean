@@ -13,7 +13,7 @@ This file does not redefine the Arnold owner logic. It packages the existing
 network output as the generator lane on the doubled carrier.
 -/
 
-namespace ArnoldNetworkPresentation
+namespace InfoGeometry.Canonical.ArnoldNetworkPresentation
 
 open InfoGeometry.Canonical.QuantumPresentation
 open InfoGeometry.Canonical.MoE
@@ -168,4 +168,4 @@ noncomputable def taggedPresentation
   lane := PresentationLane.arnoldNetwork
   data := toQuantumPresentation (E := E) n net β
 
-end ArnoldNetworkPresentation
+end InfoGeometry.Canonical.ArnoldNetworkPresentation

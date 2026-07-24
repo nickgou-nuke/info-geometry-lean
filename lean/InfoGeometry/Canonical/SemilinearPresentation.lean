@@ -9,7 +9,7 @@ import Mathlib.LinearAlgebra.Prod
 Proof-rooted semilinear presentation maps.
 -/
 
-namespace SemilinearPresentation
+namespace InfoGeometry.Canonical.SemilinearPresentation
 
 /-- Raw module-valued presentation data. -/
 @[rep_depth operator]
@@ -331,4 +331,4 @@ theorem pairedSwapMap_moves_state
 
 end PairedToy
 
-end SemilinearPresentation
+end InfoGeometry.Canonical.SemilinearPresentation

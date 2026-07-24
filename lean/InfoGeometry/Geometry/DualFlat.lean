@@ -315,7 +315,7 @@ An explicit dual-flat package over inner-product spaces, together with a
 projective/statistical bridge theorem phrased as a Bregman Pythagorean identity.
 -/
 
-namespace DualFlat
+namespace InfoGeometry.Geometry.DualFlat
 
 open Set
 open scoped Real
@@ -499,4 +499,4 @@ theorem bayesian_update_pythagorean_bregman
 
 end ProjectiveBridge
 
-end DualFlat
+end InfoGeometry.Geometry.DualFlat

@@ -7,7 +7,7 @@ import Mathlib.GroupTheory.Perm.Basic
 
 noncomputable section
 
-namespace Clifford55
+namespace InfoGeometry.Clifford.Clifford55
 
 open BigOperators
 
@@ -322,6 +322,6 @@ theorem all_masses_distinct (m0 ΔP ΔT : ℝ) (hT : ΔT ≠ 0) :
   simp [cl_mass_scalar] at h
   linarith
 
-end Clifford55
+end InfoGeometry.Clifford.Clifford55
 
 end noncomputable section

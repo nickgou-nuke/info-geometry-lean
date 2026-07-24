@@ -23,7 +23,7 @@ operator for the Riemann zeroes.
 
 noncomputable section
 
-namespace OperatorErlangenLegendre
+namespace InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
 
 universe uObs uSym uState uPol uH uD
 
@@ -276,4 +276,4 @@ theorem criticalLine_zero_iff_spectral_value :
 
 end HilbertPolyaOperatorPacket
 
-end OperatorErlangenLegendre
+end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre

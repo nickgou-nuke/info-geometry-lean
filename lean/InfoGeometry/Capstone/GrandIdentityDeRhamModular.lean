@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
 
 noncomputable section
 
-namespace GrandIdentityDeRhamModular
+namespace InfoGeometry.Capstone.GrandIdentityDeRhamModular
 
 open InfoGeometry
 
@@ -149,4 +149,4 @@ theorem cl11_nilpotent_generator_exists :
   refine ⟨InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian, ?_⟩
   exact InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction.modularHamiltonian_sq
 
-end GrandIdentityDeRhamModular
+end InfoGeometry.Capstone.GrandIdentityDeRhamModular

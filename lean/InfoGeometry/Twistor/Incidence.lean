@@ -6,19 +6,17 @@ import Mathlib.Tactic
 /-!
 # Twistor Incidence Geometry
 
-This module formalizes the geometric interpretation of the twistor incidence relation.
-The central theorem is that the set of spacetime points incident with a fixed twistor
-(with a non-zero primary spinor) forms a null geodesic (a light ray).
-
-The proof leverages the Metric-Determinant Duality established via the Soldering Form.
+This module proves the finite algebraic null-separation consequence of the
+twistor incidence relation in the displayed `2 × 2` soldering model.  It does
+not construct geodesics or a light-ray manifold.
 -/
 
 open scoped Matrix
 open scoped Quaternion
 
-namespace Incidence
+namespace InfoGeometry.Twistor.Incidence
 
-open Soldering
+open InfoGeometry.Clifford.Soldering
 
 /-- A twistor is a pair of spinors (represented here as vectors in ℝ²). -/
 abbrev Twistor := (ℝ × ℝ) × (ℝ × ℝ)
@@ -90,10 +88,9 @@ lemma det_zero_of_annihilates_nonzero (M : Matrix (Fin 2) (Fin 2) ℝ) (π : ℝ
       ext <;> assumption
 
 /-- 
-**The Fundamental Theorem of Twistor Incidence Geometry:**
-If two distinct spacetime points $X$ and $Y$ are incident with the same twistor $Z = (\omega, \pi)$,
-and the primary spinor $\pi$ is non-zero, then the vector difference $(X - Y)$ is null.
-This proves that the locus of incident points forms a null geodesic (light ray).
+If two spacetime points `X` and `Y` are incident with the same twistor
+`Z = (ω, π)`, and the primary spinor `π` is non-zero, then the vector
+difference `X - Y` is null in the finite soldering model.
 -/
 theorem incident_points_null_separated (Z : Twistor) (X Y : Vec22) 
     (hX : Incident Z X) (hY : Incident Z Y) (h_pi : Z.2 ≠ 0) :
@@ -128,4 +125,4 @@ theorem incident_points_null_separated (Z : Twistor) (X Y : Vec22)
   rw [← det_soldering_eq_q22 (X - Y)]
   exact h_det_zero
 
-end Incidence
+end InfoGeometry.Twistor.Incidence

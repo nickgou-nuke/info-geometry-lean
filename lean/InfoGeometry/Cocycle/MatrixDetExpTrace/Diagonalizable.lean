@@ -21,7 +21,7 @@ the Cartan Fisher partition function; Fisher/Souriau geometry is owned by
 
 noncomputable section
 
-namespace Diagonalizable
+namespace InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonalizable
 
 open scoped Matrix
 
@@ -35,7 +35,7 @@ theorem det_exp_eq_exp_trace_of_units_diagonal
       NormedSpace.exp
         (Matrix.trace
           ((U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ))) :=
-  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
+  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_units_diagonal U v
 
 /--
 Short PR-style name for the explicit unit-diagonalizable
@@ -47,7 +47,7 @@ theorem det_exp_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- Complex determinant/exponential trace law from an explicit diagonalization equality. -/
@@ -57,7 +57,7 @@ theorem det_exp_eq_exp_trace_of_is_units_diagonalizable
     (hA : A = (U : Matrix ι ι ℂ) * Matrix.diagonal v * (↑U⁻¹ : Matrix ι ι ℂ)) :
     Matrix.det (NormedSpace.exp A) =
       NormedSpace.exp (Matrix.trace A) :=
-  MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
+  InfoGeometry.Canonical.MatrixExponentialTraceDet.det_exp_eq_exp_trace_of_is_units_diagonalizable
     A U v hA
 
 /-- H¹ cocycle-lane name for the explicit diagonalization theorem. -/
@@ -69,4 +69,4 @@ theorem h1_det_exp_trace_of_is_units_diagonalizable
       NormedSpace.exp (Matrix.trace A) :=
   det_exp_eq_exp_trace_of_is_units_diagonalizable A U v hA
 
-end Diagonalizable
+end InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonalizable

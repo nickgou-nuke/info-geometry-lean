@@ -25,7 +25,7 @@ import InfoGeometry.OperatorAlgebra.HorizonKMS
 
 noncomputable section
 
-namespace HeckePurification
+namespace InfoGeometry.Automorphic.HeckePurification
 
 open InfoGeometry.Automorphic.RoelckeSelbergSpectral
 open InfoGeometry.Automorphic.SiegelResonance
@@ -213,4 +213,4 @@ theorem langlandsSugawaraBridge_nonempty_of_purification
       Nonempty (LanglandsSugawaraBridge P_L Finite AffineAlg BridgeVir BridgeState) :=
   ⟨HeckeSugawaraIntertwining.purified_charge_eq_l_value H chi P s, ⟨B_L⟩⟩
 
-end HeckePurification
+end InfoGeometry.Automorphic.HeckePurification

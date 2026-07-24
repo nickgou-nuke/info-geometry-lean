@@ -17,7 +17,7 @@ The file deliberately stays in the two-node polynomial lane.  It does not claim
 the full `A₂` or general Weyl-character divisibility theorem.
 -/
 
-namespace WeylPolynomialDivisibilityShadow
+namespace InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
 
 open Polynomial
 
@@ -79,4 +79,4 @@ theorem polynomial_divisibility_packet :
 
 end TwoNodePolynomialShadow
 
-end WeylPolynomialDivisibilityShadow
+end InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow

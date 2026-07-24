@@ -1,4 +1,11 @@
+import InfoGeometry.Canonical.IntegralZornII44Bridge
+import InfoGeometry.Canonical.IntegralZornCompositionAlgebra
 import InfoGeometry.Canonical.IntegralZornAlternativeAlgebra
+import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+import InfoGeometry.Canonical.CanonicalZornIntegralTrialityEquivariance
+import InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
+import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 
 /-!
 # Bilinear integral Zorn composition package
@@ -15,13 +22,14 @@ noncomputable section
 
 namespace IntegralZornBilinearComposition
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.IntegralZornCompositionAlgebra
+open IntegralZornII44Bridge
+open IntegralZornCompositionAlgebra
 open InfoGeometry.Canonical.IntegralZornAlternativeAlgebra
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornIntegralTrialityEquivariance
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornIntegralTrialityEquivariance
+open CanonicalZornIntegralSpinTrialityClosure
+open CanonicalZornCompositionFiveGradeBridge
+open CanonicalZornCliffordRepresentation
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 theorem integralToCanonical_add (X Y : IntegralZorn) :
@@ -149,7 +157,7 @@ theorem integral_bilinear_octonion_fivegrade_projective_closure
     integralAxisCycle (integralZornCompositionLaws.mul X Y) =
       integralZornCompositionLaws.mul
         (integralAxisCycle X) (integralAxisCycle Y) ∧
-    CanonicalZornCompositionTriality.vectorGradePlus
+    vectorGradePlus
         (CanonicalZornRealSpin44.realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X))) ∈
       CanonicalZornFiveGradedClosure.conformalGrade
@@ -158,12 +166,9 @@ theorem integral_bilinear_octonion_fivegrade_projective_closure
       (ProjectiveAffineConformalClosure55.conformalEmbed44to55
         (CanonicalZornRealSpin44.realSplit44ToPAC44
           (integralZornToRealSplit44 (integralAxisCycle X)))) = 0 := by
+  have h := integral_zorn_composition_triality_fivegrade_projective_closure X Y Ψ
   exact ⟨rfl, integralZornCompositionLaws.norm_mul X Y,
-    integralZornCompositionLaws.triality_mul X Y,
-    (integral_octonion_triality_fivegrade_projective_closure
-      X Y Ψ).2.2.2.2.2.2.2.1,
-    (integral_octonion_triality_fivegrade_projective_closure
-      X Y Ψ).2.2.2.2.2.2.2.2⟩
+    integralZornCompositionLaws.triality_mul X Y, h.2.2.2.1, h.2.2.2.2⟩
 
 end IntegralZornBilinearComposition
 

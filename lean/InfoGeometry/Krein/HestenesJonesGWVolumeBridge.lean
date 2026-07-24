@@ -6,7 +6,7 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-namespace HestenesJonesGWVolumeBridge
+namespace InfoGeometry.Krein.HestenesJonesGWVolumeBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesJonesFiltrationBridge
@@ -134,4 +134,4 @@ end Bridge
 
 end Core
 
-end HestenesJonesGWVolumeBridge
+end InfoGeometry.Krein.HestenesJonesGWVolumeBridge

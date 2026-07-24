@@ -36,7 +36,7 @@ import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section
 
-namespace FiniteJonesBregman
+namespace InfoGeometry.Optics.FiniteJonesBregman
 
 open InfoGeometry.Optics.FiniteJonesModel
 open InfoGeometry.Optics.FiniteJonesStinespring
@@ -323,4 +323,4 @@ theorem diagonalJonesHeat_eq_hiddenGainPotential
   rw [diagonalJonesHeat_eq_hiddenGainBregman]
   exact frobeniusBregman_to_zero _
 
-end FiniteJonesBregman
+end InfoGeometry.Optics.FiniteJonesBregman

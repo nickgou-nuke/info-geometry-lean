@@ -19,7 +19,7 @@ No placeholder `True` carriers are introduced here.
 
 noncomputable section
 
-namespace SplitBoost
+namespace InfoGeometry.Krein.SplitBoost
 
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
@@ -110,4 +110,4 @@ theorem boost_reconstruct_norm (t u v : ℝ) :
   simpa [SplitComplex.norm_reconstruct] using
     (boost_norm_preserved (t := t) (x := reconstruct u v))
 
-end SplitBoost
+end InfoGeometry.Krein.SplitBoost

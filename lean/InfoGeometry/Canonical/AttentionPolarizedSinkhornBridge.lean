@@ -11,7 +11,6 @@ weight matrix and identifies its row-stochastic and doubly-stochastic closures.
 
 namespace InfoGeometry.Canonical.Attention
 
-open _root_.Attention
 open InfoGeometry.GrandCanonical
 open scoped BigOperators
 

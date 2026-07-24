@@ -20,7 +20,7 @@ No functional calculus.
 No natural-cone or Type III assertion.
 -/
 
-namespace ModularPoissonCompact
+namespace InfoGeometry.Canonical.ModularPoissonCompact
 
 noncomputable section
 
@@ -136,4 +136,4 @@ theorem boundedModularCoordinate_invBounded_right
 
 end
 
-end ModularPoissonCompact
+end InfoGeometry.Canonical.ModularPoissonCompact

@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.AnomalyInflow
 
-namespace ConformalWard
+namespace InfoGeometry.Canonical.ConformalWard
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.PathIntegral
@@ -34,4 +34,4 @@ theorem conformal_ward_identity (CI : ConformalInference E) :
   unfold conformalVariation
   exact add_zero CI.chiralScale
 
-end ConformalWard
+end InfoGeometry.Canonical.ConformalWard

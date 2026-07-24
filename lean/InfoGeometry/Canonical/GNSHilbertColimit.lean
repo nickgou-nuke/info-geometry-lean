@@ -9,7 +9,7 @@ The theorem below proves that a compatible family of finite-stage functionals
 makes the one-step bonding map preserve the algebraic GNS inner product.
 -/
 
-namespace GNSHilbertColimit
+namespace InfoGeometry.Canonical.GNSHilbertColimit
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -61,4 +61,4 @@ theorem transition_is_isometry
   rw [h_mul]
   exact h_compat n (star x * y)
 
-end GNSHilbertColimit
+end InfoGeometry.Canonical.GNSHilbertColimit

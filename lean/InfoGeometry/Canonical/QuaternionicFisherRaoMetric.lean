@@ -31,7 +31,7 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace QuaternionicFisherRaoMetric
+namespace InfoGeometry.Canonical.QuaternionicFisherRaoMetric
 
 /-- The coordinates of the Quaternionic Statistical Manifold. 
     These correspond to the 4 real degrees of freedom of the macroscopic condensate. -/
@@ -113,4 +113,4 @@ theorem FisherRaoMetric_is_positive_definite (q : QuaternionicCoordinates) (v : 
       have hn3 : 0 ≤ v 3 ^ 2 := sq_nonneg (v 3)
       linarith
 
-end QuaternionicFisherRaoMetric
+end InfoGeometry.Canonical.QuaternionicFisherRaoMetric

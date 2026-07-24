@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Projection
 import Mathlib.RingTheory.Artinian.Module
 import InfoGeometry.Singular.MoorePenrose
 
-namespace Drazin
+namespace InfoGeometry.Singular.Drazin
 
 open MoorePenrose
 
@@ -581,5 +581,5 @@ the anomaly rigorously vanishes (ε = 0). -/
 def IsNormal (A : R) : Prop := A * A† = A† * A
 
 end Anomaly
-end Drazin
+end InfoGeometry.Singular.Drazin
 

@@ -25,7 +25,7 @@ No analytic standard-form theorem is claimed here.  A concrete module must still
 prove the dual-exhaustion premise for its chosen operator-algebra carrier.
 -/
 
-namespace SelfDualConeColimit
+namespace InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 
 /--
 Self-duality of a cone-like carrier `K` with respect to a real pairing.
@@ -163,4 +163,4 @@ theorem selfDualCone_extends_to_colimit
     IsSelfDualCone pairing (Set.iUnion K) := by
   exact isSelfDualCone_iUnion_nat pairing K hmono hself hdual_exhaustive
 
-end SelfDualConeColimit
+end InfoGeometry.OperatorAlgebra.SelfDualConeColimit

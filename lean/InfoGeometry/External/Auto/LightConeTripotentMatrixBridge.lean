@@ -21,7 +21,7 @@ noncomputable section
 namespace LightConeTripotentMatrixBridge
 
 open Matrix
-open ChiralPoincareSouriauBridge
+open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 
 /-- The determinant quadratic form on `2×2` complex matrices. -/
 def detQuadric (X : M2C) : ℂ := X.det
@@ -36,17 +36,17 @@ def MatrixNonIsotropic (X : M2C) : Prop := detQuadric X ≠ 0
 def IsAssociativeTripotent (X : M2C) : Prop := X * X * X = X
 
 /-- A basic rank-one projector/tripotent. -/
-def E00 : M2C := ChiralCausalCone.PPlus
+def E00 : M2C := InfoGeometry.Physics.ChiralCausalCone.PPlus
 
 @[simp] theorem E00_det : detQuadric E00 = 0 := by
-  rw [E00, ChiralCausalCone.PPlus_matrix]
+  rw [E00, InfoGeometry.Physics.ChiralCausalCone.PPlus_matrix]
   norm_num [detQuadric, Matrix.det_fin_two]
 
 @[simp] theorem E00_lightCone : MatrixLightCone E00 := E00_det
 
 @[simp] theorem E00_tripotent : IsAssociativeTripotent E00 := by
   simp only [IsAssociativeTripotent, E00,
-    ChiralCausalCone.PPlus_idempotent]
+    InfoGeometry.Physics.ChiralCausalCone.PPlus_idempotent]
 
 /-- A concrete rank-one matrix `u vᵀ`. -/
 def rankOneMatrix (u v : Fin 2 → ℂ) : M2C :=

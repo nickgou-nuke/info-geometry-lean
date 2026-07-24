@@ -13,7 +13,7 @@ This file intentionally contains no modular/physics owner logic. It only
 packages the reusable idempotent+commutation block-vanishing lemma.
 -/
 
-namespace RelativeModularBlockDiagonalCore
+namespace InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 
 open InfoGeometry.Krein
 
@@ -81,4 +81,4 @@ theorem block_diagonal_of_commute_idempotent
 
 end Core
 
-end RelativeModularBlockDiagonalCore
+end InfoGeometry.Canonical.RelativeModularBlockDiagonalCore

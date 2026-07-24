@@ -16,7 +16,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace FiniteCantorPauliMatrixBridge
+namespace InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 
@@ -149,4 +149,4 @@ theorem cl11PauliBridge_clifford_packet :
     cl11PauliBridge_psiGamma_zero,
     cl11PauliBridge_psiGamma_one⟩
 
-end FiniteCantorPauliMatrixBridge
+end InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge

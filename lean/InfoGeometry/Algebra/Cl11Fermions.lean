@@ -106,4 +106,9 @@ theorem anticomm_bbdag : b * bdag + bdag * b = 1 := by
           _ = 1 := by simp
       exact hcalc
 
+
+
+/-- Direct from Cl(1,1) definition with signature (+,-) -/
+theorem cl11_fermion_anticommutation_omega : e₀ * e₁ + e₁ * e₀ = 0 := by exact anticomm
+
 end Cl11Fermions

@@ -29,7 +29,7 @@ This file introduces no new mathematical objects. It only assembles existing,
 verified owner theorems into one compact ledger packet.
 -/
 
-namespace MasterFiniteBridgeLedger
+namespace InfoGeometry.Canonical.MasterFiniteBridgeLedger
 
 open KLDivergenceDecomposition
 open InfinitesimalDictionaryBridge
@@ -39,9 +39,9 @@ open MaximumCaliberPath
 open MaximumCaliberKLSplit
 open BayesianHodgeCurrent
 open BayesianDiscreteHodgeBridge
-open ThermodynamicGauge
-open DiscreteHodgeStabilizer
-open EckmannDiscreteHodge
+open InfoGeometry.Topology.ThermodynamicGauge
+open InfoGeometry.Topology.DiscreteHodgeStabilizer
+open InfoGeometry.Topology.EckmannDiscreteHodge
 open KleinBottleWallpaper
 open WallpaperPin55SummaryLedger
 open WallpaperPin55RootCrossSection
@@ -160,4 +160,4 @@ theorem wallpaper_packet (g r : Fin 8) (b d : ℝ) :
 
 end WallpaperLedger
 
-end MasterFiniteBridgeLedger
+end InfoGeometry.Canonical.MasterFiniteBridgeLedger

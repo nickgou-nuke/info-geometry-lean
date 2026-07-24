@@ -26,7 +26,7 @@ This is deliberately the finite algebraic log-det shadow, not a full
 self-concordance theorem for matrix cones.
 -/
 
-namespace LogDetBarrier
+namespace InfoGeometry.OptimalTransport.LogDetBarrier
 
 open Matrix
 open InfoGeometry.Dynamics.KanDecomposition
@@ -119,4 +119,4 @@ theorem log_det_norm_componentNCongruence (t : ℂ) (X : Mat2C) :
       Real.log ‖X.det‖ := by
   simp [componentNCongruence_det]
 
-end LogDetBarrier
+end InfoGeometry.OptimalTransport.LogDetBarrier

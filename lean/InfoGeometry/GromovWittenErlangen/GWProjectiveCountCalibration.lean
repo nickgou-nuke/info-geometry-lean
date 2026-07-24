@@ -32,7 +32,7 @@ noncomputable section
 namespace InfoGeometry
 namespace GromovWittenErlangen
 
-open PrimitiveProjectiveRays
+open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 
 /--
 Projective count calibration for a GW localization packet.

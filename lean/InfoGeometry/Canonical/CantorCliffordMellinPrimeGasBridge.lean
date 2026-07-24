@@ -33,7 +33,7 @@ and the trace-channel separation remains owned by `PrimeGasPartitions.lean`.
 
 noncomputable section
 
-namespace CantorCliffordMellinPrimeGasBridge
+namespace InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
 
 set_option linter.dupNamespace false
 
@@ -386,4 +386,4 @@ def constructCantorCliffordMellinPrimeGasTarget
     CantorCliffordMellinPrimeGasTarget :=
   P
 
-end CantorCliffordMellinPrimeGasBridge
+end InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge

@@ -26,7 +26,7 @@ Not closed here:
 * no `N = 4` SYM state-count theorem or rank-32 cohomology theorem is proved.
 -/
 
-namespace AmplituhedronBoundary
+namespace InfoGeometry.Topology.AmplituhedronBoundary
 
 /-- Three-point amplituhedron boundary packet. -/
 structure Amplituhedron3Point (Op : Type*) [Ring Op] where
@@ -46,4 +46,4 @@ structure AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] where
   amp : Amplituhedron3Point Op
   bcfw_readout : Prop
 
-end AmplituhedronBoundary
+end InfoGeometry.Topology.AmplituhedronBoundary

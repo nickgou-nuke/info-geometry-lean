@@ -20,7 +20,7 @@ owner for the relevant Cayley-Dickson multiplication and associativity scope.
 
 noncomputable section
 
-namespace HoradamIonCatalanSlice
+namespace InfoGeometry.Arithmetic.HoradamIonCatalanSlice
 
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 open InfoGeometry.Arithmetic.HoradamIonBinetSlice
@@ -83,6 +83,6 @@ theorem horadam_ion_catalan_slice_packet {N : ℕ}
   exact ⟨binetCore_catalan_shadow A B α β,
     binetIon_catalan_shadow A B α β⟩
 
-end HoradamIonCatalanSlice
+end InfoGeometry.Arithmetic.HoradamIonCatalanSlice
 
 end noncomputable section

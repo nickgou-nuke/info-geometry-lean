@@ -15,7 +15,7 @@ This file gives a nondegenerate counterexample.
 No wrappers. No `sorry`.
 -/
 
-namespace AsanoRuelleCounterexample
+namespace InfoGeometry.Canonical.AsanoRuelleCounterexample
 
 open Set
 
@@ -119,5 +119,5 @@ theorem unrestricted_AsanoRuelle_contraction_statement_false :
      one_not_mem_forbiddenProduct,
      nondegenerate_coefficients⟩
 
-end AsanoRuelleCounterexample
+end InfoGeometry.Canonical.AsanoRuelleCounterexample
 

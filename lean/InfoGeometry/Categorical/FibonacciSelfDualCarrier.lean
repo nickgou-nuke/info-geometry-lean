@@ -24,7 +24,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace FibonacciSelfDualCarrier
+namespace InfoGeometry.Categorical.FibonacciSelfDualCarrier
 
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 open InfoGeometry.Categorical.FibonacciBraidDirectLimit
@@ -141,4 +141,4 @@ theorem staged_selfDualCone_extends_to_colimit
   InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension.properCarrier_selfDualCone_extends_to_algebra
     pairing K hmono hself hdetect
 
-end FibonacciSelfDualCarrier
+end InfoGeometry.Categorical.FibonacciSelfDualCarrier

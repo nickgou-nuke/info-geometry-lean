@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.HadjiivanovMonodromyProjection
 
 noncomputable section
 
-namespace HestenesKreinKleinWitnessPacket
+namespace InfoGeometry.Canonical.HestenesKreinKleinWitnessPacket
 
 open scoped BigOperators
 open InfoGeometry.Krein
@@ -24,4 +24,4 @@ theorem grading_fixed_point_split (v : DoubledSpace E) :
 
 end Grading
 
-end HestenesKreinKleinWitnessPacket
+end InfoGeometry.Canonical.HestenesKreinKleinWitnessPacket

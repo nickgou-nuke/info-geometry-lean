@@ -32,7 +32,7 @@ or conformal group/spin-cover identification.
 
 noncomputable section
 
-namespace MD005Symmetries
+namespace InfoGeometry.Physics.MD005Symmetries
 
 open Matrix
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
@@ -175,6 +175,6 @@ theorem repaired_MD005_symmetry_packet
     ICircleRotate_preserves_dot4 α β hunit u v,
     translate_comm ξ η x⟩
 
-end MD005Symmetries
+end InfoGeometry.Physics.MD005Symmetries
 
 end noncomputable section

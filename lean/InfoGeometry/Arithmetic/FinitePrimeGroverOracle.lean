@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace FinitePrimeGroverOracle
+namespace InfoGeometry.Arithmetic.FinitePrimeGroverOracle
 
 /-! ## 1. Finite phase oracle -/
 
@@ -222,52 +222,9 @@ def WithinError (estimate actual ε : ℝ) : Prop :=
   |estimate - actual| ≤ ε
 
 /--
-Certification rule for an RH-style fluctuation inequality with a counting
-error budget.
-
-If the quantum-counting estimate is within `ε` of the actual finite count, and
-the estimate is far enough inside the bound to absorb that error, then the
-actual finite fluctuation satisfies the bound.
--/
-theorem certified_fluctuation_bound_of_error_budget
-    {estimate actual expected ε bound : ℝ}
-    (hErr : WithinError estimate actual ε)
-    (hBudget : |estimate - expected| + ε ≤ bound) :
-    |actual - expected| ≤ bound := by
-  unfold WithinError at hErr
-  have htri :
-      |actual - expected| ≤ |estimate - expected| + |estimate - actual| := by
-    calc
-      |actual - expected|
-          = |(estimate - expected) - (estimate - actual)| := by ring_nf
-      _ ≤ |estimate - expected| + |estimate - actual| := by
-            simpa [abs_sub_comm] using
-              (abs_sub_le (estimate - expected) 0 (estimate - actual))
-  calc
-    |actual - expected|
-        ≤ |estimate - expected| + |estimate - actual| := htri
-    _ ≤ |estimate - expected| + ε := by
-          have h := add_le_add_left hErr |estimate - expected|
-          simpa [add_comm, add_left_comm, add_assoc] using h
-    _ ≤ bound := hBudget
-
-/--
-RH-style finite fluctuation test socket.
-
-`expected` may be a finite logarithmic-integral readout, `bound` an
-RH-motivated finite bound, and `actual` the exact finite count.  This packet
-does not assert RH; it only stores one finite certified inequality.
--/
-structure FiniteFluctuationCertificate where
-  actual : ℝ
-  expected : ℝ
-  bound : ℝ
-  certificate : |actual - expected| ≤ bound
-
-/--
 Quantum-counting certified finite fluctuation packet.
 
-The theorem below extracts the finite fluctuation certificate from the estimate,
+The theorem below extracts the finite fluctuation bound from the estimate,
 the counting error bound, and the supplied error budget.
 -/
 structure QuantumCountingFluctuationPacket where
@@ -281,21 +238,28 @@ structure QuantumCountingFluctuationPacket where
 
 namespace QuantumCountingFluctuationPacket
 
-/-- A quantum-counting packet yields a finite fluctuation certificate. -/
-def toFiniteFluctuationCertificate
-    (P : QuantumCountingFluctuationPacket) : FiniteFluctuationCertificate where
-  actual := P.actual
-  expected := P.expected
-  bound := P.bound
-  certificate :=
-    certified_fluctuation_bound_of_error_budget P.counting_error P.error_budget
-
 /-- Re-export of the certified finite fluctuation bound. -/
 theorem fluctuation_bound
     (P : QuantumCountingFluctuationPacket) :
-    |P.actual - P.expected| ≤ P.bound :=
-  (P.toFiniteFluctuationCertificate).certificate
+    |P.actual - P.expected| ≤ P.bound := by
+  have hErr : |P.estimate - P.actual| ≤ P.ε := P.counting_error
+  have hBudget : |P.estimate - P.expected| + P.ε ≤ P.bound := P.error_budget
+  have htri :
+      |P.actual - P.expected| ≤ |P.estimate - P.expected| + |P.estimate - P.actual| := by
+    calc
+      |P.actual - P.expected|
+          = |(P.estimate - P.expected) - (P.estimate - P.actual)| := by ring_nf
+      _ ≤ |P.estimate - P.expected| + |P.estimate - P.actual| := by
+            simpa [abs_sub_comm] using
+              (abs_sub_le (P.estimate - P.expected) 0 (P.estimate - P.actual))
+  calc
+    |P.actual - P.expected|
+        ≤ |P.estimate - P.expected| + |P.estimate - P.actual| := htri
+    _ ≤ |P.estimate - P.expected| + P.ε := by
+          have h := add_le_add_left hErr |P.estimate - P.expected|
+          simpa [add_comm, add_left_comm, add_assoc] using h
+    _ ≤ P.bound := hBudget
 
 end QuantumCountingFluctuationPacket
 
-end FinitePrimeGroverOracle
+end InfoGeometry.Arithmetic.FinitePrimeGroverOracle

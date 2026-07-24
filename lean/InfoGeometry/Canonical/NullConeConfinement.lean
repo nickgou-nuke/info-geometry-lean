@@ -2,7 +2,7 @@ import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 noncomputable section
 
-namespace NullConeConfinement
+namespace InfoGeometry.Canonical.NullConeConfinement
 
 /-!
 # Null Cone Confinement
@@ -62,4 +62,4 @@ theorem confinement_preserves_valid_states {q : QuadraticForm K V}
   -- Use the idempotence property of the confinement operator
   exact op.idempotent_on_cone x hx
 
-end NullConeConfinement
+end InfoGeometry.Canonical.NullConeConfinement

@@ -18,7 +18,7 @@ This file intentionally avoids asserting operator-level `log (A * B) = log A + l
 as a primary law.
 -/
 
-namespace RNDeterminantConnesChainBridge
+namespace InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -197,4 +197,4 @@ theorem typeIII_connes_chain_package
 
 end TypeIIIConnesChain
 
-end RNDeterminantConnesChainBridge
+end InfoGeometry.Canonical.RNDeterminantConnesChainBridge

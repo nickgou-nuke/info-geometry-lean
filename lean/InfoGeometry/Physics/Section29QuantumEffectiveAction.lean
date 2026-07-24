@@ -23,7 +23,7 @@ resolution is asserted.
 
 noncomputable section
 
-namespace Section29QuantumEffectiveAction
+namespace InfoGeometry.Physics.Section29QuantumEffectiveAction
 
 /-- Finite scalar coefficients for a formal two-loop effective action. -/
 structure LoopActionDatum where
@@ -141,6 +141,6 @@ theorem repaired_section29_loop_rg_packet
       runningCoupling C (t + s) = runningCoupling C t - C.slope * s := by
   exact ⟨effectiveActionTwoLoop_sub_classical D hbar, runningCoupling_add C t s⟩
 
-end Section29QuantumEffectiveAction
+end InfoGeometry.Physics.Section29QuantumEffectiveAction
 
 end noncomputable section

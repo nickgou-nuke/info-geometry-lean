@@ -16,13 +16,9 @@ variable (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V
 variable [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
 
 /--
-  The Grand Unification Architecture (Theory of Everything).
-  This structure physically binds all verified properties of the CPT Spinor Vacuum:
-  1. It is exactly Einstein-Causal.
-  2. It supports an intrinsic Modular Time-Evolution (Thermodynamics).
-  3. It admits a Spectral Action dictating emergent Gravity.
-  4. Its causal boundaries perfectly match Quantum Error Correction commutators.
-  5. Its unit inner automorphisms produce Standard Model Bosonic Symmetries.
+  A finite architecture record bundling the listed owner-supplied fields.
+  It is not a Theory of Everything, does not derive gravity, and does not
+  construct Standard Model symmetries.
 -/
 structure GrandUnification where
   -- 1. Space and Causality

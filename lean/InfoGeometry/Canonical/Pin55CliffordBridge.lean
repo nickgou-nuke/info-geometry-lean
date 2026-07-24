@@ -3,7 +3,7 @@ import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
 import InfoGeometry.Clifford.SpinorRep
 import InfoGeometry.Canonical.Herm2x2OsO55RationalBridge
 
-namespace Pin55CliffordBridge
+namespace InfoGeometry.Canonical.Pin55CliffordBridge
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Clifford.ConformalLieAlgebra55
@@ -224,4 +224,4 @@ theorem jordanCliffordPolarizationEvidence55Installed :
   · intro X
     exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q_nullSwap X
 
-end Pin55CliffordBridge
+end InfoGeometry.Canonical.Pin55CliffordBridge

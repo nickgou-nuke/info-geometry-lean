@@ -16,7 +16,7 @@ This file proves:
 No wrappers. No `sorry`.
 -/
 
-namespace DrazinAnomalousProjector
+namespace InfoGeometry.Canonical.DrazinAnomalousProjector
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -104,4 +104,4 @@ theorem trace_K_boundary_split :
   unfold traceForm tr
   norm_num [N, N_left_eval, N_right_eval, Matrix.mul_apply, Fin.sum_univ_two]
 
-end DrazinAnomalousProjector
+end InfoGeometry.Canonical.DrazinAnomalousProjector

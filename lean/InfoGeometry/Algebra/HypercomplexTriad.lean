@@ -19,7 +19,7 @@ This file proves:
 No wrappers. No classification structure.
 -/
 
-namespace HypercomplexTriad
+namespace InfoGeometry.Algebra.HypercomplexTriad
 
 abbrev Mat2 : Type :=
   Matrix (Fin 2) (Fin 2) ℝ
@@ -418,4 +418,4 @@ theorem concrete_hypercomplex_triad :
     IsUnit I ∧ IsUnit E ∧ N ≠ 0 ∧ N * N = 0 ∧ ¬ IsUnit N := by
   exact ⟨⟨I_unit, rfl⟩, ⟨E_unit, rfl⟩, N_ne_zero, N_sq, N_not_isUnit⟩
 
-end HypercomplexTriad
+end InfoGeometry.Algebra.HypercomplexTriad

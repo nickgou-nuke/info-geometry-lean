@@ -3,7 +3,7 @@ import InfoGeometry.Clifford.JordanWignerCAR
 
 noncomputable section
 
-namespace MatToCantorOperator
+namespace InfoGeometry.Clifford.MatToCantorOperator
 
 open InfoGeometry.Clifford.TowerMatrix
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -79,4 +79,4 @@ theorem matToCantor_jw_uv_anticomm_new (k : ℕ) :
     jw_uv_anticomm_new]
   exact matToCantor_map_one (k + 1)
 
-end MatToCantorOperator
+end InfoGeometry.Clifford.MatToCantorOperator

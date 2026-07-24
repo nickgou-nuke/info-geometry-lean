@@ -11,7 +11,7 @@ Hestenes/Krein lane.  This file does not introduce a complex Hilbert owner
 surface and does not claim full Tomita-Takesaki standard form.
 -/
 
-namespace BilingualRealHestenesDictionary
+namespace InfoGeometry.Canonical.BilingualRealHestenesDictionary
 
 open scoped InnerProductSpace
 open InfoGeometry.Krein
@@ -147,4 +147,4 @@ theorem drazinCore_phaseAxis_preserved
         (Pzero T TD).comp (InfoGeometry.Krein.complex_i (E := E)) :=
   complex_i_preserves_drazinCore_split (E := E) hCompat
 
-end BilingualRealHestenesDictionary
+end InfoGeometry.Canonical.BilingualRealHestenesDictionary

@@ -17,7 +17,7 @@ Morera/Cauchy/Weierstrass equivalence, or any topology/convergence result.
 
 noncomputable section
 
-namespace ComplexRealHestenesFinite
+namespace InfoGeometry.Canonical.ComplexRealHestenesFinite
 
 /-- Complex numbers modeled as a 2D real vector space. -/
 structure ComplexReal where
@@ -85,5 +85,5 @@ structure HestenesSpinor where
   c : ℝ
   d : ℝ
 
-end ComplexRealHestenesFinite
+end InfoGeometry.Canonical.ComplexRealHestenesFinite
 

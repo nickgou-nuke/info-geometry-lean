@@ -8,7 +8,7 @@ import Mathlib
 #### BUCKET 3: Higher-dimensional Pfaffian — open debt
 -/
 
-namespace Pfaffian
+namespace InfoGeometry.Canonical.Pfaffian
 
 /-- The Pfaffian of a 2×2 skew-symmetric matrix [[0, a], [-a, 0]]. -/
 def pfaffian_2x2 {R : Type*} [CommRing R] (a : R) : R := a
@@ -31,4 +31,4 @@ theorem pfaffian_zero_2x2 {R : Type*} [CommRing R] : pfaffian_2x2 (0 : R) = 0 :=
 theorem det_nonneg_2x2 (a : ℝ) : 0 ≤ Matrix.det !![(0 : ℝ), a; -a, 0] := by
   rw [det_skew_2x2]; nlinarith [sq_nonneg a]
 
-end Pfaffian
+end InfoGeometry.Canonical.Pfaffian

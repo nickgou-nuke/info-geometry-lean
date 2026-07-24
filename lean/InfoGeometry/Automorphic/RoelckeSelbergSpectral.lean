@@ -22,7 +22,7 @@ import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section
 
-namespace RoelckeSelbergSpectral
+namespace InfoGeometry.Automorphic.RoelckeSelbergSpectral
 
 open SiegelResonance
 
@@ -426,4 +426,4 @@ def AutomorphicLFunctionOwnerTarget
     (HeckeIndex : Type uHecke) : Type _ :=
   AutomorphicLFunctionDatum HeckeIndex
 
-end RoelckeSelbergSpectral
+end InfoGeometry.Automorphic.RoelckeSelbergSpectral

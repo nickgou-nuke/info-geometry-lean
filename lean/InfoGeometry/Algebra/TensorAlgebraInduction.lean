@@ -21,7 +21,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace TensorAlgebraInduction
+namespace InfoGeometry.Algebra.TensorAlgebraInduction
 
 open InfoGeometry.Algebra.TensorAlgebraCanonical
 open InfoGeometry.Algebra.InductiveSuperClosureLemmas
@@ -280,4 +280,4 @@ theorem tensor_limit_image_inductive_susy_closure
 
 end RingSUSYChain
 
-end TensorAlgebraInduction
+end InfoGeometry.Algebra.TensorAlgebraInduction

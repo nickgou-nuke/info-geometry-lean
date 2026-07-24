@@ -16,13 +16,13 @@ This file is intentionally conservative:
   `RelativeModularOperator` and `RelativeModularHamiltonian`.
 -/
 
-namespace RelativeModularCommutingLift
+namespace InfoGeometry.Canonical.RelativeModularCommutingLift
 
 open InfoGeometry.Canonical.PositiveRayCore
 open RelativePotentialCore
 open RelativeModularOperator
 open RelativeModularHamiltonian
-open JaynesInfoStatMech.ThermalDiagonal
+open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 
@@ -102,4 +102,4 @@ theorem finite_commuting_lift_package
 
 end Finite
 
-end RelativeModularCommutingLift
+end InfoGeometry.Canonical.RelativeModularCommutingLift

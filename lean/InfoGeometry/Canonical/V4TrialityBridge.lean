@@ -38,7 +38,7 @@ V₄ → W(D₄) inclusion.
 
 noncomputable section
 
-namespace V4TrialityBridge
+namespace InfoGeometry.Canonical.V4TrialityBridge
 
 /-- Coordinate pair for the minimal affine boundary calculation. -/
 abbrev BoundaryCoord := ℝ × ℝ
@@ -138,4 +138,4 @@ theorem glide01_squared_eq_translate1
       InfoGeometry.Topology.Pin55ReflectionGlide.translate1 1 x :=
   InfoGeometry.Topology.Pin55ReflectionGlide.glide01_squared_eq_translate1 x
 
-end V4TrialityBridge
+end InfoGeometry.Canonical.V4TrialityBridge

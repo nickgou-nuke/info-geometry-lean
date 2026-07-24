@@ -5,21 +5,7 @@ namespace Omega.Folding
 
 /-- Concrete seed data for the two-state bin-fold asymptotic package. -/
 structure FoldBinTwoStateAsymptoticData where
-  dummy : fold_bin_two_state_asymptotic_statement := by
-    refine ⟨?_, ?_, ?_⟩
-    · intro m b
-      have hdiff :
-          foldBinTwoStateFiberCount m b - foldBinTwoStateMainTerm m b = foldBinTwoStateError b := by
-        simp [foldBinTwoStateFiberCount]
-      rw [hdiff]
-      exact foldBinTwoStateError_abs_le_one b
-    · intro m
-      simp [foldBinTwoStateFiberCount, foldBinTwoStateMainTerm, foldBinTwoStateWeight,
-        foldBinTwoStateGrowth, foldBinTwoStateError]
-    · intro m
-      simp [foldBinTwoStateFiberCount, foldBinTwoStateMainTerm, foldBinTwoStateWeight,
-        foldBinTwoStateGrowth, foldBinTwoStateError]
-      ring
+  dummy : Unit := ()
 
 /-- Terminal-state main term in the two-state model. -/
 noncomputable def foldBinTwoStateWeight (b : Bool) : ℝ :=
@@ -48,7 +34,7 @@ lemma foldBinTwoStateError_abs_le_one (b : Bool) : |foldBinTwoStateError b| ≤ 
 namespace FoldBinTwoStateAsymptoticData
 
 /-- Uniform two-state asymptotic with an explicit `O(1)` remainder. -/
-def fold_bin_two_state_asymptotic_statement : Prop :=
+def uniform_two_state_asymptotic (_D : FoldBinTwoStateAsymptoticData) : Prop :=
   (∀ m : ℕ, ∀ b : Bool,
     |foldBinTwoStateFiberCount m b - foldBinTwoStateMainTerm m b| ≤ 1) ∧
     (∀ m : ℕ,
@@ -63,8 +49,8 @@ open FoldBinTwoStateAsymptoticData
 
 /-- Concrete two-state asymptotic package for the bin-fold model.
     thm:fold-bin-two-state-asymptotic -/
-theorem paper_fold_bin_two_state_asymptotic :
-    fold_bin_two_state_asymptotic_statement := by
+theorem paper_fold_bin_two_state_asymptotic (D : FoldBinTwoStateAsymptoticData) :
+    D.uniform_two_state_asymptotic := by
   refine ⟨?_, ?_, ?_⟩
   · intro m b
     have hdiff :

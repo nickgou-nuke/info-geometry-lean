@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="label" for="node" attr.name="label" attr.type="string"/>
+  <key id="type" for="node" attr.name="type" attr.type="string"/>
+  <key id="file" for="node" attr.name="file" attr.type="string"/>
+  <key id="line" for="node" attr.name="line" attr.type="int"/>
+  <key id="relation" for="edge" attr.name="relation" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <node id="csqrt3_sq">
+      <data key="label">theorem csqrt3_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GellMannTraceOrthogonality.lean</data>
+      <data key="line">24</data>
+    </node>
+    <node id="gellmann_trace_orthogonality">
+      <data key="label">theorem gellmann_trace_orthogonality</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GellMannTraceOrthogonality.lean</data>
+      <data key="line">28</data>
+    </node>
+    <node id="commutator_formula">
+      <data key="label">theorem commutator_formula</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">149</data>
+    </node>
+    <node id="f_antisym_ab">
+      <data key="label">theorem f_antisym_ab</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">286</data>
+    </node>
+    <node id="f_antisym_bc">
+      <data key="label">theorem f_antisym_bc</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">292</data>
+    </node>
+    <node id="f_cyclic">
+      <data key="label">theorem f_cyclic</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">299</data>
+    </node>
+    <node id="d_sym_ab">
+      <data key="label">theorem d_sym_ab</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">306</data>
+    </node>
+    <node id="d_sym_bc">
+      <data key="label">theorem d_sym_bc</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">312</data>
+    </node>
+    <node id="d_normalization">
+      <data key="label">theorem d_normalization</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/StructureConstants.lean</data>
+      <data key="line">319</data>
+    </node>
+    <node id="suCarrier">
+      <data key="label">def suCarrier</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/SpecialUnitary.lean</data>
+      <data key="line">20</data>
+    </node>
+    <node id="su">
+      <data key="label">def su</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/SpecialUnitary.lean</data>
+      <data key="line">24</data>
+    </node>
+    <node id="su_inclusion">
+      <data key="label">def su_inclusion</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/SpecialUnitary.lean</data>
+      <data key="line">54</data>
+    </node>
+    <node id="KillingForm">
+      <data key="label">def KillingForm</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/KillingFormSU.lean</data>
+      <data key="line">22</data>
+    </node>
+    <node id="killing_form_sym">
+      <data key="label">theorem killing_form_sym</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/KillingFormSU.lean</data>
+      <data key="line">27</data>
+    </node>
+    <node id="su_trace_im_zero">
+      <data key="label">theorem su_trace_im_zero</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/KillingFormSU.lean</data>
+      <data key="line">34</data>
+    </node>
+    <node id="killing_form_ad_invariant">
+      <data key="label">theorem killing_form_ad_invariant</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/KillingFormSU.lean</data>
+      <data key="line">46</data>
+    </node>
+    <node id="q11">
+      <data key="label">def q11</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">12</data>
+    </node>
+    <node id="e₀">
+      <data key="label">def e₀</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">13</data>
+    </node>
+    <node id="e₁">
+      <data key="label">def e₁</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">14</data>
+    </node>
+    <node id="e₀_sq">
+      <data key="label">theorem e₀_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">16</data>
+    </node>
+    <node id="e₁_sq">
+      <data key="label">theorem e₁_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">21</data>
+    </node>
+    <node id="orth">
+      <data key="label">theorem orth</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">26</data>
+    </node>
+    <node id="anticomm">
+      <data key="label">theorem anticomm</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">29</data>
+    </node>
+    <node id="a">
+      <data key="label">def a</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">34</data>
+    </node>
+    <node id="a_comm">
+      <data key="label">lemma a_comm</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">36</data>
+    </node>
+    <node id="a_mul_mul">
+      <data key="label">lemma a_mul_mul</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">42</data>
+    </node>
+    <node id="b">
+      <data key="label">def b</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">49</data>
+    </node>
+    <node id="bdag">
+      <data key="label">def bdag</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">50</data>
+    </node>
+    <node id="b_sq">
+      <data key="label">theorem b_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">52</data>
+    </node>
+    <node id="bdag_sq">
+      <data key="label">theorem bdag_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">64</data>
+    </node>
+    <node id="anticomm_bbdag">
+      <data key="label">theorem anticomm_bbdag</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Cl11Fermions.lean</data>
+      <data key="line">76</data>
+    </node>
+    <node id="fermionic_tripotent">
+      <data key="label">theorem fermionic_tripotent</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">41</data>
+    </node>
+    <node id="fermionic_tripotent_sq">
+      <data key="label">theorem fermionic_tripotent_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">58</data>
+    </node>
+    <node id="projVac">
+      <data key="label">def projVac</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">78</data>
+    </node>
+    <node id="projUp">
+      <data key="label">def projUp</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">81</data>
+    </node>
+    <node id="projDown">
+      <data key="label">def projDown</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">84</data>
+    </node>
+    <node id="projUp_idem">
+      <data key="label">theorem projUp_idem</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">88</data>
+    </node>
+    <node id="proj_sum_one">
+      <data key="label">theorem proj_sum_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">157</data>
+    </node>
+    <node id="word_parity_matches_projectors">
+      <data key="label">theorem word_parity_matches_projectors</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean</data>
+      <data key="line">192</data>
+    </node>
+    <node id="freudenthal_diagonal">
+      <data key="label">theorem freudenthal_diagonal</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FreudenthalComplete.lean</data>
+      <data key="line">23</data>
+    </node>
+    <node id="freudenthal_diag_one_zero_zero">
+      <data key="label">theorem freudenthal_diag_one_zero_zero</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FreudenthalComplete.lean</data>
+      <data key="line">36</data>
+    </node>
+    <node id="freudenthal_diag_zero_one_zero">
+      <data key="label">theorem freudenthal_diag_zero_one_zero</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FreudenthalComplete.lean</data>
+      <data key="line">48</data>
+    </node>
+    <node id="freudenthal_diag_zero_zero_one">
+      <data key="label">theorem freudenthal_diag_zero_zero_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FreudenthalComplete.lean</data>
+      <data key="line">60</data>
+    </node>
+    <node id="apex_eq">
+      <data key="label">theorem apex_eq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">27</data>
+    </node>
+    <node id="apex_not_root_of_unity_sq">
+      <data key="label">theorem apex_not_root_of_unity_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">54</data>
+    </node>
+    <node id="A_sq">
+      <data key="label">theorem A_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">73</data>
+    </node>
+    <node id="matrixToCuntz_add">
+      <data key="label">lemma matrixToCuntz_add</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">78</data>
+    </node>
+    <node id="matrixToCuntz_sub">
+      <data key="label">lemma matrixToCuntz_sub</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">84</data>
+    </node>
+    <node id="matrixToCuntz_smul">
+      <data key="label">lemma matrixToCuntz_smul</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">90</data>
+    </node>
+    <node id="matrixToCuntz_one">
+      <data key="label">lemma matrixToCuntz_one</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">96</data>
+    </node>
+    <node id="X_sq">
+      <data key="label">theorem X_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">122</data>
+    </node>
+    <node id="X_pow">
+      <data key="label">theorem X_pow</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">143</data>
+    </node>
+    <node id="braid_flow_noncomm">
+      <data key="label">theorem braid_flow_noncomm</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/GoldenMeanShift.lean</data>
+      <data key="line">164</data>
+    </node>
+    <node id="A">
+      <data key="label">def A</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/Hypothesis1.lean</data>
+      <data key="line">24</data>
+    </node>
+    <node id="A_sq">
+      <data key="label">theorem A_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Hypothesis1.lean</data>
+      <data key="line">30</data>
+    </node>
+    <node id="X_sq">
+      <data key="label">theorem X_sq</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/Hypothesis1.lean</data>
+      <data key="line">37</data>
+    </node>
+    <node id="gen">
+      <data key="label">def gen</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">29</data>
+    </node>
+    <node id="S">
+      <data key="label">def S</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">33</data>
+    </node>
+    <node id="Sdag">
+      <data key="label">def Sdag</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">36</data>
+    </node>
+    <node id="daggerFree">
+      <data key="label">def daggerFree</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">54</data>
+    </node>
+    <node id="daggerAlgHom">
+      <data key="label">def daggerAlgHom</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">73</data>
+    </node>
+    <node id="dagger">
+      <data key="label">def dagger</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">80</data>
+    </node>
+    <node id="toeplitzMk">
+      <data key="label">def toeplitzMk</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">163</data>
+    </node>
+    <node id="cuntzMk">
+      <data key="label">def cuntzMk</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">167</data>
+    </node>
+    <node id="toeplitzS">
+      <data key="label">def toeplitzS</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">171</data>
+    </node>
+    <node id="toeplitzSdag">
+      <data key="label">def toeplitzSdag</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">174</data>
+    </node>
+    <node id="cuntzS">
+      <data key="label">def cuntzS</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">177</data>
+    </node>
+    <node id="cuntzSdag">
+      <data key="label">def cuntzSdag</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">180</data>
+    </node>
+    <node id="toeplitz_orthogonality">
+      <data key="label">theorem toeplitz_orthogonality</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">183</data>
+    </node>
+    <node id="cuntz_orthogonality">
+      <data key="label">theorem cuntz_orthogonality</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">190</data>
+    </node>
+    <node id="cuntz_ranges_sum_one">
+      <data key="label">theorem cuntz_ranges_sum_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">197</data>
+    </node>
+    <node id="cuntz_isometry">
+      <data key="label">theorem cuntz_isometry</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">205</data>
+    </node>
+    <node id="cuntz_distinct_orthogonal">
+      <data key="label">theorem cuntz_distinct_orthogonal</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">210</data>
+    </node>
+    <node id="finite_cuntz_tensor_quotient_packet">
+      <data key="label">theorem finite_cuntz_tensor_quotient_packet</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">215</data>
+    </node>
+    <node id="star_cuntzMk">
+      <data key="label">theorem star_cuntzMk</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">239</data>
+    </node>
+    <node id="star_cuntzS">
+      <data key="label">theorem star_cuntzS</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">247</data>
+    </node>
+    <node id="star_cuntzSdag">
+      <data key="label">theorem star_cuntzSdag</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">254</data>
+    </node>
+    <node id="cuntz_range_projector">
+      <data key="label">theorem cuntz_range_projector</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">264</data>
+    </node>
+    <node id="cuntz_range_projectors_orthogonal">
+      <data key="label">theorem cuntz_range_projectors_orthogonal</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">280</data>
+    </node>
+    <node id="cuntz_range_projector_star">
+      <data key="label">theorem cuntz_range_projector_star</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">294</data>
+    </node>
+    <node id="cuntz_range_projector_mul_S">
+      <data key="label">theorem cuntz_range_projector_mul_S</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">299</data>
+    </node>
+    <node id="cuntz_Sdag_mul_range_projector">
+      <data key="label">theorem cuntz_Sdag_mul_range_projector</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">308</data>
+    </node>
+    <node id="cuntz_range_projectors_commute">
+      <data key="label">theorem cuntz_range_projectors_commute</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">318</data>
+    </node>
+    <node id="cuntz_complete_projector_system">
+      <data key="label">theorem cuntz_complete_projector_system</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean</data>
+      <data key="line">328</data>
+    </node>
+    <node id="fibonacci_generators_noncommute">
+      <data key="label">lemma fibonacci_generators_noncommute</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">60</data>
+    </node>
+    <node id="matrixToCuntz">
+      <data key="label">def matrixToCuntz</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">86</data>
+    </node>
+    <node id="matrixToCuntz_mul_term_comm">
+      <data key="label">lemma matrixToCuntz_mul_term_comm</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">89</data>
+    </node>
+    <node id="matrixToCuntz_mul_ite_term">
+      <data key="label">lemma matrixToCuntz_mul_ite_term</data>
+      <data key="type">lemma</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">114</data>
+    </node>
+    <node id="matrixToCuntz_mul">
+      <data key="label">theorem matrixToCuntz_mul</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">123</data>
+    </node>
+    <node id="fibonacciBraidCuntzRepresentation">
+      <data key="label">def fibonacciBraidCuntzRepresentation</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">157</data>
+    </node>
+    <node id="fibonacciBraid_cuntz_nonabelian">
+      <data key="label">theorem fibonacciBraid_cuntz_nonabelian</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/CuntzFibonacciBraidInclusion.lean</data>
+      <data key="line">164</data>
+    </node>
+    <node id="fibOneRaw">
+      <data key="label">def fibOneRaw</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">29</data>
+    </node>
+    <node id="fibTauRaw">
+      <data key="label">def fibTauRaw</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">33</data>
+    </node>
+    <node id="fibOneK0">
+      <data key="label">def fibOneK0</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">41</data>
+    </node>
+    <node id="fibTauK0">
+      <data key="label">def fibTauK0</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">45</data>
+    </node>
+    <node id="one">
+      <data key="label">def one</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">60</data>
+    </node>
+    <node id="tau">
+      <data key="label">def tau</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">64</data>
+    </node>
+    <node id="mul">
+      <data key="label">def mul</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">68</data>
+    </node>
+    <node id="mul_fst">
+      <data key="label">theorem mul_fst</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">72</data>
+    </node>
+    <node id="mul_snd">
+      <data key="label">theorem mul_snd</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">77</data>
+    </node>
+    <node id="one_fst">
+      <data key="label">theorem one_fst</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">82</data>
+    </node>
+    <node id="one_snd">
+      <data key="label">theorem one_snd</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">86</data>
+    </node>
+    <node id="tau_fst">
+      <data key="label">theorem tau_fst</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">90</data>
+    </node>
+    <node id="tau_snd">
+      <data key="label">theorem tau_snd</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">94</data>
+    </node>
+    <node id="tau_mul_tau">
+      <data key="label">theorem tau_mul_tau</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">98</data>
+    </node>
+    <node id="one_mul">
+      <data key="label">theorem one_mul</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">101</data>
+    </node>
+    <node id="mul_one">
+      <data key="label">theorem mul_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">104</data>
+    </node>
+    <node id="mul_comm">
+      <data key="label">theorem mul_comm</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">107</data>
+    </node>
+    <node id="mul_assoc">
+      <data key="label">theorem mul_assoc</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">110</data>
+    </node>
+    <node id="left_distrib">
+      <data key="label">theorem left_distrib</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">113</data>
+    </node>
+    <node id="right_distrib">
+      <data key="label">theorem right_distrib</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">117</data>
+    </node>
+    <node id="rawToModel">
+      <data key="label">def rawToModel</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">159</data>
+    </node>
+    <node id="k0ToModel">
+      <data key="label">def k0ToModel</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">167</data>
+    </node>
+    <node id="k0ToModel_grothendieckMap">
+      <data key="label">theorem k0ToModel_grothendieckMap</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">171</data>
+    </node>
+    <node id="k0ToModel_one">
+      <data key="label">theorem k0ToModel_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">176</data>
+    </node>
+    <node id="k0ToModel_tau">
+      <data key="label">theorem k0ToModel_tau</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">180</data>
+    </node>
+    <node id="tensorTauRaw">
+      <data key="label">def tensorTauRaw</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">186</data>
+    </node>
+    <node id="tensorTauK0">
+      <data key="label">def tensorTauK0</data>
+      <data key="type">def</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">193</data>
+    </node>
+    <node id="rawToModel_tensorTau">
+      <data key="label">theorem rawToModel_tensorTau</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">197</data>
+    </node>
+    <node id="tensorTauRaw_one">
+      <data key="label">theorem tensorTauRaw_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">203</data>
+    </node>
+    <node id="tensorTauRaw_tau">
+      <data key="label">theorem tensorTauRaw_tau</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">206</data>
+    </node>
+    <node id="tensorTauK0_grothendieckMap">
+      <data key="label">theorem tensorTauK0_grothendieckMap</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">210</data>
+    </node>
+    <node id="tensorTauK0_one">
+      <data key="label">theorem tensorTauK0_one</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">216</data>
+    </node>
+    <node id="tensorTauK0_tau">
+      <data key="label">theorem tensorTauK0_tau</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">219</data>
+    </node>
+    <node id="k0_tau_square_model">
+      <data key="label">theorem k0_tau_square_model</data>
+      <data key="type">theorem</data>
+      <data key="file">lean/InfoGeometry/Algebra/FibonacciGrothendieckRing.lean</data>
+      <data key="line">227</data>
+    </node>
+  </graph>
+</graphml>

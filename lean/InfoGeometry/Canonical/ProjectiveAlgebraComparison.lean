@@ -7,7 +7,7 @@ Projective comparison facts stated on the current strict projectivization
 surface.
 -/
 
-namespace ProjectiveAlgebraComparison
+namespace InfoGeometry.Canonical.ProjectiveAlgebraComparison
 
 open InfoGeometry.Krein
 open ProjectiveSplitQ11Realization
@@ -27,4 +27,4 @@ theorem epsilon_is_mathlib_involute (v : H₂) (hv : v ≠ 0) :
         (spectral_epsilon_ne_zero (E := E) hv) := by
   exact mathlibProjectiveEpsilon_projectivize (E := E) v hv
 
-end ProjectiveAlgebraComparison
+end InfoGeometry.Canonical.ProjectiveAlgebraComparison

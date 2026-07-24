@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 
-namespace SupergradedClosure
+namespace InfoGeometry.OperatorAlgebra.SupergradedClosure
 
 /--
 Nilpotent supercharges generate a Dirac operator whose square is the
@@ -135,4 +135,4 @@ theorem supergradedClosureAt_of_nilpotent
   · exact superDirac_commutes_superLaplacian (Q := Q) (Qsharp := Qsharp) hQ hQsharp
 
 
-end SupergradedClosure
+end InfoGeometry.OperatorAlgebra.SupergradedClosure

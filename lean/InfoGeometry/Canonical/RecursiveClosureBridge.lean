@@ -19,7 +19,7 @@ The point is structural: a stagewise invariant is proved at stage `0` and
 propagated by a successor step.  No analytic continuation is involved.
 -/
 
-namespace RecursiveClosureBridge
+namespace InfoGeometry.Canonical.RecursiveClosureBridge
 
 /-! ## Generic stagewise recursion skeleton -/
 
@@ -80,10 +80,10 @@ each successor stage is the previous prefix plus the next coefficient term.
 theorem operatorTaylorPrefix_succ_schema
     {V : Type*} [AddCommGroup V] [Module ℂ V]
     (c : ℕ → ℂ) (A : V →ₗ[ℂ] V) (N : ℕ) :
-    InfoGeometry.Canonical.InductiveOperatorTaylorClosure.operatorTaylorPrefix c (N + 1) A =
-      InfoGeometry.Canonical.InductiveOperatorTaylorClosure.operatorTaylorPrefix c N A +
+    InductiveOperatorTaylorClosure.operatorTaylorPrefix c (N + 1) A =
+      InductiveOperatorTaylorClosure.operatorTaylorPrefix c N A +
         c N • (A ^ N) :=
-  InfoGeometry.Canonical.InductiveOperatorTaylorClosure.operatorTaylorPrefix_succ c N A
+  InductiveOperatorTaylorClosure.operatorTaylorPrefix_succ c N A
 
 end OperatorTaylor
 
@@ -145,4 +145,4 @@ theorem sinkhornTrajectory_phaseRNBarrier_monotone
 
 end Sinkhorn
 
-end RecursiveClosureBridge
+end InfoGeometry.Canonical.RecursiveClosureBridge

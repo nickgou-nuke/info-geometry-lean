@@ -17,7 +17,7 @@ import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.BogoliubovVielbein
 import InfoGeometry.Krein.DoubledSpace
 
-namespace LatticeHoppingDiffusionFlow
+namespace InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorJKOStep
@@ -190,4 +190,4 @@ theorem continuum_emergence_payload
   · exact jko_penalty_le_energy_drop B
   · exact no_defect_leakage_of_hopping B hPzeroMulPreg v hReg t
 
-end LatticeHoppingDiffusionFlow
+end InfoGeometry.Canonical.LatticeHoppingDiffusionFlow

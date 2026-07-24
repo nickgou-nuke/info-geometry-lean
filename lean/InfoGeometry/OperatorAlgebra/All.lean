@@ -173,6 +173,18 @@ import InfoGeometry.OperatorAlgebra.SplitOctonionModularJ
 import InfoGeometry.OperatorAlgebra.SplitOctonionPeirceG2Bridge
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
 import InfoGeometry.OperatorAlgebra.SplitOctonions.FureyLadderCAR
+import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
+import InfoGeometry.OperatorAlgebra.TripotentMatrix2x2
+import InfoGeometry.OperatorAlgebra.TripotentFactorization
+import InfoGeometry.OperatorAlgebra.SplitQuaternionSL2Isomorphism
+import InfoGeometry.OperatorAlgebra.SplitOctonionLoxodromic
+import InfoGeometry.OperatorAlgebra.WittenMöbiusBraidBridge
+import InfoGeometry.OperatorAlgebra.ChiralCliffordSplit
+
+
+
+
+
 
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

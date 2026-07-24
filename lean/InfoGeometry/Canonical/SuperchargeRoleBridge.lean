@@ -21,7 +21,7 @@ the division already owned elsewhere:
   operatorial Hessian/metric/curvature split.
 -/
 
-namespace SuperchargeRoleBridge
+namespace InfoGeometry.Canonical.SuperchargeRoleBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -199,4 +199,4 @@ theorem deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curva
 
 end Core
 
-end SuperchargeRoleBridge
+end InfoGeometry.Canonical.SuperchargeRoleBridge

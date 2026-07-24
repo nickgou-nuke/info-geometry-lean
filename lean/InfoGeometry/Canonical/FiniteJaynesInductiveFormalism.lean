@@ -23,7 +23,7 @@ No MaxEnt optimizer transport theorem.
 No AF/von-Neumann/state uniqueness theorem.
 -/
 
-namespace FiniteJaynesInductiveFormalism
+namespace InfoGeometry.Canonical.FiniteJaynesInductiveFormalism
 
 open Finset
 open FiniteJaynesCenteredScoreBridge
@@ -134,4 +134,4 @@ theorem id_map_centeredScore
     (fun f : FiniteProfile ι => f) (centeredScore R obs) = centeredScore R obs :=
   rfl
 
-end FiniteJaynesInductiveFormalism
+end InfoGeometry.Canonical.FiniteJaynesInductiveFormalism

@@ -21,7 +21,7 @@ compiled interface layer that packages:
 - an abstract continuous-core API (dual action + trace invariance).
 -/
 
-namespace TypeIIIContinuousCoreReal
+namespace InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.YangMillsContinuum
@@ -525,4 +525,4 @@ end RealContinuousCoreInterface
 
 end Core
 
-end TypeIIIContinuousCoreReal
+end InfoGeometry.Canonical.TypeIIIContinuousCoreReal

@@ -26,7 +26,7 @@ Type-III/Tomita theorem.
 
 noncomputable section
 
-namespace PrimeCantorLatticeDirac
+namespace InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -519,4 +519,4 @@ theorem rawHyperbolicCantorDiracIndex_eq_pfaffian_difference
       stableProjectedCantorDiracIndex_eq_pfaffian,
       stableProjectedCantorDiracIndex_eq_pfaffian]
 
-end PrimeCantorLatticeDirac
+end InfoGeometry.Arithmetic.PrimeCantorLatticeDirac

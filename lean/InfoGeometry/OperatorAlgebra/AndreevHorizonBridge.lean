@@ -13,7 +13,7 @@ import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section
 
-namespace AndreevHorizonBridge
+namespace InfoGeometry.OperatorAlgebra.AndreevHorizonBridge
 
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
@@ -58,4 +58,4 @@ theorem horizon_imbalance_anti_fixed :
 
 end AndreevHorizonBridge
 
-end AndreevHorizonBridge
+end InfoGeometry.OperatorAlgebra.AndreevHorizonBridge

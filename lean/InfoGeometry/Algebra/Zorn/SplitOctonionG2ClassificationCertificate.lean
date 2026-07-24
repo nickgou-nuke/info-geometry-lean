@@ -1,13 +1,11 @@
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 
 /-!
-# Split-octonion `Aut(𝕆_s)` / real split `G₂` classification certificate
+# Split-octonion `Aut(𝕆_s)` / real split `G₂` certificate
 
-This file is the theorem-safe landing zone for the requested full
-classification.  It does **not** manufacture the classification from a name,
-and it does not conflate the finite Chevalley group `G₂(2)` with the real split
-form often denoted `G_{2(2)}`.  Instead it states the exact kernel-checkable
-certificate needed to promote the slogan
+This file is the theorem-safe landing zone for the requested classification
+certificate.  It states the exact kernel-checkable certificate needed to
+promote the slogan
 
 `Aut(𝕆_s(ℝ)) = G₂^{split}(ℝ)`
 
@@ -21,17 +19,17 @@ to a Lean theorem:
 * optional finite/root-system invariants matching the GAP/Sage evidence lane.
 
 Supplying such a certificate is the remaining hard classification task.  This
-module proves all readbacks from the certificate without adding unsupported
-primitive assumptions or pretending that the classification has already been constructed.
+module proves all readbacks from the certificate and keeps the classification
+content carried by the explicit certificate data.
 -/
 
 noncomputable section
 
-namespace SplitOctonionG2ClassificationCertificate
+namespace InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 
 open InfoGeometry.Algebra.Zorn
-open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
-open InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
+open G2TrifactorSU3
+open SplitOctonionG2TwoClassificationBoundary
 
 variable {R Aut G2 : Type*} [CommRing R] [Group Aut] [Group G2]
 
@@ -64,8 +62,8 @@ theorem computationalEvidenceInvariants_packet :
 /--
 A full classification certificate for
 `Aut_{ℝ-alg}(𝕆_s(ℝ)) = G₂^{split}(ℝ)` over the existing Zorn split-octonion
-coordinate owner.  The finite Chevalley group `G₂(2)` is a separate
-characteristic-two boundary lane and is not the target of this real statement.
+coordinate owner.  The finite Chevalley group `G₂(2)` lives in a separate
+characteristic-two boundary lane.
 
 `Aut` and `G2` are explicit group carriers.  The multiplicative equivalence is
 part of the certificate, together with action laws proving that `Aut` really
@@ -166,6 +164,6 @@ def classification_certificate_packet
 
 end ClassificationCertificate
 
-end SplitOctonionG2ClassificationCertificate
+end InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 
 end noncomputable section

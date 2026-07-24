@@ -27,7 +27,7 @@ Authority note:
   `PhaseSpaceGeneralizedMetric`.
 -/
 
-namespace GeneralizedMetricBField
+namespace InfoGeometry.Clifford.GeneralizedMetricBField
 
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Cartan
@@ -165,4 +165,4 @@ end SplitBFieldDatum
 
 end
 
-end GeneralizedMetricBField
+end InfoGeometry.Clifford.GeneralizedMetricBField

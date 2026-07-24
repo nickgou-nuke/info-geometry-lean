@@ -22,7 +22,7 @@ No analytic completion is claimed.
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
-namespace PrimeMajoranaInfiniteCAR
+namespace InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
 
 variable (A : ℕ → Type*) [∀ n : ℕ, Ring (A n)]
 variable (L : Type*) [Ring L]
@@ -283,4 +283,4 @@ theorem exteriorCARPair_limit_image_majorana_laws
       by simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero),
       by simpa using congrArg (ι n) ((P n).parityOp_sq)⟩
 
-end PrimeMajoranaInfiniteCAR
+end InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR

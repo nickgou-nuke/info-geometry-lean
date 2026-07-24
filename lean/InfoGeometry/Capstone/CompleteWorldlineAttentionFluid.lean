@@ -202,20 +202,13 @@ theorem llama4_softmax_is_kms_state {n : ℕ} [Nonempty (Fin n)]
       · exact Finset.univ_nonempty
 
 /--
-## MAIN THEOREM: Attention = Quantum Fluid Flow
+A skew-adjoint generator has trace-zero collapsed velocity, hence the declared
+Madelung velocity is divergence-free in this finite model.
 
-An LLM's attention mechanism at thermodynamic equilibrium
-induces divergence-free quantum fluid flow
-on the doubled Krein carrier.
-
-THEOREM SIMPLIFICATION (breakthrough):
-  Only requires h_bivector (skew-adjointness)!
-  h_phi, h_eta, h_contact are superfluous.
-  No axioms needed - compiles with pure Lean.
-
-This proves: ATTENTION = CONSERVATIVE QUANTUM FLUID
+This theorem is only the displayed finite linear-algebra readout; it does not
+identify machine-learning attention with a physical quantum fluid.
 -/
-theorem attention_is_quantum_fluid_flow {n : ℕ}
+theorem skew_adjoint_madelung_velocity_divergence_free {n : ℕ}
     (_L : LegendreModel) (_theta _eta : Fin n → ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)

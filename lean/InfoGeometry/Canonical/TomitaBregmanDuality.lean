@@ -20,7 +20,7 @@ We prove:
 No wrappers. No `sorry`.
 -/
 
-namespace TomitaBregmanDuality
+namespace InfoGeometry.Canonical.TomitaBregmanDuality
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -91,4 +91,4 @@ theorem tomita_channel11_eq_scalar_bregman :
   rw [tomita_bregman_channel11, bregmanPrimal_closed]
   norm_num
 
-end TomitaBregmanDuality
+end InfoGeometry.Canonical.TomitaBregmanDuality

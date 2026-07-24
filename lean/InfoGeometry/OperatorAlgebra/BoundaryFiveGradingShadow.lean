@@ -17,7 +17,7 @@ reconstruction, analytic continuation, or Fibonacci universality.
 
 import Mathlib
 
-namespace BoundaryFiveGradingShadow
+namespace InfoGeometry.OperatorAlgebra.BoundaryFiveGradingShadow
 
 /-! ## 1. Chiral doubled two-sector shadow -/
 
@@ -219,4 +219,4 @@ theorem boundary_five_grading_shadow_synthesis :
     neg_one_pos_one_bracket_eq_zero_readout,
     pos_two_self_bracket_eq_zero⟩
 
-end BoundaryFiveGradingShadow
+end InfoGeometry.OperatorAlgebra.BoundaryFiveGradingShadow

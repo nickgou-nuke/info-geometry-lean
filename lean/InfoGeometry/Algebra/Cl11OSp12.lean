@@ -16,7 +16,7 @@ open QuadraticMap
 
 noncomputable section
 
-namespace Cl11OSp12
+namespace InfoGeometry.Algebra.Cl11OSp12
 
 /-! ## 1. Cl(1,1) generators -/
 
@@ -220,4 +220,4 @@ theorem osp_supercharge_oscillator_closure
   unfold Qplus Qminus susyOscillatorHamiltonian
   rw [qplus_qminus_factor B F I, qminus_qplus_factor B F I]
 
-end Cl11OSp12
+end InfoGeometry.Algebra.Cl11OSp12

@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace RouterFreeEnergyBridge
+namespace InfoGeometry.LLM.RouterFreeEnergyBridge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Thermo.FiniteDiagonal
@@ -175,4 +175,4 @@ theorem routerScaledPotentialGap_eq_scaledBregman
 
 end ScaledEntropicBridge
 
-end RouterFreeEnergyBridge
+end InfoGeometry.LLM.RouterFreeEnergyBridge

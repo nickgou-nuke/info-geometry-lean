@@ -1,6 +1,6 @@
 import InfoGeometry.Algebra.SupergradedBracket
 import Mathlib.Tactic
-open SupergradedBracket
+open InfoGeometry.Algebra.SupergradedBracket
 
 /-!
 # InfoGeometry.Canonical.SuperBracketInvolutionParity
@@ -16,7 +16,7 @@ No witness packet.
 No wrapper namespace over another theorem surface.
 -/
 
-namespace SuperBracketInvolutionParity
+namespace InfoGeometry.Canonical.SuperBracketInvolutionParity
 
 section RingStage
 
@@ -260,4 +260,4 @@ theorem superBracket_odd_odd_self_eq_zero_of_square_zero
 
 end RingStage
 
-end SuperBracketInvolutionParity
+end InfoGeometry.Canonical.SuperBracketInvolutionParity

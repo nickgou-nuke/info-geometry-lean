@@ -20,7 +20,7 @@ the exact coordinate readouts of their product:
 * `N`: parabolic nilpotent shear sector, `Op² = 0`.
 -/
 
-namespace KanDecomposition
+namespace InfoGeometry.Dynamics.KanDecomposition
 
 open Matrix
 open InfoGeometry.Clifford.ModularCftBridge
@@ -192,4 +192,4 @@ theorem kan_product_form (θ lam t : ℂ) :
   · exact kan_product_10 θ lam t
   · exact kan_product_11 θ lam t
 
-end KanDecomposition
+end InfoGeometry.Dynamics.KanDecomposition

@@ -15,7 +15,7 @@ at the I₄ = 0 boundary (GHZ to W-state decoherence).
 
 noncomputable section
 
-namespace STUGradientFlow
+namespace InfoGeometry.Applications.STUGradientFlow
 
 open InfoGeometry.Applications.STUQubit
 open InfoGeometry.Application.STUOperator
@@ -118,4 +118,4 @@ structure DiagonalDrazinSurgery where
   post_surgery_potential : DiagonalSTUState → ℝ :=
     fun s => - Real.log |s.y| - Real.log |s.z|
 
-end STUGradientFlow
+end InfoGeometry.Applications.STUGradientFlow

@@ -17,7 +17,7 @@ Bogoliubov frames are admissible only up to symmetries preserving the Drazin
 regular/defect split and the `Cl(1,1)` chiral split.
 -/
 
-namespace DrazinChiralFrameEquivariance
+namespace InfoGeometry.Canonical.DrazinChiralFrameEquivariance
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.DrazinKreinCompatibility
@@ -251,4 +251,4 @@ theorem drazinChiralNoetherGenerator_mem_information_lie_algebra
 
 end Core
 
-end DrazinChiralFrameEquivariance
+end InfoGeometry.Canonical.DrazinChiralFrameEquivariance

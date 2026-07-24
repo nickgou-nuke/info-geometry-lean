@@ -3,7 +3,7 @@ import Mathlib.Algebra.QuadraticDiscriminant
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Tactic.NoncommRing
 
-namespace CliffordGA
+namespace InfoGeometry.Algebra.CliffordGA
 
 open CliffordAlgebra
 
@@ -116,5 +116,5 @@ theorem vacuum_projector_idempotent [Invertible (2 : CliffordAlgebra Q)]
     rw [mul_assoc, mul_assoc]
   rw [h_assoc_two, invOf_mul_self (2 : CliffordAlgebra Q), mul_one]
 
-end CliffordGA
+end InfoGeometry.Algebra.CliffordGA
 

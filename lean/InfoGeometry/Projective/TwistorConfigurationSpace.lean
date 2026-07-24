@@ -19,7 +19,7 @@ Current status:
 
 open scoped BigOperators
 
-namespace TwistorConfigurationSpace
+namespace InfoGeometry.Projective.TwistorConfigurationSpace
 
 /-- 4-component complex vector carrier for the ambient space `\C^4`. -/
 abbrev C4 : Type := Fin 4 → ℂ
@@ -77,4 +77,4 @@ def formalLogForm (i j : Fin 3) :
 
 end FQ3
 
-end TwistorConfigurationSpace
+end InfoGeometry.Projective.TwistorConfigurationSpace

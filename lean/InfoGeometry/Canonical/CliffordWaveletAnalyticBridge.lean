@@ -22,7 +22,7 @@ No RH-level witness.
 
 noncomputable section
 
-namespace CliffordWaveletAnalyticBridge
+namespace InfoGeometry.Canonical.CliffordWaveletAnalyticBridge
 
 open InfoGeometry.Canonical
 
@@ -116,4 +116,4 @@ theorem cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one
       (cl11AtomOfTiltSwitch S j).mobiusParity = 1 :=
   CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one S j
 
-end CliffordWaveletAnalyticBridge
+end InfoGeometry.Canonical.CliffordWaveletAnalyticBridge

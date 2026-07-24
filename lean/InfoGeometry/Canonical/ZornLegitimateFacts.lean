@@ -19,7 +19,7 @@ No wrapper theorems, no classification claims, no exceptional-group claims.
 
 noncomputable section
 
-namespace ZornLegitimateFacts
+namespace InfoGeometry.Canonical.ZornLegitimateFacts
 
 open scoped BigOperators
 
@@ -87,4 +87,4 @@ theorem zornMatrix_nonassociative_exists :
 
 end Bundled
 
-end ZornLegitimateFacts
+end InfoGeometry.Canonical.ZornLegitimateFacts

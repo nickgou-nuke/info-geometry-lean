@@ -22,7 +22,7 @@ The finite `Cl(1,1)` swap already exists in
 predicates and exports the concrete PHS swap as a clean canonical surface.
 -/
 
-namespace MajoranaPHSZeroMode
+namespace InfoGeometry.Canonical.MajoranaPHSZeroMode
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -198,4 +198,4 @@ theorem concrete_majorana_swap_isKreinSkewAdjoint :
 
 end Core
 
-end MajoranaPHSZeroMode
+end InfoGeometry.Canonical.MajoranaPHSZeroMode

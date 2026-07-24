@@ -14,7 +14,7 @@ No claim is made that a specific `Cl(5,5)` model has been constructed here.
 
 noncomputable section
 
-namespace FibonacciFiveGradeBridge
+namespace InfoGeometry.Canonical.FibonacciFiveGradeBridge
 
 open ConformalFiveGradeInversion
 open FibonacciParafermionAtoms
@@ -90,4 +90,4 @@ theorem braid_preserves_leakage
     braid x ∈ leakageSet :=
   h_leak x hx
 
-end FibonacciFiveGradeBridge
+end InfoGeometry.Canonical.FibonacciFiveGradeBridge

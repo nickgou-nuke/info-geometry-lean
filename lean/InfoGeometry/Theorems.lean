@@ -52,7 +52,7 @@ certificates, or renamed placeholders.]
 - None in this file.
 -/
 
-namespace Theorems
+namespace InfoGeometry.Theorems
 
 section KreinSpaceProjectors
 
@@ -538,4 +538,4 @@ theorem verlinde_golden_identity
 
 end GoldenRatio
 
-end Theorems
+end InfoGeometry.Theorems

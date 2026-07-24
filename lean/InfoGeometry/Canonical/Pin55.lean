@@ -24,7 +24,7 @@ We prove the explicit exact sequences mapping Pin(5,5) -> O(5,5) -> Weyl(D5).
 
 noncomputable section
 
-namespace Pin55
+namespace InfoGeometry.Canonical.Pin55
 
 open InfoGeometry.Canonical.Pin55WeylWallpaper
 
@@ -107,4 +107,4 @@ theorem pin_quotient_to_weyl (v : Torus5D) :
             revert i h0 h1 h2 h3 h4
             decide
 
-end Pin55
+end InfoGeometry.Canonical.Pin55

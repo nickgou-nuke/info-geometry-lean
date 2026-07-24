@@ -11,7 +11,7 @@ surface stable while delegating all colimit transport to the canonical owner
 file in `InfoGeometry.Canonical.KuzminColimit`.
 -/
 
-namespace KuzminColimit
+namespace InfoGeometry.Projective.KuzminColimit
 
 open InfoGeometry.Canonical.KuzminColimit
 open InfoGeometry.Projective.KuzminInductiveLimitBridge
@@ -59,4 +59,4 @@ theorem toeplitz_relation_survives_colimit
   InfoGeometry.Canonical.KuzminColimit.toeplitz_relation_survives_colimit
     T toeplitzRel toeplitzLimitRel toeplitzLimitReadout n y hy
 
-end KuzminColimit
+end InfoGeometry.Projective.KuzminColimit

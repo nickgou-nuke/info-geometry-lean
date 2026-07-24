@@ -6,18 +6,18 @@ import InfoGeometry.Clifford.Cl11TensorTowerLimit
 /-!
 # Identification of the CPT Fractal Tower with the Generic Tensor Colimit
 
-This module provides the rigorous theorem-level identification of the specific 
-CPT fractal tower limit carrier (`Cl11TensorTowerLimit.Limit`) with the generic 
-tensor colimit formalization (`TensorTowerColimit`). 
+This module provides a theorem-level comparison surface between the specific
+CPT fractal tower limit carrier (`InfoGeometry.Clifford.Cl11TensorTowerLimit.Limit`)
+and the generic tensor-colimit formalization (`TensorTowerColimit`).
 
-This establishes that the macroscopic limit field constructed from `Cl(1,1)` 
-symmetry atoms perfectly satisfies the generic abstract colimit architecture.
+It records only the checked algebraic compatibility statements in this file; it
+does not assert an independent macroscopic field theorem.
 -/
 
-namespace CPTTensorColimitIdentification
+namespace InfoGeometry.Canonical.CPTTensorColimitIdentification
 
-open Cl11TensorTower
-open Cl11TensorTowerLimit
+open InfoGeometry.Clifford.Cl11TensorTower
+open InfoGeometry.Clifford.Cl11TensorTowerLimit
 open TensorColimitExpectation
 
 /-!
@@ -129,4 +129,4 @@ theorem cpt_protected_states_survive (n : ℕ) (x : Stage n)
     ofStageLinear n x ≠ 0 := by
   exact protected_states_survive_colimit Stage stageBondLinear Limit ofStageLinear h_kernel n x h_prot
 
-end CPTTensorColimitIdentification
+end InfoGeometry.Canonical.CPTTensorColimitIdentification

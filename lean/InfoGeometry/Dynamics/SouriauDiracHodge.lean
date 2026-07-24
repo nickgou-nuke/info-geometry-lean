@@ -17,7 +17,7 @@ below because several older modules still import it.
 
 universe u
 
-namespace SouriauDiracHodge
+namespace InfoGeometry.Dynamics.SouriauDiracHodge
 
 open scoped InnerProductSpace
 open InfoGeometry.Krein
@@ -486,4 +486,4 @@ def OperatorData.ofQuadraticSpectralEstimate
 
 end
 
-end SouriauDiracHodge
+end InfoGeometry.Dynamics.SouriauDiracHodge

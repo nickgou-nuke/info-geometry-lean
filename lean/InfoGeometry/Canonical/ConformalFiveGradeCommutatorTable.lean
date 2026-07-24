@@ -17,7 +17,7 @@ No bridge surface is introduced.
 
 noncomputable section
 
-namespace ConformalFiveGradeCommutatorTable
+namespace InfoGeometry.Canonical.ConformalFiveGradeCommutatorTable
 
 open InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
@@ -80,5 +80,5 @@ def ofPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :
 
 end FiveGradeCommutatorTable
 
-end ConformalFiveGradeCommutatorTable
+end InfoGeometry.Canonical.ConformalFiveGradeCommutatorTable
 

@@ -9,10 +9,10 @@ import InfoGeometry.Canonical.TomitaTakesaki
 # InfoGeometry.Canonical.YangMillsBridge
 
 Bridge-layer contracts linking the existing chiral RG flow scaffold to
-Yang-Mills mass-gap obligations.
+finite gauge-gap readout obligations.
 -/
 
-namespace YangMillsBridge
+namespace InfoGeometry.Unstable.YangMillsBridge
 
 open InfoGeometry.Canonical.ChiralRGFlow
 open InfoGeometry.Canonical.GaugeGroups
@@ -414,8 +414,8 @@ theorem spectralGapFromLogDet_pos_of_coercive
     (jacobianRelativeVolume_le_spectralGapFromLogDet
       (E := E) (rg_model := rg_model) (J := J))
 
-/-- Consolidated bridge package from chiral RG to Yang-Mills mass-gap targets. -/
-structure YangMillsMassGapBridge (E : Type) [NormedAddCommGroup E]
+/-- Consolidated finite bridge package from chiral RG data to a positive gap parameter. -/
+structure FiniteGaugeGapBridge (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Gauge-theory instantiation data. -/
   su_inst : SUNGaugeInstantiation
@@ -425,12 +425,12 @@ structure YangMillsMassGapBridge (E : Type) [NormedAddCommGroup E]
   qft_layer : QFTConstructiveLayer E
   /-- Candidate strict spectral gap (`λ₁`). -/
   spectral_gap : ℝ
-  /-- Strict positivity target for the mass gap. -/
+  /-- Strict positivity target for the supplied gap parameter. -/
   spectral_gap_pos : 0 < spectral_gap
   /-- Lower bound linking chiral scale to the spectral gap. -/
   gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap
 
-namespace YangMillsMassGapBridge
+namespace FiniteGaugeGapBridge
 
 /-- Concrete bridge constructor from explicit gauge/QFT/RG data. -/
 def ofConcreteLayers
@@ -440,7 +440,7 @@ def ofConcreteLayers
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    YangMillsMassGapBridge E where
+    FiniteGaugeGapBridge E where
   su_inst := su_inst
   rg_model := rg_model
   qft_layer := qft_layer
@@ -465,7 +465,7 @@ def ofExpectationSeedLayers
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    YangMillsMassGapBridge E :=
+    FiniteGaugeGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
     (QFTConstructiveLayer.ofExpectationSeedKMS
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct
@@ -487,7 +487,7 @@ def ofExpectationSeedLayersPositiveTime
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    YangMillsMassGapBridge E :=
+    FiniteGaugeGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
     (QFTConstructiveLayer.ofExpectationSeedKMSPositiveTime
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ
@@ -510,15 +510,14 @@ def ofExpectationSeedLayersFinite
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    YangMillsMassGapBridge E :=
+    FiniteGaugeGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
     (QFTConstructiveLayer.ofExpectationSeedKMSFinite
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero hΩ_posTime)
     spectral_gap spectral_gap_pos gamma_le_spectral_gap
 
 /--
-Fully constructive finite bridge constructor with log-det derived mass gap:
-no external spectral-gap number is supplied.
+Finite bridge constructor using the log-det gap-parameter readout; no external gap number is supplied.
 -/
 noncomputable def ofExpectationSeedLayersFiniteFromLogDet
     [FiniteDimensional ℝ (InfoGeometry.Krein.DoubledSpace E)]
@@ -532,7 +531,7 @@ noncomputable def ofExpectationSeedLayersFiniteFromLogDet
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)
     (hCoercive : LogDetCoercive (E := E) J) :
-    YangMillsMassGapBridge E :=
+    FiniteGaugeGapBridge E :=
   ofExpectationSeedLayersFinite (E := E)
     su_inst rg_model K β Ω hStruct hΩ_nonzero hΩ_posTime
     (spectralGapFromLogDet (E := E) rg_model J)
@@ -541,60 +540,58 @@ noncomputable def ofExpectationSeedLayersFiniteFromLogDet
     (gamma_le_spectralGapFromLogDet
       (E := E) (rg_model := rg_model) (J := J))
 
-end YangMillsMassGapBridge
+end FiniteGaugeGapBridge
 
 /-- Obligation 1: nontrivial `SU(N)` gauge rank (`N ≥ 2`). The `su_model` and `psu_model`
     fields in `SUNGaugeInstantiation` structurally guarantee an explicit gauge witness exists. -/
-def has_su_n_instantiation (B : YangMillsMassGapBridge E) : Prop :=
+def has_su_n_instantiation (B : FiniteGaugeGapBridge E) : Prop :=
   2 ≤ B.su_inst.n
 
 /-- Obligation 2: existence layer via OS/Wightman-style witnesses. -/
-def has_os_wightman_existence_layer (B : YangMillsMassGapBridge E) : Prop :=
+def has_os_wightman_existence_layer (B : FiniteGaugeGapBridge E) : Prop :=
   QFTConstructiveLayer.expectationSeedReflectionPositivity
       (E := E) B.qft_layer.K B.qft_layer.β B.qft_layer.Ω ∧
     QFTConstructiveLayer.finiteOsterwalderSchraderLayer (E := E) B.qft_layer.Ω ∧
     QFTConstructiveLayer.finiteWightmanReconstructionLayer
       (E := E) B.qft_layer.K B.qft_layer.β B.qft_layer.Ω
 
-/-- Obligation 3: strict positive mass gap. -/
-def has_strict_mass_gap (B : YangMillsMassGapBridge E) : Prop :=
+/-- Obligation 3: strict positivity of the gap parameter. -/
+def has_strict_positive_gap_parameter (B : FiniteGaugeGapBridge E) : Prop :=
   0 < B.spectral_gap
 
 /-- The RG component of the bridge inherits asymptotic freedom. -/
 lemma asymptotic_freedom_of_bridge_rg_model
-    (B : YangMillsMassGapBridge E) :
+    (B : FiniteGaugeGapBridge E) :
     IsAsymptoticallyFree B.rg_model.flow :=
   asymptotic_freedom_of_negative_beta B.rg_model
 
-/-- The bridge carries a strict mass-gap witness by construction. -/
-lemma strict_mass_gap_of_bridge (B : YangMillsMassGapBridge E) :
-    has_strict_mass_gap B :=
+/-- The bridge carries a strict positive gap-parameter witness by construction. -/
+lemma strict_mass_gap_of_bridge (B : FiniteGaugeGapBridge E) :
+    has_strict_positive_gap_parameter B :=
   B.spectral_gap_pos
 
 /-- The bridge carries the chiral-to-gap lower bound witness. -/
-lemma chiral_scale_bounds_mass_gap (B : YangMillsMassGapBridge E) :
+lemma chiral_scale_bounds_gap_parameter (B : FiniteGaugeGapBridge E) :
     B.rg_model.gamma ≤ B.spectral_gap :=
   B.gamma_le_spectral_gap
 
-/-- Consolidated milestone theorem for the three Yang-Mills obligations. -/
-theorem millennium_obligations_of_bridge
-    (B : YangMillsMassGapBridge E) :
+/-- Consolidated theorem for the three finite bridge obligations. -/
+theorem finite_obligations_of_bridge
+    (B : FiniteGaugeGapBridge E) :
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   refine ⟨B.su_inst.n_ge_two, ?_, B.spectral_gap_pos⟩
   exact ⟨B.qft_layer.reflection_positivity_holds,
     B.qft_layer.osterwalder_schrader_holds,
     B.qft_layer.wightman_reconstruction_holds⟩
 
-namespace YangMillsMassGapBridge
+namespace FiniteGaugeGapBridge
 
 /--
-Concrete milestone theorem:
-the bridge record is produced directly from concrete layer data, and then the
-three millennium obligations are immediate.
+Concrete finite bridge theorem: the bridge record is produced directly from concrete layer data, and then the three obligations are immediate.
 -/
-theorem millennium_obligations_of_concreteLayers
+theorem finite_obligations_of_concreteLayers
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
     (qft_layer : QFTConstructiveLayer E)
@@ -605,15 +602,14 @@ theorem millennium_obligations_of_concreteLayers
       spectral_gap spectral_gap_pos gamma_le_spectral_gap
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   intro B
-  exact millennium_obligations_of_bridge (E := E) B
+  exact finite_obligations_of_bridge (E := E) B
 
 /--
-Concrete milestone theorem in the expectation-seed route:
-reflection positivity is derived from canonical KMS structural hypotheses.
+Concrete theorem in the expectation-seed route: reflection positivity is derived from canonical KMS structural hypotheses.
 -/
-theorem millennium_obligations_of_expectationSeedLayers
+theorem finite_obligations_of_expectationSeedLayers
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
     (K : AlgebraEnd E)
@@ -625,18 +621,18 @@ theorem millennium_obligations_of_expectationSeedLayers
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    let B := YangMillsMassGapBridge.ofExpectationSeedLayers su_inst rg_model
+    let B := FiniteGaugeGapBridge.ofExpectationSeedLayers su_inst rg_model
       K β Ω hStruct hO hW spectral_gap spectral_gap_pos gamma_le_spectral_gap
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   intro B
-  exact millennium_obligations_of_bridge (E := E) B
+  exact finite_obligations_of_bridge (E := E) B
 
 /--
-Positive-time modular variant of the expectation-seed milestone theorem.
+Positive-time modular variant of the expectation-seed finite bridge theorem.
 -/
-theorem millennium_obligations_of_expectationSeedLayersPositiveTime
+theorem finite_obligations_of_expectationSeedLayersPositiveTime
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
     (K : AlgebraEnd E)
@@ -648,20 +644,19 @@ theorem millennium_obligations_of_expectationSeedLayersPositiveTime
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    let B := YangMillsMassGapBridge.ofExpectationSeedLayersPositiveTime
+    let B := FiniteGaugeGapBridge.ofExpectationSeedLayersPositiveTime
       su_inst rg_model K β Ω hStruct hΩ hW
       spectral_gap spectral_gap_pos gamma_le_spectral_gap
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   intro B
-  exact millennium_obligations_of_bridge (E := E) B
+  exact finite_obligations_of_bridge (E := E) B
 
 /--
-Fully constructive finite milestone theorem:
-no external reflection/OS/Wightman witnesses are provided by the caller.
+Finite bridge theorem: no external reflection/OS/Wightman witnesses are provided by the caller.
 -/
-theorem millennium_obligations_of_expectationSeedLayersFinite
+theorem finite_obligations_of_expectationSeedLayersFinite
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
     (K : AlgebraEnd E)
@@ -673,20 +668,19 @@ theorem millennium_obligations_of_expectationSeedLayersFinite
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
-    let B := YangMillsMassGapBridge.ofExpectationSeedLayersFinite
+    let B := FiniteGaugeGapBridge.ofExpectationSeedLayersFinite
       su_inst rg_model K β Ω hStruct hΩ_nonzero hΩ_posTime
       spectral_gap spectral_gap_pos gamma_le_spectral_gap
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   intro B
-  exact millennium_obligations_of_bridge (E := E) B
+  exact finite_obligations_of_bridge (E := E) B
 
 /--
-Fully constructive finite milestone theorem in the log-det route:
-the mass gap is derived from coercive Jacobian relative volume.
+Finite bridge theorem in the log-det route: the positive gap parameter is read from coercive Jacobian relative volume.
 -/
-theorem millennium_obligations_of_expectationSeedLayersFiniteFromLogDet
+theorem finite_obligations_of_expectationSeedLayersFiniteFromLogDet
     [FiniteDimensional ℝ (InfoGeometry.Krein.DoubledSpace E)]
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
@@ -698,14 +692,14 @@ theorem millennium_obligations_of_expectationSeedLayersFiniteFromLogDet
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)
     (hCoercive : LogDetCoercive (E := E) J) :
-    let B := YangMillsMassGapBridge.ofExpectationSeedLayersFiniteFromLogDet
+    let B := FiniteGaugeGapBridge.ofExpectationSeedLayersFiniteFromLogDet
       (E := E) su_inst rg_model K β Ω hStruct hΩ_nonzero hΩ_posTime J hCoercive
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
-      has_strict_mass_gap B := by
+      has_strict_positive_gap_parameter B := by
   intro B
-  exact millennium_obligations_of_bridge (E := E) B
+  exact finite_obligations_of_bridge (E := E) B
 
-end YangMillsMassGapBridge
+end FiniteGaugeGapBridge
 
-end YangMillsBridge
+end InfoGeometry.Unstable.YangMillsBridge

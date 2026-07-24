@@ -40,7 +40,7 @@ open scoped Topology
 
 noncomputable section
 
-namespace SouriauBostConnesFlow
+namespace InfoGeometry.Dynamics.SouriauBostConnesFlow
 
 open Complex
 open InfoGeometry.Canonical
@@ -157,4 +157,4 @@ theorem absolute_zero_attractor_limits_from
     Filter.Tendsto partition Filter.atTop (𝓝 (1 : ℝ)) :=
   hlimit
 
-end SouriauBostConnesFlow
+end InfoGeometry.Dynamics.SouriauBostConnesFlow

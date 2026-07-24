@@ -5,7 +5,7 @@ open scoped InnerProductSpace BigOperators
 
 noncomputable section
 
-namespace O55TKKAnomalyAnnihilation
+namespace InfoGeometry.Canonical.O55TKKAnomalyAnnihilation
 
 open InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
@@ -161,6 +161,6 @@ end Core
 
 end HestenesFinite
 
-end O55TKKAnomalyAnnihilation
+end InfoGeometry.Canonical.O55TKKAnomalyAnnihilation
 
 end

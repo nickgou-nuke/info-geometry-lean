@@ -20,7 +20,7 @@ invariance of the exact Pauli-spacetime transport.
 
 noncomputable section
 
-namespace CuntzLorentzPoincarePresentation
+namespace InfoGeometry.Algebra.CuntzLorentzPoincarePresentation
 
 open Matrix
 open InfoGeometry.Algebra.SupergradedSUSY
@@ -400,6 +400,6 @@ theorem finite_cuntz_super_poincare_lorentz_packet {n : ℕ} (i : Fin n) (t x y 
   exact ⟨rfl, rfl, canonical_cuntz_packet_anticommutator_translation i,
     exactBoostTransport_comp_self_preserves_spacetime_det t x y z⟩
 
-end CuntzLorentzPoincarePresentation
+end InfoGeometry.Algebra.CuntzLorentzPoincarePresentation
 
 end noncomputable section

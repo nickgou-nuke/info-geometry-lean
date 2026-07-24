@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 
-namespace BogoliubovProjectorFlux
+namespace InfoGeometry.Canonical.BogoliubovProjectorFlux
 
 open BogoliubovTransport
 open BogoliubovClosedForms
@@ -318,4 +318,4 @@ theorem minusProjectorFlux_KRotation_complex_i
 
 end Basic
 
-end BogoliubovProjectorFlux
+end InfoGeometry.Canonical.BogoliubovProjectorFlux

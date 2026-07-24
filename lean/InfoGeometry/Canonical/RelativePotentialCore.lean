@@ -18,7 +18,7 @@ primitive. The primary observables here are relational invariants: ratios,
 relative densities, and logarithmic contrasts (potentials).
 -/
 
-namespace RelativePotentialCore
+namespace InfoGeometry.Canonical.RelativePotentialCore
 
 open InfoGeometry.Canonical.PositiveRayCore
 
@@ -668,4 +668,4 @@ attribute [rep_depth projective]
 
 end Rays
 
-end RelativePotentialCore
+end InfoGeometry.Canonical.RelativePotentialCore

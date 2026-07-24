@@ -19,15 +19,15 @@ noncomputable section
 
 namespace CanonicalZornIntegralSpinTrialityClosure
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornRealComplexSpinBaseChange
-open InfoGeometry.Canonical.CanonicalZornRealSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornOuterTrialityGroup
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+open IntegralZornII44Bridge
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornCompositionTriality
+open CanonicalZornRealSpin44
+open CanonicalZornRealComplexSpinBaseChange
+open CanonicalZornRealSpinTrialityClosure
+open CanonicalZornOuterTrialityGroup
+open CanonicalZornFiveGradedClosure
+open ProjectiveAffineConformalClosure55
 
 /-- Forget the integral structure and express an integral Zorn matrix in the
 diagonal real split `(4,4)` coordinates used by the Clifford construction. -/

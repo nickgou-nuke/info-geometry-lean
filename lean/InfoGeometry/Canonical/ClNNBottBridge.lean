@@ -23,7 +23,7 @@ Authority note:
   `NeutralPhaseSpaceCore` and its adjacent bridge files.
 -/
 
-namespace ClNNBottBridge
+namespace InfoGeometry.Canonical.ClNNBottBridge
 
 open InfoGeometry.Clifford.ClNN
 open BottPeriodicity
@@ -73,4 +73,4 @@ open InfoGeometry.CliffordTower
   simpa [gammaHeadNullPlus, headNullPlus, headPair] using
     bottStep_headPair n ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))
 
-end ClNNBottBridge
+end InfoGeometry.Canonical.ClNNBottBridge

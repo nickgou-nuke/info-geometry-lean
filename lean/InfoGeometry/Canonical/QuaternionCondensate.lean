@@ -21,7 +21,7 @@ potentials, and does not derive Einstein-Cartan equations.  Those remain
 separate theorem-owned tasks.
 -/
 
-namespace QuaternionCondensate
+namespace InfoGeometry.Canonical.QuaternionCondensate
 
 set_option linter.unusedSectionVars false
 
@@ -210,4 +210,4 @@ theorem torsionReadout_antisymm
 
 end H4
 
-end QuaternionCondensate
+end InfoGeometry.Canonical.QuaternionCondensate

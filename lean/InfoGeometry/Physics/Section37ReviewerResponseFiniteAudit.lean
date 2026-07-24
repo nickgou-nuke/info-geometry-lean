@@ -24,7 +24,7 @@ or Dirac equation, Kähler integrability, CP violation, or an arrow of time.
 
 noncomputable section
 
-namespace Section37ReviewerResponseFiniteAudit
+namespace InfoGeometry.Physics.Section37ReviewerResponseFiniteAudit
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -81,6 +81,6 @@ theorem repaired_section37_reviewer_response_packet
     entropyProductionVonNeumann_zero_of_rho_commutes_logRho H rho logRho hcomm,
     entropyProductionVonNeumann_zero_of_equal_hamiltonians H1 H2 rho logRho hH⟩
 
-end Section37ReviewerResponseFiniteAudit
+end InfoGeometry.Physics.Section37ReviewerResponseFiniteAudit
 
 end noncomputable section

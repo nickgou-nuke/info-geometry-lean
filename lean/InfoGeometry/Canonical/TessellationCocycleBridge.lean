@@ -23,7 +23,7 @@ The bridge is intentionally conservative: cocycle compatibility hypotheses stay
 visible rather than being collapsed into a stronger unconditional theorem.
 -/
 
-namespace TessellationCocycleBridge
+namespace InfoGeometry.Canonical.TessellationCocycleBridge
 
 open InfoGeometry.Tessellation
 open InfoGeometry.Algebraic
@@ -115,4 +115,4 @@ noncomputable abbrev exactModularBerryCocycle
 
 end Cocycles
 
-end TessellationCocycleBridge
+end InfoGeometry.Canonical.TessellationCocycleBridge

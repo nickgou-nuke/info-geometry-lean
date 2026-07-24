@@ -21,10 +21,10 @@ Those claims remain explicit hypotheses until a concrete geometric/Fock model
 instantiates them.
 -/
 
-namespace KleinBottleOrientifold
+namespace InfoGeometry.Canonical.KleinBottleOrientifold
 
 open PrimeGasMaxEnt
-open HestenesDirac
+open InfoGeometry.Clifford.HestenesDirac
 
 universe u
 
@@ -82,4 +82,4 @@ structure SquareFreeSupportPacket where
   squareFreeSupport : Prop
   wittenMod16AnomalyCancellation : Prop
 
-end KleinBottleOrientifold
+end InfoGeometry.Canonical.KleinBottleOrientifold

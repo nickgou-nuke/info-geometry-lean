@@ -10,7 +10,7 @@ construction directly, providing genuine Lean 4 proofs of the pipeline behavior
 without vacuous data packaging or witnesses.
 -/
 
-namespace CliffordToVirasoro
+namespace InfoGeometry.Canonical.CliffordToVirasoro
 
 open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -47,4 +47,4 @@ theorem charged_fock_space_full_pipeline_readout
         H.sugawaraStressMode n := by
   exact clifford_current_to_virasoro_sugawara_readout (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
-end CliffordToVirasoro
+end InfoGeometry.Canonical.CliffordToVirasoro

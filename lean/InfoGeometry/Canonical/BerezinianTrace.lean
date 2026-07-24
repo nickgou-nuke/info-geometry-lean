@@ -18,7 +18,7 @@ import InfoGeometry.Cocycle.MatrixDetExpTrace
 - None.
 -/
 
-namespace BerezinianTrace
+namespace InfoGeometry.Canonical.BerezinianTrace
 
 open scoped Matrix
 
@@ -72,4 +72,4 @@ theorem ber_exp_eq_exp_str_debt (a b c d : ℝ) :
     Real.exp (supertrace (a + b) (c + d)) :=
   ber_exp_eq_exp_str a b c d
 
-end BerezinianTrace
+end InfoGeometry.Canonical.BerezinianTrace

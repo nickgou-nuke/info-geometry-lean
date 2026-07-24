@@ -9,7 +9,7 @@ namespace InfoGeometry.Canonical
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Clifford.ClNN
-open ConformalProjectiveEmbedding55
+open InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 /--
 The projective conformal embedding F: R^{4,4} -> Cl(5,5).

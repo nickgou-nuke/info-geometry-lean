@@ -23,7 +23,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace KleinQuadric
+namespace InfoGeometry.Projective.KleinQuadric
 
 /-- A coordinate vector in `R⁴`. -/
 structure Vec4 (R : Type*) where
@@ -295,4 +295,4 @@ theorem wedge_swap (u v : Vec4 R) :
 
 end Vec4
 
-end KleinQuadric
+end InfoGeometry.Projective.KleinQuadric

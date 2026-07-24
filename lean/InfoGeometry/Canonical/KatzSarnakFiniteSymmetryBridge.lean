@@ -28,7 +28,7 @@ or any Riemann-zeta zero statement.
 
 noncomputable section
 
-namespace KatzSarnakFiniteSymmetryBridge
+namespace InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 
 open Matrix
 
@@ -89,5 +89,5 @@ theorem finite_classical_symmetry_packet {a b : ℝ} (h : a * a + b * b = 1) :
       (rotation2 a b)ᵀ * symplecticJ * rotation2 a b = symplecticJ :=
   ⟨complexPhase_normSq h, rotation2_orthogonal h, rotation2_symplectic h⟩
 
-end KatzSarnakFiniteSymmetryBridge
+end InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 

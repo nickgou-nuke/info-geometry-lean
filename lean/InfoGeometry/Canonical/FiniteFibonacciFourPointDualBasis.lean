@@ -22,7 +22,7 @@ No complex-analytic continuation.
 No non-diagonal braid matrix.
 -/
 
-namespace FiniteFibonacciFourPointDualBasis
+namespace InfoGeometry.Canonical.FiniteFibonacciFourPointDualBasis
 
 open FiniteFibonacciFourPointBlocks
 
@@ -154,4 +154,4 @@ theorem phi_theta_exchange (D : FusionData) :
 
 end FusionData
 
-end FiniteFibonacciFourPointDualBasis
+end InfoGeometry.Canonical.FiniteFibonacciFourPointDualBasis

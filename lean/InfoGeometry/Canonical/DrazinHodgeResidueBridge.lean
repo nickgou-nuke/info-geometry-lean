@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace DrazinHodgeResidueBridge
+namespace InfoGeometry.Canonical.DrazinHodgeResidueBridge
 
 open InfoGeometry.Canonical
 
@@ -186,4 +186,4 @@ end DrazinHodgeResidueCalibration
 
 end Core
 
-end DrazinHodgeResidueBridge
+end InfoGeometry.Canonical.DrazinHodgeResidueBridge

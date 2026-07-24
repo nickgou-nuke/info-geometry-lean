@@ -25,7 +25,7 @@ they are unitary, identifies them with Majorana/Fibonacci anyons, proves
 Yang--Baxter, establishes Markov invariance, or derives a scrambling estimate.
 -/
 
-namespace RohozhkinDelaunayScramblingBridge
+namespace InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 open InfoGeometry.Projective.Scrambling
@@ -148,4 +148,4 @@ theorem rohozhkin_fibonacci_projective_gate_braid_rewrite
   exact fibonacciProjectiveGate_braid_rewrite_of_phase Gate R.phase R.readout
     i left right (R.braidPhase_rewrite i left right)
 
-end RohozhkinDelaunayScramblingBridge
+end InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge

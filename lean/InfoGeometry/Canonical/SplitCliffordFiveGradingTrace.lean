@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.SplitCliffordFiveGrading
 Minimal trace-metric facts for the concrete five-grading operators.
 -/
 
-namespace SplitCliffordFiveGradingTrace
+namespace InfoGeometry.Canonical.SplitCliffordFiveGradingTrace
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordFiveGrading
@@ -25,4 +25,4 @@ theorem trace_boundary_commutator_zero :
   rw [grading_boundary_commutator_explicit, tr4]
   simp
 
-end SplitCliffordFiveGradingTrace
+end InfoGeometry.Canonical.SplitCliffordFiveGradingTrace

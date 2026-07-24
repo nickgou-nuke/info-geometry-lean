@@ -18,7 +18,7 @@ H_{\mathrm{Dyson}} = E_{\mathrm{ext}} - \log \Delta^2.
 \]
 -/
 
-namespace PrimonCoulombGas
+namespace InfoGeometry.Canonical.PrimonCoulombGas
 
 open Real
 open scoped BigOperators
@@ -111,4 +111,4 @@ theorem dyson_to_vandermonde_bridge
 
 end FiniteDysonBridge
 
-end PrimonCoulombGas
+end InfoGeometry.Canonical.PrimonCoulombGas

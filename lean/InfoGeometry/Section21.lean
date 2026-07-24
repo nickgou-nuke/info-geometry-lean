@@ -35,9 +35,9 @@ noncomputable section
 namespace Section21
 
 open Matrix
-open DiracPauliGamma
+open InfoGeometry.Clifford.DiracPauliGamma
 
-abbrev DiracMatrix := DiracPauliGamma.DiracMatrix
+abbrev DiracMatrix := InfoGeometry.Clifford.DiracPauliGamma.DiracMatrix
 abbrev SpinMat := Section12.SpinMat
 abbrev SpinConnection := Section12.SpinConnection
 

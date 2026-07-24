@@ -15,7 +15,7 @@ It packages the safe ansatz:
 - expose a structured-trinity predicate to be studied/proved downstream.
 -/
 
-namespace HeadTrialityCore
+namespace InfoGeometry.Canonical.HeadTrialityCore
 
 open InfoGeometry.Canonical.Triality
 
@@ -186,4 +186,4 @@ theorem isBlockedTriality128_of_structured (T : CertifiedBlockedTriality128) :
 
 end Head128
 
-end HeadTrialityCore
+end InfoGeometry.Canonical.HeadTrialityCore

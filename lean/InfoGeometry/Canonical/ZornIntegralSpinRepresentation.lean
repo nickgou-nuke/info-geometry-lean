@@ -16,7 +16,7 @@ such a comparison requires an explicit scalar-extension theorem.
 
 noncomputable section
 
-namespace ZornIntegralSpinRepresentation
+namespace InfoGeometry.Canonical.ZornIntegralSpinRepresentation
 
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
@@ -123,6 +123,6 @@ theorem integralSpinLinear_bijective (g : integralSpin44) :
     Function.Bijective (integralSpinLinear g) :=
   ⟨integralSpinLinear_injective g, integralSpinLinear_surjective g⟩
 
-end ZornIntegralSpinRepresentation
+end InfoGeometry.Canonical.ZornIntegralSpinRepresentation
 
 end noncomputable section

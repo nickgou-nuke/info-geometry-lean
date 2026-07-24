@@ -12,7 +12,7 @@ open Matrix
 
 noncomputable section
 
-namespace JordanNormalForm
+namespace InfoGeometry.JordanNormalForm
 
 /--
 A Jordan block J_k(λ) of size k for eigenvalue λ:
@@ -80,4 +80,4 @@ lemma jordan_minimal_poly_sq (lam : ℚ) :
     norm_num [JordanBlock, Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply,
       Matrix.one_apply, Fin.sum_univ_two]
 
-end JordanNormalForm
+end InfoGeometry.JordanNormalForm

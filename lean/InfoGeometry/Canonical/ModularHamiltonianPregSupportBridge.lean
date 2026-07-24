@@ -14,7 +14,7 @@ certified support-restricted lane is an explicit compression of the same
 canonical `Δ/δ` package.
 -/
 
-namespace ModularHamiltonianPregSupportBridge
+namespace InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -59,7 +59,8 @@ theorem log_defined_on_Δreg
 
 /--
 Regular-lane spectral positivity implies the same `Preg` log-domain certificate,
-provided by the analytic bridge law encoded in `CertifiedModularReduction`.
+provided by the Hestenes--Krein bridge law encoded in
+`CertifiedModularReduction`.
 -/
 @[rep_depth operator]
 theorem log_defined_on_Preg_of_regularSpectrumPositive
@@ -234,4 +235,4 @@ theorem Kphys_eq_metric_compress_of_canonicalTomita
 
 end Core
 
-end ModularHamiltonianPregSupportBridge
+end InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge

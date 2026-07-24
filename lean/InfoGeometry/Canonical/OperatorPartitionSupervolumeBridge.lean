@@ -20,7 +20,7 @@ Berezinian shadow of the operatorial partition lane, not the full
 dimension-agnostic Type III/operator-volume theorem.
 -/
 
-namespace OperatorPartitionSupervolumeBridge
+namespace InfoGeometry.Canonical.OperatorPartitionSupervolumeBridge
 
 open InfoGeometry.Canonical.SouriauConformalKKT
 open InfoGeometry.Canonical.CartanBerezinianCore
@@ -58,4 +58,4 @@ end ConformalGibbsSouriauOperatorContext
 
 end Core
 
-end OperatorPartitionSupervolumeBridge
+end InfoGeometry.Canonical.OperatorPartitionSupervolumeBridge

@@ -28,7 +28,7 @@ No Hilbert-space representation of `O_A`, no K-theory computation, and no
 physical null-boundary anyon model is proved here.
 -/
 
-namespace FibonacciCantorCuntzBoundary
+namespace InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary
 
 open Matrix
 
@@ -97,4 +97,4 @@ theorem fibonacci_boundary_packet :
     fibonacciPathCount_initial.2,
     fibonacciPathCount_recursion⟩
 
-end FibonacciCantorCuntzBoundary
+end InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary

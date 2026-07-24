@@ -13,11 +13,11 @@ noncomputable section
 
 namespace CanonicalZornIntegralSpinRepresentation
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornRealComplexSpinBaseChange
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinSubgroup
+open IntegralZornII44Bridge
+open CanonicalZornRealSpin44
+open CanonicalZornRealComplexSpinBaseChange
+open CanonicalZornIntegralSpinTrialityClosure
+open CanonicalZornIntegralSpinSubgroup
 
 theorem integralZornToRealSplit44_add (X Y : IntegralZorn) :
     integralZornToRealSplit44 (X + Y) =

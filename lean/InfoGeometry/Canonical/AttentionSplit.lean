@@ -25,55 +25,55 @@ variable [AddCommMonoid V] [Module ℝ V]
 /-- Lorentzian attention parameters induced by the split-signature bilinear form. -/
 noncomputable abbrev lorentzianAttentionParams
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V) :
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V) :
     InfoGeometry.GrandCanonical.GrandCanonicalParams (Fin n) :=
-  _root_.Attention.attentionParams q ctx splitB11
+  InfoGeometry.Canonical.Attention.attentionParams q ctx splitB11
 
 /-- Gibbs weights from the split-signature interaction score. -/
 noncomputable abbrev lorentzianAttentionWeights
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
     (β : ℝ) (i : Fin n) : ℝ :=
-  _root_.Attention.attentionWeights q ctx splitB11 β i
+  InfoGeometry.Canonical.Attention.attentionWeights q ctx splitB11 β i
 
 /-- Attention output with Lorentzian query-key geometry and arbitrary value space. -/
 noncomputable abbrev lorentzianAttentionHead
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
     (β : ℝ) : V :=
-  _root_.Attention.attentionHead q ctx splitB11 β
+  InfoGeometry.Canonical.Attention.attentionHead q ctx splitB11 β
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Theorem: Lorentzian Attention is rigorously normalized. -/
 lemma lorentzianAttentionWeights_sum_one
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
     (β : ℝ) :
     ∑ i, lorentzianAttentionWeights q ctx β i = 1 := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [lorentzianAttentionWeights] using
-    _root_.Attention.attentionWeights_sum_one q ctx splitB11 β
+    InfoGeometry.Canonical.Attention.attentionWeights_sum_one q ctx splitB11 β
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Lorentzian attention weights are pointwise nonnegative. -/
 lemma lorentzianAttentionWeights_nonneg
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
     (β : ℝ) (i : Fin n) :
     0 ≤ lorentzianAttentionWeights q ctx β i := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [lorentzianAttentionWeights] using
-    _root_.Attention.attentionWeights_nonneg q ctx splitB11 β i
+    InfoGeometry.Canonical.Attention.attentionWeights_nonneg q ctx splitB11 β i
 
 omit [AddCommMonoid V] [Module ℝ V] in
 /-- Lorentzian attention weights are pointwise bounded by one. -/
 lemma lorentzianAttentionWeights_le_one
     (q : ℝ × ℝ)
-    (ctx : _root_.Attention.ContextWindow n (ℝ × ℝ) V)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
     (β : ℝ) (i : Fin n) :
     lorentzianAttentionWeights q ctx β i ≤ 1 := by
   haveI : Nonempty (Fin n) := ⟨⟨0, Fact.out⟩⟩
   simpa [lorentzianAttentionWeights] using
-    _root_.Attention.attentionWeights_le_one q ctx splitB11 β i
+    InfoGeometry.Canonical.Attention.attentionWeights_le_one q ctx splitB11 β i
 
 end InfoGeometry.Canonical.Attention

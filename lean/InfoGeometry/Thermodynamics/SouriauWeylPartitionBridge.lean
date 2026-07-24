@@ -30,7 +30,7 @@ Massieu partition function.
 
 noncomputable section
 
-namespace InfoGeometry.Thermodynamics.SouriauWeylPartition
+namespace InfoGeometry.Thermodynamics
 
 open InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 open InfoGeometry.Thermodynamics
@@ -122,4 +122,4 @@ theorem weyl_cancellation_holds
 
 end SouriauWeylPartitionBridge
 
-end InfoGeometry.Thermodynamics.SouriauWeylPartition
+end InfoGeometry.Thermodynamics

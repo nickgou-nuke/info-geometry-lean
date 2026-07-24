@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Volume.DeterminantBundle
 import Mathlib.Tactic
 
-namespace RestrictedVolumeCharacter
+namespace InfoGeometry.Canonical.RestrictedVolumeCharacter
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -14,6 +14,7 @@ open InfoGeometry.Krein.SplitQuadraticSheets
 open InfoGeometry.Krein.PolarizedSector
 open InfoGeometry.Volume.Base
 open InfoGeometry.Volume.DeterminantBundle
+open Base
 
 open Lean.Parser.Tactic in
 /-- Automates the common doubled-space operator extensionality proof pattern. -/
@@ -541,4 +542,4 @@ end RestrictedCharacter
 
 end RestrictedSheetEquiv
 
-end RestrictedVolumeCharacter
+end InfoGeometry.Canonical.RestrictedVolumeCharacter

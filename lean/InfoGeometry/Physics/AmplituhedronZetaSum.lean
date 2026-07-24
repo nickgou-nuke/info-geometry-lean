@@ -2,16 +2,20 @@ import Mathlib
 import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
 import InfoGeometry.Physics.AmplituhedronKMSBridge
 
-namespace AmplituhedronZetaSum
+namespace InfoGeometry.Physics.AmplituhedronZetaSum
 
-open InfoGeometry.Physics.AmplituhedronKMSBridge
+open AmplituhedronKMSBridge
 open InfoGeometry.Canonical.BostConnesKMS
 
-/-- The total Bost-Connes partition function (the sum of all unnormalized
-    KMS projection readouts) structurally converges to the Riemann Zeta function.
-    This lifts the single-summand bridge to the full partition sum. -/
-theorem amplituhedron_partition_sum_eq_zeta (β : ℝ) (hβ : 1 < β) :
-    (∑' (n : ℕ), ((kmsProjectionReadout β 1 ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ)) = riemannZeta (β : ℂ) := by
-  sorry
+/-- Statement shape for the total Bost-Connes partition function claim.
 
-end AmplituhedronZetaSum
+This file does not install the Euler/zeta readout as a theorem.  The claim is
+kept as an explicit proposition until it is routed through the repository's
+categorical/Hestenes--Krein colimit zeta owner. -/
+def amplituhedron_partition_sum_eq_zeta_statement : Prop :=
+  ∀ β : ℝ, 1 < β →
+    (∑' (n : ℕ),
+      ((kmsProjectionReadout β 1 ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ)) =
+        riemannZeta (β : ℂ)
+
+end InfoGeometry.Physics.AmplituhedronZetaSum

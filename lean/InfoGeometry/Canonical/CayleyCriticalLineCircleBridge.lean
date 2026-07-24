@@ -21,7 +21,7 @@ continuation of zeta, a completed-`xi` determinant identity, or RH.
 
 noncomputable section
 
-namespace CayleyCriticalLineCircleBridge
+namespace InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-- Cayley/Mobius coordinate from Riemann temperature `s` to fugacity `z`. -/
 def cayleyToFugacity (s : ℂ) : ℂ :=
@@ -242,4 +242,4 @@ variable (A : LeeYangPrimeApproximation CompletedXiReadout)
 
 end LeeYangPrimeApproximation
 
-end CayleyCriticalLineCircleBridge
+end InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

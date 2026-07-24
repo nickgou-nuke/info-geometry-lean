@@ -16,7 +16,7 @@ CPT, anomaly shielding, particle classification, or a `Pin(5,5)` representation
 theorem.  It is the kernel-checked finite block identity layer.
 -/
 
-namespace EEIntertwinerFiniteLaws
+namespace InfoGeometry.OperatorAlgebra.EEIntertwinerFiniteLaws
 
 abbrev Sector := Fin 2
 abbrev Slot16 := Fin 16
@@ -108,4 +108,4 @@ theorem ee_intertwiner_finite_laws_packet :
   exact ⟨W_involutive, W_UL_W_eq_LR, W_LR_W_eq_UL, W_g0_anticommutes,
     UL_idempotent, LR_idempotent, UL_after_LR_zero, LR_after_UL_zero⟩
 
-end EEIntertwinerFiniteLaws
+end InfoGeometry.OperatorAlgebra.EEIntertwinerFiniteLaws

@@ -29,7 +29,7 @@ Instead it exposes a theorem-safe arithmetic socket:
 * Virasoro centrality is read from the existing `VirasoroAlgebra.cgen_bracket`.
 -/
 
-namespace HestenesD4HurwitzBridge
+namespace InfoGeometry.Krein.HestenesD4HurwitzBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesMoebiusClosureBridge
@@ -294,6 +294,6 @@ end D4HurwitzArithmeticBridge
 
 end Core
 
-end HestenesD4HurwitzBridge
+end InfoGeometry.Krein.HestenesD4HurwitzBridge
 
 end

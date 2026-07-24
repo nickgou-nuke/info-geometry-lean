@@ -21,7 +21,7 @@ noncomputable section
 
 namespace CanonicalZornProjectiveTKKBridge
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open ProjectiveAffineConformalClosure55
 
 /-! ## Real split coordinates and the real Zorn carrier -/
@@ -80,7 +80,7 @@ theorem pac44ToCoreZorn_det (x : PACSplit44) :
 /-! ## Embedding the real Zorn algebra into the canonical complex carrier -/
 
 /-- Coordinatewise complexification into the canonical Zorn carrier. -/
-def coreToCanonical (X : ZornCore.Zorn) : SplitOctonionBraidSU3.Zorn where
+def coreToCanonical (X : ZornCore.Zorn) : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn where
   a := X.a
   u := fun i => X.u i
   v := fun i => X.v i
@@ -91,7 +91,7 @@ theorem coreToCanonical_injective : Function.Injective coreToCanonical := by
   apply ZornCore.Zorn.ext'
   · apply Complex.ofReal_injective
     simpa [coreToCanonical] using
-      congrArg SplitOctonionBraidSU3.Zorn.a h
+      congrArg InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn.a h
   · funext i
     apply Complex.ofReal_injective
     simpa [coreToCanonical] using congrArg (fun Z => Z.u i) h
@@ -100,7 +100,7 @@ theorem coreToCanonical_injective : Function.Injective coreToCanonical := by
     simpa [coreToCanonical] using congrArg (fun Z => Z.v i) h
   · apply Complex.ofReal_injective
     simpa [coreToCanonical] using
-      congrArg SplitOctonionBraidSU3.Zorn.b h
+      congrArg InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn.b h
 
 /-- Complexification preserves the full nonassociative Zorn product. -/
 theorem coreToCanonical_mul (X Y : ZornCore.Zorn) :
@@ -125,7 +125,7 @@ theorem coreToCanonical_norm (X : ZornCore.Zorn) :
     Fin.sum_univ_three]
 
 /-- Direct map from the split affine carrier into the canonical Zorn algebra. -/
-def pac44ToCanonicalZorn (x : PACSplit44) : SplitOctonionBraidSU3.Zorn :=
+def pac44ToCanonicalZorn (x : PACSplit44) : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn :=
   coreToCanonical (pac44ToCoreZorn x)
 
 theorem pac44ToCanonicalZorn_norm (x : PACSplit44) :
@@ -135,14 +135,14 @@ theorem pac44ToCanonicalZorn_norm (x : PACSplit44) :
 /-! ## Triality transported to the canonical carrier -/
 
 /-- Cyclic coordinate triality on the canonical complex Zorn carrier. -/
-def canonicalTriality (X : SplitOctonionBraidSU3.Zorn) :
-    SplitOctonionBraidSU3.Zorn where
+def canonicalTriality (X : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn) :
+    InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn where
   a := X.a
   u := ![X.u 1, X.u 2, X.u 0]
   v := ![X.v 1, X.v 2, X.v 0]
   b := X.b
 
-theorem canonicalTriality_order_three (X : SplitOctonionBraidSU3.Zorn) :
+theorem canonicalTriality_order_three (X : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn) :
     canonicalTriality (canonicalTriality (canonicalTriality X)) = X := by
   apply zorn_ext
   · rfl
@@ -152,7 +152,7 @@ theorem canonicalTriality_order_three (X : SplitOctonionBraidSU3.Zorn) :
     fin_cases i <;> rfl
   · rfl
 
-theorem canonicalTriality_norm (X : SplitOctonionBraidSU3.Zorn) :
+theorem canonicalTriality_norm (X : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn) :
     zornNorm (canonicalTriality X) = zornNorm X := by
   simp [canonicalTriality, zornNorm, dot3]
   ring
@@ -170,7 +170,7 @@ theorem coreToCanonical_triality (X : ZornCore.Zorn) :
   · rfl
 
 /-- Cyclic triality is an automorphism of the canonical Zorn multiplication. -/
-theorem canonicalTriality_mul (X Y : SplitOctonionBraidSU3.Zorn) :
+theorem canonicalTriality_mul (X Y : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn) :
     canonicalTriality (zornMul X Y) =
       zornMul (canonicalTriality X) (canonicalTriality Y) := by
   apply zorn_ext

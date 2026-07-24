@@ -14,9 +14,9 @@ noncomputable section
 
 open Matrix
 
-namespace SL2FiveGradingExample
+namespace InfoGeometry.Canonical.SL2FiveGradingExample
 
-open FiveGradedInformationLedger
+open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 /-! ## 1. The Lie algebra 𝔰𝔩₂(ℝ) -/
 
@@ -127,4 +127,4 @@ noncomputable def sl2FiveGrading : FiveGrading sl₂ :=
       have hX0 : X = 0 := by simpa using hX
       subst hX0; simp [Submodule.zero_mem] }
 
-end SL2FiveGradingExample
+end InfoGeometry.Canonical.SL2FiveGradingExample

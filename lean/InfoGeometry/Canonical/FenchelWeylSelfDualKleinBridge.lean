@@ -12,7 +12,7 @@ theorems as stable aliases while keeping the noncommutative affine Weyl/Klein
 relation visible at this boundary name.
 -/
 
-namespace FenchelWeylSelfDualKleinBridge
+namespace InfoGeometry.Canonical.FenchelWeylSelfDualKleinBridge
 
 set_option linter.unusedSectionVars false
 
@@ -113,4 +113,4 @@ theorem kleinBottle_weyl_noncommute :
 
 end
 
-end FenchelWeylSelfDualKleinBridge
+end InfoGeometry.Canonical.FenchelWeylSelfDualKleinBridge

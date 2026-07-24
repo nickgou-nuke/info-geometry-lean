@@ -25,7 +25,7 @@ All statements are over the concrete `M₂(ℝ)` owner model.
 
 noncomputable section
 
-namespace SplitQuaternionAutomorphismStructure
+namespace InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure
 
 open Matrix
 open InfoGeometry.Algebra.SplitQuaternionMatrices
@@ -193,4 +193,4 @@ theorem inner_automorphism_packet (A : Mat2) (hA : det2 A ≠ 0) :
       (∀ X : Mat2, det2 (innerConj A X) = det2 X) :=
   ⟨innerConj_one A hA, fun X Y => innerConj_mul A X Y hA, fun X => det2_innerConj A X hA⟩
 
-end SplitQuaternionAutomorphismStructure
+end InfoGeometry.Algebra.SplitQuaternionAutomorphismStructure

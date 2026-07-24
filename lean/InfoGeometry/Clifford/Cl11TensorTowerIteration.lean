@@ -18,7 +18,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Cl11TensorTowerIteration
+namespace InfoGeometry.Clifford.Cl11TensorTowerIteration
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.SupergradedBracket
@@ -243,4 +243,4 @@ theorem ofStage_iteratedStageEmbed_superBracket_eq
   rw [ofStage_iteratedStageEmbed m k A, ofStage_iteratedStageEmbed m k B]
   rw [← map_superBracket (InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage m) px py A B, h]
 
-end Cl11TensorTowerIteration
+end InfoGeometry.Clifford.Cl11TensorTowerIteration

@@ -15,16 +15,17 @@ noncomputable section
 
 namespace CanonicalZornIntegralTrialityEquivariance
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinRepresentation
+open IntegralZornII44Bridge
+open CanonicalZornCompositionTriality
+open CanonicalZornCompositionFiveGradeBridge
+open CanonicalZornCliffordRepresentation
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornRealSpin44
+open CanonicalZornIntegralSpinTrialityClosure
+open CanonicalZornIntegralSpinRepresentation
 open InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+open CanonicalZornFiveGradedClosure
+open ProjectiveAffineConformalClosure55
 
 /-- Cyclic permutation of the three integral Zorn vector axes. -/
 def integralAxisCycleLinear : IntegralZorn →ₗ[ℤ] IntegralZorn where

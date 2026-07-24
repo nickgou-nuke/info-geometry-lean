@@ -18,7 +18,7 @@ import InfoGeometry.Dynamics.ModularThermalState
 
 noncomputable section
 
-namespace KMSDetailedBalance
+namespace InfoGeometry.Thermo.KMSDetailedBalance
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Dynamics
@@ -275,4 +275,4 @@ theorem kmsDetailedBalanceOwnerTarget
 
 end KMSDetailedBalance
 
-end KMSDetailedBalance
+end InfoGeometry.Thermo.KMSDetailedBalance

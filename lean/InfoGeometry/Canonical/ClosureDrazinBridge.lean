@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace ClosureDrazinBridge
+namespace InfoGeometry.Canonical.ClosureDrazinBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ChiralOperatorConeClosure
@@ -209,4 +209,4 @@ end ConstructiveClosureDrazinData
 
 end Core
 
-end ClosureDrazinBridge
+end InfoGeometry.Canonical.ClosureDrazinBridge

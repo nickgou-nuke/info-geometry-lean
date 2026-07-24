@@ -14,7 +14,7 @@ noncomputable section
 namespace S3ColorSpinorDecomposition
 
 open BogoliubovBraidGraphWeld
-open BogoliubovSU3ParafermionProofChain
+open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 open SU3LoopBraidDuality
 
 /-- Permuting color lanes leaves the separate singlet lane fixed. -/

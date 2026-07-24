@@ -19,7 +19,7 @@ only packages the already-owned equalities showing that:
   source branch while the gauge branch is `K`-silent.
 -/
 
-namespace BohmMadelungOperatorialBridge
+namespace InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 
 open InfoGeometry.Canonical.PolarizedMadelungBridge
 open InfoGeometry.Canonical.StateDependentTransport
@@ -499,4 +499,4 @@ theorem constantStateGeneratorField_phaseAxisForce_eq_from_stateSourceGenerator
 
 end Core
 
-end BohmMadelungOperatorialBridge
+end InfoGeometry.Canonical.BohmMadelungOperatorialBridge

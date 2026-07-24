@@ -19,7 +19,7 @@ result beyond the packet currently owned by the repository.
 
 noncomputable section
 
-namespace D23HurwitzCliffordFilterBank
+namespace InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
 
 open InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 open InfoGeometry.Quantum.Hurwitz
@@ -139,4 +139,4 @@ theorem d23HurwitzCliffordFilterBank_packet :
       d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
   d23HurwitzCliffordFilterBankOwnerTarget
 
-end D23HurwitzCliffordFilterBank
+end InfoGeometry.Analysis.D23HurwitzCliffordFilterBank

@@ -9,7 +9,7 @@ coordinates, then derives the logarithmic volume-change cocycle.
 No wrappers. No abstract datum. No `sorry`.
 -/
 
-namespace Concrete
+namespace InfoGeometry.Algebra.Zorn.Concrete
 
 /--
 A concrete Zorn cell
@@ -261,4 +261,4 @@ theorem negLogDet_mul
 
 end ZornCell
 
-end Concrete
+end InfoGeometry.Algebra.Zorn.Concrete

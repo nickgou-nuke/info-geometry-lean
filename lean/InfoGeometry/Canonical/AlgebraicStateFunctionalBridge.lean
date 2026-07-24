@@ -19,7 +19,7 @@ It records the smallest truthful bridge currently supported by the repo:
 once a normalization witness is supplied.
 -/
 
-namespace AlgebraicStateFunctionalBridge
+namespace InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 
 open InfoGeometry.Volume.ConnesCocycle
 open StandardFormCore
@@ -161,4 +161,4 @@ end StateRepresentationBridge
 
 end Core
 
-end AlgebraicStateFunctionalBridge
+end InfoGeometry.Canonical.AlgebraicStateFunctionalBridge

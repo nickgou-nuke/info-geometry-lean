@@ -23,7 +23,7 @@ emergence theorem is asserted.
 
 noncomputable section
 
-namespace Section31UnifiedMatrixDynamics
+namespace InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -98,6 +98,6 @@ theorem repaired_section31_dynamics_packet
   exact ⟨vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 n1 n2 n3,
     covDerivConst_commutator_eq_curvature_action Γ Λ X⟩
 
-end Section31UnifiedMatrixDynamics
+end InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 end noncomputable section

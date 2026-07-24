@@ -13,7 +13,7 @@ dually-flat information geometry, Jordan/KKT barrier structure, and Bregman/Fenc
 
 namespace InfoGeometry.Canonical.GrandUnification
 
-open DualFlat
+open InfoGeometry.Geometry.DualFlat
 
 /-- Data for a Jordan/KKT barrier model on an ambient space `E`. -/
 @[blueprint "def:jordan-kkt-data"]

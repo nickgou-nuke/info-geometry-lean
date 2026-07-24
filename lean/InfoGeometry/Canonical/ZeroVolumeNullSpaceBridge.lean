@@ -26,7 +26,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace ZeroVolumeNullSpaceBridge
+namespace InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.Canonical.KreinDrazinBoundarySupport
@@ -104,4 +104,4 @@ end ZeroVolumeNullSpacePacket
 
 end Core
 
-end ZeroVolumeNullSpaceBridge
+end InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge

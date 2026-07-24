@@ -38,7 +38,7 @@ carriers used to discuss the tensor tower.  It does not assert:
 * an infinite tensor-product theorem.
 -/
 
-namespace ChiralLightConeTensorTower
+namespace InfoGeometry.Canonical.ChiralLightConeTensorTower
 
 /--
 Four-symbol local split `Cl(1,1)` chiral alphabet.
@@ -154,4 +154,4 @@ theorem CausalWord.toBoundary_of_lt {n : ℕ}
 theorem CausalWord.toChiralWord_apply {n : ℕ} (w : CausalWord n) (k : Fin n) :
     CausalWord.toChiralWord w k = ChiralArrow.toSymbol (w k) := rfl
 
-end ChiralLightConeTensorTower
+end InfoGeometry.Canonical.ChiralLightConeTensorTower

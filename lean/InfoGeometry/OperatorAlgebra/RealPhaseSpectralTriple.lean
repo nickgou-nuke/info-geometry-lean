@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 
 noncomputable section
 
-namespace RealPhaseSpectralTriple
+namespace InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 
 open scoped ENNReal
 
@@ -210,4 +210,4 @@ theorem lipschitz_nonneg (a : A) :
 
 end PhaseRealSpectralTriple
 
-end RealPhaseSpectralTriple
+end InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple

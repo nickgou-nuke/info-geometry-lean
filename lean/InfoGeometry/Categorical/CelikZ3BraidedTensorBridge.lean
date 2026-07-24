@@ -26,7 +26,7 @@ Cuntz representation closure remain outside this file.
 
 noncomputable section
 
-namespace CelikZ3BraidedTensorBridge
+namespace InfoGeometry.Categorical.CelikZ3BraidedTensorBridge
 
 open InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
@@ -89,6 +89,6 @@ theorem celik_cantor_z3_braided_tensor_bridge_packet
         wordParityZ2 (oddStep a ++ oddStep b) = 0) :=
   celik_z3_braided_tensor_bridge R12 R23 sourceR sourceB hYB hMatch a b
 
-end CelikZ3BraidedTensorBridge
+end InfoGeometry.Categorical.CelikZ3BraidedTensorBridge
 
 end noncomputable section

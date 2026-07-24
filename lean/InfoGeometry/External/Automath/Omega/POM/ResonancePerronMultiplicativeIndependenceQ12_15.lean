@@ -1,1 +1,0 @@
-import InfoGeometry.External.Automath.Omega.POM.ResonancePerronMultiplicativeIndependenceQ12Q15

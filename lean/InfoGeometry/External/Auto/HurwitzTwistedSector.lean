@@ -266,9 +266,9 @@ theorem finiteHurwitzCharacterCombination_zero
 /--
 Conservative infinite Hurwitz trace interface.
 
-The actual infinite series, convergence, and analytic continuation are not
-proved here.  This record states the precise bridge data a later analytic file
-must provide.
+The actual infinite series, convergence, and continuation readout are not
+proved here.  This record states the precise bridge data a later
+Hestenes--Krein/categorical colimit owner must provide.
 -/
 structure InfiniteHurwitzTraceModel where
   heatTrace : ℝ → ℂ → ℂ

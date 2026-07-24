@@ -14,7 +14,7 @@ in `InfoGeometry.Canonical.BosonizationConstructiveCurrent`, where the current
 law is derived from normal-ordered matrix units and the crossing-count theorem.
 -/
 
-namespace BosonizationSchwinger
+namespace InfoGeometry.Canonical.BosonizationSchwinger
 
 open InfoGeometry.Canonical.BosonizationBoundary
 open VirasoroProject
@@ -137,4 +137,4 @@ theorem normalOrderedCurrentTarget_commutator_schwingerCoeff (m n : ℤ) :
 
 end TargetHeisenberg
 
-end BosonizationSchwinger
+end InfoGeometry.Canonical.BosonizationSchwinger

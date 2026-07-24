@@ -17,7 +17,7 @@ This file proves:
 No wrappers. No `sorry`.
 -/
 
-namespace SplitCliffordChiralProjection
+namespace InfoGeometry.Canonical.SplitCliffordChiralProjection
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -120,4 +120,4 @@ theorem chiral_projectors_mul_K :
     ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
-end SplitCliffordChiralProjection
+end InfoGeometry.Canonical.SplitCliffordChiralProjection

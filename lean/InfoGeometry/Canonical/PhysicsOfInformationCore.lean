@@ -20,7 +20,7 @@ This module records the first formal targets:
 - preservation readouts for mode entropy and parity entropy across the bridge.
 -/
 
-namespace PhysicsOfInformationCore
+namespace InfoGeometry.Canonical.PhysicsOfInformationCore
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.SpectralInference
@@ -266,4 +266,4 @@ noncomputable def anomalyScale (S : SpectralHookDatum (E := E)) : ℝ :=
 
 end SpectralHooks
 
-end PhysicsOfInformationCore
+end InfoGeometry.Canonical.PhysicsOfInformationCore

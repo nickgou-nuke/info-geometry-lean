@@ -21,7 +21,7 @@ replacing external witnesses with native Fredholm derivations.
 
 noncomputable section
 
-namespace DrazinTopologicalRealization
+namespace InfoGeometry.Canonical.DrazinTopologicalRealization
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -145,4 +145,4 @@ def drazinTopologicalCentralCharge (CIK : CertifiedInverseKernel H₂)
         (drazinFredholmModule CIK cl11 W)) : ℤ :=
   (drazinFredholmModule CIK cl11 W).analyticalIndex hSfc
 
-end DrazinTopologicalRealization
+end InfoGeometry.Canonical.DrazinTopologicalRealization

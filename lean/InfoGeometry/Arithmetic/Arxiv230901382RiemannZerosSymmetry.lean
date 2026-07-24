@@ -22,7 +22,7 @@ The module records no global zeta analysis, no completeness result for function
 spaces, and no operator spectrum theorem for zeta zeros.
 -/
 
-namespace Arxiv230901382RiemannZerosSymmetry
+namespace InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry
 
 open Matrix
 
@@ -344,4 +344,4 @@ theorem arxiv230901382_finite_symmetry_packet :
     comm_J0_Jminus, spinHalfCasimir_eq_three_quarters, Jplus_ketDown,
     Jminus_ketUp, by norm_num [finiteWittenTrace_eq], parityP_sq⟩
 
-end Arxiv230901382RiemannZerosSymmetry
+end InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry

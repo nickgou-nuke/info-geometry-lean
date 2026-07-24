@@ -6,7 +6,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace JordanWignerCelikKocakBridgeNDepth
+namespace InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth
 
 open InfoGeometry.Canonical.CelikKocakCantorOperators
 open InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace
@@ -171,4 +171,4 @@ theorem matrix_jwAnnihilation_stable {n : ℕ} (k : Fin n) :
     matStageEmbed n (jwAnnihilation n k) = jwAnnihilation (n + 1) k.castSucc :=
   matStageEmbed_jwAnnihilation (n := n) k
 
-end JordanWignerCelikKocakBridgeNDepth
+end InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth

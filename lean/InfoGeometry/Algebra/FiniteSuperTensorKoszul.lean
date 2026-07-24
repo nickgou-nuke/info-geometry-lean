@@ -15,7 +15,7 @@ proved content is the concrete `1|1` odd-operator Koszul sign calculation and
 the resulting equality of the two `2 × 2` determinant blocks.
 -/
 
-namespace FiniteSuperTensorKoszul
+namespace InfoGeometry.Algebra.FiniteSuperTensorKoszul
 
 open Matrix
 open scoped Kronecker
@@ -98,4 +98,4 @@ theorem oddOddKoszul_blockDet_ratio_eq_one
   rw [oddOddKoszul_evenBlock_det, oddOddKoszul_oddBlock_det]
   exact div_self h
 
-end FiniteSuperTensorKoszul
+end InfoGeometry.Algebra.FiniteSuperTensorKoszul

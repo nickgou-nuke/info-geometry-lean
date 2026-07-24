@@ -1,9 +1,0 @@
-import InfoGeometry.External.Automath.Omega.Experiments.KLFromTVQmin
-import InfoGeometry.External.Automath.Omega.Experiments.MarkovTVSampleComplexity
-import InfoGeometry.External.Automath.Omega.Experiments.MetallicMeanGoldenUniqueOptimalTVConstant
-import InfoGeometry.External.Automath.Omega.Experiments.MultiscaleResidual
-import InfoGeometry.External.Automath.Omega.Experiments.ParryBaselineGapSturmian
-import InfoGeometry.External.Automath.Omega.Experiments.ParryBaselineGapSturmianExp
-import InfoGeometry.External.Automath.Omega.Experiments.QminLowerboundMarkov
-import InfoGeometry.External.Automath.Omega.Experiments.RotationMicrostateKLCertificate
-import InfoGeometry.External.Automath.Omega.Experiments.TVCertificateHist

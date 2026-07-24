@@ -10,7 +10,7 @@ noncommutative globally, multiplicative on coaxial 1-parameter slices.
 No wrappers. No `sorry`.
 -/
 
-namespace QuaternionCoaxialOrbit
+namespace InfoGeometry.Canonical.QuaternionCoaxialOrbit
 
 open Quaternion
 
@@ -58,4 +58,4 @@ theorem coaxialPath_neg_mul (v : PureQuaternion) (t : ℝ) :
 
 end
 
-end QuaternionCoaxialOrbit
+end InfoGeometry.Canonical.QuaternionCoaxialOrbit

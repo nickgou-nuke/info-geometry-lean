@@ -5,7 +5,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace CuntzKTowerCommutation
+namespace InfoGeometry.Canonical.CuntzKTowerCommutation
 
 open scoped Matrix Kronecker
 open Matrix
@@ -278,4 +278,4 @@ theorem S_left_commutes_K_limit_from_one
   compatible_limit_commute_from_one
     S_left stageKFromOne hS stageKFromOne_commutes_bond hcomm k
 
-end CuntzKTowerCommutation
+end InfoGeometry.Canonical.CuntzKTowerCommutation

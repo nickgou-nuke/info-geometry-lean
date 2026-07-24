@@ -3,7 +3,7 @@ import Mathlib.Tactic.NormNum
 import InfoGeometry.Clifford.CliffordTower
 import InfoGeometry.Physics.PellisFineStructure
 
-namespace FineStructureModels
+namespace InfoGeometry.Physics.FineStructureModels
 
 open InfoGeometry.Clifford.CliffordTower
 open PellisFineStructure
@@ -77,4 +77,4 @@ def cent_dim : ℕ := 137
 theorem cent_dim_sum : cent_dim = mersenne 2 + mersenne 3 + mersenne 7 := by
   rw [cent_dim]; exact combinatorial_hierarchy_sum
 
-end FineStructureModels
+end InfoGeometry.Physics.FineStructureModels

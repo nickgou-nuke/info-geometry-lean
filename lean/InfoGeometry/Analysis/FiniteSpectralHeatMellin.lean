@@ -26,7 +26,7 @@ No Mellin inversion.
 No unbounded operator or projection-valued-measure calculus.
 -/
 
-namespace FiniteSpectralHeatMellin
+namespace InfoGeometry.Analysis.FiniteSpectralHeatMellin
 
 open Finset
 open InfoGeometry.Analysis.FiniteSpectralMellinTaylor
@@ -109,4 +109,4 @@ theorem heatMellinReadout_eq_spectralScalingReadout_of_pointwise
   intro i hi
   rw [hpoint i]
 
-end FiniteSpectralHeatMellin
+end InfoGeometry.Analysis.FiniteSpectralHeatMellin

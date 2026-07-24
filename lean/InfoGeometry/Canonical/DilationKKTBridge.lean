@@ -8,7 +8,7 @@ witness.  This module deliberately does not prove that every mismatch admits a
 resolving dilation.
 -/
 
-namespace DilationKKTBridge
+namespace InfoGeometry.Canonical.DilationKKTBridge
 
 open OperatorProjectorMismatch
 
@@ -39,4 +39,4 @@ theorem dilation_vanishes_when_source_absent
     D.dilationGenerator = 0 :=
   D.vanishes_of_no_source h
 
-end DilationKKTBridge
+end InfoGeometry.Canonical.DilationKKTBridge

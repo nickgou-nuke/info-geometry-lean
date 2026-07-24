@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section
 
-namespace CosmicAndreevCrossover
+namespace InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover
 
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
@@ -78,4 +78,4 @@ theorem crossover_imbalance_anti_fixed :
 
 end CosmicCrossoverWitness
 
-end CosmicAndreevCrossover
+end InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover

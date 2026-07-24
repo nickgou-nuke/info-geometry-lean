@@ -33,7 +33,7 @@ No theorem here proves Hawking radiation, black-hole unitarity, or a literal
 superconducting horizon.  Those remain geometric/physical closure debt.
 -/
 
-namespace AndreevHorizonUnitarity
+namespace InfoGeometry.Projective.AndreevHorizonUnitarity
 
 open InfoGeometry.Physics.FermionicAndreevReflection
 open InfoGeometry.Projective.Closure
@@ -120,4 +120,4 @@ theorem concreteAndreevHorizon_information_preservation :
     concreteAndreevHorizonSMatrix
     mobiusParity2_trace
 
-end AndreevHorizonUnitarity
+end InfoGeometry.Projective.AndreevHorizonUnitarity

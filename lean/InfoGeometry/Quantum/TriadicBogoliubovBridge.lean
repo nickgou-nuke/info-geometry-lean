@@ -1,9 +1,9 @@
 import InfoGeometry.Canonical.BogoliubovTransport
 import Mathlib.Analysis.InnerProductSpace.LinearMap
 
-namespace TriadicBogoliubovBridge
+namespace InfoGeometry.Quantum.TriadicBogoliubovBridge
 
-open BogoliubovTransport
+open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Krein
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -26,4 +26,4 @@ noncomputable def triadicGenerator {ι : Type*} [Fintype ι]
     (w : ι → ℝ) (q a : ι → H₂) : EndH :=
   ∑ i, w i • dyadicKrein (E := E) (q i) (a i)
 
-end TriadicBogoliubovBridge
+end InfoGeometry.Quantum.TriadicBogoliubovBridge

@@ -18,7 +18,7 @@ inverse conclusions depend on explicit polynomial equations and explicit
 nonzero coefficient hypotheses.
 -/
 
-namespace DecellCayleyHamiltonInverse
+namespace InfoGeometry.Canonical.DecellCayleyHamiltonInverse
 
 noncomputable section
 
@@ -93,4 +93,4 @@ theorem decell_inverse_candidate_three_left
 
 end
 
-end DecellCayleyHamiltonInverse
+end InfoGeometry.Canonical.DecellCayleyHamiltonInverse

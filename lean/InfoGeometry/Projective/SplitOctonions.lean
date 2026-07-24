@@ -16,7 +16,7 @@ and an abstract Albert/Jordan interface for the later global split-Cayley plane.
 No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
 -/
 
-namespace SplitOctonions
+namespace InfoGeometry.Projective.SplitOctonions
 
 universe u v
 
@@ -1073,4 +1073,4 @@ theorem mk_scaleNull
 
 end ZornProjectiveDatum
 
-end SplitOctonions
+end InfoGeometry.Projective.SplitOctonions

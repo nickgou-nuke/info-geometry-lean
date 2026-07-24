@@ -5,15 +5,9 @@ namespace Omega.Zeta
 
 noncomputable section
 
-/-- The normalized self-dual scattering package satisfies oddness for every seed datum. -/
-def selfdual_ssf_odd_statement : Prop :=
-  ∀ D : selfdual_ssf_odd_data, selfdual_ssf_odd_data.ssf_odd D ∧
-    selfdual_ssf_odd_data.phase_odd_mod_two_pi D
-
 /-- Concrete normalized self-dual scattering phase package. -/
 structure selfdual_ssf_odd_data where
-  normalization : selfdual_ssf_odd_statement := by
-    exact paper_selfdual_ssf_odd
+  normalization : Unit := ()
 
 namespace selfdual_ssf_odd_data
 
@@ -34,17 +28,17 @@ def phase_odd_mod_two_pi (D : selfdual_ssf_odd_data) : Prop :=
   ∀ lambda : ℝ, ∃ k : ℤ,
     D.phase (-lambda) + D.phase lambda = (2 * Real.pi) * k
 
+end selfdual_ssf_odd_data
+
 /-- Paper label: `prop:selfdual-ssf-odd`. -/
 theorem paper_selfdual_ssf_odd (D : selfdual_ssf_odd_data) :
-    selfdual_ssf_odd_data.ssf_odd D ∧ selfdual_ssf_odd_data.phase_odd_mod_two_pi D := by
+    D.ssf_odd ∧ D.phase_odd_mod_two_pi := by
   constructor
   · intro lambda
     simp [selfdual_ssf_odd_data.ssf]
   · intro lambda
     refine ⟨0, ?_⟩
     simp [selfdual_ssf_odd_data.phase]
-
-end selfdual_ssf_odd_data
 
 end
 

@@ -5,8 +5,8 @@ import InfoGeometry.Projective.KleinQuadricPlucker
 # Quantum Twistors
 
 This module maps the formal quantum minors of the `QuantumGrassmannian` coordinate ring
-into the `QuantumPluckerGenerator` structure, explicitly identifying the FRT minors
-with the physical twistor products $p_{ij} = \langle Z_i Z_j \rangle$.
+into the `QuantumPluckerGenerator` structure.  It records the algebraic minor
+coordinates and the q-Plücker relation in the quantum Grassmannian carrier.
 -/
 
 namespace InfoGeometry.Projective.QuantumTwistor
@@ -26,10 +26,8 @@ structure QuantumPluckerGenerator (A : Type*) where
   p13 : A
   p23 : A
 
-/--
-Explicit map from the `QuantumGrassmannian` coordinate ring (the FRT minors)
-to the physical `QuantumPluckerGenerator` coordinates.
--/
+/-- Explicit map from the `QuantumGrassmannian` coordinate ring to the
+recorded `QuantumPluckerGenerator` coordinates. -/
 def quantumPluckerMap (q : R) :
     QuantumPluckerGenerator (coordinateRing R q) where
   p01 := ⟨quantumMinor R q ⟨(0, 1), by decide⟩, quantumMinor_mem_coordinateRing R q _⟩
@@ -39,7 +37,7 @@ def quantumPluckerMap (q : R) :
   p13 := ⟨quantumMinor R q ⟨(1, 3), by decide⟩, quantumMinor_mem_coordinateRing R q _⟩
   p23 := ⟨quantumMinor R q ⟨(2, 3), by decide⟩, quantumMinor_mem_coordinateRing R q _⟩
 
-/-- The six production twistor coordinates satisfy the q-Plücker relation in
+/-- The six recorded coordinates satisfy the q-Plücker relation in
 `O_q(Gr(2,4))`. -/
 theorem quantumPluckerMap_relation (q : R) :
     let P := quantumPluckerMap R q

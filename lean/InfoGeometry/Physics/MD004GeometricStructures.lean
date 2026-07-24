@@ -27,7 +27,7 @@ finite bilinear form has trivial algebraic kernel.
 
 noncomputable section
 
-namespace MD004GeometricStructures
+namespace InfoGeometry.Physics.MD004GeometricStructures
 
 set_option linter.unnecessarySeqFocus false
 
@@ -246,6 +246,6 @@ theorem repaired_MD004_geometric_structures_packet (a b : Coord4) (u v : Coord8)
     J0_sq u, J0_preserves_dot8 u v, omega0_skew u v,
     fun x h => omega0_nondegenerate x h⟩
 
-end MD004GeometricStructures
+end InfoGeometry.Physics.MD004GeometricStructures
 
 end noncomputable section

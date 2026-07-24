@@ -19,7 +19,7 @@ algebra, a Fuglede--Kadison determinant, a Type II/III factor, or a Virasoro
 central-charge theorem.  Those require separate owner interfaces and proofs.
 -/
 
-namespace FiniteToInfiniteTransitionSOP
+namespace InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
 
 open InductiveInvariantPacket
 
@@ -138,4 +138,4 @@ theorem finite_chain_closure_and_readout
 
 end SupergradedClosureAt
 
-end FiniteToInfiniteTransitionSOP
+end InfoGeometry.Meta.FiniteToInfiniteTransitionSOP

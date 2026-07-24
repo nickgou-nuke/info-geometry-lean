@@ -36,7 +36,7 @@ paper itself treats those analytic operator-theoretic points as the hard
 closure problem.
 -/
 
-namespace Arxiv160803679BenderHamiltonian
+namespace InfoGeometry.Arithmetic.Arxiv160803679BenderHamiltonian
 
 open Complex
 
@@ -147,4 +147,4 @@ theorem berryKeating_commuting_shadow {R : Type*} [Semiring R]
 
 end
 
-end Arxiv160803679BenderHamiltonian
+end InfoGeometry.Arithmetic.Arxiv160803679BenderHamiltonian

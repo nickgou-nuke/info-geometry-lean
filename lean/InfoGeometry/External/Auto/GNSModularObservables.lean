@@ -19,7 +19,7 @@ noncomputable section
 
 namespace GNSModularObservables
 
-open ChiralCausalCone
+open InfoGeometry.Physics.ChiralCausalCone
 /-! ## 1. normalized matrix trace τ = ½Tr on M₂(ℂ) -/
 
 /-- The normalized trace on M₂(ℂ): τ(a) = ½·Tr(a).
@@ -79,7 +79,7 @@ theorem fierz_soldering_maps_operators_to_spinors :
     (1/2 : ℂ) • (Matrix.kroneckerMap (fun (a b : ℂ) => a * b) (1 : Matrix (Fin 2) (Fin 2) ℂ) (1 : Matrix (Fin 2) (Fin 2) ℂ) +
       Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σ3c σ3c) +
     Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σPlus σMinus +
-    Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σMinus σPlus = FierzIdentities.Swap := FierzIdentities.chiral_fierz_identity
+    Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σMinus σPlus = InfoGeometry.Physics.FierzIdentities.Swap := InfoGeometry.Physics.FierzIdentities.chiral_fierz_identity
 
 /-! ## 4. Physical observables — what the normalized trace measures -/
 

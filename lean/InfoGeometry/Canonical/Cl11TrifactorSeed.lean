@@ -14,5 +14,5 @@ Import surface for the genuine trifactor owners:
 This file declares no additional theorem names.
 -/
 
-namespace Cl11TrifactorSeed
-end Cl11TrifactorSeed
+namespace InfoGeometry.Canonical.Cl11TrifactorSeed
+end InfoGeometry.Canonical.Cl11TrifactorSeed

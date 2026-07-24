@@ -37,7 +37,7 @@ and continuum quantum-field claims are intentionally outside this file.
 
 open Matrix
 
-namespace DiscreteHodgeStabilizer
+namespace InfoGeometry.Topology.DiscreteHodgeStabilizer
 
 noncomputable section
 
@@ -203,4 +203,4 @@ theorem hodge_orthogonal_protection
 
 end
 
-end DiscreteHodgeStabilizer
+end InfoGeometry.Topology.DiscreteHodgeStabilizer

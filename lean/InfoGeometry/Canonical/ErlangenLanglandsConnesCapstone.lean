@@ -8,5 +8,5 @@ The owner declarations remain in the capstone namespace; this file declares no
 theorem aliases.
 -/
 
-namespace ErlangenLanglandsConnesCapstone
-end ErlangenLanglandsConnesCapstone
+namespace InfoGeometry.Canonical.ErlangenLanglandsConnesCapstone
+end InfoGeometry.Canonical.ErlangenLanglandsConnesCapstone

@@ -10,7 +10,7 @@ native global Cartan geometry construction.  The closed facts here are the
 finite-dimensional ranks/dimensions verified from the Zorn product over `QQ`.
 -/
 
-namespace SplitOctonion235Distribution
+namespace InfoGeometry.Lie.SplitOctonion235Distribution
 
 open InfoGeometry.Projective.SplitOctonions
 
@@ -90,4 +90,4 @@ theorem splitOctonion235Packet_not_global_cartan_geometry :
     splitOctonion235Packet.status ≠ Distribution235Status.globalCartanGeometryOpenDebt := by
   decide
 
-end SplitOctonion235Distribution
+end InfoGeometry.Lie.SplitOctonion235Distribution

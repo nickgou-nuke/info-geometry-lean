@@ -15,7 +15,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace ConstructiveCayley
+namespace InfoGeometry.OperatorAlgebra.ConstructiveCayley
 
 universe u
 
@@ -312,4 +312,4 @@ attribute [rep_depth operator]
   D_sub_K_commutes_D_add_K
   cayley_factors_commute
 
-end ConstructiveCayley
+end InfoGeometry.OperatorAlgebra.ConstructiveCayley

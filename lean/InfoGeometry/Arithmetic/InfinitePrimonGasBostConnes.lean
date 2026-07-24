@@ -18,10 +18,10 @@ and local cancellations are natively preserved in the infinite target ring under
 
 set_option linter.unusedSectionVars false
 
-open PrimonFinite
+open InfoGeometry.Arithmetic.PrimonFinite
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
-namespace InfinitePrimonGasBostConnes
+namespace InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
 
 variable {ι : Type*} [DecidableEq ι]
 variable {A : ℕ → Type*} [∀ n : ℕ, CommRing (A n)]
@@ -96,4 +96,4 @@ theorem infinite_primon_susy_cancellation
   have h_local := local_susy_cancellation (K := K n) modes (q_stage n) (h_nonzero_stage n)
   rw [h_local, map_one]
 
-end InfinitePrimonGasBostConnes
+end InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes

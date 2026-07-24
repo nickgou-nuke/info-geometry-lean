@@ -11,10 +11,10 @@ This file records the theorem-safe interface between:
 * Bregman divergence and Legendre/expectation coordinates; and
 * the repository's finite thermodynamic gauge word `d_ln_Q`.
 
-It intentionally does **not** prove analytic convexity, Fisher positivity,
-Hodge theory, global de Rham exactness, or the Killing equation from first
-principles. Those require explicit premises from specialized analytic owner
-modules. The closed theorems here are algebraic readbacks from that data.
+It intentionally does **not** prove convexity, Fisher positivity, Hodge theory,
+global de Rham exactness, or the Killing equation from first principles. Those
+require explicit premises from specialized Hestenes--Krein/categorical colimit
+owner modules. The closed theorems here are algebraic readbacks from that data.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -35,7 +35,7 @@ Analytic positivity, global de Rham/Hodge theory, Souriau coadjoint-orbit
 construction, and ODE existence/uniqueness are not claimed here.
 -/
 
-namespace AmariSouriauThermodynamicGauge
+namespace InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 
 open InfoGeometry.Topology.ThermodynamicGauge
 
@@ -380,4 +380,4 @@ theorem constant_translation_lieMetric_zero :
 
 end QuadraticTwoCoordinate
 
-end AmariSouriauThermodynamicGauge
+end InfoGeometry.Canonical.AmariSouriauThermodynamicGauge

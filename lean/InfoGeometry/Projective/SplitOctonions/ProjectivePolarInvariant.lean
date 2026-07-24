@@ -21,7 +21,7 @@ No quotient construction.
 No `sorry`.
 -/
 
-namespace ProjectivePolarInvariant
+namespace InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant
 
 /--
 Projective polar incidence is well-defined under independent nonzero scalar
@@ -253,4 +253,4 @@ theorem incidenceFiber_scale_right
     · exact False.elim (hm hm_zero)
     · exact hpolar
 
-end ProjectivePolarInvariant
+end InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant

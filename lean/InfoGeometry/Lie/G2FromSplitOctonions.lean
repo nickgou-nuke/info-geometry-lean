@@ -1,17 +1,19 @@
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationWitness
-import InfoGeometry.Lie.RealSplitOctonionG2Classification
+import InfoGeometry.Lie.SplitOctonionStandardDerivation
 
 /-!
-# G₂ from Split Octonions - Honest Computational Summary
+# Split-octonion derivation-space packet
 
-Builds 𝔤₂ = Der(𝕆ₛ) with computational evidence.
+Defines the elementary derivation-space bracket and connects the canonical
+split-octonion derivation owner to its native fourteen-dimensional and
+standard-derivation spanning theorems.
 -/
 
 noncomputable section
 
-namespace G2FromSplitOctonions
+namespace InfoGeometry.Lie.G2FromSplitOctonions
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness
@@ -61,54 +63,25 @@ theorem bracket_closed {D₁ D₂ : DerivSpace} (hD1 : IsDeriv D₁) (hD2 : IsDe
       hD2_mul (D₁ X) Y, hD2_mul X (D₁ Y)]
     ext <;> simp [addZ, subZ, mulZ] <;> ring
 
--- Computational dimension from external verification
-abbrev g2_dim : ℕ := 14
+/-- The canonical split-octonion derivation algebra. -/
+abbrev CanonicalDerivations :=
+  InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations
 
-theorem dim_is_14 : g2_dim = 14 := rfl
+/-- Native finrank of the canonical split-octonion derivation algebra. -/
+theorem canonicalDerivations_finrank :
+    Module.finrank ℝ CanonicalDerivations = 14 :=
+  InfoGeometry.Lie.CanonicalZornDerivationDimension.finrank_canonicalZornDerivations
 
-/-- The exact computer-algebra packet records the same `14` dimension value. -/
-theorem g2_dim_eq_packet_derivationNullity :
-    g2_dim =
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationNullity := by
-  rfl
+/-- Baez standard derivations generate every canonical split-octonion derivation. -/
+theorem canonicalDerivations_span_standard :
+    InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ :=
+  InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivations_span_top
 
-/-- The exact packet records the same `14` value as the basis count. -/
-theorem g2_dim_eq_packet_basisCount :
-    g2_dim =
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.basisCount := by
-  rfl
-
-/-- The exact packet records the same `14` value as the Killing rank. -/
-theorem g2_dim_eq_packet_killingRank :
-    g2_dim =
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingRank := by
-  rfl
-
-/-- Packet-level `14` readback summary for the split-octonion `𝔤₂` lane. -/
-theorem g2_dim_packet_summary :
-    g2_dim = 14 ∧
-      g2_dim =
-        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationNullity ∧
-      g2_dim =
-        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.basisCount ∧
-      g2_dim =
-        InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingRank := by
-  exact ⟨rfl, g2_dim_eq_packet_derivationNullity, g2_dim_eq_packet_basisCount,
-    g2_dim_eq_packet_killingRank⟩
-
-theorem decomposition_14_eq_8_plus_6 : g2_dim = 8 + 6 := by unfold g2_dim; norm_num
-
--- Root system: |Φ| = 12, rank = 2
-def roots : ℕ := 12
-def rk : ℕ := 2
-
-theorem weyl_dim : rk + roots = g2_dim := by unfold rk roots g2_dim; norm_num
-
--- Explicit witness
+-- Concrete derivation
 def D01 : DerivSpace := rot01Derivation
 theorem D01_deriv : IsDeriv D01 :=
   ⟨rot01_preserves_add, rot01_preserves_neg, rot01_is_derivation⟩
 
-end G2FromSplitOctonions
+end InfoGeometry.Lie.G2FromSplitOctonions
 
 noncomputable section

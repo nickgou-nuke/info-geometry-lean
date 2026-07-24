@@ -25,7 +25,7 @@ exact finite readback pattern showing how:
 * equal local states have zero limit Bures cost.
 -/
 
-namespace BayesianThermoMetricHodgeBridge
+namespace InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge
 
 open InfinitesimalDictionaryBridge
 open BayesianDiscreteHodgeBridge
@@ -36,8 +36,8 @@ open MaximumCaliberKLSplit
 open MaximumCaliberPath
 open DiscreteDiracHodgeChiralBridge
 open TensorColimitExpectation
-open EckmannDiscreteHodge
-open DiscreteHodgeStabilizer
+open InfoGeometry.Topology.EckmannDiscreteHodge
+open InfoGeometry.Topology.DiscreteHodgeStabilizer
 
 universe u v w
 
@@ -126,4 +126,4 @@ theorem coexact_current_eq_dlnQ
 
 end CoexactCurrent
 
-end BayesianThermoMetricHodgeBridge
+end InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge

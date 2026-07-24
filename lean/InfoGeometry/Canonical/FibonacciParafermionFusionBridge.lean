@@ -16,7 +16,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace FibonacciParafermionFusionBridge
+namespace InfoGeometry.Canonical.FibonacciParafermionFusionBridge
 
 open Matrix
 open FibonacciParafermionAtoms
@@ -63,4 +63,4 @@ theorem ofReal_F_matrix_sq
     exact_mod_cast ha
   simpa using fibonacciFusionMatrix_sq (τ := (a : ℂ)) (s := (b : ℂ)) hbC haC
 
-end FibonacciParafermionFusionBridge
+end InfoGeometry.Canonical.FibonacciParafermionFusionBridge

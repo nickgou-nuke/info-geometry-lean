@@ -38,7 +38,7 @@ Any infinite-dimensional Tomita-Takesaki, KMS, Cuntz-algebra, spectral-triple,
 or analytic Dirac-Hodge interpretation.
 -/
 
-namespace TomitaMatrixAtom
+namespace InfoGeometry.Krein.TomitaMatrixAtom
 
 open Matrix
 
@@ -291,4 +291,4 @@ theorem diracHodgeAtom_mul_Pminus :
     norm_num [diracHodgeAtom, ellPlus, ellMinus, Pplus, Pminus,
       Matrix.mul_apply, Fin.sum_univ_two]
 
-end TomitaMatrixAtom
+end InfoGeometry.Krein.TomitaMatrixAtom

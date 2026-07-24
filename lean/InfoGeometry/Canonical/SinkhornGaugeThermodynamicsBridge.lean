@@ -20,7 +20,7 @@ That is a later grand-canonical/background-field bridge.
 
 open scoped BigOperators
 
-namespace SinkhornGaugeThermodynamicsBridge
+namespace InfoGeometry.Canonical.SinkhornGaugeThermodynamicsBridge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.KMSSinkhornBridge
@@ -149,4 +149,4 @@ theorem sinkhornGaugeBudget_zero_forces_KMSClosure
 
 end KMSBudget
 
-end SinkhornGaugeThermodynamicsBridge
+end InfoGeometry.Canonical.SinkhornGaugeThermodynamicsBridge

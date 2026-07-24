@@ -25,10 +25,10 @@ noncomputable section
 
 namespace CanonicalZornCompositionFiveGradeBridge
 
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.TKKJordanPairData
+open CanonicalZornCompositionTriality
+open CanonicalZornFiveGradedClosure
+open CanonicalZornProjectiveTKKBridge
+open TKKJordanPairData
 
 /-- The vector copy placed in the translation block of grade `+1`. -/
 def vectorGradePlus (V : Vector8) : ConformalMatrix :=

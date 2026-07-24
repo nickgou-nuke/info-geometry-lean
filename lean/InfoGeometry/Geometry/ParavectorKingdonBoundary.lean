@@ -16,12 +16,12 @@ conjugation claim is made here.
 
 noncomputable section
 
-namespace ParavectorKingdonBoundary
+namespace InfoGeometry.Geometry.ParavectorKingdonBoundary
 
 open InfoGeometry.Geometry.PauliParavectorBridge
 open InfoGeometry.Geometry.ParavectorZornBoundary
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit
-open InfoGeometry.Algebra.KingdonSplitOctonion
+open KingdonSplitOctonion
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
@@ -77,6 +77,6 @@ theorem kingdonNorm_boundary_eq_zero_iff_isNull (v : Minkowski4) :
   rw [kingdonNorm_boundary_eq_minkowski_q]
   rfl
 
-end ParavectorKingdonBoundary
+end InfoGeometry.Geometry.ParavectorKingdonBoundary
 
 end noncomputable section

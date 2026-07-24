@@ -22,7 +22,7 @@ in a Cartan chart, not `det(exp(θ·H))`.
 
 noncomputable section
 
-namespace CartanExponentialFamily
+namespace InfoGeometry.Algebraic.CartanExponentialFamily
 
 open scoped BigOperators
 open Finset
@@ -417,4 +417,4 @@ theorem fisherCov_zero_eq_average_trace_form_of_centered
     (Finset.mul_sum (s := Finset.univ) (f := fun i => X i * Y i)
       (1 / Fintype.card ι : ℝ)).symm
 
-end CartanExponentialFamily
+end InfoGeometry.Algebraic.CartanExponentialFamily

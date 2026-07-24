@@ -30,7 +30,7 @@ namespace JaynesFormalism
 open Finset
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
 open InfoGeometry.Canonical.JaynesCategoricalInductionBridge
-open JaynesLDDSCentering
+open InfoGeometry.Canonical.JaynesLDDSCentering
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps
 open InfoGeometry.Canonical.FiniteJaynesFormalism

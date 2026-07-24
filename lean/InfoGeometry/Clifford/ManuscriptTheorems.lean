@@ -24,7 +24,7 @@ Formalizing the three core theorems of the manuscript
     = 2e²/h at the topological Exceptional Point
 -/
 
-namespace ManuscriptTheorems
+namespace InfoGeometry.Clifford.ManuscriptTheorems
 
 open InfoGeometry.Clifford.Cl44Witt
 
@@ -157,4 +157,4 @@ particular, this file does not prove a measurable conductance theorem
 `G = 2e²/h` from a completed analytic model.
 -/
 
-end ManuscriptTheorems
+end InfoGeometry.Clifford.ManuscriptTheorems

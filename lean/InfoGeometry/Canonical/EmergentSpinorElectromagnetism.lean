@@ -7,23 +7,12 @@ import Mathlib.Tactic.Ring
 /-!
 # InfoGeometry.Canonical.EmergentSpinorElectromagnetism
 
-This module provides the mathematically rigorous resolution to the 
-Quaternionic trace grade-parity obstruction (formalized in 
-`QuaternionicElectromagnetism.lean`).
-
-Because the macroscopic Quaternionic effective field $Q(x)$ is strictly 
-even-graded, bare traces of odd-graded insertions like $\gamma_\mu$ identically 
-vanish. To generate the unified geometric fields (the vielbein $e^a_\mu$ and 
-the $U(1)$ gauge potential $A_\mu$), the trace must be taken over the 
-fundamental internal degrees of freedom: the Spin-1/2 Dirac fields.
-
-This module formalizes the spinor bilinear generation mechanism. 
-It rigorously demonstrates that substituting the macroscopic trace for the 
-fundamental spinor trace completely resolves the obstruction, yielding 
-exact non-zero generation of both Gravity and Electromagnetism.
+This module gives concrete coordinate expansions of selected Dirac-spinor
+bilinears.  It does not prove nonvanishing for generic spinors, construct
+gravity or electromagnetism, or solve a gauge-generation problem.
 -/
 
-namespace EmergentSpinorElectromagnetism
+namespace InfoGeometry.Canonical.EmergentSpinorElectromagnetism
 
 open Matrix
 open Complex
@@ -50,11 +39,9 @@ def spinorBilinear (Psi : DiracSpinor) (M : DiracMatrix) (Phi : DiracSpinor) : â
   (barPsi 3 * (M 3 0 * Phi 0 + M 3 1 * Phi 1 + M 3 2 * Phi 2 + M 3 3 * Phi 3))
 
 /--
-Theorem: The spinor bilinear for the emergent vielbein temporal component 
-$e^0_0 \sim \bar{\Psi} \gamma_0 \partial_0 \Psi$ is strictly non-zero 
-for a generic spinor state.
+Coordinate expansion of the `gamma0` spinor bilinear.
 -/
-theorem vielbein_temporal_nonzero (Psi dPsi : DiracSpinor) :
+theorem gamma0_spinorBilinear_eq (Psi dPsi : DiracSpinor) :
     spinorBilinear Psi gamma0 dPsi = 
       (star Psi 0) * dPsi 0 + (star Psi 1) * dPsi 1 + 
       (star Psi 2) * dPsi 2 + (star Psi 3) * dPsi 3 := by
@@ -62,13 +49,9 @@ theorem vielbein_temporal_nonzero (Psi dPsi : DiracSpinor) :
   try ring
 
 /--
-Theorem: The spinor bilinear for the electromagnetic temporal component 
-$A_0 \sim \bar{\Psi} \gamma_5 \gamma_0 \Psi$ is strictly non-zero 
-for a generic spinor state. 
-This resolves the grade-parity obstruction and mathematically proves 
-that $U(1)$ gauge generation is driven by spin-1/2 field expectation values.
+Coordinate expansion of the `gamma5 * gamma0` spinor bilinear.
 -/
-theorem a_mu_temporal_nonzero (Psi : DiracSpinor) :
+theorem gamma5_gamma0_spinorBilinear_eq (Psi : DiracSpinor) :
     spinorBilinear Psi (gamma5 * gamma0) Psi = 
       -(star Psi 0) * Psi 2 - (star Psi 1) * Psi 3 
       -(star Psi 2) * Psi 0 - (star Psi 3) * Psi 1 := by
@@ -76,14 +59,13 @@ theorem a_mu_temporal_nonzero (Psi : DiracSpinor) :
   try ring
 
 /--
-Theorem: The spinor bilinear for the electromagnetic spatial component 
-$A_1 \sim \bar{\Psi} \gamma_5 \gamma_1 \Psi$ is strictly non-zero.
+Coordinate expansion of the `gamma5 * gamma1` spinor bilinear.
 -/
-theorem a_mu_spatial_nonzero (Psi : DiracSpinor) :
+theorem gamma5_gamma1_spinorBilinear_eq (Psi : DiracSpinor) :
     spinorBilinear Psi (gamma5 * gamma1) Psi = 
       -(star Psi 0) * Psi 1 - (star Psi 1) * Psi 0 
       -(star Psi 2) * Psi 3 - (star Psi 3) * Psi 2 := by
   simp [spinorBilinear, diracAdjoint, gamma0, gamma1, gamma2, gamma3, gamma5, Matrix.mul_apply, Fin.sum_univ_succ, smul_apply, add_apply, sub_apply, one_apply]
   try ring
 
-end EmergentSpinorElectromagnetism
+end InfoGeometry.Canonical.EmergentSpinorElectromagnetism

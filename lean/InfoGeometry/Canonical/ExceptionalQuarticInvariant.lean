@@ -2,7 +2,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Vector.Basic
 import Mathlib.Tactic.Linarith
 
-namespace ExceptionalQuarticInvariant
+namespace InfoGeometry.Canonical.ExceptionalQuarticInvariant
 
 /-!
 # Exceptional Quartic Cartan Invariant
@@ -44,4 +44,4 @@ theorem i4_positive_for_macroscopic_charges (s : ℝ) (v2 s2 : ℝ)
     0 ≤ s^2 * v2 - s * s2 + s2^2 := by
   linarith
 
-end ExceptionalQuarticInvariant
+end InfoGeometry.Canonical.ExceptionalQuarticInvariant

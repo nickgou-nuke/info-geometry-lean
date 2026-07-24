@@ -10,7 +10,7 @@ import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 noncomputable section
 
-namespace CyclicGradingGrothendieck
+namespace InfoGeometry.Canonical.CyclicGradingGrothendieck
 
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
@@ -295,4 +295,4 @@ theorem cyclicFiveGradingToFive_toCyclic (CG : CyclicFiveGrading L) :
 theorem fiveGradingToCyclic_cyclicToFive (FG : FiveGrading L) :
     cyclicFiveGradingToFive L (fiveGradingToCyclic L FG) = FG := rfl
 
-end CyclicGradingGrothendieck
+end InfoGeometry.Canonical.CyclicGradingGrothendieck

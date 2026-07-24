@@ -28,7 +28,7 @@ already proved in the repository for:
 
 noncomputable section
 
-namespace SPIGL2020SouriauDigest
+namespace InfoGeometry.Thermodynamics.SPIGL2020SouriauDigest
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Algebraic.CartanExponentialFamily
@@ -434,4 +434,4 @@ theorem pathEntropy_eq_curvatureTrace
 
 end FiniteSouriauDynamicsStageData
 
-end SPIGL2020SouriauDigest
+end InfoGeometry.Thermodynamics.SPIGL2020SouriauDigest

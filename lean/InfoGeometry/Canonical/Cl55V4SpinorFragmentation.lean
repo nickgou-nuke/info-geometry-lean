@@ -11,7 +11,7 @@ This file gives explicit `Cl(5,5)` identities for the seed decomposition
 
 noncomputable section
 
-namespace Cl55V4SpinorFragmentation
+namespace InfoGeometry.Canonical.Cl55V4SpinorFragmentation
 
 open InfoGeometry.Clifford.ConformalLift55
 
@@ -108,4 +108,4 @@ theorem S_sandwich_involution (p : ConformalNullPair) (x : Cl55) :
     _ = (1 : Cl55) * x * (1 : Cl55) := by rw [hSS]
     _ = x := by simp
 
-end Cl55V4SpinorFragmentation
+end InfoGeometry.Canonical.Cl55V4SpinorFragmentation

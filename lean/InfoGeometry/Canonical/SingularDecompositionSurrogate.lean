@@ -13,7 +13,7 @@ This file does not introduce new ontology or existential KAN factors.
 It packages existing owner theorems into a single surrogate-closure interface.
 -/
 
-namespace SingularDecompositionSurrogate
+namespace InfoGeometry.Canonical.SingularDecompositionSurrogate
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -594,4 +594,4 @@ theorem canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated
 
 end Core
 
-end SingularDecompositionSurrogate
+end InfoGeometry.Canonical.SingularDecompositionSurrogate

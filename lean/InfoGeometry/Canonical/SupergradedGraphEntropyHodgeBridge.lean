@@ -21,7 +21,7 @@ zeta, or Riemann-hypothesis consequences.
 
 noncomputable section
 
-namespace SupergradedGraphEntropyHodgeBridge
+namespace InfoGeometry.Canonical.SupergradedGraphEntropyHodgeBridge
 
 open InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 open InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap
@@ -140,6 +140,6 @@ theorem dagLaplacian1_owner_readout (tc : DAG.TwoComplex α) :
 
 end DAGReadouts
 
-end SupergradedGraphEntropyHodgeBridge
+end InfoGeometry.Canonical.SupergradedGraphEntropyHodgeBridge
 
 end noncomputable section

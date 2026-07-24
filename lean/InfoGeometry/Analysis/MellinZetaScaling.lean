@@ -34,7 +34,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace MellinZetaScaling
+namespace InfoGeometry.Analysis.MellinZetaScaling
 
 /--
 Abstract finite Mellin-scaling datum.
@@ -205,4 +205,4 @@ theorem mellinZetaScaling_packet
       finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card :=
   mellinZetaScalingOwnerTarget D A f
 
-end MellinZetaScaling
+end InfoGeometry.Analysis.MellinZetaScaling

@@ -11,11 +11,11 @@ coordinate readout and its determinant identity, but does not claim a rational
 linear equivalence until an explicit rational base-change carrier is introduced.
 -/
 
-open JordanCayleyInversionOs
-open Pin55Formal
+open InfoGeometry.Algebra.JordanCayleyInversionOs
+open InfoGeometry.Physics.Pin55Formal
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace Herm2x2OsO55Bridge
+namespace InfoGeometry.Canonical.Herm2x2OsO55Bridge
 
 /-- The rational coordinates of `J₂(𝕆_s)` in the diagonal `(5,5)` convention. -/
 def toVec55 (X : Herm2x2Os) : Fin 10 → ℚ :=
@@ -42,4 +42,4 @@ theorem q55_toVec55_eq_det (X : Herm2x2Os) :
     q55 (toVec55 X) = X.det :=
   (det_eq_q55_toVec55 X).symm
 
-end Herm2x2OsO55Bridge
+end InfoGeometry.Canonical.Herm2x2OsO55Bridge

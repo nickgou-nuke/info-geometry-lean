@@ -18,7 +18,7 @@ No infinite-factor theorem.
 No infinite-limit claim.
 -/
 
-namespace CantorDiracSeaHopping
+namespace InfoGeometry.Canonical.CantorDiracSeaHopping
 
 open InfoGeometry.Canonical.CantorCuntzBasis
 open InfoGeometry.Canonical.CantorBinaryHopCharge
@@ -123,4 +123,4 @@ theorem charge_flipAt_of_length_le
     wordCharge (flipAt i w) = wordCharge w := by
   rw [flipAt_eq_self_of_length_le h]
 
-end CantorDiracSeaHopping
+end InfoGeometry.Canonical.CantorDiracSeaHopping

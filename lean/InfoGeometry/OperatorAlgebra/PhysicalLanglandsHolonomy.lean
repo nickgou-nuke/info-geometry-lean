@@ -23,7 +23,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace PhysicalLanglandsHolonomy
+namespace InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 
 /-! ## 1. Wilson and 't Hooft holonomy readouts -/
 
@@ -635,4 +635,4 @@ theorem dualHolonomyRecoveryInstalledTarget :
   intro GState GdualState GLoop GdualLoop Scalar Memory W T D R γ hγ s
   exact R.recovered_dualHolonomy_eq_hiddenMemory γ hγ s
 
-end PhysicalLanglandsHolonomy
+end InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy

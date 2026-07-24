@@ -12,7 +12,7 @@ surface and provides canonical `[simp]` unfolding lemmas; it does not add new
 bridge theorems of its own.
 -/
 
-namespace WilsonLoop
+namespace InfoGeometry.Canonical.WilsonLoop
 
 export InfoGeometry.Canonical.QuantumInference (
   DiracField
@@ -78,4 +78,4 @@ variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Complete
                 (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T))
           / chiralPathIntegral H Dε paths N T := rfl
 
-end WilsonLoop
+end InfoGeometry.Canonical.WilsonLoop

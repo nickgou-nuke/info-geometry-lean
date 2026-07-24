@@ -21,7 +21,7 @@ that is a later equivalence theorem.
 
 noncomputable section
 
-namespace ThreeDHurwitz
+namespace InfoGeometry.Clifford.ThreeDHurwitz
 
 open scoped Matrix
 
@@ -286,4 +286,4 @@ theorem pseudoscalar_sq (s0 s1 s2 : ℝ) :
     _ = algebraMap ℝ (Cl3 s0 s1 s2) (-(s0 * s1 * s2)) := by
             simp [mul_assoc]
 
-end ThreeDHurwitz
+end InfoGeometry.Clifford.ThreeDHurwitz

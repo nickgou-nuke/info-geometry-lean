@@ -1,7 +1,7 @@
 import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Ring.Basic
 
-namespace PinCPTBridge
+namespace InfoGeometry.LLM.PinCPTBridge
 
 section RingCore
 
@@ -116,4 +116,4 @@ end PinAction
 
 end RingCore
 
-end PinCPTBridge
+end InfoGeometry.LLM.PinCPTBridge

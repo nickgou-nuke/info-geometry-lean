@@ -12,7 +12,7 @@ noncomputable section
 
 namespace Q8NuclearChirality
 
-open UnifiedMatrixQuantumGeometryFinite
+open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 
 abbrev M2C := Mat2
 abbrev sigma1 : M2C := σ1

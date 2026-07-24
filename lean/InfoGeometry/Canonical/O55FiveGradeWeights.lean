@@ -15,10 +15,10 @@ comments; formal proofs of those relationships are left as future work.
 
 noncomputable section
 
-namespace O55FiveGradeWeights
+namespace InfoGeometry.Canonical.O55FiveGradeWeights
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
-open FiveGradedTKK
+open InfoGeometry.Algebra.FiveGradedTKK
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 -- Weight constants (matching the Python script output)
@@ -42,4 +42,4 @@ theorem weight_constants :
             weight_D5, weight_D4, weight_D,
             weight_J5, weight_J4, weight_J] <;> rfl
 
-end O55FiveGradeWeights
+end InfoGeometry.Canonical.O55FiveGradeWeights

@@ -7,7 +7,7 @@ import Mathlib.GroupTheory.Perm.Sign
 
 noncomputable section
 
-namespace Cl55SpinorChirality
+namespace InfoGeometry.Clifford.Cl55SpinorChirality
 
 open InfoGeometry.Clifford.SpinorRep
 open InfoGeometry.Clifford.GammaMatrices
@@ -1383,4 +1383,4 @@ theorem chiral_decomposition_unique
           zero_add]
       _ = matrixApply chiralMinusProjector ψ := by rw [← hdecomp]
 
-end Cl55SpinorChirality
+end InfoGeometry.Clifford.Cl55SpinorChirality

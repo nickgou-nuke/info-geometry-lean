@@ -24,7 +24,7 @@ cut imposed by an analyst — it is the fixed-point set of J.
 
 noncomputable section
 
-namespace SpectralCut
+namespace InfoGeometry.GrandUnification.SpectralCut
 
 open InfoGeometry.Canonical.HestenesComplexTranslation
 
@@ -67,4 +67,4 @@ theorem no_branch_cuts_on_spectral_plane
     D.indexPairing trace = 0 := by
   simpa using D.twisted_index_vanishing trace h_trace_linear h_trace_J_inv h_proj_J_comm
 
-end SpectralCut
+end InfoGeometry.GrandUnification.SpectralCut

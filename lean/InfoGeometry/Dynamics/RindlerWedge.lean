@@ -18,7 +18,7 @@ No Bisognano--Wichmann, KMS, Unruh temperature, or analytic modular theorem is
 claimed here.
 -/
 
-namespace RindlerWedge
+namespace InfoGeometry.Dynamics.RindlerWedge
 
 open Matrix
 open InfoGeometry.Dynamics.HyperbolicComponent
@@ -92,4 +92,4 @@ theorem rindler_flow_preserves_proper_distance (coords : RindlerCoordinates) (la
       time := coords.time + lam
       radius_pos := coords.radius_pos }
 
-end RindlerWedge
+end InfoGeometry.Dynamics.RindlerWedge

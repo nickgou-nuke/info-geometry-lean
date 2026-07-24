@@ -1,7 +1,7 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
-namespace MobiusDual
+namespace InfoGeometry.Projective.MobiusDual
 
 open scoped Matrix
 
@@ -42,4 +42,4 @@ theorem contragredient_pairing_invariant (A : SL2 R) (η : ProjectiveLine R) (θ
     _ = η 0 0 * θ 0 0 * 1 + η 0 1 * θ 1 0 * 1 := by rw [hdet']
     _ = pairing η θ := by simp [pairing]
 
-end MobiusDual
+end InfoGeometry.Projective.MobiusDual

@@ -1709,6 +1709,36 @@ lemma cross_ratio_inv (z1 z2 z3 z4 : ℂ) (h1 : z1 ≠ 0) (h2 : z2 ≠ 0) (h3 : 
   field_simp [h1, h2, h3, h4]
   ring
 
+/-- The difference of a Möbius transformation evaluated at two points. -/
+lemma mobius_diff (M : MobiusTransform) (z1 z2 : ℂ) (h1 : M.c * z1 + M.d ≠ 0) (h2 : M.c * z2 + M.d ≠ 0) :
+    ((M.a * z1 + M.b) / (M.c * z1 + M.d)) - ((M.a * z2 + M.b) / (M.c * z2 + M.d)) =
+    (M.a * M.d - M.b * M.c) * (z1 - z2) / ((M.c * z1 + M.d) * (M.c * z2 + M.d)) := by
+  have h1' : z1 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  have h2' : z2 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  field_simp [h1, h2, h1', h2']
+  ring
+
+/-- Every Möbius transformation preserves the cross-ratio of four points under non-pole conditions. -/
+theorem mobius_preserves_cross_ratio (M : MobiusTransform) (z1 z2 z3 z4 : ℂ)
+    (h1 : M.c * z1 + M.d ≠ 0) (h2 : M.c * z2 + M.d ≠ 0) (h3 : M.c * z3 + M.d ≠ 0) (h4 : M.c * z4 + M.d ≠ 0)
+    (hz23 : z2 - z3 ≠ 0) (hz14 : z1 - z4 ≠ 0) :
+    cross_ratio ((M.a * z1 + M.b) / (M.c * z1 + M.d))
+               ((M.a * z2 + M.b) / (M.c * z2 + M.d))
+               ((M.a * z3 + M.b) / (M.c * z3 + M.d))
+               ((M.a * z4 + M.b) / (M.c * z4 + M.d)) =
+    cross_ratio z1 z2 z3 z4 := by
+  unfold cross_ratio
+  rw [mobius_diff M z1 z3 h1 h3]
+  rw [mobius_diff M z2 z4 h2 h4]
+  rw [mobius_diff M z2 z3 h2 h3]
+  rw [mobius_diff M z1 z4 h1 h4]
+  have h_det : M.a * M.d - M.b * M.c ≠ 0 := M.det_ne_zero
+  have h1' : z1 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  have h2' : z2 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  have h3' : z3 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  have h4' : z4 * M.c + M.d ≠ 0 := by rwa [mul_comm]
+  field_simp [h1, h2, h3, h4, h1', h2', h3', h4', h_det, hz23, hz14]
+
 
 /-- Extended cross-ratio handling infinity on the Riemann sphere. -/
 noncomputable def cross_ratio_ext (z1 z2 z3 z4 : RiemannSphere) : RiemannSphere :=
@@ -2254,5 +2284,115 @@ theorem minkowski_det (x0 x1 x2 x3 : ℝ) :
     ring
   · simp [-Complex.ofReal_pow]
     ring
+
+/-- Equivalence of Möbius transformations is reflexive. -/
+lemma equiv_refl (M : MobiusTransform) : MobiusTransform.equiv M M := by
+  intro z; rfl
+
+/-- Equivalence of Möbius transformations is symmetric. -/
+lemma equiv_symm {M1 M2 : MobiusTransform} (h : MobiusTransform.equiv M1 M2) : MobiusTransform.equiv M2 M1 := by
+  intro z; exact (h z).symm
+
+/-- Equivalence of Möbius transformations is transitive. -/
+lemma equiv_trans {M1 M2 M3 : MobiusTransform} (h1 : MobiusTransform.equiv M1 M2) (h2 : MobiusTransform.equiv M2 M3) : MobiusTransform.equiv M1 M3 := by
+  intro z; exact (h1 z).trans (h2 z)
+
+/-- Setoid instance for Möbius transformations under function equivalence. -/
+instance mobiusSetoid : Setoid MobiusTransform where
+  r := MobiusTransform.equiv
+  iseqv := {
+    refl := equiv_refl
+    symm := equiv_symm
+    trans := equiv_trans
+  }
+
+/-- The complex projective general linear group PGL(2, ℂ) defined as the quotient of Möbius transformations by function equivalence. -/
+def PGL2C : Type := Quotient mobiusSetoid
+
+/-- Evaluation of identity Möbius transformation. -/
+lemma eval_default (z : RiemannSphere) : (default : MobiusTransform).eval z = z := by
+  cases z with
+  | none =>
+      change (if (0 : ℂ) = 0 then none else some (1 / 0)) = none
+      rw [if_pos rfl]
+  | some z' =>
+      change (if (0 : ℂ) * z' + 1 = 0 then none else some ((1 * z' + 0) / (0 * z' + 1))) = some z'
+      have h : (0 : ℂ) * z' + 1 ≠ 0 := by
+        simp only [zero_mul, zero_add, one_ne_zero, ne_eq, not_false_iff]
+      rw [if_neg h]
+      congr 1
+      simp only [zero_mul, zero_add, one_mul, add_zero, div_one]
+
+/-- Composition is compatible with Möbius transformation equivalence. -/
+lemma comp_congr ⦃M1 M1' : MobiusTransform⦄ (h1 : MobiusTransform.equiv M1 M1')
+    ⦃M2 M2' : MobiusTransform⦄ (h2 : MobiusTransform.equiv M2 M2') :
+    MobiusTransform.equiv (comp M1 M2) (comp M1' M2') := by
+  intro z
+  rw [eval_comp, eval_comp]
+  rw [h2 z]
+  exact h1 _
+
+/-- Inverse is compatible with Möbius transformation equivalence. -/
+lemma inv_congr ⦃M M' : MobiusTransform⦄ (h : MobiusTransform.equiv M M') : MobiusTransform.equiv (inv M) (inv M') := by
+  intro z
+  have h_inj : Function.Injective M'.eval := by
+    intro a b hab
+    have h_inv_a := eval_inv_left M' a
+    have h_inv_b := eval_inv_left M' b
+    rw [hab] at h_inv_a
+    exact h_inv_a.symm.trans h_inv_b
+  apply h_inj
+  rw [eval_inv M']
+  have h_equiv := h ((inv M).eval z)
+  rw [← h_equiv, eval_inv M]
+
+/-- Multiplication on PGL(2, ℂ) induced by composition. -/
+noncomputable instance : Mul PGL2C where
+  mul := Quotient.map₂ comp comp_congr
+
+/-- Inverse on PGL(2, ℂ) induced by Möbius inverse. -/
+noncomputable instance : Inv PGL2C where
+  inv := Quotient.map inv inv_congr
+
+/-- One (identity) on PGL(2, ℂ) represented by default. -/
+instance : One PGL2C where
+  one := Quotient.mk' default
+
+/-- PGL(2, ℂ) forms a group under composition. -/
+noncomputable instance : Group PGL2C where
+  mul_assoc := by
+    apply Quotient.ind
+    intro A
+    apply Quotient.ind
+    intro B
+    apply Quotient.ind
+    intro C
+    change Quotient.mk' (comp (comp A B) C) = Quotient.mk' (comp A (comp B C))
+    apply Quotient.sound
+    intro z
+    rw [eval_comp, eval_comp, eval_comp, eval_comp]
+  one_mul := by
+    apply Quotient.ind
+    intro M
+    change Quotient.mk' (comp default M) = Quotient.mk' M
+    apply Quotient.sound
+    intro z
+    rw [eval_comp, eval_default]
+  mul_one := by
+    apply Quotient.ind
+    intro M
+    change Quotient.mk' (comp M default) = Quotient.mk' M
+    apply Quotient.sound
+    intro z
+    rw [eval_comp]
+    congr 1
+    exact eval_default z
+  inv_mul_cancel := by
+    apply Quotient.ind
+    intro M
+    change Quotient.mk' (comp (inv M) M) = Quotient.mk' default
+    apply Quotient.sound
+    intro z
+    rw [eval_comp, eval_inv_left, eval_default]
 
 end InfoGeometry

@@ -21,7 +21,7 @@ No analytic continuation.
 No Artin theorem for all `n`.
 -/
 
-namespace FiniteFibonacciHigherAnyonPaperBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciHigherAnyonPaperBridge
 
 open FiniteFibonacciHigherAnyonBraiding
 open FiniteFibonacciFusionMatrix
@@ -105,4 +105,4 @@ theorem finiteHigherAnyonLocalDoubletMatrix_eq_FRF (q : Units ℂ) (τ root : �
       some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) :=
   finiteLocalDoubletMatrix_doublet q τ root
 
-end FiniteFibonacciHigherAnyonPaperBridge
+end InfoGeometry.Canonical.FiniteFibonacciHigherAnyonPaperBridge

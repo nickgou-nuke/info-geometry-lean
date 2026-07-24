@@ -20,7 +20,7 @@ No analytic path-integral theorem, variational uniqueness theorem, or quantum
 Markov semigroup construction is asserted here.
 -/
 
-namespace MaximumCaliberPath
+namespace InfoGeometry.Topology.MaximumCaliberPath
 
 open ThermodynamicGauge
 open WilsonLoopThermodynamics
@@ -153,4 +153,4 @@ theorem pathWeight_eq_stateWeight (γ : Path) :
 
 end MaximumCaliberToMaxEntropyCollapse
 
-end MaximumCaliberPath
+end InfoGeometry.Topology.MaximumCaliberPath

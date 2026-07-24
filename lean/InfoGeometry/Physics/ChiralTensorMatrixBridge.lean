@@ -22,7 +22,7 @@ matrix verification path.
 
 noncomputable section
 
-namespace ChiralTensorMatrixBridge
+namespace InfoGeometry.Physics.ChiralTensorMatrixBridge
 
 open Matrix
 open TensorProduct
@@ -55,4 +55,4 @@ theorem bridge_maps_R : Submodule.map (bridge : SpinPair →ₗ[ℂ] _) R_chiral
 #check R_chiral_tensor
 #check R_chiral_matrix
 
-end ChiralTensorMatrixBridge
+end InfoGeometry.Physics.ChiralTensorMatrixBridge

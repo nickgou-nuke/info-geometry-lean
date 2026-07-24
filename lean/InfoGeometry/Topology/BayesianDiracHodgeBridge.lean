@@ -13,7 +13,7 @@ claim is asserted here.  The bridge only transports explicit Bayesian-minimizer
 certificates into the finite exact/coexact/harmonic Hodge sectors.
 -/
 
-namespace BayesianDiracHodgeBridge
+namespace InfoGeometry.Topology.BayesianDiracHodgeBridge
 
 open InfoGeometry.Canonical.BayesianMarkovChain.TensorLimitStateSpace
 open InfoGeometry.Topology.EckmannDiscreteHodge
@@ -193,4 +193,4 @@ end HarmonicTopologicalSector
 
 end
 
-end BayesianDiracHodgeBridge
+end InfoGeometry.Topology.BayesianDiracHodgeBridge

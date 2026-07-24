@@ -21,7 +21,7 @@ This file is intentionally thin:
 - `chiralScale` only as a compatibility corollary
 -/
 
-namespace PhaseSpaceWeylCausalBridge
+namespace InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
@@ -1350,4 +1350,4 @@ off-diagonal blocks vanish, and holonomy is only the terminal norm corollary. -/
 
 end WeylLeafFromTrunk
 
-end PhaseSpaceWeylCausalBridge
+end InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge

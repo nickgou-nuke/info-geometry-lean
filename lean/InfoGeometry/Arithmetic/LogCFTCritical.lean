@@ -67,7 +67,7 @@ separate the primary and logarithmic partner states.
 open Complex
 open Matrix
 
-namespace LogCFTCritical
+namespace InfoGeometry.Arithmetic.LogCFTCritical
 
 open BostConnesCriticality
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -150,4 +150,4 @@ def osp12_protects_jordan_block_debt : String :=
       - logCFT dominates
     -/
 
-end LogCFTCritical
+end InfoGeometry.Arithmetic.LogCFTCritical

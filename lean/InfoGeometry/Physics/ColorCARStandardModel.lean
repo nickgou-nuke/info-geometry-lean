@@ -5,24 +5,17 @@ import InfoGeometry.Physics.BraidIdealDescent
 import InfoGeometry.Physics.ChiralTLDescent
 
 /-!
-# ColorCAR — CAR triple product and Standard Model color bridge
+# ColorCAR — finite CAR triple-product readouts
 
-The Furey ladder: one generation of Standard Model fermions is a minimal
-left ideal of `Cl(6) ≅ M₈(ℂ)`. Three copies of the CAR algebra `(σ⁺, σ⁻)`
-generate the 8 fermion states.
-
-This module proves:
-  1. The CAR submodule `span{σ⁺⊗σ⁻, σ⁻⊗σ⁺, I⊗I, σ₃⊗σ₃}` is a left τ-ideal
-     for `qCrossMap i`. (Follows from `tauL_qCrossMap_on_any` — the same
-     proof as `chiral_left_tau_ideal`.)
-  2. Three copies of the CAR algebra define an 8-dim Furey generation.
-
-The results are finite algebraic identities in the imported CAR and braid setting.
+This module proves finite algebraic identities in the imported CAR and braid
+setting.  Furey/Standard-Model terminology is used only as naming motivation;
+no theorem here constructs a Standard Model representation, proves a minimal
+left-ideal classification, or identifies physical fermions.
 -/
 
 noncomputable section
 
-namespace ColorCARStandardModel
+namespace InfoGeometry.Physics.ColorCARStandardModel
 
 open Matrix
 open TensorProduct
@@ -87,11 +80,10 @@ theorem car_submodule_is_left_tau_ideal :
   -- leftTarget is a Submodule, closed under scalar multiplication
   exact Submodule.smul_mem _ Complex.I h_base
 
-/-! ## Triple CAR product — Furey generation
+/-! ## Triple CAR product — finite eight-generator span
 
-Three copies of the CAR algebra `(σ⁺ᵢ, σ⁻ᵢ)` for i ∈ {0,1,2} generate the
-8-dimensional Furey minimal left ideal. One generation of Standard Model
-fermions = one minimal left ideal of `Cl(6)`. -/
+Three copies of the CAR algebra `(σ⁺ᵢ, σ⁻ᵢ)` for `i ∈ {0,1,2}` give a finite
+span of eight displayed tensor expressions. -/
 
 /-- Three copies of the CAR algebra: triple tensor product of M2C. -/
 abbrev CAR3 : Type := M2C ⊗[ℂ] M2C ⊗[ℂ] M2C
@@ -139,19 +131,10 @@ def carCre2 : CAR3 := (1 : M2C) ⊗ₜ[ℂ] (1 : M2C) ⊗ₜ[ℂ] σMinus
 /-- The vacuum state |0⟩ = |0⟩₀ ⊗ |0⟩₁ ⊗ |0⟩₂. -/
 def vacuum : CAR3 := (1 : M2C) ⊗ₜ[ℂ] (1 : M2C) ⊗ₜ[ℂ] (1 : M2C)
 
-/-- One generation of Standard Model fermions as an 8-dimensional submodule
-of the triple CAR product. Built by applying creation operators to the vacuum.
+/-- The finite span of the eight displayed CAR triple-product generators.
 
-   |ν⟩     = |0⟩                            (neutrino)
-   |eₗ⁻⟩   = carCre₀·|0⟩                    (left electron)
-   |uᵣ⟩    = carCre₁·|0⟩                    (red up quark)
-   |uᵦ⟩    = carCre₂·|0⟩                    (green up quark)
-   |uᵇ⟩    = carCre₀·carCre₁·|0⟩            (blue up quark)
-   |d̄ᵣ⟩    = carCre₁·carCre₂·|0⟩            (anti-red down)
-   |d̄ᵦ⟩    = carCre₀·carCre₂·|0⟩            (anti-green down)
-   |d̄ᵇ⟩    = carCre₀·carCre₁·carCre₂·|0⟩   (anti-blue down)
-
-These 8 states form the basis of one Furey generation. -/
+The particle labels from the Furey literature are not asserted as Lean theorems
+in this file. -/
 def fureyGeneration : Submodule ℂ CAR3 :=
   Submodule.span ℂ {
     vacuum,
@@ -248,4 +231,4 @@ theorem color_car_standard_model_synthesis :
     numberOp1_idem,
     numberOp2_idem⟩
 
-end ColorCARStandardModel
+end InfoGeometry.Physics.ColorCARStandardModel

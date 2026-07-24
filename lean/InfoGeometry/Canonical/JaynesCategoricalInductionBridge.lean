@@ -21,7 +21,7 @@ No global-state uniqueness theorem.
 No spectral, Tomita, or analytic-completion claim.
 -/
 
-namespace JaynesCategoricalInductionBridge
+namespace InfoGeometry.Canonical.JaynesCategoricalInductionBridge
 
 open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
@@ -109,4 +109,4 @@ theorem factorization_unique
 
 end JaynesCategoricalCone
 
-end JaynesCategoricalInductionBridge
+end InfoGeometry.Canonical.JaynesCategoricalInductionBridge

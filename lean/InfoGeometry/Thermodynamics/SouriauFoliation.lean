@@ -18,7 +18,7 @@ import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 
 noncomputable section
 
-namespace SouriauFoliation
+namespace InfoGeometry.Thermodynamics.SouriauFoliation
 
 open InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 open InfoGeometry.Thermodynamics
@@ -234,4 +234,4 @@ positive temperature leaf is a coadjoint orbit. -/
 abbrev PositiveTemperatureLeaf :=
   SymplecticLeaf PositiveSouriauTemperature
 
-end SouriauFoliation
+end InfoGeometry.Thermodynamics.SouriauFoliation

@@ -21,7 +21,7 @@ We prove that `r` and `s` are reconstructed exactly via the exponential map:
 No placeholders. No `sorry`.
 -/
 
-namespace RindlerWeylDecomposition
+namespace InfoGeometry.Canonical.RindlerWeylDecomposition
 
 noncomputable section
 
@@ -114,4 +114,4 @@ theorem exp_two_mul_eta_eq_div (hr : 0 < r) (hs : 0 < s) :
 
 end
 
-end RindlerWeylDecomposition
+end InfoGeometry.Canonical.RindlerWeylDecomposition

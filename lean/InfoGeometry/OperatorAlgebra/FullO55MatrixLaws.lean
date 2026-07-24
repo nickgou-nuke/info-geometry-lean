@@ -24,7 +24,7 @@ This file does not prove Pin(5,5) lift data, spinor representation classificatio
 triality outer automorphisms, analytic continuation, or bulk reconstruction.
 -/
 
-namespace FullO55MatrixLaws
+namespace InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
 
 open Matrix
 
@@ -202,4 +202,4 @@ theorem full_o55_matrix_law_packet :
     singleSignFlip0_is_o55, lightlikePlus_null, lightlikeMinus_null,
     lightlike_pairing⟩
 
-end FullO55MatrixLaws
+end InfoGeometry.OperatorAlgebra.FullO55MatrixLaws

@@ -26,7 +26,7 @@ open InfoGeometry.Algebra.JordanCayleyInversionHs
 open InfoGeometry.Algebra.JordanCayleyInversionOs
 open InfoGeometry.Algebra.JordanCayleyInversionOsQ
 
-namespace OrbitClassificationBridge
+namespace InfoGeometry.Algebra.OrbitClassificationBridge
 
 /-- Re-export: every split-complex spinor is zero or nonzero. -/
 theorem cs_spinor_zero_or_nonzero
@@ -81,4 +81,4 @@ theorem pin55_product_projective_involutive :
         (InfoGeometry.Physics.Pin55Formal.r₀ * InfoGeometry.Physics.Pin55Formal.r₅)) 1 :=
   InfoGeometry.Physics.Pin55Formal.r₀r₅_projective_involutive
 
-end OrbitClassificationBridge
+end InfoGeometry.Algebra.OrbitClassificationBridge

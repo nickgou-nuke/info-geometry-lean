@@ -29,7 +29,7 @@ noncomputable section
 set_option linter.unnecessarySeqFocus false
 set_option linter.unusedSimpArgs false
 
-namespace GeneralizedNullSpaceDecomposition
+namespace InfoGeometry.Canonical.GeneralizedNullSpaceDecomposition
 
 open InfoGeometry.Canonical
 
@@ -189,4 +189,4 @@ theorem exactSizeThree_example_eq_mu_sub :
 
 end RationalJordan
 
-end GeneralizedNullSpaceDecomposition
+end InfoGeometry.Canonical.GeneralizedNullSpaceDecomposition

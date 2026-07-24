@@ -24,7 +24,7 @@ noncomputable section
 
 universe u
 
-namespace MoebiusTopologyOfInformation
+namespace InfoGeometry.Canonical.MoebiusTopologyOfInformation
 
 open SelfReference
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -70,4 +70,4 @@ theorem moebiusTopologyOfInformationOwnerTarget :
     · intro g τ
       exact InfoGeometry.Geometry.RealUpperHalfPlane.toComplex_moebius g τ
 
-end MoebiusTopologyOfInformation
+end InfoGeometry.Canonical.MoebiusTopologyOfInformation

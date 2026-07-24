@@ -16,12 +16,13 @@ namespace IntegralZornCompositionAlgebra
 
 set_option maxHeartbeats 800000
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornIntegralTrialityEquivariance
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+open IntegralZornII44Bridge
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornCompositionTriality
+open CanonicalZornCompositionFiveGradeBridge
+open CanonicalZornIntegralTrialityEquivariance
+open CanonicalZornIntegralSpinTrialityClosure
+open CanonicalZornCliffordRepresentation
 open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 def integralDot3 (u v : Fin 3 → ℤ) : ℤ :=
@@ -163,7 +164,7 @@ theorem integralZornOne_mul (X : IntegralZorn) :
 theorem integralZornNorm_mul (X Y : IntegralZorn) :
     integralZornNorm (integralZornMul X Y) =
       integralZornNorm X * integralZornNorm Y := by
-  have h := zornNorm_mul
+  have h := CanonicalZornCompositionTriality.zornNorm_mul
     (coreToCanonical (integralToCoreZorn X))
     (coreToCanonical (integralToCoreZorn Y))
   rw [← coreToCanonical_integralZornMul,

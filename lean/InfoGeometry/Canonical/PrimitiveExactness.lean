@@ -31,7 +31,7 @@ domain primitive theorem is claimed here.
 
 noncomputable section
 
-namespace PrimitiveExactness
+namespace InfoGeometry.Canonical.PrimitiveExactness
 
 open Complex
 open InfoGeometry.Canonical.ComplexAnalyticBridge
@@ -138,4 +138,4 @@ def differentiableOn_ball_to_doubled_cauchyAnalyticAt
   primitiveExactOn_to_doubled_cauchyAnalyticAt
     Metric.isOpen_ball hz (differentiableOn_ball_to_isExactOn hf)
 
-end PrimitiveExactness
+end InfoGeometry.Canonical.PrimitiveExactness

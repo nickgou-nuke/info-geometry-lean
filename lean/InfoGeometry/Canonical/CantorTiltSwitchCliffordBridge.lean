@@ -24,7 +24,7 @@ envelope fields.
 
 noncomputable section
 
-namespace CantorTiltSwitchCliffordBridge
+namespace InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 
 open InfoGeometry.Canonical.HodgeDrazinEnvelope
 
@@ -919,4 +919,4 @@ theorem constructCantorTiltSwitchCliffordBridgeTarget
 (R : CantorCliffordRepresentation Op) :
 CantorTiltSwitchCliffordBridgeTarget := by
 exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
-end CantorTiltSwitchCliffordBridge
+end InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge

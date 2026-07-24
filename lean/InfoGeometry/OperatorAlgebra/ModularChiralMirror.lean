@@ -983,4 +983,4 @@ def AlgebraicModularChiralMirrorOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] : Prop :=
   ModularChiralMirrorOwnerTarget Op
 
-end ModularChiralMirror
+end InfoGeometry.OperatorAlgebra.ModularChiralMirror

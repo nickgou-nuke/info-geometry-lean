@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ChiralPrimonGas
+namespace InfoGeometry.Arithmetic.ChiralPrimonGas
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
@@ -418,4 +418,4 @@ theorem meanMomentMap_NMinus (G : PrimonGas)
       (thermodynamics G betaPlus betaMinus nuPlus nuMinus).minus.meanNumber := by
   rfl
 
-end ChiralPrimonGas
+end InfoGeometry.Arithmetic.ChiralPrimonGas

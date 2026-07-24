@@ -12,7 +12,7 @@ Fierz recombination sum.  Concrete Fierz completeness must come from owner
 modules such as `Quantum.Fierz` / `Canonical.Fierz` / `OperatorialFierz*`.
 -/
 
-namespace FierzNoetherBridge
+namespace InfoGeometry.OperatorAlgebra.FierzNoetherBridge
 
 open InfoGeometry.OperatorAlgebra.NoetherModularFlow
 
@@ -150,4 +150,4 @@ theorem map_fierzComplete_product_of_linear
   rw [hF]
   exact map_fierzRecombinationSum_of_linear δ hδ_add hδ_smul F
 
-end FierzNoetherBridge
+end InfoGeometry.OperatorAlgebra.FierzNoetherBridge

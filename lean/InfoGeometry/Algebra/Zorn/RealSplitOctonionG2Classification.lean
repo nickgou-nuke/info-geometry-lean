@@ -19,7 +19,7 @@ Chevalley group.
 
 noncomputable section
 
-namespace RealSplitOctonionG2Classification
+namespace InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
@@ -97,6 +97,6 @@ def real_split_octonion_classification_packet_from_certificate
     C.ClassificationReadbackPacket :=
   C.classification_certificate_packet hcp
 
-end RealSplitOctonionG2Classification
+end InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 
 end noncomputable section

@@ -9,7 +9,7 @@ for a diagonal generator with distinct eigenvalues, commuting matrices are diago
 No wrappers. No `sorry`.
 -/
 
-namespace LieOrbitSymmetryChart2x2
+namespace InfoGeometry.Canonical.LieOrbitSymmetryChart2x2
 
 open Matrix
 
@@ -72,4 +72,4 @@ theorem commute_diag₂_iff_diagonal
 
 end
 
-end LieOrbitSymmetryChart2x2
+end InfoGeometry.Canonical.LieOrbitSymmetryChart2x2

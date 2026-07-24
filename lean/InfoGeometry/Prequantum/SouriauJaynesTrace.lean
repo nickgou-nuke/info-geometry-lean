@@ -28,7 +28,7 @@ noncomputable section
 open Matrix
 open scoped Matrix
 
-namespace SouriauJaynesTrace
+namespace InfoGeometry.Prequantum.SouriauJaynesTrace
 
 /-- Coordinate atom for the finite `Cl(1,1)` trace bridge. -/
 structure Cl11TraceAtom where
@@ -112,4 +112,4 @@ theorem souriau_momentum_equivariance (g : SL2RUnit) (X Y : Mat2) :
   rw [← adjointAction_mul]
   exact trace_adjointAction g (X * Y)
 
-end SouriauJaynesTrace
+end InfoGeometry.Prequantum.SouriauJaynesTrace

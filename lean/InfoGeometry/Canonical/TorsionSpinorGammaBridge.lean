@@ -18,9 +18,9 @@ source packet for the finite owner lane.
 
 noncomputable section
 
-namespace TorsionSpinorGammaBridge
+namespace InfoGeometry.Canonical.TorsionSpinorGammaBridge
 
-open DiracPauliGamma
+open InfoGeometry.Clifford.DiracPauliGamma
 open TorsionSpinorEinsteinFinite
 
 abbrev Idx : Type := Fin 4
@@ -68,4 +68,4 @@ theorem gammaSpinorTorsion_antisymm
       = -spinorTorsion κ β (gammaSpinorSource psi).S lam nu mu := by
   exact spinorTorsion_antisymm κ β (gammaSpinorSource psi) lam mu nu
 
-end TorsionSpinorGammaBridge
+end InfoGeometry.Canonical.TorsionSpinorGammaBridge

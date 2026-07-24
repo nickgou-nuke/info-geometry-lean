@@ -3,11 +3,11 @@ import InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
 
-namespace EmergentGravity
+namespace InfoGeometry.Canonical.EmergentGravity
 
 set_option linter.unusedSectionVars false
 
-open BigOperators Complex Matrix DiracPauliGamma
+open BigOperators Complex Matrix InfoGeometry.Clifford.DiracPauliGamma
 
 /-!
 # Emergent Gravitational Dynamics and Spinor Condensates
@@ -71,31 +71,31 @@ theorem spinorIdealProjector_mulVec_tail_zero (ψ : Spinor4) :
 
 /-! ## Dirac-Pauli gamma bridge -/
 
-abbrev DiracMatrix := DiracPauliGamma.DiracMatrix
+abbrev DiracMatrix := InfoGeometry.Clifford.DiracPauliGamma.DiracMatrix
 
 /-- Reuse the repository-owned finite Dirac-Pauli gamma matrices. -/
 def gammaMatrix : Fin 4 → DiracMatrix :=
-  DiracPauliGamma.gamma
+  InfoGeometry.Clifford.DiracPauliGamma.gamma
 
 /-- Reuse the repository-owned `(+---)` Minkowski metric readout. -/
 def minkowskiEta : Fin 4 → Fin 4 → ℂ :=
-  DiracPauliGamma.eta
+  InfoGeometry.Clifford.DiracPauliGamma.eta
 
 /-- Imported Clifford relation `{γᵘ,γᵛ}=2ηᵘᵛI₄` for the emergent-gravity owner. -/
 theorem gammaMatrix_clifford_relation (mu nu : Fin 4) :
     gammaMatrix mu * gammaMatrix nu + gammaMatrix nu * gammaMatrix mu =
       (2 * minkowskiEta mu nu) • (1 : DiracMatrix) :=
-  DiracPauliGamma.gamma_anticomm mu nu
+  InfoGeometry.Clifford.DiracPauliGamma.gamma_anticomm mu nu
 
 /-- Spin Lorentz generator used in the finite torsion bilinear. -/
 def spinLorentzGenerator (mu nu : Fin 4) : DiracMatrix :=
-  DiracPauliGamma.lorentzGenerator mu nu
+  InfoGeometry.Clifford.DiracPauliGamma.lorentzGenerator mu nu
 
 /-- Lorentz generators are antisymmetric in their two spacetime slots. -/
 theorem spinLorentzGenerator_antisymm (mu nu : Fin 4) :
     spinLorentzGenerator nu mu = -spinLorentzGenerator mu nu := by
   ext i j
-  simp [spinLorentzGenerator, DiracPauliGamma.lorentzGenerator,
+  simp [spinLorentzGenerator, InfoGeometry.Clifford.DiracPauliGamma.lorentzGenerator,
     Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply]
   ring
 
@@ -103,25 +103,25 @@ theorem spinLorentzGenerator_antisymm (mu nu : Fin 4) :
 @[simp] theorem spinLorentzGenerator_self (mu : Fin 4) :
     spinLorentzGenerator mu mu = 0 := by
   ext i j
-  simp [spinLorentzGenerator, DiracPauliGamma.lorentzGenerator,
+  simp [spinLorentzGenerator, InfoGeometry.Clifford.DiracPauliGamma.lorentzGenerator,
     Matrix.smul_apply]
 
 /-- The finite spinor expectation of the zero matrix is zero. -/
 @[simp] theorem spinorExpectation_zero (φ : Spinor4) :
-    DiracPauliGamma.spinorExpectation 0 φ = 0 := by
-  simp [DiracPauliGamma.spinorExpectation]
+    InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation 0 φ = 0 := by
+  simp [InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation]
 
 /-- The finite spinor expectation is compatible with negating the matrix slot. -/
 theorem spinorExpectation_neg (A : DiracMatrix) (φ : Spinor4) :
-    DiracPauliGamma.spinorExpectation (-A) φ =
-      -DiracPauliGamma.spinorExpectation A φ := by
-  simp [DiracPauliGamma.spinorExpectation, Matrix.neg_mulVec,
+    InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation (-A) φ =
+      -InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation A φ := by
+  simp [InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation, Matrix.neg_mulVec,
     Finset.sum_neg_distrib, mul_comm]
 
 /-- Finite spinor torsion bilinear `ψ† γ⁰ γˡ Σᵘᵛ ψ`. -/
 def condensateTorsionBilinear (lam mu nu : Fin 4) (φ : Spinor4) : ℂ :=
-  DiracPauliGamma.spinorExpectation
-    (DiracPauliGamma.gamma0 *
+  InfoGeometry.Clifford.DiracPauliGamma.spinorExpectation
+    (InfoGeometry.Clifford.DiracPauliGamma.gamma0 *
       gammaMatrix lam * spinLorentzGenerator mu nu) φ
 
 /-- The finite spinor torsion bilinear is antisymmetric in the torsion slots. -/
@@ -414,4 +414,4 @@ def einsteinCartanSystem {idx : Type*} [Fintype idx] [DecidableEq idx]
     (spinDens : idx → idx → idx → ℂ) (Λ κ : ℂ) : Prop :=
   einsteinCartanFieldEq G T_BR g Λ κ ∧ torsionFieldEq Torsion spinDens κ
 
-end EmergentGravity
+end InfoGeometry.Canonical.EmergentGravity

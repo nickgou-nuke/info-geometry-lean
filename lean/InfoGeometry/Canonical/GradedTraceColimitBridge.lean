@@ -34,7 +34,7 @@ infinite trace, or prove uniqueness/classification of KMS states.
 
 noncomputable section
 
-namespace GradedTraceColimitBridge
+namespace InfoGeometry.Canonical.GradedTraceColimitBridge
 
 open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -73,4 +73,4 @@ theorem gradedTrace_identity_crosses_colimit
   rw [hconst]
   exact h0
 
-end GradedTraceColimitBridge
+end InfoGeometry.Canonical.GradedTraceColimitBridge

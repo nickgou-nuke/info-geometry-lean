@@ -2,18 +2,13 @@ import Mathlib.Data.Complex.Basic
 import InfoGeometry.GrandUnification.HodgeCartanTrifactor
 
 /-!
-# UV Coordinate Symmetry and Topological Annihilation
+# Centered-coordinate reflection and Cartan sign readouts
 
-This module formally verifies the "Topological Protection" mechanism that locks
-the Riemann zeros to the critical line.
-
-1. **The Coordinate Shift**: Maps the classical parameter `s` to the centered
-   holomorphic coordinates `z = u + iv`.
-2. **The Central Inversion**: Proves that the functional equation reflection
-   `s ↔ 1 - s` is mathematically isomorphic to the central inversion `z ↔ -z`.
-3. **Topological Annihilation**: Formally proves that under the Cartan Involution
-   `θ = 1 - 2T^2` on the non-orientable seam, any state with non-zero exact
-   or co-exact chiral charge is annihilated. Only Harmonic Zero-Modes survive.
+This module proves two elementary algebraic facts: the affine coordinate
+`1/2 + u + iv` sends the map `(u,v) ↦ (-u,-v)` to `s ↦ 1 - s`, and the declared
+Cartan involution fixes the harmonic sector while negating the exact/coexact
+sectors under the supplied projection hypotheses.  It does not prove a
+Riemann-zero localization theorem.
 -/
 
 namespace InfoGeometry.GrandUnification.UVSymmetry
@@ -31,9 +26,8 @@ noncomputable def UVChart.toComplex (z : UVChart) : ℂ :=
 def central_inversion (z : UVChart) : UVChart :=
   ⟨-z.u, -z.v⟩
 
-/-- **Theorem: The Functional Equation Isomorphism**
-The classical functional equation reflection `s ↔ 1 - s` is perfectly isomorphic
-to the central inversion `z ↔ -z` in the (u, v) coordinates. -/
+/-- The affine coordinate reflection `s ↦ 1 - s` is central inversion in
+centered `(u, v)` coordinates. -/
 theorem functional_equation_isomorphism (z : UVChart) :
     (1 : ℂ) - z.toComplex = (central_inversion z).toComplex := by
   unfold UVChart.toComplex central_inversion
@@ -57,9 +51,8 @@ variable (T : R)
 def survives_topology (ρ : R) : Prop :=
   cartan_involution T * ρ = ρ
 
-/-- **Theorem: The Harmonic Trap (Δρ = 0)**
-If a state is a Harmonic Zero-Mode (i.e. it lies entirely in the P_0 sector),
-it automatically survives the non-orientable topological boundary. -/
+/-- If `ρ` is fixed by the harmonic operator, then it is fixed by the declared
+Cartan involution. -/
 theorem harmonic_trap_survives (hT : T ^ 3 = T) (ρ : R) (h_harmonic : harmonic_op T * ρ = ρ) :
     survives_topology T ρ := by
   unfold survives_topology
@@ -76,9 +69,8 @@ section WithHalf
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable (T : R)
 
-/-- **Theorem: Exact Topological Annihilation**
-If a state lies entirely in the Exact sector (P_+), the topological non-orientable
-seam violently flips its chiral charge, meaning it cannot survive. -/
+/-- If `ρ` is fixed by the exact operator, then the declared Cartan involution
+acts by negation. -/
 theorem exact_annihilation (hT : T ^ 3 = T) (ρ : R) (h_exact : exact_op T * ρ = ρ) :
     cartan_involution T * ρ = -ρ := by
   calc
@@ -88,9 +80,8 @@ theorem exact_annihilation (hT : T ^ 3 = T) (ρ : R) (h_exact : exact_op T * ρ 
     _ = - (exact_op T * ρ) := by ring
     _ = -ρ := by rw [h_exact]
 
-/-- **Theorem: Co-exact Topological Annihilation**
-If a state lies entirely in the Co-exact sector (P_-), the non-orientable
-seam violently flips its chiral charge, meaning it cannot survive. -/
+/-- If `ρ` is fixed by the coexact operator, then the declared Cartan involution
+acts by negation. -/
 theorem coexact_annihilation (hT : T ^ 3 = T) (ρ : R) (h_coexact : coexact_op T * ρ = ρ) :
     cartan_involution T * ρ = -ρ := by
   calc

@@ -15,7 +15,7 @@ Sugawara theorem, or Cardy theorem is proved here.
 
 noncomputable section
 
-namespace AffineCl44CardyEntropy
+namespace InfoGeometry.OperatorAlgebra.AffineCl44CardyEntropy
 
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
@@ -124,4 +124,4 @@ variable (B : AffineDrazinBoundaryEntropyBridge (Finite := Finite) (Alg := Alg))
 
 end AffineDrazinBoundaryEntropyBridge
 
-end AffineCl44CardyEntropy
+end InfoGeometry.OperatorAlgebra.AffineCl44CardyEntropy

@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
-namespace PellisGoldenAlpha
+namespace InfoGeometry.Canonical.PellisGoldenAlpha
 
 noncomputable section
 

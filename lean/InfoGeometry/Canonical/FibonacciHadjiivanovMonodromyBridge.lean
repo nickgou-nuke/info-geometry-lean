@@ -21,7 +21,7 @@ the generic direct-limit transport skeleton that such an instantiation will use.
 
 noncomputable section
 
-namespace FibonacciHadjiivanovMonodromyBridge
+namespace InfoGeometry.Canonical.FibonacciHadjiivanovMonodromyBridge
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -135,4 +135,4 @@ theorem finiteFourAnyonFullTwistColimit_maps_to_hadjiivanovMonodromy
     (f := f) (toLimit := toLimit) (hcone := hcone) n fullTwist weight
     (h_stage.trans h_matrix)
 
-end FibonacciHadjiivanovMonodromyBridge
+end InfoGeometry.Canonical.FibonacciHadjiivanovMonodromyBridge

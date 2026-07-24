@@ -19,7 +19,7 @@ No complex analytic theorem is asserted here.
 
 noncomputable section
 
-namespace RealRotorGaussHestenesBridge
+namespace InfoGeometry.Canonical.RealRotorGaussHestenesBridge
 
 open InfoGeometry.Canonical.RealIncidenceHomology
 open InfoGeometry.Canonical.RealIncidenceChains
@@ -230,4 +230,4 @@ theorem guard_gaussStokes_law
 
 end RealRotorGaussHestenesPacket
 
-end RealRotorGaussHestenesBridge
+end InfoGeometry.Canonical.RealRotorGaussHestenesBridge

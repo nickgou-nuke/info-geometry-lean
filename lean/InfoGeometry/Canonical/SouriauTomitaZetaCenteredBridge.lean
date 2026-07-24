@@ -26,7 +26,7 @@ Scope discipline:
 
 noncomputable section
 
-namespace SouriauTomitaZetaCenteredBridge
+namespace InfoGeometry.Canonical.SouriauTomitaZetaCenteredBridge
 
 open Complex
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -210,4 +210,4 @@ theorem oddZeta_eq_lambert_plus_bernoulli
 
 end RamanujanLambertSocket
 
-end SouriauTomitaZetaCenteredBridge
+end InfoGeometry.Canonical.SouriauTomitaZetaCenteredBridge

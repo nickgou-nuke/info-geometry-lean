@@ -84,7 +84,7 @@ end Attention
 
 namespace Bregman
 
-open DualFlat
+open InfoGeometry.Geometry.DualFlat
 
 /-- 
 Standard Pythagorean property for Bregman divergences.

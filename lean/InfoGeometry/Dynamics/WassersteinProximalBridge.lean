@@ -17,7 +17,7 @@ step-size proximal update is represented by the unipotent matrix
 `n * η`.
 -/
 
-namespace WassersteinProximalBridge
+namespace InfoGeometry.Dynamics.WassersteinProximalBridge
 
 open Matrix
 open Complex
@@ -86,4 +86,4 @@ theorem optimizer_real_drift_is_linear (η : ℂ) (n : ℕ) :
     (((jkoEntropyStep η) ^ n) 0 1).re = (n : ℝ) * η.re := by
   exact dephasing_drift_is_linear η n
 
-end WassersteinProximalBridge
+end InfoGeometry.Dynamics.WassersteinProximalBridge

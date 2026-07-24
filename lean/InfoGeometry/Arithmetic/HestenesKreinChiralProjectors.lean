@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace HestenesKreinChiralProjectors
+namespace InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 
@@ -287,4 +287,4 @@ theorem kernelMinus_kernelPlus_zero
   funext x y
   exact projectMinus_projectPlus_zero (K x y)
 
-end HestenesKreinChiralProjectors
+end InfoGeometry.Arithmetic.HestenesKreinChiralProjectors

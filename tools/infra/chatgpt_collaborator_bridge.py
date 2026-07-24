@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
+import sys
+from pathlib import Path
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 import subprocess
 import argparse
-import sys
 import json
 import time
-from pathlib import Path
 
 from tools.infra.lean_audit_prompt import build_repair_prompt
 from tools.infra.chatgpt_lane_guard import browser_chatgpt_lane
@@ -150,7 +154,8 @@ print(response_text)
             reason="legacy_collaborator_browser_harness",
         ):
             result = subprocess.run(
-                ["browser-harness", "-c", harness_script],
+                ["browser-harness"],
+                input=harness_script,
                 capture_output=True,
                 text=True,
                 check=True

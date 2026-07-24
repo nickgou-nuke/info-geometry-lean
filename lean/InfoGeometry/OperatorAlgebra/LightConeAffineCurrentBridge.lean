@@ -5,7 +5,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace LightConeAffineCurrentBridge
+namespace InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
 
 /--
 Affine-current socket for lightcone-arrow modes.
@@ -167,4 +167,4 @@ theorem centralCharge_calibrated :
 
 end LightConeAffineCurrentBridge
 
-end LightConeAffineCurrentBridge
+end InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge

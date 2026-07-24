@@ -6,10 +6,10 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.FDeriv.Add
 import Mathlib.Analysis.Calculus.FDeriv.Mul
 
-namespace Gaussian
+namespace InfoGeometry.ExponentialFamily.Gaussian
 
 open InfoGeometry.Convex
-open Triality
+open InfoGeometry.Canonical.Triality
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -123,4 +123,4 @@ noncomputable def softmaxGaussianAttention
 
 end GaussianFamily
 
-end Gaussian
+end InfoGeometry.ExponentialFamily.Gaussian

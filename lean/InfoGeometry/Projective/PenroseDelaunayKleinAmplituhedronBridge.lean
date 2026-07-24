@@ -27,7 +27,7 @@ Not closed here:
 * no theorem derives the comparison equivalences from the proof DAG itself.
 -/
 
-namespace PenroseDelaunayKleinAmplituhedronBridge
+namespace InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
 
 open InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 open InfoGeometry.Projective.PenroseSpinTiling
@@ -155,4 +155,4 @@ theorem comparison_corridor_packet
 
 end PenroseDelaunayKleinAmplituhedronCorridor
 
-end PenroseDelaunayKleinAmplituhedronBridge
+end InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge

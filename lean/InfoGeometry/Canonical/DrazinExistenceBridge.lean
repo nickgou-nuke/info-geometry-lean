@@ -12,7 +12,7 @@ Bridge layer between the singular Drazin existence theorem and the canonical
 Drazin predicate used by the regularization/capstone lanes.
 -/
 
-namespace DrazinExistenceBridge
+namespace InfoGeometry.Canonical.DrazinExistenceBridge
 
 open Drazin
 
@@ -22,12 +22,12 @@ Translate a singular-lane Drazin witness into the canonical Drazin predicate.
 theorem canonical_isDrazinInverse_of_singular
     {R : Type*} [Ring R]
     {A D : R} {k : ℕ}
-    (h : IsDrazinInverse A D k) :
+    (h : InfoGeometry.Singular.Drazin.IsDrazinInverse A D k) :
     InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k := by
   refine InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_
-  · exact h.2.1
-  · exact h.1
-  · exact h.2.2.symm
+  · exact h.comm
+  · exact h.dad_eq_d
+  · exact h.pow_eq_pow_succ_mul.symm
 
 /--
 Translate a canonical Drazin witness into the singular-lane predicate.
@@ -36,11 +36,11 @@ theorem singular_isDrazinInverse_of_canonical
     {R : Type*} [Ring R]
     {A D : R} {k : ℕ}
     (h : InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k) :
-    IsDrazinInverse A D k := by
-  refine IsDrazinInverse.mk ?_ ?_ ?_
-  · exact h.2.1
-  · exact h.1
-  · exact h.2.2.symm
+    InfoGeometry.Singular.Drazin.IsDrazinInverse A D k := by
+  refine InfoGeometry.Singular.Drazin.IsDrazinInverse.mk ?_ ?_ ?_
+  · exact h.idempotent
+  · exact h.comm
+  · exact h.power.symm
 
 /--
 Global finite-dimensional existence of a canonical Drazin inverse on
@@ -52,7 +52,8 @@ theorem exists_canonicalDrazinInverse_global
     (A : Module.End K V) :
     ∃ (k : ℕ) (D : Module.End K V),
       InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k := by
-  rcases exists_drazinInverse_global (K := K) (V := V) (A := A) with
+  rcases InfoGeometry.Singular.Drazin.exists_drazinInverse_global
+      (K := K) (V := V) (A := A) with
     ⟨k, D, hD⟩
   exact ⟨k, D, canonical_isDrazinInverse_of_singular hD⟩
 
@@ -69,24 +70,19 @@ theorem exists_canonicalDrazinInverse_global_endCLM
   rcases exists_canonicalDrazinInverse_global
       (K := ℝ) (V := E) (A := A.toLinearMap) with ⟨k, Dlin, hDlin⟩
   let D : E →L[ℝ] E := LinearMap.toContinuousLinearMap Dlin
-  have hCommLin : A.toLinearMap * D.toLinearMap = D.toLinearMap * A.toLinearMap := by
-    simpa [D] using hDlin.1
-  have hIdemLin : D.toLinearMap * A.toLinearMap * D.toLinearMap = D.toLinearMap := by
-    simpa [D] using hDlin.2.1
-  have hPowLin : A.toLinearMap ^ (k + 1) * D.toLinearMap = A.toLinearMap ^ k := by
-    simpa [D] using hDlin.2.2
-  refine ⟨k, D, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_⟩
-  · ext x
-    simpa using congrArg (fun f : E →ₗ[ℝ] E => f x) hCommLin
-  · ext x
-    simpa using congrArg (fun f : E →ₗ[ℝ] E => f x) hIdemLin
-  ·
+  have hComm : A * D = D * A := by
+    ext x
+    simpa [D] using congrArg (fun f : E →ₗ[ℝ] E => f x) hDlin.1
+  have hIdem : D * A * D = D := by
+    ext x
+    simpa [D] using congrArg (fun f : E →ₗ[ℝ] E => f x) hDlin.2.1
+  have hPow : A ^ (k + 1) * D = A ^ k := by
     have hPowCont : (A ^ (k + 1) * D).toLinearMap = (A ^ k).toLinearMap := by
       change (ContinuousLinearMap.toLinearMapRingHom : (E →L[ℝ] E) →+* (E →ₗ[ℝ] E))
           (A ^ (k + 1) * D) =
         (ContinuousLinearMap.toLinearMapRingHom : (E →L[ℝ] E) →+* (E →ₗ[ℝ] E))
           (A ^ k)
-      simpa [map_mul, map_pow, D] using hPowLin
+      simpa [map_mul, map_pow, D] using hDlin.2.2
     have hPow' : A ^ (k + 1) * D = ((A ^ k).toLinearMap).toContinuousLinearMap :=
       (ContinuousLinearMap.toLinearMap_eq_iff_eq_toContinuousLinearMap
           (g := A ^ (k + 1) * D) (f := (A ^ k).toLinearMap)).1 hPowCont
@@ -94,5 +90,6 @@ theorem exists_canonicalDrazinInverse_global_endCLM
       exact (LinearMap.toContinuousLinearMap_eq_iff_eq_toLinearMap
         (f := (A ^ k).toLinearMap) (g := A ^ k)).2 rfl
     exact hPow'.trans hRoundTrip
+  exact ⟨k, D, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk hComm hIdem hPow⟩
 
-end DrazinExistenceBridge
+end InfoGeometry.Canonical.DrazinExistenceBridge

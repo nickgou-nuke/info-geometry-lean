@@ -32,7 +32,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace CommutantMoebiusFenchelMirrorBridge
+namespace InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Clifford.SplitCartanHopWittBridge
@@ -176,4 +176,4 @@ theorem supplied_o55_and_dirac_hodge_trace_window
 
 end Core
 
-end CommutantMoebiusFenchelMirrorBridge
+end InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge

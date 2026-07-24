@@ -7,7 +7,7 @@ import DAG.GraphHodge
 import DAG.ChiralDiracAnticommutation
 
 /-!
-# The Riemann Hypothesis — Formal Equivalence Theorem
+# Riemann-hypothesis bridge interfaces and finite projections
 
 This file keeps the RH bridge honest by exporting only kernel-checked facts
 from owner files and by making the analytic Fredholm half-plane claim an
@@ -32,7 +32,7 @@ vacuous theorem.
 
 open Complex
 
-namespace RiemannHypothesis
+namespace InfoGeometry.Arithmetic.RiemannHypothesis
 
 open InfoGeometry.Analysis.BregmanAnalyticBound
 
@@ -114,4 +114,4 @@ theorem fredholm_determinant_nonzero_on_critical_halfplane
     C.determinant s ≠ 0 :=
   C.determinant_ne_zero s hs
 
-end RiemannHypothesis
+end InfoGeometry.Arithmetic.RiemannHypothesis

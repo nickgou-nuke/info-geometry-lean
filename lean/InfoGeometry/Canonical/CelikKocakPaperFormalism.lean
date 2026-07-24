@@ -20,7 +20,7 @@ No witness-only basis packet is used here.
 
 noncomputable section
 
-namespace CelikKocakPaperFormalism
+namespace InfoGeometry.Canonical.CelikKocakPaperFormalism
 
 open InfoGeometry.Canonical.CelikKocakCantorOperators
 open InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
@@ -548,4 +548,4 @@ theorem cl11PauliMatrixEquiv_decompose (M : Mat2) :
       (InfoGeometry.Clifford.Cl11Matrix.delta M) • J1 :=
   InfoGeometry.Clifford.Cl11Matrix.mat2_decompose M
 
-end CelikKocakPaperFormalism
+end InfoGeometry.Canonical.CelikKocakPaperFormalism

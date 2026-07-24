@@ -17,7 +17,7 @@ in the same lower parabolic class.  The global S-block therefore has multiplied
 phase and additively accumulated logarithmic shear.
 -/
 
-namespace ExchangeSMatrixBridge
+namespace InfoGeometry.Clifford.ExchangeSMatrixBridge
 
 open Matrix
 open InfoGeometry.Clifford.LogCftMonodromy
@@ -176,4 +176,4 @@ theorem lowerExchangeSMatrix_upper_right_zero (blocks : List (ℂ × ℂ)) :
   exact lowerParabolicSBlock_upper_right_zero
     (lowerExchangePhase blocks) (lowerExchangeShear blocks)
 
-end ExchangeSMatrixBridge
+end InfoGeometry.Clifford.ExchangeSMatrixBridge

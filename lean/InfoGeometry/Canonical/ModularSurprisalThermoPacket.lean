@@ -23,7 +23,7 @@ This file deliberately does not prove a cosmological-constant theorem, a full
 Tomita logarithm theorem, or an infinite-dimensional Hessian theorem.
 -/
 
-namespace ModularSurprisalThermoPacket
+namespace InfoGeometry.Canonical.ModularSurprisalThermoPacket
 
 open scoped BigOperators
 
@@ -239,4 +239,4 @@ theorem defectiveLogPotential_chain_rule_packet
 
 end DefectiveLogRadonNikodym
 
-end ModularSurprisalThermoPacket
+end InfoGeometry.Canonical.ModularSurprisalThermoPacket

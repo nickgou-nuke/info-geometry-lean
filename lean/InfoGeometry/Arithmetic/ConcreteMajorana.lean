@@ -5,7 +5,7 @@ import Mathlib.Tactic.FinCases
 
 noncomputable section
 
-namespace ConcreteMajorana
+namespace InfoGeometry.Arithmetic.ConcreteMajorana
 
 open Matrix
 open InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
@@ -77,4 +77,4 @@ theorem trivial_majorana_dirac_square :
 /-- Concrete coefficient law in the finite 2x2 toy model. -/
 theorem modeEnergyCoefficient_zero (_ : Unit) : (0 : ℝ) = 0 := rfl
 
-end ConcreteMajorana
+end InfoGeometry.Arithmetic.ConcreteMajorana

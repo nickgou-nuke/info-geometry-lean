@@ -15,7 +15,7 @@ explicit projector-level consequences for the recovered Drazin witness:
 - decomposition `P + P₀ = 1`.
 -/
 
-namespace DrazinSpectralProjectorBridge
+namespace InfoGeometry.Canonical.DrazinSpectralProjectorBridge
 
 open DrazinInfiniteCore
 open DrazinSpectralBridge
@@ -102,4 +102,4 @@ theorem exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package
     ⟨k, TD, hD, hPidem, _hQidem, _hPQ, _hQP, _hDecomp⟩
   exact ⟨k, TD, hD, hPidem⟩
 
-end DrazinSpectralProjectorBridge
+end InfoGeometry.Canonical.DrazinSpectralProjectorBridge

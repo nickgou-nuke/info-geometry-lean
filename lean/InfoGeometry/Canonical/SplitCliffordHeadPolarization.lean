@@ -20,7 +20,7 @@ two mixed null-mode products already present in the head algebra as the local
 - the head `K`-flip swaps the two sectors.
 -/
 
-namespace SplitCliffordHeadPolarization
+namespace InfoGeometry.Canonical.SplitCliffordHeadPolarization
 
 open InfoGeometry.Canonical.SplitCliffordHeadLift
 open InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
@@ -203,4 +203,4 @@ theorem headKFlipTensor_particleHole_resolves_mixedSectorAnomaly (n : ℕ) :
     headMinusSectorTensor_mul_headPlusSectorTensor n,
     headPlusSectorTensor_mul_headMinusSectorTensor n⟩
 
-end SplitCliffordHeadPolarization
+end InfoGeometry.Canonical.SplitCliffordHeadPolarization

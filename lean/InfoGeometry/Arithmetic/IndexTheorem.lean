@@ -9,7 +9,7 @@ identification, ζ-regularized supersymmetry statement, or anomaly-cancellation
 theorem.
 -/
 
-namespace IndexTheorem
+namespace InfoGeometry.Arithmetic.IndexTheorem
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 
@@ -58,4 +58,4 @@ be added later as a theorem with explicit operator/cohomological hypotheses.
 def topological_index_debt : String :=
   "Open: state and prove any arithmetic Witten-index/Euler-characteristic bridge with explicit finite/cohomological hypotheses."
 
-end IndexTheorem
+end InfoGeometry.Arithmetic.IndexTheorem

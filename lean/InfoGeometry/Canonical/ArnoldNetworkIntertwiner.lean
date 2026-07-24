@@ -13,7 +13,7 @@ guarded by fixed-point hypotheses on experts, so the generator-preservation
 field is mathematically honest.
 -/
 
-namespace ArnoldNetworkIntertwiner
+namespace InfoGeometry.Canonical.ArnoldNetworkIntertwiner
 
 open InfoGeometry.Canonical.QuantumPresentation
 open InfoGeometry.Canonical.MoE
@@ -85,4 +85,4 @@ theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
       ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
       FierzChannelReadout.toQuantumPresentation] using hPhase s
 
-end ArnoldNetworkIntertwiner
+end InfoGeometry.Canonical.ArnoldNetworkIntertwiner

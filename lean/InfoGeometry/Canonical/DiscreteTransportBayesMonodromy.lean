@@ -26,7 +26,7 @@ the SymPy scripts.
 
 noncomputable section
 
-namespace DiscreteTransportBayesMonodromy
+namespace InfoGeometry.Canonical.DiscreteTransportBayesMonodromy
 
 open InfoGeometry.Canonical.OperatorJKOStep
 open InfoGeometry.Canonical.MajoranaJKOErgoBridge
@@ -111,4 +111,4 @@ theorem nilpotent_jordan_power
 
 end FiniteDynamics
 
-end DiscreteTransportBayesMonodromy
+end InfoGeometry.Canonical.DiscreteTransportBayesMonodromy

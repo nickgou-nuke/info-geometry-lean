@@ -6,7 +6,7 @@ set_option linter.unusedSectionVars false
 open MeasureTheory
 open scoped ENNReal
 
-namespace IBGaugeBridge
+namespace InfoGeometry.Canonical.IBGaugeBridge
 
 open IBMeasure
 open MeasureProjective
@@ -218,4 +218,4 @@ theorem ibProjectiveState_eq_of_shift
     (IBGibbs_shift_eq
       (qT := qT) (β := β) (c := c) (D := D) (x := x) hβD h_nz)
 
-end IBGaugeBridge
+end InfoGeometry.Canonical.IBGaugeBridge

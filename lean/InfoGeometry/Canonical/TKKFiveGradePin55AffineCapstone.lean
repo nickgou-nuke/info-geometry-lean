@@ -49,7 +49,7 @@ Together, these two files form the complete kernel-checked TKK / Pin(5,5) packet
 
 noncomputable section
 
-namespace TKKFiveGradePin55AffineCapstone
+namespace InfoGeometry.Canonical.TKKFiveGradePin55AffineCapstone
 
 open InfoGeometry.Algebra.FiveGradedTKK
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
@@ -162,4 +162,4 @@ theorem conservative_tkk_pin55_affine_capstone (X : JordanMatrix10D) :
   exact ⟨weight5_packet, affine_sl2_packet, conformal_grade_swap_packet,
     pin55_reflection_packet, orbit55_packet X⟩
 
-end TKKFiveGradePin55AffineCapstone
+end InfoGeometry.Canonical.TKKFiveGradePin55AffineCapstone

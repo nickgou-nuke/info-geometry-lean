@@ -18,7 +18,7 @@ No loop-group analytic representation.
 No physical boundary-state construction.
 -/
 
-namespace CayleyMobiusBoundaryBraidClosure
+namespace InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 
@@ -255,4 +255,4 @@ theorem liftedBraidBoundaryAction_commutes_deck (w : BraidWord)
       deckInvolution (liftedBraidBoundaryAction w x) :=
   liftToDoubleCover_commutes_deck (braidBoundaryAction w) x
 
-end CayleyMobiusBoundaryBraidClosure
+end InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure

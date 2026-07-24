@@ -24,7 +24,7 @@ Einstein-Cartan field equation or a full bundle-level torsion theory.
 
 noncomputable section
 
-namespace BiquaternionTorsionBridge
+namespace InfoGeometry.Canonical.BiquaternionTorsionBridge
 
 open Complex
 
@@ -95,4 +95,4 @@ theorem condensateBiquaternionTorsion_zero
   simp [condensateBiquaternionTorsion, EmergentGravity.condensate_torsion,
     hT, lift.map_zero]
 
-end BiquaternionTorsionBridge
+end InfoGeometry.Canonical.BiquaternionTorsionBridge

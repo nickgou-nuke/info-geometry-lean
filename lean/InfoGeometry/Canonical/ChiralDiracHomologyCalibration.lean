@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace ChiralDiracHomologyCalibration
+namespace InfoGeometry.Canonical.ChiralDiracHomologyCalibration
 
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Krein
@@ -245,4 +245,4 @@ theorem rootDiracOddLane_sq_eq_hodgeLoop_sum :
 
 end RootHodgeReadbacks
 
-end ChiralDiracHomologyCalibration
+end InfoGeometry.Canonical.ChiralDiracHomologyCalibration

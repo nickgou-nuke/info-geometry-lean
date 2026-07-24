@@ -28,7 +28,7 @@ The purpose is to read back:
 * compatibility of the bounded flow with `KsurAction`.
 -/
 
-namespace BoundedModularKMSBridge
+namespace InfoGeometry.Canonical.BoundedModularKMSBridge
 
 open InfoGeometry.Canonical.BoundedModularFlowCalibration
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -172,4 +172,4 @@ end Bridge
 
 end Core
 
-end BoundedModularKMSBridge
+end InfoGeometry.Canonical.BoundedModularKMSBridge

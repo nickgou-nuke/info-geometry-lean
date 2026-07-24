@@ -27,6 +27,6 @@ canonical definitions and proved theorems, without restating them through
 additional witness records.
 -/
 
-namespace CompleteLatticeSectorCompletion
+namespace InfoGeometry.Topology.CompleteLatticeSectorCompletion
 
-end CompleteLatticeSectorCompletion
+end InfoGeometry.Topology.CompleteLatticeSectorCompletion

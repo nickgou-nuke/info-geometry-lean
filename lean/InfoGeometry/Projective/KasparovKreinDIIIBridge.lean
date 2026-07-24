@@ -47,7 +47,7 @@ compatibilities currently available in the repo:
 
 open scoped InnerProductSpace
 
-namespace KasparovKreinDIIIBridge
+namespace InfoGeometry.Projective.KasparovKreinDIIIBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.RealBdGDIIIAtom
@@ -223,4 +223,4 @@ theorem concreteTopologicalSocket2_packet :
   simpa [concreteTopologicalSocket2] using
     concreteAndreevHorizon_information_preservation
 
-end KasparovKreinDIIIBridge
+end InfoGeometry.Projective.KasparovKreinDIIIBridge

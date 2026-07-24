@@ -31,7 +31,7 @@ import InfoGeometry.Topology.ParafermionBraiding
 
 noncomputable section
 
-namespace BraidParafermionClosure
+namespace InfoGeometry.Topology.BraidParafermionClosure
 
 open Matrix
 open InfoGeometry.Topology.Parafermion
@@ -81,6 +81,6 @@ theorem finite_braid_vortex_closure (t : ℂ) (v : AharonovBohmVortex) :
       vortexOperator v * vortexOperator v * vortexOperator v = 1 := by
   exact ⟨su3_parafermion_braiding t, vortexOperator_cube_eq_one v⟩
 
-end BraidParafermionClosure
+end InfoGeometry.Topology.BraidParafermionClosure
 
 end noncomputable section

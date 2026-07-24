@@ -3,9 +3,9 @@ import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
 
 noncomputable section
 
-namespace G2TrifactorColorBridge
+namespace InfoGeometry.Projective.SplitOctonions.G2TrifactorColorBridge
 
-open G2TrifactorSU3
+open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open SplitOctonionsColorStabilizer
 open BektasMatrix
 open Quaternion
@@ -57,4 +57,4 @@ theorem colorAct_preserves_splitNorm (g : ColorStabilizerElement R) (X : BektasM
     splitNorm (colorAct g X) = splitNorm X := by
   exact splitNorm_invariant g X
 
-end G2TrifactorColorBridge
+end InfoGeometry.Projective.SplitOctonions.G2TrifactorColorBridge

@@ -4,7 +4,7 @@ import InfoGeometry.OperatorAlgebra.SupergradedClosure
 
 noncomputable section
 
-namespace CantorCellInduction
+namespace InfoGeometry.Canonical.CantorCellInduction
 
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
@@ -69,4 +69,4 @@ theorem transport_laplacian (n : ℕ) :
 
 end CantorCellInductiveChain
 
-end CantorCellInduction
+end InfoGeometry.Canonical.CantorCellInduction

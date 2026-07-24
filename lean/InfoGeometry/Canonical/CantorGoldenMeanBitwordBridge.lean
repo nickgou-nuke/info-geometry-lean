@@ -17,7 +17,7 @@ No external repository is imported.  The definitions here are the repo-native
 shadow of the shared bitword interface.
 -/
 
-namespace CantorGoldenMeanBitwordBridge
+namespace InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
 
 open InfoGeometry.Cantor.CantorRandomWalk
 
@@ -189,4 +189,4 @@ theorem prefix_noAdjacentFinite_cons_true_of_head_false
   exact prefix_noAdjacentFinite
     ⟨consBit true x.1, noAdjacentOnes_cons_true_of_head_false x hhead⟩ n
 
-end CantorGoldenMeanBitwordBridge
+end InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge

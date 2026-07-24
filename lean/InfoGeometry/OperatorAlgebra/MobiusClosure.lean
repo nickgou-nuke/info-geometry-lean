@@ -17,7 +17,7 @@ import Mathlib
 
 noncomputable section
 
-namespace MobiusClosure
+namespace InfoGeometry.OperatorAlgebra.MobiusClosure
 
 /--
 A linear Möbius/closure inversion on an ambient carrier.
@@ -248,4 +248,4 @@ theorem symmetrizedReadout_inv
 
 end MobiusInversionDatum
 
-end MobiusClosure
+end InfoGeometry.OperatorAlgebra.MobiusClosure

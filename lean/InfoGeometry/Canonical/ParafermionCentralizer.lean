@@ -3,7 +3,7 @@ import InfoGeometry.Clifford.CliffordTower
 
 noncomputable section
 
-namespace ParafermionCentralizer
+namespace InfoGeometry.Canonical.ParafermionCentralizer
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.DrazinCentralizerErlangen
@@ -71,4 +71,4 @@ theorem parafermion_alpha_readout :
     alpha_combinatorial = 1 / (137 : ℝ) := by
   exact alpha_combinatorial_value
 
-end ParafermionCentralizer
+end InfoGeometry.Canonical.ParafermionCentralizer

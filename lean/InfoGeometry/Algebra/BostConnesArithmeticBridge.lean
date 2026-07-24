@@ -32,7 +32,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace BostConnesArithmeticBridge
+namespace InfoGeometry.Algebra.BostConnesArithmeticBridge
 
 open InfoGeometry.Algebra.BostConnesAnalytic
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
@@ -95,9 +95,8 @@ theorem realPartitionSum_pos (n : ℕ) [NeZero n] (primes : Fin n → ℕ) (hpos
 Our `ground_state_limit` proves: as β → ∞, the normalized finite KMS weight
 converges to δ_{i,0} (the lowest prime dominates).
 
-In the infinite system, the corresponding limit uses ζ(β) → 1 as β → ∞
-(a standard analytic fact — all terms m^{-β} → 0 for m ≥ 2, while 1^{-β} = 1).
-This is documented analytic debt; our finite ground state limit is the
+In the infinite system, the corresponding limit is a categorical/Hestenes--Krein
+colimit readout of the finite prime-cutoff tower.  This file proves only the
 algebraically precise finite-dimensional analogue.
 -/
 
@@ -108,4 +107,4 @@ theorem ground_state_limit (n : ℕ) (primes : Fin n → ℕ)
       (𝓝 (if i.val = 0 then 1 else 0)) :=
   BostConnesAnalytic.ground_state_limit n primes hpos hmono i
 
-end BostConnesArithmeticBridge
+end InfoGeometry.Algebra.BostConnesArithmeticBridge

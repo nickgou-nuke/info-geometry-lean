@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.RGFlow
 
-namespace ChiralRGFlow
+namespace InfoGeometry.Canonical.ChiralRGFlow
 
 open InfoGeometry.Canonical.MoorePenrose
 open SpectralInference
@@ -69,4 +69,4 @@ effectively 'freezing out' certain belief updates because the mass gap is too la
 def IsInfraredConfined (flow : ChiralMassFlow E) : Prop :=
   Filter.Tendsto flow (nhds 0) Filter.atTop
 
-end ChiralRGFlow
+end InfoGeometry.Canonical.ChiralRGFlow

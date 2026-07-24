@@ -27,7 +27,7 @@ No Virasoro-origin claim.
 No inductive-limit claim.
 -/
 
-namespace CantorBinaryHopCharge
+namespace InfoGeometry.Canonical.CantorBinaryHopCharge
 
 open Matrix
 open InfoGeometry.Canonical
@@ -151,4 +151,4 @@ theorem annihilate_annihilate_true_eq_zero :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [a_op, cantorState, state_true, Matrix.mul_apply, Fin.sum_univ_two]
 
-end CantorBinaryHopCharge
+end InfoGeometry.Canonical.CantorBinaryHopCharge

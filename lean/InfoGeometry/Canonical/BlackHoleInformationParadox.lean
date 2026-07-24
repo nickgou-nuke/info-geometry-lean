@@ -17,7 +17,7 @@ and black hole evaporation.
 
 noncomputable section
 
-namespace BlackHoleInformationParadox
+namespace InfoGeometry.Canonical.BlackHoleInformationParadox
 
 /-- The Space of Emergent Metrics on an abstract Space M. -/
 def EmergentMetricSpace (M : Type*) := M → ℝ
@@ -51,4 +51,4 @@ theorem topological_phase_conservation (phase : TopologicalSpinorPhase) :
     exact IsPreconnected.constant h_preconn h_cont h_mem_x h_mem_y
   exact h_const 0 1
 
-end BlackHoleInformationParadox
+end InfoGeometry.Canonical.BlackHoleInformationParadox

@@ -15,7 +15,7 @@ doubled Krein surface. It does not introduce any complex-analytic language or
 any flow-level claims.
 -/
 
-namespace RealDoubledChiralKreinBridge
+namespace InfoGeometry.Canonical.RealDoubledChiralKreinBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
@@ -82,4 +82,4 @@ theorem etaChiral_comp_right_projector :
 
 end Core
 
-end RealDoubledChiralKreinBridge
+end InfoGeometry.Canonical.RealDoubledChiralKreinBridge

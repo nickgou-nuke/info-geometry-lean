@@ -31,7 +31,7 @@ documentation strings, not theorem-shaped placeholders.
 
 universe v u
 
-namespace HexagonCocycle
+namespace InfoGeometry.Fibonacci.HexagonCocycle
 
 section HexagonAxiom
 
@@ -81,7 +81,7 @@ end YangBaxter
 
 section FibonacciMatrixReadout
 
-open YangBaxterProof
+open InfoGeometry.Canonical.YangBaxterProof
 
 /--
 The concrete Fibonacci anyon matrix braid relation from the repository owner
@@ -132,4 +132,4 @@ theorem unification :
     unified_cocycle_diagram.length ≥ 1 ∧ unified_cocycle_diagram.length ≥ 2 := by
   decide
 
-end HexagonCocycle
+end InfoGeometry.Fibonacci.HexagonCocycle

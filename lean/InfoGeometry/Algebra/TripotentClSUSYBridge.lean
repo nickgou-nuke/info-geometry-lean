@@ -24,7 +24,7 @@ This is the algebraic content of the "tripotent" keyword: the operator
 word parity picks out the fermionic vs non-fermionic sectors.
 -/
 
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 noncomputable section
@@ -204,5 +204,35 @@ theorem word_parity_matches_projectors :
       _ = (1 : ZMod 2) + (1 : ZMod 2) := by rw [h_odd]
       _ = (0 : ZMod 2) := by decide
   exact ⟨h_odd, h_even, h_append⟩
+
+
+
+/-- Ring expansion: a(a-1)(a+1) = a(a²-1) = a³-a -/
+theorem tripotent_factor : ∀ {R : Type*} [CommRing R] (a : R), a * a * a - a = a * (a - 1) * (a + 1) := by
+  intro R inst a
+  ring
+
+
+/-- a(a-1)(a+1) = 0, field has no zero divisors, so a ∈ {0, 1, -1} -/
+theorem tripotent_roots_in_field : ∀ {K : Type*} [Field K] (a : K), a * a * a = a → a = 0 ∨ a = 1 ∨ a = -1 := by
+  intro K inst a h
+  have h1 : a * a * a - a = 0 := by
+    calc a * a * a - a = a * a * a - a := rfl
+    _ = a - a := by rw [h]
+    _ = 0 := sub_self a
+  have h2 : a * (a - 1) * (a + 1) = 0 := by
+    calc a * (a - 1) * (a + 1) = a * a * a - a := (tripotent_factor a).symm
+    _ = 0 := h1
+  rcases mul_eq_zero.mp h2 with h3 | h3
+  · rcases mul_eq_zero.mp h3 with h4 | h4
+    · left; exact h4
+    · right; left
+      calc a = a - 1 + 1 := by ring
+      _ = 0 + 1 := by rw [h4]
+      _ = 1 := by ring
+  · right; right
+    calc a = a + 1 - 1 := by ring
+    _ = 0 - 1 := by rw [h3]
+    _ = -1 := by ring
 
 end TripotentClSUSYBridge

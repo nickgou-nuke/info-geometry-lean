@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace RamanujanOddZeta
+namespace InfoGeometry.Arithmetic.RamanujanOddZeta
 
 open Complex
 
@@ -195,4 +195,4 @@ theorem ramanujan_odd_zeta_expanded
           (Finset.range (n + 2)).sum (fun k => bernoulliAnomalyTerm n α β k) := by
   exact R.identity n α β hn hα hβ hαβ
 
-end RamanujanOddZeta
+end InfoGeometry.Arithmetic.RamanujanOddZeta

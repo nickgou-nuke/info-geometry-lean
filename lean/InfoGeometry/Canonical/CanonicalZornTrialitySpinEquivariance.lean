@@ -18,13 +18,13 @@ does not identify the internal axis cycle with the outer Cartan triality.
 
 noncomputable section
 
-namespace CanonicalZornTrialitySpinEquivariance
+namespace InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornFiveGradedClosure
+open CanonicalZornCompositionTriality
+open CanonicalZornCliffordRepresentation
 
 /-! ## The internal order-three Zorn automorphism on every typed copy -/
 
@@ -259,6 +259,6 @@ theorem triality_clifford_spin_five_grade_closure
     cliffordAxisCycle_ι V,
     conformalTriality_bracket A B⟩
 
-end CanonicalZornTrialitySpinEquivariance
+end InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
 
 end noncomputable section

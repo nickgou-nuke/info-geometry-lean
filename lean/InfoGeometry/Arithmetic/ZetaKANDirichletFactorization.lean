@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ZetaKANDirichletFactorization
+namespace InfoGeometry.Arithmetic.ZetaKANDirichletFactorization
 
 open Matrix
 open InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
@@ -142,4 +142,4 @@ theorem kanProduct_det_one_for_dirichlet_shear
     (kanProduct θ lam η).det = 1 :=
   kanProduct_det_eq_one θ lam η
 
-end ZetaKANDirichletFactorization
+end InfoGeometry.Arithmetic.ZetaKANDirichletFactorization

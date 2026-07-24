@@ -9,13 +9,14 @@ import InfoGeometry.Arithmetic.UnifiedCapstone
 Instantiates the three pillars on the minimal Hestenes-Krein carrier:
 DoubledSpace ℝ² = ℝ² × ℝ² with the 2×2 matrix model.
 
-Every theorem here either proves a concrete 2×2 matrix identity or records
-analytic zeta/Fredholm closure as explicit debt via `UnifiedCapstone`.
+Every theorem here either proves a concrete 2×2 matrix identity or records the
+zeta/Fredholm-style closure as a Hestenes--Krein categorical-colimit owner
+obligation via `UnifiedCapstone`.
 -/
 
 noncomputable section
 
-namespace ErlangenLanglandsConcrete
+namespace InfoGeometry.Capstone.ErlangenLanglandsConcrete
 
 open Matrix
 
@@ -126,4 +127,4 @@ theorem unification : J2 * J2 = - (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
     (K2 * eps2 + eps2 * K2) = (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
   exact ⟨J2_square_neg_one, eps2_involution, J_eps_anticomm, connes_anomaly_cancellation_2x2⟩
 
-end ErlangenLanglandsConcrete
+end InfoGeometry.Capstone.ErlangenLanglandsConcrete

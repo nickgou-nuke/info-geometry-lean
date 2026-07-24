@@ -23,7 +23,7 @@ identity already lives in algebra.
 
 noncomputable section
 
-namespace ContinuumLimit
+namespace InfoGeometry.OperatorAlgebra.ContinuumLimit
 
 open Filter
 
@@ -152,4 +152,4 @@ theorem projection_fixes_scaled_pow
 
 end ParabolicContinuumProjectionPacket
 
-end ContinuumLimit
+end InfoGeometry.OperatorAlgebra.ContinuumLimit

@@ -36,7 +36,7 @@ carrier separately.
 
 noncomputable section
 
-namespace Cl11InfiniteCarrier
+namespace InfoGeometry.Clifford.Cl11InfiniteCarrier
 
 open InfoGeometry.Clifford.Cl11TensorTowerIteration
 
@@ -212,4 +212,4 @@ Summary:
 * compatible readout: `compatibleMarkovTrace_stable` and `compatibleLogDet_one_step`.
 -/
 
-end Cl11InfiniteCarrier
+end InfoGeometry.Clifford.Cl11InfiniteCarrier

@@ -17,7 +17,7 @@ separate from `CrawfordDiracBispinorDensities`, whose gamma matrices are in a
 Weyl-basis finite kernel.
 -/
 
-namespace DiracPauliGamma
+namespace InfoGeometry.Clifford.DiracPauliGamma
 
 open scoped Matrix
 
@@ -245,4 +245,4 @@ noncomputable def pseudoscalarBilinear (ψ : DiracSpinor) : ℂ :=
 noncomputable def axialBilinear (mu : Fin 4) (ψ : DiracSpinor) : ℂ :=
   spinorExpectation (gamma0 * gamma mu * gamma5) ψ
 
-end DiracPauliGamma
+end InfoGeometry.Clifford.DiracPauliGamma

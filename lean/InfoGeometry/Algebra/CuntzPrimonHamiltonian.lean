@@ -7,12 +7,11 @@ import InfoGeometry.Algebra.CuntzTensorQuotient
 With orthogonal projectors P_i = S_i Sdag_i, H = Σ ε_i P_i
 satisfies H^k = Σ ε_i^k P_i for any k ≥ 0.
 -/
-
-open CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace CuntzPrimonHamiltonian
+namespace InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 def P (n : ℕ) (i : Fin n) : CuntzAlg n := cuntzS n i * cuntzSdag n i
 def hamiltonian (n : ℕ) (ε : Fin n → ℂ) : CuntzAlg n := ∑ i : Fin n, ε i • P n i
@@ -49,15 +48,41 @@ theorem P_mul_H (n : ℕ) (ε : Fin n → ℂ) (i : Fin n) :
   simp [Finset.mem_univ]
 
 theorem H_pow_eq (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) :
-    (hamiltonian n ε) ^ k = ∑ i : Fin n, (ε i ^ k) • P n i := by
-  induction' k with k ih
-  · rw [pow_zero, ← P_sum_one n]
-    refine Finset.sum_congr rfl (λ i _ => ?_)
-    simp [P]
-  · rw [pow_succ', ih]
-    -- H * (Σ ε_i^k P_i) = Σ_i (ε_i^k) · H · P_i = Σ_i ε_i^{k+1} · P_i
-    rw [Finset.mul_sum]
-    refine Finset.sum_congr rfl (λ i _ => ?_)
-    rw [mul_smul_comm, H_mul_P n ε, smul_smul, pow_succ]
+    (hamiltonian n ε) ^ k = ∑ i : Fin n, (ε i) ^ k • P n i := by
+  have h_main : ∀ (k : ℕ), (hamiltonian n ε) ^ k = ∑ i : Fin n, (ε i) ^ k • P n i := by
+    intro k
+    induction k with
+    | zero =>
+      simp [hamiltonian, Finset.sum_const, Finset.card_range]
+      <;>
+      simp_all [P_sum_one]
+      <;>
+      ring_nf
+      <;>
+      simp_all [P_idem, P_ortho]
+      <;>
+      aesop
+    | succ k ih =>
+      have hpow : (hamiltonian n ε) ^ (k + 1) = (hamiltonian n ε) ^ k * hamiltonian n ε := by
+        simp [pow_succ]
+      rw [hpow, ih, Finset.sum_mul]
+      have h₁ : ∀ i, ((ε i) ^ k • P n i) * (hamiltonian n ε) = (ε i) ^ (k + 1) • P n i := by
+        intro i
+        calc
+          ((ε i) ^ k • P n i) * (hamiltonian n ε) = (ε i) ^ k • (P n i * hamiltonian n ε) := by
+            simp [smul_mul_assoc]
+          _ = (ε i) ^ k • ((ε i) • P n i) := by
+            rw [P_mul_H]
+            <;> simp [smul_smul]
+          _ = (ε i) ^ (k + 1) • P n i := by
+            simp [pow_succ, smul_smul, Complex.ext_iff, Complex.I_mul_I]
+            <;> ring_nf
+            <;> simp_all [Complex.ext_iff, pow_succ]
+            <;> norm_num
+            <;> linarith
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [h₁ i]
+  exact h_main k
 
-end CuntzPrimonHamiltonian
+end InfoGeometry.Algebra.CuntzPrimonHamiltonian

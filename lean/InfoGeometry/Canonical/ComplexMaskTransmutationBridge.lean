@@ -17,7 +17,7 @@ surfaces into explicit doubled-real Lorentz-bivector language (`J ∘ ε`) and
 connects them to the circularly polarized (`u₊/u₋`) sheet transport lane.
 -/
 
-namespace ComplexMaskTransmutationBridge
+namespace InfoGeometry.Canonical.ComplexMaskTransmutationBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.SplitQuadraticSheets
@@ -111,4 +111,4 @@ theorem lorentzBivectorGenerator_maps_minusSheet_to_plusSheet
 
 end Core
 
-end ComplexMaskTransmutationBridge
+end InfoGeometry.Canonical.ComplexMaskTransmutationBridge

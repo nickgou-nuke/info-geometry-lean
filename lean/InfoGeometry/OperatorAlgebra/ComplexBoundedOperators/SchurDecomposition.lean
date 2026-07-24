@@ -22,7 +22,7 @@ the Jordan-normal-form existence corridor.
 
 noncomputable section
 
-namespace SchurDecomposition
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition
 
 open scoped BigOperators
 open Polynomial
@@ -689,4 +689,4 @@ theorem char_poly_0_block' (P : CharpolyLowerBlockPacket K n m) :
 
 end CharpolyLowerBlockPacket
 
-end SchurDecomposition
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition

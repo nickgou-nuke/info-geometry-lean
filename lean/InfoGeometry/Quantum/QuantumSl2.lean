@@ -44,7 +44,7 @@ open Matrix
 
 noncomputable section
 
-namespace QuantumSl2
+namespace InfoGeometry.Quantum.QuantumSl2
 
 /-! ### The Standard 2×2 Matrix Representation -/
 
@@ -184,4 +184,4 @@ theorem fibonacci_fusion_from_quantum_group : phi * phi = phi + 1 := by
   rw [h5sq]
   ring_nf
 
-end QuantumSl2
+end InfoGeometry.Quantum.QuantumSl2

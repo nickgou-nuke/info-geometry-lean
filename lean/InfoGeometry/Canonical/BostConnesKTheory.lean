@@ -10,7 +10,7 @@ not operator-algebraic `K₀`: no stable-projection monoid, Murray--von Neumann
 equivalence, or C*-completion is constructed here.
 -/
 
-namespace BostConnesKTheory
+namespace InfoGeometry.Canonical.BostConnesKTheory
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open BostConnesKMS
@@ -43,4 +43,4 @@ theorem projectorGrothendieckClass_inclusion_exclusion (n m : ℕ+) :
   congr 1
   abel
 
-end BostConnesKTheory
+end InfoGeometry.Canonical.BostConnesKTheory

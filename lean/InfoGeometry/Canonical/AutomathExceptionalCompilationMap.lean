@@ -27,7 +27,7 @@ What is not proved here:
 
 noncomputable section
 
-namespace AutomathExceptionalCompilationMap
+namespace InfoGeometry.Canonical.AutomathExceptionalCompilationMap
 
 open InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -82,4 +82,4 @@ theorem goldenMean_onePrepend_transports_to_cuntz_of_head_false
     ⟨noAdjacentOnes_cons_true_of_head_false x hhead,
       toBaseIndex_consBit true x.1⟩
 
-end AutomathExceptionalCompilationMap
+end InfoGeometry.Canonical.AutomathExceptionalCompilationMap

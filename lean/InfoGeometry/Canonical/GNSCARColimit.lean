@@ -20,7 +20,7 @@ it does **not** construct a star/GNS action.  The honest claim here is only:
 
 noncomputable section
 
-namespace GNSCARColimit
+namespace InfoGeometry.Canonical.GNSCARColimit
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -71,4 +71,4 @@ theorem limit_stagewise_car_packet (k : ℕ) :
   refine ⟨limit_u_sq_zero k, ?_, limit_uv_anticomm k⟩
   exact limit_v_sq_zero k
 
-end GNSCARColimit
+end InfoGeometry.Canonical.GNSCARColimit

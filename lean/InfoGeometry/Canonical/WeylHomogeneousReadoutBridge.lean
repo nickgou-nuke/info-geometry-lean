@@ -14,7 +14,7 @@ import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Meta.Architecture
 import Mathlib
 
-namespace WeylHomogeneousReadoutBridge
+namespace InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 
 /--
 A scalar readout with explicit Weyl weight.
@@ -148,4 +148,4 @@ the homogeneous representative.
 abbrev ArithmeticProjectiveWeylGaugeCalibration :=
   InfoGeometry.Arithmetic.ProjectiveWeylGauge.ProjectiveWeylGaugeCalibration
 
-end WeylHomogeneousReadoutBridge
+end InfoGeometry.Canonical.WeylHomogeneousReadoutBridge

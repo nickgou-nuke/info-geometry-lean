@@ -8,8 +8,8 @@ import Mathlib.Tactic.Ring
 Scalarized connection and Weyl-compatibility interfaces for projective prequantum bundles.
 -/
 
-namespace Connection
-end Connection
+namespace InfoGeometry.Prequantum.Connection
+end InfoGeometry.Prequantum.Connection
 
 namespace InfoGeometry.Prequantum
 

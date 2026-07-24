@@ -15,7 +15,7 @@ by composing two isomorphisms:
 
 open scoped Matrix
 
-namespace Cl11Quaternion
+namespace InfoGeometry.Clifford.Cl11Quaternion
 
 /-- `Mat₂ R` as `2×2` matrices over `R`. -/
 abbrev Mat₂ (R : Type*) := Matrix (Fin 2) (Fin 2) R
@@ -104,4 +104,4 @@ noncomputable def cliffordEquivMat : Cl11 ≃ₐ[ℝ] Mat₂ ℝ :=
   (CliffordAlgebraQuaternion.equiv (R := ℝ) (c₁ := (1 : ℝ)) (c₂ := (-1 : ℝ))).trans
     quatEquivMat
 
-end Cl11Quaternion
+end InfoGeometry.Clifford.Cl11Quaternion

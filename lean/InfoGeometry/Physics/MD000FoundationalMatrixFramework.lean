@@ -30,7 +30,7 @@ Bures/QFI, Kähler-Einstein, or physical spacetime-identification claims.
 
 noncomputable section
 
-namespace MD000FoundationalMatrixFramework
+namespace InfoGeometry.Physics.MD000FoundationalMatrixFramework
 
 open Matrix
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
@@ -128,6 +128,6 @@ theorem repaired_MD000_foundational_matrix_packet
     J0_sq u,
     omega0_skew u v⟩
 
-end MD000FoundationalMatrixFramework
+end InfoGeometry.Physics.MD000FoundationalMatrixFramework
 
 end noncomputable section

@@ -22,9 +22,9 @@ noncomputable section
 
 namespace WeylSU3ColorSymmetry
 
-open GellMannSU3
-open BogoliubovSU3ParafermionProofChain
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.GellMannSU3
+open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 

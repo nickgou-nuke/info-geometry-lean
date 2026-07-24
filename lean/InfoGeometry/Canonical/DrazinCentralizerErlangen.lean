@@ -32,7 +32,7 @@ Residual vanishing is kept as an explicit law of the supplied socket.
 
 noncomputable section
 
-namespace DrazinCentralizerErlangen
+namespace InfoGeometry.Canonical.DrazinCentralizerErlangen
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -416,4 +416,4 @@ theorem horizon_modular_fixed :
 
 end FinalDrazinFierzLaw
 
-end DrazinCentralizerErlangen
+end InfoGeometry.Canonical.DrazinCentralizerErlangen

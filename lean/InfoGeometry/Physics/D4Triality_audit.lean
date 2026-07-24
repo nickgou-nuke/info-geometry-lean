@@ -7,7 +7,7 @@ import Mathlib.Data.Finset.Basic
 # D₄ triality audit copy
 -/
 
-namespace D4Triality_audit
+namespace InfoGeometry.Physics.D4Triality_audit
 
 open InfoGeometry.Physics.ZornMatrixSU3
 
@@ -73,16 +73,15 @@ theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z :
     rw [show
         ZornMatrixSU3.dotProduct (fun i => Z.x (τ.perm i)) (fun i => Z.y (τ.perm i)) =
           ∑ i : Fin 3, Z.x (τ.perm i) * Z.y (τ.perm i) by
-        simp [ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
+        simp only [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
     rw [show
         ZornMatrixSU3.dotProduct Z.x Z.y = ∑ i : Fin 3, Z.x i * Z.y i by
-        simp [ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
+        simp only [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
-    exact Fintype.sum_bijective (fun i : Fin 3 => τ.perm i) τ.perm.bijective
-      (fun i : Fin 3 => Z.x (τ.perm i) * Z.y (τ.perm i))
-      (fun i : Fin 3 => Z.x i * Z.y i)
-      (fun _ => rfl)
+    exact Equiv.sum_comp τ.perm (fun i => Z.x i * Z.y i)
   simp [ColorPermutationAction.apply, ZornMatrixSU3.norm, h_dot]
 
 @[simp]
@@ -117,4 +116,4 @@ theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAct
 #print axioms InfoGeometry.Physics.D4Triality_audit.tripotent_cube
 #print axioms InfoGeometry.Physics.D4Triality_audit.ColorPermutationAction.commutes_with_tripotent
 
-end D4Triality_audit
+end InfoGeometry.Physics.D4Triality_audit

@@ -14,7 +14,7 @@ scaled embedding of the geometric inverse.
 
 noncomputable section
 
-namespace ConformalProjectiveEmbedding55
+namespace InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 open InfoGeometry.CliffordTower
 open InfoGeometry.Clifford.ConformalLift55
@@ -247,7 +247,7 @@ theorem F_sq_zero (x : Cl55) (q : ℝ)
   rw [h_x_v_cancel, h_x_u_cancel, h_uv_cancel]
   simp
 
-end ConformalProjectiveEmbedding55
+end InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

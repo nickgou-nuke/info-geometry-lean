@@ -12,7 +12,7 @@ complete physical identification with amplituhedra, anyonic channels, RK invaria
 or a nontrivial global generator assignment.
 -/
 
-namespace RohozhkinDelaunayBraiding
+namespace InfoGeometry.Topology.RohozhkinDelaunayBraiding
 
 open InfoGeometry.Topology.Delaunay
 open InfoGeometry.Topology.PureBraid
@@ -114,4 +114,4 @@ theorem one_cycle_scramble_identity
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) := by
   simpa using appendixPentagonWord_matrix_eq_one zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 
-end RohozhkinDelaunayBraiding
+end InfoGeometry.Topology.RohozhkinDelaunayBraiding

@@ -18,7 +18,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace ChiralTubuleBoundary
+namespace InfoGeometry.Geometry.ChiralTubuleBoundary
 
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
@@ -406,4 +406,4 @@ theorem chiralTubuleBoundary_packet
       C.boundaryState = U :=
   chiralTubuleBoundaryOwnerTarget Op Charge Residue H G T L U hSnap hThermal
 
-end ChiralTubuleBoundary
+end InfoGeometry.Geometry.ChiralTubuleBoundary

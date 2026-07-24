@@ -72,7 +72,7 @@ real-analytic.
 
 noncomputable section
 
-namespace ThermalBogoliubov
+namespace InfoGeometry.Canonical.ThermalBogoliubov
 
 open Real
 open Set
@@ -297,6 +297,6 @@ theorem q_superbracket_at_theta {Op : Type*} [Ring Op] [Algebra ℝ Op] (θ : �
     _ = ((Real.cosh θ) ^ 2)⁻¹ • (((Real.cosh θ) ^ 2) • (X * Y) - (Real.sinh θ * Real.cosh θ) • (Y * X)) := by
       rw [hcalc]
 
-end ThermalBogoliubov
+end InfoGeometry.Canonical.ThermalBogoliubov
 
 end noncomputable section

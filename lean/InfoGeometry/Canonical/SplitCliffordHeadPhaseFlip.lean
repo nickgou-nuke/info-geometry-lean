@@ -19,7 +19,7 @@ automorphism induced by flipping the `K`-axis on the head factor:
 - the lightlike null pair `u_- , u_+` is swapped.
 -/
 
-namespace SplitCliffordHeadPhaseFlip
+namespace InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
 
 open SplitCliffordHeadLift
 open SplitCliffordTensorBridge
@@ -178,4 +178,4 @@ noncomputable def headKFlipTensor (n : ℕ) :
   rw [headNullPlusTensor]
   simp [headKFlipAlg_headNullPlus, headNullMinusTensor]
 
-end SplitCliffordHeadPhaseFlip
+end InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip

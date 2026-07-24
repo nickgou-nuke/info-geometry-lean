@@ -12,7 +12,7 @@ mathlib `ContinuousLinearMap`, the Lean analogue of the AFP `action_cblinfun`.
 
 noncomputable section
 
-namespace GNSFiniteSupportOperator
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperator
 
 open GNSFiniteSupport
 
@@ -70,4 +70,4 @@ theorem liftOp_one :
   funext i
   simp [liftOp_apply]
 
-end GNSFiniteSupportOperator
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperator

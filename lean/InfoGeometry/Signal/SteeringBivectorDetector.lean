@@ -14,7 +14,7 @@ statistical optimality, false-alarm behavior, or a stochastic detection theorem.
 
 noncomputable section
 
-namespace SteeringBivectorDetector
+namespace InfoGeometry.Signal.SteeringBivectorDetector
 
 open scoped BigOperators
 open ComplexRealification
@@ -114,4 +114,4 @@ theorem steeringProjection_normSq_eq_hermitian_normSq
   rw [realDot_quadratureAxis_eq_quadratureDot]
   rw [hermitian_normSq_eq_realDot_sq_add_quadratureDot_sq]
 
-end SteeringBivectorDetector
+end InfoGeometry.Signal.SteeringBivectorDetector

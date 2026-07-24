@@ -14,7 +14,7 @@ cutoff can only be promoted cleanly to an `atTop` eventual statement when the
 cutoff predicate is upward closed.
 -/
 
-namespace SplitCliffordSourceCarrier
+namespace InfoGeometry.Canonical.SplitCliffordSourceCarrier
 
 open Filter
 
@@ -66,4 +66,4 @@ theorem eventually_stableCutoff
 
 end SplitSourceCarrier
 
-end SplitCliffordSourceCarrier
+end InfoGeometry.Canonical.SplitCliffordSourceCarrier

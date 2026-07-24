@@ -20,7 +20,7 @@ relations reduce to polynomial equations in `e_1` and `e_2`.
 - BUCKET 3: OPEN CLOSURE DEBT: None.
 -/
 
-namespace GrassmannianGrothendieckRing
+namespace InfoGeometry.Canonical.GrassmannianGrothendieckRing
 
 variable {R : Type*} [CommRing R]
 
@@ -65,4 +65,4 @@ theorem rel4_elim (e_1 e_2 f_1 f_2 : R)
     e_2 * (6 - e_2 - 4 * e_1 + e_1 ^ 2) = e_2 * f_2 := by rw [← hf2]
     _ = 1 := h4
 
-end GrassmannianGrothendieckRing
+end InfoGeometry.Canonical.GrassmannianGrothendieckRing

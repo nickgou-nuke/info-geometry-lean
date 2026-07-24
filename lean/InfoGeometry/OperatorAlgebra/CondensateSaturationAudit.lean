@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace CondensateSaturationAudit
+namespace InfoGeometry.OperatorAlgebra.CondensateSaturationAudit
 
 /-! ## 1. Capacity witness -/
 
@@ -276,4 +276,4 @@ theorem warning_of_excessive_backlog
 
 end CondensateSaturationWitness
 
-end CondensateSaturationAudit
+end InfoGeometry.OperatorAlgebra.CondensateSaturationAudit

@@ -13,7 +13,7 @@ Coordinate-free Souriau/Tomita geometric lane:
 No coordinates, no indices.
 -/
 
-namespace CoordinateFreeSouriauDerivation
+namespace InfoGeometry.Canonical.CoordinateFreeSouriauDerivation
 
 section
 
@@ -131,4 +131,4 @@ theorem ComplexifiedDerivationContext.split_equilibrium_packet
 
 end
 
-end CoordinateFreeSouriauDerivation
+end InfoGeometry.Canonical.CoordinateFreeSouriauDerivation

@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimonLiouvilleWittenIndex
+namespace InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
 
 open PrimonFinite
 
@@ -204,7 +204,7 @@ structure ProjectedHyperbolicChiralIndexPacket
     stableReadout = stableChiralIndex modes qStable
   unstable_eq_index :
     unstableReadout = unstableChiralIndex modes qUnstable
-  /-- Optional external analytic bridge for the stable branch. -/
+  /-- Optional external Hestenes--Krein/colimit bridge for the stable branch. -/
   stableAnalyticWitness : Type*
   /-- Guardrail: the raw two-branch readout is not the stable branch by default. -/
   raw_not_stable_without_projection_guard : Type*
@@ -295,4 +295,4 @@ theorem readoutSpecies_separate
 
 end MellinThermalVsDiracHeatKernelGuard
 
-end PrimonLiouvilleWittenIndex
+end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex

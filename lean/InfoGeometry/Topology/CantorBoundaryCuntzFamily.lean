@@ -23,7 +23,7 @@ Zero sorries.
 
 noncomputable section
 
-namespace CantorBoundaryCuntzFamily
+namespace InfoGeometry.Topology.CantorBoundaryCuntzFamily
 
 open ParafermionIdentityRealization
 open UHFInductiveColimit
@@ -114,7 +114,7 @@ def c4CuntzFamily : CuntzFamilyOn C4Functions where
 as symbol-shift operators on functions over infinite 4-ary sequences.
 This gives the analytic boundary model as a fully explicit Fock representation. -/
 def c4Realization :
-    GellMannParafermionSolder.ParafermionRealization C4Functions :=
+    InfoGeometry.Physics.GellMannParafermionSolder.ParafermionRealization C4Functions :=
   cuntzFamilyRealization C4Functions c4CuntzFamily (fun (_ : C4Boundary) => (0 : ℂ))
 
 /-- Synthesis: the Cuntz relations hold exactly on the full Cantor boundary.
@@ -129,6 +129,6 @@ theorem cantor_boundary_cuntz_synthesis :
   · simpa using cuntz_ortho (0 : Fin 4) (0 : Fin 4)
   · exact cuntz_partition
 
-end CantorBoundaryCuntzFamily
+end InfoGeometry.Topology.CantorBoundaryCuntzFamily
 
 end noncomputable section

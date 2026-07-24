@@ -16,7 +16,7 @@ not supplied here.
 
 noncomputable section
 
-namespace LaplaceContour
+namespace InfoGeometry.Analysis.LaplaceContour
 
 open scoped FourierTransform RealInnerProductSpace
 open Set MeasureTheory
@@ -89,4 +89,4 @@ theorem BromwichInversionLaw
 
 end ContourAdmissible
 
-end LaplaceContour
+end InfoGeometry.Analysis.LaplaceContour

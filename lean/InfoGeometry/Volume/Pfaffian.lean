@@ -9,7 +9,7 @@ Finite-dimensional Pfaffian layer used by the Kitaev-chain capstone.
 The constructive core here is the determinant-square-root identity.
 -/
 
-namespace Pfaffian
+namespace InfoGeometry.Volume.Pfaffian
 
 open InfoGeometry.Krein
 
@@ -82,4 +82,4 @@ theorem topological_stability_of_incompressibility
 
 end PfaffianCore
 
-end Pfaffian
+end InfoGeometry.Volume.Pfaffian

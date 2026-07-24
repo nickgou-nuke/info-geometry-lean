@@ -48,7 +48,7 @@ connecting to `DAG.HarmonicKMS` and `DAG.AffineProjectiveClosure`.
 
 open Complex
 
-namespace UResRepresentations
+namespace InfoGeometry.Arithmetic.UResRepresentations
 
 open BostConnesSystem
 open PrimonGasPartition
@@ -250,9 +250,9 @@ the analytic limit.
 This table mixes proved finite readouts with documented structural targets.
 Rows marked as debt are navigation targets, not closed theorem claims.
 
-The remaining analytic debt (Complex.log monodromy, Riemann surface /
-universal cover) is replaced by the algebraic colimit `SplitCliffordInfinity`
-which provides the multi-sheeted structure natively.
+The remaining monodromy/universal-cover socket is routed through the algebraic
+colimit `SplitCliffordInfinity`, which provides the multi-sheeted structure
+natively.
 -/
 
-end UResRepresentations
+end InfoGeometry.Arithmetic.UResRepresentations

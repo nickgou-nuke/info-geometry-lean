@@ -354,8 +354,7 @@ theorem asanoNondegenerateTopologicalTheorem_of_asanoRuelleClosed
     simpa [negProductSet, _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoForbiddenSet] using hzNot
   have hne :
       _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z ≠ 0 :=
-    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleClosed_apply
-      hARc P h0K₁ h0K₂ hClosed₁ hClosed₂ hPhiP hzOff
+    hARc K₁ K₂ P h0K₁ h0K₂ hClosed₁ hClosed₂ hPhiP z hzOff
   have hzero :
       _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z = 0 := by
     simpa [P, _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract, asanoPhi] using hroot
@@ -411,8 +410,7 @@ theorem asanoNondegenerateTopologicalTheoremBounded_of_asanoRuelleClosedBounded
     simpa [negProductSet, _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoForbiddenSet] using hzNot
   have hne :
       _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z ≠ 0 :=
-    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleClosedBounded_apply
-      hARcb P h0K₁ h0K₂ hClosed₁ hClosed₂ hB1 hB2 hPhiP hzOff
+    hARcb K₁ K₂ P h0K₁ h0K₂ hClosed₁ hClosed₂ hB1 hB2 hPhiP z hzOff
   have hzero :
       _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z = 0 := by
     simpa [P, _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract, asanoPhi] using hroot
@@ -449,9 +447,8 @@ theorem asanoRuelleLemmaSourceClaimClosed_of_endpointNonDeg
         ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))) :
     _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoRuelleLemmaSourceClaimClosed := by
   exact
-    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaimClosed_of_sourceClaim
-      (_root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaim_of_endpointNonDeg
-        hEndpointNonDeg)
+    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaim_of_endpointNonDeg
+      hEndpointNonDeg
 
 /--
 Bounded closed-set Asano-Ruelle source claim from the endpoint-nondegenerate hypothesis.
@@ -470,10 +467,10 @@ theorem asanoRuelleLemmaSourceClaimClosedBounded_of_endpointNonDeg
         A * D - B * C ≠ 0 →
         ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))) :
     _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoRuelleLemmaSourceClaimClosedBounded := by
+  intro K1 K2 P h0K1 h0K2 hClosed1 hClosed2 _hB1 _hB2 hPhi z hzOff
   exact
-    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaimClosedBounded_of_sourceClaim
-      (_root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaim_of_endpointNonDeg
-        hEndpointNonDeg)
+    _root_.InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaim_of_endpointNonDeg
+      hEndpointNonDeg K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
 
 /--
 If the concrete endpoint-alternative theorem is available, then the abstract

@@ -31,7 +31,7 @@ The file also records the sign correction for square-minus-one Hodge phases:
 `K² = -1`.
 -/
 
-namespace ChiralHodgeCartanBridge
+namespace InfoGeometry.Canonical.ChiralHodgeCartanBridge
 
 /-- Carrier for the representation dictionary. -/
 @[rep_depth operator]
@@ -325,4 +325,4 @@ theorem netChiralCharge_eq_chiR_sub_chiL
     C.Q = C.chiR - C.chiL :=
   hQ
 
-end ChiralHodgeCartanBridge
+end InfoGeometry.Canonical.ChiralHodgeCartanBridge

@@ -31,7 +31,7 @@ provided by Mathlib's `Complex.IsConservativeOn`.
 
 noncomputable section
 
-namespace ZeroHolonomyAnalyticity
+namespace InfoGeometry.Canonical.ZeroHolonomyAnalyticity
 
 open Complex
 open InfoGeometry.Geometry.BilingualAnalyticity
@@ -220,4 +220,4 @@ theorem cauchyAnalyticAt_derivative_commutes_phaseAxis
       complexPhaseStructure.K (hF.deriv v) := by
   exact congrArg (fun L : ℂ →L[ℝ] ℂ => L v) hF.phase_linear_deriv
 
-end ZeroHolonomyAnalyticity
+end InfoGeometry.Canonical.ZeroHolonomyAnalyticity

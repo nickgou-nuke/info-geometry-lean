@@ -5,11 +5,11 @@ import InfoGeometry.Projective.FiveGradedCentralizer
 namespace InfoGeometry.Canonical.Unification
 
 open InfoGeometry.Canonical
-open Metriplectic
+open InfoGeometry.Topology.Metriplectic
 open InfoGeometry.Projective.Closure
 
 /--
-The unified Conformal Projective Souriau Metriplectic bridge.
+The unified Conformal Projective Souriau InfoGeometry.Topology.Metriplectic bridge.
 This bundles the algebraic features of the Einstein anomaly,
 metriplectic conservation, and Möbius index cancellation.
 -/
@@ -43,7 +43,7 @@ theorem anomaly_skew_adjoint :
     star (EinsteinAnomaly B.a B.b_mp B.b_dr) = - (EinsteinAnomaly B.a B.b_mp B.b_dr) :=
   einsteinAnomaly_skew_adjoint B.a B.b_mp B.b_dr B.k B.h_mp B.h_dr B.h_dr_star
 
-/-- Metriplectic energy is conserved. -/
+/-- InfoGeometry.Topology.Metriplectic energy is conserved. -/
 theorem energy_conserved :
     totalEvolution B.metriplectic B.metriplectic.H = 0 :=
   energy_conservation B.metriplectic

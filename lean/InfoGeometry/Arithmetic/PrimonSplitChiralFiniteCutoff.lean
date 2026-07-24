@@ -21,7 +21,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimonSplitChiralFiniteCutoff
+namespace InfoGeometry.Arithmetic.PrimonSplitChiralFiniteCutoff
 
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 open InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
@@ -174,4 +174,4 @@ theorem reconstruct_chiralFreeEnergy
     chiralFreeEnergy Λ βL νL βR νR := by
   simp [chiralFreeEnergy]
 
-end PrimonSplitChiralFiniteCutoff
+end InfoGeometry.Arithmetic.PrimonSplitChiralFiniteCutoff

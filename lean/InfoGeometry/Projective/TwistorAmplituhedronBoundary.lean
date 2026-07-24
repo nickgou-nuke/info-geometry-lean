@@ -20,7 +20,7 @@ equivalence, `N=4` SYM state counting, or a physical scattering interpretation.
 Those remain explicit comparison data to be supplied by future owner files.
 -/
 
-namespace TwistorAmplituhedronBoundary
+namespace InfoGeometry.Projective.TwistorAmplituhedronBoundary
 
 open InfoGeometry.Clifford.Soldering
 open InfoGeometry.Twistor.Incidence
@@ -146,4 +146,4 @@ theorem twistor_amplituhedron_boundary_packet
     hBCFW,
     hRoh⟩
 
-end TwistorAmplituhedronBoundary
+end InfoGeometry.Projective.TwistorAmplituhedronBoundary

@@ -24,7 +24,7 @@ noncomputable section
 open scoped Matrix
 open scoped Polynomial
 
-namespace FiniteTiltDiracShell
+namespace InfoGeometry.Clifford.FiniteTiltDiracShell
 
 open InfoGeometry.Clifford.Cl11Matrix
 
@@ -257,4 +257,4 @@ theorem finiteTiltDiracShellOwnerTarget_shell_square (m : ℝ) :
   let pkt := finiteTiltDiracShellOwnerTarget
   pkt.shell_square m
 
-end FiniteTiltDiracShell
+end InfoGeometry.Clifford.FiniteTiltDiracShell

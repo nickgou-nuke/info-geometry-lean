@@ -29,7 +29,7 @@ The raw `Physics/DIIISymmetryAtom` file stays quarantined; this file is the
 owner-respecting canonical closure surface.
 -/
 
-namespace RealBdGDIIIAtom
+namespace InfoGeometry.Canonical.RealBdGDIIIAtom
 
 open InfoGeometry.Canonical.AnalyticalIndex
 open InfoGeometry.Canonical.ChiralDefectIndexBridge
@@ -883,4 +883,4 @@ theorem canonicalDIIIProxy_transport_root_parity_vortexWitness_kkt_headSuperBrac
 
 end Closure
 
-end RealBdGDIIIAtom
+end InfoGeometry.Canonical.RealBdGDIIIAtom

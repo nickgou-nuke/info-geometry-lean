@@ -11,7 +11,7 @@ Fredholm/zeta/Klein-bottle claims outside theorem form until there are native
 Lean owners for them.
 -/
 
-namespace ErlangenLanglandsRoof
+namespace InfoGeometry.Capstone.ErlangenLanglandsRoof
 
 export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
   (ErlangenO55Statement
@@ -48,4 +48,4 @@ export InfoGeometry.Capstone.FockCapstone
    map_star
    map_real_fixed_point_of_half_branch_scaling)
 
-end ErlangenLanglandsRoof
+end InfoGeometry.Capstone.ErlangenLanglandsRoof

@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace CliffordO55ProjectiveReconciliation
+namespace InfoGeometry.Canonical.CliffordO55ProjectiveReconciliation
 
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -246,4 +246,4 @@ theorem reconciliation_capstone :
   exact ⟨cl55_window_is_stage_five, cl55_window_absorbs_finite_tail,
     rationalO55Swap_preserves_pairing, sameProjectiveLine_neg⟩
 
-end CliffordO55ProjectiveReconciliation
+end InfoGeometry.Canonical.CliffordO55ProjectiveReconciliation

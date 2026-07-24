@@ -26,7 +26,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeGrandCanonicalEnsemble
+namespace InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
@@ -368,4 +368,4 @@ theorem logPrimePacket_potential_eq_log_finiteEulerProduct (P : PrimeRegister) (
 
 end PrimeGrandCanonicalPacket
 
-end PrimeGrandCanonicalEnsemble
+end InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble

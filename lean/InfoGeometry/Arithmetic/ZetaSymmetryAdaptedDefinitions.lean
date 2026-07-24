@@ -29,7 +29,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ZetaSymmetryAdaptedDefinitions
+namespace InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
 
 open Complex
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -559,4 +559,4 @@ theorem zetaNineBernoulliDefectTau_inv {tau : ℝ} (hτ : tau ≠ 0) :
   field_simp [hτ]
   ring
 
-end ZetaSymmetryAdaptedDefinitions
+end InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions

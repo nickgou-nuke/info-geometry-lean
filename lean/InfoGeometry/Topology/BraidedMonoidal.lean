@@ -1,7 +1,7 @@
 import InfoGeometry.Topology.PointedGroups
 import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 
-namespace BraidedMonoidal
+namespace InfoGeometry.Topology.BraidedMonoidal
 
 open PointedGroups
 
@@ -43,4 +43,4 @@ theorem pointed_groups_form_braided_monoidal (D : FreeProductData) :
   exact ⟨fun base x y => conjugation_left_hexagon base x y,
     fun base x => conjugation_right_hexagon base x⟩
 
-end BraidedMonoidal
+end InfoGeometry.Topology.BraidedMonoidal

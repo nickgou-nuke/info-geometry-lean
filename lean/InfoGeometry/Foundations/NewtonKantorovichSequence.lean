@@ -10,7 +10,7 @@ import InfoGeometry.Foundations.NewtonKantorovichRoots
 Executable Newton--Kantorovich majorant step and first sequence-level lemmas.
 -/
 
-namespace NewtonKantorovichSequence
+namespace InfoGeometry.Foundations.NewtonKantorovichSequence
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
 open NewtonKantorovichRoots
@@ -622,4 +622,4 @@ theorem majorantSeq_shifted_exists_lub_in_Icc_of_kantorovich_strict
   exact ⟨ℓ, hℓ, hbounds.1, hbounds.2⟩
 
 end
-end NewtonKantorovichSequence
+end InfoGeometry.Foundations.NewtonKantorovichSequence

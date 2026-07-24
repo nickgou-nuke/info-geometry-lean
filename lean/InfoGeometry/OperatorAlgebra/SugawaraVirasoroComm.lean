@@ -3,7 +3,7 @@ import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
-namespace SugawaraVirasoroComm
+namespace InfoGeometry.OperatorAlgebra.SugawaraVirasoroComm
 
 /-
 Theorem: Assuming an affine current algebra with a non‑degenerate Killing form,
@@ -118,4 +118,4 @@ theorem virasoro_commutation (s : Finset ℤ) (m n : ℤ)
       rw [h₄, h₅]
       simp only [L_sugawara, smul_smul]
 
-end SugawaraVirasoroComm
+end InfoGeometry.OperatorAlgebra.SugawaraVirasoroComm

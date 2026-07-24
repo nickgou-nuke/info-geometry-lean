@@ -27,7 +27,7 @@ The local purpose is theorem-safe:
   `O(5,5)` action.
 -/
 
-namespace HestenesAffineO55ClosureBridge
+namespace InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesMoebiusClosureBridge
@@ -218,6 +218,6 @@ end Bridge
 
 end Core
 
-end HestenesAffineO55ClosureBridge
+end InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 
 end

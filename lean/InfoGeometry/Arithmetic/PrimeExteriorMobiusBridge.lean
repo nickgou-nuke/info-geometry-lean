@@ -26,7 +26,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace PrimeExteriorMobiusBridge
+namespace InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -95,4 +95,4 @@ theorem mobius_stateNat_eq_Gamma
     ArithmeticFunction.moebius (stateNat S) = SquareFreePrimeState.Gamma S := by
   simp [SquareFreePrimeState.Gamma, mobius_stateNat_eq_fermionParitySign]
 
-end PrimeExteriorMobiusBridge
+end InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge

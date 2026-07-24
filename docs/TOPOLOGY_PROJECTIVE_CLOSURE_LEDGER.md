@@ -102,6 +102,6 @@ For an additional local proof-surface scan of the active Wilson/linker files:
 STRICT_PROOF_SURFACE=1 bash tools/ci/smoke_import_spikes.sh
 ```
 
-If the strict scan fails while `tools/infra/evolution_worker.py` is running,
-pause that worker before patching source files; otherwise generated rewrites can
-reintroduce proof-packet APIs during verification.
+If the strict scan fails, do not start `tools/infra/evolution_worker.py` in
+this checkout. It is disabled here; patch the owner source directly and verify
+with `lake env lean` / locked build instead.

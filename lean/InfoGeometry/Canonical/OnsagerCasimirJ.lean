@@ -21,7 +21,7 @@ this file does not instantiate a concrete global Souriau coadjoint-orbit
 model, and it does not assert split-source affine current construction.
 -/
 
-namespace OnsagerCasimirJ
+namespace InfoGeometry.Canonical.OnsagerCasimirJ
 
 open InfoGeometry.Canonical.ModularTwoStateCorrelation
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -285,4 +285,4 @@ theorem jPairedGeneratorCorrelation_phase
 
 end Core
 
-end OnsagerCasimirJ
+end InfoGeometry.Canonical.OnsagerCasimirJ

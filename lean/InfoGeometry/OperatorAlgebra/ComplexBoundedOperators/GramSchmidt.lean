@@ -26,7 +26,7 @@ products:
 
 noncomputable section
 
-namespace GramSchmidt
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GramSchmidt
 
 open scoped BigOperators
 
@@ -322,4 +322,4 @@ theorem gramSchmidt_result {ι : Type*} [Fintype ι]
       P.output.Nodup := by
   exact ⟨P.result.span_eq, P.result.corthogonal, P.result.length_eq, P.result.nodup⟩
 
-end GramSchmidt
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GramSchmidt

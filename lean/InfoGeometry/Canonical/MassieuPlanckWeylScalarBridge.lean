@@ -19,7 +19,7 @@ It does not assert that a Weyl scale is automatically a partition function.
 That identification is supplied as calibration data.
 -/
 
-namespace MassieuPlanckWeylScalarBridge
+namespace InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveWeylGauge
@@ -169,4 +169,4 @@ end MassieuPlanckBregmanBridge
 
 end Bregman
 
-end MassieuPlanckWeylScalarBridge
+end InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge

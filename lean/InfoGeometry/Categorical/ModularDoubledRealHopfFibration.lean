@@ -32,7 +32,7 @@ open CategoryTheory
 
 universe u v
 
-namespace ModularDoubledRealHopfFibration
+namespace InfoGeometry.Categorical.ModularDoubledRealHopfFibration
 
 /--
 Categorical data for a modular doubled-real fibration shadow.
@@ -185,4 +185,4 @@ theorem constantBaseDoubledReal_twistFiber_twice (E : Type u)
 
 end ModularDoubledRealHopf
 
-end ModularDoubledRealHopfFibration
+end InfoGeometry.Categorical.ModularDoubledRealHopfFibration

@@ -23,7 +23,7 @@ Boundary:
 * no global comparison isomorphism theorem.
 -/
 
-namespace ReducedStructureSpinCertifiedPacket
+namespace InfoGeometry.Algebra.ReducedStructureSpinCertifiedPacket
 
 open SplitJordanSpinor
 
@@ -79,4 +79,4 @@ def splitComplexBoundaryPacket : ReducedStructureSpinFinitePacket where
 @[simp] theorem splitComplexBoundaryPacket_D :
     splitComplexBoundaryPacket.D = 4 := rfl
 
-end ReducedStructureSpinCertifiedPacket
+end InfoGeometry.Algebra.ReducedStructureSpinCertifiedPacket

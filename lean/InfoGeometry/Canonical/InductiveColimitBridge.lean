@@ -24,7 +24,7 @@ Those are supplied by specialized owner modules as explicit premises and then
 read through this generic colimit interface.
 -/
 
-namespace InductiveColimitBridge
+namespace InfoGeometry.Canonical.InductiveColimitBridge
 
 universe u v
 
@@ -192,4 +192,4 @@ theorem transported_equiv_to_same_colimit
 
 end CompatibleFiniteEquivalenceTower
 
-end InductiveColimitBridge
+end InfoGeometry.Canonical.InductiveColimitBridge

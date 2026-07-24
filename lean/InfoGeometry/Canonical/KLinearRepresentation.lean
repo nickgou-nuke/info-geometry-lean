@@ -12,7 +12,7 @@ while operators anticommuting with `K` play the role of complex-antilinear maps,
 but entirely over `ℝ`.
 -/
 
-namespace KLinearRepresentation
+namespace InfoGeometry.Canonical.KLinearRepresentation
 
 open InfoGeometry.Canonical
 
@@ -194,4 +194,4 @@ noncomputable def polarizedDecomposition
   h_anti := kAntilinearPart_isKAntilinear X f
   h_sum := (kLinearPart_add_kAntilinearPart X f).symm
 
-end KLinearRepresentation
+end InfoGeometry.Canonical.KLinearRepresentation

@@ -1,34 +1,34 @@
 import Mathlib
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
-namespace ParafermionicBECHiggs
+namespace InfoGeometry.Physics.ParafermionicBECHiggs
 
 open InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
 /-!
-# Parafermionic BEC Phase as the Higgs Field
-Formalizes the principle that the Higgs is not a fundamental Klein-Gordon scalar,
-but rather the phase of the Bose-Einstein Condensate on the conformal affine 
-projective spacetime boundary populated by volume-zero (Cuntz) operators.
+# Parafermionic/BEC finite phase packet
+
+This file contains a small data packet for a boundary phase readout.  It does
+not prove a Higgs-field theorem, a Bose--Einstein condensation theorem, or a
+conformal-boundary physics theorem.
 -/
 
-/-- The fundamental scalar count is zero (Boyle-Turok-Vaibhav n_0 = 0) -/
-def fundamental_scalars : ℕ := 0
+/-- A local scalar-count parameter used by this finite packet. -/
+def scalarCount : ℕ := 0
 
 /-- Volume Zero operators at the conformal boundary (Nilpotent Cuntz generators) -/
 structure VolumeZeroOperator where
   (S : ℝ)
   (nilpotent : S ^ 2 = 0)
 
-/-- The BEC phase emerges as a macroscopic order parameter from the boundary -/
-structure BEC_Phase_Higgs where
+/-- A boundary phase packet with an explicit scalar-count field. -/
+structure BoundaryPhasePacket where
   (boundary_condensate : VolumeZeroOperator)
   (global_phase : ℝ)
   (mass_generation : ℝ)
-  -- The mass is protected by the conformal anomaly of the phase, not a fundamental scalar
-  (is_composite : fundamental_scalars = 0)
+  scalar_count_zero : scalarCount = 0
 
-theorem higgs_is_composite_phase (h : BEC_Phase_Higgs) :
-  fundamental_scalars = 0 := h.is_composite
+theorem boundaryPhasePacket_scalarCount_zero (h : BoundaryPhasePacket) :
+  scalarCount = 0 := h.scalar_count_zero
 
-end ParafermionicBECHiggs
+end InfoGeometry.Physics.ParafermionicBECHiggs

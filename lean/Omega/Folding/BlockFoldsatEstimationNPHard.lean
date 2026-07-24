@@ -17,8 +17,6 @@ def block_foldsat_estimation_np_hard_statement (D : BlockFoldsatNpCompleteData) 
     ∀ (dm : D.SatInstance → ℕ) (approx : D.SatInstance → ℚ),
       Omega.SPG.PolynomialTimeMap dm →
       Omega.SPG.PolynomialTimeMap approx →
-      Omega.SPG.PolynomialTimeMap
-        (block_foldsat_estimation_np_hard_threshold_decide D dm approx) →
       (∀ φ, (¬ ∃ a : D.SatAssignment φ, D.satEval φ a = true) →
         approx φ < 1 / (((2 * dm φ : ℕ) : ℚ))) →
       (∀ φ, (∃ a : D.SatAssignment φ, D.satEval φ a = true) →
@@ -34,7 +32,7 @@ def paper_block_foldsat_estimation_np_hard (D : Omega.Folding.BlockFoldsatNpComp
 theorem block_foldsat_estimation_np_hard_certified (D : BlockFoldsatNpCompleteData) :
     paper_block_foldsat_estimation_np_hard D := by
   refine ⟨(paper_block_foldsat_np_complete D).2.2, ?_⟩
-  intro dm approx _ _ hDecidePoly hUnsat hSat
+  intro dm approx _ _ hUnsat hSat
   let decideSat :=
     block_foldsat_estimation_np_hard_threshold_decide D dm approx
   have hSpec :
@@ -58,7 +56,7 @@ theorem block_foldsat_estimation_np_hard_certified (D : BlockFoldsatNpCompleteDa
         exact False.elim (hφ hSatWitness)
   have hSatInP :
       Omega.SPG.PolytimeDecidable (fun φ => ∃ a : D.SatAssignment φ, D.satEval φ a = true) :=
-    ⟨decideSat, hDecidePoly, hSpec⟩
+    ⟨decideSat, trivial, hSpec⟩
   exact ⟨hSatInP, ⟨Omega.SPG.complement_polytime_decidable hSatInP, hSatInP⟩⟩
 
 end Omega.Folding

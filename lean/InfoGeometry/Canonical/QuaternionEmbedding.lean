@@ -4,9 +4,9 @@ import InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
 
-namespace QuaternionEmbedding
+namespace InfoGeometry.Canonical.QuaternionEmbedding
 
-open Complex DiracPauliGamma
+open Complex InfoGeometry.Clifford.DiracPauliGamma
 
 /-!
 # Quaternion Embedding into Clifford Algebra
@@ -71,4 +71,4 @@ theorem quat_ijk_eq_neg_one : quat_i * quat_j * quat_k = -1 := by
 def quaternionToClifford (a b c d : ℂ) : DiracMatrix :=
   a • 1 + b • quat_i + c • quat_j + d • quat_k
 
-end QuaternionEmbedding
+end InfoGeometry.Canonical.QuaternionEmbedding

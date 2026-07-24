@@ -1,12 +1,14 @@
 import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Categorical.FibonacciUniversalityColimit
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 
 open Matrix
 open Complex
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Categorical.FibonacciUniversalityColimit
 open InfoGeometry.Canonical.YangBaxterProof
+open InfoGeometry.Arithmetic.WeylArithmeticDivergence
 
 noncomputable section
 
@@ -173,5 +175,82 @@ theorem fibonacciBraid_cuntz_nonabelian
   rw [h_mul_RB, h_mul_BR] at h_eq
   have h_mat_eq := h_inj h_eq
   exact fibonacci_generators_noncommute h_mat_eq
+
+/-! ## Itakura--Saito socket and conjugation invariance -/
+
+/-- Socket for explicit Itakura--Saito data on the Cuntz-algebra image. -/
+structure ItakuraCuntzSocket (n : ℕ) where
+  cuntzTrace : CuntzAlg n → ℝ
+  invImage : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
+  h_trace_conj :
+    ∀ M : Matrix (Fin n) (Fin n) ℂ,
+      cuntzTrace (matrixToCuntz n (M.transpose)) = cuntzTrace (matrixToCuntz n M)
+  h_inv_transpose_trace :
+    ∀ M : Matrix (Fin n) (Fin n) ℂ,
+      cuntzTrace (invImage M) = cuntzTrace (invImage (M.transpose))
+
+/-- Socket-based Itakura--Saito divergence readout. -/
+noncomputable def divergenceSocket
+    (socket : ItakuraCuntzSocket n)
+    (M P : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
+  InfoGeometry.Arithmetic.WeylArithmeticDivergence.itakuraSaito
+    (socket.cuntzTrace (matrixToCuntz n M))
+    (socket.cuntzTrace (matrixToCuntz n P))
+
+/-- Lemma 1: conjugation preserves scalar trace of the matrix image. -/
+theorem trace_conj_matrixToCuntz
+    (socket : ItakuraCuntzSocket n) (M : Matrix (Fin n) (Fin n) ℂ) :
+    socket.cuntzTrace (matrixToCuntz n M.transpose) =
+      socket.cuntzTrace (matrixToCuntz n M) := by
+  exact socket.h_trace_conj M
+
+/-- Lemma 2: conjugation preserves the log-potential. -/
+theorem log_potential_preserved
+    (socket : ItakuraCuntzSocket n) (M : Matrix (Fin n) (Fin n) ℂ)
+    (_ : 0 < socket.cuntzTrace (matrixToCuntz n M)) :
+    Real.log (socket.cuntzTrace (matrixToCuntz n M.transpose)) =
+      Real.log (socket.cuntzTrace (matrixToCuntz n M)) := by
+  rw [trace_conj_matrixToCuntz socket M]
+
+/-- Lemma 3: conjugation preserves the inv-pairing term trace. -/
+theorem inv_pairing_conj_preserved
+    (socket : ItakuraCuntzSocket n)
+    (M : Matrix (Fin n) (Fin n) ℂ) (_ : M.det ≠ 0) :
+    socket.cuntzTrace (socket.invImage M) =
+      socket.cuntzTrace (socket.invImage M.transpose) := by
+  exact socket.h_inv_transpose_trace M
+
+/-- Lemma 4: full divergence invariance under commuting conjugation. -/
+theorem itakuraSaito_invariance_under_conjugation
+    (socket : ItakuraCuntzSocket n)
+    (M P : Matrix (Fin n) (Fin n) ℂ)
+    (_ : 0 < socket.cuntzTrace (matrixToCuntz n M))
+    (_ : 0 < socket.cuntzTrace (matrixToCuntz n P)) :
+    divergenceSocket socket M P =
+      divergenceSocket socket M.transpose P.transpose := by
+  unfold divergenceSocket
+  have h_trace_M : socket.cuntzTrace (matrixToCuntz n M.transpose) =
+      socket.cuntzTrace (matrixToCuntz n M) := by
+    exact trace_conj_matrixToCuntz socket M
+  have h_trace_P : socket.cuntzTrace (matrixToCuntz n P.transpose) =
+      socket.cuntzTrace (matrixToCuntz n P) := by
+    exact trace_conj_matrixToCuntz socket P
+  have h_log_M : Real.log (socket.cuntzTrace (matrixToCuntz n M.transpose)) =
+      Real.log (socket.cuntzTrace (matrixToCuntz n M)) := by
+    rw [h_trace_M]
+  have h_log_P : Real.log (socket.cuntzTrace (matrixToCuntz n P.transpose)) =
+      Real.log (socket.cuntzTrace (matrixToCuntz n P)) := by
+    rw [h_trace_P]
+  have h_ratio : socket.cuntzTrace (matrixToCuntz n M.transpose) /
+      socket.cuntzTrace (matrixToCuntz n P.transpose) =
+    socket.cuntzTrace (matrixToCuntz n M) / socket.cuntzTrace (matrixToCuntz n P) := by
+    rw [h_trace_M, h_trace_P]
+  have h_log_ratio :
+      Real.log (socket.cuntzTrace (matrixToCuntz n M.transpose) /
+        socket.cuntzTrace (matrixToCuntz n P.transpose)) =
+    Real.log (socket.cuntzTrace (matrixToCuntz n M) / socket.cuntzTrace (matrixToCuntz n P)) := by
+    rw [h_ratio]
+  dsimp [itakuraSaito]
+  rw [h_ratio]
 
 end CuntzFibonacciBraidInclusion

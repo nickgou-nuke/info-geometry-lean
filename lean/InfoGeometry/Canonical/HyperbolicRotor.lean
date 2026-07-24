@@ -14,7 +14,7 @@ This file does not introduce new algebraic owners. It reuses:
 - commutator/anticommutator surfaces from `SplitCliffordHeadSuperBracket`.
 -/
 
-namespace HyperbolicRotor
+namespace InfoGeometry.Canonical.HyperbolicRotor
 
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SplitCliffordHeadLift
@@ -104,4 +104,4 @@ theorem rotor_lane_head_null_car (n : ℕ) :
       ∧ headAnticommutator (headNullMinus n) (headNullPlus n) = 1 := by
   exact head_null_car_algebra n
 
-end HyperbolicRotor
+end InfoGeometry.Canonical.HyperbolicRotor

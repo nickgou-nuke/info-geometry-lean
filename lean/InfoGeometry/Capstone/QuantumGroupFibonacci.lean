@@ -28,7 +28,7 @@ of unity q = e^{πi/5} and specializes to the repo's algebraic proofs.
 
 noncomputable section
 
-namespace QuantumGroupFibonacci
+namespace InfoGeometry.Capstone.QuantumGroupFibonacci
 
 open Matrix
 open Coalgebra HopfAlgebra
@@ -197,4 +197,4 @@ theorem quantum_group_to_fibonacci_capstone :
     FFibonacci_sq,
     quantumDimension_identity⟩
 
-end QuantumGroupFibonacci
+end InfoGeometry.Capstone.QuantumGroupFibonacci

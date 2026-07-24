@@ -27,7 +27,7 @@ This file does not prove Cuntz representation closure, wallpaper symmetry
 forcing, braid coherence, or a global real automorphism classification.
 -/
 
-namespace SplitOctonionPeirceG2Bridge
+namespace InfoGeometry.OperatorAlgebra.SplitOctonionPeirceG2Bridge
 
 abbrev IntSplitOct := InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct
 abbrev F2Bit := InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.F2Bit
@@ -105,4 +105,4 @@ theorem splitOctonion_peirce_g2_bridge_packet :
   exact ⟨reduce_oneZ, reduce_H, reduce_ePlus, reduce_eMinus, reduce_up, reduce_down,
     reduce_comm_up_down, reduce_anticomm_up_down⟩
 
-end SplitOctonionPeirceG2Bridge
+end InfoGeometry.OperatorAlgebra.SplitOctonionPeirceG2Bridge

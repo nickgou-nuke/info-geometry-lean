@@ -25,7 +25,7 @@ claims no global crystallographic or bundle classification theorem beyond the
 finite owner theorems already proved upstream.
 -/
 
-namespace WallpaperPin55SummaryLedger
+namespace InfoGeometry.Canonical.WallpaperPin55SummaryLedger
 
 open InfoGeometry.Canonical.KleinBottleWallpaper
 open InfoGeometry.Canonical.WallpaperKleinBottleCartan
@@ -103,4 +103,4 @@ theorem wallpaper_pin55_summary_packet (g r : Fin 8) (b d : ℝ) :
     weylD5CrossSection_projects_wallpaper g,
     weylD5CrossSection_preserves_splitMetric55 g⟩
 
-end WallpaperPin55SummaryLedger
+end InfoGeometry.Canonical.WallpaperPin55SummaryLedger

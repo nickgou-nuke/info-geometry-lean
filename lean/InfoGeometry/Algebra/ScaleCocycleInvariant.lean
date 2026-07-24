@@ -18,7 +18,7 @@ step.
 No colimit, no completion, no analytic continuation, no Type III theorem.
 -/
 
-namespace ScaleCocycleInvariant
+namespace InfoGeometry.Algebra.ScaleCocycleInvariant
 
 open Finset BigOperators
 
@@ -155,7 +155,7 @@ theorem invariant_iter_conjugated_step
       I
       (invariant_conjugated_step step inv I hStep hInv)
 
-end ScaleCocycleInvariant
+end InfoGeometry.Algebra.ScaleCocycleInvariant
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

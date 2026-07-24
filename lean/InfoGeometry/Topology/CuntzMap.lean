@@ -19,7 +19,7 @@ uniqueness, contractive convergence, complete positivity, or equality with a
 continuous modular flow.
 -/
 
-namespace CuntzMap
+namespace InfoGeometry.Topology.CuntzMap
 
 open InfoGeometry.Topology.CuntzCantorSpectralTriple
 
@@ -97,4 +97,4 @@ theorem real_fixed_point_of_half_branch_scaling
 
 end DiscreteModularFlowWitness
 
-end CuntzMap
+end InfoGeometry.Topology.CuntzMap

@@ -26,7 +26,7 @@ open scoped ComplexConjugate
 
 noncomputable section
 
-namespace GNSCuntzDiagonal
+namespace InfoGeometry.Algebra.GNSCuntzDiagonal
 
 /-- The positive Boltzmann weight `p^{-β}` as a real number. -/
 def weight (p : ℕ) (β : ℝ) : ℝ :=
@@ -132,4 +132,4 @@ def diagPreInnerCore (n : ℕ) (primes : Fin n → ℕ) (hpos : ∀ i, 0 < prime
     add_left := diagInner_add_left n primes β
     smul_left := diagInner_smul_left n primes β }
 
-end GNSCuntzDiagonal
+end InfoGeometry.Algebra.GNSCuntzDiagonal

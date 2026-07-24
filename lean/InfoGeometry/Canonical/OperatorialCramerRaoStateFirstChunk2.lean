@@ -19,7 +19,7 @@ This file adds:
    operatorial Cramér-Rao lower bound from Chunk-1.
 -/
 
-namespace OperatorialCramerRaoStateFirstChunk2
+namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -169,4 +169,4 @@ theorem stateFirst_apexZero_activeOnly_operatorialCramerRao
 
 end Core
 
-end OperatorialCramerRaoStateFirstChunk2
+end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2

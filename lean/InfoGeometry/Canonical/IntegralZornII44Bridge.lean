@@ -23,7 +23,7 @@ noncomputable section
 
 namespace IntegralZornII44Bridge
 
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+open CanonicalZornProjectiveTKKBridge
 
 /-- Integral Zorn coordinates `(a,u,v,b)` with `u,v : Fin 3 → ℤ`. -/
 abbrev IntegralZorn := ℤ × (Fin 3 → ℤ) × ((Fin 3 → ℤ) × ℤ)

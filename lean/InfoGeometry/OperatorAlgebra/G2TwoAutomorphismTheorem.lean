@@ -7,9 +7,9 @@ This module is the Lean twin of
 `tools/sympy/g2_2_automorphism_theorem.py`.
 
 It formalizes the split Zorn octonion multiplication over `F₂` as an exact
-eight-Boolean algebra.  The companion verifier enumerates the automorphisms
-from generator images and checks that the full automorphism count is `12096`,
-matching the GAP/Sage `G₂(2)` ledger.
+eight-Boolean algebra.  The companion verifier supplies the external
+enumeration certificate for the automorphism count `12096`, which the Lean
+file reads back only through a conditional theorem.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -33,7 +33,7 @@ matching the GAP/Sage `G₂(2)` ledger.
 * No statement is made about real or integer split-octonion automorphism groups.
 -/
 
-namespace G2TwoAutomorphismTheorem
+namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
 /-- One bit of the field `F₂`, represented as `Bool`. -/
 abbrev F2Bit := Bool
@@ -230,4 +230,4 @@ theorem aut_splitOctF2_card_eq_g2twoOrder_from_enumeration
     Fintype.card SplitOctF2Aut = g2twoOrder := by
   simpa [g2twoOrder] using h_enum
 
-end G2TwoAutomorphismTheorem
+end InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem

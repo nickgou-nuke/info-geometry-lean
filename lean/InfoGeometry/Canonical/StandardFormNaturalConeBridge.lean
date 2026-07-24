@@ -33,7 +33,7 @@ The natural cone is not identified with the Krein causal cone
 identification.
 -/
 
-namespace StandardFormNaturalConeBridge
+namespace InfoGeometry.Canonical.StandardFormNaturalConeBridge
 
 /-! ## Doubled Tomita--Cartan carrier -/
 
@@ -793,4 +793,4 @@ end BinaryWordModularFaceBridge
 
 end ModularFaces
 
-end StandardFormNaturalConeBridge
+end InfoGeometry.Canonical.StandardFormNaturalConeBridge

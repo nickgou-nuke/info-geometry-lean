@@ -7,7 +7,7 @@ set_option linter.unusedSectionVars false
 Canonical facade for doubled-space Fock operators and Bayesian update laws.
 -/
 
-namespace Fock
+namespace InfoGeometry.Canonical.Fock
 
 export InfoGeometry.Quantum (
   annihilationOp
@@ -51,4 +51,4 @@ theorem dataPart_eq_creation (v : DoubledSpace E) :
 theorem modelPart_eq_annihilation (v : DoubledSpace E) :
     modelPart (E := E) v = annihilationOp (E := E) v := rfl
 
-end Fock
+end InfoGeometry.Canonical.Fock

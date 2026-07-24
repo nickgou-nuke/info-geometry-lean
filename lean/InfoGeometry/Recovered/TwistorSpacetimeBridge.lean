@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Recovered.SplitQuaternionMatricesRecovered
+import InfoGeometry.Recovered.SpacetimeLorentzTransformations
 import InfoGeometry.Twistor.Incidence
 
 /-!
@@ -20,7 +21,6 @@ It demonstrates two crucial bridges:
 namespace InfoGeometry.Recovered
 
 open InfoGeometry.SplitQuaternion
-open InfoGeometry.Spacetime
 open InfoGeometry.Twistor.Incidence
 open InfoGeometry.Clifford.Soldering
 
@@ -35,18 +35,19 @@ The structural bridge: Our algebraically recovered `spacetimeMatrix` perfectly m
 to the codebase's existing `soldering` map under coordinate permutation.
 -/
 theorem bridge_soldering_eq (t x y z : ℝ) :
-    spacetimeMatrix t x y z = soldering (t, z, y, x) := by
+    InfoGeometry.Spacetime.spacetimeMatrix t x y z = soldering (t, z, y, x) := by
   -- Evaluate both explicitly to show structural equivalence
   ext i j
   fin_cases i <;> fin_cases j <;> 
-    (simp [spacetimeMatrix, splitOne, splitI, splitJ, splitK,
-           soldering, sigma0, sigma3, sigma1, epsilon])
+    (simp [InfoGeometry.Spacetime.spacetimeMatrix, splitOne, splitI, splitJ, splitK,
+           soldering, sigma0, sigma3, sigma1, epsilon] <;> ring)
 
 /--
 The matrix action evaluates identically to the Soldering `pointAction`.
 -/
 theorem pointAction_eq_matrixAction (t x y z : ℝ) (π : ℝ × ℝ) :
-    pointAction (t, z, y, x) π = matrixAction (spacetimeMatrix t x y z) π := by
+    InfoGeometry.Twistor.Incidence.pointAction (t, z, y, x) π =
+      matrixAction (InfoGeometry.Spacetime.spacetimeMatrix t x y z) π := by
   rw [bridge_soldering_eq]
   rfl
 
@@ -101,7 +102,8 @@ theorem lorentz_twistor_symmetry
     (X q : Matrix (Fin 2) (Fin 2) ℝ) (ω π : ℝ × ℝ)
     (h_unit : q.det = 1)
     (h_incident : ω = matrixAction X π) :
-    matrixAction q ω = matrixAction (lorentzTransform q X) (matrixAction q π) := by
+    matrixAction q ω =
+      matrixAction (InfoGeometry.Spacetime.lorentzTransform q X) (matrixAction q π) := by
   calc
     matrixAction q ω = matrixAction q (matrixAction X π) := by rw [h_incident]
     _ = matrixAction (q * X) π := by rw [matrixAction_mul]
@@ -113,7 +115,8 @@ theorem lorentz_twistor_symmetry
           have hassoc : q * X * (splitConj q * q) = (q * X * splitConj q) * q := by
             simp [Matrix.mul_assoc]
           rw [hassoc]
-    _ = matrixAction (lorentzTransform q X * q) π := rfl
-    _ = matrixAction (lorentzTransform q X) (matrixAction q π) := by rw [← matrixAction_mul]
+    _ = matrixAction (InfoGeometry.Spacetime.lorentzTransform q X * q) π := rfl
+    _ = matrixAction (InfoGeometry.Spacetime.lorentzTransform q X) (matrixAction q π) := by
+      rw [← matrixAction_mul]
 
 end InfoGeometry.Recovered

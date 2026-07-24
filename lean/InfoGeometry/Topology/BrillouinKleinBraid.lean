@@ -11,7 +11,7 @@ Therefore, for n EPs with braid group elements b_1, b_2, ..., b_n, we have:
 b_1 b_2 ... b_n = b_a b_b b_a b_b⁻¹
 -/
 
-namespace BrillouinKleinBraid
+namespace InfoGeometry.Topology.BrillouinKleinBraid
 
 /-- 
 The braiding constraint for n Exceptional Points inside a Brillouin Klein Bottle.
@@ -43,4 +43,4 @@ theorem klein_braid_constraint_abelian
   rw [mul_assoc b_a b_b b_a, h_comm, ← mul_assoc b_a b_a b_b, mul_assoc (b_a * b_a) b_b b_b⁻¹, mul_inv_cancel, mul_one]
   exact sq b_a |>.symm
 
-end BrillouinKleinBraid
+end InfoGeometry.Topology.BrillouinKleinBraid

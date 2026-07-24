@@ -17,7 +17,7 @@ No infinite Dirichlet series, convergence theorem, reciprocal zeta identity, or
 analytic continuation claim is made here.
 -/
 
-namespace MobiusDirichletInverseBridge
+namespace InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
@@ -97,4 +97,4 @@ theorem finiteFermionicEulerProduct_empty
       ({ primes := ∅, prime_mem := by simp } : PrimeRegister) x = 1 := by
   simp [finiteFermionicEulerProduct]
 
-end MobiusDirichletInverseBridge
+end InfoGeometry.Arithmetic.MobiusDirichletInverseBridge

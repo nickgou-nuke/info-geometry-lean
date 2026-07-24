@@ -30,7 +30,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace ModularMirrorBoundary
+namespace InfoGeometry.OperatorAlgebra.ModularMirrorBoundary
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
@@ -392,4 +392,4 @@ theorem modularMirrorBoundary_packet
       M.closure.theta M.imbalance = -M.imbalance :=
   modularMirrorBoundaryOwnerTarget V M
 
-end ModularMirrorBoundary
+end InfoGeometry.OperatorAlgebra.ModularMirrorBoundary

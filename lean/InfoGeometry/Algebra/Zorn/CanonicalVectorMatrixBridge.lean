@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Algebra.ZornVectorMatrix
 
-namespace CanonicalVectorMatrixBridge
+namespace InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 
 open InfoGeometry.Canonical
 
@@ -145,4 +145,4 @@ theorem mul_sub (X Y Z : CZ) : X * (Y - Z) = X * Y - X * Z := by
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_zero]
   exact InfoGeometry.Algebra.ZornVectorMatrix.mul_zero _
 
-end CanonicalVectorMatrixBridge
+end InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

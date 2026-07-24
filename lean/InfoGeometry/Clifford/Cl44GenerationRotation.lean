@@ -23,7 +23,7 @@ This is deliberately a rotation/label packet, not a hidden replacement for the
 conformal or projective comparison layers.
 -/
 
-namespace Cl44GenerationRotation
+namespace InfoGeometry.Clifford.Cl44GenerationRotation
 
 open InfoGeometry.Canonical.SplitHierarchy
 
@@ -94,4 +94,4 @@ theorem canonicalGenerationRotationPacket_labelAction :
     canonicalGenerationRotationPacket.labelAction = rotateGenerationLabel :=
   rfl
 
-end Cl44GenerationRotation
+end InfoGeometry.Clifford.Cl44GenerationRotation

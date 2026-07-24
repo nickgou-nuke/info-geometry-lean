@@ -21,7 +21,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ZetaTraceSpecialization
+namespace InfoGeometry.Arithmetic.ZetaTraceSpecialization
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.SouriauThermalEvaluation
@@ -207,4 +207,4 @@ theorem finiteZetaTraceEffectiveAction_def
       - Real.log (finiteZetaTraceSupervolume E) :=
   rfl
 
-end ZetaTraceSpecialization
+end InfoGeometry.Arithmetic.ZetaTraceSpecialization

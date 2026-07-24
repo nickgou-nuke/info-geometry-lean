@@ -3,7 +3,7 @@ import Mathlib
 
 noncomputable section
 
-namespace QCCRSupergrading
+namespace InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 open InfoGeometry.OperatorAlgebra.QCCRCore
 
@@ -32,4 +32,4 @@ theorem qSuperbracket_matches_qccr {N : ℕ} {Op : Type*} [Ring Op] [StarRing Op
   rw [A.q_commutation i j]
   simp
 
-end QCCRSupergrading
+end InfoGeometry.OperatorAlgebra.QCCRSupergrading

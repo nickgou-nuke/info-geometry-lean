@@ -16,7 +16,8 @@ On the non-orientable Klein manifold, the anti-symplectic glide twist
 reverses the orientation of the second loop ($B_{twisted} = -B$), 
 yielding exact cancellation ($B \cdot B_{twisted} = I$).
 
-This prevents chiral divergence and stabilizes the GUE monodromy distribution.
+This file proves only the displayed `2 × 2` integer matrix identities; it does
+not prove a chiral-divergence or GUE-monodromy theorem.
 -/
 
 open Matrix

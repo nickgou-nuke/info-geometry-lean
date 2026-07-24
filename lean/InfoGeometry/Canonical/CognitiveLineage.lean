@@ -10,7 +10,7 @@ anything on its own.
 
 noncomputable section
 
-namespace CognitiveLineage
+namespace InfoGeometry.Canonical.CognitiveLineage
 
 /--
 Typed lineage record for a single theorem-factory corridor.
@@ -93,4 +93,4 @@ def summary : Summary :=
 
 end CognitiveLineage
 
-end CognitiveLineage
+end InfoGeometry.Canonical.CognitiveLineage

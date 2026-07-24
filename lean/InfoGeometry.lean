@@ -21,6 +21,9 @@ Authors: Nikolay Goutev, Dimitar Tonev
 import InfoGeometry.Library
 import InfoGeometry.Generated
 import InfoGeometry.Singular
+import InfoGeometry.Algebra.GellMannBasis
+import InfoGeometry.Algebra.StructureConstants
+import InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal

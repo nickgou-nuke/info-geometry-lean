@@ -13,9 +13,9 @@ channels as a typed readout interface and connects that interface to
 `QuantumPresentation`.
 -/
 
-namespace FierzReadout
+namespace InfoGeometry.Canonical.FierzReadout
 
-open Fierz
+open InfoGeometry.Quantum.Fierz
 open QuantumPresentation
 
 /--
@@ -168,4 +168,4 @@ theorem doubledFierz_majorana
 
 end DoubledCarrier
 
-end FierzReadout
+end InfoGeometry.Canonical.FierzReadout

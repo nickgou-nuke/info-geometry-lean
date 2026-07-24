@@ -45,7 +45,7 @@ Bost--Connes projection state inherits the documented KMS matrix coefficient.
 
 noncomputable section
 
-namespace BostConnesConformalBoundary
+namespace InfoGeometry.Canonical.BostConnesConformalBoundary
 
 open InfoGeometry.Canonical.BostConnesKMS
 open InfoGeometry.Canonical.SplitCliffordExternalChain
@@ -180,4 +180,4 @@ theorem sugawaraTrace_kms_evaluation_on_prime_power_word_products
     (left.map PrimePowerIndex.toPNat)
     (right.map PrimePowerIndex.toPNat)
 
-end BostConnesConformalBoundary
+end InfoGeometry.Canonical.BostConnesConformalBoundary

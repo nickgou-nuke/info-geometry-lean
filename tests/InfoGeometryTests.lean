@@ -23,7 +23,9 @@ import InfoGeometry.Canonical.ComplexAnalyticBridge
 open InfoGeometry.Canonical.ProjectiveCCR
 #check ProjectiveBoundaryPacket
 #check ProjectiveBoundaryPacket.mk
-#check ProjectiveBoundaryPacket.split
+#check ProjectiveBoundaryPacket.cones
+#check ProjectiveBoundaryPacket.gap
+#check ProjectiveBoundaryPacket.zeroMode
 #check ProjectiveBoundaryPacket.kms
 
 -- Complex analytic doubled bridge

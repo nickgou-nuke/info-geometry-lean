@@ -20,7 +20,7 @@ Kac--Moody closure.  It only names the calibration point:
 
 noncomputable section
 
-namespace InformationAffineKacMoodyBridge
+namespace InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -181,4 +181,4 @@ theorem affineCentralCoefficient_eq_mode_mul_souriauCovariance_of_hessian
 
 end InformationAffineKacMoodyCarrier
 
-end InformationAffineKacMoodyBridge
+end InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge

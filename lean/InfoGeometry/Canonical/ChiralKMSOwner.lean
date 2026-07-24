@@ -9,7 +9,7 @@ an explicitly supplied chiral grading.  This module proves preservation versus
 obstruction only; no uniqueness theorem for the KMS flow is asserted.
 -/
 
-namespace ChiralKMSOwner
+namespace InfoGeometry.Canonical.ChiralKMSOwner
 
 variable {R : Type*} [Ring R]
 
@@ -84,4 +84,4 @@ structure ChiralKMSFlowWitness where
   Γ : ChiralGrading (R := R)
   preservesOrObstructs : KMSPreservesChirality K Γ ∨ ChiralKMSObstruction K Γ ≠ 0
 
-end ChiralKMSOwner
+end InfoGeometry.Canonical.ChiralKMSOwner

@@ -28,7 +28,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeCantorTiltFockNilpotents
+namespace InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -346,4 +346,4 @@ theorem squareZero_pair_gives_clifford_axes
       _ = -(1 : R) := by
             simp
 
-end PrimeCantorTiltFockNilpotents
+end InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents

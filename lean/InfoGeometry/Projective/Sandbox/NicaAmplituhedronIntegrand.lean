@@ -15,10 +15,10 @@ the abstract Cuntz-Plücker coordinates descend into scalar kinematic variables
 for the loop integrands.
 -/
 
-namespace NicaAmplituhedronIntegrand
+namespace InfoGeometry.Projective.Sandbox.NicaAmplituhedronIntegrand
 
-open BostConnesSystem
-open BostConnesKMS
+open InfoGeometry.Arithmetic.BostConnesSystem
+open InfoGeometry.Canonical.BostConnesKMS
 open InfoGeometry.Projective.BostConnes
 open BostConnesKleinPluckerBridge
 
@@ -54,4 +54,4 @@ noncomputable def nicaAmplituhedronVolume (Φ : KMSProjectionState C)
     -- data using the evaluated Plücker coordinates.
     (L : ℝ) * (kmsPluckerReadout C Φ n0 n1) * (kmsPluckerReadout C Φ n2 n3)
 
-end NicaAmplituhedronIntegrand
+end InfoGeometry.Projective.Sandbox.NicaAmplituhedronIntegrand

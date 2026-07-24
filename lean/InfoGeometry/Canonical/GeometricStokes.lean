@@ -26,7 +26,7 @@ planar current is supplied by external scripts:
 
 noncomputable section
 
-namespace GeometricStokes
+namespace InfoGeometry.Canonical.GeometricStokes
 
 open GeometricMonodromy
 
@@ -159,4 +159,4 @@ theorem geometric_stokes_spinorial_monodromy_packet
     stokes_state_parity_flip ω J,
     stokes_vacuum_boundary_pair_state_zero ω J⟩
 
-end GeometricStokes
+end InfoGeometry.Canonical.GeometricStokes

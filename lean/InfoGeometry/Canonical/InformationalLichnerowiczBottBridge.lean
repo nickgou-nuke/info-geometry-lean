@@ -17,7 +17,7 @@ compatibility assumptions required to route the transport lane into the Bott
 presentation.
 -/
 
-namespace InformationalLichnerowiczBottBridge
+namespace InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.BottDirac
@@ -139,4 +139,4 @@ theorem cl11_bottDirac_sq_eq_zero_of_operatorialTransport
 
 end Core
 
-end InformationalLichnerowiczBottBridge
+end InfoGeometry.Canonical.InformationalLichnerowiczBottBridge

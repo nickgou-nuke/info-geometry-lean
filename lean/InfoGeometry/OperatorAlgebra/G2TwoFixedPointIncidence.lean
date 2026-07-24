@@ -18,7 +18,7 @@ records a theorem-safe boundary: the fixed set is a seven-point invariant set,
 but it is not promoted here to a Fano-plane subgeometry.
 -/
 
-namespace G2TwoFixedPointIncidence
+namespace InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence
 
 /-- Degree of the Atlas point action used for the split Cayley hexagon point graph. -/
 def h2PointCount : Nat := 63
@@ -88,4 +88,4 @@ theorem fixed_point_incidence_packet :
       fixedInternalLineCount ≠ fanoPlaneLineCount := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, fixedInternalLineCount_ne_fanoPlaneLineCount⟩
 
-end G2TwoFixedPointIncidence
+end InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence

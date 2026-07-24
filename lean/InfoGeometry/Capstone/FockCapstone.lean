@@ -13,7 +13,7 @@ the global `O(∞,∞)` action, and the zeta function of the Cantor spectral
 triple are not proved here.
 -/
 
-namespace FockCapstone
+namespace InfoGeometry.Capstone.FockCapstone
 
 open InfoGeometry.Canonical.SplitCliffordFiniteCAR
 
@@ -69,4 +69,4 @@ theorem finite_CAR_at_all_truncations (i j : Mode) (hij : i ≠ j) :
     aMode i * aMode j + aMode j * aMode i = (0 : M4R) := by
   exact ⟨same_mode_car i, cross_annihilate_anticomm i j hij⟩
 
-end FockCapstone
+end InfoGeometry.Capstone.FockCapstone

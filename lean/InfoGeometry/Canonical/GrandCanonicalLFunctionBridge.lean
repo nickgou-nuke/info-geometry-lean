@@ -23,7 +23,7 @@ open InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 open InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge.TwistedSouriauWeylBridge
-open InfoGeometry.Thermodynamics.SouriauWeylPartition
+open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 
 variable
     {Orbit G E Op H Finite Alg Symmetry : Type}

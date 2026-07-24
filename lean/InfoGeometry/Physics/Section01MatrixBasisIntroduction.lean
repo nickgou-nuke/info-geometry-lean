@@ -42,7 +42,7 @@ matrix-basis module.
 
 noncomputable section
 
-namespace Section01MatrixBasisIntroduction
+namespace InfoGeometry.Physics.Section01MatrixBasisIntroduction
 
 open Matrix Complex
 
@@ -254,6 +254,6 @@ theorem section01_intro_matrix_quantum_packet
     bloch_density_trace nx ny nz,
     bloch_density_det nx ny nz⟩
 
-end Section01MatrixBasisIntroduction
+end InfoGeometry.Physics.Section01MatrixBasisIntroduction
 
 end noncomputable section

@@ -90,7 +90,7 @@ open scoped BigOperators Matrix Norms.Operator
 
 set_option autoImplicit false
 
-namespace BregmanAnalyticBound
+namespace InfoGeometry.Analysis.BregmanAnalyticBound
 
 abbrev MatrixEnd (n : ℕ) :=
   Matrix (Fin n) (Fin n) ℂ
@@ -490,8 +490,8 @@ Closed-form phase-axis rotations have the desired local quadratic
 operator-norm Bregman bound once the finite exponential identity and concrete
 norm facts are supplied.
 
-The missing analytic bridge is explicit in `hExp`: for a phase axis satisfying
-`K ^ 2 = -1`, prove
+The missing Hestenes phase-axis bridge is explicit in `hExp`: for a phase axis
+satisfying `K ^ 2 = -1`, prove
 `exp (ε • K) = cos ε • 1 + sin ε • K`. This theorem then converts that
 identity into the honest norm estimate; it does not use a Loewner/PSD claim.
 -/
@@ -618,4 +618,4 @@ theorem bregman_bound_clears_at_flat_boundary {n : ℕ}
     ‖exponentialRemainder K 0‖ ≤ 0 := by
   simp
 
-end BregmanAnalyticBound
+end InfoGeometry.Analysis.BregmanAnalyticBound

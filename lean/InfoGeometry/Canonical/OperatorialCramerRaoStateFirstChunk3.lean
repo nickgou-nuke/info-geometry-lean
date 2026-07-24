@@ -19,7 +19,7 @@ This file adds a conservative admissibility gate layered above existing owners:
    Cramér-Rao lower bound.
 -/
 
-namespace OperatorialCramerRaoStateFirstChunk3
+namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -208,4 +208,4 @@ theorem stateFirst_admissibleGate_transport_and_operatorialCramerRao
 
 end Core
 
-end OperatorialCramerRaoStateFirstChunk3
+end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3

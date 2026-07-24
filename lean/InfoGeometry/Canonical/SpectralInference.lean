@@ -11,7 +11,7 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.LinearAlgebra.Determinant
 
-namespace SpectralInference
+namespace InfoGeometry.Canonical.SpectralInference
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical
@@ -385,4 +385,4 @@ lemma inner_dirac_sq (u v : E) :
 
 end InfoSpectralTriple
 
-end SpectralInference
+end InfoGeometry.Canonical.SpectralInference

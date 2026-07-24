@@ -17,7 +17,7 @@ Fresnel/Jones calibration are supplied as proof-carrying data.
 
 noncomputable section
 
-namespace SusceptibilityHessian
+namespace InfoGeometry.Thermo.SusceptibilityHessian
 
 open InfoGeometry.Optics.JonesCalibration
 
@@ -689,4 +689,4 @@ attribute [rep_depth operator]
   MetalMirrorSusceptibilityHessianCalibration.r_s_eq_s_eigenvalue
   MetalMirrorSusceptibilityHessianCalibration.r_p_eq_p_eigenvalue
 
-end SusceptibilityHessian
+end InfoGeometry.Thermo.SusceptibilityHessian

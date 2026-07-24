@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace PrimeExteriorRepresentation
+namespace InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 
 open scoped BigOperators
 
@@ -154,4 +154,4 @@ lemma squareFreeEnergy_nonneg
 
 end SquareFreePrimeState
 
-end PrimeExteriorRepresentation
+end InfoGeometry.Arithmetic.PrimeExteriorRepresentation

@@ -56,6 +56,11 @@ jobs:
             --md-out reports/audit/ci/closure-debt-crawler.md \
             --print-summary
 
+      - name: Build Lean + post-build quality gate
+        run: |
+          lake build
+          bash scripts/quality/post_build_gate.sh lean
+
       - name: Run LLM closure debt audit (advisory lane)
         continue-on-error: true
         run: |

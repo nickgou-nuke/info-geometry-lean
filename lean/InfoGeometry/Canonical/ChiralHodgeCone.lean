@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace ChiralHodgeCone
+namespace InfoGeometry.Canonical.ChiralHodgeCone
 
 open Matrix Complex
 
@@ -120,4 +120,4 @@ theorem chiralTrace_vanishes_of_sewn {n : ℕ} (γ ρ : Mat n)
   have htwo_ne : (2 : ℂ) ≠ 0 := by norm_num
   exact (mul_eq_zero.mp htwo).resolve_left htwo_ne
 
-end ChiralHodgeCone
+end InfoGeometry.Canonical.ChiralHodgeCone

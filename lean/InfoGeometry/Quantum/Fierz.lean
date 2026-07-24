@@ -14,7 +14,7 @@ interpreted as identities between different informational channels:
 Fierz identities provide the "conservation of information power" across these channels.
 -/
 
-namespace Fierz
+namespace InfoGeometry.Quantum.Fierz
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -89,4 +89,4 @@ theorem information_fierz_majorana (ψ : DoubledSpace E) (hM : IsMajoranaBelief 
   rw [information_fierz_identity (E := E) ψ, hM]
   ring
 
-end Fierz
+end InfoGeometry.Quantum.Fierz

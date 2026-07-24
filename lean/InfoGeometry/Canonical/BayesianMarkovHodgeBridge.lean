@@ -20,13 +20,13 @@ the finite Hodge layer.
 
 open Matrix
 
-namespace BayesianMarkovHodgeBridge
+namespace InfoGeometry.Canonical.BayesianMarkovHodgeBridge
 
 open BayesianMarkovChain
 open BayesianMarkovChain.TensorLimitStateSpace
 open TensorColimitExpectation
-open EckmannDiscreteHodge
-open DiscreteHodgeStabilizer
+open InfoGeometry.Topology.EckmannDiscreteHodge
+open InfoGeometry.Topology.DiscreteHodgeStabilizer
 
 universe u v
 
@@ -101,4 +101,4 @@ theorem stationary_current_hodge_protection
 
 end BayesianMarkovHodgePacket
 
-end BayesianMarkovHodgeBridge
+end InfoGeometry.Canonical.BayesianMarkovHodgeBridge

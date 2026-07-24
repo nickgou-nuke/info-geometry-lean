@@ -31,7 +31,7 @@ DOI `10.11648/j.mcs.20261103.11`).
   readout.
 -/
 
-namespace PapadakisPrimes
+namespace InfoGeometry.Topology.PapadakisPrimes
 
 /-! ## Hybrid Prime Factorization certificate -/
 
@@ -176,4 +176,4 @@ theorem primeDiscriminantEndpoint_of_not_prime {n : ℕ} (hn : ¬ Nat.Prime n) :
     primeDiscriminantEndpoint n = 1 := by
   simp [primeDiscriminantEndpoint, hn]
 
-end PapadakisPrimes
+end InfoGeometry.Topology.PapadakisPrimes

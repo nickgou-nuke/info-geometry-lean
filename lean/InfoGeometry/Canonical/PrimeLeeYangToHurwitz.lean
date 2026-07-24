@@ -19,7 +19,7 @@ candidate source of that convergence witness.
 
 noncomputable section
 
-namespace PrimeLeeYangToHurwitz
+namespace InfoGeometry.Canonical.PrimeLeeYangToHurwitz
 
 open InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 open InfoGeometry.Canonical.PrimeHurwitzLimit
@@ -66,4 +66,4 @@ by
 
 end PrimeLeeYangToHurwitzWitness
 
-end PrimeLeeYangToHurwitz
+end InfoGeometry.Canonical.PrimeLeeYangToHurwitz

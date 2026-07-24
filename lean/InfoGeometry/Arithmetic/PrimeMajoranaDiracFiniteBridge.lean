@@ -18,7 +18,7 @@ No RH/Mertens socket.
 
 noncomputable section
 
-namespace PrimeMajoranaDiracFiniteBridge
+namespace InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
 
 open InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 
@@ -57,4 +57,4 @@ theorem finiteDiracHamiltonian_eq_log_primeBitInteger_bridge
       Real.log (InfoGeometry.Arithmetic.primeBitInteger L ψ : ℝ) := by
   exact finiteDiracHamiltonian_eq_log_primeBitInteger L ψ
 
-end PrimeMajoranaDiracFiniteBridge
+end InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge

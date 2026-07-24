@@ -21,7 +21,7 @@ or any Riemann-zeta consequence.  The theorem payload is restricted to:
 
 noncomputable section
 
-namespace CantorPhenomenologyReadout
+namespace InfoGeometry.Canonical.CantorPhenomenologyReadout
 
 open Matrix
 open InfoGeometry.Canonical.CelikErlangenBraidBridge
@@ -250,6 +250,6 @@ theorem finite_z3_braid_readout :
           InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix) :=
   finite_z3_braid_owner_readout
 
-end CantorPhenomenologyReadout
+end InfoGeometry.Canonical.CantorPhenomenologyReadout
 
 end noncomputable section

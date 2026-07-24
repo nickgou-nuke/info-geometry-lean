@@ -1,6 +1,0 @@
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.ApparentRandomnessFreezingEscort
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.FoldKLPythagorasIProjection
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.IidBlockFactorization
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.MixedCollisionCauchyGap
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6FixedFreezingLaw
-import InfoGeometry.External.Automath.Omega.FoldResidualTime.Window6SecondCollisionConstant

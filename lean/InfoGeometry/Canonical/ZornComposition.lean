@@ -12,7 +12,7 @@ This is a Zorn composition theorem, not a projection/Binet-Cauchy claim.
 
 noncomputable section
 
-namespace ZornComposition
+namespace InfoGeometry.Canonical.ZornComposition
 
 open InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
@@ -41,4 +41,4 @@ theorem detZ_right_mul_normOne
     detZ (mulZ X U) = detZ X := by
   rw [detZ_mul, hU, mul_one]
 
-end ZornComposition
+end InfoGeometry.Canonical.ZornComposition

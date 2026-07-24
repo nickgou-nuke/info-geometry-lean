@@ -20,7 +20,7 @@ This module introduces no scalar-complex owner lane and no external conjugation
 operation. It is only a real-operator calculus on the doubled carrier.
 -/
 
-namespace HestenesPhaseSemilinear
+namespace InfoGeometry.Canonical.HestenesPhaseSemilinear
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -249,4 +249,4 @@ theorem comp_linear_linear_isHestenesLinear
 
 end Core
 
-end HestenesPhaseSemilinear
+end InfoGeometry.Canonical.HestenesPhaseSemilinear

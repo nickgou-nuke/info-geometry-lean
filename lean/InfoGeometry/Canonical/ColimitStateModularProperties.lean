@@ -9,7 +9,7 @@ from the local CPT symmetry atoms to the macroscopic infinite-dimensional
 continuous quantum field theory limit.
 -/
 
-namespace ColimitStateModularProperties
+namespace InfoGeometry.Canonical.ColimitStateModularProperties
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -113,4 +113,4 @@ theorem modular_kms_limit_persistence
   -- Close with the local KMS condition
   exact h_local_kms n x y
 
-end ColimitStateModularProperties
+end InfoGeometry.Canonical.ColimitStateModularProperties

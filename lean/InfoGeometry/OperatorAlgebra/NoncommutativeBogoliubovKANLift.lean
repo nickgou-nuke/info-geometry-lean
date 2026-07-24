@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace NoncommutativeBogoliubovKANLift
+namespace InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 
 open InfoGeometry.OperatorAlgebra
 open ConnesSpatialDerivative
@@ -365,4 +365,4 @@ theorem bridge_typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
 
 end NoncommutativeModularToBogoliubovKANPacket
 
-end NoncommutativeBogoliubovKANLift
+end InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift

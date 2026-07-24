@@ -19,7 +19,7 @@ parameter present here is the internal modular/Bogoliubov flow parameter already
 carried by the operatorial transport layer.
 -/
 
-namespace ModularTwoStateCorrelation
+namespace InfoGeometry.Canonical.ModularTwoStateCorrelation
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.OnsagerReciprocity
@@ -378,4 +378,4 @@ theorem deriv_comparisonTransportPhaseShiftedChannelCorrelation_at_zero_eq_compa
 
 end Core
 
-end ModularTwoStateCorrelation
+end InfoGeometry.Canonical.ModularTwoStateCorrelation

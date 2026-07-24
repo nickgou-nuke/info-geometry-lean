@@ -18,7 +18,7 @@ the additional compatibility data saying which owner channels land in which
 Cartan sectors.
 -/
 
-namespace DrazinCartanShadowBridge
+namespace InfoGeometry.SuperMetriplectic.DrazinCartanShadowBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.SuperMetriplectic.CartanBridge
@@ -98,4 +98,4 @@ end DrazinCartanCompatibility
 
 end Core
 
-end DrazinCartanShadowBridge
+end InfoGeometry.SuperMetriplectic.DrazinCartanShadowBridge

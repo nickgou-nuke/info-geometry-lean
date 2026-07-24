@@ -2,7 +2,7 @@ import Mathlib
 
 open Matrix
 
-namespace ProofCone
+namespace InfoGeometry.Causal.ProofCone
 
 /-!
 BUCKET 1: CLOSED FINITE THEOREMS:
@@ -124,4 +124,4 @@ def trace (A : CausalMat2) : ℝ :=
     trace orientation = 0 := by
   norm_num [trace, orientation, Matrix.trace]
 
-end ProofCone
+end InfoGeometry.Causal.ProofCone

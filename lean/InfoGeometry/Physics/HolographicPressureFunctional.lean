@@ -20,7 +20,7 @@ The core functions are:
 * the Newtonian scalar Poisson readout follows by algebra from that definition.
 -/
 
-namespace HolographicPressureFunctional
+namespace InfoGeometry.Physics.HolographicPressureFunctional
 
 /-! ## 1. Explicit Weyl area and Majorana free energy -/
 
@@ -202,4 +202,4 @@ theorem quantumLimit_geometricMean_sq_of_equal_coeff
   rw [quantumLimit_geometricMean_sq hcrit hL hA hellE8]
   field_simp [hA]
 
-end HolographicPressureFunctional
+end InfoGeometry.Physics.HolographicPressureFunctional

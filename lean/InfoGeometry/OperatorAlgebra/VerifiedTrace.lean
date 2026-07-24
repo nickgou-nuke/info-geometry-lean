@@ -22,7 +22,7 @@ import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section
 
-namespace VerifiedTrace
+namespace InfoGeometry.OperatorAlgebra.VerifiedTrace
 
 open InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 open scoped Matrix BigOperators
@@ -130,4 +130,4 @@ theorem real_matrix_trace_invariant_under_transport
     Matrix.trace (U.conjugate A) = Matrix.trace A :=
   matrix_trace_invariant_under_transport A U
 
-end VerifiedTrace
+end InfoGeometry.OperatorAlgebra.VerifiedTrace

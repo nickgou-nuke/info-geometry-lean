@@ -5,7 +5,7 @@ import InfoGeometry.Krein.DoubledSpace
 
 set_option linter.unusedSectionVars false
 
-namespace Hurwitz
+namespace InfoGeometry.Quantum.Hurwitz
 
 open scoped Quaternion
 open scoped BigOperators
@@ -167,4 +167,4 @@ end RealMajoranaLayer
 
 end
 
-end Hurwitz
+end InfoGeometry.Quantum.Hurwitz

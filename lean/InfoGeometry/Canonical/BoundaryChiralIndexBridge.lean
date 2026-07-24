@@ -21,7 +21,7 @@ statement needed for the next boundary step:
   plus nontrivial regularization package.
 -/
 
-namespace BoundaryChiralIndexBridge
+namespace InfoGeometry.Canonical.BoundaryChiralIndexBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
@@ -182,4 +182,4 @@ theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identi
 
 end Core
 
-end BoundaryChiralIndexBridge
+end InfoGeometry.Canonical.BoundaryChiralIndexBridge

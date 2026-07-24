@@ -16,7 +16,7 @@ law.
 
 noncomputable section
 
-namespace CuntzQuotientDiracBridge
+namespace InfoGeometry.Algebra.CuntzQuotientDiracBridge
 
 open scoped BigOperators
 open InfoGeometry.Algebra.CuntzTensorQuotient
@@ -72,6 +72,6 @@ theorem finite_quotient_cuntzN_dirac_packet (n : ℕ) (i : Fin n) :
     quotient_range_projector_eq_primon_P n i,
     quotient_primon_projector_idempotent_via_CuntzN n i⟩
 
-end CuntzQuotientDiracBridge
+end InfoGeometry.Algebra.CuntzQuotientDiracBridge
 
 end noncomputable section

@@ -23,10 +23,10 @@ import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
-namespace JonesCalibration
+namespace InfoGeometry.Optics.JonesCalibration
 
 open FiniteJonesModel
-open TopologicalSnap
+open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 open FiniteJonesModel
 
@@ -738,7 +738,7 @@ into a flat/unpolarized sector unless the charge is trivial.
 structure JonesObstructionFlow
     (State Charge : Type*) [Zero Charge] where
   obstructionFlow :
-    TopologicalSnap.ConservedObstructionFlow State Charge
+    InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow State Charge
 
 
 namespace JonesObstructionFlow
@@ -758,4 +758,4 @@ theorem nontrivial_cannot_relax_to_flat
 
 end JonesObstructionFlow
 
-end JonesCalibration
+end InfoGeometry.Optics.JonesCalibration

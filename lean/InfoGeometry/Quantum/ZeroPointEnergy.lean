@@ -13,7 +13,7 @@ This strict topological minimum constitutes the formal origin of the zero-point 
 in the Information Geometry of Supergeometry / Spin Factors.
 -/
 
-namespace ZeroPointEnergy
+namespace InfoGeometry.Quantum.ZeroPointEnergy
 
 open InfoGeometry.Architecture.SpinFactor
 open InfoGeometry.Convex.SpinFactorHessian
@@ -60,4 +60,4 @@ theorem zero_point_energy_topological_obstruction (S : SpinFactorState E)
     0 < S.variance_limit :=
   zero_point_energy_positive S h_pos
 
-end ZeroPointEnergy
+end InfoGeometry.Quantum.ZeroPointEnergy

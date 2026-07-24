@@ -13,7 +13,7 @@ import Mathlib.Analysis.Convex.Slope
 
 namespace InfoGeometry.Convex
 
-open Triality
+open InfoGeometry.Canonical.Triality
 open scoped BigOperators
 
 /-- Abstract divergence interface used by Bregman-triality attention bridges. -/

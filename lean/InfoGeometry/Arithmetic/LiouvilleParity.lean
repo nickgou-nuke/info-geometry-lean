@@ -16,7 +16,7 @@ open InfoGeometry.Arithmetic.BostConnesSystem
 
 noncomputable section
 
-namespace LiouvilleParity
+namespace InfoGeometry.Arithmetic.LiouvilleParity
 
 /--
 **λ(n) = 1 when Ω(n) is even.** Since `λ(n) = (-1)^{Ω(n)}` and
@@ -76,4 +76,4 @@ theorem liouville_prime_pow_eq_neg_one_of_odd (p : ℕ+) (hp : Nat.Prime p.val) 
   rw [hm, pow_succ, pow_mul (a := (-1 : ℤ)) (m := 2),
     show ((-1 : ℤ) ^ 2) = 1 by norm_num, one_pow, one_mul]
 
-end LiouvilleParity
+end InfoGeometry.Arithmetic.LiouvilleParity

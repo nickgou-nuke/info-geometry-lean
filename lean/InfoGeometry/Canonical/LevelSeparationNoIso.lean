@@ -17,7 +17,7 @@ The result is intentionally modest and categorical: the finite atom can feed a
 mode construction, but it is not isomorphic to the completed current algebra.
 -/
 
-namespace LevelSeparationNoIso
+namespace InfoGeometry.Canonical.LevelSeparationNoIso
 
 open VirasoroProject
 
@@ -148,4 +148,4 @@ theorem finiteAtom_not_gradedIso_heisenbergCarrier {GradedIso : Type}
     ¬ Nonempty GradedIso :=
   finiteAtom_not_equiv_with_underlying_linearEquiv toLinearEquiv
 
-end LevelSeparationNoIso
+end InfoGeometry.Canonical.LevelSeparationNoIso

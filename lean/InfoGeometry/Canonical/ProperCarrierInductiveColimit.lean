@@ -28,7 +28,7 @@ claimed here.  The file only transports the proper-carrier stage geometry to
 its infinite directed union.
 -/
 
-namespace ProperCarrierInductiveColimit
+namespace InfoGeometry.Canonical.ProperCarrierInductiveColimit
 
 open InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 open InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector
@@ -119,4 +119,4 @@ theorem properCarrier_inductiveColimit_mem_iff_dualPositive
     properCarrier_inductiveColimit_selfDualCone pairing K hmono hself hstage
   exact hcone x
 
-end ProperCarrierInductiveColimit
+end InfoGeometry.Canonical.ProperCarrierInductiveColimit

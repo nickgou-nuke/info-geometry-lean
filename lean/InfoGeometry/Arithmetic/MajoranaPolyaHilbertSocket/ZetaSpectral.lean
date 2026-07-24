@@ -63,11 +63,11 @@ theorem criticalLine : IsCriticalLineRealPart P.realPart := by
 end MajoranaZeroModeNormalizabilityPacket
 
 /--
-Analytic Pfaffian/zeta spectral identity socket.
+Hestenes--Krein/colimit Pfaffian/zeta spectral identity socket.
 
-This is where a future analytic owner would connect a Majorana Pfaffian or
-determinant readout to the meromorphically continued zeta function.  It also
-separates zeros of zeta from singularities of reciprocal zeta.
+This is where a future categorical owner would connect a Majorana Pfaffian or
+determinant readout to the zeta colimit readout.  It also separates zeros of
+zeta from singularities of reciprocal zeta.
 -/
 @[socket_debt_tag]
 structure MajoranaPfaffianZetaSpectralSocket

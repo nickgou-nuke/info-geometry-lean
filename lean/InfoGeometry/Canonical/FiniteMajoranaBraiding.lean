@@ -14,7 +14,7 @@ No analytic fault-tolerance theorem.
 No infinite limit.
 -/
 
-namespace FiniteMajoranaBraiding
+namespace InfoGeometry.Canonical.FiniteMajoranaBraiding
 
 /--
 The finite algebraic readout of a neighboring Majorana exchange on mode labels:
@@ -128,4 +128,4 @@ theorem braidGateReadout_commute_rewrite
   unfold braidGateReadout
   rw [evalBraidWord_commute_rewrite h]
 
-end FiniteMajoranaBraiding
+end InfoGeometry.Canonical.FiniteMajoranaBraiding

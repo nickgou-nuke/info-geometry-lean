@@ -23,7 +23,7 @@ and discrete operator lattices. Strictly coordinate-free: finite-dimensional
 scalar diagonal matrices are NOT allowed.
 -/
 
-namespace DiscreteModularSpectrum
+namespace InfoGeometry.Canonical.DiscreteModularSpectrum
 
 section TypeIIIScale
 
@@ -215,4 +215,4 @@ end ModularMellinLattice
 
 end TypeIIIGLattice
 
-end DiscreteModularSpectrum
+end InfoGeometry.Canonical.DiscreteModularSpectrum

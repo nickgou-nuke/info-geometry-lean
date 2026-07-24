@@ -14,7 +14,7 @@ This module proves:
 No wrappers. No `sorry`.
 -/
 
-namespace SO3RotationFenchelWitness
+namespace InfoGeometry.Canonical.SO3RotationFenchelWitness
 
 open Matrix
 
@@ -182,4 +182,4 @@ theorem zCoord_constant_on_zOrbit (x z : V3)
 
 end
 
-end SO3RotationFenchelWitness
+end InfoGeometry.Canonical.SO3RotationFenchelWitness

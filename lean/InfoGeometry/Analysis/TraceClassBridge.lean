@@ -43,7 +43,7 @@ operator `T = -e^{-sH}` on ℓ²(ℕ^+) where `H|n⟩ = log(n)·|n⟩`.
 
 open Complex
 
-namespace TraceClassBridge
+namespace InfoGeometry.Analysis.TraceClassBridge
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical
@@ -136,8 +136,9 @@ Steps 1-5 require the functional analysis library (Hilbert spaces, trace-class
 operators). Steps 6-8 use the existing repo structures. Step 9 uses the
 Millennium Chain (Dikin positivity + Möbius protection + chiral anticommutation).
 
-This is the final, honest analytic gap — the bridge from the algebraic
-colimit to the analytic Fredholm determinant.
+This file is only a compatibility sketch for the classical trace-class route.
+The repository owner route is the Hestenes--Krein/categorical filtered-colimit
+readout, not an asserted Mathlib Fredholm closure.
 -/
 
-end TraceClassBridge
+end InfoGeometry.Analysis.TraceClassBridge

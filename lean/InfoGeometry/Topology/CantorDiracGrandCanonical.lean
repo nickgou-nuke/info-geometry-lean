@@ -29,7 +29,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace CantorDiracGrandCanonical
+namespace InfoGeometry.Topology.CantorDiracGrandCanonical
 
 open InfoGeometry.Topology.CantorDiracOperator
 
@@ -267,4 +267,4 @@ theorem spinodal2D_iff_det_eq_zero (B : CantorGrandCanonicalPacket) (β μ : ℝ
 
 end CantorGrandCanonicalPacket
 
-end CantorDiracGrandCanonical
+end InfoGeometry.Topology.CantorDiracGrandCanonical

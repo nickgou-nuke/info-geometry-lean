@@ -21,7 +21,7 @@ commutes with the generator, and the Krein self-adjointness relation.
 
 noncomputable section
 
-namespace InfiniteHestenesKrein
+namespace InfoGeometry.Canonical.InfiniteHestenesKrein
 
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
@@ -177,4 +177,4 @@ end HestenesKreinTower
 
 end Tower
 
-end InfiniteHestenesKrein
+end InfoGeometry.Canonical.InfiniteHestenesKrein

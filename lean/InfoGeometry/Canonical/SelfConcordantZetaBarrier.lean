@@ -8,7 +8,8 @@ import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 /-!
 # InfoGeometry.Canonical.SelfConcordantZetaBarrier
 
-Self-concordant barrier formulation of the Riemann Hypothesis.
+Self-concordant barrier calculations and an explicit RH-style variational
+statement socket.
 
 The Itakura–Saito divergence `f(x) = x − ln(x) − 1` is a self-concordant
 barrier:
@@ -37,7 +38,7 @@ This file does not prove RH.
 
 noncomputable section
 
-namespace SelfConcordantZetaBarrier
+namespace InfoGeometry.Canonical.SelfConcordantZetaBarrier
 
 open Real
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -245,8 +246,7 @@ theorem primeSpectralBarrier_nonneg
 /-! ## 5. Variational RH target -/
 
 /--
-Variational formulation of the Riemann Hypothesis via the self-concordant
-spectral barrier.
+Explicit variational statement socket for an RH-style barrier program.
 
 The barrier `Φ(σ)` is:
 * nonneg;
@@ -272,7 +272,7 @@ structure VariationalRHTarget where
 
   /-- MISSING: zeros of ξ are barrier-critical.
       If ξ(s₀) = 0, then Re(s₀) minimizes the spectral barrier.
-      This is the variational content of RH. -/
+      This is the unproved variational input for the socket. -/
   zeros_are_barrier_critical :
     ∀ s₀ : ℂ, xi s₀ = 0 →
       ∀ S : Finset ℕ, (∀ p ∈ S, 1 < p) →
@@ -317,4 +317,4 @@ theorem variationalRH_implies_criticalLine
     rw [hsum] at hEq
     linarith
 
-end SelfConcordantZetaBarrier
+end InfoGeometry.Canonical.SelfConcordantZetaBarrier

@@ -9,7 +9,7 @@ Provides the rigorous mathematical foundation for Jensen's inequality
 and the non-negativity of entropy-like functionals.
 -/
 
-namespace Convexity
+namespace InfoGeometry.Math.Convexity
 
 open Set Real
 
@@ -168,4 +168,4 @@ theorem kl_convexity_finite
   rw [h_split_lhs, h_split_rhs]
   linarith
 
-end Convexity
+end InfoGeometry.Math.Convexity

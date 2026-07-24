@@ -15,7 +15,7 @@
               ┌──────────────┴──────────────┐
               ▼                              ▼
 ┌─────────────────────────┐    ┌──────────────────────────────┐
-│ seed_goals_from_sorries │    │ evolution_worker.py (daemon) │
+│ seed_goals_from_sorries │    │ evolution_worker.py (disabled)│
 │ scans Lean sorry debt   │    │ polls evolution tasks        │
 │ seeds exact queue tasks │    │ runs evolution pipeline      │
 └─────────────────────────┘    └──────────────┬───────────────┘

@@ -9,7 +9,7 @@ Connects the q-CCR thermal dial to the Cuntz algebra core.
 
 noncomputable section
 
-namespace CuntzThermalQBridge
+namespace InfoGeometry.Canonical.CuntzThermalQBridge
 
 open InfoGeometry.Algebra.QCCRSupergradingBridge
 
@@ -39,4 +39,4 @@ theorem q_tanh_theta_interpolation {Op : Type*} [Ring Op] [Algebra ℝ Op]
     _ = ((Real.cosh θ) ^ 2)⁻¹ •
         (((Real.cosh θ) ^ 2) • (X * Y) - (Real.sinh θ * Real.cosh θ) • (Y * X)) := by rw [smul_sub]
 
-end CuntzThermalQBridge
+end InfoGeometry.Canonical.CuntzThermalQBridge

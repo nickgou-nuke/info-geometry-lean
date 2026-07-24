@@ -23,7 +23,7 @@ No closure is postulated here. The equation below remains a theorem debt for a
 concrete transported current family.
 -/
 
-namespace SplitCliffordSourceCurrentWick
+namespace InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 
 /--
 Endomorphism-valued Wick/Schwinger commutator law.
@@ -3644,4 +3644,4 @@ theorem virasoro_lgen_commutator_two_neg_two
   have h := sugawara_LL_full (𝕜 := 𝕜) α (m := 2) (n := -2)
   simpa using h
 
-end SplitCliffordSourceCurrentWick
+end InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

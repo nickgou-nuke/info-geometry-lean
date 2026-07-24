@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Swap
 
 open scoped Matrix
 
-namespace SignedPermutation
+namespace InfoGeometry.Clifford.SignedPermutation
 
 open InfoGeometry.Clifford.Cl11Matrix
 
@@ -65,4 +65,4 @@ theorem signedPermutation_clifford_relations :
   · ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [e1, e2, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
 
-end SignedPermutation
+end InfoGeometry.Clifford.SignedPermutation

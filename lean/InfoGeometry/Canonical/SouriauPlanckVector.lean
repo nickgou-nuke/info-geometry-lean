@@ -13,7 +13,7 @@ This file formalizes the geometric temperature vector as the generator
 of the modular flow on the doubled carrier.
 -/
 
-namespace SouriauPlanckVector
+namespace InfoGeometry.Canonical.SouriauPlanckVector
 
 open InfoGeometry.Canonical.ThermodynamicGenerator
 open InfoGeometry.Krein
@@ -248,4 +248,4 @@ theorem comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithfu
     (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) hFaithful hFirst)
 
-end SouriauPlanckVector
+end InfoGeometry.Canonical.SouriauPlanckVector

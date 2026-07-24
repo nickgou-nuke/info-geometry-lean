@@ -23,7 +23,7 @@ that a Dirac lane is automatically a nilpotent chain differential. Those remain
 explicit witness/calibration layers.
 -/
 
-namespace RealIncidenceHomologyBridge
+namespace InfoGeometry.Canonical.RealIncidenceHomologyBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
@@ -267,4 +267,4 @@ end ChiralNilpotentComplexWitness
 
 end ChiralDirac
 
-end RealIncidenceHomologyBridge
+end InfoGeometry.Canonical.RealIncidenceHomologyBridge

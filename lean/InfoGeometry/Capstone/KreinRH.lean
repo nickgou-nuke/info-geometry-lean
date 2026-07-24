@@ -4,36 +4,24 @@ import InfoGeometry.Canonical.LogCftMonodromyBridge
 import InfoGeometry.Capstone.ZornOrderCapstone
 
 /-!
-# Hestenes-Krein Translated RH Capstone
+# Hestenes--Krein critical-line statement sockets
 
-This file does **not** claim to prove the original complex-plane formulation
-as a native theorem about zeros of a scalar function on `ℂ`.
+This file does **not** prove the Riemann Hypothesis.  It packages conditional
+finite Hestenes--Krein readouts: if a supplied spectral chart/certificate says
+that the declared zero sector is represented by finite stages or by a
+Zorn-maximal subsystem with no leakage, then the chart's own throat predicate
+contains that declared zero sector.
 
-The theorem proved here is the isomorphic/language-translated formulation in
-the Hestenes-Krein setting:
-
-* the native carrier is the real doubled space;
-* the critical line is a real fixed-throat predicate;
-* the slit-plane picture is replaced by `J`-gluing of the physical and ghost
-  sheets, algebraically witnessed by orientation reversal of the Hestenes
-  phase axis;
-* zero-sector support is controlled by inductive-colimit finite stages or by
-  Zorn-maximal admissible subsystems;
-* finite monodromy is read as a phase plus nilpotent shear, not erased by
-  branch-cut language;
-* the original complex-coordinate statement is recovered only through the
-  explicit charts in `RHRealDoubledKreinReformulation`.
-
-So the capstone theorem is: after translating the problem into the
-Hestenes-Krein language, the zero sector is supported on the real doubled
-throat.  It is not an uncharted proof of the original formulation.
+The complex-coordinate statement is available only through explicit chart data
+in `RHRealDoubledKreinReformulation`; no chart is manufactured here and no
+zeta-zero theorem is asserted.
 -/
 
 open scoped InnerProductSpace
 
 noncomputable section
 
-namespace KreinRH
+namespace InfoGeometry.Capstone.KreinRH
 
 open InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 open InfoGeometry.Arithmetic.SpectralGap
@@ -165,8 +153,8 @@ structure KreinRHColimitZornClosure
   zornSubsystem : KreinZornMaximalSubsystemCertificate C
 
 /--
-An explicit `J`-odd obstruction certificate proves the Hestenes-Krein
-translated theorem.
+An explicit `J`-odd obstruction certificate proves the chart-local no-leakage
+statement.
 -/
 theorem translated_krein_rh_from_odd_obstruction
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -177,8 +165,8 @@ theorem translated_krein_rh_from_odd_obstruction
   kreinRH_of_oddObstructionCertificate O
 
 /--
-Inductive-colimit finite-stage support proves the Hestenes-Krein translated
-theorem.
+Inductive-colimit finite-stage support proves the chart-local no-leakage
+statement.
 -/
 theorem translated_krein_rh_from_inductive_colimit
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -189,8 +177,7 @@ theorem translated_krein_rh_from_inductive_colimit
   kreinRH_of_inductiveColimitSupport L
 
 /--
-Zorn-maximal subsystem containment proves the Hestenes-Krein translated
-theorem.
+Zorn-maximal subsystem containment proves the chart-local no-leakage statement.
 -/
 theorem translated_krein_rh_from_zorn_maximal_subsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -253,8 +240,8 @@ theorem krein_rh_topological_completion_zorn
   translated_krein_rh_completion_zorn P
 
 /--
-The same closure package gives spectral concentration of the zero sector on
-the real doubled throat.
+The same closure package gives concentration of the declared chart-zero sector
+on the chart throat.
 -/
 theorem krein_spectral_concentration_topological_completion
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -264,6 +251,6 @@ theorem krein_spectral_concentration_topological_completion
     KreinSpectralConcentration C :=
   kreinSpectralConcentration_of_zornMaximalSubsystem P.zornSubsystem
 
-end KreinRH
+end InfoGeometry.Capstone.KreinRH
 
 end

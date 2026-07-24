@@ -76,7 +76,7 @@ This file provides the conceptual bridge. Full formalization requires:
 4. Connection to Riemann zeta function
 -/
 
-namespace BostConnesThermalTime
+namespace InfoGeometry.Physics.BostConnesThermalTime
 
 open InfoGeometry.Clifford.Cl11CoordinateAlgebra
 
@@ -191,13 +191,9 @@ theorem infinitesimalGenerator_eq_modularCommutatorGenerator (q : Cl11) :
 -/
 
 /--
-The thermal time hypothesis (Connes-Rovelli) states that
-time flow is induced by the thermal state.
-
-For the Bost-Connes system at inverse temperature β:
-- Thermal state ω_β defines a modular group σ_t^ω
-- This modular group is the physical time evolution
-- At β = 1 (critical temperature), relates to Riemann zeros
+A data packet inspired by the thermal time hypothesis.  It records a supplied
+state type, modular-flow action, and KMS predicate; it does not prove the
+Connes--Rovelli hypothesis or any zeta-zero statement.
 -/
 structure ThermalTimeHypothesis where
   /-- Inverse temperature -/
@@ -210,11 +206,8 @@ structure ThermalTimeHypothesis where
   isKMS : Prop
 
 /--
-Prime number connection:
-The Bost-Connes partition function Z(β) = ζ(β) has:
-- Pole at β = 1 (Riemann zeta pole)
-- Zeros relate to prime distribution
-- Galois symmetries act on KMS states
+A single Dirichlet-style term for a natural number index.  No Euler product,
+zeta pole/zero theorem, or Galois/KMS theorem is proved here.
 -/
 noncomputable def bostConnesDirichletTerm (beta : ℝ) (n : ℕ) : ℝ :=
   if n = 0 then 0 else Real.exp (-beta * Real.log (n : ℝ))
@@ -353,4 +346,4 @@ Full formalization awaits:
 Current status: conceptual bridge with placeholder definitions.
 -/
 
-end BostConnesThermalTime
+end InfoGeometry.Physics.BostConnesThermalTime

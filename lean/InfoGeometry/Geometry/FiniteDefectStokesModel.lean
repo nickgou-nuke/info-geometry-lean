@@ -12,7 +12,7 @@ import InfoGeometry.Geometry.SpectralDivisors
 
 noncomputable section
 
-namespace FiniteDefectStokesModel
+namespace InfoGeometry.Geometry.FiniteDefectStokesModel
 
 open Matrix
 open InfoGeometry.Geometry.BilingualAnalyticity
@@ -229,4 +229,4 @@ theorem volumeIntegral_defect_eq_one_period :
     _ = ((windingDatum.winding () : ℤ) : ℝ) • defectNormalizer.phasePeriod :=
           windingDatum.boundaryIntegral_eq_winding_smul ()
 
-end FiniteDefectStokesModel
+end InfoGeometry.Geometry.FiniteDefectStokesModel

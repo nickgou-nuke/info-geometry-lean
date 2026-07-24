@@ -117,6 +117,6 @@ No theorem in this file asserts a Riemann-zero spacing theorem or a physical
 baryon-confinement theorem.
 -/
 
-namespace SplitOctonionAxiomaticSummary
+namespace InfoGeometry.OperatorAlgebra.SplitOctonionAxiomaticSummary
 
-end SplitOctonionAxiomaticSummary
+end InfoGeometry.OperatorAlgebra.SplitOctonionAxiomaticSummary

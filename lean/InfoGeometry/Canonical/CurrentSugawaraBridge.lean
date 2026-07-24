@@ -17,7 +17,7 @@ identity. The only inputs are exactly the inputs required by
 the Heisenberg commutator.
 -/
 
-namespace CurrentSugawaraBridge
+namespace InfoGeometry.Canonical.CurrentSugawaraBridge
 
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -553,4 +553,4 @@ theorem heisenberg_central_term_is_quantumRicciScalar
     completedCentral C = quantumRicciScalar C := by
   rfl
 
-end CurrentSugawaraBridge
+end InfoGeometry.Canonical.CurrentSugawaraBridge

@@ -18,7 +18,7 @@ This file is transport/operatorial by construction:
   quasilattice index-invariance lane.
 -/
 
-namespace CentralChargeAnomaly
+namespace InfoGeometry.Canonical.CentralChargeAnomaly
 
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.TopologicalResidue
@@ -184,4 +184,4 @@ theorem transportSlice_ne_zero_of_centralCharge_ne_zero
     quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero
       (A := A) (B := B) (E := E) V X hX hEven hCentral t
 
-end CentralChargeAnomaly
+end InfoGeometry.Canonical.CentralChargeAnomaly

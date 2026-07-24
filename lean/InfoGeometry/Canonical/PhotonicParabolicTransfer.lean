@@ -9,7 +9,7 @@ Concrete parabolic transport model (2x2 real upper-unitriangular transfer matric
 `T χ = [[1, χ], [0, 1]]`.
 -/
 
-namespace PhotonicParabolicTransfer
+namespace InfoGeometry.Canonical.PhotonicParabolicTransfer
 
 open Matrix
 
@@ -164,4 +164,4 @@ theorem T_mul_eq_T_iff (a b c : ℝ) :
       T a * T b = T (a + b) := by simpa using T_mul a b
       _ = T c := by simpa [hsum]
 
-end PhotonicParabolicTransfer
+end InfoGeometry.Canonical.PhotonicParabolicTransfer

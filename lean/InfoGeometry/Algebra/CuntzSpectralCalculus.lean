@@ -6,12 +6,12 @@ import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 For H = Σ ε_i P_i, any polynomial p satisfies p(H) = Σ p(ε_i) P_i.
 -/
-open CuntzPrimonHamiltonian
-open CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzPrimonHamiltonian
+open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace CuntzSpectralCalculus
+namespace InfoGeometry.Algebra.CuntzSpectralCalculus
 
 theorem polynomial_spectral (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) :
     Polynomial.aeval (hamiltonian n ε) p =
@@ -28,4 +28,4 @@ theorem polynomial_spectral (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) 
   rw [Polynomial.aeval_eq_sum_range (x := ε i) (p := p)]
   simp [Finset.sum_smul, mul_comm, smul_eq_mul]
 
-end CuntzSpectralCalculus
+end InfoGeometry.Algebra.CuntzSpectralCalculus

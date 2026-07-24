@@ -13,7 +13,7 @@ open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 noncomputable section
 
-namespace ConformalLieAlgebra55
+namespace InfoGeometry.Clifford.ConformalLieAlgebra55
 
 def toInt : ConformalGrade → ℤ
   | ConformalGrade.negTwo => -2
@@ -145,4 +145,4 @@ def instanceFiveGraded : FiveGradedConformalInversion HomogeneousElementEven whe
 
 
 
-end ConformalLieAlgebra55
+end InfoGeometry.Clifford.ConformalLieAlgebra55

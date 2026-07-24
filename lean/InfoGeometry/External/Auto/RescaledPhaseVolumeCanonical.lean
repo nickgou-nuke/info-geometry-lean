@@ -17,9 +17,9 @@ noncomputable section
 namespace RescaledPhaseVolumeCanonical
 
 open InformationGeometricCutoff
-open BogoliubovWeylChemicalPotential
-open SupergradedCuntzBdG
-open HestenesCuntzPhaseSpace
+open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+open InfoGeometry.Physics.SupergradedCuntzBdG
+open InfoGeometry.Physics.HestenesCuntzPhaseSpace
 
 /-- Generic commutator in a ring. -/
 def commA {A : Type*} [Ring A] (X P : A) : A := X * P - P * X

@@ -16,7 +16,7 @@ per the QMS Semantic Kernel Validation rules. These are pure algebra lemmas.
 - **Classification**: Bucket 1 (Closed finite algebraic lemmas)
 -/
 
-namespace ConfabulationToyModels
+namespace InfoGeometry.Algebra.ConfabulationToyModels
 
 variable {A : Type*} [Ring A]
 
@@ -93,4 +93,4 @@ theorem boundary_commutation_eigenvalue_preservation
     _ = (E * B) * ψ := by rw [← hBE]
     _ = E * (B * ψ) := by rw [mul_assoc]
 
-end ConfabulationToyModels
+end InfoGeometry.Algebra.ConfabulationToyModels

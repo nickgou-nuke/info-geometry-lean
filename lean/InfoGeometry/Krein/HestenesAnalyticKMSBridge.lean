@@ -24,7 +24,7 @@ ordinary KMS boundary remains the proof-carrying certificate owned by
 fields.
 -/
 
-namespace HestenesAnalyticKMSBridge
+namespace InfoGeometry.Krein.HestenesAnalyticKMSBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -83,6 +83,69 @@ structure Bridge where
   kms :
     KMSState EndH flow beta
 
+/--
+Minimal witness surface with explicit certificates but without duplicating
+`flow_invariant` and boundary-certificate names at this level.
+-/
+@[rep_depth krein]
+structure MinimalHestenesAnalyticKMSWitness where
+  flow :
+    OperatorFlow EndH
+
+  preserves_KLinear :
+    ∀ t A,
+      KLinear (E := E) A →
+        KLinear (E := E) (flow.flow t A)
+
+  phase_left_covariant :
+    ∀ t A,
+      flow.flow t ((clockAxis (E := E)).comp A)
+        =
+      (clockAxis (E := E)).comp (flow.flow t A)
+
+  phase_right_covariant :
+    ∀ t A,
+      flow.flow t (A.comp (clockAxis (E := E)))
+        =
+      (flow.flow t A).comp (clockAxis (E := E))
+
+  beta :
+    ℝ
+
+  kms :
+    KMSState EndH flow beta
+
+namespace MinimalHestenesAnalyticKMSWitness
+
+variable (B : MinimalHestenesAnalyticKMSWitness (E := E))
+
+/-- Canonical adapter into the full bridge surface. -/
+def toBridge : Bridge (E := E) where
+  flow := B.flow
+  preserves_KLinear := B.preserves_KLinear
+  phase_left_covariant := B.phase_left_covariant
+  phase_right_covariant := B.phase_right_covariant
+  beta := B.beta
+  kms := B.kms
+
+/-- KMS state readback is preserved by `toBridge`. -/
+theorem toBridge_state_eq :
+    (toBridge (E := E) B).kms.state = B.kms.state := by
+  rfl
+
+/-- Flow invariance readback is preserved by `toBridge`. -/
+theorem toBridge_flow_invariant
+    (t : ℝ) (x : EndH) :
+    (toBridge (E := E) B).kms.flow_invariant t x = B.kms.flow_invariant t x := by
+  rfl
+
+/-- KMS boundary condition readback is preserved by `toBridge`. -/
+theorem toBridge_kms_boundary_condition :
+    (toBridge (E := E) B).kms.kms_boundary_condition := by
+  exact B.kms.kms_boundary_condition_holds
+
+end MinimalHestenesAnalyticKMSWitness
+
 namespace Bridge
 
 variable (B : Bridge (E := E))
@@ -130,4 +193,4 @@ end Bridge
 
 end Core
 
-end HestenesAnalyticKMSBridge
+end InfoGeometry.Krein.HestenesAnalyticKMSBridge

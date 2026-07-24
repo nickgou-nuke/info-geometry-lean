@@ -5,7 +5,7 @@ import Mathlib.NumberTheory.EulerProduct.DirichletLSeries
 open scoped BigOperators
 open Complex
 
-namespace WeylDenominator
+namespace InfoGeometry.Experimental.WeylDenominator
 
 /-- A finite Weyl denominator indexed by prime generators. -/
 noncomputable def finiteWeylDenominator (S : Finset Nat.Primes) (s : ℂ) : ℂ :=
@@ -21,4 +21,4 @@ theorem weyl_denominator_limit_eq_inv_zeta
     (∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
   simpa using riemannZeta_eulerProduct_tprod h_conv
 
-end WeylDenominator
+end InfoGeometry.Experimental.WeylDenominator

@@ -21,7 +21,7 @@ The operatorial modular generator remains separate from scalar `β`.
 
 noncomputable section
 
-namespace SouriauRelativeTemperatureBridge
+namespace InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
 
 open InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.Thermo.RelativeTemperatureFirstLaw
@@ -118,4 +118,4 @@ theorem modularHamiltonian_eq_moment_geometricTemperature :
 
 end SouriauTomitaFirstLawCalibration
 
-end SouriauRelativeTemperatureBridge
+end InfoGeometry.Canonical.SouriauRelativeTemperatureBridge

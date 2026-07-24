@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 
 noncomputable section
 
-namespace ProjectiveJonesGeometry
+namespace InfoGeometry.OperatorAlgebra.ProjectiveJonesGeometry
 
 /-! ## 1. Operatorial Jones transforms -/
 
@@ -168,4 +168,4 @@ structure KreinJonesTransform
   is_junitary :
     TopologicalCharge.IsJUnitary adjDatum Jmetric U
 
-end ProjectiveJonesGeometry
+end InfoGeometry.OperatorAlgebra.ProjectiveJonesGeometry

@@ -26,7 +26,7 @@ interpretation layer. It only fixes the current constructive operatorial
 translation into theorem-bearing Lean surfaces.
 -/
 
-namespace CoordinateFreeSecondVariation
+namespace InfoGeometry.Canonical.CoordinateFreeSecondVariation
 
 open InfoGeometry.Canonical.AlgebraicStationarity
 open InfoGeometry.Canonical.CorrelationSymmetrization
@@ -245,4 +245,4 @@ theorem toRelationalInformationDatum_comparisonMetricPhaseReadout_pair_eq_gauge_
 
 end Core
 
-end CoordinateFreeSecondVariation
+end InfoGeometry.Canonical.CoordinateFreeSecondVariation

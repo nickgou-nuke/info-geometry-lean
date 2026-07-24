@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace ModularSourceBridge
+namespace InfoGeometry.Canonical.ModularSourceBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -114,4 +114,4 @@ theorem sourcedModularGenerator_boundary_excitation
 
 end Core
 
-end ModularSourceBridge
+end InfoGeometry.Canonical.ModularSourceBridge

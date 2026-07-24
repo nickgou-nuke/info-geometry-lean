@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace GNSState
+namespace InfoGeometry.Canonical.GNSState
 
 open scoped BigOperators
 
@@ -171,4 +171,4 @@ theorem gnsPreInner_basis_true_false (u v : BinaryWord) :
     gnsPreInner (cylinderBasis (true :: u)) (cylinderBasis (false :: v)) = 0 := by
   exact gnsPreInner_basis_ne (by intro h; cases h)
 
-end GNSState
+end InfoGeometry.Canonical.GNSState

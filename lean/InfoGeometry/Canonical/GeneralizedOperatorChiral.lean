@@ -9,7 +9,7 @@ hyperbolic (`sq_val = 1`) chiral polarization packet.
 No wrappers. No `sorry`.
 -/
 
-namespace GeneralizedOperatorChiral
+namespace InfoGeometry.Canonical.GeneralizedOperatorChiral
 
 noncomputable section
 
@@ -506,4 +506,4 @@ theorem hyperbolic_chiral_exp_log_packet
 end GeneralizedOperator
 end
 
-end GeneralizedOperatorChiral
+end InfoGeometry.Canonical.GeneralizedOperatorChiral

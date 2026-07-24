@@ -13,7 +13,7 @@ Compatibility bridge between:
 - and Majorana fixed sectors defined by a real involution `C`.
 -/
 
-namespace KramersMajoranaCompatibility
+namespace InfoGeometry.Canonical.KramersMajoranaCompatibility
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -193,4 +193,4 @@ end KramersMajoranaCompatible
 
 end Core
 
-end KramersMajoranaCompatibility
+end InfoGeometry.Canonical.KramersMajoranaCompatibility

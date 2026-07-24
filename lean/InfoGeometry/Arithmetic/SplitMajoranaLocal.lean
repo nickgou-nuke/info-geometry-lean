@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace SplitMajoranaLocal
+namespace InfoGeometry.Arithmetic.SplitMajoranaLocal
 
 variable {A : Type*} [Ring A]
 
@@ -273,4 +273,4 @@ theorem parityOp_eq_one_sub_two_numberOp
   simpa [parityOp, numberOp] using
     cMajorana_mul_dMajorana_eq_one_sub_two_N (ε := ε) (ι := ι) hε hι hcar
 
-end SplitMajoranaLocal
+end InfoGeometry.Arithmetic.SplitMajoranaLocal

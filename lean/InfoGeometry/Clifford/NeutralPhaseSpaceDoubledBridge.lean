@@ -27,7 +27,7 @@ This file stays deliberately narrow:
 No generalized-metric or KKT data is introduced here.
 -/
 
-namespace NeutralPhaseSpaceDoubledBridge
+namespace InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 
 open InfoGeometry.Cartan
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
@@ -552,4 +552,4 @@ omit [CompleteSpace E] in
 
 end Core
 
-end NeutralPhaseSpaceDoubledBridge
+end InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge

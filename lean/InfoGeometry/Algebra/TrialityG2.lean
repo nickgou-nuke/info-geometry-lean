@@ -1,14 +1,13 @@
 import Mathlib.Algebra.Lie.Basic
 
-namespace TrialityG2
+namespace InfoGeometry.Algebra.TrialityG2
 
 /--
 Triality automorphism data on a Lie algebra `L` over `K`.
 
 This file records the order-three Lie equivalence and the associated fixed and
-eigen carriers.  It does not claim the full `D₄ → G₂` fixed-subalgebra theorem;
-that theorem needs a separate construction of the relevant Lie algebra and
-triality action.
+eigen carriers.  The full `D₄ → G₂` fixed-subalgebra theorem belongs to a
+separate construction of the relevant Lie algebra and triality action.
 -/
 structure TrialityAutomorphism (K : Type*) [CommRing K]
     (L : Type*) [LieRing L] [LieAlgebra K L] where
@@ -28,7 +27,7 @@ def trialityEigenspaceSet (ω : K) (σ : TrialityAutomorphism K L) : Set L :=
 /--
 Open theorem target for the cyclotomic bracket grading.
 
-The proposition is exposed as a formal target, not asserted as a theorem.
+The proposition is exposed as a formal target for later proof transport.
 -/
 def eigenspaceBracketGradingStatement
     (σ : TrialityAutomorphism K L) (ω : K) : Prop :=
@@ -37,4 +36,4 @@ def eigenspaceBracketGradingStatement
     y ∈ trialityEigenspaceSet (ω ^ 2) σ →
     ⁅x, y⁆ ∈ fixedSet σ
 
-end TrialityG2
+end InfoGeometry.Algebra.TrialityG2

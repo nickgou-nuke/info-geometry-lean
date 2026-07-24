@@ -25,7 +25,7 @@ laws, not replacements for them.
 
 set_option autoImplicit false
 
-namespace CoordinateFreeConnectionChannels
+namespace InfoGeometry.Canonical.CoordinateFreeConnectionChannels
 
 universe u v w x
 
@@ -265,4 +265,4 @@ end ThreeConnectionChannels
 
 end ThreeChannels
 
-end CoordinateFreeConnectionChannels
+end InfoGeometry.Canonical.CoordinateFreeConnectionChannels

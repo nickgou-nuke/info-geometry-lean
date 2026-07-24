@@ -6,29 +6,26 @@ namespace InfoGeometry.MoebiusHurwitz
 variable (z : ℂ)
 
 /-- 
-  Standard Möbius transformation: f(z) = (az + b)/(cz + d)
-  where a, b, c, d ∈ ℂ and ad - bc ≠ 0
+  Standard Möbius transformation: `f(z) = (az + b)/(cz + d)`.
+  This file only uses the formula as a finite algebraic readout.
 -/
 noncomputable def moebiusTransform (a b c d : ℂ) : ℂ → ℂ :=
   fun z => (a * z + b) / (c * z + d)
 
 /-- 
-  The determinant condition for SL(2,ℂ)
-  For unitary transformations: |ad - bc| = 1
+  Determinant expression for the `SL(2,ℂ)`-style readout.
 -/
 def moebiusDeterminant (a b c d : ℂ) : ℂ :=
   a * d - b * c
 
 /-- 
-  Special unitary condition: d = ā and c = -b̄
-  This gives the SU(2) subgroup
+  Special-unitary-style parameterization used for the finite readout.
 -/
 def isSpecialUnitary (a b c d : ℂ) : Prop :=
   d = star a ∧ c = -star b
 
 /-- 
-  SU(2) Möbius transformation constructor
-  Given a, b ∈ ℂ, constructs the corresponding SU(2) transformation
+  SU(2)-style Möbius transformation constructor.
 -/
 noncomputable def su2Moebius (a b : ℂ) : ℂ → ℂ :=
   moebiusTransform a b (-star b) (star a)
@@ -42,8 +39,7 @@ theorem su2_determinant_is_one (a b : ℂ) :
   <;> norm_cast
 
 /-- 
-  Map from unit quaternions to SU(2) matrices
-  q = a + bi + cj + dk ↦ [[a+bi, c+di], [-c+di, a-bi]]
+  Map from quaternion coordinates to a `2 × 2` complex matrix readout.
 -/
 noncomputable def quaternionToSU2 (a b c d : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   Matrix.of fun i j =>
@@ -53,23 +49,20 @@ noncomputable def quaternionToSU2 (a b c d : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :
     else a - Complex.I * b
 
 /-- 
-  Mersenne primes: M_p = 2^p - 1 where p is prime
-  Key values: M₂ = 3, M₃ = 7, M₇ = 127
+  Finite Mersenne values used as a numeric packet.
 -/
 def mersenne (p : ℕ) : ℕ :=
   2^p - 1
 
 /-- 
-  The fundamental Mersenne decomposition for the fine structure constant
-  137 = M₂ + M₃ + M₇ = 3 + 7 + 127
+  A finite numerical decomposition record.
 -/
 theorem fine_structure_mersenne_decomposition :
     mersenne 2 + mersenne 3 + mersenne 7 = 137 := by
   simp [mersenne]
 
 /-- 
-  M₂ = 3 corresponds to the fundamental representation dimension of SU(3)
-  This is the color charge dimension in QCD
+  The `M₂` packet evaluates to `3`.
 -/
 def m2_color_dimension : ℕ := mersenne 2
 
@@ -78,8 +71,7 @@ theorem m2_equals_su3_fundamental_dim :
   simp [m2_color_dimension, mersenne]
 
 /-- 
-  M₃ = 7 corresponds to the imaginary octonion units
-  The octonions have 7 imaginary units plus 1 real unit
+  The `M₃` packet evaluates to `7`.
 -/
 def m3_octonion_imaginary_units : ℕ := mersenne 3
 
@@ -88,7 +80,7 @@ theorem m3_equals_octonion_imaginary_dim :
   simp [m3_octonion_imaginary_units, mersenne]
 
 /-- 
-  M₇ = 127 is the largest component in the coupling constant decomposition
+  The `M₇` packet evaluates to `127`.
 -/
 def m7_coupling_component : ℕ := mersenne 7
 
@@ -97,11 +89,7 @@ theorem m7_equals_127 :
   simp [m7_coupling_component, mersenne]
 
 /-- 
-  Tripotent operator eigenvalues: {+1, -1, 0}
-  These classify the Zorn matrix slots:
-  - +1: quark (fundamental 3)
-  - -1: antiquark (anti-fundamental 3̄)
-  - 0: vacuum (singlet)
+  Tripotent eigenvalues used as a finite symbolic packet.
 -/
 inductive TripotentEigenvalue
   | positive : TripotentEigenvalue  -- quark / fundamental
@@ -109,7 +97,7 @@ inductive TripotentEigenvalue
   | zero : TripotentEigenvalue      -- vacuum / singlet
 
 /-- 
-  Physical interpretation of tripotent eigenvalues
+  String readout for the tripotent packet.
 -/
 def tripotentPhysicalInterpretation : TripotentEigenvalue → String
   | TripotentEigenvalue.positive => "quark (fundamental 3)"
@@ -117,8 +105,7 @@ def tripotentPhysicalInterpretation : TripotentEigenvalue → String
   | TripotentEigenvalue.zero => "vacuum (singlet)"
 
 /-- 
-  Tripotent classification of Möbius transformations
-  Based on the trace: tr(M)² determines the type
+  Finite trace-based classifier for the Möbius readout.
 -/
 inductive MoebiusClassification
   | elliptic    -- |tr(M)|² ∈ [0, 4), eigenvalues on unit circle
@@ -127,7 +114,7 @@ inductive MoebiusClassification
   | loxodromic  -- complex eigenvalues off unit circle
 
 /-- 
-  Classify a Möbius transformation by its trace squared
+  Classify a Möbius readout by its trace-square value.
 -/
 noncomputable def classifyMoebius (tr_sq : ℝ) : MoebiusClassification :=
   if tr_sq < 4 then
@@ -138,8 +125,7 @@ noncomputable def classifyMoebius (tr_sq : ℝ) : MoebiusClassification :=
     MoebiusClassification.hyperbolic
 
 /-- 
-  Tripotent eigenvalue assignment for Zorn matrices
-  The eigenvalue determines which slot the mode occupies
+  Slot labels for the finite tripotent packet.
 -/
 def tripotentSlotAssignment : TripotentEigenvalue → String
   | TripotentEigenvalue.positive => "upper-right vector slot (x⃗)"
@@ -147,10 +133,7 @@ def tripotentSlotAssignment : TripotentEigenvalue → String
   | TripotentEigenvalue.zero => "diagonal scalar slots (a, b)"
 
 /-- 
-  The main duality theorem: Möbius-Hurwitz correspondence
-  
-  This states that SU(2) Möbius transformations are equivalent to
-  unit Hurwitz quaternion actions on the Riemann sphere
+  Finite coordinate readback for the unit quaternion components.
 -/
 theorem moebius_hurwitz_duality (a b : ℂ) (h : Complex.normSq a + Complex.normSq b = 1) :
     ∃ (q_re q_im q_j q_k : ℝ),
@@ -169,35 +152,33 @@ theorem moebius_hurwitz_duality (a b : ℂ) (h : Complex.normSq a + Complex.norm
   linarith
 
 /-- 
-  The fundamental bridge between discrete arithmetic and continuous geometry
-  
-  The functor F maps:
-  - Mersenne primes (discrete) → Representation dimensions (continuous)
-  - 137 decomposition → SU(3) color structure
-  - Tripotent eigenvalues → Zorn matrix slots
+  Finite bookkeeping record for the numeric packet.
 -/
 structure MoebiusHurwitzCorrespondence where
-  /-- Discrete arithmetic data -/
+  /-- Discrete arithmetic packet. -/
   mersenne_decomposition : ℕ × ℕ × ℕ
-  /-- Continuous geometric realization -/
+  /-- Companion numeric readout. -/
   su3_representation_dim : ℕ
   zorn_slot_dimension : ℕ × ℕ × ℕ
-  /-- The correspondence axioms -/
-  axiom_m2_color : mersenne_decomposition.1 = su3_representation_dim
-  axiom_m3_octonion : mersenne_decomposition.2.1 = zorn_slot_dimension.1
-  axiom_m7_coupling : mersenne_decomposition.2.2 = zorn_slot_dimension.2.1
-  axiom_total : su3_representation_dim + zorn_slot_dimension.1 + zorn_slot_dimension.2.1 = 137
+  /-- The `M₂` readback equality. -/
+  m2_color_eq : mersenne_decomposition.1 = su3_representation_dim
+  /-- The `M₃` readback equality. -/
+  m3_octonion_eq : mersenne_decomposition.2.1 = zorn_slot_dimension.1
+  /-- The `M₇` readback equality. -/
+  m7_coupling_eq : mersenne_decomposition.2.2 = zorn_slot_dimension.2.1
+  /-- The total numeric equality. -/
+  total_eq : su3_representation_dim + zorn_slot_dimension.1 + zorn_slot_dimension.2.1 = 137
 
 /-- 
-  Construct the canonical correspondence from the Mersenne decomposition
+  Construct the canonical finite correspondence packet.
 -/
 def canonicalCorrespondence : MoebiusHurwitzCorrespondence :=
   { mersenne_decomposition := (3, 7, 127)
     su3_representation_dim := 3
     zorn_slot_dimension := (7, 127)
-    axiom_m2_color := by simp
-    axiom_m3_octonion := by simp
-    axiom_m7_coupling := by simp
-    axiom_total := by norm_num }
+    m2_color_eq := by simp
+    m3_octonion_eq := by simp
+    m7_coupling_eq := by simp
+    total_eq := by norm_num }
 
 end InfoGeometry.MoebiusHurwitz

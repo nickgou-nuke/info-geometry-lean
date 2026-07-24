@@ -19,10 +19,10 @@ claim is asserted here.
 noncomputable section
 
 open scoped BigOperators
-open ErlangenJaynesGromov
+open InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
 open OperatorErlangenSystem
 
-namespace JaynesFiniteState
+namespace InfoGeometry.OperatorAlgebra.JaynesFiniteState
 
 universe uR uA uS uι
 
@@ -208,4 +208,4 @@ end FiniteStateCompatibleFamily
 
 end
 
-end JaynesFiniteState
+end InfoGeometry.OperatorAlgebra.JaynesFiniteState

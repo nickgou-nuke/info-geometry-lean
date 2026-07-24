@@ -20,7 +20,7 @@ No scalar Fisher replacement, diagonal Hessian model, or external spacetime
 phase space is introduced here.
 -/
 
-namespace OperatorialUncertainty
+namespace InfoGeometry.Canonical.OperatorialUncertainty
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.CorrelationSymmetrization
@@ -444,4 +444,4 @@ theorem toRelationalInformationDatum_inv_comparisonGeneratorMetric_self_le_of_un
 
 end Core
 
-end OperatorialUncertainty
+end InfoGeometry.Canonical.OperatorialUncertainty

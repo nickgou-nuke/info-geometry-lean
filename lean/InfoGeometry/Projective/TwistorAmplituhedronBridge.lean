@@ -44,7 +44,7 @@ separate amplituhedron owner.
   D-module/Singular certificate if the project needs a final rank theorem.
 -/
 
-namespace TwistorAmplituhedronBridge
+namespace InfoGeometry.Projective.TwistorAmplituhedronBridge
 
 open InfoGeometry.Clifford.Soldering
 open InfoGeometry.Twistor.Incidence
@@ -152,4 +152,4 @@ theorem bcfw_readout_of_cooperad_comparison
     toBCFW relation = target :=
   hComparison
 
-end TwistorAmplituhedronBridge
+end InfoGeometry.Projective.TwistorAmplituhedronBridge

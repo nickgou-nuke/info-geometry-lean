@@ -24,8 +24,8 @@ and that the carrier is a real 𝔰𝔩₂ weight module.
 
 namespace FibonacciParafermion
 
-open FibonacciParafermionAtoms
-open FiniteFibonacciFusionMatrix
+open InfoGeometry.Canonical.FibonacciParafermionAtoms
+open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 /-! ## 1. Real Krein space data -/
 

@@ -16,7 +16,7 @@ same inverse laws on the one-dimensional body lane, and that the hidden block in
 `ScalarSchurDrazinBlock` carries those certified scalar shadows.
 -/
 
-namespace InverseBridge
+namespace InfoGeometry.SuperMetriplectic.InverseBridge
 
 open InfoGeometry.Canonical
 
@@ -40,7 +40,7 @@ A scalar Drazin witness is an honest Drazin inverse witness on `ℝ`.
 theorem toIsDrazinInverse
     (D : InfoGeometry.SuperMetriplectic.ScalarDrazinInverse) :
     Drazin.IsDrazinInverse D.a D.aD D.index := by
-  exact Drazin.IsDrazinInverse.mk D.reflexive D.commute D.spectral.symm
+  exact Drazin.IsDrazinInverse.mk D.commute D.reflexive D.spectral
 
 /--
 The hidden scalar block of a `ScalarSchurDrazinBlock` carries a certified
@@ -64,4 +64,4 @@ theorem hiddenBlock_hasDrazinShadow
   have hD := toIsDrazinInverse B.drazin
   simpa [B.drazin_matches_hidden] using hD
 
-end InverseBridge
+end InfoGeometry.SuperMetriplectic.InverseBridge

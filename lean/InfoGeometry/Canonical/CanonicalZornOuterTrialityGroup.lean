@@ -20,13 +20,14 @@ noncomputable section
 namespace CanonicalZornOuterTrialityGroup
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornCompositionTriality
+open CanonicalZornCompositionFiveGradeBridge
+open CanonicalZornCliffordRepresentation
+open CanonicalZornRealSpin44
+open CanonicalZornFiveGradedClosure
 open InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+open ProjectiveAffineConformalClosure55
 
 abbrev VectorGL := LinearMap.GeneralLinearGroup ℂ Vector8
 abbrev SpinorPlusGL := LinearMap.GeneralLinearGroup ℂ SpinorPlus8

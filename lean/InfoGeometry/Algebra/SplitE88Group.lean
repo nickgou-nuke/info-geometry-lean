@@ -14,7 +14,7 @@ This module formalizes the exact dimensional relationships of this branching,
 verifying the algebraic structure.
 -/
 
-namespace SplitE88Group
+namespace InfoGeometry.Algebra.SplitE88Group
 
 /-- The dimension of the E8 Lie algebra is 248. -/
 def dim_E8 : ℕ := 248
@@ -43,4 +43,4 @@ Let's verify the dimension of D5.
 theorem D5_adjoint_dim : dim_Dn_adjoint 5 = 45 := by
   rfl
 
-end SplitE88Group
+end InfoGeometry.Algebra.SplitE88Group

@@ -22,7 +22,7 @@ No unbounded operator calculus.
 No analytic Taylor-series convergence or Mellin inversion.
 -/
 
-namespace FiniteSpectralMellinTaylor
+namespace InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 
 open Finset
 
@@ -103,4 +103,4 @@ theorem taylorMomentPrefix_one (D : FiniteSpectralData ι R) (c : ℕ → R) :
 
 end FiniteSpectralData
 
-end FiniteSpectralMellinTaylor
+end InfoGeometry.Analysis.FiniteSpectralMellinTaylor

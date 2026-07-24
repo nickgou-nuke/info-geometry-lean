@@ -26,7 +26,7 @@ spinor PDE theorem, or full geometric field-system theorem.
 
 noncomputable section
 
-namespace Universe1000333SpinTorsionScale
+namespace InfoGeometry.Physics.Universe1000333SpinTorsionScale
 
 open InfoGeometry.Physics.Section28EinsteinTorsionSpinor
 
@@ -121,6 +121,6 @@ theorem universe1000333_finite_scale_packet
     scalarBalanceResidual_eq_zero_of_qpe_neg ordinary,
     sta_spin_plane_square_neg⟩
 
-end Universe1000333SpinTorsionScale
+end InfoGeometry.Physics.Universe1000333SpinTorsionScale
 
 end noncomputable section

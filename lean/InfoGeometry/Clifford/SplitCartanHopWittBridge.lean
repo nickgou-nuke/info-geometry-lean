@@ -16,7 +16,7 @@ statement: the same split head plane supplies both the anti-diagonal vector
 Cartan hop and the null Clifford/CAR pair.
 -/
 
-namespace SplitCartanHopWittBridge
+namespace InfoGeometry.Clifford.SplitCartanHopWittBridge
 
 open InfoGeometry.Clifford.ClNN
 open ClNNBilinear
@@ -160,4 +160,4 @@ theorem o55_antidiagonal_cartan_hop_realizes_split_clifford_witt_pair :
       gammaHeadNullPlus 4 * gammaHeadNullMinus 4 = 1 :=
   split_cartan_hop_witt_car_bridge 4
 
-end SplitCartanHopWittBridge
+end InfoGeometry.Clifford.SplitCartanHopWittBridge

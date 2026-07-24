@@ -11,7 +11,7 @@ Theorem-safe bridge from the existing completed-zeta antiunitary symmetry on
 This file does NOT define the analytic completed ξ-function or prove RH.
 Instead, it packages the exact content already supported by the owner files:
 
-* `antiunitaryCriticalReflection` and its fixed-locus theorem on `ℂ`;
+* `CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection` and its fixed-locus theorem on `ℂ`;
 * centered zeta coordinates and the critical tangent/normal projectors.
 
 Given a supplied completed-ξ anchor point fixed by the antiunitary reflection,
@@ -19,7 +19,7 @@ we prove that its centered chart lies entirely in the tangent (`J`-even) sector
 and has zero normal (`J`-odd) component.
 -/
 
-namespace CompletedXiProjectorBridge
+namespace InfoGeometry.Arithmetic.CompletedXiProjectorBridge
 
 open CompletedZetaSouriauDInfinityThermodynamics
 open ZetaCoordinateSymmetry
@@ -41,39 +41,39 @@ noncomputable def centeredOfComplex (s : ℂ) : ZetaCenteredChart :=
 /-- The antiunitary reflection on `ℂ` becomes the critical mirror on centered coordinates. -/
 theorem centeredOfComplex_antiunitaryCriticalReflection (s : ℂ) :
     centeredOfComplex
-        (antiunitaryCriticalReflection s) =
+        (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s) =
       criticalMirror (centeredOfComplex s) := by
   apply ZetaCenteredChart.ext
   · simp [centeredOfComplex, toCentered, ofComplex, centeredSigma,
-      antiunitaryCriticalReflection,
+      CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection,
       criticalMirror]
     ring
   · simp [centeredOfComplex, toCentered, ofComplex,
-      antiunitaryCriticalReflection,
+      CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection,
       criticalMirror]
 
 /-- A complex antiunitary fixed point becomes a centered critical-mirror fixed point. -/
 theorem centered_fixed_of_complex_fixed
     {s : ℂ}
-    (hs : antiunitaryCriticalReflection s = s) :
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalMirror (centeredOfComplex s) = centeredOfComplex s := by
   rw [← centeredOfComplex_antiunitaryCriticalReflection, hs]
 
 /-- Antiunitary fixed points lie on the critical line in centered coordinates. -/
 theorem centered_u_eq_zero_of_complex_fixed
     {s : ℂ}
-    (hs : antiunitaryCriticalReflection s = s) :
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     (centeredOfComplex s).u = 0 := by
-  have hline : CriticalLine s :=
-    (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs
-  simp [CriticalLine,
+  have hline : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s :=
+    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs
+  simp [CompletedZetaSouriauDInfinityThermodynamics.CriticalLine,
     centeredOfComplex, toCentered, ofComplex, centeredSigma] at hline ⊢
   linarith
 
 /-- For antiunitary fixed points, the critical tangent projector is the identity. -/
 theorem criticalTangentProjector_eq_self_of_complex_fixed
     {s : ℂ}
-    (hs : antiunitaryCriticalReflection s = s) :
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalTangentProjector (centeredOfComplex s) = centeredOfComplex s := by
   apply ZetaCenteredChart.ext
   · exact (centered_u_eq_zero_of_complex_fixed hs).symm
@@ -82,7 +82,7 @@ theorem criticalTangentProjector_eq_self_of_complex_fixed
 /-- For antiunitary fixed points, the critical normal projector vanishes. -/
 theorem criticalNormalProjector_eq_zero_of_complex_fixed
     {s : ℂ}
-    (hs : antiunitaryCriticalReflection s = s) :
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     criticalNormalProjector (centeredOfComplex s) = zero := by
   apply ZetaCenteredChart.ext
   · exact centered_u_eq_zero_of_complex_fixed hs
@@ -99,13 +99,13 @@ structure CompletedXiProjectorPacket where
   packet : CompletedZetaMassieuPacket
   anchor : ℂ
   xi_anchor_fixed :
-    antiunitaryCriticalReflection anchor = anchor
+    CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection anchor = anchor
 
 /-- The supplied anchor lies on the complex critical line. -/
 theorem xi_anchor_on_criticalLine (P : CompletedXiProjectorPacket) :
-    CriticalLine P.anchor := by
+    CompletedZetaSouriauDInfinityThermodynamics.CriticalLine P.anchor := by
   exact
-    (fixed_antiunitaryCriticalReflection_iff_criticalLine
+    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine
       P.anchor).mp P.xi_anchor_fixed
 
 /-- The supplied anchor is fixed by the centered critical mirror. -/
@@ -123,4 +123,4 @@ theorem xi_anchor_normal_projector_eq_zero (P : CompletedXiProjectorPacket) :
     criticalNormalProjector (centeredOfComplex P.anchor) = zero :=
   criticalNormalProjector_eq_zero_of_complex_fixed P.xi_anchor_fixed
 
-end CompletedXiProjectorBridge
+end InfoGeometry.Arithmetic.CompletedXiProjectorBridge

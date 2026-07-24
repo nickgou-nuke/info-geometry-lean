@@ -14,7 +14,7 @@ This connects the algebraic volume form to the Weyl scaling of the
 information manifold.
 -/
 
-namespace Hestenes
+namespace InfoGeometry.Clifford.Hestenes
 
 open InfoGeometry.Clifford
 
@@ -128,4 +128,4 @@ lemma cl11Rep_pseudoscalar_comp_self :
 
 end Representation
 
-end Hestenes
+end InfoGeometry.Clifford.Hestenes

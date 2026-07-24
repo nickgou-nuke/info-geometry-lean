@@ -20,7 +20,7 @@ arbitrary modular operator.  The proofs here are only the ordered algebraic
 relations rooted in the existing projector and doubled-space Clifford laws.
 -/
 
-namespace ModularHamiltonianSignum
+namespace InfoGeometry.Canonical.ModularHamiltonianSignum
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ProjectorEquivariance
@@ -675,4 +675,4 @@ theorem minusProjector_mul_unruh_modularHamiltonian :
 
 end Core
 
-end ModularHamiltonianSignum
+end InfoGeometry.Canonical.ModularHamiltonianSignum

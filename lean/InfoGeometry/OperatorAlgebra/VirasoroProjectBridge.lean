@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 noncomputable section
 
-namespace VirasoroProjectBridge
+namespace InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 
 open AffineVirasoroBridge
 open VirasoroProject
@@ -92,4 +92,4 @@ theorem heisenbergSugawaraDatum_sugawara :
   unfold sugawaraCentralCharge heisenbergSugawaraDatum
   norm_num
 
-end VirasoroProjectBridge
+end InfoGeometry.OperatorAlgebra.VirasoroProjectBridge

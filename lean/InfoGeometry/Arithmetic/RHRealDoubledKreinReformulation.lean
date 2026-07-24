@@ -37,7 +37,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace RHRealDoubledKreinReformulation
+namespace InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 
 open InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -469,6 +469,6 @@ abbrev RealDoubledKreinSpectralChart
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   KreinSpectralChart (RealDoubledConformalKreinCarrier E)
 
-end RHRealDoubledKreinReformulation
+end InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 
 end

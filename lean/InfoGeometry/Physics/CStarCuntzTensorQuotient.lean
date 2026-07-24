@@ -17,9 +17,9 @@ representation interface into an existing mathlib `CStarAlgebra`.
 
 noncomputable section
 
-namespace CStarCuntzTensorQuotient
+namespace InfoGeometry.Physics.CStarCuntzTensorQuotient
 
-open AlgebraicCuntzQuotient
+open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
 variable {ι A : Type*} [Fintype ι] [DecidableEq ι]
 
@@ -39,31 +39,31 @@ def T (F : CStarCuntzFamily A ι) (i : ι) : A := star (F.S i)
 @[simp] theorem T_def (F : CStarCuntzFamily A ι) (i : ι) : F.T i = star (F.S i) := rfl
 
 /-- Any C⋆ Cuntz family gives an algebra representation of the algebraic Cuntz quotient. -/
-def lift (F : CStarCuntzFamily A ι) : AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] A :=
-  AlgebraicCuntzQuotient.lift (R := ℂ) F.S F.T F.ortho (by simpa [T] using F.partition)
+def lift (F : CStarCuntzFamily A ι) : InfoGeometry.Topology.AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] A :=
+  InfoGeometry.Topology.AlgebraicCuntzQuotient.lift (R := ℂ) F.S F.T F.ortho (by simpa [T] using F.partition)
 
 /-- The universal representation sends formal `Sᵢ` to the C⋆ generator. -/
 theorem lift_S (F : CStarCuntzFamily A ι) (i : ι) :
-    F.lift (AlgebraicCuntzQuotient.S (R := ℂ) i) = F.S i := by
-  exact AlgebraicCuntzQuotient.lift_S (R := ℂ) F.S F.T F.ortho
+    F.lift (InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i) = F.S i := by
+  exact InfoGeometry.Topology.AlgebraicCuntzQuotient.lift_S (R := ℂ) F.S F.T F.ortho
     (by simpa [T] using F.partition) i
 
 /-- The universal representation sends formal `Tᵢ` to `star (Sᵢ)`. -/
 theorem lift_T (F : CStarCuntzFamily A ι) (i : ι) :
-    F.lift (AlgebraicCuntzQuotient.T (R := ℂ) i) = star (F.S i) := by
-  exact AlgebraicCuntzQuotient.lift_T (R := ℂ) F.S F.T F.ortho
+    F.lift (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i) = star (F.S i) := by
+  exact InfoGeometry.Topology.AlgebraicCuntzQuotient.lift_T (R := ℂ) F.S F.T F.ortho
     (by simpa [T] using F.partition) i
 
 /-- The C⋆ representation is compatible with the formal adjoint on generators. -/
 theorem lift_star_S (F : CStarCuntzFamily A ι) (i : ι) :
-    F.lift (star (AlgebraicCuntzQuotient.S (R := ℂ) i)) =
-      star (F.lift (AlgebraicCuntzQuotient.S (R := ℂ) i)) := by
+    F.lift (star (InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i)) =
+      star (F.lift (InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i)) := by
   simp [lift_S, lift_T]
 
 /-- The C⋆ representation is compatible with the formal adjoint on formal adjoints. -/
 theorem lift_star_T (F : CStarCuntzFamily A ι) (i : ι) :
-    F.lift (star (AlgebraicCuntzQuotient.T (R := ℂ) i)) =
-      star (F.lift (AlgebraicCuntzQuotient.T (R := ℂ) i)) := by
+    F.lift (star (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i)) =
+      star (F.lift (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i)) := by
   simp [lift_S, lift_T]
 
 /-- Each Cuntz generator is an isometry in the C⋆ sense: `Sᵢ⋆ Sᵢ = 1`. -/
@@ -78,10 +78,10 @@ theorem orthogonal_relation (F : CStarCuntzFamily A ι) {i j : ι} (hij : i ≠ 
 
 /-- The algebraic quotient relations are satisfied after applying the C⋆ representation. -/
 theorem represented_cuntz_relations (F : CStarCuntzFamily A ι) :
-    (∀ i j, F.lift (AlgebraicCuntzQuotient.T (R := ℂ) i *
-        AlgebraicCuntzQuotient.S (R := ℂ) j) = if i = j then 1 else 0) ∧
-    F.lift (∑ i : ι, AlgebraicCuntzQuotient.S (R := ℂ) i *
-        AlgebraicCuntzQuotient.T (R := ℂ) i) = 1 := by
+    (∀ i j, F.lift (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i *
+        InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) j) = if i = j then 1 else 0) ∧
+    F.lift (∑ i : ι, InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i *
+        InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i) = 1 := by
   constructor
   · intro i j
     simp [map_mul, lift_S, lift_T, F.ortho]
@@ -123,18 +123,18 @@ def generatedFamily (F : CStarCuntzFamily A ι) :
 
 /-- The algebraic Cuntz quotient maps into the concrete generated C⋆-subalgebra. -/
 def liftToGenerated (F : CStarCuntzFamily A ι) :
-    AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] F.generatedCStarSubalgebra :=
+    InfoGeometry.Topology.AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] F.generatedCStarSubalgebra :=
   F.generatedFamily.lift
 
 /-- In the generated C⋆-subalgebra, formal `Sᵢ` maps to the included generator. -/
 theorem liftToGenerated_S (F : CStarCuntzFamily A ι) (i : ι) :
-    F.liftToGenerated (AlgebraicCuntzQuotient.S (R := ℂ) i) =
+    F.liftToGenerated (InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i) =
       ⟨F.S i, F.S_mem_generatedCStarSubalgebra i⟩ := by
   exact CStarCuntzFamily.lift_S F.generatedFamily i
 
 /-- In the generated C⋆-subalgebra, formal `Tᵢ` maps to the included adjoint. -/
 theorem liftToGenerated_T (F : CStarCuntzFamily A ι) (i : ι) :
-    F.liftToGenerated (AlgebraicCuntzQuotient.T (R := ℂ) i) =
+    F.liftToGenerated (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i) =
       star (⟨F.S i, F.S_mem_generatedCStarSubalgebra i⟩ : F.generatedCStarSubalgebra) := by
   exact CStarCuntzFamily.lift_T F.generatedFamily i
 
@@ -158,34 +158,34 @@ namespace CStarCuntzCompletion
 
 /-- The canonical algebraic representation into the C⋆ completion/realization. -/
 def algebraicToCStar (U : CStarCuntzCompletion ι) :
-    AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] U.carrier :=
+    InfoGeometry.Topology.AlgebraicCuntzQuotient.CuntzAlg ℂ ι →ₐ[ℂ] U.carrier :=
   U.family.lift
 
 /-- The algebraic generator `Sᵢ` maps to the C⋆ generator in the completion. -/
 theorem algebraicToCStar_S (U : CStarCuntzCompletion ι) (i : ι) :
-    U.algebraicToCStar (AlgebraicCuntzQuotient.S (R := ℂ) i) = U.family.S i := by
+    U.algebraicToCStar (InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i) = U.family.S i := by
   exact CStarCuntzFamily.lift_S U.family i
 
 /-- The algebraic generator `Tᵢ` maps to the adjoint of the C⋆ generator. -/
 theorem algebraicToCStar_T (U : CStarCuntzCompletion ι) (i : ι) :
-    U.algebraicToCStar (AlgebraicCuntzQuotient.T (R := ℂ) i) = star (U.family.S i) := by
+    U.algebraicToCStar (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i) = star (U.family.S i) := by
   exact CStarCuntzFamily.lift_T U.family i
 
 /-- The C⋆ realization satisfies the represented Cuntz relations. -/
 theorem represented_relations (U : CStarCuntzCompletion ι) :
     (∀ i j, U.algebraicToCStar
-        (AlgebraicCuntzQuotient.T (R := ℂ) i * AlgebraicCuntzQuotient.S (R := ℂ) j) =
+        (InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i * InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) j) =
       if i = j then 1 else 0) ∧
     U.algebraicToCStar
-        (∑ i : ι, AlgebraicCuntzQuotient.S (R := ℂ) i *
-          AlgebraicCuntzQuotient.T (R := ℂ) i) = 1 := by
+        (∑ i : ι, InfoGeometry.Topology.AlgebraicCuntzQuotient.S (R := ℂ) i *
+          InfoGeometry.Topology.AlgebraicCuntzQuotient.T (R := ℂ) i) = 1 := by
   exact CStarCuntzFamily.represented_cuntz_relations U.family
 
 end CStarCuntzCompletion
 
-#check AlgebraicCuntzQuotient.starOp
-#check AlgebraicCuntzQuotient.star_S
-#check AlgebraicCuntzQuotient.star_T
+#check InfoGeometry.Topology.AlgebraicCuntzQuotient.starOp
+#check InfoGeometry.Topology.AlgebraicCuntzQuotient.star_S
+#check InfoGeometry.Topology.AlgebraicCuntzQuotient.star_T
 #check CStarCuntzFamily
 #check CStarCuntzFamily.lift
 #check CStarCuntzFamily.lift_S
@@ -200,4 +200,4 @@ end CStarCuntzCompletion
 #check CStarCuntzFamily.liftToGenerated_T
 #check CStarCuntzCompletion
 
-end CStarCuntzTensorQuotient
+end InfoGeometry.Physics.CStarCuntzTensorQuotient

@@ -12,7 +12,7 @@ finite-support vector state.
 
 noncomputable section
 
-namespace GNSFiniteSupportStatePositivity
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStatePositivity
 
 open scoped BigOperators
 open GNSFiniteSupport
@@ -58,4 +58,4 @@ theorem omega_positive_square_positive (a : Alg n) :
       (omega p (fun i => involution a i * a i)).im = 0 := by
   exact ⟨omega_positive_square_re_nonneg p a, omega_positive_square_im_zero p a⟩
 
-end GNSFiniteSupportStatePositivity
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportStatePositivity

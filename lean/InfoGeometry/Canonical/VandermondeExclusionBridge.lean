@@ -16,7 +16,7 @@ V(v)=\mathrm{Matrix.vandermonde}(v),\qquad
 \]
 -/
 
-namespace VandermondeExclusionBridge
+namespace InfoGeometry.Canonical.VandermondeExclusionBridge
 
 open scoped Matrix
 
@@ -104,4 +104,4 @@ end FiniteVandermondeExclusionWitness
 
 end Domain
 
-end VandermondeExclusionBridge
+end InfoGeometry.Canonical.VandermondeExclusionBridge

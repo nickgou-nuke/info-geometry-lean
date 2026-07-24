@@ -7,7 +7,7 @@ import InfoGeometry.Algebra.HypercomplexTriad
 Concrete `2×2` superalgebra equilibrium identities from split-Clifford atoms.
 -/
 
-namespace SuperAlgebraEquilibrium
+namespace InfoGeometry.Canonical.SuperAlgebraEquilibrium
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -41,4 +41,4 @@ theorem super_even_odd_commute :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [H, Q, N, Matrix.mul_apply, Fin.sum_univ_two]
 
-end SuperAlgebraEquilibrium
+end InfoGeometry.Canonical.SuperAlgebraEquilibrium

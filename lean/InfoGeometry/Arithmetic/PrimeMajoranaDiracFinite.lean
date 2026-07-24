@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeMajoranaDiracFinite
+namespace InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 
 /-- The finite Dirac coefficient `sqrt(log p)`. -/
 def diracCoefficient
@@ -78,4 +78,4 @@ theorem finiteDiracHamiltonian_eq_log_primeBitInteger
   rw [finiteDiracHamiltonian_eq_primeBitEnergy]
   exact InfoGeometry.Arithmetic.primeBitEnergy_eq_log_primeBitInteger (L := L) ψ
 
-end PrimeMajoranaDiracFinite
+end InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite

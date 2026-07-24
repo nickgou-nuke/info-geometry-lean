@@ -19,7 +19,7 @@ supplied self-similar fixed operators to the existing natural-cone
 `Ω`-localized face expectations.
 -/
 
-namespace BoundedKMSErgodicOmegaVolumeBridge
+namespace InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge
 
 open InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
 open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
@@ -139,4 +139,4 @@ end Bridge
 
 end Core
 
-end BoundedKMSErgodicOmegaVolumeBridge
+end InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge

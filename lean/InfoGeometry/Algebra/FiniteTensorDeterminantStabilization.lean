@@ -28,7 +28,7 @@ No Virasoro exponentiation claim.
 
 noncomputable section
 
-namespace FiniteTensorDeterminantStabilization
+namespace InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 
 /-! ## Normalized log-determinant stabilization -/
 
@@ -240,4 +240,4 @@ theorem product_centered_flux_eq
   rw [one_add_mul_one_add_eq_one_add_flux]
   simp
 
-end FiniteTensorDeterminantStabilization
+end InfoGeometry.Algebra.FiniteTensorDeterminantStabilization

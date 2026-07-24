@@ -13,7 +13,7 @@ and that the wide projective logarithmic generator specializes to the pointwise
 relative modular potential on the strict-positive slice.
 -/
 
-namespace PositiveRayProjectiveBridge
+namespace InfoGeometry.Canonical.PositiveRayProjectiveBridge
 
 open MeasureTheory
 open InfoGeometry.Canonical.PositiveRayCore
@@ -63,4 +63,4 @@ theorem positiveRay_logGenerator_eq_relativeModularPotential
 
 end FiniteDiscrete
 
-end PositiveRayProjectiveBridge
+end InfoGeometry.Canonical.PositiveRayProjectiveBridge

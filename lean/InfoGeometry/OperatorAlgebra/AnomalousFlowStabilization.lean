@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace AnomalousFlowStabilization
+namespace InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 
 /-! ## 1. Stabilization witness -/
 
@@ -78,4 +78,4 @@ theorem stable_nonflat_of_anomaly_and_charge
 
 end AnomalousFlowStabilizationWitness
 
-end AnomalousFlowStabilization
+end InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization

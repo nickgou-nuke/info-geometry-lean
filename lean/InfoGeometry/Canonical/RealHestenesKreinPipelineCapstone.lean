@@ -29,7 +29,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace RealHestenesKreinPipelineCapstone
+namespace InfoGeometry.Canonical.RealHestenesKreinPipelineCapstone
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ProjectiveCountsModularBridge
@@ -229,5 +229,5 @@ end BottStabilizedPipeline
 
 end BottPipeline
 
-end RealHestenesKreinPipelineCapstone
+end InfoGeometry.Canonical.RealHestenesKreinPipelineCapstone
 

@@ -17,13 +17,13 @@ This file contains explicit finite algebraic lemma chains:
 
 noncomputable section
 
-namespace BogoliubovSU3ParafermionProofChain
+namespace InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 open BogoliubovWeylChemicalPotential
 open BogoliubovSU3ParafermionWeld
 open SupergradedCuntzBdG
 open GellMannSU3
-open AlgebraicCuntzQuotient
+open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
@@ -427,6 +427,6 @@ theorem bogoliubov_su3_parafermion_proof_chain
 
 
 
-end BogoliubovSU3ParafermionProofChain
+end InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 end noncomputable section

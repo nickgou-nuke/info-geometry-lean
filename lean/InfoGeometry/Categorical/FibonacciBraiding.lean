@@ -11,10 +11,10 @@ braid-group representation theorem, analytic continuation, conformal-block
 construction, or universal topological quantum-computing theorem.
 -/
 
-namespace FibonacciBraiding
+namespace InfoGeometry.Categorical.FibonacciBraiding
 
 open Matrix
-open FiniteFibonacciFusionMatrix
+open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 /-- The finite Fibonacci fusion matrix is involutive under the explicit scalar relations. -/
 theorem F_sq (τ s : ℂ) (s_sq : s ^ 2 = τ) (tau_sq_add_tau : τ ^ 2 + τ = 1) :
@@ -77,4 +77,4 @@ theorem finite_hexagon_shadow
     B_eq_FRF q τ s,
     artin_relation q τ s hq_inv hq_pow3 hq5 h_poly hτ s_sq⟩
 
-end FibonacciBraiding
+end InfoGeometry.Categorical.FibonacciBraiding

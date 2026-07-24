@@ -46,7 +46,7 @@ require separate theorem owners for the chosen scalar field, topology/smoothness
 class, metric, automorphism notion, and operator representation.
 -/
 
-namespace DualSplitOctonionAlgebra
+namespace InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.SymplecticFoundation
@@ -297,4 +297,4 @@ theorem dualSplitOct_multisystem_backbone_packet :
     sage_d4_d5_root_weyl_ledger.2.2.2.2, clifford_split_dimension_ledger.1,
     clifford_split_dimension_ledger.2, o55_five_grade_dimension_sum⟩
 
-end DualSplitOctonionAlgebra
+end InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra

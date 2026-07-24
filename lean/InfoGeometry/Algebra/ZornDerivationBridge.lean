@@ -11,7 +11,7 @@ bundled `NonAssocDerivation R (ZornVectorMatrix R)`.
 
 ## Step 1: NonUnitalNonAssocRing instance
 ## Step 2: Derivation equivalence
-## Step 3: Theorem 5.1 — Der(C) = AssDer(C)
+## Step 3: Derivation-comparison status
 -/
 
 namespace InfoGeometry.Algebra
@@ -83,6 +83,77 @@ noncomputable instance : SMulCommClass R (ZornVectorMatrix R) (ZornVectorMatrix 
          ZornVectorMatrix.mul X (ZornVectorMatrix.smul r Y)
     exact (ZornVectorMatrix.mul_smul r X Y).symm
 
+namespace ZornVectorMatrix
+
+/-- Conjugation is scalar trace minus the original Zorn element. -/
+lemma conj_eq_scalar_trace_sub (X : ZornVectorMatrix R) :
+    conj X = sub (scalar (trace X)) X := by
+  change conj X = scalar (trace X) - X
+  have h : X + conj X = scalar (trace X) := conj_trace_identity X
+  exact eq_sub_of_add_eq' h
+
+/-- Kirmse's left contraction, derived from conjugation and left alternativity. -/
+theorem kirmse_left (X Y : ZornVectorMatrix R) :
+    mul (conj X) (mul X Y) = smul (norm X) Y := by
+  rw [conj_eq_scalar_trace_sub, sub_mul, scalar_mul]
+  have halt : mul X (mul X Y) = mul (mul X X) Y := by
+    have h := associator_left_alternative X Y
+    change sub (mul (mul X X) Y) (mul X (mul X Y)) = zero at h
+    change mul (mul X X) Y - mul X (mul X Y) = 0 at h
+    exact (sub_eq_zero.mp h).symm
+  rw [halt, ← smul_mul, ← scalar_mul, ← sub_mul, ← sub_mul]
+  rw [← conj_eq_scalar_trace_sub, conj_norm_identity_right, scalar_mul]
+
+/-- Kirmse's right contraction, derived from conjugation and right alternativity. -/
+theorem kirmse_right (X Y : ZornVectorMatrix R) :
+    mul (mul Y X) (conj X) = smul (norm X) Y := by
+  rw [conj_eq_scalar_trace_sub, mul_sub, mul_scalar]
+  have halt : mul (mul Y X) X = mul Y (mul X X) := by
+    have h := associator_right_alternative Y X
+    change sub (mul (mul Y X) X) (mul Y (mul X X)) = zero at h
+    change mul (mul Y X) X - mul Y (mul X X) = 0 at h
+    exact sub_eq_zero.mp h
+  rw [halt, ← mul_smul, ← mul_scalar, ← mul_sub, ← mul_sub]
+  rw [← conj_eq_scalar_trace_sub, conj_norm_identity_left, mul_scalar]
+
+/-- Scalar trace is insensitive to reassociation of a triple Zorn product. -/
+theorem trace_mul_assoc (X Y Z : ZornVectorMatrix R) :
+    trace (mul (mul X Y) Z) = trace (mul X (mul Y Z)) := by
+  have h := trace_associator X Y Z
+  change trace (sub (mul (mul X Y) Z) (mul X (mul Y Z))) = 0 at h
+  rw [trace_sub] at h
+  exact sub_eq_zero.mp h
+
+/-- Scalar trace is cyclic on a triple Zorn product. -/
+theorem trace_mul_cyclic (X Y Z : ZornVectorMatrix R) :
+    trace (mul (mul X Y) Z) = trace (mul (mul Y Z) X) := by
+  calc
+    trace (mul (mul X Y) Z) = trace (mul Z (mul X Y)) := trace_mul_comm _ _
+    _ = trace (mul (mul Z X) Y) := (trace_mul_assoc Z X Y).symm
+    _ = trace (mul Y (mul Z X)) := trace_mul_comm _ _
+    _ = trace (mul (mul Y Z) X) := (trace_mul_assoc Y Z X).symm
+
+/-- Conjugating and reversing a triple product preserves its scalar trace. -/
+theorem trace_conj_triple_reverse (X Y Z : ZornVectorMatrix R) :
+    trace (mul (mul (conj Z) (conj Y)) (conj X)) =
+      trace (mul (mul X Y) Z) := by
+  calc
+    trace (mul (mul (conj Z) (conj Y)) (conj X)) =
+        trace (mul (conj Z) (mul (conj Y) (conj X))) :=
+      trace_mul_assoc _ _ _
+    _ = trace (conj (mul (mul X Y) Z)) := by
+      rw [conj_mul, conj_mul]
+    _ = trace (mul (mul X Y) Z) := trace_conj _
+
+/-- Polarization of the Zorn composition norm, in trace-pairing form. -/
+theorem norm_sub_eq_norm_add_norm_sub_trace_mul_conj
+    (X Y : ZornVectorMatrix R) :
+    norm (sub X Y) = norm X + norm Y - trace (mul X (conj Y)) := by
+  simp [norm, sub, add, neg, trace, mul, conj, ZornVec3.dot, Fin.sum_univ_three]
+  ring
+
+end ZornVectorMatrix
+
 /-!
 ### Step 2: Derivation equivalence
 -/
@@ -124,12 +195,12 @@ def fromNonAssocDerivation (D : NonAssocDerivation R (ZornVectorMatrix R)) :
 /-- Round-trip: unbundled → bundled → unbundled is identity. -/
 theorem derivation_equiv_left_inv (D : ZornVectorMatrix.Derivation (R := R)) :
     fromNonAssocDerivation (toNonAssocDerivation D) = D :=
-  ZornVectorMatrix.Derivation.ext fun X => rfl
+  ZornVectorMatrix.Derivation.ext fun _ => rfl
 
 /-- Round-trip: bundled → unbundled → bundled is identity. -/
 theorem derivation_equiv_right_inv (D : NonAssocDerivation R (ZornVectorMatrix R)) :
     toNonAssocDerivation (fromNonAssocDerivation D) = D :=
-  NonAssocDerivation.ext fun X => rfl
+  NonAssocDerivation.ext fun _ => rfl
 
 /-- The bundled ↔ unbundled derivation equivalence. -/
 def derivationEquiv :
@@ -140,11 +211,57 @@ def derivationEquiv :
   right_inv := derivation_equiv_right_inv
 
 /-!
-### Step 3: Theorem 5.1 — Der(C) = AssDer(C) for Zorn split-octonions
+### Native standard derivations of the split octonions
 
-Following Loos-Petersson-Racine, Theorem 5.1:
-Every derivation of an octonion algebra over any commutative ring is an
-associator derivation.
+This specializes the abstract alternative-ring theorem to the canonical Zorn
+owner.  These standard derivations are the concrete inner derivations entering
+the split-octonion realization of the Lie algebra of type `G₂`.
+-/
+
+/-- The bundled Zorn product satisfies the left alternative law. -/
+theorem zorn_left_alternative (X Y : ZornVectorMatrix R) :
+    (X * X) * Y = X * (X * Y) := by
+  have h := ZornVectorMatrix.associator_left_alternative X Y
+  change (X * X) * Y - X * (X * Y) = 0 at h
+  exact sub_eq_zero.mp h
+
+/-- The bundled Zorn product satisfies the right alternative law. -/
+theorem zorn_right_alternative (X Y : ZornVectorMatrix R) :
+    (Y * X) * X = Y * (X * X) := by
+  have h := ZornVectorMatrix.associator_right_alternative Y X
+  change (Y * X) * X - Y * (X * X) = 0 at h
+  exact sub_eq_zero.mp h
+
+/-- The standard operator `D_{a,b}` as a genuine derivation of Zorn split octonions. -/
+noncomputable def zornStanDerivation (a b : ZornVectorMatrix R) :
+    NonAssocDerivation R (ZornVectorMatrix R) :=
+  stanDerivation (R := R) zorn_left_alternative zorn_right_alternative a b
+
+@[simp] theorem zornStanDerivation_toLinearMap (a b : ZornVectorMatrix R) :
+    (zornStanDerivation a b).toLinearMap = stanDerMap (R := R) a b := rfl
+
+/-- Kleinfeld's normal form for the canonical Zorn standard derivation. -/
+theorem zornStanDerivation_apply_normal_form
+    (a b x : ZornVectorMatrix R) :
+    zornStanDerivation a b x =
+      ((a * b - b * a) * x - x * (a * b - b * a)) -
+        3 • _root_.associator a b x := by
+  exact stanDerMap_apply_normal_form
+    (R := R) zorn_left_alternative zorn_right_alternative a b x
+
+/-- Every canonical Zorn standard derivation belongs to the standard span. -/
+theorem zornStanDerivation_isStandard (a b : ZornVectorMatrix R) :
+    StanDer (zornStanDerivation a b) := by
+  change stanDerMap (R := R) a b ∈
+    Submodule.span R (Set.range (fun p : ZornVectorMatrix R × ZornVectorMatrix R =>
+      stanDerMap (R := R) p.1 p.2))
+  exact Submodule.subset_span ⟨(a, b), rfl⟩
+
+/-!
+### Step 3: Concrete consequences
+
+Only proved consequences are exported below.  The stronger classification of
+all derivations is not represented by a proposition-valued placeholder.
 -/
 
 /-- The identity element. -/
@@ -176,17 +293,5 @@ theorem map_E22_mul_E22 (D : NonAssocDerivation R (ZornVectorMatrix R)) :
   have H : (E22 : ZornVectorMatrix R) * E22 = E22 := by rw [zvm_mul_def, E22_mul_E22]
   rwa [H] at h
 
-
-/-- **Loos-Petersson-Racine Theorem 5.1** (statement).
-Every derivation of the split-octonion algebra (Zorn vector matrices) over
-a commutative ring is an associator derivation. -/
-theorem zorn_der_eq_assDer (D : NonAssocDerivation R (ZornVectorMatrix R)) :
-    AssDer D := by
-  sorry
-
-/-- Corollary: every derivation of the split-octonion algebra is a standard derivation. -/
-theorem zorn_assDer_is_stanDer (D : NonAssocDerivation R (ZornVectorMatrix R))
-    (hD : AssDer D) : StanDer D := by
-  sorry
 
 end InfoGeometry.Algebra

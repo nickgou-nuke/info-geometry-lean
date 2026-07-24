@@ -35,7 +35,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeSuperalgebra
+namespace InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
@@ -355,4 +355,4 @@ theorem inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta
   exact congrArg (fun z : ℂ => z⁻¹)
     (infiniteComplexBosonicEulerProduct_eq_riemannZeta hs)
 
-end PrimeSuperalgebra
+end InfoGeometry.Arithmetic.PrimeSuperalgebra

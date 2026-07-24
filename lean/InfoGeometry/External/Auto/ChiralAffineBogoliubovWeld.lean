@@ -23,9 +23,9 @@ noncomputable section
 
 namespace ChiralAffineBogoliubovWeld
 
-open SupergradedCuntzBdG
-open ChiralCausalCone
-open BogoliubovWeylChemicalPotential
+open InfoGeometry.Physics.SupergradedCuntzBdG
+open InfoGeometry.Physics.ChiralCausalCone
+open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 
 abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
 

@@ -17,9 +17,13 @@ import Mathlib.Data.Finset.Basic
 \qquad
 \mathrm{ColorPermutationAction}(\tau)(Z)\text{ preserves }\|Z\|.
 \]
+
+This file records a finite three-branch permutation packet and two exact
+matrix readbacks.  It does not assert a classification theorem or a physical
+interpretation.
 -/
 
-namespace D4Triality
+namespace InfoGeometry.Physics.D4Triality
 
 open InfoGeometry.Physics.ZornMatrixSU3
 
@@ -96,16 +100,15 @@ theorem ColorPermutationAction.preserves_norm (τ : ColorPermutationAction) (Z :
     rw [show
         InfoGeometry.Physics.ZornMatrixSU3.dotProduct (fun i => Z.x (τ.perm i)) (fun i => Z.y (τ.perm i)) =
           ∑ i : Fin 3, Z.x (τ.perm i) * Z.y (τ.perm i) by
-        simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
+        simp only [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
     rw [show
         InfoGeometry.Physics.ZornMatrixSU3.dotProduct Z.x Z.y = ∑ i : Fin 3, Z.x i * Z.y i by
-        simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3,
+        simp only [InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
+          InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
           Fin.sum_univ_three]]
-    exact Fintype.sum_bijective (fun i : Fin 3 => τ.perm i) τ.perm.bijective
-      (fun i : Fin 3 => Z.x (τ.perm i) * Z.y (τ.perm i))
-      (fun i : Fin 3 => Z.x i * Z.y i)
-      (fun _ => rfl)
+    exact Equiv.sum_comp τ.perm (fun i => Z.x i * Z.y i)
   simp [ColorPermutationAction.apply, InfoGeometry.Physics.ZornMatrixSU3.norm, h_dot]
 
 /-- `T(Z)=(0,0,x,-y)`. -/
@@ -132,4 +135,4 @@ theorem ColorPermutationAction.commutes_with_tripotent (τ : ColorPermutationAct
     ColorPermutationAction.apply τ (tripotent Z) = tripotent (ColorPermutationAction.apply τ Z) := by
   simp [ColorPermutationAction.apply, tripotent]
 
-end D4Triality
+end InfoGeometry.Physics.D4Triality

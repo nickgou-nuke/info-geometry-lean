@@ -1,17 +1,17 @@
-# GAP Formalization: G₂ Automorphisms and SU(3) Stabilizer
+# GAP coordinate diagnostics for split-G₂ stabilizer data
 # 
 # This script uses GAP to compute:
 # 1. The automorphism group G₂ of the octonions
-# 2. The SU(3) stabilizer subgroup fixing diagonal projectors
+# 2. An 8-dimensional stabilizer candidate fixing diagonal projectors
 # 3. The action on Zorn matrix vector slots
-# 4. Verification that dim(SU(3)) = 8 and it preserves the split norm
+# 4. Coordinate dimension and split-norm diagnostics (not a group proof)
 
 # Note: Loading optional packages (may fail if not installed)
 # LoadPackage("Wedderga");
 # LoadPackage("co Alessandra");
 
 Print("================================================================================\n");
-Print("GAP Formalization: G₂ Automorphisms and SU(3) Stabilizer\n");
+Print("GAP coordinate diagnostics: G₂ and stabilizer data\n");
 Print("================================================================================\n\n");
 
 # ============================================================================
@@ -100,27 +100,23 @@ od;
 Print(count, " (should be 42 = 7*6)\n");
 
 # ============================================================================
-# 3. SU(3) Stabilizer Subgroup
+# 3. Stabilizer Subgroup Diagnostics
 # ============================================================================
-Print("\n[3] SU(3) Stabilizer of Diagonal Projectors\n");
+Print("\n[3] Stabilizer diagnostics for diagonal projectors\n");
 Print("------------------------------------------------------------------------\n");
 
-# SU(3) is the subgroup of G₂ that fixes a chosen imaginary unit
-# In Zorn matrix language, this is the stabilizer of e₊ and e₋
-
-# The Lie algebra su(3) has dimension 8
-# G₂ has dimension 14, and G₂/SU(3) ≅ S⁶ (6-sphere)
+# The subgroup fixing e₊ and e₋ is only recorded as a stabilizer candidate.
+# Its real form and Lie-group identification are not established here.
 
 Print("Dimension check:\n");
 Print("  dim(G₂) = 14\n");
-Print("  dim(SU(3)) = 8\n");
-Print("  dim(G₂/SU(3)) = 6 (matches S⁶)\n");
+Print("  stabilizer dimension diagnostic = 8\n");
 
-# Construct SU(3) as matrices preserving the color vector space
+# Record the color-slot matrix diagnostic; do not identify it with compact SU(3).
 # The fundamental representation 3 acts on vector_x
 # The anti-fundamental 3̄ acts on vector_y
 
-Print("\nSU(3) representation on Zorn slots:\n");
+Print("\nZorn-slot representation diagnostic:\n");
 Print("  vector_x (dim 3): Fundamental representation 3\n");
 Print("  vector_y (dim 3): Anti-fundamental representation 3̄\n");
 Print("  scalars a,b: Singlets (trivial representation)\n");
@@ -140,7 +136,7 @@ m3 := mersenne(3);
 m7 := mersenne(7);
 sum := m2 + m3 + m7;
 
-Print("  M₂ = 2² - 1 = ", m2, " (dimension of SU(3) fundamental rep)\n");
+Print("  M₂ = 2² - 1 = ", m2, " (three-dimensional slot diagnostic)\n");
 Print("  M₃ = 2³ - 1 = ", m3, " (number of imaginary octonion units)\n");
 Print("  M₇ = 2⁷ - 1 = ", m7, " (coupling constant component)\n");
 Print("  Sum: ", m2, " + ", m3, " + ", m7, " = ", sum, "\n");
@@ -179,7 +175,7 @@ Print("------------------------------------------------------------------------\
 
 results := rec(
     g2_dimension := 14,
-    su3_dimension := 8,
+    stabilizer_dimension := 8,
     mersenne_decomposition := rec(
         m2 := m2,
         m3 := m3,
@@ -204,7 +200,7 @@ json_file := OutputTextFile("/tmp/gap_g2_su3_results.json", false);
 SetPrintFormattingStatus(json_file, false);
 PrintTo(json_file, "{\n");
 PrintTo(json_file, "  \"g2_dimension\": 14,\n");
-PrintTo(json_file, "  \"su3_dimension\": 8,\n");
+PrintTo(json_file, "  \"stabilizer_dimension\": 8,\n");
 PrintTo(json_file, "  \"mersenne_decomposition\": {\n");
 PrintTo(json_file, "    \"m2\": ", m2, ",\n");
 PrintTo(json_file, "    \"m3\": ", m3, ",\n");
@@ -230,11 +226,11 @@ Print("=========================================================================
 Print("Summary:\n\n");
 Print("  1. Zorn matrix multiplication defined and tested\n");
 Print("  2. G₂ automorphism group: dim = 14\n");
-Print("  3. SU(3) stabilizer: dim = 8, acts on vector_x (3) and vector_y (3̄)\n");
+Print("  3. Stabilizer candidate: dimension = 8; acts on the two vector slots\n");
 Print("  4. Mersenne decomposition: 137 = 3 + 7 + 127 verified\n");
 Print("  5. Tripotent T³ = T with eigenvalues {+1, -1, 0}\n");
-Print("  6. Explicit connection: M₂ = 3 = dim(fundamental rep of SU(3))\n\n");
+Print("  6. Explicit connection: M₂ = 3 is only a slot-dimension diagnostic\n\n");
 Print("This establishes the group-theoretic foundation for the AQL functor:\n");
 Print("  F: CombinatorialHierarchy → ZornAlgebra\n");
-Print("  M₂ ↦ SU(3) fundamental representation space\n\n");
+Print("  M₂ ↦ three-dimensional slot space\n\n");
 Print("================================================================================\n");

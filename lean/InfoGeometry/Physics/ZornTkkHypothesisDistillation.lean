@@ -20,7 +20,7 @@ Jordan triple system and its Lie closure socket.
 
 noncomputable section
 
-namespace ZornTkkHypothesisDistillation
+namespace InfoGeometry.Physics.ZornTkkHypothesisDistillation
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
@@ -170,4 +170,4 @@ theorem basic_closure_consequences (x y z : J) :
 
 end JordanTripleTKKClosureHypotheses
 
-end ZornTkkHypothesisDistillation
+end InfoGeometry.Physics.ZornTkkHypothesisDistillation

@@ -5,22 +5,18 @@ import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.VarlamovDiscreteSymmetry
 
 /-!
-# Thermal Chiral Conservation — The Anomaly Protected from Unruh Heat
+# Chiral-projector conservation under a declared Unruh flow
 
-**Theorem**: The Drazin anomaly index is invariant under Unruh-KMS
-thermal flow because the chiral pseudoscalar Γ commutes with the
-modular Hamiltonian (boost generator ε, an even-graded bivector).
-
-In Cl(p,q), Γ commutes with all even-graded elements. The Unruh
-flow is a linear combination of I and ε, both even-grade, so
-[Γ, unruhFlow(θ)] = 0 for all rapidity θ. The Majorana zero-modes
-survive the thermal bath. The 2e²/h peak is protected.
+This file proves a conditional finite operator identity: if a supplied chiral
+operator `Γ` commutes with the declared modular Hamiltonian, then the derived
+projector commutes with `unruhFlow θ`.  It does not prove a Drazin anomaly
+index theorem, Majorana zero-mode stability, or a `2e²/h` conductance result.
 -/
 
 open InfoGeometry.Dynamics
 open InfoGeometry.Krein
 
-namespace ThermalChiralConservation
+namespace InfoGeometry.Dynamics.ThermalChiralConservation
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "H₂" => DoubledSpace E
@@ -52,20 +48,8 @@ noncomputable def chiral_proj_minus : EndH :=
   (1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ H₂ - Chi.Gamma)
 
 /--
-**Theorem: Thermal Chiral Conservation (PROVED).**
-
-The Unruh flow commutes with the chiral projector P_+.
-
-Proof: unruhFlow(θ) = cosh θ · I + sinh θ · B, where B is the
-modular Hamiltonian (boost generator). Both I and B commute with Γ
-(I is grade-0, B is grade-2 → both even). Therefore P_+ commutes
-with unruhFlow.
-
-Algebra:
-  P_+ · (c·I + s·B) = (c·I + s·B) · P_+
-  ⇔ (I+Γ)(c·I + s·B) = (c·I + s·B)(I+Γ)
-  ⇔ c·I + c·Γ + s·B + s·Γ·B = c·I + c·Γ + s·B + s·B·Γ
-  ⇔ s·Γ·B = s·B·Γ  ⇔  [Γ, B] = 0  ✓ (Chi.commutes_with_modular)
+The declared Unruh flow commutes with the chiral projector `P_+`, using only
+the supplied commutation of `Γ` with the modular Hamiltonian.
 -/
 theorem thermal_chiral_conservation (θ : ℝ) :
     (chiral_proj_plus Chi).comp (unruhFlow (E := E) θ) =
@@ -81,12 +65,11 @@ theorem thermal_chiral_conservation (θ : ℝ) :
   simp
 
 /--
-Closure debt: thermal protection of the Drazin anomaly/conductance readout.
-The proved result above is chiral-projector conservation under the Unruh flow;
-turning that into a `2e²/h` conductance theorem needs a separate index and
-observable model.
+Open owner obligation: connect the projector-conservation identity above to any
+Drazin anomaly or conductance readout using a separate index and observable
+model.
 -/
-def drazin_anomaly_thermally_protected_debt : String :=
-  "Open: derive the Drazin anomaly/conductance invariant from thermal chiral conservation."
+def drazin_anomaly_conductance_obligation : String :=
+  "Open: derive any Drazin anomaly/conductance invariant from the finite projector-conservation identity using an explicit index and observable model."
 
-end ThermalChiralConservation
+end InfoGeometry.Dynamics.ThermalChiralConservation

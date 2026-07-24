@@ -15,9 +15,9 @@ set_option linter.dupNamespace false
 
 noncomputable section
 
-namespace SL2SpinorLadder
+namespace InfoGeometry.Canonical.SL2SpinorLadder
 
-open FiveGradedInformationLedger
+open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 abbrev Alg : Type := ℝ × ℝ × ℝ × ℝ × ℝ
 
@@ -257,4 +257,4 @@ lemma negTwo_negTwo_zero (X Y : Alg) (hX : X ∈ G₂) (hY : Y ∈ G₂) : ⁅X,
 
 end Alg
 
-end SL2SpinorLadder
+end InfoGeometry.Canonical.SL2SpinorLadder

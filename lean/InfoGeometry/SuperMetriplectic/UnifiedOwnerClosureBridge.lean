@@ -19,7 +19,7 @@ into the axiomatic supermetriplectic closure language, and records that the
 residual defect vanishes on the current owner slice.
 -/
 
-namespace UnifiedOwnerClosureBridge
+namespace InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.AssociativeSuperBracket
@@ -165,4 +165,4 @@ end UnifiedDrazinSuperchargeClosureBridge
 
 end Core
 
-end UnifiedOwnerClosureBridge
+end InfoGeometry.SuperMetriplectic.UnifiedOwnerClosureBridge

@@ -1,6 +1,6 @@
 import Mathlib.Logic.Equiv.Basic
 
-namespace CelikZ3FibonacciBridge
+namespace InfoGeometry.Canonical.CelikZ3FibonacciBridge
 
 /-- Abstract representation of the B_n elements -/
 structure ArtinBraid (n : ℕ) where
@@ -27,4 +27,4 @@ structure Z3ParafermionToFibonacciBridge where
       project n ∘ braidZ3 n β =
       braidFib n β ∘ project n
 
-end CelikZ3FibonacciBridge
+end InfoGeometry.Canonical.CelikZ3FibonacciBridge

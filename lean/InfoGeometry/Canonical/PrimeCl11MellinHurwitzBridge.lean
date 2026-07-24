@@ -22,7 +22,7 @@ readout already available in the repo.
 
 noncomputable section
 
-namespace PrimeCl11MellinHurwitzBridge
+namespace InfoGeometry.Canonical.PrimeCl11MellinHurwitzBridge
 
 open InfoGeometry.Canonical.DiscreteMellinModularBridge
 open InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -71,4 +71,4 @@ theorem cl11_finrank_four :
     Module.finrank ℝ (CliffordAlgebra q11) = 4 :=
   finrank_cl11
 
-end PrimeCl11MellinHurwitzBridge
+end InfoGeometry.Canonical.PrimeCl11MellinHurwitzBridge

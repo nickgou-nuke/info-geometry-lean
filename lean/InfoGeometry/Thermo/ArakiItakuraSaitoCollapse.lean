@@ -14,7 +14,7 @@ so downstream thermodynamics imports can stay local to the `Thermo` namespace.
 
 noncomputable section
 
-namespace ArakiItakuraSaitoCollapse
+namespace InfoGeometry.Thermo.ArakiItakuraSaitoCollapse
 
 open InfoGeometry.Prequantum.GNSBridge
 open InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
@@ -69,4 +69,4 @@ theorem araki_eq_noncommutativeItakuraSaito :
 
 end GNSRestrictedOperatorCollapse
 
-end ArakiItakuraSaitoCollapse
+end InfoGeometry.Thermo.ArakiItakuraSaitoCollapse

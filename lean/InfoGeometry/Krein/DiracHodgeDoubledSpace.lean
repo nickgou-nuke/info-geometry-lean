@@ -33,7 +33,7 @@ open Complex
 
 noncomputable section
 
-namespace DiracHodgeDoubledSpace
+namespace InfoGeometry.Krein.DiracHodgeDoubledSpace
 
 open InfoGeometry.Krein
 
@@ -121,4 +121,4 @@ theorem hodge_legendre_flip (E : Type*) [NormedAddCommGroup E] [InnerProductSpac
     _ = spectral_epsilon ∘L modular_j := by simp
     _ = -(modular_j ∘L spectral_epsilon) := ε_J_eq_neg_J_ε E
 
-end DiracHodgeDoubledSpace
+end InfoGeometry.Krein.DiracHodgeDoubledSpace

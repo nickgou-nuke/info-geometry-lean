@@ -26,7 +26,7 @@ curvature dynamics is asserted here.
 
 noncomputable section
 
-namespace MD002FoundationalConventions
+namespace InfoGeometry.Physics.MD002FoundationalConventions
 
 open Matrix
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
@@ -129,6 +129,6 @@ theorem repaired_MD002_foundational_conventions_packet
     lieProduct_antisymm A B,
     md002_quaternion_complex_structure_packet.2.2.2.1⟩
 
-end MD002FoundationalConventions
+end InfoGeometry.Physics.MD002FoundationalConventions
 
 end noncomputable section

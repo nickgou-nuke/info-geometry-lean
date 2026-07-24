@@ -9,7 +9,7 @@ Concrete `2 × 2` modular-boost commutator identities on the hypercomplex triad.
 No wrappers. No `sorry`.
 -/
 
-namespace ModularLorentzBoost
+namespace InfoGeometry.Canonical.ModularLorentzBoost
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -55,4 +55,4 @@ theorem finite_modular_flow_N (u : ℝ) :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [modularFlow, N, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
-end ModularLorentzBoost
+end InfoGeometry.Canonical.ModularLorentzBoost

@@ -24,7 +24,7 @@ No normal-state cone construction.
 No topological or analytic completion claim.
 -/
 
-namespace AlgebraicPositiveNormalCone
+namespace InfoGeometry.OperatorAlgebra.AlgebraicPositiveNormalCone
 
 /-! ## Algebraic positivity and normality -/
 
@@ -157,4 +157,4 @@ end AlgebraicCayleyCompactification
 
 end Cayley
 
-end AlgebraicPositiveNormalCone
+end InfoGeometry.OperatorAlgebra.AlgebraicPositiveNormalCone

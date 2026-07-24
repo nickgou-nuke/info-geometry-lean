@@ -23,7 +23,7 @@ namespace CanonicalZornRealSpinTrialityClosure
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open CanonicalZornSpinRelatedFiber
-open CanonicalZornSpinVectorAction
+open InfoGeometry.Canonical.CanonicalZornSpinVectorAction
 open CanonicalZornOuterTrialityGroup
 open CanonicalZornRealSpin44
 open CanonicalZornFiveGradedClosure

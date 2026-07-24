@@ -26,7 +26,7 @@ of this finite owner.
 
 noncomputable section
 
-namespace MD008RepresentationCharge
+namespace InfoGeometry.Physics.MD008RepresentationCharge
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
@@ -150,6 +150,6 @@ theorem repaired_MD008_representation_charge_packet (w : Weight) (a b : ℤ) :
     sigma3_E12_joint_eigen.1,
     sigma3_E12_joint_eigen.2⟩
 
-end MD008RepresentationCharge
+end InfoGeometry.Physics.MD008RepresentationCharge
 
 end noncomputable section

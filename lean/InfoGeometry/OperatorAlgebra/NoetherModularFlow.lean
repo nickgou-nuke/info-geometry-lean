@@ -20,7 +20,7 @@ Existing owner lanes such as `Canonical.Fierz`, `Canonical.OperatorialFierz*`,
 theorems. This module supplies a shared operator-Erlangen vocabulary.
 -/
 
-namespace NoetherModularFlow
+namespace InfoGeometry.OperatorAlgebra.NoetherModularFlow
 
 open InfoGeometry.OperatorAlgebra.ErlangenNet
 
@@ -240,4 +240,4 @@ theorem charge_apply :
 
 end ModularNoetherErlangenCarrier
 
-end NoetherModularFlow
+end InfoGeometry.OperatorAlgebra.NoetherModularFlow

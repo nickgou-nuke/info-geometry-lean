@@ -24,7 +24,7 @@ This file does not assert:
 
 noncomputable section
 
-namespace CantorCliffordFunctionModel
+namespace InfoGeometry.Canonical.CantorCliffordFunctionModel
 
 open InfoGeometry.Canonical.ChiralLightConeTensorTower
 
@@ -366,4 +366,4 @@ def canonicalPrefixBoundaryAction
   minusPullback := prefixPullback ChiralArrow.minus
   tail := tailPullback
 
-end CantorCliffordFunctionModel
+end InfoGeometry.Canonical.CantorCliffordFunctionModel

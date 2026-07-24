@@ -540,6 +540,13 @@ def poll_loop(once: bool = False) -> None:
 
 
 def main() -> None:
+    print(
+        "evolution_worker is disabled in this checkout; use the repo-owned "
+        "proof repair and build flow instead.",
+        file=sys.stderr,
+    )
+    raise SystemExit(2)
+
     import argparse
     parser = argparse.ArgumentParser(description="Autonomous evolution worker")
     parser.add_argument("--once", action="store_true", help="Run one cycle and exit")

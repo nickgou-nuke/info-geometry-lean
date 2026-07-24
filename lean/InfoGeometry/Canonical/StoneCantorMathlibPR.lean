@@ -33,7 +33,7 @@ and coarse/homeomorphism-group classification claims.
 
 noncomputable section
 
-namespace StoneCantorMathlibPR
+namespace InfoGeometry.Canonical.StoneCantorMathlibPR
 
 open Set Filter TopologicalSpace
 open scoped Topology
@@ -120,4 +120,4 @@ theorem principalUltrafilter_all_initialSegmentCylinder_iff
 
 end Cantor
 
-end StoneCantorMathlibPR
+end InfoGeometry.Canonical.StoneCantorMathlibPR

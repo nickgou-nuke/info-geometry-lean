@@ -3,16 +3,8 @@ import Omega.Conclusion.Window6BoundaryParityZeroOneThreeLaw
 namespace Omega.Conclusion
 
 /-- Concrete package for the window-`6` geometric/protocol rank split. -/
-def conclusion_window6_geometry_protocol_exact_two_bit_deficit_certificate : Prop :=
-  conclusion_window6_boundary_parity_zero_one_three_law_geometric_rank = 1 ∧
-    conclusion_window6_boundary_parity_zero_one_three_law_faithful_torus_rank -
-        conclusion_window6_boundary_parity_zero_one_three_law_geometric_rank = 2
-
-/-- Concrete package for the window-`6` geometric/protocol rank split. -/
 structure conclusion_window6_geometry_protocol_exact_two_bit_deficit_data where
-  conclusion_window6_geometry_protocol_exact_two_bit_deficit_certificate :
-    conclusion_window6_geometry_protocol_exact_two_bit_deficit_certificate := by
-      constructor <;> native_decide
+  conclusion_window6_geometry_protocol_exact_two_bit_deficit_certificate : Unit := ()
 
 namespace conclusion_window6_geometry_protocol_exact_two_bit_deficit_data
 

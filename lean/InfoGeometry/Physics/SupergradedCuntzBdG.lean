@@ -17,10 +17,10 @@ quotient.  The intent is deliberately algebraic:
 
 noncomputable section
 
-namespace SupergradedCuntzBdG
+namespace InfoGeometry.Physics.SupergradedCuntzBdG
 
 open scoped BigOperators
-open AlgebraicCuntzQuotient
+open InfoGeometry.Topology.AlgebraicCuntzQuotient
 open ComplexStarCuntzRedesign
 
 /-! ## `ℤ₂` supergrading and superbracket -/
@@ -803,4 +803,4 @@ theorem grandCanonicalWeightedBracket_odd_odd {A : Type*} [Semiring A] [Algebra 
 #check supercharge_self_bracket
 
 
-end SupergradedCuntzBdG
+end InfoGeometry.Physics.SupergradedCuntzBdG

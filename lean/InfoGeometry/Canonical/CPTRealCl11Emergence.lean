@@ -27,12 +27,12 @@ Those require additional representation-level premises.
 
 noncomputable section
 
-namespace CPTRealCl11Emergence
+namespace InfoGeometry.Canonical.CPTRealCl11Emergence
 
 open DiscreteCPTGroup
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
-open SplitQ11Equivariance
+open InfoGeometry.Clifford.SplitQ11Equivariance
 
 /-- The real split `Cl(1,1)` carrier used by the emergence seed. -/
 abbrev RealCl11 : Type :=
@@ -160,4 +160,4 @@ theorem realParity_seed_package :
     realParityOperator_apply_epsMinusProjector, realParityOperator_apply_epsPlusProjector,
     realParityOperator_apply_epsProjector_sum, realParityOperator_apply_epsProjector_diff⟩
 
-end CPTRealCl11Emergence
+end InfoGeometry.Canonical.CPTRealCl11Emergence

@@ -8,7 +8,7 @@ open InfoGeometry.Projective.Closure
 open InfoGeometry.Projective.Topology
 open InfoGeometry.OperatorAlgebra.ConstructiveKasparovBoundary
 
-namespace KasparovKreinDIIIBridge
+namespace InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge
 
 abbrev Fin2Matrix := Matrix (Fin 2) (Fin 2) ℝ
 
@@ -139,4 +139,4 @@ theorem concrete_diii_andreev_bridge_packet :
   · simpa [KasparovPacket2, ConstructiveKasparovBoundary.KasparovDefectDatum.rightDefect] using
       finite_andreev_right_kasparov_defect_zero
 
-end KasparovKreinDIIIBridge
+end InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge

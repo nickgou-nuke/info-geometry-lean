@@ -35,7 +35,7 @@ preservation.
 
 noncomputable section
 
-namespace MD015QuantumCorrectionsFinite
+namespace InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 
 open InfoGeometry.Physics.Section29QuantumEffectiveAction
 
@@ -150,6 +150,6 @@ theorem repaired_MD015_quantum_corrections_packet
     frgScalarRHS_add_cutoffDerivative inverseKernel dR dS,
     quaternionFluctuation_normSq_add Q0 q⟩
 
-end MD015QuantumCorrectionsFinite
+end InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 
 end noncomputable section

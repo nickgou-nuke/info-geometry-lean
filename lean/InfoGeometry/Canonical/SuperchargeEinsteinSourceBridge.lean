@@ -19,7 +19,7 @@ projector noncommutation on the conformal surface. Everything else is reused
 from existing owners.
 -/
 
-namespace SuperchargeEinsteinSourceBridge
+namespace InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.ChiralDefectIndexBridge
@@ -1231,4 +1231,4 @@ theorem chiralScale_ne_zero_and_einsteinEquation_of_quasilatticeAnalyticalIndex_
 
 end Core
 
-end SuperchargeEinsteinSourceBridge
+end InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge

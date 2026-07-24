@@ -1,0 +1,159 @@
+{
+  "run_id": "real_test_20260721",
+  "stage": "FAILED",
+  "concept_id": "test_oracle_real",
+  "formal_intent_envelope": {
+    "concept_id": "test_oracle_real",
+    "intake_classification": "theorem-bearing",
+    "mathematical_domain": [
+      "number-theory",
+      "fibonacci"
+    ],
+    "target_status": "theorem-backed",
+    "risk_level": "R1",
+    "formal_objects": [
+      "Nat.fib",
+      "Zeckendorf",
+      "golden-ratio"
+    ],
+    "acceptance_theorems": [
+      "fib_succ_succ",
+      "zeckendorf_decomposition"
+    ]
+  },
+  "derivation_log": [
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.SpecialUnitary.su",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.GellMannBasis",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Physics.GellMannSU3",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz",
+      "nodes": 0
+    },
+    {
+      "step": "skeletons",
+      "count": 3
+    },
+    {
+      "step": "prove",
+      "candidate": "Nat.fib",
+      "result": {
+        "dry_run": true,
+        "file": "lean/Omega/Graph/TransferMatrix.lean",
+        "theorem": "fib"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "Zeckendorf",
+      "result": {
+        "dry_run": true,
+        "file": "lean/Omega.lean",
+        "theorem": "Zeckendorf"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "golden-ratio",
+      "result": {
+        "dry_run": true,
+        "file": "lean/InfoGeometry/Theorems.lean",
+        "theorem": "golden-ratio"
+      }
+    }
+  ],
+  "audit_report": {
+    "vacuity_check": {
+      "errors": [
+        {
+          "severity": 0.3,
+          "name": "no_hyp_use",
+          "match": "f_antisym_ab",
+          "reason": "Theorem with parameters but proof doesn't reference them \u2014 potential vacuity"
+        },
+        {
+          "severity": 0.9,
+          "name": "trivial_proof",
+          "match": "theorem gellMann1_eq_gl1 : True := by trivial",
+          "reason": "Theorem proven with `by trivial` \u2014 likely vacuous if the statement is non-trivial"
+        },
+        {
+          "severity": 0.6,
+          "name": "true_pattern",
+          "match": "theorem gellMann1_eq_gl1 : True :=",
+          "reason": "Theorem states `True` \u2014 trivially true, check if this is intentional"
+        }
+      ]
+    },
+    "axiom_audit": {
+      "errors": [
+        "Scanning 1 module(s)...\n  [1/1] InfoGeometry.Algebra: \u2713 14 decls, 0\u2717 0p 0u\n\n======================================================================\nAXIOM INDEX REPORT\n======================================================================\n\nAll unique axioms (3):\n  \u24d8 propext: 8 uses in 1 modules\n  \u24d8 Quot.sound: 5 uses in 1 modules\n  \u24d8 Classical.choice: 2 uses in 1 modules\n\nAxiomless modules (1 / 1):\n  InfoGeometry.Algebra\n\nSummary:\n  Modules: 1\n  Declarations: 14\n  Nonstandard axiom users: 0\n  Unique axioms: 3\n  Axiomless modules: 1\n{\n  \"modules\": 1,\n  \"declarations\": 14,\n  \"axiom_usage\": {\n    \"propext\": 8,\n    \"Quot.sound\": 5,\n    \"Classical.choice\": 2\n  },\n  \"axiomless\": [\n    \"InfoGeometry.Algebra\"\n  ],\n  \"suspicious\": {}\n}\n"
+      ]
+    },
+    "style_check": {
+      "errors": []
+    },
+    "dag_freshness": {
+      "errors": [
+        "DAG index stale (>24h)"
+      ]
+    },
+    "passed": false
+  },
+  "acceptance_record": {
+    "accepted": false,
+    "reason": "Audit failed",
+    "audit": {
+      "vacuity_check": {
+        "errors": [
+          {
+            "severity": 0.3,
+            "name": "no_hyp_use",
+            "match": "f_antisym_ab",
+            "reason": "Theorem with parameters but proof doesn't reference them \u2014 potential vacuity"
+          },
+          {
+            "severity": 0.9,
+            "name": "trivial_proof",
+            "match": "theorem gellMann1_eq_gl1 : True := by trivial",
+            "reason": "Theorem proven with `by trivial` \u2014 likely vacuous if the statement is non-trivial"
+          },
+          {
+            "severity": 0.6,
+            "name": "true_pattern",
+            "match": "theorem gellMann1_eq_gl1 : True :=",
+            "reason": "Theorem states `True` \u2014 trivially true, check if this is intentional"
+          }
+        ]
+      },
+      "axiom_audit": {
+        "errors": [
+          "Scanning 1 module(s)...\n  [1/1] InfoGeometry.Algebra: \u2713 14 decls, 0\u2717 0p 0u\n\n======================================================================\nAXIOM INDEX REPORT\n======================================================================\n\nAll unique axioms (3):\n  \u24d8 propext: 8 uses in 1 modules\n  \u24d8 Quot.sound: 5 uses in 1 modules\n  \u24d8 Classical.choice: 2 uses in 1 modules\n\nAxiomless modules (1 / 1):\n  InfoGeometry.Algebra\n\nSummary:\n  Modules: 1\n  Declarations: 14\n  Nonstandard axiom users: 0\n  Unique axioms: 3\n  Axiomless modules: 1\n{\n  \"modules\": 1,\n  \"declarations\": 14,\n  \"axiom_usage\": {\n    \"propext\": 8,\n    \"Quot.sound\": 5,\n    \"Classical.choice\": 2\n  },\n  \"axiomless\": [\n    \"InfoGeometry.Algebra\"\n  ],\n  \"suspicious\": {}\n}\n"
+        ]
+      },
+      "style_check": {
+        "errors": []
+      },
+      "dag_freshness": {
+        "errors": [
+          "DAG index stale (>24h)"
+        ]
+      },
+      "passed": false
+    }
+  },
+  "created_at": "2026-07-21T20:30:58.549399Z",
+  "updated_at": "2026-07-21T20:30:58.549409Z"
+}

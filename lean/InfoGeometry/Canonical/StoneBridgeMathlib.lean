@@ -15,7 +15,7 @@ MASA spectra, motives, or amplituhedron statements.
 
 noncomputable section
 
-namespace StoneBridgeMathlib
+namespace InfoGeometry.Canonical.StoneBridgeMathlib
 
 open Set
 
@@ -228,4 +228,4 @@ theorem stoneBasic_compl (a : B) :
 
 end BooleanUltrafilter
 
-end StoneBridgeMathlib
+end InfoGeometry.Canonical.StoneBridgeMathlib

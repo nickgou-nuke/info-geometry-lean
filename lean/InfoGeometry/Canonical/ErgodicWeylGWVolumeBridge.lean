@@ -22,7 +22,7 @@ self-similar fixed operator
 ```
 -/
 
-namespace ErgodicWeylGWVolumeBridge
+namespace InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
 
 open InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 open InfoGeometry.Canonical.ErgodicFixedPointBridge
@@ -172,4 +172,4 @@ end Bridge
 
 end Core
 
-end ErgodicWeylGWVolumeBridge
+end InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge

@@ -10,13 +10,13 @@ Prime-specific Clifford wavelet limit socket.
 This file connects the Clifford-wavelet reconstruction machinery to the
 renormalized prime Lee--Yang approximants.
 
-It does not prove RH.  It formulates the exact analytic theorem that would
-replace the raw Hurwitz convergence witness.
+It does not prove RH.  It formulates the exact Hestenes--Krein/filtered-colimit
+wavelet theorem that would replace the raw Hurwitz-style convergence witness.
 -/
 
 noncomputable section
 
-namespace PrimeCliffordWaveletXiLimit
+namespace InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 
 open InfoGeometry.Analysis.CliffordWaveletTransform
 
@@ -50,9 +50,9 @@ def PrimeLeeYangApproximants.renormZ
 
 /-- Clifford wavelet realization of the prime approximants.
 
-This is the new analytic bridge:
-the prime approximants are not arbitrary functions; they are finite
-Clifford-wavelet reconstructions / partial sums.
+This is the new Hestenes--Krein/colimit bridge: the prime approximants are not
+arbitrary functions; they are finite Clifford-wavelet reconstructions / partial
+sums.
 -/
 @[rep_depth operator]
 structure PrimeCliffordWaveletRealization
@@ -96,4 +96,4 @@ def locallyUniformLimit_of_cliffordWaveletRealization
     Prop :=
   R.locallyUniformRenormalizedLimit
 
-end PrimeCliffordWaveletXiLimit
+end InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit

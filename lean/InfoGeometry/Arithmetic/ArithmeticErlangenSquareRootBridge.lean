@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ArithmeticErlangenSquareRootBridge
+namespace InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
 
 /-! ## 1. Finite amplitude square roots -/
 
@@ -146,4 +146,4 @@ end FiniteAmplitudeSquareRootPacket
 
 
 
-end ArithmeticErlangenSquareRootBridge
+end InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge

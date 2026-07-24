@@ -15,10 +15,13 @@ Proved:
 
 noncomputable section
 
-namespace B3PresentedGroup
+namespace InfoGeometry.Physics.B3PresentedGroup
+
+open InfoGeometry.External.Auto
 
 open Matrix
 open PresentedGroup
+open InfoGeometry.External.Auto
 
 /-- The group of invertible 8×8 complex matrices. -/
 abbrev GL8 := (Matrix (Fin 8) (Fin 8) ℂ)ˣ
@@ -179,4 +182,4 @@ theorem phi_sig1 : phi (PresentedGroup.of sig1 : B3) = s1_unit := by
 #check phi_sig0
 #check phi_sig1
 
-end B3PresentedGroup
+end InfoGeometry.Physics.B3PresentedGroup

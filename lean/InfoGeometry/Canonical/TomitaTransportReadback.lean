@@ -10,7 +10,7 @@ algebraic Tomita-Takesaki structure; it only records the transport/readback
 inversion for the finite token machine described in the module statement.
 -/
 
-namespace TomitaTransportReadback
+namespace InfoGeometry.Canonical.TomitaTransportReadback
 
 /-- Flat stream tokens for the linearized term representation. -/
 inductive StreamToken : Type
@@ -73,4 +73,4 @@ theorem tomita_transport_readback_inverse (t : TermGraph) :
     readback (transport t) = some t := by
   simpa [readback] using (readback_aux_append (t := t) (tokens := []) (stack := []))
 
-end TomitaTransportReadback
+end InfoGeometry.Canonical.TomitaTransportReadback

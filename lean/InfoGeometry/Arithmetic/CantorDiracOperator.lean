@@ -27,7 +27,7 @@ noncomputable section
 open scoped BigOperators
 open scoped Real
 
-namespace CantorDiracOperator
+namespace InfoGeometry.Arithmetic.CantorDiracOperator
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -426,4 +426,4 @@ theorem star_cantorDirac_eq_cantorDirac_of_generator_selfAdjoint
     star (cantorDiracOperator P γ) = cantorDiracOperator P γ :=
   cantorDirac_is_selfAdjoint P γ h_self
 
-end CantorDiracOperator
+end InfoGeometry.Arithmetic.CantorDiracOperator

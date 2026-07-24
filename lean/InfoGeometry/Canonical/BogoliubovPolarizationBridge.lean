@@ -19,7 +19,7 @@ cleanly:
   projector-super pair.
 -/
 
-namespace BogoliubovPolarizationBridge
+namespace InfoGeometry.Canonical.BogoliubovPolarizationBridge
 
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -84,4 +84,4 @@ theorem bogoliubovPolarizationBridge_of_strictSymmetry
 
 end Doubled
 
-end BogoliubovPolarizationBridge
+end InfoGeometry.Canonical.BogoliubovPolarizationBridge

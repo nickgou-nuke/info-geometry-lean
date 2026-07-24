@@ -2,7 +2,7 @@ import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Canonical.HodgeKreinTriFacet
 
-namespace HodgeTrifactor
+namespace InfoGeometry.Canonical.HodgeTrifactor
 
 open InfoGeometry.Canonical.HodgeKreinTriFacet
 
@@ -64,4 +64,4 @@ theorem fermionic_times_harmonic_eq_one_sub_sq (x : ℝ) :
   unfold fermionicFactor harmonicFactor
   ring
 
-end HodgeTrifactor
+end InfoGeometry.Canonical.HodgeTrifactor

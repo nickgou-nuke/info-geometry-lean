@@ -1,7 +1,7 @@
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Krein.KreinSpace
 
-namespace ProjectiveRayBridge
+namespace InfoGeometry.Quantum.ProjectiveRayBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Projective
@@ -42,4 +42,4 @@ theorem same_ray_incidence_right {ψ φ φ' : H₂} (h : same_ray (E := E) φ φ
     rw [KreinSpace.kreinInner_smul_right] at h0
     exact (mul_eq_zero.mp h0).resolve_left hc
 
-end ProjectiveRayBridge
+end InfoGeometry.Quantum.ProjectiveRayBridge

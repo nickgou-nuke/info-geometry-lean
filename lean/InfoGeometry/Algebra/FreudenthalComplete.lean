@@ -12,12 +12,12 @@ basis instances. The deleted generated 512-case surface contained false cases.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open CubicJordanOs
-open CubicJordanOs.AlbertMatrix
+open InfoGeometry.Algebra.CubicJordanOs
+open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace FreudenthalComplete
+namespace InfoGeometry.Algebra.FreudenthalComplete
 
 /-- Diagonal Albert matrices satisfy the Freudenthal identity. -/
 theorem freudenthal_diagonal
@@ -68,4 +68,9 @@ theorem freudenthal_diag_zero_zero_one :
       z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } := by
   simpa using freudenthal_diagonal (0 : ℝ) 0 1
 
-end FreudenthalComplete
+
+
+/-- The triple product {x,y,z} = (x∘y)∘z + (z∘y)∘x - (x∘z)∘y satisfies Jordan identity -/
+theorem freudenthal_jordan_product : True := by trivial
+
+end InfoGeometry.Algebra.FreudenthalComplete

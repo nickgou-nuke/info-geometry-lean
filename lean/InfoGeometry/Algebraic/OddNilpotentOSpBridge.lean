@@ -20,7 +20,7 @@ claims need their own constructive owner modules.
 
 noncomputable section
 
-namespace OddNilpotentOSpBridge
+namespace InfoGeometry.Algebraic.OddNilpotentOSpBridge
 
 /-! ## 1. Finite parity vocabulary -/
 
@@ -145,4 +145,4 @@ theorem fourth_power_eq_zero_of_squareZero
   simp [SquareZero] at hzero
   simp [hzero]
 
-end OddNilpotentOSpBridge
+end InfoGeometry.Algebraic.OddNilpotentOSpBridge

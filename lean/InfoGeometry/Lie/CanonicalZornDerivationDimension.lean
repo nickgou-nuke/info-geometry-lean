@@ -4,7 +4,7 @@ set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
 
 noncomputable section
-namespace CanonicalZornDerivationDimension
+namespace InfoGeometry.Lie.CanonicalZornDerivationDimension
 
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
@@ -61,7 +61,8 @@ private noncomputable def parameterDerivation (p : Params) : VDer where
         ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]
       ring
 
-private def derivationParameters (D : VDer) : Params := fun i =>
+/-- Read the fourteen canonical coordinates of a vector-Zorn derivation. -/
+def derivationParameters (D : VDer) : Params := fun i =>
   if i = 0 then (D E22).w 0
   else if i = 1 then (D (V 1)).w 0
   else if i = 2 then (D (V 2)).w 0
@@ -664,9 +665,16 @@ theorem finrank_vectorDerivations : Module.finrank ℝ VDer = 14 := by
   rw [← parameterLinearEquiv.finrank_eq]
   simp [Params]
 
+/-- The explicit fourteen-parameter model transported to canonical Zorn
+derivations.  Its inverse is the canonical coordinate readout used by the
+standard-derivation spanning proof. -/
+noncomputable def canonicalParameterLinearEquiv :
+    Params ≃ₗ[ℝ] CanonicalZornDerivation.canonicalZornDerivations :=
+  parameterLinearEquiv.trans CanonicalZornDerivation.vectorCanonicalLinearEquiv
+
 theorem finrank_canonicalZornDerivations :
     Module.finrank ℝ CanonicalZornDerivation.canonicalZornDerivations = 14 := by
   rw [← CanonicalZornDerivation.vectorCanonicalLinearEquiv.finrank_eq]
   exact finrank_vectorDerivations
 
-end CanonicalZornDerivationDimension
+end InfoGeometry.Lie.CanonicalZornDerivationDimension

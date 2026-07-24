@@ -37,9 +37,9 @@ cones, Radon--Nikodym derivatives, KMS uniqueness, and RH are not claimed here.
 
 noncomputable section
 
-namespace ZetaChiralConeAlgebra
+namespace InfoGeometry.Canonical.ZetaChiralConeAlgebra
 
-open ZetaCoordinateSymmetry
+open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open ZetaAffineChart
 open ZetaCenteredChart
 
@@ -213,4 +213,4 @@ theorem relativeModularDensity_eq_oddProjection
     density = JMinusProjector zeta :=
   hdensity.1
 
-end ZetaChiralConeAlgebra
+end InfoGeometry.Canonical.ZetaChiralConeAlgebra

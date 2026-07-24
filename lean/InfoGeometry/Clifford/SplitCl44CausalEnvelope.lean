@@ -32,7 +32,7 @@ only explicit split `(4,4)` facts and does not provide an eta-to-Lorentz
 reduction object.
 -/
 
-namespace SplitCl44CausalEnvelope
+namespace InfoGeometry.Clifford.SplitCl44CausalEnvelope
 
 open scoped TensorProduct
 
@@ -285,4 +285,4 @@ theorem splitCl44MetricLogScale_neutral_iff_metric_null
     IsWeylNeutral (splitCl44MetricLogScale v) ↔ IsMetricNull44 v :=
   Iff.rfl
 
-end SplitCl44CausalEnvelope
+end InfoGeometry.Clifford.SplitCl44CausalEnvelope

@@ -16,7 +16,7 @@ The certified layer below is the explicit quadratic-pair algebra `a + bI` with
 not already a square.
 -/
 
-namespace LevGFQT
+namespace InfoGeometry.Algebra.LevGFQT
 
 section SO14
 
@@ -140,4 +140,4 @@ def zmodThreeQuadraticExtensionCertificate : LevQuadraticExtensionCertificate wh
 
 end ConcreteBaseFieldWitness
 
-end LevGFQT
+end InfoGeometry.Algebra.LevGFQT

@@ -20,7 +20,7 @@ noncomputable section
 
 namespace ZornKleinGlideBridge
 
-open ZornScalingFlow
+open InfoGeometry.External.Auto.ZornScalingFlow
 
 /-! ## A paired Zorn/affine action -/
 

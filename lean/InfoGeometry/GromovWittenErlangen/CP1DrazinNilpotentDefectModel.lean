@@ -28,7 +28,7 @@ namespace InfoGeometry
 namespace GromovWittenErlangen
 namespace CP1DrazinNilpotentDefectModel
 
-open DrazinProjectionLocalization
+open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 
 attribute [local instance] starRingOfComm
 

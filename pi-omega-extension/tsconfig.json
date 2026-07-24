@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "types": ["node", "chrome"],
+    "paths": {
+      "@/*": ["./*"],
+      "@earendil-works/pi-ai": ["./types/pi-ai.d.ts"]
+    }
+  },
+  "include": ["index.ts"],
+  "exclude": ["node_modules", "dist", "demo.ts"]
+}

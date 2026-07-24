@@ -25,7 +25,7 @@ There are no wrappers, witness fields, law fields, certificates, guards, or
 hidden convergence assumptions.
 -/
 
-namespace InfiniteN2ModeInduction
+namespace InfoGeometry.Algebra.InfiniteN2ModeInduction
 
 open FiniteN2Induction
 
@@ -359,4 +359,4 @@ theorem iterateFinsuppModeFamily_preserves_n2_closures
 
 end FinsuppDirectSum
 
-end InfiniteN2ModeInduction
+end InfoGeometry.Algebra.InfiniteN2ModeInduction

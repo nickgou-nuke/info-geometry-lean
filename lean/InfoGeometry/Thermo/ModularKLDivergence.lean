@@ -16,7 +16,7 @@ This file introduces no new ontology. It only packages already-owned results:
 - count-ray decomposition into projective readout + mass-shift gauge term.
 -/
 
-namespace ModularKLDivergence
+namespace InfoGeometry.Thermo.ModularKLDivergence
 
 open scoped ENNReal NNReal
 
@@ -160,4 +160,4 @@ theorem modular_hamiltonian_scale_shape_split_countRay
 
 end CountRaySplit
 
-end ModularKLDivergence
+end InfoGeometry.Thermo.ModularKLDivergence

@@ -34,7 +34,7 @@ Hestenes-linearity eigenspace result.
 
 open scoped InnerProductSpace
 
-namespace HestenesKreinSpectralReadout
+namespace InfoGeometry.Canonical.HestenesKreinSpectralReadout
 
 open InfoGeometry.Canonical.HestenesPhaseSpectral
 open InfoGeometry.Krein
@@ -118,4 +118,4 @@ theorem hestenesKrein_spectralProjector_preserves_phaseAxis
 
 end HestenesKrein
 
-end HestenesKreinSpectralReadout
+end InfoGeometry.Canonical.HestenesKreinSpectralReadout

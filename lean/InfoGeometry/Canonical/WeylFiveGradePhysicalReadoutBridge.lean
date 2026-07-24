@@ -23,7 +23,7 @@ are intended to live in the grade-zero physical lane.  It does not prove a new
 Virasoro, Sugawara, Type III, or anomaly-cancellation theorem.
 -/
 
-namespace WeylFiveGradePhysicalReadoutBridge
+namespace InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
 
 open InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
 open InfoGeometry.Canonical.WeylGWVolumeBridge
@@ -268,4 +268,4 @@ theorem modularHamiltonianSurrogate_grade_zero :
 
 end WeylFiveGradePhysicalReadoutCarrier
 
-end WeylFiveGradePhysicalReadoutBridge
+end InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge

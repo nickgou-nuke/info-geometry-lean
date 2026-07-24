@@ -5,7 +5,7 @@ import Mathlib.Algebra.Polynomial.Bivariate
 open Polynomial
 open scoped Polynomial.Bivariate
 
-namespace HilbertTwoPoints
+namespace InfoGeometry.Instanton.HilbertTwoPoints
 
 noncomputable section
 

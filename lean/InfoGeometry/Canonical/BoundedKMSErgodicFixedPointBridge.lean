@@ -23,7 +23,7 @@ consequences needed downstream:
 * preservation of the Drazin regular-support lane.
 -/
 
-namespace BoundedKMSErgodicFixedPointBridge
+namespace InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
 
 open InfoGeometry.Canonical.BoundedKMSConditionBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -165,4 +165,4 @@ end Bridge
 
 end Core
 
-end BoundedKMSErgodicFixedPointBridge
+end InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge

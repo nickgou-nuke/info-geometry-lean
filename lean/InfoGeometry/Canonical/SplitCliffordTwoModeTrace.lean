@@ -11,7 +11,7 @@ Concrete 2-mode VEV/trace contractions in `M₄(ℝ)`.
 No placeholders. No `sorry`.
 -/
 
-namespace SplitCliffordTwoModeTrace
+namespace InfoGeometry.Canonical.SplitCliffordTwoModeTrace
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
@@ -62,4 +62,4 @@ theorem vev4_linear (M L : M4R) (c : ℝ) :
     vev4 (M + L) = vev4 M + vev4 L ∧ vev4 (c • M) = c * vev4 M := by
   constructor <;> rfl
 
-end SplitCliffordTwoModeTrace
+end InfoGeometry.Canonical.SplitCliffordTwoModeTrace

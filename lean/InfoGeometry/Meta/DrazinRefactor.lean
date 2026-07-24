@@ -2,7 +2,7 @@ import Lean
 
 open Lean Elab Command
 
-namespace DrazinRefactor
+namespace InfoGeometry.Meta.DrazinRefactor
 
 /-- Parse a dotted declaration path into a `Name`. -/
 def nameFromDotted (path : String) : Name :=
@@ -179,4 +179,4 @@ elab "#classify_old_riesz_usage" : command => do
   Command.liftCoreM <| logHits "Projector-readback surfaces (hP)" projector
   Command.liftCoreM <| logHits "Packaging surfaces" packaging
 
-end DrazinRefactor
+end InfoGeometry.Meta.DrazinRefactor

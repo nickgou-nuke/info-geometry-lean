@@ -15,7 +15,7 @@ This file stays at the level currently justified by the codebase:
 - the resulting no-go theorem for a nontrivial finite-dimensional trace anomaly
 -/
 
-namespace AnomalyDilationBridge
+namespace InfoGeometry.Canonical.AnomalyDilationBridge
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MoorePenrose
@@ -93,4 +93,4 @@ end TraceAnomaly
 
 end ConformalInference
 
-end AnomalyDilationBridge
+end InfoGeometry.Canonical.AnomalyDilationBridge

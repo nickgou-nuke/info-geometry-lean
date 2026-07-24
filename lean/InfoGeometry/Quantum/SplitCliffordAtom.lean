@@ -7,7 +7,7 @@ open CategoryTheory
 
 universe u
 
-namespace SplitCliffordAtom
+namespace InfoGeometry.Quantum.SplitCliffordAtom
 
 abbrev RealMajoranaCore := RealMajoranaCategory.RealMajoranaCore
 abbrev RealMajoranaCore.Hom := RealMajoranaCategory.RealMajoranaCore.Hom
@@ -132,4 +132,4 @@ noncomputable def toRealKVect : Atom ⥤ RealKCategory :=
 
 end Atom
 
-end SplitCliffordAtom
+end InfoGeometry.Quantum.SplitCliffordAtom

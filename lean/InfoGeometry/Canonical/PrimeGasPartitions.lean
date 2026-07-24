@@ -17,7 +17,7 @@ Infinite Euler products are exposed only through explicit convergence/witness
 packets.
 -/
 
-namespace PrimeGasPartitions
+namespace InfoGeometry.Canonical.PrimeGasPartitions
 
 open scoped BigOperators
 open FormalPrimeRootSystem
@@ -106,4 +106,4 @@ theorem parityTrace_eq_supertrace
 
 end SplitPrimeSupertraceShadow
 
-end PrimeGasPartitions
+end InfoGeometry.Canonical.PrimeGasPartitions

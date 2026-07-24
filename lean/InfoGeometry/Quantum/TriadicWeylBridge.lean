@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.DrazinInfiniteCore
 
-namespace TriadicWeylBridge
+namespace InfoGeometry.Quantum.TriadicWeylBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.SplitQuadraticSheets
@@ -377,4 +377,4 @@ theorem eq_logarithmicGenerator_of_scalarSheetBlocks
 
 end FiniteDimensional
 
-end TriadicWeylBridge
+end InfoGeometry.Quantum.TriadicWeylBridge

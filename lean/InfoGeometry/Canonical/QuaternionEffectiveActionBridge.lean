@@ -21,7 +21,7 @@ noncomputable section
 
 open InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 
-namespace QuaternionEffectiveActionBridge
+namespace InfoGeometry.Canonical.QuaternionEffectiveActionBridge
 
 open InfoGeometry.Algebraic.SplitSignature
 open InfoGeometry.Canonical.QuaternionGeometry
@@ -69,4 +69,4 @@ theorem quantumStationaryBridge_iff
 
 end QuaternionStationary
 
-end QuaternionEffectiveActionBridge
+end InfoGeometry.Canonical.QuaternionEffectiveActionBridge

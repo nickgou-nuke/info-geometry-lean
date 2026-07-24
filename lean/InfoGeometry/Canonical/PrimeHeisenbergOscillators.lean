@@ -38,7 +38,7 @@ extracts the prime oscillator relations from the already-owned
 
 noncomputable section
 
-namespace PrimeHeisenbergOscillators
+namespace InfoGeometry.Canonical.PrimeHeisenbergOscillators
 
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 open VirasoroProject
@@ -101,4 +101,4 @@ theorem chargedFock_prime_annihilation_creation_commutator_ne
   exact prime_annihilation_creation_commutator_ne
     (chargedFockSpaceCurrentHeisenbergRep 𝕜 α) hpq
 
-end PrimeHeisenbergOscillators
+end InfoGeometry.Canonical.PrimeHeisenbergOscillators

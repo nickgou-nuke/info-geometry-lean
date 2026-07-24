@@ -18,7 +18,7 @@ or hard analytic regularity.
 
 noncomputable section
 
-namespace LieGeometricDuality
+namespace InfoGeometry.Canonical.LieGeometricDuality
 
 open scoped BigOperators
 
@@ -199,4 +199,4 @@ theorem fenchelGap_orbit_invariant
     simpa [coadjointPairing] using L.pairing_ad_covariant g ξ X
   nlinarith [hPrimalInv g X, hDualInv g ξ, hpair]
 
-end LieGeometricDuality
+end InfoGeometry.Canonical.LieGeometricDuality

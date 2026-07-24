@@ -148,7 +148,7 @@ lemma frozenSlice_local_free_energy_identity_sum
       (InfoGeometry.fin_kl_div p_x qT).toReal
         = ∑ t : T, (p_x t).toReal * Real.log ((p_x t).toReal / (J.prior t).toReal) := by
     simpa [J, frozenSliceJaynes] using
-      (IProjection.toReal_klDiv_eq_sum_log_ratio
+      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := p_x) (Q := qT) hq)
   have hMoment :
       (∑ i ∈ J.index, lam i * J.moment p_x (J.feature i))
@@ -242,7 +242,7 @@ lemma local_free_energy_identity
         = ∑ t : T, (p_x t).toReal *
             Real.log ((p_x t).toReal / ((J.gibbsDist lam hZ) t).toReal) := by
     simpa using
-      (IProjection.toReal_klDiv_eq_sum_log_ratio
+      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := p_x) (Q := J.gibbsDist lam hZ) hGibbsFull)
   have hKLg' :
       (InfoGeometry.fin_kl_div p_x (J.gibbsDist lam hZ)).toReal

@@ -10,7 +10,7 @@ interfaces. It avoids universal existence theorems and instead provides
 mechanisms for packaging explicit data and field-specific laws.
 -/
 
-namespace STUDictionary
+namespace InfoGeometry.Application.STUDictionary
 
 open InfoGeometry.Applications.STUQubit
 
@@ -112,4 +112,4 @@ theorem drazinProjector_idempotent
 
 end DecoherenceAsDrazinSurgery
 
-end STUDictionary
+end InfoGeometry.Application.STUDictionary

@@ -19,7 +19,7 @@ No operator-algebraic completion or infinite-dimensional determinant theorem is
 asserted here.
 -/
 
-namespace FiniteDeterminantTower
+namespace InfoGeometry.Canonical.FiniteDeterminantTower
 
 open FiniteInvariantTransport
 
@@ -92,4 +92,4 @@ theorem normalized_logDet_invariant_along_chain
   rw [pow_add]
   field_simp [hpow_ne, hpowk_ne]
 
-end FiniteDeterminantTower
+end InfoGeometry.Canonical.FiniteDeterminantTower

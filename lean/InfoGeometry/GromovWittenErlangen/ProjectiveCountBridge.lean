@@ -20,9 +20,9 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ProjectiveCountBridge
+namespace InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
 
-open PrimitiveProjectiveRays
+open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 
 /--
 Projective count substrate for a GW localization packet.
@@ -232,4 +232,4 @@ theorem entropy_nonneg_of_one_le_volume
 
 end GaugeFixedGWProjectiveCountBridge
 
-end ProjectiveCountBridge
+end InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge

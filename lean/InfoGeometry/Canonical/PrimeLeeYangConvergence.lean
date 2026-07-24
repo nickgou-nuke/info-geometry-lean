@@ -29,7 +29,7 @@ corrected Hurwitz bridge.
 
 noncomputable section
 
-namespace PrimeLeeYangConvergence
+namespace InfoGeometry.Canonical.PrimeLeeYangConvergence
 
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -152,4 +152,4 @@ theorem RH_of_convergence_socket
 
 end PrimeLeeYangConvergenceSocket
 
-end PrimeLeeYangConvergence
+end InfoGeometry.Canonical.PrimeLeeYangConvergence

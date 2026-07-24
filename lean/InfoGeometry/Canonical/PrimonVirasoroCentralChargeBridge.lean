@@ -27,7 +27,7 @@ the exact compatibility data already supported by the repository:
 * topological central charge as the operatorial analytical index.
 
 Any stronger arithmetic-to-conformal identity must be supplied by a separate
-analytic owner surface.
+Hestenes--Krein/categorical colimit owner surface.
 -/
 
 noncomputable section

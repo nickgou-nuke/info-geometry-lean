@@ -25,7 +25,7 @@ exposes the supported "banished or tamed by pairing" chain.
 
 noncomputable section
 
-namespace SplitOctonionTamingBridge
+namespace InfoGeometry.Canonical.SplitOctonionTamingBridge
 
 open scoped InfoGeometryJordan
 
@@ -62,7 +62,8 @@ variable [InfoGeometry.Core.JordanAlgebra V]
 
 /--
 Jordan taming keeps the symmetric product in the formally supported lane.
-This is the repository-owned Jordan identity.
+This is the repository-owned Jordan identity for the ambient
+`InfoGeometry.Core.JordanAlgebra` class.
 -/
 theorem jordan_taming_identity
     (x y : V) :
@@ -133,4 +134,4 @@ theorem singularResidue_eq_nilpotentResidue_on_state
 
 end DrazinInformation
 
-end SplitOctonionTamingBridge
+end InfoGeometry.Canonical.SplitOctonionTamingBridge

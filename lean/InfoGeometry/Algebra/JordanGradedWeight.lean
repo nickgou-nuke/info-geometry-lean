@@ -30,7 +30,7 @@ where each `X_w` is the weight-`w` component.
 
 open InfoGeometry.Algebra.JordanCayleyInversionOs
 
-namespace JordanGradedWeight
+namespace InfoGeometry.Algebra.JordanGradedWeight
 
 /-! ## 1. Coordinate-wise addition on `Herm2x2Os` -/
 
@@ -152,4 +152,4 @@ structure RefinedOrbitData (X : Herm2x2Os) where
   stratum : DetStratum X
   weightProfile : Option (NullWeightProfile X)
 
-end JordanGradedWeight
+end InfoGeometry.Algebra.JordanGradedWeight

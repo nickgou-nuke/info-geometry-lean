@@ -7,7 +7,7 @@ import Mathlib.Tactic.NoncommRing
 
 open scoped InnerProductSpace
 
-namespace DPDWedgeCompatibility
+namespace InfoGeometry.Canonical.DPDWedgeCompatibility
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -563,4 +563,4 @@ theorem relativeModular_scaleShapeSplit_of_commutes_spectralProjector
 
 end Core
 
-end DPDWedgeCompatibility
+end InfoGeometry.Canonical.DPDWedgeCompatibility

@@ -22,7 +22,7 @@ machine-visible without claiming a new RH proof.
 
 noncomputable section
 
-namespace ZetaBraneCantorDirac
+namespace InfoGeometry.Canonical.ZetaBraneCantorDirac
 
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
@@ -101,4 +101,4 @@ theorem finiteCantorDirac_selfAdjoint_iff_unitary_holds
 by
   simpa using hEquiv S.finiteCantorDirac
 
-end ZetaBraneCantorDirac
+end InfoGeometry.Canonical.ZetaBraneCantorDirac

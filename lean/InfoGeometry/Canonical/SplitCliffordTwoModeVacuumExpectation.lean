@@ -11,7 +11,7 @@ This file uses the explicit operators `a1`, `a2`, `a1Dag`, `a2Dag` from
 arithmetic.
 -/
 
-namespace SplitCliffordTwoModeVacuumExpectation
+namespace InfoGeometry.Canonical.SplitCliffordTwoModeVacuumExpectation
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
@@ -84,4 +84,4 @@ theorem a2_vac4_zero :
   fin_cases i <;> fin_cases j <;>
     simp [a2, vac4, Matrix.mul_apply, Fin.sum_univ_four]
 
-end SplitCliffordTwoModeVacuumExpectation
+end InfoGeometry.Canonical.SplitCliffordTwoModeVacuumExpectation

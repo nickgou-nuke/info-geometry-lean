@@ -102,11 +102,11 @@ theorem weylDenominator_nonzero_on_regular {G T : Type*} [Group G] [Group T]
 /-! ## 2. Finite constructive owner-backed replacements -/
 
 theorem finitePrimeWeylDenominatorFormula
-    (L : FormalPrimeRootSystem.FormalPrimeRootLattice)
+    (L : InfoGeometry.Canonical.FormalPrimeRootSystem.FormalPrimeRootLattice)
     (x : ℕ → ℝ) :
-    FormalPrimeRootSystem.weylDenominatorProduct L x =
-      FormalPrimeRootSystem.weylAlternatingSum L x :=
-  FormalPrimeRootSystem.finite_prime_weyl_denominator L x
+    InfoGeometry.Canonical.FormalPrimeRootSystem.weylDenominatorProduct L x =
+      InfoGeometry.Canonical.FormalPrimeRootSystem.weylAlternatingSum L x :=
+  InfoGeometry.Canonical.FormalPrimeRootSystem.finite_prime_weyl_denominator L x
 
 def orbitDeterminantFactor {R : Type*} [Ring R] (y : R) : R :=
   y * y - 1

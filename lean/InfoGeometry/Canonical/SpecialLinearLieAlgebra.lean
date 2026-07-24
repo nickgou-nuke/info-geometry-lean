@@ -19,7 +19,7 @@ algebra submodule of trace-zero matrices.
 - BUCKET 3: OPEN CLOSURE DEBT: None.
 -/
 
-namespace SpecialLinearLieAlgebra
+namespace InfoGeometry.Canonical.SpecialLinearLieAlgebra
 
 open BigOperators
 
@@ -86,4 +86,4 @@ theorem lie_bracket_closed {A B : Matrix n n F}
     A * B - B * A ∈ SlLieAlgebra n F := by
   exact commutator_mem_sl A B
 
-end SpecialLinearLieAlgebra
+end InfoGeometry.Canonical.SpecialLinearLieAlgebra

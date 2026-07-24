@@ -19,7 +19,7 @@ It does **not** claim a Clifford product theorem or a full noncommutative
 Vandermonde determinant.  This is a finite operator-deformed collision owner.
 -/
 
-namespace HestenesQVandermondeShadow
+namespace InfoGeometry.Canonical.HestenesQVandermondeShadow
 
 section TwoNode
 
@@ -186,4 +186,4 @@ end A2HestenesChart
 
 end A2
 
-end HestenesQVandermondeShadow
+end InfoGeometry.Canonical.HestenesQVandermondeShadow

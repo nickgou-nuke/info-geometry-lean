@@ -13,7 +13,7 @@ This file proves:
 * bounded finite-sum lift over a `Finset` of modes.
 -/
 
-namespace CARVacuumContraction
+namespace InfoGeometry.Canonical.CARVacuumContraction
 
 open scoped BigOperators
 
@@ -67,4 +67,4 @@ theorem car_vacuum_contraction_sum
     _ = (Finset.sum S c) • v := by
           simpa using (Finset.sum_smul (s := S) (f := c) (x := v)).symm
 
-end CARVacuumContraction
+end InfoGeometry.Canonical.CARVacuumContraction

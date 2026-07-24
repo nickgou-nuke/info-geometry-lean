@@ -20,7 +20,7 @@ No convergence claim.
 
 noncomputable section
 
-namespace LeeYangAsanoNativeCore
+namespace InfoGeometry.Canonical.LeeYangAsanoNativeCore
 
 open Set
 open InfoGeometry.Canonical.LeeYangAsanoDigest
@@ -237,4 +237,4 @@ def extractMoebius (A B C D : ℂ) (hDet : A * D - B * C ≠ 0) :
       rw [h_alg]
       exact hDet }
 
-end LeeYangAsanoNativeCore
+end InfoGeometry.Canonical.LeeYangAsanoNativeCore

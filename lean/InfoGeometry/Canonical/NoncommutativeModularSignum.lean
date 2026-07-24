@@ -25,7 +25,7 @@ calculus.  The signum theorem here is the exact two-point involution calculus:
 for `a > 0`, `sgn(a • S) = S`.
 -/
 
-namespace NoncommutativeModularSignum
+namespace InfoGeometry.Canonical.NoncommutativeModularSignum
 
 open InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 open InfoGeometry.Krein
@@ -337,4 +337,4 @@ theorem doubledBoostSignum_cl11_relations_of_pos {a : ℝ} (ha : 0 < a) :
 
 end Doubled
 
-end NoncommutativeModularSignum
+end InfoGeometry.Canonical.NoncommutativeModularSignum

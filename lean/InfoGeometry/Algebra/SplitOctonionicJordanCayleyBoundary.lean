@@ -14,9 +14,9 @@ fundamental determinant identity.  Once such a proof is supplied for a concrete
 split-octonion model, the Klein-quadric corollary follows automatically.
 -/
 
-namespace SplitOctonionicJordanCayleyBoundary
+namespace InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
 
-open InfoGeometry.Algebra.SplitJordanSpinor
+open SplitJordanSpinor
 
 variable {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
 variable [SplitCompositionAlgebra K A]
@@ -79,15 +79,16 @@ split-octonion model.
 -/
 structure SplitOctonionicBoundary (K A : Type*) [CommRing K] [NonAssocSemiring A] [SMul K A]
     [SplitCompositionAlgebra K A] where
-  q_eq_8 : SplitCompositionAlgebra.q (K := K) (A := A) = 8
+  q_eq_8 : SplitJordanSpinor.SplitCompositionAlgebra.q (K := K) (A := A) = 8
   cayley : JordanCayleyBoundary K A
 
 namespace SplitOctonionicBoundary
 
 /-- The ambient split-signature Jordan dimension is `q+2=10` in the octonionic branch. -/
 theorem ambient_dimension_eq_ten (B : SplitOctonionicBoundary K A) :
-    SplitCompositionAlgebra.q (K := K) (A := A) + 2 = 10 := by
-  rw [SplitOctonionicBoundary.q_eq_8 B]
+    SplitJordanSpinor.SplitCompositionAlgebra.q (K := K) (A := A) + 2 = 10 := by
+  have hq : SplitJordanSpinor.SplitCompositionAlgebra.q (K := K) (A := A) = 8 := B.q_eq_8
+  omega
 
 /-- The Klein-quadric zero-product corollary inherited from the packaged Cayley identity. -/
 theorem on_klein_quadric (B : SplitOctonionicBoundary K A)
@@ -98,4 +99,4 @@ theorem on_klein_quadric (B : SplitOctonionicBoundary K A)
 
 end SplitOctonionicBoundary
 
-end SplitOctonionicJordanCayleyBoundary
+end InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary

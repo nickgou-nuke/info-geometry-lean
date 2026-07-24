@@ -19,7 +19,7 @@ is introduced here. The bound is derived directly from the owned
 noncommutative channel-correlation layer.
 -/
 
-namespace OperatorialCramerRao
+namespace InfoGeometry.Canonical.OperatorialCramerRao
 
 open InfoGeometry.Canonical.OnsagerReciprocity
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -194,4 +194,4 @@ theorem toRelationalInformationDatum_inv_comparisonGeneratorMetric_self_le_of_un
 
 end Core
 
-end OperatorialCramerRao
+end InfoGeometry.Canonical.OperatorialCramerRao

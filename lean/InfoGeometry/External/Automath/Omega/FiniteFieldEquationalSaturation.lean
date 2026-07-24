@@ -1,5 +1,0 @@
-import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.Linearization
-import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.ContentBound
-import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.GeometricControl
-import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.CoefficientIdeal
-import InfoGeometry.External.Automath.Omega.FiniteFieldEquationalSaturation.PrimeFieldSaturation

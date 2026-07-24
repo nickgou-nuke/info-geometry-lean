@@ -11,7 +11,7 @@ Thin bridge from the root chiral Hodge square to the canonical finite
 analytical-index lane.
 -/
 
-namespace ChiralHodgeIndexBridge
+namespace InfoGeometry.Canonical.ChiralHodgeIndexBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
@@ -89,4 +89,4 @@ theorem rootDiracOddLane_analyticalIndex_eq_zero
 
 end Core
 
-end ChiralHodgeIndexBridge
+end InfoGeometry.Canonical.ChiralHodgeIndexBridge

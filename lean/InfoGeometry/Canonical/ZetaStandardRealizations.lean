@@ -13,7 +13,7 @@ centered-`ξ` consequence `Ξ(z) = Ξ(-z)` from the completed-zeta functional
 symmetry `ξ(s) = ξ(1-s)`.
 -/
 
-namespace ZetaStandardRealizations
+namespace InfoGeometry.Canonical.ZetaStandardRealizations
 
 abbrev ComplexFunction := ℂ → ℂ
 
@@ -192,4 +192,4 @@ namespace StandardZetaAtlas
 
 end StandardZetaAtlas
 
-end ZetaStandardRealizations
+end InfoGeometry.Canonical.ZetaStandardRealizations

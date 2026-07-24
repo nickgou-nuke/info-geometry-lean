@@ -24,7 +24,7 @@ so that the spectral square can be rewritten to the modular Hamiltonian without
 using a capstone wrapper.
 -/
 
-namespace DiagonalMetricModularBridge
+namespace InfoGeometry.Canonical.DiagonalMetricModularBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.YangMillsContinuum
@@ -397,4 +397,4 @@ end SpectralTriple
 
 end Router
 
-end DiagonalMetricModularBridge
+end InfoGeometry.Canonical.DiagonalMetricModularBridge

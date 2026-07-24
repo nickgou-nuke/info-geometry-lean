@@ -22,7 +22,7 @@ open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 noncomputable section
 
-namespace CubicJordanOs
+namespace InfoGeometry.Algebra.CubicJordanOs
 
 /-! ## SplitOct as additive commutative group (via product type rep) -/
 
@@ -185,10 +185,10 @@ version is proved below as `AlbertMatrixZ.freudenthal_identityZ`.
 -/
 end AlbertMatrix
 
-end CubicJordanOs
+end InfoGeometry.Algebra.CubicJordanOs
 
 /-! ## Phase 1 Pure Integer Albert Matrix Structure -/
-namespace CubicJordanOs.AlbertMatrixZ
+namespace InfoGeometry.Algebra.CubicJordanOs.AlbertMatrixZNamespace
 
 
 @[ext]
@@ -393,4 +393,4 @@ theorem freudenthal_identityZ (X : AlbertMatrixZ) :
   · exact adjointQuadZ_z2 X
   · exact adjointQuadZ_z3 X
 
-end CubicJordanOs.AlbertMatrixZ
+end InfoGeometry.Algebra.CubicJordanOs.AlbertMatrixZNamespace

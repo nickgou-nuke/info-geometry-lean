@@ -19,7 +19,7 @@ This file stays deliberately weaker than a full Drazin-Cartan identification:
 * entropy vanishing is re-exported only on the existing owner central/BPS core.
 -/
 
-namespace DrazinProjectorConstraintBridge
+namespace InfoGeometry.SuperMetriplectic.DrazinProjectorConstraintBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.SuperMetriplectic.DrazinCartanShadowBridge
@@ -177,4 +177,4 @@ end DrazinProjectorConstraintCompatibility
 
 end Core
 
-end DrazinProjectorConstraintBridge
+end InfoGeometry.SuperMetriplectic.DrazinProjectorConstraintBridge

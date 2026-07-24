@@ -24,7 +24,7 @@ The file is intentionally conservative:
 
 noncomputable section
 
-namespace AlbertCayleyDickson
+namespace InfoGeometry.Canonical.AlbertCayleyDickson
 
 /--
 Albert's doubled carrier `A ⊕ A` with parameter `γ`.
@@ -172,4 +172,4 @@ doubling multiplication from `AlbertStep`.
 abbrev SplitOctonion (F : Type*) [CommRing F] [StarRing F] :=
   AlbertStep F (SplitQuaternion F) (1 : F)
 
-end AlbertCayleyDickson
+end InfoGeometry.Canonical.AlbertCayleyDickson

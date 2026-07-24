@@ -14,7 +14,7 @@ The formulas:
   ((X#)#)ᵢ = (α₁·α₂·α₃)·αᵢ = N(X)·αᵢ
 -/
 
-namespace CubicJordanSTU
+namespace InfoGeometry.Algebra.CubicJordanSTU
 
 /-- Diagonal STU matrix X = diag(α₁, α₂, α₃). -/
 structure DiagonalSTU where
@@ -69,4 +69,4 @@ theorem adjoint_smul (c : ℝ) (X : DiagonalSTU) :
 
 end DiagonalSTU
 
-end CubicJordanSTU
+end InfoGeometry.Algebra.CubicJordanSTU

@@ -17,7 +17,7 @@ Bogoliubov frame.
 
 noncomputable section
 
-namespace SolderingSpinConnectionBogoliubov
+namespace InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 
 open Matrix
 
@@ -90,4 +90,4 @@ theorem bogoliubov_preserves_krein (c s : ℝ) (h : c^2 - s^2 = 1) :
 #check inducedMetric_diag
 #check bogoliubov_preserves_krein
 
-end SolderingSpinConnectionBogoliubov
+end InfoGeometry.Physics.SolderingSpinConnectionBogoliubov

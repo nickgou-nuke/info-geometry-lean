@@ -15,7 +15,7 @@ This file stays in the repo-native language `(H₂, J, ε, K)`:
 - Kramers symmetry as real-linear/Krein-isometric/phase-antilinear.
 -/
 
-namespace ModularKramersBridge
+namespace InfoGeometry.Canonical.ModularKramersBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -180,4 +180,4 @@ theorem modularConjugation_equivariant_kramersPair_of_commute
 
 end Core
 
-end ModularKramersBridge
+end InfoGeometry.Canonical.ModularKramersBridge

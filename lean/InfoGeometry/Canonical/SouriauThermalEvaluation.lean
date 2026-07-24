@@ -11,7 +11,7 @@ finite and explicit: `e^{-α_p}` is sent to a supplied value `p^(-β)` (or, in a
 more invariant implementation, to `exp(-⟨α_p, β⟩)`).
 -/
 
-namespace SouriauThermalEvaluation
+namespace InfoGeometry.Canonical.SouriauThermalEvaluation
 
 open scoped BigOperators
 open FormalPrimeRootSystem
@@ -86,4 +86,4 @@ def splitFiniteParitySupertrace {L : FormalPrimeRootLattice}
     (E : SouriauThermalEvaluation L) : ℝ :=
   finiteParitySubsetSum E
 
-end SouriauThermalEvaluation
+end InfoGeometry.Canonical.SouriauThermalEvaluation

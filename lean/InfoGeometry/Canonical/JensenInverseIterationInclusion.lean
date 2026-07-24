@@ -17,7 +17,7 @@ polynomial and packages the analytic/spectral hypotheses as explicit fields;
 the Lean kernel proves the interval readouts used downstream.
 -/
 
-namespace JensenInverseIterationInclusion
+namespace InfoGeometry.Canonical.JensenInverseIterationInclusion
 
 noncomputable section
 
@@ -156,4 +156,4 @@ end JensenAcceleratedInclusionData
 
 end
 
-end JensenInverseIterationInclusion
+end InfoGeometry.Canonical.JensenInverseIterationInclusion

@@ -55,7 +55,7 @@ noncomputable section
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Clifford.ClNN
 
-namespace ConformalSL2GeneratorBridge
+namespace InfoGeometry.Canonical.ConformalSL2GeneratorBridge
 
 /-! ## 1. Finite generator table -/
 
@@ -224,4 +224,4 @@ Key identities:
   S·T·S⁻¹ = lower shear        (conjugation swaps upper ↔ lower shear)
 -/
 
-end ConformalSL2GeneratorBridge
+end InfoGeometry.Canonical.ConformalSL2GeneratorBridge

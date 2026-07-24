@@ -12,7 +12,7 @@ The split case is identified by the theorem that the new generator squares
 to `+1`, not by a convention-dependent name for `γ`.
 -/
 
-namespace AlbertCD
+namespace InfoGeometry.Algebra.AlbertCD
 
 structure CDInvolutionDatum (R A : Type*) [CommRing R] [AddCommGroup A] [Module R A] where
   star : A →ₗ[R] A
@@ -55,4 +55,4 @@ def IsSplitStep
     (γ : R) : Prop :=
   γ = (1 : R)
 
-end AlbertCD
+end InfoGeometry.Algebra.AlbertCD

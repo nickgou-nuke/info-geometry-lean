@@ -22,7 +22,7 @@ owners can instantiate.
 
 universe u v w z
 
-namespace ModularDoubledRealTwistorColimit
+namespace InfoGeometry.Categorical.ModularDoubledRealTwistorColimit
 
 open ModularDoubledRealHopfFibration
 
@@ -151,4 +151,4 @@ def toModularDoubledRealFibration
 
 end FractalScaleProjectionColimit
 
-end ModularDoubledRealTwistorColimit
+end InfoGeometry.Categorical.ModularDoubledRealTwistorColimit

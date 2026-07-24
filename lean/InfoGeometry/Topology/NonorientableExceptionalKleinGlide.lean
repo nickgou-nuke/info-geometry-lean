@@ -22,7 +22,7 @@ noncomputable section
 
 open Matrix Complex
 
-namespace NonorientableExceptionalKleinGlide
+namespace InfoGeometry.Topology.NonorientableExceptionalKleinGlide
 
 /-- Complex `2 × 2` matrices for the finite two-band model. -/
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
@@ -101,6 +101,6 @@ theorem orientations_inequivalent_of_not_self_inverse (P : KleinGlideBraidPacket
 
 end KleinGlideBraidPacket
 
-end NonorientableExceptionalKleinGlide
+end InfoGeometry.Topology.NonorientableExceptionalKleinGlide
 
 end noncomputable section

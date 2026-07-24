@@ -19,10 +19,10 @@ development. It packages:
 - a bridge from operator cocycles to projective relative potentials.
 -/
 
-namespace StandardFormCore
+namespace InfoGeometry.Canonical.StandardFormCore
 
-open TomitaTakesaki
-open RelativePotentialCore
+open InfoGeometry.Canonical.TomitaTakesaki
+open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Volume.ConnesCocycle
 open InfoGeometry.Krein
@@ -103,7 +103,7 @@ noncomputable def tomitaAtomSeed : StandardFormSeed H where
 @[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_complex_i :
     (tomitaAtomSeed (H := H)).phaseAxis = complex_i (E := H) := by
   change modularComplexI (E := H) = complex_i (E := H)
-  exact TomitaTakesaki.modularComplexI_eq_complex_i (E := H)
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := H)
 
 @[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_J_comp_eps :
     (tomitaAtomSeed (H := H)).phaseAxis =
@@ -281,4 +281,4 @@ the canonical gauge slice.
 
 end ProjectiveBridge
 
-end StandardFormCore
+end InfoGeometry.Canonical.StandardFormCore

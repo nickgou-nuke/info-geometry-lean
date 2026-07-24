@@ -1,5 +1,0 @@
-import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCube
-import InfoGeometry.External.Automath.Omega.Combinatorics.FibonacciCubeGraph
-import InfoGeometry.External.Automath.Omega.Combinatorics.GramDet
-import InfoGeometry.External.Automath.Omega.Combinatorics.PathIndSet
-import InfoGeometry.External.Automath.Omega.Combinatorics.SchurChebotarevDeviationFromVariance

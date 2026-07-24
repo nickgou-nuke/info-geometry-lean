@@ -72,8 +72,8 @@ VACUITY_PATTERNS = [
     (0.4, "empty_body", r"theorem\s+\w+.*:=\s*--",
      "Theorem body is just a comment — undefined"),
 
-    # no hypotheses used: theorem that's just `:= by` with no references to parameters
-    (0.3, "no_hyp_use", r"theorem\s+(\w+)\s+\(.*\).*:.*by\s+(?!.*\1)",
+    # Theorem with parameters that aren't used in proof
+    (0.3, "no_hyp_use", r"theorem\s+\w+\s+\(([^):]+)(?:\s*:[^)]*)?\).*:.*by\s+(?!.*\b\1\b)",
      "Theorem with parameters but proof doesn't reference them — potential vacuity"),
 ]
 

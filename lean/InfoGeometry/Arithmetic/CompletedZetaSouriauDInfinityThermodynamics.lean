@@ -2,7 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 
 noncomputable section
 
-namespace CompletedZetaSouriauDInfinityThermodynamics
+namespace InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 
 def functionalReflection (s : ℂ) : ℂ := 1 - s
 
@@ -91,4 +91,4 @@ theorem completedZetaBregman_self_eq_zero
   <;> simp [Complex.ext_iff]
   <;> norm_num
 
-end CompletedZetaSouriauDInfinityThermodynamics
+end InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics

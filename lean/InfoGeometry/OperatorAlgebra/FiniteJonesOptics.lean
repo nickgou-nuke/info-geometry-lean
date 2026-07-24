@@ -26,7 +26,7 @@ import InfoGeometry.Optics.JonesCalibration
 
 noncomputable section
 
-namespace FiniteJonesOptics
+namespace InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 
 open InfoGeometry.Optics.JonesCalibration
 
@@ -299,4 +299,4 @@ theorem det2_chiralMediumEvent_jones
     OpticalSurfaceKind.chiralMedium
     rL rR tag
 
-end FiniteJonesOptics
+end InfoGeometry.OperatorAlgebra.FiniteJonesOptics

@@ -18,8 +18,9 @@ No CAR/UHF, GNS, thermodynamic limit, random-walk, Hilbert--Polya,
 or analytic-continuation claim is made here.
 -/
 
-namespace PrimeBitWittenIndex
+namespace InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
+open InfoGeometry.Canonical.FormalPrimeRootSystem
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
@@ -212,7 +213,7 @@ theorem finite_divisor_mobius_sum_cancel
 /-- The prime register as a finite prime root lattice. -/
 @[rep_depth thermo]
 def primeRootLattice (P : PrimeRegister) :
-    FormalPrimeRootSystem.FormalPrimeRootLattice where
+    FormalPrimeRootLattice where
   primes := P.primes
   prime_mem := P.prime_mem
 
@@ -225,12 +226,12 @@ formula, specialized to the existing prime cutoff carrier.
 @[rep_depth thermo]
 theorem finite_prime_weyl_denominator_identity
     (P : PrimeRegister) (x : ℕ → ℝ) :
-    FormalPrimeRootSystem.weylDenominatorProduct
+    weylDenominatorProduct
       (primeRootLattice P) x =
-    FormalPrimeRootSystem.weylAlternatingSum
+    weylAlternatingSum
       (primeRootLattice P) x := by
   simpa [primeRootLattice] using
-    (FormalPrimeRootSystem.finite_prime_weyl_denominator
+    (finite_prime_weyl_denominator
       (L := primeRootLattice P) x)
 
-end PrimeBitWittenIndex
+end InfoGeometry.Arithmetic.PrimeBitWittenIndex

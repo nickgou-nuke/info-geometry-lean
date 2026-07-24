@@ -12,7 +12,7 @@ Theorem-safe transport layer:
 No automatic anomaly deletion and no automatic conformal-gravity closure claim.
 -/
 
-namespace MetricTransport
+namespace InfoGeometry.Canonical.MetricTransport
 
 open OperatorProjectorMismatch
 open OperatorProjectorMismatch.ProjectorPair
@@ -86,4 +86,4 @@ theorem mismatch_covariant_of_similarityTransport
     mismatch_G P' = W.g * mismatch_G P * W.gInv :=
   transported_mismatch_covariant W (mpFixedTear_eq_zero_of_similarityTransport W)
 
-end MetricTransport
+end InfoGeometry.Canonical.MetricTransport

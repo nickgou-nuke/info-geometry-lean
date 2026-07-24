@@ -135,7 +135,7 @@ theorem CED_state_determinant (ced : CEDMeasurement) :
     (Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 3)).ne'
   simp [CED_to_ZornState, InfoGeometry.Physics.ZornMatrixSU3.norm,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    ZornVectorMatrixExplicit.dot3]
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
   field_simp [hsqrt3_ne]
   nlinarith
 
@@ -241,14 +241,11 @@ theorem high_spin_grade_mixing (ced : CEDMeasurement)
 --===============================================================
 
 /-- 
-Theorem: CED monotonic growth corresponds to grade alignment (for A=39 range)
+Monotonicity of the chosen finite CED-to-Zorn readout on the `CED ≤ 95` range.
 
-For the A=39 dataset (CED ≤ 95 keV), if CED₁ < CED₂, then 
-|det ψ(CED₂)| > |det ψ(CED₁)|
-
-This proves that the observed CED systematics (15→95 keV in A=39)
-is equivalent to progressive alignment along the 5-graded direction
-of the Zorn algebra.
+If `CED₁ < CED₂`, then the absolute value of the declared norm readout for
+`CED₂` is larger.  This is an algebraic property of the encoding used in this
+file, not a proof of an experimental nuclear-structure model.
 -/
 theorem CED_growth_implies_grade_alignment 
   (ced1 ced2 : CEDMeasurement)

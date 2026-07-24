@@ -17,11 +17,11 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BuresInformationGeodesicFlow
 
-/-- Compatibility owner marker for the restored Bures information-geodesic lane. -/
-def canonicalOwnerMarker : Prop := True
-
-theorem canonicalOwnerMarker_true : canonicalOwnerMarker := by
-  trivial
+/-- Canonical re-export of the finite Bures center-distance theorem from the
+authoritative restored owner. -/
+theorem canonical_bures_center_distance_zero :
+    BuresInformationGeodesicFlow.buresDistance 0 0 0 0 0 0 = 0 :=
+  BuresInformationGeodesicFlow.bures_center_distance_zero
 
 end InfoGeometry.Canonical.BuresInformationGeodesicFlow
 

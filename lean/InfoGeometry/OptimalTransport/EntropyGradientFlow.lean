@@ -18,7 +18,7 @@ constant Bregman/JKO-style steps add linearly, so `n` steps of size `δ` are one
 step of size `n * δ`.
 -/
 
-namespace EntropyGradientFlow
+namespace InfoGeometry.OptimalTransport.EntropyGradientFlow
 
 open Matrix
 open Complex
@@ -106,4 +106,4 @@ theorem free_energy_real_drift_is_linear (δ : ℂ) (n : ℕ) :
     (((bregmanProxStep δ) ^ n) 0 1).re = (n : ℝ) * δ.re := by
   exact dephasing_drift_is_linear δ n
 
-end EntropyGradientFlow
+end InfoGeometry.OptimalTransport.EntropyGradientFlow

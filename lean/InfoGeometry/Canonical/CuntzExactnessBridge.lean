@@ -21,7 +21,7 @@ a synchronized consequence of explicit analytic and Cuntz premises.
 
 noncomputable section
 
-namespace CuntzExactnessBridge
+namespace InfoGeometry.Canonical.CuntzExactnessBridge
 
 open Complex
 open InfoGeometry.Canonical.PrimitiveExactness
@@ -116,6 +116,6 @@ theorem differentiableOn_ball_with_cuntz_vacuum_exact
   exact primitiveExactOn_with_cuntz_vacuum_exact
     Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf) C
 
-end CuntzExactnessBridge
+end InfoGeometry.Canonical.CuntzExactnessBridge
 
 end noncomputable section

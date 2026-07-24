@@ -1,23 +1,11 @@
 import Mathlib
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 /-!
-# The Primon Gas Phase Transition
+# Primon gas partition readout
 
-This module formalizes the thermodynamic crystallization of the quantum vacuum, 
-treating the vacuum as a Primon Gas (a free bosonic gas of prime frequencies).
-
-By the Lee-Yang theorem for phase transitions, the crystallization point 
-of the macroscopic spacetime lattice occurs precisely where the zeroes 
-of the Grand Canonical Partition Function (the Riemann Zeta function) 
-pinch the critical line.
-
-## Key Physical Correspondences:
-- **Partition Function (Ξ):** The Riemann Zeta function `ζ(β)`.
-- **Phase Transition Point:** The Bost-Connes horizon `β = 1`.
-- **Latent Crystal Structure:** The Wigner-Dyson / Gaussian Unitary Ensemble (GUE) lattice.
-- **Physical Signature:** The eigenvalue repulsion observed in heavy nuclei 
-  (e.g. AFRODITE HPGe measurements) exactly mirrors the thermodynamic 
-  zero-spacing of the prime gas.
+This module keeps a small theorem-honest interface between a finite primon-gas
+packet and the analytic zeta readout.  It does **not** prove a Lee--Yang theorem,
+a GUE spacing theorem, an AFRODITE-data comparison, or a crystallization theorem.
 -/
 
 namespace InfoGeometry.Thermodynamics
@@ -30,12 +18,11 @@ socket.  The analytic zeta function is owned by the arithmetic/Bost-Connes
 layers; this file only records the equality that a finite Primon-gas packet
 must carry into that layer.
 -/
-def zetaPartitionReadout (_β : ℂ) : ℂ :=
-  0
+noncomputable def zetaPartitionReadout (β : ℂ) : ℂ :=
+  riemannZeta β
 
-/-- The formal structure of the Primon Gas.
-  At inverse temperature β, the state of the gas is dictated by the 
-  prime-number distribution. -/
+/-- The formal structure of a finite Primon-gas packet carrying a partition
+readout at inverse temperature `β`. -/
 structure PrimonGas where
   /-- The inverse temperature (Thermodynamic Time). -/
   β : ℂ
@@ -59,57 +46,36 @@ def primonFreeEnergy (gas : PrimonGas) : ℂ :=
   -- This finite phase-transition layer keeps only the algebraic readout.
   -gas.partitionFunction
 
-/-- 
-  The GUE (Gaussian Unitary Ensemble) Crystal Lattice.
-  When the Primon Gas drops below the critical temperature (β = 1), 
-  the continuous gauge symmetry spontaneously breaks, and the prime 
-  frequencies crystallize into a rigid, non-commutative lattice.
--/
-structure GUECrystalLattice where
-  /-- The repulsion distribution of the eigenvalues. -/
-  eigenvalue_repulsion : String := "Wigner-Dyson"
-  /-- The topological defect stabilizing the crystal. -/
-  defect_symmetry : String := "O(5,5) Supergravity / Q_8 Spinor"
+/-- Optional finite label packet for comparing with a random-matrix model.  This
+is data only; no zeta-zero spacing theorem is asserted here. -/
+structure RandomMatrixReadout where
+  /-- The named spacing model. -/
+  spacing_model : String
 
 /-- A phase-transition point is a zero of the carried partition readout. -/
 def IsPartitionZero (gas : PrimonGas) : Prop :=
   gas.partitionFunction = 0
 
-/-- The canonical GUE label carried by the finite crystal packet. -/
-def HasGUECrystalReadout (lattice : GUECrystalLattice) : Prop :=
-  lattice.eigenvalue_repulsion = "Wigner-Dyson" ∧
-    lattice.defect_symmetry = "O(5,5) Supergravity / Q_8 Spinor"
+/-- A packet carries the Wigner--Dyson label exactly when its model string is
+`"Wigner-Dyson"`. -/
+def HasWignerDysonReadout (packet : RandomMatrixReadout) : Prop :=
+  packet.spacing_model = "Wigner-Dyson"
 
-/-- The default GUE crystal packet satisfies the finite readout contract. -/
-theorem default_gue_crystal_readout :
-    HasGUECrystalReadout {} := by
-  simp [HasGUECrystalReadout]
+/-- The only theorem proved here: a zero of the carried partition function is a
+zero of the declared zeta readout. -/
+def phase_transition_zero_transfer : Prop :=
+  ∀ gas : PrimonGas, IsPartitionZero gas → zetaPartitionReadout gas.β = 0
 
-/-- 
-  The fundamental theorem of the Phase Transition.
-  The points of crystallization are exactly the zeroes of the Zeta partition function.
-  The imaginary part of the zeroes (the modular flow frequencies) dictates the 
-  energy levels of the crystallized spacetime lattice.
--/
-def phase_transition_zeroes_eq_GUE : Prop :=
-  -- The zeroes of the Riemann Zeta partition function follow the GUE eigenvalue spacing.
-  -- This formalizes the exact isomorphism between the AFRODITE heavy-nucleus data 
-  -- and the quantum gravity vacuum scale.
-  ∀ gas : PrimonGas, IsPartitionZero gas →
-    zetaPartitionReadout gas.β = 0 ∧
-      ∃ lattice : GUECrystalLattice, HasGUECrystalReadout lattice
-
-/-- 
-The finite phase-transition bridge is now a real logical chain:
-partition zero at the Primon packet transfers through the carried zeta equality,
-and the resulting point admits the canonical finite GUE readout packet.
--/
-theorem phase_transition_zeroes_eq_GUE_holds :
-    phase_transition_zeroes_eq_GUE := by
+/-- Partition-zero transfer through the packet equality. -/
+theorem phase_transition_zero_transfer_holds :
+    phase_transition_zero_transfer := by
   intro gas hzero
-  constructor
-  · rw [← primon_partition_eq_zeta gas]
-    exact hzero
-  · exact ⟨{}, default_gue_crystal_readout⟩
+  rw [← primon_partition_eq_zeta gas]
+  exact hzero
+
+/-- Statement shape for any later random-matrix comparison.  It is deliberately
+not a theorem in this file. -/
+def zeta_zero_random_matrix_spacing_statement : Prop :=
+  ∀ gas : PrimonGas, IsPartitionZero gas → ∃ packet : RandomMatrixReadout, HasWignerDysonReadout packet
 
 end InfoGeometry.Thermodynamics

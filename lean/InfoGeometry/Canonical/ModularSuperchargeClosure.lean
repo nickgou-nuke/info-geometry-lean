@@ -30,7 +30,7 @@ The "Complex Mask" has been excised: the seed is now explicitly treated as
 the real bivector generator of the chiral light cone.
 -/
 
-namespace ModularSuperchargeClosure
+namespace InfoGeometry.Canonical.ModularSuperchargeClosure
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -2236,4 +2236,4 @@ theorem not_forall_superHamiltonian_eq_two_pi_modularHamiltonian
 
 end Core
 
-end ModularSuperchargeClosure
+end InfoGeometry.Canonical.ModularSuperchargeClosure

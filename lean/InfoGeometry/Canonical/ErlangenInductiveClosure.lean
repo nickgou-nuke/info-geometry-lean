@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 
-namespace ErlangenInductiveClosure
+namespace InfoGeometry.Canonical.ErlangenInductiveClosure
 
 -- 1. Symmetry-Adapted Local Coordinates (The Invariant Packet)
 /-- 
@@ -102,4 +102,4 @@ structure ColimitInheritsInvariants
   colimitRing : Ring ColimitStage
   LimitInvariants : @SupergradedClosureAt ColimitStage colimitRing
 
-end ErlangenInductiveClosure
+end InfoGeometry.Canonical.ErlangenInductiveClosure

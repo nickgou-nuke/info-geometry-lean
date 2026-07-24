@@ -15,9 +15,9 @@ import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 
 noncomputable section
 
-namespace ProjectiveEntropy
+namespace InfoGeometry.Arithmetic.ProjectiveEntropy
 
-open ProjectiveTemperature
+open InfoGeometry.Thermodynamics.ProjectiveTemperature
 open PrimitivePrimeProjectiveTemperature
 
 /-! ## 1. Relative density comparison socket -/
@@ -144,4 +144,4 @@ theorem prime_density_le_primitive_density
 
 end ProjectiveRelativeEntropyCalibration
 
-end ProjectiveEntropy
+end InfoGeometry.Arithmetic.ProjectiveEntropy

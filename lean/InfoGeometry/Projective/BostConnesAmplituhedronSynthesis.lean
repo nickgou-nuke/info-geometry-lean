@@ -32,7 +32,7 @@ regularization, a precise integrand model, and a comparison theorem.
   all-loop or planar-limit interpretation.
 -/
 
-namespace BostConnesAmplituhedronSynthesis
+namespace InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 
 open InfoGeometry.Projective.ArnoldRelations
 
@@ -90,4 +90,4 @@ theorem arnold_kernel_synthesis_boundary_zero
   arnold_mixed_relation_vanishes_under_kernel_membership
     R M w12 w23 w31 toTarget hKer
 
-end BostConnesAmplituhedronSynthesis
+end InfoGeometry.Projective.BostConnesAmplituhedronSynthesis

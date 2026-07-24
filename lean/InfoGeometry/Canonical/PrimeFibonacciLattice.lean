@@ -7,7 +7,7 @@ open Nat
 open Filter
 open scoped goldenRatio Nat.Prime
 
-namespace PrimeFibonacciLattice
+namespace InfoGeometry.Canonical.PrimeFibonacciLattice
 
 def latticeDimension (n : ℕ) : ℕ := Nat.fib n
 
@@ -46,4 +46,4 @@ theorem prime_counting_on_lattice
       atTop (nhds 1) := by
   simpa [latticeDimension] using h_pnt.comp latticeDimension_tendsto_atTop
 
-end PrimeFibonacciLattice
+end InfoGeometry.Canonical.PrimeFibonacciLattice

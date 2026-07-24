@@ -11,12 +11,12 @@ real-linear equivalence and proves compatibility with the canonical Zorn
 product, identity, and split norm. No associative algebra structure is imposed.
 -/
 
-namespace KingdonCanonicalBridge
+namespace InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev PhysicsZorn := InfoGeometry.Physics.ZornMatrixSU3.ZornMatrix
 abbrev CanonicalZorn := InfoGeometry.Canonical.ZornMatrix ℝ
 
-open InfoGeometry.Algebra.KingdonSplitOctonion
+open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] CanonicalZorn where
@@ -58,8 +58,8 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
     InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
     zMul, InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
-    ZornVectorMatrixExplicit.dot3,
-    ZornVectorMatrixExplicit.cross3]
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3,
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 
 @[simp] theorem physics_norm_eq_canonical_det (X : PhysicsZorn) :
     InfoGeometry.Physics.ZornMatrixSU3.norm X =
@@ -67,7 +67,7 @@ noncomputable def physicsCanonicalLinearEquiv : PhysicsZorn ≃ₗ[ℝ] Canonica
   simp [InfoGeometry.Physics.ZornMatrixSU3.norm,
     InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
     InfoGeometry.Canonical.ZornMatrix.dot,
-    ZornVectorMatrixExplicit.dot3]
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3]
 
 noncomputable def kingdonCanonicalLinearEquiv :
     AbstractKingdon ≃ₗ[ℝ] CanonicalZorn :=
@@ -202,8 +202,8 @@ private theorem smul_eq_smul_one_coefficients
       _ = (a⁻¹ * b) • (1 : CanonicalZorn) := by rw [smul_smul]
 
 /-- The group of real-linear canonical-Zorn multiplication automorphisms.
-This is the concrete stabilizer to be classified as real split `G_{2(2)}`;
-no such classification is asserted by this definition. -/
+This is a candidate stabilizer surface for later split `G_{2(2)}`
+classification; no such classification is asserted by this definition. -/
 noncomputable def realZornCompositionAut : Subgroup CanonicalLinearAut where
   carrier := {φ | IsRealZornCompositionAut φ}
   one_mem' := by
@@ -267,6 +267,30 @@ its trace and determinant coefficients, treating scalar elements separately. -/
     change ZornMatrix.detZ realCrossProduct3 Y =
       ZornMatrix.detZ realCrossProduct3 X
     exact sub_eq_zero.mp hzero.2
+
+/-- Polarization of the canonical split-octonion norm against the unit. -/
+theorem realZorn_det_add_one (X : CanonicalZorn) :
+    ZornMatrix.detZ realCrossProduct3 (X + 1) =
+      ZornMatrix.detZ realCrossProduct3 X + realZornTrace X + 1 := by
+  have h1a : (1 : CanonicalZorn).a = 1 := rfl
+  have h1b : (1 : CanonicalZorn).b = 1 := rfl
+  have h1x : (1 : CanonicalZorn).x = 0 := rfl
+  have h1y : (1 : CanonicalZorn).y = 0 := rfl
+  simp [ZornMatrix.detZ, realCrossProduct3, realZornTrace,
+    InfoGeometry.Canonical.ZornMatrix.dot, h1a, h1b, h1x, h1y]
+  ring
+
+/-- Every real split-octonion multiplication automorphism preserves the
+intrinsic scalar trace.  This follows from norm polarization and does not need
+coordinates for the automorphism itself. -/
+@[simp] theorem realZornCompositionAut_preserves_trace
+    (φ : realZornCompositionAut) (X : CanonicalZorn) :
+    realZornTrace ((φ : CanonicalLinearAut) X) = realZornTrace X := by
+  have h := realZornCompositionAut_preserves_det φ (X + 1)
+  rw [map_add, realZornCompositionAut_fix_one,
+    realZorn_det_add_one, realZorn_det_add_one,
+    realZornCompositionAut_preserves_det] at h
+  linarith
 
 /-- Conjugation transport of linear Kingdon automorphisms to the canonical Zorn carrier. -/
 noncomputable def kingdonCanonicalAutEquiv :
@@ -353,4 +377,4 @@ native transported split-octonion norm. -/
     (kingdonCanonicalLinearEquiv x)
   simpa [ψ] using h
 
-end KingdonCanonicalBridge
+end InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge

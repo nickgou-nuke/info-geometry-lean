@@ -2,7 +2,7 @@ import Mathlib.Algebra.Group.Defs
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Tactic
 
-namespace PointedGroups
+namespace InfoGeometry.Topology.PointedGroups
 
 /-- The category of pointed groups (A, a_0) where a_0 : A -/
 structure PointedGroup where
@@ -86,4 +86,4 @@ def actionY : Carrier :=
 
 end PointedGroupBraidWitness
 
-end PointedGroups
+end InfoGeometry.Topology.PointedGroups

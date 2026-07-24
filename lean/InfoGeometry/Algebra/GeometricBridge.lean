@@ -13,7 +13,7 @@ formalization layer.  This module is a dictionary/aggregation surface only: it
 does not prove CCC, analytic conformality, full orbit classification, or any
 Spin/structure-group isomorphism. -/
 
-namespace GeometricBridge
+namespace InfoGeometry.Algebra.GeometricBridge
 
 /-! ## 1. Cs Jordan-Cayley (4D, 2+2 signature) -/
 
@@ -116,4 +116,4 @@ mathematical motivation/proof debt unless separately kernel-proved.
 -/
 def GeometricDictionary : Unit := ()
 
-end GeometricBridge
+end InfoGeometry.Algebra.GeometricBridge

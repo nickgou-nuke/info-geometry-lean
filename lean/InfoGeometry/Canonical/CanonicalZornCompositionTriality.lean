@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 /-!
 # Composition-algebra triality on the canonical Zorn carrier
@@ -23,10 +24,9 @@ split Clifford relation underlying Cartan triality.
 
 noncomputable section
 
+open InfoGeometry.Physics.SplitOctonionBraidSU3
+
 namespace CanonicalZornCompositionTriality
-
-open SplitOctonionBraidSU3
-
 /-- Eight canonical complex coordinates of a Zorn element. -/
 def zornCoordinates (X : Zorn) : Fin 8 → ℂ :=
   ![X.a, X.u 0, X.u 1, X.u 2, X.v 0, X.v 1, X.v 2, X.b]
@@ -69,6 +69,33 @@ theorem zornNorm_conj (X : Zorn) : zornNorm (zornConj X) = zornNorm X := by
   simp [zornNorm, zornConj, dot3]
   ring
 
+/-- Conjugation satisfies the scalar-trace identity of a composition algebra. -/
+theorem zornAdd_conj_eq_trace_smul (X : Zorn) :
+    zornAdd X (zornConj X) = zornSmul (X.a + X.b) I_zorn := by
+  apply zorn_ext
+  all_goals simp [zornAdd, zornConj, zornSmul, I_zorn] <;> ring
+
+/-- The Zorn quadratic identity `X² - tr(X)X + N(X)1 = 0`. -/
+theorem zorn_quadratic_identity (X : Zorn) :
+    zornAdd
+        (zornSub (zornMul X X) (zornSmul (X.a + X.b) X))
+        (zornSmul (zornNorm X) I_zorn) = zornZero := by
+  apply zorn_ext
+  · simp [zornMul, zornSub, zornAdd, zornSmul, zornNorm, I_zorn, zornZero,
+      dot3, cross3]
+    ring
+  · funext i
+    fin_cases i <;>
+      simp [zornMul, zornSub, zornAdd, zornSmul, zornNorm, I_zorn, zornZero,
+        dot3, cross3] <;> ring
+  · funext i
+    fin_cases i <;>
+      simp [zornMul, zornSub, zornAdd, zornSmul, zornNorm, I_zorn, zornZero,
+        dot3, cross3] <;> ring
+  · simp [zornMul, zornSub, zornAdd, zornSmul, zornNorm, I_zorn, zornZero,
+      dot3, cross3]
+    ring
+
 theorem zornConj_add (X Y : Zorn) :
     zornConj (zornAdd X Y) = zornAdd (zornConj X) (zornConj Y) := by
   apply zorn_ext
@@ -80,6 +107,26 @@ theorem zornConj_add (X Y : Zorn) :
     simp [zornConj, zornAdd]
     ring
   · rfl
+
+/-- The split-Zorn norm is multiplicative. -/
+theorem zornNorm_mul (X Y : Zorn) :
+    zornNorm (zornMul X Y) = zornNorm X * zornNorm Y := by
+  exact InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm_mul X Y
+
+/-- Conjugation reverses the Zorn product. -/
+theorem zornConj_mul (X Y : Zorn) :
+    zornConj (zornMul X Y) = zornMul (zornConj Y) (zornConj X) := by
+  apply zorn_ext
+  · simp [zornConj, zornMul, dot3, cross3]
+    ring
+  · funext i
+    fin_cases i <;>
+      simp [zornConj, zornMul, cross3] <;> ring
+  · funext i
+    fin_cases i <;>
+      simp [zornConj, zornMul, cross3] <;> ring
+  · simp [zornConj, zornMul, dot3, cross3]
+    ring
 
 theorem zornConj_smul (c : ℂ) (X : Zorn) :
     zornConj (zornSmul c X) = zornSmul c (zornConj X) := by
@@ -201,12 +248,280 @@ theorem zorn_polarized_left_conj_action (X Y S : Zorn) :
 /-- Linear trace of a Zorn matrix. -/
 def zornTrace (X : Zorn) : ℂ := X.a + X.b
 
+/-- The trace-zero (pure) subspace of the split Zorn carrier. -/
+def zornPure (X : Zorn) : Prop := zornTrace X = 0
+
+/-- A trace-preserving map preserves the pure (trace-zero) subspace. -/
+theorem zornPure_map (f : Zorn → Zorn)
+    (htrace : ∀ X, zornTrace (f X) = zornTrace X)
+    {X : Zorn} (hX : zornPure X) :
+    zornPure (f X) := by
+  rw [zornPure, htrace, hX]
+
+/-- Scalar projection onto the identity line.  The factor `1/2` normalizes
+`zornTrace`, since the identity has trace `2`. -/
+def zornScalarPart (X : Zorn) : Zorn :=
+  zornSmul (zornTrace X / 2) I_zorn
+
+/-- Trace-zero component of a Zorn element. -/
+def zornPurePart (X : Zorn) : Zorn :=
+  zornAdd (zornSmul (-(zornTrace X / 2)) I_zorn) X
+
+@[simp] theorem zornPurePart_pure (X : Zorn) :
+    zornPure (zornPurePart X) := by
+  simp [zornPure, zornPurePart, zornTrace, zornAdd, zornSmul, I_zorn]
+  ring
+
+@[simp] theorem zornScalarPart_trace (X : Zorn) :
+    zornTrace (zornScalarPart X) = zornTrace X := by
+  simp [zornScalarPart, zornTrace, zornSmul, I_zorn]
+
+/-- Every Zorn element is the sum of its scalar and pure components. -/
+theorem zornScalarPart_add_purePart (X : Zorn) :
+    zornAdd (zornScalarPart X) (zornPurePart X) = X := by
+  apply zorn_ext
+  · simp [zornScalarPart, zornPurePart, zornTrace, zornAdd, zornSmul, I_zorn]
+  · funext i
+    simp [zornScalarPart, zornPurePart, zornTrace, zornAdd, zornSmul, I_zorn]
+  · funext i
+    simp [zornScalarPart, zornPurePart, zornTrace, zornAdd, zornSmul, I_zorn]
+  · simp [zornScalarPart, zornPurePart, zornTrace, zornAdd, zornSmul, I_zorn]
+
 /-- The scalar part of a triple Zorn product is cyclic. -/
 theorem zornTripleTrace_cyclic (X Y Z : Zorn) :
     zornTrace (zornMul (zornMul X Y) Z) =
       zornTrace (zornMul (zornMul Y Z) X) := by
   simp [zornTrace, zornMul, dot3, cross3]
   ring
+
+/-- The unalternated six-term trace sum splits into the two cyclic orientations,
+with multiplicity three for each orientation. -/
+theorem zornSymmTripleTrace_sum (X Y Z : Zorn) :
+    zornTrace (zornMul (zornMul X Y) Z) +
+      zornTrace (zornMul (zornMul Y Z) X) +
+      zornTrace (zornMul (zornMul Z X) Y) +
+      zornTrace (zornMul (zornMul X Z) Y) +
+      zornTrace (zornMul (zornMul Y X) Z) +
+      zornTrace (zornMul (zornMul Z Y) X) =
+        3 * zornTrace (zornMul (zornMul X Y) Z) +
+          3 * zornTrace (zornMul (zornMul X Z) Y) := by
+  have hYZX : zornTrace (zornMul (zornMul Y Z) X) =
+      zornTrace (zornMul (zornMul X Y) Z) :=
+    (zornTripleTrace_cyclic X Y Z).symm
+  have hZXY : zornTrace (zornMul (zornMul Z X) Y) =
+      zornTrace (zornMul (zornMul X Y) Z) := by
+    calc
+      zornTrace (zornMul (zornMul Z X) Y) =
+          zornTrace (zornMul (zornMul Y Z) X) :=
+        (zornTripleTrace_cyclic Y Z X).symm
+      _ = zornTrace (zornMul (zornMul X Y) Z) := hYZX
+  have hZYX : zornTrace (zornMul (zornMul Z Y) X) =
+      zornTrace (zornMul (zornMul X Z) Y) :=
+    (zornTripleTrace_cyclic X Z Y).symm
+  have hYXZ : zornTrace (zornMul (zornMul Y X) Z) =
+      zornTrace (zornMul (zornMul X Z) Y) := by
+    calc
+      zornTrace (zornMul (zornMul Y X) Z) =
+          zornTrace (zornMul (zornMul Z Y) X) :=
+        (zornTripleTrace_cyclic Z Y X).symm
+      _ = zornTrace (zornMul (zornMul X Z) Y) := hZYX
+  rw [hYZX, hZXY, hYXZ, hZYX]
+  ring
+
+/-- The split-octonion analogue of the MathOverflow six-term alternating trace form on pure octonions. -/
+def zornAlternatingTripleTrace (X Y Z : Zorn) : ℂ :=
+  zornTrace (zornMul (zornMul X Y) Z) +
+    zornTrace (zornMul (zornMul Y Z) X) +
+    zornTrace (zornMul (zornMul Z X) Y) -
+    zornTrace (zornMul (zornMul X Z) Y) -
+    zornTrace (zornMul (zornMul Y X) Z) -
+    zornTrace (zornMul (zornMul Z Y) X)
+
+/-- The six-term trace form is cyclic in the first three slots. -/
+theorem zornAlternatingTripleTrace_cyclic (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y Z = zornAlternatingTripleTrace Y Z X := by
+  unfold zornAlternatingTripleTrace
+  rw [zornTripleTrace_cyclic X Y Z,
+    zornTripleTrace_cyclic Y Z X,
+    zornTripleTrace_cyclic Z X Y,
+    zornTripleTrace_cyclic X Z Y,
+    zornTripleTrace_cyclic Y X Z,
+    zornTripleTrace_cyclic Z Y X]
+  ring
+
+/-- The six-term trace form is additive in its first slot. -/
+theorem zornAlternatingTripleTrace_add_left (X Y Z W : Zorn) :
+    zornAlternatingTripleTrace (zornAdd X Y) Z W =
+      zornAlternatingTripleTrace X Z W + zornAlternatingTripleTrace Y Z W := by
+  unfold zornAlternatingTripleTrace
+  simp [zornTrace, zornAdd, zornMul, dot3, cross3]
+  ring
+
+/-- The six-term trace form is homogeneous in its first slot. -/
+theorem zornAlternatingTripleTrace_smul_left (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace (zornSmul r X) Y Z =
+      r * zornAlternatingTripleTrace X Y Z := by
+  unfold zornAlternatingTripleTrace
+  simp [zornTrace, zornSmul, zornMul, dot3, cross3]
+  ring
+
+/-- Additivity in the remaining slots follows from cyclicity. -/
+theorem zornAlternatingTripleTrace_add_mid (X Y Z W : Zorn) :
+    zornAlternatingTripleTrace X (zornAdd Y Z) W =
+      zornAlternatingTripleTrace X Y W + zornAlternatingTripleTrace X Z W := by
+  calc
+    zornAlternatingTripleTrace X (zornAdd Y Z) W =
+        zornAlternatingTripleTrace (zornAdd Y Z) W X :=
+      zornAlternatingTripleTrace_cyclic X (zornAdd Y Z) W
+    _ = zornAlternatingTripleTrace Y W X + zornAlternatingTripleTrace Z W X :=
+      zornAlternatingTripleTrace_add_left Y Z W X
+    _ = zornAlternatingTripleTrace X Y W + zornAlternatingTripleTrace X Z W := by
+      rw [zornAlternatingTripleTrace_cyclic Y W X,
+        zornAlternatingTripleTrace_cyclic W X Y,
+        zornAlternatingTripleTrace_cyclic Z W X,
+        zornAlternatingTripleTrace_cyclic W X Z]
+
+/-- Additivity in the remaining slots follows from cyclicity. -/
+theorem zornAlternatingTripleTrace_add_right (X Y Z W : Zorn) :
+    zornAlternatingTripleTrace X Y (zornAdd Z W) =
+      zornAlternatingTripleTrace X Y Z + zornAlternatingTripleTrace X Y W := by
+  calc
+    zornAlternatingTripleTrace X Y (zornAdd Z W) =
+        zornAlternatingTripleTrace Y (zornAdd Z W) X :=
+      zornAlternatingTripleTrace_cyclic X Y (zornAdd Z W)
+    _ = zornAlternatingTripleTrace Y Z X + zornAlternatingTripleTrace Y W X :=
+      zornAlternatingTripleTrace_add_mid Y Z W X
+    _ = zornAlternatingTripleTrace X Y Z + zornAlternatingTripleTrace X Y W := by
+      rw [zornAlternatingTripleTrace_cyclic Y Z X,
+        zornAlternatingTripleTrace_cyclic Z X Y,
+        zornAlternatingTripleTrace_cyclic Y W X,
+        zornAlternatingTripleTrace_cyclic W X Y]
+
+/-- The six-term trace form is alternating in the first two slots. -/
+theorem zornAlternatingTripleTrace_swap12 (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y Z = - zornAlternatingTripleTrace Y X Z := by
+  unfold zornAlternatingTripleTrace
+  rw [zornTripleTrace_cyclic X Y Z,
+    zornTripleTrace_cyclic Y Z X,
+    zornTripleTrace_cyclic Z X Y,
+    zornTripleTrace_cyclic X Z Y,
+    zornTripleTrace_cyclic Y X Z,
+    zornTripleTrace_cyclic Z Y X]
+  ring
+
+/-- The six-term trace form is alternating in the last two slots. -/
+theorem zornAlternatingTripleTrace_swap23 (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y Z = - zornAlternatingTripleTrace X Z Y := by
+  calc
+    zornAlternatingTripleTrace X Y Z = zornAlternatingTripleTrace Y Z X := by
+      exact zornAlternatingTripleTrace_cyclic X Y Z
+    _ = - zornAlternatingTripleTrace Z Y X := by
+      exact zornAlternatingTripleTrace_swap12 Y Z X
+    _ = - zornAlternatingTripleTrace Y X Z := by
+      rw [zornAlternatingTripleTrace_cyclic Z Y X]
+    _ = - zornAlternatingTripleTrace X Z Y := by
+      rw [zornAlternatingTripleTrace_cyclic Y X Z]
+
+/-- The six-term trace form is alternating in the first and third slots. -/
+theorem zornAlternatingTripleTrace_swap13 (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y Z = - zornAlternatingTripleTrace Z Y X := by
+  calc
+    zornAlternatingTripleTrace X Y Z = zornAlternatingTripleTrace Y Z X := by
+      exact zornAlternatingTripleTrace_cyclic X Y Z
+    _ = - zornAlternatingTripleTrace Z Y X := by
+      exact zornAlternatingTripleTrace_swap12 Y Z X
+
+/-- The alternating form vanishes when its first two arguments coincide. -/
+theorem zornAlternatingTripleTrace_self_left (X Z : Zorn) :
+    zornAlternatingTripleTrace X X Z = 0 := by
+  have h := zornAlternatingTripleTrace_swap12 X X Z
+  linear_combination (1 / 2 : ℂ) * h
+
+/-- The six-term trace form is insensitive to adding a scalar multiple of the identity
+in the first slot, so it descends to the pure quotient. -/
+theorem zornAlternatingTripleTrace_scalar_left (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace (zornAdd (zornSmul r I_zorn) X) Y Z =
+      zornAlternatingTripleTrace X Y Z := by
+  unfold zornAlternatingTripleTrace
+  simp [zornTrace, zornAdd, zornSmul, zornMul, dot3, cross3, I_zorn]
+  ring
+
+/-- Homogeneity in the remaining slots follows from cyclicity. -/
+theorem zornAlternatingTripleTrace_smul_mid (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X (zornSmul r Y) Z =
+      r * zornAlternatingTripleTrace X Y Z := by
+  calc
+    zornAlternatingTripleTrace X (zornSmul r Y) Z =
+        zornAlternatingTripleTrace (zornSmul r Y) Z X :=
+      zornAlternatingTripleTrace_cyclic X (zornSmul r Y) Z
+    _ = r * zornAlternatingTripleTrace Y Z X :=
+      zornAlternatingTripleTrace_smul_left r Y Z X
+    _ = r * zornAlternatingTripleTrace X Y Z := by
+      rw [zornAlternatingTripleTrace_cyclic Y Z X,
+        zornAlternatingTripleTrace_cyclic Z X Y]
+
+/-- Homogeneity in the remaining slots follows from cyclicity. -/
+theorem zornAlternatingTripleTrace_smul_right (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y (zornSmul r Z) =
+      r * zornAlternatingTripleTrace X Y Z := by
+  calc
+    zornAlternatingTripleTrace X Y (zornSmul r Z) =
+        zornAlternatingTripleTrace Y (zornSmul r Z) X :=
+      zornAlternatingTripleTrace_cyclic X Y (zornSmul r Z)
+    _ = r * zornAlternatingTripleTrace Y Z X :=
+      zornAlternatingTripleTrace_smul_mid r Y Z X
+    _ = r * zornAlternatingTripleTrace X Y Z := by
+      rw [zornAlternatingTripleTrace_cyclic Y Z X,
+        zornAlternatingTripleTrace_cyclic Z X Y]
+
+/-- Scalar shifts by the identity do not affect the three-slot trace form in the
+middle slot. -/
+theorem zornAlternatingTripleTrace_scalar_mid (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X (zornAdd (zornSmul r I_zorn) Y) Z =
+      zornAlternatingTripleTrace X Y Z := by
+  calc
+    zornAlternatingTripleTrace X (zornAdd (zornSmul r I_zorn) Y) Z =
+      - zornAlternatingTripleTrace (zornAdd (zornSmul r I_zorn) Y) X Z := by
+        exact zornAlternatingTripleTrace_swap12 X (zornAdd (zornSmul r I_zorn) Y) Z
+    _ = - zornAlternatingTripleTrace Y X Z := by
+        rw [zornAlternatingTripleTrace_scalar_left r Y X Z]
+    _ = zornAlternatingTripleTrace X Y Z := by
+        exact (zornAlternatingTripleTrace_swap12 X Y Z).symm
+
+/-- Scalar shifts by the identity do not affect the three-slot trace form in the
+rightmost slot. -/
+theorem zornAlternatingTripleTrace_scalar_right (r : ℂ) (X Y Z : Zorn) :
+    zornAlternatingTripleTrace X Y (zornAdd (zornSmul r I_zorn) Z) =
+      zornAlternatingTripleTrace X Y Z := by
+  calc
+    zornAlternatingTripleTrace X Y (zornAdd (zornSmul r I_zorn) Z) =
+      zornAlternatingTripleTrace Y (zornAdd (zornSmul r I_zorn) Z) X := by
+        exact zornAlternatingTripleTrace_cyclic X Y (zornAdd (zornSmul r I_zorn) Z)
+    _ = - zornAlternatingTripleTrace (zornAdd (zornSmul r I_zorn) Z) Y X := by
+        exact zornAlternatingTripleTrace_swap12 Y (zornAdd (zornSmul r I_zorn) Z) X
+    _ = - zornAlternatingTripleTrace Z Y X := by
+        rw [zornAlternatingTripleTrace_scalar_left r Z Y X]
+    _ = zornAlternatingTripleTrace X Y Z := by
+        rw [zornAlternatingTripleTrace_cyclic Z Y X, zornAlternatingTripleTrace_swap12 X Y Z]
+
+/-- Any multiplication-preserving, trace-preserving map preserves the
+six-term octonionic three-form.  In particular, this is the exact hypothesis
+needed to obtain the usual `G₂`/`G₂(2)` invariance statement; no unsupported
+identification of a coordinate permutation with an automorphism is made here. -/
+theorem zornAlternatingTripleTrace_map
+    (f : Zorn → Zorn)
+    (hmul : ∀ X Y, f (zornMul X Y) = zornMul (f X) (f Y))
+    (htrace : ∀ X, zornTrace (f X) = zornTrace X)
+    (X Y Z : Zorn) :
+    zornAlternatingTripleTrace (f X) (f Y) (f Z) =
+      zornAlternatingTripleTrace X Y Z := by
+  have htriple (A B C : Zorn) :
+      zornTrace (zornMul (zornMul (f A) (f B)) (f C)) =
+        zornTrace (zornMul (zornMul A B) C) := by
+    rw [← hmul A B, ← hmul (zornMul A B) C, htrace]
+  unfold zornAlternatingTripleTrace
+  rw [htriple X Y Z, htriple Y Z X, htriple Z X Y,
+    htriple X Z Y, htriple Y X Z, htriple Z Y X]
 
 /-! ## Three distinct eight-dimensional carriers -/
 
@@ -279,6 +594,24 @@ def copyLinearEquivCoordinates (sector : TrialitySector) :
       (coordinatesToZorn (c • zornCoordinates X.val)) =
         c • zornCoordinates X.val
     exact zornCoordinates_coordinatesToZorn _
+
+/-- Addition on a tagged copy agrees with the explicit Zorn addition. -/
+theorem zornCopy_add_val (sector : TrialitySector) (X Y : ZornCopy sector) :
+    (X + Y).val = zornAdd X.val Y.val := by
+  apply zornCoordinates_injective
+  have h := (copyLinearEquivCoordinates sector).map_add X Y
+  simpa [copyLinearEquivCoordinates, copyEquivCoordinates, zornCoordinates,
+    zornAdd] using h
+
+/-- Scalar multiplication on a tagged copy is transported through the
+canonical coordinate equivalence. -/
+theorem zornCopy_smul_val (sector : TrialitySector) (c : ℂ) (X : ZornCopy sector) :
+    (c • X).val = coordinatesToZorn (c • zornCoordinates X.val) := by
+  apply zornCoordinates_injective
+  have h := (copyLinearEquivCoordinates sector).map_smul c X
+  change zornCoordinates ((c • X).val) = c • zornCoordinates X.val at h
+  rw [zornCoordinates_coordinatesToZorn]
+  exact h
 
 /-- Each typed triality copy is finite-dimensional because its coordinate
 equivalence has the finite function space `Fin 8 → ℂ` as source. -/

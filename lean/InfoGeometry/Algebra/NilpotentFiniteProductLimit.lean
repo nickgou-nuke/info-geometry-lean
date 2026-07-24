@@ -26,7 +26,7 @@ This file keeps three lanes separate.
   product.
 -/
 
-namespace NilpotentFiniteProductLimit
+namespace InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 variable {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
 
@@ -130,12 +130,12 @@ theorem finite_to_infinite_limit (T : ℝ) (N : A) (hN : N * N = 0) :
 
 /--
 Debt marker only: this module proves the eventually-constant nilpotent case;
-it does not prove a general infinite-dimensional analytic product/completion
-or identify the limit with any external Dirac/Virasoro flow.
+it does not prove a general infinite-dimensional Hestenes/colimit product
+completion or identify the limit with any external Dirac/Virasoro flow.
 -/
-def general_analytic_completion_debt : String :=
-  "Open: prove a general analytic product/completion theorem beyond the eventually-constant nilpotent case."
+def general_colimit_completion_debt : String :=
+  "Open: prove a general Hestenes/categorical-colimit product-completion theorem beyond the eventually-constant nilpotent case."
 
-end NilpotentFiniteProductLimit
+end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 end

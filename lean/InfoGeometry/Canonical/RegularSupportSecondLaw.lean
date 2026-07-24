@@ -19,7 +19,7 @@ automatically carries a positive Onsager/metriplectic dissipator.
 
 noncomputable section
 
-namespace RegularSupportSecondLaw
+namespace InfoGeometry.Canonical.RegularSupportSecondLaw
 
 /-! ## 1. Modular flow and expectation states -/
 
@@ -503,4 +503,4 @@ theorem regularSupportSecondLawTarget
     (fun x hx => split_second_law_on_regular_corner S x hx),
     (fun x => S.defectReadout.supported_on_defect x)⟩
 
-end RegularSupportSecondLaw
+end InfoGeometry.Canonical.RegularSupportSecondLaw

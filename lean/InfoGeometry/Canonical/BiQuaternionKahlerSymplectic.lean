@@ -32,7 +32,7 @@ Hamiltonian vector fields, Jacobi identity on function algebras, and analytic
 Kähler potential machinery.
 -/
 
-namespace BiQuaternionKahlerSymplectic
+namespace InfoGeometry.Canonical.BiQuaternionKahlerSymplectic
 
 open Matrix
 
@@ -136,4 +136,4 @@ theorem exists_symplectic_witness_of_nonzero (x : R4) (hx : ∃ i : Fin 4, x i �
   rw [symplecticI_apply_I4c_mulVec]
   exact dot4_pos_of_exists_ne_zero x hx
 
-end BiQuaternionKahlerSymplectic
+end InfoGeometry.Canonical.BiQuaternionKahlerSymplectic

@@ -16,7 +16,7 @@ This module formalizes the algebraic skeleton:
 
 noncomputable section
 
-namespace Clifford55AnomalyOSP
+namespace InfoGeometry.Clifford.Clifford55AnomalyOSP
 
 open Matrix
 
@@ -97,4 +97,4 @@ theorem TripLift_tripotent : TripLift * TripLift * TripLift = TripLift := by
     simp [TripLift, Matrix.mul_apply, Fin.sum_univ_six]
 
 
-end Clifford55AnomalyOSP
+end InfoGeometry.Clifford.Clifford55AnomalyOSP

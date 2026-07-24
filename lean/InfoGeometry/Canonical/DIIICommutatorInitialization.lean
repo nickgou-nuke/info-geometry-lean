@@ -19,7 +19,7 @@ This file is intentionally thin:
 No physical narrative is used as proof evidence; only operator identities.
 -/
 
-namespace DIIICommutatorInitialization
+namespace InfoGeometry.Canonical.DIIICommutatorInitialization
 
 open RealBdG
 open InfoGeometry.Krein
@@ -142,4 +142,4 @@ end Bridge
 
 end Core
 
-end DIIICommutatorInitialization
+end InfoGeometry.Canonical.DIIICommutatorInitialization

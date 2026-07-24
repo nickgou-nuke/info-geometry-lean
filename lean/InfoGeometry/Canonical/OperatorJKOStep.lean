@@ -23,7 +23,7 @@ import Mathlib
 
 noncomputable section
 
-namespace OperatorJKOStep
+namespace InfoGeometry.Canonical.OperatorJKOStep
 
 /-! ## 1. Operator JKO potential -/
 
@@ -334,4 +334,4 @@ variable {P : OperatorJKOPotential Weight}
 
 end JKOModularFlowLimitCalibration
 
-end OperatorJKOStep
+end InfoGeometry.Canonical.OperatorJKOStep

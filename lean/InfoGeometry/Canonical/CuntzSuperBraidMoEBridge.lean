@@ -37,7 +37,7 @@ needed analytic/operator-algebraic premises exist.
 
 noncomputable section
 
-namespace CuntzSuperBraidMoEBridge
+namespace InfoGeometry.Canonical.CuntzSuperBraidMoEBridge
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Algebra.Cuntz
@@ -236,6 +236,6 @@ theorem finite_cuntz_super_braid_moe_packet :
     particle_hole_sector_commute, NambuSector.parity_sq, isotropic_pair_cross_parity_odd,
     dissipativeResidual_eq_zero_iff, TwoExpertGate.weights_sum_one⟩
 
-end CuntzSuperBraidMoEBridge
+end InfoGeometry.Canonical.CuntzSuperBraidMoEBridge
 
 end

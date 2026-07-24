@@ -21,9 +21,9 @@ extracted from the underlying thermodynamic and dynamical layers.
 
 noncomputable section
 
-namespace SuperKaehlerGromovWittenBridge
+namespace InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartition
+open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 open InfoGeometry.Dynamics.HamiltonianFlowBridge
 open InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 
@@ -98,4 +98,4 @@ theorem witten_index_is_weyl_denominator :
 
 end SuperKaehlerPrimeManifold
 
-end SuperKaehlerGromovWittenBridge
+end InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge

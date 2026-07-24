@@ -24,7 +24,7 @@ an explicit theorem hypothesis.
   over a finite field is not asserted here.
 -/
 
-namespace HasseWeilEllipticBounds
+namespace InfoGeometry.Canonical.HasseWeilEllipticBounds
 
 /--
 The field-size parameter is nonnegative whenever the trace-square inequality
@@ -105,4 +105,4 @@ theorem characteristic_poly_roots (q α β t : ℚ)
   rw [← hnorm]
   ring
 
-end HasseWeilEllipticBounds
+end InfoGeometry.Canonical.HasseWeilEllipticBounds

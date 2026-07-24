@@ -16,7 +16,7 @@ that are currently justified in the repository:
   all induced energies/params/weights/heads are equal.
 -/
 
-namespace AttentionDiracBridge
+namespace InfoGeometry.Canonical.AttentionDiracBridge
 
 open Attention
 open scoped BigOperators
@@ -115,4 +115,4 @@ lemma diracAttentionWeights_sum_one
 
 end Core
 
-end AttentionDiracBridge
+end InfoGeometry.Canonical.AttentionDiracBridge

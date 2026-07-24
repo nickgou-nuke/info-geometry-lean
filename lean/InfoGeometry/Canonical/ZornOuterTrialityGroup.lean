@@ -10,6 +10,7 @@ noncomputable section
 
 namespace ZornOuterTrialityGroup
 
+open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
 open InfoGeometry.Canonical.ZornIntegralTrialityEquivariance

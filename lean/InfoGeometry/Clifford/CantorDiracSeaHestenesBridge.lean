@@ -29,7 +29,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace CantorDiracSeaHestenesBridge
+namespace InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 
 open InfoGeometry.Tessellation
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
@@ -144,4 +144,4 @@ theorem doubledIBivector_square_neg :
 
 end CantorDiracSeaHestenesPacket
 
-end CantorDiracSeaHestenesBridge
+end InfoGeometry.Clifford.CantorDiracSeaHestenesBridge

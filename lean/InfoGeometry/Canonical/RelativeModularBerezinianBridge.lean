@@ -19,7 +19,7 @@ restricted-volume and Berezinian readouts with the modular supervolume shadow.
 
 set_option linter.unusedSectionVars false
 
-namespace RelativeModularBerezinianBridge
+namespace InfoGeometry.Canonical.RelativeModularBerezinianBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
@@ -84,7 +84,7 @@ theorem relativeModularRestrictedSheetEquiv_character_coe_eq_berezinianShadow
         (relativeModularRestrictedSheetEquiv (n := n) qPlus q0Plus qMinus q0Minus)) : ℝˣ) : ℝ)
       = relativeModularBerezinianShadow (n := n) qPlus q0Plus qMinus q0Minus := by
   unfold RestrictedSheetEquiv.restrictedVolumeCharacter
-    relativeModularRestrictedSheetEquiv relativeModularBerezinianShadow VolumeHom
+    relativeModularRestrictedSheetEquiv relativeModularBerezinianShadow Base.VolumeHom
   simp only [Units.val_mul, Units.val_inv_eq_inv_val, div_eq_mul_inv,
     relativeModularSheetEquiv_det_coe_eq_volumeShadow]
 
@@ -488,4 +488,4 @@ end RelativeModularSupervolumeKreinHessianLift
 
 end KreinHessianLift
 
-end RelativeModularBerezinianBridge
+end InfoGeometry.Canonical.RelativeModularBerezinianBridge

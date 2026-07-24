@@ -21,9 +21,9 @@ finite Taylor prefix converges to an analytic operator function, nor that a
 barrier iteration converges to an optimizer.
 -/
 
-namespace InductiveBarrierOptimization
+namespace InfoGeometry.Convex.InductiveBarrierOptimization
 
-open SymmetryClosureConformalBlocks
+open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
 open InductiveOperatorTaylorClosure
 
 /-! ## Generic finite barrier iterations -/
@@ -131,4 +131,4 @@ theorem radialBarrier_iterateUpdate_le_start
       RadialLogBarrier.radialBarrier s :=
   barrierValue_iterateUpdate_le_start hadm hdesc hs N
 
-end InductiveBarrierOptimization
+end InfoGeometry.Convex.InductiveBarrierOptimization

@@ -29,7 +29,7 @@ theorem asserts Witten's unorientable parity anomaly, GUE asymptotics, KMS/BEC
 physics, C*-completion, zeta-zero statistics, or RH consequences.
 -/
 
-namespace DeformedIdeleDysonBridge
+namespace InfoGeometry.Canonical.DeformedIdeleDysonBridge
 
 section RealBridge
 
@@ -128,4 +128,4 @@ end BranchDefectToDysonNodes
 
 end RealBridge
 
-end DeformedIdeleDysonBridge
+end InfoGeometry.Canonical.DeformedIdeleDysonBridge

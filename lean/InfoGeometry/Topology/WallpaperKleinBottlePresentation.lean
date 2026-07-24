@@ -31,7 +31,7 @@ None in this file.
 
 noncomputable section
 
-namespace WallpaperKleinBottlePresentation
+namespace InfoGeometry.Topology.WallpaperKleinBottlePresentation
 
 open InfoGeometry.Topology.Wallpaper
 
@@ -78,6 +78,6 @@ theorem concrete_kleinBottlePresentation_relation (p : Lattice2D) :
       ((WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation.symm p) :=
   WallpaperGroupPG.kleinBottlePresentation_relation concretePG p
 
-end WallpaperKleinBottlePresentation
+end InfoGeometry.Topology.WallpaperKleinBottlePresentation
 
 end noncomputable section

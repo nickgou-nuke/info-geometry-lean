@@ -14,7 +14,7 @@ This file defines:
 No wrappers. No `sorry`.
 -/
 
-namespace BektasMatrix
+namespace InfoGeometry.Projective.SplitOctonions.BektasMatrix
 
 variable {R : Type*} [CommRing R]
 
@@ -81,5 +81,5 @@ theorem trace_is_longitudinal_scalar (X : BektasCell R) :
 
 end BektasCell
 
-end BektasMatrix
+end InfoGeometry.Projective.SplitOctonions.BektasMatrix
 

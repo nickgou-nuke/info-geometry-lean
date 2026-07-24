@@ -16,7 +16,7 @@ physical boost/Rindler time for an observer with proper acceleration `a`.
 
 noncomputable section
 
-namespace SpinUnruhCalibration
+namespace InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
@@ -286,4 +286,4 @@ attribute [rep_depth operator]
   unitSpinUnruhCalibration
   spinUnruhCalibrationOwnerTarget
 
-end SpinUnruhCalibration
+end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

@@ -15,7 +15,7 @@ This file proves only finite algebraic facts:
 No infinite limit, operator-algebra completion, or analytic claim is made here.
 -/
 
-namespace FiniteMajoranaBraid
+namespace InfoGeometry.Canonical.FiniteMajoranaBraid
 
 /-! ## Three-mode local braid relation -/
 
@@ -135,4 +135,4 @@ theorem parity3_braid_word_right (x : Bool × Bool × Bool) :
     parity3 (swap23 (swap12 (swap23 x))) = parity3 x := by
   simp
 
-end FiniteMajoranaBraid
+end InfoGeometry.Canonical.FiniteMajoranaBraid

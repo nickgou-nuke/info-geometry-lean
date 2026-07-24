@@ -10,7 +10,7 @@ as derived by Shifan Zhao (2024).
 
 noncomputable section
 
-namespace SiegelModularZeros
+namespace InfoGeometry.Arithmetic.SiegelModularZeros
 
 /--
 The symplectic one-level density limit function W_Sp(x).
@@ -39,4 +39,4 @@ def siegel_central_non_vanishing_bound_prop
     (omega_F_sum : ℕ → ℝ) : Prop :=
   limit_inf (fun k ↦ omega_F_sum k) ≥ (3 / 4 : ℝ)
 
-end SiegelModularZeros
+end InfoGeometry.Arithmetic.SiegelModularZeros

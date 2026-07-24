@@ -18,7 +18,7 @@ and Bridge Target.
 
 noncomputable section
 
-namespace MoebiusVirasoroBridge
+namespace InfoGeometry.Canonical.MoebiusVirasoroBridge
 
 open SelfReference
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -76,4 +76,4 @@ theorem moebiusVirasoroBridgeTarget
         WithLp.fst (moebiusTwist (A := A) (to_doubled s 0)) :=
   bridge.L0Flow_pi_eq_moebiusTwist
 
-end MoebiusVirasoroBridge
+end InfoGeometry.Canonical.MoebiusVirasoroBridge

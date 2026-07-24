@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import Mathlib.Algebra.Star.Basic
 
-namespace ChiralAnomaly
+namespace InfoGeometry.Canonical.ChiralAnomaly
 
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
@@ -337,4 +337,4 @@ theorem sinkhornIterate_generator_step_control
 end SinkhornDynamics
 end RoutingClifford
 
-end ChiralAnomaly
+end InfoGeometry.Canonical.ChiralAnomaly

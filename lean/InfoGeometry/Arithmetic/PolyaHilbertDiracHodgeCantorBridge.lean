@@ -2,8 +2,8 @@ import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Arithmetic.HilbertPolyaBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.External.Automath.Omega.Zeta.XiHilbertPolyaNinefoldEquivalenceDoubledSelfadjointCompression
-import InfoGeometry.External.Automath.Omega.Zeta.XiHilbertPolyaCMV
+import Omega.Zeta.XiHilbertPolyaNinefoldEquivalenceDoubledSelfadjointCompression
+import Omega.Zeta.XiHilbertPolyaCMV
 
 /-!
 # Polya-Hilbert Dirac-Hodge Cantor Bridge
@@ -29,7 +29,7 @@ Together they form the Polya-Hilbert spectral picture on the Cantor-Dirac-Hodge 
 
 noncomputable section
 
-namespace PolyaHilbertDiracHodgeCantorBridge
+namespace InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
 
 open Omega.Zeta
 
@@ -81,6 +81,6 @@ theorem polya_hilbert_dirac_hodge_cantor_conclusion
     h_caratheodory_herglotz h_unit_cmv h_doubled_unit.symm
   result.2.1
 
-end PolyaHilbertDiracHodgeCantorBridge
+end InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
 
 end noncomputable section

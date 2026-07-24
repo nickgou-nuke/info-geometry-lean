@@ -20,7 +20,7 @@ It does **not** claim a full spectral theorem, unbounded-operator analysis, or
 any theorem about Riemann zeros.
 -/
 
-namespace TopologicalGapShadow
+namespace InfoGeometry.Canonical.TopologicalGapShadow
 
 section Core
 
@@ -117,4 +117,4 @@ theorem range_le_excitedStateSector_of_isStarNormal
 
 end Core
 
-end TopologicalGapShadow
+end InfoGeometry.Canonical.TopologicalGapShadow

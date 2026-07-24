@@ -3,7 +3,7 @@ open Matrix
 open Complex
 open Real
 
-namespace FibAnyonThm3
+namespace InfoGeometry.Fibonacci.FibAnyonThm3
 
 noncomputable section
 
@@ -39,4 +39,4 @@ theorem R_char_poly_zero : (R - (q^(-4 : ℤ)) • (1 : Matrix (Fin 2) (Fin 2) �
 
 end
 
-end FibAnyonThm3
+end InfoGeometry.Fibonacci.FibAnyonThm3

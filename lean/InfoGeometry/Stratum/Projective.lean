@@ -17,7 +17,7 @@ This stratum formalizes the connection between Information Geometry's projective
 - `RealProjectiveSpace V` represents the full projective space (modulo nonzero scalars).
 -/
 
-namespace Projective
+namespace InfoGeometry.Stratum.Projective
 
 /-- Type alias for the positive rays in a real vector space. -/
 abbrev PositiveRay (V : Type*) [AddCommGroup V] [Module ℝ V] := Module.Ray ℝ V
@@ -25,4 +25,4 @@ abbrev PositiveRay (V : Type*) [AddCommGroup V] [Module ℝ V] := Module.Ray ℝ
 /-- Type alias for the full real projective space of a vector space. -/
 abbrev RealProjectiveSpace (V : Type*) [AddCommGroup V] [Module ℝ V] := Projectivization ℝ V
 
-end Projective
+end InfoGeometry.Stratum.Projective

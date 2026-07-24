@@ -19,7 +19,7 @@ consequence: Drazin-cut stability, defect localization, regular-support
 annihilation, and transport protection of the central-charge lane.
 -/
 
-namespace CasimirWeylDrazinContext
+namespace InfoGeometry.Canonical.CasimirWeylDrazinContext
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -689,4 +689,4 @@ theorem transportSlice_ne_zero_of_centralCharge_ne_zero
 
 end CentralCharge
 
-end CasimirWeylDrazinContext
+end InfoGeometry.Canonical.CasimirWeylDrazinContext

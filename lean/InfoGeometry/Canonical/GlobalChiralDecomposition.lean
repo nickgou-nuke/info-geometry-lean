@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace GlobalChiralDecomposition
+namespace InfoGeometry.Canonical.GlobalChiralDecomposition
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -189,4 +189,4 @@ theorem singularPolarKAN_replacement_of_commute
 
 end Core
 
-end GlobalChiralDecomposition
+end InfoGeometry.Canonical.GlobalChiralDecomposition

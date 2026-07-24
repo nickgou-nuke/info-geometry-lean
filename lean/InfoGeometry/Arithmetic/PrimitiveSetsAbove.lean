@@ -1898,8 +1898,8 @@ The "good" part is handled by applying `PrimitiveSetsAboveFiniteStatement`
 recursively to the quotient Q_d = {a/d | a ∈ A, d ∣ a}, which is primitive and
 supported above x/d ≥ x₀ for d ≤ x/x₀.
 
-The "large" part (d > x/x₀) is the remaining analytic debt. Three connected
-lemmas close this gap:
+The "large" part (d > x/x₀) is the remaining filtered-colimit closure socket.
+Three connected lemmas close this gap:
 
 1. `primitiveWeightSum_vonMangoldt_sigma_le_log_mul_add` — the harmonic-sum
    / primitiveWeightSum coupling via Chebyshev's ψ.

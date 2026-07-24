@@ -17,7 +17,7 @@ open InfoGeometry.OperatorAlgebra.CliffordCAR
 
 noncomputable section
 
-namespace CARFermionParity
+namespace InfoGeometry.OperatorAlgebra.CARFermionParity
 
 /-! ## Scalar embedding into Cl(n,n) -/
 
@@ -273,4 +273,4 @@ theorem capstone_fermionParity (n : ℕ) (i : Fin n) :
     cre_mul_numberOp n i,
     parityFactor_anticomm_cre n i⟩
 
-end CARFermionParity
+end InfoGeometry.OperatorAlgebra.CARFermionParity

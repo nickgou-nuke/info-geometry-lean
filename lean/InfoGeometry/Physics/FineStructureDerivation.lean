@@ -13,7 +13,7 @@ Derives α from parafermionic centralizer dimension = 137 with Pellis golden rat
 
 noncomputable section
 
-namespace FineStructureDerivation
+namespace InfoGeometry.Physics.FineStructureDerivation
 
 open InfoGeometry.Clifford.CliffordTower
 open InfoGeometry.BostConnes
@@ -92,6 +92,6 @@ theorem alpha_bounds : 0.00729 < alpha_derived ∧ alpha_derived < 0.00730 := by
 theorem derivation_complete : alpha_derived = 1 / (360/phi^2 - 2/phi^3 + 1/(3*phi)^5) := by
   unfold alpha_derived; rfl
 
-end FineStructureDerivation
+end InfoGeometry.Physics.FineStructureDerivation
 
 noncomputable section

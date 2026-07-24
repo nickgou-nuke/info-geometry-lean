@@ -20,7 +20,7 @@ So the `n`-dependent corridor is represented as a genuine inductive-colimit
 surface instead of a one-off finite packet.
 -/
 
-namespace SuperCuntzDilationColimit
+namespace InfoGeometry.Topology.SuperCuntzDilationColimit
 
 open InfoGeometry.Canonical.ErlangenInductiveClosure
 open InfoGeometry.Canonical.ErlangenColimitResolution
@@ -46,5 +46,5 @@ def qDilationColimitResolution
     (A_infty := A_infty) (GlobalInvariants := GlobalInvariants)
     global_embed
 
-end SuperCuntzDilationColimit
+end InfoGeometry.Topology.SuperCuntzDilationColimit
 

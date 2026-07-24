@@ -1,6 +1,6 @@
 # Pauli Auditor: Semantic Fidelity & Hollow Theorem Report
 
-Generated at: 2026-04-25T16:19:09.675307+00:00
+Generated at: 2026-07-22T21:09:40.132563+00:00
 
 ## Summary
 

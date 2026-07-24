@@ -18,7 +18,7 @@ concrete finite chart where the numerator-zero-on-collision property is proved,
 not assumed.
 -/
 
-namespace WeylTwoNodeCancellationChart
+namespace InfoGeometry.Canonical.WeylTwoNodeCancellationChart
 
 open InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
 open InfoGeometry.Canonical.VandermondeExclusionBridge
@@ -131,4 +131,4 @@ theorem concrete_cancellation_packet :
 
 end TwoNodeChart
 
-end WeylTwoNodeCancellationChart
+end InfoGeometry.Canonical.WeylTwoNodeCancellationChart

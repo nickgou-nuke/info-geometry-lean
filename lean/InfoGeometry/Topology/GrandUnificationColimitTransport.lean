@@ -35,7 +35,7 @@ current Delaunay owner, so this file records only the uniform finite-stage
 family for that branch.
 -/
 
-namespace GrandUnificationColimitTransport
+namespace InfoGeometry.Topology.GrandUnificationColimitTransport
 
 open InfoGeometry.Topology
 
@@ -216,4 +216,4 @@ theorem delaunay_stage_equality_to_supplied_colimit
     toLimit n before = toLimit n after := by
   rw [h]
 
-end GrandUnificationColimitTransport
+end InfoGeometry.Topology.GrandUnificationColimitTransport

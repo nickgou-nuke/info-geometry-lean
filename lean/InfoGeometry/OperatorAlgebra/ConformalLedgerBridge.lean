@@ -29,7 +29,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace ConformalLedgerBridge
+namespace InfoGeometry.OperatorAlgebra.ConformalLedgerBridge
 
 open StinespringDilation
 open TKKConformalClosure
@@ -487,4 +487,4 @@ theorem conformalLedgerBridge_packet
         (Λ.heatRicciBridge.stateOf x) :=
   conformalLedgerBridgeOwnerTarget Sys Comm L State Geometry Λ x
 
-end ConformalLedgerBridge
+end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

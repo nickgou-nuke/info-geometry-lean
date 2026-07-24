@@ -41,7 +41,7 @@ Theorems are conditional on explicit witnesses such as:
 - No positivity, negative-definiteness, or nondegeneracy theorem is proved.
 -/
 
-namespace FiniteDecompositionAudit
+namespace InfoGeometry.Krein.FiniteDecompositionAudit
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -104,4 +104,4 @@ theorem bKrein_xMinus_self
   rw [J_xMinus half J hJ2 x]
   exact B_neg_right B hBcomm hBsmulLeft (xMinus half J x) (xMinus half J x)
 
-end FiniteDecompositionAudit
+end InfoGeometry.Krein.FiniteDecompositionAudit

@@ -14,7 +14,7 @@ import InfoGeometry.OperatorAlgebra.StinespringDilation
 
 noncomputable section
 
-namespace StinespringChiralLightcone
+namespace InfoGeometry.OperatorAlgebra.StinespringChiralLightcone
 
 open InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 open InfoGeometry.OperatorAlgebra.StinespringDilation
@@ -128,4 +128,4 @@ theorem heat_is_hidden_lightcone_information
 
 end ChiralLightconeHeatBridge
 
-end StinespringChiralLightcone
+end InfoGeometry.OperatorAlgebra.StinespringChiralLightcone

@@ -13,7 +13,7 @@ This module intentionally avoids interpretation language and exposes only
 operator inequalities on the defect budget.
 -/
 
-namespace SinkhornDefectFlow
+namespace InfoGeometry.LLM.SinkhornDefectFlow
 
 open InfoGeometry.LLM.TrialityMoE
 open InfoGeometry.LLM.TrialityMoE.RouterDefectBoundBridge
@@ -1344,4 +1344,4 @@ theorem δ_odd_thermo_next_le_ZD_of_relativeDefectBridge
 
 end VolumeAnomaly
 
-end SinkhornDefectFlow
+end InfoGeometry.LLM.SinkhornDefectFlow

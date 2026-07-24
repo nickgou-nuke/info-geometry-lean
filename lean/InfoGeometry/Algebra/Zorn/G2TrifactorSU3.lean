@@ -27,7 +27,7 @@ representation-theoretic owners.
 
 noncomputable section
 
-namespace G2TrifactorSU3
+namespace InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 
 open InfoGeometry.Algebra.Zorn
 
@@ -148,5 +148,5 @@ theorem preserves_null_cone_of_det_preserving
   unfold ZornMatrix.IsNull at *
   rw [hdet X, h_null]
 
-end G2TrifactorSU3
+end InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 

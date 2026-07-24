@@ -21,7 +21,7 @@ No state uniqueness theorem.
 No spectral, Tomita, or conformal-completion claim.
 -/
 
-namespace FiniteJaynesCenteredScoreBridge
+namespace InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 
 open Finset
 open JaynesLDDSCentering
@@ -254,4 +254,4 @@ theorem FiniteJaynesPair.ref_weighted_centeredRelativeDensity_eq_zero
 
 end PublicCenteredSurface
 
-end FiniteJaynesCenteredScoreBridge
+end InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge

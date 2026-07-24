@@ -22,7 +22,7 @@ Morera equivalence, contour integration, conformality, or Dirac-equation
 analytic equivalence.  Those remain analytic/differential owner-file work.
 -/
 
-namespace FiniteHestenesCR
+namespace InfoGeometry.Geometry.FiniteHestenesCR
 
 /-- Complex numbers modeled as a two-dimensional real vector space. -/
 structure ComplexReal where
@@ -244,11 +244,12 @@ theorem hestenes_cr_equivalence (C : StandardCRComponents) :
 /-! ## Explicit non-claims / debt markers -/
 
 /--
-Debt marker only: global equivalence of Weierstrass/Cauchy/Riemann/Morera
-analyticity requires topology and integration hypotheses not present here.
+Debt marker only: global equivalence of the classical scalar-complex notions
+requires topology and integration hypotheses not present here; the repository
+route is the finite Hestenes phase-axis formulation above.
 -/
-def classical_analyticity_equivalence_debt : String :=
-  "Open: add topology/integration hypotheses and prove equivalence with classical analyticity notions."
+def classical_phase_axis_equivalence_debt : String :=
+  "Open: relate the finite Hestenes phase-axis formulation to classical topology/integration notions only through the correct owner."
 
 /--
 Debt marker only: equivalence with the four-dimensional Hestenes--Dirac
@@ -264,4 +265,4 @@ geometry work, not a consequence of the finite algebra in this file alone.
 def hestenes_conformal_mapping_preservation_debt : String :=
   "Open: prove conformality of Hestenes-analytic maps under explicit differential-geometric hypotheses."
 
-end FiniteHestenesCR
+end InfoGeometry.Geometry.FiniteHestenesCR

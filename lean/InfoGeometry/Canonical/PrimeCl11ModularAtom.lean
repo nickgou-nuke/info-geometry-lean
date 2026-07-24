@@ -24,7 +24,7 @@ or RH.
 
 noncomputable section
 
-namespace PrimeCl11ModularAtom
+namespace InfoGeometry.Canonical.PrimeCl11ModularAtom
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeHurwitzLimit
@@ -132,4 +132,4 @@ theorem cpt_invariance_forces_reciprocal_zeros
     WT.approximants.Z N (z⁻¹) = 0 := by
   exact (WT.cpt_preservation N z hz_neq).mp hz_zero
 
-end PrimeCl11ModularAtom
+end InfoGeometry.Canonical.PrimeCl11ModularAtom

@@ -213,8 +213,8 @@ noncomputable def carrierMatrix
 end ArnoldProductRank32Realization
 
 /--
-Combined finite packet: the carrier is `32 = 16 + 16`, and the attached
-three-edge boundary packet still has the nilpotence-driven factorization laws.
+Combined finite packet: the carrier is `32 = 16 + 16`, with the chiral/anti-
+chiral partition and cardinality readbacks proved above.
 -/
 theorem rank32_boundary_realization_packet
     {Op : Type*} [Ring Op] (_R : Rank32BoundaryRealization Op) :

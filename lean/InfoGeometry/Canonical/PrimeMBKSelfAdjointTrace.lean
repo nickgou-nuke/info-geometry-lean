@@ -22,7 +22,7 @@ removed rather than preserved as proof proxies.
 
 noncomputable section
 
-namespace PrimeMBKSelfAdjointTrace
+namespace InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace
 
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 
@@ -117,4 +117,4 @@ structure MBKMellinXiTracePacket
   zeroFrequency :
     ℂ → FrequencyReadout
 
-end PrimeMBKSelfAdjointTrace
+end InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace

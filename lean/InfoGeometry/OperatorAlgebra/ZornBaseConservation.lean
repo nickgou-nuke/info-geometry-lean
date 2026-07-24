@@ -18,7 +18,7 @@ Open residue:
 - no measure-theoretic or smooth-manifold theorem is asserted here.
 -/
 
-namespace ZornBaseConservation
+namespace InfoGeometry.OperatorAlgebra.ZornBaseConservation
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
@@ -56,4 +56,4 @@ theorem pureBosonic_trace_multiplicative_of_mixed_zero
             rw [hmix, add_zero]
     _ = (X.a + X.b) * (Y.a + Y.b) := by ring
 
-end ZornBaseConservation
+end InfoGeometry.OperatorAlgebra.ZornBaseConservation

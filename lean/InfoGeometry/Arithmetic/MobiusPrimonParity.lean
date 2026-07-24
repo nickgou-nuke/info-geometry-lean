@@ -22,7 +22,7 @@ locality, or a spectral zero-mode theorem.
 
 noncomputable section
 
-namespace MobiusPrimonParity
+namespace InfoGeometry.Arithmetic.MobiusPrimonParity
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -144,4 +144,4 @@ theorem mobius_zero_of_not_squarefree
     ArithmeticFunction.moebius n = 0 :=
   PrimeBitWittenIndex.mobius_eq_zero_of_not_squarefree hn
 
-end MobiusPrimonParity
+end InfoGeometry.Arithmetic.MobiusPrimonParity

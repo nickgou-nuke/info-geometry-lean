@@ -9,7 +9,7 @@ import InfoGeometry.Volume.LogPotential
 Canonical determinant/group surface for linear equivalences.
 -/
 
-namespace Determinant
+namespace InfoGeometry.Canonical.Determinant
 
 open InfoGeometry.Canonical
 open Base LogPotential
@@ -39,4 +39,4 @@ theorem linearEquivLogGenerator_mul (f g : V ≃ₗ[ℝ] V) :
       linearEquivLogGenerator.logGen f + linearEquivLogGenerator.logGen g :=
   ExactDescentLogGenerator.map_mul (ExactDescentLogGenerator.ofBridge linearEquivExactBridge) f g
 
-end Determinant
+end InfoGeometry.Canonical.Determinant

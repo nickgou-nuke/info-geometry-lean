@@ -41,9 +41,16 @@ def derivations : LieSubalgebra R (Module.End R A) where
     simp only [sub_mul, mul_sub]
     abel
 
-/-- A bundled nonassociative derivation satisfies the Leibniz rule. -/
+/-- A bundled element of `derivations` satisfies the Leibniz rule.
+
+The name is intentionally qualified by `derivations_`: the older
+`AlternativeDerivations` file already owns
+`InfoGeometry.Algebra.NonAssocDerivation.leibniz` for its bundled
+`NonAssocDerivation` structure.  Keeping this theorem under a distinct name
+lets both owner files be imported by the algebra barrel without either theorem
+shadowing or deleting the other. -/
 @[simp]
-theorem leibniz (D : derivations R A) (x y : A) :
+theorem derivations_leibniz (D : derivations R A) (x y : A) :
     (D : Module.End R A) (x * y) =
       (D : Module.End R A) x * y + x * (D : Module.End R A) y :=
   D.property x y

@@ -19,7 +19,7 @@ If each bonding map is a ring homomorphism, then the local operator identities
 that define the finite cell are preserved at every finite transported stage.
 -/
 
-namespace FiniteInvariantTransport
+namespace InfoGeometry.Canonical.FiniteInvariantTransport
 
 /-- Apply `k` consecutive finite-stage transition maps starting at stage `n`. -/
 def chainApply {α : Type*} (next : Nat → α → α) (n : Nat) : Nat → α → α
@@ -256,4 +256,4 @@ theorem commutator_preserved_along_ringHom_chain
         _ = φ (n + k) (chainApply (fun i a => φ i a) n k c) := by
               rw [ih]
 
-end FiniteInvariantTransport
+end InfoGeometry.Canonical.FiniteInvariantTransport

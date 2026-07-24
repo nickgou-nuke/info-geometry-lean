@@ -16,7 +16,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace SugawaraAlgebraicLemmas
+namespace InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 
 variable {Op : Type*} [Ring Op]
 
@@ -71,4 +71,4 @@ theorem comm_sum_right {ι : Type*} (s : Finset ι) (A : Op) (B : ι → Op) :
   unfold comm
   rw [Finset.mul_sum, Finset.sum_mul, Finset.sum_sub_distrib]
 
-end SugawaraAlgebraicLemmas
+end InfoGeometry.Canonical.SugawaraAlgebraicLemmas

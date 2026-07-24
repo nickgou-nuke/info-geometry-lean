@@ -20,7 +20,7 @@ noncomputable section
 
 set_option linter.unusedSectionVars false
 
-namespace RealHestenesPolarizationMechanism
+namespace InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.PolarizedSector
@@ -329,4 +329,4 @@ end RealHestenesPolarizationMechanismPacket
 
 end MechanismPacket
 
-end RealHestenesPolarizationMechanism
+end InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism

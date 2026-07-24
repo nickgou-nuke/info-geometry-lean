@@ -2,7 +2,7 @@ import Mathlib
 
 set_option linter.unusedVariables false
 
-namespace HodgeStarOperator
+namespace InfoGeometry.Krein.HodgeStarOperator
 
 /-- Minimal Krein-space structure on a real vector space. -/
 class KreinSpace (V : Type*) [AddCommGroup V] [Module ℝ V] where
@@ -45,4 +45,4 @@ theorem hodge_decomposition_krein (d : V →ₗ[ℝ] V) (x : V) :
   refine ⟨x, 0, 0, ?_⟩
   simp
 
-end HodgeStarOperator
+end InfoGeometry.Krein.HodgeStarOperator

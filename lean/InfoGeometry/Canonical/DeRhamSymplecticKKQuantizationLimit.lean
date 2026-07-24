@@ -15,10 +15,11 @@ This file contains only theorem-safe algebraic content:
 
 It deliberately does **not** claim a full global symplectic manifold
 construction, a full Kaluza--Klein field equation theorem, or a full
-quantization theorem without owner-side analytic hypotheses.
+quantization theorem without owner-side Hestenes--Krein/categorical colimit
+hypotheses.
 -/
 
-namespace DeRhamSymplecticKKQuantizationLimit
+namespace InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit
 
 open InductiveColimitBridge
 
@@ -162,11 +163,12 @@ theorem compatibleProofFamily_transported_to_inductiveLimit
     Pinf (S.toLimit (n + m) (S.bondSeq n m x)) :=
   hread (n + m) (S.bondSeq n m x) (F.transport n m x hx)
 
-/-! ## 5. Explicit analytic/global debt -/
+/-! ## 5. Explicit global colimit-owner obligation -/
 
 /--
 Debt: the full global de Rham obstruction theorem requires an owner-side
-construction of the relevant global de Rham cohomology group and comparison map.
+categorical construction of the relevant global de Rham cohomology group and
+comparison map.
 -/
 structure FullGlobalDeRhamObstructionDebt where
   -- Formal definitions pending
@@ -185,4 +187,4 @@ field-equation, bundle, integrality, and operator quantization hypotheses.
 structure Full5DKaluzaKleinQuantizationDebt where
   -- Formal definitions pending
 
-end DeRhamSymplecticKKQuantizationLimit
+end InfoGeometry.Canonical.DeRhamSymplecticKKQuantizationLimit

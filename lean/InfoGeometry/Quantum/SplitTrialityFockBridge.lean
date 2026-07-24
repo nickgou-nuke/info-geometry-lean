@@ -14,7 +14,7 @@ This file keeps owner facts in their owner files:
 Here we only identify the two presentations.
 -/
 
-namespace SplitTrialityFockBridge
+namespace InfoGeometry.Quantum.SplitTrialityFockBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -131,4 +131,4 @@ theorem triality_channels_CARWitness :
     (InfoGeometry.Quantum.RealMajoranaCategory.car_realization_of_clifford_concrete
       (E := E))
 
-end SplitTrialityFockBridge
+end InfoGeometry.Quantum.SplitTrialityFockBridge

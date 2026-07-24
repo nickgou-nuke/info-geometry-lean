@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace DrazinPenroseDilationKKT
+namespace InfoGeometry.Canonical.DrazinPenroseDilationKKT
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.CartanDecomposition
@@ -310,4 +310,4 @@ theorem centralSupercharge_transport_invariant
 
 end CentralChargeHook
 
-end DrazinPenroseDilationKKT
+end InfoGeometry.Canonical.DrazinPenroseDilationKKT

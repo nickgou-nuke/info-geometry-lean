@@ -32,7 +32,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace LanglandsPrimeResonance
+namespace InfoGeometry.Automorphic.LanglandsPrimeResonance
 
 open InfoGeometry.Automorphic.SiegelResonance
 open InfoGeometry.Automorphic.LFunctionResonance
@@ -399,4 +399,4 @@ def langlandsPrimeResonanceWitness_of_admissible
     bridge := h.bridge
   }
 
-end LanglandsPrimeResonance
+end InfoGeometry.Automorphic.LanglandsPrimeResonance

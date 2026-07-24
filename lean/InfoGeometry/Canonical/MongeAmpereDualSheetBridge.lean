@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Krein.PolarizedSector
 
-namespace MongeAmpereDualSheetBridge
+namespace InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.RicciMongeAmpere
@@ -538,4 +538,4 @@ theorem mongeAmpereDensityOperator_eq_exp_neg_kahlerPotentialRN_smul_id_of_rnEnt
 
 end RNEntropy
 
-end MongeAmpereDualSheetBridge
+end InfoGeometry.Canonical.MongeAmpereDualSheetBridge

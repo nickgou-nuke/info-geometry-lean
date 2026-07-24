@@ -11,7 +11,7 @@ concrete vectors, covectors, and linear maps it uses as explicit arguments.
 
 noncomputable section
 
-namespace IncidentNullFlagStress
+namespace InfoGeometry.Physics.IncidentNullFlagStress
 
 open InfoGeometry.Canonical.FierzKleinFoundation
 
@@ -139,4 +139,4 @@ theorem incidentStressTensor_swap
       incidentStressTensor Z Pboundary Pzero J Dboundary Y X :=
   minkowskiDot_comm X Y
 
-end IncidentNullFlagStress
+end InfoGeometry.Physics.IncidentNullFlagStress

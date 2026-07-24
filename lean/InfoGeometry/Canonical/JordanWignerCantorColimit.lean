@@ -19,7 +19,7 @@ The honest content is:
 
 noncomputable section
 
-namespace JordanWignerCantorColimit
+namespace InfoGeometry.Canonical.JordanWignerCantorColimit
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -168,4 +168,4 @@ noncomputable def globalCantorInverseEquiv :
         realToMatLimit_comp_matToRealLimit
       simpa using hy⟩
 
-end JordanWignerCantorColimit
+end InfoGeometry.Canonical.JordanWignerCantorColimit

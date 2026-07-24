@@ -28,7 +28,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace ConnesSpatialDerivative
+namespace InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 
 set_option linter.dupNamespace false
 
@@ -410,4 +410,4 @@ def scalarSpatialDerivativeDatum :
 
 end PositiveScalarWeight
 
-end ConnesSpatialDerivative
+end InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative

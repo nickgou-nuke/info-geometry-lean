@@ -86,45 +86,11 @@ structure ZornBraidKMSState where
   
   /-- An involution operation on the macroscopic continuum. -/
   continuumStar : ↑(zornContinuumModule R ZornSequence) → ↑(zornContinuumModule R ZornSequence)
-  
-  /-- 
-  The fundamental bridge: the Zorn macroscopic continuum generators, when projected,
-  evaluate exactly to the Bost-Connes KMS Boltzmann weights.
-  -/
-  eval_continuum_cuntz : ∀ (j k : J),
-    zornState (M.colimitMul
-      (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j)
-      (continuumStar (continuumCuntzGenerator R ZornSequence zornCuntzGenerator k))) =
-    kmsProjectionReadout bcKMS.β bcKMS.ζβ (stageIndex j) (stageIndex k)
 
-namespace ZornBraidKMSState
-
-variable {C} {ZornSequence} {M} {zornCuntzGenerator}
-variable (state : ZornBraidKMSState C ZornSequence M zornCuntzGenerator)
-
-/--
-The Boltzmann weights evaluate on the diagonal macroscopic continuum generators
-as $n^{-β} / ζβ$, where $n$ is the positive integer mapped from the stage $j$.
+/-
+The bridge-readout theorem is intentionally not asserted here until the
+state-to-KMS evaluation bridge is proved natively. The structure records only
+the data needed for a future honest theorem.
 -/
-theorem evaluate_continuum_boltzmann_weight (j : J) :
-    state.zornState (M.colimitMul
-      (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j)
-      (state.continuumStar (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j))) =
-    ((state.stageIndex j : ℕ) : ℝ) ^ (-state.bcKMS.β) / state.bcKMS.ζβ := by
-  rw [state.eval_continuum_cuntz j j]
-  exact kmsProjectionReadout_self state.bcKMS.β state.bcKMS.ζβ (state.stageIndex j)
-
-/--
-Off-diagonal macroscopic continuum generators evaluate to zero under the state,
-reflecting the orthogonality of the Bost--Connes Cuntz generators.
--/
-theorem evaluate_continuum_boltzmann_weight_off_diag {j k : J} (h : state.stageIndex j ≠ state.stageIndex k) :
-    state.zornState (M.colimitMul
-      (continuumCuntzGenerator R ZornSequence zornCuntzGenerator j)
-      (state.continuumStar (continuumCuntzGenerator R ZornSequence zornCuntzGenerator k))) = 0 := by
-  rw [state.eval_continuum_cuntz j k]
-  exact kmsProjectionReadout_ne h
-
-end ZornBraidKMSState
 
 end ZornBraidColimitKMS

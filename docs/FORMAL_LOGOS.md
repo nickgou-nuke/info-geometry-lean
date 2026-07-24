@@ -72,7 +72,7 @@ In the LeanTrail graph pipeline (`arango_dag_algorithms.py`,
 
 ### Layer 3 (Adaptation)
 
-In the evolution pipeline (`evolution_worker.py`, `gepa_evolver.py`,
+In the historical evolution pipeline (`evolution_worker.py`, `gepa_evolver.py`,
 `vacuity_critic.py`):
 
 - The vacuity critic walks `d`-edges forward to find dependent theorems
@@ -106,7 +106,8 @@ The "sensing" of the formal logos works as follows:
 4. **Analyze**: `graph_hodge_spectrum.py` computes Hodge invariants
 5. **Critique**: `vacuity_critic.py` identifies obfuscation patterns
 6. **Propose**: `seed_goals_from_sorries.py` generates repair tasks
-7. **Evolve**: `evolution_worker.py` runs the 3-stage pipeline
+7. **Evolve**: `evolution_worker.py` is disabled in this checkout; use the
+   repo-owned proof/build/audit lanes instead
 8. **Verify**: `lake build` confirms kernel acceptance
 
 Steps 1-4 are the **sensing function** — the system builds a self-model.

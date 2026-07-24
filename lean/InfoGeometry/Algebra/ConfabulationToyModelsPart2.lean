@@ -15,7 +15,7 @@ stripping all unsupported geometric and physical rhetoric.
 - **Classification**: Bucket 1 (Closed finite algebraic lemmas)
 -/
 
-namespace ConfabulationToyModelsPart2
+namespace InfoGeometry.Algebra.ConfabulationToyModelsPart2
 
 section ParityChirality
 /-! ## Cluster A: Parity/Chirality Toy Models -/
@@ -122,4 +122,4 @@ theorem plucker_klein_relation :
 
 end Plucker
 
-end ConfabulationToyModelsPart2
+end InfoGeometry.Algebra.ConfabulationToyModelsPart2

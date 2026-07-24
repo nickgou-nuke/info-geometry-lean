@@ -142,3 +142,13 @@ The AI agent has its own persistent "Hive Memory" ArangoDB container running on 
 - **Action**: All agents are structurally forbidden from editing or traversing the `.lake/packages/` directory. The entire directory must remain read-only (`chmod -R a-w .lake/packages`).
 - **Policy**: Any dependency updates to `lakefile.lean` or `lake-manifest.json` require explicit human approval. Agents shall NOT blindly run `lake update` or touch vendored dependency toolchains.
 - **Enforcement**: This is the difference between "should not happen" and "cannot happen." If an agent encounters a broken import, they must work within the currently pinned `v4.28.0` Mathlib cache instead of attempting to blindly pull or shift the toolchain manifest.
+
+## Sequential Build and Test Mandate
+**CRITICAL**: To prevent compilation race conditions, lock file contention, and resource saturation:
+- **Action**: You MUST never execute concurrent build, test, or compilation commands (e.g., `lake build`, `lake test`, `lake env lean`, `pytest`, `cargo`, `npm run dev`) at the same time.
+- **Pre-check**: Before executing any command that builds, compiles, or runs tests, you MUST inspect the current running background tasks via `manage_task list` to guarantee no other compiler-related task is active.
+
+## Strict Build Cache Protection Mandate
+**CRITICAL**: You MUST never execute cache-destructive commands (e.g., `lake clean`, `rm -rf .lake/build`, `rm -rf .lake/packages`, `rm -rf .lake`) under any circumstances. Nuking the build cache deletes precompiled dependency oleans and breaks the environment, forcing long and unnecessary compilation loops. If you need to clean up build warnings, use targeted compiler commands or rebuild specific files. Never use global clean commands.
+
+

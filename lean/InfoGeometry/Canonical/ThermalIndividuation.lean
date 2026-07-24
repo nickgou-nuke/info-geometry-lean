@@ -21,7 +21,7 @@ claimed here.
 
 noncomputable section
 
-namespace ThermalIndividuation
+namespace InfoGeometry.Canonical.ThermalIndividuation
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra
@@ -70,4 +70,4 @@ theorem casimir_is_stationary_individuated
 
   rw [mul_assoc, h_inv, mul_one]
 
-end ThermalIndividuation
+end InfoGeometry.Canonical.ThermalIndividuation

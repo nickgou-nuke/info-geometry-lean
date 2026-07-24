@@ -12,7 +12,7 @@ Determinant/group interface now aligned with mathlib objects:
 - `SL` as `Matrix.SpecialLinearGroup`
 -/
 
-namespace Determinant
+namespace InfoGeometry.Assumptions.Determinant
 
 universe u v
 
@@ -68,4 +68,4 @@ theorem jacobian_functoriality (R : Type u) (V : Type v)
     jacDet R V (f * g) = jacDet R V f * jacDet R V g :=
   jacDet_comp R V f g
 
-end Determinant
+end InfoGeometry.Assumptions.Determinant

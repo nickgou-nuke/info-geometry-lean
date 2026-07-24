@@ -27,7 +27,7 @@ phenomenological predictions remain closure debt; they are not asserted here.
 
 noncomputable section
 
-namespace Section34StrengthenedFormalism
+namespace InfoGeometry.Physics.Section34StrengthenedFormalism
 
 open Matrix Complex
 open BigOperators
@@ -170,6 +170,6 @@ theorem repaired_section34_strengthened_formalism_packet
   exact ⟨fun mu nu => densityStressShadow_symmetric g rhoD V hg mu nu,
     bqI_sq, bqJ_sq, bqK_sq, bqI_mul_bqJ, bqJ_mul_bqK, bqK_mul_bqI⟩
 
-end Section34StrengthenedFormalism
+end InfoGeometry.Physics.Section34StrengthenedFormalism
 
 end noncomputable section

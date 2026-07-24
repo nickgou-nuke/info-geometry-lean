@@ -31,7 +31,7 @@ Open Debt:
   - Algebraic derivation of the Todd class of the Grassmannian tangent bundle.
 -/
 
-namespace WittenMoebiusChiralParityIndex
+namespace InfoGeometry.Canonical.WittenMoebiusChiralParityIndex
 
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 
@@ -279,4 +279,4 @@ theorem witten_moebius_chiral_parity_gw_packet :
     boundaryPair_chiralParityIndex_zero,
     zero_gromovWitten_index_of_moebius_chiral_parity⟩
 
-end WittenMoebiusChiralParityIndex
+end InfoGeometry.Canonical.WittenMoebiusChiralParityIndex

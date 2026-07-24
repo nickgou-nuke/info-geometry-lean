@@ -35,12 +35,12 @@ contract and must not be treated as a primitive owner evidence in downstream
 operator-lane composition.
 -/
 
-namespace ModularWeldBridge
+namespace InfoGeometry.Canonical.ModularWeldBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open RelativeModularOperator
 open TomitaTakesaki
-open JaynesInfoStatMech.ThermalDiagonal
+open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.Volume.ConnesCocycle
 
 section FiniteWeld
@@ -292,4 +292,4 @@ theorem tomita_modularSign_flowUnitCocycle_cocycle
 
 end TomitaFlow
 
-end ModularWeldBridge
+end InfoGeometry.Canonical.ModularWeldBridge

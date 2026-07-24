@@ -33,7 +33,7 @@ is not the modular Hamiltonian. We keep the names separate:
 * `Delta`                   : modular operator / beta-flow endpoint.
 -/
 
-namespace HestenesModularBregman
+namespace InfoGeometry.Canonical.HestenesModularBregman
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -332,4 +332,4 @@ theorem souriauUntracedDeviation_zero
 
 end Core
 
-end HestenesModularBregman
+end InfoGeometry.Canonical.HestenesModularBregman

@@ -3,7 +3,7 @@ import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import DAG.AffineProjectiveClosure
 
-namespace GrothendieckMotive
+namespace InfoGeometry.Arithmetic.GrothendieckMotive
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Analysis.RotorCocycleBregmanBridge
@@ -42,4 +42,4 @@ theorem finite_motive_inputs {n : ℕ}
 def grothendieck_motive_debt : String :=
   "Open: prove any motivic/Lefschetz/Weil statement only from explicit cohomology, operator, and trace hypotheses."
 
-end GrothendieckMotive
+end InfoGeometry.Arithmetic.GrothendieckMotive

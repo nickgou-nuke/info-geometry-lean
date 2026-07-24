@@ -12,7 +12,7 @@ import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section
 
-namespace PoincareAndreev
+namespace InfoGeometry.OperatorAlgebra.PoincareAndreev
 
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 
@@ -66,4 +66,4 @@ theorem leakage_eq_zero_below_gap
 
 end PoincareAndreevBoundary
 
-end PoincareAndreev
+end InfoGeometry.OperatorAlgebra.PoincareAndreev

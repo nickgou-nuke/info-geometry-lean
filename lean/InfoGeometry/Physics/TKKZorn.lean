@@ -5,21 +5,20 @@ import InfoGeometry.Physics.TKKIsospinEmbedding
 import InfoGeometry.Canonical.ZornSpinor
 
 /-!
-# Concrete TKK Algebra Structure for Split Octonions (Zorn Matrices)
+# Finite TKK-style Zorn readouts
 
-This file provides a concrete instance of the 5-graded TKK algebra structure
-for the split octonion algebra represented as Zorn matrices.
+This file records a finite packet of Zorn coordinate probes and determinant
+polarization identities.  It does **not** construct the full 5-graded TKK
+algebra, prove a global conformal-algebra identification, or assert a Lie
+closure theorem for the entire carrier.
 
-The 5-grading is induced by the tripotent T = e₊ - e₋ = diag(1, -1):
-- g₋₂ = span{e₋} (1-dim)
-- g₋₁ = span{downᵢ} (3-dim, anti-fundamental 3̄)
-- g₀ = span{e₊, e₋} ⊕ Der₀ (9-dim, u(1) ⊕ su(3))
-- g₊₁ = span{upᵢ} (3-dim, fundamental 3)
-- g₊₂ = span{e₊} (1-dim)
-
-The full TKK algebra is the conformal algebra of the split octonion Jordan algebra.
+The grade labels below are only naming devices for the concrete packets used in
+this file:
+- `g₋₂`, `g₋₁`, `g₀`, `g₊₁`, `g₊₂`
+- the corresponding basis probes
+- the determinant-polarization readout
 -/
-namespace TKKZorn
+namespace InfoGeometry.Physics.TKKZorn
 
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Canonical.ZornMatrix
@@ -183,4 +182,4 @@ def applyGT (cp : CrossProduct3 R)
 
 end ProjectiveZornState
 
-end TKKZorn
+end InfoGeometry.Physics.TKKZorn

@@ -12,7 +12,7 @@ partition unity, are idempotent under the tripotent law, and are pairwise
 orthogonal.  It is a finite algebraic surface, not a global spectral theorem.
 -/
 
-namespace TriFacetGeometry
+namespace InfoGeometry.Canonical.TriFacetGeometry
 
 variable {F : Type*} [CommRing F] [Invertible (2 : F)]
 
@@ -114,4 +114,4 @@ theorem P_ell_par_orth (T : F) (hT : T^3 = T) : P_ell T * P_par T = 0 := by
     _ = ⅟(2 : F) * (T^2 - T - T^2 + T) := by rw [hT4, hT]
     _ = 0 := by ring
 
-end TriFacetGeometry
+end InfoGeometry.Canonical.TriFacetGeometry

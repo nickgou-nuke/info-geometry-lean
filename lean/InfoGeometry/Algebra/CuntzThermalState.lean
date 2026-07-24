@@ -18,13 +18,13 @@ n→∞ (over all primes), this converges to the Riemann zeta function.
 
 Reference: Bost–Connes (1995), Section 2.
 -/
-open CuntzPrimonHamiltonian
-open CuntzSpectralCalculus
-open CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzPrimonHamiltonian
+open InfoGeometry.Algebra.CuntzSpectralCalculus
+open InfoGeometry.Algebra.CuntzTensorQuotient
 
 noncomputable section
 
-namespace CuntzThermalState
+namespace InfoGeometry.Algebra.CuntzThermalState
 
 /-- The truncated exponential polynomial: exp_N(x) = Σ_{k=0}^N x^k / k!. -/
 noncomputable def truncExp (N : ℕ) : Polynomial ℂ :=
@@ -74,4 +74,4 @@ theorem primon_thermal_state (primes : Fin 3 → ℕ) (_hprimes : ∀ i, Nat.Pri
   simpa using
     truncExp_neg_beta_explicit 3 (λ i => (Real.log (primes i : ℝ) : ℂ)) β N
 
-end CuntzThermalState
+end InfoGeometry.Algebra.CuntzThermalState

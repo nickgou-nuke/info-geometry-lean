@@ -29,7 +29,7 @@ enter as explicit theorem premises or closed arithmetic lemmas over concrete
 lists.
 -/
 
-namespace NonIsoConf3RankIngestion
+namespace InfoGeometry.Projective.NonIsoConf3RankIngestion
 
 open InfoGeometry.Projective.PenroseSpinTiling
 
@@ -97,4 +97,4 @@ theorem candidateLocalBettiData_spinTiled_rank32 :
     candidateLocalBettiData_consistent
     candidateLocalBettiData_totalRank
 
-end NonIsoConf3RankIngestion
+end InfoGeometry.Projective.NonIsoConf3RankIngestion

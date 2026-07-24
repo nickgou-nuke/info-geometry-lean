@@ -18,7 +18,7 @@ The discipline is:
   fields in this dictionary.
 -/
 
-namespace OperatorInformationGeometryBridge
+namespace InfoGeometry.Canonical.OperatorInformationGeometryBridge
 
 /--
 Carrier for operator-information geometry.
@@ -172,4 +172,4 @@ theorem chartReadout_apply (A : Alg) :
 
 end ClassicalChartReadoutCarrier
 
-end OperatorInformationGeometryBridge
+end InfoGeometry.Canonical.OperatorInformationGeometryBridge

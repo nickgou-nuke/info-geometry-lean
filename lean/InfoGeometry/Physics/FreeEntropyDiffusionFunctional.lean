@@ -14,7 +14,7 @@ balance after the geometric action and the effective stress contributions have
 already been defined in concrete downstream models.
 -/
 
-namespace FreeEntropyDiffusionFunctional
+namespace InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 
 noncomputable section
 
@@ -126,4 +126,4 @@ theorem boundaryEntropyReadout_eq
 
 end
 
-end FreeEntropyDiffusionFunctional
+end InfoGeometry.Physics.FreeEntropyDiffusionFunctional

@@ -3,9 +3,10 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 /-!
-# Liquidation of Open Closure Debt: Parity Preservation and Vector Relations
-This file contains the native, closed proofs for Bucket C items, eliminating 
-`sorry` tokens from the conformal subalgebra without introducing new wrappers.
+# Clifford involution and commutator identities
+This file records small, honest Clifford-algebra identities used by the
+conformal subalgebra lane. It does not claim a full conformal completion or
+any larger geometric identification.
 -/
 
 set_option linter.unusedSectionVars false
@@ -18,15 +19,18 @@ local notation "Cl" => CliffordAlgebra Q
 
 namespace ConformalSubalgebra
 
-/-- The grading automorphism (grade-reversal) operator θ on the Clifford Algebra. -/
+/-- The grade involution operator `θ` on the Clifford algebra. -/
 def thetaOp (x : Cl) : Cl := CliffordAlgebra.involute x
+
+@[simp] theorem thetaOp_involutive (x : Cl) :
+    thetaOp (Q := Q) (thetaOp (Q := Q) x) = x := by
+  simp [thetaOp, CliffordAlgebra.involute_involute]
 
 /-- Compatibility alias for the older local naming used in the project notes. -/
 @[simp] theorem gradeInvol_eq_involute (x : Cl) : CliffordAlgebra.involute x = thetaOp (Q := Q) x := by
   rfl
 
-/-- Lemma 1: Parity preservation of the product of two orthogonal Clifford vectors.
-   This liquidates the debt for `J_even` and provides the witness for `thetaOpEven`. -/
+/-- Lemma 1: The involute fixes the product of any two lifted vectors. -/
 theorem even_product_of_vectors (u v : V) :
     CliffordAlgebra.involute (CliffordAlgebra.ι Q u * CliffordAlgebra.ι Q v) =
     CliffordAlgebra.ι Q u * CliffordAlgebra.ι Q v := by

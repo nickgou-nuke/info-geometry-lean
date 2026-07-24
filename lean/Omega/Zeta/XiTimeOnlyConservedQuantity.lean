@@ -2,25 +2,33 @@ import Mathlib.Tactic
 
 namespace Omega.Zeta
 
+/-- A concrete seed model for the time-only conservation statement.
+
+Morphisms are natural lengths, composition is addition, and the only basic reversible
+generator is the null move. This captures the quotient in which cycle contributions have
+been killed and only elapsed time remains. -/
+structure xi_time_only_conserved_quantity_system where
+  marker : Unit := ()
+
 namespace xi_time_only_conserved_quantity_system
 
 /-- Morphisms in the seeded quotient are represented by their elapsed time. -/
-abbrev Mor : Type := ℕ
+abbrev Mor (_C : xi_time_only_conserved_quantity_system) : Type := ℕ
 
 /-- The null move is the reversible basic generator after quotienting cycles. -/
-def BasicReversible (e : ℕ) : Prop :=
+def BasicReversible (_C : xi_time_only_conserved_quantity_system) (e : ℕ) : Prop :=
   e = 0
 
 /-- In the time quotient, every pair of elapsed-time morphisms composes. -/
-def Composable (_u _v : ℕ) : Prop :=
+def Composable (_C : xi_time_only_conserved_quantity_system) (_u _v : ℕ) : Prop :=
   True
 
 /-- Composition adds elapsed lengths. -/
-def comp (u v : ℕ) : ℕ :=
+def comp (_C : xi_time_only_conserved_quantity_system) (u v : ℕ) : ℕ :=
   u + v
 
 /-- The conserved time length of a morphism. -/
-def length (w : ℕ) : ℝ :=
+def length (_C : xi_time_only_conserved_quantity_system) (w : ℕ) : ℝ :=
   (w : ℝ)
 
 end xi_time_only_conserved_quantity_system
@@ -29,14 +37,14 @@ end xi_time_only_conserved_quantity_system
 additive invariant that vanishes on the reversible null generator is a scalar multiple of
 elapsed length. -/
 theorem paper_xi_time_only_conserved_quantity
-    (I : xi_time_only_conserved_quantity_system.Mor -> ℝ)
-    (hbasic : ∀ e, xi_time_only_conserved_quantity_system.BasicReversible e -> I e = 0)
-    (hadd : ∀ {u v}, xi_time_only_conserved_quantity_system.Composable u v ->
-      I (xi_time_only_conserved_quantity_system.comp u v) = I u + I v) :
-    ∃ lambda : ℝ, ∀ w, I w = lambda * xi_time_only_conserved_quantity_system.length w := by
+    (C : xi_time_only_conserved_quantity_system) (I : C.Mor -> ℝ)
+    (hbasic : ∀ e, C.BasicReversible e -> I e = 0)
+    (hadd : ∀ {u v}, C.Composable u v -> I (C.comp u v) = I u + I v) :
+    ∃ lambda : ℝ, ∀ w, I w = lambda * C.length w := by
   refine ⟨I 1, ?_⟩
   intro w
-  dsimp [xi_time_only_conserved_quantity_system.length]
+  dsimp [xi_time_only_conserved_quantity_system.Mor,
+    xi_time_only_conserved_quantity_system.length]
   induction w with
   | zero =>
       have hzero : I 0 = 0 := hbasic 0 rfl

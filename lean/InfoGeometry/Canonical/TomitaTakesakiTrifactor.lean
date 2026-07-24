@@ -27,7 +27,7 @@ conjugation.  It proves the finite algebraic substrate used by the repository:
 
 set_option autoImplicit false
 
-namespace TomitaTakesakiTrifactor
+namespace InfoGeometry.Canonical.TomitaTakesakiTrifactor
 
 open CoordinateFreeConnectionChannels
 
@@ -194,4 +194,4 @@ theorem tomita_trifactor_capstone (T : R) (hT : T ^ 3 = T) :
 
 end Trifactor
 
-end TomitaTakesakiTrifactor
+end InfoGeometry.Canonical.TomitaTakesakiTrifactor

@@ -20,7 +20,7 @@ equality of the carriers.
 
 noncomputable section
 
-namespace HadjiivanovRindlerModularBridge
+namespace InfoGeometry.Canonical.HadjiivanovRindlerModularBridge
 
 open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Clifford.MonodromyFlowAdapter
@@ -78,4 +78,4 @@ theorem modularFlow_dictionary
   exact ⟨hadjiivanovMonodromy_is_modularParabolicFlow h,
     wedgeModularFlow_eq_unruh (E := E) τmod⟩
 
-end HadjiivanovRindlerModularBridge
+end InfoGeometry.Canonical.HadjiivanovRindlerModularBridge

@@ -27,7 +27,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeExteriorGraphDirac
+namespace InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
@@ -592,4 +592,4 @@ theorem rawHyperbolicCantorDiracIndex_eq_pfaffian_difference
       stableProjectedCantorDiracIndex_eq_pfaffian,
       stableProjectedCantorDiracIndex_eq_pfaffian]
 
-end PrimeExteriorGraphDirac
+end InfoGeometry.Arithmetic.PrimeExteriorGraphDirac

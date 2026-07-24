@@ -21,7 +21,7 @@ noncomputable section
 
 set_option linter.unnecessarySimpa false
 
-namespace DirectLimitSuperClosureLemmas
+namespace InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 open InfoGeometry.Algebra.InductiveSuperClosureLemmas
 
@@ -870,4 +870,4 @@ theorem directLimit_mixedSuperClosure_zeroStage
           rw [directLimitOf_eq_zero_stage bond K hK n,
             directLimitOf_eq_zero_stage bond Z hZ n]
 
-end DirectLimitSuperClosureLemmas
+end InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

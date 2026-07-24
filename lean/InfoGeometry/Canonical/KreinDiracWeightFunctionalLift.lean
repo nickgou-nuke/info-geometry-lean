@@ -18,7 +18,7 @@ surface:
   the transported Dirac generator.
 -/
 
-namespace KreinDiracWeightFunctionalLift
+namespace InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Canonical.KreinDiracPolarizationBridge
@@ -154,4 +154,4 @@ theorem normalized_logSplitCliffordThermalWeightFunctionalLift_of_vacuumTranspor
 
 end Doubled
 
-end KreinDiracWeightFunctionalLift
+end InfoGeometry.Canonical.KreinDiracWeightFunctionalLift

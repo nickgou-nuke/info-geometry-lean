@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace LorentzBoostMinkowski
+namespace InfoGeometry.Physics.LorentzBoostMinkowski
 
 /-- Four-vector with components `(t,x,y,z)`. -/
 structure FourVector where
@@ -66,4 +66,4 @@ theorem boosted_rest_beta_minkowskiSq (φ T : ℝ) :
     minkowskiSq (boostX φ ⟨1 / T, 0, 0, 0⟩) = 1 / T ^ 2 := by
   rw [boostX_preserves_minkowskiSq, rest_beta_minkowskiSq]
 
-end LorentzBoostMinkowski
+end InfoGeometry.Physics.LorentzBoostMinkowski

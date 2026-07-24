@@ -28,9 +28,9 @@ from the twisted Weyl denominator.
 
 noncomputable section
 
-namespace LFunctionRepresentationBridge
+namespace InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartition
+open InfoGeometry.Thermodynamics
 
 /-- 
 A Gauge Field (Character) over the Prime Roots.
@@ -129,4 +129,4 @@ def LanglandsThermodynamicEquivalence
 
 end TwistedSouriauWeylBridge
 
-end LFunctionRepresentationBridge
+end InfoGeometry.Arithmetic.LFunctionRepresentationBridge

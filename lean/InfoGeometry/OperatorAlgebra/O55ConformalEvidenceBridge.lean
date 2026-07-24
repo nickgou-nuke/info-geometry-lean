@@ -15,7 +15,7 @@ supplies the diagonal split Lie algebra and null-coordinate packet.
 
 noncomputable section
 
-namespace O55ConformalEvidenceBridge
+namespace InfoGeometry.OperatorAlgebra.O55ConformalEvidenceBridge
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.Clifford
@@ -156,4 +156,4 @@ theorem installed_bridge_packet : O55CliffordConformalBridgePacket := by
     exact Clifford.ConformalProjectiveEmbedding55.conformal_inversion_maps_to_geoInv
       P x q hxu hxv hsq hq
 
-end O55ConformalEvidenceBridge
+end InfoGeometry.OperatorAlgebra.O55ConformalEvidenceBridge

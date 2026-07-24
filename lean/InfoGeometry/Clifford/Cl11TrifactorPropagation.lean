@@ -4,7 +4,7 @@ import Mathlib.Data.Matrix.Basic
 
 noncomputable section
 
-namespace Cl11TrifactorPropagation
+namespace InfoGeometry.Clifford.Cl11TrifactorPropagation
 
 open InfoGeometry.Clifford.Cl11TensorTower
 
@@ -77,4 +77,4 @@ theorem propagation_preserves_normalizedTrace (n : ℕ) (P : MatStage 1) :
       rw [normalizedTrace_matStageEmbed]
       exact ih
 
-end Cl11TrifactorPropagation
+end InfoGeometry.Clifford.Cl11TrifactorPropagation

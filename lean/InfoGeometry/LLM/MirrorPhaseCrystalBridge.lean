@@ -44,7 +44,7 @@ None.
 
 noncomputable section
 
-namespace MirrorPhaseCrystalBridge
+namespace InfoGeometry.LLM.MirrorPhaseCrystalBridge
 
 open scoped BigOperators
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -125,6 +125,6 @@ theorem balancedBlochWave_children_fixed_by_attention
   unfold blochBranchAnomaly blochChildVector branchAnomaly
   simp [hchildren]
 
-end MirrorPhaseCrystalBridge
+end InfoGeometry.LLM.MirrorPhaseCrystalBridge
 
 end noncomputable section

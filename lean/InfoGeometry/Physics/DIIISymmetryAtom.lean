@@ -13,7 +13,7 @@ This file does not own a second DIII ontology. It translates the historical
 `InfoGeometry.Canonical.RealBdGDIIIAtom`.
 -/
 
-namespace DIIISymmetryAtom
+namespace InfoGeometry.Physics.DIIISymmetryAtom
 
 open InfoGeometry.Canonical.RealBdGDIIIAtom
 open InfoGeometry.Krein
@@ -102,4 +102,4 @@ theorem cl11DIIIPackage_root_laws :
     exact (canonicalDIIIProxy (E := E)).C_sq
   · exact chiral_symmetry_eq_epsilon (E := E)
 
-end DIIISymmetryAtom
+end InfoGeometry.Physics.DIIISymmetryAtom

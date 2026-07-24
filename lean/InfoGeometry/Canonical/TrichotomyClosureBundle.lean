@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.CliffordDiracAlgebra
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 
-namespace TrichotomyClosureBundle
+namespace InfoGeometry.Canonical.TrichotomyClosureBundle
 
 open InfoGeometry.Canonical.CliffordDiracAlgebra
 open InfoGeometry.Canonical.CausalConeProjectorBridge
@@ -66,4 +66,4 @@ theorem tomita_causal_reduction_involutive
 
 end StandardSector
 
-end TrichotomyClosureBundle
+end InfoGeometry.Canonical.TrichotomyClosureBundle

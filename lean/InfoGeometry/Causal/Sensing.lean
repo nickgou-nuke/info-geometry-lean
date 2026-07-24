@@ -8,7 +8,7 @@ A `Sensor` maps one causal order into another without reversing implication.
 The forward/backward cone definitions are self-contained.
 -/
 
-namespace Sensing
+namespace InfoGeometry.Causal.Sensing
 
 /-- Forward cone in a Preorder. -/
 def forwardCone [Preorder α] (a : α) : Set α := {b | a ≤ b}
@@ -75,4 +75,4 @@ theorem sensing_interprets_no_loop
 
 end InterpretationLayer
 
-end Sensing
+end InfoGeometry.Causal.Sensing

@@ -24,7 +24,7 @@ Kac-Moody, Sugawara, or Virasoro current algebra; those require mode labels,
 normal ordering, and central extensions on top of this atom.
 -/
 
-namespace TomitaKreinNilpotentAtom
+namespace InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -240,4 +240,4 @@ theorem tomitaKrein_finite_atom_spine :
 
 end Core
 
-end TomitaKreinNilpotentAtom
+end InfoGeometry.Canonical.TomitaKreinNilpotentAtom

@@ -30,7 +30,7 @@ Einstein-Cartan equations, or a non-Abelian gauge theory. It only proves the
 finite spinor-bilinear escape route.
 -/
 
-namespace SpinorGradeParityEscape
+namespace InfoGeometry.Canonical.SpinorGradeParityEscape
 
 open Complex
 open InfoGeometry.Clifford.DiracPauliGamma
@@ -132,4 +132,4 @@ theorem temporalAxial_smul_right (a : ℂ) (Psi : DiracSpinor) :
   simp [spinorBilinear, diracAdjoint, gamma0, gamma5, Matrix.mul_apply, Fin.sum_univ_succ]
   ring
 
-end SpinorGradeParityEscape
+end InfoGeometry.Canonical.SpinorGradeParityEscape

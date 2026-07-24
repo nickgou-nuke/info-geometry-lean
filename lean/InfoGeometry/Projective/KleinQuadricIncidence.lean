@@ -16,7 +16,7 @@ This file adds:
 No wrappers. No `sorry`.
 -/
 
-namespace KleinQuadricIncidence
+namespace InfoGeometry.Projective.KleinQuadricIncidence
 
 open KleinQuadric
 
@@ -163,4 +163,4 @@ theorem incidenceFiber_projective_erlangen_image
 
 end Plucker6
 
-end KleinQuadricIncidence
+end InfoGeometry.Projective.KleinQuadricIncidence

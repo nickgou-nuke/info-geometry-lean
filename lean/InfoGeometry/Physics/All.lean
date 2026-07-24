@@ -1,3 +1,4 @@
+import InfoGeometry.Physics.Cl11ChiralCARBridge
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FisherKreinLorentz
@@ -100,4 +101,3 @@ Massieu-Planck functionals.
 namespace InfoGeometry.Physics
 
 end InfoGeometry.Physics
-import InfoGeometry.Physics.Cl11ChiralCARBridge

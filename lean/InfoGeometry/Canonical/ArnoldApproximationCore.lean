@@ -12,7 +12,7 @@ downstream presentation/intertwiner lanes without introducing vacuous
 hypotheses.
 -/
 
-namespace ArnoldApproximationCore
+namespace InfoGeometry.Canonical.ArnoldApproximationCore
 
 open InfoGeometry.Canonical.MoE
 
@@ -135,4 +135,4 @@ def HasArnoldApproximationAt
   ∃ C : ArnoldGeneratorApproximationContract (E := E) n net β,
     C.costBound ≤ ε
 
-end ArnoldApproximationCore
+end InfoGeometry.Canonical.ArnoldApproximationCore

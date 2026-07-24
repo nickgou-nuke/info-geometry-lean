@@ -10,7 +10,7 @@ readouts.  It does not claim a topological suspension-loop adjunction.
 
 noncomputable section
 
-namespace Suspension
+namespace InfoGeometry.Spectral.Homotopy.Suspension
 
 open InfoGeometry.Spectral.Spectrum.Basic
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -175,4 +175,4 @@ theorem SplitCliffordSuspension_base (n : ℕ) :
     (SplitCliffordSuspension n).base = (0 : SplitClNNAlg n) :=
   rfl
 
-end Suspension
+end InfoGeometry.Spectral.Homotopy.Suspension

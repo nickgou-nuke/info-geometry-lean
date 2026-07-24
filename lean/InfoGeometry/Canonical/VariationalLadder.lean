@@ -15,7 +15,7 @@ without claiming new owner mathematics beyond the already maintained
 relational, Hessian, and Onsager surfaces.
 -/
 
-namespace VariationalLadder
+namespace InfoGeometry.Canonical.VariationalLadder
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.ModularHessian
@@ -53,4 +53,4 @@ attribute [expository]
   Ladder
   IsOnsagerStationary
 
-end VariationalLadder
+end InfoGeometry.Canonical.VariationalLadder

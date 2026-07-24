@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace TriFacetEigenspace
+namespace InfoGeometry.Canonical.TriFacetEigenspace
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -42,4 +42,4 @@ theorem tri_facet_spectral_reconstruction (h2 : (2 : A) ≠ 0) (O : A) :
     P_hyp O - P_ell O = O := by
   unfold P_hyp P_ell; field_simp [h2]; ring
 
-end TriFacetEigenspace
+end InfoGeometry.Canonical.TriFacetEigenspace

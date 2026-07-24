@@ -17,7 +17,7 @@ The analytic Ramanujan odd-zeta identity remains a transparent side-supplied
 
 noncomputable section
 
-namespace RamanujanDefectTower
+namespace InfoGeometry.Arithmetic.RamanujanDefectTower
 
 open InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
 
@@ -225,4 +225,4 @@ theorem zeta9_tau_defect_odd {tau : ℝ} (hτ : tau ≠ 0) :
     zetaNineBernoulliDefectTau tau = -zetaNineBernoulliDefectTau tau⁻¹ :=
   zetaNineBernoulliDefectTau_inv hτ
 
-end RamanujanDefectTower
+end InfoGeometry.Arithmetic.RamanujanDefectTower

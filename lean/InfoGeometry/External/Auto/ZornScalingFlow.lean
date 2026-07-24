@@ -19,7 +19,7 @@ nilpotents on the split-octonion null cone.
 
 noncomputable section
 
-namespace ZornScalingFlow
+namespace InfoGeometry.External.Auto.ZornScalingFlow
 
 abbrev Vec3 := Fin 3 → ℂ
 
@@ -555,4 +555,4 @@ theorem lowerNil_sq_zero (v : Vec3) : zornMul (lowerNil v) (lowerNil v) = zornZe
   · simp [lowerNil, SplitOctonionBraidSU3.zornMul,
       SplitOctonionBraidSU3.zornZero, SplitOctonionBraidSU3.dot3]
 
-end ZornScalingFlow
+end InfoGeometry.External.Auto.ZornScalingFlow

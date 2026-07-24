@@ -27,11 +27,11 @@ recovered from the Pfaffian of `S * J`.  In the concrete owner:
 
 The declarations are conservative: conservation and spin-transport laws are
 not smuggled in as global assumptions.  They are carried by explicit owner
-packets until a lower analytic owner proves them from a concrete differential
-model.
+packets until the Hestenes--Krein differential/colimit owner proves them from a
+concrete model.
 -/
 
-namespace HestenesDirac
+namespace InfoGeometry.Clifford.HestenesDirac
 
 /--
 A minimal real spacetime-algebra interface for the Dirac-Hestenes corridor.
@@ -830,4 +830,4 @@ theorem pfaffian_bridge_extract (B : RealPfaffianBridge M4) :
 
 end RealPfaffianBridge
 
-end HestenesDirac
+end InfoGeometry.Clifford.HestenesDirac

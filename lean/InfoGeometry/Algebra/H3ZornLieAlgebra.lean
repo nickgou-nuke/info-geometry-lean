@@ -1,18 +1,24 @@
 import Mathlib
 import Mathlib.Algebra.Lie.Subalgebra
-import InfoGeometry.Algebra.QuadraticJordanH3Zorn
+import InfoGeometry.Algebra.H3ZornJordanInstance
+import InfoGeometry.Algebra.BaezF4H3Zorn
+
+/-!
+# H₃ Zorn derivation-Lie status
+
+The live closure source for the verified `H3Zorn ℝ` Jordan product is
+`H3ZornJordanInstance`; the derivation Lie subalgebra is then installed and
+re-exported by `BaezF4H3Zorn`.
+-/
 
 namespace InfoGeometry.Algebra.H3Zorn
 
-variable (R : Type*) [CommRing R]
+/-- The ambient linear endomorphisms of the additive real H₃ Zorn carrier. -/
+abbrev Endomorphism := Module.End ℝ (H3Zorn ℝ)
 
-/-- The derivations of the exceptional Jordan algebra H₃(𝕆_s, -) form a Lie subalgebra 
-of the endomorphism algebra. -/
-def derivationLieSubalgebra : LieSubalgebra R (Module.End R (H3Zorn R)) where
-  carrier := { f | ∃ D : Derivation R, f = D.toLinearMap }
-  zero_mem' := sorry
-  add_mem' := sorry
-  smul_mem' := sorry
-  lie_mem' := sorry
+/-- The installed derivation Lie subalgebra for the verified split-Albert
+Jordan product. -/
+abbrev DerivationLieSubalgebraTarget : Type _ :=
+  H3ZornF4Derivations
 
 end InfoGeometry.Algebra.H3Zorn

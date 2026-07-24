@@ -15,7 +15,7 @@ Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
 with zero external consumers. See `reports/dag/sorry-equivalence.md`.
 -/
 
-namespace GaugeGroups
+namespace InfoGeometry.Canonical.GaugeGroups
 
 open scoped Matrix
 
@@ -54,4 +54,4 @@ structure PSUN (n : ℕ) (G : SUN n) where
   is_quotient : ∀ g₁ g₂ : G.carrier,
     projection g₁ = projection g₂ ↔ ∃ z ∈ center.elements, G.toMatrix g₁ = z • G.toMatrix g₂
 
-end GaugeGroups
+end InfoGeometry.Canonical.GaugeGroups

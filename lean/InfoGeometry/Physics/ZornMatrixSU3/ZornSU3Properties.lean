@@ -105,77 +105,26 @@ theorem decomposition_theorem (M : ZornMatrix) :
 theorem peirce_readback_plusplus (M : ZornMatrix) :
     projector1 * M * projector1 =
       ⟨M.a, 0, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩ := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3] <;>
-        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3])
-
+  rw [mul_projector1, projector1_mul]
 /-- Peirce readback of the `3` sector. -/
 theorem peirce_readback_plusminus (M : ZornMatrix) :
     projector1 * M * projector2 =
       ⟨0, 0, M.x, fun _ : Fin 3 => 0⟩ := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3] <;>
-        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3])
-
+  rw [mul_projector1, projector2_mul]
 /-- Peirce readback of the `3*` sector. -/
 theorem peirce_readback_minusplus (M : ZornMatrix) :
     projector2 * M * projector1 =
       ⟨0, 0, fun _ : Fin 3 => 0, M.y⟩ := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3] <;>
-        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3])
-
+  rw [mul_projector2, projector1_mul]
 /-- Peirce readback of the `1_-` sector. -/
 theorem peirce_readback_minusminus (M : ZornMatrix) :
     projector2 * M * projector2 =
       ⟨0, M.b, fun _ : Fin 3 => 0, fun _ : Fin 3 => 0⟩ := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3] <;>
-        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3])
-
+  rw [mul_projector2, projector2_mul]
 /-- The canonical projector sandwich brackets agree for the color sector. -/
 theorem peirce_bracketing (M : ZornMatrix) :
     (projector1 * M) * projector2 = projector1 * (M * projector2) := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        first
-          | simp [projector1, projector2, mul, dotProduct, crossProduct,
-              ZornVectorMatrixExplicit.dot3,
-              ZornVectorMatrixExplicit.cross3]
-          | ext i <;> fin_cases i <;> simp [projector1, projector2, mul, dotProduct, crossProduct,
-              ZornVectorMatrixExplicit.dot3,
-              ZornVectorMatrixExplicit.cross3]
-
+  rw [mul_projector1, projector2_mul, projector2_mul, mul_projector1]
 /-- The Peirce decomposition reconstructs the original Zorn matrix. -/
 theorem peirce_decomposition (M : ZornMatrix) :
     M =
@@ -183,26 +132,17 @@ theorem peirce_decomposition (M : ZornMatrix) :
       projector1 * M * projector2 +
       projector2 * M * projector1 +
       projector2 * M * projector2 := by
-  cases M with
-  | mk a b x y =>
-      apply ext <;>
-      all_goals
-        simp [projector1, projector2, mul, add, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3] <;>
-        try (ext i <;> fin_cases i <;> simp [projector1, projector2, mul, add, dotProduct, crossProduct,
-          ZornVectorMatrixExplicit.dot3,
-          ZornVectorMatrixExplicit.cross3])
-
+  simp only [mul_projector1, mul_projector2, projector1_mul, projector2_mul]
+  ext i <;> simp [add]
 /-- The production Zorn multiplication is left alternative. -/
 theorem zorn_left_alternative (X Y : ZornMatrix) :
     (X * X) * Y = X * (X * Y) := by
-  simpa using (InfoGeometry.Algebra.KingdonSplitOctonion.zorn_left_alternative X Y)
+  simpa using (InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.zorn_left_alternative X Y)
 
 /-- The production Zorn multiplication is right alternative. -/
 theorem zorn_right_alternative (X Y : ZornMatrix) :
     (Y * X) * X = Y * (X * X) := by
-  simpa using (InfoGeometry.Algebra.KingdonSplitOctonion.zorn_right_alternative X Y)
+  simpa using (InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.zorn_right_alternative X Y)
 
 /-!
 ## 5. Real cross-product stabilizer

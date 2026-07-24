@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace EInfinityParadoxes
+namespace InfoGeometry.Canonical.EInfinityParadoxes
 
 /-- The lower golden ratio φ = (√5 - 1) / 2. -/
 noncomputable def phi : ℝ := (Real.sqrt 5 - 1) / 2
@@ -128,4 +128,4 @@ theorem castro_fine_structure_relation :
       100 + 61 * phi := by rw [h]
     _ = 100 + 61 * phi := by ring
 
-end EInfinityParadoxes
+end InfoGeometry.Canonical.EInfinityParadoxes

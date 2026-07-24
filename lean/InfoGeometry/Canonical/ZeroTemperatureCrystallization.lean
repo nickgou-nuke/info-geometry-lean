@@ -22,7 +22,7 @@ anomaly-free ground state of the Cuntz O₂ spin chain on the Cantor boundary.
 Zero global axioms. All proofs chain existing repository theorems.
 -/
 
-namespace ZeroTemperatureCrystallization
+namespace InfoGeometry.Canonical.ZeroTemperatureCrystallization
 
 /-! ### 1. Hodge duality: S_R = J·S_L·J -/
 
@@ -167,4 +167,4 @@ theorem chiral_charge_vanishes_at_kms_point
   rcases kms_symmetric_distribution φ P_L P_R h_partition h_norm h_symm with ⟨hL, hR⟩
   rw [hL, hR]; ring
 
-end ZeroTemperatureCrystallization
+end InfoGeometry.Canonical.ZeroTemperatureCrystallization

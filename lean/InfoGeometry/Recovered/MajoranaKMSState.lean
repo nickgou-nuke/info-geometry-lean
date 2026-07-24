@@ -15,7 +15,7 @@ namespace InfoGeometry.MajoranaKMSState
 
 open InfoGeometry.MajoranaTensorBridge
 open InfoGeometry.MajoranaColimitBoundary
-open BostConnesKMS
+open InfoGeometry.Canonical.BostConnesKMS
 
 variable (MajoranaStage : ℕ → Type)
 variable [∀ n, AddCommGroup (MajoranaStage n)] [∀ n, Module ℝ (MajoranaStage n)]
@@ -36,7 +36,8 @@ The trace of the finite projector splits the 4D space exactly in half.
 -/
 theorem trace_finiteProjector_eq_two :
   Matrix.trace finiteProjector = 2 := by
-  rfl
+  norm_num [finiteProjector, cuntzGeneratorPlus, cuntzGeneratorMinus,
+    gamma0_maj, gamma2_maj, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /--
 Pushing the finite projector up the Tensor Tower into the continuum limit.
@@ -64,19 +65,23 @@ structure MajoranaBraidKMSState {Op : Type*} [Ring Op] [StarRing Op] (C : BostCo
   evaluates to the Bost-Connes KMS Boltzmann weight for `n = 2`.
   -/
   eval_continuum_projector :
-    continuumTrace continuumProjector = kmsProjectionReadout bcKMS.β bcKMS.ζβ 2 2
+    continuumTrace (continuumProjector (MajoranaStage := MajoranaStage)
+      (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
+      kmsProjectionReadout bcKMS.β bcKMS.ζβ 2 2
 
 namespace MajoranaBraidKMSState
 
 variable {Op : Type*} [Ring Op] [StarRing Op] {C : BostConnesCuntzSystem Op}
-variable (state : MajoranaBraidKMSState MajoranaStage iota MajoranaContinuum psi baseEquiv C)
+variable (state : MajoranaBraidKMSState (MajoranaStage := MajoranaStage)
+  (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv) C)
 
 /--
 The KMS Projection State readout for the S₊S₋ continuum trace.
 It evaluates exactly to the 2-adic Boltzmann weight `2^(-β) / ζ(β)`.
 -/
 theorem kms_readout_continuumProjector :
-    state.continuumTrace (continuumProjector MajoranaStage psi baseEquiv) =
+    state.continuumTrace (continuumProjector (MajoranaStage := MajoranaStage)
+      (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
     (2 : ℝ) ^ (-state.bcKMS.β) / state.bcKMS.ζβ := by
   rw [state.eval_continuum_projector]
   exact kmsProjectionReadout_self state.bcKMS.β state.bcKMS.ζβ 2

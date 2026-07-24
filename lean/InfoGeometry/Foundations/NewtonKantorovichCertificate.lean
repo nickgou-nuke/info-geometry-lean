@@ -11,7 +11,7 @@ This module re-exports the strict Kantorovich majorant guarantees as a compact
 theorem surface for downstream numerical certification.
 -/
 
-namespace NewtonKantorovichCertificate
+namespace InfoGeometry.Foundations.NewtonKantorovichCertificate
 
 open InfoGeometry.Foundations.NewtonKantorovichBase
 open NewtonKantorovichRoots
@@ -72,4 +72,4 @@ theorem nk_one_step_residual_nonincreasing
       ((P_nonneg_on_Icc_zero_tMinus L η hL hΔ) t ht)
   linarith
 
-end NewtonKantorovichCertificate
+end InfoGeometry.Foundations.NewtonKantorovichCertificate

@@ -21,7 +21,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace AndreevBoundary
+namespace InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 open ClosureInvolution
 
@@ -488,4 +488,4 @@ theorem finiteAndreevBoundary_packet :
           -(electronAmplitude - holeAmplitude) :=
   ⟨finiteAndreevDiagonalOwnerTarget, finiteAndreevImbalanceOwnerTarget⟩
 
-end AndreevBoundary
+end InfoGeometry.OperatorAlgebra.AndreevBoundary

@@ -28,7 +28,7 @@ stability.  Those are represented by exact external certificates in `tools/`.
 
 noncomputable section
 
-namespace HartwigSouriauFrameDrazin
+namespace InfoGeometry.Canonical.HartwigSouriauFrameDrazin
 
 open InfoGeometry.Canonical
 
@@ -242,4 +242,4 @@ theorem hartwig_principal_idempotent_mul_eq_zero :
 
 end RationalSouriauFramePacket
 
-end HartwigSouriauFrameDrazin
+end InfoGeometry.Canonical.HartwigSouriauFrameDrazin

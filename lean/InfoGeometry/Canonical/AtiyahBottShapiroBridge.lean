@@ -5,7 +5,7 @@ set_option linter.unusedSectionVars false
 
 open scoped InnerProductSpace TensorProduct
 
-namespace AtiyahBottShapiroBridge
+namespace InfoGeometry.Canonical.AtiyahBottShapiroBridge
 
 open InfoGeometry.Canonical.AnalyticalIndex
 open InfoGeometry.Canonical.BottDirac
@@ -76,4 +76,4 @@ theorem cl11_bottIndexInvariantAlong_of_conjugacy
 
 end BottLift
 
-end AtiyahBottShapiroBridge
+end InfoGeometry.Canonical.AtiyahBottShapiroBridge

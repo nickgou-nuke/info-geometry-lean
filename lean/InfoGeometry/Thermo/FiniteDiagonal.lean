@@ -20,7 +20,7 @@ A finite-dimensional thermal model on matrix observables `Matrix (Fin n) (Fin n)
 - KMS-like kernel identity appears as a detailed-balance relation on entries
 -/
 
-namespace FiniteDiagonal
+namespace InfoGeometry.Thermo.FiniteDiagonal
 
 section FiniteDiagonal
 
@@ -211,4 +211,4 @@ lemma logDensityOp_exp_entry (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
 
 end FiniteDiagonal
 
-end FiniteDiagonal
+end InfoGeometry.Thermo.FiniteDiagonal

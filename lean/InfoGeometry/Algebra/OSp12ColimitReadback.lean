@@ -16,7 +16,7 @@ noncomputable section
 
 set_option synthInstance.maxHeartbeats 40000
 
-namespace OSp12ColimitReadback
+namespace InfoGeometry.Algebra.OSp12ColimitReadback
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Algebra.SupergradedBracket
@@ -142,4 +142,4 @@ theorem readback_G2_G2
   repeat rw [directLimitLift_of (Stage := StageFamily) bond toLimit hcone n] at hread
   exact hread
 
-end OSp12ColimitReadback
+end InfoGeometry.Algebra.OSp12ColimitReadback

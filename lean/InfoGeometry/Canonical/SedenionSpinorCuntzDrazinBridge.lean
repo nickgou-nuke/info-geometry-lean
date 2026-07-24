@@ -37,7 +37,7 @@ bookkeeping and operator-shadow identities.
 
 noncomputable section
 
-namespace SedenionSpinorCuntzDrazinBridge
+namespace InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 
 open InfoGeometry.Algebra.Cuntz
 open DrazinTripotentTrifactorBridge
@@ -199,6 +199,6 @@ theorem sedenion_spinor_finite_digest_packet :
     SteeringSector.sum_tripletCardinality_eq_fifteen,
     natSub_nonassociative_witness⟩
 
-end SedenionSpinorCuntzDrazinBridge
+end InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 
 end

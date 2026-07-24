@@ -13,15 +13,15 @@ well-defined vector action.
 
 noncomputable section
 
-namespace CanonicalZornSpinVectorAction
+namespace InfoGeometry.Canonical.CanonicalZornSpinVectorAction
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
-open InfoGeometry.Canonical.CanonicalZornSpinChirality
-open InfoGeometry.Canonical.CanonicalZornSpinRelatedFiber
-open InfoGeometry.Canonical.CanonicalZornOuterTrialityGroup
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
+open CanonicalZornCompositionTriality
+open CanonicalZornCliffordRepresentation
+open CanonicalZornSpinChirality
+open CanonicalZornSpinRelatedFiber
+open CanonicalZornOuterTrialityGroup
+open CanonicalZornFiveGradedClosure
 
 /-- The positive semispinor represented by the Zorn multiplicative identity. -/
 def identitySpinorPlus : SpinorPlus8 := ⟨I_zorn⟩
@@ -803,6 +803,6 @@ theorem complexSpin_outer_triality_five_grade_projective_closure
   exact outer_triality_five_grade_projective_closure
     (complexSpinRelatedRepresentation g) x y hxy S C
 
-end CanonicalZornSpinVectorAction
+end InfoGeometry.Canonical.CanonicalZornSpinVectorAction
 
 end noncomputable section

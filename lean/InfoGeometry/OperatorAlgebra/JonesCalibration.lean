@@ -21,7 +21,7 @@ import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
-namespace JonesCalibration
+namespace InfoGeometry.OperatorAlgebra.JonesCalibration
 
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
@@ -376,4 +376,4 @@ structure SpectralDivisorCharge where
   /-- Charge extracted from a region or contour label. -/
   chargeOf : Set ℂ → ℤ
 
-end JonesCalibration
+end InfoGeometry.OperatorAlgebra.JonesCalibration

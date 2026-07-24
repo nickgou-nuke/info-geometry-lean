@@ -13,7 +13,7 @@ This module introduces no new owner semantics; it packages expectation-level
 channels on top of already-owned operators and transport laws.
 -/
 
-namespace OperatorSpacetimeObservables
+namespace InfoGeometry.Canonical.OperatorSpacetimeObservables
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -210,4 +210,4 @@ theorem rapidityEpsilonObservable_eq_sinh_id_add_cosh_epsilon (ψ : H₂) (η : 
 
 end Core
 
-end OperatorSpacetimeObservables
+end InfoGeometry.Canonical.OperatorSpacetimeObservables

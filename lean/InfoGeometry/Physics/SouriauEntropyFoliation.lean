@@ -16,7 +16,7 @@ It does not assert that the free-entropy functional alone induces the
 Einstein-Hilbert action or the Bekenstein-Hawking area law.
 -/
 
-namespace SouriauEntropyFoliation
+namespace InfoGeometry.Physics.SouriauEntropyFoliation
 
 open Finset
 open scoped BigOperators
@@ -127,4 +127,4 @@ theorem weylScaleSheetMove_eq_dilatonShift
 
 end
 
-end SouriauEntropyFoliation
+end InfoGeometry.Physics.SouriauEntropyFoliation

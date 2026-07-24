@@ -22,7 +22,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace ProjectiveCrossRatio
+namespace InfoGeometry.Clifford.ProjectiveCrossRatio
 
 open InfoGeometry.Clifford.DiscreteMoebiusGroup
 open InfoGeometry.Clifford.ModularCftBridge
@@ -90,4 +90,4 @@ theorem crossRatio_S_invariant (P1 P2 P3 P4 : ℂ)
   · simpa [modularS] using hden4
   · exact hdistinct
 
-end ProjectiveCrossRatio
+end InfoGeometry.Clifford.ProjectiveCrossRatio

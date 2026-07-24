@@ -22,7 +22,7 @@ No claim is made about Maxwell equations, Dirac spinors, spacetime-algebra
 field theory, continuum geometry, or any Riemann Hypothesis consequence.
 -/
 
-namespace GullDoranPseudoscalarBridge
+namespace InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 
 open scoped Matrix
 open InfoGeometry.Clifford.Cl3ComplexMatrixProduct
@@ -168,4 +168,4 @@ theorem gull_doran_pseudoscalar_capstone :
     pauli_sigma2_sigma3_anticomm, pauli_pseudoscalar_eq_complex_phase,
     pauli_pseudoscalar_sq, real_pseudoscalar_eq_phaseAxis, realPhaseAxis_sq⟩
 
-end GullDoranPseudoscalarBridge
+end InfoGeometry.Clifford.GullDoranPseudoscalarBridge

@@ -11,7 +11,7 @@ Finite theorem corridor separating:
 No Type III completion is claimed here; this is a finite structural interface.
 -/
 
-namespace TomitaStaticVsDissipative
+namespace InfoGeometry.Canonical.TomitaStaticVsDissipative
 
 /-! ## Equilibrium (static) side -/
 
@@ -64,4 +64,4 @@ theorem dissipative_potential_nonincreasing_from_zero
   have h := D.potentialMonotone (ρ := ρ) (t₁ := 0) (t₂ := t) (by positivity) ht
   simpa [D.flowZero] using h
 
-end TomitaStaticVsDissipative
+end InfoGeometry.Canonical.TomitaStaticVsDissipative

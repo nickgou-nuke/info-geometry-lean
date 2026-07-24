@@ -165,7 +165,7 @@ end JKO
 
 end InfoGeometry.Capstone.BenamouBrenier
 
-namespace BenamouBrenierBridge
+namespace InfoGeometry.Capstone.BenamouBrenierBridge
 
 open TrivSqZeroExt Finset InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
@@ -247,7 +247,7 @@ def DualQuaternionTest (A B : Quaternion ℝ) (n : ℕ) :
 
 end Bridge
 
-end BenamouBrenierBridge
+end InfoGeometry.Capstone.BenamouBrenierBridge
 
 namespace InfoGeometry.Capstone.UHFHookup
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary

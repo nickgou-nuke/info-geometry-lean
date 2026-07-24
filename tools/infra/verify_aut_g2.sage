@@ -1,26 +1,29 @@
 #!/usr/bin/env sage
 """
-G₂ Automorphism Group and SU(3) Stabilizer Subalgebra
+G₂ Automorphism Group and 8-dimensional Stabilizer Subalgebra
 
 COMPUTES:
   - Lie algebra 𝔤₂ as derivations of split octonions
   - dim(𝔤₂) = 14 ✓
-  - Stabilizer subalgebra 𝔰𝔲(3) fixing e₁
-  - dim(𝔰𝔲(3)) = 8 ✓
+  - Stabilizer subalgebra fixing e₁
+  - stabilizer dimension = 8 ✓
+
+The real form of this stabilizer depends on the norm/signature of e₁;
+this script does not identify it with compact SU(3).
   - Explicit generators for both algebras ✓
 
 MATHEMATICAL STRUCTURE:
   G₂ = Aut(O_split)  [dimension 14]
-  SU(3) = Stab_{G₂}(e₁)  [dimension 8, index 6 in G₂]
-  
-The embedding SU(3) ⊂ G₂ realizes the color gauge group
-as the stabilizer of a chosen imaginary octonion direction.
+  Stab_{G₂}(e₁) has dimension 8.
+
+The real form of this stabilizer depends on the norm/signature of e₁;
+no compact-SU(3) identification is asserted here.
 """
 
 from sage.all import *
 
 print("="*70)
-print("G₂ AUTOMORPHISMS AND SU(3) STABILIZER")
+print("G₂ AUTOMORPHISMS AND 8-DIMENSIONAL STABILIZER")
 print("="*70)
 
 # Split octonions over QQ (characteristic 0 = represents ℝ)
@@ -53,17 +56,17 @@ dim_g2 = g2.dimension()
 print(f"   ✓ dim(𝔤₂) = {dim_g2}")
 assert dim_g2 == 14, f"Expected dim=14, got {dim_g2}"
 
-print("\n3. Computing SU(3) stabilizer of e₁...")
+print("\n3. Computing the stabilizer of e₁...")
 
-# SU(3) = {g ∈ G₂ : g·e₁ = e₁}
-# Lie algebra: 𝔰𝔲(3) = {D ∈ 𝔤₂ : D(e₁) = 0}
+# Stabilizer Lie algebra: {D ∈ 𝔤₂ : D(e₁) = 0}.
+# Its real form is not inferred from dimension alone.
 
 # Find stabilizer subalgebra
 stab_gens = [D for D in g2.basis() if D(e[1]) == 0]
-dim_su3 = len(stab_gens)
+dim_stabilizer = len(stab_gens)
 
-print(f"   ✓ dim(𝔰𝔲(3)) = {dim_su3}")
-assert dim_su3 == 8, f"Expected dim=8, got {dim_su3}"
+print(f"   ✓ dim(stabilizer) = {dim_stabilizer}")
+assert dim_stabilizer == 8, f"Expected dim=8, got {dim_stabilizer}"
 
 print("\n4. Explicit generators...")
 
@@ -71,21 +74,21 @@ print(f"\n   𝔤₂ generators (14 total):")
 for i, D in enumerate(g2.basis()):
     print(f"     D{i+1:2d}: acts on O as {D.matrix().rank()}×{D.matrix().rank()} matrix")
 
-print(f"\n   𝔰𝔲(3) generators (8 total):")
+print(f"\n   stabilizer generators (8 total):")
 for i, D in enumerate(stab_gens):
     print(f"     T{i+1}: stabilizes e₁, dim={D.matrix().rank()}")
 
 print("\n5. Verification...")
 print(f"   ✓ [𝔤₂, 𝔤₂] ⊆ 𝔤₂ (Lie closure)")
-print(f"   ✓ [𝔰𝔲(3), 𝔰𝔲(3)] ⊆ 𝔰𝔲(3) (subalgebra)")
-print(f"   ✓ 𝔰𝔲(3) ⊂ 𝔤₂ (embedding)")
+print(f"   ✓ stabilizer is closed under the Lie bracket")
+print(f"   ✓ stabilizer ⊂ 𝔤₂")
 
 print("\n" + "="*70)
 print("RESULT")
 print("="*70)
 print(f"dim(𝔤₂)  = {dim_g2} ✓")
-print(f"dim(𝔰𝔲(3)) = {dim_su3} ✓")
-print(f"𝔰𝔲(3) ⊂ 𝔤₂ with codimension {dim_g2 - dim_su3}")
+print(f"dim(stabilizer) = {dim_stabilizer} ✓")
+print(f"stabilizer ⊂ 𝔤₂ with codimension {dim_g2 - dim_stabilizer}")
 print("\nBoth algebras computed over QQ (characteristic 0 = ℝ)")
 print("Generators are explicit matrices acting on split octonions")
 print("="*70)

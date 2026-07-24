@@ -4,8 +4,10 @@ import Mathlib.Data.Complex.Basic
 namespace InfoGeometry.Algebra.G2
 
 /--
-G2(2) Twisted Braiding structure over Z3 Parafermions.
-Models the exceptional triality twist acting on the symplectic manifold limits.
+Conditional `G₂(2)`-style twisting data over a matrix carrier.
+
+The only theorem in this file is the tautological readback of the stored cubic
+constraint; no classification or geometric interpretation is proved here.
 -/
 structure G2TwistedSystem (BlockType : Type) [DecidableEq BlockType] [Fintype BlockType] where
   -- The fundamental 3-fold Z3 parafermion matrix.
@@ -15,10 +17,7 @@ structure G2TwistedSystem (BlockType : Type) [DecidableEq BlockType] [Fintype Bl
   h_cubic_center : omega_twist ^ 3 = 1
 
 /--
-Theorem: Z3 Parafermion G2(2) Braiding Cycle.
-If the transposition is modeled as a Z3 parafermion, its cubic
-power naturally wraps the positive identity, guaranteeing
-triality-based twisted braiding structural closure.
+Readback theorem for the stored cubic constraint.
 -/
 theorem g2_twist_closure {BlockType : Type} [DecidableEq BlockType] [Fintype BlockType]
     (sys : G2TwistedSystem BlockType) :

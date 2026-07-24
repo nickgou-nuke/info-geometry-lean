@@ -30,7 +30,7 @@ import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 
 noncomputable section
 
-namespace SiegelArithmeticResonanceOperator
+namespace InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator
 
 open InfoGeometry.Automorphic.SiegelResonance
 open InfoGeometry.Arithmetic.ZetaTraceSpecialization
@@ -602,4 +602,4 @@ def ThreeLayerSiegelResonanceOperatorOwnerTarget
     [AddCommGroup AutoBoundary] [Module ℝ AutoBoundary] : Prop :=
   Nonempty (ThreeLayerSiegelResonanceOperator Cubic JordanBoundary Bulk AutoBoundary)
 
-end SiegelArithmeticResonanceOperator
+end InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator

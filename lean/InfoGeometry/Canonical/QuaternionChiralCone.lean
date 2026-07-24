@@ -10,7 +10,7 @@ This 2D slice is closed under multiplication and commutative, while ambient
 quaternion multiplication is noncommutative.
 -/
 
-namespace QuaternionChiralCone
+namespace InfoGeometry.Canonical.QuaternionChiralCone
 
 open Quaternion
 
@@ -57,4 +57,4 @@ theorem pureAxis_add (x y : R) :
 
 end
 
-end QuaternionChiralCone
+end InfoGeometry.Canonical.QuaternionChiralCone

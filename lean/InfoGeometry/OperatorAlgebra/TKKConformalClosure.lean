@@ -22,7 +22,7 @@ import Mathlib
 
 noncomputable section
 
-namespace TKKConformalClosure
+namespace InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
 /-! ## 1. Abstract conformal compactification socket -/
 
@@ -799,4 +799,4 @@ variable (C : Closure J V W L State Geometry)
 
 end Closure
 
-end TKKConformalClosure
+end InfoGeometry.OperatorAlgebra.TKKConformalClosure

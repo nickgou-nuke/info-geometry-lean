@@ -16,7 +16,7 @@ owner packet from `UnifiedSuperchargeAlgebra` in the axiomatic
 `SuperMetriplectic.SuperchargeClosure` language.
 -/
 
-namespace DrazinBridge
+namespace InfoGeometry.SuperMetriplectic.DrazinBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
@@ -82,4 +82,4 @@ end DrazinSuperchargeClosureBridge
 
 end Core
 
-end DrazinBridge
+end InfoGeometry.SuperMetriplectic.DrazinBridge

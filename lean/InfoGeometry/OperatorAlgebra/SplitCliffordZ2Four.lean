@@ -13,7 +13,7 @@ import Mathlib
 
 noncomputable section
 
-namespace SplitCliffordZ2Four
+namespace InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 
 /-! ## 1. Four-bit charges -/
 
@@ -239,4 +239,4 @@ theorem h_sq :
 
 end SplitCliffordAtom
 
-end SplitCliffordZ2Four
+end InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four

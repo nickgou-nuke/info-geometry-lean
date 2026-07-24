@@ -33,7 +33,7 @@ applications.
 
 noncomputable section
 
-namespace CampbellMeyerWeakDrazin
+namespace InfoGeometry.Canonical.CampbellMeyerWeakDrazin
 
 open InfoGeometry.Canonical
 
@@ -57,7 +57,7 @@ theorem Drazin_isWeakDrazin {R : Type*} [Ring R] {a b : R} {k : ℕ}
   have hcomm : Commute b a := h.comm.symm
   calc
     b * a ^ (k + 1) = a ^ (k + 1) * b := (hcomm.pow_right (k + 1)).eq
-    _ = a ^ k := h.2.2.symm
+    _ = a ^ k := h.2.2
 
 /-! ## Exact `diag(2,N₂)` packet -/
 
@@ -259,4 +259,4 @@ theorem weak_conjugated_polynomial_inverse_isWeak :
   unfold IsWeakDrazin
   native_decide
 
-end CampbellMeyerWeakDrazin
+end InfoGeometry.Canonical.CampbellMeyerWeakDrazin

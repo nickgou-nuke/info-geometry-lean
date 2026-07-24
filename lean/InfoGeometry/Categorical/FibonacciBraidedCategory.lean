@@ -17,7 +17,7 @@ block-matrix ingredients. It deliberately does not emit a `MonoidalCategory` or
 `BraidedCategory` instance.
 -/
 
-namespace FibonacciBraidedCategory
+namespace InfoGeometry.Categorical.FibonacciBraidedCategory
 
 open CategoryTheory
 open CategoryTheory.MonoidalCategory
@@ -103,4 +103,4 @@ file. The remaining construction requires explicit associator/unitors, naturalit
 proofs, and pentagon/hexagon coherence for the full `FibCat` Hom-spaces.
 -/
 
-end FibonacciBraidedCategory
+end InfoGeometry.Categorical.FibonacciBraidedCategory

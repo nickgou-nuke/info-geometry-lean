@@ -19,7 +19,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeLatticeGasVariational
+namespace InfoGeometry.Arithmetic.PrimeLatticeGasVariational
 
 open scoped BigOperators
 open InfoGeometry.MaxEnt
@@ -142,4 +142,4 @@ theorem primeLatticeGas_zeroFeature_entropy_maximizer
       (by intro i; rfl)
       q hq)
 
-end PrimeLatticeGasVariational
+end InfoGeometry.Arithmetic.PrimeLatticeGasVariational

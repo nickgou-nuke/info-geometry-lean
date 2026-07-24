@@ -6,7 +6,7 @@ noncomputable section
 open scoped TensorProduct DirectSum Matrix Kronecker
 open Matrix
 
-namespace JordanWignerBridge
+namespace InfoGeometry.Clifford.JordanWignerBridge
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.TowerMatrix
@@ -47,4 +47,4 @@ theorem matStageEmbed_jw_v (k d : ℕ) :
     matStageEmbed (k + 1 + d) (jw_v k d) = jw_v k (d + 1) := by
   rfl
 
-end JordanWignerBridge
+end InfoGeometry.Clifford.JordanWignerBridge

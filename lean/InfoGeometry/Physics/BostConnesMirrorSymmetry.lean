@@ -1,32 +1,32 @@
 import Mathlib
 import InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin
 
-namespace BostConnesMirrorSymmetry
+namespace InfoGeometry.Physics.BostConnesMirrorSymmetry
 
 /-!
-# Bost-Connes Primon Gas and 3D Mirror Symmetry in C^2
-Formalizing the thermodynamic emergence of the CMB spectrum via the 
-Riemann Zeta partition function of the Primon gas and the 1:1 mirror 
-balance of the Higgs and Coulomb branches.
+# Finite mirror-balance data packet
+
+This file only records explicit data fields and reads them back.  It does not
+prove Bost--Connes thermodynamics, a CMB spectrum theorem, a zeta partition
+function theorem, or 3D mirror symmetry.
 -/
 
-/-- Proof-carrying data structure for Primon gas partition function property -/
+/-- Data structure carrying a supplied one-parameter real function. -/
 structure PrimonGasProperty where
   (primon_partition_function : ∀ (β : ℝ), β > 1 → ℝ)
 
-/-- The phase transition occurs exactly at the pole β = 1 (critical temperature) -/
+/-- Distinguished parameter value used by this packet. -/
 def critical_temperature_pole : ℝ := 1
 
-/-- In 3D Mirror Symmetry on C^2, the Higgs Branch matches the Coulomb Branch -/
-structure MirrorSymmetry_C2 where
+/-- Finite data packet for two dimensions equipped with an equality witness. -/
+structure MirrorBalanceC2 where
   (higgs_branch_dim : ℕ)
   (coulomb_branch_dim : ℕ)
   (mirror_balance : higgs_branch_dim = coulomb_branch_dim)
-  -- The Witten Index strictly vanishes due to the 1:1 supersymmetry balance
-  (witten_index_zero : higgs_branch_dim - coulomb_branch_dim = 0)
+  (difference_zero : higgs_branch_dim - coulomb_branch_dim = 0)
 
-theorem absolute_rigidity (m : MirrorSymmetry_C2) :
+theorem mirrorBalanceC2_difference_zero (m : MirrorBalanceC2) :
   m.higgs_branch_dim - m.coulomb_branch_dim = 0 :=
-  m.witten_index_zero
+  m.difference_zero
 
-end BostConnesMirrorSymmetry
+end InfoGeometry.Physics.BostConnesMirrorSymmetry

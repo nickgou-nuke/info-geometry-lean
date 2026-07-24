@@ -21,7 +21,7 @@ identifying the scale source with zero.
 
 open scoped InnerProductSpace
 
-namespace PhaseAxisCartanSymmetricLie
+namespace InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -298,4 +298,4 @@ theorem scaleClock_commutator_eq_zero_of_mem_phaseAxis_even
 
 end Core
 
-end PhaseAxisCartanSymmetricLie
+end InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie

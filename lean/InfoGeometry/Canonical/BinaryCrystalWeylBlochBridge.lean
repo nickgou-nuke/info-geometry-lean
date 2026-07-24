@@ -23,7 +23,7 @@ or affine-Weyl classification claim.
 
 noncomputable section
 
-namespace BinaryCrystalWeylBlochBridge
+namespace InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 
 open TypeIIIModularCantorSystem
 
@@ -149,4 +149,4 @@ theorem binaryCrystalWeylBlochOwnerTarget :
   · intro G instG instA g f w
     simpa using (adjointAction_apply (G := G) (g := g) (f := f) (w := w))
 
-end BinaryCrystalWeylBlochBridge
+end InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge

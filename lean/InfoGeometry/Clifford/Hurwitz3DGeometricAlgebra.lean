@@ -12,11 +12,11 @@ This file records the theorem-backed algebraic statements that the repository
 already owns for the Hurwitz/split-Hurwitz corridor.
 -/
 
-namespace Hurwitz3DGeometricAlgebra
+namespace InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
 
 open scoped TensorProduct
-open AlbertCayleyDickson
-open ConcreteComposition
+open InfoGeometry.Canonical.AlbertCayleyDickson
+open InfoGeometry.Algebra.Zorn.ConcreteComposition
 
 theorem cl11_pseudoscalar_sq :
     Hestenes.Pseudoscalar * Hestenes.Pseudoscalar = 1 := by
@@ -47,4 +47,4 @@ noncomputable def cl44_complexification_equiv :
       ℂ ⊗[ℝ] InfoGeometry.Clifford.BottPeriodicity.Cl44 :=
   SplitCl44Complexification.cl44ComplexificationEquiv
 
-end Hurwitz3DGeometricAlgebra
+end InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra

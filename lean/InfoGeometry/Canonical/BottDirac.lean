@@ -6,7 +6,7 @@ set_option linter.unusedSectionVars false
 
 open scoped TensorProduct
 
-namespace BottDirac
+namespace InfoGeometry.Canonical.BottDirac
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -380,4 +380,4 @@ theorem cl22_bottDirac_sq_eq_two_tensor_id :
 
 end Cl22Bridge
 
-end BottDirac
+end InfoGeometry.Canonical.BottDirac

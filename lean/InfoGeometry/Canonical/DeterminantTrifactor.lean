@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace DeterminantTrifactor
+namespace InfoGeometry.Canonical.DeterminantTrifactor
 
 /--
 The Determinant Trifactor Theorem.
@@ -48,4 +48,4 @@ theorem determinant_trifactor_eq {R : Type*} [CommRing R] [IsDomain R] (d : R)
       _ = 0 - 1     := by rw [h_right]
       _ = -1        := by ring
 
-end DeterminantTrifactor
+end InfoGeometry.Canonical.DeterminantTrifactor

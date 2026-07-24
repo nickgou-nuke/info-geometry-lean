@@ -1,90 +1,56 @@
-import Mathlib
-open Set
+import InfoGeometry.SelfReference.Shadow
 
 /-!
-# Shadow Cone — Boundary Object Model of Proof Debt
+# Shadow Cone forwarding shim
 
-This file refines the flat shadow inventory into an incidence-aware boundary
-object.
-
-The core claim is conservative:
-- a shadow may have past/future incidences into the proof graph,
-- a shadow may be roaming, incident, paired, integrated, or rejected,
-- but no status value is promoted to theorem authority on its own.
+To prevent structural duplication and satisfy the deduplication mandate, the
+incidence-aware boundary model aliases the canonical definitions from `Shadow.lean`.
 -/
 
 namespace InfoGeometry.SelfReference
 
-/-- Shadow kinds for the boundary-object model. -/
-inductive ShadowKind where
-  | sorryDebt
-  | missingPremise
-  | overclaimedBridge
-  | archetypeRecurrence
-  | failedSynthesis
-  | boundaryAnalogy
-  | roamingConjecture
-deriving DecidableEq, Repr, Inhabited
+/-- Redirects to the canonical `ShadowKind`. -/
+abbrev ShadowKind := InfoGeometry.SelfReference.Shadow.ShadowKind
 
-/-- Incidence status of a shadow cone. -/
-inductive ShadowStatus where
-  | roaming
-  | incident
-  | paired
-  | integrated
-  | rejected
-deriving DecidableEq, Repr, Inhabited
+/-- Redirects to the canonical `ShadowStatus`. -/
+abbrev ShadowStatus := InfoGeometry.SelfReference.Shadow.ShadowStatus
 
-/--
-An unintegrated apex of a causal cone.
-
-`α` is the type of existing declaration nodes.
--/
-structure ShadowCone (α : Type*) where
-  apexName : String
-  kind : ShadowKind
-  status : ShadowStatus
-  pastBoundary : Set α
-  futureBoundary : Set α
-  obstruction : Option String
+/-- Redirects to the canonical `ShadowCone`. -/
+abbrev ShadowCone := InfoGeometry.SelfReference.Shadow.ShadowCone
 
 namespace ShadowCone
 
-variable {α : Type*} (S : ShadowCone α)
+open InfoGeometry.SelfReference.Shadow
 
-/-- The cone has a past incidence when its past boundary is nonempty. -/
-def HasPastIncidence : Prop :=
-  ∃ a, a ∈ S.pastBoundary
+/-- Checks past boundary. -/
+def HasPastIncidence {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.HasPastIncidence S
 
-/-- The cone has a future incidence when its future boundary is nonempty. -/
-def HasFutureIncidence : Prop :=
-  ∃ a, a ∈ S.futureBoundary
+/-- Checks future boundary. -/
+def HasFutureIncidence {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.HasFutureIncidence S
 
-/-- The cone is roaming exactly when its status says so. -/
-def IsRoaming : Prop :=
-  S.status = ShadowStatus.roaming
+/-- Checks status. -/
+def IsRoaming {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.IsRoaming S
 
-/-- The cone is incident exactly when its status says so. -/
-def IsIncident : Prop :=
-  S.status = ShadowStatus.incident
+def IsIncident {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.IsIncident S
 
-/-- The cone is paired exactly when its status says so. -/
-def IsPaired : Prop :=
-  S.status = ShadowStatus.paired
+def IsPaired {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.IsPaired S
 
-/-- The cone is integrated exactly when its status says so. -/
-def IsIntegrated : Prop :=
-  S.status = ShadowStatus.integrated
+def IsIntegrated {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.IsIntegrated S
 
-/-- The cone is rejected exactly when its status says so. -/
-def IsRejected : Prop :=
-  S.status = ShadowStatus.rejected
+def IsRejected {α : Type*} (S : ShadowCone α) : Prop :=
+  Shadow.IsRejected S
 
-/-- An integrated shadow has status `integrated`. -/
-theorem integrated_has_status_integrated
+/-- Forwarded theorem showing integration status. -/
+theorem integrated_has_status_integrated {α : Type*} (S : ShadowCone α)
     (h : IsIntegrated S) :
-    S.status = ShadowStatus.integrated :=
-  h
+    S.status = ShadowStatus.integrated := by
+  exact h
 
 end ShadowCone
 

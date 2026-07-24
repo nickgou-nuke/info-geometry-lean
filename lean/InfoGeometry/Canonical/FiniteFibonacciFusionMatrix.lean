@@ -30,7 +30,7 @@ No analytic continuation.
 No proof that a concrete complex root `q = exp(iπ/5)` satisfies the braid relation.
 -/
 
-namespace FiniteFibonacciFusionMatrix
+namespace InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 open Matrix
 open FiniteFibonacciFourAnyonBlocks
@@ -270,4 +270,4 @@ theorem fibonacci_fourAnyon_artin
   · exact Eq.trans hLHS10 hRHS10.symm
   · exact Eq.trans hLHS11 hRHS11.symm
 
-end FiniteFibonacciFusionMatrix
+end InfoGeometry.Canonical.FiniteFibonacciFusionMatrix

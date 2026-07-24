@@ -10,7 +10,7 @@ operator facade.  Boundary action and stress readout are functions of concrete
 
 noncomputable section
 
-namespace IncidentNullFlagVariationalAction
+namespace InfoGeometry.Physics.IncidentNullFlagVariationalAction
 
 open InfoGeometry.Canonical.FierzKleinFoundation
 open InfoGeometry.Physics.IncidentNullFlagStress
@@ -52,4 +52,4 @@ theorem metricStressReadout_swap
       metricStressReadout Z Pboundary Pzero J Dboundary Y X :=
   incidentStressTensor_swap Z Pboundary Pzero J Dboundary X Y
 
-end IncidentNullFlagVariationalAction
+end InfoGeometry.Physics.IncidentNullFlagVariationalAction

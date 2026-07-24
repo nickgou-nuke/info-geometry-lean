@@ -8,14 +8,16 @@ repository's concrete Zorn product.  The witness is expressed in the standard
 8-basis table `E11,E22,U1,U2,U3,V1,V2,V3`.
 -/
 
-namespace ConcreteComposition
+namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
 namespace ZornCell
 namespace Basis8
 
+open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 open SignedBasis
 
 /-- Coordinatewise subtraction of concrete integer Zorn cells. -/
-def subZ (X Y : ZornCell ℤ) : ZornCell ℤ where
+def subZ (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ where
   r := X.r - Y.r
   s := X.s - Y.s
   x1 := X.x1 - Y.x1
@@ -26,7 +28,8 @@ def subZ (X Y : ZornCell ℤ) : ZornCell ℤ where
   y3 := X.y3 - Y.y3
 
 /-- Coordinatewise negation of concrete integer Zorn cells. -/
-def negZ (X : ZornCell ℤ) : ZornCell ℤ where
+def negZ (X : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ where
   r := -X.r
   s := -X.s
   x1 := -X.x1
@@ -37,35 +40,42 @@ def negZ (X : ZornCell ℤ) : ZornCell ℤ where
   y3 := -X.y3
 
 /-- Concrete associator `(X*Y)*Z - X*(Y*Z)` for integer Zorn cells. -/
-def associatorZ (X Y Z : ZornCell ℤ) : ZornCell ℤ :=
+def associatorZ (X Y Z : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ :=
   subZ ((X * Y) * Z) (X * (Y * Z))
 
 /-- Concrete commutator `X*Y - Y*X` for integer Zorn cells. -/
-def commutatorZ (X Y : ZornCell ℤ) : ZornCell ℤ :=
+def commutatorZ (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ :=
   subZ (X * Y) (Y * X)
 
 /-- The concrete commutator of a cell with itself is zero. -/
-theorem commutatorZ_self (X : ZornCell ℤ) :
+theorem commutatorZ_self
+    (X : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
     commutatorZ X X = SignedBasis.cell zero := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   simp [commutatorZ, subZ, SignedBasis.cell]
 
 /-- Reversing the concrete commutator negates it. -/
-theorem commutatorZ_skew (X Y : ZornCell ℤ) :
+theorem commutatorZ_skew
+    (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
     commutatorZ X Y = negZ (commutatorZ Y X) := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
   simp [commutatorZ, subZ, negZ]
 
 /-- The two ordered concrete commutators cancel under componentwise addition. -/
-theorem commutatorZ_add_reverse (X Y : ZornCell ℤ) :
+theorem commutatorZ_add_reverse
+    (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
     addZ (commutatorZ X Y) (commutatorZ Y X) = SignedBasis.cell zero := by
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
   simp [commutatorZ, subZ, addZ, SignedBasis.cell]
 
 /-- Concrete cyclic Jacobiator of the Zorn element commutator. -/
-def commutatorJacobiatorZ (X Y Z : ZornCell ℤ) : ZornCell ℤ :=
+def commutatorJacobiatorZ
+    (X Y Z : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ :=
   addZ
     (commutatorZ X (commutatorZ Y Z))
     (addZ (commutatorZ Y (commutatorZ Z X)) (commutatorZ Z (commutatorZ X Y)))
@@ -74,7 +84,9 @@ def commutatorJacobiatorZ (X Y Z : ZornCell ℤ) : ZornCell ℤ :=
 The alternating associator sum from the Akivis identity for a commutator in a
 non-associative algebra.
 -/
-def akivisRhsZ (X Y Z : ZornCell ℤ) : ZornCell ℤ :=
+def akivisRhsZ
+    (X Y Z : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ :=
   subZ
     (addZ (addZ (associatorZ X Z Y) (associatorZ Y X Z)) (associatorZ Z Y X))
     (addZ (addZ (associatorZ X Y Z) (associatorZ Y Z X)) (associatorZ Z X Y))
@@ -112,7 +124,8 @@ This is the theorem-level blocker for any attempt to treat the concrete Zorn
 product as an associative matrix multiplication.
 -/
 theorem not_associative_concrete_zorn :
-    ¬ (∀ X Y Z : ZornCell ℤ, associatorZ X Y Z = SignedBasis.cell zero) := by
+    ¬ (∀ X Y Z : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ,
+      associatorZ X Y Z = SignedBasis.cell zero) := by
   intro h
   exact associator_e11_u1_u2_ne_zero (h (cell e11) (cell u1) (cell u2))
 
@@ -129,7 +142,8 @@ theorem commutator_u1_u2_ne_zero :
 
 /-- The concrete Zorn product is not commutative on integer cells. -/
 theorem not_commutative_concrete_zorn :
-    ¬ (∀ X Y : ZornCell ℤ, commutatorZ X Y = SignedBasis.cell zero) := by
+    ¬ (∀ X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ,
+      commutatorZ X Y = SignedBasis.cell zero) := by
   intro h
   exact commutator_u1_u2_ne_zero (h (cell u1) (cell u2))
 
@@ -184,7 +198,7 @@ This is the direct finite obstruction to installing a full-element `LieRing`
 structure from the Zorn element commutator.
 -/
 theorem not_jacobi_commutator_concrete_zorn :
-    ¬ (∀ X Y Z : ZornCell ℤ,
+    ¬ (∀ X Y Z : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℤ,
       commutatorJacobiatorZ X Y Z = SignedBasis.cell zero) := by
   intro h
   exact commutator_jacobi_u1_u2_u3_ne_zero (h (cell u1) (cell u2) (cell u3))
@@ -234,4 +248,4 @@ theorem commutator_jacobi_akivis_obstruction_packet :
 
 end Basis8
 end ZornCell
-end ConcreteComposition
+end InfoGeometry.Algebra.Zorn.ConcreteComposition

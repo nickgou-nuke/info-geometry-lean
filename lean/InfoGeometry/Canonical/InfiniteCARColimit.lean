@@ -22,7 +22,7 @@ declared null law, including `souriau_vacuum_annihilated`.
 
 noncomputable section
 
-namespace InfiniteCARColimit
+namespace InfoGeometry.Canonical.InfiniteCARColimit
 
 open Filter
 open scoped Topology
@@ -125,4 +125,4 @@ lemma souriau_vacuum_annihilated
 
 end AbstractGNSQuotientReadout
 
-end InfiniteCARColimit
+end InfoGeometry.Canonical.InfiniteCARColimit

@@ -11,10 +11,7 @@ deriving DecidableEq
 
 /-- Trivial carrier for the determinant-fiber fixed-point certificate. -/
 structure conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data where
-  conclusion_elliptic_t5_linear_factor_conditional_density_mod5_witness :
-    conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement := by
-      dsimp [conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement]
-      native_decide
+  conclusion_elliptic_t5_linear_factor_conditional_density_mod5_witness : Unit := ()
 
 /-- Certified determinant-fiber counts for the `GL₂(F₅)` action on `F₅² \ {0}`. -/
 def conclusion_elliptic_t5_linear_factor_conditional_density_mod5_rows :
@@ -29,7 +26,7 @@ def conclusion_elliptic_t5_linear_factor_conditional_density_mod5_fiber_denomina
 
 /-- Paper-facing finite arithmetic certificate for conditional fixed-point distributions. -/
 def conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement
-    : Prop :=
+    (_D : conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data) : Prop :=
   conclusion_elliptic_t5_linear_factor_conditional_density_mod5_rows.length = 9 ∧
     1 + 24 + 95 =
       conclusion_elliptic_t5_linear_factor_conditional_density_mod5_fiber_denominator ∧
@@ -47,7 +44,8 @@ def conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement
 
 /-- Paper label: `thm:conclusion-elliptic-t5-linear-factor-conditional-density-mod5`. -/
 theorem paper_conclusion_elliptic_t5_linear_factor_conditional_density_mod5
-    : conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement := by
+    (D : conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data) :
+    conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement D := by
   dsimp [conclusion_elliptic_t5_linear_factor_conditional_density_mod5_statement]
   native_decide
 

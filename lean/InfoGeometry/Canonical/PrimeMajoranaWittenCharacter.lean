@@ -22,7 +22,7 @@ asserted here.
 
 noncomputable section
 
-namespace PrimeMajoranaWittenCharacter
+namespace InfoGeometry.Canonical.PrimeMajoranaWittenCharacter
 
 open scoped BigOperators
 
@@ -120,4 +120,4 @@ theorem primeMajoranaWittenCharacterOwnerTarget :
     finiteSplitMajoranaChiralityCharacter_eq_eulerProduct P q,
     finiteSignedPfaffianCharacter_eq_eulerProduct P q⟩
 
-end PrimeMajoranaWittenCharacter
+end InfoGeometry.Canonical.PrimeMajoranaWittenCharacter

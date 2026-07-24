@@ -15,7 +15,7 @@ Proved:
 
 noncomputable section
 
-namespace B3PresentedGroup
+namespace InfoGeometry.External.Auto.B3PresentedGroup
 
 open Matrix
 open PresentedGroup
@@ -179,4 +179,4 @@ theorem phi_sig1 : phi (PresentedGroup.of sig1 : B3) = s1_unit := by
 #check phi_sig0
 #check phi_sig1
 
-end B3PresentedGroup
+end InfoGeometry.External.Auto.B3PresentedGroup

@@ -10,7 +10,7 @@ open scoped BigOperators
 
 universe u v
 
-namespace JaynesInfoStatMech
+namespace InfoGeometry.MaxEnt.JaynesInfoStatMech
 open scoped BigOperators
 variable {Ω : Type u} [Fintype Ω]
 
@@ -446,4 +446,4 @@ end Model
 
 end ThermalDiagonal
 
-end JaynesInfoStatMech
+end InfoGeometry.MaxEnt.JaynesInfoStatMech

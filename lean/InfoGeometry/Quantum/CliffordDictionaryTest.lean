@@ -8,7 +8,7 @@ This module verifies the structural identities of the Cl(1,1) atom and
 the QGT identifies derived from the Kähler compatibility.
 -/
 
-namespace CliffordDictionaryTest
+namespace InfoGeometry.Quantum.CliffordDictionaryTest
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
@@ -42,17 +42,18 @@ This is the core QGT/Kähler identity for the real doubled carrier.
 -/
 theorem berry_on_phase_eq_metric_diag
     (Q : QGT E)
-    (h_skew : ∀ u v, Q.g (modularComplexI u) v = - Q.g u (modularComplexI v))
+    (h_skew : ∀ u v, Q.g (modularComplexI (E := E) u) v =
+      - Q.g u (modularComplexI (E := E) v))
     (ψ : H₂) :
-    Q.Ω ψ (modularComplexI ψ) = Q.g ψ ψ := by
+    Q.Ω ψ (modularComplexI (E := E) ψ) = Q.g ψ ψ := by
   calc
-    Q.Ω ψ (modularComplexI ψ)
-        = Q.g (modularComplexI ψ) (modularComplexI ψ) :=
-          Q.compat ψ (modularComplexI ψ)
-    _ = - Q.g ψ (modularComplexI (modularComplexI ψ)) := by
-          simpa using h_skew ψ (modularComplexI ψ)
+    Q.Ω ψ (modularComplexI (E := E) ψ)
+        = Q.g (modularComplexI (E := E) ψ) (modularComplexI (E := E) ψ) :=
+          Q.compat ψ (modularComplexI (E := E) ψ)
+    _ = - Q.g ψ (modularComplexI (E := E) (modularComplexI (E := E) ψ)) := by
+          simpa using h_skew ψ (modularComplexI (E := E) ψ)
     _ = - Q.g ψ (-ψ) := by
-          have hsq : modularComplexI (modularComplexI ψ) = -ψ := by
+          have hsq : modularComplexI (E := E) (modularComplexI (E := E) ψ) = -ψ := by
             apply DoubledSpace.ext <;> simp [modularComplexI]
           rw [hsq]
     _ = Q.g ψ ψ := by simp
@@ -69,4 +70,4 @@ theorem phase_observable_eq_neg_two_mul_inner_fst_snd (ψ : H₂) :
   simp [modularComplexI, InfoGeometry.Krein.complex_i_apply,
     sub_eq_add_neg, real_inner_comm, two_mul]
 
-end CliffordDictionaryTest
+end InfoGeometry.Quantum.CliffordDictionaryTest

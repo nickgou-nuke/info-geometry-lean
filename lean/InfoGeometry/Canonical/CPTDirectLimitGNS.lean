@@ -19,7 +19,7 @@ record the explicit algebraic GNS socket over the identified carrier.
 
 noncomputable section
 
-namespace CPTDirectLimitGNS
+namespace InfoGeometry.Canonical.CPTDirectLimitGNS
 
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -93,4 +93,4 @@ theorem stage_star (n : ℕ) (x : Stage n) :
 
 end CPTDirectLimitGNSPacket
 
-end CPTDirectLimitGNS
+end InfoGeometry.Canonical.CPTDirectLimitGNS

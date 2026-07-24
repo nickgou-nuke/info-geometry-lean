@@ -17,7 +17,7 @@ namespace InfoGeometry.Canonical
 
 namespace KreinDoubledAtom
 
-open RealMod8Classification
+open InfoGeometry.Clifford.RealMod8Classification
 
 /-- Varlamov grade involution `W`, realized by `epsilon`. -/
 def varlamovW (X : KreinDoubledAtom) : X →ₗ[ℝ] X :=

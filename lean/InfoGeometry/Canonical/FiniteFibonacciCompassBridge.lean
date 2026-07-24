@@ -14,7 +14,7 @@ It does not claim an infinite limit.
 It does not claim conformal blocks or monodromy matrices.
 -/
 
-namespace FiniteFibonacciCompassBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciCompassBridge
 
 open InfoGeometry.Canonical.FiniteCompassBraidedChain
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
@@ -78,4 +78,4 @@ theorem fibonacciCompassTransport_commute_rewrite
       fibonacciCompassTransport (left ++ [j, i] ++ right) C := by
   exact braidTransport_commute_rewrite hsep left right C
 
-end FiniteFibonacciCompassBridge
+end InfoGeometry.Canonical.FiniteFibonacciCompassBridge

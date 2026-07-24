@@ -22,7 +22,7 @@ downstream modules can depend on the dimension-agnostic operator statement
 without reconstructing it from local chain data each time.
 -/
 
-namespace BulkBoundaryZeroModeOwner
+namespace InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.BulkBoundary
@@ -154,4 +154,4 @@ theorem exists_zeroMode_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
 
 end Core
 
-end BulkBoundaryZeroModeOwner
+end InfoGeometry.Canonical.BulkBoundaryZeroModeOwner

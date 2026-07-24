@@ -16,7 +16,7 @@ No completion result.
 No global centrality result for arbitrary target elements.
 -/
 
-namespace InductiveLimitClosureInterface
+namespace InfoGeometry.Meta.InductiveLimitClosureInterface
 
 open InfoGeometry.Meta.InductiveInvariantPacket
 
@@ -227,4 +227,4 @@ theorem include_bond_image_closure
 
 end AlgebraicLimitCone
 
-end InductiveLimitClosureInterface
+end InfoGeometry.Meta.InductiveLimitClosureInterface

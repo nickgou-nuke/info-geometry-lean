@@ -1,10 +1,10 @@
-# Research and Chains of Thought for the Remaining 5 Mathematical Gaps
+# Research and Chains of Thought for the Remaining 2 Mathematical Gaps
 
 > **Document Status**: Maintained reference memory  
 > **Last Audited**: 2026-07-24  
-> **Total Open Gaps**: Exactly 5 (1 in `GenuineBounds.lean`, 1 in `Pin55KreinConformalBridge.lean`, and 3 in `GoldenMeanShift.lean`)
+> **Total Open Gaps**: Exactly 2 (1 in `GenuineBounds.lean` and 1 in `Pin55KreinConformalBridge.lean`)
 
-This document contains the complete, rigorous mathematical chains of thought and proof sketches for the remaining open stubs in the repository, serving as the blueprint for future formalization efforts.
+This document contains the complete, rigorous mathematical chains of thought and proof sketches for the remaining open stubs in the repository, serving as the blueprint for future formalization efforts. (Note: The 3 sandbox stubs for `GoldenMeanShift.lean` have been resolved/synchronised and are now 100% clean).
 
 ---
 

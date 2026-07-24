@@ -27,7 +27,7 @@ the already-owned theorem surfaces:
 - the infinite binary boundary recursion.
 -/
 
-namespace CelikKocakSplitCliffordBridge
+namespace InfoGeometry.Canonical.CelikKocakSplitCliffordBridge
 
 open InfoGeometry.Canonical.CelikKocakPaperFormalism
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -401,4 +401,4 @@ theorem splitCliffordInfinity_supergraded_completion
 
 end InfiniteBoundary
 
-end CelikKocakSplitCliffordBridge
+end InfoGeometry.Canonical.CelikKocakSplitCliffordBridge

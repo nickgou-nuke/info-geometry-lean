@@ -20,7 +20,7 @@ log, exponential, positivity, entropy, or Chern integration theorems.
 
 noncomputable section
 
-namespace BerryDrazin
+namespace InfoGeometry.Canonical.BerryDrazin
 
 open InfoGeometry.Canonical.VarlamovClifford
 
@@ -113,4 +113,4 @@ theorem harmonicBerryConnection_mul_HL_eq_zero :
 
 end LeanSafeCarrier
 
-end BerryDrazin
+end InfoGeometry.Canonical.BerryDrazin

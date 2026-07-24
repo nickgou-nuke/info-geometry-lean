@@ -20,7 +20,7 @@ This is the local Krein-site lattice before Cantor refinement.
 The Krein involution is recovered as `K = ε₊ - ε₋` at the algebraic level.
 -/
 
-namespace KreinProjectorLattice
+namespace InfoGeometry.Canonical.KreinProjectorLattice
 
 /-! ## 1. The four-element Krein sector type -/
 
@@ -340,4 +340,4 @@ theorem kreinInvolution_sq :
 
 end KreinSector
 
-end KreinProjectorLattice
+end InfoGeometry.Canonical.KreinProjectorLattice

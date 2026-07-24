@@ -42,7 +42,7 @@ noncomputable section
 
 universe u
 
-namespace BostConnesHeckeCuntzCapstone
+namespace InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 
 open InfoGeometry.Canonical.BostConnesGalois
 open InfoGeometry.Canonical.BostConnesSymmetryBreaking
@@ -130,4 +130,4 @@ theorem fibonacci_quantum_dimension_capstone :
     phi = (1 + Real.sqrt 5) / 2 ∧ phi ^ 2 = phi + 1 ∧ phi > 1 ∧ phi < 2 :=
   golden_ratio_projective_invariant
 
-end BostConnesHeckeCuntzCapstone
+end InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone

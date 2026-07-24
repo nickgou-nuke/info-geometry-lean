@@ -18,7 +18,7 @@ Boundary:
   noncommutative second-variation packet, not new primitive owner definitions.
 -/
 
-namespace Operators
+namespace InfoGeometry.Canonical.Operators
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -121,4 +121,4 @@ theorem entropyProduction_nonneg_of_probe_hessian_nonneg
 
 end Bridge
 
-end Operators
+end InfoGeometry.Canonical.Operators

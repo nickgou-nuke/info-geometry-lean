@@ -12,7 +12,7 @@ import Mathlib
 
 noncomputable section
 
-namespace FiniteJonesModel
+namespace InfoGeometry.Optics.FiniteJonesModel
 
 open scoped Matrix
 
@@ -145,4 +145,4 @@ theorem brewsterMatrix_one :
   fin_cases i <;> fin_cases j <;>
     simp [brewsterMatrix, sProjector, diagJones]
 
-end FiniteJonesModel
+end InfoGeometry.Optics.FiniteJonesModel

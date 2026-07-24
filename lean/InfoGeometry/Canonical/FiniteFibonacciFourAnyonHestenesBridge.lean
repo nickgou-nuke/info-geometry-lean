@@ -22,7 +22,7 @@ No hypergeometric continuation.
 No complex analyticity theorem.
 -/
 
-namespace FiniteFibonacciFourAnyonHestenesBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 
 open InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
 open InfoGeometry.Canonical.FiniteFibonacciFourAnyonPaperBridge
@@ -60,4 +60,4 @@ theorem fourAnyonHestenesAnalytic (q : Units ℂ) :
     IsFourAnyonHestenesAnalytic (fun v => diagonalRAction q v) := by
   exact diagonalRAction_isFourAnyonHestenesAnalytic q
 
-end FiniteFibonacciFourAnyonHestenesBridge
+end InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge

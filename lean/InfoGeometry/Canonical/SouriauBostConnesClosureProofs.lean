@@ -19,7 +19,7 @@ open scoped Topology TensorProduct
 
 noncomputable section
 
-namespace SouriauBostConnesClosureProofs
+namespace InfoGeometry.Canonical.SouriauBostConnesClosureProofs
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open Matrix Complex
@@ -50,7 +50,8 @@ Algebraic tensor-factor separation:
 `(S ⊗ id) (id ⊗ K) = (id ⊗ K) (S ⊗ id)`.
 
 This is the theorem-safe algebraic core of the Cuntz-base/fiber separation.
-The bounded Hilbert-completion lift remains separate analytic debt.
+The bounded Hestenes--Krein/colimit completion lift remains a separate owner
+obligation.
 -/
 @[rep_depth thermo, capstone]
 theorem tensor_factor_separation
@@ -225,4 +226,4 @@ theorem canonical_sewn_boundary_chiral_index_vanishes :
     sewnChiralIndex canonicalSewnBoundaryState = 0 :=
   sewn_boundary_chiral_index_vanishes canonicalSewnBoundaryState
 
-end SouriauBostConnesClosureProofs
+end InfoGeometry.Canonical.SouriauBostConnesClosureProofs

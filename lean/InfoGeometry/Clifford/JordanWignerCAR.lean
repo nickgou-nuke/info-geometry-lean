@@ -8,7 +8,7 @@ open Matrix
 open InfoGeometry.Clifford.Cl11TensorTower
 open InfoGeometry.Clifford.JordanWignerBridge
 
-namespace JordanWignerCAR
+namespace InfoGeometry.Clifford.JordanWignerCAR
 
 /-- Base creation operator squares to zero. -/
 lemma a_dagger_base_sq : a_dagger_base * a_dagger_base = 0 := by
@@ -64,4 +64,4 @@ theorem jw_uv_anticomm_new (k : ℕ) : jw_u_new k * jw_v_new k + jw_v_new k * jw
   rw [h_add, a_anticomm]
   exact Matrix.one_kronecker_one (α := ℝ) (m := InfoGeometry.Clifford.TowerMatrix.Idx k) (n := Fin 2)
 
-end JordanWignerCAR
+end InfoGeometry.Clifford.JordanWignerCAR

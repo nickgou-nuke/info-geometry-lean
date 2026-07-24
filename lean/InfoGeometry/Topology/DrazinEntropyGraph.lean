@@ -25,7 +25,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace DrazinEntropyGraph
+namespace InfoGeometry.Topology.DrazinEntropyGraph
 
 open InfoGeometry.Canonical.RegularSupportSecondLaw
 
@@ -507,4 +507,4 @@ theorem constructDrazinEntropyGraphTarget_graph
     (constructDrazinEntropyGraphTarget G).graph = G :=
   rfl
 
-end DrazinEntropyGraph
+end InfoGeometry.Topology.DrazinEntropyGraph

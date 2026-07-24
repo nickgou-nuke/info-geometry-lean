@@ -29,7 +29,7 @@ corridor.
 
 noncomputable section
 
-namespace DIIITopologicalCountExample
+namespace InfoGeometry.GromovWittenErlangen.Examples.DIIITopologicalCountExample
 
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Quantum.KitaevChain
@@ -191,4 +191,4 @@ theorem drazin_regularInverse_mul_residue :
         CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedDrazinResidue = 0 :=
   CP1DrazinNilpotentDefectModel.edgeRegularInverse_mul_localizedDrazinResidue_line
 
-end DIIITopologicalCountExample
+end InfoGeometry.GromovWittenErlangen.Examples.DIIITopologicalCountExample

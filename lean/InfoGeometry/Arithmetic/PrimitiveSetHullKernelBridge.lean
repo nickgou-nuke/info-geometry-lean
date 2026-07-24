@@ -16,7 +16,7 @@ and records the resulting closure operator. The primitive-set content stays in
 
 noncomputable section
 
-namespace PrimitiveSetHullKernelBridge
+namespace InfoGeometry.Arithmetic.PrimitiveSetHullKernelBridge
 
 open OrderDual
 open PrimitiveSpectrum
@@ -57,4 +57,4 @@ theorem primitiveSetCarrier_hullKernel_closureOperator
   simpa [PrimitiveSetCarrier] using
     (PrimitiveSpectrum.gc_closureOperator (T := PrimitiveSetCarrier) S)
 
-end PrimitiveSetHullKernelBridge
+end InfoGeometry.Arithmetic.PrimitiveSetHullKernelBridge

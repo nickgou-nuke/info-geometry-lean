@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace SplitOctonionFibration
+namespace InfoGeometry.Physics.SplitOctonionFibration
 
 /-!
 # Split-Octonion Fiber Bundle over Thermodynamic Base
@@ -31,4 +31,4 @@ def generation_fibration (base : AmariBase) (target : TrialityTarget) : ℕ :=
 theorem three_generations_fixed (b : AmariBase) (t : TrialityTarget) :
   generation_fibration b t = 3 := rfl
 
-end SplitOctonionFibration
+end InfoGeometry.Physics.SplitOctonionFibration

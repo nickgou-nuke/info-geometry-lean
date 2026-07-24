@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeGrandCanonicalSouriauBregman
+namespace InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauBregman
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.LogPotential
@@ -329,4 +329,4 @@ theorem primeGrandCanonicalSouriauBregmanOwnerTarget :
   · intro θ
     exact M.fenchelGap_eq_zero_at_contact θ
 
-end PrimeGrandCanonicalSouriauBregman
+end InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauBregman

@@ -26,7 +26,7 @@ The repository policy here is two-lane:
 
 noncomputable section
 
-namespace AlgebraicGNSState
+namespace InfoGeometry.Prequantum.AlgebraicGNSState
 
 /--
 A real algebraic state on a real `*`-algebra.
@@ -250,7 +250,7 @@ end RealAlgebraicState
 
 section CompatibleFiniteNet
 
-open MarkovJonesInduction
+open InfoGeometry.Meta.MarkovJonesInduction
 
 variable {A : Nat → Type*}
 variable [∀ n : Nat, Ring (A n)] [∀ n : Nat, Algebra ℝ (A n)]
@@ -328,4 +328,4 @@ end CompatibleAlgebraicStateNet
 
 end CompatibleFiniteNet
 
-end AlgebraicGNSState
+end InfoGeometry.Prequantum.AlgebraicGNSState

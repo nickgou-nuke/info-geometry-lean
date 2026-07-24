@@ -25,7 +25,7 @@ No wrappers.
 All statements below are fully proved.
 -/
 
-namespace NormalizedLogDetTower
+namespace InfoGeometry.Canonical.NormalizedLogDetTower
 
 /--
 General scalar normalization step.
@@ -122,4 +122,4 @@ theorem normalizedLogDet_increment_cancelled
   rw [hlog]
   ring
 
-end NormalizedLogDetTower
+end InfoGeometry.Canonical.NormalizedLogDetTower

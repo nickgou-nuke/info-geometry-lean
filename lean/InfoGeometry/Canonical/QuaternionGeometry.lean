@@ -5,7 +5,7 @@ import Mathlib.Tactic.Abel
 
 noncomputable section
 
-namespace QuaternionGeometry
+namespace InfoGeometry.Canonical.QuaternionGeometry
 
 open Complex
 
@@ -167,4 +167,4 @@ theorem quaternion_field_residual_zero_iff
   · intro h
     exact sub_eq_zero.mpr h
 
-end QuaternionGeometry
+end InfoGeometry.Canonical.QuaternionGeometry

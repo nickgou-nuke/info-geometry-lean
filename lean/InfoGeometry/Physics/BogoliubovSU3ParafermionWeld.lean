@@ -19,13 +19,13 @@ The finite theorem-honest content is:
 
 noncomputable section
 
-namespace BogoliubovSU3ParafermionWeld
+namespace InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
 
 open BogoliubovWeylChemicalPotential
 open SupergradedCuntzBdG
 open GellMannSU3
 open ColorCARStandardModel
-open AlgebraicCuntzQuotient
+open InfoGeometry.Topology.AlgebraicCuntzQuotient
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 abbrev ParafermionStage4 := CuntzAlg ℂ (Fin 4)
@@ -162,6 +162,6 @@ theorem bogoliubov_su3_parafermion_synthesis
   · exact bdgParafermionPlus4_sq
   · exact parafermionBraid_one
 
-end BogoliubovSU3ParafermionWeld
+end InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
 
 end noncomputable section

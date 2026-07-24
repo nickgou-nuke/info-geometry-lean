@@ -10,7 +10,7 @@ the discrete spinor generators are the valuations of the continuous flow at
 discrete thermodynamic steps.
 -/
 
-namespace Q8ModularFlowBridge
+namespace InfoGeometry.Topology.Q8ModularFlowBridge
 
 open Matrix Complex
 open InfoGeometryCore
@@ -68,4 +68,4 @@ theorem modular_step_is_spinor_generator (x : M2C) :
     (-M_i) * x * -(star M_i) = - (M_i * x) * -(star M_i) := by simp [neg_mul]
     _ = M_i * x * star M_i := by rw [neg_mul_neg]
 
-end Q8ModularFlowBridge
+end InfoGeometry.Topology.Q8ModularFlowBridge

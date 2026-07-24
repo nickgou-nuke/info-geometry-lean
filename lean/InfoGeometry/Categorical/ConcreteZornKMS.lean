@@ -32,23 +32,25 @@ import InfoGeometry.Canonical.ZornSpinor
 This file instantiates `ZornBraidKMSState` over the `concreteZornSequence`.
 -/
 
-namespace ConcreteZornKMS
+namespace InfoGeometry.Categorical.ConcreteZornKMS
 
 open CategoryTheory
 open CategoryTheory.Limits
-open InfoGeometry.Categorical.ZornBraidColimit
-open InfoGeometry.Categorical.ConcreteZornTower
-open InfoGeometry.Categorical.ZornBraidColimitKMS
+open ZornBraidColimit
+open ConcreteZornTower
+open ZornBraidColimitKMS
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.BostConnesKMS
+open BostConnesKMS
 
 /--
 A linear map swapping `a` and `b`, and negating `x` and `y`.
 -/
 noncomputable def zornConjugateLinear : ZornMatrix ℚ →ₗ[ℚ] ZornMatrix ℚ where
   toFun z := { a := z.b, b := z.a, x := -z.x, y := -z.y }
-  map_add' x y := sorry
-  map_smul' m x := sorry
+  map_add' x y := by
+    ext <;> simp [ZornMatrix.add_def] <;> ring
+  map_smul' m x := by
+    ext <;> simp
 
 /--
 The lifting of this conjugation to the colimit.
@@ -74,13 +76,11 @@ The instance of `ZornBraidKMSState` over `concreteZornSequence`.
 -/
 noncomputable def concreteZornBraidKMSState {Op : Type*} [Ring Op] [StarRing Op]
     (C : BostConnesCuntzSystem Op)
-    (bcKMS : KMSProjectionState C)
-    (zornCuntzGenerator : ∀ j, concreteZornSequence.obj j) :
-    ZornBraidKMSState C concreteZornSequence concreteZornBilinearMultiplication zornCuntzGenerator where
+    (bcKMS : KMSProjectionState C) :
+    ZornBraidKMSState C concreteZornSequence where
   bcKMS := bcKMS
   zornState := zornState
   stageIndex := stageIndex
   continuumStar := continuumStar
-  eval_continuum_cuntz := sorry
 
-end ConcreteZornKMS
+end InfoGeometry.Categorical.ConcreteZornKMS

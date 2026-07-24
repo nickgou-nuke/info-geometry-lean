@@ -27,10 +27,10 @@ No projective Cantor-colimit boundary theorem, no split exceptional-group
 closure theorem, and no GNS quotient/null-ideal identification is claimed here.
 -/
 
-namespace SplitZornNullBoundary
+namespace InfoGeometry.Canonical.SplitZornNullBoundary
 
-open ConcreteComposition
-open ConcreteComposition.ZornCell
+open InfoGeometry.Algebra.Zorn.ConcreteComposition
+open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
 /-- Coordinatewise zero Zorn cell over `ℝ`, used only as a finite boundary witness. -/
 def zornZero : ZornCell ℝ where
@@ -136,4 +136,4 @@ theorem split_zorn_null_boundary_packet :
     zornTopRightNull_sq_zero,
     zornTopRightNull_polar_self_zero⟩
 
-end SplitZornNullBoundary
+end InfoGeometry.Canonical.SplitZornNullBoundary

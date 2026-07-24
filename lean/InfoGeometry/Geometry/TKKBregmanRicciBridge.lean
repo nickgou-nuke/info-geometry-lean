@@ -22,7 +22,7 @@ import InfoGeometry.Geometry.OperatorBregmanDivergence
 
 noncomputable section
 
-namespace TKKBregmanRicciBridge
+namespace InfoGeometry.Geometry.TKKBregmanRicciBridge
 
 open InfoGeometry.Geometry.OperatorBregmanDivergence
 open InfoGeometry.Canonical
@@ -193,4 +193,4 @@ def TKKBregmanRicciBridgeOwnerTarget
     (Bridge
       (E := E) c ω gradPhi F D2 L State Geometry R)
 
-end TKKBregmanRicciBridge
+end InfoGeometry.Geometry.TKKBregmanRicciBridge

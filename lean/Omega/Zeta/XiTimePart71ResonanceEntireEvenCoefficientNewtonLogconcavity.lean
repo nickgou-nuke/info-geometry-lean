@@ -2,6 +2,12 @@ import Mathlib.Tactic
 
 namespace Omega.Zeta
 
+/-- Concrete seed data for the resonance even-coefficient Newton package. -/
+structure xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data where
+  witness : Unit := ()
+
+namespace xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data
+
 /-- The packaged positive even coefficients, normalized as reciprocal factorials. -/
 noncomputable def xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b
     (n : ℕ) : ℝ :=
@@ -20,7 +26,8 @@ noncomputable def xi_time_part71_resonance_entire_even_coefficient_newton_logcon
 
 /-- Concrete statement: positivity, Newton recurrence, strict log-concavity, alternating signs,
 and decreasing adjacent ratios for the packaged even coefficients. -/
-def xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_statement : Prop :=
+def statement (_D : xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data) :
+    Prop :=
   (∀ n : ℕ,
       0 < xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b n) ∧
     (∀ n : ℕ, 1 ≤ n →
@@ -41,6 +48,10 @@ def xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_stateme
           xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b n <
         xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b n /
           xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b (n - 1))
+
+end xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data
+
+open xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data
 
 private lemma xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b_pos
     (n : ℕ) :
@@ -123,8 +134,11 @@ private lemma xi_time_part71_resonance_entire_even_coefficient_newton_logconcavi
   field_simp [hb.ne', hbm.ne'] at hratio
   simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using hratio
 
+/-- Paper label:
+`thm:xi-time-part71-resonance-entire-even-coefficient-newton-logconcavity`. -/
 theorem paper_xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity
-    : xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_statement := by
+    (D : xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data) :
+    D.statement := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · exact xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_b_pos
   · exact xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_newton

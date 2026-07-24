@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace FiniteRiemannPrimeState
+namespace InfoGeometry.Arithmetic.FiniteRiemannPrimeState
 
 /-! ## 1. Finite Riemann-state normalization -/
 
@@ -93,4 +93,4 @@ theorem probability_sum_eq_one :
 
 end FiniteRiemannStatePacket
 
-end FiniteRiemannPrimeState
+end InfoGeometry.Arithmetic.FiniteRiemannPrimeState

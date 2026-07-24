@@ -21,7 +21,7 @@ This file proves only the missing direct Peirce identities connecting those
 surfaces.
 -/
 
-namespace ChiralDrazinLightConeBridge
+namespace InfoGeometry.Canonical.ChiralDrazinLightConeBridge
 
 open InfoGeometry.Canonical
 
@@ -247,4 +247,4 @@ theorem supercharge_odd_and_square_even
 
 end Core
 
-end ChiralDrazinLightConeBridge
+end InfoGeometry.Canonical.ChiralDrazinLightConeBridge

@@ -12,7 +12,7 @@ This file keeps the formalism index-free and witness-driven:
 * out-of-equilibrium is encoded by a conformal anomaly scalar `sigma`.
 -/
 
-namespace CoordinateFreeSouriau
+namespace InfoGeometry.Canonical.CoordinateFreeSouriau
 
 section Core
 
@@ -182,4 +182,4 @@ theorem sigma_zero_iff_exists_equilibrium_pair
 
 end Conformal
 
-end CoordinateFreeSouriau
+end InfoGeometry.Canonical.CoordinateFreeSouriau

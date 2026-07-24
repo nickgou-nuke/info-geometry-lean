@@ -18,7 +18,7 @@ No global Hopf completion claim.
 No Virasoro central-charge theorem.
 -/
 
-namespace ModularHopfCoproductRules
+namespace InfoGeometry.Canonical.ModularHopfCoproductRules
 
 open scoped TensorProduct
 open ModularCoproductFlux
@@ -74,4 +74,4 @@ theorem hatDeltaPhi_eq_primitive_of_cross_zero
 
 end
 
-end ModularHopfCoproductRules
+end InfoGeometry.Canonical.ModularHopfCoproductRules

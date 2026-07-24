@@ -18,7 +18,7 @@ This file does **not** prove any theorem about Riemann zeros, KMS contour
 integrals, or Bost-Connes dynamics. It is the honest real-linear rotor bridge.
 -/
 
-namespace RiemannResonatorBridge
+namespace InfoGeometry.Canonical.RiemannResonatorBridge
 
 open Matrix
 
@@ -101,4 +101,4 @@ end ResonatorShadowData
 
 end RotorShadow
 
-end RiemannResonatorBridge
+end InfoGeometry.Canonical.RiemannResonatorBridge

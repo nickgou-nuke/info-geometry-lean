@@ -18,8 +18,9 @@ the Fisher metric diverges at `β = 1`.
    acting as σ_t(S_n) = n^{it}·S_n on the generators.
 3. **Fisher metric g**: still requires an owner theorem identifying a metric
    datum with the Hessian of `log ζ(β)`.
-4. **Degeneration at β=1**: still requires an analytic owner theorem proving
-   divergence of that Hessian/variance at the transition.
+4. **Degeneration at β=1**: still requires a Hestenes--Krein/categorical
+   colimit owner theorem proving the corresponding boundary readout at the
+   transition.
 
 The closed theorem below delegates only the modular-flow additivity claim to
 the existing Tomita--Takesaki owner.  The Fisher statements are not theorem
@@ -32,7 +33,7 @@ open Complex
 
 noncomputable section
 
-namespace TomitaTakesakiFisherGaloisBridge
+namespace InfoGeometry.Dynamics.TomitaTakesakiFisherGaloisBridge
 
 open InfoGeometry.Dynamics.TomitaTakesaki
 open InfoGeometry.Dynamics.ModularThermalState
@@ -65,19 +66,19 @@ string debt note, not as a proof field.
 structure FisherMetricAtTemperature (β : ℝ) where
   /-- The Fisher information metric value g(β). -/
   value : ℝ
-  /-- Open target: prove `g(β) = ∂²/∂β² log ζ(β)` in an analytic owner file. -/
-  hessian_log_zeta_debt : String := "Open: identify this Fisher metric datum with the Hessian of log zeta."
+  /-- Open target: route `g(β) = ∂²/∂β² log ζ(β)` through the Hestenes--Krein colimit owner. -/
+  hessian_log_zeta_debt : String := "Open: route this Fisher metric datum to the log-zeta readout through the Hestenes--Krein categorical colimit owner."
   /-- For β > 1, g(β) > 0 — the metric is positive definite. -/
   positive_definite : β > 1 → value > 0
 
 /--
 Closure debt: prove the Fisher metric divergence at `β → 1+`.
 
-The intended analytic target is that the Hessian/variance corresponding to
-`∂² log ζ(β)` diverges at the Bost--Connes critical point.  This file does not
-own that analytic theorem.
+The intended target is that the Hestenes--Krein/colimit Hessian-variance readout
+corresponding to `∂² log ζ(β)` reaches the Bost--Connes critical boundary.  This
+file does not own that colimit theorem.
 -/
 def fisher_metric_divergence_closure_debt : String :=
-  "Open: prove divergence of the Fisher/log-zeta Hessian at beta -> 1+ from analytic zeta estimates."
+  "Open: prove the Fisher/log-zeta critical-boundary readout at beta -> 1+ in the Hestenes--Krein categorical colimit owner."
 
-end TomitaTakesakiFisherGaloisBridge
+end InfoGeometry.Dynamics.TomitaTakesakiFisherGaloisBridge

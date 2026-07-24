@@ -26,7 +26,7 @@ projective log increment.  Hence Weyl gauge invariance is inherited from the
 existing cylinder-log theorem, rather than asserted for arbitrary operators.
 -/
 
-namespace HestenesConnesWilsonBridge
+namespace InfoGeometry.Krein.HestenesConnesWilsonBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -368,4 +368,4 @@ end Bridge
 
 end Core
 
-end HestenesConnesWilsonBridge
+end InfoGeometry.Krein.HestenesConnesWilsonBridge

@@ -30,7 +30,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace PrimeBooleanCube
+namespace InfoGeometry.Arithmetic.PrimeBooleanCube
 
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -307,4 +307,4 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
     P q
 
 
-end PrimeBooleanCube
+end InfoGeometry.Arithmetic.PrimeBooleanCube

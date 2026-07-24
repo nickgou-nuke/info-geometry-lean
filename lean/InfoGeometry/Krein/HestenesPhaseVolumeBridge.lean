@@ -5,7 +5,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace HestenesPhaseVolumeBridge
+namespace InfoGeometry.Krein.HestenesPhaseVolumeBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -169,4 +169,4 @@ end Bridge
 
 end PhaseVolume
 
-end HestenesPhaseVolumeBridge
+end InfoGeometry.Krein.HestenesPhaseVolumeBridge

@@ -139,24 +139,32 @@ def xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_expected_oriented_rows :
     (5, [(4, false), (2, true), (4, false)]),
     (6, [(5, false), (5, false)])]
 
+namespace xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data
+
 /-- The ordered-pair model is a double cover of the unordered-pair model. -/
-def extensionQuadratic : Prop :=
+def extensionQuadratic (_D : xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data) :
+    Prop :=
   xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_ordered_pairs.length =
     2 * xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_unordered_pairs.length
 
 /-- Returning with flipped orientation is exactly the inert case in the finite model. -/
-def orientedFlipCriterion : Prop :=
+def orientedFlipCriterion
+    (_D : xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data) : Prop :=
   xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_computed_oriented_rows =
     xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_expected_oriented_rows
 
 /-- The inert residue-degree profile matches the displayed seven-row table. -/
-def inertiaProfileMatchesTable : Prop :=
+def inertiaProfileMatchesTable
+    (_D : xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data) : Prop :=
   xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_computed_profiles =
     xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_expected_profiles
 
+end xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data
+
 /-- Paper label: `thm:xi-p7-s5-k20-over-k10-oriented-flip-inertia-profile`. -/
-theorem paper_xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile :
-    extensionQuadratic ∧ orientedFlipCriterion ∧ inertiaProfileMatchesTable := by
+theorem paper_xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile
+    (D : xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data) :
+    D.extensionQuadratic ∧ D.orientedFlipCriterion ∧ D.inertiaProfileMatchesTable := by
   refine ⟨?_, ?_, ?_⟩
   · rfl
   · rfl

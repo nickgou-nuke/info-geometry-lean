@@ -19,9 +19,9 @@ import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section
 
-namespace BuresWassersteinKMSCost
+namespace InfoGeometry.Thermo.BuresWassersteinKMSCost
 
-open BilingualAnalyticity
+open InfoGeometry.Geometry.BilingualAnalyticity
 
 /-! ## 1. Positive state domain -/
 
@@ -289,4 +289,4 @@ variable (C : BilingualKMSHolonomyCompatibility State Region Point Tangent Value
 
 end BilingualKMSHolonomyCompatibility
 
-end BuresWassersteinKMSCost
+end InfoGeometry.Thermo.BuresWassersteinKMSCost

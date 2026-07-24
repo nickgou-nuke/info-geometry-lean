@@ -29,7 +29,7 @@ import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 noncomputable section
 
-namespace NavierStokesSnapBridge
+namespace InfoGeometry.Canonical.NavierStokesSnapBridge
 
 open InfoGeometry.Geometry.ChiralTubuleBoundary
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
@@ -134,7 +134,8 @@ Navier-Stokes snap data routed through the chiral tubule boundary API.
 
 This packages the local tubule transition law with a projection readout.  The
 transition still requires the supplied Hessian snap, extreme shear, and thermal
-criticality hypotheses; none of those analytic hypotheses are asserted here.
+criticality hypotheses; none of those Hestenes--Krein/colimit hypotheses are
+asserted here.
 
 The `classical` projection is carried for downstream routing. The theorem in
 this namespace does not derive snap, shear, or thermal criticality from
@@ -434,4 +435,4 @@ theorem protectedNavierStokesSnapSectorInstalledTarget
   intro S t
   exact S.cannot_relax_to_flat t
 
-end NavierStokesSnapBridge
+end InfoGeometry.Canonical.NavierStokesSnapBridge

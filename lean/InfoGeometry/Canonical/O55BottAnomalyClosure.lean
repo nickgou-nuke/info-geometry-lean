@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 
-namespace O55BottAnomalyClosure
+namespace InfoGeometry.Canonical.O55BottAnomalyClosure
 
 open SplitCliffordTensorBridge
 open InfoGeometry.CliffordTower
@@ -62,4 +62,4 @@ noncomputable abbrev cl55_bott_anomaly_closure_achieved :
     cl55_bott_anomaly_closure_achieved = splitCliffordTensorStepEquiv 4 :=
   rfl
 
-end O55BottAnomalyClosure
+end InfoGeometry.Canonical.O55BottAnomalyClosure

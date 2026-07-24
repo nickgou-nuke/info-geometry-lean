@@ -3,7 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.Module.Basic
 
-namespace Cl11OscillationBridge
+namespace InfoGeometry.Clifford.Cl11OscillationBridge
 
 open Matrix
 
@@ -87,4 +87,4 @@ theorem three_aeon_pmns_slip :
   simp [propagate_aeon]
   exact bdg_inverts_chirality
 
-end Cl11OscillationBridge
+end InfoGeometry.Clifford.Cl11OscillationBridge

@@ -12,7 +12,7 @@ it directly.
 
 noncomputable section
 
-namespace AsanoContractionBase
+namespace InfoGeometry.Canonical.AsanoContractionBase
 
 open InfoGeometry.Canonical.LeeYangAsanoDigest
 
@@ -32,4 +32,4 @@ theorem asano_repeated_contraction_base
   intro z hz
   exact P.asano_case2_zero_transfer K1 K2 hD hDet hRoots z hz
 
-end AsanoContractionBase
+end InfoGeometry.Canonical.AsanoContractionBase

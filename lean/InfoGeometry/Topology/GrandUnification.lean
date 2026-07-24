@@ -14,7 +14,7 @@ supersymmetry, or confinement.  The historical name of the file is retained as
 a compatibility location for finite topology sockets.
 -/
 
-namespace GrandUnification
+namespace InfoGeometry.Topology.GrandUnification
 
 open Complex InfoGeometry.Topology.Parafermion
 
@@ -41,4 +41,4 @@ theorem order_packet_with_burau_braid (vac : UnifiedVacuum) (t : ℂ) :
       sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t := by
   exact ⟨grand_unification_symmetry vac, su3_parafermion_braiding t⟩
 
-end GrandUnification
+end InfoGeometry.Topology.GrandUnification

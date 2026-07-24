@@ -2,9 +2,9 @@ import Mathlib
 import InfoGeometry.Physics.AmplituhedronVolume
 import InfoGeometry.Canonical.BostConnesKMS
 
-namespace AmplituhedronKMSBridge
+namespace InfoGeometry.Physics.AmplituhedronKMSBridge
 
-open InfoGeometry.Physics.AmplituhedronVolume
+open AmplituhedronVolume
 open InfoGeometry.Canonical.BostConnesKMS
 
 /-- 
@@ -35,4 +35,4 @@ theorem amplituhedron_volume_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
   congr 1
   ring
 
-end AmplituhedronKMSBridge
+end InfoGeometry.Physics.AmplituhedronKMSBridge

@@ -22,7 +22,7 @@ bridge.
 
 noncomputable section
 
-namespace QuaternionNonSeparableWaveletOptimization
+namespace InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
 
 open InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 open InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
@@ -113,4 +113,4 @@ theorem quaternionNonSeparableWaveletOwnerTarget
     P.finitePartitionAdmissible :=
   quaternionNonSeparableWavelet_finitePartitionAdmissible P
 
-end QuaternionNonSeparableWaveletOptimization
+end InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization

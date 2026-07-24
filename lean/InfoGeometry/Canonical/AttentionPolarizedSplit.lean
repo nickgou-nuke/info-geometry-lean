@@ -16,10 +16,10 @@ Euclidean softmax and, under constant key norm, to ordinary Euclidean attention.
 
 namespace InfoGeometry.Canonical.Attention
 
-open LogSumExp
-open PolarizedSector
-open SplitQuadraticSheets
-open _root_.Attention
+open InfoGeometry.Convex.LogSumExp
+open InfoGeometry.Krein.PolarizedSector
+open InfoGeometry.Krein.SplitQuadraticSheets
+open InfoGeometry.Canonical.Attention
 open scoped BigOperators
 
 variable {E V : Type*}
@@ -98,8 +98,8 @@ private theorem dotProductSoftmaxWeights_eq_euclideanAttentionWeights
     dotProductSoftmaxWeights (E := E) (V := V) q ctx β
       = fun i => euclideanAttentionWeights q ctx β i := by
   funext i
-  unfold dotProductSoftmaxWeights LogSumExp.softmax
-    LogSumExp.sumExp
+  unfold dotProductSoftmaxWeights InfoGeometry.Convex.LogSumExp.softmax
+    InfoGeometry.Convex.LogSumExp.sumExp
   simp [dotProductLogits, euclideanAttentionWeights, attentionWeights,
     attentionParams, interactionEnergy, euclideanMatchForm,
     InfoGeometry.GrandCanonical.gibbsWeight, InfoGeometry.GrandCanonical.partition]

@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace JordanNormalForm
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 
 open Matrix
 
@@ -79,4 +79,4 @@ theorem JordanNormalForm
       IsSimilarTo A J' P' Pinv' :=
   ⟨J, P, Pinv, jordanNormalForm_from_explicit_similarity A J P Pinv hPinvP hPPinv hA⟩
 
-end JordanNormalForm
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators

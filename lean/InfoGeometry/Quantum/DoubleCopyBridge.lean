@@ -20,7 +20,7 @@ This file keeps only theorem surfaces that are honest against the live codebase:
 - boundary zero-mode protection from the concrete bulk-boundary bridge.
 -/
 
-namespace DoubleCopyBridge
+namespace InfoGeometry.Quantum.DoubleCopyBridge
 
 open InfoGeometry.Quantum.ModularAnomaly
 open InfoGeometry.Quantum.BulkBoundary
@@ -135,4 +135,4 @@ theorem zero_mode_touch_is_protected
     (M := M) (P0 := P0) (localOp := localOp)
     (chain := chain) hTopo hPHS hLoc
 
-end DoubleCopyBridge
+end InfoGeometry.Quantum.DoubleCopyBridge

@@ -25,7 +25,7 @@ import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section
 
-namespace OperatorThermodynamics
+namespace InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
@@ -474,7 +474,7 @@ def modularThermalState :
 
 end EmergentThermalRadiation
 
-end OperatorThermodynamics
+end InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 namespace InfoGeometry.OperatorAlgebra.Thermodynamics
 

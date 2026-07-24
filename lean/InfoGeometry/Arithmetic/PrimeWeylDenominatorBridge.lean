@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeWeylDenominatorBridge
+namespace InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 
 open PrimeBosonFermionGas
 open PrimonFinite
@@ -462,4 +462,4 @@ theorem valid
 
 end PrimeWeylVandermondeShadow
 
-end PrimeWeylDenominatorBridge
+end InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge

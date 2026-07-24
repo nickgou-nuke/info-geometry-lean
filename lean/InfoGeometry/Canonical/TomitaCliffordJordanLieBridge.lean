@@ -20,7 +20,7 @@ sector feeds the antisymmetric/Lie generator readout.
 
 open scoped InnerProductSpace
 
-namespace TomitaCliffordJordanLieBridge
+namespace InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
@@ -157,4 +157,4 @@ theorem tomitaCliffordJordanLieBridgeOwnerTarget
       B.compact_even_feeds_jordan,
       B.noncompact_odd_feeds_lie⟩
 
-end TomitaCliffordJordanLieBridge
+end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

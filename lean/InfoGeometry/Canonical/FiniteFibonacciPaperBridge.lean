@@ -25,7 +25,7 @@ No analytic continuation.
 No infinite limit.
 -/
 
-namespace FiniteFibonacciPaperBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciPaperBridge
 
 open InfoGeometry.Canonical.FiniteCompassBraidedChain
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
@@ -180,4 +180,4 @@ theorem fibonacci_fourPoint_phi_to_theta_to_phi (D : FusionData) (v : PhiBasis) 
     FusionData.fusionTransform D (FusionData.fusionTransform D v) = v :=
   FusionData.fusionTransform_involutive D v
 
-end FiniteFibonacciPaperBridge
+end InfoGeometry.Canonical.FiniteFibonacciPaperBridge

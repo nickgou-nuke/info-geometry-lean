@@ -13,10 +13,10 @@ readbacks under a canonical owner-facing namespace.
 
 noncomputable section
 
-namespace PrimeExteriorRepresentationCalibration
+namespace InfoGeometry.Canonical.PrimeExteriorRepresentationCalibration
 
-open PrimeExteriorRepresentation
-open PrimeExteriorRepresentation.SquareFreePrimeState
+open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
+open InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
 
 /-- Canonical re-export of the local occupation/membership readback. -/
 theorem canonicalLocalOccupation_eq_one_iff_mem
@@ -76,4 +76,4 @@ theorem primeExteriorRepresentationOwnerTarget :
     canonicalLocalParitySign_eq_one_iff_not_mem p S,
     canonicalGamma_eq_negOne_pow_fermionNumber S⟩
 
-end PrimeExteriorRepresentationCalibration
+end InfoGeometry.Canonical.PrimeExteriorRepresentationCalibration

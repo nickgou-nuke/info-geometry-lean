@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.FibonacciParafermionAtoms
 
 noncomputable section
 
-namespace OSp12BulkBoundaryBridge
+namespace InfoGeometry.Algebra.OSp12BulkBoundaryBridge
 
 open InfoGeometry.Algebra.OSp12
 

@@ -14,7 +14,7 @@ Majorana/PHS surface, the constructive Heisenberg current theorem, and the
 Sugawara bridge into one theorem-only bundle.
 -/
 
-namespace BosonizationTheorem
+namespace InfoGeometry.Canonical.BosonizationTheorem
 
 open InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -105,4 +105,4 @@ theorem splitClifford_current_boundary_and_sugawara_morphism
 
 end Core
 
-end BosonizationTheorem
+end InfoGeometry.Canonical.BosonizationTheorem

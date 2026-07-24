@@ -16,7 +16,7 @@ The supporting `ZornMatrix` carrier is defined in
 
 noncomputable section
 
-namespace SplitOctonionAssociator
+namespace InfoGeometry.Canonical.SplitOctonionAssociator
 
 open scoped BigOperators
 
@@ -95,5 +95,5 @@ theorem cocycleAssociatorDefect_def {Γ : Type*}
 
 end ZornMatrix
 
-end SplitOctonionAssociator
+end InfoGeometry.Canonical.SplitOctonionAssociator
 

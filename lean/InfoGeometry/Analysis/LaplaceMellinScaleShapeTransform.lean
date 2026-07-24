@@ -4,12 +4,12 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 
-Scale-shape analytic bridge.
+Scale-shape bridge.
 
 This file does not re-prove the operatorial spine from
-`RelativeModularScaleShapeSplit.lean`.  It packages the analytic language
-needed to keep the Mellin scale channel and the Laplace shape/defect channel
-distinct.
+`RelativeModularScaleShapeSplit.lean`.  It packages the Hestenes--Krein/colimit
+language needed to keep the Mellin scale channel and the Laplace shape/defect
+channel distinct.
 
 The intended interpretation is:
 
@@ -22,7 +22,7 @@ It does not assert any prime-number, xi, or RH theorem.
 
 noncomputable section
 
-namespace LaplaceMellinScaleShapeTransform
+namespace InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 
 /--
 Abstract scale-shape packet.
@@ -39,4 +39,4 @@ structure LaplaceMellinScaleShapePacket where
   laplaceShapeCompatible : Prop
   scaleShapeBlockSplit : Prop
 
-end LaplaceMellinScaleShapeTransform
+end InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform

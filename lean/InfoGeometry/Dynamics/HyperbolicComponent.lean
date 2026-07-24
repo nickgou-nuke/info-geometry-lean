@@ -18,7 +18,7 @@ This is the finite `2 × 2` real matrix shadow of the modular/dilation lane in
 the KAN compass.
 -/
 
-namespace HyperbolicComponent
+namespace InfoGeometry.Dynamics.HyperbolicComponent
 
 open Matrix
 
@@ -125,4 +125,4 @@ theorem tangentBoost_traceInner (s t : ℝ) :
   simp [Matrix.trace_fin_two]
   ring
 
-end HyperbolicComponent
+end InfoGeometry.Dynamics.HyperbolicComponent

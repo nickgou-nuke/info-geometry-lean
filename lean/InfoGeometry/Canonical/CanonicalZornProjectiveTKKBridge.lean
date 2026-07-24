@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.ZornCore
 This owner module recovers the dependency-closed bridge between four already
 live lanes:
 
-* the real Zorn carrier `InfoGeometry.Canonical.ZornCore.Zorn` with its order-three coordinate triality;
+* the real Zorn carrier `ZornCore.Zorn` with its order-three coordinate triality;
 * the canonical complex Zorn algebra used by the braid representation;
 * the split affine quadratic carrier `PACSplit44` and its conformal embedding
   into the `Q55` null cone;
@@ -23,22 +23,22 @@ noncomputable section
 namespace CanonicalZornProjectiveTKKBridge
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
-open InfoGeometry.Canonical.ZornTrialityTKKBridge
-open InfoGeometry.Canonical.TKKJordanPairData
-open TKKGrade
+open ProjectiveAffineConformalClosure55
+open ZornTrialityTKKBridge
+open TKKJordanPairData
+open TKKJordanPairData.TKKGrade
 
 /-! ## Real split coordinates and the real Zorn carrier -/
 
 /-- The standard split-coordinate map from `ℝ^(4,4)` into real Zorn coordinates. -/
-def pac44ToCoreZorn (x : PACSplit44) : InfoGeometry.Canonical.ZornCore.Zorn where
+def pac44ToCoreZorn (x : PACSplit44) : ZornCore.Zorn where
   a := x.x0 + x.y0
   b := x.x0 - x.y0
   u := ![x.x1 + x.y1, x.x2 + x.y2, x.x3 + x.y3]
   v := ![x.y1 - x.x1, x.y2 - x.x2, x.y3 - x.x3]
 
 /-- Inverse coordinate map from a real Zorn matrix to diagonal split coordinates. -/
-def coreZornToPAC44 (X : InfoGeometry.Canonical.ZornCore.Zorn) : PACSplit44 where
+def coreZornToPAC44 (X : ZornCore.Zorn) : PACSplit44 where
   x0 := (X.a + X.b) / 2
   x1 := (X.u 0 - X.v 0) / 2
   x2 := (X.u 1 - X.v 1) / 2
@@ -55,9 +55,9 @@ theorem coreZornToPAC44_pac44ToCoreZorn (x : PACSplit44) :
   all_goals ring_nf
   all_goals simp
 
-theorem pac44ToCoreZorn_coreZornToPAC44 (X : InfoGeometry.Canonical.ZornCore.Zorn) :
+theorem pac44ToCoreZorn_coreZornToPAC44 (X : ZornCore.Zorn) :
     pac44ToCoreZorn (coreZornToPAC44 X) = X := by
-  apply InfoGeometry.Canonical.ZornCore.Zorn.ext'
+  apply ZornCore.Zorn.ext'
   · simp [pac44ToCoreZorn, coreZornToPAC44]
     ring
   · funext i
@@ -68,7 +68,7 @@ theorem pac44ToCoreZorn_coreZornToPAC44 (X : InfoGeometry.Canonical.ZornCore.Zor
     ring
 
 /-- Real Zorn matrices and the diagonal `ℝ^(4,4)` carrier are equivalent. -/
-def pac44CoreZornEquiv : PACSplit44 ≃ InfoGeometry.Canonical.ZornCore.Zorn where
+def pac44CoreZornEquiv : PACSplit44 ≃ ZornCore.Zorn where
   toFun := pac44ToCoreZorn
   invFun := coreZornToPAC44
   left_inv := coreZornToPAC44_pac44ToCoreZorn
@@ -76,15 +76,15 @@ def pac44CoreZornEquiv : PACSplit44 ≃ InfoGeometry.Canonical.ZornCore.Zorn whe
 
 /-- The real Zorn determinant is exactly the diagonal split quadratic form. -/
 theorem pac44ToCoreZorn_det (x : PACSplit44) :
-    InfoGeometry.Canonical.ZornCore.det (pac44ToCoreZorn x) = Q44 x := by
-  simp [InfoGeometry.Canonical.ZornCore.det, InfoGeometry.Canonical.ZornCore.dot, pac44ToCoreZorn, Q44,
+    ZornCore.det (pac44ToCoreZorn x) = Q44 x := by
+  simp [ZornCore.det, ZornCore.dot, pac44ToCoreZorn, Q44,
     Fin.sum_univ_three]
   ring
 
 /-! ## Embedding the real Zorn algebra into the canonical complex carrier -/
 
 /-- Coordinatewise complexification into the canonical Zorn carrier. -/
-def coreToCanonical (X : InfoGeometry.Canonical.ZornCore.Zorn) : Zorn where
+def coreToCanonical (X : ZornCore.Zorn) : Zorn where
   a := X.a
   u := fun i => X.u i
   v := fun i => X.v i
@@ -92,7 +92,7 @@ def coreToCanonical (X : InfoGeometry.Canonical.ZornCore.Zorn) : Zorn where
 
 theorem coreToCanonical_injective : Function.Injective coreToCanonical := by
   intro X Y h
-  apply InfoGeometry.Canonical.ZornCore.Zorn.ext'
+  apply ZornCore.Zorn.ext'
   · apply Complex.ofReal_injective
     simpa [coreToCanonical] using congrArg Zorn.a h
   · funext i
@@ -105,24 +105,24 @@ theorem coreToCanonical_injective : Function.Injective coreToCanonical := by
     simpa [coreToCanonical] using congrArg Zorn.b h
 
 /-- Complexification preserves the full nonassociative Zorn product. -/
-theorem coreToCanonical_mul (X Y : InfoGeometry.Canonical.ZornCore.Zorn) :
+theorem coreToCanonical_mul (X Y : ZornCore.Zorn) :
     coreToCanonical (X * Y) = zornMul (coreToCanonical X) (coreToCanonical Y) := by
   apply zorn_ext
-  · simp [coreToCanonical, zornMul, InfoGeometry.Canonical.ZornCore.dot, dot3, Fin.sum_univ_three]
+  · simp [coreToCanonical, zornMul, ZornCore.dot, dot3, Fin.sum_univ_three]
   · funext i
     fin_cases i <;>
-      simp [coreToCanonical, zornMul, InfoGeometry.Canonical.ZornCore.cross, cross3,
-        InfoGeometry.Canonical.ZornCore.dot, dot3, Fin.sum_univ_three]
+      simp [coreToCanonical, zornMul, ZornCore.cross, cross3,
+        ZornCore.dot, dot3, Fin.sum_univ_three]
   · funext i
     fin_cases i <;>
-      simp [coreToCanonical, zornMul, InfoGeometry.Canonical.ZornCore.cross, cross3,
-        InfoGeometry.Canonical.ZornCore.dot, dot3, Fin.sum_univ_three]
-  · simp [coreToCanonical, zornMul, InfoGeometry.Canonical.ZornCore.dot, dot3, Fin.sum_univ_three]
+      simp [coreToCanonical, zornMul, ZornCore.cross, cross3,
+        ZornCore.dot, dot3, Fin.sum_univ_three]
+  · simp [coreToCanonical, zornMul, ZornCore.dot, dot3, Fin.sum_univ_three]
 
 /-- Complexification sends the real determinant to the canonical Zorn norm. -/
-theorem coreToCanonical_norm (X : InfoGeometry.Canonical.ZornCore.Zorn) :
-    zornNorm (coreToCanonical X) = (InfoGeometry.Canonical.ZornCore.det X : ℂ) := by
-  simp [coreToCanonical, zornNorm, InfoGeometry.Canonical.ZornCore.det, dot3, InfoGeometry.Canonical.ZornCore.dot,
+theorem coreToCanonical_norm (X : ZornCore.Zorn) :
+    zornNorm (coreToCanonical X) = (ZornCore.det X : ℂ) := by
+  simp [coreToCanonical, zornNorm, ZornCore.det, dot3, ZornCore.dot,
     Fin.sum_univ_three]
 
 /-- Direct map from the split affine carrier into the canonical Zorn algebra. -/
@@ -158,8 +158,8 @@ theorem canonicalTriality_norm (X : Zorn) :
   ring
 
 /-- The real and canonical triality actions commute with complexification. -/
-theorem coreToCanonical_triality (X : InfoGeometry.Canonical.ZornCore.Zorn) :
-    coreToCanonical (InfoGeometry.Canonical.ZornCore.triality X) = canonicalTriality (coreToCanonical X) := by
+theorem coreToCanonical_triality (X : ZornCore.Zorn) :
+    coreToCanonical (ZornCore.triality X) = canonicalTriality (coreToCanonical X) := by
   apply zorn_ext
   · rfl
   · funext i
@@ -184,16 +184,16 @@ theorem canonicalTriality_mul (X Y : Zorn) :
 /-! ## Projective conformal closure and five-grade routing -/
 
 /-- The affine conformal closure of the same eight real Zorn coordinates. -/
-def zornConformalEmbed (X : InfoGeometry.Canonical.ZornCore.Zorn) : PACSplit55 :=
+def zornConformalEmbed (X : ZornCore.Zorn) : PACSplit55 :=
   conformalEmbed44to55 (coreZornToPAC44 X)
 
-theorem zornConformalEmbed_null (X : InfoGeometry.Canonical.ZornCore.Zorn) :
+theorem zornConformalEmbed_null (X : ZornCore.Zorn) :
     Q55 (zornConformalEmbed X) = 0 := by
   exact conformalEmbed44to55_null (coreZornToPAC44 X)
 
 /-- The affine quadratic coordinate recovered from a real Zorn element is its determinant. -/
-theorem coreZornToPAC44_Q44 (X : InfoGeometry.Canonical.ZornCore.Zorn) :
-    Q44 (coreZornToPAC44 X) = InfoGeometry.Canonical.ZornCore.det X := by
+theorem coreZornToPAC44_Q44 (X : ZornCore.Zorn) :
+    Q44 (coreZornToPAC44 X) = ZornCore.det X := by
   rw [← pac44ToCoreZorn_det]
   simp [pac44ToCoreZorn_coreZornToPAC44]
 
@@ -242,10 +242,10 @@ theorem canonicalGradedLane_grade (s : SplitOctonionLane) :
     (canonicalGradedLane s).2.grade = laneGrade s := by
   exact canonicalRouting_grade s
 
-theorem canonical_triality_projective_five_grade_bridge (X : InfoGeometry.Canonical.ZornCore.Zorn) :
-    zornNorm (coreToCanonical X) = (InfoGeometry.Canonical.ZornCore.det X : ℂ) ∧
+theorem canonical_triality_projective_five_grade_bridge (X : ZornCore.Zorn) :
+    zornNorm (coreToCanonical X) = (ZornCore.det X : ℂ) ∧
     Q55 (zornConformalEmbed X) = 0 ∧
-    coreToCanonical (InfoGeometry.Canonical.ZornCore.triality X) =
+    coreToCanonical (ZornCore.triality X) =
       canonicalTriality (coreToCanonical X) ∧
     (canonicalGradedLane .upperNilpotent).2.grade = p1 ∧
     (canonicalGradedLane .lowerNilpotent).2.grade = m1 := by

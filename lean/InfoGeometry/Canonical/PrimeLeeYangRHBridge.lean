@@ -13,16 +13,16 @@ This file records the theorem-safe target:
 
 finite Lee--Yang prime approximants
 + nonvanishing renormalization
-+ locally uniform convergence to the Cayley pullback of completed zeta
++ categorical/Hestenes--Krein colimit convergence to the Cayley pullback readout
 + no surviving spurious zeros
 ⇒ RH-style critical-line zero location.
 
-No global analytic number theory is asserted without a witness.
+No global number-theoretic conclusion is asserted without the colimit witness.
 -/
 
 noncomputable section
 
-namespace PrimeLeeYangRHBridge
+namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
 open CayleyCriticalLineCircleBridge
 open PrimeLeeYangFerromagnet
@@ -77,11 +77,11 @@ structure CayleyCriticalLineWitness where
 Finite Lee--Yang approximation packet for the Cayley pullback of completed
 `xi`.
 
-The analytic work remains explicit:
+The colimit work remains explicit:
 
 * finite Lee--Yang stability for the actual partition polynomials;
 * nonvanishing renormalization;
-* locally uniform convergence to the completed-`xi` Cayley readout;
+* filtered-colimit convergence to the completed-`xi` Cayley readout;
 * no surviving spurious zeros;
 * zero transfer from completed-`xi` zeros to the Cayley unit circle.
 -/
@@ -130,7 +130,7 @@ end LeeYangPrimeApproximation
 /--
 Conditional RH theorem from a Lee--Yang prime approximation.
 
-This theorem is deliberately small: the analytic Hurwitz/limit work is exactly
+This theorem is deliberately small: the colimit zero-transfer work is exactly
 the supplied `zeros_transfer_to_xi` witness, and the final geometric step is
 the supplied Cayley critical-line witness.
 -/
@@ -147,4 +147,4 @@ theorem RH_of_LeeYangPrimeApproximation
   · exact False.elim (Ξ.zero_ne_one s hs hs1)
   · exact (C.critical_iff_unit s hs1).mpr hcircle
 
-end PrimeLeeYangRHBridge
+end InfoGeometry.Canonical.PrimeLeeYangRHBridge

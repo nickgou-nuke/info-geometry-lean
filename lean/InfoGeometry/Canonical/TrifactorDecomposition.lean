@@ -16,7 +16,7 @@ The algebra is intentionally finite and polynomial: no spectral theorem,
 external certificate, or analytic branch cut is used.
 -/
 
-namespace TrifactorDecomposition
+namespace InfoGeometry.Canonical.TrifactorDecomposition
 
 open TriFacetGeometry
 
@@ -140,4 +140,4 @@ theorem trifactor_capstone (T : R) (hT : T ^ 3 = T) :
     ⟨T_on_P_zero T hT, T_on_P_plus T hT, T_on_P_minus T hT⟩,
     spectral_resolution T⟩
 
-end TrifactorDecomposition
+end InfoGeometry.Canonical.TrifactorDecomposition

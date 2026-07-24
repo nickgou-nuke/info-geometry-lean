@@ -40,7 +40,7 @@ The automorphism section below is only an interface/predicate surface for future
 certificates.  It is not a classification theorem.
 -/
 
-namespace DualSplitOctonion
+namespace InfoGeometry.OperatorAlgebra.DualSplitOctonion
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.SymplecticFoundation
@@ -211,4 +211,4 @@ theorem dualSplitOctonion_safe_packet :
     primal_projection_mul, lifted_associator_base_ne_zero, AutCandidate.id_is_candidate,
     rfl, InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fixedInternalLineCount_ne_fanoPlaneLineCount⟩
 
-end DualSplitOctonion
+end InfoGeometry.OperatorAlgebra.DualSplitOctonion

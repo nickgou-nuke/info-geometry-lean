@@ -19,7 +19,7 @@ identities used by those owner layers:
   readback already owned by `EckmannDiscreteHodge`.
 -/
 
-namespace DiscreteDiracHodgeChiral
+namespace InfoGeometry.Topology.DiscreteDiracHodgeChiral
 
 open Matrix
 open InfoGeometry.Topology.EckmannDiscreteHodge
@@ -176,4 +176,4 @@ theorem eckmann_harmonic1_readout {n0 n1 n2 : ℕ}
 
 end
 
-end DiscreteDiracHodgeChiral
+end InfoGeometry.Topology.DiscreteDiracHodgeChiral

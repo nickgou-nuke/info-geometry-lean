@@ -1,0 +1,14 @@
+name: Sorry Gate
+on: [push, pull_request]
+jobs:
+  sorry-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: lake build
+      - name: Count sorries
+        run: |
+          SORRIES=$(lake build 2>&1 | grep -c "sorry" || true)
+          echo "Sorries: $SORRIES"
+          if [ "$SORRIES" -gt 0 ]; then exit 1; fi

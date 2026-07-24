@@ -20,7 +20,7 @@ instantiated.
 
 noncomputable section
 
-namespace SouriauOrbitDynamics
+namespace InfoGeometry.Canonical.SouriauOrbitDynamics
 
 universe u
 
@@ -86,4 +86,4 @@ theorem entropy_derivative_eq_zero
 
 end OrbitDynamicsDatum
 
-end SouriauOrbitDynamics
+end InfoGeometry.Canonical.SouriauOrbitDynamics

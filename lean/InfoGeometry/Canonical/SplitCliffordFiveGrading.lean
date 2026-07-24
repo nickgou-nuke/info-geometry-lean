@@ -9,7 +9,7 @@ Concrete five-grading style operators on the two-mode Jordan-Wigner `4 × 4`
 matrix model, with direct commutator evaluations.
 -/
 
-namespace SplitCliffordFiveGrading
+namespace InfoGeometry.Canonical.SplitCliffordFiveGrading
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordTwoModeCAR
@@ -48,4 +48,4 @@ theorem grading_boundary_commutator_explicit :
       SplitCliffordTwoModeCAR.a2, SplitCliffordTwoModeCAR.a2Dag,
       Matrix.mul_apply, Fin.sum_univ_four]
 
-end SplitCliffordFiveGrading
+end InfoGeometry.Canonical.SplitCliffordFiveGrading

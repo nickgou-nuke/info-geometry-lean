@@ -32,7 +32,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeCantorZetaDiracOperator
+namespace InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 
 open InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 
@@ -2834,4 +2834,4 @@ theorem op_pairing_hermitian_of_modewiseAdjoint_of_zetaHolonomy
 
 end FiniteCantorZetaDirac
 
-end PrimeCantorZetaDiracOperator
+end InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator

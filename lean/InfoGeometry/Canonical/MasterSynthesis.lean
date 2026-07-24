@@ -19,7 +19,7 @@ open KLDivergenceDecomposition
 open MaximumCaliberKLSplit
 open BuresMetricStabilization
 open TensorColimitExpectation
-open ThermodynamicGauge
+open InfoGeometry.Topology.ThermodynamicGauge
 
 section FinitePacket
 

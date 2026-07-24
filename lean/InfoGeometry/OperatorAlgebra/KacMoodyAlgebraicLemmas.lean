@@ -17,7 +17,7 @@ and no bridge layer where a direct theorem is enough.
 
 noncomputable section
 
-namespace KacMoodyAlgebraicLemmas
+namespace InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
 
 open InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 
@@ -70,4 +70,4 @@ theorem sugawara_bilinear_current_bracket
   rw [hbn, han]
   rw [mul_algebraMap_eq_smul, algebraMap_mul_eq_smul]
 
-end KacMoodyAlgebraicLemmas
+end InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas

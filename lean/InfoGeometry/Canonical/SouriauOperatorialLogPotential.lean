@@ -6,7 +6,7 @@ import Mathlib
 InfoGeometry.Canonical.SouriauOperatorialLogPotential
 -/
 
-namespace SouriauOperatorialLogPotential
+namespace InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 open InfoGeometry.Canonical.StandardFormCore
 
@@ -627,4 +627,4 @@ def instGenericMetriplecticCompatibility : GenericMetriplecticCompatibility Unit
   dE_eq_zero := rfl
   dS_nonneg := le_rfl
 
-end SouriauOperatorialLogPotential
+end InfoGeometry.Canonical.SouriauOperatorialLogPotential

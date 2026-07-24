@@ -9,7 +9,6 @@ set_option autoImplicit false
 namespace InfoGeometry.MeasureProjective.Normalized
 
 open MeasureTheory
-open _root_.MeasureProjective
 open scoped ENNReal
 
 variable {α : Type*} [MeasurableSpace α]

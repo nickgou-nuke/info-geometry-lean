@@ -34,7 +34,7 @@ This file packages only the infinitesimal `P/D/K` readout and the explicit
 projective `T/S` chart action already proved in the owner lanes.
 -/
 
-namespace ConformalGeneratorPacket55
+namespace InfoGeometry.Clifford.ConformalGeneratorPacket55
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
@@ -195,4 +195,4 @@ theorem S_conjugates_T_pow_to_lower_shear (m : ℕ) :
     S * T ^ m * SInv = !![1, 0; -(m : ℂ), 1] := by
   simpa [S, T, SInv] using modularT_pow_S_conjugation m
 
-end ConformalGeneratorPacket55
+end InfoGeometry.Clifford.ConformalGeneratorPacket55

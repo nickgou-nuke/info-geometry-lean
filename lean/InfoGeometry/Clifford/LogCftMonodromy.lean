@@ -17,14 +17,14 @@ Concrete `2 × 2` logarithmic-CFT monodromy matrices.
 The file models the rank-two Jordan cell for a logarithmic pair and the
 associated parabolic monodromy.  It is deliberately matrix-level: the semantic
 bridge to Clifford / signature machinery is through the already-owned
-`OpSignatureBridge` and `SupermatrixKoszul` lanes.
+`OpSignatureBridge` and `InfoGeometry.Algebra.SupermatrixKoszul` lanes.
 -/
 
-namespace LogCftMonodromy
+namespace InfoGeometry.Clifford.LogCftMonodromy
 
 open Matrix
-open HypercomplexTriad
-open SupermatrixKoszul
+open InfoGeometry.Algebra.HypercomplexTriad
+open InfoGeometry.Algebra.SupermatrixKoszul
 open OpSignatureBridge
 
 /-- The carrier for a rank-two logarithmic pair. -/
@@ -504,4 +504,4 @@ theorem lowerHadjiivanovMonodromy_pow_original (h : ℂ) (n : ℕ) :
   all_goals simp [lowerJordan, lowerJordanNilpotent]
   all_goals ring_nf
 
-end LogCftMonodromy
+end InfoGeometry.Clifford.LogCftMonodromy

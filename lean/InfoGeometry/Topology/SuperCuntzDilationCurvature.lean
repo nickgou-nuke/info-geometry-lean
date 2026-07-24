@@ -38,7 +38,7 @@ unitarity, and continuum gravitational curvature are outside this finite file.
 
 noncomputable section
 
-namespace SuperCuntzDilationCurvature
+namespace InfoGeometry.Topology.SuperCuntzDilationCurvature
 
 open InfoGeometry.Algebra.QCCRSupergradingBridge
 open InfoGeometry.Topology.ThermodynamicGauge
@@ -245,6 +245,6 @@ theorem entropy_alignment_transfers_to_q_packet
 
 end GrandUnificationReadout
 
-end SuperCuntzDilationCurvature
+end InfoGeometry.Topology.SuperCuntzDilationCurvature
 
 end noncomputable section

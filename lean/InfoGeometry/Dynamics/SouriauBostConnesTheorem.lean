@@ -1,8 +1,13 @@
 import InfoGeometry.Quantum.FibonacciFusionCategory
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.YangBaxterProof
+import InfoGeometry.Canonical.BostConnesKMS
+import Mathlib
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Analysis.PSeries
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 
 /-!
 # Souriau–Bost–Connes Transition Theorem — Analytic Target Surface
@@ -44,13 +49,15 @@ The full dictionary:
 set_option linter.unusedVariables false
 
 open scoped Topology
+open Filter Real
 
 noncomputable section
 
-namespace SouriauBostConnesTheorem
+namespace InfoGeometry.Dynamics.SouriauBostConnesTheorem
 
 open FibonacciFusion
 open InfoGeometry.Canonical
+open InfoGeometry.Canonical.BostConnesKMS
 
 /-! ### Partition function and order parameter -/
 
@@ -177,4 +184,4 @@ structure TransitionDictionary where
 theorem transition_dictionary_nonempty : Nonempty TransitionDictionary :=
   ⟨{}⟩
 
-end SouriauBostConnesTheorem
+end InfoGeometry.Dynamics.SouriauBostConnesTheorem

@@ -32,7 +32,7 @@ References:
 
 noncomputable section
 
-namespace ZetaFunctionalEquationLayer
+namespace InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -418,11 +418,9 @@ end ZetaFunctionalEquationLayerSocket
 /--
 RH-shaped zero-location target in the Cayley disk.
 
-If the completed `Ξ(w)` has no zeros inside the open disk `|w| < 1`, then
-the functional equation `Ξ(w) = Ξ(w⁻¹)` forces all nontrivial zeros onto
-the boundary `|w| = 1`, which is the critical line `Re(s) = 1/2`.
-
-This is recorded as a socket with explicit debt.
+This is the statement shape for a future Cayley-disk zero-location theorem.
+The zero-free interior, exterior transfer, and boundary conclusion are all
+explicit fields; this structure itself proves none of them.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure CayleyDiskZeroLocationTarget where
@@ -442,4 +440,4 @@ structure CayleyDiskZeroLocationTarget where
   /-- Guardrail: constructing this packet requires a proof of RH. -/
   no_unconditional_RH_claim_guard : Type*
 
-end ZetaFunctionalEquationLayer
+end InfoGeometry.Canonical.ZetaFunctionalEquationLayer

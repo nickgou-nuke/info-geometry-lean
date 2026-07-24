@@ -20,7 +20,7 @@ thermodynamic limit is asserted here.
 
 noncomputable section
 
-namespace StableAlgebraicSemantics
+namespace InfoGeometry.OperatorAlgebra.StableAlgebraicSemantics
 
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
@@ -221,4 +221,4 @@ end StableParabolicPacket
 
 end Erlangen
 
-end StableAlgebraicSemantics
+end InfoGeometry.OperatorAlgebra.StableAlgebraicSemantics

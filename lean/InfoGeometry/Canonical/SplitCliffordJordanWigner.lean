@@ -16,7 +16,7 @@ single-mode parabolic atoms into fermionic multi-mode CAR operators:
 No wrappers. No placeholders.
 -/
 
-namespace SplitCliffordJordanWigner
+namespace InfoGeometry.Canonical.SplitCliffordJordanWigner
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -217,4 +217,4 @@ theorem jw_cross_create_anticomm :
 
 end TwoMode
 
-end SplitCliffordJordanWigner
+end InfoGeometry.Canonical.SplitCliffordJordanWigner

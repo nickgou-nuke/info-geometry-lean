@@ -35,7 +35,7 @@ Drazin/Hodge calibration is constructed here.
 
 noncomputable section
 
-namespace FierzKleinFoundation
+namespace InfoGeometry.Canonical.FierzKleinFoundation
 
 open scoped BigOperators
 open InfoGeometry.Canonical.DrazinModularPersistence
@@ -507,4 +507,4 @@ theorem horizon_fierz_klein_holds
     (horizonFierzBilinears C D)
     h.normalization
 
-end FierzKleinFoundation
+end InfoGeometry.Canonical.FierzKleinFoundation

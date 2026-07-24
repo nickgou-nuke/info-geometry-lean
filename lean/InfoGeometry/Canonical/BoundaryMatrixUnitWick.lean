@@ -16,7 +16,7 @@ augmentation `epsilon_0`.  The downstream constructor
 laws and instantiates the Wick theorem for the actual exterior-Fock modes.
 -/
 
-namespace BoundaryMatrixUnitWick
+namespace InfoGeometry.Canonical.BoundaryMatrixUnitWick
 
 /-- Ordinary associative commutator in a noncommutative ring. -/
 def comm {A : Type*} [Ring A] (x y : A) : A :=
@@ -302,4 +302,4 @@ theorem normalUnit_commutator
 
 end ExplicitCAR
 
-end BoundaryMatrixUnitWick
+end InfoGeometry.Canonical.BoundaryMatrixUnitWick

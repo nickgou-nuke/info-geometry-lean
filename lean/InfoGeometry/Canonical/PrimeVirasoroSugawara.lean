@@ -33,7 +33,7 @@ proof-carrying fields.
 
 noncomputable section
 
-namespace PrimeVirasoroSugawara
+namespace InfoGeometry.Canonical.PrimeVirasoroSugawara
 
 open InfoGeometry.Arithmetic.PrimeMajoranaOPE
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -605,4 +605,4 @@ theorem centralCharge_eq_card_of_level_one_dualCoxeter_zero
   rw [P.centralCharge_calibrated hcc, hlevel, hdim, hdual]
   norm_num
 
-end PrimeVirasoroSugawara
+end InfoGeometry.Canonical.PrimeVirasoroSugawara

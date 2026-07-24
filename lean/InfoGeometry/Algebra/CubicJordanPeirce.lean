@@ -36,12 +36,12 @@ is equivalent to proving the Jacobi identity for the TKK construction.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open CubicJordanOs
-open CubicJordanOs.AlbertMatrix
+open InfoGeometry.Algebra.CubicJordanOs
+open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace CubicJordanPeirce
+namespace InfoGeometry.Algebra.CubicJordanPeirce
 
 /-! ## 1. Peirce idempotents and projection predicates -/
 
@@ -234,4 +234,4 @@ theorem penrose_global_closure :
     adjoint_peirce_mapping_diagonal,
     associator_peirce_witness⟩
 
-end CubicJordanPeirce
+end InfoGeometry.Algebra.CubicJordanPeirce

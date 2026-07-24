@@ -26,7 +26,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeParafermionGrandCanonicalClock
+namespace InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
 
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 open InfoGeometry.Arithmetic.PrimeSuperalgebra
@@ -344,4 +344,4 @@ theorem positiveBranchThermalTime
       subtreeEntropy n = minimalSurfaceArea n / (4 * effectiveNewtonConstant) := by
   exact positive_branch_time_clock_theorem (B := B) P
 
-end PrimeParafermionGrandCanonicalClock
+end InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock

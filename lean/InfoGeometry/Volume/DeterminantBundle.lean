@@ -11,7 +11,7 @@ Transition between sections is given by the Volume Homomorphism, and
 the fibers are rescaled by the Dilation generators (Cartan D).
 -/
 
-namespace DeterminantBundle
+namespace InfoGeometry.Volume.DeterminantBundle
 
 open Base
 
@@ -30,7 +30,7 @@ The action of a linear automorphism on the volume form.
 This is exactly the determinant group homomorphism.
 -/
 noncomputable def volumeScale (f : V ≃ₗ[ℝ] V) : ℝ :=
-  |((VolumeHom f : ℝˣ) : ℝ)|
+  |((Base.VolumeHom f : ℝˣ) : ℝ)|
 
 /--
 Weyl action on the determinant line, via the positive volume scale.
@@ -67,4 +67,4 @@ theorem hasConformalWeight_one (ψ : DeterminantLine V) :
   intro f
   simp [weylAction, Dilation, volumeScale, Real.rpow_one]
 
-end DeterminantBundle
+end InfoGeometry.Volume.DeterminantBundle

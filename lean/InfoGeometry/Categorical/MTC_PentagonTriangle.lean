@@ -24,7 +24,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace MTC_PentagonTriangle
+namespace InfoGeometry.Categorical.MTC_PentagonTriangle
 
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
@@ -129,4 +129,4 @@ theorem MacLane_Pentagon_Equation
       pentagonGamma1 zi zj zk zl zm = 1 :=
   pentagon_chart_cocycle_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 
-end MTC_PentagonTriangle
+end InfoGeometry.Categorical.MTC_PentagonTriangle

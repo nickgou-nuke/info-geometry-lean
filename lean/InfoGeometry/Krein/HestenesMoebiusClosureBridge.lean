@@ -25,7 +25,7 @@ supplies the Möbius representation laws, while this bridge records the exact
 consequences needed by the real Hestenes--Krein volume pipeline.
 -/
 
-namespace HestenesMoebiusClosureBridge
+namespace InfoGeometry.Krein.HestenesMoebiusClosureBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -352,6 +352,6 @@ end Bridge
 
 end Core
 
-end HestenesMoebiusClosureBridge
+end InfoGeometry.Krein.HestenesMoebiusClosureBridge
 
 end

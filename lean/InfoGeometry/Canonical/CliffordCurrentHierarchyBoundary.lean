@@ -29,7 +29,7 @@ operator substrate is proved, and the mode-indexed central extensions are
 proved in their own external owner corridor.
 -/
 
-namespace CliffordCurrentHierarchyBoundary
+namespace InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -129,4 +129,4 @@ theorem external_sugawara_centralElement_acts_as_identity
 
 end FiniteToModeBoundary
 
-end CliffordCurrentHierarchyBoundary
+end InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary

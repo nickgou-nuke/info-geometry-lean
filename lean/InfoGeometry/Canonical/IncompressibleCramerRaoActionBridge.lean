@@ -25,7 +25,7 @@ potential forces `χ = 0`, the already-owned conformal/Weyl theorems collapse th
 projector obstruction and the dilation commutator.
 -/
 
-namespace IncompressibleCramerRaoActionBridge
+namespace InfoGeometry.Canonical.IncompressibleCramerRaoActionBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.MongeAmpereCramerRao
@@ -348,4 +348,4 @@ end CramerRaoNegLogVolumeAnomalyReadout
 
 end Core
 
-end IncompressibleCramerRaoActionBridge
+end InfoGeometry.Canonical.IncompressibleCramerRaoActionBridge

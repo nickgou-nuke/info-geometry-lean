@@ -33,8 +33,9 @@ Arango skill-evolution queue
   -> worker repeats on the next queued evolution task
 ```
 
-This is the implementation-level division of responsibility currently reflected
-in the codebase. It is the authoritative architecture for the evolution lane.
+This is the historical implementation-level division of responsibility for the
+evolution lane. In this checkout the worker entrypoint is disabled and must not
+be started.
 
 ## Concrete Components
 
@@ -60,8 +61,9 @@ Important implementation constants in `evolution_worker.py`:
 - `WORKER_ID = "evolution-worker-autonomous"`
 - `EVOLUTION_QUEUE = "skill-evolution"`
 
-The checked-in systemd unit wires the worker to this repository checkout and the
-local Python environment.
+The worker entrypoint is disabled in this checkout. Treat any systemd or daemon
+instructions here as historical only unless the entrypoint is re-enabled and
+re-verified.
 
 ### 2. GEPA Skill Evolution
 
@@ -211,24 +213,10 @@ Real-eval cache path:
 
 ## Operational Commands
 
-### Run one worker cycle in foreground
+### Worker status
 
-```bash
-python3 tools/infra/evolution_worker.py --once
-```
-
-### Run the worker continuously
-
-```bash
-python3 tools/infra/evolution_worker.py
-```
-
-### Enqueue an evolution task
-
-```bash
-python3 tools/infra/evolution_worker.py --enqueue audit-proof 10
-python3 tools/infra/evolution_worker.py --enqueue closure-debt-proof 5
-```
+`tools/infra/evolution_worker.py` is disabled in this checkout and returns
+`SystemExit(2)`. Do not use it as an execution entrypoint here.
 
 ### Run GEPA directly
 

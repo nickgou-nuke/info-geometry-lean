@@ -17,7 +17,7 @@ kernel definition.
 
 noncomputable section
 
-namespace LaplaceFourierComparison
+namespace InfoGeometry.Analysis.LaplaceFourierComparison
 
 open InfoGeometry.Analysis.LaplaceTransform
 open scoped FourierTransform RealInnerProductSpace
@@ -421,4 +421,4 @@ theorem laplace_inverse_on_positive_axis
 
 end MellinComparison
 
-end LaplaceFourierComparison
+end InfoGeometry.Analysis.LaplaceFourierComparison

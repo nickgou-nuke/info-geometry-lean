@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.SuperInference
 
-namespace GrandUnificationBlueprint
+namespace InfoGeometry.Canonical.GrandUnificationBlueprint
 
 /-!
 # The Grand Unification of the Physics of Information in Lean 4
@@ -80,4 +80,4 @@ def UnificationComplete : Prop :=
     (L : BayesianLoop E) (IST : InfoSpectralTriple E),
     AnomalyInflowClosure L IST
 
-end GrandUnificationBlueprint
+end InfoGeometry.Canonical.GrandUnificationBlueprint

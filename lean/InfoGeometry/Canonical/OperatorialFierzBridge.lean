@@ -14,7 +14,7 @@ tensor or spin-2 owner surface. It only records that the operatorial transport
 lane can be evaluated against the already-owned doubled Fierz package.
 -/
 
-namespace OperatorialFierzBridge
+namespace InfoGeometry.Canonical.OperatorialFierzBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorialHessianBridge
@@ -102,4 +102,4 @@ theorem transportEvaluatedFierzReadout_majorana
 
 end Bridge
 
-end OperatorialFierzBridge
+end InfoGeometry.Canonical.OperatorialFierzBridge

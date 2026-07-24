@@ -17,7 +17,7 @@ Cuntz-boundary losslessness, metric-symplectic emergence, or infinite categorica
 closure.
 -/
 
-namespace CliffordBraidingTheorem
+namespace InfoGeometry.Algebra.CliffordBraidingTheorem
 
 abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
 
@@ -106,4 +106,4 @@ theorem finite_clifford_braiding_center_packet :
       (∀ z : CentralCore, conjByJ (centralMatrix z) = centralMatrix z) := by
   exact ⟨J_sq, E_sq, E_anticomm_J, pseudoscalar_sq, central_core_preserved_by_J_conj⟩
 
-end CliffordBraidingTheorem
+end InfoGeometry.Algebra.CliffordBraidingTheorem

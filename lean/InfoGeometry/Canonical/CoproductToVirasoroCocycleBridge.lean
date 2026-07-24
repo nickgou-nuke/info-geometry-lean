@@ -20,7 +20,7 @@ Finite algebraic bridge used to formalize the iterative-coproduct->cocycle idea:
 No analytic limits are asserted.
 -/
 
-namespace CoproductToVirasoroCocycleBridge
+namespace InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge
 
 open scoped TensorProduct
 open scoped BigOperators
@@ -968,4 +968,4 @@ theorem local_cocycle_as_iterated_profile
 
 end
 
-end CoproductToVirasoroCocycleBridge
+end InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge

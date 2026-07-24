@@ -15,7 +15,7 @@ The intended sharp choice is `κ = tan α`, where `α` comes from the localized
 coefficient bound.
 -/
 
-namespace SharpAngleDivergenceOperators
+namespace InfoGeometry.Canonical.SharpAngleDivergenceOperators
 
 open Real
 
@@ -79,4 +79,4 @@ theorem abs_im_diag_le_sharp_mul_re_diag (u : V) :
 
 end DivergenceSharpAnglePacket
 
-end SharpAngleDivergenceOperators
+end InfoGeometry.Canonical.SharpAngleDivergenceOperators

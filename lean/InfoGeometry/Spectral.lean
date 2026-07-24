@@ -12,6 +12,6 @@ import InfoGeometry.Spectral.Cohomology.ProjectiveSpace
 import InfoGeometry.Spectral.HigherGroups
 import InfoGeometry.Spectral.Numerical.QR
 
-namespace Spectral
+namespace InfoGeometry.Spectral
 
-end Spectral
+end InfoGeometry.Spectral

@@ -20,7 +20,7 @@ import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section
 
-namespace TomitaCartanSplit
+namespace InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 universe uOp uSplit uCarrier uH
 
@@ -1581,4 +1581,4 @@ theorem defect_nil_supported
 
 end TomitaDrazinBridge
 
-end TomitaCartanSplit
+end InfoGeometry.OperatorAlgebra.TomitaCartanSplit

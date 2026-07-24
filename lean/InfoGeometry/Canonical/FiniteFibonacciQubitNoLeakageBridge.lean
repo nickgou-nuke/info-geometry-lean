@@ -17,7 +17,7 @@ No analytic continuation.
 No fault-tolerance claim.
 -/
 
-namespace FiniteFibonacciQubitNoLeakageBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakageBridge
 
 open FiniteFibonacciComputationalSpace
 open FiniteFibonacciLowAnyonMatrices
@@ -88,4 +88,4 @@ theorem twoQubit_nc_count :
     nonComputationalCount 2 = 1 :=
   FiniteFibonacciQubitNoLeakage.twoQubit_nc_count
 
-end FiniteFibonacciQubitNoLeakageBridge
+end InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakageBridge

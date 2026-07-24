@@ -12,7 +12,7 @@ set_option linter.dupNamespace false
 
 noncomputable section
 
-namespace RealifiedDoubledKreinHodgeBridge
+namespace InfoGeometry.Canonical.RealifiedDoubledKreinHodgeBridge
 
 open InfoGeometry.Krein
 
@@ -187,4 +187,4 @@ theorem hodgeLaplacian_detects_Ksq_kernel
         _ = (0 : ℝ) • J.J_R (0 : E) := by rw [J.J_R_smul]
         _ = 0 := by simp
 
-end RealifiedDoubledKreinHodgeBridge
+end InfoGeometry.Canonical.RealifiedDoubledKreinHodgeBridge

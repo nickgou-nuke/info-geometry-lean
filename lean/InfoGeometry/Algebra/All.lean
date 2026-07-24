@@ -21,7 +21,6 @@ import InfoGeometry.Algebra.Zorn.RealSplitOctonionG2Classification
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
-import InfoGeometry.Algebra.NonAssocDerivation
 import InfoGeometry.Algebra.NoFaithfulAssociativeModel
 import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit
@@ -151,6 +150,11 @@ import InfoGeometry.Algebra.WittProjectiveClosureHonest
 import InfoGeometry.Algebra.Zorn.DiscreteColorBridge
 import InfoGeometry.Algebra.Zorn.Projective
 import InfoGeometry.Algebra.Zorn._CheckNames
+import InfoGeometry.Algebra.OctonionMatrixObstruction
+import InfoGeometry.Algebra.H3ZornJordanInstance
+import InfoGeometry.Algebra.H3ZornJordanProduct
+import InfoGeometry.Algebra.BaezF4H3Zorn
+import InfoGeometry.Algebra.BaezG2AlternativeDerivations
 /-!
 # InfoGeometry.Algebra.All
 

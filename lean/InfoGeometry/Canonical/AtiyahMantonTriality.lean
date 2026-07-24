@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.Triality
 
 noncomputable section
 
-namespace AtiyahMantonTriality
+namespace InfoGeometry.Canonical.AtiyahMantonTriality
 
 /-!
 # Atiyah-Manton Correspondence and D4 Triality
@@ -100,4 +100,4 @@ theorem skyrmion_triality_preserves_baryon_number
   -- I.charge A = S.baryon_number (map A)
   rw [bridge.atiyah_manton.charge_conservation A]
 
-end AtiyahMantonTriality
+end InfoGeometry.Canonical.AtiyahMantonTriality

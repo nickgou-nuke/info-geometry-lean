@@ -23,7 +23,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace PrimeCantorLatticeDiracBridge
+namespace InfoGeometry.Arithmetic.PrimeCantorLatticeDiracBridge
 
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
@@ -67,4 +67,4 @@ theorem cantorDiracWittenCharacter_eq_eulerProduct_bridge
       ∏ p ∈ P.primes, (1 - q p) := by
   exact InfoGeometry.Arithmetic.PrimeCantorLatticeDirac.cantorDiracWittenCharacter_eq_eulerProduct P q
 
-end PrimeCantorLatticeDiracBridge
+end InfoGeometry.Arithmetic.PrimeCantorLatticeDiracBridge

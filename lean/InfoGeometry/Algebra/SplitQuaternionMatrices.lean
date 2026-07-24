@@ -24,7 +24,7 @@ beyond the finite split-quaternion `M₂(ℝ)` coordinate model.]
 Source audit: 
 -/
 
-namespace SplitQuaternionMatrices
+namespace InfoGeometry.Algebra.SplitQuaternionMatrices
 
 open Matrix
 
@@ -273,4 +273,4 @@ sqK_mul_sqJ,
 sqK_mul_sqI,
 sqI_mul_sqK⟩
 
-end SplitQuaternionMatrices
+end InfoGeometry.Algebra.SplitQuaternionMatrices

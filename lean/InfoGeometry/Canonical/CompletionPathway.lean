@@ -9,7 +9,7 @@ This file keeps only the finite completion and refinement/coarse-graining
 Galois connection that are actually owned in the repository.
 -/
 
-namespace CompletionPathway
+namespace InfoGeometry.Canonical.CompletionPathway
 
 abbrev BinaryWord (n : ℕ) := CantorCylinderLattice.BinaryWord n
 abbrev KreinSector := KreinProjectorLattice.KreinSector
@@ -120,4 +120,4 @@ theorem refinementCoAdjunction_upper_iInf
       ⨅ i, coarseProjectionAssignment (Q i) :=
   (projectionAssignment_galoisConnection n).u_iInf
 
-end CompletionPathway
+end InfoGeometry.Canonical.CompletionPathway

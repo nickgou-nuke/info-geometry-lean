@@ -12,7 +12,7 @@ This file is intentionally local and witness-driven:
 * only explicit finite identities are proved.
 -/
 
-namespace SouriauBetaField
+namespace InfoGeometry.Canonical.SouriauBetaField
 
 structure SouriauVectorField where
   beta : ℝ → ℝ
@@ -48,4 +48,4 @@ theorem unruh_profile_at_horizon
   rw [htemp, hbeta]
   field_simp [ha.ne', Real.pi_ne_zero]
 
-end SouriauBetaField
+end InfoGeometry.Canonical.SouriauBetaField

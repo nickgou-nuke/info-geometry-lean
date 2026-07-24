@@ -2,15 +2,16 @@ import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 
 /-!
-# AnalyticLimit
+# Colimit limit packet
 
-Conservative analytic-limit packetization for the prime-indexed Weyl denominator lane.
+Conservative filtered-colimit packetization for the prime-indexed Weyl
+denominator lane.
 
 This module does not claim unconditional convergence to `1 / ζ`.  It records
-finite-cutoff objects and a proof-carrying witness for the analytic limit step.
+finite-cutoff objects and a proof-carrying witness for the colimit readout step.
 -/
 
-namespace AnalyticLimit
+namespace InfoGeometry.Canonical.AnalyticLimit
 
 /--
 Finite prime-cutoff Dirichlet/Euler data at inverse temperature `beta`.
@@ -38,11 +39,11 @@ theorem finiteInverseZeta_eq_finiteEulerProduct
     finiteInverseZeta D = D.finiteEulerProduct := rfl
 
 /--
-Proof-carrying witness for the analytic limit corridor `P ↗ 𝔓`.
+Proof-carrying witness for the filtered-colimit corridor `P ↗ 𝔓`.
 
 `limitStatement` is intentionally explicit and externalized.  This keeps the
-convergence/analytic continuation debt visible until discharged in a dedicated
-analysis owner module.
+convergence/continuation readout visible until discharged in the categorical
+Hestenes--Krein owner module.
 -/
 @[rep_depth thermo]
 structure AnalyticLimitWitness where
@@ -63,4 +64,4 @@ theorem inverseZeta_eq_tendsto_finiteInverseZeta
     W.limitingInverseZeta = W.limitingInverseZeta :=
   W.inverseZeta_eq_limit
 
-end AnalyticLimit
+end InfoGeometry.Canonical.AnalyticLimit

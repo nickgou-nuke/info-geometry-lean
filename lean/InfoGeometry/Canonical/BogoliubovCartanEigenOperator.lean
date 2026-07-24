@@ -13,7 +13,7 @@ already-installed `BogoliubovTransport.transportCommutator`, read as the Cartan
 adjoint action on doubled-real bounded operators.
 -/
 
-namespace BogoliubovCartanEigenOperator
+namespace InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.DrazinKreinCompatibility
@@ -561,4 +561,4 @@ end BogoliubovCartanFrameEquiv
 
 end Core
 
-end BogoliubovCartanEigenOperator
+end InfoGeometry.Canonical.BogoliubovCartanEigenOperator

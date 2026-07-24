@@ -4,7 +4,7 @@ import Mathlib.Tactic
 
 open Lean Elab
 
-namespace DIIIIndexVerification
+namespace InfoGeometry.Canonical.DIIIIndexVerification
 
 /-
 Finite DIII-surrogate index layer.
@@ -46,4 +46,4 @@ theorem mvarZ2Index_pair_stable_from_counts (before : Nat) :
     z2IndexOfCount (before + 2) = z2IndexOfCount before :=
   z2Index_pair_stable before
 
-end DIIIIndexVerification
+end InfoGeometry.Canonical.DIIIIndexVerification

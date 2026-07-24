@@ -18,7 +18,7 @@ infinite power-series identity or any convergence statement.  A coordinate
 
 noncomputable section
 
-namespace HoradamIonGeneratingSlice
+namespace InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
 
 open Finset
 open HoradamIonMatrixMethods
@@ -115,6 +115,6 @@ theorem horadam_ion_generating_slice_packet {N : ℕ}
   exact ⟨horadamGeneratingTrunc_clear_denominator a b p q t,
     horadamIonGeneratingTrunc_clear_denominator a b p q t⟩
 
-end HoradamIonGeneratingSlice
+end InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
 
 end noncomputable section

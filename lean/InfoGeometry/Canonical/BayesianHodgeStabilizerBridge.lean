@@ -22,7 +22,7 @@ semigroups, or existence of information-geometric projections.
 
 open Matrix
 
-namespace BayesianHodgeStabilizerBridge
+namespace InfoGeometry.Canonical.BayesianHodgeStabilizerBridge
 
 open InfoGeometry.Canonical.BayesianHodgeCurrent
 open InfoGeometry.Topology.EckmannDiscreteHodge
@@ -221,4 +221,4 @@ theorem stationary_coexact_orthogonal_readout
 
 end
 
-end BayesianHodgeStabilizerBridge
+end InfoGeometry.Canonical.BayesianHodgeStabilizerBridge

@@ -11,7 +11,7 @@ declarations but no kernel-checked apex.
 
 set_option linter.unusedVariables false
 
-namespace Shadow
+namespace InfoGeometry.SelfReference.Shadow
 
 /-
 
@@ -183,4 +183,4 @@ def ShadowStatus.multiplier : ShadowStatus → ℕ
 def totalSeverity (items : List (ShadowCone α)) : ℕ :=
 (items.map fun s => s.kind.severity * s.status.multiplier).sum
 
-end Shadow
+end InfoGeometry.SelfReference.Shadow

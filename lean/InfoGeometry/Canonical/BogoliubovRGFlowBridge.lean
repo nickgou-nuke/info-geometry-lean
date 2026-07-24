@@ -22,7 +22,7 @@ fields; it is not a substitute for theorem-owner imports upstream.
 
 noncomputable section
 
-namespace BogoliubovRGFlowBridge
+namespace InfoGeometry.Canonical.BogoliubovRGFlowBridge
 
 open InfoGeometry.Canonical
 open BogoliubovOptimalTransport
@@ -71,4 +71,4 @@ def rg_fixed_point_is_pure_bogoliubov_flow
     FixedPoint.detailedBalance_restored ∧
     FixedPoint.entropyProduction_zero
 
-end BogoliubovRGFlowBridge
+end InfoGeometry.Canonical.BogoliubovRGFlowBridge

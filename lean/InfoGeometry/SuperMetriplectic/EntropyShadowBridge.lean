@@ -17,7 +17,7 @@ lane, and that the body-entropy packet can be re-read as a coadjoint-leaf style
 split with zero reversible contribution.
 -/
 
-namespace EntropyShadowBridge
+namespace InfoGeometry.SuperMetriplectic.EntropyShadowBridge
 
 open InfoGeometry.Canonical
 
@@ -65,4 +65,4 @@ theorem toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction
     (toCoadjointLeafEntropySplit E).totalEntropyChange = E.production := by
   rfl
 
-end EntropyShadowBridge
+end InfoGeometry.SuperMetriplectic.EntropyShadowBridge

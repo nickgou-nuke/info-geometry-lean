@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 noncomputable section
 
-namespace RealStokesGaussHomology
+namespace InfoGeometry.Canonical.RealStokesGaussHomology
 
 /-!
 # Real Stokes/Gauss homology
@@ -109,4 +109,4 @@ theorem pairing_boundaryOne_eq_pairing_zeroCoboundary
 
 end Incidence
 
-end RealStokesGaussHomology
+end InfoGeometry.Canonical.RealStokesGaussHomology

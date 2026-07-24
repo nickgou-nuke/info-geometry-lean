@@ -29,7 +29,7 @@ being mixed.
 
 noncomputable section
 
-namespace Cl44ConformalNormalization
+namespace InfoGeometry.Canonical.Cl44ConformalNormalization
 
 /-! ## 1. Dimension arithmetic -/
 
@@ -276,4 +276,4 @@ theorem cl44ConformalNormalizationOwnerTarget :
     ⟨SpinFactorConformalRoute.canonical⟩,
     ⟨TrialityLeviPlacement.canonical⟩⟩
 
-end Cl44ConformalNormalization
+end InfoGeometry.Canonical.Cl44ConformalNormalization

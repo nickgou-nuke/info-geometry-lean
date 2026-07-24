@@ -18,7 +18,7 @@ import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 
 noncomputable section
 
-namespace RealKreinModularSpectralTriple
+namespace InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
 
 open scoped ENNReal
 open InfoGeometry.OperatorAlgebra.ModularSignCPT
@@ -102,4 +102,4 @@ theorem Kmod_square :
 
 end RealKreinModularTriple
 
-end RealKreinModularSpectralTriple
+end InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple

@@ -16,7 +16,7 @@ import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section
 
-namespace AnomalyTubuleStability
+namespace InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
 
 /-! ## 1. Generic anomaly readouts -/
 
@@ -310,4 +310,4 @@ theorem stable_of_nonzero_global_readout
 
 end TubuleStability
 
-end AnomalyTubuleStability
+end InfoGeometry.OperatorAlgebra.AnomalyTubuleStability

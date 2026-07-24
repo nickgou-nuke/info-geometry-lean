@@ -10,7 +10,7 @@ This file packages the majorant-side contractive/Cauchy guarantees into a
 reusable interface suitable for downstream problem families.
 -/
 
-namespace NewtonKantorovichJacobianCertificate
+namespace InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate
 
 open InfoGeometry.Foundations.NewtonKantorovich
 open InfoGeometry.Foundations.NewtonKantorovichSequence
@@ -120,4 +120,4 @@ theorem zeroResidual_shifted_cauchy
   exact majorant_shifted_cauchy_of_law (zeroResidualCertificate L hLnonneg)
 
 end
-end NewtonKantorovichJacobianCertificate
+end InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate

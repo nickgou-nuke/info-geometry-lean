@@ -15,7 +15,7 @@ to Mathlib roots.
 The construction is generalized to bounded operators between different Hilbert spaces.
 -/
 
-namespace MoorePenrose
+namespace InfoGeometry.Singular.MoorePenrose
 
 -- Geometric adjoint postfix.
 postfix:max "†" => star
@@ -296,4 +296,4 @@ theorem exists_moorePenroseInverse_of_closedRange
 
 end Hilbert
 
-end MoorePenrose
+end InfoGeometry.Singular.MoorePenrose

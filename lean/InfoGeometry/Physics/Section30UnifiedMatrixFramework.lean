@@ -23,7 +23,7 @@ Repairs/guardrails:
 
 noncomputable section
 
-namespace Section30UnifiedMatrixFramework
+namespace InfoGeometry.Physics.Section30UnifiedMatrixFramework
 
 open Matrix Complex
 
@@ -183,6 +183,6 @@ theorem repaired_section30_matrix_packet (t x y z nx ny nz : ℝ) :
   exact ⟨neg_det_spacetimeMatrix_eq_minkowskiForm t x y z,
     blochMatrix_trace nx ny nz⟩
 
-end Section30UnifiedMatrixFramework
+end InfoGeometry.Physics.Section30UnifiedMatrixFramework
 
 end noncomputable section

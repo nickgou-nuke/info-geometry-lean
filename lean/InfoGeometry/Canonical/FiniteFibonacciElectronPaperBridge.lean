@@ -23,7 +23,7 @@ No conformal blocks.
 No analytic braid computation.
 -/
 
-namespace FiniteFibonacciElectronPaperBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciElectronPaperBridge
 
 open Matrix
 open FiniteFibonacciElectronIndependence
@@ -99,4 +99,4 @@ theorem fibonacciWithElectrons_artin_from_matrix_identity
   by
     simpa [fibonacciRMatrixWithElectrons, fibonacciBMatrixWithElectrons] using hArtin
 
-end FiniteFibonacciElectronPaperBridge
+end InfoGeometry.Canonical.FiniteFibonacciElectronPaperBridge

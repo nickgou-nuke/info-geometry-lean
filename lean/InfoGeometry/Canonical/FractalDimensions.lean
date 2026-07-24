@@ -1,7 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
-namespace FractalDimensions
+namespace InfoGeometry.Canonical.FractalDimensions
 
 noncomputable def UpperPhi : ℝ := (1 + Real.sqrt 5) / 2
 noncomputable def LowerPhi : ℝ := (Real.sqrt 5 - 1) / 2
@@ -50,4 +50,4 @@ def D_E8E8 : ℕ := 496
 
 theorem E8_E8_dim_eq_double : D_E8E8 = 2 * D_E8 := by rfl
 
-end FractalDimensions
+end InfoGeometry.Canonical.FractalDimensions

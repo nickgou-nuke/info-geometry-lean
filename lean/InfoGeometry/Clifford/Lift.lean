@@ -93,7 +93,7 @@ lemma cl11Rep_pseudoscalar :
 end KreinClifford
 
 
-namespace Lift
+namespace InfoGeometry.Clifford.Lift
 
 /-- Canonical namespaced alias for the split `Cl(1,1)` quadratic form. -/
 noncomputable abbrev Q11 : QuadraticForm ℝ (ℝ × ℝ) := _root_.Q11
@@ -132,4 +132,4 @@ lemma cl11RepLin_apply_pair (a b : ℝ) (x y : E) :
 
 end KreinClifford
 
-end Lift
+end InfoGeometry.Clifford.Lift

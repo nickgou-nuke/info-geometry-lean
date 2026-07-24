@@ -5,7 +5,7 @@ import InfoGeometry.Clifford.Decomposition
 
 open scoped Matrix
 
-namespace CartanInstance
+namespace InfoGeometry.Clifford.CartanInstance
 
 open Matrix
 open InfoGeometry.Cartan
@@ -65,4 +65,4 @@ lemma pSub_eq_p :
     Decomposition.pSub (J1 := J1) (n := n)
       = Cp (J1 := J1) (n := n) := rfl
 
-end CartanInstance
+end InfoGeometry.Clifford.CartanInstance

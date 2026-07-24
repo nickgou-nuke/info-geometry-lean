@@ -15,24 +15,24 @@ existing Sugawara / affine-Virasoro bridge.
 
 noncomputable section
 
-namespace CantorCFTObservables
+namespace InfoGeometry.Canonical.CantorCFTObservables
 
-open AffineVirasoroBridge
+open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-! ### 1. Central charge from the Sugawara bridge -/
 
 /--
 The split D₄ / so(4,4) level-one Sugawara central charge is `4`.
 
-This is proved in `AffineVirasoroBridge.lean:181`:
+This is proved in `InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.lean:181`:
   `sugawaraCentralCharge_so44_levelOne : sugawaraCentralCharge 1 28 6 = 4`
 
 For the Cantor boundary CFT, the chiral current algebra is the split D₄
 current algebra at level 1, giving central charge c = 4.
 -/
 theorem cantor_boundary_central_charge_so44 :
-    AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 = 4 :=
-  AffineVirasoroBridge.sugawaraCentralCharge_so44_levelOne
+    InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 = 4 :=
+  InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge_so44_levelOne
 
 /--
 The left-moving central charge from the chiral anomaly closure.
@@ -44,7 +44,7 @@ D₄ model, each chiral sector contributes half the total: `c_L = 2`.
 This is a structural readout, not an independent derivation.
 -/
 theorem left_moving_central_charge_split :
-    AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 / 2 = 2 := by
+    InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 / 2 = 2 := by
   rw [cantor_boundary_central_charge_so44]
   norm_num
 
@@ -100,10 +100,10 @@ Central charge readout table for the Cantor boundary CFT.
 | E₈(8)          | 1     | 248    | 30   | 8 |
 | so(4,4) / D₄   | 1     | 28     | 6    | 4 |
 -/
-example : AffineVirasoroBridge.sugawaraCentralCharge 1 248 30 = 8 :=
-  AffineVirasoroBridge.sugawaraCentralCharge_E8_levelOne
+example : InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge 1 248 30 = 8 :=
+  InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge_E8_levelOne
 
-example : AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 = 4 :=
+example : InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge 1 28 6 = 4 :=
   cantor_boundary_central_charge_so44
 
 /--
@@ -115,4 +115,4 @@ condition enforced by the Dikin ellipsoid / self-concordant barrier.
 -/
 theorem net_chiral_charge_vanishes (c : ℝ) : c - c = 0 := by ring
 
-end CantorCFTObservables
+end InfoGeometry.Canonical.CantorCFTObservables

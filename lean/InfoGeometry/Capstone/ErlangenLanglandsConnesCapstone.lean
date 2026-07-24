@@ -18,7 +18,7 @@ noncomputable section
 
 universe u
 
-namespace ErlangenLanglandsConnesCapstone
+namespace InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 
 open InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 open InfoGeometry.Canonical.BostConnesSymmetryBreaking
@@ -294,6 +294,6 @@ theorem trinity_capstone_unified
       tomita_j_matrix_readout s t,
       fibonacci_quantum_group_readout⟩
 
-end ErlangenLanglandsConnesCapstone
+end InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 
 end

@@ -14,7 +14,7 @@ Riemann-hypothesis statement is asserted here.
 
 noncomputable section
 
-namespace PrimeMajoranaLocalMode
+namespace InfoGeometry.Arithmetic.PrimeMajoranaLocalMode
 
 /--
 One real local Fock mode.
@@ -333,4 +333,4 @@ theorem parityOp_dMajorana_apply
     simpa [LinearMap.add_apply] using h
   exact (eq_neg_iff_add_eq_zero).2 h0
 
-end PrimeMajoranaLocalMode
+end InfoGeometry.Arithmetic.PrimeMajoranaLocalMode

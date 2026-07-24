@@ -16,7 +16,7 @@ open scoped InnerProductSpace
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 
-namespace TomitaTakesaki
+namespace InfoGeometry.Canonical.TomitaTakesaki
 
 open InfoGeometry.Clifford
 open InfoGeometry.Krein
@@ -809,5 +809,78 @@ noncomputable abbrev tomitaRepresentation :
   simpa [tomitaRepresentation] using modularAtomRepresentation_cptEps (E := E)
 
 end ModularRealization
+
+end InfoGeometry.Canonical.TomitaTakesaki
+
+namespace TomitaTakesaki
+
+open InfoGeometry.Krein
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+noncomputable abbrev modularConjugationJ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E)
+
+noncomputable abbrev modularSignEpsilon (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E)
+
+noncomputable abbrev clockAxis (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E)
+
+noncomputable abbrev phaseAxisK (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  InfoGeometry.Canonical.TomitaTakesaki.phaseAxisK (E := E)
+
+noncomputable abbrev modularComplexI (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)
+
+@[simp] theorem modularConjugationJ_eq_modular_j :
+    modularConjugationJ (E := E) = modular_j (E := E) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j
+
+@[simp] theorem modularSignEpsilon_eq_spectral_epsilon :
+    modularSignEpsilon (E := E) = spectral_epsilon (E := E) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon
+
+@[simp] theorem modularComplexI_eq_complex_i :
+    modularComplexI (E := E) = complex_i (E := E) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i
+
+@[simp] theorem modularComplexI_sq :
+    (modularComplexI (E := E)).comp (modularComplexI (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_sq (E := E)
+
+@[simp] theorem modularConjugationJ_sq :
+    (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_sq (E := E)
+
+@[simp] theorem modularSignEpsilon_sq :
+    (modularSignEpsilon (E := E)).comp (modularSignEpsilon (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_sq (E := E)
+
+theorem modularComplexI_kreinInner_swap
+    (u v : DoubledSpace E) :
+    InfoGeometry.Krein.KreinSpace.kreinInner
+        ((modularComplexI (E := E)) u) v
+      =
+    InfoGeometry.Krein.KreinSpace.kreinInner
+        u ((modularComplexI (E := E)) v) :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_kreinInner_swap (E := E) u v
+
+theorem modularComplexI_kreinInner_comp
+    (u v : DoubledSpace E) :
+    InfoGeometry.Krein.KreinSpace.kreinInner
+        ((modularComplexI (E := E)) u)
+        ((modularComplexI (E := E)) v)
+      =
+    -InfoGeometry.Krein.KreinSpace.kreinInner u v :=
+  InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_kreinInner_comp (E := E) u v
 
 end TomitaTakesaki

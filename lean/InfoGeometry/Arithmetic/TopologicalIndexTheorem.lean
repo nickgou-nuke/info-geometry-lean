@@ -4,7 +4,7 @@ import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import DAG.ChiralDiracAnticommutation
 import DAG.AffineProjectiveClosure
 
-namespace TopologicalIndexTheorem
+namespace InfoGeometry.Arithmetic.TopologicalIndexTheorem
 
 open InfoGeometry.Arithmetic
 open InfoGeometry.Analysis.RotorCocycleBregmanBridge
@@ -58,4 +58,4 @@ theorem finite_index_inputs {n0 n1 n2 n : ℕ}
 def topological_index_theorem_debt : String :=
   "Open: prove any arithmetic topological-index statement only from explicit finite complex, trace, convergence, and cohomology hypotheses."
 
-end TopologicalIndexTheorem
+end InfoGeometry.Arithmetic.TopologicalIndexTheorem

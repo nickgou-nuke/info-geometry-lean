@@ -23,7 +23,7 @@ No C*-algebra/von Neumann standard form is claimed here.  This module provides
 the proof-carrying corridor that such a construction must instantiate.
 -/
 
-namespace CoordinatelessSouriauKMSBridge
+namespace InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge
 
 open InfoGeometry.Volume.ConnesCocycle
 
@@ -1832,4 +1832,4 @@ end CyclicAlgebraicState
 
 end OperatorAlgebra
 
-end CoordinatelessSouriauKMSBridge
+end InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge

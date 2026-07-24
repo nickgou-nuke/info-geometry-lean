@@ -27,7 +27,7 @@ affine representatives below with full quotient orbifold presentations.
 
 noncomputable section
 
-namespace KleinCompatibleWallpaperClassification
+namespace InfoGeometry.Topology.KleinCompatibleWallpaperClassification
 
 open InfoGeometry.Topology.Wallpaper
 
@@ -363,6 +363,6 @@ theorem affine_weyl_d5_coordinate_bridge_readout
           (InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge.sigmaD t) :=
   InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge.wallpaper_to_affine_weyl_d5_packet t
 
-end KleinCompatibleWallpaperClassification
+end InfoGeometry.Topology.KleinCompatibleWallpaperClassification
 
 end noncomputable section

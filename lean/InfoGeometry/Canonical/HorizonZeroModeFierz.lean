@@ -30,7 +30,7 @@ The Fierz residual law remains supplied compatibility data.
 
 noncomputable section
 
-namespace HorizonZeroModeFierz
+namespace InfoGeometry.Canonical.HorizonZeroModeFierz
 
 open InfoGeometry.Canonical.DrazinCentralizerErlangen
 open InfoGeometry.Canonical.DrazinFierzBridge
@@ -172,4 +172,4 @@ theorem coords_are_horizon_expectations_eq
 
 end HorizonZeroModeFierzLaw
 
-end HorizonZeroModeFierz
+end InfoGeometry.Canonical.HorizonZeroModeFierz

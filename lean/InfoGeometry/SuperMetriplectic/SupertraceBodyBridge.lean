@@ -166,13 +166,13 @@ structure SplitParitySupertraceShadow (n : ℕ) where
 @[simp]
 theorem parity_comp_self (n : ℕ) (x : Cl_nn n) :
     (parityOp n) ((parityOp n) x) = x :=
-  SplitSuperGeometry.parityOp_comp_self n x
+  InfoGeometry.Algebraic.SplitSuperGeometry.parityOp_comp_self n x
 
 @[simp]
 theorem supervolumePotential_eq_neg_log_superBerezinian
     (n : ℕ) (x : SplitCliffordEnd n) :
     (superEffectiveAction n) x = - Real.log ((superBerezinian n) x) :=
-  SplitSuperGeometry.superEffectiveAction_eq_neg_log_superBerezinian n x
+  InfoGeometry.Algebraic.SplitSuperGeometry.superEffectiveAction_eq_neg_log_superBerezinian n x
 
 end SplitParitySupertraceTranslation
 

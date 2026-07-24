@@ -16,14 +16,17 @@ namespace InfoGeometry.Canonical
 
 universe u
 
+open InfoGeometry.Quantum.RealMajoranaCategory
+open InfoGeometry.Quantum.SplitCliffordAtom
+
 /-- Canonical owner-level name for the real doubled split `Cl(1,1)` atom. -/
 abbrev KreinDoubledAtom := InfoGeometry.Quantum.AnticommutingInvolutionCore
 
 namespace KreinDoubledAtom
 
 
-abbrev Core := RealMajoranaCategory.RealMajoranaCore
-abbrev Atom := SplitCliffordAtom.Atom
+abbrev Core := InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore
+abbrev Atom := InfoGeometry.Quantum.SplitCliffordAtom.Atom
 
 namespace Core
 
@@ -41,19 +44,19 @@ noncomputable def kOp : X →ₗ[ℝ] X := X.K
 
 @[simp] theorem j_sq :
     (jOp X).comp (jOp X) = oneOp X := by
-  exact RealMajoranaCategory.RealMajoranaCore.J_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_sq X
 
 @[simp] theorem eps_sq :
     (epsOp X).comp (epsOp X) = oneOp X := by
-  exact RealMajoranaCategory.RealMajoranaCore.eps_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.eps_sq X
 
 @[simp] theorem pi_sq :
     (piOp X).comp (piOp X) = oneOp X := by
-  exact RealMajoranaCategory.RealMajoranaCore.Pi_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.Pi_sq X
 
 @[simp] theorem j_eps_anticomm :
     (jOp X).comp (epsOp X) = -((epsOp X).comp (jOp X)) := by
-  exact RealMajoranaCategory.RealMajoranaCore.J_eps_anticomm X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_eps_anticomm X
 
 @[simp] theorem k_eq_j_comp_eps :
     kOp X = (jOp X).comp (epsOp X) := by
@@ -61,7 +64,7 @@ noncomputable def kOp : X →ₗ[ℝ] X := X.K
 
 @[simp] theorem k_sq :
     (kOp X).comp (kOp X) = -(oneOp X) := by
-  exact RealMajoranaCategory.RealMajoranaCore.K_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.K_sq X
 
 /-- Canonical re-export of `K`-commutation for Majorana-core morphisms. -/
 @[simp] theorem Hom.comm_K {Y : Core} (f : X ⟶ Y) :
@@ -74,33 +77,37 @@ namespace Atom
 
 variable (X : Atom)
 
-def oneOp : X →ₗ[ℝ] X := SplitCliffordAtom.Atom.oneOp X
+def oneOp : X →ₗ[ℝ] X :=
+  InfoGeometry.Quantum.SplitCliffordAtom.Atom.oneOp X
 
-def jOp : X →ₗ[ℝ] X := SplitCliffordAtom.Atom.jOp X
+def jOp : X →ₗ[ℝ] X :=
+  InfoGeometry.Quantum.SplitCliffordAtom.Atom.jOp X
 
-def epsOp : X →ₗ[ℝ] X := SplitCliffordAtom.Atom.epsOp X
+def epsOp : X →ₗ[ℝ] X :=
+  InfoGeometry.Quantum.SplitCliffordAtom.Atom.epsOp X
 
-noncomputable def kOp : X →ₗ[ℝ] X := SplitCliffordAtom.Atom.kOp X
+noncomputable def kOp : X →ₗ[ℝ] X :=
+  InfoGeometry.Quantum.SplitCliffordAtom.Atom.kOp X
 
 @[simp] theorem j_sq :
     (jOp X).comp (jOp X) = oneOp X := by
-  exact SplitCliffordAtom.Atom.j_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_sq X
 
 @[simp] theorem eps_sq :
     (epsOp X).comp (epsOp X) = oneOp X := by
-  exact SplitCliffordAtom.Atom.eps_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.eps_sq X
 
 @[simp] theorem j_eps_anticomm :
     (jOp X).comp (epsOp X) = -((epsOp X).comp (jOp X)) := by
-  exact SplitCliffordAtom.Atom.j_eps_anticomm X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_eps_anticomm X
 
 @[simp] theorem k_eq_j_comp_eps :
     kOp X = (jOp X).comp (epsOp X) := by
-  exact SplitCliffordAtom.Atom.k_eq_j_comp_eps X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_eq_j_comp_eps X
 
 @[simp] theorem k_sq :
     (kOp X).comp (kOp X) = -(oneOp X) := by
-  exact SplitCliffordAtom.Atom.k_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_sq X
 
 end Atom
 
@@ -171,6 +178,6 @@ noncomputable def ofAtom
 /-- Concrete doubled-space realization of the canonical split `Cl(1,1)` atom. -/
 noncomputable def cl11DoubledAtom (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] : KreinDoubledAtom :=
-  (RealMajoranaCategory.cl11DoubledCore E).toAnticommutingInvolutionCore
+  (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E).toAnticommutingInvolutionCore
 
 end InfoGeometry.Canonical

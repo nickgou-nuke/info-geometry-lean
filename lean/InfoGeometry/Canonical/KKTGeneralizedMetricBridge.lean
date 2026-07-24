@@ -16,7 +16,7 @@ the canonical KKT projectors coincide with the generalized-metric projectors,
 and the doubled metric operator swaps the KKT `±1` wings.
 -/
 
-namespace KKTGeneralizedMetricBridge
+namespace InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.GeneralizedMetricCore
@@ -160,4 +160,4 @@ local notation "EndH" => H2 →L[ℝ] H2
 
 end Core
 
-end KKTGeneralizedMetricBridge
+end InfoGeometry.Canonical.KKTGeneralizedMetricBridge

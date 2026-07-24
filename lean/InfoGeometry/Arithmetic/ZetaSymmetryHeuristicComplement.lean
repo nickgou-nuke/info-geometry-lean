@@ -20,7 +20,7 @@ the completed zeta zeros satisfy the complement.
 
 noncomputable section
 
-namespace ZetaSymmetryHeuristicComplement
+namespace InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 
 /-- Recovery from centered coordinates: `s = 1/2 + z`. -/
 def criticalCentered (z : ℂ) : ℂ :=
@@ -117,5 +117,5 @@ theorem zero_reflection_and_confinement_of_even_and_complement {F : ℂ → ℂ}
     ZeroAt F (-z) ∧ centeredCriticalLine z := by
   exact ⟨even_zero_reflection hEven hz, centeredCriticalLine_of_noOffAxisZeros hNo hz⟩
 
-end ZetaSymmetryHeuristicComplement
+end InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 

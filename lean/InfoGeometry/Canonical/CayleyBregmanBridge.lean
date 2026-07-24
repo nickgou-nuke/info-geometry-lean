@@ -10,7 +10,7 @@ namespace InfoGeometry.Canonical.Cayley
 
 open scoped Topology
 
-open DualFlat
+open InfoGeometry.Geometry.DualFlat
 
 /-- Structure `Transport`. -/
 @[blueprint "def:cayley-transport"]

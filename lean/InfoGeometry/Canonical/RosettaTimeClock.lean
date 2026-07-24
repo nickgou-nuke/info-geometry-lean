@@ -19,7 +19,7 @@ both:
 
 noncomputable section
 
-namespace RosettaTimeClock
+namespace InfoGeometry.Canonical.RosettaTimeClock
 
 export InfoGeometry.Canonical.HolographicEntanglementSymmetry (
   ForwardTimeHolographicTrialityPacket
@@ -145,4 +145,4 @@ theorem parafermion_massieu_differential_drives_rosetta_time
 
 end PrimeParafermionRosettaBridge
 
-end RosettaTimeClock
+end InfoGeometry.Canonical.RosettaTimeClock

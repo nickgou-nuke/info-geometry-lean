@@ -20,7 +20,7 @@ It does not identify `μ` with a Bogoliubov frame field or a Type III modular
 background. Those require separate operatorial owner bridges.
 -/
 
-namespace GrandCanonicalGaugePotentialBridge
+namespace InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
 
 open InfoGeometry.GrandCanonical
 open InfoGeometry.Canonical
@@ -124,4 +124,4 @@ theorem inverseTemperature_conjugate_shiftedEnergy_readout
   simpa [grandCanonicalMassieuPotential] using
     potentialGC_deriv_beta_eq_neg_meanShift params β μ
 
-end GrandCanonicalGaugePotentialBridge
+end InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge

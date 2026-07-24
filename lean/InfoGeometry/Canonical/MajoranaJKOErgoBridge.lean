@@ -9,7 +9,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace MajoranaJKOErgoBridge
+namespace InfoGeometry.Canonical.MajoranaJKOErgoBridge
 
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 open InfoGeometry.Canonical.OperatorJKOStep
@@ -694,4 +694,4 @@ theorem majoranaJKOErgoBridgeOwnerTarget :
       B.bayesian_projection_identity alt halt,
       B.bayesUpdate_previous_eq_next⟩
 
-end MajoranaJKOErgoBridge
+end InfoGeometry.Canonical.MajoranaJKOErgoBridge

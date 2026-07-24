@@ -2,7 +2,7 @@ import InfoGeometry.ExponentialFamily.Gaussian
 import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
-namespace TwistedGaussian
+namespace InfoGeometry.ExponentialFamily.TwistedGaussian
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.MoorePenrose
@@ -75,4 +75,4 @@ noncomputable def twistedChiralScale (A_D A_MP : E →L[ℝ] E) : ℝ :=
 
 end TwistedGaussianFamily
 
-end TwistedGaussian
+end InfoGeometry.ExponentialFamily.TwistedGaussian

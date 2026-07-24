@@ -11,7 +11,7 @@ inverse candidate is supplied with its algebraic laws, the core/nil projectors
 are constructively obtained.
 -/
 
-namespace OperatorSurgery
+namespace InfoGeometry.Canonical.OperatorSurgery
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -277,4 +277,4 @@ theorem isDrazinSurgery_drazinSurgeryOfDrazinInverse
     IsDrazinSurgery A (drazinSurgeryOfDrazinInverse hD) :=
   DrazinSurgeryData.isDrazinSurgery_ofDrazinInverse hD
 
-end OperatorSurgery
+end InfoGeometry.Canonical.OperatorSurgery

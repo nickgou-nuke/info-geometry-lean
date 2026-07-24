@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 
 noncomputable section
 
-namespace SplitCliffordSourceCurrentTransport
+namespace InfoGeometry.Canonical.SplitCliffordSourceCurrentTransport
 
 open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceCarrier
@@ -67,4 +67,4 @@ theorem toCurrentHeisenbergRep_readout
 
 end SplitCurrentEndTransport
 
-end SplitCliffordSourceCurrentTransport
+end InfoGeometry.Canonical.SplitCliffordSourceCurrentTransport

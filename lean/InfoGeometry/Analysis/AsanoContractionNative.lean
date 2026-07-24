@@ -16,7 +16,7 @@ import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 
 noncomputable section
 
-namespace AsanoContractionNative
+namespace InfoGeometry.Analysis.AsanoContractionNative
 
 /--
 The two-variable affine polynomial used in the Asano contraction lemma.
@@ -1007,4 +1007,4 @@ theorem not_isContractedZero_of_not_mem_signedProduct_of_endpoint_nonDeg
     (contracted_zero_mem_signedProduct_of_endpoint_nonDeg
       h0₁ h0₂ hzf hEndpointNonDeg hzero)
 
-end AsanoContractionNative
+end InfoGeometry.Analysis.AsanoContractionNative

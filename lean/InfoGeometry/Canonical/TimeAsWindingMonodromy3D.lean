@@ -26,7 +26,7 @@ noncomputable section
 open Complex
 open scoped Matrix
 
-namespace TimeAsWindingMonodromy3D
+namespace InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 
 open InfoGeometry.Canonical.ChiralCausalConeFlow
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
@@ -155,4 +155,4 @@ theorem time_tick_is_integer (ClockState : Type*) [TimeIsMonodromy ClockState]
     TimeIsMonodromy.monodromyIndex (ClockState := ClockState) c 1 = 1 := by
   exact TimeIsMonodromy.monodromyIndex_of_unit c
 
-end TimeAsWindingMonodromy3D
+end InfoGeometry.Canonical.TimeAsWindingMonodromy3D

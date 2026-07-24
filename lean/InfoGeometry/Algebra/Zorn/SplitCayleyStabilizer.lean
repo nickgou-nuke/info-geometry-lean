@@ -9,7 +9,7 @@ identified here with a split Chevalley group of type `G₂`; that classification
 is a separate theorem.
 -/
 
-namespace SplitCayleyStabilizer
+namespace InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
 
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 
@@ -94,6 +94,16 @@ def splitCayleyStabilizer : Subgroup (ZornCell R ≃ₗ[R] ZornCell R) where
 /-- The native automorphism group of the concrete split-Cayley model. -/
 abbrev SplitCayleyAut := splitCayleyStabilizer (R := R)
 
+/-- Every split-Cayley automorphism fixes the scalar line pointwise. -/
+theorem map_scalar_zornOne (e : SplitCayleyAut (R := R)) (r : R) :
+    e.1 (r • zornOne (R := R)) = r • zornOne (R := R) := by
+  rw [map_smul, e.property.1]
+
+/-- In particular, every split-Cayley automorphism fixes zero. -/
+@[simp] theorem map_zero_zornCell (e : SplitCayleyAut (R := R)) :
+    e.1 (0 : ZornCell R) = 0 := by
+  exact map_zero e.1
+
 /-- The automorphism and stabilizer surfaces coincide by construction. -/
 def autEquivStabilizer :
     SplitCayleyAut (R := R) ≃* splitCayleyStabilizer (R := R) :=
@@ -102,4 +112,4 @@ def autEquivStabilizer :
 @[simp] theorem autEquivStabilizer_apply
     (e : SplitCayleyAut (R := R)) : autEquivStabilizer e = e := rfl
 
-end SplitCayleyStabilizer
+end InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer

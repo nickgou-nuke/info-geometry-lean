@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
-namespace KreinEuclideanComparison
+namespace InfoGeometry.LLM.KreinEuclideanComparison
 
 open InfoGeometry.LLM.KreinAttentionEnergy
 open InfoGeometry.Canonical.Attention
@@ -56,4 +56,4 @@ theorem context_energy_agreement_of_zero_second_channel
 
 end ContextComparison
 
-end KreinEuclideanComparison
+end InfoGeometry.LLM.KreinEuclideanComparison

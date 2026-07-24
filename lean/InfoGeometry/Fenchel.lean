@@ -220,7 +220,8 @@ lemma fenchel_young_eq_gradient
 This section isolates a purely lattice-level closure package induced by a
 self-adjoint Galois connection.
 
-No convexity, topology, or analytic hypotheses are used.
+No convexity, topology, differentiability, or scalar-complex closure premises
+are used.
 -/
 
 section OrderKernel

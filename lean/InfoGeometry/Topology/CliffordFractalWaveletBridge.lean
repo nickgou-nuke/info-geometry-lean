@@ -23,7 +23,7 @@ The theorem-safe chain is:
 
 noncomputable section
 
-namespace CliffordFractalWaveletBridge
+namespace InfoGeometry.Topology.CliffordFractalWaveletBridge
 
 open InfoGeometry.Topology.FractalCantorFockWitness
 
@@ -267,4 +267,4 @@ theorem constructCliffordFractalWaveletBridgeTarget
     CliffordFractalWaveletBridgeTarget Op := by
   exact ⟨L⟩
 
-end CliffordFractalWaveletBridge
+end InfoGeometry.Topology.CliffordFractalWaveletBridge

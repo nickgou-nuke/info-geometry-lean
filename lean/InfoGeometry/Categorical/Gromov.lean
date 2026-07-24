@@ -9,7 +9,7 @@ This is theorem-safe algebra on `ℝ`; it does not claim a historical thesis.
 
 set_option autoImplicit false
 
-namespace Gromov
+namespace InfoGeometry.Categorical.Gromov
 
 /-- Primary unnormalized weight in the positive cone. -/
 def unnormalized_weight (count : ℝ) (dimension : ℝ) : ℝ :=
@@ -37,4 +37,4 @@ theorem unnormalized_entropy_expansion (x y : ℝ) :
   unfold unnormalized_multiplicity_entropy
   ring
 
-end Gromov
+end InfoGeometry.Categorical.Gromov

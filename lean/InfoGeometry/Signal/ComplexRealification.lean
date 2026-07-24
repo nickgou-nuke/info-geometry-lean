@@ -14,7 +14,7 @@ introducing detector optimality or stochastic assumptions.
 
 noncomputable section
 
-namespace ComplexRealification
+namespace InfoGeometry.Signal.ComplexRealification
 
 open scoped BigOperators
 
@@ -90,4 +90,4 @@ theorem hermitian_normSq_eq_realDot_sq_add_quadratureDot_sq (s z : ComplexData Œ
   rw [‚Üê hermitian_im_eq_quadratureDot (s := s) (z := z)]
   ring
 
-end ComplexRealification
+end InfoGeometry.Signal.ComplexRealification

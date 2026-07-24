@@ -20,7 +20,7 @@ from the supplied equation.
   None in this finite algebraic owner.
 -/
 
-namespace ExplicitHalfTriFacetAlgebra
+namespace InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
 
 variable {R : Type*} [CommRing R]
 
@@ -106,4 +106,4 @@ theorem P_ortho_ext_coext (half P : R) (hP : P ^ 3 = P) :
     _ = half ^ 2 * (P ^ 2 - P ^ 2) := by rw [hP4]
     _ = 0 := by ring
 
-end ExplicitHalfTriFacetAlgebra
+end InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra

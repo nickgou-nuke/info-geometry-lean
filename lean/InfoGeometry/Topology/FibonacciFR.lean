@@ -3,7 +3,7 @@ import Mathlib.Data.Matrix.Basic
 
 open Matrix
 
-namespace FibonacciFR
+namespace InfoGeometry.Topology.FibonacciFR
 
 /-- The exact root of unity limits and constants for the Fibonacci anyon field -/
 structure FibonacciData where
@@ -29,4 +29,4 @@ noncomputable def R_matrix (D : FibonacciData) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![D.R_phase_1, 0],
     ![0, D.R_phase_2]]
 
-end FibonacciFR
+end InfoGeometry.Topology.FibonacciFR

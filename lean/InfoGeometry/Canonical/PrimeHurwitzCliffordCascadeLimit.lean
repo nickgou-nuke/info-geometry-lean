@@ -21,7 +21,7 @@ locally uniformly to the Cayley pullback of the completed `xi` function.
 
 noncomputable section
 
-namespace PrimeHurwitzCliffordCascadeLimit
+namespace InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit
 
 open InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 open InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
@@ -57,4 +57,4 @@ structure PrimeHurwitzCliffordCascadeRealization
   /-- Final Hurwitz-ready convergence statement to be proved by a concrete model. -/
   locallyUniformRenormalizedLimit : Prop
 
-end PrimeHurwitzCliffordCascadeLimit
+end InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit

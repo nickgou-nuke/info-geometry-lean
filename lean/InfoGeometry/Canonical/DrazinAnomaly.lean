@@ -10,7 +10,7 @@ laws are carried by `InfoGeometry.Singular.Drazin.IsDrazinInverse`; the chiral
 anomaly index is an explicit readout attached to such a witness.
 -/
 
-namespace DrazinAnomaly
+namespace InfoGeometry.Canonical.DrazinAnomaly
 
 open InfoGeometry.Singular.Drazin
 
@@ -64,4 +64,4 @@ def drazin_anomaly_index {Γ Op : SpinorOp} {k : ℕ}
     (R : DrazinAnomalyReadout Γ Op k) : ℤ :=
   R.anomalyIndex
 
-end DrazinAnomaly
+end InfoGeometry.Canonical.DrazinAnomaly

@@ -15,7 +15,7 @@ noncomputable section
 
 open scoped MatrixGroups
 open InfoGeometry.Geometry
-open PSLDescent
+open InfoGeometry.Canonical.PSLDescent
 
 namespace InfoGeometry.ProjectiveFoundation
 
@@ -68,7 +68,7 @@ its center-triviality has been proved in the real coordinate model.
 instance instPSL2RRealAction
     [MulAction InfoGeometry.Geometry.SL2R RealUpperHalfPlane]
     [CenterActsTrivially InfoGeometry.Geometry.SL2R RealUpperHalfPlane] :
-    MulAction PSLDescent.PSL2R RealUpperHalfPlane :=
+    MulAction InfoGeometry.Canonical.PSLDescent.PSL2R RealUpperHalfPlane :=
   CenterActsTrivially.centerQuotientMulAction
     (G := InfoGeometry.Geometry.SL2R) (X := RealUpperHalfPlane)
 
@@ -79,7 +79,7 @@ The arithmetic real projective action is the corresponding descent for
 instance instPSL2ZRealAction
     [MulAction InfoGeometry.Geometry.SL2Z RealUpperHalfPlane]
     [CenterActsTrivially InfoGeometry.Geometry.SL2Z RealUpperHalfPlane] :
-    MulAction PSLDescent.PSL2Z RealUpperHalfPlane :=
+    MulAction InfoGeometry.Canonical.PSLDescent.PSL2Z RealUpperHalfPlane :=
   CenterActsTrivially.centerQuotientMulAction
     (G := InfoGeometry.Geometry.SL2Z) (X := RealUpperHalfPlane)
 

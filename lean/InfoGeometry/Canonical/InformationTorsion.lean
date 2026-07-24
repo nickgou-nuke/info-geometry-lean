@@ -1,7 +1,7 @@
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.SpectralInference
 
-namespace InformationTorsion
+namespace InfoGeometry.Canonical.InformationTorsion
 
 open InfoGeometry.Convex
 open SpectralInference
@@ -53,4 +53,4 @@ structure TwistedInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace
   dual : DualConnections E
   has_torsion : informationTorsion dual.nabla ≠ 0
 
-end InformationTorsion
+end InfoGeometry.Canonical.InformationTorsion

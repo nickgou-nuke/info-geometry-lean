@@ -18,7 +18,7 @@ It deliberately keeps three surfaces separate:
 No current-algebra or Virasoro anomaly is asserted here.
 -/
 
-namespace FiveGradedIncidence
+namespace InfoGeometry.Twistor.FiveGradedIncidence
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -222,4 +222,4 @@ theorem tomita_mirror_swaps_concrete_lightcone :
 
 end ConcreteAtom
 
-end FiveGradedIncidence
+end InfoGeometry.Twistor.FiveGradedIncidence

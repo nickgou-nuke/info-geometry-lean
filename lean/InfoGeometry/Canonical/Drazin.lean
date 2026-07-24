@@ -63,13 +63,13 @@ theorem map_ringEquiv {S : Type*} [Ring S]
 
 /-- Transport a canonical Drazin inverse proof to the singular Drazin API. -/
 private theorem toSingular (h : IsDrazinInverse a b k) :
-    _root_.Drazin.IsDrazinInverse a b k := by
-  exact _root_.Drazin.IsDrazinInverse.mk
+    InfoGeometry.Singular.Drazin.IsDrazinInverse a b k := by
+  exact InfoGeometry.Singular.Drazin.IsDrazinInverse.mk
     h.idempotent h.comm h.power.symm
 
 /-- Transport a singular Drazin inverse proof back to the canonical Drazin API. -/
 private theorem fromSingular
-    (h : _root_.Drazin.IsDrazinInverse a b k) :
+    (h : InfoGeometry.Singular.Drazin.IsDrazinInverse a b k) :
     IsDrazinInverse a b k := by
   exact mk h.comm h.dad_eq_d h.pow_eq_pow_succ_mul.symm
 
@@ -229,7 +229,7 @@ theorem fittingNilpotentPart_pow_succ_eq_zero (h : IsDrazinInverse a b k) :
       a^(k + 1) * (complementaryProjection a b)^(k + 1) := by
     exact hcomm.mul_pow (k + 1)
   have hQpow : (complementaryProjection a b)^(k + 1) = complementaryProjection a b := by
-    exact _root_.Drazin.pow_succ_eq_of_idempotent
+    exact InfoGeometry.Singular.Drazin.pow_succ_eq_of_idempotent
       (complementaryProjection_is_idempotent h) k
   unfold fittingNilpotentPart
   calc
@@ -242,7 +242,7 @@ theorem fittingNilpotentPart_pow_succ_eq_zero (h : IsDrazinInverse a b k) :
 @[rep_depth krein]
 theorem unique (hB : IsDrazinInverse a b k) (hC : IsDrazinInverse a c k) :
     b = c := by
-  exact _root_.Drazin.Drazin_unique (toSingular hB) (toSingular hC)
+  exact InfoGeometry.Singular.Drazin.Drazin_unique (toSingular hB) (toSingular hC)
 
 /--
 Index-independent uniqueness of the canonical Drazin inverse witness.
@@ -251,7 +251,7 @@ Index-independent uniqueness of the canonical Drazin inverse witness.
 theorem unique_of_indices {ℓ : ℕ}
     (hB : IsDrazinInverse a b k) (hC : IsDrazinInverse a c ℓ) :
     b = c := by
-  exact _root_.Drazin.Drazin_unique_of_indices
+  exact InfoGeometry.Singular.Drazin.Drazin_unique_of_indices
     (toSingular hB) (toSingular hC)
 
 /-! ### Star transport of Drazin inverses -/
@@ -293,11 +293,11 @@ This canonical adapter routes through the compiled singular owner root
 `Singular.Drazin.IsDrazinInverse.star_isDrazinInverse`.
 -/
 @[rep_depth krein]
-theorem star_isDrazinInverse
+  theorem star_isDrazinInverse
     (h : IsDrazinInverse a b k) :
     IsDrazinInverse (star a) (star b) k := by
   exact fromSingular
-    (_root_.Drazin.IsDrazinInverse.star_isDrazinInverse (toSingular h))
+    (InfoGeometry.Singular.Drazin.IsDrazinInverse.star_isDrazinInverse (toSingular h))
 
 /--
 A Drazin inverse of a self-adjoint element is self-adjoint.
@@ -306,11 +306,11 @@ This canonical adapter routes through the compiled singular owner root
 `Singular.Drazin.Drazin_star_eq_self_of_selfAdjoint`.
 -/
 @[rep_depth krein]
-theorem star_eq_self_of_selfAdjoint
+  theorem star_eq_self_of_selfAdjoint
     (h : IsDrazinInverse a b k)
     (ha : star a = a) :
     star b = b :=
-  _root_.Drazin.Drazin_star_eq_self_of_selfAdjoint (toSingular h) ha
+  InfoGeometry.Singular.Drazin.Drazin_star_eq_self_of_selfAdjoint (toSingular h) ha
 
 /--
 If the base element is self-adjoint, the Drazin spectral projector `a*b` is a

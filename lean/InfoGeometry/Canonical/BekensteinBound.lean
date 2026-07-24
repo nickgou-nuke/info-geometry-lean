@@ -12,7 +12,7 @@ the pre-step RN barrier is always nonnegative, obtained from
 the monotone step inequality plus the exact post-step zero identity.
 -/
 
-namespace BekensteinBound
+namespace InfoGeometry.Canonical.BekensteinBound
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Volume.ConnesCocycle
@@ -2379,4 +2379,4 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_tomitaFlowUnitConnesCocyc
 
 end TomitaSpecialization
 
-end BekensteinBound
+end InfoGeometry.Canonical.BekensteinBound

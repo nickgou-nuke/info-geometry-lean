@@ -19,7 +19,7 @@ noncommutative KMS/modular completion theorem.
 
 noncomputable section
 
-namespace FiniteJkoJaynesContinuumBridge
+namespace InfoGeometry.OperatorAlgebra.FiniteJkoJaynesContinuumBridge
 
 open InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
 open InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov.OperatorErlangenSystem
@@ -160,4 +160,4 @@ theorem finiteEmpiricalState_componentN_rescaled_parabolic_pow_eq
 
 end LogExchange
 
-end FiniteJkoJaynesContinuumBridge
+end InfoGeometry.OperatorAlgebra.FiniteJkoJaynesContinuumBridge

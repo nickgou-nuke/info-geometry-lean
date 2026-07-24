@@ -9,7 +9,7 @@ if `Ω² = 0`, the two chiral transmission lanes (`S₊`, `S₋`) collapse to on
 parabolic transport class.
 -/
 
-namespace PhotonicScatteringParabolicBridge
+namespace InfoGeometry.Canonical.PhotonicScatteringParabolicBridge
 
 open GeneralizedOperatorChiral
 open GeneralizedOperator
@@ -223,4 +223,4 @@ theorem slab_entry_parabolic_implies_full_collapse
         PhotonicParabolicChannel.chiral_collapse_to_parabolic Ω hNil
     exact hMinus
 
-end PhotonicScatteringParabolicBridge
+end InfoGeometry.Canonical.PhotonicScatteringParabolicBridge

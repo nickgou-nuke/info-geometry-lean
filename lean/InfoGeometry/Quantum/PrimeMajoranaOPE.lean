@@ -14,7 +14,7 @@ that correspond to the algebraic CAR layer without enforcing analytic limits her
 
 noncomputable section
 
-namespace PrimeMajoranaOPE
+namespace InfoGeometry.Quantum.PrimeMajoranaOPE
 
 /-- 
 Carrier for the Operator Product Expansion. 
@@ -74,4 +74,4 @@ def toArithmeticSplitMajoranaOPE
   dd_proof := hdd
   cd_proof := hcd
 
-end PrimeMajoranaOPE
+end InfoGeometry.Quantum.PrimeMajoranaOPE

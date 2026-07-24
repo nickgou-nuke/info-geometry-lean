@@ -20,7 +20,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace DIIISuperfluid
+namespace InfoGeometry.OperatorAlgebra.DIIISuperfluid
 
 universe uH uInv
 
@@ -437,4 +437,4 @@ theorem dIIISuperfluidDatum_packet
       D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by
   exact ⟨D.chi_sq, D.chi_phase_linear, D.chi_BdG⟩
 
-end DIIISuperfluid
+end InfoGeometry.OperatorAlgebra.DIIISuperfluid

@@ -29,7 +29,7 @@ open scoped MatrixGroups Topology
 open Filter
 open InfoGeometry.Geometry
 
-namespace ProjectiveFoundation
+namespace InfoGeometry.ProjectiveFoundation
 
 abbrev SL2R := Matrix.SpecialLinearGroup (Fin 2) ℝ
 abbrev SL2Z := Matrix.SpecialLinearGroup (Fin 2) ℤ
@@ -168,4 +168,4 @@ def cuspLimit_tendsto
     atTop
     (𝓝 anomalyRotor)
 
-end ProjectiveFoundation
+end InfoGeometry.ProjectiveFoundation

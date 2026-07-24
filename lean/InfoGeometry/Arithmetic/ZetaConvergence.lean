@@ -37,7 +37,7 @@ Uses Euler's formula |e^{ix}| = 1 and the positivity of n^{-σ}.
 open Complex
 open Real
 
-namespace ZetaConvergence
+namespace InfoGeometry.Arithmetic.ZetaConvergence
 
 /--
 **Target: The Norm Identity.** For real n > 0: ‖n^{-β}‖ = n^{-Re(β)}.
@@ -76,4 +76,4 @@ This is intended to instantiate the `FredholmClosureCertificate`:
 def zeta_colimit_exists_debt (β : ℂ) (_h : 1 < β.re) : String :=
   "Open: prove convergence/colimit of the zeta partial sums and connect it to the Fredholm certificate."
 
-end ZetaConvergence
+end InfoGeometry.Arithmetic.ZetaConvergence

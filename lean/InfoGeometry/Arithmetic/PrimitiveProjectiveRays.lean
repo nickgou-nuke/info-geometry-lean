@@ -18,7 +18,7 @@ open scoped BigOperators
 
 open InfoGeometry.Arithmetic
 
-namespace PrimitiveProjectiveRays
+namespace InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 
 /-- Arithmetic count profiles indexed by `ℕ`. -/
 abbrev CountProfile := ℕ → ℝ
@@ -251,6 +251,12 @@ def scalarWeylKLDivergence (z₁ z₂ : ℝ) : ℝ :=
 def scalarItakuraSaitoDivergence (z₁ z₂ : ℝ) : ℝ :=
   z₁ / z₂ - Real.log (z₁ / z₂) - 1
 
+/-- Simultaneous scale invariance of the scalar Itakura-Saito divergence -/
+theorem scalarItakuraSaitoDivergence_scale_invariance (z₁ z₂ c : ℝ) (hc : c ≠ 0) :
+    scalarItakuraSaitoDivergence (c * z₁) (c * z₂) = scalarItakuraSaitoDivergence z₁ z₂ := by
+  unfold scalarItakuraSaitoDivergence
+  rw [mul_div_mul_left z₁ z₂ hc]
+
 /--
 Proof-carrying finite shape/scale KL packaging.
 
@@ -270,4 +276,4 @@ theorem FiniteShapeScaleKLDecomposition.finiteUnnormalizedKL_eq_shape_plus_scala
     finiteUnnormalizedKLDivergence counts₁ counts₂ support s = D.shapeKL + D.scalarKL :=
   D.unnormalizedKL_eq_shape_plus_scalar
 
-end PrimitiveProjectiveRays
+end InfoGeometry.Arithmetic.PrimitiveProjectiveRays

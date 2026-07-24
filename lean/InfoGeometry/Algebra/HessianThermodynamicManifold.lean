@@ -4,7 +4,7 @@ import Mathlib.Algebra.Lie.Basic
 set_option autoImplicit false
 universe u
 
-namespace HessianThermodynamicManifold
+namespace InfoGeometry.Algebra.HessianThermodynamicManifold
 
 /-!
 # InfoGeometry.Algebra.HessianThermodynamicManifold
@@ -114,19 +114,6 @@ def TKK_Lift_Existence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
 def is_square {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [JordanAlgebra V R] (x : V) : Prop :=
   ∃ y : V, x = JordanAlgebra.mul (R := R) y y
 
-/-- DEBT 3: Koecher-Vinberg Theorem equivalence.
-    The interior of squares forms a homogeneous self-dual cone.
-    This replaces the vacuous `∃ S, True` with a mathematically meaningful (but unproven) self-duality statement. -/
-theorem Koecher_Vinberg_SelfDual {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
-  [JordanAlgebra V R] (_y : V) :
-  (∀ x : V, is_square (R := R) x → True) ↔ True := by
-  constructor
-  · intro _
-    trivial
-  · intro _ x _
-    trivial
-
-
 /-- A Fenchel-Legendre dual pair, expressing Fenchel-Young inequality and Legendre identity. -/
 structure FenchelDualPair {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
   [InnerSpace V R] (ψ : V → R) (ψ_star : V → R) (grad_ψ : V → V) where
@@ -150,4 +137,4 @@ theorem bregman_eq_fenchel_young_loss {V : Type u} [AddCommGroup V] {R : Type u}
   rw [← h_legendre]
   ring
 
-end HessianThermodynamicManifold
+end InfoGeometry.Algebra.HessianThermodynamicManifold

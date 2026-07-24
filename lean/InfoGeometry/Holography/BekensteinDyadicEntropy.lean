@@ -3,7 +3,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 
 open Real
 
-namespace BekensteinDyadicEntropy
+namespace InfoGeometry.Holography.BekensteinDyadicEntropy
 
 /-- The structural components of the Abelian KAN factor scaling the horizon. -/
 structure AbelianHorizonFactor where
@@ -42,4 +42,4 @@ theorem bekenstein_shannon_dyadic_equivalence
   dsimp [bekenstein_hawking_entropy, von_neumann_entropy]
   exact h_match
 
-end BekensteinDyadicEntropy
+end InfoGeometry.Holography.BekensteinDyadicEntropy

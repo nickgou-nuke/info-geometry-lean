@@ -26,7 +26,7 @@ and no automatic construction of a loop-group boundary action is claimed here.
 
 noncomputable section
 
-namespace FractalInvariantOperatorLimit
+namespace InfoGeometry.Canonical.FractalInvariantOperatorLimit
 
 universe u v w z
 
@@ -320,4 +320,4 @@ theorem limitInvariant_data_constant
 
 end LimitPassage
 
-end FractalInvariantOperatorLimit
+end InfoGeometry.Canonical.FractalInvariantOperatorLimit

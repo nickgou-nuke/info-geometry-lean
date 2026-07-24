@@ -3,7 +3,7 @@ import Mathlib
 
 noncomputable section
 
-namespace QCCRCarBridge
+namespace InfoGeometry.OperatorAlgebra.QCCRCarBridge
 
 open InfoGeometry.OperatorAlgebra.QCCRCore
 open InfoGeometry.OperatorAlgebra.QCCRSupergrading
@@ -24,4 +24,4 @@ theorem q_neg_one_is_clifford_car {N : ℕ} {Op : Type*} [Ring Op] [StarRing Op]
     star (A.a i) * (A.a j) + (A.a j) * star (A.a i) = if i = j then (1 : Op) else 0 :=
   QCCRAlgebra.q_neg_one_is_car N Op A hq_neg1 i j
 
-end QCCRCarBridge
+end InfoGeometry.OperatorAlgebra.QCCRCarBridge

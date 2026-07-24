@@ -54,7 +54,7 @@ noncomputable def canonical : Cl11Dictionary E where
   K := modularComplexI (E := E)
   ε_inv := modularSignEpsilon_sq (E := E)
   J_inv := modularConjugationJ_sq (E := E)
-  anticomm := modularConjugationJ_anticommutes_modularSign (E := E)
+  anticomm := InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutes_modularSign (E := E)
   K_def := by
     rfl
   K_sq := modularComplexI_sq (E := E)
@@ -161,17 +161,17 @@ noncomputable def canonical : Cl11Dictionary E where
 /-- The canonical conjugation atom is even for the modular block grading. -/
 theorem canonical_J_isEven :
     isEven (E := E) (canonical (E := E)).J := by
-  simpa [canonical] using modularConjugationJ_isEven (E := E)
+  simpa [canonical] using InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_isEven (E := E)
 
 /-- The canonical sign atom is odd for the modular block grading. -/
 theorem canonical_eps_isOdd :
     isOdd (E := E) (canonical (E := E)).ε := by
-  simpa [canonical] using modularSignEpsilon_isOdd (E := E)
+  simpa [canonical] using InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_isOdd (E := E)
 
 /-- The canonical phase atom `Jε` is odd for the modular block grading. -/
 theorem canonical_K_isOdd :
     isOdd (E := E) (canonical (E := E)).K := by
-  simpa [canonical] using modularComplexI_isOdd (E := E)
+  simpa [canonical] using InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_isOdd (E := E)
 
 /--
 Compact readback of the modular real atom:
@@ -186,7 +186,7 @@ theorem canonical_block_grading_packet :
   exact ⟨canonical_J_isEven (E := E), canonical_eps_isOdd (E := E),
     canonical_K_isOdd (E := E), by
       simpa [canonical] using
-        modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
+        InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
 
 section SpinorObservables
 

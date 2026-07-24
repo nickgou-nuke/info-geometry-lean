@@ -17,7 +17,7 @@ construction is asserted.
 
 set_option autoImplicit false
 
-namespace GromovPermutationNormalization
+namespace InfoGeometry.Probability.GromovPermutationNormalization
 
 /-- The identity permutation acts trivially on subsets of the finite state space. -/
 theorem permute_set_identity {n : ℕ} {V : Type*} (U : Set (Fin n → V)) :
@@ -41,4 +41,4 @@ theorem normalization_non_additive_counterexample :
     (1 + 1 : ℝ) / (2 + 3) ≠ (1 : ℝ) / 2 + (1 : ℝ) / 3 := by
   norm_num
 
-end GromovPermutationNormalization
+end InfoGeometry.Probability.GromovPermutationNormalization

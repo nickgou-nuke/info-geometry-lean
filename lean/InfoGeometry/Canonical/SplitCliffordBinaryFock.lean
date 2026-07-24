@@ -8,7 +8,7 @@ import Mathlib.Data.Bool.Basic
 Infinite binary-word model of the finite-excitation Fock sector.
 -/
 
-namespace SplitCliffordBinaryFock
+namespace InfoGeometry.Canonical.SplitCliffordBinaryFock
 
 /-- Dirac vacuum word: negative/zero indices filled, positive empty. -/
 def diracVacuum (n : ℤ) : Bool :=
@@ -49,5 +49,5 @@ theorem bitFlip_preserves_fock (w : FockWord) (k : ℤ) :
 def applyOperator (k : ℤ) (w : FockWord) : FockWord :=
   ⟨bitFlip k w.word, bitFlip_preserves_fock w k⟩
 
-end SplitCliffordBinaryFock
+end InfoGeometry.Canonical.SplitCliffordBinaryFock
 

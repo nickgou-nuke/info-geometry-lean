@@ -18,7 +18,7 @@ No Araki relative entropy theorem.
 No functional calculus or operator logarithm.
 -/
 
-namespace ModularCompactOperatorCore
+namespace InfoGeometry.Canonical.ModularCompactOperatorCore
 
 /--
 Equilibrium core for the bounded modular compact coordinate.
@@ -71,4 +71,4 @@ theorem adjoint_comp_quadratic_re_nonneg
   rw [← h]
   positivity
 
-end ModularCompactOperatorCore
+end InfoGeometry.Canonical.ModularCompactOperatorCore

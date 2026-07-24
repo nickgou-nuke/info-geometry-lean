@@ -24,7 +24,7 @@ No CFT claim.
 
 noncomputable section
 
-namespace SplitChiralCantorDirac
+namespace InfoGeometry.Arithmetic.SplitChiralCantorDirac
 
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
@@ -71,4 +71,4 @@ def chiralField {P : PrimeCutoff}
     (φL φR : Vertex P → ℝ) : SplitCantorField P :=
   fun x => reconstruct (φL x) (φR x)
 
-end SplitChiralCantorDirac
+end InfoGeometry.Arithmetic.SplitChiralCantorDirac

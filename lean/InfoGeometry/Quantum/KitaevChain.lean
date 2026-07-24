@@ -11,12 +11,12 @@ set_option linter.unnecessarySimpa false
 Finite chain layer where macroscopic volume is the product of local Pfaffians.
 -/
 
-namespace KitaevChain
+namespace InfoGeometry.Quantum.KitaevChain
 
 open InfoGeometry.Krein
 
 open RealMajoranaCategory
-open Pfaffian
+open InfoGeometry.Volume.Pfaffian
 
 /-- A Kitaev cell: a real Majorana core with a skew channel operator. -/
 structure KitaevCell where
@@ -27,7 +27,7 @@ structure KitaevCell where
   [instKrein : KreinSpace core.V]
   [instFinite : FiniteDimensional ℝ core.V]
   pairing : core.V →ₗ[ℝ] core.V
-  is_skew : IsSkewSymmetric pairing
+  is_skew : InfoGeometry.Volume.Pfaffian.IsSkewSymmetric pairing
 
 /--
 One-parameter cocycle on a single Kitaev cell.
@@ -51,7 +51,7 @@ noncomputable def KitaevCell.pfaffian (c : KitaevCell) : ℝ := by
   let _ : CompleteSpace c.core.V := c.instComp
   let _ : KreinSpace c.core.V := c.instKrein
   let _ : FiniteDimensional ℝ c.core.V := c.instFinite
-  exact Pfaffian.pfaffian (H := c.core.V) c.pairing
+  exact InfoGeometry.Volume.Pfaffian.pfaffian (H := c.core.V) c.pairing
 
 /-- Macroscopic volume proxy: product of microscopic cell Pfaffians. -/
 noncomputable def macroscopicVolume (chain : List KitaevCell) : ℝ :=
@@ -313,4 +313,4 @@ theorem macroscopicVolume_eq_one_of_pfaffian_one
         simpa [macroscopicVolume] using hcs
       simp [macroscopicVolume, hc, hcs']
 
-end KitaevChain
+end InfoGeometry.Quantum.KitaevChain

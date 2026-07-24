@@ -23,7 +23,7 @@ foundational category/poset/incidence surfaces already proved elsewhere in the
 repo and in mathlib.
 -/
 
-namespace PenrosePosetCategoryFoundation
+namespace InfoGeometry.Canonical.PenrosePosetCategoryFoundation
 
 open CategoryTheory
 open CategoryTheory.Limits
@@ -167,4 +167,4 @@ variable {α : Type u} [PartialOrder α]
 
 end CausalFunctorReadout
 
-end PenrosePosetCategoryFoundation
+end InfoGeometry.Canonical.PenrosePosetCategoryFoundation

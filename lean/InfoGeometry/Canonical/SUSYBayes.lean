@@ -9,7 +9,7 @@ Canonical bridge lemmas for the SUSY/Bayesian synthesis on doubled Krein state
 spaces.
 -/
 
-namespace SUSYBayes
+namespace InfoGeometry.Canonical.SUSYBayes
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RicciMongeAmpere
@@ -107,4 +107,4 @@ theorem grandCanonical_eq_hamiltonian_of_vacuumTransported
 
 end EinsteinChemicalPotential
 
-end SUSYBayes
+end InfoGeometry.Canonical.SUSYBayes

@@ -21,7 +21,7 @@ recomposition bridges, then records the paired downstream outputs as a single
 causal trunk with two terminal leaves.
 -/
 
-namespace PhaseSpaceCausalFlowBridge
+namespace InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
 
 open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
 open InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
@@ -269,4 +269,4 @@ variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
 
 end CausalUnification
 
-end PhaseSpaceCausalFlowBridge
+end InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge

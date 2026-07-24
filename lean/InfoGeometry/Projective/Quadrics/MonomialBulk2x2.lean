@@ -21,7 +21,7 @@ No proof-carrying witness class.
 No axiom.
 -/
 
-namespace MonomialBulk2x2
+namespace InfoGeometry.Projective.Quadrics.MonomialBulk2x2
 
 /-- A two-coordinate monomial-style label. -/
 structure MonomialLabel where
@@ -145,4 +145,4 @@ Open closure debt, deliberately not encoded as declarations:
 * any black-hole horizon or nilpotent-orbit interpretation.
 -/
 
-end MonomialBulk2x2
+end InfoGeometry.Projective.Quadrics.MonomialBulk2x2

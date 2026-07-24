@@ -6,7 +6,7 @@ import InfoGeometry.MaxEnt.IProjection
 open MeasureTheory
 open scoped BigOperators ENNReal
 
-namespace IBFiniteMonotonicity
+namespace InfoGeometry.Canonical.IBFiniteMonotonicity
 
 open InfoGeometry.Canonical.IBFunctional
 open InfoGeometry.Canonical.IBPythagorean
@@ -788,4 +788,4 @@ theorem IB_monotone_descent_finite_fullSupport
       (hInt := hInt) (h_meas := h_meas) (p_old := p_old)
       (hp_old := fun x t hpos => hq t))
 
-end IBFiniteMonotonicity
+end InfoGeometry.Canonical.IBFiniteMonotonicity

@@ -21,7 +21,7 @@ data and is not an automatic consequence of `[PD, PMP] ≠ 0`.
 This follows Phase A of ProjectorAnomalyTransportSync_v2.
 -/
 
-namespace ProjectorNoncommutativityDilationClosure
+namespace InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinInfiniteCore
@@ -190,4 +190,4 @@ theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
   exact Canonical.ConformalUnification.canopy_operator_and_scalar
     (E := H) (CI := CI) (X := X) CW
 
-end ProjectorNoncommutativityDilationClosure
+end InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure

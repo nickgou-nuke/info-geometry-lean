@@ -24,7 +24,7 @@ lattice with:
 Every finite Boolean lattice is automatically a `CompleteLattice`.
 -/
 
-namespace CantorCylinderLattice
+namespace InfoGeometry.Canonical.CantorCylinderLattice
 
 /-! ## 1. Cantor cylinder type -/
 
@@ -274,4 +274,4 @@ theorem cylinderIndicator_refinement {R : Type*} [Ring R]
 instance completeBoolAlgebra (n : ℕ) : CompleteBooleanAlgebra (Set (BinaryWord n)) :=
   inferInstance
 
-end CantorCylinderLattice
+end InfoGeometry.Canonical.CantorCylinderLattice

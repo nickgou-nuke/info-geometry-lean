@@ -19,7 +19,7 @@ comparison theorem from it.
 
 noncomputable section
 
-namespace KillingFisher
+namespace InfoGeometry.Erlangen.KillingFisher
 
 open scoped BigOperators
 open InfoGeometry.Algebraic.CartanExponentialFamily
@@ -74,4 +74,4 @@ theorem centeredTraceCompatible_apply
     killingLike X Y = centeredTraceForm X Y :=
   hcompat X Y hX hY
 
-end KillingFisher
+end InfoGeometry.Erlangen.KillingFisher

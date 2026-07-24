@@ -14,7 +14,7 @@ The point is not a second algebra structure.  It is a readable basis packet:
 * `li, lj, lk` are the `l`-twisted off-diagonal companions.
 -/
 
-namespace InfoGeometry.Algebra.KingdonSplitOctonion
+namespace InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 
 open InfoGeometry.Algebra.Kingdon
 open InfoGeometry.Physics.ZornMatrixSU3
@@ -65,32 +65,10 @@ theorem projector2_mul_hypeL : projector2 * hypeL = -projector2 := by
     realization (basisGenerator 2) = hypeK := by
   simp [hypeK, basisGenerator, realization_ι]
 
-@[simp] theorem realization_diagonalUpper :
-    realization diagonalUpper = projector1 := by
-  rw [diagonalUpper, map_mul, realization_upper, realization_lower]
-  simp [InfoGeometry.Physics.ZornMatrixSU3.mul,
-    InfoGeometry.Physics.ZornMatrixSU3.projector1,
-    basisVec, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    ZornVectorMatrixExplicit.dot3,
-    ZornVectorMatrixExplicit.cross3]
-  ext i <;> fin_cases i <;> simp
-
-@[simp] theorem realization_diagonalLower :
-    realization diagonalLower = projector2 := by
-  rw [diagonalLower, map_mul, realization_lower, realization_upper]
-  simp [InfoGeometry.Physics.ZornMatrixSU3.mul,
-    InfoGeometry.Physics.ZornMatrixSU3.projector2,
-    basisVec, InfoGeometry.Physics.ZornMatrixSU3.dotProduct,
-    InfoGeometry.Physics.ZornMatrixSU3.crossProduct,
-    ZornVectorMatrixExplicit.dot3,
-    ZornVectorMatrixExplicit.cross3]
-  ext i <;> fin_cases i <;> simp
-
 @[simp] theorem realization_hypeL :
     realization (diagonalUpper - diagonalLower) = hypeL := by
-  simp [hypeL, sub_eq_add_neg, realization_diagonalUpper,
-    realization_diagonalLower]
+  rw [hypeL, map_sub, realization_diagonalUpper, realization_diagonalLower]
+  rfl
 
 @[simp] theorem hypeI_sq : hypeI * hypeI = (1 : ZornMatrix) := by
   simpa [hypeI, basisGenerator, realization_ι] using
@@ -174,4 +152,4 @@ theorem projector2_mul_hypeL : projector2 * hypeL = -projector2 := by
     hypeLk = ⟨0, 0, basisVec 2, fun j => - basisVec 2 j⟩ := by
   simpa [hypeLk] using hypeL_mul_hypeK
 
-end InfoGeometry.Algebra.KingdonSplitOctonion
+end InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion

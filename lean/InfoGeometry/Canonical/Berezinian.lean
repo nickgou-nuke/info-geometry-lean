@@ -7,7 +7,7 @@ import Mathlib
 #### BUCKET 3: Full supermatrix — open
 -/
 
-namespace Berezinian
+namespace InfoGeometry.Canonical.Berezinian
 
 /-- Berezinian of a diagonal supermatrix: Ber = det(A)/det(D). -/
 noncomputable def ber (detA detD : ℝ) (_hD : detD ≠ 0) : ℝ := detA / detD
@@ -31,4 +31,4 @@ theorem ber_diagonal_exp_eq_exp_str (a d : ℝ) :
     ber (Real.exp a) (Real.exp d) (Real.exp_ne_zero d) = Real.exp (a - d) := by
   simp [ber, Real.exp_sub]
 
-end Berezinian
+end InfoGeometry.Canonical.Berezinian

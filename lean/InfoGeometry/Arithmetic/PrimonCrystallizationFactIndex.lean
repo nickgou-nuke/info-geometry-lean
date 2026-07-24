@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.VandermondeExclusionBridge
 import InfoGeometry.Arithmetic.PrimeLatticeGasVariational
 import InfoGeometry.Arithmetic.SpectorPrimonGasBridge
 
-namespace PrimonCrystallizationFactIndex
+namespace InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex
 
 open scoped BigOperators
 
@@ -62,4 +62,4 @@ theorem finite_prime_lattice_entropy_maximizer
             (InfoGeometry.MaxEnt.gibbs (fun _ : Fin n => (0 : ℝ)) 0) :=
   InfoGeometry.Arithmetic.PrimeLatticeGasVariational.primeLatticeGas_zeroFeature_entropy_maximizer M
 
-end PrimonCrystallizationFactIndex
+end InfoGeometry.Arithmetic.PrimonCrystallizationFactIndex

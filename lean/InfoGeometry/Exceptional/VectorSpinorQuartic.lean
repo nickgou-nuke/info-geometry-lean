@@ -23,7 +23,7 @@ polynomial.  It does **not** prove that this polynomial is the genuine
 law, or a qubit-entanglement classification theorem.
 -/
 
-namespace VectorSpinorQuartic
+namespace InfoGeometry.Exceptional.VectorSpinorQuartic
 
 /--
 A 56-coordinate real vector--spinor packet: `2 * 12 = 24` vector coordinates
@@ -179,4 +179,4 @@ Open closure debt, deliberately not encoded as declarations:
 * multipartite-qubit entanglement classification.
 -/
 
-end VectorSpinorQuartic
+end InfoGeometry.Exceptional.VectorSpinorQuartic

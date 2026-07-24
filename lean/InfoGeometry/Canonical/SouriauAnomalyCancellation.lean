@@ -9,7 +9,7 @@ Proved theorem:
 All hypotheses are explicit: J²=1, J*=J, K*=-K, J·K·J=-K, and φ cyclic/additive.
 -/
 
-namespace SouriauAnomalyCancellation
+namespace InfoGeometry.Canonical.SouriauAnomalyCancellation
 
 variable (Op : Type*) [Ring Op] [StarRing Op]
 
@@ -84,4 +84,4 @@ theorem twisted_index_vanishing
       _ = -φ (K.K * P) := by rw [h_φ_additive]
   linarith
 
-end SouriauAnomalyCancellation
+end InfoGeometry.Canonical.SouriauAnomalyCancellation

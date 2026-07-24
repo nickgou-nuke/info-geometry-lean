@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
 noncomputable section
 
-namespace RealIncidenceChains
+namespace InfoGeometry.Canonical.RealIncidenceChains
 
 /-!
 # Real incidence chains
@@ -89,4 +89,4 @@ theorem boundaryOne_single_one
 
 end Incidence
 
-end RealIncidenceChains
+end InfoGeometry.Canonical.RealIncidenceChains

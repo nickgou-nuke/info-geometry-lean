@@ -20,7 +20,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace FiniteJonesErlangerBridge
+namespace InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
 
 open Matrix
 open InfoGeometry.Optics.JonesCalibration
@@ -268,4 +268,4 @@ theorem finiteJonesErlangerBridgeOwnerTarget :
   · intro G rs hrs
     exact diagonalGauge_brewster_det_zero G rs hrs
 
-end FiniteJonesErlangerBridge
+end InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge

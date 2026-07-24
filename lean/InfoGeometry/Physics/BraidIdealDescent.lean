@@ -10,7 +10,7 @@ the source/target submodules give explicit Lean data for quotient descent.
 
 noncomputable section
 
-namespace BraidIdealDescent
+namespace InfoGeometry.Physics.BraidIdealDescent
 
 open TensorProduct
 
@@ -197,4 +197,4 @@ def tauRDesc
 #check tauRDesc
 #check tauRDesc_mk
 
-end BraidIdealDescent
+end InfoGeometry.Physics.BraidIdealDescent

@@ -27,7 +27,7 @@ The calibration data in this file can be instantiated using the Cl(1,1) tower
 by choosing the period to match the natural scaling of the Witt generator.
 -/
 
-namespace ThermalTimeMonodromyBridge
+namespace InfoGeometry.Canonical.ThermalTimeMonodromyBridge
 
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.YangMillsContinuum.ModularRadonNikodymData
@@ -213,4 +213,4 @@ theorem cl11_calibrated_clock_additive (E : Type) [NormedAddCommGroup E] [InnerP
 
 end Bridge
 
-end ThermalTimeMonodromyBridge
+end InfoGeometry.Canonical.ThermalTimeMonodromyBridge

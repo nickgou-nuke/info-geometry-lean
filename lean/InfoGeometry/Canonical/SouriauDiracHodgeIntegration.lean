@@ -47,7 +47,7 @@ noncomputable section
 
 universe u
 
-namespace SouriauDiracHodgeIntegration
+namespace InfoGeometry.Canonical.SouriauDiracHodgeIntegration
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical.BostConnesKMS
@@ -204,4 +204,4 @@ theorem galois_transport_on_cyclotomic_generator
 
 end GaloisKMSKreinTransport
 
-end SouriauDiracHodgeIntegration
+end InfoGeometry.Canonical.SouriauDiracHodgeIntegration

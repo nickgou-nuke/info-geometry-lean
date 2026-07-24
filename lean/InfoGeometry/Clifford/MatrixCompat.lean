@@ -3,7 +3,7 @@ import InfoGeometry.Clifford.Cl11Matrix
 
 open scoped Matrix
 
-namespace MatrixCompat
+namespace InfoGeometry.Clifford.MatrixCompat
 
 open InfoGeometry.Clifford.Cl11Matrix
 
@@ -16,4 +16,4 @@ lemma baseJ1_sq : baseJ1 * baseJ1 = 1 := by
 lemma baseJ1_transpose : baseJ1ᵀ = baseJ1 := by
   simpa [baseJ1] using J1_transpose
 
-end MatrixCompat
+end InfoGeometry.Clifford.MatrixCompat

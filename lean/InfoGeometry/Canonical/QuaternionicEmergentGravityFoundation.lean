@@ -19,10 +19,10 @@ This file formalizes:
 It does not claim the full analytic Einstein-Cartan bootstrap.
 -/
 
-namespace QuaternionicEmergentGravityFoundation
+namespace InfoGeometry.Canonical.QuaternionicEmergentGravityFoundation
 
 open scoped Matrix BigOperators
-open DiracPauliGamma
+open InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
 
@@ -146,4 +146,4 @@ theorem quaternionField_mul_conj
     simp
 
 end
-end QuaternionicEmergentGravityFoundation
+end InfoGeometry.Canonical.QuaternionicEmergentGravityFoundation

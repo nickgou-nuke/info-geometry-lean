@@ -14,7 +14,8 @@ This is the precise shape of the millennium-style target:
 * completed-`Xi` zeros are spectral-kernel points of a self-adjoint operator;
 * the height parameter is real because it is a spectral parameter of a
   self-adjoint operator;
-* the critical-line-to-RH implication is supplied by the analytic owner.
+* the critical-line-to-RH implication is supplied by the Hestenes--Krein
+  categorical-colimit owner.
 -/
 structure CompletedXiHilbertPolyaReduction
     (Operator : Type) where

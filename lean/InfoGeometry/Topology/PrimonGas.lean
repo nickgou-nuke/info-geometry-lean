@@ -2,14 +2,14 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Nat.Prime.Basic
 
 /-!
-# Primon Gas and the Riemann Zeta Partition Function
+# Finite primon-gas parameter packet
 
-This module encodes the structural concepts from "Physics of the Riemann Hypothesis",
-specifically the construction of the Riemann gas (primon gas) whose partition
-function maps exactly to the Riemann zeta function.
+This module records a small state structure and a predicate equal to its
+`E_0 > T` field.  It does not construct a Riemann gas, prove a zeta partition
+function theorem, or prove any Riemann-hypothesis statement.
 -/
 
-namespace PrimonGas
+namespace InfoGeometry.Topology.PrimonGas
 
 /-- The structure defining a generic Primon Gas state. -/
 structure PrimonGasState where
@@ -17,19 +17,16 @@ structure PrimonGasState where
   E_0 : ℝ
   /-- The temperature of the system. -/
   T : ℝ
-  /-- Condition that we are operating below the Hagedorn temperature limit (s > 1). -/
+  /-- Supplied strict parameter inequality. -/
   below_hagedorn : E_0 > T
 
-/-- 
-The theoretical mapping between the continuous partition function
-and the Riemann zeta analytic continuation.
--/
-def partition_function_zeta_map (state : PrimonGasState) : Prop :=
+/-- The local validity predicate used by this finite packet. -/
+def primonGasParameterValid (state : PrimonGasState) : Prop :=
   state.E_0 > state.T
 
-/-- The partition-function/zeta map is valid exactly under the Hagedorn bound. -/
-theorem partition_function_zeta_map_iff (state : PrimonGasState) :
-    partition_function_zeta_map state ↔ state.E_0 > state.T := by
+/-- The local validity predicate is definitionally the supplied inequality. -/
+theorem primonGasParameterValid_iff (state : PrimonGasState) :
+    primonGasParameterValid state ↔ state.E_0 > state.T := by
   rfl
 
-end PrimonGas
+end InfoGeometry.Topology.PrimonGas

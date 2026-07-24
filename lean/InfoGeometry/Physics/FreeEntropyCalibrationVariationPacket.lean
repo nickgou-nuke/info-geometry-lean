@@ -19,7 +19,7 @@ The boundary statement is deliberately a calibration theorem.  It does not claim
 that the Bekenstein-Hawking area law has been induced from the bulk action.
 -/
 
-namespace FreeEntropyCalibrationVariationPacket
+namespace InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 
 noncomputable section
 
@@ -187,4 +187,4 @@ theorem calibratedStationary_iff (P : CalibrationVariationPacket) :
 
 end
 
-end FreeEntropyCalibrationVariationPacket
+end InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket

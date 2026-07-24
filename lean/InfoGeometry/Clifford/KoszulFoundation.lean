@@ -14,7 +14,7 @@ No Berezinian functor, ABS isomorphism, Dirac index theorem, Bott-periodicity
 classification theorem, or tenfold-way physics statement is asserted here.
 -/
 
-namespace KoszulFoundation
+namespace InfoGeometry.Clifford.KoszulFoundation
 
 open CliffordAlgebra
 
@@ -157,4 +157,4 @@ theorem clifford_involute_volumeElement_of_odd_length
   rw [clifford_involute_volumeElement, h.neg_one_pow]
   simp [Algebra.smul_def]
 
-end KoszulFoundation
+end InfoGeometry.Clifford.KoszulFoundation

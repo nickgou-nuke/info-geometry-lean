@@ -13,7 +13,7 @@ everything is real-linear on `H₂`, with phase-(anti)linearity measured against
 the internal axis `K = J ∘ ε`.
 -/
 
-namespace TimeReversalKramers
+namespace InfoGeometry.Canonical.TimeReversalKramers
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
@@ -136,4 +136,4 @@ end KramersTimeReversal
 
 end Core
 
-end TimeReversalKramers
+end InfoGeometry.Canonical.TimeReversalKramers

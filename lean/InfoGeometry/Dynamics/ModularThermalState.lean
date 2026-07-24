@@ -154,17 +154,17 @@ local notation "Obs" => (H₂ →L[ℝ] H₂)
 Unruh/Krein boost carrier used to generate modular transport on observables.
 -/
 noncomputable def unruhBoost (t : ℝ) : Obs :=
-  BogoliubovTransport.epsilonBoost (E := E) t
+  InfoGeometry.Canonical.BogoliubovTransport.epsilonBoost (E := E) t
 
 omit [CompleteSpace E] in
 @[simp] theorem unruhBoost_zero : unruhBoost (E := E) 0 = (1 : Obs) := by
   unfold unruhBoost
-  exact BogoliubovTransport.epsilonBoost_zero (E := E)
+  exact InfoGeometry.Canonical.BogoliubovTransport.epsilonBoost_zero (E := E)
 
 @[simp] theorem unruhBoost_add (s t : ℝ) :
     unruhBoost (E := E) (s + t) = unruhBoost (E := E) s * unruhBoost (E := E) t := by
   simpa [unruhBoost] using
-    (BogoliubovTransport.epsilonBoost_add (E := E) s t)
+    (InfoGeometry.Canonical.BogoliubovTransport.epsilonBoost_add (E := E) s t)
 
 @[simp] theorem unruhBoost_mul_neg (t : ℝ) :
     unruhBoost (E := E) t * unruhBoost (E := E) (-t) = (1 : Obs) := by

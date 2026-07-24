@@ -21,7 +21,7 @@ So the current repo-native Lichnerowicz statement is an `EndH` theorem about
 owned transport operators, not yet a curved triality palace.
 -/
 
-namespace InformationalLichnerowicz
+namespace InfoGeometry.Canonical.InformationalLichnerowicz
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -133,4 +133,4 @@ theorem deriv2_quasilatticeDirac_at_zero_eq_metricPart_add_half_curvaturePart
 
 end Core
 
-end InformationalLichnerowicz
+end InfoGeometry.Canonical.InformationalLichnerowicz

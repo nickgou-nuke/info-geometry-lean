@@ -15,7 +15,7 @@ This file reuses the owner definitions from `Krein.DoubledSpace`,
 
 noncomputable section
 
-namespace TwoSheetedComplexPolarization
+namespace InfoGeometry.Canonical.TwoSheetedComplexPolarization
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.PolarizedSector
@@ -212,4 +212,4 @@ theorem two_sheeted_complex_polarization_capstone (u : H₂) :
     sheetSwap_conjugates_polarizationAxis (E := E),
     sheetProjector_decomposition (E := E) u⟩
 
-end TwoSheetedComplexPolarization
+end InfoGeometry.Canonical.TwoSheetedComplexPolarization

@@ -18,7 +18,7 @@ This file packages the exact pivot requested in the current lane:
 No additional classification theorem is claimed here.
 -/
 
-namespace OpSquareTriadBridge
+namespace InfoGeometry.Clifford.OpSquareTriadBridge
 
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Clifford.KoszulFoundation
@@ -124,4 +124,4 @@ theorem cliffordVolumeElement_involute
       (-1 : R) ^ vectors.length • cliffordVolumeElement Q vectors := by
   simpa using (clifford_involute_volumeElement (Q := Q) vectors)
 
-end OpSquareTriadBridge
+end InfoGeometry.Clifford.OpSquareTriadBridge

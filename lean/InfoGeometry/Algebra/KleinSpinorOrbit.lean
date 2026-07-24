@@ -15,7 +15,7 @@ split-complex coordinate model from `Arxiv160309063SplitAlgebra` and prove exact
 stabilizer equations for selected representatives.
 -/
 
-namespace KleinSpinorOrbit
+namespace InfoGeometry.Algebra.KleinSpinorOrbit
 
 namespace Cs
 
@@ -488,4 +488,4 @@ theorem eq_5_24_diagonal_null_row_sum_iff (g : CsSL2) :
 
 end CsSL2
 
-end KleinSpinorOrbit
+end InfoGeometry.Algebra.KleinSpinorOrbit

@@ -30,7 +30,7 @@ minimal-polynomial reduction, and eigenvalue classification are not asserted
 in Lean here.
 -/
 
-namespace RoseDrazinPolynomial
+namespace InfoGeometry.Canonical.RoseDrazinPolynomial
 
 noncomputable section
 
@@ -130,4 +130,4 @@ theorem roseExampleOne_drazin_equations
 
 end
 
-end RoseDrazinPolynomial
+end InfoGeometry.Canonical.RoseDrazinPolynomial

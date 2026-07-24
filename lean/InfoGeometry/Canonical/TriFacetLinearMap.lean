@@ -12,7 +12,7 @@ import Mathlib
 
 import Mathlib
 
-namespace TriFacetLinearMap
+namespace InfoGeometry.Canonical.TriFacetLinearMap
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable (O : V →ₗ[ℝ] V)
@@ -86,5 +86,5 @@ theorem sum_to_id : P_hyp O + P_ell O + P_par O = LinearMap.id := by
   simp [P_hyp_apply, P_ell_apply, P_par_apply]
   try module
 
-end TriFacetLinearMap
+end InfoGeometry.Canonical.TriFacetLinearMap
 

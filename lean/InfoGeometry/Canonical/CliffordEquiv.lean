@@ -11,7 +11,7 @@ open InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 noncomputable section
 
-namespace CliffordEquiv
+namespace InfoGeometry.Canonical.CliffordEquiv
 
 /-! ## 1. Abstract Complex Structure and Induced Module -/
 
@@ -343,19 +343,19 @@ theorem peirceCliffordEquivalence_eq_trans :
 
 /-- The Peirce-ladder complex structure is definitionally the `Cl(1,1)` generator `e₁`. -/
 theorem peirceLadder_J_eq_cl11_generator :
-    InfoGeometry.Algebra.PeirceLadder.J = InfoGeometry.Algebra.Cl11Fermions.e₁ := by
+    InfoGeometry.Algebra.PeirceLadder.J = Cl11Fermions.e₁ := by
   rfl
 
 /-- The Peirce-ladder complex structure satisfies the same square-minus-one law. -/
 theorem peirceLadder_J_sq_neg_one :
     InfoGeometry.Algebra.PeirceLadder.J * InfoGeometry.Algebra.PeirceLadder.J = -1 := by
   simpa [InfoGeometry.Algebra.PeirceLadder.J] using
-    InfoGeometry.Algebra.Cl11Fermions.e₁_sq
+    Cl11Fermions.e₁_sq
 
 /--\nFinite bridge packet for the internal complex structures currently realized in-repo.\n\nIt carries the actual linear equivalence data instead of an existence wrapper.\nIt does not claim a full global representation identification between all these carriers.\n-/
 structure FiniteComplexStructureBridgePacket where
   peirce_eq_cl11 :
-    InfoGeometry.Algebra.PeirceLadder.J = InfoGeometry.Algebra.Cl11Fermions.e₁
+    InfoGeometry.Algebra.PeirceLadder.J = Cl11Fermions.e₁
   peirce_sq :
     InfoGeometry.Algebra.PeirceLadder.J * InfoGeometry.Algebra.PeirceLadder.J = -1
   clifford_bivector_sq : cliffordBivector * cliffordBivector = -1
@@ -374,4 +374,4 @@ noncomputable def finite_complex_structure_bridge_packet :
   peirce_clifford_equiv := peirceCliffordEquivalence
   finite_hestenes_sq := InfoGeometry.Geometry.FiniteHestenesCR.bivector_i_squared
 
-end CliffordEquiv
+end InfoGeometry.Canonical.CliffordEquiv

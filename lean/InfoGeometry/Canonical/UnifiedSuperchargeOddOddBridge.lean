@@ -23,7 +23,7 @@ repo owners rather than carried as free decomposition data.
 
 open scoped InnerProductSpace
 
-namespace UnifiedSuperchargeOddOddBridge
+namespace InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
@@ -170,4 +170,4 @@ end UnifiedSuperchargePackage
 
 end Core
 
-end UnifiedSuperchargeOddOddBridge
+end InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge

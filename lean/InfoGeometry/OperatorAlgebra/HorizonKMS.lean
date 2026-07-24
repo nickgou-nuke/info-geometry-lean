@@ -23,7 +23,7 @@ import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section
 
-namespace HorizonKMS
+namespace InfoGeometry.OperatorAlgebra.HorizonKMS
 
 open InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -1082,4 +1082,4 @@ theorem kms_state_invariant_horizon_flow (t : ℝ) (X : Obs) :
 
 end ExteriorKMSFlowCalibration
 
-end HorizonKMS
+end InfoGeometry.OperatorAlgebra.HorizonKMS

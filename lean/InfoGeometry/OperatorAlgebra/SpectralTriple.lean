@@ -28,9 +28,7 @@ noncomputable section
 
 open scoped ENNReal
 
-namespace SpectralTriple
-
-open PhaseErlanger
+namespace InfoGeometry.OperatorAlgebra.SpectralTriple
 
 /-! ## 1. Basic bounded real operator notation -/
 
@@ -38,6 +36,12 @@ open PhaseErlanger
 abbrev EndR
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] :=
   H →L[ℝ] H
+
+abbrev PhaseLinear
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (K : EndR H)
+    (T : EndR H) : Prop :=
+  InfoGeometry.Geometry.PhaseErlanger.PhaseLinear K T
 
 /-- Commutator of bounded real-linear operators. -/
 def commutator
@@ -548,4 +552,4 @@ theorem orderOne_apply
 
 end PhaseRealSpectralTriple
 
-end SpectralTriple
+end InfoGeometry.OperatorAlgebra.SpectralTriple

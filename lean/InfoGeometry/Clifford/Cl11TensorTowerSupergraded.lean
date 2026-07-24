@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace Cl11TensorTowerSupergraded
+namespace InfoGeometry.Clifford.Cl11TensorTowerSupergraded
 
 open InfoGeometry.Algebra.SupergradedBracket
 
@@ -136,4 +136,4 @@ theorem finite_sequence_superBracket_in_limit
     _ = ofStage 0 (Z 0) := by
       exact InfoGeometry.Clifford.Cl11TensorTowerLimit.finite_sequence_constant_in_limit Z hZ n
 
-end Cl11TensorTowerSupergraded
+end InfoGeometry.Clifford.Cl11TensorTowerSupergraded

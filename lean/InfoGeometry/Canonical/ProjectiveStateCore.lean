@@ -15,7 +15,7 @@ positive rays are a stricter representation layer sitting above this generalized
 projective substrate.
 -/
 
-namespace ProjectiveStateCore
+namespace InfoGeometry.Canonical.ProjectiveStateCore
 
 export MeasureProjective (
   UState
@@ -53,4 +53,4 @@ export InfoGeometry.MeasureProjective.Normalized (
   logPotential_pmf_self_ae
 )
 
-end ProjectiveStateCore
+end InfoGeometry.Canonical.ProjectiveStateCore

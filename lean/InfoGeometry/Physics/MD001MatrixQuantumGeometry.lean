@@ -22,7 +22,7 @@ Born-rule or physical-state theorem.
 
 noncomputable section
 
-namespace MD001MatrixQuantumGeometry
+namespace InfoGeometry.Physics.MD001MatrixQuantumGeometry
 
 open Matrix
 open InfoGeometry.Physics.MD20250430071017MatrixStatistics
@@ -145,6 +145,6 @@ theorem repaired_MD001_matrix_quantum_geometry_packet (dt dx dy dz : ℂ)
     blochDensity_det_zero_of_unit bx bY bz hunit,
     md001_local_matrix_recompose A⟩
 
-end MD001MatrixQuantumGeometry
+end InfoGeometry.Physics.MD001MatrixQuantumGeometry
 
 end noncomputable section

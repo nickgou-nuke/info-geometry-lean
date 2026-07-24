@@ -16,7 +16,7 @@ cycle generators are exactly the first-step Clifford seeds already owned by the
 repo.
 -/
 
-namespace ClNNFredholmBridge
+namespace InfoGeometry.KK.ClNNFredholmBridge
 
 open InfoGeometry.KK
 open InfoGeometry.Krein
@@ -61,4 +61,4 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
 end FirstStep
 
-end ClNNFredholmBridge
+end InfoGeometry.KK.ClNNFredholmBridge

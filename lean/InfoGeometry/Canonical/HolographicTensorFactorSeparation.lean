@@ -21,7 +21,7 @@ is asserted here.  The compact form remains a real-form/socket choice after
 complexification; the closed theorem is the rational matrix factorization.
 -/
 
-namespace HolographicTensorFactorSeparation
+namespace InfoGeometry.Canonical.HolographicTensorFactorSeparation
 
 open scoped Kronecker
 open InfoGeometry.Canonical.HolographicSouriauReconstruction
@@ -113,4 +113,4 @@ theorem brillouinGlide_lift_commutes_color (i : Fin 8) :
 
 end
 
-end HolographicTensorFactorSeparation
+end InfoGeometry.Canonical.HolographicTensorFactorSeparation

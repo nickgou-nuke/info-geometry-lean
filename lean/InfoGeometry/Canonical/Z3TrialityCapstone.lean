@@ -54,7 +54,7 @@ open Matrix
 
 noncomputable section
 
-namespace Z3TrialityCapstone
+namespace InfoGeometry.Canonical.Z3TrialityCapstone
 
 open FibonacciParafermion
 open InfoGeometry.Canonical.CelikCantorClifford
@@ -208,4 +208,4 @@ theorem z3_triality_readout_packet
     hopf_nilpotent_cross_flux_packet (R := R) N hN,
     golden_ratio_readout_packet⟩
 
-end Z3TrialityCapstone
+end InfoGeometry.Canonical.Z3TrialityCapstone

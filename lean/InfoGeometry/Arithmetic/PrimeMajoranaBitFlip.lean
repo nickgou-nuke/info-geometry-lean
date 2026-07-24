@@ -21,7 +21,7 @@ in the separate CAR, Clifford/Fock, and zero-mode owner files.
 
 noncomputable section
 
-namespace PrimeMajoranaBitFlip
+namespace InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 
 /-! ## 1. Real Majorana toggle on square-free states -/
 
@@ -104,4 +104,4 @@ theorem card_majoranaFlip_add_one_of_mem
     (majoranaFlip p S).card + 1 = S.card := by
   simpa [majoranaFlip, h] using Finset.card_erase_add_one h
 
-end PrimeMajoranaBitFlip
+end InfoGeometry.Arithmetic.PrimeMajoranaBitFlip

@@ -140,8 +140,8 @@ theorem trace_zero
   L.h_trace_zero_iff_det_one.1 (det_one L)
 
 /--
-Bundled form of the open infinite analytic bridge: zero determinant defect
-forces determinant-one flow and trace-zero Hamiltonian.
+Bundled form of the open infinite Hestenes--Krein/colimit bridge: zero
+determinant defect forces determinant-one flow and trace-zero Hamiltonian.
 -/
 theorem infinite_iwasawa_analyticity_lock
     {H} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]

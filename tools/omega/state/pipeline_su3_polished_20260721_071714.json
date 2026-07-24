@@ -1,0 +1,189 @@
+{
+  "run_id": "su3_polished_20260721_071714",
+  "stage": "FAILED",
+  "concept_id": "su3_gellmann_lie_algebra",
+  "formal_intent_envelope": {
+    "concept_id": "su3_gellmann_lie_algebra",
+    "source_text": "Wikipedia SU(n) article + standard physics conventions (Georgi, Hall)",
+    "intake_classification": "theorem-bearing",
+    "mathematical_domain": [
+      "Lie algebras",
+      "representation theory",
+      "particle physics"
+    ],
+    "target_status": "theorem-backed",
+    "risk_level": "R2",
+    "allowed_imports": [
+      "Mathlib.Algebra.Lie.Classical",
+      "Mathlib.LinearAlgebra.Matrix.Basic",
+      "Mathlib.Analysis.Complex.Basic",
+      "InfoGeometry.Algebra.SpecialUnitary"
+    ],
+    "non_theorem_claims": [],
+    "formal_objects": [
+      "su3 : LieSubalgebra \u2102 (Matrix (Fin 3) (Fin 3) \u2102)",
+      "GellMannBasis : Basis (Fin 8) (su3)",
+      "structureConstants : Fin 8 \u2192 Fin 8 \u2192 Fin 8 \u2192 \u2102",
+      "symmetricCoefficients : Fin 8 \u2192 Fin 8 \u2192 Fin 8 \u2192 \u2102",
+      "Casimir2 : su3 \u2192 \u2102",
+      "Casimir3 : su3 \u2192 \u2102"
+    ],
+    "acceptance_theorems": [
+      "su3_def : su3 = {A : Matrix (Fin 3) (Fin 3) \u2102 | A\u2020 = -A \u2227 trace A = 0}",
+      "dim_su3 : Fintype.card (Fin 8) = 8",
+      "gellMann_basis_linearly_independent",
+      "commutator_formula : [\u03bb_a, \u03bb_b] = 2i \u2211_c f_{abc} \u03bb_c",
+      "anticommutator_formula : {\u03bb_a, \u03bb_b} = 4/3 \u03b4_{ab} I + 2 \u2211_c d_{abc} \u03bb_c",
+      "f_antisymmetric : f_{abc} = -f_{bac} = ...",
+      "d_symmetric : d_{abc} = d_{bac} = ...",
+      "f_normalization : \u2211_{c,e} d_{ace} d_{bce} = (n\u00b2-4)/n \u03b4_{ab}",
+      "Casimir2_central : \u2200 x : su3, [Casimir2 x, y] = 0"
+    ]
+  },
+  "derivation_log": [
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.SpecialUnitary.su",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.GellMannBasis",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Physics.GellMannSU3",
+      "nodes": 0
+    },
+    {
+      "step": "cone",
+      "seed": "InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz",
+      "nodes": 0
+    },
+    {
+      "step": "skeletons",
+      "count": 6
+    },
+    {
+      "step": "prove",
+      "candidate": "su3 : LieSubalgebra \u2102 (Matrix (Fin 3) (Fin 3) \u2102)",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "GellMannBasis : Basis (Fin 8) (su3)",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "structureConstants : Fin 8 \u2192 Fin 8 \u2192 Fin 8 \u2192 \u2102",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "symmetricCoefficients : Fin 8 \u2192 Fin 8 \u2192 Fin 8 \u2192 \u2102",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "Casimir2 : su3 \u2192 \u2102",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    },
+    {
+      "step": "prove",
+      "candidate": "Casimir3 : su3 \u2192 \u2102",
+      "result": {
+        "status": "failed",
+        "error": "Lean file not found"
+      }
+    }
+  ],
+  "audit_report": {
+    "vacuity_check": {
+      "errors": [
+        {
+          "severity": 0.7,
+          "name": "sorry_proof",
+          "match": "theorem f_antisym_ab (a b c : Fin 8) : f a b c = -f b a c := by sorry",
+          "reason": "Theorem proven with `by sorry` \u2014 incomplete proof"
+        },
+        {
+          "severity": 0.3,
+          "name": "no_hyp_use",
+          "match": "f_antisym_ab",
+          "reason": "Theorem with parameters but proof doesn't reference them \u2014 potential vacuity"
+        },
+        {
+          "error": "linter failed on lean/InfoGeometry/Algebra/GellMannBridge.lean: Traceback (most recent call last):\n  File \"/home/goutev/repos/info-geometry-lean/tools/scripts/vacuity-linter.py\", line 169, in <module>\n    main()\n    ~~~~^^\n  File \"/home/goutev/repos/info-geometry-lean/tools/scripts/vacuity-linter.py\", line 145, in main\n    with open(args.file, \"r\") as f:\n         ~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'lean/InfoGeometry/Algebra/GellMannBridge.lean'\n"
+        }
+      ]
+    },
+    "axiom_audit": {
+      "errors": [
+        "Scanning 1 module(s)...\n  [1/1] InfoGeometry.Algebra: \u2713 14 decls, 0\u2717 0p 0u\n\n======================================================================\nAXIOM INDEX REPORT\n======================================================================\n\nAll unique axioms (3):\n  \u24d8 propext: 8 uses in 1 modules\n  \u24d8 Quot.sound: 5 uses in 1 modules\n  \u24d8 Classical.choice: 2 uses in 1 modules\n\nAxiomless modules (1 / 1):\n  InfoGeometry.Algebra\n\nSummary:\n  Modules: 1\n  Declarations: 14\n  Nonstandard axiom users: 0\n  Unique axioms: 3\n  Axiomless modules: 1\n{\n  \"modules\": 1,\n  \"declarations\": 14,\n  \"axiom_usage\": {\n    \"propext\": 8,\n    \"Quot.sound\": 5,\n    \"Classical.choice\": 2\n  },\n  \"axiomless\": [\n    \"InfoGeometry.Algebra\"\n  ],\n  \"suspicious\": {}\n}\n"
+      ]
+    },
+    "style_check": {
+      "errors": []
+    },
+    "dag_freshness": {
+      "errors": []
+    },
+    "passed": false
+  },
+  "acceptance_record": {
+    "accepted": false,
+    "reason": "Audit failed",
+    "audit": {
+      "vacuity_check": {
+        "errors": [
+          {
+            "severity": 0.7,
+            "name": "sorry_proof",
+            "match": "theorem f_antisym_ab (a b c : Fin 8) : f a b c = -f b a c := by sorry",
+            "reason": "Theorem proven with `by sorry` \u2014 incomplete proof"
+          },
+          {
+            "severity": 0.3,
+            "name": "no_hyp_use",
+            "match": "f_antisym_ab",
+            "reason": "Theorem with parameters but proof doesn't reference them \u2014 potential vacuity"
+          },
+          {
+            "error": "linter failed on lean/InfoGeometry/Algebra/GellMannBridge.lean: Traceback (most recent call last):\n  File \"/home/goutev/repos/info-geometry-lean/tools/scripts/vacuity-linter.py\", line 169, in <module>\n    main()\n    ~~~~^^\n  File \"/home/goutev/repos/info-geometry-lean/tools/scripts/vacuity-linter.py\", line 145, in main\n    with open(args.file, \"r\") as f:\n         ~~~~^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'lean/InfoGeometry/Algebra/GellMannBridge.lean'\n"
+          }
+        ]
+      },
+      "axiom_audit": {
+        "errors": [
+          "Scanning 1 module(s)...\n  [1/1] InfoGeometry.Algebra: \u2713 14 decls, 0\u2717 0p 0u\n\n======================================================================\nAXIOM INDEX REPORT\n======================================================================\n\nAll unique axioms (3):\n  \u24d8 propext: 8 uses in 1 modules\n  \u24d8 Quot.sound: 5 uses in 1 modules\n  \u24d8 Classical.choice: 2 uses in 1 modules\n\nAxiomless modules (1 / 1):\n  InfoGeometry.Algebra\n\nSummary:\n  Modules: 1\n  Declarations: 14\n  Nonstandard axiom users: 0\n  Unique axioms: 3\n  Axiomless modules: 1\n{\n  \"modules\": 1,\n  \"declarations\": 14,\n  \"axiom_usage\": {\n    \"propext\": 8,\n    \"Quot.sound\": 5,\n    \"Classical.choice\": 2\n  },\n  \"axiomless\": [\n    \"InfoGeometry.Algebra\"\n  ],\n  \"suspicious\": {}\n}\n"
+        ]
+      },
+      "style_check": {
+        "errors": []
+      },
+      "dag_freshness": {
+        "errors": []
+      },
+      "passed": false
+    }
+  },
+  "created_at": "2026-07-21T04:17:14.357398Z",
+  "updated_at": "2026-07-21T04:17:14.357409Z"
+}

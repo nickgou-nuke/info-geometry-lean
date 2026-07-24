@@ -11,7 +11,7 @@ This module formalizes the dynamical derivation of the SU(3) gauge symmetry
 from the octonionic algebra under a preferred axis of flow.
 -/
 
-namespace OctonionicFlow
+namespace InfoGeometry.Architecture.OctonionicFlow
 
 open InfoGeometry.Canonical.GaugeGroups
 
@@ -66,4 +66,4 @@ theorem su3_winding_symmetry_holds (Ω : Type*) [AddCommGroup Ω] [Module ℝ Ω
     emergence_su3 Ω alg G S :=
   ⟨S.is_stabilizer, S.stabilizer_group.is_special⟩
 
-end OctonionicFlow
+end InfoGeometry.Architecture.OctonionicFlow

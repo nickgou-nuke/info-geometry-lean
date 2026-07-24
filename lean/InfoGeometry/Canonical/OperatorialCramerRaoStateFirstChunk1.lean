@@ -18,7 +18,7 @@ This file introduces no new ontology. It packages existing owners:
 3. operatorial Cramér-Rao lower bound (comparison-channel lane).
 -/
 
-namespace OperatorialCramerRaoStateFirstChunk1
+namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -114,4 +114,4 @@ theorem stateFirst_modularSplit_singularClosure_operatorialCramerRao
 
 end Core
 
-end OperatorialCramerRaoStateFirstChunk1
+end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1

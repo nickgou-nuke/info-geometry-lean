@@ -11,10 +11,10 @@ It intentionally does not claim the global infinite CAR commutant, a global
 Those remain proof debt until supplied by native Lean owner theorems.
 -/
 
-namespace CommutantMoebiusLegendre
+namespace InfoGeometry.Capstone.CommutantMoebiusLegendre
 
 export InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
   (finite_commutant_moebius_fenchel_mirror_o55_window
    supplied_o55_and_dirac_hodge_trace_window)
 
-end CommutantMoebiusLegendre
+end InfoGeometry.Capstone.CommutantMoebiusLegendre

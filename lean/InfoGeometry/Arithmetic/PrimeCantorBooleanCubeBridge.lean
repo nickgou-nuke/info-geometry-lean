@@ -16,7 +16,7 @@ the older carrier can delegate cleanly.
 
 noncomputable section
 
-namespace PrimeCantorBooleanCubeBridge
+namespace InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
 
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
@@ -48,4 +48,4 @@ theorem mobius_representedNat_eq_fermionParity_canonical
     PrimeBooleanCube.fermionParity] using
       (PrimeBooleanCube.mobius_representedNat_eq_fermionParity P v)
 
-end PrimeCantorBooleanCubeBridge
+end InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge

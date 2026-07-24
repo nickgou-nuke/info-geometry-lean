@@ -23,7 +23,7 @@ open InfoGeometry.Canonical.SplitCliffordTensorBridge
 
 noncomputable section
 
-namespace ZornOrderCapstone
+namespace InfoGeometry.Capstone.ZornOrderCapstone
 
 /-! ## [1] Zorn global — maximal boundary attractor ———————— ——— -/
 
@@ -244,6 +244,6 @@ theorem twin_orders_stabilize : TwinOrderStability where
   absorption := cl55_window_absorbs
   representative := every_element_has_window_rep
 
-end ZornOrderCapstone
+end InfoGeometry.Capstone.ZornOrderCapstone
 
 end

@@ -16,7 +16,7 @@ direct role-naming presentation alive without displacing the canonical theorem
 surface.
 -/
 
-namespace SuperchargeRoleMapAlt
+namespace InfoGeometry.Canonical.SuperchargeRoleMapAlt
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -119,4 +119,4 @@ noncomputable def curvatureChannelAlt
 
 end Core
 
-end SuperchargeRoleMapAlt
+end InfoGeometry.Canonical.SuperchargeRoleMapAlt

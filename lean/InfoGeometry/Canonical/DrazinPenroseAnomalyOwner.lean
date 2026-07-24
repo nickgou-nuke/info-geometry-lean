@@ -7,7 +7,7 @@ The anomaly owner is algebraic/projector mismatch first.  Physical anomaly
 interpretations require a separate realization witness.
 -/
 
-namespace DrazinPenroseAnomalyOwner
+namespace InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 
 open OperatorProjectorMismatch
 
@@ -43,4 +43,4 @@ structure PhysicalAnomalyRealizationWitness (P : ProjectorPair (R := R)) where
   physicalRealization : Prop
   realizationCertified : physicalRealization
 
-end DrazinPenroseAnomalyOwner
+end InfoGeometry.Canonical.DrazinPenroseAnomalyOwner

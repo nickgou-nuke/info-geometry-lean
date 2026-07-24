@@ -13,7 +13,7 @@ spinor representation.  It also defines the recursive tensor index for the
 
 noncomputable section
 
-namespace GammaMatrices
+namespace InfoGeometry.Clifford.GammaMatrices
 
 open Matrix
 open InfoGeometry.Clifford
@@ -92,4 +92,4 @@ theorem gamma12_gammaMinus_anticomm :
       Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
       Fin.sum_univ_two]
 
-end GammaMatrices
+end InfoGeometry.Clifford.GammaMatrices

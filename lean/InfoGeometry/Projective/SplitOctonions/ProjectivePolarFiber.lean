@@ -19,7 +19,7 @@ No wrappers.
 No `sorry`.
 -/
 
-namespace ProjectivePolarFiber
+namespace InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
 
 /--
 Left representative rescaling does not change the incidence fiber.
@@ -163,4 +163,4 @@ theorem incidenceFiber_projective_erlangen_image
         exact congrArg (fun S : Set Carrier => g '' S)
           (incidenceFiber_scale_right polar h_right μ hμ Y)
 
-end ProjectivePolarFiber
+end InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber

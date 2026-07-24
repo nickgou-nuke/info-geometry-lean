@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.KleinBoundaryStates
 import InfoGeometry.Clifford.Pin55ReflectionGlide
 import InfoGeometry.Physics.KleinBottleDefects
 
-namespace KleinBottleCosmology
+namespace InfoGeometry.Physics.KleinBottleCosmology
 
 open InfoGeometry.Topology.Q8MonodromySpinorCover
 open InfoGeometry.Topology.BrillouinKleinBottleManifold
@@ -135,4 +135,4 @@ theorem klein_bottle_cosmology_packet
   · exact sewn_boundary_chiral_index_vanishes s hSew
 
 end
-end KleinBottleCosmology
+end InfoGeometry.Physics.KleinBottleCosmology

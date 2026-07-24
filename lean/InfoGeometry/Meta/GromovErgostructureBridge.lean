@@ -23,7 +23,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace GromovErgostructureBridge
+namespace InfoGeometry.Meta.GromovErgostructureBridge
 
 open scoped BigOperators InnerProductSpace
 
@@ -268,4 +268,4 @@ theorem gromovErgostructureBridgeOwnerTarget :
       H.bayes_update_preserves_simplex,
       H.latent_majorana_K_square⟩
 
-end GromovErgostructureBridge
+end InfoGeometry.Meta.GromovErgostructureBridge

@@ -22,7 +22,7 @@ This keeps the bridge typesafe: scalar/projective anchor cocycles are handled
 elsewhere and are not mixed into the weighted transport surface here.
 -/
 
-namespace WeightedWeylNormalizationBridge
+namespace InfoGeometry.Canonical.WeightedWeylNormalizationBridge
 
 open InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -507,4 +507,4 @@ theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_firstVariation_eq_z
 
 end Core
 
-end WeightedWeylNormalizationBridge
+end InfoGeometry.Canonical.WeightedWeylNormalizationBridge

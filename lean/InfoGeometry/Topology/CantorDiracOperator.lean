@@ -28,7 +28,7 @@ This is the concrete finite operator that can feed the existing
 
 noncomputable section
 
-namespace CantorDiracOperator
+namespace InfoGeometry.Topology.CantorDiracOperator
 
 /-- Binary word of length `n`, reused from the Clifford fractal-wavelet bridge. -/
 abbrev BinaryWord (n : ℕ) : Type :=
@@ -281,4 +281,4 @@ theorem modularThermalState_kms_boundary
 
 end CantorDiracKMSThermalVacuum
 
-end CantorDiracOperator
+end InfoGeometry.Topology.CantorDiracOperator

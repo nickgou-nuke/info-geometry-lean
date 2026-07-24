@@ -22,7 +22,7 @@ It does **not** prove a general KR-theory cascade, a global cobordism theorem,
 or a K-theoretic T-duality classification.
 -/
 
-namespace KleinBerryBoundaryBottBridge
+namespace InfoGeometry.Canonical.KleinBerryBoundaryBottBridge
 
 open InfoGeometry.Canonical.KleinBerryPhase
 open InfoGeometry.Canonical.KleinBottleBoundaryAction
@@ -85,4 +85,4 @@ theorem bottLift_exists (P : KleinBerryBoundaryBottPacket) :
 
 end KleinBerryBoundaryBottPacket
 
-end KleinBerryBoundaryBottBridge
+end InfoGeometry.Canonical.KleinBerryBoundaryBottBridge

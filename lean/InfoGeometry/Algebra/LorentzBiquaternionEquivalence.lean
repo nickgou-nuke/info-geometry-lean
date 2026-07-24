@@ -24,7 +24,7 @@ classification of Lorentz/biquaternion equivalence.
 
 noncomputable section
 
-namespace LorentzBiquaternionEquivalence
+namespace InfoGeometry.Algebra.LorentzBiquaternionEquivalence
 
 open Matrix Complex
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
@@ -94,6 +94,6 @@ theorem finite_lorentz_biquaternion_packet (t x y z : ℂ) :
     exactBoostTransport_preserves_spacetime_det t x y z,
     central_sign_transport_trivial (hermitianSpacetimePoint t x y z)⟩
 
-end LorentzBiquaternionEquivalence
+end InfoGeometry.Algebra.LorentzBiquaternionEquivalence
 
 end noncomputable section

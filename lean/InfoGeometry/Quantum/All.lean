@@ -7,6 +7,8 @@ import InfoGeometry.Quantum.EntanglementMonogamy
 import InfoGeometry.Quantum.FiniteEntanglementComplexityCore
 import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Quantum.Fock
+import InfoGeometry.Quantum.GeneralizedPauli
+import InfoGeometry.Quantum.GeneralizedPauliPowers
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Quantum.GeometricTensorTransport
@@ -23,6 +25,17 @@ import InfoGeometry.Quantum.ParitySupercharge
 import InfoGeometry.Quantum.PoincareSupercharge
 import InfoGeometry.Quantum.NoncommutativeFockBridge
 import InfoGeometry.Quantum.ProjectiveRayBridge
+import InfoGeometry.Quantum.Qutrit
+import InfoGeometry.Quantum.QutritBraidIncidenceBridge
+import InfoGeometry.Quantum.QutritCircuitGeometry
+import InfoGeometry.Quantum.QutritDensityMatrix
+import InfoGeometry.Quantum.QutritGates
+import InfoGeometry.Quantum.QutritMeasurement
+import InfoGeometry.Quantum.QutritMobiusFiniteFlowClassification
+import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
+import InfoGeometry.Quantum.QutritProjectiveColorBridge
+import InfoGeometry.Quantum.QutritProjectiveGeometryOwnerBridge
+import InfoGeometry.Quantum.QutritPrimitiveWeyl
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.RealKMonodromy
 import InfoGeometry.Quantum.RealMajorana
@@ -33,6 +46,7 @@ import InfoGeometry.Quantum.QuantumGeometryProjectorBridge
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.Quantum.SplitTrialityKernel
 import InfoGeometry.Quantum.SplitCliffordAtom
+import InfoGeometry.Quantum.SylvesterColimitBridge
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge

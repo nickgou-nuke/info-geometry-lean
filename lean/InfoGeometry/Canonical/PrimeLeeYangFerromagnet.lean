@@ -25,7 +25,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeLeeYangFerromagnet
+namespace InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
 open PrimeLeeYangFerromagneticChain
 
@@ -33,7 +33,7 @@ open PrimeLeeYangFerromagneticChain
 Finite prime-chain data.
 
 The logarithm positivity is stored explicitly so this anchor remains
-independent of heavy analytic coercion proof debt.
+independent of scalar-complex coercion proof obligations.
 -/
 @[rep_depth thermo]
 structure FinitePrimeChainData
@@ -200,4 +200,4 @@ theorem primeLeeYangFerromagnetOwnerTarget :
 
 end FinitePrimeChainData
 
-end PrimeLeeYangFerromagnet
+end InfoGeometry.Canonical.PrimeLeeYangFerromagnet

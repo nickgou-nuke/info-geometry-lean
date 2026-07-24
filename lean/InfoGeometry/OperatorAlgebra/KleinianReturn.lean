@@ -13,7 +13,7 @@ import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section
 
-namespace KleinianReturn
+namespace InfoGeometry.OperatorAlgebra.KleinianReturn
 
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
@@ -69,4 +69,4 @@ structure NonOrientableReturnInterpretation
     (T : TomitaCommutantDatum Op)
     (R : ProjectiveTomitaReturn Op T) where
 
-end KleinianReturn
+end InfoGeometry.OperatorAlgebra.KleinianReturn

@@ -16,7 +16,7 @@ before any genuine three-node divisibility theorem:
 * both factors negate under the basic transposition `x ↔ y`.
 -/
 
-namespace WeylA2AlternatingDeterminantShadow
+namespace InfoGeometry.Canonical.WeylA2AlternatingDeterminantShadow
 
 open InfoGeometry.Canonical.WeylA2CancellationChart
 
@@ -82,4 +82,4 @@ theorem alternating_determinant_packet :
 
 end Chart
 
-end WeylA2AlternatingDeterminantShadow
+end InfoGeometry.Canonical.WeylA2AlternatingDeterminantShadow

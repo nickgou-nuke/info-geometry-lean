@@ -10,7 +10,7 @@ structure.  It proves only facts already rooted in `DoubledSpace`, `Hestenes`,
 and `GeometricRotor`.
 -/
 
-namespace RealDoubledHestenesAnchor
+namespace InfoGeometry.Clifford.RealDoubledHestenesAnchor
 
 open InfoGeometry.Krein
 
@@ -58,4 +58,4 @@ theorem hestenes_pseudoscalar_rep_sq :
       ContinuousLinearMap.id ℝ H₂ :=
   InfoGeometry.Clifford.Hestenes.cl11Rep_pseudoscalar_comp_self (E := E)
 
-end RealDoubledHestenesAnchor
+end InfoGeometry.Clifford.RealDoubledHestenesAnchor

@@ -146,7 +146,7 @@ five pillars are equivalent — they are different readings of the same
 inductive limit.
 -/
 
-namespace AbsoluteCapstone
+namespace InfoGeometry.Arithmetic.AbsoluteCapstone
 
 open InfoGeometry.Algebra.TensorAlgebraInduction
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -345,4 +345,4 @@ theorem absolute_capstone
         hSource hUnit x,
       pillar_weyl_character_is_inverse_zeta L β⟩
 
-end AbsoluteCapstone
+end InfoGeometry.Arithmetic.AbsoluteCapstone

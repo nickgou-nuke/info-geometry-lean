@@ -19,7 +19,7 @@ It DOES prove:
   the output index stays inside `{-1,0,1}`.
 -/
 
-namespace WittProjectiveClosureHonest
+namespace InfoGeometry.Algebra.WittProjectiveClosureHonest
 
 open VirasoroProject
 open VirasoroProject.WittAlgebra
@@ -118,4 +118,4 @@ theorem projective_sum_mem_of_bracket_coeff_ne_zero
 
 end ClosureOnly
 
-end WittProjectiveClosureHonest
+end InfoGeometry.Algebra.WittProjectiveClosureHonest

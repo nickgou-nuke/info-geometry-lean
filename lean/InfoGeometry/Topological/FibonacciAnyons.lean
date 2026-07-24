@@ -13,7 +13,7 @@ directly.
 
 set_option autoImplicit false
 
-namespace FibonacciAnyons
+namespace InfoGeometry.Topological.FibonacciAnyons
 
 open Matrix
 
@@ -176,4 +176,4 @@ theorem fibonacci_artin_relation_map {K L : Type*} [CommRing K] [CommRing L]
   have hMap := congrArg (mapMatrix f) hArtin
   simpa [mapMatrix_mul, mapMatrix_R, mapMatrix_B] using hMap
 
-end FibonacciAnyons
+end InfoGeometry.Topological.FibonacciAnyons

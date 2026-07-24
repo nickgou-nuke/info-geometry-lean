@@ -15,7 +15,7 @@ The infinite-measure extension remains an explicit open problem and must be
 added with a concrete witness theorem before this file is broadened again.
 -/
 
-namespace DimensionAgnosticModularKLDivergence
+namespace InfoGeometry.Canonical.DimensionAgnosticModularKLDivergence
 
 open InfoGeometry
 open InfoGeometry.PositiveMeasure
@@ -42,4 +42,4 @@ theorem generalizedKL_scale_shape_split (μ ν : PositiveMeasure α ℝ) :
   simpa [activeShapeTerm, kernelMassTerm] using
     InfoGeometry.Thermo.ModularKLDivergence.generalizedKL_scale_shape_split (α := α) μ ν
 
-end DimensionAgnosticModularKLDivergence
+end InfoGeometry.Canonical.DimensionAgnosticModularKLDivergence

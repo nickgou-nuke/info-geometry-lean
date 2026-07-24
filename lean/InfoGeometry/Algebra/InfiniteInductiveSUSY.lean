@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.FiniteInductiveSUSY
+import InfoGeometry.External.Auto.FractalKleinSUSYFramework
 
 /-!
 # Infinite target images of a finite inductive SUSY chain

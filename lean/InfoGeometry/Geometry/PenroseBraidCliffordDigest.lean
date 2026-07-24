@@ -8,8 +8,8 @@ the Penrose--Artin--Clifford synthesis prompt.
 
 It deliberately does not claim to formalize aperiodicity of Penrose tilings,
 configuration-space fundamental groups, Lorentzian spin geometry, Jones
-polynomials, or analytic/topological physics.  Those are open closure debt
-unless supplied by precise definitions and proof obligations.
+polynomials, or topological/physics colimit claims.  Those are open closure
+debt unless supplied by precise definitions and proof obligations.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -32,7 +32,7 @@ unless supplied by precise definitions and proof obligations.
 * Infinite braid-group colimits as categorical colimits.
 -/
 
-namespace PenroseBraidCliffordDigest
+namespace InfoGeometry.Geometry.PenroseBraidCliffordDigest
 
 open Matrix
 
@@ -124,4 +124,4 @@ theorem cliffordF_sq : cliffordF * cliffordF = -1 := by
 theorem cliffordEF_anticommute : cliffordE * cliffordF + cliffordF * cliffordE = 0 := by
   native_decide
 
-end PenroseBraidCliffordDigest
+end InfoGeometry.Geometry.PenroseBraidCliffordDigest

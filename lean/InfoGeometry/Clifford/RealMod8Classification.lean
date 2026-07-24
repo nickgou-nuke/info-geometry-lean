@@ -20,7 +20,7 @@ It does not assert matrix-algebra isomorphisms for `Cl(p,q)`.
 Those are deeper algebraic theorems not currently owned by the repo.
 -/
 
-namespace RealMod8Classification
+namespace InfoGeometry.Clifford.RealMod8Classification
 
 /-- Residue class of `p - q mod 8`. -/
 inductive ClMod8 where
@@ -286,4 +286,4 @@ theorem hasDoubleDivisionRing_iff (r : ClMod8) :
     hasDoubleDivisionRing r ↔ r = .r1 ∨ r = .r5 := by
   rfl
 
-end RealMod8Classification
+end InfoGeometry.Clifford.RealMod8Classification

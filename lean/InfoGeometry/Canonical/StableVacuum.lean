@@ -20,7 +20,7 @@ separate pieces of data.
 
 noncomputable section
 
-namespace StableVacuum
+namespace InfoGeometry.Canonical.StableVacuum
 
 open scoped BigOperators
 
@@ -631,4 +631,4 @@ theorem deformation_metric_posSemidef
 
 end StableVacuumArchitecture
 
-end StableVacuum
+end InfoGeometry.Canonical.StableVacuum

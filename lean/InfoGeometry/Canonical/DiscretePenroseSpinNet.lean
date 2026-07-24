@@ -15,7 +15,7 @@ The structure is intentionally primitive. It does not assert continuum limits,
 AF completions, or physical reconstruction theorems.
 -/
 
-namespace DiscretePenroseSpinNet
+namespace InfoGeometry.Canonical.DiscretePenroseSpinNet
 
 open CategoryTheory
 open InfoGeometry.Canonical.PenrosePosetCategoryFoundation
@@ -149,4 +149,4 @@ def twistorScale
 
 end Basic
 
-end DiscretePenroseSpinNet
+end InfoGeometry.Canonical.DiscretePenroseSpinNet

@@ -27,7 +27,7 @@ open InfoGeometry.Algebra.CuntzMatrixUnits
 
 noncomputable section
 
-namespace CuntzNormalForm
+namespace InfoGeometry.Algebra.CuntzNormalForm
 
 /-- The algebra CuntzAlg n is spanned by the n² matrix units E_{ij}.
     Every element decomposes as Σ_{i,j} P_i x P_j (Pierce decomposition). -/
@@ -51,4 +51,4 @@ theorem matrix_unit_product_rule (n : ℕ) (i j k l : Fin n) :
     (if j = k then cuntzS n i * cuntzSdag n l else 0) :=
   matrix_unit_mul n i j k l
 
-end CuntzNormalForm
+end InfoGeometry.Algebra.CuntzNormalForm

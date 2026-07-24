@@ -12,7 +12,7 @@ This is still a finite quotient shadow, not a proof that an arbitrary abstract
 kernel-checked generator relation needed by later finite S3 quotient bridges.
 -/
 
-namespace ArtinBraidS3Quotient
+namespace InfoGeometry.Topology.ArtinBraidS3Quotient
 
 /-- The two adjacent Artin generators of `B₃`. -/
 abbrev B3Gen := Fin 2
@@ -79,4 +79,4 @@ theorem s3_artin_quotient_packet :
         s3ArtinGenerator ⟨1, by decide⟩ := by
   exact ⟨rfl, rfl, sigma1_sq, sigma2_sq, s3ArtinGenerator_braid_relation⟩
 
-end ArtinBraidS3Quotient
+end InfoGeometry.Topology.ArtinBraidS3Quotient

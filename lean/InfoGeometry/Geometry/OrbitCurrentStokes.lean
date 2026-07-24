@@ -17,7 +17,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace OrbitCurrentStokes
+namespace InfoGeometry.Geometry.OrbitCurrentStokes
 
 /--
 An orbit-current Stokes datum.
@@ -196,4 +196,4 @@ by
     simp [finiteDefectOrbitCurrentDatum, finiteDefectOrbitCurrentStokesDatum]
   exact finiteDefectOrbitCurrentDatum.residue_eq_surfaceIntegral_defect hClosed
 
-end OrbitCurrentStokes
+end InfoGeometry.Geometry.OrbitCurrentStokes

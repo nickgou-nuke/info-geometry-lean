@@ -16,10 +16,9 @@ On the excited subspace ℓ²({n ≥ 2}):
 The strict contraction ‖e^{-sH}|_{n≥2}‖ ≤ 2^{-Re(s)} < 1 proves
 exponential decay of correlations to the KMS ground state.
 
-At the critical line Re(s) = 0: |2^{-it}| = 1 — contraction vanishes,
-flow becomes unitary, system orbits the Lee-Yang circle. This IS the
-Cayley compactification κ(s) = (s-1)/(s+1) sending Re(s) = 1/2 to
-the unit circle.
+At `Re(s) = 0`, the scalar factor `|2^{-it}|` has modulus `1`, so the
+positive-real-part contraction estimate no longer applies.  This elementary
+bound is separate from any Lee--Yang or Riemann-hypothesis statement.
 
 ## The Spectral Gap Typeclass
 
@@ -35,13 +34,13 @@ For the primon gas: gap = log 2.
 - Exponential decay rate 2^{-Re(s)} = correlation length 1/log 2
 - Re(s) → ∞: KMS state localizes on |1⟩, ζ(s) → 1
 - Re(s) → 0: ergodic, all states equally weighted
-- Re(s) = 0 (critical): unitary flow, Lee-Yang circle, phase transition
+- Re(s) = 0: the displayed positive-real-part contraction estimate degenerates
 -/
 
 open Complex
 open Real
 
-namespace SpectralGap
+namespace InfoGeometry.Arithmetic.SpectralGap
 
 /--
 The spectral gap of the primon gas: log 2 > 0.
@@ -72,11 +71,8 @@ theorem primon_norm_bound (s : ℂ) (hσ : s.re > 0) (n : ℕ) (hn : 2 ≤ n) :
 /--
 The spectral contraction lemma: on the excited subspace, the norm
 converges to 0 as Re(s) → ∞, contracts strictly for Re(s) > 0,
-and becomes unitary (norm = 1) on the critical line Re(s) = 0.
-
-This IS the Otto/Wasserstein gradient flow dissipation bound:
-    d/dt ‖e^{-tH} v‖ ≤ -log 2 · ‖e^{-tH} v‖
-so the free energy dissipates exponentially fast to the KMS vacuum.
+and the displayed scalar contraction estimate degenerates at `Re(s) = 0`.
+This file proves only the scalar finite-mode inequality below.
 -/
 theorem spectral_contraction_on_excited_subspace (s : ℂ) (hσ : s.re > 0) (n : ℕ) (hn : 2 ≤ n) :
     (n : ℝ) ^ (-s.re) ≤ (2 : ℝ) ^ (-s.re) := by
@@ -86,23 +82,11 @@ theorem spectral_contraction_on_excited_subspace (s : ℂ) (hσ : s.re > 0) (n :
   exact Real.rpow_le_rpow_of_nonpos zero_lt_two hn2 h_exp_nonpos
 
 /-
-**Connection to the Lee-Yang / Cayley Boundary.**
+**Boundary note.**
 
-The Cayley map κ(s) = (s-1)/(s+1) sends the critical line Re(s) = 1/2
-to the Lee-Yang unit circle |z| = 1 (proved in CayleyCriticalLineCircleBridge.lean).
-
-At real s > 0: the Boltzmann weight e^{-s} < 1 contracts into the
-interior of the unit disk — spectral gap, exponential decay, unique KMS.
-
-At Re(s) = 0 (critical): |e^{-it}| = 1 orbits the unit circle —
-the contraction vanishes, the spectral gap closes, the phase transition
-occurs at the Hagedorn temperature β = 1.
-
-The spectral gap log 2 prevents zeros inside the unit disk (Lee-Yang
-theorem) and off the critical line (Riemann Hypothesis). The convergence
-of the Euler product for Re(s) > 1/2 follows from the strict contraction
-on the excited subspace combined with the absolute convergence for
-Re(s) > 1 (ZetaConvergence.lean).
+The Cayley/Lee--Yang/RH interpretations are not proved in this file.  The
+formal content here is the positivity of `log 2` and the scalar estimate
+`n^{-Re(s)} < 1` for `n ≥ 2` and `Re(s) > 0`.
 -/
 
-end SpectralGap
+end InfoGeometry.Arithmetic.SpectralGap

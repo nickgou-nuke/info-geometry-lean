@@ -36,7 +36,7 @@ Together, these two files form the complete kernel-checked TKK / Pin(5,5) packet
 
 noncomputable section
 
-namespace O55ClosureByCommutators
+namespace InfoGeometry.Canonical.O55ClosureByCommutators
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Clifford.ClNN
@@ -126,4 +126,4 @@ theorem o55_closure_by_commutators_capstone :
   exact ⟨null_generator_packet, dilation_generator_def_packet, J_generator_def_packet,
     J_square_packet, adjoint_closure_packet, theta_reflection_packet, theta_involution_packet⟩
 
-end O55ClosureByCommutators
+end InfoGeometry.Canonical.O55ClosureByCommutators

@@ -8,7 +8,7 @@ canonical bridge namespace. It re-exports the owner surface with the canonical
 names used elsewhere in the repo.
 -/
 
-namespace CurrentSugawaraFlipBridge
+namespace InfoGeometry.Canonical.CurrentSugawaraFlipBridge
 
 open VirasoroProject
 open Module

@@ -12,7 +12,7 @@ analytic continuation theorem.
 
 noncomputable section
 
-namespace PrimeGrandCanonicalSouriauSymmetry
+namespace InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauSymmetry
 
 /-- The critical line `Re(s) = 1/2`. -/
 def CriticalLine (s : ℂ) : Prop :=
@@ -47,4 +47,4 @@ theorem zetaPlaneAct_preserves_criticalLine
   · exact hs
   · linarith [hs]
 
-end PrimeGrandCanonicalSouriauSymmetry
+end InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauSymmetry

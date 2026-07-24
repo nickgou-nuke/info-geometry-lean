@@ -14,7 +14,7 @@ content is the finite block multiplication table:
 * odd times odd is even.
 -/
 
-namespace SupermatrixKoszul
+namespace InfoGeometry.Algebra.SupermatrixKoszul
 
 open Matrix
 
@@ -138,4 +138,4 @@ theorem parityBlock_mul_oddBlock_mul_parityBlock
   fin_cases i <;> fin_cases j <;>
     simp [parityBlock, oddBlock, Matrix.mul_apply]
 
-end SupermatrixKoszul
+end InfoGeometry.Algebra.SupermatrixKoszul

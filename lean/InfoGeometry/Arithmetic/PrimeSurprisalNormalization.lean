@@ -22,7 +22,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeSurprisalNormalization
+namespace InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 
 open InfoGeometry.Thermodynamics
 
@@ -210,4 +210,4 @@ theorem complexPrimeSouriauProductSurprisal_eq_re_mul_sum
 
 /-! ## 4. Prime-register owner target -/
 
-end PrimeSurprisalNormalization
+end InfoGeometry.Arithmetic.PrimeSurprisalNormalization

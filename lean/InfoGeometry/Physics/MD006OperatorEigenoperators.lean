@@ -25,7 +25,7 @@ asserted beyond these finite identities.
 
 noncomputable section
 
-namespace MD006OperatorEigenoperators
+namespace InfoGeometry.Physics.MD006OperatorEigenoperators
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
@@ -235,6 +235,6 @@ theorem repaired_MD006_operator_eigenoperator_packet (A B X : MatrixQuantumCarri
     sigma3_comm_E21,
     E12_comm_E21⟩
 
-end MD006OperatorEigenoperators
+end InfoGeometry.Physics.MD006OperatorEigenoperators
 
 end noncomputable section

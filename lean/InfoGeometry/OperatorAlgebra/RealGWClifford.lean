@@ -29,7 +29,7 @@ import Mathlib
 
 noncomputable section
 
-namespace RealGWClifford
+namespace InfoGeometry.OperatorAlgebra.RealGWClifford
 
 /--
 Real Clifford Hilbert module packet.
@@ -342,4 +342,4 @@ theorem realGWToSplitKreinBridge_packet
     Nonempty RealGWToSplitKreinBridgePacket :=
   constructRealGWToSplitKreinBridgeTarget P
 
-end RealGWClifford
+end InfoGeometry.OperatorAlgebra.RealGWClifford

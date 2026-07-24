@@ -24,7 +24,7 @@ other repository modules and are not re-proved here.
 
 noncomputable section
 
-namespace FiniteSymmetryAtoms
+namespace InfoGeometry.Prequantum.FiniteSymmetryAtoms
 
 /-- Real coordinate proxy for a unit complex number. -/
 @[ext]
@@ -140,4 +140,4 @@ theorem polarization_identity {V : Type*} [Add V]
   rw [symm y x]
   ring
 
-end FiniteSymmetryAtoms
+end InfoGeometry.Prequantum.FiniteSymmetryAtoms

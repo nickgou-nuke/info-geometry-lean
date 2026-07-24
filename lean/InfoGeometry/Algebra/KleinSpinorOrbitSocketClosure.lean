@@ -18,7 +18,7 @@ open InfoGeometry.Clifford.Arxiv160309063
 open InfoGeometry.Algebra.KleinSpinorOrbit
 open InfoGeometry.Algebra.SplitJordanSpinor
 
-namespace KleinSpinorOrbitSocketClosure
+namespace InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
 /-- Generic representative `(1,0)` raw stabilizer equation for `C_s²`. -/
 theorem generic_representative_complete_proved :
@@ -52,4 +52,4 @@ theorem null_stabilizer_description_proved :
     ∀ (t : ℚ), Stabilizes (CsMatrix2.nullEbarFamily t) nullRep :=
   nullEbarFamily_stabilizes
 
-end KleinSpinorOrbitSocketClosure
+end InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure

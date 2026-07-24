@@ -32,7 +32,7 @@ None.
 
 noncomputable section
 
-namespace KANWallpaperSuperchargeReadout
+namespace InfoGeometry.Topology.KANWallpaperSuperchargeReadout
 
 open InfoGeometry.Topology.KANWallpaper
 open InfoGeometry.Algebra.FiniteInductiveSUSY
@@ -54,6 +54,6 @@ theorem glide_self_anticomm_eq_two_nsmul_translation :
   rw [glide_self_anticomm_eq_double_translation]
   simp [two_mul]
 
-end KANWallpaperSuperchargeReadout
+end InfoGeometry.Topology.KANWallpaperSuperchargeReadout
 
 end noncomputable section

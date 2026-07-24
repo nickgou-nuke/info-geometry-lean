@@ -13,12 +13,12 @@ subset-state witness and is projected from Mathlib's arithmetic Möbius theorem,
 not stored as a witness field.
 -/
 
-namespace ParityTraceWitness
+namespace InfoGeometry.Canonical.ParityTraceWitness
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 open FormalPrimeRootSystem
-open PrimeBitWittenIndex
+open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-- Integer sign attached to a finite subset state. -/
 @[rep_depth thermo]
@@ -130,4 +130,4 @@ theorem splitParityCoefficient_eq_mobius {L : FormalPrimeRootLattice}
     splitParityCoefficient A n = mobiusCoefficient n :=
   rfl
 
-end ParityTraceWitness
+end InfoGeometry.Canonical.ParityTraceWitness

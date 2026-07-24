@@ -13,7 +13,7 @@ it does not claim a global infinite-mode identification theorem.
 
 noncomputable section
 
-namespace NilpotentFluxVirasoroReadout
+namespace InfoGeometry.Canonical.NilpotentFluxVirasoroReadout
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -107,4 +107,4 @@ theorem virasoro_coefficient_zero_of_global_mode
   rw [virasoro_cubic_zero_of_global_mode hm]
   norm_num
 
-end NilpotentFluxVirasoroReadout
+end InfoGeometry.Canonical.NilpotentFluxVirasoroReadout

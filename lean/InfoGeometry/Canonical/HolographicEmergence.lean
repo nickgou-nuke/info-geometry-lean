@@ -18,7 +18,7 @@ emergence bridge. Degenerate zero-quadratic-form scaffolds have been removed.
 
 set_option linter.unusedSectionVars false
 
-namespace HolographicEmergence
+namespace InfoGeometry.Canonical.HolographicEmergence
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.WeylInformationGauge
@@ -154,4 +154,4 @@ theorem exists_gaugeOrderHysteresis :
 
 end TorsionHysteresis
 
-end HolographicEmergence
+end InfoGeometry.Canonical.HolographicEmergence

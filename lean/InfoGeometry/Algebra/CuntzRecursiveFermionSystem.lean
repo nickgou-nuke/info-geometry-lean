@@ -1,6 +1,9 @@
-import InfoGeometry.Algebra
+import InfoGeometry.Algebra.KawamuraCuntzCAR
+import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
-namespace CuntzRecursiveFermionSystem
+open InfoGeometry.Topology
+
+namespace InfoGeometry.Algebra.CuntzRecursiveFermionSystem
 
 /-!
 # Maya Diagrams and the Infinite Wedge Representation
@@ -232,4 +235,4 @@ noncomputable def RFS_fermion {Op : Type*} [Ring Op] [StarRing Op]
     (C : CuntzO2Carrier Op) (n : ℕ) : Op :=
   kawamuraCARSequence C n
 
-end CuntzRecursiveFermionSystem
+end InfoGeometry.Algebra.CuntzRecursiveFermionSystem

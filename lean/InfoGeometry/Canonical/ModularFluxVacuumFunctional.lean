@@ -18,7 +18,7 @@ No Type III theorem, no predual topology, and no infinite-dimensional boundednes
 claim is made here.
 -/
 
-namespace ModularFluxVacuumFunctional
+namespace InfoGeometry.Canonical.ModularFluxVacuumFunctional
 
 section Algebraic
 
@@ -193,4 +193,4 @@ theorem nilpotentFlowM2_flux_functional_zero
 
 end ConcreteM2Seed
 
-end ModularFluxVacuumFunctional
+end InfoGeometry.Canonical.ModularFluxVacuumFunctional

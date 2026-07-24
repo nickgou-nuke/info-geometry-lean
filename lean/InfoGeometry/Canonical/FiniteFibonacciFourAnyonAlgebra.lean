@@ -22,7 +22,7 @@ No conformal-block construction.
 No monodromy matrix claim.
 -/
 
-namespace FiniteFibonacciFourAnyonAlgebra
+namespace InfoGeometry.Canonical.FiniteFibonacciFourAnyonAlgebra
 
 /-- General `Zₖ` order-parameter conformal dimension, as a rational scalar. -/
 def sigmaDimension (k l : ℚ) : ℚ :=
@@ -123,4 +123,4 @@ theorem psi_limit_linear_relation {W η : ℝ} (hη : η ≠ 0) :
   field_simp [hη]
   ring
 
-end FiniteFibonacciFourAnyonAlgebra
+end InfoGeometry.Canonical.FiniteFibonacciFourAnyonAlgebra

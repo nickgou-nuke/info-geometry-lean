@@ -3,6 +3,10 @@ import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
+/-- Concrete seed data for the singular-ring node-splitting package. -/
+structure RealInput40SingularRingNodeSplittingData where
+  dummy : Unit := ()
+
 /-- The residual factor `Q(z,u)` from the audited real-input-40 spectral-collision certificate. -/
 def realInput40CollisionQ (z u : ℝ) : ℝ :=
   1 - z - 6 * u * z ^ 2 + 2 * u * z ^ 3 + (9 * u ^ 2 - u) * z ^ 4 + (u - 3 * u ^ 2) * z ^ 5 -
@@ -111,10 +115,12 @@ lemma realInput40NodeBranchCoeffs_vanish (s : ℝ) (hs : s ^ 2 = 1) :
         realInput40NodeCubicCoeff
       nlinarith
 
+namespace RealInput40SingularRingNodeSplittingData
+
 /-- Concrete node-splitting statement: the local polynomial has the audited expansion, the tangent
 cone has discriminant `89`, and the explicit `±` branch coefficients cancel the `U²`, `U³`, and
 `U⁴` terms in the formal branch substitution. -/
-def node_splitting_statement : Prop :=
+def node_splitting_statement (_D : RealInput40SingularRingNodeSplittingData) : Prop :=
   (∀ Z U : ℝ, realInput40LocalNodePolynomial Z U = realInput40LocalNodeExpansion Z U) ∧
     (∀ s : ℝ, s ^ 2 = 1 →
       realInput40NodeBranchCoeff2 (realInput40NodeSlope s) = 0 ∧
@@ -129,6 +135,10 @@ def node_splitting_statement : Prop :=
     realInput40NodeSlope (-1) = (17 - Real.sqrt 89) / 20 ∧
     (17 : ℝ) ^ 2 - 4 * 10 * 5 = 89 ∧
     realInput40NodeSlope 1 ≠ realInput40NodeSlope (-1)
+
+end RealInput40SingularRingNodeSplittingData
+
+open RealInput40SingularRingNodeSplittingData
 
 lemma realInput40NodeEigenvalueBranch_hasDerivAt (s : ℝ) :
     HasDerivAt (realInput40NodeEigenvalueBranch s) (-realInput40NodeSlope s) 0 := by
@@ -151,18 +161,25 @@ lemma realInput40ExplicitRingBranch_hasDerivAt :
     Real.hasDerivAt_sqrt (by norm_num)
   simpa [realInput40ExplicitRingBranch] using hSqrt.neg
 
+namespace RealInput40SingularRingNodeSplittingData
+
 /-- First-order eigenvalue drifts at the singular ring node: the two linearized analytic branches
 coming from the tangent cone have slopes `-(17 ± √89) / 20` in the shifted coordinate `U = u - 1`,
 while the explicit unit-ring branch `z(u) = -√u` has first-order drift `-1/2` at `u = 1`. -/
-def eigenvalueDriftStatement : Prop :=
+def eigenvalueDriftStatement (_D : RealInput40SingularRingNodeSplittingData) : Prop :=
   HasDerivAt (realInput40NodeEigenvalueBranch 1) (-realInput40NodeSlope 1) 0 ∧
     HasDerivAt (realInput40NodeEigenvalueBranch (-1)) (-realInput40NodeSlope (-1)) 0 ∧
     HasDerivAt realInput40ExplicitRingBranch (-(1 / 2)) 1 ∧
     -realInput40NodeSlope 1 = -(17 + Real.sqrt 89) / 20 ∧
     -realInput40NodeSlope (-1) = -(17 - Real.sqrt 89) / 20
 
+end RealInput40SingularRingNodeSplittingData
+
+/-- Concrete singular-ring node-splitting package for the audited real-input-40 collision
+polynomial.
+    thm:real-input-40-singular-ring-node-splitting -/
 theorem paper_real_input_40_singular_ring_node_splitting
-    : node_splitting_statement := by
+    (D : RealInput40SingularRingNodeSplittingData) : D.node_splitting_statement := by
   refine ⟨realInput40LocalNodePolynomial_eq_expansion, realInput40NodeBranchCoeffs_vanish, ?_,
     ?_, by norm_num, ?_⟩
   · norm_num [realInput40NodeSlope]
@@ -180,8 +197,10 @@ theorem paper_real_input_40_singular_ring_node_splitting
       simpa [realInput40NodeSlope] using h
     exact hslope h'
 
+/-- First-order eigenvalue drifts at the real-input-40 singular ring node.
+    cor:real-input-40-singular-ring-eigenvalue-drift -/
 theorem paper_real_input_40_singular_ring_eigenvalue_drift
-    : eigenvalueDriftStatement := by
+    (D : RealInput40SingularRingNodeSplittingData) : D.eigenvalueDriftStatement := by
   refine ⟨realInput40NodeEigenvalueBranch_hasDerivAt 1,
     realInput40NodeEigenvalueBranch_hasDerivAt (-1), realInput40ExplicitRingBranch_hasDerivAt,
     ?_, ?_⟩

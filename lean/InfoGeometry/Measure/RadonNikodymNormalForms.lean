@@ -8,7 +8,7 @@ set_option autoImplicit false
 open MeasureTheory
 open scoped ENNReal
 
-namespace RadonNikodymNormalForms
+namespace InfoGeometry.Measure.RadonNikodymNormalForms
 
 section Commutative
 
@@ -97,4 +97,4 @@ theorem rnDeriv_pmf_eq_pointwise_ratio
 
 end Discrete
 
-end RadonNikodymNormalForms
+end InfoGeometry.Measure.RadonNikodymNormalForms

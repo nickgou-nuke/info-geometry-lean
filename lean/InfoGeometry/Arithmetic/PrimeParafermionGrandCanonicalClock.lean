@@ -33,7 +33,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeParafermionGrandCanonicalClock
+namespace InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock
 
 open InfoGeometry.Arithmetic.PrimeSuperalgebra
 open InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
@@ -628,4 +628,4 @@ theorem finite_parafermion3_two_three_k2_quotient_example :
       ((1 - (1 : ℚ) / 3 ^ 6) / (1 - (1 : ℚ) / 3 ^ 2)) = 637 / 432 :=
   finite_parafermion3_primon_quotient_two_three_k2
 
-end PrimeParafermionGrandCanonicalClock
+end InfoGeometry.Arithmetic.PrimeParafermionGrandCanonicalClock

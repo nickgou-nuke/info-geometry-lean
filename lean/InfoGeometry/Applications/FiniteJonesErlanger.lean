@@ -16,7 +16,7 @@ import InfoGeometry.Applications.FiniteJonesModel
 
 noncomputable section
 
-namespace FiniteJonesErlanger
+namespace InfoGeometry.Applications.FiniteJonesErlanger
 
 open InfoGeometry.Applications.FiniteJonesModel
 open InfoGeometry.Applications.FiniteJonesModel.Polarization
@@ -232,4 +232,4 @@ def transportedCore
 
 end GeneralJonesConjugation
 
-end FiniteJonesErlanger
+end InfoGeometry.Applications.FiniteJonesErlanger

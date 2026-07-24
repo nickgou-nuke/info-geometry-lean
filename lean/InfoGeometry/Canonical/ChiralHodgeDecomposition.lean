@@ -19,7 +19,7 @@ This file stays owner-respecting:
   supercharge transport files.
 -/
 
-namespace ChiralHodgeDecomposition
+namespace InfoGeometry.Canonical.ChiralHodgeDecomposition
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.PolarizedSector
@@ -243,4 +243,4 @@ theorem rootChiralHodge_spine :
 
 end Core
 
-end ChiralHodgeDecomposition
+end InfoGeometry.Canonical.ChiralHodgeDecomposition

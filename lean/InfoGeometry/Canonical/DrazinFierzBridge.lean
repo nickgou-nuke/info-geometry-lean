@@ -29,7 +29,7 @@ a compatibility-assumption readout.
 
 noncomputable section
 
-namespace DrazinFierzBridge
+namespace InfoGeometry.Canonical.DrazinFierzBridge
 
 open scoped BigOperators
 open MeasureTheory
@@ -473,4 +473,4 @@ structure BirkhoffDecomposition4
         (fun π : Equiv.Perm (Fin 4) =>
           weights π • permutationMatrix4 π)
 
-end DrazinFierzBridge
+end InfoGeometry.Canonical.DrazinFierzBridge

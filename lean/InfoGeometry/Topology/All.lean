@@ -91,6 +91,8 @@ import InfoGeometry.Topology.DelaunayPureBraidRepresentation
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.GeneralizedCircleMobius
+import InfoGeometry.Topology.MobiusDeRhamMonodromy
+import InfoGeometry.Topology.CliffordMobiusDeRhamMonodromy
 import InfoGeometry.Topology.MobiusGeometry
 import InfoGeometry.Topology.MobiusCantorTKKClosure
 import InfoGeometry.Topology.MobiusSouriauThermodynamicFlow

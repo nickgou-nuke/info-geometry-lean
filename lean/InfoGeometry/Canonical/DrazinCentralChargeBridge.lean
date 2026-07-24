@@ -17,7 +17,7 @@ This file keeps the currently honest separation:
 The bridge packages both on the same doubled real carrier.
 -/
 
-namespace DrazinCentralChargeBridge
+namespace InfoGeometry.Canonical.DrazinCentralChargeBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorialCentralCharge
@@ -326,4 +326,4 @@ end DrazinLane
 
 end CarrierLane
 
-end DrazinCentralChargeBridge
+end InfoGeometry.Canonical.DrazinCentralChargeBridge

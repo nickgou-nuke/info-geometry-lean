@@ -18,7 +18,7 @@ is already present on the recursive head channel:
 - the lightlike null pair on the head factor.
 -/
 
-namespace SplitCliffordHeadLift
+namespace InfoGeometry.Canonical.SplitCliffordHeadLift
 
 open SplitCliffordTensorBridge
 open InfoGeometry.Clifford.ClNN
@@ -254,4 +254,4 @@ private theorem headLeftFactor_tmul_smul (n : ℕ) (a : ℝ)
   apply (splitCliffordTensorStepEquiv n).symm.injective
   simp [headNullMinusTensor, headNullPlusTensor]
 
-end SplitCliffordHeadLift
+end InfoGeometry.Canonical.SplitCliffordHeadLift

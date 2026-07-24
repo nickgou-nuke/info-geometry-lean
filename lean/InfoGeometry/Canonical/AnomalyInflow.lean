@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.TopologicalInvariants
 import InfoGeometry.Canonical.HeatKernel
 set_option linter.unusedVariables false
 
-namespace AnomalyInflow
+namespace InfoGeometry.Canonical.AnomalyInflow
 
 open TopologicalInvariants
 open HeatKernel
@@ -80,4 +80,4 @@ theorem anomalyInflowClosure
   simpa [AnomalyInflowClosure, bulkChernSimonsVariation] using
     anomaly_inflow_cancellation (E := E) L IST _hFlat
 
-end AnomalyInflow
+end InfoGeometry.Canonical.AnomalyInflow

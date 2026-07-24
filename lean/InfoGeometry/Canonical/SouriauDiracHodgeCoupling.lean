@@ -37,7 +37,7 @@ operator constants are introduced.
 * `dikin_bound` — ‖Δ(ε) - I - εK‖ ≤ (2√2)·ε²
 -/
 
-namespace SouriauDiracHodgeCoupling
+namespace InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical.BostConnesGalois
@@ -656,4 +656,4 @@ structure CouplingPacket where
 /-- The assembled coupling record. -/
 def coupling : CouplingPacket := {}
 
-end SouriauDiracHodgeCoupling
+end InfoGeometry.Canonical.SouriauDiracHodgeCoupling

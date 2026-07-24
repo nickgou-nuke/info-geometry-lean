@@ -14,7 +14,7 @@ namespace InfoGeometry
 namespace GromovWittenErlangen
 namespace CP1DrazinModel
 
-open DrazinProjectionLocalization
+open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 
 /-- Two fixed sectors of the minimal `CP^1`-style graph. -/
 inductive Fixed where

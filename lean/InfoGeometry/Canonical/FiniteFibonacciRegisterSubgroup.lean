@@ -23,7 +23,7 @@ No density/Solovay--Kitaev theorem.
 No physical fault-tolerance claim.
 -/
 
-namespace FiniteFibonacciRegisterSubgroup
+namespace InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
 
 open FiniteFibonacciComputationalSpace
 open FiniteFibonacciMonodromyInterface
@@ -140,4 +140,4 @@ theorem registerBlockDiagonalWord_no_leakage {N : ℕ} {NC : Type*}
       (braidWordAction (blockDiagonalHalfMonodromy onComputational onNonComputational) w x) :=
   blockDiagonalBraidWordAction_preserves_computational onComputational onNonComputational w hx
 
-end FiniteFibonacciRegisterSubgroup
+end InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup

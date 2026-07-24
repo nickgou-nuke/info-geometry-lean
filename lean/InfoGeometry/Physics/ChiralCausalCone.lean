@@ -24,7 +24,7 @@ as `λ ⊗ λ̃†`, and the circular polarization basis `{ε⁺, ε⁻}` is the
 
 noncomputable section
 
-namespace ChiralCausalCone
+namespace InfoGeometry.Physics.ChiralCausalCone
 
 open Matrix
 
@@ -660,4 +660,4 @@ theorem chiral_causal_cone_synthesis :
 #check circular_polarization_closure
 #check chiral_causal_cone_synthesis
 
-end ChiralCausalCone
+end InfoGeometry.Physics.ChiralCausalCone

@@ -22,7 +22,7 @@ asserted here.
 
 noncomputable section
 
-namespace ArithmeticSuperchargeHopfBridge
+namespace InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
 
 /-! ## 1. Algebraic supercharge packet -/
 
@@ -101,4 +101,4 @@ theorem supercharge_commutes_with_hamiltonian :
 
 end ParitySuperchargePacket
 
-end ArithmeticSuperchargeHopfBridge
+end InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge

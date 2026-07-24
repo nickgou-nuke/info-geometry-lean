@@ -43,7 +43,7 @@ module.
 
 noncomputable section
 
-namespace NonOrientableWeylSemimetal
+namespace InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 
 open scoped BigOperators
 
@@ -198,6 +198,6 @@ theorem totalChargeModTwo_pointwise_orientation_invariant
   exact Finset.sum_congr rfl
     (fun i _ => orientation_sign_mul_invisible_mod_two (q := charge i) (hsign i))
 
-end NonOrientableWeylSemimetal
+end InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 
 end noncomputable section

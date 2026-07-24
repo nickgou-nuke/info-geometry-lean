@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 
 open scoped InnerProductSpace
 
-namespace QuantumGeometryDualSheetBridge
+namespace InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.BogoliubovProjectorFlux
@@ -101,4 +101,4 @@ theorem dualSheetLift_cramerRaoMetricOp_eq_dualSheetLift_quantumGeometryOp
     dualSheetLift (E := E) (quantumGeometryOp H x) := by
   rw [cramerRaoMetricOp_eq_quantumGeometryOp]
 
-end QuantumGeometryDualSheetBridge
+end InfoGeometry.Canonical.QuantumGeometryDualSheetBridge

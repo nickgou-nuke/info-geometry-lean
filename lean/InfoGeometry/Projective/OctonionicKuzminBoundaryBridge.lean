@@ -37,7 +37,7 @@ identify the local OP1 shell with any global motivic model.
 - Any geometric horizon, scrambling, or boson-fermion completion theorem.
 -/
 
-namespace OctonionicKuzminBoundaryBridge
+namespace InfoGeometry.Projective.OctonionicKuzminBoundaryBridge
 
 open InfoGeometry.Projective.SplitOctonions
 open InfoGeometry.Projective.SplitOctonions.ZornMatrix
@@ -121,4 +121,4 @@ theorem op1_boundary_with_transported_toeplitz_readout
     transported_toeplitz_orthogonality (H := H) hq0 i j
   ⟩
 
-end OctonionicKuzminBoundaryBridge
+end InfoGeometry.Projective.OctonionicKuzminBoundaryBridge

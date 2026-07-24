@@ -24,7 +24,7 @@ exact thermodynamic duality of twisted Euler products.
 
 noncomputable section
 
-namespace LFunctionRepresentationBridge
+namespace InfoGeometry.Automorphic.LFunctionRepresentationBridge
 
 open InfoGeometry.Geometry.SuperKaehlerGromovWittenBridge
 
@@ -67,4 +67,4 @@ def langlands_duality_as_thermodynamic_equivalence
   twistedEulerProduct positiveRoots temperature_s twist_Galois =
     twistedEulerProduct positiveRoots temperature_s twist_Automorphic
 
-end LFunctionRepresentationBridge
+end InfoGeometry.Automorphic.LFunctionRepresentationBridge

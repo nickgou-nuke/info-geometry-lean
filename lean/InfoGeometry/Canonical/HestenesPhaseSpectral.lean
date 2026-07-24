@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.DrazinKreinCompatibility
 
 open scoped InnerProductSpace
 
-namespace HestenesPhaseSpectral
+namespace InfoGeometry.Canonical.HestenesPhaseSpectral
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -280,4 +280,4 @@ end FiniteProjector
 
 end Core
 
-end HestenesPhaseSpectral
+end InfoGeometry.Canonical.HestenesPhaseSpectral

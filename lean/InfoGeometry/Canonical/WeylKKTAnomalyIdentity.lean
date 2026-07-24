@@ -21,7 +21,7 @@ This file is intentionally compositional: it does not introduce a new anomaly
 owner, a new dilation owner, or a new Einstein source model.
 -/
 
-namespace WeylKKTAnomalyIdentity
+namespace InfoGeometry.Canonical.WeylKKTAnomalyIdentity
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.WeylInformationGauge
@@ -601,4 +601,4 @@ theorem nonzeroProjectorObstruction_sources_transportedEinsteinResidual
 
 end EinsteinResidualClosure
 
-end WeylKKTAnomalyIdentity
+end InfoGeometry.Canonical.WeylKKTAnomalyIdentity

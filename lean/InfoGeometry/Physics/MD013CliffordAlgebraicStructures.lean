@@ -28,7 +28,7 @@ Clifford modules, primitive/minimal-ideal classification, or index formulas.
 
 noncomputable section
 
-namespace MD013CliffordAlgebraicStructures
+namespace InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 
 set_option linter.unusedSimpArgs false
 
@@ -205,6 +205,6 @@ theorem repaired_MD013_clifford_algebra_packet {R : Type} [Ring R]
   · exact (leftZeroDivisor_of_nontrivial_idempotent e heidem he0 he1).hmul
   · exact (rightZeroDivisor_of_nontrivial_idempotent e heidem he0 he1).hmul
 
-end MD013CliffordAlgebraicStructures
+end InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 
 end noncomputable section

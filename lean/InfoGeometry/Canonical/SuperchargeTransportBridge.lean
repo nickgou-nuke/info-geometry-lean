@@ -20,7 +20,7 @@ the repository already owns on the same doubled carrier:
 - and the weak-owner Lichnerowicz split from the transported Dirac lane.
 -/
 
-namespace SuperchargeTransportBridge
+namespace InfoGeometry.Canonical.SuperchargeTransportBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.QuasilatticeDirac
@@ -422,4 +422,4 @@ theorem quasilatticeTranslationCandidate_eq_phaseAntilinearSeed_of_commute_phase
 
 end Core
 
-end SuperchargeTransportBridge
+end InfoGeometry.Canonical.SuperchargeTransportBridge

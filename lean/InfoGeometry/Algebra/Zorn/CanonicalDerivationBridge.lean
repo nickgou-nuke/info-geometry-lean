@@ -1,3 +1,4 @@
+import InfoGeometry.Algebra.KingdonSplitOctonion
 import InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 import InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 import Mathlib.Algebra.Lie.OfAssociative
@@ -14,17 +15,17 @@ commutator bracket through injective Lie equivalences.
 No dimension or split-`G₂` classification claim is made here.
 -/
 
-namespace CanonicalDerivationBridge
+namespace InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge
 
 open InfoGeometry.Algebra
-open InfoGeometry.Algebra.KingdonSplitOctonion
 open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 
 abbrev VectorDerivation := ZornVectorMatrix.Derivation (R := ℝ)
 abbrev CanonicalEnd := Module.End ℝ CZ
-abbrev Kingdon := AbstractKingdon
+abbrev Kingdon :=
+  InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion.AbstractKingdon
 abbrev KingdonEnd := Module.End ℝ Kingdon
 
 @[simp] theorem zMul_eq_canonical_mul (X Y : CZ) : zMul X Y = X * Y := rfl
@@ -210,4 +211,4 @@ noncomputable def kingdonDerivationLieEquiv :
     (kingdonDerivationLieEquiv D : KingdonEnd) = toKingdonEnd D := by
   rfl
 
-end CanonicalDerivationBridge
+end InfoGeometry.Algebra.Zorn.CanonicalDerivationBridge

@@ -2,7 +2,7 @@ import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.ChiralRadiationCones
 
-namespace SuperKMS_Equilibrium
+namespace InfoGeometry.Canonical.SuperKMS_Equilibrium
 
 open ChiralRadiationCones
 
@@ -89,4 +89,4 @@ theorem dirac_mass_term_is_equilibrium_constant
       diracMassTerm E.massDynamics.flipRate ψL ψR := by
   simpa using diracMassTerm_eq_of_mass_eq_flipRate E.massDynamics ψL ψR
 
-end SuperKMS_Equilibrium
+end InfoGeometry.Canonical.SuperKMS_Equilibrium

@@ -13,11 +13,11 @@ Schumayer--Hutchinson, arXiv:1101.3116v1.  It is intentionally conservative:
 
 It does **not** assert RH, Hilbert--Polya, analytic continuation, quantum chaos,
 Riemann--von Mangoldt asymptotics, or any physical spectral operator theorem.
-Those remain outside this finite packet unless closed by existing analytic owner
-surfaces.
+Those remain outside this finite packet unless closed by existing
+Hestenes--Krein/categorical colimit owner surfaces.
 -/
 
-namespace PhysicsRiemannHypothesisFinite
+namespace InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
 
 /-- Paper-local finite Mobius table, enough for the checked divisor-sum examples. -/
 def muPaper : ℕ → ℤ
@@ -151,4 +151,4 @@ theorem mertens_muPaper_ten :
       muPaper 6 + muPaper 7 + muPaper 8 + muPaper 9 + muPaper 10 = -1 := by
   decide
 
-end PhysicsRiemannHypothesisFinite
+end InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite

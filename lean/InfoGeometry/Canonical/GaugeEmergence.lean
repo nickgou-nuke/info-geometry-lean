@@ -10,10 +10,9 @@ variable (h_compat : ∀ (m n : ℕ) (_h : m ≤ n) (x : InfoGeometry.Topology.V
 variable [HasColimit (CliffordTowerCausalFunctor Q h_compat)]
 
 /--
-  The Standard Model Gauge Group is mathematically known to emerge
-  from the inner automorphisms of the finite spectral triple geometry.
-  Since the Causal Spacetime is built from Clifford layers, the 
-  group of invertible elements (units) defines the gauge symmetry.
+  The unit group of the supplied Clifford-colimit vacuum carrier.  This is a
+  finite algebraic gauge-symmetry proxy, not a Standard Model gauge-group
+  theorem.
 -/
 abbrev GaugeSymmetryGroup := (CPTSpinorVacuum Q h_compat)ˣ
 
@@ -27,10 +26,9 @@ noncomputable def gaugeTransform (U : GaugeSymmetryGroup Q h_compat)
   U.val * x * U.inv
 
 /--
-  The Gauge Invariance of the Vacuum (Frontier 1/Standard Model):
-  If an observable `x` commutes with the gauge transformation operator `U`,
-  then `x` is perfectly gauge invariant. This formally recovers the 
-  bosonic symmetries of the Standard Model within the Clifford colimit.
+  If an observable `x` commutes with the unit `U`, conjugation by `U` fixes
+  `x`.  This is the ordinary algebraic conjugation readout, not a Standard
+  Model bosonic-symmetry theorem.
 -/
 theorem gauge_invariance_condition 
     (U : GaugeSymmetryGroup Q h_compat) 

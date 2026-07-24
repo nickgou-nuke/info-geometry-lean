@@ -17,7 +17,7 @@ extract the deterministic ceiling: repeated nilpotent shear perturbations
 accumulate linearly.
 -/
 
-namespace MajoranaStabilizerThreshold
+namespace InfoGeometry.Codes.MajoranaStabilizerThreshold
 
 open Matrix
 open Complex
@@ -118,4 +118,4 @@ theorem square_zero_unipotent_pow {A : Type _} [Ring A] {x : A}
         _ = 1 + (Nat.succ n) • x := by
           rw [succ_nsmul]
 
-end MajoranaStabilizerThreshold
+end InfoGeometry.Codes.MajoranaStabilizerThreshold

@@ -20,7 +20,7 @@ import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 
 noncomputable section
 
-namespace OperatorChiralLightcone
+namespace InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 
 open InfoGeometry.OperatorAlgebra
 
@@ -419,4 +419,4 @@ theorem defect_has_chiral_lightlike_image
 
 end OperatorDefectChiralLightconeBridge
 
-end OperatorChiralLightcone
+end InfoGeometry.OperatorAlgebra.OperatorChiralLightcone

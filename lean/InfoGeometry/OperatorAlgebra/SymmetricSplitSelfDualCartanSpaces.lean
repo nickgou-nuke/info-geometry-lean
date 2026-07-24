@@ -46,7 +46,7 @@ This file proves only the proper-carrier indexing geometry and its finite
 Cartan-symmetry readouts.
 -/
 
-namespace SymmetricSplitSelfDualCartanSpaces
+namespace InfoGeometry.OperatorAlgebra.SymmetricSplitSelfDualCartanSpaces
 
 open InfoGeometry.Geometry.Cartan
 open InfoGeometry.OperatorAlgebra.SelfDualConeColimit
@@ -428,4 +428,4 @@ theorem splitCartan_cartan_selfDual_readback
     (splitCartan_selfDualCone_extends X pairing hself)
     x
 
-end SymmetricSplitSelfDualCartanSpaces
+end InfoGeometry.OperatorAlgebra.SymmetricSplitSelfDualCartanSpaces

@@ -17,7 +17,7 @@ that identify the chiral translation/defect shadows with the Schur effective
 metric and the Drazin defect projector.
 -/
 
-namespace TriadBridge
+namespace InfoGeometry.SuperMetriplectic.TriadBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.AssociativeSuperBracket
@@ -338,4 +338,4 @@ theorem effective_metric_is_schur_complement :
 
 end DrazinPenroseSchurChiralTriadBridge
 
-end TriadBridge
+end InfoGeometry.SuperMetriplectic.TriadBridge

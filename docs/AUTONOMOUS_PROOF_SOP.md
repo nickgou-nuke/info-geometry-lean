@@ -18,7 +18,7 @@ Authoritative closure in this repo means:
 
 Implementation surfaces used by this SOP:
 - `tools/infra/seed_goals_from_sorries.py`
-- `tools/infra/evolution_worker.py`
+- `tools/infra/evolution_worker.py` (disabled in this checkout)
 - `tools/infra/gepa_evolver.py`
 - `tools/infra/gepa_real_eval.py`
 - `tools/infra/proof_seeker.py`

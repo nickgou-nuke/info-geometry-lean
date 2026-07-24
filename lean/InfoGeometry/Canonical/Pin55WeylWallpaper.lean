@@ -19,7 +19,7 @@ classification theorem.
 
 noncomputable section
 
-namespace Pin55WeylWallpaper
+namespace InfoGeometry.Canonical.Pin55WeylWallpaper
 
 /-!
 ### 1. D_5 Root System and Weyl Reflections
@@ -97,4 +97,4 @@ theorem weyl_wallpaper_quotient_packet (v : Torus5D) :
   exact ⟨weyl_projects_to_wallpaper_mirror v,
     affine_weyl_projects_to_glide_reflection v⟩
 
-end Pin55WeylWallpaper
+end InfoGeometry.Canonical.Pin55WeylWallpaper

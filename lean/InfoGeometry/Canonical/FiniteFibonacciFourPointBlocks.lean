@@ -20,7 +20,7 @@ The purpose is to connect the four-anyon sector to the existing finite braid
 and finite monodromy interfaces already present in the repository.
 -/
 
-namespace FiniteFibonacciFourPointBlocks
+namespace InfoGeometry.Canonical.FiniteFibonacciFourPointBlocks
 
 open FiniteFibonacciAnyonBraiding
 open FiniteFibonacciMonodromyInterface
@@ -140,4 +140,4 @@ theorem pairing14_23_relation (x : ℂ) :
     pairing14_23 x = x • pairing12_34 + (1 - x) • pairing13_24 := by
   simp [pairing14_23, pairing12_34, pairing13_24, phi0, phi1]
 
-end FiniteFibonacciFourPointBlocks
+end InfoGeometry.Canonical.FiniteFibonacciFourPointBlocks

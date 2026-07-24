@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 set_option autoImplicit false
 open scoped ENNReal
 
-namespace MeasureProjective
+namespace InfoGeometry.MeasureProjective
 
 open MeasureTheory
 
@@ -181,4 +181,4 @@ noncomputable def ProjectiveState.logGeneratorClass
 
 end Descend
 
-end MeasureProjective
+end InfoGeometry.MeasureProjective

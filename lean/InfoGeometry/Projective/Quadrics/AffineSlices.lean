@@ -23,7 +23,7 @@ No classification theorem.
 No `sorry`.
 -/
 
-namespace AffineSlices
+namespace InfoGeometry.Projective.Quadrics.AffineSlices
 
 variable {R : Type*} [CommRing R]
 
@@ -164,4 +164,4 @@ theorem paraboloidAff_iff_homogeneous_one (x y z : R) :
   · intro h
     simpa [paraboloidAff, paraboloidHom] using (sub_eq_zero.mp h).symm
 
-end AffineSlices
+end InfoGeometry.Projective.Quadrics.AffineSlices

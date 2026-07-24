@@ -10,7 +10,7 @@ B-splines of complex order, as derived by Forster, Garunkstis, Massopust, and St
 
 noncomputable section
 
-namespace ComplexBSpline
+namespace InfoGeometry.Analysis.ComplexBSpline
 
 open Complex
 
@@ -35,4 +35,4 @@ def spline_interpolation_denominator_prop (s : ℂ) (α : ℝ) : Prop :=
   (0 < α ∧ α < 1 ∧ 1 < s.re) →
   (∑' (k : ℤ), 1 / ((k : ℂ) + α) ^ s) = f_plus s α
 
-end ComplexBSpline
+end InfoGeometry.Analysis.ComplexBSpline

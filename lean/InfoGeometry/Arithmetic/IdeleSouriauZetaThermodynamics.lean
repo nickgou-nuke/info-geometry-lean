@@ -31,7 +31,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace IdeleSouriauZetaThermodynamics
+namespace InfoGeometry.Arithmetic.IdeleSouriauZetaThermodynamics
 
 open InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
 open InfoGeometry.Arithmetic.IdeleClassZetaSymmetry.IdeleClassLayer
@@ -222,4 +222,4 @@ theorem model_tracePartition_eq_zetaReadout
 
 end CommGroup
 
-end IdeleSouriauZetaThermodynamics
+end InfoGeometry.Arithmetic.IdeleSouriauZetaThermodynamics

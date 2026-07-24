@@ -4,7 +4,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.LLM
 
-open Triality
+open InfoGeometry.Canonical.Triality
 
 /--
 Causal-mask interface over token indices.

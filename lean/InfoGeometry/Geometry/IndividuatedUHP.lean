@@ -35,7 +35,7 @@ import InfoGeometry.Canonical.TomitaTakesaki
 
 noncomputable section
 
-namespace IndividuatedUHP
+namespace InfoGeometry.Geometry.IndividuatedUHP
 
 open scoped InnerProductSpace
 
@@ -401,4 +401,4 @@ def kernelInPhysicalSector
       rw [← h_invertible.unit_spec]
       exact U.inv_mul }
 
-end IndividuatedUHP
+end InfoGeometry.Geometry.IndividuatedUHP

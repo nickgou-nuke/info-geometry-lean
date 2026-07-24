@@ -22,7 +22,7 @@ full analytic Penrose transform.  Those analytic facts enter only as explicit
 witness fields.
 -/
 
-namespace LiteratureTwistorHodgePalatial
+namespace InfoGeometry.Canonical.LiteratureTwistorHodgePalatial
 
 /-! ## Hodge self-dual / anti-self-dual split -/
 
@@ -250,4 +250,4 @@ theorem root_negative_chiral_hodge_loop_is_projector :
 
 end RootChiralHodge
 
-end LiteratureTwistorHodgePalatial
+end InfoGeometry.Canonical.LiteratureTwistorHodgePalatial

@@ -13,7 +13,7 @@ It provides the honest topological boundary limit theorem without claiming
 endomorphism action on the global charged Fock space.
 -/
 
-namespace SplitCliffordHeisenbergAdapter
+namespace InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter
 
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 
@@ -85,4 +85,4 @@ theorem splitCompletion_to_current_morphism :
     Nonempty SplitCliffordCurrentMorphism :=
   ⟨trivialSplitCliffordCurrentMorphism⟩
 
-end SplitCliffordHeisenbergAdapter
+end InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter

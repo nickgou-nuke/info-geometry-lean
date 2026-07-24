@@ -27,7 +27,7 @@ open InfoGeometry.Algebra
 
 noncomputable section
 
-namespace ConformalSpinorBridge
+namespace InfoGeometry.Clifford.ConformalSpinorBridge
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 
@@ -291,4 +291,4 @@ instance : SuperLieRing OSp12 where
 
 end OSp12
 
-end ConformalSpinorBridge
+end InfoGeometry.Clifford.ConformalSpinorBridge

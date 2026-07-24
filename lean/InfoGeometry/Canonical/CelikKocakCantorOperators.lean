@@ -19,7 +19,7 @@ noncomputable section
 
 open scoped InnerProductSpace
 
-namespace CelikKocakCantorOperators
+namespace InfoGeometry.Canonical.CelikKocakCantorOperators
 
 /-- Binary addresses of depth `n`. -/
 abbrev CantorAddress (n : ℕ) := Fin n → Bool
@@ -284,4 +284,4 @@ theorem pairTerm_commute_of_ne {i j : ℕ} (hij : i ≠ j) :
 
 end FunctionSpace
 
-end CelikKocakCantorOperators
+end InfoGeometry.Canonical.CelikKocakCantorOperators

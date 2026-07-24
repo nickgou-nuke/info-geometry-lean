@@ -15,7 +15,7 @@ No wrappers. No `sorry`.
 
 open Topology
 
-namespace TopologicalGroupIsoExpLog
+namespace InfoGeometry.Canonical.TopologicalGroupIsoExpLog
 
 structure TopologicalGroupIso (E : Type*) (G : Type*)
     [AddCommGroup E] [TopologicalSpace E] [ContinuousAdd E]
@@ -79,4 +79,4 @@ theorem infinitesimal_derivation_near_zero
 
 end RealInfinitesimal
 
-end TopologicalGroupIsoExpLog
+end InfoGeometry.Canonical.TopologicalGroupIsoExpLog

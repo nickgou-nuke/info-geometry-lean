@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace PrimonZeta
+namespace InfoGeometry.Analytic.PrimonZeta
 
 open Real
 open Filter
@@ -29,12 +29,9 @@ noncomputable def primonPartitionFunction (β : ℝ) : ℝ :=
   tsum (λ n : ℕ => if n = 0 then 0 else primonWeight n β)
 
 /-- 
-Native Lean Proof: The partition function of the Primon gas 
-equals the Dirichlet series definition of the Riemann Zeta function. 
-
-This truthfully implements the Riemann Hypothesis / Bost-Connes analytic idea 
-by providing a genuine logical chain, replacing the previously deleted 
-`primon_partition_eq_riemann_zeta_True` witness-gate.
+Native Lean proof: the chosen Primon weight sum is definitionally the displayed
+real Dirichlet-series expression.  This is not a Riemann-Hypothesis theorem and
+not a Bost--Connes phase-transition theorem.
 -/
 theorem primonPartition_eq_dirichletZeta (β : ℝ) (hβ : 1 < β) :
     primonPartitionFunction β = tsum (λ n : ℕ => (n : ℝ) ^ (-β)) := by
@@ -50,4 +47,4 @@ theorem primonPartition_eq_dirichletZeta (β : ℝ) (hβ : 1 < β) :
     simp [hn]
     exact primonWeight_eq_rpow n hn_pos β
 
-end PrimonZeta
+end InfoGeometry.Analytic.PrimonZeta

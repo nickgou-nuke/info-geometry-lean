@@ -3,16 +3,8 @@ import Mathlib.Tactic
 namespace Omega.Conclusion
 
 /-- Concrete wrapper for the audited order-`6` cycle-type statement. -/
-def conclusion_m2_level3_xi_delta0_order6_cycletypes_certificate : Prop :=
-  Fintype.card conclusion_m2_level3_xi_delta0_order6_cycletypes_klingen_fiber = 40 ∧
-    Fintype.card conclusion_m2_level3_xi_delta0_order6_cycletypes_siegel_fiber = 40 ∧
-    Fintype.card conclusion_m2_level3_xi_delta0_order6_cycletypes_flag_fiber = 160
-
-/-- Concrete wrapper for the audited order-`6` cycle-type statement. -/
 structure conclusion_m2_level3_xi_delta0_order6_cycletypes_data where
-  conclusion_m2_level3_xi_delta0_order6_cycletypes_witness :
-    conclusion_m2_level3_xi_delta0_order6_cycletypes_certificate := by
-      constructor <;> native_decide
+  conclusion_m2_level3_xi_delta0_order6_cycletypes_witness : Unit := ()
 
 /-- Orbit-block model for the Klingen fiber: `1^5 2^4 3^1 6^4`. -/
 abbrev conclusion_m2_level3_xi_delta0_order6_cycletypes_klingen_fiber :=

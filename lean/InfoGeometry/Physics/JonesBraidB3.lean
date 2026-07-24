@@ -18,10 +18,10 @@ from `e₀² = 2e₀`, `e₁² = 2e₁`, `e₀e₁e₀ = e₀`, `e₁e₀e₁ = 
 
 noncomputable section
 
-namespace JonesBraidB3
+namespace InfoGeometry.Physics.JonesBraidB3
 
 open Matrix
-open TLChain
+open InfoGeometry.External.Auto.TLChain
 
 /-- First braid generator: s₀ = i·(I - e₀). -/
 def s0 : Matrix (Fin 8) (Fin 8) ℂ :=
@@ -121,4 +121,4 @@ theorem artin_braid_relation : s0 * s1 * s0 = s1 * s0 * s1 := by
 
 #check artin_braid_relation
 
-end JonesBraidB3
+end InfoGeometry.Physics.JonesBraidB3

@@ -23,7 +23,7 @@ zero-sector projector, not necessarily a classical smooth harmonic projector.
 
 noncomputable section
 
-namespace HodgeDrazinEnvelope
+namespace InfoGeometry.Canonical.HodgeDrazinEnvelope
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 
@@ -132,4 +132,4 @@ theorem physicalEnvelope_eq_matterSupport_compression
   InfoGeometry.Canonical.DrazinGreenHorizonEnvelope.envelope_eq_combined_support_compression
     C.signal C.frequency C.x_raw hComm
 
-end HodgeDrazinEnvelope
+end InfoGeometry.Canonical.HodgeDrazinEnvelope

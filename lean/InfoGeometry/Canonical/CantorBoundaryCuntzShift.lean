@@ -37,7 +37,7 @@ space, KMS dynamics, BEC/Hagedorn interpretation, and zeta/RH consequences.
 
 noncomputable section
 
-namespace CantorBoundaryCuntzShift
+namespace InfoGeometry.Canonical.CantorBoundaryCuntzShift
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorCuntzBasis
@@ -244,6 +244,6 @@ theorem orbit_branch_recursion_readout
         CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
   CantorCuntzBasis.CantorCuntzBasisPacket.orbit_branch_recursion B b w
 
-end CantorBoundaryCuntzShift
+end InfoGeometry.Canonical.CantorBoundaryCuntzShift
 
 end noncomputable section

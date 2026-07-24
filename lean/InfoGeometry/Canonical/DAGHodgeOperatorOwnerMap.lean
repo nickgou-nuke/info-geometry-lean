@@ -29,7 +29,7 @@ assert Type-III/KMS completion, Hilbert--Pólya, zeta continuation, or RH.
 
 noncomputable section
 
-namespace DAGHodgeOperatorOwnerMap
+namespace InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap
 
 /-- The operator-like objects supplied by the DAG Hodge toolchain. -/
 @[rep_depth operator]
@@ -296,4 +296,4 @@ theorem dagHodgeSummary_diracDim (tc : DAG.TwoComplex α) :
 
 end DAGReadouts
 
-end DAGHodgeOperatorOwnerMap
+end InfoGeometry.Canonical.DAGHodgeOperatorOwnerMap

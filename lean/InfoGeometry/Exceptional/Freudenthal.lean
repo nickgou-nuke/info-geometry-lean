@@ -15,7 +15,7 @@ import Mathlib.Tactic.Ring
 
 noncomputable section
 
-namespace Freudenthal
+namespace InfoGeometry.Exceptional.Freudenthal
 
 /-! ### 1. Cubic Jordan algebra signature -/
 
@@ -176,4 +176,4 @@ structure TKKClosureDatum
   /-- Bilinear operation from grade `-1` and grade `+1` into grade zero. -/
   op_minus1_plus1 : J →ₗ[ℝ] J →ₗ[ℝ] G_zero
 
-end Freudenthal
+end InfoGeometry.Exceptional.Freudenthal

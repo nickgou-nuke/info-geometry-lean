@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Socratic Lean proof repair prompt via the safe aiClaw adapter.
+"""Socratic Lean proof repair prompt via browser-harness + ChatGPT.
 
-This is intentionally a workflow wrapper around tools/infra/aiclaw_chat.py.
-It preserves the useful Hermes lesson: send the complete owner file plus all
-relevant Lean errors in one prompt. It also preserves the safer aiClaw adapter
-discipline: dry-run, secret-pattern refusal, status polling, one prompt at a
-time, and no automatic overwrite of Lean source.
+This replaces the aiClaw adapter with a browser-harness driver that works with
+ChatGPT (and Google AI Search via the same harness). It preserves the Hermes
+lesson: send the complete owner file plus all relevant Lean errors in one prompt.
+No automatic overwrite of Lean source.
 """
 
 from __future__ import annotations
@@ -13,22 +12,30 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 import subprocess
 import sys
+import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from tools.infra.aiclaw_chat import ask_ai
 from tools.infra.lean_audit_prompt import extract_replacement_lean, lean_candidate_reject_reason
 
 
 ROOT = Path(__file__).resolve().parents[2]
 PROMPT_PROFILE_DIR = ROOT / "configs" / "oracle_prompt_profiles"
 logger = logging.getLogger("socratic_clawbot")
+
+# Browser-harness configuration
+CHATGPT_URL = os.environ.get("CHATGPT_URL", "https://chatgpt.com/?temporary-chat=true")
+CHATGPT_RESULT_JSON = Path(os.environ.get("CHATGPT_RESULT_JSON", "/tmp/socratic_browser_result.json"))
+CHATGPT_TIMEOUT_SECONDS = int(os.environ.get("CHATGPT_TIMEOUT_SECONDS", "600"))
+CHATGPT_POLL_SECONDS = float(os.environ.get("CHATGPT_POLL_SECONDS", "5"))
 
 
 def read_theorem_block(filepath: Path, theorem_name: str) -> dict[str, Any]:
@@ -208,13 +215,7 @@ def extract_lean_code(text: str) -> str:
 
 
 def response_readback_reason(text: str, candidate: str) -> str:
-    """Return a reason when the transport payload violates the repair contract.
-
-    The browser may visibly render a correct Markdown answer while the REST
-    payload flattens the replacement block into text such as
-    `Replacement\nlean4import ...`.  That output must be recovered from the
-    visible DOM instead of treated as a clean candidate.
-    """
+    """Return a reason when the transport payload violates the repair contract."""
     if not text.strip():
         return ""
     no_replacement = re.search(r"\bno replacement needed\b", text, re.IGNORECASE)
@@ -253,6 +254,62 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def run_browser_harness(prompt: str, timeout: int = CHATGPT_TIMEOUT_SECONDS) -> dict[str, Any]:
+    """Execute the browser-harness driver with the given prompt."""
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
+        f.write(prompt)
+        prompt_file = f.name
+
+    try:
+        env = os.environ.copy()
+        env["CHATGPT_PROMPT_FILE"] = prompt_file
+        env["BU_CDP_WS"] = os.environ.get("BU_CDP_WS", "")
+        env["CHATGPT_URL"] = CHATGPT_URL
+        env["CHATGPT_RESULT_JSON"] = str(CHATGPT_RESULT_JSON)
+        env["CHATGPT_TIMEOUT_SECONDS"] = str(timeout)
+        env["CHATGPT_POLL_SECONDS"] = str(CHATGPT_POLL_SECONDS)
+
+        harness_script = f'''import sys
+sys.path.insert(0, "{ROOT}")
+exec(open("tools/infra/chatgpt_browser_harness_driver.py").read())
+_main()
+'''
+
+        result = subprocess.run(
+            ["browser-harness"],
+            input=harness_script,
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+
+        if CHATGPT_RESULT_JSON.exists():
+            content = CHATGPT_RESULT_JSON.read_text()
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                return {"content": content, "success": True, "dry_run": False}
+
+        return {
+            "content": result.stdout,
+            "success": result.returncode == 0,
+            "dry_run": False,
+            "stderr": result.stderr,
+        }
+
+    except subprocess.TimeoutExpired:
+        return {"content": "", "success": False, "dry_run": False, "error": "timeout"}
+    except Exception as e:
+        return {"content": "", "success": False, "dry_run": False, "error": str(e)}
+    finally:
+        try:
+            os.unlink(prompt_file)
+        except OSError:
+            pass
+
+
 def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
     filepath = (ROOT / args.file).resolve() if not Path(args.file).is_absolute() else Path(args.file)
     if not filepath.exists():
@@ -260,15 +317,11 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
 
     if args.rounds != 1:
         logger.warning("fused safe mode sends one prompt; --rounds=%s is ignored", args.rounds)
-    if args.pauli_platform:
-        logger.warning("--pauli-platform is deprecated in fused safe mode; using --platform=%s", args.platform)
 
     block = read_theorem_block(filepath, args.theorem)
     lean_check = compile_check(filepath, args.lean_timeout)
     prompt_profile, system_addendum = load_prompt_addendum(args.prompt_profile, args.system_prompt_file)
-    queue_root = Path(args.queue_root)
-    if not queue_root.is_absolute():
-        queue_root = ROOT / queue_root
+
     prompt = build_oracle_prompt(
         filepath=filepath,
         theorem_name=args.theorem,
@@ -278,25 +331,7 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
         system_addendum=system_addendum,
     )
 
-    result = ask_ai(
-        base_url=args.base_url,
-        platform=args.platform,
-        prompt=prompt,
-        timeout=args.timeout,
-        wait=True,
-        wait_timeout=args.wait_timeout,
-        interval=args.interval,
-        require_login=not args.no_login_required,
-        quiet=args.quiet,
-        navigate=args.navigate,
-        new=not args.no_new,
-        dry_run=args.dry_run,
-        allow_sensitive=args.allow_sensitive,
-        queue=not args.no_queue,
-        queue_root=queue_root,
-        queue_timeout=args.queue_timeout,
-        hold_on_suspect=not args.no_hold_on_suspect,
-    )
+    result = run_browser_harness(prompt, args.timeout)
 
     content = str(result.get("content") or "")
     candidate = extract_lean_code(content)
@@ -304,6 +339,7 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
     if readback_reason:
         candidate = ""
     needs_readback = bool(result.get("suspect_intermediate")) or bool(readback_reason)
+
     report = {
         "file": str(filepath),
         "theorem": args.theorem,
@@ -315,7 +351,7 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
             else ""
         ),
         "lean_check": lean_check,
-        "aiclaw_result": result,
+        "browser_result": result,
         "candidate_chars": len(candidate),
         "suspect_intermediate": bool(result.get("suspect_intermediate")),
         "response_contract_suspect": bool(readback_reason),
@@ -345,33 +381,30 @@ def build_parser() -> argparse.ArgumentParser:
                         help="Optional additive oracle prompt profile from configs/oracle_prompt_profiles.")
     parser.add_argument("--system-prompt-file", default=None,
                         help="Optional additive prompt discipline file. Default prompt remains unchanged.")
-    parser.add_argument("--platform", default="chatgpt", help="aiClaw platform, usually chatgpt.")
-    parser.add_argument("--pauli-platform", default=None, help="Deprecated compatibility option; ignored.")
-    parser.add_argument("--rounds", type=int, default=1, help="Deprecated compatibility option; fused mode sends one prompt.")
-    parser.add_argument("--base-url", default="http://127.0.0.1:10088")
-    parser.add_argument("--timeout", type=int, default=300, help="aiClaw message timeout in seconds.")
-    parser.add_argument("--wait-timeout", type=float, default=60)
-    parser.add_argument("--interval", type=float, default=1)
+    parser.add_argument("--timeout", type=int, default=300, help="Browser-harness message timeout in seconds.")
     parser.add_argument("--lean-timeout", type=int, default=120)
-    parser.add_argument("--no-login-required", action="store_true")
-    parser.add_argument("--navigate", action="store_true")
-    parser.add_argument("--no-new", action="store_true", help="Do not start a new chat before sending.")
-    parser.add_argument("--dry-run", action="store_true", help="Show send metadata without contacting ChatGPT.")
-    parser.add_argument("--allow-sensitive", action="store_true")
-    parser.add_argument("--no-queue", action="store_true", help="Bypass the local aiClaw single-flight queue.")
-    parser.add_argument("--queue-root", default="tmp/aiclaw_queue", help="Local aiClaw queue root.")
-    parser.add_argument("--queue-timeout", type=float, default=900)
-    parser.add_argument(
-        "--no-hold-on-suspect",
-        action="store_true",
-        help="Do not leave the lane busy after suspect/failed post-send results.",
-    )
     parser.add_argument("--response-out", help="Write visible assistant response text.")
     parser.add_argument("--candidate-out", help="Write extracted Lean code candidate, if any.")
     parser.add_argument("--json-out", help="Write a JSON event report.")
     parser.add_argument("--json", action="store_true", help="Print full JSON report to stdout.")
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--verbose", action="store_true")
+    # Deprecated aiClaw options (kept for compatibility, ignored)
+    parser.add_argument("--platform", default="chatgpt", help="Ignored (was aiClaw platform).")
+    parser.add_argument("--base-url", default="", help="Ignored (was aiClaw base URL).")
+    parser.add_argument("--rounds", type=int, default=1, help="Ignored (fused mode sends one prompt).")
+    parser.add_argument("--wait-timeout", type=float, default=60, help="Ignored.")
+    parser.add_argument("--interval", type=float, default=1, help="Ignored.")
+    parser.add_argument("--no-login-required", action="store_true", help="Ignored.")
+    parser.add_argument("--navigate", action="store_true", help="Ignored.")
+    parser.add_argument("--no-new", action="store_true", help="Ignored.")
+    parser.add_argument("--dry-run", action="store_true", help="Show send metadata without contacting ChatGPT.")
+    parser.add_argument("--allow-sensitive", action="store_true", help="Ignored.")
+    parser.add_argument("--no-queue", action="store_true", help="Ignored (no local queue with browser-harness).")
+    parser.add_argument("--queue-root", default="", help="Ignored.")
+    parser.add_argument("--queue-timeout", type=float, default=900, help="Ignored.")
+    parser.add_argument("--no-hold-on-suspect", action="store_true", help="Ignored.")
+    parser.add_argument("--pauli-platform", default=None, help="Deprecated; ignored.")
     return parser
 
 
@@ -381,22 +414,24 @@ def main() -> int:
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
     )
+    if args.dry_run:
+        print(json.dumps({"dry_run": True, "file": args.file, "theorem": args.theorem}, indent=2))
+        return 0
     report = run_oracle(args)
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
-        result = report["aiclaw_result"]
+        result = report["browser_result"]
         print(json.dumps({
-            "success": bool(result.get("success", args.dry_run)),
-            "dry_run": bool(result.get("dry_run", False)),
+            "success": bool(result.get("success", False)),
+            "dry_run": False,
             "suspect_intermediate": report["suspect_intermediate"],
             "needs_readback": report["needs_readback"],
             "candidate_chars": report["candidate_chars"],
-            "prompt_sha256": result.get("meta", {}).get("prompt_sha256") or result.get("prompt_sha256"),
         }, indent=2, sort_keys=True))
     if report["needs_readback"]:
         return 2
-    return 0 if report["aiclaw_result"].get("success", args.dry_run) else 1
+    return 0 if report["browser_result"].get("success", False) else 1
 
 
 if __name__ == "__main__":

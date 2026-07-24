@@ -44,13 +44,13 @@ Witnessed by: `formalizations/cpt_compass_evidence.py` (SymPy+Clifford),
 group), `Cl11Fermions.lean` (Cl(1,1) CPT atom).
 -/
 
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 open InfoGeometry.Algebra.FiveGradedTKK
 open InfoGeometry.Algebra.CubicJordanPeirce
 
 noncomputable section
 
-namespace CPTGradingCompass
+namespace InfoGeometry.Canonical.CPTGradingCompass
 
 /-! ## 1. The CPT Compass bivector -/
 
@@ -161,4 +161,4 @@ theorem thermal_q_dial_alignment (q : ℝ) (hq : 0 < q ∧ q < 1) :
     Real.exp (-(1 - q) / q) > 0 :=
   Real.exp_pos _
 
-end CPTGradingCompass
+end InfoGeometry.Canonical.CPTGradingCompass

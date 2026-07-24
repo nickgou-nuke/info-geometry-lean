@@ -15,7 +15,7 @@ parity: odd winding lands on `-I`, and even winding lands on `I`.  The file also
 records the corresponding `Pin(5,5)` membership fact for the scalar `-1`.
 -/
 
-namespace ArtinCentralizerMonodromy
+namespace InfoGeometry.Topology.ArtinCentralizerMonodromy
 
 /-- The finite central sign group `{I,-I}`. -/
 inductive CentralSign where
@@ -180,4 +180,4 @@ def centralizerElement (c : CentralSign) : InfoGeometry.Clifford.Clifford55.Pin5
   | I => 1
   | negI => negOnePin55
 
-end ArtinCentralizerMonodromy
+end InfoGeometry.Topology.ArtinCentralizerMonodromy

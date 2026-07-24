@@ -14,7 +14,7 @@ typeclass, and the Lie action is the ordinary mathlib Lie-module bracket.
 Every theorem below is just an unpacking of those action interfaces.
 -/
 
-namespace InvariantGeometry
+namespace InfoGeometry.Erlangen.InvariantGeometry
 
 /-! ## Group-action invariants -/
 
@@ -162,4 +162,4 @@ theorem casimir_action_eq_zero
 
 end ExplicitLinearAction
 
-end InvariantGeometry
+end InfoGeometry.Erlangen.InvariantGeometry

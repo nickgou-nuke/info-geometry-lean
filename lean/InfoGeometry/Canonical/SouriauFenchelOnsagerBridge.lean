@@ -34,7 +34,7 @@ instantiate concrete `G₂(2)` / `Spin(5,5)` coadjoint-orbit thermodynamic
 models.
 -/
 
-namespace SouriauFenchelOnsagerBridge
+namespace InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 
 open SouriauThermodynamics
 open InfoGeometry.Canonical.SouriauMetriplectic
@@ -373,7 +373,7 @@ diagonal at the selected Souriau basepoint.
 theorem primalBregman_self_at_bridge_base :
     C.model.primalBregman C.theta C.theta = 0 := by
   unfold InfoGeometry.LogPotential.LegendreModel.primalBregman
-  simp [InfoGeometry.Volume.LogPotential.bregman, InfoGeometry.bregmanDiv]
+  simp [InfoGeometry.LogPotential.bregman, InfoGeometry.bregmanDiv]
 
 /--
 Transverse Fenchel defect readout at the Souriau bridge basepoint.
@@ -494,4 +494,4 @@ theorem entropy_difference_on_state_orbit_eq_zero
 
 end CoadjointEntropySymmetryContext
 
-end SouriauFenchelOnsagerBridge
+end InfoGeometry.Canonical.SouriauFenchelOnsagerBridge

@@ -14,7 +14,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace SpectralGeneratorProxy
+namespace InfoGeometry.Canonical.SpectralGeneratorProxy
 
 universe u
 
@@ -484,4 +484,4 @@ attribute [rep_depth operator]
   boundedTransformOwnerTarget
   boundedKasparovOwnerTarget
 
-end SpectralGeneratorProxy
+end InfoGeometry.Canonical.SpectralGeneratorProxy

@@ -16,7 +16,7 @@ KMS boundary law, state invariance, and support-stability preservation are
 explicit witness fields.
 -/
 
-namespace KMSConditionBridge
+namespace InfoGeometry.Canonical.KMSConditionBridge
 
 open InfoGeometry.Canonical.BoundedModularFlowCalibration
 open InfoGeometry.OperatorAlgebra.HorizonKMS
@@ -156,4 +156,4 @@ end BoundedKMSConditionBridge
 
 end Core
 
-end KMSConditionBridge
+end InfoGeometry.Canonical.KMSConditionBridge

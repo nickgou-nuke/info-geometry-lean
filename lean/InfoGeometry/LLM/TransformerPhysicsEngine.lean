@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
 
-namespace TransformerPhysicsEngine
+namespace InfoGeometry.LLM.TransformerPhysicsEngine
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicTransformer
@@ -105,4 +105,4 @@ end OmitEngineCapstoneVars
 
 end EngineInvariants
 
-end TransformerPhysicsEngine
+end InfoGeometry.LLM.TransformerPhysicsEngine

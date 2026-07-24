@@ -16,7 +16,7 @@ This enforces total arithmetic covariance over the conformal field theory.
 
 set_option linter.unusedSectionVars false
 
-namespace GaloisKMSVacuum
+namespace InfoGeometry.Canonical.GaloisKMSVacuum
 
 open Complex
 
@@ -49,4 +49,4 @@ theorem galois_covariance (g : GaloisGroup) (φ : KMSVacuum CuntzUHF) :
       fun A => φ.val (galois_action g A) := by
   rfl
 
-end GaloisKMSVacuum
+end InfoGeometry.Canonical.GaloisKMSVacuum

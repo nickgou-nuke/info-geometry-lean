@@ -14,7 +14,7 @@ algebraic identity from the finite
 prime/matrix stage `A n` through the categorical direct limit into `A_inf`.
 -/
 
-namespace ModularGibbsColimitBridge
+namespace InfoGeometry.Canonical.ModularGibbsColimitBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
@@ -71,4 +71,4 @@ theorem relative_modular_survives_colimit
   rw [tower.linear_compat n]
   rw [tower.identity_compat n]
 
-end ModularGibbsColimitBridge
+end InfoGeometry.Canonical.ModularGibbsColimitBridge

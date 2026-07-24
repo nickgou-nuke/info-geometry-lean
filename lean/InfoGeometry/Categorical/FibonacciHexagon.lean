@@ -1,9 +1,9 @@
 import InfoGeometry.Categorical.FibonacciBraiding
 
-namespace FibonacciHexagon
+namespace InfoGeometry.Categorical.FibonacciHexagon
 
 open Matrix
-open FiniteFibonacciFusionMatrix
+open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 /--
 Finite Fibonacci hexagon shadow.
@@ -23,4 +23,4 @@ theorem fibonacci_hexagon_coherence (q : Units ℂ) (τ s : ℂ)
       fibonacciRMatrix q * (fibonacciBMatrix q τ s) * fibonacciRMatrix q := by
   exact (fibonacci_fourAnyon_artin q τ s hq_inv hq_pow3 hq5 h_poly hτ hs).symm
 
-end FibonacciHexagon
+end InfoGeometry.Categorical.FibonacciHexagon

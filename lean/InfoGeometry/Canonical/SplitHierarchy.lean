@@ -21,7 +21,7 @@ and boundary-gap files.
 
 noncomputable section
 
-namespace SplitHierarchy
+namespace InfoGeometry.Canonical.SplitHierarchy
 
 open InfoGeometry.Algebraic.SplitSignature
 open InfoGeometry.Algebraic.SplitSuperGeometry
@@ -184,4 +184,4 @@ theorem canonicalDiagnostic_octonionTier_signature :
     canonicalDiagnostic.octonionTier.signature = (4, 4) := by
   simp [canonicalDiagnostic, canonicalSplitOctonionPacket]
 
-end SplitHierarchy
+end InfoGeometry.Canonical.SplitHierarchy

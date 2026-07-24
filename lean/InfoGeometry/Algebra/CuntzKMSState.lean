@@ -12,8 +12,8 @@ has the modular automorphism group σ_t(S_i) = p_i^{it} S_i and satisfies:
   φ_β(P_i) = p_i^{-β} / Z_n(β)    where Z_n(β) = Σ_k p_k^{-β}
 
 The finite partition function is `Z_n(β) = Σ_i p_i^{-β}`. The directed
-prime-cutoff colimit and its zeta identification are analytic debt, not proved
-in this file.
+prime-cutoff colimit and its zeta identification are categorical/Hestenes--Krein
+colimit owner obligations, not proved in this file.
 
 All theorems are concrete algebraic computations using the diagonal structure
 of the Cuntz algebra: every element of the diagonal subalgebra (the commutative
@@ -25,12 +25,12 @@ Direct connection to the truncated thermal state from `CuntzThermalState.lean`:
   Tr(exp_N(-βH)) = Σ_i Σ_{k=0}^N (-β·log p_i)^k/k!
   has finite-mode coefficient sum Σ_i Σ_k (-β·log p_i)^k/k!.
 -/
-open CuntzTensorQuotient
-open CuntzPrimonHamiltonian
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzPrimonHamiltonian
 
 noncomputable section
 
-namespace CuntzKMSState
+namespace InfoGeometry.Algebra.CuntzKMSState
 
 /-! ## Primon Boltzmann weights -/
 
@@ -166,7 +166,7 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → `CuntzMatrixUnits.lean` (5 theorems) ✅
 
   Step 3. Hamiltonian H = Σ ε_i P_i, spectral theorem H^k = Σ ε_i^k P_i
-          → `CuntzPrimonHamiltonian.lean` ✅
+          → `InfoGeometry.Algebra.CuntzPrimonHamiltonian.lean` ✅
 
   Step 4. Polynomial spectral calculus: p(H) = Σ p(ε_i) P_i
           → `CuntzSpectralCalculus.lean` ✅
@@ -184,7 +184,8 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → `DiagonalKMSState` (this file) ✅
 
   Step 9. Partition function Z_n(β) = Σ_i p_i^{-β}
-          → finite formula established here; zeta colimit is separate analytic debt
+          → finite formula established here; zeta readout belongs to the separate
+            categorical/Hestenes--Krein colimit owner
 
   Step 10. GNS representation of the KMS state → Hilbert space completion
           → Algebraic infrastructure in `Prequantum/AlgebraicGNSState.lean` ✅
@@ -195,4 +196,4 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → Concrete instantiation on O_n remains as documented debt
 -/
 
-end CuntzKMSState
+end InfoGeometry.Algebra.CuntzKMSState

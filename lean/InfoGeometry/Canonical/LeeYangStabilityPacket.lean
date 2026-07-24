@@ -21,7 +21,7 @@ tracked without pretending the witness is already discharged.
 
 noncomputable section
 
-namespace LeeYangStabilityPacket
+namespace InfoGeometry.Canonical.LeeYangStabilityPacket
 
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -101,4 +101,4 @@ theorem leeYangPolydiscWitness_iff_sourceClaim :
     intro N D lam hLam
     exact ⟨H.inner_zero_free D lam hLam, H.outer_zero_free D lam hLam⟩
 
-end LeeYangStabilityPacket
+end InfoGeometry.Canonical.LeeYangStabilityPacket

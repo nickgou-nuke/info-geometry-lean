@@ -18,7 +18,7 @@ from `e₀² = 2e₀`, `e₁² = 2e₁`, `e₀e₁e₀ = e₀`, `e₁e₀e₁ = 
 
 noncomputable section
 
-namespace JonesBraidB3
+namespace InfoGeometry.External.Auto.JonesBraidB3
 
 open Matrix
 open TLChain
@@ -122,4 +122,4 @@ theorem artin_braid_relation : s0 * s1 * s0 = s1 * s0 * s1 := by
 
 #check artin_braid_relation
 
-end JonesBraidB3
+end InfoGeometry.External.Auto.JonesBraidB3

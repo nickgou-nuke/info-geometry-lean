@@ -28,7 +28,7 @@ The point of the file is the finite algebraic colimit skeleton only.
 
 noncomputable section
 
-namespace UHFInductiveColimitBoundary
+namespace InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 /-- Binary words of length `n`. -/
 abbrev BitWord (n : ℕ) : Type :=
@@ -184,6 +184,6 @@ theorem diagonal_uhf_colimit_synthesis :
     constantStageObservable_embed,
     cylinder_mem_colimit⟩
 
-end UHFInductiveColimitBoundary
+end InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 end noncomputable section

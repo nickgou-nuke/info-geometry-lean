@@ -20,10 +20,10 @@ for those claims:
 * explicit isometry/readout witnesses for the bonding maps and the limit cone.
 -/
 
-namespace BuresMetricStabilization
+namespace InfoGeometry.Canonical.BuresMetricStabilization
 
 open TensorColimitExpectation
-open BuresWassersteinKMSCost
+open InfoGeometry.Thermo.BuresWassersteinKMSCost
 
 universe u v w
 
@@ -121,4 +121,4 @@ theorem bures_cost_limit_eq_zero_of_stage_eq
 
 end BuresMetricStabilizationBridge
 
-end BuresMetricStabilization
+end InfoGeometry.Canonical.BuresMetricStabilization

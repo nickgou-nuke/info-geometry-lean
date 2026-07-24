@@ -34,7 +34,7 @@ interpretations.
 
 noncomputable section
 
-namespace BostConnesSuperalgebra
+namespace InfoGeometry.Canonical.BostConnesSuperalgebra
 
 open InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 
@@ -148,6 +148,6 @@ theorem invariant_state_supertrace_carFromCuntz_eq_zero
   InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzCarrier.invariant_state_supertrace_carFromCuntz_eq_zero
     E φ hφ
 
-end BostConnesSuperalgebra
+end InfoGeometry.Canonical.BostConnesSuperalgebra
 
 end noncomputable section

@@ -12,7 +12,7 @@ Conditional Souriau/Legendre zeta-duality hypotheses and debt lemmas.
 
 noncomputable section
 
-namespace SouriauZetaDualityBridge
+namespace InfoGeometry.Canonical.SouriauZetaDualityBridge
 
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
@@ -31,7 +31,7 @@ structure SouriauZetaDualityHypotheses where
   /-- The primal surprisal potential, nominally `-log |ξ(s)|`. -/
   surprisal : ℂ → ℝ
 
-  /-- Supplied analytic predicate: `s` is a singularity of the surprisal. -/
+  /-- Supplied Hestenes--Krein/colimit predicate: `s` is a singularity of the surprisal readout. -/
   isSurprisalSingularity : ℂ → Prop
 
   /-- The singularities of the surprisal potential are exactly the zeros of `ξ`. -/
@@ -47,7 +47,7 @@ structure SouriauZetaDualityHypotheses where
       ∀ (S : Finset ℕ) (_hS : ∀ p ∈ S, 1 < p) (σ : ℝ),
         primeSpectralBarrier S s.re ≤ primeSpectralBarrier S σ
 
-  /-- Guardrail: this packet is architectural/conditional, not an unconditional RH proof. -/
+  /-- Guardrail: this packet is categorical/conditional, not an unconditional RH proof. -/
   no_unconditional_RH_claim_guard : Type*
 
 namespace SouriauZetaDualityHypotheses
@@ -88,4 +88,4 @@ theorem RH_of_SouriauDuality
 
 end SouriauZetaDualityHypotheses
 
-end SouriauZetaDualityBridge
+end InfoGeometry.Canonical.SouriauZetaDualityBridge

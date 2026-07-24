@@ -5,7 +5,7 @@ import InfoGeometry.Krein.KreinSpace
 set_option linter.unusedSectionVars false
 open InfoGeometry.Krein
 
-namespace DrazinBogoliubovFrameEquiv
+namespace InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv
 
 section Core
 
@@ -214,4 +214,4 @@ end EquivalentBogoliubovFrames
 
 end Core
 
-end DrazinBogoliubovFrameEquiv
+end InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv

@@ -28,7 +28,7 @@ physics, Planck-2018 parameter derivations, or experimental detectability.
 
 noncomputable section
 
-namespace MD016ExperimentalPredictionsFinite
+namespace InfoGeometry.Physics.MD016ExperimentalPredictionsFinite
 
 /-- Finite scalar cross-section modification factor `1 + α E²/Λ² F`. -/
 def crossSectionFactor (alpha E Lambda angular : ℝ) : ℝ :=
@@ -146,6 +146,6 @@ theorem repaired_MD016_prediction_packet
     darkEnergyEOS_sample,
     omegaRatios_sum_one gamma hgamma⟩
 
-end MD016ExperimentalPredictionsFinite
+end InfoGeometry.Physics.MD016ExperimentalPredictionsFinite
 
 end noncomputable section

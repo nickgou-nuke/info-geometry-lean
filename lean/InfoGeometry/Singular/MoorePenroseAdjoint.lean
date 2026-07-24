@@ -1,6 +1,6 @@
 import InfoGeometry.Singular.MoorePenrose
 
-namespace MoorePenroseAdjoint
+namespace InfoGeometry.Singular.MoorePenroseAdjoint
 
 section MP
 variable {R : Type*} [Ring R] [StarRing R]
@@ -67,4 +67,4 @@ lemma MP_Projector_self_adjoint {A B : R} (h : IsMoorePenroseInverse A B) :
 
 end MP
 
-end MoorePenroseAdjoint
+end InfoGeometry.Singular.MoorePenroseAdjoint

@@ -11,7 +11,7 @@ category, an infinite operator trace, a Dixmier trace, or a Drazin-core Witten
 index.  Those remain separate owner obligations.
 -/
 
-namespace Spin44CharacterShadow
+namespace InfoGeometry.Canonical.Spin44CharacterShadow
 
 open scoped BigOperators
 
@@ -130,4 +130,4 @@ theorem halfSpinorDifferenceShadow_eq
       spinorEvenCharacter β - spinorOddCharacter β := by
   rfl
 
-end Spin44CharacterShadow
+end InfoGeometry.Canonical.Spin44CharacterShadow

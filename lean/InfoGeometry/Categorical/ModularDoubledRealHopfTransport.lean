@@ -26,7 +26,7 @@ surface; they do not replace it.
 
 universe u v wV wS wQ
 
-namespace ModularDoubledRealHopfTransport
+namespace InfoGeometry.Categorical.ModularDoubledRealHopfTransport
 
 open ModularDoubledRealHopfFibration
 
@@ -257,4 +257,4 @@ theorem cl11V4Shadow_composite_involutive :
     Function.Involutive cl11V4Shadow.gradeAB :=
   cl11V4Shadow.gradeAB_involutive
 
-end ModularDoubledRealHopfTransport
+end InfoGeometry.Categorical.ModularDoubledRealHopfTransport

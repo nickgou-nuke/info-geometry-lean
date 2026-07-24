@@ -33,7 +33,7 @@ braid holonomy, punctured-plane monodromy, Berry curvature, or analytic zeta
 geometry.
 -/
 
-namespace CelikErlangenBraidBridge
+namespace InfoGeometry.GrandUnification.CelikErlangenBraidBridge
 
 universe u
 
@@ -92,4 +92,4 @@ theorem spectral_triangle_identity (u v w : ℝ) :
   unfold spectral_parameter
   ring
 
-end CelikErlangenBraidBridge
+end InfoGeometry.GrandUnification.CelikErlangenBraidBridge

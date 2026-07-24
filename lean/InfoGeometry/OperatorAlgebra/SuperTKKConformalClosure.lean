@@ -31,7 +31,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace SuperTKKConformalClosure
+namespace InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 
 
@@ -829,4 +829,4 @@ theorem superTKKDefectAbsorptionOwnerTarget :
   intro L Odd State Geometry _ _ _ _ _ _ _ _ _ _ R A X s
   exact A.closure_defect_has_left_left_square X s
 
-end SuperTKKConformalClosure
+end InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure

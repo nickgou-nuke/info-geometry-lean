@@ -33,6 +33,10 @@ def test_proof_synthesis_report_renders_authority_bounded_prompt(tmp_path: Path)
     json_out = tmp_path / "packet.json"
     md_out = tmp_path / "prompt.md"
 
+    import os
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(REPO)
+
     subprocess.run(
         [
             sys.executable,
@@ -48,6 +52,7 @@ def test_proof_synthesis_report_renders_authority_bounded_prompt(tmp_path: Path)
         ],
         check=True,
         cwd=REPO,
+        env=env,
     )
 
     packet = json.loads(json_out.read_text(encoding="utf-8"))

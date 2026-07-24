@@ -22,7 +22,7 @@ import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section
 
-namespace DIIISuperfluidBranch
+namespace InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 
 open InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
@@ -248,4 +248,4 @@ structure DIIITopologicalSuperfluid
   symmetry : DIIISuperfluidDatum Op
   invariant : DIIITopologicalInvariant Op
 
-end DIIISuperfluidBranch
+end InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch

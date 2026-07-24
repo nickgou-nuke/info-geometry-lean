@@ -26,7 +26,7 @@ law beyond these finite identities.
 
 noncomputable section
 
-namespace MD007QuantumEigenoperatorInterpretation
+namespace InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 
 set_option linter.unusedSimpArgs false
 set_option linter.unusedTactic false
@@ -243,6 +243,6 @@ theorem repaired_MD007_quantum_eigenoperator_packet (ρ : MatrixQuantumCarrier) 
     depolarizing_trace p ρ,
     depolarizing_E12 p⟩
 
-end MD007QuantumEigenoperatorInterpretation
+end InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 
 end noncomputable section

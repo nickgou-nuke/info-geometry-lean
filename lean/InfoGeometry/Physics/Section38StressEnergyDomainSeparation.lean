@@ -26,7 +26,7 @@ time is asserted.
 
 noncomputable section
 
-namespace Section38StressEnergyDomainSeparation
+namespace InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 
 open Matrix Complex
 open BigOperators
@@ -131,6 +131,6 @@ theorem repaired_section38_stress_domain_packet
   exact ⟨fun mu nu => D.fullStress_symmetric hmetric hconn mu nu,
     fun mu nu => D.fullStress_eq_compact_of_zero_connectionVariation hzero mu nu⟩
 
-end Section38StressEnergyDomainSeparation
+end InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 
 end noncomputable section

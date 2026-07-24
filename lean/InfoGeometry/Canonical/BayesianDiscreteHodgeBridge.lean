@@ -20,7 +20,7 @@ decomposition, or physical anyon models.
 
 open Matrix
 
-namespace BayesianDiscreteHodgeBridge
+namespace InfoGeometry.Canonical.BayesianDiscreteHodgeBridge
 
 noncomputable section
 
@@ -186,4 +186,4 @@ end CoexactMaxCalCurrentReadout
 
 end
 
-end BayesianDiscreteHodgeBridge
+end InfoGeometry.Canonical.BayesianDiscreteHodgeBridge

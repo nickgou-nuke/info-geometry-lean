@@ -19,7 +19,7 @@ The actual missing theorem remains constructive bosonization:
 split completion + normal ordering + mode labels `⇒` Heisenberg currents.
 -/
 
-namespace BosonizationBoundary
+namespace InfoGeometry.Canonical.BosonizationBoundary
 
 open InfoGeometry.Canonical.ModeExtensionBoundary
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -100,4 +100,4 @@ theorem external_heisenberg_current_law_reference (m n : ℤ) :
 
 end ExternalReference
 
-end BosonizationBoundary
+end InfoGeometry.Canonical.BosonizationBoundary

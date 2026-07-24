@@ -23,7 +23,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace GrandCanonicalHamiltonianFlowBridge
+namespace InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 open InfoGeometry.Dynamics.HamiltonianFlowBridge
@@ -106,4 +106,4 @@ theorem bogoliubovFlow_isOptimal :
 
 end Bridge
 
-end GrandCanonicalHamiltonianFlowBridge
+end InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge

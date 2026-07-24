@@ -3,11 +3,11 @@ import InfoGeometry.Canonical.Triality
 
 namespace InfoGeometry.LLM
 
-open _root_.Attention
-open Triality
+open InfoGeometry.Canonical.Attention
+open InfoGeometry.Canonical.Triality
 
 /-- Context-window alias for LLM-facing APIs. -/
-abbrev TokenContext (n : ℕ) (K V : Type*) := Attention.ContextWindow n K V
+abbrev TokenContext (n : ℕ) (K V : Type*) := InfoGeometry.Canonical.Attention.ContextWindow n K V
 
 /-- Functional identity predicate used for normalization-layer assumptions. -/
 def IsIdentityMap {V : Type*} (f : V → V) : Prop :=

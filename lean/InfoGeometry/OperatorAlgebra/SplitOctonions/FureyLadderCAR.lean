@@ -4,11 +4,11 @@ import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
 
 /-!
-# Furey Ladder Operators: Full CAR Proof in Zorn Matrix Algebra
+# Furey-inspired ladder identities in the Zorn matrix algebra
 
-This module provides a **theorem-safe, kernel-checked proof** of the canonical
-anticommutation relations (CAR) for Furey ladder operators in the split-octonion
-Zorn matrix algebra over ℚ.
+This module provides theorem-safe, kernel-checked exact identities for a
+particular Furey-inspired pair of elements in the split-octonion Zorn matrix
+algebra over `ℚ`.  It does not prove a full CAR representation theorem.
 
 ## Mathematical Background
 
@@ -34,7 +34,7 @@ The Furey ladder operators are defined with `x = J` (the complex structure itsel
 α† = ½(J - J·J) = ½(J + 1)
 ```
 
-These satisfy the CAR relations:
+For this particular pair, the checked identities are:
 ```
 {α, α†} = αα† + α†α = -1
 α² = ½(-J),   (α†)² = ½J

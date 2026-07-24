@@ -10,7 +10,7 @@ This is a typed record of what the system is refusing, delaying, or
 quarantining. It does not prove anything on its own.
 -/
 
-namespace CognitiveShadow
+namespace InfoGeometry.Canonical.CognitiveShadow
 
 /-- Shadow modes recognized by the LeanTrail critic lane. -/
 structure ShadowTemplate where
@@ -85,4 +85,4 @@ def detectedShadows (observedTerms : Array String) : Array DetectedShadow :=
   knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T =>
     { template := T, observedTerms := observedTerms })
 
-end CognitiveShadow
+end InfoGeometry.Canonical.CognitiveShadow

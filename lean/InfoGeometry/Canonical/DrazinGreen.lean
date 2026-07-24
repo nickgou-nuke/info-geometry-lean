@@ -13,12 +13,13 @@ algebraic obstruction statement for the canonical Drazin-Green representative:
 `A * (D * f) = f` iff the Drazin residue `Q_D * f` vanishes.
 
 Kernel/integral Green-function language is only stored as separate data unless
-a representation theorem is supplied by a stronger analytic owner.
+a representation theorem is supplied by a stronger Hestenes--Krein/colimit
+owner.
 -/
 
 noncomputable section
 
-namespace DrazinGreen
+namespace InfoGeometry.Canonical.DrazinGreen
 
 open InfoGeometry.Canonical.Drazin
 
@@ -163,4 +164,4 @@ def greenOperator : R :=
 
 end DrazinGreenKernelData
 
-end DrazinGreen
+end InfoGeometry.Canonical.DrazinGreen

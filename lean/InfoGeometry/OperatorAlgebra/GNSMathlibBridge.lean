@@ -3,7 +3,7 @@ import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
 open scoped ComplexOrder InnerProductSpace
 open Complex ContinuousLinearMap UniformSpace Completion
 
-namespace GNSMathlibBridge
+namespace InfoGeometry.OperatorAlgebra.GNSMathlibBridge
 
 variable {A : Type*} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]
 variable (f : A →ₚ[ℂ] ℂ)
@@ -55,4 +55,4 @@ theorem gnsStarAlgHom_cyclicVector_inner (a : A) :
       ((f.toPreGNS (1 : A) : f.PreGNS) : f.GNS)⟫_ℂ = f (star a)
   simp [PositiveLinearMap.preGNS_inner_def]
 
-end GNSMathlibBridge
+end InfoGeometry.OperatorAlgebra.GNSMathlibBridge

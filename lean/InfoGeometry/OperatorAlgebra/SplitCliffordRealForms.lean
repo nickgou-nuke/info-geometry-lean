@@ -32,7 +32,7 @@ import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section
 
-namespace SplitCliffordRealForms
+namespace InfoGeometry.OperatorAlgebra.SplitCliffordRealForms
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
@@ -364,4 +364,4 @@ theorem complement_twice
 
 end GWRealFormCriterion
 
-end SplitCliffordRealForms
+end InfoGeometry.OperatorAlgebra.SplitCliffordRealForms

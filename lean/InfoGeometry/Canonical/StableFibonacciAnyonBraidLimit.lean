@@ -22,7 +22,7 @@ open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Canonical.FiniteMajoranaProjectiveBraiding
 open InfoGeometry.Algebra.InfiniteInductiveSUSY
 
-namespace StableFibonacciAnyonBraidLimit
+namespace InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit
 
 variable {Gate : ℕ → Type*} [∀ n : ℕ, SMul (Units ℂ) (Gate n)]
 variable {LGate : Type*} [SMul (Units ℂ) LGate]
@@ -62,4 +62,4 @@ theorem stable_fibonacci_projective_gate_compat
   rw [h_step] at h_cone_apply
   exact congrArg (fun x => phase w • x) h_cone_apply
 
-end StableFibonacciAnyonBraidLimit
+end InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit

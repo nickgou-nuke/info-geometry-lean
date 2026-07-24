@@ -5,7 +5,7 @@ Finite von Mangoldt / prime-weighted projective-temperature sidecar.
 
 This module connects the scalar von Mangoldt partition readout
 `arithmeticPrimePartition` from `PrimitiveSetsAbove` with the real projective
-temperature inversion from `ProjectiveTemperature`.
+temperature inversion from `InfoGeometry.Thermodynamics.ProjectiveTemperature`.
 
 It does not assert the logarithmic derivative theorem for `ζ`, the prime
 number theorem, analytic continuation, or a global Euler product.  The
@@ -20,10 +20,10 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimitivePrimeProjectiveTemperature
+namespace InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 
 open InfoGeometry.Arithmetic
-open ProjectiveTemperature
+open InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 /-! ## 1. Finite von Mangoldt partition under projective temperature -/
 
@@ -140,4 +140,4 @@ theorem ArithmeticPrimeTemperatureInversionCalibration.primePartitionIntegral_eq
     ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u :=
   ArithmeticPrimeTemperatureInversionCalibration.inversion_integral_law C
 
-end PrimitivePrimeProjectiveTemperature
+end InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature

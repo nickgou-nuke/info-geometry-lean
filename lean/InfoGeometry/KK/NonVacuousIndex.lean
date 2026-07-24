@@ -1,6 +1,6 @@
 import InfoGeometry.KK.KasparovCycle
 
-namespace NonVacuousIndex
+namespace InfoGeometry.KK.NonVacuousIndex
 
 open InfoGeometry.Krein
 
@@ -23,4 +23,4 @@ theorem analyticalIndex_eq_zero_of_F_sq_one [FiniteDimensional ℝ H]
     X.analyticalIndex = 0 := by
   exact InfoGeometry.KK.index_bridge_spectral_zero (X := X) hF
 
-end NonVacuousIndex
+end InfoGeometry.KK.NonVacuousIndex

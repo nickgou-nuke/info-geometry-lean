@@ -9,10 +9,10 @@ Concrete logarithmic relative-volume identities for
 `InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell`.
 -/
 
-namespace RelativeVolume
+namespace InfoGeometry.Algebra.Zorn.RelativeVolume
 
-open ConcreteComposition
-open ZornCell
+open InfoGeometry.Algebra.Zorn.ConcreteComposition
+open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
 /-- Negative logarithmic Zorn volume potential. -/
 noncomputable def negLogVolume (X : ZornCell ℝ) : ℝ :=
@@ -82,4 +82,4 @@ theorem negLogVolume_mul
   rw [log_detZ_mul X Y hX hY]
   ring
 
-end RelativeVolume
+end InfoGeometry.Algebra.Zorn.RelativeVolume

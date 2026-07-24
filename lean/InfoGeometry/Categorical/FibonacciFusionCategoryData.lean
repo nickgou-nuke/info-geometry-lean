@@ -23,7 +23,7 @@ No theorem here replaces `InfoGeometry.Categorical.FibonacciBraiding`; this file
 only organizes its inputs.
 -/
 
-namespace FibonacciFusionCategoryData
+namespace InfoGeometry.Categorical.FibonacciFusionCategoryData
 
 open Matrix
 open Set
@@ -165,4 +165,4 @@ theorem zorn_inductive_support_readout
   InfoGeometry.Categorical.FibonacciBraidedTowerCone.zorn_maximal_support
     family chain_sUnion_mem nonempty
 
-end FibonacciFusionCategoryData
+end InfoGeometry.Categorical.FibonacciFusionCategoryData

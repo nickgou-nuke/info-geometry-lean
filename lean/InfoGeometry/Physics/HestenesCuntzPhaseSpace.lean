@@ -17,7 +17,7 @@ compatible-family colimit candidate.
 
 noncomputable section
 
-namespace HestenesCuntzPhaseSpace
+namespace InfoGeometry.Physics.HestenesCuntzPhaseSpace
 
 open Matrix
 open ChiralPoincareSouriauBridge
@@ -254,6 +254,6 @@ theorem hestenes_cuntz_phase_space_synthesis :
   · intro n
     exact constantTwoCellWeylFamily.stage_coordinate_momentum_commutator n
 
-end HestenesCuntzPhaseSpace
+end InfoGeometry.Physics.HestenesCuntzPhaseSpace
 
 end noncomputable section

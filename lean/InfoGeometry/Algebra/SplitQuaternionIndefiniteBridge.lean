@@ -8,7 +8,7 @@ This is an algebraic signature bridge, not a Euclidean realization. The
 coordinate permutation is `(w,x,y,z) ↦ (t=w,x'=y,y'=x,z'=z)`.
 -/
 
-namespace SplitQuaternionIndefiniteBridge
+namespace InfoGeometry.Algebra.SplitQuaternionIndefiniteBridge
 
 open InfoGeometry.Algebra.RealPauliCausalCone
 open InfoGeometry.Clifford
@@ -49,4 +49,4 @@ theorem splitQuaternion_norm_signature (w x y z : ℝ) :
   simp [InfoGeometry.Clifford.norm]
   ring
 
-end SplitQuaternionIndefiniteBridge
+end InfoGeometry.Algebra.SplitQuaternionIndefiniteBridge

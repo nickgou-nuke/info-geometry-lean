@@ -13,7 +13,7 @@ This file proves:
 No wrappers. No `sorry`.
 -/
 
-namespace LieOrbitInfinitesimal
+namespace InfoGeometry.Canonical.LieOrbitInfinitesimal
 
 open Matrix
 
@@ -93,4 +93,4 @@ theorem orbitTangent_scalar_eq_bot (a : R) :
 
 end
 
-end LieOrbitInfinitesimal
+end InfoGeometry.Canonical.LieOrbitInfinitesimal

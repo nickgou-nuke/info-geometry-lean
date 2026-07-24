@@ -23,7 +23,7 @@ No finite-dimensional density matrix is introduced here, and no analytic KMS
 theorem is inferred from the bounded flow alone.
 -/
 
-namespace BoundedKMSConditionBridge
+namespace InfoGeometry.Canonical.BoundedKMSConditionBridge
 
 open InfoGeometry.Canonical.BoundedModularFlowCalibration
 open InfoGeometry.OperatorAlgebra.Thermodynamics
@@ -104,16 +104,27 @@ variable (B : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebr
 
 /-- Recover the legacy broad bounded KMS bridge from the integrated KMS state. -/
 @[rep_depth thermo]
-def toBridge :
+def toBoundedKMSConditionBridge :
     Bridge (E := E) (LieAlgebra := LieAlgebra) where
   boundedFlow := B.boundedFlow
   beta := B.beta
   state := B.kms.state
   kms := B.kms.kms
 
+@[rep_depth thermo]
+def toBridge :
+    Bridge (E := E) (LieAlgebra := LieAlgebra) :=
+  B.toBoundedKMSConditionBridge
+
 /-- The legacy state field is definitionally the state carried by the KMS state. -/
 @[rep_depth thermo]
 theorem state_eq_kms_state :
+    B.toBoundedKMSConditionBridge.state = B.kms.state :=
+  rfl
+
+/-- Backward-compatible name for the legacy bridge constructor. -/
+@[rep_depth thermo]
+theorem toBoundedKMSConditionBridge_state_eq :
     B.toBridge.state = B.kms.state :=
   rfl
 
@@ -190,13 +201,9 @@ theorem kms_boundary_holds :
 /--
 Build the narrowed integrated KMS carrier from the broad bounded bridge once
 real-time flow invariance is supplied explicitly.
-
-This is the smallest honest reverse route currently available in this file:
-the broad carrier already carries the state and analytic KMS boundary datum,
-but not the flow-invariance field required by `KMSState`.
 -/
 @[rep_depth thermo]
-def toMinimal
+def toMinimalBoundedKMSConditionBridge
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
@@ -209,7 +216,25 @@ def toMinimal
     kms := B.kms
   }
 
+/-- Legacy narrow-construction name retained for compatibility. -/
+@[rep_depth thermo]
+def toMinimal
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) :=
+  B.toMinimalBoundedKMSConditionBridge hInvariant
+
 /-- The direct narrowed reverse route recovers the legacy state definitionally. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_state_eq
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    (B.toMinimalBoundedKMSConditionBridge hInvariant).kms.state = B.state :=
+  rfl
+
+/-- Backward-compatible alias for callers using the shorter legacy name. -/
 @[rep_depth thermo]
 theorem toMinimal_state_eq
     (hInvariant :
@@ -219,6 +244,15 @@ theorem toMinimal_state_eq
   rfl
 
 /-- The direct narrowed reverse route round-trips back to the broad bridge. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_toBoundedKMSConditionBridge
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    (B.toMinimalBoundedKMSConditionBridge hInvariant).toBoundedKMSConditionBridge = B :=
+  rfl
+
+/-- Legacy theorem name for backwards compatibility. -/
 @[rep_depth thermo]
 theorem toMinimal_toBridge
     (hInvariant :
@@ -232,6 +266,15 @@ Compatibility theorem: build the narrowed integrated KMS carrier from the broad
 bounded bridge once real-time flow invariance is supplied explicitly.
 -/
 @[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
+      M.kms.state = B.state := by
+  exact ⟨B.toMinimalBoundedKMSConditionBridge hInvariant, rfl⟩
+
+/-- Legacy name kept for compatibility. -/
 theorem toMinimal_of_flow_invariant
     (hInvariant :
       ∀ t : ℝ, ∀ A : EndH,
@@ -279,4 +322,4 @@ end Bridge
 
 end Core
 
-end BoundedKMSConditionBridge
+end InfoGeometry.Canonical.BoundedKMSConditionBridge

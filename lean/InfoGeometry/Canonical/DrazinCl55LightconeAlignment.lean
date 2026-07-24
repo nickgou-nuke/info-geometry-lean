@@ -19,7 +19,7 @@ This is only finite algebraic data: no analytic completion, limit passage, or
 bulk-boundary reconstruction is asserted here.
 -/
 
-namespace DrazinCl55LightconeAlignment
+namespace InfoGeometry.Canonical.DrazinCl55LightconeAlignment
 
 open InfoGeometry.Clifford.ConformalLift55
 
@@ -385,4 +385,4 @@ theorem cl55_drazin_defect_finite_alignment
      (InfoGeometry.Canonical.DrazinChiralLightconeBoundary.drazin_power_annihilates_defect_lane hD).1,
      (InfoGeometry.Canonical.DrazinChiralLightconeBoundary.drazin_power_annihilates_defect_lane hD).2⟩
 
-end DrazinCl55LightconeAlignment
+end InfoGeometry.Canonical.DrazinCl55LightconeAlignment

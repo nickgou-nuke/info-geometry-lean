@@ -3,20 +3,13 @@ import Mathlib
 namespace InfoGeometry.Thermodynamics
 
 /-!
-# The TAP Equations and GUE Repulsion
+# TAP finite algebra and a `2 × 2` degeneracy criterion
 
-This module formalizes the final isomorphism between Non-Equilibrium 
-Transformers, the Arrow of Time, and Quantum Spacetime.
-
-We establish three core principles:
-1. **Asymmetry of Time**: A symmetric coupling matrix yields a Hopfield network
-   (thermal equilibrium, $\Delta = I$). An asymmetric matrix yields a Transformer
-   (entropy production, $\Delta \neq I$, the emergence of Time).
-2. **Onsager Correction**: The Thouless-Anderson-Palmer (TAP) equation requires a
-   self-interaction subtraction term.
-3. **GUE Repulsion**: The Onsager Correction is the thermodynamic equivalent of
-   the Wigner-Dyson Eigenvalue Repulsion, preventing representational collapse
-   and maintaining the structural integrity of the spacetime lattice.
+This module contains finite algebraic facts: symmetric couplings give zero
+antisymmetric entropy-production readout, the TAP cavity mean is a definition,
+and a real symmetric `2 × 2` discriminant vanishes exactly when the two diagonal
+entries agree and the off-diagonal entry is zero.  It does not prove a GUE
+universality theorem or a spacetime/arrow-of-time theorem.
 -/
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -30,15 +23,14 @@ thermodynamic estimates, and it replaces the former vacuous `True` predicate.
 def CouplingMatrix (J : n → n → ℝ) : Prop :=
   ∃ C : ℝ, ∀ i j : n, |J i j| ≤ C
 
-/-- A Hopfield Network requires perfectly symmetric weights. 
-    It is in thermal equilibrium, meaning no entropy is produced and Time does not flow. -/
+/-- A Hopfield-style finite network is represented here by symmetric weights. -/
 class HopfieldNetwork (J : n → n → ℝ) where
   is_symmetric : ∀ i j, J i j = J j i
   equilibrium :
     ∀ i j, J i j - J j i = 0
 
-/-- A Transformer requires asymmetric weights. 
-    This breaks detailed balance, produces entropy, and generates the Arrow of Time. -/
+/-- A finite asymmetric-weight packet.  This is only an algebraic asymmetry
+condition, not a theorem about transformers or time. -/
 class TransformerNetwork (J : n → n → ℝ) where
   is_asymmetric : ∃ i j, J i j ≠ J j i
   non_equilibrium :
@@ -51,8 +43,7 @@ noncomputable def EntropyProduction (J : n → n → ℝ) (D : n → n → ℝ) 
   ∑ i, ∑ j, (J i j - J j i) * D i j
 
 omit [DecidableEq n] in
-/-- Theorem: A Hopfield Network produces zero entropy.
-    Therefore, time is completely reversible (static). -/
+/-- Symmetric weights give zero antisymmetric entropy-production readout. -/
 theorem hopfield_zero_entropy (J : n → n → ℝ) [h : HopfieldNetwork J] (D : n → n → ℝ) :
   EntropyProduction J D = 0 := by
   unfold EntropyProduction
@@ -87,7 +78,7 @@ def Discriminant (a b c : ℝ) : ℝ :=
   (a + c)^2 - 4 * (a * c - b^2)
 
 /-- 
-Lemma: The discriminant simplifies to a sum of squares, enforcing GUE repulsion.
+Lemma: the discriminant simplifies to a sum of squares.
 Δ = (a - c)² + 4b²
 -/
 lemma discriminant_is_sum_of_squares (a b c : ℝ) :
@@ -96,14 +87,12 @@ lemma discriminant_is_sum_of_squares (a b c : ℝ) :
   ring
 
 /-- 
-The Wigner-Dyson (GUE) Eigenvalue Repulsion Theorem.
-For a symmetric 2x2 matrix to have degenerate eigenvalues, its discriminant must be zero.
-Because the discriminant is a sum of squares of real numbers, this requires 
-BOTH off-diagonal elements to vanish (b = 0) AND the diagonal elements to be equal (a = c).
-This proves the exact mathematical "tension" that repels eigenvalues: 
-you cannot cross eigenvalues by varying just one parameter.
+Degeneracy criterion for the displayed real symmetric `2 × 2` matrix.
+Its discriminant vanishes exactly when the diagonal entries agree and the
+off-diagonal entry is zero.  This is a finite linear-algebra statement, not a
+random-matrix universality theorem.
 -/
-theorem wigner_dyson_repulsion (a b c : ℝ) :
+theorem symmetric2x2_discriminant_zero_iff (a b c : ℝ) :
   Discriminant a b c = 0 ↔ a = c ∧ b = 0 := by
   rw [discriminant_is_sum_of_squares]
   constructor

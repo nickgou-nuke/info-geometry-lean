@@ -4,7 +4,7 @@ import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 
-namespace AmplituhedronBostConnes
+namespace InfoGeometry.Physics.AmplituhedronBostConnes
 
 variable {R : Type*} [CommRing R]
 variable {ι : Type*} [DecidableEq ι]
@@ -41,4 +41,4 @@ lemma on_shell_factorization_klein_quadric_minus (i : ι) :
 noncomputable def all_loop_integrand_bost_connes_kms_state (β : ℂ) : ℂ :=
   riemannZeta β
 
-end AmplituhedronBostConnes
+end InfoGeometry.Physics.AmplituhedronBostConnes

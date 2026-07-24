@@ -13,7 +13,7 @@ This file defines an octonion coordinate norm but does not prove multiplicativit
 of that norm or a full octonionic Hopf fibration theorem.
 -/
 
-namespace HopfTest
+namespace InfoGeometry.Canonical.HopfTest
 
 open GIFT.Algebraic.Octonions
 
@@ -38,4 +38,4 @@ theorem octonionic_hopf_fibration_s8 (n1 n2 : ℝ) (h_sphere : n1 + n2 = 1) :
     _ = 1^2 := by rw [h_sphere]
     _ = 1 := by ring
 
-end HopfTest
+end InfoGeometry.Canonical.HopfTest

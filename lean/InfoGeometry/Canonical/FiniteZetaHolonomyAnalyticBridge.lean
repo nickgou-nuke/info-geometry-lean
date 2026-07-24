@@ -2,24 +2,25 @@ import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 
 /-!
-# Finite zeta holonomy analytic bridge
+# Finite zeta holonomy Hestenes phase bridge
 
 This module attaches the existing finite zeta holonomy
 
 `h_p(s) = exp((1 / 2 - s) * log p)`
 
-to Mathlib's native complex analytic surface, then reuses the existing
-`ComplexAnalyticBridge` to read it as a Cauchy-analytic map and as a transported
-map on the doubled real carrier.
+to the existing finite complex phase surface, then reuses the existing
+`ComplexAnalyticBridge` to read it as a Cauchy/Hestenes phase-compatible map and
+as a transported map on the doubled real carrier.
 
-The proof is deliberately local and finite: the only analytic fact used is that
-the complex exponential of an affine complex expression is differentiable, hence
-analytic by Mathlib's `Differentiable.analyticAt`.
+The proof is deliberately local and finite: the only scalar-complex fact used is
+that the complex exponential of an affine complex expression is differentiable,
+hence compatible with Mathlib's local `AnalyticAt` API before transport to the
+Hestenes carrier.
 -/
 
 noncomputable section
 
-namespace FiniteZetaHolonomyAnalyticBridge
+namespace InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
 
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 open InfoGeometry.Canonical.ComplexAnalyticBridge
@@ -100,5 +101,5 @@ def zetaNormalizedPrimeHolonomy_lifted_doubled_cauchyAnalyticAt
   analyticAt_liftedToDoubled_cauchyAnalyticAt
     (zetaNormalizedPrimeHolonomy_analyticAt p s)
 
-end FiniteZetaHolonomyAnalyticBridge
+end InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
 

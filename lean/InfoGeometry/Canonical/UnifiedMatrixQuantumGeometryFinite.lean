@@ -40,7 +40,7 @@ entanglement/connection correspondence, quantum evolution as spacetime
 translation, and physical dynamics.
 -/
 
-namespace UnifiedMatrixQuantumGeometryFinite
+namespace InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 
 open Matrix
 open Complex
@@ -266,4 +266,4 @@ theorem vonNeumannRHS_eq_bloch_precession (ω1 ω2 ω3 n1 n2 n3 : ℂ) :
 
 end
 
-end UnifiedMatrixQuantumGeometryFinite
+end InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite

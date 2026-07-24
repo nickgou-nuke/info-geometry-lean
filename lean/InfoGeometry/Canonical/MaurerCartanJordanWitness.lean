@@ -19,7 +19,7 @@ The corresponding SymPy witness is `tools/sympy/maurer_cartan_jordan_truncation.
 
 noncomputable section
 
-namespace MaurerCartanJordanWitness
+namespace InfoGeometry.Canonical.MaurerCartanJordanWitness
 
 open InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
 
@@ -49,4 +49,4 @@ theorem lowerHadjiivanovMonodromy_pow_eq_phase_conj_componentN_bridge (h : ℂ) 
           InfoGeometry.Clifford.ModularCftBridge.modularSInverse) := by
   exact lowerHadjiivanovMonodromy_pow_eq_phase_conj_componentN h n
 
-end MaurerCartanJordanWitness
+end InfoGeometry.Canonical.MaurerCartanJordanWitness

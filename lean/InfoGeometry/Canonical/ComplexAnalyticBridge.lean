@@ -10,7 +10,7 @@ import InfoGeometry.Krein.DoubledSpace
 
 noncomputable section
 
-namespace ComplexAnalyticBridge
+namespace InfoGeometry.Canonical.ComplexAnalyticBridge
 
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.HestenesAnalyticity
@@ -132,7 +132,7 @@ def analyticAtToCauchyAnalyticAt
     CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
   analyticAt_complex_to_cauchyAnalyticAt h_an
 
-/-- Compatibility name for the honest one-way complex analytic bridge. -/
+/-- Compatibility name for the one-way complex-to-Hestenes bridge. -/
 abbrev analyticAt_implies_cauchyAnalyticAt
     {f : ℂ → ℂ} {z : ℂ}
     (h_an : AnalyticAt ℂ f z) :
@@ -144,7 +144,7 @@ def lifted (f : ℂ → ℂ) : H₂ℝ → H₂ℝ :=
   fun v => complexToDoubled (f (doubledToComplex v))
 
 /--
-Transport the native complex analytic bridge to the doubled/clock-axis carrier.
+Transport the native complex phase-line bridge to the doubled/clock-axis carrier.
 -/
 noncomputable def analyticAt_liftedToDoubled_cauchyAnalyticAt
     {f : ℂ → ℂ} {z : ℂ}
@@ -336,4 +336,4 @@ def conformalHolomorphicToCauchyAnalyticAt
     CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
   differentiableAtToCauchyAnalyticAt hf
 
-end ComplexAnalyticBridge
+end InfoGeometry.Canonical.ComplexAnalyticBridge

@@ -23,7 +23,7 @@ import InfoGeometry.OperatorAlgebra.FresnelJonesReflection
 
 noncomputable section
 
-namespace FiniteJonesModel
+namespace InfoGeometry.Applications.FiniteJonesModel
 
 open InfoGeometry.OperatorAlgebra.FresnelJonesReflection
 
@@ -256,4 +256,4 @@ theorem operator_eq_s_core_of_witness
 
 end FiniteJonesEvent
 
-end FiniteJonesModel
+end InfoGeometry.Applications.FiniteJonesModel

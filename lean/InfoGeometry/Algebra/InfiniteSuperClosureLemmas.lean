@@ -12,7 +12,7 @@ compatible cone, transported generator images are also independent of the
 finite stage.
 -/
 
-namespace InfiniteSuperClosureLemmas
+namespace InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 
 open InductiveSuperClosureLemmas
 
@@ -172,4 +172,4 @@ theorem compatibleCone_limitImage_mixedSuperClosure_zeroStage
 
 end ImageLimit
 
-end InfiniteSuperClosureLemmas
+end InfoGeometry.Algebra.InfiniteSuperClosureLemmas

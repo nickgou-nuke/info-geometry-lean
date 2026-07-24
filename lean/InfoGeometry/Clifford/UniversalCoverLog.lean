@@ -54,7 +54,7 @@ sheet structure.
 open Complex
 open Real
 
-namespace UniversalCoverLog
+namespace InfoGeometry.Clifford.UniversalCoverLog
 
 /-! ## The Universal Cover of ℂ\{0} -/
 
@@ -241,4 +241,4 @@ theorem algebraic_winding_matches_analytic (n : ℕ) :
 | SplitCliffordInfinity ≅ universal cover    | DOCUMENTED | algebraic = discrete, continuous = analytic |
 -/
 
-end UniversalCoverLog
+end InfoGeometry.Clifford.UniversalCoverLog

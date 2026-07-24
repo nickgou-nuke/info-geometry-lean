@@ -26,11 +26,11 @@ namespace CanonicalZornRealSpin44
 set_option synthInstance.maxHeartbeats 100000
 
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+open CanonicalZornCompositionTriality
+open CanonicalZornCompositionFiveGradeBridge
+open CanonicalZornCliffordRepresentation
+open ProjectiveAffineConformalClosure55
+open CanonicalZornProjectiveTKKBridge
 
 /-! ## Standard real split quadratic carrier -/
 

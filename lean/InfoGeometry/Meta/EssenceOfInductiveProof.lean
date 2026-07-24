@@ -18,7 +18,7 @@ shape of induction as Lean theorems.  It introduces no axioms and no hidden
 proof fields.
 -/
 
-namespace EssenceOfInductiveProof
+namespace InfoGeometry.Meta.EssenceOfInductiveProof
 
 /-! ## Predicate induction -/
 
@@ -263,4 +263,4 @@ theorem induction_pair {P Q : Nat → Prop}
   intro n
   exact ⟨induction_essence hP0 hPstep n, induction_essence hQ0 hQstep n⟩
 
-end EssenceOfInductiveProof
+end InfoGeometry.Meta.EssenceOfInductiveProof

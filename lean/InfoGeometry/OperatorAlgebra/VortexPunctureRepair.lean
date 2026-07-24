@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 
 noncomputable section
 
-namespace VortexPunctureRepair
+namespace InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 open InfoGeometry.OperatorAlgebra.ChiralResidueAudit
@@ -191,4 +191,4 @@ theorem audit_repaired_benign :
 
 end VortexRepairBridge
 
-end VortexPunctureRepair
+end InfoGeometry.OperatorAlgebra.VortexPunctureRepair

@@ -1,7 +1,7 @@
 import InfoGeometry.Physics.PellisFineStructure
 import InfoGeometry.BostConnes.BostConnesParity
 
-namespace PellisfineStructure
+namespace InfoGeometry.Physics.PellisfineStructure
 
 open InfoGeometry.BostConnes
 
@@ -75,4 +75,4 @@ theorem arithmetic_foundation_connection :
   intro n
   exact moebius_eq_squarefreeProj_mul_liouvilleParity n
 
-end PellisfineStructure
+end InfoGeometry.Physics.PellisfineStructure

@@ -12,7 +12,7 @@ It is intentionally over `ℝ`, since the log-barrier statements use `Real.log`.
 The production Zorn definitions remain in the concrete owner file.
 -/
 
-namespace ZornFlowRelativeVolumeAbstract
+namespace InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolumeAbstract
 
 noncomputable section
 
@@ -127,4 +127,4 @@ theorem zornLogBarrier_flowDifference
 
 end
 
-end ZornFlowRelativeVolumeAbstract
+end InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolumeAbstract

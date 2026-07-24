@@ -9,7 +9,7 @@ Constructive owner interface for routing Drazin-side inverse candidates into the
 Weyl-compatibility surface used by `TriadicWeylBridge`.
 -/
 
-namespace DrazinWeylConstructive
+namespace InfoGeometry.Canonical.DrazinWeylConstructive
 
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.TriadicWeylBridge
@@ -76,6 +76,13 @@ assumptions together with the spectral-sheet commutation proof for the classical
 Riesz candidate they already expose.
 -/
 structure DrazinInfiniteWeylCompatibility (T : EndH) where
+  assumptions : DrazinInfiniteAssumptions (𝕂 := ℝ) T
+  classical_candidate_commutes_spectralEpsilon :
+    assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
+      = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
+
+/-- Compatibility witness alias with expected legacy naming in test fixtures. -/
+structure DrazinInfiniteWeylWitness (T : EndH) where
   assumptions : DrazinInfiniteAssumptions (𝕂 := ℝ) T
   classical_candidate_commutes_spectralEpsilon :
     assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
@@ -728,6 +735,28 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylCompatibili
       (E := E)
       (constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility (E := E) W)
 
+/-- Legacy witness-compatible bridge constructor. -/
+def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
+    {T : EndH}
+    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    ConstructiveRieszWeylData (E := E) T :=
+  constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility
+    (E := E)
+    { assumptions := W.assumptions
+      classical_candidate_commutes_spectralEpsilon := W.classical_candidate_commutes_spectralEpsilon }
+
+/-- Legacy witness wrapper for the same existence theorem. -/
+theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylWitness
+    {T : EndH}
+    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylCompatibility
+      (E := E)
+      { assumptions := W.assumptions
+        classical_candidate_commutes_spectralEpsilon := W.classical_candidate_commutes_spectralEpsilon }
+
 /--
 Broad infinite local-symmetry route into the constructive Drazin/Weyl existence
 theorem. This removes the explicit classical-candidate commutation proof from
@@ -883,4 +912,4 @@ theorem rieszDrazinCandidate_isWeylCompatible
     { riesz := hR
       candidate_commutes_spectralEpsilon := hComm }
 
-end DrazinWeylConstructive
+end InfoGeometry.Canonical.DrazinWeylConstructive

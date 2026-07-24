@@ -25,7 +25,7 @@ This file deliberately stays in the bounded doubled-carrier lane:
   scalar readout/pairing, not through an unpaired product alone.
 -/
 
-namespace SouriauModularBregmanOperator
+namespace InfoGeometry.Canonical.SouriauModularBregmanOperator
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.OperatorDictionary
@@ -382,4 +382,4 @@ end SouriauOperatorialBregmanPacket
 
 end BoundedDoubledModular
 
-end SouriauModularBregmanOperator
+end InfoGeometry.Canonical.SouriauModularBregmanOperator

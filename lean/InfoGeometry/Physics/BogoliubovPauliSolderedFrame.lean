@@ -33,7 +33,7 @@ None.
 
 noncomputable section
 
-namespace BogoliubovPauliSolderedFrame
+namespace InfoGeometry.Physics.BogoliubovPauliSolderedFrame
 
 open InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 
@@ -305,4 +305,4 @@ theorem unifiedBogoliubov_pauli_tetrad_det_eq_q22
 
 end UnifiedOperatorAndSoldering
 
-end BogoliubovPauliSolderedFrame
+end InfoGeometry.Physics.BogoliubovPauliSolderedFrame

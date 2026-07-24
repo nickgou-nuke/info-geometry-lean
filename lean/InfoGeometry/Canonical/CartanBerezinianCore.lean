@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 
-namespace CartanBerezinianCore
+namespace InfoGeometry.Canonical.CartanBerezinianCore
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.RestrictedVolumeCharacter
@@ -36,7 +36,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 noncomputable def generalizedBerezinian
     [FiniteDimensional ℝ E]
     (S : SchurAdmissibleTransport (E := E)) : ℝˣ :=
-  VolumeHom S.Schur.toLinearEquiv * (VolumeHom S.Dinv.toLinearEquiv)⁻¹
+  Base.VolumeHom S.Schur.toLinearEquiv * (Base.VolumeHom S.Dinv.toLinearEquiv)⁻¹
 
 /-- Positive scalar shadow of the Schur-complement Berezinian. -/
 noncomputable def generalizedBerezinianScale
@@ -97,4 +97,4 @@ theorem generalizedBerezinian_diagonal_reduction
 
 end Berezinian
 
-end CartanBerezinianCore
+end InfoGeometry.Canonical.CartanBerezinianCore

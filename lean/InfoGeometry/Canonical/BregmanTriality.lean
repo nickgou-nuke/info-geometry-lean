@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Convex.HessianGeometry
 
-namespace BregmanTriality
+namespace InfoGeometry.Canonical.BregmanTriality
 
 open InfoGeometry.Canonical.GrandUnification
 open Triality
@@ -24,4 +24,4 @@ noncomputable def softmaxBregmanAttention
   exact softmaxAttention (core := bregmanTriadicCore route)
     (I := I) (hI := hI) (keys := keys)
 
-end BregmanTriality
+end InfoGeometry.Canonical.BregmanTriality

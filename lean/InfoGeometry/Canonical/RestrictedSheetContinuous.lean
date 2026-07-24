@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 
-namespace RestrictedSheetContinuous
+namespace InfoGeometry.Canonical.RestrictedSheetContinuous
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.BogoliubovProjectorFlux
@@ -357,4 +357,4 @@ def trivialSheetRestriction (E : Type*) [NormedAddCommGroup E] [InnerProductSpac
   mul_mem := by intro _ _ _ _; rfl
   inv_mem := by intro _ _; rfl
 
-end RestrictedSheetContinuous
+end InfoGeometry.Canonical.RestrictedSheetContinuous

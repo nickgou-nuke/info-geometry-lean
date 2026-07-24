@@ -2,7 +2,7 @@
 
 open Lean
 
-namespace Graph
+namespace InfoGeometry.Analysis.Graph
 
 
 
@@ -117,7 +117,7 @@ def indexedToGraph (g : IndexedGraph) : SimpleGraph :=
 def envToGraph (env : Environment) (nsPrefix? : Option String := none) : SimpleGraph :=
   indexedToGraph (envToIndexedGraph env nsPrefix?)
 
-end Graph
+end InfoGeometry.Analysis.Graph
 
 -- bring the useful names out of the subnamespace into the parent so that
 -- `import InfoGeometry.Analysis.Graph` gives you everything directly.

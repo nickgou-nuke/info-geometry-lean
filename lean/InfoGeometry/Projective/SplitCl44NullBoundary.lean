@@ -18,7 +18,7 @@ carrier.  It only records the common quotient pattern:
 
 open scoped Classical
 
-namespace SplitCl44NullBoundary
+namespace InfoGeometry.Projective.SplitCl44NullBoundary
 
 open InfoGeometry.Clifford.SplitCl44CausalEnvelope
 
@@ -97,4 +97,4 @@ theorem splitCl44ProjectiveNullSpace_nonempty :
   rcases splitCl44ProjectiveNullBoundary_nonempty with ⟨Z, _hZ, _hmk⟩
   exact ⟨splitCl44NullMk Z⟩
 
-end SplitCl44NullBoundary
+end InfoGeometry.Projective.SplitCl44NullBoundary

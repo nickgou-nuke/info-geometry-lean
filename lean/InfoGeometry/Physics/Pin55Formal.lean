@@ -17,7 +17,7 @@ open QuadraticMap
 
 noncomputable section
 
-namespace Pin55Formal
+namespace InfoGeometry.Physics.Pin55Formal
 
 /-! ## 1. Split (5,5) quadratic form via `QuadraticMap.proj` -/
 
@@ -96,4 +96,4 @@ claimed to be a literal subgroup: `r₅² = -1`, so closure holds only after a
 separate projective-sign quotient construction. -/
 def v4Set : Set (CliffordAlgebra q55) := {1, r₀, r₅, r₀ * r₅}
 
-end Pin55Formal
+end InfoGeometry.Physics.Pin55Formal

@@ -22,7 +22,7 @@ open scoped Matrix
 
 set_option linter.unnecessarySeqFocus false
 
-namespace PauliBraidB3
+namespace InfoGeometry.Canonical.PauliBraidB3
 
 abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
@@ -94,4 +94,4 @@ theorem pauli_b3_braid_shadow_packet :
         (2 * Complex.I : ℂ) • (sigma1 + sigma2) :=
   ⟨pauli_braid_relation, pauli_braid_triple_product⟩
 
-end PauliBraidB3
+end InfoGeometry.Canonical.PauliBraidB3

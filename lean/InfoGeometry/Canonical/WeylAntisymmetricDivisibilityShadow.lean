@@ -16,7 +16,7 @@ This is still only the two-node finite lane.  It does not claim a full
 multivariate alternating-polynomial or Weyl-character divisibility theorem.
 -/
 
-namespace WeylAntisymmetricDivisibilityShadow
+namespace InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow
 
 /-- Two-node alternating shadow data. -/
 @[rep_depth thermo]
@@ -94,4 +94,4 @@ theorem antisymmetry_divisibility_packet :
 
 end TwoNodeAlternatingShadow
 
-end WeylAntisymmetricDivisibilityShadow
+end InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow

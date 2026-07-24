@@ -11,7 +11,7 @@ continuum derivative or a categorical colimit theorem, this file records the
 exact algebraic transport that follows from the supplied compatibility fields.
 -/
 
-namespace DuhamelColimitBridge
+namespace InfoGeometry.Canonical.DuhamelColimitBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
@@ -50,4 +50,4 @@ theorem duhamel_survives_colimit
   -- Apply the finite-stage algebraic identity.
   rw [h_finite_duhamel]
 
-end DuhamelColimitBridge
+end InfoGeometry.Canonical.DuhamelColimitBridge

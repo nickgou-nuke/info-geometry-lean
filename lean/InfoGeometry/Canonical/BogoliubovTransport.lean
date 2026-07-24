@@ -20,9 +20,9 @@ scalars and no Euclidean proxy carrier. The owner surface consists of:
 - and the induced scalar Krein transport law.
 -/
 
-namespace BogoliubovTransport
+namespace InfoGeometry.Canonical.BogoliubovTransport
 
-open TomitaTakesaki
+open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
 open scoped InnerProductSpace
 
@@ -1531,4 +1531,4 @@ theorem modularVariance_eq_neg_kreinExpectation_one_of_expectation_zero_of_squar
 
 end Basic
 
-end BogoliubovTransport
+end InfoGeometry.Canonical.BogoliubovTransport

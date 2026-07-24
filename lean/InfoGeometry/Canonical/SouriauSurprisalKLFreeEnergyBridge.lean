@@ -25,7 +25,7 @@ entropy, KMS flow, Tomita modular operators, or unbounded logarithms.
 
 noncomputable section
 
-namespace SouriauSurprisalKLFreeEnergyBridge
+namespace InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Canonical.StateDependentTransport
@@ -150,4 +150,4 @@ theorem modularHamiltonian_eq_freeEnergy
 
 end ModularFreeEnergyReadout
 
-end SouriauSurprisalKLFreeEnergyBridge
+end InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge

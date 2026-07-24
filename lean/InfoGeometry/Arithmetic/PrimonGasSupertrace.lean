@@ -23,7 +23,7 @@ Z_{\mathrm{sf}}(A,\beta)=\sum_{n\in A\cap\mathrm{SqFree}} w_\beta(n),
 
 noncomputable section
 
-namespace PrimonGasSupertrace
+namespace InfoGeometry.Arithmetic.PrimonGasSupertrace
 
 open scoped BigOperators
 
@@ -194,4 +194,4 @@ theorem supertrace_eq_squarefree_filter :
 
 end FinitePrimonThermalPacket
 
-end PrimonGasSupertrace
+end InfoGeometry.Arithmetic.PrimonGasSupertrace

@@ -11,9 +11,9 @@ the old theorem surface as a bridge and avoids maintaining a divergent scalar
 proof with a different root-of-unity convention.
 -/
 
-namespace FibAnyonThm4
+namespace InfoGeometry.Fibonacci.FibAnyonThm4
 
-open YangBaxterProof
+open InfoGeometry.Canonical.YangBaxterProof
 
 /-- The Fibonacci scalar constraints used by the finite matrix owner. -/
 theorem fibonacci_scalar_packet :
@@ -32,7 +32,7 @@ theorem middle_braid_conjugation :
 
 /-- Concrete finite Fibonacci Artin/Yang-Baxter matrix relation. -/
 theorem braid_relation : R * B * R = B * R * B :=
-  YangBaxterProof.braid_relation
+  InfoGeometry.Canonical.YangBaxterProof.braid_relation
 
 /-- The archived theorem surface is backed by the owner scalar, fusion, and braid facts. -/
 theorem theorem4_packet :
@@ -42,4 +42,4 @@ theorem theorem4_packet :
           R * B * R = B * R * B :=
   ⟨fibonacci_scalar_packet, fusion_matrix_involutive, middle_braid_conjugation, braid_relation⟩
 
-end FibAnyonThm4
+end InfoGeometry.Fibonacci.FibAnyonThm4

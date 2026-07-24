@@ -7,19 +7,19 @@ import InfoGeometry.Topology.FractalCantorFockWitness
 /-!
 # InfoGeometry.Canonical.DiracSea
 
-A theorem-safe, non-analytic bridge from the existing finite nilpotent modular
+A theorem-safe finite-stage bridge from the existing finite nilpotent modular
 seed to the Cantor/Fock carrier narrative.
 
 Important scope note:
 This lane is formalized over the existing `ℕ → Bool` Cantor boundary and finite
 prefix reconstruction already present in the repo. It does not claim a completed
-bi-infinite Hilbert-analytic completion; it packages the stable, finite-stage,
+bi-infinite Hilbert completion; it packages the stable, finite-stage,
 combinatorial core as a reusable bridge.
 -/
 
 noncomputable section
 
-namespace DiracSea
+namespace InfoGeometry.Canonical.DiracSea
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
@@ -159,4 +159,4 @@ theorem diracSeaStep_eq_none_iff
     (w : DiracSeaBoundary) : diracSeaStep w = none ↔ ¬ (w (-1) = true ∧ w 0 = false) := by
   simp [diracSeaStep]
 
-end DiracSea
+end InfoGeometry.Canonical.DiracSea

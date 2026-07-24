@@ -9,7 +9,7 @@ All commutators verified by `ext i j; fin_cases; ring_nf; simp [Complex.I_mul_I]
 namespace WeakIsospinSU2
 
 open Matrix
-open ChiralCausalCone
+open InfoGeometry.Physics.ChiralCausalCone
 
 def I₁ : M2C := σPlus + σMinus
 def I₂ : M2C := Complex.I • (σMinus - σPlus)

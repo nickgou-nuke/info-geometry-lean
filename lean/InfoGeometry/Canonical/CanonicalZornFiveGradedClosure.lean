@@ -22,10 +22,10 @@ noncomputable section
 
 namespace CanonicalZornFiveGradedClosure
 
-open InfoGeometry.Canonical.TKKJordanPairData
+open TKKJordanPairData
 open TKKJordanPairData.TKKGrade
 open InfoGeometry.Physics.SplitOctonionBraidSU3
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+open CanonicalZornProjectiveTKKBridge
 
 /-- Indices for the conformal block decomposition `1 ⊕ 8 ⊕ 1`. -/
 inductive ConformalIndex where
@@ -422,7 +422,7 @@ theorem canonical_triality_five_grade_covariance (X Y : Zorn) :
 
 /-! ## Affine conformal/projective coordinates on the same `1 ⊕ 8 ⊕ 1` block -/
 
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+open ProjectiveAffineConformalClosure55
 
 /-- Coordinates of the existing `(5,5)` projective closure on the same
 `1 ⊕ 8 ⊕ 1` index type used by the five-graded matrix algebra. -/

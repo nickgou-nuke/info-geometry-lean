@@ -28,7 +28,7 @@ additional explicit embeddings.
 
 open scoped BigOperators
 
-namespace DelaunayAdjacentStructures
+namespace InfoGeometry.Topology.DelaunayAdjacentStructures
 
 /-- Boundary packet recording the adjacent formal lanes as real theorem readbacks. -/
 structure AdjacentOwnerSurface where
@@ -141,4 +141,4 @@ theorem finite_mellin_taylor_interchange
 
 end Readback
 
-end DelaunayAdjacentStructures
+end InfoGeometry.Topology.DelaunayAdjacentStructures

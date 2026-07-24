@@ -5,26 +5,26 @@ import InfoGeometry.External.Virasoro.Sugawara
 open scoped InnerProductSpace
 
 /-!
-# InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy
+# Finite Clifford lattice and supplied current hierarchy
 
-Boundary packet for the full four-tier architecture:
+Boundary packet for the theorem-owned finite architecture:
 
 1. finite doubled real `Cl(1,1)` nilpotent/idempotent atom;
-2. complete Cantor-Krein projection lattice and self-similar fixed-point layer;
+2. the complete finite-level Cantor-Krein projection lattice and its adjacent-level Galois connection;
 3. supplied source-side normal-ordered Heisenberg current law;
 4. external Sugawara/Virasoro representation.
 
-This module deliberately does not claim that the complete lattice generates
+This module does not assert an unconstructed infinite or self-similar completion,
+and deliberately does not claim that the finite complete lattice generates
 Heisenberg, Kac-Moody, or Virasoro by itself.  The current/conformal layer is
 available only after supplied `heiOper`, `heiTrunc`, and `hComm` data, i.e.
 after the normal-ordered current construction and local truncation have been
 provided.
 -/
 
-namespace CliffordCompleteLatticeCurrentHierarchy
+namespace InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy
 
 open InfoGeometry.Canonical.CompletionPathway
-open InfoGeometry.Canonical.SectorLattice
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 open InfoGeometry.Krein
@@ -37,14 +37,14 @@ variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-The theorem-level packet for the corrected hierarchy.
+The theorem-level packet for the finite hierarchy.
 
-The complete-lattice fields are order-theoretic closure data.  The
+The finite complete-lattice field is order-theoretic closure data.  The
 `source_heisenberg_commutator` and `external_sugawara_central` fields are
 available only from a supplied source-side current datum; this preserves the
 boundary between sector completion and current construction.
 -/
-structure CompleteLatticeCurrentHierarchyPacket
+structure FiniteLatticeCurrentHierarchyPacket
     (n : ℕ)
     (heiOper : ℤ → DoubledSpace E →ₗ[ℝ] DoubledSpace E)
     (heiTrunc : ∀ v : DoubledSpace E, ∀ᶠ k : ℤ in atTop, heiOper k v = 0)
@@ -55,10 +55,6 @@ structure CompleteLatticeCurrentHierarchyPacket
     Prop where
   finite_projection_complete :
     ∀ T : Set (FiniteProjectionCompletion n), IsLUB T (sSup T) ∧ IsGLB T (sInf T)
-  infinite_projection_complete :
-    ∀ T : Set InfiniteProjectionCompletion, IsLUB T (sSup T) ∧ IsGLB T (sInf T)
-  self_similar_projection_complete :
-    ∀ T : Set SelfSimilarProjectionCompletion, IsLUB T (sSup T) ∧ IsGLB T (sInf T)
   refinement_coarse_galois :
     GaloisConnection (@refineProjectionAssignment n) (@coarseProjectionAssignment n)
   finite_split_null_atom :
@@ -83,7 +79,7 @@ structure CompleteLatticeCurrentHierarchyPacket
 
 /--
 The corrected hierarchy is kernel-checked as a boundary packet:
-complete projection closure, finite split-null atom, source Heisenberg current
+finite-level complete projection closure, finite split-null atom, source Heisenberg current
 law, and external Sugawara central action.
 
 This is not a proof that the projection lattice alone derives the current
@@ -91,7 +87,7 @@ algebra.  The supplied `heiOper`, `heiTrunc`, and `hComm` arguments are exactly
 the missing source-side normal-ordered current datum.
 -/
 @[rep_depth transport]
-theorem complete_lattice_current_hierarchy_packet
+theorem finite_lattice_current_hierarchy_packet
     (n : ℕ)
     (heiOper : ℤ → DoubledSpace E →ₗ[ℝ] DoubledSpace E)
     (heiTrunc : ∀ v : DoubledSpace E, ∀ᶠ k : ℤ in atTop, heiOper k v = 0)
@@ -99,14 +95,12 @@ theorem complete_lattice_current_hierarchy_packet
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0) :
-    CompleteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm := by
-  rcases completeLatticeProjectionArchitecture n with
-    ⟨hfinite, hinfinite, hself, hrefine⟩
+    FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm := by
   refine
-    { finite_projection_complete := hfinite
-      infinite_projection_complete := hinfinite
-      self_similar_projection_complete := hself
-      refinement_coarse_galois := hrefine
+    { finite_projection_complete := fun T =>
+        ⟨finiteProjectionCompletion_sSup_isLUB n T,
+          finiteProjectionCompletion_sInf_isGLB n T⟩
+      refinement_coarse_galois := projectionAssignment_galoisConnection n
       finite_split_null_atom := by
         exact ⟨concrete_creation_square_zero (E := E),
           concrete_annihilation_square_zero (E := E),
@@ -128,7 +122,7 @@ theorem packet_refinement_coarse_galois
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0}
-    (P : CompleteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
+    (P : FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
     GaloisConnection (@refineProjectionAssignment n) (@coarseProjectionAssignment n) :=
   P.refinement_coarse_galois
 
@@ -144,7 +138,7 @@ theorem packet_finite_split_null_atom
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0}
-    (P : CompleteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
+    (P : FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
     (concreteCARCreation (E := E)).comp (concreteCARCreation (E := E)) = 0
       ∧ (concreteCARAnnihilation (E := E)).comp
           (concreteCARAnnihilation (E := E)) = 0
@@ -170,7 +164,7 @@ theorem packet_source_heisenberg_commutator
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0}
-    (P : CompleteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm)
+    (P : FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm)
     (m q : ℤ) :
     (heiOper m).commutator (heiOper q) =
       if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0 :=
@@ -188,11 +182,11 @@ theorem packet_external_sugawara_central
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0}
-    (P : CompleteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
+    (P : FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm) :
     VirasoroProject.sugawaraRepresentation (heiOper := heiOper) heiTrunc hComm
       (VirasoroAlgebra.cgen ℝ) = 1 :=
   P.external_sugawara_central
 
 end Packet
 
-end CliffordCompleteLatticeCurrentHierarchy
+end InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy

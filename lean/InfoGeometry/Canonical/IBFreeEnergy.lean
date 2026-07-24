@@ -7,7 +7,7 @@ set_option linter.unusedSimpArgs false
 open MeasureTheory
 open scoped ENNReal
 
-namespace IBFreeEnergy
+namespace InfoGeometry.Canonical.IBFreeEnergy
 
 open IBMeasure
 
@@ -50,4 +50,4 @@ noncomputable def IBLocalFreeEnergy
 
 end Local
 
-end IBFreeEnergy
+end InfoGeometry.Canonical.IBFreeEnergy

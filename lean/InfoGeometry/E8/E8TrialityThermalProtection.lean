@@ -1,23 +1,15 @@
 /-
-E₈(8) Split Form & Triality: Thermal Protection via Liouville Grading
-=====================================================================
+Finite E₈/triality-inspired arithmetic readouts
+===============================================
 
-This file formalizes:
-  1. E₈(8) split real form from M₇ = 127
-  2. Spin(8) triality: S₃ outer automorphism
-  3. Liouville grading Γ = (-1)^Ω(n) on E₈ root lattice
-  4. Commutation: [Γ, σₜ] = 0 for E₈ modular flow
-  5. Thermal protection of exceptional structures
+This file contains small finite data and identities: E₈ dimension/rank numbers,
+a three-element Spin(8)-representation toy triality action, a Liouville-style
+integer grading on natural-number indices, and scalar commutativity of that
+grading with a declared phase factor.
 
-Main theorem: E₈ exceptional symmetry is thermally protected!
-  - Liouville grading commutes with E₈ modular flow
-  - Triality S₃ automorphism preserved at all temperatures
-  - Witten index on E₈ root lattice is conserved
-
-References:
-  - BostConnesThermofield.lean (Liouville grading base)
-  - PeirceLadderOperators.lean (SU(3) color from ladders)
-  - This file extends to E₈(8) exceptional structure
+It does not construct the split real Lie group `E₈(8)`, prove thermal
+protection, prove a Witten-index conservation law for the E₈ root lattice, or
+embed Standard Model gauge groups.
 -/
 
 import Mathlib.Algebra.Lie.Basic
@@ -52,7 +44,7 @@ E₈(8) split real form.
 
 The split real form of E₈ has maximal non-compact signature.
 Maximal compact subalgebra: so(8, 8) ≅ Spin(8,8) / ℤ₂
-DEBT: replace with mathlib SO(8,8) when available
+TODO: replace this finite witness by a real split-form construction when available
 -/
 structure E8SplitForm where
   dimension : ℕ := dim_E8
@@ -73,7 +65,7 @@ def canonicalE8SplitForm : E8SplitForm where
   maximal_compact_dimension := 120
   maximal_compact_dimension_eq := rfl
 
-/-- E8 split form is maximally noncompact -/
+/-- The canonical finite witness has the declared E₈ dimension and rank. -/
 theorem canonicalE8SplitForm_is_split : canonicalE8SplitForm.is_split :=
   by
     constructor <;> rfl
@@ -91,8 +83,8 @@ end E8SplitForm
 theorem maximal_compact_dim : canonicalE8SplitForm.maximal_compact_dimension = 120 :=
   canonicalE8SplitForm.maximal_compact_dimension_eq
 
-/-- Closure debt tracker -/
-def maximal_compact_debt : String :=
+/-- Open owner obligation tracker. -/
+def maximal_compact_obligation : String :=
   "Open: replace E8SplitForm.maximal_compact placeholder with
        explicit isomorphism to Matrix.SpecialOrthogonalGroup 8 8 ℝ
        and prove dimension = 120 via Module.rank calculation"
@@ -165,7 +157,7 @@ def count_bosonic_e8 : ℕ :=
 def count_fermionic_e8 : ℕ :=
   (e8_root_indices.filter (fun n => e8_liouville_grading n = -1)).card
 
-/-- Witten index for E₈ root lattice -/
+/-- Difference of the two finite index counts above. -/
 def witten_index_e8 : ℤ :=
   (count_bosonic_e8 : ℤ) - (count_fermionic_e8 : ℤ)
 
@@ -178,68 +170,41 @@ Acts on root vectors by phase rotation:
 noncomputable def e8_modular_flow (t : ℝ) (root_idx : ℕ) : ℂ :=
   Complex.exp (Complex.I * t * Real.log (root_idx + 1 : ℝ))
 
-/-- 
-COMMUTATION THEOREM FOR E₈: [Γ, σₜ] = 0
-
-Liouville grading commutes with E₈ modular flow.
--/
-theorem e8_liouville_commutes_modular_flow (root_idx : ℕ) (t : ℝ) :
+/-- Scalar commutativity of the Liouville-style grading and the declared phase. -/
+theorem e8_liouville_scalar_commutes_phase (root_idx : ℕ) (t : ℝ) :
   (e8_liouville_grading root_idx : ℂ) * e8_modular_flow t root_idx 
   = e8_modular_flow t root_idx * (e8_liouville_grading root_idx : ℂ) := by
   exact mul_comm _ _
 
-/-- 
-THERMAL PROTECTION THEOREM FOR E₈:
-
-Exceptional structures are preserved at all temperatures.
--/
-theorem e8_thermal_anomaly_protection :
+/-- Uniform form of the same scalar commutativity identity. -/
+theorem e8_liouville_scalar_commutes_phase_uniform :
   ∀ (t : ℝ) (root_idx : ℕ),
   (e8_liouville_grading root_idx : ℂ) * e8_modular_flow t root_idx
   = e8_modular_flow t root_idx * (e8_liouville_grading root_idx : ℂ) := by
   intro t root_idx
-  exact e8_liouville_commutes_modular_flow root_idx t
+  exact e8_liouville_scalar_commutes_phase root_idx t
 
-/-- 
-TRIALITY INVARIANCE THEOREM:
-
-Liouville grading is invariant under triality automorphisms.
--/
+/-- The three toy Spin(8) representation labels all have dimension `8`, so the
+declared grading value at their dimension is unchanged by the 3-cycle. -/
 theorem triality_preserves_grading (rep : Spin8Representation) :
   e8_liouville_grading (spin8_rep_dim rep) = 
   e8_liouville_grading (spin8_rep_dim (triality_sigma rep)) := by
   cases rep <;> rfl
 
-/-- 
-M₇ = 127 → E₈ CONNECTION THEOREM:
-
-The 7th Mersenne prime maps to E₈ structure:
-  127 = 120 (positive E₈ roots) + 7 (G₂ imaginary units)
--/
-theorem mersenne_7_to_e8 :
+/-- The numerical identity `127 = 120 + 7`. -/
+theorem positive_roots_E8_add_seven_eq_127 :
   (127 : ℕ) = positive_roots_E8 + 7 := by
   rfl
 
-/-- 
-UNIFIED CHAIN THEOREM:
-
-O(5,5) → split octonions → G₂ → F₄ → E₆ → E₇ → E₈(8)
-
-Full exception al hierarchy thermally protected.
--/
-theorem exceptional_chain_thermal_protection :
+/-- The finite count difference is definitionally constant in an unused parameter. -/
+theorem witten_index_e8_constant_in_parameter :
   ∀ β > 0, witten_index_e8 = witten_index_e8 := by
   intro β Hβ
   rfl  -- Witten index is constant
 
-/-- 
-E₈(8) contains the full Peirce ladder / SU(3) structure:
-  E₈ ⊃ F₄ ⊃ E₆ ⊃ Spin(8) ⊃ SU(3) × SU(2) × U(1)
-  
-Thus thermal protection of E₈ implies thermal protection of
-Standard Model gauge groups!
--/
-theorem standard_model_thermal_protection :
+/-- Trivial existential readback of the finite count difference under a supplied
+`gauge_group = Unit` hypothesis.  This is not a Standard Model embedding. -/
+theorem finite_unit_group_index_readback :
   ∀ gauge_group : Type,
   gauge_group = Unit → -- SU(3) × SU(2) × U(1) embedded in E₈
   ∀ β > 0, ∃ W : ℤ, witten_index_e8 = W := by

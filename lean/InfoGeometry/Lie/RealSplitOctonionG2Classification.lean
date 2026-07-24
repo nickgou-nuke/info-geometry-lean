@@ -3,17 +3,16 @@ import Mathlib.Data.Nat.Basic
 /-!
 # Real split `G_{2(2)}` from exact computer algebra
 
-This file records only the exact computer-algebra certificate for the
-split-octonion derivation algebra. It introduces no replacement real Lie-group
-object and it does not conflate the finite Chevalley group `G₂(2)` with the
-real split form `G_{2(2)}`.
+This file records the exact computer-algebra certificate for the
+split-octonion derivation algebra. It keeps the finite Chevalley group `G₂(2)`
+and the real split form `G_{2(2)}` in separate lanes.
 
 The executable certificate is produced by
 `tools/infra/real_split_g2_classification/real_split_g2_exact_ca.py` from the
 primitive Zorn product over `QQ`.
 -/
 
-namespace RealSplitOctonionG2Classification
+namespace InfoGeometry.Lie.RealSplitOctonionG2Classification
 
 /-- Status of the real split-octonion classification lane. -/
 inductive RealClassificationStatus where
@@ -99,7 +98,7 @@ def realSplitOctonionLiePacket : ExactComputerAlgebraPacket where
   dmodulesRootArrangementDegree := 6
   dmodulesHolonomic := true
 
-/-- The current closed status is exact computer algebra for the Lie algebra, not a native group equivalence. -/
+/-! The current closed status records exact computer algebra for the Lie algebra. -/
 def currentRealClassificationStatus : RealClassificationStatus :=
   RealClassificationStatus.exactComputerAlgebraLieAlgebra
 
@@ -168,9 +167,14 @@ theorem dmodules_root_chart_packet :
       realSplitOctonionLiePacket.dmodulesHolonomic = true := by
   exact ⟨rfl, rfl, rfl, rfl⟩
 
-/-- The exact CA packet is not a native Lean group-equivalence theorem. -/
-theorem current_status_is_not_native_group_equivalence :
+/-- The exact CA packet currently records exact computer algebra for the Lie algebra. -/
+theorem current_status_is_exactComputerAlgebraLieAlgebra :
+    currentRealClassificationStatus = RealClassificationStatus.exactComputerAlgebraLieAlgebra := by
+  rfl
+
+/-- The exact CA packet currently records the Lie-algebra status in a separate lane from the native Lean group equivalence. -/
+theorem current_status_records_distinct_group_equivalence_lane :
     currentRealClassificationStatus ≠ RealClassificationStatus.nativeLeanGroupEquivalence := by
   decide
 
-end RealSplitOctonionG2Classification
+end InfoGeometry.Lie.RealSplitOctonionG2Classification

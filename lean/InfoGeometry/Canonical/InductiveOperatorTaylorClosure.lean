@@ -24,8 +24,8 @@ No topological completion.
 namespace InductiveOperatorTaylorClosure
 
 open Finset
-open SymmetryClosureConformalBlocks
-open SymmetryClosureConformalBlocks.SectorDecomposition
+open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
+open InfoGeometry.Canonical.SymmetryClosureConformalBlocks.SectorDecomposition
 
 /-- A coefficient recursion for finite Taylor prefixes. -/
 structure TaylorCoefficientRecursion where

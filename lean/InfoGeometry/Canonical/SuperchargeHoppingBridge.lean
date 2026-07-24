@@ -14,7 +14,7 @@ SUSY hopping operator is exactly the repo-native odd-odd closure `{Q,Q}`.
 
 set_option linter.unusedSectionVars false
 
-namespace SuperchargeHoppingBridge
+namespace InfoGeometry.Canonical.SuperchargeHoppingBridge
 
 open TopologicalGapShadow
 
@@ -81,4 +81,4 @@ theorem hoppingTranslationCandidate_eq_susyHoppingOperator
 
 end Core
 
-end SuperchargeHoppingBridge
+end InfoGeometry.Canonical.SuperchargeHoppingBridge

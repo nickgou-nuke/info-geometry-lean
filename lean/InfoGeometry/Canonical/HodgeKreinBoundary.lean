@@ -54,7 +54,7 @@ a supplied linear equivalence.
   - None for this finite algebraic boundary-transport layer.
 -/
 
-namespace HodgeKreinBoundary
+namespace InfoGeometry.Canonical.HodgeKreinBoundary
 
 open InfoGeometry.Canonical.HodgeKreinTriFacet
 
@@ -161,4 +161,4 @@ theorem harmonic_orthogonal_coexact
 
 end Pairing
 
-end HodgeKreinBoundary
+end InfoGeometry.Canonical.HodgeKreinBoundary

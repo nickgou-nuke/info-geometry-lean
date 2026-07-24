@@ -169,15 +169,24 @@ def Stabilization {n k : ℕ} (_H : k ≥ n + 2) :
   }
 
 /-
-  5. Trivial finite closure lemmas.
+  5. Equality of pointed morphisms.
 -/
 
 def GTypeHom {n k : ℕ} (G H : GType n k) : Type := PointedMap (GType_B G) (GType_B H)
 
-theorem isSet_GTypeHom {n k : ℕ} (G H : GType n k) : True := by
-  trivial
-
-def isTrunc_GType {n k : ℕ} : True := by
-  trivial
+/-- Two morphisms in the finite pointed-readout layer are equal when their
+underlying functions agree pointwise. This is the concrete equality statement
+available in ordinary Lean in place of the former vacuous truncation claim. -/
+@[ext]
+theorem GTypeHom_ext {n k : ℕ} {G H : GType n k}
+    {f g : GTypeHom G H}
+    (h : ∀ x : (GType_B G).carrier, f.toFun x = g.toFun x) : f = g := by
+  cases f with
+  | mk f hf =>
+    cases g with
+    | mk g hg =>
+      congr
+      funext x
+      exact h x
 
 end InfoGeometry.Spectral.HigherGroups

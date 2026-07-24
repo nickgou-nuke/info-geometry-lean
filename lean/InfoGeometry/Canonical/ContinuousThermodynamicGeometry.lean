@@ -18,7 +18,7 @@ Per the Categorical Synthesis Dictionary:
 
 noncomputable section
 
-namespace ContinuousThermodynamicGeometry
+namespace InfoGeometry.Canonical.ContinuousThermodynamicGeometry
 
 universe u
 
@@ -90,4 +90,4 @@ theorem thermodynamicGauge_chord_exact
     G.dΨ β (γ - β) = P.Ψ γ - P.Ψ β :=
   G.finite_chord_exact β γ
 
-end ContinuousThermodynamicGeometry
+end InfoGeometry.Canonical.ContinuousThermodynamicGeometry

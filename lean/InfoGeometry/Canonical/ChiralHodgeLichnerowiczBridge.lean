@@ -11,7 +11,7 @@ Thin transport bridge projecting the already-owned root supercharge
 Lichnerowicz closure onto the `ε`-chiral sectors.
 -/
 
-namespace ChiralHodgeLichnerowiczBridge
+namespace InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -117,4 +117,4 @@ theorem root_supercharge_lichnerowicz_minus_sector
 
 end Core
 
-end ChiralHodgeLichnerowiczBridge
+end InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge

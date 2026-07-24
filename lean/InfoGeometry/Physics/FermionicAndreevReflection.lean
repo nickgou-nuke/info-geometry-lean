@@ -17,7 +17,7 @@ spin-statistics theorem, topological edge protection, a DIII classification
 result, or a superconducting event-horizon theorem.
 -/
 
-namespace FermionicAndreevReflection
+namespace InfoGeometry.Physics.FermionicAndreevReflection
 
 /-- Two real coordinates for a finite electron/hole BdG amplitude. -/
 @[ext]
@@ -69,4 +69,4 @@ theorem andreevReflection_zero :
     (⟨0, 0⟩ : BdGQuasiparticle)
   ext <;> norm_num [andreevReflection]
 
-end FermionicAndreevReflection
+end InfoGeometry.Physics.FermionicAndreevReflection

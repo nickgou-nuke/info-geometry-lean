@@ -22,7 +22,7 @@ This produces proper support projectors, a nontrivial Moore-Penrose/Drazin
 package, and pseudo-determinant style scalar shadows.
 -/
 
-namespace RelativeModularSingularization
+namespace InfoGeometry.Canonical.RelativeModularSingularization
 
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.MoorePenrose
@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.PositiveRayCore
 open RelativeModularCore
 open RelativePotentialCore
 open RelativeModularOperator
-open _root_.JaynesInfoStatMech.ThermalDiagonal
+open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 
@@ -578,4 +578,4 @@ theorem relativeModularPseudoBerezinianPotential_eq_sum_relativeModularPotential
 
 end Finite
 
-end RelativeModularSingularization
+end InfoGeometry.Canonical.RelativeModularSingularization

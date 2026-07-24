@@ -20,7 +20,7 @@ No placeholder proofs.
 No inductive-limit claim.
 -/
 
-namespace FiniteStageInvariantTransport
+namespace InfoGeometry.Canonical.FiniteStageInvariantTransport
 
 section RingStage
 
@@ -236,4 +236,4 @@ theorem algHom_reflect_commutator_eq_of_injective
 
 end Reflection
 
-end FiniteStageInvariantTransport
+end InfoGeometry.Canonical.FiniteStageInvariantTransport

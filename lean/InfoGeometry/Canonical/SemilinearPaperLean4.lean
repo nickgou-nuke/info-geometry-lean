@@ -6,7 +6,7 @@ import Mathlib
 
 noncomputable section
 
-namespace SemilinearPaperLean4
+namespace InfoGeometry.Canonical.SemilinearPaperLean4
 
 universe u v w
 
@@ -170,4 +170,4 @@ section IsocrystalChecks
 
 end IsocrystalChecks
 
-end SemilinearPaperLean4
+end InfoGeometry.Canonical.SemilinearPaperLean4

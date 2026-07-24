@@ -2,7 +2,7 @@ import InfoGeometry.OperatorAlgebra.QCCRCore
 
 noncomputable section
 
-namespace QCCRZeroCuntzBridge
+namespace InfoGeometry.OperatorAlgebra.QCCRZeroCuntzBridge
 
 open InfoGeometry.OperatorAlgebra.QCCRCore
 
@@ -19,4 +19,4 @@ theorem q_zero_is_cuntz_isometry {N : ℕ} {Op : Type*} [Ring Op] [StarRing Op] 
     star (A.a i) * (A.a j) = if i = j then (1 : Op) else 0 :=
   QCCRAlgebra.q_zero_is_cuntz N Op A hq0 i j
 
-end QCCRZeroCuntzBridge
+end InfoGeometry.OperatorAlgebra.QCCRZeroCuntzBridge

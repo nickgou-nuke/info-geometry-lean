@@ -25,7 +25,7 @@ No Type III or weak-limit claim.
 
 noncomputable section
 
-namespace RadialLogBarrier
+namespace InfoGeometry.Convex.RadialLogBarrier
 
 /-! ## Radial inversion and logarithmic coordinate -/
 
@@ -306,4 +306,4 @@ theorem tau_eq_tauOfDual_of_tauDual
   rw [hlog]
   ring
 
-end RadialLogBarrier
+end InfoGeometry.Convex.RadialLogBarrier

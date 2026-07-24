@@ -45,7 +45,7 @@ physics.
 
 noncomputable section
 
-namespace TorsionSpinorEinsteinFinite
+namespace InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
 
 abbrev Idx : Type := Fin 4
 abbrev Tensor3 : Type := Idx → Idx → Idx → ℝ
@@ -191,4 +191,4 @@ theorem modifiedEinsteinResidual_symmetric
       simp [h, Ne.symm h]
     rw [P.symm_G μ ν, P.symm_H μ ν, P.symm_Tpsi μ ν, P.symm_GT μ ν, hδ]
 
-end TorsionSpinorEinsteinFinite
+end InfoGeometry.Canonical.TorsionSpinorEinsteinFinite

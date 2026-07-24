@@ -25,7 +25,7 @@ No Hilbert-Polya/RH claim.
 
 noncomputable section
 
-namespace PrimeCantorWeylGaugeFockBridge
+namespace InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveWeylGauge
@@ -58,4 +58,4 @@ theorem normalizedWeylGauge_and_cantorFock
         B.weyl.shapeCoreReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u := by
   exact B.weyl.total_eq_scale_mul_shape counts₁ counts₂ support u
 
-end PrimeCantorWeylGaugeFockBridge
+end InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge

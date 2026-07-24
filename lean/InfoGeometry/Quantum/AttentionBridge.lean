@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Unification
 
-namespace AttentionBridge
+namespace InfoGeometry.Quantum.AttentionBridge
 
 open InfoGeometry.Canonical.Triality
 open InfoGeometry.Canonical.Unification
@@ -74,4 +74,4 @@ theorem attention_source_transports_to_modular
     _ = S.modularGenerator := by
             simp [ScalarAnomalyRosettaStone.scalarToMajorana, S.h_source_fock, S.h_fock_mod]
 
-end AttentionBridge
+end InfoGeometry.Quantum.AttentionBridge

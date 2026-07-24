@@ -13,7 +13,7 @@ explicit comparison packets.  The closed content is the algebraic even/odd
 splitting under state swap.
 -/
 
-namespace KLDivergenceDecomposition
+namespace InfoGeometry.Canonical.KLDivergenceDecomposition
 
 open InfoGeometry.Topology.ThermodynamicGauge
 
@@ -150,4 +150,4 @@ theorem antisymmetric_eq_dlnQ_eval :
 
 end AntisymmetricThermodynamicBridge
 
-end KLDivergenceDecomposition
+end InfoGeometry.Canonical.KLDivergenceDecomposition

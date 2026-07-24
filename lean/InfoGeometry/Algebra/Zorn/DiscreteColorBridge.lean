@@ -25,7 +25,7 @@ or promote a physical interpretation. It only locks the finite discrete packet
 used by the nearby Zorn owner surfaces.
 -/
 
-namespace DiscreteColorBridge
+namespace InfoGeometry.Algebra.Zorn.DiscreteColorBridge
 
 /-- The three discrete Mersenne modes used in the finite packet. -/
 inductive MersenneMode where
@@ -71,4 +71,4 @@ theorem zorn_projector_matches_m2_packet :
       coupling137 = modeDimension .m2 + modeDimension .m3 + modeDimension .m7 := by
   exact ⟨colorSlot_cardinality, coupling137_decomposition⟩
 
-end DiscreteColorBridge
+end InfoGeometry.Algebra.Zorn.DiscreteColorBridge

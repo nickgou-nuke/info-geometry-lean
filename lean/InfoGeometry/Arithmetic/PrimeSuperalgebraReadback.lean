@@ -26,7 +26,7 @@ identifications require separate witnesses.
 
 noncomputable section
 
-namespace PrimeSuperalgebraReadback
+namespace InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
@@ -168,4 +168,4 @@ theorem finiteThermalSupertrace_eq_inverseEulerProduct
 -- Finite supertrace equals finite inverse Euler product.
 -- Thermal finite cutoffs.
 
-end PrimeSuperalgebraReadback
+end InfoGeometry.Arithmetic.PrimeSuperalgebraReadback

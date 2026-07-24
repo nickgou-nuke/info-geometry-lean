@@ -26,7 +26,7 @@ branching into `(3,27)` and `(3bar,27bar)`, and any Standard Model, QCD,
 generation-count, or particle-phenomenology theorem.
 -/
 
-namespace E8Z3GradingDimension
+namespace InfoGeometry.Canonical.E8Z3GradingDimension
 
 /-- Three labels for the finite `Z₃` grading readout. -/
 inductive Z3Sector
@@ -124,4 +124,4 @@ theorem e8_z3_grading_dimension_packet :
     e8_z3_dimension_split,
     sectorCharge_cube_trivial⟩
 
-end E8Z3GradingDimension
+end InfoGeometry.Canonical.E8Z3GradingDimension

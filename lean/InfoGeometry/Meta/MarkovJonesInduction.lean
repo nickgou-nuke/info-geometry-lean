@@ -22,7 +22,7 @@ result is asserted here.
 
 noncomputable section
 
-namespace MarkovJonesInduction
+namespace InfoGeometry.Meta.MarkovJonesInduction
 
 variable {𝕜 : Type*} [CommSemiring 𝕜]
 variable {A : Nat → Type*} [∀ n, Semiring (A n)] [∀ n, Algebra 𝕜 (A n)]
@@ -218,4 +218,4 @@ theorem adjacent
 
 end JonesProjectorNet
 
-end MarkovJonesInduction
+end InfoGeometry.Meta.MarkovJonesInduction

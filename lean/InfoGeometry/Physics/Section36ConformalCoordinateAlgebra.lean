@@ -25,7 +25,7 @@ unification, electroweak physics, or an arrow of time.
 
 noncomputable section
 
-namespace Section36ConformalCoordinateAlgebra
+namespace InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
 
 open Matrix Complex
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -127,6 +127,6 @@ theorem repaired_section36_conformal_coordinate_packet
     entropyQuadraticDefect_eq_neg_timeDilationQuadraticDefect r,
     hamiltonianAsymmetry_zero_iff H1 H2⟩
 
-end Section36ConformalCoordinateAlgebra
+end InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
 
 end noncomputable section

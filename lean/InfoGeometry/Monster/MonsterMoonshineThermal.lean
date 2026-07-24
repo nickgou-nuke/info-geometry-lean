@@ -3,26 +3,13 @@ import Mathlib.NumberTheory.ModularForms.Basic
 import Mathlib.Data.Complex.Exponential
 
 /-!
-Monster Group via Mersenne Primes: Moonshine Thermal Protection
-================================================================
+Finite Monster/Moonshine-inspired arithmetic readouts
+=====================================================
 
-This file formalizes:
-  1. Mersenne primes: M₂=3, M₃=7, M₅=31, M₇=127, M₁₃=8191, ...
-  2. Monster group M: largest sporadic simple group (dim 196883)
-  3. Monstrous Moonshine: connection to modular j-function
-  4. Liouville grading Γ = (-1)^Ω(n) on Monster conjugacy classes
-  5. Commutation: [Γ, σₜ] = 0 for Moonshine modular flow
-  6. Thermal protection of Moonshine functions
-
-Main theorem: Monstrous Moonshine is thermally stable!
-  - Mersenne primes encode Monster structure
-  - j-function coefficients preserved at all temperatures
-  - [Γ, σₜ] = 0 extends to Monster representation
-
-References:
-  - E8TrialityThermalProtection.lean (exceptional groups)
-  - BostConnesThermofield.lean (Liouville grading base)
-  - This file extends to Monster group via Mersenne primes
+This file contains finite numerical facts and a sample-class bookkeeping packet
+inspired by Monster/Moonshine terminology.  It does not construct the Monster
+group, prove Monstrous Moonshine, prove a modular-function theorem, or prove
+thermal stability/protection of moonshine functions.
 -/
 
 open ArithmeticFunction
@@ -38,13 +25,10 @@ def mersenne_prime (p : ℕ) : ℕ :=
   2^p - 1
 
 /-- 
-Monster group M: largest sporadic simple group.
+A finite witness carrying standard Monster numerical constants.
 
-Properties:
-  - Order: ~8.1 × 10^53
-  - Minimal faithful representation: 196883 dimensions
-  - Conjugacy classes: 194
-  - Prime divisors: 15 distinct primes
+The fields below are local readback witnesses for the constants used in this
+file; the structure is not a construction of the Monster group.
 -/
 structure MonsterGroup where
   order : ℕ := 808017424794512875886459904961710757005754368000000000
@@ -68,13 +52,13 @@ theorem monsterGroup_is_simple : monsterGroup.min_rep_dim = 196883 :=
 theorem monsterGroup_is_sporadic : monsterGroup.conjugacy_classes = 194 :=
   monsterGroup.is_sporadic
 
-/-- Monster order factorization -/
+/-- The stored order constant has the displayed prime-factor product. -/
 theorem monster_order_factorization :
   monsterGroup.order =
     2^46 * 3^20 * 5^9 * 7^6 * 11^2 * 13^3 * 17 * 19 * 23 * 29 * 31 * 41 * 47 * 59 * 71 := by
   rfl  -- By definition
 
-/-- Mersenne primes that divide Monster order -/
+/-- Sample Mersenne-prime values that divide the stored order constant. -/
 def mersenne_in_monster : List ℕ :=
   [3, 7, 31]  -- M₂, M₃, M₅
 
@@ -87,10 +71,8 @@ theorem mersenne_divides_monster (M_p : ℕ) (h : M_p ∈ mersenne_in_monster) :
   · native_decide
 
 /-- 
-Monstrous Moonshine: connection between Monster and modular j-function.
-
-j(τ) = 1/q + 744 + 196884q + 21493760q² + ...
-where coefficients are sums of Monster representation dimensions.
+A data packet for a graded-dimension sequence and coefficient sequence.
+No modular-function or Moonshine theorem is asserted here.
 -/
 structure MoonshineModule where
   graded_dimension : ℤ → ℕ
@@ -153,41 +135,29 @@ def count_bosonic_monster : ℕ :=
 def count_fermionic_monster : ℕ :=
   (monsterSampleClasses.filter (fun c => monster_liouville_grading (class_order c) = -1)).length
 
-/-- Witten index for Monster conjugacy classes -/
+/-- Difference of the two finite sample-class counts above. -/
 def witten_index_monster : ℤ :=
   (count_bosonic_monster : ℤ) - (count_fermionic_monster : ℤ)
 
 /-- 
-Moonshine modular flow σₜ.
-
-Acts on graded moonshine module V^♮:
-  σₜ(v) = e^(2πint) v for v ∈ V_n
+Declared scalar phase factor for a grade parameter.
 -/
 noncomputable def moonshine_modular_flow (t : ℝ) (grade : ℤ) : ℂ :=
   Complex.exp (2 * Real.pi * Complex.I * t * (grade : ℝ))
 
-/-- 
-COMMUTATION THEOREM FOR MONSTER: [Γ, σₜ] = 0
-
-Liouville grading commutes with Moonshine modular flow.
--/
-theorem monster_liouville_commutes_moonshine_flow (class_order : ℕ) (t : ℝ) :
+/-- Scalar commutativity of the Liouville-style grading and declared phase. -/
+theorem monster_liouville_scalar_commutes_phase (class_order : ℕ) (t : ℝ) :
   (monster_liouville_grading class_order : ℂ) * moonshine_modular_flow t 1
   = moonshine_modular_flow t 1 * (monster_liouville_grading class_order : ℂ) := by
-  -- monster_liouville_grading is ±1, commutes with complex phase
   rw [mul_comm]
 
-/-- 
-THERMAL PROTECTION THEOREM FOR MONSTER:
-
-Monstrous Moonshine is preserved at all temperatures.
--/
-theorem monster_thermal_anomaly_protection :
+/-- Uniform form of the same scalar commutativity identity. -/
+theorem monster_liouville_scalar_commutes_phase_uniform :
   ∀ (t : ℝ) (class_order : ℕ),
   (monster_liouville_grading class_order : ℂ) * moonshine_modular_flow t 1
   = moonshine_modular_flow t 1 * (monster_liouville_grading class_order : ℂ) := by
   intro t class_order
-  exact monster_liouville_commutes_moonshine_flow class_order t
+  exact monster_liouville_scalar_commutes_phase class_order t
 
 /-- Self-contained alias for the E8 Witten readout used in the transport theorem. -/
 def witten_index_e8 : ℤ :=
@@ -197,15 +167,9 @@ def witten_index_e8 : ℤ :=
 def witten_index_bost_connes : ℤ :=
   witten_index_monster
 
-/-- 
-MERSENNE → MONSTER CONNECTION THEOREM:
-
-Mersenne primes encode Monster group structure:
-  M₂ = 3 → SU(3) ⊂ Monster (via Leech lattice)
-  M₃ = 7 → G₂ ⊂ Monster (octonions)
-  M₅ = 31 → divides |M|
--/
-theorem mersenne_to_monster_connection :
+/-- The numerical Mersenne values `3`, `7`, and `31` divide the stored order
+constant. -/
+theorem sample_mersenne_values_divide_monster_order_constant :
   let M2 := mersenne_prime 2
   let M3 := mersenne_prime 3
   let M5 := mersenne_prime 5
@@ -217,11 +181,8 @@ theorem mersenne_to_monster_connection :
   native_decide
 
 /-- 
-Leech lattice connection:
-  Λ₂₄: 24-dimensional even unimodular lattice
-  Minimal vectors: 196560
-  Automorphism: Co₀ → Co₁ ⊂ Monster
-  196560 = 24 × 8232 + 48
+A pure numerical implication involving the displayed Leech-lattice constants;
+no Leech lattice or Conway/Monster embedding is constructed.
 -/
 theorem leech_lattice_monster :
   (let leech_min_vectors := 196560
@@ -235,34 +196,15 @@ theorem leech_lattice_monster :
   intro h
   exact h
 
-/-- 
-Unified chain from O(5,5) to Monster:
-  O(5,5) → split octonions → G₂ → F₄ → E₆ → E₇ → E₈ → Monster
-
-Thermal protection extends through entire hierarchy!
--/
-theorem full_hierarchy_thermal_protection :
+/-- The finite count difference is definitionally constant in an unused parameter. -/
+theorem witten_index_monster_constant_in_parameter :
   ∀ β > 0, witten_index_monster = witten_index_monster := by
   intro β Hβ
   rfl
 
-/-- 
-Grand Unification Theorem:
-  
-The complete structure:
-  1. O(5,5) spacetime closure
-  2. Bost-Connes thermal protection
-  3. Peirce ladders → SU(3) color
-  4. E₈(8) exceptional symmetry
-  5. Monster group via Mersenne primes
-
-All levels share:
-  - Liouville grading Γ = (-1)^Ω(n)
-  - Commutation [Γ, σₜ] = 0
-  - Witten index conservation dW/dβ = 0
-  - Thermal stability ∀β > 0
--/
-theorem grand_unification_thermal_protection :
+/-- If the two alias readouts equal the sample Monster readout, then all three
+readouts are constant in the unused positive parameter. -/
+theorem shared_index_readout_constant_in_parameter :
   (witten_index_e8 = witten_index_monster) →
   (witten_index_bost_connes = witten_index_monster) →
   ∃ (W : ℤ), ∀ β > 0,

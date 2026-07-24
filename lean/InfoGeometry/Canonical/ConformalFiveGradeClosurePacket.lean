@@ -16,7 +16,7 @@ No bridge surface is introduced.
 
 noncomputable section
 
-namespace ConformalFiveGradeClosurePacket
+namespace InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
 
 open InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
 open InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
@@ -152,4 +152,4 @@ def ofCurrentPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :
 
 end FiveGradeClosurePacket
 
-end ConformalFiveGradeClosurePacket
+end InfoGeometry.Canonical.ConformalFiveGradeClosurePacket

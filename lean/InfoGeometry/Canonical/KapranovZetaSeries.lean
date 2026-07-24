@@ -28,7 +28,7 @@ functions `Nat → R` with Cauchy convolution multiplication.
 
 open scoped BigOperators
 
-namespace KapranovZetaSeries
+namespace InfoGeometry.Canonical.KapranovZetaSeries
 
 /-- A formal series with coefficients in `R`, represented by its coefficient function. -/
 abbrev Series (R : Type u) :=
@@ -200,4 +200,4 @@ theorem mot_zeta_mult {R : Type*} [Semiring R] (y u : R) (S : R → ℕ → R)
   rw [cauchyMul_apply]
   exact h n
 
-end KapranovZetaSeries
+end InfoGeometry.Canonical.KapranovZetaSeries

@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.RicciMongeAmpere
 import Mathlib.Analysis.SpecialFunctions.Exp
 
-namespace HeatKernel
+namespace InfoGeometry.Canonical.HeatKernel
 
 open RicciMongeAmpere
 open SpectralInference
@@ -85,4 +85,4 @@ omit [FiniteDimensional ℝ E] in
     einsteinHilbertAction IST = -6 * spectralLogVolume IST := by
   simp [einsteinHilbertAction]
 
-end HeatKernel
+end InfoGeometry.Canonical.HeatKernel

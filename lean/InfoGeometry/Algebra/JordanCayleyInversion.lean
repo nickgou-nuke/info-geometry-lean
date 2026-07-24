@@ -12,7 +12,7 @@ No analytic conformality theorem, CCC theorem, global Spin theorem, or
 octonionic inverse theorem is claimed here.
 -/
 
-namespace JordanCayleyInversion
+namespace InfoGeometry.Algebra.JordanCayleyInversion
 
 /-- Numerator of the image of the line `A x + B y + C = 0` under planar inversion
 `x = u/(u²+v²)`, `y = -v/(u²+v²)`. -/
@@ -147,4 +147,4 @@ theorem cayleyInversion_involutive (X : Herm2) (hX : det X ≠ 0) :
 
 end CsJordan
 
-end JordanCayleyInversion
+end InfoGeometry.Algebra.JordanCayleyInversion

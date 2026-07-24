@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace JordanMinkowski
+namespace InfoGeometry.Canonical.JordanMinkowski
 
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
@@ -19,4 +19,4 @@ theorem jordan_recovers_metric (u v : M) :
     algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q u v) := by
   exact CliffordAlgebra.ι_mul_ι_add_swap u v
 
-end JordanMinkowski
+end InfoGeometry.Canonical.JordanMinkowski

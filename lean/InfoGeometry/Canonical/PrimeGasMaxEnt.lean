@@ -19,11 +19,11 @@ The intent is to provide the missing partition-function owner surface without
 collapsing the infinite carrier into a finite toy model.
 -/
 
-namespace PrimeGasMaxEnt
+namespace InfoGeometry.Canonical.PrimeGasMaxEnt
 
 open MeasureTheory
 open InfoGeometry.MaxEnt
-open JaynesRNMaxEnt
+open _root_.JaynesRNMaxEnt
 
 universe u
 
@@ -193,4 +193,4 @@ def PrimeGasJaynesConjecture : Prop :=
 
 end PrimeGasJaynesData
 
-end PrimeGasMaxEnt
+end InfoGeometry.Canonical.PrimeGasMaxEnt

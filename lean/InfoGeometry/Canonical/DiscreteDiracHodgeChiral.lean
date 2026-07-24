@@ -15,7 +15,7 @@ realization are intentionally represented only by explicit hypotheses in the
 readout theorem below.
 -/
 
-namespace DiscreteDiracHodgeChiral
+namespace InfoGeometry.Canonical.DiscreteDiracHodgeChiral
 
 universe u
 
@@ -174,4 +174,4 @@ theorem hodge_decomposition_readout
 
 end FormPredicates
 
-end DiscreteDiracHodgeChiral
+end InfoGeometry.Canonical.DiscreteDiracHodgeChiral

@@ -33,30 +33,30 @@ namespace Section19
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySimpa false
 
-open DiracPauliGamma
+open InfoGeometry.Clifford.DiracPauliGamma
 
-abbrev Mat4C := DiracPauliGamma.DiracMatrix
+abbrev Mat4C := InfoGeometry.Clifford.DiracPauliGamma.DiracMatrix
 
 def cl4Generator : Fin 4 → Mat4C
-  | 0 => Complex.I • DiracPauliGamma.gamma0
-  | 1 => DiracPauliGamma.gamma1
-  | 2 => DiracPauliGamma.gamma2
-  | 3 => DiracPauliGamma.gamma3
+  | 0 => Complex.I • InfoGeometry.Clifford.DiracPauliGamma.gamma0
+  | 1 => InfoGeometry.Clifford.DiracPauliGamma.gamma1
+  | 2 => InfoGeometry.Clifford.DiracPauliGamma.gamma2
+  | 3 => InfoGeometry.Clifford.DiracPauliGamma.gamma3
 
 theorem cl4Generator_square (mu : Fin 4) :
     cl4Generator mu * cl4Generator mu = -(1 : Mat4C) := by
   fin_cases mu
-  · change (Complex.I • DiracPauliGamma.gamma0) * (Complex.I • DiracPauliGamma.gamma0) =
+  · change (Complex.I • InfoGeometry.Clifford.DiracPauliGamma.gamma0) * (Complex.I • InfoGeometry.Clifford.DiracPauliGamma.gamma0) =
       -(1 : Mat4C)
-    rw [Matrix.smul_mul, Matrix.mul_smul, DiracPauliGamma.gamma0_mul_self]
+    rw [Matrix.smul_mul, Matrix.mul_smul, InfoGeometry.Clifford.DiracPauliGamma.gamma0_mul_self]
     ext i j
     by_cases h : i = j
     · subst j
       simp [Complex.I_mul_I]
     · simp [Matrix.one_apply, h]
-  · exact DiracPauliGamma.gamma1_mul_self
-  · exact DiracPauliGamma.gamma2_mul_self
-  · exact DiracPauliGamma.gamma3_mul_self
+  · exact InfoGeometry.Clifford.DiracPauliGamma.gamma1_mul_self
+  · exact InfoGeometry.Clifford.DiracPauliGamma.gamma2_mul_self
+  · exact InfoGeometry.Clifford.DiracPauliGamma.gamma3_mul_self
 
 theorem cl4Generator_anticomm (mu nu : Fin 4) (h : mu ≠ nu) :
     cl4Generator mu * cl4Generator nu + cl4Generator nu * cl4Generator mu =
@@ -64,34 +64,34 @@ theorem cl4Generator_anticomm (mu nu : Fin 4) (h : mu ≠ nu) :
   fin_cases mu <;> fin_cases nu <;> try contradiction
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma0_gamma1_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma0_gamma1_anticomm]
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma0_gamma2_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma0_gamma2_anticomm]
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma0_gamma3_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma0_gamma3_anticomm]
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma1_gamma0_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma1_gamma2_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma1_gamma3_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma1_gamma0_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma1_gamma2_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma1_gamma3_anticomm]
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma2_gamma0_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma2_gamma1_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma2_gamma3_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma2_gamma0_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma2_gamma1_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma2_gamma3_anticomm]
   · simp only [cl4Generator, Matrix.smul_mul, Matrix.mul_smul]
     rw [← smul_add]
-    simp [DiracPauliGamma.gamma3_gamma0_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma3_gamma1_anticomm]
-  · simp [cl4Generator, DiracPauliGamma.gamma3_gamma2_anticomm]
+    simp [InfoGeometry.Clifford.DiracPauliGamma.gamma3_gamma0_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma3_gamma1_anticomm]
+  · simp [cl4Generator, InfoGeometry.Clifford.DiracPauliGamma.gamma3_gamma2_anticomm]
 
 /-- The corrected spatial gamma pair anticommutes. -/
 theorem corrected_spatial_pair_anticomm :
-    DiracPauliGamma.gamma1 * DiracPauliGamma.gamma3 +
-      DiracPauliGamma.gamma3 * DiracPauliGamma.gamma1 = (0 : Mat4C) :=
-  DiracPauliGamma.gamma1_gamma3_anticomm
+    InfoGeometry.Clifford.DiracPauliGamma.gamma1 * InfoGeometry.Clifford.DiracPauliGamma.gamma3 +
+      InfoGeometry.Clifford.DiracPauliGamma.gamma3 * InfoGeometry.Clifford.DiracPauliGamma.gamma1 = (0 : Mat4C) :=
+  InfoGeometry.Clifford.DiracPauliGamma.gamma1_gamma3_anticomm
 
 theorem section19_capstone :
     (∀ mu : Fin 4, cl4Generator mu * cl4Generator mu = -(1 : Mat4C)) ∧

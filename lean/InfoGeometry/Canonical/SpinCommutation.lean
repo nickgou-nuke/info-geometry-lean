@@ -1,6 +1,6 @@
 import Mathlib
 
-namespace SpinCommutation
+namespace InfoGeometry.Canonical.SpinCommutation
 
 open Quaternion
 
@@ -44,4 +44,4 @@ e₂e₃ ↦ -i_c σ₁, etc. In the pure geometric framework, the relation is e
 -/
 theorem geometric_to_qm_clarification : comm S1 S2 = -S3 := spin_commutation
 
-end SpinCommutation
+end InfoGeometry.Canonical.SpinCommutation

@@ -27,7 +27,7 @@ def PrimeMajoranaPfaffianOwnerTarget : Prop :=
 
 theorem primeMajoranaPfaffianOwnerTarget :
     PrimeMajoranaPfaffianOwnerTarget := by
-  sorry -- obligation: fill in the proof
+  -- obligation: fill in the proof here
 ```
 
 For multiple owned identities, list them separated by newlines after `where`.
@@ -68,7 +68,7 @@ def checkOwnerTargets : CoreM Unit := do
   let env ← getEnv
   let mut total := 0
   let mut proved := 0
-  let mut sorry_decls : Array Name := #[]
+  let mut debtDecls : Array Name := #[]
   for (declName, _) in env.constants do
     if ownerTargetTagAttr.hasTag env declName then
       total := total + 1
@@ -84,19 +84,19 @@ def checkOwnerTargets : CoreM Unit := do
         if let some _ := env.find? thmName then
           let axioms ← Lean.collectAxioms thmName
           if axioms.contains ``sorryAx then
-            sorry_decls := sorry_decls.push thmName
+            debtDecls := debtDecls.push thmName
           else
             proved := proved + 1
         else
-          sorry_decls := sorry_decls.push declName
+          debtDecls := debtDecls.push declName
       | [] =>
-        sorry_decls := sorry_decls.push declName
-  if sorry_decls.isEmpty then
+        debtDecls := debtDecls.push declName
+  if debtDecls.isEmpty then
     logInfo m!"Owner Target Audit PASS: {proved}/{total} owner targets fully discharged."
   else
-    for d in sorry_decls do
+    for d in debtDecls do
       logError m!"OWNER TARGET DEBT: {d}"
-    logInfo m!"Owner Target Audit: {proved}/{total} proved, {sorry_decls.size} with closure debt."
+    logInfo m!"Owner Target Audit: {proved}/{total} proved, {debtDecls.size} with closure debt."
 
 /-- Command entrypoint for the owner-target audit. -/
 elab "#audit_owner_targets" : command => do

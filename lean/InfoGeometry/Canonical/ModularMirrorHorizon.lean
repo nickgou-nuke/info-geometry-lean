@@ -18,7 +18,7 @@ boundary-sector language already supported by the repository.
 
 noncomputable section
 
-namespace ModularMirrorHorizon
+namespace InfoGeometry.Canonical.ModularMirrorHorizon
 
 open InfoGeometry.Canonical.DrazinCentralizerErlangen
 
@@ -79,4 +79,4 @@ theorem horizonBoundarySector_eq_compressedCentralizer
       InDrazinCompressedCentralizer S.flow S.horizon x :=
   Iff.rfl
 
-end ModularMirrorHorizon
+end InfoGeometry.Canonical.ModularMirrorHorizon

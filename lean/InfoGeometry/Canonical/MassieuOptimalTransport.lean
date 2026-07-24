@@ -6,7 +6,7 @@ import Mathlib.Tactic.Ring
 Minimal algebraic natural-gradient identity for the 1D Massieu/log-barrier lane.
 -/
 
-namespace MassieuOptimalTransport
+namespace InfoGeometry.Canonical.MassieuOptimalTransport
 
 variable {R : Type*} [CommRing R]
 
@@ -55,5 +55,5 @@ theorem natural_gradient_is_coordinate
     _ = 1 * s.a := by ring
     _ = s.a := by ring
 
-end MassieuOptimalTransport
+end InfoGeometry.Canonical.MassieuOptimalTransport
 

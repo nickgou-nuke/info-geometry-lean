@@ -6,15 +6,15 @@ import Mathlib.CategoryTheory.Functor.OfSequence
 
 noncomputable section
 
-namespace ZornUHFColimit
+namespace InfoGeometry.Categorical.ZornUHFColimit
 
 open CategoryTheory
 open CategoryTheory.Limits
 open MonoidalCategory
 open scoped MonoidalCategory
-open UHFInductiveColimitBoundary
-open SplitOctonionBraidSU3
-open YangBaxterZornBridge
+open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Physics.SplitOctonionBraidSU3
+open InfoGeometry.Physics.YangBaxterZornBridge
 
 abbrev FinZorn := Fin 8 → ℂ
 abbrev ZornStage (n : ℕ) := BitWord n → FinZorn
@@ -358,5 +358,5 @@ theorem colimitNilpotent_sq_zero : colimitNilpotent * colimitNilpotent = 0 := by
   change (colimit.ι zornStageFunctor 0).hom 0 = 0
   exact (colimit.ι zornStageFunctor 0).hom.map_zero
 
-end ZornUHFColimit
+end InfoGeometry.Categorical.ZornUHFColimit
 

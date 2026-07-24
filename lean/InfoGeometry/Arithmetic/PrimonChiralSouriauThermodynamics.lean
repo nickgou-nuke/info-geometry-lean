@@ -36,7 +36,7 @@ This module keeps the proof surface finite and algebraic:
 
 noncomputable section
 
-namespace PrimonChiralSouriauThermodynamics
+namespace InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
 
 open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 open InfoGeometry.Arithmetic.ZetaSouriauComplexLift
@@ -560,4 +560,4 @@ theorem primonCollectedNativeClosure
       InfoGeometry.Canonical.PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
         P S hlevel hdim hdual hcc
 
-end PrimonChiralSouriauThermodynamics
+end InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

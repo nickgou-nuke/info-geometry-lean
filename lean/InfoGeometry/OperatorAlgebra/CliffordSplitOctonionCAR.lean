@@ -13,7 +13,7 @@ open InfoGeometry.Algebraic.SplitSignature
 
 noncomputable section
 
-namespace CliffordSplitOctonionCAR
+namespace InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR
 
 abbrev Cl44 := CliffordAlgebra (splitQuadraticForm 4)
 abbrev Q44 := splitQuadraticForm 4
@@ -130,4 +130,4 @@ theorem car_packet :
       a i * aDag j + aDag j * a i = if i = j then (1 : Cl44) else 0) := by
   exact ⟨a_sq_zero, aDag_sq_zero, a_a_anticomm, aDag_aDag_anticomm, car_identity⟩
 
-end CliffordSplitOctonionCAR
+end InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR

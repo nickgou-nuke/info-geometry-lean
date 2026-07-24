@@ -22,7 +22,7 @@ There is no topological-boundary theorem, no holographic reconstruction theorem,
 no analytic completion, and no colimit claim here.
 -/
 
-namespace DrazinChiralLightconeBoundary
+namespace InfoGeometry.Canonical.DrazinChiralLightconeBoundary
 
 open InfoGeometry.Canonical.Drazin
 
@@ -173,4 +173,4 @@ theorem ringHom_transports_central_lane_on_image
 
 end ChiralTransport
 
-end DrazinChiralLightconeBoundary
+end InfoGeometry.Canonical.DrazinChiralLightconeBoundary

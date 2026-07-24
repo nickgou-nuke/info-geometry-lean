@@ -18,7 +18,7 @@ derivations. The core surfaces are:
 - and the gauge/source balance equivalent to state-level algebraic stationarity.
 -/
 
-namespace AlgebraicStationarity
+namespace InfoGeometry.Canonical.AlgebraicStationarity
 
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -274,4 +274,4 @@ theorem modularCurvatureExpectation_eq_zero_of_phaseResponseStationary
 
 end LightweightTheorems
 
-end AlgebraicStationarity
+end InfoGeometry.Canonical.AlgebraicStationarity

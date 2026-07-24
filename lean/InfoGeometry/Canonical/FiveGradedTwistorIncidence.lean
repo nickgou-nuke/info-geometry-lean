@@ -19,7 +19,7 @@ This file keeps the layers separated:
 No current-algebra anomaly is introduced here.
 -/
 
-namespace FiveGradedTwistorIncidence
+namespace InfoGeometry.Canonical.FiveGradedTwistorIncidence
 
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Clifford.Soldering
@@ -151,4 +151,4 @@ theorem incident_points_null_separated
 
 end FiveGradedTwistorIncidencePacket
 
-end FiveGradedTwistorIncidence
+end InfoGeometry.Canonical.FiveGradedTwistorIncidence

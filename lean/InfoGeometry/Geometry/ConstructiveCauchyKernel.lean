@@ -6,7 +6,7 @@ import Mathlib
 
 noncomputable section
 
-namespace ConstructiveCauchyKernel
+namespace InfoGeometry.Geometry.ConstructiveCauchyKernel
 
 structure VerifiedInverse {Value : Type*} [Ring Value] (Z : Value) where
   inv : Value
@@ -82,4 +82,4 @@ theorem scalarVerifiedInverse_right_inv {K : Type*} [Field K]
     z * (scalarVerifiedInverse z hz).inv = 1 := by
   simpa [scalarVerifiedInverse] using mul_inv_cancel₀ hz
 
-end ConstructiveCauchyKernel
+end InfoGeometry.Geometry.ConstructiveCauchyKernel

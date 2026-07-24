@@ -24,7 +24,7 @@ arise from the phase rotations of the Bi-Quaternion-Kähler condensate.
 
 noncomputable section
 
-namespace EmergentGaugeSymmetry
+namespace InfoGeometry.Canonical.EmergentGaugeSymmetry
 
 open Complex
 open Matrix
@@ -75,4 +75,4 @@ def SU2_Generator (α1 α2 α3 : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
 def SU2_Action (α1 α2 α3 : ℝ) (Φ : QuaternionicField) : QuaternionicField :=
   mulVec (SU2_Generator α1 α2 α3) Φ
 
-end EmergentGaugeSymmetry
+end InfoGeometry.Canonical.EmergentGaugeSymmetry

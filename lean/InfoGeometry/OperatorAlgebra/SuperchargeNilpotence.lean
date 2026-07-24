@@ -22,7 +22,7 @@ open CliffordAlgebra
 
 noncomputable section
 
-namespace SuperchargeNilpotence
+namespace InfoGeometry.OperatorAlgebra.SuperchargeNilpotence
 
 def s (m : ℕ) (r : ℝ) : Clnn m := algebraMap ℝ (Clnn m) r
 
@@ -206,4 +206,4 @@ theorem D_sq_eq_H (n : ℕ) (w : Fin n → ℝ) : D n w * D n w = H n w := by
   rw [add_mul, mul_add, mul_add, hQ, hQDag]
   simp
 
-end SuperchargeNilpotence
+end InfoGeometry.OperatorAlgebra.SuperchargeNilpotence

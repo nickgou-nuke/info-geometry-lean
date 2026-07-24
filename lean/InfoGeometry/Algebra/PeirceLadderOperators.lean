@@ -3,34 +3,13 @@ import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 
 /-!
-# Peirce Ladder Operators — Furey Construction for the Standard Model
+# Peirce ladder operator packets
 
-Following Cohl Furey (2018, arXiv:1611.09182), the creation/annihilation
-operators for one generation of SM fermions are built from the split
-octonion basis using the internal complex structure J = e₁.
-
-## Construction
-
-Given the Cl(1,1) CPT atom with e₀ (r₀) and e₁ (r₅ = J), and the
-6 nilpotent split-octonion basis elements {upᵢ, downᵢ} (i=0,1,2),
-define the Furey ladder operators:
-
-  α₀ = ½(up0 + J·up0)   [annihilation, color 1]
-  α₁ = ½(down0 + J·down0) [annihilation, color 2]
-  α₂ = ½(up1 + J·up1)    [annihilation, color 3]
-
-with their Hermitian conjugates αₖ† = ½(x - J·x).
-
-These satisfy the CAR: {αᵢ, αⱼ†} = δᵢⱼ, {αᵢ, αⱼ} = 0.
-
-The 27-dimensional Albert algebra then decomposes as:
-  Lepton (1) + 3 Colors × (2 up/down) × 2 chiral = 1 + 12 particles
-  Anti-particles: 13 more
-  Higgs/identity: 1
-  Total: 27 = one generation
-
-Witnessed by: tools/sympy/freudenthal_identity.py,
-tools/gap/g2_twisted_braiding_roots.g.
+This file defines Furey-inspired ladder expressions over the existing
+`Cl(1,1)` carrier and proves only the conditional algebraic square-zero facts
+shown below.  It does not prove CAR for a full split-octonion embedding, does
+not construct a Standard Model representation, and does not prove an Albert
+algebra particle decomposition.
 -/
 
 open Cl11Fermions
@@ -141,29 +120,10 @@ structure LeptonLadderPacket where
   electron : CliffordAlgebra q11
   electronDag : CliffordAlgebra q11
 
-/-! ## 5. Generation count via Peirce decomposition -/
+/-! ## 5. Arithmetic count readout -/
 
-/--
-The 27-dimensional Albert algebra J₃(𝕆_s) decomposes as:
-
-  Lepton doublet: 1 electron + 1 neutrino = 2 states
-  Anti-lepton doublet: 2 states
-  Quark triplet (3 colors): 2 (up/down) × 2 (chiral) = 12 states
-  Anti-quark triplet: 12 states
-  Higgs/Identity: 1 state
-
-  Total: 2 + 2 + 12 + 12 + 1 = 27 + 1...
-
-  Actually: 1 (lepton) + 1 (anti-lepton) + 3 (colors) × 4 (up/down × particle/antiparticle)
-  = 1 + 1 + 12 + 12 + 1 (identity) = 27.
-
-  The 8-dimensional split octonions decompose as:
-  - 2 diagonal idempotents (ePlus, eMinus) → lepton sector
-  - 6 nilpotents (up0,up1,up2,down0,down1,down2) → quark sector
-
-  The CPT compass J = e₁ pairs the 6 nilpotents into 3 complex pairs,
-  giving the 3 quark colors.
--/
+/-- Elementary arithmetic count used by downstream Furey-inspired naming.  This
+is not an Albert-algebra or Standard-Model decomposition theorem. -/
 theorem generation_dimension_count :
     1 + 1 + 12 + 12 + 1 = (27 : ℕ) := by
   norm_num

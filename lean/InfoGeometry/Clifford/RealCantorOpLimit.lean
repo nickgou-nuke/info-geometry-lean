@@ -6,7 +6,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace RealCantorOpLimit
+namespace InfoGeometry.Clifford.RealCantorOpLimit
 
 open InfoGeometry.Clifford.MatToCantorOperator
 open InfoGeometry.Clifford.Cl11TensorTower
@@ -51,4 +51,4 @@ noncomputable instance : Algebra ℝ Limit :=
         rw [realAlgebraMap_stage]
         simpa using congrArg (ofStage n) (Algebra.commutes r x))
 
-end RealCantorOpLimit
+end InfoGeometry.Clifford.RealCantorOpLimit

@@ -21,7 +21,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace PhaseErlanger
+namespace InfoGeometry.Geometry.PhaseErlanger
 
 /-! ## 1. Basic phase-preserving morphisms -/
 
@@ -471,4 +471,4 @@ def phaseCentralizer_id
     (phaseCentralizer_id H K).op = ContinuousLinearMap.id ℝ H :=
   rfl
 
-end PhaseErlanger
+end InfoGeometry.Geometry.PhaseErlanger

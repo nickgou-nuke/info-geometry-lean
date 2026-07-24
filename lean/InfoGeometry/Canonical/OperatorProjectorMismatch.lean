@@ -8,7 +8,7 @@ Obstruction-first algebraic owner map for Drazin/MP projector mismatch.
 No physical closure claims are made here.
 -/
 
-namespace OperatorProjectorMismatch
+namespace InfoGeometry.Canonical.OperatorProjectorMismatch
 
 /-- Abstract Drazin/MP projector pair. -/
 @[rep_depth transport]
@@ -144,4 +144,4 @@ theorem ProjectorCommutatorObstruction.implies_mismatch
     O.pair.mismatch ≠ 0 :=
   ProjectorPair.commutator_ne_zero_implies_mismatch_ne_zero (P := O.pair) O.noncommutingSplit
 
-end OperatorProjectorMismatch
+end InfoGeometry.Canonical.OperatorProjectorMismatch

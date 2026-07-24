@@ -11,7 +11,7 @@ integers and commutes with the Clifford structure natively via functoriality.
 
 noncomputable section
 
-namespace ZornIntegralTrialityEquivariance
+namespace InfoGeometry.Canonical.ZornIntegralTrialityEquivariance
 
 open InfoGeometry.Canonical.ZornMatrix
 open InfoGeometry.Canonical.ZornClifford
@@ -83,6 +83,6 @@ theorem integral_axis_triality_clifford_closure (X : ZornMatrix ℤ) (Ψ : Dirac
   rw [zornBaseChange_triality]
   exact diracGamma_axis_covariant _ _
 
-end ZornIntegralTrialityEquivariance
+end InfoGeometry.Canonical.ZornIntegralTrialityEquivariance
 
 end noncomputable section

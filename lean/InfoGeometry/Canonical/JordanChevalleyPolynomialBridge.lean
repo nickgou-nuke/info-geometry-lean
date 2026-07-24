@@ -13,11 +13,11 @@ readout needed by downstream canonical modules.
 
 noncomputable section
 
-namespace JordanChevalleyPolynomialBridge
+namespace InfoGeometry.Canonical.JordanChevalleyPolynomialBridge
 
 open scoped Polynomial
 open Polynomial
-open JordanChevalleyBridge
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanChevalleyBridge
 
 variable {K : Type*} [Field K]
 variable {V : Type*} [AddCommGroup V] [Module K V] [FiniteDimensional K V]
@@ -91,4 +91,4 @@ theorem unbroken_susy_in_jordan_blocks {f g : Module.End K V}
     Commute (nilpotentPart P) g :=
   (preserves_symmetries (P := P) hSUSY).right
 
-end JordanChevalleyPolynomialBridge
+end InfoGeometry.Canonical.JordanChevalleyPolynomialBridge

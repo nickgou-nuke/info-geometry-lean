@@ -10,7 +10,7 @@ completed-current theorem from `BosonizationConstructiveCurrent` under a
 boundary-facing canonical name.
 -/
 
-namespace BoundaryCurrentHeisenbergAPI
+namespace InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI
 
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 
@@ -27,4 +27,4 @@ theorem boundaryCurrentHeisenberg
 
 end CanonicalCurrent
 
-end BoundaryCurrentHeisenbergAPI
+end InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI

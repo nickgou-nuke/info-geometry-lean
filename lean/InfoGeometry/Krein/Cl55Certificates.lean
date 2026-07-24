@@ -10,7 +10,7 @@ The Lean bridge treats them as opaque certificates.
 
 noncomputable section
 
-namespace Cl55Certificates
+namespace InfoGeometry.Krein.Cl55Certificates
 
 open scoped InnerProductSpace BigOperators
 
@@ -44,6 +44,6 @@ def d4RootLabels : List String :=
    "+1+4", "+1-4", "-1+4", "-1-4", "+2+3", "+2-3", "-2+3", "-2-3",
    "+2+4", "+2-4", "-2+4", "-2-4", "+3+4", "+3-4", "-3+4", "-3-4"]
 
-end Cl55Certificates
+end InfoGeometry.Krein.Cl55Certificates
 
 end

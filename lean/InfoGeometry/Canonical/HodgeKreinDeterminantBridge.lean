@@ -17,7 +17,7 @@ owner theorems that matter for the Hodge-Krein narrative:
 * the finite Krein/Fredholm trace defect contract.
 -/
 
-namespace HodgeKreinDeterminantBridge
+namespace InfoGeometry.Canonical.HodgeKreinDeterminantBridge
 
 open scoped Matrix
 
@@ -138,4 +138,4 @@ theorem det_involution_sq_eq_one {V : Type*} [AddCommGroup V] [Module ℝ V] [Fi
     nlinarith
   exact this
 
-end HodgeKreinDeterminantBridge
+end InfoGeometry.Canonical.HodgeKreinDeterminantBridge

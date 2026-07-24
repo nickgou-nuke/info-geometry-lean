@@ -19,7 +19,7 @@ noncomputable section
 namespace InfoGeometry
 namespace GromovWittenErlangen
 
-open DrazinProjectionLocalization
+open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 
 /--
 Drazin-localized fixed-sector packet for a GW/Erlangen localization graph.

@@ -21,7 +21,7 @@ It is a meet-preserving map, making it the upper adjoint.
 The adjunction is: `refine a ≤ b ↔ a ≤ coarse b`.
 -/
 
-namespace RefinementGaloisConnection
+namespace InfoGeometry.Canonical.RefinementGaloisConnection
 
 open CantorCylinderLattice
 
@@ -95,4 +95,4 @@ theorem coarseSector_iInf {n : ℕ} {ι : Type*}
     coarseSector (⨅ i, f i) = ⨅ i, coarseSector (f i) :=
   (sector_galois_connection n).u_iInf
 
-end RefinementGaloisConnection
+end InfoGeometry.Canonical.RefinementGaloisConnection

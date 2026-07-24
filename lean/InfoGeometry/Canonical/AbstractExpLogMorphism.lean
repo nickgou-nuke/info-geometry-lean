@@ -9,7 +9,7 @@ infinitesimal derivative theorem on `ℝ`.
 
 open Topology
 
-namespace AbstractExpLogMorphism
+namespace InfoGeometry.Canonical.AbstractExpLogMorphism
 
 /-- Continuous additive-to-multiplicative group isomorphism data. -/
 structure TopologicalGroupIso (E : Type*) (G : Type*)
@@ -68,5 +68,5 @@ theorem infinitesimal_derivation_near_zero
   rw [hfun] at hcomp
   simpa using hcomp
 
-end AbstractExpLogMorphism
+end InfoGeometry.Canonical.AbstractExpLogMorphism
 

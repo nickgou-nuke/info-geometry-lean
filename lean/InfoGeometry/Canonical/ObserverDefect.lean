@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace ObserverDefect
+namespace InfoGeometry.Canonical.ObserverDefect
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -1063,4 +1063,4 @@ theorem observerOrientationStrain_eq_zero_of_deviationControlledByZD_of_ZD_eq_ze
 
 end Core
 
-end ObserverDefect
+end InfoGeometry.Canonical.ObserverDefect

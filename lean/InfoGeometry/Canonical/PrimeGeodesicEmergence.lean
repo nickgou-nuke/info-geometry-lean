@@ -20,11 +20,11 @@ No claim is made here that the primes have already been proved from the
 geometry; this file records the exact packet one would need to do so.
 -/
 
-namespace PrimeGeodesicEmergence
+namespace InfoGeometry.Canonical.PrimeGeodesicEmergence
 
 open KleinBottleOrientifold
 open PrimeGasMaxEnt
-open HestenesDirac
+open InfoGeometry.Clifford.HestenesDirac
 
 universe u
 
@@ -91,4 +91,4 @@ structure PrimeGeodesicEmergencePacket
   squareFreeSupport : emergence.squareFreeSupport
   kleinBottleFilter : emergence.orientifold.squareFreeSupport
 
-end PrimeGeodesicEmergence
+end InfoGeometry.Canonical.PrimeGeodesicEmergence

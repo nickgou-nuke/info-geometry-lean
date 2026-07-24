@@ -11,7 +11,7 @@ projector/anomaly language as primitives; it derives the first fixed and
 anti-fixed combinations directly from the canonical `K`-axis phase flip.
 -/
 
-namespace SplitQ11Equivariance
+namespace InfoGeometry.Clifford.SplitQ11Equivariance
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
@@ -67,4 +67,4 @@ noncomputable def phaseFlipResidual (x : Alg) : Alg :=
   rw [phaseFlip_apply_epsGen]
   module
 
-end SplitQ11Equivariance
+end InfoGeometry.Clifford.SplitQ11Equivariance

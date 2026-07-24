@@ -19,12 +19,12 @@ variable (MajoranaStage : ℕ → Type)
 variable [∀ n, AddCommGroup (MajoranaStage n)] [∀ n, Module ℝ (MajoranaStage n)]
 variable (iota : ∀ n, MajoranaStage n →ₗ[ℝ] MajoranaStage (n + 1))
 
-/-- The colimit (continuum) boundary algebra (M_{4^∞}(ℝ)). -/
+/- The colimit (continuum) boundary algebra (M_{4^∞}(ℝ)). -/
 variable (MajoranaContinuum : Type) [AddCommGroup MajoranaContinuum] [Module ℝ MajoranaContinuum]
 variable (psi : ∀ n, MajoranaStage n →ₗ[ℝ] MajoranaContinuum)
 variable (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
 
-/-- 
+/-
 Assume the stage 1 is strictly isomorphic to our 16-dimensional 
 Majorana matrix algebra M_4(ℝ).
 -/
@@ -52,8 +52,8 @@ into the infinite-dimensional colimit.
 theorem protected_cuntz_survives
     (colimit_kernel : ∀ (n : ℕ) (x : MajoranaStage n), psi n x = 0 → ∃ m, iota_seq MajoranaStage iota n m x = 0)
     (h_prot : IsTopologicallyProtected MajoranaStage iota 1 (baseEquiv.symm cuntzGeneratorPlus)) :
-  continuumCuntzPlus MajoranaStage psi baseEquiv ≠ 0 := by
-  apply protected_states_survive_colimit MajoranaStage iota MajoranaContinuum psi psi_comm colimit_kernel
+  continuumCuntzPlus MajoranaStage MajoranaContinuum psi baseEquiv ≠ 0 := by
+  apply protected_states_survive_colimit MajoranaStage iota MajoranaContinuum psi colimit_kernel
   exact h_prot
 
 end InfoGeometry.MajoranaColimitBoundary

@@ -3,7 +3,7 @@ import Mathlib
 open Matrix
 open scoped BigOperators
 
-namespace EckmannDiscreteHodge
+namespace InfoGeometry.Topology.EckmannDiscreteHodge
 
 noncomputable section
 
@@ -196,4 +196,4 @@ theorem eckmann_discrete_hodge_betti1_zero_of_closed_coclosed
 
 end
 
-end EckmannDiscreteHodge
+end InfoGeometry.Topology.EckmannDiscreteHodge

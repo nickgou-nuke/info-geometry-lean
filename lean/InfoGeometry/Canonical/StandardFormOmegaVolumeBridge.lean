@@ -26,7 +26,7 @@ trace/determinant primitive.  It records the Type-III-safe replacement:
   log-potential API.
 -/
 
-namespace StandardFormOmegaVolumeBridge
+namespace InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 
 open InfoGeometry.Canonical.StandardFormNaturalConeBridge
 open InfoGeometry.Canonical.ModularCartanCantorSystem
@@ -218,6 +218,6 @@ end NaturalConeVolumeBridge
 
 end Core
 
-end StandardFormOmegaVolumeBridge
+end InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 
 end

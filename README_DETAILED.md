@@ -1280,8 +1280,9 @@ for s in shadows[:10]:
         module=module, goal_index=s['line'], priority=1.0, task_kind='proof.search')
 "
 
-# 6. Start the evolution worker (processes the queue)
-python3 tools/infra/evolution_worker.py
+# 6. Evolution worker
+`tools/infra/evolution_worker.py` is disabled in this checkout and exits
+immediately. Do not start it here.
 ```
 
 ### 3. Understanding the Shadow Lifecycle
@@ -1303,7 +1304,7 @@ Roaming → Incident → Paired → Integrated
 
 | File | Purpose |
 |------|---------|
-| `tools/infra/evolution_worker.py` | Main daemon — polls ArangoDB queue, runs 3-stage pipeline |
+| `tools/infra/evolution_worker.py` | Disabled stub in this checkout; does not run the queue |
 | `tools/infra/gepa_evolver.py` | Genetic Evolutionary Proof Algorithm — mutates skills |
 | `tools/infra/shadow_cone_scanner.py` | Scans `:= by sorry`, computes past/future incidences |
 | `tools/infra/vacuity_critic.py` | Reviews failed tasks, discovers new obfuscation patterns |
@@ -1351,7 +1352,7 @@ The pipeline can propose, reflect, and evolve, but:
 Build:         10118 jobs, passes
 Shadows:       145 `:= by sorry` across 13 modules
 Queue:         50 tasks in ArangoDB proof-search, pending
-Worker:        evolution_worker.py running (daemon)
+Worker:        evolution_worker.py disabled in this checkout
 _True fields:  Eliminated (~220 across ~25 files)
 ClosureDebt:   2 fields in Eval/ClosureDebtTest.lean (DO NOT FIX — GEPA targets)
 ```

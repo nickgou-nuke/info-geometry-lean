@@ -13,10 +13,10 @@ mode base used by `N2ModeCentralExtension`.  It does not pretend to be a
 super-anticommutator lane.
 -/
 
-namespace SupergradedCocycle
+namespace InfoGeometry.Algebra.SupergradedCocycle
 
 open Module
-open N2ModeCentralExtension
+open InfoGeometry.Algebra.N2ModeCentralExtension
 open VirasoroProject
 
 universe u
@@ -30,32 +30,32 @@ The supergraded N=2 central cocycle on mode labels.
 Unlike the ordinary Lie cocycle, the `Qᵢ,Rⱼ` and `Rⱼ,Qᵢ` odd-odd channels have
 the same sign, because they belong to an anticommutator.
 -/
-def superLabelCocycle : N2ModeLabel ι → N2ModeLabel ι → 𝕜
-  | N2ModeLabel.q i, N2ModeLabel.r j => if i = j then 1 else 0
-  | N2ModeLabel.r i, N2ModeLabel.q j => if i = j then 1 else 0
+def superLabelCocycle : InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι → InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι → 𝕜
+  | InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q i, InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r j => if i = j then 1 else 0
+  | InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r i, InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q j => if i = j then 1 else 0
   | _, _ => 0
 
 @[simp]
 theorem superLabelCocycle_q_r (i j : ι) :
-    superLabelCocycle 𝕜 (N2ModeLabel.q i) (N2ModeLabel.r j) =
+    superLabelCocycle 𝕜 (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q i) (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r j) =
       if i = j then 1 else 0 :=
   rfl
 
 @[simp]
 theorem superLabelCocycle_r_q (i j : ι) :
-    superLabelCocycle 𝕜 (N2ModeLabel.r i) (N2ModeLabel.q j) =
+    superLabelCocycle 𝕜 (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r i) (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q j) =
       if i = j then 1 else 0 :=
   rfl
 
 @[simp]
-theorem superLabelCocycle_self (a : N2ModeLabel ι) :
+theorem superLabelCocycle_self (a : InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι) :
     superLabelCocycle 𝕜 a a = 0 := by
   cases a <;> simp [superLabelCocycle]
 
 /-- The odd `Q/R` super-cocycle is symmetric on generators. -/
 theorem superLabelCocycle_q_r_symm (i j : ι) :
-    superLabelCocycle 𝕜 (N2ModeLabel.q i) (N2ModeLabel.r j) =
-      superLabelCocycle 𝕜 (N2ModeLabel.r j) (N2ModeLabel.q i) := by
+    superLabelCocycle 𝕜 (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q i) (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r j) =
+      superLabelCocycle 𝕜 (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r j) (InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q i) := by
   by_cases h : i = j
   · simp [h]
   · simp [h, Ne.symm h]
@@ -63,15 +63,15 @@ theorem superLabelCocycle_q_r_symm (i j : ι) :
 /-- Bilinear extension of the supergraded N=2 cocycle to finite-support modes. -/
 noncomputable def superBilin :
     N2ModeBase ι 𝕜 →ₗ[𝕜] N2ModeBase ι 𝕜 →ₗ[𝕜] 𝕜 :=
-  (AbelianLieAlgebraOn.jgen (ι := N2ModeLabel ι) 𝕜).constr 𝕜 <| fun a =>
-    (AbelianLieAlgebraOn.jgen (ι := N2ModeLabel ι) 𝕜).constr 𝕜 <| fun b =>
+  (AbelianLieAlgebraOn.jgen (ι := InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι) 𝕜).constr 𝕜 <| fun a =>
+    (AbelianLieAlgebraOn.jgen (ι := InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι) 𝕜).constr 𝕜 <| fun b =>
       superLabelCocycle 𝕜 a b
 
 @[simp]
 theorem superBilin_apply_jgen_jgen (a b : N2ModeLabel ι) :
     superBilin 𝕜
-        (AbelianLieAlgebraOn.jgen (ι := N2ModeLabel ι) 𝕜 a)
-        (AbelianLieAlgebraOn.jgen (ι := N2ModeLabel ι) 𝕜 b) =
+        (AbelianLieAlgebraOn.jgen (ι := InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι) 𝕜 a)
+        (AbelianLieAlgebraOn.jgen (ι := InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel ι) 𝕜 b) =
       superLabelCocycle 𝕜 a b := by
   simp [superBilin]
 
@@ -104,4 +104,4 @@ theorem superBilin_qgen_rgen_centralCoefficient (i j : ι) :
       if i = j then (1 : 𝕜) else 0 := by
   simp
 
-end SupergradedCocycle
+end InfoGeometry.Algebra.SupergradedCocycle

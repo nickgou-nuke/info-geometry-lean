@@ -24,7 +24,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace LFunctionResonance
+namespace InfoGeometry.Automorphic.LFunctionResonance
 
 open SiegelResonance
 
@@ -492,4 +492,4 @@ theorem automorphicLResonanceOwnerTarget :
   intro Bulk _ _ Boundary _ _ W h
   exact automorphicLResonanceWitness_nonempty_of_admissible (W := W) h
 
-end LFunctionResonance
+end InfoGeometry.Automorphic.LFunctionResonance

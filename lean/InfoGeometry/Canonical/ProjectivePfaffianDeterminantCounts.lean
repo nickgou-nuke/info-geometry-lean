@@ -39,7 +39,7 @@ The theorem-safe doctrine is:
 
 noncomputable section
 
-namespace ProjectivePfaffianDeterminantCounts
+namespace InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
 
 open scoped BigOperators
 
@@ -291,4 +291,4 @@ theorem projective_pfaffian_counts_lie_on_fierz_klein
     K.residual.residual K.coords = 0 :=
   K.klein_residual_eq_zero
 
-end ProjectivePfaffianDeterminantCounts
+end InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts

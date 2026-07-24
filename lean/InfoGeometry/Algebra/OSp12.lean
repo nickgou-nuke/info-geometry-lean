@@ -9,7 +9,7 @@ noncomputable section
 set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
-namespace OSp12
+namespace InfoGeometry.Algebra.OSp12
 
 open scoped BigOperators
 
@@ -188,4 +188,4 @@ def trivialOperatorSurface (V : Type*) [AddCommGroup V] [Module ℝ V] : Operato
 
 end OperatorSurface
 
-end OSp12
+end InfoGeometry.Algebra.OSp12

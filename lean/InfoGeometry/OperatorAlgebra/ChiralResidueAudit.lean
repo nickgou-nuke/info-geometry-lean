@@ -15,7 +15,7 @@ import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section
 
-namespace ChiralResidueAudit
+namespace InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
@@ -299,8 +299,8 @@ variable
 variable (B : ChiralAuditRegularityBridge Memory Flow)
 
 /--
-Benign chiral residue induces global regularity, once the analytic bridge is
-installed.
+Benign chiral residue induces global regularity once the Hestenes--Krein
+regularity bridge is installed.
 -/
 theorem global_regular_of_benign
     (R : ChiralResidue Memory)
@@ -310,8 +310,8 @@ theorem global_regular_of_benign
     (B.regularizing_of_benign R hR)
 
 /--
-Obstructed chiral residue induces non-regularity, once the analytic bridge is
-installed.
+Obstructed chiral residue induces non-regularity once the Hestenes--Krein
+regularity bridge is installed.
 -/
 theorem not_global_regular_of_obstructed
     (R : ChiralResidue Memory)
@@ -346,5 +346,5 @@ theorem not_global_regular_of_audit_obstructed
 
 end ChiralAuditRegularityBridge
 
-end ChiralResidueAudit
+end InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 

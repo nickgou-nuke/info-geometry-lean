@@ -9,7 +9,7 @@ set_option linter.unnecessarySimpa false
 open MeasureTheory
 open scoped BigOperators ENNReal
 
-namespace IBFinitePythagorean
+namespace InfoGeometry.Canonical.IBFinitePythagorean
 
 open InfoGeometry.Canonical.IBFreeEnergy
 open InfoGeometry.Canonical.IBFunctional
@@ -962,4 +962,4 @@ theorem ibMarginalDescentWitness_finite_fullSupport
       (pX := pX) (q_n := q_n) (β := β) (D := D)
       (hInt := hInt) (h_meas := h_meas))
 
-end IBFinitePythagorean
+end InfoGeometry.Canonical.IBFinitePythagorean

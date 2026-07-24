@@ -22,7 +22,7 @@ existing Lean group structure on `Matrix.SpecialLinearGroup (Fin 2) ℂ`.
 
 noncomputable section
 
-namespace LorentzChiralCuntzBridge
+namespace InfoGeometry.Physics.LorentzChiralCuntzBridge
 
 open Matrix
 open ChiralPoincareSouriauBridge
@@ -382,6 +382,6 @@ theorem lorentz_chiral_poincare_cuntz_synthesis
   · simpa using sl2c_transportedRelation_holds g S
   · simpa using CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y
 
-end LorentzChiralCuntzBridge
+end InfoGeometry.Physics.LorentzChiralCuntzBridge
 
 end noncomputable section

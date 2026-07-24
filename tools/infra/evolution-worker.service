@@ -3,14 +3,15 @@ Description=Evolution Worker — autonomous GEPA skill evolution daemon
 Documentation=https://github.com/nickgou-nuke/info-geometry-lean
 After=network.target arangodb.service
 Wants=arangodb.service
+RefuseManualStart=yes
+ConditionEnvironment=INFO_GEOMETRY_ENABLE_EVOLUTION_WORKER=1
 
 [Service]
 Type=simple
 User=goutev
 WorkingDirectory=/home/goutev/repos/info-geometry-lean
-ExecStart=/home/goutev/repos/info-geometry-lean/.venv-py312/bin/python3 \
-    tools/infra/evolution_worker.py
-Restart=always
+ExecStart=/bin/false
+Restart=no
 RestartSec=10
 
 # Environment
@@ -18,7 +19,8 @@ Environment=PYTHONUNBUFFERED=1
 Environment=HOME=/home/goutev
 Environment=PATH=/home/goutev/.nvm/versions/node/v22.22.2/bin:/home/goutev/.local/bin:/home/goutev/.venv-py312/bin:/home/goutev/.elan/bin:/usr/local/bin:/usr/bin:/bin
 Environment=HERMES_HOME=/home/goutev/.hermes
-Environment=DEEPSEEK_API_KEY=sk-8b3881bfe4a84bd49ebe6cf1f67c23d5
+# Load provider credentials from the user environment or a local override;
+# never store API keys in the tracked service unit.
 
 # Security (relaxed for Hermes CLI subprocess access)
 NoNewPrivileges=true

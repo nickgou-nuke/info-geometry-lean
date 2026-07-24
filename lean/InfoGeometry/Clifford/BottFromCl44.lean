@@ -14,7 +14,7 @@ This file records the repo-native real extension
 and does **not** identify this step with complexification.
 -/
 
-namespace BottFromCl44
+namespace InfoGeometry.Clifford.BottFromCl44
 
 open InfoGeometry.Clifford.BottPeriodicity
 
@@ -50,4 +50,4 @@ theorem majoranaWeyl_split_exists : ∃ ω : Cl55, ω * ω = 1 := by
 -- The full involutive Majorana–Weyl splitting theorem (as stated in the
 -- architecture notes) is still pending formalization in this file.
 
-end BottFromCl44
+end InfoGeometry.Clifford.BottFromCl44

@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeMajoranaWittenCharacter
+namespace InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
 open PrimeBitWittenIndex
 
@@ -129,4 +129,4 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
       symm
       exact SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q
 
-end PrimeMajoranaWittenCharacter
+end InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter

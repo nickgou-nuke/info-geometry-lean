@@ -24,7 +24,7 @@ assumption-derived.
 
 noncomputable section
 
-namespace HorizonZitterFierzReadback
+namespace InfoGeometry.Canonical.HorizonZitterFierzReadback
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.HorizonZitterModes
@@ -67,4 +67,4 @@ theorem horizonZitter_fierz_readback_from_assumption
       (horizonZitterFierzReadbackVector K.state K.channels Z) = 0 :=
   InfoGeometry.Canonical.HorizonZitterFierzReadout.horizonZitter_fierz_quadric_from_assumption K Z
 
-end HorizonZitterFierzReadback
+end InfoGeometry.Canonical.HorizonZitterFierzReadback

@@ -16,7 +16,7 @@ asserted.
 
 set_option autoImplicit false
 
-namespace GromovPascalConcentration
+namespace InfoGeometry.GromovConcentration
 
 open scoped BigOperators
 
@@ -42,4 +42,4 @@ theorem gromov_row_sum_step (n : ℕ) (S : ℕ → ℕ)
   rw [pow_succ]
   ring
 
-end GromovPascalConcentration
+end InfoGeometry.GromovConcentration

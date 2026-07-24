@@ -15,7 +15,7 @@ Certification wrappers linking:
 - and weighted nonequilibrium Sinkhorn/KMS closure.
 -/
 
-namespace BogoliubovWeightedKMSCertification
+namespace InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -254,4 +254,4 @@ theorem weightedNonequilibrium_sinkhornKMSClosure_of_structural
 
 end WeightedNonequilibrium
 
-end BogoliubovWeightedKMSCertification
+end InfoGeometry.Canonical.BogoliubovWeightedKMSCertification

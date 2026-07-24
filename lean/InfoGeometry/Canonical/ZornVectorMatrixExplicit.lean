@@ -20,7 +20,7 @@ This is the finite algebraic readout behind the split-octonion light-cone
 language.  It is not ordinary associative matrix multiplication.
 -/
 
-namespace ZornVectorMatrixExplicit
+namespace InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 abbrev Vec3 : Type :=
   Fin 3 → ℝ
@@ -341,5 +341,32 @@ theorem split_null_projector_pair :
     pPlus ≠ 0 ∧ pMinus ≠ 0 ∧ IsZornNull pPlus ∧ IsZornNull pMinus ∧
       pPlus + pMinus = zornOne :=
   ⟨pPlus_ne_zero, pMinus_ne_zero, pPlus_isNull, pMinus_isNull, pPlus_add_pMinus⟩
+
+end InfoGeometry.Canonical.ZornVectorMatrixExplicit
+
+namespace ZornVectorMatrixExplicit
+
+abbrev Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
+abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
+abbrev dot3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3
+abbrev cross3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3
+abbrev zornMk := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMk
+abbrev zornOne := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornOne
+abbrev zornTrace := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornTrace
+abbrev zornNorm := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornNorm
+abbrev zornConj := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornConj
+abbrev zornMul := InfoGeometry.Canonical.ZornVectorMatrixExplicit.zornMul
+abbrev scalarZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.scalarZorn
+abbrev paravectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.paravectorZorn
+abbrev upperVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.upperVectorZorn
+abbrev lowerVectorZorn := InfoGeometry.Canonical.ZornVectorMatrixExplicit.lowerVectorZorn
+
+@[simp] theorem dot3_comm (u v : Vec3) :
+    dot3 u v = dot3 v u :=
+  InfoGeometry.Canonical.ZornVectorMatrixExplicit.dot3_comm u v
+
+@[simp] theorem cross3_self (u : Vec3) :
+    cross3 u u = 0 :=
+  InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3_self u
 
 end ZornVectorMatrixExplicit

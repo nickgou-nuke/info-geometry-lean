@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.YangBaxterProof
 
-open YangBaxterProof
+open InfoGeometry.Canonical.YangBaxterProof
 
 noncomputable section
 

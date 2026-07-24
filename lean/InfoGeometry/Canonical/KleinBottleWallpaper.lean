@@ -26,7 +26,7 @@ modulo integer lattice translations.
 
 noncomputable section
 
-namespace KleinBottleWallpaper
+namespace InfoGeometry.Canonical.KleinBottleWallpaper
 
 open InfoGeometry.Canonical.HolographicSouriauClosure
 
@@ -158,4 +158,4 @@ theorem rot_90_incompatible : ¬ IsCompatibleSymmetry rot_90 := by
     injection h0 with hx hy
     norm_num at hx
 
-end KleinBottleWallpaper
+end InfoGeometry.Canonical.KleinBottleWallpaper

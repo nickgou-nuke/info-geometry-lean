@@ -8,7 +8,7 @@ Finite supertrace and Drazin-Hodge zero-mode readbacks.
 
 noncomputable section
 
-namespace SupergradedRandomWalkZeroModes
+namespace InfoGeometry.Canonical.SupergradedRandomWalkZeroModes
 
 open scoped BigOperators
 
@@ -48,4 +48,4 @@ theorem zeroModeIndex_eq_superTrace {V : Type*} [Fintype V] [DecidableEq V] (S :
     zeroModeIndex S D = superTrace S D.H := by
   rfl
 
-end SupergradedRandomWalkZeroModes
+end InfoGeometry.Canonical.SupergradedRandomWalkZeroModes

@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace GrandCanonicalPrimeEnsembleProofs
+namespace InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs
 
 open InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 
@@ -187,4 +187,4 @@ theorem primeEulerProduct_eq_riemannZeta
     (∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
   simpa using InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge (s := s) hs
 
-end GrandCanonicalPrimeEnsembleProofs
+end InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs

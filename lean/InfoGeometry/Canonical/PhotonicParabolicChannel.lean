@@ -10,7 +10,7 @@ No global crystal-band theorem is claimed here; this is a local algebraic
 contraction statement.
 -/
 
-namespace PhotonicParabolicChannel
+namespace InfoGeometry.Canonical.PhotonicParabolicChannel
 
 open GeneralizedOperatorChiral
 open GeneralizedOperator
@@ -70,4 +70,4 @@ theorem pure_directional_collapse (χ : ℝ) :
   apply chiral_collapse_to_parabolic
   exact pure_directional_nilpotent χ
 
-end PhotonicParabolicChannel
+end InfoGeometry.Canonical.PhotonicParabolicChannel

@@ -21,7 +21,7 @@ continuum holonomy, QCD/GR claim, or physical BdG theorem is asserted here.
 
 noncomputable section
 
-namespace BiquaternionDualRootRegularizer
+namespace InfoGeometry.Canonical.BiquaternionDualRootRegularizer
 
 open Matrix
 open scoped Matrix
@@ -160,6 +160,6 @@ theorem finite_dual_root_regularizer_packet :
     plusBoundary_sub_I_sq, det2_plusBoundary_sub_I,
     minusBoundary_add_I_sq, det2_minusBoundary_add_I⟩
 
-end BiquaternionDualRootRegularizer
+end InfoGeometry.Canonical.BiquaternionDualRootRegularizer
 
 end noncomputable section

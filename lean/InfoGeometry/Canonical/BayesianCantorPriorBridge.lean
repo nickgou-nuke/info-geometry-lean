@@ -19,7 +19,7 @@ probability skeleton that the later state-layer can extend.
 
 noncomputable section
 
-namespace BayesianCantorPriorBridge
+namespace InfoGeometry.Canonical.BayesianCantorPriorBridge
 
 open InfoGeometry
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
@@ -73,4 +73,4 @@ theorem pointPrior_prefixPullback
     congrArg (fun b : Bool => if b then (1 : ℝ) else 0)
       (cantorBooleanEvaluation_prefixPullback x n A)
 
-end BayesianCantorPriorBridge
+end InfoGeometry.Canonical.BayesianCantorPriorBridge

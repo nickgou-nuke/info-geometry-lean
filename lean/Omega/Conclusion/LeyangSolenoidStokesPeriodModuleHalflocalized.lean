@@ -26,8 +26,8 @@ def conclusion_leyang_solenoid_stokes_period_module_halflocalized_lambda_omega_h
       p ∈ conclusion_leyang_solenoid_stokes_period_module_halflocalized_level_module k}
 
 /-- Normalized Stokes period module of the Leyang solenoid, presented by the same dyadic union. -/
-def conclusion_leyang_solenoid_stokes_period_module_halflocalized_pi_st :
-    Set (ℚ × ℚ) :=
+def conclusion_leyang_solenoid_stokes_period_module_halflocalized_pi_st
+    (_ : Unit × (ℚ × ℚ)) : Set (ℚ × ℚ) :=
   {p | ∃ k,
       p ∈ conclusion_leyang_solenoid_stokes_period_module_halflocalized_level_module k}
 
@@ -43,8 +43,7 @@ local notation "Pi_St" =>
 chosen period basis, both the normalized Stokes module and the half-localized period lattice are
 the union of the dyadically scaled lattices generated at each level. -/
 theorem paper_conclusion_leyang_solenoid_stokes_period_module_halflocalized :
-    conclusion_leyang_solenoid_stokes_period_module_halflocalized_pi_st =
-      Lambda_omega_half_localized := by
+    Pi_St (Sigma_Emin, omega) = Lambda_omega_half_localized := by
   rfl
 
 end Omega.Conclusion

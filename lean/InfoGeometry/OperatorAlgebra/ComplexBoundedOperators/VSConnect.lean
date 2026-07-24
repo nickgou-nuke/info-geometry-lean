@@ -14,7 +14,7 @@ row/column lists, and row/column spaces.
 
 noncomputable section
 
-namespace VSConnect
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.VSConnect
 
 open scoped BigOperators
 
@@ -201,4 +201,4 @@ theorem colSpace_eq (P : MatrixCarrierPacket K m n) :
 
 end MatrixCarrierPacket
 
-end VSConnect
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.VSConnect

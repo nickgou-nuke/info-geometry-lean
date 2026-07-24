@@ -30,7 +30,7 @@ emergence theorem, or physical arrow-of-time theorem is asserted.
 
 noncomputable section
 
-namespace MD20250430071017MatrixStatistics
+namespace InfoGeometry.Physics.MD20250430071017MatrixStatistics
 
 open Matrix Complex BigOperators
 open InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
@@ -104,6 +104,6 @@ theorem repaired_MD20250430071017_matrix_statistics_packet {ι : Type} [Fintype 
     fun a b => covarianceCoeff_symmetric w q a b,
     fun a b => covarianceCoeff_zero_of_constant w A hwsum a b⟩
 
-end MD20250430071017MatrixStatistics
+end InfoGeometry.Physics.MD20250430071017MatrixStatistics
 
 end noncomputable section

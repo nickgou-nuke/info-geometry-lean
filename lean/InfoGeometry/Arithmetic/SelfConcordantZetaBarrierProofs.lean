@@ -20,7 +20,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace SelfConcordantZetaBarrierProofs
+namespace InfoGeometry.Arithmetic.SelfConcordantZetaBarrierProofs
 
 /-! ## 1. Cayley equation -/
 
@@ -144,4 +144,4 @@ theorem logEulerMode_NN_cleared_derivative_bound_fails
   have hmul := mul_lt_mul_of_pos_left hcore hE6_pos
   nlinarith
 
-end SelfConcordantZetaBarrierProofs
+end InfoGeometry.Arithmetic.SelfConcordantZetaBarrierProofs

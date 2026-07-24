@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace CauchyResidueReadback
+namespace InfoGeometry.Canonical.CauchyResidueReadback
 
 open InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 open InfoGeometry.Canonical.DrazinHodgeResidueBridge
@@ -184,4 +184,4 @@ theorem drazinResidueReadout_projected
 
 end DrazinResidue
 
-end CauchyResidueReadback
+end InfoGeometry.Canonical.CauchyResidueReadback

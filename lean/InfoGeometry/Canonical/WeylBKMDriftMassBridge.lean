@@ -27,7 +27,7 @@ The Drazin supercharge layer is imported as the intended source of modular-twin
 drift data; this file does not rederive `Q`, `Q²`, or a BKM score map.
 -/
 
-namespace WeylBKMDriftMassBridge
+namespace InfoGeometry.Canonical.WeylBKMDriftMassBridge
 
 open InfoGeometry.Canonical.BKMDriftMetric
 
@@ -217,4 +217,4 @@ theorem gaugeScale_eq_metric
 
 end BKMDriftMetricMassFusion
 
-end WeylBKMDriftMassBridge
+end InfoGeometry.Canonical.WeylBKMDriftMassBridge

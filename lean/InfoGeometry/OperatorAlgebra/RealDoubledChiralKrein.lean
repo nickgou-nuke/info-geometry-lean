@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped InnerProductSpace
 
-namespace RealDoubledChiralKrein
+namespace InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 
 open InfoGeometry.Krein
 
@@ -592,4 +592,4 @@ theorem valid
 
 end MobiusHeatInverseZetaWitness
 
-end RealDoubledChiralKrein
+end InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein

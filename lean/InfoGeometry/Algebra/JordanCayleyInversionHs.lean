@@ -14,7 +14,7 @@ a `Spin(3,3)` isomorphism, or an octonionic/`Spin(5,5)` statement.
 
 open InfoGeometry.Clifford.Arxiv160309063
 
-namespace JordanCayleyInversionHs
+namespace InfoGeometry.Algebra.JordanCayleyInversionHs
 
 /--
 A Hermitian 2x2 matrix over Hs:
@@ -77,4 +77,4 @@ theorem klein_quadric_equation (X : Herm2x2Hs) (x1 x2 x3 x4 x5 x6 : ℚ)
 
 end Herm2x2Hs
 
-end JordanCayleyInversionHs
+end InfoGeometry.Algebra.JordanCayleyInversionHs

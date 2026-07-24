@@ -1,0 +1,13 @@
+1. Causal site: The causal structure on a partially ordered set defines a Grothendieck topology via downward-closed sets. The associated sheaf topos encodes the local-to-global principle for causal propagation.
+
+2. Presheaf of Zorn algebras: Each open set in the Alexandrov topology is assigned a Zorn algebra. Restriction maps are algebra homomorphisms, and the gluing condition holds for compatible families.
+
+3. Golden-Ratio Spectral Rigidity: For A in M2(C) with char poly x^2 - x - 1, the spectrum of pi(A) in O2 is exactly {phi, psi}. The embedding pi preserves the minimal polynomial.
+
+4. Fibonacci Braid Image Generates the First Matrix Block: The representation rho_Fib: B3 -> U(O2) satisfies UVU = VUV, UV != VU, and C*(U,V) ~ pi(M2(C)). The projective closure equals embedded PSU(2).
+
+5. Cuntz shift commutativity: The shift endomorphism on O_n commutes with the embedded matrix block.
+
+6. SU(3) Gell-Mann Lie algebra: The eight Gell-Mann matrices generate the su(3) Lie algebra via commutation relations.
+
+7. K-theory of the Cuntz algebra: K0(O_n) ~ Z/(n-1)Z and K1(O_n) = 0.

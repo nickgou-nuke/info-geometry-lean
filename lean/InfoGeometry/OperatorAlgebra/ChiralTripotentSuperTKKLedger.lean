@@ -22,7 +22,7 @@ statistics theorem.
 
 noncomputable section
 
-namespace ChiralTripotentSuperTKKLedger
+namespace InfoGeometry.OperatorAlgebra.ChiralTripotentSuperTKKLedger
 
 open InfoGeometry.Algebraic
 open InfoGeometry.Krein
@@ -152,6 +152,6 @@ theorem chiral_tripotent_super_tkk_hierarchy_packet
     G.zero_pos_two_mem_pos_two hZ₁ hP₂,
     G.zero_neg_two_mem_neg_two hZ₁ hN₂⟩
 
-end ChiralTripotentSuperTKKLedger
+end InfoGeometry.OperatorAlgebra.ChiralTripotentSuperTKKLedger
 
 end noncomputable section

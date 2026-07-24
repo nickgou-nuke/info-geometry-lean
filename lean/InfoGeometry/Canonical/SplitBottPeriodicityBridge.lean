@@ -17,11 +17,11 @@ The theorem surface is intentionally small:
 * tensoring the `Cl(4,4)` anchor by `ℂ` preserves the split Bott step.
 -/
 
-namespace SplitBottPeriodicityBridge
+namespace InfoGeometry.Canonical.SplitBottPeriodicityBridge
 
 open BottPeriodicity
 open RealDoubledCliffordFiniteSpine
-open SplitCl44Complexification
+open InfoGeometry.Clifford.SplitCl44Complexification
 
 /-- The split Bott tensor target at level `3`. -/
 abbrev BottTensor3 : Type :=
@@ -70,4 +70,4 @@ noncomputable def splitBott_anchor_and_complexification :
     cl44_complexification_tensor_anchor,
     cl44_complexification_anchor)
 
-end SplitBottPeriodicityBridge
+end InfoGeometry.Canonical.SplitBottPeriodicityBridge

@@ -45,7 +45,7 @@ def bogoliubov_symplectic_debt : String :=
 -- Fisher metric = second derivative = Kähler metric on coadjoint orbit
 
 def legendre_souriau_duality_debt : String :=
-  "Open: state and prove the Legendre-Souriau/Fisher-Hessian bridge with explicit analytic hypotheses."
+  "Open: state and prove the Legendre-Souriau/Fisher-Hessian bridge through the Hestenes--Krein categorical colimit owner."
 
 /- 5. KAC-MOODY GENERALIZATION -/
 

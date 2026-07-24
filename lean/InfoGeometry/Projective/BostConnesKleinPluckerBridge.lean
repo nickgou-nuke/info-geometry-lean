@@ -1,10 +1,10 @@
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Projective.KleinQuadricPlucker
 
-namespace BostConnesKleinPluckerBridge
+namespace InfoGeometry.Projective.BostConnesKleinPluckerBridge
 
-open BostConnesSystem
-open BostConnesKMS
+open InfoGeometry.Arithmetic.BostConnesSystem
+open InfoGeometry.Canonical.BostConnesKMS
 open KleinQuadricPlucker
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
@@ -67,4 +67,4 @@ theorem projectorPlucker_on_klein_of_nica
     (kmsProjector C n2) (kmsProjector C n3)
     (hComm n1 n2) (hComm n1 n3) (hComm n2 n3)
 
-end BostConnesKleinPluckerBridge
+end InfoGeometry.Projective.BostConnesKleinPluckerBridge

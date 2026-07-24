@@ -36,7 +36,7 @@ require a full Clifford representation and sandwich-action formalization.
 
 noncomputable section
 
-namespace Pin55ReflectionGlide
+namespace InfoGeometry.Clifford.Pin55ReflectionGlide
 
 /-- Split `5+5` real carrier, written as momentum/winding coordinates. -/
 @[ext]
@@ -141,6 +141,6 @@ theorem glide_square_eq_translation (x : Split55) :
   rw [translateP_add]
   norm_num
 
-end Pin55ReflectionGlide
+end InfoGeometry.Clifford.Pin55ReflectionGlide
 
 end noncomputable section

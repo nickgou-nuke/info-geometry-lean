@@ -2,7 +2,7 @@ import InfoGeometry.ErlangenLanglandsGeometryLane
 
 noncomputable section
 
-namespace ErlangenLanglandsOwners
+namespace InfoGeometry.ErlangenLanglandsOwners
 
 open InfoGeometry.Automorphic
 open InfoGeometry.Automorphic.SiegelResonance
@@ -179,4 +179,4 @@ theorem constructRealisticErlangenLanglandsOwnerChainWithGeometry
         (E := E) D Z W P
         Full S Wr Tr G K
 
-end ErlangenLanglandsOwners
+end InfoGeometry.ErlangenLanglandsOwners

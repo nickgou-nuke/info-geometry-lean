@@ -11,7 +11,7 @@ noncomputable section
 
 namespace ChemicalPotentialMetricBridge
 
-open ChiralPoincareSouriauBridge
+open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 
 /-- Shift the energy coordinate of a Pauli-soldered four-momentum. -/
 def chemicalShiftMomentum (P : FourMomentum) (δμ : ℂ) : FourMomentum where

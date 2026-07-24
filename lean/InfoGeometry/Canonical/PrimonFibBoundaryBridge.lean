@@ -20,7 +20,7 @@ Fibonacci facts are owned by `InfoGeometry.Categorical.FibonacciBraiding`.
 SymPy witness: `tools/sympy/primon_fib_boundary_bridge.py`
 -/
 
-namespace PrimonFibBoundaryBridge
+namespace InfoGeometry.Canonical.PrimonFibBoundaryBridge
 
 /--
 Closure debt: identify a concrete primon-gas partition function with zeta on
@@ -47,4 +47,4 @@ graded representation theorem.
 def graded_statistics_closure_debt : String :=
   "Construct the graded V4 eigenspaces and prove the corresponding finite splitting theorem."
 
-end PrimonFibBoundaryBridge
+end InfoGeometry.Canonical.PrimonFibBoundaryBridge

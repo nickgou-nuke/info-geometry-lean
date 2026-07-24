@@ -2,7 +2,7 @@ import Mathlib
 
 open scoped InnerProductSpace
 
-namespace RealTomitaStandardSubspace
+namespace InfoGeometry.Canonical.RealTomitaStandardSubspace
 
 variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
@@ -136,4 +136,4 @@ lemma tomitaOnStandard_involutive (K : Submodule ℝ H) (hK : IsStandardSubspace
   change e (tomitaProd (H := H) K (e.symm (e (tomitaProd (H := H) K (e.symm z))))) = z
   simp [tomitaProd_involutive]
 
-end RealTomitaStandardSubspace
+end InfoGeometry.Canonical.RealTomitaStandardSubspace

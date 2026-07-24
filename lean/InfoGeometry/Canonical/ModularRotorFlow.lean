@@ -15,7 +15,7 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace ModularRotorFlow
+namespace InfoGeometry.Canonical.ModularRotorFlow
 
 /-- Rotor conjugation composes as a one-parameter action under explicit homomorphism laws. -/
 theorem modular_flow_group_action {A : Type*} [Ring A]
@@ -55,4 +55,4 @@ theorem modular_spectral_selection_rule {A : Type*} [Ring A] [Algebra ℝ A]
   rw [map_scale lam X] at h_tr
   exact (mul_eq_zero.mp h_tr).resolve_left h_nonzero
 
-end ModularRotorFlow
+end InfoGeometry.Canonical.ModularRotorFlow

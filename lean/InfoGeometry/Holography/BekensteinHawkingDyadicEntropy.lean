@@ -45,7 +45,7 @@ that are available to Lean.
 
 noncomputable section
 
-namespace BekensteinHawkingDyadicEntropy
+namespace InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
 
 open InfoGeometry.Thermodynamics.FiniteGibbsRelative
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -195,6 +195,6 @@ theorem primeBitState_mobiusParity_wittenCancel_bhDyadicBits
     finite_witten_index_cancel P hP,
     bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea⟩
 
-end BekensteinHawkingDyadicEntropy
+end InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
 
 end noncomputable section

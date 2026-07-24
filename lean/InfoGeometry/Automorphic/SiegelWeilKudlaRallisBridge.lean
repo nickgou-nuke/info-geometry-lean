@@ -23,7 +23,7 @@ import InfoGeometry.Automorphic.ProjectedLFunction
 
 noncomputable section
 
-namespace SiegelWeilKudlaRallisBridge
+namespace InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
 
 open InfoGeometry.Automorphic.SiegelResonance
 
@@ -141,9 +141,9 @@ This packages the paper's critical equality
 
 `E(g, s₀, Φ) = Θ_{φ,1}(g)`.
 
-The analytic hypotheses, including critical range, convergence, local
-irreducibility, and invariant distribution uniqueness, are represented by the
-supplied equality law.
+The critical-range, convergence, local irreducibility, and invariant
+distribution uniqueness obligations are represented by the supplied equality
+law; this file does not recast them as Mathlib analytic closure.
 -/
 structure SiegelWeilKudlaRallisFormulaWitness
     (GState Value : Type*) where
@@ -391,4 +391,4 @@ theorem projectedL_shift_eq_pairing_div_inner_bad
 
 end RankinSelbergProjectedLBridge
 
-end SiegelWeilKudlaRallisBridge
+end InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge

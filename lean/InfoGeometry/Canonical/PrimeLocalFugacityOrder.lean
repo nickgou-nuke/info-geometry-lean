@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace PrimeLocalFugacityOrder
+namespace InfoGeometry.Canonical.PrimeLocalFugacityOrder
 
 /--
 Real modulus model for local fugacity:
@@ -30,4 +30,4 @@ theorem one_lt_localFugacityAbs
   rw [← Real.exp_zero]
   exact Real.exp_lt_exp.mpr (by nlinarith)
 
-end PrimeLocalFugacityOrder
+end InfoGeometry.Canonical.PrimeLocalFugacityOrder

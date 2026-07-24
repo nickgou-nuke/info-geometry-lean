@@ -23,7 +23,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace WeylA1Character
+namespace InfoGeometry.Canonical.WeylA1Character
 
 /-- The finite `A1` character numerator. -/
 @[rep_depth thermo]
@@ -192,4 +192,4 @@ theorem su2Character_eq_sum
     (x : R) (m : ℕ) :
     su2Character x m = a1CharacterSum x x⁻¹ m := rfl
 
-end WeylA1Character
+end InfoGeometry.Canonical.WeylA1Character

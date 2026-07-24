@@ -11,7 +11,7 @@ the existing KKT corridor.
 No wrappers. No `sorry`.
 -/
 
-namespace KreinMajoranaZeroModeBlock
+namespace InfoGeometry.Canonical.KreinMajoranaZeroModeBlock
 
 open InfoGeometry.Canonical.KKTCore
 
@@ -610,4 +610,4 @@ theorem polarized_zeroMode_pfaffian_loop_packet
 
 end
 
-end KreinMajoranaZeroModeBlock
+end InfoGeometry.Canonical.KreinMajoranaZeroModeBlock

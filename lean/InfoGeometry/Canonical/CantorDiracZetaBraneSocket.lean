@@ -25,7 +25,7 @@ it as closed.
 
 noncomputable section
 
-namespace CantorDiracZetaBraneSocket
+namespace InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 
 /-- Critical-line predicate for a complex spectral parameter. -/
 @[rep_depth operator]
@@ -163,4 +163,4 @@ theorem zetaPeriod_zero_implies_criticalLine
     (S.totalDirac.total_selfAdjoint_iff_cantor s).mp hTotal
   exact (S.totalDirac.cantor.selfAdjoint_iff_criticalLine s).mp hCantor
 
-end CantorDiracZetaBraneSocket
+end InfoGeometry.Canonical.CantorDiracZetaBraneSocket

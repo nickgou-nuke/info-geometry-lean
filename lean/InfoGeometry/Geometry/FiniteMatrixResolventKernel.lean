@@ -17,7 +17,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace FiniteMatrixResolventKernel
+namespace InfoGeometry.Geometry.FiniteMatrixResolventKernel
 
 open Matrix
 
@@ -294,4 +294,4 @@ theorem finiteMatrixResolventKernel_packet :
     scalarOneByOneResolventOwnerTarget,
     matrixResolventFromUnitOwnerTarget⟩
 
-end FiniteMatrixResolventKernel
+end InfoGeometry.Geometry.FiniteMatrixResolventKernel

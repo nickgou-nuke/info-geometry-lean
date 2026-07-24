@@ -16,7 +16,7 @@ surfaces that matter for the causal reading of Lean developments:
 Lean remains the proof authority. This module is a packaging surface.
 -/
 
-namespace ProofCausalityBridge
+namespace InfoGeometry.Canonical.ProofCausalityBridge
 
 open InfoGeometry.Causal.Algebra
 open DAG
@@ -152,4 +152,4 @@ theorem graphHodgeBridgeTarget :
 
 end DAGBridge
 
-end ProofCausalityBridge
+end InfoGeometry.Canonical.ProofCausalityBridge

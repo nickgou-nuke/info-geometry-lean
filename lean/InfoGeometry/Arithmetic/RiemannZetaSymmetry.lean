@@ -9,7 +9,7 @@ displaying its natural reflection symmetry across the critical line Re(s) = 1/2.
 
 noncomputable section
 
-namespace RiemannZetaSymmetry
+namespace InfoGeometry.Arithmetic.RiemannZetaSymmetry
 
 open Complex
 
@@ -34,4 +34,4 @@ If ρ is a zero of xi(s), then 1 - ρ is also a zero.
 def riemann_zeta_zero_symmetry_prop (zeta : ℂ → ℂ) : Prop :=
   ∀ ρ : ℂ, completed_zeta zeta ρ = 0 → completed_zeta zeta (1 - ρ) = 0
 
-end RiemannZetaSymmetry
+end InfoGeometry.Arithmetic.RiemannZetaSymmetry

@@ -2,7 +2,7 @@ import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
-namespace GromovHyperbolicity
+namespace InfoGeometry.Geometry.GromovHyperbolicity
 
 variable {X : Type*} [PseudoMetricSpace X]
 
@@ -102,4 +102,4 @@ lemma GromovHyperbolicSubset.of_gromovProduct {δ : ℝ} {A : Set X}
       le_max_left _ _
     linarith
 
-end GromovHyperbolicity
+end InfoGeometry.Geometry.GromovHyperbolicity

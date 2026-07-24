@@ -15,7 +15,7 @@ the diagonal split form `splitQ11` on `ℝ × ℝ`, and lifts that isometry to t
 Clifford algebra level.
 -/
 
-namespace NeutralPhaseSpaceRankOne
+namespace InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
 
 open NeutralPhaseSpaceCore
 
@@ -167,4 +167,4 @@ noncomputable def rankOneCliffordEquiv :
       = canonicalNeutralForm (E := ℝ) X := by
   exact rankOneIsometry.map_app X
 
-end NeutralPhaseSpaceRankOne
+end InfoGeometry.Clifford.NeutralPhaseSpaceRankOne

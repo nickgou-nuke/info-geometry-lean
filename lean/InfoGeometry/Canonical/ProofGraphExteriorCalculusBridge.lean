@@ -11,7 +11,7 @@ This file only re-exports the narrow owner lemmas from
 Hodge theorem for proof graphs.
 -/
 
-namespace ProofGraphExteriorCalculusBridge
+namespace InfoGeometry.Canonical.ProofGraphExteriorCalculusBridge
 
 open InfoGeometry.Causal.ProofGraphExteriorCalculus
 open InfoGeometry.Causal.ProofDAGRepresentation
@@ -44,4 +44,4 @@ theorem grad_ofProofDAG_apply
     grad (DirectedProofGraph.ofProofDAG G) f a b = f b - f a :=
   InfoGeometry.Causal.ProofGraphExteriorCalculus.grad_ofProofDAG_apply G f hab
 
-end ProofGraphExteriorCalculusBridge
+end InfoGeometry.Canonical.ProofGraphExteriorCalculusBridge

@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.RicciMongeAmpere
 import Mathlib.Tactic
 
-namespace MongeAmpereCramerRao
+namespace InfoGeometry.Canonical.MongeAmpereCramerRao
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.MoE
@@ -193,4 +193,4 @@ theorem abs_squeezingLogShear_le_of_sinkhornTrajectory
 
 end BekensteinBridge
 
-end MongeAmpereCramerRao
+end InfoGeometry.Canonical.MongeAmpereCramerRao

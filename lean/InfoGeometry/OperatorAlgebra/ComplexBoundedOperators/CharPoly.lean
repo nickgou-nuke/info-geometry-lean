@@ -14,7 +14,7 @@ characteristic polynomials, and block/triangular readouts.
 
 noncomputable section
 
-namespace CharPoly
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly
 
 open scoped BigOperators
 open Polynomial
@@ -496,4 +496,4 @@ theorem charPoly_factorized {n : Nat} (P : CharPolyFactorizationPacket n) :
 
 end CharPolyFactorizationPacket
 
-end CharPoly
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly

@@ -31,7 +31,7 @@ spine needed before those analytic statements.
 
 noncomputable section
 
-namespace MobiusWittenWeylDenominator
+namespace InfoGeometry.Arithmetic.MobiusWittenWeylDenominator
 
 open scoped BigOperators
 open InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
@@ -100,5 +100,5 @@ theorem finite_mobius_witten_weyl_packet
     finiteMobiusPolynomial_eq_wittenSupertrace P q,
     finiteBoson_mul_mobiusPolynomial_cancel P q h⟩
 
-end MobiusWittenWeylDenominator
+end InfoGeometry.Arithmetic.MobiusWittenWeylDenominator
 

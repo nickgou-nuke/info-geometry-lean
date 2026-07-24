@@ -24,7 +24,7 @@ shadow packet supplied by `NoncommutativeBogoliubovKANLift`.
 
 noncomputable section
 
-namespace KANLightConeAffineBridge
+namespace InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
@@ -236,4 +236,4 @@ theorem centralSelector_eq_zero_of_not_modeBalanced
 
 end Bridge
 
-end KANLightConeAffineBridge
+end InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge

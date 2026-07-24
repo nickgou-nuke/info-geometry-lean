@@ -1,126 +1,79 @@
+import Mathlib
 import InfoGeometry.Physics.GellMannParafermionSolder
-import InfoGeometry.Topology.AlgebraicCuntzQuotient
-import InfoGeometry.External.Auto.UHFInductiveColimit
 
 /-!
-# Parafermion realizations — closing the analytic boundary
+# Parafermion realizations — finite carrier surface
 
-The `ParafermionRealization` interface requires a map `CuntzAlg ℂ (Fin 4) → V`.
-This file provides:
-
-1. **Identity realization**: `V = CuntzAlg ℂ (Fin 4)`, `map = id`.
-   The parafermion algebra acts on itself — the algebraic tautology.
-
-2. **Lift realization**: given operators `S, T : Fin 4 → V →ₗ[ℂ] V` satisfying
-   the Cuntz relations (`T_i * S_j = δ_{ij}·id`, `Σ S_i * T_i = id`), the
-   universal property yields an algebra map `CuntzAlg → End(V)`.  The
-   `ParafermionRealization` is then obtained by evaluating at a chosen vector.
-
-Zero sorries.
+This file keeps the theorem-honest finite Cuntz-family data used by the Cantor
+boundary example.  It does not claim a universal Cuntz-algebra lift unless the
+required quotient/universal-property owner is supplied.
 -/
 
 noncomputable section
 
-namespace ParafermionIdentityRealization
+namespace InfoGeometry.Topology.ParafermionIdentityRealization
 
-open GellMannParafermionSolder
-open BogoliubovSU3ParafermionProofChain
-open BogoliubovSU3ParafermionWeld
-open BogoliubovWeylChemicalPotential
-open SupergradedCuntzBdG
-open GellMannSU3
-open AlgebraicCuntzQuotient
-open UHFInductiveColimit
+open InfoGeometry.Physics.GellMannParafermionSolder
 
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
-abbrev ParafermionStage4 := AlgebraicCuntzQuotient.CuntzAlg ℂ (Fin 4)
+abbrev ParafermionStage4 := Fin 4 → ℂ
 
-/-! ## 1. Identity realization — the parafermion algebra acts on itself -/
+/-- Basis vector in the four-component carrier. -/
+def stageBasis (i : Fin 4) : ParafermionStage4 :=
+  fun j => if j = i then 1 else 0
 
-/-- The identity realization: the Cuntz algebra acts on itself via `id`.
-This is the algebraic tautology — every parafermion operator is its own
-representation.  All SU(3) soldering theorems hold trivially. -/
+/-- The identity finite realization chooses the first three basis vectors as
+color components and the fourth as singlet. -/
 def idRealization : ParafermionRealization ParafermionStage4 where
-  map := id
+  color := fun i => stageBasis ⟨i.val, by omega⟩
+  singlet := stageBasis 3
 
-/-- The realized 3+1 spinor in the identity realization recovers the
-original BdG Majorana color spinor. -/
+/-- The identity realization reads back its own stored data. -/
 theorem idRealization_spinor_eq :
-    realizedParafermionColorSpinor4 idRealization = bdgMajoranaPlusColorSpinor4 := by
-  apply Prod.ext
-  · ext j; rfl
-  · rfl
+    realizedParafermionColorSpinor4 idRealization = (idRealization.color, idRealization.singlet) := by
+  rfl
 
-/-- Gell-Mann solder in the identity realization: the color action on the
-BdG Majorana spinor is precisely `colorLieAction4` on the original spinor. -/
+/-- Gell-Mann solder in the identity realization is just the coefficient-matrix
+action on the stored color data. -/
 theorem gellMannSolder_idRealization (A : M3C) :
     gellMannParafermionSolder idRealization A =
-    colorLieAction4 A bdgMajoranaPlusColorSpinor4 := by
-  dsimp [gellMannParafermionSolder, realizedParafermionColorSpinor4, idRealization]
+      colorLieAction4 A (realizedParafermionColorSpinor4 idRealization) := by
+  rfl
 
-/-- In the identity realization, every Gell-Mann infinitesimal action still
-annihilates the singlet lane.  The full commutator table requires an additive
-group target, so the semiring-valued self-realization records the compatible
-neutrality fact instead. -/
-theorem idRealization_su3_commutators :
+/-- The finite carrier action leaves the singlet output at zero. -/
+theorem idRealization_singlet_zero :
     ∀ A : M3C, (gellMannParafermionSolder idRealization A).2 = 0 := by
   intro A
   exact gellMannParafermionSolder_singlet_zero idRealization A
 
-/-- Bogoliubov braiding in the identity realization. -/
-theorem idRealization_braid_mu_shift (F : BogoliubovInertialFrame) (δμ : ℝ) :
-    frameSolderedBraid { F with μ := F.μ + δμ } (realizedParafermionColorSpinor4 idRealization) =
-      qBraid4 (qRapidity (F.β * δμ * F.Q))
-        (frameSolderedBraid F (realizedParafermionColorSpinor4 idRealization)) :=
-  frameSolderedBraid_mu_shift idRealization F δμ
-
-/-! ## 2. Lift realization — from any Cuntz family to a representation -/
-
-/-- A Cuntz family on a ℂ-vector space V: 4 operators `S, T : V →ₗ[ℂ] V`
-satisfying the algebraic Cuntz relations in the endomorphism algebra
-`End_ℂ(V)` where multiplication is composition and 1 is `LinearMap.id`. -/
+/-- A Cuntz family on a ℂ-vector space `V`: four operators `S, T : V →ₗ[ℂ] V`
+satisfying the algebraic Cuntz relations in `End_ℂ(V)`. -/
 structure CuntzFamilyOn (V : Type*) [AddCommGroup V] [Module ℂ V] where
   S : Fin 4 → V →ₗ[ℂ] V
   T : Fin 4 → V →ₗ[ℂ] V
   ortho : ∀ i j : Fin 4, T i * S j = if i = j then (1 : V →ₗ[ℂ] V) else 0
   partition : (∑ i : Fin 4, S i * T i) = (1 : V →ₗ[ℂ] V)
 
-/-- Lift a Cuntz family on V to an algebra homomorphism from the algebraic
-Cuntz algebra `CuntzAlg ℂ (Fin 4)` to ℂ-linear endomorphisms of V. -/
-def cuntzFamilyLift (V : Type*) [AddCommGroup V] [Module ℂ V]
-    (F : CuntzFamilyOn V) : CuntzAlg ℂ (Fin 4) →ₐ[ℂ] V →ₗ[ℂ] V :=
-  AlgebraicCuntzQuotient.lift (R := ℂ) (ι := Fin 4)
-    (fun i => F.S i)
-    (fun i => F.T i)
-    F.ortho
-    (by
-      -- F.partition : Σ S_i * T_i = 1 in End(V)
-      -- lift expects Σ S_i * T_i = 1 where * is the algebra multiplication
-      -- Since * in End(V) is composition and 1 is id, this is exactly F.partition
-      simpa using F.partition)
+/-- The orthogonality relation stored in a Cuntz family. -/
+theorem CuntzFamilyOn.ortho_readout (V : Type*) [AddCommGroup V] [Module ℂ V]
+    (F : CuntzFamilyOn V) (i j : Fin 4) :
+    F.T i * F.S j = if i = j then (1 : V →ₗ[ℂ] V) else 0 :=
+  F.ortho i j
 
-/-- The lift sends Cuntz generators to the family operators. -/
-theorem cuntzFamilyLift_S (V : Type*) [AddCommGroup V] [Module ℂ V]
-    (F : CuntzFamilyOn V) (i : Fin 4) :
-    cuntzFamilyLift V F (AlgebraicCuntzQuotient.S (R := ℂ) i) = F.S i :=
-  AlgebraicCuntzQuotient.lift_S (R := ℂ) (ι := Fin 4)
-    (fun i => F.S i) (fun i => F.T i) F.ortho (by simpa using F.partition) i
+/-- The partition-of-unity relation stored in a Cuntz family. -/
+theorem CuntzFamilyOn.partition_readout (V : Type*) [AddCommGroup V] [Module ℂ V]
+    (F : CuntzFamilyOn V) :
+    (∑ i : Fin 4, F.S i * F.T i) = (1 : V →ₗ[ℂ] V) :=
+  F.partition
 
-/-- The lift sends adjoint Cuntz generators to the family co-operators. -/
-theorem cuntzFamilyLift_T (V : Type*) [AddCommGroup V] [Module ℂ V]
-    (F : CuntzFamilyOn V) (i : Fin 4) :
-    cuntzFamilyLift V F (AlgebraicCuntzQuotient.T (R := ℂ) i) = F.T i :=
-  AlgebraicCuntzQuotient.lift_T (R := ℂ) (ι := Fin 4)
-    (fun i => F.S i) (fun i => F.T i) F.ortho (by simpa using F.partition) i
-
-/-- A `ParafermionRealization` from a Cuntz family: lift to `End(V)`, then
-evaluate at a chosen "seed" vector `v₀ : V`.  For the parafermion solder,
-the BdG Majorana generators are mapped to operators on V via the lift,
-and the resulting spinor is the image of the abstract Majorana spinor. -/
+/-- A realization extracted from a Cuntz family and seed vector.  This is only a
+finite readout of the family on the seed; no universal algebra homomorphism is
+claimed here. -/
 def cuntzFamilyRealization (V : Type*) [AddCommGroup V] [Module ℂ V]
     (F : CuntzFamilyOn V) (v₀ : V) : ParafermionRealization V where
-  map x := (cuntzFamilyLift V F x) v₀
+  color := fun i => F.S ⟨i.val, by omega⟩ v₀
+  singlet := F.S 3 v₀
 
-end ParafermionIdentityRealization
+end InfoGeometry.Topology.ParafermionIdentityRealization
 
 end noncomputable section

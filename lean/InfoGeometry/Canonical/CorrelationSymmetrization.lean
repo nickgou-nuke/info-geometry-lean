@@ -19,7 +19,7 @@ This file deliberately stays weak:
   comparison-state channel metric.
 -/
 
-namespace CorrelationSymmetrization
+namespace InfoGeometry.Canonical.CorrelationSymmetrization
 
 open InfoGeometry.Canonical.ModularTwoStateCorrelation
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -185,4 +185,4 @@ theorem toRelationalInformationDatum_comparisonGeneratorPhase_eq_phaseShiftedTwo
 
 end Core
 
-end CorrelationSymmetrization
+end InfoGeometry.Canonical.CorrelationSymmetrization

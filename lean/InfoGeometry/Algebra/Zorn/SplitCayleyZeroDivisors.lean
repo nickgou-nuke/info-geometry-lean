@@ -8,7 +8,7 @@ arXiv:1511.05818v2.  This file makes no physical particle identification and
 no `G₂` classification claim.
 -/
 
-namespace SplitCayleyZeroDivisors
+namespace InfoGeometry.Algebra.Zorn.SplitCayleyZeroDivisors
 
 noncomputable section
 
@@ -123,4 +123,4 @@ theorem G_anticommutator : Gplus * Gminus + Gminus * Gplus = zornOne := by
   norm_num
 
 end
-end SplitCayleyZeroDivisors
+end InfoGeometry.Algebra.Zorn.SplitCayleyZeroDivisors

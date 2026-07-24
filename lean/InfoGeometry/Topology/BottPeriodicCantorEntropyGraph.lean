@@ -22,7 +22,7 @@ weights, entropy coupling between streams, and the Drazin-Hodge matter envelope.
 
 noncomputable section
 
-namespace BottPeriodicCantorEntropyGraph
+namespace InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 
 open scoped BigOperators
 
@@ -348,4 +348,4 @@ variable (L : BottPeriodicFierzKleinLaw Op)
 
 end BottPeriodicFierzKleinLaw
 
-end BottPeriodicCantorEntropyGraph
+end InfoGeometry.Topology.BottPeriodicCantorEntropyGraph

@@ -10,7 +10,7 @@ import InfoGeometry.Canonical.EmergentKillingField
 Operator surprisal as a scaled modular generator and its chiral trace readout.
 -/
 
-namespace OperatorSurprisal
+namespace InfoGeometry.Canonical.OperatorSurprisal
 
 open Matrix
 open InfoGeometry.Algebra.HypercomplexTriad
@@ -51,4 +51,4 @@ theorem surprisal_total_equilibrium (β : ℝ) :
   rw [K_eval]
   norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
-end OperatorSurprisal
+end InfoGeometry.Canonical.OperatorSurprisal

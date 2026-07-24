@@ -23,7 +23,7 @@ This file stays narrow:
 No recomposition data is introduced here.
 -/
 
-namespace PhaseSpacePolarizedBridge
+namespace InfoGeometry.Canonical.PhaseSpacePolarizedBridge
 
 open InfoGeometry.Canonical.RelativeModularPolarizedBridge
 open InfoGeometry.Canonical.KKTGeneralizedMetricBridge
@@ -474,4 +474,4 @@ end CountJunction
 
 end Core
 
-end PhaseSpacePolarizedBridge
+end InfoGeometry.Canonical.PhaseSpacePolarizedBridge

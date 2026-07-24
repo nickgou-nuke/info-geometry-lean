@@ -38,7 +38,7 @@ this file.
 
 noncomputable section
 
-namespace ArakiItakuraSaitoCollapse
+namespace InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 
 open InfoGeometry.Canonical.SouriauModularBregmanOperator
 open InfoGeometry.Canonical.SouriauOperatorBregmanModular
@@ -240,6 +240,64 @@ theorem ofSouriauOperatorialBregmanPacket_divergence
 
 end BoundedDoubledCarrier
 
-end ArakiItakuraSaitoCollapse
+/-! ## GNS / Relative Modular Operator Expectation -/
+
+section RelativeModularExpectation
+
+open scoped InnerProductSpace
+
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/--
+Socket for the relative modular operator and GNS state vector in Tomita-Takesaki theory.
+It carries the exact algebraic properties of the relative modular operator Δ_{φ|ω}
+associated with the GNS vector state Ω_ω.
+-/
+@[rep_depth operator]
+structure RelativeModularOperatorSocket (H : Type*)
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
+  /-- The GNS vector state Ω_ω representing state ω. -/
+  omegaVector : H
+  /-- The GNS vector is normalized: ⟨Ω_ω, Ω_ω⟩ = 1. -/
+  omegaVector_norm : inner ℝ omegaVector omegaVector = 1
+  /-- The relative modular operator Δ_{φ|ω}. -/
+  relativeModularOp : H →L[ℝ] H
+  /-- The expectation of the relative modular operator Δ is 1 (normalization of φ). -/
+  relativeModularOp_expectation : inner ℝ (relativeModularOp omegaVector) omegaVector = 1
+  /-- The logarithm of the relative modular operator, log Δ. -/
+  logRelativeModularOp : H →L[ℝ] H
+  /-- Araki relative entropy is defined as -⟨Ω_ω, log Δ_{φ|ω} Ω_ω⟩. -/
+  arakiRelativeEntropy : ℝ
+  /-- Definition of Araki relative entropy. -/
+  arakiRelativeEntropy_def :
+    arakiRelativeEntropy = - inner ℝ (logRelativeModularOp omegaVector) omegaVector
+
+/--
+The operator Itakura-Saito divergence of the relative modular operator:
+D_IS(Δ) = Δ - log Δ - I.
+-/
+@[rep_depth operator]
+def operatorItakuraSaito (S : RelativeModularOperatorSocket H) : H →L[ℝ] H :=
+  S.relativeModularOp - S.logRelativeModularOp - ContinuousLinearMap.id ℝ H
+
+/--
+The expectation value of the operator Itakura-Saito divergence under the state ω
+is exactly the Araki relative entropy:
+⟨Ω_ω, D_IS(Δ) Ω_ω⟩ = S(ω || φ).
+-/
+@[rep_depth operator]
+theorem operatorItakuraSaito_expectation_eq_araki
+    (S : RelativeModularOperatorSocket H) :
+    inner ℝ (operatorItakuraSaito S S.omegaVector) S.omegaVector = S.arakiRelativeEntropy := by
+  unfold operatorItakuraSaito
+  simp
+  rw [inner_sub_left, inner_sub_left]
+  rw [S.relativeModularOp_expectation, S.omegaVector_norm]
+  rw [S.arakiRelativeEntropy_def]
+  ring
+
+end RelativeModularExpectation
+
+end InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 
 end noncomputable section

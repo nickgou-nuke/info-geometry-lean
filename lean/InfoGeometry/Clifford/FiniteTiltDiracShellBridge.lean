@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 Thin bridge exports for the finite tilt Dirac shell.
 -/
 
-namespace FiniteTiltDiracShellBridge
+namespace InfoGeometry.Clifford.FiniteTiltDiracShellBridge
 
 open FiniteTiltDiracShell
 
@@ -16,7 +16,11 @@ theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge :
     finiteTiltCurrentDensity = finiteTiltBoundaryCurrent := by
   exact finiteTiltCurrentDensity_eq_boundaryCurrent
 
-@[rep_depth operator]
+-- def FiniteTiltDiracShellBridgeOwnerTarget : FiniteTiltDiracShellBridgeOwnerTarget := finiteTiltDiracShellBridgeOwnerTarget
+-- theorem finiteTiltDiracShellBridgeOwnerTarget :
+--    finiteTiltDiracShellBridgeOwnerTarget := by
+--  rfl
+
 structure FiniteTiltDiracShellBridgeOwnerTarget where
   shell_square :
     ∀ m : ℝ,
@@ -33,15 +37,15 @@ def finiteTiltDiracShellBridgeOwnerTarget :
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellBridge_shell_square (m : ℝ) :
-    finiteTiltDiracShell m * finiteTiltDiracShell m =
-      (m ^ 2 : ℝ) • (1 : Mat2) :=
+    finiteTiltDiracShell m * finiteTiltDiracShell m = (m ^ 2 : ℝ) • (1 : Mat2) := by
   let pkt := finiteTiltDiracShellBridgeOwnerTarget
-  pkt.shell_square m
+  exact pkt.shell_square m
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellBridge_current_density_eq :
-    finiteTiltCurrentDensity = finiteTiltBoundaryCurrent :=
+    finiteTiltCurrentDensity = finiteTiltBoundaryCurrent := by
   let pkt := finiteTiltDiracShellBridgeOwnerTarget
-  pkt.current_density_eq
+  exact pkt.current_density_eq
 
-end FiniteTiltDiracShellBridge
+end InfoGeometry.Clifford.FiniteTiltDiracShellBridge
+

@@ -11,8 +11,8 @@ noncomputable section
 
 namespace InfoGeometry.Clifford
 
-open SplitCliffordDirectLimit
-open SplitCliffordTensorBridge
+open InfoGeometry.Canonical.SplitCliffordDirectLimit
+open InfoGeometry.Canonical.SplitCliffordTensorBridge
 
 /-- Historical name for the `n`th split Clifford algebra. -/
 abbrev Cl_split (n : ℕ) := SplitClNNAlg n

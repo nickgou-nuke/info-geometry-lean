@@ -11,7 +11,7 @@ Bridge from the Navier-Stokes modular-velocity lane to the
 The bridge keeps approximation control in shape/scale-cost form.
 -/
 
-namespace NavierStokesNeuralOperatorBridge
+namespace InfoGeometry.Canonical.NavierStokesNeuralOperatorBridge
 
 open InfoGeometry.Canonical.NeuralOperatorCore
 
@@ -139,4 +139,4 @@ theorem modularVelocityOperator_momentumResidualError_le_of_contract
       (hdom := hdom)
       hKfield i)
 
-end NavierStokesNeuralOperatorBridge
+end InfoGeometry.Canonical.NavierStokesNeuralOperatorBridge

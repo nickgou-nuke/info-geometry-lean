@@ -13,7 +13,7 @@ associative-algebra commutator Leibniz rule and records the corresponding
 mathlib `Derivation` multiplication law.
 -/
 
-namespace Infinitesimal
+namespace InfoGeometry.Cocycle.Infinitesimal
 
 /-- Inner commutator generator `[K,-]` in an associative ring. -/
 def innerCommutatorDerivation {A : Type*} [Ring A] (K X : A) : A :=
@@ -33,4 +33,4 @@ theorem mathlib_derivation_leibniz {R A : Type*}
     D (a * b) = a * D b + b * D a := by
   simp [D.leibniz a b]
 
-end Infinitesimal
+end InfoGeometry.Cocycle.Infinitesimal

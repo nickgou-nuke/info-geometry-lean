@@ -11,5 +11,5 @@ in `InfoGeometry.Canonical.SplitCliffordDirectLimit` using mathlib's
 declares no additional theorem names.
 -/
 
-namespace CliffordInfiniteLimit
-end CliffordInfiniteLimit
+namespace InfoGeometry.Canonical.CliffordInfiniteLimit
+end InfoGeometry.Canonical.CliffordInfiniteLimit

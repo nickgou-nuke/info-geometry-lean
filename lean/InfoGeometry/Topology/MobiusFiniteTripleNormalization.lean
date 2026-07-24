@@ -7,7 +7,7 @@ A small honest normalization packet for finite Möbius triples.
 It isolates the concrete `0, 1, ∞` normalization used by the 3-transitivity story.
 -/
 
-namespace MobiusFiniteTripleNormalization
+namespace InfoGeometry.Topology.MobiusFiniteTripleNormalization
 
 open Complex
 
@@ -77,4 +77,4 @@ theorem maps_to_01inf_finite
       ring
     simp [normalizeTriple, InfoGeometry.MobiusTransform.eval, hden3]
 
-end MobiusFiniteTripleNormalization
+end InfoGeometry.Topology.MobiusFiniteTripleNormalization

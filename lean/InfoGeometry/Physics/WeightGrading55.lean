@@ -2,32 +2,21 @@ import InfoGeometry.Physics.OrbitClassification55
 import Mathlib.Tactic
 
 /-!
-# 5-graded weight decomposition of J₂(𝕆_s) and refined orbit classification
+# 5-slot weight packets for the `J₂(𝕆_s)` coordinate model
 
-The 10D Jordan algebra J₂(𝕆_s) carries a natural 5-grading by conformal
-weight inherited from the Kantor–Koecher–Tits construction:
+This file records a finite weight-labeled coordinate packet for the
+`JordanMatrix10D` carrier together with a local orbit-type predicate.  It does
+**not** construct a global Kantor--Koecher--Tits grading, a Lie-closure theorem,
+or a classification theorem for the full split Albert geometry.
 
-    J₂ = 𝔤_{-2} ⊕ 𝔤_{-1} ⊕ 𝔤₀ ⊕ 𝔤₁ ⊕ 𝔤₂
-
-* 𝔤_{±2} = the light-cone coordinates ⟨ξ₊, ξ₋⟩  (weight ±2)
-* 𝔤_{±1} = the octonionic null cone 𝕆_s          (weight ±1)
-* 𝔤₀     = the dilatation/scaling generator
-
-Under this grading, the `isNull` orbit splits into three sub-types:
-
-1. **pure null**: ξ₊ or ξ₋ vanishes, Z is zero-divisor in one direction
-2. **mixed null**: both ξ₊ and ξ₋ non-zero, but det = 0
-3. **totally null**: all components zero (isZero)
-
-The Fioresi et al. ℂ_s decomposition `E = 1 + j` (weight +1) vs
-`Ē = 1 - j` (weight -1) generalizes to 𝕆_s via the split-octonion
-lightcone projectors.
+The weight labels and orbit names are bookkeeping devices for the named
+coordinates used in this file.
 -/
 
 open InfoGeometry.Physics.OrbitClassification55
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-namespace WeightGrading55
+namespace InfoGeometry.Physics.WeightGrading55
 
 namespace JordanMatrix10D
 
@@ -97,9 +86,9 @@ theorem weightCoordinates_eta (X : JordanMatrix10D) :
 Refined orbit types that account for the conformal-weight grading.
 
 - `isZero`:       X = 0 (all weights zero)
-- `isPureNull`:   det = 0, X ≠ 0, ALL weight components lie in a single
-                  Z-divisor subspace (E or Ē direction in the Cs slice).
-- `isMixedNull`:  det = 0, X ≠ 0, weights span both E and Ē directions.
+- `isPureNull`:   det = 0, X ≠ 0, and at least one outer weight slot
+                  (`weightMinusTwo` or `weightPlusTwo`) vanishes.
+- `isMixedNull`:  det = 0, X ≠ 0, and both outer weight slots are nonzero.
 - `isGeneric`:    det ≠ 0.
 -/
 inductive RefinedOrbitType (X : JordanMatrix10D) : Prop where
@@ -136,4 +125,4 @@ def ebComponent (Z : SplitOct) : ℚ := (Z.a : ℚ) - (Z.b : ℚ)
 
 end JordanMatrix10D
 
-end WeightGrading55
+end InfoGeometry.Physics.WeightGrading55

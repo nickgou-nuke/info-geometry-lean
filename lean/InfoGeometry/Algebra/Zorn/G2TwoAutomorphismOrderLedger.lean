@@ -19,7 +19,7 @@ This is only an order ledger.  It does not construct any finite group carrier or
 prove an isomorphism/classification theorem.
 -/
 
-namespace G2TwoAutomorphismOrderLedger
+namespace InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
 
 /-- GAP/Atlas order of `G₂(2)`. -/
 def g2TwoOrder : ℕ := 12096
@@ -82,4 +82,4 @@ theorem corrected_g2two_automorphism_order_packet :
       pgl3F3Order ≠ g2TwoOrder := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, pgl3F3Order_ne_g2TwoOrder⟩
 
-end G2TwoAutomorphismOrderLedger
+end InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger

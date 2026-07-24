@@ -20,7 +20,7 @@ This module formalizes:
 - sampled IB-to-modular KMS bridge theorems.
 -/
 
-namespace YangMillsContinuum
+namespace InfoGeometry.Canonical.YangMillsContinuum
 
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.IB
@@ -625,4 +625,4 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornControl_
 
 end IBSampledFlow
 
-end YangMillsContinuum
+end InfoGeometry.Canonical.YangMillsContinuum

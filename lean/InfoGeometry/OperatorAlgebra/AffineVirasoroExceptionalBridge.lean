@@ -19,7 +19,7 @@ import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
-namespace AffineVirasoroExceptionalBridge
+namespace InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 
 open FiveGradedInformationLedger
 open SuperVirasoroExtension
@@ -151,4 +151,4 @@ theorem exceptionalAffineVirasoroBridge_packet
     B.centralChargeReadout s = B.hiddenGradeMemoryReadout s :=
   exceptionalAffineVirasoroBridgeOwnerTarget Finite Affine Vir State Charge B s
 
-end AffineVirasoroExceptionalBridge
+end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

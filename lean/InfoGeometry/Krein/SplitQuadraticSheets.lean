@@ -3,7 +3,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace SplitQuadraticSheets
+namespace InfoGeometry.Krein.SplitQuadraticSheets
 
 open InfoGeometry.Krein
 open SplitQuadratic
@@ -192,4 +192,4 @@ theorem divergence_nonpos_of_mem_minusSheet {q k : H₂}
     divergence_minusPoint_eq_neg_half_sqdist]
   exact neg_nonpos.mpr (mul_nonneg (by norm_num) real_inner_self_nonneg)
 
-end SplitQuadraticSheets
+end InfoGeometry.Krein.SplitQuadraticSheets

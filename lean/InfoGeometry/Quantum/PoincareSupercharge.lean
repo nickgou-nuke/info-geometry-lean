@@ -22,7 +22,7 @@ open InfoGeometry.Canonical.PauliHestenesSpinMomentum
 
 noncomputable section
 
-namespace PoincareSupercharge
+namespace InfoGeometry.Quantum.PoincareSupercharge
 
 /-- The Casimir P^μ P_μ = H² - p² = H² in the rest frame.
     From `H_pow_eq n ε 2` we get H² = Σ ε_i² P_i. -/
@@ -135,4 +135,4 @@ theorem pauli_supercharge_anticommutator_det_neg_of_spacelike
     (Matrix.det P.superPoincareAnticommutatorMatrix).re < 0 :=
   PauliParavector.det_superPoincareAnticommutatorMatrix_neg_of_spacelike hP
 
-end PoincareSupercharge
+end InfoGeometry.Quantum.PoincareSupercharge

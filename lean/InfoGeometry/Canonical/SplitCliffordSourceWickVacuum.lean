@@ -20,7 +20,7 @@ concrete boundary-term vanishing condition on the chosen vacuum/evaluation lane.
 
 noncomputable section
 
-namespace SplitCliffordSourceWickVacuum
+namespace InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
 
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.SplitCliffordWickDiracSea
@@ -274,4 +274,4 @@ theorem chargedFock_sugawara_vacuum_highest_weight_packet
 
 end ExternalLaneReadout
 
-end SplitCliffordSourceWickVacuum
+end InfoGeometry.Canonical.SplitCliffordSourceWickVacuum

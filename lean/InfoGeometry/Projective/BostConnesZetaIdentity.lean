@@ -119,7 +119,7 @@ def bost_connes_amplituhedron_synthesis
 /--
 We read back the family equality using the explicit comparison.
 The comparison premise is explicit, so the readback is kernel-checked and
-does not hide any missing analytic bridge.
+does not hide any missing Hestenes--Krein/colimit bridge.
 -/
 theorem bost_connes_identity_verified (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : ∀ (β : ℂ) (L : ℕ), bost_connes_zeta β = Vol L) :

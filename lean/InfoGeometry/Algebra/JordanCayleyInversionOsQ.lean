@@ -18,7 +18,7 @@ an analytic conformality theorem, a CCC theorem, or a global
 
 open InfoGeometry.Algebra.SplitOctonionQ
 
-namespace JordanCayleyInversionOsQ
+namespace InfoGeometry.Algebra.JordanCayleyInversionOsQ
 
 /--
 A Hermitian 2×2 matrix over the split octonions 𝕆ₛ:
@@ -165,4 +165,4 @@ theorem klein_quadric_equation (X : Herm2x2OsQ) (x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 
 
 end Herm2x2OsQ
 
-end JordanCayleyInversionOsQ
+end InfoGeometry.Algebra.JordanCayleyInversionOsQ

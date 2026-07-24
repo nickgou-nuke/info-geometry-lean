@@ -24,7 +24,7 @@ transport required by `Canonical/PrimeVirasoroSugawara.lean`.
 
 noncomputable section
 
-namespace PrimonMajoranaCurrent
+namespace InfoGeometry.Arithmetic.PrimonMajoranaCurrent
 
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
 open InfoGeometry.Arithmetic.PrimeMajoranaOPE
@@ -236,4 +236,4 @@ theorem toMobiusCurrentOPE_current_d :
 
 end PrimeWeylGaugeCantorFockBridge.WeylGaugeTiltSwitchNormalization
 
-end PrimonMajoranaCurrent
+end InfoGeometry.Arithmetic.PrimonMajoranaCurrent

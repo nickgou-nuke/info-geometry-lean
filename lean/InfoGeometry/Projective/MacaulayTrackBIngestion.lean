@@ -20,7 +20,7 @@ The closed theorem surface is:
 The file intentionally separates those two certificates.
 -/
 
-namespace MacaulayTrackBIngestion
+namespace InfoGeometry.Projective.MacaulayTrackBIngestion
 
 open InfoGeometry.Projective.PenroseSpinTiling
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
@@ -170,4 +170,4 @@ theorem canonicalTrackBBoundary_spin_tiled_rank32 :
     canonicalTrackBBoundary.bettiRank.consistent
     canonicalTrackBBoundary.bettiRank.localRank8
 
-end MacaulayTrackBIngestion
+end InfoGeometry.Projective.MacaulayTrackBIngestion

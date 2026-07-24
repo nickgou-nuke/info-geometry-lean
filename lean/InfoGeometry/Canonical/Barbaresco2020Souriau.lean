@@ -31,7 +31,7 @@ noncomputable section
 
 set_option linter.unnecessarySeqFocus false
 
-namespace Barbaresco2020Souriau
+namespace InfoGeometry.Canonical.Barbaresco2020Souriau
 
 open InfoGeometry.Canonical.SouriauCasimirInvariant
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
@@ -222,4 +222,4 @@ theorem entropy_is_casimir_under_affine_coadjoint_action
     IsCasimirInvariant (affineCoAd coAd theta) entropy :=
   hentropy
 
-end Barbaresco2020Souriau
+end InfoGeometry.Canonical.Barbaresco2020Souriau

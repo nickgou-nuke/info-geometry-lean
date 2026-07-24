@@ -9,7 +9,7 @@ import Mathlib
 #### BUCKET 2: None. #### BUCKET 3: None.
 -/
 
-namespace KeywordIndex
+namespace InfoGeometry.Meta.KeywordIndex
 
 inductive Keyword : Type
   | Berezinian
@@ -60,4 +60,4 @@ theorem keyword_to_nat_inj (x y : Keyword) (h : keyword_to_nat x = keyword_to_na
   cases x <;> cases y <;> try rfl
   all_goals { contradiction }
 
-end KeywordIndex
+end InfoGeometry.Meta.KeywordIndex

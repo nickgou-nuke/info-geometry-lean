@@ -17,12 +17,12 @@ its missing representative and orbit proofs.
 -/
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open CubicJordanOs
-open CubicJordanOs.AlbertMatrix
+open InfoGeometry.Algebra.CubicJordanOs
+open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
-namespace CubicJordanFreudenthal
+namespace InfoGeometry.Algebra.CubicJordanFreudenthal
 
 /-- Cyclic shift of Albert matrix entries. -/
 def cyclicShift (X : AlbertMatrix) : AlbertMatrix :=
@@ -110,4 +110,4 @@ theorem freudenthal_architecture :
   exact ⟨freudenthal_diagonal, cyclicShift_three, cyclicShift_injective,
     adjointQuad_polarization⟩
 
-end CubicJordanFreudenthal
+end InfoGeometry.Algebra.CubicJordanFreudenthal

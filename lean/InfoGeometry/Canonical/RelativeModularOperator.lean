@@ -22,12 +22,12 @@ diagonal. Its logarithmic readouts recover the relative log-density and the
 relative modular potential.
 -/
 
-namespace RelativeModularOperator
+namespace InfoGeometry.Canonical.RelativeModularOperator
 
 open InfoGeometry.Canonical.PositiveRayCore
 open RelativePotentialCore
 open RelativeModularCore
-open JaynesInfoStatMech.ThermalDiagonal
+open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 
 section Finite
 
@@ -465,4 +465,4 @@ theorem relativeModularHamiltonianReadout_self
 
 end Finite
 
-end RelativeModularOperator
+end InfoGeometry.Canonical.RelativeModularOperator

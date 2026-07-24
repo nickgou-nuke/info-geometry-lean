@@ -22,7 +22,7 @@ No analytic continuation.
 No all-`n` monodromy recursion theorem.
 -/
 
-namespace FiniteFibonacciLowAnyonMatrices
+namespace InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 
 open Matrix
 
@@ -188,4 +188,4 @@ theorem pi6_adjacent_artin_from_identities
         pi6_b5 qNeg4 q3 * pi6_b4 q3 B * pi6_b5 qNeg4 q3) :=
   ⟨h12, h23, h34, h45⟩
 
-end FiniteFibonacciLowAnyonMatrices
+end InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices

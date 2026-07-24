@@ -188,7 +188,13 @@ def streaming() -> bool:
 
 def assistant_messages() -> list[dict]:
     raw = evaluate(
-        """JSON.stringify(Array.from(document.querySelectorAll('[data-message-author-role="assistant"]')).map((e, i) => ({ index: i, text: e.innerText || '' })))"""
+        """(() => {
+          let elements = Array.from(document.querySelectorAll('[data-message-author-role="assistant"]'));
+          if (elements.length === 0) {
+            elements = Array.from(document.querySelectorAll('div[class*="assistantMessage"]'));
+          }
+          return JSON.stringify(elements.map((e, i) => ({ index: i, text: e.innerText || '' })));
+        })()"""
     )
     return json.loads(raw or "[]")
 

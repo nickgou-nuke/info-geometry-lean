@@ -15,7 +15,7 @@ This file sits immediately above `RelativeModularPolarizedBridge` and records:
 - vanishing-coupling criteria separating sectorwise and global visibility.
 -/
 
-namespace RelativeModularRecomposition
+namespace InfoGeometry.Canonical.RelativeModularRecomposition
 
 open InfoGeometry.Canonical.StandardFormCore
 open InfoGeometry.Canonical.RelativeModularCore
@@ -417,4 +417,4 @@ not asserted here: global cancellation may hide nontrivial sector defects.
 
 end Recomposition
 
-end RelativeModularRecomposition
+end InfoGeometry.Canonical.RelativeModularRecomposition

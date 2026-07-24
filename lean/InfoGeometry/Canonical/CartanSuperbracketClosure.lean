@@ -29,7 +29,7 @@ No compactification claim.
 No `sorry`.
 -/
 
-namespace CartanSuperbracketClosure
+namespace InfoGeometry.Canonical.CartanSuperbracketClosure
 
 variable {A : Type*} [Ring A]
 
@@ -180,4 +180,4 @@ theorem cartan_superbracket_closure_profile
      cartan_odd_odd_anticomm_even θ ho₁ ho₂,
      cartan_odd_square_even θ ho₁⟩
 
-end CartanSuperbracketClosure
+end InfoGeometry.Canonical.CartanSuperbracketClosure

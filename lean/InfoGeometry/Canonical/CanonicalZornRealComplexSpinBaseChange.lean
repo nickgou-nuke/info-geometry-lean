@@ -15,15 +15,15 @@ namespace CanonicalZornRealComplexSpinBaseChange
 
 set_option synthInstance.maxHeartbeats 100000
 
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornSpinRelatedFiber
+open CanonicalZornCompositionTriality
+open CanonicalZornCliffordRepresentation
+open CanonicalZornRealSpin44
+open CanonicalZornSpinRelatedFiber
 open InfoGeometry.Canonical.CanonicalZornSpinVectorAction
-open InfoGeometry.Canonical.CanonicalZornRealSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornOuterTrialityGroup
-open InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
-open InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+open CanonicalZornRealSpinTrialityClosure
+open CanonicalZornOuterTrialityGroup
+open CanonicalZornFiveGradedClosure
+open ProjectiveAffineConformalClosure55
 
 /-- The real generator map into the complex canonical Clifford algebra. -/
 def realToComplexCliffordGenerator :
@@ -264,14 +264,14 @@ theorem realGammaLinear_injective :
     Function.Injective realGammaLinear := by
   intro x y h
   have happ := LinearMap.congr_fun h
-    (CanonicalZornSpinVectorAction.identitySpinorPlus, 0)
+    (InfoGeometry.Canonical.CanonicalZornSpinVectorAction.identitySpinorPlus, 0)
   have hsnd := congrArg Prod.snd happ
   change (diracGamma (realSplit44ToVector8 x)
-      (CanonicalZornSpinVectorAction.identitySpinorPlus, 0)).2 =
+      (InfoGeometry.Canonical.CanonicalZornSpinVectorAction.identitySpinorPlus, 0)).2 =
     (diracGamma (realSplit44ToVector8 y)
-      (CanonicalZornSpinVectorAction.identitySpinorPlus, 0)).2 at hsnd
-  rw [CanonicalZornSpinVectorAction.diracGamma_identitySpinor,
-    CanonicalZornSpinVectorAction.diracGamma_identitySpinor] at hsnd
+      (InfoGeometry.Canonical.CanonicalZornSpinVectorAction.identitySpinorPlus, 0)).2 at hsnd
+  rw [InfoGeometry.Canonical.CanonicalZornSpinVectorAction.diracGamma_identitySpinor,
+    InfoGeometry.Canonical.CanonicalZornSpinVectorAction.diracGamma_identitySpinor] at hsnd
   have hv : realSplit44ToVector8 x = realSplit44ToVector8 y := by
     apply ZornCopy.ext
     exact congrArg (fun C : SpinorMinus8 => C.val) hsnd

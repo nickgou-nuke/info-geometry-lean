@@ -3,7 +3,7 @@ import Mathlib.Tactic.Abel
 
 open scoped InnerProductSpace
 
-namespace NontracialModularBridge
+namespace InfoGeometry.Canonical.NontracialModularBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -53,4 +53,4 @@ theorem centeredRelativeModular_of_scaleShapeSplit
 
 end Core
 
-end NontracialModularBridge
+end InfoGeometry.Canonical.NontracialModularBridge

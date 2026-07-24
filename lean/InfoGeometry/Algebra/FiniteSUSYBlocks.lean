@@ -44,6 +44,19 @@ theorem susy_partner_intertwining :
     _ = (sys.A * sys.A_dag) * sys.A := by rw [Matrix.mul_assoc]
     _ = sys.H_plus * sys.A := by rw [sys.h_H_plus_def]
 
+/-- `H₋` is exactly the product `A†A`. -/
+theorem h_minus_is_product :
+    sys.H_minus = sys.A_dag * sys.A := sys.h_H_minus_def
+
+/-- `H₊` is exactly the product `AA†`. -/
+theorem h_plus_is_product :
+    sys.H_plus = sys.A * sys.A_dag := sys.h_H_plus_def
+
+/-- The odd-odd anticommutator is exactly the even-slab sum: `{A,A†} = H₊ + H₋`. -/
+theorem odd_anticommutator_is_even_sum :
+    sys.A * sys.A_dag + sys.A_dag * sys.A = sys.H_plus + sys.H_minus := by
+  simp [sys.h_H_plus_def, sys.h_H_minus_def, add_comm, add_left_comm, add_assoc]
+
 end FiniteSUSYSystem
 
 /-- Concrete lowering supercharge. -/
@@ -75,6 +88,23 @@ def canonicalFiniteSUSYSystem : FiniteSUSYSystem 2 where
 theorem canonical_partner_intertwining :
     superchargeA * H_minus = H_plus * superchargeA :=
   canonicalFiniteSUSYSystem.susy_partner_intertwining
+
+/-- Concrete supercharge square-zero for lowering charge. -/
+theorem canonical_supercharge_square_zero :
+    superchargeA * superchargeA = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [superchargeA, J_minus, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Concrete supercharge square-zero for raising charge. -/
+theorem canonical_adjoint_supercharge_square_zero :
+    superchargeAdag * superchargeAdag = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [superchargeAdag, J_plus, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Concrete odd-odd anticommutator equals H₊+H₋. -/
+theorem canonical_odd_anticommutator_is_even_sum :
+    superchargeA * superchargeAdag + superchargeAdag * superchargeA = H_plus + H_minus := by
+  simp [H_plus, H_minus, add_comm, add_left_comm, add_assoc]
 
 /-- Fermion-parity grading on the two-state block. -/
 def fermionParity : MatC 2 :=

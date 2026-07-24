@@ -26,7 +26,7 @@ Instead, it records the strongest honest common packet already available from
 existing owner files.
 -/
 
-namespace HypercomplexMobiusLegendreCapstone
+namespace InfoGeometry.Canonical.HypercomplexMobiusLegendreCapstone
 
 open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.ModularLorentzBoost
@@ -128,4 +128,4 @@ theorem conservative_unification_capstone
   exact ⟨triad_modular_packet, mobius_boundary_packet,
     fenchel_legendre_packet M θ η ε β hε hβ⟩
 
-end HypercomplexMobiusLegendreCapstone
+end InfoGeometry.Canonical.HypercomplexMobiusLegendreCapstone

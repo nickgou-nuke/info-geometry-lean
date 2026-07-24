@@ -11,7 +11,7 @@ inverse commutes with the metric itself (the EP condition), the spectral
 and geometric mirrors align perfectly, and the Anomaly vanishes.
 -/
 
-namespace NormalAnomaly
+namespace InfoGeometry.Singular.NormalAnomaly
 
 open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Singular.Drazin
@@ -60,4 +60,4 @@ theorem Anomaly_vanishes_if_projectors_eq
   -- P_D * P_D - P_D * P_D = 0
   exact sub_self (Drazin_Projector A D k hD * Drazin_Projector A D k hD)
 
-end NormalAnomaly
+end InfoGeometry.Singular.NormalAnomaly

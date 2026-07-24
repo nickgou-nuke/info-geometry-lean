@@ -107,6 +107,9 @@ jobs:
       - name: Baseline build
         run: lake build
 
+      - name: Post-build quality gate
+        run: bash scripts/quality/post_build_gate.sh lean
+
       - name: Build compiler bridge server
         run: lake build Agent compilerBridgeServer
 

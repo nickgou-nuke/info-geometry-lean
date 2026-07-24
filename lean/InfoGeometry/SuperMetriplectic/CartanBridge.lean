@@ -18,7 +18,7 @@ operator lane, then reads off the `𝔨 ⊕ 𝔭` split as the Drazin core / dis
 range shadow required by `CartanOnsagerSplit`.
 -/
 
-namespace CartanBridge
+namespace InfoGeometry.SuperMetriplectic.CartanBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Core
@@ -105,4 +105,4 @@ end DrazinCartanOnsagerBridge
 
 end Core
 
-end CartanBridge
+end InfoGeometry.SuperMetriplectic.CartanBridge

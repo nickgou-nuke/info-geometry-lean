@@ -5,7 +5,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace ModularHamiltonianSurrogateCalibration
+namespace InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
@@ -166,6 +166,6 @@ end Calibration
 
 end Calibration
 
-end ModularHamiltonianSurrogateCalibration
+end InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 
 end

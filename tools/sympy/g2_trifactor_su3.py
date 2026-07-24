@@ -5,9 +5,9 @@ This script mirrors the closed finite corridor in
 lean/InfoGeometry/Algebra/Zorn/G2TrifactorSU3.lean:
 
 MATHEMATICAL CONTEXT:
-  - G₂ = automorphism group of split octonions, dim(𝔤₂) = 14
-  - SU(3) = stabilizer of chosen direction in 𝔤₂, dim(𝔰𝔲(3)) = 8
-  - The embedding SU(3) ⊂ G₂ realizes color gauge symmetry
+  - G₂ is the automorphism group of split octonions, with Lie algebra dimension 14.
+  - A chosen-direction stabilizer has dimension 8.
+  - Its real form is not determined by dimension alone.
 
 CHECKS:
 * OP1 and OP2 are idempotent and cubic projectors for the canonical Zorn
@@ -15,8 +15,9 @@ CHECKS:
 * OP1 * X * OP2 isolates the upper-right three-vector.
 * OP2 * X * OP1 isolates the lower-left three-vector.
 
-It does not claim or test an identification of a stabilizer with SU(3) or G2.
-That dimensional analysis is done separately in verify_aut_g2.sage.
+It does not claim or test an identification of a stabilizer with compact SU(3)
+or a full G₂ classification. Dimension data from external calculations are
+not used as proof authority.
 """
 
 from __future__ import annotations

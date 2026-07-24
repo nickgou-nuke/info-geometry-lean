@@ -24,7 +24,7 @@ owner-map surface that keeps the missing proof substrate explicit.
 
 noncomputable section
 
-namespace LeeYangAsanoDigest
+namespace InfoGeometry.Canonical.LeeYangAsanoDigest
 
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -830,11 +830,7 @@ This is the exact shape consumed by the native topological reduction corridor.
 -/
 @[rep_depth thermo]
 def AsanoRuelleLemmaSourceClaimClosed : Prop :=
-  ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
-    0 ∉ K1 → 0 ∉ K2 →
-      IsClosed K1 → IsClosed K2 →
-      (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
-        ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+  AsanoRuelleLemmaSourceClaim
 
 /--
 Corrected Asano-Ruelle source claim with explicit analytic guards.
@@ -852,54 +848,7 @@ def AsanoRuelleLemmaSourceClaimClosedBounded : Prop :=
       (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
         ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
 
-/--
-Unrestricted Asano-Ruelle source claim implies the closed-set variant.
--/
-@[rep_depth thermo]
-theorem asanoRuelleLemmaSourceClaimClosed_of_sourceClaim
-    (hAR : AsanoRuelleLemmaSourceClaim) :
-    AsanoRuelleLemmaSourceClaimClosed := by
-  intro K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
-  exact hAR K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
 
-/--
-The unrestricted guarded source claim implies the closed-bounded claim.
--/
-@[rep_depth thermo]
-theorem asanoRuelleLemmaSourceClaimClosedBounded_of_sourceClaim
-    (hAR : AsanoRuelleLemmaSourceClaim) :
-    AsanoRuelleLemmaSourceClaimClosedBounded := by
-  intro K1 K2 P h0K1 h0K2 hClosed1 hClosed2 _hB1 _hB2 hPhi z hzOff
-  exact hAR K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
-
-/--
-Pointwise eliminator for the closed-bounded corrected source claim.
--/
-@[rep_depth thermo]
-theorem asanoRuelleClosedBounded_apply
-    (hARcb : AsanoRuelleLemmaSourceClaimClosedBounded)
-    {K1 K2 : Set ℂ} (P : TwoVarAffinePolynomial)
-    (h0K1 : 0 ∉ K1) (h0K2 : 0 ∉ K2)
-    (hClosed1 : IsClosed K1) (hClosed2 : IsClosed K2)
-    (hB1 : Bornology.IsBounded K1) (hB2 : Bornology.IsBounded K2)
-    (hPhi : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
-    {z : ℂ} (hzOff : z ∉ asanoForbiddenSet K1 K2) :
-    P.contract z ≠ 0 :=
-  hARcb K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hB1 hB2 hPhi z hzOff
-
-/--
-Pointwise eliminator for the closed-set Asano-Ruelle source claim.
--/
-@[rep_depth thermo]
-theorem asanoRuelleClosed_apply
-    (hARc : AsanoRuelleLemmaSourceClaimClosed)
-    {K1 K2 : Set ℂ} (P : TwoVarAffinePolynomial)
-    (h0K1 : 0 ∉ K1) (h0K2 : 0 ∉ K2)
-    (hClosed1 : IsClosed K1) (hClosed2 : IsClosed K2)
-    (hPhi : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
-    {z : ℂ} (hzOff : z ∉ asanoForbiddenSet K1 K2) :
-    P.contract z ≠ 0 :=
-  hARc K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
 
 /--
 Asano-Ruelle source claim from the explicit endpoint-nondegenerate branch
@@ -1103,4 +1052,4 @@ def AsanoInductiveStepSourceClaim : Prop :=
 
 end AsanoInduction
 
-end LeeYangAsanoDigest
+end InfoGeometry.Canonical.LeeYangAsanoDigest

@@ -10,7 +10,7 @@ vacuity checks live in `InfoGeometry.Lint.Vacuity`; this model must therefore
 fail closed when no inspection payload is present.
 -/
 
-namespace VacuityCritic
+namespace InfoGeometry.Tooling.VacuityCritic
 
 /-- One concrete field emitted by an external inspection pass. -/
 structure InspectionField where
@@ -47,4 +47,4 @@ theorem passes_empty_fields (name : String) :
   simp [passes, InspectedDeclaration.hasInspectablePayload,
     InspectedDeclaration.fieldsPass]
 
-end VacuityCritic
+end InfoGeometry.Tooling.VacuityCritic

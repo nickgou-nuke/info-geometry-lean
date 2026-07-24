@@ -12,11 +12,11 @@ claims are deliberately not asserted here.
 -/
 
 open InfoGeometry.Algebra.CPT
-open CliffordCAR
+open InfoGeometry.OperatorAlgebra.CliffordCAR
 
 noncomputable section
 
-namespace SplitCliffordRealization
+namespace InfoGeometry.Arithmetic.SplitCliffordRealization
 
 universe uK
 
@@ -421,4 +421,4 @@ def capstone_split_clifford_realization (cl11 : Cl11Atom K) (n : ℕ) :
     SplitCliffordRealizationTarget K n :=
   mkRealization cl11 n
 
-end SplitCliffordRealization
+end InfoGeometry.Arithmetic.SplitCliffordRealization

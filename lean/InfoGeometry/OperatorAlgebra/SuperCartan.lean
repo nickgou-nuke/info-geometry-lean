@@ -6,7 +6,7 @@ import Mathlib.Algebra.Module.LinearMap.Basic
 
 noncomputable section
 
-namespace SuperCartan
+namespace InfoGeometry.OperatorAlgebra.SuperCartan
 
 /-- 
 Superbracket Extension & Cartan Decomposition
@@ -72,7 +72,7 @@ theorem cayley_commutes (H : V) :
 
 end CayleyCompactification
 
-end SuperCartan
+end InfoGeometry.OperatorAlgebra.SuperCartan
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

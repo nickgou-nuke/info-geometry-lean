@@ -32,7 +32,7 @@ classification remain open outside this finite bridge.
 
 noncomputable section
 
-namespace WallpaperToWeylBridge
+namespace InfoGeometry.Topology.WallpaperToWeylBridge
 
 open InfoGeometry.Topology.Wallpaper
 open InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
@@ -79,6 +79,6 @@ theorem pg_exactness_gives_nonorientable_weyl_cancellation
   exact ⟨pg_generates_klein_bottle_relation pg p,
     exactness_gives_mod_two_charge_cancellation β hExact s⟩
 
-end WallpaperToWeylBridge
+end InfoGeometry.Topology.WallpaperToWeylBridge
 
 end noncomputable section

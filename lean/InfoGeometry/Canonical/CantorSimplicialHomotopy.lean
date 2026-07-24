@@ -3,7 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 import Mathlib.Order.Filter.Basic
 
-namespace CantorSimplicialHomotopy
+namespace InfoGeometry.Canonical.CantorSimplicialHomotopy
 
 open Matrix
 
@@ -46,4 +46,4 @@ theorem cantor_limit_homotopy_closed
   rw [h1, h2, h_twist, Matrix.one_mul]
   exact step.chiral_balance i
 
-end CantorSimplicialHomotopy
+end InfoGeometry.Canonical.CantorSimplicialHomotopy

@@ -99,6 +99,15 @@ lemma Pplus_comp_Pminus (hθ : IsCartanInvolution θ) : (Pplus θ) * (Pminus θ)
     abel_nf
   rw [h_expand, hθ, sub_self, smul_zero]
 
+/-- Projectors are complementary in the opposite order: P₋ * P₊ = 0. -/
+lemma Pminus_comp_Pplus (hθ : IsCartanInvolution θ) : (Pminus θ) * (Pplus θ) = 0 := by
+  dsimp [Pplus, Pminus]
+  simp only [smul_mul_assoc, mul_smul_comm, smul_smul]
+  have h_expand : (1 - θ) * (1 + θ) = 1 - θ * θ := by
+    rw [sub_mul, one_mul, mul_add, mul_one]
+    abel_nf
+  rw [h_expand, hθ, sub_self, smul_zero]
+
 /-! ### Vector Bridge Lemmas (Pointwise Descent) -/
 
 lemma Pplus_apply (x : E) : (Pplus θ) x = (⅟(2 : 𝕜)) • (x + θ x) := by

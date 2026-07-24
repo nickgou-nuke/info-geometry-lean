@@ -30,7 +30,7 @@ This file proves:
 
 -/
 
-namespace CliffordTower
+namespace InfoGeometry.Clifford.CliffordTower
 
 /-! ## The Mersenne Dimension Sequence -/
 
@@ -140,4 +140,4 @@ theorem alpha_combinatorial_value :
     alpha_combinatorial = 1 / (137 : ℝ) := by
   simp [alpha_combinatorial, alpha_inv_is_137]
 
-end CliffordTower
+end InfoGeometry.Clifford.CliffordTower

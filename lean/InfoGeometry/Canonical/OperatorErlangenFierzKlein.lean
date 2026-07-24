@@ -28,7 +28,7 @@ foundation theorem.
 
 noncomputable section
 
-namespace OperatorErlangenFierzKlein
+namespace InfoGeometry.Canonical.OperatorErlangenFierzKlein
 
 universe u
 
@@ -244,4 +244,4 @@ theorem constructOperatorErlangenFierzKleinTarget_holds
       (constructOperatorErlangenFierzKleinTarget E).coordinates :=
   (constructOperatorErlangenFierzKleinTarget E).operator_erlangen_fierz_klein_holds
 
-end OperatorErlangenFierzKlein
+end InfoGeometry.Canonical.OperatorErlangenFierzKlein

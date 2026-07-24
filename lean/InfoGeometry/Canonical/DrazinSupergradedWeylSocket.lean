@@ -34,7 +34,7 @@ even bilinear / chiral projector / current -> stable sector
 
 noncomputable section
 
-namespace DrazinSupergradedWeylSocket
+namespace InfoGeometry.Canonical.DrazinSupergradedWeylSocket
 
 open MeasureTheory
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -440,4 +440,4 @@ theorem ccr_scale_is_expectation
 
 end DrazinCARCCRCompatibilityAssumption
 
-end DrazinSupergradedWeylSocket
+end InfoGeometry.Canonical.DrazinSupergradedWeylSocket

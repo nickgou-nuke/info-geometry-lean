@@ -21,7 +21,7 @@ Because the gap owner now uses the same real odd-odd self-closure `{Q_D, Q_D}`
 as the unified Drazin lane, no extra compatibility hypothesis is needed here.
 -/
 
-namespace UnifiedTopologicalGapBridge
+namespace InfoGeometry.Canonical.UnifiedTopologicalGapBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.TopologicalGapShadow
@@ -179,4 +179,4 @@ end UnifiedTopologicalGapCompatibility
 
 end Core
 
-end UnifiedTopologicalGapBridge
+end InfoGeometry.Canonical.UnifiedTopologicalGapBridge

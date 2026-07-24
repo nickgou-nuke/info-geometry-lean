@@ -18,7 +18,7 @@ open Finset
 
 noncomputable section
 
-namespace PrimonThermodynamics
+namespace InfoGeometry.Arithmetic.PrimonThermodynamics
 
 noncomputable def bosonFactor (p : ℕ) (β : ℝ) : ℝ :=
   (1 - ((p : ℝ) ^ (-β)))⁻¹
@@ -108,4 +108,4 @@ theorem superPartition_eq (S : Finset ℕ) (β : ℝ) :
   rw [superPartition, fermionPartition, bosonPartition]
   simp [Finset.prod_mul_distrib, mul_comm]
 
-end PrimonThermodynamics
+end InfoGeometry.Arithmetic.PrimonThermodynamics

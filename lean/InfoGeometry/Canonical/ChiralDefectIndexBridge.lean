@@ -23,7 +23,7 @@ load-bearing consequence needed by any honest vortex/zero-mode package:
  genuine mismatch between the transported plus/minus chiral kernel sectors.
 -/
 
-namespace ChiralDefectIndexBridge
+namespace InfoGeometry.Canonical.ChiralDefectIndexBridge
 
 open InfoGeometry.Canonical.AnalyticalIndex
 open InfoGeometry.Canonical.BogoliubovVielbein
@@ -157,4 +157,4 @@ theorem transportedChiralKernelDimMismatch_of_operatorialCentralCharge_ne_zero
 
 end Core
 
-end ChiralDefectIndexBridge
+end InfoGeometry.Canonical.ChiralDefectIndexBridge

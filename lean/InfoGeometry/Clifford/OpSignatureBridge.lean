@@ -16,9 +16,9 @@ This file is deliberately thin: it reuses the theorem-owned triad, the concrete
 `1|1` block matrices, and the native Clifford polarization law.
 -/
 
-namespace OpSignatureBridge
+namespace InfoGeometry.Clifford.OpSignatureBridge
 
-open HypercomplexTriad
+open InfoGeometry.Algebra.HypercomplexTriad
 open KoszulFoundation
 
 /-- Symbolic operator-square signature. -/
@@ -60,9 +60,9 @@ def toStructuralParity : OpSignature → OpParity
 
 /-- Concrete `1|1` block-channel selected by the signature lane. -/
 def toSupermatrixBlock : OpSignature → Mat2
-  | .elliptic => SupermatrixKoszul.evenBlock 1 1
-  | .parabolic => SupermatrixKoszul.oddBlock 1 0
-  | .hyperbolic => SupermatrixKoszul.oddBlock 1 1
+  | .elliptic => InfoGeometry.Algebra.SupermatrixKoszul.evenBlock 1 1
+  | .parabolic => InfoGeometry.Algebra.SupermatrixKoszul.oddBlock 1 0
+  | .hyperbolic => InfoGeometry.Algebra.SupermatrixKoszul.oddBlock 1 1
 
 /--
 A 1D quadratic form encoding the sign choice for the Clifford bridge.
@@ -112,4 +112,4 @@ theorem bridge_to_polarization
   simpa using
     (clifford_polarization (Q := signatureToQuadraticForm (R := R) sig) v w)
 
-end OpSignatureBridge
+end InfoGeometry.Clifford.OpSignatureBridge

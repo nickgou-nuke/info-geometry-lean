@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RefinementGaloisConnection
+import InfoGeometry.Canonical.CompletionPathway
 import Mathlib.Order.FixedPoints
 
 /-!
@@ -21,10 +22,9 @@ A fixed point of $R$ satisfies $s_{n+1} = \text{refine}(s_n)$ for all $n$,
 which is the exact formal definition of a self-similar fractal vacuum state.
 -/
 
-namespace SelfSimilarVacuum
+namespace InfoGeometry.Canonical.SelfSimilarVacuum
 
 open InfoGeometry.Canonical.RefinementGaloisConnection
-open InfoGeometry.Canonical.SectorLattice
 
 /-! ## 1. State Space -/
 
@@ -44,7 +44,9 @@ def R (s : StateSpace) : StateSpace
 
 /-- The operator $R$ is monotone. -/
 theorem R_monotone : Monotone R := by
-  intro s t hst n
+  intro s t hst
+  change ∀ n, R s n ≤ R t n
+  intro n
   cases n with
   | zero => exact hst 0
   | succ m =>
@@ -84,7 +86,8 @@ noncomputable def greatestVacuum : VacuumLattice :=
 The stronger projector state space records a complete finite projection assignment at
 every Cantor level.
 -/
-def ProjectionStateSpace := ∀ n : ℕ, ProjectionAssignment n
+def ProjectionStateSpace :=
+  ∀ n : ℕ, InfoGeometry.Canonical.CompletionPathway.ProjectionAssignment n
 
 /-- The pointwise projector state space is a complete lattice. -/
 noncomputable instance completeLatticeProjectionStateSpace :
@@ -94,16 +97,19 @@ noncomputable instance completeLatticeProjectionStateSpace :
 /-- The pointwise projector renormalization/refinement operator. -/
 def projectionR (s : ProjectionStateSpace) : ProjectionStateSpace
   | 0 => s 0
-  | n + 1 => refineProjectionAssignment (s n)
+  | n + 1 => InfoGeometry.Canonical.CompletionPathway.refineProjectionAssignment (s n)
 
 /-- The pointwise projector renormalization operator is monotone. -/
 theorem projectionR_monotone : Monotone projectionR := by
-  intro s t hst n
+  intro s t hst
+  change ∀ n, projectionR s n ≤ projectionR t n
+  intro n
   cases n with
   | zero => exact hst 0
   | succ m =>
-    have h_mono : Monotone (@refineProjectionAssignment m) :=
-      (projectionAssignment_galoisConnection m).monotone_l
+    have h_mono : Monotone
+        (@InfoGeometry.Canonical.CompletionPathway.refineProjectionAssignment m) :=
+      (InfoGeometry.Canonical.CompletionPathway.projectionAssignment_galoisConnection m).monotone_l
     exact h_mono (hst m)
 
 /-- The pointwise projector renormalization operator as an `OrderHom`. -/
@@ -144,4 +150,4 @@ theorem greatestProjectionVacuum_isFixed :
     projectionR projectionR_hom.gfp = projectionR_hom.gfp :=
   projectionR_hom.map_gfp
 
-end SelfSimilarVacuum
+end InfoGeometry.Canonical.SelfSimilarVacuum

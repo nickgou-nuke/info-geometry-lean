@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped MatrixGroups Modular
 
-namespace BerryRotorBridge
+namespace InfoGeometry.Canonical.BerryRotorBridge
 
 universe u v w
 
@@ -189,4 +189,4 @@ theorem modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly
 
 end NonAbelianSpinBerryData
 
-end BerryRotorBridge
+end InfoGeometry.Canonical.BerryRotorBridge

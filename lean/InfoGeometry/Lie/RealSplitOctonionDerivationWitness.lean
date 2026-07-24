@@ -13,7 +13,7 @@ classification.
 
 noncomputable section
 
-namespace RealSplitOctonionDerivationWitness
+namespace InfoGeometry.Lie.RealSplitOctonionDerivationWitness
 
 open RealSplitOctonionG2Classification
 
@@ -121,4 +121,4 @@ theorem rot01Real_nonzero_on_up0 : rot01Real up0 ≠ 0 := by
   change -1 = 0 at h1
   norm_num at h1
 
-end RealSplitOctonionDerivationWitness
+end InfoGeometry.Lie.RealSplitOctonionDerivationWitness

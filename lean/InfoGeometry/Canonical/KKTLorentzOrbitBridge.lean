@@ -14,7 +14,7 @@ This file does not add new owners. It exposes the channel-weight action of the
 `ε`-generated hyperbolic boost on the already-owned `uPlus/uMinus` channels.
 -/
 
-namespace KKTLorentzOrbitBridge
+namespace InfoGeometry.Canonical.KKTLorentzOrbitBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Quantum
@@ -188,4 +188,4 @@ theorem channelBoost_mul_uMinus
 
 end Core
 
-end KKTLorentzOrbitBridge
+end InfoGeometry.Canonical.KKTLorentzOrbitBridge

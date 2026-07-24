@@ -1,11 +1,11 @@
 import InfoGeometry.Canonical.PrimitiveCuntzIsometry
 
 open InfoGeometry.GrandUnification.UHF
-open PrimitiveCuntzIsometry
+open InfoGeometry.Canonical.PrimitiveCuntzIsometry
 
 noncomputable section
 
-namespace PrimitiveCuntzCohomology
+namespace InfoGeometry.Canonical.PrimitiveCuntzCohomology
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 variable [UHF : UHFAlgebra A]
@@ -80,4 +80,4 @@ theorem UHF_Laplacian_eq_one : UHF_Laplacian (A := A) = 1 := by
   rw [step1_final, step2_final]
   exact cuntz_partition_exactness
 
-end PrimitiveCuntzCohomology
+end InfoGeometry.Canonical.PrimitiveCuntzCohomology

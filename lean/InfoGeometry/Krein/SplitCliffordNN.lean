@@ -24,7 +24,7 @@ Authority note:
 - this file is a Krein-facing transport/bridge layer.
 -/
 
-namespace SplitCliffordNN
+namespace InfoGeometry.Krein.SplitCliffordNN
 
 open InfoGeometry.Clifford
 
@@ -65,4 +65,4 @@ noncomputable abbrev rankOneCarrierEquiv : Carrier 1 ≃ₗ[ℝ] (ℝ × ℝ) :=
     Quad 1 (ClNN.headNullPlus 0) = 0 := by
   simpa [Quad] using ClNNSpecialization.quad_rankOne_headNullPlus
 
-end SplitCliffordNN
+end InfoGeometry.Krein.SplitCliffordNN

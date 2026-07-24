@@ -32,7 +32,7 @@ This file proves the finite algebraic Cuntz/Tomita shadow stated above.
 
 noncomputable section
 
-namespace CuntzTomitaTakesaki
+namespace InfoGeometry.Canonical.CuntzTomitaTakesaki
 
 open Matrix
 
@@ -200,6 +200,6 @@ theorem cuntz_tomita_takesaki_packet {c s : ℝ} (h : c * c - s * s = 1) :
   exact ⟨Pplus_add_Pminus, eta_sq, expNeg_mul_expPos h, expPos_mul_expNeg h,
     tomitaS_eq_transpose h⟩
 
-end CuntzTomitaTakesaki
+end InfoGeometry.Canonical.CuntzTomitaTakesaki
 
 end

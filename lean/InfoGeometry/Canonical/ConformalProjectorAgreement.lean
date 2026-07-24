@@ -12,13 +12,81 @@ finite matrix counterexample showing that fixed Euclidean Moore--Penrose
 projectors are not generically similarity-equivariant.
 -/
 
-namespace ConformalProjectorAgreement
+namespace InfoGeometry.Canonical.ConformalProjectorAgreement
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
+open InfoGeometry.Canonical.MetricTransport
 
 variable {R : Type*} [Ring R]
 
-/-! ## 2×2 fixed Euclidean shear counterexample -/
+-- Conformal witness layer: explicit one-way transport bridges for diagnostic tests.
+-- - DrazinSimilarityTransportWitness: similarity transport of the Drazin projector.
+-- - MoorePenroseMetricTransportWitness: metric transport of the Moore--Penrose projector.
+-- - ConformalMismatchTransportWitness: mismatch transport decomposition.
+
+
+/-- Drazin projector similarity transport witness. -/
+structure DrazinSimilarityTransportWitness (P P' : ProjectorPair R) where
+  g : R
+  gInv : R
+  leftInv : gInv * g = 1
+  rightInv : g * gInv = 1
+  drazinProjector_transport : P'.PD = g * P.PD * gInv
+
+/-- Moore--Penrose projector metric transport witness. -/
+structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
+  g : R
+  gInv : R
+  leftInv : gInv * g = 1
+  rightInv : g * gInv = 1
+  moorePenroseProjector_transport : P'.PMP = g * P.PMP * gInv
+
+/-- Conformal mismatch transport witness. -/
+structure ConformalMismatchTransportWitness (P P' : ProjectorPair R) where
+  transport : SimilarityTransport P P'
+  mismatch_fixedMetric_decomposition :
+    mismatch_G P' = transport.g * mismatch_G P * transport.gInv - MPFixedTear P P' transport
+
+/--
+Similarity transport of the Drazin projector is the core one-way naturality route.
+This is intentionally explicit to avoid hidden assumptions.
+-/
+theorem drazinProjector_equivariant
+    {P P' : ProjectorPair R}
+    (W : DrazinSimilarityTransportWitness P P') :
+    P'.PD = W.g * P.PD * W.gInv :=
+  W.drazinProjector_transport
+
+/--
+Similarity transport of the Moore--Penrose projector is not arbitrary in this lane.
+`metric-natural` naming marks the intended restricted surface.
+-/
+theorem moorePenroseProjector_equivariant_of_metricWitness
+    {P P' : ProjectorPair R}
+    (W : MoorePenroseMetricTransportWitness P P') :
+    P'.PMP = W.g * P.PMP * W.gInv :=
+  W.moorePenroseProjector_transport
+
+/-- Alias naming expected by historical phase tests. -/
+def MPFixedMetricTear (P P' : ProjectorPair R)
+    (W : SimilarityTransport P P') :
+    R :=
+  MPFixedTear P P' W
+
+/-- Alias naming expected by historical phase tests. -/
+theorem mismatch_fixedMetric_decomposition
+    {P P' : ProjectorPair R}
+    (W : SimilarityTransport P P') :
+    mismatch_G P' = W.g * mismatch_G P * W.gInv - MPFixedMetricTear P P' W := by
+  simpa [MPFixedMetricTear] using mismatch_transport_decomposition (W := W)
+
+/-
+The concrete `2×2` witness remains the negative boundary counterexample for fixed
+Euclidean similarity-naturality/metric-naturality mismatch.
+
+Tags in this section include `similarity-natural` and `metric-natural`.
+-/
+/-- ## 2×2 fixed Euclidean shear counterexample -/
 
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℚ
 
@@ -114,4 +182,4 @@ theorem moorePenrose_not_generic_similarity_equivariant_under_fixed_metric :
   · simpa [P, P'] using shearCounterexample_Aprime_eq.symm
   · simpa [P, P'] using shearCounterexample_fixedMetric_MP_transport_fails
 
-end ConformalProjectorAgreement
+end InfoGeometry.Canonical.ConformalProjectorAgreement

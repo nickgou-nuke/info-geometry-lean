@@ -22,7 +22,7 @@ representation, Type III factor, or invertible groupoid theorem is asserted.
 
 set_option autoImplicit false
 
-namespace CartanSpacetime
+namespace InfoGeometry.Categorical.CartanSpacetime
 
 /-- The identity function is left-covariant for any supplied left action. -/
 theorem id_connection_left_covariant {A M : Type*} (left_action : A → M → M) :
@@ -80,4 +80,4 @@ theorem trace_conservation {M : Type*} (c : M → M) (tr : M → ℕ)
   rw [cocycle_identity c]
   exact h_inv x
 
-end CartanSpacetime
+end InfoGeometry.Categorical.CartanSpacetime

@@ -10,7 +10,7 @@ lemmas needed for the Heisenberg current debt from the existing owner theorem
 surface in `BosonizationConstructiveCurrent`.
 -/
 
-namespace SplitCliffordWickCAR
+namespace InfoGeometry.Canonical.SplitCliffordWickCAR
 
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 
@@ -100,4 +100,4 @@ theorem completedCurrent_commutator_eq_central_of_add_eq_zero
   rw [normalOrderedCurrent_heisenberg_from_matrixUnit]
   simp [hmn]
 
-end SplitCliffordWickCAR
+end InfoGeometry.Canonical.SplitCliffordWickCAR

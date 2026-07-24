@@ -4,7 +4,7 @@ import InfoGeometry.Topology.FibonacciFR
 
 open Matrix
 
-namespace FibonacciBraidRepresentation
+namespace InfoGeometry.Topology.FibonacciBraidRepresentation
 
 open FibonacciFR
 
@@ -22,4 +22,4 @@ def is_fibonacci_B3_artin_relation (D : FibonacciData) : Prop :=
 def is_fibonacci_not_s3_closure (D : FibonacciData) : Prop :=
   B1 D * B1 D ≠ 1 ∧ B2 D * B2 D ≠ 1
 
-end FibonacciBraidRepresentation
+end InfoGeometry.Topology.FibonacciBraidRepresentation

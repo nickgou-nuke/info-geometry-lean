@@ -12,7 +12,7 @@ unit sphere is fixed.
 
 noncomputable section
 
-namespace ConformalInversionCore
+namespace InfoGeometry.Canonical.ConformalInversionCore
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
@@ -42,4 +42,4 @@ theorem conformalInversion_fixed_of_norm_one (x : E) (hx : ‖x‖ = 1) :
 
 end UnitSphere
 
-end ConformalInversionCore
+end InfoGeometry.Canonical.ConformalInversionCore

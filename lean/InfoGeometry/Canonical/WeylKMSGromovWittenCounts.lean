@@ -40,7 +40,7 @@ finite object is a real weighted zero-mode orbit count.
 
 noncomputable section
 
-namespace WeylKMSGromovWittenCounts
+namespace InfoGeometry.Canonical.WeylKMSGromovWittenCounts
 
 open scoped BigOperators
 
@@ -192,4 +192,4 @@ structure ProjectiveCountFierzKleinData
       readout.coord ch
         (fun γ => projectiveOrbitCoordinate Ω φ γ)
 
-end WeylKMSGromovWittenCounts
+end InfoGeometry.Canonical.WeylKMSGromovWittenCounts

@@ -32,17 +32,18 @@ class CurvatureForm (B : PrincipalBundle M G) [Connection B] (g : Type _) [AddCo
   /-- Curvature form evaluates to elements in the Lie algebra g -/
   Omega : B.P → g
 
-/-- A mock type for loops in M based at x -/
-opaque Loop (M : Type _) [TopologicalSpace M] (x : M) : Type _
+/--
+Explicit carrier for the Ambrose--Singer theorem surface.
 
-/-- 5. Define Contractible loops (contracts to an internal point) -/
-opaque IsContractible {x : M} (gamma : Loop M x) : Prop
-
-/-- 6. Define the Holonomy Group -/
-opaque HolonomyGroup (B : PrincipalBundle M G) [Connection B] (p : B.P) : Subgroup G
-
-/-- The Lie algebra of the holonomy group -/
-opaque HolonomyLieAlgebra (B : PrincipalBundle M G) [Connection B] (p : B.P) (g : Type _) [AddCommGroup g] [Module R g] [LieRing g] [LieAlgebra R g] : LieSubalgebra R g
+The loop space, contractibility predicate, holonomy group, and holonomy Lie
+algebra are supplied as data by a geometric owner.  This file does not create
+opaque constants for them and does not assert the Ambrose--Singer equality.
+-/
+structure AmbroseSingerContext (B : PrincipalBundle M G) [Connection B] (p : B.P) where
+  Loop : Type _
+  IsContractible : Loop → Prop
+  HolonomyGroup : Subgroup G
+  HolonomyLieAlgebra : LieSubalgebra R g
 
 /- Submodule spanned by curvature evaluated on the horizontal subspaces of the bundle. -/
 def CurvatureSpan (B : PrincipalBundle M G) [Connection B] [CurvatureForm (R := R) B g] :
@@ -54,9 +55,10 @@ def CurvatureSpan (B : PrincipalBundle M G) [Connection B] [CurvatureForm (R := 
 For a principal bundle with a connection, the Lie algebra of the holonomy group
 (restricted to loops contracting to an internal point) is spanned by the curvature.
 
-Open QMS debt: this file currently declares `HolonomyLieAlgebra` as an opaque root,
-with no constructive owner theorem relating it to `CurvatureSpan`.  Therefore the
-Ambrose-Singer equality is intentionally not exposed as a theorem surface here.
+Open geometric owner obligation: this file only records the finite interface and
+`CurvatureSpan`.  A separate geometric/Hestenes--Krein owner must supply a
+context and prove any Ambrose--Singer equality relating the supplied holonomy Lie
+algebra to `CurvatureSpan`.
 -/
 
 end InfoGeometry.Kaehler

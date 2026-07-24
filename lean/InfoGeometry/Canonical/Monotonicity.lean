@@ -12,7 +12,7 @@ None.
 None.
 -/
 
-namespace Monotonicity
+namespace InfoGeometry.Canonical.Monotonicity
 
 open InfoGeometry.Convex
 open InfoGeometry.Convex.Euclidean
@@ -22,4 +22,4 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 theorem euclidean_gradient_monotone (x y : E) : 0 ≤ inner ℝ (grad x - grad y) (x - y) :=
   euclidean_grad_monotone x y
 
-end Monotonicity
+end InfoGeometry.Canonical.Monotonicity

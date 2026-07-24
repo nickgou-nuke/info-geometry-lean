@@ -19,7 +19,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace ZetaDihedral
+namespace InfoGeometry.Arithmetic.ZetaDihedral
 
 open Complex
 open CompletedZetaSouriauDInfinityThermodynamics
@@ -96,4 +96,4 @@ theorem stable_state_reflection (s : ℂ) (h_stable : gamma s = s) :
     simpa [tau, sigma, Complex.sub_re] using h_re
   · simp [tau, sigma, functionalReflection, conjugationReflection]
 
-end ZetaDihedral
+end InfoGeometry.Arithmetic.ZetaDihedral

@@ -20,7 +20,7 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.Determinant
 
-open _root_.SpectralInference
+open InfoGeometry.Canonical.SpectralInference
 open _root_.Base
 open _root_.LogPotential
 

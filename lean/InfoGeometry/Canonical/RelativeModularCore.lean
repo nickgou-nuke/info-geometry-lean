@@ -16,7 +16,7 @@ It does **not** yet define the full relative modular operator `Δ_{ω|μ}` or a
 standard-form von Neumann algebra package. Those belong in later owner files.
 -/
 
-namespace RelativeModularCore
+namespace InfoGeometry.Canonical.RelativeModularCore
 
 open InfoGeometry.Canonical.PositiveRayCore
 open RelativePotentialCore
@@ -193,4 +193,4 @@ difference between the target and source logarithmic reweightings.
 
 end Restriction
 
-end RelativeModularCore
+end InfoGeometry.Canonical.RelativeModularCore

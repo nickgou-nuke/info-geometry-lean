@@ -30,7 +30,7 @@ Souriau coadjoint-orbit realization for groups such as `G₂(2)`, `G₂*`, or
 `Spin(5,5)`.
 -/
 
-namespace SouriauThermodynamics
+namespace InfoGeometry.Canonical.SouriauThermodynamics
 
 open InfoGeometry.GrandCanonical
 
@@ -940,4 +940,4 @@ theorem souriauPartitionAsCharacter_eq_souriauPartition
     souriauPartitionAsCharacter M T = souriauPartition M T := by
   rfl
 
-end SouriauThermodynamics
+end InfoGeometry.Canonical.SouriauThermodynamics

@@ -8,7 +8,7 @@ A closed finite algebraic placeholder for operatorial Ricci-flow readback.
 
 noncomputable section
 
-namespace OperatorialRicciFlow
+namespace InfoGeometry.Dynamics.OperatorialRicciFlow
 
 /-- Euler step for a discrete flow on an additive group. -/
 def eulerStep {E : Type*} [Sub E] (x v : E) : E :=
@@ -19,4 +19,4 @@ theorem eulerStep_eq {E : Type*} [Sub E] (x v : E) :
     eulerStep x v = x - v := by
   rfl
 
-end OperatorialRicciFlow
+end InfoGeometry.Dynamics.OperatorialRicciFlow

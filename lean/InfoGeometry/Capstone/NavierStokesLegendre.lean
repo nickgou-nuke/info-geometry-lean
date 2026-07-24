@@ -27,7 +27,7 @@ open CategoryTheory
 
 noncomputable section
 
-namespace NavierStokesLegendre
+namespace InfoGeometry.Capstone.NavierStokesLegendre
 
 set_option linter.unusedSectionVars false
 
@@ -115,4 +115,4 @@ def kaluzaKleinLift (L : LegendreModel) (β : ℝ) (K : EndH)
   }
   map {x y} f := homOfLE (le_refl _)
 
-end NavierStokesLegendre
+end InfoGeometry.Capstone.NavierStokesLegendre

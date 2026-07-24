@@ -20,7 +20,7 @@ No CFT claim.
 
 noncomputable section
 
-namespace SplitQ11ChiralDecomposition
+namespace InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
@@ -96,4 +96,4 @@ theorem rightSplitComponent_supported (x : Alg) :
   simpa [rightSplitComponent] using
     ComplementaryProjectors.qComponent_supported splitQ11ComplementaryProjectors x
 
-end SplitQ11ChiralDecomposition
+end InfoGeometry.Clifford.SplitQ11ChiralDecomposition

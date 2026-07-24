@@ -24,7 +24,7 @@ corridor.  The arithmetic Möbius coefficient is imported from
 `ArithmeticFunction.moebius`.
 -/
 
-namespace WeylCharacterEquivalence
+namespace InfoGeometry.Canonical.WeylCharacterEquivalence
 
 open InfoGeometry.Algebraic.SplitSignature
 open ParityTraceWitness
@@ -413,4 +413,4 @@ theorem split_corrected_denominator_is_parity_supertrace
       FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
   finiteParityTrace_eq_weylDenominatorProduct P.lattice P.p_neg_beta
 
-end WeylCharacterEquivalence
+end InfoGeometry.Canonical.WeylCharacterEquivalence

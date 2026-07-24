@@ -31,7 +31,7 @@ claim. No KMS theorem. No modular-conjugation theorem. This file proves only
 proper-carrier detection and self-dual extension to the algebraic colimit.
 -/
 
-namespace ProperCarrierSelfDualConeExtension
+namespace InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
 
 open SelfDualConeColimit
 
@@ -66,4 +66,4 @@ theorem properCarrier_selfDualCone_extends_to_algebra
   apply selfDualCone_extends_to_colimit pairing K hmono hself
   exact selfDualCone_dual_exhaustive_of_stage_detector pairing K hdetect
 
-end ProperCarrierSelfDualConeExtension
+end InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension

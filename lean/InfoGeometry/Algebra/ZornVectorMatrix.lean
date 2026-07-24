@@ -1265,6 +1265,11 @@ theorem conj_trace_identity (X : ZornVectorMatrix R) :
   simp [trace, smul]
   ring
 
+/-- Conjugation fixes the additive zero. -/
+@[simp] theorem conj_zero :
+    conj (zero : ZornVectorMatrix R) = zero := by
+  ext i <;> simp [conj, zero]
+
 @[simp] theorem conj_conj (X : ZornVectorMatrix R) :
     conj (conj X) = X := by
   ext i <;> simp [conj]

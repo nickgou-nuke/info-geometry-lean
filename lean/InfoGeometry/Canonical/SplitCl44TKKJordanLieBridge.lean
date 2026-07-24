@@ -25,7 +25,7 @@ Instead it links the formal surfaces already owned by the repository:
 
 open scoped InnerProductSpace
 
-namespace SplitCl44TKKJordanLieBridge
+namespace InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SouriauConformalKKT
@@ -273,4 +273,4 @@ theorem fisherKilling_baseRelation_transports
 
 end FisherKilling
 
-end SplitCl44TKKJordanLieBridge
+end InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge

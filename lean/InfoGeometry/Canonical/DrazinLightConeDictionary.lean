@@ -20,7 +20,7 @@ and `DrazinSupercharge`.  Type III realization, if any, is a separate analytic
 theorem or hypothesis and is not asserted here.
 -/
 
-namespace DrazinLightConeDictionary
+namespace InfoGeometry.Canonical.DrazinLightConeDictionary
 
 /-- Ring commutator. -/
 @[rep_depth operator]
@@ -274,4 +274,4 @@ theorem mpSupercharge_eq_net_lightcone_mismatch
       (S.uPlus PR - S.uMinus PR) - (S.uPlus PL - S.uMinus PL) := by
   rw [mpSupercharge, mpChiR_eq_uPlus_sub_uMinus, mpChiL_eq_uPlus_sub_uMinus]
 
-end DrazinLightConeDictionary
+end InfoGeometry.Canonical.DrazinLightConeDictionary

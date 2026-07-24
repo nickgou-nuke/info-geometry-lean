@@ -1,0 +1,78 @@
+{
+  "lean4_root": "external_refs/automath/lean4",
+  "theory_root": "external_refs/automath/theory",
+  "arango": {
+    "url": "http://localhost:8530",
+    "db": "infogeometry",
+    "user": "root",
+    "pass": "hive_brain"
+  },
+  "oracle": {
+    "model": "chatgpt-5.5-pro",
+    "write_latex": true,
+    "max_turns": 10
+  },
+  "llm": {
+    "provider": "openrouter",
+    "model": "anthropic/claude-3.5-sonnet",
+    "reasoning_effort": "high"
+  },
+  "agents": {
+    "analyst": {
+      "model": "anthropic/claude-3.5-sonnet",
+      "codex_parallel": true
+    },
+    "formalizer": {
+      "model": "anthropic/claude-3.5-sonnet",
+      "codex_parallel": true,
+      "max_attempts": 8,
+      "tactic_cascade": ["rfl", "simp_all", "ring_nf", "linarith", "nlinarith", "omega", "exact?", "apply?", "grind", "aesop"]
+    },
+    "reviewer": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "registrar": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "optimizer": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "orchestrator": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "pub_orchestrator": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "pub_journal_rewriter": {
+      "model": "anthropic/claude-3.5-sonnet"
+    },
+    "pub_editorial_reviewer": {
+      "model": "anthropic/claude-3.5-sonnet"
+    }
+  },
+  "pipeline": {
+    "max_parallel_rounds": 3,
+    "depth_gate_min_medium": 1,
+    "chapter_diversity_window": 3,
+    "lake_timeout_seconds": 300,
+    "lean_version": "4.28.0",
+    "mathlib_rev": "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+  },
+  "formalization": {
+    "zero_sorry_policy": true,
+    "zero_axiom_policy": true,
+    "zero_warning_policy": true,
+    "native_decide_exceptions": ["base_case_m_le_2", "pure_arithmetic"],
+    "file_size_limit_lines": 800,
+    "proof_commit_required": true
+  },
+  "publication": {
+    "stages": ["P0_intake", "P1_research", "P2_journal_rewrite", "P3_editorial_review", "P4_integration", "P5_biblio", "P6_lean_sync", "P7_submission_ready"],
+    "target_journals": ["Ergodic Theory & Dynamical Systems", "Annals of Pure and Applied Logic", "Transactions of the AMS", "Journal of Number Theory", "Research in Number Theory", "RAIRO ITA", "Journal of Theoretical Probability", "General Relativity and Gravitation"]
+  },
+  "knowledge_graph": {
+    "collections": ["theorems", "dependencies", "concepts", "papers", "agents"],
+    "edge_types": ["depends_on", "emerges_from", "generalizes", "specializes", "proves", "uses", "cites"],
+    "seed_theorem": "seed_x2_eq_x_plus_1"
+  }
+}

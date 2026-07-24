@@ -16,7 +16,7 @@ import InfoGeometry.Arithmetic.ProjectivePrimePartition
 
 noncomputable section
 
-namespace WeylArithmeticDivergence
+namespace InfoGeometry.Arithmetic.WeylArithmeticDivergence
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic
@@ -268,4 +268,4 @@ theorem totalDivergence_eq_shape_of_equal_mass
 
 end WeylGaugeDecompositionWitness
 
-end WeylArithmeticDivergence
+end InfoGeometry.Arithmetic.WeylArithmeticDivergence

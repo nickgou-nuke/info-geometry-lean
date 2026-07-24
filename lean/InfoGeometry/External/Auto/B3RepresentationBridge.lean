@@ -26,12 +26,12 @@ structure B3Representation (G : Type*) [Group G] where
   artin : σ0 * σ1 * σ0 = σ1 * σ0 * σ1
 
 /-- The GL₈(ℂ) representation via the Jones braid generators. -/
-def gl8_rep : B3Representation B3PresentedGroup.GL8 where
-  σ0 := B3PresentedGroup.s0_unit
-  σ1 := B3PresentedGroup.s1_unit
+def gl8_rep : B3Representation InfoGeometry.Physics.B3PresentedGroup.GL8 where
+  σ0 := InfoGeometry.Physics.B3PresentedGroup.s0_unit
+  σ1 := InfoGeometry.Physics.B3PresentedGroup.s1_unit
   artin := by
     apply Units.ext
-    exact JonesBraidB3.artin_braid_relation
+    exact InfoGeometry.Physics.JonesBraidB3.artin_braid_relation
 
 /-- The S₃ permutation representation on 3-component real fields. -/
 def s3_rep : B3Representation (Equiv.Perm (Fin 3)) where

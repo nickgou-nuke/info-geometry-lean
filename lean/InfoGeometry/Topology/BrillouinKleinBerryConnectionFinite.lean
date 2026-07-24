@@ -33,7 +33,7 @@ Hamiltonian band topology, AdS/CFT, supersymmetry, supergravity, a quantum
 `G₂` `R`-matrix, or a Yang-Baxter theorem.
 -/
 
-namespace BrillouinKleinBerryConnectionFinite
+namespace InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite
 
 /-- Eight-slot cross-cap block swap: the first four slots exchange with the last four. -/
 def crossCapIndex : Fin 8 → Fin 8
@@ -142,4 +142,4 @@ theorem brillouinKleinBerryConnectionFinite_packet :
     klein_z2_orientation_reversal_cancel, phaseParity_add_two, phaseParity_one,
     g2_cartan_det_ledger, exceptional_dimension_ledger.1, exceptional_dimension_ledger.2⟩
 
-end BrillouinKleinBerryConnectionFinite
+end InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite

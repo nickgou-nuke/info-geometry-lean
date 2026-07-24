@@ -27,13 +27,13 @@ The superbracket `{Q,R}` routing through the five-graded closure
 under the Kantor–Koecher–Tits construction.
 -/
 
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 open InfoGeometry.Algebra.OSp12
 open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 noncomputable section
 
-namespace TripotentCuntzSUSYBridge
+namespace InfoGeometry.Algebra.TripotentCuntzSUSYBridge
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -115,4 +115,4 @@ theorem tripotent_projector_implies_superbracket_routing (O : Op V) (hO3 : O ^ 3
     projUp O * projDown O = 0 ∧ projDown O * projUp O = 0 := by
   exact ⟨projUp_mul_projDown O hO3, projDown_mul_projUp O hO3⟩
 
-end TripotentCuntzSUSYBridge
+end InfoGeometry.Algebra.TripotentCuntzSUSYBridge

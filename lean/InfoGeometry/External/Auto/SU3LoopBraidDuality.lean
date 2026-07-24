@@ -33,11 +33,11 @@ noncomputable section
 
 namespace SU3LoopBraidDuality
 
-open GellMannSU3
+open InfoGeometry.Physics.GellMannSU3
 open WeylSU3ColorSymmetry
-open JonesBraidB3
-open SupergradedCuntzBdG
-open BogoliubovSU3ParafermionProofChain
+open InfoGeometry.Physics.JonesBraidB3
+open InfoGeometry.Physics.SupergradedCuntzBdG
+open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 open BogoliubovBraidGraphWeld
 /-! ## B₃ Braid group generators and the S₃ projection -/
 

@@ -3,7 +3,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Tactic.FinCases
 
-namespace WeylCrystal
+namespace InfoGeometry.Canonical.WeylCrystal
 
 open Matrix
 
@@ -61,4 +61,4 @@ theorem weyl_chamber_wall_flip :
   ext i
   fin_cases i <;> decide
 
-end WeylCrystal
+end InfoGeometry.Canonical.WeylCrystal

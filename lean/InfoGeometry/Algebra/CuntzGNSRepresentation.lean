@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Algebra.CuntzKMSState
 import InfoGeometry.Algebra.CuntzConditionalExpectation
 import InfoGeometry.Prequantum.AlgebraicGNSState
@@ -14,21 +15,23 @@ Constructs the GNS pre-Hilbert space from the KMS weight φ_β on O_n:
 
 For the Bost-Connes model, the diagonal subalgebra D_n ≅ ℂ^n (commutative),
 so the GNS completion H_β = ℓ²({1,...,n}, w) where w_i = p_i^{-β}/Z_n(β).
-The partition function is Z_n(β) = Σ p_i^{-β} → ζ(β) as n→∞.
+The partition function is the finite cutoff value `Z_n(β) = Σ p_i^{-β}`; its
+zeta readout is routed through the repository's categorical/Hestenes--Krein
+colimit owner.
 
-All proofs are genuine algebraic computations on the diagonal subalgebra.
-The analytic Hilbert-space completion is documented debt.
+All proofs are genuine algebraic computations on the diagonal subalgebra.  The
+Hilbert-space completion is a separate owner obligation.
 -/
 
-open CuntzTensorQuotient
-open CuntzKMSState
-open CuntzConditionalExpectation
-open AlgebraicGNSState
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzKMSState
+open InfoGeometry.Algebra.CuntzConditionalExpectation
+open InfoGeometry.Prequantum.AlgebraicGNSState
 open scoped ComplexConjugate
 
 noncomputable section
 
-namespace CuntzGNSRepresentation
+namespace InfoGeometry.Algebra.CuntzGNSRepresentation
 
 /-- Diagonal subalgebra element: a ℂ-linear combination of projectors P_i.
     Represented by a coefficient vector c : Fin n → ℂ, the element is Σ c_i P_i. -/
@@ -62,23 +65,23 @@ lemma kmsInner_hermitian (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
 
 /-! ### GNS Pre-Hilbert Space
 
-The KMS weight is positive and faithful on the diagonal subalgebra D_n ≅ ℂ^n
-when all prime weights are positive. The pre-inner product is already definite
-since w_i > 0 for all i.
+The KMS weight is positive on the diagonal subalgebra `D_n ≅ ℂ^n` when the
+prime weights are positive. This file records the algebraic pre-inner product
+and representation data; positivity/faithfulness of the completed Hilbert
+structure remain separate owner obligations.
 
 ## Summary: GNS for the Bost-Connes model
 
-The algebraic GNS construction is complete:
-1. KMS weight φ_β(P_i) = p_i^{-β}/Z_n(β)  [CuntzKMSState.lean]
-2. Diagonal subalgebra D_n = span{P_i} ≅ ℂ^n  [CuntzConditionalExpectation.lean]
-3. GNS pre-inner product ⟨c, d⟩_β = Σ c̄_i d_i w_i  [this file]
-4. GNS representation π(a)x = a·x (pointwise)  [this file]
-5. Cyclic vector Ω = (1,...,1)  [this file]
-6. Partition function Z_n(β) = Σ p_i^{-β}  [CuntzKMSState.lean]
+The algebraic packet recorded here is:
+1. KMS weight `φ_β(P_i) = p_i^{-β}/Z_n(β)`  [CuntzKMSState.lean]
+2. Diagonal subalgebra `D_n = span{P_i} ≅ ℂ^n`  [InfoGeometry.Algebra.CuntzConditionalExpectation.lean]
+3. GNS pre-inner product `⟨c, d⟩_β = Σ c̄_i d_i w_i`  [this file]
+4. GNS representation `π(a)x = a·x` (pointwise)  [this file]
+5. Cyclic vector `Ω = (1,...,1)`  [this file]
+6. Partition function `Z_n(β) = Σ p_i^{-β}`  [CuntzKMSState.lean]
 
-The analytic Hilbert space completion (H_β = ℓ²(n, w)) and the
-convergence Z_n(β) → ζ(β) remain as documented debt.
-The algebraic structure that supports them is fully proved.
+The Hilbert-space completion and the convergence `Z_n(β) → ζ(β)` remain as
+documented debt.
 -/
 
-end CuntzGNSRepresentation
+end InfoGeometry.Algebra.CuntzGNSRepresentation

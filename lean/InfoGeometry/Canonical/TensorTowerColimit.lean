@@ -39,6 +39,16 @@ theorem psi_comp_iota_seq (n m : ℕ) :
     rw [hcomm]
     exact ih
 
+/-- **Theorem: Generic Colimit Trace Commutativity**
+    For any linear evaluation functional `psi_trace : A_inf →ₗ[R] R` on the colimit space,
+    evaluating `psi_trace` on the $m$-step colimit image $\psi(n+m)(\text{iota\_seq } n m x)$
+    is identically equal to evaluating it at stage $n$: $\psi_{\text{trace}}(\psi n x)$. -/
+theorem colimit_trace_comm (psi_trace : A_inf →ₗ[R] R) (n m : ℕ) (x : A n) :
+    psi_trace (psi (n + m) (iota_seq A iota n m x)) = psi_trace (psi n x) := by
+  have h_comp := psi_comp_iota_seq A iota A_inf psi psi_comm n m
+  have h_eval := congr_arg (fun (f : A n →ₗ[R] A_inf) => psi_trace (f x)) h_comp
+  exact h_eval
+
 variable (colimit_kernel : ∀ (n : ℕ) (x : A n), psi n x = 0 → ∃ m, iota_seq A iota n m x = 0)
 
 include colimit_kernel

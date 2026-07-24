@@ -8,7 +8,7 @@ Infinitesimal modular invariance in the endomorphism Lie algebra.
 No wrappers. No `sorry`.
 -/
 
-namespace SouriauInfinitesimalInvariance
+namespace InfoGeometry.Canonical.SouriauInfinitesimalInvariance
 
 variable {𝕜 V : Type*}
 variable [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -38,4 +38,4 @@ theorem infinitesimal_modular_power_invariant
     _ = (A.comp K).comp K := by rw [h]
     _ = A.comp (K.comp K) := by rw [LinearMap.comp_assoc]
 
-end SouriauInfinitesimalInvariance
+end InfoGeometry.Canonical.SouriauInfinitesimalInvariance

@@ -24,7 +24,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace FibonacciTimeModularClock
+namespace InfoGeometry.Categorical.FibonacciTimeModularClock
 
 open InfoGeometry.Categorical.FibonacciSelfDualCarrier
 
@@ -137,4 +137,4 @@ theorem parabolicClock_power
     (u + N) ^ (n + 1) = u ^ (n + 1) + (n + 1) • (u ^ n * N) :=
   InfoGeometry.QuantumMonodromy.nilpotent_jordan_power u N h_comm h_nil n
 
-end FibonacciTimeModularClock
+end InfoGeometry.Categorical.FibonacciTimeModularClock

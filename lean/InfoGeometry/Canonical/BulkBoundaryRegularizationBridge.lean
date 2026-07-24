@@ -21,7 +21,7 @@ that zero-mode statement to a nontrivial regularization package: the resulting
 projectors cannot be the identity.
 -/
 
-namespace BulkBoundaryRegularizationBridge
+namespace InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Drazin
@@ -463,4 +463,4 @@ theorem exists_zero_mode_regularization_package_of_topologicalIndexZ2_eq_one_of_
 
 end Core
 
-end BulkBoundaryRegularizationBridge
+end InfoGeometry.Canonical.BulkBoundaryRegularizationBridge

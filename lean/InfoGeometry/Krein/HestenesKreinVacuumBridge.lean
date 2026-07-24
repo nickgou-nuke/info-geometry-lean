@@ -5,7 +5,7 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-namespace HestenesKreinVacuumBridge
+namespace InfoGeometry.Krein.HestenesKreinVacuumBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -27,8 +27,8 @@ Vacuum vector socket for the Hestenes/Krein real KMS packet.
 
 This file does not prove a global Haagerup--Araki standard-form uniqueness
 statement.  The cyclic/separating/uniqueness content remains an explicit
-certificate supplied by the analytic owner.  Locally, this bridge proves the
-Krein readbacks that follow from the supplied witnesses.
+certificate supplied by the Hestenes--Krein owner.  Locally, this bridge proves
+the Krein readbacks that follow from the supplied witnesses.
 -/
 @[rep_depth krein]
 structure HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) where
@@ -124,4 +124,4 @@ end HestenesKreinVacuum
 
 end Core
 
-end HestenesKreinVacuumBridge
+end InfoGeometry.Krein.HestenesKreinVacuumBridge

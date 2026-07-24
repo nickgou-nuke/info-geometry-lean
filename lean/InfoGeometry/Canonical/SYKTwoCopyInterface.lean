@@ -19,7 +19,7 @@ This file does not claim holographic traversability or literal spacetime
 realization. It provides boundary-safe interfaces only.
 -/
 
-namespace SYKTwoCopyInterface
+namespace InfoGeometry.Canonical.SYKTwoCopyInterface
 
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Canonical.RNDeterminantConnesChainBridge
@@ -305,4 +305,4 @@ end Connes
 
 end OwnerAnchorWrappers
 
-end SYKTwoCopyInterface
+end InfoGeometry.Canonical.SYKTwoCopyInterface

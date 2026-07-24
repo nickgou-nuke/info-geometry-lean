@@ -15,7 +15,7 @@ It proves:
 No wrappers. No `sorry`.
 -/
 
-namespace LieFenchelQuadratic
+namespace InfoGeometry.Canonical.LieFenchelQuadratic
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
@@ -97,4 +97,4 @@ theorem bregman_invariant_of_isometry
   have hsub : T (x - y) = T x - T y := by simp
   rw [← hsub, hTnorm x, hTnorm y, hTinner y (x - y)]
 
-end LieFenchelQuadratic
+end InfoGeometry.Canonical.LieFenchelQuadratic

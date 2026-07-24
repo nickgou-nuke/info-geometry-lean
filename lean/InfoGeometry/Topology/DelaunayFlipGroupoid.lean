@@ -28,7 +28,7 @@ trace cancellation theorem, or any five-graded closure theorem.
 namespace InfoGeometry.Topology.Delaunay
 
 open InfoGeometry.Physics
-open InfoGeometry.Algebra.Cl11Fermions
+open Cl11Fermions
 open InfoGeometry.Physics.WeightGrading55.JordanMatrix10D
 
 /-- An object in the Delaunay flip groupoid boundary is a witnessed flip word. -/

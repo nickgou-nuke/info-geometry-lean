@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Clifford.Grading
 
-namespace ChiralCliffordBridge
+namespace InfoGeometry.Canonical.ChiralCliffordBridge
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MoorePenrose
@@ -127,4 +127,4 @@ theorem cartan_collapse_of_unitRelativeVolumeBit
       (CI := CI) (M := M) hScaleFromKahler bit
   exact cartan_collapse_of_normal CI hNormal
 
-end ChiralCliffordBridge
+end InfoGeometry.Canonical.ChiralCliffordBridge

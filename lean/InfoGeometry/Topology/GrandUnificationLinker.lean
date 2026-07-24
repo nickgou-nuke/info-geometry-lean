@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Topology.DelaunayFlipInterfaces
 import InfoGeometry.Topology.ThermodynamicGauge
 
-namespace GrandUnificationLinker
+namespace InfoGeometry.Topology.GrandUnificationLinker
 
 /-!
 # Grand Unification Linker
@@ -265,4 +265,4 @@ theorem entropy_production_eq_dlnQ
       jewel.thermodynamic_flow.d_ln_Q :=
   entropy_alignment jewel hcomm
 
-end GrandUnificationLinker
+end InfoGeometry.Topology.GrandUnificationLinker

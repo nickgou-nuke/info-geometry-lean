@@ -24,7 +24,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeSpinorSquareRootBoost
+namespace InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 open PrimeWeylDenominatorBridge
 open MobiusFermionBosonization
@@ -294,4 +294,4 @@ theorem bilinear_partition
 
 end PrimeSpinorSquareRootPacket
 
-end PrimeSpinorSquareRootBoost
+end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

@@ -1,15 +1,13 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.Basic
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 open Complex
 
 namespace InfoGeometry.Spectral
 
 noncomputable section
-
-/-- Placeholder for the Riemann Zeta function in this logical module. -/
-def riemannZeta (_s : ℂ) : ℂ := 0
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
@@ -36,7 +34,10 @@ theorem entropic_dissipation_rate_eq_half :
     entropic_dissipation_rate = (1 / 2 : ℝ) := by
   rfl
 
-theorem metriplectic_riemann_hypothesis (s : ℂ) (_hs : s.re ∈ Set.Ioo 0 1)
+/-- If a zero in the critical strip is additionally supplied with the independent
+metriplectic lock condition, then its real part is `1/2`.  This is not a proof
+of the Riemann hypothesis; the lock is an explicit hypothesis. -/
+theorem metriplectic_critical_line_of_lock (s : ℂ) (_hs : s.re ∈ Set.Ioo 0 1)
     (_h_zeta : riemannZeta s = 0) (h_lock : CriticalLineLock s) :
     s.re = 1/2 := by
   simpa [CriticalLineLock, entropic_dissipation_rate] using h_lock

@@ -23,7 +23,7 @@ All derived theorems are then proved from those explicit compatibility fields.
 
 noncomputable section
 
-namespace RyuTakayanagiThermalTimeBridge
+namespace InfoGeometry.Canonical.RyuTakayanagiThermalTimeBridge
 
 open InfoGeometry.Canonical.ThermalTimeMonodromyBridge
 open InfoGeometry.Canonical.RyuTakayanagiEntanglementBridge
@@ -404,4 +404,4 @@ theorem physicalForwardTimeBridge_synchronized_additivity
 
 end Bridge
 
-end RyuTakayanagiThermalTimeBridge
+end InfoGeometry.Canonical.RyuTakayanagiThermalTimeBridge

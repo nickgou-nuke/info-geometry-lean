@@ -878,6 +878,9 @@ lean_lib Docs where
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
+lean_lib Omega where
+  globs := #[.andSubmodules `Omega]
+
 @[default_target]
 lean_lib InfoGeometry where
   -- Build the root project entrypoint. Repository policy is that every
@@ -886,6 +889,19 @@ lean_lib InfoGeometry where
   -- and experimental modules are not exempt; if they fail this contract, repair
   -- them and wire them into the provided library surface.
   globs := #[.andSubmodules `InfoGeometry]
+
+@[test_driver]
+lean_lib InfoGeometryTestSuite where
+  srcDir := "../tests"
+  roots := #[
+    `InfoGeometryTests,
+    `ComplexAnalyticBridgeTests,
+    `PrimitiveExactnessTests,
+    `PrimitiveCuntzIsometryTests,
+    `BekensteinHawkingDyadicEntropyTests,
+    `PO55ConformalClosureTests,
+    `DvorakSystemTest
+  ]
 
 /--
 Pinned local clone of the formal Lean proof of Erdos Problem #1196.

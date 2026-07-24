@@ -22,10 +22,11 @@ noncomputable section
 
 namespace BogoliubovBraidGraphWeld
 
-open BogoliubovSU3ParafermionProofChain
-open BogoliubovSU3ParafermionWeld
-open BogoliubovWeylChemicalPotential
-open SupergradedCuntzBdG
+open InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
+open InfoGeometry.Physics.BogoliubovSU3ParafermionWeld
+open InfoGeometry.Physics.BogoliubovWeylChemicalPotential
+open InfoGeometry.Physics.SupergradedCuntzBdG
+open InfoGeometry.Physics
 
 /-- Permute the color triplet of a four-component spinor and leave the singlet
 component fixed. -/

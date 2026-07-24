@@ -8,7 +8,7 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 The coordinate-level split Cayley owner.  This file intentionally stops before
 any claim identifying its automorphism group with a Chevalley group.
 -/
-namespace SplitCayley
+namespace InfoGeometry.Algebra.Zorn
 
 abbrev Vec3 (R : Type*) := Fin 3 → R
 
@@ -117,4 +117,4 @@ def norm (x : SplitCayley R) : R := x.a * x.b - dot x.u x.v
   ring
 
 end SplitCayley
-end SplitCayley
+end InfoGeometry.Algebra.Zorn

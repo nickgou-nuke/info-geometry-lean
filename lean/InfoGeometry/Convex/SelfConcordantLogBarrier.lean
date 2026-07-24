@@ -29,7 +29,7 @@ No certificate.
 
 noncomputable section
 
-namespace SelfConcordantLogBarrier
+namespace InfoGeometry.Convex.SelfConcordantLogBarrier
 
 /-- The standard logarithmic barrier on the positive real line. -/
 @[rep_depth thermo]
@@ -150,4 +150,4 @@ theorem selfConcordantLogBarrier_packet :
         logBarrierThirdAbs x = 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) := by
   exact ⟨selfConcordantLogBarrierOwnerTarget, fun hx => logBarrier_selfConcordant_exact hx⟩
 
-end SelfConcordantLogBarrier
+end InfoGeometry.Convex.SelfConcordantLogBarrier

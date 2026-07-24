@@ -16,11 +16,11 @@ holomorphic functional calculus. It records theorem-safe readbacks:
 * a supplied flow preserves the Hestenes analytic sector;
 * a supplied Hestenes-analytic generator acts by analytic commutator.
 
-The analytic owner is `HestenesAnalyticity`, where preservation of the internal
-phase axis `clockAxis` replaces scalar-complex holomorphy.
+The owner is `HestenesAnalyticity`, where preservation of the internal phase
+axis `clockAxis` replaces scalar-complex holomorphy.
 -/
 
-namespace HestenesKreinAnalyticFlowBridge
+namespace InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesAnalyticity
@@ -135,4 +135,4 @@ end HestenesAnalyticRotorGenerator
 
 end Core
 
-end HestenesKreinAnalyticFlowBridge
+end InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge

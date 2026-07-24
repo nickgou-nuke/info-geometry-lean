@@ -26,7 +26,7 @@ equivalences are not yet primitive owners, but the projective, Krein, and Weyl
 weight presentations already exist and can be tied together canonically.
 -/
 
-namespace DensityWeightIntertwinerBridge
+namespace InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -373,4 +373,4 @@ theorem densityWeightWeylIntertwiners_of_strictSymmetry_snd
 
 end WeylIntertwiners
 
-end DensityWeightIntertwinerBridge
+end InfoGeometry.Canonical.DensityWeightIntertwinerBridge

@@ -28,7 +28,7 @@ noncomputable section
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-namespace PrimeWeylGaugeCantorFockBridge
+namespace InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -211,4 +211,4 @@ theorem toSquareFreePrimeState_Gamma_eq_globalChirality
   rw [PrimeBooleanCube.globalChirality_vertex_eq_fermionParity P v]
   rfl
 
-end PrimeWeylGaugeCantorFockBridge
+end InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge

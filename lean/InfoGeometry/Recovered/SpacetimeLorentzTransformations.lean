@@ -74,18 +74,18 @@ theorem lorentz_isometry (q x : Matrix (Fin 2) (Fin 2) ℝ) (h_unit : q.det = 1)
     _ = x.det := by ring
 
 /--
-A specific Lorentz boost along the Z-axis (rapidity `ϕ`) using the periodic hyperbolic generator.
-This expands the generator $(l\mathbf{k})^2 = -1$ into $e^{\phi (l\mathbf{k})} = \cos\phi + l\mathbf{k}\sin\phi$.
+A Lorentz boost along the Z-axis with rapidity `ϕ`.
+Since `splitK² = 1`, its exponential is
+`cosh ϕ • splitOne + sinh ϕ • splitK`.
 -/
 noncomputable def lorentzBoostZ (ϕ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
-  (Real.cos ϕ) • splitOne + (Real.sin ϕ) • splitK
+  (Real.cosh ϕ) • splitOne + (Real.sinh ϕ) • splitK
 
-/-- The determinant of the trigonometric periodic Lorentz boost generator is universally 1. -/
+/-- The hyperbolic Z-axis boost has determinant one. -/
 lemma det_lorentzBoostZ (ϕ : ℝ) :
     (lorentzBoostZ ϕ).det = 1 := by
   simp [lorentzBoostZ, splitOne, splitK, Matrix.det_fin_two]
-  -- cos^2 + sin^2 = 1
-  have h := Real.cos_sq_add_sin_sq ϕ
-  linarith
+  rw [← sub_eq_add_neg, Real.cosh_sub_sinh, ← Real.exp_add]
+  simp
 
 end InfoGeometry.Spacetime

@@ -337,4 +337,17 @@ theorem d_normalization (a b : Fin 8) :
   all_goals fin_cases b
   all_goals { simp [d, Fin.sum_univ_eight, h_sq, h_div1, h_div2, h_div3, h_div4]; try ring }
 
+
+
+/-- From [λₐ, λ_b] = 2i f_abc λ_c, antisymmetry of commutator -/
+theorem f_antisym_omega : ∀ (a b c : Fin 8), f a b c = -f b a c := by exact f_antisym_ab
+
+
+/-- From Jacobi identity [λₐ, [λ_b, λ_c]] + cyclic = 0 -/
+theorem f_cyclic_omega : ∀ (a b c : Fin 8), f a b c = f b c a := by exact f_cyclic
+
+
+/-- From {λₐ, λ_b} = (4/3)δₐᵦ + 2d_abc λ_c, symmetry of anticommutator -/
+theorem d_sym_omega : ∀ (a b c : Fin 8), d a b c = d b a c := by exact d_sym_ab
+
 end InfoGeometry.Algebra.StructureConstants

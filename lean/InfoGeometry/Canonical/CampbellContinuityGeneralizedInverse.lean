@@ -26,7 +26,7 @@ and Drazin inverses, and convergence of arbitrary matrix sequences are outside
 this finite algebraic file.
 -/
 
-namespace CampbellContinuityGeneralizedInverse
+namespace InfoGeometry.Canonical.CampbellContinuityGeneralizedInverse
 
 variable {R : Type} [Ring R]
 
@@ -102,4 +102,4 @@ theorem groupInverse_residual_decomposition
           + (1 - Ag * A) * (-E₂ * Ag * E₂ - E₁) * (1 - Ag * A) := by
       rw [h₁₁, h₁₀, h₀₁, h₀₀]
 
-end CampbellContinuityGeneralizedInverse
+end InfoGeometry.Canonical.CampbellContinuityGeneralizedInverse

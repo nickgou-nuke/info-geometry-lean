@@ -6,6 +6,7 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Volume.Pfaffian
+import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
 
 /-!
 # InfoGeometry.Canonical.DiracSouriauOperator
@@ -242,6 +243,26 @@ theorem hasDrazinInverse_zero_of_decoupled
   have hInv :=
     toMatrix_has_twoSidedInverse_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left
   exact hasDrazinInverse_zero_of_twoSidedInverse S D hInv.1 hInv.2
+
+/--
+A decoupled Dirac-Souriau sector with invertible bosonic block and nilpotent
+fermionic block admits a Drazin inverse of index 2.
+-/
+theorem hasDrazinInverse_two_of_decoupled_nilpotent
+    {K : Type*} [Field K] (S : DiracSouriauSector K)
+    (hB : S.B = 0)
+    (hA : IsUnit S.A.det)
+    (hK : S.K ^ 2 = 0) :
+    S.HasDrazinInverse 2 := by
+  have hC : S.C = 0 := by
+    simp [C, hB]
+  have hMatrix : S.toMatrix = fromBlocks S.A 0 0 S.K := by
+    rw [toMatrix_eq_fromBlocks S]
+    ext i j <;> cases i <;> cases j <;> simp [hB, hC]
+  obtain ⟨D, hD⟩ := block_drazin_inverse_decoupled S.A hA S.K hK
+  use D
+  rw [hMatrix]
+  exact hD
 
 /--
 Constructive inverse context for the decoupled `B = 0` lane with explicit block

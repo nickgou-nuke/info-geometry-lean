@@ -14,7 +14,7 @@ commutator lemmas using the existing `RawCARModeCompletion`/matrix-unit API.
 
 noncomputable section
 
-namespace SplitCliffordCurrentCommutator
+namespace InfoGeometry.Canonical.SplitCliffordCurrentCommutator
 
 open scoped BigOperators
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -527,4 +527,4 @@ theorem current_cutoff_commutator_zero_mode
 
 end RawCARModeCompletion
 
-end SplitCliffordCurrentCommutator
+end InfoGeometry.Canonical.SplitCliffordCurrentCommutator

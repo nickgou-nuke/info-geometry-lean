@@ -25,7 +25,7 @@ predicate on a raw function, rather than as a proof-carrying structure.
 
 open scoped BigOperators
 
-namespace HasseWeilZetaPointCounts
+namespace InfoGeometry.Canonical.HasseWeilZetaPointCounts
 
 open InfoGeometry.Canonical.KapranovZetaSeries
 
@@ -125,4 +125,4 @@ theorem zeta_projective_decomposition (n : ℕ) (q : ℚ)
       rw [ih]
       rfl
 
-end HasseWeilZetaPointCounts
+end InfoGeometry.Canonical.HasseWeilZetaPointCounts

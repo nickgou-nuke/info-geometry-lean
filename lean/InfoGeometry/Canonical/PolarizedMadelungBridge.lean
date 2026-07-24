@@ -18,7 +18,7 @@ This file does not introduce a complex wavefunction or Euclidean owner. It keeps
 - and phase as the orbit of the internal axis `Jε`.
 -/
 
-namespace PolarizedMadelungBridge
+namespace InfoGeometry.Canonical.PolarizedMadelungBridge
 
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
@@ -380,4 +380,4 @@ end StateGeneratorField
 
 end Operatorial
 
-end PolarizedMadelungBridge
+end InfoGeometry.Canonical.PolarizedMadelungBridge

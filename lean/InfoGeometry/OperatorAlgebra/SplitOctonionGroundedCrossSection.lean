@@ -1,7 +1,7 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
 
-namespace SplitOctonionGroundedCrossSection
+namespace InfoGeometry.OperatorAlgebra.SplitOctonionGroundedCrossSection
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.SymplecticFoundation
@@ -69,4 +69,4 @@ abbrev hyperbolicSquareDirection : SplitOct := H
     detZ hyperbolicSquareDirection = -1 := by
   simpa [hyperbolicSquareDirection] using detZ_H
 
-end SplitOctonionGroundedCrossSection
+end InfoGeometry.OperatorAlgebra.SplitOctonionGroundedCrossSection

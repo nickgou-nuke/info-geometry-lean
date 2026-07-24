@@ -28,7 +28,7 @@ The file does not assert analytic braid operators, particle-sector models,
 continuum cancellation results, or compactification classifications.
 -/
 
-namespace DualSplitOctonionRootKleinBraidBridge
+namespace InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge
 
 open Matrix
 
@@ -187,4 +187,4 @@ theorem dual_split_octonion_root_klein_braid_packet :
     central_sign_pair_even.2, negI2Z_sq, tripotentZ3_cube, z3Rotate_cube,
     klein_monodromy_relation, Mx_sq, g2_artin_length_six⟩
 
-end DualSplitOctonionRootKleinBraidBridge
+end InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge

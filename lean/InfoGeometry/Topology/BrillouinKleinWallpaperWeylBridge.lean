@@ -21,7 +21,7 @@ full `Q₈` or `Pin(5,5)` quotient, or a momentum-space band theorem.
 
 noncomputable section
 
-namespace BrillouinKleinWallpaperWeylBridge
+namespace InfoGeometry.Topology.BrillouinKleinWallpaperWeylBridge
 
 open InfoGeometry.Topology.Wallpaper
 open InfoGeometry.Topology.BrillouinKleinGauge
@@ -66,4 +66,4 @@ def brillouin_klein_wallpaper_weyl_packet : BrillouinKleinWallpaperWeylPacket wh
   gaugeStable := fun theta n => klein_bottle_invariant_gauge_stable theta (-theta) n
   affineWeyl := wallpaper_to_affine_weyl_d5_packet
 
-end BrillouinKleinWallpaperWeylBridge
+end InfoGeometry.Topology.BrillouinKleinWallpaperWeylBridge

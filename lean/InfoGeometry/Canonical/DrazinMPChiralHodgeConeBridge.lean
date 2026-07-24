@@ -27,7 +27,7 @@ so `⋆χ² = 1`. This is a chirality/grading operator, not the Hestenes phase
 axis `K`, which has square `-1`.
 -/
 
-namespace DrazinMPChiralHodgeConeBridge
+namespace InfoGeometry.Canonical
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinLightConeDictionary
@@ -211,6 +211,8 @@ structure DrazinMPChiralHodgeConeBridge where
     Dirac * hodgeChiralityStar CIK =
       -(hodgeChiralityStar CIK * Dirac)
 
+namespace DrazinMPChiralHodgeConeBridge
+
 /-- The canonical bridge using the repo-owned anomaly-difference Dirac. -/
 @[rep_depth krein]
 noncomputable def canonicalBridge
@@ -218,8 +220,6 @@ noncomputable def canonicalBridge
   CIK := CIK
   Dirac := CIK.rightChiralAnomaly - CIK.chiralAnomaly
   Dirac_odd := canonicalDirac_anticommutes_hodgeChiralityStar (CIK := CIK)
-
-namespace DrazinMPChiralHodgeConeBridge
 
 variable (B : DrazinMPChiralHodgeConeBridge (E := E))
 
@@ -381,4 +381,4 @@ end DrazinMPChiralHodgeConeBridge
 
 end Core
 
-end DrazinMPChiralHodgeConeBridge
+end InfoGeometry.Canonical

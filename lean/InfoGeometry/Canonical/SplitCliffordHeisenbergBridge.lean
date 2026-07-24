@@ -33,7 +33,7 @@ current algebra witness.
 
 noncomputable section
 
-namespace SplitCliffordHeisenbergBridge
+namespace InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -294,4 +294,4 @@ theorem canonicalInfiniteCurrent_lie_central
 
 end ExternalInfiniteCurrent
 
-end SplitCliffordHeisenbergBridge
+end InfoGeometry.Canonical.SplitCliffordHeisenbergBridge

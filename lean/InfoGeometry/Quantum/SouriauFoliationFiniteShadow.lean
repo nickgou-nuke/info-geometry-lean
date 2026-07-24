@@ -26,7 +26,7 @@ BUCKET 3: excluded analytic claims
 - no full Tomita--Takesaki standard-form theorem.
 -/
 
-namespace SouriauFoliationFiniteShadow
+namespace InfoGeometry.Quantum.SouriauFoliationFiniteShadow
 
 open InfoGeometry.Dynamics.KmsBoundary
 open InfoGeometry.Dynamics.TomitaTakesaki
@@ -91,4 +91,4 @@ theorem dual_engine_finite_shadow :
   exact ⟨modularOperator_isRadialEngine, identity_isRotationalEngine,
     modularConjugation_involutive⟩
 
-end SouriauFoliationFiniteShadow
+end InfoGeometry.Quantum.SouriauFoliationFiniteShadow

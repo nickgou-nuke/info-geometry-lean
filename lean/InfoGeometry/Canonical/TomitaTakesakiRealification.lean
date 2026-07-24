@@ -12,7 +12,7 @@ noncomputable section
 
 set_option autoImplicit false
 
-namespace TomitaTakesakiRealification
+namespace InfoGeometry.Canonical.TomitaTakesakiRealification
 
 open InfoGeometry.Canonical.HestenesKreinModularGeometry
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -96,4 +96,4 @@ theorem connes_cocycle_to_souriau_realification
 NormedSpace.exp (t • G) = NormedSpace.exp (t • G) :=
 rfl
 
-end TomitaTakesakiRealification
+end InfoGeometry.Canonical.TomitaTakesakiRealification

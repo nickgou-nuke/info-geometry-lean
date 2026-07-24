@@ -16,7 +16,7 @@ logarithmic Tomita generator, and its additive modular flow is the existing
 Connes/Tomita exponential conjugation flow.
 -/
 
-namespace SouriauTomitaModularFlowBridge
+namespace InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 
 open InfoGeometry.Volume.ConnesCocycle
 open InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge

@@ -1,4 +1,4 @@
 import Mathlib
 
-namespace bridge_full
-end bridge_full
+namespace InfoGeometry.External.Auto.bridge_full
+end InfoGeometry.External.Auto.bridge_full

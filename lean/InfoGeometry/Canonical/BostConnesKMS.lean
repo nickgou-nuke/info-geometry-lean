@@ -27,7 +27,8 @@ The partition sum is identified with `Re ζ(β)` in the convergence domain
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
 * `KMSProjectionState` is a projection-state readout whose normalization
-  parameter `ζβ` must be supplied by an analytic owner.
+  parameter `ζβ` must be supplied by the Hestenes--Krein/categorical colimit
+  owner.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
@@ -39,7 +40,7 @@ open scoped BigOperators
 
 noncomputable section
 
-namespace BostConnesKMS
+namespace InfoGeometry.Canonical.BostConnesKMS
 open InfoGeometry.Arithmetic.BostConnesSystem
 
 /-! ## 1. Proof-carrying multiplicative Cuntz representation -/
@@ -329,4 +330,4 @@ theorem kms_evaluation_on_word_products
 
 end KMSProjectionState
 
-end BostConnesKMS
+end InfoGeometry.Canonical.BostConnesKMS

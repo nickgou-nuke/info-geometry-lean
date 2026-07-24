@@ -15,7 +15,7 @@ Bridge layer connecting:
 - and Perelman-style Ricci/Dirac entropy flow monotonicity.
 -/
 
-namespace DiracRicciBridge
+namespace InfoGeometry.Canonical.DiracRicciBridge
 
 open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.CalabiYauBridge
@@ -164,4 +164,4 @@ theorem gravity_from_rn_entropy
 
 end EntropyGravity
 
-end DiracRicciBridge
+end InfoGeometry.Canonical.DiracRicciBridge

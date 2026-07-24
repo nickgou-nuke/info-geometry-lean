@@ -36,7 +36,7 @@ this file.
 
 noncomputable section
 
-namespace CreationAnnihilationTomitaBridge
+namespace InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
 
 open scoped InnerProductSpace
 open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
@@ -192,4 +192,4 @@ def concreteCreationAnnihilationReadout :
 
 end Concrete
 
-end CreationAnnihilationTomitaBridge
+end InfoGeometry.Canonical.CreationAnnihilationTomitaBridge

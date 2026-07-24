@@ -3,7 +3,7 @@ import Mathlib.Tactic.Ring
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Data.Complex.Basic
 
-namespace CantorianFractalSpacetime
+namespace InfoGeometry.Canonical.CantorianFractalSpacetime
 
 /-!
 # Cantorian-Fractal Spacetime and Fractal Strings (hep-th/0203086)
@@ -208,5 +208,5 @@ theorem padicNormTwo_137 : padicNormTwo 137 = 1 := by
   rw [padicValTwo_137]
   simp
 
-end CantorianFractalSpacetime
+end InfoGeometry.Canonical.CantorianFractalSpacetime
 

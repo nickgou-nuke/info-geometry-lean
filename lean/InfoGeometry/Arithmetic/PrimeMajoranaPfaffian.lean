@@ -15,7 +15,7 @@ statement is asserted here.
 
 noncomputable section
 
-namespace PrimeMajoranaPfaffian
+namespace InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 
 open scoped BigOperators
 
@@ -33,4 +33,4 @@ theorem blockPfaffian_eq_finiteEulerProduct
       InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q := by
   rfl
 
-end PrimeMajoranaPfaffian
+end InfoGeometry.Arithmetic.PrimeMajoranaPfaffian

@@ -23,7 +23,7 @@ Methodological note:
   theorems, not definitions.
 -/
 
-namespace DrazinKreinCompatibility
+namespace InfoGeometry.Canonical.DrazinKreinCompatibility
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Drazin
@@ -554,4 +554,4 @@ structure DefectSectorData
   compat : KreinGradedDrazinCompatibility (E := E) T TD k
   nontrivial_defect : Pzero T TD ≠ 0
 
-end DrazinKreinCompatibility
+end InfoGeometry.Canonical.DrazinKreinCompatibility

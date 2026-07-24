@@ -15,7 +15,7 @@ This file does not prove a BCFW recursion theorem.  Such a comparison must be
 supplied by an amplituhedron owner file.
 -/
 
-namespace ArnoldRelations
+namespace InfoGeometry.Projective.ArnoldRelations
 
 variable (R : Type*) [CommRing R]
 variable (M : Type*) [AddCommGroup M] [Module R M]
@@ -41,7 +41,7 @@ theorem arnold_mixed_relation_vanishes_under_kernel_membership
     φ (arnoldMixedRelation R M w12 w23 w31) = 0 := by
   simpa using (RingHom.mem_ker.mp hKer)
 
-end ArnoldRelations
+end InfoGeometry.Projective.ArnoldRelations
 
 namespace InfoGeometry.Projective.Amplituhedron
 

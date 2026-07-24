@@ -12,7 +12,7 @@ It does not assert any multiplication compatibility.  That would be a
 stronger algebra theorem and is not needed for the current bridge.
 -/
 
-namespace ZornSplitOctonionBridge
+namespace InfoGeometry.Canonical.ZornSplitOctonionBridge
 
 open InfoGeometry.Algebra.SplitOctonionQ
 
@@ -100,4 +100,4 @@ theorem zornToSplitO_peirce_decomposition (Z : ZornMatrix ℚ) :
   ext <;> simp [zornToSplitO, splitODiagonalProject, splitOColorProject,
     splitOAnticolorProject, SplitO.add]
 
-end ZornSplitOctonionBridge
+end InfoGeometry.Canonical.ZornSplitOctonionBridge

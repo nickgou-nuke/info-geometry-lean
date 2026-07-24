@@ -11,9 +11,9 @@ set_option autoImplicit false
 
 noncomputable section
 
-namespace RealSpacetime4x4Closure
+namespace InfoGeometry.Canonical.RealSpacetime4x4Closure
 
-open HestenesDirac
+open InfoGeometry.Clifford.HestenesDirac
 
 /-- 
 Realified Hermitian Pauli Slice (4x4 Spacetime).
@@ -269,4 +269,4 @@ theorem concrete_null_cone_celestial_sphere_unit (X : RealSpacetime4x4)
 /-- Fully discharged in this module. -/
 def open_closure_debt : List String := []
 
-end RealSpacetime4x4Closure
+end InfoGeometry.Canonical.RealSpacetime4x4Closure

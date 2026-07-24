@@ -19,10 +19,10 @@ Out of scope:
 - `G₂(2)` or exceptional-group boundary-closure theorems.
 -/
 
-namespace CantorSplitNullBridge
+namespace InfoGeometry.Canonical.CantorSplitNullBridge
 
-open ConcreteComposition
-open ConcreteComposition.ZornCell
+open InfoGeometry.Algebra.Zorn.ConcreteComposition
+open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 open TypeIIIModularCantorSystem
 open TypeIIIModularCantorSystem.BinaryWord
 open SplitZornNullBoundary
@@ -199,4 +199,4 @@ theorem cantor_split_null_bridge_packet (w : FiniteBinaryWord) :
     addressNullGenerator_child_polar_self_zero w true,
     child_false_true_polar_pair w⟩
 
-end CantorSplitNullBridge
+end InfoGeometry.Canonical.CantorSplitNullBridge

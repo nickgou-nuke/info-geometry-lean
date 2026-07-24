@@ -16,7 +16,7 @@ This file keeps to owner data already present in `CertifiedModularReduction`:
 No new physics axioms are introduced.
 -/
 
-namespace BogoliubovOptimalTransport
+namespace InfoGeometry.Canonical.BogoliubovOptimalTransport
 
 open InfoGeometry.Canonical
 
@@ -164,4 +164,4 @@ theorem no_defect_leakage_of_optimal_flow
 
 end Core
 
-end BogoliubovOptimalTransport
+end InfoGeometry.Canonical.BogoliubovOptimalTransport

@@ -30,7 +30,7 @@ The owner language is real doubled/Hestenes--Krein. No scalar-complex
 coefficient lane is introduced here.
 -/
 
-namespace RealHomologyCohomologyDictionary
+namespace InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovCartanEigenOperator
@@ -703,4 +703,4 @@ theorem linearRealCoboundary_is_linearRealCocycle
 
 end LinearCohomologyWitnesses
 
-end RealHomologyCohomologyDictionary
+end InfoGeometry.Canonical.RealHomologyCohomologyDictionary

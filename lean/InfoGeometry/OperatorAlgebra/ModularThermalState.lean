@@ -23,7 +23,7 @@ References:
 
 noncomputable section
 
-namespace ModularThermalState
+namespace InfoGeometry.OperatorAlgebra.ModularThermalState
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra
@@ -139,4 +139,4 @@ theorem casimir_is_stationary
     _ = V.C := by
           simp [hCancel]
 
-end ModularThermalState
+end InfoGeometry.OperatorAlgebra.ModularThermalState

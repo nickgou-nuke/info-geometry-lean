@@ -36,7 +36,7 @@ that layer.
 
 noncomputable section
 
-namespace BranmanCountableStone
+namespace InfoGeometry.Canonical.BranmanCountableStone
 
 open Set
 
@@ -200,4 +200,4 @@ theorem labels_finite (F : Finset G) : (F : Set G).Finite :=
 
 end FiniteLabels
 
-end BranmanCountableStone
+end InfoGeometry.Canonical.BranmanCountableStone

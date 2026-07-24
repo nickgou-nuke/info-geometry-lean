@@ -14,7 +14,7 @@ import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section
 
-namespace KreinIsotropicCone
+namespace InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 
 open InfoGeometry.OperatorAlgebra
 
@@ -618,4 +618,4 @@ theorem isotropic_representation_is_drazin_nil
     IsNilpotentElement (B.repVector v) :=
   nilpotent_of_isotropic_bridge_drazin B v hv hNil
 
-end KreinIsotropicCone
+end InfoGeometry.OperatorAlgebra.KreinIsotropicCone

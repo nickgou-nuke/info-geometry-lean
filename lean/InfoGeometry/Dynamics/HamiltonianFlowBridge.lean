@@ -23,9 +23,9 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace HamiltonianFlowBridge
+namespace InfoGeometry.Dynamics.HamiltonianFlowBridge
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartition
+open InfoGeometry.Thermodynamics
 open InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 open InfoGeometry.Krein
@@ -115,4 +115,4 @@ theorem positive_roots_spectral_encoding (p : ℕ) (hp : p ∈ B.partition.posit
 
 end HamiltonianFlowBridge
 
-end HamiltonianFlowBridge
+end InfoGeometry.Dynamics.HamiltonianFlowBridge

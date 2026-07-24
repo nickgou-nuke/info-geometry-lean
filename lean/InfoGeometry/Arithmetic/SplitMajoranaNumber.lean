@@ -2,7 +2,7 @@ import Mathlib
 
 noncomputable section
 
-namespace SplitMajoranaNumber
+namespace InfoGeometry.Arithmetic.SplitMajoranaNumber
 
 variable {A : Type*} [Ring A]
 
@@ -222,4 +222,4 @@ theorem one_sub_cMajorana_mul_dMajorana_eq_two_particleNumber
   rw [cMajorana_mul_dMajorana_eq_one_sub_two_particleNumber ε ι hε hι hcar]
   noncomm_ring
 
-end SplitMajoranaNumber
+end InfoGeometry.Arithmetic.SplitMajoranaNumber

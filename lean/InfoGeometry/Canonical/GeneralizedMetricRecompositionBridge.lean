@@ -20,7 +20,7 @@ This file stays disciplined:
 It does **not** claim that a physical `B`-field has already been formalized.
 -/
 
-namespace GeneralizedMetricRecompositionBridge
+namespace InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 
 open InfoGeometry.Canonical.GeneralizedMetricCore
 open InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
@@ -190,4 +190,4 @@ def PolarizedRecompositionData.generalizedMetricPotentialShadow
 
 end Core
 
-end GeneralizedMetricRecompositionBridge
+end InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge

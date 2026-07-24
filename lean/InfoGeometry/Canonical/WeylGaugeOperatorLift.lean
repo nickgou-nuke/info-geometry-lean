@@ -19,7 +19,7 @@ The determinant is used only as a character attached to lifted transport data.
 It is not promoted to a scalar replacement for the operator surface.
 -/
 
-namespace WeylGaugeOperatorLift
+namespace InfoGeometry.Canonical.WeylGaugeOperatorLift
 
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 open InfoGeometry.Canonical.RestrictedVolumeCharacter
@@ -31,6 +31,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Krein.SplitQuadraticSheets
 open InfoGeometry.Volume.Base
 open InfoGeometry.Volume.DeterminantBundle
+open Base
 
 section Lifted
 
@@ -318,4 +319,4 @@ theorem isotropicGaugeTransport_commutes_relativeDilationTransport
 end LiftedSheetAut
 end Lifted
 
-end WeylGaugeOperatorLift
+end InfoGeometry.Canonical.WeylGaugeOperatorLift

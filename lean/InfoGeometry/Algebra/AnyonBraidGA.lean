@@ -23,7 +23,7 @@ Deriving the anti-commutator from quadratic-form orthogonality and connecting
 the resulting rotors to Fibonacci F/R matrices remain open here.
 -/
 
-namespace AnyonBraidGA
+namespace InfoGeometry.Algebra.AnyonBraidGA
 
 open CliffordAlgebra
 
@@ -53,4 +53,4 @@ theorem rotor_substrate_readout_of_isOrtho (u v : M)
   simpa [CliffordVectorAnticommutes] using
     (CliffordVectorAnticommutes_of_isOrtho (Q := Q) (u := u) (v := v) h)
 
-end AnyonBraidGA
+end InfoGeometry.Algebra.AnyonBraidGA

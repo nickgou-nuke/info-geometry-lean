@@ -18,7 +18,7 @@ alone.
 
 noncomputable section
 
-namespace HorizonZitterFierzReadout
+namespace InfoGeometry.Canonical.HorizonZitterFierzReadout
 
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.Canonical.HorizonZitterModes
@@ -68,4 +68,4 @@ theorem horizonZitter_fierz_quadric_from_assumption
     K.residual.residual (horizonZitterFierzVector K.state K.channels Z) = 0 :=
   K.compatibility_assumption Z
 
-end HorizonZitterFierzReadout
+end InfoGeometry.Canonical.HorizonZitterFierzReadout

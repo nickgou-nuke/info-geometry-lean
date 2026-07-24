@@ -26,7 +26,7 @@ import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-namespace MetalMirror
+namespace InfoGeometry.Thermo.MetalMirror
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.OperatorFenchelRegularCone
@@ -628,4 +628,4 @@ theorem metalMirrorRicciFluxBridge_of_admissible
   rw [← h.heat_eq_ricciFlux U]
   exact (h.readout.heatFlux_eq U).symm
 
-end MetalMirror
+end InfoGeometry.Thermo.MetalMirror

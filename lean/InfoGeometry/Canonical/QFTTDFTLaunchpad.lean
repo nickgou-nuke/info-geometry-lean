@@ -13,7 +13,7 @@ consumers:
 - the Runge-Gross stationary dual-map state predicate and its basic stationarity witness
 -/
 
-namespace QFTTDFTLaunchpad
+namespace InfoGeometry.Canonical.QFTTDFTLaunchpad
 
 open InfoGeometry.Geometry
 open RGFlow
@@ -62,4 +62,4 @@ theorem rungeGrossStationaryDualState_of_stationaryAtScale
 
 end TDFT
 
-end QFTTDFTLaunchpad
+end InfoGeometry.Canonical.QFTTDFTLaunchpad

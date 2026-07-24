@@ -22,10 +22,13 @@ The proof proceeds via:
 
 noncomputable section
 
-namespace ChiralTLDescent
+namespace InfoGeometry.Physics.ChiralTLDescent
+
+open InfoGeometry.External.Auto
 
 open Matrix
 open TensorProduct
+open InfoGeometry.External.Auto
 open ChiralCausalCone
 open ChiralTensorRecoupling
 open ChiralTensorMatrixBridge
@@ -260,4 +263,4 @@ theorem chiral_right_kernel_tau_ideal :
 #check chiral_right_tau_ideal
 #check chiral_right_kernel_tau_ideal
 
-end ChiralTLDescent
+end InfoGeometry.Physics.ChiralTLDescent

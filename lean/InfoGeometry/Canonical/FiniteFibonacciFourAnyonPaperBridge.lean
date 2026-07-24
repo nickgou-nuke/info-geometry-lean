@@ -22,7 +22,7 @@ No conformal-block construction.
 No non-diagonal `B` matrix.
 -/
 
-namespace FiniteFibonacciFourAnyonPaperBridge
+namespace InfoGeometry.Canonical.FiniteFibonacciFourAnyonPaperBridge
 
 open FiniteFibonacciComputationalSpace
 open FiniteFibonacciFourAnyonBlocks
@@ -135,4 +135,4 @@ theorem fourAnyon_pairing14_23_relation (x : ℂ) :
     pairing14_23 x = x • pairing12_34 + (1 - x) • pairing13_24 :=
   rfl
 
-end FiniteFibonacciFourAnyonPaperBridge
+end InfoGeometry.Canonical.FiniteFibonacciFourAnyonPaperBridge

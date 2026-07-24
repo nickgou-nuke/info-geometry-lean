@@ -39,9 +39,9 @@ It contains the Hilbert-space representation `H`, the representation of the
 commutator constraint.
 -/
 structure QuantumSpectralTriple (H : Type*) [NormedAddCommGroup H] [Module ℂ H] where
-  rep : QuantumGrassmannian.coordinateRing ℂ q →+* Module.End ℂ H
+  rep : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q →+* Module.End ℂ H
   D : QuantumDiracOperator H
-  bounded_commutators : ∀ (a : QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : H), x ∈ D.domain →
+  bounded_commutators : ∀ (a : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : H), x ∈ D.domain →
     ‖D.op ((rep a) x) - (rep a) (D.op x)‖ ≤ C * ‖x‖
 
 /--
@@ -50,7 +50,7 @@ structure itself.
 -/
 def IsKTheoryCommutatorBounded {H : Type*} [NormedAddCommGroup H] [Module ℂ H]
     (ST : QuantumSpectralTriple q H) : Prop :=
-  ∀ (a : QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : H), x ∈ ST.D.domain →
+  ∀ (a : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : H), x ∈ ST.D.domain →
     ‖ST.D.op ((ST.rep a) x) - (ST.rep a) (ST.D.op x)‖ ≤ C * ‖x‖
 
 /--
@@ -60,9 +60,9 @@ if the gauge action is implemented by a unitary operator `U` that commutes with
 -/
 def IsGaugeCovariant {H : Type*} [NormedAddCommGroup H] [Module ℂ H]
     (ST : QuantumSpectralTriple q H)
-    (gauge : QuantumGrassmannian.coordinateRing ℂ q → QuantumGrassmannian.coordinateRing ℂ q) : Prop :=
+    (gauge : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q → InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q) : Prop :=
   ∃ (U : H ≃ₗᵢ[ℂ] H),
-    (∀ (a : QuantumGrassmannian.coordinateRing ℂ q), ST.rep (gauge a) =
+    (∀ (a : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q), ST.rep (gauge a) =
       (U : H →L[ℂ] H) * ST.rep a * (U.symm : H →L[ℂ] H)) ∧
     (∀ (x : H), x ∈ ST.D.domain → U x ∈ ST.D.domain ∧ ST.D.op (U x) = U (ST.D.op x))
 
@@ -74,11 +74,11 @@ variable (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (q : ℂ)
 
 /-- The GNS pre-Hilbert space is the finite-support carrier `Fin n → ℂ`. -/
 abbrev GNSPreHilbert (n : ℕ) : Type :=
-  GNSFiniteSupport.GNS
+  InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport.GNS
     (fun _ : Fin n => True)
 
 private def gnsInner (n : ℕ) : GNSPreHilbert n → GNSPreHilbert n → ℂ :=
-  GNSFiniteSupport.innerGNS
+  InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport.innerGNS
     (fun _ : Fin n => True)
 
 private def gnsDiracWeight (n : ℕ) (primes : Fin n → ℕ) : Fin n → ℂ :=
@@ -86,7 +86,7 @@ private def gnsDiracWeight (n : ℕ) (primes : Fin n → ℕ) : Fin n → ℂ :=
 
 private def gnsDiracAction (n : ℕ) (primes : Fin n → ℕ) :
     GNSPreHilbert n → GNSPreHilbert n :=
-  GNSFiniteSupport.liftMul (fun _ : Fin n => True)
+  InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport.liftMul (fun _ : Fin n => True)
     (gnsDiracWeight n primes)
 
 /-- The diagonal log-weight Dirac operator on the finite GNS carrier. -/
@@ -95,20 +95,20 @@ noncomputable def gnsDiracOperator : QuantumDiracOperator (GNSPreHilbert n) wher
   domain := ⊤
   op := gnsDiracAction n primes
 
-variable (coordinateToCuntz : QuantumGrassmannian.coordinateRing ℂ q →ₐ[ℂ] CuntzTensorQuotient.CuntzAlg n)
-variable (cuntzGNSAction : CuntzTensorQuotient.CuntzAlg n →ₐ[ℂ] (GNSPreHilbert n →L[ℂ] GNSPreHilbert n))
+variable (coordinateToCuntz : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q →ₐ[ℂ] InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg n)
+variable (cuntzGNSAction : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg n →ₐ[ℂ] (GNSPreHilbert n →L[ℂ] GNSPreHilbert n))
 
 /-- The representation maps the coordinate ring to the Cuntz algebra,
     and then acts on the GNS space. -/
 noncomputable def gnsRepresentation :
-    QuantumGrassmannian.coordinateRing ℂ q →+* Module.End ℂ (GNSPreHilbert n) :=
+    InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q →+* Module.End ℂ (GNSPreHilbert n) :=
   (ContinuousLinearMap.toLinearMapRingHom :
       (GNSPreHilbert n →L[ℂ] GNSPreHilbert n) →+* Module.End ℂ (GNSPreHilbert n)).comp
     (cuntzGNSAction.comp coordinateToCuntz)
 
 /-- The exact QuantumSpectralTriple over the Bost-Connes boundary. -/
 noncomputable def bostConnesSpectralTriple
-    (hbounded : ∀ (a : QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : GNSPreHilbert n),
+    (hbounded : ∀ (a : InfoGeometry.Projective.QuantumGrassmannian.coordinateRing ℂ q), ∃ (C : ℝ), ∀ (x : GNSPreHilbert n),
       x ∈ (gnsDiracOperator n primes).domain →
         ‖(gnsDiracOperator n primes).op ((gnsRepresentation n q coordinateToCuntz
           cuntzGNSAction a) x) -

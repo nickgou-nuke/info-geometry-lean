@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace PolarizedSector
+namespace InfoGeometry.Krein.PolarizedSector
 
 open InfoGeometry.Krein
 open SplitQuadraticSheets
@@ -213,4 +213,4 @@ theorem neg_projectedMinusDivergence_eq_minusSheet_interaction (q k : H2) :
   exact neg_divergence_minusPoint_eq_neg_dot_plus_half_norms (E := E)
     (WithLp.snd q) (WithLp.snd k)
 
-end PolarizedSector
+end InfoGeometry.Krein.PolarizedSector

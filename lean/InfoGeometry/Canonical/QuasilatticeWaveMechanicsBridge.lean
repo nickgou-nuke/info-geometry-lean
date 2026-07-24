@@ -23,7 +23,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace QuasilatticeWaveMechanicsBridge
+namespace InfoGeometry.Canonical.QuasilatticeWaveMechanicsBridge
 
 open InfoGeometry.Canonical.InformationalLichnerowicz
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -150,4 +150,4 @@ theorem dirac_transport_preserves_fierz_klein_variety
 
 end QuasilatticeWaveMechanicsBridge
 
-end QuasilatticeWaveMechanicsBridge
+end InfoGeometry.Canonical.QuasilatticeWaveMechanicsBridge

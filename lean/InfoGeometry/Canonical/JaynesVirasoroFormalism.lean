@@ -20,10 +20,10 @@ new Virasoro theorem. It packages the existing owners into a single Jaynes-
 adapted formalism surface.
 -/
 
-namespace JaynesVirasoroFormalism
+namespace InfoGeometry.Canonical.JaynesVirasoroFormalism
 
 open MeasureTheory
-open InfoGeometry.Canonical.JaynesFormalism
+open JaynesFormalism
 open InfoGeometry.Canonical.JaynesRNMaxEnt
 open InfoGeometry.Canonical.VirasoroWardEquilibrium
 open InfoGeometry.Canonical.CurrentSugawaraBridge
@@ -93,7 +93,7 @@ variable (C : MomentFamily (Ω := Ω) ι)
 /-- Jaynes potential is the modular potential shifted by `log Z`. -/
 theorem jaynesPotential_eq_log_rnDeriv_gibbsMeasure_toReal_add_logPartition
     (lam : ι → ℝ) (hInt : PartitionIntegrable (μ₀ := μ₀) (C := C) lam) :
-    (InfoGeometry.MaxEnt.JaynesRNMaxEnt.potential (C := C) lam)
+    (JaynesRNMaxEnt.potential (C := C) lam)
       =ᵐ[μ₀]
         fun x =>
           Real.log (((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal) +
@@ -108,7 +108,7 @@ theorem jaynesNegLogRnDeriv_eq_negPotential_add_logPartition
       -Real.log (((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal))
       =ᵐ[μ₀]
         fun x =>
-          -(InfoGeometry.MaxEnt.JaynesRNMaxEnt.potential (C := C) lam x) +
+          -(JaynesRNMaxEnt.potential (C := C) lam x) +
             Real.log (partitionFunction (μ₀ := μ₀) (C := C) lam) :=
   InfoGeometry.Canonical.JaynesRNMaxEnt.neg_log_rnDeriv_gibbsMeasure_toReal_eq_neg_potential_add_logPartition
     (μ₀ := μ₀) (C := C) lam hInt
@@ -145,4 +145,4 @@ end Sugawara
 
 end Ward
 
-end JaynesVirasoroFormalism
+end InfoGeometry.Canonical.JaynesVirasoroFormalism

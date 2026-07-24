@@ -34,7 +34,7 @@ Hodge representatives.
   owner.
 -/
 
-namespace HodgeKreinTriFacet
+namespace InfoGeometry.Canonical.HodgeKreinTriFacet
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -374,4 +374,4 @@ def tri_facet_decomposition_equiv
     · simp [map_add, hu2, h21, h23]
     · simp [map_add, hu3, h31, h32]
 
-end HodgeKreinTriFacet
+end InfoGeometry.Canonical.HodgeKreinTriFacet

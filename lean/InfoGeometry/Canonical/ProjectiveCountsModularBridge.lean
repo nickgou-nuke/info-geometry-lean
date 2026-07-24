@@ -5,7 +5,7 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
-namespace ProjectiveCountsModularBridge
+namespace InfoGeometry.Canonical.ProjectiveCountsModularBridge
 
 open RelativePotentialCountBridge
 open InfoGeometry.Canonical.PositiveRayCore
@@ -245,4 +245,4 @@ theorem countKreinOperatorLift_common_smul
 
 end CountOperatorLift
 
-end ProjectiveCountsModularBridge
+end InfoGeometry.Canonical.ProjectiveCountsModularBridge

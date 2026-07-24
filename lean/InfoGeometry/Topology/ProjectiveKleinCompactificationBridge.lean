@@ -18,7 +18,7 @@ It packages the exact algebraic facts already proved in the owners above.
 
 noncomputable section
 
-namespace ProjectiveKleinCompactificationBridge
+namespace InfoGeometry.Topology.ProjectiveKleinCompactificationBridge
 
 open InfoGeometry.Topology.ProjectiveKleinCompactification
 open InfoGeometry.Canonical.PSLDescent
@@ -86,4 +86,4 @@ theorem projectiveKlein_sign_kernel_trivial :
     PSLDescentContract :=
   (projectiveKleinRefocusingPacket).sign_kernel_trivial
 
-end ProjectiveKleinCompactificationBridge
+end InfoGeometry.Topology.ProjectiveKleinCompactificationBridge

@@ -19,7 +19,7 @@ infinite analytic theorem is asserted here.
 
 noncomputable section
 
-namespace RHQuantumStabilityBridge
+namespace InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 
 open FinitePrimeGroverOracle
 
@@ -112,4 +112,4 @@ theorem criticalReflection_fixed_point_log_chain
       StrictConvexOn ℝ (Set.Ioi 0) (fun x : ℝ => -Real.log x) := by
   exact ⟨isCriticalLineRealPart_of_reflection_fixed h, neg_log_strictConvexOn⟩
 
-end RHQuantumStabilityBridge
+end InfoGeometry.Arithmetic.RHQuantumStabilityBridge

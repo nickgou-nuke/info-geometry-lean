@@ -20,7 +20,7 @@ It captures the **"Coriolis Whirlpool"** at the boundary of the causal cone:
   null threads of the modular web.
 -/
 
-namespace SpinorModularBridge
+namespace InfoGeometry.Canonical.SpinorModularBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.BoundaryChiralIndexBridge
@@ -531,4 +531,4 @@ theorem exists_localizedBoundaryVortex_of_operatorialCentralCharge_ne_zero_of_ke
 
 end TransportedBoundary
 
-end SpinorModularBridge
+end InfoGeometry.Canonical.SpinorModularBridge

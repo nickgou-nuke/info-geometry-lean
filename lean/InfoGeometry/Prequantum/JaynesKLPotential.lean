@@ -24,7 +24,7 @@ corresponding repository modules and are not re-proved here.
 
 noncomputable section
 
-namespace JaynesKLPotential
+namespace InfoGeometry.Prequantum.JaynesKLPotential
 
 /-! ## Real lemma: Poisson / KL potential -/
 
@@ -97,4 +97,4 @@ theorem kl_divergence_lower_bound (x y : ℝ) (hx : 0 < x) (hy : 0 < y) :
     x * Real.log (x / y) - x + y ≥ 0 := by
   simpa [scalarKLDivergence] using scalarKLDivergence_nonneg x y hx hy
 
-end JaynesKLPotential
+end InfoGeometry.Prequantum.JaynesKLPotential

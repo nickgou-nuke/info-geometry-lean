@@ -936,7 +936,7 @@ Hessian.
 Compared with `ofSmoothLegendreReadout`, this removes the explicit Fisher
 symmetry, nonnegativity, and strict-positivity hypotheses.  They are proved
 from the inner-product Gram representation.  The remaining nontrivial model
-identification is the real analytic bridge
+identification is the Hestenes--Krein/colimit bridge
 `legendre.fisherHessian X Y = ⟪feature X, feature Y⟫`; this is the correct
 place for concrete infinite-dimensional covariance/BKM models to connect.
 -/

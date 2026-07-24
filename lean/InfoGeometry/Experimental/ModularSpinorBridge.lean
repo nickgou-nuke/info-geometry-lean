@@ -16,7 +16,7 @@ This module formalizes the parallel transport of the Bogoliubov frame
 via the modular operator on the doubled Krein space.
 -/
 
-namespace ModularSpinorBridge
+namespace InfoGeometry.Experimental.ModularSpinorBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Clifford
@@ -98,4 +98,4 @@ theorem spinorBilinear_eq_klDivergence
     spinorBilinear (E := E) B.ψ B.O_innov = B.D.KL := by
   exact B.h_bilinear
 
-end ModularSpinorBridge
+end InfoGeometry.Experimental.ModularSpinorBridge

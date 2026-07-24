@@ -10,7 +10,7 @@ Two-mode indexed finite SUSY block exposing nontrivial mixed scaling.
 
 noncomputable section
 
-namespace SplitCliffordSuperVirasoroModes
+namespace InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes
 
 open Matrix
 open InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
@@ -67,4 +67,4 @@ theorem shifted_supercurrent_comm_self_zero :
   unfold InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.commM4
   simp [shifted_supercurrent_nilpotent]
 
-end SplitCliffordSuperVirasoroModes
+end InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes

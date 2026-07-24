@@ -1,13 +1,11 @@
 import Mathlib
 
 /-!
-# Chirality Pseudoscalar and Cuntz Parity
+# Involutive chirality-operator projectors
 
-This module formalizes the ultimate unification of the Pseudoscalar,
-the Dirac Chirality Operator (γ₅), and the Cuntz Algebra Metric Parity (η).
-
-It mathematically proves that the Cuntz parity metric exactly splits 
-the space into orthogonal P+ (16+) and P- (16-) Weyl spinor sheets.
+This module proves elementary projector identities for a supplied real-linear
+involution `gamma5`.  It does not construct Cuntz parity, Dirac chirality,
+Weyl spinor sheets, or a physical unification theorem.
 -/
 
 namespace ChiralityPseudoscalar
@@ -22,18 +20,16 @@ structure ChiralityOperator (V : Type) [AddCommGroup V] [Module ℝ V] where
 
 variable {V : Type} [AddCommGroup V] [Module ℝ V]
 
-/-- Projector P+ (corresponds to S₁ S₁* in Cuntz) -/
+/-- The `+` projector associated to a supplied involution. -/
 noncomputable def P_plus (op : ChiralityOperator V) : V →ₗ[ℝ] V :=
   (1 / 2 : ℝ) • (LinearMap.id + op.gamma5)
 
-/-- Projector P- (corresponds to S₂ S₂* in Cuntz) -/
+/-- The `-` projector associated to a supplied involution. -/
 noncomputable def P_minus (op : ChiralityOperator V) : V →ₗ[ℝ] V :=
   (1 / 2 : ℝ) • (LinearMap.id - op.gamma5)
 
 /-- 
-  THE MASTER SPLIT THEOREM
-  The projectors sum exactly to the identity mapping, demonstrating 
-  the complete split of the Hilbert space into left- and right-handed sheets.
+  The two projectors sum to the identity map.
 -/
 theorem projectors_sum_id (op : ChiralityOperator V) :
     P_plus op + P_minus op = LinearMap.id := by

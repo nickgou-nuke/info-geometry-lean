@@ -8,33 +8,24 @@ import InfoGeometry.Topology.ArtinCentralizerMonodromy
 /-!
 # D₄ ⊗ Cl(1,1) ⊗ M₂(ℝ) Structure with Tripotent Splitting
 
-This module constructs the TRUE structure of Pin(5,5) as:
-- TWO copies of D₄ (so(4,4)) cloned by V₄ involutions
-- Connected by Cl(1,1) modulator atom
-- With tripotent determinant sign splitting of M₂(ℝ)
+This module records finite split-signature reflection/glide identities over the
+explicit carrier `ℝ^5 ⊕ ℝ^5` and a separate tripotent matrix packet.
 
-Key insight: The 5-grading emerges from the tensor product structure,
-not from a naive D₅ root system. The tripotent structure of 2×2 matrices
-is the "secret source" that generates the TKK closure.
+It proves:
+- the first-pair sign reflection preserves the split pairing;
+- the reflection is involutive;
+- a glide obtained by composing that reflection with a half-translation along
+  an invariant coordinate squares to a unit translation.
 
-## Mathematical Structure
-
-Cl(5,5) ≅ Cl(4,4) ⊗ Cl(1,1)
-       ≅ M₁₆(ℝ) ⊗ M₂(ℝ)
-       ≅ M₃₂(ℝ)
-
-where:
-- Cl(4,4) contains TWO copies of D₄ = so(4,4)
-- Cl(1,1) is the modulator bridge between them
-- M₂(ℝ) has tripotent structure E³ = E (not E² = E!)
-- V₄ Klein four-group involutions clone D₄ → D₄ ⊕ D₄
-- Varlamov PCT theorem encoded in V₄ structure
+It does **not** assert a full Clifford algebra model of `Pin(5,5)`, a proof of
+the double cover map `Pin(5,5) → O(5,5)`, or any spacetime interpretation.
+Those remain outside this finite socket.
 
 -/
 
 noncomputable section
 
-namespace D4Cl11Tripotent
+namespace InfoGeometry.Clifford.D4Cl11Tripotent
 
 open TKKJordanPairData
 open InfoGeometry.Topology.ArtinCentralizerMonodromy
@@ -82,10 +73,9 @@ theorem sq_eq_one (a : V4) : a * a = I := by
 
 end V4
 
-/-!
-## 2. Tripotent Structure of M₂(ℝ)
-This is the "secret source" - tripotents E with E³ = E,
-not idempotents with E² = P.
+/-
+Tripotent `2×2` matrices with `E³ = E`, kept as a finite algebraic packet
+separate from the reflection/glide carrier.
 -/
 
 /--
@@ -97,12 +87,12 @@ structure IsTripotent (E : Matrix (Fin 2) (Fin 2) ℝ) : Prop where
 
 /--
 The determinant sign classification of tripotents.
-This splits M₂(ℝ) into three sectors.
+This records a sign-based sectorization of the tripotent packets in the file.
 -/
 inductive TripotentType where
-  | positive  -- det > 0: physical particles (electrons)
-  | negative  -- det < 0: antiparticles (positrons)
-  | null      -- det = 0: massless/virtual particles
+  | positive  -- det > 0: positive sector
+  | negative  -- det < 0: negative sector
+  | null      -- det = 0: null sector
   deriving DecidableEq, Repr
 
 /-- Extract the tripotent type from a matrix. -/
@@ -115,7 +105,7 @@ def tripotentType (E : Matrix (Fin 2) (Fin 2) ℝ) : Option TripotentType :=
 
 /--
 Theorem: Every tripotent has determinant in {-1, 0, +1}.
-This is the key classification result.
+This is the finite determinant readback proved by the local packet.
 -/
 theorem tripotent_det_classification (E : Matrix (Fin 2) (Fin 2) ℝ)
     (hE : IsTripotent E) :
@@ -149,7 +139,7 @@ structure M2TripotentDecomposition where
   M2_neg : Set (Matrix (Fin 2) (Fin 2) ℝ)
   /-- Null sector (massless) -/
   M2_null : Set (Matrix (Fin 2) (Fin 2) ℝ)
-  /-- Every matrix is in exactly one sector -/
+  /-- The packet records a three-sector partition for tripotent matrices. -/
   complete : ∀ E : Matrix (Fin 2) (Fin 2) ℝ,
     IsTripotent E →
       (E ∈ M2_pos ∨ E ∈ M2_neg ∨ E ∈ M2_null)
@@ -328,32 +318,19 @@ theorem pct_preserved : V4.J_e * V4.J_p * V4.J_ep = V4.I := by rfl
 -/
 
 /--
-Main theorem: The Standard Model emerges from the (D₄ ⊕ D₄) ⋊ Cl(1,1) structure.
+Readback theorem for the supplied anomaly-index equality.
 
-Given:
-- Two D₄ copies cloned by V₄
-- Cl(1,1) modulator bridge
-- Tripotent splitting of M₂(ℝ)
-- 5-grading from modulator eigenvalues
-- Anomaly cancellation (5 - 5 = 0)
-
-Then:
-- su(2) subalgebras exist in each D₄
-- su(3) subalgebras embed in D₄
-- Three generations from embedding choices
-- Electron/positron from V₄ eigenvalues
-- Mass from determinant sign
-
-This proves the Standard Model is the geometric structure of
-the cloned D₄ algebra with tripotent M₂(ℝ) splitting.
+This file does not derive the Standard Model, particle generations, mass, or
+gauge embeddings from the cloned `D₄` and `Cl(1,1)` structures.  The theorem
+below only returns the explicit anomaly-balance premise supplied by the caller.
 -/
-theorem standard_model_from_D4_tripotent
+theorem anomaly_index_balance_from_D4_tripotent_packet
     (D4 : ClonedD4Algebra)
     (modulator : Cl11Modulator)
     (tripotent : M2TripotentDecomposition)
     (graded : FiveGradedD4Cl11Algebra)
     (h_anomaly : anomalyIndex 5 5 = 0) : anomalyIndex 5 5 = 0 := h_anomaly
 
-end D4Cl11Tripotent
+end InfoGeometry.Clifford.D4Cl11Tripotent
 
 end noncomputable section

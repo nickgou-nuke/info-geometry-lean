@@ -22,7 +22,7 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace HelicalCovering
+namespace InfoGeometry.Geometry.HelicalCovering
 
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
@@ -420,4 +420,4 @@ theorem spectralDivisorMonodromyOwnerTarget
   intro C S s hs
   exact S.maps_to_branch hs
 
-end HelicalCovering
+end InfoGeometry.Geometry.HelicalCovering

@@ -11,7 +11,7 @@ subspace.  With full support the representation is faithful.
 
 noncomputable section
 
-namespace GNSFiniteSupportOperatorKernel
+namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorKernel
 
 open GNSFiniteSupport
 open GNSFiniteSupportOperator
@@ -77,4 +77,4 @@ theorem liftOp_zero_faithful_of_full_support
     simpa [liftOp_apply] using hz
   exact liftOp_faithful_of_full_support p hfull a 0 hzero
 
-end GNSFiniteSupportOperatorKernel
+end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorKernel

@@ -14,7 +14,7 @@ This module avoids extra algebraic typeclass assumptions and formalizes:
 * pure nilpotent exponential composition.
 -/
 
-namespace ParabolicContractionBridge
+namespace InfoGeometry.Canonical.ParabolicContractionBridge
 
 open GeneralizedOperatorChiral
 open GeneralizedOperator
@@ -54,4 +54,4 @@ theorem parabolicExp_pure_composition (χ₁ χ₂ : ℝ) :
   simpa [metricParabolic] using
     (GeneralizedOperator.parabolicExp_pure_nilpotent_add χ₁ χ₂)
 
-end ParabolicContractionBridge
+end InfoGeometry.Canonical.ParabolicContractionBridge

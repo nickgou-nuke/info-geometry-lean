@@ -19,15 +19,31 @@ separate `spin44OrSO44Readout`, and standard 3+1 conformal gravity would need
 additional signature-translation data.
 -/
 
-namespace Cl44BridgeCandidate
+namespace InfoGeometry.Canonical
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MetricTransport
 
+/-- Compatibility carrier expected by operator-owner-map tests. -/
+structure Cl44BridgeCandidate where
+  metricTransportWitness :
+    ∃ (R : Type) (_ : Ring R) (P P' : ProjectorPair R),
+      Nonempty (SimilarityTransport P P')
+  realCliffordRepresentationWitness :
+    Nonempty InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket
+  nullConePreservationWitness :
+    ∃ (K : Type) (_ : Field K) (V : Type) (_ : AddCommGroup V) (_ : Module K V)
+      (q : QuadraticForm K V),
+      Nonempty (NullConeConfinement.ConfinementOperator q)
+  quantizationWitness :
+    ∃ (Op : Type) (_ : NormedAddCommGroup Op) (_ : NormedSpace ℝ Op),
+      Nonempty (OperatorThermodynamics.FirstQuantizationLaw Op)
+
 /-- Candidate bridge: green only when every required field is supplied. -/
 @[rep_depth transport]
 structure Candidate where
+
   operatorSystem : Type
   drazinMPAgreement :
     ∃ (R : Type) (_ : Ring R) (P : ProjectorPair R),
@@ -244,4 +260,4 @@ def candidate_spin44Readout_packet
     InfoGeometry.Canonical.Spin44CharacterShadow.Cartan4 :=
   C.spin44OrSO44Readout
 
-end Cl44BridgeCandidate
+end InfoGeometry.Canonical

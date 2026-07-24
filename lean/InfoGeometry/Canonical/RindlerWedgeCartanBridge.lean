@@ -20,7 +20,7 @@ owner surfaces in a wedge-oriented package so the `R/L` commutant language and
 the chiral Cartan closure language can be cited from a single bridge.
 -/
 
-namespace RindlerWedgeCartanBridge
+namespace InfoGeometry.Canonical.RindlerWedgeCartanBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealTomitaCore
@@ -160,4 +160,4 @@ end ChiralCartanSplit
 
 end Core
 
-end RindlerWedgeCartanBridge
+end InfoGeometry.Canonical.RindlerWedgeCartanBridge

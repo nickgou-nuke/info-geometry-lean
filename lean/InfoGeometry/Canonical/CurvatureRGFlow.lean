@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.RGFlow
 import Mathlib.Analysis.Calculus.MeanValue
 
-namespace CurvatureRGFlow
+namespace InfoGeometry.Canonical.CurvatureRGFlow
 
 open RGFlow
 open InfoGeometry.Convex
@@ -48,4 +48,4 @@ Describes how the inference cost of manifold tension flows with scale.
 noncomputable def einsteinHilbertFlow (flow : ScalarCurvatureFlow E) (scale : ℝ) : ℝ :=
   flow scale -- S_EH(Λ) = R(Λ)
 
-end CurvatureRGFlow
+end InfoGeometry.Canonical.CurvatureRGFlow

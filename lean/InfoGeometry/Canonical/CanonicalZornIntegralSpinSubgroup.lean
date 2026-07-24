@@ -14,13 +14,13 @@ noncomputable section
 
 namespace CanonicalZornIntegralSpinSubgroup
 
-open InfoGeometry.Canonical.IntegralZornII44Bridge
-open InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
-open InfoGeometry.Canonical.CanonicalZornCompositionTriality
-open InfoGeometry.Canonical.CanonicalZornRealSpin44
-open InfoGeometry.Canonical.CanonicalZornRealComplexSpinBaseChange
-open InfoGeometry.Canonical.CanonicalZornRealSpinTrialityClosure
-open InfoGeometry.Canonical.CanonicalZornIntegralSpinTrialityClosure
+open IntegralZornII44Bridge
+open CanonicalZornProjectiveTKKBridge
+open CanonicalZornCompositionTriality
+open CanonicalZornRealSpin44
+open CanonicalZornRealComplexSpinBaseChange
+open CanonicalZornRealSpinTrialityClosure
+open CanonicalZornIntegralSpinTrialityClosure
 
  theorem realSpinVectorLinear_one : realSpinVectorLinear 1 = 1 := by
   apply LinearMap.ext

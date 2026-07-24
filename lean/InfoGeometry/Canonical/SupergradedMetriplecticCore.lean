@@ -10,7 +10,7 @@ This file adds grading-dependent sign data to the metriplectic interface
 without introducing analytic/infinite-dimensional claims.
 -/
 
-namespace SupergradedMetriplecticCore
+namespace InfoGeometry.Canonical.SupergradedMetriplecticCore
 
 structure SupergradedMetriplectic
     (A : Type*) [Ring A] (degree : A → ℤ) where
@@ -85,5 +85,5 @@ def ofUngraded
   hamiltonian_conserved := M.hamiltonian_conserved
   entropy_casimir := M.entropy_casimir
 
-end SupergradedMetriplecticCore
+end InfoGeometry.Canonical.SupergradedMetriplecticCore
 

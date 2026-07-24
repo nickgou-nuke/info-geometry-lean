@@ -738,4 +738,4 @@ theorem partialModularSignCPTOwnerTarget :
   intro H _ _ M
   exact ⟨M.Kmod_eq, M.Kmod_square, M.support_Kmod, M.Kmod_support⟩
 
-end ModularSignCPT
+end InfoGeometry.OperatorAlgebra.ModularSignCPT

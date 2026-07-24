@@ -22,7 +22,7 @@ actual global nondegenerate Asano theorem remains deferred as socket debt.
 
 noncomputable section
 
-namespace AsanoKleinFourSymmetry
+namespace InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
 
 /-- The `V4` (Klein-four) symmetry group generators for the Asano chart. -/
 @[rep_depth thermo]
@@ -47,4 +47,4 @@ def v4Action (g : V4) (z : ℂ) : ℂ :=
 def IsV4Symmetric (S : Set ℂ) : Prop :=
   ∀ (g : V4) (z : ℂ), z ∈ S → v4Action g z ∈ S
 
-end AsanoKleinFourSymmetry
+end InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry

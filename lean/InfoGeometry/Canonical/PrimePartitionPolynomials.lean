@@ -30,7 +30,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimePartitionPolynomials
+namespace InfoGeometry.Canonical.PrimePartitionPolynomials
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeHurwitzLimit
@@ -260,7 +260,9 @@ theorem zero_implies_field_re_zero
       exact False.elim (hzne hz)
     · linarith
 
-/-- Pulled Lee--Yang zeros lie on the Riemann critical line. -/
+/-- Under the supplied pullback chart, a zero of the finite pulled partition has
+real coordinate `1/2`.  This is a chart-local Lee--Yang readout, not a theorem
+about Riemann zeta zeros. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem zero_implies_critical_line
     (D : FinitePrimeChainData N)
@@ -490,4 +492,4 @@ theorem local_preserves_unit_circle
 
 end LocalFugacityProjectionWitness
 
-end PrimePartitionPolynomials
+end InfoGeometry.Canonical.PrimePartitionPolynomials

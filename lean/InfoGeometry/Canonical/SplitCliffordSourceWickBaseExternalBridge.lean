@@ -14,7 +14,7 @@ the shared base-case normalization shape:
 * external charged-Fock lane: `J₁`/`J₋₁` commutator equals `1 • id`.
 -/
 
-namespace SplitCliffordSourceWickBaseExternalBridge
+namespace InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
@@ -46,5 +46,5 @@ theorem external_chargedFock_mode_one_commutator
             VirasoroProject.ChargedFockSpace 𝕜 α) := by
   simpa using chargedFock_current_commutator_base_via_morphism (𝕜 := 𝕜) α (1 : Int)
 
-end SplitCliffordSourceWickBaseExternalBridge
+end InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 

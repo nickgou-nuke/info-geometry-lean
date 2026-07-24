@@ -23,7 +23,7 @@ This module formalizes:
    ambient symmetric Lie algebra of operators.
 -/
 
-namespace NoetherInference
+namespace InfoGeometry.Canonical.NoetherInference
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.KaehlerGeometry
@@ -387,4 +387,4 @@ def BayesianSymmetryOrbit.update
   orbit.update 0 = prior := by
   simp [BayesianSymmetryOrbit.update, orbit.U_zero]
 
-end NoetherInference
+end InfoGeometry.Canonical.NoetherInference

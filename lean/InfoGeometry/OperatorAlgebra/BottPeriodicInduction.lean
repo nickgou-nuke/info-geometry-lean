@@ -1,7 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 
-namespace BottPeriodicInduction
+namespace InfoGeometry.OperatorAlgebra.BottPeriodicInduction
 
 /--
 Bott-periodic recurrence on even degrees:
@@ -56,4 +56,4 @@ theorem bott_periodic_induction_all
     simpa [two_mul, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hprop k
 
 
-end BottPeriodicInduction
+end InfoGeometry.OperatorAlgebra.BottPeriodicInduction

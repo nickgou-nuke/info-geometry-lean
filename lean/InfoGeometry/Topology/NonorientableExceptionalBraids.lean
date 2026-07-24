@@ -11,7 +11,7 @@ gapped non-Hermitian phases and gapless exceptional points exhibit fundamental d
 from their orientable counterparts.
 -/
 
-namespace NonorientableExceptionalBraids
+namespace InfoGeometry.Topology.NonorientableExceptionalBraids
 
 /--
 Gapped phases on the Klein bottle must satisfy the boundary conjugacy constraint:
@@ -56,4 +56,4 @@ theorem klein_bottle_abelian_bp_trivial {G : Type} [CommGroup G]
     rw [mul_comm B_q B_p, mul_inv_cancel_right, sq]
   exact h1 ▸ h
 
-end NonorientableExceptionalBraids
+end InfoGeometry.Topology.NonorientableExceptionalBraids

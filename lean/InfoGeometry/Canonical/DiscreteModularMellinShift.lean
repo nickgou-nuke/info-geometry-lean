@@ -22,7 +22,7 @@ file: the central channel is the operator-valued Drazin lane carried by
 
 set_option linter.unusedSectionVars false
 
-namespace DiscreteModularMellinShift
+namespace InfoGeometry.Canonical.DiscreteModularMellinShift
 
 variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -230,4 +230,4 @@ theorem centralOperator_isDefectSupported
 
 end CliffordSuperMellinPacket
 
-end DiscreteModularMellinShift
+end InfoGeometry.Canonical.DiscreteModularMellinShift

@@ -1,7 +1,7 @@
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Canonical.RGFlow
 
-namespace HurwitzRGFlow
+namespace InfoGeometry.Quantum.HurwitzRGFlow
 
 open InfoGeometry.Quantum.Hurwitz
 open InfoGeometry.Canonical.RGFlow
@@ -113,4 +113,4 @@ end HurwitzShellAction
 
 end AbstractShell
 
-end HurwitzRGFlow
+end InfoGeometry.Quantum.HurwitzRGFlow

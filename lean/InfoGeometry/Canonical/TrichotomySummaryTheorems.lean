@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.CliffordDiracAlgebra
 import InfoGeometry.Canonical.TrichotomyClosureBundle
 
-namespace TrichotomySummaryTheorems
+namespace InfoGeometry.Canonical.TrichotomySummaryTheorems
 
 open InfoGeometry.Canonical.CliffordDiracAlgebra
 open InfoGeometry.Canonical.CausalConeProjectorBridge
@@ -75,4 +75,4 @@ theorem summary_tomita_reduced_involutive
 
 end StandardSector
 
-end TrichotomySummaryTheorems
+end InfoGeometry.Canonical.TrichotomySummaryTheorems

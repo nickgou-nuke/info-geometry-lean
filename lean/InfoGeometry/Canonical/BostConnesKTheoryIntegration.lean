@@ -12,8 +12,8 @@ additive Grothendieck classes of the range projections $S_n S_n^*$.
 namespace BostConnesKTheoryIntegration
 
 open InfoGeometry.Arithmetic.BostConnesSystem
-open BostConnesKMS
-open BostConnesKTheory
+open InfoGeometry.Canonical.BostConnesKMS
+open InfoGeometry.Canonical.BostConnesKTheory
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : BostConnesCuntzSystem Op)

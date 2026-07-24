@@ -17,7 +17,7 @@ the finite Fisher/Onsager packet together with the completed current H²
 anomaly theorem from the constructive CAR-to-current layer.
 -/
 
-namespace FreeEntropyDiffusionBridge
+namespace InfoGeometry.Canonical.FreeEntropyDiffusionBridge
 
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.SouriauThermodynamics
@@ -261,4 +261,4 @@ theorem h2_current_anomaly_from_rawCAR
       if m + n = 0 then m • completedCentral C else 0 :=
   RawCARModeAlgebra.normalOrderedCurrent_heisenberg_from_matrixUnit C m n
 
-end FreeEntropyDiffusionBridge
+end InfoGeometry.Canonical.FreeEntropyDiffusionBridge

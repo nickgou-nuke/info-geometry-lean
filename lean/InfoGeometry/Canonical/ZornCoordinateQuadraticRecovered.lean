@@ -24,7 +24,7 @@ current repository checkout and therefore remain explicit restoration debt.
 
 noncomputable section
 
-namespace ZornCoordinateQuadraticRecovered
+namespace InfoGeometry.Canonical.ZornCoordinateQuadraticRecovered
 
 /-- Zorn determinant in the recovered fixed eight-coordinate presentation. -/
 def coordinateQuadraticFun (x : Fin 8 → ℂ) : ℂ :=
@@ -50,6 +50,6 @@ def coordinateQuadratic : QuadraticForm ℂ (Fin 8 → ℂ) :=
     coordinateQuadratic x = coordinateQuadraticFun x := by
   rfl
 
-end ZornCoordinateQuadraticRecovered
+end InfoGeometry.Canonical.ZornCoordinateQuadraticRecovered
 
 end noncomputable section

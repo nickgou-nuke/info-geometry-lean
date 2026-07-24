@@ -4,7 +4,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace ChiralOperatorConeClosure
+namespace InfoGeometry.Canonical.ChiralOperatorConeClosure
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.CartanDecomposition
@@ -408,4 +408,4 @@ theorem anticommutator_GammaS_rightChiralAnomaly_eq_zero
 
 end Core
 
-end ChiralOperatorConeClosure
+end InfoGeometry.Canonical.ChiralOperatorConeClosure

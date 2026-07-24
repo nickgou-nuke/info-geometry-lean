@@ -21,7 +21,7 @@ asserted here.
 
 noncomputable section
 
-namespace HoradamIonSummationSlice
+namespace InfoGeometry.Arithmetic.HoradamIonSummationSlice
 
 open Finset
 open InfoGeometry.Arithmetic.HoradamIonMatrixMethods
@@ -135,6 +135,6 @@ theorem horadam_ion_summation_slice_packet {N : ℕ}
   exact ⟨binetPartialSum_clear_denominator A B α β,
     binetIonPartialSum_clear_denominator A B α β⟩
 
-end HoradamIonSummationSlice
+end InfoGeometry.Arithmetic.HoradamIonSummationSlice
 
 end noncomputable section

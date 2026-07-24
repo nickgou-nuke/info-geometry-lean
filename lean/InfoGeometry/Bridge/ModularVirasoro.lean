@@ -13,7 +13,7 @@ This file is theorem-safe and witness-gated.
 
 noncomputable section
 
-namespace ModularVirasoro
+namespace InfoGeometry.Bridge.ModularVirasoro
 
 open VirasoroProject
 
@@ -90,4 +90,4 @@ theorem modularToLieVermaMap_enveloping_smul
         modularToLieVermaMap (𝕜 := 𝕜) (M := M) (c := c) (h := h) D v := by
   simpa [modularToLieVermaMap] using D.map.map_smul (ιUEA 𝕜 X) v
 
-end ModularVirasoro
+end InfoGeometry.Bridge.ModularVirasoro

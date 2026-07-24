@@ -28,7 +28,7 @@ The "Perfect Circle" of formalization:
 
 noncomputable section
 
-namespace HamiltonianFlowBridge
+namespace InfoGeometry.Canonical.HamiltonianFlowBridge
 
 open InfoGeometry.Canonical
 open InfoGeometry.Convex
@@ -166,4 +166,4 @@ theorem majoranaDirac_as_quasilatticeDirac_zero
   rw [hSeed]
   exact InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac_zero V V.connectionGenerator
 
-end HamiltonianFlowBridge
+end InfoGeometry.Canonical.HamiltonianFlowBridge

@@ -16,7 +16,7 @@ The module has two layers:
 2. Type-III modular cocycle packaging (`TypeIIILogDetRNPackage`).
 -/
 
-namespace LogDetRadonNikodymMechanism
+namespace InfoGeometry.Canonical.LogDetRadonNikodymMechanism
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.TypeIIIContinuousCoreReal
@@ -146,4 +146,4 @@ end TypeIIILogDetRNPackage
 
 end TypeIII
 
-end LogDetRadonNikodymMechanism
+end InfoGeometry.Canonical.LogDetRadonNikodymMechanism

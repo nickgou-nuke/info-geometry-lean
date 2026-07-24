@@ -20,7 +20,7 @@ continuous entropy theorem or a hyperfinite completion.
 
 noncomputable section
 
-namespace JaynesLDDSBridge
+namespace InfoGeometry.Canonical.JaynesLDDSBridge
 
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
@@ -101,4 +101,4 @@ end JaynesLDDSPacket
 
 end Tower
 
-end JaynesLDDSBridge
+end InfoGeometry.Canonical.JaynesLDDSBridge

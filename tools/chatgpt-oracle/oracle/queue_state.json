@@ -1,0 +1,35 @@
+{
+  "task_queue": [
+    {
+      "task_id": "automath_formalization",
+      "prompt": "You are Antigravity, a formalization assistant for Lean 4.\nGiven the following mathematical hypothesis:\n\nSTATEMENT: Causal Zorn Presheaf\nRATIONALE: This represents the Alexandrov topology mapped to a presheaf of Zorn algebras.\nThe C*-algebra representation is defined via Cuntz quotients.\nObjects: presheaf, causal-site, Zorn, C*-algebra, Cuntz.\nOBJECTS: C*-algebra, presheaf, causal-site, Zorn, Cuntz, algebra, topology\nSOURCE APEX: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz\n\nTranslate this mathematical hypothesis and its objects into a formal Lean 4 theorem.\nYour translation should:\n1. Import `Mathlib` and any other relevant modules.\n2. Wrap the definition/theorem in `namespace Automath.Generated`.\n3. Use a realistic type signature mapping the mathematical objects and statement. If the exact mathlib lemma is not known, state the assumptions cleanly as variables.\n4. Close the proof with a `sorry` so it parses and typechecks, but has an honest sorry instead of a fake `True` verification.\n5. Provide ONLY the valid Lean 4 source code block inside ` ```lean ` and ` ``` `. Do not include any other markdown text or explanation.\n",
+      "conversation_id": "",
+      "conversation_url": "",
+      "project_url": "",
+      "is_followup": false,
+      "re_extract": false,
+      "model": "chatgpt-5.4-pro",
+      "tag": "",
+      "submitted_at": "2026-07-21T21:18:32+00:00",
+      "queued_at_s": 1784668712.1153607,
+      "status": "queued"
+    },
+    {
+      "task_id": "automath_formalization",
+      "prompt": "You are Antigravity, a formalization assistant for Lean 4.\nGiven the following mathematical hypothesis:\n\nSTATEMENT: souriauEntropyProduction M T x_beta x_mu = 0 <-> forceIsZero x_beta x_mu\nRATIONALE: Entropy production in a steady state vanishes if and only if the conjugate thermodynamic forces vanish under Onsager reciprocity.\nOBJECTS: SouriauMomentMap, GeometricTemperature, souriauEntropyProduction, forceIsZero\nSOURCE APEX: InfoGeometry.Canonical.SouriauTheoremTranslatorPacket.analyticEnrichmentTranslatorPacket\n\nTranslate this mathematical hypothesis and its objects into a formal Lean 4 theorem.\nYour translation should:\n1. Import `Mathlib` and any other relevant modules.\n2. Wrap the definition/theorem in `namespace Automath.Generated`.\n3. Use a realistic type signature mapping the mathematical objects and statement. If the exact mathlib lemma is not known, state the assumptions cleanly as variables.\n4. Close the proof with a `sorry` so it parses and typechecks, but has an honest sorry instead of a fake `True` verification.\n5. Provide ONLY the valid Lean 4 source code block inside ` ```lean ` and ` ``` `. Do not include any other markdown text or explanation.\n",
+      "conversation_id": "",
+      "conversation_url": "",
+      "project_url": "",
+      "is_followup": false,
+      "re_extract": false,
+      "model": "chatgpt-5.4-pro",
+      "tag": "",
+      "submitted_at": "2026-07-22T03:40:57+00:00",
+      "queued_at_s": 1784691657.965323,
+      "status": "queued"
+    }
+  ],
+  "pending_tasks": {},
+  "dispatch_times": {},
+  "saved_at": "2026-07-22T03:40:57+00:00"
+}

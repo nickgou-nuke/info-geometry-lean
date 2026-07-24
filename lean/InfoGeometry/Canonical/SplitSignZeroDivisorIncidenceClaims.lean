@@ -24,7 +24,7 @@ identification.
 
 noncomputable section
 
-namespace SplitSignZeroDivisorIncidenceClaims
+namespace InfoGeometry.Canonical.SplitSignZeroDivisorIncidenceClaims
 
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 open InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics.SplitComplex
@@ -95,4 +95,4 @@ theorem nonzero_associator_of_y_ne_zero
       SplitOctonionClassificationCore.ZornMatrix.associator (R := R) x y z ≠ 0 :=
   SplitOctonionClassificationCore.ZornMatrix.nonzero_associator_of_y_ne_zero (R := R) x hy
 
-end SplitSignZeroDivisorIncidenceClaims
+end InfoGeometry.Canonical.SplitSignZeroDivisorIncidenceClaims

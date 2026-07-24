@@ -24,7 +24,7 @@ import Mathlib
 
 noncomputable section
 
-namespace ConstructiveCasimir
+namespace InfoGeometry.OperatorAlgebra.ConstructiveCasimir
 
 open scoped BigOperators
 
@@ -323,4 +323,4 @@ theorem constructiveCasimirOwnerTarget
   intro C
   exact ⟨C.isCentral, C.unitConjugationInvariant⟩
 
-end ConstructiveCasimir
+end InfoGeometry.OperatorAlgebra.ConstructiveCasimir

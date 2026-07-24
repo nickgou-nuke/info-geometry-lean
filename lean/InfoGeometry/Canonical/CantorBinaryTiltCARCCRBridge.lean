@@ -24,7 +24,7 @@ product theorem, or any RH-level convergence claim.
 
 noncomputable section
 
-namespace CantorBinaryTiltCARCCRBridge
+namespace InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovFockSuper
@@ -237,4 +237,4 @@ theorem cantorBinaryTiltCARCCROwnerTarget :
         · exact concreteSplitCl11CARPair (E := E)
         · exact concreteSplitCl11NormalizedCARPair (E := E)
 
-end CantorBinaryTiltCARCCRBridge
+end InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge

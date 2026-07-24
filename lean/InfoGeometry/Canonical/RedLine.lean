@@ -48,7 +48,7 @@ References:
 - `docs/projective_mathlib_canonicalization_plan.md` for owner/translator law.
 -/
 
-namespace RedLine
+namespace InfoGeometry.Canonical.RedLine
 
 
 export InfoGeometry.Jordan (
@@ -56,7 +56,7 @@ export InfoGeometry.Jordan (
   logDetBregman
 )
 
-export LogPotential (
+export _root_.LogPotential (
   LogAbsVolume
   logAbsVolume_add
 )
@@ -77,7 +77,7 @@ export LogSumExp (
   logSumExp_eq_log_partition
 )
 
-export JaynesRNMaxEnt (
+export _root_.JaynesRNMaxEnt (
   MomentFamily
   objectiveKL
   potential
@@ -88,7 +88,7 @@ export JaynesRNMaxEnt (
   GibbsMinimizesKL
 )
 
-export JaynesRNMaxEnt (
+export _root_.JaynesRNMaxEnt (
   partitionFunction_pos
 )
 
@@ -295,4 +295,4 @@ export InfoGeometry.Canonical.BohmMadelungOperatorialBridge (
 )
 
 
-end RedLine
+end InfoGeometry.Canonical.RedLine

@@ -34,7 +34,7 @@ or zeta consequences.
 
 noncomputable section
 
-namespace DeformedIdeleAction
+namespace InfoGeometry.Canonical.DeformedIdeleAction
 
 open InfoGeometry.Topology
 open InfoGeometry.Algebra.NonCommutativity
@@ -192,6 +192,6 @@ theorem right_cuntz_branch_commutator_ne_zero'
   exact isometry_branch_commutator_ne_zero C.S_right C.right_isometry
     (right_cuntz_rangeProjection_ne_one (C := C))
 
-end DeformedIdeleAction
+end InfoGeometry.Canonical.DeformedIdeleAction
 
 end noncomputable section

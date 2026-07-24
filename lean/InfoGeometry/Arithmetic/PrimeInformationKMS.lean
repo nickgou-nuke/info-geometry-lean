@@ -28,7 +28,7 @@ noncomputable section
 
 open scoped BigOperators
 
-namespace PrimeInformationKMS
+namespace InfoGeometry.Arithmetic.PrimeInformationKMS
 
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 open InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
@@ -288,4 +288,4 @@ theorem canonicalFreeEnergy_eq_scaled_entropy_energy_of_massieuBridge
   B.massieuModel.canonicalFreeEnergy_eq_scaled_entropy_energy ε θ
 
 
-end PrimeInformationKMS
+end InfoGeometry.Arithmetic.PrimeInformationKMS

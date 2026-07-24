@@ -2,7 +2,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
 
-namespace KleinExceptionalBraid
+namespace InfoGeometry.Canonical.KleinExceptionalBraid
 
 open Matrix
 
@@ -49,4 +49,4 @@ theorem klein_twist_anti_isomorphism :
     G_Glide * B_EP * G_Glide = - B_EP := by
   decide
 
-end KleinExceptionalBraid
+end InfoGeometry.Canonical.KleinExceptionalBraid

@@ -3,16 +3,14 @@ import Mathlib
 /-!
 # Real Split-Albert Carrier
 
-This file provides the genuine $\mathbb{R}$-bilinear vector space for the split-Albert algebra,
-which serves as the canonical 27-dimensional carrier for the $F_4$ derivation algebra.
-
-The coordinates are given as an element of $\mathbb{R}^3$ for the diagonal entries,
-and three copies of the real split-octonions $\mathbb{R}^8$ for the off-diagonal entries.
+This file provides the real coordinate carrier used by the split-Albert route.
+It records the additive and scalar structure together with a candidate product
+formula for later transport into the Jordan and derivation surfaces.
 -/
 
 namespace InfoGeometry.Algebra
 
-/-- The genuine real split-octonion algebra carrier $\mathbb{R}^8$. -/
+/-- The real split-octonion coordinate carrier `ℝ^8`. -/
 @[ext]
 structure RealSplitOct where
   a : ℝ
@@ -44,29 +42,23 @@ instance : Neg RealSplitOct := ⟨neg⟩
 instance : Sub RealSplitOct := ⟨fun X Y => add X (neg Y)⟩
 instance : Zero RealSplitOct := ⟨zero⟩
 
-instance : AddCommGroup RealSplitOct where
-  add_assoc := sorry
-  zero_add := sorry
-  add_zero := sorry
-  nsmul := nsmulRec
-  nsmul_zero := sorry
-  nsmul_succ := sorry
-  sub_eq_add_neg := sorry
-  zsmul := zsmulRec
-  zsmul_zero' := sorry
-  zsmul_succ' := sorry
-  zsmul_neg' := sorry
-  neg_add_cancel := sorry
-  add_comm := sorry
+/-- Coordinate equivalence used to transport the additive and module structure. -/
+def coordEquiv : RealSplitOct ≃ ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ × ℝ where
+  toFun X := (X.a, X.b, X.x0, X.x1, X.x2, X.y0, X.y1, X.y2)
+  invFun t := ⟨t.1, t.2.1, t.2.2.1, t.2.2.2.1, t.2.2.2.2.1, t.2.2.2.2.2.1,
+    t.2.2.2.2.2.2.1, t.2.2.2.2.2.2.2⟩
+  left_inv := by
+    intro X
+    rfl
+  right_inv := by
+    intro t
+    cases t <;> rfl
 
-instance : Module ℝ RealSplitOct where
-  smul := smul
-  one_smul := sorry
-  mul_smul := sorry
-  smul_zero := sorry
-  smul_add := sorry
-  add_smul := sorry
-  zero_smul := sorry
+instance : AddCommGroup RealSplitOct :=
+  Equiv.addCommGroup coordEquiv
+
+instance : Module ℝ RealSplitOct :=
+  Equiv.module ℝ coordEquiv
 
 /-- Conjugation of real split octonions. -/
 def conj (X : RealSplitOct) : RealSplitOct :=
@@ -85,7 +77,7 @@ def mul (X Y : RealSplitOct) : RealSplitOct :=
 
 end RealSplitOct
 
-/-- The genuine real Albert matrix algebra carrier $\mathbb{R}^{27}$. -/
+/-- The real Albert matrix coordinate carrier `ℝ^{27}`. -/
 @[ext]
 structure RealAlbertMatrix where
   α₁ : ℝ
@@ -114,38 +106,62 @@ instance : Neg RealAlbertMatrix := ⟨neg⟩
 instance : Sub RealAlbertMatrix := ⟨fun X Y => add X (neg Y)⟩
 instance : Zero RealAlbertMatrix := ⟨zero⟩
 
-instance : AddCommGroup RealAlbertMatrix where
-  add_assoc := sorry
-  zero_add := sorry
-  add_zero := sorry
-  nsmul := nsmulRec
-  nsmul_zero := sorry
-  nsmul_succ := sorry
-  sub_eq_add_neg := sorry
-  zsmul := zsmulRec
-  zsmul_zero' := sorry
-  zsmul_succ' := sorry
-  zsmul_neg' := sorry
-  neg_add_cancel := sorry
-  add_comm := sorry
+/-- Coordinate equivalence used to transport the additive and module structure. -/
+def coordEquiv : RealAlbertMatrix ≃ ℝ × ℝ × ℝ × RealSplitOct × RealSplitOct × RealSplitOct where
+  toFun X := (X.α₁, X.α₂, X.α₃, X.z₁, X.z₂, X.z₃)
+  invFun t := ⟨t.1, t.2.1, t.2.2.1, t.2.2.2.1, t.2.2.2.2.1, t.2.2.2.2.2⟩
+  left_inv := by
+    intro X
+    rfl
+  right_inv := by
+    intro t
+    cases t <;> rfl
 
-instance : Module ℝ RealAlbertMatrix where
-  smul := smul
-  one_smul := sorry
-  mul_smul := sorry
-  smul_zero := sorry
-  smul_add := sorry
-  add_smul := sorry
-  zero_smul := sorry
+instance : AddCommGroup RealAlbertMatrix :=
+  Equiv.addCommGroup coordEquiv
 
-/-- Jordan product of two Albert matrices. -/
+instance : Module ℝ RealAlbertMatrix :=
+  Equiv.module ℝ coordEquiv
+
+/-- The split-Albert Jordan product `X ∘ Y = (XY + YX) / 2` in Hermitian
+coordinates
+`[[α₁, z₃, conj z₂], [conj z₃, α₂, z₁], [z₂, conj z₁, α₃]]`.
+
+The factor `1/2` applies to every paired off-diagonal contribution, including
+the diagonal readouts.  The order of the conjugated cross terms is inherited
+from the displayed matrix multiplication and cannot be reversed in the
+noncommutative split-octonion algebra.
+-/
 def mul (X Y : RealAlbertMatrix) : RealAlbertMatrix :=
-  ⟨ X.α₁ * Y.α₁ + (X.z₃.mul Y.z₃.conj).a + (Y.z₃.mul X.z₃.conj).a + (X.z₂.conj.mul Y.z₂).a + (Y.z₂.conj.mul X.z₂).a,
-    X.α₂ * Y.α₂ + (X.z₃.conj.mul Y.z₃).a + (Y.z₃.conj.mul X.z₃).a + (X.z₁.mul Y.z₁.conj).a + (Y.z₁.mul X.z₁.conj).a,
-    X.α₃ * Y.α₃ + (X.z₂.mul Y.z₂.conj).a + (Y.z₂.mul X.z₂.conj).a + (X.z₁.conj.mul Y.z₁).a + (Y.z₁.conj.mul X.z₁).a,
-    RealSplitOct.smul (1/2) (X.z₁.smul (Y.α₂ + Y.α₃) + Y.z₁.smul (X.α₂ + X.α₃) + X.z₂.conj.mul Y.z₃.conj + Y.z₂.conj.mul X.z₃.conj),
-    RealSplitOct.smul (1/2) (X.z₂.smul (Y.α₃ + Y.α₁) + Y.z₂.smul (X.α₃ + X.α₁) + X.z₃.conj.mul Y.z₁.conj + Y.z₃.conj.mul X.z₁.conj),
-    RealSplitOct.smul (1/2) (X.z₃.smul (Y.α₁ + Y.α₂) + Y.z₃.smul (X.α₁ + X.α₂) + X.z₁.conj.mul Y.z₂.conj + Y.z₁.conj.mul X.z₂.conj) ⟩
+  ⟨ X.α₁ * Y.α₁ + (1 / 2 : ℝ) *
+      ((X.z₃.mul Y.z₃.conj).a + (Y.z₃.mul X.z₃.conj).a +
+       (X.z₂.conj.mul Y.z₂).a + (Y.z₂.conj.mul X.z₂).a),
+    X.α₂ * Y.α₂ + (1 / 2 : ℝ) *
+      ((X.z₃.conj.mul Y.z₃).a + (Y.z₃.conj.mul X.z₃).a +
+       (X.z₁.mul Y.z₁.conj).a + (Y.z₁.mul X.z₁.conj).a),
+    X.α₃ * Y.α₃ + (1 / 2 : ℝ) *
+      ((X.z₂.mul Y.z₂.conj).a + (Y.z₂.mul X.z₂.conj).a +
+       (X.z₁.conj.mul Y.z₁).a + (Y.z₁.conj.mul X.z₁).a),
+    RealSplitOct.smul (1 / 2)
+      (X.z₁.smul (Y.α₂ + Y.α₃) + Y.z₁.smul (X.α₂ + X.α₃) +
+       X.z₃.conj.mul Y.z₂.conj + Y.z₃.conj.mul X.z₂.conj),
+    RealSplitOct.smul (1 / 2)
+      (X.z₂.smul (Y.α₃ + Y.α₁) + Y.z₂.smul (X.α₃ + X.α₁) +
+       X.z₁.conj.mul Y.z₃.conj + Y.z₁.conj.mul X.z₃.conj),
+    RealSplitOct.smul (1 / 2)
+      (X.z₃.smul (Y.α₁ + Y.α₂) + Y.z₃.smul (X.α₁ + X.α₂) +
+       X.z₂.conj.mul Y.z₁.conj + Y.z₂.conj.mul X.z₁.conj) ⟩
+
+/-- Sparse normalization regression: the Hermitian matrix supported by the
+unit split octonion in the `(1,2)` slot squares to the first two primitive
+diagonal idempotents, with coefficient `1` rather than the erroneous doubled
+coefficient `2`.
+-/
+theorem mul_upper_unit_self :
+    let e : RealSplitOct := ⟨1, 1, 0, 0, 0, 0, 0, 0⟩
+    let X : RealAlbertMatrix := ⟨0, 0, 0, RealSplitOct.zero, RealSplitOct.zero, e⟩
+    (mul X X).α₁ = 1 ∧ (mul X X).α₂ = 1 ∧ (mul X X).α₃ = 0 := by
+  norm_num [mul, RealSplitOct.mul, RealSplitOct.conj, RealSplitOct.zero]
 
 end RealAlbertMatrix
 

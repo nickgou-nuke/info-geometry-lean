@@ -25,7 +25,7 @@ APIs.
 
 noncomputable section
 
-namespace Cl11HestenesKreinTripartiteCompletion
+namespace InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
 
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -120,4 +120,4 @@ theorem finiteCarrier_and_hestenesKreinFlow
         P.phaseAxis * P.modularFlow.flow t B := by
   exact ⟨intoCarrier_finiteAdvance m k A, hestenesKrein_flow_phase_analytic P t B⟩
 
-end Cl11HestenesKreinTripartiteCompletion
+end InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion

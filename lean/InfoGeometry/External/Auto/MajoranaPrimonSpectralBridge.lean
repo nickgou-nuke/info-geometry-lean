@@ -4,7 +4,7 @@ import InfoGeometry.Physics.SupergradedCuntzBdG
 # Majorana → Primon Spectral Bridge
 
 The self-adjoint Majorana operator `γ₁` generates the positive Cuntz-BdG
-Hamiltonian `H_atom = γ₁²`, already proved in `SupergradedCuntzBdG`. This file
+Hamiltonian `H_atom = γ₁²`, already proved in `InfoGeometry.Physics.SupergradedCuntzBdG`. This file
 bundles those theorems with the CPT spectral involution `s ↦ 1 - s̄` whose
 unique fixed locus is `Re(s) = 1/2` — the critical line.
 
@@ -17,7 +17,7 @@ No omitted proof holes.
 
 namespace MajoranaPrimonSpectralBridge
 
-open SupergradedCuntzBdG
+open InfoGeometry.Physics.SupergradedCuntzBdG
 open scoped ComplexConjugate
 
 /-- CPT spectral involution: `s ↦ 1 - s̄`. The critical line `Re(s)=1/2`
@@ -35,8 +35,8 @@ theorem cpt_fixed_point_iff_critical_line (s : ℂ) :
     · simp [cptSpectralMap, Complex.sub_im, Complex.one_im, Complex.conj_im]
 
 /-- The Majorana-Primon Spectral Bridge:
-1. γ₁ is self-adjoint (proved in `SupergradedCuntzBdG`)
-2. γ₁² = H_atom (proved in `SupergradedCuntzBdG`)
+1. γ₁ is self-adjoint (proved in `InfoGeometry.Physics.SupergradedCuntzBdG`)
+2. γ₁² = H_atom (proved in `InfoGeometry.Physics.SupergradedCuntzBdG`)
 3. CPT involution fixes exactly the critical line Re(s)=1/2 (proved above) -/
 theorem majorana_primon_spectral_bridge {ι : Type*} [Fintype ι] [DecidableEq ι] (i : ι) (s : ℂ) :
     (star (bdgMajoranaPlus i) = bdgMajoranaPlus i) ∧

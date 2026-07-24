@@ -25,7 +25,7 @@ It does not assert any prime-number, Lee--Yang, xi, Mertens, or RH theorem.
 
 noncomputable section
 
-namespace CliffordWaveletDonohoStark
+namespace InfoGeometry.Analysis.CliffordWaveletDonohoStark
 
 open InfoGeometry.Analysis.CliffordWaveletTransform
 
@@ -204,4 +204,4 @@ theorem waveletSupport_pos
 
 end CliffordDonohoStarkOps
 
-end CliffordWaveletDonohoStark
+end InfoGeometry.Analysis.CliffordWaveletDonohoStark

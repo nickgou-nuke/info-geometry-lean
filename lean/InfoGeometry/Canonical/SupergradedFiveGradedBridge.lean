@@ -13,7 +13,7 @@ Connects the three existing layers:
 open InfoGeometry.Arithmetic.WittenParityIndex
 open InfoGeometry.Canonical.MobiusChiralClosure
 
-namespace SupergradedFiveGradedBridge
+namespace InfoGeometry.Canonical.SupergradedFiveGradedBridge
 
 /-- The alternating Witten parity sequence (+1, −1, +1, −1) sums to zero. -/
 theorem witten_parity_sum_zero :
@@ -35,4 +35,4 @@ theorem witten_mobius_bridge :
   · exact moebius_parity_closure_achieved_4
   · norm_num [witten_parity_factor]
 
-end SupergradedFiveGradedBridge
+end InfoGeometry.Canonical.SupergradedFiveGradedBridge

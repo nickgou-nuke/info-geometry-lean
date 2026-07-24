@@ -27,7 +27,7 @@ matrix atom alone.
 
 open scoped Matrix
 
-namespace SplitQ11CausalCone
+namespace InfoGeometry.Clifford.SplitQ11CausalCone
 
 open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.Clifford.SplitQ11PhaseFlip
@@ -694,4 +694,4 @@ theorem final_local_causal_cone_identities :
   exact ⟨hI, hK, hNp, hNm, rfl, rfl, hpm, hmp, hsum, hdiff,
     krein_squeeze_projector_decomposition, hβanti⟩
 
-end SplitQ11CausalCone
+end InfoGeometry.Clifford.SplitQ11CausalCone

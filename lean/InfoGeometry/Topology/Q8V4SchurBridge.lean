@@ -16,7 +16,7 @@ The content is deliberately finite:
   representation is projective.
 -/
 
-namespace Q8V4SchurBridge
+namespace InfoGeometry.Topology.Q8V4SchurBridge
 
 open QuaternionGroup
 
@@ -70,4 +70,4 @@ theorem q8_v4_schur_packet :
         -(Q8MonodromySpinorCover.M_j * Q8MonodromySpinorCover.M_i) := by
   exact ⟨q8ToV4_surjective, q8ToV4_central_two, q8_spinor_generators_anticommute⟩
 
-end Q8V4SchurBridge
+end InfoGeometry.Topology.Q8V4SchurBridge

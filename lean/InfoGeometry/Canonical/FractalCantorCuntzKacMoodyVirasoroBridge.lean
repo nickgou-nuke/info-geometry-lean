@@ -42,7 +42,7 @@ noncomputable section
 set_option linter.dupNamespace false
 set_option linter.unusedSectionVars false
 
-namespace FractalCantorCuntzKacMoodyVirasoroBridge
+namespace InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 
 open InfoGeometry.Core
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
@@ -214,4 +214,4 @@ theorem bogoljubov_packet_holds
 
 end FractalCantorCuntzKacMoodyVirasoroBridge
 
-end FractalCantorCuntzKacMoodyVirasoroBridge
+end InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge

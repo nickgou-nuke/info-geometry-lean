@@ -1,7 +1,7 @@
 import InfoGeometry.Categorical.FibonacciBraidDirectLimit
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 
-namespace FibonacciUniversalityColimit
+namespace InfoGeometry.Categorical.FibonacciUniversalityColimit
 
 open InfoGeometry.Categorical.FibonacciBraidDirectLimit
 open InfoGeometry.Categorical.FibonacciBraidedTowerCone
@@ -32,4 +32,4 @@ theorem zorn_maximal_support_readout
     ∃ M ∈ family, ∀ X ∈ family, M ⊆ X → X = M :=
   zorn_maximal_support family chain_sUnion_mem nonempty
 
-end FibonacciUniversalityColimit
+end InfoGeometry.Categorical.FibonacciUniversalityColimit

@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.SplitCliffordDirectLimit
 
 noncomputable section
 
-namespace SpinorRep
+namespace InfoGeometry.Clifford.SpinorRep
 
 open Matrix
 open InfoGeometry.Clifford.ClNN
@@ -422,4 +422,4 @@ theorem infiniteSplitClifford_has_finite_stage_representatives
         (fun m n h => splitCliffordMap m n h) n x = z :=
   splitCliffordInfinity_unbounded_representatives z
 
-end SpinorRep
+end InfoGeometry.Clifford.SpinorRep

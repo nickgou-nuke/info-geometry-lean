@@ -22,7 +22,7 @@ No conformal-block function theory.
 No hidden construction of physical Hilbert spaces.
 -/
 
-namespace SymmetryClosureConformalBlocks
+namespace InfoGeometry.Canonical.SymmetryClosureConformalBlocks
 
 /-- Commutator of two linear symmetry generators. -/
 def commutator {V : Type*} [AddCommGroup V] [Module ℂ V]
@@ -197,4 +197,4 @@ theorem blockAction_noLeakage {V W : Type*}
     (productSectorDecomposition V W).NoLeakage (blockAction A B) :=
   SectorDecomposition.noLeakage_of_preservesSectors (blockAction_preserves_productSectors A B)
 
-end SymmetryClosureConformalBlocks
+end InfoGeometry.Canonical.SymmetryClosureConformalBlocks

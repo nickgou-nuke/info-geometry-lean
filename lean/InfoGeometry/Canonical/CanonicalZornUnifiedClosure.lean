@@ -20,7 +20,7 @@ namespace CanonicalZornUnifiedClosure
 
 open IntegralZornII44Bridge
 open IntegralZornCompositionAlgebra
-open IntegralZornAlternativeAlgebra
+open InfoGeometry.Canonical.IntegralZornAlternativeAlgebra
 open IntegralZornBilinearComposition
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
@@ -32,7 +32,7 @@ open CanonicalZornIntegralSpinTrialityClosure
 open CanonicalZornIntegralSpinSubgroup
 open CanonicalZornIntegralSpinRepresentation
 open CanonicalZornIntegralTrialityEquivariance
-open CanonicalZornTrialitySpinEquivariance
+open InfoGeometry.Canonical.CanonicalZornTrialitySpinEquivariance
 open CanonicalZornOuterTrialityGroup
 open CanonicalZornFiveGradedClosure
 open ProjectiveAffineConformalClosure55

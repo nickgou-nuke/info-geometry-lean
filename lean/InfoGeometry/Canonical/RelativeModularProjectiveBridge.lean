@@ -15,7 +15,7 @@ This file adds no new modular ontology. It only transports the owner data from
 - the count-ray/projective-count representation layer.
 -/
 
-namespace RelativeModularProjectiveBridge
+namespace InfoGeometry.Canonical.RelativeModularProjectiveBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
@@ -225,4 +225,4 @@ theorem RestrictedRelativeModularData.local_projectiveLogGenerator_eq_projective
 
 end CountDiscrete
 
-end RelativeModularProjectiveBridge
+end InfoGeometry.Canonical.RelativeModularProjectiveBridge

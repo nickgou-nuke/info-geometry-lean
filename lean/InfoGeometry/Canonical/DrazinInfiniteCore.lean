@@ -16,7 +16,7 @@ This file separates:
 - constructive finite-dimensional bridge into a Riesz-style package.
 -/
 
-namespace DrazinInfiniteCore
+namespace InfoGeometry.Canonical.DrazinInfiniteCore
 
 open InfoGeometry.Canonical
 
@@ -28,12 +28,12 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 /-- Kernel stabilization at index `k` (ascent interface). -/
 @[rep_depth operator]
 def AscentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
-  Fitting.AscentStabilized T k
+  InfoGeometry.Algebraic.Fitting.AscentStabilized T k
 
 /-- Range stabilization at index `k` (descent interface). -/
 @[rep_depth operator]
 def DescentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
-  Fitting.DescentStabilized T k
+  InfoGeometry.Algebraic.Fitting.DescentStabilized T k
 
 /-- Finite ascent/descent witness at the spectral point `0`. -/
 @[rep_depth operator]
@@ -151,7 +151,7 @@ theorem exists_drazinInverse_of_finiteAscentDescent_readback
   ⟨h.k, h.D, h.hIsDrazin⟩
 
 /--
-**The Fitting Transition:**
+**The InfoGeometry.Algebraic.Fitting Transition:**
 Algebraically construct the Drazin inverse from stabilized ascent and descent.
 -/
 @[rep_depth operator]
@@ -162,7 +162,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
   let Ran : Submodule K V := (T ^ k).range
 
   have hk : IsCompl Ker Ran :=
-    Fitting.isCompl_ker_pow_range_pow (T := T) (k := k) ha hd
+    InfoGeometry.Algebraic.Fitting.isCompl_ker_pow_range_pow (T := T) (k := k) ha hd
 
   let πRan : V →ₗ[K] Ran := Ran.linearProjOfIsCompl Ker hk.symm
 
@@ -183,7 +183,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
 
   have hTR_surj : Function.Surjective TR := by
     intro y
-    rcases Fitting.surjective_on_range (T := T) (k := k) hd y.1 y.2 with
+    rcases InfoGeometry.Algebraic.Fitting.surjective_on_range (T := T) (k := k) hd y.1 y.2 with
       ⟨x, hx, hTx⟩
     refine ⟨⟨x, hx⟩, ?_⟩
     apply Subtype.ext
@@ -199,7 +199,7 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
         T (x.1 - y.1) = T x.1 - T y.1 := by simp [map_sub]
         _ = 0 := by simp [hxy_val]
     have h_sub_eq_zero : x.1 - y.1 = 0 :=
-      Fitting.injective_on_range (T := T) (k := k) ha hd
+      InfoGeometry.Algebraic.Fitting.injective_on_range (T := T) (k := k) ha hd
         (x.1 - y.1) (Submodule.sub_mem Ran x.2 y.2) hT_sub
     exact sub_eq_zero.mp h_sub_eq_zero
 
@@ -778,4 +778,4 @@ theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
 
 end FiniteDimensionalBridge
 
-end DrazinInfiniteCore
+end InfoGeometry.Canonical.DrazinInfiniteCore

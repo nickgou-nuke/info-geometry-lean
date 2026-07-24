@@ -2,26 +2,17 @@ import InfoGeometry.Analysis.BregmanAnalyticBound
 import Mathlib.Analysis.Complex.Basic
 
 /-!
-# The Equivalence of the Three Reformulations of RH
+# Dikin positivity and RH-equivalence socket
 
-In the repo's algebraic language, the Riemann Hypothesis is the
-equivalence of three structural properties:
-
-1. **Representation-theoretic**: The Fredholm determinant det(1 - e^{-sH})
-   is invertible for all s with Re(s) > 1/2.
-
-2. **Information-geometric**: The Dikin sandwich ω ≤ D_ψ ≤ ω* does not
-   collapse for any finite ε when Re(s) > 1/2.
-
-3. **Topological/supersymmetric**: The Möbius summatory function
-   M(x) = Σ_{n≤x} μ(n) satisfies |M(x)| ≤ C·x^{1/2+ε}.
-
-These three formulations are EQUIVALENT in the repo's architecture.
+This module proves the elementary positivity of the Dikin envelope.  It does
+not prove any equivalence with the Riemann Hypothesis, Fredholm determinants, or
+Möbius summatory bounds; future equivalences must be routed through the
+Hestenes--Krein/categorical-colimit owner layer.
 -/
 
 open Complex
 
-namespace RHEquivalence
+namespace InfoGeometry.Arithmetic.RHEquivalence
 
 open InfoGeometry.Analysis.BregmanAnalyticBound
 
@@ -38,43 +29,9 @@ theorem dikinOmega_pos (t : ℝ) (ht : 0 < t) : 0 < dikinOmega t := by
     simpa [Real.log_exp] using hlog0
   linarith
 
-/- ## The Equivalence Theorem
+/-- Statement shape for any future RH-equivalence theorem.  The required
+categorical-colimit bridges are explicit inputs rather than hidden assumptions. -/
+def rhEquivalenceStatement (RH fredholm mobius : Prop) : Prop :=
+  (RH ↔ fredholm) ∧ (RH ↔ mobius)
 
-The following are equivalent in the repo's architecture:
-
-(1) ∀ s : ℂ, s.re > 1/2 → FredholmUnit(1 - exp(-s • H))
-    [Fredholm determinant invertible]
-
-(2) ∀ ε > 0, dikinOmega(ε · ‖H‖) > 0
-    [Dikin sandwich non-collapse]
-
-(3) ∀ ε > 0, ∃ C, ∀ x, |Σ_{n≤x} μ(n)| ≤ C·x^{1/2+ε}
-    [Möbius growth bound]
-
-(4) ζ·1/ζ = 1 holds uniformly on {Re(s) > 1/2}
-    [Affine projective closure, no poles/zeros]
-
-(5) ΓD + DΓ = 0 is stable under the modular flow
-    [CPT invariance]
-
-(6) The Hodge Laplacian Δ has no anomalous zero-modes
-    [Hodge stability]
-
-Proof map:
-- (1) ⇔ (2): |log det(1-A)| ≤ ω(‖A‖) for trace-class A → BregmanAnalyticBound
-- (1) ⇔ (3): Perron formula → MoebiusWeylEuler
-- (1) ⇔ (4): ζ·(1/ζ) = 1 iff ζ ≠ 0 → AffineProjectiveClosure
-- (2) ⇔ (5): Dikin positivity ⇔ CPT anticommutation → ModularSignCPT
-- (5) ⇔ (6): ΓD + DΓ = 0 ⇔ no anomalous Δ zero-modes → HarmonicKMS
-
-The theorem type:
-
-    theorem riemann_hypothesis_geometric :
-      (∀ s : ℂ, s.re > 1/2 → (1 - exp (-s • H)) ≠ 0)
-      ↔ (∀ ε > 0, 0 < dikinOmega (ε * ‖H‖))
-      ↔ (∀ ε > 0, ∃ C, ∀ x, ‖moebiusSum x‖ ≤ C * x ^ (1/2 + ε))
-
-where `moebiusSum x` is the summatory Möbius function Σ_{n≤x} μ(n).
--/
-
-end RHEquivalence
+end InfoGeometry.Arithmetic.RHEquivalence

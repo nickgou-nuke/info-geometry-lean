@@ -18,7 +18,7 @@ algebra over the Cantor boundary.
 
 noncomputable section
 
-namespace CuntzKMSState
+namespace InfoGeometry.Topology.CuntzKMSState
 
 variable (t : ℝ) (β : ℝ)
 
@@ -60,6 +60,6 @@ theorem unique_kms_temperature (h : 2 * kms_trace_projector β = 1) :
   | inr h_right =>
       contradiction
 
-end CuntzKMSState
+end InfoGeometry.Topology.CuntzKMSState
 
 end noncomputable section

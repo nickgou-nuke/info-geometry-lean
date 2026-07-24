@@ -12,7 +12,7 @@ import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
-namespace RelativeModularScaleShapeSplit
+namespace InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
@@ -310,4 +310,4 @@ theorem canonicalRelativeModularOperator_scaleShapeSplit_of_wedgeCalibrated
 
 end Core
 
-end RelativeModularScaleShapeSplit
+end InfoGeometry.Canonical.RelativeModularScaleShapeSplit

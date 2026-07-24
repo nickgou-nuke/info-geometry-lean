@@ -19,13 +19,13 @@ noncomputable section
 
 set_option linter.dupNamespace false
 
-namespace LFunctionHamiltonianFlowBridge
+namespace InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge.TwistedSouriauWeylBridge
 open InfoGeometry.Canonical.WeylCharacterEquivalence
-open InfoGeometry.Thermodynamics.SouriauWeylPartition
+open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 
 variable
     {Orbit G E Op H Finite Alg : Type}
@@ -161,4 +161,4 @@ theorem packet_denominator_is_prime_euler_product :
 
 end LFunctionHamiltonianFlowBridge
 
-end LFunctionHamiltonianFlowBridge
+end InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge

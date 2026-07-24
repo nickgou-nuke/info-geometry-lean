@@ -4478,3 +4478,4 @@ import InfoGeometry.Quantum.GolayLeechStabilizerCode
 import InfoGeometry.Neurosymbolic.BornNMFEngine
 import InfoGeometry.Neurosymbolic.LLMAttentionKreinMellinBridge
 import InfoGeometry.Neurosymbolic.SinkhornCramerRaoBridge
+import InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge

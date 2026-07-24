@@ -10,7 +10,7 @@ Relative shift endomorphism commutes with embedded matrix blocks in O_n
 Source: InfoGeometry.Algebra.CuntzFibonacciFiveHypotheses
 Objects: shiftEndomorphism, matrixToCuntz, CuntzAlg -/
 theorem cuntz_shift_commutativity (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

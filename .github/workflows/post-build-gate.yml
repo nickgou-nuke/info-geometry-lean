@@ -43,7 +43,7 @@ jobs:
         run: python3 tools/infra/axiom_audit.py
         
       - name: Semantic Vacuity Gate
-        run: python3 tools/quality/semantic_vacuity_gate.py lean/InfoGeometry/Algebra/ZeckendorfBijection.lean lean/InfoGeometry/Topology/DeRhamBridge.lean
+        run: python3 tools/quality/semantic_vacuity_gate.py lean
         
       - name: Semantic Content Audit
         run: python3 tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry --gate
@@ -68,3 +68,4 @@ jobs:
           name: axiom-audit-report
           path: artifacts/axiom_audit_report.json
           retention-days: 7
+EOF

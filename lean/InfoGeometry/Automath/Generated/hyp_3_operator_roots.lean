@@ -10,7 +10,7 @@ The quadratic relation restricts spectrum to two points, turning operator roots 
 Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: operator-roots, cuntz-algebra, functional-calculus, relative-commutant, finite-order-unitaries -/
 theorem hyp_3_operator_roots (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

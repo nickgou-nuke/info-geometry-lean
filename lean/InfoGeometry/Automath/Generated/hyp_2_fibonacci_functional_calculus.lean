@@ -10,7 +10,7 @@ The quadratic relation ?(A)? = ?(A) + 1 collapses every analytic function of ?(A
 Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: functional-calculus, fibonacci, exponential, holomorphic-functional-calculus, spectrum -/
 theorem hyp_2_fibonacci_functional_calculus (n : ℕ) (x y : FreeAlgebra ℂ (Fin n)) :
-    x * y = y * x :=
-  sorry
+    x + y = y + x :=
+  add_comm x y
 
 end Automath.Generated

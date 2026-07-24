@@ -1,6 +1,6 @@
 # Theory Audit Report
 
-Generated: 2026-07-24 06:15:40Z
+Generated: 2026-07-24 11:12:44Z
 
 ## Build toolchain status
 - lake: available (/home/goutev/.elan/bin/lake)
@@ -12,145 +12,159 @@ Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)
 
 ```text
 lean/InfoGeometry/Probability/HomologicalProbability.lean:823:Type III von Neumann factors admit no finite normal tracial state.
-lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive axiom audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
-lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
-lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
-lean/InfoGeometry/Lint/Pauli.lean:12:register_option linter.pauli.sorry : Bool := {
-lean/InfoGeometry/Lint/Pauli.lean:51:      linter.pauli.sorry.get (← getOptions) ||
-lean/InfoGeometry/Lint/Pauli.lean:92:              if linter.pauli.sorry.get (← getOptions) then
-lean/InfoGeometry/Lint/Pauli.lean:100:                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
-lean/InfoGeometry/Topology/MobiusNonParabolicRecovered.lean:15:/-- On the Riemann sphere, every two distinct points admit a third distinct point. -/
-lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:22:## Verified theorems (no sorry)
-lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:17:## Verified theorems (no sorry)
 lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
 lean/InfoGeometry/Application/OperatorFreudenthalBoundary.lean:167:  /-- Boundary states admit Drazin surgery. -/
+lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean:28:* Remaining `sorry` debt, with exact blocker names:
+lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean:259:  sorry
+lean/InfoGeometry/Clifford/SpinorRep.lean:683:        sorry
+lean/InfoGeometry/Clifford/SpinorRep.lean:691:  sorry
+lean/InfoGeometry/Clifford/SpinorRep.lean:696:  sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:110:    CliffordAlgebra (splitQuadraticFormStd (n + 1)) ≃ₐ[ℝ] CliffordAlgebra (splitQuadraticFormStd n) ⊗ₐ[ℝ] CliffordAlgebra (QuadraticForm.std (R := ℝ) (Fin 1) × QuadraticForm.std (R := ℝ) (Fin 1)) := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:117:    spinGroup (splitQuadraticFormStd n) ≃* (Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ)ˣ := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:121:    Function.Injective (spinorRep n) := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:128:    (algebraMap ℝ (Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ) (Q (splitQuadraticFormStd n) v)) := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:147:    0 ≤ burgDivergence X Y := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:154:    spinGroup (splitQuadraticFormStd n) ≃* spinGroup (QuadraticForm.std (R := ℝ) (Fin (2 * n))) := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:174:    ∃ (g : spinGroup Q →* G), ∀ m, g (spinGroup.of Q m) = f m := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:181:    (spinorRep m).toLinearMap ⊗ₗ[ℝ] (spinorRep n).toLinearMap := by sorry
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:200:    (matrixCuntzTrace (n := Fin (2 ^ n))).trace ((spinorRep n).toLinearMap X) = Matrix.trace X := by sorry
 lean/InfoGeometry/Eval/SorryFillerTest.lean:6:This file contains controlled `sorry` placeholders used as evaluation targets
 lean/InfoGeometry/Eval/SorryFillerTest.lean:7:for the GEPA skill evolution loop. Each theorem has a `sorry` that needs to
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:108:    CliffordAlgebra (splitQuadraticFormStd (n + 1)) ≃ₐ[ℝ] CliffordAlgebra (splitQuadraticFormStd n) ⊗ₐ[ℝ] CliffordAlgebra (QuadraticForm.std (R := ℝ) (Fin 1) × QuadraticForm.std (R := ℝ) (Fin 1)) := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:115:    spinGroup (splitQuadraticFormStd n) ≃* (Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ)ˣ := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:119:    Function.Injective (spinorRep n) := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:126:    (algebraMap ℝ (Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℝ) (Q (splitQuadraticFormStd n) v)) := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:145:    0 ≤ burgDivergence X Y := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:152:    spinGroup (splitQuadraticFormStd n) ≃* spinGroup (QuadraticForm.std (R := ℝ) (Fin (2 * n))) := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:172:    ∃ (g : spinGroup Q →* G), ∀ m, g (spinGroup.of Q m) = f m := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:179:    (spinorRep m).toLinearMap ⊗ₗ[ℝ] (spinorRep n).toLinearMap := by sorry
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:198:    (matrixCuntzTrace (n := Fin (2 ^ n))).trace ((spinorRep n).toLinearMap X) = Matrix.trace X := by sorry
 lean/InfoGeometry/Automorphic/HeckePurification.lean:82:  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
-lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean:28:* Remaining `sorry` debt, with exact blocker names:
-lean/InfoGeometry/OperatorAlgebra/TripotentFactorization.lean:11:All proofs are native Lean 4 derivations checked by the kernel with zero sorry debt.
-lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
+lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
 lean/InfoGeometry/OperatorAlgebra/SplitOctonionPseudoReal.lean:18:No `sorry`/`axiom`/`admit`/certificate scaffolding is used.
+lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
 lean/InfoGeometry/OperatorAlgebra/ChiralCliffordSplit.lean:17:All proofs are native, formal Lean 4 derivations checked by the kernel with zero sorry debt.
+lean/InfoGeometry/OperatorAlgebra/TripotentFactorization.lean:11:All proofs are native Lean 4 derivations checked by the kernel with zero sorry debt.
 lean/InfoGeometry/OperatorAlgebra/TripotentMatrix2x2.lean:15:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean:2070:Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
+lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
 lean/InfoGeometry/OperatorAlgebra/WittenMöbiusBraidBridge.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean:16:No `sorry`.
 lean/InfoGeometry/Analysis/LaplaceUniqueness.lean:302:If two Laplace data agree on the same Bromwich contour and both admit the
+lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:20:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
 lean/InfoGeometry/Tooling/VacuityCritic.lean:24:    field.value != "sorry" && field.value != "admit"
 lean/InfoGeometry/Signal/QuaternionPhase.lean:14:No assumptions, axioms, or `sorry`/`admit` scaffolding are used.
-lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean:16:No `sorry`.
+lean/InfoGeometry/Automath.lean:12:`by sorry` marking the gap between hypothesis and proof.
+lean/InfoGeometry/Automath.lean:29:- Marked with `by sorry` as an honest gap (NOT `by trivial`)
+lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
+lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
+lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:22:## Verified theorems (no sorry)
 lean/InfoGeometry/Meta/OwnerTarget.lean:43:  A `sorry` in an owner-target proof is machine-visible closure debt.
-lean/InfoGeometry/Meta/SocketTarget.lean:12:normal `sorry` detection because the law itself is a parameter.
-lean/InfoGeometry/Meta/SocketTarget.lean:29:   closure debt — the architectural equivalent of a typed `sorry`.
-lean/InfoGeometry/Meta/SocketTarget.lean:49:not check for `sorry` — sockets are *expected* to carry opaque laws.
-lean/InfoGeometry/Automath/Generated/cuntz_fibonacci_resolvent.lean:14:  sorry
+lean/InfoGeometry/Arithmetic/LPrimitive.lean:153:-- with actual native Lean theorems. The `sorry` forms are completely eliminated!
+lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean:37:  fitness : ℝ          -- between 0 and 1 (1 = compiles, 0 = sorry)
 lean/InfoGeometry/Meta/Admission.lean:141:      mkAdmissionReason syntheticDecl "trust.sorry" "error"
+lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:17:## Verified theorems (no sorry)
+lean/InfoGeometry/Meta/HonestyPolicy.lean:15:- if it does not exist yet, expose the gap explicitly as `sorry` or an
+lean/InfoGeometry/Meta/HonestyPolicy.lean:43:  /-- Explicit `sorry` is acceptable only as visible debt. -/
+lean/InfoGeometry/Meta/HonestyPolicy.lean:47:  /-- Banner text must not claim certified readback when `sorry` remains. -/
+lean/InfoGeometry/Meta/HonestyPolicy.lean:59:    "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners."
 lean/InfoGeometry/Meta/StrictDef.lean:18:  , ``Lean.Parser.Term.«sorry»
 lean/InfoGeometry/Meta/StrictDef.lean:31:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its type."
 lean/InfoGeometry/Meta/StrictDef.lean:34:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its value."
 lean/InfoGeometry/Meta/StrictDef.lean:291:It accepts only ordinary `def` syntax and rejects tactic blocks, `sorry`, and
 lean/InfoGeometry/Meta/ShadowLedger.lean:6:The shadow ledger tracks every `:= by sorry` declaration in the repository.
 lean/InfoGeometry/Meta/ShadowLedger.lean:30:Every `:= by sorry` is a seed for the next evolution cycle.
-lean/InfoGeometry/Automath/Generated/hyp_2_fibonacci_functional_calculus.lean:14:  sorry
-lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean:37:  fitness : ℝ          -- between 0 and 1 (1 = compiles, 0 = sorry)
-lean/InfoGeometry/Automath/Generated/hyp_5_k_theory.lean:14:  sorry
+lean/InfoGeometry/Meta/SocketTarget.lean:12:normal `sorry` detection because the law itself is a parameter.
+lean/InfoGeometry/Meta/SocketTarget.lean:29:   closure debt — the architectural equivalent of a typed `sorry`.
+lean/InfoGeometry/Meta/SocketTarget.lean:49:not check for `sorry` — sockets are *expected* to carry opaque laws.
 lean/InfoGeometry/Meta/ClosureAttribute.lean:11:anchored to the DAG, and free of `sorry` or `admit`.
-lean/InfoGeometry/Automath.lean:12:`by sorry` marking the gap between hypothesis and proof.
-lean/InfoGeometry/Automath.lean:29:- Marked with `by sorry` as an honest gap (NOT `by trivial`)
-lean/InfoGeometry/Meta/HonestyPolicy.lean:15:- if it does not exist yet, expose the gap explicitly as `sorry` or an
-lean/InfoGeometry/Meta/HonestyPolicy.lean:43:  /-- Explicit `sorry` is acceptable only as visible debt. -/
-lean/InfoGeometry/Meta/HonestyPolicy.lean:47:  /-- Banner text must not claim certified readback when `sorry` remains. -/
-lean/InfoGeometry/Meta/HonestyPolicy.lean:59:    "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners."
-lean/InfoGeometry/Automath/Generated/cuntz_yang_baxter.lean:14:  sorry
-lean/InfoGeometry/Automath/Generated/hyp_3_operator_roots.lean:14:  sorry
-lean/InfoGeometry/Automath/Generated/hyp_4_braid_image.lean:10:  sorry
-lean/InfoGeometry/Automath/Generated/hyp_1_spectral_rigidity.lean:14:  sorry
-lean/InfoGeometry/Automath/Generated/cuntz_shift_commutativity.lean:14:  sorry
-lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
-lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
-lean/InfoGeometry/Arithmetic/LPrimitive.lean:153:-- with actual native Lean theorems. The `sorry` forms are completely eliminated!
-lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
-lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy witness in
-lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean:2070:Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
-lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
-lean/InfoGeometry/Arithmetic/GenuineBounds.lean:81:  · sorry
-lean/InfoGeometry/Arithmetic/GenuineBounds.lean:151:  sorry
-lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
-lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:9:is proved without axioms or `sorry`.
-lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot admit such a
-lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean:219:/-! ## Wedge Actions (sorry-free) -/
-lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:20:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
-lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/TomitaFisherMetric.lean:17:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean:18:No `sorry`.
+lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
+lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Topology/MobiusNonParabolicRecovered.lean:15:/-- On the Riemann sphere, every two distinct points admit a third distinct point. -/
+lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No sockets. No certificates. No axioms. No `sorry`.
 lean/InfoGeometry/Canonical/SO3RotationFenchelWitness.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No sockets. No certificates. No axioms. No `sorry`.
+lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean:23:No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean:21:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/Zorn/Concrete.lean:9:No wrappers. No abstract datum. No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean:14:No wrappers. No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean:21:No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean:14:No wrappers. No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean:22:No `sorry`.
-lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
 lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sorry`.
+lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive axiom audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
+lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
+lean/InfoGeometry/Canonical/ModularTensorInduction.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Projective/KleinQuadricPlucker.lean:16:No wrappers. No `sorry`.
 lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
+lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
+lean/InfoGeometry/Lint/Pauli.lean:12:register_option linter.pauli.sorry : Bool := {
+lean/InfoGeometry/Lint/Pauli.lean:51:      linter.pauli.sorry.get (← getOptions) ||
+lean/InfoGeometry/Lint/Pauli.lean:92:              if linter.pauli.sorry.get (← getOptions) then
+lean/InfoGeometry/Lint/Pauli.lean:100:                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
 lean/InfoGeometry/Projective/SplitOctonions.lean:16:No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
-lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
-lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No sockets. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean:23:No `sorry`.
-lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No sockets. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/Canonical/ModularTensorInduction.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean:25:No `sorry`.
+lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/CognitiveShadow.lean:48:      triggerTerms := #["sorry", "proof debt", "hole"]
-lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean:9:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean:18:No `sorry`.
 lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean:18:It does not depend on the sorry-equivalent modular spinor layer.
-lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean:15:No placeholders. No `sorry`.
+lean/InfoGeometry/Algebra/Zorn/Concrete.lean:9:No wrappers. No abstract datum. No `sorry`.
 lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean:17:No `sorry`.
+lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean:15:No placeholders. No `sorry`.
+lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
 lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean:17:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
 lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean:20:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean:19:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean:18:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean:21:No `sorry`.
-lean/InfoGeometry/Canonical/AlgebraicDerivations.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean:18:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
+lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:9:is proved without axioms or `sorry`.
 lean/InfoGeometry/Canonical/DrazinAnomalousProjector.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean:10:unsupported claims are exposed as explicit `sorry` debt, not hidden as arbitrary
-lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean:7:remaining fully constructive (no `sorry`).
-lean/InfoGeometry/Canonical/ChiralKKTIsolation.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AlgebraicDerivations.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean:21:No `sorry`.
+lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean:18:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/SplitCliffordJordanWignerTwoModeCurrent.lean:13:No `sorry`.
-lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean:16:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/FenchelExpLogCore.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot admit such a
+lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
+lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
+lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean:16:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/ChiralKKTIsolation.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean:7:remaining fully constructive (no `sorry`).
+lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy witness in
 lean/InfoGeometry/Canonical/DepthLogScaleInvariant.lean:21:No `sorry`.
 lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean:118:/-- Junction 5: spinor-modular identification without sorry-equivalent layer. -/
+lean/InfoGeometry/Algebra/Vertex/Basic.lean:144:  sorry
+lean/InfoGeometry/Algebra/Vertex/Basic.lean:158:  sorry
 lean/InfoGeometry/Canonical/GaugeGroups.lean:14:Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
 lean/InfoGeometry/Canonical/GaugeGroups.lean:15:with zero external consumers. See `reports/dag/sorry-equivalence.md`.
-lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/GeneralizedOperatorChiral.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean:13:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/ModularLorentzBoost.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/SouriauInfinitesimalInvariance.lean:8:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean:25:No `sorry`.
+lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean:17:No `sorry`.
+lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
 lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean:10:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:858:`Analysis.AsanoContractionNative` (no `sorry`).
-lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:1039:`sorry`.
 lean/InfoGeometry/Canonical/PrimeLeeYangLargeDeviation.lean:23:`sorry` debt, not as arbitrary `Prop` fields.
 lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean:11:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:858:`Analysis.AsanoContractionNative` (no `sorry`).
+lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:1039:`sorry`.
 lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean:10:unsupported claims are exposed as explicit `sorry` debt, not hidden as arbitrary
+lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean:219:/-! ## Wedge Actions (sorry-free) -/
 ```
 
-- Total placeholder occurrences in canonical tree: 137
+- Total placeholder occurrences in canonical tree: 151
 
 ## Axiom declarations
 
@@ -164,8 +178,8 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 [audit] Project namespace: InfoGeometry
 [audit] Scanning root:       ./lean/InfoGeometry
 
-[audit] Files with namespace InfoGeometry*: 3874
-[audit] Files missing namespace InfoGeometry*: 800
+[audit] Files with namespace InfoGeometry*: 3880
+[audit] Files missing namespace InfoGeometry*: 801
 
 === Missing namespace InfoGeometry ===
 ./lean/InfoGeometry/Algebra/BerezinianPfaffianBott.lean
@@ -187,6 +201,7 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ./lean/InfoGeometry/Algebra/TripotentClSUSYBridge.lean
 ./lean/InfoGeometry/Algebra/UnitizationNonAssoc.lean
 ./lean/InfoGeometry/Algebra/VerlindeSMatrix.lean
+./lean/InfoGeometry/Algebra/Vertex/Basic.lean
 ./lean/InfoGeometry/Algebra/Zorn/_CheckNames.lean
 ./lean/InfoGeometry/All.lean
 ./lean/InfoGeometry/Analysis/All.lean
@@ -990,15 +1005,15 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ./lean/InfoGeometry/Automath/Generated/auto_20260721_230011_1.lean :: 4:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/auto_20260721_230011_2.lean :: 4:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/causal_zorn_presheaf.lean :: 12:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/cuntz_fibonacci_resolvent.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/cuntz_shift_commutativity.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/cuntz_yang_baxter.lean :: 4:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/cuntz_fibonacci_resolvent.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/cuntz_shift_commutativity.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/cuntz_yang_baxter.lean :: 3:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/entropy_hessian_eq_fisher_inverse.lean :: 3:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/hyp_1_spectral_rigidity.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/hyp_2_fibonacci_functional_calculus.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/hyp_3_operator_roots.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/hyp_4_braid_image.lean :: 4:namespace Automath.Generated
-./lean/InfoGeometry/Automath/Generated/hyp_5_k_theory.lean :: 4:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/hyp_1_spectral_rigidity.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/hyp_2_fibonacci_functional_calculus.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/hyp_3_operator_roots.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/hyp_4_braid_image.lean :: 3:namespace Automath.Generated
+./lean/InfoGeometry/Automath/Generated/hyp_5_k_theory.lean :: 3:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/hyp_pin55_krein.lean :: 4:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/omega_auto_omega_bost_connes_kms.lean :: 4:namespace Automath.Generated
 ./lean/InfoGeometry/Automath/Generated/omega_auto_omega_circle_dimension.lean :: 4:namespace Automath.Generated
@@ -1469,7 +1484,7 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ./lean/InfoGeometry/UnifiedMatrixBasis.lean :: 14:namespace UnifiedMatrixBasis
 
 === Namespace prefix histogram (first namespace line per file) ===
-   3902 InfoGeometry
+   3909 InfoGeometry
      30 Bridge
      23 Automath
      22 VirasoroProject
@@ -1512,8 +1527,8 @@ lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `
 ## Quarantine Boundary Audit
 
 ```text
-Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/All.lean:548
 Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/CoverageClosure.lean:78
+Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/All.lean:548
 Forbidden quarantined import: InfoGeometry.Canonical.AnomalyDilationBridge in lean/InfoGeometry/All.lean:571
 Forbidden quarantined import: InfoGeometry.Canonical.AnomalyDilationBridge in lean/InfoGeometry/CoverageClosure.lean:81
 Forbidden quarantined import: InfoGeometry.Canonical.BeliefDynamics in lean/InfoGeometry/All.lean:622
@@ -1524,8 +1539,8 @@ Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeom
 Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/CoverageClosure.lean:103
 Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/All.lean:731
 Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/Canonical/CalabiYauGrandDualityBridge.lean:1
-Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/Quantum/DoubleCopyBridge.lean:4
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/CoverageClosure.lean:113
+Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/Quantum/DoubleCopyBridge.lean:4
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/All.lean:831
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralCliffordBridge in lean/InfoGeometry/CoverageClosure.lean:116
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralCliffordBridge in lean/InfoGeometry/All.lean:837
@@ -1533,34 +1548,34 @@ Forbidden quarantined import: InfoGeometry.Canonical.ConformalWard in lean/InfoG
 Forbidden quarantined import: InfoGeometry.Canonical.ConformalWard in lean/InfoGeometry/All.lean:938
 Forbidden quarantined import: InfoGeometry.Canonical.DiracRicciBridge in lean/InfoGeometry/CoverageClosure.lean:148
 Forbidden quarantined import: InfoGeometry.Canonical.DiracRicciBridge in lean/InfoGeometry/All.lean:1014
-Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/All.lean:1228
 Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/CoverageClosure.lean:191
-Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/CoverageClosure.lean:192
+Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/All.lean:1228
 Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/All.lean:1234
+Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/CoverageClosure.lean:192
 Forbidden quarantined import: InfoGeometry.Canonical.HolographicEmergence in lean/InfoGeometry/CoverageClosure.lean:201
 Forbidden quarantined import: InfoGeometry.Canonical.HolographicEmergence in lean/InfoGeometry/All.lean:1288
 Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/All.lean:1473
 Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/Canonical/All.lean:1290
-Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/CoverageClosure.lean:246
 Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/All.lean:1651
+Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/CoverageClosure.lean:246
 Forbidden quarantined import: InfoGeometry.Canonical.RedLine in lean/InfoGeometry/All.lean:1770
 Forbidden quarantined import: InfoGeometry.Canonical.Rosetta in lean/InfoGeometry/All.lean:1809
 Forbidden quarantined import: InfoGeometry.Canonical.SUSYBayes in lean/InfoGeometry/CoverageClosure.lean:267
 Forbidden quarantined import: InfoGeometry.Canonical.SUSYBayes in lean/InfoGeometry/All.lean:1821
 Forbidden quarantined import: InfoGeometry.Canonical.WilsonLoop in lean/InfoGeometry/All.lean:2166
-Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/All.lean:3840
 Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/CoverageClosure.lean:527
+Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/All.lean:3842
 Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/CoverageClosure.lean:528
-Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/All.lean:3846
-Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/All.lean:3989
+Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/All.lean:3848
+Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/All.lean:3991
 Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/CoverageClosure.lean:556
 Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/CoverageClosure.lean:650
-Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/All.lean:4445
+Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/All.lean:4447
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionRelativeVolume in lean/InfoGeometry/CoverageClosure.lean:119
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionRelativeVolume in lean/InfoGeometry/All.lean:859
 Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/CoverageClosure.lean:417
-Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/All.lean:2549
-Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/All.lean:2550
+Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/All.lean:2551
+Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/All.lean:2552
 Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/CoverageClosure.lean:418
 Quarantine import boundary check failed.
 ```
@@ -1568,21 +1583,21 @@ Quarantine import boundary check failed.
 ## Exact Constructivity Audit
 
 ```text
-wrote /tmp/proof_gap_report.md (16 gaps)
+wrote /tmp/proof_gap_report.md (27 gaps)
 wrote /tmp/proof_gap_report.tex
 ```
 
 ## Review-Only Surrogate Audit
 
 ```text
-wrote /tmp/proof_gap_report.review.md (16 gaps)
+wrote /tmp/proof_gap_report.review.md (27 gaps)
 wrote /tmp/proof_gap_report.review.tex
 ```
 
 ## Mathless Proposition Audit
 
 ```text
-Found 3012 candidate(s):
+Found 3023 candidate(s):
 
 lean/InfoGeometry/Algebra/AiStudioNativeMathlibFindings.lean:115: theorem scalarDisc_chiral_split [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
@@ -1702,6 +1717,9 @@ lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean:210: theorem cuntz_distinct_o
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/CuntzTensorQuotient.lean:294: theorem cuntz_range_projector_star [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Algebra/CyclicTraceStokes.lean:146: theorem boundary_flux_sum [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/Det2.lean:12: theorem det2_identity [skeletal_proof]
@@ -2265,14 +2283,8 @@ lean/InfoGeometry/Arithmetic/ConcreteMajorana.lean:70: theorem combined_dirac_fo
 lean/InfoGeometry/Arithmetic/ConcreteMajorana.lean:73: theorem trivial_majorana_dirac_square [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Arithmetic/GenuineBounds.lean:59: theorem grover_success_probability_lower_bound [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Arithmetic/GenuineBounds.lean:86: theorem quantum_counting_chernoff_bound [skeletal_proof]
+lean/InfoGeometry/Arithmetic/GenuineBounds.lean:146: theorem quantum_counting_chernoff_bound [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Arithmetic/GenuineBounds.lean:149: theorem rosser_schoenfeld_prime_count_bound [proof_hole]
-  - contains `sorry`/`admit`
 
 lean/InfoGeometry/Arithmetic/HoradamIonCatalanSlice.lean:62: theorem binetCore_cassini_shadow [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
@@ -2770,30 +2782,6 @@ lean/InfoGeometry/Arithmetic/ZetaTraceVielbeinSpecialization.lean:159: theorem c
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Audit.lean:6: def printDebt [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/cuntz_fibonacci_resolvent.lean:12: theorem cuntz_fibonacci_resolvent [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/cuntz_shift_commutativity.lean:12: theorem cuntz_shift_commutativity [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/cuntz_yang_baxter.lean:12: theorem hypothesis4_yang_baxter_relation [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/hyp_1_spectral_rigidity.lean:12: theorem hyp_1_spectral_rigidity [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/hyp_2_fibonacci_functional_calculus.lean:12: theorem hyp_2_fibonacci_functional_calculus [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/hyp_3_operator_roots.lean:12: theorem hyp_3_operator_roots [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/hyp_4_braid_image.lean:8: theorem hyp_4_braid_image [proof_hole]
-  - contains `sorry`/`admit`
-
-lean/InfoGeometry/Automath/Generated/hyp_5_k_theory.lean:12: theorem hyp_5_k_theory [proof_hole]
   - contains `sorry`/`admit`
 
 lean/InfoGeometry/Automorphic/LanglandsSugawaraBridge.lean:122: theorem centralCharge_eq_projectedL_zero_of_match [skeletal_proof]
@@ -5588,6 +5576,63 @@ lean/InfoGeometry/Clifford/Sandbox/SplitQuaternionPauliCommutators.lean:291: the
 
 lean/InfoGeometry/Clifford/SpinorRep.lean:107: theorem gradingAtom_sq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/SpinorRep.lean:673: theorem cl_split_2_is_mat4 [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep.lean:689: theorem spinorRepresentation_irreducible [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep.lean:694: theorem spinorRepresentation_real_type [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:107: def bottPeriodicitySplit [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:118: theorem spinorRep_faithful [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:124: theorem gamma_sq [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:144: theorem burgDivergence_nonneg [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:151: def hestenesKreinContinuation [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:169: theorem spinGroup_universal [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:177: theorem spinorRep_tensorTower [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRepNative.lean:197: theorem spinorRep_preserves_trace [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:109: def bottPeriodicitySplit [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:120: theorem spinorRep_faithful [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:126: theorem gamma_sq [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:146: theorem burgDivergence_nonneg [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:153: def hestenesKreinContinuation [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:171: theorem spinGroup_universal [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:179: theorem spinorRep_tensorTower [proof_hole]
+  - contains `sorry`/`admit`
+
+lean/InfoGeometry/Clifford/SpinorRep_Native.lean:199: theorem spinorRep_preserves_trace [proof_hole]
+  - contains `sorry`/`admit`
 
 lean/InfoGeometry/Clifford/SplitBiquaternion.lean:136: theorem norm_splitConj [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
@@ -8408,6 +8453,9 @@ lean/InfoGeometry/LanglandsGWBridge.lean:138: theorem constructSymplecticWeylVol
 
 lean/InfoGeometry/LanglandsGWBridge.lean:275: theorem splitBoundaryMetricBracket_eq_zero_of_boundary_dual_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean:250: theorem exists_pin55_krein_conformal_package [proof_hole]
+  - contains `sorry`/`admit`
 
 lean/InfoGeometry/Lie/RealSplitOctonionDerivationWitness.lean:106: theorem rot01Real_up0_readout [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only

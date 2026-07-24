@@ -306,9 +306,16 @@ theorem tensorIndex_card_pow_two (n : ℕ) :
   | succ n ih =>
       simp [TensorIndex, Fintype.card_prod, ih, pow_succ, Nat.mul_comm]
 
-noncomputable def tensorIndexEquivFinPowTwo (n : ℕ) :
-    TensorIndex n ≃ Fin (2 ^ n) :=
-  Fintype.equivFinOfCardEq (tensorIndex_card_pow_two n)
+def tensorIndexEquivFinPowTwo : (n : ℕ) → TensorIndex n ≃ Fin (2 ^ n)
+  | 0 =>
+    { toFun := fun _ => 0
+      invFun := fun _ => PUnit.unit
+      left_inv := fun _ => rfl
+      right_inv := fun x => by
+        fin_cases x
+        rfl }
+  | n + 1 =>
+    (tensorIndexEquivFinPowTwo n).prodCongr (Equiv.refl (Fin 2)) |>.trans finProdFinEquiv
 
 noncomputable def tensorMatrixEquivFinPowTwo (n : ℕ) :
     SplitGammaMatrix n ≃ₐ[ℝ] SpinorMatrix n :=
@@ -413,6 +420,28 @@ theorem spinorRepresentation_tailFactor_ι (n : ℕ) (xs : SplitSpace n) :
     recursiveGammaTensor_tailLift]
   rfl
 
+/-- The canonical split-Clifford successor map sends a generator to the
+tail-lifted generator at the next finite stage. -/
+theorem incl_Cl_split_ι (n : ℕ) (xs : SplitSpace n) :
+    incl_Cl_split n (CliffordAlgebra.ι (SplitQuad n) xs) =
+      CliffordAlgebra.ι (SplitQuad (n + 1)) (tailLift n xs) := by
+  simp [incl_Cl_split, InfoGeometry.Clifford.incl_Cl_split,
+    InfoGeometry.Canonical.SplitCliffordDirectLimit.splitCliffordStep,
+    InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStepEquiv,
+    tailLift]
+  rfl
+
+/-- Generator-level compatibility of the canonical tower inclusion with the
+recursive spinor representation. The successor action is the old gamma
+operator tensored with `gradingAtom`, as prescribed by the Clifford recursion. -/
+theorem spinorRepresentation_incl_ι (n : ℕ) (xs : SplitSpace n) :
+    spinorRepresentation (n + 1)
+        (incl_Cl_split n (CliffordAlgebra.ι (SplitQuad n) xs)) =
+      (tensorMatrixEquivFinPowTwo (n + 1))
+        (appendAtom (recursiveGammaTensor n xs) gradingAtom) := by
+  rw [incl_Cl_split_ι]
+  exact spinorRepresentation_tailFactor_ι n xs
+
 abbrev InfiniteSplitClifford := SplitCliffordInfinity
 
 theorem infiniteSplitClifford_has_finite_stage_representatives
@@ -422,4 +451,6 @@ theorem infiniteSplitClifford_has_finite_stage_representatives
         (fun m n h => splitCliffordMap m n h) n x = z :=
   splitCliffordInfinity_unbounded_representatives z
 
-end InfoGeometry.Clifford.SpinorRep
+
+
+end SpinorRep

@@ -360,7 +360,7 @@ import InfoGeometry.Causal.ProofCohomology
 -- `InfoGeometry.Foundations.AxiomaticDependencyGraph`, which duplicates
 -- `Audit.tri_facet_resolution` already supplied by `InfoGeometry.Audit`.
 -- import InfoGeometry.Causal.TriFacetInstantiation
-import InfoGeometry.Clifford.BottFromCl44
+import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.Cl11TrifactorPropagation
 import InfoGeometry.Clifford.Cl44S3Family
 import InfoGeometry.Clifford.Cl44Spinors

@@ -86,6 +86,138 @@ def bfs_ids(
     return out
 
 
+def dependency_root_paths(
+    by_id: dict[str, dict[str, Any]],
+    *,
+    seed: str,
+    max_depth: int,
+    max_paths: int,
+) -> list[list[str]]:
+    if seed not in by_id or max_paths <= 0:
+        return []
+    queue: deque[list[str]] = deque([[seed]])
+    best_depth: dict[str, int] = {seed: 0}
+    root_paths: list[list[str]] = []
+    while queue and len(root_paths) < max_paths:
+        path = queue.popleft()
+        cid = path[-1]
+        depth = len(path) - 1
+        row = by_id[cid]
+        deps = sorted(
+            {
+                dep
+                for dep in row.get("dependencyComponentIds") or []
+                if isinstance(dep, str) and dep in by_id and dep not in path
+            }
+        )
+        if cid != seed and (bool(row.get("isRoot")) or not deps):
+            root_paths.append(path)
+            continue
+        if depth >= max_depth:
+            continue
+        for dep in deps:
+            next_depth = depth + 1
+            previous = best_depth.get(dep)
+            if previous is not None and next_depth > previous:
+                continue
+            best_depth[dep] = next_depth
+            queue.append(path + [dep])
+    return root_paths
+
+
+def structural_relay_candidates(
+    by_id: dict[str, dict[str, Any]],
+    *,
+    seed: str,
+    root_paths: list[list[str]],
+) -> list[dict[str, Any]]:
+    path_predecessors: dict[str, set[str]] = {}
+    path_dependencies: dict[str, set[str]] = {}
+    root_ids = {path[-1] for path in root_paths if path}
+    for path in root_paths:
+        for src, dst in zip(path, path[1:]):
+            path_dependencies.setdefault(src, set()).add(dst)
+            path_predecessors.setdefault(dst, set()).add(src)
+
+    candidates: list[dict[str, Any]] = []
+    for cid in sorted(set(path_predecessors) | set(path_dependencies)):
+        if cid == seed or cid in root_ids:
+            continue
+        row = by_id[cid]
+        dependencies = sorted(path_dependencies.get(cid, set()))
+        predecessors = sorted(path_predecessors.get(cid, set()))
+        if bool(row.get("isCapstone")):
+            continue
+        if int(row.get("size") or 0) != 1:
+            continue
+        if len(dependencies) != 1 or not predecessors:
+            continue
+        candidates.append(
+            {
+                "componentId": cid,
+                "representative": component_name(row, id_fallback=cid),
+                "pathPredecessorComponentIds": predecessors,
+                "pathDependencyComponentIds": dependencies,
+                "pathPredecessorCount": len(predecessors),
+                "pathDependencyCount": len(dependencies),
+                "classification": "structural_relay_candidate",
+                "requires": [
+                    "exact value-hash duplicate or definitionally equal owner",
+                    "no independent source declaration content",
+                    "downstream references rewritten to the owner",
+                    "Lean kernel validation after replacement",
+                ],
+            }
+        )
+    return candidates
+
+
+def apex_root_analysis(
+    args: argparse.Namespace,
+    by_id: dict[str, dict[str, Any]],
+    name_to_id: dict[str, str],
+) -> dict[str, Any]:
+    if not args.apex:
+        return {
+            "apexComponentId": None,
+            "rootComponentIds": [],
+            "rootPaths": [],
+            "structuralRelayCandidates": [],
+        }
+    seed = name_to_id.get(args.apex)
+    if seed is None:
+        raise SystemExit(f"apex declaration/component not found in hydrated DAG: {args.apex}")
+    paths = dependency_root_paths(
+        by_id,
+        seed=seed,
+        max_depth=args.root_path_depth,
+        max_paths=args.max_root_paths,
+    )
+    named_paths = [
+        [
+            {
+                "componentId": cid,
+                "representative": component_name(by_id[cid], id_fallback=cid),
+            }
+            for cid in path
+        ]
+        for path in paths
+    ]
+    return {
+        "apexComponentId": seed,
+        "rootComponentIds": sorted({path[-1] for path in paths if path}),
+        "rootPaths": named_paths,
+        "rootPathCount": len(named_paths),
+        "rootPathDepthLimit": args.root_path_depth,
+        "rootPathTruncated": len(named_paths) >= args.max_root_paths,
+        "structuralRelayCandidates": structural_relay_candidates(
+            by_id,
+            seed=seed,
+            root_paths=paths,
+        ),
+    }
+
+
 def select_ids(args: argparse.Namespace, by_id: dict[str, dict[str, Any]], name_to_id: dict[str, str]) -> tuple[set[str], str]:
     if args.apex:
         seed = name_to_id.get(args.apex)
@@ -148,8 +280,24 @@ def const_type_for(c: dict[str, Any], *, cid: str) -> str:
     return "Hydrated SCC component; " + "; ".join(fields)
 
 
-def to_lean_graph_json(by_id: dict[str, dict[str, Any]], ids: set[str]) -> list[dict[str, Any]]:
+def to_lean_graph_json(
+    by_id: dict[str, dict[str, Any]],
+    ids: set[str],
+    *,
+    root_analysis: dict[str, Any],
+) -> list[dict[str, Any]]:
     names = {cid: component_name(by_id[cid], id_fallback=cid) for cid in ids if cid in by_id}
+    root_path_ids = {
+        str(node.get("componentId"))
+        for path in root_analysis.get("rootPaths") or []
+        for node in path
+        if isinstance(node, dict)
+    }
+    relay_ids = {
+        str(row.get("componentId"))
+        for row in root_analysis.get("structuralRelayCandidates") or []
+        if isinstance(row, dict)
+    }
     rows: list[dict[str, Any]] = []
     for cid in sorted(ids, key=lambda x: int(by_id[x].get("componentIndex") or 0)):
         c = by_id[cid]
@@ -163,6 +311,8 @@ def to_lean_graph_json(by_id: dict[str, dict[str, Any]], ids: set[str]) -> list[
                 "constCategory": category_for(c),
                 "constType": const_type_for(c, cid=cid),
                 "references": sorted(set(refs)),
+                "onApexRootPath": cid in root_path_ids,
+                "structuralRelayCandidate": cid in relay_ids,
             }
         )
     return rows
@@ -205,6 +355,7 @@ def metadata_for(
     slice_mode: str,
     rows: list[dict[str, Any]],
     validation: dict[str, Any],
+    root_analysis: dict[str, Any],
 ) -> dict[str, Any]:
     return {
         "schema": "info_geometry.hydrated_dag_to_lean_graph.meta.v1",
@@ -220,6 +371,7 @@ def metadata_for(
         "forward_depth": args.forward_depth,
         "max_nodes": args.max_nodes,
         "node_count": len(rows),
+        "apex_root_analysis": root_analysis,
         "validation": validation,
         "warning": (
             "This file is a visualization projection only. Hydrated DAG and Lean "
@@ -238,11 +390,14 @@ def main() -> int:
     parser.add_argument("--backward-depth", type=int, default=2)
     parser.add_argument("--forward-depth", type=int, default=1)
     parser.add_argument("--max-nodes", type=int, default=300)
+    parser.add_argument("--root-path-depth", type=int, default=64)
+    parser.add_argument("--max-root-paths", type=int, default=64)
     args = parser.parse_args()
 
     _payload, by_id, name_to_id = load_structure(args.structure)
+    root_analysis = apex_root_analysis(args, by_id, name_to_id)
     ids, slice_mode = select_ids(args, by_id, name_to_id)
-    rows = to_lean_graph_json(by_id, ids)
+    rows = to_lean_graph_json(by_id, ids, root_analysis=root_analysis)
     validation = validate_rows(rows)
     if not validation["valid_for_lean_graph"]:
         raise SystemExit(
@@ -256,7 +411,13 @@ def main() -> int:
     meta_out = args.meta_out or args.out.with_suffix(".meta.json")
     meta_out.parent.mkdir(parents=True, exist_ok=True)
     meta_out.write_text(
-        json.dumps(metadata_for(args, slice_mode=slice_mode, rows=rows, validation=validation),
+        json.dumps(metadata_for(
+            args,
+            slice_mode=slice_mode,
+            rows=rows,
+            validation=validation,
+            root_analysis=root_analysis,
+        ),
                    indent=2,
                    ensure_ascii=False),
         encoding="utf-8",

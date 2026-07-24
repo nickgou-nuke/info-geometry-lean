@@ -97,10 +97,20 @@ noncomputable def fibWhiskerLeft (X : FibCat) {Y₁ Y₂ : FibCat} (f : FibHom Y
 noncomputable def fibWhiskerRight {X₁ X₂ : FibCat} (f : FibHom X₁ X₂) (Y : FibCat) : FibHom (fibTensorObj X₁ Y) (fibTensorObj X₂ Y) :=
   fibTensorHom f (FibHom.id Y)
 
-/-
-No mathlib `MonoidalCategory` or `BraidedCategory` instance is declared in this
-file. The remaining construction requires explicit associator/unitors, naturality
-proofs, and pentagon/hexagon coherence for the full `FibCat` Hom-spaces.
+/-!
+## Remaining closure debt
+
+This file is verified scaffolding only; no `MonoidalCategory`/`BraidedCategory`
+instance is declared.
+
+Exact kernel-checked lemmas still owed before full monoidal closure:
+- TODO: `fibTensorObj_assoc X Y Z : fibTensorObj (fibTensorObj X Y) Z = fibTensorObj X (fibTensorObj Y Z)`
+- TODO: `fibTensorObj_unit_left X : fibTensorObj fibTensorUnit X = X`
+- TODO: `fibTensorObj_unit_right X : fibTensorObj X fibTensorUnit = X`
+- TODO: associator unit/tau block lemmas from `MTC_FusionMatrix`
+- TODO: pentagon/triangle proofs as `FibHom.ext` calc chains
+- TODO: braiding naturality `right/left` as `FibHom.ext` simp calc
+- TODO: hexagon forward/reverse as `FibHom.ext` block calc
 -/
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

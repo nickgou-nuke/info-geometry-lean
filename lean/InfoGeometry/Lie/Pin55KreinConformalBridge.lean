@@ -217,6 +217,8 @@ noncomputable def pkg_concrete : Pin55KreinConformalPackage where
   ρ_scales_B := by
     intro v x y
     simp [B_concrete]
+    <;>
+    rfl
   anomaly_index_zero := anomaly_index_zero_proof
 
 /-- Linear injection mapping SplitSpace 4 coordinates to Fin 32 -> ℝ. -/

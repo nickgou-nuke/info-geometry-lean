@@ -299,23 +299,30 @@ theorem hyperrotor_is_modular_automorphism
   have h₂ : u⁻¹ * (x * y) * u = (u⁻¹ * x * u) * (u⁻¹ * y * u) := by
     calc
       u⁻¹ * (x * y) * u = u⁻¹ * x * y * u := by simp [Matrix.mul_assoc]
-      _ = u⁻¹ * x * (u * u⁻¹) * y * u := by
-        have h_inv : u * u⁻¹ = 1 := Invertible.mul_invOf_self u
-        rw [h_inv]
-        <;> simp [Matrix.mul_assoc]
-        <;> simp_all [Matrix.mul_assoc] <;> ring_nf
-      _ = u⁻¹ * x * (1 : Matrix n n ℂ) * y * u := by
-        simp [Invertible.mul_invOf_self]
-      _ = u⁻¹ * x * y * u := by simp [one_mul]
       _ = (u⁻¹ * x * u) * (u⁻¹ * y * u) := by
+        have h_inv_left : u⁻¹ * u = 1 := Invertible.invOf_mul_self u
+        have h_inv_right : u * u⁻¹ = 1 := Invertible.mul_invOf_self u
         calc
           u⁻¹ * x * y * u = u⁻¹ * x * (u * u⁻¹) * y * u := by
-            rw [Invertible.mul_invOf_self u]
+            rw [h_inv_right]
             <;> simp [Matrix.mul_assoc]
             <;> simp_all [Matrix.mul_assoc] <;> ring_nf
-          _ = (u⁻¹ * x * u) * (u⁻¹ * y * u) := by
-            simp [Matrix.mul_assoc, Invertible.mul_invOf_self]
+          _ = u⁻¹ * x * (1 : Matrix n n ℂ) * y * u := by
+            rw [h_inv_right]
+            <;> simp [Matrix.mul_assoc]
+          _ = u⁻¹ * x * y * u := by
+            simp [Matrix.one_mul, Matrix.mul_assoc]
             <;> simp_all [Matrix.mul_assoc] <;> ring_nf
+          _ = (u⁻¹ * x * u) * (u⁻¹ * y * u) := by
+            calc
+              u⁻¹ * x * y * u = u⁻¹ * x * (u * u⁻¹) * y * u := by
+                rw [h_inv_right]
+                <;> simp [Matrix.mul_assoc]
+                <;> simp_all [Matrix.mul_assoc] <;> ring_nf
+              _ = (u⁻¹ * x * u) * (u⁻¹ * y * u) := by
+                rw [h_inv_left, h_inv_right]
+                <;> simp [Matrix.mul_assoc]
+                <;> simp_all [Matrix.mul_assoc] <;> ring_nf
   have h₃ : Matrix.trace (u⁻¹ * x * u) = Matrix.trace x := by
     exact hyperrotor_conjugation_trace_invariant u x
   exact ⟨h₁, h₂, h₃⟩

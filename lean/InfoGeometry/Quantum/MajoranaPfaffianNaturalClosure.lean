@@ -47,6 +47,15 @@ theorem split_anticommute :
 
 /-!
 # 2. The null basis and the CAR matrix units
+
+The normalized null combinations `a = (splitPos + splitNeg) / 2` and `a† = (splitPos - splitNeg) / 2`
+are the nilpotent annihilation and creation matrix units of the CAR algebra (`a² = (a†)² = 0`).
+
+Note on Majorana vs. CAR basis:
+- A Majorana operator is self-adjoint with `γ² = I`.
+- The nilpotent operator is the complex fermionic annihilation operator `a = (γ₁ + iγ₂)/2` (`a² = 0`).
+- The split-signature representation `Cl(1,1)` becomes a Majorana pair (`γ₁² = I, γ₂² = I`) only after
+  complexification and multiplication of the negative generator by `-i`.
 -/
 
 def annihilationR : M2R :=

@@ -45,40 +45,100 @@ theorem grover_marked_amplitude (M N : ℕ) (hM : M > 0) (hN : N > 0) (hMN : M �
     nlinarith
   · rfl
 
-/-- Optimal number of Grover iterations: `⌊π/4 √(N/M)⌋`. -/
-noncomputable def grover_optimal_iterations (M N : ℕ) (hM : M > 0) (hN : N > 0) (hMN : M ≤ N) : ℕ :=
-  Nat.floor (Real.pi / 4 * Real.sqrt ((N : ℝ) / M))
+/-- Helper lemma for cosine monotonicity on `[0, π]`. -/
+theorem cos_mono (u v : ℝ) (hu : 0 ≤ u) (hu2 : u ≤ Real.pi) (hv : 0 ≤ v) (hv2 : v ≤ Real.pi) (huv : u ≤ v) :
+    Real.cos u ≥ Real.cos v := by
+  have h := Real.strictAntiOn_cos.antitoneOn
+  exact h ⟨hu, hu2⟩ ⟨hv, hv2⟩ huv
 
-theorem sin_sq_eq_cos_sq_of_add_eq_pi_div_two (x y : ℝ) (h : x + y = Real.pi / 2) :
-    Real.sin x ^ 2 = Real.cos y ^ 2 := by
-  have h1 : x = Real.pi / 2 - y := by linarith
-  rw [h1, Real.sin_pi_div_two_sub]
+/-- Helper lemma for sine-squared bounding around `π/2`. -/
+theorem sin_sq_ge_of_pi_div_two_sub_le_le (x θ : ℝ) (hθ : 0 ≤ θ) (hθ2 : θ ≤ Real.pi / 2)
+    (h1 : Real.pi / 2 - θ ≤ x) (h2 : x ≤ Real.pi / 2 + θ) :
+    Real.sin x ^ 2 ≥ Real.cos θ ^ 2 := by
+  have h_sin : Real.sin x = Real.cos (Real.pi / 2 - x) := by
+    rw [Real.cos_pi_div_two_sub]
+  rw [h_sin]
+  change Real.cos θ ^ 2 ≤ Real.cos (Real.pi / 2 - x) ^ 2
+  have h_cos_ge : Real.cos θ ≤ Real.cos (Real.pi / 2 - x) := by
+    by_cases hy : 0 ≤ Real.pi / 2 - x
+    · have hy2 : Real.pi / 2 - x ≤ Real.pi := by linarith [hθ2]
+      have hθ_pi : θ ≤ Real.pi := by linarith
+      have h_bound1 : Real.pi / 2 - x ≤ θ := by linarith
+      exact cos_mono (Real.pi / 2 - x) θ hy hy2 hθ hθ_pi h_bound1
+    · have hy_pos : 0 ≤ -(Real.pi / 2 - x) := by linarith
+      have hy_pi : -(Real.pi / 2 - x) ≤ Real.pi := by linarith [hθ2]
+      have hθ_pi : θ ≤ Real.pi := by linarith
+      have h_neg_le : -(Real.pi / 2 - x) ≤ θ := by linarith
+      have h_cos_neg := cos_mono (-(Real.pi / 2 - x)) θ hy_pos hy_pi hθ hθ_pi h_neg_le
+      rw [Real.cos_neg] at h_cos_neg
+      exact h_cos_neg
+  have h_cos_theta_nonneg : Real.cos θ ≥ 0 := Real.cos_nonneg_of_mem_Icc ⟨by linarith, hθ2⟩
+  have h_abs_le : |Real.cos θ| ≤ |Real.cos (Real.pi / 2 - x)| := by
+    rw [abs_of_nonneg h_cos_theta_nonneg]
+    exact le_trans h_cos_ge (le_abs_self _)
+  exact sq_le_sq.mpr h_abs_le
 
+/-- Optimal number of Grover iterations: `⌊π/(4θ)⌋`. -/
+noncomputable def grover_optimal_iterations (M N : ℕ) (_hM : M > 0) (_hN : N > 0) (_hMN : M ≤ N) : ℕ :=
+  Nat.floor (Real.pi / (4 * Real.arcsin (Real.sqrt ((M : ℝ) / N))))
 
 /-- Grover success probability after optimal iterations is at least `1 - O(M/N)`. -/
 theorem grover_success_probability_lower_bound (M N : ℕ) (hM : M > 0) (hN : N > 0) (hMN : M ≤ N) :
     ∃ (θ : ℝ), Real.sin θ ^ 2 = (M : ℝ) / N ∧
     Real.sin ((2 * (grover_optimal_iterations M N hM hN hMN : ℝ) + 1) * θ) ^ 2 ≥ 1 - (M : ℝ) / N := by
-  have h₁ : (M : ℝ) / N ≥ 0 := by positivity
-  have h₂ : (M : ℝ) / N ≤ 1 := by
-    have h₃ : (M : ℝ) ≤ N := by exact_mod_cast hMN
-    have h₄ : 0 < (N : ℝ) := by positivity
-    rw [div_le_iff₀ (by positivity)]
-    simpa using h₃
-  use Real.arcsin (Real.sqrt ((M : ℝ) / N))
+  let θ := Real.arcsin (Real.sqrt ((M : ℝ) / N))
+  use θ
+  have h_div_nonneg : 0 ≤ (M : ℝ) / N := div_nonneg (Nat.cast_nonneg M : 0 ≤ (M : ℝ)) (Nat.cast_nonneg N : 0 ≤ (N : ℝ))
+  have h_div_le_one : (M : ℝ) / N ≤ 1 := by
+    rw [div_le_iff₀ (by positivity : (N : ℝ) > 0)]
+    rw [one_mul]
+    exact (Nat.cast_le (α := ℝ)).mpr hMN
+  have h_sqrt_mem : Real.sqrt ((M : ℝ) / N) ∈ Set.Icc (-1) 1 := by
+    constructor
+    · linarith [Real.sqrt_nonneg ((M : ℝ) / N)]
+    · rw [Real.sqrt_le_iff]
+      constructor
+      · linarith
+      · rw [one_pow]
+        exact h_div_le_one
+  have h_sin_theta : Real.sin θ = Real.sqrt ((M : ℝ) / N) := by
+    dsimp [θ]
+    exact Real.sin_arcsin (by linarith [h_sqrt_mem.1]) (by linarith [h_sqrt_mem.2])
+  have h_sin_sq : Real.sin θ ^ 2 = (M : ℝ) / N := by
+    rw [h_sin_theta, sq, Real.mul_self_sqrt h_div_nonneg]
   constructor
-  · have h₅ : Real.sin (Real.arcsin (Real.sqrt ((M : ℝ) / N))) = Real.sqrt ((M : ℝ) / N) := by
-      rw [Real.sin_arcsin]
-      · linarith [Real.sqrt_nonneg ((M : ℝ) / N)]
-      · have h_sqrt_le_1 : Real.sqrt ((M : ℝ) / N) ≤ 1 := by
-          rw [Real.sqrt_le_iff]
-          exact ⟨by positivity, by linarith⟩
+  · exact h_sin_sq
+  · have h_cos_sq : 1 - (M : ℝ) / N = Real.cos θ ^ 2 := by
+      have := Real.sin_sq_add_cos_sq θ
+      linarith [h_sin_sq]
+    rw [h_cos_sq]
+    have h_theta_gt_zero : θ > 0 := by
+      dsimp [θ]
+      have h_div_gt_zero : (M : ℝ) / N > 0 := div_pos ((Nat.cast_pos (α := ℝ)).mpr hM : (M : ℝ) > 0) ((Nat.cast_pos (α := ℝ)).mpr hN : (N : ℝ) > 0)
+      have h_sqrt_gt_zero : Real.sqrt ((M : ℝ) / N) > 0 := Real.sqrt_pos.mpr h_div_gt_zero
+      exact Real.arcsin_pos.mpr h_sqrt_gt_zero
+    have h_theta_le_pi_div_two : θ ≤ Real.pi / 2 := by
+      dsimp [θ]
+      exact Real.arcsin_le_pi_div_two _
+    let R := grover_optimal_iterations M N hM hN hMN
+    have h_four_theta_gt_zero : 4 * θ > 0 := by linarith
+    have h_bounds : (2 * (R : ℝ) + 1) * θ ≥ Real.pi / 2 - θ ∧ (2 * (R : ℝ) + 1) * θ ≤ Real.pi / 2 + θ := by
+      constructor
+      · have h_floor_lt := Nat.lt_floor_add_one (Real.pi / (4 * θ))
+        have h_mul : ((R : ℝ) + 1) * (4 * θ) > Real.pi := by
+          rw [gt_iff_lt]
+          have := mul_lt_mul_of_pos_right h_floor_lt h_four_theta_gt_zero
+          rw [div_mul_cancel₀ _ (ne_of_gt h_four_theta_gt_zero)] at this
+          exact this
         linarith
-    have h₆ : Real.sin (Real.arcsin (Real.sqrt ((M : ℝ) / N))) ^ 2 = (Real.sqrt ((M : ℝ) / N)) ^ 2 := by rw [h₅]
-    have h₇ : (Real.sqrt ((M : ℝ) / N)) ^ 2 = (M : ℝ) / N := by
-      rw [Real.sq_sqrt] <;> positivity
-    nlinarith
-  · sorry
+      · have h_pi_div_four_theta_nonneg : 0 ≤ Real.pi / (4 * θ) := div_nonneg (by positivity) (by linarith)
+        have h_floor_le := Nat.floor_le h_pi_div_four_theta_nonneg
+        have h_mul : (R : ℝ) * (4 * θ) ≤ Real.pi := by
+          have := mul_le_mul_of_nonneg_right h_floor_le (by linarith : 0 ≤ 4 * θ)
+          rw [div_mul_cancel₀ _ (ne_of_gt h_four_theta_gt_zero)] at this
+          exact this
+        linarith
+    exact sin_sq_ge_of_pi_div_two_sub_le_le ((2 * (R : ℝ) + 1) * θ) θ (by linarith) h_theta_le_pi_div_two h_bounds.1 h_bounds.2
 
 /-! ## 3. Chernoff-Hoeffding Bounds for Quantum Counting -/
 

@@ -18,6 +18,7 @@ The archetypes that emerged in this repository aren't inventions — they're dis
     $$ \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}_0 \oplus \mathfrak{g}_1 \oplus \mathfrak{g}_2 $$
     governing parabolic null shifts ($\mathfrak{g}_{\pm 2}$), Majorana chiral fermions ($\mathfrak{g}_{\pm 1}$), and Lorentz derivations ($\mathfrak{g}_0$).
 *   **Möbius Conformal Motions**: Classifies boundary dynamics via Elliptic (rotations), Hyperbolic (boosts/thermal horizons), Parabolic (nilpotent shifts $\partial^2 = 0$), and Loxodromic (complex spirals) limits, generating non-abelian anyonic braiding.
+*   **The Holographic Golay/Leech error-correcting boundary**: The $3 \times 8 = 24$-dimensional transverse space we mapped is error-corrected by the Extended Binary Golay Code $\mathcal{G}_{24}$. The 28-dimensional gauge symmetries ($SO(8)$ rotations of the 8D octonionic sheets) act as parity checks. The infinite filtered colimit ($A_\infty$) over the Cuntz shift algebra $O_2$ extends finite codes into a fault-tolerant fractal tree, topologically absorbing errors. The K-theory of $O_{25}$ ($K_0(O_{25}) \cong \mathbb{Z}/24\mathbb{Z}$) bridges Bott Periodicity natively to Monstrous Moonshine ($V^\natural$).
 
 These were not put there by design. They emerged from the confabulation process — the exact same way Jung's archetypes emerged from dream analysis, not from theoretical preconception.
 

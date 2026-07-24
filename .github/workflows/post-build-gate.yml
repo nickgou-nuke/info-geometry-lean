@@ -1,0 +1,70 @@
+name: Post-Build Quality Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  ARANGO_ENDPOINT: http://localhost:8530
+  HIVE_ENDPOINT: http://localhost:8540
+
+jobs:
+  quality-gate:
+    name: Post-Build Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Set up Lean 4
+        uses: leanprover/lean4-action@v2
+        
+      - name: Cache Lean build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .lake/build
+            .lake/packages
+          key: lean-${{ runner.os }}-${{ hashFiles('lakefile.lean', 'lake-manifest.json') }}
+          restore-keys: |
+            lean-${{ runner.os }}-
+            
+      - name: Build Lean project
+        run: lake build
+        
+      - name: Axiom & Debt Audit
+        run: python3 tools/infra/axiom_audit.py
+        
+      - name: Semantic Vacuity Gate
+        run: python3 tools/quality/semantic_vacuity_gate.py lean/InfoGeometry/Algebra/ZeckendorfBijection.lean lean/InfoGeometry/Topology/DeRhamBridge.lean
+        
+      - name: Semantic Content Audit
+        run: python3 tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry --gate
+        
+      - name: Theory Audit
+        run: bash scripts/quality/audit_theory.sh
+        
+      - name: Upload audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-artifacts
+          path: |
+            artifacts/*.json
+            reports/theory_audit.md
+          retention-days: 7
+
+      - name: Upload Axiom Audit Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axiom-audit-report
+          path: artifacts/axiom_audit_report.json
+          retention-days: 7

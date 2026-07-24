@@ -1,0 +1,90 @@
+name: Post-Build Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  post-build-gate:
+    name: Post-Build Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+          
+      - name: Cache Lake dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-
+            
+      - name: Update Lake dependencies
+        run: lake update
+        
+      - name: Build
+        run: lake build
+        
+      - name: Run Post-Build Quality Gate
+        run: bash scripts/quality/post_build_gate.sh
+        timeout-minutes: 45
+        
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-artifacts-${{ github.run_id }}
+          path: |
+            artifacts/
+            reports/
+          retention-days: 7
+          
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f artifacts/axiom_audit_full.json ]; then
+            GAPS=$(jq '.total_open_gaps' artifacts/axiom_audit_full.json)
+            DEBT=$(jq '.debt_files' artifacts/axiom_audit_full.json)
+            echo "### Axiom/Debt Audit" >> $GITHUB_STEP_SUMMARY
+            echo "- Open gaps (sorry/admit): $GAPS" >> $GITHUB_STEP_SUMMARY
+            echo "- Files with debt: $DEBT" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f reports/pauli-seal-audit.json ]; then
+            VIOLATIONS=$(jq 'length' reports/pauli-seal-audit.json)
+            echo "### Pauli Protocol Seal" >> $GITHUB_STEP_SUMMARY
+            echo "- Total violations: $VIOLATIONS" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f artifacts/vacuity_full.txt ]; then
+            FINDINGS=$(grep "semantic_vacuity:" artifacts/vacuity_full.txt | awk '{print $2}' || echo 0)
+            ERRORS=$(grep "error:" artifacts/vacuity_full.txt | awk '{print $2}' || echo 0)
+            echo "### Semantic Vacuity Gate" >> $GITHUB_STEP_SUMMARY
+            echo "- Findings: $FINDINGS" >> $GITHUB_STEP_SUMMARY
+            echo "- Errors (witness/carrier): $ERRORS" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f artifacts/mathless_full.json ]; then
+            SKELETAL=$(jq 'length' artifacts/mathless_full.json)
+            echo "### Mathless Proof Audit" >> $GITHUB_STEP_SUMMARY
+            echo "- Skeletal/placeholder proofs: $SKELETAL" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi

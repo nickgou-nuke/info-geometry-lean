@@ -4,7 +4,7 @@ import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 open InfoGeometry.MajoranaPfaffianNaturalClosure
 open Matrix
 
-namespace InfoGeometry.Lie.BRSTCohomologyTest
+namespace InfoGeometry.Lie.BRSTCohomology
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
@@ -76,11 +76,11 @@ theorem nambu_ker_eq_range :
 /-- Certified BRST Cohomology Triviality (Q-exact BRST Quartet Mechanism) -/
 theorem nambu_physical_space_trivial (x : PhysicalStateSpace nambuBRSTComplex) :
     x = 0 := by
-  induction x using Submodule.Quotient.inductionOn with
-  | h v =>
-    rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
-    have hv : (v.1 : Fin 2 → ℝ) ∈ LinearMap.ker nambuBRSTOp := v.2
-    rw [nambu_ker_eq_range] at hv
-    exact hv
+  obtain ⟨v, rfl⟩ := Quotient.mk''_surjective x
+  change Submodule.Quotient.mk v = 0
+  rw [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap]
+  have hv : (v.1 : Fin 2 → ℝ) ∈ LinearMap.ker nambuBRSTOp := v.2
+  rw [nambu_ker_eq_range] at hv
+  exact hv
 
-end InfoGeometry.Lie.BRSTCohomologyTest
+end InfoGeometry.Lie.BRSTCohomology

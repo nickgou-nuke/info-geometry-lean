@@ -29,9 +29,8 @@ def scan_file(filepath: Path) -> dict[str, Any] | None:
         content = filepath.read_text(encoding="utf-8", errors="ignore")
     except Exception:
         return None
-    # Strip block comments, line comments, string literals, and French/backticked quotes preserving newlines
     clean_content = re.sub(
-        r"/-.*?-/|--.*|\"(?:[^\"\\]|\\.)*\"|«[^»]*»|`+[^`]*`+",
+        r'/-.*?-/|--.*|"(?:[^"\\]|\\.)*"|«[^»]*»|`+[^`]*`+',
         lambda m: "".join("\n" if c == "\n" else " " for c in m.group(0)),
         content,
         flags=re.DOTALL

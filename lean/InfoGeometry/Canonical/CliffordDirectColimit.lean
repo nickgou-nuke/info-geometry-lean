@@ -49,10 +49,15 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
   let j : Fin (2^(n + 1)) := ⟨b.val, h_lt_b⟩
   have happ := congrFun (congrFun h i) j
   have h_cond : a.val < 2^n ∧ b.val < 2^n := ⟨a.isLt, b.isLt⟩
-  change (if h : a.val < 2^n ∧ b.val < 2^n then A ⟨a.val, h.1⟩ ⟨b.val, h.2⟩ else if h2 : a.val ≥ 2^n ∧ b.val ≥ 2^n then A ⟨a.val - 2^n, by omega⟩ ⟨b.val - 2^n, by omega⟩ else 0) =
-         (if h : a.val < 2^n ∧ b.val < 2^n then B ⟨a.val, h.1⟩ ⟨b.val, h.2⟩ else if h2 : a.val ≥ 2^n ∧ b.val ≥ 2^n then B ⟨a.val - 2^n, by omega⟩ ⟨b.val - 2^n, by omega⟩ else 0) at happ
-  simp only [dif_pos h_cond] at happ
-  exact happ
+  simp [cliffordEmbedSucc, Fin.ext_iff, Matrix.ext_iff] at happ ⊢
+  <;>
+  (try { aesop }) <;>
+  (try {
+    split_ifs at * <;> simp_all <;>
+    (try { aesop }) <;>
+    (try { omega })
+  }) <;>
+  (try { aesop })
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/
 def cliffordSeq (n m : ℕ) : CliffordStage 𝕜 n →ₗ[𝕜] CliffordStage 𝕜 (n + m) :=

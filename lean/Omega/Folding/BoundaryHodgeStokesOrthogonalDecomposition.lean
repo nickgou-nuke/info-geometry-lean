@@ -8,9 +8,6 @@ noncomputable section
 abbrev BoundaryHodgeStokesAmbient (n : ℕ) :=
   EuclideanSpace ℝ (Fin n)
 
-/-- Concrete data for the affine boundary Hodge--Stokes problem. The boundary datum is written as
-an orthogonal component plus a cycle-space correction, and the orthogonal component is assumed to
-be orthogonal to every cycle. -/
 structure BoundaryHodgeStokesData where
   n : ℕ
   boundaryVector : BoundaryHodgeStokesAmbient n
@@ -22,12 +19,10 @@ structure BoundaryHodgeStokesData where
     ∀ h : BoundaryHodgeStokesAmbient n, h ∈ cycleSpace →
       @inner ℝ (BoundaryHodgeStokesAmbient n) _ orthogonalVector h = 0
 
-/-- Feasible flows are the affine translate of the cycle space through the boundary datum. -/
 def BoundaryHodgeStokesData.Feasible (D : BoundaryHodgeStokesData)
     (g : BoundaryHodgeStokesAmbient D.n) : Prop :=
   ∃ h ∈ D.cycleSpace, g = D.boundaryVector + h
 
-/-- Package for the vector-valued Hodge--Stokes minimum-energy representative. -/
 def BoundaryHodgeStokesOrthogonalVectorPackage (D : BoundaryHodgeStokesData) : Prop :=
   D.Feasible D.orthogonalVector ∧
     (∀ h ∈ D.cycleSpace, @inner ℝ (BoundaryHodgeStokesAmbient D.n) _ D.orthogonalVector h = 0) ∧
@@ -36,7 +31,6 @@ def BoundaryHodgeStokesOrthogonalVectorPackage (D : BoundaryHodgeStokesData) : P
       ‖g‖ ^ 2 = ‖D.orthogonalVector‖ ^ 2 + ‖g - D.orthogonalVector‖ ^ 2) ∧
     (∀ g, D.Feasible g → ‖D.orthogonalVector‖ ≤ ‖g‖)
 
-/-- Paper label: `cor:fold-boundary-hodge-stokes-orthogonal-vector`. -/
 theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
     (D : BoundaryHodgeStokesData) : BoundaryHodgeStokesOrthogonalVectorPackage D := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
@@ -74,7 +68,7 @@ theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
         D.boundaryVector + k =
           D.orthogonalVector + ((D.cycleOffset : BoundaryHodgeStokesAmbient D.n) + k) := by
       rw [D.boundary_split]
-      abel
+      abel_nf
     calc
       ‖D.boundaryVector + k‖ ^ 2
           = ‖D.orthogonalVector + ((D.cycleOffset : BoundaryHodgeStokesAmbient D.n) + k)‖ ^ 2 := by
@@ -85,7 +79,7 @@ theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
       _ = ‖D.orthogonalVector‖ ^ 2 + ‖D.boundaryVector + k - D.orthogonalVector‖ ^ 2 := by
             congr 1
             rw [D.boundary_split]
-             abel_nf
+            abel_nf
   · intro g hg
     rcases hg with ⟨k, hk, rfl⟩
     have hsum_mem : (D.cycleOffset : BoundaryHodgeStokesAmbient D.n) + k ∈ D.cycleSpace :=

@@ -81,6 +81,7 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
       ρ (RawCARModeCompletion.cutoffBoundaryTerm C N m n) +
         if m + n = 0 then (m : 𝕜) • ρ C.central else 0 := by
   rw [endomorphismCutoffCurrent_commutator]
+  change ρ (BosonizationConstructiveCurrent.comm (C.cutoffCurrent N m) (C.cutoffCurrent N n)) = _
   rw [RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN]
   simp [map_add, map_smul]
 

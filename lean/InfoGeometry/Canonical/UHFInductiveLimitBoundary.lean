@@ -70,26 +70,25 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
           (Finset.univ.image (f_ext false)) ∪ (Finset.univ.image (f_ext true)) := by
         ext x
         simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_image, true_and, true_iff]
-        by_cases hb : x ⟨n, Nat.lt_succ_self n⟩ = true
-        · apply Or.inr
-          use prefixSucc n x
-          ext i
-          by_cases hi : i.1 < n
-          · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by ext; omega
-            rw [h_eq]
-            dsimp [f_ext, extendSucc]
-            simp [hb]
+        cases hb : x ⟨n, Nat.lt_succ_self n⟩
         · apply Or.inl
           use prefixSucc n x
           ext i
           by_cases hi : i.1 < n
           · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by ext; omega
-            have hb' : x ⟨n, Nat.lt_succ_self n⟩ = false := Bool.eq_false_of_ne_true hb
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (by have := i.isLt; omega)
             rw [h_eq]
             dsimp [f_ext, extendSucc]
-            simp [hb']
+            simp [hb]
+        · apply Or.inr
+          use prefixSucc n x
+          ext i
+          by_cases hi : i.1 < n
+          · simp [f_ext, extendSucc, prefixSucc, hi]
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (by have := i.isLt; omega)
+            rw [h_eq]
+            dsimp [f_ext, extendSucc]
+            simp [hb]
       have h_inj_false : Function.Injective (f_ext false) := by
         intro x y h
         have := congr_arg (prefixSucc n) h

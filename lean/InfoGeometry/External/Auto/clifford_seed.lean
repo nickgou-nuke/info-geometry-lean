@@ -25,16 +25,16 @@ def σx : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 def σy : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; -1, 0]
 
 lemma σx_sq : σx * σx = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [σx, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [σx, Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma σy_sq : σy * σy = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [σy, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [σy, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The linear map ℝ² → M₂(ℝ) sending e₁↦σx, e₂↦σy -/
 def f_lin : (ℝ × ℝ) →ₗ[ℝ] Matrix (Fin 2) (Fin 2) ℝ where
   toFun := λ ⟨x, y⟩ => x • σx + y • σy
   map_add' := λ ⟨x₁,y₁⟩ ⟨x₂,y₂⟩ => by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [σx, σy, Matrix.smul_apply, Matrix.add_apply] <;> ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [σx, σy, Matrix.add_apply] <;> ring
   map_smul' := λ r ⟨x,y⟩ => by
     ext i j; fin_cases i <;> fin_cases j <;> simp [σx, σy, Matrix.smul_apply] <;> ring
 
@@ -42,10 +42,9 @@ def f_lin : (ℝ × ℝ) →ₗ[ℝ] Matrix (Fin 2) (Fin 2) ℝ where
 lemma f_clifford_cond (v : ℝ × ℝ) : f_lin v * f_lin v = algebraMap ℝ _ (Q v) := by
   rcases v with ⟨x, y⟩
   have h_anti : σx * σy = -(σy * σx) := by
-    ext i j; fin_cases i <;> fin_cases j <;> simp [σx, σy, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [σx, σy, Matrix.mul_apply, Fin.sum_univ_two]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [f_lin, Q_apply, σx, σy, σx_sq, σy_sq, h_anti,
-      Matrix.smul_apply, Matrix.add_apply, Matrix.mul_apply, Matrix.one_apply,
+    simp [f_lin, Q_apply, σx, σy, Matrix.smul_apply, Matrix.mul_apply,
       Fin.sum_univ_two, Algebra.algebraMap_eq_smul_one] <;> ring
 
 /-- The algebra homomorphism Cl(1,1) → M₂(ℝ) from the universal property -/
@@ -65,8 +64,7 @@ theorem M2_basis_decompose (M : Matrix (Fin 2) (Fin 2) ℝ) :
         ((M 0 1 - M 1 0)/2 : ℝ) • σy +
         ((M 1 1 - M 0 0)/2 : ℝ) • (σx * σy) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [σx, σy, Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply, 
-          Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [σx, σy, Matrix.smul_apply, Matrix.add_apply] <;> ring
 
 #check cl11_to_M2
 #check cl11_to_M2_e1

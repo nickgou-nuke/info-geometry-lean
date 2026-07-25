@@ -84,10 +84,9 @@ theorem finite_euler_product_pos (S : Finset ℕ) (s : ℝ) (hs : 1 < s)
   have hp_pos : 0 < (p : ℝ) := by positivity
   have h_pow_lt1 : (p : ℝ) ^ (-s) < 1 := by
     rw [Real.rpow_neg (by positivity)]
-    have : 1 < (p : ℝ) ^ s := by
-      have : 1 < (p : ℝ) := by exact_mod_cast (Nat.Prime.one_lt (h_prime p hp))
-      exact Real.one_lt_rpow this (by positivity)
-    exact inv_lt_one_of_one_lt this
+    have h1 : 1 < (p : ℝ) := by exact_mod_cast (Nat.Prime.one_lt (h_prime p hp))
+    have hpow : 1 < (p : ℝ) ^ s := Real.one_lt_rpow h1 (by positivity)
+    exact inv_lt_one_of_one_lt hpow
   have h_sub : 0 < 1 - (p : ℝ) ^ (-s) := sub_pos.mpr h_pow_lt1
   exact inv_pos.mpr h_sub
 

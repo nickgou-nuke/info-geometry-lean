@@ -6,79 +6,84 @@ noncomputable section
 
 namespace InfoGeometry.LogJordanKreinCore
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+def N : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
 
-/-- Nilpotent Jordan Block N = (0 1; 0 0) -/
-def N : M2R := !![0, 1; 0, 0]
+def G : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
-/-- 2D Jordan Cell Operator L_Δ = Δ I + N = (Δ 1; 0 Δ) -/
-def L0 (Delta : ℝ) : M2R := !![Delta, 1; 0, Delta]
+def χ : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
-/-- Krein Signature Matrix G = (0 1; 1 0) -/
-def kreinG : M2R := !![0, 1; 1, 0]
+def scalarMatrix (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Matrix.diagonal fun _ : Fin 2 => Δ
 
-/-- One-Mode Parity Involution χ = (1 0; 0 -1) -/
-def parity : M2R := !![1, 0; 0, -1]
+def L (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  scalarMatrix Δ + N
 
-/-- Theorem 1: N is strictly nilpotent: N² = 0 -/
-theorem jordanNilpotent_sq : N * N = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [N, Matrix.mul_apply, Fin.sum_univ_two]
+def expJordanCell (t Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Real.exp (t * Δ) • (1 + t • N)
 
-/-- Theorem 2: N is non-zero -/
-theorem jordanNilpotent_ne_zero : N ≠ 0 := by
-  intro h
-  have h01 := congr_fun (congr_fun h 0) 1
-  simp [N] at h01
+theorem jordanNilpotent_sq : N * N = 0 ∧ N ≠ 0 := by
+  constructor
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [N, Matrix.mul_apply, Fin.sum_univ_two]
+  · intro h
+    have h01 := congr_fun (congr_fun h 0) 1
+    simp [N] at h01
 
-/-- Theorem 3: Jordan Cell is Krein Self-Adjoint: L_Δᵀ G = G L_Δ -/
-theorem jordanCell_krein_selfAdjoint (Delta : ℝ) :
-    (L0 Delta).transpose * kreinG = kreinG * L0 Delta := by
+theorem jordanCell_krein_selfAdjoint (Δ : ℝ) :
+    (L Δ).transpose * G = G * L Δ := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [L0, kreinG, Matrix.transpose_apply, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [L, scalarMatrix, N, G, Matrix.transpose_apply, Matrix.mul_apply, Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
 
-/-- Time evolution matrix exponential for 2D Jordan Cell: E(t, Δ) = e^{t Δ} (I + t N) -/
-def expJordanCell (t Delta : ℝ) : M2R :=
-  Real.exp (t * Delta) • (1 + t • N)
+theorem jordanCell_not_diagonalizable (Δ : ℝ) :
+    ¬ (∃ (P : Matrix (Fin 2) (Fin 2) ℝ) (D : Matrix (Fin 2) (Fin 2) ℝ) (hP : Invertible P),
+      (D 0 1 = 0 ∧ D 1 0 = 0) ∧ L Δ = P * D * ⅟P) := by
+  intro ⟨P, D, hP, ⟨hD01, hD10⟩, hL⟩
+  have h_mul : L Δ * P = P * D := by
+    rw [hL, Matrix.mul_assoc, invOf_mul_self, Matrix.mul_one]
+  have h00 : (L Δ * P) 0 0 = (P * D) 0 0 := by rw [h_mul]
+  have h01 : (L Δ * P) 0 1 = (P * D) 0 1 := by rw [h_mul]
+  have h10 : (L Δ * P) 1 0 = (P * D) 1 0 := by rw [h_mul]
+  have h11 : (L Δ * P) 1 1 = (P * D) 1 1 := by rw [h_mul]
+  simp [L, scalarMatrix, N, hD01, hD10, Matrix.mul_apply, Fin.sum_univ_two] at h00 h01 h10 h11
+  have hP10 : P 1 0 = 0 := by
+    by_cases hD0 : Δ = D 0 0
+    · subst hD0; linarith
+    · have h_sub : (Δ - D 0 0) * P 1 0 = 0 := by linarith
+      rcases mul_eq_zero.mp h_sub with h1 | h2
+      · exfalso; exact hD0 (by linarith)
+      · exact h2
+  have hP11 : P 1 1 = 0 := by
+    by_cases hD1 : Δ = D 1 1
+    · subst hD1; linarith
+    · have h_sub : (Δ - D 1 1) * P 1 1 = 0 := by linarith
+      rcases mul_eq_zero.mp h_sub with h1 | h2
+      · exfalso; exact hD1 (by linarith)
+      · exact h2
+  have h_det_zero : Matrix.det P = 0 := by
+    simp [Matrix.det_fin_two, hP10, hP11]
+  have h_det_unit : IsUnit (Matrix.det P) := Matrix.isUnit_det_of_invertible P
+  have h_det_nonzero : Matrix.det P ≠ 0 := h_det_unit.ne_zero
+  exact h_det_nonzero h_det_zero
 
-/-- Explicit Matrix Form of expJordanCell -/
-theorem expJordanCell_explicit (t Delta : ℝ) :
-    expJordanCell t Delta = !![Real.exp (t * Delta), t * Real.exp (t * Delta); 0, Real.exp (t * Delta)] := by
+theorem exp_jordanCell (t Δ : ℝ) :
+    expJordanCell t Δ = !![Real.exp (t * Δ), t * Real.exp (t * Δ); 0, Real.exp (t * Δ)] := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [expJordanCell, N, Matrix.smul_apply, Matrix.add_apply, mul_comm]
+  fin_cases i <;> fin_cases j <;> simp [expJordanCell, N, Matrix.smul_apply, Matrix.add_apply, mul_comm]
 
-/-- Theorem 4: Ordinary Trace of Jordan Cell Evolution: Tr(e^{t L_Δ}) = 2 e^{t Δ} -/
-theorem trace_exp_jordanCell (t Delta : ℝ) :
-    Matrix.trace (expJordanCell t Delta) = 2 * Real.exp (t * Delta) := by
-  rw [expJordanCell_explicit]
+theorem trace_exp_jordanCell (t Δ : ℝ) :
+    Matrix.trace (expJordanCell t Δ) = 2 * Real.exp (t * Δ) := by
+  rw [exp_jordanCell]
   simp [Matrix.trace, Fin.sum_univ_two]
   ring
 
-/-- Theorem 5: Detector Trace using Nᵀ: Tr(Nᵀ e^{t L_Δ}) = t e^{t Δ} (Extracts Jordan Logarithmic Coefficient) -/
-theorem detector_trace_jordanCell (t Delta : ℝ) :
-    Matrix.trace (N.transpose * expJordanCell t Delta) = t * Real.exp (t * Delta) := by
-  rw [expJordanCell_explicit]
+theorem detector_trace_jordanCell (t Δ : ℝ) :
+    Matrix.trace (N.transpose * expJordanCell t Δ) = t * Real.exp (t * Δ) := by
+  rw [exp_jordanCell]
   simp [N, Matrix.transpose_apply, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- Theorem 6: Parity Supertrace of Jordan Cell Evolution: Tr(χ e^{t L_Δ}) = 0 -/
-theorem parity_trace_jordanCell (t Delta : ℝ) :
-    Matrix.trace (parity * expJordanCell t Delta) = 0 := by
-  rw [expJordanCell_explicit]
-  simp [parity, Matrix.trace, Fin.sum_univ_two]
-
-/-- Certified Logarithmic Jordan-Krein Apex Packet -/
-structure LogJordanKreinPacket where
-  nilpotent_sq : N * N = 0
-  nilpotent_nz : N ≠ 0
-  krein_self_adjoint : ∀ Delta, (L0 Delta).transpose * kreinG = kreinG * L0 Delta
-  trace_val : ∀ t Delta, Matrix.trace (expJordanCell t Delta) = 2 * Real.exp (t * Delta)
-  detector_val : ∀ t Delta, Matrix.trace (N.transpose * expJordanCell t Delta) = t * Real.exp (t * Delta)
-  parity_val : ∀ t Delta, Matrix.trace (parity * expJordanCell t Delta) = 0
-
-theorem log_jordan_krein_apex_exists : Nonempty LogJordanKreinPacket :=
-  ⟨⟨jordanNilpotent_sq, jordanNilpotent_ne_zero, jordanCell_krein_selfAdjoint,
-    trace_exp_jordanCell, detector_trace_jordanCell, parity_trace_jordanCell⟩⟩
+theorem parity_trace_jordanCell (t Δ : ℝ) :
+    Matrix.trace (χ * expJordanCell t Δ) = 0 := by
+  rw [exp_jordanCell]
+  simp [χ, Matrix.trace, Fin.sum_univ_two]
 
 end InfoGeometry.LogJordanKreinCore

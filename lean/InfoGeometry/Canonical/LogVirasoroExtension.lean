@@ -101,7 +101,7 @@ def makeLogVirasoroRepresentation
     intro x y
     change blockOp (ρ ⁅x, y⁆) (c ⁅x, y⁆) = (blockOp (ρ x) (c x)).commutator (blockOp (ρ y) (c y))
     rw [blockOp_commutator]
-    have h1 : ρ ⁅x, y⁆ = (ρ x).commutator (ρ y) := map_lie ρ x y
+    have h1 : ρ ⁅x, y⁆ = (ρ x).commutator (ρ y) := LieHom.map_lie ρ x y
     have h2 : c ⁅x, y⁆ = (ρ x).commutator (c y) + (c x).commutator (ρ y) := hc x y
     rw [h1, h2]
 

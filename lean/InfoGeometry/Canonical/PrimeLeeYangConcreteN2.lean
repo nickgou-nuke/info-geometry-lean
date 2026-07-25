@@ -23,10 +23,9 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 Concrete N=2 instance of the Lee-Yang/RH bridge.
 
 This module provides:
-1. The concrete N=2 prime chain with explicit primes {2, 3}
-2. Explicit partition polynomial for N=2
-3. Concrete Lee-Yang witness structure for N=2
-4. Explicit connection to the RH bridge via Cayley transform
+1. The concrete N=2 partition polynomial with roots on the unit circle
+2. Concrete Lee-Yang stability theorem for N=2
+3. Explicit connection to the RH bridge via Cayley transform
 -/
 
 noncomputable section
@@ -44,52 +43,7 @@ open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticCha
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
-The concrete N=2 prime chain with explicit primes {2, 3}
--/
-noncomputable def primeChainN2 : PrimeFerromagneticChain 2 :=
-  { prime := ![2, 3],
-    prime_isPrime := by
-      intro i
-      fin_cases i <;> decide,
-    kappa := (1 : ℝ),
-    kappa_nonneg := by norm_num }
-
-/-- The finite prime chain data for N=2 with κ = 1 -/
-noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
-  { p := ![2, 3],
-    prime := by
-      intro i
-      fin_cases i <;> decide,
-    ell := fun i => Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ),
-    ell_eq_log := by
-      intro i
-      fin_cases i <;> norm_num [FinitePrimeChainData.ell_eq_log],
-    ell_pos := by
-      intro i
-      fin_cases i <;>
-      (try norm_num) <;>
-      (try
-        {
-          have h : (0 : ℝ) < Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ) := by
-            simp [FinitePrimeChainData.ell_eq_log] at *
-            <;>
-            norm_num [Real.log_pos]
-            <;>
-            (try norm_num) <;>
-            (try
-              {
-                have h₁ : (1 : ℝ) < (2 : ℝ) := by norm_num
-                have h₂ : (1 : ℝ) < (3 : ℝ) := by norm_num
-                exact Real.log_pos (by norm_num)
-              })
-          exact h
-        })
-      <;>
-      (try norm_num) <;>
-      (try linarith)
-    }
-
-/-- The concrete N=2 partition polynomial with κ=1 and primes {2, 3}
+The concrete N=2 partition polynomial with κ=1 and primes {2, 3}
 
 For the Lee-Yang theorem, the partition function as a polynomial in fugacity z = e^{-2h}
 has all roots on the unit circle |z| = 1 for ferromagnetic Ising models.
@@ -105,48 +59,41 @@ noncomputable def partitionPolyN2 : Polynomial ℂ :=
 theorem partitionPolyN2_explicit : partitionPolyN2 = Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ) := by
   rfl
 
-/-- The concrete partition polynomial coefficients -/
-@[rep_depth thermo]
-def partitionPolyN2_coeffs : (ℕ → ℂ) :=
-  fun n => Polynomial.coeff partitionPolyN2 n
-
 /-- The first few coefficients of the partition polynomial -/
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_0 :
     Polynomial.coeff partitionPolyN2 0 = 1 := by
   simp [partitionPolyN2]
-  <;> norm_num
+  <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
+  <;> rfl
 
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_1 :
     Polynomial.coeff partitionPolyN2 1 = (-1 : ℂ) := by
   simp [partitionPolyN2]
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
+  <;> rfl
 
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_2 :
     Polynomial.coeff partitionPolyN2 2 = (1 : ℂ) := by
   simp [partitionPolyN2]
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
+  <;> rfl
 
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_3 :
     Polynomial.coeff partitionPolyN2 3 = 0 := by
   simp [partitionPolyN2]
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
+  <;> rfl
 
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_4 :
     Polynomial.coeff partitionPolyN2 4 = 0 := by
   simp [partitionPolyN2]
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
-
-/-- Concrete instance of the Lee-Yang stability witness for N=2 -/
-noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :=
-  { chain := (finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)),
-    partitionPolynomial := partitionPolyN2,
-    fieldToFugacity := fun _ => (1 : ℂ),
-    noRiemannHypothesisClaimGuard := by infer_instance }
+  <;> rfl
 
 /-- The concrete Lee-Yang stability theorem for N=2 -/
 theorem leeYangStabilityN2 :
@@ -163,7 +110,7 @@ theorem leeYangStabilityN2 :
   have h_norm_sq : Complex.normSq z = 1 := by
     have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h_root
     have h₄ : z ^ 2 - z + 1 = 0 := by
-      simpa [Polynomial.eval₂_hom_C_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul] using h₃
+      simpa [Polynomial.eval₂_hom_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul] using h₃
     have h₅ : z ^ 2 = z - 1 := by
       rw [← sub_eq_zero]
       ring_nf at h₄ ⊢
@@ -171,41 +118,38 @@ theorem leeYangStabilityN2 :
       <;> norm_num at * <;>
       (try constructor <;> nlinarith) <;>
       (try ring_nf at * <;> norm_num at * <;> nlinarith)
-    -- From z² = z - 1, we can deduce the real and imaginary parts
     have h₆ : z.re = 1 / 2 := by
-      have h₅ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
+      have h₈ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
         simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
         <;> norm_num at h₅ ⊢ <;>
         (try ring_nf at h₅ ⊢) <;>
         (try nlinarith) <;>
         (try linarith) <;>
         (try nlinarith)
-      have h₇ : z.re = 1 / 2 := by
-        have h₈ : z.im * (2 * z.re - 1) = 0 := by
-          simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
-          <;> norm_num at h₅ ⊢ <;>
-          (try ring_nf at h₅ ⊢) <;>
-          (try nlinarith) <;>
-          (try linarith) <;>
-          (try nlinarith)
-          <;>
-          (try
-            {
-              nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
-                sq_nonneg (z.im + Real.sqrt 3 / 2)]
-            })
-        by_cases h₉ : z.im = 0
-        · -- If z.im = 0, then z is real. But z² - z + 1 = 0 has no real roots.
-          have h₁₀ : z.re * z.re - z.re + 1 = 0 := by
-            simp [h₉] at h₅ h₆ ⊢
-            <;> nlinarith
-          nlinarith [sq_nonneg (z.re - 1 / 2)]
-        · -- If z.im ≠ 0, then 2 * z.re - 1 = 0
-          have h₁₀ : 2 * z.re - 1 = 0 := by
-            apply mul_left_cancel₀ h₉
-            linarith
+      have h₉ : z.im * (2 * z.re - 1) = 0 := by
+        simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
+        <;> norm_num at h₅ ⊢ <;>
+        (try ring_nf at h₅ ⊢) <;>
+        (try nlinarith) <;>
+        (try linarith) <;>
+        (try nlinarith)
+        <;>
+        (try
+          {
+            nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
+              sq_nonneg (z.im + Real.sqrt 3 / 2)]
+          })
+      by_cases h₁₀ : z.im = 0
+      · -- If z.im = 0, then z is real. But z² - z + 1 = 0 has no real roots.
+        have h₁₁ : z.re * z.re - z.re + 1 = 0 := by
+          simp [h₁₀] at h₅ h₈ ⊢
+          <;> nlinarith
+        nlinarith [sq_nonneg (z.re - 1 / 2)]
+      · -- If z.im ≠ 0, then 2 * z.re - 1 = 0
+        have h₁₁ : 2 * z.re - 1 = 0 := by
+          apply mul_left_cancel₀ h₁₀
           linarith
-      exact h₇
+        linarith
     have h_im_sq : z.im * z.im = 3 / 4 := by
       have h₈ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
         simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢

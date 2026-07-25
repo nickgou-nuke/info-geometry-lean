@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
@@ -32,6 +33,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
 open Complex
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 open InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
@@ -55,22 +57,27 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right
 theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
     (cayleyTransform z).re = 0 := by
   unfold cayleyTransform
-  have h1 : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
-    rw [div_eq_mul_inv, div_eq_mul_inv, conj_mul_eq_normSq]
-    field_simp [sub_ne_zero.mpr (Ne.symm hne)]
-    ring
-  rw [h1, div_re]
-  have h2 : ((1 + z) * star (1 - z)).re = 0 := by
-    have h_abs : ‖z‖^2 = 1 := by rw [hz, one_pow]
-    have h_sq : z.re^2 + z.im^2 = 1 := by
-      rw [← normSq_eq_abs] at h_abs
-      exact h_abs
+  have h_abs_sq : (Complex.abs z)^2 = 1 := by rw [hz, one_pow]
+  have h_sq : z.re^2 + z.im^2 = 1 := by
+    rw [Complex.abs] at h_abs_sq
+    exact (Real.rpow_two _).symm.trans h_abs_sq
+  have h_num : ((1 + z) * star (1 - z)).re = 0 := by
     calc ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
       simp only [star_def, conj_sub, conj_one, sub_re, add_re, mul_re, one_re, one_im, zero_mul, sub_zero]
       ring
     _ = 1 - 1 := by rw [h_sq]
     _ = 0 := by ring
-  rw [h2, zero_mul, zero_div, add_zero]
+  have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (‖1 - z‖^2 : ℂ) := by
+    have h_star : (1 - z) * star (1 - z) = (‖1 - z‖ : ℂ)^2 := by
+      rw [star_def, mul_conj]
+      norm_cast
+    have h_inv : (1 - z)⁻¹ = star (1 - z) / (‖1 - z‖ : ℂ)^2 := by
+      field_simp [sub_ne_zero.mpr (Ne.symm hne)]
+      exact h_star.symm
+    rw [div_eq_mul_inv, h_inv]
+    ring
+  rw [h_eq, div_re]
+  simp [h_num]
 
 /--
 **Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**

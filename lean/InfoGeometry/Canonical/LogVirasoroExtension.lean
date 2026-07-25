@@ -107,7 +107,7 @@ noncomputable def AdapterData.toLogVirasoroExtension
 Given a primary state $v_0 \neq 0$ with $L_0 v_0 = \Delta v_0$ and $c(L_0) v_0 = v_0$,
 embeds the 2D non-diagonalizable Jordan cell $L(\Delta)$ into $V \times V$.
 -/
-def makeLogIntertwiner
+noncomputable def makeLogIntertwiner
     (ρ : VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ Module.End 𝕜 V)
     (c : VirasoroAlgebra 𝕜 →ₗ[𝕜] Module.End 𝕜 V)
     (hc : IsVirasoroCocycle ρ c)
@@ -119,7 +119,7 @@ def makeLogIntertwiner
     toFun := fun v => (v 0 • v0 + v 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0, v 1 • v0)
     map_add' := by
       intro x y
-      ext <;> simp [add_smul, smul_add, add_assoc, add_left_comm]
+      ext <;> simp [add_smul, add_assoc, add_left_comm]
     map_smul' := by
       intro r x
       ext <;> simp [smul_add, mul_smul]

@@ -1,6 +1,6 @@
-import Mathlib.Tactic
-import InfoGeometry.Krein.KreinSpace
-import InfoGeometry.Krein.DoubledSpace
+import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic.Ring
 
 set_option linter.unusedSectionVars false
 
@@ -19,8 +19,6 @@ This module formalizes Bridge 4: The Metric Closure.
 -/
 
 namespace InfoGeometry.Canonical.TomitaTakesakiWickRotation
-
-open InfoGeometry.Krein
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 

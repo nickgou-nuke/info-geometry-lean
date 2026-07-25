@@ -1305,6 +1305,8 @@ import InfoGeometry.Canonical.BuresMetricClosedCartography
 import InfoGeometry.Canonical.BuresInformationGeodesicFlow
 import InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 import InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
+import InfoGeometry.Canonical.FilteredHestenesKreinColimit
+import InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
 
 namespace InfoGeometry
 

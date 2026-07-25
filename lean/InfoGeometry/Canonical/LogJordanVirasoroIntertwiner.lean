@@ -23,7 +23,7 @@ namespace InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 
 open Matrix
 
-variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 V : Type*} [Field 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
 /-- The $2 \times 2$ nilpotent Jordan shift matrix over scalar field `𝕜`. -/
@@ -69,9 +69,10 @@ theorem primary_eigenvalue
     (I : LogVirasoroIntertwiner L0 Δ) :
     L0 (I.ι (Pi.single 0 (1 : 𝕜))) = Δ • I.ι (Pi.single 0 (1 : 𝕜)) := by
   rw [apply_intertwines]
-  congr 1
-  ext i
-  fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  have hvec : Matrix.toLin' (jordanCell Δ) (Pi.single 0 (1 : 𝕜)) = Δ • Pi.single 0 (1 : 𝕜) := by
+    ext i
+    fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  rw [hvec, map_smul]
 
 /--
 **Logarithmic Partner State Action Law:**
@@ -82,10 +83,11 @@ theorem partner_action
     L0 (I.ι (Pi.single 1 (1 : 𝕜))) =
       Δ • I.ι (Pi.single 1 (1 : 𝕜)) + I.ι (Pi.single 0 (1 : 𝕜)) := by
   rw [apply_intertwines]
-  rw [← map_smul, ← map_add]
-  congr 1
-  ext i
-  fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  have hvec : Matrix.toLin' (jordanCell Δ) (Pi.single 1 (1 : 𝕜)) =
+      Δ • Pi.single 1 (1 : 𝕜) + Pi.single 0 (1 : 𝕜) := by
+    ext i
+    fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  rw [hvec, map_add, map_smul]
 
 /--
 **Non-Diagonalizability Preservation:**

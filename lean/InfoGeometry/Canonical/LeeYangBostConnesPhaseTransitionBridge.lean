@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 import InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -32,13 +33,14 @@ open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 open InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 /-- Logarithmic potential wall condition at a partition function zero. -/
 def HasLogarithmicPotentialWall (Z : ℂ → ℂ) (s0 : ℂ) : Prop :=
   Z s0 = 0
 
 /-- de Rham topological winding charge around a phase transition zero. -/
-def TopologicalWindingCharge (n : ℤ) : ℝ :=
+noncomputable def TopologicalWindingCharge (n : ℤ) : ℝ :=
   2 * Real.pi * (n : ℝ)
 
 /--
@@ -73,11 +75,11 @@ theorem grand_leeyang_bost_connes_phase_transition_master_duality
     ((leeYangToRiemannS z0).re = 1 / 2) ∧
     (TopologicalWindingCharge n ≠ 0) ∧
     (s.re = 1 / 2) ∧
-    (antiunitaryCriticalReflection s = s) := ⟨
+    (s = 1 - star s) := ⟨
   lee_yang_to_riemann_critical_line hz0 hne,
   quantized_time_step_ne_zero hn,
   antiunitary_fixed_locus_rigidity h_anti,
-  (antiunitary_fixed_locus_is_critical_line s).mpr (antiunitary_fixed_locus_rigidity h_anti)
+  (critical_line_fixed_locus_iff s).2 (antiunitary_fixed_locus_rigidity h_anti)
 ⟩
 
 end InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge

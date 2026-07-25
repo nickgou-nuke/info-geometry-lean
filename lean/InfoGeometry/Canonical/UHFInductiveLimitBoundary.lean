@@ -76,7 +76,7 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
           ext i
           by_cases hi : i.1 < n
           · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (by have := i.isLt; omega)
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (Nat.le_antisymm (Nat.le_of_lt_succ i.isLt) (not_lt.mp hi))
             rw [h_eq]
             dsimp [f_ext, extendSucc]
             simp [hb]
@@ -85,7 +85,7 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
           ext i
           by_cases hi : i.1 < n
           · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (by have := i.isLt; omega)
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := Fin.ext (Nat.le_antisymm (Nat.le_of_lt_succ i.isLt) (not_lt.mp hi))
             rw [h_eq]
             dsimp [f_ext, extendSucc]
             simp [hb]

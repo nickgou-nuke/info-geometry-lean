@@ -149,6 +149,7 @@ noncomputable def makeLogIntertwiner
     · exact hy1
   intertwines := by
     ext v
-    fin_cases v <;> simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
+    obtain ⟨v0_c, v1_c⟩ := v
+    simp [makeLogVirasoroRepresentation, blockOp, LinearMap.comp_apply]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

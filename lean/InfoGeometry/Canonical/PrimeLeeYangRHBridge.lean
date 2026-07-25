@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -15,6 +16,9 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+
+variable {n : ℕ}
 
 /--
 An actual root of a stored partition polynomial maps to the critical line,
@@ -24,7 +28,7 @@ The condition `z.re ≠ -1` removes the pole `z = -1` of
 `cayleyToTemperature z = z / (1 + z)`.
 -/
 theorem partitionRoot_mapsToCriticalLine
-    (W : LeeYangStabilityWitness)
+    (W : LeeYangStabilityWitness (n := n))
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
@@ -32,7 +36,7 @@ theorem partitionRoot_mapsToCriticalLine
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) := by
   exact cayleyToTemperature_mem_criticalLine_of_unitCircle z
-    (W.root_lies_on_leeYang_circle hLeeYang z hz) hpole
+    (LeeYangStabilityWitness.root_lies_on_leeYang_circle W hLeeYang z hz) hpole
 
 /--
 For a non-polar partition root satisfying the Lee--Yang theorem, the Cayley
@@ -43,7 +47,7 @@ This is the exact finite algebraic content of the Lee--Yang/critical-line
 coordinate dictionary.  No statement about zeta zeros is used.
 -/
 theorem partitionRoot_cayleyRoundTrip
-    (W : LeeYangStabilityWitness)
+    (W : LeeYangStabilityWitness (n := n))
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}

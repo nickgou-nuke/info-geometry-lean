@@ -70,6 +70,29 @@ theorem cliffordSeq_injective (n m : ℕ) :
     have h_inj := cliffordEmbedSucc_injective (n + m) h
     exact ih h_inj
 
+/-- Nonzero elements remain nonzero under finite-stage embeddings. -/
+theorem cliffordSeq_eq_zero (n m : ℕ) (X : CliffordStage 𝕜 n) :
+    cliffordSeq (𝕜 := 𝕜) n m X = 0 → X = 0 := by
+  induction' m with m ih
+  · intro h
+    simpa [cliffordSeq, iota_seq] using h
+  · intro h
+    have h' : cliffordEmbedSuccLinear (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = 0 := by
+      simpa [cliffordSeq, iota_seq] using h
+    change cliffordEmbedSucc (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = 0 at h'
+    have hstep' : cliffordEmbedSucc (𝕜 := 𝕜) (n + m) (cliffordSeq (𝕜 := 𝕜) n m X) = cliffordEmbedSucc (𝕜 := 𝕜) (n + m) 0 := by
+      simpa [cliffordEmbedSucc] using h'
+    have hstep : cliffordSeq (𝕜 := 𝕜) n m X = 0 :=
+      cliffordEmbedSucc_injective (𝕜 := 𝕜) (n + m) hstep'
+    exact ih hstep
+
+/-- Any nonzero stage element is topologically protected in the finite chain model. -/
+theorem cliffordTopologicalProtection_of_nonzero (n : ℕ) {X : CliffordStage 𝕜 n} (hX : X ≠ 0) :
+    IsTopologicallyProtected (fun k => CliffordStage 𝕜 k)
+      (fun k => cliffordEmbedSuccLinear (𝕜 := 𝕜) k) n X := by
+  intro m hzero
+  exact hX (cliffordSeq_eq_zero (𝕜 := 𝕜) n m X hzero)
+
 /-- Direct limit compatibility law: composite sequence commutes with colimit target maps. -/
 theorem clifford_colimit_trace_comm
     (A_inf : Type) [AddCommGroup A_inf] [Module 𝕜 A_inf]
@@ -103,5 +126,16 @@ theorem majorana_zero_mode_thermodynamic_survival
     psi n X ≠ 0 := by
   exact protected_states_survive_colimit (fun k => CliffordStage 𝕜 k)
     (fun k => cliffordEmbedSuccLinear k) A_inf psi colimit_kernel n X h_prot
+
+/-- Thermodynamic non-vanishing transport from a genuine nonzero finite-stage current. -/
+theorem majorana_zero_mode_thermodynamic_survival_of_nonzero
+    (A_inf : Type) [AddCommGroup A_inf] [Module 𝕜 A_inf]
+    (psi : ∀ k, CliffordStage 𝕜 k →ₗ[𝕜] A_inf)
+    (colimit_kernel : ∀ (k : ℕ) (X : CliffordStage 𝕜 k), psi k X = 0 → ∃ m, cliffordSeq k m X = 0)
+    (n : ℕ) (X : CliffordStage 𝕜 n) (hX : X ≠ 0) :
+    psi n X ≠ 0 := by
+  exact protected_states_survive_colimit (fun k => CliffordStage 𝕜 k)
+    (fun k => cliffordEmbedSuccLinear k) A_inf psi colimit_kernel n X
+    (cliffordTopologicalProtection_of_nonzero (𝕜 := 𝕜) n hX)
 
 end InfoGeometry.Canonical.CliffordDirectColimit

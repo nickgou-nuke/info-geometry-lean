@@ -51,7 +51,7 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
   have h_cond : a.val < 2^n ∧ b.val < 2^n := ⟨a.isLt, b.isLt⟩
   change (if h : a.val < 2^n ∧ b.val < 2^n then A ⟨a.val, h.1⟩ ⟨b.val, h.2⟩ else if h2 : a.val ≥ 2^n ∧ b.val ≥ 2^n then A ⟨a.val - 2^n, by omega⟩ ⟨b.val - 2^n, by omega⟩ else 0) =
          (if h : a.val < 2^n ∧ b.val < 2^n then B ⟨a.val, h.1⟩ ⟨b.val, h.2⟩ else if h2 : a.val ≥ 2^n ∧ b.val ≥ 2^n then B ⟨a.val - 2^n, by omega⟩ ⟨b.val - 2^n, by omega⟩ else 0) at happ
-  rw [dif_pos h_cond] at happ
+  simp only [dif_pos h_cond] at happ
   exact happ
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/

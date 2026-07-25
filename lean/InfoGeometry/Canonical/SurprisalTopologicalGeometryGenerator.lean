@@ -30,6 +30,7 @@ This module formalizes in native Lean 4 / Mathlib:
 namespace InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
 
 open Complex
+open InfoGeometry.Algebra.HypercomplexTriad
 open InfoGeometry.Canonical.OperatorSurprisal
 open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.RedLineCausalConeMonodromy

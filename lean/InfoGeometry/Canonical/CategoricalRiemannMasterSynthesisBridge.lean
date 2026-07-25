@@ -51,7 +51,7 @@ $$\begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}^2 = -\begin{pmatrix} 1 & 0 \\ 0 
 theorem realPhaseMatrix_square :
     realPhaseMatrix * realPhaseMatrix = -1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> decide
+  fin_cases i <;> fin_cases j <;> simp [realPhaseMatrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Real antiunitary reflection on $\mathbb{R}^2$: $\mathcal{J}_{\text{anti}}(x, y) = (1 - x, y)$. -/
 def realAntiunitaryReflection (v : ℝ × ℝ) : ℝ × ℝ :=
@@ -80,8 +80,8 @@ Re-exports the kernel-checked equivalence theorem:
 $$(\forall s, \operatorname{is\_colimit\_kernel\_object}(s) \implies \operatorname{Re}(s) = 1/2) \iff (\forall s, \operatorname{is\_colimit\_kernel\_object}(s) \implies \mathcal{J}_{\text{anti}}(s) = s).$$
 -/
 theorem rh_eq_colimit_antiunitary_rigidity (riemannZeta : ℂ → ℂ) :
-    (∀ s, InfoGeometry.Canonical.CategoricalRiemannRigidity.is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
-    (∀ s, InfoGeometry.Canonical.CategoricalRiemannRigidity.is_colimit_kernel_object s riemannZeta → InfoGeometry.Canonical.CategoricalRiemannRigidity.antiunitaryCriticalReflection s = s) :=
+    (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
+    (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → antiunitaryCriticalReflection s = s) :=
   riemann_hypothesis_colimit_rigidity riemannZeta
 
 /--
@@ -107,8 +107,8 @@ theorem grand_categorical_riemann_master_synthesis
     (realPhaseMatrix * realPhaseMatrix = -1) ∧
     (realAntiunitaryReflection v = v ↔ v.1 = 1 / 2) ∧
     (s.re = 1 / 2) ∧
-    ((∀ s, InfoGeometry.Canonical.CategoricalRiemannRigidity.is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
-     (∀ s, InfoGeometry.Canonical.CategoricalRiemannRigidity.is_colimit_kernel_object s riemannZeta → InfoGeometry.Canonical.CategoricalRiemannRigidity.antiunitaryCriticalReflection s = s)) := ⟨
+    ((∀ s : ℂ, is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
+     (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → antiunitaryCriticalReflection s = s)) := ⟨
   realPhaseMatrix_square,
   realAntiunitaryReflection_fixed_locus v,
   antiunitary_fixed_locus_rigidity h_anti,

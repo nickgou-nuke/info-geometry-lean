@@ -62,7 +62,7 @@ local notation "xiJensenKernel" => prop_xi_dtn_acts_on_jensen_kernel_xiJensenKer
 local notation "xiDtn" => prop_xi_dtn_acts_on_jensen_kernel_xiDtn
 local notation "xiPoissonConvolution" => prop_xi_dtn_acts_on_jensen_kernel_xiPoissonConvolution
 
-theorem paper_xi_dtn_acts_on_jensen_kernel (γ δ : Real) (hδ : 0 < δ ∧ δ < 1) :
+theorem paper_xi_dtn_acts_on_jensen_kernel (γ δ : Real) (_ : 0 < δ ∧ δ < 1) :
     xiDtn (xiJensenKernel γ δ) =
       (fun x : Real => Real.pi * (xiPoissonKernel (1 - δ) (x - γ) - xiPoissonKernel (1 + δ) (x - γ))) ∧
       (∀ t : Real, 0 < t ->

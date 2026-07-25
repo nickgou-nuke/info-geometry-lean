@@ -119,7 +119,7 @@ lemma smithPrefixDelta_pos_of_le_top {m : ℕ} (e : Fin m → ℕ) {k : ℕ}
           (by
             intro j hj
             by_cases hje : k ≤ e j <;> simp [hje])
-          (by simpa using (Finset.mem_univ i))
+          (by simp)
       have : 0 < smithPrefixDelta e k := lt_of_lt_of_le hterm hle
       omega
     · omega

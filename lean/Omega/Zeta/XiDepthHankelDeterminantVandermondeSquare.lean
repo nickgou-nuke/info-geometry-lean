@@ -61,7 +61,7 @@ theorem hankel_eq_vandermonde_mul_diagonal_mul_transpose {κ : Nat}
     _ = ∑ x, D.weights x * D.nodes x ^ (p.1 + q.1) := by
           refine Finset.sum_congr rfl ?_
           intro x hx
-          simp [vandermonde, Matrix.vandermonde_apply, pow_add, mul_assoc, mul_left_comm, mul_comm]
+          simp [vandermonde, Matrix.vandermonde_apply, pow_add, mul_assoc, mul_comm]
 
 theorem hankel_det_eq_weight_prod_mul_vandermonde_sq {κ : Nat}
     (D : XiFiniteAtomicMomentData κ) :

@@ -26,7 +26,7 @@ theorem paper_xi_endpoint_single_defect_weighted_kl_li2
     calc
       Real.log (1 / δ ^ 2) = Real.log ((δ ^ 2)⁻¹) := by simp [one_div]
       _ = -Real.log (δ ^ 2) := by rw [Real.log_inv]
-      _ = -Real.log (δ * δ) := by congr 1; ring
+      _ = -Real.log (δ * δ) := by rw [sq]
       _ = -(Real.log δ + Real.log δ) := by rw [Real.log_mul hδ_ne hδ_ne]
       _ = -2 * Real.log δ := by ring
   have hinv_gt_one : (1 : ℝ) < 1 / δ ^ 2 := by

@@ -47,14 +47,14 @@ lemma connectedPartBlind_of_factorsThrough {α : Type*} {I : FinitePrimeLocaliza
     ConnectedPartBlindness I := by
   rcases hI with ⟨f, hf⟩
   intro S T
-  simpa [hf S, hf T, localizedIntegersConnectedDualComponent]
+  simp [hf S, hf T, localizedIntegersConnectedDualComponent]
 
 lemma circleDimensionBlind_of_factorsThrough {α : Type*} {I : FinitePrimeLocalization → α}
     (hI : FactorsThroughCircleDimension I) :
     CircleDimensionBlindness I := by
   rcases hI with ⟨f, hf⟩
   intro S T
-  simpa [hf S, hf T, localizedIntegersCircleDimension]
+  simp [hf S, hf T, localizedIntegersCircleDimension]
 
 /-- Any invariant of finite localized integers that factors through the common rationalization, the
 common connected dual component, or the common circle dimension is constant across the family. -/

@@ -58,9 +58,7 @@ lemma xi_jensen_boundary_potential_finite_defect_explicit_singleProfile_tendsto_
   have hsub : Filter.Tendsto (fun x : ℝ => x - γ i) Filter.atTop Filter.atTop := by
     simpa [sub_eq_add_neg] using tendsto_atTop_add_const_right Filter.atTop (-γ i) tendsto_id
   have hpow : Filter.Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop := by
-    simpa using
-      (tendsto_pow_atTop_atTop_of_one_lt
-        (by norm_num : 1 < (2 : ℕ)) : Filter.Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop)
+    simpa using (tendsto_pow_atTop_atTop_of_one_lt one_lt_two : Filter.Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop)
   have hsq : Filter.Tendsto (fun x : ℝ => (x - γ i) ^ 2) Filter.atTop Filter.atTop := by
     simpa [Function.comp] using hpow.comp hsub
   have hden :
@@ -110,7 +108,7 @@ theorem paper_xi_jensen_boundary_potential_finite_defect_explicit
                     ∫ x : ℝ,
                       (m i : ℝ) * (4 * δ i) / (((x - γ i) ^ 2) + (1 + δ i) ^ 2)) := by
                 field_simp [h4pi_ne]
-                ring
+                ring_nf
         _ = (4 * Real.pi) * ∑ i, (m i : ℝ) * (δ i / (1 + δ i)) := by
               rw [← hmass]
         _ = 4 * Real.pi * ∑ i, (m i : ℝ) * (δ i / (1 + δ i)) := by ring

@@ -97,7 +97,7 @@ theorem paper_abel_damping_semigroup_dissipation {m : ℕ} (b : ℝ) (hb : 1 ≤
         congr 1
         ring
       · unfold abel_damping_semigroup_dissipation_weight
-        ring
+        ring_nf
     simpa [abel_damping_semigroup_dissipation_generator,
       abel_damping_semigroup_dissipation_apply, mul_assoc, mul_left_comm, mul_comm] using
       hweight.mul_const (a i)
@@ -122,7 +122,7 @@ theorem paper_abel_damping_semigroup_dissipation {m : ℕ} (b : ℝ) (hb : 1 ≤
           congr 1
           ring
         · unfold abel_damping_semigroup_dissipation_weight
-          ring
+          ring_nf
       simpa [abel_damping_semigroup_dissipation_term, mul_assoc, mul_left_comm, mul_comm] using
         hweight.mul_const ((a i) ^ 2)
     convert (HasDerivAt.sum (u := Finset.univ) hterm) using 1

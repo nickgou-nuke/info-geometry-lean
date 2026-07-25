@@ -3,26 +3,10 @@ import InfoGeometry.Algebra.CyclicTraceStokes
 
 set_option linter.unusedSectionVars false
 
-/-!
-# Connes KMS Index Pairing
-
-This module formalizes Bridge 3: Connes Index Pairing.
-
-## Mathematical Spine
-
-1. **Connes Graded Spectral Triple**: $(A, V, D, \gamma)$ with grading $\gamma^2 = I$ and anti-commutation $\{\gamma, D\} = 0$.
-2. **KMS Cyclic Pairing**: $\langle \omega_{\text{KMS}}, X \rangle = \text{Tr}(\gamma X)$.
-3. **Connes Index Theorem**: Trace vanishing over commutator brackets and heat kernel invariants.
-4. **Nilpotent Boundary Mode Isolator**: Proof that evaluating the Connes Index pairing over the BdG Dirac operator isolates the $f^2=0$ boundary mode and outputs the $\mathbb{Z}_2$ Pfaffian invariant.
--/
-
 namespace InfoGeometry.Canonical.ConnesKMSIndexPairing
 
 open Matrix
 open InfoGeometry.Algebra.CyclicTraceStokes
-
-variable {n : Type*} [Fintype n] [DecidableEq n]
-variable {R : Type*} [CommRing R]
 
 /-- A finite dimensional Connes Graded Spectral Triple over a matrix algebra. -/
 structure ConnesGradedSpectralTriple (n : Type*) [Fintype n] (R : Type*) [CommRing R] where
@@ -30,6 +14,9 @@ structure ConnesGradedSpectralTriple (n : Type*) [Fintype n] (R : Type*) [CommRi
   gamma : Matrix n n R
   gamma_sq : gamma * gamma = 1
   anti_comm : gamma * D + D * gamma = 0
+
+variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {R : Type*} [CommRing R]
 
 /-- The KMS Connes Index Pairing evaluated on a matrix observable `X`. -/
 def connesIndexPairing (ST : ConnesGradedSpectralTriple n R) (X : Matrix n n R) : R :=
@@ -46,12 +33,12 @@ theorem connes_index_squared_dirac_comm (ST : ConnesGradedSpectralTriple n R) :
     rw [← add_eq_zero_iff_eq_neg]
     exact ST.anti_comm
   calc
-    ST.gamma * (ST.D * ST.D) = (ST.gamma * ST.D) * ST.D := by rw [Matrix.mul_assoc]
+    ST.gamma * (ST.D * ST.D) = (ST.gamma * ST.D) * ST.D := by rw [mul_assoc]
     _ = (- (ST.D * ST.gamma)) * ST.D := by rw [h1]
-    _ = - (ST.D * (ST.gamma * ST.D)) := by simp [Matrix.mul_assoc]
+    _ = - (ST.D * (ST.gamma * ST.D)) := by simp [mul_assoc]
     _ = - (ST.D * (- (ST.D * ST.gamma))) := by rw [h1]
     _ = ST.D * (ST.D * ST.gamma) := by simp
-    _ = (ST.D * ST.D) * ST.gamma := by rw [Matrix.mul_assoc]
+    _ = (ST.D * ST.D) * ST.gamma := by rw [mul_assoc]
 
 /--
 **Main Theorem 2: Connes Pairing Vanishes on Dirac Commutators**
@@ -65,11 +52,11 @@ theorem connes_pairing_commutator_zero (ST : ConnesGradedSpectralTriple n R) (X 
   rw [Matrix.trace_sub]
   have h1 : Matrix.trace (ST.gamma * (ST.D * X)) = Matrix.trace (ST.gamma * (X * ST.D)) := by
     calc
-      Matrix.trace (ST.gamma * (ST.D * X)) = Matrix.trace ((ST.gamma * ST.D) * X) := by rw [Matrix.mul_assoc]
+      Matrix.trace (ST.gamma * (ST.D * X)) = Matrix.trace ((ST.gamma * ST.D) * X) := by rw [mul_assoc]
       _ = Matrix.trace (X * (ST.gamma * ST.D)) := by rw [Matrix.trace_mul_comm]
-      _ = Matrix.trace ((X * ST.gamma) * ST.D) := by rw [Matrix.mul_assoc]
+      _ = Matrix.trace ((X * ST.gamma) * ST.D) := by rw [mul_assoc]
       _ = Matrix.trace ((ST.gamma * X) * ST.D) := by rw [h_comm]
-      _ = Matrix.trace (ST.gamma * (X * ST.D)) := by rw [Matrix.mul_assoc]
+      _ = Matrix.trace (ST.gamma * (X * ST.D)) := by rw [mul_assoc]
   rw [h1, sub_self]
 
 /--

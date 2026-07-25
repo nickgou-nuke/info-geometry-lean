@@ -32,9 +32,10 @@ their bivector ab satisfies (a * b)^2 = 1.
 theorem cl11_bivector_square_one
     (a b : ℝ) (ha : a * a = 1) (hb : b * b = -1) (h_anticomm : a * b = - (b * a)) :
     (a * b) * (a * b) = 1 := by
+  have h_ba : b * a = - (a * b) := by linarith [h_anticomm]
   calc (a * b) * (a * b)
     _ = a * (b * a) * b := by ring
-    _ = a * (- (a * b)) * b := by rw [← neg_eq_iff_eq_neg, ← h_anticomm]
+    _ = a * (- (a * b)) * b := by rw [h_ba]
     _ = - (a * a) * (b * b) := by ring
     _ = - (1) * (-1) := by rw [ha, hb]
     _ = 1 := by ring

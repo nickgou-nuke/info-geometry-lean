@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+import InfoGeometry.Krein.DoubledSpace
 
 set_option linter.unusedSectionVars false
 
@@ -31,6 +33,22 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 noncomputable def redLineOmegaPotential (detJ : ℝ → ℝ) (x : ℝ) : ℝ :=
   - Real.log (detJ x)
 
+/-- The red-line Ω-potential is definitionally negative logarithm of the Jacobian determinant. -/
+theorem redLineOmegaPotential_eq_neg_log (detJ : ℝ → ℝ) (x : ℝ) :
+    redLineOmegaPotential detJ x = -Real.log (detJ x) := by
+  rfl
+
+/-- Differential identity for the red-line potential: `dΦ = -(detJ'/detJ)`. -/
+theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
+    (hdet : HasDerivAt detJ (detJ' : ℝ) x) (hpos : 0 < detJ x) :
+    HasDerivAt (redLineOmegaPotential detJ)
+      (-(detJ' / detJ x)) x := by
+  have hlog : HasDerivAt (fun y : ℝ => -Real.log y) (-(detJ x)⁻¹) (detJ x) :=
+    (Real.hasDerivAt_log hpos.ne').neg
+  have hcomp := hlog.comp x hdet
+  simpa [redLineOmegaPotential, Function.comp, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc]
+    using hcomp
+
 /-- Unnormalized spinorial flow Jacobian data. -/
 structure SpinorialFlowJacobianData (Map : Type*) where
   jacobianDet : Map → ℝ
@@ -53,6 +71,24 @@ theorem redLine_potential_exp_recovery
 /-- De Rham logarithmic form evaluation on a complex loop parameter $z \neq 0$. -/
 noncomputable def deRhamLogForm (z : ℂ) : ℂ :=
   1 / z
+
+/-- De Rham logarithmic form is the inverse pole form `dz / z`. -/
+theorem deRhamLogForm_is_dlog (z : ℂ) :
+    deRhamLogForm z = 1 / z := by
+  rfl
+
+/-- The red-line monodromy bridge exports the canonical support module as a `K_neg_log_PregDelta` package. -/
+theorem modularSupportPackage_from_redLine (V : Type 0)
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (c : InfoGeometry.Canonical.CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace V)) :
+    let KambientCanonical :=
+      compress (CertifiedModularReduction.Preg c)
+        (InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge.K_neg_log_PregDelta (V := V) c)
+    (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical) ∧
+    (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical) ∧
+    (CertifiedModularReduction.Pzero c * KambientCanonical = 0) ∧
+    (KambientCanonical * CertifiedModularReduction.Pzero c = 0) :=
+  InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge.K_neg_log_PregDelta_support_package (c := c)
 
 /--
 **Main Theorem 2: Lightcone Determinant Apex Singularity**

@@ -747,6 +747,7 @@ import InfoGeometry.Canonical.ArnoldCohenPluckerBridge
 import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
+import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 import InfoGeometry.Canonical.SpinStructureJacobiTheta
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation

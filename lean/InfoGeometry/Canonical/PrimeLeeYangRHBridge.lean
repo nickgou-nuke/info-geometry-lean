@@ -60,14 +60,19 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   have h_den : 1 - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
   have h_sq : z.re^2 + z.im^2 = 1 := by
     have h_abs : ‖z‖ = 1 := hz
-    have h1 : z.re^2 + z.im^2 = normSq z := by ring
+    have h1 : z.re^2 + z.im^2 = normSq z := by simp [normSq_apply, sq]
     have h2 : normSq z = 1 := by
-      rw [normSq_eq_abs, ← norm_eq_abs, h_abs, one_pow]
+      calc normSq z = (Complex.abs z)^2 := normSq_eq_abs z
+      _ = ‖z‖^2 := rfl
+      _ = 1^2 := by rw [h_abs]
+      _ = 1 := by ring
     rw [h1, h2]
   have h_num : ((1 + z) * star (1 - z)).re = 0 := by
     have h_ring : ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
-      simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, conj_re]
-      ring
+      calc ((1 + z) * star (1 - z)).re = (1 + z.re) * (1 - z.re) - z.im * z.im := by
+        simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, conj_re, conj_im]
+        ring
+      _ = 1 - (z.re^2 + z.im^2) := by ring
     rw [h_ring, h_sq, sub_self]
   have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
     rw [div_eq_mul_inv, div_eq_mul_inv]
@@ -80,7 +85,7 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
     ring
   rw [h_eq]
   have h_real_div : (((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ)).re = ((1 + z) * star (1 - z)).re / normSq (1 - z) := by
-    simp [div_re, ofReal_re, ofReal_im]
+    simp [div_re]
   rw [h_real_div, h_num, zero_div]
 
 /--

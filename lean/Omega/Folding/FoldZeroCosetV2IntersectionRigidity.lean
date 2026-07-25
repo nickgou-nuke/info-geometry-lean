@@ -23,7 +23,7 @@ def FoldZeroCosetV2IntersectionSpec (M g h : ℕ) : Prop :=
 
 /-- Paper label: `thm:xi-fold-zero-coset-v2-intersection-rigidity`. -/
 theorem paper_xi_fold_zero_coset_v2_intersection_rigidity
-    (M g h : ℕ) (hM : Even M) (hg : g ∣ M / 2) (hh : h ∣ M / 2) :
+    (M g h : ℕ) (_ : Even M) (hg : g ∣ M / 2) (_ : h ∣ M / 2) :
     FoldZeroCosetV2IntersectionSpec M g h := by
   let d := Nat.gcd g h
   have hdhalf : d ∣ M / 2 := dvd_trans (Nat.gcd_dvd_left g h) hg

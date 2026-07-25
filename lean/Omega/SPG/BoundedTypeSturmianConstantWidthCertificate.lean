@@ -33,7 +33,7 @@ private theorem sturmian_denominator_upper_pow
     (hq0 : q 0 = 1)
     (hStep : ∀ n, q (n + 1) + q n ≤ (A + 2) * q n) :
     ∀ n, q n ≤ (A + 2) ^ n
-  | 0 => by simpa [hq0]
+  | 0 => by simp [hq0]
   | n + 1 => by
       calc
         q (n + 1) ≤ q (n + 1) + q n := Nat.le_add_right _ _

@@ -197,7 +197,7 @@ theorem Pplus_mul_Pminus
     Pplus R * Pminus R = (0 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [Pplus, Pminus, E, Matrix.mul_apply, Fin.sum_univ_two]
-    <;> ring
+
 
 /-- The split projectors are orthogonal in the other order: `P₋P₊ = 0`. -/
 theorem Pminus_mul_Pplus
@@ -205,7 +205,7 @@ theorem Pminus_mul_Pplus
     Pminus R * Pplus R = (0 : Matrix (Fin 2) (Fin 2) R) := by
   ext i j <;> fin_cases i <;> fin_cases j
     <;> simp [Pplus, Pminus, E, Matrix.mul_apply, Fin.sum_univ_two]
-    <;> ring
+
 
 /-- The split projectors resolve the identity: `P₊ + P₋ = 1`. -/
 theorem Pplus_add_Pminus

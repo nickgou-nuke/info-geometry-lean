@@ -91,30 +91,26 @@ def quatK : Mat2C := -(Complex.I • sigma3)
 theorem quatI_sq : quatI * quatI = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatI, sigma1, sigma1C, Matrix.mul_apply, Fin.sum_univ_two] <;>
-    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
+    simp [quatI, sigma1, sigma1C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The corrected image has `j² = -1`. -/
 theorem quatJ_sq : quatJ * quatJ = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatJ, sigma2, sigma2C, Matrix.mul_apply, Fin.sum_univ_two] <;>
-    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
+    simp [quatJ, sigma2, sigma2C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The corrected image has `k² = -1`. -/
 theorem quatK_sq : quatK * quatK = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [quatK, sigma3, sigma3C, Matrix.mul_apply, Fin.sum_univ_two] <;>
-    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
+    simp [quatK, sigma3, sigma3C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Corrected quaternion sign: `(Iσ₁)(Iσ₂) = -Iσ₃`, i.e. `ij = k`. -/
 theorem quatI_mul_quatJ : quatI * quatJ = quatK := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [quatI, quatJ, quatK, sigma1, sigma2, sigma3, sigma1C, sigma2C, sigma3C,
-      Matrix.mul_apply, Fin.sum_univ_two] <;>
-    ring_nf <;> rw [Complex.I_mul_I] <;> ring_nf
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Unnormalized Hermitian/Minkowski matrix `t I + x σ₁ + y σ₂ + z σ₃`. -/
 def spacetimeMatrix (t x y z : ℝ) : Mat2C :=

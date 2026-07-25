@@ -36,98 +36,79 @@ variable
 @[simp] theorem directLimit_hΓ
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    φ (surf n).Γ * φ (surf n).Γ = 1 := by
-  dsimp
-  exact congrArg (ofStage (bond := bond) n) (surf n).hΓ
+    φ (surf n).Γ * φ (surf n).Γ = 1 :=
+  congrArg (ofStage (bond := bond) n) (surf n).hΓ
 
 @[simp] theorem directLimit_G1_odd
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    φ ((surf n).Γ * (surf n).G1) = -φ ((surf n).G1 * (surf n).Γ) := by
-  dsimp
-  exact congrArg (ofStage (bond := bond) n) (surf n).G1_odd
+    φ ((surf n).Γ * (surf n).G1) = -φ ((surf n).G1 * (surf n).Γ) :=
+  congrArg (ofStage (bond := bond) n) (surf n).G1_odd
 
 @[simp] theorem directLimit_H_Ep
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false false (φ (surf n).H) (φ (surf n).Ep) =
-      (2 : ℝ) • φ (surf n).Ep := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Ep
-  simpa [two_smul] using h
+      (2 : ℝ) • φ (surf n).Ep :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Ep
 
 @[simp] theorem directLimit_H_Em
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false false (φ (surf n).H) (φ (surf n).Em) =
-      (-2 : ℝ) • φ (surf n).Em := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Em
-  simpa [two_smul] using h
+      (-2 : ℝ) • φ (surf n).Em :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Em
 
 @[simp] theorem directLimit_Ep_Em
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    superBracket false false (φ (surf n).Ep) (φ (surf n).Em) = φ (surf n).H := by
-  dsimp
-  exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_Em
+    superBracket false false (φ (surf n).Ep) (φ (surf n).Em) = φ (surf n).H :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_Em
 
 @[simp] theorem directLimit_H_G1
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    superBracket false true (φ (surf n).H) (φ (surf n).G1) = φ (surf n).G1 := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G1
-  simpa using h
+    superBracket false true (φ (surf n).H) (φ (surf n).G1) = φ (surf n).G1 :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G1
 
 @[simp] theorem directLimit_H_G2
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false true (φ (surf n).H) (φ (surf n).G2) =
-      (-1 : ℝ) • φ (surf n).G2 := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G2
-  simpa using h
+      (-1 : ℝ) • φ (surf n).G2 :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G2
 
 @[simp] theorem directLimit_Ep_G2
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    superBracket false true (φ (surf n).Ep) (φ (surf n).G2) = φ (surf n).G1 := by
-  dsimp
-  exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_G2
+    superBracket false true (φ (surf n).Ep) (φ (surf n).G2) = φ (surf n).G1 :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_G2
 
 @[simp] theorem directLimit_Em_G1
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    superBracket false true (φ (surf n).Em) (φ (surf n).G1) = φ (surf n).G2 := by
-  dsimp
-  exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Em_G1
+    superBracket false true (φ (surf n).Em) (φ (surf n).G1) = φ (surf n).G2 :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Em_G1
 
 @[simp] theorem directLimit_G1_G1
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket true true (φ (surf n).G1) (φ (surf n).G1) =
-      (2 : ℝ) • φ (surf n).Ep := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G1
-  simpa [two_smul] using h
+      (2 : ℝ) • φ (surf n).Ep :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G1
 
 @[simp] theorem directLimit_G2_G2
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket true true (φ (surf n).G2) (φ (surf n).G2) =
-      (-2 : ℝ) • φ (surf n).Em := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G2_G2
-  simpa [two_smul] using h
+      (-2 : ℝ) • φ (surf n).Em :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G2_G2
 
 @[simp] theorem directLimit_G1_G2
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
-    superBracket true true (φ (surf n).G1) (φ (surf n).G2) = -φ (surf n).H := by
-  dsimp
-  have h := superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G2
-  simpa using h
+    superBracket true true (φ (surf n).G1) (φ (surf n).G2) = -φ (surf n).H :=
+  superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G2
 
 end DirectLimitRelations
 

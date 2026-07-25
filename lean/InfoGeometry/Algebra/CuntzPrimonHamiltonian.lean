@@ -56,12 +56,6 @@ theorem H_pow_eq (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) :
       simp [hamiltonian, Finset.sum_const, Finset.card_range]
       <;>
       simp_all [P_sum_one]
-      <;>
-      ring_nf
-      <;>
-      simp_all [P_idem, P_ortho]
-      <;>
-      aesop
     | succ k ih =>
       have hpow : (hamiltonian n ε) ^ (k + 1) = (hamiltonian n ε) ^ k * hamiltonian n ε := by
         simp [pow_succ]
@@ -73,13 +67,8 @@ theorem H_pow_eq (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) :
             simp [smul_mul_assoc]
           _ = (ε i) ^ k • ((ε i) • P n i) := by
             rw [P_mul_H]
-            <;> simp [smul_smul]
           _ = (ε i) ^ (k + 1) • P n i := by
             simp [pow_succ, smul_smul, Complex.ext_iff, Complex.I_mul_I]
-            <;> ring_nf
-            <;> simp_all [Complex.ext_iff, pow_succ]
-            <;> norm_num
-            <;> linarith
       apply Finset.sum_congr rfl
       intro i _
       rw [h₁ i]

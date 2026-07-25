@@ -40,8 +40,8 @@ def zornBaseChange : ZornMatrix ℤ →+ ZornMatrix ℝ where
       b := (z.b : ℝ)
       x := fun i => (z.x i : ℝ)
       y := fun i => (z.y i : ℝ) }
-  map_zero' := by ext <;> simp [zero_a, zero_b, zero_x, zero_y] <;> rfl
-  map_add' z1 z2 := by ext <;> simp [add_a, add_b, add_x, add_y] <;> push_cast <;> rfl
+  map_zero' := by ext <;> simp [zero_a, zero_b, zero_x, zero_y]
+  map_add' z1 z2 := by ext <;> simp [add_a, add_b, add_x, add_y]
 
 @[simp]
 theorem zornBaseChange_a (z : ZornMatrix ℤ) : (zornBaseChange z).a = (z.a : ℝ) := rfl

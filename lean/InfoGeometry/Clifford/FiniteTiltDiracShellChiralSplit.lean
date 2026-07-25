@@ -65,7 +65,7 @@ theorem finiteTiltLeftRightChiralProjector_mul_zero :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
       tiltOddA, Eplus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-      Matrix.add_apply] <;> ring_nf
+      Matrix.add_apply]
 
 /-- The two chiral projectors annihilate in the opposite order. -/
 @[rep_depth operator]
@@ -74,7 +74,7 @@ theorem finiteTiltRightLeftChiralProjector_mul_zero :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
       tiltOddA, Eplus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-      Matrix.add_apply] <;> ring_nf
+      Matrix.add_apply]
 
 /-- The finite tilt chiral projectors form a complementary projector pair. -/
 @[rep_depth operator]

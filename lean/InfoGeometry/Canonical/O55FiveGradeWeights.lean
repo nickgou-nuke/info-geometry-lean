@@ -40,6 +40,6 @@ theorem weight_constants :
     weight_J5 = 0 ∧ weight_J4 = 0 ∧ weight_J = 0 := by
   norm_num [weight_u5, weight_v5, weight_u4, weight_v4,
             weight_D5, weight_D4, weight_D,
-            weight_J5, weight_J4, weight_J] <;> rfl
+            weight_J5, weight_J4, weight_J]
 
 end InfoGeometry.Canonical.O55FiveGradeWeights

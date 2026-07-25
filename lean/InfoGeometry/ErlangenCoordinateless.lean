@@ -74,7 +74,7 @@ theorem jacobi_identity (A B C : Matrix (Fin 2) (Fin 2) ℂ) :
 theorem bracket_antisymm (X Y : Matrix (Fin 2) (Fin 2) ℂ) : bracket X Y = -bracket Y X := by
   dsimp [bracket]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.neg_apply, Fin.sum_univ_two] <;> ring
+    simp [Matrix.mul_apply, Matrix.sub_apply, Matrix.neg_apply, Fin.sum_univ_two]
 
 /--
 **Bianchi = Jacobi** (Genuine Proof):

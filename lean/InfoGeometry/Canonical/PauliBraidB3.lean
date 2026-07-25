@@ -50,25 +50,25 @@ def pauliBraidY : Mat2C := 1 + Complex.I • sigma2
 
 @[simp] theorem sigma1_sq : sigma1 * sigma1 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sigma1C, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf
+    simp [sigma1C, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigma2_sq : sigma2 * sigma2 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
+    simp [sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
 
 @[simp] theorem sigma3_sq : sigma3 * sigma3 = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sigma3C, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf
+    simp [sigma3C, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Pauli anticommutation in the `σ₁, σ₂` plane. -/
 theorem sigma1_sigma2_anticomm : sigma1 * sigma2 = -(sigma2 * sigma1) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sigma1C, sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
+    simp [sigma1C, sigma2C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
 
 /-- The concrete product `σ₁σ₂ = i σ₃`. -/
 theorem sigma1_mul_sigma2 : sigma1 * sigma2 = Complex.I • sigma3 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sigma1C, sigma2C, sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring_nf
+    simp [sigma1C, sigma2C, sigma3C, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
 
 /-- Exact unnormalised Pauli braid relation. -/
 theorem pauli_braid_relation :

@@ -33,10 +33,10 @@ theorem toZornVectorMatrix_mul (X Y : ZornMatrix) :
   dsimp [Mul.mul, toZornVectorMatrix]
   unfold InfoGeometry.Algebra.ZornVectorMatrix.mul
   ext <;> try (rename_i i; fin_cases i)
-  · simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3, InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three] <;> try ring
-  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
-  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
-  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.dotProduct, ZornVectorMatrixExplicit.dot3, InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross]
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross]
+  · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross]
   · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
   · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
   · simp [InfoGeometry.Physics.ZornMatrixSU3.crossProduct, ZornVectorMatrixExplicit.cross3, InfoGeometry.Algebra.ZornVec3.cross] <;> try ring
@@ -515,14 +515,14 @@ theorem upper_add_lower (v : ThreeSpace) :
     realization (upper v) = ⟨0, 0, v, 0⟩ := by
   rw [upper_eq_basis_sum]
   simp [realization_smul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul]
-  congr
+
   exact (threeSpace_eq_basis_sum v).symm
 
 @[simp] theorem realization_lower (v : ThreeSpace) :
     realization (lower v) = ⟨0, 0, 0, v⟩ := by
   rw [lower_eq_basis_sum]
   simp [realization_smul, InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul]
-  congr
+
   exact (threeSpace_eq_basis_sum v).symm
 
 noncomputable def diagonalUpper : AbstractKingdon := upper (basisVec 0) * lower (basisVec 0)
@@ -1909,7 +1909,7 @@ noncomputable def preimageAddHom : ZornMatrix →+ AbstractKingdon where
   simp only [preimage, map_add, realization_smul, scalar_eq_smul_one, scale_eq_smul,
     realization_diagonalUpper, realization_diagonalLower,
     realization_upper, realization_lower, map_one]
-  ext i <;> simp [InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.one] <;> ring
+  ext i <;> simp [InfoGeometry.Physics.ZornMatrixSU3.add, InfoGeometry.Physics.ZornMatrixSU3.smul, InfoGeometry.Physics.ZornMatrixSU3.one]
 
 @[simp] theorem preimage_one : preimage 1 = 1 := by
   simp [preimage, upper, lower, anti, scale, scalar]

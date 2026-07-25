@@ -103,6 +103,74 @@ lemma RingHom.map_int_zsmul_one
       <;> abel
   exact h m
 
+/-- The finite normal-ordered CAR current represented on `V`. -/
+def endomorphismCutoffCurrent
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N : ℕ) (m : Int) : Module.End 𝕜 V :=
+  ρ (C.cutoffCurrent N m)
+
+/-- The represented cutoff is the image of the public finite-window current. -/
+theorem endomorphismCutoffCurrent_eq_representedCutoffCurrent
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N : ℕ) (m : Int) :
+    endomorphismCutoffCurrent C ρ N m = ρ (representedCutoffCurrent C N m) := by
+  rfl
+
+/-- A represented cutoff current is the finite sum of represented matrix units. -/
+theorem endomorphismCutoffCurrent_eq_sum
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N : ℕ) (m : Int) :
+    endomorphismCutoffCurrent C ρ N m =
+      ∑ k ∈ integerWindow N, ρ (C.matrixUnit k (k + m)) := by
+  rw [endomorphismCutoffCurrent_eq_representedCutoffCurrent]
+  unfold representedCutoffCurrent
+  exact map_sum ρ (fun k => C.matrixUnit k (k + m)) (integerWindow N)
+
+/-- Ring representations carry the raw algebra commutator to the endomorphism commutator. -/
+theorem endomorphismCutoffCurrent_commutator
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N M : ℕ) (m n : Int) :
+    (endomorphismCutoffCurrent C ρ N m).commutator
+        (endomorphismCutoffCurrent C ρ M n) =
+      ρ (InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm
+        (C.cutoffCurrent N m) (C.cutoffCurrent M n)) := by
+  unfold endomorphismCutoffCurrent
+  unfold InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm LinearMap.commutator
+  simp [map_sub, map_mul]
+  <;>
+  simp_all [LinearMap.commutator]
+  <;>
+  ring_nf
+  <;>
+  aesop
+
+/-- Ring homomorphisms preserve integer scalar multiplication on the unit. -/
+lemma RingHom.map_int_zsmul_one
+    {R S : Type*} [Ring R] [Ring S] [Algebra 𝕜 S]
+    (ρ : R →+* S) (m : Int) :
+    ρ (m • (1 : R)) = (m : 𝕜) • (1 : S) := by
+  have h : ∀ (m : Int), ρ (m • (1 : R)) = (m : 𝕜) • (1 : S) := by
+    intro m
+    induction m using Int.induction_on with
+    | zero =>
+      simp [RingHom.map_zero]
+    | succ m ih =>
+      rw [Int.succ_eq_add_one]
+      simp [add_smul, one_smul, RingHom.map_add, RingHom.map_one, ih]
+      <;> ring_nf at * <;> simp_all [Algebra.smul_def]
+      <;> abel
+    | neg m ih =>
+      rw [Int.neg_eq_neg]
+      rw [neg_smul, ih]
+      simp [neg_smul, Algebra.smul_def]
+      <;> ring_nf at * <;> simp_all [Algebra.smul_def]
+      <;> abel
+  exact h m
+
 /--
 Pointwise eventual stabilization of the finite cutoff to `J m`.
 
@@ -172,8 +240,23 @@ theorem stabilizedCurrent_add
   have hv := S.eventually_cutoffCurrent_eq m v
   have hw := S.eventually_cutoffCurrent_eq m w
   have hvw := S.eventually_cutoffCurrent_eq m (v + w)
-  filter_upwards [hv, hw, hvw] with N hvN hwN hvwN
-  rw [← hvwN, LinearMap.add_apply, hvN, hwN]
+  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by
+    filter_upwards [hvw, hv, hw] with N hvwN hvN hwN
+    rw [← hvwN, LinearMap.add_apply, hvN, hwN]
+  have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (v + w) = S.J m v + S.J m w := by
+    filter_upwards [h₁, hvw, hv, hw] with N hN hvwN hvN hwN
+    calc
+      S.J m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m (v + w) := by rw [hvwN]
+      _ = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by rw [hN]
+      _ = S.J m v + S.J m w := by rw [hvN, hwN]
+  -- Extract the result from the filter
+  have h₃ : S.J m (v + w) = S.J m v + S.J m w := by
+    have h₄ : ∃ N : ℕ, S.J m (v + w) = S.J m v + S.J m w := by
+      obtain ⟨N, hN⟩ := (h₂).exists
+      exact ⟨N, hN⟩
+    obtain ⟨N, hN⟩ := h₃
+    exact hN
+  exact h₃
 
 /-- Scalar multiplication likewise descends pointwise. -/
 theorem stabilizedCurrent_smul
@@ -181,8 +264,23 @@ theorem stabilizedCurrent_smul
     S.J m (c • v) = c • S.J m v := by
   have hv := S.eventually_cutoffCurrent_eq m v
   have hcv := S.eventually_cutoffCurrent_eq m (c • v)
-  filter_upwards [hv, hcv] with N hvN hcvN
-  rw [← hcvN, LinearMap.map_smul, hvN]
+  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (c • v) = c • endomorphismCutoffCurrent S.source S.ρ N m v := by
+    filter_upwards [hv, hcv] with N hvN hcvN
+    rw [← hcvN, LinearMap.map_smul, hvN]
+  have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (c • v) = c • S.J m v := by
+    filter_upwards [h₁, hv, hcv] with N hN hvN hcvN
+    calc
+      S.J m (c • v) = endomorphismCutoffCurrent S.source S.ρ N m (c • v) := by rw [hcvN]
+      _ = c • endomorphismCutoffCurrent S.source S.ρ N m v := by rw [hN]
+      _ = c • S.J m v := by rw [hvN]
+  -- Extract the result from the filter
+  have h₃ : S.J m (c • v) = c • S.J m v := by
+    have h₄ : ∃ N : ℕ, S.J m (c • v) = c • S.J m v := by
+      obtain ⟨N, hN⟩ := (h₂).exists
+      exact ⟨N, hN⟩
+    obtain ⟨N, hN⟩ := h₃
+    exact hN
+  exact h₃
 
 /-- The commutator of the derived stabilized currents is the Heisenberg
 commutator.  The proof uses exact finite-cutoff CAR/Wick expansion,

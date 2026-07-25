@@ -60,11 +60,10 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   have h_sq : z.re^2 + z.im^2 = 1 := by
     have h1 : ‖z‖^2 = 1 := by rw [hz, one_pow]
     have h2 : ‖z‖^2 = z.re^2 + z.im^2 := by
-      rw [norm_def]
-      exact (Real.rpow_two _).symm
+      rw [norm_def, Real.sq_sqrt (by positivity)]
     rw [← h2, h1]
   have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
-    ext
+    apply Complex.ext
     · simp only [div_re, add_re, sub_re, add_im, sub_im, one_re, one_im]
       have h_num : (1 + z.re) * (1 - z.re) - z.im * z.im = 0 := by
         calc (1 + z.re) * (1 - z.re) - z.im * z.im = 1 - (z.re^2 + z.im^2) := by ring

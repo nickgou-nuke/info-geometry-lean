@@ -175,7 +175,8 @@ theorem partitionPolyN2_coeff_3 :
 
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_4 :
-    Polynomial.coeff partitionPolyN2 4 = 0 := rfl
+    Polynomial.coeff partitionPolyN2 4 = 0 := by
+  simp [partitionPolyN2, partitionPolynomial, configurationWeight, SpinConfig]
 
 /-- The concrete partition polynomial coefficients -/
 theorem partitionPolyN2_explicit_computation :

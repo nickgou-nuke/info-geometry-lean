@@ -86,7 +86,8 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
   rw [map_add]
   congr 1
   split_ifs with hmn
-  · simp [RawCARModeCompletion.central, map_zsmul, map_one]
+  · ext v
+    simp [RawCARModeCompletion.central]
   · exact map_zero ρ
 
 /--

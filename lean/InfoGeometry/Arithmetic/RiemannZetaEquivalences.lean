@@ -190,7 +190,7 @@ theorem dirichletSeriesZetaTarget_closed (s : ℂ) : DirichletSeriesZetaTarget s
   dirichletSeriesZeta_eq_riemannZeta s
 
 /-- Target statement: the eta quotient gives zeta off the pole in `Re(s) > 0`. -/
-def DirichletEtaQuotientTarget (s : ℂ) : Prop :=
+def DirichletEtaQuotientTarget (s : ℂ) : Prop :=\n  0 < s.re → s ≠ 1 → riemannZeta s = (1 - 2 ^ (1 - s))⁻¹ * dirichletEta s\n\nend InfoGeometry.Arithmetic.RiemannZetaEquivalences\n
   0 < s.re → s ≠ 1 → riemannZeta s = (1 - 2 ^ (1 - s))⁻¹ * dirichletEta s
 
 /-! ## 3. Ramanujan's odd-zeta transformation target -/

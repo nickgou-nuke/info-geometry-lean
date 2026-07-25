@@ -733,6 +733,7 @@ import InfoGeometry.Canonical.CPTRealCl11Emergence
 import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 import InfoGeometry.Canonical.SpinStructureJacobiTheta
+import InfoGeometry.Canonical.TomitaTakesakiWickRotation
 import InfoGeometry.Canonical.CPTKMSColimitTower
 import InfoGeometry.Canonical.CPTTensorColimitIdentification
 import InfoGeometry.Canonical.CalabiYauBridge

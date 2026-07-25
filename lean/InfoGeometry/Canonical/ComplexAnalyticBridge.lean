@@ -216,6 +216,37 @@ def differentiableAtToCauchyAnalyticAt
       has_fderiv_at := hf.hasFDerivAt.restrictScalars ℝ
       phase_linear_deriv := complexLinearMap_phaseLinear dC }
 
+/--
+On the canonical phase structure of `ℂ`, pointwise Cauchy analyticity recovers
+ordinary complex differentiability at the same point.
+-/
+theorem cauchyAnalyticAtToDifferentiableAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :
+    DifferentiableAt ℂ f z := by
+  have hreal : DifferentiableAt ℝ f z :=
+    hf.has_fderiv_at.differentiableAt
+  have hderiv : fderiv ℝ f z = hf.deriv :=
+    hf.has_fderiv_at.fderiv
+  have hphase :
+      hf.deriv Complex.I = Complex.I • hf.deriv 1 := by
+    simpa [complexPhaseStructure, complexIMap] using
+      hf.cauchyRiemann_apply (1 : ℂ)
+  exact (differentiableAt_complex_iff_differentiableAt_real).2
+    ⟨hreal, by simpa [hderiv] using hphase⟩
+
+/-- Pointwise phase-form Cauchy analyticity on `ℂ` is exactly complex
+differentiability at that point. -/
+theorem cauchyAnalyticAt_iff_differentiableAt
+    {f : ℂ → ℂ} {z : ℂ} :
+    Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) ↔
+      DifferentiableAt ℂ f z := by
+  constructor
+  · rintro ⟨hf⟩
+    exact cauchyAnalyticAtToDifferentiableAt hf
+  · intro hf
+    exact ⟨differentiableAtToCauchyAnalyticAt hf⟩
+
 /-- Differentiability in a neighborhood implies Mathlib `AnalyticAt`. -/
 theorem eventuallyDifferentiableAtToAnalyticAt
     {f : ℂ → ℂ} {z : ℂ}
@@ -229,6 +260,20 @@ theorem analyticAtToEventuallyDifferentiableAt
     (hf : AnalyticAt ℂ f z) :
     ∀ᶠ w in 𝓝 z, DifferentiableAt ℂ f w :=
   (Complex.analyticAt_iff_eventually_differentiableAt).1 hf
+
+/--
+Mathlib power-series analyticity at `z` is equivalent to phase-form Cauchy
+analyticity at every point in some neighborhood of `z`.
+-/
+theorem analyticAt_iff_eventually_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ} :
+    AnalyticAt ℂ f z ↔
+      ∀ᶠ w in 𝓝 z,
+        Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f w) := by
+  rw [Complex.analyticAt_iff_eventually_differentiableAt]
+  apply eventually_congr
+  filter_upwards with w
+  exact cauchyAnalyticAt_iff_differentiableAt.symm
 
 /-- Complex differentiability on a neighborhood implies Mathlib analyticity at the point. -/
 theorem differentiableOnNhdToAnalyticAt

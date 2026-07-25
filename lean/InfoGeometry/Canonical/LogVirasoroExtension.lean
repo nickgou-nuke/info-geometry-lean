@@ -82,21 +82,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext ⟨u, v⟩
-    · dsimp [blockOp]
-      simp [map_add]
-      abel
-    · dsimp [blockOp]
-      simp [map_add]
-      abel
+    ext ⟨u, v⟩ <;> dsimp [blockOp] <;> simp [map_add]
   map_smul' := by
     intro r x
-    ext ⟨u, v⟩
-    · dsimp [blockOp]
-      simp [map_smul, smul_add]
-      abel
-    · dsimp [blockOp]
-      simp [map_smul]
+    ext ⟨u, v⟩ <;> dsimp [blockOp] <;> simp [map_smul, smul_add]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -120,11 +109,11 @@ theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
     Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
   ext i
   fin_cases i
-  · dsimp [jordanCell, Matrix.mulVec]
-    simp [Fin.sum_univ_two]
+  · dsimp [jordanCell, Matrix.mulVec, Matrix.dotProduct]
+    simp [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
     ring
-  · dsimp [jordanCell, Matrix.mulVec]
-    simp [Fin.sum_univ_two]
+  · dsimp [jordanCell, Matrix.mulVec, Matrix.dotProduct]
+    simp [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
     ring
 
 /--
@@ -186,11 +175,11 @@ noncomputable def makeLogIntertwiner
       rw [jordanCell_mulVec_apply]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_add, map_smul, hL0, hc0, h_comm_apply]
       rw [smul_smul, smul_smul, smul_smul]
-      rw [mul_comm (w 0) Δ, mul_comm (w 1) Δ, add_smul]
+      rw [mul_comm (Pi.single w 1 0) Δ, mul_comm (Pi.single w 1 1) Δ, add_smul]
       abel
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       rw [jordanCell_mulVec_apply]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_smul, hL0]
-      rw [smul_smul, smul_smul, mul_comm (w 1) Δ]
+      rw [smul_smul, smul_smul, mul_comm (Pi.single w 1 1) Δ]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

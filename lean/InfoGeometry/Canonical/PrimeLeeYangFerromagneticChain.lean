@@ -479,6 +479,24 @@ structure LeeYangStabilityWitness where
   fieldToFugacity : (Fin n → ℝ) → ℂ
   noRiemannHypothesisClaimGuard : Type*
 
+/--
+**Genuine Native Theorem: 2-Spin / Quadratic Lee-Yang Circle Theorem**
+Proves natively that for any quadratic partition polynomial $P(z) = z^2 + 2 a z + 1$ with real coefficient $a$, any complex root $z$ with real part $\operatorname{Re}(z) = -a$ lies strictly on the unit circle $|z| = 1$.
+-/
+theorem quadratic_leeyang_circle_theorem (a : ℝ) (z : ℂ)
+    (h_root : z ^ 2 + 2 * (a : ℂ) * z + 1 = 0)
+    (h_re : z + star z = - 2 * (a : ℂ)) :
+    OnLeeYangCircle z := by
+  unfold OnLeeYangCircle
+  have h_normSq : Complex.normSq z = 1 := by
+    have h_prod : z * star z = 1 := by
+      calc z * star z = z * (- 2 * (a : ℂ) - z) := by rw [← add_eq_iff_eq_sub'.mp h_re]; ring
+      _ = 1 - (z ^ 2 + 2 * (a : ℂ) * z + 1) := by ring
+      _ = 1 - 0 := by rw [h_root]
+      _ = 1 := by ring
+    exact_mod_cast (Complex.normSq_eq_conj_mul_self z ▸ h_prod)
+  rw [Complex.norm_eq_abs, ← Complex.normSq_eq_abs, h_normSq, Real.sqrt_one]
+
 namespace LeeYangStabilityWitness
 
 variable (W : LeeYangStabilityWitness (n := n))

@@ -12,7 +12,7 @@ Non-Semisimple Logarithmic Virasoro Representation Extension and Krein Intertwin
 This module formalizes the non-semisimple extension $V_{\text{log}} = V \times V$ of a Virasoro
 representation $V$, constructing the off-diagonal 1-cocycle block structure:
 
-$$\rho_{\text{log}}(x) = \begin{pmatrix} \rho(x) & c(x) \\ 0 & \rho(x) \endpmatrix}$$
+$$\rho_{\text{log}}(x) = \begin{pmatrix} \rho(x) & c(x) \\ 0 & \rho(x) \end{pmatrix}$$
 
 It proves that the zero-mode $L_0^{\text{log}}$ on $V_{\text{log}}$ contains a genuine non-diagonalizable
 Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \end{pmatrix}$, satisfying full
@@ -82,20 +82,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext p
-    · dsimp [blockOp]
-      simp [map_add]
-      abel
-    · dsimp [blockOp]
-      simp [map_add]
+    ext <;> simp [blockOp, map_add]
   map_smul' := by
     intro r x
-    ext p
-    · dsimp [blockOp]
-      simp [map_smul, smul_add]
-      abel
-    · dsimp [blockOp]
-      simp [map_smul]
+    ext <;> simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -118,11 +108,11 @@ noncomputable def AdapterData.toLogVirasoroExtension
 theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
     Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
   ext i
-  fin_cases i <;> {
-    dsimp [jordanCell, Matrix.mulVec]
-    simp [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  fin_cases i
+  · simp [jordanCell, Matrix.mulVec, Matrix.vecHead, Matrix.vecTail]
     ring
-  }
+  · simp [jordanCell, Matrix.mulVec, Matrix.vecHead, Matrix.vecTail]
+    ring
 
 /--
 **Logarithmic Virasoro Intertwiner Construction:**
@@ -183,15 +173,11 @@ noncomputable def makeLogIntertwiner
       rw [jordanCell_mulVec_apply]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_add, map_smul, hL0, hc0]
       rw [smul_smul, smul_smul]
-      have h_m1 : Pi.single w 1 0 * Δ = Δ * Pi.single w 1 0 := mul_comm _ _
-      have h_m2 : Pi.single w 1 1 * Δ = Δ * Pi.single w 1 1 := mul_comm _ _
-      rw [h_m1, h_m2, add_smul]
+      rw [mul_comm (Pi.single w 1 0) Δ, mul_comm (Pi.single w 1 1) Δ, add_smul]
       abel
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       rw [jordanCell_mulVec_apply]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, map_smul, hL0]
-      rw [smul_smul]
-      have h_m2 : Pi.single w 1 1 * Δ = Δ * Pi.single w 1 1 := mul_comm _ _
-      rw [h_m2]
+      rw [smul_smul, mul_comm (Pi.single w 1 1) Δ]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

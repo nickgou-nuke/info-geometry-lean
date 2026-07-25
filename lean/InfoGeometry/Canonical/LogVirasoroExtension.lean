@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.LogJordanKreinCore
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 
 /-!
 # InfoGeometry.Canonical.LogVirasoroExtension
@@ -34,12 +35,12 @@ abbrev Vlog (V : Type*) := V × V
 
 /-- Upper-triangular block operator on $V \times V$ defined by diagonal operator `T` and off-diagonal operator `C`. -/
 def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
-  toFun := fun ⟨u, v⟩ => ⟨T u + C v, T v⟩
+  toFun := fun p => ⟨T p.1 + C p.2, T p.2⟩
   map_add' := by
-    intro ⟨u1, v1⟩ ⟨u2, v2⟩
+    intro p q
     ext <;> simp [map_add, add_assoc, add_left_comm]
   map_smul' := by
-    intro r ⟨u, v⟩
+    intro r p
     ext <;> simp [map_smul, smul_add]
 
 /--
@@ -85,10 +86,10 @@ def makeLogVirasoroRepresentation
     ext ⟨u, v⟩ <;> simp [blockOp, map_smul]
   map_lie' := by
     intro x y
-    simp [blockOp_commutator]
-    rw [map_lie ρ x y]
-    congr 1
-    exact (hc x y).symm
+    simp only [LieHom.coe_toLinearMap, blockOp_commutator]
+    have h1 : (ρ ⁅x, y⁆) = (ρ x).commutator (ρ y) := map_lie ρ x y
+    have h2 : c ⁅x, y⁆ = (ρ x).commutator (c y) + (c x).commutator (ρ y) := hc x y
+    rw [h1, h2]
 
 /--
 **Source-Derived Logarithmic Extension:**
@@ -111,11 +112,11 @@ def makeLogIntertwiner
     (c : VirasoroAlgebra 𝕜 →ₗ[𝕜] Module.End 𝕜 V)
     (hc : IsVirasoroCocycle ρ c)
     (Δ : 𝕜) (v0 : V) (hv0 : v0 ≠ 0)
-    (hL0 : ρ (L 0) v0 = Δ • v0)
-    (hc0 : c (L 0) v0 = v0) :
-    LogVirasoroIntertwiner (V × V) (makeLogVirasoroRepresentation ρ c hc (L 0)) Δ where
+    (hL0 : ρ (VirasoroAlgebra.lgen 𝕜 0) v0 = Δ • v0)
+    (hc0 : c (VirasoroAlgebra.lgen 𝕜 0) v0 = v0) :
+    LogVirasoroIntertwiner (V × V) (makeLogVirasoroRepresentation ρ c hc (VirasoroAlgebra.lgen 𝕜 0)) Δ where
   ι := {
-    toFun := fun v => (v 0 • v0 + v 1 • c (L 0) v0, v 1 • v0)
+    toFun := fun v => (v 0 • v0 + v 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0, v 1 • v0)
     map_add' := by
       intro x y
       ext <;> simp [add_smul, smul_add, add_assoc, add_left_comm]
@@ -125,24 +126,29 @@ def makeLogIntertwiner
   }
   injective := by
     intro x y hxy
-    have h2 : x 1 • v0 = y 1 • v0 := by
-      have := congr_arg Prod.snd hxy
-      exact this
+    have hsnd : x 1 • v0 = y 1 • v0 := congr_arg Prod.snd hxy
     have hy1 : x 1 = y 1 := by
-      have := sub_eq_zero.mp (smul_eq_zero.mp (by simpa [sub_smul] using sub_eq_zero.2 h2) |>.resolve_right hv0)
-      exact this
-    subst hy1
-    have h1 : x 0 • v0 = y 0 • v0 := by
-      have := congr_arg Prod.fst hxy
-      simpa using this
+      have hdiff : (x 1 - y 1) • v0 = 0 := by
+        rw [sub_smul, hsnd, sub_self]
+      cases smul_eq_zero.mp hdiff with
+      | inl h => exact sub_eq_zero.mp h
+      | inr h => contradiction
+    have hfst : x 0 • v0 + x 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0 = y 0 • v0 + y 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0 := congr_arg Prod.fst hxy
+    rw [hy1] at hfst
     have hy0 : x 0 = y 0 := by
-      have := sub_eq_zero.mp (smul_eq_zero.mp (by simpa [sub_smul] using sub_eq_zero.2 h1) |>.resolve_right hv0)
-      exact this
+      have hdiff : (x 0 - y 0) • v0 = 0 := by
+        have hsub := congr_arg (fun z => z - y 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0) hfst
+        simp only [add_sub_cancel_right] at hsub
+        rw [sub_smul, hsub, sub_self]
+      cases smul_eq_zero.mp hdiff with
+      | inl h => exact sub_eq_zero.mp h
+      | inr h => contradiction
     ext i
-    fin_cases i <;> assumption
+    fin_cases i
+    · exact hy0
+    · exact hy1
   intertwines := by
-    ext x
-    ext i
-    fin_cases i <;> simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
+    ext v
+    simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

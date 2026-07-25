@@ -40,7 +40,9 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
     Function.Injective (cliffordEmbedSucc (𝕜 := 𝕜) n) := by
   intro A B h
   ext a b
-  have h_pow : 2^n < 2^(n + 1) := by rw [Nat.pow_succ]; omega
+  have h_pow : 2^n < 2^(n + 1) := by
+    rw [Nat.pow_succ]
+    nlinarith [Nat.two_pow_pos n]
   have h_lt_a : a.val < 2^(n + 1) := Nat.lt_trans a.isLt h_pow
   have h_lt_b : b.val < 2^(n + 1) := Nat.lt_trans b.isLt h_pow
   let i : Fin (2^(n + 1)) := ⟨a.val, h_lt_a⟩

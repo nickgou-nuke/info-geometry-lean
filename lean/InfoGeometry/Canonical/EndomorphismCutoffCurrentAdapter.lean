@@ -86,9 +86,9 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
   rw [map_add]
   congr 1
   split_ifs with hmn
-  · ext v
-    simp only [RawCARModeCompletion.central, map_zsmul, map_one, LinearMap.smul_apply, LinearMap.one_apply]
-    exact zsmul_eq_smul_cast 𝕜 m v
+  · rw [RawCARModeCompletion.central, map_zsmul, map_one]
+    ext v
+    simp [LinearMap.smul_apply, LinearMap.id_apply]
   · exact map_zero ρ
 
 /--

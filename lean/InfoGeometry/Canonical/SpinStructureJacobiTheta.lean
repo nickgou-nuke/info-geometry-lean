@@ -32,7 +32,7 @@ inductive SpinStructureIndex
   deriving DecidableEq, Repr
 
 /-- Spin structure characteristics $(\alpha, \beta) \in \{0, 1/2\}^2$. -/
-def spinChar (s : SpinStructureIndex) : ℝ × ℝ :=
+noncomputable def spinChar (s : SpinStructureIndex) : ℝ × ℝ :=
   match s with
   | SpinStructureIndex.S11 => (1/2, 1/2)
   | SpinStructureIndex.S10 => (1/2, 0)
@@ -46,7 +46,7 @@ def spinParity (s : SpinStructureIndex) : ℤ :=
   | _ => 0
 
 /-- Evaluated finite Jacobi theta function associated with a spin structure $\sigma$. -/
-def jacobiTheta (s : SpinStructureIndex) (S : Finset ℤ) (l τ : ℝ) : ℝ :=
+noncomputable def jacobiTheta (s : SpinStructureIndex) (S : Finset ℤ) (l τ : ℝ) : ℝ :=
   match s with
   | SpinStructureIndex.S00 => finiteTheta S l τ
   | SpinStructureIndex.S10 => finiteTheta S (l + 1/2) τ
@@ -54,7 +54,7 @@ def jacobiTheta (s : SpinStructureIndex) (S : Finset ℤ) (l τ : ℝ) : ℝ :=
   | SpinStructureIndex.S11 => finiteTheta S (l + 1/2) (τ + 1/2)
 
 /-- Abstract Dirac operator Pfaffian on $T^2$ for spin structure $s$. -/
-def diracPfaffian (s : SpinStructureIndex) (S : Finset ℤ) (l τ : ℝ) : ℝ :=
+noncomputable def diracPfaffian (s : SpinStructureIndex) (S : Finset ℤ) (l τ : ℝ) : ℝ :=
   jacobiTheta s S l τ
 
 /--

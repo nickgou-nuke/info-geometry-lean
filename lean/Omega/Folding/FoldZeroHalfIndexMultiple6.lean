@@ -48,7 +48,7 @@ theorem paper_fold_zero_half_index_multiple6 (m : ℕ) (hm : (m + 2) % 6 = 0) :
     calc
       Nat.fib (m + 2) / 2 = (w * Omega.lucasNum d) / 2 := by rw [hdouble_nat]
       _ = (w * (k + k)) / 2 := by rw [hk]
-      _ = (2 * (w * k)) / 2 := by ring
+      _ = (2 * (w * k)) / 2 := by ring_nf
       _ = w * k := by
         exact Nat.mul_div_right (w * k) (by decide)
       _ = Nat.fib d * k := by rfl

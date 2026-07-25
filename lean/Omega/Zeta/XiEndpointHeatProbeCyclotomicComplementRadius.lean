@@ -34,7 +34,7 @@ theorem paper_xi_endpoint_heat_probe_cyclotomic_complement_radius
               rw [xiEndpointHeatProbeAtomicTerm, Real.log_mul hatom.ne' hpow_pos.ne']
       _ = (Real.log atom + ((N + 1 : ℝ) * Real.log rStar)) / ((N + 1 : ℕ) : ℝ) := by
             congr 1
-            simpa [Real.rpow_natCast] using Real.log_rpow hrStar (N + 1 : ℝ)
+            simp [Real.rpow_natCast, Real.log_rpow hrStar]
       _ = Real.log atom / ((N + 1 : ℕ) : ℝ) +
             (((N + 1 : ℕ) : ℝ) * Real.log rStar) / ((N + 1 : ℕ) : ℝ) := by
             field_simp [hden]

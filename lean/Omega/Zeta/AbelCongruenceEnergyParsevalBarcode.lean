@@ -65,12 +65,7 @@ theorem paper_abel_congruence_energy_parseval_barcode (m : ℕ) (δ : ℝ) :
           ∑ a, ‖abelCongruenceHardyCoeff m δ a‖ ^ 2 =
             Finset.sum (Finset.univ.erase a0) (fun a => ‖abelCongruenceHardyCoeff m δ a‖ ^ 2) +
               ‖abelCongruenceHardyCoeff m δ a0‖ ^ 2 := by
-        simpa [a0] using
-          (Finset.sum_erase_add
-            (s := Finset.univ)
-            (a := a0)
-            (f := fun a : Fin m => ‖abelCongruenceHardyCoeff m δ a‖ ^ 2)
-            (by exact Finset.mem_univ a0)).symm
+        simp [a0, Finset.sum_erase_add (s := Finset.univ) (a := a0) (f := fun a : Fin m => ‖abelCongruenceHardyCoeff m δ a‖ ^ 2) (by exact Finset.mem_univ a0)]
       simpa [abelCongruenceHardyEnergy, abelCongruenceTrivialCharacterEnergy,
         abelCongruenceNontrivialCharacterEnergy, h, a0, add_comm] using hsplit
     · have hm : m = 0 := Nat.eq_zero_of_not_pos h

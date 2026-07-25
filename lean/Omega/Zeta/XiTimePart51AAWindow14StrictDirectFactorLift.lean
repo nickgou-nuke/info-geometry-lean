@@ -48,9 +48,8 @@ theorem paper_xi_time_part51aa_window14_strict_direct_factor_lift :
       XiDerivedCrossFibGcdFormulaData.indexGcd, XiDerivedCrossFibGcdFormulaData.moduli,
       XiDerivedCrossFibGcdFormulaData.shiftedWindows, fibWindowModulus] using hderived.2.1
   have hhomology0 : D.homologyMultiplicity 0 = 1 := by
-    simpa [D, xi_time_part51aa_window14_strict_direct_factor_lift_data,
-      XiDerivedCrossFibGcdFormulaData.homologyMultiplicity]
-      using hderived.2.2 0
+    simp [D, xi_time_part51aa_window14_strict_direct_factor_lift_data,
+      XiDerivedCrossFibGcdFormulaData.homologyMultiplicity, hderived.2.2 0]
   have hhomology1 : D.homologyMultiplicity 1 = 1 := by
     simpa [D, xi_time_part51aa_window14_strict_direct_factor_lift_data,
       XiDerivedCrossFibGcdFormulaData.homologyMultiplicity]

@@ -17,7 +17,7 @@ establishing thermodynamic non-negativity of relative entropy and exact zero-lea
 2. **Zero Entropy Leakage Conservation Theorem**:
    For equal input and output thermodynamic state norms $C_1 = C_2$, the net leakage flux $C_1 - C_2 = 0$.
 3. **KMS Modular Fixed Point Unitary Invariance**:
-   For any modular phase $\theta \in \mathbb{R}$, $|\exp(i \theta)| = 1$.
+   For any modular phase $\theta \in \mathbb{R}$, $\|\exp(i \theta)\| = 1$.
 -/
 
 noncomputable section
@@ -38,11 +38,11 @@ theorem no_entropy_leakage_conservation (c1 c2 : ℝ) (h_eq : c1 = c2) :
 
 /--
 **Lemma 2: KMS Modular Fixed Point Phase Unitary Invariance**
-Proves natively that for any real modular flow parameter $\theta \in \mathbb{R}$, $|\exp(i \theta)| = 1$.
+Proves natively that for any real modular flow parameter $\theta \in \mathbb{R}$, $\|\exp(i \theta)\| = 1$.
 -/
 theorem modular_fixed_point_norm (theta : ℝ) :
-    Complex.abs (Complex.exp (I * theta)) = 1 := by
-  exact Complex.abs_exp_ofReal_mul_I theta
+    ‖Complex.exp (I * theta)‖ = 1 := by
+  exact Complex.norm_exp_ofReal_mul_I theta
 
 /--
 **Lemma 3: Relative Entropy Elementary Non-Negativity**
@@ -62,7 +62,7 @@ theorem grand_regular_support_second_law_master_duality
     (p : ℝ) (hp : 0 < p)
     (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
     (c1 - c2 = 0) ∧
-    (Complex.abs (Complex.exp (I * theta)) = 1) ∧
+    (‖Complex.exp (I * theta)‖ = 1) ∧
     (0 ≤ p * Real.log (p / p)) ∧
     (s_anti.re = 1 / 2) := ⟨
   no_entropy_leakage_conservation c1 c2 h_eq,

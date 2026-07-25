@@ -94,7 +94,7 @@ def coreSubmodule : Submodule ℝ CZ :=
   ext i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     add_mul, mul_add, sub_eq_add_neg, Pi.add_apply, Fin.sum_univ_three]
-  all_goals ring
+  all_goals ring_nf
 
 /-- `zMul` distributes over addition in its right argument. -/
 @[simp] theorem zMul_add_right (X Y Z : CZ) :
@@ -102,7 +102,7 @@ def coreSubmodule : Submodule ℝ CZ :=
   ext i <;> simp [zMul, InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     add_mul, mul_add, sub_eq_add_neg, Pi.add_apply, Fin.sum_univ_three]
-  all_goals ring
+  all_goals ring_nf
 
 /-- `zMul` is ℝ-homogeneous in its left argument. -/
 @[simp] theorem zMul_smul_left (r : ℝ) (X Y : CZ) :
@@ -112,7 +112,7 @@ def coreSubmodule : Submodule ℝ CZ :=
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     add_mul, mul_add, sub_eq_add_neg, Pi.smul_apply, Fin.sum_univ_three]
-  all_goals ring
+  all_goals ring_nf
 
 /-- `zMul` is ℝ-homogeneous in its right argument. -/
 @[simp] theorem zMul_smul_right (r : ℝ) (X Y : CZ) :
@@ -122,7 +122,7 @@ def coreSubmodule : Submodule ℝ CZ :=
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross,
     add_mul, mul_add, sub_eq_add_neg, Pi.smul_apply, Fin.sum_univ_three]
-  all_goals ring
+  all_goals ring_nf
 
 /-- Multiplying by zero on the left yields zero. -/
 theorem zMul_zero_left (Y : CZ) : zMul 0 Y = 0 := by
@@ -152,12 +152,12 @@ theorem k_eq_il : kUnit = zMul iUnit lUnit := rfl
 /-- `il = -li` (the product anticommutes). -/
 theorem il_eq_neg_li : zMul iUnit lUnit = -(zMul lUnit iUnit) := by
   ext i <;> simp [iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
-  all_goals (try fin_cases i) <;> norm_num
+  all_goals (try fin_cases i)
 
 /-- `k = il` squares to `+1`. -/
 @[simp] theorem k_sq : zMul kUnit kUnit = 1 := by
   ext i <;> simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
-  all_goals (try fin_cases i) <;> norm_num
+  (try fin_cases i) <;> norm_num
 
 /-! ## Membership of the generators -/
 
@@ -321,13 +321,13 @@ theorem assoc_table (g h k : Fin 4) :
     zMul (genVec g) (zMul (genVec h) (genVec k)) := by
   ext i
   · fin_cases g <;> fin_cases h <;> fin_cases k <;>
-    (simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;> try norm_num)
+    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
   · fin_cases g <;> fin_cases h <;> fin_cases k <;>
-    (simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;> try norm_num)
+    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
   · fin_cases g <;> fin_cases h <;> fin_cases k <;> (try fin_cases i) <;>
-    (simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;> try norm_num)
+    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
   · fin_cases g <;> fin_cases h <;> fin_cases k <;> (try fin_cases i) <;>
-    (simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;> try norm_num)
+    simp [genVec, iUnit, lUnit, kUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
 
 /-- The induced multiplication on the core is associative.
 Every element of `coreSubmodule` is an ℝ-linear combination of the four

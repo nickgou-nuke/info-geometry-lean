@@ -83,7 +83,7 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
                 exact Real.log_pos (by norm_num)
               })
           exact h
-        )
+        })
       <;>
       (try norm_num) <;>
       (try linarith)
@@ -104,10 +104,6 @@ Z(z) = (z - e^{iπ/3})(z - e^{-iπ/3}) = z² - 2cos(π/3)z + 1 = z² - z + 1
 This has roots at e^{±iπ/3} which lie on the unit circle. -/
 noncomputable def partitionPolyN2 : Polynomial ℂ :=
   Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)
-
-/-- The concrete N=2 prime chain converted from finite prime chain data -/
-noncomputable def primeChainN2Concrete : PrimeFerromagneticChain 2 :=
-  finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)
 
 /-- Explicit computation of the partition polynomial for N=2 -/
 theorem partitionPolyN2_explicit : partitionPolyN2 = Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ) := by
@@ -179,7 +175,7 @@ theorem leeYangStabilityN2 :
     have h₃ : Complex.normSq z = 1 := by
       have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h₂
       have h₄ : z ^ 2 - z + 1 = 0 := by
-        simpa [Polynomial.eval₂_hom_C_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul, Complex.ext_iff] using h₃
+        simpa [Polynomial.eval₂_hom_C_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul] using h₃
       have h₅ : z ^ 2 = z - 1 := by
         rw [← sub_eq_zero]
         ring_nf at h₄ ⊢
@@ -202,7 +198,8 @@ theorem leeYangStabilityN2 :
           exact h₉
         simp [Complex.normSq, Complex.ext_iff] at h₆ ⊢
         <;> nlinarith
-      simp_all [Complex.normSq, OnLeeYangCircle]
+      -- Since Complex.normSq z = 1, we have OnLeeYangCircle z by definition
+      simp_all [OnLeeYangCircle]
       <;>
       (try ring_nf at *) <;>
       (try nlinarith [Real.sqrt_nonneg 3, Real.sq_sqrt (show 0 ≤ 3 by norm_num)])

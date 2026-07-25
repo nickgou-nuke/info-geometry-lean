@@ -51,13 +51,13 @@ variable (C : HestenesKreinCone)
 
 /-- The Hestenes clock-axis commutation law is exactly phase-linearity for the
 canonical doubled-space phase structures. -/
-theorem bond_phaseLinear (n : ℕ) :
+theorem bond_phaseLinear {n : ℕ} :
     (clockPhaseStructure (C.Base n)).IsPhaseLinearMap
       (C.bond n) (clockPhaseStructure (C.Base (n + 1))) :=
   C.bond_hestenes n
 
 /-- Cone maps preserve the Hestenes clock axis. -/
-theorem ι_phaseLinear (n : ℕ) :
+theorem ι_phaseLinear {n : ℕ} :
     (clockPhaseStructure (C.Base n)).IsPhaseLinearMap
       (C.ι n) (clockPhaseStructure C.LimitBase) :=
   C.ι_hestenes n

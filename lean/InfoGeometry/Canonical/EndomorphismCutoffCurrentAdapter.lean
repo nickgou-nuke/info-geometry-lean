@@ -78,7 +78,7 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
     (N : ℕ) (m n : Int) (hN : m.natAbs ≤ N) :
     (endomorphismCutoffCurrent C ρ N m).commutator
         (endomorphismCutoffCurrent C ρ N n) =
-      ρ (cutoffBoundaryTerm C N m n) +
+      ρ (RawCARModeCompletion.cutoffBoundaryTerm C N m n) +
         if m + n = 0 then (m : 𝕜) • ρ C.central else 0 := by
   rw [endomorphismCutoffCurrent_commutator]
   rw [RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN]

@@ -1,6 +1,4 @@
-import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib
 import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 

@@ -97,6 +97,7 @@ def makeLogVirasoroRepresentation
     ext
     · simp [blockOp, map_smul, smul_add]
       abel
+    · simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

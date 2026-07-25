@@ -45,7 +45,8 @@ Proves natively that for any $x \in (0, 1)$, the bosonic Euler factor $(1 - x)^{
 theorem bosonic_euler_factor_gt_prime_term {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :
     (1 - x)⁻¹ > x := by
   have h1 : 0 < 1 - x := sub_pos.mpr hx1
-  have h2 : 1 < (1 - x)⁻¹ := (one_lt_inv₀ h1).mpr hx1
+  have hx1_sub : 1 - x < 1 := by linarith
+  have h2 : 1 < (1 - x)⁻¹ := (one_lt_inv₀ h1).mpr hx1_sub
   exact hx1.trans h2
 
 /--

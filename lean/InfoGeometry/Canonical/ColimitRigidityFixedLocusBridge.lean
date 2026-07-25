@@ -49,6 +49,7 @@ theorem critical_line_fixed_locus_iff (s : ℂ) :
     · simp only [sub_re, one_re, star_def, conj_re]
       linarith
     · simp only [sub_im, one_im, star_def, conj_im]
+      ring
 
 /--
 **Main Theorem 2: Critical Line Parametrization Antiunitary Equivalence**

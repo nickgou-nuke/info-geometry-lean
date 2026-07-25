@@ -176,7 +176,17 @@ theorem partitionPolyN2_coeff_3 :
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_4 :
     Polynomial.coeff partitionPolyN2 4 = 0 := by
-  simp [partitionPolyN2, partitionPolynomial]
+  simp [partitionPolyN2, partitionPolynomial, configurationWeight, SpinConfig, FinitePrimeChainData,
+    FinitePrimeChainData.ell_eq_log, Real.log_mul, Real.log_rpow, Complex.ext_iff, pow_two]
+  <;>
+  norm_num [SpinConfig, FinitePrimeChainData, FinitePrimeChainData.ell_eq_log, Real.log_mul, Real.log_rpow,
+    Complex.ext_iff, pow_two]
+  <;>
+  simp_all [Polynomial.coeff_sum, Polynomial.coeff_C_mul_X_pow, Finset.sum_const, Finset.card_range]
+  <;>
+  norm_num
+  <;>
+  rfl
 
 /-- The concrete partition polynomial coefficients -/
 theorem partitionPolyN2_explicit_computation :

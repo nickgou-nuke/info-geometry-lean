@@ -77,12 +77,12 @@ theorem realAntiunitaryReflection_fixed_locus (v : ℝ × ℝ) :
 /--
 **Main Theorem 3: Analytical RH $\iff$ Categorical Antiunitary Rigidity**
 Re-exports the kernel-checked equivalence theorem:
-$$(\forall s, \operatorname{is\_colimit\_kernel\_object}(s) \implies \operatorname{Re}(s) = 1/2) \iff (\forall s, \operatorname{is\_colimit\_kernel\_object}(s) \implies \mathcal{J}_{\text{anti}}(s) = s).$$
+$$(\forall s, \operatorname{IsCriticalStripZero}(f, s) \implies \operatorname{Re}(s) = 1/2) \iff (\forall s, \operatorname{IsCriticalStripZero}(f, s) \implies s = 1 - \bar{s}).$$
 -/
-theorem rh_eq_colimit_antiunitary_rigidity (riemannZeta : ℂ → ℂ) :
-    (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
-    (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → antiunitaryCriticalReflection s = s) :=
-  riemann_hypothesis_colimit_rigidity riemannZeta
+theorem rh_eq_colimit_antiunitary_rigidity (f : ℂ → ℂ) :
+    (∀ s : ℂ, IsCriticalStripZero f s → s.re = 1 / 2) ↔
+    (∀ s : ℂ, IsCriticalStripZero f s → s = 1 - star s) :=
+  criticalStripZeros_on_line_iff_fixed_by_reflection f
 
 /--
 **Main Theorem 4: Dirac Zero-Mode Stage Survival**
@@ -103,16 +103,16 @@ theorem dirac_zero_mode_survival
 Unifies all 4 pillars of the Categorical Riemann Hypothesis translation framework into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
 -/
 theorem grand_categorical_riemann_master_synthesis
-    (v : ℝ × ℝ) (s : ℂ) (h_anti : s = 1 - star s) (riemannZeta : ℂ → ℂ) :
+    (v : ℝ × ℝ) (s : ℂ) (h_anti : s = 1 - star s) (f : ℂ → ℂ) :
     (realPhaseMatrix * realPhaseMatrix = -1) ∧
     (realAntiunitaryReflection v = v ↔ v.1 = 1 / 2) ∧
     (s.re = 1 / 2) ∧
-    ((∀ s : ℂ, is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
-     (∀ s : ℂ, is_colimit_kernel_object s riemannZeta → antiunitaryCriticalReflection s = s)) := ⟨
+    ((∀ s : ℂ, IsCriticalStripZero f s → s.re = 1 / 2) ↔
+     (∀ s : ℂ, IsCriticalStripZero f s → s = 1 - star s)) := ⟨
   realPhaseMatrix_square,
   realAntiunitaryReflection_fixed_locus v,
   antiunitary_fixed_locus_rigidity h_anti,
-  rh_eq_colimit_antiunitary_rigidity riemannZeta
+  rh_eq_colimit_antiunitary_rigidity f
 ⟩
 
 end InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge

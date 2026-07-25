@@ -48,7 +48,8 @@ theorem landauer_heat_positivity (data : LandauerErasureData) :
     0 < landauerHeat data := by
   unfold landauerHeat
   have h_diff : 0 < (data.kolmogorovX : ℝ) - (data.kolmogorovY : ℝ) := by
-    exact_mod_cast sub_pos.mpr data.complexity_decrease
+    rw [sub_pos]
+    exact Nat.cast_lt.mpr data.complexity_decrease
   have h_log2 : 0 < Real.log 2 := by
     apply Real.log_pos
     linarith
@@ -65,7 +66,8 @@ theorem environment_entropy_increase_pos (data : LandauerErasureData) :
     0 < environmentEntropyIncrease data := by
   unfold environmentEntropyIncrease
   have h_diff : 0 < (data.kolmogorovX : ℝ) - (data.kolmogorovY : ℝ) := by
-    exact_mod_cast sub_pos.mpr data.complexity_decrease
+    rw [sub_pos]
+    exact Nat.cast_lt.mpr data.complexity_decrease
   have h_log2 : 0 < Real.log 2 := by
     apply Real.log_pos
     linarith

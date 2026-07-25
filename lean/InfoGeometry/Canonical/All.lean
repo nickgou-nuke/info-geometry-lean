@@ -1309,6 +1309,8 @@ import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 import InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
 import InfoGeometry.Canonical.FilteredHestenesKernelTransport
+import InfoGeometry.Canonical.FilteredHestenesGlobalOperator
+import InfoGeometry.Canonical.FilteredHestenesGlobalFunction
 
 namespace InfoGeometry
 

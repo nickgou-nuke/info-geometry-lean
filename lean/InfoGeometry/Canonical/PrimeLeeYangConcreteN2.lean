@@ -73,12 +73,14 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
           have h : (0 : ℝ) < Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ) := by
             simp [FinitePrimeChainData.ell_eq_log] at *
             <;>
+            norm_num [Real.log_pos]
+            <;>
+            (try norm_num) <;>
             (try
               {
                 have h₁ : (1 : ℝ) < (2 : ℝ) := by norm_num
                 have h₂ : (1 : ℝ) < (3 : ℝ) := by norm_num
-                simp_all [Real.log_pos]
-                <;> norm_num
+                exact Real.log_pos (by norm_num)
               })
           exact h
         })
@@ -144,7 +146,7 @@ theorem partitionPolyN2_coeff_4 :
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
 
 /-- Concrete instance of the Lee-Yang stability witness for N=2 -/
-noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness :=
+noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :=
   { chain := (finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)),
     partitionPolynomial := partitionPolyN2,
     fieldToFugacity := fun _ => (1 : ℂ),
@@ -165,7 +167,7 @@ theorem leeYangStabilityN2 :
   have h_norm_sq : Complex.normSq z = 1 := by
     have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h_root
     have h₄ : z ^ 2 - z + 1 = 0 := by
-      simpa [Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul, Polynomial.eval_mul] using h₃
+      simpa [Polynomial.eval₂_hom_C_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul] using h₃
     have h₅ : z ^ 2 = z - 1 := by
       rw [← sub_eq_zero]
       ring_nf at h₄ ⊢
@@ -173,7 +175,42 @@ theorem leeYangStabilityN2 :
       <;> norm_num at * <;>
       (try constructor <;> nlinarith) <;>
       (try ring_nf at * <;> norm_num at * <;> nlinarith)
-    have h₇ : z.re * z.re + z.im * z.im = 1 := by
+    -- From z² = z - 1, we can deduce the real and imaginary parts
+    have h₆ : z.re = 1 / 2 := by
+      have h₅ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
+        simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
+        <;> norm_num at h₅ ⊢ <;>
+        (try ring_nf at h₅ ⊢) <;>
+        (try nlinarith) <;>
+        (try linarith) <;>
+        (try nlinarith)
+      have h₇ : z.re = 1 / 2 := by
+        have h₈ : z.im * (2 * z.re - 1) = 0 := by
+          simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
+          <;> norm_num at h₅ ⊢ <;>
+          (try ring_nf at h₅ ⊢) <;>
+          (try nlinarith) <;>
+          (try linarith) <;>
+          (try nlinarith)
+          <;>
+          (try
+            {
+              nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
+                sq_nonneg (z.im + Real.sqrt 3 / 2)]
+            })
+        by_cases h₉ : z.im = 0
+        · -- If z.im = 0, then z is real. But z² - z + 1 = 0 has no real roots.
+          have h₁₀ : z.re * z.re - z.re + 1 = 0 := by
+            simp [h₉] at h₅ h₆ ⊢
+            <;> nlinarith
+          nlinarith [sq_nonneg (z.re - 1 / 2)]
+        · -- If z.im ≠ 0, then 2 * z.re - 1 = 0
+          have h₁₀ : 2 * z.re - 1 = 0 := by
+            apply mul_left_cancel₀ h₉
+            linarith
+          linarith
+      exact h₇
+    have h_im_sq : z.im * z.im = 3 / 4 := by
       have h₈ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
         simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
         <;> norm_num at h₅ ⊢ <;>
@@ -181,12 +218,17 @@ theorem leeYangStabilityN2 :
         (try nlinarith) <;>
         (try linarith) <;>
         (try nlinarith)
-      have h₉ : z.re * z.re + z.im * z.im = 1 := by
-        nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
-          sq_nonneg (z.im + Real.sqrt 3 / 2)]
-      exact h₉
-    simp [Complex.normSq, Complex.ext_iff] at h₇ ⊢
-    <;> nlinarith
+      have h₉ : z.re = 1 / 2 := h₆
+      rw [h₉] at h₈
+      ring_nf at h₈ ⊢
+      nlinarith
+    have h₁₁ : Complex.normSq z = 1 := by
+      have h₁₂ : z.re * z.re + z.im * z.im = 1 := by
+        rw [h₆]
+        nlinarith [h_im_sq]
+      simp [Complex.normSq, Complex.ext_iff] at h₁₂ ⊢
+      <;> nlinarith
+    exact h₁₁
   -- Since Complex.normSq z = 1, we have OnLeeYangCircle z by definition
   have h_on_circle : OnLeeYangCircle z := by
     simp_all [OnLeeYangCircle]

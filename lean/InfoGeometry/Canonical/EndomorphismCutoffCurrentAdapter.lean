@@ -2,6 +2,8 @@ import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter
 
 open Filter
@@ -23,16 +25,11 @@ lemma RingHom.map_int_zsmul_one
     | zero =>
       simp [RingHom.map_zero]
     | succ m ih =>
-      rw [Int.succ_eq_add_one]
-      simp [add_smul, one_smul, RingHom.map_add, RingHom.map_one, ih]
-      <;> ring_nf at * <;> simp_all [Algebra.smul_def]
-      <;> abel
-    | neg m ih =>
-      rw [Int.neg_eq_neg]
-      rw [neg_smul, ih]
-      simp [neg_smul, Algebra.smul_def]
-      <;> ring_nf at * <;> simp_all [Algebra.smul_def]
-      <;> abel
+      rw [Int.cast_add, Int.cast_one, add_smul, one_smul, map_add, map_one, ih]
+      abel
+    | pred m ih =>
+      rw [Int.cast_sub, Int.cast_one, sub_smul, one_smul, map_sub, map_one, ih]
+      abel
   exact h m
 
 /-- The finite normal-ordered CAR current represented on `V`. -/
@@ -190,9 +187,8 @@ theorem current_commutator
     calc
       (S.J m).commutator (S.J n) v = S.J m (S.J n v) - S.J n (S.J m v) := rfl
       _ = endomorphismCutoffCurrent S.source S.ρ N m (S.J n v) - endomorphismCutoffCurrent S.source S.ρ N n (S.J m v) := by rw [← hN4, ← hN5]
-      _ = (endomorphismCutoffCurrent S.source S.ρ N m).commutator (endomorphismCutoffCurrent S.source S.ρ N n) v := by
-        dsimp [LinearMap.commutator]
-        rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply, hN3, hN2]
+      _ = (endomorphismCutoffCurrent S.source S.ρ N m) ((endomorphismCutoffCurrent S.source S.ρ N n) v) - (endomorphismCutoffCurrent S.source S.ρ N n) ((endomorphismCutoffCurrent S.source S.ρ N m) v) := by rw [hN3, hN2]
+      _ = (endomorphismCutoffCurrent S.source S.ρ N m).commutator (endomorphismCutoffCurrent S.source S.ρ N n) v := rfl
       _ = (S.ρ (S.source.cutoffBoundaryTerm N m n) + if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
         rw [h₂]
       _ = (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by

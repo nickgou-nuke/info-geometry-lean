@@ -28,7 +28,7 @@ The condition `z.re ≠ -1` removes the pole `z = -1` of
 `cayleyToTemperature z = z / (1 + z)`.
 -/
 theorem partitionRoot_mapsToCriticalLine
-    (W : LeeYangStabilityWitness (n := n))
+    (W : LeeYangStabilityWitness)
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
@@ -46,7 +46,7 @@ This is the exact finite algebraic content of the Lee--Yang/critical-line
 coordinate dictionary.  No statement about zeta zeros is used.
 -/
 theorem partitionRoot_cayleyRoundTrip
-    (W : LeeYangStabilityWitness (n := n))
+    (W : LeeYangStabilityWitness)
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}

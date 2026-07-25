@@ -62,7 +62,8 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
     have h2 : ‖z‖^2 = normSq z := by
       rw [norm_def, Real.sq_sqrt (normSq_nonneg z)]
     rw [normSq_apply] at h2
-    rw [← h2, h1]
+    ring_nf at h2 ⊢
+    exact h2.symm.trans h1
   have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
     apply Complex.ext
     · have h_re : ((1 + z) / (1 - z)).re = (1 - (z.re^2 + z.im^2)) / normSq (1 - z) := by

@@ -33,6 +33,6 @@ theorem gellmann_trace_orthogonality (a b : Fin 8) :
   have h_ne : ((Real.sqrt 3 : ℝ) : ℂ) ≠ 0 := by
     norm_cast
     exact Real.sqrt_ne_zero'.mpr (by norm_num)
-  fin_cases a <;> fin_cases b <;> dsimp [gellMann, gellMannArray] <;> simp [gellMann1, gellMann2, gellMann3, gellMann4, gellMann5, gellMann6, gellMann7, gellMann8, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_three] <;> try ring <;> (try field_simp [h_ne]; try rw [Complex.I_sq, h_sq3]; try ring)
+  fin_cases a <;> fin_cases b <;> dsimp [gellMann, gellMannArray] <;> simp [gellMann1, gellMann2, gellMann3, gellMann4, gellMann5, gellMann6, gellMann7, gellMann8, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_three] <;> try ring_nf <;> (try field_simp [h_ne]; try rw [Complex.I_sq, h_sq3]; try ring_nf)
 
 end InfoGeometry.Algebra.GellMannTraceOrthogonality

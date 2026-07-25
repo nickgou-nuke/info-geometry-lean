@@ -1,4 +1,5 @@
-import Mathlib.Tactic
+import Mathlib.Data.Complex.Basic
+import Mathlib.Tactic.Ring
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -48,8 +49,8 @@ Proves natively that if s = 1 - star s, then s + star s = 1.
 -/
 theorem antiunitary_fixed_locus_sum_law (s : ℂ) (h_anti : s = 1 - star s) :
     s + star s = 1 := by
-  rw [h_anti]
-  ring
+  calc s + star s = (1 - star s) + star s := by nth_rw 1 [h_anti]
+    _ = 1 := by ring
 
 /--
 **Main Theorem: Grand Filtered Direct Limit Operator Master Duality**

@@ -193,9 +193,8 @@ theorem rawCAR_to_exteriorFock_source_witness
       (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
         (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
       (VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  refine chargedFockSpaceSplitCARCurrentWitness 𝕜 α
-  · exact C
-  · rfl
+  refine chargedFockSpaceSplitCARCurrentWitness 𝕜 α { source := C }
+  rfl
 
 /--
 Main Raw-CAR Source-to-Heisenberg Representation Existence Theorem:
@@ -210,7 +209,7 @@ theorem rawCAR_to_SplitCARCurrentWitness_exists
       (∀ v, ∀ᶠ l : Int in atTop, W.J l v = 0) ∧
       (∀ m n, (W.J m).commutator (W.J n) =
         if m + n = 0 then (m : 𝕜) • (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) else 0) := by
-  refine' ⟨rawCAR_to_SplitCARCurrentWitness C 𝕜 α, rfl, ?_, ?_⟩
+  refine' ⟨chargedFockSpaceSplitCARCurrentWitness 𝕜 α { source := C }, rfl, ?_, ?_⟩
   · exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
   · exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
 

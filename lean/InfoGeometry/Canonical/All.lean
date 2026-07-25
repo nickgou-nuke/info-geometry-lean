@@ -1104,6 +1104,7 @@ import InfoGeometry.Canonical.BosonizationTheorem
 import InfoGeometry.Canonical.TensorModularAtomCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.ChargedFockSpaceFromRawCAR
+import InfoGeometry.Canonical.CARStabilizedCurrentHeisenbergRep
 import InfoGeometry.Volume.PfaffianGeneral
 import InfoGeometry.Canonical.ClassDTopology
 import InfoGeometry.Canonical.CurrentConjugationLemmas

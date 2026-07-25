@@ -59,15 +59,14 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   unfold cayleyTransform
   have h_den : 1 - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
   have h_sq : z.re^2 + z.im^2 = 1 := by
-    have h_abs : ‖z‖^2 = 1 := by rw [hz, one_pow]
-    have h_normSq : normSq z = 1 := by
-      calc normSq z = ‖z‖^2 := by simp [normSq_apply, sq]
-      _ = 1 := h_abs
-    rw [normSq_apply] at h_normSq
-    exact h_normSq
+    have h_abs : ‖z‖ = 1 := hz
+    have h1 : z.re^2 + z.im^2 = normSq z := by ring
+    have h2 : normSq z = 1 := by
+      rw [normSq_eq_abs, ← norm_eq_abs, h_abs, one_pow]
+    rw [h1, h2]
   have h_num : ((1 + z) * star (1 - z)).re = 0 := by
     have h_ring : ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
-      simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, one_im, conj_re, conj_im]
+      simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, conj_re]
       ring
     rw [h_ring, h_sq, sub_self]
   have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
@@ -79,8 +78,10 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
       exact h_star.symm
     rw [h_inv]
     ring
-  rw [h_eq, div_re]
-  simp only [h_num, zero_mul, zero_div, add_zero]
+  rw [h_eq]
+  have h_real_div : (((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ)).re = ((1 + z) * star (1 - z)).re / normSq (1 - z) := by
+    simp [div_re, ofReal_re, ofReal_im]
+  rw [h_real_div, h_num, zero_div]
 
 /--
 **Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**

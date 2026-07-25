@@ -1304,7 +1304,7 @@ import InfoGeometry.Canonical.BiquaternionExpClosure
 import InfoGeometry.Canonical.BuresMetricClosedCartography
 import InfoGeometry.Canonical.BuresInformationGeodesicFlow
 import InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
-import InfoGeometry.Canonical.FilteredHestenesKreinColimit
+import InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
 
 namespace InfoGeometry
 

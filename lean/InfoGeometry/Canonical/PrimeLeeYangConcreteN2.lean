@@ -89,10 +89,6 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
       (try linarith)
     }
 
-/-- The concrete N=2 prime chain converted from finite prime chain data -/
-noncomputable def primeChainN2Concrete : PrimeFerromagneticChain 2 :=
-  finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)
-
 /-- The concrete N=2 partition polynomial with κ=1 and primes {2, 3}
 
 For the Lee-Yang theorem, the partition function as a polynomial in fugacity z = e^{-2h}

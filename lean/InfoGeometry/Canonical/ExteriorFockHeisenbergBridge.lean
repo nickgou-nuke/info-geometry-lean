@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.SplitCARCurrentSource
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.CanonicalNormalOrdering
-import Mathlib.LinearAlgebra.Finrank
 
 /-!
 # Constructive CAR-to-Heisenberg Bridge on Exterior Fock Space

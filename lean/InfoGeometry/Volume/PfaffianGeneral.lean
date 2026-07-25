@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# InfoGeometry.Canonical.PfaffianGeneral
+# InfoGeometry.Volume.PfaffianGeneral
 
 General $2n \times 2n$ skew-symmetric block-diagonal Pfaffian construction.
 
@@ -10,7 +10,7 @@ to arbitrary $2n \times 2n$ block skew-symmetric matrices over any commutative r
 establishing the algebraic core for Class D topological phase invariants ($\mathbb{Z}_2$).
 -/
 
-namespace InfoGeometry.Canonical.PfaffianGeneral
+namespace InfoGeometry.Volume.PfaffianGeneral
 
 open scoped BigOperators
 
@@ -64,4 +64,4 @@ theorem pfaffianBlock_mul (n : ℕ) (a b : Fin n → R) :
   unfold pfaffianBlock
   exact Finset.prod_mul_distrib
 
-end InfoGeometry.Canonical.PfaffianGeneral
+end InfoGeometry.Volume.PfaffianGeneral

@@ -1,5 +1,5 @@
 import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
-import InfoGeometry.Canonical.PfaffianGeneral
+import InfoGeometry.Volume.PfaffianGeneral
 
 /-!
 # InfoGeometry.Canonical.ClassDTopology
@@ -14,7 +14,7 @@ to the sign of the Pfaffian product $\nu = \text{Pf}(A(0)) \cdot \text{Pf}(A(\pi
 namespace InfoGeometry.Canonical.ClassDTopology
 
 open InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
-open InfoGeometry.Canonical.PfaffianGeneral
+open InfoGeometry.Volume.PfaffianGeneral
 
 /--
 The $\mathbb{Z}_2$ topological invariant of a 1D Class-D superconductor:

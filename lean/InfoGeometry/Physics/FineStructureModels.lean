@@ -23,15 +23,7 @@ theorem pellis_near_137 : |(pellis_alpha_inv : ℝ) - 137| < 1 := by
   have h₁ : 1370359991 / 10000000 < pellis_alpha_inv ∧ pellis_alpha_inv < 171294999 / 1250000 := PellisFineStructure.pellis_bounds
   have h₂ : |(pellis_alpha_inv : ℝ) - 137| < 1 := by
     rw [abs_lt]
-    constructor <;> norm_num at h₁ ⊢ <;>
-    (try norm_num) <;>
-    (try linarith) <;>
-    (try
-      {
-        norm_num at h₁ ⊢
-        <;>
-        (try linarith)
-      })
+    constructor <;> norm_num at h₁ ⊢ <;> linarith
   exact h₂
 
 /-- Speculative α = 1/137 (definition) -/
@@ -65,11 +57,7 @@ theorem alpha_p_approx : |alpha_p - 0.0073| < 0.0001 := by
       have h₈ : (1 / (171294999 / 1250000 : ℝ) : ℝ) > 0.0073 - 1 / 10000 := by norm_num
       linarith
     rw [abs_lt]
-    constructor <;> norm_num at h₄ h₅ ⊢ <;>
-    (try linarith) <;>
-    (try assumption) <;>
-    (try norm_num) <;>
-    (try linarith)
+    constructor <;> norm_num at h₄ h₅ ⊢ <;> linarith
   exact h₂
 
 /-- Centralizer dimension = 137 (defined, not derived) -/

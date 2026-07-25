@@ -1,32 +1,27 @@
-import Mathlib
+import InfoGeometry.Canonical.CategoricalRiemannRigidity
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
-open Complex
+/-!
+# Compatibility Shim for CategoricalRiemannRigidity
+
+Redirects legacy symbols to the canonical owner in `InfoGeometry.Canonical.CategoricalRiemannRigidity`.
+-/
+
+open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 def antiunitaryCriticalReflection (s : ℂ) : ℂ :=
   1 - star s
 
 theorem antiunitary_fixed_locus_is_critical_line (s : ℂ) :
-    antiunitaryCriticalReflection s = s ↔ s.re = 1 / 2 := by
-  constructor
-  · intro h
-    have h_re : 1 - s.re = s.re := by
-      have h' := congrArg Complex.re h
-      simpa [antiunitaryCriticalReflection] using h'
-    nlinarith
-  · intro h
-    apply Complex.ext
-    · simp [antiunitaryCriticalReflection, h]
-      nlinarith
-    · simp [antiunitaryCriticalReflection]
+    antiunitaryCriticalReflection s = s ↔ s.re = 1 / 2 :=
+  critical_line_fixed_locus_iff s
 
 def is_colimit_kernel_object (s : ℂ) (riemannZeta : ℂ → ℂ) : Prop :=
-  riemannZeta s = 0 ∧ 0 < s.re ∧ s.re < 1
+  IsCriticalStripZero riemannZeta s
 
 theorem riemann_hypothesis_colimit_rigidity (riemannZeta : ℂ → ℂ) :
     (∀ s, is_colimit_kernel_object s riemannZeta → s.re = 1 / 2) ↔
       (∀ s, is_colimit_kernel_object s riemannZeta → antiunitaryCriticalReflection s = s) := by
-  constructor
-  · intro h s hs
-    exact (antiunitary_fixed_locus_is_critical_line s).2 (h s hs)
-  · intro h s hs
-    exact (antiunitary_fixed_locus_is_critical_line s).1 (h s hs)
+  simpa [antiunitaryCriticalReflection, is_colimit_kernel_object] using
+    criticalStripZeros_on_line_iff_fixed_by_reflection riemannZeta

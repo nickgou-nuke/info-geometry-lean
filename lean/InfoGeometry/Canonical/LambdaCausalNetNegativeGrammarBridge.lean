@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence
 import InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
 
 set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
 
 /-!
 # The Functorial Rosetta Stone: Lambda Calculus Causal Nets ↔ Negative Grammar ↔ Causal Split ↔ Modular Flow ↔ Operatorial Entropy
@@ -91,8 +92,9 @@ Negative polarity types correspond to async lazy evaluation in $\lambda$-causal 
 -/
 theorem negative_grammar_async_polarity (net : CausalNet) (h : net.has_causal_past = true) :
     causalNetToPolarity net = Polarity.negative := by
-  dsimp [causalNetToPolarity]
+  unfold causalNetToPolarity
   rw [h]
+  rfl
 
 /--
 **Main Theorem 3: The Grand 5-Functorial Rosetta Unification**
@@ -101,7 +103,7 @@ negative grammar polarities, causal splits, Tomita-Takesaki modular flows, and o
 -/
 theorem grand_lambda_negative_grammar_rosetta_chain
     (t : LambdaTerm) (net : CausalNet) (hnet : net.has_causal_past = true)
-    {V : Type*} [AddCommGroup V] [Module ℝ V] (V_bulk V_boundary V_null : Submodule ℝ V)
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] (V_bulk V_boundary V_null : Submodule ℝ V)
     (β : ℝ) (B : OperatorBoltzmannEntropy V) :
     ((lambdaToCausalNet t).is_dag = true) ∧
     (causalNetToPolarity net = Polarity.negative) ∧

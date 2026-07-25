@@ -58,11 +58,8 @@ theorem primon_thermal_readouts_separate
     (beta1 beta2 E : ℝ) (hE : 0 < E) (h_beta_ne : beta1 ≠ beta2) :
     Real.exp (-beta1 * E) ≠ Real.exp (-beta2 * E) := by
   have h_prod_ne : beta1 * E ≠ beta2 * E := fun h => h_beta_ne (mul_right_cancel₀ (ne_of_gt hE) h)
-  have h_neg_ne : -beta1 * E ≠ -beta2 * E := by
-    intro h
-    have h_mul : -(beta1 * E) = -(beta2 * E) := by linarith [h]
-    exact h_prod_ne (neg_inj.mp h_mul)
-  exact dirac_heat_kernel_readouts_separate (beta1 * E) (beta2 * E) h_prod_ne
+  have h_sep := dirac_heat_kernel_readouts_separate (beta1 * E) (beta2 * E) h_prod_ne
+  rwa [← neg_mul, ← neg_mul]
 
 /--
 **Main Theorem: Grand Primon Heat Kernel Master Duality**

@@ -46,9 +46,17 @@ def colimitReadoutCauchyAnalyticAt
       (clockPhaseStructure (C.Base n))
       (clockPhaseStructure C.LimitBase)
       (F.colimitReadout n) x :=
-  CauchyAnalyticAt.comp
-    (F.analytic n x)
-    (C.ιCauchyAnalyticAt n (F.map n x))
+  { deriv := (C.ι n).comp ((F.analytic n x).deriv)
+    has_fderiv_at := by
+      simpa [colimitReadout] using
+        (C.ι n).hasFDerivAt.comp x (F.analytic n x).has_fderiv_at
+    phase_linear_deriv :=
+      PhaseStructure.comp_phaseLinear
+        (clockPhaseStructure (C.Base n))
+        (clockPhaseStructure (C.Base n))
+        (clockPhaseStructure C.LimitBase)
+        (F.analytic n x).phase_linear_deriv
+        (C.ι_hestenes n) }
 
 /-- The derivative of the colimit readout is the canonical cone map composed
 with the finite-stage derivative. -/

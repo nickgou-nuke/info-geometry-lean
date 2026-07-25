@@ -57,16 +57,16 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right
 theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
     (cayleyTransform z).re = 0 := by
   unfold cayleyTransform
-  have h_abs_sq : (Complex.abs z)^2 = 1 := by rw [hz, one_pow]
   have h_sq : z.re^2 + z.im^2 = 1 := by
-    rw [Complex.abs] at h_abs_sq
-    exact (Real.rpow_two _).symm.trans h_abs_sq
+    have h_abs : ‖z‖^2 = 1 := by rw [hz, one_pow]
+    have h_normSq : normSq z = 1 := by
+      rw [normSq_eq_abs, h_abs]
+    rw [← normSq_apply, h_normSq]
   have h_num : ((1 + z) * star (1 - z)).re = 0 := by
-    calc ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
+    have h_mul : ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
       simp only [star_def, conj_sub, conj_one, sub_re, add_re, mul_re, one_re, one_im, zero_mul, sub_zero]
       ring
-    _ = 1 - 1 := by rw [h_sq]
-    _ = 0 := by ring
+    rw [h_mul, h_sq, sub_self]
   have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (‖1 - z‖^2 : ℂ) := by
     have h_star : (1 - z) * star (1 - z) = (‖1 - z‖ : ℂ)^2 := by
       rw [star_def, mul_conj]

@@ -1,4 +1,5 @@
-import Mathlib.Tactic
+import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.BigOperators.Basic
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Meta.BridgeTarget
@@ -107,6 +108,14 @@ def finitePartition
     (h : Fin n → ℝ) : ℝ :=
   ∑ σ : Fin n → IsingSpin, boltzmannWeight C β h σ
 
+/-- The finite partition function is strictly positive. -/
+theorem finitePartition_pos
+    (β : ℝ)
+    (h : Fin n → ℝ) :
+    0 < finitePartition C β h := by
+  unfold finitePartition
+  exact Finset.sum_pos (fun σ _ => boltzmannWeight_pos C β h σ) Finset.univ_nonempty
+
 /-- Tilted finite partition function for an observable `O`. -/
 def tiltedPartition
     (β : ℝ)
@@ -115,6 +124,16 @@ def tiltedPartition
     (θ : ℝ) : ℝ :=
   ∑ σ : Fin n → IsingSpin,
     Real.exp (-β * C.isingHamiltonian h σ + θ * O σ)
+
+/-- The tilted finite partition function is strictly positive. -/
+theorem tiltedPartition_pos
+    (β : ℝ)
+    (h : Fin n → ℝ)
+    (O : (Fin n → IsingSpin) → ℝ)
+    (θ : ℝ) :
+    0 < tiltedPartition C β h O θ := by
+  unfold tiltedPartition
+  exact Finset.sum_pos (fun _ _ => Real.exp_pos _) Finset.univ_nonempty
 
 /--
 Finite log-moment generating function:

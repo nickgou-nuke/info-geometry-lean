@@ -59,18 +59,19 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   unfold cayleyTransform
   have h_sq : z.re^2 + z.im^2 = 1 := by
     have h1 : ‖z‖^2 = 1 := by rw [hz, one_pow]
-    have h2 : ‖z‖^2 = z.re^2 + z.im^2 := by
-      rw [norm_def, Real.sq_sqrt (by positivity)]
-    rw [← h2, h1]
+    have h2 : normSq z = 1 := by
+      calc normSq z = (Complex.abs z)^2 := normSq_eq_abs z
+      _ = ‖z‖^2 := rfl
+      _ = 1 := h1
+    rw [← normSq_apply] at h2
+    exact h2
   have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
     apply Complex.ext
-    · simp only [div_re, add_re, sub_re, add_im, sub_im, one_re, one_im]
-      have h_num : (1 + z.re) * (1 - z.re) - z.im * z.im = 0 := by
-        calc (1 + z.re) * (1 - z.re) - z.im * z.im = 1 - (z.re^2 + z.im^2) := by ring
-        _ = 1 - 1 := by rw [h_sq]
-        _ = 0 := by ring
-      rw [h_num, zero_mul, zero_div, add_zero]
-    · simp only [div_im, add_re, sub_re, add_im, sub_im, one_re, one_im]
+    · have h_re : ((1 + z) / (1 - z)).re = (1 - (z.re^2 + z.im^2)) / normSq (1 - z) := by
+        simp only [div_re, add_re, sub_re, add_im, sub_im, one_re, one_im]
+        ring
+      rw [h_re, h_sq, sub_self, zero_div]
+    · simp only [div_im, add_re, sub_re, add_im, sub_im, one_re, one_im, normSq_apply]
       ring
   rw [h_div]
 

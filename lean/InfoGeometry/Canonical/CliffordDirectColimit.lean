@@ -11,7 +11,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]
 
 /-- Matrix algebra at stage `n` representing the finite Clifford algebra `Cl(2n, ℂ)`. -/
-def CliffordStage (𝕜 : Type) [Field 𝕜] (n : ℕ) : Type :=
+abbrev CliffordStage (𝕜 : Type) [Field 𝕜] (n : ℕ) : Type :=
   Matrix (Fin (2^n)) (Fin (2^n)) 𝕜
 
 instance (n : ℕ) : AddCommGroup (CliffordStage 𝕜 n) :=

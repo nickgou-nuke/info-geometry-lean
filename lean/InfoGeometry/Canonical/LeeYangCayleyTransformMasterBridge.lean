@@ -33,17 +33,20 @@ theorem cayley_unit_circle_anticomm_sum (z : ℂ) (h_norm : star z * z = 1) (h_d
     (1 + z) / (1 - z) + star ((1 + z) / (1 - z)) = 0 := by
   have h_conj_den : 1 - star z ≠ 0 := by
     intro hc
-    have h_sz : star z = 1 := by linarith [hc]
+    have h_sz : star z = 1 := by
+      calc star z = 1 - (1 - star z) := by ring
+        _ = 1 - 0 := by rw [hc]
+        _ = 1 := by ring
     have h_z : z = 1 := by
       calc z = star (star z) := (star_star z).symm
         _ = star (1 : ℂ) := by rw [h_sz]
         _ = 1 := map_one (starRingEnd ℂ)
     have : 1 - z = 0 := by rw [h_z, sub_self]
     exact h_den this
-  have h_num : (1 + z) * (1 - star z) + (1 + star z) * (1 - z) = 0 := by
-    calc (1 + z) * (1 - star z) + (1 + star z) * (1 - z)
-      _ = 2 - (star z * z) + (z - star z) - 1 - (star z * z) + (star z - z) + 1 := by ring
-      _ = 2 - 1 - 1 := by rw [h_norm]; ring
+  have h_num : (1 + z) * (1 - star z) + (1 - z) * (1 + star z) = 0 := by
+    calc (1 + z) * (1 - star z) + (1 - z) * (1 + star z)
+      _ = 2 - 2 * (star z * z) := by ring
+      _ = 2 - 2 * 1 := by rw [h_norm]
       _ = 0 := by ring
   have h_map : star ((1 + z) / (1 - z)) = (1 + star z) / (1 - star z) := by
     simp only [map_div, map_add, map_sub, map_one]

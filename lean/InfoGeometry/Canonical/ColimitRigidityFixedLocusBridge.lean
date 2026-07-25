@@ -41,15 +41,14 @@ theorem critical_line_fixed_locus_iff (s : ℂ) :
     s = 1 - star s ↔ s.re = 1 / 2 := by
   constructor
   · intro h
-    have h_re : s.re = (1 - star s).re := by rw [h]
+    have h_re : s.re = (1 - star s).re := congrArg re h
     simp only [sub_re, one_re, star_def, conj_re] at h_re
     linarith
   · intro h
-    ext
+    apply Complex.ext
     · simp only [sub_re, one_re, star_def, conj_re]
       linarith
     · simp only [sub_im, one_im, star_def, conj_im]
-      ring
 
 /--
 **Main Theorem 2: Critical Line Parametrization Antiunitary Equivalence**

@@ -40,13 +40,15 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
     Function.Injective (cliffordEmbedSucc (𝕜 := 𝕜) n) := by
   intro A B h
   ext a b
-  have h_lt_a : a.val < 2^(n + 1) := Nat.lt_trans a.isLt (by omega)
-  have h_lt_b : b.val < 2^(n + 1) := Nat.lt_trans b.isLt (by omega)
+  have h_pow : 2^n < 2^(n + 1) := by rw [Nat.pow_succ]; omega
+  have h_lt_a : a.val < 2^(n + 1) := Nat.lt_trans a.isLt h_pow
+  have h_lt_b : b.val < 2^(n + 1) := Nat.lt_trans b.isLt h_pow
   let i : Fin (2^(n + 1)) := ⟨a.val, h_lt_a⟩
   let j : Fin (2^(n + 1)) := ⟨b.val, h_lt_b⟩
   have happ := congrFun (congrFun h i) j
+  dsimp [cliffordEmbedSucc, Matrix.of] at happ
   have h_cond : a.val < 2^n ∧ b.val < 2^n := ⟨a.isLt, b.isLt⟩
-  simp only [cliffordEmbedSucc, Matrix.of_apply, dif_pos h_cond] at happ
+  rw [dif_pos h_cond, dif_pos h_cond] at happ
   exact happ
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/

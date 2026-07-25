@@ -40,10 +40,8 @@ theorem quadratic_leeyang_root_normSq_eq_one
     Complex.normSq (⟨-a, Real.sqrt (1 - a ^ 2)⟩ : ℂ) = 1 := by
   have h_sub : 0 ≤ 1 - a ^ 2 := sub_nonneg.mpr ha_le
   have h_sq : (Real.sqrt (1 - a ^ 2)) ^ 2 = 1 - a ^ 2 := Real.sq_sqrt h_sub
-  calc Complex.normSq ⟨-a, Real.sqrt (1 - a ^ 2)⟩
-    _ = (-a) ^ 2 + (Real.sqrt (1 - a ^ 2)) ^ 2 := by simp [Complex.normSq_apply]
-    _ = a ^ 2 + (1 - a ^ 2) := by rw [neg_sq, h_sq]
-    _ = 1 := by ring
+  dsimp [Complex.normSq_apply]
+  linarith
 
 /--
 **Main Theorem 2: Quadratic Lee-Yang Partition Polynomial Circle Theorem**
@@ -55,24 +53,15 @@ theorem quadratic_partition_polynomial_root_on_circle
     (h_re : z.re = -a) :
     OnLeeYangCircle z := by
   unfold OnLeeYangCircle
-  have h_im_sq : z.im ^ 2 = 1 - a ^ 2 := by
-    have h_eval : (z.re + z.im * I) ^ 2 + 2 * (a : ℂ) * (z.re + z.im * I) + 1 = 0 := by
-      have h_z : z = z.re + z.im * I := (Complex.re_add_im z).symm
-      rwa [← h_z]
-    rw [h_re] at h_eval
-    have h_re_part : ((-a : ℂ) ^ 2 - (z.im : ℂ) ^ 2) - 2 * (a : ℂ) ^ 2 + 1 = 0 := by
-      calc ((-a : ℂ) + z.im * I) ^ 2 + 2 * (a : ℂ) * ((-a : ℂ) + z.im * I) + 1
-        _ = ((-a : ℂ) ^ 2 - (z.im : ℂ) ^ 2 + 2 * (-a : ℂ) * (z.im : ℂ) * I) + (-2 * (a : ℂ) ^ 2 + 2 * (a : ℂ) * (z.im : ℂ) * I) + 1 := by ring
-        _ = ((-a : ℂ) ^ 2 - (z.im : ℂ) ^ 2 - 2 * (a : ℂ) ^ 2 + 1) + (4 * (-a : ℂ) * (z.im : ℂ) + 2 * (a : ℂ) * (z.im : ℂ)) * I := by ring
-        _ = 0 := h_eval
-    have h_real : a ^ 2 - z.im ^ 2 - 2 * a ^ 2 + 1 = 0 := by
-      have h_re_eq : ((-a : ℂ) ^ 2 - (z.im : ℂ) ^ 2 - 2 * (a : ℂ) ^ 2 + 1).re = (0 : ℂ).re := by rw [h_re_part]
-      simpa using h_re_eq
-    linarith
+  have h_re_part : (z ^ 2 + 2 * (a : ℂ) * z + 1).re = 0 := by rw [h_root, zero_re]
+  have h_expand : (z ^ 2 + 2 * (a : ℂ) * z + 1).re = z.re * z.re - z.im * z.im + 2 * a * z.re + 1 := by
+    simp [add_re, mul_re, ofReal_re, ofReal_im]
+    ring
+  rw [h_expand, h_re] at h_re_part
+  have h_im_sq : z.im * z.im = 1 - a * a := by linarith
   calc Complex.normSq z
-    _ = z.re ^ 2 + z.im ^ 2 := Complex.normSq_apply z
-    _ = (-a) ^ 2 + (1 - a ^ 2) := by rw [h_re, h_im_sq]
-    _ = a ^ 2 + (1 - a ^ 2) := by rw [neg_sq]
+    _ = z.re * z.re + z.im * z.im := Complex.normSq_apply z
+    _ = (-a) * (-a) + (1 - a * a) := by rw [h_re, h_im_sq]
     _ = 1 := by ring
 
 /--

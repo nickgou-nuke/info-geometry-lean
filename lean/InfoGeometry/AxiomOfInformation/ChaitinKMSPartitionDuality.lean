@@ -11,20 +11,16 @@ namespace InfoGeometry.AxiomOfInformation
 
 /-- The type of microstates (pure quantum/algorithmic states) -/
 inductive Microstate : Type* where
-  | config : String → Microstate
+  | config : Nat → Microstate
   | halt : Microstate
   | nonhalt : Microstate
-  deriving DecidableEq
+  deriving Fintype, DecidableEq
 
-instance : Fintype Microstate :=
-  ⟨{Microstate.halt, Microstate.nonhalt}, by
-    decide⟩
-
-/- The Kolmogorov Complexity function K : Microstate → ℕ
+/-- The Kolmogorov Complexity function K : Microstate → ℕ
     (formalized as a function to ℕ for simplicity; true K is uncomputable) -/
 noncomputable def kolmogorov_complexity (x : Microstate) : ℕ :=
   match x with
-  | Microstate.config s => s.length
+  | Microstate.config n => n + 1
   | Microstate.halt => 1
   | Microstate.nonhalt => 1000
 
@@ -37,11 +33,11 @@ noncomputable def microstate_boltzmann_entropy (x : Microstate) : ℝ :=
 noncomputable def algorithmic_partition_function (S : Finset Microstate) : ℝ :=
   ∑ x ∈ S, (2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ))
 
-/- The Thermodynamic Partition Function at inverse temperature β -/
+/-- The Thermodynamic Partition Function at inverse temperature β -/
 noncomputable def thermodynamic_partition_function (S : Finset Microstate) (β : ℝ) : ℝ :=
-  ∑ x in S, Real.exp (-β * microstate_boltzmann_entropy x)
+  ∑ x ∈ S, Real.exp (-β * microstate_boltzmann_entropy x)
 
-/- The microcanonical set of halting microstates (halting programs) -/
+/-- The microcanonical set of halting microstates (halting programs) -/
 noncomputable def halting_microstates : Finset Microstate :=
   {x : Microstate | x = Microstate.halt}
 
@@ -82,34 +78,34 @@ theorem chaitin_kms_partition_duality :
         = (2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)) := by
         have h₅ : Real.exp (-((kolmogorov_complexity x : ℝ) * Real.log 2))
           = Real.exp (Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))) := by
-            have h₆ : Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))
-              = (-(kolmogorov_complexity x : ℝ)) * Real.log 2 := by
-              rw [Real.log_rpow (by norm_num : (2 : ℝ) > 0)]
-              <;> ring_nf
-            rw [h₆]
-            <;> field_simp [Real.exp_log]
+          have h₆ : Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))
+            = (-(kolmogorov_complexity x : ℝ)) * Real.log 2 := by
+            rw [Real.log_rpow (by norm_num : (2 : ℝ) > 0)]
             <;> ring_nf
-            <;> norm_num
-          rw [h₅]
+          rw [h₆]
           <;> field_simp [Real.exp_log]
           <;> ring_nf
           <;> norm_num
-        rw [h₄]
-        <;> simp_all [Real.exp_neg]
-        <;> ring_nf
-        <;> field_simp [Real.rpow_neg, Real.rpow_add, Real.rpow_mul]
+        rw [h₅]
+        <;> field_simp [Real.exp_log]
         <;> ring_nf
         <;> norm_num
-      rw [h₂]
+      rw [h₄]
       <;> simp_all [Real.exp_neg]
       <;> ring_nf
       <;> field_simp [Real.rpow_neg, Real.rpow_add, Real.rpow_mul]
       <;> ring_nf
       <;> norm_num
     rw [h₂]
-    <;> simp_all [algorithmic_partition_function]
+    <;> simp_all [Real.exp_neg]
+    <;> ring_nf
+    <;> field_simp [Real.rpow_neg, Real.rpow_add, Real.rpow_mul]
     <;> ring_nf
     <;> norm_num
+  rw [h₂]
+  <;> simp_all [algorithmic_partition_function]
+  <;> ring_nf
+  <;> norm_num
 
 /-- The microcanonical version restricted to halting microstates -/
 theorem chaitin_kms_partition_duality_halting :
@@ -142,25 +138,19 @@ theorem chaitin_kms_partition_duality_halting :
         = (2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)) := by
         have h₅ : Real.exp (-((kolmogorov_complexity x : ℝ) * Real.log 2))
           = Real.exp (Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))) := by
-            have h₆ : Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))
-              = (-(kolmogorov_complexity x : ℝ)) * Real.log 2 := by
-              rw [Real.log_rpow (by norm_num : (2 : ℝ) > 0)]
-              <;> ring_nf
-            rw [h₆]
-            <;> field_simp [Real.exp_log]
+          have h₆ : Real.log ((2 : ℝ) ^ (-(kolmogorov_complexity x : ℝ)))
+            = (-(kolmogorov_complexity x : ℝ)) * Real.log 2 := by
+            rw [Real.log_rpow (by norm_num : (2 : ℝ) > 0)]
             <;> ring_nf
-            <;> norm_num
-          rw [h₅]
+          rw [h₆]
           <;> field_simp [Real.exp_log]
           <;> ring_nf
           <;> norm_num
-        rw [h₄]
-        <;> simp_all [Real.exp_neg]
-        <;> ring_nf
-        <;> field_simp [Real.rpow_neg, Real.rpow_add, Real.rpow_mul]
+        rw [h₅]
+        <;> field_simp [Real.exp_log]
         <;> ring_nf
         <;> norm_num
-      rw [h₂]
+      rw [h₄]
       <;> simp_all [Real.exp_neg]
       <;> ring_nf
       <;> field_simp [Real.rpow_neg, Real.rpow_add, Real.rpow_mul]
@@ -327,12 +317,8 @@ theorem chaitin_kms_partition_duality_halting_nats :
           <;> ring_nf
           <;> norm_num
         rw [h₂]
-        <;> simp_all [Real.exp_log]
+        <;> simp_all [algorithmic_partition_function]
         <;> ring_nf
         <;> norm_num
-      rw [h₂]
-      <;> simp_all [algorithmic_partition_function]
-      <;> ring_nf
-      <;> norm_num
 
 end InfoGeometry.AxiomOfInformation

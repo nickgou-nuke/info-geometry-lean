@@ -9,6 +9,9 @@ strict *-homomorphism, encoding the fractal dynamics of the Cantor set.
 We additionally construct the unitary Braid Twist, proving its symmetries.
 -/
 
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
+
 section CuntzEndomorphism
 
 variable {A : Type*} [Ring A] [StarRing A]
@@ -98,7 +101,6 @@ theorem CuntzShift_star (X : A) : CuntzShift S₁ S₂ (star X) = star (CuntzShi
 def BraidTwist : A := S₁ * star S₂ + S₂ * star S₁
 
 /-- The Braid Twist is self-adjoint (an observable symmetry). -/
-omit hC in
 theorem BraidTwist_self_adjoint : star (BraidTwist S₁ S₂) = BraidTwist S₁ S₂ := by
   dsimp [BraidTwist]
   simp only [star_add, star_mul, star_star]

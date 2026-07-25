@@ -45,8 +45,8 @@ theorem paper_xi_time_part69_localized_rational_endomorphism_fixedpoints_zeta :
         xi_time_part69_localized_rational_endomorphism_fixedpoints_zeta_fixedPointCount S a n =
           localizedIndex S (a ^ n - 1) := by
       have hPeriodic := paper_xi_localized_solenoid_periodic_point_formula S a ha n hn
-      simpa [xi_time_part69_localized_rational_endomorphism_fixedpoints_zeta_fixedPointCount] using
-        hPeriodic.2.2.1
+      simp [xi_time_part69_localized_rational_endomorphism_fixedpoints_zeta_fixedPointCount,
+        hPeriodic.2.2.1]
     simp [xi_time_part69_localized_rational_endomorphism_fixedpoints_zeta_artinMazurCoefficient,
       hCount]
 

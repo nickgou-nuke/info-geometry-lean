@@ -6,6 +6,8 @@ import Mathlib.Tactic
 
 open scoped BigOperators
 
+set_option linter.unusedSectionVars false
+
 namespace Omega.OperatorAlgebra
 
 section
@@ -102,7 +104,6 @@ lemma sum_diagonal_fiberMatrixUnit (fold : Ω → X) (x : X) :
 a direct sum of fiber blocks, each block carries canonical matrix units, and the diagonal matrix
 units already recover the identity on that block.
     thm:fold-jones-basic-construction-directsum -/
-omit [Fintype X] in
 theorem paper_op_algebra_fold_jones_basic_construction_directsum
     (fold : Ω → X) :
     directsumMatrixDecomposition fold ∧ matrixUnitGeneration fold ∧ depthTwoClosure fold := by

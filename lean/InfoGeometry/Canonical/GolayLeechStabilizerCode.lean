@@ -28,7 +28,7 @@ This module formalizes in native Lean 4 / Mathlib:
 
 namespace InfoGeometry.Canonical.GolayLeechStabilizerCode
 
-open InfoGeometry.Canonical.Pin55KreinConformalBridge
+open InfoGeometry.Canonical.Pin55
 open InfoGeometry.Canonical.CausalConeProjectorBridge
 
 /-- Parameter structure for the Extended Binary Golay Code $G_{24}$. -/

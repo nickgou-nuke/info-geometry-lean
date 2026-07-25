@@ -2100,6 +2100,7 @@ import InfoGeometry.Canonical.DeRhamCantorCohomology
 import InfoGeometry.Canonical.OmegaBoundaryRepresentation
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
+import InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 import InfoGeometry.Canonical.KOIndexSpectralFlow
 import InfoGeometry.Canonical.HolographicBoundaryEntropy

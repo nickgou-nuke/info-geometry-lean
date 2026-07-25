@@ -57,9 +57,8 @@ theorem virasoro_bracket_antisymm (m n : ℤ) (c : ℂ) (L_sum : ℂ) (I : ℂ) 
       have : n = -m := eq_neg_of_add_eq_zero_left h_zero'
       exact_mod_cast this
     rw [if_pos h_zero, if_pos h_zero']
-    push_cast
-    linear_combination -1 * (c / 12 * ↑m * (↑m ^ 2 - 1) * I) + (c / 12 * ↑n * (↑n ^ 2 - 1) * I)
-      using hn_eq
+    rw [hn_eq]
+    ring
   · have h_zero' : n + m = 0 → False := by intro h; exact h_zero (h_add.mpr h)
     rw [if_neg h_zero, if_neg h_zero']
     push_cast
@@ -86,15 +85,16 @@ theorem voa_logarithmic_jordan_nilpotent {V : Type*} [AddCommGroup V] [Module �
     (h_psi : L0 psi = h • psi) :
     (L0 - h • LinearMap.id) ((L0 - h • LinearMap.id) phi) = 0 := by
   have h1 : (L0 - h • LinearMap.id) phi = psi := by
-    calc (L0 - h • LinearMap.id) phi = L0 phi - h • phi := by simp
-    _ = (h • phi + psi) - h • phi := by rw [h_phi]
-    _ = psi := by abel
+    change L0 phi - h • phi = psi
+    rw [h_phi]
+    simp
   have h2 : (L0 - h • LinearMap.id) psi = 0 := by
-    calc (L0 - h • LinearMap.id) psi = L0 psi - h • psi := by simp
-    _ = (h • psi) - h • psi := by rw [h_psi]
-    _ = 0 := by sub_self (h • psi)
-  calc (L0 - h • LinearMap.id) ((L0 - h • LinearMap.id) phi) = (L0 - h • LinearMap.id) psi := by rw [h1]
-  _ = 0 := h2
+    change L0 psi - h • psi = 0
+    rw [h_psi]
+    simp
+  change (L0 - h • LinearMap.id) ((L0 - h • LinearMap.id) phi) = 0
+  rw [h1]
+  exact h2
 
 /--
 **Main Theorem 4: Grand Infinite Virasoro VOA Master Duality Theorem**

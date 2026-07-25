@@ -14,7 +14,7 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine proofs:
 
 2. **Critical Line Reflection Duality**:
    On the critical line $s = \frac{1}{2} + i t$, reflection $s \mapsto 1 - s$ is identically complex conjugation:
-   $$1 - \left(\frac{1}{2} + i t\right) = \frac{1}{2} - i t = \overline{\frac{1}{2} + i t}.$$
+   $$1 - \left(\frac{1}{2} + i t\right) = \frac{1}{2} - i t = \star\left(\frac{1}{2} + i t\right).$$
 
 3. **Dirichlet Eta / Riemann Zeta Functional Relation**:
    $$\eta(s) = (1 - 2^{1-s}) \zeta(s)$$
@@ -40,17 +40,12 @@ structure CompletedXiData where
 /--
 **Main Theorem 1: Critical Line Reflection as Complex Conjugation**
 Proves natively that for $s = 1/2 + i t$, reflection $1 - s$ equals complex conjugation $\bar{s}$:
-$$1 - (1/2 + i t) = 1/2 - i t = \overline{1/2 + i t}.$$
+$$1 - (1/2 + i t) = 1/2 - i t = \star (1/2 + i t).$$
 -/
 theorem critical_line_reflection_eq_conj (t : ℝ) :
-    1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = Complex.conj ((1 / 2 : ℂ) + I * (t : ℂ)) := by
-  apply Complex.ext
-  · simp only [sub_re, one_re, add_re, div_re, two_re, mul_re, I_re,
-      I_im, ofReal_re, ofReal_im, Complex.conj_re]
-    ring
-  · simp only [sub_im, one_im, add_im, div_im, one_re, two_re, mul_im, I_re,
-      I_im, ofReal_re, ofReal_im, Complex.conj_im]
-    ring
+    1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = star ((1 / 2 : ℂ) + I * (t : ℂ)) := by
+  rw [map_add, map_mul, star_I, star_ofReal]
+  ext <;> simp <;> ring
 
 /--
 **Main Theorem 2: Centered Xi Evenness $\iff$ Completed Xi Functional Equation**
@@ -96,7 +91,7 @@ Unifies critical line reflection, centered Xi evenness, Dirichlet Eta relations,
 -/
 theorem grand_native_zeta_functional_symmetry_duality
     (data : CompletedXiData) (z : ℂ) (t : ℝ) (s : ℂ) (hs : 1 < s.re) :
-    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = Complex.conj ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
+    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = star ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
     (data.xi z = data.xi (-z) ↔ data.lambda (1 / 2 + z) = data.lambda (1 / 2 - z)) ∧
     (((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1) := ⟨
   critical_line_reflection_eq_conj t,

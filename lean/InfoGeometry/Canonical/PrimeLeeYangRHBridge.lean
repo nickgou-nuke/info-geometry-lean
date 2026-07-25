@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
@@ -32,6 +33,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
 open Complex
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 open InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
@@ -57,17 +59,17 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   unfold cayleyTransform
   have h_den : 1 - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
   have h_sq : z.re^2 + z.im^2 = 1 := by
-    have h_abs : ‖z‖ = 1 := hz
-    calc z.re^2 + z.im^2 = normSq z := rfl
-    _ = ‖z‖^2 := normSq_eq_abs z
-    _ = 1^2 := by rw [h_abs]
-    _ = 1 := by ring
+    have h_abs : ‖z‖^2 = 1 := by rw [hz, one_pow]
+    have h_normSq : normSq z = 1 := by
+      calc normSq z = ‖z‖^2 := by simp [normSq_apply, sq]
+      _ = 1 := h_abs
+    rw [normSq_apply] at h_normSq
+    exact h_normSq
   have h_num : ((1 + z) * star (1 - z)).re = 0 := by
-    calc ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
+    have h_ring : ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
       simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, one_im, conj_re, conj_im]
       ring
-    _ = 1 - 1 := by rw [h_sq]
-    _ = 0 := by ring
+    rw [h_ring, h_sq, sub_self]
   have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
     rw [div_eq_mul_inv, div_eq_mul_inv]
     have h_star : (1 - z) * star (1 - z) = (normSq (1 - z) : ℂ) := by

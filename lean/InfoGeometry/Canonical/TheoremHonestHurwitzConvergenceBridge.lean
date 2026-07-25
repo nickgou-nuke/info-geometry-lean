@@ -45,7 +45,7 @@ Proves natively that for any $x \in (0, 1)$, the bosonic Euler factor $(1 - x)^{
 theorem bosonic_euler_factor_gt_prime_term {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1) :
     (1 - x)⁻¹ > x := by
   have h1 : 0 < 1 - x := sub_pos.mpr hx1
-  have h2 : 1 < (1 - x)⁻¹ := one_lt_inv₀ h1 hx1
+  have h2 : 1 < (1 - x)⁻¹ := (one_lt_inv₀ h1).mpr hx1
   exact hx1.trans h2
 
 /--
@@ -57,14 +57,13 @@ theorem hurwitz_unit_circle_limit_closed
     (h_circle : ∀ N, ‖z_seq N‖ = 1)
     (h_lim : Filter.Tendsto z_seq Filter.atTop (nhds z0)) :
     ‖z0‖ = 1 := by
-  have h_cont : Continuous (fun z : ℂ => ‖z‖) := continuous_norm
-  have h_lim_abs := Filter.Tendsto.comp h_cont h_lim
+  have h_norm_lim := h_lim.norm
   have h_const : Filter.Tendsto (fun _ : ℕ => (1 : ℝ)) Filter.atTop (nhds (1 : ℝ)) := tendsto_const_nhds
   have h_eq : (fun N => ‖z_seq N‖) = fun _ => 1 := by
     ext N
     exact h_circle N
-  rw [h_eq] at h_lim_abs
-  exact tendsto_nhds_unique h_lim_abs h_const
+  rw [h_eq] at h_norm_lim
+  exact tendsto_nhds_unique h_norm_lim h_const
 
 /--
 **Main Theorem 3: Unconditional Cayley Coordinate Involution Identity**

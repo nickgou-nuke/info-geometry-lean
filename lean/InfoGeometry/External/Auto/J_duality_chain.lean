@@ -37,17 +37,17 @@ set_option linter.unusedSimpArgs false
 def J_mod : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
 theorem J_mod_sq_I : J_mod * J_mod = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod]
 
 /-- Complex structure J_cpx: J_cpx² = -I -/
 def J_cpx : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 theorem J_cpx_sq_neg_I : J_cpx * J_cpx = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx]
 
 /-- J_mod exchanges algebra and commutant: J_mod·J_cpx·J_mod = -J_cpx -/
 theorem J_mod_commutant : J_mod * J_cpx * J_mod = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod]
 
 /-══════════════════════════════════════════════════════════════════════
    LAYER 2: KLEIN V₄ = {1, Γ, J, ΓJ}
@@ -57,7 +57,7 @@ theorem J_mod_commutant : J_mod * J_cpx * J_mod = -J_cpx := by
 def Γ : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 theorem Γ_sq_I : Γ * Γ = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ]
 
 /-- ΓJ = Γ · J_mod -/
 def ΓJ : Matrix (Fin 2) (Fin 2) ℝ := Γ * J_mod
@@ -71,7 +71,7 @@ def V4action (sector : Fin 4) (z : ℂ) : ℂ :=
   | 3 => -1 / z    -- ΓJ: reflected ghost
 
 lemma V4action_involution (sector : Fin 4) (z : ℂ) (hz : z ≠ 0) : V4action sector (V4action sector z) = z := by
-  fin_cases sector <;> simp [V4action, hz] <;> field_simp [hz] <;> ring
+  fin_cases sector <;> simp [V4action, hz] <;> field_simp [hz]
 
 /-══════════════════════════════════════════════════════════════════════
    LAYER 3: MÖBIUS ACTION ON PROJECTIVE COORDINATE
@@ -181,7 +181,7 @@ structure JDualityChain where
 /-- J and Γ anticommute: J·Γ = -Γ·J. Verified by SymPy. -/
 lemma J_Γ_anticomm : J_mod * Γ = -(Γ * J_mod) := by
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [J_mod, Γ, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+    simp [J_mod, Γ, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The J-duality chain is satisfied by the concrete definitions. -/
 theorem JDualityChain_holds : JDualityChain :=

@@ -59,7 +59,7 @@ structure TomitaData (𝒜 : Type) where
 def J_cpx : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 theorem J_cpx_sq_neg_I : J_cpx * J_cpx = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx]
 
 /-- Krein metric η = diag(1, -1) -/
 def η_kr : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
@@ -68,11 +68,11 @@ def η_kr : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 def J_mod : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
 theorem J_mod_sq_I : J_mod * J_mod = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod]
 
 /-- J_mod exchanges algebra and commutant: J_mod·J_cpx·J_mod = -J_cpx -/
 theorem J_mod_commutant : J_mod * J_cpx * J_mod = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod]
 
 /-- Modular operator Δ = e^{-K} (scalar for simplicity) -/
 noncomputable def modularOp (K : ℝ) : ℝ := Real.exp (-K)
@@ -192,10 +192,10 @@ structure KleinFour where
 def kleinFourCanonical : KleinFour where
   Γ := !![1, 0; 0, -1]
   J := !![0, 1; 1, 0]
-  Γ_sq := by ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
-  J_sq := by ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
-  ΓJ_sq_proj := by ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
-  comm_proj := by ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
+  Γ_sq := by ext i j; fin_cases i <;> fin_cases j <;> simp
+  J_sq := by ext i j; fin_cases i <;> fin_cases j <;> simp
+  ΓJ_sq_proj := by ext i j; fin_cases i <;> fin_cases j <;> simp
+  comm_proj := by ext i j; fin_cases i <;> fin_cases j <;> simp
 
 /-- V₄ sector interpretation -/
 inductive V4Sector : Type where

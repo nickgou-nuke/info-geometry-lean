@@ -18,7 +18,7 @@ noncomputable section
 def J_cplx : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 theorem J_sq_neg_I : J_cplx * J_cplx = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cplx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cplx]
 
 /-- Krein metric η = diag(1, -1) -/
 def η_krein : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
@@ -27,10 +27,10 @@ def η_krein : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 def J_mod : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
 theorem J_mod_sq_I : J_mod * J_mod = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod]
 
 theorem J_mod_conj_J : J_mod * J_cplx * J_mod = -(J_cplx) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod, J_cplx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod, J_cplx]
 
 /- L2: SOURIAU THERMODYNAMICS -/
 

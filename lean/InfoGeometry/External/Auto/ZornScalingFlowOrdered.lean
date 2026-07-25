@@ -76,9 +76,9 @@ theorem flow_formula {p : ℂ} (hp : p ≠ 0) (X : Zorn) :
   · simp [flow, zornMul, E, Einv, dot3]
     field_simp [hp]
   · funext i
-    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp] <;> ring
+    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp]
   · funext i
-    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp] <;> ring
+    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp]
 
 /-- Pure upper nilpotent. -/
 def upperNil (u : Vec3) : Zorn where
@@ -97,7 +97,7 @@ theorem upperNil_sq_zero (u : Vec3) : zornMul (upperNil u) (upperNil u) = zero :
   apply zorn_ext
   · simp [zornMul, upperNil, zero, dot3]
   · simp [zornMul, upperNil, zero, dot3]
-  · funext i; fin_cases i <;> simp [zornMul, upperNil, zero, cross3] <;> ring
+  · funext i; fin_cases i <;> simp [zornMul, upperNil, zero, cross3]
   · funext i; fin_cases i <;> simp [zornMul, upperNil, zero, cross3] <;> ring
 
 /-- Lower nilpotents square to zero. -/
@@ -105,7 +105,7 @@ theorem lowerNil_sq_zero (v : Vec3) : zornMul (lowerNil v) (lowerNil v) = zero :
   apply zorn_ext
   · simp [zornMul, lowerNil, zero, dot3]
   · simp [zornMul, lowerNil, zero, dot3]
-  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3] <;> ring
+  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3]
   · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3] <;> ring
 
 /-- Synthesis theorem for the ordered tuple convention. -/

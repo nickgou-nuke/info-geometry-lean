@@ -38,9 +38,11 @@ def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
   toFun := fun p => ⟨T p.1 + C p.2, T p.2⟩
   map_add' := by
     intro p q
+    dsimp
     simp [map_add, add_assoc, add_left_comm]
   map_smul' := by
     intro r p
+    dsimp
     simp [map_smul, smul_add]
 
 /--
@@ -80,10 +82,12 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext ⟨u, v⟩ <;> simp [blockOp, map_add]
+    ext p
+    simp [blockOp, map_add]
   map_smul' := by
     intro r x
-    ext ⟨u, v⟩ <;> simp [blockOp, map_smul]
+    ext p
+    simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -107,9 +111,9 @@ theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
     Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
   ext i
   fin_cases i
-  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  · change Δ * w 0 + (1 : 𝕜) * w 1 = Δ * w 0 + w 1
     ring
-  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  · change (0 : 𝕜) * w 0 + Δ * w 1 = Δ * w 1
     ring
 
 /--
@@ -166,7 +170,8 @@ noncomputable def makeLogIntertwiner
       rw [hL0] at h1'
       rw [map_smul] at h1'
       exact sub_eq_zero.mp h1'
-    ext w
+    refine LinearMap.ext fun w => ?_
+    refine Prod.ext ?_ ?_
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 0 • v0 + w 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0) + c (VirasoroAlgebra.lgen 𝕜 0) (w 1 • v0) =
         (Matrix.mulVec (jordanCell Δ) w) 0 • v0 + (Matrix.mulVec (jordanCell Δ) w) 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0

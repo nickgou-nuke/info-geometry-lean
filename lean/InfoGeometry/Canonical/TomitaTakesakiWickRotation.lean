@@ -84,8 +84,7 @@ theorem lorentzian_euclidean_duality
     wickRotatedPairing K TT u (TT.J u) = K.kreinPairing u u := by
   dsimp [wickRotatedPairing]
   have h_inv : TT.J (TT.J u) = u := by
-    have h_comp := congr_fun (congr_arg LinearMap.toFun TT.involutive) u
-    exact h_comp
+    simpa using congr_arg (fun (T : V →ₗ[ℝ] V) => T u) TT.involutive
   rw [h_inv]
 
 end InfoGeometry.Canonical.TomitaTakesakiWickRotation

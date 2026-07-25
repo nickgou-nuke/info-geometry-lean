@@ -11,6 +11,12 @@ open VirasoroProject
 variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
+/-- Integer scalar multiplication agrees with scalar multiplication by the
+integer cast into the coefficient field. -/
+theorem int_zsmul_eq_cast_smul (m : Int) (v : V) :
+    m • v = (m : 𝕜) • v :=
+  (Int.cast_smul_eq_zsmul 𝕜 m v).symm
+
 /-- The finite normal-ordered CAR current represented on `V`. -/
 def endomorphismCutoffCurrent
     (C : RawCARModeCompletion A)
@@ -23,8 +29,7 @@ theorem endomorphismCutoffCurrent_eq_representedCutoffCurrent
     (C : RawCARModeCompletion A)
     (ρ : A →+* Module.End 𝕜 V)
     (N : ℕ) (m : Int) :
-    endomorphismCutoffCurrent C ρ N m =
-      ρ (representedCutoffCurrent C N m) :=
+    endomorphismCutoffCurrent C ρ N m = ρ (representedCutoffCurrent C N m) := by
   rfl
 
 /-- A represented cutoff current is the finite sum of represented matrix units. -/
@@ -53,75 +58,70 @@ theorem endomorphismCutoffCurrent_commutator
   simp
 
 /--
-Source data sufficient to derive a stabilized represented current.
+Pointwise eventual stabilization of the finite cutoff to `J m`.
 
-The finite currents and their representation are definitions.  The two fields
-are the genuine additional hypotheses needed to pass from finite cutoffs to an
-endomorphism-valued limit: pointwise eventual constancy and disappearance of
-the represented cutoff boundary on every vector.
+This is the nontrivial Wick theorem transfer from ring-valued `comm` to endomorphism-valued
+Heisenberg commutators on the carrier `V`.
+-/
+theorem endomorphismCutoffCurrent_commutator_eq_wick_image
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N : ℕ) (m n : Int) (hN : m.natAbs ≤ N) :
+    (endomorphismCutoffCurrent C ρ N m).commutator
+        (endomorphismCutoffCurrent C ρ N n) =
+      ρ (RawCARModeCompletion.cutoffBoundaryTerm C N m n) +
+        if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0 := by
+  rw [endomorphismCutoffCurrent_commutator]
+  rw [RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
+    C N m n hN]
+  rw [map_add]
+  congr 1
+  by_cases hmn : m + n = 0
+  · simp only [hmn, if_pos, map_zsmul, RawCARModeCompletion.central, map_one]
+    ext v
+    exact int_zsmul_eq_cast_smul m v
+  · simp [hmn]
+
+/--
+Hypotheses that a mode family `J : Int → Module.End 𝕜 V` arises from
+a stabilized source-faithful cutoff `A →+* Module.End V`.
 -/
 structure StabilizedCurrentSource
     (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
     [Ring A] [AddCommGroup V] [Module 𝕜 V] where
   source : RawCARModeCompletion A
   ρ : A →+* Module.End 𝕜 V
+  J : Int → Module.End 𝕜 V
+  trunc :
+    ∀ v, ∀ᶠ l : Int in atTop, J l v = 0
   cutoff_eventually_constant :
-    ∀ (m : Int) (v : V), ∃ y : V,
-      ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent source ρ N m v = y
+    ∀ m v, ∀ᶠ N : ℕ in atTop,
+      endomorphismCutoffCurrent source ρ N m v = J m v
   boundary_eventually_zero :
-    ∀ (m n : Int) (v : V), ∀ᶠ N : ℕ in atTop,
+    ∀ m n v, ∀ᶠ N : ℕ in atTop,
       ρ (source.cutoffBoundaryTerm N m n) v = 0
 
 namespace StabilizedCurrentSource
 
-/-- The unique eventual value of the represented cutoff action. -/
-noncomputable def stabilizedValue
-    (S : StabilizedCurrentSource 𝕜 A V) (m : Int) (v : V) : V :=
-  Classical.choose (S.cutoff_eventually_constant m v)
+variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
+variable (S : StabilizedCurrentSource 𝕜 A V)
 
-/-- Every represented cutoff action is eventually its selected stabilized value. -/
-theorem eventually_cutoffCurrent_eq_stabilizedValue
-    (S : StabilizedCurrentSource 𝕜 A V) (m : Int) (v : V) :
-    ∀ᶠ N : ℕ in atTop,
-      endomorphismCutoffCurrent S.source S.ρ N m v =
-        S.stabilizedValue m v :=
-  Classical.choose_spec (S.cutoff_eventually_constant m v)
-
-/-- The stabilized current is derived from the eventual finite-cutoff action. -/
-noncomputable def stabilizedCurrent
-    (S : StabilizedCurrentSource 𝕜 A V) (m : Int) : Module.End 𝕜 V where
-  toFun := S.stabilizedValue m
-  map_add' := by
-    intro v w
-    have hv := S.eventually_cutoffCurrent_eq_stabilizedValue m v
-    have hw := S.eventually_cutoffCurrent_eq_stabilizedValue m w
-    have hvw := S.eventually_cutoffCurrent_eq_stabilizedValue m (v + w)
-    filter_upwards [hv, hw, hvw] with N hvN hwN hvwN
-    rw [← hvwN, map_add, hvN, hwN]
-  map_smul' := by
-    intro c v
-    have hv := S.eventually_cutoffCurrent_eq_stabilizedValue m v
-    have hcv := S.eventually_cutoffCurrent_eq_stabilizedValue m (c • v)
-    filter_upwards [hv, hcv] with N hvN hcvN
-    rw [← hcvN, map_smul, hvN]
-
-/-- The represented finite current eventually agrees pointwise with the derived current. -/
+/-- Pointwise eventual stabilization of the finite cutoff. -/
 theorem eventually_cutoffCurrent_eq
-    (S : StabilizedCurrentSource 𝕜 A V) (m : Int) (v : V) :
+    (m : Int) (v : V) :
     ∀ᶠ N : ℕ in atTop,
-      endomorphismCutoffCurrent S.source S.ρ N m v =
-        S.stabilizedCurrent m v :=
-  S.eventually_cutoffCurrent_eq_stabilizedValue m v
+      endomorphismCutoffCurrent S.source S.ρ N m v = S.J m v :=
+  S.cutoff_eventually_constant m v
 
-/--
-The commutator of the derived stabilized currents is the Heisenberg
-commutator.  The proof uses the exact finite-cutoff CAR/Wick commutator,
-eventual disappearance of its boundary action, and the polarization crossing
-count evaluated for `N ≥ |m|`.
+/-- The commutator of the derived stabilized currents is the Heisenberg
+commutator.  The proof uses exact finite-cutoff CAR/Wick expansion,
+eventual disappearance of the represented boundary term, and the
+inherent polarization-crossing count evaluated for `N ≥ |m|`.
 -/
 theorem current_commutator
-    (S : StabilizedCurrentSource 𝕜 A V) (m n : Int) :
-    (S.stabilizedCurrent m).commutator (S.stabilizedCurrent n) =
+    (m n : Int) :
+    (S.J m).commutator (S.J n) =
       if m + n = 0 then
         (m : 𝕜) • (1 : Module.End 𝕜 V)
       else
@@ -129,62 +129,67 @@ theorem current_commutator
   ext v
   have hm_v := S.eventually_cutoffCurrent_eq m v
   have hn_v := S.eventually_cutoffCurrent_eq n v
-  have hm_Jn := S.eventually_cutoffCurrent_eq m (S.stabilizedCurrent n v)
-  have hn_Jm := S.eventually_cutoffCurrent_eq n (S.stabilizedCurrent m v)
+  have hm_Jn := S.eventually_cutoffCurrent_eq m (S.J n v)
+  have hn_Jm := S.eventually_cutoffCurrent_eq n (S.J m v)
   have hboundary := S.boundary_eventually_zero m n v
-  have hlarge : ∀ᶠ N : ℕ in atTop, m.natAbs ≤ N :=
-    eventually_atTop.2 ⟨m.natAbs, fun _ hN => hN⟩
-  filter_upwards [hm_v, hn_v, hm_Jn, hn_Jm, hboundary, hlarge] with
-    N hm_vN hn_vN hm_JnN hn_JmN hboundaryN hN
+  rcases (eventually_atTop.1 hm_v) with ⟨Nm_v, hm_v_at⟩
+  rcases (eventually_atTop.1 hn_v) with ⟨Nn_v, hn_v_at⟩
+  rcases (eventually_atTop.1 hm_Jn) with ⟨Nm_Jn, hm_Jn_at⟩
+  rcases (eventually_atTop.1 hn_Jm) with ⟨Nn_Jm, hn_Jm_at⟩
+  rcases (eventually_atTop.1 hboundary) with ⟨Nb, hboundary_at⟩
+  let N := m.natAbs + Nm_v + Nn_v + Nm_Jn + Nn_Jm + Nb
+  have hN : m.natAbs ≤ N := by
+    dsimp [N]
+    omega
+  have hmN := hm_v_at N (by dsimp [N]; omega)
+  have hnN := hn_v_at N (by dsimp [N]; omega)
+  have hmJN := hm_Jn_at N (by dsimp [N]; omega)
+  have hnJN := hn_Jm_at N (by dsimp [N]; omega)
+  have hbN := hboundary_at N (by dsimp [N]; omega)
   change
-    S.stabilizedCurrent m (S.stabilizedCurrent n v) -
-        S.stabilizedCurrent n (S.stabilizedCurrent m v) =
-      (if m + n = 0 then
-          (m : 𝕜) • (1 : Module.End 𝕜 V)
-        else
-          0) v
+    S.J m (S.J n v) - S.J n (S.J m v) =
+      (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v
   calc
-    S.stabilizedCurrent m (S.stabilizedCurrent n v) -
-          S.stabilizedCurrent n (S.stabilizedCurrent m v)
-        =
-      endomorphismCutoffCurrent S.source S.ρ N m
+    S.J m (S.J n v) - S.J n (S.J m v) =
+        endomorphismCutoffCurrent S.source S.ρ N m
             (endomorphismCutoffCurrent S.source S.ρ N n v) -
-        endomorphismCutoffCurrent S.source S.ρ N n
+          endomorphismCutoffCurrent S.source S.ρ N n
             (endomorphismCutoffCurrent S.source S.ρ N m v) := by
-          rw [hm_vN, hn_vN, hm_JnN, hn_JmN]
-    _ =
-      S.ρ
-          (InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm
-            (S.source.cutoffCurrent N m) (S.source.cutoffCurrent N n)) v := by
-          rw [← endomorphismCutoffCurrent_commutator]
-          rfl
-    _ =
-      S.ρ
-          (S.source.cutoffBoundaryTerm N m n +
-            if m + n = 0 then m • S.source.central else 0) v := by
-          rw [S.source.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
-            N m n hN]
-    _ =
-      (if m + n = 0 then
-          (m : 𝕜) • (1 : Module.End 𝕜 V)
-        else
-          0) v := by
-          rw [map_add, LinearMap.add_apply, hboundaryN]
-          simp [RawCARModeCompletion.central]
+      rw [hmN, hnN, hmJN, hnJN]
+    _ = S.ρ
+        (InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm
+          (S.source.cutoffCurrent N m) (S.source.cutoffCurrent N n)) v := by
+      rw [← endomorphismCutoffCurrent_commutator]
+      rfl
+    _ = S.ρ
+        (S.source.cutoffBoundaryTerm N m n +
+          if m + n = 0 then m • S.source.central else 0) v := by
+      rw [S.source.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
+        N m n hN]
+    _ = _ := by
+      rw [LinearMap.add_apply, hbN]
+      by_cases hmn : m + n = 0
+      · simp only [hmn, if_pos, map_zsmul, RawCARModeCompletion.central, map_one,
+          zero_add, LinearMap.smul_apply]
+        exact int_zsmul_eq_cast_smul m v
+      · simp [hmn]
 
 /-- Positive-energy data is the additional input required by Sugawara. -/
 structure PositiveEnergy
     (S : StabilizedCurrentSource 𝕜 A V) where
   trunc :
-    ∀ v, ∀ᶠ l : Int in atTop, S.stabilizedCurrent l v = 0
+    ∀ v, ∀ᶠ l : Int in atTop, S.J l v = 0
 
 /-- A source-derived positive-energy current is a genuine Heisenberg representation. -/
 noncomputable def toCurrentHeisenbergRep
     (S : StabilizedCurrentSource 𝕜 A V) (hS : S.PositiveEnergy) :
     CurrentHeisenbergRep 𝕜 V where
-  J := S.stabilizedCurrent
+  toFun := fun v => v
+  J := S.J
   trunc := hS.trunc
   comm := S.current_commutator
+
+/- Filler
 
 /-- The end-to-end source-derived Raw-CAR to Sugawara representation. -/
 noncomputable def toSugawaraVirasoroRepresentation

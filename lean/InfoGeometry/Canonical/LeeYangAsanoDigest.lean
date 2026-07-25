@@ -588,6 +588,41 @@ theorem asano_case2_zero_transfer
     ring
   simpa [hzneg, hprod]
 
+/-- The Asano contraction of a separately affine two-variable polynomial $P(z_1, z_2) = A + B z_1 + C z_2 + D z_1 z_2$ is $\mathcal{A}(P)(z) = A + D z$. -/
+@[rep_depth thermo]
+def asanoContract (P : TwoVarAffinePolynomial) (z : ℂ) : ℂ :=
+  P.A + P.D * z
+
+/-- The Asano determinant $\Delta(P) = A D - B C$. -/
+@[rep_depth thermo]
+def asanoDeterminant (P : TwoVarAffinePolynomial) : ℂ :=
+  P.A * P.D - P.B * P.C
+
+/--
+**Main Native Theorem: Asano Contraction Root Localization**
+Proves natively that if $D \neq 0$ and $\mathcal{A}(P)(z) = A + D z = 0$, then $z = -A / D$.
+-/
+@[rep_depth thermo]
+theorem asanoContract_root_eq (P : TwoVarAffinePolynomial) (z : ℂ)
+    (h_root : P.asanoContract z = 0) (hD : P.D ≠ 0) :
+    z = - P.A / P.D := by
+  unfold asanoContract at h_root
+  have h1 : P.D * z = - P.A := eq_neg_of_add_eq_zero_left h_root
+  have h2 : z * P.D = - P.A := by rw [mul_comm, h1]
+  exact eq_div_of_mul_eq hD h2
+
+/--
+**Main Native Theorem: Symmetric Asano Diagonal Difference Law**
+Proves natively that for a symmetric two-variable affine polynomial ($B = C$), the diagonal evaluation $P(z, z)$ differs from the contracted evaluation $\mathcal{A}(P)(z^2)$ by exactly $2 B z$:
+$$P(z, z) - \mathcal{A}(P)(z^2) = 2 B z.$$
+-/
+@[rep_depth thermo]
+theorem eval_diag_sub_asanoContract_sq (P : TwoVarAffinePolynomial) (z : ℂ) (h_symm : P.B = P.C) :
+    P.eval z z - P.asanoContract (z ^ 2) = 2 * P.B * z := by
+  unfold eval asanoContract
+  rw [h_symm]
+  ring
+
 end TwoVarAffinePolynomial
 
 /-- The forbidden contracted set `-K1·K2`. -/

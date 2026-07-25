@@ -41,12 +41,8 @@ Proves natively that if $N^2 = 0$ and $J^2 = I$, then $(J N J)^2 = 0$.
 theorem hestenes_krein_jordan_nilpotent_preserved
     {R : Type*} [MonoidWithZero R] (J N : R) (hJ : J * J = 1) (hN : N * N = 0) :
     (J * N * J) * (J * N * J) = 0 := by
-  calc (J * N * J) * (J * N * J)
-    _ = J * N * (J * J) * N * J := by ring
-    _ = J * N * 1 * N * J := by rw [hJ]
-    _ = J * (N * N) * J := by ring
-    _ = J * 0 * J := by rw [hN]
-    _ = 0 := by ring
+  have h1 : (J * N * J) * (J * N * J) = J * N * (J * J) * N * J := by simp [mul_assoc]
+  rw [h1, hJ, mul_one, ← mul_assoc (J * N), hN, mul_zero, zero_mul]
 
 /--
 **Main Theorem 2: Hestenes Clifford 2x2 Geometric Involution**

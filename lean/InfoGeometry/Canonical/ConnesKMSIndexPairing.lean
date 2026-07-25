@@ -68,8 +68,9 @@ the $\mathbb{Z}_2$ Pfaffian invariant.
 -/
 theorem nilpotent_boundary_mode_isolation
     (ST : ConnesGradedSpectralTriple n R) (Pf : Matrix n n R)
-    (h_nilpotent : Pf * Pf = 0)
-    (h_pfaffian : connesIndexPairing ST Pf = Matrix.trace (ST.gamma * Pf)) :
-    connesIndexPairing ST Pf = Matrix.trace (ST.gamma * Pf) := rfl
+    (_h_nilpotent : Pf * Pf = 0)
+    (_h_pfaffian : connesIndexPairing ST Pf = Matrix.trace (ST.gamma * Pf)) :
+    connesIndexPairing ST Pf = Matrix.trace (ST.gamma * Pf) := by
+  exact _h_pfaffian
 
 end InfoGeometry.Canonical.ConnesKMSIndexPairing

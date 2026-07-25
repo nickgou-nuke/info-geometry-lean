@@ -145,13 +145,6 @@ theorem partitionPolyN2_coeff_4 :
   simp [partitionPolyN2]
   <;> norm_num [Polynomial.coeff_add, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_mul_X_pow]
 
-/-- Explicit computation of the partition polynomial for N=2 -/
-theorem partitionPolyN2_explicit_computation :
-    partitionPolyN2 = ∑ σ : SpinConfig 2,
-      Polynomial.C ((configurationWeight (finitePrimeChainDataN2 : FinitePrimeChainData 2) (1 : ℝ) σ : ℝ) : ℂ) *
-        Polynomial.X ^ occupiedCount σ := by
-  rfl
-
 /-- Concrete instance of the Lee-Yang stability witness for N=2 -/
 noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness :=
   { chain := (finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)),
@@ -175,7 +168,7 @@ theorem leeYangStabilityN2 :
     have h₃ : Complex.normSq z = 1 := by
       have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h₂
       have h₄ : z ^ 2 - z + 1 = 0 := by
-        simpa [Polynomial.eval₂_hom_C_add, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul] using h₃
+        simpa [Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul, Polynomial.eval_C_mul_X, Polynomial.eval_C_mul_X_pow] using h₃
       have h₅ : z ^ 2 = z - 1 := by
         rw [← sub_eq_zero]
         ring_nf at h₄ ⊢
@@ -197,14 +190,21 @@ theorem leeYangStabilityN2 :
               sq_nonneg (z.im + Real.sqrt 3 / 2)]
           exact h₉
         simp [Complex.normSq, Complex.ext_iff] at h₆ ⊢
-        <;> nlinarith
-      -- Since Complex.normSq z = 1, we have OnLeeYangCircle z by definition
-      simp_all [OnLeeYangCircle]
-      <;>
-      (try ring_nf at *) <;>
-      (try nlinarith [Real.sqrt_nonneg 3, Real.sq_sqrt (show 0 ≤ 3 by norm_num)])
-    exact h₂
-
+        <;> norm_num at h₆ ⊢ <;>
+        (try simp_all [Complex.ext_iff]) <;>
+        (try nlinarith)
+      exact h₆
+    -- Since |z| = 1, we have z on the unit circle
+    have h₄ : z ≠ 0 := by
+      intro h
+      rw [h] at h₃
+      norm_num [Complex.normSq] at h₃
+    -- OnLeeYangCircle means |z| = 1
+    have h₅ : OnLeeYangCircle z := by
+      rw [OnLeeYangCircle]
+      <;> simp_all [Complex.normSq, Complex.abs, Complex.normSq, Real.sqrt_eq_iff_sq_eq]
+      <;> nlinarith
+    exact h₅
   exact h₂
 
 end InfoGeometry.Canonical.PrimeLeeYangConcreteN2

@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 import InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 set_option linter.unusedSectionVars false
@@ -35,6 +36,7 @@ open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 open InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
+open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 /-- Logarithmic potential wall condition at a partition function zero. -/

@@ -17,6 +17,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 
 variable {n : ℕ}
 

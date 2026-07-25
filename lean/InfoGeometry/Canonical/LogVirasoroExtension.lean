@@ -99,8 +99,9 @@ def makeLogVirasoroRepresentation
     · simp [blockOp, map_smul]
   map_lie' := by
     intro x y
-    simp only [LieHom.coe_toLinearMap, blockOp_commutator]
-    have h1 : (ρ ⁅x, y⁆) = (ρ x).commutator (ρ y) := map_lie ρ x y
+    dsimp [makeLogVirasoroRepresentation]
+    rw [blockOp_commutator]
+    have h1 : ρ ⁅x, y⁆ = (ρ x).commutator (ρ y) := map_lie ρ x y
     have h2 : c ⁅x, y⁆ = (ρ x).commutator (c y) + (c x).commutator (ρ y) := hc x y
     rw [h1, h2]
 

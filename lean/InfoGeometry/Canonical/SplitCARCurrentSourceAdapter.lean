@@ -11,7 +11,7 @@ This module closes the interface adapter gap:
 1. It connects `source` to the module action via `ρ : A →+* Module.End 𝕜 V`.
 2. It proves that `cutoffCurrent L m` equals the represented raw CAR normal-ordered current `ρ (representedCutoffCurrent source L m)`.
 3. It derives `J m` from the stabilized cutoff current action.
-4. It proves the Heisenberg commutator law $[J_m, J_n] = m \delta_{m+n,0} I$ non-vacuously from the underlying Wick expansion.
+4. It proves the Heisenberg commutator law $[J_m, J_n] = m \\delta_{m+n,0} I$ non-vacuously from the underlying Wick expansion.
 5. It yields the composed end-to-end `RawCAR → Heisenberg → Sugawara` Virasoro representation.
 -/
 
@@ -67,9 +67,9 @@ def toCurrentHeisenbergRep
   comm := S.comm
 
 /--
-**End-to-End Raw-CAR to Sugawara Virasoro Representation Theorem:**
-Every source-faithful adapter `S` induces a unique Sugawara Virasoro algebra representation
-$L_n : \mathfrak{vir} \to \operatorname{End}(V)$ with central charge $c = 1$.
+End-to-End Raw-CAR to Sugawara Virasoro Representation Theorem:
+Every source-faithful adapter `S` induces a Sugawara Virasoro algebra representation
+$L_n : \\mathfrak{vir} \\to \\operatorname{End}(V)$ with central charge $c = 1$.
 -/
 noncomputable def toSugawaraVirasoroRepresentation
     (S : AdapterData 𝕜 A V) :
@@ -77,8 +77,8 @@ noncomputable def toSugawaraVirasoroRepresentation
   S.toCurrentHeisenbergRep.currentSugawaraRepresentation
 
 /--
-**Virasoro Bracket Readout:**
-The stress-tensor modes $L_m = S.\text{toSugawaraVirasoroRepresentation}(L_m)$ satisfy the Virasoro algebra.
+Virasoro Bracket Readout:
+The stress-tensor modes $L_m = S.\\text{toSugawaraVirasoroRepresentation}(L_m)$ satisfy the Virasoro algebra.
 -/
 theorem virasoro_bracket_readout
     (S : AdapterData 𝕜 A V) (m n : Int) :

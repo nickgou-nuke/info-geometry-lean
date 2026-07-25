@@ -37,10 +37,10 @@ abbrev Vlog (V : Type*) := V × V
 def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
   toFun := fun p => ⟨T p.1 + C p.2, T p.2⟩
   map_add' := by
-    intro ⟨u1, v1⟩ ⟨u2, v2⟩
+    intro p q
     ext <;> simp [map_add, add_assoc, add_left_comm]
   map_smul' := by
-    intro r ⟨u, v⟩
+    intro r p
     ext <;> simp [map_smul, smul_add]
 
 /--
@@ -80,10 +80,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext ⟨u, v⟩ <;> simp [blockOp, map_add]
+    ext <;> simp [blockOp, map_add]
   map_smul' := by
     intro r x
-    ext ⟨u, v⟩ <;> simp [blockOp, map_smul]
+    ext <;> simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -148,8 +148,9 @@ noncomputable def makeLogIntertwiner
     · exact hy0
     · exact hy1
   intertwines := by
-    ext v
-    obtain ⟨v0_c, v1_c⟩ := v
-    simp [makeLogVirasoroRepresentation, blockOp, LinearMap.comp_apply]
+    ext j
+    fin_cases j
+    · ext <;> simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
+    · ext <;> simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

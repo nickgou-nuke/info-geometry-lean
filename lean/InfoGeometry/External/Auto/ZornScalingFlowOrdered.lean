@@ -105,8 +105,8 @@ theorem lowerNil_sq_zero (v : Vec3) : zornMul (lowerNil v) (lowerNil v) = zero :
   apply zorn_ext
   · simp [zornMul, lowerNil, zero, dot3]
   · simp [zornMul, lowerNil, zero, dot3]
-  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3]
   · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3] <;> ring
+  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3]
 
 /-- Synthesis theorem for the ordered tuple convention. -/
 theorem zorn_scaling_flow_ordered_synthesis :

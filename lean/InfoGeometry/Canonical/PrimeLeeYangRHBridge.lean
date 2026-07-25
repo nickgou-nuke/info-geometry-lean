@@ -1,7 +1,7 @@
 import Mathlib
-import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
+import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -33,6 +33,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open Complex
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 open InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
+open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 /-- Lee-Yang partition function zero condition: $|z| = 1$. -/
 def IsLeeYangZero (z : ℂ) : Prop :=
@@ -54,33 +55,25 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right
 theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
     (cayleyTransform z).re = 0 := by
   unfold cayleyTransform
-  have h_den : 1 - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
-  have h_norm_sq : z * star z = 1 := by
-    have h_abs_sq : ‖z‖^2 = 1 := by rw [hz, one_pow]
-    have h_mul_star : z * star z = (‖z‖ : ℂ)^2 := by
+  have h_mul : (1 + z) / (1 - z) = ((1 + z) * (1 - star z)) / (‖1 - z‖^2 : ℂ) := by
+    rw [div_eq_mul_inv, div_eq_mul_inv]
+    have h_star : (1 - z) * star (1 - z) = (‖1 - z‖ : ℂ)^2 := by
       rw [star_def, mul_conj]
       norm_cast
-    rw [h_mul_star, h_abs_sq]
-    norm_num
-  have h_re : ((1 + z) / (1 - z)).re = 0 := by
-    have h_conj : star ((1 + z) / (1 - z)) = -((1 + z) / (1 - z)) := by
-      rw [star_div, star_add, star_sub, star_one, h_norm_sq]
-      have h_star_z : star z = z⁻¹ := by
-        exact eq_inv_of_mul_eq_one_right h_norm_sq
-      rw [h_star_z]
-      have hz_ne0 : z ≠ 0 := by
-        intro h0
-        rw [h0, norm_zero] at hz
-        exact zero_ne_one hz
-      field_simp [h_den, hz_ne0]
-      ring
-    have h_re_eq : ((1 + z) / (1 - z)).re = (((1 + z) / (1 - z)) + star ((1 + z) / (1 - z))).re / 2 := by
-      simp only [add_re, star_def, conj_re]
-      ring
-    rw [h_conj] at h_re_eq
-    ring_nf at h_re_eq ⊢
-    exact h_re_eq
-  exact h_re
+    have h_inv : (1 - z)⁻¹ = star (1 - z) / (‖1 - z‖ : ℂ)^2 := by
+      field_simp [sub_ne_zero.mpr (Ne.symm hne)]
+      exact h_star.symm
+    rw [h_inv]
+    ring
+  rw [h_mul, div_re]
+  have h_num : ((1 + z) * (1 - star z)).re = 0 := by
+    calc ((1 + z) * (1 - star z)).re = (1 - z * star z + star z - z).re := by ring_nf
+    _ = (1 - (‖z‖ : ℂ)^2 + star z - z).re := by rw [star_def, mul_conj]
+    _ = (1 - 1 + star z - z).re := by rw [hz, norm_one, one_pow, Nat.cast_one]
+    _ = (star z - z).re := by ring_nf
+    _ = z.re - z.re := by simp [star_def, conj_re]
+    _ = 0 := by ring
+  rw [h_num, zero_mul]
 
 /--
 **Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**
@@ -90,10 +83,8 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}(s(z)) = \frac{1}{2}.$$
 theorem lee_yang_to_riemann_critical_line {z : ℂ} (hz : IsLeeYangZero z) (hne : z ≠ 1) :
     (leeYangToRiemannS z).re = 1 / 2 := by
   unfold leeYangToRiemannS
-  rw [add_re, one_div_re]
-  have h_cayley : (cayleyTransform z).re = 0 := cayley_transform_re_zero_on_unit_circle hz hne
-  rw [h_cayley]
-  ring
+  rw [add_re, cayley_transform_re_zero_on_unit_circle hz hne]
+  simp
 
 /--
 **Main Theorem 3: Grand Prime Lee-Yang RH Master Duality**

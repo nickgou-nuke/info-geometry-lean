@@ -50,9 +50,48 @@ theorem redLine_potential_exp_recovery
   rw [h, neg_neg]
   exact Real.exp_log (data.pos_det φ)
 
+/-- Canonical adapter from spinorial-flow Jacobian data to the regularized Jacobian
+potential structure used elsewhere in Souriau-based modules. -/
+noncomputable def regularizedJacobianPotentialFromSpinorialFlow (data : SpinorialFlowJacobianData Map) :
+    RegularizedJacobianPotential Map :=
+  { jacobian := data.jacobianDet
+    logDetReg := fun φ => Real.log (data.jacobianDet φ)
+    volumeCompressionPotential := data.redLinePotential
+    volumeCompressionPotential_eq_neg_logDetReg := by
+      intro φ
+      simp [SpinorialFlowJacobianData.redLinePotential_eq] }
+
+@[simp] theorem regularizedJacobianPotentialFromSpinorialFlow_volumeCompressionPotential
+    (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (regularizedJacobianPotentialFromSpinorialFlow data).volumeCompressionPotential φ
+      = data.redLinePotential φ := by
+  rfl
+
+theorem regularizedJacobianPotentialFromSpinorialFlow_logDetReg
+    (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (regularizedJacobianPotentialFromSpinorialFlow data).logDetReg φ
+      = Real.log (data.jacobianDet φ) := by
+  rfl
+
+theorem regularizedJacobianPotentialFromSpinorialFlow_volumeCompression_eq_neg_logDetReg
+    (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (regularizedJacobianPotentialFromSpinorialFlow data).volumeCompressionPotential φ
+      = -(regularizedJacobianPotentialFromSpinorialFlow data).logDetReg φ := by
+  simpa using
+    (RegularizedJacobianPotential.volumeCompressionPotential_eq_neg_logDetReg_apply
+      (regularizedJacobianPotentialFromSpinorialFlow data) φ)
+
 /-- De Rham logarithmic form evaluation on a complex loop parameter $z \neq 0$. -/
 noncomputable def deRhamLogForm (z : ℂ) : ℂ :=
   1 / z
+
+theorem deRhamLogForm_is_derivative_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
+    HasDerivAt (fun w : ℂ => Complex.log w) (deRhamLogForm z) z := by
+  simpa [deRhamLogForm] using (Complex.hasDerivAt_log hz)
+
+theorem deRhamLogForm_is_negative_derivative_neg_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
+    HasDerivAt (fun w : ℂ => -Complex.log w) (-deRhamLogForm z) z := by
+  simpa [deRhamLogForm, one_div] using (Complex.hasDerivAt_log hz).neg
 
 /--
 **Main Theorem 2: Lightcone Determinant Apex Singularity**
@@ -63,6 +102,11 @@ theorem chiral_matrix_det_zero_iff_lightcone_apex (X : Chiral3) :
     Matrix.det (chiralMatrix X) = 0 ↔ lightconePotential X = 0 := by
   rw [chiralMatrix_det]
   exact Complex.ofReal_eq_zero
+
+theorem chiral_matrix_det_zero_iff_lightcone_boundary (X : Chiral3) :
+    Matrix.det (chiralMatrix X) = 0 ↔ X ∈ lightconeBoundary := by
+  rw [chiral_matrix_det_zero_iff_lightcone_apex, lightconeBoundary]
+  exact Iff.rfl
 
 /--
 **Main Theorem 3: De Rham Monodromy Winding Around Causal Cone Apex**

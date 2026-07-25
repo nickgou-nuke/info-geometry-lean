@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 import InfoGeometry.Canonical.ClassDTopology
 
 /-!
@@ -21,6 +22,7 @@ and establishing the Bott periodicity $d + 8 \equiv d \pmod 8$.
 
 namespace InfoGeometry.Canonical.KOIndexSpectralFlow
 
+open InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 open InfoGeometry.Canonical.ClassDTopology
 
 /--
@@ -35,7 +37,7 @@ theorem bott_periodicity_mod8_eq (d : ℕ) :
     bottPeriodicityMod8 d = (d : ZMod 8) := by
   unfold bottPeriodicityMod8
   push_cast
-  ring
+  rfl
 
 /--
 The Fredholm $\mathbb{Z}_2$ index associated to a real skew-adjoint operator with Pfaffian determinant `nu`:
@@ -58,6 +60,7 @@ theorem fredholm_z2_index_mul (nu1 nu2 : ℝ) (h1 : nu1 ≠ 0) (h2 : nu2 ≠ 0) 
   · have hprod : nu1 * nu2 > 0 := mul_pos_of_neg_of_neg h1_neg h2_neg
     have hprod_not_neg : ¬ (nu1 * nu2 < 0) := not_lt.mpr (le_of_lt hprod)
     simp [h1_neg, h2_neg, hprod_not_neg]
+    rfl
   · have hprod : nu1 * nu2 < 0 := mul_neg_of_neg_of_pos h1_neg h2_pos
     have h2_not_neg : ¬ (nu2 < 0) := not_lt.mpr (le_of_lt h2_pos)
     simp [h1_neg, h2_not_neg, hprod]

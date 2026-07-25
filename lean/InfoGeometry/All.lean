@@ -730,6 +730,7 @@ import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.CPTDirectLimitGNS
 import InfoGeometry.Canonical.CPTGradingCompass
 import InfoGeometry.Canonical.CPTRealCl11Emergence
+import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Canonical.CPTKMSColimitTower
 import InfoGeometry.Canonical.CPTTensorColimitIdentification
 import InfoGeometry.Canonical.CalabiYauBridge

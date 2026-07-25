@@ -4,7 +4,7 @@ open Matrix
 
 namespace InfoGeometry.Algebra.CyclicTraceStokes
 
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {n : Type*} [Fintype n]
 variable {R : Type*} [CommRing R]
 
 /-- Algebraic Cauchy Theorem: The trace of a commutator vanishes -/
@@ -39,15 +39,5 @@ theorem trace_mul_cycle_four (A B C D : Matrix n n R) :
     Matrix.trace (A * B * C * D) = Matrix.trace (A * (B * C * D)) := by simp [Matrix.mul_assoc]
     _ = Matrix.trace ((B * C * D) * A) := by rw [Matrix.trace_mul_comm]
     _ = Matrix.trace (B * C * D * A) := by simp [Matrix.mul_assoc]
-
-/-- Certified Cyclic Trace Stokes Packet -/
-structure CyclicTraceStokesPacket (n : Type*) [Fintype n] [DecidableEq n] (R : Type*) [CommRing R] where
-  cauchy : ∀ (A B : Matrix n n R), Matrix.trace (A * B - B * A) = 0
-  stokes : ∀ (A B : Matrix n n R), Matrix.trace (A * B - B * A) = Matrix.trace (A * B) - Matrix.trace (B * A)
-  cycle_three : ∀ (A B C : Matrix n n R), Matrix.trace (A * B * C) = Matrix.trace (B * C * A)
-  cycle_four : ∀ (A B C D : Matrix n n R), Matrix.trace (A * B * C * D) = Matrix.trace (B * C * D * A)
-
-theorem cyclic_trace_stokes_packet_exists : Nonempty (CyclicTraceStokesPacket n R) :=
-  ⟨⟨trace_commutator_zero_of_cyclic, stokes_in_trace, trace_mul_cycle_three, trace_mul_cycle_four⟩⟩
 
 end InfoGeometry.Algebra.CyclicTraceStokes

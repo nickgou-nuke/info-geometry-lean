@@ -607,7 +607,8 @@ theorem asanoContract_root_eq (P : TwoVarAffinePolynomial) (z : ℂ)
     (h_root : P.asanoContract z = 0) (hD : P.D ≠ 0) :
     z = - P.A / P.D := by
   unfold asanoContract at h_root
-  have h1 : P.D * z = - P.A := eq_neg_of_add_eq_zero_left h_root
+  have h_add : P.D * z + P.A = 0 := by rw [add_comm, h_root]
+  have h1 : P.D * z = - P.A := eq_neg_of_add_eq_zero_left h_add
   have h2 : z * P.D = - P.A := by rw [mul_comm, h1]
   exact eq_div_of_mul_eq hD h2
 

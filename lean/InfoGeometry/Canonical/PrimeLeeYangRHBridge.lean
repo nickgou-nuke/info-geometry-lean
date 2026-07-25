@@ -1,103 +1,71 @@
-import Mathlib
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
-import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
-import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
-import InfoGeometry.Canonical.CategoricalRiemannRigidity
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
-# Prime Lee-Yang RH Conformal Bridge
+# Partition roots and Cayley critical-line coordinates
 
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
+This module supplies the theorem-honest adapter between:
 
-1. **Lee-Yang Unit Circle Condition**:
-   $$\operatorname{IsLeeYangZero}(z) := \|z\| = 1$$
+* a root of the concrete partition polynomial stored by
+  `PrimeFerromagneticChain.LeeYangStabilityWitness`;
+* an externally established Lee--Yang circle theorem for that polynomial; and
+* the Cayley equivalence proved in `CayleyCriticalLineCircleBridge`.
 
-2. **Cayley Conformal Transform Map**:
-   $$w(z) = \frac{1 + z}{1 - z}, \qquad s(z) = \frac{1}{2} + \frac{1 + z}{1 - z}$$
-
-3. **Lee-Yang Unit Circle to Critical Line Theorem**:
-   Proves natively that if $\|z\| = 1$ and $z \neq 1$, then $\operatorname{Re}\left(\frac{1 + z}{1 - z}\right) = 0$, and therefore $\operatorname{Re}(s(z)) = 1/2$:
-   $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1}{2} + \frac{1 + z}{1 - z}\right) = \frac{1}{2}.$$
-
-4. **Metriplectic Entropic Lock**:
-   Connects the Cayley-transformed Lee-Yang zeros on $|z| = 1$ to the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$.
-
-5. **Grand Prime Lee-Yang RH Master Duality**:
-   Unifies Lee-Yang unit circle conditions, Cayley conformal real-part vanishing, critical line alignment $\operatorname{Re}(s) = 1/2$, and fixed locus antiunitary reflection into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
+It does not prove the Lee--Yang circle theorem.  It also does not identify a
+partition-polynomial root with a zero of the Riemann zeta function and makes no
+Riemann-hypothesis claim.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
-open Complex
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
-open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
-open InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
-open InfoGeometry.Canonical.CategoricalRiemannRigidity
-
-/-- Lee-Yang partition function zero condition: $|z| = 1$. -/
-def IsLeeYangZero (z : ℂ) : Prop :=
-  ‖z‖ = 1
-
-/-- Cayley conformal transform $w(z) = \frac{1 + z}{1 - z}$. -/
-noncomputable def cayleyTransform (z : ℂ) : ℂ :=
-  (1 + z) / (1 - z)
-
-/-- Conformal map from Lee-Yang fugacity to Riemann $s$-variable $s(z) = \frac{1}{2} + w(z)$. -/
-noncomputable def leeYangToRiemannS (z : ℂ) : ℂ :=
-  1 / 2 + cayleyTransform z
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /--
-**Main Theorem 1: Real Part of Cayley Transform of Unit Circle Vector Vanishes**
-Proves natively that if $\|z\| = 1$ and $z \neq 1$, then $\operatorname{Re}\left(\frac{1+z}{1-z}\right) = 0$:
-$$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right) = 0.$$
+An actual root of a stored partition polynomial maps to the critical line,
+provided a Lee--Yang root-location theorem has been proved for that polynomial.
+
+The condition `z.re ≠ -1` removes the pole `z = -1` of
+`cayleyToTemperature z = z / (1 + z)`.
 -/
-theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
-    (cayleyTransform z).re = 0 := by
-  unfold cayleyTransform
-  have h_sq : z.re^2 + z.im^2 = 1 := by
-    have h1 : ‖z‖^2 = 1 := by rw [hz, one_pow]
-    have h2 : ‖z‖^2 = z.re^2 + z.im^2 := by
-      rw [norm_def, normSq_apply, Real.sq_sqrt (add_nonneg (mul_self_nonneg z.re) (mul_self_nonneg z.im))]
-      ring
-    rw [← h2, h1]
-  have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
-    apply Complex.ext
-    · have h_re : ((1 + z) / (1 - z)).re = (1 - (z.re^2 + z.im^2)) / normSq (1 - z) := by
-        simp only [div_re, add_re, sub_re, add_im, sub_im, one_re, one_im]
-        ring
-      rw [h_re, h_sq, sub_self, zero_div]
-    · simp only [div_im, add_re, sub_re, add_im, sub_im, one_re, one_im, normSq_apply]
-      ring
-  rw [h_div]
+theorem partitionRoot_mapsToCriticalLine
+    {n : ℕ}
+    (W : LeeYangStabilityWitness (n := n))
+    (hLeeYang :
+      ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {z : ℂ}
+    (hz : W.partitionPolynomial.IsRoot z)
+    (hpole : z.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z) := by
+  exact cayleyToTemperature_mem_criticalLine_of_unitCircle z
+    (W.root_lies_on_leeYang_circle hLeeYang z hz) hpole
 
 /--
-**Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**
-Proves natively that if $\|z\| = 1$ and $z \neq 1$, then $\operatorname{Re}(s(z)) = 1/2$:
-$$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}(s(z)) = \frac{1}{2}.$$
--/
-theorem lee_yang_to_riemann_critical_line {z : ℂ} (hz : IsLeeYangZero z) (hne : z ≠ 1) :
-    (leeYangToRiemannS z).re = 1 / 2 := by
-  unfold leeYangToRiemannS
-  rw [add_re, cayley_transform_re_zero_on_unit_circle hz hne]
-  simp
+For a non-polar partition root satisfying the Lee--Yang theorem, the Cayley
+coordinate lies on the critical line and transforming back recovers the
+original root.
 
-/--
-**Main Theorem 3: Grand Prime Lee-Yang RH Master Duality**
-Unifies the Lee-Yang unit circle condition $\|z\| = 1$, Cayley transform real-part vanishing, Riemann critical line mapping $\operatorname{Re}(s) = 1/2$, and antiunitary reflection fixed locus rigidity into a single 100% kernel-checked theorem.
+This is the exact finite algebraic content of the Lee--Yang/critical-line
+coordinate dictionary.  No statement about zeta zeros is used.
 -/
-theorem grand_prime_lee_yang_rh_master_duality
-    (z : ℂ) (hz : IsLeeYangZero z) (hne : z ≠ 1) (s : ℂ) (h_anti : s = 1 - star s) :
-    ((cayleyTransform z).re = 0) ∧
-    ((leeYangToRiemannS z).re = 1 / 2) ∧
-    (s.re = 1 / 2) ∧
-    (s = 1 - star s) := ⟨
-  cayley_transform_re_zero_on_unit_circle hz hne,
-  lee_yang_to_riemann_critical_line hz hne,
-  antiunitary_fixed_locus_rigidity h_anti,
-  (critical_line_fixed_locus_iff s).2 (antiunitary_fixed_locus_rigidity h_anti)
-⟩
+theorem partitionRoot_cayleyRoundTrip
+    {n : ℕ}
+    (W : LeeYangStabilityWitness (n := n))
+    (hLeeYang :
+      ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {z : ℂ}
+    (hz : W.partitionPolynomial.IsRoot z)
+    (hpole : z.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z) ∧
+      cayleyToFugacity (cayleyToTemperature z) = z := by
+  constructor
+  · exact partitionRoot_mapsToCriticalLine W hLeeYang hz hpole
+  · apply cayleyToFugacity_cayleyToTemperature
+    intro hzero
+    have hre : (1 + z).re = 0 := by rw [hzero]; simp
+    apply hpole
+    simpa using hre
 
 end InfoGeometry.Canonical.PrimeLeeYangRHBridge

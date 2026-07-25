@@ -30,8 +30,11 @@ theorem rawCAR_to_SugawaraVirasoro_bridge
       (∀ m n, (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) =
         (m - n) • H.sugawaraStressMode (m + n) +
           if m + n = 0 then (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) else 0) := by
-  have H : CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
-    chargedFockSpaceCurrentHeisenbergRep 𝕜 α
-  exact ⟨H, rfl, fun m n => H.comm m n, fun m n => sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n⟩
+  use chargedFockSpaceCurrentHeisenbergRep 𝕜 α
+  refine ⟨rfl, ?_, ?_⟩
+  · intro m n
+    exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+  · intro m n
+    exact sugawaraVirasoro_from_heisenbergCurrent (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
 end InfoGeometry.Canonical.SourceLinkedCARCurrent

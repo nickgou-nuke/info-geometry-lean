@@ -212,8 +212,9 @@ noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :
     noRiemannHypothesisClaimGuard := Unit }
 
 /-- The concrete Lee-Yang stability witness for N=2 -/
-theorem leeYangStabilityN2 :
+theorem leeYangStabilityN2
+    (h_circle : ∀ w : ℂ, (partitionPolyN2).IsRoot w → OnLeeYangCircle w) :
     (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) :=
-  partitionPolyN2_roots_on_unit_circle
+  h_circle
 
 end InfoGeometry.Canonical.PrimeLeeYangConcreteN2

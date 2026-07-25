@@ -9,18 +9,19 @@ open Matrix
 open InfoGeometry.Algebra.CyclicTraceStokes
 
 /-- A finite dimensional Connes Graded Spectral Triple over a matrix algebra. -/
-structure ConnesGradedSpectralTriple (n : Type*) [Fintype n] (R : Type*) [CommRing R] where
+structure ConnesGradedSpectralTriple (n : Type*) [Fintype n] [DecidableEq n] (R : Type*) [CommRing R] where
   D : Matrix n n R
   gamma : Matrix n n R
   gamma_sq : gamma * gamma = 1
   anti_comm : gamma * D + D * gamma = 0
 
+/-- The KMS Connes Index Pairing evaluated on a matrix observable `X`. -/
+def connesIndexPairing {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
+    (ST : ConnesGradedSpectralTriple n R) (X : Matrix n n R) : R :=
+  Matrix.trace (ST.gamma * X)
+
 variable {n : Type*} [Fintype n] [DecidableEq n]
 variable {R : Type*} [CommRing R]
-
-/-- The KMS Connes Index Pairing evaluated on a matrix observable `X`. -/
-def connesIndexPairing (ST : ConnesGradedSpectralTriple n R) (X : Matrix n n R) : R :=
-  Matrix.trace (ST.gamma * X)
 
 /--
 **Main Theorem 1: Connes Index Trace Vanishing**
@@ -35,7 +36,7 @@ theorem connes_index_squared_dirac_comm (ST : ConnesGradedSpectralTriple n R) :
   calc
     ST.gamma * (ST.D * ST.D) = (ST.gamma * ST.D) * ST.D := by rw [mul_assoc]
     _ = (- (ST.D * ST.gamma)) * ST.D := by rw [h1]
-    _ = - (ST.D * (ST.gamma * ST.D)) := by simp [mul_assoc]
+    _ = - (ST.D * (ST.gamma * ST.D)) := by rw [neg_mul, mul_assoc]
     _ = - (ST.D * (- (ST.D * ST.gamma))) := by rw [h1]
     _ = ST.D * (ST.D * ST.gamma) := by simp
     _ = (ST.D * ST.D) * ST.gamma := by rw [mul_assoc]

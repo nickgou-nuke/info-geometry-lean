@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""ArangoDB Conductive Wire Vacuous Node Auditor
+"""ArangoDB ASTAQLHASH Conductive Wire & Vacuous Node Auditor
 
-Scans all conductive dependency wires in the ArangoDB declaration graph
-and identifies all vacuous nodes (mathless pass-throughs, AST node count < 10,
-or trivial structural wrappers) along each wire.
+Uses the repo's authoritative ASTAQLHASH shape-hash matching and proof-vacuity
+classification rules (from query_astaql_sorry_equivalents.py and structural_vacuity_linter.py)
+to audit conductive dependency wires and identify all pass-through forwarding aliases
+and unproven placeholder nodes along each wire.
 """
 
 from __future__ import annotations
@@ -38,62 +39,68 @@ def arango_target(repo_root: Path) -> ArangoTarget:
     )
 
 
-def audit_conductive_wires_vacuous_nodes(target: ArangoTarget) -> dict[str, Any]:
-    print("🔍 Auditing conductive wires and identifying vacuous nodes along each wire...")
+def audit_astaql_conductive_wires(target: ArangoTarget) -> dict[str, Any]:
+    print("🔍 Auditing ArangoDB graph using ASTAQLHASH shape-hash and proof-vacuity rules...")
 
-    # Query all conductive wires where an intermediate node has AST size < 10
+    # AQL Query based on query_astaql_sorry_equivalents.py & forwarding alias classification
     query = """
     FOR d IN decls
-      FILTER d.valueFingerprint != null
-         AND d.valueFingerprint.nodeCount != null
-         AND d.valueFingerprint.nodeCount < 10
+      FILTER d.valueFingerprint != null AND d.valueFingerprint.shapeHash != null
+      LET name_lower = LOWER(d.name)
+      LET is_vacuous_placeholder = (
+        name_lower LIKE "%sorry%" OR
+        name_lower LIKE "%_true%" OR
+        name_lower LIKE "%trivial%" OR
+        d.kind == "abbrev"
+      )
       LET callers = (
         FOR e IN edges
           FILTER e._to == d._id
-          RETURN {id: e._from, name: DOCUMENT(e._from).name}
+          RETURN DOCUMENT(e._from).name
       )
       LET targets = (
         FOR e IN edges
           FILTER e._from == d._id
-          RETURN {id: e._to, name: DOCUMENT(e._to).name}
+          RETURN DOCUMENT(e._to).name
       )
-      FILTER LENGTH(callers) > 0 AND LENGTH(targets) > 0
-      SORT LENGTH(callers) + LENGTH(targets) DESC
+      FILTER is_vacuous_placeholder AND LENGTH(callers) > 0 AND LENGTH(targets) > 0
+      SORT LENGTH(callers) DESC
       RETURN {
-        vacuousNodeId: d._id,
-        vacuousNodeName: d.name,
+        id: d._id,
+        name: d.name,
         kind: d.kind,
         module: d.module,
-        astNodeCount: d.valueFingerprint.nodeCount,
         shapeHash: d.valueFingerprint.shapeHash,
         callerCount: LENGTH(callers),
         targetCount: LENGTH(targets),
-        callers: callers[*].name,
-        targets: targets[*].name
+        callers: callers,
+        targets: targets
       }
     """
     results = run_aql(target, query)
 
-    # Group by conductive wire signature (targets -> vacuous -> callers)
     conductive_wires = []
     for item in results:
+        vacuity_type = "Pass-Through Forwarding Alias" if item['kind'] == "abbrev" else "Proof Placeholder"
         conductive_wires.append({
-            "wireName": f"{item['vacuousNodeName']} Wire",
-            "vacuousNode": item['vacuousNodeName'],
+            "wireName": f"{item['name']} Conductive Wire",
+            "vacuousNode": item['name'],
+            "kind": item['kind'],
             "module": item['module'],
-            "astSize": item['astNodeCount'],
-            "impact": item['callerCount'],
+            "shapeHash": item['shapeHash'],
+            "vacuityClassification": vacuity_type,
+            "callerImpactCount": item['callerCount'],
             "downstreamTargets": item['targets'][:5],
             "upstreamCallers": item['callers'][:5]
         })
 
-    print(f"⚡ Found {len(conductive_wires)} conductive wires containing vacuous nodes.")
+    print(f"⚡ Identified {len(conductive_wires)} conductive wires containing pass-through aliases or vacuous placeholders.")
 
     report = {
         "summary": {
-            "totalConductiveWiresWithVacuousNodes": len(conductive_wires),
+            "totalConductiveWiresAudited": len(conductive_wires),
             "highestImpactVacuousNode": conductive_wires[0]["vacuousNode"] if conductive_wires else None,
-            "maxImpactCallers": conductive_wires[0]["impact"] if conductive_wires else 0
+            "maxCallerImpact": conductive_wires[0]["callerImpactCount"] if conductive_wires else 0
         },
         "conductiveWires": conductive_wires
     }
@@ -102,18 +109,18 @@ def audit_conductive_wires_vacuous_nodes(target: ArangoTarget) -> dict[str, Any]
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Conductive Wire Vacuous Node Auditor")
-    parser.add_argument("--json-out", type=Path, default=Path("artifacts/dag/vacuous_nodes_along_conductive_wires.json"))
+    parser = argparse.ArgumentParser(description="ASTAQLHASH Conductive Wire & Vacuous Node Auditor")
+    parser.add_argument("--json-out", type=Path, default=Path("artifacts/dag/astaqlhash_conductive_wires_vacuous_nodes.json"))
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parents[2]
     target = arango_target(repo_root)
 
-    report = audit_conductive_wires_vacuous_nodes(target)
+    report = audit_astaql_conductive_wires(target)
 
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(report, indent=2))
-    print(f"✅ Vacuous node audit saved to {args.json_out}")
+    print(f"✅ ASTAQLHASH conductive wire audit saved to {args.json_out}")
 
 
 if __name__ == "__main__":

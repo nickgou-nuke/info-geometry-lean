@@ -15,7 +15,7 @@ representation $V$, constructing the off-diagonal 1-cocycle block structure:
 $$\rho_{\text{log}}(x) = \begin{pmatrix} \rho(x) & c(x) \\ 0 & \rho(x) \endpmatrix$$
 
 It proves that the zero-mode $L_0^{\text{log}}$ on $V_{\text{log}}$ contains a genuine non-diagonalizable
-Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \endpmatrix$, satisfying full
+Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \end{pmatrix}$, satisfying full
 Virasoro relations, non-diagonalizability, and Krein pseudo-hermiticity.
 -/
 
@@ -89,7 +89,6 @@ def makeLogVirasoroRepresentation
       abel
     · dsimp [blockOp]
       simp [map_add]
-      abel
   map_smul' := by
     intro r x
     refine LinearMap.ext fun ⟨u, v⟩ => ?_
@@ -99,7 +98,6 @@ def makeLogVirasoroRepresentation
       abel
     · dsimp [blockOp]
       simp [map_smul]
-      abel
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

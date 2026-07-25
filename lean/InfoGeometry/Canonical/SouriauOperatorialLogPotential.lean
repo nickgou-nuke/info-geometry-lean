@@ -257,21 +257,20 @@ namespace SouriauLieThermoData
     rw [negativeLogGibbsDensity_eq_K_beta_add_Phi, K_beta_eq_pairing_apply]
 
   /--
-  Statewise microscopic modular Hamiltonian/Kullback identification:
+  Honest statewise microscopic Boltzmann/Kullback relation for this structure.
 
-  The negative log Gibbs density is the generator `K(x)`, not an ensemble
-  average.  The scalar partition potential `Φ` is the only global readout.
-  This closes the requested `K = -ln ρ̂` operator identity at the structure
-  level, using only `gibbsDensity_eq`, `K_beta_eq_pairing`,
-  `partitionPotential_eq_logZ`, and `Real.log_exp`.
+  The normalized Gibbs density is `gibbsDensity x = Real.exp (-K_beta x - partitionPotential)`,
+  so the exact operator identity is:
+
+      `K_beta x = -Real.log (gibbsDensity x) - partitionPotential`
+
+  The global scalar `partitionPotential` is the only nonstatewise readout.
+  For the operator family this is lifted as `modularHamiltonian = -operatorLog rho_beta`.
   -/
   @[rep_depth operator]
-  theorem modularHamiltonian_eq_neg_log_density_operator (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) :
+  theorem modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) :
       D.K_beta x = -Real.log (D.gibbsDensity x) - D.partitionPotential := by
-    have hstep : -Real.log (D.gibbsDensity x) = D.K_beta x + D.partitionPotential :=
-      negativeLogGibbsDensity_eq_K_beta_add_Phi D x
-    rw [hstep]
-    ring
+    linarith [negativeLogGibbsDensity_eq_K_beta_add_Phi D x]
 end SouriauLieThermoData
 
 def instSouriauLieThermoData : SouriauLieThermoData Unit Unit Unit where

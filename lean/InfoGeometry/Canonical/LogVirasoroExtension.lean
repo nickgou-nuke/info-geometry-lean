@@ -16,12 +16,6 @@ $$\rho_{\text{log}}(x) = \begin{pmatrix} \rho(x) & c(x) \\ 0 & \rho(x) \end{pmat
 It proves that the zero-mode $L_0^{\text{log}}$ on $V_{\text{log}}$ contains a genuine non-diagonalizable
 Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \end{pmatrix}$, satisfying full
 Virasoro relations, non-diagonalizability, and Krein pseudo-hermiticity.
-
-## Mathematical Content
-
-1. **Upper-Triangular Virasoro Action**: `vlogAction ρ c x (u, v) = (ρ x u + c x v, ρ x v)`.
-2. **Virasoro Lie Algebra Homomorphism**: Preserves $[\rho_{\text{log}}(x), \rho_{\text{log}}(y)] = \rho_{\text{log}}([x,y])$ when $c$ satisfies the Lie-algebra derivation identity.
-3. **Krein Form Pullback**: $B_{\text{log}}((u_1, v_1), (u_2, v_2)) = B(u_1, v_2) + B(v_1, u_2)$ pulls back to the Jordan–Krein matrix $G = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$.
 -/
 
 namespace InfoGeometry.Canonical.LogVirasoroExtension
@@ -31,8 +25,9 @@ open InfoGeometry.LogJordanKreinCore
 open InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 open InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 
-variable {𝕜 V : Type*} [Field 𝕜]
+variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
+variable {A : Type*} [Ring A]
 
 /-- The logarithmic extension carrier space $V_{\text{log}} = V \times V$. -/
 abbrev Vlog (V : Type*) := V × V
@@ -100,7 +95,6 @@ def makeLogVirasoroRepresentation
 Extends an `AdapterData 𝕜 A V` representation to the logarithmic extension space $V \times V$.
 -/
 noncomputable def AdapterData.toLogVirasoroExtension
-    [CharZero 𝕜]
     (D : AdapterData 𝕜 A V)
     (c : VirasoroAlgebra 𝕜 →ₗ[𝕜] Module.End 𝕜 V)
     (hc : IsVirasoroCocycle D.toSugawaraVirasoroRepresentation c) :

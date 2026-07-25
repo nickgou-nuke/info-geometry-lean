@@ -149,18 +149,16 @@ noncomputable def makeLogIntertwiner
     · exact hy0
     · exact hy1
   intertwines := by
-    ext j
-    fin_cases j
-    · ext
-      · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, hL0, hc0, LinearMap.comp_apply, LinearMap.single_apply, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e0_zero, e0_one]
-      · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, hL0, hc0, LinearMap.comp_apply, LinearMap.single_apply, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e0_zero, e0_one]
-    · ext
-      · have h_comm_apply : ρ (VirasoroAlgebra.lgen 𝕜 0) (c (VirasoroAlgebra.lgen 𝕜 0) v0) = c (VirasoroAlgebra.lgen 𝕜 0) (Δ • v0) := by
-          have h1 : (ρ (VirasoroAlgebra.lgen 𝕜 0)).commutator (c (VirasoroAlgebra.lgen 𝕜 0)) v0 = 0 := by rw [hcomm0, LinearMap.zero_apply]
-          unfold LinearMap.commutator LinearMap.sub_apply LinearMap.comp_apply at h1
-          rw [hL0] at h1
-          exact sub_eq_zero.mp h1
-        simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e1, hL0, hc0, h_comm_apply, LinearMap.comp_apply, LinearMap.single_apply, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e1_zero, e1_one, map_smul, smul_add, add_assoc, add_left_comm]
-      · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e1, hL0, hc0, LinearMap.comp_apply, LinearMap.single_apply, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e1_zero, e1_one, map_smul, smul_add, add_assoc, add_left_comm]
+    ext w
+    have h_comm_apply : ρ (VirasoroAlgebra.lgen 𝕜 0) (c (VirasoroAlgebra.lgen 𝕜 0) v0) = Δ • c (VirasoroAlgebra.lgen 𝕜 0) v0 := by
+      have h1 : (ρ (VirasoroAlgebra.lgen 𝕜 0)).commutator (c (VirasoroAlgebra.lgen 𝕜 0)) v0 = 0 := by rw [hcomm0, LinearMap.zero_apply]
+      unfold LinearMap.commutator LinearMap.sub_apply LinearMap.comp_apply at h1
+      rw [hL0] at h1
+      have h2 := sub_eq_zero.mp h1
+      rw [h2, map_smul]
+    ext
+    · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, h_comm_apply, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
+      abel
+    · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

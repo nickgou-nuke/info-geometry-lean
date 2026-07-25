@@ -44,7 +44,7 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
     stageTrace (n + 1) (diagEmbedSucc n f) = stageTrace n f := by
   unfold stageTrace diagEmbedSucc
   have hpow : (2 ^ (n + 1) : ℂ)⁻¹ = (2 ^ n : ℂ)⁻¹ * (2 : ℂ)⁻¹ := by
-    rw [pow_add, pow_one, mul_inv]
+    rw [pow_succ', mul_inv₀]
   rw [hpow]
   have htwo : (2 : ℂ) ≠ 0 := by norm_num
   have hsum :
@@ -55,10 +55,14 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
       let f_ext (b : Bool) (w : BitWord n) : BitWord (n + 1) := extendSucc n w b
       have h_disj : Disjoint (Finset.univ.image (f_ext false)) (Finset.univ.image (f_ext true)) := by
         simp only [Finset.disjoint_iff_ne, Finset.mem_univ, Finset.mem_image, true_and]
-        rintro x ⟨x0, rfl⟩ y ⟨y0, hy⟩
-        have h_last := congrFun hy ⟨n, Nat.lt_succ_self n⟩
-        dsimp [f_ext, extendSucc] at h_last
-        simp only [lt_self_iff_false, ↓reduceDIte, Bool.false_eq_true] at h_last
+        rintro x0 ⟨w1, rfl⟩ y0 ⟨w2, h_eq⟩
+        have h_val1 : (extendSucc n w1 false) ⟨n, Nat.lt_succ_self n⟩ = false := by
+          dsimp [extendSucc]; simp
+        have h_val2 : (extendSucc n w2 true) ⟨n, Nat.lt_succ_self n⟩ = true := by
+          dsimp [extendSucc]; simp
+        have h_eval := congrFun h_eq ⟨n, Nat.lt_succ_self n⟩
+        rw [h_val1, h_val2] at h_eval
+        contradiction
       have h_union : Finset.univ = (Finset.univ.image (f_ext false)) ∪ (Finset.univ.image (f_ext true)) := by
         ext x
         simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_image, true_and]
@@ -68,22 +72,20 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
           ext i
           by_cases hi : i.1 < n
           · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by
-              ext
-              omega
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by ext; omega
             rw [h_eq]
-            simp [f_ext, extendSucc, hb]
+            dsimp [f_ext, extendSucc]
+            simp [hb]
         · left
           use prefixSucc n x
           ext i
           by_cases hi : i.1 < n
           · simp [f_ext, extendSucc, prefixSucc, hi]
-          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by
-              ext
-              omega
+          · have h_eq : i = ⟨n, Nat.lt_succ_self n⟩ := by ext; omega
             have hb' : x ⟨n, Nat.lt_succ_self n⟩ = false := Bool.eq_false_of_ne_true hb
             rw [h_eq]
-            simp [f_ext, extendSucc, hb']
+            dsimp [f_ext, extendSucc]
+            simp [hb']
       have h_inj_false : Function.Injective (f_ext false) := by
         intro x y h
         have := congr_arg (prefixSucc n) h
@@ -95,7 +97,7 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
       rw [h_union, Finset.sum_union h_disj]
       rw [Finset.sum_image (by intro x _ y _ h; exact h_inj_false h)]
       rw [Finset.sum_image (by intro x _ y _ h; exact h_inj_true h)]
-      simp only [f_ext, prefixSucc_extendSucc, Finset.sum_const, Finset.card_univ]
+      simp only [f_ext, prefixSucc_extendSucc]
     rw [h1, ← two_mul, mul_comm]
   rw [hsum]
   calc

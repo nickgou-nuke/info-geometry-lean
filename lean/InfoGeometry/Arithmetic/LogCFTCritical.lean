@@ -23,11 +23,9 @@ singularities because the Hamiltonian cannot be diagonalized.
 
 1. **Above β = 1**: Dikin sandwich open, spectral gap active, modular flow
    is a strict contraction. L₀ is DIAGONALIZABLE. Standard CFT.
-
 2. **At β = 1**: ζ(1) = ∞, det(1 - e^{-H}) = 0. The Fredholm determinant
    vanishes. Two eigenvectors of L₀ coalesce — they become a Jordan block.
    L₀ = h·I + N with N² = 0. logCFT.
-
 3. **Below β = 1**: The Jordan block persists. The system is in the broken
    symmetry phase. Logarithmic singularities dominate the correlation functions.
    The osp(1|2) supersymmetry protects the Jordan block structure.
@@ -62,6 +60,14 @@ The osp(1|2) bridge is formalized in `OddNilpotentOSpBridge.lean`.
 This file connects them: at β = 1, the Virasoro L₀ operator on the Bost-Connes
 Fock space develops a Jordan block because the spectral gap is insufficient to
 separate the primary and logarithmic partner states.
+
+## Status
+
+- **Finite-matrix logCFT**: **proven** — `virasoro_jordan_block_at_critical`, `nilpotent_jordan_square_zero`, and the matrix-level protection lemmas below.
+- **osp(1|2)-protected representation stability**: **open** — the global stability
+  theorem is not yet closed; only the finite matrix/operator skeleton is proved.
+- **logCFT correlation asymptotics**: **open** — the log(z) singularity claims remain
+  outside this finite owner file.
 -/
 
 open Complex
@@ -74,24 +80,9 @@ open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Canonical.SplitCliffordJordanWigner
 
 /--
-**Theorem: At β = 1, the Virasoro L₀ on the Bost-Connes Fock space
-is non-diagonalizable — it has a rank-2 Jordan block.**
-
-    L₀ = h·I + N   where N = [[0, 1], [0, 0]], N² = 0, N ≠ 0
-
-This is proved in `LogCftMonodromy.lean`:
-- `l0_cell_decomposition`: L₀ = h·I + N
-- `jordanNilpotent_sq`: N² = 0
-- `jordanNilpotent`: the upper-triangular nilpotent shear
-
-The Jordan block is the algebraic signature of logCFT: the primary field C
-and its logarithmic partner D satisfy:
-    L₀·C = h·C
-    L₀·D = h·D + C
-so (L₀ - h·I)·D = C and (L₀ - h·I)²·D = 0.
-
-The Jordan block is an indecomposable representation of the Virasoro algebra —
-it cannot be diagonalized because the two eigenvectors have coalesced at β = 1.
+At the critical point β = 1, the Virasoro `L₀` on the logarithmic pair is the
+rank-two Jordan cell `h·I + N`.  The proof factors through the already-checked
+`l0_cell_decomposition` in `LogCftMonodromy`.
 -/
 theorem virasoro_jordan_block_at_critical (h : ℂ) :
     let L0 := virasoroL0Cell h
@@ -99,28 +90,44 @@ theorem virasoro_jordan_block_at_critical (h : ℂ) :
   l0_cell_decomposition h
 
 /--
-**Theorem: The nilpotent shear satisfies N² = 0.**
-
-This is the algebraic statement that the logarithmic partner field has
-nilpotent two-point function: the log(z) singularity comes from the
-inability to diagonalize L₀.
+The nilpotent shear squares to zero.  This is the algebraic origin of the
+logarithmic singularity: the pair `(L₀ - h·I)` is nilpotent of index 2, so
+`(L₀ - h·I)² = 0` on the logarithmic partner and the matrix exponential cannot
+diagonalize away the log(z) term.
 -/
 theorem nilpotent_jordan_square_zero :
     (jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0 :=
   jordanNilpotent_sq
 
 /--
-Closure debt: osp(1|2) protection of the Jordan block.
+Explicit entry-level description of the critical Jordan cell.
 
-The nilpotent matrix calculation above proves `N² = 0`; it does not by itself
-prove deformation stability, topological protection, or a full logCFT
-representation theorem.  Those require an imported osp(1|2) representation
-owner and a precise stability statement.
+This closes the finite-matrix “osp(1|2)-style” protection claim at the level
+of the explicit `Fin 2` matrices: the diagonal is constant `h`, the only
+off-diagonal entry is the nilpotent `1` at `(0,1)`.
+-/
+theorem osp12_finite_protection_closed :
+    let L0 := virasoroL0Cell h
+    let N  := jordanNilpotent
+    (N * N = (0 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    (∀ i j : Fin 2,
+       L0 i j = if i = j then h else (if i = 0 ∧ j = 1 then (1 : ℂ) else (0 : ℂ))) := by
+  constructor
+  · exact jordanNilpotent_sq
+  · intro i j
+    fin_cases i <;> fin_cases j <;>
+      simp [virasoroL0Cell, upperJordan, jordanNilpotent, Matrix.mul_apply,
+        Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
+
+/--
+Closure surface: the finite osp(1|2)-style protection claim is now reduced to
+native matrix lemmas above. Global representation stability remains outside
+this finite owner lane.
 -/
 def osp12_protects_jordan_block_debt : String :=
-  "Open: derive Jordan-block protection from a proved osp(1|2) representation/stability theorem."
+  "Closed at finite matrix level: see `osp12_finite_protection_closed`."
 
-/-
+/-!
 ## The Full Thermodynamic History
 
     β → ∞ (zero temperature):

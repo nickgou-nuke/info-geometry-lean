@@ -37,7 +37,8 @@ theorem bott_periodicity_mod8_eq (d : ℕ) :
     bottPeriodicityMod8 d = (d : ZMod 8) := by
   unfold bottPeriodicityMod8
   push_cast
-  rfl
+  have h8 : (8 : ZMod 8) = 0 := rfl
+  rw [h8, add_zero]
 
 /--
 The Fredholm $\mathbb{Z}_2$ index associated to a real skew-adjoint operator with Pfaffian determinant `nu`:
@@ -81,15 +82,17 @@ of the high-symmetry Pfaffian product $\nu = \text{Pf}(A(0)) \cdot \text{Pf}(A(\
 theorem classD_to_fredholm_index_match (mu t : ℝ) (h : mu^2 ≠ t^2) :
     classDInvariantZ2 mu t = fredholmZ2Index (kitaevPfaffianProduct mu t) := by
   unfold classDInvariantZ2 fredholmZ2Index
-  split_ifs with htop hpfaff
-  · rfl
-  · exfalso
-    have hneg := topological_phase_pfaffian_neg mu t htop
-    exact hpfaff hneg
-  · exfalso
-    rw [kitaev_pfaffian_product_eq] at hpfaff
-    have : mu^2 < t^2 := by linarith
-    exact htop this
-  · rfl
+  by_cases htop : mu^2 < t^2
+  · have hneg := topological_phase_pfaffian_neg mu t htop
+    simp [htop, hneg]
+  · have hpos : kitaevPfaffianProduct mu t > 0 := by
+      rw [kitaev_pfaffian_product_eq]
+      have : t^2 < mu^2 := by
+        rcases lt_or_gt_of_ne h with h1 | h2
+        · exact False.elim (htop h1)
+        · exact h2
+      linarith
+    have hnot_neg : ¬ (kitaevPfaffianProduct mu t < 0) := not_lt.mpr (le_of_lt hpos)
+    simp [htop, hnot_neg]
 
 end InfoGeometry.Canonical.KOIndexSpectralFlow

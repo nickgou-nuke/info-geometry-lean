@@ -73,14 +73,12 @@ noncomputable def finitePrimeChainDataN2 : FinitePrimeChainData 2 :=
           have h : (0 : ℝ) < Real.log ((![2, 3] : Fin 2 → ℕ) i : ℝ) := by
             simp [FinitePrimeChainData.ell_eq_log] at *
             <;>
-            norm_num [Real.log_pos]
-            <;>
-            (try norm_num) <;>
             (try
               {
                 have h₁ : (1 : ℝ) < (2 : ℝ) := by norm_num
                 have h₂ : (1 : ℝ) < (3 : ℝ) := by norm_num
-                exact Real.log_pos (by norm_num)
+                simp_all [Real.log_pos]
+                <;> norm_num
               })
           exact h
         })
@@ -157,54 +155,44 @@ theorem leeYangStabilityN2 :
     (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) := by
   intro z hz
   have h₁ : (partitionPolyN2 : Polynomial ℂ).IsRoot z := hz
-  have h₂ : OnLeeYangCircle z := by
-    -- The partition polynomial for N=2 is Z(z) = z² - z + 1
-    -- Its roots are z = (1 ± i√3)/2 = e^{±iπ/3}, which lie on the unit circle
-    have h₁ : (partitionPolyN2 : Polynomial ℂ) = Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ) := by rfl
-    rw [h₁] at h₁
-    have h₂ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).IsRoot z := h₁
-    -- The roots of z² - z + 1 = 0 are z = (1 ± i√3)/2 = e^{±iπ/3}
-    -- These have |z| = 1, so they lie on the unit circle
-    have h₃ : Complex.normSq z = 1 := by
-      have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h₂
-      have h₄ : z ^ 2 - z + 1 = 0 := by
-        simpa [Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul, Polynomial.eval_C_mul_X, Polynomial.eval_C_mul_X_pow] using h₃
-      have h₅ : z ^ 2 = z - 1 := by
-        rw [← sub_eq_zero]
-        ring_nf at h₄ ⊢
-        simp_all [Complex.ext_iff, pow_two]
-        <;> norm_num at * <;>
-        (try constructor <;> nlinarith) <;>
-        (try ring_nf at * <;> norm_num at * <;> nlinarith)
-      have h₆ : Complex.normSq z = 1 := by
-        have h₇ : z.re * z.re + z.im * z.im = 1 := by
-          have h₈ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
-            simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
-            <;> norm_num at h₅ ⊢ <;>
-            (try ring_nf at h₅ ⊢) <;>
-            (try nlinarith) <;>
-            (try linarith) <;>
-            (try nlinarith)
-          have h₉ : z.re * z.re + z.im * z.im = 1 := by
-            nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
-              sq_nonneg (z.im + Real.sqrt 3 / 2)]
-          exact h₉
-        simp [Complex.normSq, Complex.ext_iff] at h₆ ⊢
-        <;> norm_num at h₆ ⊢ <;>
-        (try simp_all [Complex.ext_iff]) <;>
+  -- The partition polynomial for N=2 is Z(z) = z² - z + 1
+  -- Its roots are z = (1 ± i√3)/2 = e^{±iπ/3}, which lie on the unit circle
+  have h_poly_eq : (partitionPolyN2 : Polynomial ℂ) = Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ) := by rfl
+  rw [h_poly_eq] at h₁
+  have h_root : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).IsRoot z := h₁
+  -- The roots of z² - z + 1 = 0 are z = (1 ± i√3)/2 = e^{±iπ/3}
+  -- These have |z| = 1, so they lie on the unit circle
+  have h_norm_sq : Complex.normSq z = 1 := by
+    have h₃ : (Polynomial.X ^ 2 - Polynomial.C (1 : ℂ) * Polynomial.X + Polynomial.C (1 : ℂ)).eval z = 0 := by simpa [Polynomial.IsRoot] using h_root
+    have h₄ : z ^ 2 - z + 1 = 0 := by
+      simpa [Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C_mul, Polynomial.eval_mul] using h₃
+    have h₅ : z ^ 2 = z - 1 := by
+      rw [← sub_eq_zero]
+      ring_nf at h₄ ⊢
+      simp_all [Complex.ext_iff, pow_two]
+      <;> norm_num at * <;>
+      (try constructor <;> nlinarith) <;>
+      (try ring_nf at * <;> norm_num at * <;> nlinarith)
+    have h₇ : z.re * z.re + z.im * z.im = 1 := by
+      have h₈ : z.re * z.re - z.im * z.im - z.re + 1 = 0 := by
+        simp [Complex.ext_iff, pow_two, Complex.normSq, Complex.mul_re, Complex.mul_im, Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im] at h₅ ⊢
+        <;> norm_num at h₅ ⊢ <;>
+        (try ring_nf at h₅ ⊢) <;>
+        (try nlinarith) <;>
+        (try linarith) <;>
         (try nlinarith)
-      exact h₆
-    -- Since |z| = 1, we have z on the unit circle
-    have h₄ : z ≠ 0 := by
-      intro h
-      rw [h] at h₃
-      norm_num [Complex.normSq] at h₃
-    -- OnLeeYangCircle means |z| = 1
-    have h₅ : OnLeeYangCircle z := by
-      rw [OnLeeYangCircle]
-      <;> simp_all [Complex.normSq, Complex.abs, Complex.normSq, Real.sqrt_eq_iff_sq_eq]
-      <;> nlinarith
-    exact h₅
-  exact h₂
+      have h₉ : z.re * z.re + z.im * z.im = 1 := by
+        nlinarith [sq_nonneg (z.re - 1 / 2), sq_nonneg (z.im - Real.sqrt 3 / 2),
+          sq_nonneg (z.im + Real.sqrt 3 / 2)]
+      exact h₉
+    simp [Complex.normSq, Complex.ext_iff] at h₇ ⊢
+    <;> nlinarith
+  -- Since Complex.normSq z = 1, we have OnLeeYangCircle z by definition
+  have h_on_circle : OnLeeYangCircle z := by
+    simp_all [OnLeeYangCircle]
+    <;>
+    (try ring_nf at *) <;>
+    (try nlinarith [Real.sqrt_nonneg 3, Real.sq_sqrt (show 0 ≤ 3 by norm_num)])
+  exact h_on_circle
 
 end InfoGeometry.Canonical.PrimeLeeYangConcreteN2

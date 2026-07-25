@@ -57,7 +57,9 @@ theorem blockOp_commutator (T1 C1 T2 C2 : Module.End 𝕜 V) :
     (blockOp T1 C1).commutator (blockOp T2 C2) =
       blockOp (T1.commutator T2) (T1.commutator C2 + C1.commutator T2) := by
   ext ⟨u, v⟩
-  simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add]
+  · simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add]
+    abel
+  · dsimp [blockOp, LinearMap.commutator]
 
 /--
 **Virasoro 1-Cocycle Derivation Condition:**
@@ -84,11 +86,15 @@ def makeLogVirasoroRepresentation
   map_add' := by
     intro x y
     ext ⟨u, v⟩
-    simp [blockOp, map_add]
+    · simp [map_add]
+      abel
+    · simp [map_add]
   map_smul' := by
     intro r x
     ext ⟨u, v⟩
-    simp [blockOp, map_smul, smul_add]
+    · simp [map_smul, smul_add]
+      abel
+    · simp [map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Canonical.Pin55KreinConformalBridge
+import InfoGeometry.Canonical.Pin55
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 
 set_option linter.unusedSectionVars false

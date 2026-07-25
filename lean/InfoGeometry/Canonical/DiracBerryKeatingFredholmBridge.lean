@@ -59,8 +59,8 @@ theorem kernel_protection_survival
   constructor
   · intro h_eq_zero
     have h_mem_ker : v ∈ LinearMap.ker ψ_n := LinearMap.mem_ker.mpr h_eq_zero
-    rw [h_injective] at h_mem_ker
-    exact h_v_not_zero (Submodule.mem_bot.mp h_mem_ker)
+    rw [h_injective, Submodule.mem_bot] at h_mem_ker
+    exact h_v_not_zero h_mem_ker
   · calc
       D_boundary (ψ_n v) = (D_boundary.comp ψ_n) v := rfl
       _ = (ψ_n.comp D_n) v := by rw [h_commute]

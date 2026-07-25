@@ -80,10 +80,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext <;> simp [blockOp, map_add]
+    simp [blockOp, map_add]
   map_smul' := by
     intro r x
-    ext <;> simp [blockOp, map_smul]
+    simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -104,7 +104,7 @@ noncomputable def AdapterData.toLogVirasoroExtension
 
 /-- Matrix multiplication evaluation on $2 \times 2$ Jordan cell. -/
 theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
-    jordanCell Δ *ᵥ w = ![Δ * w 0 + w 1, Δ * w 1] := by
+    Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
   ext i
   fin_cases i
   · simp [jordanCell, Matrix.mulVec, vecHead, vecTail, Fin.sum_univ_two]
@@ -166,15 +166,16 @@ noncomputable def makeLogIntertwiner
       rw [hL0] at h1'
       rw [map_smul] at h1'
       exact sub_eq_zero.mp h1'
-    ext w
+    refine LinearMap.ext fun w => ?_
+    refine Prod.ext ?_ ?_
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 0 • v0 + w 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0) + c (VirasoroAlgebra.lgen 𝕜 0) (w 1 • v0) =
-        (jordanCell Δ *ᵥ w) 0 • v0 + (jordanCell Δ *ᵥ w) 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0
+        (Matrix.mulVec (jordanCell Δ) w) 0 • v0 + (Matrix.mulVec (jordanCell Δ) w) 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0
       rw [jordanCell_mulVec_apply]
       simp [hL0, hc0, h_comm_apply, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
       abel
     · dsimp [makeLogVirasoroRepresentation, blockOp]
-      change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 1 • v0) = (jordanCell Δ *ᵥ w) 1 • v0
+      change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 1 • v0) = (Matrix.mulVec (jordanCell Δ) w) 1 • v0
       rw [jordanCell_mulVec_apply]
       simp [hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
 

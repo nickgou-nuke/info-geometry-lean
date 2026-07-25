@@ -28,42 +28,48 @@ def quat_k : DiracMatrix := gamma1 * gamma2
 theorem quat_i_sq : quat_i * quat_i = -1 := by
   unfold quat_i
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ, Complex.I_mul_I]
 
 /-- Quaternion basis element j squares to -I. -/
 theorem quat_j_sq : quat_j * quat_j = -1 := by
   unfold quat_j
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma3, gamma1, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma3, gamma1, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- Quaternion basis element k squares to -I. -/
 theorem quat_k_sq : quat_k * quat_k = -1 := by
   unfold quat_k
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma1, gamma2, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1, gamma2, Matrix.mul_apply, Fin.sum_univ_succ, Complex.I_mul_I]
 
 /-- Quaternion relation: i*j = k. -/
 theorem quat_ij_eq_k : quat_i * quat_j = quat_k := by
   unfold quat_i quat_j quat_k
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- Quaternion relation: j*k = i. -/
 theorem quat_jk_eq_i : quat_j * quat_k = quat_i := by
   unfold quat_i quat_j quat_k
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- Quaternion relation: k*i = j. -/
 theorem quat_ki_eq_j : quat_k * quat_i = quat_j := by
   unfold quat_i quat_j quat_k
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_succ, add_mul, mul_add, Complex.I_mul_I, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im] <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1, gamma2, gamma3, Matrix.mul_apply, Fin.sum_univ_succ, Complex.I_mul_I]
 
 /-- Quaternion relation: i*j*k = -I. -/
 theorem quat_ijk_eq_neg_one : quat_i * quat_j * quat_k = -1 := by
   calc
-    quat_i * quat_j * quat_k = (quat_i * quat_j) * quat_k := by ring
+    quat_i * quat_j * quat_k = (quat_i * quat_j) * quat_k := rfl
     _ = quat_k * quat_k := by rw [quat_ij_eq_k]
     _ = -1 := quat_k_sq
 

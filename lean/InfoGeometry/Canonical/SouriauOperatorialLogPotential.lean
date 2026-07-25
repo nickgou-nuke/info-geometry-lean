@@ -113,3 +113,14 @@ def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Uni
   expectationBeta _ := 0
   Q := ()
   entropy_eq_Phi_add_pairing_Q_beta := by change (0 : ℝ) = 0 + 0; norm_num
+/-- The modular Hamiltonian IS the negative log density operator = Boltzmann entropy operator / log-generating operator. The historical name "modular Hamiltonian" is unfortunate; it is the log-generating operator for the Boltzmann Gibbs state. -/
+theorem modularHamiltonian_is_negativeLogDensity {Op : Type*} [Module ℝ Op] (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
+
+/-- The modular potential IS the negative log Radon-Nikodym derivative = Boltzmann entropy operator. -/
+theorem modularPotential_is_negLogRN (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) : D.modularPotential x = -Real.log (D.rnDerivative x) := rfl
+
+/-- The entropy IS the expectation of the Boltzmann entropy operator (modular Hamiltonian). -/
+theorem entropy_is_expectation_of_BoltzmannEntropy (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
+/-- The modular Hamiltonian in the quantum operatorial family IS the operatorial Boltzmann entropy operator: K̂_β + ln Z · I. -/
+theorem modularHamiltonian_is_BoltzmannEntropyOperator {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := rfl

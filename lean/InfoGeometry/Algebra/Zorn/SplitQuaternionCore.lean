@@ -151,13 +151,16 @@ theorem k_eq_il : kUnit = zMul iUnit lUnit := rfl
 
 /-- `il = -li` (the product anticommutes). -/
 theorem il_eq_neg_li : zMul iUnit lUnit = -(zMul lUnit iUnit) := by
-  ext i <;> simp [iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
-  all_goals (try fin_cases i)
+  ext i <;>
+    simp [iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
 
 /-- `k = il` squares to `+1`. -/
 @[simp] theorem k_sq : zMul kUnit kUnit = 1 := by
-  ext i <;> simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross] <;>
-  (try fin_cases i) <;> norm_num
+  ext i <;>
+    simp [kUnit, iUnit, lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals fin_cases i <;> norm_num
 
 /-! ## Membership of the generators -/
 

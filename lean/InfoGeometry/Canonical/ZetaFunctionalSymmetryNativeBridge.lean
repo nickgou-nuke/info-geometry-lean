@@ -43,13 +43,13 @@ Proves natively that for $s = 1/2 + i t$, reflection $1 - s$ equals complex conj
 $$1 - (1/2 + i t) = 1/2 - i t = \overline{1/2 + i t}.$$
 -/
 theorem critical_line_reflection_eq_conj (t : ℝ) :
-    1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = conj ((1 / 2 : ℂ) + I * (t : ℂ)) := by
-  ext
-  · simp only [sub_re, one_re, add_re, div_re, one_re, two_re, mul_re, I_re,
-      I_im, ofReal_re, ofReal_im, conj_re]
+    1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = Complex.conj ((1 / 2 : ℂ) + I * (t : ℂ)) := by
+  apply Complex.ext
+  · simp only [sub_re, one_re, add_re, div_re, two_re, mul_re, I_re,
+      I_im, ofReal_re, ofReal_im, Complex.conj_re]
     ring
   · simp only [sub_im, one_im, add_im, div_im, one_re, two_re, mul_im, I_re,
-      I_im, ofReal_re, ofReal_im, conj_im]
+      I_im, ofReal_re, ofReal_im, Complex.conj_im]
     ring
 
 /--
@@ -96,7 +96,7 @@ Unifies critical line reflection, centered Xi evenness, Dirichlet Eta relations,
 -/
 theorem grand_native_zeta_functional_symmetry_duality
     (data : CompletedXiData) (z : ℂ) (t : ℝ) (s : ℂ) (hs : 1 < s.re) :
-    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = conj ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
+    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = Complex.conj ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
     (data.xi z = data.xi (-z) ↔ data.lambda (1 / 2 + z) = data.lambda (1 / 2 - z)) ∧
     (((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1) := ⟨
   critical_line_reflection_eq_conj t,

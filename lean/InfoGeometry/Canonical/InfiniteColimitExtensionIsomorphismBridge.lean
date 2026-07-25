@@ -46,7 +46,14 @@ theorem colimit_isomorphism_id_of_additive
     (f : ℝ → ℝ) (h_add : ∀ x y, f (x + y) = f x + f y) (h1 : f 1 = 1) (x : ℝ) (hx : x = 0) :
     f x = x := by
   subst hx
-  have h0 : f 0 = 0 := by linarith [h_add 0 0]
+  have h_sum : f 0 + f 0 = f 0 := by
+    have h := h_add 0 0
+    rw [add_zero] at h
+    exact h.symm
+  have h0 : f 0 = 0 := by
+    have h2 : f 0 + f 0 - f 0 = f 0 - f 0 := by rw [h_sum]
+    ring_nf at h2
+    exact h2
   exact h0
 
 /--

@@ -652,6 +652,7 @@ import InfoGeometry.Canonical.BiquaternionKANnilpotent
 import InfoGeometry.Canonical.BiquaternionLaplaceResolvent
 import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
 import InfoGeometry.Canonical.BiquaternionLogarithmMonodromy
+import InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence
 import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
 import InfoGeometry.Canonical.BiquaternionSU2
 import InfoGeometry.Canonical.BiquaternionTorsionBridge

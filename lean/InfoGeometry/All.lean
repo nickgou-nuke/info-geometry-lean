@@ -1781,7 +1781,6 @@ import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
 import InfoGeometry.Canonical.RefinementGaloisConnection
 import InfoGeometry.Canonical.ReflectorAdjunction
 import InfoGeometry.Canonical.RedLineCausalConeMonodromy
-import InfoGeometry.Canonical.ReflectionGroupPin55
 import InfoGeometry.Canonical.RegularSupportSecondLaw
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.RelationalInformationDynamics

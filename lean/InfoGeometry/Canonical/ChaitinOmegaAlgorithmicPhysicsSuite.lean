@@ -33,6 +33,7 @@ This module formalizes in native Lean 4 / Mathlib:
 
 namespace InfoGeometry.Canonical.ChaitinOmegaAlgorithmicPhysicsSuite
 
+open InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 open InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
 open InfoGeometry.Canonical.AlgorithmicThermodynamicsLandauerBekensteinBridge
 open InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge

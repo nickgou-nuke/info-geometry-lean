@@ -1334,7 +1334,7 @@ theorem normalizedPrimeHolonomy_normSq_eq_one_iff {P : PrimeCutoff}
       ↔ s.re = (1 : ℝ) / 2 := by
   rw [normalizedPrimeHolonomy_normSq]
   set a : ℝ := ((1 : ℝ) / 2 - s.re) * logPrime p
-  change (Real.exp a) ^ 2 = 1 ↔ s.re = (1 : ℝ) / 2
+
   constructor
   · intro hsq
     rcases sq_eq_one_iff.mp hsq with h1 | hneg

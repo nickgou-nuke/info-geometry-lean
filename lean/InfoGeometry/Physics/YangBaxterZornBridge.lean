@@ -190,7 +190,7 @@ theorem leftMulR_braid_relation
   simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul, 
              Matrix.one_mul, Matrix.mul_one, smul_smul, smul_add]
   have i_sq : Complex.I * Complex.I = -1 := Complex.I_mul_I
-  simp only [i_sq, neg_smul, smul_neg, sub_eq_add_neg, add_assoc]
+  simp only [i_sq, neg_smul, add_assoc]
   have hLHS : LeftMulQ i * LeftMulQ j * LeftMulQ i = -LeftMulQ j := by
     rw [hij, Matrix.neg_mul, Matrix.mul_assoc, hi, Matrix.mul_one]
   have hRHS : LeftMulQ j * LeftMulQ i * LeftMulQ j = -LeftMulQ i := by
@@ -209,15 +209,16 @@ theorem LeftMulR_mul_LeftMulRInv (k : Fin 3) :
   dsimp [LeftMulRInv, Id8]
   have hi := leftMulQ_sq k
   dsimp [Id8] at hi
-  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.sub_mul, Matrix.mul_sub, Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.one_mul, Matrix.mul_one]
+  simp only [Matrix.add_mul, Matrix.mul_sub, Matrix.smul_mul, Matrix.mul_smul,
+    Matrix.one_mul, Matrix.mul_one]
   have i_sq : Complex.I * Complex.I = -1 := Complex.I_mul_I
   rw [hi]
-  simp only [i_sq, neg_smul, smul_neg, sub_eq_add_neg]
+  simp only [sub_eq_add_neg]
   ext r c
-  simp [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply]
+  simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply]
   split_ifs with h
-  · ring_nf; try { simp [Complex.I_sq]; norm_num }
-  · ring_nf; try { simp [Complex.I_sq]; norm_num }
+  · ring_nf
+  · ring_nf
 
 theorem LeftMulRInv_mul_LeftMulR (k : Fin 3) :
     LeftMulRInv k * LeftMulR k = Id8 := by
@@ -225,15 +226,16 @@ theorem LeftMulRInv_mul_LeftMulR (k : Fin 3) :
   dsimp [LeftMulRInv, Id8]
   have hi := leftMulQ_sq k
   dsimp [Id8] at hi
-  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.sub_mul, Matrix.mul_sub, Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.one_mul, Matrix.mul_one]
+  simp only [Matrix.mul_add, Matrix.sub_mul, Matrix.smul_mul, Matrix.mul_smul,
+    smul_smul, Matrix.one_mul, Matrix.mul_one]
   have i_sq : Complex.I * Complex.I = -1 := Complex.I_mul_I
   rw [hi]
-  simp only [i_sq, neg_smul, smul_neg, sub_eq_add_neg]
+  simp only [sub_eq_add_neg]
   ext r c
-  simp [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply]
+  simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply]
   split_ifs with h
   · ring_nf; try { simp [Complex.I_sq]; norm_num }
-  · ring_nf; try { simp [Complex.I_sq]; norm_num }
+  · ring_nf
 
 theorem isUnit_LeftMulR (k : Fin 3) :
     IsUnit (LeftMulR k) := by
@@ -347,7 +349,7 @@ theorem LeftMulR_sq (k : Fin 3) :
   have hq := leftMulQ_sq k
   dsimp [Id8] at hq
   simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul,
-    Matrix.one_mul, Matrix.mul_one, smul_smul]
+    Matrix.one_mul, Matrix.mul_one]
   rw [hq]
   ext r c
   simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply, Complex.I_mul_I]
@@ -356,7 +358,7 @@ theorem LeftMulR_sq (k : Fin 3) :
 /-- The first trace moment of the axis-zero Zorn braid generator. -/
 theorem trace_LeftMulR0 : Matrix.trace (LeftMulR 0) = 8 := by
   rw [LeftMulR_eq, Matrix.trace_add, Matrix.trace_smul, trace_LeftMulQ_zero]
-  simp [Id8, Matrix.trace, Matrix.diag, Fin.sum_univ_eight]
+  simp [Id8, Matrix.trace, Matrix.diag]
 
 /-- The squared trace moment vanishes for every Zorn braid generator. -/
 theorem trace_sq_LeftMulR (k : Fin 3) :

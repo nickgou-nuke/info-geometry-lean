@@ -117,7 +117,7 @@ theorem gradingAtom_splitHeadAtom_anticomm (x : ℝ × ℝ) :
       gammaPlus, gammaMinus, InfoGeometry.Clifford.Cl11Matrix.J1,
       InfoGeometry.Clifford.Cl11Matrix.Eplus, InfoGeometry.Clifford.Cl11Matrix.Eminus,
       Matrix.mul_apply, Fin.sum_univ_two]
-    <;> ring_nf
+
 
 theorem appendAtom_grading_square {n : ℕ} {s : ℝ}
     {A : SplitGammaMatrix n} (hA : A * A = s • (1 : SplitGammaMatrix n)) :

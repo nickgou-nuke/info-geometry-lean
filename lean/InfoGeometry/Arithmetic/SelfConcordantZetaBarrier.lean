@@ -246,13 +246,13 @@ theorem logBarrier_self_concordant :
     have h₅ : ((-2 : ℝ) / x ^ 3) ^ 2 = 4 / x ^ 6 := by
       field_simp [pow_ne_zero]
       <;> ring_nf
-      <;> field_simp [h₄.ne']
-      <;> ring_nf
+
+
     have h₆ : (4 : ℝ) * (1 / x ^ 2 : ℝ) ^ 3 = 4 / x ^ 6 := by
       field_simp [pow_ne_zero]
-      <;> ring_nf
-      <;> field_simp [h₄.ne']
-      <;> ring_nf
+
+
+
     rw [h₅, h₆]
   exact ⟨by positivity, h₃⟩
 

@@ -14,26 +14,26 @@ def CriticalLine (s : ℂ) : Prop := s.re = 1 / 2
 
 theorem functionalReflection_involutive (s : ℂ) : functionalReflection (functionalReflection s) = s := by
   simp [functionalReflection]
-  <;> ring_nf
-  <;> simp [Complex.ext_iff]
-  <;> norm_num
+
+
+
 
 theorem conjugationReflection_involutive (s : ℂ) : conjugationReflection (conjugationReflection s) = s := by
   simp [conjugationReflection, star_star]
-  <;> simp [Complex.ext_iff]
-  <;> norm_num
+
+
 
 theorem antiunitaryCriticalReflection_involutive (s : ℂ) : antiunitaryCriticalReflection (antiunitaryCriticalReflection s) = s := by
   simp [antiunitaryCriticalReflection, star_star]
-  <;> ring_nf
-  <;> simp [Complex.ext_iff]
-  <;> norm_num
+
+
+
 
 theorem functional_conjugation_commute (s : ℂ) : functionalReflection (conjugationReflection s) = conjugationReflection (functionalReflection s) := by
   simp [functionalReflection, conjugationReflection, star_one, star_sub]
-  <;> ring_nf
-  <;> simp [Complex.ext_iff]
-  <;> norm_num
+
+
+
 
 inductive CompletedZetaSymmetry
   | identity
@@ -87,8 +87,8 @@ theorem completedZetaBregman_self_eq_zero
     (s : ℂ) :
     completedZetaBregman Phi gradPhi s s = 0 := by
   simp [completedZetaBregman]
-  <;> ring_nf
-  <;> simp [Complex.ext_iff]
-  <;> norm_num
+
+
+
 
 end InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics

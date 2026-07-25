@@ -55,11 +55,7 @@ theorem triality_isospin_breaking :
     InfoGeometry.Canonical.ZornMatrix.mul,
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross] at h₁ h₂
-  <;> norm_num [Fin.val_zero, Fin.val_succ, ConcreteZorn] at h₁ h₂ <;>
-  (try contradiction) <;>
-  (try norm_num) <;>
-  (try simp_all [ConcreteZorn]) <;>
-  (try rfl)
+  <;> norm_num [Fin.val_zero, Fin.val_succ, ConcreteZorn] at h₁ h₂
 
 /-- Concrete SU(2) action on g₁: purely diagonal elements in g₀ preserve g₁.
 In the Zorn model:
@@ -94,17 +90,12 @@ theorem concrete_su2_action_g1 :
       InfoGeometry.Canonical.ZornMatrix.cross, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ,
       sub_mul, mul_sub]
     <;>
-    (try simp_all [ConcreteZorn, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ]) <;>
-    (try ring_nf at *) <;>
-    (try norm_num at *) <;>
-    (try aesop)
+    (try simp_all [ConcreteZorn, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ])
   · -- Prove (g₀ * u - u * g₀).b = 0
     simp [InfoGeometry.Canonical.ZornMatrix.mul, InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ,
       sub_mul, mul_sub]
     <;>
-    (try simp_all [ConcreteZorn, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ]) <;>
-    (try ring_nf at *) <;>
-    (try aesop)
+    (try simp_all [ConcreteZorn, Fin.sum_univ_succ, Fin.val_zero, Fin.val_succ])
 
 end InfoGeometry.Physics

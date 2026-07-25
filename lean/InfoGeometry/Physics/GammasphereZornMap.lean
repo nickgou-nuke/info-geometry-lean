@@ -160,12 +160,10 @@ theorem low_spin_vacuum_dominance (ced : CEDMeasurement)
   have h₂ : abs (-(gradeMixingParameter ced : ℝ)^2) = (gradeMixingParameter ced : ℝ)^2 := by
     rw [abs_of_nonpos] <;>
     (try norm_num) <;>
-    (try nlinarith [sq_nonneg (gradeMixingParameter ced)]) <;>
-    (try linarith)
+    (try nlinarith [sq_nonneg (gradeMixingParameter ced)])
   rw [h₂]
   have h₃ : gradeMixingParameter ced = min (1.0 : ℝ) (ced.ced_keV / 100.0) := by
     simp [gradeMixingParameter]
-    <;> norm_num
   rw [h₃]
   have h₄ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) = ced.ced_keV / 100.0 := by
     have h₅ : (ced.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
@@ -183,11 +181,7 @@ theorem low_spin_vacuum_dominance (ced : CEDMeasurement)
     have h₉ : (ced.ced_keV : ℝ) / 100.0 < 0.2 := by linarith
     have h₁₀ : 0 ≤ (ced.ced_keV : ℝ) / 100.0 := by positivity
     nlinarith
-  norm_num at h₅ ⊢
-  <;>
-  (try simp_all [div_le_iff]) <;>
-  (try nlinarith) <;>
-  (try linarith)
+  norm_num at h₅ ⊢ <;> nlinarith
 
 /-- 
 Theorem: High-spin states are mixed-grade (pulled into bulk)
@@ -207,12 +201,10 @@ theorem high_spin_grade_mixing (ced : CEDMeasurement)
   have h₂ : abs (-(gradeMixingParameter ced : ℝ)^2) = (gradeMixingParameter ced : ℝ)^2 := by
     rw [abs_of_nonpos] <;>
     (try norm_num) <;>
-    (try nlinarith [sq_nonneg (gradeMixingParameter ced)]) <;>
-    (try linarith)
+    (try nlinarith [sq_nonneg (gradeMixingParameter ced)])
   rw [h₂]
   have h₃ : gradeMixingParameter ced = min (1.0 : ℝ) (ced.ced_keV / 100.0) := by
     simp [gradeMixingParameter]
-    <;> norm_num
   rw [h₃]
   have h₄ : (min (1.0 : ℝ) (ced.ced_keV / 100.0) : ℝ) = ced.ced_keV / 100.0 := by
     have h₅ : (ced.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by
@@ -230,11 +222,7 @@ theorem high_spin_grade_mixing (ced : CEDMeasurement)
     have h₉ : (ced.ced_keV : ℝ) / 100.0 > 0.8 := by linarith
     have h₁₀ : 0 ≤ (ced.ced_keV : ℝ) / 100.0 := by positivity
     nlinarith
-  norm_num at h₅ ⊢
-  <;>
-  (try simp_all [div_le_iff]) <;>
-  (try nlinarith) <;>
-  (try linarith)
+  norm_num at h₅ ⊢ <;> nlinarith
 
 --===============================================================
 -- 5. CED GROWTH AS GRADE ALIGNMENT
@@ -261,20 +249,16 @@ theorem CED_growth_implies_grade_alignment
   have h₅ : abs (-(gradeMixingParameter ced1 : ℝ)^2) = (gradeMixingParameter ced1 : ℝ)^2 := by
     rw [abs_of_nonpos] <;>
     (try norm_num) <;>
-    (try nlinarith [sq_nonneg (gradeMixingParameter ced1)]) <;>
-    (try linarith)
+    (try nlinarith [sq_nonneg (gradeMixingParameter ced1)])
   have h₆ : abs (-(gradeMixingParameter ced2 : ℝ)^2) = (gradeMixingParameter ced2 : ℝ)^2 := by
     rw [abs_of_nonpos] <;>
     (try norm_num) <;>
-    (try nlinarith [sq_nonneg (gradeMixingParameter ced2)]) <;>
-    (try linarith)
+    (try nlinarith [sq_nonneg (gradeMixingParameter ced2)])
   rw [h₅, h₆]
   have h₇ : gradeMixingParameter ced1 = min (1.0 : ℝ) (ced1.ced_keV / 100.0) := by
     simp [gradeMixingParameter]
-    <;> norm_num
   have h₈ : gradeMixingParameter ced2 = min (1.0 : ℝ) (ced2.ced_keV / 100.0) := by
     simp [gradeMixingParameter]
-    <;> norm_num
   rw [h₇, h₈]
   have h₉ : (min (1.0 : ℝ) (ced1.ced_keV / 100.0) : ℝ) = ced1.ced_keV / 100.0 := by
     have h₁₀ : (ced1.ced_keV / 100.0 : ℝ) ≤ (1.0 : ℝ) := by

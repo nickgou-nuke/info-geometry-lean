@@ -126,49 +126,49 @@ lemma weylD5CrossSection2_latticeEmbed_commutation_0 (t : Z2) :
     matVec5 (weylD5CrossSection2 0) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 0 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_1 (t : Z2) :
     matVec5 (weylD5CrossSection2 1) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 1 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_2 (t : Z2) :
     matVec5 (weylD5CrossSection2 2) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 2 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_3 (t : Z2) :
     matVec5 (weylD5CrossSection2 3) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 3 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_4 (t : Z2) :
     matVec5 (weylD5CrossSection2 4) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 4 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_5 (t : Z2) :
     matVec5 (weylD5CrossSection2 5) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 5 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_6 (t : Z2) :
     matVec5 (weylD5CrossSection2 6) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 6 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 lemma weylD5CrossSection2_latticeEmbed_commutation_7 (t : Z2) :
     matVec5 (weylD5CrossSection2 7) (latticeEmbed t) = latticeEmbed (d4_action_on_Z2 7 t) := by
   rcases t with ⟨u, v⟩
   ext i
-  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2] <;> push_cast <;> ring
+  fin_cases i <;> rw [eval_matVec5] <;> simp [latticeEmbed, d4_action_on_Z2, weylD5CrossSection2]
 
 /-- 
 LEMMA: The 5D Weyl representation of the `D₄` action precisely matches the 

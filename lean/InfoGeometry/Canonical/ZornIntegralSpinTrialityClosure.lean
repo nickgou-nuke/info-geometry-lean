@@ -49,21 +49,21 @@ theorem zornTriality_mul (X Y : ZornMatrix R) :
   · simp [zornTriality, mul_def, mul, dot, cross]; ring
   · simp [zornTriality, mul_def, mul, dot, cross]; ring
   · ext i
-    fin_cases i <;> simp [zornTriality, mul_def, mul, dot, cross] <;> try ring
+    fin_cases i <;> simp [zornTriality, mul_def, mul, dot, cross]
   · ext i
-    fin_cases i <;> simp [zornTriality, mul_def, mul, dot, cross] <;> try ring
+    fin_cases i <;> simp [zornTriality, mul_def, mul, dot, cross]
 
 /-! ## Scalar extension compatibility -/
 
 theorem zornBaseChange_mul (X Y : ZornMatrix ℤ) :
     zornBaseChange (X * Y) = zornBaseChange X * zornBaseChange Y := by
   apply ZornMatrix.ext
-  · simp [mul_def, mul, dot, cross]; try push_cast; try ring
-  · simp [mul_def, mul, dot, cross]; try push_cast; try ring
+  · simp [mul_def, mul, dot, cross]
+  · simp [mul_def, mul, dot, cross]
   · ext i
-    fin_cases i <;> simp [mul_def, mul, dot, cross] <;> try push_cast <;> try ring
+    fin_cases i <;> simp [mul_def, mul, dot, cross]
   · ext i
-    fin_cases i <;> simp [mul_def, mul, dot, cross] <;> try push_cast <;> try ring
+    fin_cases i <;> simp [mul_def, mul, dot, cross]
 
 theorem zornBaseChange_triality (X : ZornMatrix ℤ) :
     zornBaseChange (zornTriality X) = zornTriality (zornBaseChange X) := by

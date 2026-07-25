@@ -241,7 +241,7 @@ theorem gammaBasis55_sq (i : Fin 10) :
         (1 : SpinorMatrix 5) := by
   rw [gammaBasis55, gamma55_sq]
   fin_cases i <;> simp [vec55Basis, q55Real]
-  all_goals norm_num
+
 
 private lemma listProd_mul_of_anticommutes
     (x : SpinorMatrix 5)
@@ -1011,7 +1011,7 @@ theorem toVec55Q_jordanNullPlus :
     toVec55Q jordanNullPlus =
       fun i => if i = 0 then 1 / 2 else if i = 5 then 1 / 2 else 0 := by
   funext i
-  fin_cases i <;> simp [jordanNullPlus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero] <;> ring
+  fin_cases i <;> simp [jordanNullPlus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero]
 
 theorem toVec55Q_jordanNullMinus :
     toVec55Q jordanNullMinus =

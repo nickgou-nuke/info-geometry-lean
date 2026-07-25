@@ -293,13 +293,13 @@ theorem unnormalizedR_k_mul_unnormalizedR_k_inv (k : Fin 3) :
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,
         zornSmul, I_c, Q_k, e_k, I_zorn, dot3, cross3
-      ] <;> ring_nf <;> try rw [Complex.I_sq] <;> ring
+      ]
   · funext i
     fin_cases k <;> fin_cases i <;>
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,
         zornSmul, I_c, Q_k, e_k, I_zorn, dot3, cross3
-      ] <;> ring_nf <;> try rw [Complex.I_sq] <;> ring
+      ]
   · fin_cases k <;>
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,
@@ -319,13 +319,13 @@ theorem unnormalizedR_k_inv_mul_unnormalizedR_k (k : Fin 3) :
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,
         zornSmul, I_c, Q_k, e_k, I_zorn, dot3, cross3
-      ] <;> ring_nf <;> try rw [Complex.I_sq] <;> ring
+      ]
   · funext i
     fin_cases k <;> fin_cases i <;>
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,
         zornSmul, I_c, Q_k, e_k, I_zorn, dot3, cross3
-      ] <;> ring_nf <;> try rw [Complex.I_sq] <;> ring
+      ]
   · fin_cases k <;>
       simp [
         unnormalizedR_k, unnormalizedR_k_inv, zornMul, zornAdd, zornSub,

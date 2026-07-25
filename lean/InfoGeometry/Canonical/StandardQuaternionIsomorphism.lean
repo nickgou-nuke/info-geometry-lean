@@ -32,12 +32,12 @@ def e23 : Quaternion ℝ := ⟨0, 1, 0, 0⟩
 def e31 : Quaternion ℝ := ⟨0, 0, 1, 0⟩
 def e12 : Quaternion ℝ := ⟨0, 0, 0, -1⟩
 
-theorem e23_sq : e23 * e23 = -1 := by ext <;> simp [e23] <;> ring
-theorem e31_sq : e31 * e31 = -1 := by ext <;> simp [e31] <;> ring
-theorem e12_sq : e12 * e12 = -1 := by ext <;> simp [e12] <;> ring
+theorem e23_sq : e23 * e23 = -1 := by ext <;> simp [e23]
+theorem e31_sq : e31 * e31 = -1 := by ext <;> simp [e31]
+theorem e12_sq : e12 * e12 = -1 := by ext <;> simp [e12]
 
-theorem cross_12_23 : e12 * e23 = -e31 := by ext <;> simp [e12, e23, e31] <;> ring
-theorem cross_23_31 : e23 * e31 = -e12 := by ext <;> simp [e12, e23, e31] <;> ring
-theorem cross_31_12 : e31 * e12 = -e23 := by ext <;> simp [e12, e23, e31] <;> ring
+theorem cross_12_23 : e12 * e23 = -e31 := by ext <;> simp [e12, e23, e31]
+theorem cross_23_31 : e23 * e31 = -e12 := by ext <;> simp [e12, e23, e31]
+theorem cross_31_12 : e31 * e12 = -e23 := by ext <;> simp [e12, e23, e31]
 
 end InfoGeometry.Canonical.StandardQuaternionIsomorphism

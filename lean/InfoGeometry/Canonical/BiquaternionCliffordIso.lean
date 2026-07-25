@@ -38,19 +38,19 @@ lemma σ₁σ₂_anti : σ₁ * σ₂ = -(σ₂ * σ₁) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₁, σ₂, BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma σ₁σ₃_anti : σ₁ * σ₃ = -(σ₃ * σ₁) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₁, σ₃, BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma σ₂σ₃_anti : σ₂ * σ₃ = -(σ₃ * σ₂) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₂, σ₃, BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 def i_q : M2C := σ₃ * σ₂
 def j_q : M2C := σ₁ * σ₃
@@ -60,19 +60,19 @@ lemma i_q_sq : i_q * i_q = -(1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [i_q, σ₂, σ₃, BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
 
 lemma j_q_sq : j_q * j_q = -(1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [j_q, σ₁, σ₃, BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
 
 lemma k_q_sq : k_q * k_q = -(1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [k_q, σ₁, σ₂, BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
 
 lemma ij_eq_k : i_q * j_q = k_q := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -80,7 +80,7 @@ lemma ij_eq_k : i_q * j_q = k_q := by
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma ijk_eq_neg_one : i_q * j_q * k_q = -(1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -88,7 +88,7 @@ lemma ijk_eq_neg_one : i_q * j_q * k_q = -(1 : M2C) := by
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
 
 def ω : M2C := σ₁ * σ₂ * σ₃
 
@@ -98,7 +98,7 @@ lemma ω_eq_iI : ω = I • (1 : M2C) := by
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
 
 lemma ω_sq : ω * ω = -(1 : M2C) := by
   rw [ω_eq_iI]

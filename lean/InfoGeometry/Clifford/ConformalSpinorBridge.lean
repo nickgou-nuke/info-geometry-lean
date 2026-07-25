@@ -145,7 +145,7 @@ theorem basis_even_even_skew (i j : B) (hi : i ∈ EvenBasis) (hj : j ∈ EvenBa
   rcases hi with rfl | rfl | rfl <;>
   rcases hj with rfl | rfl | rfl <;>
   ext k <;> fin_cases k <;>
-  simp [basis, bracket] <;> ring_nf
+  simp [basis, bracket]
 
 /-- Even and odd basis vectors skew-commute. -/
 theorem basis_even_odd_skew (i j : B) (hi : i ∈ EvenBasis) (hj : j ∈ OddBasis) :
@@ -153,7 +153,7 @@ theorem basis_even_odd_skew (i j : B) (hi : i ∈ EvenBasis) (hj : j ∈ OddBasi
   rcases hi with rfl | rfl | rfl <;>
   rcases hj with rfl | rfl <;>
   ext k <;> fin_cases k <;>
-  simp [basis, bracket] <;> ring_nf
+  simp [basis, bracket]
 
 /-- Odd basis vectors have symmetric super-bracket. -/
 theorem basis_odd_odd_symm (i j : B) (hi : i ∈ OddBasis) (hj : j ∈ OddBasis) :
@@ -161,7 +161,7 @@ theorem basis_odd_odd_symm (i j : B) (hi : i ∈ OddBasis) (hj : j ∈ OddBasis)
   rcases hi with rfl | rfl <;>
   rcases hj with rfl | rfl <;>
   ext k <;> fin_cases k <;>
-  simp [basis, bracket] <;> ring_nf
+  simp [basis, bracket]
 
 /-! ## 5. Named table readbacks -/
 

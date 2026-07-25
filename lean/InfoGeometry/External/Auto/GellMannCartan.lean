@@ -32,7 +32,7 @@ def twiceNoncompact (X : Matrix (Fin 3) (Fin 3) R) : Matrix (Fin 3) (Fin 3) R :=
 theorem twiceCompact_isCompact (X : Matrix (Fin 3) (Fin 3) R) : isCompact (twiceCompact X) := by
   dsimp [isCompact, θ, twiceCompact]
   ext i j; fin_cases i <;> fin_cases j <;>
-    simp [Matrix.sub_apply, Matrix.transpose_apply] <;> ring
+    simp [Matrix.sub_apply, Matrix.transpose_apply]
 
 theorem twiceNoncompact_isNoncompact (X : Matrix (Fin 3) (Fin 3) R) : isNoncompact (twiceNoncompact X) := by
   dsimp [isNoncompact, θ, twiceNoncompact]

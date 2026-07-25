@@ -37,8 +37,20 @@ def jordanNilpotent (𝕜 : Type*) [Semiring 𝕜] : Matrix (Fin 2) (Fin 2) 𝕜
   !![0, 1; 0, 0]
 
 /-- The $2 \times 2$ non-diagonalizable Jordan cell matrix $L(\Delta) = \Delta I + N$ over `𝕜`. -/
-def jordanCell (Δ : 𝕜) : Matrix (Fin 2) (Fin 2) 𝕜 :=
+def jordanCell {𝕜 : Type*} [Semiring 𝕜] (Δ : 𝕜) : Matrix (Fin 2) (Fin 2) 𝕜 :=
   !![Δ, 1; 0, Δ]
+
+theorem jordanCell_mulVec_e0 [CommRing 𝕜] (Δ : 𝕜) :
+    jordanCell Δ *ᵥ (e0 : Fin 2 → 𝕜) = Δ • (e0 : Fin 2 → 𝕜) := by
+  ext i
+  fin_cases i <;> simp [jordanCell, e0, Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+
+theorem jordanCell_mulVec_e1 [CommRing 𝕜] (Δ : 𝕜) :
+    jordanCell Δ *ᵥ (e1 : Fin 2 → 𝕜) = Δ • (e1 : Fin 2 → 𝕜) + (e0 : Fin 2 → 𝕜) := by
+  ext i
+  fin_cases i <;> simp [jordanCell, e0, e1, Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+
+variable [Field 𝕜]
 
 /--
 A Logarithmic Virasoro Intertwiner structure.
@@ -75,10 +87,8 @@ theorem primary_eigenvalue
     (I : LogVirasoroIntertwiner L0 Δ) :
     L0 (I.ι (e0 : Fin 2 → 𝕜)) = Δ • I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
-  have hvec : Matrix.toLin' (jordanCell Δ) (e0 : Fin 2 → 𝕜) = Δ • (e0 : Fin 2 → 𝕜) := by
-    ext i
-    fin_cases i <;> simp [e0, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
-  rw [hvec, map_smul]
+  change I.ι (jordanCell Δ *ᵥ e0) = Δ • I.ι e0
+  rw [jordanCell_mulVec_e0, map_smul]
 
 /--
 **Logarithmic Partner State Action Law:**
@@ -89,11 +99,8 @@ theorem partner_action
     L0 (I.ι (e1 : Fin 2 → 𝕜)) =
       Δ • I.ι (e1 : Fin 2 → 𝕜) + I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
-  have hvec : Matrix.toLin' (jordanCell Δ) (e1 : Fin 2 → 𝕜) =
-      Δ • (e1 : Fin 2 → 𝕜) + (e0 : Fin 2 → 𝕜) := by
-    ext i
-    fin_cases i <;> simp [e0, e1, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
-  rw [hvec, map_add, map_smul]
+  change I.ι (jordanCell Δ *ᵥ e1) = Δ • I.ι e1 + I.ι e0
+  rw [jordanCell_mulVec_e1, map_add, map_smul]
 
 /--
 **Non-Diagonalizability Preservation:**

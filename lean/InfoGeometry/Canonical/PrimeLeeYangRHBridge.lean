@@ -19,8 +19,6 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 
-variable {n : ℕ}
-
 /--
 An actual root of a stored partition polynomial maps to the critical line,
 provided a Lee--Yang root-location theorem has been proved for that polynomial.
@@ -29,7 +27,8 @@ The condition `z.re ≠ -1` removes the pole `z = -1` of
 `cayleyToTemperature z = z / (1 + z)`.
 -/
 theorem partitionRoot_mapsToCriticalLine
-    (W : LeeYangStabilityWitness)
+    {n : ℕ}
+    (W : LeeYangStabilityWitness (n := n))
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
@@ -47,7 +46,8 @@ This is the exact finite algebraic content of the Lee--Yang/critical-line
 coordinate dictionary.  No statement about zeta zeros is used.
 -/
 theorem partitionRoot_cayleyRoundTrip
-    (W : LeeYangStabilityWitness)
+    {n : ℕ}
+    (W : LeeYangStabilityWitness (n := n))
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}

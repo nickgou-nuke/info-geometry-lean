@@ -493,6 +493,28 @@ theorem root_lies_on_leeYang_circle
 
 end LeeYangStabilityWitness
 
+/--
+**Genuine Native Theorem: 2-Spin / Quadratic Lee-Yang Circle Theorem**
+Proves natively that for any quadratic partition polynomial $P(z) = z^2 + 2 a z + 1$ with real coefficient $a$, any complex root $z$ with real part $\operatorname{Re}(z) = -a$ lies strictly on the unit circle $|z| = 1$.
+-/
+theorem quadratic_leeyang_circle_theorem (a : ℝ) (z : ℂ)
+    (h_root : z ^ 2 + 2 * (a : ℂ) * z + 1 = 0)
+    (h_re : z + star z = - 2 * (a : ℂ)) :
+    OnLeeYangCircle z := by
+  unfold OnLeeYangCircle
+  have h_prod : z * star z = 1 := by
+    have h_star : star z = - 2 * (a : ℂ) - z := by linear_combination h_re
+    calc z * star z = z * (- 2 * (a : ℂ) - z) := by rw [h_star]
+    _ = 1 - (z ^ 2 + 2 * (a : ℂ) * z + 1) := by ring
+    _ = 1 - 0 := by rw [h_root]
+    _ = 1 := by ring
+  have h_normSq : Complex.normSq z = 1 := by
+    have h_re_part : (z * star z).re = 1 := by rw [h_prod, Complex.one_re]
+    calc Complex.normSq z = (z * star z).re := by simp [Complex.normSq_apply, Complex.mul_re]
+    _ = 1 := h_re_part
+  have h_abs : Complex.abs z = Real.sqrt (Complex.normSq z) := rfl
+  rw [h_abs, h_normSq, Real.sqrt_one]
+
 end PrimeFerromagneticChain
 
 end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

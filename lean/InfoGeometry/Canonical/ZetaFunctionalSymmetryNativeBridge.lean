@@ -44,7 +44,9 @@ $$1 - (1/2 + i t) = 1/2 - i t = \star (1/2 + i t).$$
 -/
 theorem critical_line_reflection_eq_conj (t : ℝ) :
     1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = star ((1 / 2 : ℂ) + I * (t : ℂ)) := by
-  apply Complex.ext <;> simp
+  apply Complex.ext
+  · simp; norm_num
+  · simp
 
 /--
 **Main Theorem 2: Centered Xi Evenness $\iff$ Completed Xi Functional Equation**

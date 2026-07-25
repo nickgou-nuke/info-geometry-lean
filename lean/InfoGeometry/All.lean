@@ -2093,6 +2093,7 @@ import InfoGeometry.Canonical.TypeIIISouriauCalibration
 import InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 import InfoGeometry.Canonical.UHFCohomologyColimit
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Categorical.FilteredDirectLimitOwner
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFColimitRepresentationBridge
 import InfoGeometry.Canonical.DeRhamCantorCohomology

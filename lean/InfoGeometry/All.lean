@@ -2025,6 +2025,7 @@ import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeHoppingBridge
 import InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
+import InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
 import InfoGeometry.Canonical.SuperchargeOddOddDecomposition
 import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeRoleMapAlt

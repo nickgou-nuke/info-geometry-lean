@@ -31,7 +31,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
-open CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-! ## Spins -/
 
@@ -57,59 +57,79 @@ theorem sign_down :
     sign down = -1 := rfl
 
 @[simp]
-theorem sign_sq (s : IsingSpin) :
-    sign s ^ 2 = 1 := by
-  cases s <;> rfl
-
-@[simp]
-theorem sign_nonneg (s : IsingSpin) :
-    -1 ≤ sign s ∧ sign s ≤ 1 := by
-  cases s <;> decide
+theorem sign_sq
+    (σ : IsingSpin) :
+    sign σ * sign σ = 1 := by
+  cases σ <;> norm_num [sign]
 
 end IsingSpin
 
-/-! ## Ferromagnetic Prime Chain Data -/
+/-! ## Prime ferromagnetic chain -/
 
-/-- Finite prime-chain parameter packet. -/
-structure PrimeFerromagneticChain (n : ℕ) where
-  primes : Fin n → ℕ
-  prime_ge_two : ∀ i, 2 ≤ primes i
+/--
+A finite prime-labelled ferromagnetic chain.
+
+`prime i` is the arithmetic label at site `i`.
+`κ` is the global ferromagnetic coupling scale.
+-/
+structure PrimeFerromagneticChain
+    (n : ℕ) where
+  prime : Fin n → ℕ
+  prime_isPrime : ∀ i : Fin n, Nat.Prime (prime i)
   kappa : ℝ
   kappa_nonneg : 0 ≤ kappa
 
 namespace PrimeFerromagneticChain
 
-variable {n : ℕ} (C : PrimeFerromagneticChain n)
+variable {n : ℕ}
+variable (C : PrimeFerromagneticChain n)
 
-/-- Logarithmic prime site energy. -/
-def siteEnergy (i : Fin n) : ℝ :=
-  Real.log (C.primes i)
+/-- Site energy `log pᵢ`. -/
+def siteEnergy
+    (i : Fin n) : ℝ :=
+  Real.log (C.prime i : ℝ)
 
-/-- Logarithmic prime site energy is strictly positive. -/
-theorem siteEnergy_pos (i : Fin n) :
-    0 < C.siteEnergy i := by
-  unfold siteEnergy
-  have h2 : (2 : ℝ) ≤ (C.primes i : ℝ) := by exact_mod_cast C.prime_ge_two i
-  have h1 : (1 : ℝ) < (C.primes i : ℝ) := by linarith
-  exact Real.log_pos h1
-
-/-- Logarithmic prime site energy is non-negative. -/
-theorem siteEnergy_nonneg (i : Fin n) :
-    0 ≤ C.siteEnergy i :=
-  le_of_lt (C.siteEnergy_pos i)
-
-/-- Ferromagnetic prime-coupling matrix: `Jᵢⱼ = κ log(pᵢ) log(pⱼ)`. -/
-def coupling (i j : Fin n) : ℝ :=
+/-- Prime-chain ferromagnetic interaction matrix `Jᵢⱼ = κ log(pᵢ) log(pⱼ)`. -/
+def coupling
+    (i j : Fin n) : ℝ :=
   C.kappa * C.siteEnergy i * C.siteEnergy j
 
-/-- Prime couplings are non-negative for `κ ≥ 0`. -/
-theorem coupling_nonneg (i j : Fin n) :
+/-- The interaction matrix as a finite real matrix. -/
+def couplingMatrix : Matrix (Fin n) (Fin n) ℝ :=
+  fun i j => C.coupling i j
+
+/-- Prime-site logarithmic energy is nonnegative. -/
+theorem siteEnergy_nonneg
+    (i : Fin n) :
+    0 ≤ C.siteEnergy i := by
+  unfold siteEnergy
+  exact Real.log_nonneg (by
+    exact_mod_cast (Nat.Prime.one_lt (C.prime_isPrime i)).le)
+
+/-- Prime-site logarithmic energy is positive. -/
+theorem siteEnergy_pos
+    (i : Fin n) :
+    0 < C.siteEnergy i := by
+  unfold siteEnergy
+  exact Real.log_pos (by
+    exact_mod_cast Nat.Prime.one_lt (C.prime_isPrime i))
+
+/-- The prime-chain interaction is ferromagnetic: `Jᵢⱼ ≥ 0`. -/
+theorem coupling_nonneg
+    (i j : Fin n) :
     0 ≤ C.coupling i j := by
   unfold coupling
   exact mul_nonneg (mul_nonneg C.kappa_nonneg (C.siteEnergy_nonneg i))
     (C.siteEnergy_nonneg j)
 
-/-- Strict positivity of prime couplings for `κ > 0`. -/
+/-- The interaction matrix is symmetric. -/
+theorem coupling_symm
+    (i j : Fin n) :
+    C.coupling i j = C.coupling j i := by
+  unfold coupling
+  ring
+
+/-- Strictly positive coupling scale gives strictly positive pair couplings. -/
 theorem coupling_pos
     (hκ : 0 < C.kappa)
     (i j : Fin n) :
@@ -117,225 +137,267 @@ theorem coupling_pos
   unfold coupling
   exact mul_pos (mul_pos hκ (C.siteEnergy_pos i)) (C.siteEnergy_pos j)
 
-/-- Symmetry of the prime-coupling matrix. -/
-theorem coupling_symm (i j : Fin n) :
-    C.coupling i j = C.coupling j i := by
-  unfold coupling
-  ring
+/-- Matrix readout of the coupling entry. -/
+@[simp]
+theorem couplingMatrix_apply
+    (i j : Fin n) :
+    C.couplingMatrix i j = C.coupling i j := rfl
 
-/-- Ising configuration space on `n` prime-labelled sites. -/
-def Configuration (n : ℕ) := Fin n → IsingSpin
+/-- The coupling matrix has nonnegative entries. -/
+theorem couplingMatrix_entry_nonneg
+    (i j : Fin n) :
+    0 ≤ C.couplingMatrix i j :=
+  C.coupling_nonneg i j
 
-/-- Configuration sign readout at a site. -/
-def spinSign (σ : Configuration n) (i : Fin n) : ℝ :=
-  IsingSpin.sign (σ i)
+/-- The coupling matrix is symmetric entrywise. -/
+theorem couplingMatrix_symm
+    (i j : Fin n) :
+    C.couplingMatrix i j = C.couplingMatrix j i :=
+  C.coupling_symm i j
 
-/-- Total magnetization of a spin configuration. -/
-def magnetization (σ : Configuration n) : ℝ :=
-  ∑ i, C.spinSign σ i
+/-! ## Hamiltonian and fugacity readout -/
 
-/-- Log-weighted prime magnetization. -/
-def primeWeightedMagnetization (σ : Configuration n) : ℝ :=
-  ∑ i, C.spinSign σ i * C.siteEnergy i
+/-- A spin configuration on the finite chain. -/
+abbrev SpinConfiguration :=
+  Fin n → IsingSpin
+
+/-- Pair interaction energy `-Σᵢⱼ Jᵢⱼ σᵢ σⱼ`. -/
+def pairEnergy
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  -∑ i : Fin n, ∑ j : Fin n,
+    C.coupling i j * IsingSpin.sign (σ i) * IsingSpin.sign (σ j)
+
+/-- External-field energy `-Σᵢ hᵢ σᵢ`. -/
+def fieldEnergy
+    (h : Fin n → ℝ)
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  -∑ i : Fin n, h i * IsingSpin.sign (σ i)
+
+/-- Finite Ising Hamiltonian for the prime ferromagnetic chain. -/
+def isingHamiltonian
+    (h : Fin n → ℝ)
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  C.pairEnergy σ + fieldEnergy h σ
+
+/-- The pair-energy definition unfolded. -/
+theorem pairEnergy_eq
+    (σ : SpinConfiguration (n := n)) :
+    C.pairEnergy σ =
+      -∑ i : Fin n, ∑ j : Fin n,
+        C.coupling i j * IsingSpin.sign (σ i) * IsingSpin.sign (σ j) := rfl
+
+/-- The field-energy definition unfolded. -/
+theorem fieldEnergy_eq
+    (h : Fin n → ℝ)
+    (σ : SpinConfiguration (n := n)) :
+    fieldEnergy h σ =
+      -∑ i : Fin n, h i * IsingSpin.sign (σ i) := rfl
+
+/-- The Hamiltonian definition unfolded. -/
+theorem isingHamiltonian_eq_pair_add_field
+    (h : Fin n → ℝ)
+    (σ : SpinConfiguration (n := n)) :
+    C.isingHamiltonian h σ = C.pairEnergy σ + fieldEnergy h σ := rfl
 
 /--
-Ferromagnetic prime Ising Hamiltonian
+Field/fugacity dictionary for one site:
 
-`E(σ) = - Σ_{i,j} Jᵢⱼ σᵢ σⱼ - h Σᵢ σᵢ`.
+`zᵢ = exp(-2 hᵢ)`.
+
+The Cayley map in `CayleyCriticalLineCircleBridge` then supplies the global
+Riemann-temperature/fugacity chart.
 -/
-def hamiltonian
-    (h : ℝ)
-    (σ : Configuration n) : ℝ :=
-  -(∑ i, ∑ j, C.coupling i j * C.spinSign σ i * C.spinSign σ j) -
-    h * C.magnetization σ
+def localFugacity
+    (h : Fin n → ℝ)
+    (i : Fin n) : ℝ :=
+  Real.exp (-2 * h i)
+
+/-- Local fugacity is positive. -/
+theorem localFugacity_pos
+    (h : Fin n → ℝ)
+    (i : Fin n) :
+    0 < localFugacity h i := by
+  unfold localFugacity
+  exact Real.exp_pos _
+
+/-! ## Occupation convention and negative-energy couplings -/
 
 /--
-Factorization of the zero-external-field prime Ising energy:
-`E₀(σ) = -κ (Σᵢ σᵢ log pᵢ)².`
--/
-theorem hamiltonian_zero_field_eq_sq
-    (σ : Configuration n) :
-    C.hamiltonian 0 σ = -C.kappa * (C.primeWeightedMagnetization σ)^2 := by
-  unfold hamiltonian magnetization primeWeightedMagnetization coupling
-  simp only [sub_zero, mul_zero, zero_mul]
-  have hsum :
-      (∑ i, ∑ j, C.kappa * C.siteEnergy i * C.siteEnergy j * C.spinSign σ i * C.spinSign σ j) =
-        C.kappa * (∑ i, C.spinSign σ i * C.siteEnergy i)^2 := by
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro i _
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro j _
-    ring
-  rw [hsum]
+Occupation readout for the convention:
 
-/-- Zero-field energy is non-positive for `κ ≥ 0`. -/
-theorem hamiltonian_zero_field_nonpos
-    (σ : Configuration n) :
-    C.hamiltonian 0 σ ≤ 0 := by
-  rw [C.hamiltonian_zero_field_eq_sq]
-  exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr C.kappa_nonneg)
-    (sq_nonneg _)
+* `1` means the prime is present;
+* `0` means the prime is absent.
+
+Here `up` is the occupied/present state. This is a convention bridge; the
+ferromagnetic Ising convention above uses signs and positive `Jᵢⱼ` in
+`-Σ Jᵢⱼ σᵢσⱼ`.
+-/
+def occupation : IsingSpin → ℝ :=
+  fun
+    | IsingSpin.up => 1
+    | IsingSpin.down => 0
+
+@[simp]
+theorem occupation_up :
+    occupation IsingSpin.up = 1 := rfl
+
+@[simp]
+theorem occupation_down :
+    occupation IsingSpin.down = 0 := rfl
 
 /--
-Lattice-gas occupation state at a site.
+Occupation-Hamiltonian pair coefficient
+
+`Kᵢⱼ = -2 log(pᵢ) log(pⱼ)`.
+
+This is the negative-energy convention for a Hamiltonian written as
+`Σ Kᵢⱼ kᵢ kⱼ + Σ hᵢ kᵢ`. It is equivalent in sign spirit to a positive
+ferromagnetic coupling in the Ising convention `-Σ Jᵢⱼ σᵢσⱼ`.
 -/
-def occupation (σ : Configuration n) (i : Fin n) : ℝ :=
-  (1 + C.spinSign σ i) / 2
+def occupationPairCoefficient
+    (i j : Fin n) : ℝ :=
+  -2 * C.siteEnergy i * C.siteEnergy j
 
-/-- Occupation numbers lie in `[0, 1]`. -/
-theorem occupation_bounds (σ : Configuration n) (i : Fin n) :
-    0 ≤ C.occupation σ i ∧ C.occupation σ i ≤ 1 := by
-  unfold occupation spinSign
-  rcases C.spinSign σ i with _ | _
-  · simp [IsingSpin.sign]
-  · simp [IsingSpin.sign]
-
-/-- Total occupation number. -/
-def totalOccupation (σ : Configuration n) : ℝ :=
-  ∑ i, C.occupation σ i
-
-/-- Log-weighted prime occupation number. -/
-def primeWeightedOccupation (σ : Configuration n) : ℝ :=
-  ∑ i, C.occupation σ i * C.siteEnergy i
-
-/-- Relation between centered spin sign and occupation number. -/
-theorem spinSign_eq_two_occupation_sub_one (σ : Configuration n) (i : Fin n) :
-    C.spinSign σ i = 2 * C.occupation σ i - 1 := by
-  unfold occupation
+/-- The occupation pair coefficient is symmetric. -/
+theorem occupationPairCoefficient_symm
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j = C.occupationPairCoefficient j i := by
+  unfold occupationPairCoefficient
   ring
 
-/-- Relation between magnetization and total occupation. -/
-theorem magnetization_eq_two_totalOccupation_sub_n (σ : Configuration n) :
-    C.magnetization σ = 2 * C.totalOccupation σ - (n : ℝ) := by
-  unfold magnetization totalOccupation occupation
-  rw [← Finset.sum_sub_distrib, ← Finset.mul_sum]
-  have hsum : (∑ i : Fin n, ((1 : ℝ) + C.spinSign σ i) / 2) =
-      (∑ i : Fin n, (1 : ℝ) + C.spinSign σ i) / 2 := by
-    rw [Finset.sum_div]
-  rw [hsum]
-  have hsum2 : (∑ i : Fin n, (1 : ℝ) + C.spinSign σ i) =
-      (Finset.card (Finset.univ : Finset (Fin n)) : ℝ) + ∑ i : Fin n, C.spinSign σ i := by
-    rw [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul, mul_one]
-  rw [hsum2, Fintype.card_fin]
+/-- In the occupation-energy convention the pair coefficient is nonpositive. -/
+theorem occupationPairCoefficient_nonpos
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j ≤ 0 := by
+  unfold occupationPairCoefficient
+  have hprod : 0 ≤ C.siteEnergy i * C.siteEnergy j :=
+    mul_nonneg (C.siteEnergy_nonneg i) (C.siteEnergy_nonneg j)
+  nlinarith
+
+/-- In the occupation-energy convention the pair coefficient is strictly negative. -/
+theorem occupationPairCoefficient_neg
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j < 0 := by
+  unfold occupationPairCoefficient
+  have hprod : 0 < C.siteEnergy i * C.siteEnergy j :=
+    mul_pos (C.siteEnergy_pos i) (C.siteEnergy_pos j)
+  nlinarith
+
+/-- Occupation-space pair energy `Σᵢⱼ Kᵢⱼ kᵢ kⱼ`. -/
+def occupationPairEnergy
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  ∑ i : Fin n, ∑ j : Fin n,
+    C.occupationPairCoefficient i j * occupation (σ i) * occupation (σ j)
+
+/--
+Complex arithmetic external field
+
+`hᵢ(s) = s log(pᵢ) - log(pᵢ - 1)`.
+
+The subtraction is meaningful for primes because `pᵢ ≥ 2`, so `pᵢ - 1 ≥ 1`.
+No analytic zero-location theorem is inferred from this readout.
+-/
+def arithmeticExternalField
+    (s : ℂ)
+    (i : Fin n) : ℂ :=
+  s * (C.siteEnergy i : ℂ) - (Real.log ((C.prime i - 1 : ℕ) : ℝ) : ℂ)
+
+/-- The regulator `log(pᵢ - 1)` is nonnegative for prime sites. -/
+theorem primeMinusOne_log_nonneg
+    (i : Fin n) :
+    0 ≤ Real.log ((C.prime i - 1 : ℕ) : ℝ) := by
+  exact Real.log_nonneg (by
+    have hp : 1 < C.prime i := Nat.Prime.one_lt (C.prime_isPrime i)
+    have hle : 1 ≤ C.prime i - 1 := Nat.le_sub_one_of_lt hp
+    exact_mod_cast hle)
+
+/-- Occupation-space complex field energy `Σᵢ hᵢ(s) kᵢ`. -/
+def arithmeticFieldEnergy
+    (s : ℂ)
+    (σ : SpinConfiguration (n := n)) : ℂ :=
+  ∑ i : Fin n, C.arithmeticExternalField s i * (occupation (σ i) : ℂ)
+
+/--
+Occupation-space arithmetic Hamiltonian with the negative-energy pair
+convention.
+-/
+def arithmeticOccupationHamiltonian
+    (s : ℂ)
+    (σ : SpinConfiguration (n := n)) : ℂ :=
+  (C.occupationPairEnergy σ : ℂ) + C.arithmeticFieldEnergy s σ
+
+/-! ## Centered Lee--Yang prime chain -/
+
+/-- Centered occupation `k - 1/2`, the particle-hole odd coordinate. -/
+def centeredOccupation
+    (σ : IsingSpin) : ℝ :=
+  occupation σ - (1 / 2 : ℝ)
+
+@[simp]
+theorem centeredOccupation_up :
+    centeredOccupation IsingSpin.up = (1 / 2 : ℝ) := by
+  norm_num [centeredOccupation]
+
+@[simp]
+theorem centeredOccupation_down :
+    centeredOccupation IsingSpin.down = -(1 / 2 : ℝ) := by
+  norm_num [centeredOccupation]
+
+/--
+Centered logarithmic energy
+
+`A_N = Σᵢ log(pᵢ) (kᵢ - 1/2)`.
+-/
+def centeredLogEnergy
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  ∑ i : Fin n, C.siteEnergy i * centeredOccupation (σ i)
+
+/-- The centered logarithmic energy is half the weighted spin magnetization. -/
+theorem centeredLogEnergy_eq_half_spinSum
+    (σ : SpinConfiguration (n := n)) :
+    C.centeredLogEnergy σ =
+      (1 / 2 : ℝ) * ∑ i : Fin n, C.siteEnergy i * IsingSpin.sign (σ i) := by
+  unfold centeredLogEnergy centeredOccupation occupation IsingSpin.sign
+  rw [Finset.mul_sum]
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  cases σ i <;> ring
+
+/--
+Centered Lee--Yang spin coupling
+
+`Jᵢⱼ = κ/2 log(pᵢ) log(pⱼ)`.
+
+This is the coefficient in the standard convention
+`-Σ_{i<j} Jᵢⱼ σᵢσⱼ`.
+-/
+def centeredSpinCoupling
+    (i j : Fin n) : ℝ :=
+  (C.kappa / 2) * C.siteEnergy i * C.siteEnergy j
+
+/-- Centered spin coupling is nonnegative. -/
+theorem centeredSpinCoupling_nonneg
+    (i j : Fin n) :
+    0 ≤ C.centeredSpinCoupling i j := by
+  unfold centeredSpinCoupling
+  exact mul_nonneg (mul_nonneg (div_nonneg C.kappa_nonneg (by norm_num))
+    (C.siteEnergy_nonneg i)) (C.siteEnergy_nonneg j)
+
+/-- Centered spin coupling is symmetric. -/
+theorem centeredSpinCoupling_symm
+    (i j : Fin n) :
+    C.centeredSpinCoupling i j = C.centeredSpinCoupling j i := by
+  unfold centeredSpinCoupling
   ring
 
-/-- Boltzmann weight for a configuration at inverse temperature `β > 0`. -/
-def boltzmannWeight
-    (β h : ℝ)
-    (σ : Configuration n) : ℝ :=
-  Real.exp (-β * C.hamiltonian h σ)
-
-/-- Boltzmann weights are strictly positive. -/
-theorem boltzmannWeight_pos
-    (β h : ℝ)
-    (σ : Configuration n) :
-    0 < C.boltzmannWeight β h σ :=
-  Real.exp_pos _
-
-/-- Canonical partition function for the prime Ising chain. -/
-def partitionFunction
-    (β h : ℝ) : ℝ :=
-  ∑ σ : Fintype.elems (Configuration n), C.boltzmannWeight β h σ
-
-/-- Partition function is strictly positive. -/
-theorem partitionFunction_pos
-    (β h : ℝ) :
-    0 < C.partitionFunction β h := by
-  unfold partitionFunction
-  apply Finset.sum_pos
-  · intro σ _
-    exact C.boltzmannWeight_pos β h σ
-  · exact Finset.univ_nonempty
-
-/-- Real fugacity parameter `z = exp(2 β h)`. -/
-def fugacity (β h : ℝ) : ℝ :=
-  Real.exp (2 * β * h)
-
-/-- Fugacity is strictly positive. -/
-theorem fugacity_pos (β h : ℝ) :
-    0 < C.fugacity β h :=
-  Real.exp_pos _
-
-/-- Site-local prime magnetic field `hᵢ = h log(pᵢ)`. -/
-def siteField (h : ℝ) (i : Fin n) : ℝ :=
-  h * C.siteEnergy i
-
-/-- Prime site fields are non-negative for `h ≥ 0`. -/
-theorem siteField_nonneg
-    (h : ℝ) (hh : 0 ≤ h) (i : Fin n) :
-    0 ≤ C.siteField h i :=
-  mul_nonneg hh (C.siteEnergy_nonneg i)
-
-/-- Site-local prime fugacity `zᵢ = z^{log pᵢ} = exp(2 β h log pᵢ)`. -/
-def siteFugacity (β h : ℝ) (i : Fin n) : ℝ :=
-  Real.exp (2 * β * C.siteField h i)
-
-/-- Prime site fugacities are strictly positive. -/
-theorem siteFugacity_pos (β h : ℝ) (i : Fin n) :
-    0 < C.siteFugacity β h i :=
-  Real.exp_pos _
-
-/-- Site-local prime fugacity at `h = 0` is `1`. -/
-theorem siteFugacity_zero_field (β : ℝ) (i : Fin n) :
-    C.siteFugacity β 0 i = 1 := by
-  unfold siteFugacity siteField
-  simp [mul_zero, zero_mul]
-
-/-- Dimensionless coupling scale `Kᵢⱼ = β Jᵢⱼ`. -/
-def dimensionlessCoupling (β : ℝ) (i j : Fin n) : ℝ :=
-  β * C.coupling i j
-
-/-- Dimensionless couplings are non-negative for `β ≥ 0`. -/
-theorem dimensionlessCoupling_nonneg
-    (β : ℝ) (hβ : 0 ≤ β) (i j : Fin n) :
-    0 ≤ C.dimensionlessCoupling β i j :=
-  mul_nonneg hβ (C.coupling_nonneg i j)
-
-/-- Dimensionless couplings are symmetric. -/
-theorem dimensionlessCoupling_symm (β : ℝ) (i j : Fin n) :
-    C.dimensionlessCoupling β i j = C.dimensionlessCoupling β j i := by
-  unfold dimensionlessCoupling
-  rw [C.coupling_symm]
-
-/-- Dimensionless zero-field energy `E_dim(σ) = β E₀(σ) = -β κ (Σᵢ σᵢ log pᵢ)².` -/
-def dimensionlessZeroFieldEnergy
-    (β : ℝ)
-    (σ : Configuration n) : ℝ :=
-  β * C.hamiltonian 0 σ
-
-/-- Dimensionless zero-field energy is non-positive for `β ≥ 0`. -/
-theorem dimensionlessZeroFieldEnergy_nonpos
-    (β : ℝ) (hβ : 0 ≤ β)
-    (σ : Configuration n) :
-    C.dimensionlessZeroFieldEnergy β σ ≤ 0 :=
-  mul_nonpos_of_nonneg_of_nonpos hβ (C.hamiltonian_zero_field_nonpos σ)
-
-/-- High-temperature trivial coupling limit: at `κ = 0`, `Jᵢⱼ = 0`. -/
-theorem coupling_zero_kappa (i j : Fin n) :
-    (PrimeFerromagneticChain.mk C.primes C.prime_ge_two 0 (by norm_num)).coupling i j = 0 := by
-  unfold coupling
-  simp [zero_mul]
-
-/-- High-temperature trivial energy limit: at `κ = 0`, zero-field energy is zero. -/
-theorem hamiltonian_zero_kappa_zero_field (σ : Configuration n) :
-    (PrimeFerromagneticChain.mk C.primes C.prime_ge_two 0 (by norm_num)).hamiltonian 0 σ = 0 := by
-  unfold hamiltonian magnetization coupling
-  simp [zero_mul, mul_zero, Finset.sum_const_zero]
-
-/-- High-temperature trivial Boltzmann weights are `1` at `h = 0`. -/
-theorem boltzmannWeight_zero_kappa_zero_field
-    (β : ℝ) (σ : Configuration n) :
-    (PrimeFerromagneticChain.mk C.primes C.prime_ge_two 0 (by norm_num)).boltzmannWeight β 0 σ = 1 := by
-  unfold boltzmannWeight
-  rw [C.hamiltonian_zero_kappa_zero_field, mul_zero, neg_zero, Real.exp_zero]
-
-/-- Single-site prime chain partition function positivity: `0 < Z₁(β, h)`. -/
-theorem single_site_partition_function_pos
-    (C1 : PrimeFerromagneticChain 1) (β h : ℝ) :
-    0 < C1.partitionFunction β h :=
-  C1.partitionFunction_pos β h
+/-- Positive coupling scale gives strictly positive centered couplings. -/
+theorem centeredSpinCoupling_pos
+    (hκ : 0 < C.kappa)
+    (i j : Fin n) :
+    0 < C.centeredSpinCoupling i j := by
+  unfold centeredSpinCoupling
+  exact mul_pos (mul_pos (div_pos hκ (by norm_num)) (C.siteEnergy_pos i))
+    (C.siteEnergy_pos j)
 
 /-- Centered Lee--Yang external field `hᵢ(w) = -w/2 log(pᵢ)`. -/
 def centeredField
@@ -430,25 +492,6 @@ theorem root_lies_on_leeYang_circle
   hLeeYang z hz
 
 end LeeYangStabilityWitness
-
-/--
-**Genuine Native Theorem: 2-Spin / Quadratic Lee-Yang Circle Theorem**
-Proves natively that for any quadratic partition polynomial $P(z) = z^2 + 2 a z + 1$ with real coefficient $a$, any complex root $z$ with real part $\operatorname{Re}(z) = -a$ lies strictly on the unit circle $|z| = 1$.
--/
-theorem quadratic_leeyang_circle_theorem (a : ℝ) (z : ℂ)
-    (h_root : z ^ 2 + 2 * (a : ℂ) * z + 1 = 0)
-    (h_re : z + star z = - 2 * (a : ℂ)) :
-    OnLeeYangCircle z := by
-  unfold OnLeeYangCircle
-  have h_prod : z * star z = 1 := by
-    have h_star : star z = - 2 * (a : ℂ) - z := by linear_combination h_re
-    calc z * star z = z * (- 2 * (a : ℂ) - z) := by rw [h_star]
-    _ = 1 - (z ^ 2 + 2 * (a : ℂ) * z + 1) := by ring
-    _ = 1 - 0 := by rw [h_root]
-    _ = 1 := by ring
-  have h_re_part : (z * star z).re = 1 := by rw [h_prod, Complex.one_re]
-  calc Complex.normSq z = (z * star z).re := by simp [Complex.normSq_apply, Complex.mul_re]
-  _ = 1 := h_re_part
 
 end PrimeFerromagneticChain
 

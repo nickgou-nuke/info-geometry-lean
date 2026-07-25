@@ -28,7 +28,7 @@ def skewBlock2x2 (a : R) : Matrix (Fin 2) (Fin 2) R :=
 A canonical $2n \times 2n$ block skew-symmetric matrix formed by $n$ diagonal
 $2 \times 2$ blocks with entries $a_i$.
 -/
-def blockSkewMatrix (n : ℕ) (a : Fin n → R) : Matrix (Fin n × Fin 2) (Fin n × Fin 2) R :=
+def blockSkewMatrix (n : ℕ) (a : Fin n → R) : Matrix (Fin 2 × Fin n) (Fin 2 × Fin n) R :=
   Matrix.blockDiagonal (fun i => skewBlock2x2 (a i))
 
 /-- The $2n \times 2n$ Pfaffian of a block skew-symmetric matrix is the product of block values. -/

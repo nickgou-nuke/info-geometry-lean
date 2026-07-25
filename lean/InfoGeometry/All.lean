@@ -1191,6 +1191,7 @@ import InfoGeometry.Canonical.FiveGradedTwistorIncidence
 import InfoGeometry.Canonical.FluidCore
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Canonical.GolayLeechStabilizerCode
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.FormalVerificationPacket
 import InfoGeometry.Canonical.Foundations

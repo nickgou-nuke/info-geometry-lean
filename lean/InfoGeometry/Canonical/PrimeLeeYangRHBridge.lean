@@ -59,11 +59,10 @@ theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hn
   unfold cayleyTransform
   have h_sq : z.re^2 + z.im^2 = 1 := by
     have h1 : ‖z‖ = 1 := hz
-    calc z.re^2 + z.im^2 = normSq z := by simp [normSq_apply, sq]
-    _ = (Complex.abs z)^2 := normSq_eq_abs z
-    _ = ‖z‖^2 := rfl
-    _ = 1^2 := by rw [h1]
-    _ = 1 := by ring
+    have h2 : z.re^2 + z.im^2 = ‖z‖^2 := by
+      calc z.re^2 + z.im^2 = (Real.sqrt (z.re^2 + z.im^2))^2 := (Real.sq_sqrt (add_nonneg (sq_nonneg z.re) (sq_nonneg z.im))).symm
+      _ = ‖z‖^2 := rfl
+    rw [h2, h1, one_pow]
   have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
     apply Complex.ext
     · have h_re : ((1 + z) / (1 - z)).re = (1 - (z.re^2 + z.im^2)) / normSq (1 - z) := by

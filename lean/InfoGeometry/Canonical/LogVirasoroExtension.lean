@@ -18,7 +18,7 @@ representation $V$, constructing the off-diagonal 1-cocycle block structure:
 $$\rho_{\text{log}}(x) = \begin{pmatrix} \rho(x) & c(x) \\ 0 & \rho(x) \endpmatrix$$
 
 It proves that the zero-mode $L_0^{\text{log}}$ on $V_{\text{log}}$ contains a genuine non-diagonalizable
-Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \endpmatrix$, satisfying full
+Jordan cell $L(\Delta) = \begin{pmatrix} \Delta & 1 \\ 0 & \Delta \end{pmatrix}$, satisfying full
 Virasoro relations, non-diagonalizability, and Krein pseudo-hermiticity.
 -/
 
@@ -57,9 +57,8 @@ theorem blockOp_commutator (T1 C1 T2 C2 : Module.End 𝕜 V) :
     (blockOp T1 C1).commutator (blockOp T2 C2) =
       blockOp (T1.commutator T2) (T1.commutator C2 + C1.commutator T2) := by
   ext ⟨u, v⟩
-  · simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add]
-    abel
-  · simp [blockOp, LinearMap.commutator]
+  simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add]
+  abel
 
 /--
 **Virasoro 1-Cocycle Derivation Condition:**
@@ -86,15 +85,13 @@ def makeLogVirasoroRepresentation
   map_add' := by
     intro x y
     ext ⟨u, v⟩
-    · simp [blockOp, map_add]
-      abel
-    · simp [blockOp, map_add]
+    simp [blockOp, map_add]
+    abel
   map_smul' := by
     intro r x
     ext ⟨u, v⟩
-    · simp [blockOp, map_smul, smul_add]
-      abel
-    · simp [blockOp, map_smul]
+    simp [blockOp, map_smul, smul_add]
+    abel
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

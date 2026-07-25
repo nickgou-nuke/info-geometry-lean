@@ -561,6 +561,7 @@ import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.Algebra
 import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle
 import InfoGeometry.Canonical.AlgebraicDerivations
+import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
 import InfoGeometry.Canonical.AlgebraicStateEmergence
 import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 import InfoGeometry.Canonical.AlgebraicStateLorentzAction

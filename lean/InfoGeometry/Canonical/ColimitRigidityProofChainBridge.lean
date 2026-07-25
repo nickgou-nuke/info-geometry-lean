@@ -83,16 +83,18 @@ theorem finite_complex_euler_product_ne_zero
   intro p hp
   apply inv_ne_zero
   intro h_sub
-  have h_cpow : (p : ℂ) ^ (-s) = 1 := by linarith
+  have h_cpow : (p : ℂ) ^ (-s) = 1 := by
+    calc (p : ℂ) ^ (-s) = 1 - (1 - (p : ℂ) ^ (-s)) := by ring
+    _ = 1 - 0 := by rw [h_sub]
+    _ = 1 := by ring
   have h_norm : ‖(p : ℂ) ^ (-s)‖ = 1 := by rw [h_cpow, norm_one]
   have hp_ge2 : 2 ≤ p := (h_prime p hp).two_le
   have hp_pos : 0 < (p : ℝ) := by positivity
   have h1 : 1 < (p : ℝ) := by exact_mod_cast (Nat.Prime.one_lt (h_prime p hp))
   have hpow : 1 < (p : ℝ) ^ s.re := Real.one_lt_rpow h1 (by positivity)
-  have h_inv : ((p : ℝ) ^ s.re)⁻¹ < 1 := (inv_lt_one_iff₀ (by positivity)).mpr hpow
+  have h_inv : ((p : ℝ) ^ s.re)⁻¹ < 1 := inv_lt_one_iff₀.mpr (Or.inr hpow)
   have h_norm_cpow : ‖(p : ℂ) ^ (-s)‖ = ((p : ℝ) ^ s.re)⁻¹ := by
-    rw [norm_cpow_eq_rpow_re_of_pos hp_pos]
-    simp
+    rw [norm_cpow, neg_re, Real.rpow_neg hp_pos.le]
   rw [h_norm_cpow] at h_norm
   linarith
 

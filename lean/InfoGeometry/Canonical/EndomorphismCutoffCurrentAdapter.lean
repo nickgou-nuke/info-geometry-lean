@@ -28,12 +28,12 @@ variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 /-- Integer scalar multiplication identification lemma. -/
 theorem int_zsmul_eq_cast_smul (m : Int) (v : V) : m • v = (m : 𝕜) • v := by
   induction m using Int.induction_on with
-  | hz => simp
-  | hp i hi =>
+  | zero => simp
+  | succ i hi =>
     rw [add_smul, one_smul, hi]
     push_cast
     rw [add_smul, one_smul]
-  | hn i hi =>
+  | pred i hi =>
     rw [sub_smul, one_smul, hi]
     push_cast
     rw [sub_smul, one_smul]
@@ -101,7 +101,7 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
   split_ifs with hmn
   · rw [RawCARModeCompletion.central, map_zsmul, map_one]
     ext v
-    simp only [LinearMap.smul_apply, LinearMap.id_apply]
+    simp only [LinearMap.smul_apply]
     exact int_zsmul_eq_cast_smul m v
   · exact map_zero ρ
 

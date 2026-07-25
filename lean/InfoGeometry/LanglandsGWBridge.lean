@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Analysis.LaplaceFourierComparison
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.SpectralTaylorMellinBridge

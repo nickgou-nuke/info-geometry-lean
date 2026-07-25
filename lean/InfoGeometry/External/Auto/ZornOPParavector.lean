@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Zorn Matrix Layer for OP³ = OP and Null Paravectors

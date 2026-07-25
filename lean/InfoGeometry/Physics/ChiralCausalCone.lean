@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.CPTAtom
 import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 import InfoGeometry.Physics.SplitCliffordAlgebras

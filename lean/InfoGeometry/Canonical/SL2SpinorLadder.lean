@@ -8,7 +8,7 @@ All 5 grading slots are non-trivial:
   gPosOne = ℝ·u   gPosTwo = ℝ·e
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 set_option linter.dupNamespace false

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Fibonacci / golden q fractal Hamiltonian anchors

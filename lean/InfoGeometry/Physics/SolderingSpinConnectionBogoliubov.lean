@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Soldering forms, spin connection, and Bogoliubov frame bundle

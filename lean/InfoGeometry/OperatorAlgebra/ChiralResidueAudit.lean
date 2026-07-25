@@ -10,7 +10,7 @@ It classifies chiral residues and exposes the witness boundary required to
 turn an audit verdict into a flow-regularity theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

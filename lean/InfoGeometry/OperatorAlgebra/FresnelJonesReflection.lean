@@ -8,7 +8,7 @@ The `s/p` basis is the Fresnel eigenbasis of a smooth isotropic interface.  The
 but they are not the same basis.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

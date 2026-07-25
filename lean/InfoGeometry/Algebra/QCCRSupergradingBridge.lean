@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Data.Real.Basic

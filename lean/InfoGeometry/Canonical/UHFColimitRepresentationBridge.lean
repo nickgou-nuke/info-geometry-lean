@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.ErlangenInductiveClosure
 import InfoGeometry.Canonical.ErlangenColimitResolution
 import InfoGeometry.Canonical.UHFBoundaryExactSequence

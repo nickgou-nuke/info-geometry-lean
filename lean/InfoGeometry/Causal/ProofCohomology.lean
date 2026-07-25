@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Causal.ProofDAGRepresentation
 open Classical
 open InfoGeometry.Causal.ProofDAGRepresentation

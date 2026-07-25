@@ -1,6 +1,6 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.SuperchargeHoppingBridge
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.SuperchargeOddOddDecomposition

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Horadam `2^k`-ion matrix methods: finite coordinate layer

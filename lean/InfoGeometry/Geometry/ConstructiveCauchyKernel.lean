@@ -2,7 +2,7 @@
 InfoGeometry/Geometry/ConstructiveCauchyKernel.lean
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

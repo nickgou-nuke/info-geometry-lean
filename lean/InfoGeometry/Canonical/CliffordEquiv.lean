@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.PeirceLadderOperators
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Geometry.FiniteHestenesCR

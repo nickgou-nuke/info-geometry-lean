@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.Canonical.MobiusHyperbolicCompactification

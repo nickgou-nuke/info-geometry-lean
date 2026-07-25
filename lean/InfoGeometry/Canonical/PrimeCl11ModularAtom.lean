@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.Cl11ModularAtom
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet

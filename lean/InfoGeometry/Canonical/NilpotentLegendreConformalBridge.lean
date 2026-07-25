@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Canonical.Cl11LorentzAction

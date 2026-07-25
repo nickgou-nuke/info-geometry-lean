@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
 

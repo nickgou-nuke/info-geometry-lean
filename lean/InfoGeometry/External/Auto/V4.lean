@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 theorem my_add_comm (a b : ℕ) : a + b = b + a := by
   exact Nat.add_comm a b

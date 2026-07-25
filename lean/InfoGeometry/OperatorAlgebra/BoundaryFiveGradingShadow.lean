@@ -15,7 +15,7 @@ It does not prove the full O(5,5)/Pin(5,5) bulk theorem, holographic
 reconstruction, analytic continuation, or Fibonacci universality.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.OperatorAlgebra.BoundaryFiveGradingShadow
 

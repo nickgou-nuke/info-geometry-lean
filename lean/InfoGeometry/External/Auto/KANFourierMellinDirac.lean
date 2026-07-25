@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # KAN / Fourier--Mellin / Dirac-Hodge synthesis

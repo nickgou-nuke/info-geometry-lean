@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 

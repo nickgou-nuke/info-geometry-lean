@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.Q8ModularFlowBridge
 

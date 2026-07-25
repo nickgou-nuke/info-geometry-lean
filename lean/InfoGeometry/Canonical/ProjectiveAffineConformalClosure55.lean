@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Projective affine conformal closure at `O(5,5)` / `Pin(5,5)`

@@ -13,7 +13,7 @@ This module isolates the algebraic mechanism:
   with a null/isotropic defect.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit

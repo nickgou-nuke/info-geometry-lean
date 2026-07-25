@@ -8,7 +8,7 @@ This file contains no physical witness sockets. It defines the concrete
 projector and Brewster rank-collapse facts directly.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

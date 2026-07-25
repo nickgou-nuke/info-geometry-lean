@@ -27,7 +27,7 @@ It extracts the constructive finite algebraic skeleton:
 The analytic Garding-Wightman splitting criterion remains witness-gated.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Canonical.InformationalLichnerowicz

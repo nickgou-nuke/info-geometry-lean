@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Topology.MobiusDeRhamMonodromy
 import InfoGeometry.Topology.BuscherTDuality

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.Finsupp.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.Algebra.Algebra.Basic

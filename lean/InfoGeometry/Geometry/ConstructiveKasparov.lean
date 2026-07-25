@@ -16,7 +16,7 @@ Core chain:
     -> nonzero residue obstructs flow to Flat
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Geometry.SpectralDivisors
 

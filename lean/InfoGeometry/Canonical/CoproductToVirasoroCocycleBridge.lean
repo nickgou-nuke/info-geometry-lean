@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import InfoGeometry.Canonical.ModularCoproductFlux
 import InfoGeometry.Canonical.ModularHopfCoproductRules

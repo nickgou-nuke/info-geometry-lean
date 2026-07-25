@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorCylinderTopology
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Projective center quotient for the finite Pin(5,5) spinor carrier

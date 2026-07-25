@@ -22,7 +22,7 @@ operator-geometry modules should consume bounded endomorphisms and proof
 certificates.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

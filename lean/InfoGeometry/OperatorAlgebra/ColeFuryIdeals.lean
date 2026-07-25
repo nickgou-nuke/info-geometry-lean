@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cole-Fury 32-dimensional ideal quadrant laws

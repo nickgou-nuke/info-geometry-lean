@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.ZetaCoordinateSymmetry
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 import InfoGeometry.External.Auto.KasparovKreinCategory

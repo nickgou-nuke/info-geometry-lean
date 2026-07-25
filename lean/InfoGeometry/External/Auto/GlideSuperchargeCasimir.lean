@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Glide square, supercharge square, and Casimir energy-momentum

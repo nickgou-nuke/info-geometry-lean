@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinCentralizerErlangen
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge

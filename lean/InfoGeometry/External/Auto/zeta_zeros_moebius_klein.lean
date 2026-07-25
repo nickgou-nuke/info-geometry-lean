@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Zeta Zeros, Möbius Gluing, and the Klein Throat

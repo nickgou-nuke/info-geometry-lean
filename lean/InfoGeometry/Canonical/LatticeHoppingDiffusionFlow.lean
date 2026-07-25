@@ -8,7 +8,7 @@ to the continuous informational manifold. It defines the stochastic hopping
 propagator and its relation to the Dirac operator and RG flow.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.QuasilatticeDirac

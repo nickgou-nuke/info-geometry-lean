@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Analysis.SouriauKoszulMetric
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

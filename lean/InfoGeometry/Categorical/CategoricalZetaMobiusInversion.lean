@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Categorical.CategoricalZetaMobius
 import Omega.Zeta.XiChainInteriorBooleanFlagClosedForm
 

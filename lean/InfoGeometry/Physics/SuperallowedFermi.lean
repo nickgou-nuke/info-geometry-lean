@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.IsospinMirrorDynamics
 
 namespace InfoGeometry.Physics

@@ -17,7 +17,7 @@ over `ℝ`.  Generalizing to other scalar rings would require an explicit
 invertibility-of-two hypothesis.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

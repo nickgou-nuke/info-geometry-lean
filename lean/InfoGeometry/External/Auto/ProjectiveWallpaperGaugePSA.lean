@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Projective wallpaper symmetry algebras with gauge structures

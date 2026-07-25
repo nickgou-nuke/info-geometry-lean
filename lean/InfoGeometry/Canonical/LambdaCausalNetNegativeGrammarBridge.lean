@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 import InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence
 import InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator

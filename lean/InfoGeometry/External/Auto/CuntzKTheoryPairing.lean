@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.ConnesSpectralAction
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 

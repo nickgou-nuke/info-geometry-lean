@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.Fin.Basic
 import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Lie.SplitOctonionImaginaryAction

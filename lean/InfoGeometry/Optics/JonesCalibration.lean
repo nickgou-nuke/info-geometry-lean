@@ -17,7 +17,7 @@ No concrete Fresnel formula is hard-coded here. Angle, refractive index,
 complex material response, and branch choices are supplied by later models.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 

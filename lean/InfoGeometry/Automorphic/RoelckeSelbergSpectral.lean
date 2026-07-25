@@ -17,7 +17,7 @@ The algebraic consequences are proved here:
 * automorphic L-functions are attached to joint cuspidal eigenpackets.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
 import InfoGeometry.Dynamics.KanDecomposition
 

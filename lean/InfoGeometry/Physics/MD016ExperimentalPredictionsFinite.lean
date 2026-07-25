@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Repaired MD 016: finite experimental-prediction algebra

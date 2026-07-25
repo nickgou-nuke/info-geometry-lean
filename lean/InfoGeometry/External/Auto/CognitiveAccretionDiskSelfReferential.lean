@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cognitive Accretion Disk: Self-Referential Modeling Notes

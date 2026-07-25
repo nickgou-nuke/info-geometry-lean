@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzMatrixUnits
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 import InfoGeometry.Algebra.CuntzThermalState

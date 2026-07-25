@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 open Matrix
 
 /- THE KREIN-SOURIAU-FISHER-METRIPLECTIC COMPLEX

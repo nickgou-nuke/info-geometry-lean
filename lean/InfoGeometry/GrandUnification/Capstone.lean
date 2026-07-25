@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Dynamics.SouriauDiracHodge
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Canonical.SplitCliffordDirectLimit

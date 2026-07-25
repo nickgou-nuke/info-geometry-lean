@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.DoubledSpace
 

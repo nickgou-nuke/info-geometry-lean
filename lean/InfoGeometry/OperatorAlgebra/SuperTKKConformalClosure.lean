@@ -25,7 +25,7 @@ lane in `Canonical.OperatorialCentralCharge`,
 super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget
 

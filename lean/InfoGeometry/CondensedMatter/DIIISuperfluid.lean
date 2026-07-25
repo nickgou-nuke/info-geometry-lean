@@ -15,7 +15,7 @@ operator-algebraic DIII branch.  Concrete 3He-B, lattice BdG, or continuum
 Dirac/Majorana models can instantiate the datum later.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.DIIISuperfluid
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch

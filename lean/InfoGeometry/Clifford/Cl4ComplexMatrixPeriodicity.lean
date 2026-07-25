@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Complex `Cl(4)` matrix periodicity corridor

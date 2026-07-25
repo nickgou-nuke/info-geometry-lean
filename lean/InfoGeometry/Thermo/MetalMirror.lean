@@ -17,7 +17,7 @@ Drazin regular positive cone specialization is retained under the `RegularCone`
 namespace.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Krein.DoubledSpace

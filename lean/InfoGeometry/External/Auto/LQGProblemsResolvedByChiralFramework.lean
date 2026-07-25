@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Loop Quantum Gravity: Four Open Problems Resolved by the Chiral Framework

@@ -3,7 +3,7 @@ Phase 4: Bridge to existing GellMannSU3 module
 - Relates the normalized gellMann1…8 basis to the repo's unnormalized gl1…gl8
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.SpecialUnitary
 import InfoGeometry.Algebra.GellMannBasis
 import InfoGeometry.Algebra.StructureConstants

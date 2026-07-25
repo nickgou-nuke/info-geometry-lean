@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.FinitePrimeGroverOracle
 import InfoGeometry.Arithmetic.FiniteRiemannPrimeState
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge

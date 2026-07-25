@@ -25,7 +25,7 @@ It also does not identify this real Clifford module lane with split `Cl(n,n)`,
 split-quadratic witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

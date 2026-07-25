@@ -8,7 +8,7 @@ superconducting surface. It records a concrete Andreev boundary datum together
 with opaque horizon data, then exports only the algebraic Andreev consequences.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

@@ -17,7 +17,7 @@ This file is an accounting socket. It does not prove a concrete `E7`, `E8`,
 Virasoro, black-hole unitarity, Page-curve, or holographic-recovery theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget

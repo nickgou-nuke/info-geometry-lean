@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import DAG.HodgeTheorems
 import DAG.GraphHodgeBridge
 import InfoGeometry.Topology.EckmannDiscreteHodge

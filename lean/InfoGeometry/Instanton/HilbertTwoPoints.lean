@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.Algebra.Polynomial.Bivariate
 

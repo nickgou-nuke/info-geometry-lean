@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 

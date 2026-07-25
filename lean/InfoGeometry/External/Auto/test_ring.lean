@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 open Complex
 
 variable (q s : ℂ)

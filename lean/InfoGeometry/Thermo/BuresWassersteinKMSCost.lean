@@ -14,7 +14,7 @@ metric.  The positive-state domain and metric are supplied as proof-carrying
 data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

@@ -1,6 +1,6 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.Drazin
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.DrazinLightConeDictionary

@@ -14,7 +14,7 @@ Total internal reflection is a phase-retarder/unitary branch.
 Rough reflection is modeled by channels, not a single Jones operator.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 

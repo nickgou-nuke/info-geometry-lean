@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Fixed lines: Brillouin Klein glide axis and Riemann critical line

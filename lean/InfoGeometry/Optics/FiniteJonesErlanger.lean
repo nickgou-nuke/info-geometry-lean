@@ -11,7 +11,7 @@ covariantly to another projector. The fixed-projector theorem belongs to the
 diagonal phase-centralizer subgroup.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section

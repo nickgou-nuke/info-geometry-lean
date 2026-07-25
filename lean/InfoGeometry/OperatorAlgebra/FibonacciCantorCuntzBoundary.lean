@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Fibonacci Cantor--Cuntz--Krieger boundary

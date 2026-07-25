@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.B3PresentedGroup
 /-!
 # B₃ Representation Bridge — clean interface without PresentedGroup

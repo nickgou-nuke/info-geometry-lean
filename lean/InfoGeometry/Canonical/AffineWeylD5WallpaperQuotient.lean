@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.V4D4WeylEmbedding
 import InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
 

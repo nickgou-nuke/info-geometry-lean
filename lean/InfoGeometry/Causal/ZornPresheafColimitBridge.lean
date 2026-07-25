@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Causal.Alexandrov
 import InfoGeometry.Causal.ZornPresheaf
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Section 29 repaired: finite quantum-effective-action algebra

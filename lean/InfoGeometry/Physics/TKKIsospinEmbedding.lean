@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Ring.Defs
 import InfoGeometry.NuclearHamiltonian
 import InfoGeometry.Canonical.ZornSpinor

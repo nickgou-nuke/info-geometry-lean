@@ -4,7 +4,7 @@ Phase 2: Normalized Gell-Mann basis for 𝔰𝔲(3)
 - Computable data for Lie algebra generators
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Matrix.Basis
 import Mathlib.LinearAlgebra.Matrix.Trace

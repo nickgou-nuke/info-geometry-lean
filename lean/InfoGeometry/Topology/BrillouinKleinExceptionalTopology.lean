@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Exceptional Non-Hermitian Topology Associated with Non-Toroidal Brillouin Zones

@@ -22,7 +22,7 @@ Formalizes:
 9. Instanton moduli mirror duality M_{N,k}! = M_{k,N}
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 open Matrix Finset BigOperators
 

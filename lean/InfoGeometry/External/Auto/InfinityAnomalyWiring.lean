@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.InfinityFilteredColimits
 import InfoGeometry.External.Auto.LieAlgebraColimit
 

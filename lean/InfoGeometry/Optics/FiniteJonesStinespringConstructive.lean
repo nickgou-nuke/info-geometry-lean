@@ -36,7 +36,7 @@ full 4x4 unitary dilation unless such a theorem/certificate is supplied
 separately.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesStinespring
 

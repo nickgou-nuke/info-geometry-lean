@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.CategoryTheory.Functor.OfSequence
 import InfoGeometry.External.Auto.BraidInductiveColimitComplement
 

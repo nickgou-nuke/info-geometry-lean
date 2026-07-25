@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Basic
 import InfoGeometry.ExponentialFamily.Class
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Canonical.BogoliubovOptimalTransport

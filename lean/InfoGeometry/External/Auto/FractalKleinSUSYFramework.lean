@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Fractal/Cuntz logCFT and Brillouin-Klein SUSY framework

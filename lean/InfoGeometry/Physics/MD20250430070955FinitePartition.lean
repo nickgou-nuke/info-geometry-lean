@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.MD20250430071017MatrixStatistics
 
 /-!

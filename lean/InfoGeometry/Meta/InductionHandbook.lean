@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.EssenceOfInductiveProof
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 import InfoGeometry.Canonical.AFRecursiveLimitBridge

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Riemann Hypothesis: Theorem-Honest Complex-Temperature Boundary

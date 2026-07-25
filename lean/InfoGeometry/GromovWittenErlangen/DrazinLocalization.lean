@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 import InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 

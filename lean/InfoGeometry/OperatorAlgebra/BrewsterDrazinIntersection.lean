@@ -15,7 +15,7 @@ The Hessian singularity is not assumed to imply Brewster collapse unless a
 model supplies that bridge.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Thermo.SusceptibilityHessian

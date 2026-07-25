@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 variable {F : Type*} [Field F] (A : F)
 variable {A_alg : Type*} [Ring A_alg] [Algebra F A_alg]

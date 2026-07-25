@@ -8,7 +8,7 @@ records the boundary-gluing datum saying that the projective boundary returns
 through the Tomita mirror.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section

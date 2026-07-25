@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Mellin Colimit Trifactor: Smoothness as Continuum Colimit of Cantor Dust

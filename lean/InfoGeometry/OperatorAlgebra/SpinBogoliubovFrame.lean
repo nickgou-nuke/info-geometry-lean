@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget

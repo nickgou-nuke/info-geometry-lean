@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.Krein.DoubledSpace

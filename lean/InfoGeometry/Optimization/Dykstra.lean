@@ -2,7 +2,7 @@
 /- Alternating projection algorithm to retract a matrix onto the Birkhoff Polytope
    (doubly stochastic matrices with row/column sums = 1 and non-negative entries). -/
 
-import Mathlib
+import Mathlib.Tactic
 
 open Matrix
 open scoped Matrix BigOperators

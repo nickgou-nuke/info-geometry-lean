@@ -24,7 +24,7 @@ The module proves the negative boundaries constructively:
 It does not claim that horizon evaporation implies recovery.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

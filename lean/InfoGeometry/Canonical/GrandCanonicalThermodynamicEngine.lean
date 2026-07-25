@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.BayesianThermoMetricHodgeBridge
 import InfoGeometry.Canonical.BuresMetricStabilization
 import InfoGeometry.Canonical.InfinitesimalDictionaryBridge

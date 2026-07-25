@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Non-orientable Exceptional Points in Twisted Boundary Systems

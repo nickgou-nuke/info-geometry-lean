@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Section 28 repaired: finite Einstein--torsion--spinor tensor socket

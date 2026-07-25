@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 open Real
 
 namespace InfoGeometry.Fibonacci.FibAnyonThm1

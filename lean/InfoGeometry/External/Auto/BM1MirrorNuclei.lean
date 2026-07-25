@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # B(M1) Mirror Ratios in a Finite TKK-Style Model

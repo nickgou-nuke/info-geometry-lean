@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/UnnormalizedRelativeEntropy.lean
 Unnormalized relative entropy and modular transport data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section

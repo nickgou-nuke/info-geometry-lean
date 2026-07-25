@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Canonical.ErlangenInductiveClosure
 

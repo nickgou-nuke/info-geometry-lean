@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.FiveGradedCentralizer
 import InfoGeometry.Projective.FiveGradedTopologicalBridge
 import InfoGeometry.Projective.AndreevHorizonUnitarity

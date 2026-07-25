@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.StoneBridgeMathlib
 import InfoGeometry.Canonical.StoneCantorMathlib
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary

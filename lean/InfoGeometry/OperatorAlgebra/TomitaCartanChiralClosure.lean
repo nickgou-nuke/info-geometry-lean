@@ -16,7 +16,7 @@ The resulting theorem is the intended CPT/noncompact branch:
     => isotropic boundary data with left/right chirality exchanged.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanDynamics
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 

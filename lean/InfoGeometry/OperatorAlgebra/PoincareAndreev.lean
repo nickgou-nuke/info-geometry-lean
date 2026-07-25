@@ -7,7 +7,7 @@ Below-gap no-leakage behavior is supplied as an interface law. This module does
 not infer perfect Andreev reflection from `epsilon < Δ` alone.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

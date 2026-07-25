@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # `Cl(5,5)`, split anomaly cancellation, Bott stability, and `osp(1|2)` atoms

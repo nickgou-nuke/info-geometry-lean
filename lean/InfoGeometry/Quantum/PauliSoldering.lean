@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import InfoGeometry.Physics.Section33PauliBiquaternionCompletion

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 
 open InfoGeometry.Algebra.HessianThermodynamicManifold

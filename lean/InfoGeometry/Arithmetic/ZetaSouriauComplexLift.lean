@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

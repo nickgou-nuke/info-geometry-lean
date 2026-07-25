@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 import InfoGeometry.Canonical.TKKJordanPairData
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge

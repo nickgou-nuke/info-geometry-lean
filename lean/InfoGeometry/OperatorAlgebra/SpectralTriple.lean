@@ -20,7 +20,7 @@ Key point:
 `J K = - K J`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Geometry.PhaseErlanger
 

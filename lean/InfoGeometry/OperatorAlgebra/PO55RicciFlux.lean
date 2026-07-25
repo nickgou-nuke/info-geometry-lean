@@ -23,7 +23,7 @@ Einstein tensor by definition; concrete metric/connection modules must supply
 the contraction/readout theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization

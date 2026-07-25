@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Farnea et al. `64Ge` isospin-mixing formal anchors

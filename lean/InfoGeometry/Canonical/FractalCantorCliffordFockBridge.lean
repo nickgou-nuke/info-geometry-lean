@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem

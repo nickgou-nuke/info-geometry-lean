@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import InfoGeometry.Canonical.ChiralAnomalyCantor
 import InfoGeometry.Canonical.BregmanAnalyticBound

@@ -18,7 +18,7 @@ This file deliberately does not define modular forms. Automorphic forms need
 the metric, growth, cusp, and automorphy-factor APIs.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualPoincareMetric
 
 noncomputable section

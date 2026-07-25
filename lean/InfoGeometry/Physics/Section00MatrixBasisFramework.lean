@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
 import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Optics.JonesPoincareSphere

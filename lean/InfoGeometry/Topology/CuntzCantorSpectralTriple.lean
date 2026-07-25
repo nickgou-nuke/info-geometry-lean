@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ErlangenNet
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary

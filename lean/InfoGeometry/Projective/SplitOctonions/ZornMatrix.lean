@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Split Octonions: Zorn Vector Matrix Algebra

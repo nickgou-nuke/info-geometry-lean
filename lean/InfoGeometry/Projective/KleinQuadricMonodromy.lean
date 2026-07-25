@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 import InfoGeometry.Clifford.UniversalCoverLog

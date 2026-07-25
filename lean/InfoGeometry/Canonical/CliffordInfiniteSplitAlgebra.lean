@@ -10,7 +10,7 @@ spinors from the Cl(5,5) infinite tensor colimit boundary.
 - BUCKET 3: None.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 set_option linter.unusedVariables false
 

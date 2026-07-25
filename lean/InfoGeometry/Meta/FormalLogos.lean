@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 open Matrix
 
 set_option autoImplicit false

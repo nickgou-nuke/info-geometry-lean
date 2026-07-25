@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.JonesBraidB3
 import Mathlib.GroupTheory.PresentedGroup
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.ProjectiveWallpaperGaugePSA
 import InfoGeometry.External.Auto.PentagonPenroseWallpaperFractal
 /-!

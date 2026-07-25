@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 namespace IsospinSymmetryBreaking

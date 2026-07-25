@@ -9,7 +9,7 @@ E9 arithmetic. It packages a supplied calibration between a Virasoro/Sugawara
 central-charge readout and a completed L-function readout.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 

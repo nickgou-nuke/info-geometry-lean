@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Spectral.Spectrum.Basic
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 

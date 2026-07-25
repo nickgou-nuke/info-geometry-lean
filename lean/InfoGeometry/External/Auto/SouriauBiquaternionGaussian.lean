@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Souriau biquaternion thermodynamics and Gaussian closure

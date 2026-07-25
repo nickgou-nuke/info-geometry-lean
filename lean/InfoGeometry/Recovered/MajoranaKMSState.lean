@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Recovered.MajoranaColimitBoundary
 import InfoGeometry.Canonical.BostConnesKMS
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.SplitE88Group
 import InfoGeometry.Topology.BuscherTDuality
 

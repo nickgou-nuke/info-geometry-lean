@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.CategoryTheory.Limits.Shapes.ZeroMorphisms
 
 noncomputable section

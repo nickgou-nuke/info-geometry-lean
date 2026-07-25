@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
 
 open InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge

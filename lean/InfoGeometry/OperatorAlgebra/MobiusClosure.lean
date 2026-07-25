@@ -13,7 +13,7 @@ natural cone, BPS charge, or any other model-specific invariant.  Those
 identifications require separate witness structures.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

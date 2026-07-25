@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cl(4,4) Fock Parity — 16-state occupation sheet (PROVED)

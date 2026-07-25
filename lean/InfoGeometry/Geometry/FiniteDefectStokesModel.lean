@@ -5,7 +5,7 @@ A finite 2x2 matrix model separating the closed-form and defect-supported
 Stokes lanes.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Geometry.SpectralDivisors

@@ -15,7 +15,7 @@ The result can be exported both as a `CircularPolarization` and as the
 `ChiralStage` used by the Tomita-Cartan routing layer.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.Meta.OwnerTarget

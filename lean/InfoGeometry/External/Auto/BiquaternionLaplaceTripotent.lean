@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Biquaternion Laplace resolvent and tripotent scale poles

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # KMS Interior Point — Self-Concordant Barrier

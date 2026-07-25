@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
 import InfoGeometry.Canonical.CausalConeProjectorBridge

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Projective.SplitOctonions.ProjectiveLine

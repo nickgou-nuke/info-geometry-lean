@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Probability.HomologicalProbability

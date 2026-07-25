@@ -17,7 +17,7 @@ duality witness. The geometric Langlands interpretation is kept as a separate
 witness-gated socket.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 

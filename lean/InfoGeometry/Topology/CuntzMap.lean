@@ -1,5 +1,5 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cuntz Map — Algebraic Two-Branch Transfer

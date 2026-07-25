@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CliffordCAR
 import InfoGeometry.OperatorAlgebra.Cl44FockParity
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws

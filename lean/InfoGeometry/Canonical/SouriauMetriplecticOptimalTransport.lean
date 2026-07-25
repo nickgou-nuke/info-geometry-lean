@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauThermodynamics
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Projective Cuntz--Toeplitz CAR/CCR finite algebra

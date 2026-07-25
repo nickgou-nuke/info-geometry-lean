@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Gell-Mann Cartan decomposition — no division, pure `CommRing`

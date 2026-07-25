@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Module.LinearMap.Basic
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.CARVacuumContraction

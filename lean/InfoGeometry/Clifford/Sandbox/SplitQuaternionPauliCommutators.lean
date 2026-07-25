@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Split-Quaternion Pauli Commutators and Split-Biquaternion Extension

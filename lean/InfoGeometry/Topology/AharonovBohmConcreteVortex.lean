@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Concrete finite Aharonov--Bohm vortex owner

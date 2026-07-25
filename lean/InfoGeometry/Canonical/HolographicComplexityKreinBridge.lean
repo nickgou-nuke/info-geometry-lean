@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation
 import InfoGeometry.Canonical.CausalConeProjectorBridge

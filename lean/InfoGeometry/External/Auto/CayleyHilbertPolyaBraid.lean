@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cayley-Hilbert-Pólya-Braid: The Arithmetic Topology of Spacetime

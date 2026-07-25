@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Algebra.Zorn.ConcreteBarrier

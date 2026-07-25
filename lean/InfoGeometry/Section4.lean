@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Section 4.4: Hyperkähler Symmetry — Lean 4 Formalization

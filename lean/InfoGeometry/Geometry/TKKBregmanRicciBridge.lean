@@ -16,7 +16,7 @@ It does not assert that Ricci flux is always a Bregman Hessian. It packages the
 concrete identification as proof-carrying bridge data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import DAG.GraphHodgeBridge
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Krein.DoubledSpace

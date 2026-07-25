@@ -18,7 +18,7 @@ witness field.  The algebraic theorem proved here is the composition of those
 witnesses.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 noncomputable section

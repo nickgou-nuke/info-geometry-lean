@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Canonical.ZetaStandardRealizations
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential

@@ -16,7 +16,7 @@ weights attached to polarization channels. The V₄ tag records discrete
 orientation/PT bookkeeping.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section

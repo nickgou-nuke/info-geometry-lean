@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Geometric Zeta: Layer-12 Lightcone Geometry of the Graded Index

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Foundations.NewtonKantorovichBase
 import InfoGeometry.Foundations.NewtonKantorovichRoots
 import InfoGeometry.Foundations.NewtonKantorovichSequence

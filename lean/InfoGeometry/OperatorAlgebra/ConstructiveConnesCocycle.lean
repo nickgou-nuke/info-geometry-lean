@@ -2,7 +2,7 @@
 InfoGeometry/OperatorAlgebra/ConstructiveConnesCocycle.lean
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

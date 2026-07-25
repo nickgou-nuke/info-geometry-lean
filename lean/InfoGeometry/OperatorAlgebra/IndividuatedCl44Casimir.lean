@@ -15,7 +15,7 @@ scalar and pseudoscalar Clifford readouts.  A Pfaffian interpretation is kept as
 a separate calibration, not as the definition of the Casimir.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.Canonical.DiracSouriauOperator
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cayley Jacobian Contraction at the Bost-Connes Boundary

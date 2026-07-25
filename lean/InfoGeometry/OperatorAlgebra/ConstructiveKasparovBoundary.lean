@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/ConstructiveKasparovBoundary.lean
 Constructive Kasparov boundary and defect ledger.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

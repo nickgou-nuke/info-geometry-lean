@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Canonical.SpinStructureJacobiTheta
 import InfoGeometry.Canonical.ConnesKMSIndexPairing

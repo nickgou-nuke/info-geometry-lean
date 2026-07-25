@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.CalibrationReexport
 import InfoGeometry.Automorphic.ProjectedLFunction
 

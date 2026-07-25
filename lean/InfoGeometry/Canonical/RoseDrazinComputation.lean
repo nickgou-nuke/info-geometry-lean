@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Computing the Drazin inverse from a characteristic polynomial

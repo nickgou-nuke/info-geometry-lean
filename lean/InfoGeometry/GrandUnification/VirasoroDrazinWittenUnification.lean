@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteInductiveSUSY
 import InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
 import InfoGeometry.Canonical.DrazinTripotentTrifactorBridge

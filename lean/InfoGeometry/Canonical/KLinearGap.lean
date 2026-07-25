@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Analysis.L2CantorCommutation

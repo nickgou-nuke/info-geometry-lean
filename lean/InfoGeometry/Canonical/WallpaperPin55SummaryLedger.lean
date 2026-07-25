@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.KleinBottleWallpaper
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
 import InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge

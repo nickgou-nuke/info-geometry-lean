@@ -1,7 +1,7 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.SuperchargeOddOddDecomposition
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge

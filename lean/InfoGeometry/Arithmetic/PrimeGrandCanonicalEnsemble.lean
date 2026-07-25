@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Meta.Architecture

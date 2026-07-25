@@ -11,7 +11,7 @@ This module bridges modular sign/CPT data to phase-real spectral geometry:
   D = commutator metric sensor.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace

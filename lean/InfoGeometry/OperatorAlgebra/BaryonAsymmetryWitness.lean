@@ -7,7 +7,7 @@ This module does not derive baryogenesis. It records an optional model in which
 an asymmetry readout is related to a condensate-transfer readout.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

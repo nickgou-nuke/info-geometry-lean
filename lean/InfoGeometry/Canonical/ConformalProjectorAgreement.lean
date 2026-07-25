@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Canonical.MetricTransport
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Conformal projector agreement

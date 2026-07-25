@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Chiral supercharges, Poincaré momentum, and Souriau beta vector

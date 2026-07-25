@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Squashing/Cayley/Fredholm/Möbius transforms of biquaternions

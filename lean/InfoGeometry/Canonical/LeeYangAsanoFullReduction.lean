@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Canonical.LeeYangAsanoDigest
 import InfoGeometry.Canonical.LeeYangAsanoNativeCore

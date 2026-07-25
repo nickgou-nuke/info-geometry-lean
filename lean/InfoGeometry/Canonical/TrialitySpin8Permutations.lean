@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.Cl55V4SpinorFragmentation
 
 -- File: TrialitySpin8Permutations.lean

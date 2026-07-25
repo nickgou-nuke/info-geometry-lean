@@ -10,7 +10,7 @@ For type III algebras, singular traces should be routed through the continuous
 core or another semifinite backend, not placed directly on the type III base.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 
 noncomputable section

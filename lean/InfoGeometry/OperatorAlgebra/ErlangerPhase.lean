@@ -7,7 +7,7 @@ The primitive morphisms are phase-preserving intertwiners.  Geometry is then
 read through invariants under the chosen admissible morphism class.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

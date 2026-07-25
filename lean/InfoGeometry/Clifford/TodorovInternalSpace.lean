@@ -1,5 +1,5 @@
 import InfoGeometry.Cartan.Involution
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Todorov octonion internal-space projector calculus

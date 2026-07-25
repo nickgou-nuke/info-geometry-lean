@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinFierzBridge
 import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture

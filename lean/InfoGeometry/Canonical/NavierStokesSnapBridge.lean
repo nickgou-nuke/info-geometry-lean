@@ -21,7 +21,7 @@ attached to an extended operator ledger. It is not a formalization of the
 classical PDE.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Geometry.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.TopologicalSnap

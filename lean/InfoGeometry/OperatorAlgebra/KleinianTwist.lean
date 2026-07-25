@@ -10,7 +10,7 @@ This module records a witness-gated boundary return:
 It does not assert that a bare Clifford algebra has a Klein-bottle topology.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 

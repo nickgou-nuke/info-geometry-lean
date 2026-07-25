@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.NumberTheory.SumPrimeReciprocals
 import InfoGeometry.Algebra.CuntzTensorQuotient
 

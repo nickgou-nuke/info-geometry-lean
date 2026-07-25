@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Clifford.MonodromyFlowAdapter
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary

@@ -1,5 +1,5 @@
 import Mathlib.NumberTheory.Bernoulli
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.RamanujanOddZeta
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry

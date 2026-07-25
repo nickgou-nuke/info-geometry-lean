@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Soloviev QPNM as a Chiral Cuntz Matrix-Unit Shadow

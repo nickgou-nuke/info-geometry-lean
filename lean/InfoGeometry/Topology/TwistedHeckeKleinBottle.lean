@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # A Twisted Hecke Algebra and a Klein Bottle of Tempered Representations

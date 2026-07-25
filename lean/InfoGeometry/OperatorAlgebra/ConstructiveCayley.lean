@@ -10,7 +10,7 @@ No independent `cayley_phase_linear` or `denomInv_phase_linear` hypothesis is
 kept.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 
 noncomputable section

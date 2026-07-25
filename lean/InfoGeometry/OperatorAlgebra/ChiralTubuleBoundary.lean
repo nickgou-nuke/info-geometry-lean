@@ -15,7 +15,7 @@ The Unruh temperature may drive the threshold once a modular acceleration
 calibration is supplied, but temperature alone is not the snap theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap

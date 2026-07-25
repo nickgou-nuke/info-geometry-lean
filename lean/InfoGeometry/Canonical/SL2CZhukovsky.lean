@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.FinCases
 
 namespace InfoGeometry.Canonical.SL2CZhukovsky

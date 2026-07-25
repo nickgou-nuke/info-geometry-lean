@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Readout
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex.Pfaffian
 

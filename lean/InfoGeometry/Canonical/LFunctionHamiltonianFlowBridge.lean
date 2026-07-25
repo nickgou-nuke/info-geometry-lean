@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 import InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 import InfoGeometry.Canonical.WeylCharacterEquivalence

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.ThermodynamicGauge
 import InfoGeometry.Topology.WilsonLoopThermodynamics
 

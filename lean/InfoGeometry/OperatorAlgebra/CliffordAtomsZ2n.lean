@@ -9,7 +9,7 @@ hypercube is a local Cartan/sign address space.  It is deliberately not
 identified with cyclic global anomaly classes such as `Z16`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

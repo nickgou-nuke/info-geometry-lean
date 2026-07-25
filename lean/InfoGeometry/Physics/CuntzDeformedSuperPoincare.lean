@@ -2,7 +2,7 @@ import InfoGeometry.Physics.SupergradedCuntzBdG
 import InfoGeometry.Physics.SuperPoincareOperatorCharges
 import InfoGeometry.Physics.LorentzBoostMinkowski
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cuntz-deformed supergrading and operator super-Poincaré presentation

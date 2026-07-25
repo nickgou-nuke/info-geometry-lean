@@ -1,5 +1,5 @@
 import Lean
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.ExtractBraid
 
 open Lean

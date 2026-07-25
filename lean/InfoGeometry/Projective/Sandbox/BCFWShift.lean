@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.ArnoldRelations
 
 namespace InfoGeometry.Projective.Sandbox.BCFWShift

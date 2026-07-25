@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 

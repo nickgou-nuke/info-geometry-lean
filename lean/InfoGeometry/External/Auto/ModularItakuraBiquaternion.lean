@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Modular Itakura--Saito divergence in the biquaternion algebra

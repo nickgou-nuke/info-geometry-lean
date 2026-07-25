@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge

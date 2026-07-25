@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.VarlamovClifford
 import InfoGeometry.Meta.Architecture
 

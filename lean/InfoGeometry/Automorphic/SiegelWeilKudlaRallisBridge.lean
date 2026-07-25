@@ -18,7 +18,7 @@ the algebraic consequences that are constructively available from those
 witnesses.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Automorphic.ProjectedLFunction
 
 noncomputable section

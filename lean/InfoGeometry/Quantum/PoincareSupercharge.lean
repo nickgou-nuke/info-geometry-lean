@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.OperatorAlgebra.SuperchargeNilpotence

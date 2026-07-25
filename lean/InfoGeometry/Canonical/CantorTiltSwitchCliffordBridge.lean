@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget

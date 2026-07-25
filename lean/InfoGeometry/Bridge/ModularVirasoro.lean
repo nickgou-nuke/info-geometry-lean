@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.External.Virasoro.WittAlgebra
 import InfoGeometry.External.Virasoro.VirasoroCocycle

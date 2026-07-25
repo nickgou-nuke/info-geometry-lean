@@ -8,7 +8,7 @@ This file does not prove the Einstein field equations. It records the exact
 accounting identity needed by a later Einstein-readout theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 
 noncomputable section

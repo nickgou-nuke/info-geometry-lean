@@ -14,7 +14,7 @@ commutant reflection. The commutant interpretation is supplied by a
 proof-carrying calibration datum.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 

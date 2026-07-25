@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.V4RootSystem
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation
 import InfoGeometry.Topology.Pin55ReflectionGlide

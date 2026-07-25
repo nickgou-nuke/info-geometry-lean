@@ -1,3 +1,3 @@
-import Mathlib
+import Mathlib.Tactic
 
 #check DirectLimit

@@ -13,7 +13,7 @@ The key distinction:
   calibration may say that the hidden sector carries the helical sheet charge.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.OwnerTarget
 

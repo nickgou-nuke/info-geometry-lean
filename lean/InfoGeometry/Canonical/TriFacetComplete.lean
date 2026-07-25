@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS (14)
@@ -13,7 +13,7 @@ import Mathlib
 #### BUCKET 3: None
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.TriFacetComplete
 

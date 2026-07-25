@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.CategoryTheory.Category.Basic
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 import InfoGeometry.External.Auto.ConnesSpectralAction

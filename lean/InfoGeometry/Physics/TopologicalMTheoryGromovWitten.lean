@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Topological M-Theory and Gromov-Witten Invariants

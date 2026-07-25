@@ -18,7 +18,7 @@ is the real Hestenes phase axis / complex structure on the active modular
 support.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Meta.OwnerTarget
 

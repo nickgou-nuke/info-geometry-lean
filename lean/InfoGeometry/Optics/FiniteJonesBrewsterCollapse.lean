@@ -16,7 +16,7 @@ with explicit finite matrix facts:
   the s-channel is scaled by r_s.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesErlanger
 

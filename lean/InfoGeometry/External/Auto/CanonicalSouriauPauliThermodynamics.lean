@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Canonical Souriau Thermodynamics for Pauli Algebra (toy finite model)

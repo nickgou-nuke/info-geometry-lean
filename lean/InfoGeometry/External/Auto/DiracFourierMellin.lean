@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Dirac-Hodge operator in the Fourier--Mellin domain

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.SuperLieRing
 import InfoGeometry.Clifford.ConformalLieAlgebra55
 

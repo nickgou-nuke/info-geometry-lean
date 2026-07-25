@@ -16,7 +16,7 @@ complexified/split chiral axis is supplied, functoriality of the chiral
 polarization projectors.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

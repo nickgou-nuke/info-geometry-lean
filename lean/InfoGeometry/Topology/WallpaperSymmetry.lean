@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Wallpaper `pg` symmetry: finite Klein-bottle relation

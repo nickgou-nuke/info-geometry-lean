@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.ZetaStandardRealizations
 import InfoGeometry.Canonical.TomitaTakesakiTrifactor
 import InfoGeometry.Canonical.TwoSheetedComplexPolarization

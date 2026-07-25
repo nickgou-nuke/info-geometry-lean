@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Analysis.MellinTransform
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

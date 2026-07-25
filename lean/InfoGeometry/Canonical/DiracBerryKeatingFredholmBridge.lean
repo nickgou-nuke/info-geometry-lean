@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 

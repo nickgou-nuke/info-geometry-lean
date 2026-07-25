@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # O(5,5) Light-Cone Spectrum Bridge

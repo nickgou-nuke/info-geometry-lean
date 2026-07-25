@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.DiracColimit
 import InfoGeometry.External.Auto.KANFormalization
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # K-theory for the Fibonacci Cuntz--Krieger algebra

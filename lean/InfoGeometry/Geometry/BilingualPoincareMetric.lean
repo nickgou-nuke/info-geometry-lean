@@ -12,7 +12,7 @@ operators and its covariance under the derivative of the operator Mobius
 action.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.Meta.OwnerTarget

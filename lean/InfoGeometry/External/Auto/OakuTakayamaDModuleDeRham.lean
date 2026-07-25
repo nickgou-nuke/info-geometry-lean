@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Oaku--Takayama D-module de Rham algorithm interface

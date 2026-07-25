@@ -18,7 +18,7 @@ Horizon radiation interpretations require a separate boost/Killing-flow
 calibration witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit

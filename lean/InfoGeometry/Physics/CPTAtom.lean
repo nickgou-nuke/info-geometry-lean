@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # The `Cl(1,1)` CPT atom and the signum map

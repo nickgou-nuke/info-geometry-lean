@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-- A spacetime is a topological space equipped with a causal preorder relation. -/
 class Spacetime (M : Type) [TopologicalSpace M] where

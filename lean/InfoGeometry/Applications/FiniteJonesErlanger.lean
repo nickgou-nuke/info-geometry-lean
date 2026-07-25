@@ -11,7 +11,7 @@ Under a general Jones transform mixing `s` and `p`, the same projector is only
 transported covariantly.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Applications.FiniteJonesModel
 
 noncomputable section

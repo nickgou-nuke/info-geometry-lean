@@ -11,7 +11,7 @@ It is a transport law for projective polarization projectors, not the
 primitive source of the Poincare metric or the KMS theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 
 noncomputable section

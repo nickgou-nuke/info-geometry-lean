@@ -20,7 +20,7 @@ The cancellation identity is the remaining model-specific law.  It is no
 longer hidden inside a bare `is_central` hypothesis.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

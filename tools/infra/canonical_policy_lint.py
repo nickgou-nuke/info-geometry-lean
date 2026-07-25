@@ -207,7 +207,10 @@ def theorem_block(lines: list[str], line: int, next_line: int | None) -> str:
 
 
 def theorem_has_trivial_proof(block: str) -> bool:
-    first_line = block.splitlines()[0]
+    lines = block.splitlines()
+    if not lines:
+        return False
+    first_line = lines[0]
     for pattern in TRIVIAL_SAME_LINE_PATTERNS:
         if pattern.search(first_line):
             return True

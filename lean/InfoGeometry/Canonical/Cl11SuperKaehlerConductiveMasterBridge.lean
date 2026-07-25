@@ -68,7 +68,7 @@ theorem super_kaehler_involutive_law {V : Type*} [AddCommGroup V] [Module ℝ V]
       ext x
       simp [LinearMap.comp_apply]
     _ = - (- LinearMap.id) := by rw [hJ_sq]
-    _ = LinearMap.id := by noncomm_ring
+    _ = LinearMap.id := by simp
 
 /--
 **Main Theorem: Grand Cl(1,1) Super-Kähler Conductive Master Duality**

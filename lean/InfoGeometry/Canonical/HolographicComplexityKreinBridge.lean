@@ -75,7 +75,7 @@ $$\langle x, J x \rangle_{\text{Krein}} = \text{Action } A_{\text{Krein}} = \tex
 -/
 theorem holographic_complexity_action_wick_duality
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (actionData : KreinActionData V) (volData : CausalBulkVolumeData (polarityToCausalSplit Polarity.negative ⊤ ⊥ ⊥))
+    (actionData : KreinActionData V) (volData : CausalBulkVolumeData (polarityToCausalSplit (V := V) Polarity.negative ⊤ ⊥ ⊥))
     (h_act : actionData.kreinAction = volData.bulkVolume) :
     actionData.kreinAction = volData.bulkVolume :=
   h_act

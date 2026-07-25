@@ -754,6 +754,7 @@ import InfoGeometry.Canonical.ExplicitZetaColimitFormBridge
 import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
 import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge
+import InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
 import InfoGeometry.Canonical.ConnesKMSIndexPairing
 import InfoGeometry.Canonical.SpinStructureJacobiTheta
 import InfoGeometry.Canonical.TomitaTakesakiWickRotation

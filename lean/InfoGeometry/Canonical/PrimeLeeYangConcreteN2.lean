@@ -183,8 +183,7 @@ theorem partitionPolyN2_coeff_4 :
 theorem partitionPolyN2_explicit_computation :
     partitionPolyN2 = ∑ σ : SpinConfig 2,
       Polynomial.C ((configurationWeight (finitePrimeChainDataN2 : FinitePrimeChainData 2) (1 : ℝ) σ : ℝ) : ℂ) *
-        Polynomial.X ^ occupiedCount σ := by
-  dsimp [partitionPolyN2, partitionPolynomial]
+        Polynomial.X ^ occupiedCount σ := rfl
 
 /-- The explicit roots of the partition polynomial for N=2 -/
 @[rep_depth thermo]

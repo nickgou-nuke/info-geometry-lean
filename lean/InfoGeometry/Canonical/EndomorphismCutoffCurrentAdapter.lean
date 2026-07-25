@@ -167,7 +167,7 @@ theorem current_commutator
       rw [S.source.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
         N m n hN]
     _ = _ := by
-      rw [LinearMap.add_apply, hbN]
+      rw [map_add, LinearMap.add_apply, hbN]
       by_cases hmn : m + n = 0
       · simp only [hmn, if_pos, map_zsmul, RawCARModeCompletion.central, map_one,
           zero_add, LinearMap.smul_apply]
@@ -184,12 +184,9 @@ structure PositiveEnergy
 noncomputable def toCurrentHeisenbergRep
     (S : StabilizedCurrentSource 𝕜 A V) (hS : S.PositiveEnergy) :
     CurrentHeisenbergRep 𝕜 V where
-  toFun := fun v => v
   J := S.J
   trunc := hS.trunc
   comm := S.current_commutator
-
-/- Filler
 
 /-- The end-to-end source-derived Raw-CAR to Sugawara representation. -/
 noncomputable def toSugawaraVirasoroRepresentation

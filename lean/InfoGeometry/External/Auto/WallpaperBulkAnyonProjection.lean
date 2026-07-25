@@ -68,7 +68,7 @@ def piTwistPhase : Matrix (Fin 2) (Fin 2) ℂ := -1
 /-- A π-twist squares to the trivial `2π` phase. -/
 theorem piTwistPhase_sq : piTwistPhase * piTwistPhase = 1 := by
   dsimp [piTwistPhase]
-  ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp
 
 /-- The π-twist phase is genuinely nontrivial. -/
 theorem piTwistPhase_nontrivial : piTwistPhase ≠ 1 := by

@@ -71,17 +71,17 @@ def J_mat : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 def ΓJ_mat : Matrix (Fin 2) (Fin 2) ℝ := Γ_mat * J_mat
 
 theorem Γ_sq_I : Γ_mat * Γ_mat = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat]
 
 theorem J_sq_I : J_mat * J_mat = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mat] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mat]
 
 theorem ΓJ_sq_neg_I : ΓJ_mat * ΓJ_mat = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   dsimp [ΓJ_mat]
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat, J_mat] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat, J_mat]
 
 theorem Γ_anticomm_J : Γ_mat * J_mat = -(J_mat * Γ_mat) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat, J_mat] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Γ_mat, J_mat]
 
 /-- V₄ acts by Möbius transformations: 1→z, Γ→-z, J→1/z, ΓJ→-1/z -/
 noncomputable def mobiusV4 (sector : Fin 4) (z : ℂ) : ℂ :=
@@ -103,16 +103,16 @@ theorem V4_J_sq (z : ℂ) (hz : z ≠ 0) : mobiusV4 2 (mobiusV4 2 z) = mobiusV4 
 def J_cpx : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 theorem J_cpx_sq_neg_I : J_cpx * J_cpx = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx]
 
 /-- Modular conjugation J_mod: J_mod² = I, J_mod·J_cpx·J_mod = -J_cpx -/
 def J_mod : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
 theorem J_mod_sq_I : J_mod * J_mod = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod]
 
 theorem J_mod_conj_J_cpx : J_mod * J_cpx * J_mod = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, J_mod]
 
 /-- J_mod is the V₄ J element -/
 theorem J_mod_eq_V4_J : J_mod = J_mat := by
@@ -122,10 +122,10 @@ theorem J_mod_eq_V4_J : J_mod = J_mat := by
 def η_kr : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 theorem η_sq_I : η_kr * η_kr = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [η_kr] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [η_kr]
 
 theorem η_J_cpx_η : η_kr * J_cpx * η_kr = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, η_kr] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, η_kr]
 
 /-══════════════════════════════════════════════════════════════════════
    Determinant sign as Weyl gauge / sector classifier
@@ -174,7 +174,7 @@ theorem sector_nullProjector : detSector nullProjector = DetSector.null := by
   simp [detSector, det_nullProjector]
 
 theorem V4_cpt_conjugates_Γ : J_mod * Γ_mat * J_mod = -Γ_mat := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod, Γ_mat] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_mod, Γ_mat]
 
 noncomputable def ellipticExpChart (t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![Real.cos t, -Real.sin t; Real.sin t, Real.cos t]

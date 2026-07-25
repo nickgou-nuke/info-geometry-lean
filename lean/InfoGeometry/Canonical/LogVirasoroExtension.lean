@@ -107,9 +107,9 @@ theorem jordanCell_mulVec_apply (Δ : 𝕜) (w : Fin 2 → 𝕜) :
     Matrix.mulVec (jordanCell Δ) w = ![Δ * w 0 + w 1, Δ * w 1] := by
   ext i
   fin_cases i
-  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two]
+  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
     ring
-  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two]
+  · simp [jordanCell, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
     ring
 
 /--
@@ -166,17 +166,14 @@ noncomputable def makeLogIntertwiner
       rw [hL0] at h1'
       rw [map_smul] at h1'
       exact sub_eq_zero.mp h1'
-    refine LinearMap.ext fun w => ?_
-    refine Prod.ext ?_ ?_
+    ext w
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 0 • v0 + w 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0) + c (VirasoroAlgebra.lgen 𝕜 0) (w 1 • v0) =
         (Matrix.mulVec (jordanCell Δ) w) 0 • v0 + (Matrix.mulVec (jordanCell Δ) w) 1 • c (VirasoroAlgebra.lgen 𝕜 0) v0
       rw [jordanCell_mulVec_apply]
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, map_add, map_smul, hL0, hc0, h_comm_apply]
       rw [smul_smul, smul_smul, smul_smul, add_smul]
-      have h_sc1 : w 0 * Δ = Δ * w 0 := mul_comm (w 0) Δ
-      have h_sc2 : w 1 * Δ = Δ * w 1 := mul_comm (w 1) Δ
-      rw [h_sc1, h_sc2]
+      rw [mul_comm (w 0) Δ, mul_comm (w 1) Δ]
       abel
     · dsimp [makeLogVirasoroRepresentation, blockOp]
       change (ρ (VirasoroAlgebra.lgen 𝕜 0)) (w 1 • v0) = (Matrix.mulVec (jordanCell Δ) w) 1 • v0

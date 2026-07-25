@@ -2102,6 +2102,7 @@ import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 import InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
+import InfoGeometry.Canonical.LogVirasoroExtension
 import InfoGeometry.Canonical.KOIndexSpectralFlow
 import InfoGeometry.Canonical.HolographicBoundaryEntropy
 import InfoGeometry.Canonical.CantorDiracPropagation

@@ -17,6 +17,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 
 /--
 An actual root of a stored partition polynomial maps to the critical line,
@@ -34,7 +35,7 @@ theorem partitionRoot_mapsToCriticalLine
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) := by
   exact cayleyToTemperature_mem_criticalLine_of_unitCircle z
-    (W.root_lies_on_leeYang_circle hLeeYang z hz) hpole
+    (LeeYangStabilityWitness.root_lies_on_leeYang_circle W hLeeYang z hz) hpole
 
 /--
 For a non-polar partition root satisfying the Lee--Yang theorem, the Cayley

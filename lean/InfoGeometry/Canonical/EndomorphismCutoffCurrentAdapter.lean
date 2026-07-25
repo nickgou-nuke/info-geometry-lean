@@ -58,11 +58,12 @@ theorem endomorphismCutoffCurrent_commutator
     (N M : ℕ) (m n : Int) :
     (endomorphismCutoffCurrent C ρ N m).commutator
         (endomorphismCutoffCurrent C ρ M n) =
-      ρ (comm (representedCutoffCurrent C N m) (representedCutoffCurrent C M n)) := by
+      ρ (InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm
+        (representedCutoffCurrent C N m) (representedCutoffCurrent C M n)) := by
   unfold endomorphismCutoffCurrent
-  have hcomm : ∀ x y : A, ρ (comm x y) = (ρ x).commutator (ρ y) := by
+  have hcomm : ∀ x y : A, ρ (InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm x y) = (ρ x).commutator (ρ y) := by
     intro x y
-    unfold comm LinearMap.commutator
+    unfold InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm LinearMap.commutator
     simp [map_sub, map_mul]
   rw [← hcomm]
 
@@ -84,7 +85,7 @@ def makeSourceAdapter
   cutoffCurrent := endomorphismCutoffCurrent C ρ
   J := J
   eventually_cutoffCurrent_eq := eventually_eq
-  cutoffCurrent_eq_represented_rawCurrent := fun L m => rfl
+  cutoffCurrent_eq_represented_rawCurrent := fun _ _ => rfl
   trunc := trunc
   comm := comm
 

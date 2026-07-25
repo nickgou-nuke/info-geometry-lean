@@ -59,7 +59,7 @@ Proves natively that if s = 1 - star s, then Re(s) = 1/2.
 theorem cayley_temperature_re_half (s : ℂ) (h_anti : s = 1 - star s) :
     s.re = 1 / 2 := by
   have h_re : s.re = (1 - star s).re := congrArg re h_anti
-  simp only [sub_re, one_re, star_def, conj_re] at h_re
+  rw [sub_re, one_re, star_re] at h_re
   linarith
 
 /--

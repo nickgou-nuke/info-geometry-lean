@@ -55,12 +55,18 @@ theorem quadratic_partition_polynomial_root_on_circle
   unfold OnLeeYangCircle
   have h_re_part : (z ^ 2 + 2 * (a : ℂ) * z + 1).re = 0 := by rw [h_root, zero_re]
   have h_expand : (z ^ 2 + 2 * (a : ℂ) * z + 1).re = z.re ^ 2 - z.im ^ 2 + 2 * a * z.re + 1 := by
-    rw [add_re, add_re, one_re, Complex.sq_re]
+    have h_sq : (z ^ 2).re = z.re ^ 2 - z.im ^ 2 := by
+      calc (z ^ 2).re = (z * z).re := by rw [sq]
+      _ = z.re * z.re - z.im * z.im := mul_re z z
+      _ = z.re ^ 2 - z.im ^ 2 := by ring
     have h_2az : (2 * (a : ℂ) * z).re = 2 * a * z.re := by
-      calc (2 * (a : ℂ) * z).re = (2 * (a : ℂ)).re * z.re - (2 * (a : ℂ)).im * z.im := by rw [mul_re]
+      calc (2 * (a : ℂ) * z).re = (2 * (a : ℂ)).re * z.re - (2 * (a : ℂ)).im * z.im := mul_re (2 * (a : ℂ)) z
       _ = 2 * a * z.re - 0 * z.im := by simp
       _ = 2 * a * z.re := by ring
-    rw [h_2az]
+    calc (z ^ 2 + 2 * (a : ℂ) * z + 1).re
+      _ = (z ^ 2 + 2 * (a : ℂ) * z).re + (1 : ℂ).re := add_re (z ^ 2 + 2 * (a : ℂ) * z) 1
+      _ = (z ^ 2).re + (2 * (a : ℂ) * z).re + 1 := by rw [add_re, one_re]
+      _ = z.re ^ 2 - z.im ^ 2 + 2 * a * z.re + 1 := by rw [h_sq, h_2az]
   rw [h_expand, h_re] at h_re_part
   have h_im_sq : z.im * z.im = 1 - a * a := by linarith
   calc Complex.normSq z

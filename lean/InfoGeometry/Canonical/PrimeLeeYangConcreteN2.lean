@@ -201,8 +201,7 @@ theorem partitionPolyN2_explicit_computation :
 theorem partitionPolyN2_roots_on_unit_circle :
     ∀ (z : ℂ), (partitionPolyN2).IsRoot z → OnLeeYangCircle z := by
   intro z hz
-  have h_eval : Polynomial.eval z partitionPolyN2 = 0 := hz
-  dsimp [partitionPolyN2] at h_eval
+  have h_eval : Polynomial.eval z (1 : Polynomial ℂ) = 0 := hz
   simp at h_eval
 
 /-- Concrete instance of the Lee-Yang stability witness for N=2 -/
@@ -214,15 +213,7 @@ noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :
 
 /-- The concrete Lee-Yang stability witness for N=2 -/
 theorem leeYangStabilityN2 :
-    (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) := by
-  intro z hz
-  have h₃ : (partitionPolyN2 : Polynomial ℂ) = 1 := by
-    apply Polynomial.ext
-    intro n
-    cases n <;> norm_num [partitionPolyN2]
-  rw [h₃] at hz
-  have h_root : (1 : Polynomial ℂ).IsRoot z := hz
-  exfalso
-  exact Polynomial.not_isRoot_one z h_root
+    (∀ z : ℂ, (partitionPolyN2).IsRoot z → OnLeeYangCircle z) :=
+  partitionPolyN2_roots_on_unit_circle
 
 end InfoGeometry.Canonical.PrimeLeeYangConcreteN2

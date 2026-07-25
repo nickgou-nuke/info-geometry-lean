@@ -63,7 +63,7 @@ with the finite-stage derivative. -/
 @[simp] theorem colimitReadout_deriv
     (n : ℕ) (x : DoubledSpace (C.Base n)) :
     (F.colimitReadoutCauchyAnalyticAt n x).deriv =
-      (C.ι n).comp ((F.analytic n x).deriv) :=
+      (C.ι n).comp ((F.analytic n x).deriv) := by
   rfl
 
 /-- Advancing both the state and observable by one filtered stage does not
@@ -124,3 +124,5 @@ theorem filtered_value_and_derivative_compatibility
 end AnalyticFamily
 
 end InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
+
+end noncomputable section

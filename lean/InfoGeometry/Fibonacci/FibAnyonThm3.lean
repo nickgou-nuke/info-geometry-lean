@@ -16,7 +16,7 @@ theorem q_fifth_power : q^5 = 1 := by
     q^5 = (Complex.exp (2 * (π : ℂ) * Complex.I / 5)) ^ 5 := rfl
     _ = Complex.exp ((2 * (π : ℂ) * Complex.I / 5) * (5 : ℂ)) := by
       rw [← Complex.exp_nat_mul, mul_comm, Nat.cast_ofNat]
-    _ = Complex.exp (2 * (π : ℂ) * Complex.I) := by ring
+    _ = Complex.exp (2 * (π : ℂ) * Complex.I) := by ring_nf
     _ = Complex.cos (2 * (π : ℂ)) + Complex.sin (2 * (π : ℂ)) * Complex.I := by
       rw [Complex.exp_mul_I]
     _ = 1 := by simp

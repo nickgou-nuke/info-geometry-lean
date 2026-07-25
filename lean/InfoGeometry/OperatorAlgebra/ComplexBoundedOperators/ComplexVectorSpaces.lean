@@ -43,7 +43,7 @@ theorem complex_smul_re_im (z : ℂ) (x : E) :
     z • x = (z.re : ℝ) • x + (z.im : ℝ) • ((Complex.I : ℂ) • x) := by
   conv_lhs => rw [← Complex.re_add_im z]
   rw [add_smul, mul_smul]
-  congr 1 <;> exact (Complex.real_smul _ _).symm
+  congr 1
 
 theorem neg_one_smul (x : E) :
     ((-1 : ℂ) • x) = -x := by

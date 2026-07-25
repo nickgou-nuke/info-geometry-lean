@@ -33,7 +33,7 @@ theorem normalized_trace_eq_dirichlet_term (β : ℂ) (n : ℕ) :
   simp [hadjiivanovMonodromy, upperJordan, lcftPhase, conformalWeight]
   field_simp
   rw [Complex.I_sq]
-  ring
+  ring_nf
 
 /-- The formal amplituhedron-style trace sum, represented only as its intended
 Dirichlet series expression. -/

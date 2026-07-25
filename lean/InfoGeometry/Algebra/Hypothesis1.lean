@@ -30,8 +30,7 @@ noncomputable def X : CuntzAlg 2 := matrixToCuntz 2 A
 theorem A_sq : A * A = A + 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [A, Matrix.one_apply, Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_succ] <;>
-    norm_num
+    simp [A, Matrix.one_apply, Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- The noncommutative lift X = ι(A) satisfies X² = X + 1. -/
 theorem X_sq : X * X = X + 1 := by

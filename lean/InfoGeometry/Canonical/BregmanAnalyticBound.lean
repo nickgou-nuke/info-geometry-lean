@@ -25,7 +25,7 @@ lemma cos_one_bound (ε : ℝ) : |Real.cos ε - 1| ≤ ε ^ 2 := by
     calc
       Real.cos ε - 1 = Real.cos ε - Real.cos 0 := by simp
       _ = -2 * Real.sin ((ε + 0)/2) * Real.sin ((ε - 0)/2) := by rw [Real.cos_sub_cos]
-      _ = -2 * ((Real.sin (ε/2)) ^ 2) := by ring
+      _ = -2 * ((Real.sin (ε/2)) ^ 2) := by ring_nf
   rw [h_eq]
   calc
     |-2 * ((Real.sin (ε / 2)) ^ 2)| = 2 * ((Real.sin (ε / 2)) ^ 2) := by

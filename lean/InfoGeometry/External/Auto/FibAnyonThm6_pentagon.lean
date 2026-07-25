@@ -67,7 +67,7 @@ theorem fib_anyons_pentagon_full : F12_mat * F12_mat * F12_mat = F12_mat := by
         s_gr * s_gr + tau_gr * tau_gr = tau_gr ^ 2 + s_gr ^ 2 := by ring
         _ = 1 := pentagon_condition
   calc
-    F12_mat * F12_mat * F12_mat = (F12_mat * F12_mat) * F12_mat := by ring
+    F12_mat * F12_mat * F12_mat = (F12_mat * F12_mat) * F12_mat := by rfl
     _ = (1 : Matrix (Fin 3) (Fin 3) ℝ) * F12_mat := by rw [hF12sq]
     _ = F12_mat := by simp
 

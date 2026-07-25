@@ -47,7 +47,7 @@ theorem phi_le_fenchelValue (y x : ℝ) (hy : 0 < y) :
   have hexp_split : Real.exp x = y * Real.exp (x - Real.log y) := by
     rw [show x = (x - Real.log y) + Real.log y by ring]
     rw [Real.exp_add, Real.exp_log hy]
-    ring
+    ring_nf
   unfold phi
   rw [hexp_split]
   have hstep : y * ((x - Real.log y) + 1) = y * x - (y * Real.log y - y) := by ring

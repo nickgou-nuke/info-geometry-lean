@@ -37,6 +37,6 @@ annihilating the spatial translation without any abstract assumptions.
 theorem explicit_glide_compactification :
     (R_core * T_core) * (R_core * T_core) = 1 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [R_core, T_core, s1, s2, mul_apply, sum_fin_2, I_mul_I] <;> ring
+  fin_cases i <;> fin_cases j <;> simp [R_core, T_core, s1, s2, mul_apply, I_mul_I]
 
 end InfoGeometry.Physics.Pin55

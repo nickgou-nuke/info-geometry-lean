@@ -84,14 +84,14 @@ theorem e0_mul_e1_mul_e0 : e0 * e1 * e0 = e0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     dsimp [Matrix.mul_apply] <;>
-    simp [e0, e1, Fin.sum_univ_eight] <;> norm_num
+    simp [e0, e1, Fin.sum_univ_eight]
 
 /-- TL symmetric skein: `e₁·e₀·e₁ = e₁`. -/
 theorem e1_mul_e0_mul_e1 : e1 * e0 * e1 = e1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     dsimp [Matrix.mul_apply] <;>
-    simp [e0, e1, Fin.sum_univ_eight] <;> norm_num
+    simp [e0, e1, Fin.sum_univ_eight]
 
 /-! ## TL₃(2) synthesis -/
 

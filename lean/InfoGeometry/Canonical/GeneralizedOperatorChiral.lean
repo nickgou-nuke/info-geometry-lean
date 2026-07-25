@@ -211,7 +211,7 @@ theorem chiralExp_chiralLog
           = (Real.exp (Real.log (W.scalar + W.directional)) +
               Real.exp (Real.log (W.scalar - W.directional))) / 2 := by
                 simp [chiralExp, chiralLog]
-                ring
+                ring_nf
       _ = ((W.scalar + W.directional) + (W.scalar - W.directional)) / 2 := by
             rw [Real.exp_log hplus, Real.exp_log hminus]
       _ = W.scalar := by ring
@@ -220,7 +220,7 @@ theorem chiralExp_chiralLog
           = (Real.exp (Real.log (W.scalar + W.directional)) -
               Real.exp (Real.log (W.scalar - W.directional))) / 2 := by
                 simp [chiralExp, chiralLog]
-                ring
+                ring_nf
       _ = ((W.scalar + W.directional) - (W.scalar - W.directional)) / 2 := by
             rw [Real.exp_log hplus, Real.exp_log hminus]
       _ = W.directional := by ring
@@ -292,7 +292,7 @@ theorem ellipticExp_norm_sq (V : GeneralizedOperator (-1)) :
           ring
     _ = Real.exp (V.scalar + V.scalar) := by
           rw [pow_two, ← Real.exp_add]
-    _ = Real.exp (2 * V.scalar) := by ring
+    _ = Real.exp (2 * V.scalar) := by ring_nf
 
 /-- Parabolic closed-form exponential coordinates (`Ω² = 0`). -/
 noncomputable def parabolicExp (V : GeneralizedOperator 0) : GeneralizedOperator 0 :=

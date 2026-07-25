@@ -181,7 +181,7 @@ theorem T_square_eq_q_sq_I_n2 (q : ℝ) : T_matrix_n2 q * T_matrix_n2 q = q^2 �
       simp [T_eq_q_mul_P q]
     _ = (q * q) • (P_matrix_n2 * P_matrix_n2) := by
       simp [Matrix.mul_smul, Matrix.smul_mul, smul_smul]
-    _ = q^2 • (P_matrix_n2 * P_matrix_n2) := by ring
+    _ = q^2 • (P_matrix_n2 * P_matrix_n2) := by rw [pow_two]
     _ = q^2 • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by simp [P_square_eq_I]
 
 theorem T_self_adjoint_n2 (q : ℝ) : (T_matrix_n2 q)ᵀ = T_matrix_n2 q := by

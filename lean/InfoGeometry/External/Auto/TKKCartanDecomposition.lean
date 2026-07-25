@@ -68,7 +68,7 @@ Proton is the upper component with isospin +1/2. -/
 theorem proton_isospin :
     (I_3 * (!![1; 0] : M21C)) = (1/2 : ℂ) • (!![1; 0] : M21C) := by
   dsimp [I_3, sigma3]
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The neutron state eigenvalue equation for $I_3$. 
 Neutron is the lower component with isospin -1/2. -/

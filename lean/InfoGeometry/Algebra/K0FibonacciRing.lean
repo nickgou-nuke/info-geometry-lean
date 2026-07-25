@@ -86,26 +86,26 @@ theorem add_zero (x : FibRing) : x + 0 = x :=
 theorem mul_one (x : FibRing) : x * 1 = x :=
   calc
     x * 1 = ⟨x.a * 1 + x.b * 0, x.a * 0 + x.b * 1 + x.b * 0⟩ := rfl
-    _ = ⟨x.a, x.b⟩ := by ring
+    _ = ⟨x.a, x.b⟩ := by ring_nf
     _ = x := rfl
 
 theorem one_mul (x : FibRing) : 1 * x = x :=
   calc
     1 * x = ⟨1 * x.a + 0 * x.b, 1 * x.b + 0 * x.a + 0 * x.b⟩ := rfl
-    _ = ⟨x.a, x.b⟩ := by ring
+    _ = ⟨x.a, x.b⟩ := by ring_nf
     _ = x := rfl
 
 theorem mul_comm (x y : FibRing) : x * y = y * x :=
   calc
     x * y = ⟨x.a * y.a + x.b * y.b, x.a * y.b + x.b * y.a + x.b * y.b⟩ := rfl
-    _ = ⟨y.a * x.a + y.b * x.b, y.a * x.b + y.b * x.a + y.b * x.b⟩ := by ring
+    _ = ⟨y.a * x.a + y.b * x.b, y.a * x.b + y.b * x.a + y.b * x.b⟩ := by ring_nf
     _ = y * x := rfl
 
 /-- The fusion rule for τ: τ² = τ + 1. -/
 theorem tau_sq_eq_tau_add_one : tau * tau = tau + 1 :=
   calc
     tau * tau = ⟨0*0 + 1*1, 0*1 + 1*0 + 1*1⟩ := rfl
-    _ = ⟨1, 1⟩ := by ring
+    _ = ⟨1, 1⟩ := by ring_nf
     _ = ⟨0 + 1, 1 + 0⟩ := by simp
     _ = tau + 1 := rfl
 

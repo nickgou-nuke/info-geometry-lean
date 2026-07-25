@@ -248,8 +248,8 @@ theorem frequency_shift {f : ℝ → E} {s b : ℂ} :
       have hb :
           Complex.exp (b * (t : ℂ)) = Complex.exp (-((-b : ℂ) * (t : ℂ))) := by
         simpa using
-          congrArg Complex.exp (by
-            ring : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
+          congrArg Complex.exp
+            (rfl : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
       calc
         laplaceKernel s t • (Complex.exp (b * (t : ℂ)) • f t)
             = Complex.exp (b * (t : ℂ)) • (laplaceKernel s t • f t) := by
@@ -269,8 +269,8 @@ theorem frequency_shift {f : ℝ → E} {s b : ℂ} :
       have hb :
           Complex.exp (b * (t : ℂ)) = Complex.exp (-((-b : ℂ) * (t : ℂ))) := by
         simpa using
-          congrArg Complex.exp (by
-            ring : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
+          congrArg Complex.exp
+            (rfl : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
       calc
         laplaceKernel (s - b) t • f t
             = (Complex.exp (-((-b : ℂ) * (t : ℂ))) * laplaceKernel s t) • f t := by
@@ -371,8 +371,8 @@ theorem frequency_shift {f : ℝ → E} {s b : ℂ} :
   have hb :
       Complex.exp (b * (t : ℂ)) = Complex.exp (-((-b : ℂ) * (t : ℂ))) := by
     simpa using
-      congrArg Complex.exp (by
-        ring : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
+      congrArg Complex.exp
+        (rfl : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
   calc
     laplaceKernel s t • (Complex.exp (b * (t : ℂ)) • f t)
         = Complex.exp (b * (t : ℂ)) • (laplaceKernel s t • f t) := by
@@ -477,8 +477,8 @@ theorem frequency_shift {f : ℝ → E} {s b : ℂ} :
       have hb :
           Complex.exp (b * (t : ℂ)) = Complex.exp (-((-b : ℂ) * (t : ℂ))) := by
         simpa using
-          congrArg Complex.exp (by
-            ring : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
+          congrArg Complex.exp
+            (rfl : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
       calc
         laplaceKernel s t • (Complex.exp (b * (t : ℂ)) • f t)
             = Complex.exp (b * (t : ℂ)) • (laplaceKernel s t • f t) := by
@@ -498,8 +498,8 @@ theorem frequency_shift {f : ℝ → E} {s b : ℂ} :
       have hb :
           Complex.exp (b * (t : ℂ)) = Complex.exp (-((-b : ℂ) * (t : ℂ))) := by
         simpa using
-          congrArg Complex.exp (by
-            ring : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
+          congrArg Complex.exp
+            (rfl : (b * (t : ℂ)) = -((-b : ℂ) * (t : ℂ)))
       calc
         laplaceKernel (s - b) t • f t
             = (Complex.exp (-((-b : ℂ) * (t : ℂ))) * laplaceKernel s t) • f t := by

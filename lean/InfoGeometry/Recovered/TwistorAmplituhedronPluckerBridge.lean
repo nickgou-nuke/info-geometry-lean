@@ -31,8 +31,7 @@ theorem thermalPluckerDeterminant_eq_sq (r s : ℝ) :
   have hdiff : spacetimeMatrix s 0 0 0 - spacetimeMatrix r 0 0 0 =
       spacetimeMatrix (s - r) 0 0 0 := by
     ext a b <;> fin_cases a <;> fin_cases b <;>
-      simp [spacetimeMatrix, splitOne, splitI, splitJ, splitK] <;>
-      ring
+      simp [spacetimeMatrix, splitOne, splitI, splitJ, splitK]
   rw [hdiff, det_spacetimeMatrix]
   ring
 

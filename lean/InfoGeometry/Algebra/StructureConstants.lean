@@ -274,7 +274,7 @@ theorem commutator_formula (a b : Fin 8) :
         try simp [h_cdiv1, h_cdiv2, h_cdiv3, h_cdiv4, h_cmul1, h_cmul2, h_cmul3, h_cmul4, h_cmul5, h_cmul6]
         try repeat rw [← mul_assoc]
         try simp [h_cdiv1, h_cdiv2, h_cdiv3, h_cdiv4, h_cmul1, h_cmul2, h_cmul3, h_cmul4, h_cmul5, h_cmul6]
-        try ring
+        try ring_nf
         try rfl
         try { funext i j <;> fin_cases i <;> fin_cases j <;> { try ring_nf; try rfl } }
         try { funext i <;> fin_cases i <;> { try ring_nf; try rfl } }

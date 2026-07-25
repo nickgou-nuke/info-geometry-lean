@@ -18,7 +18,7 @@ open Matrix
 /-- Commutator antisymmetry: [A,B] = -[B,A] always. -/
 theorem commutator_antisymm (A B : Matrix (Fin 2) (Fin 2) ℂ) :
     A*B - B*A = -(B*A - A*B) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- F_{μν} = -F_{νμ} — curvature is antisymmetric. -/
 theorem curvature_antisymm (omega_mu omega_nu : Matrix (Fin 2) (Fin 2) ℂ) :

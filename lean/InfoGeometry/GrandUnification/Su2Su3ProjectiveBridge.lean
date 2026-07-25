@@ -31,6 +31,36 @@ theorem master_symmetry_reconciliation (T_leakage : ℝ) :
     (grand_unification_matrix T_leakage) * (grand_unification_matrix T_leakage) = 
     ![![1, 0, 0], ![0, 1, 2 * T_leakage], ![0, 0, 1]] := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [grand_unification_matrix, mul_apply, sum_fin_3] <;> ring
+  fin_cases i
+  · fin_cases j
+    · rw [mul_apply, sum_fin_3]
+      change (1 : ℝ) * 1 + 0 * 0 + 0 * 0 = 1
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (1 : ℝ) * 0 + 0 * 1 + 0 * 0 = 0
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (1 : ℝ) * 0 + 0 * T_leakage + 0 * 1 = 0
+      norm_num
+  · fin_cases j
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 1 + 1 * 0 + T_leakage * 0 = 0
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 0 + 1 * 1 + T_leakage * 0 = 1
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 0 + 1 * T_leakage + T_leakage * 1 = 2 * T_leakage
+      ring
+  · fin_cases j
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 1 + 0 * 0 + 1 * 0 = 0
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 0 + 0 * 1 + 1 * 0 = 0
+      norm_num
+    · rw [mul_apply, sum_fin_3]
+      change (0 : ℝ) * 0 + 0 * T_leakage + 1 * 1 = 1
+      norm_num
 
 end InfoGeometry.GrandUnification.Su2Su3ProjectiveBridge

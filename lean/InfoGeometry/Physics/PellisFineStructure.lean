@@ -71,12 +71,10 @@ theorem pellis_normal_form : pellis_alpha_inv = 176410/243 - 88447/243 * phi := 
   have h2 : 1 / phi ^ 2 = 2 - phi := inv_sq
   have h3 : 1 / phi ^ 3 = 2 * phi - 3 := inv_cube
   have h5 : 1 / phi ^ 5 = 5 * phi - 8 := inv_fifth
-  have h3ne : (3:ℝ) ≠ 0 := by norm_num
   calc
     pellis_alpha_inv = 360/phi^2 - 2/phi^3 + 1/(3 * phi)^5 := by rfl
     _ = 360/phi^2 - 2/phi^3 + 1/(3^5 * phi^5) := by
       rw [mul_pow]
-      <;> field_simp [h3ne, phi_ne_zero]
     _ = 360*(2-phi) - 2*(2*phi-3) + 1/243*(5*phi-8) := by
       rw [div_eq_mul_inv (360 : ℝ) (phi ^ 2), div_eq_mul_inv (2 : ℝ) (phi ^ 3)]
       rw [← h2, ← h3, ← h5]

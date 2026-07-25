@@ -71,7 +71,7 @@ theorem opLogLeft_add_opLogRight_on_image (t : ℝ) :
 theorem opExp_of_opLogRight_on_image (t : ℝ) :
     expKExact (- opLogRight (expKExact t)) = expKExact t := by
   rw [opLogRight_on_exp]
-  ring
+  ring_nf
 
 /-- Product of diagonal channels is constant `1` on the `expKExact` image. -/
 theorem opDiag_product_one_on_image (t : ℝ) :

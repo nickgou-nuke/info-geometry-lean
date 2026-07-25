@@ -35,9 +35,9 @@ theorem jordanCell_krein_selfAdjoint (Δ : ℝ) :
     simp [L, scalarMatrix, N, G, Matrix.transpose_apply, Matrix.mul_apply, Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
 
 theorem jordanCell_not_diagonalizable (Δ : ℝ) :
-    ¬ (∃ (P : Matrix (Fin 2) (Fin 2) ℝ) (D : Matrix (Fin 2) (Fin 2) ℝ) (hP : Invertible P),
+    ¬ (∃ (P : Matrix (Fin 2) (Fin 2) ℝ) (D : Matrix (Fin 2) (Fin 2) ℝ) (_ : Invertible P),
       (D 0 1 = 0 ∧ D 1 0 = 0) ∧ L Δ = P * D * ⅟P) := by
-  intro ⟨P, D, hP, ⟨hD01, hD10⟩, hL⟩
+  intro ⟨P, D, instP, ⟨hD01, hD10⟩, hL⟩
   have h_mul : L Δ * P = P * D := by
     rw [hL, Matrix.mul_assoc, invOf_mul_self, Matrix.mul_one]
   have h00 : (L Δ * P) 0 0 = (P * D) 0 0 := by rw [h_mul]

@@ -1,8 +1,9 @@
 import Mathlib
+import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 import InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+import InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 import InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 set_option linter.unusedSectionVars false
@@ -17,7 +18,7 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
    For $Z(s) \to 0$, the effective free energy potential $\Phi(s) = -\ln |Z(s)| \to +\infty$.
 
 2. **Symplectic Deflection onto Antiunitary Fixed Locus**:
-   At a Lee-Yang phase transition zero $z_0$ with $\|z_0\| = 1$, the Cayley transform $s(z_0) = \frac{1}{2} + \frac{1+z_0}{1-z_0}$ aligns strictly with the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$.
+   At a Lee-Yang phase transition zero $z_0$ with $\|z_0\| = 1$, the Cayley transform $s(z_0)$ aligns strictly with the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$.
 
 3. **de Rham Winding & Topological Time Quantization**:
    Winding around a Lee-Yang zero yields a discrete topological integer $n \in \mathbb{Z}$, quantizing time steps $\Delta t_n = 2\pi n$.
@@ -29,10 +30,11 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
 namespace InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge
 
 open Complex
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
 open InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
+open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 /-- Logarithmic potential wall condition at a partition function zero. -/
@@ -44,13 +46,13 @@ noncomputable def TopologicalWindingCharge (n : ℤ) : ℝ :=
   2 * Real.pi * (n : ℝ)
 
 /--
-**Main Theorem 1: Lee-Yang Fugacity Zeros Map to Free Energy Barrier & Fixed Locus**
-Proves natively that if $\|z_0\| = 1$ and $z_0 \neq 1$, the Cayley-transformed state $s(z_0)$ lies on the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$:
-$$\|z_0\| = 1 \land z_0 \neq 1 \implies \operatorname{Re}(s(z_0)) = \frac{1}{2}.$$
+**Main Theorem 1: Lee-Yang Fugacity Zeros Map to Free Energy Barrier & Critical Line**
+Proves natively that if $\|z_0\| = 1$ and $z_0.re \neq -1$, the Cayley temperature state lies on the critical line:
+$$\|z_0\| = 1 \land z_0.re \neq -1 \implies \operatorname{Re}(\text{cayleyToTemperature } z_0) = \frac{1}{2}.$$
 -/
-theorem leeyang_zero_maps_to_fixed_locus {z0 : ℂ} (hz0 : IsLeeYangZero z0) (hne : z0 ≠ 1) :
-    (leeYangToRiemannS z0).re = 1 / 2 :=
-  lee_yang_to_riemann_critical_line hz0 hne
+theorem leeyang_zero_maps_to_critical_line {z0 : ℂ} (hz0 : OnLeeYangCircle z0) (hpole : z0.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z0) :=
+  cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole
 
 /--
 **Main Theorem 2: Quantized Topological Time Step Non-Zero for Non-Zero Winding**
@@ -70,13 +72,13 @@ theorem quantized_time_step_ne_zero {n : ℤ} (hn : n ≠ 0) :
 Unifies partition zero conditions, Cayley unit circle alignment, topological winding quantization, and antiunitary fixed locus rigidity into a single 100% kernel-checked theorem in Lean 4.
 -/
 theorem grand_leeyang_bost_connes_phase_transition_master_duality
-    (z0 : ℂ) (hz0 : IsLeeYangZero z0) (hne : z0 ≠ 1)
+    (z0 : ℂ) (hz0 : OnLeeYangCircle z0) (hpole : z0.re ≠ -1)
     (n : ℤ) (hn : n ≠ 0) (s : ℂ) (h_anti : s = 1 - star s) :
-    ((leeYangToRiemannS z0).re = 1 / 2) ∧
+    (OnCriticalLine (cayleyToTemperature z0)) ∧
     (TopologicalWindingCharge n ≠ 0) ∧
     (s.re = 1 / 2) ∧
     (s = 1 - star s) := ⟨
-  lee_yang_to_riemann_critical_line hz0 hne,
+  cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole,
   quantized_time_step_ne_zero hn,
   antiunitary_fixed_locus_rigidity h_anti,
   (critical_line_fixed_locus_iff s).2 (antiunitary_fixed_locus_rigidity h_anti)

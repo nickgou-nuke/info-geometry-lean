@@ -1031,6 +1031,74 @@ def toTwoVar {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ) (w : Fin n → �
   D := splitEval P 1 1 w - splitEval P 1 0 w - splitEval P 0 1 w + splitEval P 0 0 w
 
 /--
+The interpolation polynomial `toTwoVar P w` evaluates to the original fixed
+slice whenever that slice is affine in each of its two displayed variables.
+-/
+theorem toTwoVar_eval_eq_of_separatelyAffine
+    {n : ℕ}
+    (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ)
+    (w : Fin n → ℂ)
+    (h₀ :
+      ∀ y : ℂ, ∃ a b : ℂ, ∀ x : ℂ,
+        splitEval P x y w = a + b * x)
+    (h₁ :
+      ∀ x : ℂ, ∃ a b : ℂ, ∀ y : ℂ,
+        splitEval P x y w = a + b * y)
+    (z₀ z₁ : ℂ) :
+    (toTwoVar P w).eval z₀ z₁ = splitEval P z₀ z₁ w := by
+  have hExpansion :=
+    multiaffine_2var_expansion
+      (fun x y : ℂ => splitEval P x y w) h₀ h₁ z₀ z₁
+  simpa [toTwoVar, TwoVarAffinePolynomial.eval] using hExpansion.symm
+
+/--
+One repeated Asano contraction step under the exact hypotheses consumed by
+the closed-set Asano--Ruelle theorem.
+
+The separate-affinity assumptions are explicit.  A later polynomial lemma may
+derive them from the support-degree bound in `AsanoInductiveStepSourceClaim`;
+this theorem does not hide that remaining obligation.
+-/
+theorem asanoInductiveStep_of_separatelyAffine
+    {n : ℕ}
+    (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ)
+    (K : Fin 2 ⊕ Fin n → Set ℂ)
+    (hzero : ∀ i, 0 ∉ K i)
+    (hclosed₀ : IsClosed (K (Sum.inl 0)))
+    (hclosed₁ : IsClosed (K (Sum.inl 1)))
+    (hfree :
+      ∀ z : Fin 2 ⊕ Fin n → ℂ,
+        (∀ i, z i ∉ K i) → eval z P ≠ 0)
+    (hAR : AsanoRuelleLemmaSourceClaim)
+    (w : Fin n → ℂ)
+    (hw : ∀ j : Fin n, w j ∉ K (Sum.inr j))
+    (h₀ :
+      ∀ y : ℂ, ∃ a b : ℂ, ∀ x : ℂ,
+        splitEval P x y w = a + b * x)
+    (h₁ :
+      ∀ x : ℂ, ∃ a b : ℂ, ∀ y : ℂ,
+        splitEval P x y w = a + b * y)
+    (z : ℂ)
+    (hz : z ∉ asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1))) :
+    (toTwoVar P w).contract z ≠ 0 := by
+  apply hAR
+    (K (Sum.inl 0)) (K (Sum.inl 1)) (toTwoVar P w)
+    (hzero (Sum.inl 0)) (hzero (Sum.inl 1))
+    hclosed₀ hclosed₁
+  · intro z₀ z₁ hz₀ hz₁
+    rw [toTwoVar_eval_eq_of_separatelyAffine P w h₀ h₁]
+    apply hfree
+    intro i
+    cases i with
+    | inl i =>
+        fin_cases i
+        · exact hz₀
+        · exact hz₁
+    | inr j =>
+        exact hw j
+  · exact hz
+
+/--
 Main Asano induction source claim.
 
 This records the missing repeated-contraction theorem shape without claiming a

@@ -51,17 +51,16 @@ theorem virasoro_bracket_antisymm (m n : ℤ) (c : ℂ) (L_sum : ℂ) (I : ℂ) 
     virasoroBracket m n c L_sum I = - virasoroBracket n m c L_sum I := by
   unfold virasoroBracket virasoroCocycle
   have h_add : m + n = 0 ↔ n + m = 0 := by rw [add_comm]
+  have h_cast : ((m - n : ℤ) : ℂ) = - ((n - m : ℤ) : ℂ) := by push_cast; ring
   by_cases h_zero : m + n = 0
   · have h_zero' : n + m = 0 := h_add.mp h_zero
     have hn_eq : (n : ℂ) = - (m : ℂ) := by
       have : n = -m := eq_neg_of_add_eq_zero_left h_zero'
       exact_mod_cast this
-    rw [if_pos h_zero, if_pos h_zero']
-    rw [hn_eq]
-    ring_nf
+    rw [if_pos h_zero, if_pos h_zero', h_cast, hn_eq]
+    ring
   · have h_zero' : n + m = 0 → False := by intro h; exact h_zero (h_add.mpr h)
-    rw [if_neg h_zero, if_neg h_zero']
-    push_cast
+    rw [if_neg h_zero, if_neg h_zero', h_cast]
     ring
 
 /--

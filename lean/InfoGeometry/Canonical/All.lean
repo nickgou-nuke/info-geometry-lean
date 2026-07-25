@@ -490,7 +490,6 @@ import InfoGeometry.Canonical.LeeYangAsanoFullReduction
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
-import InfoGeometry.Canonical.PrimeLeeYangFilteredColimit
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace
 import InfoGeometry.Canonical.PrimonVirasoroCentralChargeBridge

@@ -95,7 +95,7 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
       if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0 := by
     split_ifs with hmn
     · unfold RawCARModeCompletion.central
-      simp [RingHom.map_int_zsmul_one, RingHom.map_one]
+      exact RingHom.map_int_zsmul_one ρ m
     · simp [map_zero]
   rw [hs]
 
@@ -139,17 +139,15 @@ theorem stabilizedCurrent_add
   have hv := S.eventually_cutoffCurrent_eq m v
   have hw := S.eventually_cutoffCurrent_eq m w
   have hvw := S.eventually_cutoffCurrent_eq m (v + w)
-  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by
-    filter_upwards [hvw, hv, hw] with N hvwN hvN hwN
-    rw [← hvwN, LinearMap.add_apply, hvN, hwN]
+  have h₁ : ∀ᶠ N : ℕ in atTop,
+      endomorphismCutoffCurrent S.source S.ρ N m (v + w) =
+      endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by
+    filter_upwards with N
+    exact map_add (endomorphismCutoffCurrent S.source S.ρ N m) v w
   have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (v + w) = S.J m v + S.J m w := by
-    filter_upwards [h₁, hvw, hv, hw] with N hN hvwN hvN hwN
-    calc
-      S.J m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m (v + w) := by rw [hvwN]
-      _ = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by rw [hN]
-      _ = S.J m v + S.J m w := by rw [hvN, hwN]
-  obtain ⟨N, hN⟩ := h₂.exists
-  exact hN
+    filter_upwards [h₁, hvw, hv, hw] with N h1 hvwN hvN hwN
+    rw [← hvwN, h1, hvN, hwN]
+  exact h₂.exists.choose_spec
 
 /-- Scalar multiplication likewise descends pointwise. -/
 theorem stabilizedCurrent_smul
@@ -157,17 +155,15 @@ theorem stabilizedCurrent_smul
     S.J m (c • v) = c • S.J m v := by
   have hv := S.eventually_cutoffCurrent_eq m v
   have hcv := S.eventually_cutoffCurrent_eq m (c • v)
-  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (c • v) = c • endomorphismCutoffCurrent S.source S.ρ N m v := by
-    filter_upwards [hv, hcv] with N hvN hcvN
-    rw [← hcvN, LinearMap.map_smul, hvN]
+  have h₁ : ∀ᶠ N : ℕ in atTop,
+      endomorphismCutoffCurrent S.source S.ρ N m (c • v) =
+      c • endomorphismCutoffCurrent S.source S.ρ N m v := by
+    filter_upwards with N
+    exact map_smul (endomorphismCutoffCurrent S.source S.ρ N m) c v
   have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (c • v) = c • S.J m v := by
-    filter_upwards [h₁, hv, hcv] with N hN hvN hcvN
-    calc
-      S.J m (c • v) = endomorphismCutoffCurrent S.source S.ρ N m (c • v) := by rw [hcvN]
-      _ = c • endomorphismCutoffCurrent S.source S.ρ N m v := by rw [hN]
-      _ = c • S.J m v := by rw [hvN]
-  obtain ⟨N, hN⟩ := h₂.exists
-  exact hN
+    filter_upwards [h₁, hv, hcv] with N h1 hvN hcvN
+    rw [← hcvN, h1, hvN]
+  exact h₂.exists.choose_spec
 
 /-- The commutator of the derived stabilized currents is the Heisenberg commutator. -/
 theorem current_commutator
@@ -192,8 +188,11 @@ theorem current_commutator
     apply endomorphismCutoffCurrent_commutator_eq_wick_image S.source S.ρ N m n hN1
   have h_calc : (S.J m).commutator (S.J n) v = (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
     calc
-      (S.J m).commutator (S.J n) v = (endomorphismCutoffCurrent S.source S.ρ N m).commutator (endomorphismCutoffCurrent S.source S.ρ N n) v := by
-        simp only [LinearMap.commutator, LinearMap.sub_apply, LinearMap.mul_apply, hN2, hN3, hN4, hN5]
+      (S.J m).commutator (S.J n) v = S.J m (S.J n v) - S.J n (S.J m v) := rfl
+      _ = endomorphismCutoffCurrent S.source S.ρ N m (S.J n v) - endomorphismCutoffCurrent S.source S.ρ N n (S.J m v) := by rw [← hN4, ← hN5]
+      _ = (endomorphismCutoffCurrent S.source S.ρ N m).commutator (endomorphismCutoffCurrent S.source S.ρ N n) v := by
+        dsimp [LinearMap.commutator]
+        rw [LinearMap.sub_apply, LinearMap.comp_apply, LinearMap.comp_apply, hN3, hN2]
       _ = (S.ρ (S.source.cutoffBoundaryTerm N m n) + if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
         rw [h₂]
       _ = (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by

@@ -25,6 +25,19 @@ open InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 variable {𝕜 A V : Type*} [Field 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
+/-- Integer scalar multiplication identification lemma. -/
+theorem int_zsmul_eq_cast_smul (m : Int) (v : V) : m • v = (m : 𝕜) • v := by
+  induction m using Int.induction_on with
+  | hz => simp
+  | hp i hi =>
+    rw [add_smul, one_smul, hi]
+    push_cast
+    rw [add_smul, one_smul]
+  | hn i hi =>
+    rw [sub_smul, one_smul, hi]
+    push_cast
+    rw [sub_smul, one_smul]
+
 /--
 Endomorphism-valued finite cutoff current:
 Applies the representation `ρ : A →+* Module.End 𝕜 V` to the ring-valued normal-ordered cutoff current `representedCutoffCurrent C N m`.
@@ -88,7 +101,8 @@ theorem endomorphismCutoffCurrent_commutator_eq_wick_image
   split_ifs with hmn
   · rw [RawCARModeCompletion.central, map_zsmul, map_one]
     ext v
-    simp [LinearMap.smul_apply, LinearMap.id_apply]
+    simp only [LinearMap.smul_apply, LinearMap.id_apply]
+    exact int_zsmul_eq_cast_smul m v
   · exact map_zero ρ
 
 /--

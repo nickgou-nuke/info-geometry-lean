@@ -49,7 +49,7 @@ lemma xiAdamsMStar_sandwich (n : ℕ) {δ r : ℝ} (hδ : 0 < δ) (hr₀ : 0 < r
 lemma tendsto_xiAdamsCommonFactor_atTop {δ : ℝ} (hδ : 0 < δ) :
     Tendsto (fun n : ℕ => xiAdamsCommonFactor n δ) atTop atTop := by
   have hpowReal : Tendsto (fun x : ℝ => x ^ 2) atTop atTop := by
-    simpa using (tendsto_pow_atTop (n := 2) (by norm_num : (2 : ℕ) ≠ 0))
+    simpa using (tendsto_pow_atTop (n := 2) (Nat.succ_ne_zero 1))
   have hpow : Tendsto (fun n : ℕ => ((n : ℝ) ^ 2)) atTop atTop :=
     hpowReal.comp tendsto_natCast_atTop_atTop
   have hadd : Tendsto (fun n : ℕ => ((n : ℝ) ^ 2) + (1 + δ) ^ 2) atTop atTop := by

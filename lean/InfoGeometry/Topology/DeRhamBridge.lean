@@ -89,7 +89,6 @@ theorem nilpotent_itakura_realizes_d_squared_zero (K : BiquaternionKANnilpotent.
 theorem stokes_splitting_realizes_derham (u v : ℕ) :
     Set.range (stokesBoundaryInclusion u v) = {p | stokesProjection u v p = 0} := by
   rw [stokes_range_eq_kernel]
-  <;> rfl
 
 /-! ## Section 3: Fibonacci Ring → Period Matrix -/
 

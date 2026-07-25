@@ -19,11 +19,13 @@ private lemma xi_integer_ellipse_mod_kernel_spectrum_primewise_unordered_pair_eq
       · simp [huv] at hcard
     have hu : u = x := by
       have hu_mem : u ∈ ({x, x} : Finset Nat) := by
-        simpa [h] using (show u ∈ ({u, v} : Finset Nat) by simp)
+        rw [h]
+        exact Finset.mem_insert_self u {v}
       simpa [Finset.pair_eq_singleton] using hu_mem
     have hv : v = x := by
       have hv_mem : v ∈ ({x, x} : Finset Nat) := by
-        simpa [h] using (show v ∈ ({u, v} : Finset Nat) by simp)
+        rw [h]
+        exact Finset.mem_insert_of_mem (Finset.mem_singleton_self v)
       simpa [Finset.pair_eq_singleton] using hv_mem
     exact Or.inl ⟨hu.symm, hv.symm⟩
   · have hcard : ({u, v} : Finset Nat).card = 2 := by

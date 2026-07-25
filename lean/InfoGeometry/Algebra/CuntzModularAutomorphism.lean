@@ -35,7 +35,8 @@ def modularPhaseInv (p : ℕ) (t : ℝ) : ℂ := Complex.exp (-(I * (t : ℂ) * 
   rw [h, Complex.exp_add]
 
 @[simp] lemma modularPhase_mul_inv (p : ℕ) (t : ℝ) : modularPhase p t * modularPhaseInv p t = 1 := by
-  dsimp [modularPhase, modularPhaseInv]; rw [← Complex.exp_add]; ring; simp
+  dsimp [modularPhase, modularPhaseInv]
+  rw [← Complex.exp_add, add_neg_cancel, Complex.exp_zero]
 
 noncomputable def modularOnFree (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) : CuntzFree n →ₗ[ℂ] CuntzTensor n :=
   (Finsupp.lsum ℂ) (λ (g : Fin n × Bool) =>

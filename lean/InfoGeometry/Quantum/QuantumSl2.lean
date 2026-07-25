@@ -141,9 +141,9 @@ theorem q_plus_qinv_equals_phi_at_fibonacci :
     (Complex.exp (Real.pi * Complex.I / 5) + Complex.exp (-Real.pi * Complex.I / 5)) = phi := by
   set θ := (Real.pi : ℂ) / 5 with hθ
   have hpos : Complex.exp (Real.pi * Complex.I / 5) = Complex.exp (θ * Complex.I) := by
-    dsimp [θ]; ring
+    dsimp [θ]; ring_nf
   have hneg : Complex.exp (-Real.pi * Complex.I / 5) = Complex.exp (-θ * Complex.I) := by
-    dsimp [θ]; ring
+    dsimp [θ]; ring_nf
   rw [hpos, hneg]
   -- Euler: e^{iθ} + e^{-iθ} = 2*cos(θ)
   rw [Complex.exp_mul_I θ, Complex.exp_mul_I (-θ)]

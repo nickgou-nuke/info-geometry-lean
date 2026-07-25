@@ -147,8 +147,7 @@ def ofVec44 (v : Fin 8 → ℚ) : SplitO :=
     toVec44 (ofVec44 v) = v := by
   funext i
   fin_cases i <;>
-    simp [ofVec44, toVec44] <;>
-    ring
+    simp [ofVec44, toVec44]
 
 def vec44Equiv : SplitO ≃ (Fin 8 → ℚ) where
   toFun := toVec44

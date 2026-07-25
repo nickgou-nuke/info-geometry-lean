@@ -115,14 +115,13 @@ def ofVec55Q (v : Fin 10 → ℚ) : Herm2x2OsQ :=
   cases X
   apply Herm2x2OsQ.ext <;>
     simp [ofVec55Q, toVec55Q, ofVec44] <;>
-    ring
+    ring_nf
 
 @[simp] theorem toVec55Q_ofVec55Q (v : Fin 10 → ℚ) :
     toVec55Q (ofVec55Q v) = v := by
   funext i
   fin_cases i <;>
-    simp [ofVec55Q, toVec55Q] <;>
-    ring
+    simp [ofVec55Q, toVec55Q]
 
 def vec55Equiv : Herm2x2OsQ ≃ (Fin 10 → ℚ) where
   toFun := toVec55Q

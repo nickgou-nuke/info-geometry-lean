@@ -21,10 +21,10 @@ theorem paper_conclusion_window6_three_moment_spectrum_inversion
     nlinarith [h0, h1, h2]
   refine ⟨?_, ?_, ?_⟩
   · rw [hN2]
-    simpa using (Int.ediv_mul_cancel (show (2 : ℤ) ∣ 2 * N2 by exact dvd_mul_right _ _)).symm
+    simp
   · exact hN3.symm
   · rw [hN4]
-    simpa using (Int.ediv_mul_cancel (show (2 : ℤ) ∣ 2 * N4 by exact dvd_mul_right _ _)).symm
+    simp
 
 /-- Window-6 specialization recovers the histogram `(8,4,9)` from `(S0,S1,S2) = (21,64,212)`. -/
 theorem window6_three_moment_spectrum_histogram :

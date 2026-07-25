@@ -54,8 +54,7 @@ theorem iσ₂_square_root_neg_one :
     (I • σ₂) * (I • σ₂) = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₂, Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply, Matrix.neg_apply,
-      Fin.sum_univ_two, Complex.I_mul_I] <;>
-    (ring_nf; try simp [Complex.I_mul_I]; try ring)
+      Fin.sum_univ_two, Complex.I_mul_I]
 
 /-- The logarithm branch shift is indexed by integers: changing branch adds `2πi n`. -/
 def logBranchShift (n : ℤ) : ℂ := (2 * Real.pi * n : ℝ) * I

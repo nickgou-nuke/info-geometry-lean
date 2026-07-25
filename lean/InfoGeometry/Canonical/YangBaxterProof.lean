@@ -225,7 +225,7 @@ theorem cyclotomic_relation : q^4 - q^3 + q^2 - q + 1 = 0 := by
     have hq_re : (q : ℂ).re = Real.cos (Real.pi / 5) := by
       calc
         (q : ℂ).re = (Complex.exp (((Real.pi / 5 : ℂ)) * Complex.I)).re := by
-          dsimp [q]; ring
+          dsimp [q]; ring_nf
         _ = Real.cos (Real.pi / 5) := by
           simpa using (Complex.exp_ofReal_mul_I_re (Real.pi / 5))
     have hneg_re : (-1 : ℂ).re = -1 := by norm_num
@@ -247,13 +247,13 @@ theorem τ_eq_q_plus_qinv_minus_one : τ = q + (q⁻¹) - 1 := by
   have h_re_q : (q : ℂ).re = Real.cos (Real.pi / 5) := by
     calc
       (q : ℂ).re = (Complex.exp (((Real.pi / 5 : ℂ)) * Complex.I)).re := by
-        dsimp [q]; ring
+        dsimp [q]; ring_nf
       _ = Real.cos (Real.pi / 5) := by
         simpa using (Complex.exp_ofReal_mul_I_re (Real.pi / 5))
   have h_im_q : (q : ℂ).im = Real.sin (Real.pi / 5) := by
     calc
       (q : ℂ).im = (Complex.exp (((Real.pi / 5 : ℂ)) * Complex.I)).im := by
-        dsimp [q]; ring
+        dsimp [q]; ring_nf
       _ = Real.sin (Real.pi / 5) := by
         simpa using (Complex.exp_ofReal_mul_I_im (Real.pi / 5))
   have h_norm_sq : Complex.normSq q = 1 := by

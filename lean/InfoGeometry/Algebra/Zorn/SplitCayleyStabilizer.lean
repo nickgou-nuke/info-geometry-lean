@@ -48,14 +48,14 @@ def zornOne : ZornCell R :=
   change ZornCell.mulZ (zornOne (R := R)) X = X
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold zornOne ZornCell.mulZ
-  ring
+  ring_nf
 
 @[simp] theorem mul_zornOne (X : ZornCell R) :
     X * zornOne (R := R) = X := by
   change ZornCell.mulZ X (zornOne (R := R)) = X
   rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
   unfold zornOne ZornCell.mulZ
-  ring
+  ring_nf
 
 @[simp] theorem detZ_zornOne :
     ZornCell.detZ (zornOne (R := R)) = 1 := by

@@ -370,7 +370,7 @@ theorem modularAutomorphism_rec_nat_closed_form
     _ = (nilpotentFlow t) ^ n * A * (nilpotentFlow (-t)) ^ n := by
           rw [nilpotentFlow_pow (-t) n]
           congr 1
-          ring
+          ring_nf
 
 /--
 The inverse automorphism is obtained by negating time.

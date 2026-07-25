@@ -29,9 +29,8 @@ theorem paper_op_algebra_fold_orbit_stieltjes_hankel_logconvex {m : ℕ} (N : Fi
           foldOrbitStieltjesMoment N (q - 1) * foldOrbitStieltjesMoment N (q + 1)) := by
   refine ⟨?_, ?_, ?_⟩
   · refine ⟨foldOrbitStieltjesRandomVariable N, ?_, ?_⟩
-    · simpa [foldOrbitStieltjesRandomVariable] using
-        (show (0 : ℝ) ≤ (foldGaugeGroupOrder N : ℝ) by
-          exact_mod_cast Nat.zero_le (foldGaugeGroupOrder N))
+    · dsimp [foldOrbitStieltjesRandomVariable]
+      exact Nat.cast_nonneg _
     intro q
     rfl
   · intro n a

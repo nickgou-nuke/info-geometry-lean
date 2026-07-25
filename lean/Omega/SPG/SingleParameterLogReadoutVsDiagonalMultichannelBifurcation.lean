@@ -35,9 +35,12 @@ private theorem bucketCount_pos_nat {k : ℕ} (hk : 1 ≤ k) : 0 < 2 ^ k - 1 := 
   | zero =>
       cases hk
   | succ n =>
-      have hpow : 1 < 2 ^ Nat.succ n := by
-        simpa using one_lt_pow' (show 1 < (2 : ℕ) by decide) (Nat.succ_ne_zero n)
-      omega
+          have hpow : 1 < 2 ^ Nat.succ n := by
+            simpa using
+              one_lt_pow'
+                (Nat.succ_lt_succ (Nat.zero_lt_succ 0))
+                (Nat.succ_ne_zero n)
+          omega
 
 private theorem bucketCount_pos {k : ℕ} (hk : 1 ≤ k) : 0 < ((2 : ℝ) ^ k - 1) := by
   cases k with

@@ -50,9 +50,9 @@ theorem rot01Real_neg : ∀ X : SplitOctReal, rot01Real (-X) = - rot01Real X := 
   · simp [rot01Real]
   · simp [rot01Real]
   · rename_i i
-    fin_cases i <;> simp [rot01Real] <;> ring_nf
+    fin_cases i <;> simp [rot01Real]
   · rename_i i
-    fin_cases i <;> simp [rot01Real] <;> ring_nf
+    fin_cases i <;> simp [rot01Real]
 
 /-- Leibniz law for the real `0-1` rotation derivation. -/
 theorem rot01Real_mul : ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by

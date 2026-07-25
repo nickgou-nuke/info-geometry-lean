@@ -55,7 +55,7 @@ theorem one_add_eps_mul_one_sub_eps_zero :
 theorem one_sub_eps_mul_one_add_eps_zero :
     SplitComplex.mul (SplitComplex.add one (SplitComplex.neg eps)) (SplitComplex.add one eps) = zero := by
   ext <;> simp [eps, SplitComplex.j, SplitComplex.add, SplitComplex.mul,
-    SplitComplex.neg, SplitComplex.one, SplitComplex.zero] <;> ring
+    SplitComplex.neg, SplitComplex.one, SplitComplex.zero]
 
 /-- The positive half-projector is idempotent. -/
 @[simp] theorem pPlus_idempotent :

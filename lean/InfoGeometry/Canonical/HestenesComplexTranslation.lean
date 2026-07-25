@@ -309,8 +309,7 @@ theorem modular_j_conjugates_hestenesScalar (z : ℂ) :
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [hestenesScalar, modular_j, complex_i] <;>
-    abel_nf
+    simp [hestenesScalar, modular_j, complex_i]
 
 /-- Positive Hestenes boost signum is exactly the doubled sign operator `ε`. -/
 @[rep_depth krein]

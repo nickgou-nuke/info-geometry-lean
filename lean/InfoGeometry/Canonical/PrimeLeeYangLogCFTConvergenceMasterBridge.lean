@@ -35,14 +35,18 @@ theorem prime_spin_chain_coupling_positivity (pi pj : ℕ) (hpi : 1 ≤ pi) (hpj
   have hpj_log : 0 ≤ Real.log (pj : ℝ) := Real.log_nonneg (by exact_mod_cast hpj)
   exact mul_nonneg (mul_nonneg hkappa hpi_log) hpj_log
 
+/-- Rank-2 Virasoro Jordan shear matrix N. -/
+noncomputable def jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ :=
+  ![![0, 1], ![0, 0]]
+
 /--
 **Theorem 2: LogCFT Virasoro Jordan Cell Nilpotency**
-Proves natively that the rank-2 Virasoro Jordan shear matrix N = !![0, 1; 0, 0] squares to zero.
+Proves natively that the rank-2 Virasoro Jordan shear matrix N squares to zero: N^2 = 0.
 -/
 theorem logcft_virasoro_jordan_nilpotent_sq :
-    (![ ![ (0 : ℂ), 1 ], ![ 0, 0 ] ] : Matrix (Fin 2) (Fin 2) ℂ) * ![[0, 1], [0, 0]] = 0 := by
+    jordanNilpotent * jordanNilpotent = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> simp [jordanNilpotent, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 **Theorem 3: Boundary Zero Preservation Law**
@@ -64,7 +68,7 @@ theorem grand_prime_lee_yang_logcft_convergence_master_duality
     (f : ℂ → ℂ) (z0 : ℂ) (h_domain : norm z0 ≠ 1 → f z0 ≠ 0) (h_zero : f z0 = 0)
     (s : ℂ) (h_anti : s = 1 - star s) :
     (0 ≤ kappa * Real.log (pi : ℝ) * Real.log (pj : ℝ)) ∧
-    ((![ ![ (0 : ℂ), 1 ], ![ 0, 0 ] ] : Matrix (Fin 2) (Fin 2) ℂ) * ![[0, 1], [0, 0]] = 0) ∧
+    (jordanNilpotent * jordanNilpotent = 0) ∧
     (norm z0 = 1) ∧
     (s.re = 1 / 2) := ⟨
   prime_spin_chain_coupling_positivity pi pj hpi hpj kappa hkappa,

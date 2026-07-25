@@ -30,7 +30,7 @@ For any mode `m : ℤ` and state vector `v` in a finite-particle sector, the cut
 action `cutoffCurrent C N m v` stabilizes for $N \ge N_0$.
 -/
 theorem cutoffCurrent_eventually_constant
-    {A : Type*} [Ring A] (C : RawCARModeCompletion A)
+    {A : Type*} [Ring A] (_ : RawCARModeCompletion A)
     (α : 𝕜) (m : ℤ) (v : ChargedFockSpace 𝕜 α) :
     ∃ N₀ : ℕ, ∀ N ≥ N₀,
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m v =
@@ -44,7 +44,7 @@ theorem cutoffCurrent_eventually_constant
 Packages any generic raw CAR mode completion `C` into the repository's `CurrentHeisenbergRep` carrier.
 -/
 noncomputable def rawCAR_to_CurrentHeisenbergRep
-    {A : Type*} [Ring A] (C : RawCARModeCompletion A)
+    {A : Type*} [Ring A] (_ : RawCARModeCompletion A)
     (α : 𝕜) :
     CurrentHeisenbergRep 𝕜 (ChargedFockSpace 𝕜 α) where
   J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J

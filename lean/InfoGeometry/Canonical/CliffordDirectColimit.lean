@@ -8,11 +8,17 @@ namespace InfoGeometry.Canonical.CliffordDirectColimit
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
-variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]
 
 /-- Matrix algebra at stage `n` representing the finite Clifford algebra `Cl(2n, ℂ)`. -/
-abbrev CliffordStage (𝕜 : Type*) [Field 𝕜] (n : ℕ) : Type :=
+def CliffordStage (𝕜 : Type) [Field 𝕜] (n : ℕ) : Type :=
   Matrix (Fin (2^n)) (Fin (2^n)) 𝕜
+
+instance (n : ℕ) : AddCommGroup (CliffordStage 𝕜 n) :=
+  inferInstanceAs (AddCommGroup (Matrix (Fin (2^n)) (Fin (2^n)) 𝕜))
+
+instance (n : ℕ) : Module 𝕜 (CliffordStage 𝕜 n) :=
+  inferInstanceAs (Module 𝕜 (Matrix (Fin (2^n)) (Fin (2^n)) 𝕜))
 
 /-- Block diagonal inclusion `ι_n : Cl(2n, ℂ) ↪ Cl(2n+2, ℂ)`. -/
 def cliffordEmbedSucc (n : ℕ) (A : CliffordStage 𝕜 n) : CliffordStage 𝕜 (n + 1) :=
@@ -40,23 +46,21 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
     Function.Injective (cliffordEmbedSucc (𝕜 := 𝕜) n) := by
   intro A B h
   ext a b
-  have h_dim : 2^n < 2^(n + 1) := by
-    rw [Nat.pow_succ]
-    omega
-  let i : Fin (2^(n + 1)) := ⟨a.val, h_dim⟩
-  let j : Fin (2^(n + 1)) := ⟨b.val, h_dim⟩
+  have h_lt_a : a.val < 2^(n + 1) := Nat.lt_trans a.isLt (by positivity)
+  have h_lt_b : b.val < 2^(n + 1) := Nat.lt_trans b.isLt (by positivity)
+  let i : Fin (2^(n + 1)) := ⟨a.val, h_lt_a⟩
+  let j : Fin (2^(n + 1)) := ⟨b.val, h_lt_b⟩
   have happ := congrFun (congrFun h i) j
   dsimp [cliffordEmbedSucc] at happ
-  have h_lt1 : a.val < 2^n := a.isLt
-  have h_lt2 : b.val < 2^n := b.isLt
   have h_mod1 : a.val % 2^n = a.val := Nat.mod_eq_of_lt a.isLt
   have h_mod2 : b.val % 2^n = b.val := Nat.mod_eq_of_lt b.isLt
-  simp [h_lt1, h_lt2, h_mod1, h_mod2] at happ
+  have h_cond : (a.val < 2^n ∧ b.val < 2^n) ∨ (a.val ≥ 2^n ∧ b.val ≥ 2^n) := Or.inl ⟨a.isLt, b.isLt⟩
+  simp [h_cond, h_mod1, h_mod2] at happ
   exact happ
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/
 def cliffordSeq (n m : ℕ) : CliffordStage 𝕜 n →ₗ[𝕜] CliffordStage 𝕜 (n + m) :=
-  iota_seq (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear (n := k)) n m
+  iota_seq (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear k) n m
 
 /-- The multi-step embedding sequence is injective. -/
 theorem cliffordSeq_injective (n m : ℕ) :
@@ -72,12 +76,12 @@ theorem cliffordSeq_injective (n m : ℕ) :
 
 /-- Direct limit compatibility law: composite sequence commutes with colimit target maps. -/
 theorem clifford_colimit_trace_comm
-    (A_inf : Type*) [AddCommGroup A_inf] [Module 𝕜 A_inf]
+    (A_inf : Type) [AddCommGroup A_inf] [Module 𝕜 A_inf]
     (psi : ∀ k, CliffordStage 𝕜 k →ₗ[𝕜] A_inf)
-    (psi_comm : ∀ k, (psi (k + 1)).comp (cliffordEmbedSuccLinear (n := k)) = psi k)
+    (psi_comm : ∀ k, (psi (k + 1)).comp (cliffordEmbedSuccLinear k) = psi k)
     (psi_trace : A_inf →ₗ[𝕜] 𝕜) (n m : ℕ) (X : CliffordStage 𝕜 n) :
     psi_trace (psi (n + m) (cliffordSeq n m X)) = psi_trace (psi n X) := by
-  exact colimit_trace_comm (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear (n := k))
+  exact colimit_trace_comm (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear k)
     A_inf psi psi_comm psi_trace n m X
 
 /--
@@ -95,13 +99,13 @@ Topologically protected Majorana zero-modes in finite Clifford stages
 survive non-vanishingly in the C*-algebraic thermodynamic colimit.
 -/
 theorem majorana_zero_mode_thermodynamic_survival
-    (A_inf : Type*) [AddCommGroup A_inf] [Module 𝕜 A_inf]
+    (A_inf : Type) [AddCommGroup A_inf] [Module 𝕜 A_inf]
     (psi : ∀ k, CliffordStage 𝕜 k →ₗ[𝕜] A_inf)
     (colimit_kernel : ∀ (k : ℕ) (X : CliffordStage 𝕜 k), psi k X = 0 → ∃ m, cliffordSeq k m X = 0)
     (n : ℕ) (X : CliffordStage 𝕜 n)
-    (h_prot : IsTopologicallyProtected (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear (n := k)) n X) :
+    (h_prot : IsTopologicallyProtected (fun k => CliffordStage 𝕜 k) (fun k => cliffordEmbedSuccLinear k) n X) :
     psi n X ≠ 0 := by
   exact protected_states_survive_colimit (fun k => CliffordStage 𝕜 k)
-    (fun k => cliffordEmbedSuccLinear (n := k)) A_inf psi colimit_kernel n X h_prot
+    (fun k => cliffordEmbedSuccLinear k) A_inf psi colimit_kernel n X h_prot
 
 end InfoGeometry.Canonical.CliffordDirectColimit

@@ -1916,6 +1916,7 @@ import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
 import InfoGeometry.Canonical.Spin44CharacterShadow
 import InfoGeometry.Canonical.SpinCommutation
 import InfoGeometry.Canonical.SpinConnection
+import InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
 import InfoGeometry.Canonical.SpinStatisticsBridge
 import InfoGeometry.Canonical.SpineAttributes
 import InfoGeometry.Canonical.SpinorGradeParityEscape

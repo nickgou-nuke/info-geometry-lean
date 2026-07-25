@@ -40,29 +40,43 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
     Function.Injective (cliffordEmbedSucc (𝕜 := 𝕜) n) := by
   intro A B h
   ext a b
-  have h_pow : 2^n < 2^(n + 1) := by
-    rw [Nat.pow_succ]
-    nlinarith [Nat.two_pow_pos n]
-  have h_lt_a : a.val < 2^(n + 1) := Nat.lt_trans a.isLt h_pow
-  have h_lt_b : b.val < 2^(n + 1) := Nat.lt_trans b.isLt h_pow
-  let i : Fin (2^(n + 1)) := ⟨a.val, h_lt_a⟩
-  let j : Fin (2^(n + 1)) := ⟨b.val, h_lt_b⟩
-  have happ := congrFun (congrFun h i) j
-  have h_cond : a.val < 2^n ∧ b.val < 2^n := ⟨a.isLt, b.isLt⟩
-  simp_all [cliffordEmbedSucc, Fin.ext_iff, Matrix.ext_iff]
-  <;>
-  (try { aesop }) <;>
-  (try {
-    by_cases h₁ : a.val < 2^n ∧ b.val < 2^n <;>
-    simp_all [h_cond]
-    <;> aesop
-  }) <;>
-  (try {
-    by_cases h₁ : a.val ≥ 2^n ∧ b.val ≥ 2^n <;>
-    simp_all
-    <;> omega
-  }) <;>
-  (try { aesop })
+  -- Case analysis on whether a, b are in the upper-left block (a < 2^n, b < 2^n)
+  -- or in the lower-right block (a ≥ 2^n, b ≥ 2^n)
+  have h₁ : (if h : a < 2^n ∧ b < 2^n then A ⟨a, by omega⟩ ⟨b, by omega⟩ else if h2 : a ≥ 2^n ∧ b ≥ 2^n then A ⟨a - 2^n, by omega⟩ ⟨b - 2^n, by omega⟩ else 0) =
+      (if h : a < 2^n ∧ b < 2^n then B ⟨a, by omega⟩ ⟨b, by omega⟩ else if h2 : a ≥ 2^n ∧ b ≥ 2^n then B ⟨a - 2^n, by omega⟩ ⟨b - 2^n, by omega⟩ else 0) := by
+    have h₁ := congr_arg (fun X => X a b) h
+    simp [cliffordEmbedSucc, Matrix.ext_iff] at h₁ ⊢
+    <;>
+    (try aesop) <;>
+    (try {
+      split_ifs at * <;> simp_all <;>
+      (try { aesop }) <;>
+      (try { omega })
+    })
+    <;>
+    (try { aesop })
+  -- Now we need to deduce A = B from the equality of the embedded matrices
+  have h₂ : A = B := by
+    ext a b
+    have h₂ := congr_arg (fun X => (if h : a < 2^n ∧ b < 2^n then X ⟨a, by omega⟩ ⟨b, by omega⟩ else if h2 : a ≥ 2^n ∧ b ≥ 2^n then X ⟨a - 2^n, by omega⟩ ⟨b - 2^n, by omega⟩ else 0)) (congr_arg (fun X => X a b) h)
+    simp [cliffordEmbedSucc, Matrix.ext_iff] at h₂ ⊢
+    <;>
+    (try {
+      by_cases h₃ : a < 2^n ∧ b < 2^n <;>
+      by_cases h₄ : a ≥ 2^n ∧ b ≥ 2^n <;>
+      simp_all [Fin.ext_iff] <;>
+      (try { aesop }) <;>
+      (try { omega }) <;>
+      (try {
+        exfalso
+        have h₅ : ¬(a < 2^n ∧ b < 2^n) := by intro h₅; exact h₃ h₅
+        have h₆ : ¬(a ≥ 2^n ∧ b ≥ 2^n) := by intro h₆; exact h₄ h₆
+        simp_all
+        <;> omega
+      })
+    }) <;>
+    (try { aesop })
+  exact h₂
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/
 def cliffordSeq (n m : ℕ) : CliffordStage 𝕜 n →ₗ[𝕜] CliffordStage 𝕜 (n + m) :=

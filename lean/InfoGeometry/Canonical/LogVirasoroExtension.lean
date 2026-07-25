@@ -85,10 +85,16 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext ⟨u, v⟩ <;> simp [blockOp, map_add]
+    ext ⟨u, v⟩
+    · simp [map_add]
+      abel
+    · simp [map_add]
   map_smul' := by
     intro r x
-    ext ⟨u, v⟩ <;> simp [blockOp, map_smul]
+    ext ⟨u, v⟩
+    · simp [map_smul, smul_add]
+      abel
+    · simp [map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

@@ -22,7 +22,7 @@ open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 
-variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 A V : Type*} [Field 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
 /--
@@ -72,7 +72,7 @@ theorem endomorphismCutoffCurrent_commutator
 Given raw CAR data `C`, representation `ρ`, and a limit current family `J` with stabilization `eventually_eq`,
 packages the data into a valid `AdapterData 𝕜 A V`.
 -/
-def makeSourceAdapter
+def makeSourceAdapter [CharZero 𝕜]
     (C : RawCARModeCompletion A)
     (ρ : A →+* Module.End 𝕜 V)
     (J : Int → Module.End 𝕜 V)

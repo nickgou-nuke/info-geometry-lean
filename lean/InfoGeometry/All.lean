@@ -728,6 +728,7 @@ import InfoGeometry.Canonical.BuresMetricStabilization
 import InfoGeometry.Canonical.CARChiralPacketInstance
 import InfoGeometry.Canonical.CARVacuumContraction
 import InfoGeometry.Canonical.MicrocanonicalBoltzmannOperator
+import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.CPTDirectLimitGNS
 import InfoGeometry.Canonical.CPTGradingCompass

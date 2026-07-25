@@ -31,6 +31,7 @@ namespace InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
 
 open Complex
 open InfoGeometry.Canonical.OperatorSurprisal
+open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.RedLineCausalConeMonodromy
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 
@@ -44,7 +45,7 @@ The surprisal operator $S_{\text{surprisal}}(\beta)$ acts on the boundary nilpot
 $$[S_{\text{surprisal}}(\beta), N] = (2\beta) \cdot N.$$
 -/
 theorem surprisal_generates_modular_geometry (β : ℝ) :
-    surprisal β * N - N * surprisal β = (2 * β) • N :=
+    InfoGeometry.Canonical.OperatorSurprisal.surprisal β * N - N * InfoGeometry.Canonical.OperatorSurprisal.surprisal β = (2 * β) • N :=
   surprisal_generates_hyperbolic_boost β
 
 /--
@@ -67,7 +68,7 @@ Unifies the 3 manifestations of Surprisal / Boltzmann Entropy:
 theorem surprisal_topological_geometry_unification
     (β : ℝ) (R : ℝ) (hR : 0 < R) (n : ℤ)
     (data : SpinorialFlowJacobianData Map) (φ : Map) :
-    (surprisal β * N - N * surprisal β = (2 * β) • N) ∧
+    (InfoGeometry.Canonical.OperatorSurprisal.surprisal β * N - N * InfoGeometry.Canonical.OperatorSurprisal.surprisal β = (2 * β) • N) ∧
     (poleWinding R hR n / (2 * Real.pi * Complex.I : ℂ) = (n : ℂ)) ∧
     (Real.exp (- data.redLinePotential φ) = data.jacobianDet φ) := ⟨
   surprisal_generates_modular_geometry β,

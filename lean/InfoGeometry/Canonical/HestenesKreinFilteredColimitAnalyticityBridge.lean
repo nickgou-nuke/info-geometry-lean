@@ -42,7 +42,8 @@ theorem hestenes_krein_jordan_nilpotent_preserved
     {R : Type*} [MonoidWithZero R] (J N : R) (hJ : J * J = 1) (hN : N * N = 0) :
     (J * N * J) * (J * N * J) = 0 := by
   have h1 : (J * N * J) * (J * N * J) = J * N * (J * J) * N * J := by simp [mul_assoc]
-  rw [h1, hJ, mul_one, ← mul_assoc (J * N), hN, mul_zero, zero_mul]
+  have h2 : J * N * N * J = J * (N * N) * J := by simp [mul_assoc]
+  rw [h1, hJ, mul_one, h2, hN, mul_zero, zero_mul]
 
 /--
 **Main Theorem 2: Hestenes Clifford 2x2 Geometric Involution**

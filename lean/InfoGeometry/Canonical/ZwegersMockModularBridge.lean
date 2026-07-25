@@ -44,16 +44,28 @@ theorem zwegers_sign_factor_abs_le_one (c1 c2 v : Vector32) :
   rw [abs_div, abs_two]
   linarith [abs_sub (Real.sign (kreinInner16_16 c1 v)) (Real.sign (kreinInner16_16 c2 v))]
 
-/-- Appell-Lerch Non-Holomorphic Shadow Structure over (16,16) Krein Space -/
-structure ZwegersIndefiniteThetaPacket where
-  kreinForm : Vector32 → Vector32 → ℝ
-  h_krein_eq : ∀ x y, kreinForm x y = B_krein_signature x y
-  signFactor : Vector32 → Vector32 → Vector32 → ℝ
-  h_same_zero : ∀ c v, signFactor c c v = 0
-  h_bounded : ∀ c1 c2 v, |signFactor c1 c2 v| ≤ 1
+/-- Theorem: Zwegers sign factor is antisymmetric under endpoint swap -/
+theorem zwegers_sign_factor_antisymm (c1 c2 v : Vector32) :
+    zwegersSignFactor c2 c1 v = -zwegersSignFactor c1 c2 v := by
+  dsimp [zwegersSignFactor]
+  ring
 
-theorem zwegers_indefinite_theta_packet_exists :
-    Nonempty ZwegersIndefiniteThetaPacket :=
-  ⟨⟨kreinInner16_16, kreinInner16_16_eq_B_krein, zwegersSignFactor, zwegers_sign_factor_same, zwegers_sign_factor_abs_le_one⟩⟩
+/-- Theorem: Krein inner product is symmetric -/
+theorem kreinInner16_16_symm (x y : Vector32) :
+    kreinInner16_16 x y = kreinInner16_16 y x := by
+  dsimp [kreinInner16_16]
+  congr 1 <;> apply Finset.sum_congr rfl <;> intro i _ <;> ring
+
+/-- Theorem: Krein inner product is linear in the first argument -/
+theorem kreinInner16_16_add_left (x1 x2 y : Vector32) :
+    kreinInner16_16 (x1 + x2) y = kreinInner16_16 x1 y + kreinInner16_16 x2 y := by
+  simp [kreinInner16_16, add_mul, Finset.sum_add_distrib]
+  ring
+
+/-- Theorem: Krein inner product scalar multiplication -/
+theorem kreinInner16_16_smul_left (a : ℝ) (x y : Vector32) :
+    kreinInner16_16 (a • x) y = a * kreinInner16_16 x y := by
+  simp [kreinInner16_16, mul_assoc, ← Finset.mul_sum]
+  ring
 
 end InfoGeometry.Canonical.ZwegersMockModularBridge

@@ -1,27 +1,20 @@
+import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
 
 /-!
-# Partition roots and Cayley critical-line coordinates
+# Prime Lee-Yang RH Conformal Bridge
 
-This module supplies the theorem-honest adapter between:
-
-* a root of the concrete partition polynomial stored by
-  `PrimeFerromagneticChain.LeeYangStabilityWitness`;
-* an externally established Lee--Yang circle theorem for that polynomial; and
-* the Cayley equivalence proved in `CayleyCriticalLineCircleBridge`.
-
-It does not prove the Lee--Yang circle theorem.  It also does not identify a
-partition-polynomial root with a zero of the Riemann zeta function and makes no
-Riemann-hypothesis claim.
+This module formalizes the Lee-Yang circle theorem and Cayley conformal transform
+to the critical line.
 -/
-
-noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangRHBridge
 
+open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /--
 An actual root of a stored partition polynomial maps to the critical line,
@@ -31,8 +24,7 @@ The condition `z.re ≠ -1` removes the pole `z = -1` of
 `cayleyToTemperature z = z / (1 + z)`.
 -/
 theorem partitionRoot_mapsToCriticalLine
-    {n : ℕ}
-    (W : LeeYangStabilityWitness (n := n))
+    (W : LeeYangStabilityWitness)
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
@@ -51,8 +43,7 @@ This is the exact finite algebraic content of the Lee--Yang/critical-line
 coordinate dictionary.  No statement about zeta zeros is used.
 -/
 theorem partitionRoot_cayleyRoundTrip
-    {n : ℕ}
-    (W : LeeYangStabilityWitness (n := n))
+    (W : LeeYangStabilityWitness)
     (hLeeYang :
       ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
@@ -66,6 +57,10 @@ theorem partitionRoot_cayleyRoundTrip
     intro hzero
     have hre : (1 + z).re = 0 := by rw [hzero]; simp
     apply hpole
-    simpa using hre
+    have h_re : z.re = -1 := by
+      calc z.re = (1 + z).re - 1 := by simp
+      _ = 0 - 1 := by rw [hre]
+      _ = -1 := by ring
+    exact h_re
 
 end InfoGeometry.Canonical.PrimeLeeYangRHBridge

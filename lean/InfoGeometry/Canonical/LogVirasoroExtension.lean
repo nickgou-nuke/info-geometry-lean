@@ -89,6 +89,7 @@ def makeLogVirasoroRepresentation
       abel
     · dsimp [blockOp]
       simp [map_add]
+      abel
   map_smul' := by
     intro r x
     refine LinearMap.ext fun ⟨u, v⟩ => ?_
@@ -98,6 +99,7 @@ def makeLogVirasoroRepresentation
       abel
     · dsimp [blockOp]
       simp [map_smul]
+      abel
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

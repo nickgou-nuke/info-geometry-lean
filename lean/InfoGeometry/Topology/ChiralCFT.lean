@@ -64,12 +64,7 @@ theorem left_right_chiral_commute (O_L O_R : (V_L ⊗[ℂ] V_R) →ₗ[ℂ] (V_L
   -- Left chiral operator is O_L' ⊗ id, right chiral operator is id ⊗ O_R'
   -- Their composition in either order is O_L' ⊗ O_R'
   ext x
-  simp [TensorProduct.map_comp, LinearMap.comp_apply, LinearMap.id_apply]
-  <;>
-  (try aesop) <;>
-  (try simp_all [LinearMap.map_add, LinearMap.map_smul, TensorProduct.map_map]) <;>
-  (try ring_nf) <;>
-  (try aesop)
+  simp [LinearMap.comp_apply, TensorProduct.map_map]
 
 /-- The structural definition of a 2D Chiral Conformal Field Theory,
 incorporating the primary state and field aspects on top of the chiral spaces. -/

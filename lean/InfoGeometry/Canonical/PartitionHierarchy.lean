@@ -26,6 +26,11 @@ variable {X Y α : Type*}
 noncomputable def boltzmannWeight (energy : X → ℝ) (β : ℝ) (x : X) : ℝ :=
   Real.exp (-β * energy x)
 
+/-- Every microscopic Boltzmann weight is strictly positive. -/
+theorem boltzmannWeight_pos (energy : X → ℝ) (β : ℝ) (x : X) :
+    0 < boltzmannWeight energy β x :=
+  Real.exp_pos _
+
 section Finite
 
 variable [Fintype X]
@@ -33,6 +38,15 @@ variable [Fintype X]
 /-- Total partition function before coarse graining. -/
 noncomputable def totalPartition (energy : X → ℝ) (β : ℝ) : ℝ :=
   ∑ x, boltzmannWeight energy β x
+
+/-- A finite nonempty microscopic state space has a strictly positive partition function. -/
+theorem totalPartition_pos [Nonempty X] (energy : X → ℝ) (β : ℝ) :
+    0 < totalPartition energy β := by
+  classical
+  unfold totalPartition
+  exact Finset.sum_pos
+    (fun x _ => boltzmannWeight_pos energy β x)
+    Finset.univ_nonempty
 
 end Finite
 
@@ -44,6 +58,27 @@ variable [Fintype X] [DecidableEq Y]
 noncomputable def fiberPartition
     (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y) : ℝ :=
   G.fiberWeight (boltzmannWeight energy β) y
+
+/-- Every coarse fiber partition is nonnegative, including an empty fiber. -/
+theorem fiberPartition_nonneg
+    (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y) :
+    0 ≤ fiberPartition G energy β y := by
+  classical
+  unfold fiberPartition FiniteCoarseGraining.fiberWeight
+  exact Finset.sum_nonneg (fun x _ => le_of_lt (boltzmannWeight_pos energy β x))
+
+/-- A coarse fiber containing a microscopic state has strictly positive partition function. -/
+theorem fiberPartition_pos
+    (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y)
+    (hy : ∃ x, G.project x = y) :
+    0 < fiberPartition G energy β y := by
+  classical
+  rcases hy with ⟨x, hx⟩
+  let xFiber : {x // G.project x = y} := ⟨x, hx⟩
+  unfold fiberPartition FiniteCoarseGraining.fiberWeight
+  exact Finset.sum_pos
+    (fun x _ => boltzmannWeight_pos energy β x)
+    ⟨xFiber, Finset.mem_univ xFiber⟩
 
 /-- Log-partition potential on a retained coarse fiber. -/
 noncomputable def logPartitionPotential
@@ -60,6 +95,33 @@ noncomputable def effectivePotential
     (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y) :
     effectivePotential G energy β y =
       -(1 / β) * Real.log (fiberPartition G energy β y) := rfl
+
+/-- Exponentiating a populated fiber's log-partition potential recovers its partition. -/
+theorem exp_logPartitionPotential_eq_fiberPartition
+    (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y)
+    (hy : ∃ x, G.project x = y) :
+    Real.exp (logPartitionPotential G energy β y) =
+      fiberPartition G energy β y := by
+  unfold logPartitionPotential
+  exact Real.exp_log (fiberPartition_pos G energy β y hy)
+
+/--
+At nonzero inverse temperature, exponentiating `-β` times the effective
+potential recovers the populated fiber partition.
+-/
+theorem exp_neg_temp_mul_effectivePotential_eq_fiberPartition
+    (G : FiniteCoarseGraining X Y) (energy : X → ℝ) (β : ℝ) (y : Y)
+    (hβ : β ≠ 0)
+    (hy : ∃ x, G.project x = y) :
+    Real.exp (-β * effectivePotential G energy β y) =
+      fiberPartition G energy β y := by
+  rw [effectivePotential_eq_neg_inv_temp_mul_log_fiberPartition]
+  have hcancel :
+      -β * (-(1 / β) * Real.log (fiberPartition G energy β y)) =
+        Real.log (fiberPartition G energy β y) := by
+    field_simp [hβ]
+  rw [hcancel]
+  exact Real.exp_log (fiberPartition_pos G energy β y hy)
 
 end Fiber
 

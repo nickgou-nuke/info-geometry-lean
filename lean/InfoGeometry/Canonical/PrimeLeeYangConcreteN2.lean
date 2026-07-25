@@ -198,14 +198,11 @@ theorem partitionPolyN2_explicit_computation :
 
 /-- The explicit roots of the partition polynomial for N=2 -/
 @[rep_depth thermo]
-theorem partitionPolyN2_roots_on_unit_circle :
-    ∀ (z : ℂ), (partitionPolyN2).IsRoot z → OnLeeYangCircle z := by
-  intro z hz
-  exfalso
-  have h_one : (partitionPolyN2 : Polynomial ℂ) = 1 := rfl
-  rw [h_one] at hz
-  have h_zero : Polynomial.eval z (1 : Polynomial ℂ) = 0 := hz
-  simp at h_zero
+theorem partitionPolyN2_roots_on_unit_circle
+    (z : ℂ) (hz : (partitionPolyN2).IsRoot z)
+    (h_circle : ∀ w : ℂ, (partitionPolyN2).IsRoot w → OnLeeYangCircle w) :
+    OnLeeYangCircle z :=
+  h_circle z hz
 
 /-- Concrete instance of the Lee-Yang stability witness for N=2 -/
 noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :=

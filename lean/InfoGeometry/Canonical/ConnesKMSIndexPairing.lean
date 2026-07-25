@@ -1,4 +1,5 @@
-import Mathlib.Tactic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Tactic.Ring
 import InfoGeometry.Algebra.CyclicTraceStokes
 
 set_option linter.unusedSectionVars false

@@ -1,4 +1,5 @@
-import Mathlib.Tactic
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
 
 open Matrix
 

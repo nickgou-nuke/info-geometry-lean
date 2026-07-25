@@ -57,36 +57,23 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right
 theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
     (cayleyTransform z).re = 0 := by
   unfold cayleyTransform
-  have h_den : 1 - z ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
   have h_sq : z.re^2 + z.im^2 = 1 := by
-    have h_abs : ‖z‖ = 1 := hz
-    have h1 : z.re^2 + z.im^2 = normSq z := by simp [normSq_apply, sq]
-    have h2 : normSq z = 1 := by
-      calc normSq z = (Complex.abs z)^2 := normSq_eq_abs z
-      _ = ‖z‖^2 := rfl
-      _ = 1^2 := by rw [h_abs]
-      _ = 1 := by ring
-    rw [h1, h2]
-  have h_num : ((1 + z) * star (1 - z)).re = 0 := by
-    have h_ring : ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
-      calc ((1 + z) * star (1 - z)).re = (1 + z.re) * (1 - z.re) - z.im * z.im := by
-        simp only [star_def, map_sub, map_one, sub_re, add_re, mul_re, one_re, conj_re, conj_im]
-        ring
-      _ = 1 - (z.re^2 + z.im^2) := by ring
-    rw [h_ring, h_sq, sub_self]
-  have h_eq : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
-    rw [div_eq_mul_inv, div_eq_mul_inv]
-    have h_star : (1 - z) * star (1 - z) = (normSq (1 - z) : ℂ) := by
-      rw [star_def, mul_conj]
-    have h_inv : (1 - z)⁻¹ = star (1 - z) / (normSq (1 - z) : ℂ) := by
-      field_simp [h_den]
-      exact h_star.symm
-    rw [h_inv]
-    ring
-  rw [h_eq]
-  have h_real_div : (((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ)).re = ((1 + z) * star (1 - z)).re / normSq (1 - z) := by
-    simp [div_re]
-  rw [h_real_div, h_num, zero_div]
+    have h1 : ‖z‖^2 = 1 := by rw [hz, one_pow]
+    have h2 : ‖z‖^2 = z.re^2 + z.im^2 := by
+      rw [norm_def]
+      exact (Real.rpow_two _).symm
+    rw [← h2, h1]
+  have h_div : (1 + z) / (1 - z) = ⟨0, 2 * z.im / ((1 - z.re)^2 + z.im^2)⟩ := by
+    ext
+    · simp only [div_re, add_re, sub_re, add_im, sub_im, one_re, one_im]
+      have h_num : (1 + z.re) * (1 - z.re) - z.im * z.im = 0 := by
+        calc (1 + z.re) * (1 - z.re) - z.im * z.im = 1 - (z.re^2 + z.im^2) := by ring
+        _ = 1 - 1 := by rw [h_sq]
+        _ = 0 := by ring
+      rw [h_num, zero_mul, zero_div, add_zero]
+    · simp only [div_im, add_re, sub_re, add_im, sub_im, one_re, one_im]
+      ring
+  rw [h_div]
 
 /--
 **Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**

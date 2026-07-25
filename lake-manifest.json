@@ -32,7 +32,7 @@
    "rev": "a41d5ebebfa77afe737fec8de8ad03fc8b08fdff",
    "name": "«doc-gen4»",
    "manifestFile": "lake-manifest.json",
-   "inputRev": "v4.28.0",
+   "inputRev": "v4.28.1",
    "inherited": false,
    "configFile": "lakefile.lean"},
   {"url": "https://github.com/hanwenzhu/LeanArchitect.git",

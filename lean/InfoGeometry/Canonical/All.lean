@@ -1303,6 +1303,7 @@ import InfoGeometry.Canonical.BiquaternionCliffordIso
 import InfoGeometry.Canonical.BiquaternionExpClosure
 import InfoGeometry.Canonical.BuresMetricClosedCartography
 import InfoGeometry.Canonical.BuresInformationGeodesicFlow
+import InfoGeometry.Canonical.FilteredInductiveHestenesAnalyticity
 
 namespace InfoGeometry
 

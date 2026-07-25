@@ -80,10 +80,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext <;> simp [blockOp, map_add]
+    ext ⟨u, v⟩ <;> simp [blockOp, map_add]
   map_smul' := by
     intro r x
-    ext <;> simp [blockOp, map_smul]
+    ext ⟨u, v⟩ <;> simp [blockOp, map_smul]
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]
@@ -157,7 +157,7 @@ noncomputable def makeLogIntertwiner
       rw [hL0] at h1'
       rw [map_smul] at h1'
       exact sub_eq_zero.mp h1'
-    refine Prod.ext ?_ ?_
+    ext
     · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, h_comm_apply, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
       abel
     · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]

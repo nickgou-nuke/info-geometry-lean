@@ -71,8 +71,7 @@ theorem grand_hurwitz_zero_transfer_master_duality
   have hz0 : ‖z0‖ = 1 := zeros_transfer_to_xi_of_locallyUniform_limit z_seq z0 h_circle h_lim
   have h_leeyang : OnLeeYangCircle z0 := by
     unfold OnLeeYangCircle
-    have h_sq : (‖z0‖)^2 = 1 := by rw [hz0, one_pow]
-    rwa [← Complex.normSq_eq_abs] at h_sq
+    exact (Complex.normSq_eq_one_iff z0).mpr hz0
   refine ⟨hz0, limit_root_cayley_to_criticalLine z0 h_leeyang hpole, ?_⟩
   exact (critical_line_fixed_locus_iff s_anti).1 h_anti
 

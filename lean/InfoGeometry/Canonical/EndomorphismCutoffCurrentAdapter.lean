@@ -194,8 +194,8 @@ theorem stabilizedCurrent_add
 theorem stabilizedCurrent_smul
     (m : Int) (c : 𝕜) (v : V) :
     S.J m (c • v) = c • S.J m v := by
-  have hv := S.eventually_cutoffCurrent_eq m v
-  have hcv := S.eventually_cutoffCurrent_eq m (c • v)
+  have hv : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m v = S.J m v := S.cutoff_eventually_constant m v
+  have hcv : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (c • v) = S.J m (c • v) := S.cutoff_eventually_constant m (c • v)
   have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (c • v) = c • endomorphismCutoffCurrent S.source S.ρ N m v := by
     filter_upwards [S.cutoff_eventually_constant m (c • v), S.cutoff_eventually_constant m v] with N hcvN hvN
     rw [← hcvN, LinearMap.map_smul, hvN]

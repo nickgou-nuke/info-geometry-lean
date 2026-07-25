@@ -14,11 +14,11 @@ variable {𝕜 : Type} [Field 𝕜] [CharZero 𝕜]
 abbrev CliffordStage (𝕜 : Type) [Field 𝕜] (n : ℕ) : Type :=
   Matrix (Fin (2^n)) (Fin (2^n)) 𝕜
 
-/-- Block diagonal inclusion `ι_n : Cl(2n, ℂ) ↪ Cl(2n+2, ℂ)`. -/
+/-- Block diagonal inclusion `ι_n : Cl(2n, ℂ) ↪ Cl(2n+2, ℂ)` mapping `A ↦ diag(A, A)`. -/
 def cliffordEmbedSucc (n : ℕ) (A : CliffordStage 𝕜 n) : CliffordStage 𝕜 (n + 1) :=
   Matrix.of (fun i j =>
-    if (i.val < 2^n ∧ j.val < 2^n) ∨ (i.val ≥ 2^n ∧ j.val ≥ 2^n) then
-      if i.val % 2^n = j.val % 2^n then A ⟨i.val % 2^n, Nat.mod_lt _ (Nat.two_pow_pos n)⟩ ⟨j.val % 2^n, Nat.mod_lt _ (Nat.two_pow_pos n)⟩ else 0
+    if h : i.val < 2^n ∧ j.val < 2^n then A ⟨i.val, h.1⟩ ⟨j.val, h.2⟩
+    else if h2 : i.val ≥ 2^n ∧ j.val ≥ 2^n then A ⟨i.val - 2^n, by omega⟩ ⟨j.val - 2^n, by omega⟩
     else 0)
 
 /-- Linear map version of the inclusion homomorphism. -/
@@ -46,12 +46,8 @@ theorem cliffordEmbedSucc_injective (n : ℕ) :
   let j : Fin (2^(n + 1)) := ⟨b.val, h_lt_b⟩
   have happ := congrFun (congrFun h i) j
   dsimp [cliffordEmbedSucc] at happ
-  have h1 : (a.val < 2^n ∧ b.val < 2^n) ∨ (a.val ≥ 2^n ∧ b.val ≥ 2^n) := Or.inl ⟨a.isLt, b.isLt⟩
-  have h2 : a.val % 2^n = b.val % 2^n := by simp [Nat.mod_eq_of_lt a.isLt, Nat.mod_eq_of_lt b.isLt]
-  rw [if_pos h1, if_pos h2] at happ
-  have ha : (⟨a.val % 2^n, Nat.mod_lt a.val (Nat.two_pow_pos n)⟩ : Fin (2^n)) = a := Fin.ext (Nat.mod_eq_of_lt a.isLt)
-  have hb : (⟨b.val % 2^n, Nat.mod_lt b.val (Nat.two_pow_pos n)⟩ : Fin (2^n)) = b := Fin.ext (Nat.mod_eq_of_lt b.isLt)
-  rw [ha, hb] at happ
+  have h_cond : a.val < 2^n ∧ b.val < 2^n := ⟨a.isLt, b.isLt⟩
+  rw [dif_pos h_cond] at happ
   exact happ
 
 /-- Multi-step embedding sequence `ι_{n,m} : Cl(2n) ↪ Cl(2(n+m))`. -/

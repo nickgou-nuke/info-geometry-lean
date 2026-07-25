@@ -50,11 +50,14 @@ structure NeurosymbolicFactorization (m k n : Type*) [Fintype k] where
   h_W_nonneg : MatrixNonneg left_factor_W
   h_H_nonneg : MatrixNonneg right_factor_H
   h_factor_nonneg : MatrixNonneg (left_factor_W * right_factor_H)
+  h_factor_eq : left_factor_W * right_factor_H = born_prob_matrix
 
 /-- Main Theorem: Proof of existence of the Neurosymbolic Born-Rule NMF Decoherence Engine. -/
 theorem neurosymbolic_engine_exists {m k n : Type*} [Fintype k] (M : Matrix m n ℝ)
-    (W : Matrix m k ℝ) (H : Matrix k n ℝ) (hW : MatrixNonneg W) (hH : MatrixNonneg H) :
+    (W : Matrix m k ℝ) (H : Matrix k n ℝ) (hW : MatrixNonneg W) (hH : MatrixNonneg H)
+    (hFactor : W * H = bornRuleMap M) :
     Nonempty (NeurosymbolicFactorization m k n) := by
-  refine ⟨⟨M, bornRuleMap M, W, H, rfl, born_rule_nonneg M, hW, hH, nmf_mul_nonneg W H hW hH⟩⟩
+  refine ⟨⟨M, bornRuleMap M, W, H, rfl, born_rule_nonneg M, hW, hH,
+    by simpa [hFactor] using nmf_mul_nonneg W H hW hH, hFactor⟩⟩
 
 end InfoGeometry.Neurosymbolic.BornNMFEngine

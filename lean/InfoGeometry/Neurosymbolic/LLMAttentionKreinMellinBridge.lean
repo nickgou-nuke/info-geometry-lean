@@ -28,11 +28,18 @@ theorem softmax_attention_matrix_nonneg {n : ℕ} [Fact (0 < n)] (A : Matrix (Fi
 /-- Main Theorem: Proof of existence of the Unified LLM Latent Space Geometry Engine. -/
 theorem llm_latent_space_unification_exists {n : ℕ} [Fact (0 < n)] (A : Matrix (Fin n) (Fin n) ℝ) (β : ℝ) :
     Nonempty (LLMLatentSpaceUnification n) := by
-  have h_nonneg := softmax_attention_matrix_nonneg A β
+  let attention : Matrix (Fin n) (Fin n) ℝ :=
+    fun i j => Real.exp (β * A i j) / ∑ k, Real.exp (β * A i k)
+  have h_nonneg : MatrixNonneg attention := softmax_attention_matrix_nonneg A β
   have h_W : MatrixNonneg (1 : Matrix (Fin n) (Fin n) ℝ) := fun i j => by
     dsimp [Matrix.one_apply]
     split_ifs <;> norm_num
-  have h_factor := neurosymbolic_engine_exists (m := Fin n) (k := Fin n) (n := Fin n) A 1 1 h_W h_W
-  refine ⟨⟨fun i j => Real.exp (β * A i j) / ∑ k, Real.exp (β * A i k), h_nonneg, h_factor⟩⟩
+  have h_prob_nonneg : MatrixNonneg (bornRuleMap attention) := born_rule_nonneg attention
+  have h_factor :
+      Nonempty (NeurosymbolicFactorization (Fin n) (Fin n) (Fin n)) :=
+    neurosymbolic_engine_exists (m := Fin n) (k := Fin n) (n := Fin n)
+      attention (1 : Matrix (Fin n) (Fin n) ℝ) (bornRuleMap attention)
+      h_W h_prob_nonneg (by simpa [attention, Matrix.one_mul])
+  refine ⟨⟨attention, h_nonneg, h_factor⟩⟩
 
 end InfoGeometry.Neurosymbolic.LLMAttentionKreinMellinBridge

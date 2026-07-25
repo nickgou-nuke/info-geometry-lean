@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+import Mathlib
 
 set_option linter.unusedSectionVars false
 
@@ -26,6 +28,8 @@ open Complex
 open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
+open InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+open InfoGeometry.Krein
 
 /-- The "Red Line" Ω-Generating Potential $\Phi_{\text{RedLine}}(\phi) = -\ln \det J(\phi)$. -/
 noncomputable def redLineOmegaPotential (detJ : ℝ → ℝ) (x : ℝ) : ℝ :=
@@ -53,6 +57,56 @@ theorem redLine_potential_exp_recovery
 /-- De Rham logarithmic form evaluation on a complex loop parameter $z \neq 0$. -/
 noncomputable def deRhamLogForm (z : ℂ) : ℂ :=
   1 / z
+
+/-- Log potential lifted to `RegularizedJacobianPotential`. -/
+noncomputable def redLineRegularizedPotential (Map : Type*)
+    (data : SpinorialFlowJacobianData Map) :
+    RegularizedJacobianPotential Map :=
+  { jacobian := data.jacobianDet
+    logDetReg := fun φ => Real.log (data.jacobianDet φ)
+    volumeCompressionPotential := data.redLinePotential
+    volumeCompressionPotential_eq_neg_logDetReg := by
+      intro φ
+      simpa [data.redLinePotential_eq] }
+
+theorem redLineRegularizedPotential_volumePotential
+    (Map : Type*) (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (redLineRegularizedPotential Map data).volumeCompressionPotential φ = data.redLinePotential φ := by
+  rfl
+
+theorem redLineRegularizedPotential_det
+    (Map : Type*) (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (redLineRegularizedPotential Map data).logDetReg φ = Real.log (data.jacobianDet φ) := by
+  rfl
+
+theorem deRhamLogForm_eq_poleForm (z : ℂ) :
+    deRhamLogForm z = poleForm z := rfl
+
+/-- Red line potential recovers the lightcone potential when the scalar Jacobian field matches.
+This is the honest adapter from the Red-Line model to the chiral lightcone carrier. -/
+theorem redLine_chiral_volumeCompression_eq_lightconeBarrier
+    (data : SpinorialFlowJacobianData Chiral3)
+    (hJ : ∀ X : Chiral3, data.jacobianDet X = lightconePotential X) :
+    (∀ X : Chiral3,
+      (redLineRegularizedPotential Chiral3 data).volumeCompressionPotential X =
+        lightconeBarrierCarrier.volumeCompressionPotential X) := by
+  intro X
+  have hP : data.redLinePotential X = -Real.log (lightconePotential X) := by
+    simpa [hJ X] using data.redLinePotential_eq X
+  simp [redLineRegularizedPotential, lightconeBarrierCarrier, hP, hJ]
+
+/-- `K = -log Δ` written on the regularized support lane is exactly the `Preg` compression.
+This is a direct adapter to the existing modular support bridge. -/
+theorem modularSupportPackage_from_redLine (V : Type 0)
+    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (c : CertifiedModularReduction (E := DoubledSpace V)) :
+    let KambientCanonical :=
+      compress (CertifiedModularReduction.Preg c) (K_neg_log_PregDelta (V := V) c)
+    (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical) ∧
+    (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical) ∧
+    (CertifiedModularReduction.Pzero c * KambientCanonical = 0) ∧
+    (KambientCanonical * CertifiedModularReduction.Pzero c = 0) :=
+  K_neg_log_PregDelta_support_package (V := V) c
 
 /--
 **Main Theorem 2: Lightcone Determinant Apex Singularity**

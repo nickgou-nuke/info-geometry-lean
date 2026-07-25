@@ -488,14 +488,17 @@ theorem quadratic_leeyang_circle_theorem (a : ℝ) (z : ℂ)
     (h_re : z + star z = - 2 * (a : ℂ)) :
     OnLeeYangCircle z := by
   unfold OnLeeYangCircle
+  have h_prod : z * star z = 1 := by
+    have h_star : star z = - 2 * (a : ℂ) - z := by linear_combination h_re
+    calc z * star z = z * (- 2 * (a : ℂ) - z) := by rw [h_star]
+    _ = 1 - (z ^ 2 + 2 * (a : ℂ) * z + 1) := by ring
+    _ = 1 - 0 := by rw [h_root]
+    _ = 1 := by ring
   have h_normSq : Complex.normSq z = 1 := by
-    have h_prod : z * star z = 1 := by
-      calc z * star z = z * (- 2 * (a : ℂ) - z) := by rw [← add_eq_iff_eq_sub'.mp h_re]; ring
-      _ = 1 - (z ^ 2 + 2 * (a : ℂ) * z + 1) := by ring
-      _ = 1 - 0 := by rw [h_root]
-      _ = 1 := by ring
-    exact_mod_cast (Complex.normSq_eq_conj_mul_self z ▸ h_prod)
-  rw [Complex.norm_eq_abs, ← Complex.normSq_eq_abs, h_normSq, Real.sqrt_one]
+    have h_re_part : (z * star z).re = 1 := by rw [h_prod, Complex.one_re]
+    have h_norm : (z * star z).re = Complex.normSq z := Complex.conj_mul_self_re z
+    rw [← h_norm, h_re_part]
+  rw [Complex.abs_def, h_normSq, Real.sqrt_one]
 
 namespace LeeYangStabilityWitness
 

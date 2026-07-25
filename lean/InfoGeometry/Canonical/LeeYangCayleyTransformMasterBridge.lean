@@ -49,7 +49,7 @@ theorem cayley_unit_circle_anticomm_sum (z : ℂ) (h_norm : star z * z = 1) (h_d
       _ = 2 - 2 * 1 := by rw [h_norm]
       _ = 0 := by ring
   have h_map : star ((1 + z) / (1 - z)) = (1 + star z) / (1 - star z) := by
-    simp only [map_div, map_add, map_sub, map_one]
+    rw [star_def, map_div₀ (starRingEnd ℂ), map_add (starRingEnd ℂ), map_sub (starRingEnd ℂ), map_one (starRingEnd ℂ)]
   rw [h_map, div_add_div _ _ h_den h_conj_den, h_num, zero_div]
 
 /--
@@ -59,7 +59,7 @@ Proves natively that if s = 1 - star s, then Re(s) = 1/2.
 theorem cayley_temperature_re_half (s : ℂ) (h_anti : s = 1 - star s) :
     s.re = 1 / 2 := by
   have h_re : s.re = (1 - star s).re := congrArg re h_anti
-  rw [sub_re, one_re, star_re] at h_re
+  rw [sub_re, one_re, star_def, conj_re] at h_re
   linarith
 
 /--

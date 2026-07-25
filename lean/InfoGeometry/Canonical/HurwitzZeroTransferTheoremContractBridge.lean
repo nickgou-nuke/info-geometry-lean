@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.TheoremHonestHurwitzConvergenceBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -32,6 +33,7 @@ namespace InfoGeometry.Canonical.HurwitzZeroTransferTheoremContractBridge
 open Complex
 open InfoGeometry.Canonical.TheoremHonestHurwitzConvergenceBridge
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
 **Main Theorem: Hurwitz Zero-Transfer from Unit-Circle Approximants**
@@ -69,7 +71,8 @@ theorem grand_hurwitz_zero_transfer_master_duality
   have hz0 : ‖z0‖ = 1 := zeros_transfer_to_xi_of_locallyUniform_limit z_seq z0 h_circle h_lim
   have h_leeyang : OnLeeYangCircle z0 := by
     unfold OnLeeYangCircle
-    simpa [Complex.abs] using hz0
+    have h_sq : (‖z0‖)^2 = 1 := by rw [hz0, one_pow]
+    rwa [← Complex.normSq_eq_abs] at h_sq
   refine ⟨hz0, limit_root_cayley_to_criticalLine z0 h_leeyang hpole, ?_⟩
   exact (critical_line_fixed_locus_iff s_anti).1 h_anti
 

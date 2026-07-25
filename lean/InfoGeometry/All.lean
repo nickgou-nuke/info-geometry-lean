@@ -2130,6 +2130,7 @@ import InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
 import InfoGeometry.Canonical.UnifiedTopologicalGapBridge
 import InfoGeometry.Canonical.V4D4WeylEmbedding
 import InfoGeometry.Canonical.V4Q8ProjectiveBridge
+import InfoGeometry.Canonical.HolographicComplexityKreinBridge
 import InfoGeometry.Canonical.V4SemidirectS3Bridge
 import InfoGeometry.Canonical.V4TrialityBridge
 import InfoGeometry.Canonical.VandermondeExclusionBridge

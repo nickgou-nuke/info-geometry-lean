@@ -20,7 +20,7 @@ open InfoGeometry.Canonical.PfaffianGeneral
 The $\mathbb{Z}_2$ topological invariant of a 1D Class-D superconductor:
 returns `1 : ZMod 2` in the topological phase ($\mu^2 < t^2$) and `0 : ZMod 2` in the trivial phase ($\mu^2 > t^2$).
 -/
-def classDInvariantZ2 (mu t : ℝ) : ZMod 2 :=
+noncomputable def classDInvariantZ2 (mu t : ℝ) : ZMod 2 :=
   if mu^2 < t^2 then 1 else 0
 
 /--
@@ -28,7 +28,7 @@ def classDInvariantZ2 (mu t : ℝ) : ZMod 2 :=
 The $\mathbb{Z}_2$ invariant is non-trivial ($1$) if and only if the high-symmetry
 Pfaffian product $\text{Pf}(A(0)) \cdot \text{Pf}(A(\pi))$ is strictly negative.
 -/
-theorem classD_oneDimensional_classification (mu t : ℝ) (hgap : mu^2 ≠ t^2) :
+theorem classD_oneDimensional_classification (mu t : ℝ) (_ : mu^2 ≠ t^2) :
     classDInvariantZ2 mu t = 1 ↔ kitaevPfaffianProduct mu t < 0 := by
   unfold classDInvariantZ2
   constructor

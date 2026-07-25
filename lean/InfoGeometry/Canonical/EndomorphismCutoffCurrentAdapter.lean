@@ -172,31 +172,8 @@ theorem stabilizedCurrent_add
   have hv := S.eventually_cutoffCurrent_eq m v
   have hw := S.eventually_cutoffCurrent_eq m w
   have hvw := S.eventually_cutoffCurrent_eq m (v + w)
-  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by
-    filter_upwards [hvw, hv, hw] with N hvwN hvN hwN
-    rw [hvwN, hvN, hwN]
-    <;>
-    simp [endomorphismCutoffCurrent, LinearMap.add_apply]
-    <;>
-    simp_all [LinearMap.add_apply]
-  have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (v + w) = S.J m v + S.J m w := by
-    filter_upwards [h₁, hvw, hv, hw] with N hN hvwN hvN hwN
-    calc
-      S.J m (v + w) = endomorphismCutoffCurrent S.source S.ρ N m (v + w) := by rw [hvwN]
-      _ = endomorphismCutoffCurrent S.source S.ρ N m v + endomorphismCutoffCurrent S.source S.ρ N m w := by rw [hN]
-      _ = S.J m v + S.J m w := by rw [hvN, hwN]
-  -- Extract the result from the filter
-  have h₃ : S.J m (v + w) = S.J m v + S.J m w := by
-    have h₄ : ∀ᶠ N : ℕ in atTop, S.J m (v + w) = S.J m v + S.J m w := h₂
-    have h₅ : S.J m (v + w) = S.J m v + S.J m w := by
-      -- Since the equality holds for all sufficiently large N, and the LHS doesn't depend on N,
-      -- we can extract the equality
-      have h₆ : ∃ N : ℕ, S.J m (v + w) = S.J m v + S.J m w := by
-        obtain ⟨N, hN⟩ := (h₄).exists
-        exact ⟨N, hN⟩
-      obtain ⟨N, hN⟩ := h₆
-      exact hN
-    exact h₃
+  filter_upwards [hv, hw, hvw] with N hvN hwN hvwN
+  rw [← hvwN, LinearMap.add_apply, hvN, hwN]
 
 /-- Scalar multiplication likewise descends pointwise. -/
 theorem stabilizedCurrent_smul
@@ -204,25 +181,8 @@ theorem stabilizedCurrent_smul
     S.J m (c • v) = c • S.J m v := by
   have hv := S.eventually_cutoffCurrent_eq m v
   have hcv := S.eventually_cutoffCurrent_eq m (c • v)
-  have h₁ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (c • v) = c • endomorphismCutoffCurrent S.source S.ρ N m v := by
-    filter_upwards [hv, hcv] with N hvN hcvN
-    rw [hcvN, hvN]
-    <;>
-    simp [endomorphismCutoffCurrent, LinearMap.map_smul]
-  have h₂ : ∀ᶠ N : ℕ in atTop, S.J m (c • v) = c • S.J m v := by
-    filter_upwards [h₁, hv, hcv] with N hN hvN hcvN
-    calc
-      S.J m (c • v) = endomorphismCutoffCurrent S.source S.ρ N m (c • v) := by rw [hcvN]
-      _ = c • endomorphismCutoffCurrent S.source S.ρ N m v := by rw [hN]
-      _ = c • S.J m v := by rw [hvN]
-  -- Extract the result from the filter
-  have h₃ : S.J m (c • v) = c • S.J m v := by
-    have h₄ : ∀ᶠ N : ℕ in atTop, S.J m (c • v) = c • S.J m v := h₂
-    have h₅ : ∃ N : ℕ, S.J m (c • v) = c • S.J m v := by
-      obtain ⟨N, hN⟩ := (h₄).exists
-      exact ⟨N, hN⟩
-    obtain ⟨N, hN⟩ := h₅
-    exact hN
+  filter_upwards [hv, hcv] with N hvN hcvN
+  rw [← hcvN, LinearMap.map_smul, hvN]
 
 /-- The commutator of the derived stabilized currents is the Heisenberg
 commutator.  The proof uses exact finite-cutoff CAR/Wick expansion,
@@ -244,26 +204,16 @@ theorem current_commutator
     eventually_atTop.2 ⟨m.natAbs, fun _ hN => hN⟩
   -- Find a cutoff N large enough for all the eventually conditions
   have h_main : (S.J m).commutator (S.J n) v = (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
-    have hm_v' := hm_v
-    have hn_v' := hn_v
-    have hm_Jn' := hm_Jn
-    have hn_Jm' := hn_Jm
-    have hboundary' := hboundary
-    have hlarge' : ∀ᶠ N : ℕ in atTop, m.natAbs ≤ N := hlarge
-    -- Get a sufficiently large N
     have h₁ : ∃ (N : ℕ), m.natAbs ≤ N ∧ endomorphismCutoffCurrent S.source S.ρ N m v = S.J m v ∧ endomorphismCutoffCurrent S.source S.ρ N n v = S.J n v ∧ endomorphismCutoffCurrent S.source S.ρ N m (S.J n v) = S.J m (S.J n v) ∧ endomorphismCutoffCurrent S.source S.ρ N n (S.J m v) = S.J n (S.J m v) ∧ S.ρ (S.source.cutoffBoundaryTerm N m n) v = 0 := by
-      -- Use the fact that all these eventually hold to find a common N
       have h₁ : ∀ᶠ N : ℕ in atTop, m.natAbs ≤ N := eventually_atTop.2 ⟨m.natAbs, fun _ hN => hN⟩
       have h₂ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m v = S.J m v := S.eventually_cutoffCurrent_eq m v
       have h₃ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N n v = S.J n v := S.eventually_cutoffCurrent_eq n v
       have h₄ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N m (S.J n v) = S.J m (S.J n v) := S.eventually_cutoffCurrent_eq m (S.J n v)
       have h₅ : ∀ᶠ N : ℕ in atTop, endomorphismCutoffCurrent S.source S.ρ N n (S.J m v) = S.J n (S.J m v) := S.eventually_cutoffCurrent_eq n (S.J m v)
       have h₆ : ∀ᶠ N : ℕ in atTop, S.ρ (S.source.cutoffBoundaryTerm N m n) v = 0 := S.boundary_eventually_zero m n v
-      -- Find a common N where all conditions hold
       have h₇ : ∀ᶠ N : ℕ in atTop, m.natAbs ≤ N ∧ endomorphismCutoffCurrent S.source S.ρ N m v = S.J m v ∧ endomorphismCutoffCurrent S.source S.ρ N n v = S.J n v ∧ endomorphismCutoffCurrent S.source S.ρ N m (S.J n v) = S.J m (S.J n v) ∧ endomorphismCutoffCurrent S.source S.ρ N n (S.J m v) = S.J n (S.J m v) ∧ S.ρ (S.source.cutoffBoundaryTerm N m n) v = 0 := by
         filter_upwards [h₁, h₂, h₃, h₄, h₅, h₆] with N hN hnv hnv' hm_Jn hn_Jm hb
         exact ⟨hN, hnv, hnv', hm_Jn, hn_Jm, hb⟩
-      -- Extract the witness
       obtain ⟨N, hN⟩ := (h₇).exists
       exact ⟨N, hN.1, hN.2.1, hN.2.2.1, hN.2.2.2.1, hN.2.2.2.2.1, hN.2.2.2.2.2⟩
     obtain ⟨N, hN1, hN2, hN3, hN4, hN5, hN6⟩ := h₁
@@ -271,16 +221,12 @@ theorem current_commutator
       apply endomorphismCutoffCurrent_commutator_eq_wick_image S.source S.ρ N m n (by exact_mod_cast (by omega : m.natAbs ≤ N))
     calc
       (S.J m).commutator (S.J n) v = (endomorphismCutoffCurrent S.source S.ρ N m).commutator (endomorphismCutoffCurrent S.source S.ρ N n) v := by
-        rw [← hN2, ← hN3, ← hN4, ← hN5]
-        <;>
-        simp [LinearMap.commutator_apply]
+        rw [hm_v, hn_v, hm_Jn, hn_Jm]
       _ = (S.ρ (S.source.cutoffBoundaryTerm N m n) + if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
         rw [h₂]
         <;> simp [LinearMap.add_apply]
       _ = (if m + n = 0 then (m : 𝕜) • (1 : Module.End 𝕜 V) else 0) v := by
-        have h₃ : S.ρ (S.source.cutoffBoundaryTerm N m n) v = 0 := by
-          have h₄ := hN6
-          simpa using h₄
+        have h₃ : S.ρ (S.source.cutoffBoundaryTerm N m n) v = 0 := by simpa using hN6
         rw [LinearMap.add_apply, h₃]
         <;> split_ifs <;> simp_all [RawCARModeCompletion.central]
         <;> try { contradiction }

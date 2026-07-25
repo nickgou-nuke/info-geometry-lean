@@ -1314,6 +1314,7 @@ import InfoGeometry.Canonical.FilteredHestenesGlobalFunction
 import InfoGeometry.Canonical.FilteredHestenesGlobalPhase
 import InfoGeometry.Canonical.FilteredHestenesLinearIterate
 import InfoGeometry.Canonical.FilteredDirectLimitOperator
+import InfoGeometry.Canonical.FilteredDirectLimitOperatorUniqueness
 
 namespace InfoGeometry
 

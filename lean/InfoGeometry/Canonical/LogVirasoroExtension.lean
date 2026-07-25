@@ -96,7 +96,6 @@ def makeLogVirasoroRepresentation
     refine LinearMap.ext fun ⟨u, v⟩ => ?_
     ext
     · simp [blockOp, map_smul, smul_add]
-      abel
     · simp [blockOp, map_smul]
   map_lie' := by
     intro x y

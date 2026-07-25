@@ -69,7 +69,7 @@ theorem stageTrace_diagEmbedSucc (n : ℕ) (f : DiagAlg n) :
       have h_union : (Finset.univ : Finset (BitWord (n + 1))) =
           (Finset.univ.image (f_ext false)) ∪ (Finset.univ.image (f_ext true)) := by
         ext x
-        simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_image, true_and]
+        simp only [Finset.mem_univ, Finset.mem_union, Finset.mem_image, true_and, iff_true]
         by_cases hb : x ⟨n, Nat.lt_succ_self n⟩ = true
         · apply Or.inr
           use prefixSucc n x

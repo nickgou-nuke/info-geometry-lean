@@ -26,10 +26,10 @@ lemma RingHom.map_int_zsmul_one
       simp [RingHom.map_zero]
     | succ m ih =>
       rw [Int.cast_add, Int.cast_one, add_smul, one_smul, map_add, map_one, ih]
-      abel
+      simp [add_smul]
     | pred m ih =>
       rw [Int.cast_sub, Int.cast_one, sub_smul, one_smul, map_sub, map_one, ih]
-      abel
+      simp [sub_smul]
   exact h m
 
 /-- The finite normal-ordered CAR current represented on `V`. -/

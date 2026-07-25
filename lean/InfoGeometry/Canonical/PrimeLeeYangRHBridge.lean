@@ -55,25 +55,22 @@ $$\|z\| = 1 \land z \neq 1 \implies \operatorname{Re}\left(\frac{1+z}{1-z}\right
 theorem cayley_transform_re_zero_on_unit_circle {z : ℂ} (hz : ‖z‖ = 1) (hne : z ≠ 1) :
     (cayleyTransform z).re = 0 := by
   unfold cayleyTransform
-  have h_mul : (1 + z) / (1 - z) = ((1 + z) * (1 - star z)) / (‖1 - z‖^2 : ℂ) := by
-    rw [div_eq_mul_inv, div_eq_mul_inv]
-    have h_star : (1 - z) * star (1 - z) = (‖1 - z‖ : ℂ)^2 := by
-      rw [star_def, mul_conj]
-      norm_cast
-    have h_inv : (1 - z)⁻¹ = star (1 - z) / (‖1 - z‖ : ℂ)^2 := by
-      field_simp [sub_ne_zero.mpr (Ne.symm hne)]
-      exact h_star.symm
-    rw [h_inv]
+  have h1 : (1 + z) / (1 - z) = ((1 + z) * star (1 - z)) / (normSq (1 - z) : ℂ) := by
+    rw [div_eq_mul_inv, div_eq_mul_inv, conj_mul_eq_normSq]
+    field_simp [sub_ne_zero.mpr (Ne.symm hne)]
     ring
-  rw [h_mul, div_re]
-  have h_num : ((1 + z) * (1 - star z)).re = 0 := by
-    calc ((1 + z) * (1 - star z)).re = (1 - z * star z + star z - z).re := by ring_nf
-    _ = (1 - (‖z‖ : ℂ)^2 + star z - z).re := by rw [star_def, mul_conj]
-    _ = (1 - 1 + star z - z).re := by rw [hz, norm_one, one_pow, Nat.cast_one]
-    _ = (star z - z).re := by ring_nf
-    _ = z.re - z.re := by simp [star_def, conj_re]
+  rw [h1, div_re]
+  have h2 : ((1 + z) * star (1 - z)).re = 0 := by
+    have h_abs : ‖z‖^2 = 1 := by rw [hz, one_pow]
+    have h_sq : z.re^2 + z.im^2 = 1 := by
+      rw [← normSq_eq_abs] at h_abs
+      exact h_abs
+    calc ((1 + z) * star (1 - z)).re = 1 - (z.re^2 + z.im^2) := by
+      simp only [star_def, conj_sub, conj_one, sub_re, add_re, mul_re, one_re, one_im, zero_mul, sub_zero]
+      ring
+    _ = 1 - 1 := by rw [h_sq]
     _ = 0 := by ring
-  rw [h_num, zero_mul]
+  rw [h2, zero_mul, zero_div, add_zero]
 
 /--
 **Main Theorem 2: Lee-Yang Zero Maps Bijectively to Critical Line $\operatorname{Re}(s) = 1/2$**
@@ -95,11 +92,11 @@ theorem grand_prime_lee_yang_rh_master_duality
     ((cayleyTransform z).re = 0) ∧
     ((leeYangToRiemannS z).re = 1 / 2) ∧
     (s.re = 1 / 2) ∧
-    (antiunitaryCriticalReflection s = s) := ⟨
+    (s = 1 - star s) := ⟨
   cayley_transform_re_zero_on_unit_circle hz hne,
   lee_yang_to_riemann_critical_line hz hne,
   antiunitary_fixed_locus_rigidity h_anti,
-  (antiunitary_fixed_locus_is_critical_line s).mpr (antiunitary_fixed_locus_rigidity h_anti)
+  (critical_line_fixed_locus_iff s).2 (antiunitary_fixed_locus_rigidity h_anti)
 ⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangRHBridge

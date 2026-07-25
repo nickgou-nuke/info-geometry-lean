@@ -85,7 +85,7 @@ theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
       _ = ‖D.orthogonalVector‖ ^ 2 + ‖D.boundaryVector + k - D.orthogonalVector‖ ^ 2 := by
             congr 1
             rw [D.boundary_split]
-            abel
+             abel_nf
   · intro g hg
     rcases hg with ⟨k, hk, rfl⟩
     have hsum_mem : (D.cycleOffset : BoundaryHodgeStokesAmbient D.n) + k ∈ D.cycleSpace :=
@@ -98,7 +98,7 @@ theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
         D.boundaryVector + k =
           D.orthogonalVector + ((D.cycleOffset : BoundaryHodgeStokesAmbient D.n) + k) := by
       rw [D.boundary_split]
-      abel
+      abel_nf
     have hpyth :
         ‖D.boundaryVector + k‖ ^ 2 =
           ‖D.orthogonalVector‖ ^ 2 + ‖D.boundaryVector + k - D.orthogonalVector‖ ^ 2 := by
@@ -112,7 +112,7 @@ theorem paper_fold_boundary_hodge_stokes_orthogonal_vector
         _ = ‖D.orthogonalVector‖ ^ 2 + ‖D.boundaryVector + k - D.orthogonalVector‖ ^ 2 := by
               congr 1
               rw [D.boundary_split]
-              abel
+              abel_nf
     have hnonneg : 0 ≤ ‖D.boundaryVector + k - D.orthogonalVector‖ ^ 2 := sq_nonneg _
     nlinarith [hpyth, hnonneg, norm_nonneg D.orthogonalVector, norm_nonneg (D.boundaryVector + k)]
 

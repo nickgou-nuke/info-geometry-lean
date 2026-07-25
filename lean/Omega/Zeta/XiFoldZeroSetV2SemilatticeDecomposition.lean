@@ -99,10 +99,10 @@ private lemma xi_fold_zero_set_v2_semilattice_decomposition_subset_of_dvd_odd
     have hhalf_g : M / 2 / g = d * q := by
       rw [hq]
       calc
-        (g * d * q) / g = (g * (d * q)) / g := by ring
+        (g * d * q) / g = (g * (d * q)) / g := by rw [mul_assoc]
         _ = d * q := Nat.mul_div_right (d * q) hg
     rw [← hkx, hhalf_h, hhalf_g, hd]
-    ring
+    ring_nf
 
 /-- Paper label: `cor:xi-fold-zero-set-v2-semilattice-decomposition`. -/
 theorem paper_xi_fold_zero_set_v2_semilattice_decomposition (m : ℕ) :

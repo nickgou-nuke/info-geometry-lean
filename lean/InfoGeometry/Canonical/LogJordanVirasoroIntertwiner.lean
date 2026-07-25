@@ -23,8 +23,7 @@ namespace InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 
 open Matrix
 
-variable {𝕜 V : Type*} [Field 𝕜]
-variable [AddCommGroup V] [Module 𝕜 V]
+variable {𝕜 : Type*} [Field 𝕜]
 
 /-- Standard basis vector $e_0 = (1, 0)^T$ in $\mathbb{k}^2$. -/
 def e0 : Fin 2 → 𝕜 := Pi.single 0 1
@@ -37,20 +36,22 @@ def jordanNilpotent (𝕜 : Type*) [Semiring 𝕜] : Matrix (Fin 2) (Fin 2) 𝕜
   !![0, 1; 0, 0]
 
 /-- The $2 \times 2$ non-diagonalizable Jordan cell matrix $L(\Delta) = \Delta I + N$ over `𝕜`. -/
-def jordanCell {𝕜 : Type*} [Semiring 𝕜] (Δ : 𝕜) : Matrix (Fin 2) (Fin 2) 𝕜 :=
+def jordanCell (Δ : 𝕜) : Matrix (Fin 2) (Fin 2) 𝕜 :=
   !![Δ, 1; 0, Δ]
 
-theorem jordanCell_mulVec_e0 [CommRing 𝕜] (Δ : 𝕜) :
+theorem jordanCell_mulVec_e0 (Δ : 𝕜) :
     jordanCell Δ *ᵥ (e0 : Fin 2 → 𝕜) = Δ • (e0 : Fin 2 → 𝕜) := by
   ext i
-  fin_cases i <;> simp [jordanCell, e0, Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  fin_cases i <;> simp [jordanCell, e0, Matrix.mulVec, Pi.single, vecHead, vecTail]
 
-theorem jordanCell_mulVec_e1 [CommRing 𝕜] (Δ : 𝕜) :
+theorem jordanCell_mulVec_e1 (Δ : 𝕜) :
     jordanCell Δ *ᵥ (e1 : Fin 2 → 𝕜) = Δ • (e1 : Fin 2 → 𝕜) + (e0 : Fin 2 → 𝕜) := by
   ext i
-  fin_cases i <;> simp [jordanCell, e0, e1, Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+  fin_cases i <;> simp [jordanCell, e0, e1, Matrix.mulVec, Pi.single, vecHead, vecTail]
 
-variable [Field 𝕜]
+section Subspace
+
+variable (V : Type*) [AddCommGroup V] [Module 𝕜 V]
 
 /--
 A Logarithmic Virasoro Intertwiner structure.
@@ -74,7 +75,7 @@ variable {L0 : Module.End 𝕜 V} {Δ : 𝕜}
 
 /-- Pointwise intertwining evaluation: $L_0(\iota v) = \iota(L(\Delta) v)$. -/
 theorem apply_intertwines
-    (I : LogVirasoroIntertwiner L0 Δ) (v : Fin 2 → 𝕜) :
+    (I : LogVirasoroIntertwiner V L0 Δ) (v : Fin 2 → 𝕜) :
     L0 (I.ι v) = I.ι (Matrix.toLin' (jordanCell Δ) v) := by
   have h := LinearMap.congr_fun I.intertwines v
   exact h
@@ -84,7 +85,7 @@ theorem apply_intertwines
 The primary state $v_0 = \iota(e_0)$ is an eigenvector of $L_0$ with eigenvalue $\Delta$.
 -/
 theorem primary_eigenvalue
-    (I : LogVirasoroIntertwiner L0 Δ) :
+    (I : LogVirasoroIntertwiner V L0 Δ) :
     L0 (I.ι (e0 : Fin 2 → 𝕜)) = Δ • I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
   change I.ι (jordanCell Δ *ᵥ e0) = Δ • I.ι e0
@@ -95,12 +96,16 @@ theorem primary_eigenvalue
 The logarithmic partner $v_1 = \iota(e_1)$ satisfies $L_0 v_1 = \Delta v_1 + v_0$.
 -/
 theorem partner_action
-    (I : LogVirasoroIntertwiner L0 Δ) :
+    (I : LogVirasoroIntertwiner V L0 Δ) :
     L0 (I.ι (e1 : Fin 2 → 𝕜)) =
       Δ • I.ι (e1 : Fin 2 → 𝕜) + I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
   change I.ι (jordanCell Δ *ᵥ e1) = Δ • I.ι e1 + I.ι e0
   rw [jordanCell_mulVec_e1, map_add, map_smul]
+
+end LogVirasoroIntertwiner
+
+end Subspace
 
 /--
 **Non-Diagonalizability Preservation:**
@@ -114,7 +119,5 @@ theorem zero_mode_subspace_indecomposable :
     simp [jordanNilpotent] at h01
   · ext i j
     fin_cases i <;> fin_cases j <;> simp [jordanNilpotent, Matrix.mul_apply, Fin.sum_univ_two]
-
-end LogVirasoroIntertwiner
 
 end InfoGeometry.Canonical.LogJordanVirasoroIntertwiner

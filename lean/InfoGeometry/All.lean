@@ -1511,7 +1511,6 @@ import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Canonical.MetriplecticCore
 import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
-import InfoGeometry.Canonical.MetriplecticStructuralEquivalenceBridge
 import InfoGeometry.Canonical.MirrorSystematicsA102
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.MobiusChiralClosure

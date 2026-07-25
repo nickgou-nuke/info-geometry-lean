@@ -1,8 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
-import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
-import Mathlib
 
 set_option linter.unusedSectionVars false
 
@@ -28,8 +26,6 @@ open Complex
 open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
-open InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
-open InfoGeometry.Krein
 
 /-- The "Red Line" Ω-Generating Potential $\Phi_{\text{RedLine}}(\phi) = -\ln \det J(\phi)$. -/
 noncomputable def redLineOmegaPotential (detJ : ℝ → ℝ) (x : ℝ) : ℝ :=
@@ -41,48 +37,6 @@ structure SpinorialFlowJacobianData (Map : Type*) where
   pos_det : ∀ φ, 0 < jacobianDet φ
   redLinePotential : Map → ℝ
   redLinePotential_eq : ∀ φ, redLinePotential φ = - Real.log (jacobianDet φ)
-
-/-- Unnormalized spinorial flow Jacobian data (alias kept for adapter clarity). -/
-abbrev UnnormalizedSpinorialFlowJacobian (Map : Type*) := SpinorialFlowJacobianData Map
-
-/-- Red-Line Ω-potential written directly from Jacobian data.
-Equivalent to `redLinePotential` on valid flow data. -/
-noncomputable def unnormalizedFlowOmegaPotential (Map : Type*)
-    (S : UnnormalizedSpinorialFlowJacobian Map) (φ : Map) : ℝ :=
-  - Real.log (S.jacobianDet φ)
-
-/-- `-log ∘ jacobian` is exactly the stored Red-Line potential. -/
-theorem unnormalizedFlowOmegaPotential_eq_redLinePotential
-    (Map : Type*) (S : UnnormalizedSpinorialFlowJacobian Map) (φ : Map) :
-    unnormalizedFlowOmegaPotential Map S φ = S.redLinePotential φ := by
-  simpa [unnormalizedFlowOmegaPotential, S.redLinePotential_eq]
-
-/-- The Ω-potential is definitionally `-log` of the Jacobian determinant. -/
-theorem redLineOmegaPotential_eq_neg_log (detJ : ℝ → ℝ) (x : ℝ) :
-    redLineOmegaPotential detJ x = -Real.log (detJ x) := by
-  rfl
-
-/-- Differential identity for the red-line potential `Φ = -log det`.
-For a scalar Jacobian field `detJ`, the derivative is the familiar
-\(\frac{d}{dx}\Phi = -\frac{detJ'(x)}{detJ(x)}\) whenever `detJ x ≠ 0`. -/
-theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
-    (hdet : HasDerivAt detJ (detJ' : ℝ) x) (hpos : 0 < detJ x) :
-    HasDerivAt (redLineOmegaPotential detJ)
-      (-(detJ' / detJ x)) x := by
-  have hlog : HasDerivAt (fun y : ℝ => -Real.log y) (-(1 / detJ x)) (detJ x) :=
-    (Real.hasDerivAt_log hpos.ne').neg
-  have hcomp := hlog.comp x hdet
-  -- chain rule gives `(-(1 / detJ x)) * detJ'`
-  have hmul : (-(1 / detJ x)) * detJ' = -(detJ' / detJ x) := by
-    field_simp [hpos.ne']
-  simpa [redLineOmegaPotential, hmul, div_eq_mul_inv, mul_assoc]
-    using hcomp
-
-/-- `SpinorialFlowJacobianData` stores exactly the same Ω-potential as the defining equation. -/
-theorem redLinePotential_eq_neg_log_jacobian
-    (data : SpinorialFlowJacobianData Map) (φ : Map) :
-    data.redLinePotential φ = -Real.log (data.jacobianDet φ) := by
-  exact data.redLinePotential_eq φ
 
 /--
 **Main Theorem 1: Red Line Potential Exponentiation**
@@ -100,74 +54,6 @@ theorem redLine_potential_exp_recovery
 noncomputable def deRhamLogForm (z : ℂ) : ℂ :=
   1 / z
 
-/-- Log potential lifted to `RegularizedJacobianPotential`. -/
-noncomputable def redLineRegularizedPotential (Map : Type*)
-    (data : SpinorialFlowJacobianData Map) :
-    RegularizedJacobianPotential Map :=
-  { jacobian := data.jacobianDet
-    logDetReg := fun φ => Real.log (data.jacobianDet φ)
-    volumeCompressionPotential := data.redLinePotential
-    volumeCompressionPotential_eq_neg_logDetReg := by
-      intro φ
-      simpa [data.redLinePotential_eq] }
-
-theorem redLineRegularizedPotential_volumePotential
-    (Map : Type*) (data : SpinorialFlowJacobianData Map) (φ : Map) :
-    (redLineRegularizedPotential Map data).volumeCompressionPotential φ = data.redLinePotential φ := by
-  rfl
-
-theorem redLineRegularizedPotential_componentwise_eq_lightconeBarrierCarrier
-    (data : SpinorialFlowJacobianData Chiral3)
-    (hJ : ∀ X : Chiral3, data.jacobianDet X = lightconePotential X) :
-    ((∀ X : Chiral3, (redLineRegularizedPotential Chiral3 data).logDetReg X =
-      lightconeBarrierCarrier.logDetReg X) ∧
-     (∀ X : Chiral3, (redLineRegularizedPotential Chiral3 data).volumeCompressionPotential X =
-      lightconeBarrierCarrier.volumeCompressionPotential X)) := by
-  refine ⟨?_, ?_⟩
-  · intro X
-    simp [redLineRegularizedPotential, lightconeBarrierCarrier, hJ X]
-  · intro X
-    simp [redLineRegularizedPotential, lightconeBarrierCarrier, hJ X, data.redLinePotential_eq]
-
-theorem redLineRegularizedPotential_det
-    (Map : Type*) (data : SpinorialFlowJacobianData Map) (φ : Map) :
-    (redLineRegularizedPotential Map data).logDetReg φ = Real.log (data.jacobianDet φ) := by
-  rfl
-
-theorem deRhamLogForm_eq_poleForm (z : ℂ) :
-    deRhamLogForm z = poleForm z := rfl
-
-/-- `dΩ = 0` away from poles is represented by `deRhamLogForm = 1/z`. -/
-theorem deRhamLogForm_is_dlog (z : ℂ) (hz : z ≠ 0) :
-    deRhamLogForm z = 1 / z := by
-  exact (deRhamLogForm_eq_poleForm z).trans (poleForm_eq_one_div z hz)
-
-/-- Red line potential recovers the lightcone potential when the scalar Jacobian field matches.
-This is the honest adapter from the Red-Line model to the chiral lightcone carrier. -/
-theorem redLine_chiral_volumeCompression_eq_lightconeBarrier
-    (data : SpinorialFlowJacobianData Chiral3)
-    (hJ : ∀ X : Chiral3, data.jacobianDet X = lightconePotential X) :
-    (∀ X : Chiral3,
-      (redLineRegularizedPotential Chiral3 data).volumeCompressionPotential X =
-        lightconeBarrierCarrier.volumeCompressionPotential X) := by
-  intro X
-  have hP : data.redLinePotential X = -Real.log (lightconePotential X) := by
-    simpa [hJ X] using data.redLinePotential_eq X
-  simp [redLineRegularizedPotential, lightconeBarrierCarrier, hP, hJ]
-
-/-- `K = -log Δ` written on the regularized support lane is exactly the `Preg` compression.
-This is a direct adapter to the existing modular support bridge. -/
-theorem modularSupportPackage_from_redLine (V : Type 0)
-    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
-    (c : CertifiedModularReduction (E := DoubledSpace V)) :
-    let KambientCanonical :=
-      compress (CertifiedModularReduction.Preg c) (K_neg_log_PregDelta (V := V) c)
-    (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical) ∧
-    (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical) ∧
-    (CertifiedModularReduction.Pzero c * KambientCanonical = 0) ∧
-    (KambientCanonical * CertifiedModularReduction.Pzero c = 0) :=
-  K_neg_log_PregDelta_support_package (V := V) c
-
 /--
 **Main Theorem 2: Lightcone Determinant Apex Singularity**
 The chiral matrix determinant vanishes if and only if the spacetime vector $X$
@@ -177,22 +63,6 @@ theorem chiral_matrix_det_zero_iff_lightcone_apex (X : Chiral3) :
     Matrix.det (chiralMatrix X) = 0 ↔ lightconePotential X = 0 := by
   rw [chiralMatrix_det]
   exact Complex.ofReal_eq_zero
-
-/-- de Rham logarithmic 1-form equals the complex logarithm derivative.
-This is the analytic identity `d (log Ω) = dΩ / Ω` in local logarithm coordinates:
-for `Ω(z)=z`, the derivative is `1/z`. -/
-theorem deRhamLogForm_deriv (z : ℂ) (hz : z ∈ Complex.slitPlane) :
-    HasDerivAt (fun w : ℂ => Complex.log w) (deRhamLogForm z) z := by
-  simpa [deRhamLogForm] using (Complex.hasDerivAt_log hz)
-
-/-- Negative branch differential used for minus-log potentials. -/
-theorem neg_deRhamLogForm_deriv (z : ℂ) (hz : z ∈ Complex.slitPlane) :
-    HasDerivAt (fun w : ℂ => -Complex.log w) (-(deRhamLogForm z)) z := by
-  simpa [deRhamLogForm] using (Complex.hasDerivAt_log hz).neg
-
-/-- Pole form is non-vanishing off the singularity. -/
-theorem deRhamLogForm_ne_zero (z : ℂ) (hz : z ≠ 0) : deRhamLogForm z ≠ 0 := by
-  exact div_ne_zero (by norm_num) hz
 
 /--
 **Main Theorem 3: De Rham Monodromy Winding Around Causal Cone Apex**

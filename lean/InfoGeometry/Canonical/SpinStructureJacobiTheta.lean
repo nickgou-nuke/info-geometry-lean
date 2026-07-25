@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib.Data.Real.Basic
 import InfoGeometry.Arithmetic.CastroThetaScalingBridge
 
 set_option linter.unusedSectionVars false
@@ -74,6 +74,16 @@ theorem even_spin_structure_pfaffian_nonneg
   | S00 => exact finiteTheta_nonneg S l τ
   | S10 => exact finiteTheta_nonneg S (l + 1/2) τ
   | S01 => exact finiteTheta_nonneg S l (τ + 1/2)
+
+/-- Even spin structures produce strictly positive partition functions for non-empty index set S. -/
+theorem even_spin_structure_pfaffian_pos_of_nonempty
+    (s : SpinStructureIndex) (hs : s ≠ SpinStructureIndex.S11) {S : Finset ℤ} (hS : S.Nonempty) (l τ : ℝ) :
+    0 < diracPfaffian s S l τ := by
+  cases s with
+  | S11 => contradiction
+  | S00 => exact finiteTheta_pos_of_nonempty hS l τ
+  | S10 => exact finiteTheta_pos_of_nonempty hS (l + 1/2) τ
+  | S01 => exact finiteTheta_pos_of_nonempty hS l (τ + 1/2)
 
 /--
 **Main Theorem 2: Viazovska Jacobi Identity**

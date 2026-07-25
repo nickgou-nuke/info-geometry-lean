@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # GNS Construction: Gelfand-Naimark-Segal Setoid and Quotient

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Barbaresco SPIGL 2020: finite Souriau--Casimir certificate layer

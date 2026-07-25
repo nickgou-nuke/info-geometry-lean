@@ -27,7 +27,7 @@ real shifted operators have trivial kernel. Full invertibility still requires
 an explicit `IsUnit` witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Quantum.HestenesKahler

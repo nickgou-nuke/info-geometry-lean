@@ -22,7 +22,7 @@ Thermal/KMS readouts are kept separate from recovery: a thermal certificate by
 itself does not decode hidden memory.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

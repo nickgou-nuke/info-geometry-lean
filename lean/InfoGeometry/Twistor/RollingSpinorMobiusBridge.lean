@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Lie.G2RollingBall
 import InfoGeometry.Topology.MobiusGeometry

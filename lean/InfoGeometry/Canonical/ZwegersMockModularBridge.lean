@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Lie.Pin55KreinConformalBridge
 
 open InfoGeometry.Lie.Pin55KreinConformalBridge

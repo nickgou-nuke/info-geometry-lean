@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Canonical.TensorColimitExpectation
 import InfoGeometry.Clifford.Cl11TensorTowerLimit

@@ -8,7 +8,7 @@ metric spacetime theorem. It also treats circuit complexity as the length of a
 supplied circuit witness, not as a proof of minimal circuit complexity.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.RamanujanDefectTower
 
 namespace InfoGeometry.Arithmetic.WittenParityIndex

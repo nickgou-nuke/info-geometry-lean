@@ -9,7 +9,7 @@ construct a Clifford module, a `Pin(5,5)` action, a physical Witten index, or a
 global orbit/classification theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

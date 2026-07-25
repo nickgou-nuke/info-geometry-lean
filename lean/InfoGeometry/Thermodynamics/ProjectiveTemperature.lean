@@ -16,7 +16,7 @@ change-of-variables statement for the objective integral is exposed as an
 explicit calibration witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 

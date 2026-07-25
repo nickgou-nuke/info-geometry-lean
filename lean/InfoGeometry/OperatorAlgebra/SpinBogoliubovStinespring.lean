@@ -16,7 +16,7 @@ Loss/heat appears only after a reduction and a calibrated Stinespring/Bregman
 readout.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.OperatorAlgebra.StinespringDilation

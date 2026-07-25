@@ -14,7 +14,7 @@ half-projectors.  Therefore the diagonal survives and the chiral imbalance is
 anti-fixed without an additional reflection witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover
 import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 

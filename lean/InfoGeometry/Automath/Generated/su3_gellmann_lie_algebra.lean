@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.Cl11Fermions
 import InfoGeometry.Algebra.GellMannBasis
 

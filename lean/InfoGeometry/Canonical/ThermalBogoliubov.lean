@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Krein.DoubledSpace

@@ -16,7 +16,7 @@ When `J² = 1`, the mirror swaps the half-projectors
 This is a bridge datum, not a global theorem about every modular conjugation.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.Meta.OwnerTarget
 

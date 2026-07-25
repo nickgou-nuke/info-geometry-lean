@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.NonIsoConf3RankIngestion
 
 /-!

@@ -31,7 +31,7 @@ this gives a proved finite heat readout:
   Heat = DPhi(I-R^dagger R,0) = DPhi(V^dagger V,0).
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section

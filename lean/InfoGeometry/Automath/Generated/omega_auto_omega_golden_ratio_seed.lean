@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Omega.Core.Fib
 
 namespace Automath.Generated

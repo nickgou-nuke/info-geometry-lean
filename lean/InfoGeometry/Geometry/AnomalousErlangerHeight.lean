@@ -16,7 +16,7 @@ where a concrete model may identify anomaly/capacity data with a geometric
 height.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 

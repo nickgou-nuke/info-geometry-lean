@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-══════════════════════════════════════════════════════════════════════
   FIBONACCI ANYON THEOREM 6 — FINITE F-MATRIX IDENTITIES

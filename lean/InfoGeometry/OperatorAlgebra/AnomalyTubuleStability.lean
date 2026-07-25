@@ -10,7 +10,7 @@ sector invariant.  This file records that distinction without asserting a concre
 analytic classification theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 

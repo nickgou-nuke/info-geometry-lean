@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.CognitiveTopology.ExceptionalPoints
 import InfoGeometry.Topology.AharonovBohmVortices
 

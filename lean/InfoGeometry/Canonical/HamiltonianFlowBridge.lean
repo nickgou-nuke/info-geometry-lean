@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Krein.DoubledSpace
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.HamiltonianFlowBridge

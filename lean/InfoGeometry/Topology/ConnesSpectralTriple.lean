@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Topology.Algebra.Group.Basic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 

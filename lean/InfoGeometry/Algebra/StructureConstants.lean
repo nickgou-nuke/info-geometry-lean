@@ -5,7 +5,7 @@ Phase 3: Structure Constants f_{abc} and d_{abc} for su(3)
 - Normalization identities
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Classical
 import Mathlib.LinearAlgebra.Matrix.Basis
 import Mathlib.Analysis.Complex.Basic

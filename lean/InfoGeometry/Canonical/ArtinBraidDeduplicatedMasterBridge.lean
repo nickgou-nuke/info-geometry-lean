@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 

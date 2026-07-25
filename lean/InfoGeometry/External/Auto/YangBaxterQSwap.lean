@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Yang–Baxter q-Swap — explicit 8×8 verification

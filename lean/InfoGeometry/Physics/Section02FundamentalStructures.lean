@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.Section00MatrixBasisFramework
 import InfoGeometry.Physics.Section01MatrixBasisIntroduction
 

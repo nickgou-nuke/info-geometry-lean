@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # 2×2 Hermitian Matrices: Spacetime, GUE, and Chiral Coordinates

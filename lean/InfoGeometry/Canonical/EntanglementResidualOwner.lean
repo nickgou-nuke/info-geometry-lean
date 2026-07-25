@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Holography.RyuTakayanagiEmergence
 import InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Entanglement residual owner

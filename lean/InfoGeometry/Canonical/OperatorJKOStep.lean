@@ -19,7 +19,7 @@ continuous-time convergence, stochastic dynamics, or Hudson-Parthasarathy
 calculus.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

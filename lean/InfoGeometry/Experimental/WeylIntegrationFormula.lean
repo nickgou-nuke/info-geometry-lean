@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.RootSystem.WeylGroup
 import Mathlib.LinearAlgebra.RootSystem.RootPositive
 import Mathlib.MeasureTheory.Measure.MeasureSpace

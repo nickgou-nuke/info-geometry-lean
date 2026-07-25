@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 open CategoryTheory
 open CategoryTheory.Limits

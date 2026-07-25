@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.Eigenspace.Zero
 import InfoGeometry.JordanDecomposition.CyclicNilpotent
 

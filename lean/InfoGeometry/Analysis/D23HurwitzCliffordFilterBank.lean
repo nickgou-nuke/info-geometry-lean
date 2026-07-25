@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Meta.OwnerTarget

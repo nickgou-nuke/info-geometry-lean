@@ -19,7 +19,7 @@ and an ER-style identification can evade that contradiction only by proving
 `¬ Independent A R`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Meta.OwnerTarget
 

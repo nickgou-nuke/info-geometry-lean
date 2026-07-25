@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Poisson → Gaussian GNS Colimit Bridge

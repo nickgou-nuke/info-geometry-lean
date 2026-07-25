@@ -19,7 +19,7 @@ quotient type; instead it records projective equality by equality of actions on
 rays.  Concrete matrix/Clifford models can later instantiate the quotient.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.TKKClosure
 

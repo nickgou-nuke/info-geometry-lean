@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Meta.Architecture
-import Mathlib
+import Mathlib.Tactic
 
 open scoped InnerProductSpace BigOperators
 

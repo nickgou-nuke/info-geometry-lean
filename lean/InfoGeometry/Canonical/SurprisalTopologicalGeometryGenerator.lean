@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorSurprisal
 import InfoGeometry.Canonical.RedLineCausalConeMonodromy
 

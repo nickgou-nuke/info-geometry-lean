@@ -9,7 +9,7 @@ hypermatrix or Cayley hyperdeterminant may be attached later only through a
 separate chart theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Application.STUOperatorBridge
 

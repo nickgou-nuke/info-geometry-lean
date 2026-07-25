@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 

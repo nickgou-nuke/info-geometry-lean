@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Katz--Sarnak Finite Symmetry Bridge

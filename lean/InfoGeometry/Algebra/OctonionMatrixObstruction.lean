@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.ZornMatrix
 

@@ -18,7 +18,7 @@ No Navier-Stokes regularity theorem is asserted.
 No ethical claim is encoded.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.CrossoverResidue
 import InfoGeometry.Meta.OwnerTarget
 

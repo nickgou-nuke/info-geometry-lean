@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # q-Deformed Supergraded Cuntz Superalgebra — The Final Unification

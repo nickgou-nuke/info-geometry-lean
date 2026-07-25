@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 import InfoGeometry.Canonical.CliffordO55ProjectiveReconciliation
 

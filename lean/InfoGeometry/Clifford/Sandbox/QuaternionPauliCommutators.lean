@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Standard Quaternion Pauli Commutators and Comparison with Split-Quaternions

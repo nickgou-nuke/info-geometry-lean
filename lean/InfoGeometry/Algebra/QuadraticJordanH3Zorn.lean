@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.ZornAlternativeLaws
 

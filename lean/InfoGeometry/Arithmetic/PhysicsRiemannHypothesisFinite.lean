@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Finite arithmetic packet for `Physics of the Riemann Hypothesis`

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Atlas.TensorCategories.code.QuantumSl2
 import Atlas.TensorCategories.code.QuantumSl2Concrete
 import Atlas.TensorCategories.code.QuantumSl2Instance

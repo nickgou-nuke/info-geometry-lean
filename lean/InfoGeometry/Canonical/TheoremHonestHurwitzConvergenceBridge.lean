@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.FilteredColimitLeeYangVirasoroMasterBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

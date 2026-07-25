@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.MaximumCaliberPath
 import InfoGeometry.Canonical.BayesianMarkovChain
 import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus

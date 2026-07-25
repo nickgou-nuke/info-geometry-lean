@@ -21,7 +21,7 @@ Four Ontological Sieve Stages:
   4. Geometric Emergence: State → Fierz readout → Klein quadric (manifestation as observable geometry)
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget

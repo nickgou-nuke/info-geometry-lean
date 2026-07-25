@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.iR
 import InfoGeometry.External.Auto.GoutevTonevPrinciple
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Meta.Architecture

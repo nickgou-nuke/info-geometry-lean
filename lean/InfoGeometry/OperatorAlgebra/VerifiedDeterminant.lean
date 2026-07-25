@@ -16,7 +16,7 @@ from determinant multiplicativity and an explicit inverse law.
 No vacuous determinant-invariance certificate is used.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section

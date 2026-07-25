@@ -20,7 +20,7 @@ BPS charge, natural cone, or Shilov boundary unless a separate model supplies
 that witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.Meta.OwnerTarget
 

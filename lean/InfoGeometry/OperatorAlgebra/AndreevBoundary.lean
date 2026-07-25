@@ -15,7 +15,7 @@ This file does not assert that every superconducting surface hosts Majorana
 modes. Topological edge protection is a separate witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.Meta.OwnerTarget
 

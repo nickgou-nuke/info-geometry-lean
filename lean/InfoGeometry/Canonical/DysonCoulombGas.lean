@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 open Finset
 open scoped BigOperators

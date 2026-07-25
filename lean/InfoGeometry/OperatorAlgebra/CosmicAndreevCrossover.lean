@@ -11,7 +11,7 @@ reflection. It records the algebraic pattern:
 through a closure involution, and proves that the diagonal survives.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

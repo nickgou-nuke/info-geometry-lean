@@ -14,7 +14,7 @@ Physical interpretations such as "metal lattice", "heat", or "commutant" are
 added in later calibration layers.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section

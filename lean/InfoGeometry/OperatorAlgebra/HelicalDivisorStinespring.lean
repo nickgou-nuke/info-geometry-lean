@@ -11,7 +11,7 @@ This module is generic.  Riemann/L-function zeroes, material resonances, and
 scattering determinant zeroes are later instantiations supplied by calibration.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-
 # Modular/Krein reflection over a directed tower

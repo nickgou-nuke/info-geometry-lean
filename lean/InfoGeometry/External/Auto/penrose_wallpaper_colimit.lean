@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.YangBaxterProof
 
 open InfoGeometry.Canonical.YangBaxterProof

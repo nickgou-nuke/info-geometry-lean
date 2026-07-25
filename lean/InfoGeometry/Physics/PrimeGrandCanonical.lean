@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Grand Canonical Ensemble of Primes and the Modular Hamiltonian

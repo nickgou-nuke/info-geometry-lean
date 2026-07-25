@@ -8,7 +8,7 @@ Zero divisors, nilpotents, and Drazin-nil support are representation-level
 detection predicates, not the primitive definition of the cone.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 

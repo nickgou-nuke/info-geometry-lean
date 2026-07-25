@@ -16,7 +16,7 @@ theorem-level obligations, and recovery/Page-curve/holographic reconstruction
 statements remain separate certified structures.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit

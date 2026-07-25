@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.KanCayley
 import InfoGeometry.External.Auto.ComplexTemperatureRH
 import InfoGeometry.External.Auto.LieFlowCompilerBridge

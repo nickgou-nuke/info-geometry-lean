@@ -10,7 +10,7 @@ Andreev reflection supplies electron-like ↔ hole-like closure.
 Edge/topological claims require explicit BdG, localization, and index data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 noncomputable section

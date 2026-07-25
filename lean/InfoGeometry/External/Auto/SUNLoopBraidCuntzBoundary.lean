@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # `SU(N)` loop/braid/Cuntz boundary skeleton

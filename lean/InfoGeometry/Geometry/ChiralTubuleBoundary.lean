@@ -12,7 +12,7 @@ Temperature, shear, Hessian degeneracy, and residue formation are connected
 only through proof-carrying calibration data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Meta.OwnerTarget
 

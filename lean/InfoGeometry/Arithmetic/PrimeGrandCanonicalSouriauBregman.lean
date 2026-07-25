@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
 import InfoGeometry.Arithmetic.PrimonFinite

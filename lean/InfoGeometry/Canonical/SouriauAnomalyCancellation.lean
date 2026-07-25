@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Souriau Dirac-Hodge Coupling & Anomaly Elimination

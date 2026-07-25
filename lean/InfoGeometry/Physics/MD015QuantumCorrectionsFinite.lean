@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Section8
 import InfoGeometry.Physics.Section29QuantumEffectiveAction
 

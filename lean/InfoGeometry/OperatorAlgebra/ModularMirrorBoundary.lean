@@ -23,7 +23,7 @@ It does not assert that every horizon has Andreev physics.
 It does not assert that every fixed diagonal is a protected Majorana edge mode.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 import InfoGeometry.Meta.OwnerTarget

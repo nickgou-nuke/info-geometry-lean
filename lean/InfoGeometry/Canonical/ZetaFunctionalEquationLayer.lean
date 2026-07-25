@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget

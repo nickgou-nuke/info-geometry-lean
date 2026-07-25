@@ -9,7 +9,7 @@ import InfoGeometry.External.Virasoro.CentralChargeCalc
 import InfoGeometry.External.Virasoro.Commutator
 import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
 import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # The bosonic Sugawara construction

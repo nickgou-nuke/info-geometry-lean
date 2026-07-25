@@ -15,7 +15,7 @@ It kills the finite shadows first:
 * Classical single-flip complexity is the Hamming weight and is bounded by `n`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Wallpaper-group mechanical metamaterial dataset digest

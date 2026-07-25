@@ -12,7 +12,7 @@ This module records the precise representation-theoretic data:
 * spin-momentum coupling is supplied by explicit Lorentz/spin calibration data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Meta.Architecture

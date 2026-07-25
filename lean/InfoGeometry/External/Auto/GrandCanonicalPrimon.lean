@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Grand Canonical Bosonic and Fermionic Primon Ensembles

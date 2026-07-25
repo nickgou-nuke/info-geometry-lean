@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 open Setoid
 
 set_option autoImplicit false

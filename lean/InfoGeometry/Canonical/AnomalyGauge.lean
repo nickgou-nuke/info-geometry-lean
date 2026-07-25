@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Singular.KreinNaturalFlow

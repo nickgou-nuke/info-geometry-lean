@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Repaired MD 014: finite `Z₃` projector and extension algebra

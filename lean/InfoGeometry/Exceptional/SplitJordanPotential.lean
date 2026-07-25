@@ -4,7 +4,7 @@ InfoGeometry/Exceptional/SplitJordanPotential.lean
 Cubic norm N_J and Φ_J pseudo-barrier.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

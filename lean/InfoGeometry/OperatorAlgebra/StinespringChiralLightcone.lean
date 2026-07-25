@@ -8,7 +8,7 @@ hidden flow into a commutant/environment sector, once a dilation witness and
 lightcone calibration are supplied.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 

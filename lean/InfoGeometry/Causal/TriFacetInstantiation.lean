@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Foundations.AxiomaticDependencyGraph
 import InfoGeometry.Causal.CausalAlgebra
 

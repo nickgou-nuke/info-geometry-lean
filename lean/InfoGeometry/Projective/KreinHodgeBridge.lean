@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import DAG.GraphHodge
 import InfoGeometry.Projective.KreinAttention
 

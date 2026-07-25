@@ -10,7 +10,7 @@ This module keeps the strict separation:
 * `J` reverses phase rather than being identified with `K`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 

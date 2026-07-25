@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

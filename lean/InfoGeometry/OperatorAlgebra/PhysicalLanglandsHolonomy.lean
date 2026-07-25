@@ -18,7 +18,7 @@ No Beilinson-Drinfeld stack, D-module, eigensheaf, exceptional affine, or
 black-hole microstate theorem is asserted here.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

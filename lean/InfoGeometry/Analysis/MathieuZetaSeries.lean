@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Applications of Euler Sums and Series Involving the Zeta Functions

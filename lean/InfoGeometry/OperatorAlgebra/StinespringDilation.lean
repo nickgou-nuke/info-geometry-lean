@@ -16,7 +16,7 @@ strengthen the channel to a completely positive map, a trace-preserving map,
 a normal map on a von Neumann algebra, or a type III modular reduction.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

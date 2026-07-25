@@ -17,7 +17,7 @@ real layer. Chiral projectors are supplied as proof-carrying data, or later
 derived after complexification.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

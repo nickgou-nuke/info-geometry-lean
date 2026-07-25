@@ -12,7 +12,7 @@ carry isotropic cones or zero-divisor loci, but Drazin projectors and circular
 polarization live safely in the associative represented operator algebra.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.Meta.OwnerTarget
 

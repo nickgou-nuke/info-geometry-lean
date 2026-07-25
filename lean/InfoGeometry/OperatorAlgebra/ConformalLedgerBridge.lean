@@ -22,7 +22,7 @@ and the `TKKConformalClosure.TKKRicciFluxDatum` socket. It is complementary to
 material, and topological ledgers.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget

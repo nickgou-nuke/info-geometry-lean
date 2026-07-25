@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Fourier--Mellin Dirac zero modes as biquaternion resolvent poles

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Section17
 import InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 import InfoGeometry.Physics.MD014TriSpinZ3Projectors

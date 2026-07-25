@@ -28,7 +28,7 @@ This is the algebraic core needed before moving to trace/Pfaffian/Freudenthal
 or Cl(4,4)-specific realizations.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

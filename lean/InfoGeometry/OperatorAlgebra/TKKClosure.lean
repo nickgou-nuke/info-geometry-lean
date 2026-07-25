@@ -27,7 +27,7 @@ algebra or a concrete Jordan triple system; it records the dependency graph and
 proof-carrying closure laws needed by concrete models.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.KleinianTwist
 import InfoGeometry.Meta.OwnerTarget

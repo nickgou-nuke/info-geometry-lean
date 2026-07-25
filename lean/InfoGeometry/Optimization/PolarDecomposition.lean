@@ -2,7 +2,7 @@
 /- The Newton-Schulz iteration computes the unitary factor U = msign(G) of the polar decomposition
    G = P * U without requiring a full SVD. Uses only matrix addition, transposition, and inversion. -/
 
-import Mathlib
+import Mathlib.Tactic
 
 open Matrix
 open scoped Matrix

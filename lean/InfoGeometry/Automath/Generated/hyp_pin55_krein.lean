@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Basic
 
 namespace Automath.Generated

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Glide-symmetric `ℤ₂` invariant anchors

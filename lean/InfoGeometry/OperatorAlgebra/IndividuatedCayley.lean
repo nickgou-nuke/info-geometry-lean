@@ -23,7 +23,7 @@ is proved to be unitary:
 The proof is algebraic and works in any starred ring.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

@@ -15,7 +15,7 @@ The later Euler-product / completed L-function / zeta-potential layer should
 instantiate the witness structures defined here.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 import InfoGeometry.Meta.OwnerTarget

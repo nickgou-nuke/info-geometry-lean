@@ -9,7 +9,7 @@ regularity, or Majorana protection beyond the explicit algebraic laws stored
 below.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 

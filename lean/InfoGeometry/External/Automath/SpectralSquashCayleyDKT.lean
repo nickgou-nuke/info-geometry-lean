@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Finite spectral squashing, Cayley coordinates, and Dirac--Krein--Tomita shadow

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Auto.DeterminantSupergrading
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.LieFlowCompilerBridge

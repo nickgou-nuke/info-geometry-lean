@@ -8,7 +8,7 @@ energy. Convexity, strictness, and second-variation/Ricci identification are
 proof-carrying data, not placeholder assertions.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.OperatorAlgebra.PO55RicciFlux

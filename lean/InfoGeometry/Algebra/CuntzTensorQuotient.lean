@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
 import Mathlib.Algebra.Star.RingQuot
 import Mathlib.Algebra.Algebra.Opposite

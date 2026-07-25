@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Penrose Spin Networks and the Chiral Cone: The Explicit Isomorphism

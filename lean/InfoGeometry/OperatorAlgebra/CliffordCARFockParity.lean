@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Cl(n,n) Fock Parity — general n occupation counting

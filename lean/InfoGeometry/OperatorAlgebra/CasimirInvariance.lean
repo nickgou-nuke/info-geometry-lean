@@ -17,7 +17,7 @@ The complex KMS strip is intentionally not introduced here.  This file locks
 the algebraic center/Casimir anchor first.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir

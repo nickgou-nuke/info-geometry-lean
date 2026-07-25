@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorBoundarySplitClifford
 import InfoGeometry.Canonical.CantorCl11Limit
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization

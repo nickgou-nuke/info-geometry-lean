@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.MetriplecticCore
 import InfoGeometry.SuperMetriplectic.Flow
 import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge

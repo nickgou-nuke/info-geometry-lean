@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Shadow Ledger — Formal Self-Model of Open Closure Debt

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Trifactor Geometry and Pauli/Zorn Synthesis

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform

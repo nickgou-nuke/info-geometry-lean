@@ -18,7 +18,7 @@ closure defect along TKK generators. It is not a bare Ricci tensor until a
 connection/curvature contraction API is supplied.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

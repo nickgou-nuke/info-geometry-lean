@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Recovered.MajoranaTensorBridge
 import InfoGeometry.Canonical.TensorTowerColimit
 

@@ -12,7 +12,7 @@ surfaces below, not proof fields.
 
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Meta.Architecture
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 

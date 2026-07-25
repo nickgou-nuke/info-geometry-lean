@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 #check (inferInstance : AddCommGroup PUnit)
 #check (inferInstance : Subsingleton PUnit)

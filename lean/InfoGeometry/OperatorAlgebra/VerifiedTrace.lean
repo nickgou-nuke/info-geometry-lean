@@ -17,7 +17,7 @@ whenever `U` has a two-sided inverse.
 No vacuous trace-invariance certificate is used.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section

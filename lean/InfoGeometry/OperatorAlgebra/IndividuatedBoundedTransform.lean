@@ -19,7 +19,7 @@ only after a functional-calculus/order-lift bridge explicitly proves that the
 scalar bound transfers to the chosen operator model.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

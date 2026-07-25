@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Gell-Mann parafermion solder — theorem-honest carrier

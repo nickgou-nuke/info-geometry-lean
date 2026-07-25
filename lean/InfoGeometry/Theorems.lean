@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Mathematical Unification of Tri-Facet Geometry, Drazin Inverses, and Golden Ratio Invariants

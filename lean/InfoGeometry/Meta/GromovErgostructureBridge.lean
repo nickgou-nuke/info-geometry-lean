@@ -14,7 +14,7 @@ No biological theorem is asserted.
 No claim is made that LLMs understand.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.Core.MajoranaLiftPacket

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Three-point non-isotropic configuration: Orlik--Solomon skeleton

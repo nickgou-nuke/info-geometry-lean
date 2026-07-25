@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Non-orientable exceptional points in a Klein Brillouin zone

@@ -17,7 +17,7 @@ This file does not claim that every CP map automatically routes into the
 commutant. That routing is a proof-carrying Tomita/Stinespring witness.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 import InfoGeometry.Meta.OwnerTarget

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Three non-isotropic points for an even complex quadric: finite presentation data

@@ -9,7 +9,7 @@ one bit.  This is a kinematic Clifford/Krein substrate, not a proof of a
 global `Z16` interacting classification.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

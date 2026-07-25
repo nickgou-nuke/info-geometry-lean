@@ -8,7 +8,7 @@ It defines the witness structure needed to say that a condensate is near
 capacity and that an Andreev/modular mirror is beginning to fail.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

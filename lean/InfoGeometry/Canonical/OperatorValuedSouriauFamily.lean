@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture

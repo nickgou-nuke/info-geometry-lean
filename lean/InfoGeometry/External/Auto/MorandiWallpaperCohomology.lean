@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Morandi wallpaper-pattern classification: cohomology digest

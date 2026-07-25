@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.Cl44QuaternionSplit
 
 noncomputable section

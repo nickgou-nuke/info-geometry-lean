@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.ModularLorentzBoost
 import InfoGeometry.Canonical.ModularSL2R

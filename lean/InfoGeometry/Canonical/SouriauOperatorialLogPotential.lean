@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Meta.Architecture
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 InfoGeometry.Canonical.SouriauOperatorialLogPotential

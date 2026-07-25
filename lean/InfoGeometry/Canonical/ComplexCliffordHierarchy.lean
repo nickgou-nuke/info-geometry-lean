@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 Finite, source-checkable invariants for the complex Clifford hierarchy.

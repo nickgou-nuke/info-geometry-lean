@@ -11,7 +11,7 @@ by the ordinary determinant; in infinite dimensions it may be a Fredholm,
 Berezinian, core-trace, or regularized determinant.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.Meta.OwnerTarget

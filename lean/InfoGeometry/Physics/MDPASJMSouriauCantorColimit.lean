@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.MDPASJMSouriauDigest
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge

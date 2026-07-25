@@ -15,7 +15,7 @@ The topological invariant is intentionally model-dependent: `Z`, `Z2`, `Z16`,
 or a richer index/winding datum depending on dimension and interaction regime.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

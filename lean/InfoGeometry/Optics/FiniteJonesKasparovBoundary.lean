@@ -25,7 +25,7 @@ The module proves this equality and then reads it three ways:
   heat:         Frobenius-Bregman heat
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespringConstructive

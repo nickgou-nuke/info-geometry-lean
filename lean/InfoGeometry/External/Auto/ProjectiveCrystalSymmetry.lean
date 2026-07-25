@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Projective crystal symmetry and momentum-space nonsymmorphicity

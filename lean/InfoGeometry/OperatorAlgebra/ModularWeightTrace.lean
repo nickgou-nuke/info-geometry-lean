@@ -14,7 +14,7 @@ The key type III rule is encoded by separation of structures:
 In particular, this file does not put a bare trace field on a type III algebra.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

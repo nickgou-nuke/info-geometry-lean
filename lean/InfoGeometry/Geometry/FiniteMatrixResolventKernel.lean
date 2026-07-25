@@ -12,7 +12,7 @@ resolvent difference is
 A resolvent kernel is a matrix `R` equipped with two-sided inverse proofs.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 import InfoGeometry.Meta.BridgeTarget
 

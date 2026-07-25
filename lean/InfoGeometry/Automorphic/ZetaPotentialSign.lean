@@ -16,7 +16,7 @@ A later bridge file can instantiate the arithmetic side using Mathlib's
 `riemannZeta`, Dirichlet L-functions, or completed L-functions.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Automorphic.SiegelResonance
 
 noncomputable section

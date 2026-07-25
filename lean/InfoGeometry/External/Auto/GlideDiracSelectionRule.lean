@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Glide Fourier extinctions as Dirac--Mellin scale selection rules

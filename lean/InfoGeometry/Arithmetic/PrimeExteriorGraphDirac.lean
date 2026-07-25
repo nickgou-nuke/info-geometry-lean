@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex

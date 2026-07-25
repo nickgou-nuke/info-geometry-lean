@@ -18,7 +18,7 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Canonical.WeylKMSGromovWittenCounts

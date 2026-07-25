@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Asano--Ruelle contraction: counterexample to the unrestricted statement

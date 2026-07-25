@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
 import InfoGeometry.OperatorAlgebra.SymmetricSplitSelfDualCartanSpaces

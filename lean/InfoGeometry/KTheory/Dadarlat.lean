@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Dadarlat (2009) — finite algebraic K-theory readout

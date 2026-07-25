@@ -22,7 +22,7 @@ The complexity-growth part is witness-gated: bridge length equals complexity
 only after a concrete calibration is supplied.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

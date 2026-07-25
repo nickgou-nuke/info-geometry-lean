@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 set_option linter.unusedSectionVars false

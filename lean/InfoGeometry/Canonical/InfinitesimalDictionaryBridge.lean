@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle

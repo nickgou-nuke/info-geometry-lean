@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.CastroThetaScalingBridge
 
 set_option linter.unusedSectionVars false

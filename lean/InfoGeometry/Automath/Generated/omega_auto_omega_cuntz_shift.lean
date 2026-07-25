@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Omega.OperatorAlgebra
 
 namespace Automath.Generated

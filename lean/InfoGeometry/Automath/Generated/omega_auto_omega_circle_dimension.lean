@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Omega.CircleDimension
 
 namespace Automath.Generated

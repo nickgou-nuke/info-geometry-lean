@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 def D4Lattice := Fin 4 → ℤ
 

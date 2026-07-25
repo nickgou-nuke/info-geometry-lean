@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Cartan.Involution
 import InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition
 import InfoGeometry.Canonical.HodgeDiracLaplacianBridge

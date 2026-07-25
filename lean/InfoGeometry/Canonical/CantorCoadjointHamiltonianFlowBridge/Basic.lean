@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Omega.StatisticalStability
 
 namespace Automath.Generated

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometryCore.Basic
 
 open InfoGeometryCore

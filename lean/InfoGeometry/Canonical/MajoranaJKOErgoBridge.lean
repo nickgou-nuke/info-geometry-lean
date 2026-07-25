@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Geometry.DualFlat

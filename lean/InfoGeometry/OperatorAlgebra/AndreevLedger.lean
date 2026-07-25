@@ -16,7 +16,7 @@ No Navier-Stokes regularity statement is asserted.
 No claim is made that every vortex hosts a Majorana zero mode.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.Meta.OwnerTarget
 

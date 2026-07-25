@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE

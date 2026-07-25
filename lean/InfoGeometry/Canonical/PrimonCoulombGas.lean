@@ -1,6 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # The Primon Coulomb Gas and GUE Level Repulsion

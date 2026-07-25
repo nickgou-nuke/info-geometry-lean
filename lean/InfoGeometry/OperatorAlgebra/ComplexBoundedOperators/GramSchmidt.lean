@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.ExtraJordanNormalForm
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.VSConnect
 

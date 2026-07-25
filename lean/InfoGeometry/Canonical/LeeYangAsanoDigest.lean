@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoRuelleObstruction
 import InfoGeometry.Canonical.AsanoRuelleCounterexample

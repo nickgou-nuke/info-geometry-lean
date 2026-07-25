@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.BostConnesKMS
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Conditional Graded Trace Compatibility

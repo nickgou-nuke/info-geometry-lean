@@ -6,7 +6,7 @@ operator Γ, given by prime-factor parity `(-1)^Ω(n)`, commutes with the
 modular-flow phase `σ_t` on the chosen arithmetic generators.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Canonical.BostConnesModularFlow
 import InfoGeometry.Canonical.BostConnesKMS

@@ -12,7 +12,7 @@ not automatically central in the full algebra. In the Virasoro route, the
 adjoined central charge is genuinely central by an explicit field.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.External.Virasoro.VirasoroCocycle
 

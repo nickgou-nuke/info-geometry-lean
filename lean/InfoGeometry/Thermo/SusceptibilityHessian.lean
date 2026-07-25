@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Optics.JonesCalibration

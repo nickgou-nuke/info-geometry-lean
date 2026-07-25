@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture

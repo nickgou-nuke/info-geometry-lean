@@ -14,7 +14,7 @@ grammar slogan:
 No cosmological, observational, or Navier-Stokes conclusion is asserted.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

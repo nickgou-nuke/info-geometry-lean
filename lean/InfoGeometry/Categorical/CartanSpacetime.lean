@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Finite algebraic Cartan-spacetime 2-cell atoms

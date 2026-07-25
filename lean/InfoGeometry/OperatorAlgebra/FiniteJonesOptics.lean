@@ -21,7 +21,7 @@ This file does not derive the coefficients from a material model. That belongs
 to `SusceptibilityHessian.lean`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Optics.JonesCalibration
 
 noncomputable section

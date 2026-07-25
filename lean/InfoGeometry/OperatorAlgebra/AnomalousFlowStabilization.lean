@@ -8,7 +8,7 @@ and a protected topological charge force a stable non-flat representative.  It
 does not claim that Clifford kinematics alone prove a tubule phase.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
 import InfoGeometry.Thermo.BuresWassersteinKMSCost

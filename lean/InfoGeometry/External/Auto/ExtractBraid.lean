@@ -1,5 +1,5 @@
 import Lean
-import Mathlib
+import Mathlib.Tactic
 
 open Lean
 open Lean.Meta

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorChirality
 import InfoGeometry.Canonical.BohmMadelungFisher
 import InfoGeometry.Canonical.CramerRaoUncertainty

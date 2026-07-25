@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 
 set_option linter.unusedSectionVars false

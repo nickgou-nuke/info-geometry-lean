@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
 
 open InfoGeometry.MajoranaPfaffianNaturalClosure

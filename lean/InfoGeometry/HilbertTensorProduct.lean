@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 open Real
 open scoped InnerProductSpace

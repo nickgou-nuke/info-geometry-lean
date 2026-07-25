@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Souriau operatorial Lie-group thermodynamics: finite algebraic core

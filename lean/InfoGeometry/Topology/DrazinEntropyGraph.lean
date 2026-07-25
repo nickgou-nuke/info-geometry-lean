@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.RegularSupportSecondLaw
 import InfoGeometry.Meta.Architecture
 

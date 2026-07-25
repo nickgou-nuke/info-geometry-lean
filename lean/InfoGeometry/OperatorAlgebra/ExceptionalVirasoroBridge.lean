@@ -22,7 +22,7 @@ The physical statement is witness-gated:
       -> KMS/horizon thermal ledger.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Meta.OwnerTarget

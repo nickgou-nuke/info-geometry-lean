@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.PNat.Basic
 import Mathlib.NumberTheory.Bernoulli
 

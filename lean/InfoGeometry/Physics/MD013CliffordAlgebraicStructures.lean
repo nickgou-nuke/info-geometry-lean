@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.MD006OperatorEigenoperators
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 

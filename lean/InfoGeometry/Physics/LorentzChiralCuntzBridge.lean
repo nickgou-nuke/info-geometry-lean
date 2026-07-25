@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
 import InfoGeometry.Physics.CuntzDeformedSuperPoincare

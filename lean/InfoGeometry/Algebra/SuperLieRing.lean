@@ -8,7 +8,7 @@ Extends `SuperBracket` with:
 - Graded anti-commutativity (even-even / even-odd skew, odd-odd symmetric)
 - Super Jacobi identity by parity sectors
 -/
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.SuperBracket
 
 set_option linter.dupNamespace false

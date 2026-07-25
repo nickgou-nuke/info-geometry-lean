@@ -14,7 +14,7 @@ Under a larger Jones unitary that mixes polarization channels, the projector is
 covariant rather than fixed.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 import InfoGeometry.Meta.OwnerTarget
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Jean-Marie Souriau, MDPAS 1974: finite spin-particle algebra

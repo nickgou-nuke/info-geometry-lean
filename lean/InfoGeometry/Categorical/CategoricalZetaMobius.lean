@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Star.Basic
 import Mathlib.CategoryTheory.Category.Preorder
 

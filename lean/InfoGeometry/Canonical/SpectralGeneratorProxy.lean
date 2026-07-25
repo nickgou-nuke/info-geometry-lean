@@ -8,7 +8,7 @@ data extracted from a spectral generator and proves the algebraic consequences
 that can be proved at this layer.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

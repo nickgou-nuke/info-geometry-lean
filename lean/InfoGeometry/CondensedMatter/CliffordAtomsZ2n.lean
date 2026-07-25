@@ -14,7 +14,7 @@ cyclic `Z16` invariant.  A concrete DIII/topological model must supply a
 compatibility datum relating local Clifford addresses to a global index.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.CondensedMatter.DIIISuperfluid
 
 noncomputable section

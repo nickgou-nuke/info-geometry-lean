@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 #### BUCKET 1: CLOSED FINITE THEOREMS

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Projective.KuzminCuntzPath
 

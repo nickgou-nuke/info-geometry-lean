@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Kagome Lattice and Klein Bottle Topology Incompatibility

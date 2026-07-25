@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.BrillouinKleinExceptionalTopology

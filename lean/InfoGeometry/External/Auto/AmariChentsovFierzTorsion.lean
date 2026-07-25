@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Amari--Chentsov cubic coefficient and 2x2 skew matrix

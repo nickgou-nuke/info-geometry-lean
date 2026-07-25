@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Clifford.JordanWignerBridge
 import InfoGeometry.Clifford.JordanWignerCAR

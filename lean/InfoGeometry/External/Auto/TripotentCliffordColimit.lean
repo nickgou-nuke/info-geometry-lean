@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Tripotent trifactor geometry and a finite diagonal scale model

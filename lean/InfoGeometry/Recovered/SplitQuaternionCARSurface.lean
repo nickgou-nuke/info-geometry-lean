@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Recovered.SplitQuaternionMatricesRecovered
 import InfoGeometry.Algebra.Cl11OSp12
 

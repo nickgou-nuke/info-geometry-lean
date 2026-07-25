@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Itakura-Saito Divergence and the Prime Log-Generating Potential

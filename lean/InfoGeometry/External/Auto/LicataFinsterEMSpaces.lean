@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Licata--Finster Eilenberg--MacLane spaces

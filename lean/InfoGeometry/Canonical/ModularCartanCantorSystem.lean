@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Modular Cartan/Cantor Toy Owner Surface

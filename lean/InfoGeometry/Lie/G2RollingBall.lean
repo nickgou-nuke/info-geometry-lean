@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Lie.SagerschnigS2S3Distribution
 
 /-!

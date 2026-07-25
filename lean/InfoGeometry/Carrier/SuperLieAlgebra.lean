@@ -12,7 +12,7 @@ The typeclass hierarchy is:
         ⤷ `SuperLieAlgebra` (carrier-level, may add carrier-specific results)
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.SuperLieRing
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 

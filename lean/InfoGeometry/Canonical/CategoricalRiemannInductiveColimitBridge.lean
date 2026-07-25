@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CliffordDirectColimit
 import InfoGeometry.Arithmetic.BostConnesZeta
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge

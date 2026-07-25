@@ -7,7 +7,7 @@ No coordinate amplitudes are primary here.  Coordinate hyperdeterminant
 formulas may be added later only through chart theorems.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 
 noncomputable section

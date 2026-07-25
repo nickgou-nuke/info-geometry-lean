@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
 import InfoGeometry.Canonical.WeylIntegrationFixedPoint

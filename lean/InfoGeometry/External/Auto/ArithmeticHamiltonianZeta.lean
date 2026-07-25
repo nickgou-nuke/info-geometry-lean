@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Arithmetic Hamiltonian and the Zeta Partition Trace

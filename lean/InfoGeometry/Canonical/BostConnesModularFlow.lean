@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Canonical.DiscreteModularSpectrum
 

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.BaezF4H3Zorn

@@ -12,7 +12,7 @@ This module keeps analytic residue extraction proof-bearing:
 * index is tied directly to the winding datum, hence to the boundary residue.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualAnalyticity
 
 noncomputable section

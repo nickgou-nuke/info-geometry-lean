@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.ChiralCausalConeFlow
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Projective.KleinQuadricMonodromy

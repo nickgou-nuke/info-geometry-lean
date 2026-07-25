@@ -7,7 +7,7 @@ The isotropic cone is geometric carrier data.  Algebraic nilpotents and
 zero-divisors are related to it only through representation theorems.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

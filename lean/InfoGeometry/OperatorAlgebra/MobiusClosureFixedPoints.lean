@@ -18,7 +18,7 @@ It separates:
 No claim is made that all of these are definitionally the same object.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

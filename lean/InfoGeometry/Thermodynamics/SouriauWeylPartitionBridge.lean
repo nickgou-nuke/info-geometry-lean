@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 import InfoGeometry.Thermodynamics.SouriauTemperature
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge

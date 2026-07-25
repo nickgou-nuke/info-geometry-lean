@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/FiveGradedInformationLedger.lean
 Projected information accounting identity and five-grade memory ledger sockets.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

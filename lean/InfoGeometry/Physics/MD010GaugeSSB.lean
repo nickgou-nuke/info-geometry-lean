@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.QuaternionCondensate
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 import InfoGeometry.Physics.Section34StrengthenedFormalism

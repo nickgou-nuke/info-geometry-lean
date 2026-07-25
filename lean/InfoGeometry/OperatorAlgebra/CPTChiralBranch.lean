@@ -14,7 +14,7 @@ Consequently, the left and right chiral projectors are exchanged by the
 modular/CPT mirror.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 

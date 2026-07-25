@@ -5,7 +5,7 @@ group API shape but is formulated using the finite pointed-readout tower used in
 this repository.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Spectral.Homotopy
 import InfoGeometry.Spectral.Homotopy.Suspension
 import InfoGeometry.Spectral.Homotopy.Wedge

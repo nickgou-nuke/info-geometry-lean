@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.Pin55
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 

@@ -5,7 +5,7 @@ Concrete 5-graded Lie algebra: **𝔰𝔩₂(ℝ)** graded by the eigenvalues
 of the Cartan element `h`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 set_option linter.dupNamespace false

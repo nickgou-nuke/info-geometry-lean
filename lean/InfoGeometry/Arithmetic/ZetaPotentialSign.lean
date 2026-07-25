@@ -4,7 +4,7 @@ InfoGeometry/Arithmetic/ZetaPotentialSign.lean
 Log ζ sign convention.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Arithmetic.ZetaPotential
 

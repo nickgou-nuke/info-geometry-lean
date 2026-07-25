@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Star
 import Mathlib.LinearAlgebra.CliffordAlgebra.Even

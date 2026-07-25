@@ -2,7 +2,7 @@ import InfoGeometry.Quantum.FibonacciFusionCategory
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Canonical.BostConnesKMS
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics

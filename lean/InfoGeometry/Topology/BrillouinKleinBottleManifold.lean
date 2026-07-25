@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.ProjectiveKleinCompactification
 import InfoGeometry.Topology.V4RootSystem

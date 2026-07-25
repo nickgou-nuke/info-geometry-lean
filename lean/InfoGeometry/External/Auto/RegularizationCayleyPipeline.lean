@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Regularization, Cayley coordinates, and the unified adjoint

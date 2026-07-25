@@ -12,7 +12,7 @@ The determinant line / Fredholm determinant / Berezinian layer should be added
 later as a refinement, not as the primitive definition of the index.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section

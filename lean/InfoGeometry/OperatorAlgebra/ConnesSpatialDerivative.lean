@@ -21,7 +21,7 @@ The scalar positive-cone branch is fully constructive and proves:
 No trace normalization is used.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section

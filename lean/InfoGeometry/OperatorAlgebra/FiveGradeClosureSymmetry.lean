@@ -14,7 +14,7 @@ means grade zero survives as a sector.  It does not mean every grade-zero
 element is fixed.  Pointwise survival still requires `theta x = x`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 noncomputable section

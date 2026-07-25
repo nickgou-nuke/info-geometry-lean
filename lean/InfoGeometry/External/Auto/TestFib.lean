@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 def phi : ℝ := (1 + Real.sqrt 5) / 2

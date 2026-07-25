@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Non-Hermitian Kitaev--Cuntz Chain: Finite Edge-Mode Core

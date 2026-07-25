@@ -8,7 +8,7 @@ nontrivial topological/anomaly sector into a flat sector when the obstruction
 invariant is conserved and every flat state has trivial obstruction.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

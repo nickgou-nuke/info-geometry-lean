@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Concrete `B₃ → S₃` Artin quotient shadow

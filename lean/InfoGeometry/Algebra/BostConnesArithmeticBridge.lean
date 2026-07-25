@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Algebra.BostConnesAnalytic
 import InfoGeometry.Algebra.CuntzKMSState

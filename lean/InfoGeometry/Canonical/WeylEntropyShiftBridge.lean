@@ -10,7 +10,7 @@ standard additive shift forced by multiplicative Weyl homogeneity.
 
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.Meta.Architecture
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.WeylEntropyShiftBridge
 

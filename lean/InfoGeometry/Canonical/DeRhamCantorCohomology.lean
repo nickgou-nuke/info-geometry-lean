@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift

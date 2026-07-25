@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Topology.Q8MonodromySpinorCover
 import InfoGeometry.Topology.BrillouinKleinBottleManifold
 import InfoGeometry.Canonical.KleinBottleSewing

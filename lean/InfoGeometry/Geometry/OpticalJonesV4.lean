@@ -7,7 +7,7 @@ The Fresnel/Jones coefficients are continuous optical data.  The V4 tag records
 the discrete orientation/parity/time-reversal bookkeeping of the event.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

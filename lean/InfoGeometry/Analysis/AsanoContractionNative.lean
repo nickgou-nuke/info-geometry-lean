@@ -11,7 +11,7 @@ The sign convention used here is the standard signed product obstruction:
 if the contraction `A + D z` vanishes, then the zero lies in `-K₁K₂`.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 
 noncomputable section

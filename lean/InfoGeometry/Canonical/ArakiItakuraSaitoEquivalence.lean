@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Operator Itakura-Saito and Araki Relative Entropy Equivalence

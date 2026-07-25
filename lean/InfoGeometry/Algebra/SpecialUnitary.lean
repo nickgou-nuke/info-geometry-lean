@@ -5,7 +5,7 @@ Phase 1: Native mathlib-compatible `su(n)` Lie algebra definition.
 - Uses `Submodule.span` and `LieSubalgebra.mk` (structure extension).
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.Complex.Basic

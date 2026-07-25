@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import DAG.GraphHodge
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget

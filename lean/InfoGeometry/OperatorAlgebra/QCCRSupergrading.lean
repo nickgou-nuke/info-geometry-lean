@@ -1,5 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRCore
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

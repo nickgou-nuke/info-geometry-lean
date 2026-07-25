@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Projective.QuantumTwistorGauge
 import InfoGeometry.Canonical.BostConnesKTheory
 import InfoGeometry.Algebra.CuntzGNSRepresentation

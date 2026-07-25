@@ -4,7 +4,7 @@ InfoGeometry/Geometry/WindingSnap.lean
 Bridge from residue winding to TopologicalSnap obstruction flows.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.SpectralDivisors
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 

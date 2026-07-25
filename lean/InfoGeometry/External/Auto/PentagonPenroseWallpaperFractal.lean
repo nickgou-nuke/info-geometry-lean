@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Pentagon / Penrose fractal beyond wallpaper crystallography

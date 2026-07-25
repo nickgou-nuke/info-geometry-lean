@@ -1,5 +1,5 @@
 import InfoGeometry.OperatorAlgebra.QCCRSupergrading
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

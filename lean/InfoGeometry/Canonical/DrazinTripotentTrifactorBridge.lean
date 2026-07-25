@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Canonical.TrifactorDecomposition
 

@@ -8,7 +8,7 @@ This file intentionally does not import a nonexistent or unstable Fredholm
 determinant API. Fredholm data are supplied as structure fields.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 
 noncomputable section

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Canonical.BohmMadelungFisher
 

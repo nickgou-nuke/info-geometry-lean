@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Dynamics.ModularThermalState

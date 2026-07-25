@@ -15,7 +15,7 @@ where `chi` is the grading/chiral operator and `Readout` is supplied by an
 explicit backend.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section

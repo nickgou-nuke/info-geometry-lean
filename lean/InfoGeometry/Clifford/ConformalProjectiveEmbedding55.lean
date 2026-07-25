@@ -1,5 +1,5 @@
 import InfoGeometry.Clifford.ConformalLift55
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 
 /-!

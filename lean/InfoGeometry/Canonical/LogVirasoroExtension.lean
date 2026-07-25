@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.LogJordanKreinCore
 import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
 import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner

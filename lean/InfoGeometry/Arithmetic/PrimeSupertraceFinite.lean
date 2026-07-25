@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Meta.SocketTarget

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge

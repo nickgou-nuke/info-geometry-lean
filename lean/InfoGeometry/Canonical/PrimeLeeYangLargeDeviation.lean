@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Meta.BridgeTarget

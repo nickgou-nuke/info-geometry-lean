@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # 2×2 Matrix → determinant normalization → supergrading → Pauli/KAN chain

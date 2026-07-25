@@ -10,7 +10,7 @@ The chiral sign is data.  Tomita theory supplies the algebra/commutant mirror;
 it does not by itself decide whether the mirror preserves or flips chirality.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.Meta.OwnerTarget

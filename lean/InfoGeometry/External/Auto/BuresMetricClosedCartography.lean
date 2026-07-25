@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 set_option maxHeartbeats 10000000
 

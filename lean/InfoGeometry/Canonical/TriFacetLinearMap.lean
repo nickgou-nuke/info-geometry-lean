@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS (7)
@@ -10,7 +10,7 @@ import Mathlib
 #### BUCKET 3: None — all stated theorems proved from explicit hypotheses.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Canonical.TriFacetLinearMap
 

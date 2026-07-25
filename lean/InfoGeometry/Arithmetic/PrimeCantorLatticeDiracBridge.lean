@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge

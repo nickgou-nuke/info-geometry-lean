@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Meta.Architecture

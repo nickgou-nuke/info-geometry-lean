@@ -15,7 +15,7 @@ Analytic identifications, such as log-zeta branch behavior, are supplied later
 as calibration data.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section

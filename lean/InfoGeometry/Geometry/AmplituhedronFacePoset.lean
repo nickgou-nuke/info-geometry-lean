@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import Mathlib.Order.Basic
 import Mathlib.Data.Real.Basic
 

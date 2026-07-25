@@ -8,7 +8,7 @@ Provides the `SuperBracket` typeclass, which is the minimal interface for an
 structures (`SuperLieRing`, `SuperLieAlgebra`) extend this.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 set_option linter.dupNamespace false
 

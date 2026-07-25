@@ -17,7 +17,7 @@ Here `T` is the time-reversal/Kramers symmetry, `C` is the particle-hole
 or CPT/BdG mirror, and `chi` is the induced chiral grading.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section

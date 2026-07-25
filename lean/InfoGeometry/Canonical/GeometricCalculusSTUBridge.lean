@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Applications.STUBlackHoleQubit

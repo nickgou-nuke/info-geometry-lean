@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
 import InfoGeometry.Meta.BridgeTarget

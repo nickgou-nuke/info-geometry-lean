@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzKMSState
 import InfoGeometry.Algebra.CuntzGNSRepresentation
 import InfoGeometry.Algebra.CuntzTensorQuotient

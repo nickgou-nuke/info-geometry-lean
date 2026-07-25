@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
 import InfoGeometry.Dynamics.SouriauDiracHodge
 

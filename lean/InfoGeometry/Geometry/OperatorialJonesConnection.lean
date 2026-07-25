@@ -11,7 +11,7 @@ This is the low-dimensional CP1 / polarization connection layer.  It is not
 itself the Poincare metric or the KMS theorem.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 noncomputable section
 

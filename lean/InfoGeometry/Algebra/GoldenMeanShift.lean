@@ -1,6 +1,6 @@
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
-import Mathlib
+import Mathlib.Tactic
 
 open Matrix
 open InfoGeometry.Algebra.CuntzTensorQuotient

@@ -25,7 +25,7 @@ The file is an owner-level socket.  It does not construct concrete Clifford
 algebras; it keeps the reflection/projective/conformal dependency graph honest.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.Meta.OwnerTarget

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Biquaternions, `SL(2,C)`, KAN boosts, and special relativity

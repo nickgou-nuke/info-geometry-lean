@@ -1,5 +1,5 @@
 import InfoGeometry.Prequantum.GNSBridge
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # GNS Representation Action

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 import InfoGeometry.Clifford.Cl11Matrix

@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

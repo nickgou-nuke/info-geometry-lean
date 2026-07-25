@@ -18,7 +18,7 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 

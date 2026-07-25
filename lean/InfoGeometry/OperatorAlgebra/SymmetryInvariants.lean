@@ -16,7 +16,7 @@ operators, invariant projectors, supported sectors, invariant predicates,
 readouts, pairings, and projector decompositions.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.Meta.OwnerTarget

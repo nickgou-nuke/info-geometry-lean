@@ -14,7 +14,7 @@ represented operator algebra; lightlike vectors live in the carrier. A
 representation bridge should relate them.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 

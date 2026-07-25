@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.MD008RepresentationCharge

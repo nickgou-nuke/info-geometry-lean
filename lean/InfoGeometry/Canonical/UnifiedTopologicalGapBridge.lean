@@ -1,7 +1,7 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.TopologicalGapShadow
 import InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
-import Mathlib
+import Mathlib.Tactic
 
 open scoped InnerProductSpace
 

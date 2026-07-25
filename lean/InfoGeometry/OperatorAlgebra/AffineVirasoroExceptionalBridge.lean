@@ -12,7 +12,7 @@ This is proof-carrying calibration data, not an unconditional theorem that
 `E8(8)` equals Virasoro.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.Meta.OwnerTarget

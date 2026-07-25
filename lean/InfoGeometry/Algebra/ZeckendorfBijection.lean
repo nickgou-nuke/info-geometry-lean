@@ -1,6 +1,6 @@
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import Mathlib.Data.Nat.Fib.Zeckendorf
-import Mathlib
+import Mathlib.Tactic
 
 namespace InfoGeometry.Algebra.ZeckendorfBijection
 

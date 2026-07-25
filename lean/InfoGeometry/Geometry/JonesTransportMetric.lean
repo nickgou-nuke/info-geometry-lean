@@ -8,7 +8,7 @@ minimal cost of admissible coherent transport. Nonunitary projectors/polarizers
 are boundary or dissipative events, not ordinary isometries.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
 noncomputable section

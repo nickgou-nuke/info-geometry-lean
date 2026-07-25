@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Quantum.Hurwitz

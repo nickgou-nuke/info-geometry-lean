@@ -1714,7 +1714,6 @@ import InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
-import InfoGeometry.Canonical.PrimeLeeYangFilteredColimit
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

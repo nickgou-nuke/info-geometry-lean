@@ -1308,6 +1308,7 @@ import InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 import InfoGeometry.Canonical.FilteredHestenesAnalyticFamily
 import InfoGeometry.Canonical.FilteredHestenesIteratedTransport
+import InfoGeometry.Canonical.FilteredHestenesKernelTransport
 
 namespace InfoGeometry
 

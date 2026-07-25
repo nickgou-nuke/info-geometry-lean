@@ -56,10 +56,7 @@ and off-diagonal $[T_1, C_2] + [C_1, T_2]$.
 theorem blockOp_commutator (T1 C1 T2 C2 : Module.End 𝕜 V) :
     (blockOp T1 C1).commutator (blockOp T2 C2) =
       blockOp (T1.commutator T2) (T1.commutator C2 + C1.commutator T2) := by
-  ext ⟨u, v⟩
-  · simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add]
-    abel
-  · simp [blockOp, LinearMap.commutator]
+  ext ⟨u, v⟩ <;> simp [blockOp, LinearMap.commutator, sub_eq_iff_eq_add] <;> abel
 
 /--
 **Virasoro 1-Cocycle Derivation Condition:**
@@ -85,16 +82,10 @@ def makeLogVirasoroRepresentation
   toFun := fun x => blockOp (ρ x) (c x)
   map_add' := by
     intro x y
-    ext ⟨u, v⟩
-    · simp [map_add]
-      abel
-    · simp [map_add]
+    ext ⟨u, v⟩ <;> simp [blockOp, map_add] <;> abel
   map_smul' := by
     intro r x
-    ext ⟨u, v⟩
-    · simp [map_smul, smul_add]
-      abel
-    · simp [map_smul]
+    ext ⟨u, v⟩ <;> simp [blockOp, map_smul, smul_add] <;> abel
   map_lie' := by
     intro x y
     simp only [LieHom.coe_toLinearMap, blockOp_commutator]

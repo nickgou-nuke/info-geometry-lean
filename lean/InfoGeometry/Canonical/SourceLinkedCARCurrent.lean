@@ -32,10 +32,6 @@ theorem rawCAR_to_SugawaraVirasoro_bridge
           if m + n = 0 then (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) else 0) := by
   have H : CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
     chargedFockSpaceCurrentHeisenbergRep 𝕜 α
-  refine ⟨H, rfl, ?_, ?_⟩
-  · intro m n
-    exact H.comm m n
-  · intro m n
-    exact sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n
+  exact ⟨H, rfl, fun m n => H.comm m n, fun m n => sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n⟩
 
 end InfoGeometry.Canonical.SourceLinkedCARCurrent

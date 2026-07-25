@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.CliffordDirectColimit
-import InfoGeometry.Canonical.BostConnesZeta
+import InfoGeometry.Arithmetic.BostConnesZeta
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
 
 set_option linter.unusedSectionVars false

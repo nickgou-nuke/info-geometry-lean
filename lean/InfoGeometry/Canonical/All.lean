@@ -1313,6 +1313,7 @@ import InfoGeometry.Canonical.FilteredHestenesGlobalOperator
 import InfoGeometry.Canonical.FilteredHestenesGlobalFunction
 import InfoGeometry.Canonical.FilteredHestenesGlobalPhase
 import InfoGeometry.Canonical.FilteredHestenesLinearIterate
+import InfoGeometry.Canonical.FilteredDirectLimitOperator
 
 namespace InfoGeometry
 

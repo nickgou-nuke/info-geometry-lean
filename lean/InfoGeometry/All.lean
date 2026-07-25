@@ -4487,4 +4487,3 @@ import InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant
 import InfoGeometry.Lie.BRSTCohomology
 import InfoGeometry.Canonical.LogJordanKreinCore
 import InfoGeometry.Quantum.BRSTBoundaryCohomology
-import InfoGeometry.Analytic.AppellLerchZwegersCompletion

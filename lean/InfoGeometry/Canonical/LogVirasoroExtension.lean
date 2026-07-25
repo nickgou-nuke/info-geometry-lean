@@ -38,10 +38,10 @@ def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
   toFun := fun p => ⟨T p.1 + C p.2, T p.2⟩
   map_add' := by
     intro p q
-    ext <;> simp [map_add, add_assoc, add_left_comm]
+    simp [map_add, add_assoc, add_left_comm]
   map_smul' := by
     intro r p
-    ext <;> simp [map_smul, smul_add]
+    simp [map_smul, smul_add]
 
 /--
 **Upper-Triangular Block Commutator Theorem:**
@@ -149,7 +149,6 @@ noncomputable def makeLogIntertwiner
     · exact hy0
     · exact hy1
   intertwines := by
-    ext w
     have h_comm_apply : ρ (VirasoroAlgebra.lgen 𝕜 0) (c (VirasoroAlgebra.lgen 𝕜 0) v0) = Δ • c (VirasoroAlgebra.lgen 𝕜 0) v0 := by
       have h1 : (ρ (VirasoroAlgebra.lgen 𝕜 0)).commutator (c (VirasoroAlgebra.lgen 𝕜 0)) v0 = 0 := by rw [hcomm0, LinearMap.zero_apply]
       have h1' : ρ (VirasoroAlgebra.lgen 𝕜 0) (c (VirasoroAlgebra.lgen 𝕜 0) v0) - c (VirasoroAlgebra.lgen 𝕜 0) (ρ (VirasoroAlgebra.lgen 𝕜 0) v0) = 0 := by
@@ -157,7 +156,7 @@ noncomputable def makeLogIntertwiner
       rw [hL0] at h1'
       rw [map_smul] at h1'
       exact sub_eq_zero.mp h1'
-    apply Prod.ext
+    ext w
     · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, h_comm_apply, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]
       abel
     · simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm, mul_smul]

@@ -857,7 +857,7 @@ require LeanArchitect from git "https://github.com/hanwenzhu/LeanArchitect.git"
   @ "54d3fb249685db8e5a564e0b3f331cff77991607"
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
-  @ "v4.28.0"
+  @ "v4.28.1"
 
 require «GIFT» from
   "external_refs/gift-framework-core"
@@ -912,7 +912,7 @@ The source lives under `external/Erdos1196` at commit
 
 This library is intentionally not a default target: the external proof repo is
 pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
-Lean `v4.28.0`. Build/import it explicitly after toolchain alignment.
+Lean `v4.28.1`. Build/import it explicitly after toolchain alignment.
 -/
 lean_lib PrimitiveSetsAboveX where
   globs := #[.andSubmodules `PrimitiveSetsAboveX]

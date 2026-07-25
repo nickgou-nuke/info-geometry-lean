@@ -1312,6 +1312,7 @@ import InfoGeometry.Canonical.FilteredHestenesKernelTransport
 import InfoGeometry.Canonical.FilteredHestenesGlobalOperator
 import InfoGeometry.Canonical.FilteredHestenesGlobalFunction
 import InfoGeometry.Canonical.FilteredHestenesGlobalPhase
+import InfoGeometry.Canonical.FilteredHestenesLinearIterate
 
 namespace InfoGeometry
 

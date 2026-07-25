@@ -1,33 +1,6 @@
 # Detailed sorry-equivalent structural audit report
 This report lists all declarations containing `sorry` in the source code, resolves their `valueFingerprint.shapeHash`, and identifies all other declarations in the codebase that share the same shape hash (sorry-equivalents).
 
-### Source Sorry: `InfoGeometry.Lie.Pin55KreinConformalBridge.ρ_spinor`
-- **Value Shape Hash**: `2126941057685862022`
-- **Total Equivalents**: 1
-
-Sharing declarations:
-  - `InfoGeometry.Lie.Pin55KreinConformalBridge.ρ_spinor` (InfoGeometry.Lie.Pin55KreinConformalBridge)
-
----
-
-### Source Sorry: `InfoGeometry.Lie.Pin55KreinConformalBridge.pkg_concrete`
-- **Value Shape Hash**: `3314480488063040148`
-- **Total Equivalents**: 1
-
-Sharing declarations:
-  - `InfoGeometry.Lie.Pin55KreinConformalBridge.pkg_concrete` (InfoGeometry.Lie.Pin55KreinConformalBridge)
-
----
-
-### Source Sorry: `InfoGeometry.Lie.Pin55KreinConformalBridge.exists_pin55_krein_conformal_package`
-- **Value Shape Hash**: `17840536066560259302`
-- **Total Equivalents**: 1
-
-Sharing declarations:
-  - `InfoGeometry.Lie.Pin55KreinConformalBridge.exists_pin55_krein_conformal_package` (InfoGeometry.Lie.Pin55KreinConformalBridge)
-
----
-
 ### Source Sorry: `InfoGeometry.Application.OperatorFreudenthalBoundary.dictionaryOfFreudenthalChart`
 - **Value Shape Hash**: `10787280648982415932`
 - **Total Equivalents**: 1
@@ -65,13 +38,12 @@ Sharing declarations:
 
 ---
 
-### Source Sorry: `InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleClosed_apply`
-- **Value Shape Hash**: `4416296342143749824`
-- **Total Equivalents**: 2
+### Source Sorry: `InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoRuelleLemmaSourceClaimClosedBounded`
+- **Value Shape Hash**: `15991122272174853056`
+- **Total Equivalents**: 1
 
 Sharing declarations:
-  - `InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleClosed_apply` (InfoGeometry.Canonical.LeeYangAsanoDigest)
-  - `InfoGeometry.Canonical.LeeYangAsanoDigest.asanoRuelleLemmaSourceClaimClosed_of_sourceClaim` (InfoGeometry.Canonical.LeeYangAsanoDigest)
+  - `InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoRuelleLemmaSourceClaimClosedBounded` (InfoGeometry.Canonical.LeeYangAsanoDigest)
 
 ---
 

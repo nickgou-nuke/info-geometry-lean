@@ -1227,6 +1227,7 @@ import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.RamanujanDefectTower
 import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.UHFBoundaryExactSequence

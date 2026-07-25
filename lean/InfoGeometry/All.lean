@@ -2099,6 +2099,8 @@ import InfoGeometry.Canonical.UHFColimitRepresentationBridge
 import InfoGeometry.Canonical.DeRhamCantorCohomology
 import InfoGeometry.Canonical.OmegaBoundaryRepresentation
 import InfoGeometry.Canonical.CantorKMSState
+import InfoGeometry.Canonical.SplitCARCurrentSourceAdapter
+import InfoGeometry.Canonical.LogJordanVirasoroIntertwiner
 import InfoGeometry.Canonical.HolographicBoundaryEntropy
 import InfoGeometry.Canonical.CantorDiracPropagation
 import InfoGeometry.Canonical.CantorThermodynamics

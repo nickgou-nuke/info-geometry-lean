@@ -24,7 +24,10 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 universe u
 
 variable (R : Type u) [CommRing R]
-variable {J : Type u} [Category.{u} J] [IsFiltered J]
+variable {J : Type u} [Category.{u} J]
+
+section ModuleColimit
+variable [IsFiltered J]
 
 /-- The category-filtered direct limit of an $R$-module diagram $F : J \to \mathbf{Module}_R$. -/
 noncomputable def DirectLimitModule (F : J ⥤ ModuleCat.{u} R) : ModuleCat.{u} R :=
@@ -43,6 +46,8 @@ to a morphism $\overline{t} : \operatorname{DirectLimitModule}(F) \to V$.
 noncomputable def descendDirectLimit (F : J ⥤ ModuleCat.{u} R) (t : Cocone F) :
     DirectLimitModule R F ⟶ t.pt :=
   colimit.desc F t
+
+end ModuleColimit
 
 /--
 **Stage Injection Commutativity:**

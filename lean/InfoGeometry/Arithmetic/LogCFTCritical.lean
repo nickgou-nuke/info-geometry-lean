@@ -110,19 +110,8 @@ theorem osp12_finite_protection_closed :
     L0 0 1 = (1 : ℂ) ∧
     L0 1 0 = (0 : ℂ) ∧
     L0 1 1 = h := by
-  constructor
-  · exact jordanNilpotent_sq
-  · constructor
-    · unfold L0; simp [virasoroL0Cell, upperJordan, jordanNilpotent, Matrix.mul_apply,
-        Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
-    · constructor
-      · unfold L0; simp [virasoroL0Cell, upperJordan, jordanNilpotent, Matrix.mul_apply,
-          Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
-      · constructor
-        · unfold L0; simp [virasoroL0Cell, upperJordan, jordanNilpotent, Matrix.mul_apply,
-            Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
-        · unfold L0; simp [virasoroL0Cell, upperJordan, jordanNilpotent, Matrix.mul_apply,
-            Matrix.add_apply, Matrix.diagonal_apply, Fin.sum_univ_two]
+  intro L0 N
+  refine ⟨jordanNilpotent_sq, rfl, rfl, rfl, rfl⟩
 
 /--
 Closure surface: the finite `osp(1|2)`-style protection claim is now reduced to

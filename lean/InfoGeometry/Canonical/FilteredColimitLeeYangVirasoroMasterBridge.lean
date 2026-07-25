@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
 import InfoGeometry.Canonical.SpinChainLogCFTLeeYangMasterBridge
 import InfoGeometry.Canonical.InfiniteVirasoroVOAFusionBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -38,6 +39,7 @@ open InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
 open InfoGeometry.Canonical.SpinChainLogCFTLeeYangMasterBridge
 open InfoGeometry.Canonical.InfiniteVirasoroVOAFusionBridge
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
 **Main Theorem 1: Multiaffine Monomial Exponent Bound Implies Separate Linearity**
@@ -54,7 +56,8 @@ Proves natively that for two linear functions $f(z_1, z_2) = a z_1 z_2 + b z_1 +
 theorem asano_contraction_quadratic_preserved (a b c d z : ℂ) (h_det : a * d - b * c ≠ 0) (h_root : a * z + d = 0) (ha : a ≠ 0) :
     z = - d / a := by
   have h1 : a * z = -d := eq_neg_of_add_eq_zero_left h_root
-  exact eq_div_of_mul_eq ha h1
+  have h1_comm : z * a = -d := by rw [mul_comm, h1]
+  exact eq_div_of_mul_eq ha h1_comm
 
 /--
 **Main Theorem 3: LogCFT Krein Bilinear Form Pairing Non-Degeneracy**

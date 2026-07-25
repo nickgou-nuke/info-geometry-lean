@@ -49,8 +49,8 @@ private theorem sturmian_denominator_lower_fib
     (hq1 : q 1 = 1)
     (hStep : ∀ n, q (n + 2) ≥ q (n + 1) + q n) :
     ∀ n, Nat.fib (n + 1) ≤ q n
-  | 0 => by simpa [hq0]
-  | 1 => by simpa [hq1]
+  | 0 => by simp [hq0]
+  | 1 => by simp [hq1]
   | n + 2 => by
       calc
         Nat.fib (n + 3) = Nat.fib (n + 2) + Nat.fib (n + 1) := by

@@ -42,6 +42,7 @@ Proves natively that for any real modular flow parameter $\theta \in \mathbb{R}$
 -/
 theorem modular_fixed_point_norm (theta : ℝ) :
     ‖Complex.exp (I * theta)‖ = 1 := by
+  rw [mul_comm I (theta : ℂ)]
   exact Complex.norm_exp_ofReal_mul_I theta
 
 /--

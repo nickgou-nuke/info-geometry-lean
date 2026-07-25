@@ -731,6 +731,7 @@ import InfoGeometry.Canonical.BuresMetricStabilization
 import InfoGeometry.Canonical.CARChiralPacketInstance
 import InfoGeometry.Canonical.CARVacuumContraction
 import InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
+import InfoGeometry.Canonical.CategoricalRiemannRigidity
 import InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 import InfoGeometry.Canonical.ChaitinOmegaAlgorithmicPhysicsSuite
 import InfoGeometry.Canonical.MicrocanonicalBoltzmannOperator

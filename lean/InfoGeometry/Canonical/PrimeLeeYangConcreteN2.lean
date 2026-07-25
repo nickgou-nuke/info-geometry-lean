@@ -176,15 +176,15 @@ theorem partitionPolyN2_coeff_3 :
 @[rep_depth thermo]
 theorem partitionPolyN2_coeff_4 :
     Polynomial.coeff partitionPolyN2 4 = 0 := by
-  simp [partitionPolyN2, partitionPolynomial, configurationWeight, SpinConfig]
+  dsimp [partitionPolyN2, partitionPolynomial]
+  decide
 
 /-- The concrete partition polynomial coefficients -/
 theorem partitionPolyN2_explicit_computation :
     partitionPolyN2 = ∑ σ : SpinConfig 2,
       Polynomial.C ((configurationWeight (finitePrimeChainDataN2 : FinitePrimeChainData 2) (1 : ℝ) σ : ℝ) : ℂ) *
         Polynomial.X ^ occupiedCount σ := by
-  rw [partitionPolyN2]
-  <;> rfl
+  dsimp [partitionPolyN2, partitionPolynomial]
 
 /-- The explicit roots of the partition polynomial for N=2 -/
 @[rep_depth thermo]

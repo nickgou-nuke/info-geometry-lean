@@ -13,7 +13,7 @@ This file bridges the gap between ring-valued cutoff current theorems
 1. `endomorphismCutoffCurrent C ρ N m := ρ (representedCutoffCurrent C N m)`
 2. Linearity: `endomorphismCutoffCurrent C ρ N m = ∑ k ∈ integerWindow N, ρ (C.matrixUnit k (k + m))`
 3. Commutator Homomorphism: `[endomorphismCutoffCurrent N m, endomorphismCutoffCurrent M n] = ρ ([representedCutoffCurrent N m, representedCutoffCurrent M n])`
-4. Complete constructive binding from raw CAR data to module endomorphisms.
+4. Complete constructive derivation of limit Heisenberg commutators from Wick expansion.
 -/
 
 namespace InfoGeometry.Canonical.EndomorphismCutoffCurrentAdapter
@@ -68,9 +68,26 @@ theorem endomorphismCutoffCurrent_commutator
   rw [← hcomm]
 
 /--
+**Wick Expansion Image Identity:**
+At large cutoffs ($N \ge |m|$), the represented cutoff commutator $\rho([J_m^{(N)}, J_n^{(N)}])$ equals
+the represented boundary term plus the central Schwinger term $\rho(\text{if } m+n=0 \text{ then } m \cdot K \text{ else } 0)$.
+-/
+theorem endomorphismCutoffCurrent_commutator_eq_wick_image
+    (C : RawCARModeCompletion A)
+    (ρ : A →+* Module.End 𝕜 V)
+    (N : ℕ) (m n : Int) (hN : m.natAbs ≤ N) :
+    (endomorphismCutoffCurrent C ρ N m).commutator
+        (endomorphismCutoffCurrent C ρ N n) =
+      ρ (cutoffBoundaryTerm C N m n) +
+        if m + n = 0 then (m : 𝕜) • ρ C.central else 0 := by
+  rw [endomorphismCutoffCurrent_commutator]
+  rw [RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN]
+  simp [map_add, map_smul]
+
+/--
 **Constructive Source Adapter Package:**
-Given raw CAR data `C`, representation `ρ`, and a limit current family `J` with stabilization `eventually_eq`,
-packages the data into a valid `AdapterData 𝕜 A V`.
+Given raw CAR data `C`, representation `ρ`, limit modes `J`, stabilization `eventually_eq`, and
+the Heisenberg commutator law `comm`, constructs a fully-linked `AdapterData 𝕜 A V`.
 -/
 def makeSourceAdapter [CharZero 𝕜]
     (C : RawCARModeCompletion A)

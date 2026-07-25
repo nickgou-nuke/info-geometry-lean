@@ -79,19 +79,17 @@ $$\prod_{p \in S} (1 - p^{-s})^{-1} \neq 0.$$
 theorem finite_complex_euler_product_ne_zero
     (S : Finset ℕ) (s : ℂ) (hs : 1 < s.re) (h_prime : ∀ p ∈ S, Nat.Prime p) :
     (∏ p ∈ S, (1 - (p : ℂ) ^ (-s))⁻¹) ≠ 0 := by
-  apply Finset.prod_ne_zero
+  rw [Finset.prod_ne_zero_iff]
   intro p hp
   apply inv_ne_zero
-  intro h_zero
-  have hp_ge2 : 2 ≤ p := (h_prime p hp).two_le
+  intro h_sub
+  have h_cpow : (p : ℂ) ^ (-s) = 1 := sub_eq_zero.mp h_sub
+  have h_norm : ‖(p : ℂ) ^ (-s)‖ = 1 := by rw [h_cpow, norm_one]
   have hp_pos : 0 < (p : ℝ) := by positivity
-  have h_one : (p : ℂ) ^ (-s) = 1 := by linarith
-  have h_norm : ‖(p : ℂ) ^ (-s)‖ = 1 := by rw [h_one, norm_one]
   rw [norm_natCast_cpow_neg hp_pos] at h_norm
-  have h_pow_gt1 : 1 < (p : ℝ) ^ s.re := by
-    have h1 : 1 < (p : ℝ) := by exact_mod_cast (Nat.Prime.one_lt (h_prime p hp))
-    exact Real.one_lt_rpow h1 (by positivity)
-  have h_inv_lt1 : ((p : ℝ) ^ s.re)⁻¹ < 1 := (inv_lt_one_iff₀ (by positivity)).mpr h_pow_gt1
+  have h1 : 1 < (p : ℝ) := by exact_mod_cast (Nat.Prime.one_lt (h_prime p hp))
+  have hpow : 1 < (p : ℝ) ^ s.re := Real.one_lt_rpow h1 (by positivity)
+  have h_inv : ((p : ℝ) ^ s.re)⁻¹ < 1 := (inv_lt_one_iff₀ (by positivity)).mpr hpow
   linarith
 
 /--

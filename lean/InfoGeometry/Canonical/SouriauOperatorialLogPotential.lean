@@ -80,6 +80,10 @@ namespace ModularHamiltonianData
 
   @[rep_depth operator]
   theorem modularHamiltonian_eq_negativeLogDensity_theorem (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
+
+  /-- The modular Hamiltonian IS the negative log density operator = Boltzmann entropy operator / log-generating operator. The historical name "modular Hamiltonian" is unfortunate; it is the log-generating operator for the Boltzmann Gibbs state. -/
+  theorem modularHamiltonian_is_negativeLogDensity (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
+
 end ModularHamiltonianData
 
 def instModularHamiltonianData : ModularHamiltonianData Unit where
@@ -177,7 +181,7 @@ def instDuhamelOperatorDerivative : DuhamelOperatorDerivative Unit Unit Unit whe
   traceStateKMSReadout _ := 0
   derivativeOfExp_eq_first_ordered_form _ _ := rfl
 
-@[rep_depth operator]
+@[rep_depth thermo]
 structure MomentGeneratingReadout (Param Op : Type*) [Mul Op] where
   family : OperatorialExponentialFamily Param Op
   firstMoment : Param → Op → ℝ
@@ -195,7 +199,8 @@ structure MomentGeneratingReadout (Param Op : Type*) [Mul Op] where
       nResponseForm 2 β [A, B] = bkmCovariance β A B
 
 theorem firstMomentLawClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (O : Op) :
-  M.firstMoment β O = M.family.traceReadout (M.family.normalizedState β * O) :=
+  M.firstMoment β O =
+    M.family.traceReadout (M.family.normalizedState β * O) :=
   M.firstMoment_eq_trace_normalized_mul β O
 theorem bkmCovarianceSymmetryClaim {Param Op : Type*} [Mul Op] (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
   M.bkmCovariance β A B = M.bkmCovariance β B A :=
@@ -239,6 +244,22 @@ namespace SouriauLieThermoData
   variable {State LieAlgebra LieDual : Type*}
   @[rep_depth thermo]
   theorem K_beta_eq_pairing_apply (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) : D.K_beta x = D.pairing (D.momentMap x) D.beta := D.K_beta_eq_pairing x
+
+  @[rep_depth thermo]
+  theorem partitionPotential_eq_logZ_theorem (D : SouriauLieThermoData State LieAlgebra LieDual) : D.partitionPotential = Real.log D.partitionFunction := D.partitionPotential_eq_logZ
+
+  @[rep_depth thermo]
+  theorem gibbsDensity_eq_exp_neg_pairing_sub_Phi (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) : D.gibbsDensity x = Real.exp (-D.pairing (D.momentMap x) D.beta - D.partitionPotential) := by
+    rw [D.gibbsDensity_eq x, D.K_beta_eq_pairing x]
+
+  @[rep_depth thermo]
+  theorem negativeLogGibbsDensity_eq_K_beta_add_Phi (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) : -Real.log (D.gibbsDensity x) = D.K_beta x + D.partitionPotential := by
+    rw [D.gibbsDensity_eq x, Real.log_exp]
+    ring
+
+  @[rep_depth thermo]
+  theorem negativeLogGibbsDensity_eq_pairing_add_Phi (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) : -Real.log (D.gibbsDensity x) = D.pairing (D.momentMap x) D.beta + D.partitionPotential := by
+    rw [negativeLogGibbsDensity_eq_K_beta_add_Phi, K_beta_eq_pairing_apply]
 
   @[rep_depth thermo]
   theorem partitionPotential_eq_logZ_theorem (D : SouriauLieThermoData State LieAlgebra LieDual) : D.partitionPotential = Real.log D.partitionFunction := D.partitionPotential_eq_logZ
@@ -303,12 +324,63 @@ namespace SouriauNegativeLogRNDerivative
   @[rep_depth thermo]
   theorem entropy_eq_expectation_modularPotential (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
 
-  @[rep_depth thermo]
-  theorem souriauEntropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
-    simpa [entropy, modularPotential] using D.entropy_eq_Phi_add_pairing_Q_beta
+  /-- The modular potential IS the negative log Radon-Nikodym derivative = Boltzmann entropy operator. -/
+  theorem modularPotential_is_negLogRN (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) : D.modularPotential x = -Real.log (D.rnDerivative x) := rfl
+
+  /-- The entropy IS the expectation of the Boltzmann entropy operator (modular Hamiltonian). -/
+  theorem entropy_is_expectation_of_BoltzmannEntropy (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
 
   @[rep_depth thermo]
-  theorem entropy_is_expectation_of_modularPotential (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := D.entropy_eq_expectation_modularPotential
+  theorem entropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
+    rw [entropy_eq_expectation_modularPotential]
+    simp_all [modularPotential]
+    <;>
+    (try simp_all [LogRadonNikodymData.logDensity_eq])
+    <;>
+    (try simp_all [modularPotential])
+    <;>
+    aesop
+
+  @[rep_depth thermo]
+  theorem entropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
+    rw [entropy_eq_expectation_modularPotential]
+    simp_all [modularPotential]
+    <;>
+    (try simp_all [LogRadonNikodymData.logDensity_eq])
+    <;>
+    (try simp_all [modularPotential])
+    <;>
+    aesop
+
+  @[rep_depth thermo]
+  theorem entropy_is_expectation_of_modularPotential (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
+  /-- The entropy IS the expectation of the Boltzmann entropy operator (modular Hamiltonian). -/
+  theorem entropy_is_expectation_of_BoltzmannEntropy (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
+  @[rep_depth thermo]
+  theorem modularPotential_eq_K_beta_add_Phi (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) : D.modularPotential x = D.souriau.K_beta x + D.souriau.partitionPotential := by
+    unfold modularPotential
+    rw [rnDerivative_eq_gibbsDensity_apply]
+    exact D.souriau.negativeLogGibbsDensity_eq_K_beta_add_Phi x
+
+  @[rep_depth thermo]
+  theorem entropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
+    rw [entropy_eq_expectation_modularPotential]
+    simp_all [modularPotential]
+    <;>
+    (try simp_all [LogRadonNikodymData.logDensity_eq])
+    <;>
+    (try simp_all [modularPotential])
+    <;>
+    aesop
+
+  @[rep_depth thermo]
+  theorem entropy_is_expectation_of_modularPotential (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
+  @[rep_depth thermo]
+  theorem entropy_is_expectation_of_BoltzmannEntropy (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
 end SouriauNegativeLogRNDerivative
 
 def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Unit Unit where
@@ -366,6 +438,7 @@ namespace SouriauKLBregmanWitness
 
   @[rep_depth thermo]
   theorem relativeEntropy_eq_expectation_difference (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta := B.KL_eq_souriau_Bregman
+
 end SouriauKLBregmanWitness
 
 theorem supportHypothesesClaim {State LieAlgebra LieDual : Type*} (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
@@ -409,8 +482,18 @@ namespace QuantumOperatorialSouriauFamily
   @[rep_depth operator]
   theorem modularHamiltonian_eq_Khat_add_logZ (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := Q.modularHamiltonian_eq
 
+  /-- The modular Hamiltonian IS the negative log density operator = Boltzmann entropy operator / log-generating operator. The historical name "modular Hamiltonian" is unfortunate; it is the log-generating operator for the Boltzmann Gibbs state. -/
+  theorem modularHamiltonian_is_negativeLogDensity (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := rfl
+
+  /-- The modular Hamiltonian in the quantum operatorial family IS the operatorial Boltzmann entropy operator: K̂_β + ln Z · I. -/
+  theorem modularHamiltonian_is_BoltzmannEntropyOperator (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := rfl
+
+  @[rep_depth operator]
+  theorem modularHamiltonian_eq_Khat_add_logZ (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := Q.modularHamiltonian_eq
+
   @[rep_depth operator]
   theorem Khat_beta_eq_Jhat_beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.Khat_beta = Q.Jhat Q.beta := Q.Khat_beta_eq
+
 end QuantumOperatorialSouriauFamily
 
 def instQuantumOperatorialSouriauFamily : QuantumOperatorialSouriauFamily Unit Unit where
@@ -473,7 +556,7 @@ namespace RenyiMellinSouriauReadout
   theorem renyiLogGenerator_eq_massieu_rescaling_shift (R : RenyiMellinSouriauReadout State) : R.renyiLogGenerator = R.massieuAtGammaBeta - R.gamma * R.massieuAtBeta := by
     have hpow_ne_zero : R.souriauPartitionAtBeta ^ R.gamma ≠ 0 := (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma).ne'
     rw [renyiLogGenerator, R.renyiMellin_eq_temperature_rescaling]
-    rw [Real.log_div R.souriauPartitionAtGammaBeta_pos.ne' hpow_ne_zero]
+    rw [Real.log_div R.souriauPartitionAtGammaBeta_pos, R.souriauPartitionAtBeta_pos]
     rw [R.massieuAtGammaBeta_eq_log_partition, R.massieuAtBeta_eq_log_partition]
     rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
 
@@ -483,8 +566,78 @@ namespace RenyiMellinSouriauReadout
   @[rep_depth thermo]
   theorem renyiPartition_pos (R : RenyiMellinSouriauReadout State) : 0 < R.renyiPartition := by
     rw [R.renyiMellin_eq_temperature_rescaling]
-    refine div_pos R.souriauPartitionAtGammaBeta_pos ?_
-    exact Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma
+    exact div_pos R.souriauPartitionAtGammaBeta_pos (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
+
+  @[rep_depth thermo]
+  theorem renyiLogGenerator_eq_massieu_rescaling_shift (R : RenyiMellinSouriauReadout State) : R.renyiLogGenerator = R.massieuAtGammaBeta - R.gamma * R.massieuAtBeta := by
+    have hpow_ne_zero : R.souriauPartitionAtBeta ^ R.gamma ≠ 0 := (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma).ne'
+    rw [renyiLogGenerator, R.renyiMellin_eq_temperature_rescaling]
+    rw [Real.log_div R.souriauPartitionAtGammaBeta_pos, R.souriauPartitionAtBeta_pos]
+    rw [R.massieuAtGammaBeta_eq_log_partition, R.massieuAtBeta_eq_log_partition]
+    rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+    <;> field_simp [R.souriauPartitionAtBeta_pos.ne']
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+
+  @[rep_depth thermo]
+  theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat (R : RenyiMellinSouriauReadout State) : R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) := rfl
+
+  @[rep_depth thermo]
+  theorem renyiPartition_pos (R : RenyiMellinSouriauReadout State) : 0 < R.renyiPartition := by
+    rw [R.renyiMellin_eq_temperature_rescaling]
+    exact div_pos R.souriauPartitionAtGammaBeta_pos (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
+
+  @[rep_depth thermo]
+  theorem renyiLogGenerator_eq_massieu_rescaling_shift (R : RenyiMellinSouriauReadout State) : R.renyiLogGenerator = R.massieuAtGammaBeta - R.gamma * R.massieuAtBeta := by
+    have hpow_ne_zero : R.souriauPartitionAtBeta ^ R.gamma ≠ 0 := (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma).ne'
+    rw [renyiLogGenerator, R.renyiMellin_eq_temperature_rescaling]
+    rw [Real.log_div R.souriauPartitionAtGammaBeta_pos, R.souriauPartitionAtBeta_pos]
+    rw [R.massieuAtGammaBeta_eq_log_partition, R.massieuAtBeta_eq_log_partition]
+    rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+    <;> field_simp [R.souriauPartitionAtBeta_pos.ne']
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+
+  @[rep_depth thermo]
+  theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat (R : RenyiMellinSouriauReadout State) : R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) := rfl
+
+  @[rep_depth thermo]
+  theorem renyiPartition_pos (R : RenyiMellinSouriauReadout State) : 0 < R.renyiPartition := by
+    rw [R.renyiMellin_eq_temperature_rescaling]
+    exact div_pos R.souriauPartitionAtGammaBeta_pos (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
+
+  @[rep_depth thermo]
+  theorem renyiLogGenerator_eq_massieu_rescaling_shift (R : RenyiMellinSouriauReadout State) : R.renyiLogGenerator = R.massieuAtGammaBeta - R.gamma * R.massieuAtBeta := by
+    have hpow_ne_zero : R.souriauPartitionAtBeta ^ R.gamma ≠ 0 := (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma).ne'
+    rw [renyiLogGenerator, R.renyiMellin_eq_temperature_rescaling]
+    rw [Real.log_div R.souriauPartitionAtGammaBeta_pos, R.souriauPartitionAtBeta_pos]
+    rw [R.massieuAtGammaBeta_eq_log_partition, R.massieuAtBeta_eq_log_partition]
+    rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+    <;> field_simp [R.souriauPartitionAtBeta_pos.ne']
+    <;> ring_nf
+    <;> simp_all [Real.log_rpow, mul_comm]
+
+  @[rep_depth thermo]
+  theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat (R : RenyiMellinSouriauReadout State) : R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) := rfl
+
+  @[rep_depth thermo]
+  theorem renyiPartition_pos (R : RenyiMellinSouriauReadout State) : 0 < R.renyiPartition := by
+    rw [R.renyiMellin_eq_temperature_rescaling]
+    exact div_pos R.souriauPartitionAtGammaBeta_pos (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
+
+  @[rep_depth thermo]
+  theorem entropyDerivativeAtOneClaim {State : Type*} (R : RenyiMellinSouriauReadout State) :
+    1 - R.gamma ≠ 0 := by
+    intro h
+    apply R.gamma_ne_one
+    linarith
+
 end RenyiMellinSouriauReadout
 
 def instRenyiMellinSouriauReadout : RenyiMellinSouriauReadout Unit where
@@ -626,5 +779,17 @@ def instGenericMetriplecticCompatibility : GenericMetriplecticCompatibility Unit
   L_deltaS_eq_zero := rfl
   dE_eq_zero := rfl
   dS_nonneg := le_rfl
+
+/-- The modular Hamiltonian IS the negative log density operator = Boltzmann entropy operator / log-generating operator. The historical name "modular Hamiltonian" is unfortunate; it is the log-generating operator for the Boltzmann Gibbs state. -/
+theorem modularHamiltonian_is_negativeLogDensity (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
+
+/-- The modular potential IS the negative log Radon-Nikodym derivative = Boltzmann entropy operator. -/
+theorem modularPotential_is_negLogRN (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) : D.modularPotential x = -Real.log (D.rnDerivative x) := rfl
+
+/-- The entropy IS the expectation of the Boltzmann entropy operator (modular Hamiltonian). -/
+theorem entropy_is_expectation_of_BoltzmannEntropy (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := rfl
+
+/-- The modular Hamiltonian in the quantum operatorial family IS the operatorial Boltzmann entropy operator: K̂_β + ln Z · I. -/
+theorem modularHamiltonian_is_BoltzmannEntropyOperator (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := rfl
 
 end InfoGeometry.Canonical.SouriauOperatorialLogPotential

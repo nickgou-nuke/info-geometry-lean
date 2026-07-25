@@ -69,7 +69,7 @@ Proves natively that the von Mangoldt function $\Lambda(n) \ge 0$ for all $n \in
 -/
 theorem von_mangoldt_nonneg_law (n : ℕ) :
     0 ≤ ArithmeticFunction.vonMangoldt n :=
-  ArithmeticFunction.vonMangoldt_nonneg n
+  ArithmeticFunction.vonMangoldt_nonneg
 
 /--
 **Main Theorem 3: Grand Primon-Fermion-Boson-von-Mangoldt Master Duality**

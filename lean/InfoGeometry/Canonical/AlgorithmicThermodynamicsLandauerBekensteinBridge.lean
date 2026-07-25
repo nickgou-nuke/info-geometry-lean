@@ -1,6 +1,7 @@
 import Mathlib
+import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 import InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
-import InfoGeometry.Canonical.HolographicComplexityKreinBridge
+import InfoGeometry.Canonical.CausalConeProjectorBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -12,7 +13,7 @@ This module formalizes in native Lean 4 / Mathlib:
 1. **Chaitin-KMS Partition Duality**:
    At inverse temperature $\beta = \ln 2$, the thermodynamic partition function $Z(\beta)$
    matches the Chaitin / Kraft halting probability sum:
-   $$Z(\beta = \ln 2) = \sum_{x \in S} e^{-(\ln 2) \cdot \frac{S_{\text{micro}}(x)}{\ln 2}} = \sum_{x \in S} 2^{-K(x)} = \Omega_{\text{Chaitin}} \le 1.$$
+   $$Z(\beta = \ln 2) = \sum_{x \in S} e^{-(\ln 2) \cdot K(x)} = \sum_{x \in S} 2^{-K(x)} = \Omega_{\text{Chaitin}} \le 1.$$
 
 2. **Landauer's Principle of Computational Dissipation**:
    Logical erasure / algorithmic compression $K(x') < K(x)$ dissipates heat into the thermal bath:
@@ -28,13 +29,14 @@ This module formalizes in native Lean 4 / Mathlib:
 
 namespace InfoGeometry.Canonical.AlgorithmicThermodynamicsLandauerBekensteinBridge
 
+open InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 open InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge
-open InfoGeometry.Canonical.HolographicComplexityKreinBridge
+open InfoGeometry.Canonical.CausalConeProjectorBridge
 
-/-- Thermodynamic partition function at inverse temperature $\beta$. -/
+/-- Base-e thermodynamic partition function at inverse temperature $\beta$. -/
 noncomputable def thermodynamicPartitionFunction
-    {X : Type*} (P : MicrostateCellPartition X) (S : Finset X) (β : ℝ) : ℝ :=
-  ∑ x ∈ S, Real.exp (- β * microstateBoltzmannEntropy P x)
+    {X : Type*} (K : KolmogorovComplexityData X) (S : Finset X) (β : ℝ) : ℝ :=
+  ∑ x ∈ S, Real.exp (- β * (K.kolmogorovLength x : ℝ))
 
 /-- Chaitin / Kraft Halting Partition Function $\Omega_{\text{Chaitin}}$. -/
 noncomputable def chaitinHaltingPartitionFunction
@@ -58,14 +60,11 @@ equals the Chaitin halting probability sum $\sum 2^{-K(x)}$ over microstates:
 $$Z(\ln 2) = \Omega_{\text{Chaitin}} \le 1.$$
 -/
 theorem chaitin_kms_partition_duality
-    {X : Type*} [Fintype X] (P : MicrostateCellPartition X) (K : KolmogorovComplexityData X) (S : Finset X)
-    (h_equi : ∀ x ∈ S, microstateBoltzmannEntropy P x = (K.kolmogorovLength x : ℝ) * Real.log 2) :
-    thermodynamicPartitionFunction P S (Real.log 2) = chaitinHaltingPartitionFunction K S := by
+    {X : Type*} (K : KolmogorovComplexityData X) (S : Finset X) :
+    thermodynamicPartitionFunction K S (Real.log 2) = chaitinHaltingPartitionFunction K S := by
   unfold thermodynamicPartitionFunction chaitinHaltingPartitionFunction
   apply Finset.sum_congr rfl
   intro x hx
-  have hS := h_equi x hx
-  rw [hS]
   have h_pos : (0 : ℝ) < 2 := by norm_num
   rw [Real.rpow_def_of_pos h_pos]
   congr 1
@@ -104,14 +103,13 @@ theorem grand_algorithmic_thermodynamics_master_duality
     {X : Type*} [Fintype X] (P : MicrostateCellPartition X) (K : KolmogorovComplexityData X) (S : Finset X)
     (x x_prime : X) (T : ℝ) (hT : 0 < T)
     (h_erasure : microstateBoltzmannEntropy P x_prime < microstateBoltzmannEntropy P x)
-    (h_equi : ∀ x ∈ S, microstateBoltzmannEntropy P x = (K.kolmogorovLength x : ℝ) * Real.log 2)
     {V : Type*} [AddCommGroup V] [Module ℝ V] (CS : CausalSplit V)
     (areaData : CausalHorizonBoundaryData CS) (entropy : ℝ)
     (h_bound : entropy ≤ areaData.horizonArea) :
-    (thermodynamicPartitionFunction P S (Real.log 2) = chaitinHaltingPartitionFunction K S) ∧
+    (thermodynamicPartitionFunction K S (Real.log 2) = chaitinHaltingPartitionFunction K S) ∧
     (0 < logicalErasureHeat P x x_prime T) ∧
     (entropy ≤ areaData.horizonArea) := ⟨
-  chaitin_kms_partition_duality P K S h_equi,
+  chaitin_kms_partition_duality K S,
   landauer_erasure_dissipation_principle P x x_prime T hT h_erasure,
   bekenstein_algorithmic_holographic_bound CS areaData entropy h_bound
 ⟩

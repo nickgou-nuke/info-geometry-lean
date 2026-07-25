@@ -81,7 +81,7 @@ theorem arnold_relation_cyclic_invariant
     T.w23 * T.w31 + T.w31 * T.w12 + T.w12 * T.w23 = 0 := by
   unfold ArnoldMixedRelation at h_arnold
   rw [add_comm (T.w23 * T.w31 + T.w31 * T.w12) (T.w12 * T.w23)]
-  rw [add_assoc]
+  rw [← add_assoc]
   exact h_arnold
 
 /--
@@ -95,7 +95,7 @@ theorem bcfw_pole_factorization
     (h_arnold : ArnoldMixedRelation T) :
     T.w12 * T.w23 = - (T.w23 * T.w31 + T.w31 * T.w12) := by
   rw [← add_eq_zero_iff_eq_neg]
-  rw [add_assoc]
+  rw [← add_assoc]
   exact h_arnold
 
 /--

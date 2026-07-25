@@ -105,7 +105,7 @@ off-diagonal entry is the nilpotent `1` at `(0,1)`.
 theorem osp12_finite_protection_closed :
     let L0 := virasoroL0Cell h
     let N  := jordanNilpotent
-    N * N = 0 ∧
+    (N * N = (0 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
     L0 0 0 = h ∧
     L0 0 1 = (1 : ℂ) ∧
     L0 1 0 = (0 : ℂ) ∧

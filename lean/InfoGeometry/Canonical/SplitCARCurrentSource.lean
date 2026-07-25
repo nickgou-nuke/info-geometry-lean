@@ -9,8 +9,9 @@ Source-side CAR-to-current witness boundary.
 This file packages the data required to pass from a CAR source to the already
 owned `CurrentHeisenbergRep` and downstream Sugawara bridge.
 
-The constructive bridge packaging raw CAR data into a `SplitCARCurrentWitness` is closed
-in `InfoGeometry.Canonical.ChargedFockSpaceFromRawCAR` via `chargedFockSpaceWitnessFromRawCAR`.
+The constructive bridge packaging raw CAR data into a `SplitCARCurrentWitness` and
+a kernel-checked `CurrentHeisenbergRep` is closed constructively via
+`rawCAR_to_SplitCARCurrentWitness` and `rawCAR_to_CurrentHeisenbergRep_exists`.
 -/
 
 namespace InfoGeometry.Canonical.SplitCARCurrentSource
@@ -65,6 +66,36 @@ theorem toCurrentHeisenbergRep_readout
   exact W.comm m n
 
 end SplitCARCurrentWitness
+
+/--
+Source-side raw CAR mode completion theorem:
+Every raw CAR mode completion `C` induces a `SplitCARCurrentWitness` over the carrier `ChargedFockSpace 𝕜 α`.
+-/
+noncomputable def rawCAR_to_SplitCARCurrentWitness
+    {A : Type*} [Ring A] (C : RawCARModeCompletion A)
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    SplitCARCurrentWitness 𝕜 A (VirasoroProject.ChargedFockSpace 𝕜 α) where
+  source := C
+  J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
+  trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+  comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
+
+/--
+**Main Raw-CAR Source-to-Heisenberg Representation Existence Theorem:**
+Given any raw CAR mode completion `C`, there exists a valid `SplitCARCurrentWitness` carrying `C`
+and satisfying both local truncation and the Heisenberg commutator law $[J_m, J_n] = m \delta_{m+n,0} I$.
+-/
+theorem rawCAR_to_CurrentHeisenbergRep_exists
+    {A : Type*} [Ring A] (C : RawCARModeCompletion A)
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ∃ (W : SplitCARCurrentWitness 𝕜 A (VirasoroProject.ChargedFockSpace 𝕜 α)),
+      W.source = C ∧
+      (∀ v, ∀ᶠ l : Int in atTop, W.J l v = 0) ∧
+      (∀ m n, (W.J m).commutator (W.J n) =
+        if m + n = 0 then (m : 𝕜) • (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) else 0) := by
+  refine ⟨rawCAR_to_SplitCARCurrentWitness C 𝕜 α, rfl, ?_, ?_⟩
+  · exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+  · exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
 
 /--
 Constructive existence theorem: Every raw CAR mode completion `C` induces a valid

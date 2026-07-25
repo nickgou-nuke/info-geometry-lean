@@ -26,6 +26,12 @@ open Matrix
 variable {𝕜 V : Type*} [Field 𝕜]
 variable [AddCommGroup V] [Module 𝕜 V]
 
+/-- Standard basis vector $e_0 = (1, 0)^T$ in $\mathbb{k}^2$. -/
+def e0 : Fin 2 → 𝕜 := Pi.single 0 1
+
+/-- Standard basis vector $e_1 = (0, 1)^T$ in $\mathbb{k}^2$. -/
+def e1 : Fin 2 → 𝕜 := Pi.single 1 1
+
 /-- The $2 \times 2$ nilpotent Jordan shift matrix over scalar field `𝕜`. -/
 def jordanNilpotent (𝕜 : Type*) [Semiring 𝕜] : Matrix (Fin 2) (Fin 2) 𝕜 :=
   !![0, 1; 0, 0]
@@ -67,11 +73,11 @@ The primary state $v_0 = \iota(e_0)$ is an eigenvector of $L_0$ with eigenvalue 
 -/
 theorem primary_eigenvalue
     (I : LogVirasoroIntertwiner L0 Δ) :
-    L0 (I.ι (Pi.single 0 (1 : 𝕜))) = Δ • I.ι (Pi.single 0 (1 : 𝕜)) := by
+    L0 (I.ι (e0 : Fin 2 → 𝕜)) = Δ • I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
-  have hvec : Matrix.toLin' (jordanCell Δ) (Pi.single 0 (1 : 𝕜)) = Δ • Pi.single 0 (1 : 𝕜) := by
+  have hvec : Matrix.toLin' (jordanCell Δ) (e0 : Fin 2 → 𝕜) = Δ • (e0 : Fin 2 → 𝕜) := by
     ext i
-    fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+    fin_cases i <;> simp [e0, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
   rw [hvec, map_smul]
 
 /--
@@ -80,13 +86,13 @@ The logarithmic partner $v_1 = \iota(e_1)$ satisfies $L_0 v_1 = \Delta v_1 + v_0
 -/
 theorem partner_action
     (I : LogVirasoroIntertwiner L0 Δ) :
-    L0 (I.ι (Pi.single 1 (1 : 𝕜))) =
-      Δ • I.ι (Pi.single 1 (1 : 𝕜)) + I.ι (Pi.single 0 (1 : 𝕜)) := by
+    L0 (I.ι (e1 : Fin 2 → 𝕜)) =
+      Δ • I.ι (e1 : Fin 2 → 𝕜) + I.ι (e0 : Fin 2 → 𝕜) := by
   rw [apply_intertwines]
-  have hvec : Matrix.toLin' (jordanCell Δ) (Pi.single 1 (1 : 𝕜)) =
-      Δ • Pi.single 1 (1 : 𝕜) + Pi.single 0 (1 : 𝕜) := by
+  have hvec : Matrix.toLin' (jordanCell Δ) (e1 : Fin 2 → 𝕜) =
+      Δ • (e1 : Fin 2 → 𝕜) + (e0 : Fin 2 → 𝕜) := by
     ext i
-    fin_cases i <;> simp [jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
+    fin_cases i <;> simp [e0, e1, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, Pi.single]
   rw [hvec, map_add, map_smul]
 
 /--

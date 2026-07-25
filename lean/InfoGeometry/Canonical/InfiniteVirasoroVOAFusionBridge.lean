@@ -58,7 +58,7 @@ theorem virasoro_bracket_antisymm (m n : ℤ) (c : ℂ) (L_sum : ℂ) (I : ℂ) 
       exact_mod_cast this
     rw [if_pos h_zero, if_pos h_zero']
     rw [hn_eq]
-    ring
+    ring_nf
   · have h_zero' : n + m = 0 → False := by intro h; exact h_zero (h_add.mpr h)
     rw [if_neg h_zero, if_neg h_zero']
     push_cast
@@ -83,18 +83,14 @@ theorem voa_logarithmic_jordan_nilpotent {V : Type*} [AddCommGroup V] [Module �
     (L0 : V →ₗ[ℂ] V) (h : ℂ) (phi psi : V)
     (h_phi : L0 phi = h • phi + psi)
     (h_psi : L0 psi = h • psi) :
-    (L0 - h • LinearMap.id) ((L0 - h • LinearMap.id) phi) = 0 := by
-  have h1 : (L0 - h • LinearMap.id) phi = psi := by
-    change L0 phi - h • phi = psi
+    L0 (L0 phi - h • phi) - h • (L0 phi - h • phi) = 0 := by
+  have h1 : L0 phi - h • phi = psi := by
     rw [h_phi]
-    simp
-  have h2 : (L0 - h • LinearMap.id) psi = 0 := by
-    change L0 psi - h • psi = 0
+    module
+  have h2 : L0 psi - h • psi = 0 := by
     rw [h_psi]
-    simp
-  change (L0 - h • LinearMap.id) ((L0 - h • LinearMap.id) phi) = 0
-  rw [h1]
-  exact h2
+    module
+  rw [h1, h2]
 
 /--
 **Main Theorem 4: Grand Infinite Virasoro VOA Master Duality Theorem**
@@ -108,7 +104,7 @@ theorem grand_infinite_virasoro_voa_master_duality
     (h_psi : L0_op psi = h • psi) :
     (virasoroBracket m n c L_sum I = - virasoroBracket n m c L_sum I) ∧
     (virasoroBracket m (-m) c L0 I = 2 * (m : ℂ) * L0 + virasoroCocycle m c * I) ∧
-    ((L0_op - h • LinearMap.id) ((L0_op - h • LinearMap.id) phi) = 0) := ⟨
+    (L0_op (L0_op phi - h • phi) - h • (L0_op phi - h • phi) = 0) := ⟨
   virasoro_bracket_antisymm m n c L_sum I,
   virasoro_opposite_mode_commutator m c L0 I,
   voa_logarithmic_jordan_nilpotent L0_op h phi psi h_phi h_psi

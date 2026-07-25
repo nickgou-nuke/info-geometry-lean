@@ -43,14 +43,4 @@ theorem inv_pair_conj_three (u v x : Matrix n n R) [Invertible u] [Invertible v]
     _ = ⅟v * v := by simp
     _ = 1 := by rw [invOf_mul_self]
 
-/-- Certified Inv-Pair Preservation Packet -/
-structure InvPairPreservationPacket (n : Type*) [Fintype n] [DecidableEq n] (R : Type*) [CommRing R] where
-  conj_left : ∀ (u x : Matrix n n R) [Invertible u] [Invertible x],
-    (⅟u * ⅟x * u) * (⅟u * x * u) = 1
-  conj_right : ∀ (u x : Matrix n n R) [Invertible u] [Invertible x],
-    (⅟u * x * u) * (⅟u * ⅟x * u) = 1
-
-theorem inv_pair_preservation_packet_exists : Nonempty (InvPairPreservationPacket n R) :=
-  ⟨⟨fun u x => (inv_pair_conj u x).1, fun u x => (inv_pair_conj u x).2⟩⟩
-
 end InfoGeometry.Algebra.InvPairHolomorphicity

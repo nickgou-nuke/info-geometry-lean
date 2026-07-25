@@ -201,7 +201,8 @@ theorem partitionPolyN2_explicit_computation :
 theorem partitionPolyN2_roots_on_unit_circle :
     ∀ (z : ℂ), (partitionPolyN2).IsRoot z → OnLeeYangCircle z := by
   intro z hz
-  have h_eval : Polynomial.eval z (1 : Polynomial ℂ) = 0 := hz
+  have h_eval : Polynomial.eval z partitionPolyN2 = 0 := hz
+  unfold partitionPolyN2 at h_eval
   simp at h_eval
 
 /-- Concrete instance of the Lee-Yang stability witness for N=2 -/

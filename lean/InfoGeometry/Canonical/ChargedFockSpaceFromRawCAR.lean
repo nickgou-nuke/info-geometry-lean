@@ -21,7 +21,7 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCARCurrentSource
 open VirasoroProject
 
-variable {𝕜 α : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
 
 /--
 Constructive package embedding a raw CAR mode completion into the charged Fock space
@@ -43,7 +43,7 @@ canonical `chargedFockSpaceCurrentHeisenbergRep`.
 theorem chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) :
-    (chargedFockSpaceWitnessFromRawCAR (α := α) C).toCurrentHeisenbergRep =
+    (chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep =
       chargedFockSpaceCurrentHeisenbergRep 𝕜 α := by
   rfl
 
@@ -54,7 +54,7 @@ Sugawara representation.
 theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode
     {A : Type*} [Ring A]
     (C : RawCARModeCompletion A) (n : Int) :
-    (chargedFockSpaceWitnessFromRawCAR (α := α) C).toCurrentHeisenbergRep.sugawaraStressMode n =
+    (chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep.sugawaraStressMode n =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).sugawaraStressMode n := by
   rfl
 
@@ -71,8 +71,9 @@ theorem rawCAR_to_SugawaraVirasoro_bridge
       (∀ m n, (H.J m).commutator (H.J n) = if m + n = 0 then (m : 𝕜) • (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α) else 0) ∧
       (∀ m n, (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) =
         (m - n) • H.sugawaraStressMode (m + n) +
-          if m + n = 0 then (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • 1) else 0) := by
-  refine ⟨(chargedFockSpaceWitnessFromRawCAR (α := α) C).toCurrentHeisenbergRep, ?_, ?_⟩
+          if m + n = 0 then (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : ChargedFockSpace 𝕜 α →ₗ[𝕜] ChargedFockSpace 𝕜 α)) else 0) := by
+  classical
+  refine ⟨(chargedFockSpaceWitnessFromRawCAR α C).toCurrentHeisenbergRep, ?_, ?_⟩
   · intro m n
     exact (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
   · intro m n

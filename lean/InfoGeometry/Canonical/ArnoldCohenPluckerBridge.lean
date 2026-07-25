@@ -48,7 +48,7 @@ An on-shell configuration satisfies the Plücker quadric constraint $p_{12} p_{3
 theorem on_shell_quadric_factorization (p : PluckerCoordinates R) (h : IsOnShellBoundary p) :
     p.p12 * p.p34 = p.p13 * p.p24 - p.p14 * p.p23 := by
   unfold IsOnShellBoundary kleinQuadric at h
-  linear_combination -h
+  linear_combination h
 
 /-- Abstract 3-mode Arnold-Cohen generator triple $(\omega_{12}, \omega_{23}, \omega_{31})$ in an exterior algebra over `R`. -/
 structure ArnoldFormTriple (R : Type*) [CommRing R] (V : Type*) [AddCommGroup V] [Module R V] where
@@ -73,14 +73,16 @@ structure ChiralCuntzBoundary (R : Type*) [CommRing R] (V : Type*) [AddCommGroup
 
 /--
 **Main Theorem 2: Arnold 3-Term Symmetry**
-The Arnold mixed relation is invariant under cyclic permutation of indices $(1 \to 2 \to 3 \to 1)$.
+The Arnold mixed relation is invariant under cyclic permutation of terms.
 -/
 theorem arnold_relation_cyclic_invariant
     {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V)
     (h_arnold : ArnoldMixedRelation T) :
     T.w23 * T.w31 + T.w31 * T.w12 + T.w12 * T.w23 = 0 := by
-  unfold ArnoldMixedRelation at h_arnold ⊢
-  linear_combination h_arnold
+  unfold ArnoldMixedRelation at h_arnold
+  rw [add_comm (T.w23 * T.w31 + T.w31 * T.w12) (T.w12 * T.w23)]
+  rw [add_assoc]
+  exact h_arnold
 
 /--
 **Main Theorem 3: BCFW Pole Factorization**
@@ -92,8 +94,9 @@ theorem bcfw_pole_factorization
     {V : Type*} [AddCommGroup V] [Module R V] (T : ArnoldFormTriple R V)
     (h_arnold : ArnoldMixedRelation T) :
     T.w12 * T.w23 = - (T.w23 * T.w31 + T.w31 * T.w12) := by
-  unfold ArnoldMixedRelation at h_arnold
-  linear_combination h_arnold
+  rw [← add_eq_zero_iff_eq_neg]
+  rw [add_assoc]
+  exact h_arnold
 
 /--
 **Main Theorem 4: Arnold-Plücker On-Shell Duality**

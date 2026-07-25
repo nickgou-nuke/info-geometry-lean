@@ -37,10 +37,10 @@ abbrev Vlog (V : Type*) := V × V
 def blockOp (T C : Module.End 𝕜 V) : Module.End 𝕜 (V × V) where
   toFun := fun p => ⟨T p.1 + C p.2, T p.2⟩
   map_add' := by
-    intro p q
+    intro ⟨u1, v1⟩ ⟨u2, v2⟩
     ext <;> simp [map_add, add_assoc, add_left_comm]
   map_smul' := by
-    intro r p
+    intro r ⟨u, v⟩
     ext <;> simp [map_smul, smul_add]
 
 /--
@@ -149,6 +149,6 @@ noncomputable def makeLogIntertwiner
     · exact hy1
   intertwines := by
     ext v
-    simp [makeLogVirasoroRepresentation, blockOp, jordanCell, Matrix.toLin', Matrix.mulVec, Fin.sum_univ_two, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
+    fin_cases v <;> simp [makeLogVirasoroRepresentation, blockOp, jordanCell, e0, e1, hL0, hc0, map_add, map_smul, smul_add, add_assoc, add_left_comm]
 
 end InfoGeometry.Canonical.LogVirasoroExtension

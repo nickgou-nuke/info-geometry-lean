@@ -32,7 +32,7 @@ open InfoGeometry.Canonical.CliffordDirectColimit
 open InfoGeometry.Canonical.CategoricalRiemannInductiveColimitBridge
 
 /-- Data for a UHF Clifford algebra tower $\mathcal{A}_n$ with embedding maps $\phi_{n, n+1}$. -/
-structure UHFCliffordTower (𝕜 : Type*) [Field 𝕜] where
+structure UHFCliffordTower (𝕜 : Type) [Field 𝕜] where
   stageDim : ℕ → ℕ
   embedding : ∀ n, CliffordStage 𝕜 (stageDim n) →ₗ[𝕜] CliffordStage 𝕜 (stageDim (n + 1))
   embedding_injective : ∀ n, Function.Injective (embedding n)
@@ -49,7 +49,7 @@ Proves that embedding maps along a UHF Clifford tower compose injectively across
 $$\text{Function.Injective}(\phi_{n, m}).$$
 -/
 theorem uhf_clifford_embedding_injective_step
-    {𝕜 : Type*} [Field 𝕜] (tower : UHFCliffordTower 𝕜) (n : ℕ) :
+    {𝕜 : Type} [Field 𝕜] (tower : UHFCliffordTower 𝕜) (n : ℕ) :
     Function.Injective (tower.embedding n) :=
   tower.embedding_injective n
 
@@ -69,7 +69,7 @@ Proves that the categorical direct colimit of finite non-commutative Clifford ma
 $$\text{dim}(\mathcal{A}_n) \le \text{dim}(\mathcal{A}_{n+1}).$$
 -/
 theorem uhf_colimit_stage_dim_monotone
-    {𝕜 : Type*} [Field 𝕜] (tower : UHFCliffordTower 𝕜)
+    {𝕜 : Type} [Field 𝕜] (tower : UHFCliffordTower 𝕜)
     (h_mono : ∀ n, tower.stageDim n ≤ tower.stageDim (n + 1)) (n : ℕ) :
     tower.stageDim n ≤ tower.stageDim (n + 1) :=
   h_mono n
@@ -89,7 +89,7 @@ theorem ainfty_colimit_boundary_resolution_exists
 Unifies UHF Clifford tower inclusions, Stasheff $A_\infty$ homotopy identities, dimension monotonicity, and categorical boundary resolution into a single kernel-checked theorem.
 -/
 theorem grand_ainfty_colimit_boundary_resolution_duality
-    {𝕜 : Type*} [Field 𝕜] (tower : UHFCliffordTower 𝕜)
+    {𝕜 : Type} [Field 𝕜] (tower : UHFCliffordTower 𝕜)
     (h_mono : ∀ n, tower.stageDim n ≤ tower.stageDim (n + 1)) (n : ℕ)
     {A : Type*} [AddCommGroup A] [Module ℝ A] (ops : AInftyAlgebraOps A) (a b c : A) :
     (Function.Injective (tower.embedding n)) ∧

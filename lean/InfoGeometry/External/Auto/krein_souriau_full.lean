@@ -46,27 +46,27 @@ noncomputable section
 def J_cpx : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 
 theorem J_cpx_sq_neg_I : J_cpx * J_cpx = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx]
 
 /-- Krein metric η_kr = diag(1, -1): the indefinite inner product -/
 def η_kr : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 theorem η_kr_sq_I : η_kr * η_kr = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [η_kr] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [η_kr]
 
 /-- J_cpx is η_kr-skew: η_kr·J_cpx·η_kr = -J_cpx -/
 theorem J_η_skew : η_kr * J_cpx * η_kr = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, η_kr] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, η_kr]
 
 /-- Modular conjugation Jm: Jm² = I (the Tomita-Takesaki J) -/
 def Jm : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
 theorem Jm_sq_I : Jm * Jm = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [Jm] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Jm]
 
 /-- Jm exchanges algebra and commutant: Jm·J_cpx·Jm = -J_cpx -/
 theorem Jm_commutant : Jm * J_cpx * Jm = -J_cpx := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, Jm] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J_cpx, Jm]
 
 /-- The commutant 𝒜' is obtained by conjugating with Jm -/
 def commutant (A : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=

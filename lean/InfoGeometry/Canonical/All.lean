@@ -1105,6 +1105,7 @@ import InfoGeometry.Canonical.TensorModularAtomCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.ChargedFockSpaceFromRawCAR
 import InfoGeometry.Canonical.PfaffianGeneral
+import InfoGeometry.Canonical.ClassDTopology
 import InfoGeometry.Canonical.CurrentConjugationLemmas
 import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.CurrentSugawaraFlipBridge

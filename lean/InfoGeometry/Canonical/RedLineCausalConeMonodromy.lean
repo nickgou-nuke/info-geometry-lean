@@ -62,6 +62,22 @@ theorem redLineOmegaPotential_eq_neg_log (detJ : ℝ → ℝ) (x : ℝ) :
     redLineOmegaPotential detJ x = -Real.log (detJ x) := by
   rfl
 
+/-- Differential identity for the red-line potential `Φ = -log det`.
+For a scalar Jacobian field `detJ`, the derivative is the familiar
+\(\frac{d}{dx}\Phi = -\frac{detJ'(x)}{detJ(x)}\) whenever `detJ x ≠ 0`. -/
+theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
+    (hdet : HasDerivAt detJ (detJ' : ℝ) x) (hpos : 0 < detJ x) :
+    HasDerivAt (redLineOmegaPotential detJ)
+      (-(detJ' / detJ x)) x := by
+  have hlog : HasDerivAt (fun y : ℝ => -Real.log y) (-(1 / detJ x)) (detJ x) :=
+    (Real.hasDerivAt_log hpos.ne').neg
+  have hcomp := hlog.comp x hdet
+  -- chain rule gives `(-(1 / detJ x)) * detJ'`
+  have hmul : (-(1 / detJ x)) * detJ' = -(detJ' / detJ x) := by
+    field_simp [hpos.ne']
+  simpa [redLineOmegaPotential, hmul, div_eq_mul_inv, mul_assoc]
+    using hcomp
+
 /-- `SpinorialFlowJacobianData` stores exactly the same Ω-potential as the defining equation. -/
 theorem redLinePotential_eq_neg_log_jacobian
     (data : SpinorialFlowJacobianData Map) (φ : Map) :
@@ -120,6 +136,11 @@ theorem redLineRegularizedPotential_det
 
 theorem deRhamLogForm_eq_poleForm (z : ℂ) :
     deRhamLogForm z = poleForm z := rfl
+
+/-- `dΩ = 0` away from poles is represented by `deRhamLogForm = 1/z`. -/
+theorem deRhamLogForm_is_dlog (z : ℂ) (hz : z ≠ 0) :
+    deRhamLogForm z = 1 / z := by
+  exact (deRhamLogForm_eq_poleForm z).trans (poleForm_eq_one_div z hz)
 
 /-- Red line potential recovers the lightcone potential when the scalar Jacobian field matches.
 This is the honest adapter from the Red-Line model to the chiral lightcone carrier. -/

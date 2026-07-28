@@ -32,4 +32,14 @@ theorem weight_ratio_eq_exp_energy_gap
   congr 1
   ring_nf
 
+theorem weight_ratio_le_exp_neg_gap
+    (M : Model (Data := Data) (Theta := Theta))
+    (θ : Theta) {ε δ : ℝ} (hε : 0 < ε) (i j : Data)
+    (hgap : M.energy j θ + δ ≤ M.energy i θ) :
+    weight M θ ε i / weight M θ ε j ≤ Real.exp (-δ / ε) := by
+  rw [weight_ratio_eq_exp_energy_gap M θ ε i j]
+  apply Real.exp_le_exp.mpr
+  apply (div_le_div_iff_of_pos_right hε).2
+  linarith
+
 end InfoGeometry.Inference.FiniteGibbs

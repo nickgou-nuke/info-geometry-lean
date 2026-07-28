@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.GoodBadGibbs
+import InfoGeometry.Inference.GoodFitVolume
 import InfoGeometry.Inference.RegularizedPoissonDeviance
 
 /-!
@@ -65,5 +66,21 @@ theorem poissonGoodBad_goodResponsibility_le_one
     goodResponsibility (M.energyModel θ) εg εb i ≤ 1 := by
   exact goodResponsibility_le_one (M.energyModel θ) hεg hεb
     M.goodPrior_pos M.badPrior_pos i
+
+theorem poissonGoodBad_effectiveGoodFraction_pos
+    [Nonempty Data]
+    (M : PoissonGoodBadModel (Data := Data) (Theta := Theta))
+    (θ : Theta) {εg εb : ℝ} (hεg : 0 < εg) (hεb : 0 < εb) :
+    0 < effectiveGoodFraction (M.energyModel θ) εg εb := by
+  exact effectiveGoodFraction_pos (M.energyModel θ) hεg hεb
+    M.goodPrior_pos M.badPrior_pos
+
+theorem poissonGoodBad_effectiveGoodFraction_le_one
+    [Nonempty Data]
+    (M : PoissonGoodBadModel (Data := Data) (Theta := Theta))
+    (θ : Theta) {εg εb : ℝ} (hεg : 0 < εg) (hεb : 0 < εb) :
+    effectiveGoodFraction (M.energyModel θ) εg εb ≤ 1 := by
+  exact effectiveGoodFraction_le_one (M.energyModel θ) hεg hεb
+    M.goodPrior_pos M.badPrior_pos
 
 end InfoGeometry.Inference

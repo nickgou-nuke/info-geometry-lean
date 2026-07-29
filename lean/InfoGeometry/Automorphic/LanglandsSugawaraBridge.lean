@@ -161,7 +161,7 @@ Once the bridge witness is supplied, it packages the strong
 `LanglandsPrimeResonanceStrongWitness` already carried by the bridge and
 exposes the central-charge/completed-L calibration.
 -/
-structure LanglandsSugawaraBridgeInstalledTarget
+def LanglandsSugawaraBridgeInstalledTarget
     {Bulk : Type uBulk} {Boundary : Type uBoundary}
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
@@ -172,12 +172,8 @@ structure LanglandsSugawaraBridgeInstalledTarget
     [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P Finite Affine Vir State) where
-  /-- Strong resonance witness already carried by the bridge. -/
-  strongWitness : LanglandsPrimeResonanceStrongWitness P
-
-  /-- Central charge calibration carried by the bridge. -/
-  centralCharge_eq_completedL :
+    (B : LanglandsSugawaraBridge P Finite Affine Vir State) : Prop :=
+  LanglandsPrimeResonanceStrongWitness P ∧
     B.affineVirasoro.centralChargeReadout B.state =
       B.completedL B.spectralPoint
 
@@ -200,8 +196,6 @@ def langlandsSugawaraBridgeInstalledTarget :
       (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
   intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State
     _ _ _ _ _ _ _ _ _ _ B
-  exact
-    { strongWitness := B.resonance,
-      centralCharge_eq_completedL := B.centralCharge_eq_completedL }
+  exact ⟨B.resonance, B.centralCharge_eq_completedL⟩
 
 end InfoGeometry.Automorphic

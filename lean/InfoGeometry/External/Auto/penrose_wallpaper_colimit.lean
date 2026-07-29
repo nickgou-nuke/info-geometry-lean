@@ -188,40 +188,25 @@ theorem goutev_penrose_synthesis :
   BRIDGES TO PRE-PROVED THEOREMS
   ═════════════════════════════════════════════════════════════════════-/
 
-structure BridgeArtifact where
-  name : String
-  artifact : String
-  exported_symbols : List String
+abbrev BridgeArtifact := String × String × List String
 
-def bridge_yang_baxter : BridgeArtifact where
-  name := "Yang-Baxter"
-  artifact := "proofs/FibAnyonThm4.lean"
-  exported_symbols := ["yang_baxter"]
+def bridge_yang_baxter : BridgeArtifact :=
+  ("Yang-Baxter", "proofs/FibAnyonThm4.lean", ["yang_baxter"])
 
-def bridge_pentagon : BridgeArtifact where
-  name := "Pentagon"
-  artifact := "proofs/FibAnyonThm6_pentagon.lean"
-  exported_symbols := ["pentagon"]
+def bridge_pentagon : BridgeArtifact :=
+  ("Pentagon", "proofs/FibAnyonThm6_pentagon.lean", ["pentagon"])
 
-def bridge_hexagons : BridgeArtifact where
-  name := "Hexagons"
-  artifact := "proofs/FibAnyonThm7_hexagon.lean"
-  exported_symbols := ["hexagon_forward", "hexagon_reverse"]
+def bridge_hexagons : BridgeArtifact :=
+  ("Hexagons", "proofs/FibAnyonThm7_hexagon.lean", ["hexagon_forward", "hexagon_reverse"])
 
-def bridge_uhf_ladder : BridgeArtifact where
-  name := "UHF ladder"
-  artifact := "proofs/uhf_ladder.lean"
-  exported_symbols := ["thermodynamicLadder"]
+def bridge_uhf_ladder : BridgeArtifact :=
+  ("UHF ladder", "proofs/uhf_ladder.lean", ["thermodynamicLadder"])
 
-def bridge_goutev_principle : BridgeArtifact where
-  name := "Goutev principle"
-  artifact := "proofs/goutev_principle.lean"
-  exported_symbols := ["goutev_cycle_closes", "bridge_registry"]
+def bridge_goutev_principle : BridgeArtifact :=
+  ("Goutev principle", "proofs/goutev_principle.lean", ["goutev_cycle_closes", "bridge_registry"])
 
-def bridge_clifford_seed : BridgeArtifact where
-  name := "Clifford seed"
-  artifact := "proofs/clifford_seed.lean"
-  exported_symbols := ["Cl11", "Pauli"]
+def bridge_clifford_seed : BridgeArtifact :=
+  ("Clifford seed", "proofs/clifford_seed.lean", ["Cl11", "Pauli"])
 
 def penrose_bridge_registry : List BridgeArtifact :=
   [ bridge_yang_baxter

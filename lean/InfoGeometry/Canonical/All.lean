@@ -381,6 +381,7 @@ import InfoGeometry.Canonical.FibonacciPentagonEquationBridge
 import InfoGeometry.Canonical.FibonacciHexagonEquationBridge
 import InfoGeometry.Canonical.FibonacciCentralChargeBridge
 import InfoGeometry.Canonical.QuantumDoubleToricCodeBridge
+import InfoGeometry.Canonical.FibonacciModularGroupBridge
 import InfoGeometry.Canonical.NonAbelianBerryPhaseBridge
 import InfoGeometry.Canonical.AreaLawEntropyViolationBridge
 import InfoGeometry.Canonical.OTOCScramblingChaosBridge

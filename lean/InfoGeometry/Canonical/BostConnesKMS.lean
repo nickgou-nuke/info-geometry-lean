@@ -281,7 +281,8 @@ normalized Boltzmann weight.
 structure KMSProjectionState (C : BostConnesCuntzSystem Op) where
   β : ℝ
   ζβ : ℝ
-  φ : Op → ℝ
+  /-- Additive operator functional carrying the projection-state readout. -/
+  φ : Op →+ ℝ
   eval_projection :
     ∀ n m : ℕ+, φ (S C n * star (S C m)) = kmsProjectionReadout β ζβ n m
 

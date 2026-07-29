@@ -367,6 +367,30 @@ noncomputable instance complexModuleRealDirectLimit :
     induction z using Module.DirectLimit.induction_on with
     | ih i x => simp
 
+/-- The descended complex action extends the original real module action. -/
+noncomputable instance realComplexScalarTowerDirectLimit :
+    IsScalarTower ℝ ℂ D∞ where
+  smul_assoc r c z := by
+    induction z using Module.DirectLimit.induction_on with
+    | ih i x =>
+        simp only [complex_smul_of]
+        change
+          (Module.DirectLimit.of
+            ℝ I E
+            (fun _ _ h => realTransition E sys h)
+            i) ((r • c) • x) =
+          r •
+            (Module.DirectLimit.of
+              ℝ I E
+              (fun _ _ h => realTransition E sys h)
+              i) (c • x)
+        rw [smul_assoc]
+        exact
+          (Module.DirectLimit.of
+            ℝ I E
+            (fun _ _ h => realTransition E sys h)
+            i).map_smul r (c • x)
+
 /-- Complex conjugate homogeneity at a common stage. -/
 theorem commonStageInner_smul_left_complex
     (i j : I) (c : ℂ) (x : E i) (y : E j) :

@@ -7,6 +7,7 @@ import Mathlib.Topology.Constructions
 import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Topology.Instances.Matrix
 import Mathlib.Topology.Connected.PathConnected
+import InfoGeometry.Thermo.BuresWassersteinKMSCost
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -15,45 +16,70 @@ open Matrix BigOperators
 
 namespace SouriauBuresWasserstein
 
+open InfoGeometry.Thermo.BuresWassersteinKMSCost
+
 variable {n : ℕ}
 
-/-- 1. Bures-Wasserstein Metric Distance Structure between Positive Semi-Definite Density Matrices -/
+/- 1. A finite matrix shadow of the genuine positive-state Bures datum.
+   The distance laws are inherited from `BuresWassersteinDatum`; only symmetry
+   is an additional property of the chosen metric implementation. -/
+def matrixPositiveDomain (n : ℕ) :
+    PositiveStateDomain (Matrix (Fin n) (Fin n) ℝ) :=
+  ⟨Set.univ⟩
+
+def matrixPositiveState (n : ℕ) (ρ : Matrix (Fin n) (Fin n) ℝ) :
+    PositiveState (matrixPositiveDomain n) :=
+  ⟨ρ, Set.mem_univ ρ⟩
+
 structure BuresWassersteinStructure (n : ℕ) where
-  -- Bures-Wasserstein distance function d_BW(ρ₁, ρ₂)
-  distBW : Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ → ℝ
-  -- Symmetry axiom: d_BW(ρ₁, ρ₂) = d_BW(ρ₂, ρ₁)
-  h_bw_symm : ∀ ρ₁ ρ₂ : Matrix (Fin n) (Fin n) ℝ, distBW ρ₁ ρ₂ = distBW ρ₂ ρ₁
-  -- Self-nullity axiom: d_BW(ρ, ρ) = 0
-  h_bw_self_zero : ∀ ρ : Matrix (Fin n) (Fin n) ℝ, distBW ρ ρ = 0
-  -- Non-negativity axiom: d_BW(ρ₁, ρ₂) ≥ 0
-  h_bw_nonneg : ∀ ρ₁ ρ₂ : Matrix (Fin n) (Fin n) ℝ, 0 ≤ distBW ρ₁ ρ₂
+  BW : BuresWassersteinDatum
+    (Matrix (Fin n) (Fin n) ℝ) (matrixPositiveDomain n)
+  dist_symm : ∀ ρ σ : PositiveState (matrixPositiveDomain n),
+    BW.dist ρ σ = BW.dist σ ρ
+
+def BuresWassersteinStructure.distBW (sys : BuresWassersteinStructure n)
+    (ρ σ : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+  sys.BW.dist (matrixPositiveState n ρ) (matrixPositiveState n σ)
 
 /-- 🏆 THEOREM 1: Symmetry of the Bures-Wasserstein Distance -/
 theorem buresWasserstein_symm (sys : BuresWassersteinStructure n) (ρ₁ ρ₂ : Matrix (Fin n) (Fin n) ℝ) :
     sys.distBW ρ₁ ρ₂ = sys.distBW ρ₂ ρ₁ :=
-  sys.h_bw_symm ρ₁ ρ₂
+  sys.dist_symm _ _
 
 /-- 🏆 THEOREM 2: Self-Nullity of the Bures-Wasserstein Distance -/
 theorem buresWasserstein_self_zero (sys : BuresWassersteinStructure n) (ρ : Matrix (Fin n) (Fin n) ℝ) :
     sys.distBW ρ ρ = 0 :=
-  sys.h_bw_self_zero ρ
+  sys.BW.dist_self _
 
 /-- 🏆 THEOREM 3: Non-Negativity of the Bures-Wasserstein Metric -/
 theorem buresWasserstein_nonneg (sys : BuresWassersteinStructure n) (ρ₁ ρ₂ : Matrix (Fin n) (Fin n) ℝ) :
     0 ≤ sys.distBW ρ₁ ρ₂ :=
-  sys.h_bw_nonneg ρ₁ ρ₂
+  sys.BW.dist_nonneg _ _
 
-/-- 2. Classical Bures Fidelity Metric Formula for Diagonal Covariance Matrices:
-    F(ρ₁, ρ₂) = (Tr(ρ₁ ρ₂)) / (Tr(ρ₁) Tr(ρ₂)) -/
-noncomputable def classicalFidelity (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+/-- Normalized operator trace pairing.
+
+This is defined for arbitrary finite matrix observables; no commutativity or
+diagonalization hypothesis is part of the carrier.  It is a scalar readout of
+the noncommutative product, not the quantum root fidelity.
+-/
+noncomputable def normalizedTracePairing (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   trace (rho1 * rho2) / (trace rho1 * trace rho2)
 
-/-- 🏆 THEOREM 4: Symmetry of Classical Quantum State Fidelity -/
-theorem classicalFidelity_symm (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) :
-    classicalFidelity rho1 rho2 = classicalFidelity rho2 rho1 := by
-  dsimp [classicalFidelity]
+/-- Compatibility name retained for downstream users of the old API. -/
+noncomputable abbrev classicalFidelity {n : ℕ} :=
+  normalizedTracePairing (n := n)
+
+/-- Cyclic symmetry of the normalized trace pairing. -/
+theorem normalizedTracePairing_symm (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) :
+    normalizedTracePairing rho1 rho2 = normalizedTracePairing rho2 rho1 := by
+  dsimp [normalizedTracePairing]
   rw [trace_mul_comm rho1 rho2]
   ring
+
+/-- Compatibility theorem for the former API name. -/
+theorem classicalFidelity_symm (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) :
+    classicalFidelity rho1 rho2 = classicalFidelity rho2 rho1 :=
+  normalizedTracePairing_symm rho1 rho2
 
 theorem isClosed_buresWasserstein_ball
     (sys : BuresWassersteinStructure n)

@@ -4,6 +4,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -15,29 +16,35 @@ open Matrix Complex
 
 namespace ZornOctonionAnyon
 
+open InfoGeometry.Physics.SplitOctonionBraidSU3
+
 /-- Zorn Split Octonion Matrix Cell Z = (a, b, v, w) with scalars a, b ∈ ℂ and color 3-vectors v, w ∈ ℂ³. -/
-structure ZornCell where
-  a : ℂ
-  b : ℂ
-  v : Fin 3 → ℂ
-  w : Fin 3 → ℂ
+abbrev ZornCell :=
+  InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 namespace ZornCell
 
 /-- Dot product pairing for color vectors v • w = ∑ v_i w_i. -/
-def colorDot (v w : Fin 3 → ℂ) : ℂ :=
-  v 0 * w 0 + v 1 * w 1 + v 2 * w 2
+abbrev colorDot :=
+  InfoGeometry.Physics.SplitOctonionBraidSU3.dot3
 
 /-- Zorn Split Octonion Norm/Determinant: det(Z) = a * b - v • w. -/
-def detZ (Z : ZornCell) : ℂ :=
-  Z.a * Z.b - colorDot Z.v Z.w
+abbrev detZ :=
+  InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm
+
+def offDiagonal (v w : Fin 3 → ℂ) : ZornCell where
+  a := 0
+  u := v
+  v := w
+  b := 0
 
 /-- **Theorem**: Pure Off-Diagonal Null Cone Boundary Condition (a = 0, b = 0):
     det(Z) = - (v • w). -/
 theorem det_off_diagonal_null_cone (v w : Fin 3 → ℂ) :
-    detZ ⟨0, 0, v, w⟩ = - colorDot v w := by
-  dsimp [detZ]
-  ring
+    detZ (offDiagonal v w) = - colorDot v w := by
+  simp [detZ, offDiagonal, colorDot,
+    InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm,
+    InfoGeometry.Physics.SplitOctonionBraidSU3.dot3]
 
 /-- Color Pair Tensor Product Matrix M_{ij} = v_i * w_j in M₃(ℂ). -/
 def colorTensorMatrix (v w : Fin 3 → ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
@@ -47,8 +54,9 @@ def colorTensorMatrix (v w : Fin 3 → ℂ) : Matrix (Fin 3) (Fin 3) ℂ :=
     Tr(v ⊗ w) = v • w. -/
 theorem color_tensor_trace_eq_dot (v w : Fin 3 → ℂ) :
     trace (colorTensorMatrix v w) = colorDot v w := by
-  dsimp [colorTensorMatrix, colorDot, trace]
+  dsimp [colorTensorMatrix, trace]
   rw [Fin.sum_univ_three]
+  rfl
 
 /-- **Theorem**: Null Boundary Anyon Braiding Pairing Vanishing:
     If v • w = 0 on the Zorn null boundary, then Tr(v ⊗ w) = 0. -/

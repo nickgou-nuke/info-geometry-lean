@@ -66,24 +66,24 @@ theorem drazin_signed_chiral_polarization
 @[rep_depth krein]
 theorem drazin_supercharge_eq_chiral_polarization_defect
     (C : ConstructiveClosureDrazinData (E := H₂)) :
-    DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel =
-      DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG :=
+    DrazinSupercharge.CertifiedInverseKernel.supercharge C =
+      DrazinSupercharge.commutator C.spectralProjector C.GammaG :=
   C.supercharge_eq_commutator_P_D_GammaG
 
 /-- The Drazin supercharge lies in the spectral chiral operator cone. -/
 @[rep_depth krein]
 theorem drazin_supercharge_mem_chiral_operator_cone
     (C : ConstructiveClosureDrazinData (E := H₂)) :
-    IsInChiralOperatorCone C.kernel
-      (DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel) :=
+    IsInChiralOperatorCone C
+      (DrazinSupercharge.CertifiedInverseKernel.supercharge C) :=
   C.supercharge_mem_chiralCone
 
 /-- Drazin chiral defect is the right-minus-left anomaly channel. -/
 @[rep_depth krein]
 theorem drazin_chiral_defect_eq_right_minus_left
     (C : ConstructiveClosureDrazinData (E := H₂)) :
-    DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG =
-      C.kernel.rightChiralAnomaly - C.kernel.chiralAnomaly :=
+    DrazinSupercharge.commutator C.spectralProjector C.GammaG =
+      C.rightChiralAnomaly - C.chiralAnomaly :=
   C.commutator_P_D_GammaG_eq_sub_anomalies
 
 /-- Primitive doubled-carrier supercharges close by `[J, ε] = 2Q`. -/
@@ -134,11 +134,11 @@ structure ChiralChargeFockNumberReconciliation
     epsilonObservable (E := E) ψ =
       lightconePlusCoordinate (E := E) ψ - lightconeMinusCoordinate (E := E) ψ
   drazinSuperchargeDefect :
-    DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel =
-      DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG
+    DrazinSupercharge.CertifiedInverseKernel.supercharge C =
+      DrazinSupercharge.commutator C.spectralProjector C.GammaG
   drazinRightMinusLeft :
-    DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG =
-      C.kernel.rightChiralAnomaly - C.kernel.chiralAnomaly
+    DrazinSupercharge.commutator C.spectralProjector C.GammaG =
+      C.rightChiralAnomaly - C.chiralAnomaly
   fockNumberOccupation :
     bogoliubovNumberOperator (E := E) B =
       (bogoliubovCreation (E := E) B).comp (bogoliubovAnnihilation (E := E) B)
@@ -164,11 +164,11 @@ structure ChiralLightconeKKTClosure
   kktChiralPolarization :
     (C.toDPDKKT).GammaG = (C.toDPDKKT).P_R - (C.toDPDKKT).P_L
   superchargeCommutatorClosure :
-    DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel =
-      DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG
+    DrazinSupercharge.CertifiedInverseKernel.supercharge C =
+      DrazinSupercharge.commutator C.spectralProjector C.GammaG
   superchargeRightMinusLeftClosure :
-    DrazinSupercharge.commutator C.kernel.spectralProjector C.kernel.GammaG =
-      C.kernel.rightChiralAnomaly - C.kernel.chiralAnomaly
+    DrazinSupercharge.commutator C.spectralProjector C.GammaG =
+      C.rightChiralAnomaly - C.chiralAnomaly
   primitiveCCRClosure :
     CCRBracket (E := E)
         (paritySuperchargeOp (E := E))

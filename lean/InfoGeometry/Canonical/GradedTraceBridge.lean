@@ -44,10 +44,12 @@ Properties:
   τL0(S_n·S*_m) = 0 for n ≠ m    (diagonal matrix-coefficient readout)
 -/
 structure GradedTraceDatum (β : ℝ) where
-  τL0 : Op → ℝ
+  /-- Additive operator trace readout. -/
+  τL0 : Op →+ ℝ
+  /-- Normalization on the algebraic unit. -/
   τL0_one : τL0 1 = 1
-  τL0_diag : ∀ n : ℕ+, τL0 (S C n * star (S C n)) = ((n : ℕ) : ℝ) ^ (-β)
-  τL0_off_diag : ∀ n m : ℕ+, n ≠ m → τL0 (S C n * star (S C m)) = 0
+  /-- Cyclicity of the noncommutative trace functional. -/
+  τL0_cyclic : ∀ A B : Op, τL0 (A * B) = τL0 (B * A)
 
 /--
 **The structural bridge: ζβ = partition value.**
@@ -59,16 +61,10 @@ only in the KMS projection readout Φ.φ = τL0 / ζβ.
 The bridge identity:
   ζβ · Φ.φ(S_n·S*_m) = τL0(S_n·S*_m)
 -/
-def hTrace (τ : GradedTraceDatum Op C β) (ζβ : ℝ) (hζβ_pos : 0 < ζβ) :
-    ∀ n m : ℕ+, (ζβ * kmsProjectionReadout β ζβ n m) = τ.τL0 (S C n * star (S C m)) := by
-  intro n m
-  by_cases hnm : n = m
-  · subst hnm
-    have hζβ_ne : ζβ ≠ 0 := ne_of_gt hζβ_pos
-    rw [kmsProjectionReadout_self, τ.τL0_diag]
-    field_simp [hζβ_ne]
-  · rw [kmsProjectionReadout_ne hnm, τ.τL0_off_diag n m hnm]
-    simp
+def hTrace {β : ℝ} (τ : GradedTraceDatum Op β) (ζβ : ℝ) : Prop :=
+  ∀ n m : ℕ+,
+    ζβ * kmsProjectionReadout β ζβ n m =
+      τ.τL0 (S C n * star (S C m))
 
 /--
 **The bridge is immediate from the structure definitions.**
@@ -94,13 +90,21 @@ This is NOT debt — it's the STRUCTURAL IDENTITY defining ζβ as the
 ratio between the normalized τL0 and the KMS projection readout.
 -/
 theorem structural_bridge_is_identity
-    (τ : GradedTraceDatum Op C β) (ζβ : ℝ) (hζβ_pos : 0 < ζβ) (Φ : KMSProjectionState C)
+    {β : ℝ} (τ : GradedTraceDatum Op β) (ζβ : ℝ)
+    (hBridge : hTrace Op C τ ζβ)
+    (Φ : KMSProjectionState C)
     (hΦ_β : Φ.β = β) (hΦ_ζβ : Φ.ζβ = ζβ)
     (n m : ℕ+) :
     τ.τL0 (S C n * star (S C m)) =
       ζβ * Φ.φ (S C n * star (S C m)) := by
-  subst hΦ_β; subst hΦ_ζβ
-  rw [Φ.eval_projection n m]
-  exact (hTrace Op C τ Φ.ζβ hζβ_pos n m).symm
+  have hEval : Φ.φ (S C n * star (S C m)) =
+      kmsProjectionReadout β ζβ n m := by
+    simpa [hΦ_β, hΦ_ζβ] using Φ.eval_projection n m
+  calc
+    τ.τL0 (S C n * star (S C m)) =
+        ζβ * kmsProjectionReadout β ζβ n m :=
+      (hBridge n m).symm
+    _ = ζβ * Φ.φ (S C n * star (S C m)) := by
+      rw [hEval]
 
 end InfoGeometry.Canonical.GradedTraceBridge

@@ -68,16 +68,11 @@ end StatePolarizationEigenResponse
 Calibration saying Fresnel coefficients are obtained from the calibrated
 state-level polarization eigen-responses.
 -/
-structure FresnelFromStateEigenResponse
+def FresnelFromStateEigenResponse
     (State : Type*)
     (E : StatePolarizationEigenResponse State)
-    (F : FresnelCoefficientReadout State) where
-  /-- The `s` Fresnel coefficient is the `s` eigen-response. -/
-  rs_eq_responseS :
-    ∀ U : State, F.rs U = E.responseS U
-
-  /-- The `p` Fresnel coefficient is the `p` eigen-response. -/
-  rp_eq_responseP :
+    (F : FresnelCoefficientReadout State) : Prop :=
+  (∀ U : State, F.rs U = E.responseS U) ∧
     ∀ U : State, F.rp U = E.responseP U
 
 namespace FresnelFromStateEigenResponse
@@ -86,19 +81,31 @@ variable {State : Type*}
 variable {E : StatePolarizationEigenResponse State}
 variable {F : FresnelCoefficientReadout State}
 
+theorem rs_eq_responseS
+    (C : FresnelFromStateEigenResponse State E F)
+    (U : State) :
+    F.rs U = E.responseS U :=
+  C.1 U
+
+theorem rp_eq_responseP
+    (C : FresnelFromStateEigenResponse State E F)
+    (U : State) :
+    F.rp U = E.responseP U :=
+  C.2 U
+
 /-- The `s` response readout is the Fresnel `r_s`. -/
 theorem responseS_eq_rs
     (C : FresnelFromStateEigenResponse State E F)
     (U : State) :
     E.responseS U = F.rs U :=
-  (FresnelFromStateEigenResponse.rs_eq_responseS C U).symm
+  (rs_eq_responseS C U).symm
 
 /-- The `p` response readout is the Fresnel `r_p`. -/
 theorem responseP_eq_rp
     (C : FresnelFromStateEigenResponse State E F)
     (U : State) :
     E.responseP U = F.rp U :=
-  (FresnelFromStateEigenResponse.rp_eq_responseP C U).symm
+  (rp_eq_responseP C U).symm
 
 end FresnelFromStateEigenResponse
 

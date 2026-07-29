@@ -78,12 +78,33 @@ theorem representedRangeCompletionEquiv_map_mul
         ((representedRangeCompletionEquiv
           Stage sys ω).continuous.comp continuous_snd))
   | ih x y =>
-    rw [← UniformSpace.Completion.coe_mul,
-      representedRangeCompletionEquiv_coe,
-      representedRangeCompletionEquiv_coe,
-      representedRangeCompletionEquiv_coe]
-    exact map_mul
-      (representedAlgebraicRangeInclusion Stage sys ω) x y
+    calc
+      representedRangeCompletionEquiv Stage sys ω
+          ((x :
+              representedAlgebraicRangeCompletion Stage sys ω) *
+            (y :
+              representedAlgebraicRangeCompletion Stage sys ω)) =
+          representedRangeCompletionEquiv Stage sys ω
+            ((x * y :
+              representedAlgebraicRange Stage sys ω) :
+              representedAlgebraicRangeCompletion Stage sys ω) := by
+                exact congrArg
+                  (representedRangeCompletionEquiv Stage sys ω)
+                  (UniformSpace.Completion.coe_mul x y).symm
+      _ = representedAlgebraicRangeInclusion Stage sys ω (x * y) :=
+        representedRangeCompletionEquiv_coe Stage sys ω (x * y)
+      _ = representedAlgebraicRangeInclusion Stage sys ω x *
+          representedAlgebraicRangeInclusion Stage sys ω y :=
+        map_mul
+          (representedAlgebraicRangeInclusion Stage sys ω) x y
+      _ = representedRangeCompletionEquiv Stage sys ω
+              (x :
+                representedAlgebraicRangeCompletion Stage sys ω) *
+            representedRangeCompletionEquiv Stage sys ω
+              (y :
+                representedAlgebraicRangeCompletion Stage sys ω) := by
+        rw [representedRangeCompletionEquiv_coe,
+          representedRangeCompletionEquiv_coe]
 
 /-- Canonical complex algebra equivalence between the completed faithful
 range and the represented operator closure. -/
@@ -101,6 +122,15 @@ def representedRangeCompletionAlgEquiv :
     representedRangeCompletionAlgEquiv Stage sys ω x =
       representedRangeCompletionEquiv Stage sys ω x :=
   rfl
+
+@[simp] theorem representedRangeCompletionAlgEquiv_coe
+    (x : representedAlgebraicRange Stage sys ω) :
+    representedRangeCompletionAlgEquiv Stage sys ω
+        (x :
+          representedAlgebraicRangeCompletion Stage sys ω) =
+      representedAlgebraicRangeInclusion Stage sys ω x := by
+  rw [representedRangeCompletionAlgEquiv_apply,
+    representedRangeCompletionEquiv_coe]
 
 /-- Canonical involution on the completed faithful range, transported from
 the operator adjoint on the represented C-star closure. -/
@@ -132,16 +162,18 @@ instance representedAlgebraicRangeCompletionStarRing :
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
     rw [representedRangeCompletionAlgEquiv_map_star,
       map_add,
+      star_add,
+      map_add,
       representedRangeCompletionAlgEquiv_map_star,
-      representedRangeCompletionAlgEquiv_map_star,
-      star_add]
+      representedRangeCompletionAlgEquiv_map_star]
   star_mul x y := by
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
     rw [representedRangeCompletionAlgEquiv_map_star,
       map_mul,
+      star_mul,
+      map_mul,
       representedRangeCompletionAlgEquiv_map_star,
-      representedRangeCompletionAlgEquiv_map_star,
-      star_mul]
+      representedRangeCompletionAlgEquiv_map_star]
 
 instance representedAlgebraicRangeCompletionStarModule :
     StarModule ℂ
@@ -150,8 +182,9 @@ instance representedAlgebraicRangeCompletionStarModule :
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
     rw [representedRangeCompletionAlgEquiv_map_star,
       map_smul,
-      representedRangeCompletionAlgEquiv_map_star,
-      star_smul]
+      star_smul,
+      map_smul,
+      representedRangeCompletionAlgEquiv_map_star]
 
 /-- The transported involution is continuous in the operator-norm completion
 topology. -/
@@ -180,14 +213,24 @@ involution on the dense represented algebraic range. -/
       ((star x : representedAlgebraicRange Stage sys ω) :
         representedAlgebraicRangeCompletion Stage sys ω) := by
   apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-  rw [representedRangeCompletionAlgEquiv_map_star,
-    representedRangeCompletionAlgEquiv_apply,
-    representedRangeCompletionAlgEquiv_apply,
-    representedRangeCompletionEquiv_coe,
-    representedRangeCompletionEquiv_coe]
-  exact
-    (representedAlgebraicRangeInclusion_star
-      Stage sys ω x).symm
+  calc
+    representedRangeCompletionAlgEquiv Stage sys ω
+        (star
+          (x :
+            representedAlgebraicRangeCompletion Stage sys ω)) =
+      star
+        (representedRangeCompletionAlgEquiv Stage sys ω
+          (x :
+            representedAlgebraicRangeCompletion Stage sys ω)) :=
+      representedRangeCompletionAlgEquiv_map_star Stage sys ω _
+    _ = star (representedAlgebraicRangeInclusion Stage sys ω x) := by
+      rw [representedRangeCompletionAlgEquiv_coe]
+    _ = representedAlgebraicRangeInclusion Stage sys ω (star x) :=
+      (representedAlgebraicRangeInclusion_star Stage sys ω x).symm
+    _ = representedRangeCompletionAlgEquiv Stage sys ω
+        ((star x : representedAlgebraicRange Stage sys ω) :
+          representedAlgebraicRangeCompletion Stage sys ω) := by
+      rw [representedRangeCompletionAlgEquiv_coe]
 
 instance representedAlgebraicRangeCompletionCStarRing :
     CStarRing

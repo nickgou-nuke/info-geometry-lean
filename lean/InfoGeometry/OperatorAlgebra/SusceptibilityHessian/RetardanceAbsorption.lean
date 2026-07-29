@@ -31,16 +31,23 @@ variable (R : RetardanceReadout State)
 
 end RetardanceReadout
 
-/--
-Absorption/heat readout from Jones coefficients.
-
-For a metal mirror this is where continuous optical loss data are linked to
-Bregman heat.
+/-!
+An optical absorption readout is directly the state-indexed heat/loss map.
+There is no additional carrier law here, so a structure would only wrap the
+function without adding mathematical content.
 -/
-structure OpticalAbsorptionReadout
-    (State : Type*) where
-  /-- Absorption or heat readout. -/
-  absorption : State → ℝ
+abbrev OpticalAbsorptionReadout (State : Type*) := State → ℝ
+
+namespace OpticalAbsorptionReadout
+
+abbrev absorption {State : Type*}
+    (R : OpticalAbsorptionReadout State) : State → ℝ := R
+
+def mk {State : Type*}
+    (absorption : State → ℝ) : OpticalAbsorptionReadout State :=
+  absorption
+
+end OpticalAbsorptionReadout
 
 /--
 Full optical response calibration.

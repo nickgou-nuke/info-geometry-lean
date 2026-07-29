@@ -144,20 +144,17 @@ A readout connecting states to residue regions.
 This removes the need to repeatedly pass an explicit hypothesis
 `F.winding x = W.winding (stateRegion x)`.
 -/
-structure StateResidueReadout
+def StateResidueReadout
     {State Region Point Tangent Value : Type*}
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value)
     (N : PhaseResidueNormalizer Value)
     (ω : OperatorOneForm Point Tangent Value)
     (W : WindingNumberDatum I N ω)
-    (F : WindingObstructionFlow State) where
-  /-- Region/contour associated to a state. -/
-  stateRegion : State → Region
-  /-- The state winding is the residue winding of its region. -/
-  winding_eq_regionWinding :
+    (F : WindingObstructionFlow State) :=
+  {stateRegion : State → Region //
     ∀ x : State,
-      F.winding x = W.winding (stateRegion x)
+      F.winding x = W.winding (stateRegion x)}
 
 namespace StateResidueReadout
 
@@ -171,6 +168,21 @@ variable
     {F : WindingObstructionFlow State}
 
 variable (R : StateResidueReadout I N ω W F)
+
+abbrev stateRegion : State → Region := R.1
+
+theorem winding_eq_regionWinding
+    (x : State) :
+    F.winding x = W.winding (R.stateRegion x) :=
+  R.2 x
+
+def mk
+    (stateRegion : State → Region)
+    (winding_eq_regionWinding :
+      ∀ x : State,
+        F.winding x = W.winding (stateRegion x)) :
+    StateResidueReadout I N ω W F :=
+  ⟨stateRegion, winding_eq_regionWinding⟩
 
 /-- Nonzero residue proposition for a state-readout region. -/
 abbrev BoundaryIntegralNonzeroWitness
@@ -228,7 +240,7 @@ end StateResidueReadout
 /-! ## 3. Index readout for states -/
 
 /-- A readout connecting states to topological index cycles. -/
-structure StateIndexReadout
+def StateIndexReadout
     {State Region Point Tangent Value Cycle : Type*}
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value)
@@ -238,13 +250,10 @@ structure StateIndexReadout
     (T :
       SpectralDivisors.TopologicalIndexDatum
         (I := I) (N := N) (ω := ω) W Cycle)
-    (F : WindingObstructionFlow State) where
-  /-- Cycle associated to a state. -/
-  cycleOf : State → Cycle
-  /-- The state winding is the topological index of its cycle. -/
-  winding_eq_index :
+    (F : WindingObstructionFlow State) :=
+  {cycleOf : State → Cycle //
     ∀ x : State,
-      F.winding x = T.index (cycleOf x)
+      F.winding x = T.index (cycleOf x)}
 
 namespace StateIndexReadout
 
@@ -261,6 +270,21 @@ variable
     {F : WindingObstructionFlow State}
 
 variable (R : StateIndexReadout I N ω W T F)
+
+abbrev cycleOf : State → Cycle := R.1
+
+theorem winding_eq_index
+    (x : State) :
+    F.winding x = T.index (R.cycleOf x) :=
+  R.2 x
+
+def mk
+    (cycleOf : State → Cycle)
+    (winding_eq_index :
+      ∀ x : State,
+        F.winding x = T.index (cycleOf x)) :
+    StateIndexReadout I N ω W T F :=
+  ⟨cycleOf, winding_eq_index⟩
 
 /-- Nonzero topological index obstructs relaxation into the flat sector. -/
 theorem nonzero_index_cannot_flow_to_flat

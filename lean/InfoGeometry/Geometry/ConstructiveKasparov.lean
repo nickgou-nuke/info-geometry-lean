@@ -627,7 +627,7 @@ Concrete readout identifying a state with a residue region.
 This packages the one equality needed to connect the finite kernel index to
 the residue winding.
 -/
-structure ConstructiveResidueReadout
+def ConstructiveResidueReadout
     {State Op Projection Mode Region Point Tangent Value : Type*}
     [Ring Op]
     [AddCommGroup Value] [Module ℝ Value]
@@ -635,14 +635,10 @@ structure ConstructiveResidueReadout
     (I : GeometricIntegralBackend Region Point Tangent Value)
     (N : PhaseResidueNormalizer Value)
     (ω : OperatorOneForm Point Tangent Value)
-    (W : WindingNumberDatum I N ω) where
-  /-- Region/contour associated to a state. -/
-  regionOf : State → Region
-
-  /-- The finite projected-kernel index equals the residue winding. -/
-  index_eq_winding :
+    (W : WindingNumberDatum I N ω) :=
+  {regionOf : State → Region //
     ∀ x : State,
-      K.index x = W.winding (regionOf x)
+      K.index x = W.winding (regionOf x)}
 
 namespace ConstructiveResidueReadout
 
@@ -657,6 +653,21 @@ variable
     {W : WindingNumberDatum I N ω}
 
 variable (R : ConstructiveResidueReadout K I N ω W)
+
+abbrev regionOf : State → Region := R.1
+
+theorem index_eq_winding
+    (x : State) :
+    K.index x = W.winding (R.regionOf x) :=
+  R.2 x
+
+def mk
+    (regionOf : State → Region)
+    (index_eq_winding :
+      ∀ x : State,
+        K.index x = W.winding (regionOf x)) :
+    ConstructiveResidueReadout K I N ω W :=
+  ⟨regionOf, index_eq_winding⟩
 
 /--
 Nonzero boundary residue obstructs relaxation into the flat sector.

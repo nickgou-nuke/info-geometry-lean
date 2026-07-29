@@ -36,15 +36,25 @@ open TKKConformalClosure
 
 /-! ## 1. Scalarization of TKK Ricci flux -/
 
-/--
-A scalar readout of a geometric/Ricci-flux value.
-
-This is the place where a trace, state, contraction, observer, supertrace, or
-renormalized scalar readout enters.
+/-!
+The scalar readout is already a Mathlib linear map.  The former one-field
+record added no semantics, so the maintained carrier is the linear map itself.
 -/
-structure GeometryScalarReadout
-    (Geometry : Type*) [AddCommGroup Geometry] [Module ℝ Geometry] where
-  scalar : Geometry →ₗ[ℝ] ℝ
+abbrev GeometryScalarReadout
+    (Geometry : Type*) [AddCommGroup Geometry] [Module ℝ Geometry] :=
+  Geometry →ₗ[ℝ] ℝ
+
+namespace GeometryScalarReadout
+
+variable {Geometry : Type*} [AddCommGroup Geometry] [Module ℝ Geometry]
+
+abbrev scalar (S : GeometryScalarReadout Geometry) : Geometry →ₗ[ℝ] ℝ :=
+  S
+
+abbrev mk (scalar : Geometry →ₗ[ℝ] ℝ) : GeometryScalarReadout Geometry :=
+  scalar
+
+end GeometryScalarReadout
 
 /-- Scalarized TKK Ricci flux. -/
 def scalarTKKRicciFlux

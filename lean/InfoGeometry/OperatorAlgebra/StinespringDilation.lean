@@ -229,15 +229,31 @@ theorem bregmanHeatLoss_eq_zero_of_zero_hiddenLeak
 
 /-! ## 5. Hidden information readout -/
 
-/--
-A hidden-information readout on the environment/commutant carrier.
+/-!
+The hidden-information readout is a positive function on the environment.
+The subtype keeps the function as the carrier and stores only its positivity
+proof, rather than introducing a duplicate record wrapper.
 -/
-structure HiddenInformationReadout
-    (Env : Type*) where
-  hiddenInfo : Env → ℝ
+def HiddenInformationReadout (Env : Type*) :=
+  {f : Env → ℝ // ∀ e : Env, 0 ≤ f e}
 
-  nonneg :
-    ∀ e : Env, 0 ≤ hiddenInfo e
+namespace HiddenInformationReadout
+
+variable {Env : Type*}
+
+abbrev hiddenInfo (I : HiddenInformationReadout Env) : Env → ℝ :=
+  I.1
+
+theorem nonneg (I : HiddenInformationReadout Env) (e : Env) :
+    0 ≤ I.hiddenInfo e :=
+  I.2 e
+
+def mk (hiddenInfo : Env → ℝ)
+    (nonneg : ∀ e : Env, 0 ≤ hiddenInfo e) :
+    HiddenInformationReadout Env :=
+  ⟨hiddenInfo, nonneg⟩
+
+end HiddenInformationReadout
 
 /--
 Hidden information associated to a system state through a dilation.

@@ -65,20 +65,35 @@ theorem projectiveArithmeticShape_scale_counts
 A readout of arithmetic shapes which is invariant under Weyl rescaling of the
 count profile.
 -/
-structure ScaleInvariantReadout where
-  /-- Shape/core readout. -/
-  readout : CountProfile → Finset ℕ → ℝ → ℝ
-
-  /-- Weyl-scale invariance under nonzero global rescaling of counts. -/
-  scale_invariant :
+def ScaleInvariantReadout :=
+  {readout : CountProfile → Finset ℕ → ℝ → ℝ //
     ∀ (counts : CountProfile) (support : Finset ℕ) (u c : ℝ),
       c ≠ 0 →
         readout (fun n => c * counts n) support u =
-          readout counts support u
+          readout counts support u}
 
 namespace ScaleInvariantReadout
 
 variable (R : ScaleInvariantReadout)
+
+abbrev readout : CountProfile → Finset ℕ → ℝ → ℝ := R.1
+
+theorem scale_invariant
+    (counts : CountProfile) (support : Finset ℕ) (u c : ℝ)
+    (hc : c ≠ 0) :
+    R.readout (fun n => c * counts n) support u =
+      R.readout counts support u :=
+  R.2 counts support u c hc
+
+def mk
+    (readout : CountProfile → Finset ℕ → ℝ → ℝ)
+    (scale_invariant :
+      ∀ (counts : CountProfile) (support : Finset ℕ) (u c : ℝ),
+        c ≠ 0 →
+          readout (fun n => c * counts n) support u =
+            readout counts support u) :
+    ScaleInvariantReadout :=
+  ⟨readout, scale_invariant⟩
 
 /-- Re-export scale invariance for a supplied shape/core readout. -/
 theorem readout_scale_invariant
@@ -96,27 +111,51 @@ end ScaleInvariantReadout
 A pairwise readout of arithmetic shapes which is invariant under independent
 nonzero Weyl rescaling of either count profile.
 -/
-structure PairScaleInvariantReadout where
-  /-- Pairwise shape/core readout. -/
-  readout : CountProfile → CountProfile → Finset ℕ → ℝ → ℝ
-
-  /-- Left profile Weyl-scale invariance. -/
-  scale_invariant_left :
-    ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+def PairScaleInvariantReadout :=
+  {readout : CountProfile → CountProfile → Finset ℕ → ℝ → ℝ //
+    (∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
       c ≠ 0 →
         readout (fun n => c * counts₁ n) counts₂ support u =
-          readout counts₁ counts₂ support u
-
-  /-- Right profile Weyl-scale invariance. -/
-  scale_invariant_right :
-    ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+          readout counts₁ counts₂ support u) ∧
+    (∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
       c ≠ 0 →
         readout counts₁ (fun n => c * counts₂ n) support u =
-          readout counts₁ counts₂ support u
+          readout counts₁ counts₂ support u)}
 
 namespace PairScaleInvariantReadout
 
 variable (R : PairScaleInvariantReadout)
+
+abbrev readout : CountProfile → CountProfile → Finset ℕ → ℝ → ℝ := R.1
+
+theorem scale_invariant_left
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ)
+    (hc : c ≠ 0) :
+    R.readout (fun n => c * counts₁ n) counts₂ support u =
+      R.readout counts₁ counts₂ support u :=
+  R.2.1 counts₁ counts₂ support u c hc
+
+theorem scale_invariant_right
+    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ)
+    (hc : c ≠ 0) :
+    R.readout counts₁ (fun n => c * counts₂ n) support u =
+      R.readout counts₁ counts₂ support u :=
+  R.2.2 counts₁ counts₂ support u c hc
+
+def mk
+    (readout : CountProfile → CountProfile → Finset ℕ → ℝ → ℝ)
+    (scale_invariant_left :
+      ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+        c ≠ 0 →
+          readout (fun n => c * counts₁ n) counts₂ support u =
+            readout counts₁ counts₂ support u)
+    (scale_invariant_right :
+      ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+        c ≠ 0 →
+          readout counts₁ (fun n => c * counts₂ n) support u =
+            readout counts₁ counts₂ support u) :
+    PairScaleInvariantReadout :=
+  ⟨readout, ⟨scale_invariant_left, scale_invariant_right⟩⟩
 
 /-- Re-export left scale invariance. -/
 theorem readout_scale_invariant_left
@@ -169,14 +208,12 @@ theorem projectiveItakuraSaitoDistance_scale_right
   rw [projectiveArithmeticShape_scale_counts counts₂ support u c hc]
 
 /-- Itakura-Saito distance as a pairwise scale-invariant shape readout. -/
-def itakuraSaitoDistanceReadout : PairScaleInvariantReadout where
-  readout := projectiveItakuraSaitoDistance
-  scale_invariant_left := by
+def itakuraSaitoDistanceReadout : PairScaleInvariantReadout :=
+  PairScaleInvariantReadout.mk projectiveItakuraSaitoDistance (by
     intro counts₁ counts₂ support u c hc
-    exact projectiveItakuraSaitoDistance_scale_left counts₁ counts₂ support u c hc
-  scale_invariant_right := by
+    exact projectiveItakuraSaitoDistance_scale_left counts₁ counts₂ support u c hc) (by
     intro counts₁ counts₂ support u c hc
-    exact projectiveItakuraSaitoDistance_scale_right counts₁ counts₂ support u c hc
+    exact projectiveItakuraSaitoDistance_scale_right counts₁ counts₂ support u c hc)
 
 /-! ## 3. Weyl-gauge KL decomposition witness -/
 

@@ -495,15 +495,35 @@ An invariant predicate on the operator algebra.
 Examples: defect loci, nilpotent loci, regular loci, support loci,
 spectral-branch predicates.
 -/
-structure InvariantPredicate
+def InvariantPredicate
     {G Op : Type*}
     [Group G] [Ring Op]
-    (α : SymmetryAction G Op) where
-  pred : Op → Prop
-
-  invariant :
+    (α : SymmetryAction G Op) :=
+  {pred : Op → Prop //
     ∀ g : G, ∀ x : Op,
-      pred (α.act g x) ↔ pred x
+      pred (α.act g x) ↔ pred x}
+
+namespace InvariantPredicate
+
+variable {G Op : Type*} [Group G] [Ring Op]
+variable {α : SymmetryAction G Op}
+variable (P : InvariantPredicate α)
+
+abbrev pred : Op → Prop := P.1
+
+theorem invariant
+    (g : G) (x : Op) :
+    P.pred (α.act g x) ↔ P.pred x :=
+  P.2 g x
+
+def mk
+    (pred : Op → Prop)
+    (invariant : ∀ g : G, ∀ x : Op,
+      pred (α.act g x) ↔ pred x) :
+    InvariantPredicate α :=
+  ⟨pred, invariant⟩
+
+end InvariantPredicate
 
 /--
 An invariant readout is a coordinate-independent observable of the operator
@@ -512,32 +532,74 @@ algebra.
 Examples: trace-like quantities, index-like quantities, spectral multiplicities,
 dimension readouts, entropy readouts.
 -/
-structure InvariantReadout
+def InvariantReadout
     {G : Type uG} {Op : Type uOp}
     [Group G] [Ring Op]
     (α : SymmetryAction G Op)
-    (β : Type uβ) where
-  read : Op → β
-
-  invariant :
+    (β : Type uβ) :=
+  {read : Op → β //
     ∀ g : G, ∀ x : Op,
-      read (α.act g x) = read x
+      read (α.act g x) = read x}
+
+namespace InvariantReadout
+
+variable {G : Type uG} {Op : Type uOp}
+variable [Group G] [Ring Op]
+variable {α : SymmetryAction G Op} {β : Type uβ}
+variable (R : InvariantReadout α β)
+
+abbrev read : Op → β := R.1
+
+theorem invariant
+    (g : G) (x : Op) :
+    R.read (α.act g x) = R.read x :=
+  R.2 g x
+
+def mk
+    (read : Op → β)
+    (invariant : ∀ g : G, ∀ x : Op,
+      read (α.act g x) = read x) :
+    InvariantReadout α β :=
+  ⟨read, invariant⟩
+
+end InvariantReadout
 
 /--
 An invariant binary pairing.
 
 Examples: trace pairings, cyclic cocycles, metric pairings, intersection forms.
 -/
-structure InvariantPairing
+def InvariantPairing
     {G : Type uG} {Op : Type uOp}
     [Group G] [Ring Op]
     (α : SymmetryAction G Op)
-    (β : Type uβ) where
-  pair : Op → Op → β
-
-  invariant :
+    (β : Type uβ) :=
+  {pair : Op → Op → β //
     ∀ g : G, ∀ x y : Op,
-      pair (α.act g x) (α.act g y) = pair x y
+      pair (α.act g x) (α.act g y) = pair x y}
+
+namespace InvariantPairing
+
+variable {G : Type uG} {Op : Type uOp}
+variable [Group G] [Ring Op]
+variable {α : SymmetryAction G Op} {β : Type uβ}
+variable (P : InvariantPairing α β)
+
+abbrev pair : Op → Op → β := P.1
+
+theorem invariant
+    (g : G) (x y : Op) :
+    P.pair (α.act g x) (α.act g y) = P.pair x y :=
+  P.2 g x y
+
+def mk
+    (pair : Op → Op → β)
+    (invariant : ∀ g : G, ∀ x y : Op,
+      pair (α.act g x) (α.act g y) = pair x y) :
+    InvariantPairing α β :=
+  ⟨pair, invariant⟩
+
+end InvariantPairing
 
 /--
 A covariant readout between two symmetry representations.
@@ -545,16 +607,38 @@ A covariant readout between two symmetry representations.
 This is the correct abstraction when a quantity transforms naturally rather
 than being fixed.
 -/
-structure CovariantReadout
+def CovariantReadout
     {G : Type uG} {Op : Type uOp} {β : Type uβ}
     [Group G] [Ring Op]
     (α : SymmetryAction G Op)
-    (targetAct : G → β → β) where
-  read : Op → β
-
-  covariance :
+    (targetAct : G → β → β) :=
+  {read : Op → β //
     ∀ g : G, ∀ x : Op,
-      read (α.act g x) = targetAct g (read x)
+      read (α.act g x) = targetAct g (read x)}
+
+namespace CovariantReadout
+
+variable {G : Type uG} {Op : Type uOp} {β : Type uβ}
+variable [Group G] [Ring Op]
+variable {α : SymmetryAction G Op}
+variable {targetAct : G → β → β}
+variable (R : CovariantReadout α targetAct)
+
+abbrev read : Op → β := R.1
+
+theorem covariance
+    (g : G) (x : Op) :
+    R.read (α.act g x) = targetAct g (R.read x) :=
+  R.2 g x
+
+def mk
+    (read : Op → β)
+    (covariance : ∀ g : G, ∀ x : Op,
+      read (α.act g x) = targetAct g (read x)) :
+    CovariantReadout α targetAct :=
+  ⟨read, covariance⟩
+
+end CovariantReadout
 
 /-! ## 6. Defect loci as invariant subobjects inside one ambient algebra -/
 
@@ -564,15 +648,35 @@ A defect locus is an invariant predicate inside the ambient operator algebra.
 The defect is not a new universe or a new algebra. It is a symmetry-stable
 subobject of the represented operator algebra.
 -/
-structure DefectLocus
+def DefectLocus
     {G : Type uG} {Op : Type uOp}
     [Group G] [Ring Op]
-    (α : SymmetryAction G Op) where
-  locus : Op → Prop
-
-  invariant :
+    (α : SymmetryAction G Op) :=
+  {locus : Op → Prop //
     ∀ g : G, ∀ x : Op,
-      locus (α.act g x) ↔ locus x
+      locus (α.act g x) ↔ locus x}
+
+namespace DefectLocus
+
+variable {G : Type uG} {Op : Type uOp} [Group G] [Ring Op]
+variable {α : SymmetryAction G Op}
+variable (D : DefectLocus α)
+
+abbrev locus : Op → Prop := D.1
+
+theorem invariant
+    (g : G) (x : Op) :
+    D.locus (α.act g x) ↔ D.locus x :=
+  D.2 g x
+
+def mk
+    (locus : Op → Prop)
+    (invariant : ∀ g : G, ∀ x : Op,
+      locus (α.act g x) ↔ locus x) :
+    DefectLocus α :=
+  ⟨locus, invariant⟩
+
+end DefectLocus
 
 /-- A defect locus supported by an invariant projector. -/
 structure ProjectorSupportedDefect
@@ -1104,13 +1208,11 @@ end EquivariantAlgebraMap
 An invariant readout is a scalar/categorical/geometric observable that is
 unchanged by the chosen symmetry action.
 -/
-structure InvariantReadout
-    (Out : Type uOut) where
-  read : Op → Out
-
-  invariant :
+def InvariantReadout
+    (Out : Type uOut) :=
+  {read : Op → Out //
     ∀ (g : G) (x : Op),
-      read (S.act g x) = read x
+      read (S.act g x) = read x}
 
 namespace InvariantReadout
 
@@ -1118,19 +1220,33 @@ variable
     {Out : Type uOut}
     (R : S.InvariantReadout Out)
 
+abbrev read : Op → Out := R.1
+
+theorem invariant
+    (g : G) (x : Op) :
+    R.1 (S.act g x) = R.1 x :=
+  R.2 g x
+
+def mk
+    (read : Op → Out)
+    (invariant : ∀ (g : G) (x : Op),
+      read (S.act g x) = read x) :
+    S.InvariantReadout Out :=
+  ⟨read, invariant⟩
+
 /-- Re-export the readout invariance law. -/
 theorem apply_action
     (g : G)
     (x : Op) :
-    R.read (S.act g x) = R.read x :=
-  R.invariant g x
+    R.1 (S.act g x) = R.1 x :=
+  R.2 g x
 
 /-- Invariant elements evaluate trivially under the symmetry action. -/
 theorem apply_invariant
     {x : Op}
     (hx : S.IsInvariant x)
     (g : G) :
-    R.read (S.act g x) = R.read x := by
+    R.1 (S.act g x) = R.1 x := by
   rw [hx g]
 
 end InvariantReadout

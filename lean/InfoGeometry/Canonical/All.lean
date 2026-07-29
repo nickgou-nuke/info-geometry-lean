@@ -361,6 +361,7 @@ import InfoGeometry.Canonical.HaagKastlerReehSchliederAQFT
 import InfoGeometry.Canonical.BisognanoWichmannUnruhAQFT
 import InfoGeometry.Canonical.HaPPYPerfectTensorHolography
 import InfoGeometry.Canonical.DiscreteGaussBonnetKleinBridge
+import InfoGeometry.Canonical.KasparovKHomologyProductBridge
 import InfoGeometry.Canonical.NonAbelianBerryPhaseBridge
 import InfoGeometry.Canonical.AreaLawEntropyViolationBridge
 import InfoGeometry.Canonical.OTOCScramblingChaosBridge

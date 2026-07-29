@@ -86,14 +86,17 @@ The carrier `E` is arbitrary. This is explicit bridge data; it prevents the
 false theorem "incompressibility alone implies normality".
 -/
 @[rep_depth transport]
-structure CramerRaoNegLogVolumeAnomalyReadout
-    (CI : ConformalInference E) (H : HessianGeometry E) where
-  chiralScale_eq_metricVolumePotential :
-    ∀ x : E, CI.chiralScale = souriauFisherMetricVolumePotential H x
+abbrev CramerRaoNegLogVolumeAnomalyReadout
+    (CI : ConformalInference E) (H : HessianGeometry E) : Prop :=
+  ∀ x : E, CI.chiralScale = souriauFisherMetricVolumePotential H x
 
 namespace CramerRaoNegLogVolumeAnomalyReadout
 
 variable {CI : ConformalInference E} {H : HessianGeometry E}
+
+abbrev chiralScale_eq_metricVolumePotential
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H) :
+    ∀ x : E, CI.chiralScale = souriauFisherMetricVolumePotential H x := R
 
 /--
 Proof-carrying witness for the structured projector hypotheses used by the

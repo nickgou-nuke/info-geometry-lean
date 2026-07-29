@@ -30,17 +30,23 @@ The field `andreev_resonance` is the empirical/topological calibration linking
 the scalar Andreev probability to the Drazin anomaly readout. It is deliberately
 proof-carrying data, not a primitive declaration.
 -/
-structure AndreevDrazinReadout (Op : SpinorOp) (k : ℕ) where
-  anomaly : DrazinAnomalyReadout Gamma_11 Op k
-  andreevProbability : ℝ
-  andreevProbability_nonneg : 0 ≤ andreevProbability
-  andreevProbability_le_one : andreevProbability ≤ 1
-  andreev_resonance :
-    andreevProbability = |(drazin_anomaly_index anomaly : ℝ)|
+abbrev AndreevDrazinReadout (Op : SpinorOp) (k : ℕ) : Type :=
+  Σ' anomaly : DrazinAnomalyReadout Gamma_11 Op k,
+    Σ' andreevProbability : ℝ,
+      0 ≤ andreevProbability ∧
+        andreevProbability ≤ 1 ∧
+          andreevProbability = |(drazin_anomaly_index anomaly : ℝ)|
 
 namespace AndreevDrazinReadout
 
 variable {Op : SpinorOp} {k : ℕ} (R : AndreevDrazinReadout Op k)
+
+abbrev anomaly : DrazinAnomalyReadout Gamma_11 Op k := R.1
+abbrev andreevProbability : ℝ := R.2.1
+abbrev andreevProbability_nonneg : 0 ≤ R.andreevProbability := R.2.2.1
+abbrev andreevProbability_le_one : R.andreevProbability ≤ 1 := R.2.2.2.1
+abbrev andreev_resonance :
+    R.andreevProbability = |(drazin_anomaly_index R.anomaly : ℝ)| := R.2.2.2.2
 
 /-- The readout exposes the Drazin-defect witness used by the anomaly packet. -/
 theorem is_drazin_defective (R : AndreevDrazinReadout Op k) :

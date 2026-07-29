@@ -169,18 +169,23 @@ Proof-carrying boundary/Cuntz branch packet.
 The symbolic branch maps are front-prefix maps.  The algebraic branch operators
 are the existing abstract Cuntz `O₂` operators.
 -/
-structure BoundaryCuntzShiftPacket
-    (Op : Type*) [Ring Op] [StarRing Op] where
-  cuntz : CuntzO2Carrier Op
-  leftBoundary : CantorBoundary → CantorBoundary
-  rightBoundary : CantorBoundary → CantorBoundary
-  leftBoundary_eq : leftBoundary = leftShift
-  rightBoundary_eq : rightBoundary = rightShift
+abbrev BoundaryCuntzShiftPacket
+    (Op : Type*) [Ring Op] [StarRing Op] : Type _ :=
+  Σ' _cuntz : CuntzO2Carrier Op,
+    Σ' leftBoundary : CantorBoundary → CantorBoundary,
+      Σ' rightBoundary : CantorBoundary → CantorBoundary,
+        leftBoundary = leftShift ∧ rightBoundary = rightShift
 
 namespace BoundaryCuntzShiftPacket
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (P : BoundaryCuntzShiftPacket Op)
+
+abbrev cuntz : CuntzO2Carrier Op := P.1
+abbrev leftBoundary : CantorBoundary → CantorBoundary := P.2.1
+abbrev rightBoundary : CantorBoundary → CantorBoundary := P.2.2.1
+abbrev leftBoundary_eq : P.leftBoundary = leftShift := P.2.2.2.1
+abbrev rightBoundary_eq : P.rightBoundary = rightShift := P.2.2.2.2
 
 /-- The left algebraic Cuntz branch operator. -/
 def leftOperator : Op :=

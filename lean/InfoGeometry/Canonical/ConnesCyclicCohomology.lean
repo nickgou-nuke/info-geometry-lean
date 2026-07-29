@@ -18,14 +18,18 @@ namespace ConnesCyclic
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
 /-- Cyclic Cochain Boundary Operator b: C^k → C^(k+1) satisfying b² = 0. -/
-structure CyclicBoundaryOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
-  b : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ
-  b_add : ∀ X Y, b (X + Y) = b X + b Y
-  b_nilpotent : ∀ X, b (b X) = 0
+abbrev CyclicBoundaryOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] : Type _ :=
+  Σ' b : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ,
+    (∀ X Y, b (X + Y) = b X + b Y) ∧
+      ∀ X, b (b X) = 0
 
 namespace CyclicBoundaryOperator
 
 variable (boundary : CyclicBoundaryOperator n)
+
+abbrev b : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ := boundary.1
+abbrev b_add : ∀ X Y, boundary.b (X + Y) = boundary.b X + boundary.b Y := boundary.2.1
+abbrev b_nilpotent : ∀ X, boundary.b (boundary.b X) = 0 := boundary.2.2
 
 /-- **Theorem**: Connes Cyclic Boundary Nilpotency b(b(X)) = 0. -/
 theorem boundary_nilpotent_sq (X : Matrix (Fin n) (Fin n) ℂ) :

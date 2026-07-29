@@ -146,4 +146,33 @@ theorem modelVolumes_sum_one
     _ = 1 := by
           simp [Fintype.card_ne_zero]
 
+theorem responsibility_ratio_eq_prior_ratio_mul_exp_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    (ε : ℝ) (m n : ModelId) (i : Data) :
+    responsibility F ε m i / responsibility F ε n i =
+      (F.prior m / F.prior n) *
+        Real.exp (-(F.energy m i - F.energy n i) / ε) := by
+  unfold responsibility
+  have hZ : modelPartition F ε i ≠ 0 :=
+    (modelPartition_pos F ε i).ne'
+  have hm : F.prior m ≠ 0 := (F.prior_pos m).ne'
+  have hn : F.prior n ≠ 0 := (F.prior_pos n).ne'
+  field_simp [hZ, hm, hn, Real.exp_ne_zero]
+  rw [← Real.exp_add]
+  congr 1
+  ring_nf
+
+theorem responsibility_ratio_le_prior_ratio_mul_exp_neg_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    {ε δ : ℝ} (hε : 0 < ε) (m n : ModelId) (i : Data)
+    (hgap : F.energy n i + δ ≤ F.energy m i) :
+    responsibility F ε m i / responsibility F ε n i ≤
+      (F.prior m / F.prior n) * Real.exp (-δ / ε) := by
+  rw [responsibility_ratio_eq_prior_ratio_mul_exp_gap F ε m n i]
+  apply mul_le_mul_of_nonneg_left
+  · apply Real.exp_le_exp.mpr
+    apply (div_le_div_iff_of_pos_right hε).2
+    linarith
+  · exact (div_nonneg (F.prior_pos m).le (F.prior_pos n).le)
+
 end InfoGeometry.Inference.FiniteGibbs

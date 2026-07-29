@@ -145,13 +145,19 @@ This layer only records the two complex amplitudes.  Equations connecting these
 amplitudes to a concrete dielectric/interface model belong to the corresponding
 model theorem, not to a generic proposition/evidence field.
 -/
-structure FresnelCoefficientDatum where
-  /-- The `s`-polarized reflection amplitude. -/
-  r_s : ℂ
-  /-- The `p`-polarized reflection amplitude. -/
-  r_p : ℂ
+def FresnelCoefficientDatum :=
+  ℂ × ℂ
 
 namespace FresnelCoefficientDatum
+
+def r_s (F : FresnelCoefficientDatum) : ℂ :=
+  F.1
+
+def r_p (F : FresnelCoefficientDatum) : ℂ :=
+  F.2
+
+def mk (r_s r_p : ℂ) : FresnelCoefficientDatum :=
+  (r_s, r_p)
 
 /--
 Brewster condition: the `p` reflected channel vanishes.

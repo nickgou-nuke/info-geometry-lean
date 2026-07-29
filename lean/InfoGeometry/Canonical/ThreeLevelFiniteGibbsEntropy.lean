@@ -76,9 +76,10 @@ theorem outerWeight_pos
   unfold outerWeight
   exact div_pos (outerNumerator_pos State super energy particleNumber superNumber
     β μ ν fiber_nonempty g)
-    (grandPartition_pos State super energy particleNumber superNumber β μ ν fiber_nonempty)
+      (grandPartition_pos State super energy particleNumber superNumber β μ ν fiber_nonempty)
 
 /-- The product-form joint weight is the product of the three normalized layers. -/
+omit [Nonempty SuperSector] [Nonempty Sector] [∀ (s : Sector), Nonempty (State s)] in
 theorem layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight
     (super : Sector → SuperSector)
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
@@ -161,6 +162,137 @@ theorem sum_layeredJointWeight_eq_one
     _ = 1 := by
           exact sum_outerWeight_eq_one State super energy particleNumber superNumber β μ ν
             fiber_nonempty
+
+/-- Entropy of the full three-level joint distribution. -/
+noncomputable def jointEntropy
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ) : ℝ :=
+  -∑ g, ∑ s, ∑ x, layeredJointWeight State super energy particleNumber superNumber β μ ν g s x *
+    Real.log (layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)
+
+/-- The full joint entropy splits into outer, fiber, and conditional contributions. -/
+theorem jointEntropy_eq_outerEntropy_add_expectedFiberEntropy_add_expectedConditionalEntropy
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (fiber_nonempty : ∀ g, (superFiber super g).Nonempty) :
+    jointEntropy State super energy particleNumber superNumber β μ ν =
+      outerEntropy State super energy particleNumber superNumber β μ ν +
+        ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberEntropy State super energy particleNumber β μ g +
+        ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          (∑ s, fiberSectorWeight State super energy particleNumber β μ g s *
+            conditionalEntropy State energy β s) := by
+  classical
+  unfold jointEntropy outerEntropy fiberEntropy conditionalEntropy finiteEntropy
+  have hinner :
+      ∀ g s,
+        ∑ x, layeredJointWeight State super energy particleNumber superNumber β μ ν g s x *
+          Real.log (layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)
+          =
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s *
+            Real.log (outerWeight State super energy particleNumber superNumber β μ ν g) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s *
+            Real.log (fiberSectorWeight State super energy particleNumber β μ g s) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s *
+            (∑ x, conditionalWeight State energy β s x *
+              Real.log (conditionalWeight State energy β s x)) := by
+    intro g s
+    have houter : 0 < outerWeight State super energy particleNumber superNumber β μ ν g :=
+      outerWeight_pos State super energy particleNumber superNumber β μ ν fiber_nonempty g
+    have hfiber : 0 < fiberSectorWeight State super energy particleNumber β μ g s :=
+      fiberSectorWeight_pos State super energy particleNumber β μ fiber_nonempty g s
+    have hcond : ∀ x, 0 < conditionalWeight State energy β s x :=
+      fun x => conditionalWeight_pos State energy β s x
+    calc
+      ∑ x, layeredJointWeight State super energy particleNumber superNumber β μ ν g s x *
+          Real.log (layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)
+          =
+          ∑ x,
+            (outerWeight State super energy particleNumber superNumber β μ ν g *
+              fiberSectorWeight State super energy particleNumber β μ g s *
+              conditionalWeight State energy β s x) *
+              Real.log (outerWeight State super energy particleNumber superNumber β μ ν g *
+                fiberSectorWeight State energy particleNumber β μ g s *
+                conditionalWeight State energy β s x) := by
+                  apply Finset.sum_congr rfl
+                  intro x hx
+                  rw [layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight]
+      _ =
+          ∑ x,
+            outerWeight State super energy particleNumber superNumber β μ ν g *
+              fiberSectorWeight State super energy particleNumber β μ g s *
+              conditionalWeight State energy β s x *
+              (Real.log (outerWeight State super energy particleNumber superNumber β μ ν g) +
+                Real.log (fiberSectorWeight State energy particleNumber β μ g s) +
+                Real.log (conditionalWeight State energy β s x)) := by
+                  apply Finset.sum_congr rfl
+                  intro x hx
+                  rw [Real.log_mul (mul_pos houter hfiber) (hcond x)]
+                  rw [Real.log_mul houter hfiber]
+                  ring
+      _ =
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s *
+            Real.log (outerWeight State super energy particleNumber superNumber β μ ν g) *
+              (∑ x, conditionalWeight State energy β s x) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State energy particleNumber β μ g s *
+            Real.log (fiberSectorWeight State energy particleNumber β μ g s) *
+              (∑ x, conditionalWeight State energy β s x) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State energy particleNumber β μ g s *
+              (∑ x, conditionalWeight State energy β s x *
+                Real.log (conditionalWeight State energy β s x)) := by
+                  rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+                  congr
+                  · rw [Finset.mul_sum]
+                  · congr
+                    · rw [Finset.mul_sum]
+                    · rw [Finset.mul_sum]
+  calc
+    jointEntropy State super energy particleNumber superNumber β μ ν
+        =
+        -∑ g, ∑ s,
+          (outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s *
+            Real.log (outerWeight State super energy particleNumber superNumber β μ ν g) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State energy particleNumber β μ g s *
+            Real.log (fiberSectorWeight State energy particleNumber β μ g s) +
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State energy particleNumber β μ g s *
+              (∑ x, conditionalWeight State energy β s x *
+                Real.log (conditionalWeight State energy β s x))) := by
+            simp [jointEntropy, hinner]
+    _ =
+        -∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          Real.log (outerWeight State super energy particleNumber superNumber β μ ν g) +
+        -∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          (∑ s, fiberSectorWeight State energy particleNumber β μ g s *
+            Real.log (fiberSectorWeight State energy particleNumber β μ g s)) +
+        -∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          (∑ s, fiberSectorWeight State energy particleNumber β μ g s *
+            (∑ x, conditionalWeight State energy β s x *
+              Real.log (conditionalWeight State energy β s x))) := by
+            rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+            congr
+            · rw [Finset.sum_mul]
+              simp
+            · congr
+              · rw [Finset.sum_mul]
+              · rw [Finset.sum_mul]
+    _ = outerEntropy State super energy particleNumber superNumber β μ ν +
+        ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberEntropy State super energy particleNumber β μ g +
+        ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          (∑ s, fiberSectorWeight State super energy particleNumber β μ g s *
+            conditionalEntropy State energy β s) := by
+            simp [outerEntropy, fiberEntropy, conditionalEntropy, finiteEntropy]
 
 end ThreeLevelFiniteGibbs
 

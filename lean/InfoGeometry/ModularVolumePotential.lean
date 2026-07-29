@@ -31,19 +31,12 @@ Classical Radon–Nikodym potential packet.
 The field `logPotential` is the signed logarithmic density (surprisal) and
 `relativeDensity` is the raw density with respect to a reference volume.
 -/
-structure LogRadonNikodymPacket (SampleSpace : Type*) [MeasurableSpace SampleSpace] where
-  /-- Reference measure `ν` on the common measurable sample space. -/
-  referenceMeasure : MeasureTheory.Measure SampleSpace
-  /-- State measure `μ` on the common measurable sample space. -/
-  stateMeasure : MeasureTheory.Measure SampleSpace
-  /-- Chosen real-valued density representative for `dμ/dν`. -/
-  relativeDensity : SampleSpace → ℝ
-  /-- Log-potential (`−log(dμ/dν)`). -/
-  logPotential : SampleSpace → ℝ
-
-  /-- Signed log law: `logPotential = -log(relativeDensity)`. -/
-  logPotential_eq :
-    ∀ x, logPotential x = -Real.log (relativeDensity x)
+abbrev LogRadonNikodymPacket (SampleSpace : Type*) [MeasurableSpace SampleSpace] : Type _ :=
+  Σ' referenceMeasure : MeasureTheory.Measure SampleSpace,
+    Σ' stateMeasure : MeasureTheory.Measure SampleSpace,
+      Σ' relativeDensity : SampleSpace → ℝ,
+        Σ' logPotential : SampleSpace → ℝ,
+          ∀ x, logPotential x = -Real.log (relativeDensity x)
 
 /--
 Relative surprisal / KL packet.
@@ -52,24 +45,40 @@ Relative surprisal / KL packet.
 `log(dμ/dη)`, and `klReadout` is the corresponding scalar divergence-like
 expectation value.
 -/
-structure RelativeSurprisalPacket
-    (SampleSpace : Type*) [MeasurableSpace SampleSpace] where
-  /-- Source measure μ of the KL comparison. -/
-  sourceMeasure : MeasureTheory.Measure SampleSpace
-  /-- Reference measure η of the KL comparison. -/
-  referenceMeasure : MeasureTheory.Measure SampleSpace
-  /-- Relative density `dμ/dη` on the common sample space. -/
-  relativeDensity : SampleSpace → ENNReal
-  /-- The source measure is obtained from η by this density. -/
-  sourceMeasure_eq_withDensity :
-    sourceMeasure = referenceMeasure.withDensity relativeDensity
-  /-- Relative log-density on sample points (`-log(dμ/dη)`). -/
-  relativeLogPotential : SampleSpace → ℝ
-  /-- Signed logarithmic surprisal law. -/
-  relativeLogPotential_eq : ∀ x,
-    relativeLogPotential x = -Real.log ((relativeDensity x).toReal)
-  /-- Scalar divergence readout downstream of the operator-valued density. -/
-  klReadout : ℝ
+abbrev RelativeSurprisalPacket
+    (SampleSpace : Type*) [MeasurableSpace SampleSpace] : Type _ :=
+  Σ' sourceMeasure : MeasureTheory.Measure SampleSpace,
+    Σ' referenceMeasure : MeasureTheory.Measure SampleSpace,
+      Σ' relativeDensity : SampleSpace → ENNReal,
+        Σ' sourceMeasure_eq_withDensity :
+          sourceMeasure = referenceMeasure.withDensity relativeDensity,
+          Σ' relativeLogPotential : SampleSpace → ℝ,
+            Σ' relativeLogPotential_eq :
+              (∀ x, relativeLogPotential x =
+                -Real.log ((relativeDensity x).toReal)),
+              ℝ
+
+namespace RelativeSurprisalPacket
+
+abbrev sourceMeasure {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) : MeasureTheory.Measure SampleSpace := P.1
+abbrev referenceMeasure {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) : MeasureTheory.Measure SampleSpace := P.2.1
+abbrev relativeDensity {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) : SampleSpace → ENNReal := P.2.2.1
+abbrev sourceMeasure_eq_withDensity {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) :
+    P.1 = P.2.1.withDensity P.2.2.1 := P.2.2.2.1
+abbrev relativeLogPotential {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) : SampleSpace → ℝ := P.2.2.2.2.1
+abbrev relativeLogPotential_eq {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) :
+    ∀ x, P.2.2.2.2.1 x =
+      -Real.log ((P.2.2.1 x).toReal) := P.2.2.2.2.2.1
+abbrev klReadout {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : RelativeSurprisalPacket SampleSpace) : ℝ := P.2.2.2.2.2.2
+
+end RelativeSurprisalPacket
 
 /--
 Finite/free-energy packet.
@@ -176,25 +185,29 @@ These structures model the modular spectral partition function at the witness le
 `Z = Σ e^{-βE} dν_H(E)` on a finite spectrum index.
 -/
 /-- Spectral data with explicit modular tilt. -/
-structure SpectralBoltzmannPacket (S : Type*) where
-  /-- Inverse temperature β. -/
-  inverseTemperature : ℝ
-  /-- Energy/spectral parameter (`E`). -/
-  spectralEnergy : S → ℝ
-  /-- Geometric/spectral volume (`dν_H` density on the chosen model index). -/
-  spectralVolume : S → ℝ
-  /-- Modular potential used in the tilt (`Φ_β`). -/
-  modularPotential : S → ℝ
-  /-- Boltzmann factor (`e^{-Φ_β}`). -/
-  boltzmannFactor : S → ℝ
-  /-- Modulation law (`Φ_β(s)=β*E(s)`). -/
-  modularPotential_eq :
-    ∀ s : S, modularPotential s = inverseTemperature * spectralEnergy s
-  /-- Explicit factor law field. -/
-  boltzmannFactor_eq :
-    ∀ s : S, boltzmannFactor s = Real.exp (- modularPotential s)
+abbrev SpectralBoltzmannPacket (S : Type*) : Type _ :=
+  Σ' inverseTemperature : ℝ,
+    Σ' spectralEnergy : S → ℝ,
+      Σ' spectralVolume : S → ℝ,
+        Σ' modularPotential : S → ℝ,
+          Σ' boltzmannFactor : S → ℝ,
+            (∀ s : S, modularPotential s = inverseTemperature * spectralEnergy s) ∧
+              ∀ s : S, boltzmannFactor s = Real.exp (- modularPotential s)
 
-/-- Finite spectral partition schema. -/
+namespace SpectralBoltzmannPacket
+
+abbrev inverseTemperature {S : Type*} (Z : SpectralBoltzmannPacket S) : ℝ := Z.1
+abbrev spectralEnergy {S : Type*} (Z : SpectralBoltzmannPacket S) : S → ℝ := Z.2.1
+abbrev spectralVolume {S : Type*} (Z : SpectralBoltzmannPacket S) : S → ℝ := Z.2.2.1
+abbrev modularPotential {S : Type*} (Z : SpectralBoltzmannPacket S) : S → ℝ := Z.2.2.2.1
+abbrev boltzmannFactor {S : Type*} (Z : SpectralBoltzmannPacket S) : S → ℝ := Z.2.2.2.2.1
+abbrev modularPotential_eq {S : Type*} (Z : SpectralBoltzmannPacket S) :
+    ∀ s : S, Z.2.2.2.1 s = Z.1 * Z.2.1 s := Z.2.2.2.2.2.1
+abbrev boltzmannFactor_eq {S : Type*} (Z : SpectralBoltzmannPacket S) :
+    ∀ s : S, Z.2.2.2.2.1 s = Real.exp (- Z.2.2.2.1 s) := Z.2.2.2.2.2.2
+
+end SpectralBoltzmannPacket
+
 structure FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] where
   /-- Spectral tilt data for the model. -/
   spectrum : SpectralBoltzmannPacket S
@@ -224,12 +237,16 @@ theorem finiteSpectralPartitionNormalization
           Z.spectrum.spectralVolume s := by
       refine Finset.sum_congr rfl ?_
       intro s hs
-      rw [Z.spectrum.boltzmannFactor_eq s]
+      change Z.spectrum.2.2.2.2.1 s * Z.spectrum.2.2.1 s =
+        Real.exp (-Z.spectrum.2.2.2.1 s) * Z.spectrum.2.2.1 s
+      rw [SpectralBoltzmannPacket.boltzmannFactor_eq Z.spectrum s]
     _ = ∑ s : S, Real.exp (-(Z.spectrum.inverseTemperature * Z.spectrum.spectralEnergy s)) *
           Z.spectrum.spectralVolume s := by
       refine Finset.sum_congr rfl ?_
       intro s hs
-      rw [Z.spectrum.modularPotential_eq s]
+      change Real.exp (-Z.spectrum.2.2.2.1 s) * Z.spectrum.2.2.1 s =
+        Real.exp (-(Z.spectrum.1 * Z.spectrum.2.1 s)) * Z.spectrum.2.2.1 s
+      rw [SpectralBoltzmannPacket.modularPotential_eq Z.spectrum s]
 
 /-- The capstone normalization schema for finite spectral thermodynamics. -/
 def FiniteSpectralThermodynamicNormalizationSchema (S : Type*) [Fintype S] : Prop :=
@@ -424,6 +441,22 @@ end ModularVolumeBridgePacket
 
 namespace LogRadonNikodymPacket
 
+abbrev referenceMeasure {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) : MeasureTheory.Measure SampleSpace := P.1
+
+abbrev stateMeasure {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) : MeasureTheory.Measure SampleSpace := P.2.1
+
+abbrev relativeDensity {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) : SampleSpace → ℝ := P.2.2.1
+
+abbrev logPotential {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) : SampleSpace → ℝ := P.2.2.2.1
+
+abbrev logPotential_eq {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) :
+    ∀ x, P.2.2.2.1 x = -Real.log (P.2.2.1 x) := P.2.2.2.2
+
 /-- Rewrite `logPotential` as a negative log-density. -/
 @[simp] theorem logPotential_eq_neg_log_density
     {SampleSpace : Type*} [MeasurableSpace SampleSpace]
@@ -455,7 +488,9 @@ namespace SpectralBoltzmannPacket
 theorem boltzmannFactor_eq_exp_neg_beta_energy
     (S : Type*) (Z : SpectralBoltzmannPacket S) (s : S) :
     Z.boltzmannFactor s = Real.exp (-(Z.inverseTemperature * Z.spectralEnergy s)) := by
-  rw [Z.boltzmannFactor_eq, Z.modularPotential_eq]
+  change Z.2.2.2.2.1 s = Real.exp (-(Z.1 * Z.2.1 s))
+  rw [SpectralBoltzmannPacket.boltzmannFactor_eq Z s,
+    SpectralBoltzmannPacket.modularPotential_eq Z s]
 
 end SpectralBoltzmannPacket
 

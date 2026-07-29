@@ -66,12 +66,38 @@ theorem sum_layeredJointWeight_eq_one
       layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)) = 1 := by
   classical
   unfold layeredJointWeight
-  simp_rw [Finset.mul_sum, Finset.sum_mul]
-  rw [sum_conditionalWeight_eq_one State energy β]
-  simp_rw [Finset.sum_mul]
-  rw [sum_fiberSectorWeight_eq_one State super energy particleNumber β μ fiber_nonempty]
-  simp_rw [Finset.sum_mul]
-  rw [sum_outerWeight_eq_one State super energy particleNumber superNumber β μ ν fiber_nonempty]
+  have hinner :
+      ∀ g s,
+        ∑ x, outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberSectorWeight State super energy particleNumber β μ g s *
+          conditionalWeight State energy β s x =
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s := by
+    intro g s
+    rw [Finset.mul_sum]
+    rw [sum_conditionalWeight_eq_one State energy β s]
+    ring
+  calc
+    (∑ g, (superFiber super g).sum (fun s => ∑ x,
+      layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)) =
+        ∑ g, (superFiber super g).sum (fun s =>
+          outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s) := by
+          apply Finset.sum_congr rfl
+          intro g hg
+          apply Finset.sum_congr rfl
+          intro s hs
+          exact hinner g s
+    _ = ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g *
+          (superFiber super g).sum (fun s =>
+            fiberSectorWeight State super energy particleNumber β μ g s) := by
+          simp_rw [Finset.mul_sum]
+    _ = ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g := by
+          rw [sum_fiberSectorWeight_eq_one State super energy particleNumber β μ
+            fiber_nonempty]
+    _ = 1 := by
+          exact sum_outerWeight_eq_one State super energy particleNumber superNumber β μ ν
+            fiber_nonempty
 
 end ThreeLevelFiniteGibbs
 

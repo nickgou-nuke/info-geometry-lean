@@ -74,18 +74,25 @@ stages and an involution operation on the continuum. It mandates that the
 macroscopic Zorn state evaluates inner products of the continuum Cuntz 
 generators identically to the Bost--Connes KMS projection weights.
 -/
-structure ZornBraidKMSState where
-  /-- The Bost--Connes KMS state providing the thermodynamic parameters. -/
-  bcKMS : KMSProjectionState C
-  
-  /-- A macro-state functional on the Zorn continuum. -/
-  zornState : ↑(zornContinuumModule R ZornSequence) → ℝ
-  
-  /-- The index mapping from the Zorn braid stages to the Bost--Connes natural numbers. -/
-  stageIndex : J → ℕ+
-  
-  /-- An involution operation on the macroscopic continuum. -/
-  continuumStar : ↑(zornContinuumModule R ZornSequence) → ↑(zornContinuumModule R ZornSequence)
+abbrev ZornBraidKMSState : Type _ :=
+  KMSProjectionState C ×
+    (↑(zornContinuumModule R ZornSequence) → ℝ) ×
+      (J → ℕ+) ×
+        (↑(zornContinuumModule R ZornSequence) →
+          ↑(zornContinuumModule R ZornSequence))
+
+namespace ZornBraidKMSState
+
+variable (state : ZornBraidKMSState C ZornSequence)
+
+abbrev bcKMS : KMSProjectionState C := state.1
+abbrev zornState : ↑(zornContinuumModule R ZornSequence) → ℝ := state.2.1
+abbrev stageIndex : J → ℕ+ := state.2.2.1
+abbrev continuumStar :
+    ↑(zornContinuumModule R ZornSequence) →
+      ↑(zornContinuumModule R ZornSequence) := state.2.2.2
+
+end ZornBraidKMSState
 
 /-
 The bridge-readout theorem is intentionally not asserted here until the

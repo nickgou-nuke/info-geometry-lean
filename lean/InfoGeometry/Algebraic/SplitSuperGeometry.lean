@@ -214,27 +214,15 @@ This is intentionally not implemented as an explicit determinant on even and
 odd coordinate blocks. That refinement belongs in a later file once a concrete
 splitting or basis has been supplied.
 -/
-structure SuperBerezinianReadout
+abbrev SuperBerezinianReadout
     {A : Type*} [Ring A] [Algebra ℝ A]
-    (P : ParityInvolution A) where
-
-  /-- Berezinian/superdeterminant of a parity-preserving operator. -/
-  ber : Module.End ℝ A → ℝ
-
-  /-- The Berezinian of the identity is one. -/
-  ber_one : ber 1 = 1
-
-  /--
-  Multiplicativity on parity-preserving operators.
-
-  The order is retained for compatibility with noncommutative operator
-  algebras, even though the target is commutative.
-  -/
-  ber_mul_of_parityPreserving :
-    ∀ {S T : Module.End ℝ A},
-      P.ParityPreserving S →
-      P.ParityPreserving T →
-      ber (S * T) = ber S * ber T
+    (P : ParityInvolution A) : Type _ :=
+  Σ' ber : Module.End ℝ A → ℝ,
+    ber 1 = 1 ∧
+      ∀ {S T : Module.End ℝ A},
+        P.ParityPreserving S →
+        P.ParityPreserving T →
+        ber (S * T) = ber S * ber T
 
 
 namespace SuperBerezinianReadout
@@ -242,6 +230,14 @@ namespace SuperBerezinianReadout
 variable
     {A : Type*} [Ring A] [Algebra ℝ A]
     {P : ParityInvolution A}
+
+abbrev ber (B : SuperBerezinianReadout P) : Module.End ℝ A → ℝ := B.1
+abbrev ber_one (B : SuperBerezinianReadout P) : B.1 1 = 1 := B.2.1
+abbrev ber_mul_of_parityPreserving (B : SuperBerezinianReadout P) :
+    ∀ {S T : Module.End ℝ A},
+      P.ParityPreserving S →
+      P.ParityPreserving T →
+      B.1 (S * T) = B.1 S * B.1 T := B.2.2
 
 /--
 Negative logarithmic Berezinian potential.

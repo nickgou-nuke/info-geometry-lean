@@ -53,21 +53,13 @@ This structure mandates that the macroscopic state evaluates the S₊S₋
 continuum projector proportionally to the Bost--Connes KMS projection weight
 for the prime `p = 2` (representing the 2-adic half-splitting of the chiral continuum).
 -/
-structure MajoranaBraidKMSState {Op : Type*} [Ring Op] [StarRing Op] (C : BostConnesCuntzSystem Op) where
-  /-- The Bost--Connes KMS state providing the thermodynamic parameters. -/
-  bcKMS : KMSProjectionState C
-  
-  /-- A macro-state functional on the Majorana continuum. -/
-  continuumTrace : MajoranaContinuum →ₗ[ℝ] ℝ
-  
-  /-- 
-  The fundamental bridge: the S₊S₋ macroscopic continuum projector, when traced,
-  evaluates to the Bost-Connes KMS Boltzmann weight for `n = 2`.
-  -/
-  eval_continuum_projector :
-    continuumTrace (continuumProjector (MajoranaStage := MajoranaStage)
-      (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
-      kmsProjectionReadout bcKMS.β bcKMS.ζβ 2 2
+abbrev MajoranaBraidKMSState {Op : Type*} [Ring Op] [StarRing Op]
+    (C : BostConnesCuntzSystem Op) : Type _ :=
+  Σ' bcKMS : KMSProjectionState C,
+    Σ' continuumTrace : MajoranaContinuum →ₗ[ℝ] ℝ,
+      continuumTrace (continuumProjector (MajoranaStage := MajoranaStage)
+        (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
+        kmsProjectionReadout bcKMS.β bcKMS.ζβ 2 2
 
 namespace MajoranaBraidKMSState
 
@@ -75,16 +67,23 @@ variable {Op : Type*} [Ring Op] [StarRing Op] {C : BostConnesCuntzSystem Op}
 variable (state : MajoranaBraidKMSState (MajoranaStage := MajoranaStage)
   (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv) C)
 
+abbrev bcKMS : KMSProjectionState C := state.1
+abbrev continuumTrace : MajoranaContinuum →ₗ[ℝ] ℝ := state.2.1
+abbrev eval_continuum_projector :
+    state.2.1 (continuumProjector (MajoranaStage := MajoranaStage)
+      (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
+      kmsProjectionReadout state.1.β state.1.ζβ 2 2 := state.2.2
+
 /--
 The KMS Projection State readout for the S₊S₋ continuum trace.
 It evaluates exactly to the 2-adic Boltzmann weight `2^(-β) / ζ(β)`.
 -/
 theorem kms_readout_continuumProjector :
-    state.continuumTrace (continuumProjector (MajoranaStage := MajoranaStage)
+    state.2.1 (continuumProjector (MajoranaStage := MajoranaStage)
       (MajoranaContinuum := MajoranaContinuum) (psi := psi) (baseEquiv := baseEquiv)) =
-    (2 : ℝ) ^ (-state.bcKMS.β) / state.bcKMS.ζβ := by
-  rw [state.eval_continuum_projector]
-  exact kmsProjectionReadout_self state.bcKMS.β state.bcKMS.ζβ 2
+    (2 : ℝ) ^ (-state.1.β) / state.1.ζβ := by
+  rw [state.2.2]
+  exact kmsProjectionReadout_self state.1.β state.1.ζβ 2
 
 end MajoranaBraidKMSState
 

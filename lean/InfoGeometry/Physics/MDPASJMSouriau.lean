@@ -157,12 +157,22 @@ theorem gyromagneticReadout_g_two (q m sB : ℚ) (hm : m ≠ 0) :
   unfold gyromagneticReadout
   field_simp [hm]
 
-structure FiniteSpinParticleCertificate where
-  p : Vec4
-  u : Vec4
-  v : Vec4
-  field : Tensor2
-  field_antisym : IsAntisymmetric field
+abbrev FiniteSpinParticleCertificate : Type _ :=
+  Σ' p : Vec4,
+    Σ' u : Vec4,
+      Σ' v : Vec4,
+        Σ' field : Tensor2,
+          IsAntisymmetric field
+
+namespace FiniteSpinParticleCertificate
+
+abbrev p (C : FiniteSpinParticleCertificate) : Vec4 := C.1
+abbrev u (C : FiniteSpinParticleCertificate) : Vec4 := C.2.1
+abbrev v (C : FiniteSpinParticleCertificate) : Vec4 := C.2.2.1
+abbrev field (C : FiniteSpinParticleCertificate) : Tensor2 := C.2.2.2.1
+abbrev field_antisym (C : FiniteSpinParticleCertificate) := C.2.2.2.2
+
+end FiniteSpinParticleCertificate
 
 namespace FiniteSpinParticleCertificate
 
@@ -203,11 +213,6 @@ theorem spin_half_prequantization
 end FiniteSpinParticleCertificate
 
 def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field) :
-    FiniteSpinParticleCertificate where
-  p := p
-  u := u
-  v := v
-  field := field
-  field_antisym := hfield
+    FiniteSpinParticleCertificate := ⟨p, u, v, field, hfield⟩
 
 end InfoGeometry.Physics.MDPASJMSouriau

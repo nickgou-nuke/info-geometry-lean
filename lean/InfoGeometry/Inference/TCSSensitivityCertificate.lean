@@ -56,4 +56,40 @@ theorem tcsLocalVariance_nonneg
     0 ≤ localVariance I c.fisher v := by
   exact localVariance_nonneg I c.fisher v
 
+noncomputable def tcsCLocalStdDev
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) : ℝ :=
+  Real.sqrt (tcsCLocalVariance I c)
+
+noncomputable def tcsKLocalStdDev
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) : ℝ :=
+  Real.sqrt (tcsKLocalVariance I c)
+
+theorem tcsCLocalStdDev_nonneg
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) :
+    0 ≤ tcsCLocalStdDev I c := by
+  exact Real.sqrt_nonneg _
+
+theorem tcsKLocalStdDev_nonneg
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) :
+    0 ≤ tcsKLocalStdDev I c := by
+  exact Real.sqrt_nonneg _
+
+theorem tcsCLocalStdDev_sq
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) :
+    (tcsCLocalStdDev I c) ^ (2 : ℕ) = tcsCLocalVariance I c := by
+  unfold tcsCLocalStdDev
+  exact Real.sq_sqrt (tcsCLocalVariance_nonneg I c)
+
+theorem tcsKLocalStdDev_sq
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I) :
+    (tcsKLocalStdDev I c) ^ (2 : ℕ) = tcsKLocalVariance I c := by
+  unfold tcsKLocalStdDev
+  exact Real.sq_sqrt (tcsKLocalVariance_nonneg I c)
+
 end InfoGeometry.Inference

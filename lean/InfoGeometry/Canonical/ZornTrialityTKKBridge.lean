@@ -115,44 +115,33 @@ theorem canonical_lane_grade_synthesis :
     laneGrade_lowerNilpotent, laneGrade_associatorWitness,
     laneMirror_involutive _⟩
 
-/-- Optional bridge readout: the mirror and lane routing stay separate at the type level. -/
-structure LaneRouting where
-  lane : SplitOctonionLane
-  sector : ZornSector
-  grade : TKKGrade
-  h_lane_sector : sector = laneSector lane
-  h_sector_grade : grade = sectorGrade sector
+/-!
+The routing record carried no independent data: both its sector and grade were
+definitionally determined by its lane.  Use the canonical lane carrier and
+derive the historical projections instead of storing equality evidence.
+-/
+abbrev LaneRouting := SplitOctonionLane
+
+namespace LaneRouting
+
+def lane (r : LaneRouting) : SplitOctonionLane := r
+
+def sector (r : LaneRouting) : ZornSector := laneSector r.lane
+
+def grade (r : LaneRouting) : TKKGrade := sectorGrade r.sector
+
+theorem h_lane_sector (r : LaneRouting) : r.sector = laneSector r.lane := rfl
+
+theorem h_sector_grade (r : LaneRouting) : r.grade = sectorGrade r.sector := rfl
+
+end LaneRouting
 
 /-- A canonical routing record for the four named generators. -/
-def canonicalRouting : SplitOctonionLane → LaneRouting
-  | .diagonalProjector =>
-      { lane := .diagonalProjector
-        sector := .neutral
-        grade := z0
-        h_lane_sector := rfl
-        h_sector_grade := rfl }
-  | .upperNilpotent =>
-      { lane := .upperNilpotent
-        sector := .positive
-        grade := p1
-        h_lane_sector := rfl
-        h_sector_grade := rfl }
-  | .lowerNilpotent =>
-      { lane := .lowerNilpotent
-        sector := .negative
-        grade := m1
-        h_lane_sector := rfl
-        h_sector_grade := rfl }
-  | .associatorWitness =>
-      { lane := .associatorWitness
-        sector := .defect
-        grade := p2
-        h_lane_sector := rfl
-        h_sector_grade := rfl }
+def canonicalRouting : SplitOctonionLane → LaneRouting := id
 
 @[simp]
 theorem canonicalRouting_grade (s : SplitOctonionLane) :
     (canonicalRouting s).grade = laneGrade s := by
-  cases s <;> rfl
+  rfl
 
 end ZornTrialityTKKBridge

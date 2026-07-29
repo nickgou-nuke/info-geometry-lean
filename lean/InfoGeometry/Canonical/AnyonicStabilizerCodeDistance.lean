@@ -2,6 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 
@@ -18,15 +19,22 @@ namespace AnyonicStabilizer
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
 /-- Anyonic Quantum Stabilizer Generator g with g * g† = 1. -/
-structure AnyonStabilizerGenerator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
-  g_val : Matrix (Fin n) (Fin n) ℂ
-  g_dagger : Matrix (Fin n) (Fin n) ℂ
-  h_unitary : g_val * g_dagger = 1
-  h_unitary_rev : g_dagger * g_val = 1
+abbrev AnyonStabilizerGenerator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] :=
+  Matrix.unitaryGroup (Fin n) ℂ
 
 namespace AnyonStabilizerGenerator
 
 variable (g : AnyonStabilizerGenerator n)
+
+def g_val : Matrix (Fin n) (Fin n) ℂ := (g : Matrix (Fin n) (Fin n) ℂ)
+
+def g_dagger : Matrix (Fin n) (Fin n) ℂ := (g_val g).conjTranspose
+
+theorem h_unitary : g.g_val * g.g_dagger = 1 := by
+  simpa [g_val, g_dagger] using (Matrix.mem_unitaryGroup_iff.mp g.property)
+
+theorem h_unitary_rev : g.g_dagger * g.g_val = 1 := by
+  simpa [g_val, g_dagger] using (Matrix.mem_unitaryGroup_iff'.mp g.property)
 
 /-- **Theorem**: Anyon Stabilizer Generator Unitarity g * g† = 1. -/
 theorem anyon_stabilizer_unitary : g.g_val * g.g_dagger = 1 :=

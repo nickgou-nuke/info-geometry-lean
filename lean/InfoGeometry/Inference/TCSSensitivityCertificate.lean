@@ -8,6 +8,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Inference.FisherVariance
 import InfoGeometry.Inference.GibbsTemperatureCertificate
+import InfoGeometry.Inference.TCSSensitivity
 
 /-!
 # Certified local TCS sensitivity
@@ -91,5 +92,40 @@ theorem tcsKLocalStdDev_sq
     (tcsKLocalStdDev I c) ^ (2 : ℕ) = tcsKLocalVariance I c := by
   unfold tcsKLocalStdDev
   exact Real.sq_sqrt (tcsKLocalVariance_nonneg I c)
+
+noncomputable def tcsMeanLocalVariance
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I)
+    (liveTime x : ℝ) : ℝ :=
+  localVariance I c.fisher (tcsSensitivity liveTime x)
+
+noncomputable def tcsMeanLocalStdDev
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I)
+    (liveTime x : ℝ) : ℝ :=
+  Real.sqrt (tcsMeanLocalVariance I c liveTime x)
+
+theorem tcsMeanLocalVariance_nonneg
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I)
+    (liveTime x : ℝ) :
+    0 ≤ tcsMeanLocalVariance I c liveTime x := by
+  exact localVariance_nonneg I c.fisher (tcsSensitivity liveTime x)
+
+theorem tcsMeanLocalStdDev_nonneg
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I)
+    (liveTime x : ℝ) :
+    0 ≤ tcsMeanLocalStdDev I c liveTime x := by
+  exact Real.sqrt_nonneg _
+
+theorem tcsMeanLocalStdDev_sq
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (c : GibbsTemperatureCertificate I)
+    (liveTime x : ℝ) :
+    (tcsMeanLocalStdDev I c liveTime x) ^ (2 : ℕ) =
+      tcsMeanLocalVariance I c liveTime x := by
+  unfold tcsMeanLocalStdDev
+  exact Real.sq_sqrt (tcsMeanLocalVariance_nonneg I c liveTime x)
 
 end InfoGeometry.Inference

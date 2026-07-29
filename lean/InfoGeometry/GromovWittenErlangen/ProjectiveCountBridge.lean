@@ -198,10 +198,10 @@ variable (B : GWProjectiveCountBridge G T Target Coeff)
 theorem normalizedShape_scale_counts
     (β c : ℝ) (hc : c ≠ 0) :
     finiteArithmeticNormalizedRay
-        (fun n => c * B.countState.counts n)
+        (fun n => c * B.counts n)
         B.support β =
       B.normalizedShape β :=
-  B.normalizedShape_scale_counts β c hc
+  GWProjectiveCountState.normalizedShape_scale_counts B β c hc
 
 end GWProjectiveCountBridge
 

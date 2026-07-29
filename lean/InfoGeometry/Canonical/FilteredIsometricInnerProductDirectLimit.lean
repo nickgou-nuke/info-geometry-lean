@@ -375,6 +375,7 @@ theorem commonStageInner_smul_left_complex
   unfold commonStageInner
   rw [(sys.map (le_commonUpper_left i j)).map_smul,
     inner_smul_left]
+  rfl
 
 /-- Complex homogeneity in the second common-stage argument. -/
 theorem commonStageInner_smul_right_complex
@@ -510,7 +511,7 @@ theorem directLimitInner_self_eq_zero_iff
             rw [hmap]
             exact map_zero _
       · intro hz
-        subst hz
+        rw [hz]
         simp
 
 end InfoGeometry.Canonical.FilteredIsometricInnerProductDirectLimit

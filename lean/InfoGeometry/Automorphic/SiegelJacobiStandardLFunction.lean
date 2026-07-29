@@ -194,20 +194,16 @@ This connects a Siegel--Jacobi standard L-function packet to the existing
 The equality `projected.L = sj.L` is carried explicitly, because the projected
 automorphic realization is model-specific arithmetic/geometric input.
 -/
-structure SiegelJacobiProjectedRealization
+def SiegelJacobiProjectedRealization
     {Bulk : Type uBulk} {Boundary : Type uBoundary}
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (W : SiegelEisensteinWitness Bulk Boundary)
     (D : SiegelJacobiDatum)
     (F : SiegelJacobiFormPacket D)
-    (SJ : SiegelJacobiStandardLFunctionPacket D F) where
-  /-- Existing projected automorphic L-function witness. -/
-  projected : ProjectedAutomorphicLFunctionWitness W
-
-  /-- Compatibility between the projected automorphic L-function and `SJ.L`. -/
-  projected_eq_standard :
-    projected.L = SJ.L
+    (SJ : SiegelJacobiStandardLFunctionPacket D F) :=
+  { projected : ProjectedAutomorphicLFunctionWitness W //
+      projected.L = SJ.L }
 
 namespace SiegelJacobiProjectedRealization
 
@@ -227,8 +223,8 @@ L-function.
 theorem projected_eval_eq_standard
     (R : SiegelJacobiProjectedRealization W D F SJ)
     (s : ℂ) :
-    R.projected.L s = SJ.L s := by
-  rw [R.projected_eq_standard]
+    R.1.L s = SJ.L s := by
+  rw [R.2]
 
 /--
 A zero/resonance of the projected L-function is a zero/resonance of the
@@ -237,7 +233,7 @@ standard Siegel--Jacobi L-function.
 theorem projected_resonance_iff_standard_zero
     (R : SiegelJacobiProjectedRealization W D F SJ)
     (s : ℂ) :
-    IsAutomorphicResonance R.projected.L s ↔ SJ.L s = 0 := by
+    IsAutomorphicResonance R.1.L s ↔ SJ.L s = 0 := by
   unfold IsAutomorphicResonance
   rw [R.projected_eval_eq_standard s]
 
@@ -274,11 +270,11 @@ def toLanglandsPrimeResonanceStrongWitness
     {F : SiegelJacobiFormPacket D}
     {SJ : SiegelJacobiStandardLFunctionPacket D F}
     (R : SiegelJacobiProjectedRealization W D F SJ) :
-    LanglandsPrimeResonanceStrongWitness R.projected where
+    LanglandsPrimeResonanceStrongWitness R.1 where
   eulerProduct :=
-    transportEulerProductWitness R.projected_eq_standard SJ.eulerProduct
+    transportEulerProductWitness R.2 SJ.eulerProduct
   completed :=
-    transportCompletedLFunctionWitness R.projected_eq_standard SJ.completedLFunction
+    transportCompletedLFunctionWitness R.2 SJ.completedLFunction
 
 /--
 Adapter from a Siegel--Jacobi projected realization to the existing weak
@@ -293,7 +289,7 @@ def toLanglandsPrimeResonanceWitness
     {F : SiegelJacobiFormPacket D}
     {SJ : SiegelJacobiStandardLFunctionPacket D F}
     (R : SiegelJacobiProjectedRealization W D F SJ) :
-    LanglandsPrimeResonanceWitness R.projected :=
+    LanglandsPrimeResonanceWitness R.1 :=
   (toLanglandsPrimeResonanceStrongWitness R).toWeakWitness
 
 /-- Owner target for a supplied Siegel--Jacobi standard L-function packet. -/

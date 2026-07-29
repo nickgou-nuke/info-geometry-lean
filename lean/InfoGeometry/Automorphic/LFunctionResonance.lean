@@ -446,19 +446,9 @@ Admissibility package for constructing an automorphic L-resonance witness.
 This prevents the owner target from asserting that arbitrary split sequences
 canonically carry Langlands L-functions.
 -/
-structure AutomorphicLResonanceAdmissible
-    (W : SiegelEisensteinWitness Bulk Boundary) where
-  cuspL :
-    CuspidalLFunctionDatum W
-
-  boundaryL :
-    BoundaryScatteringLFunctionDatum W
-
-  operators :
-    CompatibleAutomorphicOperatorFamily W
-
-  hecke_euler_compatibility :
-    HasHeckeEulerCompatibility operators cuspL
+abbrev AutomorphicLResonanceAdmissible
+    (W : SiegelEisensteinWitness Bulk Boundary) :=
+  AutomorphicLResonanceWitness W
 
 /--
 Admissible L-function and operator data expose the actual Hecke/Euler

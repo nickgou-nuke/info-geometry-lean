@@ -79,9 +79,25 @@ namespace InfoGeometry.Probability.Homological
 A common invariant structure shared by two classes of objects.
 Safer than asserting `α ≃ β`.
 -/
-structure CommonInvariantStructure (α β I : Type*) where
-  leftInvariant  : α → I
-  rightInvariant : β → I
+def CommonInvariantStructure (α β I : Type*) :=
+  (α → I) × (β → I)
+
+namespace CommonInvariantStructure
+
+def leftInvariant
+    (C : CommonInvariantStructure α β I) : α → I :=
+  C.1
+
+def rightInvariant
+    (C : CommonInvariantStructure α β I) : β → I :=
+  C.2
+
+def mk
+    (leftInvariant : α → I)
+    (rightInvariant : β → I) : CommonInvariantStructure α β I :=
+  (leftInvariant, rightInvariant)
+
+end CommonInvariantStructure
 
 /--
 Poincaré–Grothendieck naming principle, as data rather than a false theorem.

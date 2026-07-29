@@ -49,7 +49,7 @@ local notation "qQ" =>
 modular form. -/
 def modularQuotientInnerProductCore :
     InnerProductSpace.Core ℂ Q∞ where
-  inner := qQ
+  inner := fun x y => qQ x y
   conj_inner_symm :=
     quotientModularForm_conj_symm
       Stage sys ω hclos
@@ -60,10 +60,13 @@ def modularQuotientInnerProductCore :
     intro x y z
     exact
       LinearMap.congr_fun
-        (qQ.map_add x y) z
+        ((quotientModularForm
+          Stage sys ω hclos).map_add x y) z
   smul_left := by
     intro x y c
-    have h := qQ.map_smulₛₗ c x
+    have h :=
+      (quotientModularForm
+        Stage sys ω hclos).map_smulₛₗ c x
     have happ := LinearMap.congr_fun h y
     simpa only [LinearMap.smul_apply, smul_eq_mul] using happ
   definite := by
@@ -77,16 +80,24 @@ noncomputable instance modularQuotientInnerProductCoreInst :
     InnerProductSpace.Core ℂ Q∞ :=
   modularQuotientInnerProductCore Stage sys ω hclos
 
+/-- The corresponding pre-inner-product core used by Mathlib's norm
+construction. -/
+noncomputable instance modularQuotientPreInnerProductCoreInst :
+    PreInnerProductSpace.Core ℂ Q∞ :=
+  (modularQuotientInnerProductCore
+    Stage sys ω hclos).toCore
+
 /-- The norm is derived from the positive-definite modular form. -/
 noncomputable instance modularQuotientNormedAddCommGroup :
     NormedAddCommGroup Q∞ :=
-  InnerProductSpace.Core.toNormedAddCommGroup
+  InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
 
 /-- The resulting native complex inner-product space. -/
 noncomputable instance modularQuotientInnerProductSpace :
     InnerProductSpace ℂ Q∞ :=
   InnerProductSpace.ofCore
-    (modularQuotientInnerProductCore Stage sys ω hclos).toCore
+    (modularQuotientInnerProductCore
+      Stage sys ω hclos).toCore
 
 /-- The installed inner product is exactly the descended quotient modular
 form. -/
@@ -125,6 +136,41 @@ theorem modularQuotientToCompletion_denseRange :
     DenseRange
       (modularQuotientToCompletion Stage sys ω hclos) :=
   UniformSpace.Completion.denseRange_coe
+
+/-- The canonical embedding as a native complex-linear map. -/
+def modularQuotientToCompletionLinearMap :
+    Q∞ →ₗ[ℂ]
+      ModularHilbertCompletion Stage sys ω hclos where
+  toFun := modularQuotientToCompletion Stage sys ω hclos
+  map_add' := by
+    intro x y
+    exact UniformSpace.Completion.coe_add x y
+  map_smul' := by
+    intro c x
+    exact UniformSpace.Completion.coe_smul c x
+
+/-- The canonical dense embedding bundled as a complex linear isometry. -/
+def modularQuotientToCompletionLinearIsometry :
+    Q∞ →ₗᵢ[ℂ]
+      ModularHilbertCompletion Stage sys ω hclos :=
+  LinearIsometry.mk
+    (modularQuotientToCompletionLinearMap
+      Stage sys ω hclos)
+    (fun x => by
+      have h :=
+        (modularQuotientToCompletion_isometry
+          Stage sys ω hclos).dist_eq x 0
+      simpa only [modularQuotientToCompletion,
+        UniformSpace.Completion.coe_zero,
+        dist_zero_right] using h)
+
+@[simp] theorem modularQuotientToCompletionLinearIsometry_apply
+    (x : Q∞) :
+    modularQuotientToCompletionLinearIsometry
+        Stage sys ω hclos x =
+      modularQuotientToCompletion
+        Stage sys ω hclos x :=
+  rfl
 
 /-- The completed modular carrier is complete. -/
 theorem modularHilbertCompletion_complete :

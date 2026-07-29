@@ -1599,27 +1599,36 @@ Cup product: `I(U) * I(V) ≤ I(U ∩ V)` (cup is compatible with intersection).
 
 See §7's `SupportInvariantMeasureLike` for the related Prop-level version.
 -/
-structure HomologicalMeasurePacket where
-  /-- State space of the physical system (configuration space). -/
-  StateSpace : Type*
-  /-- Observable space (outcome space). -/
-  ObservableSpace : Type*
-  /-- Cohomology / invariant algebra where support ideals live. -/
-  CohomologyAlgebra : Type*
-  /-- Observation map `f : StateSpace → ObservableSpace`. -/
-  observableMap : StateSpace → ObservableSpace
-  /-- Homological support-ideal assignment: observable event ↦ support ideal. -/
-  supportIdeal : Set ObservableSpace → CohomologyAlgebra
-  /-- Abstract order relation on the algebra (stands in for `≤`). -/
-  idealLeq : CohomologyAlgebra → CohomologyAlgebra → Prop
-  /-- Abstract multiplication on the algebra (stands in for cup product). -/
-  idealMul : CohomologyAlgebra → CohomologyAlgebra → CohomologyAlgebra
-  /-- Monotonicity: larger observable events have larger support ideals. -/
-  mono : ∀ U V : Set ObservableSpace,
-    U ⊆ V → idealLeq (supportIdeal U) (supportIdeal V)
-  /-- Cup product axiom: `I(U) * I(V) ≤ I(U ∩ V)`. -/
-  cup_intersection : ∀ U V : Set ObservableSpace,
-    idealLeq (idealMul (supportIdeal U) (supportIdeal V)) (supportIdeal (U ∩ V))
+abbrev HomologicalMeasurePacket : Type _ :=
+  Σ' StateSpace : Type*,
+    Σ' ObservableSpace : Type*,
+      Σ' CohomologyAlgebra : Type*,
+        Σ' observableMap : StateSpace → ObservableSpace,
+          Σ' supportIdeal : Set ObservableSpace → CohomologyAlgebra,
+            Σ' idealLeq : CohomologyAlgebra → CohomologyAlgebra → Prop,
+              Σ' idealMul : CohomologyAlgebra → CohomologyAlgebra → CohomologyAlgebra,
+                Σ' mono : ∀ U V : Set ObservableSpace,
+                  U ⊆ V → idealLeq (supportIdeal U) (supportIdeal V),
+                  ∀ U V : Set ObservableSpace,
+                    idealLeq (idealMul (supportIdeal U) (supportIdeal V))
+                      (supportIdeal (U ∩ V))
+
+namespace HomologicalMeasurePacket
+
+abbrev StateSpace (P : HomologicalMeasurePacket) : Type _ := P.1
+abbrev ObservableSpace (P : HomologicalMeasurePacket) : Type _ := P.2.1
+abbrev CohomologyAlgebra (P : HomologicalMeasurePacket) : Type _ := P.2.2.1
+abbrev observableMap (P : HomologicalMeasurePacket) : StateSpace P → ObservableSpace P := P.2.2.2.1
+abbrev supportIdeal (P : HomologicalMeasurePacket) : Set (ObservableSpace P) → CohomologyAlgebra P :=
+  P.2.2.2.2.1
+abbrev idealLeq (P : HomologicalMeasurePacket) : CohomologyAlgebra P → CohomologyAlgebra P → Prop :=
+  P.2.2.2.2.2.1
+abbrev idealMul (P : HomologicalMeasurePacket) :
+    CohomologyAlgebra P → CohomologyAlgebra P → CohomologyAlgebra P := P.2.2.2.2.2.2.1
+abbrev mono (P : HomologicalMeasurePacket) := P.2.2.2.2.2.2.2.1
+abbrev cup_intersection (P : HomologicalMeasurePacket) := P.2.2.2.2.2.2.2.2
+
+end HomologicalMeasurePacket
 
 /--
 **Packet 24.3 — Moving-ball configuration packet.**
@@ -1631,19 +1640,25 @@ a filtered space whose homology measures packing / covering complexity.
 radius `ε` in the manifold.  Gromov's key point: the homology of the
 configuration space (as a function of `ε`) detects volume constraints on cycles.
 -/
-structure MovingBallConfigurationPacket where
-  /-- The ambient manifold (or metric space). -/
-  Manifold : Type*
-  /-- Number of moving balls (particles). -/
-  ParticleNumber : ℕ
-  /-- Radius parameter type (e.g. `{ε : ℝ // 0 < ε}` or abstract). -/
-  RadiusParameter : Type*
-  /-- Filtered configuration space: `ParticleNumber` balls with radius `ε`. -/
-  configurationSpace : RadiusParameter → Type*
-  /-- Full (unfiltered) configuration space (limit as `ε → 0`). -/
-  baseConfigSpace : Type*
-  /-- Inclusion of `ε`-filtered configurations into the base. -/
-  inclusionInBase : ∀ ε : RadiusParameter, configurationSpace ε → baseConfigSpace
+abbrev MovingBallConfigurationPacket : Type _ :=
+  Σ' Manifold : Type*,
+    Σ' ParticleNumber : ℕ,
+      Σ' RadiusParameter : Type*,
+        Σ' configurationSpace : RadiusParameter → Type*,
+          Σ' baseConfigSpace : Type*,
+            ∀ ε : RadiusParameter, configurationSpace ε → baseConfigSpace
+
+namespace MovingBallConfigurationPacket
+
+abbrev Manifold (P : MovingBallConfigurationPacket) : Type _ := P.1
+abbrev ParticleNumber (P : MovingBallConfigurationPacket) : ℕ := P.2.1
+abbrev RadiusParameter (P : MovingBallConfigurationPacket) : Type _ := P.2.2.1
+abbrev configurationSpace (P : MovingBallConfigurationPacket) : RadiusParameter P → Type* :=
+  P.2.2.2.1
+abbrev baseConfigSpace (P : MovingBallConfigurationPacket) : Type _ := P.2.2.2.2.1
+abbrev inclusionInBase (P : MovingBallConfigurationPacket) := P.2.2.2.2.2
+
+end MovingBallConfigurationPacket
 
 /--
 **Packet 24.4 — Cycle-volume spectrum packet.**
@@ -1657,22 +1672,27 @@ For `k = n-1` (hypersurfaces), the sorted spectral values are the *p*-widths
 
 The `spectralVal_eq` field connects to the `spectralValue` definition of §8.
 -/
-structure CycleVolumeSpectrumPacket where
-  /-- The ambient manifold. -/
-  Manifold : Type*
-  /-- Homology class type (e.g. `H_k(M, ℤ)` or an abstract class type). -/
-  HomologyClass : Type*
-  /-- The cycle space `𝒵_k(M)`. -/
-  CycleSpace : Type*
-  /-- Volume functional on cycles. -/
-  cycleVolume : CycleSpace → ℝ
-  /-- Detection predicate: `detected V α` iff class `α` first appears in `𝒵^{≤V}`. -/
-  detected : ℝ → HomologyClass → Prop
-  /-- Spectral value: infimum volume threshold at which `α` is detected. -/
-  spectralVal : HomologyClass → ℝ
-  /-- Compatibility: spectral value is the infimum of the detection threshold set. -/
-  spectralVal_eq : ∀ α : HomologyClass,
-    spectralVal α = sInf { V : ℝ | detected V α }
+abbrev CycleVolumeSpectrumPacket : Type _ :=
+  Σ' Manifold : Type*,
+    Σ' HomologyClass : Type*,
+      Σ' CycleSpace : Type*,
+        Σ' cycleVolume : CycleSpace → ℝ,
+          Σ' detected : ℝ → HomologyClass → Prop,
+            Σ' spectralVal : HomologyClass → ℝ,
+              ∀ α : HomologyClass,
+                spectralVal α = sInf { V : ℝ | detected V α }
+
+namespace CycleVolumeSpectrumPacket
+
+abbrev Manifold (P : CycleVolumeSpectrumPacket) : Type _ := P.1
+abbrev HomologyClass (P : CycleVolumeSpectrumPacket) : Type _ := P.2.1
+abbrev CycleSpace (P : CycleVolumeSpectrumPacket) : Type _ := P.2.2.1
+abbrev cycleVolume (P : CycleVolumeSpectrumPacket) : CycleSpace P → ℝ := P.2.2.2.1
+abbrev detected (P : CycleVolumeSpectrumPacket) : ℝ → HomologyClass P → Prop := P.2.2.2.2.1
+abbrev spectralVal (P : CycleVolumeSpectrumPacket) : HomologyClass P → ℝ := P.2.2.2.2.2.1
+abbrev spectralVal_eq (P : CycleVolumeSpectrumPacket) := P.2.2.2.2.2.2
+
+end CycleVolumeSpectrumPacket
 
 /--
 **Theorem 24.4a — Cycle-spectrum packet agrees with §8 `spectralValue`.**

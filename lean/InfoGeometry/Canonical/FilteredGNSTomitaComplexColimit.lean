@@ -130,10 +130,12 @@ def complexScalarDirectLimit
         (fun k => closedTomitaDomain (ω.state k))
         (fun _ _ h => domainTransition Stage sys ω h)
         i (c • x) := by
-  exact
-    Module.DirectLimit.lift_of
-      (complexScalarCoconeMap Stage sys ω c)
+  simpa only [complexScalarCoconeMap,
+    stageComplexScalarMap] using
+    (Module.DirectLimit.lift_of
+      (g := complexScalarCoconeMap Stage sys ω c)
       (complexScalarCoconeMap_compatible Stage sys ω c)
+      (i := i) x)
 
 /-- The descended complex scalar operation. -/
 noncomputable instance complexSMulClosedDomainDirectLimit :
@@ -195,8 +197,12 @@ theorem real_smul_eq_complex_smul
   induction z using Module.DirectLimit.induction_on with
   | ih i x =>
       rw [complex_smul_of]
-      rw [← Module.DirectLimit.of.map_smul]
-      rfl
+      exact
+        ((Module.DirectLimit.of
+          ℝ I
+          (fun k => closedTomitaDomain (ω.state k))
+          (fun _ _ h => domainTransition Stage sys ω h)
+          i).map_smul r x).symm
 
 /-- Complex conjugate homogeneity of the common-stage pairing in its first
 argument. -/
@@ -210,14 +216,16 @@ theorem commonStageModularPairing_smul_left_complex
         commonStageModularPairing Stage sys ω hclos i j x y := by
   unfold commonStageModularPairing
   rw [domainTransition_smul_complex]
-  exact
+  have h :=
     (closedTomitaModularForm
       Stage sys ω hclos (commonUpper i j)).map_smulₛₗ c
       (domainTransition Stage sys ω
-        (le_commonUpper_left i j) x) |>.congrArg
-        (fun f => f
-          (domainTransition Stage sys ω
-            (le_commonUpper_right i j) y))
+        (le_commonUpper_left i j) x)
+  have happ :=
+    LinearMap.congr_fun h
+      (domainTransition Stage sys ω
+        (le_commonUpper_right i j) y)
+  simpa only [LinearMap.smul_apply, smul_eq_mul] using happ
 
 /-- Complex homogeneity of the common-stage pairing in its second argument. -/
 theorem commonStageModularPairing_smul_right_complex
@@ -237,5 +245,115 @@ theorem commonStageModularPairing_smul_right_complex
         (le_commonUpper_left i j) x)).map_smul c
       (domainTransition Stage sys ω
         (le_commonUpper_right i j) y)
+
+/-- The descended form is conjugate-homogeneous in its first argument on all
+direct-limit vectors. -/
+theorem directLimitModularForm_smul_left_complex
+    (c : ℂ)
+    (z w : ClosedDomainDirectLimit Stage sys ω) :
+    directLimitModularForm Stage sys ω hclos (c • z) w =
+      star c *
+        directLimitModularForm Stage sys ω hclos z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          rw [complex_smul_of]
+          rw [directLimitModularForm_of_of,
+            directLimitModularForm_of_of]
+          exact
+            commonStageModularPairing_smul_left_complex
+              Stage sys ω hclos i j c x y
+
+/-- The descended form is complex-homogeneous in its second argument on all
+direct-limit vectors. -/
+theorem directLimitModularForm_smul_right_complex
+    (c : ℂ)
+    (z w : ClosedDomainDirectLimit Stage sys ω) :
+    directLimitModularForm Stage sys ω hclos z (c • w) =
+      c *
+        directLimitModularForm Stage sys ω hclos z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          rw [complex_smul_of]
+          rw [directLimitModularForm_of_of,
+            directLimitModularForm_of_of]
+          exact
+            commonStageModularPairing_smul_right_complex
+              Stage sys ω hclos i j c x y
+
+/-- The modular form on the filtered colimit, now bundled with its genuine
+complex sesquilinear structure. -/
+def complexDirectLimitModularForm :
+    ClosedDomainDirectLimit Stage sys ω →ₛₗ[starRingEnd ℂ]
+      ClosedDomainDirectLimit Stage sys ω →ₗ[ℂ] ℂ :=
+  LinearMap.mk₂'ₛₗ
+    (starRingEnd ℂ) (RingHom.id ℂ)
+    (fun z w =>
+      directLimitModularForm Stage sys ω hclos z w)
+    (by
+      intro z₁ z₂ w
+      exact
+        LinearMap.congr_fun
+          ((directLimitModularForm
+            Stage sys ω hclos).map_add z₁ z₂) w)
+    (by
+      intro c z w
+      simpa only [smul_eq_mul] using
+        directLimitModularForm_smul_left_complex
+          Stage sys ω hclos c z w)
+    (by
+      intro z w₁ w₂
+      exact
+        (directLimitModularForm
+          Stage sys ω hclos z).map_add w₁ w₂)
+    (by
+      intro c z w
+      simpa only [smul_eq_mul] using
+        directLimitModularForm_smul_right_complex
+          Stage sys ω hclos c z w)
+
+@[simp] theorem complexDirectLimitModularForm_apply
+    (z w : ClosedDomainDirectLimit Stage sys ω) :
+    complexDirectLimitModularForm Stage sys ω hclos z w =
+      directLimitModularForm Stage sys ω hclos z w :=
+  rfl
+
+/-- Positivity of the genuinely complex sesquilinear colimit form. -/
+theorem complexDirectLimitModularForm_nonneg
+    (z : ClosedDomainDirectLimit Stage sys ω) :
+    0 ≤
+      Complex.re
+        (complexDirectLimitModularForm
+          Stage sys ω hclos z z) := by
+  rw [complexDirectLimitModularForm_apply]
+  exact directLimitModularForm_nonneg Stage sys ω hclos z
+
+/-- Hermitian symmetry of the complex colimit modular form. -/
+theorem complexDirectLimitModularForm_conj_symm
+    (z w : ClosedDomainDirectLimit Stage sys ω) :
+    star
+        (complexDirectLimitModularForm
+          Stage sys ω hclos w z) =
+      complexDirectLimitModularForm
+        Stage sys ω hclos z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          simp only [complexDirectLimitModularForm_apply,
+            directLimitModularForm_of_of]
+          let k := commonUpper i j
+          rw [commonStageModularPairing_eq_at
+            Stage sys ω hclos j i k
+            (le_commonUpper_right i j)
+            (le_commonUpper_left i j)]
+          rw [commonStageModularPairing_eq_at
+            Stage sys ω hclos i j k
+            (le_commonUpper_left i j)
+            (le_commonUpper_right i j)]
+          exact inner_conj_symm _ _
 
 end CStarStateColimit.Native.FilteredGNSTomitaComplexColimit

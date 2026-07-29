@@ -74,9 +74,25 @@ theorem sum_layeredJointWeight_eq_one
           outerWeight State super energy particleNumber superNumber β μ ν g *
             fiberSectorWeight State super energy particleNumber β μ g s := by
     intro g s
-    rw [Finset.mul_sum]
-    rw [sum_conditionalWeight_eq_one State energy β s]
-    ring
+    calc
+      ∑ x, outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberSectorWeight State super energy particleNumber β μ g s *
+          conditionalWeight State energy β s x
+          =
+          ∑ x, conditionalWeight State energy β s x *
+            (outerWeight State super energy particleNumber superNumber β μ ν g *
+              fiberSectorWeight State super energy particleNumber β μ g s) := by
+              apply Finset.sum_congr rfl
+              intro x hx
+              ring
+      _ = (∑ x, conditionalWeight State energy β s x) *
+          (outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s) := by
+              rw [Finset.sum_mul]
+      _ = outerWeight State super energy particleNumber superNumber β μ ν g *
+            fiberSectorWeight State super energy particleNumber β μ g s := by
+              rw [sum_conditionalWeight_eq_one State energy β s]
+              ring
   calc
     (∑ g, (superFiber super g).sum (fun s => ∑ x,
       layeredJointWeight State super energy particleNumber superNumber β μ ν g s x)) =
@@ -93,8 +109,11 @@ theorem sum_layeredJointWeight_eq_one
             fiberSectorWeight State super energy particleNumber β μ g s) := by
           simp_rw [Finset.mul_sum]
     _ = ∑ g, outerWeight State super energy particleNumber superNumber β μ ν g := by
+          apply Finset.sum_congr rfl
+          intro g hg
           rw [sum_fiberSectorWeight_eq_one State super energy particleNumber β μ
-            fiber_nonempty]
+            fiber_nonempty g]
+          ring
     _ = 1 := by
           exact sum_outerWeight_eq_one State super energy particleNumber superNumber β μ ν
             fiber_nonempty

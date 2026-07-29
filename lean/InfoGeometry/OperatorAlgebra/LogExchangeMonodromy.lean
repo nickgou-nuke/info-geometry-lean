@@ -113,13 +113,19 @@ theorem lowerHadjiivanovMonodromy_pow_eq_phase_conj_componentN (h : ℂ) (n : �
 An explicitly typed finite logarithmic exchange datum: a block together with
 proof that it has protected lower parabolic form.
 -/
-structure LogExchangeDatum where
-  phase : ℂ
-  shear : ℂ
-  block : LogExchangeMatrix
-  lower_constraint : ExchangeLowerBlockConstraint block phase shear
+abbrev LogExchangeDatum : Type _ :=
+  Σ' phase : ℂ,
+    Σ' shear : ℂ,
+      Σ' block : LogExchangeMatrix,
+        ExchangeLowerBlockConstraint block phase shear
 
 namespace LogExchangeDatum
+
+abbrev phase (D : LogExchangeDatum) : ℂ := D.1
+abbrev shear (D : LogExchangeDatum) : ℂ := D.2.1
+abbrev block (D : LogExchangeDatum) : LogExchangeMatrix := D.2.2.1
+abbrev lower_constraint (D : LogExchangeDatum) :
+    ExchangeLowerBlockConstraint D.2.2.1 D.1 D.2.1 := D.2.2.2
 
 /-- Read a lower exchange datum through the existing KAN `N` corridor. -/
 def kanReadback (D : LogExchangeDatum) : LogExchangeMatrix :=
@@ -132,8 +138,9 @@ then its matrix readback is exactly the conjugated `componentN` corridor.
 theorem block_eq_kanReadback (D : LogExchangeDatum) :
     D.block = D.kanReadback := by
   unfold kanReadback
-  rw [D.lower_constraint]
-  exact lowerParabolicSBlock_eq_phase_conj_componentN D.phase D.shear
+  change D.2.2.1 = D.1 • (modularS * componentN (-D.2.1) * modularSInverse)
+  rw [D.2.2.2]
+  exact lowerParabolicSBlock_eq_phase_conj_componentN D.1 D.2.1
 
 end LogExchangeDatum
 

@@ -45,16 +45,18 @@ theorem commutesWithSet_iff
   Iff.rfl
 
 /-- Modular-Noether readout carrier. No invariance law is bundled. -/
-structure ModularNoetherReadout
-    (Time Alg Readout : Type*) where
-  flow : Time → Alg → Alg
-  readout : Alg → Readout
-  charge : Alg
+abbrev ModularNoetherReadout
+    (Time Alg Readout : Type*) : Type _ :=
+  (Time → Alg → Alg) × ((Alg → Readout) × Alg)
 
 namespace ModularNoetherReadout
 
 variable {Time Alg Readout : Type*}
 variable (M : ModularNoetherReadout Time Alg Readout)
+
+abbrev flow : Time → Alg → Alg := M.1
+abbrev readout : Alg → Readout := M.2.1
+abbrev charge : Alg := M.2.2
 
 @[rep_depth operator]
 theorem flow_apply (t : Time) (A : Alg) :

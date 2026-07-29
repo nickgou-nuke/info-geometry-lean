@@ -360,9 +360,13 @@ A real-valued state/readout on the represented algebra.
 This is intentionally abstract. Later modules can specialize it to positive
 normalized states, vector states, KMS states, or boundary states.
 -/
-structure StateReadout
-    (A : Type*) where
-  eval : A → ℝ
+abbrev StateReadout (A : Type*) := A → ℝ
+
+namespace StateReadout
+
+abbrev eval {A : Type*} (φ : StateReadout A) : A → ℝ := φ
+
+end StateReadout
 
 /--
 Connes-style distance candidate between two state readouts.

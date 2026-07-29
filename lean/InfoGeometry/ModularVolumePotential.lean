@@ -325,27 +325,32 @@ structural level: it records two-state modular frames and abstract transport
 carriers between them.  Finite Connes-cocycle transport theorems are owned by
 `InfoGeometry.GrandUnification.ModularTransport`.
 -/
-structure ModularTransportBridgePacket where
-  /-- Von Neumann / operator-algebraic system carrier. -/
-  VonNeumannSystem : Type*
-  /-- Parameterized space of faithful states/weights. -/
-  StateWeightSpace : Type*
-  /-- Source/reference state or weight. -/
-  referenceWeight : StateWeightSpace
-  /-- Target/endpoint state or weight. -/
-  targetWeight : StateWeightSpace
-  /-- Modular flow attached to a state/weight. -/
-  modularFlow : StateWeightSpace → Type*
-  /-- Connes cocycle / transport carrier between two weights. -/
-  connesCocycle : StateWeightSpace → StateWeightSpace → Type*
-  /-- Log-potential / modular Hamiltonian on the transport path. -/
-  modularPotential : Type*
-  /-- Relative-entropy or free-energy transport cost carrier. -/
-  transportFreeEnergy : Type*
-  /-- Optional Berry/holonomy comparison carrier. -/
-  holonomyComparison : Type*
-  /-- Optional Ricci/Perelman transport comparison carrier. -/
-  perelmanComparison : Type*
+abbrev ModularTransportBridgePacket : Type _ :=
+  Σ' VonNeumannSystem : Type*,
+    Σ' StateWeightSpace : Type*,
+      Σ' referenceWeight : StateWeightSpace,
+        Σ' targetWeight : StateWeightSpace,
+          Σ' modularFlow : StateWeightSpace → Type*,
+            Σ' connesCocycle : StateWeightSpace → StateWeightSpace → Type*,
+              Σ' modularPotential : Type*,
+                Σ' transportFreeEnergy : Type*,
+                  Type* × Type*
+
+namespace ModularTransportBridgePacket
+
+abbrev VonNeumannSystem (P : ModularTransportBridgePacket) : Type _ := P.1
+abbrev StateWeightSpace (P : ModularTransportBridgePacket) : Type _ := P.2.1
+abbrev referenceWeight (P : ModularTransportBridgePacket) : StateWeightSpace P := P.2.2.1
+abbrev targetWeight (P : ModularTransportBridgePacket) : StateWeightSpace P := P.2.2.2.1
+abbrev modularFlow (P : ModularTransportBridgePacket) : StateWeightSpace P → Type* := P.2.2.2.2.1
+abbrev connesCocycle (P : ModularTransportBridgePacket) :
+    StateWeightSpace P → StateWeightSpace P → Type* := P.2.2.2.2.2.1
+abbrev modularPotential (P : ModularTransportBridgePacket) : Type* := P.2.2.2.2.2.2.1
+abbrev transportFreeEnergy (P : ModularTransportBridgePacket) : Type* := P.2.2.2.2.2.2.2.1
+abbrev holonomyComparison (P : ModularTransportBridgePacket) : Type* := P.2.2.2.2.2.2.2.2.1
+abbrev perelmanComparison (P : ModularTransportBridgePacket) : Type* := P.2.2.2.2.2.2.2.2.2
+
+end ModularTransportBridgePacket
 
 /-!
 Normalize by the supplied modular reference data, with an explicit branch for
@@ -418,45 +423,81 @@ This packet is intentionally structural: it records the carriers and explicit
 comparison propositions for the classical, noncommutative modular, and
 spectral-volume layers without promoting those propositions to local theorems.
 -/
-structure ModularVolumeBridgePacket where
-  ClassicalMeasureSpace : Type*
-  VonNeumannSystem : Type*
-  SpectralGeometry : Type*
-  /-- Classical state/density carrier. -/
-  classicalState : Type*
-  /-- Classical reference volume/measure readout. -/
-  classicalVolume : ClassicalMeasureSpace → ℝ
-  /-- Logarithmic Radon–Nikodym potential. -/
-  classicalLogPotential : classicalState → ClassicalMeasureSpace → ℝ
-  /-- Modular reference weight/state carrier. -/
-  modularWeight : Type*
-  /-- Relative modular data carrier (`[Dφ:Dψ]`, modular operators, etc.). -/
-  modularData : modularWeight → modularWeight → Type*
-  /-- Carrier of modular Hamiltonians / modular log-potentials. -/
-  ModularHamiltonianCarrier : Type*
-  /-- Modular Hamiltonian attached to a reference weight. -/
-  modularHamiltonian : modularWeight → ModularHamiltonianCarrier
-  /-- Map comparing a classical state with its modular-weight realization. -/
-  stateToModularWeight : classicalState → modularWeight
-  /-- Classical KL-divergence functional. -/
-  klDivergence : classicalState → classicalState → ℝ
-  /-- Araki relative-entropy functional. -/
-  arakiRelativeEntropy : modularWeight → modularWeight → ℝ
-  /-- Energy and free-energy functionals on classical states. -/
-  energy : classicalState → ℝ
-  freeEnergy : classicalState → ℝ
-  /-- Gibbs comparison data used by the free-energy split. -/
-  inverseTemperature : ℝ
-  gibbsReference : classicalState
-  /-- Spectral volume and its Weyl-gauge comparison readout. -/
-  spectralVolume : SpectralGeometry → ℝ
-  weylVolumeGauge : SpectralGeometry → ℝ
-  /-- Spectral thermal normalization data (`Z_β`). -/
-  spectralThermalNormalization : SpectralThermalNormalizationPacket
-  /-- Connes-cocycle transport data. -/
-  modularTransport : ModularTransportBridgePacket
+abbrev ModularVolumeBridgePacket : Type _ :=
+  Σ' ClassicalMeasureSpace : Type*,
+    Σ' VonNeumannSystem : Type*,
+      Σ' SpectralGeometry : Type*,
+        Σ' classicalState : Type*,
+          Σ' classicalVolume : ClassicalMeasureSpace → ℝ,
+            Σ' classicalLogPotential : classicalState → ClassicalMeasureSpace → ℝ,
+              Σ' modularWeight : Type*,
+                Σ' modularData : modularWeight → modularWeight → Type*,
+                  Σ' ModularHamiltonianCarrier : Type*,
+                    Σ' modularHamiltonian : modularWeight → ModularHamiltonianCarrier,
+                      Σ' stateToModularWeight : classicalState → modularWeight,
+                        Σ' klDivergence : classicalState → classicalState → ℝ,
+                          Σ' arakiRelativeEntropy : modularWeight → modularWeight → ℝ,
+                            Σ' energy : classicalState → ℝ,
+                              Σ' freeEnergy : classicalState → ℝ,
+                                Σ' inverseTemperature : ℝ,
+                                  Σ' gibbsReference : classicalState,
+                                    Σ' spectralVolume : SpectralGeometry → ℝ,
+                                      Σ' weylVolumeGauge : SpectralGeometry → ℝ,
+                                        Σ' spectralThermalNormalization :
+                                          SpectralThermalNormalizationPacket,
+                                          ModularTransportBridgePacket
 
 namespace ModularVolumeBridgePacket
+
+abbrev tail₁ (B : ModularVolumeBridgePacket) := B.2
+abbrev tail₂ (B : ModularVolumeBridgePacket) := (tail₁ B).2
+abbrev tail₃ (B : ModularVolumeBridgePacket) := (tail₂ B).2
+abbrev tail₄ (B : ModularVolumeBridgePacket) := (tail₃ B).2
+abbrev tail₅ (B : ModularVolumeBridgePacket) := (tail₄ B).2
+abbrev tail₆ (B : ModularVolumeBridgePacket) := (tail₅ B).2
+abbrev tail₇ (B : ModularVolumeBridgePacket) := (tail₆ B).2
+abbrev tail₈ (B : ModularVolumeBridgePacket) := (tail₇ B).2
+abbrev tail₉ (B : ModularVolumeBridgePacket) := (tail₈ B).2
+abbrev tail₁₀ (B : ModularVolumeBridgePacket) := (tail₉ B).2
+abbrev tail₁₁ (B : ModularVolumeBridgePacket) := (tail₁₀ B).2
+abbrev tail₁₂ (B : ModularVolumeBridgePacket) := (tail₁₁ B).2
+abbrev tail₁₃ (B : ModularVolumeBridgePacket) := (tail₁₂ B).2
+abbrev tail₁₄ (B : ModularVolumeBridgePacket) := (tail₁₃ B).2
+abbrev tail₁₅ (B : ModularVolumeBridgePacket) := (tail₁₄ B).2
+abbrev tail₁₆ (B : ModularVolumeBridgePacket) := (tail₁₅ B).2
+abbrev tail₁₇ (B : ModularVolumeBridgePacket) := (tail₁₆ B).2
+abbrev tail₁₈ (B : ModularVolumeBridgePacket) := (tail₁₇ B).2
+abbrev tail₁₉ (B : ModularVolumeBridgePacket) := (tail₁₈ B).2
+abbrev tail₂₀ (B : ModularVolumeBridgePacket) := (tail₁₉ B).2
+
+abbrev ClassicalMeasureSpace (B : ModularVolumeBridgePacket) : Type _ := B.1
+abbrev VonNeumannSystem (B : ModularVolumeBridgePacket) : Type _ := (tail₁ B).1
+abbrev SpectralGeometry (B : ModularVolumeBridgePacket) : Type _ := (tail₂ B).1
+abbrev classicalState (B : ModularVolumeBridgePacket) : Type _ := (tail₃ B).1
+abbrev classicalVolume (B : ModularVolumeBridgePacket) : ClassicalMeasureSpace B → ℝ := (tail₄ B).1
+abbrev classicalLogPotential (B : ModularVolumeBridgePacket) :
+    classicalState B → ClassicalMeasureSpace B → ℝ := (tail₅ B).1
+abbrev modularWeight (B : ModularVolumeBridgePacket) : Type _ := (tail₆ B).1
+abbrev modularData (B : ModularVolumeBridgePacket) :
+    modularWeight B → modularWeight B → Type _ := (tail₇ B).1
+abbrev ModularHamiltonianCarrier (B : ModularVolumeBridgePacket) : Type _ := (tail₈ B).1
+abbrev modularHamiltonian (B : ModularVolumeBridgePacket) :
+    modularWeight B → ModularHamiltonianCarrier B := (tail₉ B).1
+abbrev stateToModularWeight (B : ModularVolumeBridgePacket) :
+    classicalState B → modularWeight B := (tail₁₀ B).1
+abbrev klDivergence (B : ModularVolumeBridgePacket) :
+    classicalState B → classicalState B → ℝ := (tail₁₁ B).1
+abbrev arakiRelativeEntropy (B : ModularVolumeBridgePacket) :
+    modularWeight B → modularWeight B → ℝ := (tail₁₂ B).1
+abbrev energy (B : ModularVolumeBridgePacket) : classicalState B → ℝ := (tail₁₃ B).1
+abbrev freeEnergy (B : ModularVolumeBridgePacket) : classicalState B → ℝ := (tail₁₄ B).1
+abbrev inverseTemperature (B : ModularVolumeBridgePacket) : ℝ := (tail₁₅ B).1
+abbrev gibbsReference (B : ModularVolumeBridgePacket) : classicalState B := (tail₁₆ B).1
+abbrev spectralVolume (B : ModularVolumeBridgePacket) : SpectralGeometry B → ℝ := (tail₁₇ B).1
+abbrev weylVolumeGauge (B : ModularVolumeBridgePacket) : SpectralGeometry B → ℝ := (tail₁₈ B).1
+abbrev spectralThermalNormalization (B : ModularVolumeBridgePacket) :
+    SpectralThermalNormalizationPacket := (tail₁₉ B).1
+abbrev modularTransport (B : ModularVolumeBridgePacket) : ModularTransportBridgePacket := tail₂₀ B
 
 /-- KL and Araki entropy agree after the selected state-to-weight realization. -/
 def entropyComparison (B : ModularVolumeBridgePacket) : Prop :=

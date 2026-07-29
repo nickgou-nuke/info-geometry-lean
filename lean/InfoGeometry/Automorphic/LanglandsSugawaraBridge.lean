@@ -172,8 +172,8 @@ def LanglandsSugawaraBridgeInstalledTarget
     [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P Finite Affine Vir State) : Prop :=
-  LanglandsPrimeResonanceStrongWitness P ∧
+    (B : LanglandsSugawaraBridge P Finite Affine Vir State) :=
+  ∃ _ : LanglandsPrimeResonanceStrongWitness P,
     B.affineVirasoro.centralChargeReadout B.state =
       B.completedL B.spectralPoint
 

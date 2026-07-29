@@ -20,15 +20,15 @@ namespace SplitQuaternionZorn
 /-- Cayley-Dickson Doubling Map: Pair of 2x2 Split Quaternion Matrices (q₁, q₂) → Zorn Split Octonion Cell. -/
 def pairToZorn (q1 q2 : Matrix (Fin 2) (Fin 2) ℂ) : ZornCell where
   a := q1 0 0
-  b := q1 1 1
+  u := fun i => match i with
+    | 0 => q1 1 0
+    | 1 => q2 1 0
+    | 2 => q2 1 1
   v := fun i => match i with
     | 0 => q1 0 1
     | 1 => q2 0 0
     | 2 => q2 0 1
-  w := fun i => match i with
-    | 0 => q1 1 0
-    | 1 => q2 1 0
-    | 2 => q2 1 1
+  b := q1 1 1
 
 /-- **Theorem**: Zorn Diagonal Trace equals first Split Quaternion Matrix Trace:
     Tr_Zorn(Z(q₁, q₂)) = q₁(0,0) + q₁(1,1) = Tr(q₁). -/
@@ -40,16 +40,23 @@ theorem zorn_trace_eq_q1_trace (q1 q2 : Matrix (Fin 2) (Fin 2) ℂ) :
 /-- **Theorem**: Zorn Off-Diagonal Color Vectors for (q₁, q₂):
     v = (q₁₀₁, q₂₀₀, q₂₀₁), w = (q₁₁₀, q₂₁₀, q₂₁₁). -/
 theorem zorn_color_vectors (q1 q2 : Matrix (Fin 2) (Fin 2) ℂ) :
-    ZornCell.colorDot (pairToZorn q1 q2).v (pairToZorn q1 q2).w =
+    ZornCell.colorDot (pairToZorn q1 q2).u (pairToZorn q1 q2).v =
     q1 0 1 * q1 1 0 + q2 0 0 * q2 1 0 + q2 0 1 * q2 1 1 := by
-  dsimp [pairToZorn, ZornCell.colorDot]
+  simp [pairToZorn, ZornCell.colorDot,
+    InfoGeometry.Physics.SplitOctonionBraidSU3.dot3,
+    mul_comm, add_comm]
 
 /-- **Theorem**: Zorn Split Octonion Determinant in terms of Matrix Elements:
     det(Z(q₁, q₂)) = q₁₀₀ * q₁₁₁ - (q₁₀₁ q₁₁₀ + q₂₀₀ q₂₁₀ + q₂₀₁ q₂₁₁). -/
 theorem zorn_det_expansion (q1 q2 : Matrix (Fin 2) (Fin 2) ℂ) :
     ZornCell.detZ (pairToZorn q1 q2) =
     q1 0 0 * q1 1 1 - (q1 0 1 * q1 1 0 + q2 0 0 * q2 1 0 + q2 0 1 * q2 1 1) := by
-  dsimp [ZornCell.detZ, pairToZorn, ZornCell.colorDot]
+  change
+    q1 0 0 * q1 1 1 -
+        (q1 1 0 * q1 0 1 + q2 1 0 * q2 0 0 + q2 1 1 * q2 0 1) =
+      q1 0 0 * q1 1 1 -
+        (q1 0 1 * q1 1 0 + q2 0 0 * q2 1 0 + q2 0 1 * q2 1 1)
+  ring
 
 /-- **Theorem**: Pure Chiral Off-Diagonal Pair (q₁₀₀ = 0, q₁₁₁ = 0):
     det(Z(q₁, q₂)) = - (q₁₀₁ q₁₁₀ + q₂₀₀ q₂₁₀ + q₂₀₁ q₂₁₁). -/

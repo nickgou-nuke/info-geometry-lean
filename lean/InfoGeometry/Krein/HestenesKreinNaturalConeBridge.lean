@@ -168,7 +168,7 @@ end HestenesKreinNaturalConeVacuum
 
 section KMS
 
-variable [Mul Op]
+variable [AddMonoid Op] [Monoid Op]
 
 /--
 KMS adapter for a Hestenes/Krein natural-cone readout.

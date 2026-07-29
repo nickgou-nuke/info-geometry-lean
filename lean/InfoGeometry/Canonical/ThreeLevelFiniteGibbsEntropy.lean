@@ -99,11 +99,14 @@ theorem layeredJointWeight_pos
     (g : SuperSector) (s : Sector) (x : State s) :
     0 < layeredJointWeight State super energy particleNumber superNumber β μ ν g s x := by
   rw [layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight]
-  exact mul_pos
-    (outerWeight_pos State super energy particleNumber superNumber β μ ν fiber_nonempty g)
-    (mul_pos
-      (fiberSectorWeight_pos State super energy particleNumber β μ fiber_nonempty g s)
-      (conditionalWeight_pos State energy β s x))
+  have houter := outerWeight_pos State super energy particleNumber superNumber β μ ν
+    fiber_nonempty g
+  have hfiber := fiberSectorWeight_pos State super energy particleNumber β μ fiber_nonempty g s
+  have hcond := conditionalWeight_pos State energy β s x
+  have hpair : 0 < outerWeight State super energy particleNumber superNumber β μ ν g *
+      fiberSectorWeight State super energy particleNumber β μ g s :=
+    mul_pos houter hfiber
+  exact mul_pos hpair hcond
 
 /-- The conditional Gibbs weights normalize inside each sector. -/
 theorem sum_conditionalWeight_eq_one

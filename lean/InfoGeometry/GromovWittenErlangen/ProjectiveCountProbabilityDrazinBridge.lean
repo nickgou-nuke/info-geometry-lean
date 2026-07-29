@@ -44,7 +44,7 @@ projective modular count profiles.
 -/
 @[rep_depth operator]
 abbrev GWProjectiveCountProbabilityBridge
-    (n : ℕ) [Nonempty (Fin n)]
+    (n : ℕ)
     (G T Target Coeff : Type*) :=
   GWCanonicalCountRayBridge n G T Target Coeff
 

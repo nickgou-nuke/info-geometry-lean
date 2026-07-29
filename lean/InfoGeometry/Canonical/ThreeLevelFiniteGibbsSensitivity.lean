@@ -59,8 +59,21 @@ theorem outerLocalVariance_zero (C : OuterSensitivityContract) :
 theorem outerLocalVariance_pos (C : OuterSensitivityContract) {v : Fin 2 → ℝ}
     (hv : v ≠ 0) :
     0 < outerLocalVariance C v := by
-  simpa [outerLocalVariance] using
-    InfoGeometry.Inference.localVariance_pos C.fisherInverse C.contract hv
+  rw [outerLocalVariance, InfoGeometry.Inference.localVariance,
+    InfoGeometry.Inference.localCovariance, if_pos C.contract.determinant_isUnit]
+  exact C.contract.positiveDefinite.inv.dotProduct_mulVec_pos hv
+
+/-- Local variance vanishes exactly on the zero direction. -/
+theorem outerLocalVariance_eq_zero_iff (C : OuterSensitivityContract)
+    (v : Fin 2 → ℝ) :
+    outerLocalVariance C v = 0 ↔ v = 0 := by
+  constructor
+  · intro hv
+    by_contra hzero
+    have hpos : 0 < outerLocalVariance C v := outerLocalVariance_pos C hzero
+    linarith
+  · intro hv
+    simpa [hv] using outerLocalVariance_zero C
 
 end OuterSensitivityContract
 

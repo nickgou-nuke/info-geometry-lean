@@ -71,7 +71,7 @@ theorem grand_unification_framework_closure
   · exact dirac_pfaffian_eq_jacobi_theta s S l τ
   · exact even_spin_structure_pfaffian_nonneg s hs S l τ
   · exact connes_index_squared_dirac_comm ST
-  · exact nilpotent_boundary_mode_isolation ST Pf h_nilpotent h_pfaffian
+  · exact nilpotent_boundary_mode_isolation ST Pf
   · exact wick_rotation_positive_definite K TT h_pos_def
   · exact lorentzian_euclidean_duality K TT
 

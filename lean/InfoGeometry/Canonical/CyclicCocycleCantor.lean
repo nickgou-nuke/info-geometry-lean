@@ -33,16 +33,22 @@ variable {Op H : Type*} [Ring Op] [StarRing Op]
 A finite idempotent matrix projection used as the concrete `K₀` shadow of a
 clopen Cantor boundary projection.
 -/
-structure KTheoryProjection (n : ℕ) where
-  /-- Matrix representative of the projection. -/
-  e : Matrix (Fin n) (Fin n) ℂ
-  /-- Idempotence law for the projection representative. -/
-  is_idempotent : e * e = e
+abbrev KTheoryProjection (n : ℕ) :=
+  { e : Matrix (Fin n) (Fin n) ℂ // IsIdempotentElem e }
+
+namespace KTheoryProjection
+
+def e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
+
+theorem is_idempotent {n : ℕ} (proj : KTheoryProjection n) :
+    e proj * e proj = e proj := by
+  simpa only [e, IsIdempotentElem] using proj.2
+
+end KTheoryProjection
 
 /-- Instantiation of the KTheoryProjection structure to avoid fake/vacuous shapes. -/
 def trivialKTheoryProjection : KTheoryProjection 2 :=
-  { e := 1,
-    is_idempotent := by simp }
+  ⟨1, by simp [IsIdempotentElem]⟩
 
 /-- The finite grade-zero chiral cocycle `A ↦ Tr(γ A)`. -/
 noncomputable def finiteChiralCocycle0

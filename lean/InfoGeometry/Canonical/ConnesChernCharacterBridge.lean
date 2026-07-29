@@ -16,22 +16,26 @@ namespace ConnesChern
 variable {n : ℕ}
 
 /-- Non-Commutative Projection Idempotent e² = e representing a quantum vector bundle. -/
-structure IdempotentProjection (n : ℕ) where
-  e : Matrix (Fin n) (Fin n) ℂ
-  idem : e * e = e
+abbrev IdempotentProjection (n : ℕ) :=
+  { e : Matrix (Fin n) (Fin n) ℂ // IsIdempotentElem e }
 
 namespace IdempotentProjection
 
 variable (proj : IdempotentProjection n)
 
+def e : Matrix (Fin n) (Fin n) ℂ := proj.1
+
+theorem idem : e proj * e proj = e proj := by
+  simpa only [e, IsIdempotentElem] using proj.2
+
 /-- **Theorem**: Idempotent Square Identity: e³ = e. -/
-theorem idempotent_cube : proj.e * proj.e * proj.e = proj.e := by
-  rw [proj.idem, proj.idem]
+theorem idempotent_cube : e proj * e proj * e proj = e proj := by
+  rw [idem proj, idem proj]
 
 /-- **Theorem**: Idempotent Trace Rank non-negativity for positive projections:
     Tr(e) = Tr(e²). -/
-theorem idempotent_trace_sq : trace (proj.e * proj.e) = trace proj.e := by
-  rw [proj.idem]
+theorem idempotent_trace_sq : trace (e proj * e proj) = trace (e proj) := by
+  rw [idem proj]
 
 /-- Non-Commutative Chern Character Pairing <Ch(e), [D]> = Index(D_e). -/
 def chernCharacterPairing (indexD : ℝ) : ℝ := indexD

@@ -2,6 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 
@@ -19,30 +20,46 @@ variable {n : ℕ} [DecidableEq (Fin n)]
 
 /-- Non-Abelian Anyonic Fractional Statistics System with Single Braid R_ab and Reverse Braid R_ba. -/
 structure AnyonBraidSystem (n : ℕ) [DecidableEq (Fin n)] where
-  R_ab : Matrix (Fin n) (Fin n) ℂ
-  R_ba : Matrix (Fin n) (Fin n) ℂ
-  h_Rab_unitary : R_ab * R_ab.conjTranspose = 1
-  h_Rba_unitary : R_ba * R_ba.conjTranspose = 1
-  h_comm_braid : R_ab * R_ba = R_ba * R_ab
+  R_ab : Matrix.unitaryGroup (Fin n) ℂ
+  R_ba : Matrix.unitaryGroup (Fin n) ℂ
+  h_comm_braid :
+    (R_ab : Matrix (Fin n) (Fin n) ℂ) * R_ba =
+      (R_ba : Matrix (Fin n) (Fin n) ℂ) * R_ab
 
 namespace AnyonBraidSystem
 
 variable (sys : AnyonBraidSystem n)
 
+def R_abVal : Matrix (Fin n) (Fin n) ℂ := sys.R_ab
+
+def R_baVal : Matrix (Fin n) (Fin n) ℂ := sys.R_ba
+
+theorem h_Rab_unitary : R_abVal sys * (R_abVal sys).conjTranspose = 1 := by
+  change (sys.R_ab : Matrix (Fin n) (Fin n) ℂ) *
+      ((sys.R_ab : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = 1
+  exact Matrix.mem_unitaryGroup_iff.mp sys.R_ab.2
+
+theorem h_Rba_unitary : R_baVal sys * (R_baVal sys).conjTranspose = 1 := by
+  change (sys.R_ba : Matrix (Fin n) (Fin n) ℂ) *
+      ((sys.R_ba : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = 1
+  exact Matrix.mem_unitaryGroup_iff.mp sys.R_ba.2
+
 /-- Double Braiding Anyon Monodromy Operator M_ab = R_ba * R_ab. -/
 def doubleBraidingOperator : Matrix (Fin n) (Fin n) ℂ :=
-  sys.R_ba * sys.R_ab
+  R_baVal sys * R_abVal sys
 
 /-- **Theorem**: Double Braiding Monodromy Unitarity: M_ab * M_ab† = 1. -/
 theorem double_braiding_unitary :
     sys.doubleBraidingOperator * sys.doubleBraidingOperator.conjTranspose = 1 := by
   dsimp [doubleBraidingOperator]
   rw [conjTranspose_mul]
-  calc (sys.R_ba * sys.R_ab) * (sys.R_ab.conjTranspose * sys.R_ba.conjTranspose)
-    _ = sys.R_ba * (sys.R_ab * sys.R_ab.conjTranspose) * sys.R_ba.conjTranspose := by noncomm_ring
-    _ = sys.R_ba * 1 * sys.R_ba.conjTranspose := by rw [sys.h_Rab_unitary]
-    _ = sys.R_ba * sys.R_ba.conjTranspose := by rw [mul_one]
-    _ = 1 := sys.h_Rba_unitary
+  calc (R_baVal sys * R_abVal sys) *
+      ((R_abVal sys).conjTranspose * (R_baVal sys).conjTranspose)
+    _ = R_baVal sys * (R_abVal sys * (R_abVal sys).conjTranspose) *
+        (R_baVal sys).conjTranspose := by noncomm_ring
+    _ = R_baVal sys * 1 * (R_baVal sys).conjTranspose := by rw [h_Rab_unitary sys]
+    _ = R_baVal sys * (R_baVal sys).conjTranspose := by rw [mul_one]
+    _ = 1 := h_Rba_unitary sys
 
 /-- **Theorem**: Double Braiding Monodromy Trace Normalization: Tr(M_ab M_ab†) = n. -/
 theorem double_braiding_trace_normalized :

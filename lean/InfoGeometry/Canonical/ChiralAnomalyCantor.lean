@@ -13,9 +13,18 @@ commutes with the Dirac operator `D` and `D` is invertible.
 local hypotheses parameterized into the theorem.
 -/
 
-structure KTheoryProjection (n : ℕ) where
-  e : Matrix (Fin n) (Fin n) ℂ
-  is_idempotent : e * e = e
+abbrev KTheoryProjection (n : ℕ) :=
+  { e : Matrix (Fin n) (Fin n) ℂ // IsIdempotentElem e }
+
+namespace KTheoryProjection
+
+def e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
+
+theorem is_idempotent {n : ℕ} (proj : KTheoryProjection n) :
+    e proj * e proj = e proj := by
+  simpa only [e, IsIdempotentElem] using proj.2
+
+end KTheoryProjection
 
 /-- Cyclic 0-cocycle: `τ_tilt(A) = Tr(tilt · A)`. -/
 noncomputable def cyclic_0_cocycle

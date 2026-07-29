@@ -16,7 +16,7 @@ structure MetriplecticFlow (n : Type*) [Fintype n] [DecidableEq n] where
   rho : Matrix n n ℂ
   H   : Matrix n n ℂ                        -- Reversible Hamiltonian
   grad_F : Matrix n n ℂ                   -- Free Energy Gradient
-  Onsager : Matrix n n ℂ → Matrix n n ℂ -- Onsager Mobility
+  Onsager : Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ -- Onsager Mobility
   h_onsager_zero : Onsager 0 = 0          -- Zero gradient yields zero dissipation
 
 /-- 2. Matrix Commutator Operator: [A, B] = A * B - B * A -/

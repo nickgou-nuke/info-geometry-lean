@@ -2,6 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 
@@ -18,10 +19,8 @@ namespace TensorNetworkHolography
 
 /-- MERA Multi-Scale Entanglement Renormalization Structure with Disentangler u and Isometry w. -/
 structure MERANetwork (n : ℕ) where
-  disentangler_u : Matrix (Fin n) (Fin n) ℂ
-  isometry_w : Matrix (Fin n) (Fin n) ℂ
-  h_u_isometry : disentangler_u * disentangler_u.conjTranspose = 1
-  h_w_isometry : isometry_w * isometry_w.conjTranspose = 1
+  disentangler_u : Matrix.unitaryGroup (Fin n) ℂ
+  isometry_w : Matrix.unitaryGroup (Fin n) ℂ
   bond_dimension : ℕ
   cut_bonds : ℕ
 
@@ -29,34 +28,51 @@ namespace MERANetwork
 
 variable {n : ℕ} (mera : MERANetwork n)
 
+def disentanglerVal : Matrix (Fin n) (Fin n) ℂ := mera.disentangler_u
+
+def isometryVal : Matrix (Fin n) (Fin n) ℂ := mera.isometry_w
+
+theorem h_u_isometry : disentanglerVal mera * (disentanglerVal mera).conjTranspose = 1 := by
+  change (mera.disentangler_u : Matrix (Fin n) (Fin n) ℂ) *
+      (mera.disentangler_u : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1
+  exact Matrix.mem_unitaryGroup_iff.mp mera.disentangler_u.2
+
+theorem h_w_isometry : isometryVal mera * (isometryVal mera).conjTranspose = 1 := by
+  change (mera.isometry_w : Matrix (Fin n) (Fin n) ℂ) *
+      (mera.isometry_w : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1
+  exact Matrix.mem_unitaryGroup_iff.mp mera.isometry_w.2
+
 /-- MERA Layer Transformation Matrix T = u * w. -/
 def layerTransformation : Matrix (Fin n) (Fin n) ℂ :=
-  mera.disentangler_u * mera.isometry_w
+  disentanglerVal mera * isometryVal mera
 
 /-- **Theorem**: MERA Disentangler Trace Conservation: Tr(u u†) = n. -/
 theorem disentangler_trace_conservation :
-    trace (mera.disentangler_u * mera.disentangler_u.conjTranspose) = (n : ℂ) := by
-  rw [mera.h_u_isometry, trace_one]
+    trace (disentanglerVal mera * (disentanglerVal mera).conjTranspose) = (n : ℂ) := by
+  rw [h_u_isometry mera, trace_one]
   norm_cast
   exact Fintype.card_fin n
 
 /-- **Theorem**: MERA Isometry Trace Conservation: Tr(w w†) = n. -/
 theorem isometry_trace_conservation :
-    trace (mera.isometry_w * mera.isometry_w.conjTranspose) = (n : ℂ) := by
-  rw [mera.h_w_isometry, trace_one]
+    trace (isometryVal mera * (isometryVal mera).conjTranspose) = (n : ℂ) := by
+  rw [h_w_isometry mera, trace_one]
   norm_cast
   exact Fintype.card_fin n
 
 /-- **Theorem**: Composite MERA Layer Transformation Isometry:
     (u * w) * (u * w)† = u * (w * w†) * u† = 1. -/
 theorem layer_transformation_isometry :
-    (mera.disentangler_u * mera.isometry_w) * (mera.disentangler_u * mera.isometry_w).conjTranspose = 1 := by
-  rw [conjTranspose_mul, mul_assoc, ← mul_assoc mera.isometry_w, mera.h_w_isometry, one_mul, mera.h_u_isometry]
+    (disentanglerVal mera * isometryVal mera) *
+        (disentanglerVal mera * isometryVal mera).conjTranspose = 1 := by
+  rw [conjTranspose_mul, mul_assoc, ← mul_assoc (isometryVal mera),
+    h_w_isometry mera, one_mul, h_u_isometry mera]
 
 /-- **Theorem**: Composite MERA Layer Trace Conservation: Tr((u w) (u w)†) = n. -/
 theorem layer_transformation_trace_conservation :
-    trace ((mera.disentangler_u * mera.isometry_w) * (mera.disentangler_u * mera.isometry_w).conjTranspose) = (n : ℂ) := by
-  rw [mera.layer_transformation_isometry, trace_one]
+    trace ((disentanglerVal mera * isometryVal mera) *
+      (disentanglerVal mera * isometryVal mera).conjTranspose) = (n : ℂ) := by
+  rw [layer_transformation_isometry mera, trace_one]
   norm_cast
   exact Fintype.card_fin n
 

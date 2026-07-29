@@ -16,7 +16,7 @@ structure MetriplecticDissipativeSystem (n : Type*) [Fintype n] [DecidableEq n] 
   rho : Matrix n n ℂ
   H   : Matrix n n ℂ                        -- Reversible Hamiltonian
   grad_F : Matrix n n ℂ                   -- Free Energy Gradient
-  Onsager : Matrix n n ℂ → Matrix n n ℂ -- Onsager Mobility
+  Onsager : Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ -- Onsager Mobility
   h_onsager_pos : ∀ A : Matrix n n ℂ, 0 ≤ (trace (star A * Onsager A)).re
   -- Metriplectic Degeneracy Condition: Unitary flow preserves Free Energy
   h_unitary_F_inv : (trace (star grad_F * (- Complex.I • (H * rho - rho * H)))).re = 0

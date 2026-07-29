@@ -409,6 +409,7 @@ import InfoGeometry.Canonical.TopologicalEntanglementEntropyBridge
 import InfoGeometry.Canonical.DrinfeldCenterFibonacciBridge
 import InfoGeometry.Canonical.HaagerupSubfactorAnyonBridge
 import InfoGeometry.Canonical.FQHEChiralEdgeCFTBridge
+import InfoGeometry.Canonical.CuntzKriegerMarkovBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge

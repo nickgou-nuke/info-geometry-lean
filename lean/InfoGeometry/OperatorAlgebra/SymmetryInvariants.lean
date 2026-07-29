@@ -19,6 +19,7 @@ readouts, pairings, and projector decompositions.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
+import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
@@ -798,20 +799,43 @@ multiplicativity and group-action laws. This is enough to define invariant
 operators as a submodule and to prove that products and commutators of
 invariants are invariant.
 -/
-structure OperatorSymmetryAction
+abbrev OperatorSymmetryAction
     (G : Type uG) (Op : Type uOp)
-    [Group G] [Ring Op] [Algebra ℝ Op] where
-  /-- The action of a symmetry element on the operator algebra. -/
-  act : G → Op ≃ₐ[ℝ] Op
+    [Group G] [Ring Op] [Algebra ℝ Op] :=
+  ErlangenConformalInvariant.GroupAction G Op
 
-  /-- The identity group element acts trivially. -/
-  act_id :
-    ∀ x : Op, act 1 x = x
+namespace OperatorSymmetryAction
 
-  /-- Group multiplication acts by composition. -/
-  act_mul :
-    ∀ (g h : G) (x : Op),
-      act (g * h) x = act g (act h x)
+variable {G : Type uG} {Op : Type uOp}
+variable [Group G] [Ring Op] [Algebra ℝ Op]
+
+def act (S : OperatorSymmetryAction G Op) : G → Op ≃ₐ[ℝ] Op :=
+  fun g => S.toFun g⁻¹
+
+theorem act_id (S : OperatorSymmetryAction G Op) (x : Op) :
+    S.act 1 x = x := by
+  change S.toFun (1⁻¹) x = x
+  simp only [inv_one]
+  rw [S.map_one']
+  rfl
+
+theorem act_mul (S : OperatorSymmetryAction G Op)
+    (g h : G) (x : Op) :
+    S.act (g * h) x = S.act g (S.act h x) := by
+  change S.toFun ((g * h)⁻¹) x =
+    S.toFun g⁻¹ (S.toFun h⁻¹ x)
+  rw [mul_inv_rev, S.map_mul']
+  simp
+
+theorem map_one (S : OperatorSymmetryAction G Op) (g : G) :
+    S.act g 1 = 1 := (S.act g).map_one
+
+theorem map_mul (S : OperatorSymmetryAction G Op)
+    (g : G) (x y : Op) :
+    S.act g (x * y) = S.act g x * S.act g y :=
+  (S.act g).map_mul x y
+
+end OperatorSymmetryAction
 
 /-- Convert a linear operator symmetry action into a ring-automorphism action. -/
 def toSymmetryAction
@@ -819,8 +843,8 @@ def toSymmetryAction
     [Group G] [Ring Op] [Algebra ℝ Op]
     (S : OperatorSymmetryAction G Op) : SymmetryAction G Op where
   act g := (S.act g).toRingEquiv
-  act_one x := S.act_id x
-  act_mul g h x := S.act_mul g h x
+  act_one x := OperatorSymmetryAction.act_id S x
+  act_mul g h x := OperatorSymmetryAction.act_mul S g h x
 
 namespace OperatorSymmetryAction
 
@@ -829,11 +853,6 @@ variable
     [Group G] [Ring Op] [Algebra ℝ Op]
 
 variable (S : OperatorSymmetryAction G Op)
-
-theorem map_one (g : G) : S.act g 1 = 1 := (S.act g).map_one
-
-theorem map_mul (g : G) (x y : Op) :
-    S.act g (x * y) = S.act g x * S.act g y := (S.act g).map_mul x y
 
 @[simp]
 theorem act_one_apply

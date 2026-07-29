@@ -293,18 +293,11 @@ This is the algebra-level version of the naturality statement:
 -/
 structure PhasePreservingAlgebraMap
     {OpA OpB : Type*}
-    [Ring OpA] [Module ℝ OpA]
-    [Ring OpB] [Module ℝ OpB]
+    [Ring OpA] [Algebra ℝ OpA]
+    [Ring OpB] [Algebra ℝ OpB]
     (CA : CircularPolarization OpA)
     (CB : CircularPolarization OpB) where
-  toLinearMap : OpA →ₗ[ℝ] OpB
-
-  map_one :
-    toLinearMap 1 = 1
-
-  map_mul :
-    ∀ x y : OpA,
-      toLinearMap (x * y) = toLinearMap x * toLinearMap y
+  toLinearMap : OpA →ₐ[ℝ] OpB
 
   map_chi :
     toLinearMap CA.chi = CB.chi
@@ -312,11 +305,17 @@ structure PhasePreservingAlgebraMap
 namespace PhasePreservingAlgebraMap
 
 variable {OpA OpB : Type*}
-variable [Ring OpA] [Module ℝ OpA]
-variable [Ring OpB] [Module ℝ OpB]
+variable [Ring OpA] [Algebra ℝ OpA]
+variable [Ring OpB] [Algebra ℝ OpB]
 variable {CA : CircularPolarization OpA}
 variable {CB : CircularPolarization OpB}
 variable (f : PhasePreservingAlgebraMap CA CB)
+
+theorem map_one : f.toLinearMap 1 = 1 := f.toLinearMap.map_one
+
+theorem map_mul (x y : OpA) :
+    f.toLinearMap (x * y) = f.toLinearMap x * f.toLinearMap y :=
+  f.toLinearMap.map_mul x y
 
 /-- A phase-preserving algebra map preserves the left circular projector. -/
 theorem map_P_left :

@@ -340,14 +340,34 @@ noncomputable def rotor (X : RealKVect) (θ : ℝ) : X ⟶ X :=
 A structured nilpotent morphism inside `RealKVect`.
 Extends `RealKVect.Hom X X` with a proof that `hom ∘ hom = 0`.
 -/
-structure NilpotentHom (X : RealKVect) extends RealKVect.Hom X X where
-  nilpotent : toHom.hom.comp toHom.hom = 0
+def NilpotentHom (X : RealKVect) : Type _ :=
+  {f : RealKVect.Hom X X // f.hom.comp f.hom = 0}
+
+namespace NilpotentHom
+
+/-- The underlying `RealKVect` morphism of a nilpotent morphism. -/
+abbrev toHom {X : RealKVect} (N : NilpotentHom X) : RealKVect.Hom X X :=
+  N.1
+
+/-- The nilpotence law carried by the morphism. -/
+theorem nilpotent {X : RealKVect} (N : NilpotentHom X) :
+    (toHom N).hom.comp (toHom N).hom = 0 :=
+  N.2
+
+/-- Construct a nilpotent morphism from a commuting morphism and its square-zero law. -/
+def mk {X : RealKVect}
+    (f : RealKVect.Hom X X)
+    (h : f.hom.comp f.hom = 0) : NilpotentHom X :=
+  ⟨f, h⟩
+
+end NilpotentHom
 
 /-- Concrete instantiation of `NilpotentHom` using the zero morphism. -/
-def zeroNilpotentHom (X : RealKVect) : NilpotentHom X where
-  hom := 0
-  comm := by ext; simp
-  nilpotent := by ext; simp
+def zeroNilpotentHom (X : RealKVect) : NilpotentHom X :=
+  NilpotentHom.mk
+    { hom := 0
+      comm := by ext; simp }
+    (by ext; simp)
 
 /-- Commutation lemma for `rotor` and any morphism. -/
 lemma rotor_comp_hom (X : RealKVect) (θ : ℝ) (f : X ⟶ X) :

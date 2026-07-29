@@ -14,6 +14,7 @@ action.
 
 import Mathlib.Tactic
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
+import InfoGeometry.Geometry.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.Meta.OwnerTarget
 
@@ -792,54 +793,45 @@ A homogeneous Krein quadratic readout on a real carrier.
 
 Morally this is `q(v) = ⟪v, η v⟫`.
 -/
-structure KreinQuadraticDatum
-    (H : Type*) [AddCommGroup H] [Module ℝ H] where
-  /-- Quadratic readout. -/
-  q : H → ℝ
-
-  /-- The zero vector is null. -/
-  q_zero :
-    q 0 = 0
-
-  /-- Quadratic homogeneity. -/
-  q_smul :
-    ∀ (a : ℝ) (v : H), q (a • v) = a ^ 2 * q v
+abbrev KreinQuadraticDatum
+    (H : Type*) [AddCommGroup H] [Module ℝ H] :=
+  InfoGeometry.Geometry.KreinIsotropicCone.KreinQuadraticDatum H
 
 /--
 The isotropic/null cone.
 
 This is the projective boundary/absolute, not the metric interior.
 -/
-def IsotropicCone
+abbrev IsotropicCone
     {H : Type*} [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) : Set H :=
-  {v : H | Q.q v = 0}
+  InfoGeometry.Geometry.KreinIsotropicCone.IsotropicCone Q
 
 /--
 The strict isotropic cone excludes the zero vector.
 -/
-def StrictIsotropicCone
+abbrev StrictIsotropicCone
     {H : Type*} [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) : Set H :=
-  {v : H | v ≠ 0 ∧ Q.q v = 0}
+  InfoGeometry.Geometry.KreinIsotropicCone.StrictIsotropicCone Q
 
 /--
 The positive Krein cone.
 
 This is one possible interior domain for hyperbolic/Poincare geometry.
 -/
-def PositiveKreinCone
+abbrev PositiveKreinCone
     {H : Type*} [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) : Set H :=
-  {v : H | 0 < Q.q v}
+  InfoGeometry.Geometry.KreinIsotropicCone.PositiveKreinCone Q
 
 /--
 The negative Krein cone.
 -/
-def NegativeKreinCone
+abbrev NegativeKreinCone
     {H : Type*} [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) : Set H :=
-  {v : H | Q.q v < 0}
+  InfoGeometry.Geometry.KreinIsotropicCone.NegativeKreinCone Q
 
 /--
 The isotropic cone is stable under scalar multiplication.
@@ -851,7 +843,8 @@ theorem smul_mem_isotropicCone
     (hv : v ∈ IsotropicCone Q)
     (a : ℝ) :
     a • v ∈ IsotropicCone Q := by
-  dsimp [IsotropicCone] at hv ⊢
+  change Q.q (a • v) = 0
+  change Q.q v = 0 at hv
   rw [Q.q_smul, hv, mul_zero]
 
 /--

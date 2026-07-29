@@ -97,10 +97,32 @@ This is intentionally a data interface: the repo does not currently contain a
 trace-class Fredholm determinant theorem proving this certificate from first
 principles.
 -/
-structure FredholmHalfPlaneCertificate where
-  determinant : ℂ → ℂ
-  determinant_ne_zero :
-    ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
+def FredholmHalfPlaneCertificate : Type _ :=
+  {determinant : ℂ → ℂ //
+    ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0}
+
+namespace FredholmHalfPlaneCertificate
+
+/-- The Fredholm determinant carried by the certificate. -/
+abbrev determinant (C : FredholmHalfPlaneCertificate) : ℂ → ℂ :=
+  C.1
+
+/-- The half-plane nonvanishing law carried by the certificate. -/
+theorem determinant_ne_zero
+    (C : FredholmHalfPlaneCertificate)
+    (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) :
+    determinant C s ≠ 0 :=
+  C.2 s hs
+
+/-- Construct a Fredholm half-plane certificate from its determinant law. -/
+def mk
+    (determinant : ℂ → ℂ)
+    (h : ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0) :
+    FredholmHalfPlaneCertificate :=
+  ⟨determinant, h⟩
+
+end FredholmHalfPlaneCertificate
 
 /--
 **Formulation 4 (Fredholm Invertibility).**

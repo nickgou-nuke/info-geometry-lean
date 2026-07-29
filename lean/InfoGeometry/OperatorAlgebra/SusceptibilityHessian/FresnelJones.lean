@@ -18,18 +18,22 @@ Fresnel/Jones coefficient readout from a material model.
 
 `rs` and `rp` are complex amplitude reflection coefficients in the `s/p` basis.
 -/
-structure FresnelCoefficientReadout
-    (State : Type*) where
-  /-- s-polarized reflection amplitude. -/
-  rs : State → ℂ
-
-  /-- p-polarized reflection amplitude. -/
-  rp : State → ℂ
+def FresnelCoefficientReadout (State : Type*) :=
+  State → ℂ × ℂ
 
 namespace FresnelCoefficientReadout
 
 variable {State : Type*}
-variable (F : FresnelCoefficientReadout State)
+
+def rs (F : FresnelCoefficientReadout State) : State → ℂ :=
+  fun U => (F U).1
+
+def rp (F : FresnelCoefficientReadout State) : State → ℂ :=
+  fun U => (F U).2
+
+def mk
+    (rs rp : State → ℂ) : FresnelCoefficientReadout State :=
+  fun U => (rs U, rp U)
 
 end FresnelCoefficientReadout
 

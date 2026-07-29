@@ -145,15 +145,13 @@ certificate is exactly the converse: every invertible difference lies in the
 admissible resolvent domain.  Only with this certificate do admissibility
 failure and ordinary spectral-divisor failure coincide.
 -/
-structure KernelAdmissibilityComplete
+def KernelAdmissibilityComplete
     {Param Point Value : Type*}
     [Ring Value]
-    (K : NoncommutativeCauchyKernel Param Point Value) where
-  /-- Invertibility of the difference implies admissibility of the kernel. -/
-  admissible_of_isUnit_diff :
-    ∀ ζ z,
-      IsUnit (K.diff ζ z) →
-        K.IsAdmissible ζ z
+    (K : NoncommutativeCauchyKernel Param Point Value) : Prop :=
+  ∀ ζ z,
+    IsUnit (K.diff ζ z) →
+      K.IsAdmissible ζ z
 
 namespace KernelAdmissibilityComplete
 
@@ -165,8 +163,7 @@ Native completeness for the scalar complex Cauchy kernel:
 invertible difference implies admissibility.
 -/
 noncomputable def scalarComplexKernelAdmissibilityComplete :
-    KernelAdmissibilityComplete scalarComplexCauchyKernel where
-  admissible_of_isUnit_diff := by
+    KernelAdmissibilityComplete scalarComplexCauchyKernel := by
     intro ζ z hunit
     rw [InfoGeometry.Geometry.BilingualAnalyticity.scalarComplexCauchyKernel.admissible_iff]
     exact hunit.ne_zero
@@ -183,8 +180,7 @@ theorem kernelSpectralDivisor_iff_spectralDivisor_kernelDiff
       ↔ IsSpectralDivisor (kernelDiffFunction K) (ζ, z) := by
   constructor
   · intro hdiv hunit
-    rcases complete with ⟨hcomplete⟩
-    exact hdiv (hcomplete ζ z hunit)
+    exact hdiv (complete ζ z hunit)
   · intro hdiv hadm
     apply hdiv
     refine
@@ -206,8 +202,7 @@ theorem admissible_of_not_spectralDivisor_kernelDiff
     {z : Point}
     (h : ¬ IsSpectralDivisor (kernelDiffFunction K) (ζ, z)) :
     K.IsAdmissible ζ z := by
-  rcases complete with ⟨hcomplete⟩
-  apply hcomplete
+  apply complete
   by_contra hunit
   exact h hunit
 

@@ -180,19 +180,46 @@ The `cone` here is the symbolic `J`-fixed cone of centered scalar fields.  This
 does not construct the full Tomita--Takesaki natural cone; it records the exact
 projection facts that a future standard-form owner can consume.
 -/
-structure ChiralConeAnchorReadout where
-  anchor : CenteredField
-  anchor_mem_cone : anchor ∈ JFixedCone
-  even_projection_eq_anchor : JEvenProjector anchor = anchor
-  odd_projection_eq_zero : JOddProjector anchor = 0
+def ChiralConeAnchorReadout :=
+  {anchor : CenteredField //
+    anchor ∈ JFixedCone ∧
+      JEvenProjector anchor = anchor ∧
+        JOddProjector anchor = 0}
+
+namespace ChiralConeAnchorReadout
+
+abbrev anchor (A : ChiralConeAnchorReadout) : CenteredField := A.1
+
+theorem anchor_mem_cone (A : ChiralConeAnchorReadout) :
+    A.anchor ∈ JFixedCone :=
+  A.2.1
+
+theorem even_projection_eq_anchor (A : ChiralConeAnchorReadout) :
+    JEvenProjector A.anchor = A.anchor :=
+  A.2.2.1
+
+theorem odd_projection_eq_zero (A : ChiralConeAnchorReadout) :
+    JOddProjector A.anchor = 0 :=
+  A.2.2.2
+
+def mk
+    (anchor : CenteredField)
+    (anchor_mem_cone : anchor ∈ JFixedCone)
+    (even_projection_eq_anchor : JEvenProjector anchor = anchor)
+    (odd_projection_eq_zero : JOddProjector anchor = 0) :
+    ChiralConeAnchorReadout :=
+  ⟨anchor, ⟨anchor_mem_cone,
+    ⟨even_projection_eq_anchor, odd_projection_eq_zero⟩⟩⟩
+
+end ChiralConeAnchorReadout
 
 /-- Completed `xi` supplies a theorem-safe symbolic chiral-cone anchor. -/
 def CenteredXiSymmetryPacket.toChiralConeAnchorReadout
     (X : CenteredXiSymmetryPacket) :
-    ChiralConeAnchorReadout where
-  anchor := X.xi
-  anchor_mem_cone := X.xi_mem_JFixedCone
-  even_projection_eq_anchor := X.xi_JEvenProjector_eq
-  odd_projection_eq_zero := X.xi_JOddProjector_eq_zero
+    ChiralConeAnchorReadout :=
+  ChiralConeAnchorReadout.mk X.xi
+    X.xi_mem_JFixedCone
+    X.xi_JEvenProjector_eq
+    X.xi_JOddProjector_eq_zero
 
 end InfoGeometry.Arithmetic.ZetaChiralConeProjection

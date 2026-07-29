@@ -331,14 +331,24 @@ A modular readout with a distinguished `T` element.
 The only closed theorem we need for the boundary cusp lane is the
 `T`-identity hypothesis.
 -/
-structure RealModularReadoutData (R : Type*) [Monoid R] where
-  readout : SL2Z → RealUpperHalfPlane → R
-  T : SL2Z
-  T_identity : ∀ τ : RealUpperHalfPlane, readout T τ = 1
+def RealModularReadoutData (R : Type*) [Monoid R] :=
+  {readout : SL2Z → RealUpperHalfPlane → R //
+    ∃ T : SL2Z, ∀ τ : RealUpperHalfPlane, readout T τ = 1}
 
 namespace RealModularReadoutData
 
 variable {R : Type*} [Monoid R]
+
+def readout (D : RealModularReadoutData R) :
+    SL2Z → RealUpperHalfPlane → R :=
+  D.1
+
+noncomputable def T (D : RealModularReadoutData R) : SL2Z :=
+  Classical.choose D.2
+
+theorem T_identity (D : RealModularReadoutData R) :
+    ∀ τ : RealUpperHalfPlane, D.readout D.T τ = 1 :=
+  Classical.choose_spec D.2
 
 /-- The `T`-identity hypothesis in theorem form. -/
 theorem t_identity (D : RealModularReadoutData R) :

@@ -159,25 +159,56 @@ A super/graded readout.
 This is not a bare trace. It is whatever graded integration backend the model
 supplies.
 -/
-structure SuperReadout
-    (A Scalar : Type*) [Ring A] where
-  /-- Graded/super readout. -/
-  read : A → Scalar
+def SuperReadout
+    (A Scalar : Type*) [Ring A] : Type _ :=
+  A → Scalar
+
+namespace SuperReadout
+
+/-- The graded/super readout carried by the direct function owner. -/
+abbrev read
+    {A Scalar : Type*} [Ring A]
+    (R : SuperReadout A Scalar) : A → Scalar :=
+  R
+
+/-- Construct a direct super readout. -/
+def mk
+    {A Scalar : Type*} [Ring A]
+    (readout : A → Scalar) : SuperReadout A Scalar :=
+  readout
+
+end SuperReadout
 
 /-- A unit-conjugation invariant superreadout. -/
-structure UnitInvariantSuperReadout
-    (A Scalar : Type*) [Ring A] where
-  /-- Graded/super readout. -/
-  read : A → Scalar
-  /-- Unit-conjugation invariance. -/
-  invariant :
+def UnitInvariantSuperReadout
+    (A Scalar : Type*) [Ring A] : Type _ :=
+  {read : A → Scalar //
     ∀ (g : Units A) (x : A),
-      read (g.val * x * g.inv) = read x
+      read (g.val * x * g.inv) = read x}
 
 namespace UnitInvariantSuperReadout
 
 variable {A Scalar : Type*} [Ring A]
 variable (R : UnitInvariantSuperReadout A Scalar)
+
+/-- The readout carried by a unit-invariant superreadout. -/
+abbrev read (R : UnitInvariantSuperReadout A Scalar) : A → Scalar :=
+  R.1
+
+/-- The unit-conjugation invariance law carried by the readout. -/
+theorem invariant
+    (R : UnitInvariantSuperReadout A Scalar)
+    (g : Units A) (x : A) :
+    read R (g.val * x * g.inv) = read R x :=
+  R.2 g x
+
+/-- Construct a unit-invariant superreadout from its law. -/
+def mk
+    (readout : A → Scalar)
+    (h : ∀ (g : Units A) (x : A),
+      readout (g.val * x * g.inv) = readout x) :
+    UnitInvariantSuperReadout A Scalar :=
+  ⟨readout, h⟩
 
 /-- The graded index readout of a kernel projector. -/
 def indexOf
@@ -191,7 +222,7 @@ theorem indexOf_conjugate
     R.indexOf (P.conjugate g) = R.indexOf P := by
   dsimp [indexOf]
   rw [KernelProjector.conjugate_Pker]
-  exact R.invariant g P.Pker
+  exact invariant R g P.Pker
 
 end UnitInvariantSuperReadout
 
@@ -306,7 +337,7 @@ variable (K : KasparovBoundaryAccounting A Scalar Region Point Tangent Value I)
 
 /-- The index readout is the graded/super readout of the kernel projector. -/
 def index : Scalar :=
-  K.superReadout.read K.kernelProjector.Pker
+  SuperReadout.read K.superReadout K.kernelProjector.Pker
 
 /-- Boundary equals volume defect by the stored boundary ledger. -/
 theorem boundary_eq_volume_defect

@@ -69,9 +69,23 @@ Concrete models may instantiate this by a Bregman divergence, Hessian
 condition number, modular acceleration, absorption coefficient, or curvature
 readout.
 -/
-structure ShearReadout
-    (State : Type*) where
-  shear : State → ℝ
+/-!
+A scalar shear readout is directly a state-indexed real observable.  No
+additional law is attached to this carrier, so a structure would only wrap
+the function.
+-/
+abbrev ShearReadout (State : Type*) := State → ℝ
+
+namespace ShearReadout
+
+abbrev shear {State : Type*}
+    (R : ShearReadout State) : State → ℝ := R
+
+def mk {State : Type*}
+    (shear : State → ℝ) : ShearReadout State :=
+  shear
+
+end ShearReadout
 
 /-- An extreme shear threshold. -/
 structure ExtremeShearThreshold

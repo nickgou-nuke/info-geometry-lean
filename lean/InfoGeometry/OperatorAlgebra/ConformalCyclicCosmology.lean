@@ -123,17 +123,11 @@ This is the formal replacement for saying that a cross-ratio/null-incidence
 type observable survives: the readout is invariant on the null cone under the
 Möbius chart swap.
 -/
-structure SurvivingConformalReadout
+def SurvivingConformalReadout
     {Old New W : Type*} [AddCommGroup W] [Module ℝ W]
     (C : AeonConformalCrossover Old New W)
-    (Readout : Type*) where
-  /-- Ambient conformal readout. -/
-  read :
-    W → Readout
-
-  /-- The readout is invariant under the crossover inversion on null data. -/
-  read_invariant :
-    C.inversion.IsMobiusInvariantReadout read
+    (Readout : Type*) : Type _ :=
+  {read : W → Readout // C.inversion.IsMobiusInvariantReadout read}
 
 namespace SurvivingConformalReadout
 
@@ -142,22 +136,38 @@ variable
     {C : AeonConformalCrossover Old New W}
     (R : SurvivingConformalReadout C Readout)
 
+/-- The ambient readout carried by a surviving conformal readout. -/
+abbrev read (R : SurvivingConformalReadout C Readout) : W → Readout :=
+  R.1
+
+/-- The crossover-invariance law carried by a surviving conformal readout. -/
+theorem read_invariant :
+    C.inversion.IsMobiusInvariantReadout (read R) :=
+  R.2
+
+/-- Construct a surviving conformal readout from a readout and its invariant law. -/
+def mk
+    (readout : W → Readout)
+    (h : C.inversion.IsMobiusInvariantReadout readout) :
+    SurvivingConformalReadout C Readout :=
+  ⟨readout, h⟩
+
 /-- The readout of an old representative agrees with its inverted representative. -/
 theorem old_read_eq_inverted_old_read
     (o : Old) :
     R.read (C.inversion.inv (C.oldCarrier o)) =
       R.read (C.oldCarrier o) :=
-  C.inversion.invariantReadout_inv_eq R.read_invariant (C.old_null o)
+  C.inversion.invariantReadout_inv_eq (read_invariant R) (C.old_null o)
 
 /--
 The symmetrized old readout is chart-swap stable up to swapping its two entries.
 -/
 theorem old_symmetrized_readout_swaps
     (o : Old) :
-    C.inversion.symmetrizedReadout R.read
+    C.inversion.symmetrizedReadout (read R)
         (C.inversion.inv (C.oldCarrier o)) =
-      (R.read (C.inversion.inv (C.oldCarrier o)), R.read (C.oldCarrier o)) :=
-  C.inversion.symmetrizedReadout_inv R.read (C.oldCarrier o)
+      (read R (C.inversion.inv (C.oldCarrier o)), read R (C.oldCarrier o)) :=
+  C.inversion.symmetrizedReadout_inv (read R) (C.oldCarrier o)
 
 end SurvivingConformalReadout
 

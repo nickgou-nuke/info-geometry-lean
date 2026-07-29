@@ -154,25 +154,35 @@ An Erlanger invariant is a readout unchanged by admissible phase conjugation.
 This packages the slogan that the geometry is determined by the objects,
 admissible morphisms, and readouts invariant under those morphisms.
 -/
-structure ErlangerInvariant
+def ErlangerInvariant
     {H : Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (K : H →L[ℝ] H)
-    (α : Type*) where
-  /-- The readout assigned to an operator. -/
-  read : (H →L[ℝ] H) → α
-
-  /-- The readout is unchanged by conjugation inside the phase centralizer. -/
-  invariant_under_phase_conjugation :
+    (α : Type*) : Type _ :=
+  {read : (H →L[ℝ] H) → α //
     ∀ (g : Units (H →L[ℝ] H)) (T : H →L[ℝ] H),
       PhaseLinear K g.val →
       PhaseLinear K (g⁻¹).val →
-      read ((g.val.comp T).comp (g⁻¹).val) = read T
+      read ((g.val.comp T).comp (g⁻¹).val) = read T}
 
 namespace ErlangerInvariant
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 variable {K : H →L[ℝ] H} {α : Type*}
+
+/-- The operator readout carried by an Erlanger invariant. -/
+abbrev read (I : ErlangerInvariant K α) : (H →L[ℝ] H) → α :=
+  I.1
+
+/-- The phase-conjugation law carried by an Erlanger invariant. -/
+theorem invariant_under_phase_conjugation
+    (I : ErlangerInvariant K α)
+    (g : Units (H →L[ℝ] H))
+    (T : H →L[ℝ] H)
+    (hg : PhaseLinear K g.val)
+    (hgi : PhaseLinear K (g⁻¹).val) :
+    read I ((g.val.comp T).comp (g⁻¹).val) = read I T :=
+  I.2 g T hg hgi
 
 /-- Named re-export of phase-conjugation invariance. -/
 theorem phase_conjugation
@@ -182,7 +192,7 @@ theorem phase_conjugation
     (hg : PhaseLinear K g.val)
     (hgi : PhaseLinear K (g⁻¹).val) :
     I.read ((g.val.comp T).comp (g⁻¹).val) = I.read T :=
-  I.invariant_under_phase_conjugation g T hg hgi
+  invariant_under_phase_conjugation I g T hg hgi
 
 end ErlangerInvariant
 

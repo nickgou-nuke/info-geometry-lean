@@ -48,36 +48,107 @@ kernel-checked field, so downstream users cannot silently treat a debt item as
 an owner theorem.
 -/
 @[rep_depth thermo]
-structure TheoryShadowRepresentation where
- spin44CharacterStatus : ShadowStatus
- exactKKTResidualStatus : ShadowStatus
- splitCl44TKKStatus : ShadowStatus
- drazinDixmierStatus : ShadowStatus
- pfaffianWittenIndexStatus : ShadowStatus
- spin44_is_finiteShadow :
- spin44CharacterStatus = ShadowStatus.finiteShadow
- exactKKT_is_ownerOwned :
- exactKKTResidualStatus = ShadowStatus.ownerOwned
- splitCl44TKK_is_bridgeOwned :
- splitCl44TKKStatus = ShadowStatus.bridgeOwned
- drazinDixmier_is_debt :
- drazinDixmierStatus = ShadowStatus.debt
- pfaffianWittenIndex_is_debt :
- pfaffianWittenIndexStatus = ShadowStatus.debt
+abbrev TheoryShadowStatusVector :=
+  ShadowStatus × ShadowStatus × ShadowStatus × ShadowStatus × ShadowStatus
+
+def TheoryShadowRepresentation : Prop :=
+  ∃ s : TheoryShadowStatusVector,
+    s.1 = ShadowStatus.finiteShadow ∧
+    s.2.1 = ShadowStatus.ownerOwned ∧
+    s.2.2.1 = ShadowStatus.bridgeOwned ∧
+    s.2.2.2.1 = ShadowStatus.debt ∧
+    s.2.2.2.2 = ShadowStatus.debt
+
+abbrev CurrentTheoryShadowRepresentation :=
+  {s : TheoryShadowStatusVector //
+    s.1 = ShadowStatus.finiteShadow ∧
+    s.2.1 = ShadowStatus.ownerOwned ∧
+    s.2.2.1 = ShadowStatus.bridgeOwned ∧
+    s.2.2.2.1 = ShadowStatus.debt ∧
+    s.2.2.2.2 = ShadowStatus.debt}
+
+def currentStatus : CurrentTheoryShadowRepresentation :=
+  ⟨(ShadowStatus.finiteShadow, ShadowStatus.ownerOwned,
+      ShadowStatus.bridgeOwned, ShadowStatus.debt, ShadowStatus.debt), by
+    exact ⟨rfl, rfl, rfl, rfl, rfl⟩⟩
+
+def CurrentTheoryShadowRepresentation.spin44CharacterStatus
+    (C : CurrentTheoryShadowRepresentation) : ShadowStatus := C.1.1
+
+def CurrentTheoryShadowRepresentation.exactKKTResidualStatus
+    (C : CurrentTheoryShadowRepresentation) : ShadowStatus := C.1.2.1
+
+def CurrentTheoryShadowRepresentation.splitCl44TKKStatus
+    (C : CurrentTheoryShadowRepresentation) : ShadowStatus := C.1.2.2.1
+
+def CurrentTheoryShadowRepresentation.drazinDixmierStatus
+    (C : CurrentTheoryShadowRepresentation) : ShadowStatus := C.1.2.2.2.1
+
+def CurrentTheoryShadowRepresentation.pfaffianWittenIndexStatus
+    (C : CurrentTheoryShadowRepresentation) : ShadowStatus := C.1.2.2.2.2
+
+theorem CurrentTheoryShadowRepresentation.spin44_is_finiteShadow
+    (C : CurrentTheoryShadowRepresentation) :
+    C.spin44CharacterStatus = ShadowStatus.finiteShadow := C.2.1
+
+theorem CurrentTheoryShadowRepresentation.exactKKT_is_ownerOwned
+    (C : CurrentTheoryShadowRepresentation) :
+    C.exactKKTResidualStatus = ShadowStatus.ownerOwned := C.2.2.1
+
+theorem CurrentTheoryShadowRepresentation.splitCl44TKK_is_bridgeOwned
+    (C : CurrentTheoryShadowRepresentation) :
+    C.splitCl44TKKStatus = ShadowStatus.bridgeOwned := C.2.2.2.1
+
+theorem CurrentTheoryShadowRepresentation.drazinDixmier_is_debt
+    (C : CurrentTheoryShadowRepresentation) :
+    C.drazinDixmierStatus = ShadowStatus.debt := C.2.2.2.2.1
+
+theorem CurrentTheoryShadowRepresentation.pfaffianWittenIndex_is_debt
+    (C : CurrentTheoryShadowRepresentation) :
+    C.pfaffianWittenIndexStatus = ShadowStatus.debt := C.2.2.2.2.2
+
+namespace TheoryShadowRepresentation
+
+def spin44CharacterStatus (C : CurrentTheoryShadowRepresentation) : ShadowStatus :=
+  C.spin44CharacterStatus
+
+def exactKKTResidualStatus (C : CurrentTheoryShadowRepresentation) : ShadowStatus :=
+  C.exactKKTResidualStatus
+
+def splitCl44TKKStatus (C : CurrentTheoryShadowRepresentation) : ShadowStatus :=
+  C.splitCl44TKKStatus
+
+def drazinDixmierStatus (C : CurrentTheoryShadowRepresentation) : ShadowStatus :=
+  C.drazinDixmierStatus
+
+def pfaffianWittenIndexStatus (C : CurrentTheoryShadowRepresentation) : ShadowStatus :=
+  C.pfaffianWittenIndexStatus
+
+theorem spin44_is_finiteShadow (C : CurrentTheoryShadowRepresentation) :
+    C.spin44CharacterStatus = ShadowStatus.finiteShadow :=
+  C.spin44_is_finiteShadow
+
+theorem exactKKT_is_ownerOwned (C : CurrentTheoryShadowRepresentation) :
+    C.exactKKTResidualStatus = ShadowStatus.ownerOwned :=
+  C.exactKKT_is_ownerOwned
+
+theorem splitCl44TKK_is_bridgeOwned (C : CurrentTheoryShadowRepresentation) :
+    C.splitCl44TKKStatus = ShadowStatus.bridgeOwned :=
+  C.splitCl44TKK_is_bridgeOwned
+
+theorem drazinDixmier_is_debt (C : CurrentTheoryShadowRepresentation) :
+    C.drazinDixmierStatus = ShadowStatus.debt :=
+  C.drazinDixmier_is_debt
+
+theorem pfaffianWittenIndex_is_debt (C : CurrentTheoryShadowRepresentation) :
+    C.pfaffianWittenIndexStatus = ShadowStatus.debt :=
+  C.pfaffianWittenIndex_is_debt
+
+end TheoryShadowRepresentation
 
 /-- The repository-current shadow classification. -/
 @[rep_depth thermo]
-def current : TheoryShadowRepresentation where
- spin44CharacterStatus := ShadowStatus.finiteShadow
- exactKKTResidualStatus := ShadowStatus.ownerOwned
- splitCl44TKKStatus := ShadowStatus.bridgeOwned
- drazinDixmierStatus := ShadowStatus.debt
- pfaffianWittenIndexStatus := ShadowStatus.debt
- spin44_is_finiteShadow := rfl
- exactKKT_is_ownerOwned := rfl
- splitCl44TKK_is_bridgeOwned := rfl
- drazinDixmier_is_debt := rfl
- pfaffianWittenIndex_is_debt := rfl
+def current : CurrentTheoryShadowRepresentation := currentStatus
 
 @[rep_depth thermo]
 theorem current_spin44_is_finiteShadow :

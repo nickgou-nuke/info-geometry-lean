@@ -211,4 +211,82 @@ theorem jointModelDataEntropy_le_log_card_add_log_card
   rw [hconstant] at havg
   linarith
 
+/-- The joint upper entropy bound is attained exactly by uniform responsibilities. -/
+theorem jointModelDataEntropy_eq_log_card_add_log_card_iff_uniform
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) :
+    jointModelDataEntropy F ε =
+        Real.log (Fintype.card Data) + Real.log (Fintype.card ModelId) ↔
+      ∀ i : Data, ∀ m : ModelId,
+        responsibility F ε m i = 1 / (Fintype.card ModelId : ℝ) := by
+  have hD : 0 < (Fintype.card Data : ℝ) := by
+    exact_mod_cast Fintype.card_pos
+  have hM : 0 < (Fintype.card ModelId : ℝ) := by
+    exact_mod_cast Fintype.card_pos
+  have hcond : ∀ i : Data,
+      responsibilityEntropy F ε i ≤ Real.log (Fintype.card ModelId) := by
+    intro i
+    unfold responsibilityEntropy
+    exact entropyOf_le_log_card (Data := ModelId)
+      (fun m => responsibility F ε m i)
+      (fun m => responsibility_pos F ε m i)
+      (responsibilities_sum_one F ε i)
+  constructor
+  · intro h
+    have hsum : ∑ i : Data, responsibilityEntropy F ε i =
+        (Fintype.card Data : ℝ) * Real.log (Fintype.card ModelId) := by
+      have hchain :=
+        jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy F ε
+      have havg : (1 / Fintype.card Data : ℝ) *
+          ∑ i : Data, responsibilityEntropy F ε i =
+          Real.log (Fintype.card ModelId) := by
+        rw [h] at hchain
+        linarith
+      calc
+        ∑ i : Data, responsibilityEntropy F ε i =
+            (Fintype.card Data : ℝ) *
+              ((1 / Fintype.card Data : ℝ) *
+                ∑ i : Data, responsibilityEntropy F ε i) := by
+          field_simp [Fintype.card_ne_zero]
+        _ = (Fintype.card Data : ℝ) *
+            Real.log (Fintype.card ModelId) := by rw [havg]
+    have hdef_nonneg : ∀ i : Data,
+        0 ≤ Real.log (Fintype.card ModelId) - responsibilityEntropy F ε i := by
+      intro i
+      linarith [hcond i]
+    have hdef_sum : ∑ i : Data,
+        (Real.log (Fintype.card ModelId) - responsibilityEntropy F ε i) = 0 := by
+      rw [Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ]
+      simp only [nsmul_eq_mul]
+      linarith
+    have hdef_zero : ∀ i : Data,
+        Real.log (Fintype.card ModelId) - responsibilityEntropy F ε i = 0 := by
+      intro i
+      have hall := (Finset.sum_eq_zero_iff_of_nonneg
+        (fun j hj => hdef_nonneg j)).mp hdef_sum
+      exact hall i (Finset.mem_univ i)
+    intro i m
+    have hi : responsibilityEntropy F ε i =
+        Real.log (Fintype.card ModelId) := by linarith [hdef_zero i]
+    change entropyOf (fun m : ModelId => responsibility F ε m i) =
+      Real.log (Fintype.card ModelId) at hi
+    have huniform := (entropyOf_eq_log_card_iff_uniform
+      (Data := ModelId) (fun m : ModelId => responsibility F ε m i)
+      (fun m => responsibility_pos F ε m i)
+      (responsibilities_sum_one F ε i)).mp hi
+    exact huniform m
+  · intro huniform
+    rw [jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy]
+    have hcond_eq : ∀ i : Data,
+        responsibilityEntropy F ε i = Real.log (Fintype.card ModelId) := by
+      intro i
+      change entropyOf (fun m : ModelId => responsibility F ε m i) =
+        Real.log (Fintype.card ModelId)
+      exact (entropyOf_eq_log_card_iff_uniform
+        (Data := ModelId) (fun m : ModelId => responsibility F ε m i)
+        (fun m => responsibility_pos F ε m i)
+        (responsibilities_sum_one F ε i)).mpr (fun m => huniform i m)
+    simp_rw [hcond_eq]
+    rw [Finset.sum_const, Finset.card_univ]
+    simp [nsmul_eq_mul]
+
 end InfoGeometry.Inference.FiniteGibbs

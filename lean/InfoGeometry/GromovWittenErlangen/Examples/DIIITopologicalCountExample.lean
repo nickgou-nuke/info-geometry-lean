@@ -141,8 +141,8 @@ def canonicalCountRayBridge : GWCanonicalCountRayBridge 3 G T Target Coeff where
 
 /-- Probability/operator bridge for the concrete count-ray target. -/
 def projectiveProbabilityBridge :
-    GWProjectiveCountProbabilityBridge 3 G T Target Coeff where
-  canonical := canonicalCountRayBridge
+    GWProjectiveCountProbabilityBridge 3 G T Target Coeff :=
+  canonicalCountRayBridge
 
 /-- The probability gauge of the bulk sector is the normalized count value. -/
 theorem stateFinProb_bulk_toReal :

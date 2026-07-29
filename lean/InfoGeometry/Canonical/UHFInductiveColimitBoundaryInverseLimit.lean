@@ -343,4 +343,33 @@ theorem prefixLimitPrependBit_projection_apply (b : Bool) (n : ℕ)
   rw [boundaryPrefix_succ_prependBit]
   rw [prefixLimit_projection_eq_boundaryPrefix]
 
+theorem prependWord_injective (n : ℕ) (b : Bool) :
+    Function.Injective (prependWord n b) := by
+  intro u v huv
+  funext i
+  have htail := congrFun huv ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩
+  simpa [prependWord] using htail
+
+theorem prefixLimitPrependBit_cylinder_preimage (b : Bool) (n : ℕ)
+    (w : BitWord n) :
+    (fun x : ↑(limit prefixDiagram) =>
+        (ConcreteCategory.hom (prefixLimitPrependBit b)) x) ⁻¹'
+        prefixLimitCylinderSet (n + 1) (prependWord n b w) =
+      prefixLimitCylinderSet n w := by
+  ext x
+  rw [prefixLimitCylinderSet_eq_projection_fiber,
+    prefixLimitCylinderSet_eq_projection_fiber]
+  change
+    (limit.π prefixDiagram (Opposite.op (n + 1))).hom
+        ((ConcreteCategory.hom (prefixLimitPrependBit b)) x) =
+        prependWord n b w ↔
+      (limit.π prefixDiagram (Opposite.op n)).hom x = w
+  rw [prefixLimitPrependBit_projection_apply]
+  constructor
+  · intro h
+    apply (prependWord_injective n b)
+    simpa using h
+  · intro h
+    simpa using congrArg (prependWord n b) h
+
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit

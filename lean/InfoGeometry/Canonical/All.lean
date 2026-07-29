@@ -430,6 +430,7 @@ import InfoGeometry.Canonical.NoncommutativeTorusAlgebraBridge
 import InfoGeometry.Canonical.FibonacciBraidingPhaseBridge
 import InfoGeometry.Canonical.KitaevBdGPfaffianBridge
 import InfoGeometry.Canonical.NambuGorkovParticleHoleBridge
+import InfoGeometry.Canonical.ViazovskaMagicFunctionBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge

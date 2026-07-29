@@ -128,6 +128,68 @@ theorem layeredJointWeight_eq_jointWeight
     ne_of_gt (grandPartition_pos State super energy particleNumber superNumber β μ ν
       fiber_nonempty)
   field_simp [hcanonical, hsuper, hgrand]
+
+/-- Marginalizing the fine state leaves the outer and fiber weights. -/
+theorem sum_layeredJointWeight_over_state
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (g : SuperSector) (s : Sector) :
+    ∑ x, layeredJointWeight State super energy particleNumber superNumber β μ ν g s x =
+      outerWeight State super energy particleNumber superNumber β μ ν g *
+        fiberSectorWeight State super energy particleNumber β μ g s := by
+  unfold layeredJointWeight
+  calc
+    ∑ x, outerWeight State super energy particleNumber superNumber β μ ν g *
+        fiberSectorWeight State super energy particleNumber β μ g s *
+        conditionalWeight State energy β s x =
+      ∑ x, conditionalWeight State energy β s x *
+        (outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberSectorWeight State super energy particleNumber β μ g s) := by
+            apply Finset.sum_congr rfl
+            intro x hx
+            ring
+    _ = (∑ x, conditionalWeight State energy β s x) *
+        (outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberSectorWeight State super energy particleNumber β μ g s) := by
+            rw [Finset.sum_mul]
+    _ = outerWeight State super energy particleNumber superNumber β μ ν g *
+        fiberSectorWeight State super energy particleNumber β μ g s := by
+            have hconditional : (∑ x, conditionalWeight State energy β s x) = 1 := by
+              classical
+              unfold conditionalWeight
+              simp_rw [div_eq_mul_inv]
+              rw [← Finset.sum_mul]
+              exact mul_inv_cancel₀ (ne_of_gt (canonicalPartition_pos State energy β s))
+            rw [hconditional]
+            ring
+
+/-- Marginalizing a super-sector fiber recovers its outer Gibbs weight. -/
+theorem sum_layeredJointWeight_over_sector
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (fiber_nonempty : ∀ g, (superFiber super g).Nonempty) (g : SuperSector) :
+    (superFiber super g).sum (fun s => ∑ x,
+      layeredJointWeight State super energy particleNumber superNumber β μ ν g s x) =
+      outerWeight State super energy particleNumber superNumber β μ ν g := by
+  rw [show (superFiber super g).sum (fun s => ∑ x,
+      layeredJointWeight State super energy particleNumber superNumber β μ ν g s x) =
+      (superFiber super g).sum (fun s =>
+        outerWeight State super energy particleNumber superNumber β μ ν g *
+          fiberSectorWeight State super energy particleNumber β μ g s) by
+        apply Finset.sum_congr rfl
+        intro s hs
+        exact sum_layeredJointWeight_over_state State super energy particleNumber
+          superNumber β μ ν g s]
+  rw [show (superFiber super g).sum (fun s =>
+      outerWeight State super energy particleNumber superNumber β μ ν g *
+        fiberSectorWeight State super energy particleNumber β μ g s) =
+      outerWeight State super energy particleNumber superNumber β μ ν g *
+        (superFiber super g).sum (fun s =>
+          fiberSectorWeight State super energy particleNumber β μ g s) by
+        rw [Finset.mul_sum]]
+  rw [sum_fiberSectorWeight_eq_one State super energy particleNumber β μ fiber_nonempty g]
   ring
 
 /-- The conditional Gibbs weights normalize inside each sector. -/

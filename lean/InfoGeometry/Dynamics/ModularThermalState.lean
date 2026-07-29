@@ -1,5 +1,6 @@
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import Mathlib.Data.Complex.Basic
 
 open scoped InnerProductSpace
@@ -11,18 +12,33 @@ Minimal socket for a one-parameter modular action on an observable carrier.
 This keeps the implementation constructive while avoiding premature analytic
 claims.
 -/
-structure ModularAutomorphismFamily (A : Type*) [Mul A] where
-  sigma : ℝ → A → A
-  sigma_zero : ∀ a : A, sigma 0 a = a
-  sigma_add : ∀ t s : ℝ, ∀ a : A, sigma (t + s) a = sigma t (sigma s a)
-  sigma_mul : ∀ t : ℝ, ∀ a b : A, sigma t (a * b) = sigma t a * sigma t b
+abbrev ModularAutomorphismFamily (A : Type*) [Monoid A] :=
+  InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A
+
+namespace ModularAutomorphismFamily
+
+variable {A : Type*} [Monoid A]
+variable (M : ModularAutomorphismFamily A)
+
+def sigma : ℝ → A → A := fun t a => M.flow t a
+
+theorem sigma_zero (a : A) : M.sigma 0 a = a := M.flow_zero a
+
+theorem sigma_add (t s : ℝ) (a : A) :
+    M.sigma (t + s) a = M.sigma t (M.sigma s a) := M.flow_add t s a
+
+theorem sigma_mul (t : ℝ) (a b : A) :
+    M.sigma t (a * b) = M.sigma t a * M.sigma t b :=
+  (M.flow t).map_mul a b
+
+end ModularAutomorphismFamily
 
 /--
 Constructive KMS boundary socket:
 `omega_eval` stores the two-point observable pairing;
 `kms_boundary` stores the β-strip boundary identity as explicit data.
 -/
-structure KMSBoundaryData (A : Type*) [Mul A] where
+structure KMSBoundaryData (A : Type*) [Monoid A] where
   beta : ℝ
   omega_eval : A → A → ℝ
   modular : ModularAutomorphismFamily A
@@ -32,7 +48,7 @@ structure KMSBoundaryData (A : Type*) [Mul A] where
 /--
 Casimir anchor in the observable algebra: centrality + modular invariance.
 -/
-structure VerifiedCasimir (A : Type*) [Mul A] where
+structure VerifiedCasimir (A : Type*) [Monoid A] where
   C : A
   central : ∀ x : A, C * x = x * C
   modular_invariant : ∀ (M : ModularAutomorphismFamily A), ∀ t : ℝ,
@@ -41,7 +57,7 @@ structure VerifiedCasimir (A : Type*) [Mul A] where
 /--
 Thermal state packet anchored by a verified Casimir and a KMS boundary witness.
 -/
-structure ModularThermalState (A : Type*) [Mul A] where
+structure ModularThermalState (A : Type*) [Monoid A] where
   casimir : VerifiedCasimir A
   kms : KMSBoundaryData A
 
@@ -49,7 +65,7 @@ structure ModularThermalState (A : Type*) [Mul A] where
 The Casimir remains fixed under the modular flow of a thermal state packet.
 -/
 theorem casimir_fixed_under_modular_flow
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (T : ModularThermalState A) (t : ℝ) :
     (T.kms.modular.sigma t T.casimir.C) = T.casimir.C := by
   exact T.casimir.modular_invariant T.kms.modular t
@@ -66,7 +82,7 @@ Analytic continuation socket for the Hestenes-Krein modular flow.
 `sigmaC` is the complex-time extension of the real flow; this structure records
 only the boundary/continuation laws needed for KMS work.
 -/
-structure HestenesKreinAnalyticContinuationData (A : Type*) [Mul A] where
+structure HestenesKreinAnalyticContinuationData (A : Type*) [Monoid A] where
   beta : ℝ
   modular : ModularAutomorphismFamily A
   sigmaC : ℂ → A → A
@@ -78,7 +94,7 @@ structure HestenesKreinAnalyticContinuationData (A : Type*) [Mul A] where
 KMS strip boundary packet in Hestenes-Krein language, with explicit
 `z = t + iβ` continuation socket.
 -/
-structure HestenesKreinKMSStripData (A : Type*) [Mul A] where
+structure HestenesKreinKMSStripData (A : Type*) [Monoid A] where
   omega_eval : A → A → ℝ
   analytic : HestenesKreinAnalyticContinuationData A
   boundary_lower : ∀ t : ℝ, ∀ a b : A,
@@ -103,7 +119,7 @@ Hestenes-Krein KMS + generalized Stokes synthesis packet.
 The `kms_from_stokes` field is the bridge theorem socket asserting that the
 strip Stokes balance enforces the KMS boundary identity.
 -/
-structure HestenesKreinKMSStokesBridge (A : Type*) [Mul A] where
+structure HestenesKreinKMSStokesBridge (A : Type*) [Monoid A] where
   strip : HestenesKreinKMSStripData A
   stokes : GeneralizedStokesBoundaryData A
   kms_from_stokes : ∀ t : ℝ, ∀ a b : A,
@@ -115,7 +131,7 @@ structure HestenesKreinKMSStokesBridge (A : Type*) [Mul A] where
 Real-axis reduction from the analytic continuation socket.
 -/
 theorem sigmaC_real_axis_eq_sigma
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (H : HestenesKreinAnalyticContinuationData A)
     (t : ℝ) (a : A) :
     H.sigmaC (t : ℂ) a = H.modular.sigma t a :=
@@ -125,7 +141,7 @@ theorem sigmaC_real_axis_eq_sigma
 Top-strip reduction at `t + iβ` in the Hestenes-Krein clock axis.
 -/
 theorem sigmaC_top_strip_eq_sigma_shift
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (H : HestenesKreinAnalyticContinuationData A)
     (t : ℝ) (a : A) :
     H.sigmaC (complexClockPoint t H.beta) a = H.modular.sigma (t + H.beta) a :=
@@ -136,7 +152,7 @@ KMS upper boundary can be derived from top-strip reduction plus the algebraic
 boundary socket.
 -/
 theorem kms_upper_from_strip_top
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : HestenesKreinKMSStripData A)
     (t : ℝ) (a b : A) :
     K.omega_eval a (K.analytic.sigmaC (complexClockPoint t K.analytic.beta) b)
@@ -190,19 +206,33 @@ omit [CompleteSpace E] in
 Nontrivial modular action candidate on doubled/Krein observables:
 Heisenberg conjugation by the Unruh boost flow generated by the modular sign.
 -/
-noncomputable def unruhModularFlow : ModularAutomorphismFamily Obs where
-  sigma := fun t a => unruhBoost (E := E) t * a * unruhBoost (E := E) (-t)
-  sigma_zero := by
+noncomputable def unruhConjugation (t : ℝ) : Obs ≃* Obs where
+  toFun := fun a => unruhBoost (E := E) t * a * unruhBoost (E := E) (-t)
+  invFun := fun a => unruhBoost (E := E) (-t) * a * unruhBoost (E := E) t
+  left_inv := by
     intro a
-    simp [unruhBoost]
-  sigma_add := by
-    intro t s a
-    rw [unruhBoost_add]
-    rw [show -(t + s) = (-s) + (-t) by ring]
-    rw [unruhBoost_add]
-    simp [mul_assoc]
-  sigma_mul := by
-    intro t a b
+    calc
+      unruhBoost (E := E) (-t) *
+          (unruhBoost (E := E) t * a * unruhBoost (E := E) (-t)) *
+          unruhBoost (E := E) t =
+          (unruhBoost (E := E) (-t) * unruhBoost (E := E) t) * a *
+            (unruhBoost (E := E) (-t) * unruhBoost (E := E) t) := by
+              noncomm_ring
+      _ = a := by
+        simp [unruhBoost_neg_mul]
+  right_inv := by
+    intro a
+    calc
+      unruhBoost (E := E) t *
+          (unruhBoost (E := E) (-t) * a * unruhBoost (E := E) t) *
+          unruhBoost (E := E) (-t) =
+          (unruhBoost (E := E) t * unruhBoost (E := E) (-t)) * a *
+            (unruhBoost (E := E) t * unruhBoost (E := E) (-t)) := by
+              noncomm_ring
+      _ = a := by
+        simp [unruhBoost_mul_neg]
+  map_mul' := by
+    intro a b
     calc
       unruhBoost (E := E) t * (a * b) * unruhBoost (E := E) (-t)
           = unruhBoost (E := E) t * a * b * unruhBoost (E := E) (-t) := by
@@ -224,6 +254,24 @@ noncomputable def unruhModularFlow : ModularAutomorphismFamily Obs where
                 _ = (unruhBoost (E := E) t * a * unruhBoost (E := E) (-t)) *
                       (unruhBoost (E := E) t * b * unruhBoost (E := E) (-t)) := by
                         repeat rw [mul_assoc]
+
+noncomputable def unruhModularFlow : ModularAutomorphismFamily Obs where
+  flow := unruhConjugation (E := E)
+  flow_zero := by
+    intro a
+    change unruhBoost (E := E) 0 * a * unruhBoost (E := E) (-0) = a
+    simp [unruhBoost]
+  flow_add := by
+    intro t s a
+    change unruhBoost (E := E) (t + s) * a *
+        unruhBoost (E := E) (-(t + s)) =
+      unruhBoost (E := E) t *
+          (unruhBoost (E := E) s * a * unruhBoost (E := E) (-s)) *
+        unruhBoost (E := E) (-t)
+    rw [unruhBoost_add]
+    rw [show -(t + s) = (-s) + (-t) by ring]
+    rw [unruhBoost_add]
+    simp [mul_assoc]
 
 /--
 Compatibility alias for older downstream names.

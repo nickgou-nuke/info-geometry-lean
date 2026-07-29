@@ -22,6 +22,7 @@ No trace normalization is used.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import Mathlib.Data.ENNReal.Basic
 
 noncomputable section
@@ -71,25 +72,13 @@ Algebraic modular flow.
 Analytic continuity, normality, and KMS-strip data belong to later concrete
 modules.
 -/
-structure ModularFlow
-    (A : Type*) [Ring A] where
-  flow : ℝ → A → A
-
-  flow_zero :
-    ∀ x : A, flow 0 x = x
-
-  flow_add :
-    ∀ s t x, flow (s + t) x = flow s (flow t x)
-
-  flow_one :
-    ∀ t, flow t 1 = 1
-
-  flow_mul :
-    ∀ t x y, flow t (x * y) = flow t x * flow t y
+abbrev ModularFlow
+    (A : Type*) [Monoid A] :=
+  InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A
 
 namespace ModularFlow
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Monoid A]
 variable (σ : ModularFlow A)
 
 @[simp]
@@ -102,13 +91,24 @@ theorem flow_zero_apply
 theorem flow_one_apply
     (t : ℝ) :
     σ.flow t 1 = 1 :=
-  σ.flow_one t
+  (σ.flow t).map_one
 
 theorem flow_mul_apply
     (t : ℝ)
     (x y : A) :
     σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
-  σ.flow_mul t x y
+  (σ.flow t).map_mul x y
+
+theorem flow_one
+    (t : ℝ) :
+    σ.flow t 1 = 1 :=
+  flow_one_apply σ t
+
+theorem flow_mul
+    (t : ℝ)
+    (x y : A) :
+    σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
+  flow_mul_apply σ t x y
 
 end ModularFlow
 

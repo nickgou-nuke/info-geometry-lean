@@ -32,22 +32,27 @@ Additive-time one-parameter automorphism flow on doubled-space endomorphisms.
 This makes the `(ℝ,+)` semantics explicit at the type level.
 -/
 structure AdditiveModularFlow where
-  toFun : ℝ → (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H)
-  map_zero' : toFun 0 = 1
-  map_add' : ∀ s t : ℝ, toFun (s + t) = toFun s * toFun t
+  toFun : Multiplicative ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H)
 
 instance : CoeFun (AdditiveModularFlow (H := H))
     (fun _ => ℝ → (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H)) :=
-  ⟨AdditiveModularFlow.toFun⟩
+  ⟨fun σ t => σ.toFun (Multiplicative.toAdd.symm t)⟩
 
 @[simp] theorem AdditiveModularFlow.map_zero
     (σ : AdditiveModularFlow (H := H)) : σ 0 = 1 :=
-  σ.map_zero'
+  by
+    change σ.toFun (Multiplicative.toAdd.symm 0) = 1
+    simpa using σ.toFun.map_one
 
 @[simp] theorem AdditiveModularFlow.map_add
     (σ : AdditiveModularFlow (H := H)) (s t : ℝ) :
     σ (s + t) = σ s * σ t :=
-  σ.map_add' s t
+  by
+    change σ.toFun (Multiplicative.toAdd.symm (s + t)) =
+      σ.toFun (Multiplicative.toAdd.symm s) *
+        σ.toFun (Multiplicative.toAdd.symm t)
+    exact σ.toFun.map_mul (Multiplicative.toAdd.symm s)
+      (Multiplicative.toAdd.symm t)
 
 section GeneratorFlow
 
@@ -141,28 +146,34 @@ conjugation with generator `K`.
 -/
 noncomputable def additiveModularFlowOfGenerator
     (K : AlgebraEnd H) : AdditiveModularFlow (H := H) where
-  toFun := modularShiftAlgEquiv (H := H) K
-  map_zero' := by
-    apply AlgEquiv.ext
-    intro A
-    apply ContinuousLinearMap.ext
-    intro x
-    change (InfoGeometry.Krein.modular_shift (E := H) K 0 A) x = A x
-    exact
-      congrArg (fun B : AlgebraEnd H => B x)
-        (InfoGeometry.Krein.modular_shift_zero (E := H) K A)
-  map_add' s t := by
-    apply AlgEquiv.ext
-    intro A
-    apply ContinuousLinearMap.ext
-    intro x
-    change
-      (InfoGeometry.Krein.modular_shift (E := H) K (s + t) A) x =
-        (InfoGeometry.Krein.modular_shift (E := H) K s
-          (InfoGeometry.Krein.modular_shift (E := H) K t A)) x
-    exact
-      congrArg (fun B : AlgebraEnd H => B x)
-        (InfoGeometry.Krein.modular_shift_add (E := H) K s t A)
+  toFun :=
+    { toFun := fun t => modularShiftAlgEquiv (H := H) K t
+      map_one' := by
+        apply AlgEquiv.ext
+        intro A
+        apply ContinuousLinearMap.ext
+        intro x
+        change (InfoGeometry.Krein.modular_shift (E := H) K 0 A) x = A x
+        exact
+          congrArg (fun B : AlgebraEnd H => B x)
+            (InfoGeometry.Krein.modular_shift_zero (E := H) K A)
+      map_mul' := by
+        intro s t
+        apply AlgEquiv.ext
+        intro A
+        apply ContinuousLinearMap.ext
+        intro x
+        change
+          (InfoGeometry.Krein.modular_shift (E := H) K
+            (Multiplicative.toAdd (s * t)) A) x =
+            (InfoGeometry.Krein.modular_shift (E := H) K
+              (Multiplicative.toAdd s)
+              (InfoGeometry.Krein.modular_shift (E := H) K
+                (Multiplicative.toAdd t) A)) x
+        exact
+          congrArg (fun B : AlgebraEnd H => B x)
+            (InfoGeometry.Krein.modular_shift_add (E := H) K
+              (Multiplicative.toAdd s) (Multiplicative.toAdd t) A) }
 
 @[simp] theorem additiveModularFlowOfGenerator_apply
     (K : AlgebraEnd H) (t : ℝ) (A : AlgebraEnd H) :

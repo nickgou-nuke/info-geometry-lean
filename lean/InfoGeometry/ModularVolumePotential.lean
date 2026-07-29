@@ -86,31 +86,38 @@ Finite/free-energy packet.
 This captures the Gibbs regularization pattern
 `σβ ∝ e^{-βH}/Zβ` at a constructive level.
 -/
-structure GibbsFreeEnergyPacket where
-  /-- Energy observable or Hamiltonian on a state carrier. -/
-  StateSpace : Type*
-  /-- Inverse temperature β. -/
-  inverseTemperature : ℝ
-  /-- Energy readout. -/
-  energy : StateSpace → ℝ
-  /-- Gibbs partition log-normalizer (the additive constant `log Z_β`). -/
-  logPartitionConstant : ℝ
-  /-- A Gibbs-style density map on state space. -/
-  gibbsWeight : StateSpace → ℝ
-  /-- Gibbs reference state witness. -/
-  gibbsState : StateSpace
-  /-- Free-energy functional (as an explicit scalar readout). -/
-  freeEnergy : StateSpace → ℝ
+abbrev GibbsFreeEnergyPacket : Type _ :=
+  Σ' StateSpace : Type*,
+    Σ' inverseTemperature : ℝ,
+      Σ' energy : StateSpace → ℝ,
+        Σ' logPartitionConstant : ℝ,
+          Σ' gibbsWeight : StateSpace → ℝ,
+            Σ' gibbsState : StateSpace,
+              Σ' freeEnergy : StateSpace → ℝ,
+                Σ' klToGibbs : StateSpace → ℝ,
+                  Σ' gibbsWeight_eq :
+                    ∀ s : StateSpace,
+                      gibbsWeight s =
+                        Real.exp (-(inverseTemperature * energy s) - logPartitionConstant),
+                    Σ' freeEnergy_eq :
+                      ∀ s : StateSpace,
+                        freeEnergy s = energy s + inverseTemperature⁻¹ * klToGibbs s,
+                      Type*
 
-  /-- Relative divergence to Gibbs readout (`KL_to_Gibbs`). -/
-  klToGibbs : StateSpace → ℝ
+namespace GibbsFreeEnergyPacket
 
-  /-- Gibbs law (`gibbsWeight = exp(-(βE+logZ))`). -/
-  gibbsWeight_eq :
-    ∀ s, gibbsWeight s = Real.exp (-(inverseTemperature * energy s) - logPartitionConstant)
-  /-- Free-energy splitting witness (`F = E + β⁻¹ KL_to_Gibbs`). -/
-  freeEnergy_eq :
-    ∀ s, freeEnergy s = energy s + inverseTemperature⁻¹ * klToGibbs s
+abbrev StateSpace (P : GibbsFreeEnergyPacket) : Type _ := P.1
+abbrev inverseTemperature (P : GibbsFreeEnergyPacket) : ℝ := P.2.1
+abbrev energy (P : GibbsFreeEnergyPacket) : StateSpace P → ℝ := P.2.2.1
+abbrev logPartitionConstant (P : GibbsFreeEnergyPacket) : ℝ := P.2.2.2.1
+abbrev gibbsWeight (P : GibbsFreeEnergyPacket) : StateSpace P → ℝ := P.2.2.2.2.1
+abbrev gibbsState (P : GibbsFreeEnergyPacket) : StateSpace P := P.2.2.2.2.2.1
+abbrev freeEnergy (P : GibbsFreeEnergyPacket) : StateSpace P → ℝ := P.2.2.2.2.2.2.1
+abbrev klToGibbs (P : GibbsFreeEnergyPacket) : StateSpace P → ℝ := P.2.2.2.2.2.2.2.1
+abbrev gibbsWeight_eq (P : GibbsFreeEnergyPacket) := P.2.2.2.2.2.2.2.2.1
+abbrev freeEnergy_eq (P : GibbsFreeEnergyPacket) := P.2.2.2.2.2.2.2.2.2.1
+
+end GibbsFreeEnergyPacket
 
 /-- Normalization source for modular thermodynamics. -/
 inductive ModularNormalizationReference where
@@ -292,30 +299,42 @@ This packet is theorem-safe: it records explicit finite-stage data for the
 Boltzmann tilt and normalization of spectral volume.  It does not assert
 analytic assumptions.
 -/
-structure SpectralThermalNormalizationPacket where
-  /-- Energy/spectral parameter space. -/
-  EnergySpace : Type*
-  /-- Spectral geometry/topology shadow carrying the energy label space. -/
-  SpectralGeometry : Type*
-  /-- Spectral volume/density-of-states datum (`dν_H`). -/
-  spectralVolume : EnergySpace → ℝ
-  /-- Energy readout (`E`). -/
-  energy : EnergySpace → ℝ
-  /-- Inverse temperature (`β`). -/
-  inverseTemperature : ℝ
-  /-- Witness that the inverse temperature is strictly positive. -/
-  inverseTemperature_pos : 0 < inverseTemperature
-  /-- Boltzmann/modular potential (`β * E` in the standard model). -/
-  boltzmannPotential : EnergySpace → ℝ
-  /-- Explicit Boltzmann potential law (`β * E`). -/
-  boltzmannPotential_eq :
-    ∀ e : EnergySpace, boltzmannPotential e = inverseTemperature * energy e
-  /-- Spectral normalization constant (`Z_β`). -/
-  partitionFunction : ℝ
-  /-- Positivity of the normalization constant (`Z_β > 0`). -/
-  partitionFunction_pos : 0 < partitionFunction
-  /-- Normalized spectral Gibbs/KMS-type state carrier. -/
-  normalizedSpectralState : Type*
+abbrev SpectralThermalNormalizationPacket : Type _ :=
+  Σ' EnergySpace : Type*,
+    Σ' SpectralGeometry : Type*,
+      Σ' spectralVolume : EnergySpace → ℝ,
+        Σ' energy : EnergySpace → ℝ,
+          Σ' inverseTemperature : ℝ,
+            Σ' inverseTemperature_pos : 0 < inverseTemperature,
+              Σ' boltzmannPotential : EnergySpace → ℝ,
+                Σ' boltzmannPotential_eq :
+                  ∀ e : EnergySpace,
+                    boltzmannPotential e = inverseTemperature * energy e,
+                  Σ' partitionFunction : ℝ,
+                    Σ' partitionFunction_pos : 0 < partitionFunction,
+                      Type*
+
+namespace SpectralThermalNormalizationPacket
+
+abbrev EnergySpace (P : SpectralThermalNormalizationPacket) : Type _ := P.1
+abbrev SpectralGeometry (P : SpectralThermalNormalizationPacket) : Type _ := P.2.1
+abbrev spectralVolume (P : SpectralThermalNormalizationPacket) : EnergySpace P → ℝ := P.2.2.1
+abbrev energy (P : SpectralThermalNormalizationPacket) : EnergySpace P → ℝ := P.2.2.2.1
+abbrev inverseTemperature (P : SpectralThermalNormalizationPacket) : ℝ := P.2.2.2.2.1
+abbrev inverseTemperature_pos (P : SpectralThermalNormalizationPacket) :
+    0 < P.2.2.2.2.1 := P.2.2.2.2.2.1
+abbrev boltzmannPotential (P : SpectralThermalNormalizationPacket) :
+    EnergySpace P → ℝ := P.2.2.2.2.2.2.1
+abbrev boltzmannPotential_eq (P : SpectralThermalNormalizationPacket) :=
+  P.2.2.2.2.2.2.2.1
+abbrev partitionFunction (P : SpectralThermalNormalizationPacket) : ℝ :=
+  P.2.2.2.2.2.2.2.2.1
+abbrev partitionFunction_pos (P : SpectralThermalNormalizationPacket) :
+    0 < P.2.2.2.2.2.2.2.2.1 := P.2.2.2.2.2.2.2.2.2.1
+abbrev normalizedSpectralState (P : SpectralThermalNormalizationPacket) : Type* :=
+  P.2.2.2.2.2.2.2.2.2.2
+
+end SpectralThermalNormalizationPacket
 
 /--
 Modular transport bridge packet.

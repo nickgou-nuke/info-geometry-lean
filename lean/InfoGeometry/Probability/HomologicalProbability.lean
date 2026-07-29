@@ -1981,25 +1981,31 @@ Every faithful normal state is KMS for its own modular automorphism group
 (Tomita–Takesaki).  This is the operator-algebraic reason type III probability
 is dynamical rather than tracial.
 -/
-structure GibbsKMSPacket where
-  /-- Observable algebra (density matrices or abstract state space). -/
-  ObservableAlgebra : Type*
-  /-- Hamiltonian space (self-adjoint operators or abstract energy type). -/
-  HamiltonianSpace : Type*
-  /-- Inverse temperature β > 0. -/
-  beta : ℝ
-  /-- Partition function `Z_β = Tr(e^{-βH})`. -/
-  partitionFunction : ℝ
-  /-- Gibbs/KMS reference state `σ_β = e^{-βH}/Z_β`. -/
-  gibbsState : ObservableAlgebra
-  /-- Free-energy functional: `F_β(ρ) = ⟨H⟩_ρ − β⁻¹ S(ρ)`. -/
-  freeEnergy : ObservableAlgebra → ℝ
-  /-- Relative entropy to equilibrium: `D(ρ|σ_β)`. -/
-  relativeEntropyToGibbs : ObservableAlgebra → ℝ
-  /-- `D(ρ|σ_β) = β · (F_β(ρ) − F_β(σ_β))`. -/
-  freeEnergyEntropyRelation : ∀ ρ : ObservableAlgebra,
-    relativeEntropyToGibbs ρ =
-      beta * (freeEnergy ρ - freeEnergy gibbsState)
+abbrev GibbsKMSPacket : Type _ :=
+  Σ' ObservableAlgebra : Type*,
+    Σ' HamiltonianSpace : Type*,
+      Σ' beta : ℝ,
+        Σ' partitionFunction : ℝ,
+          Σ' gibbsState : ObservableAlgebra,
+            Σ' freeEnergy : ObservableAlgebra → ℝ,
+              Σ' relativeEntropyToGibbs : ObservableAlgebra → ℝ,
+                ∀ ρ : ObservableAlgebra,
+                  relativeEntropyToGibbs ρ =
+                    beta * (freeEnergy ρ - freeEnergy gibbsState)
+
+namespace GibbsKMSPacket
+
+abbrev ObservableAlgebra (P : GibbsKMSPacket) : Type _ := P.1
+abbrev HamiltonianSpace (P : GibbsKMSPacket) : Type _ := P.2.1
+abbrev beta (P : GibbsKMSPacket) : ℝ := P.2.2.1
+abbrev partitionFunction (P : GibbsKMSPacket) : ℝ := P.2.2.2.1
+abbrev gibbsState (P : GibbsKMSPacket) : ObservableAlgebra P := P.2.2.2.2.1
+abbrev freeEnergy (P : GibbsKMSPacket) : ObservableAlgebra P → ℝ := P.2.2.2.2.2.1
+abbrev relativeEntropyToGibbs (P : GibbsKMSPacket) : ObservableAlgebra P → ℝ :=
+  P.2.2.2.2.2.2.1
+abbrev freeEnergyEntropyRelation (P : GibbsKMSPacket) := P.2.2.2.2.2.2.2
+
+end GibbsKMSPacket
 
 namespace GibbsKMSPacket
 
@@ -2059,23 +2065,30 @@ Dynamical extension of the modular bridge:
 - GKSL       = dissipative dynamics of open quantum systems;
 - Relative entropy decay = free-energy dissipation along the semigroup.
 -/
-structure GKSLDissipativeDynamicsPacket where
-  /-- State space (density matrices or algebra elements). -/
-  StateSpace : Type*
-  /-- Coherent Hamiltonian term (generates unitary flow). -/
-  CoherentHamiltonian : Type*
-  /-- Lindblad / jump operator family `{L_k}`. -/
-  JumpOperators : Type*
-  /-- The GKSL generator `ℒ : StateSpace → StateSpace`. -/
-  lindbladGenerator : StateSpace → StateSpace
-  /-- Free-energy / relative-entropy functional that decays under ℒ. -/
-  dissipationFunctional : StateSpace → ℝ
-  /-- Equilibrium state: fixed point of the semigroup. -/
-  equilibriumState : StateSpace
-  /-- Dissipation axiom: functional value decreases along the flow. -/
-  entropyDecay : ∀ ρ : StateSpace,
-    dissipationFunctional (lindbladGenerator ρ) ≤
-    dissipationFunctional ρ
+abbrev GKSLDissipativeDynamicsPacket : Type _ :=
+  Σ' StateSpace : Type*,
+    Σ' CoherentHamiltonian : Type*,
+      Σ' JumpOperators : Type*,
+        Σ' lindbladGenerator : StateSpace → StateSpace,
+          Σ' dissipationFunctional : StateSpace → ℝ,
+            Σ' equilibriumState : StateSpace,
+              ∀ ρ : StateSpace,
+                dissipationFunctional (lindbladGenerator ρ) ≤
+                  dissipationFunctional ρ
+
+namespace GKSLDissipativeDynamicsPacket
+
+abbrev StateSpace (P : GKSLDissipativeDynamicsPacket) : Type _ := P.1
+abbrev CoherentHamiltonian (P : GKSLDissipativeDynamicsPacket) : Type _ := P.2.1
+abbrev JumpOperators (P : GKSLDissipativeDynamicsPacket) : Type _ := P.2.2.1
+abbrev lindbladGenerator (P : GKSLDissipativeDynamicsPacket) : StateSpace P → StateSpace P :=
+  P.2.2.2.1
+abbrev dissipationFunctional (P : GKSLDissipativeDynamicsPacket) : StateSpace P → ℝ :=
+  P.2.2.2.2.1
+abbrev equilibriumState (P : GKSLDissipativeDynamicsPacket) : StateSpace P := P.2.2.2.2.2.1
+abbrev entropyDecay (P : GKSLDissipativeDynamicsPacket) := P.2.2.2.2.2.2
+
+end GKSLDissipativeDynamicsPacket
 
 /--
 **Definition 25.5 — Modular thermodynamic bridge packet (grand synthesis).**

@@ -14,33 +14,30 @@ open InfoGeometry.Geometry.DualFlat
 
 /-- Structure `Transport`. -/
 @[blueprint "def:cayley-transport"]
-structure Transport (U B : Type*) where
-  toBounded : U → B
+abbrev Transport (U B : Type*) := U → B
 
 /-- Structure `Bridge`. -/
 @[blueprint "def:cayley-bridge"]
-structure Bridge (U B : Type*) where
-  equiv : U ≃ B
+abbrev Bridge (U B : Type*) := U ≃ B
 
 /-- Forward map induced by a reversible bridge. -/
-def Bridge.toBounded (C : Bridge U B) : U → B := C.equiv
+abbrev Bridge.toBounded (C : Bridge U B) : U → B := C
 
 /-- Backward map induced by a reversible bridge. -/
-def Bridge.toUnbounded (C : Bridge U B) : B → U := C.equiv.symm
+abbrev Bridge.toUnbounded (C : Bridge U B) : B → U := C.symm
 
 /-- Forget reversibility and keep only forward transport. -/
-def Bridge.toTransport (C : Bridge U B) : Transport U B where
-  toBounded := C.toBounded
+abbrev Bridge.toTransport (C : Bridge U B) : Transport U B := C
 
 @[simp] theorem Bridge.left_inv (C : Bridge U B) :
     Function.LeftInverse C.toUnbounded C.toBounded := by
   intro x
-  exact C.equiv.left_inv x
+  exact Equiv.left_inv C x
 
 @[simp] theorem Bridge.right_inv (C : Bridge U B) :
     Function.RightInverse C.toUnbounded C.toBounded := by
   intro x
-  exact C.equiv.right_inv x
+  exact Equiv.right_inv C x
 
 /-- Canonical name for a Cayley transport equivalence. -/
 abbrev CayleyBridge (U B : Type*) := Bridge U B
@@ -55,8 +52,8 @@ structure CompatibleDualFlat
     [NormedAddCommGroup B] [InnerProductSpace ℝ B] [CompleteSpace B]
     (T : Transport U B) (SU : DualFlatStructure U) where
   SB : DualFlatStructure B
-  D_transport : ∀ x y : U, divergence SB (T.toBounded x) (T.toBounded y) = divergence SU x y
-  grad_transport : ∀ x : U, T.toBounded (nabla SU x) = nabla SB (T.toBounded x)
+  D_transport : ∀ x y : U, divergence SB (T x) (T y) = divergence SU x y
+  grad_transport : ∀ x : U, T (nabla SU x) = nabla SB (T x)
 
 /-- Canonical name for dual-flat compatibility under Cayley transport. -/
 abbrev CayleyCompatibleDualFlat
@@ -73,12 +70,11 @@ abbrev CayleyDualFlatCompatibility
   CayleyCompatibleDualFlat C SU
 
 /-- Definition `cayleyIdentityBridge`. -/
-def cayleyIdentityBridge (E : Type*) : CayleyBridge E E where
-  equiv := Equiv.refl E
+def cayleyIdentityBridge (E : Type*) : CayleyBridge E E := Equiv.refl E
 
 /-- Definition `cayleyIdentityTransport`. -/
 abbrev cayleyIdentityTransport (E : Type*) : Transport E E :=
-  (cayleyIdentityBridge E).toTransport
+  cayleyIdentityBridge E
 
 /-- Definition `cayleyIdentityCompatibleGeometry`. -/
 def cayleyIdentityCompatibleGeometry
@@ -157,17 +153,17 @@ theorem cayley_pythagorean_invariance
     (hT : CompatibleDualFlat T SU)
     (Prior Posterior Alt : U)
     (hproj : inner ℝ (nabla SU Prior - nabla SU Posterior) (Alt - Posterior) = 0) :
-    divergence hT.SB (T.toBounded Alt) (T.toBounded Prior)
-      = divergence hT.SB (T.toBounded Alt) (T.toBounded Posterior)
-      + divergence hT.SB (T.toBounded Posterior) (T.toBounded Prior) := by
+    divergence hT.SB (T Alt) (T Prior)
+      = divergence hT.SB (T Alt) (T Posterior)
+      + divergence hT.SB (T Posterior) (T Prior) := by
   have hU : divergence SU Alt Prior = divergence SU Alt Posterior + divergence SU Posterior Prior :=
     bregman_pythagorean SU Alt Posterior Prior hproj
   calc
-    divergence hT.SB (T.toBounded Alt) (T.toBounded Prior)
+    divergence hT.SB (T Alt) (T Prior)
         = divergence SU Alt Prior := by rw [hT.D_transport]
     _ = divergence SU Alt Posterior + divergence SU Posterior Prior := hU
-    _ = divergence hT.SB (T.toBounded Alt) (T.toBounded Posterior)
-        + divergence hT.SB (T.toBounded Posterior) (T.toBounded Prior) := by
+    _ = divergence hT.SB (T Alt) (T Posterior)
+        + divergence hT.SB (T Posterior) (T Prior) := by
           rw [hT.D_transport, hT.D_transport]
 
 /-- Backward transport of the gradient along a reversible bridge. -/
@@ -188,9 +184,9 @@ theorem cayleyPythagoreanInvariance
     (hT : CompatibleDualFlat T SU)
     (prior posterior alt : U)
     (hproj : inner ℝ (nabla SU prior - nabla SU posterior) (alt - posterior) = 0) :
-    divergence hT.SB (T.toBounded alt) (T.toBounded prior)
-      = divergence hT.SB (T.toBounded alt) (T.toBounded posterior)
-      + divergence hT.SB (T.toBounded posterior) (T.toBounded prior) := by
+    divergence hT.SB (T alt) (T prior)
+      = divergence hT.SB (T alt) (T posterior)
+      + divergence hT.SB (T posterior) (T prior) := by
   have hInv :=
     cayley_pythagorean_invariance
       (T := T) (SU := SU) (hT := hT)
@@ -240,19 +236,18 @@ theorem quadraticDualFlat_divergence (x y : ℝ) :
   ring_nf
 
 /-- Negation is a nontrivial reversible transport preserving the quadratic dual-flat geometry. -/
-def cayleyNegationBridge : CayleyBridge ℝ ℝ where
-  equiv := Equiv.neg ℝ
+def cayleyNegationBridge : CayleyBridge ℝ ℝ := Equiv.neg ℝ
 
 /-- The quadratic dual-flat structure is invariant under negation transport. -/
 def cayleyNegationCompatibleGeometry :
     CayleyCompatibleDualFlat cayleyNegationBridge quadraticDualFlat where
   SB := quadraticDualFlat
   D_transport x y := by
-    simp [cayleyNegationBridge, Bridge.toTransport, Bridge.toBounded]
+    simp [cayleyNegationBridge, Bridge.toTransport]
     rw [quadraticDualFlat_divergence, quadraticDualFlat_divergence]
     ring
   grad_transport x := by
-    simp [cayleyNegationBridge, Bridge.toTransport, Bridge.toBounded, quadraticDualFlat_nabla]
+    simp [cayleyNegationBridge, Bridge.toTransport, quadraticDualFlat_nabla]
 
 /-- Concrete Pythagorean invariance for the quadratic negation bridge. -/
 theorem cayleyNegationPythagoreanInvariance

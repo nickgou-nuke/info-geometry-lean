@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
+import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
 
 /-!
 # Real split-octonion `G₂` classification boundary
@@ -26,26 +27,31 @@ open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.G2TwoSplitZorn
 open InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 
-/-- Evidence values separating the finite Atlas lane from the real split Lie lane. -/
-structure RealSplitBoundaryEvidence where
-  /-- Finite Chevalley/Atlas `G₂(2)` order. -/
-  finiteAtlasG2TwoOrder : ℕ
-  /-- Derived subgroup `G₂(2)'` order. -/
-  finiteDerivedOrder : ℕ
-  /-- `PGL₃(3)` order, used to rule out a common finite misidentification. -/
-  pgl3F3Order : ℕ
-  /-- Real split `G₂` Lie algebra dimension evidence. -/
-  realSplitLieDimension : ℕ
-  /-- Root count for the abstract `G₂` root system. -/
-  rootCount : ℕ
+/-- Compatibility carrier for the finite/root-system evidence owner.
 
-/-- Concrete evidence ledger currently verified by Lean plus the executable GAP/Sage lane. -/
-def realSplitBoundaryEvidence : RealSplitBoundaryEvidence where
-  finiteAtlasG2TwoOrder := 12096
-  finiteDerivedOrder := 6048
-  pgl3F3Order := 5616
-  realSplitLieDimension := 14
-  rootCount := 12
+The carrier is the imported `G2EvidenceInvariants`; this module no longer
+duplicates a second evidence structure or stores raw numerical markers. -/
+abbrev RealSplitBoundaryEvidence := G2EvidenceInvariants
+
+namespace RealSplitBoundaryEvidence
+
+abbrev finiteAtlasG2TwoOrder (e : RealSplitBoundaryEvidence) : ℕ :=
+  e.atlasG2TwoOrder
+
+abbrev finiteDerivedOrder (_e : RealSplitBoundaryEvidence) : ℕ :=
+  InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger.g2TwoDerivedOrder
+
+abbrev pgl3F3Order (_e : RealSplitBoundaryEvidence) : ℕ :=
+  InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger.pgl3F3Order
+
+abbrev realSplitLieDimension (e : RealSplitBoundaryEvidence) : ℕ :=
+  e.derivationDimension
+
+end RealSplitBoundaryEvidence
+
+/-- Evidence readback from the imported finite/root-system owner. -/
+abbrev realSplitBoundaryEvidence : RealSplitBoundaryEvidence :=
+  computationalEvidenceInvariants
 
 /-- Exact evidence readback for the finite/real-boundary ledger. -/
 theorem realSplitBoundaryEvidence_packet :
@@ -60,13 +66,13 @@ theorem realSplitBoundaryEvidence_packet :
 theorem finiteAtlasG2TwoOrder_eq_lean_g2twoOrder :
     realSplitBoundaryEvidence.finiteAtlasG2TwoOrder =
       InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem.g2twoOrder := by
-  rfl
+  exact rfl
 
 /-- The `PGL₃(3)` order is not the finite `G₂(2)` order. -/
 theorem pgl3F3Order_ne_finiteAtlasG2TwoOrder :
     realSplitBoundaryEvidence.pgl3F3Order ≠
       realSplitBoundaryEvidence.finiteAtlasG2TwoOrder := by
-  norm_num [realSplitBoundaryEvidence]
+  exact InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger.pgl3F3Order_ne_g2TwoOrder
 
 variable {Aut G2SplitReal : Type*} [Group Aut] [Group G2SplitReal]
 

@@ -6,9 +6,18 @@ namespace InfoGeometry.Canonical
 namespace ThreeLevelFiniteGibbs
 
 /-- Fisher-inverse sensitivity contract for a three-level Gibbs response slice. -/
-structure OuterSensitivityContract where
-  fisherInverse : Matrix (Fin 2) (Fin 2) ℝ
-  contract : InfoGeometry.Inference.FisherInverseContract fisherInverse
+abbrev OuterSensitivityContract :=
+  {I : Matrix (Fin 2) (Fin 2) ℝ //
+    InfoGeometry.Inference.FisherInverseContract I}
+
+abbrev OuterSensitivityContract.fisherInverse
+    (C : OuterSensitivityContract) : Matrix (Fin 2) (Fin 2) ℝ :=
+  C.1
+
+abbrev OuterSensitivityContract.contract
+    (C : OuterSensitivityContract) :
+    InfoGeometry.Inference.FisherInverseContract C.fisherInverse :=
+  C.2
 
 namespace OuterSensitivityContract
 

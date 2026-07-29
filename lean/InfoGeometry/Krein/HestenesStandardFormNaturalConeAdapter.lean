@@ -30,11 +30,9 @@ realized by the supplied Hestenes/Krein carrier with:
 * the supplied Hestenes/Krein natural cone as the canonical cone.
 -/
 @[rep_depth krein]
-structure Adapter where
-  /-- Hestenes/Krein natural-cone carrier. -/
-  hestenes :
-    _root_.InfoGeometry.Krein.HestenesKreinNaturalConeBridge.Bridge
-      (H := H) (NormalPositive := NormalPositive) (Op := Op)
+abbrev Adapter :=
+  _root_.InfoGeometry.Krein.HestenesKreinNaturalConeBridge.Bridge
+    (H := H) (NormalPositive := NormalPositive) (Op := Op)
 
 namespace Adapter
 
@@ -51,27 +49,27 @@ state carrier.
 @[rep_depth krein]
 def toCanonical :
     NaturalConeStandardFormInterface Op H NormalPositive where
-  act := A.hestenes.act
+  act := A.act
   J := KreinSpace.jCLM (H := H)
-  cone := A.hestenes.naturalCone
-  isNormalPositive := fun ω => A.hestenes.coneVector ω ∈ A.hestenes.naturalCone
-  coneVector := A.hestenes.coneVector
-  eval := A.hestenes.eval
+  cone := A.naturalCone
+  isNormalPositive := fun ω => A.coneVector ω ∈ A.naturalCone
+  coneVector := A.coneVector
+  eval := A.eval
   innerReadout := KreinSpace.kreinInner (H := H)
   coneVector_mem := by
     intro ω hω
     exact hω
   eval_eq_vector_readout := by
     intro ω B _hω
-    exact A.hestenes.eval_eq_krein_vector_readout ω B
+    exact A.eval_eq_krein_vector_readout ω B
   J_fixes_cone := by
     intro ξ hξ
-    exact A.hestenes.J_fixes_cone ξ hξ
+    exact A.J_fixes_cone ξ hξ
 
 /-- Readback: the induced canonical cone is the supplied Hestenes/Krein cone. -/
 @[rep_depth krein]
 theorem toCanonical_cone :
-    (A.toCanonical).cone = A.hestenes.naturalCone :=
+    (A.toCanonical).cone = A.naturalCone :=
   rfl
 
 /-- Readback: the induced canonical reflection is `KreinSpace.jCLM`. -/
@@ -92,14 +90,14 @@ theorem toCanonical_innerReadout
 @[rep_depth krein]
 theorem toCanonical_eval
     (ω : NormalPositive) (B : Op) :
-    (A.toCanonical).eval ω B = A.hestenes.eval ω B :=
+    (A.toCanonical).eval ω B = A.eval ω B :=
   rfl
 
 /-- Readback: canonical cone vectors are the Hestenes/Krein cone vectors. -/
 @[rep_depth krein]
 theorem toCanonical_coneVector
     (ω : NormalPositive) :
-    (A.toCanonical).coneVector ω = A.hestenes.coneVector ω :=
+    (A.toCanonical).coneVector ω = A.coneVector ω :=
   rfl
 
 /-- Readback: every supplied Hestenes/Krein readout is normal-positive in the adapter. -/
@@ -107,7 +105,7 @@ theorem toCanonical_coneVector
 theorem toCanonical_isNormalPositive
     (ω : NormalPositive) :
     (A.toCanonical).isNormalPositive ω :=
-  A.hestenes.coneVector_mem ω
+  A.coneVector_mem ω
 
 /--
 Readback: the canonical standard-form vector expectation is the Krein vector
@@ -118,9 +116,9 @@ theorem toCanonical_eval_eq_krein_readout
     (ω : NormalPositive) (B : Op) :
     (A.toCanonical).eval ω B =
       KreinSpace.kreinInner (H := H)
-        (A.hestenes.act B (A.hestenes.coneVector ω))
-        (A.hestenes.coneVector ω) :=
-  A.hestenes.eval_eq_krein_vector_readout ω B
+        (A.act B (A.coneVector ω))
+        (A.coneVector ω) :=
+  A.eval_eq_krein_vector_readout ω B
 
 /-- Readback: canonical cone vectors are fixed by `KreinSpace.jCLM`. -/
 @[rep_depth krein]

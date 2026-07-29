@@ -63,15 +63,17 @@ theorem attention_source_transports_to_modular
     [DecidableEq ι] [AddCommGroup V] [Module ℝ V]
     (attn : GeometricAttentionMap core ι)
     (q : Q)
-    (h_source : S.source = attentionSourceTension core attn q) :
+    (h_source : S.source =
+      scalarToFockLift (E := E) (attentionSourceTension core attn q)) :
     (ScalarAnomalyRosettaStone.scalarToMajorana (E := E) (S := S))
         (attentionSourceTension core attn q) = S.modularGenerator := by
   calc
     (ScalarAnomalyRosettaStone.scalarToMajorana (E := E) (S := S))
         (attentionSourceTension core attn q)
-        = (ScalarAnomalyRosettaStone.scalarToMajorana (E := E) (S := S)) S.source := by
-            simp [h_source]
-    _ = S.modularGenerator := by
-            simp [ScalarAnomalyRosettaStone.scalarToMajorana, S.h_source_fock, S.h_fock_mod]
+        = S.embedToMajorana (scalarToFockLift (E := E)
+            (attentionSourceTension core attn q)) := rfl
+    _ = S.embedToMajorana S.source := by rw [h_source]
+    _ = S.embedToMajorana S.fockDeformation := by rw [S.h_source_fock]
+    _ = S.modularGenerator := S.h_fock_mod
 
 end InfoGeometry.Quantum.AttentionBridge

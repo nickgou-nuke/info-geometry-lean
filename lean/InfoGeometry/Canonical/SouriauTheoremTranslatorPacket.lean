@@ -78,24 +78,29 @@ model can instantiate this interface once it supplies the required
 differentiability, nondegeneracy, and inverse-Hessian proof.
 -/
 @[rep_depth thermo]
-structure EntropyFisherInverseGate where
- entropyHessian : ℝ
- fisherInverse : ℝ
- entropy_hessian_eq_fisher_inverse : entropyHessian = fisherInverse
+structure EntropyFisherInverseGate
+    (Θ : Type*) [NormedAddCommGroup Θ] [NormedSpace ℝ Θ] where
+  /-- Entropy Hessian as an operator on the tangent carrier. -/
+  entropyHessian : Θ →L[ℝ] Θ
+  /-- Fisher inverse as an operator on the same tangent carrier. -/
+  fisherInverse : Θ →L[ℝ] Θ
+  /-- The inverse-Hessian identity on the operator carrier. -/
+  entropy_hessian_eq_fisher_inverse : entropyHessian = fisherInverse
 
 namespace EntropyFisherInverseGate
 
 /-- The inverse Fisher/Hessian claim is available only from the explicit gate. -/
 @[rep_depth thermo]
 theorem claimD_entropy_hessian_eq_fisher_inverse
- (G : EntropyFisherInverseGate) :
+ {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
+ (G : EntropyFisherInverseGate Θ) :
  G.entropyHessian = G.fisherInverse :=
  G.entropy_hessian_eq_fisher_inverse
 
 end EntropyFisherInverseGate
 
 /--
-Stage-2 scalar analytic enrichment for Claim D.
+Stage-2 operatorial analytic enrichment for Claim D.
 
 This is the one-dimensional Legendre theorem behind the prose line
 `Hess(S) = Fisher⁻¹`: if the natural-to-dual coordinate map has derivative
@@ -848,8 +853,9 @@ Both conclusions are projected from explicit proof-carrying gates.
 @[rep_depth thermo]
 theorem analyticEnrichmentTranslatorPacket
  [Fintype α] [Nonempty α]
+ {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
  (C : SouriauFenchelContext (α := α))
- (Ginv : EntropyFisherInverseGate)
+ (Ginv : EntropyFisherInverseGate Θ)
  (Gstrict : StrictOnsagerEquilibriumGate C.M C.T)
  (xβ xμ : ℝ) :
  Ginv.entropyHessian = Ginv.fisherInverse

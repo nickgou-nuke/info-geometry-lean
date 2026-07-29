@@ -58,14 +58,11 @@ noncomputable def geometricToMajorana
 
 end AnomalyRosettaStone
 
-/-!
-Concrete scalar-source packaging
+/-! Operator-source packaging.
 
-The canonical Einstein residual in the current library is scalar-valued (`ℝ`),
-and its Fock realization is an operator via scalar multiplication by identity.
-This structure packages that concrete layer while still allowing a user-supplied
-embedding into the doubled Majorana operator layer.
--/
+The source owner is the Fock endomorphism.  A scalar chemical-potential readout
+may still be lifted explicitly by `scalarToFockLift`, but it is not stored as
+the anomaly source. -/
 
 section ScalarRosetta
 
@@ -102,14 +99,14 @@ Concrete Rosetta package for scalar source tension.
 Majorana-layer realization linked by `h_fock_mod`.
 -/
 structure ScalarAnomalyRosettaStone where
-  source : ℝ
+  source : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E
   fockDeformation : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E
   modularGenerator :
     InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
   embedToMajorana :
     (InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) →ₗ[ℝ]
       (InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
-  h_source_fock : scalarToFockLift source = fockDeformation
+  h_source_fock : source = fockDeformation
   h_fock_mod : embedToMajorana fockDeformation = modularGenerator
 
 namespace ScalarAnomalyRosettaStone
@@ -119,7 +116,7 @@ variable (S : ScalarAnomalyRosettaStone (E := E))
 /-- Composed scalar-to-modular transport. -/
 noncomputable def scalarToMajorana :
   ℝ →ₗ[ℝ] (InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) :=
-  LinearMap.comp S.embedToMajorana scalarToFockLift
+    LinearMap.comp S.embedToMajorana scalarToFockLift
 
 end ScalarAnomalyRosettaStone
 
@@ -144,7 +141,7 @@ noncomputable def canonicalScalarRosetta
             (E := E) R K x scalar Λ V Γ)
         = modularGenerator) :
     ScalarAnomalyRosettaStone (E := E) where
-  source := InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential
+  source := InfoGeometry.Canonical.BogoliubovFockSuper.einsteinFockDeformationOperator
     (E := E) R K x scalar Λ V Γ
   fockDeformation := InfoGeometry.Canonical.BogoliubovFockSuper.einsteinFockDeformationOperator
     (E := E) R K x scalar Λ V Γ

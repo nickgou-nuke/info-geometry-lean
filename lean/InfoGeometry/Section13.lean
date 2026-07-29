@@ -53,9 +53,18 @@ def IsNormalized (ψ : TwoQubitVec) : Prop :=
   stateNormSq ψ = 1
 
 /-- The `S^7` shadow as a subtype of normalized two-qubit vectors. -/
-structure S7Shadow where
-  vec : TwoQubitVec
-  normalized : IsNormalized vec
+def S7Shadow := {ψ : TwoQubitVec // IsNormalized ψ}
+
+namespace S7Shadow
+
+def vec (ψ : S7Shadow) : TwoQubitVec := ψ.1
+
+theorem normalized (ψ : S7Shadow) : IsNormalized ψ.vec := ψ.2
+
+def mk (vec : TwoQubitVec) (normalized : IsNormalized vec) : S7Shadow :=
+  ⟨vec, normalized⟩
+
+end S7Shadow
 
 /-- Computational tensor product of two one-qubit vectors. -/
 def tensor2 (u v : OneQubitVec) : TwoQubitVec
@@ -134,9 +143,8 @@ theorem preserves_normalized (U : LocalUnitaryShadow)
   rw [U.norm_preserving, hψ]
 
 /-- A local-unitary shadow acts on the normalized-state subtype. -/
-def mapS7 (U : LocalUnitaryShadow) (ψ : S7Shadow) : S7Shadow where
-  vec := U.map ψ.vec
-  normalized := U.preserves_normalized ψ.vec ψ.normalized
+def mapS7 (U : LocalUnitaryShadow) (ψ : S7Shadow) : S7Shadow :=
+  S7Shadow.mk (U.map ψ.vec) (U.preserves_normalized ψ.vec ψ.normalized)
 
 end LocalUnitaryShadow
 

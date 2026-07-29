@@ -46,6 +46,50 @@ noncomputable def layeredJointWeight
     fiberSectorWeight State super energy particleNumber β μ g s *
     conditionalWeight State energy β s x
 
+/-- Conditional weights are strictly positive. -/
+theorem conditionalWeight_pos
+    (energy : ∀ s, State s → ℝ) (β : ℝ) (s : Sector) (x : State s) :
+    0 < conditionalWeight State energy β s x := by
+  unfold conditionalWeight
+  exact div_pos (Real.exp_pos _)
+    (canonicalPartition_pos State energy β s)
+
+/-- Fiber-sector weights are strictly positive on each retained fiber. -/
+theorem fiberSectorWeight_pos
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (β μ : ℝ) (fiber_nonempty : ∀ g, (superFiber super g).Nonempty)
+    (g : SuperSector) (s : Sector) :
+    0 < fiberSectorWeight State super energy particleNumber β μ g s := by
+  unfold fiberSectorWeight
+  exact div_pos (middleNumerator_pos State energy particleNumber β μ s)
+    (superPartition_pos State super energy particleNumber β μ fiber_nonempty g)
+
+/-- Outer super-sector weights are strictly positive. -/
+theorem outerWeight_pos
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (fiber_nonempty : ∀ g, (superFiber super g).Nonempty)
+    (g : SuperSector) :
+    0 < outerWeight State super energy particleNumber superNumber β μ ν g := by
+  unfold outerWeight
+  exact div_pos (outerNumerator_pos State super energy particleNumber superNumber
+    β μ ν fiber_nonempty g)
+    (grandPartition_pos State super energy particleNumber superNumber β μ ν fiber_nonempty)
+
+/-- The product-form joint weight is the product of the three normalized layers. -/
+theorem layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (g : SuperSector) (s : Sector) (x : State s) :
+    layeredJointWeight State super energy particleNumber superNumber β μ ν g s x =
+      outerWeight State super energy particleNumber superNumber β μ ν g *
+        fiberSectorWeight State super energy particleNumber β μ g s *
+        conditionalWeight State energy β s x := by
+  rfl
+
 /-- The conditional Gibbs weights normalize inside each sector. -/
 theorem sum_conditionalWeight_eq_one
     (energy : ∀ s, State s → ℝ) (β : ℝ) (s : Sector) :

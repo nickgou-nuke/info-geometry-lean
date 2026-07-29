@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.PrimeCounting
 
 open Real
 
@@ -187,17 +188,50 @@ noncomputable def mkGenuineCertificate (x : ℝ) (hx : x ≥ 55) (actual expecte
 
 /-! ## 6. Genuine Quantum Counting Accuracy -/
 
-/-- Genuine quantum counting accuracy with explicit Chernoff bounds. -/
+/-- Absolute numerical accuracy of a counting estimate. -/
+def CountingWithinError (estimate actual ε : ℝ) : Prop :=
+  |estimate - actual| ≤ ε
+
+/--
+Genuine quantum-counting data with an operational estimate error and an
+explicit Chernoff failure-probability bound.
+
+Unlike the former generic gate, every field has numerical content: the query
+count is positive, the estimate approximates an actual value, and the failure
+probability dominates the Chernoff expression.
+-/
 structure GenuineQuantumCountingAccuracy where
   queries : ℕ
+  queries_pos : 0 < queries
+  estimate : ℝ
+  actual : ℝ
   ε : ℝ
   h_ε : ε > 0
+  counting_accuracy : CountingWithinError estimate actual ε
   failure_prob : ℝ
-  bound : 2 * Real.exp (-2 * (queries : ℝ) * ε ^ 2) ≤ failure_prob
+  chernoff_bound :
+    2 * Real.exp (-2 * (queries : ℝ) * ε ^ 2) ≤ failure_prob
 
-noncomputable def mkGenuineAccuracy (Q : ℕ) (hQ : Q > 0) (ε : ℝ) (hε : ε > 0) (δ : ℝ) (hδ : 2 * Real.exp (-2 * (Q : ℝ) * ε ^ 2) ≤ δ) :
+noncomputable def mkGenuineAccuracy
+    (Q : ℕ) (hQ : Q > 0)
+    (estimate actual ε : ℝ) (hε : ε > 0)
+    (hAccuracy : CountingWithinError estimate actual ε)
+    (δ : ℝ)
+    (hδ : 2 * Real.exp (-2 * (Q : ℝ) * ε ^ 2) ≤ δ) :
     GenuineQuantumCountingAccuracy :=
-  ⟨Q, ε, hε, δ, by exact_mod_cast hδ⟩
+  ⟨Q, hQ, estimate, actual, ε, hε, hAccuracy, δ, hδ⟩
+
+/-- Read the genuine operational counting error from the numerical owner. -/
+theorem GenuineQuantumCountingAccuracy.withinError
+    (G : GenuineQuantumCountingAccuracy) :
+    CountingWithinError G.estimate G.actual G.ε :=
+  G.counting_accuracy
+
+/-- Read the explicit Chernoff bound from the numerical owner. -/
+theorem GenuineQuantumCountingAccuracy.failureProbability_bound
+    (G : GenuineQuantumCountingAccuracy) :
+    2 * Real.exp (-2 * (G.queries : ℝ) * G.ε ^ 2) ≤ G.failure_prob :=
+  G.chernoff_bound
 
 /-! ## 7. Logarithmic Integral and Prime Count Bounds -/
 

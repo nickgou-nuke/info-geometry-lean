@@ -158,7 +158,7 @@ theorem hiddenGradeMemory_eq_l_value
     (chi : JointEigenvalue HeckeIndex)
     (P : CuspidalEigenpacket R chi)
     (s : State) :
-    charge_eval (EAV.hiddenGradeMemoryReadout s) =
+    charge_eval (EAV.calibratedHiddenGradeMemoryReadout s) =
       L_func.value chi 0 := by
   rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
   exact H.purified_charge_eq_l_value chi P s

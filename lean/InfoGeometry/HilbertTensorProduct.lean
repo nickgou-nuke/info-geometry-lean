@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Trace
 
 open Real
 open scoped InnerProductSpace

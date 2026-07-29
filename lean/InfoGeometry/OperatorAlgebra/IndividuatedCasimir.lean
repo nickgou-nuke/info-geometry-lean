@@ -38,18 +38,12 @@ namespace InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 /-! ## 1. Invertible conjugation -/
 
-/--
-A lightweight invertible transport.
-
-This is enough for conjugation invariance and avoids committing to a specific
-`Units` API.
+/-!
+`InvertibleTransport` is the repository-facing name for Mathlib's native unit
+carrier.  The alias preserves the existing API while making the inverse laws
+and coercions come from `Units` rather than from a duplicate wrapper.
 -/
-structure InvertibleTransport
-    (Op : Type*) [Monoid Op] where
-  val : Op
-  inv : Op
-  val_inv : val * inv = 1
-  inv_val : inv * val = 1
+abbrev InvertibleTransport (Op : Type*) [Monoid Op] := Opˣ
 
 namespace InvertibleTransport
 

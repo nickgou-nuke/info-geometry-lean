@@ -249,8 +249,8 @@ structure ChiralPathWordPacket where
   /-- Path-word amplitude. -/
   pathWordAmplitude : PathWord → ℝ
 
-  /-- Witness that `uPlus` and `uMinus` generate the declared path words. -/
-  chiralPathWordWitness : Type*
+  /-- Concrete operator letters carried by each path word. -/
+  pathWordLetters : PathWord → List OperatorAlgebra
 
 /--
 Full Pfaffian/path bridge packet.
@@ -269,22 +269,12 @@ structure PfaffianPathBridgePacket where
   pfaffianPairings : PfaffianMatchingExpansionPacket
 
   /--
-  Witness that the determinant path expansion is the even/bosonic shadow of
-  the chiral path words.
+  Equality identifying the determinant path readout with the even-volume
+  readout of the Pfaffian sector.
   -/
-  determinantAsEvenPathVolumeWitness : Type*
-
-  /--
-  Witness that the Pfaffian matching expansion is the fermionic pairing
-  amplitude of the chiral path words.
-  -/
-  pfaffianAsFermionicPairingWitness : Type*
-
-  /--
-  Witness that forgetting orientation/sign/square-root data sends the Pfaffian
-  amplitude to the determinant/even-volume shadow.
-  -/
-  pfaffianToDeterminantShadowWitness : Type*
+  determinantAsEvenPathVolume :
+    determinantPaths.determinantReadout =
+      pfaffianPairings.determinantEvenVolume
 
 /--
 Owner-side bridge theorem currently available from explicit Pfaffian/path data:
@@ -298,5 +288,19 @@ theorem constructPfaffianPathBridgeTarget
     P.pfaffianPairings.pfaffianAmplitude ^ 2 =
       P.pfaffianPairings.determinantEvenVolume :=
   P.pfaffianPairings.pfaffian_sq_eq_determinantEvenVolume
+
+/-! The two remaining bridge readouts are already owned by the matching packet. -/
+
+theorem pfaffian_eq_fermionic_pairing
+    (P : PfaffianPathBridgePacket) :
+    P.pfaffianPairings.pfaffianAmplitude =
+      P.pfaffianPairings.matchingExpansion :=
+  P.pfaffianPairings.pfaffian_eq_matchingExpansion
+
+theorem determinant_even_volume_eq_pfaffian_sq_bridge
+    (P : PfaffianPathBridgePacket) :
+    P.pfaffianPairings.determinantEvenVolume =
+      P.pfaffianPairings.pfaffianAmplitude ^ 2 :=
+  determinant_even_volume_eq_pfaffian_sq P.pfaffianPairings
 
 end InfoGeometry.Volume.PfaffianPathBridge

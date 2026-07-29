@@ -210,19 +210,29 @@ in infinite dimension, strict positivity of the quadratic form does not by
 itself supply a bounded inverse operator.
 -/
 structure ImaginaryRiesz (Z : BilingualUpperHalfPlane D) where
-  /-- The positive operator representing the imaginary form. -/
-  Y : EndH
-  /-- `Y` represents the imaginary form by the real inner product. -/
+  /-- Invertible positive operator representing the imaginary form. -/
+  unit : Units EndH
+  /-- The unit value represents the imaginary form by the real inner product. -/
   form_eq :
     ∀ v w : H₂,
-      imaginaryForm Z v w = ⟪v, Y w⟫_ℝ
+      imaginaryForm Z v w = ⟪v, unit.val w⟫_ℝ
   /-- Strict positivity of the representing operator. -/
   positive :
-    ∀ v : H₂, v ≠ 0 → 0 < ⟪v, Y v⟫_ℝ
-  /-- The representing operator is invertible. -/
-  unit : Units EndH
-  /-- The unit really is the imaginary operator. -/
-  unit_eq : unit.val = Y
+    ∀ v : H₂, v ≠ 0 → 0 < ⟪v, unit.val v⟫_ℝ
+
+namespace ImaginaryRiesz
+
+variable {Z : BilingualUpperHalfPlane D}
+
+/-- Positive imaginary operator derived from the invertible owner. -/
+abbrev Y (R : ImaginaryRiesz Z) : DoubledEnd E :=
+  R.unit.val
+
+@[simp]
+theorem unit_eq (R : ImaginaryRiesz Z) : R.unit.val = Y R :=
+  rfl
+
+end ImaginaryRiesz
 
 /--
 A coordinate-free trace datum.

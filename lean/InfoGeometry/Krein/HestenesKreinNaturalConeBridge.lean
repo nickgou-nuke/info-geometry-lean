@@ -218,8 +218,11 @@ def fromKMSBridgeCompat :
   let kms : KMSState Op B.flow B.beta :=
     { state := B.kms.state
       flow_invariant := B.kms.flow_invariant
-      kms_boundary_condition := B.kms.kms_boundary_condition
-      kms_boundary_condition_holds := B.kms.kms_boundary_condition_holds }
+      correlation := B.kms.correlation
+      correlation_differentiableOn_openStrip :=
+        B.kms.correlation_differentiableOn_openStrip
+      correlation_lower_boundary := B.kms.correlation_lower_boundary
+      correlation_upper_boundary := B.kms.correlation_upper_boundary }
   exact
     { vacuum := B.vacuum
       omegaState := B.omegaState
@@ -279,7 +282,7 @@ theorem kms_flow_invariant
 @[rep_depth krein]
 theorem kms_boundary_holds :
     B.kms.kms_boundary_condition :=
-  B.kms.kms_boundary_holds
+  KMSState.kms_boundary_holds B.kms
 
 end HestenesKreinNaturalConeKMSBridge
 

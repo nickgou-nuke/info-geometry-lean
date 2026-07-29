@@ -1,4 +1,5 @@
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
+import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
 
 /-!
 # Minimal CP1-style Drazin localization model
@@ -37,11 +38,11 @@ inductive Edge where
   | line
 deriving DecidableEq, Repr
 
-abbrev G := Unit
-abbrev T := Unit
+abbrev G := Fixed
+abbrev T := Degree
 abbrev Target := Fixed
 abbrev Coeff := ℤ
-abbrev Algebra := ℤ
+abbrev Algebra := ℝ
 
 /-- Minimal homogeneous root shadow for a two-fixed-point line. -/
 def rootShadow : HomogeneousRootShadow G where
@@ -128,17 +129,13 @@ def regularEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
   nilpotent_isNilpotent := by
     exact IsNilpotent.zero
 
-/-- Trivial Frobenius self-duality packet over the integer coefficient algebra. -/
+/-- Frobenius self-duality over the real localized coefficient algebra. -/
 def frobenius : FrobeniusSelfDualPacket Algebra where
-  pairing := fun a b => (a * b : ℤ)
-  pairing_mul_left_eq_pairing_mul_right := by
-    intro a b c
-    norm_num [mul_assoc]
+  functional := AddMonoidHom.id ℝ
   nondegenerate := by
     intro a h
-    have h1 : ((a * 1 : ℤ) : ℝ) = 0 := h 1
-    norm_num at h1
-    exact_mod_cast h1
+    have h1 := h 1
+    simpa using h1
 
 /-- The unique edge carries the regular Drazin denominator `1`. -/
 theorem edgeDrazinData_element_line :

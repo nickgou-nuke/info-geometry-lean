@@ -62,29 +62,42 @@ theorem finiteRiemannProbability_sum_eq_one
   exact div_self h
 
 /--
-Finite prime-state packet.
-
-The support can be all integers in a cutoff, or only primes in a cutoff.
-Primality of the support is a predicate field, not built into the normalization
-theorem.
+Finite prime-state packet.  Membership in the prime lane is the concrete
+Mathlib primality law on every supported natural number.
 -/
 structure FiniteRiemannStatePacket where
-  support : Finset ℕ
-  weight : ℕ → ℝ
+  support : Finset Nat.Primes
+  weight : Nat.Primes → ℝ
   normSq_nonzero : finiteRiemannNormSq support weight ≠ 0
-  support_is_prime_lane : Prop
 
 namespace FiniteRiemannStatePacket
 
 variable (P : FiniteRiemannStatePacket)
+
+/-- Natural-number projection of the intrinsically prime support. -/
+def natSupport : Finset ℕ :=
+  P.support.image (fun p : Nat.Primes => p.1)
 
 /-- Finite squared norm of the packet. -/
 def normSq : ℝ :=
   finiteRiemannNormSq P.support P.weight
 
 /-- Finite probability weight of one register basis element. -/
-def probability (n : ℕ) : ℝ :=
-  finiteRiemannProbability P.support P.weight n
+def probability (p : Nat.Primes) : ℝ :=
+  finiteRiemannProbability P.support P.weight p
+
+/-- Primality is intrinsic to every supported mode. -/
+theorem support_is_prime_lane
+    (p : Nat.Primes) (_hp : p ∈ P.support) :
+    Nat.Prime p.1 :=
+  p.2
+
+/-- The finite support lies in Mathlib's subtype of prime natural numbers. -/
+theorem support_subset_primes :
+    (P.natSupport : Set ℕ) ⊆ Set.range (fun p : Nat.Primes => p.1) := by
+  intro p hp
+  rcases Finset.mem_image.mp (by simpa [natSupport] using hp) with ⟨q, hq, hq'⟩
+  exact ⟨q, hq'⟩
 
 /-- The finite packet probabilities sum to `1`. -/
 theorem probability_sum_eq_one :

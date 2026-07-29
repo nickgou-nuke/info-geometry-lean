@@ -1,5 +1,6 @@
 import InfoGeometry.Projective.Cl44QuaternionSplit
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
+import Mathlib.Analysis.Normed.Algebra.QuaternionExponential
 
 noncomputable section
 

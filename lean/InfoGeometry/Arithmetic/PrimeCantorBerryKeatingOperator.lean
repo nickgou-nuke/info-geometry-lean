@@ -212,10 +212,15 @@ structure BerryKeatingTraceFormulaSocket (P : PrimeCutoff)
   PeriodicOrbitPeriod : PrimeMode P → ℝ
   periodicOrbitPeriod_eq_logPrime :
     ∀ p : PrimeMode P, PeriodicOrbitPeriod p = B.logPrime p
-  SelfAdjointExtensionProblem : Prop
-  BoundaryConditionSolvesExtension : Prop
-  boundaryCondition_implies_selfAdjointExtension :
-    BoundaryConditionSolvesExtension → SelfAdjointExtensionProblem
+  /-- Concrete self-adjoint operator on the finite Cantor field carrier. -/
+  extensionOperator : CantorField P →L[ℂ] CantorField P
+  extensionAdjoint : CantorField P →L[ℂ] CantorField P
+  extensionOperator_selfAdjoint : extensionAdjoint = extensionOperator
+  /-- Domain selected by the finite boundary condition. -/
+  boundaryDomain : Set (CantorField P)
+  /-- The extension agrees with the finite Berry--Keating Hamiltonian on its domain. -/
+  boundaryCondition_solves_extension :
+    ∀ f ∈ boundaryDomain, extensionOperator f = B.H f
 
 namespace BerryKeatingTraceFormulaSocket
 
@@ -232,9 +237,10 @@ theorem period_eq_logPrime (p : PrimeMode P) :
 /-- Re-export: a supplied boundary condition solves the socketed extension target. -/
 @[rep_depth operator]
 theorem extension_of_boundary
-    (h : Skt.BoundaryConditionSolvesExtension) :
-    Skt.SelfAdjointExtensionProblem :=
-  Skt.boundaryCondition_implies_selfAdjointExtension h
+    {f : CantorField P}
+    (hf : f ∈ Skt.boundaryDomain) :
+    Skt.extensionOperator f = B.H f :=
+  Skt.boundaryCondition_solves_extension f hf
 
 end BerryKeatingTraceFormulaSocket
 

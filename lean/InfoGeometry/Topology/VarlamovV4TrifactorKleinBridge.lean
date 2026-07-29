@@ -61,20 +61,38 @@ theorem sectorV4_involution (s : TripotentState) :
   cases s <;> rfl
 
 /-- A finite witness bundling the tripotent/V₄ cycle with a `pg` Klein relation. -/
-structure VarlamovTrifactorKleinWitness where
-  klein : KleinBottlePresentationWitness
-  sector_cycle_cube : ∀ s : TripotentState,
-    sectorV4 (TripotentState.trialityCycle
-      (TripotentState.trialityCycle (TripotentState.trialityCycle s))) = sectorV4 s
-  sector_involution : ∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I
-  sector_nonidentity : ∀ s : TripotentState, sectorV4 s ≠ V4Group.I
+abbrev VarlamovTrifactorKleinWitness : Type :=
+  Σ' _klein : KleinBottlePresentationWitness,
+    (∀ s : TripotentState,
+      sectorV4 (TripotentState.trialityCycle
+        (TripotentState.trialityCycle (TripotentState.trialityCycle s))) = sectorV4 s) ∧
+      (∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I) ∧
+        (∀ s : TripotentState, sectorV4 s ≠ V4Group.I)
 
-/-- The concrete wallpaper `pg` action together with the finite Varlamov/trifactor data. -/
-def concreteVarlamovTrifactorKleinWitness : VarlamovTrifactorKleinWitness where
-  klein := WallpaperGroupPG.kleinBottlePresentation concretePG
-  sector_cycle_cube := sectorV4_trialityCube
-  sector_involution := sectorV4_involution
-  sector_nonidentity := sectorV4_ne_identity
+namespace VarlamovTrifactorKleinWitness
+
+abbrev klein (W : VarlamovTrifactorKleinWitness) : KleinBottlePresentationWitness :=
+  W.1
+
+abbrev sector_cycle_cube (W : VarlamovTrifactorKleinWitness) :
+    ∀ s : TripotentState,
+      sectorV4 (TripotentState.trialityCycle
+        (TripotentState.trialityCycle (TripotentState.trialityCycle s))) = sectorV4 s :=
+  W.2.1
+
+abbrev sector_involution (W : VarlamovTrifactorKleinWitness) :
+    ∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I :=
+  W.2.2.1
+
+abbrev sector_nonidentity (W : VarlamovTrifactorKleinWitness) :
+    ∀ s : TripotentState, sectorV4 s ≠ V4Group.I :=
+  W.2.2.2
+
+end VarlamovTrifactorKleinWitness
+
+def concreteVarlamovTrifactorKleinWitness : VarlamovTrifactorKleinWitness :=
+  ⟨WallpaperGroupPG.kleinBottlePresentation concretePG,
+    sectorV4_trialityCube, sectorV4_involution, sectorV4_ne_identity⟩
 
 /-- Read back the finite Klein-bottle presentation relation from any bridge witness. -/
 theorem witness_klein_relation (W : VarlamovTrifactorKleinWitness) (p : Lattice2D) :

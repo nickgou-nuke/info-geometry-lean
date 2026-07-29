@@ -40,6 +40,38 @@ variable {Obs R : Type*} [Ring R] [LinearOrder R]
     sys.poisson sys.S sys.H + sys.metric sys.S sys.S = sys.metric sys.S sys.S := by
   rw [sys.poisson_S_casimir, zero_add]
 
+theorem metric_entropy_energy_zero (sys : MetriplecticStructure Obs R) :
+    sys.metric sys.S sys.H = 0 := by
+  rw [sys.metric_symm, sys.metric_H_casimir]
+
+theorem poisson_energy_entropy_zero (sys : MetriplecticStructure Obs R) :
+    sys.poisson sys.H sys.S = 0 := by
+  rw [sys.poisson_skew, sys.poisson_S_casimir, neg_zero]
+
+theorem entropy_total_evolution_nonnegative
+    (sys : MetriplecticStructure Obs R) :
+    0 ≤ sys.poisson sys.S sys.H + sys.metric sys.S sys.S := by
+  rw [sys.poisson_S_casimir, zero_add]
+  exact sys.metric_nonneg sys.S
+
+theorem energy_conservation_and_entropy_production
+    (sys : MetriplecticStructure Obs R) :
+    sys.poisson sys.H sys.H + sys.metric sys.H sys.S = 0 ∧
+      0 ≤ sys.poisson sys.S sys.H + sys.metric sys.S sys.S :=
+  ⟨sys.energy_conservation, sys.entropy_total_evolution_nonnegative⟩
+
+theorem metriplectic_degeneracy
+    (sys : MetriplecticStructure Obs R) :
+    (∀ f, sys.metric sys.H f = 0) ∧
+      (∀ f, sys.metric f sys.H = 0) ∧
+      (∀ f, sys.poisson sys.S f = 0) ∧
+      (∀ f, sys.poisson f sys.S = 0) := by
+  refine ⟨sys.metric_H_casimir, ?_, sys.poisson_S_casimir, ?_⟩
+  · intro f
+    rw [sys.metric_symm, sys.metric_H_casimir]
+  · intro f
+    rw [sys.poisson_skew, sys.poisson_S_casimir, neg_zero]
+
 end MetriplecticStructure
 
 /-- Minimal Kähler-compatible triple over a carrier `V`. -/

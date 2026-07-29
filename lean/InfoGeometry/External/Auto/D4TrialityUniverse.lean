@@ -153,10 +153,7 @@ theorem triality_breaking_splitting (p : Particle) (hε : ε ≠ 0) :
 -- The Algebra of Observables
 -- ============================================================================
 
-/--
-The finite observable universe.  The `relations` field assembles the concrete
-finite equations for Cartan commutation, triality order, and Casimir invariance.
--/
+/-- Data of a finite observable universe, without an opaque relation marker. -/
 structure ObservableUniverse where
   algebra : Type
   generators : algebra → algebra → algebra
@@ -164,7 +161,24 @@ structure ObservableUniverse where
   casimir_quadratic : algebra → ℂ
   casimir_quartic : algebra → ℂ
   triality : TrialityRep → TrialityRep
-  relations : Prop
+
+namespace ObservableUniverse
+
+/--
+Exact realization predicate for the checked D4 coordinate model.
+
+The predicate identifies every operation with its concrete owner.  The Cartan,
+triality, and Casimir laws then follow from the corresponding owner theorems.
+-/
+def Relations (U : ObservableUniverse) : Prop :=
+  U.algebra = D4Alg ∧
+    HEq U.generators d4Bracket ∧
+    HEq U.cartan cartan_generator ∧
+    HEq U.casimir_quadratic quadratic_casimir ∧
+    HEq U.casimir_quartic quartic_casimir ∧
+    U.triality = triality_map
+
+end ObservableUniverse
 
 /-- Concrete relations for the checked observable universe. -/
 def observableRelations : Prop :=
@@ -182,14 +196,18 @@ def observableUniverse : ObservableUniverse where
   casimir_quadratic := quadratic_casimir
   casimir_quartic := quartic_casimir
   triality := triality_map
-  relations := observableRelations
 
 theorem constructed_universe_exists : Nonempty ObservableUniverse := by
   exact ⟨observableUniverse⟩
 
 theorem constructed_universe_relations :
-    observableUniverse.relations := by
-  exact observableRelations_checked
+    observableUniverse.Relations := by
+  exact ⟨rfl, HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl, rfl⟩
+
+/-- The realized universe satisfies the concrete Cartan/triality/Casimir laws. -/
+theorem constructed_universe_checked_laws :
+    observableRelations :=
+  observableRelations_checked
 
 end D4TrialityUniverse
 

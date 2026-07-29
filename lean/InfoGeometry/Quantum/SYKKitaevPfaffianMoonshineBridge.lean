@@ -38,17 +38,20 @@ theorem pfaffian_syk_moonshine_unification :
     sykMajoranaCouplingDim 24 = 10626 := by
   refine ⟨rfl, mckay_observation_weight_1, by decide⟩
 
-/-- Main Bridge Theorem: Proof of existence of the SYK-Kitaev-Pfaffian-Moonshine Bridge Packet -/
-structure SYKKitaevMoonshinePacket where
-  pfaffianIndex : ℝ
-  h_pfaffian : pfaffianIndex = -1
-  sykCouplings : ℕ
-  h_syk : sykCouplings = 10626
-  moonshineDim : ℕ
-  h_moonshine : moonshineDim = 196884
+/--
+Exact finite numerical content of the SYK/Pfaffian/Moonshine comparison.
+
+This proposition does not package freely chosen numbers with equality evidence;
+each conjunct is owned by the corresponding native theorem above.
+-/
+def SYKKitaevMoonshinePacket : Prop :=
+  (PfaffianParity.topological).toReal = -1 ∧
+  sykMajoranaCouplingDim 24 = 10626 ∧
+  fourier_j_1 = monster_chi_1 + monster_chi_2
 
 theorem syk_kitaev_moonshine_bridge_exists :
-    Nonempty SYKKitaevMoonshinePacket :=
-  ⟨⟨-1, rfl, 10626, by decide, 196884, by decide⟩⟩
+    SYKKitaevMoonshinePacket := by
+  exact ⟨topological_pfaffian_parity_neg, syk_24_coupling_count,
+    mckay_observation_weight_1⟩
 
 end InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge

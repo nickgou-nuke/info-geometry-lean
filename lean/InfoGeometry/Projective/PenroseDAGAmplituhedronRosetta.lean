@@ -147,7 +147,7 @@ theorem delaunay_pure_braid_descent_readback {moving : ℕ}
       ∀ g :
         InfoGeometry.Topology.PureBraid.PureBraidGenerator
           (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
-        ρ (InfoGeometry.Topology.PureBraid.of g) = D.rohozhkin.packet.delaunay.gen g :=
+        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g :=
   rohozhkin_plabic_descent_packet D.rohozhkin
 
 /--
@@ -173,7 +173,7 @@ theorem rosetta_owner_readback_packet {moving : ℕ}
       ∀ g :
         InfoGeometry.Topology.PureBraid.PureBraidGenerator
           (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
-        ρ (InfoGeometry.Topology.PureBraid.of g) = D.rohozhkin.packet.delaunay.gen g := by
+        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
   refine ⟨⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩,
     split_quaternion_matrix_equiv_readback,
     ?_, klein_quadric_line_readback D i,

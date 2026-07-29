@@ -7,6 +7,7 @@ Phase 1: Native mathlib-compatible `su(n)` Lie algebra definition.
 
 import Mathlib.Tactic
 import Mathlib.Algebra.Lie.Subalgebra
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Module.Submodule.LinearMap

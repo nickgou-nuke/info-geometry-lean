@@ -17,6 +17,10 @@ namespace KoroteevZeitlin.Bethe
 
 variable {R : Type*} [CommRing R]
 
+/-- Admissible multiplicative XXZ deformation parameters. -/
+abbrev XXZDeformationParameter :=
+  {q : ℂ // q ≠ 0 ∧ q ≠ 1}
+
 /-- XXZ Bethe Ansatz data for an A_r quiver.
 
 Given:
@@ -33,12 +37,23 @@ structure XXZBetheData (r : ℕ) where
   /-- Equivariant parameters (evaluation params) -/
   numSites : ℕ
   /-- ℏ deformation parameter -/
-  hbar : ℂ
+  hbar : XXZDeformationParameter
   /-- Kähler parameters z_1,...,z_r -/
   kahler : Fin r → ℂ
-  /-- ℏ is not zero or a root of unity -/
-  hbar_ne_zero : hbar ≠ 0
-  hbar_ne_one : hbar ≠ 1
+
+namespace XXZBetheData
+
+/-- The admissible XXZ parameter is nonzero. -/
+theorem hbar_ne_zero (B : XXZBetheData r) :
+    (B.hbar : ℂ) ≠ 0 :=
+  B.hbar.2.1
+
+/-- The admissible XXZ parameter is not the undeformed value `1`. -/
+theorem hbar_ne_one (B : XXZBetheData r) :
+    (B.hbar : ℂ) ≠ 1 :=
+  B.hbar.2.2
+
+end XXZBetheData
 
 /-- Bethe roots: s_{a,j} for node a, index j -/
 def BetheRoots (B : XXZBetheData r) : Type :=
@@ -69,7 +84,7 @@ noncomputable def Q_plus_shifted
     (s : BetheRoots B)
     (a : Fin r) : ℂ[X] :=
   ∏ j : Fin (B.dimVec a),
-    (C B.hbar * X - C (s a j))
+    (C (B.hbar : ℂ) * X - C (s a j))
 
 /--
 The QQ-system for A_1 (rank 1):
@@ -112,12 +127,12 @@ def BetheEquation
   let lhs_same :=
     ∏ i : Fin (B.dimVec a),
       if (i : ℕ) = (j : ℕ) then 1
-      else (B.hbar * s a j - s a i) /
-           (s a j - B.hbar * s a i)
+      else ((B.hbar : ℂ) * s a j - s a i) /
+           (s a j - (B.hbar : ℂ) * s a i)
   let lhs_site :=
     ∏ m : Fin B.numSites,
       (s a j - sites m) /
-      (B.hbar * s a j - sites m)
+      ((B.hbar : ℂ) * s a j - sites m)
   lhs_same * lhs_site = B.kahler a
 
 /--
@@ -131,39 +146,54 @@ def BetheSystem
     BetheEquation B s sites a j
 
 /--
-Yang-Yang function:
+The finite algebraic critical-point predicate owned by this file.
 
-𝒴(s, a, z, ℏ) whose critical points
-∂_{s_{a,j}} 𝒴 = 0 yield the Bethe equations.
-
-The Bethe equations emerge as:
-  s_{a,j} · ∂/∂s_{a,j} 𝒴 = 0
+An analytic Yang--Yang potential and a theorem identifying its derivative-zero
+locus with this predicate require a separate complex-differentiability
+development.  Until that owner exists, criticality is represented by the
+already explicit Bethe equations rather than by an opaque `Prop` field.
 -/
-structure YangYangFunction where
-  /-- The function value -/
-  value : ℂ
-  /-- Critical point condition gives Bethe eqs -/
-  critical_is_bethe : Prop
+def IsBetheCriticalPoint
+    (B : XXZBetheData r)
+    (s : BetheRoots B)
+    (sites : SiteParams B) : Prop :=
+  BetheSystem B s sites
+
+@[simp]
+theorem isBetheCriticalPoint_iff_betheSystem
+    (B : XXZBetheData r)
+    (s : BetheRoots B)
+    (sites : SiteParams B) :
+    IsBetheCriticalPoint B s sites ↔ BetheSystem B s sites :=
+  Iff.rfl
 
 /--
-Bethe algebra: the commutative algebra generated
-by quantum K-theory classes.
+Finite Bethe presentation by its polynomial generators and QQ relations.
 
-This is isomorphic to the equivariant quantum
-K-theory ring K^q_T(X).
+Commutativity is not stored as evidence: the ambient owner is the commutative
+polynomial ring `ℂ[X]`, so every pair of generators commutes by `mul_comm`.
 -/
-structure BetheAlgebra (r : ℕ) where
-  /-- Base ring -/
-  base : CommRing ℂ := inferInstance
-  /-- Generators: exterior powers of tautological
-      bundles (= Baxter Q-operators) -/
-  generators : Fin r → ℂ[X]
-  /-- Relations: the QQ-system -/
-  relations : Fin r → ℂ[X]
-  /-- Commutativity: [T_i, T_j] = 0 -/
-  commute : ∀ i j : Fin r,
-    generators i * generators j =
-    generators j * generators i
+abbrev BetheAlgebra (r : ℕ) :=
+  (Fin r → ℂ[X]) × (Fin r → ℂ[X])
+
+namespace BetheAlgebra
+
+/-- Generators: exterior powers of tautological bundles, represented by Baxter
+`Q`-polynomials. -/
+def generators (A : BetheAlgebra r) : Fin r → ℂ[X] :=
+  A.1
+
+/-- Polynomial relations of the finite Bethe presentation. -/
+def relations (A : BetheAlgebra r) : Fin r → ℂ[X] :=
+  A.2
+
+/-- Bethe generators commute because `ℂ[X]` is a commutative ring. -/
+theorem generators_commute (A : BetheAlgebra r) (i j : Fin r) :
+    A.generators i * A.generators j =
+      A.generators j * A.generators i :=
+  mul_comm _ _
+
+end BetheAlgebra
 
 /--
 Spectrum of the Bethe algebra.
@@ -183,12 +213,7 @@ theorem bethe_spectrum_parametrized
         A.generators a = Q_plus B s a := by
   intro _h
   refine ⟨?_, ?_⟩
-  · exact
-      { generators := fun a => Q_plus B s a
-        relations := fun _ => 0
-        commute := by
-          intro i j
-          ring }
+  · exact ⟨fun a => Q_plus B s a, fun _ => 0⟩
   · intro a
     rfl
 
@@ -200,21 +225,22 @@ space of solutions.
 noncomputable def hbarInvertedData (B : XXZBetheData 1) : XXZBetheData 1 where
   dimVec := B.dimVec
   numSites := B.numSites
-  hbar := B.hbar⁻¹
-  kahler := B.kahler
-  hbar_ne_zero := inv_ne_zero B.hbar_ne_zero
-  hbar_ne_one := by
+  hbar := ⟨(B.hbar : ℂ)⁻¹, inv_ne_zero B.hbar_ne_zero, by
     intro h
-    have hmul : B.hbar * B.hbar⁻¹ = B.hbar * 1 := by rw [h]
+    have hmul : (B.hbar : ℂ) * (B.hbar : ℂ)⁻¹ =
+        (B.hbar : ℂ) * 1 := by
+      rw [h]
     rw [mul_inv_cancel₀ B.hbar_ne_zero, mul_one] at hmul
-    exact B.hbar_ne_one hmul.symm
+    exact B.hbar_ne_one hmul.symm⟩
+  kahler := B.kahler
 
 theorem bethe_mirror_invariance
     (B : XXZBetheData 1)
     (s : BetheRoots B)
     (sites : SiteParams B) :
     BetheSystem B s sites →
-    ∃ B' : XXZBetheData 1, B'.hbar = B.hbar⁻¹ := by
+    ∃ B' : XXZBetheData 1,
+      (B'.hbar : ℂ) = (B.hbar : ℂ)⁻¹ := by
   intro _h
   exact ⟨hbarInvertedData B, rfl⟩
 

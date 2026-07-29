@@ -71,11 +71,13 @@ structure MetalMirrorChannel
       U ∈ regularPositiveConeOmegaD c →
         idealFlow U ∈ regularPositiveConeOmegaD c
 
-  /-- Actual reflected branch is the physical dissipative reduced channel. -/
-  actual_dissipative_branch : Prop
+  /-- The observed reduced branch is dissipative in the operator norm. -/
+  actual_norm_nonincreasing :
+    ∀ U : OperatorEnd E, ‖actualFlow U‖ ≤ ‖U‖
 
-  /-- Ideal branch is the lossless/unitary comparison branch. -/
-  ideal_lossless_branch : Prop
+  /-- The ideal comparison branch is lossless in the operator norm. -/
+  ideal_norm_preserving :
+    ∀ U : OperatorEnd E, ‖idealFlow U‖ = ‖U‖
 
 namespace MetalMirrorChannel
 
@@ -108,6 +110,24 @@ theorem idealPoint_op
     (U : RegularConePoint c) :
     (M.idealPoint U).op = M.idealFlow U.op :=
   rfl
+
+/-- Native dissipative-branch predicate: the reduced channel is contractive. -/
+def ActualDissipativeBranch : Prop :=
+  ∀ U : OperatorEnd E, ‖M.actualFlow U‖ ≤ ‖U‖
+
+/-- Native lossless-branch predicate: the ideal channel preserves norm. -/
+def IdealLosslessBranch : Prop :=
+  ∀ U : OperatorEnd E, ‖M.idealFlow U‖ = ‖U‖
+
+/-- The actual branch is dissipative by the channel's contraction law. -/
+theorem actual_dissipative_branch :
+    M.ActualDissipativeBranch :=
+  M.actual_norm_nonincreasing
+
+/-- The comparison branch is lossless by its norm-preservation law. -/
+theorem ideal_lossless_branch :
+    M.IdealLosslessBranch :=
+  M.ideal_norm_preserving
 
 end MetalMirrorChannel
 
@@ -383,11 +403,13 @@ structure MetalMirrorChannel
       U ∈ Ω.cone →
         idealUnitary U ∈ Ω.cone
 
-  /-- Physical branch property: actual branch is dissipative/reduced. -/
-  actual_dissipative_branch : Prop
+  /-- The observed reduced branch is contractive in the carrier norm. -/
+  actual_norm_nonincreasing :
+    ∀ U : Op, ‖actualFlow U‖ ≤ ‖U‖
 
-  /-- Physical branch property: ideal branch is lossless/reference. -/
-  ideal_lossless_branch : Prop
+  /-- The ideal reference branch preserves the carrier norm. -/
+  ideal_norm_preserving :
+    ∀ U : Op, ‖idealUnitary U‖ = ‖U‖
 
 namespace MetalMirrorChannel
 
@@ -409,6 +431,24 @@ def idealPoint
     RegularConePoint Ω where
   op := M.idealUnitary U.op
   mem := M.ideal_preserves_cone U.op U.mem
+
+/-- Native dissipative-branch predicate for the backend-generic channel. -/
+def ActualDissipativeBranch : Prop :=
+  ∀ U : Op, ‖M.actualFlow U‖ ≤ ‖U‖
+
+/-- Native lossless-branch predicate for the backend-generic reference. -/
+def IdealLosslessBranch : Prop :=
+  ∀ U : Op, ‖M.idealUnitary U‖ = ‖U‖
+
+/-- The actual branch is dissipative by its contraction law. -/
+theorem actual_dissipative_branch :
+    M.ActualDissipativeBranch :=
+  M.actual_norm_nonincreasing
+
+/-- The ideal branch is lossless by its norm-preservation law. -/
+theorem ideal_lossless_branch :
+    M.IdealLosslessBranch :=
+  M.ideal_norm_preserving
 
 end MetalMirrorChannel
 

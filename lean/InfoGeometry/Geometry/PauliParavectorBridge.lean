@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
+import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 
@@ -156,39 +157,39 @@ Bivector/spin-plane readout socket.
 
 In Hestenes language, spin is a bivector/rotor datum extracted from the spinor,
 not a component of the momentum paravector itself.
+
+This finite interface owns only the readout map.  A model-specific law requires
+actual bivector operations and is not represented by an opaque proposition.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure SpinBivectorReadout
     (Spinor Bivector : Type*) where
   /-- Spin plane/bivector readout. -/
   spinPlane : Spinor → Bivector
-
-  /-- The abstract proposition representing the readout law. -/
-  ReadoutHolds : Prop
-
-  /-- The certificate/proof of the readout law. -/
-  readout : ReadoutHolds
+  /-- Model-specific relation defining a valid spin-plane readout. -/
+  IsSpinPlaneReadout : Spinor → Bivector → Prop
+  /-- Every selected spin plane satisfies that relation. -/
+  spinPlane_spec : ∀ psi, IsSpinPlaneReadout psi (spinPlane psi)
 
 namespace SpinBivectorReadout
 
 variable {Spinor Bivector : Type*}
 
-/-- Debt surface for the model-specific spin-plane readout theorem. -/
-@[rep_depth operator]
 theorem readout_holds
-    (S : SpinBivectorReadout Spinor Bivector) :
-    S.ReadoutHolds :=
-  S.readout
+    (S : SpinBivectorReadout Spinor Bivector) (psi : Spinor) :
+    S.IsSpinPlaneReadout psi (S.spinPlane psi) :=
+  S.spinPlane_spec psi
 
 end SpinBivectorReadout
 
 /--
 Momentum-spin coupling socket.
 
-This is the theorem-safe representation-theoretic statement: momentum and spin
-are read together through a common spinor/rotor structure.
+Momentum and spin are read together through a common spinor carrier.  No
+Pauli--Lubanski coupling equation is asserted until a concrete representation
+supplies one.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure MomentumSpinCoupling
     (Spinor Bivector : Type*) where
   /-- Momentum/paravector readout. -/
@@ -203,23 +204,69 @@ structure MomentumSpinCoupling
   /-- Pauli-Lubanski-style readout. -/
   pauliLubanskiReadout : Spinor → Minkowski4
 
-  /-- The abstract proposition representing the coupling law. -/
-  CouplingHolds : Prop
+  /-- Relation coupling the four model-specific readouts. -/
+  CouplingLaw : Minkowski4 → Bivector → ℝ → Minkowski4 → Prop
 
-  /-- The certificate/proof of the coupling law. -/
-  coupling : CouplingHolds
+  /-- The selected readouts satisfy the coupling relation. -/
+  coupling :
+    ∀ psi,
+      CouplingLaw (momentum psi) (spinReadout.spinPlane psi)
+        (helicity psi) (pauliLubanskiReadout psi)
 
 namespace MomentumSpinCoupling
 
 variable {Spinor Bivector : Type*}
 
-/-- Debt surface for the model-specific spin-momentum coupling theorem. -/
-@[rep_depth operator]
 theorem coupling_holds
-    (C : MomentumSpinCoupling Spinor Bivector) :
-    C.CouplingHolds :=
-  C.coupling
+    (C : MomentumSpinCoupling Spinor Bivector) (psi : Spinor) :
+    C.CouplingLaw (C.momentum psi) (C.spinReadout.spinPlane psi)
+      (C.helicity psi) (C.pauliLubanskiReadout psi) :=
+  C.coupling psi
 
 end MomentumSpinCoupling
+
+/-! ## 3. Native finite Souriau spin-particle realization -/
+
+abbrev SouriauFiniteSpinReadout :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate
+
+namespace SouriauFiniteSpinReadout
+
+open InfoGeometry.Physics.MDPASJMSouriau
+
+variable (C : SouriauFiniteSpinReadout)
+
+theorem spin_antisymmetric :
+    IsAntisymmetric (wedge C.u C.v) :=
+  C.spin_antisym
+
+theorem spin_plucker :
+    pfaffian4 (wedge C.u C.v) = 0 :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_plucker C
+
+theorem spin_transverse
+    (hu : dot C.u C.p = 0) (hv : dot C.v C.p = 0) :
+    contractRight (wedge C.u C.v) C.p = 0 :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_transverse
+    C hu hv
+
+theorem lorentz_power_zero :
+    dot C.p (lorentzForce C.field C.p) = 0 :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.lorentz_power_zero C
+
+theorem normal_moment_readout
+    (C : SouriauFiniteSpinReadout)
+    (q m sB : ℚ) (hm : m ≠ 0) :
+    gyromagneticReadout q m 2 sB = q * sB / m :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.normal_moment_readout
+    C q m sB hm
+
+theorem spin_half_prequantization
+    (C : SouriauFiniteSpinReadout) (h : ℚ) :
+    SpinPrequantized (h / 2) h :=
+  InfoGeometry.Physics.MDPASJMSouriau.FiniteSpinParticleCertificate.spin_half_prequantization
+    C h
+
+end SouriauFiniteSpinReadout
 
 end InfoGeometry.Geometry.PauliParavectorBridge

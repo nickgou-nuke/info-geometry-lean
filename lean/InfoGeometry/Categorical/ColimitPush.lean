@@ -6,6 +6,7 @@ import Mathlib.Algebra.Module.Basic
 import Mathlib.LinearAlgebra.Dimension.Finrank
 
 import InfoGeometry.Canonical.TensorTowerColimit
+import InfoGeometry.Canonical.CuntzDirectLimit
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.ErlangenColimitResolution
 import InfoGeometry.Canonical.ErlangenInductiveClosure
@@ -24,9 +25,21 @@ namespace InfoGeometry.Categorical
 
 /- Categorical colimit push: Finite SUSY/Cuntz/amplituhedron models
    mapped to infinite-dimensional models in the colimit. -/
-def ColimitPush : Type := Unit
+/-!
+`ColimitPush` is the concrete algebraic carrier supplied by the Cuntz direct
+limit owner.  Keeping this as an alias preserves the historical name while
+ensuring that the exported carrier is an actual direct-limit construction,
+not a propositionally empty placeholder.
+-/
+abbrev ColimitPush : Type :=
+  _root_.InfoGeometry.Canonical.KashiwaraCuntzCohomology.CuntzColimit ℚ
 
-def mathlib_colimit_infrastructure : Type := Unit
+/-!
+The Mathlib-facing infrastructure exported by this module is the same
+concrete direct-limit carrier.  The actual universal-property lemmas remain
+owned by the imported categorical/direct-limit modules above.
+-/
+abbrev mathlib_colimit_infrastructure : Type := ColimitPush
 
 open InfoGeometry.Physics.AmplituhedronBostConnes
 open InfoGeometry.Algebra.SupergradedSUSY

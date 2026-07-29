@@ -27,9 +27,23 @@ variable {n : ℕ} (S : Fin n → A)
 /-- The Cuntz algebra relations for generators `S i`.
   1. Each `S i` is an isometry: `S i^* S i = 1`
   2. The sum of range projections is 1: `∑ i, S i S i^* = 1` -/
-class CuntzAlgebraRelations : Prop where
-  isometry : ∀ i, star (S i) * S i = 1
-  sum_proj : ∑ i : Fin n, S i * star (S i) = 1
+def CuntzAlgebraRelations : Prop :=
+  (∀ i, star (S i) * S i = 1) ∧
+    (∑ i : Fin n, S i * star (S i) = 1)
+
+namespace CuntzAlgebraRelations
+
+/-- Compatibility projection for the generator isometry law. -/
+theorem isometry
+    (h : CuntzAlgebraRelations S) : ∀ i, star (S i) * S i = 1 :=
+  h.1
+
+/-- Compatibility projection for the partition-of-unity law. -/
+theorem sum_proj
+    (h : CuntzAlgebraRelations S) : ∑ i : Fin n, S i * star (S i) = 1 :=
+  h.2
+
+end CuntzAlgebraRelations
 
 /-- A word in the Cuntz generators. -/
 def CuntzWord (w : List (Fin n)) : A :=

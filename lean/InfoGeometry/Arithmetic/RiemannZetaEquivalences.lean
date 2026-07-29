@@ -1,4 +1,6 @@
 import Mathlib.NumberTheory.Bernoulli
+import Mathlib.NumberTheory.LSeries.Dirichlet
+import Mathlib.NumberTheory.LSeries.Nonvanishing
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.RamanujanOddZeta
@@ -167,6 +169,11 @@ def EtaQuotientAnalyticContinuationDebt : Prop :=
 /-- Explicit closure debt: completed-ξ reflection on the full complex plane. -/
 def CompletedXiFunctionalEquationDebt (s : ℂ) : Prop :=
   completedRiemannZeta s = completedRiemannZeta (1 - s)
+
+/-- The completed-ξ reflection target follows from Mathlib's functional equation. -/
+theorem completedXiFunctionalEquation (s : ℂ) :
+    CompletedXiFunctionalEquationDebt s := by
+  exact (completedRiemannZeta_one_sub s).symm
 
 /-! ## 5. Ramanujan-style odd-zeta transformation targets -/
 

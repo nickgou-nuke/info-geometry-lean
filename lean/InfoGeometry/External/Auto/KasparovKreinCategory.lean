@@ -50,9 +50,27 @@ class KasparovKreinData where
   comp : ∀ {A B C : Type}, KK A B → KK B C → KK A C
 
 /-- KK-contractible boundary object: all classes to/from it are empty. -/
-class KKContractibleBoundary (K₀ : Type) [KK : KasparovKreinData] : Prop where
-  incoming : ∀ A : Type, IsEmpty (KK.KK A K₀)
-  outgoing : ∀ B : Type, IsEmpty (KK.KK K₀ B)
+def KKContractibleBoundary (K₀ : Type) [KK : KasparovKreinData] : Prop :=
+  (∀ A : Type, IsEmpty (KasparovKreinData.KK A K₀)) ∧
+    (∀ B : Type, IsEmpty (KasparovKreinData.KK K₀ B))
+
+namespace KKContractibleBoundary
+
+/-- Compatibility projection for incoming KK classes. -/
+theorem incoming
+    {K₀ : Type} [KK : KasparovKreinData]
+    (h : KKContractibleBoundary K₀) (A : Type) :
+    IsEmpty (KasparovKreinData.KK A K₀) :=
+  h.1 A
+
+/-- Compatibility projection for outgoing KK classes. -/
+theorem outgoing
+    {K₀ : Type} [KK : KasparovKreinData]
+    (h : KKContractibleBoundary K₀) (B : Type) :
+    IsEmpty (KasparovKreinData.KK K₀ B) :=
+  h.2 B
+
+end KKContractibleBoundary
 
 /--
 O₂ boundary K₀ carrier aligned with the existing external compatibility symbol.
@@ -68,7 +86,7 @@ def kkBoundaryPairing
     {K1 : Type*} [AddCommGroup K1]
     {A B : Type}
     [KK : KasparovKreinData]
-    (_xA : KK.KK A O2Boundary) (_xB : KK.KK O2Boundary B)
+    (_xA : KasparovKreinData.KK A O2Boundary) (_xB : KasparovKreinData.KK O2Boundary B)
     (_k : CuntzKTheoryPairing.O2_K0) (_ξ : K1) : ℂ :=
   0
 
@@ -78,7 +96,7 @@ theorem kkBoundaryPairing_zero
     {K1 : Type*} [AddCommGroup K1]
     {A B : Type}
     [KK : KasparovKreinData]
-    (xA : KK.KK A O2Boundary) (xB : KK.KK O2Boundary B)
+    (xA : KasparovKreinData.KK A O2Boundary) (xB : KasparovKreinData.KK O2Boundary B)
     (k : CuntzKTheoryPairing.O2_K0) (ξ : K1) :
     kkBoundaryPairing H xA xB k ξ = 0 := by
   simp [kkBoundaryPairing]
@@ -86,10 +104,10 @@ theorem kkBoundaryPairing_zero
 /-- O₂ contractibility blocks all KK transport through it. -/
 theorem kasparovKrein_killed_by_o2
     (K₀ : Type) [KK : KasparovKreinData]
-    [hK : KKContractibleBoundary K₀] :
-    ∀ A : Type, IsEmpty (KK.KK A K₀) ∧ IsEmpty (KK.KK K₀ A) := by
+    (hK : KKContractibleBoundary K₀) :
+    ∀ A : Type, IsEmpty (KasparovKreinData.KK A K₀) ∧ IsEmpty (KasparovKreinData.KK K₀ A) := by
   intro A
-  exact ⟨hK.incoming A, hK.outgoing A⟩
+  exact ⟨hK.1 A, hK.2 A⟩
 
 /--
 A typed Kasparov-factorization chain through the O₂ boundary:
@@ -97,9 +115,9 @@ A typed Kasparov-factorization chain through the O₂ boundary:
 -/
 structure KKProductChain
     {A C : Type} [KK : KasparovKreinData] where
-  left : KK.KK A O2Boundary
-  right : KK.KK O2Boundary C
-  composite : KK.KK A C
+  left : KasparovKreinData.KK A O2Boundary
+  right : KasparovKreinData.KK O2Boundary C
+  composite : KasparovKreinData.KK A C
   isComposed : composite = KK.comp left right
 
 /--
@@ -141,10 +159,10 @@ incoming/outgoing non-empty KK data, so any such chain is impossible.
 theorem kasparov_krein_product_chain_contractibility_forbids
     {A Ctxt : Type}
     [KK : KasparovKreinData]
-    [hK : KKContractibleBoundary O2Boundary]
+    (hK : KKContractibleBoundary O2Boundary)
     (chain : KKProductChain (A := A) (C := Ctxt)) :
     False := by
-  have hIn : IsEmpty (KK.KK A O2Boundary) := hK.incoming A
+  have hIn : IsEmpty (KasparovKreinData.KK A O2Boundary) := hK.1 A
   exact hIn.elim chain.left
 
 /--
@@ -160,13 +178,13 @@ theorem kasparov_krein_contractibility_forbids_anomaly_chain
     [KK : KasparovKreinData]
     {A B : Type}
     (k : CuntzKTheoryPairing.O2_K0) (ξ : K1)
-    [hKK : KKContractibleBoundary O2Boundary]
-    (xA : KK.KK A O2Boundary) (_xB : KK.KK O2Boundary B)
+    (hKK : KKContractibleBoundary O2Boundary)
+    (xA : KasparovKreinData.KK A O2Boundary) (_xB : KasparovKreinData.KK O2Boundary B)
     (_hPair :
       AnomalousKMSFlow.anomalousIndex H C =
         kkBoundaryPairing H xA _xB k ξ) :
     False := by
-  have hIm : IsEmpty (KK.KK A O2Boundary) := hKK.incoming A
+  have hIm : IsEmpty (KasparovKreinData.KK A O2Boundary) := hKK.1 A
   exact hIm.elim xA
 
 /-- Static consequence on the existing Connes–Chern interface. -/
@@ -179,9 +197,9 @@ theorem kasparov_krein_contractibility_reduces_o2_pairing
 
 /-- Compact exported slogan. -/
 theorem kasparov_krein_contractibility_slogan
-    (K₀ : Type) [KK : KasparovKreinData] [hK : KKContractibleBoundary K₀] :
-    ∀ A : Type, IsEmpty (KK.KK A K₀) := by
+    (K₀ : Type) [KK : KasparovKreinData] (hK : KKContractibleBoundary K₀) :
+    ∀ A : Type, IsEmpty (KasparovKreinData.KK A K₀) := by
   intro A
-  exact hK.incoming A
+  exact hK.1 A
 
 end InfoGeometry.Canonical.KasparovKreinCategory

@@ -19,6 +19,8 @@ connection/curvature contraction API is supplied.
 -/
 
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 noncomputable section
 

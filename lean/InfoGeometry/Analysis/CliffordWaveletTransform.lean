@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -11,31 +12,34 @@ Literature owner:
   arXiv:1306.1620.
 
 This file records the analytic wavelet machine:
-* a real Clifford blade replacing scalar `i`;
+* the native `Cl(1,1)` Clifford generator replacing scalar `i`;
 * similitude-style dilation / translation / rotation parameters;
-* admissibility;
-* covariance;
-* reproducing kernel;
-* reconstruction.
+* reconstruction and its native left-inverse admissibility predicate.
 
-It does not assert any prime-number or Riemann-zeta theorem.
+Covariance and reproducing-kernel theorems require an explicit similitude
+action, measure, and kernel.  They are not represented by opaque proposition
+markers in this finite interface.
+
+This file does not assert any prime-number or Riemann-zeta theorem.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Analysis.CliffordWaveletTransform
 
-/-- Abstract real Clifford target with a distinguished blade squaring to `-1`.
+/-- Native real Clifford coefficient algebra for the wavelet transform. -/
+abbrev CliffordCoefficient : Type :=
+  CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11
 
-In a later mathlib-rooted version, `A` should be replaced by an actual
-`CliffordAlgebra Q`.
--/
-@[rep_depth operator]
-structure CliffordBladeModel where
-  A : Type
-  instRing : Ring A
-  blade : A
-  blade_sq_neg_one : blade * blade = -1
+/-- The negative `Cl(1,1)` generator used as the geometric imaginary blade. -/
+noncomputable abbrev cliffordBlade : CliffordCoefficient :=
+  CliffordAlgebra.ι InfoGeometry.Clifford.Cl11Matrix.q11 (0, 1)
+
+/-- The native Clifford blade squares to `-1`. -/
+theorem cliffordBlade_sq_neg_one :
+    cliffordBlade * cliffordBlade = -1 := by
+  rw [CliffordAlgebra.ι_sq_scalar]
+  simp [InfoGeometry.Clifford.Cl11Matrix.q11_apply]
 
 /-- Abstract similitude parameter: scale, translation, and rotation.
 
@@ -57,40 +61,104 @@ structure SimilitudeParameter (V : Type) where
 @[rep_depth operator]
 structure CliffordWaveletModel where
   V : Type
-  A : Type
-  instRing : Ring A
-  blade : A
-  blade_sq_neg_one : blade * blade = -1
 
   Signal : Type
   wavelet : Signal
-  admissible : Prop
 
   waveletTransform :
-    Signal → SimilitudeParameter V → A
+    Signal → SimilitudeParameter V → CliffordCoefficient
 
   reconstruction :
-    (SimilitudeParameter V → A) → Signal
-
-  /-- Hitzer-style inversion theorem, stored as owner field. -/
-  reconstruction_left_inverse :
-    admissible →
-      ∀ f : Signal,
-        reconstruction (waveletTransform f) = f
-
-  /-- Covariance under translation / dilation / rotation. -/
-  covariance : Prop
-
-  /-- Reproducing kernel property. -/
-  reproducingKernel : Prop
+    (SimilitudeParameter V → CliffordCoefficient) → Signal
 
 namespace CliffordWaveletModel
+
+/-- Clifford coefficient carrier inherited from the unique blade owner. -/
+abbrev A (W : CliffordWaveletModel) : Type :=
+  CliffordCoefficient
+
+/-- Historical projection name for the native Clifford-algebra ring structure. -/
+instance instRing (W : CliffordWaveletModel) : Ring W.A :=
+  inferInstance
+
+/-- Distinguished Clifford blade inherited from the unique blade owner. -/
+abbrev blade (W : CliffordWaveletModel) : W.A :=
+  cliffordBlade
+
+/-- The inherited blade squares to `-1`. -/
+theorem blade_sq_neg_one (W : CliffordWaveletModel) :
+    W.blade * W.blade = -1 :=
+  cliffordBlade_sq_neg_one
+
+/--
+Admissibility is the native left-inverse relation between reconstruction and
+the wavelet transform, rather than an unrelated proposition marker.
+-/
+def admissible (W : CliffordWaveletModel) : Prop :=
+  Function.LeftInverse W.reconstruction W.waveletTransform
+
+/-- Compatibility name for the native reconstruction left-inverse law. -/
+theorem reconstruction_left_inverse
+    (W : CliffordWaveletModel) (hAdm : W.admissible) :
+    Function.LeftInverse W.reconstruction W.waveletTransform :=
+  hAdm
 
 /-- Admissible signals are exactly reconstructed by the wavelet transform. -/
 theorem reconstruction_waveletTransform
     (W : CliffordWaveletModel) (hAdm : W.admissible) (f : W.Signal) :
     W.reconstruction (W.waveletTransform f) = f :=
-  W.reconstruction_left_inverse hAdm f
+  hAdm f
+
+/--
+Covariance of the Clifford wavelet transform under explicit actions on signals
+and coefficient functions.
+
+The actions are parameters because `SimilitudeParameter` currently records
+geometric data but does not yet carry a proved group law.
+-/
+def covariance
+    (W : CliffordWaveletModel)
+    (signalAction :
+      SimilitudeParameter W.V → W.Signal → W.Signal)
+    (coefficientAction :
+      SimilitudeParameter W.V →
+        (SimilitudeParameter W.V → W.A) →
+          (SimilitudeParameter W.V → W.A)) : Prop :=
+  ∀ g f,
+    W.waveletTransform (signalAction g f) =
+      coefficientAction g (W.waveletTransform f)
+
+/-- A covariance witness evaluates to the corresponding transform identity. -/
+theorem waveletTransform_covariant
+    (W : CliffordWaveletModel)
+    (signalAction :
+      SimilitudeParameter W.V → W.Signal → W.Signal)
+    (coefficientAction :
+      SimilitudeParameter W.V →
+        (SimilitudeParameter W.V → W.A) →
+          (SimilitudeParameter W.V → W.A))
+    (hCov : W.covariance signalAction coefficientAction)
+    (g : SimilitudeParameter W.V) (f : W.Signal) :
+    W.waveletTransform (signalAction g f) =
+      coefficientAction g (W.waveletTransform f) :=
+  hCov g f
+
+/--
+Coefficient reproducing law: analysis after reconstruction is the identity on
+the coefficient space.
+
+Together with `admissible`, this states that analysis and reconstruction are
+mutual inverses, without replacing either law by an opaque proposition field.
+-/
+def reproducingKernel (W : CliffordWaveletModel) : Prop :=
+  Function.RightInverse W.reconstruction W.waveletTransform
+
+/-- A reproducing law reconstructs every coefficient function exactly. -/
+theorem waveletTransform_reconstruction
+    (W : CliffordWaveletModel) (hRep : W.reproducingKernel)
+    (coeff : SimilitudeParameter W.V → W.A) :
+    W.waveletTransform (W.reconstruction coeff) = coeff :=
+  hRep coeff
 
 end CliffordWaveletModel
 

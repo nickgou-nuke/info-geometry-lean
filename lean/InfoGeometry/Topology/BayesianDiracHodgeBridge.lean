@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.BayesianMarkovChain
+import InfoGeometry.Canonical.BayesianHodgeCurrent
 import InfoGeometry.Topology.DiscreteHodgeStabilizer
 
 /-!
@@ -26,17 +27,17 @@ abbrev IsCodeState' {n0 n1 n2 : ℕ}
     (d0 : Matrix (Fin n1) (Fin n0) ℝ)
     (d1 : Matrix (Fin n2) (Fin n1) ℝ)
     (u : Fin n1 → ℝ) : Prop :=
-  InfoGeometry.Topology.DiscreteHodgeStabilizer.IsHarmonicCodeState d0 d1 u
+  InfoGeometry.Canonical.BayesianHodgeCurrent.IsProtectedHarmonicCurrent d0 d1 u
 
 abbrev IsExactError' {n0 n1 : ℕ}
     (d0 : Matrix (Fin n1) (Fin n0) ℝ)
     (e : Fin n1 → ℝ) : Prop :=
-  InfoGeometry.Topology.DiscreteHodgeStabilizer.IsExactOneForm d0 e
+  InfoGeometry.Canonical.BayesianHodgeCurrent.IsDetailedBalanceCurrent d0 e
 
 abbrev IsCoexactError' {n1 n2 : ℕ}
     (d1 : Matrix (Fin n2) (Fin n1) ℝ)
     (c : Fin n1 → ℝ) : Prop :=
-  InfoGeometry.Topology.DiscreteHodgeStabilizer.IsCoexactOneForm d1 c
+  InfoGeometry.Canonical.BayesianHodgeCurrent.IsEntropyLoopCurrent d1 c
 
 /-- A Bayesian Markov step projected to a degree-one discrete Hodge current. -/
 structure BayesianHodgeCurrentBridge
@@ -106,44 +107,30 @@ theorem harmonic_current_hodge_protection
 
 end BayesianHodgeCurrentBridge
 
-/-- Exact Hodge current sector calibrated to detailed balance/KMS stationarity. -/
-structure ExactDetailedBalanceSector
+/--
+Compatibility name for an exact degree-one Hodge current.
+
+Detailed balance and KMS stationarity require transition-rate and state data;
+they do not follow from exactness alone and are not stored as free propositions.
+-/
+abbrev ExactDetailedBalanceSector
     {n0 n1 n2 : ℕ}
     (d0 : Matrix (Fin n1) (Fin n0) ℝ)
     (_d1 : Matrix (Fin n2) (Fin n1) ℝ)
-    (current : Fin n1 → ℝ) where
-  exact_current : IsExactError' d0 current
-  detailedBalance : Prop
-  kmsStationary : Prop
-  exact_implies_detailedBalance : IsExactError' d0 current → detailedBalance
-  detailedBalance_implies_kms : detailedBalance → kmsStationary
+    (current : Fin n1 → ℝ) : Prop :=
+  IsExactError' d0 current
 
-namespace ExactDetailedBalanceSector
+/--
+Coexact Hodge current sector.
 
-variable {n0 n1 n2 : ℕ}
-variable {d0 : Matrix (Fin n1) (Fin n0) ℝ}
-variable {d1 : Matrix (Fin n2) (Fin n1) ℝ}
-variable {current : Fin n1 → ℝ}
-variable (E : ExactDetailedBalanceSector d0 d1 current)
-
-/-- Exact posterior currents satisfy the supplied detailed-balance certificate. -/
-theorem detailed_balance_holds : E.detailedBalance :=
-  E.exact_implies_detailedBalance E.exact_current
-
-/-- Exact posterior currents reach the supplied KMS/stationary certificate. -/
-theorem kms_stationary_holds : E.kmsStationary :=
-  E.detailedBalance_implies_kms (detailed_balance_holds E)
-
-end ExactDetailedBalanceSector
-
-/-- Coexact Hodge current sector calibrated to entropy production / MaxCal current. -/
-structure CoexactEntropySector
+Entropy production is derived below as the native squared Hodge norm; it is
+not supplied as an independent scalar together with an equality certificate.
+-/
+abbrev CoexactEntropySector
     {n1 n2 : ℕ}
     (d1 : Matrix (Fin n2) (Fin n1) ℝ)
-    (current : Fin n1 → ℝ) where
-  coexact_current : IsCoexactError' d1 current
-  entropyCurrent : ℝ
-  readout : eckmannDot current current = entropyCurrent
+    (current : Fin n1 → ℝ) : Prop :=
+  IsCoexactError' d1 current
 
 namespace CoexactEntropySector
 
@@ -152,22 +139,23 @@ variable {d1 : Matrix (Fin n2) (Fin n1) ℝ}
 variable {current : Fin n1 → ℝ}
 variable (C : CoexactEntropySector d1 current)
 
-/-- Coexact current has the supplied entropy-production readout. -/
-theorem entropy_current_nonneg : 0 ≤ C.entropyCurrent := by
-  rw [← C.readout]
-  exact eckmannDot_self_nonneg current
+/-- Entropy-production readout of a coexact current: its squared Hodge norm. -/
+def entropyCurrent : ℝ :=
+  eckmannDot current current
+
+/-- The native coexact entropy-current readout is nonnegative. -/
+theorem entropy_current_nonneg : 0 ≤ entropyCurrent (current := current) :=
+  eckmannDot_self_nonneg current
 
 end CoexactEntropySector
 
-/-- Harmonic Hodge sector calibrated to topological anyon/stabilizer code space. -/
-structure HarmonicTopologicalSector
+/-- Harmonic Hodge sector represented by the native harmonic-code predicate. -/
+abbrev HarmonicTopologicalSector
     {n0 n1 n2 : ℕ}
     (d0 : Matrix (Fin n1) (Fin n0) ℝ)
     (d1 : Matrix (Fin n2) (Fin n1) ℝ)
-    (current : Fin n1 → ℝ) where
-  harmonic_current : IsCodeState' d0 d1 current
-  topologicalProtected : Prop
-  harmonic_implies_protected : IsCodeState' d0 d1 current → topologicalProtected
+    (current : Fin n1 → ℝ) : Prop :=
+  IsCodeState' d0 d1 current
 
 namespace HarmonicTopologicalSector
 
@@ -184,10 +172,11 @@ theorem protected_orthogonal_to_local_errors
     (he : IsExactError' d0 e)
     (hc : IsCoexactError' d1 c) :
     eckmannDot current e = 0 ∧ eckmannDot current c = 0 := by
-  cases H with
-  | mk harmonic_current topologicalProtected harmonic_implies_protected =>
-      exact InfoGeometry.Topology.DiscreteHodgeStabilizer.hodge_orthogonal_protection
-        d0 d1 harmonic_current he hc
+  exact
+    ⟨InfoGeometry.Canonical.BayesianHodgeCurrent.protected_orthogonal_detailedBalance
+        d0 d1 H he,
+      InfoGeometry.Canonical.BayesianHodgeCurrent.protected_orthogonal_entropyLoop
+        d0 d1 H hc⟩
 
 end HarmonicTopologicalSector
 

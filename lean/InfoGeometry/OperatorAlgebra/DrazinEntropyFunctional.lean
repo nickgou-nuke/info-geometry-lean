@@ -31,7 +31,7 @@ A stable Drazin readout over a state space.
 as data. The law fields are proposition-valued predicates tied to the state and
 are accompanied by explicit proofs on valid states.
 -/
-structure DrazinStableReadout (Op State : Type*) where
+structure DrazinStableReadout (Op State : Type*) [Add Op] [Mul Op] where
   /-- Operator or algebra element attached to a state. -/
   elementOf : State -> Op
   /-- Stable regular component extracted by the model. -/
@@ -46,32 +46,36 @@ structure DrazinStableReadout (Op State : Type*) where
   valid : State -> Prop
   /-- The stable volume is positive on valid states. -/
   stableVolume_pos : ∀ s : State, valid s -> 0 < stableVolume s
-  /-- Model-specific decomposition law. -/
-  decompositionLaw : State -> Prop
-  /-- Model-specific Drazin law. -/
-  drazinLaw : State -> Prop
-  /-- The decomposition law holds on valid states. -/
-  decomposition_holds : ∀ s : State, valid s -> decompositionLaw s
-  /-- The Drazin law holds on valid states. -/
-  drazin_holds : ∀ s : State, valid s -> drazinLaw s
+  /-- The regular and residue readouts reconstruct the attached element. -/
+  decompositionLaw :
+    ∀ s : State, valid s ->
+      elementOf s = regularPart s + nilpotentResidue s
+  /-- The readout inverse satisfies the noncommutative Drazin laws. -/
+  drazinLaw :
+    ∀ s : State, valid s ->
+      (drazinInverse s * elementOf s = elementOf s * drazinInverse s) ∧
+        (drazinInverse s * elementOf s * drazinInverse s = drazinInverse s)
 
 namespace DrazinStableReadout
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 
 /-- The supplied decomposition proof is available on valid states. -/
 theorem decomposition_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
-    D.decompositionLaw s :=
-  D.decomposition_holds s hs
+    D.elementOf s = D.regularPart s + D.nilpotentResidue s :=
+  D.decompositionLaw s hs
 
 /-- The supplied Drazin proof is available on valid states. -/
 theorem drazin_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
-    D.drazinLaw s :=
-  D.drazin_holds s hs
+    (D.drazinInverse s * D.elementOf s =
+        D.elementOf s * D.drazinInverse s) ∧
+      (D.drazinInverse s * D.elementOf s * D.drazinInverse s =
+        D.drazinInverse s) :=
+  D.drazinLaw s hs
 
 /-- The stable Drazin volume is nonzero on valid states. -/
 theorem stableVolume_ne_zero
@@ -147,7 +151,7 @@ Drazin entropy functional.
 The entropy law is a calibration: the Drazin layer supplies a stable volume, and
 this structure supplies the thermodynamic convention `S = k_B log W_D`.
 -/
-structure DrazinEntropyFunctional (Op State : Type*) where
+structure DrazinEntropyFunctional (Op State : Type*) [Add Op] [Mul Op] where
   /-- Drazin stable regularization readout. -/
   readout : DrazinStableReadout Op State
   /-- Boltzmann constant or unit-normalization scalar. -/
@@ -163,7 +167,7 @@ structure DrazinEntropyFunctional (Op State : Type*) where
 
 namespace DrazinEntropyFunctional
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (F : DrazinEntropyFunctional Op State)
 
 /-- Re-export of the Drazin entropy calibration law. -/
@@ -195,7 +199,7 @@ This is the finite Boltzmann-counting version: the stable Drazin volume is the
 cardinality of a supplied finite microstate fiber.
 -/
 structure FiniteDrazinMicrostateCalibration
-    (Op State MicroState : Type*) where
+    (Op State MicroState : Type*) [Add Op] [Mul Op] where
   /-- Drazin entropy functional. -/
   functional : DrazinEntropyFunctional Op State
   /-- Finite microstate fiber assigned to each state. -/
@@ -210,7 +214,7 @@ structure FiniteDrazinMicrostateCalibration
 
 namespace FiniteDrazinMicrostateCalibration
 
-variable {Op State MicroState : Type*}
+variable {Op State MicroState : Type*} [Add Op] [Mul Op]
 variable (C : FiniteDrazinMicrostateCalibration Op State MicroState)
 
 /-- The calibrated Drazin entropy is `k_B log` of the finite microstate count. -/
@@ -245,7 +249,7 @@ Spectral/GW-volume calibration for Drazin entropy.
 readout. The equality to the stable Drazin volume is supplied as calibration
 data, not derived here.
 -/
-structure DrazinGWVolumeCalibration (Op State : Type*) where
+structure DrazinGWVolumeCalibration (Op State : Type*) [Add Op] [Mul Op] where
   functional : DrazinEntropyFunctional Op State
   gwVolume : State -> ℝ
   gwVolume_eq_stableVolume :
@@ -254,7 +258,7 @@ structure DrazinGWVolumeCalibration (Op State : Type*) where
 
 namespace DrazinGWVolumeCalibration
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (C : DrazinGWVolumeCalibration Op State)
 
 /-- Drazin entropy expressed through the calibrated GW volume. -/
@@ -278,7 +282,7 @@ The extracted stable component is explicitly the regular part, and the
 singular component is explicitly the nilpotent residue.  This avoids arbitrary
 proposition-valued law sockets that would not add mathematical content.
 -/
-structure DrazinInformationExtraction (Op State : Type*) where
+structure DrazinInformationExtraction (Op State : Type*) [Add Op] [Mul Op] where
   readout : DrazinStableReadout Op State
   stableInformation : State -> Op
   singularResidue : State -> Op
@@ -291,7 +295,7 @@ structure DrazinInformationExtraction (Op State : Type*) where
 
 namespace DrazinInformationExtraction
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (P : DrazinInformationExtraction Op State)
 
 /-- Stable information is the regular Drazin readout on valid states. -/

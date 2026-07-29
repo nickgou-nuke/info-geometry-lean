@@ -33,12 +33,8 @@ Operator-level Drazin inverse relation.
 
 The fields are intentionally operator equations, not coordinate equations.
 -/
-structure IsDrazinInverse (A D : EndH) : Prop where
-  drazin_outer :
-    D * A * D = D
-  commute :
-    A * D = D * A
-  drazin_power :
+abbrev IsDrazinInverse (A D : EndH) : Prop :=
+  D * A * D = D ∧ A * D = D * A ∧
     ∃ k : ℕ, A ^ (k + 1) * D = A ^ k
 
 /-- Regular Drazin projector `P = A D`. -/
@@ -81,7 +77,7 @@ theorem drazinCoreProjector_idempotent
         = A * (D * A * D) := by
           rw [mul_assoc, ← mul_assoc D A D]
     _ = A * D := by
-          rw [hD.drazin_outer]
+          rw [hD.1]
 
 theorem drazinNilProjector_idempotent
     {A D : EndH} (hD : IsDrazinInverse A D) :

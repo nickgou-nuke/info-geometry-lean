@@ -164,17 +164,31 @@ theorem parabolic_transfer_periodic_cell_pow (χ₁ χ₂ : ℝ) (n : ℕ) :
 Theorem-safe certificate for a Bloch/Berry realization.  The analytic content is
 supplied by fields; the finite matrix and glide laws above are closed theorems.
 -/
-structure BrillouinKleinInsulatorCertificate where
-  gamma0 : ℤ
-  gammaPi : ℤ
-  chern : ℤ
-  orientation_reverses_chern : chern = -chern
-  edgeTwistParity : ℤ
-  edgeTwistParity_eq_z2 : edgeTwistParity = brillouinKleinZ2 gamma0 gammaPi
+abbrev BrillouinKleinInsulatorCertificate : Type :=
+  Σ' gamma0 : ℤ,
+    Σ' gammaPi : ℤ,
+      Σ' chern : ℤ,
+        Σ' _hchern : chern = -chern,
+          Σ' edgeTwistParity : ℤ,
+            edgeTwistParity = brillouinKleinZ2 gamma0 gammaPi
 
 namespace BrillouinKleinInsulatorCertificate
 
 variable (C : BrillouinKleinInsulatorCertificate)
+
+abbrev gamma0 : ℤ := C.1
+
+abbrev gammaPi : ℤ := C.2.1
+
+abbrev chern : ℤ := C.2.2.1
+
+abbrev orientation_reverses_chern : C.chern = -C.chern := C.2.2.2.1
+
+abbrev edgeTwistParity : ℤ := C.2.2.2.2.1
+
+abbrev edgeTwistParity_eq_z2 :
+  C.edgeTwistParity = brillouinKleinZ2 C.gamma0 C.gammaPi :=
+  C.2.2.2.2.2
 
 /-- The Chern readout vanishes under the supplied non-orientable orientation reversal. -/
 theorem chern_eq_zero : C.chern = 0 :=

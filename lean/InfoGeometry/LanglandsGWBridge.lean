@@ -4,6 +4,9 @@ import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.SpectralTaylorMellinBridge
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.OperatorAlgebra.CrossoverResidue
+import InfoGeometry.Canonical.KaehlerGeometry
+import InfoGeometry.Experimental.WeylIntegrationFormula
 
 /-!
 # InfoGeometry.LanglandsGWBridge
@@ -27,6 +30,7 @@ open InfoGeometry.Analysis.MellinZetaScaling
 open InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 open InfoGeometry.Analysis.SpectralTaylorMellinBridge
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
+open InfoGeometry.OperatorAlgebra.CrossoverResidue
 
 /--
 Symplectic quotient carrier data for a gauge action.
@@ -39,64 +43,114 @@ The fields are intentionally structural:
 * `moduliSpace` is the reduced moduli object exported as carrier data.
 * `gaugeAction` is the group action by the provided `Group` parameter.
 --/
-structure SymplecticQuotientData (Space : Type) (GaugeGroup : Type) [instGroup : Group GaugeGroup] where
-  /-- Abstract symplectic-geometry data on the configuration space. -/
-  symplecticForm : Type*
-  /-- Optional momentum-value type for the moment map. -/
-  momentumValue : Type*
-  /-- Momentum map `μ : Space → momentumValue`. -/
-  momentumMap : Space → momentumValue
-  /-- Distinguished zero element in the momentum-value type. -/
-  zeroMomentum : momentumValue
+structure SymplecticQuotientData (Space : Type)
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    (GaugeGroup : Type) [instGroup : Group GaugeGroup] where
+  /-- The symplectic carrier is the existing Kähler-information form owner. -/
+  symplecticForm : InfoGeometry.Canonical.KaehlerGeometry.SymplecticForm Space
+  /-- The moment map takes values in the dual module of the configuration space. -/
+  momentumMap : Space → Module.Dual ℝ Space
   /-- Group action on the configuration space by the provided `Group` parameter. -/
   gaugeAction : GaugeGroup → Space → Space
-  /-- Moduli object obtained from the constrained quotient. -/
-  moduliSpace : Type*
-  /-- The moduli map from constrained points into the quotient object. -/
-  moduliProjection : {a : Space // momentumMap a = zeroMomentum} → moduliSpace
+  /-- Identity law for the explicitly supplied gauge action. -/
+  gaugeAction_one : ∀ x, gaugeAction 1 x = x
+  /-- Composition law for the explicitly supplied gauge action. -/
+  gaugeAction_mul : ∀ g h x, gaugeAction (g * h) x = gaugeAction g (gaugeAction h x)
+
+namespace SymplecticQuotientData
+
+variable {Space GaugeGroup : Type}
+variable [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+variable [Group GaugeGroup]
+
+/-- The momentum-value carrier is the dual module, not an untyped socket. -/
+abbrev momentumValue (Q : SymplecticQuotientData Space GaugeGroup) :=
+  Module.Dual ℝ Space
+
+/-- The constrained configuration carrier used by symplectic reduction. -/
+def zeroLocusCarrier (Q : SymplecticQuotientData Space GaugeGroup) :=
+  {a : Space // Q.momentumMap a = 0}
+
+/-- Two constrained points are equivalent when related by the supplied gauge action. -/
+def orbitRel (Q : SymplecticQuotientData Space GaugeGroup)
+    (a b : Q.zeroLocusCarrier) : Prop :=
+  ∃ g : GaugeGroup, Q.gaugeAction g a.1 = b.1
+
+theorem orbitRel_refl (Q : SymplecticQuotientData Space GaugeGroup)
+    (a : Q.zeroLocusCarrier) : Q.orbitRel a a := by
+  exact ⟨1, Q.gaugeAction_one a.1⟩
+
+theorem orbitRel_symm (Q : SymplecticQuotientData Space GaugeGroup)
+    {a b : Q.zeroLocusCarrier} (h : Q.orbitRel a b) : Q.orbitRel b a := by
+  rcases h with ⟨g, hg⟩
+  refine ⟨g⁻¹, ?_⟩
+  rw [← hg, ← Q.gaugeAction_mul, inv_mul_cancel, Q.gaugeAction_one]
+
+theorem orbitRel_trans (Q : SymplecticQuotientData Space GaugeGroup)
+    {a b c : Q.zeroLocusCarrier} (hab : Q.orbitRel a b) (hbc : Q.orbitRel b c) :
+    Q.orbitRel a c := by
+  rcases hab with ⟨g, hg⟩
+  rcases hbc with ⟨h, hh⟩
+  refine ⟨h * g, ?_⟩
+  rw [Q.gaugeAction_mul, hg, hh]
+
+def orbitSetoid (Q : SymplecticQuotientData Space GaugeGroup) :
+    Setoid Q.zeroLocusCarrier where
+  r := Q.orbitRel
+  iseqv := {
+    refl := Q.orbitRel_refl
+    symm := Q.orbitRel_symm
+    trans := Q.orbitRel_trans }
+
+instance (Q : SymplecticQuotientData Space GaugeGroup) :
+    Setoid Q.zeroLocusCarrier := Q.orbitSetoid
+
+/-- The reduced moduli carrier is the orbit quotient of the zero-momentum locus. -/
+abbrev moduliSpace (Q : SymplecticQuotientData Space GaugeGroup) :=
+  Quotient Q.orbitSetoid
+
+/-- Canonical projection to the reduced moduli carrier. -/
+def moduliProjection (Q : SymplecticQuotientData Space GaugeGroup) :
+    Q.zeroLocusCarrier → Q.moduliSpace :=
+  Quotient.mk Q.orbitSetoid
+
+end SymplecticQuotientData
 
 /--
 Fixed-point locus `μ⁻¹(0)` for the momentum map.
 -/
 def SymplecticQuotientData.zeroLocus
-    {Space GaugeGroup : Type} [instGroup : Group GaugeGroup]
+    {Space GaugeGroup : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup]
     (Q : SymplecticQuotientData Space GaugeGroup) : Set Space :=
-  {a : Space | Q.momentumMap a = Q.zeroMomentum}
+  {a : Space | Q.momentumMap a = 0}
 
 /--
 Closed local theorem: zero-locus membership is exactly the momentum-map equation.
 -/
 theorem SymplecticQuotientData.mem_zeroLocus_iff
-    {Space GaugeGroup : Type} [instGroup : Group GaugeGroup]
+    {Space GaugeGroup : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup]
     (Q : SymplecticQuotientData Space GaugeGroup) (a : Space) :
-    a ∈ Q.zeroLocus ↔ Q.momentumMap a = Q.zeroMomentum := by
+    a ∈ Q.zeroLocus ↔ Q.momentumMap a = 0 := by
   rfl
 
-/--
-Weyl-reduction carrier data for measure/integral descent from a group to a torus.
-
-This structure stores the root data and a Jacobian-type root weight map that is
-used as the reduction factor in Weyl-style formulas.
--/
-structure WeylIntegrationData (GaugeGroup Torus : Type) where
-  /-- Weyl group controlling residual symmetries. -/
-  weylGroup : Type*
-  /-- Positive root labels appearing in the Jacobian factor. -/
-  positiveRoots : Type*
-  /-- A root-valued weight used as a Jacobian ingredient (e.g. Vandermonde). -/
-  rootWeight : positiveRoots → ℝ
-  /-- A distinguished torus reduction map from the original group. -/
+/-- The Weyl carrier is the existing finite-root owner, not a pair of type sockets. -/
+structure WeylIntegrationData (GaugeGroup Torus : Type)
+    [Group GaugeGroup] [Group Torus] where
+  /-- Root-system and Weyl-action data from the existing Weyl owner. -/
+  rootData : WeylIntegration.WeylData GaugeGroup Torus
+  /-- Explicit reduction map from the original group to the torus. -/
   torusMap : GaugeGroup → Torus
-  /-- Total root-weight product; the structural shadow of the denominator factor. -/
-  rootMeasureProduct : ℝ := 0
-  /-- Numerical shadow of the reduced volume/integral. -/
-  volumeShadow : ℝ
 
 /--
 Pullback along the torus map.
 -/
 def WeylIntegrationData.pullback
-    {GaugeGroup Torus : Type} (W : WeylIntegrationData GaugeGroup Torus)
+    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
+    (W : WeylIntegrationData GaugeGroup Torus)
     (f : Torus → ℝ) : GaugeGroup → ℝ :=
   fun g => f (W.torusMap g)
 
@@ -105,7 +159,8 @@ Closed local theorem: Weyl pullback evaluates by applying the function after
 the torus reduction map.
 -/
 theorem WeylIntegrationData.pullback_apply
-    {GaugeGroup Torus : Type} (W : WeylIntegrationData GaugeGroup Torus)
+    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
+    (W : WeylIntegrationData GaugeGroup Torus)
     (f : Torus → ℝ) (g : GaugeGroup) :
     W.pullback f g = f (W.torusMap g) := by
   rfl
@@ -116,7 +171,9 @@ Combined carrier data for Atiyah--Bott/Abelian-reduction style localization.
 The combined carrier is an owner-level shape: the moduli object is presented with
 its momentum constraint and a Weyl-type torus reduction shadow.
 -/
-structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type) [instGroup : Group GaugeGroup] where
+structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup] [Group Torus] where
   /-- Symplectic quotient layer. -/
   quotient : SymplecticQuotientData Space GaugeGroup
   /-- Weyl torus-reduction layer. -/
@@ -126,19 +183,23 @@ structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type) [instGroup : 
 Canonical assembly from separate symplectic-quotient and Weyl-reduction data.
 -/
 def constructSymplecticWeylVolumeData
-    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
-    SymplecticWeylVolumeData.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
+    {Space GaugeGroup Torus : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup] [Group Torus]
+    (Q : SymplecticQuotientData Space GaugeGroup)
+    (W : WeylIntegrationData GaugeGroup Torus) :
+    SymplecticWeylVolumeData Space GaugeGroup Torus :=
   ⟨Q, W⟩
 
 /--
 Closed local theorem: the assembled carrier has the supplied quotient data.
 -/
 theorem constructSymplecticWeylVolumeData_quotient
-    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
+    {Space GaugeGroup Torus : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup] [Group Torus]
+    (Q : SymplecticQuotientData Space GaugeGroup)
+    (W : WeylIntegrationData GaugeGroup Torus) :
     (constructSymplecticWeylVolumeData Q W).quotient = Q := by
   rfl
 
@@ -146,9 +207,11 @@ theorem constructSymplecticWeylVolumeData_quotient
 Closed local theorem: the assembled carrier has the supplied Weyl data.
 -/
 theorem constructSymplecticWeylVolumeData_weyl
-    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
+    {Space GaugeGroup Torus : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [instGroup : Group GaugeGroup] [Group Torus]
+    (Q : SymplecticQuotientData Space GaugeGroup)
+    (W : WeylIntegrationData GaugeGroup Torus) :
     (constructSymplecticWeylVolumeData Q W).weyl = W := by
   rfl
 
@@ -162,7 +225,8 @@ scale/shape channel split.
 -/
 structure WeylIntegrationPillarData
     (Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type)
-    [Group GaugeGroup] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] where
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] where
   /-- Gauge-theoretic symplectic quotient carrier. -/
   quotient : SymplecticQuotientData Space GaugeGroup
   /-- Weyl torus-reduction carrier. -/
@@ -179,7 +243,8 @@ structure WeylIntegrationPillarData
 namespace WeylIntegrationPillarData
 
 variable {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
-variable [Group GaugeGroup] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+variable [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+variable [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
 variable (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι)
 
 /-- The connector still assembles the original symplectic/Weyl carrier. -/
@@ -297,20 +362,20 @@ theorem connesBoundaryCocycleDerivative_eq_zero_of_eq
 /-- Minimal carrier for the Klein-bottle sheet flip used by non-orientable boundary maps. -/
 structure KleinBottleSheet (Carrier : Type*) where
   carrier : Carrier
-  isChiral : Bool
+  chirality : Chirality
 
 /-- Orientation-reversing sheet transition: it preserves the carrier and flips chirality. -/
 def kleinSheetFlip {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     KleinBottleSheet Carrier where
   carrier := A.carrier
-  isChiral := !A.isChiral
+  chirality := A.chirality.flip
 
 @[simp] theorem kleinSheetFlip_carrier {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     (kleinSheetFlip A).carrier = A.carrier :=
   rfl
 
-@[simp] theorem kleinSheetFlip_isChiral {Carrier : Type*} (A : KleinBottleSheet Carrier) :
-    (kleinSheetFlip A).isChiral = !A.isChiral :=
+@[simp] theorem kleinSheetFlip_chirality {Carrier : Type*} (A : KleinBottleSheet Carrier) :
+    (kleinSheetFlip A).chirality = A.chirality.flip :=
   rfl
 
 /-- The Klein sheet transition is a genuine `Z₂` involution. -/

@@ -31,7 +31,7 @@ Drazin-Laplacian calibration.
 is read as an Euler weight. The equality between the Euler weight and the
 stable volume is a supplied calibration, not a derived localization theorem.
 -/
-structure DrazinLaplacianCalibration (Op State : Type*) where
+structure DrazinLaplacianCalibration (Op State : Type*) [Add Op] [Mul Op] where
   /-- Underlying Drazin entropy functional. -/
   functional : DrazinEntropyFunctional Op State
   /-- Model-specific Laplacian-like operator. -/
@@ -49,7 +49,7 @@ structure DrazinLaplacianCalibration (Op State : Type*) where
 
 namespace DrazinLaplacianCalibration
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (C : DrazinLaplacianCalibration Op State)
 
 /-- The Euler weight is positive on valid states. -/
@@ -109,7 +109,7 @@ The edge Euler weight and edge contribution readout are calibrated to the
 Drazin entropy of that state.
 -/
 structure GWDrazinLaplacianBridge
-    (G T Target Coeff Op State : Type*) where
+    (G T Target Coeff Op State : Type*) [Add Op] [Mul Op] where
   /-- Underlying finite GW/Erlangen localization packet. -/
   virtualLocalization :
     VirtualLocalizationOrbitPacket G T Target Coeff
@@ -141,7 +141,7 @@ structure GWDrazinLaplacianBridge
 
 namespace GWDrazinLaplacianBridge
 
-variable {G T Target Coeff Op State : Type*}
+variable {G T Target Coeff Op State : Type*} [Add Op] [Mul Op]
 variable (B : GWDrazinLaplacianBridge G T Target Coeff Op State)
 
 /-- The edge Euler weight is positive. -/

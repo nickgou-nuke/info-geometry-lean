@@ -62,7 +62,13 @@ structure CasimirLeaf (State : Type*) where
   casimir : State → ℝ
   entropy : State → ℝ
   base : State
-  on_leaf : State → Prop := fun q => casimir q = casimir base ∧ entropy q = entropy base
+
+namespace CasimirLeaf
+
+def on_leaf (L : CasimirLeaf State) (q : State) : Prop :=
+  L.casimir q = L.casimir L.base ∧ L.entropy q = L.entropy L.base
+
+end CasimirLeaf
 
 structure TangentFlow (State : Type*) (L : CasimirLeaf State) where
   flow : State → State

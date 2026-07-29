@@ -28,11 +28,14 @@ open InfoGeometry.Canonical.RealTomitaCore
 /--
 A structure representing the uniform acceleration context of a Rindler observer.
 -/
-structure RindlerObserver where
-  /-- Constant proper acceleration (a > 0) -/
-  a : ℝ
-  /-- Acceleration is positive -/
-  ha : 0 < a
+abbrev RindlerObserver := {a : ℝ // 0 < a}
+
+namespace RindlerObserver
+
+abbrev a (obs : RindlerObserver) : ℝ := obs.1
+abbrev ha (obs : RindlerObserver) : 0 < obs.a := obs.2
+
+end RindlerObserver
 
 /-- The boost rapidity as a function of proper time `τ`. -/
 def rapidity (obs : RindlerObserver) (τ : ℝ) : ℝ :=

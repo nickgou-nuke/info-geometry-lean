@@ -112,8 +112,7 @@ A constructive Brewster collapse event.
 No `Prop` certificate is needed for trace/determinant collapse; those are
 proved theorems from the matrix definition.
 -/
-structure ConstructiveBrewsterCollapse where
-  r_s : ℂ
+abbrev ConstructiveBrewsterCollapse := ℂ
 
 namespace ConstructiveBrewsterCollapse
 
@@ -123,29 +122,29 @@ variable (B : ConstructiveBrewsterCollapse)
 Trace readout of the collapse event.
 -/
 theorem trace_readout :
-    Matrix.trace (brewsterMatrix B.r_s) = B.r_s :=
-  brewsterMatrix_trace B.r_s
+    Matrix.trace (brewsterMatrix B) = B :=
+  brewsterMatrix_trace B
 
 /--
 Determinant readout of the collapse event.
 -/
 theorem determinant_collapse :
-    Matrix.det (brewsterMatrix B.r_s) = 0 :=
-  brewsterMatrix_det_eq_zero B.r_s
+    Matrix.det (brewsterMatrix B) = 0 :=
+  brewsterMatrix_det_eq_zero B
 
 /--
 The killed p-channel theorem for the collapse event.
 -/
 theorem p_channel_killed :
-    brewsterMatrix B.r_s * pProjector = 0 :=
-  brewsterMatrix_kills_p_basis B.r_s
+    brewsterMatrix B * pProjector = 0 :=
+  brewsterMatrix_kills_p_basis B
 
 /--
 The surviving s-channel core theorem for the collapse event.
 -/
 theorem s_channel_survives :
-    brewsterMatrix B.r_s * sProjector = B.r_s • sProjector :=
-  brewsterMatrix_on_s_projector B.r_s
+    brewsterMatrix B * sProjector = B • sProjector :=
+  brewsterMatrix_on_s_projector B
 
 end ConstructiveBrewsterCollapse
 

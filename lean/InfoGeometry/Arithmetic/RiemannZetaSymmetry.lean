@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Natural Symmetries of the Riemann Zeta Function

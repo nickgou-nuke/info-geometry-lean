@@ -20,6 +20,8 @@ complex material response, and branch choices are supplied by later models.
 import Mathlib.Tactic
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
+import InfoGeometry.Geometry.OperatorialJonesConnection
+import InfoGeometry.Geometry.KleinFourTag
 
 noncomputable section
 
@@ -27,6 +29,7 @@ namespace InfoGeometry.Optics.JonesCalibration
 
 open FiniteJonesModel
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
+open InfoGeometry.Geometry.OperatorialJonesConnection
 
 open FiniteJonesModel
 
@@ -42,38 +45,27 @@ inductive FresnelChannel where
   | p
 deriving DecidableEq, Repr
 
-/--
-A minimal V₄-style PT label.
-
-This is the optical boundary bookkeeping for parity/time flips. It is not yet
-a full group implementation.
--/
-structure V4Label where
-  parityFlip : Bool
-  timeFlip : Bool
-deriving DecidableEq, Repr
+/-- Canonical Klein-four parity/time orientation label. -/
+abbrev V4Label :=
+  InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace V4Label
 
 /-- Identity component. -/
-def identity : V4Label where
-  parityFlip := false
-  timeFlip := false
+def identity : V4Label :=
+  InfoGeometry.Geometry.KleinFourTag.id
 
 /-- Parity flip. -/
-def P : V4Label where
-  parityFlip := true
-  timeFlip := false
+def P : V4Label :=
+  InfoGeometry.Geometry.KleinFourTag.P
 
 /-- Time flip. -/
-def T : V4Label where
-  parityFlip := false
-  timeFlip := true
+def T : V4Label :=
+  InfoGeometry.Geometry.KleinFourTag.T
 
 /-- PT flip. -/
-def PT : V4Label where
-  parityFlip := true
-  timeFlip := true
+def PT : V4Label :=
+  InfoGeometry.Geometry.KleinFourTag.PT
 
 end V4Label
 
@@ -274,7 +266,6 @@ structure JonesOpticalEvent where
   coeff0 : ℂ
   coeff1 : ℂ
   tag : V4Tag
-  coherence : Prop
 
 namespace JonesOpticalEvent
 
@@ -299,6 +290,21 @@ theorem secondCoeff_eq (E : JonesOpticalEvent) :
 /-- The diagonal Jones matrix associated to an event. -/
 def jones (E : JonesOpticalEvent) : JonesMat :=
   diagJones E.coeff0 E.coeff1
+
+/-- Operatorial coherence of a Jones event: its matrix is realized by an
+invertible transport preserving a genuine complementary chiral projector
+pair. This is stronger than the concrete fact that `E.jones` is diagonal. -/
+def coherence (E : JonesOpticalEvent) : Prop :=
+  ∃ (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C),
+    T.U.val = E.jones
+
+theorem coherence_iff_exists_operatorial_realization (E : JonesOpticalEvent) :
+    E.coherence ↔
+      ∃ (C : ChiralCartanProjectors JonesMat)
+        (T : OperatorialJonesTransport JonesMat C),
+        T.U.val = E.jones :=
+  Iff.rfl
 
 @[simp]
 theorem jones_apply_same_zero (E : JonesOpticalEvent) :

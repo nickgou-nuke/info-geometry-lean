@@ -50,6 +50,51 @@ theorem entropy_production_eq_zero_iff_detailed_balance (flow : CausalNonequilib
       flow.P_forward * flow.P_backward = flow.P_backward * flow.P_forward := by
   simp [entropy_production, sub_eq_zero]
 
+/--
+Operator-valued variation of the negative logarithmic generator
+`K_Q = -log Q`.
+
+Since the flow stores `d_ln_Q`, its surprisal/log-generator variation is
+`dK_Q = -d_ln_Q`.  No trace or scalar expectation is taken here.
+-/
+def logGeneratorVariation (flow : CausalNonequilibriumFlow Op) : Op :=
+  -flow.d_ln_Q
+
+/--
+Under the commutator comparison, operator-valued entropy production is the
+negative variation of the surprisal/log generator:
+`[P_forward, P_backward] = d log Q = -dK_Q`.
+-/
+theorem entropy_production_eq_neg_logGeneratorVariation
+    (flow : CausalNonequilibriumFlow Op)
+    (hcomm :
+      flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward =
+        flow.d_ln_Q) :
+    entropy_production flow = -logGeneratorVariation flow := by
+  rw [de_rham_potential_equals_entropy_production_of_commutator flow hcomm]
+  simp [logGeneratorVariation]
+
+/--
+A nonzero operator-valued logarithmic-generator variation rules out detailed
+balance.  This is a ring-level consequence of the commutator identity and does
+not scalarize entropy production.
+-/
+theorem nonzero_logGeneratorVariation_implies_not_detailedBalance
+    (flow : CausalNonequilibriumFlow Op)
+    (hcomm :
+      flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward =
+        flow.d_ln_Q)
+    (hne : logGeneratorVariation flow ≠ 0) :
+    ¬ flow.P_forward * flow.P_backward =
+        flow.P_backward * flow.P_forward := by
+  intro hdb
+  have hzero : entropy_production flow = 0 :=
+    (entropy_production_eq_zero_iff_detailed_balance flow).2 hdb
+  have hvariation : logGeneratorVariation flow = 0 := by
+    rw [entropy_production_eq_neg_logGeneratorVariation flow hcomm] at hzero
+    simpa using congrArg Neg.neg hzero
+  exact hne hvariation
+
 /-- Scalar reciprocity invariance of the gauge word. -/
 theorem gauge_field_covariance
     [Algebra ℝ Op]

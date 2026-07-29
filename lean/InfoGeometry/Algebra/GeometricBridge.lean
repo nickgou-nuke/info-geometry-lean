@@ -114,6 +114,38 @@ Informal dictionary marker for the verified coordinate layers:
 The global conformal, CCC, and Spin/structure-group interpretations remain
 mathematical motivation/proof debt unless separately kernel-proved.
 -/
-def GeometricDictionary : Unit := ()
+structure GeometricDictionary : Type where
+  cs_fundamental :
+    ∀ (X : JordanCayleyInversionCs.Herm2x2Cs),
+      X.mulTraceReversal = { e11 := X.det, e22 := -X.det }
+  hs_fundamental :
+    ∀ (X : JordanCayleyInversionHs.Herm2x2Hs),
+      X.mulTraceReversal = (X.det, -X.det)
+  os_fundamental :
+    ∀ (X : JordanCayleyInversionOs.Herm2x2Os),
+      X.mulTraceReversal = { e11 := X.det, e22 := -X.det }
+  osQ_fundamental :
+    ∀ (X : JordanCayleyInversionOsQ.Herm2x2OsQ),
+      X.mulTraceReversal = { e11 := X.det, e22 := -X.det }
+  os_isomorphism :
+    ∀ (X : JordanCayleyInversionOs.Herm2x2Os),
+      (SplitOctonionIsomorphism.hermitianPromotion X).det = X.det
+  os_trace_reversal_isomorphism :
+    ∀ (X : JordanCayleyInversionOs.Herm2x2Os),
+      SplitOctonionIsomorphism.hermitianPromotion (X.traceReversal) =
+        (SplitOctonionIsomorphism.hermitianPromotion X).traceReversal
+  orbit_stabilizers :
+    ∃ (g n : KleinSpinorOrbit.CsSpinor),
+      KleinSpinorOrbit.Stabilizes KleinSpinorOrbit.CsMatrix2.identity g ∧
+      KleinSpinorOrbit.Stabilizes KleinSpinorOrbit.CsMatrix2.identity n
+
+def geometricDictionary : GeometricDictionary where
+  cs_fundamental := cs_fundamental_identity
+  hs_fundamental := hs_fundamental_identity
+  os_fundamental := os_fundamental_identity
+  osQ_fundamental := osQ_fundamental_identity
+  os_isomorphism := SplitOctonionIsomorphism.det_preserved
+  os_trace_reversal_isomorphism := SplitOctonionIsomorphism.traceReversal_preserved
+  orbit_stabilizers := orbit_stabilizers_exist
 
 end InfoGeometry.Algebra.GeometricBridge

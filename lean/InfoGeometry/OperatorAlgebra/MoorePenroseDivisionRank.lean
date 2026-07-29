@@ -28,7 +28,7 @@ The intended projector is `A⁺ * A` or `A * A⁺`, depending on the chosen metr
 side. This file does not choose the side; it only records the calibrated
 readout.
 -/
-structure MoorePenroseVolumeCalibration (Op State : Type*) where
+structure MoorePenroseVolumeCalibration (Op State : Type*) [Add Op] [Mul Op] where
   /-- The underlying Drazin-stable entropy calibration. -/
   functional : DrazinEntropyFunctional Op State
   /-- The Moore--Penrose projector assigned to the state. -/
@@ -42,7 +42,7 @@ structure MoorePenroseVolumeCalibration (Op State : Type*) where
 
 namespace MoorePenroseVolumeCalibration
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (C : MoorePenroseVolumeCalibration Op State)
 
 /-- Entropy expressed through the Moore--Penrose trace/rank readout. -/
@@ -97,7 +97,7 @@ the Moore--Penrose projector is the identity of that localized block. Together
 with a faithful trace law, this derives the `trace >= 1` bound used by the DIII
 entropy bridge.
 -/
-structure MoorePenroseDivisionIdentityLaw (Op State : Type*) where
+structure MoorePenroseDivisionIdentityLaw (Op State : Type*) [Add Op] [Mul Op] where
   /-- MP trace/rank calibration for the same entropy functional. -/
   calibration : MoorePenroseVolumeCalibration Op State
   /-- Faithful trace law on division-fiber identities. -/
@@ -117,7 +117,7 @@ structure MoorePenroseDivisionIdentityLaw (Op State : Type*) where
 
 namespace MoorePenroseDivisionIdentityLaw
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (L : MoorePenroseDivisionIdentityLaw Op State)
 
 /-- The MP trace/rank is at least one on valid division fibers. -/

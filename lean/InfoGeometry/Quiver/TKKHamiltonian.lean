@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.Basic
 
 open BigOperators
 

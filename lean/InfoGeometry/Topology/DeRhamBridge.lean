@@ -51,9 +51,9 @@ open Filter
     `∫ Tr(F ∧ F)` for the associated connection. -/
 theorem araki_itakura_is_curvature_form :
     ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ)),
-    True := by
-  intro P
-  trivial
+    ∀ (X : Matrix (Fin 2) (Fin 2) ℂ), P.divergence X X = 0 := by
+  intro P X
+  exact P.divergence_self X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;
@@ -65,9 +65,11 @@ theorem araki_itakura_is_curvature_form :
     it equals the relative entropy production rate. -/
 theorem thermodynamic_gauge_is_connection :
     ∀ (flow : CausalNonequilibriumFlow (Matrix (Fin 2) (Fin 2) ℂ)),
-    True := by
+    entropy_production flow =
+      flow.P_forward * flow.P_backward -
+        flow.P_backward * flow.P_forward := by
   intro flow
-  trivial
+  exact entropy_production_eq_commutator flow
 
 /-- 3. **Nilpotent Itakura-Saito** → de Rham differential `d`
     `nilItakuraSaito K = nilExp K - 1 - K = 0` for `K² = 0`

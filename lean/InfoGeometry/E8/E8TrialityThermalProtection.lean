@@ -22,6 +22,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 import Mathlib.LinearAlgebra.RootSystem.Basic
 import Mathlib.LinearAlgebra.UnitaryGroup
+import InfoGeometry.Algebra.SplitE88Group
 
 open ArithmeticFunction LieAlgebra
 
@@ -47,47 +48,67 @@ Maximal compact subalgebra: so(8, 8) ≅ Spin(8,8) / ℤ₂
 TODO: replace this finite witness by a real split-form construction when available
 -/
 structure E8SplitForm where
-  dimension : ℕ := dim_E8
-  rank : ℕ := rank_E8
-  /--
-  Current finite witness for the split lane used in this file:
-  the carrier has the canonical E₈ dimension and rank data.
-  -/
-  is_split : Prop :=
-    dimension = dim_E8 ∧ rank = rank_E8
+  dimension : ℕ
+  rank : ℕ
   /-- Maximal compact subgroup dimension witness. -/
   maximal_compact_dimension : ℕ
-  /-- Finite dimension law for the compact witness used in this file. -/
-  maximal_compact_dimension_eq : maximal_compact_dimension = 120
+
+/-- Finite numerical predicate for the canonical datum used in this file. -/
+def E8SplitForm.IsCanonical (E : E8SplitForm) : Prop :=
+  E.dimension = dim_E8 ∧
+  E.rank = rank_E8 ∧
+  E.maximal_compact_dimension = positive_roots_E8
 
 /-- Canonical E8 split form instance -/
 def canonicalE8SplitForm : E8SplitForm where
+  dimension := dim_E8
+  rank := rank_E8
   maximal_compact_dimension := 120
-  maximal_compact_dimension_eq := rfl
 
 /-- The canonical finite witness has the declared E₈ dimension and rank. -/
-theorem canonicalE8SplitForm_is_split : canonicalE8SplitForm.is_split :=
-  by
-    constructor <;> rfl
+theorem canonicalE8SplitForm_isCanonical :
+    canonicalE8SplitForm.IsCanonical := by
+  exact ⟨rfl, rfl, rfl⟩
+
+/--
+Historical finite split-lane readback, recovered from the strengthened
+`IsCanonical` owner.
+
+The conclusion records only the canonical dimension and rank parameters.  It
+does not assert that this numerical carrier constructs the split real Lie
+group `E₈(8)`.
+-/
+theorem canonicalE8SplitForm_is_split :
+    canonicalE8SplitForm.dimension = dim_E8 ∧
+      canonicalE8SplitForm.rank = rank_E8 :=
+  ⟨canonicalE8SplitForm_isCanonical.1,
+    canonicalE8SplitForm_isCanonical.2.1⟩
 
 namespace E8SplitForm
 
-/-- Projection theorem for the compact-dimension witness. -/
-theorem maximal_compact_dim_eq_120 (E : E8SplitForm) :
+/-- A canonical finite datum has compact-dimension parameter `120`. -/
+theorem maximal_compact_dim_eq_120 (E : E8SplitForm)
+    (hE : E.IsCanonical) :
     E.maximal_compact_dimension = 120 :=
-  E.maximal_compact_dimension_eq
+  by simpa [positive_roots_E8] using hE.2.2
 
 end E8SplitForm
 
 /-- Maximal compact witness carried by the canonical split form has dimension `120`. -/
 theorem maximal_compact_dim : canonicalE8SplitForm.maximal_compact_dimension = 120 :=
-  canonicalE8SplitForm.maximal_compact_dimension_eq
+  E8SplitForm.maximal_compact_dim_eq_120 canonicalE8SplitForm
+    canonicalE8SplitForm_isCanonical
 
-/-- Open owner obligation tracker. -/
-def maximal_compact_obligation : String :=
-  "Open: replace E8SplitForm.maximal_compact placeholder with
-       explicit isomorphism to Matrix.SpecialOrthogonalGroup 8 8 ℝ
-       and prove dimension = 120 via Module.rank calculation"
+/-!
+The repository owner currently proves the finite `D₈` branching dimension
+identity, but does not own a Lie-group construction or an isomorphism with a
+matrix special-orthogonal group.  Expose the available theorem directly
+instead of encoding the missing construction as prose data.
+-/
+theorem maximal_compact_dimension_eq_D8_adjoint :
+    canonicalE8SplitForm.maximal_compact_dimension =
+      InfoGeometry.Algebra.SplitE88Group.dim_Dn_adjoint 8 := by
+  rfl
 
 
 /-- 

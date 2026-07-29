@@ -32,9 +32,22 @@ instance (k n : ℕ) (o : PositroidOrder k n) : PartialOrder (PositroidCell k n)
   A representation-independent bound calculated by Macaulay2.
   This acts as the target socket for the automated code injection.
 -/
-structure CertifiedCellBound (k n : ℕ) (cell : PositroidCell k n) where
-  m2_calculated_dim : ℕ
-  -- Lean forces the formal dimension to match the Macaulay2 verified bound
-  is_verified : cell.dimension = m2_calculated_dim
+abbrev CertifiedCellBound (k n : ℕ) (cell : PositroidCell k n) : Type :=
+  Σ' m2_calculated_dim : ℕ, cell.dimension = m2_calculated_dim
+
+namespace CertifiedCellBound
+
+abbrev m2_calculated_dim
+    {k n : ℕ} {cell : PositroidCell k n}
+    (C : CertifiedCellBound k n cell) : ℕ :=
+  C.1
+
+abbrev is_verified
+    {k n : ℕ} {cell : PositroidCell k n}
+    (C : CertifiedCellBound k n cell) :
+    cell.dimension = C.m2_calculated_dim :=
+  C.2
+
+end CertifiedCellBound
 
 end InfoGeometry.Topology.Amplituhedron

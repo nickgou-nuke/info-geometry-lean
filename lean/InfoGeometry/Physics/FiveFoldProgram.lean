@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic
 
 namespace InfoGeometry.Physics.FiveFoldProgram
@@ -12,20 +13,28 @@ Internalizing the structural invariants:
 5. Fractal-to-Continuum Geometry (Cuntz-UHF isomorphism)
 -/
 
-/-- 1. Erlangen 2.0: The geometry is preserved under the colimit of Clifford-Krein actions -/
-theorem ι_bracket_preserve {L : Type*} [LieRing L] (a b : L) :
-  -- The Lie bracket is strictly continuous through the transfinite limit
-  ⁅a, b⁆ = ⁅a, b⁆ :=
-  rfl
+/-- A specified Lie-algebra morphism preserves the bracket. -/
+theorem ι_bracket_preserve
+    {R L K : Type*} [CommRing R]
+    [LieRing L] [LieRing K]
+    [Module R L] [Module R K]
+    [LieAlgebra R L] [LieAlgebra R K]
+    (ι : L →ₗ⁅R⁆ K) (a b : L) :
+    ι ⁅a, b⁆ = ⁅ι a, ι b⁆ :=
+  ι.map_lie a b
 
-/-- 3. Grothendieck's Functor of Points: AQL Pushforward (Σ_F) translates algebras to univalent sets -/
+/-- A functor-of-points coordinate is supplied together with its inverse. -/
 class FunctorOfPoints (Algebra : Type*) (Set : Type*) where
-  (pushforwardSigmaF : Algebra → Set)
+  pushforwardSigmaF : Algebra ≃ Set
 
 theorem functorOfPoints_univalent_equivalence
-    {Algebra Set : Type*} [F : FunctorOfPoints Algebra Set] (A : Algebra) :
-    F.pushforwardSigmaF A = F.pushforwardSigmaF A :=
-  rfl
+    {Algebra Set : Type*} [F : FunctorOfPoints Algebra Set] (A B : Algebra) :
+    F.pushforwardSigmaF A = F.pushforwardSigmaF B ↔ A = B := by
+  constructor
+  · intro h
+    exact F.pushforwardSigmaF.injective h
+  · intro h
+    exact congrArg F.pushforwardSigmaF h
 
 /-- 4. Gromov-Witten Invariants: Vanishing of first Chern Class (c_1 = 0) protects topological strings -/
 structure SymplecticManifold where

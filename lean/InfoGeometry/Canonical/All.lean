@@ -320,6 +320,7 @@ import InfoGeometry.Canonical.FilteredGNSTomitaClosedOperator
 import InfoGeometry.Canonical.FilteredGNSTomitaClosedTransport
 import InfoGeometry.Canonical.FilteredGNSTomitaDomainColimit
 import InfoGeometry.Canonical.FilteredGNSTomitaRealColimit
+import InfoGeometry.Canonical.FilteredGNSTomitaModularForm
 import InfoGeometry.Canonical.HilbertSchmidtMatrixPairing
 import InfoGeometry.Canonical.KuboMoriBogoliubovMetric
 import InfoGeometry.Canonical.FullOperatorBKMQuantumFisher
@@ -359,6 +360,7 @@ import InfoGeometry.Canonical.TensorNetworkHolography
 import InfoGeometry.Canonical.HaagKastlerReehSchliederAQFT
 import InfoGeometry.Canonical.BisognanoWichmannUnruhAQFT
 import InfoGeometry.Canonical.HaPPYPerfectTensorHolography
+import InfoGeometry.Canonical.DiscreteGaussBonnetKleinBridge
 import InfoGeometry.Canonical.NonAbelianBerryPhaseBridge
 import InfoGeometry.Canonical.AreaLawEntropyViolationBridge
 import InfoGeometry.Canonical.OTOCScramblingChaosBridge

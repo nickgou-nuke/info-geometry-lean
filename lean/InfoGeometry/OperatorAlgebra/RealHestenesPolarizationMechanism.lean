@@ -231,102 +231,11 @@ theorem bogoliubov_maps_minus_of_preserves
 
 end BogoliubovTransport
 
-section MechanismPacket
 
-/--
-Transparent real splitting/polarization mechanism.
-
-This is only a witness packet tying together the already formalized mechanisms.
-It does not make diagonal operators primitive.
-
-The diagonal/Cartan lane is a later KAN shadow of a real Bogoliubov transform.
+/-!
+The owner surface ends with the concrete projector, Hestenes-axis, and
+Bogoliubov transport theorems above.  No additional packet is introduced:
+those theorems already carry their hypotheses and conclusions directly.
 -/
-structure RealHestenesPolarizationMechanismPacket where
-  /-- Real doubled carrier data. -/
-  DoubledKreinCarrier : Type
-
-  /-- Fundamental sign / spectral involution data. -/
-  SpectralEpsilonData : Type
-
-  /-- Plus/minus spectral projector data. -/
-  SpectralProjectorData : Type
-
-  /-- Real Majorana/Hestenes datum `(J, epsilon, K = J epsilon)`. -/
-  RealMajoranaData : Type
-
-  /-- `K`-compatible polarization datum. -/
-  KCompatiblePolarizationData : Type
-
-  /-- Real Bogoliubov transport datum. -/
-  RealBogoliubovTransportData : Type
-
-  /-- Witness that `P+ + P- = 1`. -/
-  spectralDecompositionWitness : Type
-
-  /-- Witness that `P+^2 = P+` and `P-^2 = P-`. -/
-  projectorIdempotenceWitness : Type
-
-  /-- Witness that `K^2 = -1`. -/
-  hestenesAxisSquareWitness : Type
-
-  /-- Witness that `K` swaps plus/minus sectors. -/
-  KSwapsPolarizationWitness : Type
-
-  /-- Witness that Bogoliubov transport conjugates/transports polarizations. -/
-  bogoliubovTransportsPolarizationWitness : Type
-
-  /--
-  Guard: diagonal/Cartan data are not primitive; they are only later KAN
-  shadows after choosing the real polarized Bogoliubov representation.
-  -/
-  diagonalOnlyKANShadowWitness : Type
-
-  /-- Guard: no complex scalar owner lane is used. -/
-  realOnlyNoComplexScalarWitness : Type
-
-/-- Owner target for the transparent real Hestenes polarization mechanism. -/
-abbrev RealHestenesPolarizationMechanismTarget : Type 1 :=
-  RealHestenesPolarizationMechanismPacket
-
-/-- Construct the mechanism target from explicit packet data. -/
-def constructRealHestenesPolarizationMechanismTarget
-    (P : RealHestenesPolarizationMechanismPacket) :
-    RealHestenesPolarizationMechanismTarget :=
-  P
-
-namespace RealHestenesPolarizationMechanismPacket
-
-/-- Expose the guard that diagonal data are only KAN shadows. -/
-def diagonalShadowGuard
-    (P : RealHestenesPolarizationMechanismPacket) : Type :=
-  P.diagonalOnlyKANShadowWitness
-
-@[simp] theorem diagonalShadowGuard_eq
-    (P : RealHestenesPolarizationMechanismPacket) :
-    P.diagonalShadowGuard = P.diagonalOnlyKANShadowWitness :=
-  rfl
-
-/-- Expose the guard that the owner lane is real-only. -/
-def realOnlyGuard
-    (P : RealHestenesPolarizationMechanismPacket) : Type :=
-  P.realOnlyNoComplexScalarWitness
-
-@[simp] theorem realOnlyGuard_eq
-    (P : RealHestenesPolarizationMechanismPacket) :
-    P.realOnlyGuard = P.realOnlyNoComplexScalarWitness :=
-  rfl
-
-/-- Constructing the packet preserves the two explicit guard lanes. -/
-theorem constructRealHestenesPolarizationMechanismTarget_guards
-    (P : RealHestenesPolarizationMechanismPacket) :
-    (constructRealHestenesPolarizationMechanismTarget P).diagonalShadowGuard =
-        P.diagonalOnlyKANShadowWitness ∧
-      (constructRealHestenesPolarizationMechanismTarget P).realOnlyGuard =
-        P.realOnlyNoComplexScalarWitness := by
-  exact ⟨rfl, rfl⟩
-
-end RealHestenesPolarizationMechanismPacket
-
-end MechanismPacket
 
 end InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism

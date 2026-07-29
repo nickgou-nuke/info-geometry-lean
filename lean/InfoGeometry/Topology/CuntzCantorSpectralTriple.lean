@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Order.Quotient
 import InfoGeometry.OperatorAlgebra.ErlangenNet
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
@@ -1246,50 +1247,56 @@ def anticommutator
   x * y + y * x
 
 /--
-Witness that the Cuntz Majorana candidates satisfy the intended Clifford/CAR laws.
+The three Clifford/CAR equations for the Cuntz Majorana candidates.
 
-This is intentionally not derived from the Cuntz relations alone.
+This is a proposition, not a proof-carrying witness structure.  It remains
+explicitly conditional because these equations are not consequences of the
+Cuntz relations alone.
 -/
 @[rep_depth operator]
-structure MajoranaCARWitness
+def MajoranaCARWitness
     (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
-    (M : CuntzMajoranaCandidates Op) where
-  e1_square :
-    M.e1 * M.e1 = 1
-
-  e2_square :
-    M.e2 * M.e2 = 1
-
-  anticommute :
-    anticommutator M.e1 M.e2 = 0
+    (M : CuntzMajoranaCandidates Op) : Prop :=
+  M.e1 * M.e1 = 1 ∧
+    M.e2 * M.e2 = 1 ∧
+      anticommutator M.e1 M.e2 = 0
 
 namespace MajoranaCARWitness
 
-variable {Op : Type*} [Ring Op] [StarRing Op] [SMul ℂ Op] [PhaseAxisCarrier Op]
+variable {Op : Type*} [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
 variable {M : CuntzMajoranaCandidates Op}
 
-/--
-Construct a `MajoranaCARWitness` from explicit proof terms.
-
-This is the honest constructor: rather than carrying `e1_square`, `e2_square`,
-`anticommute` as opaque hypothesis fields, this bundles them as a single
-theorem-backed package.  Downstream users can still access each component
-via the structure fields.
--/
+/-- The first Clifford equation extracted from the conjunction. -/
 @[rep_depth operator]
-def ofProofs (h1 : M.e1 * M.e1 = 1) (h2 : M.e2 * M.e2 = 1)
-    (h3 : anticommutator M.e1 M.e2 = 0) : MajoranaCARWitness Op M := by
-  exact ⟨h1, h2, h3⟩
+theorem e1_square (h : MajoranaCARWitness Op M) :
+    M.e1 * M.e1 = 1 :=
+  h.1
 
-/--
-Construct a `MajoranaCARWitness` from a single bundled proof of all three
-Clifford/CAR laws.  Uses conjunction instead of `Prod` since the components
-are `Prop`, not `Type`.
--/
+/-- The second Clifford equation extracted from the conjunction. -/
 @[rep_depth operator]
-def ofBundle (h : (M.e1 * M.e1 = 1) ∧ (M.e2 * M.e2 = 1) ∧ (anticommutator M.e1 M.e2 = 0)) :
-    MajoranaCARWitness Op M := by
-  exact ⟨h.1, h.2.1, h.2.2⟩
+theorem e2_square (h : MajoranaCARWitness Op M) :
+    M.e2 * M.e2 = 1 :=
+  h.2.1
+
+/-- The anticommutation equation extracted from the conjunction. -/
+@[rep_depth operator]
+theorem anticommute (h : MajoranaCARWitness Op M) :
+    anticommutator M.e1 M.e2 = 0 :=
+  h.2.2
+
+/-- Prove the CAR proposition from the three component equations. -/
+@[rep_depth operator]
+theorem ofProofs (h1 : M.e1 * M.e1 = 1) (h2 : M.e2 * M.e2 = 1)
+    (h3 : anticommutator M.e1 M.e2 = 0) : MajoranaCARWitness Op M :=
+  ⟨h1, h2, h3⟩
+
+/-- The bundled conjunction is definitionally the CAR proposition. -/
+@[rep_depth operator]
+theorem ofBundle
+    (h : (M.e1 * M.e1 = 1) ∧ (M.e2 * M.e2 = 1) ∧
+      anticommutator M.e1 M.e2 = 0) :
+    MajoranaCARWitness Op M :=
+  h
 
 end MajoranaCARWitness
 
@@ -1518,10 +1525,27 @@ theorem e2_isSelfAdjoint_of_left_KLinear
 
 end RealDoubledCuntzMajoranaPacket
 
+/-- Native compact-resolvent data for a complex-linear bounded Dirac operator. -/
+@[rep_depth operator]
+structure ComplexCompactResolventData
+    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℂ H] [MulAction ℂ H]
+    (D : H →L[ℂ] H) where
+  spectralParameter : ℂ
+  resolvent : H →L[ℂ] H
+  resolvent_comp_shift :
+    resolvent.comp
+        (D - spectralParameter • ContinuousLinearMap.id ℂ H) =
+      ContinuousLinearMap.id ℂ H
+  shift_comp_resolvent :
+    (D - spectralParameter • ContinuousLinearMap.id ℂ H).comp resolvent =
+      ContinuousLinearMap.id ℂ H
+  resolvent_compact : IsCompactOperator resolvent
+
 /-- A bounded spectral-triple-style socket over a Cuntz/Cantor carrier. -/
 @[rep_depth operator]
 structure CuntzCantorSpectralTriple
     (Op H : Type*) [Ring Op] [StarRing Op] [NormedAddCommGroup H] [NormedSpace ℂ H]
+    [MulAction ℂ H]
     [SMul Op H] where
   cuntz : CuntzO2Carrier Op
 
@@ -1534,13 +1558,18 @@ structure CuntzCantorSpectralTriple
   /-- Representation action used to state bounded commutator data. -/
   representedAction : Op -> H →L[ℂ] H
 
-  /-- Supplied bounded-commutator condition for represented cylinder operators. -/
-  boundedCommutatorWitness : Prop
-  boundedCommutatorCertified : boundedCommutatorWitness
+  /-- Explicit bounded commutator for every represented cylinder operator. -/
+  boundedCommutatorWitness :
+    (n : Nat) → BinaryCylinder n → H →L[ℂ] H
+  /-- The supplied bounded map is the actual Dirac commutator. -/
+  boundedCommutatorCertified :
+    ∀ (n : Nat) (word : BinaryCylinder n),
+      boundedCommutatorWitness n word =
+        dirac.comp (representedAction (cylinderRepresentation n word)) -
+          (representedAction (cylinderRepresentation n word)).comp dirac
 
-  /-- Supplied compact-resolvent or summability condition. -/
-  compactResolventOrSummability : Prop
-  compactResolventOrSummabilityCertified : compactResolventOrSummability
+  /-- Native complex compact-resolvent data for the Dirac operator. -/
+  compactResolventOrSummability : ComplexCompactResolventData H dirac
 
   /-- Spectral dimension readout supplied by the concrete model. -/
   spectralDimension : ℝ
@@ -1552,7 +1581,7 @@ structure CuntzCantorSpectralTriple
 namespace CuntzCantorSpectralTriple
 
 variable {Op H : Type*} [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+variable [NormedAddCommGroup H] [NormedSpace ℂ H] [MulAction ℂ H] [SMul Op H]
 variable (T : CuntzCantorSpectralTriple Op H)
 
 /-- The left Cuntz range projection of the spectral-triple carrier. -/
@@ -1577,17 +1606,20 @@ theorem spectralDimension_eq_middleThirdsCantor :
     T.spectralDimension = Real.log 2 / Real.log 3 :=
   T.cantorDimensionCalibration
 
-/-- Re-export the bounded-commutator witness. -/
+/-- Re-export the bounded-commutator formula. -/
 @[rep_depth operator]
-theorem boundedCommutator_holds :
-    T.boundedCommutatorWitness :=
-  T.boundedCommutatorCertified
+theorem boundedCommutator_holds
+    (n : Nat) (word : BinaryCylinder n) :
+    T.boundedCommutatorWitness n word =
+      T.dirac.comp (T.representedAction (T.cylinderRepresentation n word)) -
+        (T.representedAction (T.cylinderRepresentation n word)).comp T.dirac :=
+  T.boundedCommutatorCertified n word
 
-/-- Re-export the compact-resolvent/summability witness. -/
+/-- The installed resolvent representative is compact. -/
 @[rep_depth operator]
 theorem compactResolventOrSummability_holds :
-    T.compactResolventOrSummability :=
-  T.compactResolventOrSummabilityCertified
+    IsCompactOperator T.compactResolventOrSummability.resolvent :=
+  T.compactResolventOrSummability.resolvent_compact
 
 end CuntzCantorSpectralTriple
 
@@ -1602,13 +1634,15 @@ structure ErlangenNetCuntzRealization
   net : IteratedObservableSectorization Alg Frame Sym BinarySector Label
   triple : CuntzCantorSpectralTriple Op H
 
-  /-- Boundary-code prefixing is represented by the left Cuntz shift. -/
-  leftPrefixRealization : Prop
-  leftPrefixRealizationCertified : leftPrefixRealization
+  /-- The depth-one left cylinder is represented by the left Cuntz shift. -/
+  leftPrefixRealization :
+    triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
+      triple.cuntz.S_left
 
-  /-- Boundary-code prefixing is represented by the right Cuntz shift. -/
-  rightPrefixRealization : Prop
-  rightPrefixRealizationCertified : rightPrefixRealization
+  /-- The depth-one right cylinder is represented by the right Cuntz shift. -/
+  rightPrefixRealization :
+    triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
+      triple.cuntz.S_right
 
 namespace ErlangenNetCuntzRealization
 
@@ -1619,14 +1653,16 @@ variable (R : ErlangenNetCuntzRealization Alg Frame Sym Label Op H)
 /-- Re-export the left-prefix realization witness. -/
 @[rep_depth operator]
 theorem leftPrefixRealization_holds :
-    R.leftPrefixRealization :=
-  R.leftPrefixRealizationCertified
+    R.triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
+      R.triple.cuntz.S_left :=
+  R.leftPrefixRealization
 
 /-- Re-export the right-prefix realization witness. -/
 @[rep_depth operator]
 theorem rightPrefixRealization_holds :
-    R.rightPrefixRealization :=
-  R.rightPrefixRealizationCertified
+    R.triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
+      R.triple.cuntz.S_right :=
+  R.rightPrefixRealization
 
 /-- The Cuntz realization gives the first-level boundary decomposition. -/
 @[rep_depth operator]

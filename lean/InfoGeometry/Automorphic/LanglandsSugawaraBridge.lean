@@ -38,6 +38,8 @@ structure LanglandsSugawaraBridge
     {W : SiegelEisensteinWitness Bulk Boundary}
     (P : ProjectedAutomorphicLFunctionWitness W)
     (Finite Affine Vir State : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State] where
 
@@ -76,6 +78,8 @@ variable
     {W : SiegelEisensteinWitness Bulk Boundary}
     {P : ProjectedAutomorphicLFunctionWitness W}
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
 
@@ -132,7 +136,7 @@ affine/Virasoro exceptional bridge.
 -/
 theorem centralCharge_eq_hiddenGradeMemory :
     B.affineVirasoro.centralChargeReadout B.state =
-      B.affineVirasoro.hiddenGradeMemoryReadout B.state :=
+      B.affineVirasoro.calibratedHiddenGradeMemoryReadout B.state :=
   B.affineVirasoro.centralCharge_eq_hiddenGradeMemory B.state
 
 /--
@@ -143,7 +147,7 @@ This is the composed payload:
 Virasoro central charge = hidden memory = completed L-value.
 -/
 theorem hiddenGradeMemory_eq_completedL :
-    B.affineVirasoro.hiddenGradeMemoryReadout B.state =
+    B.affineVirasoro.calibratedHiddenGradeMemoryReadout B.state =
       B.completedL B.spectralPoint := by
   rw [← B.centralCharge_eq_hiddenGradeMemory]
   exact B.centralCharge_eq_completedL
@@ -164,6 +168,8 @@ structure LanglandsSugawaraBridgeInstalledTarget
     {W : SiegelEisensteinWitness Bulk Boundary}
     (P : ProjectedAutomorphicLFunctionWitness W)
     (Finite Affine Vir State : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (B : LanglandsSugawaraBridge P Finite Affine Vir State) where
@@ -185,12 +191,15 @@ def langlandsSugawaraBridgeInstalledTarget :
       {W : SiegelEisensteinWitness Bulk Boundary}
       (P : ProjectedAutomorphicLFunctionWitness W)
       (Finite Affine Vir State : Type*)
+      [AddCommGroup Finite] [Module ℝ Finite]
+      [AddCommGroup Affine] [Module ℝ Affine]
       [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
       [AddCommGroup State] [Module ℝ State]
       (B : LanglandsSugawaraBridge P Finite Affine Vir State),
     LanglandsSugawaraBridgeInstalledTarget
       (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
-  intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State _ _ _ _ _ _ B
+  intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State
+    _ _ _ _ _ _ _ _ _ _ B
   exact
     { strongWitness := B.resonance,
       centralCharge_eq_completedL := B.centralCharge_eq_completedL }

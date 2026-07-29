@@ -44,21 +44,6 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `93724516755064749` (Total: 8 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Lint.ContaminationState.honest_sorry.elim`
-- `InfoGeometry.Lint.ProofShape.trivial.elim`
-- `InfoGeometry.Meta.ProofHeadShape.trivial.elim`
-- `InfoGeometry.SelfReference.Shadow.ShadowKind.sorryDebt.elim`
-- `InfoGeometry.SelfReference.ShadowCone.ShadowKind.sorryDebt.elim`
-- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.x.elim`
-- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.xy.elim`
-- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.y.elim`
-
----
-
 ### Signature Hash: `12208340636926849531` (Total: 8 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -74,6 +59,21 @@ Declarations in this equivalence class:
 
 ---
 
+### Signature Hash: `93724516755064749` (Total: 8 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Lint.ContaminationState.honest_sorry.elim`
+- `InfoGeometry.Lint.ProofShape.trivial.elim`
+- `InfoGeometry.Meta.ProofHeadShape.trivial.elim`
+- `InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge.PfaffianParity.trivial.elim`
+- `InfoGeometry.SelfReference.Shadow.ShadowKind.sorryDebt.elim`
+- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.x.elim`
+- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.xy.elim`
+- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.y.elim`
+
+---
+
 ### Signature Hash: `16754253492277755127` (Total: 8 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -81,8 +81,8 @@ Declarations in this equivalence class:
 - `InfoGeometry.Lint.ContaminationState.honest_sorry.sizeOf_spec`
 - `InfoGeometry.Lint.ProofShape.trivial.sizeOf_spec`
 - `InfoGeometry.Meta.ProofHeadShape.trivial.sizeOf_spec`
+- `InfoGeometry.Quantum.SYKKitaevPfaffianMoonshineBridge.PfaffianParity.trivial.sizeOf_spec`
 - `InfoGeometry.SelfReference.Shadow.ShadowKind.sorryDebt.sizeOf_spec`
-- `InfoGeometry.SelfReference.ShadowCone.ShadowKind.sorryDebt.sizeOf_spec`
 - `InfoGeometry.Topology.V4RootSystem.NontrivialV4.x.sizeOf_spec`
 - `InfoGeometry.Topology.V4RootSystem.NontrivialV4.xy.sizeOf_spec`
 - `InfoGeometry.Topology.V4RootSystem.NontrivialV4.y.sizeOf_spec`
@@ -112,16 +112,6 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `17307638282192463654` (Total: 3 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.model`
-- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.char_val`
-- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.weight`
-
----
-
 ### Signature Hash: `18062283861344979621` (Total: 3 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -132,6 +122,16 @@ Declarations in this equivalence class:
 
 ---
 
+### Signature Hash: `17307638282192463654` (Total: 3 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.model`
+- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.char_val`
+- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.weight`
+
+---
+
 ### Signature Hash: `12039778815218407892` (Total: 3 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -139,16 +139,6 @@ Declarations in this equivalence class:
 - `InfoGeometry.Canonical.CantorSplitNullBridge.bitNullGenerator_true`
 - `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.computationalBlockTriple_true`
 - `InfoGeometry.Canonical.FiniteFibonacciComputationalSpace.computationalBlock_true`
-
----
-
-### Signature Hash: `2574248020462547666` (Total: 3 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.bitCharge_true`
-- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.oneQubitShape_true`
-- `InfoGeometry.Canonical.SplitCliffordCantorHop.hopBit_true`
 
 ---
 
@@ -172,21 +162,22 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `17851292228068094657` (Total: 2 declarations)
+### Signature Hash: `2574248020462547666` (Total: 3 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.IsNontrivial`
-- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.IsTrivial`
+- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.bitCharge_true`
+- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.oneQubitShape_true`
+- `InfoGeometry.Canonical.SplitCliffordCantorHop.hopBit_true`
 
 ---
 
-### Signature Hash: `2551348722197888260` (Total: 2 declarations)
+### Signature Hash: `15032258047328959655` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary.external_heisenberg_cocycle_nontrivial`
-- `InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary.external_virasoro_cocycle_nontrivial`
+- `InfoGeometry.Canonical.GNSState.gnsPreInner_basis_false_true`
+- `InfoGeometry.Canonical.GNSState.gnsPreInner_basis_true_false`
 
 ---
 
@@ -196,6 +187,15 @@ Classified as: **Open Debt Sorry-Equivalent**
 Declarations in this equivalence class:
 - `InfoGeometry.Canonical.SplitCliffordCantorFock.cantorState_hop_true_eq_annihilate`
 - `InfoGeometry.Canonical.SplitCliffordCantorHop.cantorState_hop_true_eq_annihilate`
+
+---
+
+### Signature Hash: `2551348722197888260` (Total: 2 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary.external_heisenberg_cocycle_nontrivial`
+- `InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary.external_virasoro_cocycle_nontrivial`
 
 ---
 
@@ -226,30 +226,21 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `14077041240843685493` (Total: 2 declarations)
+### Signature Hash: `967695529218802879` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Physics.MD013CliffordAlgebraicStructures.leftZeroDivisor_of_nontrivial_idempotent`
-- `InfoGeometry.Physics.MD013CliffordAlgebraicStructures.rightZeroDivisor_of_nontrivial_idempotent`
+- `InfoGeometry.Canonical.SplitCliffordCantorHop.bitCharge_true`
+- `InfoGeometry.LLM.MirrorPhaseCrystalBridge.crystalBranchIndex_true`
 
 ---
 
-### Signature Hash: `6323419665017937653` (Total: 2 declarations)
+### Signature Hash: `17851292228068094657` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.ctorIdx`
-- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.ctorIdx`
-
----
-
-### Signature Hash: `7958391039255708368` (Total: 2 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSCoeff_cons_false_true`
-- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSCoeff_cons_true_false`
+- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.IsNontrivial`
+- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.IsTrivial`
 
 ---
 
@@ -262,6 +253,15 @@ Declarations in this equivalence class:
 
 ---
 
+### Signature Hash: `6323419665017937653` (Total: 2 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.ctorIdx`
+- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.ctorIdx`
+
+---
+
 ### Signature Hash: `12922494302254564678` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -271,29 +271,21 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `967695529218802879` (Total: 2 declarations)
+### Signature Hash: `7958391039255708368` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.SplitCliffordCantorHop.bitCharge_true`
-- `InfoGeometry.LLM.MirrorPhaseCrystalBridge.crystalBranchIndex_true`
+- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSCoeff_cons_false_true`
+- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSCoeff_cons_true_false`
 
 ---
 
-### Signature Hash: `15032258047328959655` (Total: 2 declarations)
+### Signature Hash: `14077041240843685493` (Total: 2 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.GNSState.gnsPreInner_basis_false_true`
-- `InfoGeometry.Canonical.GNSState.gnsPreInner_basis_true_false`
-
----
-
-### Signature Hash: `427901394683368262` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.KL.empirical_nontrivial`
+- `InfoGeometry.Physics.MD013CliffordAlgebraicStructures.leftZeroDivisor_of_nontrivial_idempotent`
+- `InfoGeometry.Physics.MD013CliffordAlgebraicStructures.rightZeroDivisor_of_nontrivial_idempotent`
 
 ---
 
@@ -305,43 +297,27 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `3800701254204740551` (Total: 1 declarations)
+### Signature Hash: `4484108122507030164` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Eval.SorryFillerTest.add_assoc_easy`
+- `InfoGeometry.Canonical.PrimeBooleanCubeSugawara.trivialAffineCurrentDatum_killingForm`
 
 ---
 
-### Signature Hash: `4193560145692455587` (Total: 1 declarations)
+### Signature Hash: `476825606874629550` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.RealHomologyCohomologyDictionary.RealPairingSocket.PairsTriviallyOnBoundaries`
+- `InfoGeometry.Canonical.CasiniBekenstein.true_bekenstein_bound`
 
 ---
 
-### Signature Hash: `440828004035817776` (Total: 1 declarations)
+### Signature Hash: `450858104832888492` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidRepresentation_of`
-
----
-
-### Signature Hash: `4038299216988105558` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Lint.auditExprTrivialityDetailed`
-
----
-
-### Signature Hash: `3947622847969626771` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Lint.«_aux_InfoGeometry_Lint_NonTriviality___elabRules_InfoGeometry_Lint_command#biopsy_non_triviality__1»`
+- `InfoGeometry.OperatorAlgebra.AnomalyTubuleStability.AnomalousFlowData.defect_has_nontrivial_anomaly`
 
 ---
 
@@ -353,6 +329,38 @@ Declarations in this equivalence class:
 
 ---
 
+### Signature Hash: `440828004035817776` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidRepresentation_of`
+
+---
+
+### Signature Hash: `427901394683368262` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.KL.empirical_nontrivial`
+
+---
+
+### Signature Hash: `4193560145692455587` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.RealHomologyCohomologyDictionary.RealPairingSocket.PairsTriviallyOnBoundaries`
+
+---
+
+### Signature Hash: `4038299216988105558` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Lint.auditExprTrivialityDetailed`
+
+---
+
 ### Signature Hash: `3911039110409453262` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
@@ -361,27 +369,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `2937155978910489844` (Total: 1 declarations)
+### Signature Hash: `3947622847969626771` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.higherBraidDoubletAction_basis_true_false`
-
----
-
-### Signature Hash: `4484108122507030164` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PrimeBooleanCubeSugawara.trivialAffineCurrentDatum_killingForm`
-
----
-
-### Signature Hash: `450858104832888492` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.AnomalyTubuleStability.AnomalousFlowData.defect_has_nontrivial_anomaly`
+- `InfoGeometry.Lint.«_aux_InfoGeometry_Lint_NonTriviality___elabRules_InfoGeometry_Lint_command#biopsy_non_triviality__1»`
 
 ---
 
@@ -409,11 +401,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `476825606874629550` (Total: 1 declarations)
+### Signature Hash: `3170628671440849977` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.CasiniBekenstein.true_bekenstein_bound`
+- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.casesOn`
 
 ---
 
@@ -497,27 +489,35 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `2481740317817055753` (Total: 1 declarations)
+### Signature Hash: `5737893847967192853` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.fierzAdmissibleState_true`
+- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.ofNat_ctorIdx`
 
 ---
 
-### Signature Hash: `18350646722267290505` (Total: 1 declarations)
+### Signature Hash: `5744705605274150480` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.nontrivial_cannot_flow_to_trivial_sector`
+- `InfoGeometry.Thermodynamics.PositiveSouriauTemperature.ProjectiveLiftTemperatureInversion.smul_trivial_of_projective_sq`
 
 ---
 
-### Signature Hash: `1855810766778074334` (Total: 1 declarations)
+### Signature Hash: `2539511856182189126` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection.BrewsterSnapBoundary.nontrivial_cannot_flow_to_flat`
+- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.recOn`
+
+---
+
+### Signature Hash: `180758392099035346` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.mk.sizeOf_spec`
 
 ---
 
@@ -617,19 +617,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `3638736029643049189` (Total: 1 declarations)
+### Signature Hash: `2481740317817055753` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PrimeBooleanCubeSugawara.trivialVirasoroDatum_Lmode`
+- `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.fierzAdmissibleState_true`
 
 ---
 
-### Signature Hash: `2539511856182189126` (Total: 1 declarations)
+### Signature Hash: `3800701254204740551` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.recOn`
+- `InfoGeometry.Eval.SorryFillerTest.add_assoc_easy`
 
 ---
 
@@ -665,11 +665,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `6211409712679005216` (Total: 1 declarations)
+### Signature Hash: `2937155978910489844` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.ctorIdx`
+- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.higherBraidDoubletAction_basis_true_false`
 
 ---
 
@@ -681,11 +681,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `3170628671440849977` (Total: 1 declarations)
+### Signature Hash: `1855810766778074334` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.casesOn`
+- `InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection.BrewsterSnapBoundary.nontrivial_cannot_flow_to_flat`
 
 ---
 
@@ -729,67 +729,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `9235109859180930804` (Total: 1 declarations)
+### Signature Hash: `3638736029643049189` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.BenoisTrivialZeros.BenoisTrivialZeroData.ctorIdx`
-
----
-
-### Signature Hash: `8061138914435370156` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonical_potentialGC_eq_trivialLogPartitionPotential`
-
----
-
-### Signature Hash: `8113098967891044063` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Tessellation.CantorDiracSeaWalkDatum.boundaryHead_boundaryCons_true`
-
----
-
-### Signature Hash: `8127679990477397872` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.DeRhamCantorCohomology.cantor_de_rham_trivial`
-
----
-
-### Signature Hash: `8131290074614976868` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Arithmetic.ConcreteMajorana.trivial_majorana_dirac_square`
-
----
-
-### Signature Hash: `8184700176177882040` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Geometry.IndividuatedUHP.PhysicalSectorDatum.realShifted_kernel_trivial`
-
----
-
-### Signature Hash: `8304518394163487083` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.recOn`
-
----
-
-### Signature Hash: `8367815913239795696` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.casesOn`
+- `InfoGeometry.Canonical.PrimeBooleanCubeSugawara.trivialVirasoroDatum_Lmode`
 
 ---
 
@@ -801,43 +745,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `8374844339973592591` (Total: 1 declarations)
+### Signature Hash: `9185414093971825434` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring.SpectralDivisorCharge.IsTrivialRegion`
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_nontrivial_regularization_package_of_dim_mismatch`
 
 ---
 
-### Signature Hash: `8428734696657570115` (Total: 1 declarations)
+### Signature Hash: `9127111378319942888` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.FractalCantorFockWitness.CelikKocakInfiniteFockCarrier.orbit_cons_true_action`
-
----
-
-### Signature Hash: `8527901832261018471` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Lint.auditExprTrivialityDetailed.match_1`
-
----
-
-### Signature Hash: `8634328861204070071` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.CantorSplitNullBridge.child_false_true_polar_pair`
-
----
-
-### Signature Hash: `8958379249394539558` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonical_potential_eq_trivialLogPartitionPotential`
+- `InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant.trivial_phase_pfaffian_pos`
 
 ---
 
@@ -849,19 +769,115 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `9185414093971825434` (Total: 1 declarations)
+### Signature Hash: `8958379249394539558` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_nontrivial_regularization_package_of_dim_mismatch`
+- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonical_potential_eq_trivialLogPartitionPotential`
 
 ---
 
-### Signature Hash: `7929011708081559417` (Total: 1 declarations)
+### Signature Hash: `8634328861204070071` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSWeight_cons_true`
+- `InfoGeometry.Canonical.CantorSplitNullBridge.child_false_true_polar_pair`
+
+---
+
+### Signature Hash: `8527901832261018471` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Lint.auditExprTrivialityDetailed.match_1`
+
+---
+
+### Signature Hash: `8428734696657570115` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.FractalCantorFockWitness.CelikKocakInfiniteFockCarrier.orbit_cons_true_action`
+
+---
+
+### Signature Hash: `8374844339973592591` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring.SpectralDivisorCharge.IsTrivialRegion`
+
+---
+
+### Signature Hash: `9235109859180930804` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.BenoisTrivialZeros.BenoisTrivialZeroData.ctorIdx`
+
+---
+
+### Signature Hash: `8367815913239795696` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.casesOn`
+
+---
+
+### Signature Hash: `8304518394163487083` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.recOn`
+
+---
+
+### Signature Hash: `8184700176177882040` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Geometry.IndividuatedUHP.PhysicalSectorDatum.realShifted_kernel_trivial`
+
+---
+
+### Signature Hash: `8131290074614976868` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Arithmetic.ConcreteMajorana.trivial_majorana_dirac_square`
+
+---
+
+### Signature Hash: `8127679990477397872` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.DeRhamCantorCohomology.cantor_de_rham_trivial`
+
+---
+
+### Signature Hash: `8113098967891044063` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Tessellation.CantorDiracSeaWalkDatum.boundaryHead_boundaryCons_true`
+
+---
+
+### Signature Hash: `8067183243397287260` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge.bonding_kernel_trivial_of_injective`
+
+---
+
+### Signature Hash: `8061138914435370156` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonical_potentialGC_eq_trivialLogPartitionPotential`
 
 ---
 
@@ -985,27 +1001,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `6456000745795487526` (Total: 1 declarations)
+### Signature Hash: `650088938762887486` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.AllWilsonLoopsTrivial`
-
----
-
-### Signature Hash: `5744705605274150480` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Thermodynamics.PositiveSouriauTemperature.ProjectiveLiftTemperatureInversion.smul_trivial_of_projective_sq`
-
----
-
-### Signature Hash: `5772666677159650238` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.SuperVirasoroFiniteWindow.nontrivial_mode01_family_with_eventual_closure`
+- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.centerQuotientPermHom`
 
 ---
 
@@ -1049,11 +1049,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `18062373602213822563` (Total: 1 declarations)
+### Signature Hash: `6211409712679005216` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.noConfusionType`
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.ctorIdx`
 
 ---
 
@@ -1113,11 +1113,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `5737893847967192853` (Total: 1 declarations)
+### Signature Hash: `6456000745795487526` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.ofNat_ctorIdx`
+- `InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.AllWilsonLoopsTrivial`
 
 ---
 
@@ -1129,11 +1129,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `650088938762887486` (Total: 1 declarations)
+### Signature Hash: `5772666677159650238` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.centerQuotientPermHom`
+- `InfoGeometry.Canonical.SuperVirasoroFiniteWindow.nontrivial_mode01_family_with_eventual_closure`
 
 ---
 
@@ -1241,19 +1241,27 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `13120002140333277455` (Total: 1 declarations)
+### Signature Hash: `7777411573845493581` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.toV4`
+- `InfoGeometry.Lie.BRSTCohomology.nambu_physical_space_trivial`
 
 ---
 
-### Signature Hash: `13818114693990219975` (Total: 1 declarations)
+### Signature Hash: `7929011708081559417` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidRepresentation.eq_1`
+- `InfoGeometry.Canonical.CantorKMSCylinderState.cylinderKMSWeight_cons_true`
+
+---
+
+### Signature Hash: `13061283431612465658` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonicalTrivialCoarse`
 
 ---
 
@@ -1313,19 +1321,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `13829800770031237369` (Total: 1 declarations)
+### Signature Hash: `13120002140333277455` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidGenerator_respects`
+- `InfoGeometry.Topology.V4RootSystem.NontrivialV4.toV4`
 
 ---
 
-### Signature Hash: `13061283431612465658` (Total: 1 declarations)
+### Signature Hash: `13818114693990219975` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PartitionHierarchy.grandCanonicalTrivialCoarse`
+- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidRepresentation.eq_1`
 
 ---
 
@@ -1385,115 +1393,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `13832320876650368534` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Topology.FractalCantorFockWitness.CelikKocakInfiniteFockCarrier.orbit_cons_true`
-
----
-
-### Signature Hash: `13841890526253948445` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.StoneDualityBooleanEval.cantor_eval_true_iff_pointStoneFilter`
-
----
-
-### Signature Hash: `13994457182963546528` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Topology.Delaunay.trivialPureBraidGeneratorAssignment.eq_1`
-
----
-
-### Signature Hash: `14046956621765818359` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.no_nontrivial_flattening`
-
----
-
-### Signature Hash: `14089970925054694448` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Eval.SorryFillerTest.zero_add_easy`
-
----
-
-### Signature Hash: `14100226518075912910` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.ChiralCausalConeFlow.trivialModularTimeFlow`
-
----
-
 ### Signature Hash: `14107363983376993484` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.Algebra.FiniteSingleModeCAR.cre_apply_true`
-
----
-
-### Signature Hash: `141240015399598115` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.trivialCocycle_isCocycle`
-
----
-
-### Signature Hash: `14164608863474419117` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Topology.Delaunay.trivialPureBraidGeneratorAssignment`
-
----
-
-### Signature Hash: `14225390938638234413` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding.middle_eq_true_of_right_zero`
-
----
-
-### Signature Hash: `14265354032025111843` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1.StateFirstCRWitness.yNontrivial`
-
----
-
-### Signature Hash: `14279931071316409823` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.TomitaCartanSplit.LeftChiralDynamics.act_right_sector_trivial`
-
----
-
-### Signature Hash: `14361054821219345161` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.RestrictedSheetContinuous.trivialSheetRestriction`
-
----
-
-### Signature Hash: `14505164315238285560` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.trivialCocycle`
 
 ---
 
@@ -1505,19 +1409,131 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `1084931848726285095` (Total: 1 declarations)
+### Signature Hash: `14505164315238285560` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.mk.sizeOf_spec`
+- `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.trivialCocycle`
 
 ---
 
-### Signature Hash: `11362775043162536884` (Total: 1 declarations)
+### Signature Hash: `14361054821219345161` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.FermiGT.g0Character_trivial`
+- `InfoGeometry.Canonical.RestrictedSheetContinuous.trivialSheetRestriction`
+
+---
+
+### Signature Hash: `14279931071316409823` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.TomitaCartanSplit.LeftChiralDynamics.act_right_sector_trivial`
+
+---
+
+### Signature Hash: `14265354032025111843` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1.StateFirstCRWitness.yNontrivial`
+
+---
+
+### Signature Hash: `14225390938638234413` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding.middle_eq_true_of_right_zero`
+
+---
+
+### Signature Hash: `14164608863474419117` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.Delaunay.trivialPureBraidGeneratorAssignment`
+
+---
+
+### Signature Hash: `141240015399598115` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.trivialCocycle_isCocycle`
+
+---
+
+### Signature Hash: `12205351564596638627` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.ModularInfinitesimal.deRham_zero_of_trivialLoop`
+
+---
+
+### Signature Hash: `14100226518075912910` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.ChiralCausalConeFlow.trivialModularTimeFlow`
+
+---
+
+### Signature Hash: `14089970925054694448` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Eval.SorryFillerTest.zero_add_easy`
+
+---
+
+### Signature Hash: `14046956621765818359` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.no_nontrivial_flattening`
+
+---
+
+### Signature Hash: `13994457182963546528` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.Delaunay.trivialPureBraidGeneratorAssignment.eq_1`
+
+---
+
+### Signature Hash: `13841890526253948445` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.StoneDualityBooleanEval.cantor_eval_true_iff_pointStoneFilter`
+
+---
+
+### Signature Hash: `13832320876650368534` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.FractalCantorFockWitness.CelikKocakInfiniteFockCarrier.orbit_cons_true`
+
+---
+
+### Signature Hash: `13829800770031237369` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.RohozhkinBoundary.trivialPureBraidGenerator_respects`
+
+---
+
+### Signature Hash: `10834689738647708886` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.centerQuotientMulAction`
 
 ---
 
@@ -1577,19 +1593,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `11387306106064637206` (Total: 1 declarations)
+### Signature Hash: `1084931848726285095` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.TomitaCartanSplit.LeftChiralDynamics.right_sector_trivial`
+- `InfoGeometry.KTheory.Dadarlat.AutomaticTrivialityClassification.mk.sizeOf_spec`
 
 ---
 
-### Signature Hash: `10834689738647708886` (Total: 1 declarations)
+### Signature Hash: `11362775043162536884` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.centerQuotientMulAction`
+- `InfoGeometry.FermiGT.g0Character_trivial`
 
 ---
 
@@ -1614,6 +1630,14 @@ Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.OperatorAlgebra.trivialInvariant_unit_packet`
+
+---
+
+### Signature Hash: `10221438626352950303` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge.zero_free_region_trivial_index`
 
 ---
 
@@ -1646,6 +1670,14 @@ Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.OperatorAlgebra.VortexPunctureRepair.LocalizedPuncture.Nontrivial`
+
+---
+
+### Signature Hash: `11387306106064637206` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.TomitaCartanSplit.LeftChiralDynamics.right_sector_trivial`
 
 ---
 
@@ -1761,19 +1793,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `12205351564596638627` (Total: 1 declarations)
+### Signature Hash: `16994639749090984713` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.ModularInfinitesimal.deRham_zero_of_trivialLoop`
+- `InfoGeometry.Eval.SorryFillerTest.mul_succ_easy`
 
 ---
 
-### Signature Hash: `169644489544863451` (Total: 1 declarations)
+### Signature Hash: `17372500700804021052` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhase_connesLaw_trivialReference`
+- `InfoGeometry.Algebra.CuntzLorentzPoincarePresentation.CuntzGradingDeformation.majoranaSupercharge_odd_of_label_true`
 
 ---
 
@@ -1833,19 +1865,19 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `16994639749090984713` (Total: 1 declarations)
+### Signature Hash: `17421155278166553975` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Eval.SorryFillerTest.mul_succ_easy`
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.congr_simp`
 
 ---
 
-### Signature Hash: `17372500700804021052` (Total: 1 declarations)
+### Signature Hash: `169644489544863451` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Algebra.CuntzLorentzPoincarePresentation.CuntzGradingDeformation.majoranaSupercharge_odd_of_label_true`
+- `InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhase_connesLaw_trivialReference`
 
 ---
 
@@ -1902,22 +1934,6 @@ Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.Topology.BenoisTrivialZeros.BenoisTrivialZeroData.recOn`
-
----
-
-### Signature Hash: `16292563201535377524` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Arithmetic.PadicLFunction.TrivialZeroConjectureData.recOn`
-
----
-
-### Signature Hash: `17421155278166553975` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.congr_simp`
 
 ---
 
@@ -1985,19 +2001,19 @@ Declarations in this equivalence class:
 
 ---
 
+### Signature Hash: `18062373602213822563` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.noConfusionType`
+
+---
+
 ### Signature Hash: `10030429699513610656` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.trivial_of_flat`
-
----
-
-### Signature Hash: `180758392099035346` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.NontrivialRegularizationPackage.mk.sizeOf_spec`
 
 ---
 
@@ -2033,67 +2049,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `15593895728878491954` (Total: 1 declarations)
+### Signature Hash: `18249611966126237289` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_nontrivial_regularization_package_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel`
-
----
-
-### Signature Hash: `14752926845749387231` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Arithmetic.PadicLFunction.TrivialZeroConjectureData.mk.sizeOf_spec`
-
----
-
-### Signature Hash: `14792154573553476101` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.MajoranaWittenAnomaly.massive_dirac_ker_trivial`
-
----
-
-### Signature Hash: `14795824364829221114` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Topology.KTheory.k1_o2_is_trivial`
-
----
-
-### Signature Hash: `14982508560012193082` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding.next_eq_true_of_current_eq_false`
-
----
-
-### Signature Hash: `14992899702030458449` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.OperatorAlgebra.VortexPunctureRepair.LocalizedPuncture.nontrivial_iff`
-
----
-
-### Signature Hash: `15003008426521543449` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Optics.JonesCalibration.JonesObstructionFlow.nontrivial_cannot_relax_to_flat`
-
----
-
-### Signature Hash: `15031813957600899923` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge.FinitePrimeBitLattice.PrimitiveBinarySupport.nontrivial`
+- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.mk.noConfusion`
 
 ---
 
@@ -2105,51 +2065,11 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `15085416384574105006` (Total: 1 declarations)
+### Signature Hash: `15593895728878491954` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.recOn`
-
----
-
-### Signature Hash: `15181721943460898726` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Quantum.KitaevChain.trivialKitaevCocycle`
-
----
-
-### Signature Hash: `15258953484877458910` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.ModularInfinitesimal.connesGenerator_zero_of_trivialLoop`
-
----
-
-### Signature Hash: `15399100486458374722` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.singleQubitFullPath_true`
-
----
-
-### Signature Hash: `15507815232399160933` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Quantum.IwasawaAnalyticityLock.PrimonCuntz.finite_iwasawa_colimit_trivial`
-
----
-
-### Signature Hash: `15517739234248984583` (Total: 1 declarations)
-Classified as: **Open Debt Sorry-Equivalent**
-
-Declarations in this equivalence class:
-- `InfoGeometry.Canonical.EntanglementResidualOwner.lightconeReadoutBoundary_kernelNontrivial`
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_nontrivial_regularization_package_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel`
 
 ---
 
@@ -2161,11 +2081,51 @@ Declarations in this equivalence class:
 
 ---
 
-### Signature Hash: `18249611966126237289` (Total: 1 declarations)
+### Signature Hash: `15517739234248984583` (Total: 1 declarations)
 Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
-- `InfoGeometry.Topology.BenoisTrivialZeros.Newform.mk.noConfusion`
+- `InfoGeometry.Canonical.EntanglementResidualOwner.lightconeReadoutBoundary_kernelNontrivial`
+
+---
+
+### Signature Hash: `15507815232399160933` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Quantum.IwasawaAnalyticityLock.PrimonCuntz.finite_iwasawa_colimit_trivial`
+
+---
+
+### Signature Hash: `15399100486458374722` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.singleQubitFullPath_true`
+
+---
+
+### Signature Hash: `15258953484877458910` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.ModularInfinitesimal.connesGenerator_zero_of_trivialLoop`
+
+---
+
+### Signature Hash: `15181721943460898726` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Quantum.KitaevChain.trivialKitaevCocycle`
+
+---
+
+### Signature Hash: `15085416384574105006` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.ProjectiveFoundation.CenterActsTrivially.recOn`
 
 ---
 
@@ -2174,6 +2134,70 @@ Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.Canonical.FierzKleinFoundation.trivialFierzBilinears_fpk`
+
+---
+
+### Signature Hash: `15031813957600899923` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge.FinitePrimeBitLattice.PrimitiveBinarySupport.nontrivial`
+
+---
+
+### Signature Hash: `15003008426521543449` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Optics.JonesCalibration.JonesObstructionFlow.nontrivial_cannot_relax_to_flat`
+
+---
+
+### Signature Hash: `14992899702030458449` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.VortexPunctureRepair.LocalizedPuncture.nontrivial_iff`
+
+---
+
+### Signature Hash: `14982508560012193082` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding.next_eq_true_of_current_eq_false`
+
+---
+
+### Signature Hash: `14795824364829221114` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Topology.KTheory.k1_o2_is_trivial`
+
+---
+
+### Signature Hash: `14792154573553476101` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Canonical.MajoranaWittenAnomaly.massive_dirac_ker_trivial`
+
+---
+
+### Signature Hash: `14752926845749387231` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Arithmetic.PadicLFunction.TrivialZeroConjectureData.mk.sizeOf_spec`
+
+---
+
+### Signature Hash: `18350646722267290505` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow.nontrivial_cannot_flow_to_trivial_sector`
 
 ---
 
@@ -2286,6 +2310,14 @@ Classified as: **Open Debt Sorry-Equivalent**
 
 Declarations in this equivalence class:
 - `InfoGeometry.Canonical.FiniteFibonacciAnyonRegister.higherBraidDoubletAction_basis_false_true`
+
+---
+
+### Signature Hash: `16292563201535377524` (Total: 1 declarations)
+Classified as: **Open Debt Sorry-Equivalent**
+
+Declarations in this equivalence class:
+- `InfoGeometry.Arithmetic.PadicLFunction.TrivialZeroConjectureData.recOn`
 
 ---
 

@@ -47,13 +47,12 @@ theorem rt_formula_with_newton_constant :
   ring
 
 /-- Ryu-Takayanagi bookkeeping relation for finite entropy and area data. -/
-structure IsRyuTakayanagiMatch (stateEntropy bulkArea G : ℝ) : Prop where
-  entropy_eq_area : stateEntropy = bulkArea / (4 * G)
+abbrev IsRyuTakayanagiMatch (stateEntropy bulkArea G : ℝ) : Prop :=
+  stateEntropy = bulkArea / (4 * G)
 
 /-- The normalized two-state datum satisfies the finite RT bookkeeping relation. -/
 theorem maxent_is_rt_match :
-    IsRyuTakayanagiMatch (Real.log 2) (Real.log 2) newtonConstant := by
-  refine ⟨?entropy_eq_area⟩
+      IsRyuTakayanagiMatch (Real.log 2) (Real.log 2) newtonConstant := by
   dsimp [newtonConstant]
   ring
 

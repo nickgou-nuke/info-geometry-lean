@@ -2,6 +2,7 @@ import InfoGeometry.Algebra.CuntzFibonacciBraidInclusion
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Algebra.GoldenMeanShift
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.RCLike.Sqrt
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.RingTheory.PowerBasis
 import Mathlib.Analysis.Matrix.Spectrum

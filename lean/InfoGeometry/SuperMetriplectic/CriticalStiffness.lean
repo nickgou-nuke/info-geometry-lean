@@ -96,17 +96,18 @@ structure DarkEnergyDominanceGate where
   lambdaCritical : ℝ
   casimirResidual : ℝ
   criticalStiffness : ℝ
-  darkEnergyDominates : Prop
   lambdaEff_eq_casimirResidual :
     lambdaEff = casimirResidual
   lambdaCritical_eq_criticalStiffness :
     lambdaCritical = criticalStiffness
-  dominance_at_threshold :
-    lambdaEff = lambdaCritical → darkEnergyDominates
   lambdaEff_reaches_threshold :
     lambdaEff = lambdaCritical
 
 namespace DarkEnergyDominanceGate
+
+/-- Dark-energy dominance is the concrete threshold inequality. -/
+def darkEnergyDominates (G : DarkEnergyDominanceGate) : Prop :=
+  G.lambdaCritical ≤ G.lambdaEff
 
 /-- Effective lambda is the Casimir residual. -/
 theorem lambdaEff_eq_casimir
@@ -124,7 +125,7 @@ theorem lambdaCritical_eq_stiffness
 theorem dominance_holds
     (G : DarkEnergyDominanceGate) :
     G.darkEnergyDominates :=
-  G.dominance_at_threshold G.lambdaEff_reaches_threshold
+  le_of_eq G.lambdaEff_reaches_threshold.symm
 
 end DarkEnergyDominanceGate
 
@@ -258,19 +259,20 @@ explicit implication over a scalar threshold predicate.
 structure DarkEnergyIgnitionPacket where
   localInfoDensity : ℝ
   criticalInfoDensity : ℝ
-  darkEnergyDominates : Prop
   belowCritical :
     localInfoDensity ≤ criticalInfoDensity
-  dominance_from_belowCritical :
-    localInfoDensity ≤ criticalInfoDensity → darkEnergyDominates
 
 namespace DarkEnergyIgnitionPacket
+
+/-- Ignition dominance is exactly the below-critical density inequality. -/
+def darkEnergyDominates (I : DarkEnergyIgnitionPacket) : Prop :=
+  I.localInfoDensity ≤ I.criticalInfoDensity
 
 /-- Below the critical density, the supplied packet enters dark-energy dominance. -/
 theorem darkEnergyDominates_of_belowCritical
     (I : DarkEnergyIgnitionPacket) :
     I.darkEnergyDominates :=
-  I.dominance_from_belowCritical I.belowCritical
+  I.belowCritical
 
 end DarkEnergyIgnitionPacket
 

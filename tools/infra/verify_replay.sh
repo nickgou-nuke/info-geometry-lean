@@ -54,7 +54,7 @@ grep -q "\baxiom\b" "$TARGET_FILE" && {
 }
 
 echo "--- [REPLAY] Phase 0: Hydrate precompiled mathlib cache ---"
-lake exe cache get
+bash scripts/build/hydrate_pinned_mathlib_cache.sh
 
 echo "--- [REPLAY] Phase 1: Build verification ---"
 lake build

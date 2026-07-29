@@ -4,97 +4,106 @@ import InfoGeometry.Meta.Architecture
 open scoped InnerProductSpace
 
 /-!
-# InfoGeometry.Core.MajoranaLiftPacket
+# Canonical doubled-core Majorana lift
 
-Owner packet for the doubled-core Majorana lift.
-
-This is intentionally root-level and algebraic:
-it records only the doubled-carrier involution data `(J, ε, K = J ∘ ε)` and
-its defining closure laws.
+The Majorana operators are the canonical maps already owned by
+`InfoGeometry.Krein.DoubledSpace`.  No structure stores copies of the operators
+or their defining laws.
 -/
 
 namespace InfoGeometry.Core
 
 open InfoGeometry.Krein
 
-section Core
+noncomputable section
 
 variable {E : Type}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
-local notation "EndH" => H₂ →L[ℝ] H₂
 
-/--
-Minimal doubled-core Majorana packet.
+/-- Canonical Majorana conjugation. -/
+abbrev canonicalMajoranaJ := modular_j (E := E)
 
-`J` and `ε` are involutions with split `Cl(1,1)` anticommutation, and `K` is
-the derived phase axis.
--/
-@[rep_depth krein]
-structure MajoranaLiftPacket where
-  J : EndH
-  eps : EndH
-  K : EndH
-  hJ_sq : J.comp J = ContinuousLinearMap.id ℝ H₂
-  hEps_sq : eps.comp eps = ContinuousLinearMap.id ℝ H₂
-  hJ_eps_anticomm : J.comp eps = -(eps.comp J)
-  hK_eq_J_comp_eps : K = J.comp eps
+/-- Canonical Majorana spectral sign. -/
+abbrev canonicalMajoranaEps := spectral_epsilon (E := E)
 
-namespace MajoranaLiftPacket
+/-- Canonical Majorana phase axis `J ∘ ε`. -/
+abbrev canonicalMajoranaK := complex_i (E := E)
 
-variable (P : MajoranaLiftPacket (E := E))
+/-- The canonical Majorana conjugation is involutive. -/
+theorem canonicalMajoranaJ_sq :
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaJ (E := E)) =
+      ContinuousLinearMap.id ℝ H₂ :=
+  modular_j_involution (E := E)
 
-/-- Derived phase-axis square law: `(Jε)^2 = -Id`. -/
-@[rep_depth krein]
-theorem K_sq_eq_neg_id :
-    P.K.comp P.K = -(ContinuousLinearMap.id ℝ H₂) := by
-  rw [P.hK_eq_J_comp_eps]
-  exact
-    InfoGeometry.Krein.K_sq_of_relations
-      (J := P.J) (ε := P.eps)
-      P.hJ_sq P.hEps_sq P.hJ_eps_anticomm
+/-- The canonical Majorana spectral sign is involutive. -/
+theorem canonicalMajoranaEps_sq :
+    (canonicalMajoranaEps (E := E)).comp (canonicalMajoranaEps (E := E)) =
+      ContinuousLinearMap.id ℝ H₂ :=
+  spectral_epsilon_involution (E := E)
 
-end MajoranaLiftPacket
+/-- The two canonical Majorana involutions anticommute. -/
+theorem canonicalMajoranaJ_Eps_anticommute :
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaEps (E := E)) =
+      -((canonicalMajoranaEps (E := E)).comp (canonicalMajoranaJ (E := E))) :=
+  modular_j_spectral_epsilon_anticommute (E := E)
 
-section Complete
+/-- The canonical Majorana phase axis is the composite `J ∘ ε`. -/
+theorem canonicalMajoranaK_eq_J_comp_Eps :
+    canonicalMajoranaK (E := E) =
+      (canonicalMajoranaJ (E := E)).comp
+        (canonicalMajoranaEps (E := E)) :=
+  rfl
 
-variable [CompleteSpace E]
+/-- The canonical Majorana phase axis squares to `-Id`. -/
+theorem canonicalMajoranaK_sq_eq_neg_id :
+    (canonicalMajoranaK (E := E)).comp (canonicalMajoranaK (E := E)) =
+      -(ContinuousLinearMap.id ℝ H₂) :=
+  complex_i_sq (E := E)
 
-/-- Canonical doubled-core Majorana packet from the repo-owned root maps. -/
-@[rep_depth krein]
-noncomputable def canonicalMajoranaLiftPacket : MajoranaLiftPacket (E := E) where
-  J := modular_j (E := E)
-  eps := spectral_epsilon (E := E)
-  K := complex_i (E := E)
-  hJ_sq := modular_j_involution (E := E)
-  hEps_sq := spectral_epsilon_involution (E := E)
-  hJ_eps_anticomm := modular_j_spectral_epsilon_anticommute (E := E)
-  hK_eq_J_comp_eps := rfl
+/-- Complete canonical doubled-core Majorana root laws. -/
+theorem canonicalMajorana_root_laws :
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaJ (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (canonicalMajoranaEps (E := E)).comp (canonicalMajoranaEps (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaEps (E := E)) =
+        -((canonicalMajoranaEps (E := E)).comp (canonicalMajoranaJ (E := E)))
+      ∧
+    (canonicalMajoranaK (E := E)).comp (canonicalMajoranaK (E := E)) =
+        -(ContinuousLinearMap.id ℝ H₂) :=
+  ⟨modular_j_involution (E := E),
+    spectral_epsilon_involution (E := E),
+    modular_j_spectral_epsilon_anticommute (E := E),
+    complex_i_sq (E := E)⟩
 
-@[rep_depth krein, simp]
-theorem canonicalMajoranaLiftPacket_J_eq_modular_j :
-    (canonicalMajoranaLiftPacket (E := E)).J = modular_j (E := E) := rfl
+/-- Complete canonical doubled-core Majorana laws, including the phase-axis
+factorization that was formerly stored as a packet field. -/
+theorem canonicalMajorana_complete_root_laws :
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaJ (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (canonicalMajoranaEps (E := E)).comp (canonicalMajoranaEps (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (canonicalMajoranaJ (E := E)).comp (canonicalMajoranaEps (E := E)) =
+        -((canonicalMajoranaEps (E := E)).comp (canonicalMajoranaJ (E := E)))
+      ∧
+    canonicalMajoranaK (E := E) =
+        (canonicalMajoranaJ (E := E)).comp
+          (canonicalMajoranaEps (E := E))
+      ∧
+    (canonicalMajoranaK (E := E)).comp (canonicalMajoranaK (E := E)) =
+        -(ContinuousLinearMap.id ℝ H₂) :=
+  ⟨canonicalMajoranaJ_sq (E := E),
+    canonicalMajoranaEps_sq (E := E),
+    canonicalMajoranaJ_Eps_anticommute (E := E),
+    canonicalMajoranaK_eq_J_comp_Eps (E := E),
+    canonicalMajoranaK_sq_eq_neg_id (E := E)⟩
 
-@[rep_depth krein, simp]
-theorem canonicalMajoranaLiftPacket_eps_eq_spectral_epsilon :
-    (canonicalMajoranaLiftPacket (E := E)).eps = spectral_epsilon (E := E) := rfl
-
-@[rep_depth krein, simp]
-theorem canonicalMajoranaLiftPacket_K_eq_complex_i :
-    (canonicalMajoranaLiftPacket (E := E)).K = complex_i (E := E) := rfl
-
-@[rep_depth krein]
-theorem canonicalMajoranaLiftPacket_root_laws :
-    let P := canonicalMajoranaLiftPacket (E := E)
-    P.J = modular_j (E := E)
-      ∧ P.eps = spectral_epsilon (E := E)
-      ∧ P.K = complex_i (E := E)
-      ∧ P.K.comp P.K = -(ContinuousLinearMap.id ℝ H₂) := by
-  refine ⟨rfl, rfl, rfl, ?_⟩
-  exact MajoranaLiftPacket.K_sq_eq_neg_id (E := E) (canonicalMajoranaLiftPacket (E := E))
-
-end Complete
-end Core
+end
 
 end InfoGeometry.Core

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Geometry.SpectralDivisors
 
 /-!
 # Finite arithmetic grading packet for the index lane
@@ -12,6 +13,8 @@ theorem.
 namespace InfoGeometry.Arithmetic.IndexTheorem
 
 open InfoGeometry.Arithmetic.BostConnesSystem
+open InfoGeometry.Geometry.BilingualAnalyticity
+open InfoGeometry.Geometry.SpectralDivisors
 
 /-- The total prime-factor count of `1` is zero. -/
 @[simp] theorem totalPrimeFactors_one :
@@ -55,7 +58,16 @@ The current repository proves the finite arithmetic grading identities above.
 Any Witten-index, Euler-characteristic, or anomaly-cancellation statement must
 be added later as a theorem with explicit operator/cohomological hypotheses.
 -/
-def topological_index_debt : String :=
-  "Open: state and prove any arithmetic Witten-index/Euler-characteristic bridge with explicit finite/cohomological hypotheses."
+theorem topological_index_eq_spectral_flow
+    {Region Point Tangent Value Cycle : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {N : PhaseResidueNormalizer Value}
+    {ω : OperatorOneForm Point Tangent Value}
+    {W : WindingNumberDatum I N ω}
+    (T : TopologicalIndexDatum I N ω W Cycle)
+    (c : Cycle) :
+    T.index c = T.spectralFlow c := by
+  exact T.index_eq_spectralFlow c
 
 end InfoGeometry.Arithmetic.IndexTheorem

@@ -160,28 +160,21 @@ theorem souriau_bost_connes_transition :
     unfold phi
     rfl
 
-/-! ### Dictionary: Thermodynamic to Topological -/
+/-! ### Owner-backed transition certificate -/
 
-/--
-The transition dictionary: bulk (β > 1) to boundary (β → ∞).
+/-- Closed algebraic content of the bulk-to-boundary transition packet. -/
+def TransitionDictionary : Prop :=
+  quantumDimension = phi ∧
+    ‖R1_phase‖ = 1 ∧
+    ‖Rtau_phase‖ = 1 ∧
+    R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5))
 
-This is the conceptual heart of the Bost-Connes system: the zero-temperature
-limit transforms every layer of the mathematical structure.
--/
-structure TransitionDictionary where
-  algebraicRing_bulk : String := "Dirichlet Series / Primon Gas Z_P(β)"
-  algebraicRing_boundary : String := "Cuntz O₂ Algebra / Fusion Category 𝒩"
-  geometry_bulk : String := "Continuous Cylinder S¹ × ℝ"
-  geometry_boundary : String := "Totally Disconnected Binary Cantor Set"
-  symmetryGroup_bulk : String := "Boolean Weyl Group"
-  symmetryGroup_boundary : String := "Fibonacci Braid Group B_n"
-  scatteringInvariant_bulk : String := "Prime Ideals / Euler Factors"
-  scatteringInvariant_boundary : String := "Anyon R-Matrix Phases {e^{4πi/5}, e^{-2πi/5}}"
-  orderParameter_bulk : String := "Riemann Zeta Value ζ(β)"
-  orderParameter_boundary : String := "Quantum Dimension φ (Golden Ratio)"
-
-/-- The transition dictionary exists (trivially). -/
-theorem transition_dictionary_nonempty : Nonempty TransitionDictionary :=
-  ⟨{}⟩
+/-- The transition certificate is assembled from the existing Fibonacci owners. -/
+theorem transition_dictionary_nonempty : Nonempty TransitionDictionary := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact quantum_dimension_tau_eq_phi
+  · exact R_phases_unitary.1
+  · exact R_phases_unitary.2
+  · exact R_product
 
 end InfoGeometry.Dynamics.SouriauBostConnesTheorem

@@ -219,17 +219,21 @@ def FiniteJonesEvent.IsBrewster
     (E : FiniteJonesEvent) : Prop :=
   E.r_p = 0
 
-/--
-Constructive witness that the `p`-channel has collapsed at Brewster.
-
-This packages the equality witness as first-class event data instead of a
-bare hypothesis in downstream theorem signatures.
--/
-structure FiniteJonesEvent.BrewsterWitness
-    (E : FiniteJonesEvent) : Type where
-  rp_zero : E.r_p = 0
+/-- A Brewster witness is exactly the canonical collapse proposition. -/
+abbrev FiniteJonesEvent.BrewsterWitness
+    (E : FiniteJonesEvent) : Prop :=
+  E.IsBrewster
 
 namespace FiniteJonesEvent
+
+namespace BrewsterWitness
+
+/-- Historical projection name, now a direct theorem from the proposition. -/
+theorem rp_zero {E : FiniteJonesEvent} (w : BrewsterWitness E) :
+    E.r_p = 0 :=
+  w
+
+end BrewsterWitness
 
 /-- Every finite Jones event decomposes into its `s/p` channel projectors. -/
 theorem operator_decomposition

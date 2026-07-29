@@ -72,6 +72,12 @@ theorem sq_nilpotent_exp_eq (T : ℝ) :
     sq_nilpotent_exp T = ⟨1, T, -T, 0⟩ := by
   ext <;> simp [sq_nilpotent_exp, sq_smul, N_nil, sqAdd, sqOne]
 
+/-- The concrete nilpotent truncations form an additive one-parameter family. -/
+theorem sq_nilpotent_exp_mul (S T : ℝ) :
+    sq_nilpotent_exp S * sq_nilpotent_exp T = sq_nilpotent_exp (S + T) := by
+  ext <;> simp [sq_nilpotent_exp, sq_smul, N_nil, sqAdd, sqMul, sqOne]
+  ring
+
 /-- Finite-stage product collapse for the concrete nilpotent `N = i - j`. -/
 theorem sq_nilpotent_prod_induction_N (t : ℕ → ℝ) (n : ℕ) :
     sq_recursive_prod t N_nil n = 1 + sq_smul (recursive_sum t n) N_nil := by
@@ -152,11 +158,18 @@ theorem sq_finite_to_infinite_limit (T : ℝ) :
     exact Filter.tendsto_congr' h_eq |>.mpr tendsto_const_nhds
 
 /--
-Debt marker only: the coordinatewise eventually-constant result above does not
-prove a general Clifford/Hestenes colimit completion or differential geometric
-flow.
+The coordinatewise result above does not prove a general Clifford/Hestenes
+colimit completion or differential-geometric flow.
 -/
-def split_quaternion_general_colimit_completion_debt : String :=
-  "Open: extend the finite nilpotent flow to the correct Clifford/Hestenes categorical-colimit completion theorem."
+/-
+The finite owner proved above is deliberately not promoted to a completion
+theorem.  The old declaration name is retained as a compatibility theorem, but
+now exposes the actual native algebraic law rather than a prose marker.
+The categorical completion remains a separate, genuinely open interface.
+-/
+@[deprecated sq_nilpotent_exp_mul (since := "2026-07-29")]
+theorem split_quaternion_general_colimit_completion_debt (S T : ℝ) :
+    sq_nilpotent_exp S * sq_nilpotent_exp T = sq_nilpotent_exp (S + T) :=
+  sq_nilpotent_exp_mul S T
 
 end InfoGeometry.Clifford.SplitQuaternionNilpotentFlow

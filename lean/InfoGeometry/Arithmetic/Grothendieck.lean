@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.BostConnesSystem
+import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import DAG.AffineProjectiveClosure
@@ -55,7 +56,17 @@ theorem grothendieck_finite_inputs {n0 n1 n2 : ℕ}
   · exact liouville_prime_mul p q hp
   · exact dirac_anticommutes_gamma B1 B2
 
-def grothendieck_debt : String :=
-  DAG.AffineProjectiveClosure.affine_projective_closure_debt
+/-!
+The arithmetic surface uses the actual Grothendieck completion owner above.
+The following statement records its universal additive readout; it does not
+promote the unrelated affine-projective anomaly target into a Grothendieck
+theorem.
+-/
+theorem grothendieck_completion_preserves_subtractions
+    {M A : Type*} [AddCommMonoid M] [AddCommGroup A]
+    (f : M →+ A) (a b : M) :
+    grothendieckLift f (grothendieckMap M a - grothendieckMap M b) =
+      f a - f b := by
+  rw [map_sub, grothendieckLift_comp, grothendieckLift_comp]
 
 end InfoGeometry.Arithmetic.Grothendieck

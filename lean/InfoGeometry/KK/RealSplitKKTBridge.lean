@@ -51,9 +51,23 @@ variable [KreinSpace H] [KreinGradedModule H]
 
 local notation "EndH" => H →L[ℝ] H
 
-/-- Constructive witness that the ambient grading and split pseudoscalar coincide. -/
-structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
-  grade_eq : gradeCLM (H := H) = X.cl11.eps
+/-- The ambient grading agrees with the split pseudoscalar.
+
+This is the equality itself, not a one-field proof wrapper.
+-/
+def GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop :=
+  gradeCLM (H := H) = X.cl11.eps
+
+namespace GradeEpsWitness
+
+/-- Compatibility theorem exposing the defining equality. -/
+@[rep_depth krein]
+theorem grade_eq {X : RealSplitKreinKasparovCycle A B H}
+    (h : GradeEpsWitness X) :
+    gradeCLM (H := H) = X.cl11.eps :=
+  h
+
+end GradeEpsWitness
 
 @[rep_depth krein] theorem pi_isGZero_of_gradeCLM_eq_eps
     (X : RealSplitKreinKasparovCycle A B H)

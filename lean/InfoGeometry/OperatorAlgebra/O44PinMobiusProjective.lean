@@ -26,6 +26,7 @@ algebras; it keeps the reflection/projective/conformal dependency graph honest.
 -/
 
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.QuadraticForm.IsometryEquiv
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.Meta.OwnerTarget
@@ -33,6 +34,18 @@ import InfoGeometry.Meta.OwnerTarget
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
+
+/-! ## 0. Canonical split quadratic models -/
+
+/-- The standard `(4,4)` quadratic form used as the native signature model. -/
+def splitSignature44Model : QuadraticForm ℝ (Fin 8 → ℝ) :=
+  QuadraticMap.weightedSumSquares ℝ
+    (fun i => if i.val < 4 then (1 : ℝ) else -1)
+
+/-- The standard `(5,5)` quadratic form used for conformal compactification. -/
+def splitSignature55Model : QuadraticForm ℝ (Fin 10 → ℝ) :=
+  QuadraticMap.weightedSumSquares ℝ
+    (fun i => if i.val < 5 then (1 : ℝ) else -1)
 
 /-! ## 1. Split quadratic carrier and projective rays -/
 
@@ -45,7 +58,7 @@ independent of a concrete matrix model.
 structure SplitQuadratic44
     (V : Type*) [AddCommGroup V] [Module ℝ V] where
   /-- Quadratic form. -/
-  q : V → ℝ
+  q : QuadraticForm ℝ V
 
   /-- Polar/symmetric bilinear pairing, left abstract at this layer. -/
   polar : V → V → ℝ
@@ -58,17 +71,25 @@ structure SplitQuadratic44
   polar_symm :
     ∀ v w : V, polar v w = polar w v
 
-  /-- Nondegeneracy certificate. -/
-  nondegenerate : Prop
+  /-- The polar pairing has trivial left radical. -/
+  nondegenerate :
+    ∀ v : V, (∀ w : V, polar v w = 0) → v = 0
 
-  /-- Signature `(4,4)` certificate. -/
-  signature44 : Prop
+  /-- Explicit quadratic isometry to the standard `(4,4)` model. -/
+  signature44 : q.IsometryEquiv splitSignature44Model
 
 namespace SplitQuadratic44
 
 variable
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (Q : SplitQuadratic44 V)
+
+/-- The split `(4,4)` polar pairing has trivial radical. -/
+theorem polar_nondegenerate
+    (v : V)
+    (h : ∀ w : V, Q.polar v w = 0) :
+    v = 0 :=
+  Q.nondegenerate v h
 
 /-- Null/isotropic vectors for the split quadratic form. -/
 def IsNull
@@ -129,6 +150,17 @@ variable
 def SameProjectiveRay
     (r s : ProjectiveRay V) : Prop :=
   ∃ c : ℝ, c ≠ 0 ∧ s.vec = c • r.vec
+
+/-- The antipodal representative of a projective ray. -/
+def antipode (r : ProjectiveRay V) : ProjectiveRay V :=
+  { vec := -r.vec
+    nonzero := neg_ne_zero.mpr r.nonzero }
+
+/-- Projectivization identifies a ray with its antipodal representative. -/
+theorem sameProjectiveRay_antipode (r : ProjectiveRay V) :
+    SameProjectiveRay r (antipode r) := by
+  refine ⟨-1, by norm_num, ?_⟩
+  simp [antipode]
 
 /-- A represented projective ray lies on the projective null quadric. -/
 def IsNullRay
@@ -294,8 +326,38 @@ structure Pin44CoverDatum
   /-- The induced linear split-orthogonal transformation. -/
   cover : ∀ a : PinEl, isPin a → Orthogonal44 Q
 
-  /-- **Open debt socket**: asserting the odd-reflection lane is available in the model. Currently unused. -/
-  odd_reflection_socket : Prop
+  /-- A concrete odd Pin element implementing the reflection component. -/
+  oddReflection : PinEl
+
+  oddReflection_isPin :
+    isPin oddReflection
+
+  oddReflection_parity :
+    parity oddReflection = PinParity.odd
+
+  oddReflection_component :
+    (cover oddReflection oddReflection_isPin).component =
+      O44Component.reflection
+
+namespace Pin44CoverDatum
+
+variable
+    {V PinEl : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    [Monoid PinEl]
+    {Q : SplitQuadratic44 V}
+    (P : Pin44CoverDatum (V := V) (PinEl := PinEl) Q)
+
+/-- The odd-reflection lane is witnessed by an actual odd Pin element whose
+orthogonal image lies in the reflection component. -/
+theorem odd_reflection_socket :
+    ∃ a : PinEl, ∃ ha : P.isPin a,
+      P.parity a = PinParity.odd ∧
+        (P.cover a ha).component = O44Component.reflection :=
+  ⟨P.oddReflection, P.oddReflection_isPin,
+    P.oddReflection_parity, P.oddReflection_component⟩
+
+end Pin44CoverDatum
 
 
 /--
@@ -371,7 +433,7 @@ Möbius inversion is linear/projective only in this ambient model.
 -/
 structure SplitQuadratic55
     (W : Type*) [AddCommGroup W] [Module ℝ W] where
-  q : W → ℝ
+  q : QuadraticForm ℝ W
   polar : W → W → ℝ
 
   q_smul :
@@ -380,8 +442,11 @@ structure SplitQuadratic55
   polar_symm :
     ∀ v w : W, polar v w = polar w v
 
-  nondegenerate : Prop
-  signature55 : Prop
+  /-- The ambient polar pairing has trivial left radical. -/
+  nondegenerate :
+    ∀ v : W, (∀ w : W, polar v w = 0) → v = 0
+  /-- Explicit quadratic isometry to the standard `(5,5)` model. -/
+  signature55 : q.IsometryEquiv splitSignature55Model
 
 /-- An element of the full ambient conformal orthogonal group `O(5,5)`. -/
 structure Orthogonal55
@@ -399,6 +464,13 @@ namespace SplitQuadratic55
 variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
     (Q : SplitQuadratic55 W)
+
+/-- The ambient `(5,5)` polar pairing has trivial radical. -/
+theorem polar_nondegenerate
+    (v : W)
+    (h : ∀ w : W, Q.polar v w = 0) :
+    v = 0 :=
+  Q.nondegenerate v h
 
 /-- Null/isotropic vectors in the ambient conformal `(5,5)` carrier. -/
 def IsNull
@@ -606,8 +678,10 @@ structure ConformalMobius44Extension
   /-- Ambient Möbius inversion, linear only after conformal extension. -/
   inversion : Orthogonal55 ambientQ
 
-  /-- Certificate that the ambient inversion realizes affine sphere inversion. -/
-  inversion_realizes_sphere_inversion : Prop
+  /-- Ambient inversion preserves the null ray of every embedded affine point. -/
+  inversion_realizes_sphere_inversion :
+    ∀ v : V,
+      (inversion.actRay (projectivePoint v)).IsAmbientNullRay ambientQ
 
   /-- The base `O(4,4)` embeds into the conformal `O(5,5)` model. -/
   base_orthogonal_lift :
@@ -745,7 +819,37 @@ structure Pin55CoverDatum
   inversionPin_isPin :
     isPin inversionPin
 
-  inversion_is_reflection_or_null_swap : Prop
+  /-- The covered inversion occupies a reflection-type component. -/
+  inversion_is_reflection_or_null_swap :
+      (cover inversionPin inversionPin_isPin).component =
+        O44Component.reflection ∨
+      (cover inversionPin inversionPin_isPin).component =
+        O44Component.totalInversion
+
+/-! ## 5a. Explicit base-to-ambient Pin lift -/
+
+/--
+An actual lift of the base Pin carrier into the conformal Pin carrier.
+
+The map and its carrier proof are data, while `cover_compatibility` is the
+equation identifying the induced ambient orthogonal transformation with the
+conformal extension's canonical lift of the base transformation.
+-/
+structure PinLiftDatum
+    (V W PinBase PinConf : Type*)
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf]
+    (M : ConformalMobius44Extension V W)
+    (basePin : Pin44CoverDatum (V := V) (PinEl := PinBase) M.baseQ)
+    (conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) M.ambientQ) where
+  pinMap : PinBase → PinConf
+  pinMap_isPin :
+    ∀ a : PinBase, basePin.isPin a → conformalPin.isPin (pinMap a)
+  cover_compatibility :
+    ∀ (a : PinBase) (ha : basePin.isPin a),
+      conformalPin.cover (pinMap a) (pinMap_isPin a ha) =
+        M.base_orthogonal_lift (basePin.cover a ha)
 
 /--
 Combined base/conformal Pin architecture.
@@ -763,11 +867,17 @@ structure PinMobiusProjective44
   basePin : Pin44CoverDatum (V := V) (PinEl := PinBase) mobius.baseQ
   conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) mobius.ambientQ
 
-  /-- Compatibility certificate for embedding base Pin transformations upstairs. -/
-  basePin_lifts_to_conformalPin : Prop
+  /-- Explicit map and action law embedding base Pin transformations upstairs. -/
+  basePin_lifts_to_conformalPin :
+    PinLiftDatum V W PinBase PinConf mobius basePin conformalPin
 
-  /-- Projective states/rays are the declared target of the conformal action. -/
-  acts_on_projective_null_rays : Prop
+  /-- The ambient Pin inversion preserves every projective null ray. -/
+  acts_on_projective_null_rays :
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay mobius.ambientQ →
+        ((conformalPin.cover conformalPin.inversionPin
+          conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            mobius.ambientQ
 
 
 namespace PinMobiusProjective44
@@ -807,8 +917,14 @@ structure O44PinMobiusProjectiveConstructionData
   mobius : ConformalMobius44Extension V W
   basePin : Pin44CoverDatum (V := V) (PinEl := PinBase) mobius.baseQ
   conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) mobius.ambientQ
-  basePin_lifts_to_conformalPin : Prop
-  acts_on_projective_null_rays : Prop
+  basePin_lifts_to_conformalPin :
+    PinLiftDatum V W PinBase PinConf mobius basePin conformalPin
+  acts_on_projective_null_rays :
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay mobius.ambientQ →
+        ((conformalPin.cover conformalPin.inversionPin
+          conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            mobius.ambientQ
 
 namespace O44PinMobiusProjectiveConstructionData
 

@@ -21,14 +21,20 @@ structure VolumeZeroOperator where
   (S : ℝ)
   (nilpotent : S ^ 2 = 0)
 
-/-- A boundary phase packet with an explicit scalar-count field. -/
+/-- A real square-zero scalar operator is necessarily zero. -/
+theorem VolumeZeroOperator.eq_zero (V : VolumeZeroOperator) :
+    V.S = 0 :=
+  sq_eq_zero_iff.mp V.nilpotent
+
+/-- A boundary phase packet carrying only its independent finite data. -/
 structure BoundaryPhasePacket where
   (boundary_condensate : VolumeZeroOperator)
   (global_phase : ℝ)
   (mass_generation : ℝ)
-  scalar_count_zero : scalarCount = 0
 
-theorem boundaryPhasePacket_scalarCount_zero (h : BoundaryPhasePacket) :
-  scalarCount = 0 := h.scalar_count_zero
+/-- Scalar count vanishes definitionally, independently of packet evidence. -/
+theorem boundaryPhasePacket_scalarCount_zero (_h : BoundaryPhasePacket) :
+    scalarCount = 0 :=
+  rfl
 
 end InfoGeometry.Physics.ParafermionicBECHiggs

@@ -399,11 +399,16 @@ structure TKKMobiusGroupClosure
 
   /-- The imported Pin/Möbius owner certifies lifting base Pin data upstairs. -/
   basePin_lift :
-    pinMobius.basePin_lifts_to_conformalPin
+    PinLiftDatum V W PinBase PinConf pinMobius.mobius pinMobius.basePin
+      pinMobius.conformalPin
 
   /-- The imported Pin/Möbius owner certifies action on projective null rays. -/
   projective_null_ray_action :
-    pinMobius.acts_on_projective_null_rays
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay pinMobius.mobius.ambientQ →
+        ((pinMobius.conformalPin.cover pinMobius.conformalPin.inversionPin
+          pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            pinMobius.mobius.ambientQ
 
 namespace TKKMobiusGroupClosure
 
@@ -436,14 +441,28 @@ theorem positive_is_inversion_conjugate
 
 /-- The conformal Pin/Möbius owner supplies the projective-null-ray action. -/
 theorem acts_on_projective_null_states :
-    G.pinMobius.acts_on_projective_null_rays :=
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay G.pinMobius.mobius.ambientQ →
+        ((G.pinMobius.conformalPin.cover G.pinMobius.conformalPin.inversionPin
+          G.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            G.pinMobius.mobius.ambientQ :=
   G.projective_null_ray_action
 
 /-- The imported Pin/Möbius owner retains both base-to-conformal lift and ray action data. -/
 theorem reflection_sensitive :
-    G.pinMobius.basePin_lifts_to_conformalPin ∧
-      G.pinMobius.acts_on_projective_null_rays :=
-  ⟨G.basePin_lift, G.projective_null_ray_action⟩
+  (∀ (a : PinBase) (ha : G.pinMobius.basePin.isPin a),
+    G.pinMobius.conformalPin.cover
+        (G.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
+        (G.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
+      G.pinMobius.mobius.base_orthogonal_lift
+        (G.pinMobius.basePin.cover a ha)) ∧
+      (∀ r : ProjectiveRay W,
+        r.IsAmbientNullRay G.pinMobius.mobius.ambientQ →
+          ((G.pinMobius.conformalPin.cover G.pinMobius.conformalPin.inversionPin
+            G.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+              G.pinMobius.mobius.ambientQ) :=
+  ⟨G.pinMobius.basePin_lifts_to_conformalPin.cover_compatibility,
+    G.projective_null_ray_action⟩
 
 end TKKMobiusGroupClosure
 
@@ -493,11 +512,16 @@ structure TKKClosureCompatibility
 
   /-- The imported Pin/Möbius owner certifies lifting base Pin data upstairs. -/
   basePin_lift :
-    pinMobius.basePin_lifts_to_conformalPin
+    PinLiftDatum V W PinBase PinConf pinMobius.mobius pinMobius.basePin
+      pinMobius.conformalPin
 
   /-- The imported Pin/Möbius owner certifies action on projective null rays. -/
   projective_null_ray_action :
-    pinMobius.acts_on_projective_null_rays
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay pinMobius.mobius.ambientQ →
+        ((pinMobius.conformalPin.cover pinMobius.conformalPin.inversionPin
+          pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            pinMobius.mobius.ambientQ
 
 namespace TKKClosureCompatibility
 
@@ -541,15 +565,24 @@ theorem tkkClosureOwnerTarget :
         C.tkk.pos y ∈ C.tkk.gradeSet TKKGrade.positive ∧
         C.inversionClosure.inversion (C.tkk.neg x) = C.tkk.pos x ∧
         C.inversionClosure.inversion (C.tkk.pos y) = C.tkk.neg y ∧
-        C.pinMobius.basePin_lifts_to_conformalPin ∧
-        C.pinMobius.acts_on_projective_null_rays := by
+        (∀ (a : PinBase) (ha : C.pinMobius.basePin.isPin a),
+          C.pinMobius.conformalPin.cover
+              (C.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
+              (C.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
+            C.pinMobius.mobius.base_orthogonal_lift
+              (C.pinMobius.basePin.cover a ha)) ∧
+        (∀ r : ProjectiveRay W,
+          r.IsAmbientNullRay C.pinMobius.mobius.ambientQ →
+            ((C.pinMobius.conformalPin.cover C.pinMobius.conformalPin.inversionPin
+              C.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+                C.pinMobius.mobius.ambientQ) := by
   intro J L V W PinBase PinConf _ _ _ _ _ _ _ _ _ _ C x y
   exact ⟨C.tkk.neg_mem x,
     C.tkk.zero_mem x y,
     C.tkk.pos_mem y,
     C.inversionClosure.maps_neg_to_pos x,
     C.inversionClosure.maps_pos_to_neg y,
-    C.basePin_lift,
+    C.pinMobius.basePin_lifts_to_conformalPin.cover_compatibility,
     C.projective_null_ray_action⟩
 
 /-- Packet readout for a concrete TKK/Möbius compatibility datum. -/
@@ -567,8 +600,17 @@ theorem tkkClosure_packet
       C.tkk.pos y ∈ C.tkk.gradeSet TKKGrade.positive ∧
       C.inversionClosure.inversion (C.tkk.neg x) = C.tkk.pos x ∧
       C.inversionClosure.inversion (C.tkk.pos y) = C.tkk.neg y ∧
-      C.pinMobius.basePin_lifts_to_conformalPin ∧
-      C.pinMobius.acts_on_projective_null_rays :=
+      (∀ (a : PinBase) (ha : C.pinMobius.basePin.isPin a),
+        C.pinMobius.conformalPin.cover
+            (C.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
+            (C.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
+          C.pinMobius.mobius.base_orthogonal_lift
+            (C.pinMobius.basePin.cover a ha)) ∧
+      (∀ r : ProjectiveRay W,
+        r.IsAmbientNullRay C.pinMobius.mobius.ambientQ →
+          ((C.pinMobius.conformalPin.cover C.pinMobius.conformalPin.inversionPin
+            C.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+              C.pinMobius.mobius.ambientQ) :=
   tkkClosureOwnerTarget J L V W PinBase PinConf C x y
 
 end InfoGeometry.OperatorAlgebra

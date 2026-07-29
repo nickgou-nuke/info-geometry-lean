@@ -64,6 +64,8 @@ structure LanglandsLaneArithmeticPacket
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     where
@@ -110,6 +112,8 @@ def LanglandsGeometryToArithmetic
     (Z : BilingualUpperHalfPlane D)
     (W : SiegelEisensteinWitness Bulk Boundary)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (P : ProjectedAutomorphicLFunctionWitness W)
@@ -133,6 +137,8 @@ def LanglandsLaneCoreTarget
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (packet :
@@ -185,6 +191,8 @@ theorem constructLanglandsLanePacket
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (packet :
@@ -260,6 +268,8 @@ structure LanglandsGeometryCorrespondence
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (W : SiegelEisensteinWitness Bulk Boundary)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (P : ProjectedAutomorphicLFunctionWitness W)
@@ -289,6 +299,8 @@ theorem constructLanglandsLanePacket_withGeometry
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (packet : LanglandsLaneArithmeticPacket (W := W) (P := P)

@@ -69,7 +69,18 @@ Open owner obligation: connect the projector-conservation identity above to any
 Drazin anomaly or conductance readout using a separate index and observable
 model.
 -/
-def drazin_anomaly_conductance_obligation : String :=
-  "Open: derive any Drazin anomaly/conductance invariant from the finite projector-conservation identity using an explicit index and observable model."
+/- The projector-conservation theorem and the transport observable have
+   separate owners.  This export keeps the required Drazin/index data explicit
+   rather than claiming that conservation alone implies conductance. -/
+theorem drazin_anomaly_conductance_obligation
+    {Op : InfoGeometry.Canonical.DrazinAnomaly.SpinorOp} {k : ℕ}
+    (R : InfoGeometry.Canonical.TransportObservable.AndreevDrazinReadout Op k)
+    (e_charge planck_h : ℝ) :
+    R.zero_bias_conductance e_charge planck_h =
+      InfoGeometry.Canonical.TransportObservable.conductance_quantum
+        e_charge planck_h *
+          |(InfoGeometry.Canonical.DrazinAnomaly.drazin_anomaly_index
+            R.anomaly : ℝ)| :=
+  R.majorana_conductance_peak e_charge planck_h
 
 end InfoGeometry.Dynamics.ThermalChiralConservation

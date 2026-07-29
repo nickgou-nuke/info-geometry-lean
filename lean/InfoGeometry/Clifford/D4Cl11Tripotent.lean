@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import InfoGeometry.Clifford.Clifford55AnomalyOSP
@@ -82,8 +83,8 @@ separate from the reflection/glide carrier.
 A 2×2 real matrix is tripotent if E³ = E.
 This is weaker than idempotent (E² = E) and gives a richer structure.
 -/
-structure IsTripotent (E : Matrix (Fin 2) (Fin 2) ℝ) : Prop where
-  tripotent : E * E * E = E
+abbrev IsTripotent (E : Matrix (Fin 2) (Fin 2) ℝ) : Prop :=
+  E * E * E = E
 
 /--
 The determinant sign classification of tripotents.
@@ -110,7 +111,7 @@ This is the finite determinant readback proved by the local packet.
 theorem tripotent_det_classification (E : Matrix (Fin 2) (Fin 2) ℝ)
     (hE : IsTripotent E) :
     Matrix.det E ∈ ({-1, 0, 1} : Set ℝ) := by
-  have h : Matrix.det (E * E * E) = Matrix.det E := by rw [hE.tripotent]
+  have h : Matrix.det (E * E * E) = Matrix.det E := by rw [hE]
   have h2 : Matrix.det E * (Matrix.det E * Matrix.det E) = Matrix.det E := by
     have h_det : Matrix.det (E * E * E) = Matrix.det E * Matrix.det E * Matrix.det E := by
       rw [Matrix.det_mul, Matrix.det_mul]
@@ -236,8 +237,28 @@ structure FullAlgebraD4Cl11 where
   clonedD4 : ClonedD4Algebra
   /-- The Cl(1,1) modulator -/
   modulator : Cl11Modulator
-  /-- Semidirect product structure -/
-  semidirect : Prop
+  /-- The modulator acts by involutions on the cloned `D₄` carrier.
+
+  This is the action law available at the present structural level. A genuine
+  Lie semidirect product additionally requires an action by Lie
+  automorphisms, which is not data carried by `ClonedD4Algebra`.
+  -/
+  modulator_action_involutive :
+    ∀ g : modulator.gamma,
+      Function.Involutive (modulator.bridge_action g)
+
+namespace FullAlgebraD4Cl11
+
+variable (F : FullAlgebraD4Cl11)
+
+/-- The owned semidirect-action content: every `Cl(1,1)` modulator acts
+involutively on the cloned `D₄` carrier. -/
+theorem semidirect
+    (g : F.modulator.gamma) :
+    Function.Involutive (F.modulator.bridge_action g) :=
+  F.modulator_action_involutive g
+
+end FullAlgebraD4Cl11
 
 /-!
 ## 6. 5-Grading from the Modulator Eigenvalues

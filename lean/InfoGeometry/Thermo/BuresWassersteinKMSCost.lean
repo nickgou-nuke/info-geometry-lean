@@ -271,11 +271,31 @@ structure BilingualKMSHolonomyCompatibility
   holonomy :
     KMSHolonomyTransport State Ω
 
-  /-- Bilingual/Stokes analytic origin of the holonomy transport. -/
-  bilingual_stokes_holonomy : Prop
+  /-- Thermal region whose boundary carries the Wilson/KMS holonomy. -/
+  thermalRegion : Region
 
-  /-- Thermal-cylinder / KMS-strip interpretation. -/
-  thermal_cylinder : Prop
+  /-- Operator-valued connection one-form integrated around the boundary. -/
+  holonomyForm : OperatorOneForm Point Tangent Value
+
+  /-- Readout comparing state transport with the geometric integral backend. -/
+  stateReadout : State → Value
+
+  /-- Bilingual/Stokes origin of the holonomy transport. -/
+  bilingual_stokes_holonomy :
+    ∀ state : State,
+      stateReadout (holonomy.transport state) - stateReadout state =
+        I.boundaryIntegral thermalRegion holonomyForm
+
+  /-- Inverse-temperature period of the thermal cylinder. -/
+  beta : ℝ
+
+  /-- Concrete periodic thermal-cylinder path. -/
+  thermalCylinderPath : ℝ → Point
+
+  /-- Thermal-cylinder period is positive and closes the path. -/
+  thermal_cylinder :
+    0 < beta ∧
+      ∀ t : ℝ, thermalCylinderPath (t + beta) = thermalCylinderPath t
 
 namespace BilingualKMSHolonomyCompatibility
 
@@ -286,6 +306,24 @@ variable
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
 variable (C : BilingualKMSHolonomyCompatibility State Region Point Tangent Value Ω I)
+
+/-- Holonomy transport changes the state readout by the Stokes boundary integral. -/
+theorem holonomy_readout_sub_eq_boundaryIntegral
+    (state : State) :
+    C.stateReadout (C.holonomy.transport state) - C.stateReadout state =
+      I.boundaryIntegral C.thermalRegion C.holonomyForm :=
+  C.bilingual_stokes_holonomy state
+
+/-- The installed thermal-cylinder inverse temperature is positive. -/
+theorem beta_pos :
+    0 < C.beta :=
+  C.thermal_cylinder.1
+
+/-- The installed thermal path closes after one inverse-temperature period. -/
+theorem thermalCylinderPath_add_beta
+    (t : ℝ) :
+    C.thermalCylinderPath (t + C.beta) = C.thermalCylinderPath t :=
+  C.thermal_cylinder.2 t
 
 end BilingualKMSHolonomyCompatibility
 

@@ -66,10 +66,8 @@ theorem isTraceFree_iff_prod_eq_antiPart {A : Type*} [Ring A] [Invertible (2 : A
     exact h_zero
 
 /-- Two vectors are a light-like (null) pair if both square to 0 and their polar product is 2. -/
-structure IsLightlikePair (u v : M) : Prop where
-  hu : Q u = 0
-  hv : Q v = 0
-  h_polar : QuadraticMap.polar Q u v = 2
+abbrev IsLightlikePair (u v : M) : Prop :=
+  Q u = 0 ∧ Q v = 0 ∧ QuadraticMap.polar Q u v = 2
 
 lemma commute_two {A : Type*} [Ring A] (x : A) : (2 : A) * x = x * (2 : A) := by
   rw [two_mul, mul_two]
@@ -94,12 +92,12 @@ theorem vacuum_projector_idempotent [Invertible (2 : CliffordAlgebra Q)]
       exact ι_mul_ι_comm v u
     have h_symm : QuadraticMap.polar Q v u = QuadraticMap.polar Q u v := by
       exact (QuadraticMap.polar_comm Q u v).symm
-    rw [h_symm, h.h_polar] at h_comm
+    rw [h_symm, h.2.2] at h_comm
     have h_two : algebraMap R (CliffordAlgebra Q) 2 = (2 : CliffordAlgebra Q) := by
       exact map_ofNat (algebraMap R (CliffordAlgebra Q)) 2
     rw [h_two] at h_comm
     have h_nil : ι Q u * ι Q u = 0 := by
-      rw [ι_sq_scalar, h.hu, map_zero]
+      rw [ι_sq_scalar, h.1, map_zero]
     rw [mul_assoc, ← mul_assoc (ι Q v), h_comm, sub_mul, mul_assoc, mul_sub, ← mul_assoc, ← mul_assoc]
     rw [h_nil, zero_mul, sub_zero]
     rw [← commute_two (ι Q u), mul_assoc]
@@ -117,4 +115,3 @@ theorem vacuum_projector_idempotent [Invertible (2 : CliffordAlgebra Q)]
   rw [h_assoc_two, invOf_mul_self (2 : CliffordAlgebra Q), mul_one]
 
 end InfoGeometry.Algebra.CliffordGA
-

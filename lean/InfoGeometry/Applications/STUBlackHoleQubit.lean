@@ -1,5 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Real.Sqrt
+import Mathlib.LinearAlgebra.TensorProduct.Basic
 import InfoGeometry.Exceptional.Freudenthal
 
 /-!
@@ -110,6 +111,23 @@ structure BlackHoleQubitDictionary
 /-! ### 4. Drazin Surgery on the Qubit Space -/
 
 /--
+An explicit tensor-factor carrier for a Drazin regular core.  The
+factorization is stored as a Mathlib linear equivalence, rather than as an
+uninterpreted proposition-valued certificate.
+-/
+structure DrazinBipartiteCore where
+  Core : Type*
+  [coreAddCommGroup : AddCommGroup Core]
+  [coreModule : Module ℝ Core]
+  LeftFactor : Type*
+  [leftAddCommGroup : AddCommGroup LeftFactor]
+  [leftModule : Module ℝ LeftFactor]
+  RightFactor : Type*
+  [rightAddCommGroup : AddCommGroup RightFactor]
+  [rightModule : Module ℝ RightFactor]
+  coreEquiv : Core ≃ₗ[ℝ] TensorProduct ℝ LeftFactor RightFactor
+
+/--
 The algebraic correspondence of quantum decoherence to geometric surgery.
 If a GHZ state loses a qubit (e.g., Alice is traced out), the state drops 
 rank into the W-class horizon. 
@@ -126,12 +144,36 @@ structure DecoherenceAsDrazinSurgery
   /-- A transformation representing the loss/decoherence of a qubit channel. -/
   decoherence_flow : ℝ → ThreeQubitState → ThreeQubitState
 
+  /-- The operator-level core carrier and its tensor-factor decomposition. -/
+  drazin_core : DrazinBipartiteCore
+
   /-- Decoherence forces the state from the GHZ orbit to the W orbit. -/
   hits_w_state_horizon :
     ∀ psi : ThreeQubitState, ThreeQubitState.isGHZState psi → 
       ∃ t_c > 0, ThreeQubitState.isWState (decoherence_flow t_c psi)
 
-  /-- The resulting bipartite entanglement is the Drazin regular core. -/
-  drazin_core_is_bipartite : Prop
+namespace DecoherenceAsDrazinSurgery
+
+variable {J : Type*} [AddCommGroup J] [Module ℝ J]
+variable {D : CubicJordanDatum J}
+variable {Dict : BlackHoleQubitDictionary D}
+variable (S : DecoherenceAsDrazinSurgery Dict)
+
+/-- The supplied core carrier admits the claimed bipartite factorization. -/
+def drazin_core_is_bipartite : Prop :=
+  letI := S.drazin_core.coreAddCommGroup
+  letI := S.drazin_core.coreModule
+  letI := S.drazin_core.leftAddCommGroup
+  letI := S.drazin_core.leftModule
+  letI := S.drazin_core.rightAddCommGroup
+  letI := S.drazin_core.rightModule
+  Nonempty (S.drazin_core.Core ≃ₗ[ℝ]
+    TensorProduct ℝ S.drazin_core.LeftFactor S.drazin_core.RightFactor)
+
+theorem drazin_core_is_bipartite_of_equiv :
+    drazin_core_is_bipartite S := by
+  exact ⟨S.drazin_core.coreEquiv⟩
+
+end DecoherenceAsDrazinSurgery
 
 end InfoGeometry.Applications.STUQubit

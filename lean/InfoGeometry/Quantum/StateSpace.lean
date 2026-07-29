@@ -179,13 +179,12 @@ available.
 This records an exact owner-side readout law for the supplied affine path; it
 does not promote the construction to a general analytic RN theorem.
 -/
-structure ParabolicRNPathWitness
+abbrev ParabolicRNPathWitness
     (τ : Cl_inftyState)
-    (R : NilpotentRNReadout τ) where
-  /-- Density representation of the affine state path. -/
-  rn_law :
-    ∀ (t : ℝ) (a : Cl_infty),
-      (rnStatePath τ R t).toLinearMap a = τ.toLinearMap (parabolicRNDensity t * a)
+    (R : NilpotentRNReadout τ) : Prop :=
+  ∀ (t : ℝ) (a : Cl_infty),
+    (rnStatePath τ R t).toLinearMap a =
+      τ.toLinearMap (parabolicRNDensity t * a)
 
 namespace ParabolicRNPathWitness
 
@@ -195,9 +194,9 @@ def densityAt
     {R : NilpotentRNReadout τ}
     (W : ParabolicRNPathWitness τ R)
     (t : ℝ) :
-    Cl_inftyRNDensity τ (rnStatePath τ R t) where
+  Cl_inftyRNDensity τ (rnStatePath τ R t) where
   density := parabolicRNDensity t
-  rn_law := W.rn_law t
+  rn_law := W t
 
 end ParabolicRNPathWitness
 

@@ -163,10 +163,13 @@ structure IsotropicAlgebraicBridge
         IsSquareZeroElement (represent x)
 
   /--
-  Optional reflection certificate: in a concrete model the square-zero
-  represented shadow may characterize isotropy.
+  The represented square-zero shadow reflects isotropy in the concrete model.
+  This is stated as the actual converse implication, not as an opaque marker.
   -/
-  square_zero_reflects_null : Prop
+  square_zero_reflects_null :
+    ∀ x : H,
+      IsSquareZeroElement (represent x) →
+        quadratic.IsNull x
 
 namespace IsotropicAlgebraicBridge
 
@@ -275,21 +278,18 @@ end IsotropicDrazinBridge
 /-! ## 5. Krein form and isotropic cone -/
 
 /--
-A Krein fundamental symmetry or metric operator.
-
-The metric compatibility properties are intentionally proof-carrying at this
-layer so concrete Hilbert/Krein models can supply the appropriate analytic
-witnesses.
+The isotropic-cone layer uses the canonical Krein metric owner from
+`ChiralPolarization`; it does not maintain a second metric record.
 -/
-structure KreinMetricDatum
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
-  eta : H →L[ℝ] H
-  eta_self_adjoint : Prop
-  eta_involutive : Prop
+abbrev KreinMetricDatum
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] :=
+  InfoGeometry.OperatorAlgebra.KreinMetricDatum H
 
 /-- Krein bilinear form associated to `eta`. -/
 def kreinForm
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     (K : KreinMetricDatum H)
     (v w : H) : ℝ :=
   inner (𝕜 := ℝ) v (K.eta w)
@@ -297,6 +297,7 @@ def kreinForm
 /-- The projective isotropic cone is the nonzero null locus of the Krein form. -/
 def IsNonzeroKreinNull
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     (K : KreinMetricDatum H)
     (v : H) : Prop :=
   v ≠ 0 ∧ kreinForm K v v = 0
@@ -305,6 +306,7 @@ namespace IsNonzeroKreinNull
 
 variable
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     {K : KreinMetricDatum H}
 
 /-- Re-export nonzero-ness of a projective null vector. -/
@@ -335,7 +337,8 @@ from boundary cross-ratio data.
 -/
 structure ProjectiveAbsoluteBoundaryDatum
     (H Domain : Type*)
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [PseudoMetricSpace Domain]
     (K : KreinMetricDatum H) where
   /-- Interior domain carrying the Poincare/hyperbolic metric. -/
   interior : Set Domain
@@ -350,11 +353,9 @@ structure ProjectiveAbsoluteBoundaryDatum
   /-- Poincare/hyperbolic distance readout on the interior domain. -/
   poincareDistance : Domain → Domain → ℝ
 
-  /--
-  Certificate that `poincareDistance` is intended on the interior, not as a
-  finite intrinsic metric on the null cone itself.
-  -/
-  metric_lives_on_interior : Prop
+  /-- The supplied distance readout is the native metric distance. -/
+  poincareDistance_eq_dist :
+    ∀ x y : Domain, poincareDistance x y = dist x y
 
   /-- Optional boundary cross-ratio style readout. -/
   boundaryCrossRatio : H → H → H → H → ℝ
@@ -363,7 +364,8 @@ namespace ProjectiveAbsoluteBoundaryDatum
 
 variable
     {H Domain : Type*}
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [PseudoMetricSpace Domain]
     {K : KreinMetricDatum H}
     (B : ProjectiveAbsoluteBoundaryDatum H Domain K)
 
@@ -372,6 +374,13 @@ theorem boundary_isotropic_iff
     (v : H) :
     B.boundary v ↔ IsNonzeroKreinNull K v :=
   B.boundary_iff_isotropic v
+
+/-- The interior distance readout is nonnegative. -/
+theorem poincareDistance_nonneg
+    (x y : Domain) :
+    0 ≤ B.poincareDistance x y := by
+  rw [B.poincareDistance_eq_dist]
+  exact dist_nonneg
 
 end ProjectiveAbsoluteBoundaryDatum
 
@@ -385,7 +394,7 @@ that a representation detects isotropic vectors as algebraic defects.
 -/
 structure MetricIsotropicAlgebraBridge
     (H A : Type*)
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [Ring A]
     (K : KreinMetricDatum H) where
   repVector : H → A
@@ -403,6 +412,7 @@ namespace MetricIsotropicAlgebraBridge
 variable
     {H A : Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     [Ring A]
     {K : KreinMetricDatum H}
     (B : MetricIsotropicAlgebraBridge H A K)
@@ -486,7 +496,7 @@ every nonzero Krein-null vector maps to a nilpotent represented element.
 -/
 theorem nilpotent_of_isotropic_bridge_drazin
     {H A : Type*}
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [Ring A]
     {K : KreinMetricDatum H}
     (B : MetricIsotropicAlgebraBridge H A K)
@@ -606,7 +616,7 @@ branch.
 -/
 theorem isotropic_representation_is_drazin_nil
     {H A : Type*}
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [Ring A]
     {K : KreinMetricDatum H}
     (B : MetricIsotropicAlgebraBridge H A K)

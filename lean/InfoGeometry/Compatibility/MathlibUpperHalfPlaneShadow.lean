@@ -182,38 +182,10 @@ theorem denom_shadow_matrix (g : SL2R) (τ : RealUpperHalfPlane) :
 /-! ### 4. Möbius action shadow -/
 
 /--
-Coordinate formulas witnessing compatibility between the real action and the
-complex shadow.
--/
-structure RealMoebiusShadowWitness where
-  hx :
-    ∀ (g : SL2R) (τ : RealUpperHalfPlane),
-      (g • τ).x =
-        (((((g : Matrix (Fin 2) (Fin 2) ℝ) 0 0) * τ.x
-            + ((g : Matrix (Fin 2) (Fin 2) ℝ) 0 1))
-          *
-          (((g : Matrix (Fin 2) (Fin 2) ℝ) 1 0) * τ.x
-            + ((g : Matrix (Fin 2) (Fin 2) ℝ) 1 1))
-          +
-          ((g : Matrix (Fin 2) (Fin 2) ℝ) 0 0)
-            * ((g : Matrix (Fin 2) (Fin 2) ℝ) 1 0)
-            * τ.y ^ 2)
-        / realDenomSq g τ)
-  hy :
-    ∀ (g : SL2R) (τ : RealUpperHalfPlane),
-      (g • τ).y = τ.y / realDenomSq g τ
-
-/--
-Continuous action shadow.
-
-The real fractional-linear action, pushed through `realToMathlibUHP`, agrees
-with Mathlib's complex-backed upper-half-plane action.
-
-The witness argument is retained for compatibility with the coordinate-shadow
-API, but the proof is delegated to `RealMoebiusAction.lean`.
+The real fractional-linear action, pushed through the coordinate equivalence,
+agrees with Mathlib's complex-backed upper-half-plane action.
 -/
 theorem smul_shadow_SL2R_proof
-    (_ : RealMoebiusShadowWitness)
     (g : SL2R) (τ : RealUpperHalfPlane) :
     realToComplexEquiv (g • τ) =
       g • realToComplexEquiv τ := by

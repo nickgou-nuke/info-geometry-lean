@@ -220,42 +220,6 @@ theorem adapted_basis_capstone
 
 end InvolutionAdaptedSuperMetriplecticBasis
 
-/--
-Blockwise operator-lift obligation packet.
-
-The point is architectural: after scalar basis adaptation, the global lift is
-represented as a conjunction of smaller lane-wise obligations rather than a
-single unsplit theorem.
--/
-structure BlockwiseOperatorLiftObligations where
-  leftLift : Prop
-  rightLift : Prop
-  exchangeLift : Prop
-  defectLift : Prop
-  cartanLift : Prop
-  flowLift : Prop
-
-namespace BlockwiseOperatorLiftObligations
-
-/-- The global operator lift obligation is the product of the lane-wise lifts. -/
-theorem global_lift
-    (O : BlockwiseOperatorLiftObligations)
-    (hLeft : O.leftLift)
-    (hRight : O.rightLift)
-    (hExchange : O.exchangeLift)
-    (hDefect : O.defectLift)
-    (hCartan : O.cartanLift)
-    (hFlow : O.flowLift) :
-    O.leftLift
-      ∧ O.rightLift
-      ∧ O.exchangeLift
-      ∧ O.defectLift
-      ∧ O.cartanLift
-      ∧ O.flowLift :=
-  ⟨hLeft, hRight, hExchange, hDefect, hCartan, hFlow⟩
-
-end BlockwiseOperatorLiftObligations
-
 /-! ## Repo-native doubled chiral projector bridge -/
 
 namespace DoubledChiralProjectorBridge
@@ -283,6 +247,36 @@ theorem grade_plus_comp_minus_zero :
 theorem grade_minus_comp_plus_zero :
     (gradeMinusProj (E := E)).comp (gradePlusProj (E := E)) = 0 :=
   gradeMinusProj_comp_gradePlusProj (E := E)
+
+/--
+Every operator on the doubled carrier is the sum of its four genuine chiral
+blocks.  This is the operator-level replacement for the former packet of six
+untyped lift propositions.
+-/
+theorem operator_eq_sum_chiral_blocks
+    (T : H₂ →L[ℝ] H₂) :
+    (gradePlusProj (E := E)).comp
+          (T.comp (gradePlusProj (E := E)))
+      + (gradePlusProj (E := E)).comp
+          (T.comp (gradeMinusProj (E := E)))
+      + (gradeMinusProj (E := E)).comp
+          (T.comp (gradePlusProj (E := E)))
+      + (gradeMinusProj (E := E)).comp
+          (T.comp (gradeMinusProj (E := E)))
+      = T := by
+  calc
+    _ =
+        (gradePlusProj (E := E) + gradeMinusProj (E := E)).comp
+          (T.comp
+            (gradePlusProj (E := E) + gradeMinusProj (E := E))) := by
+          simp only [ContinuousLinearMap.add_comp,
+            ContinuousLinearMap.comp_add]
+          abel
+    _ = (ContinuousLinearMap.id ℝ H₂).comp
+          (T.comp (ContinuousLinearMap.id ℝ H₂)) := by
+          rw [grade_projectors_sum]
+    _ = T := by
+          simp [ContinuousLinearMap.comp_id, ContinuousLinearMap.id_comp]
 
 end Doubled
 

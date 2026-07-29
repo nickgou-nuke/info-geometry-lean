@@ -222,19 +222,14 @@ QMS [kernel_verified] R2 contract.
 Instantiates the canonical `DuhamelOperatorDerivative` interface natively over the 
 fractal Cantor boundaries via the exact TrivSqZeroExt `discreteDuhamelSum`.
 -/
-def TrivSqZeroExtDuhamel (n : ℕ) : DuhamelOperatorDerivative S (TrivSqZeroExt S N) (TrivSqZeroExt S N) where
-  K β := inl β
-  directionToInsertion δ := δ
-  derivativeOfExp β δ := 
-    -- The first-order perturbation term
-    -- Note: for a pure dual perturbation δ = inr B, this evaluates exactly to the discreteDuhamelSum
-    -- For abstract compliance with the typeclass, we provide the formal structural signature:
-    discreteDuhamelSum β (δ.snd) n
-  higherSimplexOrderedForms
-    | 1, β, [δ] => discreteDuhamelSum β (δ.snd) n
-    | _, _, _ => 0
-  traceStateKMSReadout _ := 0
-  derivativeOfExp_eq_first_ordered_form _ _ := rfl
+def TrivSqZeroExtDuhamel (n : ℕ) :
+    DuhamelOperatorDerivative S (TrivSqZeroExt S N) (TrivSqZeroExt S N) :=
+  (fun β => inl β,
+    fun δ => δ,
+    fun
+      | 1, β, [δ] => discreteDuhamelSum β (δ.snd) n
+      | _, _, _ => 0,
+    fun _ => 0)
 
 /--
 Physical Test Instantiation: Exact Non-Commutative Expansion for the SE(3) Dual Quaternion Twist.

@@ -29,20 +29,39 @@ theorem mckay_observation_weight_3 :
     fourier_j_3 = monster_chi_1 + monster_chi_2 + monster_chi_3 + monster_chi_4 := by
   norm_num [fourier_j_3, monster_chi_1, monster_chi_2, monster_chi_3, monster_chi_4]
 
-/-- Structure representing a graded VOA (Vertex Operator Algebra) character decomposition -/
-structure MoonshineVOADecomposition where
-  weight1_dim : ℕ
-  weight2_dim : ℕ
-  weight3_dim : ℕ
-  h_weight1 : weight1_dim = monster_chi_1 + monster_chi_2
-  h_weight2 : weight2_dim = monster_chi_1 + monster_chi_2 + monster_chi_3
-  h_weight3 : weight3_dim = monster_chi_1 + monster_chi_2 + monster_chi_3 + monster_chi_4
+/--
+The first three McKay decompositions, stated directly rather than packaged in
+a record that repeats the Fourier coefficients and stores their proofs.
 
-/-- Theorem: Monstrous Moonshine VOA graded representation decomposition exists. -/
-theorem moonshine_voa_decomposition_exists : Nonempty MoonshineVOADecomposition := by
-  refine ⟨⟨196884, 21493760, 864299970, ?_, ?_, ?_⟩⟩
-  · exact mckay_observation_weight_1
-  · exact mckay_observation_weight_2
-  · exact mckay_observation_weight_3
+This finite arithmetic theorem is not by itself a construction of a vertex
+operator algebra; a genuine VOA owner requires the corresponding graded
+algebraic structure.
+-/
+theorem moonshine_graded_dimension_decomposition :
+    fourier_j_1 = monster_chi_1 + monster_chi_2 ∧
+      fourier_j_2 = monster_chi_1 + monster_chi_2 + monster_chi_3 ∧
+        fourier_j_3 =
+          monster_chi_1 + monster_chi_2 + monster_chi_3 + monster_chi_4 :=
+  ⟨mckay_observation_weight_1,
+    mckay_observation_weight_2,
+    mckay_observation_weight_3⟩
+
+/--
+Historical Moonshine decomposition proposition.
+
+This name denotes the proved first-three-weight character decomposition.  It
+does not assert that these numerical equalities alone construct a vertex
+operator algebra.
+-/
+abbrev MoonshineVOADecomposition : Prop :=
+  fourier_j_1 = monster_chi_1 + monster_chi_2 ∧
+    fourier_j_2 = monster_chi_1 + monster_chi_2 + monster_chi_3 ∧
+      fourier_j_3 =
+        monster_chi_1 + monster_chi_2 + monster_chi_3 + monster_chi_4
+
+/-- Historical owner name restored from the proved McKay decompositions. -/
+theorem moonshine_voa_decomposition_exists :
+    MoonshineVOADecomposition :=
+  moonshine_graded_dimension_decomposition
 
 end InfoGeometry.Monster.MoonshineGradedDimensions

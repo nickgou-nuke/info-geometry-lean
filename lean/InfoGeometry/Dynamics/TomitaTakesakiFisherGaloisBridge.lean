@@ -59,15 +59,18 @@ The mathematical target is:
 
   g_β(H, H) = φ_β(H²) - φ_β(H)² = ∂²/∂β² log ζ(β).
 
-This structure is only a carrier for a chosen metric value and an explicit
-positivity premise.  The Hessian/log-zeta identification is recorded as a
-string debt note, not as a proof field.
+This structure is a carrier for a chosen metric value, an explicit
+log-partition function, its second-derivative relation, and a positivity
+premise.  The separate identification of that function with `log ζ` remains
+outside this packet until the corresponding analytic owner is supplied.
 -/
 structure FisherMetricAtTemperature (β : ℝ) where
   /-- The Fisher information metric value g(β). -/
   value : ℝ
-  /-- Open target: route `g(β) = ∂²/∂β² log ζ(β)` through the Hestenes--Krein colimit owner. -/
-  hessian_log_zeta_debt : String := "Open: route this Fisher metric datum to the log-zeta readout through the Hestenes--Krein categorical colimit owner."
+  /-- The supplied scalar log-partition readout. -/
+  logPartition : ℝ → ℝ
+  /-- The metric value is the second derivative of the supplied readout. -/
+  value_eq_second_derivative : value = deriv (deriv logPartition) β
   /-- For β > 1, g(β) > 0 — the metric is positive definite. -/
   positive_definite : β > 1 → value > 0
 

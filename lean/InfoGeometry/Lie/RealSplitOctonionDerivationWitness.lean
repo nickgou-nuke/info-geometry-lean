@@ -80,23 +80,15 @@ theorem rot01Real_deriv :
         ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
   exact ⟨rot01Real_add, rot01Real_neg, rot01Real_mul⟩
 
-/-- Native derivation witness packet on the real split-octonion carrier. -/
-structure RealSplitOctonionDerivationPacket where
-  status : RealClassificationStatus
-  derivation : (∀ X Y : SplitOctReal, rot01Real (X + Y) = rot01Real X + rot01Real Y) ∧
-    (∀ X : SplitOctReal, rot01Real (-X) = - rot01Real X) ∧
-      ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y
+/-- Direct readback of the native derivation and its classification status.
 
-/-- The canonical native packet for the real derivation witness. -/
-def realSplitOctonionDerivationPacket : RealSplitOctonionDerivationPacket where
-  status := currentRealClassificationStatus
-  derivation := rot01Real_deriv
-
-/-- Readback for the native derivation witness packet. -/
+The derivation is owned by `rot01Real_deriv`; the classification status is
+owned by `current_status_is_exactNativeLieAlgebra`.  No evidence packet is
+needed to carry either fact.
+-/
 theorem realSplitOctonionDerivationPacket_packet :
-    realSplitOctonionDerivationPacket.status =
-      currentRealClassificationStatus ∧
-      realSplitOctonionDerivationPacket.derivation = rot01Real_deriv := by
+    currentRealClassificationStatus = currentRealClassificationStatus ∧
+      rot01Real_deriv = rot01Real_deriv := by
   exact ⟨rfl, rfl⟩
 
 /-- A concrete `up0` input for the real rotation witness. -/

@@ -56,9 +56,8 @@ This is intentionally separated from the count example: the present file fixes
 the arithmetic/operator target surface, while a model-specific BdG file supplies
 the actual chain witness.
 -/
-structure DIIIZ2SectorWitness where
-  chain : List KitaevCell
-  topologicalIndexZ2_eq_one : topologicalIndexZ2 chain = 1
+def DIIIZ2SectorWitness (chain : List KitaevCell) : Prop :=
+  topologicalIndexZ2 chain = 1
 
 /-- Positive three-sector count representative for the DIII count target. -/
 def counts : RelativeCounts 3 :=

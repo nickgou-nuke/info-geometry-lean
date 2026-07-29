@@ -8,9 +8,9 @@ namespace InfoGeometry.Geometry
 structure PositroidCell (k n : ℕ) where
   id : ℕ
   dimension : ℕ
-  is_positive : Bool
   -- Represents the closure of the cell in the Grassmannian
   closure : Set (Fin (k * n) → ℝ)
+  closure_nonempty : closure.Nonempty
 
 /-- Defining the preorder via subset inclusion of closures.
 The carried metadata is richer than closure inclusion alone, so we do not
@@ -24,7 +24,6 @@ instance (k n : ℕ) : Preorder (PositroidCell k n) where
 structure AmplituhedronFacePoset (k n m : ℕ) where
   cells : List (PositroidCell k n)
   dimension_bounded : ∀ c ∈ cells, c.dimension ≤ k * n
-  closure_positive : ∀ c ∈ cells, c.is_positive = true → c.closure.Nonempty
 
 theorem AmplituhedronFacePoset.dimension_le
     {k n m : ℕ} (P : AmplituhedronFacePoset k n m)

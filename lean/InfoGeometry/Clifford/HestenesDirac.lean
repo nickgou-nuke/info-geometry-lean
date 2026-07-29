@@ -811,22 +811,30 @@ symmetric spacetime slice with the skew BdG dynamics slice.
 structure RealPfaffianBridge (M4 : Type u) [Mul M4] [One M4] [Neg M4] where
   biquaternionSlice : RealFourByFourBiquaternionSlice M4
   majoranaBdG : MajoranaBdGFourByFour M4
-  biquaternionNull : Prop := biquaternionSlice.pfaffianSJ = 0
-  bdgZeroMode : Prop := majoranaBdG.pfaffian majoranaBdG.bdgMatrix = 0
-  /-- Both real geometries expose their singular loci as Pfaffian-zero surfaces. -/
-  pfaffian_bridge : biquaternionNull ∧ bdgZeroMode ↔
-    biquaternionSlice.pfaffianSJ = 0 ∧ majoranaBdG.pfaffian majoranaBdG.bdgMatrix = 0
+  /-- The biquaternion slice lies on its Pfaffian-zero locus. -/
+  biquaternionNull : biquaternionSlice.pfaffianSJ = 0
+  /-- The Majorana/BdG datum lies on its Pfaffian-zero locus. -/
+  bdgZeroMode : majoranaBdG.pfaffian majoranaBdG.bdgMatrix = 0
 
 namespace RealPfaffianBridge
 
 variable {M4 : Type u} [Mul M4] [One M4] [Neg M4]
 
-/-- Extract the real Pfaffian bridge equivalence. -/
-theorem pfaffian_bridge_extract (B : RealPfaffianBridge M4) :
-    B.biquaternionNull ∧ B.bdgZeroMode ↔
+/-- Both real geometries expose their singular loci as Pfaffian-zero surfaces. -/
+theorem pfaffian_bridge (B : RealPfaffianBridge M4) :
+    (B.biquaternionSlice.pfaffianSJ = 0) ∧
+      (B.majoranaBdG.pfaffian B.majoranaBdG.bdgMatrix = 0) ↔
       B.biquaternionSlice.pfaffianSJ = 0 ∧
         B.majoranaBdG.pfaffian B.majoranaBdG.bdgMatrix = 0 :=
-  B.pfaffian_bridge
+  Iff.rfl
+
+/-- Extract the real Pfaffian bridge equivalence. -/
+theorem pfaffian_bridge_extract (B : RealPfaffianBridge M4) :
+    (B.biquaternionSlice.pfaffianSJ = 0) ∧
+      (B.majoranaBdG.pfaffian B.majoranaBdG.bdgMatrix = 0) ↔
+      B.biquaternionSlice.pfaffianSJ = 0 ∧
+        B.majoranaBdG.pfaffian B.majoranaBdG.bdgMatrix = 0 := by
+  exact pfaffian_bridge B
 
 end RealPfaffianBridge
 

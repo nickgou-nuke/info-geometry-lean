@@ -1,5 +1,6 @@
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Arithmetic.PrimonGasPartition
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Arithmetic.UResRepresentations
 import InfoGeometry.Arithmetic.Capstone
@@ -51,7 +52,7 @@ open Complex
 namespace InfoGeometry.Arithmetic.UnifiedCapstone
 
 /--
-**The Master Identity — Target Statement.**
+**The proved Euler-product component of the master identity.**
 
 For Re(β) > 1, the following four expressions are equal:
 
@@ -61,7 +62,10 @@ This is the intended fundamental identity of the primon gas.  This capstone
 file records the target and its relational dependencies; it does not prove the
 analytic Fredholm/Euler/Dirichlet identity here.
 -/
-def master_identity_debt (β : ℂ) (_hRe : β.re > 1) : String :=
-  "Open: prove Fredholm determinant = Euler product = Dirichlet series = zeta under trace-class hypotheses."
+theorem master_euler_product_eq_riemannZeta
+    {β : ℂ} (hRe : 1 < β.re) :
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
+      riemannZeta β :=
+  InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct_eq_riemannZeta hRe
 
 end InfoGeometry.Arithmetic.UnifiedCapstone

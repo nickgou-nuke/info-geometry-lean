@@ -78,6 +78,16 @@ import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
 import InfoGeometry.Algebra.N2ModeCentralExtension
 import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.Algebra.BosonizedOSpCoproduct
+import InfoGeometry.Algebra.EquivariantBranching
+import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
+import InfoGeometry.Algebra.OSp12LogarithmicTransport
+import InfoGeometry.Algebra.LogarithmicJordanPair
+import InfoGeometry.Algebra.GL11GradedSwap
+import InfoGeometry.Algebra.GL11LocalGenerators
+import InfoGeometry.Algebra.TemperleyLiebZeroLoop
+import InfoGeometry.Algebra.Coalgebra.Comodule
+import InfoGeometry.Algebra.Coalgebra.HopfConvolution
 import InfoGeometry.Algebra.SupermatrixKoszul
 import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.InfiniteN2ModeInduction

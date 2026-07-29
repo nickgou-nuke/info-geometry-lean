@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSUSYBlocks
+import InfoGeometry.Algebra.AnyonFiniteSpinBraid.AnyonCoxeterQuotient
 
 /-!
 # Finite spin anyon braid interface
@@ -243,32 +244,6 @@ theorem b3SpinArtinBraidOperators_packet :
         b3SpinArtinBraidOperators.generatorOperator ⟨1, by decide⟩ := by
   exact ⟨rfl, rfl, b3SpinSwap_braid_relation⟩
 
-/-- GAP finite quotient certificate for the D-type Coxeter witnesses. -/
-structure CoxeterDQuotientCertificate where
-  D4_order : ℕ
-  D5_order : ℕ
-  D4_order_eq : D4_order = 192
-  D5_order_eq : D5_order = 1920
-
-namespace CoxeterDQuotientCertificate
-
-/-- Certificate values emitted by `tools/gap/anyon_braid_closure.g`. -/
-def gapWitness : CoxeterDQuotientCertificate where
-  D4_order := 192
-  D5_order := 1920
-  D4_order_eq := rfl
-  D5_order_eq := rfl
-
-/-- The GAP witness records `|W(D₄)| = 192`. -/
-theorem D4_order_readout : gapWitness.D4_order = 192 :=
-  gapWitness.D4_order_eq
-
-/-- The GAP witness records `|W(D₅)| = 1920`. -/
-theorem D5_order_readout : gapWitness.D5_order = 1920 :=
-  gapWitness.D5_order_eq
-
-end CoxeterDQuotientCertificate
-
 /-- Consolidated finite spin/SUSY anyon braid packet. -/
 theorem finite_spin_anyon_braid_packet :
     canonicalDefectSteps.create = J_plus ∧
@@ -285,4 +260,3 @@ theorem finite_spin_anyon_braid_packet :
 end InfoGeometry.Algebra.AnyonFiniteSpinBraid
 
 end noncomputable section
-

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Data.Real.Sign
 import InfoGeometry.External.Auto.DeterminantSupergrading
 import InfoGeometry.External.Auto.TrifactorGeometry
 import InfoGeometry.External.Auto.MobiusInversion

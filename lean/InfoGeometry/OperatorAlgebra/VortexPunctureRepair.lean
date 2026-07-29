@@ -25,17 +25,23 @@ open InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 /--
 A localized puncture in a superconducting/order-parameter ledger.
 
-`winding` records the topological phase winding. `singular` is a model-supplied
-predicate saying the puncture is unresolved before repair.
+`winding` records the topological phase winding. The unresolved singular locus
+is defined intrinsically by nonzero winding rather than by an independent
+proposition field.
 -/
 structure LocalizedPuncture where
   winding : ℤ
-  singular : Prop
 
 /-- A puncture is topologically nontrivial if its winding is nonzero. -/
 def LocalizedPuncture.Nontrivial
     (P : LocalizedPuncture) : Prop :=
   P.winding ≠ 0
+
+/-- The localized puncture is singular precisely when it carries nonzero
+topological winding. -/
+def LocalizedPuncture.Singular
+    (P : LocalizedPuncture) : Prop :=
+  P.Nontrivial
 
 namespace LocalizedPuncture
 
@@ -44,6 +50,11 @@ variable (P : LocalizedPuncture)
 /-- Nonzero winding is exactly nontriviality. -/
 theorem nontrivial_iff :
     P.Nontrivial ↔ P.winding ≠ 0 :=
+  Iff.rfl
+
+/-- Singularity is the native nonzero-winding condition. -/
+theorem singular_iff :
+    P.Singular ↔ P.winding ≠ 0 :=
   Iff.rfl
 
 end LocalizedPuncture
@@ -137,8 +148,8 @@ structure SubgapRepairWitness
   /-- The core state is represented by the localized subgap state. -/
   core_eq_subgap : V.coreState = subgapState
 
-  /-- The puncture is considered resolved by this localized state. -/
-  resolved : Prop
+  /-- A repaired core has no residual mismatch with its localized state. -/
+  residual_eq_zero : V.coreState - subgapState = 0
 
 namespace SubgapRepairWitness
 
@@ -152,6 +163,20 @@ variable (S : SubgapRepairWitness Memory V)
 theorem core_eq_subgap_state :
     V.coreState = S.subgapState :=
   S.core_eq_subgap
+
+/-- Resolution is the vanishing of the core/subgap residual. -/
+def Resolved : Prop :=
+  V.coreState - S.subgapState = 0
+
+/-- Every subgap repair witness is resolved by its concrete residual law. -/
+theorem resolved :
+    S.Resolved :=
+  S.residual_eq_zero
+
+/-- The residual formulation is equivalent to the represented-core law. -/
+theorem resolved_iff_core_eq_subgap :
+    S.Resolved ↔ V.coreState = S.subgapState := by
+  exact sub_eq_zero
 
 end SubgapRepairWitness
 

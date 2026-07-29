@@ -8,6 +8,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 
 open InfoGeometry.Optics.JonesCalibration
+open InfoGeometry.Geometry.OperatorialJonesConnection
 open StinespringDilation
 
 /-! ## 3. Fresnel/Jones coefficient calibration -/
@@ -108,9 +109,6 @@ def spJonesEventOfFresnel
   coeff0 := F.rs U
   coeff1 := F.rp U
   tag := V4Tag.id
-  coherence :=
-    diagJones (F.rs U) (F.rp U) 0 1 = 0 ∧
-      diagJones (F.rs U) (F.rp U) 1 0 = 0
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}
@@ -147,13 +145,17 @@ def spJonesEventOfFresnel
     (spJonesEventOfFresnel F U).jones 1 1 = F.rp U := by
   simp [spJonesEventOfFresnel]
 
-/-- The canonical Fresnel/Jones event is coherently diagonal. -/
+/-- A canonical Fresnel/Jones event is coherent when a genuine operatorial
+Jones transport realizes its matrix. -/
 theorem spJonesEventOfFresnel_coherence
     {State : Type*}
     (F : FresnelCoefficientReadout State)
-    (U : State) :
-    (spJonesEventOfFresnel F U).coherence := by
-  simp [spJonesEventOfFresnel, diagJones]
+    (U : State)
+    (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C)
+    (hRealizes : T.val.val = (spJonesEventOfFresnel F U).jones) :
+    (spJonesEventOfFresnel F U).coherence :=
+  ⟨C, T, hRealizes⟩
 
 /--
 A calibration connecting material response to a Jones optical event.

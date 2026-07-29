@@ -11,6 +11,8 @@ This module keeps the strict separation:
 -/
 
 import Mathlib.Tactic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Normed.Operator.Compact
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 
@@ -101,12 +103,31 @@ structure ChiralGrading
   chi_square : chi.comp chi = 1
   chi_phase_linear : PhasePreserving K.K K.K chi
 
-/-- Bounded spectral/Dirac generator with explicit model obligations. -/
+/-- Bounded spectral/Dirac generator. -/
 structure SpectralGenerator
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   D : RealEnd H
-  selfAdjointOrKreinSelfAdjoint : Prop
-  summabilityOrCompactResolvent : Prop
+
+/--
+Native compact-resolvent data for a bounded real spectral generator.
+
+The resolvent is an explicit compact two-sided inverse of the shifted
+generator.  Summability is a different analytic condition and is not hidden
+behind a disjunctive evidence marker.
+-/
+structure CompactResolventData
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (D : RealEnd H) where
+  spectralParameter : ℝ
+  resolvent : RealEnd H
+  resolvent_comp_shift :
+    resolvent.comp
+        (D - spectralParameter • ContinuousLinearMap.id ℝ H) =
+      ContinuousLinearMap.id ℝ H
+  shift_comp_resolvent :
+    (D - spectralParameter • ContinuousLinearMap.id ℝ H).comp resolvent =
+      ContinuousLinearMap.id ℝ H
+  resolvent_compact : IsCompactOperator resolvent
 
 /-- Commutator of bounded real endomorphisms. -/
 def commutator
@@ -183,11 +204,14 @@ The `order_one` field is supplied abstractly and should be proved in concrete
 representation modules.
 -/
 structure PhaseRealSpectralTriple
-    (A H : Type*) [Ring A] [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
+    (A H : Type*) [Ring A] [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] where
   phaseAxis : PhaseAxis H
   realStructure : PhaseRealStructure H phaseAxis
   grading : ChiralGrading H phaseAxis
   spectralGenerator : SpectralGenerator H
+  D_selfAdjoint : IsSelfAdjoint spectralGenerator.D
+  D_compactResolvent : CompactResolventData spectralGenerator.D
   representedAlgebra : RepresentedAlgebra A H
   order_one : OrderOneCondition representedAlgebra spectralGenerator
   traceBackend : Option (TraceDatum (RealEnd H))
@@ -198,6 +222,7 @@ namespace PhaseRealSpectralTriple
 
 variable
     {A H : Type*} [Ring A] [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     (T : PhaseRealSpectralTriple A H)
 
 /-- The spectral triple's Lipschitz seminorm. -/

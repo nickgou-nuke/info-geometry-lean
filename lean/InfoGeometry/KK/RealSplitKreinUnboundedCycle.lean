@@ -43,7 +43,6 @@ structure RealSplitKreinUnboundedCycle
   grade_preserves_domain : ∀ ⦃x : H⦄, x ∈ domain → KreinGradedModule.gradeCLM (H := H) x ∈ domain
   π_preserves_domain : ∀ a : A, ∀ ⦃x : H⦄, x ∈ domain → (π a) x ∈ domain
   ρ_preserves_domain : ∀ b : B, ∀ ⦃x : H⦄, x ∈ domain → (ρ b) x ∈ domain
-  regular : Prop
   D_odd :
     ∀ x : {x // x ∈ domain},
       D ⟨KreinGradedModule.gradeCLM (H := H) x.1, grade_preserves_domain x.2⟩ =
@@ -65,6 +64,37 @@ variable [NormedRing A] [NormedRing B]
 variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H] [KreinGradedModule H]
+
+/--
+First-order regularity of the real split-Krein unbounded cycle.
+
+This predicate records the actual analytic content owned by the interface:
+dense closed domain, invariance under grading and both algebra actions,
+bounded commutator representatives, and compact resolvent.
+-/
+def Regular
+    (X : RealSplitKreinUnboundedCycle A B H) : Prop :=
+  Dense X.domain ∧
+    IsClosed
+      (Set.range fun x : {x // x ∈ X.domain} =>
+        ((x.1, X.D x) : H × H)) ∧
+    (∀ ⦃x : H⦄, x ∈ X.domain →
+      KreinGradedModule.gradeCLM (H := H) x ∈ X.domain) ∧
+    (∀ a : A, ∀ ⦃x : H⦄, x ∈ X.domain → (X.π a) x ∈ X.domain) ∧
+    (∀ b : B, ∀ ⦃x : H⦄, x ∈ X.domain → (X.ρ b) x ∈ X.domain) ∧
+    (∀ a : A, ∀ x : {x // x ∈ X.domain},
+      X.commutator a x.1 =
+        X.D ⟨(X.π a) x.1, X.π_preserves_domain a x.2⟩ -
+          (X.π a) (X.D x)) ∧
+    IsCompactEnd H X.resolventData.resolvent
+
+/-- Every cycle satisfies its native first-order regularity predicate. -/
+theorem regular
+    (X : RealSplitKreinUnboundedCycle A B H) :
+    X.Regular :=
+  ⟨X.dense_domain, X.closed_graph, X.grade_preserves_domain,
+    X.π_preserves_domain, X.ρ_preserves_domain, X.commutator_formula,
+    X.resolventData.compact⟩
 
 /-- The internal square-minus-one axis carried by the primitive split atom. -/
 noncomputable def K

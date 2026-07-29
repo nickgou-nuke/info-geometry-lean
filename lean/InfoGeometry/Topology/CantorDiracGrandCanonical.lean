@@ -79,7 +79,7 @@ abbrev State (B : CantorGrandCanonicalPacket) := CantorState B.cutoff
 @[rep_depth thermo]
 def params (B : CantorGrandCanonicalPacket) :
     InfoGeometry.GrandCanonical.GrandCanonicalTwoParam (State B) where
-  energy := fun w => B.scale.eigenvalue B.cutoff * occupancy w
+  energy := fun w => B.scale B.cutoff * occupancy w
   number := occupancy
 
 /-- Canonical `β, μ` partition function. -/
@@ -150,7 +150,7 @@ def spinodal2D (B : CantorGrandCanonicalPacket) (β μ : ℝ) : Prop :=
 
 @[simp, rep_depth thermo]
 theorem params_energy (B : CantorGrandCanonicalPacket) (w : State B) :
-    (params B).energy w = B.scale.eigenvalue B.cutoff * occupancy w := by
+    (params B).energy w = B.scale B.cutoff * occupancy w := by
   rfl
 
 @[simp, rep_depth thermo]

@@ -191,19 +191,66 @@ theorem infinitesimalGenerator_eq_modularCommutatorGenerator (q : Cl11) :
 -/
 
 /--
-A data packet inspired by the thermal time hypothesis.  It records a supplied
-state type, modular-flow action, and KMS predicate; it does not prove the
-Connes--Rovelli hypothesis or any zeta-zero statement.
+A bounded algebraic thermal-time packet.
+
+The modular group acts by ring equivalences on observables, and the state
+functional satisfies the explicit KMS boundary identity at inverse
+temperature `beta`. Analytic continuation through a KMS strip is deliberately
+not claimed by this finite algebraic interface.
 -/
 structure ThermalTimeHypothesis where
   /-- Inverse temperature -/
   beta : ℝ
-  /-- Thermal state -/
-  thermalState : Type
-  /-- Modular flow from state -/
-  modularGroup : ThermalTime → thermalState → thermalState
-  /-- KMS condition satisfaction -/
-  isKMS : Prop
+  /-- Observable ring. -/
+  Observable : Type
+  [observableRing : Ring Observable]
+  /-- Thermal state functional. -/
+  thermalState : Observable → ℂ
+  /-- Modular automorphism group. -/
+  modularGroup : ThermalTime → Observable ≃+* Observable
+  /-- Identity at zero thermal time. -/
+  modularGroup_zero :
+    modularGroup 0 = RingEquiv.refl Observable
+  /-- Additive one-parameter group law. -/
+  modularGroup_add :
+    ∀ s t : ThermalTime,
+      modularGroup (s + t) = (modularGroup t).trans (modularGroup s)
+  /-- Algebraic KMS boundary relation at inverse temperature `beta`. -/
+  kms_boundary :
+    ∀ A B : Observable,
+      thermalState (A * modularGroup beta B) = thermalState (B * A)
+
+attribute [instance] ThermalTimeHypothesis.observableRing
+
+namespace ThermalTimeHypothesis
+
+variable (T : ThermalTimeHypothesis)
+
+/-- The owned KMS condition is the explicit boundary relation on observables. -/
+def IsKMS : Prop :=
+  ∀ A B : T.Observable,
+    T.thermalState (A * T.modularGroup T.beta B) =
+      T.thermalState (B * A)
+
+/-- The supplied thermal state satisfies the algebraic KMS boundary law. -/
+theorem isKMS :
+    T.IsKMS :=
+  T.kms_boundary
+
+@[simp]
+theorem modularGroup_zero_apply (A : T.Observable) :
+    T.modularGroup 0 A = A := by
+  rw [T.modularGroup_zero]
+  rfl
+
+theorem modularGroup_add_apply
+    (s t : ThermalTime) (A : T.Observable) :
+    T.modularGroup (s + t) A =
+      T.modularGroup s (T.modularGroup t A) := by
+  rw [T.modularGroup_add]
+  rfl
+
+end ThermalTimeHypothesis
 
 /--
 A single Dirichlet-style term for a natural number index.  No Euler product,

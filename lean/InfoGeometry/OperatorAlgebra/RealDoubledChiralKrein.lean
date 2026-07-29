@@ -569,8 +569,8 @@ structure MobiusHeatInverseZetaWitness
     (Readout ZetaReadout : Type*) where
   /-- Analytic spectral parameter. -/
   s : ℝ
-  /-- Domain/convergence condition, e.g. `1 < s`. -/
-  admissible : Prop
+  /-- Standard real absolute-convergence domain for the Möbius Dirichlet lane. -/
+  admissible : 1 < s
   /-- Positive-decay Möbius heat/supertrace readout. -/
   mobiusHeatReadout : Readout
   /-- Reciprocal-zeta readout. -/

@@ -63,7 +63,9 @@ theorem killing_form_ad_invariant (A B C : su n) :
 
 
 
-/-- Trace form is ad-invariant: Tr([A,B]C) = Tr(A[B,C]) by cyclic property of trace -/
-theorem gellmann_killing_form_ad_invariant : True := by trivial
+/-- The concrete `su (Fin 3)` instance is the generic proved theorem above. -/
+theorem gellmann_killing_form_ad_invariant (A B C : su (Fin 3)) :
+    KillingForm ⁅A, B⁆ C + KillingForm B ⁅A, C⁆ = 0 := by
+  exact killing_form_ad_invariant A B C
 
 end InfoGeometry.Algebra.KillingFormSU

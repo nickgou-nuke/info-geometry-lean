@@ -123,7 +123,7 @@ theorem finite_vandermonde_nonzero_iff_injective
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
-    W.determinant ≠ 0 ↔ Function.Injective W.nodes :=
+    W.determinant ≠ 0 ↔ Function.Injective W :=
   W.determinant_ne_zero_iff_injective
 
 /-- Finite node collision is exactly the zero locus of the Vandermonde determinant. -/
@@ -131,7 +131,7 @@ theorem finite_vandermonde_zero_iff_collision
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
-    W.determinant = 0 ↔ ∃ i j : Fin n, W.nodes i = W.nodes j ∧ i ≠ j :=
+    W.determinant = 0 ↔ ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
   W.determinant_eq_zero_iff_collision
 
 /-- A small closed readback saying that this module is grounded in repo theorem

@@ -172,18 +172,17 @@ variable
 
 variable (R : StateResidueReadout I N ω W F)
 
-/-- Proof-carrying nonzero residue witness for a state-readout region. -/
-structure BoundaryIntegralNonzeroWitness
-    (x : State) where
-  boundaryIntegral_ne_zero :
-    I.boundaryIntegral (R.stateRegion x) ω ≠ 0
+/-- Nonzero residue proposition for a state-readout region. -/
+abbrev BoundaryIntegralNonzeroWitness
+    (x : State) : Prop :=
+  I.boundaryIntegral (R.stateRegion x) ω ≠ 0
 
 /-- Recover the nonzero residue hypothesis from the witness packet. -/
 theorem boundaryIntegral_ne_zero_of_witness
     {x : State}
     (Wz : R.BoundaryIntegralNonzeroWitness x) :
     I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
-  Wz.boundaryIntegral_ne_zero
+  Wz
 
 /-- Nonzero analytic residue obstructs relaxation into the flat sector. -/
 theorem nonzero_boundaryIntegral_cannot_flow_to_flat

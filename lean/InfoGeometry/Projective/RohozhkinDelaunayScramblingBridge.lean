@@ -54,37 +54,40 @@ theorem rohozhkinTotalPointCount_eq_moving_add_three (moving : ℕ) :
 
 /-! ## Pure-braid descent readback -/
 
-/--
-Projective-side packet for a completed Rohozhkin/Delaunay representation.
-
-The field `delaunay` is the only source of a pure-braid representation.  It is
-already assumption-indexed by a concrete generator assignment and a proof that
-all presented pure-braid relators evaluate to `1`.
+/-!
+The projective-side packet is the completed Rohozhkin/Delaunay representation
+itself. The generator assignment and relator proof are already owned by
+`RohozhkinDelaunayBraidingSpec`.
 -/
-structure RohozhkinProjectiveBraidPacket (moving : ℕ) where
-  delaunay : RohozhkinDelaunayBraidingSpec moving
+abbrev RohozhkinProjectiveBraidPacket (moving : ℕ) :=
+  RohozhkinDelaunayBraidingSpec moving
+
+def rohozhkinProjectiveBraidPacketGen {moving : ℕ}
+    (P : RohozhkinProjectiveBraidPacket moving) :
+    PureBraidGenerator (rohozhkinTotalPoints moving) → RohozhkinMatrixUnits moving :=
+  InfoGeometry.Topology.RohozhkinRepresentation.RohozhkinDelaunayBraidingSpec.gen
+    (show RohozhkinDelaunayBraidingSpec moving from P)
 
 /-- The descended pure-braid matrix representation supplied by the topology owner. -/
 noncomputable def RohozhkinProjectiveBraidPacket.representation {moving : ℕ}
     (P : RohozhkinProjectiveBraidPacket moving) :
     RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving :=
-  P.delaunay.representation
+  InfoGeometry.Topology.RohozhkinRepresentation.RohozhkinDelaunayBraidingSpec.representation P
 
 /-- Generator readout for the descended Rohozhkin representation. -/
 @[simp]
 theorem RohozhkinProjectiveBraidPacket.representation_of {moving : ℕ}
     (P : RohozhkinProjectiveBraidPacket moving)
     (g : PureBraidGenerator (rohozhkinTotalPoints moving)) :
-    P.representation (of g) = P.delaunay.gen g := by
-  change P.delaunay.representation (of g) = P.delaunay.gen g
-  exact P.delaunay.representation_of g
+    P.representation (of g) = P.gen g := by
+  exact InfoGeometry.Topology.RohozhkinRepresentation.RohozhkinDelaunayBraidingSpec.representation_of P g
 
 /-- Existence packet for the descended representation. -/
 theorem rohozhkin_projective_braid_descent_packet {moving : ℕ}
     (P : RohozhkinProjectiveBraidPacket moving) :
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
-      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = P.delaunay.gen g :=
-  P.delaunay.descent_packet
+      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = P.gen g :=
+  InfoGeometry.Topology.RohozhkinRepresentation.RohozhkinDelaunayBraidingSpec.descent_packet P
 
 /-! ## Horizon-flow interface -/
 

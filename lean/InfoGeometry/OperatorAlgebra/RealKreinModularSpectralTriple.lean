@@ -31,12 +31,29 @@ abbrev RealEnd
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] :=
   H →L[ℝ] H
 
-/-- Abstract Krein pairing socket. -/
+/-- A genuine symmetric nondegenerate real Krein bilinear form. -/
 structure KreinPairing
-    (H : Type*) where
-  pair : H → H → ℝ
-  symmetric : Prop
-  nondegenerate : Prop
+    (H : Type*) [AddCommMonoid H] [Module ℝ H] where
+  pair : LinearMap.BilinForm ℝ H
+  symmetric : pair.IsSymm
+  nondegenerate : pair.Nondegenerate
+
+namespace KreinPairing
+
+variable {H : Type*} [AddCommMonoid H] [Module ℝ H]
+variable (K : KreinPairing H)
+
+/-- The Krein bilinear form is symmetric. -/
+theorem pair_comm (u v : H) :
+    K.pair u v = K.pair v u :=
+  K.symmetric.eq u v
+
+/-- The Krein bilinear form has trivial radical. -/
+theorem pair_nondegenerate :
+    K.pair.Nondegenerate :=
+  K.nondegenerate
+
+end KreinPairing
 
 /--
 The phase axis reconstructed from full/gapped modular sign-CPT data.

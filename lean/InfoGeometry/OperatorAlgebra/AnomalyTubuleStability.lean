@@ -28,18 +28,25 @@ the readout of the variation:
 
 `A_delta x = tau (delta x)`.
 -/
-structure AnomalyReadout
-    (Op : Type*) [Ring Op] where
-  /-- Symmetry variation or infinitesimal transformation. -/
-  symmetryVariation : Op → Op
+abbrev AnomalyReadout
+    (Op : Type*) [Ring Op] : Type _ :=
+  Σ' symmetryVariation : Op → Op,
+    Σ' readout : Op → ℝ,
+      ∃ x : Op,
+        readout (symmetryVariation x) ≠ readout (symmetryVariation 0)
 
-  /-- Regularized trace, index, residue, weight, determinant variation, etc. -/
-  readout : Op → ℝ
+namespace AnomalyReadout
 
-  /-- The readout has a nonzero anomaly in the intended model. -/
-  nonvanishing :
+abbrev symmetryVariation {Op : Type*} [Ring Op]
+    (A : AnomalyReadout Op) : Op → Op := A.1
+abbrev readout {Op : Type*} [Ring Op]
+    (A : AnomalyReadout Op) : Op → ℝ := A.2.1
+abbrev nonvanishing {Op : Type*} [Ring Op]
+    (A : AnomalyReadout Op) :
     ∃ x : Op,
-      readout (symmetryVariation x) ≠ readout (symmetryVariation 0)
+      A.readout (A.symmetryVariation x) ≠ A.readout (A.symmetryVariation 0) := A.2.2
+
+end AnomalyReadout
 
 namespace AnomalyReadout
 
@@ -199,39 +206,40 @@ Free-to-interacting DIII invariant bridge.
 The local `Z2^4` Clifford hypercube labels Cartan sectors.  The interacting
 DIII stacking invariant is cyclic and is represented here by `ZMod 16`.
 -/
-structure DIIIInteractionInvariant where
-  /-- Free-fermion winding/integer index. -/
-  nuFree : ℤ
+abbrev DIIIInteractionInvariant : Type :=
+  Σ' nuFree : ℤ,
+    Σ' nuInteracting : ZMod 16,
+      nuInteracting = (nuFree : ZMod 16)
 
-  /-- Interacting cyclic reduction. -/
-  nuInteracting : ZMod 16
+namespace DIIIInteractionInvariant
 
-  /-- Reduction law from the free integer invariant to the cyclic class. -/
-  reduction_law :
-    nuInteracting = (nuFree : ZMod 16)
+abbrev nuFree (D : DIIIInteractionInvariant) : ℤ := D.1
+abbrev nuInteracting (D : DIIIInteractionInvariant) : ZMod 16 := D.2.1
+abbrev reduction_law (D : DIIIInteractionInvariant) :
+    D.nuInteracting = (D.nuFree : ZMod 16) := D.2.2
+
+end DIIIInteractionInvariant
 
 /--
 Bridge from four local Clifford bits to a cyclic DIII interacting readout.
 
 This is intentionally proof-carrying: it does not identify `Z2^4` with `Z16`.
 -/
-structure CliffordToDIIIInteractionBridge where
-  /-- Local Cartan/Clifford sector label. -/
-  localSector :
-    InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.Z2FourCharge
-
-  /-- Global cyclic interacting invariant. -/
-  globalInvariant : DIIIInteractionInvariant
-
-  /-- Model-dependent calibration from local four-bit sectors to `ZMod 16`. -/
-  calibration :
-    InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.DIIIInteractionCalibration
-
-  /-- The calibrated local sector is the supplied interacting DIII index. -/
-  compatibility :
-    calibration.encode localSector = globalInvariant.nuInteracting
+abbrev CliffordToDIIIInteractionBridge : Type :=
+  Σ' localSector :
+      InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.Z2FourCharge,
+    Σ' globalInvariant : DIIIInteractionInvariant,
+      Σ' calibration :
+          InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n.DIIIInteractionCalibration,
+        calibration.encode localSector = globalInvariant.nuInteracting
 
 namespace CliffordToDIIIInteractionBridge
+
+abbrev localSector (B : CliffordToDIIIInteractionBridge) := B.1
+abbrev globalInvariant (B : CliffordToDIIIInteractionBridge) := B.2.1
+abbrev calibration (B : CliffordToDIIIInteractionBridge) := B.2.2.1
+abbrev compatibility (B : CliffordToDIIIInteractionBridge) :
+    B.calibration.encode B.localSector = B.globalInvariant.nuInteracting := B.2.2.2
 
 variable (B : CliffordToDIIIInteractionBridge)
 
@@ -261,7 +269,7 @@ stable global object only after a nonzero anomaly/topological readout proves
 that it cannot be removed by local gauge choices.
 -/
 structure TubuleStability
-    (Op : Type*) [Ring Op] where
+    (Op Sector : Type*) [Ring Op] where
   /-- Local defect locus: Drazin nil branch, isotropic cone shadow, tear, etc. -/
   defect : Set Op
 
@@ -271,14 +279,11 @@ structure TubuleStability
   /-- Anomaly/global obstruction readout. -/
   anomaly : AnomalyReadout Op
 
-  /-- Model-specific topological sector type. -/
-  topologicalSector : Type*
-
   /-- Sector readout for configurations/operators. -/
-  sectorReadout : Op → topologicalSector
+  sectorReadout : Op → Sector
 
   /-- Chosen nontrivial sector predicate. -/
-  isNontrivialSector : topologicalSector → Prop
+  isNontrivialSector : Sector → Prop
 
   /--
   Nonzero anomaly/topological readout rules out a trivial sector for the
@@ -291,8 +296,8 @@ structure TubuleStability
 
 namespace TubuleStability
 
-variable {Op : Type*} [Ring Op]
-variable (T : TubuleStability Op)
+variable {Op Sector : Type*} [Ring Op]
+variable (T : TubuleStability Op Sector)
 
 /-- A configuration lies in a nontrivial topological sector. -/
 def InNontrivialSector

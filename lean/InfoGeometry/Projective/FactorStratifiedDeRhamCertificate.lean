@@ -79,8 +79,13 @@ theorem complementCountPoly_at_seven :
   norm_num [complementCountPoly]
 
 structure BernsteinPolynomial where
-  raw : String
-  factorized : String
+  raw : ℤ[X]
+  factorized : ℤ[X]
+
+inductive AuditStatus where
+  | ok
+  | timeout
+  deriving DecidableEq, Repr
 
 structure FactorStratifiedAudit where
   ambientDim : ℕ
@@ -91,10 +96,10 @@ structure FactorStratifiedAudit where
   qB : BernsteinPolynomial
   qAB : BernsteinPolynomial
   generalB : BernsteinPolynomial
-  fullProductStatus : String
-  degreeZeroStatus : String
-  fullDeRhamStatus : String
-  dlocalizeExtStatus : String
+  fullProductStatus : AuditStatus
+  degreeZeroStatus : AuditStatus
+  fullDeRhamStatus : AuditStatus
+  dlocalizeExtStatus : AuditStatus
 
 /-- Codimension readback from stored ambient/stratum dimensions. -/
 def pairCodim (audit : FactorStratifiedAudit) : ℕ :=
@@ -106,25 +111,25 @@ def tripleCodim (audit : FactorStratifiedAudit) : ℕ :=
 
 /-- The de Rham lane is closed only when every bounded probe succeeded. -/
 def DeRhamClosed (audit : FactorStratifiedAudit) : Prop :=
-  audit.fullProductStatus = "ok" ∧
-    audit.degreeZeroStatus = "ok" ∧
-    audit.fullDeRhamStatus = "ok" ∧
-    audit.dlocalizeExtStatus = "ok"
+  audit.fullProductStatus = AuditStatus.ok ∧
+    audit.degreeZeroStatus = AuditStatus.ok ∧
+    audit.fullDeRhamStatus = AuditStatus.ok ∧
+    audit.dlocalizeExtStatus = AuditStatus.ok
 
 /-- Observed factor-level Bernstein-Sato / Singular data from the bounded audit. -/
-def observedAudit : FactorStratifiedAudit where
+noncomputable def observedAudit : FactorStratifiedAudit where
   ambientDim := 8
   pairIntersectionDim := 6
   tripleIntersectionDim := 5
   singularLocusDim := 6
-  qA := { raw := "s^2+3*s+2", factorized := "(s+1)*(s+2)" }
-  qB := { raw := "s^2+3*s+2", factorized := "(s+1)*(s+2)" }
-  qAB := { raw := "s^2+3*s+2", factorized := "(s+1)*(s+2)" }
-  generalB := { raw := "s^3+10*s^2+33*s+36", factorized := "(s+3)^2*(s+4)" }
-  fullProductStatus := "timeout"
-  degreeZeroStatus := "timeout"
-  fullDeRhamStatus := "timeout"
-  dlocalizeExtStatus := "timeout"
+  qA := { raw := factorBernsteinPoly, factorized := (X + 1) * (X + 2) }
+  qB := { raw := factorBernsteinPoly, factorized := (X + 1) * (X + 2) }
+  qAB := { raw := factorBernsteinPoly, factorized := (X + 1) * (X + 2) }
+  generalB := { raw := generalBernsteinPoly, factorized := (X + 3) ^ 2 * (X + 4) }
+  fullProductStatus := AuditStatus.timeout
+  degreeZeroStatus := AuditStatus.timeout
+  fullDeRhamStatus := AuditStatus.timeout
+  dlocalizeExtStatus := AuditStatus.timeout
 
 theorem observedAudit_pairCodim :
     pairCodim observedAudit = 2 := by
@@ -138,11 +143,11 @@ theorem observedAudit_singularLocusCodim :
     observedAudit.ambientDim - observedAudit.singularLocusDim = 2 := by
   rfl
 
-theorem observedAudit_factorStrings :
-    observedAudit.qA.factorized = "(s+1)*(s+2)" ∧
-    observedAudit.qB.factorized = "(s+1)*(s+2)" ∧
-    observedAudit.qAB.factorized = "(s+1)*(s+2)" ∧
-    observedAudit.generalB.factorized = "(s+3)^2*(s+4)" := by
+theorem observedAudit_factorizations :
+    observedAudit.qA.factorized = (X + 1) * (X + 2) ∧
+    observedAudit.qB.factorized = (X + 1) * (X + 2) ∧
+    observedAudit.qAB.factorized = (X + 1) * (X + 2) ∧
+    observedAudit.generalB.factorized = (X + 3) ^ 2 * (X + 4) := by
   simp [observedAudit]
 
 theorem observedAudit_not_closed :
@@ -150,19 +155,19 @@ theorem observedAudit_not_closed :
   simp [DeRhamClosed, observedAudit]
 
 theorem observedAudit_fullProduct_timeout :
-    observedAudit.fullProductStatus = "timeout" := by
+    observedAudit.fullProductStatus = AuditStatus.timeout := by
   rfl
 
 theorem observedAudit_degreeZero_timeout :
-    observedAudit.degreeZeroStatus = "timeout" := by
+    observedAudit.degreeZeroStatus = AuditStatus.timeout := by
   rfl
 
 theorem observedAudit_fullDeRham_timeout :
-    observedAudit.fullDeRhamStatus = "timeout" := by
+    observedAudit.fullDeRhamStatus = AuditStatus.timeout := by
   rfl
 
 theorem observedAudit_dlocalizeExt_timeout :
-    observedAudit.dlocalizeExtStatus = "timeout" := by
+    observedAudit.dlocalizeExtStatus = AuditStatus.timeout := by
   rfl
 
 /-- The current external audit can coexist with the existing rank-8 local fixture,

@@ -76,10 +76,18 @@ theorem norm_nilpotent_exp (T : ℝ) :
   exact norm_parabolicFlow T
 
 /--
-Debt marker only: the three coordinate norm computations above are not a proof
-of an exhaustive subgroup classification or a global causal/conformal theorem.
+The three coordinate norm computations above are not a proof of an exhaustive
+subgroup classification or a global causal/conformal theorem.
 -/
-def split_quaternion_subgroup_classification_debt : String :=
-  "Open: classify split-quaternion one-parameter subgroups beyond the three norm-one coordinate flows."
+/-
+The three coordinate curves are proven norm-one flows.  Their exhaustive
+classification is intentionally not asserted here: it requires a separate
+Lie-group owner and is not implied by the coordinate identities above.
+-/
+theorem split_quaternion_coordinate_flows_are_norm_one :
+    (∀ θ : ℝ, norm (ellipticFlow θ) = 1) ∧
+    (∀ η : ℝ, norm (hyperbolicFlow η) = 1) ∧
+    (∀ T : ℝ, norm (parabolicFlow T) = 1) := by
+  exact ⟨norm_ellipticFlow, norm_hyperbolicFlow, norm_parabolicFlow⟩
 
 end InfoGeometry.Clifford.SplitQuaternionFlowCoordinates

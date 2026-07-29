@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
+import InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 import InfoGeometry.Arithmetic.PrimeDistributionLaw
 
 /-!
@@ -26,16 +27,19 @@ namespace InfoGeometry.Arithmetic.ZetaPrimeFluctuationBridge
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
+open InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
 open InfoGeometry.Arithmetic.PrimeDistributionLaw
 
 /-! ## Centered zero states and normal leakage -/
 
-/-- A finite/scalar readout for a zeta zero in the centered chart. -/
+/-- A zero of a concrete complex function, expressed in the centered zeta chart. -/
 structure CenteredZeroReadout where
   /-- Centered coordinate of the zero, `u = σ - 1/2`, `v = γ`. -/
   coord : ZetaCenteredChart
-  /-- Predicate asserting that this readout is an actual zero in the chosen model. -/
-  isZero : Prop
+  /-- The concrete function whose zero is being read out. -/
+  zeroFunction : ℂ → ℂ
+  /-- Native pointwise zero law at the affine point represented by `coord`. -/
+  isZero : ZeroAt zeroFunction (fromCentered coord).toComplex
 
 namespace CenteredZeroReadout
 

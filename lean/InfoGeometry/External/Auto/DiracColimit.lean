@@ -1,11 +1,23 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 import Mathlib.Analysis.CStarAlgebra.Spectrum
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.DiracColimit
 
 open Complex
+
+private theorem selfAdjoint_spectrum_im_eq_zero
+    {H : Type*}
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (D : H →L[ℂ] H)
+    (hD : IsSelfAdjoint D)
+    (z : ℂ)
+    (hz : z ∈ spectrum ℂ D) :
+    z.im = 0 :=
+  hD.im_eq_zero_of_mem_spectrum hz
 
 /--
 Abstract inductive tower of finite-dimensional stages and Dirac operators.
@@ -87,7 +99,8 @@ theorem dirac_colimit_spectrum_is_real
     (z : ℂ)
     (hz : z ∈ spectrum ℂ L.Dlim) :
     z.im = 0 := by
-  exact (dirac_colimit_selfAdjoint S L).im_eq_zero_of_mem_spectrum hz
+  have hSelf : IsSelfAdjoint L.Dlim := dirac_colimit_selfAdjoint S L
+  exact selfAdjoint_spectrum_im_eq_zero L.Dlim hSelf z hz
 
 /--
 A compact transport package used by other layers:

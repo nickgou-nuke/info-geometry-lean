@@ -192,8 +192,8 @@ This is an interface theorem, not a construction of the interior tensor product.
 -/
 theorem kasparov_product_cycle_readback
     (D : KasparovProductData A B C H₁ H₂ P X Y) :
-    ∃ Z : KasparovCycle A C P, Z = D.out :=
-  ⟨D.out, rfl⟩
+    ∃ Z : KasparovCycle A C P, Z = D :=
+  ⟨D, rfl⟩
 
 end KasparovProduct
 

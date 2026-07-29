@@ -19,6 +19,7 @@ import InfoGeometry.Quantum.InvolutionCore
 import InfoGeometry.Quantum.CommutingInvolutionCore
 import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.KitaevChain
+import InfoGeometry.Quantum.KitaevPauliBraiding
 import InfoGeometry.Quantum.Monodromy
 import InfoGeometry.Quantum.ModularAnomaly
 import InfoGeometry.Quantum.ParitySupercharge

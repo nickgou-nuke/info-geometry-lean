@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.Grothendieck
+import InfoGeometry.Algebra.Grothendieck
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
 import DAG.AffineProjectiveClosure
@@ -39,7 +40,17 @@ theorem finite_motive_inputs {n : ℕ}
   · exact liouville_sq p
   · exact exponentialRemainder_zero K
 
-def grothendieck_motive_debt : String :=
-  "Open: prove any motivic/Lefschetz/Weil statement only from explicit cohomology, operator, and trace hypotheses."
+/-!
+The arithmetic motive layer uses the actual additive Grothendieck completion,
+not a string-valued certificate.  The universal property below is the native
+owner-level statement available without adding unsupported cohomological or
+Weil hypotheses.
+-/
+theorem grothendieck_motive_completion_unique
+    {M A : Type*} [AddCommMonoid M] [AddCommGroup A]
+    (f : M →+ A) (g : Grothendieck M →+ A)
+    (h_comp : ∀ m, g (grothendieckMap M m) = f m) (x : Grothendieck M) :
+    g x = grothendieckLift f x :=
+  grothendieckLift_unique f g h_comp x
 
 end InfoGeometry.Arithmetic.GrothendieckMotive

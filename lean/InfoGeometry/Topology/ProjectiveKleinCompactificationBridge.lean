@@ -6,14 +6,9 @@ import InfoGeometry.Canonical.MobiusHyperbolicCompactification
 /-!
 # Projective Klein compactification bridge
 
-This is the theorem-safe bridge between three already-existing owner layers:
-
-* the explicit Klein glide-reflection identity on `2 × 2` matrices;
-* the `±I`-insensitive `SL(2, ℝ)` descent contract;
-* the compactified Möbius inversion on the two-sheet hyperbolic chart.
-
-It does not claim a new global classification of projective/Klein spaces.
-It packages the exact algebraic facts already proved in the owners above.
+Direct theorem composition between the exact rational Klein model, central-sign
+invariance of the modular action, and compactified Möbius inversion.  No packet
+stores these already-proved propositions.
 -/
 
 noncomputable section
@@ -24,66 +19,93 @@ open InfoGeometry.Topology.ProjectiveKleinCompactification
 open InfoGeometry.Canonical.PSLDescent
 open InfoGeometry.Canonical.MobiusHyperbolicCompactification
 
-/-- The projective Klein refocusing packet. -/
-structure ProjectiveKleinRefocusingPacket where
-  projective_sign_trivial :
-    ProjectivelyEqual I2 minusI2
-  glide_reflection_identity :
-    twistA * parabolicB * twistA * parabolicB = I2
-  mobius_refocus :
-    ∀ t : ℚ, mobiusS.mulVec ![t, 1] = ![-1, t]
-  sign_kernel_trivial :
-    PSLDescentContract
-  mobius_involutive :
-    Function.Involutive mobiusInv
-  two_sheet_swap :
-    ∀ x : HyperChart, twoSheet (mobiusInv x) = Prod.swap (twoSheet x)
+/-- Owner-backed projective Klein laws without an evidence packet. -/
+abbrev ProjectiveKleinRefocusingPacket : Prop :=
+  ProjectivelyEqual I2 minusI2 ∧
+    twistA * parabolicB * twistA * parabolicB = I2 ∧
+    (∀ t : ℚ, mobiusS.mulVec ![t, 1] = ![-1, t]) ∧
+    PSLDescentContract ∧
+    Function.Involutive mobiusInv ∧
+    (∀ x : HyperChart, twoSheet (mobiusInv x) = Prod.swap (twoSheet x))
 
-/-- The packet is witnessed directly by the existing owner theorems. -/
-theorem projectiveKleinRefocusingPacket : ProjectiveKleinRefocusingPacket := by
-  refine
-    { projective_sign_trivial := projective_identifies_central_sign
-      , glide_reflection_identity := klein_bottle_relation
-      , mobius_refocus := mobius_refocus_vector
-      , sign_kernel_trivial := pslDescentContract
-      , mobius_involutive := mobiusInv_involutive
-      , two_sheet_swap := ?_ }
-  intro x
-  exact twoSheet_mobius_swap x
+namespace ProjectiveKleinRefocusingPacket
 
-/-- Readout theorem for the projective Klein compactification bridge. -/
+theorem projective_sign_trivial (h : ProjectiveKleinRefocusingPacket) :
+    ProjectivelyEqual I2 minusI2 :=
+  h.1
+
+theorem glide_reflection_identity (h : ProjectiveKleinRefocusingPacket) :
+    twistA * parabolicB * twistA * parabolicB = I2 :=
+  h.2.1
+
+theorem mobius_refocus (h : ProjectiveKleinRefocusingPacket) :
+    ∀ t : ℚ, mobiusS.mulVec ![t, 1] = ![-1, t] :=
+  h.2.2.1
+
+theorem sign_kernel_trivial (h : ProjectiveKleinRefocusingPacket) :
+    PSLDescentContract :=
+  h.2.2.2.1
+
+theorem mobius_involutive (h : ProjectiveKleinRefocusingPacket) :
+    Function.Involutive mobiusInv :=
+  h.2.2.2.2.1
+
+theorem two_sheet_swap (h : ProjectiveKleinRefocusingPacket) :
+    ∀ x : HyperChart, twoSheet (mobiusInv x) = Prod.swap (twoSheet x) :=
+  h.2.2.2.2.2
+
+end ProjectiveKleinRefocusingPacket
+
+/-- Canonical packet assembled from the native Klein, PSL, and Möbius owners. -/
+theorem projectiveKleinRefocusingPacket : ProjectiveKleinRefocusingPacket :=
+  ⟨projective_identifies_central_sign,
+   klein_bottle_relation,
+   mobius_refocus_vector,
+   pslDescentContract,
+   mobiusInv_involutive,
+   twoSheet_mobius_swap⟩
+
+/-- Compatibility readout of the complete owner-backed packet. -/
 theorem projectiveKlein_refocusing_readout :
     ProjectiveKleinRefocusingPacket :=
   projectiveKleinRefocusingPacket
 
-/-- The projective Klein packet exposes the Möbius involution directly. -/
+/-- Möbius inversion on the compact hyperbolic chart is involutive. -/
 theorem projectiveKlein_mobius_involutive :
     Function.Involutive mobiusInv :=
-  (projectiveKleinRefocusingPacket).mobius_involutive
+  projectiveKleinRefocusingPacket.mobius_involutive
 
-/-- The projective Klein packet exposes the two-sheet swap law directly. -/
+/-- Möbius inversion exchanges the two compactified sheets. -/
 theorem projectiveKlein_two_sheet_swap (x : HyperChart) :
     twoSheet (mobiusInv x) = Prod.swap (twoSheet x) :=
-  (projectiveKleinRefocusingPacket).two_sheet_swap x
+  projectiveKleinRefocusingPacket.two_sheet_swap x
 
-/-- The projective Klein packet exposes the sign-triviality witness directly. -/
+/-- The projective rational chart identifies the two central signs. -/
 theorem projectiveKlein_projective_sign_trivial :
     ProjectivelyEqual I2 minusI2 :=
-  (projectiveKleinRefocusingPacket).projective_sign_trivial
+  projectiveKleinRefocusingPacket.projective_sign_trivial
 
-/-- The projective Klein packet exposes the Klein-bottle glide identity directly. -/
+/-- Exact Klein-bottle glide-reflection identity. -/
 theorem projectiveKlein_glide_reflection_identity :
     twistA * parabolicB * twistA * parabolicB = I2 :=
-  (projectiveKleinRefocusingPacket).glide_reflection_identity
+  projectiveKleinRefocusingPacket.glide_reflection_identity
 
-/-- The projective Klein packet exposes the explicit Möbius refocusing law directly. -/
+/-- Explicit Möbius refocusing law on rational affine vectors. -/
 theorem projectiveKlein_mobius_refocus (t : ℚ) :
     mobiusS.mulVec ![t, 1] = ![-1, t] :=
-  (projectiveKleinRefocusingPacket).mobius_refocus t
+  projectiveKleinRefocusingPacket.mobius_refocus t
 
-/-- The projective Klein packet exposes the quotient descent contract directly. -/
-theorem projectiveKlein_sign_kernel_trivial :
-    PSLDescentContract :=
-  (projectiveKleinRefocusingPacket).sign_kernel_trivial
+/-- Direct central-sign kernel triviality on the upper half-plane. -/
+theorem projectiveKlein_sign_kernel_trivial
+    (g : SL2R) (tau : UpperHalfPlane) :
+    (-g) • tau = g • tau :=
+  projectiveKleinRefocusingPacket.sign_kernel_trivial.sl2r_kernel_trivial_on_base g tau
+
+/-- Finite refocusing and compactified sheet exchange hold simultaneously. -/
+theorem projectiveKlein_refocusing_and_sheet_swap
+    (t : ℚ) (x : HyperChart) :
+    mobiusS.mulVec ![t, 1] = ![-1, t] ∧
+      twoSheet (mobiusInv x) = Prod.swap (twoSheet x) :=
+  ⟨mobius_refocus_vector t, twoSheet_mobius_swap x⟩
 
 end InfoGeometry.Topology.ProjectiveKleinCompactificationBridge

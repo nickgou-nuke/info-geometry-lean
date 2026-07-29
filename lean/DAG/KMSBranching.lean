@@ -113,16 +113,17 @@ theorem cpt_emerges_from_varlamov_C
   ⟩
 
 /--
-Closure debt: the modular flow σ_t(A) = exp(t·ad_K)·A begins
-from the idempotent splitting at β = 1.
-
-The left and right sectors evolve independently:
-  σ_t^{left}(A)  = exp(t·K₊)·A·exp(-t·K₊)
-  σ_t^{right}(A) = exp(t·K₋)·A·exp(-t·K₋)
-
-where K₊ = e₊·K·e₊ and K₋ = e₋·K·e₋ are the projected Hamiltonians.
+The supported owner statement is the additive modular-flow law itself.  It is
+kept separate from the stronger, currently unowned assertion that the flow
+decomposes into independent `ePlus` and `eMinus` Hamiltonian sectors.
 -/
-def modular_flow_starts_from_idempotent_splitting_debt : String :=
-  "Open: prove the modular-flow decomposition from explicit idempotent and Hamiltonian hypotheses."
+theorem modular_flow_additive_owner
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (M : InfoGeometry.OperatorAlgebra.ModularSignCPT.DynamicModularCPTAlgebra H)
+    (s t : ℝ)
+    (T : InfoGeometry.OperatorAlgebra.ModularSignCPT.EndR H) :
+    M.modularFlow (s + t) T = M.modularFlow s (M.modularFlow t T) :=
+  InfoGeometry.OperatorAlgebra.ModularSignCPT.DynamicModularCPTAlgebra.modularFlow_add_apply
+    M s t T
 
 end DAG.KMSBranching

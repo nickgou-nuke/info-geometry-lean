@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 
 /-!
 # Exploring New Insights into the Riemann Hypothesis
@@ -323,10 +324,10 @@ def hilbertPolyaOperator : Prop :=
 
 /-- Summary of the paper's four theorems in a single record. -/
 structure RiemannHypothesisPaper where
-  theorem1_RH : Prop := riemannHypothesis
-  theorem2_PNT : Prop := primeNumberTheorem
-  theorem3_PrimeGaps : Prop := averagePrimeGapTheorem
-  theorem4_GUE : (ℕ → ℝ) → ℝ → Prop := gueZeroSpacingDistributionStatement
+  theorem1_RH : riemannHypothesis
+  theorem2_PNT : primeNumberTheorem
+  theorem3_PrimeGaps : averagePrimeGapTheorem
+  theorem4_GUE : (ℕ → ℝ) → ℝ → Prop
   numericalEvidence : String :=
     "First 10^13 zeros verified on critical line"
   wignerDysonFormula : ℝ → ℝ := wignerDysonPDF

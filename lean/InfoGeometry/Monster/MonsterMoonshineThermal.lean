@@ -1,6 +1,10 @@
-import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.NumberTheory.ArithmeticFunction.Defs
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 import Mathlib.NumberTheory.ModularForms.Basic
-import Mathlib.Data.Complex.Exponential
+import Mathlib.Analysis.Complex.Exponential
 
 /-!
 Finite Monster/Moonshine-inspired arithmetic readouts
@@ -24,46 +28,40 @@ def mersenne_exponents : List ℕ :=
 def mersenne_prime (p : ℕ) : ℕ :=
   2^p - 1
 
-/-- 
-A finite witness carrying standard Monster numerical constants.
+/-- The standard decimal value of the Monster group order. -/
+def monsterOrder : ℕ :=
+  808017424794512875886459904961710757005754368000000000
 
-The fields below are local readback witnesses for the constants used in this
-file; the structure is not a construction of the Monster group.
--/
-structure MonsterGroup where
-  order : ℕ := 808017424794512875886459904961710757005754368000000000
-  min_rep_dim : ℕ := 196883
-  conjugacy_classes : ℕ := 194
-  /-- Local witness for the minimal representation dimension used in this file. -/
-  is_simple : min_rep_dim = 196883
-  /-- Local witness for the sampled Monster class count used in this file. -/
-  is_sporadic : conjugacy_classes = 194
+/-- The smallest nontrivial irreducible representation dimension used here. -/
+def monsterMinimalRepresentationDimension : ℕ :=
+  196883
 
-/-- Canonical Monster witness used by this file. -/
-def monsterGroup : MonsterGroup where
-  is_simple := rfl
-  is_sporadic := rfl
+/-- The number of Monster conjugacy classes. -/
+def monsterConjugacyClassCount : ℕ :=
+  194
 
-/-- Monster witness has the local minimal representation dimension used here. -/
-theorem monsterGroup_is_simple : monsterGroup.min_rep_dim = 196883 :=
-  monsterGroup.is_simple
+/-- The stored minimal representation dimension has its displayed value. -/
+theorem monster_minimal_representation_dimension :
+    monsterMinimalRepresentationDimension = 196883 :=
+  rfl
 
-/-- Monster witness has the local sampled conjugacy-class count used here. -/
-theorem monsterGroup_is_sporadic : monsterGroup.conjugacy_classes = 194 :=
-  monsterGroup.is_sporadic
+/-- The stored conjugacy-class count has its displayed value. -/
+theorem monster_conjugacy_class_count :
+    monsterConjugacyClassCount = 194 :=
+  rfl
 
 /-- The stored order constant has the displayed prime-factor product. -/
 theorem monster_order_factorization :
-  monsterGroup.order =
+  monsterOrder =
     2^46 * 3^20 * 5^9 * 7^6 * 11^2 * 13^3 * 17 * 19 * 23 * 29 * 31 * 41 * 47 * 59 * 71 := by
-  rfl  -- By definition
+  native_decide
 
 /-- Sample Mersenne-prime values that divide the stored order constant. -/
 def mersenne_in_monster : List ℕ :=
   [3, 7, 31]  -- M₂, M₃, M₅
 
 theorem mersenne_divides_monster (M_p : ℕ) (h : M_p ∈ mersenne_in_monster) :
-  M_p ∣ monsterGroup.order := by
+  M_p ∣ monsterOrder := by
   simp [mersenne_in_monster] at h
   rcases h with rfl | rfl | rfl
   · native_decide
@@ -77,7 +75,6 @@ No modular-function or Moonshine theorem is asserted here.
 structure MoonshineModule where
   graded_dimension : ℤ → ℕ
   j_function_coeff : ℕ → ℕ
-  min_rep_dim : ℕ := 196883
 
 /-- First few j-function coefficients -/
 def j_coeff_1 : ℕ := 196884  -- = 1 + 196883
@@ -174,9 +171,9 @@ theorem sample_mersenne_values_divide_monster_order_constant :
   let M3 := mersenne_prime 3
   let M5 := mersenne_prime 5
   M2 = 3 ∧ M3 = 7 ∧ M5 = 31 ∧
-  M2 ∣ monsterGroup.order ∧
-  M3 ∣ monsterGroup.order ∧
-  M5 ∣ monsterGroup.order := by
+  M2 ∣ monsterOrder ∧
+  M3 ∣ monsterOrder ∧
+  M5 ∣ monsterOrder := by
   simp [mersenne_prime]
   native_decide
 

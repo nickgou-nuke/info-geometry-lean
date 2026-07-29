@@ -1,4 +1,8 @@
 import Mathlib.Tactic
+import Mathlib.Order.Filter.Tendsto
+import Mathlib.Topology.Basic
+import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Analysis.Normed.Group.Basic
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -93,24 +97,6 @@ def paraunitary (F : ParaunitaryCliffordFilterBank) : Prop :=
   (∀ i : F.index.Index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
   (∀ i : F.index.Index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
 
-/-- The concrete two-channel normalization law carried by a filter bank. -/
-@[rep_depth operator]
-def ParaunitaryCliffordFilterBank.normalizedBranches
-    (F : ParaunitaryCliffordFilterBank) : Prop :=
-  paraunitary F
-
-/-- Perfect reconstruction readout carried by the paraunitary law. -/
-@[rep_depth operator]
-def ParaunitaryCliffordFilterBank.perfectReconstruction
-    (F : ParaunitaryCliffordFilterBank) : Prop :=
-  paraunitary F
-
-/-- Energy preservation readout carried by the paraunitary law. -/
-@[rep_depth operator]
-def ParaunitaryCliffordFilterBank.energyPreservation
-    (F : ParaunitaryCliffordFilterBank) : Prop :=
-  paraunitary F
-
 /--
 Sum norm-square readout: for each index `i`, the low-pass and high-pass
 coefficient norm-squares add to 1.
@@ -125,7 +111,7 @@ def ParaunitaryCliffordFilterBank.sum_normSq_eq_one
 @[rep_depth operator]
 theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_normalizedBranches
     (F : ParaunitaryCliffordFilterBank)
-    (h : F.normalizedBranches) :
+    (h : paraunitary F) :
     F.sum_normSq_eq_one := by
   rcases h with ⟨hl, hh⟩
   intro i
@@ -136,29 +122,31 @@ theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_normalizedBranches
     _ = (1 : ℝ) := by ring
 
 @[rep_depth operator]
-theorem paraunitary_iff_normalizedBranches (F : ParaunitaryCliffordFilterBank) :
-    paraunitary F ↔ F.normalizedBranches :=
-  Iff.rfl
-
-@[rep_depth operator]
 theorem sum_normSq_eq_one_of_paraunitary (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=
   F.sum_normSq_eq_one_of_normalizedBranches h
 
+/-!
+The previous names were attached to tautologies returning the premise.  The
+current owner has no analysis/synthesis maps, so it cannot state perfect
+reconstruction.  Preserve the historical names as compatibility readouts of
+the strongest theorem actually owned here: pointwise normalized energy.
+-/
+
 @[rep_depth operator]
 theorem perfectReconstruction_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
-    F.perfectReconstruction :=
-  h
+    F.sum_normSq_eq_one :=
+  sum_normSq_eq_one_of_paraunitary F h
 
 @[rep_depth operator]
 theorem energyPreservation_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
-    F.energyPreservation :=
-  h
+    F.sum_normSq_eq_one :=
+  sum_normSq_eq_one_of_paraunitary F h
 
 /--
 Discrete cascade system attached to a paraunitary Clifford filter bank.
@@ -166,15 +154,56 @@ Discrete cascade system attached to a paraunitary Clifford filter bank.
 @[rep_depth operator]
 structure CliffordCascadeSystem
     (F : ParaunitaryCliffordFilterBank) where
-  Signal : Type
+  Signal : Type*
+  [signalNorm : NormedAddCommGroup Signal]
+  [signalComplete : CompleteSpace Signal]
   scalingApproximation : ℕ → Signal
   waveletDetail : ℕ → Signal
 
-  cascadeAlgorithm : Prop
-  regularityWitness : Prop
-  sumRuleWitness : Prop
-  cascadeConvergesL2 : Prop
-  compactUniformUpgrade : Prop
-  reconstructionExists : Prop
+  cascadeAlgorithm : paraunitary F
+  cascadeLimit : Signal
+  cascadeConverges : Filter.Tendsto scalingApproximation Filter.atTop (nhds cascadeLimit)
+  compactRange : IsCompact (Set.range scalingApproximation)
+  analysis : Signal → Signal
+  synthesis : Signal → Signal
+  reconstruction_leftInverse : Function.LeftInverse synthesis analysis
+
+namespace CliffordCascadeSystem
+
+variable {F : ParaunitaryCliffordFilterBank}
+
+/-- The paraunitary cascade supplies the pointwise sum rule. -/
+def sumRuleWitness (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
+  sum_normSq_eq_one_of_paraunitary F C.cascadeAlgorithm
+
+/-- Historical regularity name, now backed by the actual signal convergence law. -/
+def regularityWitness (C : CliffordCascadeSystem F) : Prop :=
+  letI := C.signalNorm
+  Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit)
+
+/-- Historical L² convergence name, represented by convergence in the owned
+complete normed signal carrier. -/
+def cascadeConvergesL2 (C : CliffordCascadeSystem F) : Prop :=
+  C.regularityWitness
+
+/-- Historical compact-uniform name, now backed by an actual compact range. -/
+def compactUniformUpgrade (C : CliffordCascadeSystem F) : Prop :=
+  letI := C.signalNorm
+  IsCompact (Set.range C.scalingApproximation)
+
+/-- Reconstruction exists because the owner carries a concrete synthesis map
+with a proved left-inverse law. -/
+def reconstructionExists (C : CliffordCascadeSystem F) : Prop :=
+  ∃ R : C.Signal → C.Signal, ∀ s, R (C.analysis s) = s
+
+theorem reconstruction_exists (C : CliffordCascadeSystem F) :
+    C.reconstructionExists := by
+  exact ⟨C.synthesis, C.reconstruction_leftInverse⟩
+
+theorem reconstructed_signal (C : CliffordCascadeSystem F) (s : C.Signal) :
+    C.synthesis (C.analysis s) = s :=
+  C.reconstruction_leftInverse s
+
+end CliffordCascadeSystem
 
 end InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet

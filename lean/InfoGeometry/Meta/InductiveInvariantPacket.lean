@@ -145,8 +145,23 @@ Named image-preservation packet for the central lane.
 This is deliberately weaker than global centrality in the target algebra: it only
 asserts centrality against elements that actually come from the source stage.
 -/
-structure PreservesClosureImage (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop where
-  image_central : ∀ X : A, φ I.C * φ X = φ X * φ I.C
+/-
+Image centrality is already a direct relation on the source image.  Keep it
+transparent instead of wrapping the same proposition in a one-field evidence
+structure.
+-/
+def PreservesClosureImage (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
+  ∀ X : A, φ I.C * φ X = φ X * φ I.C
+
+namespace PreservesClosureImage
+
+/-- Read image centrality under the historical field name. -/
+theorem image_central
+    (h : PreservesClosureImage I φ) (X : A) :
+    (φ I.C : B) * (φ X : B) = (φ X : B) * (φ I.C : B) :=
+  h X
+
+end PreservesClosureImage
 
 /--
 The finite closure relations transported to the image of a bonding map.
@@ -212,8 +227,8 @@ theorem map_image_central
 /-- Named image-preservation packet induced by a bonding map. -/
 theorem map_preserves_closure_image
     (I : SupergradedClosureAt A) (φ : StarRingHom A B) :
-    PreservesClosureImage I φ where
-  image_central := map_image_central I φ
+    PreservesClosureImage I φ := by
+  exact map_image_central I φ
 
 /--
 Finite Erlangen transport theorem: all local closure identities hold on the

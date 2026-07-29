@@ -55,22 +55,15 @@ theorem erlangen_light_cone_is_invariant
   B.o55_preserves_nullCone hv
 
 /--
-**Zeta/Fredholm statement socket.**
-
-The zeta/Fredholm/L-function text is only recorded as an explicit owner
-obligation string from `UnifiedCapstone`; no analytic or automorphic theorem is
-proved here.
+The arithmetic owner proves the Euler-product equality on `Re(β)>1`; the
+Fredholm, Dirichlet-series, and automorphic identifications remain separate.
 -/
-def langlands_lfunction_zeta_obligation (β : ℂ) (hRe : β.re > 1) : String :=
-  InfoGeometry.Arithmetic.UnifiedCapstone.master_identity_debt β hRe
+theorem langlands_lfunction_euler_product_eq_riemannZeta
+    {β : ℂ} (hRe : 1 < β.re) :
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
+      riemannZeta β :=
+  InfoGeometry.Arithmetic.UnifiedCapstone.master_euler_product_eq_riemannZeta hRe
 
-/--
-The ζ/Fredholm/L-function identity is intentionally routed to
-`UnifiedCapstone.master_identity_debt`; it is not closed in this file.
--/
-theorem langlands_lfunction_zeta_is_recorded_as_obligation (β : ℂ) (hRe : β.re > 1) :
-    langlands_lfunction_zeta_obligation β hRe =
-      InfoGeometry.Arithmetic.UnifiedCapstone.master_identity_debt β hRe := rfl
 
 /--
 **Finite anomaly/Dikin readout.**

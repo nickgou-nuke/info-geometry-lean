@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.CliffordWaveletTransform
+import InfoGeometry.Analysis.CliffordWaveletNativeL2
 import InfoGeometry.Analysis.CliffordWaveletUncertainty
 import InfoGeometry.Analysis.CliffordWaveletDonohoStark
 import InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
@@ -22,3 +23,4 @@ import InfoGeometry.Analysis.SouriauCocycle
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.Graph
 import InfoGeometry.Analysis.RankOneTrace
+import InfoGeometry.Analysis.MobiusRadialTime

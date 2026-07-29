@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.CategoryTheory.Limits.HasLimits
+import InfoGeometry.Canonical.TomitaTakesakiWickRotation
+import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 
 /-!
 # Finite spectral squashing, Cayley coordinates, and Dirac--Krein--Tomita shadow
@@ -13,6 +16,8 @@ noncomputable section
 
 namespace SpectralSquashCayleyDKT
 
+open CategoryTheory
+open CategoryTheory.Limits
 open Matrix
 open scoped BigOperators
 
@@ -128,13 +133,40 @@ theorem cayleyStage_dkt_unitary (lam : ℝ) :
   rw [dktAdjoint_cayleyStage_eq_star]
   exact cayleyStage_unitary lam
 
-/-- Analytic/categorical destinations not proved by this finite file. -/
-structure RegularizationColimitSocket where
-  unboundedSelfAdjointAffiliatedOperators : Prop
-  cStarInductiveColimit : Prop
-  inverseCayleyBoundaryRecovery : Prop
-  tomitaTakesakiAntiunitaryJ : Prop
-  traceDivergenceRenormalizationTheorem : Prop
+/--
+Typed analytic/categorical assembly for extending the finite Cayley stage.
+
+This structure contains mathematical objects and laws rather than proposition
+markers.  `Affiliated` and its self-adjoint locus remain supplied by the
+chosen analytic realization because bare algebraic Mathlib does not identify
+unbounded affiliated operators with bounded matrices.
+-/
+structure RegularizationColimitSocket
+    (C Affiliated Boundary V A : Type*)
+    [CategoryTheory.Category C]
+    [AddCommGroup V] [Module ℝ V]
+    [Ring A]
+    (F : ℕ ⥤ C) where
+  /-- Self-adjointness predicate in the selected affiliated-operator model. -/
+  selfAdjointAffiliated : Affiliated → Prop
+  /-- A genuine affiliated operator in the self-adjoint locus. -/
+  unboundedSelfAdjointAffiliatedOperators :
+    {T : Affiliated // selfAdjointAffiliated T}
+  /-- The chosen categorical inductive colimit and its universal property. -/
+  cStarInductiveColimit : CategoryTheory.Limits.ColimitCocone F
+  /-- Cayley boundary coordinate of an affiliated operator. -/
+  cayley : Affiliated → Boundary
+  /-- Inverse Cayley reconstruction on the selected boundary carrier. -/
+  inverseCayley : Boundary → Affiliated
+  /-- Exact recovery of affiliated operators from their Cayley coordinates. -/
+  inverseCayleyBoundaryRecovery :
+    Function.LeftInverse inverseCayley cayley
+  /-- Repository-owned Tomita involution on the selected real carrier. -/
+  tomitaTakesakiAntiunitaryJ :
+    InfoGeometry.Canonical.TomitaTakesakiWickRotation.TomitaTakesakiConjugation V
+  /-- Renormalized trace/cocycle backend carrying its defining laws. -/
+  traceDivergenceRenormalizationTheorem :
+    InfoGeometry.OperatorAlgebra.RenormalizedTraceBackend A
 
 /-- Synthesis theorem: finite squashing is bounded, finite Cayley coordinates are
 unitary, and the finite DKT/Krein adjoint shadow is an anti-involution. -/

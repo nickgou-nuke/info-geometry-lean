@@ -60,10 +60,8 @@ theorem modularSLiftInversion_element :
 /-! ## 2. The fixed temperature `i` -/
 
 /-- The unit imaginary positive Souriau temperature. -/
-def unitImaginary : PositiveSouriauTemperature where
-  temp := { s := Complex.I }
-  im_pos := by
-    norm_num [Complex.I]
+def unitImaginary : PositiveSouriauTemperature :=
+  ⟨Complex.I, by norm_num [Complex.I]⟩
 
 @[simp]
 theorem unitImaginary_re :
@@ -82,7 +80,7 @@ theorem modularS_smul_unitImaginary :
       toRealUpperHalfPlane (modularS • unitImaginary) =
         toRealUpperHalfPlane unitImaginary := by
     ext <;>
-      simp [unitImaginary, modularS, smul_def, ofRealUpperHalfPlane,
+      simp [unitImaginary, PositiveSouriauTemperature.temp, modularS, smul_def, ofRealUpperHalfPlane,
         toRealUpperHalfPlane, RealUpperHalfPlane.smul_def,
         RealUpperHalfPlane.moebius, RealUpperHalfPlane.a,
         RealUpperHalfPlane.b, RealUpperHalfPlane.c, RealUpperHalfPlane.d,

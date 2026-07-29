@@ -56,6 +56,17 @@ theorem D_sq_eq_H (M : FiniteMajoranaLattice Op) :
   exact InfoGeometry.Arithmetic.CantorDiracOperator.cantorDirac_sq_eq_hamiltonian_of_clifford
     M.register M.gamma M.clifford
 
+theorem H_selfAdjoint (M : FiniteMajoranaLattice Op) :
+    IsSelfAdjoint M.H := by
+  rw [← M.D_sq_eq_H]
+  change star (M.D ^ 2) = M.D ^ 2
+  rw [star_pow, M.D_selfAdjoint]
+
+theorem D_commutes_H (M : FiniteMajoranaLattice Op) :
+    M.D * M.H = M.H * M.D := by
+  rw [← M.D_sq_eq_H]
+  noncomm_ring
+
 end FiniteMajoranaLattice
 
 structure FiniteZetaDiracLattice (P : PrimeCutoff) where

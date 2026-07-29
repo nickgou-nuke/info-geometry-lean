@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.External.Auto.DiracColimit
 import InfoGeometry.External.Auto.PrimonCuntzTower
 

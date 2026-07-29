@@ -21,20 +21,8 @@ structure LightConeAffineCurrentBridge
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
 
-  affine :
-    AffineVirasoroBridge.AffineCurrentDatum Finite Alg
-
-  virasoro :
-    AffineVirasoroBridge.VirasoroDatum Alg
-
   bridge :
     AffineVirasoroBridge.AffineVirasoroBridgeDatum Finite Alg
-
-  /-- Compatibility between the bridge record and the local affine datum. -/
-  bridge_affine_eq : bridge.affine = affine
-
-  /-- Compatibility between the bridge record and the local Virasoro datum. -/
-  bridge_virasoro_eq : bridge.virasoro = virasoro
 
   /-- Finite-algebra element representing the `u₊` lightcone direction. -/
   uPlusRoot : Finite
@@ -51,6 +39,16 @@ variable
 
 variable (B : LightConeAffineCurrentBridge Finite Alg)
 
+/-- Affine datum owned by the single affine/Virasoro bridge field. -/
+abbrev affine :
+    AffineVirasoroBridge.AffineCurrentDatum Finite Alg :=
+  B.bridge.affine
+
+/-- Virasoro datum owned by the single affine/Virasoro bridge field. -/
+abbrev virasoro :
+    AffineVirasoroBridge.VirasoroDatum Alg :=
+  B.bridge.virasoro
+
 /-- The positive lightcone current mode `J⁺_n`. -/
 @[rep_depth operator]
 def uPlusCurrent (n : ℤ) : Alg :=
@@ -61,19 +59,37 @@ def uPlusCurrent (n : ℤ) : Alg :=
 def uMinusCurrent (n : ℤ) : Alg :=
   B.affine.Current n B.uMinusRoot
 
-/-- Compatibility between the bridge record and the local affine datum. -/
+/-- Definitional compatibility of the derived affine readback. -/
+theorem bridge_affine_eq : B.bridge.affine = B.affine :=
+  rfl
+
+/-- Definitional compatibility of the derived Virasoro readback. -/
+theorem bridge_virasoro_eq : B.bridge.virasoro = B.virasoro :=
+  rfl
+
+/-- Compatibility alias retained for downstream source stability. -/
 theorem bridge_affine_eq_theorem : B.bridge.affine = B.affine :=
   B.bridge_affine_eq
 
-/-- Compatibility between the bridge record and the local Virasoro datum. -/
+/-- Compatibility alias retained for downstream source stability. -/
 theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
   B.bridge_virasoro_eq
 
-/-- Debt surface for proving that the chosen affine roots are lightcone directions. -/
-theorem lightcone_current_direction_debt
+/--
+Concrete lightcone-current realization carried by the bridge.
+
+The previous statement only repeated definitional equalities between the
+bridge and its projections.  This theorem instead exposes the actual two
+families of affine modes selected by the positive and negative lightcone
+roots.
+-/
+theorem lightcone_current_direction
     (B : LightConeAffineCurrentBridge Finite Alg) :
-    B.bridge.affine = B.affine ∧ B.bridge.virasoro = B.virasoro := by
-  exact ⟨B.bridge_affine_eq, B.bridge_virasoro_eq⟩
+    ∀ n : ℤ,
+      B.uPlusCurrent n = B.bridge.affine.Current n B.uPlusRoot ∧
+      B.uMinusCurrent n = B.bridge.affine.Current n B.uMinusRoot := by
+  intro n
+  exact ⟨rfl, rfl⟩
 
 /-- Bracket of two positive lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]

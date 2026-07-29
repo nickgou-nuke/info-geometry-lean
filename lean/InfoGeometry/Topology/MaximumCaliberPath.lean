@@ -133,23 +133,46 @@ theorem entropy_production_eq_dlnQ
 
 end MaximumCaliberThermodynamicBridge
 
-/-- Collapse socket from MaxCal path weights to MaxEnt/KMS state weights in an exact sector. -/
+/--
+Collapse socket from MaxCal path weights to MaxEnt/KMS state weights on a
+model-selected exact path sector.
+-/
 structure MaximumCaliberToMaxEntropyCollapse (Path State : Type u) where
   endpoint : Path → State
   pathWeight : Path → ℝ
   stateWeight : State → ℝ
-  exactSector : Prop
-  exactWitness : exactSector
-  collapse : ∀ γ : Path, exactSector → pathWeight γ = stateWeight (endpoint γ)
+  IsExactPath : Path → Prop
+  collapse :
+    ∀ γ : Path, IsExactPath γ → pathWeight γ = stateWeight (endpoint γ)
 
 namespace MaximumCaliberToMaxEntropyCollapse
 
 variable {Path State : Type u} (C : MaximumCaliberToMaxEntropyCollapse Path State)
 
+/-- The exact sector is the subtype of paths on which the collapse law applies. -/
+def exactSector :=
+  { γ : Path // C.IsExactPath γ }
+
+/-- Package a path together with its proof of membership in the exact sector. -/
+def exactWitness (γ : Path) (hγ : C.IsExactPath γ) : C.exactSector :=
+  ⟨γ, hγ⟩
+
+@[simp]
+theorem exactWitness_val (γ : Path) (hγ : C.IsExactPath γ) :
+    (C.exactWitness γ hγ).1 = γ :=
+  rfl
+
 /-- In the supplied exact sector, MaxCal path weights reduce to MaxEnt state weights. -/
-theorem pathWeight_eq_stateWeight (γ : Path) :
+theorem pathWeight_eq_stateWeight
+    (γ : Path) (hγ : C.IsExactPath γ) :
     C.pathWeight γ = C.stateWeight (C.endpoint γ) :=
-  C.collapse γ C.exactWitness
+  C.collapse γ hγ
+
+/-- The MaxCal-to-MaxEnt collapse law restricted to the genuine exact sector. -/
+theorem pathWeight_eq_stateWeight_on_exactSector
+    (γ : C.exactSector) :
+    C.pathWeight γ.1 = C.stateWeight (C.endpoint γ.1) :=
+  C.collapse γ.1 γ.2
 
 end MaximumCaliberToMaxEntropyCollapse
 

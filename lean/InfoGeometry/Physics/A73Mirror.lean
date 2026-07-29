@@ -30,12 +30,12 @@ noncomputable def ground_state (nuc : Nucleus) : A73State :=
 
 /-- Structure representing the A=73 Mirror Symmetry Violation.
     The ground state spin of Sr-73 is 5/2 while the ground state spin of Br-73 is 1/2. -/
-structure A73MirrorSymmetryViolation where
-  (violation : (ground_state Sr73).spin = 5 / 2 ∧ (ground_state Br73).spin = 1 / 2)
+abbrev A73MirrorSymmetryViolation : Prop :=
+  (ground_state Sr73).spin = 5 / 2 ∧ (ground_state Br73).spin = 1 / 2
 
 /-- Formal proof that the ground state spins of Sr-73 and Br-73 are not equal. -/
-theorem sr73_br73_spin_neq (m : A73MirrorSymmetryViolation) : (ground_state Sr73).spin ≠ (ground_state Br73).spin := by
-  have h := m.violation
+theorem sr73_br73_spin_neq (h : A73MirrorSymmetryViolation) :
+    (ground_state Sr73).spin ≠ (ground_state Br73).spin := by
   rw [h.1, h.2]
   norm_num
 

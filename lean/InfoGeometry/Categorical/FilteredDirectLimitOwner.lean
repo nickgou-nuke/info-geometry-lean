@@ -67,6 +67,36 @@ noncomputable def directLimitRingInjection (F_ring : J ⥤ RingCat.{u}) [HasColi
     F_ring.obj j ⟶ DirectLimitRing F_ring :=
   colimit.ι F_ring j
 
+/-- Descend a compatible cocone of noncommutative ring homomorphisms through
+the categorical ring colimit. -/
+noncomputable def descendDirectLimitRing
+    (F_ring : J ⥤ RingCat.{u}) [HasColimit F_ring] (t : Cocone F_ring) :
+    DirectLimitRing F_ring ⟶ t.pt :=
+  colimit.desc F_ring t
+
+/-- The descended ring homomorphism agrees with every stage map. -/
+@[reassoc]
+theorem directLimitRing_desc_commutes
+    (F_ring : J ⥤ RingCat.{u}) [HasColimit F_ring]
+    (t : Cocone F_ring) (j : J) :
+    directLimitRingInjection F_ring j ≫ descendDirectLimitRing F_ring t =
+      t.ι.app j :=
+  colimit.ι_desc t j
+
+/-- The RingCat colimit descent is unique among maps with the same stage laws. -/
+theorem descendDirectLimitRing_unique
+    (F_ring : J ⥤ RingCat.{u}) [HasColimit F_ring]
+    (t : Cocone F_ring)
+    (f : DirectLimitRing F_ring ⟶ t.pt)
+    (h : ∀ j : J,
+      directLimitRingInjection F_ring j ≫ f = t.ι.app j) :
+    f = descendDirectLimitRing F_ring t := by
+  apply colimit.hom_ext
+  intro j
+  change directLimitRingInjection F_ring j ≫ f =
+    directLimitRingInjection F_ring j ≫ descendDirectLimitRing F_ring t
+  rw [h j, directLimitRing_desc_commutes]
+
 /--
 **Finite-Tower to UHF Algebra Promotion:**
 Stage-local diagonal observables $f \in \text{DiagAlg}(n)$ map into the category-filtered

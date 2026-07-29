@@ -21,6 +21,7 @@ support.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
@@ -586,20 +587,33 @@ structure DynamicModularCPTAlgebra
   modularWeightBackend :
     Option (InfoGeometry.OperatorAlgebra.ModularWeightDatum (EndR H))
 
-  /--
-  Certificate that `eps` is the sign of the modular Hamiltonian generating the
-  flow.
-  -/
-  eps_is_sign_of_modular_hamiltonian : Prop
+  /-- Bounded modular Hamiltonian represented on the real carrier. -/
+  modularHamiltonian : EndR H
 
-  /-- Certificate that `J` reverses modular time/CPT orientation. -/
-  J_reverses_modular_flow : Prop
+  /-- Positive magnitude `|K|` in the modular-Hamiltonian polar
+  factorization. -/
+  modularHamiltonianMagnitude : EndR H
 
-  /--
-  Certificate that the generated algebra is the intended split Clifford/CPT
-  superalgebra.
-  -/
-  split_clifford_cpt_superalgebra : Prop
+  /-- Positivity of the modular-Hamiltonian magnitude. -/
+  modularHamiltonianMagnitude_nonnegative :
+    ∀ x : H, 0 ≤ inner ℝ (modularHamiltonianMagnitude x) x
+
+  /-- Polar/sign factorization `K = eps |K|`. -/
+  modularHamiltonian_eq_eps_comp_magnitude :
+    modularHamiltonian =
+      signCPT.eps.comp modularHamiltonianMagnitude
+
+  /-- The sign commutes with the magnitude in the bounded polar model. -/
+  eps_commutes_magnitude :
+    signCPT.eps.comp modularHamiltonianMagnitude =
+      modularHamiltonianMagnitude.comp signCPT.eps
+
+  /-- Modular conjugation reverses the modular flow by conjugating an
+  observable and changing `t` to `-t`. -/
+  J_reverses_modular_flow :
+    ∀ (t : ℝ) (T : EndR H),
+      modularFlow t ((signCPT.J.comp T).comp signCPT.J) =
+        (signCPT.J.comp (modularFlow (-t) T)).comp signCPT.J
 
 namespace DynamicModularCPTAlgebra
 
@@ -629,6 +643,37 @@ theorem modularFlow_mul_apply
     (A B : EndR H) :
     M.modularFlow t (A.comp B) = (M.modularFlow t A).comp (M.modularFlow t B) :=
   M.flow_mul t A B
+
+/-- The modular sign is owned through the positive polar factorization of the
+bounded modular Hamiltonian. -/
+theorem eps_is_sign_of_modular_hamiltonian :
+    M.modularHamiltonian =
+        M.signCPT.eps.comp M.modularHamiltonianMagnitude ∧
+      (∀ x : H,
+        0 ≤ inner ℝ (M.modularHamiltonianMagnitude x) x) ∧
+      M.signCPT.eps.comp M.modularHamiltonianMagnitude =
+        M.modularHamiltonianMagnitude.comp M.signCPT.eps :=
+  ⟨M.modularHamiltonian_eq_eps_comp_magnitude,
+    M.modularHamiltonianMagnitude_nonnegative,
+    M.eps_commutes_magnitude⟩
+
+/-- Pointwise CPT reversal of modular time. -/
+theorem J_reverses_modular_flow_apply
+    (t : ℝ) (T : EndR H) :
+    M.modularFlow t ((M.signCPT.J.comp T).comp M.signCPT.J) =
+      (M.signCPT.J.comp (M.modularFlow (-t) T)).comp M.signCPT.J :=
+  M.J_reverses_modular_flow t T
+
+/-- The generated split-Clifford/CPT algebra consists of the two involutions,
+their anticommutation law, and the derived square-minus-one phase axis. -/
+theorem split_clifford_cpt_superalgebra :
+    M.signCPT.eps.comp M.signCPT.eps = 1 ∧
+      M.signCPT.J.comp M.signCPT.J = 1 ∧
+      M.signCPT.J.comp M.signCPT.eps =
+        -(M.signCPT.eps.comp M.signCPT.J) ∧
+      M.signCPT.Kmod.comp M.signCPT.Kmod = -(1 : EndR H) :=
+  ⟨M.signCPT.eps_square, M.signCPT.J_square,
+    M.signCPT.J_eps_anticomm, M.signCPT.Kmod_square_apply⟩
 
 /-- The dynamically generated phase axis squares to `-1`. -/
 theorem complexStructure_square :
@@ -737,5 +782,21 @@ theorem partialModularSignCPTOwnerTarget :
         M.Kmod.comp M.support = M.Kmod := by
   intro H _ _ M
   exact ⟨M.Kmod_eq, M.Kmod_square, M.support_Kmod, M.Kmod_support⟩
+
+/-! Historical capitalized owner names are retained as aliases to the native
+theorems above.  They carry no additional evidence fields. -/
+
+@[rep_depth transport]
+def ModularSignCPTDatumOwnerTarget := modularSignCPTDatumOwnerTarget
+
+@[rep_depth transport]
+def ModularSignCPTOwnerTarget := modularSignCPTOwnerTarget
+
+@[rep_depth transport]
+def PartialModularSignCPTDatumOwnerTarget :=
+  partialModularSignCPTDatumOwnerTarget
+
+@[rep_depth transport]
+def PartialModularSignCPTOwnerTarget := partialModularSignCPTOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.ModularSignCPT

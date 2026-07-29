@@ -229,11 +229,39 @@ The actual Virasoro central charge is a separate CFT datum.  The arithmetic
 scale-density response is stored separately so it cannot be silently identified
 with that central extension.
 -/
-structure CentralChargeGuardrail
-    (CFTCentralCharge ScaleDensityReadout : Type*) where
-  centralCharge : CFTCentralCharge
-  scaleDensity : ScaleDensityReadout
-  not_definitional_equality : Prop
+abbrev CentralChargeGuardrail
+    (CFTCentralCharge ScaleDensityReadout : Type*) :=
+  CFTCentralCharge × ScaleDensityReadout
+
+namespace CentralChargeGuardrail
+
+/-- The CFT central charge remains in its own carrier. -/
+def centralCharge
+    {CFTCentralCharge ScaleDensityReadout : Type*}
+    (G : CentralChargeGuardrail CFTCentralCharge ScaleDensityReadout) :
+    CFTCentralCharge :=
+  G.1
+
+/-- The arithmetic scale density remains in its separate readout carrier. -/
+def scaleDensity
+    {CFTCentralCharge ScaleDensityReadout : Type*}
+    (G : CentralChargeGuardrail CFTCentralCharge ScaleDensityReadout) :
+    ScaleDensityReadout :=
+  G.2
+
+@[simp] theorem centralCharge_mk
+    {CFTCentralCharge ScaleDensityReadout : Type*}
+    (c : CFTCentralCharge) (d : ScaleDensityReadout) :
+    centralCharge (c, d) = c :=
+  rfl
+
+@[simp] theorem scaleDensity_mk
+    {CFTCentralCharge ScaleDensityReadout : Type*}
+    (c : CFTCentralCharge) (d : ScaleDensityReadout) :
+    scaleDensity (c, d) = d :=
+  rfl
+
+end CentralChargeGuardrail
 
 /--
 Determinant/Vandermonde comparison gate.

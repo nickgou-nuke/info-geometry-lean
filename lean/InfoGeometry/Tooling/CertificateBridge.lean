@@ -21,7 +21,11 @@ outside computational lane (M2, GAP, Sage, SymPy, Galgebra).
 structure ExternalCertificate where
   lane : String
   witness_data : String
-  is_exact_rational : Bool
+  exactRationalWitness : Option ℚ
+
+/-- Exact-rational status is backed by an actual typed rational witness. -/
+def ExternalCertificate.is_exact_rational (C : ExternalCertificate) : Prop :=
+  C.exactRationalWitness.isSome
 
 /--
 The Macaulay2 (M2) lane specifically loading the D-modules package.
@@ -30,41 +34,35 @@ D-modules are used for algebraic D-module theory (systems of linear PDEs).
 def M2_DModule_Certificate (witness : String) : ExternalCertificate :=
   { lane := "Macaulay2 (Dmodules)",
     witness_data := witness,
-    is_exact_rational := true }
+    exactRationalWitness := none }
 
 /-- The GAP lane for computational discrete algebra and group theory. -/
 def GAP_Certificate (witness : String) : ExternalCertificate :=
   { lane := "GAP",
     witness_data := witness,
-    is_exact_rational := true }
+    exactRationalWitness := none }
 
 /-- The SymPy lane for symbolic computation. -/
 def SymPy_Certificate (witness : String) : ExternalCertificate :=
   { lane := "SymPy",
     witness_data := witness,
-    is_exact_rational := true }
+    exactRationalWitness := none }
 
 /-- The Galgebra / Clifford lane for geometric algebra. -/
 def Galgebra_Certificate (witness : String) : ExternalCertificate :=
   { lane := "Galgebra/Clifford",
     witness_data := witness,
-    is_exact_rational := true }
+    exactRationalWitness := none }
 
-/-- 
-A proposition that is currently gated by an external certificate.
-This represents "closure debt" that must be converted to a native Lean proof.
+/-!
+External certificates are provenance metadata only.  They cannot inhabit a
+mathematical proposition.  Promotion therefore requires an explicit native
+Lean proof.
 -/
-class CertificateGatedProposition (P : Prop) where
-  certificate : ExternalCertificate
-  -- Note: This is an axiom reflecting trust in the external lane.
-  -- It MUST be replaced by a native proof.
-  external_truth : P 
+def CertificateGatedProposition (P : Prop) : Prop := P
 
-/-- 
-The mandate to replace external certificates with native Lean proofs.
-When a native proof is provided, the closure debt is cleared.
--/
-theorem native_proof_clears_debt {P : Prop} (native_proof : P) : P :=
+theorem native_proof_clears_debt {P : Prop} (native_proof : P) :
+    CertificateGatedProposition P :=
   native_proof
 
 end InfoGeometry.Tooling

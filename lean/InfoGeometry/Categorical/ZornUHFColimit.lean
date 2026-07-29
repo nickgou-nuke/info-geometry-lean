@@ -221,6 +221,13 @@ def leftMulCocone :
     { app := rightDesc
       naturality := fun _ _ f => rightDesc_naturality f }
 
+/-- Right tensoring preserves this colimit by transport across the braided symmetry. -/
+instance preservesColimit_zornStageFunctor_tensorRight :
+    PreservesColimit zornStageFunctor
+      (MonoidalCategory.tensorRight ZornColimit) :=
+  preservesColimit_of_natIso zornStageFunctor
+    (CategoryTheory.BraidedCategory.tensorLeftIsoTensorRight ZornColimit)
+
 /-- Tensoring the filtered colimit on the right also preserves its universal property. -/
 def leftTensorColimit :
     IsColimit ((MonoidalCategory.tensorRight ZornColimit).mapCocone
@@ -359,4 +366,3 @@ theorem colimitNilpotent_sq_zero : colimitNilpotent * colimitNilpotent = 0 := by
   exact (colimit.ι zornStageFunctor 0).hom.map_zero
 
 end InfoGeometry.Categorical.ZornUHFColimit
-

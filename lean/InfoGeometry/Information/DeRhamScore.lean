@@ -1,7 +1,8 @@
-import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.Tactic.Ring
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Inv
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 open Real
 

@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.ExtraJordanNormalForm
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.RingHomMatrix
+import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition
@@ -248,19 +249,11 @@ The AFP statement records `A = P * B * Q` and `P * Q = 1`; the Lean packet also
 stores `Q * P = 1`, making the inverse relation available without recovering it
 from finite-dimensional algebra.
 -/
-structure SimilarMatrixWitness {R ι : Type*}
+abbrev SimilarMatrixWitness {R ι : Type*}
     [Semiring R] [Fintype ι] [DecidableEq ι]
-    (A B : Matrix ι ι R) where
-  /-- Change-of-basis matrix. -/
-  P : Matrix ι ι R
-  /-- Inverse change-of-basis matrix. -/
-  Q : Matrix ι ι R
-  /-- `P` is a left inverse of `Q`. -/
-  P_mul_Q : P * Q = 1
-  /-- `Q` is a left inverse of `P`. -/
-  Q_mul_P : Q * P = 1
-  /-- Similarity factorization. -/
-  factorization : A = P * B * Q
+    (A B : Matrix ι ι R) :=
+  InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly.SimilarMatrixWitness
+    A B
 
 namespace SimilarMatrixWitness
 

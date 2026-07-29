@@ -46,18 +46,21 @@ This is the abstract socket for the point where the Bregman/information Hessian
 ceases to define a locally invertible material/vacuum response.
 -/
 structure HessianCollapseEvent
-    (State Tangent : Type*) where
+    (State Tangent : Type*) [Zero Tangent] where
   /-- State at which the response degenerates. -/
   state : State
 
   /-- Degenerating tangent/response direction. -/
   nullDirection : Tangent
 
+  /-- Abstract response map whose degeneracy is being read at `state`. -/
+  response : State → Tangent → Tangent
+
   /-- The Hessian vanishes or collapses along the chosen direction. -/
-  hessian_collapse : Prop
+  hessian_collapse : response state nullDirection = 0
 
   /-- Rank-defect / loss-of-invertibility certificate. -/
-  rank_defect : Prop
+  rank_defect : ¬ Function.Injective (response state)
 
 /--
 A scalar shear readout.
@@ -206,13 +209,15 @@ structure ChiralResidue
   residue : Residue
 
   /--
-  Model-specific stability predicate.
+  State evolution used to express residue stability.
 
-  This file does not prove stability from the abstract socket alone; exported
-  stable-residue claims below are explicit proof debt until a concrete owner
-  supplies this predicate and its proof.
+  Stability is an actual fixed-point equation for the supplied evolution map,
+  rather than an untyped evidence socket.
   -/
-  stable : Prop
+  stabilityMap : State → State
+
+  /-- The residue state is fixed by the model-specific stability evolution. -/
+  stable : stabilityMap state = state
 
 /-! ## 4. Chiral tubule boundary witness -/
 
@@ -229,7 +234,7 @@ A chiral tubule boundary occurs when:
 -/
 structure ChiralTubuleBoundaryWitness
     (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) where
@@ -272,7 +277,7 @@ namespace ChiralTubuleBoundaryWitness
 
 variable
     {State Tangent Charge Residue H : Type*}
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     {Q : KreinIsotropicCone.KreinQuadraticDatum H}
     {C : ModuleCircularPolarization H}
@@ -299,13 +304,12 @@ theorem collapse_state_crosses_threshold :
 
 /-- A stable chiral residue exists at the collapse boundary. -/
 theorem exists_stable_chiral_residue :
-    B.residue.stable →
     ∃ r : Residue,
-      r = B.residue.residue ∧ B.residue.stable :=
+      r = B.residue.residue ∧
+        B.residue.stabilityMap B.residue.state = B.residue.state :=
   by
-    intro hstable
     refine ⟨B.residue.residue, ?_⟩
-    exact ⟨rfl, hstable⟩
+    exact ⟨rfl, B.residue.stable⟩
 
 end ChiralTubuleBoundaryWitness
 
@@ -322,7 +326,7 @@ already-present topological obstruction forces a stable chiral residue.”
 -/
 structure UnruhDrivenChiralTubuleBoundary
     (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) where
@@ -348,7 +352,7 @@ namespace UnruhDrivenChiralTubuleBoundary
 
 variable
     {State Tangent Charge Residue H : Type*}
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     {Q : KreinIsotropicCone.KreinQuadraticDatum H}
     {C : ModuleCircularPolarization H}
@@ -374,10 +378,11 @@ theorem collapse_state_not_flat :
 
 /-- The Unruh-driven snap produces a stable chiral residue. -/
 theorem exists_stable_chiral_residue :
-    U.boundary.residue.stable →
     ∃ r : Residue,
-      r = U.boundary.residue.residue ∧ U.boundary.residue.stable :=
-  fun hstable => U.boundary.exists_stable_chiral_residue hstable
+      r = U.boundary.residue.residue ∧
+        U.boundary.residue.stabilityMap U.boundary.residue.state =
+          U.boundary.residue.state :=
+  U.boundary.exists_stable_chiral_residue
 
 /-- The physical temperature in natural units is `a / 2π`. -/
 theorem unruh_temperature :
@@ -614,8 +619,8 @@ structure JonesRankCollapseEvent
   p_channel_zero :
     eigenResponse.responseP frequency = 0
 
-  /-- Optional s-channel noncollapse certificate. -/
-  s_channel_nonzero : Prop
+  /-- The s-channel remains nonzero at the p-channel collapse frequency. -/
+  s_channel_nonzero : eigenResponse.responseS frequency ≠ 0
 
 namespace JonesRankCollapseEvent
 
@@ -635,6 +640,11 @@ theorem r_p_eq_zero :
   rw [h]
   exact J.p_channel_zero
 
+/-- The noncollapsed s-channel is an explicit native response relation. -/
+theorem s_eigenvalue_ne_zero :
+    J.eigenResponse.responseS J.frequency ≠ 0 :=
+  J.s_channel_nonzero
+
 end JonesRankCollapseEvent
 
 /-! ## 7. Owner targets -/
@@ -647,7 +657,7 @@ susceptibility response, conserved obstruction, and chiral lightcone support.
 -/
 def ChiralTubuleBoundaryCompatibility
     (_State _Tangent Charge _Residue H : Type*)
-    [Zero Charge]
+    [Zero _Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) : Prop :=
@@ -658,7 +668,7 @@ def ChiralTubuleBoundaryCompatibility
 /-- Construct the chiral tubule boundary witness from its explicit compatibility data. -/
 theorem chiralTubuleBoundaryOwnerTarget :
   ∀ (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H],
   ∀ (Q : KreinIsotropicCone.KreinQuadraticDatum H),
   ∀ (C : ModuleCircularPolarization H),
@@ -666,13 +676,13 @@ theorem chiralTubuleBoundaryOwnerTarget :
       Nonempty
         (ChiralTubuleBoundaryWitness
           State Tangent Charge Residue H Q C) := by
-  intro State Tangent Charge Residue H _ _ _ Q C h
+  intro State Tangent Charge Residue H _ _ _ _ Q C h
   exact h
 
 /-- Packet readout for a concrete chiral tubule boundary compatibility witness. -/
 theorem chiralTubuleBoundary_packet
     (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H)
@@ -690,7 +700,7 @@ boundary.
 -/
 def UnruhDrivenChiralTubuleCompatibility
     (_State _Tangent Charge _Residue H : Type*)
-    [Zero Charge]
+    [Zero _Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) : Prop :=
@@ -701,7 +711,7 @@ def UnruhDrivenChiralTubuleCompatibility
 /-- Construct the Unruh-driven boundary from its explicit compatibility data. -/
 theorem unruhDrivenChiralTubuleOwnerTarget :
   ∀ (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H],
   ∀ (Q : KreinIsotropicCone.KreinQuadraticDatum H),
   ∀ (C : ModuleCircularPolarization H),
@@ -710,13 +720,13 @@ theorem unruhDrivenChiralTubuleOwnerTarget :
       Nonempty
         (UnruhDrivenChiralTubuleBoundary
           State Tangent Charge Residue H Q C) := by
-  intro State Tangent Charge Residue H _ _ _ Q C h
+  intro State Tangent Charge Residue H _ _ _ _ Q C h
   exact h
 
 /-- Packet readout for a concrete Unruh-driven chiral tubule compatibility witness. -/
 theorem unruhDrivenChiralTubule_packet
     (State Tangent Charge Residue H : Type*)
-    [Zero Charge]
+    [Zero Tangent] [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H)

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Even
 
 namespace InfoGeometry.Lie.ChevalleySpinor
 
@@ -11,7 +12,7 @@ open Even
 def splitQuadraticForm {R : Type*} [CommRing R] {Mp Mm : Type*} [AddCommGroup Mp] [AddCommGroup Mm]
     [Module R Mp] [Module R Mm] (Qp : QuadraticForm R Mp) (Qm : QuadraticForm R Mm) :
     QuadraticForm R (Mp × Mm) :=
-  (Qp.prod <| -Qm)
+  Qp.comp (LinearMap.fst R Mp Mm) + (-Qm).comp (LinearMap.snd R Mp Mm)
 
 /- 2. SPINOR REPRESENTATION VIA MATHLIB'S NATIVE EVEN SUBALGEBRA -/
 

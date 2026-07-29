@@ -136,28 +136,43 @@ confused with passing automatically to the identity component.
 For split real signatures, reflection components remain meaningful unless the
 model explicitly restricts to a connected subgroup or complexifies.
 -/
-structure PO55ComponentLedger where
+structure PO55ComponentLedger
+    (W PinConf : Type*) [AddCommGroup W] [Module ℝ W] [Monoid PinConf]
+    (Q : SplitQuadratic55 W) where
   /-- The central `±1` ambiguity is identified projectively. -/
-  central_antipodal_identified : Bool
+  central_antipodal_identified :
+    ∀ (r : ProjectiveRay W),
+      ProjectiveRay.SameProjectiveRay r (ProjectiveRay.antipode r)
 
-  /-- Reflection/inversion components are still part of the full real group. -/
-  residual_reflection_components : Bool
+  /-- Ambient Pin cover carrying the reflection-sensitive inversion component. -/
+  conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) Q
 
   /-- The chosen component label of the distinguished Möbius inversion. -/
   inversion_component : O44Component
 
+  /-- The chosen label is the component of the covered ambient inversion. -/
+  residual_reflection_components :
+    inversion_component =
+      (conformalPin.cover conformalPin.inversionPin
+        conformalPin.inversionPin_isPin).component
+
 namespace PO55ComponentLedger
 
-variable (C : PO55ComponentLedger)
+variable
+    {W PinConf : Type*} [AddCommGroup W] [Module ℝ W] [Monoid PinConf]
+    {Q : SplitQuadratic55 W}
+    (C : PO55ComponentLedger W PinConf Q)
 
 /-- Both Boolean bookkeeping fields have concrete truth values. -/
 theorem component_convention_holds :
-    (C.central_antipodal_identified = true ∨
-      C.central_antipodal_identified = false) ∧
-    (C.residual_reflection_components = true ∨
-      C.residual_reflection_components = false) := by
-  constructor <;> cases C.central_antipodal_identified <;>
-    cases C.residual_reflection_components <;> simp
+    (∀ (r : ProjectiveRay W),
+      ProjectiveRay.SameProjectiveRay r (ProjectiveRay.antipode r)) ∧
+    (C.inversion_component = O44Component.reflection ∨
+      C.inversion_component = O44Component.totalInversion) := by
+  refine ⟨C.central_antipodal_identified, ?_⟩
+  rcases C.conformalPin.inversion_is_reflection_or_null_swap with h | h
+  · exact Or.inl (C.residual_reflection_components.trans h)
+  · exact Or.inr (C.residual_reflection_components.trans h)
 
 end PO55ComponentLedger
 
@@ -523,14 +538,14 @@ This is the precise formal layer for the slogan:
 `O(4,4)` is local; `PO(5,5)` is the conformal/projective global ledger.
 -/
 structure PO55ConformalClosure
-    (V W : Type*)
+    (V W PinConf : Type*)
     [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W] where
+    [AddCommGroup W] [Module ℝ W] [Monoid PinConf] where
   /-- Existing base-to-ambient conformal extension. -/
   mobius : ConformalMobius44Extension V W
 
   /-- Component bookkeeping after quotienting by projective scalars. -/
-  components : PO55ComponentLedger
+  components : PO55ComponentLedger W PinConf mobius.ambientQ
 
   /-- Null directions selecting the affine chart. -/
   nullPair : AmbientNullPair mobius.ambientQ
@@ -562,10 +577,11 @@ structure PO55ConformalClosure
 namespace PO55ConformalClosure
 
 variable
-    {V W : Type*}
+    {V W PinConf : Type*}
     [AddCommGroup V] [Module ℝ V]
     [AddCommGroup W] [Module ℝ W]
-    (C : PO55ConformalClosure V W)
+    [Monoid PinConf]
+    (C : PO55ConformalClosure V W PinConf)
 
 /-- The compactified state space attached to the closure. -/
 abbrev State :=
@@ -635,7 +651,7 @@ structure TKKPO55ClosedSymmetry
   tkkMobius : TKKMobiusGroupClosure J L V W PinBase PinConf
 
   /-- Projective conformal `PO(5,5)` closure of the state space. -/
-  po55 : PO55ConformalClosure V W
+  po55 : PO55ConformalClosure V W PinConf
 
 namespace TKKPO55ClosedSymmetry
 
@@ -651,14 +667,36 @@ variable (S : TKKPO55ClosedSymmetry J L V W PinBase PinConf)
 
 /-- The TKK integration law is available. -/
 theorem tkk_integrates_to_projective_conformal_action :
-    S.tkkMobius.pinMobius.acts_on_projective_null_rays :=
-  S.tkkMobius.acts_on_projective_null_states
+    ∀ r : ProjectiveRay W,
+      r.IsAmbientNullRay S.tkkMobius.pinMobius.mobius.ambientQ →
+        ((S.tkkMobius.pinMobius.conformalPin.cover
+          S.tkkMobius.pinMobius.conformalPin.inversionPin
+          S.tkkMobius.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+            S.tkkMobius.pinMobius.mobius.ambientQ :=
+  by
+    intro r hr
+    exact S.tkkMobius.pinMobius.acts_on_projective_null_rays r hr
 
 /-- The Pin(5,5) reflection-lift law is available. -/
 theorem pin55_reflection_lift_matches_PO55 :
-    S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin ∧
-      S.tkkMobius.pinMobius.acts_on_projective_null_rays :=
-  S.tkkMobius.reflection_sensitive
+    (∀ (a : PinBase)
+        (ha : S.tkkMobius.pinMobius.basePin.isPin a),
+      S.tkkMobius.pinMobius.conformalPin.cover
+          (S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
+          (S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
+        S.tkkMobius.pinMobius.mobius.base_orthogonal_lift
+          (S.tkkMobius.pinMobius.basePin.cover a ha)) ∧
+      (∀ r : ProjectiveRay W,
+        r.IsAmbientNullRay S.tkkMobius.pinMobius.mobius.ambientQ →
+          ((S.tkkMobius.pinMobius.conformalPin.cover
+            S.tkkMobius.pinMobius.conformalPin.inversionPin
+            S.tkkMobius.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
+              S.tkkMobius.pinMobius.mobius.ambientQ) :=
+  by
+    refine ⟨S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.cover_compatibility,
+      ?_⟩
+    intro r hr
+    exact S.tkkMobius.pinMobius.acts_on_projective_null_rays r hr
 
 /-- The inversion grade-swap law is available. -/
 theorem inversion_swaps_tkk_outer_grades
@@ -682,10 +720,10 @@ Installed-owner target: once a `PO55ConformalClosure` witness is supplied, each
 base affine point gives a compactified projective null state.
 -/
 def PO55ConformalClosureInstalledTarget : Prop :=
-  ∀ (V W : Type*)
+  ∀ (V W PinConf : Type*)
     [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W],
-  ∀ C : PO55ConformalClosure V W,
+    [AddCommGroup W] [Module ℝ W] [Monoid PinConf],
+  ∀ C : PO55ConformalClosure V W PinConf,
   ∀ v : V,
     (C.affineState v).1.IsAmbientNullRay C.mobius.ambientQ
 
@@ -694,7 +732,7 @@ Installed `PO(5,5)` closures satisfy the affine-null-state target.
 -/
 theorem po55ConformalClosureInstalledTarget :
     PO55ConformalClosureInstalledTarget := by
-  intro V W _ _ _ _ C v
+  intro V W PinConf _ _ _ _ _ C v
   exact C.affineState_is_null v
 
 end InfoGeometry.OperatorAlgebra

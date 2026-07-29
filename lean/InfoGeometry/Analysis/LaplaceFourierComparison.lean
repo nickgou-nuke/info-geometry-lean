@@ -1,4 +1,8 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Fourier.FourierTransform
+import Mathlib.Analysis.Fourier.Inversion
+import Mathlib.Analysis.MellinTransform
+import Mathlib.Analysis.MellinInversion
 import InfoGeometry.Analysis.LaplaceTransform
 
 /-!

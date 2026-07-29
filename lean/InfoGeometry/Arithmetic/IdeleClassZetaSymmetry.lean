@@ -39,16 +39,19 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCentered
 /-! ## Positive scale layer -/
 
 /-- Positive real scale, the multiplicative `ℝ^*_+` layer. -/
-structure PositiveScale where
-  val : ℝ
-  pos : 0 < val
+abbrev PositiveScale := {x : ℝ // 0 < x}
+
+namespace PositiveScale
+
+abbrev val (a : PositiveScale) : ℝ := a.1
+abbrev pos (a : PositiveScale) : 0 < a.val := a.2
+
+end PositiveScale
 
 namespace PositiveScale
 
 @[ext] theorem ext {a b : PositiveScale} (h : a.val = b.val) : a = b := by
-  cases a
-  cases b
-  simp_all
+  exact Subtype.ext h
 
 /-- Identity positive scale. -/
 def one : PositiveScale :=
@@ -72,13 +75,15 @@ def inv (a : PositiveScale) : PositiveScale :=
 
 theorem one_mul (a : PositiveScale) :
     mul one a = a := by
-  ext
-  simp [mul, one]
+  apply Subtype.ext
+  change 1 * a.val = a.val
+  ring
 
 theorem mul_one (a : PositiveScale) :
     mul a one = a := by
-  ext
-  simp [mul, one]
+  apply Subtype.ext
+  change a.val * 1 = a.val
+  ring
 
 theorem mul_assoc (a b c : PositiveScale) :
     mul (mul a b) c = mul a (mul b c) := by

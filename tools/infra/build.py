@@ -83,11 +83,12 @@ def ensure_mathlib_cache(root: Path) -> None:
     )
     if mathlib_olean.exists():
         return
+    hydration_script = root / "scripts" / "build" / "hydrate_pinned_mathlib_cache.sh"
     print(
-        "[locked-lake-build] hydrating precompiled mathlib cache via `lake exe cache get`",
+        "[locked-lake-build] hydrating the pinned local Mathlib workspace",
         flush=True,
     )
-    subprocess.run(["lake", "exe", "cache", "get"], cwd=root, check=True)
+    subprocess.run(["bash", str(hydration_script)], cwd=root, check=True)
 
 
 def run_locked_lake_build(

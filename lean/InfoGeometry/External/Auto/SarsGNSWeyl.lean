@@ -75,26 +75,52 @@ structure WeylSystem (V A : Type*) [AddCommGroup V] [One A] [Mul A] [Star A] [SM
   W_neg : ∀ u : V, W (-u) = star (W u)
   W_mul : ∀ u v : V, W u * W v = weylPhase (sigma u v) • W (u + v)
 
-structure GNSWeylState (V A H : Type*) [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+structure GNSWeylState (V A H : Type*)
+    [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (𝓦 : WeylSystem V A) where
   omega : A → ℂ
-  pi : A → H → H
+  pi : A → H →L[ℂ] H
   Omega : H
-  vacuum_expectation : ∀ u : V, omega (𝓦.W u) = omega (𝓦.W u)
-  cyclic : Prop
+  vacuum_expectation :
+    ∀ u : V, omega (𝓦.W u) = inner ℂ Omega (pi (𝓦.W u) Omega)
+  cyclic :
+    Submodule.span ℂ (Set.range fun a : A => pi a Omega) = ⊤
 
-structure RegularWeylGNS (V A H Generator : Type*)
+structure RegularWeylGNS (V A H : Type*)
     [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (𝓦 : WeylSystem V A) extends GNSWeylState V A H 𝓦 where
-  R : V → Generator
-  exp_generator_matches_weyl : Prop
+  R : V → H →L[ℂ] H
+  exp_generator_matches_weyl :
+    ∀ u : V, NormedSpace.exp (R u) = pi (𝓦.W u)
   identity_trace_status : String := "not_trace_class_in_infinite_GNS"
 
 @[simp] theorem gns_vacuum_expectation
-    {V A H : Type*} [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    {V A H : Type*}
+    [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {𝓦 : WeylSystem V A} (G : GNSWeylState V A H 𝓦) (u : V) :
-    G.omega (𝓦.W u) = G.omega (𝓦.W u) :=
+    G.omega (𝓦.W u) = inner ℂ G.Omega (G.pi (𝓦.W u) G.Omega) :=
   G.vacuum_expectation u
+
+/-- The represented orbit of the GNS vector spans the Hilbert carrier. -/
+theorem gns_cyclic_span
+    {V A H : Type*}
+    [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    {𝓦 : WeylSystem V A} (G : GNSWeylState V A H 𝓦) :
+    Submodule.span ℂ (Set.range fun a : A => G.pi a G.Omega) = ⊤ :=
+  G.cyclic
+
+/-- Regular Weyl generators exponentiate to the represented Weyl operators. -/
+theorem regular_generator_exp
+    {V A H : Type*}
+    [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    {𝓦 : WeylSystem V A} (G : RegularWeylGNS V A H 𝓦) (u : V) :
+    NormedSpace.exp (G.R u) = G.pi (𝓦.W u) :=
+  G.exp_generator_matches_weyl u
 
 theorem gns_weyl_colimit_kernel :
     (∀ u v : RPhaseSpace 1,

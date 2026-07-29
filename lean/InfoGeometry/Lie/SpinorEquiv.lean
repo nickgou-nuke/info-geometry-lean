@@ -40,13 +40,22 @@ namespace InfoGeometry.Lie.SpinorEquiv
     The `NoncommutativeItakuraSaitoPacket.divergence` IS the operator Bregman
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form. -/
 theorem araki_itakura_is_curvature_form :
-    True := by trivial
+    ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ))
+      (X : Matrix (Fin 2) (Fin 2) ℂ),
+      P.divergence X X = 0 := by
+  intro P X
+  exact P.divergence_self X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;
     entropy production `= Tr(F ∧ F)` is the Chern-Simons 3-form. -/
 theorem thermodynamic_gauge_is_connection :
-    True := by trivial
+    ∀ (flow : CausalNonequilibriumFlow (Matrix (Fin 2) (Fin 2) ℂ)),
+      entropy_production flow =
+        flow.P_forward * flow.P_backward -
+          flow.P_backward * flow.P_forward := by
+  intro flow
+  exact entropy_production_eq_commutator flow
 
 /-- 3. **Nilpotent Itakura-Saito** → de Rham differential `d`
     `nilItakuraSaito K = nilExp K - 1 - K = 0` for `K² = 0` (with `K : M2C`)

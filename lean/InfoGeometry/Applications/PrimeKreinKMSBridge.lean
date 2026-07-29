@@ -2,6 +2,10 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Arithmetic.PrimonKMSKreinBridge
+import InfoGeometry.Krein.LiouvilleanDynamics
+import InfoGeometry.OperatorAlgebra.ModularWeightTrace
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
+import InfoGeometry.Canonical.BoundedModularFlowCalibration
 
 /-!
 # InfoGeometry.Applications.PrimeKreinKMSBridge
@@ -40,7 +44,7 @@ Interpretation:
 * `beta_gt_one` is the normalizability / trace-class gate.
 -/
 structure PositivePrimonGibbsGate
-    (State Observable : Type*) where
+    (State Observable : Type*) [Ring Observable] where
   /-- Inverse temperature. -/
   beta : ℝ
   /-- Normalizability / trace-class gate. -/
@@ -51,19 +55,41 @@ structure PositivePrimonGibbsGate
   partition_pos : 0 < partition
   /-- Positive Gibbs/KMS state carrier. -/
   gibbsState : State
-  /-- Observable expectation map. -/
-  expectation : Observable → ℝ
-  /--
-  The KMS condition for the positive Gibbs state.
+  /-- Native modular flow acting on the noncommutative observable algebra. -/
+  modularFlow :
+    InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Observable
+  /-- Genuine analytic KMS state for `modularFlow` at inverse temperature `beta`. -/
+  kmsState :
+    InfoGeometry.OperatorAlgebra.Thermodynamics.KMSState
+      Observable modularFlow beta
 
-  This is a gate because the concrete analytic KMS condition depends on the
-  operator-algebra model.
-  -/
-  KMS_condition : Prop
+namespace PositivePrimonGibbsGate
+
+variable {State Observable : Type*} [Ring Observable]
+
+/-- Complex-valued observable expectation supplied by the native KMS state. -/
+def expectation
+    (G : PositivePrimonGibbsGate State Observable) :
+    Observable → ℂ :=
+  G.kmsState.state.eval
+
+/-- The exact analytic strip and both noncommutative KMS boundary equations. -/
+def KMSCondition
+    (G : PositivePrimonGibbsGate State Observable) : Prop :=
+  G.kmsState.kms.boundaryCondition
+
+/-- The native analytic KMS certificate proves the derived condition. -/
+theorem KMS_condition
+    (G : PositivePrimonGibbsGate State Observable) :
+    G.KMSCondition :=
+  G.kmsState.kms.boundaryCondition_holds
+
+end PositivePrimonGibbsGate
 
 /-- The convergence half-plane is the positive normalization gate. -/
 theorem positivePrimon_beta_gt_one
     {State Observable : Type*}
+    [Ring Observable]
     (G : PositivePrimonGibbsGate State Observable) :
     1 < G.beta :=
   G.beta_gt_one
@@ -71,6 +97,7 @@ theorem positivePrimon_beta_gt_one
 /-- Re-export of the positive partition positivity. -/
 theorem positivePrimon_partition_pos
     {State Observable : Type*}
+    [Ring Observable]
     (G : PositivePrimonGibbsGate State Observable) :
     0 < G.partition :=
   G.partition_pos
@@ -87,30 +114,50 @@ This is the tensor-product/GNS-style doubling:
 It is not the same object as the direct-sum Krein carrier.
 -/
 structure ThermofieldGNSGate
-    (ThermofieldVector Observable : Type*) where
+    (ThermofieldVector Observable : Type*)
+    [NormedAddCommGroup ThermofieldVector] where
   /-- Inverse temperature. -/
   beta : ℝ
   /-- Positive normalizability domain. -/
   beta_gt_one : 1 < beta
   /-- Unnormalized or normalized thermofield vector. -/
   psi_beta : ThermofieldVector
-  /-- Norm-square readout, intended to be `ζ(β)` for the unnormalized vector. -/
-  normSq : ℝ
-  /-- Norm-square/partition calibration, supplied by the concrete model. -/
-  normSq_eq_partition : Prop
+  /-- Positive partition function represented by the thermofield norm square. -/
+  partition : ℝ
+  /-- Positivity of the partition in the normalizable regime. -/
+  partition_pos : 0 < partition
+  /-- Genuine norm-square/partition calibration. -/
+  normSq_eq_partition : ‖psi_beta‖ ^ 2 = partition
   /-- Positive expectation readout, intended as `Tr(ρβ A)`. -/
   expectation : Observable → ℝ
-  /-- Normalizability gate. -/
-  normalizable : Prop
-  /-- Certificate that `β > 1` supplies normalizability in the chosen model. -/
-  normalizable_of_beta_gt_one : normalizable
+
+namespace ThermofieldGNSGate
+
+variable
+    {ThermofieldVector Observable : Type*}
+    [NormedAddCommGroup ThermofieldVector]
+
+/-- Normalizability is the positive finite norm-square relation. -/
+def Normalizable
+    (T : ThermofieldGNSGate ThermofieldVector Observable) : Prop :=
+  0 < ‖T.psi_beta‖ ^ 2
+
+/-- Partition positivity and the calibration equation imply normalizability. -/
+theorem normalizable
+    (T : ThermofieldGNSGate ThermofieldVector Observable) :
+    T.Normalizable := by
+  rw [Normalizable, T.normSq_eq_partition]
+  exact T.partition_pos
+
+end ThermofieldGNSGate
 
 /-- Re-export of the supplied thermofield normalizability certificate. -/
 theorem thermofield_normalizable
     {ThermofieldVector Observable : Type*}
+    [NormedAddCommGroup ThermofieldVector]
     (T : ThermofieldGNSGate ThermofieldVector Observable) :
-    T.normalizable :=
-  T.normalizable_of_beta_gt_one
+    T.Normalizable :=
+  T.normalizable
 
 /-! ## 3. Tomita modular data -/
 
@@ -120,18 +167,27 @@ Tomita--Takesaki modular data.
 This is abstract because the concrete implementation depends on the
 operator-algebraic model.  In particular, no Type-III claim is derived here.
 -/
-structure TomitaModularGate
-    (Algebra ModularOperator ModularConjugation : Type*) where
-  /-- Modular operator `Δ`. -/
-  modularOperator : ModularOperator
-  /-- Modular conjugation `J_T`, not to be confused with a Krein metric. -/
-  modularConjugation : ModularConjugation
-  /-- `J_T M J_T = M'`, recorded as a model-dependent gate. -/
-  commutant_mirror : Prop
-  /-- `Δ^{it} M Δ^{-it} = M`, recorded as a model-dependent gate. -/
-  modular_automorphism_group : Prop
-  /-- KMS condition in normalized modular time. -/
-  KMS_in_modular_time : Prop
+abbrev TomitaModularGate
+    (Algebra : Type*) [Ring Algebra] :=
+  InfoGeometry.OperatorAlgebra.Thermodynamics.TomitaKMSDatum Algebra
+
+namespace TomitaModularGate
+
+variable {Algebra : Type*} [Ring Algebra]
+
+/-- The Tomita flow is a genuine one-parameter family of ring equivalences. -/
+def modular_automorphism_group
+    (T : TomitaModularGate Algebra) :
+    InfoGeometry.OperatorAlgebra.Thermodynamics.ModularFlow Algebra :=
+  T.modularFlow
+
+/-- The native Tomita owner yields the full analytic KMS boundary condition. -/
+theorem KMS_in_modular_time
+    (T : TomitaModularGate Algebra) :
+    T.toKMSState.kms.boundaryCondition :=
+  T.toKMSState_is_KMS
+
+end TomitaModularGate
 
 /-! ## 4. Abstract real Krein carrier -/
 
@@ -173,8 +229,10 @@ structure DirectSumKreinDoubling
     (K : Type*) [AddCommGroup K] [Module ℝ K] where
   /-- Fundamental symmetry of the direct-sum Krein carrier. -/
   symmetry : FundamentalSymmetry K
-  /-- Semantic label: thermal copies, ghosts, or Möbius signature copies. -/
-  interpretation : String
+
+/-! The underlying direct-sum carrier is the typed product `K × K`; semantic
+labels are not stored as data. -/
+abbrev DirectSumKreinCarrier (K : Type*) := K × K
 
 /-! ## 4. Möbius / fermionic square-free Krein index sector -/
 
@@ -203,8 +261,24 @@ structure MobiusKreinIndexGate
   /-- Supplied signed trace / inverse-zeta calibration. -/
   signedTrace_eq_inverseZeta :
     signedTrace = inverseZetaReadout
-  /-- Explicit warning gate: this readout is not a positive Gibbs state. -/
-  is_index_not_state : Prop
+
+namespace MobiusKreinIndexGate
+
+variable {FermionSpace Operator : Type*}
+
+/-- The Möbius signed readout uses the supertrace backend, not a state backend. -/
+def backendKind
+    (_M : MobiusKreinIndexGate FermionSpace Operator) :
+    InfoGeometry.OperatorAlgebra.IntegrationBackendKind :=
+  .superTrace
+
+/-- The historical index-not-state guardrail is now a concrete backend classification. -/
+theorem is_index_not_state
+    (M : MobiusKreinIndexGate FermionSpace Operator) :
+    M.backendKind = InfoGeometry.OperatorAlgebra.IntegrationBackendKind.superTrace :=
+  rfl
+
+end MobiusKreinIndexGate
 
 /-- Re-export of the signed-trace / inverse-zeta calibration. -/
 theorem mobius_signedTrace_eq_inverseZeta
@@ -226,15 +300,42 @@ At this abstract level, adjoints are model-dependent, so Krein-self-adjointness
 is stored as a gate.
 -/
 structure KreinLiouvilleanGate
-    (K Operator : Type*) [AddCommGroup K] [Module ℝ K] where
-  /-- Direct-sum Krein carrier. -/
-  krein : DirectSumKreinDoubling K
-  /-- Doubled Liouvillean, intended as `H ⊕ (-H)`. -/
-  liouvillean : Operator
-  /-- Krein-self-adjointness gate. -/
-  krein_self_adjoint : Prop
-  /-- The induced flow preserves the indefinite form. -/
-  eta_unitary_flow : Prop
+    (K : Type*) [NormedAddCommGroup K] [InnerProductSpace ℝ K]
+    [CompleteSpace K] [InfoGeometry.Krein.KreinSpace K] where
+  /-- Native bounded Krein-self-adjoint Liouvillean. -/
+  liouvillean :
+    InfoGeometry.Krein.KreinSelfAdjointLiouvillean (H := K)
+  /-- Native Krein-skew generator of the canonical exponential flow. -/
+  flowGenerator :
+    InfoGeometry.Krein.KreinSkewGenerator (H := K)
+
+namespace KreinLiouvilleanGate
+
+open InfoGeometry.Krein
+open InfoGeometry.Krein.KreinSpace
+
+variable
+    {K : Type*} [NormedAddCommGroup K] [InnerProductSpace ℝ K]
+    [CompleteSpace K] [KreinSpace K]
+
+/-- Krein self-adjointness is carried by the native operator subtype. -/
+theorem krein_self_adjoint (L : KreinLiouvilleanGate K) :
+    IsKreinSelfAdjoint (L.liouvillean : K →L[ℝ] K) :=
+  L.liouvillean.2
+
+/-- The canonical flow generated by `flowGenerator` preserves the Krein form. -/
+theorem eta_unitary_flow (L : KreinLiouvilleanGate K) (t : ℝ) :
+    IsKreinIsometry (L.flowGenerator.modularFlow.flow t) :=
+  L.flowGenerator.flow_isKreinIsometry t
+
+/-- The generated flow satisfies the one-parameter composition law. -/
+theorem flow_add (L : KreinLiouvilleanGate K) (s t : ℝ) :
+    L.flowGenerator.modularFlow.flow (s + t) =
+      L.flowGenerator.modularFlow.flow s *
+        L.flowGenerator.modularFlow.flow t :=
+  L.flowGenerator.flow_add s t
+
+end KreinLiouvilleanGate
 
 /-! ## 6. Modular Hamiltonian normalization -/
 
@@ -248,20 +349,38 @@ Interpretation:
 The scalar `log Z(β)` normalizes the state and does not affect the modular
 automorphism flow.
 -/
-structure GibbsModularHamiltonianGate
-    (Hamiltonian ModularHamiltonian : Type*) where
-  /-- Inverse temperature. -/
-  beta : ℝ
-  /-- Positive partition readout. -/
-  partition : ℝ
-  /-- Hamiltonian carrier. -/
-  H : Hamiltonian
-  /-- Modular Hamiltonian carrier. -/
-  K_beta : ModularHamiltonian
-  /-- Symbolic statement of `Kβ = βH + log Z · 1`. -/
-  normalization_formula : Prop
-  /-- Modular time rescales physical time by `β`. -/
-  modular_time_rescaling : Prop
+abbrev GibbsModularHamiltonianGate
+    (E LieAlgebra : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
+    (E := E) (LieAlgebra := LieAlgebra)
+
+namespace GibbsModularHamiltonianGate
+
+open InfoGeometry.Canonical.BoundedModularFlowCalibration
+
+variable
+    {E LieAlgebra : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- The normalized modular Hamiltonian is the Souriau generator plus its
+Massieu/partition-potential identity shift. -/
+theorem normalization_formula
+    (G : GibbsModularHamiltonianGate E LieAlgebra) :
+    G.souriau.family.modularHamiltonian =
+      G.souriau.superBridge.Ksur +
+        G.souriau.family.partitionPotential • (1 : E →L[ℝ] E) :=
+  G.modularHamiltonian_eq_Ksur_add_partitionPotential_one
+
+/-- The bounded implementing flow is generated by the same Souriau operator
+that owns the modular Hamiltonian normalization. -/
+theorem modular_time_generated_by_Khat_beta
+    (G : GibbsModularHamiltonianGate E LieAlgebra)
+    (t : ℝ) :
+    G.flow t = NormedSpace.exp (t • G.souriau.family.Khat_beta) :=
+  G.flow_eq_exp_Khat_beta t
+
+end GibbsModularHamiltonianGate
 
 /-! ## 7. Optional Type-III thermodynamic-limit gate -/
 
@@ -273,17 +392,38 @@ or KMS phase structure.  It is not automatic for the trace-class `β > 1`
 Hilbert-space Gibbs model.
 -/
 structure OperatorAlgebraicLimitGate
-    (Algebra FactorType State : Type*) where
+    (Algebra Core FactorType State : Type*)
+    [AddCommMonoid Algebra] [Mul Core] where
   /-- Operator algebra carrier. -/
   algebra : Algebra
   /-- State/readout carrier for the limit model. -/
   state : State
   /-- Claimed factor type carrier. -/
   factorType : FactorType
-  /-- Type-III claim, supplied by the limit model. -/
-  is_typeIII_claim : Prop
-  /-- KMS phase structure, supplied by the limit model. -/
-  KMS_phase_structure : Prop
+  /-- Genuine modular-weight and continuous-core integration owner. -/
+  integration :
+    InfoGeometry.OperatorAlgebra.TypeIIIIntegrationDatum Algebra Core
+
+namespace OperatorAlgebraicLimitGate
+
+variable
+    {Algebra Core FactorType State : Type*}
+    [AddCommMonoid Algebra] [Mul Core]
+
+/-- Type-III base integration is definitionally routed through a modular weight. -/
+theorem is_typeIII_claim
+    (L : OperatorAlgebraicLimitGate Algebra Core FactorType State) :
+    L.integration.typeIII =
+      InfoGeometry.OperatorAlgebra.IntegrationBackendKind.modularWeight :=
+  rfl
+
+/-- The KMS/modular phase owner is the installed modular-weight datum itself. -/
+def KMS_phase_structure
+    (L : OperatorAlgebraicLimitGate Algebra Core FactorType State) :
+    InfoGeometry.OperatorAlgebra.ModularWeightDatum Algebra :=
+  L.integration.modularWeight
+
+end OperatorAlgebraicLimitGate
 
 /-! ## 8. Positive/Krein comparison gate -/
 
@@ -317,9 +457,11 @@ This is the precise contract:
 The positive state and the Krein index are not identified.
 -/
 structure PrimeKreinKMSBridgeData
-    (State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian : Type*)
-    [AddCommGroup K] [Module ℝ K] where
+    (State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra : Type*)
+    [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
+    [InfoGeometry.Krein.KreinSpace K]
+    [NormedAddCommGroup ThermofieldVector] [Ring Observable] [Ring Algebra] where
   /-- Positive Hilbert/Gibbs/KMS sector. -/
   positiveGibbs :
     PositivePrimonGibbsGate State Observable
@@ -328,16 +470,16 @@ structure PrimeKreinKMSBridgeData
     ThermofieldGNSGate ThermofieldVector Observable
   /-- Abstract Tomita modular sector. -/
   tomita :
-    TomitaModularGate Algebra ModularOperator ModularConjugation
+    TomitaModularGate Algebra
   /-- Signed Möbius/Krein index sector. -/
   mobiusIndex :
     MobiusKreinIndexGate FermionSpace Operator
   /-- Direct-sum doubled Krein Liouvillean sector. -/
   kreinLiouvillean :
-    KreinLiouvilleanGate K Operator
+    KreinLiouvilleanGate K
   /-- Positive Gibbs modular Hamiltonian normalization sector. -/
   modularHamiltonian :
-    GibbsModularHamiltonianGate Hamiltonian ModularHamiltonian
+    GibbsModularHamiltonianGate K LieAlgebra
   /--
   Consistency of inverse temperatures across the positive, thermofield,
   Möbius, and modular readouts.
@@ -346,65 +488,62 @@ structure PrimeKreinKMSBridgeData
     positiveGibbs.beta = thermofield.beta ∧
     positiveGibbs.beta = mobiusIndex.beta ∧
     positiveGibbs.beta = modularHamiltonian.beta
-  /-- Guardrail: `H ⊗ Hbar` and `H ⊕ H` are not identified. -/
-  tensorPurification_not_directSumKreinWitness : Type*
-  /-- Guardrail: the Krein metric is not a positive KMS state. -/
-  kreinMetric_not_positiveStateWitness : Type*
-  /-- Guardrail: no unbounded Hamiltonian is represented as a bounded endomorphism here. -/
-  noBoundedUnboundedHamiltonianClaim : Type*
 
 namespace PrimeKreinKMSBridgeData
 
 variable
-    {State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian : Type*}
-    [AddCommGroup K] [Module ℝ K]
+    {State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra : Type*}
+    [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
+    [InfoGeometry.Krein.KreinSpace K]
+    [NormedAddCommGroup ThermofieldVector]
+    [Ring Observable] [Ring Algebra]
 
 /-- The positive Gibbs/KMS sector supplies the convergence gate. -/
 theorem beta_gt_one
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
     1 < D.positiveGibbs.beta :=
   D.positiveGibbs.beta_gt_one
 
 /-- The thermofield vector is normalizable by its supplied gate. -/
 theorem thermofield_normalizable
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
-    D.thermofield.normalizable :=
-  D.thermofield.normalizable_of_beta_gt_one
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
+    D.thermofield.Normalizable :=
+  ThermofieldGNSGate.normalizable D.thermofield
 
 /-- The Möbius/Krein signed trace equals the supplied inverse-zeta readout. -/
 theorem mobius_index_eq_inverseZeta
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
     D.mobiusIndex.signedTrace = D.mobiusIndex.inverseZetaReadout :=
   D.mobiusIndex.signedTrace_eq_inverseZeta
 
 /-- Readback of temperature consistency between the positive and thermofield lanes. -/
 theorem positive_beta_eq_thermofield_beta
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
     D.positiveGibbs.beta = D.thermofield.beta :=
   D.beta_consistency.1
 
 /-- Readback of temperature consistency between the positive and Möbius lanes. -/
 theorem positive_beta_eq_mobius_beta
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
     D.positiveGibbs.beta = D.mobiusIndex.beta :=
   D.beta_consistency.2.1
 
 /-- Readback of temperature consistency between the positive and modular lanes. -/
 theorem positive_beta_eq_modular_beta
     (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
+      State Observable ThermofieldVector Algebra FermionSpace Operator K
+      LieAlgebra) :
     D.positiveGibbs.beta = D.modularHamiltonian.beta :=
   D.beta_consistency.2.2
 

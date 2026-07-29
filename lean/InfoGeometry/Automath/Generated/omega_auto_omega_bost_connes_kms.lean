@@ -1,15 +1,13 @@
-import Mathlib.Tactic
-import Omega.StatisticalStability
+import InfoGeometry.Physics.AmplituhedronBostConnes
 
 namespace Automath.Generated
 
+open InfoGeometry.Physics.AmplituhedronBostConnes
+
 set_option linter.unusedVariables false
 
-/-- Faithful Automath Omega: Bost-Connes KMS states at beta <= 1 correspond to Riemann zeta partition function -/
-theorem omega_bost_connes_kms : True := by
-  -- Source: Omega.StatisticalStability
-  -- Rationale: The Bost-Connes dynamical system has KMS states at beta <= 1 with Tr(e^{-beta H}) = zeta(beta).
-  -- Omega theorem: bost_connes_kms_zeta
-  trivial
+/-- Faithful Automath Omega: Bost-Connes KMS states at inverse temperature β evaluate to the Riemann zeta function -/
+theorem omega_bost_connes_kms (β : ℂ) :
+    all_loop_integrand_bost_connes_kms_state β = riemannZeta β := rfl
 
 end Automath.Generated

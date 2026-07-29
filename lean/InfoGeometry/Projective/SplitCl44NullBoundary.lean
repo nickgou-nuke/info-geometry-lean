@@ -1,3 +1,4 @@
+import Mathlib
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 import InfoGeometry.Projective.NullBoundary
 
@@ -88,7 +89,11 @@ theorem splitCl44ProjectiveNullBoundary_nonempty :
           exact LinearMap.map_zero (CliffordAlgebra.ι (Clifford.ClNN.Quad 4))
         have hcontr : (0 : SplitCl44Algebra) = 1 := by
           simpa [hzeroγ] using (splitCl44_headNull_clifford_car)
-        exact zero_ne_one hcontr⟩, rfl, rfl⟩
+        have hExterior :=
+          congrArg
+            (CliffordAlgebra.equivExterior (InfoGeometry.Clifford.ClNN.Quad 4))
+            hcontr
+        simpa using hExterior⟩, rfl, rfl⟩
 
 /-- The split `Cl(4,4)` projective null quotient is inhabited by the concrete
 head-null ray. -/

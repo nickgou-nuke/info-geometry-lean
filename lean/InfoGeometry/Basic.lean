@@ -22,13 +22,15 @@ namespace InfoGeometry
 
 open scoped BigOperators ENNReal
 
-/-- Empirical counts on a type. Consider replacing this by `α →₀ ℕ`
-if finite support is intended. -/
-structure EmpiricalCounts (α : Type*) where
-  count : α → ℕ
+/-- Empirical counts with finite support, owned by Mathlib's `Finsupp`. -/
+abbrev EmpiricalCounts (α : Type*) := α →₀ ℕ
 
-instance {α : Type*} : CoeFun (EmpiricalCounts α) (fun _ => α → ℕ) where
-  coe N := N.count
+namespace EmpiricalCounts
+
+/-- Compatibility projection for the former named count field. -/
+abbrev count {α : Type*} (N : EmpiricalCounts α) : α → ℕ := N
+
+end EmpiricalCounts
 
 /--
 Canonical finite probability distribution.

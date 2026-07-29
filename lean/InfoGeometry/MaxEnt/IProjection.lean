@@ -91,6 +91,49 @@ lemma sum_log_ratio_nonneg
   rw [← toReal_klDiv_eq_sum_log_ratio P Q hQ]
   exact ENNReal.toReal_nonneg
 
+omit [MeasurableSpace α] [MeasurableSingletonClass α] in
+/--
+Exact finite KL Pythagorean identity for a feasible law and a moment-matching
+Gibbs information projection.
+-/
+theorem gibbs_kl_pythagorean
+    [DecidableEq α] [DecidableEq ι]
+    (J : FiniteJaynesProblem α ι)
+    (hprior : J.FullSupportPrior)
+    [Nonempty α] (lam : ι → ℝ) (hZ : J.partition lam ≠ 0)
+    (h_match : J.SatisfiesTargetMoments lam hZ)
+    (P : ProbabilityDist α)
+    (h_feasible : ∀ i ∈ J.index, J.moment P (J.feature i) = J.target i) :
+    (∑ x, (P x).toReal *
+      Real.log ((P x).toReal / (J.prior x).toReal))
+      =
+    (∑ x, (P x).toReal *
+      Real.log ((P x).toReal / ((J.gibbsDist lam hZ) x).toReal))
+      +
+    ∑ x, ((J.gibbsDist lam hZ) x).toReal *
+      Real.log (((J.gibbsDist lam hZ) x).toReal / (J.prior x).toReal) := by
+  have hP :=
+    J.kl_prior_eq_kl_gibbs_add_dualObjective
+      hprior lam hZ P h_feasible
+  have hG :=
+    J.kl_prior_eq_kl_gibbs_add_dualObjective
+      hprior lam hZ (J.gibbsDist lam hZ)
+      (by
+        simpa [FiniteJaynesProblem.SatisfiesTargetMoments] using h_match)
+  simp_rw [J.gibbsDist_pointwise] at hP hG ⊢
+  have h_gibbs_pos : ∀ x, J.gibbsProb lam hZ x ≠ 0 := by
+    intro x
+    rw [J.gibbsProb_eq_prior_mul_exp_tilt lam hZ x]
+    exact (mul_pos (hprior x) (Real.exp_pos _)).ne'
+  have h_self :
+      (∑ x, J.gibbsProb lam hZ x *
+        Real.log (J.gibbsProb lam hZ x / J.gibbsProb lam hZ x)) = 0 := by
+    refine Finset.sum_eq_zero ?_
+    intro x _
+    simp [h_gibbs_pos x]
+  rw [h_self, zero_sub] at hG
+  linarith
+
 /--
 The I-Projection (Information Projection) theorem:
 The distribution that minimizes KL divergence to a prior `q` subject to

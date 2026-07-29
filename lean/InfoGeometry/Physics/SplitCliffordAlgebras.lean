@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import InfoGeometry.Canonical.TKKJordanPairData
 
 /-!
 # Split Clifford algebras `Cl(n,n)`
@@ -344,7 +345,18 @@ structure SouriauAffineBracket where
   μ : ℝ
   energy : ℝ
   charge : ℝ
-  exponent_eq : grandCanonicalExponent β μ energy charge = -β * (energy - μ * charge)
+
+namespace SouriauAffineBracket
+
+/-- The grand-canonical exponent identity is definitional, not stored evidence. -/
+@[simp]
+theorem exponent_eq
+    (S : SouriauAffineBracket) :
+    grandCanonicalExponent S.β S.μ S.energy S.charge =
+      -S.β * (S.energy - S.μ * S.charge) :=
+  rfl
+
+end SouriauAffineBracket
 
 /-- Symbolic Bogoliubov/Rindler boost matrix with parameters `c,s`. -/
 def bogoliubovMix (c s : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -364,16 +376,55 @@ theorem bogoliubov_preserves_krein {c s : ℝ} (h : c * c - s * s = 1) :
   fin_cases i <;> fin_cases j <;>
     simp [bogoliubovMix, kreinJ, Matrix.mul_apply, Fin.sum_univ_two] <;> nlinarith [h]
 
-/-- The projective-affine-conformal closure is represented as an interface:
-from a split Clifford carrier, through normalized Jordan/Lie/super brackets, to a
-structure group action and TKK-style closure. -/
-structure ProjectiveAffineConformalClosure where
-  cliffordCarrier : Prop
-  jordanLieSplit : Prop
-  supergradedAlgebra : Prop
-  structureGroupAction : Prop
-  tkkClosure : Prop
-  closes : cliffordCarrier → jordanLieSplit → supergradedAlgebra → structureGroupAction → tkkClosure
+/--
+Projective-affine-conformal closure data with genuine algebraic owners.
+
+The split Clifford carrier and its `ZMod 2` grading are fixed by `Q11`, so they
+are not repeated as proposition fields.  Variable closure data consists of a
+five-graded Lie algebra and a native Mathlib group action on its carrier.
+-/
+structure ProjectiveAffineConformalClosure
+    (R G : Type*) [CommRing R] [Group G] where
+  tkk : TKKJordanPairData.FiveGradedLieAlgebra R
+  structureGroupAction : MulAction G tkk.L
+
+namespace ProjectiveAffineConformalClosure
+
+variable {R G : Type*} [CommRing R] [Group G]
+
+/-- The genuine split Clifford carrier used by every closure packet. -/
+abbrev cliffordCarrier (_C : ProjectiveAffineConformalClosure R G) : Type :=
+  Cl11
+
+/-- The genuine Mathlib `ZMod 2` grading of the split Clifford carrier. -/
+noncomputable abbrev supergradedAlgebra
+    (_C : ProjectiveAffineConformalClosure R G) :=
+  CliffordAlgebra.evenOdd Q11
+
+/--
+The noncommutative Clifford product is exactly the sum of its normalized
+Jordan and Lie channels.
+-/
+theorem jordanLieSplit
+    (_C : ProjectiveAffineConformalClosure R G) (a b : Cl11) :
+    jordanR a b + lieR a b = a * b :=
+  jordanR_add_lieR_clifford a b
+
+/-- The native structure-group action, exposed without a proposition marker. -/
+def action (C : ProjectiveAffineConformalClosure R G) : MulAction G C.tkk.L :=
+  C.structureGroupAction
+
+/-- TKK bracket closure in every grade whose sum remains in the five-grade window. -/
+theorem tkkClosure
+    (C : ProjectiveAffineConformalClosure R G)
+    {i j k : TKKJordanPairData.TKKGrade}
+    (hijk : TKKJordanPairData.gradeAdd i j = some k)
+    {x y : C.tkk.L}
+    (hx : x ∈ C.tkk.grade i) (hy : y ∈ C.tkk.grade j) :
+    ⁅x, y⁆ ∈ C.tkk.grade k :=
+  C.tkk.bracket_mem_some hijk hx hy
+
+end ProjectiveAffineConformalClosure
 
 /-! ## Chiral operator, projectors, and split pseudoscalar
 

@@ -27,9 +27,10 @@ open InfoGeometry.Thermodynamics.ProjectiveTemperature
 /-! ## 1. Generic arithmetic divergence readouts -/
 
 /-- A finite arithmetic divergence readout in projective temperature. -/
-structure ArithmeticDivergenceReadout where
-  /-- Readout over two count profiles, a finite support, and projective temperature. -/
-  readout : CountProfile → CountProfile → Finset ℕ → ℝ → ℝ
+/- A divergence readout is already the function it evaluates. The former
+one-field structure added no data or law beyond this function. -/
+abbrev ArithmeticDivergenceReadout :=
+  CountProfile → CountProfile → Finset ℕ → ℝ → ℝ
 
 namespace ArithmeticDivergenceReadout
 
@@ -37,16 +38,15 @@ variable (D : ArithmeticDivergenceReadout)
 
 /-- Pull a divergence readout through a temperature map. -/
 def transportTemperature
-    (φ : ℝ → ℝ) : ArithmeticDivergenceReadout where
-  readout counts₁ counts₂ support u :=
-    D.readout counts₁ counts₂ support (φ u)
+    (φ : ℝ → ℝ) : ArithmeticDivergenceReadout :=
+  fun counts₁ counts₂ support u => D counts₁ counts₂ support (φ u)
 
 @[simp]
 theorem transportTemperature_apply
     (φ : ℝ → ℝ)
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
-    (D.transportTemperature φ).readout counts₁ counts₂ support u =
-      D.readout counts₁ counts₂ support (φ u) :=
+    D.transportTemperature φ counts₁ counts₂ support u =
+      D counts₁ counts₂ support (φ u) :=
   rfl
 
 end ArithmeticDivergenceReadout
@@ -63,8 +63,8 @@ structure GaugeInvariantDivergence
   invariant_under_scale :
     ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
       c ≠ 0 →
-        D.readout (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
-          D.readout counts₁ counts₂ support u
+        D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
+          D counts₁ counts₂ support u
 
 namespace GaugeInvariantDivergence
 
@@ -76,8 +76,8 @@ theorem readout_scale_invariant
     (G : GaugeInvariantDivergence D)
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ)
     (hc : c ≠ 0) :
-    D.readout (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
-      D.readout counts₁ counts₂ support u :=
+    D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
+      D counts₁ counts₂ support u :=
   GaugeInvariantDivergence.invariant_under_scale G counts₁ counts₂ support u c hc
 
 end GaugeInvariantDivergence
@@ -95,8 +95,8 @@ structure GaugeCovariantTemperatureDivergence
   /-- Covariance law under the temperature transport. -/
   transported_eq_factor_mul :
     ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
-      D.readout counts₁ counts₂ support (φ u) =
-        weylFactor u * D.readout counts₁ counts₂ support u
+      D counts₁ counts₂ support (φ u) =
+        weylFactor u * D counts₁ counts₂ support u
 
 namespace GaugeCovariantTemperatureDivergence
 
@@ -106,8 +106,8 @@ variable (G : GaugeCovariantTemperatureDivergence D φ)
 /-- Re-export temperature covariance. -/
 theorem readout_transport_eq_factor_mul
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
-    D.readout counts₁ counts₂ support (φ u) =
-      G.weylFactor u * D.readout counts₁ counts₂ support u :=
+    D counts₁ counts₂ support (φ u) =
+      G.weylFactor u * D counts₁ counts₂ support u :=
   G.transported_eq_factor_mul counts₁ counts₂ support u
 
 end GaugeCovariantTemperatureDivergence
@@ -123,8 +123,8 @@ structure InversionInvariantDivergence
   /-- Projective inversion invariance. -/
   inversion_invariant :
     ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
-      D.readout counts₁ counts₂ support (betaInvert u) =
-        D.readout counts₁ counts₂ support u
+      D counts₁ counts₂ support (betaInvert u) =
+        D counts₁ counts₂ support u
 
 namespace InversionInvariantDivergence
 
@@ -135,15 +135,15 @@ variable (G : InversionInvariantDivergence D)
 theorem readout_betaInvert_eq
     (G : InversionInvariantDivergence D)
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
-    D.readout counts₁ counts₂ support (betaInvert u) =
-      D.readout counts₁ counts₂ support u :=
+    D counts₁ counts₂ support (betaInvert u) =
+      D counts₁ counts₂ support u :=
   InversionInvariantDivergence.inversion_invariant G counts₁ counts₂ support u
 
 /-- Applying inversion twice returns the original readout. -/
 theorem readout_betaInvert_betaInvert_eq
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
-    D.readout counts₁ counts₂ support (betaInvert (betaInvert u)) =
-      D.readout counts₁ counts₂ support u := by
+    D counts₁ counts₂ support (betaInvert (betaInvert u)) =
+      D counts₁ counts₂ support u := by
   rw [betaInvert_involutive]
 
 end InversionInvariantDivergence
@@ -154,8 +154,8 @@ end InversionInvariantDivergence
 def readoutOfProjectiveWeylGaugeCalibration
     {State : Type*}
     (C : ProjectiveWeylGaugeCalibration State) :
-    ArithmeticDivergenceReadout where
-  readout counts₁ counts₂ support u :=
+    ArithmeticDivergenceReadout :=
+  fun counts₁ counts₂ support u =>
     C.totalReadout (C.stateOfProfiles counts₁ counts₂ support) u
 
 /-- Prime modular-flow divergence readout induced by a supplied prime calibration. -/
@@ -170,7 +170,7 @@ theorem readoutOfProjectiveWeylGaugeCalibration_factorization
     {State : Type*}
     (C : ProjectiveWeylGaugeCalibration State)
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
-    (readoutOfProjectiveWeylGaugeCalibration C).readout counts₁ counts₂ support u =
+    readoutOfProjectiveWeylGaugeCalibration C counts₁ counts₂ support u =
       C.weylScaleReadout (C.stateOfProfiles counts₁ counts₂ support) u *
         C.shapeCoreReadout (C.stateOfProfiles counts₁ counts₂ support) u :=
   C.total_eq_scale_mul_shape counts₁ counts₂ support u

@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 open CliffordAlgebra
 

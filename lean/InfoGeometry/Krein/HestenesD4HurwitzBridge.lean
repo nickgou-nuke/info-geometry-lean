@@ -1,6 +1,7 @@
 import InfoGeometry.Krein.HestenesMoebiusClosureBridge
 import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace BigOperators
@@ -21,12 +22,16 @@ Instead it exposes a theorem-safe arithmetic socket:
 
 * the 24 candidate Hurwitz/D4 roots are identified with the finite
   Wigner--Jones atom layer already carried by `StandardFormOmegaVolumeBridge`;
-* D4/Hurwitz, self-duality, triality, and affine Kac--Moody facts are explicit
-  backend certificates;
+* triality is an explicit permutation relation;
 * the affine null-root sockets are calibrated to the existing Drazin
   `ProjectorSplit.uPlus/uMinus` arrows;
 * same-arrow null-root nilpotence is inherited from `ProjectorSplit`;
 * Virasoro centrality is read from the existing `VirasoroAlgebra.cgen_bracket`.
+
+A D4 root-system theorem requires a root pairing, a Hurwitz maximal-order
+theorem requires an explicit order, self-duality requires a lattice and dual,
+and affine Kac--Moody closure requires current modes and their bracket.  Those
+objects are not replaced here by proposition-valued markers.
 -/
 
 namespace InfoGeometry.Krein.HestenesD4HurwitzBridge
@@ -55,14 +60,14 @@ local instance d4HurwitzSMulCommClass : SMulCommClass ℝ EndH EndH := inferInst
 local instance d4HurwitzIsScalarTower : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-Generic D4 lattice / Hurwitz / affine Kac--Moody certificate carrier.
+Finite root-family, triality, and central-charge calibration carrier.
 
-This is the theorem-safe version of the arithmetic-crystal layer.  It records
-the 24 candidate roots, a discrete symmetry carrier acting on their indices,
-and backend certificates for the nontrivial arithmetic facts.
+It records 24 candidate roots and discrete symmetry actions on their indices.
+The name reflects the intended future realization, but this finite socket does
+not assert the absent D4 lattice, Hurwitz order, or affine current algebra.
 
-No construction of the Hurwitz maximal order, D4 self-duality, triality, or
-affine Kac--Moody representation theory is asserted here.
+No construction of the Hurwitz maximal order, D4 self-duality, or affine
+Kac--Moody representation theory is asserted here.
 -/
 @[rep_depth projective]
 structure D4LatticeKacMoodyBridge
@@ -70,39 +75,57 @@ structure D4LatticeKacMoodyBridge
   /-- The 24 candidate D4/Hurwitz roots. -/
   hurwitzRoots : Fin 24 → Op
 
+  /-- Bilinear root-pairing readout used to state the D4 Cartan law. -/
+  rootPairing : Op → Op → ℝ
+
+  /-- Four selected simple-root labels inside the 24-root family. -/
+  simpleRootLabel : Fin 4 → Fin 24
+
+  /-- The D4 Cartan matrix realized by the selected simple roots. -/
+  d4CartanMatrix : Matrix (Fin 4) (Fin 4) ℝ
+
+  /-- Root pairings agree with the supplied D4 Cartan matrix. -/
+  rootPairing_eq_cartan :
+    ∀ i j,
+      rootPairing (hurwitzRoots (simpleRootLabel i))
+        (hurwitzRoots (simpleRootLabel j)) = d4CartanMatrix i j
+
+  /-- Explicit Hurwitz-order carrier inside the operator algebra. -/
+  hurwitzOrder : Subring Op
+
+  /-- Every selected root belongs to the installed Hurwitz order. -/
+  roots_mem_hurwitzOrder : ∀ i, hurwitzRoots i ∈ hurwitzOrder
+
+  /--
+  Maximality of the installed Hurwitz order among proper subrings of the
+  ambient operator ring: an over-order is either unchanged or the full ring.
+  -/
+  hurwitzOrder_maximal :
+    ∀ O : Subring Op, hurwitzOrder ≤ O → O = hurwitzOrder ∨ O = ⊤
+
+  /-- Additive lattice generated/selected inside the Hurwitz order. -/
+  rootLattice : AddSubgroup Op
+
+  /-- Every selected root belongs to the lattice. -/
+  roots_mem_rootLattice : ∀ i, hurwitzRoots i ∈ rootLattice
+
+  /--
+  Integral dual-lattice characterization.  This is the actual self-duality
+  obligation for the supplied pairing, not a Boolean or proposition token.
+  -/
+  rootLattice_selfDual :
+    ∀ x : Op,
+      x ∈ rootLattice ↔
+        ∀ y ∈ rootLattice, ∃ z : ℤ, rootPairing x y = z
+
   /-- Discrete Möbius/quaternionic symmetry action on the root labels. -/
   discreteMoebiusAction : Automorphism → Equiv.Perm (Fin 24)
-
-  /-- Backend certificate: the 24 roots form the intended D4/Hurwitz root system. -/
-  d4_hurwitz_root_system : Prop
-
-  /-- Evidence for the D4/Hurwitz root-system certificate. -/
-  d4_hurwitz_root_system_holds : d4_hurwitz_root_system
-
-  /-- Backend certificate: the Hurwitz order is maximal/arithmetic-closed. -/
-  hurwitz_maximal_order : Prop
-
-  /-- Evidence for the maximal-order certificate. -/
-  hurwitz_maximal_order_holds : hurwitz_maximal_order
-
-  /-- Backend certificate: the D4 lattice is self-dual in the chosen readout. -/
-  d4_self_dual_lattice : Prop
-
-  /-- Evidence for the self-duality certificate. -/
-  d4_self_dual_lattice_holds : d4_self_dual_lattice
-
 
   /-- Triality action on the three outer nodes of the D4 diagram. -/
   triality_action : Automorphism → Equiv.Perm (Fin 3)
 
   /-- Triality has order dividing three for every installed symmetry element. -/
   triality_holds : ∀ g : Automorphism, triality_action g ^ 3 = 1
-
-  /-- Backend certificate: affine Kac--Moody closure is installed. -/
-  affine_kac_moody_closure : Prop
-
-  /-- Evidence for affine Kac--Moody closure. -/
-  affine_kac_moody_closure_holds : affine_kac_moody_closure
 
   /-- Calibrated affine/Virasoro central charge. -/
   affine_central_charge : ℝ
@@ -119,35 +142,11 @@ variable {Op Automorphism : Type*}
 variable [Ring Op] [Algebra ℝ Op] [Group Automorphism]
 variable (B : D4LatticeKacMoodyBridge Op Automorphism)
 
-/-- Readback: the supplied roots carry the intended D4/Hurwitz root-system certificate. -/
-@[rep_depth projective]
-theorem d4_hurwitz_root_system_readback :
-    B.d4_hurwitz_root_system :=
-  B.d4_hurwitz_root_system_holds
-
-/-- Readback: the Hurwitz maximal-order/arithmetic-closure certificate is available. -/
-@[rep_depth projective]
-theorem hurwitz_maximal_order_readback :
-    B.hurwitz_maximal_order :=
-  B.hurwitz_maximal_order_holds
-
-/-- Readback: D4 self-duality is supplied by the arithmetic backend. -/
-@[rep_depth projective]
-theorem d4_self_dual_in_krein :
-    B.d4_self_dual_lattice :=
-  B.d4_self_dual_lattice_holds
-
 /-- Readback: triality is supplied by the arithmetic backend. -/
 @[rep_depth projective]
 theorem triality_readback :
     ∀ g : Automorphism, B.triality_action g ^ 3 = 1 :=
   B.triality_holds
-
-/-- Readback: affine Kac--Moody closure is supplied by the arithmetic backend. -/
-@[rep_depth projective]
-theorem affine_kac_moody_closure_readback :
-    B.affine_kac_moody_closure :=
-  B.affine_kac_moody_closure_holds
 
 /-- Readback: the affine central charge is calibrated by the modular-discriminant readout. -/
 @[rep_depth projective]
@@ -155,7 +154,153 @@ theorem affine_central_charge_calibrated :
     B.affine_central_charge = B.modular_discriminant_readout :=
   B.central_charge_calibrated
 
+/-- The selected simple roots realize the installed D4 Cartan matrix. -/
+@[rep_depth projective]
+theorem simpleRoot_pairing_eq_cartan (i j : Fin 4) :
+    B.rootPairing (B.hurwitzRoots (B.simpleRootLabel i))
+        (B.hurwitzRoots (B.simpleRootLabel j)) =
+      B.d4CartanMatrix i j :=
+  B.rootPairing_eq_cartan i j
+
+/-- Every candidate root is an element of the explicit Hurwitz order. -/
+@[rep_depth projective]
+theorem root_mem_hurwitzOrder (i : Fin 24) :
+    B.hurwitzRoots i ∈ B.hurwitzOrder :=
+  B.roots_mem_hurwitzOrder i
+
+/--
+Concrete replacement for the former unconstrained
+`hurwitz_maximal_order : Prop` field.
+-/
+def hurwitz_maximal_order : Prop :=
+  ∀ O : Subring Op,
+    B.hurwitzOrder ≤ O → O = B.hurwitzOrder ∨ O = ⊤
+
+/-- The installed over-order law proves maximality of the Hurwitz order. -/
+theorem hurwitz_maximal_order_holds :
+    B.hurwitz_maximal_order :=
+  B.hurwitzOrder_maximal
+
+/-- Restored historical maximal-order readback. -/
+theorem hurwitz_maximal_order_readback :
+    B.hurwitz_maximal_order :=
+  B.hurwitz_maximal_order_holds
+
+/-- Self-duality readback for the explicit root lattice and pairing. -/
+@[rep_depth projective]
+theorem rootLattice_mem_iff_integral_pairing (x : Op) :
+    x ∈ B.rootLattice ↔
+      ∀ y ∈ B.rootLattice, ∃ z : ℤ, B.rootPairing x y = z :=
+  B.rootLattice_selfDual x
+
+/--
+Concrete replacement for the former unconstrained
+`d4_hurwitz_root_system : Prop` field: the four selected roots realize the
+installed D4 Cartan pairing.
+-/
+def d4_hurwitz_root_system : Prop :=
+  ∀ i j : Fin 4,
+    B.rootPairing (B.hurwitzRoots (B.simpleRootLabel i))
+        (B.hurwitzRoots (B.simpleRootLabel j)) =
+      B.d4CartanMatrix i j
+
+/-- The installed Cartan-pairing law proves the derived D4 root predicate. -/
+theorem d4_hurwitz_root_system_holds :
+    B.d4_hurwitz_root_system :=
+  B.rootPairing_eq_cartan
+
+/--
+Concrete replacement for the former unconstrained
+`d4_self_dual_lattice : Prop` field, using the installed integral dual-lattice
+characterization.
+-/
+def d4_self_dual_lattice : Prop :=
+  ∀ x : Op,
+    x ∈ B.rootLattice ↔
+      ∀ y ∈ B.rootLattice, ∃ z : ℤ, B.rootPairing x y = z
+
+/-- The installed dual-lattice law proves the derived self-duality predicate. -/
+theorem d4_self_dual_lattice_holds :
+    B.d4_self_dual_lattice :=
+  B.rootLattice_selfDual
+
+/-- Restored historical readback for the concrete D4 Cartan law. -/
+theorem d4_hurwitz_root_system_readback :
+    B.d4_hurwitz_root_system :=
+  B.d4_hurwitz_root_system_holds
+
+/-- Restored historical readback for the concrete lattice self-duality law. -/
+theorem d4_self_dual_in_krein :
+    B.d4_self_dual_lattice :=
+  B.d4_self_dual_lattice_holds
+
 end D4LatticeKacMoodyBridge
+
+/-!
+## Native affine Kac-Moody realization
+
+The finite D4/Hurwitz packet and affine current algebra remain type-distinct.
+An instantiation must provide the actual loop-current bracket in the native
+`AffineCurrentDatum` carrier.
+-/
+
+structure D4AffineKacMoodyRealization
+    (Finite Alg : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
+  affine :
+    InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.AffineCurrentDatum Finite Alg
+  current_mode_bracket :
+    ∀ (m n : ℤ) (X Y : Finite),
+      ⁅affine.Current m X, affine.Current n Y⁆ =
+        affine.Current (m + n) ⁅X, Y⁆ +
+          ((m : ℝ) * affine.killingForm X Y) •
+            (if m + n = 0 then affine.kCentral else 0)
+  central_commutes : ∀ X : Alg, ⁅affine.kCentral, X⁆ = 0
+
+namespace D4AffineKacMoodyRealization
+
+variable
+    {Finite Alg : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (A : D4AffineKacMoodyRealization Finite Alg)
+
+theorem bracket_readback (m n : ℤ) (X Y : Finite) :
+    ⁅A.affine.Current m X, A.affine.Current n Y⁆ =
+      A.affine.Current (m + n) ⁅X, Y⁆ +
+        ((m : ℝ) * A.affine.killingForm X Y) •
+          (if m + n = 0 then A.affine.kCentral else 0) :=
+  A.affine.current_mode_bracket A.current_mode_bracket m n X Y
+
+theorem central_readback (X : Alg) :
+    ⁅A.affine.kCentral, X⁆ = 0 :=
+  A.affine.central_commutes_with A.central_commutes X
+
+/--
+Native replacement for the former unconstrained
+`affine_kac_moody_closure : Prop` field.  Closure is the current-mode bracket
+together with centrality of the affine central generator.
+-/
+def affine_kac_moody_closure : Prop :=
+  (∀ (m n : ℤ) (X Y : Finite),
+      ⁅A.affine.Current m X, A.affine.Current n Y⁆ =
+        A.affine.Current (m + n) ⁅X, Y⁆ +
+          ((m : ℝ) * A.affine.killingForm X Y) •
+            (if m + n = 0 then A.affine.kCentral else 0)) ∧
+    ∀ X : Alg, ⁅A.affine.kCentral, X⁆ = 0
+
+/-- Every installed affine realization satisfies its derived closure law. -/
+theorem affine_kac_moody_closure_holds :
+    A.affine_kac_moody_closure :=
+  ⟨A.current_mode_bracket, A.central_commutes⟩
+
+/-- Restored historical readback for native affine Kac-Moody closure. -/
+theorem affine_kac_moody_closure_readback :
+    A.affine_kac_moody_closure :=
+  A.affine_kac_moody_closure_holds
+
+end D4AffineKacMoodyRealization
 
 /--
 D4/Hurwitz arithmetic calibration over the sealed Möbius/Connes layer.
@@ -173,28 +318,6 @@ structure D4HurwitzArithmeticBridge where
 
   /-- Generic Drazin projector split used for affine null-root arrows. -/
   drazinSplit : ProjectorSplit EndH
-
-  /-- Candidate Hurwitz/D4 root atom as a bounded operator. -/
-  hurwitzRoot : Fin 24 → EndH
-
-  /-- The Hurwitz/D4 roots are the existing Wigner--Jones atoms. -/
-  root_eq_wignerJonesAtom :
-    ∀ i : Fin 24, hurwitzRoot i = moebius.wilson.volume.wignerJonesAtom i
-
-  /-- Affine null-root `+` socket. -/
-  affineNullRootPlus : EndH → EndH
-
-  /-- Affine null-root `-` socket. -/
-  affineNullRootMinus : EndH → EndH
-
-  /-- Calibration of the positive affine null-root socket to `uPlus`. -/
-  affineNullRootPlus_eq_uPlus :
-    ∀ A : EndH, affineNullRootPlus A = drazinSplit.uPlus A
-
-  /-- Calibration of the negative affine null-root socket to `uMinus`. -/
-  affineNullRootMinus_eq_uMinus :
-    ∀ A : EndH, affineNullRootMinus A = drazinSplit.uMinus A
-
 
   /-- Triality action on the three outer nodes of the D4 diagram. -/
   trialityAction : MoebiusParameter → Equiv.Perm (Fin 3)
@@ -215,6 +338,36 @@ structure D4HurwitzArithmeticBridge where
 namespace D4HurwitzArithmeticBridge
 
 variable (B : D4HurwitzArithmeticBridge (E := E))
+
+/-- The Hurwitz/D4 root atom is canonically the existing Wigner--Jones atom. -/
+def hurwitzRoot (i : Fin 24) : EndH :=
+  B.moebius.wilson.volume.wignerJonesAtom i
+
+/-- The positive affine null-root map is canonically the Drazin `uPlus` map. -/
+def affineNullRootPlus (A : EndH) : EndH :=
+  B.drazinSplit.uPlus A
+
+/-- The negative affine null-root map is canonically the Drazin `uMinus` map. -/
+def affineNullRootMinus (A : EndH) : EndH :=
+  B.drazinSplit.uMinus A
+
+/-- The canonical Hurwitz roots are the existing Wigner--Jones atoms. -/
+@[simp, rep_depth projective]
+theorem root_eq_wignerJonesAtom (i : Fin 24) :
+    B.hurwitzRoot i = B.moebius.wilson.volume.wignerJonesAtom i :=
+  rfl
+
+/-- The canonical positive affine null-root map is `uPlus`. -/
+@[simp, rep_depth operator]
+theorem affineNullRootPlus_eq_uPlus (A : EndH) :
+    B.affineNullRootPlus A = B.drazinSplit.uPlus A :=
+  rfl
+
+/-- The canonical negative affine null-root map is `uMinus`. -/
+@[simp, rep_depth operator]
+theorem affineNullRootMinus_eq_uMinus (A : EndH) :
+    B.affineNullRootMinus A = B.drazinSplit.uMinus A :=
+  rfl
 
 /-- The supplied triality certificate is available. -/
 @[rep_depth projective]

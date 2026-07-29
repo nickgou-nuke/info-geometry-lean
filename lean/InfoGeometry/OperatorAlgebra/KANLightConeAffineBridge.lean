@@ -88,16 +88,6 @@ abbrev nilpotentSector : Nshear :=
 abbrev diagonalShadow : CartanDiag :=
   B.kanShadow.diagonalShadow
 
-/-- The KAN decomposition witness is whatever the supplied shadow packet carries. -/
-@[rep_depth operator]
-abbrev kanDecompositionWitness : Type* :=
-  B.kanShadow.kanDecomposition
-
-/-- Guard: diagonal data are only a representation/KAN shadow. -/
-@[rep_depth operator]
-abbrev diagonalIsOnlyShadow : Type* :=
-  B.kanShadow.diagonalIsOnlyShadow
-
 /-! ## Lightcone affine-current readbacks -/
 
 /-- Positive lightcone root as routed through the affine-current socket. -/

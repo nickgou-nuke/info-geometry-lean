@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsModelVolumeMarginal
+import InfoGeometry.Inference.FiniteGibbsThermodynamicIdentity
 
 /-!
 # Entropy chain rule for responsibility coarse-graining
@@ -155,5 +156,59 @@ theorem jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy
   rw [harea, hbackground]
   rw [Finset.sum_neg_distrib]
   ring
+
+/-- The joint entropy dominates the observation-volume entropy. -/
+theorem log_card_data_le_jointModelDataEntropy
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) :
+    Real.log (Fintype.card Data) ≤ jointModelDataEntropy F ε := by
+  rw [jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy]
+  have hcond : ∀ i : Data, 0 ≤ responsibilityEntropy F ε i := by
+    intro i
+    unfold responsibilityEntropy
+    exact entropyOf_nonneg (Data := ModelId)
+      (fun m => responsibility F ε m i)
+      (fun m => responsibility_pos F ε m i)
+      (responsibilities_sum_one F ε i)
+  have hsum : 0 ≤ ∑ i : Data, responsibilityEntropy F ε i :=
+    Finset.sum_nonneg (fun i hi => hcond i)
+  have hcard : 0 ≤ (1 / Fintype.card Data : ℝ) := by
+    positivity
+  have havg : 0 ≤ (1 / Fintype.card Data : ℝ) *
+      ∑ i : Data, responsibilityEntropy F ε i :=
+    mul_nonneg hcard hsum
+  linarith
+
+/-- The joint entropy is bounded by the log-cardinality of both finite axes. -/
+theorem jointModelDataEntropy_le_log_card_add_log_card
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) :
+    jointModelDataEntropy F ε ≤
+      Real.log (Fintype.card Data) + Real.log (Fintype.card ModelId) := by
+  rw [jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy]
+  have hcond : ∀ i : Data,
+      responsibilityEntropy F ε i ≤ Real.log (Fintype.card ModelId) := by
+    intro i
+    unfold responsibilityEntropy
+    exact entropyOf_le_log_card (Data := ModelId)
+      (fun m => responsibility F ε m i)
+      (fun m => responsibility_pos F ε m i)
+      (responsibilities_sum_one F ε i)
+  have hsum : ∑ i : Data, responsibilityEntropy F ε i ≤
+      ∑ i : Data, Real.log (Fintype.card ModelId) :=
+    Finset.sum_le_sum (fun i hi => hcond i)
+  have hcard : 0 ≤ (1 / Fintype.card Data : ℝ) := by
+    positivity
+  have havg : (1 / Fintype.card Data : ℝ) *
+      ∑ i : Data, responsibilityEntropy F ε i ≤
+      (1 / Fintype.card Data : ℝ) *
+        ∑ i : Data, Real.log (Fintype.card ModelId) :=
+    mul_le_mul_of_nonneg_left hsum hcard
+  have hconstant :
+      (1 / Fintype.card Data : ℝ) *
+        ∑ i : Data, Real.log (Fintype.card ModelId) =
+      Real.log (Fintype.card ModelId) := by
+    rw [Finset.sum_const, Finset.card_univ]
+    simp [nsmul_eq_mul]
+  rw [hconstant] at havg
+  linarith
 
 end InfoGeometry.Inference.FiniteGibbs

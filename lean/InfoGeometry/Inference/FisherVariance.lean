@@ -35,6 +35,14 @@ theorem localVariance_nonneg
   · rw [localVariance, localCovariance, if_pos hI.determinant_isUnit]
     exact le_of_lt (hI.positiveDefinite.inv.dotProduct_mulVec_pos hv)
 
+theorem localVariance_pos
+    (I : Matrix (Fin 2) (Fin 2) ℝ)
+    (hI : FisherInverseContract I)
+    {v : Fin 2 → ℝ} (hv : v ≠ 0) :
+    0 < localVariance I hI v := by
+  rw [localVariance, localCovariance, if_pos hI.determinant_isUnit]
+  exact hI.positiveDefinite.inv.dotProduct_mulVec_pos hv
+
 theorem localVariance_zero_direction
     (I : Matrix (Fin 2) (Fin 2) ℝ)
     (hI : FisherInverseContract I) :

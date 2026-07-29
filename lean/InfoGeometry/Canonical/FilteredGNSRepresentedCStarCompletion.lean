@@ -336,6 +336,7 @@ instance representedAlgebraicRangeCompletionCStarRing :
 instance representedAlgebraicRangeCompletionCStarAlgebra :
     CStarAlgebra
       (representedAlgebraicRangeCompletion Stage sys ω) where
+  norm_smul_le := norm_smul_le
 
 /-- Canonical star-algebra equivalence between the completed faithful
 represented range and the concrete represented C-star closure. -/

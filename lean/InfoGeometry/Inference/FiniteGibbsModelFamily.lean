@@ -123,4 +123,27 @@ theorem modelVolume_le_one
         simpa [hsum] using hle)
     _ = 1 * Fintype.card Data := by simp
 
+theorem modelVolumes_sum_one
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    (ε : ℝ) :
+    ∑ m : ModelId, modelVolume F ε m = 1 := by
+  unfold modelVolume
+  calc
+    ∑ m : ModelId,
+        (∑ i : Data, responsibility F ε m i) / Fintype.card Data =
+      (∑ m : ModelId, ∑ i : Data, responsibility F ε m i) /
+        Fintype.card Data := by
+          symm
+          exact Finset.sum_div
+            (s := (Finset.univ : Finset ModelId))
+            (f := fun m : ModelId => ∑ i : Data, responsibility F ε m i)
+            (a := Fintype.card Data)
+    _ = (∑ i : Data, ∑ m : ModelId, responsibility F ε m i) /
+        Fintype.card Data := by
+          rw [Finset.sum_comm]
+    _ = (∑ i : Data, (1 : ℝ)) / Fintype.card Data := by
+          simp_rw [responsibilities_sum_one]
+    _ = 1 := by
+          simp [Fintype.card_ne_zero]
+
 end InfoGeometry.Inference.FiniteGibbs

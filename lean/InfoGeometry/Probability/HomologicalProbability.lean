@@ -1298,23 +1298,51 @@ Packages the five-graded symmetry group acting on a homogeneous space, the
 affine closure of that space, and the GW-bundle isomorphism principle into a
 single owner witness.  This is the §22 Erlangen–Langlands owner target.
 -/
-structure ErlangenFiveGradedOwnerWitness
+abbrev ErlangenFiveGradedOwnerWitness
     (Sym X XBar BX G Bundle ChernClass : Type*)
     (mulSym       : Sym → Sym → Sym)
     (oneSym       : Sym)
     (actSym       : Sym → X → X)
     (bracket      : G → G → G)
     (chernClasses : Bundle → ChernClass)
-    (gwTheory     : Bundle → Type*) where
-  /-- The five-graded symmetry group acting on the homogeneous space `X`. -/
-  fiveGradedSym    : FiveGradedSymmetryGroup Sym X G mulSym oneSym actSym bracket
-  /-- The affine closure of the Erlangen homogeneous space. -/
-  affineClosure    : AffineClosure Sym X XBar BX
-  /-- The GW-bundle isomorphism holds for this geometry. -/
-  gwIsomorphism    : GWBundleIsomorphismStatement Bundle ChernClass
-    chernClasses gwTheory
-  /-- The boundary stratum inherits its own five-graded structure. -/
-  boundaryFiveGrading : FiveGradedLieAlgebra G bracket
+    (gwTheory     : Bundle → Type*) : Type _ :=
+  FiveGradedSymmetryGroup Sym X G mulSym oneSym actSym bracket ×
+    (AffineClosure Sym X XBar BX ×
+      (Σ' _ : GWBundleIsomorphismStatement Bundle ChernClass chernClasses gwTheory,
+        FiveGradedLieAlgebra G bracket))
+
+namespace ErlangenFiveGradedOwnerWitness
+
+abbrev fiveGradedSym
+    {Sym X XBar BX G Bundle ChernClass : Type*}
+    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
+    (gwTheory : Bundle → Type*)
+    (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
+      mulSym oneSym actSym bracket chernClasses gwTheory) := W.1
+abbrev affineClosure
+    {Sym X XBar BX G Bundle ChernClass : Type*}
+    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
+    (gwTheory : Bundle → Type*)
+    (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
+      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.1
+abbrev gwIsomorphism
+    {Sym X XBar BX G Bundle ChernClass : Type*}
+    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
+    (gwTheory : Bundle → Type*)
+    (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
+      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.2.1
+abbrev boundaryFiveGrading
+    {Sym X XBar BX G Bundle ChernClass : Type*}
+    (mulSym : Sym → Sym → Sym) (oneSym : Sym) (actSym : Sym → X → X)
+    (bracket : G → G → G) (chernClasses : Bundle → ChernClass)
+    (gwTheory : Bundle → Type*)
+    (W : ErlangenFiveGradedOwnerWitness Sym X XBar BX G Bundle ChernClass
+      mulSym oneSym actSym bracket chernClasses gwTheory) := W.2.2.2
+
+end ErlangenFiveGradedOwnerWitness
 
 /--
 **Theorem 22.7 — Five-graded filtration instantiates the homological pipeline.**
@@ -1718,21 +1746,26 @@ Two Weyl-law instances:
 The `weylConstant = C_D` and `pWidthConstant = a_D` are the dimension-dependent
 leading coefficients.  Full asymptotic proofs are not formalized here.
 -/
-structure WeylVolumeGaugePacket where
-  /-- The manifold. -/
-  Manifold : Type*
-  /-- Riemannian dimension `D`. -/
-  dimension : ℕ
-  /-- Riemannian volume of the manifold. -/
-  volume : ℝ
-  /-- Laplace eigenvalue sequence: `spectrum k = λ_k`. -/
-  spectrum : ℕ → ℝ
-  /-- *p*-width sequence: `pWidth p = ωₚ(M)`. -/
-  pWidth : ℕ → ℝ
-  /-- Weyl constant `C_D > 0` (Laplace Weyl law leading coefficient). -/
-  weylConstant : ℝ
-  /-- Cycle *p*-width constant `a_D > 0` (volume-spectrum leading coefficient). -/
-  pWidthConstant : ℝ
+abbrev WeylVolumeGaugePacket : Type _ :=
+  Σ' Manifold : Type*,
+    Σ' dimension : ℕ,
+      Σ' volume : ℝ,
+        Σ' spectrum : ℕ → ℝ,
+          Σ' pWidth : ℕ → ℝ,
+            Σ' weylConstant : ℝ,
+              ℝ
+
+namespace WeylVolumeGaugePacket
+
+abbrev Manifold (P : WeylVolumeGaugePacket) : Type _ := P.1
+abbrev dimension (P : WeylVolumeGaugePacket) : ℕ := P.2.1
+abbrev volume (P : WeylVolumeGaugePacket) : ℝ := P.2.2.1
+abbrev spectrum (P : WeylVolumeGaugePacket) : ℕ → ℝ := P.2.2.2.1
+abbrev pWidth (P : WeylVolumeGaugePacket) : ℕ → ℝ := P.2.2.2.2.1
+abbrev weylConstant (P : WeylVolumeGaugePacket) : ℝ := P.2.2.2.2.2.1
+abbrev pWidthConstant (P : WeylVolumeGaugePacket) : ℝ := P.2.2.2.2.2.2
+
+end WeylVolumeGaugePacket
 
 /--
 **Owner-level positivity sanity check for the Weyl volume gauge.**
@@ -1775,17 +1808,23 @@ Integrates all five geometric mechanisms from the Gromov lecture:
 | Observable event `U`               | Cohomological support ideal `I(U)`                 |
 | Moving ball radius `ε`             | Volume filtration threshold `V`                     |
 -/
-structure GromovHomologicalProbabilityRoadmapPacket where
-  /-- Momentum-map probability (finite-dimensional / symplectic prototype). -/
-  momentum        : MomentumMapProbabilityPacket
-  /-- Homological measure (events → cohomological support ideals). -/
-  homologicalMeas : HomologicalMeasurePacket
-  /-- Moving-ball configuration space (radius-filtered packing geometry). -/
-  movingBalls     : MovingBallConfigurationPacket
-  /-- Cycle-volume spectrum (volume filtration → homological spectrum). -/
-  cycleSpectrum   : CycleVolumeSpectrumPacket
-  /-- Weyl volume gauge (asymptotic spectral growth → volume readout). -/
-  weylGauge       : WeylVolumeGaugePacket
+abbrev GromovHomologicalProbabilityRoadmapPacket : Type _ :=
+  MomentumMapProbabilityPacket ×
+    (HomologicalMeasurePacket ×
+      (MovingBallConfigurationPacket ×
+        (CycleVolumeSpectrumPacket × WeylVolumeGaugePacket)))
+
+namespace GromovHomologicalProbabilityRoadmapPacket
+
+abbrev momentum (P : GromovHomologicalProbabilityRoadmapPacket) : MomentumMapProbabilityPacket := P.1
+abbrev homologicalMeas (P : GromovHomologicalProbabilityRoadmapPacket) : HomologicalMeasurePacket := P.2.1
+abbrev movingBalls (P : GromovHomologicalProbabilityRoadmapPacket) : MovingBallConfigurationPacket :=
+  P.2.2.1
+abbrev cycleSpectrum (P : GromovHomologicalProbabilityRoadmapPacket) : CycleVolumeSpectrumPacket :=
+  P.2.2.2.1
+abbrev weylGauge (P : GromovHomologicalProbabilityRoadmapPacket) : WeylVolumeGaugePacket := P.2.2.2.2
+
+end GromovHomologicalProbabilityRoadmapPacket
 
 /--
 **Theorem 24.7 — Roadmap constructor from explicit witnesses.**
@@ -1801,11 +1840,7 @@ def constructGromovRoadmap
     (c : CycleVolumeSpectrumPacket)
     (w : WeylVolumeGaugePacket) :
     GromovHomologicalProbabilityRoadmapPacket :=
-  { momentum        := m
-    homologicalMeas := h
-    movingBalls     := b
-    cycleSpectrum   := c
-    weylGauge       := w }
+  (m, (h, (b, (c, w))))
 
 /--
 **Theorem 24.8 — Gromov roadmap induces the §12 homological probability pipeline.**

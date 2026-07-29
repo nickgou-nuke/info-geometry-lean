@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.FilteredGNSRepresentedRangeCompletion
+import InfoGeometry.Canonical.FilteredGNSRepresentedAlgebraCompletion
 
 /-!
 # C-star algebra structure on the completed represented GNS range
@@ -21,7 +21,7 @@ noncomputable section
 namespace CStarStateColimit.Native.FilteredGNSRepresentedCStarCompletion
 
 set_option synthInstance.maxHeartbeats 80000
-set_option maxHeartbeats 2000000
+set_option maxHeartbeats 400000
 set_option linter.unusedSectionVars false
 
 open CStarStateColimit.Native
@@ -29,6 +29,7 @@ open CStarStateColimit.Native.FilteredGNSHilbertColimit
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient
 open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
+open CStarStateColimit.Native.FilteredGNSRepresentedAlgebraCompletion
 
 universe u
 
@@ -48,92 +49,6 @@ local instance globalBoundedOperatorCStarAlgebra :
     CStarAlgebra
       (GNSHilbertColimit Stage sys ω →L[ℂ]
         GNSHilbertColimit Stage sys ω) where
-
-/-- The completion equivalence preserves the multiplicative unit. -/
-theorem representedRangeCompletionEquiv_map_one :
-    representedRangeCompletionEquiv Stage sys ω
-        (1 :
-          representedAlgebraicRangeCompletion Stage sys ω) =
-      1 := by
-  rw [← UniformSpace.Completion.coe_one,
-    representedRangeCompletionEquiv_coe]
-  exact map_one
-    (representedAlgebraicRangeInclusion Stage sys ω)
-
-/-- The completion equivalence preserves noncommutative multiplication.
-The proof descends from the dense represented algebraic range. -/
-theorem representedRangeCompletionEquiv_map_mul
-    (x y : representedAlgebraicRangeCompletion Stage sys ω) :
-    representedRangeCompletionEquiv Stage sys ω (x * y) =
-      representedRangeCompletionEquiv Stage sys ω x *
-        representedRangeCompletionEquiv Stage sys ω y := by
-  induction x, y using UniformSpace.Completion.induction_on₂ with
-  | hp =>
-    exact isClosed_eq
-      ((representedRangeCompletionEquiv
-        Stage sys ω).continuous.comp
-          (continuous_fst.mul continuous_snd))
-      (((representedRangeCompletionEquiv
-          Stage sys ω).continuous.comp continuous_fst).mul
-        ((representedRangeCompletionEquiv
-          Stage sys ω).continuous.comp continuous_snd))
-  | ih x y =>
-    calc
-      representedRangeCompletionEquiv Stage sys ω
-          ((x :
-              representedAlgebraicRangeCompletion Stage sys ω) *
-            (y :
-              representedAlgebraicRangeCompletion Stage sys ω)) =
-          representedRangeCompletionEquiv Stage sys ω
-            ((x * y :
-              representedAlgebraicRange Stage sys ω) :
-              representedAlgebraicRangeCompletion Stage sys ω) := by
-                exact congrArg
-                  (representedRangeCompletionEquiv Stage sys ω)
-                  (UniformSpace.Completion.coe_mul x y).symm
-      _ = representedAlgebraicRangeInclusion Stage sys ω (x * y) :=
-        representedRangeCompletionEquiv_coe Stage sys ω (x * y)
-      _ = representedAlgebraicRangeInclusion Stage sys ω x *
-          representedAlgebraicRangeInclusion Stage sys ω y :=
-        map_mul
-          (representedAlgebraicRangeInclusion Stage sys ω) x y
-      _ = representedRangeCompletionEquiv Stage sys ω
-              (x :
-                representedAlgebraicRangeCompletion Stage sys ω) *
-            representedRangeCompletionEquiv Stage sys ω
-              (y :
-                representedAlgebraicRangeCompletion Stage sys ω) := by
-        exact congrArg₂ (· * ·)
-          (representedRangeCompletionEquiv_coe
-            Stage sys ω x).symm
-          (representedRangeCompletionEquiv_coe
-            Stage sys ω y).symm
-
-/-- Canonical complex algebra equivalence between the completed faithful
-range and the represented operator closure. -/
-def representedRangeCompletionAlgEquiv :
-    representedAlgebraicRangeCompletion Stage sys ω ≃ₐ[ℂ]
-      representedCStarClosure Stage sys ω :=
-  AlgEquiv.ofLinearEquiv
-    (representedRangeCompletionEquiv
-      Stage sys ω).toLinearEquiv
-    (representedRangeCompletionEquiv_map_one Stage sys ω)
-    (representedRangeCompletionEquiv_map_mul Stage sys ω)
-
-@[simp] theorem representedRangeCompletionAlgEquiv_apply
-    (x : representedAlgebraicRangeCompletion Stage sys ω) :
-    representedRangeCompletionAlgEquiv Stage sys ω x =
-      representedRangeCompletionEquiv Stage sys ω x :=
-  rfl
-
-@[simp] theorem representedRangeCompletionAlgEquiv_coe
-    (x : representedAlgebraicRange Stage sys ω) :
-    representedRangeCompletionAlgEquiv Stage sys ω
-        (x :
-          representedAlgebraicRangeCompletion Stage sys ω) =
-      representedAlgebraicRangeInclusion Stage sys ω x := by
-  rw [representedRangeCompletionAlgEquiv_apply,
-    representedRangeCompletionEquiv_coe]
 
 /-- Canonical involution on the completed faithful range, transported from
 the operator adjoint on the represented C-star closure. -/

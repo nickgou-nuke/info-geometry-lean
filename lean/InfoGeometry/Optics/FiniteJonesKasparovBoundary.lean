@@ -131,15 +131,23 @@ The optical kernel projection readout used by the finite Kasparov bridge.
 This remains a finite readout function: it maps a defect matrix to the list of
 projected defect modes selected by the model.
 -/
-structure FiniteOpticalKernelReadout where
-  /-- Read a defect matrix as a finite list of projected modes. -/
-  modesOfDefect : JonesMat → List JonesMode
-  /-- Grade of each projected optical mode. -/
-  grade : JonesMode → KernelGrade
+def FiniteOpticalKernelReadout :=
+  (JonesMat → List JonesMode) × (JonesMode → KernelGrade)
 
 namespace FiniteOpticalKernelReadout
 
 variable (K : FiniteOpticalKernelReadout)
+
+/-- Read a defect matrix as a finite list of projected modes. -/
+def modesOfDefect : JonesMat → List JonesMode := K.1
+
+/-- Grade of each projected optical mode. -/
+def grade : JonesMode → KernelGrade := K.2
+
+/-- Construct a finite optical kernel readout from its two maps. -/
+def mk (modesOfDefect : JonesMat → List JonesMode)
+    (grade : JonesMode → KernelGrade) : FiniteOpticalKernelReadout :=
+  (modesOfDefect, grade)
 
 /--
 The constructive Kasparov datum associated to a finite optical kernel readout.

@@ -108,15 +108,22 @@ This restores the historical public carrier without storing coherence as
 evidence: the nontrivial action is owned by the native automorphism
 `MulAut.conj`, while `base`, `x`, and `y` are genuine group data.
 -/
-structure PointedGroupBraidWitness (Carrier : Type) [Group Carrier] where
-  base : Carrier
-  x : Carrier
-  y : Carrier
+def PointedGroupBraidWitness (Carrier : Type) [Group Carrier] :=
+  Carrier × Carrier × Carrier
 
 namespace PointedGroupBraidWitness
 
 variable {Carrier : Type} [Group Carrier]
 variable (W : PointedGroupBraidWitness Carrier)
+
+def base : Carrier := W.1
+
+def x : Carrier := W.2.1
+
+def y : Carrier := W.2.2
+
+def mk (base x y : Carrier) : PointedGroupBraidWitness Carrier :=
+  (base, x, y)
 
 /-- The bundled `A`-side action, evaluated through the native conjugation owner. -/
 def actionX : Carrier :=

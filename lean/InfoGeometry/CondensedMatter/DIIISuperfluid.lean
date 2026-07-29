@@ -192,17 +192,47 @@ A model-specific topological readout attached to a DIII datum.
 The invariant value is intentionally abstract: the same symmetry class supports
 different classification groups depending on dimension and interaction regime.
 -/
-structure DIIITopologicalReadout
+def DIIITopologicalReadout
     {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (D : DIIISuperfluidDatum Op) where
-  /-- Classification regime being represented. -/
-  regime : DIIITopologicalRegime
+    (D : DIIISuperfluidDatum Op) :=
+  DIIITopologicalRegime × Σ I : Type*, I
 
-  /-- Model-specific invariant carrier, for example `Z`, `Z2`, or `Z16`. -/
-  invariantType : Type*
+namespace DIIITopologicalReadout
 
-  /-- Chosen invariant value/readout. -/
-  invariant : invariantType
+variable
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    {D : DIIISuperfluidDatum Op}
+
+/-- Classification regime carried by a model-specific DIII readout. -/
+def regime (R : DIIITopologicalReadout D) : DIIITopologicalRegime :=
+  R.1
+
+/-- The model-specific invariant carrier, such as `ℤ`, `ZMod 2`, or `ZMod 16`. -/
+def invariantType (R : DIIITopologicalReadout D) : Type* :=
+  R.2.1
+
+/-- The chosen invariant value in the carrier selected by the model. -/
+def invariant (R : DIIITopologicalReadout D) : R.invariantType :=
+  R.2.2
+
+/-- Construct a DIII readout from its regime and invariant value. -/
+def mk (regime : DIIITopologicalRegime)
+    {I : Type*} (invariant : I) : DIIITopologicalReadout D :=
+  (regime, ⟨I, invariant⟩)
+
+@[simp] theorem regime_mk (regime : DIIITopologicalRegime)
+    {I : Type*} (invariant : I) :
+    (mk (D := D) regime invariant).regime = regime := rfl
+
+@[simp] theorem invariantType_mk (regime : DIIITopologicalRegime)
+    {I : Type*} (invariant : I) :
+    (mk (D := D) regime invariant).invariantType = I := rfl
+
+@[simp] theorem invariant_mk (regime : DIIITopologicalRegime)
+    {I : Type*} (invariant : I) :
+    (mk (D := D) regime invariant).invariant = invariant := rfl
+
+end DIIITopologicalReadout
 
 /-! ## 3. Owner target -/
 

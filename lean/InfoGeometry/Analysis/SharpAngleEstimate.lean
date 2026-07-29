@@ -1,4 +1,5 @@
 import InfoGeometry.Analysis.DirichletForm
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # InfoGeometry.Analysis.SharpAngleEstimate

@@ -34,9 +34,14 @@ The positive-height Souriau temperature sector.
 This is the part of `SouriauTemperature` whose complex coordinate lies in the
 upper half-plane.
 -/
-structure PositiveSouriauTemperature where
-  temp : SouriauTemperature
-  im_pos : 0 < temp.s.im
+abbrev PositiveSouriauTemperature := {s : ℂ // 0 < s.im}
+
+namespace PositiveSouriauTemperature
+
+abbrev temp (T : PositiveSouriauTemperature) : SouriauTemperature := T.1
+abbrev im_pos (T : PositiveSouriauTemperature) : 0 < T.temp.s.im := T.2
+
+end PositiveSouriauTemperature
 
 namespace PositiveSouriauTemperature
 
@@ -51,10 +56,8 @@ def toRealUpperHalfPlane
 /-- Package a real UHP point as a positive Souriau temperature. -/
 def ofRealUpperHalfPlane
     (τ : RealUpperHalfPlane) :
-    PositiveSouriauTemperature where
-  temp := { s := Complex.mk τ.x τ.y }
-  im_pos := by
-    simpa using τ.y_pos
+    PositiveSouriauTemperature :=
+  ⟨Complex.mk τ.x τ.y, by simpa using τ.y_pos⟩
 
 @[simp]
 theorem toRealUpperHalfPlane_x
@@ -84,12 +87,8 @@ theorem toRealUpperHalfPlane_ofRealUpperHalfPlane
 theorem ofRealUpperHalfPlane_toRealUpperHalfPlane
     (T : PositiveSouriauTemperature) :
     ofRealUpperHalfPlane (toRealUpperHalfPlane T) = T := by
-  cases T with
-  | mk temp hpos =>
-    cases temp with
-    | mk s =>
-      cases s
-      simp [toRealUpperHalfPlane, ofRealUpperHalfPlane]
+  apply Subtype.ext
+  apply Complex.ext <;> rfl
 
 /-! ## 2. Transported `SL2R` action -/
 

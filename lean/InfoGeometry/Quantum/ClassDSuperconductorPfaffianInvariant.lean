@@ -130,21 +130,66 @@ theorem gap_closing_at_transition (mu t : ℝ) (h : mu^2 = t^2) :
     rw [det_H_high_symm, h2]
     ring
 
-/-- Finite parameter witness for the two high-symmetry Pfaffian signs and gaps. -/
-structure FiniteClassDPfaffianWitness where
-  mu : ℝ
-  t : ℝ
-  h_topological : mu^2 < t^2
-  pfaffianProduct : ℝ
-  h_pfaffian_eq : pfaffianProduct = mu^2 - t^2
-  h_pfaffian_neg : pfaffianProduct < 0
-  bulkGapZero : (H_BdG_high_symm (mu + t)).det ≠ 0
-  bulkGapPi : (H_BdG_high_symm (mu - t)).det ≠ 0
+/--
+Finite Class-D parameters in the topological regime.
+
+The Pfaffian product, its sign, and both high-symmetry bulk gaps are derived
+below; they are not stored as independent evidence.
+-/
+abbrev FiniteClassDPfaffianWitness : Type :=
+  Σ' mu : ℝ, Σ' t : ℝ, mu^2 < t^2
+
+namespace FiniteClassDPfaffianWitness
+
+variable (W : FiniteClassDPfaffianWitness)
+
+abbrev mu : ℝ := W.1
+
+abbrev t : ℝ := W.2.1
+
+abbrev h_topological : W.mu^2 < W.t^2 := W.2.2
+
+/-- The witness's Pfaffian product is the canonical finite Kitaev product. -/
+def pfaffianProduct : ℝ :=
+  kitaevPfaffianProduct W.mu W.t
+
+/-- The canonical product is the difference of squares. -/
+theorem h_pfaffian_eq :
+    W.pfaffianProduct = W.mu^2 - W.t^2 :=
+  kitaev_pfaffian_product_eq W.mu W.t
+
+/-- Topological parameters force a negative Pfaffian product. -/
+theorem h_pfaffian_neg : W.pfaffianProduct < 0 :=
+  topological_phase_pfaffian_neg W.mu W.t W.h_topological
+
+/-- The `k = 0` finite Hamiltonian is gapped in the strict topological regime. -/
+theorem bulkGapZero :
+    (H_BdG_high_symm (W.mu + W.t)).det ≠ 0 := by
+  rw [bulk_gap_iff]
+  intro hzero
+  have hmu : W.mu = -W.t := by
+    linarith
+  have hsquares : W.mu^2 = W.t^2 := by
+    calc
+      W.mu^2 = (-W.t)^2 := congrArg (fun x : ℝ => x^2) hmu
+      _ = W.t^2 := by ring
+  exact (ne_of_lt W.h_topological) hsquares
+
+/-- The `k = π` finite Hamiltonian is gapped in the strict topological regime. -/
+theorem bulkGapPi :
+    (H_BdG_high_symm (W.mu - W.t)).det ≠ 0 := by
+  rw [bulk_gap_iff]
+  intro hpi
+  have hmu : W.mu = W.t := by
+    linarith
+  have hsquares : W.mu^2 = W.t^2 := by
+    exact congrArg (fun x : ℝ => x^2) hmu
+  exact (ne_of_lt W.h_topological) hsquares
+
+end FiniteClassDPfaffianWitness
 
 theorem finiteClassDPfaffianWitness_exists :
     Nonempty FiniteClassDPfaffianWitness := by
-  refine ⟨⟨0, 1, by norm_num, -1, by norm_num, by norm_num, ?_, ?_⟩⟩
-  · rw [det_H_high_symm]; norm_num
-  · rw [det_H_high_symm]; norm_num
+  exact ⟨⟨0, 1, by norm_num⟩⟩
 
 end InfoGeometry.Quantum.ClassDSuperconductorPfaffianInvariant

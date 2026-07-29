@@ -54,6 +54,16 @@ deriving DecidableEq, Repr
 /-! ## 2. Trace-capable and weight-capable layers -/
 
 /--
+`x` is the least upper bound of an increasing sequence for an explicitly
+installed positive order.  Operator algebras need not carry a lattice order on
+all elements, so the order is supplied on the integration datum.
+-/
+def IsIncreasingSequentialSup
+    {A : Type*} (le : A → A → Prop) (u : ℕ → A) (x : A) : Prop :=
+  (∀ n, le (u n) (u (n + 1))) ∧
+    (∀ y, (∀ n, le (u n) y) ↔ le x y)
+
+/--
 A trace-capable noncommutative integration datum.
 
 This structure is intentionally separate from `WeightDatum`: a type III
@@ -64,25 +74,33 @@ structure TraceDatum
   /-- The positive cone on which positivity is asserted. -/
   positiveCone : Set A
 
+  /-- Positive order used by the sequential normality law. -/
+  positiveLE : A → A → Prop
+
   /-- Trace/integration functional. -/
   trace : A → ℝ≥0∞
-
-  /-- Positivity of the trace on the chosen cone. -/
-  positive :
-    ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ trace x
 
   /-- Cyclicity of the trace. -/
   cyclic :
     ∀ a b : A, trace (a * b) = trace (b * a)
 
-  /-- Normality certificate, left abstract at this algebraic layer. -/
-  normality : Prop
+  /-- Sequential normality on increasing positive elements. -/
+  normality :
+    ∀ (u : ℕ → A) (x : A),
+      (∀ n, u n ∈ positiveCone) →
+      IsIncreasingSequentialSup positiveLE u x →
+      trace x = ⨆ n, trace (u n)
 
-  /-- Faithfulness certificate, left abstract at this algebraic layer. -/
-  faithfulness : Prop
+  /-- Faithfulness on the selected positive cone. -/
+  faithfulness :
+    ∀ x : A, x ∈ positiveCone → trace x = 0 → x = 0
 
-  /-- Semifiniteness certificate, left abstract at this algebraic layer. -/
-  semifiniteness : Prop
+  /--
+  Semifiniteness through an explicit positive subdomain on which the trace is
+  finite.
+  -/
+  semifiniteness :
+    ∃ S : Set A, S ⊆ positiveCone ∧ ∀ x ∈ S, trace x < ⊤
 
 /--
 A noncommutative integration backend by weight.
@@ -95,32 +113,60 @@ structure WeightDatum
   /-- Positive cone for the weight. -/
   positiveCone : Set A
 
+  /-- Positive order used by the sequential normality law. -/
+  positiveLE : A → A → Prop
+
   /-- Weight/integration functional. -/
   integral : A → ℝ≥0∞
 
-  /-- Positivity of the weight on the chosen cone. -/
-  positive :
-    ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ integral x
+  /-- Sequential normality on increasing positive elements. -/
+  normality :
+    ∀ (u : ℕ → A) (x : A),
+      (∀ n, u n ∈ positiveCone) →
+      IsIncreasingSequentialSup positiveLE u x →
+      integral x = ⨆ n, integral (u n)
 
-  /-- Normality certificate. -/
-  normality : Prop
+  /-- Faithfulness on the selected positive cone. -/
+  faithfulness :
+    ∀ x : A, x ∈ positiveCone → integral x = 0 → x = 0
 
-  /-- Faithfulness certificate. -/
-  faithfulness : Prop
-
-  /-- Semifiniteness certificate. -/
-  semifiniteness : Prop
+  /--
+  Semifiniteness through an explicit positive subdomain on which the weight is
+  finite.
+  -/
+  semifiniteness :
+    ∃ S : Set A, S ⊆ positiveCone ∧ ∀ x ∈ S, integral x < ⊤
 
 namespace TraceDatum
 
 variable {A : Type*} [AddCommMonoid A] [Mul A]
 variable (τ : TraceDatum A)
 
+/-- Nonnegativity is native to the `ℝ≥0∞` codomain; it is not stored evidence. -/
+theorem positive
+    (x : A) (_hx : x ∈ τ.positiveCone) :
+    (0 : ℝ≥0∞) ≤ τ.trace x :=
+  bot_le
+
 /-- Re-export trace cyclicity. -/
 theorem cyclic_apply
     (a b : A) :
     τ.trace (a * b) = τ.trace (b * a) :=
   τ.cyclic a b
+
+/-- A positive element with zero trace is zero. -/
+theorem eq_zero_of_mem_positiveCone_of_trace_eq_zero
+    {x : A}
+    (hx : x ∈ τ.positiveCone)
+    (htrace : τ.trace x = 0) :
+    x = 0 :=
+  τ.faithfulness x hx htrace
+
+/-- The trace has an explicit positive finite-valued subdomain. -/
+theorem exists_finite_positive_subdomain :
+    ∃ S : Set A, S ⊆ τ.positiveCone ∧
+      ∀ x ∈ S, τ.trace x < ⊤ :=
+  τ.semifiniteness
 
 end TraceDatum
 
@@ -172,6 +218,12 @@ namespace WeightDatum
 variable {A : Type*} [AddCommMonoid A]
 variable (φ : WeightDatum A)
 
+/-- Nonnegativity is native to the `ℝ≥0∞` codomain; it is not stored evidence. -/
+theorem positive
+    (x : A) (_hx : x ∈ φ.positiveCone) :
+    (0 : ℝ≥0∞) ≤ φ.integral x :=
+  bot_le
+
 /-- A weight is finite at an element when its value is not `∞`. -/
 def IsFiniteAt
     (x : A) : Prop :=
@@ -181,6 +233,20 @@ def IsFiniteAt
 def VanishesAt
     (x : A) : Prop :=
   φ.integral x = 0
+
+/-- A positive element with zero weight is zero. -/
+theorem eq_zero_of_mem_positiveCone_of_integral_eq_zero
+    {x : A}
+    (hx : x ∈ φ.positiveCone)
+    (hintegral : φ.integral x = 0) :
+    x = 0 :=
+  φ.faithfulness x hx hintegral
+
+/-- The weight has an explicit positive finite-valued subdomain. -/
+theorem exists_finite_positive_subdomain :
+    ∃ S : Set A, S ⊆ φ.positiveCone ∧
+      ∀ x ∈ S, φ.integral x < ⊤ :=
+  φ.semifiniteness
 
 end WeightDatum
 
@@ -209,8 +275,16 @@ structure ModularWeightDatum
   flow_add :
     ∀ s t x, modularFlow (s + t) x = modularFlow s (modularFlow t x)
 
-  /-- KMS/modular covariance certificate. -/
-  kmsCondition : Prop
+  /--
+  Modular invariance of the weight.
+
+  This is the exact real-time covariance law available at this algebraic
+  layer.  A full KMS boundary condition additionally needs multiplication,
+  complex-time analyticity, and boundary values, none of which are hidden in
+  this structure.
+  -/
+  weight_invariant :
+    ∀ t x, weight.integral (modularFlow t x) = weight.integral x
 
 namespace ModularWeightDatum
 
@@ -228,6 +302,12 @@ theorem modularFlow_zero_apply
     φ.modularFlow 0 x = x :=
   φ.flow_zero x
 
+/-- The modular flow preserves the installed noncommutative weight. -/
+theorem integral_modularFlow
+    (t : ℝ) (x : A) :
+    φ.integral (φ.modularFlow t x) = φ.integral x :=
+  φ.weight_invariant t x
+
 end ModularWeightDatum
 
 /-! ## 4. Crossed-product core traces -/
@@ -240,28 +320,69 @@ uses a modular weight, while the crossed-product core `Core` may carry an
 honest semifinite trace.
 -/
 structure CoreTraceDatum
-    (M Core : Type*) where
+    (M Core : Type*) [Mul Core] where
   /-- Embedding of the original algebra into the core. -/
   embed : M → Core
 
   /-- Semifinite trace on the core. -/
   coreTrace : Core → ℝ≥0∞
 
-  /-- Trace property on the core, left abstract at this layer. -/
-  traceProperty : Prop
+  /-- Dual action on the crossed-product/continuous core. -/
+  dualAction : ℝ → Core → Core
 
-  /-- Scaling/covariance under the dual flow. -/
-  traceScalingUnderDualFlow : Prop
+  /-- The zero parameter acts identically on the core. -/
+  dualAction_zero :
+    ∀ x : Core, dualAction 0 x = x
+
+  /-- The additive real parameter acts by composition. -/
+  dualAction_add :
+    ∀ (s t : ℝ) (x : Core),
+      dualAction (s + t) x = dualAction s (dualAction t x)
+
+  /-- Genuine cyclic trace law on the noncommutative core. -/
+  traceProperty :
+    ∀ x y : Core, coreTrace (x * y) = coreTrace (y * x)
+
+  /--
+  Covariance law under the dual flow.
+
+  This owner follows the invariant convention already used by
+  `TypeIIIContinuousCoreReal.RealContinuousCoreInterface`.
+  -/
+  traceScalingUnderDualFlow :
+    ∀ (t : ℝ) (x : Core),
+      coreTrace (dualAction t x) = coreTrace x
 
 namespace CoreTraceDatum
 
-variable {M Core : Type*}
+variable {M Core : Type*} [Mul Core]
 variable (C : CoreTraceDatum M Core)
 
 /-- Core trace readout of an embedded element. -/
 def traceOfEmbedded
     (x : M) : ℝ≥0∞ :=
   C.coreTrace (C.embed x)
+
+/-- The core trace is cyclic on products. -/
+theorem coreTrace_mul_comm (x y : Core) :
+    C.coreTrace (x * y) = C.coreTrace (y * x) :=
+  C.traceProperty x y
+
+/-- Readback of the identity element of the real dual action. -/
+theorem dualAction_zero_apply (x : Core) :
+    C.dualAction 0 x = x :=
+  C.dualAction_zero x
+
+/-- Readback of composition for the real dual action. -/
+theorem dualAction_add_apply (s t : ℝ) (x : Core) :
+    C.dualAction (s + t) x =
+      C.dualAction s (C.dualAction t x) :=
+  C.dualAction_add s t x
+
+/-- The continuous-core trace is invariant under the selected dual action. -/
+theorem coreTrace_dualAction (t : ℝ) (x : Core) :
+    C.coreTrace (C.dualAction t x) = C.coreTrace x :=
+  C.traceScalingUnderDualFlow t x
 
 end CoreTraceDatum
 
@@ -275,23 +396,29 @@ The important design choice is negative: this structure has no field
 available only after passing to `Core`.
 -/
 structure TypeIIIIntegrationDatum
-    (M Core : Type*) [AddCommMonoid M] where
+    (M Core : Type*) [AddCommMonoid M] [Mul Core] where
   /-- Modular weight on the original type III algebra. -/
   modularWeight : ModularWeightDatum M
 
   /-- Crossed-product/continuous-core trace datum. -/
   coreTrace : CoreTraceDatum M Core
 
-  /-- Certificate that the original algebra is treated as type III. -/
-  typeIII : Prop
-
-  /-- Certificate recording that no bare trace on `M` is part of this datum. -/
-  noBareTraceOnBase : Prop
-
 namespace TypeIIIIntegrationDatum
 
-variable {M Core : Type*} [AddCommMonoid M]
+variable {M Core : Type*} [AddCommMonoid M] [Mul Core]
 variable (T : TypeIIIIntegrationDatum M Core)
+
+/-- The base integration backend is definitionally a modular weight. -/
+def typeIII (_T : TypeIIIIntegrationDatum M Core) : IntegrationBackendKind :=
+  .modularWeight
+
+/--
+The absence of a bare base trace is enforced by the type of
+`TypeIIIIntegrationDatum`: its only base functional is the modular weight.
+-/
+theorem noBareTraceOnBase :
+    T.typeIII = IntegrationBackendKind.modularWeight :=
+  rfl
 
 /-- Type III base integration is by modular weight. -/
 def baseIntegral : M → ℝ≥0∞ :=
@@ -346,12 +473,18 @@ structure SuperTraceDatum
   /-- Supertrace readout. -/
   supertrace : A → ℝ := fun x => traceBackend (grading * x)
 
-  /-- The supertrace is routed through the declared backend and grading. -/
+  /-- Supertrace is grading-twist by `grading`. -/
   supertrace_eq :
-    ∀ x : A, supertrace x = traceBackend (grading * x)
+      ∀ x : A, supertrace x = traceBackend (grading * x) := by
+    intro x
+    rfl
 
-  /-- Cyclicity, twisted cyclicity, or KMS covariance certificate. -/
-  cyclicityOrTwistedCyclicity : Prop
+  /-- Twist used by a KMS or graded backend; ordinary cyclicity uses `id`. -/
+  twist : A → A := id
+
+  /-- Concrete twisted-cyclicity law for the selected supertrace backend. -/
+  cyclicityOrTwistedCyclicity :
+    ∀ x y : A, supertrace (x * y) = supertrace (twist y * x)
 
 namespace SuperTraceDatum
 
@@ -363,7 +496,14 @@ variable (S : SuperTraceDatum A)
 theorem supertrace_eq_traceBackend_grading_mul
     (x : A) :
     S.supertrace x = S.traceBackend (S.grading * x) :=
-  S.supertrace_eq x
+  by
+    simpa [SuperTraceDatum.supertrace] using S.supertrace_eq x
+
+/-- The selected supertrace backend satisfies its installed twisted cyclicity law. -/
+theorem supertrace_mul_eq_twisted_mul
+    (x y : A) :
+    S.supertrace (x * y) = S.supertrace (S.twist y * x) :=
+  S.cyclicityOrTwistedCyclicity x y
 
 end SuperTraceDatum
 

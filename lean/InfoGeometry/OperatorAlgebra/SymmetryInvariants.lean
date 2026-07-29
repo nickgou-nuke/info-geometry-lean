@@ -1401,10 +1401,33 @@ structure OperatorGeometryOrigin
   /--
   Optional regular/defect projector pair, when a geometry supplies one.
 
-  This is a field of type `Prop`-free data only when available; modules that
-  need it should quantify over an explicit `symmetry.InvariantProjectorPair`.
+  The owner includes the Drazin inverse and the resulting invariant regular,
+  defect, and chiral projector geometry.
   -/
-  has_projector_geometry : Prop
+  projectorGeometry : Option symmetry.InvariantDrazinGeometry
+
+namespace OperatorGeometryOrigin
+
+variable {G : Type uG} {Op : Type uOp}
+variable [Group G] [Ring Op] [Module ℝ Op]
+
+/-- Historical readback derived from the presence of concrete projector
+geometry rather than stored as an evidence marker. -/
+def has_projector_geometry (O : OperatorGeometryOrigin G Op) : Prop :=
+  O.projectorGeometry.isSome
+
+theorem has_projector_geometry_iff_exists
+    (O : OperatorGeometryOrigin G Op) :
+    O.has_projector_geometry ↔
+      ∃ geometry : O.symmetry.InvariantDrazinGeometry,
+        O.projectorGeometry = some geometry := by
+  cases h : O.projectorGeometry with
+  | none =>
+      simp [has_projector_geometry, h]
+  | some geometry =>
+      simp [has_projector_geometry, h]
+
+end OperatorGeometryOrigin
 
 /--
 The formal slogan as a proposition schema:

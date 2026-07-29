@@ -18,12 +18,9 @@ lanes, not assumed here.
 
 namespace InfoGeometry.GroupTheory.AutomorphismTower
 
-/-- A theorem-honest certificate for a complete group: an explicit multiplicative
-equivalence between the group and its automorphism group.  In the standard
-literature this packages the facts "centerless" and "all automorphisms inner"
-without re-proving those definitions in this small packet. -/
-structure CompleteGroupCertificate (G : Type*) [Group G] where
-  conjEquiv : G ≃* MulAut G
+/-! The complete-group datum is the explicit multiplicative equivalence itself;
+the former certificate added no field or proposition beyond `conjEquiv`. -/
+abbrev CompleteGroupCertificate (G : Type*) [Group G] := G ≃* MulAut G
 
 namespace CompleteGroupCertificate
 
@@ -33,15 +30,15 @@ variable {G : Type*} [Group G]
 automorphism group. -/
 noncomputable def autFintype [Fintype G]
     (C : CompleteGroupCertificate G) : Fintype (MulAut G) :=
-  Fintype.ofEquiv G C.conjEquiv.toEquiv
+    Fintype.ofEquiv G C.toEquiv
 
 /-- Cardinal readback: a complete finite group and its automorphism group have
 the same number of elements. -/
 theorem card_aut_eq_group [Fintype G] (C : CompleteGroupCertificate G) :
-    letI : Fintype (MulAut G) := C.autFintype
+    letI : Fintype (MulAut G) := CompleteGroupCertificate.autFintype C
     Fintype.card (MulAut G) = Fintype.card G := by
-  letI : Fintype (MulAut G) := C.autFintype
-  exact Fintype.card_congr (C.conjEquiv.symm : MulAut G ≃* G).toEquiv
+  letI : Fintype (MulAut G) := CompleteGroupCertificate.autFintype C
+  exact Fintype.card_congr (C.symm : MulAut G ≃* G).toEquiv
 
 /-- The bounded finite-stage cardinal ledger used by the executable multi-engine
 sandbox once a complete-group certificate is available. -/
@@ -52,7 +49,8 @@ def towerCard [Fintype G] (_C : CompleteGroupCertificate G) (_n : ℕ) : ℕ :=
 from one stage to the next.  This is not the transfinite automorphism-tower
 theorem; it is the exact local fixed-point readback. -/
 theorem towerCard_stable [Fintype G] (C : CompleteGroupCertificate G) (n : ℕ) :
-    C.towerCard (n + 1) = C.towerCard n := by
+    CompleteGroupCertificate.towerCard C (n + 1) =
+      CompleteGroupCertificate.towerCard C n := by
   rfl
 
 /-- Concrete low-cardinality sanity check used by the external lanes: the

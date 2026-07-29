@@ -51,6 +51,16 @@ def finite_prod_seq (T : ℝ) (N : A) (n : ℕ) : A :=
 def nilpotent_exp (T : ℝ) (N : A) : A :=
   1 + T • N
 
+/-- Nilpotent truncations form an additive one-parameter family. -/
+theorem nilpotent_exp_mul (S T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp S N * nilpotent_exp T N = nilpotent_exp (S + T) N := by
+  unfold nilpotent_exp
+  rw [add_mul, one_mul, mul_add, mul_one]
+  have h_smul_mul : (S • N) * (T • N) = (S * T) • (N * N) := by
+    rw [smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [h_smul_mul, hN, smul_zero, add_zero, add_smul]
+  abel
+
 /-- Recursive sum evaluation for a constant sequence. -/
 lemma recursive_sum_const (T : ℝ) (n : ℕ) :
     recursive_sum (fun _ => T) n = (n : ℝ) * T := by
@@ -133,8 +143,12 @@ Debt marker only: this module proves the eventually-constant nilpotent case;
 it does not prove a general infinite-dimensional Hestenes/colimit product
 completion or identify the limit with any external Dirac/Virasoro flow.
 -/
-def general_colimit_completion_debt : String :=
-  "Open: prove a general Hestenes/categorical-colimit product-completion theorem beyond the eventually-constant nilpotent case."
+/- The categorical completion remains open; the retained compatibility name now
+   exposes the proven generic nilpotent group law rather than a string marker. -/
+@[deprecated nilpotent_exp_mul (since := "2026-07-29")]
+theorem general_colimit_completion_debt (S T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp S N * nilpotent_exp T N = nilpotent_exp (S + T) N :=
+  nilpotent_exp_mul S T N hN
 
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 

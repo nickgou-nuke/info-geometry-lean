@@ -2,6 +2,7 @@ import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Canonical.TriFacetGeometry
 import InfoGeometry.Convex.SelfDualCone
+import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 
 /-!
 # Fibonacci Braided Tower Cone
@@ -27,6 +28,7 @@ namespace InfoGeometry.Categorical.FibonacciBraidedTowerCone
 open Set
 open CategoryTheory
 open CategoryTheory.MonoidalCategory
+open scoped MonoidalCategory
 open InfoGeometry.Canonical.TriFacetGeometry
 open InfoGeometry.Convex
 

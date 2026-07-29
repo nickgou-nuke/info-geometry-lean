@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.MvPolynomial.Basic
 
 /-!
 # Oaku--Takayama D-module de Rham algorithm interface
@@ -39,9 +40,25 @@ def WeylRelation : WeylGen → WeylGen → Prop
 /-- A paper-level input for the hypersurface complement problem. -/
 structure HypersurfaceComplementInput where
   n : ℕ
-  polynomial : Type
-  nonzeroPolynomial : Prop
-  computableField : Prop
+  coefficientField : Type
+  [field : Field coefficientField]
+  [effectiveEquality : DecidableEq coefficientField]
+  polynomial : MvPolynomial (Fin n) coefficientField
+  nonzeroPolynomial : polynomial ≠ 0
+
+namespace HypersurfaceComplementInput
+
+/-- Historical name for the native effective equality structure on coefficients. -/
+abbrev computableField (Input : HypersurfaceComplementInput) :
+    DecidableEq Input.coefficientField :=
+  Input.effectiveEquality
+
+/-- The hypersurface equation is a genuine nonzero multivariate polynomial. -/
+theorem polynomial_ne_zero (Input : HypersurfaceComplementInput) :
+    Input.polynomial ≠ 0 :=
+  Input.nonzeroPolynomial
+
+end HypersurfaceComplementInput
 
 /-- Data slots for the four computational stages of Algorithm 1.2.
 

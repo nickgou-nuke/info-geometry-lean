@@ -88,9 +88,14 @@ theorem finiteRelativeEntropy_eq_zero_iff
     have hsum_gap_eq :
         ∑ j : Data, relativeEntropyGap q p j = finiteRelativeEntropy q p := by
       unfold relativeEntropyGap finiteRelativeEntropy
-      rw [Finset.sum_sub_distrib]
-      rw [Finset.sum_sub_distrib, hq_sum, hp_sum]
-      norm_num
+      calc
+        (∑ j : Data, (q j * Real.log (q j / p j) - (q j - p j))) =
+            (∑ j : Data, q j * Real.log (q j / p j)) -
+              ∑ j : Data, (q j - p j) := by
+          rw [Finset.sum_sub_distrib]
+        _ = ∑ j : Data, q j * Real.log (q j / p j) := by
+          rw [Finset.sum_sub_distrib, hq_sum, hp_sum]
+          norm_num
     linarith
   · intro hqp
     subst p

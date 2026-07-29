@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.CubicJordanOs
+import InfoGeometry.Algebra.H3ZornJordanIdentity
 
 /-!
 # Freudenthal identity: checked diagonal Albert subalgebra
@@ -70,7 +71,12 @@ theorem freudenthal_diag_zero_zero_one :
 
 
 
-/-- The triple product {x,y,z} = (x∘y)∘z + (z∘y)∘x - (x∘z)∘y satisfies Jordan identity -/
-theorem freudenthal_jordan_product : True := by trivial
+/-! The full Albert identity remains outside this owner.  The genuine
+noncommutative Jordan theorem available in the repository is the proved
+`H3Zorn` quadratic-representation law, exposed here under the legacy name
+without weakening it to a proposition marker. -/
+theorem freudenthal_jordan_product :
+    InfoGeometry.Algebra.H3ZornJordanProductLaw :=
+  InfoGeometry.Algebra.H3ZornJordanProductLaw_proof
 
 end InfoGeometry.Algebra.FreudenthalComplete

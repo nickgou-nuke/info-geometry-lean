@@ -16,7 +16,29 @@ abbrev Z2 := ℤ × ℤ
 
 def shiftI (pq : Z2) : Z2 := (pq.1 + 1, pq.2 - 1)
 
+/-- The inverse bidegree shift to `shiftI`. -/
+def shiftIPre (pq : Z2) : Z2 := (pq.1 - 1, pq.2 + 1)
+
 def shiftK (pq : Z2) : Z2 := (pq.1 - 1, pq.2)
+
+/-- The inverse bidegree shift to `shiftK`. -/
+def shiftKPre (pq : Z2) : Z2 := (pq.1 + 1, pq.2)
+
+@[simp]
+theorem shiftI_shiftIPre (pq : Z2) : shiftI (shiftIPre pq) = pq := by
+  ext <;> simp [shiftI, shiftIPre]
+
+@[simp]
+theorem shiftIPre_shiftI (pq : Z2) : shiftIPre (shiftI pq) = pq := by
+  ext <;> simp [shiftI, shiftIPre]
+
+@[simp]
+theorem shiftK_shiftKPre (pq : Z2) : shiftK (shiftKPre pq) = pq := by
+  ext <;> simp [shiftK, shiftKPre]
+
+@[simp]
+theorem shiftKPre_shiftK (pq : Z2) : shiftKPre (shiftK pq) = pq := by
+  ext <;> simp [shiftK, shiftKPre]
 
 universe u
 
@@ -28,7 +50,12 @@ structure ExactCouple (R : Type u) [Ring R]
   i : ∀ pq, D pq →ₗ[R] D (shiftI pq)
   j : ∀ pq, D pq →ₗ[R] E pq
   k : ∀ pq, E pq →ₗ[R] D (shiftK pq)
-  exact_k : ∀ pq, LinearMap.ker (k pq) = LinearMap.range (j pq)
+  exact_ij :
+    ∀ pq, LinearMap.ker (j (shiftI pq)) = LinearMap.range (i pq)
+  exact_jk :
+    ∀ pq, LinearMap.ker (k pq) = LinearMap.range (j pq)
+  exact_ki :
+    ∀ pq, LinearMap.ker (i (shiftK pq)) = LinearMap.range (k pq)
 
 namespace ExactCouple
 
@@ -57,7 +84,7 @@ theorem differential_comp_differential (pq : Z2) :
     exact ⟨C.k pq x, rfl⟩
   have hker :
       C.j (shiftK pq) (C.k pq x) ∈ LinearMap.ker (C.k (shiftK pq)) := by
-    rw [C.exact_k (shiftK pq)]
+    rw [C.exact_jk (shiftK pq)]
     exact hmem
   have hzero :
       C.k (shiftK pq) (C.j (shiftK pq) (C.k pq x)) = 0 := hker

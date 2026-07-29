@@ -1,1 +1,3 @@
 import InfoGeometry.Categorical.Holonomy
+import InfoGeometry.Categorical.FilteredColimitExactness
+import InfoGeometry.Categorical.TensorColimit

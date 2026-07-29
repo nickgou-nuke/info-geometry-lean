@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.InnerProductSpace.l2Space
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Krein.DoubledSpace

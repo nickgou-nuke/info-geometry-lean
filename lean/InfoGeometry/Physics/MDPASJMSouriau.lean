@@ -163,12 +163,44 @@ structure FiniteSpinParticleCertificate where
   v : Vec4
   field : Tensor2
   field_antisym : IsAntisymmetric field
-  spin_antisym : IsAntisymmetric (wedge u v)
-  spin_plucker : pfaffian4 (wedge u v) = 0
-  spin_transverse : dot u p = 0 → dot v p = 0 → contractRight (wedge u v) p = 0
-  lorentz_power_zero : dot p (lorentzForce field p) = 0
-  normal_moment_readout : ∀ q m sB : ℚ, m ≠ 0 → gyromagneticReadout q m 2 sB = q * sB / m
-  spin_half_prequantization : ∀ h : ℚ, SpinPrequantized (h / 2) h
+
+namespace FiniteSpinParticleCertificate
+
+variable (C : FiniteSpinParticleCertificate)
+
+/-- The certificate's decomposable spin bivector is antisymmetric. -/
+theorem spin_antisym : IsAntisymmetric (wedge C.u C.v) :=
+  wedge_antisymmetric C.u C.v
+
+/-- The certificate's decomposable spin bivector has zero Pfaffian. -/
+theorem spin_plucker : pfaffian4 (wedge C.u C.v) = 0 :=
+  pfaffian4_wedge_zero C.u C.v
+
+/-- Orthogonality of both generating vectors implies spin transversality. -/
+theorem spin_transverse
+    (hu : dot C.u C.p = 0) (hv : dot C.v C.p = 0) :
+    contractRight (wedge C.u C.v) C.p = 0 :=
+  contract_wedge_eq_zero_of_dot_eq_zero C.u C.v C.p hu hv
+
+/-- Antisymmetry of the supplied field forces zero Lorentz-force power. -/
+theorem lorentz_power_zero :
+    dot C.p (lorentzForce C.field C.p) = 0 :=
+  antisymmetric_power_zero C.field C.p C.field_antisym
+
+/-- The normal `g = 2` magnetic-moment readout. -/
+theorem normal_moment_readout
+    (_C : FiniteSpinParticleCertificate)
+    (q m sB : ℚ) (hm : m ≠ 0) :
+    gyromagneticReadout q m 2 sB = q * sB / m :=
+  gyromagneticReadout_g_two q m sB hm
+
+/-- Half-spin prequantization is the integral identity `2(h/2)/h = 1`. -/
+theorem spin_half_prequantization
+    (_C : FiniteSpinParticleCertificate) (h : ℚ) :
+    SpinPrequantized (h / 2) h :=
+  spin_half_prequantized h
+
+end FiniteSpinParticleCertificate
 
 def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field) :
     FiniteSpinParticleCertificate where
@@ -177,13 +209,5 @@ def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field
   v := v
   field := field
   field_antisym := hfield
-  spin_antisym := wedge_antisymmetric u v
-  spin_plucker := pfaffian4_wedge_zero u v
-  spin_transverse := by
-    intro hu hv
-    exact contract_wedge_eq_zero_of_dot_eq_zero u v p hu hv
-  lorentz_power_zero := antisymmetric_power_zero field p hfield
-  normal_moment_readout := gyromagneticReadout_g_two
-  spin_half_prequantization := spin_half_prequantized
 
 end InfoGeometry.Physics.MDPASJMSouriau

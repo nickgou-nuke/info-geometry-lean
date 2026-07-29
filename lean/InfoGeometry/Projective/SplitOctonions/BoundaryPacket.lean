@@ -106,87 +106,107 @@ boundary lane.
 This is a theorem bundle collecting owner facts already proved elsewhere in the
 repository. It does not add a new abstract split-Albert projective-plane bridge.
 -/
-structure SplitOctonionBoundaryPacket
+abbrev SplitOctonionBoundaryPacket
     (V : Type v) [AddCommGroup V] [Module ℝ V]
-    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) where
-  /-- The split Albert-Cayley-Dickson doubling layer has canonical zero divisors. -/
-  split_albert_zero_divisors :
-    ∃ x y : AlbertStep ℝ (SplitQuaternion ℝ) (1 : ℝ),
-      x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) : Type _ :=
+  Σ' _projective_null_boundary :
+      ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B),
+    (∃ x y : AlbertStep ℝ (SplitQuaternion ℝ) (1 : ℝ),
+        x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0) ∧
+      Module.finrank ℝ SplitAlbertCarrier = 27 ∧
+      (∀ X Y : ZornCell ℝ V,
+        polarZ (concretePolarDatum B) X Y = polarZ (concretePolarDatum B) Y X) ∧
+      (∀ X Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B),
+        projective_polar_incidence (R := ℝ) (V := V) B
+            (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) X)
+            (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) Y)
+          ↔ polarExpr B X.rep Y.rep = 0) ∧
+      (∀ {v : V} (hv : v ≠ 0),
+        Incident (concretePolarDatum B)
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (pPlusRep (R := ℝ) (V := V) B))
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (upperLightrayRep (R := ℝ) (V := V) B hv))) ∧
+      (∀ {w : V} (hw : w ≠ 0),
+        Incident (concretePolarDatum B)
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (pMinusRep (R := ℝ) (V := V) B))
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (lowerLightrayRep (R := ℝ) (V := V) B hw))) ∧
+      (¬ Incident (concretePolarDatum B)
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (pPlusRep (R := ℝ) (V := V) B))
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (pMinusRep (R := ℝ) (V := V) B))) ∧
+      (∀ {v w : V} (hv : v ≠ 0) (hw : w ≠ 0),
+        Incident (concretePolarDatum B)
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (upperLightrayRep (R := ℝ) (V := V) B hv))
+          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+            (lowerLightrayRep (R := ℝ) (V := V) B hw))
+          ↔ B v w = 0)
 
-  /-- The current split Albert carrier is the real 27-dimensional owner model. -/
-  split_albert_finrank_27 :
-    Module.finrank ℝ SplitAlbertCarrier = 27
+namespace SplitOctonionBoundaryPacket
 
-  /-- The concrete Zorn polar pairing is symmetric. -/
-  concrete_polar_symm :
-    ∀ X Y : ZornCell ℝ V,
-      polarZ (concretePolarDatum B) X Y = polarZ (concretePolarDatum B) Y X
+variable {V : Type v} [AddCommGroup V] [Module ℝ V]
+variable {B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ}
 
-  /-- Canonical representative-level projective incidence is the polarized-form zero test. -/
-  projective_polar_incidence_iff :
-    ∀ X Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B),
-      projective_polar_incidence (R := ℝ) (V := V) B
-          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) X)
-          (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) Y)
-        ↔ polarExpr B X.rep Y.rep = 0
-
-  /-- The canonical positive diagonal ray is incident with every upper lightray ray. -/
-  pPlus_incident_upperLightray :
+abbrev projective_null_boundary (P : SplitOctonionBoundaryPacket V B) := P.1
+abbrev split_albert_zero_divisors (P : SplitOctonionBoundaryPacket V B) := P.2.1
+abbrev split_albert_finrank_27 (P : SplitOctonionBoundaryPacket V B) := P.2.2.1
+abbrev concrete_polar_symm (P : SplitOctonionBoundaryPacket V B) := P.2.2.2.1
+abbrev projective_polar_incidence_iff (P : SplitOctonionBoundaryPacket V B) := P.2.2.2.2.1
+abbrev pPlus_incident_upperLightray (P : SplitOctonionBoundaryPacket V B) :
     ∀ {v : V} (hv : v ≠ 0),
       Incident (concretePolarDatum B)
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
           (pPlusRep (R := ℝ) (V := V) B))
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-          (upperLightrayRep (R := ℝ) (V := V) B hv))
-
-  /-- The canonical negative diagonal ray is incident with every lower lightray ray. -/
-  pMinus_incident_lowerLightray :
+          (upperLightrayRep (R := ℝ) (V := V) B hv)) :=
+  P.2.2.2.2.2.1
+abbrev pMinus_incident_lowerLightray (P : SplitOctonionBoundaryPacket V B) :
     ∀ {w : V} (hw : w ≠ 0),
       Incident (concretePolarDatum B)
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
           (pMinusRep (R := ℝ) (V := V) B))
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-          (lowerLightrayRep (R := ℝ) (V := V) B hw))
-
-  /-- Over a nontrivial field, the canonical positive and negative diagonal rays are not incident. -/
-  pPlus_notIncident_pMinus :
+          (lowerLightrayRep (R := ℝ) (V := V) B hw)) :=
+  P.2.2.2.2.2.2.1
+abbrev pPlus_notIncident_pMinus (P : SplitOctonionBoundaryPacket V B) :
     ¬ Incident (concretePolarDatum B)
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
           (pPlusRep (R := ℝ) (V := V) B))
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-          (pMinusRep (R := ℝ) (V := V) B))
-
-  /-- Upper/lower lightray incidence is exactly vanishing of the bilinear pairing. -/
-  upperLightray_incident_lowerLightray_iff :
+          (pMinusRep (R := ℝ) (V := V) B)) :=
+  P.2.2.2.2.2.2.2.1
+abbrev upperLightray_incident_lowerLightray_iff
+    (P : SplitOctonionBoundaryPacket V B) :
     ∀ {v w : V} (hv : v ≠ 0) (hw : w ≠ 0),
       Incident (concretePolarDatum B)
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
           (upperLightrayRep (R := ℝ) (V := V) B hv))
         (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
           (lowerLightrayRep (R := ℝ) (V := V) B hw))
-        ↔ B v w = 0
+        ↔ B v w = 0 :=
+  P.2.2.2.2.2.2.2.2
 
-  /-- The split-octonion projective null boundary carries an explicit ray. -/
-  projective_null_boundary :
-    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B)
+end SplitOctonionBoundaryPacket
 
 /-- Canonical repository packet for the split-octonion / split-Albert / Zorn boundary lane. -/
 def canonicalSplitOctonionBoundaryPacket
     (V : Type v) [AddCommGroup V] [Module ℝ V]
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) :
-    SplitOctonionBoundaryPacket V B where
-  split_albert_zero_divisors := split_albert_zero_divisors_lemma
-  split_albert_finrank_27 := split_albert_finrank_27_lemma
-  concrete_polar_symm := concrete_polar_symm_lemma B
-  projective_polar_incidence_iff := projective_polar_incidence_iff_lemma B
-  pPlus_incident_upperLightray := pPlus_incident_upperLightray_lemma B
-  pMinus_incident_lowerLightray := pMinus_incident_lowerLightray_lemma B
-  pPlus_notIncident_pMinus := pPlus_notIncident_pMinus_lemma B
-  upperLightray_incident_lowerLightray_iff := upperLightray_incident_lowerLightray_iff_lemma B
-  projective_null_boundary :=
-    ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
-      (pPlusRep (R := ℝ) (V := V) B)
+    SplitOctonionBoundaryPacket V B :=
+  ⟨ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B)
+      (pPlusRep (R := ℝ) (V := V) B),
+    split_albert_zero_divisors_lemma,
+    split_albert_finrank_27_lemma,
+    concrete_polar_symm_lemma B,
+    projective_polar_incidence_iff_lemma B,
+    pPlus_incident_upperLightray_lemma B,
+    pMinus_incident_lowerLightray_lemma B,
+    pPlus_notIncident_pMinus_lemma B,
+    upperLightray_incident_lowerLightray_iff_lemma B⟩
 
 /-- The boundary packet exposes its explicit null ray witness. -/
 def projective_null_boundary_witness
@@ -194,6 +214,6 @@ def projective_null_boundary_witness
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (P : SplitOctonionBoundaryPacket V B) :
     ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) :=
-  P.projective_null_boundary
+  SplitOctonionBoundaryPacket.projective_null_boundary P
 
 end InfoGeometry.Projective.SplitOctonions.BoundaryPacket

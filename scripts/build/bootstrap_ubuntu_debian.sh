@@ -159,14 +159,13 @@ if command -v elan >/dev/null 2>&1; then
 fi
 
 run_cmd lake --version
-run_cmd lake update
 
 log "Attempting mathlib cache download"
 if [[ "$DRY_RUN" -eq 1 ]]; then
-  log "lake exe cache get"
+  log "bash scripts/build/hydrate_pinned_mathlib_cache.sh"
 else
-  if ! lake exe cache get; then
-    log "Warning: 'lake exe cache get' failed; continuing with source build"
+  if ! bash scripts/build/hydrate_pinned_mathlib_cache.sh; then
+    log "Warning: pinned Mathlib cache hydration failed; continuing with existing artifacts"
   fi
 fi
 

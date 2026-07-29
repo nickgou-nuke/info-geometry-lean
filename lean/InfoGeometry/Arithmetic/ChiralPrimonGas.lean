@@ -60,8 +60,8 @@ theorem mem_primesUpto_iff {Λ p : ℕ} :
 /-- A finite prime register obtained from a cutoff. -/
 @[rep_depth thermo]
 def primeCutoffRegister (Λ : ℕ) : PrimeRegister where
-  primes := primesUpto Λ
-  prime_mem := by
+  val := primesUpto Λ
+  property := by
     intro p hp
     exact (Finset.mem_filter.mp hp).2
 

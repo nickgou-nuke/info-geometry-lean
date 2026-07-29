@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Automorphic.ProjectedLFunction
 
 /-!
@@ -32,9 +33,11 @@ index, level, and form data are supplied as witnesses.
 structure SiegelJacobiDatum where
   /-- Jacobi group / Heisenberg-semidirect-symplectic datum. -/
   JacobiGroupData : Type
+  [jacobiGroup : Group JacobiGroupData]
 
   /-- Siegel--Jacobi domain datum. -/
   SiegelJacobiDomain : Type
+  [domainAction : MulAction JacobiGroupData SiegelJacobiDomain]
 
   /-- Matrix index / Jacobi index datum. -/
   IndexData : Type
@@ -48,6 +51,9 @@ structure SiegelJacobiDatum where
   /-- Nebentypus / character datum, if present. -/
   CharacterData : Type
 
+attribute [instance] SiegelJacobiDatum.jacobiGroup
+  SiegelJacobiDatum.domainAction
+
 /--
 A Siegel--Jacobi modular form packet.
 
@@ -56,8 +62,11 @@ external data, not as a theorem of this file.
 -/
 structure SiegelJacobiFormPacket
     (D : SiegelJacobiDatum) where
-  /-- The underlying Siegel--Jacobi modular form object. -/
-  form : Type
+  /-- The underlying complex-valued Siegel--Jacobi modular form. -/
+  form : D.SiegelJacobiDomain → ℂ
+
+  /-- Automorphy factor for the supplied Jacobi group action. -/
+  automorphyFactor : D.JacobiGroupData → D.SiegelJacobiDomain → ℂ
 
   /-- Fourier coefficient data. -/
   FourierCoefficientData : Type
@@ -71,8 +80,32 @@ structure SiegelJacobiFormPacket
   /-- Hecke eigenform witness/data. -/
   HeckeEigenData : Type
 
-  /-- Automorphy law witness. -/
-  automorphyLawWitness : Type
+  /-- Exact automorphy law for the supplied form and factor. -/
+  automorphyLaw :
+    ∀ g z,
+      form (g • z) = automorphyFactor g z * form z
+
+/-!
+The following carriers replace theorem-shaped `Type` sockets in the standard
+L-function packet with the actual analytic data used by the corresponding
+Mathlib predicates.
+-/
+
+/-- A holomorphic continuation of a complex-valued function on an open set. -/
+structure AnalyticContinuationData (L : ℂ → ℂ) where
+  domain : Set ℂ
+  domain_open : IsOpen domain
+  continuation : ℂ → ℂ
+  continuation_eq : ∀ z, z ∈ domain → continuation z = L z
+  holomorphic : DifferentiableOn ℂ continuation domain
+
+/-- A convergent series realization of a complex-valued function. -/
+structure DirichletSeriesRealization (L : ℂ → ℂ) where
+  term : ℕ → ℂ → ℂ
+  convergenceRegion : Set ℂ
+  convergenceRegion_open : IsOpen convergenceRegion
+  summable : ∀ s, s ∈ convergenceRegion → Summable (fun n => term n s)
+  realizes : ∀ s, s ∈ convergenceRegion → L s = ∑' n, term n s
 
 /--
 Standard L-function data attached to a Siegel--Jacobi modular form.
@@ -98,22 +131,39 @@ structure SiegelJacobiStandardLFunctionPacket
   /-- Klingen-type Eisenstein-series or integral-representation datum. -/
   EisensteinSeriesData : Type
 
-  /-- Analytic continuation witness. -/
-  analyticContinuationWitness : Type
+  /-- Actual holomorphic continuation data. -/
+  analyticContinuation : AnalyticContinuationData L
 
-  /-- Functional-equation witness, if separated from the completed-L packet. -/
-  functionalEquationWitness : Type
-
-  /-- Witness that the Dirichlet-series readout realizes `L` in its convergence region. -/
-  dirichletSeriesWitness : Type
-
-  /-- Witness that the Euler product realizes `L` in its convergence region. -/
-  eulerProductWitness : Type
+  /-- Actual convergent series realization of `L`. -/
+  dirichletSeries : DirichletSeriesRealization L
 
 namespace SiegelJacobiStandardLFunctionPacket
 
 variable {D : SiegelJacobiDatum}
 variable {F : SiegelJacobiFormPacket D}
+
+/-- The completed packet supplies the functional-equation law. -/
+def functionalEquationWitness
+    (P : SiegelJacobiStandardLFunctionPacket D F) : Prop :=
+  HasCompletedFunctionalEquation P.L P.completedLFunction.completedL
+
+/-- The Euler-product owner supplies its realization law. -/
+def eulerProductWitness
+    (P : SiegelJacobiStandardLFunctionPacket D F) : Prop :=
+  HasEulerProduct P.L P.eulerProduct.PrimeIndex
+    P.eulerProduct.localFactor P.eulerProduct.convergenceRegion
+
+/-- The series owner supplies its realization law. -/
+def dirichletSeriesWitness
+    (P : SiegelJacobiStandardLFunctionPacket D F) : Prop :=
+  ∀ s, s ∈ P.dirichletSeries.convergenceRegion →
+    P.L s = ∑' n, P.dirichletSeries.term n s
+
+/-- The continuation owner supplies an actual holomorphic continuation. -/
+def analyticContinuationWitness
+    (P : SiegelJacobiStandardLFunctionPacket D F) : Prop :=
+  DifferentiableOn ℂ P.analyticContinuation.continuation
+    P.analyticContinuation.domain
 
 /--
 Forget the strong Siegel--Jacobi packet to the existing weak Euler-product data

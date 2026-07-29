@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.Order.Filter.Tendsto
+import Mathlib.Topology.Basic
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimonFinite
 
@@ -191,7 +193,8 @@ Any inverse-zeta or analytic interpretation is deliberately only a witness
 field, not a theorem in this file.
 -/
 structure ProjectedHyperbolicChiralIndexPacket
-    (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R] where
+    (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R]
+    [TopologicalSpace R] where
   modes : Finset PrimeLabel
   qStable : PrimeLabel → R
   qUnstable : PrimeLabel → R
@@ -204,14 +207,20 @@ structure ProjectedHyperbolicChiralIndexPacket
     stableReadout = stableChiralIndex modes qStable
   unstable_eq_index :
     unstableReadout = unstableChiralIndex modes qUnstable
-  /-- Optional external Hestenes--Krein/colimit bridge for the stable branch. -/
-  stableAnalyticWitness : Type*
-  /-- Guardrail: the raw two-branch readout is not the stable branch by default. -/
-  raw_not_stable_without_projection_guard : Type*
+  /-- A topological sequence of stable-branch approximants. -/
+  stableSequence : ℕ → R
+  /-- Its limiting stable-branch readout. -/
+  stableLimit : R
+  stableSequence_converges :
+    Filter.Tendsto stableSequence Filter.atTop (nhds stableLimit)
+  stableLimit_eq_stableReadout :
+    stableLimit = stableReadout
+  /-- Explicit guardrail when the two finite branches are distinct. -/
+  raw_not_stable_without_projection : rawReadout ≠ stableReadout
 
 namespace ProjectedHyperbolicChiralIndexPacket
 
-variable [DecidableEq PrimeLabel] [CommRing R]
+variable [DecidableEq PrimeLabel] [CommRing R] [TopologicalSpace R]
 variable (P : ProjectedHyperbolicChiralIndexPacket PrimeLabel R)
 
 /-- The raw packet readout splits as stable minus unstable. -/

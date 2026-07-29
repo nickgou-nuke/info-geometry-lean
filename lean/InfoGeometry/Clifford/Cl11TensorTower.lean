@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Algebra.TensorAlgebraCanonical
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
+import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.TensorProduct.Map
 
 noncomputable section

@@ -8,8 +8,8 @@ The finite exceptional ledger records hidden charge/memory. The affine
 extension records loop/helical modes. The Virasoro extension records
 reparametrization stress-energy and central charge.
 
-This is proof-carrying calibration data, not an unconditional theorem that
-`E8(8)` equals Virasoro.
+This file supplies a concrete linear bridge.  It does not assert that an
+exceptional finite algebra is isomorphic to a Virasoro algebra.
 -/
 
 import Mathlib.Tactic
@@ -27,8 +27,8 @@ open SuperVirasoroExtension
 /-! ## 1. Exceptional/affine/Virasoro bridge -/
 
 /--
-Proof-carrying bridge between an exceptional finite ledger, its affine/current
-extension, and a Virasoro boundary ledger.
+Linear bridge between a finite ledger, its affine/current extension, and a
+Virasoro boundary ledger.
 
 The intended architecture is:
 
@@ -40,73 +40,77 @@ finite E8-type ledger
   -> central charge readout
 ```
 
-The equality between central charge and hidden memory is deliberately a witness
-field: real form, level, representation category, boundary condition, and
-normalization all belong to a concrete model.
+The maps are data.  Any injectivity, surjectivity, Lie compatibility, Sugawara
+identity, or representation-theoretic equivalence must be proved separately
+for a concrete model.
 -/
 structure ExceptionalAffineVirasoroBridge
     (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Charge] [Module ℝ Charge] where
-  /-- Finite exceptional ledger, morally the `E8(8)` charge/memory side. -/
-  finiteExceptionalLedger : Prop
-  finiteExceptionalLedger_holds : finiteExceptionalLedger
+  /-- Map from finite exceptional data to affine/current modes. -/
+  finiteToAffine : Finite →ₗ[ℝ] Affine
 
-  /-- Affine/current extension of the finite ledger, morally `E9` or loop `E8`. -/
-  affineExtensionOfFinite : Prop
-  affineExtensionOfFinite_holds : affineExtensionOfFinite
-
-  /-- Virasoro acts on, or is constructed from, the affine/current modes. -/
-  virasoroActsOnAffineModes : Prop
-  virasoroActsOnAffineModes_holds : virasoroActsOnAffineModes
+  /-- Linear realization of affine/current modes in the Virasoro carrier. -/
+  affineToVirasoro : Affine →ₗ[ℝ] Vir
 
   /-- Virasoro datum used for the stress-energy/central-charge ledger. -/
   virasoro : VirasoroAlgebraDatum Vir
 
-  /-- Central charge/anomaly readout on the boundary/helical side. -/
-  centralChargeReadout : State → Charge
+  /-- Select the finite-ledger datum carried by a boundary state. -/
+  stateToFiniteLedger : State → Finite
 
-  /-- Hidden grade-memory readout on the exceptional finite/five-graded side. -/
-  hiddenGradeMemoryReadout : State → Charge
-
-  /--
-  Calibration law identifying boundary central charge with hidden exceptional
-  memory readout.
-  -/
-  central_equals_hidden_memory :
-    ∀ s : State, centralChargeReadout s = hiddenGradeMemoryReadout s
+  /-- Read hidden finite-grade memory as a charge. -/
+  finiteHiddenMemoryReadout : Finite →ₗ[ℝ] Charge
 
 namespace ExceptionalAffineVirasoroBridge
 
 variable
     {Finite Affine Vir State Charge : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Charge] [Module ℝ Charge]
 
 variable (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
 
-/-- The bridge supplies the finite exceptional ledger witness. -/
-theorem finite_exceptional_ledger :
-    B.finiteExceptionalLedger :=
-  B.finiteExceptionalLedger_holds
+/-- The actual finite-to-Virasoro map supplied by the two bridge stages. -/
+def finiteToVirasoro : Finite →ₗ[ℝ] Vir :=
+  B.affineToVirasoro.comp B.finiteToAffine
 
-/-- The bridge supplies the affine/current extension witness. -/
-theorem affine_extension_of_finite :
-    B.affineExtensionOfFinite :=
-  B.affineExtensionOfFinite_holds
+@[simp]
+theorem finiteToVirasoro_apply (x : Finite) :
+    B.finiteToVirasoro x =
+      B.affineToVirasoro (B.finiteToAffine x) :=
+  rfl
 
-/-- The bridge supplies the Virasoro-on-affine-modes witness. -/
-theorem virasoro_acts_on_affine_modes :
-    B.virasoroActsOnAffineModes :=
-  B.virasoroActsOnAffineModes_holds
+/--
+Canonical boundary charge induced by the finite exceptional ledger.
 
-/-- Boundary central charge equals hidden exceptional grade-memory readout. -/
+This preserves the historical readout API without postulating an independent
+map and an equality field.  Identifying this charge with a concrete Sugawara
+central charge remains a separate representation-theoretic theorem.
+-/
+def centralChargeReadout : State → Charge :=
+  fun s => B.finiteHiddenMemoryReadout (B.stateToFiniteLedger s)
+
+/-- Hidden grade-memory readout transported from the finite ledger. -/
+def hiddenGradeMemoryReadout : State → Charge :=
+  fun s => B.finiteHiddenMemoryReadout (B.stateToFiniteLedger s)
+
+/-- Compatibility name for the canonical finite-ledger hidden-memory readout. -/
+abbrev calibratedHiddenGradeMemoryReadout : State → Charge :=
+  B.hiddenGradeMemoryReadout
+
+/-- The two historical readout names unfold to the same canonical map. -/
 theorem centralCharge_eq_hiddenGradeMemory
     (s : State) :
-    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s :=
-  B.central_equals_hidden_memory s
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
+  rfl
 
 /-- The Virasoro central generator commutes inside the Virasoro ledger. -/
 theorem virasoro_central_commutes
@@ -121,34 +125,37 @@ end ExceptionalAffineVirasoroBridge
 /--
 Affine/Virasoro exceptional bridge readout.
 
-This captures the precise slogan:
+This captures the precise compatibility:
 
 ```text
-hidden grade-two memory in the exceptional ledger
-  =
-Virasoro/affine central charge readout on the helical boundary.
+the historical boundary-charge and hidden-memory names denote the same
+finite-ledger projection.  It does not assert an exceptional Sugawara theorem.
 ```
 -/
 theorem exceptionalAffineVirasoroBridgeOwnerTarget :
   ∀ (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
       [AddCommGroup Charge] [Module ℝ Charge],
   ∀ B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge,
   ∀ s : State,
-    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s := by
-  intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ B s
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s := by
+  intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ _ _ _ _ B s
   exact B.centralCharge_eq_hiddenGradeMemory s
 
 /-- Packet readout for one exceptional affine/Virasoro bridge. -/
 theorem exceptionalAffineVirasoroBridge_packet
     (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Charge] [Module ℝ Charge]
     (B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
     (s : State) :
-    B.centralChargeReadout s = B.hiddenGradeMemoryReadout s :=
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
   exceptionalAffineVirasoroBridgeOwnerTarget Finite Affine Vir State Charge B s
 
 end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

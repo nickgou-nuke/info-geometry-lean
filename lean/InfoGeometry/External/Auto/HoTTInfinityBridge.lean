@@ -103,8 +103,18 @@ variable (E2 : ℕ → ℤ → V)
 variable (d2 : ∀ p q, E2 p q ⟶ E2 (p+2) (q-1))
 
 -- A rigorous structure enforcing that d2 acts as a homological differential (d² = 0)
-class IsSpectralDifferential2 : Prop where
-  d2Square (p : ℕ) (q : ℤ) : d2 p q ≫ d2 (p+2) (q-1) = 0
+/- The spectral condition is a direct square-zero relation in the category. -/
+def IsSpectralDifferential2 : Prop :=
+  ∀ p : ℕ, ∀ q : ℤ, d2 p q ≫ d2 (p + 2) (q - 1) = 0
+
+namespace IsSpectralDifferential2
+
+/-- Read the differential-square relation under the historical field name. -/
+theorem d2Square (h : IsSpectralDifferential2 (E2 := E2) (d2 := d2))
+    (p : ℕ) (q : ℤ) : d2 p q ≫ d2 (p + 2) (q - 1) = 0 :=
+  h p q
+
+end IsSpectralDifferential2
 
 end SerreSpectralSequence
 

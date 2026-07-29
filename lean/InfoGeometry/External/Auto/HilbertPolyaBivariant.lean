@@ -64,11 +64,11 @@ Kasparov product chain can exist through the boundary.
 theorem bivariant_boundary_forbids_off_axis_factorization
     {A Ctxt : Type}
     [InfoGeometry.Canonical.KasparovKreinCategory.KasparovKreinData]
-    [hK : InfoGeometry.Canonical.KasparovKreinCategory.KKContractibleBoundary
-      InfoGeometry.Canonical.KasparovKreinCategory.O2Boundary]
+    (hK : InfoGeometry.Canonical.KasparovKreinCategory.KKContractibleBoundary
+      InfoGeometry.Canonical.KasparovKreinCategory.O2Boundary)
     (chain : InfoGeometry.Canonical.KasparovKreinCategory.KKProductChain (A := A) (C := Ctxt)) :
     False := by
-  exact InfoGeometry.Canonical.KasparovKreinCategory.kasparov_krein_product_chain_contractibility_forbids chain
+  exact InfoGeometry.Canonical.KasparovKreinCategory.kasparov_krein_product_chain_contractibility_forbids hK chain
 
 /--
 A tiny definitional bridge: in this model, ‘critical axis trapping’ is exactly the
@@ -85,11 +85,11 @@ that an off-axis complex number produces such a Kasparov product chain.
 theorem HilbertPolya_o2_factorization_forbidden_by_contractibility
     {A Ctxt : Type}
     [InfoGeometry.Canonical.KasparovKreinCategory.KasparovKreinData]
-    [hK : InfoGeometry.Canonical.KasparovKreinCategory.KKContractibleBoundary
-      InfoGeometry.Canonical.KasparovKreinCategory.O2Boundary]
+    (hK : InfoGeometry.Canonical.KasparovKreinCategory.KKContractibleBoundary
+      InfoGeometry.Canonical.KasparovKreinCategory.O2Boundary)
     (chain : InfoGeometry.Canonical.KasparovKreinCategory.KKProductChain (A := A) (C := Ctxt))
     (_s : ℂ) :
     False := by
-  exact bivariant_boundary_forbids_off_axis_factorization (A := A) (Ctxt := Ctxt) chain
+  exact bivariant_boundary_forbids_off_axis_factorization (A := A) (Ctxt := Ctxt) hK chain
 
 end InfoGeometry.Canonical.HilbertPolyaBivariant

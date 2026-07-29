@@ -37,12 +37,17 @@ variable (h_O_scale_cubed : O_scale ^ 3 = O_scale)
 -- The modular conjugation symmetry J on the state space.
 variable (J : H → H)
 
-/-- 
-A named symmetry predicate for states fixed by the supplied involution-like map
-`J`.  No analytic zeta-zero content is encoded here.
--/
-structure JSymmetricMode (ρ : H) : Prop where
-  j_symmetric : J ρ = ρ
+/-- The direct fixed-point relation for the supplied modular symmetry. -/
+def JSymmetricMode (ρ : H) : Prop :=
+  J ρ = ρ
+
+namespace JSymmetricMode
+
+/-- Read the fixed-point relation under its historical field name. -/
+theorem j_symmetric (ρ : H) (h : JSymmetricMode J ρ) : J ρ = ρ :=
+  h
+
+end JSymmetricMode
 
 /-- 
 If the active `P_plus + P_minus` channels annihilate a state, the partition of

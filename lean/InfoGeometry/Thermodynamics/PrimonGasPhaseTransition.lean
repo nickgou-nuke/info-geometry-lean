@@ -48,18 +48,22 @@ def primonFreeEnergy (gas : PrimonGas) : ℂ :=
 
 /-- Optional finite label packet for comparing with a random-matrix model.  This
 is data only; no zeta-zero spacing theorem is asserted here. -/
-structure RandomMatrixReadout where
-  /-- The named spacing model. -/
-  spacing_model : String
+inductive RandomMatrixSpacingModel where
+  | wignerDyson
+  | other
+  deriving DecidableEq, Repr
+
+/-! The random-matrix readout is the typed spacing model itself. -/
+abbrev RandomMatrixReadout := RandomMatrixSpacingModel
 
 /-- A phase-transition point is a zero of the carried partition readout. -/
 def IsPartitionZero (gas : PrimonGas) : Prop :=
   gas.partitionFunction = 0
 
-/-- A packet carries the Wigner--Dyson label exactly when its model string is
-`"Wigner-Dyson"`. -/
+/-- A packet carries the Wigner--Dyson label exactly when its typed model is
+`RandomMatrixSpacingModel.wignerDyson`. -/
 def HasWignerDysonReadout (packet : RandomMatrixReadout) : Prop :=
-  packet.spacing_model = "Wigner-Dyson"
+  packet = RandomMatrixSpacingModel.wignerDyson
 
 /-- The only theorem proved here: a zero of the carried partition function is a
 zero of the declared zeta readout. -/

@@ -1,5 +1,7 @@
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
+import Mathlib.Analysis.Analytic.Basic
+import Mathlib.Order.Filter.Basic
 
 /-!
 # InfoGeometry.Arithmetic.ZetaSupertraceBridge
@@ -27,25 +29,46 @@ This is an external analytic fact, explicitly gated here as a structural
 assumption so it does not pollute the algebraic layers.
 -/
 structure InfiniteEulerProductWitness (s : ℂ) where
-  /-- The limit of the finite Euler products converges to $1/\zeta(s)$. -/
-  euler_limit : Prop -- Placeholder for actual topological convergence
-  
+  /-- Finite Euler-product readouts indexed by the cutoff. -/
+  finiteEulerProduct : ℕ → ℂ → ℂ
+
+  /-- The limiting zeta readout on the spectral parameter. -/
+  zeta : ℂ → ℂ
+
+  /-- The finite products converge to the supplied zeta readout at `s`. -/
+  euler_limit :
+    Filter.Tendsto
+      (fun N => finiteEulerProduct N s)
+      Filter.atTop (nhds (zeta s))
+
   /-- The Zeta function is analytically continued to the region of interest. -/
-  analytic_continuation : Prop
+  analyticDomain : Set ℂ
+  analytic_continuation :
+    AnalyticOnNhd ℂ zeta analyticDomain
 
 /--
 Analytic Spectral Hypothesis: Zeta zeros correspond to Majorana zero modes.
 This is the ultimate target of the thermodynamic bridge, maintained here
 as an unproved physical hypothesis pending the infinite-dimensional Pfaffian.
 -/
-structure MajoranaZeroModeHypothesis (s : ℂ) where
-  /-- $s$ is a non-trivial zero of $\zeta$. -/
-  is_zeta_zero : Prop
-  
+structure MajoranaZeroModeHypothesis
+    (s : ℂ) (H : Type*)
+    [AddCommGroup H] [Module ℂ H] where
+  /-- The supplied completed-zeta readout. -/
+  zeta : ℂ → ℂ
+
+  /-- `s` is a zero of the supplied zeta readout. -/
+  is_zeta_zero : zeta s = 0
+
+  /-- The operator whose kernel carries the Majorana zero mode. -/
+  operator : H →ₗ[ℂ] H
+
   /-- The infinite-dimensional operator possesses a zero mode at $s$. -/
-  has_zero_mode : Prop
-  
+  has_zero_mode :
+    ∃ v : H, v ≠ 0 ∧ operator v = 0
+
   /-- The correspondence holds. -/
-  zero_correspondence : is_zeta_zero ↔ has_zero_mode
+  zero_correspondence :
+    zeta s = 0 ↔ ∃ v : H, v ≠ 0 ∧ operator v = 0
 
 end InfoGeometry.Arithmetic.ZetaSupertraceBridge

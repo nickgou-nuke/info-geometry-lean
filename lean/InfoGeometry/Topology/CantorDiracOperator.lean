@@ -1,64 +1,40 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.KK.RealSplitKreinBoundedTransform
 import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 /-!
 # InfoGeometry.Topology.CantorDiracOperator
 
-Finite-level Cantor Dirac operator.
+Cantor Dirac operators at the unbounded, bounded-transform, finite-truncation,
+and KMS readout levels.
 
-This module implements the concrete finite-depth Cantor Dirac block.
-
-At level `n`, a spinor is a binary word `w : {0,1}^n`.
-The finite Dirac operator is a scalar diagonal action on the finite wavelet
-space over those words.
-
-For the middle-thirds Cantor model, the natural scale is `3^n`.
-The finite commutator with a locally constant function on depth `n + 1`
-is the finite cylinder difference.
-
-This is the concrete finite operator that can feed the existing
-`CuntzCantorSpectralTriple` socket.
+The owner is the native real split-Krein unbounded cycle.  The scalar finite
+block below is retained only as a finite truncation and is not used to replace
+the domain, closed-graph, resolvent, commutator, or KMS obligations.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Topology.CantorDiracOperator
 
-/-- Binary word of length `n`, reused from the Clifford fractal-wavelet bridge. -/
+/-- Binary words at depth `n`. -/
 abbrev BinaryWord (n : ℕ) : Type :=
   InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n
 
-/-- Finite complex wavelet space over depth-`n` binary words. -/
+/-- Finite complex wavelet space at depth `n`. -/
 abbrev FiniteWaveletSpace (n : ℕ) : Type :=
   BinaryWord n → ℂ
 
-/-! ## 1. AF/Cantor filtration projection algebra -/
-
-/--
-Difference projection for consecutive AF/Cantor filtration levels.
-
-In the Antonescu-Christensen AF construction this is the algebraic form of
-`Q_m = P_m - P_{m-1}`.
--/
+/-- Difference of consecutive filtration projections. -/
 def filtrationDifferenceProjection
     {A : Type*} [Sub A]
     (Pnext Pprev : A) : A :=
   Pnext - Pprev
 
-/--
-If an algebra element commutes with two consecutive filtration projections,
-then it commutes with their difference projection.
-
-This is the finite algebraic core of the AF/Cantor spectral-triple argument:
-`a P_m = P_m a` and `a P_{m-1} = P_{m-1} a` imply
-`a Q_m = Q_m a` for `Q_m = P_m - P_{m-1}`.
--/
+/-- Commutation with consecutive projections implies commutation with their difference. -/
 theorem commutes_filtrationDifferenceProjection_of_commutes_consecutive
     {A : Type*} [Ring A]
     {a Pnext Pprev : A}
@@ -66,30 +42,15 @@ theorem commutes_filtrationDifferenceProjection_of_commutes_consecutive
     (hprev : a * Pprev = Pprev * a) :
     a * filtrationDifferenceProjection Pnext Pprev =
       filtrationDifferenceProjection Pnext Pprev * a := by
-  calc
-    a * filtrationDifferenceProjection Pnext Pprev
-        = a * Pnext - a * Pprev := by
-          rw [filtrationDifferenceProjection, mul_sub]
-    _ = Pnext * a - Pprev * a := by
-          rw [hnext, hprev]
-    _ = filtrationDifferenceProjection Pnext Pprev * a := by
-          rw [filtrationDifferenceProjection, sub_mul]
+  simp only [filtrationDifferenceProjection, mul_sub, sub_mul, hnext, hprev]
 
-/-! ## 2. Finite diagonal Dirac block -/
-
-/--
-Finite-level Cantor Dirac operator.
-
-This is the diagonal finite truncation:
-
-`D_n f(w) = λ_n f(w)`.
--/
+/-- Scalar diagonal Cantor Dirac block at level `n`. -/
 def finiteCantorDirac
     (weight : ℕ → ℝ)
     (n : ℕ) : Module.End ℂ (FiniteWaveletSpace n) :=
   ((weight n : ℝ) : ℂ) • (1 : Module.End ℂ (FiniteWaveletSpace n))
 
-/-- Pointwise readout of the finite Cantor Dirac operator. -/
+/-- Pointwise action of the finite Cantor Dirac block. -/
 theorem finiteCantorDirac_apply
     (weight : ℕ → ℝ)
     (n : ℕ)
@@ -98,7 +59,16 @@ theorem finiteCantorDirac_apply
     finiteCantorDirac weight n ψ w = ((weight n : ℝ) : ℂ) * ψ w := by
   simp [finiteCantorDirac]
 
-/-- The finite Cantor Dirac is scalar multiplication by the level weight. -/
+/-- Every vector in a scalar finite block is an eigenvector with the level weight. -/
+theorem finiteCantorDirac_eigenvector
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (ψ : FiniteWaveletSpace n) :
+    finiteCantorDirac weight n ψ = ((weight n : ℝ) : ℂ) • ψ := by
+  ext w
+  simp [finiteCantorDirac]
+
+/-- The finite Cantor Dirac is scalar multiplication by the identity. -/
 theorem finiteCantorDirac_eq_smul_id
     (weight : ℕ → ℝ)
     (n : ℕ) :
@@ -106,7 +76,7 @@ theorem finiteCantorDirac_eq_smul_id
       ((weight n : ℝ) : ℂ) • (1 : Module.End ℂ (FiniteWaveletSpace n)) := by
   rfl
 
-/-- The finite Cantor Dirac sends the constant-one field to the constant weight. -/
+/-- The constant-one field is sent to the constant level weight. -/
 theorem finiteCantorDirac_const_one
     (weight : ℕ → ℝ)
     (n : ℕ) :
@@ -115,170 +85,269 @@ theorem finiteCantorDirac_const_one
   ext w
   simp [finiteCantorDirac]
 
-/-- Middle-thirds Cantor scale, `λ_n = 3^n`. -/
+/-- Middle-thirds Cantor scale `3^n`. -/
 def middleThirdsScale (n : ℕ) : ℝ :=
   (3 : ℝ) ^ n
 
-/-- Convenience scale packet for the finite Cantor Dirac layer. -/
-@[rep_depth operator]
-structure CantorDiracScale where
-  eigenvalue : ℕ → ℝ
+/-- Spectral scale assigned to the Cantor wavelet filtration. -/
+abbrev CantorDiracScale : Type :=
+  ℕ → ℝ
 
-/-- Middle-thirds scale packaged as a Cantor Dirac scale. -/
+/-- Middle-thirds Cantor Dirac scale. -/
 def middleThirdsCantorDiracScale : CantorDiracScale :=
-  ⟨middleThirdsScale⟩
+  middleThirdsScale
+
+/-! ## Native unbounded split-Krein owner -/
 
 /--
-Finite Cantor Dirac operator socket.
+Cantor wavelet realization inside a genuine unbounded split-Krein cycle.
 
-The genuine Cantor Dirac is generally unbounded, so the operator/domain
-data is stored as a socket with an explicit domain, inclusion, and wavelet
-eigenmode law.
+The cycle owns the dense domain, closed graph, grading, represented actions,
+bounded commutators, and compact resolvent.  This structure adds only the
+Cantor wavelet indexing and its eigenmode equation.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure CantorDiracOperatorSocket
-    (H Domain : Type*)
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-    [AddCommGroup Domain] [Module ℂ Domain] where
-  inclusion : Domain →ₗ[ℂ] H
-  dirac : Domain →ₗ[ℂ] H
+    (A B H : Type*)
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H] where
+  cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H
   scale : CantorDiracScale
-  waveletMode : ∀ n : ℕ, BinaryWord n → Domain
+  waveletMode :
+    ∀ n : ℕ, BinaryWord n → {x : H // x ∈ cycle.domain}
   dirac_wavelet :
     ∀ (n : ℕ) (w : BinaryWord n),
-      dirac (waveletMode n w) =
-        ((scale.eigenvalue n : ℝ) : ℂ) • inclusion (waveletMode n w)
+      cycle.D (waveletMode n w) =
+        scale n • (waveletMode n w).1
 
 namespace CantorDiracOperatorSocket
 
-variable {H Domain : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-variable [AddCommGroup Domain] [Module ℂ Domain]
-variable (S : CantorDiracOperatorSocket H Domain)
+variable
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (S : CantorDiracOperatorSocket A B H)
 
-/-- Re-export of the supplied wavelet eigenmode law. -/
-@[bridge_target_tag, rep_depth operator]
+/-- The Cantor wavelet mode belongs to the native unbounded domain. -/
+theorem waveletMode_mem_domain (n : ℕ) (w : BinaryWord n) :
+    (S.waveletMode n w).1 ∈ S.cycle.domain :=
+  (S.waveletMode n w).2
+
+/-- Native unbounded Dirac eigenmode equation. -/
+@[rep_depth operator]
 theorem dirac_wavelet_holds (n : ℕ) (w : BinaryWord n) :
-    S.dirac (S.waveletMode n w) =
-      ((S.scale.eigenvalue n : ℝ) : ℂ) • S.inclusion (S.waveletMode n w) :=
+    S.cycle.D (S.waveletMode n w) =
+      S.scale n • (S.waveletMode n w).1 :=
   S.dirac_wavelet n w
+
+/-- The owner domain is dense in the ambient split-Krein carrier. -/
+theorem dense_domain :
+    Dense S.cycle.domain :=
+  S.cycle.dense_domain
+
+/-- The owner Dirac graph is closed. -/
+theorem closed_graph :
+    IsClosed
+      (Set.range
+        (fun x : {x : H // x ∈ S.cycle.domain} =>
+          ((x.1, S.cycle.D x) : H × H))) :=
+  S.cycle.closed_graph
 
 end CantorDiracOperatorSocket
 
 /--
-Compatibility layer with the existing bounded Cuntz/Cantor spectral-triple socket.
+Native bounded transform of a Cantor unbounded cycle.
 
-The operator data are stored explicitly, and the bounded realization is
-separately witnessed. No analytic closure is claimed.
+This restores the bounded-realization layer without identifying the unbounded
+Dirac operator with a scalar finite matrix.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure BoundedCantorDiracRealization
-    (Op H Domain : Type*)
-    [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-  [SMul Op H] [AddCommGroup Domain] [Module ℂ Domain] where
-  triple : InfoGeometry.Topology.CuntzCantorSpectralTriple Op H
-  cantorDirac : CantorDiracOperatorSocket H Domain
-  dirac_agrees_on_domain :
-    ∀ ξ : Domain,
-      triple.dirac (cantorDirac.inclusion ξ) = cantorDirac.dirac ξ
+    (A B H : Type*)
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H] where
+  cantorDirac : CantorDiracOperatorSocket A B H
+  boundedTransform :
+    InfoGeometry.KK.RealSplitKreinBoundedTransform cantorDirac.cycle
 
 namespace BoundedCantorDiracRealization
 
-variable {Op H Domain : Type*}
-variable [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-variable [SMul Op H]
-variable [AddCommGroup Domain] [Module ℂ Domain]
-variable (R : BoundedCantorDiracRealization Op H Domain)
+variable
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (R : BoundedCantorDiracRealization A B H)
 
-/--
-Wavelet eigenmode transfer through a bounded Cantor/Cuntz spectral-triple
-realization.
--/
-@[bridge_target_tag, rep_depth operator]
-theorem triple_dirac_wavelet
-  (n : ℕ)
-  (w : BinaryWord n) :
-    R.triple.dirac (R.cantorDirac.inclusion (R.cantorDirac.waveletMode n w)) =
-      ((R.cantorDirac.scale.eigenvalue n : ℝ) : ℂ) •
-        R.cantorDirac.inclusion (R.cantorDirac.waveletMode n w) := by
-  calc
-    R.triple.dirac (R.cantorDirac.inclusion (R.cantorDirac.waveletMode n w))
-        = R.cantorDirac.dirac (R.cantorDirac.waveletMode n w) := by
-            simpa using
-              R.dirac_agrees_on_domain (R.cantorDirac.waveletMode n w)
-    _ = ((R.cantorDirac.scale.eigenvalue n : ℝ) : ℂ) •
-          R.cantorDirac.inclusion (R.cantorDirac.waveletMode n w) := by
-            simpa using R.cantorDirac.dirac_wavelet n w
+/-- The bounded phase is the compact resolvent owned by the unbounded cycle. -/
+theorem phase_compact :
+    InfoGeometry.KK.IsCompactEnd H
+      (InfoGeometry.KK.RealSplitKreinBoundedTransform.phase R.boundedTransform) :=
+  R.boundedTransform.phase_compact
+
+/-- Wavelet eigenmodes remain equations of the unbounded owner. -/
+theorem triple_dirac_wavelet (n : ℕ) (w : BinaryWord n) :
+    R.cantorDirac.cycle.D (R.cantorDirac.waveletMode n w) =
+      R.cantorDirac.scale n •
+        (R.cantorDirac.waveletMode n w).1 :=
+  R.cantorDirac.dirac_wavelet_holds n w
 
 end BoundedCantorDiracRealization
 
-/-! ## 5. KMS thermal bridge -/
+/-- Direct eigenmode transfer through a bounded realization.
+
+The hypotheses are the precise graph-intertwining and eigenmode equations; no
+structure stores them as evidence fields.
+-/
+theorem bounded_realization_transfers_eigenmode
+    {Op H Domain : Type*}
+    [Ring Op] [StarRing Op]
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    [SMul Op H] [AddCommGroup Domain] [Module ℂ Domain]
+    (triple : InfoGeometry.Topology.CuntzCantorSpectralTriple Op H)
+    (inclusion dirac : Domain →ₗ[ℂ] H)
+    (weight : ℕ → ℝ)
+    (waveletMode : ∀ n : ℕ, BinaryWord n → Domain)
+    (dirac_agrees_on_domain :
+      ∀ ξ : Domain, triple.dirac (inclusion ξ) = dirac ξ)
+    (dirac_wavelet :
+      ∀ (n : ℕ) (w : BinaryWord n),
+        dirac (waveletMode n w) =
+          ((weight n : ℝ) : ℂ) • inclusion (waveletMode n w))
+    (n : ℕ)
+    (w : BinaryWord n) :
+    triple.dirac (inclusion (waveletMode n w)) =
+      ((weight n : ℝ) : ℂ) • inclusion (waveletMode n w) := by
+  rw [dirac_agrees_on_domain]
+  exact dirac_wavelet n w
+
+/-- The finite even thermal Hamiltonian attached to a Cantor scale. -/
+def finiteCantorThermalHamiltonian
+    (weight : ℕ → ℝ)
+    (cutoff : ℕ) : Module.End ℂ (FiniteWaveletSpace cutoff) :=
+  finiteCantorDirac weight cutoff
+
+/-- The finite thermal Hamiltonian is exactly the finite Dirac block. -/
+theorem finiteCantorThermalHamiltonian_eq_dirac
+    (weight : ℕ → ℝ)
+    (cutoff : ℕ) :
+    finiteCantorThermalHamiltonian weight cutoff =
+      finiteCantorDirac weight cutoff := by
+  rfl
 
 open InfoGeometry.Dynamics
 
-/-!
-KMS thermal bridge for the finite Cantor Dirac block.
+/-! ## KMS thermal realization of the unbounded Cantor owner -/
 
-The thermal Hamiltonian is stored as the even block generated by the finite
-Dirac packet.  The actual KMS strip periodicity is carried by the analytic
-continuation witness, not by raw Cantor cylinders.
+/--
+KMS thermal realization attached to a genuine unbounded Cantor Dirac cycle.
+
+The parity laws are equations on selected observables at the upper strip
+boundary.  No bare proposition fields remain.
 -/
-@[socket_debt_tag, rep_depth operator]
+@[rep_depth operator]
 structure CantorDiracKMSThermalVacuum
-    (Observable : Type*) [Mul Observable] where
-  cutoff : ℕ
-  eigenvalue : ℕ → ℝ
-  thermalHamiltonian :
-    Module.End ℂ (FiniteWaveletSpace cutoff)
-  thermalHamiltonian_matches_diracBlock : Prop
+    (A B H Observable : Type*)
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    [Ring Observable] where
+  cantorDirac : CantorDiracOperatorSocket A B H
+  thermalGenerator : Observable
+  diracGeneratorReadout : Observable
+  thermalGenerator_matches_dirac :
+    thermalGenerator = diracGeneratorReadout
   partitionFunction : ℝ
   thermalState : ModularThermalState Observable
   strip : HestenesKreinKMSStripData Observable
-  oddFieldAntiperiodic : Prop
-  evenObservablePeriodic : Prop
+  oddField : Observable
+  evenObservable : Observable
+  oddFieldAntiperiodic :
+    ∀ t : ℝ,
+      strip.analytic.sigmaC
+          (complexClockPoint t strip.analytic.beta) oddField =
+        -(strip.analytic.sigmaC (t : ℂ) oddField)
+  evenObservablePeriodic :
+    ∀ t : ℝ,
+      strip.analytic.sigmaC
+          (complexClockPoint t strip.analytic.beta) evenObservable =
+        strip.analytic.sigmaC (t : ℂ) evenObservable
 
 namespace CantorDiracKMSThermalVacuum
 
-variable {Observable : Type*} [Mul Observable]
-variable (T : CantorDiracKMSThermalVacuum Observable)
+variable
+    {A B H Observable : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    [Ring Observable]
+    (T : CantorDiracKMSThermalVacuum A B H Observable)
 
+theorem thermalGenerator_eq_diracReadout :
+    T.thermalGenerator = T.diracGeneratorReadout :=
+  T.thermalGenerator_matches_dirac
 
-/-- Readback of the KMS lower boundary identity. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem kms_lower_boundary
-    (t : ℝ) (a b : Observable) :
-    T.strip.omega_eval a
-      (T.strip.analytic.sigmaC (t : ℂ) b)
-      =
-    T.strip.omega_eval a
-      (T.strip.analytic.modular.sigma t b) :=
-  T.strip.boundary_lower t a b
+theorem odd_antiperiodic (t : ℝ) :
+    T.strip.analytic.sigmaC
+        (complexClockPoint t T.strip.analytic.beta) T.oddField =
+      -(T.strip.analytic.sigmaC (t : ℂ) T.oddField) :=
+  T.oddFieldAntiperiodic t
 
-/-- Readback of the KMS upper boundary identity. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem kms_upper_boundary
-    (t : ℝ) (a b : Observable) :
-    T.strip.omega_eval a
-      (T.strip.analytic.sigmaC
-        (complexClockPoint t T.strip.analytic.beta) b)
-      =
-    T.strip.omega_eval
-      (T.strip.analytic.modular.sigma (t + T.strip.analytic.beta) b) a :=
-  T.strip.boundary_upper t a b
-
-/-- Readback of the constructive KMS boundary law from the modular thermal state. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem modularThermalState_kms_boundary
-    (t : ℝ) (a b : Observable) :
-    T.thermalState.kms.omega_eval a
-      (T.thermalState.kms.modular.sigma t b)
-      =
-    T.thermalState.kms.omega_eval
-      (T.thermalState.kms.modular.sigma (t + T.thermalState.kms.beta) b) a :=
-  T.thermalState.kms.kms_boundary t a b
+theorem even_periodic (t : ℝ) :
+    T.strip.analytic.sigmaC
+        (complexClockPoint t T.strip.analytic.beta) T.evenObservable =
+      T.strip.analytic.sigmaC (t : ℂ) T.evenObservable :=
+  T.evenObservablePeriodic t
 
 end CantorDiracKMSThermalVacuum
+
+/-- Lower KMS boundary identity, directly from genuine strip data. -/
+theorem kms_lower_boundary
+    {Observable : Type*} [Mul Observable]
+    (strip : HestenesKreinKMSStripData Observable)
+    (t : ℝ) (a b : Observable) :
+    strip.omega_eval a
+      (strip.analytic.sigmaC (t : ℂ) b) =
+    strip.omega_eval a
+      (strip.analytic.modular.sigma t b) :=
+  strip.boundary_lower t a b
+
+/-- Upper KMS boundary identity, directly from genuine strip data. -/
+theorem kms_upper_boundary
+    {Observable : Type*} [Mul Observable]
+    (strip : HestenesKreinKMSStripData Observable)
+    (t : ℝ) (a b : Observable) :
+    strip.omega_eval a
+      (strip.analytic.sigmaC
+        (complexClockPoint t strip.analytic.beta) b) =
+    strip.omega_eval
+      (strip.analytic.modular.sigma (t + strip.analytic.beta) b) a :=
+  strip.boundary_upper t a b
+
+/-- Constructive KMS boundary law of an actual modular thermal state. -/
+theorem modularThermalState_kms_boundary
+    {Observable : Type*} [Mul Observable]
+    (thermalState : ModularThermalState Observable)
+    (t : ℝ) (a b : Observable) :
+    thermalState.kms.omega_eval a
+      (thermalState.kms.modular.sigma t b) =
+    thermalState.kms.omega_eval
+      (thermalState.kms.modular.sigma (t + thermalState.kms.beta) b) a :=
+  thermalState.kms.kms_boundary t a b
 
 end InfoGeometry.Topology.CantorDiracOperator

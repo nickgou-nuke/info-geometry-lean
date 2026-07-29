@@ -18,6 +18,8 @@ orientation/PT bookkeeping.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
+import InfoGeometry.Geometry.KleinFourTag
+import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section
 
@@ -27,35 +29,27 @@ open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 /-! ## 1. V₄ orientation tags -/
 
-/--
-Discrete V₄-style orientation tag.
-
-`parity = true` records a spatial/parity flip.
-
-`time = true` records a propagation/time-orientation reversal tag.
--/
-structure V4Tag where
-  parity : Bool
-  time : Bool
-deriving DecidableEq, Repr
+/-- Canonical Klein-four parity/time orientation tag. -/
+abbrev V4Tag :=
+  InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace V4Tag
 
 /-- Identity sector. -/
 def id : V4Tag :=
-  ⟨false, false⟩
+  InfoGeometry.Geometry.KleinFourTag.id
 
 /-- Parity/spatial-reflection sector. -/
 def P : V4Tag :=
-  ⟨true, false⟩
+  InfoGeometry.Geometry.KleinFourTag.P
 
 /-- Time/propagation-reversal sector. -/
 def T : V4Tag :=
-  ⟨false, true⟩
+  InfoGeometry.Geometry.KleinFourTag.T
 
 /-- Combined PT sector. -/
 def PT : V4Tag :=
-  ⟨true, true⟩
+  InfoGeometry.Geometry.KleinFourTag.PT
 
 end V4Tag
 
@@ -67,7 +61,7 @@ abbrev JonesVec :=
 
 /-- Jones matrices for a two-channel polarization basis. -/
 abbrev JonesMat :=
-  Matrix (Fin 2) (Fin 2) ℂ
+  InfoGeometry.Optics.FiniteJonesModel.JonesMat
 
 /--
 Polarization basis used by a local optical description.
@@ -88,18 +82,15 @@ In the circular `L/R` basis, this is `diag(r_L, r_R)`.
 -/
 def diagJones
     (a b : ℂ) : JonesMat :=
-  fun i j =>
-    if i = j then
-      if i = 0 then a else b
-    else 0
+  InfoGeometry.Optics.FiniteJonesModel.diagJones a b
 
 /-- The `s`-channel projector in the `s/p` basis. -/
 def sProjector : JonesMat :=
-  diagJones 1 0
+  InfoGeometry.Optics.FiniteJonesModel.sProjector
 
 /-- The `p`-channel projector in the `s/p` basis. -/
 def pProjector : JonesMat :=
-  diagJones 0 1
+  InfoGeometry.Optics.FiniteJonesModel.pProjector
 
 /-- The `L`-channel projector in the circular basis. -/
 def leftCircularProjector : JonesMat :=
@@ -278,68 +269,116 @@ end JonesOpticalEvent
 /-! ## 5. V₄-to-optical calibration -/
 
 /--
-A calibration saying how an optical event's V₄ tag should be interpreted.
-
-The tag does not determine the continuous coefficients. It records the
-orientation/PT bookkeeping attached to the event.
+A V₄ optical calibration is the event itself: its canonical Klein-four tag is
+already part of `JonesOpticalEvent`.
 -/
-structure V4OpticalCalibration where
-  /-- Event being calibrated. -/
-  event : JonesOpticalEvent
+abbrev V4OpticalCalibration :=
+  JonesOpticalEvent
 
 /--
-A Brewster calibration packages an event with its rank-collapse proof.
+A Brewster calibration is the native subtype of events satisfying the
+rank-collapse predicate.
 -/
-structure BrewsterCalibration where
-  event : JonesOpticalEvent
-  is_brewster : IsBrewsterEvent event
+abbrev BrewsterCalibration :=
+  {event : JonesOpticalEvent // IsBrewsterEvent event}
+
+namespace BrewsterCalibration
+
+/-- Underlying calibrated event. -/
+def event (C : BrewsterCalibration) : JonesOpticalEvent :=
+  C.1
+
+/-- The underlying event satisfies the Brewster predicate. -/
+theorem is_brewster (C : BrewsterCalibration) :
+    IsBrewsterEvent C.event :=
+  C.2
+
+end BrewsterCalibration
 
 /--
-A total-internal-reflection calibration packages a lossless retarder event.
+A total-internal-reflection calibration is the subtype of lossless events.
 -/
-structure TIRCalibration where
-  event : JonesOpticalEvent
-  is_lossless : IsLosslessRetarder event
+abbrev TIRCalibration :=
+  {event : JonesOpticalEvent // IsLosslessRetarder event}
+
+namespace TIRCalibration
+
+def event (C : TIRCalibration) : JonesOpticalEvent :=
+  C.1
+
+theorem is_lossless (C : TIRCalibration) :
+    IsLosslessRetarder C.event :=
+  C.2
+
+end TIRCalibration
 
 /--
 A metal-mirror calibration packages a possibly lossy complex retarder event.
 
 Concrete material equations belong to the material-response owner file.
 -/
-structure MetalMirrorCalibration where
-  event : JonesOpticalEvent
+abbrev MetalMirrorCalibration :=
+  JonesOpticalEvent
 
 /--
 A chiral-medium calibration packages the exact circular-basis readout.
 -/
-structure ChiralMediumCalibration where
-  event : JonesOpticalEvent
-  circular_basis :
-    event.basis = PolarizationBasis.circular
+abbrev ChiralMediumCalibration :=
+  {event : JonesOpticalEvent //
+    event.basis = PolarizationBasis.circular}
+
+namespace ChiralMediumCalibration
+
+def event (C : ChiralMediumCalibration) : JonesOpticalEvent :=
+  C.1
+
+theorem circular_basis (C : ChiralMediumCalibration) :
+    C.event.basis = PolarizationBasis.circular :=
+  C.2
+
+end ChiralMediumCalibration
 
 /-! ## 6. Topological obstruction link -/
 
 /--
-An optical event may carry a topological/anomaly obstruction charge.
-
-This is the bridge from Jones/Fresnel optics into `TopologicalSnap`.
+An optical event assignment together with its obstruction charge.  The flat
+sector is derived as the exact zero locus of the obstruction rather than stored
+with a separate proof field.
 -/
-structure JonesObstructionCalibration
-    (State Charge : Type*) [Zero Charge] where
-  /-- Optical event assigned to a state. -/
-  eventOf : State → JonesOpticalEvent
+abbrev JonesObstructionCalibration
+    (State Charge : Type*) [Zero Charge] :=
+  (State → JonesOpticalEvent) × (State → Charge)
 
-  /-- Obstruction charge assigned to a state. -/
-  obstruction : State → Charge
+namespace JonesObstructionCalibration
 
-  /-- Flat optical sector. -/
-  Flat : Set State
+/-- Optical event assigned to a state. -/
+def eventOf
+    {State Charge : Type*} [Zero Charge]
+    (C : JonesObstructionCalibration State Charge) :
+    State → JonesOpticalEvent :=
+  C.1
 
-  /--
-  Flat optical states have trivial obstruction.
-  -/
-  flat_obstruction_zero :
-    ∀ x : State, x ∈ Flat → obstruction x = 0
+/-- Obstruction charge assigned to a state. -/
+def obstruction
+    {State Charge : Type*} [Zero Charge]
+    (C : JonesObstructionCalibration State Charge) :
+    State → Charge :=
+  C.2
+
+/-- The flat optical sector is the obstruction's zero locus. -/
+def Flat
+    {State Charge : Type*} [Zero Charge]
+    (C : JonesObstructionCalibration State Charge) : Set State :=
+  {x | C.obstruction x = 0}
+
+theorem flat_obstruction_zero
+    {State Charge : Type*} [Zero Charge]
+    (C : JonesObstructionCalibration State Charge)
+    (x : State) (hx : x ∈ C.Flat) :
+    C.obstruction x = 0 :=
+  hx
+
+end JonesObstructionCalibration
 
 /--
 A Jones obstruction calibration can generate a conserved-obstruction flow once

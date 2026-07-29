@@ -118,8 +118,19 @@ Closure surface: the finite `osp(1|2)`-style protection claim is now reduced to
 native matrix lemmas above. Global representation stability remains outside
 this finite owner lane.
 -/
-def osp12_protects_jordan_block_debt : String :=
-  "Closed at finite matrix level: see `osp12_finite_protection_closed`."
+def osp12_finite_protection (h : ℂ) : Prop :=
+  let L0 := virasoroL0Cell h
+  let N := jordanNilpotent
+  (N * N = (0 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    L0 0 0 = h ∧
+    L0 0 1 = (1 : ℂ) ∧
+    L0 1 0 = (0 : ℂ) ∧
+    L0 1 1 = h
+
+theorem osp12_finite_protection_holds (h : ℂ) :
+    osp12_finite_protection h := by
+  simpa [osp12_finite_protection] using
+    (osp12_finite_protection_closed (h := h))
 
 /-!
 ## The Full Thermodynamic History

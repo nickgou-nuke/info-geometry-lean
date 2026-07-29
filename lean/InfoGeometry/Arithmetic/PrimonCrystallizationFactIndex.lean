@@ -40,7 +40,7 @@ theorem finite_vandermonde_nonzero_iff_injective
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
-    W.determinant ≠ 0 ↔ Function.Injective W.nodes :=
+    W.determinant ≠ 0 ↔ Function.Injective W :=
   W.determinant_ne_zero_iff_injective
 
 /-- Finite Vandermonde collision locus re-exported from the quasicrystal packet. -/
@@ -48,7 +48,7 @@ theorem finite_vandermonde_zero_iff_collision
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
     (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := R) (n := n)) :
-    W.determinant = 0 ↔ ∃ i j : Fin n, W.nodes i = W.nodes j ∧ i ≠ j :=
+    W.determinant = 0 ↔ ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
   W.determinant_eq_zero_iff_collision
 
 /-- Finite prime-lattice entropy maximizer re-exported from the lattice gas packet. -/

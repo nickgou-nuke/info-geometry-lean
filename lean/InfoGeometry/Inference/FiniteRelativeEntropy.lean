@@ -51,8 +51,8 @@ theorem finiteRelativeEntropy_nonneg
     rw [hright] at hmul
     linarith
   have hsum :
-      (Finset.univ.sum (fun i : Data => q i - p i)) ≤
-        Finset.univ.sum (fun i : Data => q i * Real.log (q i / p i)) := by
+      (Finset.univ.sum (fun i : Data => (q i - p i))) ≤
+        Finset.univ.sum (fun i : Data => (q i * Real.log (q i / p i))) := by
     exact Finset.sum_le_sum (fun i hi => hpoint i)
   calc
     0 = Finset.univ.sum (fun i : Data => q i - p i) := by

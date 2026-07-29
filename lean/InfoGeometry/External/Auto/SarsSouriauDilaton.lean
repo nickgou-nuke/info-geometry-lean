@@ -9,7 +9,13 @@ open Real
 structure EntropicLeaf (State : Type*) where
   entropy : State → ℝ
   base : State
-  same_entropy : State → Prop := fun q => entropy q = entropy base
+
+namespace EntropicLeaf
+
+def same_entropy (L : EntropicLeaf State) (q : State) : Prop :=
+  L.entropy q = L.entropy L.base
+
+end EntropicLeaf
 
 structure SouriauHamiltonianFlow (State : Type*) (L : EntropicLeaf State) where
   flow : State → State

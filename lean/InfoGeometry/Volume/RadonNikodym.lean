@@ -47,7 +47,7 @@ theorem rn_eq_additiveInvariant {A : Type*} [Monoid A]
 /-- The RN potential is the value of the induced high-level logarithmic generator. -/
 theorem rn_eq_logGenerator {A : Type*} [Monoid A]
     (vol : A →* ℝˣ) (a : A) :
-    scalarRN vol a = (logGeneratorOfVolumeCharacter vol).logGen a :=
+    scalarRN vol a = LogGenerator.apply (logGeneratorOfVolumeCharacter vol) a :=
   rn_eq_additiveInvariant vol a
 
 /--
@@ -61,37 +61,32 @@ theorem rn_chain_rule {A : Type*} [Monoid A] (vol : A →* ℝˣ) (f g : A) :
   exact ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul
     (exactBridgeOfVolumeCharacter vol) f g
 
-/--
-Scalar Radon-Nikodym bridge.
-
-Wraps a multiplicative volume character and exposes the induced additive
-scalar potential.
--/
+/-! A scalar Radon-Nikodym bridge is the multiplicative volume character
+itself. The former structure added no law beyond `vol`. -/
 @[rep_depth projective]
-structure HasScalarRNBridge (A : Type*) [Monoid A] where
-  vol : A →* ℝˣ
+abbrev HasScalarRNBridge (A : Type*) [Monoid A] := A →* ℝˣ
 
 namespace HasScalarRNBridge
 
 variable {A : Type*} [Monoid A] (B : HasScalarRNBridge A)
 
 /-- The induced scalar RN potential. -/
-noncomputable def rn (a : A) : ℝ := scalarRN B.vol a
+noncomputable def rn (a : A) : ℝ := scalarRN B a
 
 /-- The RN potential is exactly the log-absolute volume readout. -/
 theorem rn_eq_logAbs_vol (a : A) :
-    B.rn a = Real.log |((B.vol a : ℝˣ) : ℝ)| :=
+    HasScalarRNBridge.rn B a = Real.log |((B a : ℝˣ) : ℝ)| :=
   rfl
 
 /-- Compatibility with the induced additive invariant. -/
 theorem rn_eq_additiveInvariant (a : A) :
-    B.rn a = (exactBridgeOfVolumeCharacter B.vol).additiveInvariant a :=
+    HasScalarRNBridge.rn B a = (exactBridgeOfVolumeCharacter B).additiveInvariant a :=
   rfl
 
 /-- Multiplicative chain rule for the scalar RN bridge. -/
 theorem rn_chain_rule (f g : A) :
-    B.rn (f * g) = B.rn f + B.rn g :=
-    InfoGeometry.Volume.RadonNikodym.rn_chain_rule B.vol f g
+    HasScalarRNBridge.rn B (f * g) = HasScalarRNBridge.rn B f + HasScalarRNBridge.rn B g :=
+    InfoGeometry.Volume.RadonNikodym.rn_chain_rule B f g
 
 end HasScalarRNBridge
 

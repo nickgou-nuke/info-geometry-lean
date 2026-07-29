@@ -34,7 +34,6 @@ structure ChiralOperatorCarrier (X : InvolutiveSelfDualCarrier) where
   eps : X.H →L[ℝ] X.H
   uPlus : X.H →L[ℝ] X.H
   uMinus : X.H →L[ℝ] X.H
-  conformalOperator : X.H →L[ℝ] X.H
   boost_sq : boost.comp boost = ContinuousLinearMap.id ℝ X.H
   boost_eps_anticomm : boost.comp eps = -(eps.comp boost)
   eps_sq : eps.comp eps = ContinuousLinearMap.id ℝ X.H
@@ -43,13 +42,19 @@ structure ChiralOperatorCarrier (X : InvolutiveSelfDualCarrier) where
   uPlus_add_uMinus : uPlus + uMinus = ContinuousLinearMap.id ℝ X.H
   uPlus_comp_uMinus : uPlus.comp uMinus = 0
   uMinus_comp_uPlus : uMinus.comp uPlus = 0
-  conformal_eq : conformalOperator = boost.comp eps
   conformal_sq_neg_id :
-    conformalOperator.comp conformalOperator = -(ContinuousLinearMap.id ℝ X.H)
+    (boost.comp eps).comp (boost.comp eps) = -(ContinuousLinearMap.id ℝ X.H)
 
 namespace ChiralOperatorCarrier
 
 variable {X : InvolutiveSelfDualCarrier}
+
+/-- The conformal phase axis derived from the primitive boost and chirality maps. -/
+def conformalOperator (C : ChiralOperatorCarrier X) : X.H →L[ℝ] X.H :=
+  C.boost.comp C.eps
+
+@[simp] theorem conformal_eq (C : ChiralOperatorCarrier X) :
+    C.conformalOperator = C.boost.comp C.eps := rfl
 
 /-- The canonical chiral operator carrier built from the repo-owned doubled packet. -/
 noncomputable def canonicalChiralOperatorCarrier : ChiralOperatorCarrier X where
@@ -57,7 +62,6 @@ noncomputable def canonicalChiralOperatorCarrier : ChiralOperatorCarrier X where
   eps := X.ε
   uPlus := X.Pplus
   uMinus := X.Pminus
-  conformalOperator := X.K
   boost_sq := X.J_sq
   boost_eps_anticomm := X.J_ε_anticomm
   eps_sq := X.ε_sq
@@ -66,7 +70,6 @@ noncomputable def canonicalChiralOperatorCarrier : ChiralOperatorCarrier X where
   uPlus_add_uMinus := X.Pplus_add_Pminus
   uPlus_comp_uMinus := X.Pplus_comp_Pminus
   uMinus_comp_uPlus := X.Pminus_comp_Pplus
-  conformal_eq := rfl
   conformal_sq_neg_id := X.K_sq
 
 @[simp] theorem canonicalChiralOperatorCarrier_boost_eq_modular_j :

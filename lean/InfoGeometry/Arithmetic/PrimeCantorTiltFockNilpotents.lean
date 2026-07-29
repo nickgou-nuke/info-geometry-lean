@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
+import InfoGeometry.Canonical.OperatorSurgery
 
 /-!
 # InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents
@@ -345,5 +346,33 @@ theorem squareZero_pair_gives_clifford_axes
             rw [hu, hv, hcar]
       _ = -(1 : R) := by
             simp
+
+/-! The archived Cantor/Fock surface exposed these generic Drazin laws under
+this namespace. Their owner is the native operator-surgery module; these
+projections preserve the old theorem names without rebuilding a second Drazin
+packet here. -/
+
+theorem drazin_indexOne_projector_idempotent
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hDAD : D * A * D = D) :
+    (A * D) * (A * D) = A * D :=
+  InfoGeometry.Canonical.OperatorSurgery.drazin_indexOne_projector_idempotent_ring hDAD
+
+theorem drazin_indexOne_annihilates_right_defect
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hADA : A * D * A = A)
+    (hcomm : A * D = D * A) :
+    A * (1 - A * D) = 0 :=
+  InfoGeometry.Canonical.OperatorSurgery.drazin_indexOne_annihilates_right_defect_ring
+    hADA hcomm
+
+theorem drazin_indexOne_annihilates_left_defect
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hADA : A * D * A = A) :
+    (1 - A * D) * A = 0 :=
+  InfoGeometry.Canonical.OperatorSurgery.drazin_indexOne_annihilates_left_defect_ring hADA
 
 end InfoGeometry.Arithmetic.PrimeCantorTiltFockNilpotents

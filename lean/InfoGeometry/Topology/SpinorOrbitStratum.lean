@@ -108,10 +108,10 @@ theorem q55_epsilon5_isGeneric :
 The hypotheses are intentionally explicit and local: zero is mapped to zero,
 zero is reflected, and the quadratic value is preserved.  No group action,
 quotient, spin representation, or orbit theorem is asserted here. -/
-structure PreservesOrbitStrata (Q : QuadraticForm R M) (f : M → M) : Prop where
-  map_zero : f 0 = 0
-  reflect_zero : ∀ {x : M}, f x = 0 → x = 0
-  preserve_quadratic : ∀ x : M, Q (f x) = Q x
+abbrev PreservesOrbitStrata (Q : QuadraticForm R M) (f : M → M) : Prop :=
+  f 0 = 0 ∧
+    (∀ {x : M}, f x = 0 → x = 0) ∧
+    ∀ x : M, Q (f x) = Q x
 
 /-- A zero/null/generic stratum is preserved by any map satisfying
 `PreservesOrbitStrata`. -/
@@ -121,17 +121,17 @@ theorem map_stratum_of_preserves {Q : QuadraticForm R M} {f : M → M}
   intro h
   cases h with
   | isZero hx =>
-      exact OrbitStratum.isZero (by rw [hx]; exact hf.map_zero)
+      exact OrbitStratum.isZero (by rw [hx]; exact hf.1)
   | isNull hx hQ =>
       exact OrbitStratum.isNull
         (by
           intro hfx
-          exact hx (hf.reflect_zero hfx))
-        (by simpa [hf.preserve_quadratic x] using hQ)
+          exact hx (hf.2.1 hfx))
+        (by simpa [hf.2.2 x] using hQ)
   | isGeneric hQ =>
       exact OrbitStratum.isGeneric (by
         intro hfx
-        exact hQ (by simpa [hf.preserve_quadratic x] using hfx))
+        exact hQ (by simpa [hf.2.2 x] using hfx))
 
 /-- Coordinatewise negation on the concrete `q55` carrier. -/
 def q55NegAll (x : Vec55) : Vec55 := fun i => -x i
@@ -155,12 +155,10 @@ theorem q55NegAll_preserves_q55 (x : Vec55) :
 
 /-- Coordinatewise negation preserves the zero/null/generic strata for `q55`. -/
 theorem q55NegAll_preserves_orbit_strata :
-    PreservesOrbitStrata q55 q55NegAll where
-  map_zero := q55NegAll_zero
-  reflect_zero := by
-    intro x hx
-    exact q55NegAll_reflect_zero hx
-  preserve_quadratic := q55NegAll_preserves_q55
+    PreservesOrbitStrata q55 q55NegAll := by
+  refine ⟨q55NegAll_zero, ?_, q55NegAll_preserves_q55⟩
+  intro x hx
+  exact q55NegAll_reflect_zero hx
 
 /-- Concrete stratum transport under coordinatewise negation. -/
 theorem q55NegAll_maps_stratum {x : Vec55} :

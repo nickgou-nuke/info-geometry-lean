@@ -42,23 +42,17 @@ universe uBulk uBoundary uReadout
 
 /-! ## 1. Siegel filter packet -/
 
-/--
-Siegel arithmetic resonance filter.
-
-The same split exact sequence supplies two complementary components:
-
-* `boundaryNoise = ℰ_P ∘ 𝔖_P`;
-* `pureResonance = I - ℰ_P ∘ 𝔖_P`.
-
-The word "noise" is interpretive: it means the boundary/Eisenstein component
-removed by the chosen Siegel operator, not stochastic noise by itself.
+/-!
+The arithmetic resonance filter is the existing Siegel/Eisenstein owner
+itself.  The same split exact sequence supplies the boundary/Eisenstein and
+cuspidal components; the former one-field witness packet added no mathematical
+content.
 -/
-structure SiegelArithmeticResonanceFilter
+abbrev SiegelArithmeticResonanceFilter
     (Bulk : Type uBulk) (Boundary : Type uBoundary)
     [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary] where
-  /-- Split Siegel/Eisenstein witness. -/
-  witness : SiegelEisensteinWitness Bulk Boundary
+    [AddCommGroup Boundary] [Module ℝ Boundary] :=
+  SiegelEisensteinWitness Bulk Boundary
 
 namespace SiegelArithmeticResonanceFilter
 
@@ -69,21 +63,21 @@ variable (F : SiegelArithmeticResonanceFilter Bulk Boundary)
 
 /-- The Siegel boundary operator. -/
 def siegelOperator : Bulk →ₗ[ℝ] Boundary :=
-  F.witness.siegel
+  F.siegel
 
 /-- Boundary/Eisenstein component, interpreted as removable boundary noise. -/
 def boundaryNoise : Bulk →ₗ[ℝ] Bulk :=
-  F.witness.boundaryProjector
+  F.boundaryProjector
 
 /-- Pure arithmetic resonance component. -/
 def pureResonance : Bulk →ₗ[ℝ] Bulk :=
-  F.witness.cuspidalProjector
+  F.cuspidalProjector
 
 /-- The pure resonance component is killed by the Siegel operator. -/
 theorem siegel_pureResonance_eq_zero
     (X : Bulk) :
     F.siegelOperator (F.pureResonance X) = 0 :=
-  F.witness.siegel_cuspidalProjector_apply X
+  F.siegel_cuspidalProjector_apply X
 
 /-- The pure resonance component lies in the kernel of the Siegel operator. -/
 theorem pureResonance_mem_kernel
@@ -98,7 +92,7 @@ theorem pureResonance_boundaryNoise_eq_zero
     F.pureResonance (F.boundaryNoise X) = 0 := by
   have h :=
     congrArg (fun T : Bulk →ₗ[ℝ] Bulk => T X)
-      F.witness.cuspidalProjector_mul_boundaryProjector
+      F.cuspidalProjector_mul_boundaryProjector
   simpa [pureResonance, boundaryNoise] using h
 
 /-- The boundary component is unchanged by the Siegel operator. -/
@@ -107,7 +101,7 @@ theorem siegel_boundaryNoise_eq_siegel
     F.siegelOperator (F.boundaryNoise X) = F.siegelOperator X := by
   have h :=
     congrArg (fun T : Bulk →ₗ[ℝ] Boundary => T X)
-      F.witness.siegel_comp_boundaryProjector
+      F.siegel_comp_boundaryProjector
   simpa [siegelOperator, boundaryNoise, LinearMap.comp_apply] using h
 
 /--
@@ -118,7 +112,7 @@ theorem boundaryNoise_add_pureResonance
     F.boundaryNoise X + F.pureResonance X = X := by
   have h :=
     congrArg (fun T : Bulk →ₗ[ℝ] Bulk => T X)
-      F.witness.projector_sum
+      F.projector_sum
   simpa [boundaryNoise, pureResonance, LinearMap.add_apply] using h
 
 /--
@@ -129,7 +123,7 @@ theorem pureResonance_idempotent
     F.pureResonance (F.pureResonance X) = F.pureResonance X := by
   have h :=
     congrArg (fun T : Bulk →ₗ[ℝ] Bulk => T X)
-      F.witness.cuspidalProjector_idempotent
+      F.cuspidalProjector_idempotent
   simpa [pureResonance] using h
 
 end SiegelArithmeticResonanceFilter

@@ -262,13 +262,6 @@ structure DIIISuperfluidDatum
   chi_BdG :
     chi.comp BdG = -(BdG.comp chi)
 
-  /-- Topological invariant socket: `Z`, `Z2`, or `Z16` depending on the model. -/
-  topologicalInvariant : Type*
-
-  /-- Chosen invariant readout for this model. -/
-  invariant_readout :
-    topologicalInvariant
-
 namespace DIIISuperfluidDatum
 
 variable
@@ -370,13 +363,6 @@ structure MomentumDIIISuperfluidDatum
   chiral :
     ∀ k : Kpt, chi.comp (BdG k) = -((BdG k).comp chi)
 
-  /-- Topological invariant socket for this momentum-space model. -/
-  topologicalInvariant : Type*
-
-  /-- Chosen invariant readout for this model. -/
-  invariant_readout :
-    topologicalInvariant
-
 namespace MomentumDIIISuperfluidDatum
 
 variable
@@ -410,7 +396,7 @@ phase-reversal, chiral, and BdG covariance laws carried by that datum.
 -/
 theorem dIIISuperfluidOwnerTarget :
   ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
-    ∀ D : DIIISuperfluidDatum.{uH, uInv} H,
+    ∀ D : DIIISuperfluidDatum H,
       D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧
       D.Theta.comp D.K = -(D.K.comp D.Theta) ∧
       D.Xi.comp D.K = -(D.K.comp D.Xi) ∧
@@ -431,7 +417,7 @@ theorem dIIISuperfluidOwnerTarget :
 /-- A supplied DIII datum exposes the chiral and BdG laws used downstream. -/
 theorem dIIISuperfluidDatum_packet
     {H : Type uH} [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (D : DIIISuperfluidDatum.{uH, uInv} H) :
+    (D : DIIISuperfluidDatum H) :
     D.chi.comp D.chi = ContinuousLinearMap.id ℝ H ∧
       D.chi.comp D.K = D.K.comp D.chi ∧
       D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by

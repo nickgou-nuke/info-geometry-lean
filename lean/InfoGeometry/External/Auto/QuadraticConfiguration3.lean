@@ -240,14 +240,54 @@ inductive ArnoldTriangle where
   | alpha | beta | mixed
   deriving DecidableEq, Repr
 
-/-- Data containing the analytic and operadic theorems still needed to identify
-this finite presentation with de Rham cohomology. -/
+/-- Typed comparison data needed to identify a presentation with the de Rham
+cohomology ring.  Unlike the former proposition markers, this packet carries
+the classes, the presentation equivalence, and the cooperad map whose laws are
+to be checked.  Constructing a value therefore requires an actual comparison,
+not five unrelated propositions. -/
 structure DeRhamCohomologyData (E : EvenDimension) where
-  pairComplementClassAlpha : Prop
-  pairComplementClassBeta : Prop
-  arnoldTriangleRelations : Prop
-  deRhamPresentationIsComplete : Prop
-  cooperadCompatibility : Prop
+  cohomology : Type*
+  [cohomologyRing : CommRing cohomology]
+  presentation : Type*
+  [presentationRing : CommRing presentation]
+  pairComplementClassAlpha : Edge3 → cohomology
+  pairComplementClassBeta : Edge3 → cohomology
+  /-- The arity-three Arnold relation among the actual alpha classes. -/
+  arnoldTriangleRelations :
+    pairComplementClassAlpha Edge3.e12 *
+          pairComplementClassAlpha Edge3.e23 -
+        pairComplementClassAlpha Edge3.e12 *
+          pairComplementClassAlpha Edge3.e13 +
+      pairComplementClassAlpha Edge3.e23 *
+        pairComplementClassAlpha Edge3.e13 = 0
+  /-- Completeness is an equivalence of rings, rather than a truth marker. -/
+  deRhamPresentationIsComplete : presentation ≃+* cohomology
+  /-- Cocomposition on the represented alpha and beta edge classes. -/
+  cooperadAction :
+    BlockDecomp3 → EdgeGen → TargetFactor × GenKind
+  cooperadCompatibility :
+    ∀ b g, cooperadAction b g = cooperadGen b g
+
+namespace DeRhamCohomologyData
+
+/-- The presentation comparison sends zero to the zero cohomology class. -/
+@[simp] theorem presentation_zero
+    (C : DeRhamCohomologyData E) :
+    C.deRhamPresentationIsComplete
+        C.presentationRing.toRing.toAddCommGroup.zero =
+      C.cohomologyRing.toRing.toAddCommGroup.zero :=
+  by
+    letI : CommRing C.presentation := C.presentationRing
+    letI : CommRing C.cohomology := C.cohomologyRing
+    exact C.deRhamPresentationIsComplete.map_zero
+
+/-- The stored cocomposition is exactly the finite arity-three owner map. -/
+theorem cooperad_action_eq
+    (C : DeRhamCohomologyData E) (b : BlockDecomp3) (g : EdgeGen) :
+    C.cooperadAction b g = cooperadGen b g :=
+  C.cooperadCompatibility b g
+
+end DeRhamCohomologyData
 
 /-- Finite theorem-honest synthesis: the arity-three combinatorics and generator
 degrees compile; analytic de Rham completeness remains explicit comparison data. -/

@@ -105,6 +105,29 @@ theorem marginal_x_assemble (p_x : FinProb X) (p_theta_given_x : X → FinProb �
   rw [marginal_x, assemble, PMF.map_bind]
   simp [PMF.map_comp]
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+A joint law with full `X`-marginal support is reconstructed exactly from its
+`X`-marginal and conditional family.
+-/
+theorem assemble_marginal_x_conditional
+    (p : Joint X Θ)
+    (hp : ∀ x : X, x ∈ (marginal_x p).support) :
+    assemble (marginal_x p) (fun x => cond_theta_given_x p x (hp x)) = p := by
+  ext z
+  rcases z with ⟨x, θ⟩
+  rw [assemble_apply, cond_theta_given_x_apply]
+  have hne : marginal_x p x ≠ 0 :=
+    (PMF.mem_support_iff (marginal_x p) x).1 (hp x)
+  have htop : marginal_x p x ≠ ⊤ :=
+    (marginal_x p).apply_ne_top x
+  calc
+    marginal_x p x * (p (x, θ) * (marginal_x p x)⁻¹) =
+        (marginal_x p x * (marginal_x p x)⁻¹) * p (x, θ) := by
+      ac_rfl
+    _ = p (x, θ) := by
+      rw [ENNReal.mul_inv_cancel hne htop, one_mul]
+
 
 
 /-- Bayes posterior after observing `x₀`. -/
@@ -407,6 +430,37 @@ theorem kl_chain_rule_toReal_strict
   intro x _hx
   rw [h_cond_each x]
 
+/--
+Finite deterministic data processing for the coordinate projection
+`(x, θ) ↦ x`, in `toReal` form under strict positivity.
+-/
+theorem kl_marginal_x_le_toReal_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
+    (InfoGeometry.KL.kl_div
+      (marginal_x p).toMeasure
+      (marginal_x q).toMeasure).toReal
+      ≤
+    (kl p q).toReal := by
+  have hchain :=
+    kl_chain_rule_toReal_strict
+      (p := p) (q := q) (hposp := hposp) (hposq := hposq)
+  have hconditional :
+      0 ≤
+        ∑ x : X, (marginal_x p x).toReal *
+          (InfoGeometry.KL.kl_div
+            (cond_theta_given_x p x
+              (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+            (cond_theta_given_x q x
+              (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal := by
+    exact Finset.sum_nonneg fun x _ =>
+      mul_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg
+  linarith
+
   omit [MeasurableSpace X] [MeasurableSpace Θ] in
   /--
   Conditionals of an assembled joint recover the input kernel.
@@ -588,6 +642,190 @@ lemma kl_div_ne_top_of_right_toReal_pos
   · exact
       (InfoGeometry.MaxEnt.IProjection.integrable_of_fintype
         (f := MeasureTheory.llr P.toMeasure Q.toMeasure) (μ := P.toMeasure))
+
+/--
+Equality in finite marginal data processing holds exactly when the two joint
+laws have the same conditional law of `Θ` at every `x`.
+-/
+theorem kl_marginal_x_eq_toReal_iff_conditionals_eq
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
+    (InfoGeometry.KL.kl_div
+      (marginal_x p).toMeasure
+      (marginal_x q).toMeasure).toReal =
+        (kl p q).toReal
+      ↔
+    ∀ x : X,
+      cond_theta_given_x p x
+        (marginal_x_full_support_of_joint_toReal_pos p hposp x)
+        =
+      cond_theta_given_x q x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq x) := by
+  have hchain :=
+    kl_chain_rule_toReal_strict
+      (p := p) (q := q) (hposp := hposp) (hposq := hposq)
+  have hmarg_pos :
+      ∀ x : X, 0 < (marginal_x p x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos p hposp
+  have hcondq_pos :
+      ∀ x : X, ∀ θ : Θ,
+        0 <
+          (cond_theta_given_x q x
+            (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal := by
+    intro x θ
+    rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+    exact div_pos
+      (hposq x θ)
+      (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+  constructor
+  · intro heq
+    have hsum :
+        (∑ x : X, (marginal_x p x).toReal *
+          (InfoGeometry.KL.kl_div
+            (cond_theta_given_x p x
+              (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+            (cond_theta_given_x q x
+              (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) = 0 := by
+      linarith
+    have hterms :
+        ∀ x : X,
+          (marginal_x p x).toReal *
+            (InfoGeometry.KL.kl_div
+              (cond_theta_given_x p x
+                (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+              (cond_theta_given_x q x
+                (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal = 0 := by
+      have hzero :=
+        (Finset.sum_eq_zero_iff_of_nonneg
+          (s := (Finset.univ : Finset X))
+          (f := fun x =>
+            (marginal_x p x).toReal *
+              (InfoGeometry.KL.kl_div
+                (cond_theta_given_x p x
+                  (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+                (cond_theta_given_x q x
+                  (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal)
+          (by
+            intro x _
+            exact mul_nonneg ENNReal.toReal_nonneg ENNReal.toReal_nonneg)).1 hsum
+      intro x
+      exact hzero x (Finset.mem_univ x)
+    intro x
+    let cp :=
+      cond_theta_given_x p x
+        (marginal_x_full_support_of_joint_toReal_pos p hposp x)
+    let cq :=
+      cond_theta_given_x q x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq x)
+    have hkl_toReal :
+        (InfoGeometry.KL.kl_div cp.toMeasure cq.toMeasure).toReal = 0 := by
+      have hweight_ne : (marginal_x p x).toReal ≠ 0 :=
+        (hmarg_pos x).ne'
+      exact (mul_eq_zero.mp (hterms x)).resolve_left hweight_ne
+    have hkl_ne_top :
+        InfoGeometry.KL.kl_div cp.toMeasure cq.toMeasure ≠ ⊤ := by
+      apply kl_div_ne_top_of_right_toReal_pos cp cq
+      intro θ
+      exact hcondq_pos x θ
+    have hkl_zero :
+        InfoGeometry.KL.kl_div cp.toMeasure cq.toMeasure = 0 :=
+      ((ENNReal.toReal_eq_zero_iff _).mp hkl_toReal).resolve_right hkl_ne_top
+    have hmeasure : cp.toMeasure = cq.toMeasure := by
+      exact InformationTheory.klDiv_eq_zero_iff.mp hkl_zero
+    exact PMF.toMeasure_inj.mp hmeasure
+  · intro hcond
+    have hsum :
+        (∑ x : X, (marginal_x p x).toReal *
+          (InfoGeometry.KL.kl_div
+            (cond_theta_given_x p x
+              (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+            (cond_theta_given_x q x
+              (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) = 0 := by
+      refine Finset.sum_eq_zero ?_
+      intro x _
+      rw [hcond x]
+      simp [InfoGeometry.KL.kl_div]
+    linarith
+
+/--
+Equality in finite marginal data processing is equivalent to exact recovery
+of both joint laws from their marginals by one shared conditional kernel.
+-/
+theorem kl_marginal_x_eq_toReal_iff_exists_shared_recovery
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
+    (InfoGeometry.KL.kl_div
+      (marginal_x p).toMeasure
+      (marginal_x q).toMeasure).toReal =
+        (kl p q).toReal
+      ↔
+    ∃ recovery : X → FinProb Θ,
+      p = assemble (marginal_x p) recovery ∧
+      q = assemble (marginal_x q) recovery := by
+  rw [kl_marginal_x_eq_toReal_iff_conditionals_eq
+    p q hposp hposq]
+  constructor
+  · intro hcond
+    let recovery : X → FinProb Θ := fun x =>
+      cond_theta_given_x p x
+        (marginal_x_full_support_of_joint_toReal_pos p hposp x)
+    refine ⟨recovery, ?_, ?_⟩
+    · exact (assemble_marginal_x_conditional p
+        (marginal_x_full_support_of_joint_toReal_pos p hposp)).symm
+    · calc
+        q =
+            assemble (marginal_x q) (fun x =>
+              cond_theta_given_x q x
+                (marginal_x_full_support_of_joint_toReal_pos q hposq x)) :=
+          (assemble_marginal_x_conditional q
+            (marginal_x_full_support_of_joint_toReal_pos q hposq)).symm
+        _ = assemble (marginal_x q) recovery := by
+          congr 1
+          funext x
+          exact (hcond x).symm
+  · rintro ⟨recovery, hp_recover, hq_recover⟩
+    intro x
+    ext θ
+    rw [cond_theta_given_x_apply, cond_theta_given_x_apply]
+    have hp_point :=
+      congrArg (fun law : Joint X Θ => law (x, θ)) hp_recover
+    have hq_point :=
+      congrArg (fun law : Joint X Θ => law (x, θ)) hq_recover
+    change p (x, θ) =
+      assemble (marginal_x p) recovery (x, θ) at hp_point
+    change q (x, θ) =
+      assemble (marginal_x q) recovery (x, θ) at hq_point
+    rw [assemble_apply] at hp_point hq_point
+    rw [hp_point, hq_point]
+    have hmp_ne : marginal_x p x ≠ 0 :=
+      (PMF.mem_support_iff (marginal_x p) x).1
+        (marginal_x_full_support_of_joint_toReal_pos p hposp x)
+    have hmq_ne : marginal_x q x ≠ 0 :=
+      (PMF.mem_support_iff (marginal_x q) x).1
+        (marginal_x_full_support_of_joint_toReal_pos q hposq x)
+    have hmp_top : marginal_x p x ≠ ⊤ :=
+      (marginal_x p).apply_ne_top x
+    have hmq_top : marginal_x q x ≠ ⊤ :=
+      (marginal_x q).apply_ne_top x
+    calc
+      (marginal_x p x * recovery x θ) * (marginal_x p x)⁻¹ =
+          (marginal_x p x * (marginal_x p x)⁻¹) * recovery x θ := by
+        ac_rfl
+      _ = recovery x θ := by
+        rw [ENNReal.mul_inv_cancel hmp_ne hmp_top, one_mul]
+      _ =
+          (marginal_x q x * (marginal_x q x)⁻¹) * recovery x θ := by
+        rw [ENNReal.mul_inv_cancel hmq_ne hmq_top, one_mul]
+      _ = (marginal_x q x * recovery x θ) * (marginal_x q x)⁻¹ := by
+        ac_rfl
 
 /--
 Constructive KL-Pythagorean theorem in `ℝ≥0∞` form for strictly positive finite joints.

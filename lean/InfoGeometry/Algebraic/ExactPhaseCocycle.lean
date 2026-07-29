@@ -64,17 +64,33 @@ theorem exactBerryPhase_one
   unfold exactBerryPhase automorphicFactor
   simp [PhaseRotorGroup.phase_zero]
 
-/--
-Compatibility hypothesis for the exact phase lift.
+/-- Compatibility hypothesis for the exact phase lift.
 
 This is the honest Lean boundary: branch-cut and additivity behavior are not
 asserted silently; they are packaged as an explicit condition.
--/
-structure ExactPhaseCompatibility {R : Type*} [PhaseRotorGroup R] (k : ℤ) : Prop where
-  map_mul :
-    ∀ γ δ : ModularGroup, ∀ τ : UpperHalfPlane,
-      exactBerryPhase (R := R) k (γ * δ) τ =
-        exactBerryPhase (R := R) k γ (δ • τ) * exactBerryPhase (R := R) k δ τ
+
+The explicit branch-compatible cocycle law for the exact phase readout.
+
+This is a direct proposition rather than a one-field evidence wrapper.  The
+law is not supplied by the bare `Complex.arg` API: it remains an assumption
+until a branch-choice theorem for the automorphic factor is proved. -/
+def ExactPhaseCompatibility {R : Type*} [PhaseRotorGroup R] (k : ℤ) : Prop :=
+  ∀ γ δ : ModularGroup, ∀ τ : UpperHalfPlane,
+    exactBerryPhase (R := R) k (γ * δ) τ =
+      exactBerryPhase (R := R) k γ (δ • τ) * exactBerryPhase (R := R) k δ τ
+
+namespace ExactPhaseCompatibility
+
+variable {R : Type*} [PhaseRotorGroup R] {k : ℤ}
+
+/-- The direct compatibility relation, exposed under the former field name. -/
+theorem map_mul (h : ExactPhaseCompatibility (R := R) k)
+    (γ δ : ModularGroup) (τ : UpperHalfPlane) :
+    exactBerryPhase (R := R) k (γ * δ) τ =
+      exactBerryPhase (R := R) k γ (δ • τ) * exactBerryPhase (R := R) k δ τ :=
+  h γ δ τ
+
+end ExactPhaseCompatibility
 
 /--
 Exact phase cocycle packaged as a `MulActionCocycle`.

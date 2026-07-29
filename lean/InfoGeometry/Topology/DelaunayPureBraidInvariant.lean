@@ -80,7 +80,17 @@ inductive DelaunayMoveKind where
 /-- A sequence of abstract Delaunay flips. -/
 structure DelaunayFlipWord (n : ℕ) where
   flips : List (DelaunayFlipContext n)
-  admissible : Prop
+
+/--
+Presentation-level admissibility of a Delaunay flip word.
+
+Every local transport matrix must be invertible. This is the algebraic
+condition needed for a word to represent transport in a groupoid. It is
+deliberately weaker than geometric Delaunay admissibility, which requires
+separate point-configuration data.
+-/
+def DelaunayFlipWord.admissible {n : ℕ} (W : DelaunayFlipWord n) : Prop :=
+  ∀ F ∈ W.flips, IsUnit F.matrix
 
 /-- Product matrix attached to a witnessed flip list. -/
 def rohozhkinMatrixList {n : ℕ}
@@ -110,24 +120,24 @@ def rohozhkinMatrix {n : ℕ}
 
 /-- Product evaluation respects concatenation of witnessed flip words. -/
 theorem rohozhkinMatrix_append {n : ℕ}
-    (W₁ W₂ : DelaunayFlipWord n) (h : Prop) :
+    (W₁ W₂ : DelaunayFlipWord n) :
     rohozhkinMatrix
-        ({ flips := W₁.flips ++ W₂.flips, admissible := h } :
+        ({ flips := W₁.flips ++ W₂.flips } :
           DelaunayFlipWord n) =
       rohozhkinMatrix W₁ * rohozhkinMatrix W₂ := by
   exact rohozhkinMatrixList_append W₁.flips W₂.flips
 
 @[simp]
-theorem rohozhkinMatrix_nil {n : ℕ} (h : Prop) :
-    rohozhkinMatrix ({ flips := [], admissible := h } : DelaunayFlipWord n) = 1 := by
+theorem rohozhkinMatrix_nil {n : ℕ} :
+    rohozhkinMatrix ({ flips := [] } : DelaunayFlipWord n) = 1 := by
   rfl
 
 @[simp]
 theorem rohozhkinMatrix_cons {n : ℕ}
-    (F : DelaunayFlipContext n) (tail : List (DelaunayFlipContext n)) (h : Prop) :
-    rohozhkinMatrix ({ flips := F :: tail, admissible := h } : DelaunayFlipWord n) =
+    (F : DelaunayFlipContext n) (tail : List (DelaunayFlipContext n)) :
+    rohozhkinMatrix ({ flips := F :: tail } : DelaunayFlipWord n) =
       F.matrix *
-        rohozhkinMatrix ({ flips := tail, admissible := h } : DelaunayFlipWord n) := by
+        rohozhkinMatrix ({ flips := tail } : DelaunayFlipWord n) := by
   rfl
 
 /-- Concrete presentation-level move relation for Delaunay flip sequences. -/
@@ -166,13 +176,12 @@ lemma rohozhkinMatrixList_invariant_under_move {n : ℕ} {kind : DelaunayMoveKin
 /-- Matrix invariance for deleting adjacent inverse flips inside a word. -/
 theorem rohozhkin_invariant_under_inverse_move {n : ℕ}
     (w₁ w₂ : List (DelaunayFlipContext n)) (A B : DelaunayFlipContext n)
-    (h : A.matrix * B.matrix = 1)
-    (hbefore hafter : Prop) :
+    (h : A.matrix * B.matrix = 1) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B] ++ w₂, admissible := hbefore } :
+        ({ flips := w₁ ++ [A, B] ++ w₂ } :
           DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ w₂, admissible := hafter } :
+        ({ flips := w₁ ++ w₂ } :
           DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.inverse w₁ w₂ A B h)
@@ -180,13 +189,12 @@ theorem rohozhkin_invariant_under_inverse_move {n : ℕ}
 /-- Matrix invariance for swapping adjacent far-commuting flips inside a word. -/
 theorem rohozhkin_invariant_under_far_commute_move {n : ℕ}
     (w₁ w₂ : List (DelaunayFlipContext n)) (A B : DelaunayFlipContext n)
-    (h : A.matrix * B.matrix = B.matrix * A.matrix)
-    (hbefore hafter : Prop) :
+    (h : A.matrix * B.matrix = B.matrix * A.matrix) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B] ++ w₂, admissible := hbefore } :
+        ({ flips := w₁ ++ [A, B] ++ w₂ } :
           DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ [B, A] ++ w₂, admissible := hafter } :
+        ({ flips := w₁ ++ [B, A] ++ w₂ } :
           DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.farCommute w₁ w₂ A B h)
@@ -201,13 +209,12 @@ The order is the local matrix-product order.  For the Appendix A pentagon in
 theorem rohozhkin_invariant_under_pentagon_move {n : ℕ}
     (w₁ w₂ : List (DelaunayFlipContext n))
     (A B C D E : DelaunayFlipContext n)
-    (h : A.matrix * B.matrix * C.matrix * D.matrix * E.matrix = 1)
-    (hbefore hafter : Prop) :
+    (h : A.matrix * B.matrix * C.matrix * D.matrix * E.matrix = 1) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B, C, D, E] ++ w₂, admissible := hbefore } :
+        ({ flips := w₁ ++ [A, B, C, D, E] ++ w₂ } :
           DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ w₂, admissible := hafter } :
+        ({ flips := w₁ ++ w₂ } :
           DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.pentagon w₁ w₂ A B C D E h)
@@ -215,9 +222,9 @@ theorem rohozhkin_invariant_under_pentagon_move {n : ℕ}
 /--
 Presentation-level move relation for `DelaunayFlipWord`.
 
-This relation intentionally ignores the `admissible : Prop` field.  The quotient
-layer proves only matrix-word invariance under witnessed local replacements; it
-does not prove or transport geometric admissibility of a Delaunay motion.
+The quotient layer proves matrix-word invariance under witnessed local
+replacements. Geometric admissibility of a Delaunay motion remains a separate
+point-configuration theorem.
 -/
 def DelaunayMove {n : ℕ} (kind : DelaunayMoveKind)
     (before after : DelaunayFlipWord n) : Prop :=

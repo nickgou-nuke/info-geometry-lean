@@ -142,7 +142,7 @@ theorem toBridge_flow_invariant
 /-- KMS boundary condition readback is preserved by `toBridge`. -/
 theorem toBridge_kms_boundary_condition :
     (toBridge (E := E) B).kms.kms_boundary_condition := by
-  exact B.kms.kms_boundary_condition_holds
+  exact KMSState.kms_boundary_holds B.kms
 
 end MinimalHestenesAnalyticKMSWitness
 
@@ -180,7 +180,7 @@ theorem phase_right_covariance
 @[rep_depth krein]
 theorem kms_holds :
     B.kms.kms_boundary_condition :=
-  B.kms.kms_boundary_condition_holds
+  KMSState.kms_boundary_holds B.kms
 
 /-- Readback: the underlying KMS state is invariant under the operator flow. -/
 @[rep_depth krein]

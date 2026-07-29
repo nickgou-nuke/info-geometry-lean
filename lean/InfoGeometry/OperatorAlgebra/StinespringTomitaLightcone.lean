@@ -335,19 +335,17 @@ end TomitaLightconeMirrorCompatibility
 
 /-! ## 5. Compatibility readouts -/
 
-/--
-Compatibility data for constructing the Stinespring-Tomita dilation.
-
-Concrete implementations require complete positivity, a representation,
-compression map, and Tomita-compatible global routing.
+/-!
+The compatibility name is the Stinespring-Tomita owner itself. Concrete
+implementations are therefore represented directly by the dilation carrying
+complete positivity, representation, compression, and Tomita routing laws.
 -/
-structure StinespringTomitaDilationCompatibility
+abbrev StinespringTomitaDilationCompatibility
     (Op GlobalOp : Type*)
     [Ring Op] [Module ℝ Op]
     [Ring GlobalOp] [Module ℝ GlobalOp]
-    (Φ : LocalChannel Op) where
-  witness :
-    StinespringTomitaDilation Op GlobalOp Φ
+    (Φ : LocalChannel Op) :=
+  StinespringTomitaDilation Op GlobalOp Φ
 
 /-- Construct the Stinespring-Tomita dilation from compatibility data. -/
 theorem stinespringTomitaDilationOwnerTarget
@@ -358,17 +356,17 @@ theorem stinespringTomitaDilationOwnerTarget
     (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
     (∀ x : Op,
         Φ.map x =
-          h.witness.compress (h.witness.globalEvolution (h.witness.embed x))) ∧
-      (∀ x : Op, h.witness.embed x ∈ h.witness.tomita.M) ∧
-      (∀ x : Op, h.witness.leakage x ∈ h.witness.tomita.Mcomm) ∧
+          h.compress (h.globalEvolution (h.embed x))) ∧
+      (∀ x : Op, h.embed x ∈ h.tomita.M) ∧
+      (∀ x : Op, h.leakage x ∈ h.tomita.Mcomm) ∧
       (∀ x : Op,
-        h.witness.globalEvolution (h.witness.embed x) =
-          h.witness.embed (Φ.map x) + h.witness.leakage x) := by
+        h.globalEvolution (h.embed x) =
+          h.embed (Φ.map x) + h.leakage x) := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · exact h.witness.channel_factorization
-  · exact h.witness.embed_mem_observable
-  · exact h.witness.leakage_mem_commutant
-  · exact h.witness.accounting
+  · exact h.channel_factorization
+  · exact h.embed_mem_observable
+  · exact h.leakage_mem_commutant
+  · exact h.accounting
 
 /-- Packet readout for one Stinespring-Tomita compatibility witness. -/
 theorem stinespringTomitaDilation_packet
@@ -379,27 +377,27 @@ theorem stinespringTomitaDilation_packet
     (h : StinespringTomitaDilationCompatibility Op GlobalOp Φ) :
     (∀ x : Op,
         Φ.map x =
-          h.witness.compress (h.witness.globalEvolution (h.witness.embed x))) ∧
-      (∀ x : Op, h.witness.embed x ∈ h.witness.tomita.M) ∧
-      (∀ x : Op, h.witness.leakage x ∈ h.witness.tomita.Mcomm) ∧
+          h.compress (h.globalEvolution (h.embed x))) ∧
+      (∀ x : Op, h.embed x ∈ h.tomita.M) ∧
+      (∀ x : Op, h.leakage x ∈ h.tomita.Mcomm) ∧
       (∀ x : Op,
-        h.witness.globalEvolution (h.witness.embed x) =
-          h.witness.embed (Φ.map x) + h.witness.leakage x) :=
+        h.globalEvolution (h.embed x) =
+          h.embed (Φ.map x) + h.leakage x) :=
   stinespringTomitaDilationOwnerTarget Op GlobalOp Φ h
 
-/--
-Compatibility data for constructing the chiral-lightcone refinement.
+/-!
+The chiral-lightcone compatibility name is likewise the concrete dilation
+owner, not a one-field witness packet.
 -/
-structure StinespringTomitaChiralLightconeCompatibility
+abbrev StinespringTomitaChiralLightconeCompatibility
     (Op GlobalOp H : Type*)
     [Ring Op] [Module ℝ Op]
     [Ring GlobalOp] [Module ℝ GlobalOp]
     [AddCommGroup H] [Module ℝ H]
     (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H)
-    (Φ : LocalChannel Op) where
-  witness :
-    StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ
+    (Φ : LocalChannel Op) :=
+  StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ
 
 /-- Construct the chiral-lightcone Stinespring-Tomita refinement from compatibility data. -/
 theorem stinespringTomitaChiralLightconeOwnerTarget :
@@ -414,7 +412,7 @@ theorem stinespringTomitaChiralLightconeOwnerTarget :
       Nonempty
         (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) := by
   intro Op GlobalOp H _ _ _ _ _ _ Q C Φ h
-  exact ⟨h.witness⟩
+  exact ⟨h⟩
 
 /-- Packet readout for one chiral-lightcone Stinespring-Tomita compatibility witness. -/
 theorem stinespringTomitaChiralLightcone_packet

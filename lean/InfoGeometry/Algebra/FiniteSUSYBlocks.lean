@@ -27,35 +27,46 @@ abbrev MatC (n : ℕ) := Matrix (Fin n) (Fin n) ℂ
 structure FiniteSUSYSystem (n : ℕ) where
   A : MatC n
   A_dag : MatC n
-  H_minus : MatC n
-  H_plus : MatC n
-  h_H_minus_def : H_minus = A_dag * A
-  h_H_plus_def : H_plus = A * A_dag
 
 namespace FiniteSUSYSystem
 
 variable {n : ℕ} (sys : FiniteSUSYSystem n)
 
+/-- The negative partner Hamiltonian is canonically `A†A`. -/
+def H_minus : MatC n :=
+  sys.A_dag * sys.A
+
+/-- The positive partner Hamiltonian is canonically `AA†`. -/
+def H_plus : MatC n :=
+  sys.A * sys.A_dag
+
+/-- `H₋` unfolds to the product `A†A`. -/
+@[simp]
+theorem h_H_minus_def :
+    sys.H_minus = sys.A_dag * sys.A := rfl
+
+/-- `H₊` unfolds to the product `AA†`. -/
+@[simp]
+theorem h_H_plus_def :
+    sys.H_plus = sys.A * sys.A_dag := rfl
+
 /-- Partner block intertwining: `A H₋ = H₊ A`. -/
 theorem susy_partner_intertwining :
     sys.A * sys.H_minus = sys.H_plus * sys.A := by
-  calc
-    sys.A * sys.H_minus = sys.A * (sys.A_dag * sys.A) := by rw [sys.h_H_minus_def]
-    _ = (sys.A * sys.A_dag) * sys.A := by rw [Matrix.mul_assoc]
-    _ = sys.H_plus * sys.A := by rw [sys.h_H_plus_def]
+  simp only [H_minus, H_plus, Matrix.mul_assoc]
 
 /-- `H₋` is exactly the product `A†A`. -/
 theorem h_minus_is_product :
-    sys.H_minus = sys.A_dag * sys.A := sys.h_H_minus_def
+    sys.H_minus = sys.A_dag * sys.A := rfl
 
 /-- `H₊` is exactly the product `AA†`. -/
 theorem h_plus_is_product :
-    sys.H_plus = sys.A * sys.A_dag := sys.h_H_plus_def
+    sys.H_plus = sys.A * sys.A_dag := rfl
 
 /-- The odd-odd anticommutator is exactly the even-slab sum: `{A,A†} = H₊ + H₋`. -/
 theorem odd_anticommutator_is_even_sum :
     sys.A * sys.A_dag + sys.A_dag * sys.A = sys.H_plus + sys.H_minus := by
-  simp [sys.h_H_plus_def, sys.h_H_minus_def, add_comm, add_left_comm, add_assoc]
+  rfl
 
 end FiniteSUSYSystem
 
@@ -79,10 +90,6 @@ def H_plus : MatC 2 :=
 def canonicalFiniteSUSYSystem : FiniteSUSYSystem 2 where
   A := superchargeA
   A_dag := superchargeAdag
-  H_minus := H_minus
-  H_plus := H_plus
-  h_H_minus_def := rfl
-  h_H_plus_def := rfl
 
 /-- Concrete partner block intertwining. -/
 theorem canonical_partner_intertwining :

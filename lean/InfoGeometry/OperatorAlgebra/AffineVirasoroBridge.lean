@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.BostConnes.BostConnesThermofield
+import InfoGeometry.Dynamics.ModularThermalState
 
 noncomputable section
 

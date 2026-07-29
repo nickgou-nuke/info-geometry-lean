@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.External.Auto.KanCayley
 import InfoGeometry.External.Auto.TraceSeparationFlow
 

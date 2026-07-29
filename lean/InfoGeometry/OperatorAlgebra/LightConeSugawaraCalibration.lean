@@ -6,8 +6,9 @@ import InfoGeometry.Meta.Architecture
 
 Sugawara binding for KAN-organized lightcone affine currents.
 
-The compatibility between the KAN socket and the Sugawara datum is an external
-law, re-exposed here as honest debt.
+The KAN socket owns the affine/Virasoro bridge.  This module adds only the
+normal-ordered mode sum needed to construct the corresponding Sugawara datum;
+no parallel bridge and no bridge-equality evidence are stored.
 -/
 
 noncomputable section
@@ -34,13 +35,9 @@ structure Calibration
     InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge.Bridge
       E Finite Alg Bog Korth Asplit Nshear CartanDiag
 
-  /-- Supplied Sugawara normal-ordered mode-sum datum. -/
-  sugawara :
-    SugawaraModeConstructionDatum Finite Alg
-
-  /-- Constructive calibration law tying both carriers to the same bridge. -/
-  usesBridge :
-    sugawara.bridge = kanAffine.affineLightCone.bridge
+  /-- Normal-ordered bilinear mode sum attached to the KAN affine bridge. -/
+  sugawaraModeSum :
+    ℤ → Alg
 
 namespace Calibration
 
@@ -54,42 +51,43 @@ variable (S :
   Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
 
 /--
-External compatibility law: the supplied Sugawara datum is calibrated
-against the same affine/Virasoro bridge used by the lightcone affine socket.
+The Sugawara datum constructed natively from the KAN-owned affine/Virasoro
+bridge and the supplied normal-ordered mode sum.
+-/
+@[rep_depth operator]
+def sugawara : SugawaraModeConstructionDatum Finite Alg where
+  bridge := S.kanAffine.affineLightCone.bridge
+  modeSum := S.sugawaraModeSum
+
+/--
+The constructed Sugawara datum uses the KAN-owned affine/Virasoro bridge
+definitionally.
 -/
 theorem uses_lightcone_affine_bridge :
     S.sugawara.bridge = S.kanAffine.affineLightCone.bridge := by
-  exact S.usesBridge
+  rfl
 
-/-- Legacy compatibility alias. -/
-def UsesLightConeAffineBridge : Prop :=
-  S.sugawara.bridge = S.kanAffine.affineLightCone.bridge
-
-/-- Legacy law holds by the explicit honest-debt theorem. -/
-theorem usesLightConeAffineBridge_holds :
-    S.UsesLightConeAffineBridge :=
+/-- Legacy theorem name for the definitional bridge readback. -/
+theorem UsesLightConeAffineBridge :
+    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
   S.uses_lightcone_affine_bridge
 
-/--
-Constructive witness for lightcone/Sugawara bridge compatibility.
-Now a pure data structure.
--/
+/-- Legacy theorem name retained without a proof-packet wrapper. -/
 @[rep_depth operator]
-structure UsesLightConeAffineBridgeWitness where
-  law : S.UsesLightConeAffineBridge
+theorem UsesLightConeAffineBridgeWitness :
+    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
+  S.uses_lightcone_affine_bridge
 
-/-- Recover the compatibility law from the proof-carrying witness. -/
-theorem UsesLightConeAffineBridgeWitness.use
-    (W : S.UsesLightConeAffineBridgeWitness) :
-    S.UsesLightConeAffineBridge := by
-  exact W.law
+/-- Legacy law holds definitionally for every calibration. -/
+theorem usesLightConeAffineBridge_holds :
+    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
+  S.uses_lightcone_affine_bridge
 
-/-- Recover the compatibility proposition from its witness packet. -/
+/-- Legacy readback theorem retained without a witness argument. -/
 @[rep_depth operator]
-theorem usesLightConeAffineBridge_of_witness
-    (W : S.UsesLightConeAffineBridgeWitness) :
-    S.UsesLightConeAffineBridge :=
-  UsesLightConeAffineBridgeWitness.use S W
+theorem usesLightConeAffineBridge_of_witness :
+    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
+  S.uses_lightcone_affine_bridge
 
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
@@ -118,13 +116,11 @@ theorem sugawara_virasoro_mode_eq_rescaled_sum
   exact S.sugawara.virasoro_mode_eq_rescaled_sum n hsum
 
 /--
-Lightcone-compatible Sugawara readback.  Under the external compatibility
-predicate, the lightcone bridge's Virasoro mode is the supplied Sugawara
-mode-sum readout.
+Lightcone-compatible Sugawara readback.  The lightcone bridge's Virasoro mode
+is the supplied Sugawara mode-sum readout by definitional bridge ownership.
 -/
 @[rep_depth operator]
 theorem lightcone_virasoro_mode_eq_rescaled_sum
-    (hUse : S.UsesLightConeAffineBridge)
     (n : ℤ)
     (hsum :
       ∀ n : ℤ,
@@ -133,7 +129,7 @@ theorem lightcone_virasoro_mode_eq_rescaled_sum
             S.sugawara.modeSum n) :
     S.kanAffine.affineLightCone.bridge.virasoro.Lmode n =
       S.sugawaraFactor • S.modeSum n := by
-  rw [← hUse]
+  rw [← S.uses_lightcone_affine_bridge]
   exact S.sugawara_virasoro_mode_eq_rescaled_sum n hsum
 
 /-- Virasoro bracket in coefficient-normalized form, inherited from the owner datum. -/
@@ -212,12 +208,11 @@ theorem affineCentralSelector_eq_zero_of_not_modeBalanced
   S.kanAffine.centralSelector_eq_zero_of_not_modeBalanced hNot
 
 /--
-Under the compatibility predicate, the supplied Sugawara Virasoro modes act on
-positive lightcone currents by the inherited affine/Virasoro action law.
+The supplied Sugawara Virasoro modes act on positive lightcone currents by the
+inherited affine/Virasoro action law.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uPlusCurrent
-    (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ) :
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -228,18 +223,12 @@ theorem sugawara_virasoro_acts_on_uPlusCurrent
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
   intro hact
   have hVir := S.kanAffine.affineLightCone.bridge_virasoro_eq
-  rw [hUse, hVir]
+  rw [S.uses_lightcone_affine_bridge, hVir]
   exact S.kanAffine.virasoro_acts_on_uPlusCurrent m n hact
 
-/--
-Constructive witness variant of the positive-current action theorem.
-
-This removes the bare compatibility proposition argument from this route by
-consuming a proof-carrying witness packet.
--/
+/-- Legacy theorem name for the direct positive-current action theorem. -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
-    (W : S.UsesLightConeAffineBridgeWitness)
     (m n : ℤ) :
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -249,16 +238,14 @@ theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
   intro hact
-  exact S.sugawara_virasoro_acts_on_uPlusCurrent
-    (UsesLightConeAffineBridgeWitness.use S W) m n hact
+  exact S.sugawara_virasoro_acts_on_uPlusCurrent m n hact
 
 /--
-Under the compatibility predicate, the supplied Sugawara Virasoro modes act on
-negative lightcone currents by the inherited affine/Virasoro action law.
+The supplied Sugawara Virasoro modes act on negative lightcone currents by the
+inherited affine/Virasoro action law.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uMinusCurrent
-    (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ) :
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -269,7 +256,7 @@ theorem sugawara_virasoro_acts_on_uMinusCurrent
       (-(n : ℝ)) • S.kanAffine.uMinusCurrent (m + n) := by
   intro hact
   have hVir := S.kanAffine.affineLightCone.bridge_virasoro_eq
-  rw [hUse, hVir]
+  rw [S.uses_lightcone_affine_bridge, hVir]
   exact S.kanAffine.virasoro_acts_on_uMinusCurrent m n hact
 
 end Calibration

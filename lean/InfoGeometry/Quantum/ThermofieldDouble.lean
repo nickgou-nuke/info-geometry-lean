@@ -91,11 +91,15 @@ theorem tfdCoeffOnSupport_eq_supported
 end FiniteQuantumSpectrum
 
 /--
-Bulk geometry witness for bridge calibrations.
+Bulk geometry for bridge calibrations.  Connectivity is the native Mathlib
+topological predicate on an explicit bulk carrier.
 -/
-structure BulkGeometry where
-  /-- Bulk connectivity status in this model. -/
-  isConnected : Prop
+structure BulkGeometry
+    (Point : Type*) [TopologicalSpace Point] where
+  /-- Points belonging to the modeled bulk region. -/
+  carrier : Set Point
+  /-- The modeled bulk region is nonempty and preconnected. -/
+  connected : IsConnected carrier
   /-- Bulk interior-volume readout. -/
   interiorVolume : ℝ → ℝ
 
@@ -174,8 +178,9 @@ end RyuTakayanagiCalibration
 /--
 Exact bridge-volume growth law (model-supplied).
 -/
-structure ExactERBridgeGrowth where
-  bulk : BulkGeometry
+structure ExactERBridgeGrowth
+    (Point : Type*) [TopologicalSpace Point] where
+  bulk : BulkGeometry Point
   rate : ℝ
 
   /-- Exact affine growth law between two times. -/
@@ -184,7 +189,8 @@ structure ExactERBridgeGrowth where
 
 namespace ExactERBridgeGrowth
 
-variable (G : ExactERBridgeGrowth)
+variable {Point : Type*} [TopologicalSpace Point]
+variable (G : ExactERBridgeGrowth Point)
 
 /-- Linear-in-time law is exactly the supplied bridge growth witness. -/
 theorem volume_difference_eq_rate_mul_time (t₁ t₂ : ℝ) :

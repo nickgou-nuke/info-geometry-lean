@@ -279,8 +279,12 @@ structure VortexCoreMajoranaWitness
   /-- Majorana zero mode attached to this core. -/
   majorana : MajoranaZeroMode B
 
-  /-- Model-specific localization predicate. -/
-  localized_at_core : Prop
+  /-- Core-indexed linear subspace of states localized at the vortex core. -/
+  localizationSubspace : Core → Submodule ℝ V
+
+  /-- The Majorana mode belongs to the localization subspace of its core. -/
+  localized_at_core :
+    majorana.mode ∈ localizationSubspace core
 
 namespace VortexCoreMajoranaWitness
 
@@ -300,6 +304,12 @@ theorem core_mode_zero :
 theorem core_mode_fixed :
     W.majorana.mode ∈ B.Fixed :=
   W.majorana.fixed
+
+/-- The vortex-core Majorana mode lies in the core's owned localization
+subspace. -/
+theorem core_mode_localized :
+    W.majorana.mode ∈ W.localizationSubspace W.core :=
+  W.localized_at_core
 
 end VortexCoreMajoranaWitness
 

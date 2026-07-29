@@ -2,6 +2,7 @@ import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.H3ZornQuadraticCommutation
 import InfoGeometry.Exceptional.Freudenthal
+import Mathlib.Algebra.Jordan.Basic
 
 /-!
 # Verified `H3Zorn` candidate Jordan-law surface

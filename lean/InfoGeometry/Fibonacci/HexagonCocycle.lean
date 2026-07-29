@@ -114,15 +114,28 @@ theorem souriau_fisher_theorem (x p : ℝ) :
   have hsq : 0 ≤ (x - p) ^ 2 := sq_nonneg (x - p)
   nlinarith
 
-structure CocycleLink where
-  source : String
-  target : String
-  formalized : Bool
+/-!
+The finite diagram is indexed by the two theorem-owned links above.  Using an
+inductive index prevents construction of a link whose labels claim a theorem
+that this module does not prove.
+-/
+inductive CocycleLink
+  | hexagonYangBaxter
+  | quadraticLegendreGaussianFisher
 deriving DecidableEq
 
+/-- Human-readable source label derived from a theorem-owned link. -/
+def CocycleLink.source : CocycleLink → String
+  | .hexagonYangBaxter => "hexagon"
+  | .quadraticLegendreGaussianFisher => "quadratic Legendre"
+
+/-- Human-readable target label derived from a theorem-owned link. -/
+def CocycleLink.target : CocycleLink → String
+  | .hexagonYangBaxter => "Yang-Baxter"
+  | .quadraticLegendreGaussianFisher => "Gaussian Fisher"
+
 def unified_cocycle_diagram : List CocycleLink :=
-  [ { source := "hexagon", target := "Yang-Baxter", formalized := true },
-    { source := "quadratic Legendre", target := "Gaussian Fisher", formalized := true } ]
+  [ .hexagonYangBaxter, .quadraticLegendreGaussianFisher ]
 
 theorem unified_cocycle_diagram_length :
     unified_cocycle_diagram.length = 2 := by

@@ -674,6 +674,8 @@ import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovRGFlowBridge
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Canonical.BogoliubovFrameDeformationEntropy
+import InfoGeometry.Canonical.FiniteBogoliubovFrameDeformationEntropy
 import InfoGeometry.Canonical.BogoliubovVielbeinBridge
 import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
@@ -1564,6 +1566,7 @@ import InfoGeometry.Canonical.ModularFluxVacuumFunctional
 import InfoGeometry.Canonical.ModularGibbsColimitBridge
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+import InfoGeometry.Canonical.ModularDerivationJordanTripleBridge
 import InfoGeometry.Canonical.ModularHamiltonianSignum
 import InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 import InfoGeometry.Canonical.ModularHessian
@@ -1948,6 +1951,7 @@ import InfoGeometry.Canonical.SouriauModularLogIdentity
 import InfoGeometry.Canonical.SouriauOperatorBregmanModular
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.SouriauOperatorialLogPotentialFiniteReadback
+import InfoGeometry.Canonical.SpatialDerivativeCertifiedReductionBridge
 import InfoGeometry.Canonical.SouriauOrbitDynamics
 import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
@@ -2083,6 +2087,7 @@ import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeHoppingBridge
 import InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
 import InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
+import InfoGeometry.Canonical.SurprisalLoopExactness
 import InfoGeometry.Canonical.SuperchargeOddOddDecomposition
 import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeRoleMapAlt
@@ -3658,6 +3663,8 @@ import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
 import InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 import InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy
 import InfoGeometry.OperatorAlgebra.SpectralTriple
+import InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner
+import InfoGeometry.OperatorAlgebra.SpatialDerivativeLogarithmicVariation
 import InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame
 import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
@@ -4152,6 +4159,7 @@ import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 import InfoGeometry.Quiver.BetheAnsatzXXZ
+import InfoGeometry.Quiver.XXZYangYang
 import InfoGeometry.Quiver.FermiGTIsometry
 import InfoGeometry.Quiver.HbarOper
 import InfoGeometry.Quiver.KoroteevZeitlinMirror

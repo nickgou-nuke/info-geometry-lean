@@ -142,18 +142,27 @@ structure ColimitBridge where
   finiteSide : JaynesDirectedSystem
   colimitMechanism : InductionColimit finiteSide
   continuum : ColimitContinuumData finiteSide colimitMechanism
-  finitePropertiesLift : Prop := ∀ n, StageKMS (finiteSide.stages n) →
+  finitePropertiesLift_proof : ∀ n, StageKMS (finiteSide.stages n) →
     letI := (finiteSide.stages n).sampleSpace_fintype
     ∃ β, ∀ x,
       continuum.kmsState (colimitMechanism.inclusions n x) *
           (∑ ω' : (finiteSide.stages n).sampleSpace,
             Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion ω')) =
         Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion x)
-  finitePropertiesLift_proof : finitePropertiesLift
   bridgeSlogan : String :=
     "The continuum is not the domain of integration; it is what survives all finite refinements compatibly."
   mechanismSlogan : String :=
     "succ is the microscopic mechanism; colimit is the bookkeeping; Jaynes is the finite-information rule."
+
+/-- The finite-to-colimit lifting law exposed as a proposition from its owner. -/
+def ColimitBridge.finitePropertiesLift (B : ColimitBridge) : Prop :=
+  ∀ n, StageKMS (B.finiteSide.stages n) →
+    letI := (B.finiteSide.stages n).sampleSpace_fintype
+    ∃ β, ∀ x,
+      B.continuum.kmsState (B.colimitMechanism.inclusions n x) *
+          (∑ ω' : (B.finiteSide.stages n).sampleSpace,
+            Real.exp (- β * (B.finiteSide.stages n).finiteIntegralOfMotion ω')) =
+        Real.exp (- β * (B.finiteSide.stages n).finiteIntegralOfMotion x)
 
 /-- If the bridge includes a proof that finite compatible properties lift, then
 the recorded lifting statement is available. -/

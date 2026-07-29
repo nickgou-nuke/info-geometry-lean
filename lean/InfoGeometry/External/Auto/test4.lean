@@ -12,5 +12,9 @@ def zeroCommutatorDeterminant : Q :=
 
 lemma zeroCommutator_det_trace_cube_identity :
     zeroCommutatorDeterminant = (1 / 3 : Q) * trace (⁅zeroMatrixA, zeroMatrixB⁆ ^ 3) := by
-  simp [zeroCommutatorDeterminant, zeroMatrixA, zeroMatrixB]
-  exact Matrix.det_zero ⟨0⟩
+  change det ((0 : Matrix (Fin 3) (Fin 3) Q) * 0 - 0 * 0) =
+    (1 / 3 : Q) * trace (((0 : Matrix (Fin 3) (Fin 3) Q) * 0 - 0 * 0) ^ 3)
+  have hz : (0 : Matrix (Fin 3) (Fin 3) Q) * 0 - 0 * 0 = 0 := by
+    simp
+  rw [hz, Matrix.det_zero (Nonempty.intro (0 : Fin 3))]
+  simp

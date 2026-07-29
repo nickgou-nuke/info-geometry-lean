@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.DualNumber
 
 /-!
 # Erlangen--Jaynes--Gromov Operator Geometry

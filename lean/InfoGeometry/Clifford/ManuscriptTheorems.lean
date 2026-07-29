@@ -4,6 +4,7 @@ import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.KK.DiracFredholmIndex
 import InfoGeometry.Arithmetic.SpectralGap
+import InfoGeometry.Canonical.TransportObservable
 import Mathlib.Tactic.FinCases
 
 /-!
@@ -122,8 +123,16 @@ The conductance formula remains a manuscript target unless the analytic model,
 index theorem, charge normalization, and Drazin nullspace hypotheses are all
 supplied explicitly.
 -/
-def drazin_conductance_formula_debt : String :=
-  "Open: prove G = (2e^2/h) * index(D) from explicit Fredholm, Drazin-nullspace, and conductance-normalization premises."
+theorem drazin_conductance_formula_debt
+    {Op : InfoGeometry.Canonical.DrazinAnomaly.SpinorOp} {k : ℕ}
+    (R : InfoGeometry.Canonical.TransportObservable.AndreevDrazinReadout Op k)
+    (e_charge planck_h : ℝ) :
+    R.zero_bias_conductance e_charge planck_h =
+      InfoGeometry.Canonical.TransportObservable.conductance_quantum
+        e_charge planck_h *
+          |(InfoGeometry.Canonical.DrazinAnomaly.drazin_anomaly_index
+            R.anomaly : ℝ)| :=
+  R.majorana_conductance_peak e_charge planck_h
 
 /-! ## The Complete Physical Chain -/
 

@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Prod
 
 /-!
 # Complex `Cl(4)` matrix periodicity corridor

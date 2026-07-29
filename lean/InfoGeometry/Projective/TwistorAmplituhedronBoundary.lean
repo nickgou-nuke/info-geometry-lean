@@ -73,9 +73,15 @@ amplituhedron or on-shell diagram formalization.
 -/
 structure AmplituhedronBoundarySpec where
   Boundary : Type
+  /-- Carrier used by the selected BCFW boundary model. -/
+  BCFWBoundary : Type
+  /-- Carrier used by the selected Rohozhkin/plabic move model. -/
+  RohozhkinBoundary : Type
   boundaryOfNullPair : ∀ X Y : Vec22, q22 (X - Y) = 0 → Boundary
-  bcfwComparison : Prop
-  rohozhkinComparison : Prop
+  /-- Explicit comparison map from geometric boundary points to BCFW data. -/
+  bcfwComparison : Boundary → BCFWBoundary
+  /-- Explicit comparison map from geometric boundary points to Rohozhkin data. -/
+  rohozhkinComparison : Boundary → RohozhkinBoundary
 
 namespace AmplituhedronBoundarySpec
 
@@ -91,17 +97,15 @@ def boundary_of_common_twistor
   S.boundaryOfNullPair X Y
     (common_twistor_incidence_forces_null Z X Y hX hY hπ)
 
-/-- Read back the BCFW comparison as an explicit assumption of the spec. -/
-theorem bcfwComparison_readback (S : AmplituhedronBoundarySpec)
-    (h : S.bcfwComparison) :
-    S.bcfwComparison :=
-  h
+/-- Read back the installed BCFW comparison map. -/
+def bcfwComparison_readback (S : AmplituhedronBoundarySpec) :
+    S.Boundary → S.BCFWBoundary :=
+  S.bcfwComparison
 
-/-- Read back the Rohozhkin/plabic comparison as an explicit assumption of the spec. -/
-theorem rohozhkinComparison_readback (S : AmplituhedronBoundarySpec)
-    (h : S.rohozhkinComparison) :
-    S.rohozhkinComparison :=
-  h
+/-- Read back the installed Rohozhkin/plabic comparison map. -/
+def rohozhkinComparison_readback (S : AmplituhedronBoundarySpec) :
+    S.Boundary → S.RohozhkinBoundary :=
+  S.rohozhkinComparison
 
 end AmplituhedronBoundarySpec
 
@@ -133,17 +137,16 @@ lane.
 theorem twistor_amplituhedron_boundary_packet
     (S : AmplituhedronBoundarySpec)
     (X₁ X₂ X₃ : Vec22)
-    (hTriple : TripleNonNull X₁ X₂ X₃)
-    (hBCFW : S.bcfwComparison)
-    (hRoh : S.rohozhkinComparison) :
+    (hTriple : TripleNonNull X₁ X₂ X₃) :
     ((¬ ∃ Z : Twistor, Incident Z X₁ ∧ Incident Z X₂ ∧ Z.2 ≠ 0) ∧
       (¬ ∃ Z : Twistor, Incident Z X₂ ∧ Incident Z X₃ ∧ Z.2 ≠ 0) ∧
       (¬ ∃ Z : Twistor, Incident Z X₃ ∧ Incident Z X₁ ∧ Z.2 ≠ 0)) ∧
       candidateLocalBettiData.totalRank * spinTilingMultiplicity = 32 ∧
-      S.bcfwComparison ∧ S.rohozhkinComparison := by
+      Nonempty (S.Boundary → S.BCFWBoundary) ∧
+      Nonempty (S.Boundary → S.RohozhkinBoundary) := by
   exact ⟨triple_nonnull_excludes_pairwise_common_twistors X₁ X₂ X₃ hTriple,
     candidate_conf3_spin_tiled_rank32,
-    hBCFW,
-    hRoh⟩
+    ⟨S.bcfwComparison⟩,
+    ⟨S.rohozhkinComparison⟩⟩
 
 end InfoGeometry.Projective.TwistorAmplituhedronBoundary

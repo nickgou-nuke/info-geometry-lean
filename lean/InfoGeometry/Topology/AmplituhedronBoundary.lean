@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Projective.ArnoldRelations
+import InfoGeometry.Projective.TwistorAmplituhedronBridge
 
 /-!
 # Three-Point Amplituhedron Boundary Operators
@@ -41,9 +42,30 @@ structure Amplituhedron3Point (Op : Type*) [Ring Op] where
   square_zero_edge3 : edge3 * edge3 = 0
   mixed_volume : edge1 * edge2 * edge3 = edge1 * edge3 * edge2 + edge2 * edge1 * edge3 + edge3 * edge1 * edge2
 
-/-- Three-point boundary packet with nilpotent edge operators and channel forms. -/
+/--
+Three-point boundary packet with an explicit BCFW comparison in the selected
+operator carrier.
+
+Constructing `cooperadReadout` and `bcfwReadout` from positive-Grassmannian or
+plabic data remains the responsibility of the model instantiating this packet.
+-/
 structure AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] where
   amp : Amplituhedron3Point Op
-  bcfw_readout : Prop
+  cooperadReadout : Op
+  bcfwReadout : Op
+  bcfwComparison : cooperadReadout = bcfwReadout
+
+namespace AmplituhedronBoundaryPacket
+
+variable {Op : Type*} [Ring Op]
+
+/-- The installed cooperad/BCFW comparison is a genuine carrier equality. -/
+theorem bcfw_readout
+    (P : AmplituhedronBoundaryPacket Op) :
+    P.cooperadReadout = P.bcfwReadout :=
+  InfoGeometry.Projective.TwistorAmplituhedronBridge.bcfw_readout_of_cooperad_comparison
+    (fun x : Op => x) P.cooperadReadout P.bcfwReadout P.bcfwComparison
+
+end AmplituhedronBoundaryPacket
 
 end InfoGeometry.Topology.AmplituhedronBoundary

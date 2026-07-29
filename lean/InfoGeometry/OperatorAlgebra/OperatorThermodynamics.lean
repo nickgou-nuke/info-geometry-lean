@@ -38,7 +38,7 @@ This is deliberately minimal. Concrete modules may add positivity, normality,
 faithfulness, continuity, or GNS data.
 -/
 structure AlgebraicState
-    (Op : Type*) [Mul Op] where
+    (Op : Type*) where
   /-- Evaluation of the state. -/
   eval : Op → ℂ
 
@@ -99,23 +99,26 @@ structure KMSState
   flow_invariant :
     ∀ t x, state.eval (σ.flow t x) = state.eval x
 
-  /--
-  KMS analytic boundary condition.
+  /-- Complex-time correlation attached to an ordered pair of observables. -/
+  correlation : Op → Op → ℂ → ℂ
 
-  Morally:
-    `F(t) = omega(A sigma_t(B))`
-    `F(t + i beta) = omega(sigma_t(B) A)`
+  /-- Holomorphy on the open KMS strip. -/
+  correlation_differentiableOn_openStrip :
+    ∀ A B : Op,
+      DifferentiableOn ℂ (correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < beta}
 
-  The analytic details are model-dependent, so they are stored as a certificate.
-  -/
-  -- DEBT_ID: OTH-ZD-003
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: KMS boundary is an explicit certificate placeholder.
-  kms_boundary_condition : Prop
+  /-- Lower KMS boundary equation. -/
+  correlation_lower_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B (t : ℂ) =
+        state.eval (A * σ.flow t B)
 
-  /-- Evidence for the KMS analytic boundary condition. -/
-  kms_boundary_condition_holds :
-    kms_boundary_condition
+  /-- Upper KMS boundary equation with reversed noncommutative product. -/
+  correlation_upper_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B ((t : ℂ) + (beta : ℂ) * Complex.I) =
+        state.eval (σ.flow t B * A)
 
 namespace KMSState
 
@@ -131,10 +134,24 @@ theorem invariant
     K.state.eval (σ.flow t x) = K.state.eval x :=
   K.flow_invariant t x
 
-/-- Re-export the analytic KMS boundary certificate. -/
+/-- The analytic strip and both KMS boundary laws as one derived proposition. -/
+def kms_boundary_condition : Prop :=
+  (∀ A B : Op,
+      DifferentiableOn ℂ (K.correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < beta}) ∧
+    (∀ (A B : Op) (t : ℝ),
+      K.correlation A B (t : ℂ) =
+        K.state.eval (A * σ.flow t B)) ∧
+    (∀ (A B : Op) (t : ℝ),
+      K.correlation A B ((t : ℂ) + (beta : ℂ) * Complex.I) =
+        K.state.eval (σ.flow t B * A))
+
+/-- Re-export the genuine analytic KMS boundary certificate. -/
 theorem kms_boundary_holds :
     K.kms_boundary_condition :=
-  K.kms_boundary_condition_holds
+  ⟨K.correlation_differentiableOn_openStrip,
+    K.correlation_lower_boundary,
+    K.correlation_upper_boundary⟩
 
 end KMSState
 
@@ -187,18 +204,25 @@ keeps that content as supplied evidence instead of making it definitionally
 -/
 structure KMSAnalyticBoundary
     {Op : Type*} [Mul Op]
-    (_eval : Op → ℂ)
-    (_σ : OperatorFlow Op)
-    (_beta : ℝ) where
-  /-- Analytic strip-boundary statement for the supplied readout and flow. -/
-  -- DEBT_ID: OTH-ZD-005
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
-  boundaryCondition : Prop
-
-  /-- Evidence that the boundary condition holds. -/
-  boundaryCondition_holds :
-    boundaryCondition
+    (eval : Op → ℂ)
+    (σ : OperatorFlow Op)
+    (beta : ℝ) where
+  /-- Complex-time correlation attached to each ordered observable pair. -/
+  correlation : Op → Op → ℂ → ℂ
+  /-- Holomorphy on the open KMS strip. -/
+  differentiableOn_openStrip :
+    ∀ A B : Op,
+      DifferentiableOn ℂ (correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < beta}
+  /-- Exact lower boundary equation. -/
+  lower_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B (t : ℂ) = eval (A * σ.flow t B)
+  /-- Exact upper boundary equation. -/
+  upper_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B ((t : ℂ) + (beta : ℂ) * Complex.I) =
+        eval (σ.flow t B * A)
 
 /--
 Observer reduction from a global algebraic state to the observable algebra
@@ -222,11 +246,20 @@ structure ObserverReduction
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
-  /-- The commutant is inaccessible to the local observer. -/
-  commutant_inaccessible : Prop
+  /-- Concrete restriction/conditional-reduction backend. -/
+  reduce : Op → Op
 
-  /-- Selected restriction/reduction backend is valid. -/
-  reduction_backend_holds : Prop
+  /-- Every reduced observable belongs to the visible Tomita algebra. -/
+  reduce_mem_observable :
+    ∀ A : Op, reduce A ∈ T.M
+
+  /-- Reduction fixes elements already belonging to the observable algebra. -/
+  reduce_eq_self_on_observable :
+    ∀ A : Op, A ∈ T.M → reduce A = A
+
+  /-- The observer readout factors through the concrete reduction backend. -/
+  observableEval_eq_globalEval_reduce :
+    ∀ A : Op, observableEval A = globalEval (reduce A)
 
 namespace ObserverReduction
 
@@ -240,6 +273,19 @@ theorem observable_agrees
     (hA : A ∈ T.M) :
     R.observableEval A = R.globalEval A :=
   R.agrees_on_observable A hA
+
+/-- A genuine observer reduction is idempotent. -/
+@[simp]
+theorem reduce_idempotent
+    (A : Op) :
+    R.reduce (R.reduce A) = R.reduce A :=
+  R.reduce_eq_self_on_observable (R.reduce A) (R.reduce_mem_observable A)
+
+/-- The reduced readout depends only on the concrete observable reduction. -/
+theorem observable_eval_factors
+    (A : Op) :
+    R.observableEval A = R.globalEval (R.reduce A) :=
+  R.observableEval_eq_globalEval_reduce A
 
 end ObserverReduction
 
@@ -265,11 +311,19 @@ structure TomitaKMSThermalization
   thermal_eq_reduction :
     ∀ A : Op, thermal.state.eval A = reduction.observableEval A
 
-  /-- The modular flow is the Tomita flow of the pair/state. -/
-  modular_origin : Prop
+  /-- Explicit Tomita flow carrier for the origin comparison. -/
+  tomitaFlow : OperatorFlow Op
 
-  /-- Optional geometric/horizon origin (e.g. wedge or Killing horizon data). -/
-  horizon_or_wedge_origin : Prop
+  /-- The selected KMS flow agrees with the explicit Tomita flow carrier. -/
+  modular_origin :
+    ∀ t A, σ.flow t A = tomitaFlow.flow t A
+
+  /-- Physical horizon or wedge flow used for the geometric calibration. -/
+  horizonFlow : OperatorFlow Op
+
+  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
+  horizon_origin :
+    ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
 namespace TomitaKMSThermalization
 
@@ -290,8 +344,17 @@ theorem exists_kms_state_for_observer :
 /-- The observer-reduced state carries the named KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ beta where
-  boundaryCondition := Θ.thermal.kms_boundary_condition
-  boundaryCondition_holds := Θ.thermal.kms_boundary_condition_holds
+  correlation := Θ.thermal.correlation
+  differentiableOn_openStrip :=
+    Θ.thermal.correlation_differentiableOn_openStrip
+  lower_boundary := by
+    intro A B t
+    rw [Θ.thermal.correlation_lower_boundary]
+    rw [Θ.thermal_eq_reduction]
+  upper_boundary := by
+    intro A B t
+    rw [Θ.thermal.correlation_upper_boundary]
+    rw [Θ.thermal_eq_reduction]
 
 /-- The local observer's readout is invariant under real modular time. -/
 theorem reduced_state_flow_invariant
@@ -339,8 +402,12 @@ structure HorizonCommutantBoundary
   boundary_maps_observable_to_commutant :
     ∀ A : Op, A ∈ T.M → boundary A ∈ T.Mcomm
 
-  /-- This boundary is the intended defect/horizon locus. -/
-  boundary_is_defect_locus : Prop
+  /-- The explicitly named defect/horizon locus. -/
+  defectLocus : Set Op
+
+  /-- The boundary locus is exactly the preimage of the commutant. -/
+  boundary_is_defect_locus :
+    {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
 Full thermodynamic horizon witness:
@@ -452,10 +519,12 @@ structure EmergentThermalRadiation
   physicalBeta : ℝ
 
   /--
-  Certificate relating `physicalBeta` to modular beta and the time rescaling.
-  The exact formula depends on conventions.
+  Calibration convention: rescaling modular time by `time_rescaling` rescales
+  inverse temperature by the same factor.
   -/
-  beta_calibration : Prop
+  beta_calibration :
+    physicalBeta =
+      horizonCalibration.time_rescaling * modularKMS.beta
 
 namespace EmergentThermalRadiation
 
@@ -574,25 +643,13 @@ def toFlowDatum :
 
 end ModularFlow
 
-/--
-A complex-valued state/readout on an operator algebra.
-
-Positivity, normality, and normalization are proof fields because their exact
-shape depends on the concrete algebraic category.
+/-!
+The generic KMS carrier is only an algebraic readout. Positivity and normality
+are not defined for a bare `Type*` with `[Mul Op]`; concrete C*-algebra models
+must use Mathlib's `PositiveLinearMap` carrier.
 -/
-structure StateFunctional
-    (Op : Type*) where
-  /-- Complex-valued state/readout. -/
-  eval : Op → ℂ
-
-  /-- Positivity certificate. -/
-  positive : Prop
-
-  /-- Normalization certificate. -/
-  normalized : Prop
-
-  /-- Normality certificate. -/
-  normality : Prop
+abbrev StateFunctional (Op : Type*) :=
+  InfoGeometry.OperatorAlgebra.OperatorThermodynamics.AlgebraicState Op
 
 /-! ## 2. KMS condition -/
 
@@ -603,24 +660,60 @@ The true KMS condition is an analytic strip-boundary condition.  This algebraic
 layer records it as named data, not as an automatically true proposition.
 -/
 structure KMSAnalyticCertificate
-    {Op : Type*}
+    {Op : Type*} [Mul Op]
     (σ : FlowDatum Op)
     (β : ℝ)
     (ω : StateFunctional Op) where
-  /--
-  Analytic strip-boundary statement, morally:
-  `F(t) = omega(A * sigma_t(B))` and
-  `F(t + i beta) = omega(sigma_t(B) * A)`.
-  -/
-  boundaryCondition : Prop
+  /-- Complex-time correlation attached to each ordered pair of observables. -/
+  correlation : Op → Op → ℂ → ℂ
 
-  /-- Certificate that the boundary condition holds. -/
-  boundaryCondition_holds :
-    boundaryCondition
+  /-- Holomorphy on the open KMS strip `0 < im z < β`. -/
+  differentiableOn_openStrip :
+    ∀ A B : Op,
+      DifferentiableOn ℂ (correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < β}
+
+  /-- Lower boundary value of the analytic correlation. -/
+  lower_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B (t : ℂ) =
+        ω.eval (A * σ.flow t B)
+
+  /-- Upper boundary value of the analytic correlation. -/
+  upper_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B ((t : ℂ) + (β : ℂ) * Complex.I) =
+        ω.eval (σ.flow t B * A)
+
+namespace KMSAnalyticCertificate
+
+variable {Op : Type*} [Mul Op]
+variable {σ : FlowDatum Op} {β : ℝ} {ω : StateFunctional Op}
+
+/-- The exact KMS strip and both boundary equations as one derived predicate. -/
+def boundaryCondition
+    (K : KMSAnalyticCertificate σ β ω) : Prop :=
+  (∀ A B : Op,
+      DifferentiableOn ℂ (K.correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < β}) ∧
+    (∀ (A B : Op) (t : ℝ),
+      K.correlation A B (t : ℂ) =
+        ω.eval (A * σ.flow t B)) ∧
+    (∀ (A B : Op) (t : ℝ),
+      K.correlation A B ((t : ℂ) + (β : ℂ) * Complex.I) =
+        ω.eval (σ.flow t B * A))
+
+/-- A genuine analytic certificate proves its derived boundary predicate. -/
+theorem boundaryCondition_holds
+    (K : KMSAnalyticCertificate σ β ω) :
+    K.boundaryCondition :=
+  ⟨K.differentiableOn_openStrip, K.lower_boundary, K.upper_boundary⟩
+
+end KMSAnalyticCertificate
 
 /-- A KMS state for a given flow and inverse temperature. -/
 structure KMSState
-    (Op : Type*)
+    (Op : Type*) [Mul Op]
     (σ : FlowDatum Op)
     (β : ℝ) where
   /-- Underlying state/readout. -/
@@ -637,7 +730,7 @@ structure KMSState
 
 namespace KMSState
 
-variable {Op : Type*} {σ : FlowDatum Op} {β : ℝ}
+variable {Op : Type*} [Mul Op] {σ : FlowDatum Op} {β : ℝ}
 variable (ω : KMSState Op σ β)
 
 /-- Re-export real-time invariance. -/
@@ -665,18 +758,25 @@ ambient algebraic data.
 -/
 structure KMSAnalyticBoundary
     {Op : Type*} [Ring Op]
-    (_eval : Op → ℂ)
-    (_σ : ModularFlow Op)
-    (_β : ℝ) where
-  /-- Analytic strip-boundary statement for the supplied readout and flow. -/
-  -- DEBT_ID: OTH-ZD-006
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
-  boundaryCondition : Prop
-
-  /-- Evidence that the boundary condition holds. -/
-  boundaryCondition_holds :
-    boundaryCondition
+    (eval : Op → ℂ)
+    (σ : ModularFlow Op)
+    (β : ℝ) where
+  /-- Complex-time correlation attached to each ordered observable pair. -/
+  correlation : Op → Op → ℂ → ℂ
+  /-- Holomorphy on the open KMS strip. -/
+  differentiableOn_openStrip :
+    ∀ A B : Op,
+      DifferentiableOn ℂ (correlation A B)
+        {z : ℂ | 0 < z.im ∧ z.im < β}
+  /-- Exact lower boundary equation. -/
+  lower_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B (t : ℂ) = eval (A * σ.flow t B)
+  /-- Exact upper boundary equation. -/
+  upper_boundary :
+    ∀ (A B : Op) (t : ℝ),
+      correlation A B ((t : ℂ) + (β : ℂ) * Complex.I) =
+        eval (σ.flow t B * A)
 
 /-! ## 3. Tomita-KMS datum -/
 
@@ -688,21 +788,15 @@ state is KMS with respect to its modular automorphism group.  The analytic
 theorem itself is supplied here as the `kms` certificate.
 -/
 structure TomitaKMSDatum
-    (Op : Type*) where
+    (Op : Type*) [Ring Op] where
   /-- The modular state/readout. -/
   state : StateFunctional Op
 
-  /-- The modular flow. -/
-  modularFlow : FlowDatum Op
+  /-- The modular automorphism group as genuine ring equivalences. -/
+  modularFlow : ModularFlow Op
 
   /-- Inverse temperature normalization, usually `1` for modular time. -/
   beta : ℝ
-
-  /-- Faithful-normal certificate. -/
-  faithfulNormal : Prop
-
-  /-- Certificate that `modularFlow` is the Tomita-Takesaki modular flow. -/
-  tomitaModularFlow : Prop
 
   /-- State invariance under real modular time. -/
   modular_invariant :
@@ -711,16 +805,16 @@ structure TomitaKMSDatum
 
   /-- KMS analytic certificate. -/
   kms :
-    KMSAnalyticCertificate modularFlow beta state
+    KMSAnalyticCertificate modularFlow.toFlowDatum beta state
 
 namespace TomitaKMSDatum
 
-variable {Op : Type*}
+variable {Op : Type*} [Ring Op]
 variable (T : TomitaKMSDatum Op)
 
 /-- Tomita-KMS data produce a KMS state. -/
 def toKMSState :
-    KMSState Op T.modularFlow T.beta where
+    KMSState Op T.modularFlow.toFlowDatum T.beta where
   state := T.state
   flow_invariant := T.modular_invariant
   kms := T.kms
@@ -751,6 +845,13 @@ structure ObservableRestrictionDatum
   /-- Embedding of visible observables into the global carrier. -/
   embedVisible : Visible → Global
 
+  /-- Concrete observer restriction from global to visible observables. -/
+  restrictVisible : Global → Visible
+
+  /-- Restriction is a left inverse of the visible inclusion. -/
+  restrictVisible_embedVisible :
+    Function.LeftInverse restrictVisible embedVisible
+
   /-- Global state/readout. -/
   globalState : StateFunctional Global
 
@@ -762,9 +863,6 @@ structure ObservableRestrictionDatum
     ∀ A : Visible,
       visibleState.eval A = globalState.eval (embedVisible A)
 
-  /-- Certificate that the hidden/commutant sector is inaccessible to the observer. -/
-  hiddenSectorInaccessible : Prop
-
 namespace ObservableRestrictionDatum
 
 variable {Global Visible : Type*}
@@ -775,6 +873,23 @@ theorem visible_eval_eq_global_eval
     (A : Visible) :
     R.visibleState.eval A = R.globalState.eval (R.embedVisible A) :=
   R.visible_eq_restriction A
+
+/-- Two global observables are indistinguishable to the restricted observer. -/
+def ObserverEquivalent
+    (A B : Global) : Prop :=
+  R.restrictVisible A = R.restrictVisible B
+
+/-- Included visible observables retain their complete observer content. -/
+@[simp]
+theorem restrictVisible_embedVisible_readback
+    (A : Visible) :
+    R.restrictVisible (R.embedVisible A) = A :=
+  R.restrictVisible_embedVisible A
+
+/-- Observer equivalence is an actual equivalence relation induced by restriction. -/
+theorem observerEquivalent_equivalence :
+    Equivalence R.ObserverEquivalent :=
+  ⟨fun _ => rfl, fun h => h.symm, fun hAB hBC => hAB.trans hBC⟩
 
 end ObservableRestrictionDatum
 
@@ -801,15 +916,20 @@ structure ObserverReduction
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
-  /-- The commutant is inaccessible to the local observer. -/
-  commutant_inaccessible : Prop
+  /-- Concrete restriction/conditional-reduction backend. -/
+  reduce : Op → Op
 
-  /--
-  Reduction is implemented by the selected backend:
-  finite partial trace, restriction, conditional expectation, modular weight,
-  or core trace.
-  -/
-  reduction_backend_holds : Prop
+  /-- Every reduced observable belongs to the visible Tomita algebra. -/
+  reduce_mem_observable :
+    ∀ A : Op, reduce A ∈ T.M
+
+  /-- Reduction fixes elements already belonging to the observable algebra. -/
+  reduce_eq_self_on_observable :
+    ∀ A : Op, A ∈ T.M → reduce A = A
+
+  /-- The observer readout factors through the concrete reduction backend. -/
+  observableEval_eq_globalEval_reduce :
+    ∀ A : Op, observableEval A = globalEval (reduce A)
 
 namespace ObserverReduction
 
@@ -823,6 +943,19 @@ theorem observable_agrees
     (hA : A ∈ T.M) :
     R.observableEval A = R.globalEval A :=
   R.agrees_on_observable A hA
+
+/-- A genuine observer reduction is idempotent. -/
+@[simp]
+theorem reduce_idempotent
+    (A : Op) :
+    R.reduce (R.reduce A) = R.reduce A :=
+  R.reduce_eq_self_on_observable (R.reduce A) (R.reduce_mem_observable A)
+
+/-- The reduced readout depends only on the concrete observable reduction. -/
+theorem observable_eval_factors
+    (A : Op) :
+    R.observableEval A = R.globalEval (R.reduce A) :=
+  R.observableEval_eq_globalEval_reduce A
 
 end ObserverReduction
 
@@ -850,11 +983,19 @@ structure TomitaKMSThermalization
   thermal_eq_reduction :
     ∀ A : Op, thermal.state.eval A = reduction.observableEval A
 
-  /-- The modular flow is the Tomita flow of the pair/state. -/
-  modular_origin : Prop
+  /-- Explicit Tomita flow carrier for the origin comparison. -/
+  tomitaFlow : ModularFlow Op
 
-  /-- Optional geometric/horizon origin, e.g. wedge or Killing horizon data. -/
-  horizon_or_wedge_origin : Prop
+  /-- The selected KMS flow agrees with the explicit Tomita flow carrier. -/
+  modular_origin :
+    ∀ t A, σ.flow t A = tomitaFlow.flow t A
+
+  /-- Physical horizon or wedge flow used for the geometric calibration. -/
+  horizonFlow : ModularFlow Op
+
+  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
+  horizon_origin :
+    ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
 namespace TomitaKMSThermalization
 
@@ -875,8 +1016,19 @@ theorem exists_kms_state_for_observer :
 /-- The observer-reduced state carries the named KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ β where
-  boundaryCondition := Θ.thermal.kms.boundaryCondition
-  boundaryCondition_holds := Θ.thermal.kms.boundaryCondition_holds
+  correlation := Θ.thermal.kms.correlation
+  differentiableOn_openStrip :=
+    Θ.thermal.kms.differentiableOn_openStrip
+  lower_boundary := by
+    intro A B t
+    rw [Θ.thermal.kms.lower_boundary]
+    simpa [ModularFlow.toFlowDatum] using
+      Θ.thermal_eq_reduction (A * σ.flow t B)
+  upper_boundary := by
+    intro A B t
+    rw [Θ.thermal.kms.upper_boundary]
+    simpa [ModularFlow.toFlowDatum] using
+      Θ.thermal_eq_reduction (σ.flow t B * A)
 
 /-- The local observer's readout is invariant under real modular time. -/
 theorem reduced_state_flow_invariant
@@ -925,8 +1077,12 @@ structure HorizonCommutantBoundary
   boundary_maps_observable_to_commutant :
     ∀ A : Op, A ∈ T.M → boundary A ∈ T.Mcomm
 
-  /-- This boundary is the intended Drazin/null/horizon locus. -/
-  boundary_is_defect_locus : Prop
+  /-- The explicitly named Drazin/null/horizon locus. -/
+  defectLocus : Set Op
+
+  /-- The boundary locus is exactly the preimage of the commutant. -/
+  boundary_is_defect_locus :
+    {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
 Full thermodynamic horizon witness:
@@ -986,7 +1142,7 @@ This replaces the heuristic "tracing out the commutant produces a thermal
 state."
 -/
 structure ObservableKMSReduction
-    (Global Visible : Type*) where
+    (Global Visible : Type*) [Mul Visible] where
   /-- Observable restriction. -/
   restriction :
     ObservableRestrictionDatum Global Visible
@@ -1011,7 +1167,7 @@ structure ObservableKMSReduction
 
 namespace ObservableKMSReduction
 
-variable {Global Visible : Type*}
+variable {Global Visible : Type*} [Ring Visible]
 variable (R : ObservableKMSReduction Global Visible)
 
 /-- The restricted visible state is KMS. -/
@@ -1047,19 +1203,27 @@ geometric statement identifying modular time with physical horizon or wedge
 time.
 -/
 structure HorizonThermalCalibration
-    (Visible : Type*) where
+    (Visible : Type*) [Ring Visible] where
   /-- Physical inverse temperature. -/
   betaPhysical : ℝ
 
-  /-- Certificate that modular flow is physical horizon/wedge time. -/
-  modularFlow_is_horizon_time : Prop
+  /-- Modular flow of the visible observer algebra. -/
+  modularFlow : ModularFlow Visible
 
-  /-- Certificate that the KMS state is interpreted as Hawking/Unruh radiation. -/
-  KMS_is_hawking_unruh_readout : Prop
+  /-- Physical horizon/wedge flow on the visible observer algebra. -/
+  horizonFlow : ModularFlow Visible
+
+  /-- Modular time is identified with the calibrated horizon flow. -/
+  modularFlow_is_horizon_time :
+    ∀ t A, modularFlow.flow t A = horizonFlow.flow t A
+
+  /-- Actual KMS state supplying the thermal Hawking/Unruh readout. -/
+  KMS_is_hawking_unruh_readout :
+    KMSState Visible modularFlow.toFlowDatum betaPhysical
 
 /-- A Hawking/Unruh branch is visible KMS reduction plus geometric calibration. -/
 structure HawkingUnruhBranch
-    (Global Visible : Type*) where
+    (Global Visible : Type*) [Ring Visible] where
   /-- Visible KMS reduction. -/
   reduction :
     ObservableKMSReduction Global Visible
@@ -1074,7 +1238,7 @@ structure HawkingUnruhBranch
 
 namespace HawkingUnruhBranch
 
-variable {Global Visible : Type*}
+variable {Global Visible : Type*} [Ring Visible]
 variable (H : HawkingUnruhBranch Global Visible)
 
 /-- The observer sees a KMS state. -/

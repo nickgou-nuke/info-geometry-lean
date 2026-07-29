@@ -455,18 +455,13 @@ theorem log_uniformLengthScale_of_pos
 
 /-! ## Abstract GW partition-weight interface -/
 
-/--
-Abstract positive multiplicative partition-weight interface for GW-like
-applications.
-
-This does not assert that Gromov--Witten invariants themselves are density
-cocycles.  It only tags a positive multiplicative weight that may later be
-constructed from a genuine GW partition function or Novikov/Kähler weight.
+/-!
+The GW partition-weight lane is exactly the existing positive multiplicative
+cocycle owner.  No additional semantic marker is needed: positivity and the
+multiplicative law are the mathematical content of the interface.
 -/
-structure GWPartitionWeight (G : Type*) [Group G]
-    extends PositiveMultiplicativeCocycle G where
-  /-- Semantic tag: this positive cocycle is interpreted as a GW partition weight. -/
-  gw_label : Unit := ()
+abbrev GWPartitionWeight (G : Type*) [Group G] :=
+  PositiveMultiplicativeCocycle G
 
 namespace GWPartitionWeight
 
@@ -477,7 +472,7 @@ GW free-energy/surprisal convention attached to a positive partition weight:
 `F = -log Z`.
 -/
 noncomputable def gwFreeEnergy (Z : GWPartitionWeight G) : G → ℝ :=
-  PositiveMultiplicativeCocycle.logPotential Z.toPositiveMultiplicativeCocycle
+  PositiveMultiplicativeCocycle.logPotential Z
 
 @[simp]
 theorem gwFreeEnergy_apply (Z : GWPartitionWeight G) (g : G) :
@@ -488,7 +483,7 @@ theorem gwFreeEnergy_apply (Z : GWPartitionWeight G) (g : G) :
 theorem gwFreeEnergy_additive (Z : GWPartitionWeight G) (g h : G) :
     gwFreeEnergy Z (g * h) = gwFreeEnergy Z g + gwFreeEnergy Z h :=
   PositiveMultiplicativeCocycle.logPotential_additive
-    Z.toPositiveMultiplicativeCocycle g h
+    Z g h
 
 /--
 If a proposed Weyl scalar/order-parameter readout is definitionally tied to
@@ -569,6 +564,67 @@ variable {ι : Type*} [DecidableEq ι] [Fintype ι]
 /-- Matrix log-det barrier `B(X) = -log |det X|`. -/
 def matrixLogdetBarrier (X : Matrix ι ι ℝ) : ℝ :=
   logdetBarrier Matrix.det X
+
+/-- The identity matrix has zero finite deformation entropy. -/
+@[simp]
+theorem matrixLogdetBarrier_one :
+    matrixLogdetBarrier (1 : Matrix ι ι ℝ) = 0 := by
+  simp [matrixLogdetBarrier, logdetBarrier]
+
+/--
+Finite deformation entropy is additive under composition of nonsingular
+linear deformations.
+-/
+theorem matrixLogdetBarrier_mul
+    (A B : Matrix ι ι ℝ)
+    (hA : A.det ≠ 0)
+    (hB : B.det ≠ 0) :
+    matrixLogdetBarrier (A * B) =
+      matrixLogdetBarrier A + matrixLogdetBarrier B := by
+  unfold matrixLogdetBarrier logdetBarrier
+  rw [Matrix.det_mul, abs_mul,
+    Real.log_mul (abs_ne_zero.mpr hA) (abs_ne_zero.mpr hB)]
+  ring
+
+/-- A volume-preserving deformation has zero finite deformation entropy. -/
+theorem matrixLogdetBarrier_eq_zero_of_abs_det_eq_one
+    (J : Matrix ι ι ℝ)
+    (hJ : |J.det| = 1) :
+    matrixLogdetBarrier J = 0 := by
+  simp [matrixLogdetBarrier, logdetBarrier, hJ]
+
+/--
+On the orientation-preserving stratum, deformation entropy is the ordinary
+negative logarithm of the determinant.
+-/
+theorem matrixLogdetBarrier_eq_neg_log_det_of_det_pos
+    (J : Matrix ι ι ℝ)
+    (hJ : 0 < J.det) :
+    matrixLogdetBarrier J = -Real.log J.det := by
+  rw [matrixLogdetBarrier, logdetBarrier, abs_of_pos hJ]
+
+/--
+A nonsingular volume-compressing deformation has nonnegative finite
+deformation entropy.
+-/
+theorem matrixLogdetBarrier_nonneg_of_abs_det_le_one
+    (J : Matrix ι ι ℝ)
+    (hJ₀ : J.det ≠ 0)
+    (hJ₁ : |J.det| ≤ 1) :
+    0 ≤ matrixLogdetBarrier J := by
+  unfold matrixLogdetBarrier logdetBarrier
+  exact neg_nonneg.mpr
+    (Real.log_nonpos (abs_pos.mpr hJ₀).le hJ₁)
+
+/--
+A volume-expanding deformation has nonpositive finite deformation entropy.
+-/
+theorem matrixLogdetBarrier_nonpos_of_one_le_abs_det
+    (J : Matrix ι ι ℝ)
+    (hJ : 1 ≤ |J.det|) :
+    matrixLogdetBarrier J ≤ 0 := by
+  unfold matrixLogdetBarrier logdetBarrier
+  exact neg_nonpos.mpr (Real.log_nonneg hJ)
 
 /--
 Congruence transformation law for the finite log-det barrier:

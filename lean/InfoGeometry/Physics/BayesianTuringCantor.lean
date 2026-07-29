@@ -192,22 +192,32 @@ theorem logResidue_self {Q : ℚ} (hQ : Q ≠ 0) :
   unfold logResidue
   field_simp [hQ]
 
-/-- Finite packet collecting the theorem-safe Bayesian/Turing/logarithmic layer. -/
-structure BayesianTuringPacket where
-  tape_carrier : Type
-  tape_carrier_eq : tape_carrier = TuringTape
-  finite_program_closed_under_intersection : ∀ n (P Q : FiniteProgram n),
-    programCylinder n (P ∩ Q) = programCylinder n P ∩ programCylinder n Q
-  finite_log_cocycle : ∀ φ ψ χ : ℚ,
-    logRNIncrement φ ψ + logRNIncrement ψ χ = logRNIncrement φ χ
-  residue_one : ∀ {Q : ℚ}, Q ≠ 0 → logResidue Q Q = 1
+/-- The tape carrier is definitionally the repository's Cantor boundary. -/
+theorem tape_carrier_eq : CantorBoundary = TuringTape :=
+  rfl
 
-/-- Main theorem-safe readout: the finite Bayesian/Turing layer is closed algebraically. -/
-def bayesian_turing_cantor_packet : BayesianTuringPacket where
-  tape_carrier := TuringTape
-  tape_carrier_eq := rfl
-  finite_program_closed_under_intersection := programCylinder_inter
-  finite_log_cocycle := logRNIncrement_cocycle
-  residue_one := logResidue_self
+/--
+The finite Bayesian/Turing/logarithmic closure theorem.
+
+This was formerly an evidence structure whose only inhabitant copied the three
+theorems below into fields.  The conjunction exposes the actual propositions
+without introducing a second carrier or projection-only proofs.
+-/
+theorem BayesianTuringPacket :
+    (∀ n (P Q : FiniteProgram n),
+      programCylinder n (P ∩ Q) = programCylinder n P ∩ programCylinder n Q) ∧
+    (∀ φ ψ χ : ℚ,
+      logRNIncrement φ ψ + logRNIncrement ψ χ = logRNIncrement φ χ) ∧
+    (∀ {Q : ℚ}, Q ≠ 0 → logResidue Q Q = 1) :=
+  ⟨programCylinder_inter, logRNIncrement_cocycle, logResidue_self⟩
+
+/-- Historical entry point for the finite Bayesian/Turing closure theorem. -/
+theorem bayesian_turing_cantor_packet :
+    (∀ n (P Q : FiniteProgram n),
+      programCylinder n (P ∩ Q) = programCylinder n P ∩ programCylinder n Q) ∧
+    (∀ φ ψ χ : ℚ,
+      logRNIncrement φ ψ + logRNIncrement ψ χ = logRNIncrement φ χ) ∧
+    (∀ {Q : ℚ}, Q ≠ 0 → logResidue Q Q = 1) :=
+  BayesianTuringPacket
 
 end InfoGeometry.Physics.BayesianTuringCantor

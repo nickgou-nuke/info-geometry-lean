@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ModularCoproductFlux
+import InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 
 /-!
@@ -22,7 +23,15 @@ Closure debt: an exact mathematical map connecting the finite-stage
 This is a ledger entry for the future continuous limit theorem, not a proved
 theorem in this bridge file.
 -/
-def crossFlux_yields_virasoroCocycle_debt : String :=
-  "Open: prove the finite cross-flux-to-Virasoro-cocycle limit with explicit convergence data."
+theorem crossFlux_yields_virasoroCocycle_debt
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (S : InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.NilpotentFluxReadout A)
+    (m : Int) :
+    InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.splitChannelRelativeEntropy
+        (A := A) S m (-m) 2 =
+      (S.ρ (InfoGeometry.Canonical.ModularCoproductFlux.crossFlux
+        (R := ℝ) S.N) / 12) * (((m : ℝ) ^ 3) - (m : ℝ)) :=
+  InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.splitChannelRelativeEntropy_two_step_resonant
+    S m
 
 end InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge

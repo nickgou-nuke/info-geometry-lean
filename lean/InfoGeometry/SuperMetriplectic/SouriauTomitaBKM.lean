@@ -433,43 +433,68 @@ Policy carrier for discretizing the BKM modular-time integral.
 The actual numerical quadrature error estimates are carried as explicit scalar
 readouts.  Lean only checks the solver-policy implications.
 -/
-structure KMSImaginaryTimeDiscretizationPolicy where
+structure KMSImaginaryTimeDiscretizationPolicy
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℂ Op] where
   scheme : ImaginaryTimeDiscretizationScheme
-  analyticStripResolved : Prop
-  kmsBoundaryResidualControlled : Prop
-  matsubaraModeDiagonal : Prop
-  sinkhornPerelmanSolverReady : Prop
+  /-- Inverse temperature determining the upper KMS boundary. -/
+  beta : ℝ
+  /-- Complex-time correlation produced by the selected discretization. -/
+  stripCorrelation : ℂ → Op
+  /-- Domain on which complex differentiability is required. -/
+  stripDomain : Set ℂ
+  /-- Lower and upper KMS boundary readouts. -/
+  lowerBoundary : ℝ → Op
+  upperBoundary : ℝ → Op
+  /-- Operator-valued Matsubara kernel. -/
+  matsubaraKernel : ℤ → ℤ → Op
+  /-- One numerical Sinkhorn/Perelman solver step. -/
+  solverStep : Op → Op
+  /-- Genuine analytic-strip regularity. -/
+  analyticStripResolved :
+    DifferentiableOn ℂ stripCorrelation stripDomain
+  /-- Exact lower and upper KMS boundary equations. -/
+  kmsBoundaryResidualControlled :
+    (∀ t : ℝ, stripCorrelation (t : ℂ) = lowerBoundary t) ∧
+    (∀ t : ℝ,
+      stripCorrelation ((t : ℂ) + (beta : ℂ) * Complex.I) =
+        upperBoundary t)
+  /-- Matsubara mode diagonality means all off-diagonal kernel entries vanish. -/
+  matsubaraModeDiagonal :
+    ∀ m n : ℤ, m ≠ n → matsubaraKernel m n = 0
+  /-- Solver readiness is witnessed by an actual fixed point. -/
+  sinkhornPerelmanSolverReady :
+    ∃ state : Op, solverStep state = state
   chebyshev_resolves_solver :
     scheme = ImaginaryTimeDiscretizationScheme.chebyshevSpectralCollocation →
-      analyticStripResolved →
-      kmsBoundaryResidualControlled →
-      sinkhornPerelmanSolverReady
+      ∃ state : Op, solverStep state = state
   matsubara_is_diagnostic :
     scheme = ImaginaryTimeDiscretizationScheme.thermalMatsubaraSummation →
-      matsubaraModeDiagonal
+      ∀ m n : ℤ, m ≠ n → matsubaraKernel m n = 0
 
 namespace KMSImaginaryTimeDiscretizationPolicy
+
+variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℂ Op]
 
 /--
 Chebyshev spectral collocation is solver-ready when the analytic strip and KMS
 boundary residual are controlled.
 -/
 theorem solverReady_of_chebyshev
-    (P : KMSImaginaryTimeDiscretizationPolicy)
+    (P : KMSImaginaryTimeDiscretizationPolicy Op)
     (hScheme : P.scheme =
-      ImaginaryTimeDiscretizationScheme.chebyshevSpectralCollocation)
-    (hStrip : P.analyticStripResolved)
-    (hKMS : P.kmsBoundaryResidualControlled) :
-    P.sinkhornPerelmanSolverReady :=
-  P.chebyshev_resolves_solver hScheme hStrip hKMS
+      ImaginaryTimeDiscretizationScheme.chebyshevSpectralCollocation) :
+    ∃ state : Op, P.solverStep state = state :=
+  P.chebyshev_resolves_solver hScheme
 
 /-- Matsubara summation is exposed as a mode-diagonal diagnostic lane. -/
 theorem matsubara_modeDiagonal
-    (P : KMSImaginaryTimeDiscretizationPolicy)
+    (P : KMSImaginaryTimeDiscretizationPolicy Op)
     (hScheme : P.scheme =
-      ImaginaryTimeDiscretizationScheme.thermalMatsubaraSummation) :
-    P.matsubaraModeDiagonal :=
+      ImaginaryTimeDiscretizationScheme.thermalMatsubaraSummation)
+    (m n : ℤ) (hmn : m ≠ n) :
+    P.matsubaraKernel m n = 0 :=
   P.matsubara_is_diagnostic hScheme
+    m n hmn
 
 end KMSImaginaryTimeDiscretizationPolicy
 
@@ -479,26 +504,30 @@ Preferred policy packet for the Sinkhorn/Perelman BKM solver.
 This records the architectural decision: use Chebyshev collocation for the
 actual imaginary-time quadrature when KMS endpoint control matters.
 -/
-structure SinkhornPerelmanBKMQuadratureChoice where
-  policy : KMSImaginaryTimeDiscretizationPolicy
+structure SinkhornPerelmanBKMQuadratureChoice
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℂ Op] where
+  policy : KMSImaginaryTimeDiscretizationPolicy Op
   selected_chebyshev :
     policy.scheme =
       ImaginaryTimeDiscretizationScheme.chebyshevSpectralCollocation
   analyticStripResolved :
-    policy.analyticStripResolved
+    DifferentiableOn ℂ policy.stripCorrelation policy.stripDomain
   kmsBoundaryResidualControlled :
-    policy.kmsBoundaryResidualControlled
+    (∀ t : ℝ, policy.stripCorrelation (t : ℂ) = policy.lowerBoundary t) ∧
+    (∀ t : ℝ,
+      policy.stripCorrelation ((t : ℂ) + (policy.beta : ℂ) * Complex.I) =
+        policy.upperBoundary t)
 
 namespace SinkhornPerelmanBKMQuadratureChoice
 
+variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℂ Op]
+
 /-- The selected Chebyshev policy is solver-ready under the supplied KMS controls. -/
 theorem solverReady
-    (Q : SinkhornPerelmanBKMQuadratureChoice) :
-    Q.policy.sinkhornPerelmanSolverReady :=
+    (Q : SinkhornPerelmanBKMQuadratureChoice Op) :
+    ∃ state : Op, Q.policy.solverStep state = state :=
   Q.policy.solverReady_of_chebyshev
     Q.selected_chebyshev
-    Q.analyticStripResolved
-    Q.kmsBoundaryResidualControlled
 
 end SinkhornPerelmanBKMQuadratureChoice
 

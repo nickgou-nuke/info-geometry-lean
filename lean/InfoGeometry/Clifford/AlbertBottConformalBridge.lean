@@ -133,7 +133,7 @@ theorem splitCl44_projective_null_nonempty :
   InfoGeometry.Projective.SplitCl44NullBoundary.splitCl44ProjectiveNullSpace_nonempty
 
 /-- The conformal `Cl(5,5)` null-pair construction is still explicit theorem debt. -/
-theorem conformal_null_pair_debt :
+theorem conformal_null_pair_exists :
     Nonempty InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
   InfoGeometry.Clifford.ConformalLift55.conformalNullPair_exists
 
@@ -176,6 +176,6 @@ theorem albert_bott_conformal_route :
   refine ⟨quadratic_conformal_count, ?_⟩
   refine ⟨penrose_projective_null_nonempty, ?_⟩
   refine ⟨splitCl44_projective_null_nonempty, ?_⟩
-  exact conformal_null_pair_debt
+  exact conformal_null_pair_exists
 
 end InfoGeometry.Clifford.AlbertBottConformalBridge

@@ -144,6 +144,24 @@ theorem map_mem_pCuspidal_of_commutes
 /-! ## 3. Roelcke-Selberg spectral datum -/
 
 /--
+Simultaneous nonzero cuspidal eigenvectors of a Laplacian and a commuting Hecke
+family.  The eigenvalues are part of the existential spectral character.
+-/
+def simultaneousCuspidalEigenvectors
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (laplacian : Bulk →ₗ[ℝ] Bulk)
+    {HeckeIndex : Type uHecke}
+    (hecke : HeckeIndex → Bulk →ₗ[ℝ] Bulk) :
+    Set Bulk :=
+  {F |
+    F ∈ W.pCuspidalSubspace ∧
+      F ≠ 0 ∧
+        ∃ laplaceEigenvalue : ℝ,
+          ∃ heckeEigenvalue : HeckeIndex → ℝ,
+            laplacian F = laplaceEigenvalue • F ∧
+              ∀ i : HeckeIndex, hecke i F = heckeEigenvalue i • F}
+
+/--
 Abstract Roelcke-Selberg spectral datum.
 
 This packages the analytic theorem rather than pretending to derive it from
@@ -185,22 +203,30 @@ structure RoelckeSelbergSpectralDatum
       CommuteLinear W.cuspidalProjector (hecke i)
 
   /--
-  Analytic spectral-decomposition statement.
-
-  This is intentionally proof-carrying but abstract. A concrete Hilbert-space
-  model may later instantiate it with a genuine Roelcke-Selberg theorem.
+  Roelcke-Selberg completeness: simultaneous nonzero Laplace-Hecke
+  eigenvectors span the cuspidal subspace.
   -/
-  roelckeSelbergStatement : Prop
-
-  /-- The chosen analytic spectral theorem/witness. -/
   roelckeSelberg :
-    roelckeSelbergStatement
+    Submodule.span ℝ
+        (simultaneousCuspidalEigenvectors W laplacian hecke) =
+      W.pCuspidalSubspace
 
 namespace RoelckeSelbergSpectralDatum
 
 variable {W : SiegelEisensteinWitness Bulk Boundary}
 variable {HeckeIndex : Type uHecke}
 variable (R : RoelckeSelbergSpectralDatum W HeckeIndex)
+
+/-- Historical statement name, now derived from the explicit span equality. -/
+def roelckeSelbergStatement : Prop :=
+  Submodule.span ℝ
+      (simultaneousCuspidalEigenvectors W R.laplacian R.hecke) =
+    W.pCuspidalSubspace
+
+/-- The explicit Roelcke-Selberg completeness law carried by the datum. -/
+theorem roelckeSelberg_holds :
+    R.roelckeSelbergStatement :=
+  R.roelckeSelberg
 
 /--
 The Laplacian preserves the cuspidal subspace.
@@ -346,22 +372,37 @@ structure AutomorphicLFunctionDatum
   value_nonzero :
     ∀ chi s, regular chi s → value chi s ≠ 0
 
+  /-- Region on which the selected local-factor realization is valid. -/
+  convergenceRegion :
+    JointEigenvalue HeckeIndex → Set ℂ
+
   /--
-  Euler product or Langlands product statement.
-
-  This remains abstract because convergence and normalization depend on the
-  chosen L-function.
+  Explicit finite local-factor realization on the declared convergence
+  region. Stronger analytic models may refine this with a convergent infinite
+  product theorem.
   -/
-  eulerProductStatement : Prop
-
-  /-- Proof/witness of the chosen Euler-product statement. -/
   eulerProduct :
-    eulerProductStatement
+    ∀ chi s, s ∈ convergenceRegion chi →
+      ∃ finitePlaces : Finset HeckeIndex,
+        value chi s =
+          ∏ i ∈ finitePlaces, localFactor i chi s
 
 namespace AutomorphicLFunctionDatum
 
 variable {HeckeIndex : Type uHecke}
 variable (L : AutomorphicLFunctionDatum HeckeIndex)
+
+/-- Historical statement name, now the explicit local-factor law. -/
+def eulerProductStatement : Prop :=
+  ∀ chi s, s ∈ L.convergenceRegion chi →
+    ∃ finitePlaces : Finset HeckeIndex,
+      L.value chi s =
+        ∏ i ∈ finitePlaces, L.localFactor i chi s
+
+/-- Readback of the concrete Euler-product realization. -/
+theorem eulerProduct_holds :
+    L.eulerProductStatement :=
+  L.eulerProduct
 
 /--
 Prime-surprisal / L-potential attached to a joint eigenvalue:

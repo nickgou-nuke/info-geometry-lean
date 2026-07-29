@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 open CliffordAlgebra
 open QuadraticForm
 open QuadraticMap

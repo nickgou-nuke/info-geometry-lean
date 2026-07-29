@@ -49,35 +49,53 @@ def MTC_BMatrix (q : Units ℂ) (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /--
 Bundled finite hypotheses for the finite Fibonacci shadow.
 
-The file intentionally treats the Artin relation as explicit input and does not
-reconstruct it from number theory or analytic continuation.
+This restores the historical input owner as a subtype: its certificate is the
+actual square-root, fusion, and Artin equality, not a separate evidence field.
 -/
 def MTC_FiniteInput : Type _ :=
   {q : Units ℂ //
     ∃ τ s : ℂ,
-      s ^ 2 = τ ∧ τ ^ 2 + τ = 1 ∧
-        fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
-          fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s}
+      s ^ 2 = τ ∧
+        τ ^ 2 + τ = 1 ∧
+          fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
+            fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s}
 
 /--
-Finite matrix shadow theorem for one bundled input.
+Finite matrix shadow theorem with all mathematical inputs explicit.
 
 The statement is exactly the finite owner-backed shadow from
 `FibonacciFusionCategoryData.finite_braiding_input_readout`.
 -/
-theorem MTC_FiniteShadow (data : MTC_FiniteInput) :
-    ∃ (τ s : ℂ),
-      s ^ 2 = τ ∧ τ ^ 2 + τ = 1 ∧
+theorem MTC_FiniteShadow
+    (q : Units ℂ) (τ s : ℂ)
+    (hsq : s ^ 2 = τ)
+    (hTau : τ ^ 2 + τ = 1)
+    (hArtin :
+      fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
+        fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s) :
       MTC_FusionMatrix τ s * MTC_FusionMatrix τ s = 1 ∧
       (MTC_FusionMatrix τ s).det = -1 ∧
-      MTC_BMatrix data.1 τ s =
-        MTC_FusionMatrix τ s * MTC_RMatrix data.1 * MTC_FusionMatrix τ s ∧
-      MTC_RMatrix data.1 * MTC_BMatrix data.1 τ s * MTC_RMatrix data.1 =
-        MTC_BMatrix data.1 τ s * MTC_RMatrix data.1 * MTC_BMatrix data.1 τ s := by
-  rcases data with ⟨q, τ, s, hsq, hTau, hArtin⟩
+      MTC_BMatrix q τ s =
+        MTC_FusionMatrix τ s * MTC_RMatrix q * MTC_FusionMatrix τ s ∧
+      MTC_RMatrix q * MTC_BMatrix q τ s * MTC_RMatrix q =
+        MTC_BMatrix q τ s * MTC_RMatrix q * MTC_BMatrix q τ s := by
   rcases finite_braiding_input_readout q τ s hsq hTau hArtin with
     ⟨hF2, hdet, hB, hArtin'⟩
-  exact ⟨τ, s, hsq, hTau, hF2, hdet, hB, hArtin'⟩
+  exact ⟨hF2, hdet, hB, hArtin'⟩
+
+/-- Every bundled finite input exposes the complete owner-backed shadow. -/
+theorem MTC_FiniteInput.shadow (data : MTC_FiniteInput) :
+    ∃ τ s : ℂ,
+      s ^ 2 = τ ∧
+        τ ^ 2 + τ = 1 ∧
+          MTC_FusionMatrix τ s * MTC_FusionMatrix τ s = 1 ∧
+          (MTC_FusionMatrix τ s).det = -1 ∧
+          MTC_BMatrix data.1 τ s =
+            MTC_FusionMatrix τ s * MTC_RMatrix data.1 * MTC_FusionMatrix τ s ∧
+          MTC_RMatrix data.1 * MTC_BMatrix data.1 τ s * MTC_RMatrix data.1 =
+            MTC_BMatrix data.1 τ s * MTC_RMatrix data.1 * MTC_BMatrix data.1 τ s := by
+  rcases data with ⟨q, τ, s, hsq, hTau, hArtin⟩
+  exact ⟨τ, s, hsq, hTau, MTC_FiniteShadow q τ s hsq hTau hArtin⟩
 
 /--
 Mac Lane triangle-style graph law on the Zorn diagonal shell.

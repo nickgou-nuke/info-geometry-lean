@@ -247,6 +247,7 @@ theorem psi_eq_neg_phi_inv : ψ = -φ⁻¹ := by
 
 
 /-- From X² = X + 1, multiply by X⁻¹: X = 1 + X⁻¹, so X⁻¹ = X - 1 -/
-theorem X_inv_omega : True := by trivial
+theorem X_inv_omega : ⅟ X = X - 1 := by
+  rfl
 
 end InfoGeometry.Algebra.GoldenMeanShift

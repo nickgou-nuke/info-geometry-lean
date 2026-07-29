@@ -1,9 +1,6 @@
 import Mathlib.Tactic
-import Atlas.TensorCategories.code.QuantumSl2
-import Atlas.TensorCategories.code.QuantumSl2Concrete
-import Atlas.TensorCategories.code.QuantumSl2Instance
-import Atlas.TensorCategories.code.HopfAlgebraRep
-import Atlas.TensorCategories.code.QBinomial
+import InfoGeometry.Algebra.Coalgebra.HopfConvolution
+import InfoGeometry.Algebra.Quantum.QBinomial
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
 import InfoGeometry.Quantum.FibonacciFusionCategory
@@ -13,11 +10,11 @@ import InfoGeometry.Topological.FibonacciAnyons
 /-!
 # Quantum Group → Fibonacci Capstone
 
-Connects the U_q(sl(2)) quantum group derivation (formalized in
-external_refs/atlas-lean) to the repo's Fibonacci anyon infrastructure.
+Connects native Hopf-algebra identities and the repo's finite Fibonacci anyon
+infrastructure.
 
 The 8-chapter derivation chain:
-  1-2. U_q(sl(2)) Hopf algebra → quasitriangular R-matrix
+  1-2. Hopf convolution identities and finite R-matrix data
   3-4. Yang-Baxter → braided tensor category
   5-6. q = e^{πi/5} truncation → Fibonacci {1,τ} fusion
   7-8. F,R matrices → hexagon coherence → Fibonacci anyons
@@ -31,43 +28,31 @@ noncomputable section
 namespace InfoGeometry.Capstone.QuantumGroupFibonacci
 
 open Matrix
-open Coalgebra HopfAlgebra
 open scoped TensorProduct
 
-/-! ## Atlas quantum-group foundation imports -/
+/-! ## Native Hopf-algebra foundation -/
 
 /--
-Atlas owner theorem for the Hopf structure formulas of `U_q(sl₂)`.
-
-This keeps the capstone traceable to Meta's quantum-group formalization while
-leaving the finite Fibonacci matrix owners in this repository.
+The antipode is simultaneously the left and right convolution inverse of the
+identity endomorphism.  This is the native Hopf-algebra theorem used by the
+capstone; no generator-relation packet is assumed.
 -/
-theorem atlas_quantum_sl2_hopf_foundation
-    {k : Type*} [Field k] {A : Type*} [Ring A] [HopfAlgebra k A] [h : QuantumSl2 k A] :
-    (Coalgebra.comul (R := k) h.K = h.K ⊗ₜ[k] h.K) ∧
-    (Coalgebra.comul (R := k) h.E = h.E ⊗ₜ[k] h.K + 1 ⊗ₜ[k] h.E) ∧
-    (Coalgebra.comul (R := k) h.F = h.F ⊗ₜ[k] 1 + h.Kinv ⊗ₜ[k] h.F) ∧
-    (Coalgebra.comul (R := k) h.Kinv = h.Kinv ⊗ₜ[k] h.Kinv) ∧
-    (Coalgebra.counit (R := k) h.K = (1 : k)) ∧
-    (Coalgebra.counit (R := k) h.E = (0 : k)) ∧
-    (Coalgebra.counit (R := k) h.F = (0 : k)) ∧
-    (Coalgebra.counit (R := k) h.Kinv = (1 : k)) ∧
-    (HopfAlgebra.antipode k h.K = h.Kinv) ∧
-    (HopfAlgebra.antipode k h.E = -(h.E * h.Kinv)) ∧
-    (HopfAlgebra.antipode k h.F = -(h.K * h.F)) ∧
-    (HopfAlgebra.antipode k h.Kinv = h.K) := by
-  exact QuantumSl2.Theorem_1_25_2_Uq_sl2_Hopf
+theorem hopf_antipode_convolution_foundation
+    {k A : Type*} [CommSemiring k] [Semiring A] [HopfAlgebra k A] :
+    (WithConv.toConv (HopfAlgebra.antipode k) :
+        WithConv (A →ₗ[k] A)) *
+          WithConv.toConv LinearMap.id = 1 ∧
+    (WithConv.toConv (LinearMap.id : A →ₗ[k] A)) *
+          WithConv.toConv (HopfAlgebra.antipode k) = 1 :=
+  ⟨InfoGeometry.Algebra.HopfConvolution.antipode_conv_id,
+    InfoGeometry.Algebra.HopfConvolution.id_conv_antipode⟩
 
-/-- Atlas q-binomial primitive-root vanishing theorem, re-exported as a capstone dependency. -/
-theorem atlas_qBinomial_root_vanishing
+/-- Primitive-root vanishing of the repo-owned quantum binomial coefficient. -/
+theorem qBinomial_root_vanishing
     {k : Type*} [Field k] (q : k) (n : ℕ) (hn : 1 < n)
     (hq : IsPrimitiveRoot q n) (m : ℕ) (hm1 : 0 < m) (hm2 : m < n) :
-    qBinomial q n m = 0 := by
-  exact qBinomial_vanish q n hn hq m hm1 hm2
-
-/-- Atlas representation-category surface for a Hopf algebra. -/
-abbrev atlasRepBialgebra (H : Type*) [Ring H] :=
-  RepBialgebra H
+    InfoGeometry.Algebra.Quantum.qBinomial q n m = 0 := by
+  exact InfoGeometry.Algebra.Quantum.qBinomial_vanish q n hn hq m hm1 hm2
 
 /--
 The Fibonacci root of unity: q = e^{πi/5}.
@@ -175,7 +160,7 @@ Starting from the quantum group U_q(sl(2)) at q = e^{πi/5}:
   3. The fusion rule τ⊗τ = 1⊕τ with d_τ = φ — proved above
   4. The Yang-Baxter relation R·B·R = B·R·B — proved in YangBaxterProof
   5. The braid generators σ₁=F·R·F, σ₂=R — proved in CelikErlangenBraidBridge
-  6. The Atlas Hopf/q-binomial surfaces are imported above as foundations
+  6. Native Hopf convolution and q-binomial theorems supply the foundations
 
 All theorems delegate to existing repo owner files.
 Zero axioms. Zero sorries.

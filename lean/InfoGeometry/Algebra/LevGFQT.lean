@@ -124,19 +124,16 @@ theorem three_mod_four_eq_three : 3 % 4 = 3 := by
   decide
 
 /-- A finite certificate packet for the `ZMod 3` quadratic-pair extension. -/
-structure LevQuadraticExtensionCertificate where
-  basePrime : Nat.Prime 3
-  modFour : 3 % 4 = 3
-  noBaseSquareMinusOne : ∀ x : ZMod 3, x * x ≠ -1
-  formalIHasSquareMinusOne :
-    qmul (qI : QuadraticPair (ZMod 3)) qI = qneg (qone : QuadraticPair (ZMod 3))
+abbrev LevQuadraticExtensionCertificate : Prop :=
+  Nat.Prime 3 ∧
+    3 % 4 = 3 ∧
+      (∀ x : ZMod 3, x * x ≠ -1) ∧
+        qmul (qI : QuadraticPair (ZMod 3)) qI = qneg (qone : QuadraticPair (ZMod 3))
 
 /-- The explicit `ZMod 3` finite complex-extension certificate. -/
-def zmodThreeQuadraticExtensionCertificate : LevQuadraticExtensionCertificate where
-  basePrime := by decide
-  modFour := three_mod_four_eq_three
-  noBaseSquareMinusOne := zmod_three_no_square_minus_one
-  formalIHasSquareMinusOne := qI_sq
+theorem zmodThreeQuadraticExtensionCertificate : LevQuadraticExtensionCertificate := by
+  exact ⟨by decide, three_mod_four_eq_three,
+    zmod_three_no_square_minus_one, qI_sq⟩
 
 end ConcreteBaseFieldWitness
 

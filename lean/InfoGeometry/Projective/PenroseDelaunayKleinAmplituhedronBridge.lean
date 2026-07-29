@@ -144,7 +144,7 @@ theorem comparison_corridor_packet
         C.twistor.rank.stateBudget ∧
       ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
         ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = C.twistor.rohozhkin.packet.delaunay.gen g := by
+          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen C.twistor.rohozhkin.packet g := by
   have hTwistor := twistor_amplituhedron_bridge_packet C.twistor i
   exact ⟨⟨C.dagToAmplituhedronViaKlein⟩,
     ⟨C.splitQuaternionToAmplituhedronViaKlein⟩,

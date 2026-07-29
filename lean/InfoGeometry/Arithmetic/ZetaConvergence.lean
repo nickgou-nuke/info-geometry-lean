@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.PSeries
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Arithmetic.SpectralDistance
 import InfoGeometry.Arithmetic.FredholmProved
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -44,8 +45,11 @@ namespace InfoGeometry.Arithmetic.ZetaConvergence
 
 Mathlib API: `Complex.norm_cpow_of_real` or `Complex.abs_cpow_of_ne_zero`.
 -/
-def norm_cpow_eq_rpow_debt (_β : ℂ) (_n : ℕ) (_hn : _n ≠ 0) : String :=
-  "Open: prove the complex-power norm identity using Mathlib complex power APIs."
+theorem norm_cpow_eq_rpow (β : ℂ) (n : ℕ) (hn : n ≠ 0) :
+    ‖(n : ℂ) ^ (-β)‖ = (n : ℝ) ^ (-β.re) := by
+  have hnpos : 0 < (n : ℝ) := by
+    exact_mod_cast Nat.pos_of_ne_zero hn
+  simpa using Complex.norm_cpow_eq_rpow_re_of_pos hnpos (-β)
 
 /--
 **Target: The p-Series Test.** Σ n^{-p} converges iff p > 1.
@@ -54,8 +58,17 @@ For β with Re(β) > 1: Σ |n^{-β}| = Σ n^{-Re(β)} converges absolutely.
 
 Mathlib API: `summable_nat_rpow_inv` or `summable_nat_rpow`.
 -/
-def zeta_absolutely_summable_debt (β : ℂ) (_h : 1 < β.re) : String :=
-  "Open: combine the complex-power norm identity with Mathlib's p-series summability theorem."
+theorem zeta_absolutely_summable (β : ℂ) (h : 1 < β.re) :
+    Summable (fun n : ℕ =>
+      ‖((n + 1 : ℕ) : ℂ) ^ (-β)‖) := by
+  have hbase : Summable (fun n : ℕ => (n : ℝ) ^ (-β.re)) := by
+    exact Real.summable_nat_rpow.mpr (by linarith)
+  have hshift : Summable (fun n : ℕ =>
+      ((n + 1 : ℕ) : ℝ) ^ (-β.re)) := by
+    exact (summable_nat_add_iff 1).mpr hbase
+  convert hshift using 1
+  funext n
+  exact norm_cpow_eq_rpow β (n + 1) (Nat.succ_ne_zero n)
 
 /--
 **Target: The Colimit Exists.** For Re(β) > 1, the diagram of partial sums
@@ -73,7 +86,13 @@ This is intended to instantiate the `FredholmClosureCertificate`:
     determinant_mul_zeta_eq_one: det·ζ = 1 for Re(β) > 1.
     determinant_ne_zero: det ≠ 0 for Re(β) > 1/2.
 -/
-def zeta_colimit_exists_debt (β : ℂ) (_h : 1 < β.re) : String :=
-  "Open: prove convergence/colimit of the zeta partial sums and connect it to the Fredholm certificate."
+theorem zeta_colimit_exists
+    (C : InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate)
+    {β : ℂ} (h : 1 < β.re) :
+    Filter.Tendsto
+      (fun N : ℕ => C.determinantOnIdeal (C.finiteCutoff β N))
+      Filter.atTop
+      (nhds (C.determinantOnIdeal (C.limitOperator β))) :=
+  InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate.determinant_cutoff_converges C h
 
 end InfoGeometry.Arithmetic.ZetaConvergence

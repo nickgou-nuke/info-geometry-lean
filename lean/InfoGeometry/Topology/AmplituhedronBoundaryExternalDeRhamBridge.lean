@@ -25,23 +25,24 @@ namespace InfoGeometry.Topology.AmplituhedronBoundary
 
 open InfoGeometry.Projective.TwistorConfigurationSpace
 
-/-- 
-Explicit external certificate assuming the de Rham cohomology of the 
-quadric complement `F_Q(C^4,3)` has total rank 32. 
+/--
+Explicit external assumption that the de Rham cohomology of the quadric
+complement `F_Q(C^4,3)` has total rank 32.
 -/
-structure ExternalRank32DeRhamCertificate where
-  quadricComplementDeRhamRank : ℕ
-  rank_eq : quadricComplementDeRhamRank = 32
+abbrev ExternalRank32DeRhamCertificate
+    (quadricComplementDeRhamRank : ℕ) : Prop :=
+  quadricComplementDeRhamRank = 32
 
 /--
 The external de Rham cohomology rank equals the cardinality of the finite rank-32
 boundary carrier, under the certificate assumption.
 -/
-theorem external_de_rham_rank_eq_boundary_card 
-    (C : ExternalRank32DeRhamCertificate) :
-    C.quadricComplementDeRhamRank = Fintype.card BoundaryRank32State := by
+theorem external_de_rham_rank_eq_boundary_card
+    (quadricComplementDeRhamRank : ℕ)
+    (hRank : ExternalRank32DeRhamCertificate quadricComplementDeRhamRank) :
+    quadricComplementDeRhamRank = Fintype.card BoundaryRank32State := by
   calc
-    C.quadricComplementDeRhamRank = 32 := C.rank_eq
+    quadricComplementDeRhamRank = 32 := hRank
     _ = Fintype.card BoundaryRank32State := boundaryRank32State_card.symm
 
 end InfoGeometry.Topology.AmplituhedronBoundary

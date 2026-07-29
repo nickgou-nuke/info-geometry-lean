@@ -23,7 +23,12 @@ The Souriau Temperature Vector in the Cartan Subalgebra.
 In the infinite-dimensional prime-root system, this is represented by 
  the complex parameter `s`.
 -/
-structure SouriauTemperature where
-  s : ℂ
+abbrev SouriauTemperature := ℂ
+
+namespace SouriauTemperature
+
+abbrev s (temperature : SouriauTemperature) : ℂ := temperature
+
+end SouriauTemperature
 
 end InfoGeometry.Thermodynamics

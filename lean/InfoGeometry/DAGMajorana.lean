@@ -38,13 +38,26 @@ structure DAGMajoranaHomomorphism
     (α : Type*) [BEq α] [Hashable α] where
   dag : HydratedGraph α
   net : MajoranaNet α
-  /-- Map a directed edge (u→v) to the operator F(u,v). -/
-  edgeToOp : α → α → (net.V → net.V)
-  /-- The edge map factors through Majorana generators. -/
-  edgeToOp_eq : ∀ u v, edgeToOp u v = net.gamma u ∘ net.gamma v
   /-- The central residue readout: values in {±1}. -/
   centralResidue : α → α → ℤ
   residue_binary : ∀ u v, centralResidue u v = 1 ∨ centralResidue u v = -1
+
+namespace DAGMajoranaHomomorphism
+
+/-- The operator assigned to an edge, derived from its endpoint generators. -/
+def edgeToOp
+    {α : Type*} [BEq α] [Hashable α]
+    (F : DAGMajoranaHomomorphism α) (u v : α) : F.net.V → F.net.V :=
+  F.net.gamma u ∘ F.net.gamma v
+
+@[simp]
+theorem edgeToOp_eq
+    {α : Type*} [BEq α] [Hashable α]
+    (F : DAGMajoranaHomomorphism α) (u v : α) :
+    F.edgeToOp u v = F.net.gamma u ∘ F.net.gamma v :=
+  rfl
+
+end DAGMajoranaHomomorphism
 
 /--
 Direct readout of the defining `{±1}` range condition for the central residue.

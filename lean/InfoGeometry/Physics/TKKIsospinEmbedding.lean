@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.NuclearHamiltonian
 import InfoGeometry.Canonical.ZornSpinor
 

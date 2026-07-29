@@ -61,6 +61,6 @@ theorem entropyRegularizedObjective_eq_freeEnergy_iff
       rw [div_self (weight_pos M θ ε i).ne']
       simp
     rw [hkl]
-    ring
+    simp
 
 end InfoGeometry.Inference.FiniteGibbs

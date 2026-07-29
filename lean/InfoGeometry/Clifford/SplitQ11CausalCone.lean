@@ -551,117 +551,93 @@ theorem massless_null_dirac_symbol_sq (dPlus dMinus : ℝ) :
 /--
 Compressed local closure packet for the fixed causal-cone convention.
 -/
-structure LocalCausalConeClosure : Prop where
-  split_quaternion_basis :
-    splitQuaternionI * splitQuaternionI = -(1 : Alg)
+abbrev LocalCausalConeClosure : Prop :=
+  (splitQuaternionI * splitQuaternionI = -(1 : Alg)
       ∧ splitQuaternionJ * splitQuaternionJ = (1 : Alg)
       ∧ splitQuaternionK * splitQuaternionK = (1 : Alg)
       ∧ splitQuaternionI * splitQuaternionJ = splitQuaternionK
-      ∧ splitQuaternionJ * splitQuaternionI = -splitQuaternionK
-  matrix_basis :
-    Eminus * Eminus = -(1 : Mat2)
+      ∧ splitQuaternionJ * splitQuaternionI = -splitQuaternionK)
+    ∧ (Eminus * Eminus = -(1 : Mat2)
       ∧ J1 * J1 = (1 : Mat2)
       ∧ Eplus * Eplus = (1 : Mat2)
       ∧ Eminus * J1 = Eplus
-      ∧ J1 * Eminus = -Eplus
-  matrix_projectors :
-    matrixKreinPlusProjector = !![(1 : ℝ), 0; 0, 0]
-      ∧ matrixKreinMinusProjector = !![0, 0; 0, (1 : ℝ)]
-  matrix_nulls :
-    matrixCausalNullPlus = !![(0 : ℝ), 1; 0, 0]
-      ∧ matrixCausalNullMinus = !![0, 0; (1 : ℝ), 0]
-  matrix_null_closure :
-    matrixCausalNullPlus * matrixCausalNullPlus = 0
+      ∧ J1 * Eminus = -Eplus)
+    ∧ (matrixKreinPlusProjector = !![(1 : ℝ), 0; 0, 0]
+      ∧ matrixKreinMinusProjector = !![0, 0; 0, (1 : ℝ)])
+    ∧ (matrixCausalNullPlus = !![(0 : ℝ), 1; 0, 0]
+      ∧ matrixCausalNullMinus = !![0, 0; (1 : ℝ), 0])
+    ∧ (matrixCausalNullPlus * matrixCausalNullPlus = 0
       ∧ matrixCausalNullMinus * matrixCausalNullMinus = 0
       ∧ matrixCausalNullPlus * matrixCausalNullMinus = matrixKreinPlusProjector
       ∧ matrixCausalNullMinus * matrixCausalNullPlus = matrixKreinMinusProjector
       ∧ matrixCausalNullPlus * matrixCausalNullMinus
           + matrixCausalNullMinus * matrixCausalNullPlus = (1 : Mat2)
       ∧ matrixCausalNullPlus * matrixCausalNullMinus
-          - matrixCausalNullMinus * matrixCausalNullPlus = Eplus
-  matrix_projectors_noncentral :
-    matrixKreinPlusProjector * matrixCausalNullPlus
+          - matrixCausalNullMinus * matrixCausalNullPlus = Eplus)
+    ∧ (matrixKreinPlusProjector * matrixCausalNullPlus
         ≠ matrixCausalNullPlus * matrixKreinPlusProjector
       ∧ matrixKreinMinusProjector * matrixCausalNullMinus
-        ≠ matrixCausalNullMinus * matrixKreinMinusProjector
-  matrix_projector_spinor_readout :
-    ∀ ψ : Spinor2,
+        ≠ matrixCausalNullMinus * matrixKreinMinusProjector)
+    ∧ (∀ ψ : Spinor2,
       matrixAct matrixKreinPlusProjector ψ 0 = ψ 0
         ∧ matrixAct matrixKreinPlusProjector ψ 1 = 0
         ∧ matrixAct matrixKreinMinusProjector ψ 0 = 0
-        ∧ matrixAct matrixKreinMinusProjector ψ 1 = ψ 1
-  matrix_null_spinor_readout :
-    ∀ ψ : Spinor2,
+        ∧ matrixAct matrixKreinMinusProjector ψ 1 = ψ 1)
+    ∧ (∀ ψ : Spinor2,
       matrixAct matrixCausalNullPlus ψ 0 = ψ 1
         ∧ matrixAct matrixCausalNullPlus ψ 1 = 0
         ∧ matrixAct matrixCausalNullMinus ψ 0 = 0
-        ∧ matrixAct matrixCausalNullMinus ψ 1 = ψ 0
-  krein_projectors :
-    kreinPlusProjector * kreinPlusProjector = kreinPlusProjector
+        ∧ matrixAct matrixCausalNullMinus ψ 1 = ψ 0)
+    ∧ (kreinPlusProjector * kreinPlusProjector = kreinPlusProjector
       ∧ kreinMinusProjector * kreinMinusProjector = kreinMinusProjector
       ∧ kreinPlusProjector * kreinMinusProjector = 0
       ∧ kreinMinusProjector * kreinPlusProjector = 0
-      ∧ kreinPlusProjector + kreinMinusProjector = (1 : Alg)
-  null_closure :
-    causalNullPlus * causalNullPlus = 0
+      ∧ kreinPlusProjector + kreinMinusProjector = (1 : Alg))
+    ∧ (causalNullPlus * causalNullPlus = 0
       ∧ causalNullMinus * causalNullMinus = 0
       ∧ causalNullPlus * causalNullMinus = kreinPlusProjector
       ∧ causalNullMinus * causalNullPlus = kreinMinusProjector
       ∧ causalNullPlus * causalNullMinus + causalNullMinus * causalNullPlus = (1 : Alg)
       ∧ causalNullPlus * causalNullMinus - causalNullMinus * causalNullPlus =
-          splitQuaternionK
-  sector_hopping :
-    kreinPlusProjector * causalNullPlus = causalNullPlus
+          splitQuaternionK)
+    ∧ (kreinPlusProjector * causalNullPlus = causalNullPlus
       ∧ causalNullPlus * kreinMinusProjector = causalNullPlus
       ∧ kreinMinusProjector * causalNullMinus = causalNullMinus
       ∧ causalNullMinus * kreinPlusProjector = causalNullMinus
       ∧ kreinMinusProjector * causalNullPlus = 0
       ∧ causalNullPlus * kreinPlusProjector = 0
       ∧ kreinPlusProjector * causalNullMinus = 0
-      ∧ causalNullMinus * kreinMinusProjector = 0
-  finite_dilaton :
-    finiteDilatonDerivation causalNullPlus = causalNullPlus
-      ∧ finiteDilatonDerivation causalNullMinus = -causalNullMinus
-  squeeze_scaling :
-    ∀ σ : ℝ,
+      ∧ causalNullMinus * kreinMinusProjector = 0)
+    ∧ (finiteDilatonDerivation causalNullPlus = causalNullPlus
+      ∧ finiteDilatonDerivation causalNullMinus = -causalNullMinus)
+    ∧ (∀ σ : ℝ,
       kreinSqueeze σ * causalNullPlus = Real.exp σ • causalNullPlus
         ∧ kreinSqueeze σ * causalNullMinus = Real.exp (-σ) • causalNullMinus
         ∧ causalNullPlus * kreinSqueeze (-σ) = Real.exp σ • causalNullPlus
-        ∧ causalNullMinus * kreinSqueeze (-σ) = Real.exp (-σ) • causalNullMinus
-  squeeze_conjugation :
-    ∀ σ : ℝ,
+        ∧ causalNullMinus * kreinSqueeze (-σ) = Real.exp (-σ) • causalNullMinus)
+    ∧ (∀ σ : ℝ,
       kreinSqueeze (σ / 2) * causalNullPlus * kreinSqueeze (-(σ / 2)) =
           Real.exp σ • causalNullPlus
         ∧ kreinSqueeze (σ / 2) * causalNullMinus * kreinSqueeze (-(σ / 2)) =
-          Real.exp (-σ) • causalNullMinus
-  mass_bridge :
-    massBridgeBeta * massBridgeBeta = (1 : Alg)
+          Real.exp (-σ) • causalNullMinus)
+    ∧ (massBridgeBeta * massBridgeBeta = (1 : Alg)
       ∧ splitQuaternionK * massBridgeBeta + massBridgeBeta * splitQuaternionK = 0
       ∧ massBridgeBeta * kreinPlusProjector = kreinMinusProjector * massBridgeBeta
-      ∧ massBridgeBeta * kreinMinusProjector = kreinPlusProjector * massBridgeBeta
-  null_dirac_square :
-    ∀ dPlus dMinus : ℝ,
+      ∧ massBridgeBeta * kreinMinusProjector = kreinPlusProjector * massBridgeBeta)
+    ∧ (∀ dPlus dMinus : ℝ,
       masslessNullDiracSymbol dPlus dMinus * masslessNullDiracSymbol dPlus dMinus =
-        (dPlus * dMinus) • (1 : Alg)
+        (dPlus * dMinus) • (1 : Alg))
 
 @[rep_depth krein]
-theorem localCausalConeClosure : LocalCausalConeClosure where
-  split_quaternion_basis := split_quaternion_basis_laws
-  matrix_basis := matrix_split_quaternion_basis_laws
-  matrix_projectors := matrix_krein_projectors_explicit
-  matrix_nulls := matrix_causal_nulls_explicit
-  matrix_null_closure := matrix_causal_null_closure_laws
-  matrix_projectors_noncentral := matrix_krein_projectors_noncentral
-  matrix_projector_spinor_readout := matrix_projector_spinor_action
-  matrix_null_spinor_readout := matrix_null_spinor_action
-  krein_projectors := krein_projector_laws
-  null_closure := causal_null_closure_laws
-  sector_hopping := sector_hopping_laws
-  finite_dilaton := finite_dilaton_action_on_nulls
-  squeeze_scaling := krein_squeeze_left_right_null_scaling
-  squeeze_conjugation := krein_squeeze_half_conjugates_nulls
-  mass_bridge := mass_bridge_beta_laws
-  null_dirac_square := massless_null_dirac_symbol_sq
+theorem localCausalConeClosure : LocalCausalConeClosure := by
+  exact ⟨split_quaternion_basis_laws, matrix_split_quaternion_basis_laws,
+    matrix_krein_projectors_explicit, matrix_causal_nulls_explicit,
+    matrix_causal_null_closure_laws, matrix_krein_projectors_noncentral,
+    matrix_projector_spinor_action, matrix_null_spinor_action,
+    krein_projector_laws, causal_null_closure_laws, sector_hopping_laws,
+    finite_dilaton_action_on_nulls, krein_squeeze_left_right_null_scaling,
+    krein_squeeze_half_conjugates_nulls, mass_bridge_beta_laws,
+    massless_null_dirac_symbol_sq⟩
 
 /--
 Compressed readback of the final finite causal-cone identities.

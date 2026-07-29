@@ -69,11 +69,15 @@ theorem run_transport_expansion
     (DecoderLayer.run_eq_two_stage_residual (B := B.layer) (x := B.transport t X))
 
 /-- Equivariance assumptions for the decoder submaps against spin transport. -/
-structure IsSpinEquivariant (B : SpinPinTransformerLayer (E := E)) : Prop where
-  preAttentionNorm : ∀ t X, B.layer.preAttentionNorm (B.transport t X) = B.transport t (B.layer.preAttentionNorm X)
-  attention : ∀ t X, B.layer.attention (B.transport t X) = B.transport t (B.layer.attention X)
-  preFFNNorm : ∀ t X, B.layer.preFFNNorm (B.transport t X) = B.transport t (B.layer.preFFNNorm X)
-  feedForward : ∀ t X, B.layer.feedForward (B.transport t X) = B.transport t (B.layer.feedForward X)
+abbrev IsSpinEquivariant (B : SpinPinTransformerLayer (E := E)) : Prop :=
+  (∀ t X, B.layer.preAttentionNorm (B.transport t X) =
+    B.transport t (B.layer.preAttentionNorm X)) ∧
+  (∀ t X, B.layer.attention (B.transport t X) =
+    B.transport t (B.layer.attention X)) ∧
+  (∀ t X, B.layer.preFFNNorm (B.transport t X) =
+    B.transport t (B.layer.preFFNNorm X)) ∧
+  (∀ t X, B.layer.feedForward (B.transport t X) =
+    B.transport t (B.layer.feedForward X))
 
 /-- First residual stage commutes with spin transport under equivariance assumptions. -/
 @[rep_depth transport]
@@ -83,8 +87,8 @@ theorem afterAttention_transport_commute
     (t : ℝ) (X : EndN) :
     B.layer.afterAttention (B.transport t X) = B.transport t (B.layer.afterAttention X) := by
   unfold DecoderLayer.afterAttention
-  rw [hEq.preAttentionNorm t X]
-  rw [hEq.attention t (B.layer.preAttentionNorm X)]
+  rw [hEq.1 t X]
+  rw [hEq.2.1 t (B.layer.preAttentionNorm X)]
   unfold transport
   exact (transportEnd_add B.spin t X (B.layer.attention (B.layer.preAttentionNorm X))).symm
 
@@ -105,9 +109,9 @@ theorem afterFeedForward_transport_commute
         = B.transport t hX + B.layer.feedForward (B.layer.preFFNNorm (B.transport t hX)) := by
             simp [hAh]
     _ = B.transport t hX + B.layer.feedForward (B.transport t (B.layer.preFFNNorm hX)) := by
-          rw [hEq.preFFNNorm t hX]
+          rw [hEq.2.2.1 t hX]
     _ = B.transport t hX + B.transport t (B.layer.feedForward (B.layer.preFFNNorm hX)) := by
-          rw [hEq.feedForward t (B.layer.preFFNNorm hX)]
+          rw [hEq.2.2.2 t (B.layer.preFFNNorm hX)]
     _ = B.transport t (hX + B.layer.feedForward (B.layer.preFFNNorm hX)) := by
           unfold transport
           exact

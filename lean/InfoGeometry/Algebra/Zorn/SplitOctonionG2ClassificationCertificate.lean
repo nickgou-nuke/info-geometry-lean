@@ -136,31 +136,27 @@ theorem act_preserves_anticolorPart_of_canonical_zMul
   exact (C.toG2TwoCandidate g).preserves_anticolorPart_of_canonical_zMul hcp X
 
 /-- Full certificate readback packet with the actual equivalence as data. -/
-structure ClassificationReadbackPacket where
-  autEquivG2 : Aut ≃* G2
-  act_mulZ :
-    ∀ g : Aut, ∀ X Y : ZornMatrix R,
-      C.act g (cp.mulZ X Y) = cp.mulZ (C.act g X) (C.act g Y)
-  act_detZ :
-    ∀ g : Aut, ∀ X : ZornMatrix R,
+abbrev ClassificationReadbackPacket : Type _ :=
+  Σ' e : Aut ≃* G2,
+    (∀ g : Aut, ∀ X Y : ZornMatrix R,
+      C.act g (cp.mulZ X Y) = cp.mulZ (C.act g X) (C.act g Y)) ∧
+    (∀ g : Aut, ∀ X : ZornMatrix R,
       ZornMatrix.detZ cp.toCrossProduct3 (C.act g X) =
-        ZornMatrix.detZ cp.toCrossProduct3 X
-  act_preserves_colorPart :
-    ∀ g : Aut, ∀ X : ZornMatrix R,
-      C.act g (colorPart X) = colorPart (C.act g X)
-  act_preserves_anticolorPart :
+        ZornMatrix.detZ cp.toCrossProduct3 X) ∧
+    (∀ g : Aut, ∀ X : ZornMatrix R,
+      C.act g (colorPart X) = colorPart (C.act g X)) ∧
     ∀ g : Aut, ∀ X : ZornMatrix R,
       C.act g (anticolorPart X) = anticolorPart (C.act g X)
 
 /-- Full certificate readback packet. -/
 def classification_certificate_packet
     (hcp : cp.mulZ = zMul (R := R)) :
-    C.ClassificationReadbackPacket where
-  autEquivG2 := aut_equiv_g2 C
-  act_mulZ := C.act_mulZ
-  act_detZ := C.act_detZ
-  act_preserves_colorPart := C.act_preserves_colorPart_of_canonical_zMul hcp
-  act_preserves_anticolorPart := C.act_preserves_anticolorPart_of_canonical_zMul hcp
+    ClassificationReadbackPacket C := by
+  refine ⟨aut_equiv_g2 C, C.act_mulZ, C.act_detZ, ?_, ?_⟩
+  · intro g X
+    exact C.act_preserves_colorPart_of_canonical_zMul hcp g X
+  · intro g X
+    exact C.act_preserves_anticolorPart_of_canonical_zMul hcp g X
 
 end ClassificationCertificate
 

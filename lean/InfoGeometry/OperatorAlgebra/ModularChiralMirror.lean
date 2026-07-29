@@ -833,17 +833,54 @@ structure AlgebraCommutantChiralMirror
   InCommutant : Op → Prop
 
   /--
-  Tomita routing certificate: algebra-side data mirror into the commutant side.
-  This is a socket for `J M J = M'`.
+  Operator-level Tomita mirror.  In a represented von Neumann algebra this is
+  the map `x ↦ J x J`.
   -/
-  algebra_mirrors_to_commutant : Prop
+  mirrorOp : Op → Op
+
+  /-- Applying the operator mirror twice returns the original operator. -/
+  mirrorOp_involutive :
+    Function.Involutive mirrorOp
 
   /--
-  Chirality flips under the modular mirror.
-  This is supplied by `mirror.J_flips_chi`, but is exposed as a named
-  representation-level certificate.
+  Exact algebra/commutant routing law.  This is the predicate-level form of
+  `J M J = M'`, rather than a bare certificate that such a law exists.
   -/
-  mirror_flips_chiral_charge : Prop
+  algebra_mirrors_to_commutant :
+    ∀ x : Op, InCommutant (mirrorOp x) ↔ InAlgebra x
+
+namespace AlgebraCommutantChiralMirror
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    {Op : Type*}
+    (C : AlgebraCommutantChiralMirror H Op)
+
+/-- Algebra membership is transported to commutant membership by the mirror. -/
+theorem mirror_mem_commutant {x : Op} (hx : C.InAlgebra x) :
+    C.InCommutant (C.mirrorOp x) :=
+  (C.algebra_mirrors_to_commutant x).2 hx
+
+/-- Commutant membership is transported back to algebra membership. -/
+theorem mirror_mem_algebra {x : Op} (hx : C.InCommutant x) :
+    C.InAlgebra (C.mirrorOp x) := by
+  have hcomm :
+      C.InCommutant (C.mirrorOp (C.mirrorOp x)) :=
+    by
+      rw [C.mirrorOp_involutive x]
+      exact hx
+  exact (C.algebra_mirrors_to_commutant (C.mirrorOp x)).1 hcomm
+
+/--
+The former representation-level chirality marker is a theorem of the owned
+carrier mirror: the modular mirror anticommutes with the chiral grading.
+-/
+theorem mirror_flips_chiral_charge :
+    C.mirror.J.comp C.mirror.chi =
+      -(C.mirror.chi.comp C.mirror.J) :=
+  C.mirror.J_flips_chi
+
+end AlgebraCommutantChiralMirror
 
 /--
 Real-linear modular mirroring of chiral projectors.

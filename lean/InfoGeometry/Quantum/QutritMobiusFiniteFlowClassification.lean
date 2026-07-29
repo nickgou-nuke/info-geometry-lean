@@ -1,6 +1,7 @@
 import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
 import InfoGeometry.Topology.MobiusClassification
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Exact finite classification of the qutrit-indexed Möbius flows

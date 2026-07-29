@@ -468,6 +468,8 @@ structure LanglandsSugawaraBridge
     {P : ProjectedAutomorphicLFunctionWitness W}
     (LPR : LanglandsPrimeResonanceWitness P)
     {Finite Affine Vir State Charge : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Charge] [Module ℝ Charge]
@@ -491,6 +493,8 @@ theorem hiddenMemory_arithmetic_calibration
     {P : ProjectedAutomorphicLFunctionWitness W}
     {LPR : LanglandsPrimeResonanceWitness P}
     {Finite Affine Vir State Charge : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     [AddCommGroup Charge] [Module ℝ Charge]
@@ -498,7 +502,7 @@ theorem hiddenMemory_arithmetic_calibration
     {charge_eval : Charge → ℂ}
     (bridge : LanglandsSugawaraBridge LPR EAV charge_eval)
     (s : State) :
-    charge_eval (EAV.hiddenGradeMemoryReadout s) = LPR.completedL 0 := by
+    charge_eval (EAV.calibratedHiddenGradeMemoryReadout s) = LPR.completedL 0 := by
   rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
   exact bridge.Sugawara_L_calibration s
 

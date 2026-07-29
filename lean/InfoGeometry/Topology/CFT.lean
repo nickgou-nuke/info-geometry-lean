@@ -13,9 +13,23 @@ This encodes the structural conditions:
 1. Annihilated by positive modes: `L_n v = 0` for `n > 0`.
 2. Eigenstate of `L_0`: `L_0 v = Δ • v`.
 -/
-structure IsPrimaryState (v : V) (Δ : ℂ) : Prop where
-  annihilated_positive : ∀ (n : ℤ), n > 0 → L n v = 0
-  eigenstate_zero : L 0 v = Δ • v
+def IsPrimaryState (v : V) (Δ : ℂ) : Prop :=
+  (∀ (n : ℤ), n > 0 → L n v = 0) ∧
+    L 0 v = Δ • v
+
+namespace IsPrimaryState
+
+/-- Compatibility projection for annihilation by positive Virasoro modes. -/
+theorem annihilated_positive
+    (h : IsPrimaryState L v Δ) : ∀ (n : ℤ), n > 0 → L n v = 0 :=
+  h.1
+
+/-- Compatibility projection for the highest-weight eigenvalue law. -/
+theorem eigenstate_zero
+    (h : IsPrimaryState L v Δ) : L 0 v = Δ • v :=
+  h.2
+
+end IsPrimaryState
 
 /--
 The State-Field correspondence structurally maps a state `v` to a field `V(z)`.

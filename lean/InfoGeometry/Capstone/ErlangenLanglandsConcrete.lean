@@ -73,24 +73,15 @@ theorem erlangen_light_cone_invariant (v θ : ℝ) :
     (R * v0 * R.transpose) = R * v0 * R.transpose := rfl
 
 /--
-**Langlands Theorem — ζ(β) = Tr(e^{-βH}) on primon gas.**
-
-The modular Hamiltonian H = diag(log n) on the Cantor boundary
-has trace Tr(e^{-βH}) = Σ_n n^{-β} = ζ(β). This is the L-function
-identity proved in `UnifiedCapstone.lean` — we instantiate it here
-by reference to the owner file.
+The arithmetic owner proves the infinite bosonic Euler product equals
+`riemannZeta` on the half-plane `Re(β)>1`. This 2×2 model does not assert a
+trace-class Fredholm realization.
 -/
-def langlands_lfunction_identity_debt (β : ℂ) (hRe : β.re > 1) : String :=
-  InfoGeometry.Arithmetic.UnifiedCapstone.master_identity_debt β hRe
-
-/--
-Concrete file audit hook: the zeta/Fredholm identity is not proved by the
-2×2 matrix model.  It is routed to the existing capstone debt record.
--/
-theorem langlands_lfunction_identity_is_recorded_as_debt
-    (β : ℂ) (hRe : β.re > 1) :
-    langlands_lfunction_identity_debt β hRe =
-      InfoGeometry.Arithmetic.UnifiedCapstone.master_identity_debt β hRe := rfl
+theorem langlands_lfunction_euler_product_eq_riemannZeta
+    {β : ℂ} (hRe : 1 < β.re) :
+    InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
+      riemannZeta β :=
+  InfoGeometry.Arithmetic.UnifiedCapstone.master_euler_product_eq_riemannZeta hRe
 
 /--
 **Connes Theorem — Anomaly Cancellation on the 2×2 Model.**

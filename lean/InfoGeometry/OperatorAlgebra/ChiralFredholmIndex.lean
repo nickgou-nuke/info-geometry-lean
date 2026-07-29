@@ -13,6 +13,7 @@ later as a refinement, not as the primitive definition of the index.
 -/
 
 import Mathlib.Tactic
+import Mathlib.Analysis.Normed.Operator.Compact
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 
 noncomputable section
@@ -35,9 +36,6 @@ structure FredholmIndexDatum
   /-- The Fredholm operator. -/
   operator : V →ₗ[ℝ] W
 
-  /-- Analytic/Fredholm index. -/
-  index : ℤ
-
   /-- The kernel of the operator is finite-dimensional. -/
   kernelFinite :
     FiniteDimensional ℝ (LinearMap.ker operator)
@@ -53,6 +51,14 @@ variable
     [AddCommGroup W] [Module ℝ W]
     (F : FredholmIndexDatum V W)
 
+/--
+The algebraic Fredholm index, derived from Mathlib finranks of the kernel and
+cokernel.  It is not an independently supplied integer readout.
+-/
+noncomputable def index : ℤ :=
+  (Module.finrank ℝ (LinearMap.ker F.operator) : ℤ) -
+    (Module.finrank ℝ (W ⧸ LinearMap.range F.operator) : ℤ)
+
 /-- Read back the kernel finite-dimensionality carried by the Fredholm datum. -/
 theorem kernel_finite :
     FiniteDimensional ℝ (LinearMap.ker F.operator) :=
@@ -62,6 +68,13 @@ theorem kernel_finite :
 theorem cokernel_finite :
     FiniteDimensional ℝ (W ⧸ LinearMap.range F.operator) :=
   F.cokernelFinite
+
+/-- The Fredholm index is the native kernel-minus-cokernel dimension. -/
+theorem index_eq_finrank_ker_sub_finrank_coker :
+    F.index =
+      (Module.finrank ℝ (LinearMap.ker F.operator) : ℤ) -
+        (Module.finrank ℝ (W ⧸ LinearMap.range F.operator) : ℤ) :=
+  rfl
 
 end FredholmIndexDatum
 
@@ -256,32 +269,42 @@ downstream for index pairings:
 * compactness/commutator certificates.
 -/
 structure EvenKasparovCycleDatum
-    (A H : Type*) [AddCommGroup H] [Module ℝ H] where
+    (A H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] where
   /-- Representation of the algebra by operators on the carrier. -/
-  rep : A → H →ₗ[ℝ] H
+  rep : A → H →L[ℝ] H
 
   /-- Chiral grading. -/
-  chi : H →ₗ[ℝ] H
+  chi : H →L[ℝ] H
 
   /-- Fredholm/Kasparov operator. -/
-  F : H →ₗ[ℝ] H
+  F : H →L[ℝ] H
 
   /-- Grading law. -/
   chi_square :
-    chi.comp chi = LinearMap.id
+    chi.comp chi = ContinuousLinearMap.id ℝ H
 
   /-- Oddness of the Fredholm operator. -/
   F_odd :
     chi.comp F = -(F.comp chi)
 
-  /-- Commutator compactness certificate. -/
-  commutators_compact : Prop
+  /-- Every represented commutator `[F, π(a)]` is compact. -/
+  commutators_compact :
+    ∀ a : A,
+      IsCompactOperator
+        ((F * rep a - rep a * F : H →L[ℝ] H) : H → H)
 
-  /-- `a(F² - 1)` compactness certificate. -/
-  square_minus_one_compact : Prop
+  /-- Every represented defect `π(a)(F² - 1)` is compact. -/
+  square_minus_one_compact :
+    ∀ a : A,
+      IsCompactOperator
+        ((rep a * (F * F - (1 : H →L[ℝ] H)) : H →L[ℝ] H) : H → H)
 
-  /-- Self-adjointness modulo compact operators certificate. -/
-  self_adjoint_mod_compact : Prop
+  /-- Every represented self-adjointness defect `π(a)(F - F*)` is compact. -/
+  self_adjoint_mod_compact :
+    ∀ a : A,
+      IsCompactOperator
+        ((rep a * (F - ContinuousLinearMap.adjoint F) : H →L[ℝ] H) : H → H)
 
   /-- Abstract Fredholm index pairing socket. -/
   indexPairing : A → ℤ
@@ -294,21 +317,39 @@ or JLO/local-index data should enter. It is deliberately not identified with a
 Fredholm determinant.
 -/
 structure ChiralIndexFormulaDatum
-    (A H : Type*) [AddCommGroup H] [Module ℝ H]
+    (A H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     (K : EvenKasparovCycleDatum A H) where
   /-- Cocycle or supertrace readout. -/
   cocycleReadout : A → ℂ
 
-  /-- Integer index readout. -/
-  indexReadout : A → ℤ
-
   /--
-  Index formula certificate.
-
-  Intended meaning:
-  `indexReadout a` equals the appropriate cyclic-cocycle/supertrace pairing.
+  The cyclic-cocycle/supertrace pairing is the complex realization of the
+  Kasparov cycle's integer index pairing.
   -/
-  index_formula : Prop
+  index_formula :
+    ∀ a : A, cocycleReadout a = (K.indexPairing a : ℂ)
+
+namespace ChiralIndexFormulaDatum
+
+/-- The canonical complex readout of a Kasparov cycle's integer index pairing. -/
+def ofIndexPairing
+    {A H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
+    (K : EvenKasparovCycleDatum A H) :
+    ChiralIndexFormulaDatum A H K where
+  cocycleReadout := fun a => (K.indexPairing a : ℂ)
+  index_formula := fun _ => rfl
+
+@[simp]
+theorem ofIndexPairing_cocycleReadout
+    {A H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
+    (K : EvenKasparovCycleDatum A H) (a : A) :
+    (ofIndexPairing K).cocycleReadout a = (K.indexPairing a : ℂ) :=
+  rfl
+
+end ChiralIndexFormulaDatum
 
 /-! ## 6. Owner targets -/
 
@@ -323,12 +364,16 @@ def ChiralFredholmIndexOwnerTarget
 
 /-- Owner target for constructing an even Kasparov-cycle socket. -/
 def EvenKasparovCycleOwnerTarget
-    (A H : Type*) [AddCommGroup H] [Module ℝ H] : Prop :=
+    (A H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] : Prop :=
   ∀ K : EvenKasparovCycleDatum A H,
-    K.chi.comp K.chi = LinearMap.id ∧
+    K.chi.comp K.chi = ContinuousLinearMap.id ℝ H ∧
       K.chi.comp K.F = -(K.F.comp K.chi) ∧
-      K.commutators_compact ∧
-      K.square_minus_one_compact ∧
-      K.self_adjoint_mod_compact
+      (∀ a : A, IsCompactOperator
+        ((K.F * K.rep a - K.rep a * K.F : H →L[ℝ] H) : H → H)) ∧
+      (∀ a : A, IsCompactOperator
+        ((K.rep a * (K.F * K.F - (1 : H →L[ℝ] H)) : H →L[ℝ] H) : H → H)) ∧
+      (∀ a : A, IsCompactOperator
+        ((K.rep a * (K.F - ContinuousLinearMap.adjoint K.F) : H →L[ℝ] H) : H → H))
 
 end InfoGeometry.OperatorAlgebra.ChiralFredholmIndex

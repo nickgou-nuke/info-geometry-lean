@@ -20,14 +20,20 @@ structure PlanckScaleCalibration where
   planckLengthSq : ℝ
   /-- Positivity of Planck length scale. -/
   planckLengthSq_pos : 0 < planckLengthSq
-  /-- Boltzmann constant in the chosen unit convention. -/
-  kB : ℝ
-  /-- Boltzmann constant positivity. -/
-  kB_pos : 0 < kB
   /-- Newton constant proxy. -/
   G : ℝ
   /-- Newton constant positivity. -/
   G_pos : 0 < G
+
+/-- Dimensionless Boltzmann constant in the repository's unit convention. -/
+def PlanckScaleCalibration.kB (_ : PlanckScaleCalibration) : ℝ := 1
+
+@[simp] theorem PlanckScaleCalibration.kB_eq_one
+    (P : PlanckScaleCalibration) : P.kB = 1 := rfl
+
+theorem PlanckScaleCalibration.kB_pos
+    (P : PlanckScaleCalibration) : 0 < P.kB := by
+  simp [PlanckScaleCalibration.kB]
 
 /-- Black-hole thermodynamic readout contract (witness-gated (Native Closure Mandated: Closure Debt)). -/
 structure BlackHoleThermodynamics (P : PlanckScaleCalibration) (State : Type*) where

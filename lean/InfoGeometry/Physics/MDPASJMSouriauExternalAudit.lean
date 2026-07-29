@@ -47,7 +47,6 @@ structure ExternalDeRhamAuditData where
   totalRank : ℕ
   status : AuditStatus
   method : DeRhamMethod
-  isVerified : Bool
 
 /-- Arithmetic consistency for any explicit Betti-number vector carried by the audit. -/
 def RankDataConsistent (data : ExternalDeRhamAuditData) : Prop :=
@@ -57,16 +56,9 @@ def RankDataConsistent (data : ExternalDeRhamAuditData) : Prop :=
 def HasAmbientDimension8 (data : ExternalDeRhamAuditData) : Prop :=
   data.ambientDim = 8
 
-/-- A verified certificate is one explicitly marked as such. -/
+/-- Verification is determined by the native audit status, not a Boolean marker. -/
 def Verified (data : ExternalDeRhamAuditData) : Prop :=
-  data.isVerified = true
-
-/-- Honest external certificate: dimension + arithmetic consistency + verified flag. -/
-structure ExternalDeRhamAuditCertificate where
-  data : ExternalDeRhamAuditData
-  ambient : HasAmbientDimension8 data
-  consistent : RankDataConsistent data
-  verified : Verified data
+  data.status = AuditStatus.ok
 
 /-- Observed bounded Macaulay2 `deRham(0, f)` lane: attempted, timed out, unverified. -/
 def observedDegree0Audit : ExternalDeRhamAuditData where
@@ -75,7 +67,6 @@ def observedDegree0Audit : ExternalDeRhamAuditData where
   totalRank := 0
   status := AuditStatus.timeout
   method := DeRhamMethod.derham
-  isVerified := false
 
 /-- Observed bounded Macaulay2 full `deRham(f)` lane: attempted, timed out, unverified. -/
 def observedFullDerhamAudit : ExternalDeRhamAuditData where
@@ -84,7 +75,6 @@ def observedFullDerhamAudit : ExternalDeRhamAuditData where
   totalRank := 0
   status := AuditStatus.timeout
   method := DeRhamMethod.derham
-  isVerified := false
 
 /-- Observed bounded Macaulay2 `Dlocalize + rationalFunctionExt` lane: attempted, timed out. -/
 def observedDlocalizeExtAudit : ExternalDeRhamAuditData where
@@ -93,7 +83,6 @@ def observedDlocalizeExtAudit : ExternalDeRhamAuditData where
   totalRank := 0
   status := AuditStatus.timeout
   method := DeRhamMethod.dlocalizeExt
-  isVerified := false
 
 @[simp] theorem observedDegree0Audit_consistent :
     RankDataConsistent observedDegree0Audit := by
@@ -144,11 +133,11 @@ theorem observed_timeout_audit_packet :
 
 /-- Any verified external certificate carries its rank arithmetic by projection. -/
 theorem verified_certificate_rank_readback
-    (C : ExternalDeRhamAuditCertificate) :
+    (data : ExternalDeRhamAuditData)
+    (hconsistent : RankDataConsistent data) :
     ∃ bVals : List ℕ,
-      C.data.bettiNumbers = bVals ∧ C.data.totalRank = bVals.sum := by
-  refine ⟨C.data.bettiNumbers, rfl, ?_⟩
-  exact C.consistent
+      data.bettiNumbers = bVals ∧ data.totalRank = bVals.sum := by
+  exact ⟨data.bettiNumbers, rfl, hconsistent⟩
 
 /--
 Finite theorem-safe packet for the global story: obstruction, symplectic,

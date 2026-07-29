@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 open CategoryTheory
 open CategoryTheory.MonoidalCategory
 open scoped MonoidalCategory
@@ -37,21 +38,23 @@ are equal.
 This IS the cocycle condition: braiding then reassociating = reassociating then braiding.
 -/
 theorem hexagon_as_cocycle (X Y Z : C) :
-    (α_ X Y Z).hom ≫ (BraidedCategory.braiding X (tensorObj Y Z)).hom ≫
+    (α_ X Y Z).hom ≫ (β_ X (tensorObj Y Z)).hom ≫
       (α_ Y Z X).hom =
-      whiskerRight (BraidedCategory.braiding X Y).hom Z ≫ (α_ Y X Z).hom ≫
-        whiskerLeft Y (BraidedCategory.braiding X Z).hom := by
-  exact BraidedCategory.hexagon_forward X Y Z
+      whiskerRight (β_ X Y).hom Z ≫ (α_ Y X Z).hom ≫
+        whiskerLeft Y (β_ X Z).hom := by
+  simpa using congrArg CategoryTheory.Iso.hom
+    (BraidedCategory.hexagon_forward_iso X Y Z)
 
 /--
 The second hexagon identity (hexagon_reverse).
 -/
 theorem hexagon_reverse_as_cocycle (X Y Z : C) :
-    (α_ X Y Z).inv ≫ (BraidedCategory.braiding (tensorObj X Y) Z).hom ≫
+    (α_ X Y Z).inv ≫ (β_ (tensorObj X Y) Z).hom ≫
       (α_ Z X Y).inv =
-      whiskerLeft X (BraidedCategory.braiding Y Z).hom ≫ (α_ X Z Y).inv ≫
-        whiskerRight (BraidedCategory.braiding X Z).hom Y := by
-  exact BraidedCategory.hexagon_reverse X Y Z
+      whiskerLeft X (β_ Y Z).hom ≫ (α_ X Z Y).inv ≫
+        whiskerRight (β_ X Z).hom Y := by
+  simpa using congrArg CategoryTheory.Iso.hom
+    (BraidedCategory.hexagon_reverse_iso X Y Z)
 
 end HexagonAxiom
 
@@ -68,13 +71,13 @@ This is `yang_baxter` in mathlib4's Braided/Basic.lean.
 In braid group notation: σ₁·σ₂·σ₁ = σ₂·σ₁·σ₂
 -/
 theorem braid_relation_from_hexagon (X Y Z : C) :
-    (α_ X Y Z).inv ≫ whiskerRight (BraidedCategory.braiding X Y).hom Z ≫
-    (α_ Y X Z).hom ≫ whiskerLeft Y (BraidedCategory.braiding X Z).hom ≫
-    (α_ Y Z X).inv ≫ whiskerRight (BraidedCategory.braiding Y Z).hom X ≫
+    (α_ X Y Z).inv ≫ whiskerRight (β_ X Y).hom Z ≫
+    (α_ Y X Z).hom ≫ whiskerLeft Y (β_ X Z).hom ≫
+    (α_ Y Z X).inv ≫ whiskerRight (β_ Y Z).hom X ≫
     (α_ Z Y X).hom =
-      whiskerLeft X (BraidedCategory.braiding Y Z).hom ≫ (α_ X Z Y).inv ≫
-      whiskerRight (BraidedCategory.braiding X Z).hom Y ≫ (α_ Z X Y).hom ≫
-      whiskerLeft Z (BraidedCategory.braiding X Y).hom := by
+      whiskerLeft X (β_ Y Z).hom ≫ (α_ X Z Y).inv ≫
+      whiskerRight (β_ X Z).hom Y ≫ (α_ Z X Y).hom ≫
+      whiskerLeft Z (β_ X Y).hom := by
   simpa using BraidedCategory.yang_baxter X Y Z
 
 end YangBaxter
@@ -136,13 +139,10 @@ Reference: KB entry "Unified Cocycle Diagram"
 structure CocycleLink where
   source : String
   target : String
-  formalized : Bool
 
 def unified_cocycle_diagram : List CocycleLink :=
-  [ { source := "hexagon", target := "Yang-Baxter",
-      formalized := true },
-    { source := "quadratic Legendre", target := "Gaussian Fisher",
-      formalized := true } ]
+  [ { source := "hexagon", target := "Yang-Baxter" },
+    { source := "quadratic Legendre", target := "Gaussian Fisher" } ]
 
 theorem unified_cocycle_diagram_length :
     unified_cocycle_diagram.length = 2 := by

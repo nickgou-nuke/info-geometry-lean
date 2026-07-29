@@ -69,9 +69,10 @@ structure SouriauWeylPartitionBridge
   weylSignature :
     ℕ → ℤ
 
-  /-- The Möbius function compatibility. -/
+  /-- The Weyl signature is the native arithmetic Möbius function. -/
   weylSignature_eq_mobius :
-    ∀ n ∈ positiveRoots, weylSignature n = if n = 1 then 1 else -1 -- Simplified placeholder for μ(n)
+    ∀ n ∈ positiveRoots,
+      weylSignature n = ArithmeticFunction.moebius n
 
   /--
   The finite Souriau-Weyl arithmetic readout:

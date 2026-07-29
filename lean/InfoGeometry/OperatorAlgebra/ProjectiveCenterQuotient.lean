@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Data.ZMod.Basic
 
 /-!
 # Projective center quotient for the finite Pin(5,5) spinor carrier
@@ -35,15 +36,25 @@ def negId : Spin32Matrix := -(1 : Spin32Matrix)
 /-- Projective equivalence under the signed-identity center `{+I,-I}`. -/
 def ProjectivelyEquivalent (A B : Spin32Matrix) : Prop := B = A ∨ B = -A
 
-/-- Structure packaging the nontrivial center element. -/
-structure PinCenter where
-  I_neg : Spin32Matrix
-  h_center_def : I_neg = negId
+/-- The signed center is the genuine two-element group `ZMod 2`. -/
+abbrev PinCenter := ZMod 2
+
+namespace PinCenter
+
+/-- The unique nontrivial signed-center element. -/
+def I_neg (sys : PinCenter) : Spin32Matrix :=
+  if sys = 1 then negId else 1
+
+/-- The unique center element is definitionally the negative identity. -/
+@[simp]
+theorem h_center_def : I_neg (1 : PinCenter) = negId := by
+  simp [I_neg]
+
+end PinCenter
 
 /-- The concrete signed-identity center element. -/
-def concreteCenter : PinCenter where
-  I_neg := negId
-  h_center_def := rfl
+def concreteCenter : PinCenter :=
+  1
 
 /-- The negative identity is an involution. -/
 theorem negId_sq : negId * negId = 1 := by
@@ -74,14 +85,12 @@ theorem id_commutes (A : Spin32Matrix) : (1 : Spin32Matrix) * A = A * 1 := by
 
 /-- The packaged center element is involutive. -/
 theorem projective_center_involution (sys : PinCenter) : sys.I_neg * sys.I_neg = 1 := by
-  rw [sys.h_center_def]
-  exact negId_sq
+  fin_cases sys <;> simp [PinCenter.I_neg, negId]
 
 /-- The packaged center element commutes with every finite spinor matrix. -/
 theorem projective_center_commutes (sys : PinCenter) (A : Spin32Matrix) :
     sys.I_neg * A = A * sys.I_neg := by
-  rw [sys.h_center_def]
-  exact negId_commutes A
+  fin_cases sys <;> simp [PinCenter.I_neg, negId]
 
 /-- Projective signed-center equivalence is reflexive. -/
 theorem projectivelyEquivalent_refl (A : Spin32Matrix) : ProjectivelyEquivalent A A := by

@@ -20,8 +20,19 @@ Models the Shannon-von Neumann entropy of the dyadic rationals.
 -/
 structure KmsDyadicState where
   branch_depth : ℕ
-  beta         : ℝ
-  h_beta       : beta = log 2
+
+namespace KmsDyadicState
+
+/-- The dyadic KMS inverse temperature is canonically `log 2`. -/
+noncomputable def beta (_state : KmsDyadicState) : ℝ :=
+  log 2
+
+/-- The canonical dyadic inverse temperature is `log 2`. -/
+@[simp]
+theorem h_beta (state : KmsDyadicState) : state.beta = log 2 :=
+  rfl
+
+end KmsDyadicState
 
 /-- The von Neumann statistical entropy of the dyadic path tree. -/
 noncomputable def von_neumann_entropy (state : KmsDyadicState) : ℝ :=

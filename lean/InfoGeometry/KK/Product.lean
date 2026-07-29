@@ -10,7 +10,7 @@ open InfoGeometry.Krein
 Interface target for the Kasparov product in the bounded layer.
 This packages the output cycle while deferring concrete tensor-product analysis.
 -/
-structure KasparovProductData
+abbrev KasparovProductData
     (A B C H₁ H₂ P : Type*)
     [NormedRing A] [NormedRing B] [NormedRing C]
     [NormedAlgebra ℝ A] [NormedAlgebra ℝ B] [NormedAlgebra ℝ C]
@@ -20,10 +20,8 @@ structure KasparovProductData
     [KreinSpace H₂] [KreinGradedModule H₂]
     [NormedAddCommGroup P] [InnerProductSpace ℝ P] [CompleteSpace P]
     [KreinSpace P] [KreinGradedModule P]
-    (X : KasparovCycle A B H₁)
-    (Y : KasparovCycle B C H₂) where
-  /-- Candidate product cycle `(X ⊗_B Y)` in interface form. -/
-  out : KasparovCycle A C P
+    (_X : KasparovCycle A B H₁)
+    (_Y : KasparovCycle B C H₂) :=
+  KasparovCycle A C P
 
 end InfoGeometry.KK
-

@@ -13,10 +13,9 @@ The paper defines
 where `P(a)` is the largest prime factor of `a`, and calls a set `L`-primitive
 when no distinct member is an `L`-multiple of another.
 
-This file installs the finite/order-theoretic skeleton only.  The analytic
-parts of Lichtman's proof, such as log-density of `L_A`, Mertens estimates,
-odd-prime strength, and the special `p = 2` bound, remain explicit witness
-surfaces.
+This file installs the finite/order-theoretic skeleton and canonical cutoff
+densities.  It does not claim an asymptotic density or analytic continuation
+without a convergence theorem.
 -/
 
 namespace InfoGeometry.Arithmetic
@@ -94,16 +93,26 @@ The paper proves that if `L_a` and `L_a'` meet, then one generator is an
 `L`-multiple of the other.  We keep this as an explicit finite combinatorial
 input until the largest-prime-factor arithmetic proof is fully formalized.
 -/
-structure LTrichotomyInput where
-  trichotomy :
-    ∀ ⦃a a' x : ℕ⦄,
-      1 < a →
-      1 < a' →
-      LMultiple a x →
-      LMultiple a' x →
-        LMultiple a a' ∨ LMultiple a' a
+def LTrichotomyInput : Prop :=
+  ∀ ⦃a a' x : ℕ⦄,
+    1 < a →
+    1 < a' →
+    LMultiple a x →
+    LMultiple a' x →
+      LMultiple a a' ∨ LMultiple a' a
 
 namespace LTrichotomyInput
+
+/-- Read the Lichtman trichotomy directly from its native proposition. -/
+theorem trichotomy
+    (T : LTrichotomyInput)
+    ⦃a a' x : ℕ⦄
+    (ha : 1 < a)
+    (ha' : 1 < a')
+    (hx : LMultiple a x)
+    (hx' : LMultiple a' x) :
+    LMultiple a a' ∨ LMultiple a' a :=
+  T ha ha' hx hx'
 
 /--
 For an `L`-primitive set, distinct generators have disjoint `L`-multiple
@@ -128,37 +137,83 @@ theorem not_common_LMultiple_of_lprimitive
 
 end LTrichotomyInput
 
-/-- Density data for a single `L_a` surface. -/
-structure LMultipleDensityWitness (a : ℕ) where
-  density : ℝ
-  density_nonnegative : 0 ≤ density
+/--
+Canonical finite-cutoff density of `L_a` in `{0, ..., cutoff}`.
+
+The historical name is retained, but this is now an explicitly computed real
+number rather than a proof-carrying witness record.
+-/
+noncomputable def LMultipleDensityWitness (a cutoff : ℕ) : ℝ :=
+  by
+    classical
+    exact
+      (((Finset.range (cutoff + 1)).filter (LMultiple a)).card : ℝ) /
+        (cutoff + 1 : ℝ)
 
 namespace LMultipleDensityWitness
 
-variable {a : ℕ} (W : LMultipleDensityWitness a)
+/-- Every canonical finite-cutoff `L_a` density is nonnegative. -/
+theorem density_holds (a cutoff : ℕ) :
+    0 ≤ LMultipleDensityWitness a cutoff := by
+  classical
+  unfold LMultipleDensityWitness
+  apply div_nonneg
+  · exact_mod_cast
+      Nat.zero_le (((Finset.range (cutoff + 1)).filter (LMultiple a)).card)
+  · positivity
 
-/-- The supplied `L_a` density is nonnegative. -/
-theorem density_holds (W : LMultipleDensityWitness a) : 0 ≤ W.density :=
-  W.density_nonnegative
+/-- Every canonical finite-cutoff density is at most one. -/
+theorem density_le_one (a cutoff : ℕ) :
+    LMultipleDensityWitness a cutoff ≤ 1 := by
+  classical
+  unfold LMultipleDensityWitness
+  have hcard :
+      ((Finset.range (cutoff + 1)).filter (LMultiple a)).card ≤
+        (Finset.range (cutoff + 1)).card :=
+    Finset.card_filter_le _ _
+  have hden : (0 : ℝ) < cutoff + 1 := by positivity
+  rw [div_le_one hden]
+  have hcard' :
+      ((Finset.range (cutoff + 1)).filter (LMultiple a)).card ≤ cutoff + 1 := by
+    simpa using hcard
+  exact_mod_cast hcard'
+
+/-- Canonical finite-cutoff `L_a` densities lie in the unit interval. -/
+theorem density_mem_unitInterval (a cutoff : ℕ) :
+    LMultipleDensityWitness a cutoff ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨density_holds a cutoff, density_le_one a cutoff⟩
 
 end LMultipleDensityWitness
 
-/-- Log-density data for `L_A`. -/
-structure LPrimitiveLogDensityWitness (A : Set ℕ) where
-  logDensity : ℝ
-  densitySum : ℝ
-  density_eq_sum : logDensity = densitySum
+/--
+Canonical finite aggregate density for a finite family of `L_a` surfaces.
 
--- ALCHEMICAL TRANSMUTATION: We replace the LichtmanLocalBoundInput vacuous structure
--- with actual native Lean theorems. The `sorry` forms are completely eliminated!
+No logarithm or asymptotic limit is hidden in this definition.
+-/
+noncomputable def LPrimitiveLogDensityWitness
+    (A : Finset ℕ) (cutoff : ℕ) : ℝ :=
+  by
+    classical
+    exact ∑ a ∈ A, LMultipleDensityWitness a cutoff
 
-theorem lichtman_local_density_bound {a : ℕ} (ha : 1 < a) (W : LMultipleDensityWitness a) :
-    0 ≤ W.density :=
-  W.density_nonnegative
+/-- Native finite local-density nonnegativity theorem. -/
+theorem lichtman_local_density_bound (a cutoff : ℕ) :
+    0 ≤ LMultipleDensityWitness a cutoff :=
+  LMultipleDensityWitness.density_holds a cutoff
 
-theorem lichtman_lDensity_eq_sum {A : Set ℕ} (W : LPrimitiveLogDensityWitness A) :
-    W.logDensity = W.densitySum :=
-  W.density_eq_sum
+/-- The finite aggregate density is the sum of its canonical local densities. -/
+theorem lichtman_lDensity_eq_sum (A : Finset ℕ) (cutoff : ℕ) :
+    LPrimitiveLogDensityWitness A cutoff =
+      ∑ a ∈ A, LMultipleDensityWitness a cutoff :=
+  rfl
+
+/-- A finite aggregate of canonical local densities is nonnegative. -/
+theorem lichtman_lDensity_nonnegative (A : Finset ℕ) (cutoff : ℕ) :
+    0 ≤ LPrimitiveLogDensityWitness A cutoff := by
+  unfold LPrimitiveLogDensityWitness
+  apply Finset.sum_nonneg
+  intro a ha
+  exact LMultipleDensityWitness.density_holds a cutoff
 
 theorem lichtman_mertens_weight_nonnegative (n : ℕ) :
     0 ≤ (1 / ((n : ℝ) + 1) : ℝ) := by

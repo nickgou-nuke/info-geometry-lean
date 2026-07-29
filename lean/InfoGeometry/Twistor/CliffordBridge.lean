@@ -54,13 +54,27 @@ theorem twistorRealQuadraticForm_polar (z w : TwistorCarrier) :
   rw [twistorClifford_ι_mul_ι_add_swap_eq_polar, twistorRealQuadraticForm_polar]
 
 /--
-A quadratic isometry of the twistor carrier.
+The exact quadratic-form preservation relation required by the Clifford map.
 
-This is the honest equivariance socket: it states exactly the preservation law
-that is needed before `CliffordAlgebra.map` can be applied.
+This is a direct proposition rather than a one-field evidence wrapper; the
+relation is consumed by Mathlib's `QuadraticMap.Isometry` interface below.
 -/
-structure TwistorQuadraticEquivariance (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier) : Prop where
-  preserves : ∀ z, PenroseTwistor.twistorRealQuadraticForm (f z) = PenroseTwistor.twistorRealQuadraticForm z
+def TwistorQuadraticEquivariance
+    (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier) : Prop :=
+  ∀ z, PenroseTwistor.twistorRealQuadraticForm (f z) =
+    PenroseTwistor.twistorRealQuadraticForm z
+
+namespace TwistorQuadraticEquivariance
+
+/-- Read the quadratic preservation relation under its historical field name. -/
+theorem preserves
+    (f : TwistorCarrier ≃ₗ[ℝ] TwistorCarrier)
+    (h : TwistorQuadraticEquivariance f) (z : TwistorCarrier) :
+    PenroseTwistor.twistorRealQuadraticForm (f z) =
+      PenroseTwistor.twistorRealQuadraticForm z :=
+  h z
+
+end TwistorQuadraticEquivariance
 
 /-- Convert a quadratic-equivariant linear equivalence into a mathlib isometry. -/
 def toTwistorQuadraticIsometry

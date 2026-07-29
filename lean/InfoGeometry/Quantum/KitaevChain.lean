@@ -313,4 +313,544 @@ theorem macroscopicVolume_eq_one_of_pfaffian_one
         simpa [macroscopicVolume] using hcs
       simp [macroscopicVolume, hc, hcs']
 
+/-! ## Operator Algebra & Boundary Majorana Zero Mode -/
+
+open BigOperators
+
+/-- Commutator of two operators in a ring: `[A, B] = A * B - B * A`. -/
+def commutator {A : Type*} [Ring A] (a b : A) : A := a * b - b * a
+
+/-- Structure representing an `N`-site chain with `2N` Majorana operators `γ`. -/
+structure MajoranaOperators (N : ℕ) (A : Type*) [Ring A] where
+  γ : Fin (2 * N) → A
+  h_ortho : ∀ m n, m ≠ n → γ m * γ n + γ n * γ m = 0
+
+/-! ## Noncommutative two-mode commutation owner -/
+
+/--
+Moving a Majorana generator past a product of two distinct modes produces two
+sign changes.  This is the reusable noncommutative Clifford calculation behind
+both boundary zero-mode theorems below.
+-/
+lemma gamma_comm_product_of_avoids {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaOperators N A) (k a b : Fin (2 * N))
+    (hka : k ≠ a) (hkb : k ≠ b) :
+    ops.γ k * (ops.γ a * ops.γ b) =
+      (ops.γ a * ops.γ b) * ops.γ k := by
+  have h_anti_a : ops.γ k * ops.γ a = -(ops.γ a * ops.γ k) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho k a hka)
+  have h_anti_b : ops.γ k * ops.γ b = -(ops.γ b * ops.γ k) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho k b hkb)
+  calc
+    ops.γ k * (ops.γ a * ops.γ b)
+        = (ops.γ k * ops.γ a) * ops.γ b := by rw [mul_assoc]
+    _ = (-(ops.γ a * ops.γ k)) * ops.γ b := by rw [h_anti_a]
+    _ = -(ops.γ a * (ops.γ k * ops.γ b)) := by
+      rw [neg_mul, mul_assoc]
+    _ = -(ops.γ a * (-(ops.γ b * ops.γ k))) := by rw [h_anti_b]
+    _ = (ops.γ a * ops.γ b) * ops.γ k := by
+      rw [mul_neg, neg_neg, mul_assoc]
+
+/-- The Kitaev Hamiltonian at the topological sweet spot (`μ = 0`, `t = Δ`). -/
+noncomputable def sweetSpotHamiltonian {A : Type*} [Ring A] {N : ℕ}
+    (ops : MajoranaOperators N A) (it : A) : A :=
+  ∑ j ∈ Finset.attach (Finset.range (N - 1)),
+    have hj : j.1 < N - 1 := Finset.mem_range.mp j.2
+    have hjN : j.1 + 1 < N := by omega
+    it * (ops.γ ⟨2 * j.1 + 1, by omega⟩ * ops.γ ⟨2 * j.1 + 2, by omega⟩)
+
+/-- An operator `γ ⟨0, _⟩` commutes with a product `γ_a * γ_b` if `⟨0, _⟩ ≠ a` and `⟨0, _⟩ ≠ b`. -/
+lemma gamma_comm_product {A : Type*} [Ring A] {N : ℕ} (hN : 0 < N)
+    (ops : MajoranaOperators N A) (a b : Fin (2 * N))
+    (ha : (⟨0, by omega⟩ : Fin (2 * N)) ≠ a) (hb : (⟨0, by omega⟩ : Fin (2 * N)) ≠ b) :
+    ops.γ ⟨0, by omega⟩ * (ops.γ a * ops.γ b) = (ops.γ a * ops.γ b) * ops.γ ⟨0, by omega⟩ := by
+  exact gamma_comm_product_of_avoids ops _ a b ha hb
+
+/-- **Left Boundary Majorana Zero Mode Theorem**:
+
+The uncoupled boundary Majorana mode `γ₀` strictly commutes with the sweet-spot
+Hamiltonian: `[H_sweet, γ₀] = 0`. -/
+theorem left_majorana_zero_mode {A : Type*} [CommRing A] {N : ℕ} (hN : 0 < N)
+    (ops : MajoranaOperators N A) (it : A) :
+    commutator (sweetSpotHamiltonian ops it) (ops.γ ⟨0, by omega⟩) = 0 := by
+  unfold sweetSpotHamiltonian commutator
+  rw [Finset.sum_mul, Finset.mul_sum, sub_eq_zero]
+  refine Finset.sum_congr rfl ?_
+  intro ⟨j, hj_mem⟩ _
+  have hj : j < N - 1 := Finset.mem_range.mp hj_mem
+  have ha : (⟨0, by omega⟩ : Fin (2 * N)) ≠ ⟨2 * j + 1, by omega⟩ := by
+    intro h; have h_val := congrArg Fin.val h; dsimp at h_val; omega
+  have hb : (⟨0, by omega⟩ : Fin (2 * N)) ≠ ⟨2 * j + 2, by omega⟩ := by
+    intro h; have h_val := congrArg Fin.val h; dsimp at h_val; omega
+  have h_comm := gamma_comm_product hN ops ⟨2 * j + 1, by omega⟩ ⟨2 * j + 2, by omega⟩ ha hb
+  calc it * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩) * ops.γ ⟨0, _⟩
+    _ = it * ((ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩) * ops.γ ⟨0, _⟩) := by rw [mul_assoc]
+    _ = it * (ops.γ ⟨0, _⟩ * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩)) := by rw [h_comm]
+    _ = ops.γ ⟨0, _⟩ * (it * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩)) := by ring
+
+/-- An operator `γ ⟨2 * N - 1, _⟩` commutes with a product `γ_a * γ_b` if `⟨2 * N - 1, _⟩ ≠ a` and `⟨2 * N - 1, _⟩ ≠ b`. -/
+lemma gamma_right_comm_product {A : Type*} [Ring A] {N : ℕ} (hN : 0 < N)
+    (ops : MajoranaOperators N A) (a b : Fin (2 * N))
+    (ha : (⟨2 * N - 1, by omega⟩ : Fin (2 * N)) ≠ a)
+    (hb : (⟨2 * N - 1, by omega⟩ : Fin (2 * N)) ≠ b) :
+    ops.γ ⟨2 * N - 1, by omega⟩ * (ops.γ a * ops.γ b) = (ops.γ a * ops.γ b) * ops.γ ⟨2 * N - 1, by omega⟩ := by
+  exact gamma_comm_product_of_avoids ops _ a b ha hb
+
+/-- **Right Boundary Majorana Zero Mode Theorem**:
+
+The uncoupled right boundary Majorana mode `γ₂ₙ₋₁` strictly commutes with the sweet-spot
+Hamiltonian: `[H_sweet, γ₂ₙ₋₁] = 0`. -/
+theorem right_majorana_zero_mode {A : Type*} [CommRing A] {N : ℕ} (hN : 0 < N)
+    (ops : MajoranaOperators N A) (it : A) :
+    commutator (sweetSpotHamiltonian ops it) (ops.γ ⟨2 * N - 1, by omega⟩) = 0 := by
+  unfold sweetSpotHamiltonian commutator
+  rw [Finset.sum_mul, Finset.mul_sum, sub_eq_zero]
+  refine Finset.sum_congr rfl ?_
+  intro ⟨j, hj_mem⟩ _
+  have hj : j < N - 1 := Finset.mem_range.mp hj_mem
+  have ha : (⟨2 * N - 1, by omega⟩ : Fin (2 * N)) ≠ ⟨2 * j + 1, by omega⟩ := by
+    intro h; have h_val := congrArg Fin.val h; dsimp at h_val; omega
+  have hb : (⟨2 * N - 1, by omega⟩ : Fin (2 * N)) ≠ ⟨2 * j + 2, by omega⟩ := by
+    intro h; have h_val := congrArg Fin.val h; dsimp at h_val; omega
+  have h_comm := gamma_right_comm_product hN ops ⟨2 * j + 1, by omega⟩ ⟨2 * j + 2, by omega⟩ ha hb
+  calc it * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩) * ops.γ ⟨2 * N - 1, _⟩
+    _ = it * ((ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩) * ops.γ ⟨2 * N - 1, _⟩) := by rw [mul_assoc]
+    _ = it * (ops.γ ⟨2 * N - 1, _⟩ * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩)) := by rw [h_comm]
+    _ = ops.γ ⟨2 * N - 1, _⟩ * (it * (ops.γ ⟨2 * j + 1, _⟩ * ops.γ ⟨2 * j + 2, _⟩)) := by ring
+
+/-- Non-local Dirac fermion creation operator from boundary Majoranas. -/
+noncomputable def boundaryDiracFermion {A : Type*} [Ring A] {N : ℕ} (hN : 0 < N)
+    (ops : MajoranaOperators N A) (inv_2 I_complex : A) : A :=
+  inv_2 * (ops.γ ⟨0, by omega⟩ + I_complex * ops.γ ⟨2 * N - 1, by omega⟩)
+
+/-! ## Non-Abelian Majorana Braiding Operators -/
+
+/-- Majorana Clifford operators with normalization `γ_i² = 1`. -/
+structure MajoranaCliffordOperators (N : ℕ) (A : Type*) [Ring A] extends MajoranaOperators N A where
+  h_sq : ∀ i, γ i * γ i = 1
+
+/-- Elementary Majorana braid generator: `U_ij = inv_sqrt2 * (1 + γ_i * γ_j)`. -/
+def braidOperator {A : Type*} [Ring A] {N : ℕ} (inv_sqrt2 : A)
+    (ops : MajoranaCliffordOperators N A) (i j : Fin (2 * N)) : A :=
+  inv_sqrt2 * (1 + ops.γ i * ops.γ j)
+
+/-- Scalar parameters satisfying the normalization used by the braid inverse
+law. -/
+def braidNormalizationLocus {A : Type*} [Ring A] : Set A :=
+  {r | r * r + r * r = 1}
+
+/-- The normalization domain is closed in a `T₁` topological ring. -/
+theorem braidNormalizationLocus_isClosed {A : Type*} [Ring A]
+    [TopologicalSpace A] [ContinuousMul A] [ContinuousAdd A] [T1Space A] :
+    IsClosed (braidNormalizationLocus (A := A)) := by
+  change IsClosed {r : A | r * r + r * r = 1}
+  have hcont : Continuous (fun r : A => r * r + r * r) := by
+    exact (continuous_id.mul continuous_id).add
+      (continuous_id.mul continuous_id)
+  exact IsClosed.preimage hcont isClosed_singleton
+
+/-- The physical real normalization `1 / √2` is a genuine point of the
+normalization locus. -/
+theorem real_mem_braidNormalizationLocus :
+    (1 / Real.sqrt 2 : ℝ) ∈ braidNormalizationLocus := by
+  change (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2) +
+      (1 / Real.sqrt 2) * (1 / Real.sqrt 2) = 1
+  have hs : (Real.sqrt 2 : ℝ) ≠ 0 := by positivity
+  have hsq : (Real.sqrt 2 : ℝ) * Real.sqrt 2 = 2 := by
+    rw [Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+  field_simp [hs]
+  nlinarith
+
+/-- Over the reals, the normalization locus consists of exactly the two
+possible signs of `1 / √2`. -/
+theorem real_braidNormalizationLocus_eq_two_points :
+    braidNormalizationLocus (A := ℝ) =
+      ({(1 / Real.sqrt 2 : ℝ), -(1 / Real.sqrt 2 : ℝ)} : Set ℝ) := by
+  ext r
+  constructor
+  · intro hr
+    change r * r + r * r = 1 at hr
+    have hs : (Real.sqrt 2 : ℝ) ≠ 0 := by positivity
+    have hsq : (Real.sqrt 2 : ℝ) * Real.sqrt 2 = 2 := by
+      rw [Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+    have htarget : (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2) =
+        (1 / 2 : ℝ) := by
+      field_simp [hs]
+      nlinarith
+    have hrhalf : r * r = (1 / 2 : ℝ) := by nlinarith
+    have heq : r * r = (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2) := by
+      rw [hrhalf, htarget]
+    rcases (mul_self_eq_mul_self_iff.mp heq) with h | h
+    · exact Or.inl h
+    · exact Or.inr h
+  · intro hr
+    rcases hr with (rfl | rfl)
+    · exact real_mem_braidNormalizationLocus
+    · change (-(1 / Real.sqrt 2 : ℝ)) * (-(1 / Real.sqrt 2 : ℝ)) +
+        (-(1 / Real.sqrt 2 : ℝ)) * (-(1 / Real.sqrt 2 : ℝ)) = 1
+      have h := real_mem_braidNormalizationLocus
+      change (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2) +
+        (1 / Real.sqrt 2 : ℝ) * (1 / Real.sqrt 2) = 1 at h
+      nlinarith
+
+/-- The real normalization locus is compact, since it is a two-point set. -/
+theorem real_braidNormalizationLocus_isCompact :
+    IsCompact (braidNormalizationLocus (A := ℝ)) := by
+  rw [real_braidNormalizationLocus_eq_two_points]
+  exact (Set.Finite.insert _ (Set.finite_singleton _)).isCompact
+
+/-- The braid family is continuous in its scalar parameter whenever the
+ambient multiplication is continuous. -/
+theorem continuous_braidOperator {A : Type*} [Ring A] [TopologicalSpace A]
+    [ContinuousMul A] {N : ℕ} (ops : MajoranaCliffordOperators N A)
+    (i j : Fin (2 * N)) :
+    Continuous (fun r : A => braidOperator r ops i j) := by
+  unfold braidOperator
+  exact continuous_id.mul continuous_const
+
+/-- The commutator of two braid generators varies continuously with the
+scalar parameter. -/
+theorem continuous_braid_commutator {A : Type*} [Ring A] [TopologicalSpace A]
+    [ContinuousMul A] [ContinuousSub A] {N : ℕ}
+    (ops : MajoranaCliffordOperators N A)
+    (i1 i2 i3 : Fin (2 * N)) :
+    Continuous (fun r : A =>
+      braidOperator r ops i1 i2 * braidOperator r ops i2 i3 -
+        braidOperator r ops i2 i3 * braidOperator r ops i1 i2) := by
+  exact (continuous_braidOperator ops i1 i2).mul
+      (continuous_braidOperator ops i2 i3) |>.sub
+    ((continuous_braidOperator ops i2 i3).mul
+      (continuous_braidOperator ops i1 i2))
+
+/-- The real braid family has a compact image when its scalar parameter is
+restricted to the normalized locus. -/
+theorem real_braidOperator_image_isCompact {N : ℕ}
+    (ops : MajoranaCliffordOperators N ℝ) (i j : Fin (2 * N)) :
+    IsCompact ((fun r : ℝ => braidOperator r ops i j) ''
+      braidNormalizationLocus (A := ℝ)) := by
+  exact real_braidNormalizationLocus_isCompact.image
+    (continuous_braidOperator ops i j)
+
+/-- The corresponding commutator values also form a compact real image on the
+normalized scalar domain. -/
+theorem real_braid_commutator_image_isCompact {N : ℕ}
+    (ops : MajoranaCliffordOperators N ℝ)
+    (i1 i2 i3 : Fin (2 * N)) :
+    IsCompact ((fun r : ℝ =>
+      braidOperator r ops i1 i2 * braidOperator r ops i2 i3 -
+        braidOperator r ops i2 i3 * braidOperator r ops i1 i2) ''
+      braidNormalizationLocus (A := ℝ)) := by
+  exact real_braidNormalizationLocus_isCompact.image
+    (continuous_braid_commutator ops i1 i2 i3)
+
+/-- **Non-Abelian Braiding Commutator Theorem**:
+
+For distinct Majorana modes `γ₁`, `γ₂`, `γ₃`, the elementary exchange operators
+`U₁₂` and `U₂₃` do not commute:
+`U₁₂ * U₂₃ - U₂₃ * U₁₂ = (inv_sqrt2 * inv_sqrt2 * 2) • (γ₁ * γ₃)`.
+
+When `inv_sqrt2 = 1 / √2`, the scalar factor is `1`, yielding
+`[U₁₂, U₂₃] = γ₁ * γ₃`.  Non-vanishing requires a separate hypothesis on
+the chosen representation. -/
+theorem braid_non_abelian_commutator {A : Type*} [Ring A] {N : ℕ}
+    (inv_sqrt2 : A) (h_comm : ∀ x : A, inv_sqrt2 * x = x * inv_sqrt2)
+    (ops : MajoranaCliffordOperators N A)
+    (i1 i2 i3 : Fin (2 * N))
+    (h23 : i2 ≠ i3) (h21 : i2 ≠ i1) (h31 : i3 ≠ i1) :
+    braidOperator inv_sqrt2 ops i1 i2 * braidOperator inv_sqrt2 ops i2 i3 -
+    braidOperator inv_sqrt2 ops i2 i3 * braidOperator inv_sqrt2 ops i1 i2 =
+    (inv_sqrt2 * inv_sqrt2 + inv_sqrt2 * inv_sqrt2) * (ops.γ i1 * ops.γ i3) := by
+  unfold braidOperator
+  have h31_anti : ops.γ i3 * ops.γ i1 = - (ops.γ i1 * ops.γ i3) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho i3 i1 h31)
+  have h21_anti : ops.γ i2 * ops.γ i1 = - (ops.γ i1 * ops.γ i2) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho i2 i1 h21)
+  have h23_anti : ops.γ i2 * ops.γ i3 = - (ops.γ i3 * ops.γ i2) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho i2 i3 h23)
+  have h22_sq : ops.γ i2 * ops.γ i2 = 1 := ops.h_sq i2
+
+  have h_prod1 : (1 + ops.γ i1 * ops.γ i2) * (1 + ops.γ i2 * ops.γ i3) =
+      1 + ops.γ i1 * ops.γ i2 + ops.γ i2 * ops.γ i3 + ops.γ i1 * ops.γ i3 := by
+    calc (1 + ops.γ i1 * ops.γ i2) * (1 + ops.γ i2 * ops.γ i3)
+      _ = 1 + ops.γ i2 * ops.γ i3 + ops.γ i1 * ops.γ i2 + ops.γ i1 * (ops.γ i2 * ops.γ i2) * ops.γ i3 := by noncomm_ring
+      _ = 1 + ops.γ i1 * ops.γ i2 + ops.γ i2 * ops.γ i3 + ops.γ i1 * ops.γ i3 := by rw [h22_sq]; noncomm_ring
+
+  have h_mid : ops.γ i2 * ops.γ i3 * (ops.γ i1 * ops.γ i2) = - (ops.γ i1 * ops.γ i3) := by
+    calc ops.γ i2 * ops.γ i3 * (ops.γ i1 * ops.γ i2)
+      _ = ops.γ i2 * (ops.γ i3 * ops.γ i1) * ops.γ i2 := by noncomm_ring
+      _ = ops.γ i2 * (- (ops.γ i1 * ops.γ i3)) * ops.γ i2 := by rw [h31_anti]
+      _ = - (ops.γ i2 * ops.γ i1) * ops.γ i3 * ops.γ i2 := by noncomm_ring
+      _ = - (- (ops.γ i1 * ops.γ i2)) * ops.γ i3 * ops.γ i2 := by rw [h21_anti]
+      _ = ops.γ i1 * (ops.γ i2 * ops.γ i3 * ops.γ i2) := by noncomm_ring
+      _ = ops.γ i1 * (- (ops.γ i3 * ops.γ i2) * ops.γ i2) := by rw [← h23_anti]
+      _ = ops.γ i1 * (- (ops.γ i3 * (ops.γ i2 * ops.γ i2))) := by noncomm_ring
+      _ = ops.γ i1 * (- (ops.γ i3 * 1)) := by rw [h22_sq]
+      _ = - (ops.γ i1 * ops.γ i3) := by noncomm_ring
+
+  have h_prod2 : (1 + ops.γ i2 * ops.γ i3) * (1 + ops.γ i1 * ops.γ i2) =
+      1 + ops.γ i1 * ops.γ i2 + ops.γ i2 * ops.γ i3 - ops.γ i1 * ops.γ i3 := by
+    calc (1 + ops.γ i2 * ops.γ i3) * (1 + ops.γ i1 * ops.γ i2)
+      _ = 1 + ops.γ i1 * ops.γ i2 + ops.γ i2 * ops.γ i3 + ops.γ i2 * ops.γ i3 * (ops.γ i1 * ops.γ i2) := by noncomm_ring
+      _ = 1 + ops.γ i1 * ops.γ i2 + ops.γ i2 * ops.γ i3 - ops.γ i1 * ops.γ i3 := by rw [h_mid]; noncomm_ring
+
+  have h_scalar : ∀ A_op B_op : A, inv_sqrt2 * A_op * (inv_sqrt2 * B_op) = (inv_sqrt2 * inv_sqrt2) * (A_op * B_op) := by
+    intro A_op B_op
+    calc inv_sqrt2 * A_op * (inv_sqrt2 * B_op)
+      _ = inv_sqrt2 * (A_op * inv_sqrt2) * B_op := by simp only [mul_assoc]
+      _ = inv_sqrt2 * (inv_sqrt2 * A_op) * B_op := by rw [← h_comm A_op]
+      _ = (inv_sqrt2 * inv_sqrt2) * (A_op * B_op) := by noncomm_ring
+
+  rw [h_scalar (1 + ops.γ i1 * ops.γ i2) (1 + ops.γ i2 * ops.γ i3)]
+  rw [h_scalar (1 + ops.γ i2 * ops.γ i3) (1 + ops.γ i1 * ops.γ i2)]
+  rw [h_prod1, h_prod2]
+  noncomm_ring
+
+/-- Non-vanishing of the braid commutator once a representation supplies a
+nonzero product of the two outer Majorana modes.
+
+The preceding formula is representation-independent.  This corollary keeps
+the required non-vanishing witness explicit instead of silently asserting it
+for every abstract `MajoranaCliffordOperators` datum. -/
+theorem braid_commutator_ne_zero_of_outer_product_ne_zero
+    {A : Type*} [Ring A] {N : ℕ}
+    (r : A) (h_comm : ∀ x : A, r * x = x * r)
+    (h_norm : r * r + r * r = 1)
+    (ops : MajoranaCliffordOperators N A)
+    (i1 i2 i3 : Fin (2 * N))
+    (h23 : i2 ≠ i3) (h21 : i2 ≠ i1) (h31 : i3 ≠ i1)
+    (h_outer : ops.γ i1 * ops.γ i3 ≠ 0) :
+    braidOperator r ops i1 i2 * braidOperator r ops i2 i3 -
+      braidOperator r ops i2 i3 * braidOperator r ops i1 i2 ≠ 0 := by
+  rw [braid_non_abelian_commutator r h_comm ops i1 i2 i3 h23 h21 h31]
+  simpa [h_norm] using h_outer
+
+/-- Real normalized braids have exactly the outer-Majorana commutator.
+
+Membership in `braidNormalizationLocus` supplies the scalar normalization;
+the only representation-specific input remains the explicit nonzero outer
+product witness. -/
+theorem real_braid_commutator_eq_outer_product
+    {N : ℕ} (r : ℝ) (hr : r ∈ braidNormalizationLocus (A := ℝ))
+    (ops : MajoranaCliffordOperators N ℝ)
+    (i1 i2 i3 : Fin (2 * N))
+    (h23 : i2 ≠ i3) (h21 : i2 ≠ i1) (h31 : i3 ≠ i1) :
+    braidOperator r ops i1 i2 * braidOperator r ops i2 i3 -
+      braidOperator r ops i2 i3 * braidOperator r ops i1 i2 =
+      ops.γ i1 * ops.γ i3 := by
+  change r * r + r * r = 1 at hr
+  rw [braid_non_abelian_commutator r (fun x => mul_comm r x) ops
+    i1 i2 i3 h23 h21 h31]
+  rw [hr]
+  simp
+
+/-- The real normalized commutator is nonzero whenever the chosen Majorana
+representation makes the outer product nonzero. -/
+theorem real_braid_commutator_ne_zero
+    {N : ℕ} (r : ℝ) (hr : r ∈ braidNormalizationLocus (A := ℝ))
+    (ops : MajoranaCliffordOperators N ℝ)
+    (i1 i2 i3 : Fin (2 * N))
+    (h23 : i2 ≠ i3) (h21 : i2 ≠ i1) (h31 : i3 ≠ i1)
+    (h_outer : ops.γ i1 * ops.γ i3 ≠ 0) :
+    braidOperator r ops i1 i2 * braidOperator r ops i2 i3 -
+      braidOperator r ops i2 i3 * braidOperator r ops i1 i2 ≠ 0 := by
+  rw [real_braid_commutator_eq_outer_product r hr ops i1 i2 i3 h23 h21 h31]
+  exact h_outer
+
+/-- **Majorana Braid Inverse Law**:
+
+For distinct Majorana indices `i ≠ j`, under the scalar normalization `r * r + r * r = 1`
+(where `r = 1 / √2`), the braid generator `U_ij` satisfies `U_ij * U_ji = 1` and `U_ji * U_ij = 1`. -/
+theorem braidOperator_inverse_law {A : Type*} [Ring A] {N : ℕ}
+    (r : A) (h_comm : ∀ x : A, r * x = x * r)
+    (h_norm : r * r + r * r = 1)
+    (ops : MajoranaCliffordOperators N A)
+    (i j : Fin (2 * N)) (hji : j ≠ i) (hij : i ≠ j) :
+    braidOperator r ops i j * braidOperator r ops j i = 1 ∧
+    braidOperator r ops j i * braidOperator r ops i j = 1 := by
+  have hji_anti : ops.γ j * ops.γ i = - (ops.γ i * ops.γ j) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho j i hji)
+  have hij_anti : ops.γ i * ops.γ j = - (ops.γ j * ops.γ i) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho i j hij)
+  have hii_sq : ops.γ i * ops.γ i = 1 := ops.h_sq i
+  have hjj_sq : ops.γ j * ops.γ j = 1 := ops.h_sq j
+
+  have h_scalar : ∀ X Y : A, r * X * (r * Y) = (r * r) * (X * Y) := by
+    intro X Y
+    calc r * X * (r * Y)
+      _ = r * (X * r) * Y := by noncomm_ring
+      _ = r * (r * X) * Y := by rw [← h_comm X]
+      _ = (r * r) * (X * Y) := by noncomm_ring
+
+  have h_prod1 : (1 + ops.γ i * ops.γ j) * (1 + ops.γ j * ops.γ i) = 1 + 1 := by
+    calc (1 + ops.γ i * ops.γ j) * (1 + ops.γ j * ops.γ i)
+      _ = 1 + ops.γ j * ops.γ i + ops.γ i * ops.γ j + ops.γ i * (ops.γ j * ops.γ j) * ops.γ i := by noncomm_ring
+      _ = 1 + ops.γ j * ops.γ i + ops.γ i * ops.γ j + ops.γ i * 1 * ops.γ i := by rw [hjj_sq]
+      _ = 1 + (- (ops.γ i * ops.γ j)) + ops.γ i * ops.γ j + (ops.γ i * ops.γ i) := by rw [hji_anti]; noncomm_ring
+      _ = 1 + (- (ops.γ i * ops.γ j)) + ops.γ i * ops.γ j + 1 := by rw [hii_sq]
+      _ = 1 + 1 := by abel
+
+  have h_prod2 : (1 + ops.γ j * ops.γ i) * (1 + ops.γ i * ops.γ j) = 1 + 1 := by
+    calc (1 + ops.γ j * ops.γ i) * (1 + ops.γ i * ops.γ j)
+      _ = 1 + ops.γ i * ops.γ j + ops.γ j * ops.γ i + ops.γ j * (ops.γ i * ops.γ i) * ops.γ j := by noncomm_ring
+      _ = 1 + ops.γ i * ops.γ j + ops.γ j * ops.γ i + ops.γ j * 1 * ops.γ j := by rw [hii_sq]
+      _ = 1 + (- (ops.γ j * ops.γ i)) + ops.γ j * ops.γ i + (ops.γ j * ops.γ j) := by rw [hij_anti]; noncomm_ring
+      _ = 1 + (- (ops.γ j * ops.γ i)) + ops.γ j * ops.γ i + 1 := by rw [hjj_sq]
+      _ = 1 + 1 := by abel
+
+  constructor
+  · unfold braidOperator
+    rw [h_scalar (1 + ops.γ i * ops.γ j) (1 + ops.γ j * ops.γ i)]
+    rw [h_prod1]
+    calc (r * r) * (1 + 1)
+      _ = r * r + r * r := by noncomm_ring
+      _ = 1 := h_norm
+  · unfold braidOperator
+    rw [h_scalar (1 + ops.γ j * ops.γ i) (1 + ops.γ i * ops.γ j)]
+    rw [h_prod2]
+    calc (r * r) * (1 + 1)
+      _ = r * r + r * r := by noncomm_ring
+      _ = 1 := h_norm
+
+/-- Conjugation by a normalized braid exchanges the two Majorana modes.
+
+This is the algebraic action law behind the braid operator: the inverse used
+here is the one proved in `braidOperator_inverse_law`, and no representation
+or analytic phase convention is hidden in the statement. -/
+theorem braidOperator_conjugates_left {A : Type*} [Ring A] {N : ℕ}
+    (r : A) (h_comm : ∀ x : A, r * x = x * r)
+    (h_norm : r * r + r * r = 1)
+    (ops : MajoranaCliffordOperators N A)
+    (i j : Fin (2 * N)) (hji : j ≠ i) :
+    braidOperator r ops i j * ops.γ i * braidOperator r ops j i = -ops.γ j := by
+  have hji_anti : ops.γ j * ops.γ i = - (ops.γ i * ops.γ j) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho j i hji)
+  have hii_sq : ops.γ i * ops.γ i = 1 := ops.h_sq i
+  have hjj_sq : ops.γ j * ops.γ j = 1 := ops.h_sq j
+  have h_scalar : ∀ X Y : A, r * X * (r * Y) = (r * r) * (X * Y) := by
+    intro X Y
+    calc r * X * (r * Y)
+      _ = r * (X * r) * Y := by noncomm_ring
+      _ = r * (r * X) * Y := by rw [← h_comm X]
+      _ = (r * r) * (X * Y) := by noncomm_ring
+  have h_inner :
+      ((1 + ops.γ i * ops.γ j) * ops.γ i) *
+          (1 + ops.γ j * ops.γ i) = - (ops.γ j + ops.γ j) := by
+    have h_aba : ops.γ i * ops.γ j * ops.γ i = -ops.γ j := by
+      calc
+        ops.γ i * ops.γ j * ops.γ i =
+            ops.γ i * (ops.γ j * ops.γ i) := by noncomm_ring
+        _ = ops.γ i * (-(ops.γ i * ops.γ j)) := by rw [hji_anti]
+        _ = -(ops.γ i * (ops.γ i * ops.γ j)) := by noncomm_ring
+        _ = -ops.γ j := by
+          rw [show ops.γ i * (ops.γ i * ops.γ j) =
+            (ops.γ i * ops.γ i) * ops.γ j by noncomm_ring, hii_sq]
+          simp
+    have h_bba : ops.γ j * ops.γ j * ops.γ i = ops.γ i := by
+      rw [hjj_sq]
+      noncomm_ring
+    calc
+      ((1 + ops.γ i * ops.γ j) * ops.γ i) *
+          (1 + ops.γ j * ops.γ i)
+          = (ops.γ i + ops.γ i * ops.γ j * ops.γ i) *
+              (1 + ops.γ j * ops.γ i) := by noncomm_ring
+      _ = (ops.γ i - ops.γ j) * (1 + ops.γ j * ops.γ i) := by
+            rw [h_aba]
+            simp only [sub_eq_add_neg]
+      _ = - (ops.γ j + ops.γ j) := by
+            calc
+              (ops.γ i - ops.γ j) * (1 + ops.γ j * ops.γ i) =
+                  ops.γ i - ops.γ j + ops.γ i * ops.γ j * ops.γ i -
+                    ops.γ j * ops.γ j * ops.γ i := by noncomm_ring
+              _ = - (ops.γ j + ops.γ j) := by rw [h_aba, h_bba]; noncomm_ring
+  calc
+    r * (1 + ops.γ i * ops.γ j) * ops.γ i *
+        (r * (1 + ops.γ j * ops.γ i)) =
+        r * ((1 + ops.γ i * ops.γ j) * ops.γ i) *
+          (r * (1 + ops.γ j * ops.γ i)) := by noncomm_ring
+    _ = (r * r) * (((1 + ops.γ i * ops.γ j) * ops.γ i) *
+        (1 + ops.γ j * ops.γ i)) :=
+      h_scalar ((1 + ops.γ i * ops.γ j) * ops.γ i)
+        (1 + ops.γ j * ops.γ i)
+    _ = (r * r) * -(ops.γ j + ops.γ j) := by rw [h_inner]
+    _ = -((r * r + r * r) * ops.γ j) := by noncomm_ring
+    _ = -ops.γ j := by rw [h_norm]; noncomm_ring
+
+/-- The companion exchange law: the second Majorana is transported to the
+first one under the same normalized braid conjugation. -/
+theorem braidOperator_conjugates_right {A : Type*} [Ring A] {N : ℕ}
+    (r : A) (h_comm : ∀ x : A, r * x = x * r)
+    (h_norm : r * r + r * r = 1)
+    (ops : MajoranaCliffordOperators N A)
+    (i j : Fin (2 * N)) (hji : j ≠ i) :
+    braidOperator r ops i j * ops.γ j * braidOperator r ops j i = ops.γ i := by
+  have hji_anti : ops.γ j * ops.γ i = - (ops.γ i * ops.γ j) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho j i hji)
+  have hij : i ≠ j := Ne.symm hji
+  have hij_anti : ops.γ i * ops.γ j = - (ops.γ j * ops.γ i) :=
+    eq_neg_of_add_eq_zero_left (ops.h_ortho i j hij)
+  have hii_sq : ops.γ i * ops.γ i = 1 := ops.h_sq i
+  have hjj_sq : ops.γ j * ops.γ j = 1 := ops.h_sq j
+  have h_scalar : ∀ X Y : A, r * X * (r * Y) = (r * r) * (X * Y) := by
+    intro X Y
+    calc r * X * (r * Y)
+      _ = r * (X * r) * Y := by noncomm_ring
+      _ = r * (r * X) * Y := by rw [← h_comm X]
+      _ = (r * r) * (X * Y) := by noncomm_ring
+  have h_bab : ops.γ j * ops.γ i * ops.γ j = -ops.γ i := by
+    calc
+      ops.γ j * ops.γ i * ops.γ j =
+          ops.γ j * (ops.γ i * ops.γ j) := by noncomm_ring
+      _ = ops.γ j * (-(ops.γ j * ops.γ i)) := by rw [hij_anti]
+      _ = -(ops.γ j * (ops.γ j * ops.γ i)) := by noncomm_ring
+      _ = -ops.γ i := by
+        rw [show ops.γ j * (ops.γ j * ops.γ i) =
+          (ops.γ j * ops.γ j) * ops.γ i by noncomm_ring, hjj_sq]
+        simp
+  have h_inner :
+      ((1 + ops.γ i * ops.γ j) * ops.γ j) *
+          (1 + ops.γ j * ops.γ i) = ops.γ i + ops.γ i := by
+    have h_abb : ops.γ i * ops.γ j * ops.γ j = ops.γ i := by
+      rw [show ops.γ i * ops.γ j * ops.γ j =
+        ops.γ i * (ops.γ j * ops.γ j) by noncomm_ring, hjj_sq]
+      simp
+    have h_aba : ops.γ i * ops.γ j * ops.γ i = -ops.γ j := by
+      calc
+        ops.γ i * ops.γ j * ops.γ i =
+            ops.γ i * (ops.γ j * ops.γ i) := by noncomm_ring
+        _ = ops.γ i * (-(ops.γ i * ops.γ j)) := by rw [hji_anti]
+        _ = -(ops.γ i * (ops.γ i * ops.γ j)) := by noncomm_ring
+        _ = -ops.γ j := by
+          rw [show ops.γ i * (ops.γ i * ops.γ j) =
+            (ops.γ i * ops.γ i) * ops.γ j by noncomm_ring, hii_sq]
+          simp
+    have h_bba : ops.γ j * ops.γ j * ops.γ i = ops.γ i := by
+      rw [hjj_sq]
+      noncomm_ring
+    calc
+      ((1 + ops.γ i * ops.γ j) * ops.γ j) *
+          (1 + ops.γ j * ops.γ i) =
+          (ops.γ j + ops.γ i * ops.γ j * ops.γ j) *
+            (1 + ops.γ j * ops.γ i) := by noncomm_ring
+      _ = (ops.γ j + ops.γ i) * (1 + ops.γ j * ops.γ i) := by
+            rw [h_abb]
+      _ = ops.γ i + ops.γ i := by
+            calc
+              (ops.γ j + ops.γ i) * (1 + ops.γ j * ops.γ i) =
+                  ops.γ j + ops.γ i + ops.γ j * ops.γ j * ops.γ i +
+                    ops.γ i * ops.γ j * ops.γ i := by noncomm_ring
+              _ = ops.γ i + ops.γ i := by rw [h_bba, h_aba]; abel
+  calc
+    r * (1 + ops.γ i * ops.γ j) * ops.γ j *
+        (r * (1 + ops.γ j * ops.γ i)) =
+        r * ((1 + ops.γ i * ops.γ j) * ops.γ j) *
+          (r * (1 + ops.γ j * ops.γ i)) := by noncomm_ring
+    _ = (r * r) * (((1 + ops.γ i * ops.γ j) * ops.γ j) *
+        (1 + ops.γ j * ops.γ i)) :=
+      h_scalar ((1 + ops.γ i * ops.γ j) * ops.γ j)
+        (1 + ops.γ j * ops.γ i)
+    _ = (r * r) * (ops.γ i + ops.γ i) := by rw [h_inner]
+    _ = (r * r + r * r) * ops.γ i := by noncomm_ring
+    _ = ops.γ i := by rw [h_norm]; simp
+
+
 end InfoGeometry.Quantum.KitaevChain

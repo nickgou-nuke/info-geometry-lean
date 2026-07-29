@@ -467,7 +467,8 @@ noncomputable def scalarCocycleDefectiveLogGenerator
     (u : ℝ → AlgebraEnd H)
     (hCocycle : IsConnesCocycle σ u)
     (B : ScalarCocycleBridge (H := H) σ) (t : ℝ) :
-    (scalarCocycleDefectiveLogGenerator (H := H) σ u hCocycle B).logGen
+    LogGenerator.apply
+        (scalarCocycleDefectiveLogGenerator (H := H) σ u hCocycle B)
         (Multiplicative.ofAdd t) =
       cocycleLogPotential (H := H) σ u B t := rfl
 

@@ -110,6 +110,12 @@ theorem d23HurwitzCliffordFilterBank_sum_normSq_eq_one :
     d23HurwitzCliffordFilterBank
     d23HurwitzCliffordFilterBank_paraunitary
 
+/-- The concrete energy-preservation readout owned by the normalized bank. -/
+@[rep_depth operator]
+theorem d23HurwitzCliffordFilterBank_energyPreservation :
+    d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
+  d23HurwitzCliffordFilterBank_sum_normSq_eq_one
+
 /--
 Combined theorem-safe owner target for the D23 Hurwitz--Clifford layer.
 

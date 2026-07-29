@@ -242,7 +242,8 @@ structure ReducedStructureSpinBoundary where
   q_val : q = 2 ∨ q = 4 ∨ q = 8
   reducedStructureGroup : Type*
   spinGroup : Type*
-  expectedIsomorphism : Prop
+  /-- The boundary carries an actual equivalence witness between its endpoints. -/
+  expectedIsomorphism : Nonempty (reducedStructureGroup ≃ spinGroup)
 
 /--
 Boundary object for a future proof of the Section 5.1 Klein spinor orbit
@@ -252,9 +253,53 @@ proofs before claiming classification.
 structure KleinSpinorOrbitStratification (A : Type*) [NonAssocSemiring A] where
   epsilon : A
   epsilon_square_two_smul : epsilon * epsilon = (2 : ℕ) • epsilon
-  generic_representative_complete : Prop
-  null_representative_complete : Prop
-  generic_stabilizer_description : Prop
-  null_stabilizer_description : Prop
+  /-- Orbit of the generic representative under the raw matrix action. -/
+  genericOrbit : Set (Spinor2 A)
+  /-- Orbit of the selected null representative under the raw matrix action. -/
+  nullOrbit : Set (Spinor2 A)
+  /-- Stabilizer set of the generic representative. -/
+  genericStabilizer : Set (SplitMatrix2 A)
+  /-- Stabilizer set of the selected null representative. -/
+  nullStabilizer : Set (SplitMatrix2 A)
+  /-- The supplied generic orbit is exactly the raw-action orbit. -/
+  generic_representative_complete :
+    genericOrbit =
+      {ψ | ∃ M : SplitMatrix2 A,
+        SplitMatrix2.spinorAction M (Spinor2.genericRepresentative (A := A)) = ψ}
+  /-- The supplied null orbit is exactly the raw-action orbit. -/
+  null_representative_complete :
+    nullOrbit =
+      {ψ | ∃ M : SplitMatrix2 A,
+        SplitMatrix2.spinorAction M
+          (Spinor2.nullRepresentative (A := A) epsilon) = ψ}
+  /-- The supplied generic stabilizer is the stabilizer predicate. -/
+  generic_stabilizer_description :
+    genericStabilizer =
+      {M | SplitMatrix2.Stabilizes M
+        (Spinor2.genericRepresentative (A := A))}
+  /-- The supplied null stabilizer is the stabilizer predicate. -/
+  null_stabilizer_description :
+    nullStabilizer =
+      {M | SplitMatrix2.Stabilizes M
+        (Spinor2.nullRepresentative (A := A) epsilon)}
+
+namespace KleinSpinorOrbitStratification
+
+variable {A : Type*} [NonAssocSemiring A]
+(S : KleinSpinorOrbitStratification A)
+
+/-- The generic representative belongs to its supplied raw-action orbit. -/
+theorem genericRepresentative_mem_orbit :
+    Spinor2.genericRepresentative (A := A) ∈ S.genericOrbit := by
+  rw [S.generic_representative_complete]
+  exact ⟨SplitMatrix2.identity, SplitMatrix2.identity_stabilizes_generic⟩
+
+/-- The selected null representative belongs to its supplied raw-action orbit. -/
+theorem nullRepresentative_mem_orbit :
+    Spinor2.nullRepresentative (A := A) S.epsilon ∈ S.nullOrbit := by
+  rw [S.null_representative_complete]
+  exact ⟨SplitMatrix2.identity, SplitMatrix2.identity_stabilizes_null S.epsilon⟩
+
+end KleinSpinorOrbitStratification
 
 end InfoGeometry.Algebra.SplitJordanSpinor

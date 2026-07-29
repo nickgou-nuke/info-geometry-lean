@@ -1,95 +1,137 @@
-/- Higher Homotopy Groups and Real Projective Spaces - Wave 6 of the Spectral port.
-Ported from cmu-phil/Spectral/higher_groups.hlean and realprojective.hlean (Lean 2 HoTT) to Lean 4.28.0 / mathlib4. -/
-
-import InfoGeometry.Spectral.Spectrum.Basic
 import InfoGeometry.Spectral.Algebra.ExactCouple
 import InfoGeometry.Spectral.Algebra.SpectralSequence
 import InfoGeometry.Spectral.Cohomology.Basic
-import InfoGeometry.Spectral.Cohomology.Serre
-import InfoGeometry.Spectral.Cohomology.ProjectiveSpace
+import Mathlib.Topology.Homotopy.HomotopyGroup
 
-open InfoGeometry.Spectral.Spectrum.Basic
+/-!
+# Native homotopy groups and algebraic spectral pages
+
+The former port assigned `PUnit` to stable homotopy groups and used
+eventual-`True` fields as convergence claims.  Those declarations did not
+formalize Adams, Adams--Novikov, EHP, or Whitehead theory.
+
+This module now uses Mathlib's genuine homotopy groups, defined as homotopy
+classes of iterated loops, for the topological owner layer.  Adams and
+Adams--Novikov pages remain consequences of explicit exact-couple inputs.
+Constructing the sphere exact couples, filtrations, and abutments is separate
+from defining the homotopy groups they are intended to compute.
+-/
+
+namespace InfoGeometry.Spectral.HigherGroups
+
 open InfoGeometry.Spectral.Algebra
-open InfoGeometry.Spectral.Cohomology
+open InfoGeometry.Spectral.Cohomology.Basic
+open scoped Topology
 
-/- Higher homotopy groups of spheres -/
+universe u
 
-/- The homotopy groups of spheres -/
-def homotopy_groups_of_spheres (n k : ℕ) : Type* := PUnit
+/-! ## Native topological homotopy groups -/
 
-/- The stable homotopy groups of spheres -/
-def stable_homotopy_groups_of_spheres (n : ℤ) : Type* := PUnit
+/--
+The genuine `n`th homotopy group of a pointed topological space.
 
-/- The J-homomorphism -/
-def J_homomorphism (n k : ℕ) : Type* := PUnit
+This is Mathlib's quotient of `n`-fold generalized loops by pointed homotopy,
+not a placeholder carrier.
+-/
+abbrev NativeHomotopyGroup
+    (n : ℕ) (X : Type u) [TopologicalSpace X] (x : X) :=
+  HomotopyGroup.Pi n X x
 
-/- The image of J -/
-def image_of_J (n : ℕ) : Type* := PUnit
+/-- The native fundamental-group comparison for the first homotopy group. -/
+def nativePiOneEquivFundamentalGroup
+    (X : Type u) [TopologicalSpace X] (x : X) :
+    NativeHomotopyGroup 1 X x ≃ FundamentalGroup X x :=
+  HomotopyGroup.pi1EquivFundamentalGroup
 
-/- Real projective spaces -/
+/--
+For at least two loop coordinates, the Eckmann--Hilton argument gives the
+canonical commutativity law on the native homotopy group.
+-/
+theorem nativeHomotopyGroup_mul_comm
+    (n : ℕ) (X : Type u) [TopologicalSpace X] (x : X)
+    [Nontrivial (Fin n)]
+    (a b : NativeHomotopyGroup n X x) :
+    a * b = b * a :=
+  mul_comm a b
 
-/- The stable homotopy groups of ℝP^∞ -/
-def stable_homotopy_groups_RP_infinity (n : ℤ) : Type* := PUnit
+/-! ## Exact-couple spectral pages -/
 
-/- The J-homomorphism on ℝP^∞ -/
-def J_homomorphism_RP_infinity (n : ℤ) : Type* := PUnit
+variable {R : Type u} [Ring R]
+variable {D E : Z2 → Type u}
+variable [∀ pq, AddCommGroup (D pq)] [∀ pq, AddCommGroup (E pq)]
+variable [∀ pq, Module R (D pq)] [∀ pq, Module R (E pq)]
 
-/- The Adams spectral sequence -/
+/-- An Adams page at the currently formalized exact-couple level. -/
+abbrev AdamsPage
+    (R : Type u) [Ring R]
+    (E : Z2 → Type u)
+    [∀ pq, AddCommGroup (E pq)] [∀ pq, Module R (E pq)] :=
+  SpectralSequencePage R E shiftK
 
-/- The Adams spectral sequence for the sphere -/
-structure AdamsSpectralSequence where
-  (E₂ : ℤ → ℤ → Type*)
-  (E₂_addCommGroup : ∀ (p q : ℤ), AddCommGroup (E₂ p q))
-  (d : ∀ (r : ℕ) (p q : ℤ), (E₂ p q) →+ (E₂ (p + r) (q - r + 1)))
-  (convergence : ∀ (n : ℤ), ∃ (N : ℕ), ∀ (r : ℕ), r ≥ N → True)
+/-- Construct the square-zero Adams page supplied by explicit exact-couple data. -/
+def adamsPageOfExactCouple (C : ExactCouple R D E) : AdamsPage R E :=
+  C.toPage
 
-/- The Adams spectral sequence for the sphere -/
-def adams_spectral_sequence_sphere : AdamsSpectralSequence := {
-  E₂ := fun _ _ => PUnit,
-  E₂_addCommGroup := fun _ _ => inferInstance,
-  d := fun _ _ _ => 0,
-  convergence := fun _ => ⟨0, fun _ _ => True.intro⟩
-}
+@[simp]
+theorem adamsPageOfExactCouple_d
+    (C : ExactCouple R D E) (pq : Z2) :
+    (adamsPageOfExactCouple C).d pq = C.differential pq :=
+  rfl
 
-/- The Adams-Novikov spectral sequence -/
-structure AdamsNovikovSpectralSequence where
-  (E₂ : ℤ → ℤ → Type*)
-  (E₂_addCommGroup : ∀ (p q : ℤ), AddCommGroup (E₂ p q))
-  (d : ∀ (r : ℕ) (p q : ℤ), (E₂ p q) →+ (E₂ (p + r) (q - r + 1)))
-  (convergence : ∀ (n : ℤ), ∃ (N : ℕ), ∀ (r : ℕ), r ≥ N → True)
+/-- The exactness law at `E` proves the Adams-page differential squares to zero. -/
+theorem adamsPageOfExactCouple_differential_sq_zero
+    (C : ExactCouple R D E) (pq : Z2) :
+    ((adamsPageOfExactCouple C).d (shiftK pq)).comp
+        ((adamsPageOfExactCouple C).d pq) = 0 :=
+  C.toPage_differential_sq_zero pq
 
-/- The Adams-Novikov spectral sequence for the sphere -/
-def adams_novikov_spectral_sequence_sphere : AdamsNovikovSpectralSequence := {
-  E₂ := fun _ _ => PUnit,
-  E₂_addCommGroup := fun _ _ => inferInstance,
-  d := fun _ _ _ => 0,
-  convergence := fun _ => ⟨0, fun _ _ => True.intro⟩
-}
+/--
+At this algebraic level an Adams--Novikov page has the same square-zero page
+type.  Its distinction from an Adams page lies in the separately constructed
+exact couple and coefficient theory, not in an additional proof packet.
+-/
+abbrev AdamsNovikovPage
+    (R : Type u) [Ring R]
+    (E : Z2 → Type u)
+    [∀ pq, AddCommGroup (E pq)] [∀ pq, Module R (E pq)] :=
+  SpectralSequencePage R E shiftK
 
-/- The EHP sequence -/
+/-- Construct an Adams--Novikov page from its explicit exact couple. -/
+def adamsNovikovPageOfExactCouple
+    (C : ExactCouple R D E) : AdamsNovikovPage R E :=
+  C.toPage
 
-/- The EHP sequence for spheres -/
-structure EHPSequence where
-  (E : ℕ → Type*)
-  (H : ℕ → Type*)
-  (P : ℕ → Type*)
+/-- The induced Adams--Novikov page has a square-zero differential. -/
+theorem adamsNovikovPageOfExactCouple_differential_sq_zero
+    (C : ExactCouple R D E) (pq : Z2) :
+    ((adamsNovikovPageOfExactCouple C).d (shiftK pq)).comp
+        ((adamsNovikovPageOfExactCouple C).d pq) = 0 :=
+  C.toPage_differential_sq_zero pq
 
-/- The EHP sequence for spheres -/
-def EHP_sequence_spheres : EHPSequence := {
-  E := fun _ => PUnit,
-  H := fun _ => PUnit,
-  P := fun _ => PUnit
-}
+/--
+A three-term EHP fragment is an exact sequence of additive groups.  This is the
+native algebraic interface required before a sphere-level EHP construction can
+be claimed.
+-/
+abbrev EHPFragment
+    (A B C : Type*)
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup C] :=
+  ExactSequence A B C
 
-/- The Whitehead tower -/
+/-- In every EHP fragment, the consecutive maps compose to zero. -/
+theorem EHPFragment.comp_eq_zero
+    {A B C : Type*}
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup C]
+    (S : EHPFragment A B C) (a : A) :
+    S.g (S.f a) = 0 :=
+  S.f_exact a
 
-/- The Whitehead tower of a space -/
-structure WhiteheadTower (X : Type*) where
-  (X_n : ℕ → Type*)
-  (maps : ∀ (n : ℕ), X_n (n + 1) → X_n n)
+/-- Exactness identifies every element in the kernel of `g` with an image under `f`. -/
+theorem EHPFragment.mem_range_of_mem_kernel
+    {A B C : Type*}
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup C]
+    (S : EHPFragment A B C) {b : B} (hb : S.g b = 0) :
+    ∃ a : A, S.f a = b :=
+  S.exactness b hb
 
-/- The Whitehead tower of the sphere -/
-def Whitehead_tower_sphere : WhiteheadTower Unit := {
-  X_n := fun _ => Unit,
-  maps := fun _ _ => ()
-}
+end InfoGeometry.Spectral.HigherGroups

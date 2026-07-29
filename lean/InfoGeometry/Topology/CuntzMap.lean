@@ -71,9 +71,8 @@ Witness that a supplied discrete modular step is pointwise the Cuntz map.
 
 The equality is data, not inferred from the Cuntz relations alone.
 -/
-structure DiscreteModularFlowWitness (C : CuntzO2Carrier Op) where
-  sigma : Op → Op
-  sigma_eq_map : ∀ X, sigma X = map Op C X
+abbrev DiscreteModularFlowWitness (C : CuntzO2Carrier Op) :=
+  { sigma : Op → Op // ∀ X, sigma X = map Op C X }
 
 namespace DiscreteModularFlowWitness
 
@@ -82,8 +81,8 @@ variable (W : DiscreteModularFlowWitness Op C)
 
 /-- The witnessed discrete modular step evaluates as the Cuntz map. -/
 theorem apply_eq_map (X : Op) :
-    W.sigma X = map Op C X :=
-  W.sigma_eq_map X
+    W.1 X = map Op C X :=
+  W.2 X
 
 /-- A half-branch real readout is fixed by a witnessed Cuntz modular step. -/
 theorem real_fixed_point_of_half_branch_scaling
@@ -91,7 +90,7 @@ theorem real_fixed_point_of_half_branch_scaling
     (X : Op)
     (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
     (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
-    φ (W.sigma X) = φ X := by
+    φ (W.1 X) = φ X := by
   rw [DiscreteModularFlowWitness.apply_eq_map (Op := Op) (C := C) W X]
   exact map_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
 

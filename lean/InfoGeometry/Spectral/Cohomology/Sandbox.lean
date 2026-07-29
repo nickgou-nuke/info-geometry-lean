@@ -56,7 +56,7 @@ lemma differential_shift_is_shiftK (C : ExactCouple R D E) (pq : Z2) :
 
 lemma exactness_ker_k_eq_range (C : ExactCouple R D E) (pq : Z2) :
     LinearMap.ker (C.k pq) = LinearMap.range (C.j pq) := by
-  exact C.exact_k pq
+  exact C.exact_jk pq
 
 /- LEMMA 11: The differential on the r-th page has shift (r, -r+1) -/
 

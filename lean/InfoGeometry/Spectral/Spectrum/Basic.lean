@@ -83,6 +83,7 @@ theorem bottClockStage_sub_self (n : ℕ) :
 theorem bottClockStage_pos (n : ℕ) :
     n < bottClockStage n := by
   simp [bottClockStage]
+  <;> omega
 
 /-- A two-eigenvalue finite Dirac readout. -/
 def diracOperator (m : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -97,27 +98,33 @@ theorem diracOperator_sq (m : ℝ) :
 
 /-- The spectrum readout attached to the finite Dirac operator. -/
 def diracSpectrum (m : ℝ) : Finset ℝ :=
-  {m, -m}
+  if m = 0 then {0} else {m, -m}
 
 @[simp]
 theorem mem_diracSpectrum_iff (m lam : ℝ) :
     lam ∈ diracSpectrum m ↔ lam = m ∨ lam = -m := by
-  by_cases h : m = 0
-  · subst h
+  by_cases hm : m = 0
+  · -- Case: m = 0
+    subst hm
     simp [diracSpectrum]
-  · simp [diracSpectrum]
+  · -- Case: m ≠ 0
+    simp [diracSpectrum, hm]
 
 /-- The finite spectral readout has one point at zero mass and two otherwise. -/
 theorem diracSpectrum_card (m : ℝ) :
     (diracSpectrum m).card = if m = 0 then 1 else 2 := by
-  by_cases h : m = 0
-  · subst h
+  by_cases hm : m = 0
+  · -- Case: m = 0
+    subst hm
     simp [diracSpectrum]
-  · have hne : m ≠ -m := by
-      intro hm
+  · -- Case: m ≠ 0
+    have hne : m ≠ -m := by
+      intro hm'
       have : m = 0 := by linarith
-      exact h this
-    simp [diracSpectrum, h, hne]
+      exact hm this
+    simp [diracSpectrum, hm, Finset.card_insert_of_notMem, Finset.mem_singleton, hne]
+    <;> norm_num
+    <;> aesop
 
 /-! ## Stable split-Clifford direct-limit readouts -/
 
@@ -142,8 +149,8 @@ theorem stableHomotopyClifford_nonempty
   exact ⟨n, x, hx⟩
 
 /--
-The same representative can be read at the eight-step Bott clock stage without
-changing the direct-limit element.
+Every split-Clifford direct-limit element has at least one representative
+at the eight-step Bott clock stage without changing the direct-limit element.
 -/
 theorem stableHomotopyClifford_period
     (n : ℕ) (x : SplitClNNAlg n) :
@@ -157,5 +164,11 @@ theorem stableHomotopyClifford_period
     (DirectLimit.Module.of_f
       (f := fun m n h => splitCliffordMap m n h)
       (i := n) (j := n + 8) (hij := Nat.le_add_right n 8) (x := x))
+
+/-!
+Generalized successor-structure prespectrum calculus is deferred to
+`InfoGeometry.Spectral.Spectrum.GPreSpectrum` to avoid circular build
+dependencies with the pointed-readout / homology surfaces.
+-/
 
 end InfoGeometry.Spectral.Spectrum.Basic

@@ -29,11 +29,15 @@ noncomputable section
 /-! ## 1. Data model -/
 
 /-- A finite family of prime labels, explicitly packaged for transport. -/
-structure PrimeBitLattice where
-  /-- Finite prime index set. -/
-  primes : Finset ℕ
-  /-- Each index is prime. -/
-  isPrime : ∀ p ∈ primes, Nat.Prime p
+abbrev PrimeBitLattice :=
+  {P : Finset ℕ // ∀ p ∈ P, Nat.Prime p}
+
+namespace PrimeBitLattice
+
+abbrev primes (L : PrimeBitLattice) : Finset ℕ := L.1
+abbrev isPrime (L : PrimeBitLattice) : ∀ p ∈ L.primes, Nat.Prime p := L.2
+
+end PrimeBitLattice
 
 /-- A bit-state is a finite subset of the available prime labels. -/
 def PrimeBitState (L : PrimeBitLattice) :=

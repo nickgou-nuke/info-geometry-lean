@@ -32,12 +32,11 @@ structure LanglandsLaneGeometryPacket
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     (Z : BilingualUpperHalfPlane D) where
-    /-- Geometry datum on which the Möbius data is based. -/
-    upperHalfPlane : BilingualUpperHalfPlane D
-    /-- Link to the distinguished base point supplied to the constructor. -/
-    upperHalfPlane_is_Z : upperHalfPlane = Z
-    /-- Chosen Möbius/self-map datum (acts as geometric witness). -/
-    moebius : BilingualUpperHalfPlane.MoebiusActionDatum upperHalfPlane
+    /--
+    Chosen Möbius/self-map datum on the indexed upper-half-plane object `Z`.
+    The dependency is enforced by the type rather than by a stored equality.
+    -/
+    moebius : BilingualUpperHalfPlane.MoebiusActionDatum Z
     /--
     Completed `L`-function data obtained from the geometric side.
     This is the common interface with the arithmetic packet.
@@ -58,6 +57,8 @@ structure LanglandsLaneFullPacket
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     where
@@ -87,6 +88,8 @@ def LanglandsLaneFullTarget
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (Z : BilingualUpperHalfPlane D)
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (W : SiegelEisensteinWitness Bulk Boundary)
@@ -131,6 +134,8 @@ theorem constructFullLanglandsLanePacket
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (Full : LanglandsLaneFullPacket

@@ -35,8 +35,8 @@ def TKKComponent (_g : TKKGrading) : Type := M2C
 /-! ## 2. Cartan Decomposition Projectors -/
 
 /-- The Cartan involution $J$ on the TKK algebra. -/
-structure CartanInvolution (J : M2C) : Prop where
-  involutive : J * J = (1 : M2C)
+abbrev CartanInvolution (J : M2C) : Prop :=
+  J * J = (1 : M2C)
 
 /-- The symmetric (right-handed/causal) Cartan projector $P_+ = (I + J)/2$. -/
 def P_plus (J : M2C) : M2C := (1/2 : ℂ) • ((1 : M2C) + J)

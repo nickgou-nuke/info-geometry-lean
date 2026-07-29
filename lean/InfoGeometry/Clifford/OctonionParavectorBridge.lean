@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 /-!
 # Octonion paravectors and projected Clifford products

@@ -35,21 +35,22 @@ local instance : CompleteSpace (AlgebraEnd H) := inferInstance
 /-! ## Concrete scalar RN logarithm on real units -/
 
 /-- The constructive scalar RN datum on real units: volume is the identity. -/
-noncomputable def unitsRNBridge : HasScalarRNBridge ℝˣ where
-  vol := MonoidHom.id ℝˣ
+noncomputable def unitsRNBridge : HasScalarRNBridge ℝˣ := MonoidHom.id ℝˣ
 
 @[simp] theorem unitsRNBridge_rn_apply (u : ℝˣ) :
-    unitsRNBridge.rn u = Real.log |(u : ℝ)| :=
+    HasScalarRNBridge.rn unitsRNBridge u = Real.log |(u : ℝ)| :=
   rfl
 
 /-- The exact logarithmic RN chain rule on real units. -/
 theorem unitsRNBridge_chain_rule (u v : ℝˣ) :
-    unitsRNBridge.rn (u * v) = unitsRNBridge.rn u + unitsRNBridge.rn v :=
-  unitsRNBridge.rn_chain_rule u v
+    HasScalarRNBridge.rn unitsRNBridge (u * v) =
+      HasScalarRNBridge.rn unitsRNBridge u + HasScalarRNBridge.rn unitsRNBridge v :=
+  HasScalarRNBridge.rn_chain_rule unitsRNBridge u v
 
 /-- The logarithmic two-coboundary of the concrete RN character. -/
 noncomputable def unitsRNTwoCoboundary (u v : ℝˣ) : ℝ :=
-  unitsRNBridge.rn (u * v) - unitsRNBridge.rn u - unitsRNBridge.rn v
+  HasScalarRNBridge.rn unitsRNBridge (u * v) -
+    HasScalarRNBridge.rn unitsRNBridge u - HasScalarRNBridge.rn unitsRNBridge v
 
 /-- Exact RN logarithms have zero additive two-coboundary. -/
 @[simp] theorem unitsRNTwoCoboundary_eq_zero (u v : ℝˣ) :

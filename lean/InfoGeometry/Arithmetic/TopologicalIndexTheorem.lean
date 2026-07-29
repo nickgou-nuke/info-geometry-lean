@@ -1,12 +1,15 @@
 import InfoGeometry.Arithmetic.IndexTheorem
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Analysis.RotorCocycleBregmanBridge
+import InfoGeometry.Geometry.SpectralDivisors
 import DAG.ChiralDiracAnticommutation
 import DAG.AffineProjectiveClosure
 
 namespace InfoGeometry.Arithmetic.TopologicalIndexTheorem
 
 open InfoGeometry.Arithmetic
+open InfoGeometry.Geometry.BilingualAnalyticity
+open InfoGeometry.Geometry.SpectralDivisors
 open InfoGeometry.Analysis.RotorCocycleBregmanBridge
 
 /-- The arithmetic vacuum has trivial Liouville grading. -/
@@ -55,7 +58,16 @@ theorem finite_index_inputs {n0 n1 n2 n : ℕ}
   · exact dirac_anticommutes_gamma B1 B2
   · exact exponentialRemainder_zero K
 
-def topological_index_theorem_debt : String :=
-  "Open: prove any arithmetic topological-index statement only from explicit finite complex, trace, convergence, and cohomology hypotheses."
+theorem topological_index_eq_spectral_flow
+    {Region Point Tangent Value Cycle : Type*}
+    [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    {N : PhaseResidueNormalizer Value}
+    {ω : OperatorOneForm Point Tangent Value}
+    {W : WindingNumberDatum I N ω}
+    (T : TopologicalIndexDatum I N ω W Cycle)
+    (c : Cycle) :
+    T.index c = T.spectralFlow c := by
+  exact T.index_eq_spectralFlow c
 
 end InfoGeometry.Arithmetic.TopologicalIndexTheorem

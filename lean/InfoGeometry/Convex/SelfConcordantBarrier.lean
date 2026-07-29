@@ -63,7 +63,32 @@ structure NoncommutativeSelfConcordantBarrier (n : ℕ) (ν : ℝ) where
   bregmanDiv : MatrixEnd n → MatrixEnd n → ℝ
   localRadiusSq : MatrixEnd n → MatrixEnd n → ℝ
   localRadiusSq_nonneg : ∀ x h, 0 ≤ localRadiusSq x h
-  selfConcordantEstimate : Prop
+  selfConcordantEstimate :
+    ∀ x h,
+      omegaLow (Real.sqrt (localRadiusSq x h)) ≤ bregmanDiv (x + h) x ∧
+        (Real.sqrt (localRadiusSq x h) < 1 →
+          bregmanDiv (x + h) x ≤
+            omegaHigh (Real.sqrt (localRadiusSq x h)))
+
+namespace NoncommutativeSelfConcordantBarrier
+
+variable {n : ℕ} {ν : ℝ}
+variable (ψ : NoncommutativeSelfConcordantBarrier n ν)
+
+/-- Lower half of the matrix self-concordant Dikin sandwich. -/
+theorem dikin_lower (x h : MatrixEnd n) :
+    omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤
+      ψ.bregmanDiv (x + h) x :=
+  (ψ.selfConcordantEstimate x h).1
+
+/-- Upper half of the matrix self-concordant Dikin sandwich. -/
+theorem dikin_upper (x h : MatrixEnd n)
+    (hsmall : Real.sqrt (ψ.localRadiusSq x h) < 1) :
+    ψ.bregmanDiv (x + h) x ≤
+      omegaHigh (Real.sqrt (ψ.localRadiusSq x h)) :=
+  (ψ.selfConcordantEstimate x h).2 hsmall
+
+end NoncommutativeSelfConcordantBarrier
 
 /-- Dikin lower bound on a matrix tangent step. -/
 structure MatrixDikinLowerBound (n : ℕ)
@@ -108,6 +133,20 @@ def toMatrixDikinEnvelope {n : ℕ}
     have hxy : y + (x - y) = x := by
       abel
     simpa [hxy] using hUpper y (x - y) hsmall
+
+/--
+The matrix self-concordance law carried by a barrier produces the repository's
+native matrix Dikin envelope without an additional evidence argument.
+-/
+def NoncommutativeSelfConcordantBarrier.toMatrixDikinEnvelope
+    {n : ℕ}
+    (ψ : NoncommutativeSelfConcordantBarrier n 1) :
+    InfoGeometry.Analysis.BregmanAnalyticBound.HasMatrixSelfConcordantDikinEnvelope
+      (fun x y => ψ.bregmanDiv x y)
+      (fun x y => Real.sqrt (ψ.localRadiusSq y (x - y))) :=
+  InfoGeometry.Convex.toMatrixDikinEnvelope ψ
+    (fun x h => ψ.dikin_lower x h)
+    (fun x h hsmall => ψ.dikin_upper x h hsmall)
 
 /-! ## Explicit finite model handoff -/
 

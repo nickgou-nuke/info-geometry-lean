@@ -55,8 +55,9 @@ structure OnsagerTwoOperatorForm
   symmetric :
     ∀ A B : Op, form A B = form B A
 
-  /-- Optional second-law/PSD constraint for the diagonal sector. -/
-  diagonal_nonnegative : Prop
+  /-- Second-law positivity of the Onsager quadratic response. -/
+  diagonal_nonnegative :
+    ∀ A : Op, 0 ≤ form A A
 
 namespace OnsagerTwoOperatorForm
 
@@ -72,6 +73,13 @@ theorem swap
     (A B : Op) :
     L.form A B = L.form B A :=
   L.symmetric A B
+
+/-- The Onsager quadratic response is nonnegative. -/
+@[rep_depth thermo]
+theorem apply_self_nonnegative
+    (A : Op) :
+    0 ≤ L.form A A :=
+  L.diagonal_nonnegative A
 
 end OnsagerTwoOperatorForm
 
@@ -95,12 +103,22 @@ structure SusceptibilityOnsagerPairing
   /-- Two-field Onsager response form at a material state. -/
   pairing : Op → TwoOperatorForm Field
 
+  /-- Dual contraction between a perturbing field and a material response. -/
+  responsePairing :
+    Field →ₗ[ℝ] (Response →ₗ[ℝ] ℝ)
+
   /-- Reciprocity of the field response pairing. -/
   pairing_symmetric :
     ∀ U : Op, ∀ E₁ E₂ : Field, pairing U E₁ E₂ = pairing U E₂ E₁
 
-  /-- Constitutive relation connecting the pairing to the susceptibility `χ_U`. -/
-  pairing_from_susceptibility : Prop
+  /--
+  Constitutive relation: the Onsager pairing is the pullback of susceptibility
+  through the selected field-response contraction.
+  -/
+  pairing_from_susceptibility :
+    ∀ (U : Op) (E₁ E₂ : Field),
+      pairing U E₁ E₂ =
+        responsePairing E₁ (C.susceptibility U E₂)
 
 namespace SusceptibilityOnsagerPairing
 
@@ -121,6 +139,15 @@ theorem pairing_swap
     P.pairing U E₁ E₂ = P.pairing U E₂ E₁ :=
   P.pairing_symmetric U E₁ E₂
 
+/-- The field Onsager pairing is induced by the constructive susceptibility. -/
+@[rep_depth thermo]
+theorem pairing_eq_responsePairing_susceptibility
+    (U : Op)
+    (E₁ E₂ : Field) :
+    P.pairing U E₁ E₂ =
+      P.responsePairing E₁ (C.susceptibility U E₂) :=
+  P.pairing_from_susceptibility U E₁ E₂
+
 end SusceptibilityOnsagerPairing
 
 /-! ## 3. Stress-tensor operator readouts -/
@@ -137,12 +164,21 @@ structure StressTensorOperator
   /-- Stress tensor at a material/operator state. -/
   stress : Op → LinearMap.BilinForm ℝ Carrier
 
+  /-- Bilinear carrier geometry used to read constitutive response. -/
+  carrierPairing : LinearMap.BilinForm ℝ Carrier
+
+  /-- State-dependent constitutive response acting on carrier directions. -/
+  constitutiveResponse : Op → Carrier →ₗ[ℝ] Carrier
+
   /-- Stress tensor symmetry. -/
   stress_symmetric :
     ∀ U : Op, ∀ X Y : Carrier, stress U X Y = stress U Y X
 
-  /-- Constitutive relation linking stress to the chosen response geometry. -/
-  constitutive : Prop
+  /-- Stress is the carrier-pairing readout of the constitutive response. -/
+  constitutive :
+    ∀ (U : Op) (X Y : Carrier),
+      stress U X Y =
+        carrierPairing (constitutiveResponse U X) Y
 
 namespace StressTensorOperator
 
@@ -159,6 +195,15 @@ theorem stress_swap
     (X Y : Carrier) :
     T.stress U X Y = T.stress U Y X :=
   T.stress_symmetric U X Y
+
+/-- The stress tensor is induced by the constitutive carrier response. -/
+@[rep_depth thermo]
+theorem stress_eq_carrierPairing_constitutiveResponse
+    (U : Op)
+    (X Y : Carrier) :
+    T.stress U X Y =
+      T.carrierPairing (T.constitutiveResponse U X) Y :=
+  T.constitutive U X Y
 
 end StressTensorOperator
 
@@ -311,8 +356,20 @@ structure SusceptibilityOnsagerStressPacket
   derivedStress :
     DerivedStressTensorResponse Op Carrier derivation stressTensor
 
-  /-- Calibration connecting the operator Onsager form to stress response. -/
-  onsager_controls_stress : Prop
+  /-- State-dependent carrier direction represented in the operator force space. -/
+  stressProbe :
+    Op → Carrier →ₗ[ℝ] Op
+
+  /--
+  Calibration connecting stress response to the operator Onsager form.
+
+  The stress tensor is the pullback of the Onsager response along the selected
+  state-dependent probe.
+  -/
+  onsager_controls_stress :
+    ∀ (U : Op) (X Y : Carrier),
+      stressTensor.stress U X Y =
+        operatorOnsager.form (stressProbe U X) (stressProbe U Y)
 
 namespace SusceptibilityOnsagerStressPacket
 
@@ -332,6 +389,13 @@ theorem operatorOnsager_swap
     P.operatorOnsager.form A B = P.operatorOnsager.form B A :=
   P.operatorOnsager.swap A B
 
+/-- The packet's operator Onsager quadratic response is nonnegative. -/
+@[rep_depth thermo]
+theorem operatorOnsager_apply_self_nonnegative
+    (A : Op) :
+    0 ≤ P.operatorOnsager.form A A :=
+  P.operatorOnsager.apply_self_nonnegative A
+
 /-- The field Onsager pairing in the packet is reciprocal. -/
 @[rep_depth thermo]
 theorem fieldOnsager_swap
@@ -347,6 +411,15 @@ theorem stressTensor_swap
     (X Y : Carrier) :
     P.stressTensor.stress U X Y = P.stressTensor.stress U Y X :=
   P.stressTensor.stress_swap U X Y
+
+/-- Stress is the pullback of the operator Onsager form along the stress probe. -/
+@[rep_depth thermo]
+theorem stressTensor_eq_operatorOnsager
+    (U : Op)
+    (X Y : Carrier) :
+    P.stressTensor.stress U X Y =
+      P.operatorOnsager.form (P.stressProbe U X) (P.stressProbe U Y) :=
+  P.onsager_controls_stress U X Y
 
 /-- The packet derived stress is stress evaluated on the derived operator. -/
 @[rep_depth thermo]

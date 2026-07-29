@@ -31,37 +31,30 @@ builds against this repository's cached mathlib.
 
 namespace InfoGeometry.Arithmetic
 
-/-- Metadata for a pinned external Lean proof source. -/
-structure ExternalLeanProofPin where
-  /-- Repository URL. -/
-  repository : String
-  /-- Exact commit used locally. -/
-  commit : String
-  /-- Local checkout path. -/
-  localPath : String
-  /-- Upstream Lean toolchain recorded by the proof repository. -/
-  upstreamToolchain : String
-  /-- Local Lean toolchain used by this vendored checkout. -/
-  localToolchain : String
-  /-- Main external theorem declaration. -/
-  mainTheorem : String
-  /-- Formal-conjectures bridge theorem declaration. -/
-  formalConjecturesTheorem : String
-  deriving Repr
+/- Metadata constants for a pinned external proof source. -/
+namespace erdos1196ProofPin
 
-/--
-Pinned external proof source for the primitive-sets-above theorem.
+/-- Repository URL of the pinned external proof source. -/
+def repository : String := "https://github.com/math-inc/Erdos1196"
 
-This is metadata only; it is not a mathematical axiom and does not assert the
-external theorem inside this namespace.
--/
-def erdos1196ProofPin : ExternalLeanProofPin where
-  repository := "https://github.com/math-inc/Erdos1196"
-  commit := "02fba13be7487cc51315f68d8fa7ef277633d3c8"
-  localPath := "external/Erdos1196"
-  upstreamToolchain := "leanprover/lean4:v4.30.0-rc1"
-  localToolchain := "leanprover/lean4:v4.28.0"
-  mainTheorem := "PrimitiveSetsAboveX.mainTheorem"
-  formalConjecturesTheorem := "Erdos1196.erdos_1196"
+/-- Exact commit used by the local external checkout. -/
+def commit : String := "02fba13be7487cc51315f68d8fa7ef277633d3c8"
+
+/-- Local checkout path of the external proof source. -/
+def localPath : String := "external/Erdos1196"
+
+/-- Upstream Lean toolchain recorded by the proof repository. -/
+def upstreamToolchain : String := "leanprover/lean4:v4.30.0-rc1"
+
+/-- Local Lean toolchain used by the vendored checkout. -/
+def localToolchain : String := "leanprover/lean4:v4.28.0"
+
+/-- Main theorem declaration in the external source. -/
+def mainTheorem : String := "PrimitiveSetsAboveX.mainTheorem"
+
+/-- Formal-conjectures bridge theorem declaration in the external source. -/
+def formalConjecturesTheorem : String := "Erdos1196.erdos_1196"
+
+end erdos1196ProofPin
 
 end InfoGeometry.Arithmetic

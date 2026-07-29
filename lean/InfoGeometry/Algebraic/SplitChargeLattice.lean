@@ -88,8 +88,14 @@ Later specializations:
 * Jordan determinant weights;
 * logarithmic Jacobian charges.
 -/
-structure ChargeFunctional (n : ℕ) where
-  weight : SplitCharge n → ℝ
+abbrev ChargeFunctional (n : ℕ) := SplitCharge n → ℝ
+
+namespace ChargeFunctional
+
+/-- Compatibility projection for the former named weight field. -/
+abbrev weight {n : ℕ} (E : ChargeFunctional n) : SplitCharge n → ℝ := E
+
+end ChargeFunctional
 
 /--
 A finite charged spectrum.

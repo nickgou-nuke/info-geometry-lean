@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Topology.Basic
@@ -1881,16 +1882,22 @@ logarithmic potential.
 structure ClassicalRadonNikodymPacket where
   /-- Base measurable state space. -/
   StateSpace : Type*
-  /-- Reference measure μ (type-label for the measure structure). -/
-  ReferenceMeasureType : Type*
-  /-- Target measure ν (type-label for the measure structure). -/
-  TargetMeasureType : Type*
-  /-- Radon–Nikodym density `dν/dμ : StateSpace → ℝ`. -/
-  rnDensity : StateSpace → ℝ
-  /-- Log-likelihood ratio `log(dν/dμ)`. -/
+  /-- Measurable structure carried by the state space. -/
+  measurableSpace : MeasurableSpace StateSpace
+  /-- Reference measure μ. -/
+  referenceMeasure : @MeasureTheory.Measure StateSpace measurableSpace
+  /-- Target measure ν. -/
+  targetMeasure : @MeasureTheory.Measure StateSpace measurableSpace
+  /-- Radon–Nikodym density `dν/dμ : StateSpace → ENNReal`. -/
+  rnDensity : StateSpace → ENNReal
+  /-- The target measure is obtained from μ by this density. -/
+  targetMeasure_eq_withDensity :
+    targetMeasure = referenceMeasure.withDensity rnDensity
+  /-- Log-likelihood ratio `log((dν/dμ).toReal)`. -/
   logLikelihood : StateSpace → ℝ
   /-- Log-likelihood agrees with log of the density. -/
-  logLikelihood_eq : ∀ x : StateSpace, logLikelihood x = Real.log (rnDensity x)
+  logLikelihood_eq : ∀ x : StateSpace,
+    logLikelihood x = Real.log ((rnDensity x).toReal)
   /-- Relative surprisal `S_{ν|μ}(x) = log(dν/dμ)(x)` (= log-likelihood). -/
   surprisal : StateSpace → ℝ
   /-- Surprisal agrees with log-likelihood. -/
@@ -1943,8 +1950,8 @@ Mechanically verified: no `by rfl`.
 def classicalToModularWitness
     (cl : ClassicalRadonNikodymPacket) : ModularRadonNikodymPacket :=
   { VonNeumannAlgebra         := cl.StateSpace → ℝ
-    ReferenceState             := cl.ReferenceMeasureType
-    TargetState                := cl.TargetMeasureType
+    ReferenceState             := cl.StateSpace
+    TargetState                := cl.StateSpace
     RelativeModularOperator    := cl.StateSpace → ℝ   -- multiplication by dν/dμ
     ConnescCocycle             := cl.StateSpace → ℝ   -- pointwise r^{it}
     RelativeModularHamiltonian := cl.StateSpace → ℝ   -- pointwise log r
@@ -2497,7 +2504,7 @@ def classicalRNToVolumeBridgeHub
     -- ClassicalMeasureSpace, VonNeumannSystem, SpectralGeometry
     cl.StateSpace cl.StateSpace cl.StateSpace
     -- classicalVolume, classicalState, classicalLogPotential
-    cl.ReferenceMeasureType cl.TargetMeasureType (cl.StateSpace → ℝ)
+    cl.StateSpace cl.StateSpace (cl.StateSpace → ℝ)
     -- modularWeight, modularData, modularHamiltonian
     (cl.StateSpace → ℝ) (cl.StateSpace → ℝ) (cl.StateSpace → ℝ)
     -- klDivergenceData, arakiRelativeEntropyData
@@ -2516,118 +2523,36 @@ end ModularVolumeBridge
 --       type III caveat; extended modular bridge packet)
 -- ---------------------------------------------------------------------------
 
+
 section SpectralThermalNormalization
 
 /-!
-## §27  Spectral thermal normalization
+## §27 Spectral thermal normalization
 
-**Theorem-bank name:**
-  *Boltzmann Normalization of Spectral Volume*.
-
-**Core identity:** Let `H` have spectral volume measure `dν_H(E)` and assume
-`Z_β = ∫ e^{-βE} dν_H(E) < ∞`.  Then:
-
-1. The Boltzmann-tilted Gibbs spectral state is normalized:
-   `dγ_β(E) = e^{-βE}/Z_β dν_H(E)`, `∫ dγ_β = 1`.
-
-2. Log-RN potential: `-log(dγ_β/dν_H) = βE + log Z_β`.
-
-3. Free-energy identity: `D_KL(μ|γ_β) = β(F_β(μ) - F_β(γ_β))`.
-
-4. Weyl compatibility: `Z_β ~ C · Γ(α+1) · Vol(X) · β^{-α}` as `β ↓ 0`
-   when `N_H(Λ) ~ C · Vol(X) · Λ^α` (Weyl law).
-
-**Type III caveat (theorem-safe):**
-- Finite/semifinite: `Z_β = Tr(e^{-βH})` is a literal trace normalization.
-- Type III: no faithful normal finite trace exists.  The primary object is
-  `(M, φ, σ_t^φ)` (algebra + faithful normal weight + modular flow).
-  A partition function appears only after regularization, crossed-product
-  construction, or finite-volume approximation.
-
-**Grand bridge line:**
-  `Weyl volume → spectral volume → Boltzmann tilt → KMS/Gibbs state`.
+The former packet stored analytic claims as `Type*` witnesses.  The native
+operator-first owner is `Canonical.SouriauOperatorialLogPotential`, whose
+`SouriauLieThermoData` carries the moment map, geometric inverse temperature,
+pairing, positive partition function, and statewise Gibbs log generator.
 -/
 
-/--
-**Packet 27.1 — Spectral thermal normalization packet.**
+open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-Witness packet for the *Boltzmann Normalization of Spectral Volume* principle.
+abbrev SpectralThermalNormalizationData (State LieAlgebra LieDual : Type*) :=
+  SouriauLieThermoData State LieAlgebra LieDual
 
-Records the data that a spectral volume is Boltzmann-weighted by a modular/energy
-potential, producing a normalized Gibbs/KMS-type state.  Analytic convergence is
-not asserted unless supplied via `partition_pos`.
-
-**Theorem-bank line:**
-  The partition function is the thermodynamic normalization of spectral volume:
-  `Z_β = ∫ e^{-βE} dν_H(E)`.
--/
-structure SpectralThermalNormalizationPacket where
-  /-- Energy / spectral parameter space. -/
-  EnergySpace : Type*
-  /-- Spectral volume or density-of-states datum (abstract type label). -/
-  SpectralVolumeDatum : Type*
-  /-- Inverse temperature `β > 0`. -/
-  beta : ℝ
-  /-- Positivity witness for `β`. -/
-  beta_pos : 0 < beta
-  /-- Energy readout: `E : EnergySpace → ℝ`. -/
-  energy : EnergySpace → ℝ
-  /-- Boltzmann potential `Φ(E) = β · E` (log-RN potential = `Φ + log Z_β`). -/
-  boltzmannPotential : EnergySpace → ℝ
-  /-- Boltzmann potential axiom: `Φ(e) = β · energy(e)`. -/
-  boltzmannPotential_eq : ∀ e : EnergySpace, boltzmannPotential e = beta * energy e
-  /-- Partition function `Z_β = ∫ e^{-βE} dν_H(E)` (thermal normalization). -/
-  partitionFunction : ℝ
-  /-- Finiteness / positivity witness for `Z_β`. -/
-  partition_pos : 0 < partitionFunction
-  /-- Normalized Gibbs/KMS spectral state (type label; `= e^{-βE}/Z_β dν_H`). -/
-  NormalizedSpectralState : Type*
-  /-- Witness: state is obtained by Boltzmann-tilting the spectral volume. -/
-  BoltzmannTiltWitness : Type*
-  /--
-  Witness for the log-potential identity:
-  `-log(dγ_β/dν_H) = βE + log Z_β`
-  (in whatever formalism is in use).
-  -/
-  LogarithmicPotentialWitness : Type*
-  /-- Witness for the free-energy / relative-entropy identity. -/
-  FreeEnergyIdentityWitness : Type*
-  /--
-  Optional Weyl-gauge asymptotic witness:
-  `Z_β ~ C · Γ(α+1) · Vol(X) · β^{-α}` as `β ↓ 0`.
-  -/
-  WeylGaugeWitness : Type*
-  /--
-  Type III caveat witness:
-  in type III, KMS / modular data replace ordinary trace normalization.
-  -/
-  TypeIIICaveatWitness : Type*
-
-/--
-**Theorem 27.1a — Boltzmann potential axiom stated cleanly.**
-
-The Boltzmann potential `Φ(e) = β · energy(e)` by the packet axiom.
-Mechanically verified: no `by rfl`.
--/
 theorem boltzmannPotential_is_beta_times_energy
-    (pkt : SpectralThermalNormalizationPacket) (e : pkt.EnergySpace) :
-    pkt.boltzmannPotential e = pkt.beta * pkt.energy e :=
-  pkt.boltzmannPotential_eq e
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
+    (e : State) :
+    D.K_beta e = D.pairing (D.momentMap e) D.beta :=
+  D.K_beta_eq_pairing e
 
-/--
-**Theorem 27.1b — Log-RN potential form from the packet.**
+theorem spectralThermalNormalization_partition_pos
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual) :
+    0 < D.partitionFunction :=
+  D.partitionFunction_pos
 
-The log-RN potential of `γ_β` relative to `ν_H` is `βE + log Z_β`.
-In finite discrete form: `-log(w_i) = βE_i - log v_i + log Z_β` where
-`w_i = v_i e^{-βE_i}/Z_β`.  Verified at the level of the `SpectralVolumeWeightPacket`
-axioms from §26.
-
-For a packet where `spectralVolume i = 1` (flat density of states),
-the Boltzmann weight satisfies:
-  `Real.log(partitionFunction) - beta * energyLevel i =
-   Real.log(boltzmannWeight i * partitionFunction)`
-Up to `Real.log` arithmetic, this encodes `-log w_i = βE_i + log Z_β`.
--/
 theorem logRN_potential_form
     (pkt : SpectralVolumeWeightPacket)
     (hv : ∀ i : Fin pkt.n, pkt.spectralVolume i = 1)
@@ -2639,79 +2564,12 @@ theorem logRN_potential_form
   rw [h]
   field_simp [ne_of_gt pkt.partitionFunction_pos]
 
-/--
-**Packet 27.2 — Extended modular volume bridge with thermal normalization.**
-
-Extends the `ModularVolumeBridgePacket` of §26 by adding a
-`SpectralThermalNormalizationPacket` as a subpacket:
-  partition function = thermodynamic normalization of spectral volume.
-
-This records the `Weyl volume → spectral volume → Boltzmann tilt → KMS state`
-chain explicitly in the bridge architecture.
--/
-structure ModularVolumeBridgeWithThermal where
-  /-- The base modular volume bridge (§26). -/
-  bridge : ModularVolumeBridgePacket
-  /-- Spectral thermal normalization subpacket (§27). -/
-  spectralThermalNormalization : SpectralThermalNormalizationPacket
-
-/--
-**Theorem 27.3 — Constructor for the extended bridge packet.**
-
-Providing a base `ModularVolumeBridgePacket` and a
-`SpectralThermalNormalizationPacket` assembles the extended bridge.
-Mechanically verified: no `by rfl`.
--/
-def constructModularVolumeBridgeWithThermal
-    (b : ModularVolumeBridgePacket)
-    (t : SpectralThermalNormalizationPacket) :
-    ModularVolumeBridgeWithThermal :=
-  { bridge                     := b
-    spectralThermalNormalization := t }
-
-/--
-**Theorem 27.4 — Thermal normalization is positive in the extended bridge.**
-
-The partition function of the spectral thermal normalization subpacket
-is positive by construction (from `partition_pos`).
-Mechanically verified: no `by rfl`.
--/
-theorem extendedBridge_partition_pos
-    (pkt : ModularVolumeBridgeWithThermal) :
-    0 < pkt.spectralThermalNormalization.partitionFunction :=
-  pkt.spectralThermalNormalization.partition_pos
-
-/--
-**Theorem 27.5 — §26 `SpectralVolumeWeightPacket` specializes to the
-thermal normalization packet.**
-
-The finite spectral-weight data from §26 instantiates the abstract
-`SpectralThermalNormalizationPacket`, with:
-- `EnergySpace = Fin n` (finite spectrum);
-- `boltzmannPotential e = beta * energyLevel e`;
-- `partitionFunction = Z_β` (positive by `partitionFunction_pos`).
-Mechanically verified: no `by rfl`.
--/
-def spectralWeightPacketToThermal
-    (svw : SpectralVolumeWeightPacket)
-    (hbeta : 0 < svw.beta)
-    (SVD BT LW FE WG TC : Type*) :
-    SpectralThermalNormalizationPacket :=
-  { EnergySpace             := Fin svw.n
-    SpectralVolumeDatum      := SVD
-    beta                     := svw.beta
-    beta_pos                 := hbeta
-    energy                   := svw.energyLevel
-    boltzmannPotential       := fun i => svw.beta * svw.energyLevel i
-    boltzmannPotential_eq    := fun _ => rfl
-    partitionFunction        := svw.partitionFunction
-    partition_pos            := svw.partitionFunction_pos
-    NormalizedSpectralState  := BT
-    BoltzmannTiltWitness     := BT
-    LogarithmicPotentialWitness := LW
-    FreeEnergyIdentityWitness   := FE
-    WeylGaugeWitness            := WG
-    TypeIIICaveatWitness        := TC }
+theorem spectralThermalNormalization_statewise_log_generator
+    {State LieAlgebra LieDual : Type*}
+    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
+    (e : State) :
+    D.K_beta e = -Real.log (D.gibbsDensity e) - D.partitionPotential :=
+  D.modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential e
 
 end SpectralThermalNormalization
 

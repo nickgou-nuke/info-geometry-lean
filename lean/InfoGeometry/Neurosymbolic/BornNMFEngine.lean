@@ -42,22 +42,44 @@ into bipartite language W and formal type H factors.
 -/
 structure NeurosymbolicFactorization (m k n : Type*) [Fintype k] where
   amplitude_matrix : Matrix m n ℝ
-  born_prob_matrix : Matrix m n ℝ
   left_factor_W : Matrix m k ℝ
   right_factor_H : Matrix k n ℝ
-  h_born : born_prob_matrix = bornRuleMap amplitude_matrix
-  h_born_nonneg : MatrixNonneg born_prob_matrix
   h_W_nonneg : MatrixNonneg left_factor_W
   h_H_nonneg : MatrixNonneg right_factor_H
-  h_factor_nonneg : MatrixNonneg (left_factor_W * right_factor_H)
-  h_factor_eq : left_factor_W * right_factor_H = born_prob_matrix
+  factorization : left_factor_W * right_factor_H = bornRuleMap amplitude_matrix
+
+namespace NeurosymbolicFactorization
+
+variable {m k n : Type*} [Fintype k]
+
+/-- Born probability matrix derived from the amplitude matrix. -/
+def born_prob_matrix (F : NeurosymbolicFactorization m k n) : Matrix m n ℝ :=
+  bornRuleMap F.amplitude_matrix
+
+@[simp]
+theorem h_born (F : NeurosymbolicFactorization m k n) :
+    F.born_prob_matrix = bornRuleMap F.amplitude_matrix :=
+  rfl
+
+theorem h_born_nonneg (F : NeurosymbolicFactorization m k n) :
+    MatrixNonneg F.born_prob_matrix :=
+  born_rule_nonneg F.amplitude_matrix
+
+theorem h_factor_nonneg (F : NeurosymbolicFactorization m k n) :
+    MatrixNonneg (F.left_factor_W * F.right_factor_H) :=
+  nmf_mul_nonneg F.left_factor_W F.right_factor_H F.h_W_nonneg F.h_H_nonneg
+
+theorem h_factor_eq (F : NeurosymbolicFactorization m k n) :
+    F.left_factor_W * F.right_factor_H = F.born_prob_matrix :=
+  F.factorization
+
+end NeurosymbolicFactorization
 
 /-- Main Theorem: Proof of existence of the Neurosymbolic Born-Rule NMF Decoherence Engine. -/
 theorem neurosymbolic_engine_exists {m k n : Type*} [Fintype k] (M : Matrix m n ℝ)
     (W : Matrix m k ℝ) (H : Matrix k n ℝ) (hW : MatrixNonneg W) (hH : MatrixNonneg H)
     (hFactor : W * H = bornRuleMap M) :
     Nonempty (NeurosymbolicFactorization m k n) := by
-  refine ⟨⟨M, bornRuleMap M, W, H, rfl, born_rule_nonneg M, hW, hH,
-    by simpa [hFactor] using nmf_mul_nonneg W H hW hH, hFactor⟩⟩
+  exact ⟨⟨M, W, H, hW, hH, hFactor⟩⟩
 
 end InfoGeometry.Neurosymbolic.BornNMFEngine

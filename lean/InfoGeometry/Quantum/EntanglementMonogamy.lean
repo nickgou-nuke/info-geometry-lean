@@ -63,7 +63,14 @@ structure EntanglementDatum
   state : Q.State
   MaxEntangled : Q.State → Prop
   max_entangled : MaxEntangled state
-  correlation_calibration : Prop
+  /--
+  An explicit observable pair whose joint readout does not factor through its
+  two marginal readouts.
+  -/
+  correlation_calibration :
+    ∃ leftObs : R.ObsL, ∃ rightObs : R.ObsR,
+      R.correlation state leftObs rightObs ≠
+        R.outcomeL state leftObs * R.outcomeR state rightObs
 
 namespace EntanglementDatum
 
@@ -75,6 +82,13 @@ variable (E : EntanglementDatum Q R)
 theorem state_maxEntangled :
     E.MaxEntangled E.state :=
   E.max_entangled
+
+/-- The calibrated state has a concrete nonfactorizing observable pair. -/
+theorem exists_nonfactorizing_observables :
+    ∃ leftObs : R.ObsL, ∃ rightObs : R.ObsR,
+      R.correlation E.state leftObs rightObs ≠
+        R.outcomeL E.state leftObs * R.outcomeR E.state rightObs :=
+  E.correlation_calibration
 
 end EntanglementDatum
 
@@ -246,35 +260,61 @@ structure ERBridgeDatum where
   LeftExterior : Type*
   RightExterior : Type*
   Interior : Type*
-  entangled_pair : Prop
-  bridge_exists : Prop
-  exterior_to_exterior_signal : Prop
-  interior_meeting_possible : Prop
+  /-- Concrete carrier of ER bridges. -/
+  Bridge : Type*
+  /-- Left endpoint of a bridge. -/
+  leftEndpoint : Bridge → LeftExterior
+  /-- Right endpoint of a bridge. -/
+  rightEndpoint : Bridge → RightExterior
+  /-- Model-specific entanglement relation between exterior systems. -/
+  entangled_pair : LeftExterior → RightExterior → Prop
+  /-- Exterior-to-exterior signaling relation. -/
+  exterior_to_exterior_signal : LeftExterior → RightExterior → Prop
+  /-- Interior incidence relation for a concrete bridge. -/
+  interior_meeting_possible : Bridge → Interior → Prop
   bridge_of_entanglement :
-    entangled_pair → bridge_exists
+    ∀ {left right},
+      entangled_pair left right →
+        ∃ bridge : Bridge,
+          leftEndpoint bridge = left ∧ rightEndpoint bridge = right
   nontraversable :
-    bridge_exists → ¬ exterior_to_exterior_signal
+    ∀ {left right},
+      (∃ bridge : Bridge,
+        leftEndpoint bridge = left ∧ rightEndpoint bridge = right) →
+        ¬ exterior_to_exterior_signal left right
 
 namespace ERBridgeDatum
+
+/-- Existence of a bridge with the selected endpoints. -/
+def bridge_exists
+    (E : ERBridgeDatum)
+    (left : E.LeftExterior)
+    (right : E.RightExterior) : Prop :=
+  ∃ bridge : E.Bridge,
+    E.leftEndpoint bridge = left ∧ E.rightEndpoint bridge = right
+
 
 variable (E : ERBridgeDatum)
 
 /-- Entanglement gives bridge existence in this supplied ER bookkeeping datum. -/
 theorem bridge_exists_of_entangled
-    (h : E.entangled_pair) :
-    E.bridge_exists :=
+    {left : E.LeftExterior} {right : E.RightExterior}
+    (h : E.entangled_pair left right) :
+    E.bridge_exists left right :=
   E.bridge_of_entanglement h
 
 /-- An existing ER bridge is nontraversable for exterior-to-exterior signaling. -/
 theorem no_exterior_signal_of_bridge
-    (h : E.bridge_exists) :
-    ¬ E.exterior_to_exterior_signal :=
+    {left : E.LeftExterior} {right : E.RightExterior}
+    (h : E.bridge_exists left right) :
+    ¬ E.exterior_to_exterior_signal left right :=
   E.nontraversable h
 
 /-- Entangled ER pairs do not permit exterior-to-exterior signaling. -/
 theorem no_exterior_signal_of_entangled
-    (h : E.entangled_pair) :
-    ¬ E.exterior_to_exterior_signal :=
+    {left : E.LeftExterior} {right : E.RightExterior}
+    (h : E.entangled_pair left right) :
+    ¬ E.exterior_to_exterior_signal left right :=
   E.nontraversable (E.bridge_of_entanglement h)
 
 end ERBridgeDatum
@@ -292,10 +332,11 @@ structure EREPRIdentification
     (M : MonogamyBackend) where
   InteriorMode : M.System
   RadiationMode : M.System
-  Bridge : Prop
+  /-- Concrete carrier of bridge identifications. -/
+  Bridge : Type*
   EncodedTogether : M.System → M.System → Prop
   encoded_of_bridge :
-    Bridge → EncodedTogether InteriorMode RadiationMode
+    ∀ _bridge : Bridge, EncodedTogether InteriorMode RadiationMode
   not_independent_of_encoded :
     EncodedTogether InteriorMode RadiationMode →
       ¬ M.Independent InteriorMode RadiationMode
@@ -310,9 +351,9 @@ An ER/EPR bridge identification refutes the independence hypothesis needed for
 the AMPS monogamy contradiction.
 -/
 theorem evades_amps_independence
-    (hBridge : E.Bridge) :
+    (bridge : E.Bridge) :
     ¬ M.Independent E.InteriorMode E.RadiationMode :=
-  E.not_independent_of_encoded (E.encoded_of_bridge hBridge)
+  E.not_independent_of_encoded (E.encoded_of_bridge bridge)
 
 end EREPRIdentification
 
@@ -327,9 +368,9 @@ longer available.
 theorem er_epr_evades_amps
     {M : MonogamyBackend}
     (E : EREPRIdentification M)
-    (hBridge : E.Bridge) :
+    (bridge : E.Bridge) :
     ¬ M.Independent E.InteriorMode E.RadiationMode :=
-  E.evades_amps_independence hBridge
+  E.evades_amps_independence bridge
 
 /--
 With the ER/EPR identification in hand, the AMPS contradiction cannot be formed
@@ -338,12 +379,12 @@ using the identified interior/radiation pair as independent partners.
 theorem no_amps_independence_after_er_identification
     {M : MonogamyBackend}
     (E : EREPRIdentification M)
-    (hBridge : E.Bridge)
+    (bridge : E.Bridge)
     {B : M.System}
     (_h_smooth : M.MaxEntangled B E.InteriorMode)
     (_h_old : M.MaxEntangled B E.RadiationMode) :
     ¬ M.Independent E.InteriorMode E.RadiationMode :=
-  er_epr_evades_amps E hBridge
+  er_epr_evades_amps E bridge
 
 /-! ## 5. Complexity growth layer -/
 

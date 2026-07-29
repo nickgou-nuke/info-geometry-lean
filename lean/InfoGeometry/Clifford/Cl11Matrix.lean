@@ -74,6 +74,35 @@ noncomputable def cl11ToMat : CliffordAlgebra q11 →ₐ[ℝ] Mat2 :=
   CliffordAlgebra.lift q11 ⟨gen, fun v => by
     simp [Algebra.algebraMap_eq_smul_one, gen_sq v]⟩
 
+@[simp] theorem cl11ToMat_iota_pos :
+    cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) = Eplus := by
+  simp [cl11ToMat, gen, Eplus, Eminus]
+
+@[simp] theorem cl11ToMat_iota_neg :
+    cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) = Eminus := by
+  simp [cl11ToMat, gen, Eplus, Eminus]
+
+theorem cl11ToMat_iota_pos_sq :
+    cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) *
+        cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) = 1 := by
+  rw [cl11ToMat_iota_pos, Eplus_sq]
+
+theorem cl11ToMat_iota_neg_sq :
+    cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) *
+        cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) = -1 := by
+  rw [cl11ToMat_iota_neg, Eminus_sq]
+  simp
+
+theorem cl11ToMat_iota_pos_neg_anticomm :
+    cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) *
+        cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) +
+      cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) *
+        cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) = 0 := by
+  rw [cl11ToMat_iota_pos, cl11ToMat_iota_neg]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+
 -- Decomposition of any 2x2 matrix into the Pauli basis
 noncomputable def alpha (M : Mat2) : ℝ := (M 0 0 + M 1 1) / 2
 noncomputable def beta  (M : Mat2) : ℝ := (M 0 0 - M 1 1) / 2
@@ -132,5 +161,34 @@ noncomputable def cl11EquivMat : CliffordAlgebra q11 ≃ₐ[ℝ] Mat2 :=
       exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h_rank).mpr h_surj
     · -- Surjectivity
       exact cl11ToMat_surjective)
+
+/-! ## 5. Generator laws transported through the algebra equivalence -/
+
+@[simp] theorem cl11EquivMat_iota_pos :
+    cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) = Eplus := by
+  exact cl11ToMat_iota_pos
+
+@[simp] theorem cl11EquivMat_iota_neg :
+    cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) = Eminus := by
+  exact cl11ToMat_iota_neg
+
+theorem cl11EquivMat_iota_pos_sq :
+    cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) *
+        cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) = 1 := by
+  rw [cl11EquivMat_iota_pos]
+  exact Eplus_sq
+
+theorem cl11EquivMat_iota_neg_sq :
+    cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) *
+        cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) = -1 := by
+  rw [cl11EquivMat_iota_neg]
+  simpa using Eminus_sq
+
+theorem cl11EquivMat_iota_pos_neg_anticomm :
+    cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) *
+        cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) +
+      cl11EquivMat (CliffordAlgebra.ι q11 (0, 1)) *
+        cl11EquivMat (CliffordAlgebra.ι q11 (1, 0)) = 0 := by
+  simpa [cl11EquivMat] using cl11ToMat_iota_pos_neg_anticomm
 
 end InfoGeometry.Clifford.Cl11Matrix

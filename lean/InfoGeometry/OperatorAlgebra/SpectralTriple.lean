@@ -20,7 +20,7 @@ Key point:
 `J K = - K J`.
 -/
 
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Geometry.PhaseErlanger
 
@@ -192,11 +192,27 @@ structure SpectralGenerator
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   D : EndR H
 
-  /-- Self-adjointness or Krein-self-adjointness obligation for concrete models. -/
-  selfAdjoint : Prop
+/--
+Native compact-resolvent data for a bounded real spectral generator.
 
-  /-- Compact-resolvent or summability obligation for concrete models. -/
-  compactResolventOrSummability : Prop
+The chosen continuous operator is a two-sided inverse of `D - λ` and is
+compact.  This is deliberately separate from `SpectralGenerator`: generic
+commutator constructions only need the operator, while compact resolvent is a
+Hilbert-space spectral-triple obligation.
+-/
+structure CompactResolventData
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (D : EndR H) where
+  spectralParameter : ℝ
+  resolvent : EndR H
+  resolvent_comp_shift :
+    resolvent.comp
+        (D - spectralParameter • ContinuousLinearMap.id ℝ H) =
+      ContinuousLinearMap.id ℝ H
+  shift_comp_resolvent :
+    (D - spectralParameter • ContinuousLinearMap.id ℝ H).comp resolvent =
+      ContinuousLinearMap.id ℝ H
+  resolvent_compact : IsCompactOperator resolvent
 
 namespace SpectralGenerator
 
@@ -467,6 +483,9 @@ structure PhaseRealSpectralTriple
     (A H : Type*)
     [Ring A] [Star A]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
+  /-- The chosen star operation on the real-linear operator carrier. -/
+  operatorStar : Star (EndR H)
+
   signs : KOSigns
 
   phaseAxis : PhaseAxis H
@@ -485,6 +504,12 @@ structure PhaseRealSpectralTriple
 
   spectralGenerator :
     SpectralGenerator H
+
+  D_selfAdjoint :
+    @IsSelfAdjoint (EndR H) operatorStar spectralGenerator.D
+
+  D_compactResolvent :
+    CompactResolventData spectralGenerator.D
 
   D_phase_linear :
     PhaseLinear phaseAxis.K spectralGenerator.D

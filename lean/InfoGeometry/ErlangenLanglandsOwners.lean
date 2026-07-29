@@ -35,9 +35,11 @@ abbrev constructRealisticErlangenLanglandsOwnerChainTarget
     (Eul : EulerProductWitness P.L)
     (Ccompleted : CompletedLFunctionWitness P.L)
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P FiniteSet AffineSet Vir State)
+    (B : InfoGeometry.Automorphic.LanglandsSugawaraBridge P FiniteSet AffineSet Vir State)
     {ElectricState MagneticState DualCharge : Type*}
     (S : SDualityDatum ElectricState MagneticState DualCharge)
     {GState GdualState GLoop GdualLoop Scalar : Type*}
@@ -77,9 +79,11 @@ theorem constructRealisticErlangenLanglandsOwnerChain
     (Ccompleted : CompletedLFunctionWitness P.L)
 
     {FiniteSet AffineSet Vir State : Type*}
+    [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
+    [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (B : LanglandsSugawaraBridge P FiniteSet AffineSet Vir State)
+    (B : InfoGeometry.Automorphic.LanglandsSugawaraBridge P FiniteSet AffineSet Vir State)
 
     {ElectricState MagneticState DualCharge : Type*}
     (S : SDualityDatum ElectricState MagneticState DualCharge)
@@ -122,6 +126,8 @@ abbrev constructRealisticErlangenLanglandsOwnerChainWithGeometryTarget
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (Full :
@@ -155,6 +161,8 @@ theorem constructRealisticErlangenLanglandsOwnerChainWithGeometry
     (W : SiegelEisensteinWitness Bulk Boundary)
     (P : ProjectedAutomorphicLFunctionWitness W)
     {Finite Affine Vir State : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (Full : LanglandsLaneFullPacket

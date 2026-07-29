@@ -66,9 +66,13 @@ abbrev Configuration (M : ℕ) : Type :=
   Finset (PrimeSites M)
 
 /-- `z := e^{\beta\mu}`. -/
-structure Fugacity where
-  /-- Fugacity weight `z`. -/
-  z : ℝ
+abbrev Fugacity := ℝ
+
+namespace Fugacity
+
+abbrev z (Z : Fugacity) : ℝ := Z
+
+end Fugacity
 
 /-- `\Xi(M,z)=\sum_{C\in\mathcal C_M} z^{|C|}`. -/
 def grandPartition (M : ℕ) (Z : Fugacity) : ℝ :=

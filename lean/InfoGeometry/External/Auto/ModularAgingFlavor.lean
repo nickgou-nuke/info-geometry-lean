@@ -103,6 +103,11 @@ open Matrix
 def massMatrixU : Matrix (Fin 3) (Fin 3) Q := 0
 def massMatrixD : Matrix (Fin 3) (Fin 3) Q := 0
 
+/-- The two exact modular-aging mass matrices commute. -/
+lemma massMatrix_commutator_eq_zero :
+    ⁅massMatrixU, massMatrixD⁆ = (0 : Matrix (Fin 3) (Fin 3) Q) := by
+  simp [Ring.lie_def, massMatrixU, massMatrixD]
+
 /-- The Jarlskog identity relates the determinant of the quark mass matrix commutator 
 to the CP-violating invariant. In the exact modular aging limit, this is rigorously 0. -/
 def jarlskogCommutatorDeterminant : Q :=
@@ -110,7 +115,9 @@ def jarlskogCommutatorDeterminant : Q :=
 
 lemma jarlskog_trace_identity : 
   jarlskogCommutatorDeterminant = (1 / 3 : Q) * trace (⁅massMatrixU, massMatrixD⁆ ^ 3) := by
-  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD]
+  unfold jarlskogCommutatorDeterminant
+  rw [massMatrix_commutator_eq_zero]
+  simp
   exact Matrix.det_zero ⟨0⟩
 
 def determinantIdentityValue : Q := 1
@@ -229,7 +236,8 @@ theorem ckmMatrixEntryCount_eq_nine : ckmMatrixEntryCount = 9 := rfl
 theorem determinantIdentityValue_eq_one : determinantIdentityValue = 1 := rfl
 
 theorem jarlskogCommutatorDeterminant_eq_zero : jarlskogCommutatorDeterminant = 0 := by
-  simp [jarlskogCommutatorDeterminant, massMatrixU, massMatrixD]
+  unfold jarlskogCommutatorDeterminant
+  rw [massMatrix_commutator_eq_zero]
   exact Matrix.det_zero ⟨0⟩
 
 theorem colorAnomaly_eq_zero : colorAnomaly = 0 := by

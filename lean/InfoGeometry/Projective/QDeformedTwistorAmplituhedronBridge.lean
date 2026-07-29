@@ -130,12 +130,35 @@ checked Klein/rank/Rohozhkin packets.
 structure QDeformedTwistorAmplituhedronDatum (moving : ℕ) where
   base : TwistorAmplituhedronBridgeDatum moving
   qStable : KuzminQStableCarrier
-  boundaryPreserved : Prop
-  boundaryPreserved_proof : boundaryPreserved
-  rankBudgetPreserved : Prop
-  rankBudgetPreserved_proof : rankBudgetPreserved
-  bcfwComparisonPreserved : Prop
-  bcfwComparisonPreserved_proof : bcfwComparisonPreserved
+
+namespace QDeformedTwistorAmplituhedronDatum
+
+/--
+Boundary preservation is the already-installed Klein-incidence to
+amplituhedron-boundary map of the undeformed owner.
+-/
+theorem boundaryPreserved {moving : ℕ}
+    (D : QDeformedTwistorAmplituhedronDatum moving)
+    {i j : Fin 3} (hij : i ≠ j)
+    (hinc : D.base.lines.OnIncidenceBoundary i j) :
+    D.base.boundary.boundary i j :=
+  D.base.boundary.incidence_to_boundary hij hinc
+
+/-- The configured spin-tiled rank equals the selected scattering-state budget. -/
+theorem rankBudgetPreserved {moving : ℕ}
+    (D : QDeformedTwistorAmplituhedronDatum moving) :
+    D.base.rank.data.totalRank * spinTilingMultiplicity =
+      D.base.rank.stateBudget :=
+  spin_tiled_rank_matches_stateBudget D.base.rank
+
+/-- The native Arnold/cooperad and BCFW operators agree in the base packet. -/
+theorem bcfwComparisonPreserved {moving : ℕ}
+    (D : QDeformedTwistorAmplituhedronDatum moving) :
+    D.base.arnoldBCFW.cooperadReadout =
+      D.base.arnoldBCFW.bcfwReadout :=
+  bcfw_of_arnold D.base.arnoldBCFW
+
+end QDeformedTwistorAmplituhedronDatum
 
 /--
 Combined readback: the supplied q-carrier is in the Kuzmin open window, the
@@ -147,20 +170,17 @@ theorem q_deformed_twistor_amplituhedron_packet {moving : ℕ}
     (i : Fin 3) :
     InKuzminOpenWindow D.qStable.q ∧
       Nonempty (D.qStable.qCarrier ≃ D.qStable.toeplitzCarrier) ∧
-      D.boundaryPreserved ∧
-      D.rankBudgetPreserved ∧
-      D.bcfwComparisonPreserved ∧
+      D.base.arnoldBCFW.cooperadReadout =
+        D.base.arnoldBCFW.bcfwReadout ∧
       InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.base.lines.line i) ∧
       D.base.rank.data.totalRank * spinTilingMultiplicity = D.base.rank.stateBudget ∧
       ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
         ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = D.base.rohozhkin.packet.delaunay.gen g := by
+          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.base.rohozhkin.packet g := by
   have hbase := twistor_amplituhedron_bridge_packet D.base i
   exact ⟨D.qStable.inWindow,
     ⟨D.qStable.stableEquiv⟩,
-    D.boundaryPreserved_proof,
-    D.rankBudgetPreserved_proof,
-    D.bcfwComparisonPreserved_proof,
+    D.bcfwComparisonPreserved,
     hbase.1,
     hbase.2.1,
     hbase.2.2⟩

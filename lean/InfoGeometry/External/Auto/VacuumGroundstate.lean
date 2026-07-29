@@ -59,7 +59,7 @@ theorem vacuum_groundstate_cohomology_trivial (node : DAGNode)
 
 structure CognitiveForm (M : Type*) [TopologicalSpace M] where
   differential : M → ℝ
-  is_closed : True
+  zero_locus_closed : IsClosed {x : M | differential x = 0}
 
 def boundary_operator (node : DAGNode) : ℝ :=
   if node.hash = VACUUM_HASH then (0 : ℝ) else node.winding_number

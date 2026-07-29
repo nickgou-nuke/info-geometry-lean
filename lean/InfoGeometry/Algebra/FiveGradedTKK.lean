@@ -30,11 +30,9 @@ variable {A : Type*} [Ring A] [Algebra K A]
 
 /-- Orthogonal split idempotents with the Fioresi-style normalization
 `E² = 2E`, `Ebar² = 2Ebar`. -/
-structure SplitIdempotents (E Ebar : A) : Prop where
-  mul_zero : E * Ebar = 0
-  mul_zero_rev : Ebar * E = 0
-  proj_E : E * E = (2 : K) • E
-  proj_Ebar : Ebar * Ebar = (2 : K) • Ebar
+abbrev SplitIdempotents (E Ebar : A) : Prop :=
+  E * Ebar = 0 ∧ Ebar * E = 0 ∧
+    E * E = (2 : K) • E ∧ Ebar * Ebar = (2 : K) • Ebar
 
 /-- Five conformal/TKK-style weight labels. -/
 inductive Weight5 where
@@ -119,7 +117,7 @@ theorem right_mul_Ebar_of_split
     _ = a_plus • (E * Ebar) + a_minus • (Ebar * Ebar) := by
           rw [smul_mul_assoc, smul_mul_assoc]
     _ = a_plus • (0 : A) + a_minus • ((2 : K) • Ebar) := by
-          rw [h.mul_zero, h.proj_Ebar]
+          rw [h.1, h.2.2.2]
     _ = (2 * a_minus) • Ebar := by
           simp [smul_smul, mul_comm]
 
@@ -136,7 +134,7 @@ theorem right_mul_E_of_split
     _ = a_plus • (E * E) + a_minus • (Ebar * E) := by
           rw [smul_mul_assoc, smul_mul_assoc]
     _ = a_plus • ((2 : K) • E) + a_minus • (0 : A) := by
-          rw [h.proj_E, h.mul_zero_rev]
+          rw [h.2.2.1, h.2.1]
     _ = (2 * a_plus) • E := by
           simp [smul_smul, mul_comm]
 

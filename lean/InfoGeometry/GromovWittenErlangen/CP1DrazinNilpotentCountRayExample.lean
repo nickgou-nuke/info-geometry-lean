@@ -118,8 +118,8 @@ inductive Edge where
   | line
 deriving DecidableEq, Repr
 
-abbrev G := Unit
-abbrev T := Unit
+abbrev G := Fixed
+abbrev T := Degree
 abbrev Target := Fixed
 abbrev Coeff := ℤ
 abbrev Algebra := ℤ × ZMod 4

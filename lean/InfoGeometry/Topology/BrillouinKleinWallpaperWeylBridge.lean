@@ -40,30 +40,27 @@ The fields are exactly the owner-file facts already present in the repo:
 * the gauge-stable `Z₂` readout under adding two crossings;
 * the exact affine `D₅` coordinate bridge.
 -/
-structure BrillouinKleinWallpaperWeylPacket where
-  glide : ∀ p : Lattice2D,
-    concretePG.G (concretePG.T_y p) = concretePG.T_y.symm (concretePG.G p)
-  z2Cancel : ∀ theta : ℤ,
-    klein_bottle_z2_invariant theta (-theta) = 0
-  boundaryChargeEven :
-    ∀ {Path : Type} [AddCommGroup Path] (a b : Path) (int_charge : Path →+ ℤ),
-      int_charge (klein_bottle_boundary Path a b) = 2 * int_charge a
-  gaugeStable : ∀ theta n : ℤ,
-    klein_bottle_z2_invariant (theta + 2 * n) (-theta) =
-      klein_bottle_z2_invariant theta (-theta)
-  affineWeyl : ∀ (t : Z2),
-    (latticeEmbed t 0 + latticeEmbed t 1 + latticeEmbed t 2 +
-        latticeEmbed t 3 + latticeEmbed t 4 = 0) ∧
-      matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) ∧
-      matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t)
+abbrev BrillouinKleinWallpaperWeylPacket : Prop :=
+  (∀ p : Lattice2D,
+    concretePG.G (concretePG.T_y p) = concretePG.T_y.symm (concretePG.G p)) ∧
+    (∀ theta : ℤ, klein_bottle_z2_invariant theta (-theta) = 0) ∧
+      (∀ {Path : Type} [AddCommGroup Path] (a b : Path) (int_charge : Path →+ ℤ),
+        int_charge (klein_bottle_boundary Path a b) = 2 * int_charge a) ∧
+        (∀ theta n : ℤ,
+          klein_bottle_z2_invariant (theta + 2 * n) (-theta) =
+            klein_bottle_z2_invariant theta (-theta)) ∧
+          (∀ t : Z2,
+            (latticeEmbed t 0 + latticeEmbed t 1 + latticeEmbed t 2 +
+                latticeEmbed t 3 + latticeEmbed t 4 = 0) ∧
+              matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) ∧
+              matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t))
 
 /-- Construct the finite Brillouin/Klein bridge packet from the owner theorems. -/
-def brillouin_klein_wallpaper_weyl_packet : BrillouinKleinWallpaperWeylPacket where
-  glide := concrete_pg_generates_klein_bottle_relation
-  z2Cancel := fun theta => by
-    simp [klein_bottle_z2_invariant]
-  boundaryChargeEven := fun a b int_charge => fermion_doubling_violation a b int_charge
-  gaugeStable := fun theta n => klein_bottle_invariant_gauge_stable theta (-theta) n
-  affineWeyl := wallpaper_to_affine_weyl_d5_packet
+def brillouin_klein_wallpaper_weyl_packet : BrillouinKleinWallpaperWeylPacket := by
+  exact ⟨concrete_pg_generates_klein_bottle_relation,
+    (fun theta => by simp [klein_bottle_z2_invariant]),
+    (fun a b int_charge => fermion_doubling_violation a b int_charge),
+    (fun theta n => klein_bottle_invariant_gauge_stable theta (-theta) n),
+    wallpaper_to_affine_weyl_d5_packet⟩
 
 end InfoGeometry.Topology.BrillouinKleinWallpaperWeylBridge

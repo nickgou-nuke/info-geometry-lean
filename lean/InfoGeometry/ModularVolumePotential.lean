@@ -1,4 +1,8 @@
 import Mathlib.Tactic
+import Mathlib.MeasureTheory.Measure.MeasureSpace
+import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
+import InfoGeometry.OperatorAlgebra.ModularWeightTrace
+import InfoGeometry.Canonical.TomitaTakesakiKMSEntropyBracket
 
 /-!
 # InfoGeometry.ModularVolumePotential
@@ -27,27 +31,19 @@ Classical Radon–Nikodym potential packet.
 The field `logPotential` is the signed logarithmic density (surprisal) and
 `relativeDensity` is the raw density with respect to a reference volume.
 -/
-structure LogRadonNikodymPacket where
-  /-- Underlying event/sample type. -/
-  SampleSpace : Type*
-  /-- Reference volume state carrier (e.g. ν). -/
-  ReferenceCarrier : Type*
-  /-- State carrier (e.g. μ). -/
-  StateCarrier : Type*
-  /-- Density of states against reference (`dμ/dν`). -/
-  relativeDensity : StateCarrier → SampleSpace → ℝ
+structure LogRadonNikodymPacket (SampleSpace : Type*) [MeasurableSpace SampleSpace] where
+  /-- Reference measure `ν` on the common measurable sample space. -/
+  referenceMeasure : MeasureTheory.Measure SampleSpace
+  /-- State measure `μ` on the common measurable sample space. -/
+  stateMeasure : MeasureTheory.Measure SampleSpace
+  /-- Chosen real-valued density representative for `dμ/dν`. -/
+  relativeDensity : SampleSpace → ℝ
   /-- Log-potential (`−log(dμ/dν)`). -/
-  logPotential : StateCarrier → SampleSpace → ℝ
+  logPotential : SampleSpace → ℝ
 
   /-- Signed log law: `logPotential = -log(relativeDensity)`. -/
   logPotential_eq :
-    ∀ μ x, logPotential μ x = -Real.log (relativeDensity μ x)
-
-  /-- Reference volume witness carried by the packet. -/
-  referenceVolume : ReferenceCarrier
-
-  /-- Chosen reference carrier for the state. -/
-  stateVolume : StateCarrier
+    ∀ x, logPotential x = -Real.log (relativeDensity x)
 
 /--
 Relative surprisal / KL packet.
@@ -56,17 +52,24 @@ Relative surprisal / KL packet.
 `log(dμ/dη)`, and `klReadout` is the corresponding scalar divergence-like
 expectation value.
 -/
-structure RelativeSurprisalPacket where
-  /-- Source state of the KL comparison. -/
-  SourceState : Type*
-  /-- Reference state of the KL comparison. -/
-  ReferenceState : Type*
-
-  /-- Relative log-density on sample points (`log(dμ/dη)`). -/
-  relativeLogPotential : SourceState → ReferenceState → ℝ → ℝ
-
-  /-- Scalar divergence-like readout for each pair of states. -/
-  klReadout : SourceState → ReferenceState → ℝ
+structure RelativeSurprisalPacket
+    (SampleSpace : Type*) [MeasurableSpace SampleSpace] where
+  /-- Source measure μ of the KL comparison. -/
+  sourceMeasure : MeasureTheory.Measure SampleSpace
+  /-- Reference measure η of the KL comparison. -/
+  referenceMeasure : MeasureTheory.Measure SampleSpace
+  /-- Relative density `dμ/dη` on the common sample space. -/
+  relativeDensity : SampleSpace → ENNReal
+  /-- The source measure is obtained from η by this density. -/
+  sourceMeasure_eq_withDensity :
+    sourceMeasure = referenceMeasure.withDensity relativeDensity
+  /-- Relative log-density on sample points (`-log(dμ/dη)`). -/
+  relativeLogPotential : SampleSpace → ℝ
+  /-- Signed logarithmic surprisal law. -/
+  relativeLogPotential_eq : ∀ x,
+    relativeLogPotential x = -Real.log ((relativeDensity x).toReal)
+  /-- Scalar divergence readout downstream of the operator-valued density. -/
+  klReadout : ℝ
 
 /--
 Finite/free-energy packet.
@@ -100,57 +103,48 @@ structure GibbsFreeEnergyPacket where
   freeEnergy_eq :
     ∀ s, freeEnergy s = energy s + inverseTemperature⁻¹ * klToGibbs s
 
+/-- Normalization source for modular thermodynamics. -/
+inductive ModularNormalizationReference where
+  /-- A trace/weight normalization is available. -/
+  | trace (partition : ℝ)
+  /-- Type-III-style normalization is supplied by modular/KMS data. -/
+  | kms (partition : ℝ)
+
 /--
 Noncommutative modular-flow packet (Tomita–Takesaki style skeleton).
 
 No full modular theory is assumed; the fields record only explicit
 compatible data supplied by witnesses.
 -/
-structure ModularFlowPacket where
-  /-- Algebra/observable carrier. -/
-  AlgebraCarrier : Type*
-  /-- State/cyclic-vector carrier used by the modular packet. -/
-  StateCarrier : Type*
-  /-- Modular time action. -/
-  modularFlow : ℝ → StateCarrier → StateCarrier
+structure ModularFlowPacket (Algebra : Type*) [Ring Algebra] where
+  /-- The operator-valued modular flow owner. -/
+  modularOwner :
+    InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative.ModularFlow Algebra
   /-- Modular Hamiltonian (log density/potential) on states. -/
-  modularHamiltonian : StateCarrier → ℝ
+  modularHamiltonian : Algebra → ℝ
   /-- Connes cocycle trace shadow (`[Dφ:Dψ]_t` in abstract notation). -/
-  connesCocycle : ℝ → StateCarrier → ℝ
+  connesCocycle : ℝ → Algebra → ℝ
   /-- Relative modular potential witness. -/
-  relativeModularPotential : StateCarrier → StateCarrier → ℝ
-  /-- Whether a trace/volume reference has been explicitly chosen.
-
-      In Type III regimes this is typically false and modular/KMS data is
-      primary.
-  -/
-  hasTraceReference : Prop
-  /-- Trace-based normalization, when a trace/weight reference is supplied. -/
-  tracePartition : hasTraceReference → ℝ
-  /-- KMS/modular normalization, when no trace/weight reference is supplied. -/
-  kmsPartition : ¬ hasTraceReference → ℝ
+  relativeModularPotential : Algebra → Algebra → ℝ
+  /-- Explicit choice between trace and modular/KMS normalization. -/
+  normalizationReference : ModularNormalizationReference
 
   /-- Distinguished state/witness carrying the modular data. -/
-  modularState : StateCarrier
+  modularState : Algebra
 
 /--
 Supervolume layer (graded/signed trace skeleton).
 -/
-structure SupervolumePacket where
-  /-- Graded object carrier. -/
-  GradedCarrier : Type*
-  /-- Even sector. -/
-  EvenSector : Type*
-  /-- Odd sector. -/
-  OddSector : Type*
+structure SupervolumePacket (Algebra : Type*) [Ring Algebra] where
+  /-- Actual graded/supertrace owner for the operator algebra. -/
+  supertraceOwner : InfoGeometry.OperatorAlgebra.SuperTraceDatum Algebra
   /-- Even-trace contribution. -/
-  evenTrace : GradedCarrier → ℝ
+  evenTrace : Algebra → ℝ
   /-- Odd-trace contribution. -/
-  oddTrace : GradedCarrier → ℝ
-  /-- Supertrace/effective signed volume assignment. -/
-  supertrace : GradedCarrier → ℝ
+  oddTrace : Algebra → ℝ
   /-- Supertrace as graded difference: `Str = Tr_even - Tr_odd`. -/
-  supertrace_eq : ∀ x : GradedCarrier, supertrace x = evenTrace x - oddTrace x
+  supertrace_eq : ∀ x : Algebra,
+    supertraceOwner.supertrace x = evenTrace x - oddTrace x
 
 /--
 Dissipative KMS-compatible flow skeleton (GKSL-style container).
@@ -158,29 +152,26 @@ Dissipative KMS-compatible flow skeleton (GKSL-style container).
 This remains a witness-level wrapper of a generator and entropy/energy
 functional decay shadow.
 -/
-structure GKSLPacket where
-  /-- Open-system state carrier. -/
-  StateCarrier : Type*
-  /-- One-parameter semigroup generator placeholder. -/
-  generator : ℝ → StateCarrier → StateCarrier
-  /-- Abstract dissipation/jump carrier witness. -/
-  jumpIndex : Type*
-  /-- Abstract anticommutator term, witnessing GKSL structure at sector level. -/
-  anticommutator : jumpIndex → StateCarrier → StateCarrier → StateCarrier
-  /-- Abstract involution/join map for jump terms. -/
-  involution : StateCarrier → StateCarrier
+structure GKSLPacket (n : ℕ) where
+  /-- Hamiltonian matrix in the noncommutative state algebra. -/
+  hamiltonian : Matrix (Fin n) (Fin n) ℝ
+  /-- Lindblad jump operator matrix. -/
+  jumpOperator : Matrix (Fin n) (Fin n) ℝ
+  /-- One-parameter generator on matrix states. -/
+  generator : ℝ → Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ
+  /-- Generator is the canonical Hamiltonian plus Lindblad dissipator. -/
+  generator_eq : ∀ t ρ,
+    generator t ρ =
+      TomitaTakesakiKMSEntropy.hamiltonianCommutator hamiltonian ρ +
+        TomitaTakesakiKMSEntropy.lindbladDissipator jumpOperator ρ
   /-- Energy/potential Lyapunov readout carried by the flow. -/
-  freeEnergyShadow : StateCarrier → ℝ
-  /-- Monotonicity witness requested by flow narratives. -/
-  freeEnergyDecay : StateCarrier → ℝ → Prop
-  /-- Concrete monotonicity instance for the shadow flow. -/
-  freeEnergyDecay_holds : ∀ ρ t, freeEnergyDecay ρ t
+  freeEnergyShadow : Matrix (Fin n) (Fin n) ℝ → ℝ
   /-- Dissipative monotonicity for nonnegative time (shadow law). -/
   freeEnergy_monotone :
     ∀ ρ t, 0 ≤ t → freeEnergyShadow (generator t ρ) ≤ freeEnergyShadow ρ
 
   /-- Equilibrium/reference state used by the flow data. -/
-  equilibriumState : StateCarrier
+  equilibriumState : Matrix (Fin n) (Fin n) ℝ
 
 /-!
 Finite spectral-thermal normalization schema.
@@ -325,40 +316,47 @@ structure ModularTransportBridgePacket where
 Normalize by the supplied modular reference data, with an explicit branch for
 type III/trace-free situations.
 -/
-def modularPartitionNormalization (mf : ModularFlowPacket) : ℝ := by
-  classical
-  exact if h : mf.hasTraceReference then mf.tracePartition h else mf.kmsPartition h
+def modularPartitionNormalization
+    {Algebra : Type*} [Ring Algebra]
+    (mf : ModularFlowPacket Algebra) : ℝ := by
+  exact match mf.normalizationReference with
+    | .trace partition => partition
+    | .kms partition => partition
 
 /-- Modular normalization is by trace when a trace reference is supplied. -/
 theorem modularPartitionNormalization_trace
-    (mf : ModularFlowPacket) (h : mf.hasTraceReference) :
-    modularPartitionNormalization mf = mf.tracePartition h := by
-  classical
-  simp [modularPartitionNormalization, h]
+    {Algebra : Type*} [Ring Algebra]
+    (mf : ModularFlowPacket Algebra) (partition : ℝ)
+    (h : mf.normalizationReference = .trace partition) :
+    modularPartitionNormalization mf = partition := by
+  rw [modularPartitionNormalization, h]
 
 /-- Modular normalization is by KMS/modular data when no trace reference is supplied. -/
 theorem modularPartitionNormalization_kms
-    (mf : ModularFlowPacket) (h : ¬ mf.hasTraceReference) :
-    modularPartitionNormalization mf = mf.kmsPartition h := by
-  classical
-  simp [modularPartitionNormalization, h]
+    {Algebra : Type*} [Ring Algebra]
+    (mf : ModularFlowPacket Algebra) (partition : ℝ)
+    (h : mf.normalizationReference = .kms partition) :
+    modularPartitionNormalization mf = partition := by
+  rw [modularPartitionNormalization, h]
 
 /--
 Integrated modular-volume thermodynamic packet.
 -/
-structure ModularVolumePotentialPacket where
+structure ModularVolumePotentialPacket
+    (SampleSpace Algebra : Type*) (n : ℕ)
+    [MeasurableSpace SampleSpace] [Ring Algebra] where
   /-- Classical measure/potential layer. -/
-  logRN : LogRadonNikodymPacket
+  logRN : LogRadonNikodymPacket SampleSpace
   /-- Relative surprisal and KL readout layer. -/
-  relativeKL : RelativeSurprisalPacket
+  relativeKL : RelativeSurprisalPacket SampleSpace
   /-- Gibbs/free-energy layer. -/
   freeEnergy : GibbsFreeEnergyPacket
   /-- Modular flow and modular Hamiltonian layer. -/
-  modularFlow : ModularFlowPacket
+  modularFlow : ModularFlowPacket Algebra
   /-- Graded/supertrace layer. -/
-  supervolume : SupervolumePacket
+  supervolume : SupervolumePacket Algebra
   /-- Dissipative/KMS-compatible flow layer. -/
-  dissipativeFlow : GKSLPacket
+  dissipativeFlow : GKSLPacket n
 
 /-!
 Grand unification bridge packet.
@@ -371,46 +369,71 @@ structure ModularVolumeBridgePacket where
   ClassicalMeasureSpace : Type*
   VonNeumannSystem : Type*
   SpectralGeometry : Type*
-  /-- Classical reference volume/measure carrier. -/
-  classicalVolume : Type*
   /-- Classical state/density carrier. -/
   classicalState : Type*
-  /-- Logarithmic Radon–Nikodym potential carrier. -/
-  classicalLogPotential : Type*
+  /-- Classical reference volume/measure readout. -/
+  classicalVolume : ClassicalMeasureSpace → ℝ
+  /-- Logarithmic Radon–Nikodym potential. -/
+  classicalLogPotential : classicalState → ClassicalMeasureSpace → ℝ
   /-- Modular reference weight/state carrier. -/
   modularWeight : Type*
   /-- Relative modular data carrier (`[Dφ:Dψ]`, modular operators, etc.). -/
-  modularData : Type*
-  /-- Modular Hamiltonian / modular log-potential carrier. -/
-  modularHamiltonian : Type*
-  /-- KL-divergence proposition (written as `D_{KL}(μ|η)` in this layer). -/
-  klDivergence : Prop
-  /-- Araki entropy carrier. -/
-  arakiRelativeEntropy : Type*
-  /-- Free-energy proposition. -/
-  freeEnergy : Prop
-  /-- Spectral volume / density-of-states proposition. -/
-  spectralVolume : Prop
-  /-- Weyl/volume asymptotic proposition. -/
-  weylVolumeGauge : Prop
+  modularData : modularWeight → modularWeight → Type*
+  /-- Carrier of modular Hamiltonians / modular log-potentials. -/
+  ModularHamiltonianCarrier : Type*
+  /-- Modular Hamiltonian attached to a reference weight. -/
+  modularHamiltonian : modularWeight → ModularHamiltonianCarrier
+  /-- Map comparing a classical state with its modular-weight realization. -/
+  stateToModularWeight : classicalState → modularWeight
+  /-- Classical KL-divergence functional. -/
+  klDivergence : classicalState → classicalState → ℝ
+  /-- Araki relative-entropy functional. -/
+  arakiRelativeEntropy : modularWeight → modularWeight → ℝ
+  /-- Energy and free-energy functionals on classical states. -/
+  energy : classicalState → ℝ
+  freeEnergy : classicalState → ℝ
+  /-- Gibbs comparison data used by the free-energy split. -/
+  inverseTemperature : ℝ
+  gibbsReference : classicalState
+  /-- Spectral volume and its Weyl-gauge comparison readout. -/
+  spectralVolume : SpectralGeometry → ℝ
+  weylVolumeGauge : SpectralGeometry → ℝ
   /-- Spectral thermal normalization data (`Z_β`). -/
   spectralThermalNormalization : SpectralThermalNormalizationPacket
   /-- Connes-cocycle transport data. -/
   modularTransport : ModularTransportBridgePacket
-  /-- Comparison proposition linking KL and Araki entropy reductions. -/
-  entropyComparison : Prop
-  /-- Comparison proposition linking free energy to relative entropy. -/
-  freeEnergyComparison : Prop
-  /-- Comparison proposition linking spectral volume and geometric volume asymptotics. -/
-  spectralVolumeComparison : Prop
+
+namespace ModularVolumeBridgePacket
+
+/-- KL and Araki entropy agree after the selected state-to-weight realization. -/
+def entropyComparison (B : ModularVolumeBridgePacket) : Prop :=
+  ∀ μ η : B.classicalState,
+    B.klDivergence μ η =
+      B.arakiRelativeEntropy
+        (B.stateToModularWeight μ) (B.stateToModularWeight η)
+
+/-- Free energy is energy plus the inverse-temperature-scaled Gibbs divergence. -/
+def freeEnergyComparison (B : ModularVolumeBridgePacket) : Prop :=
+  ∀ μ : B.classicalState,
+    B.freeEnergy μ =
+      B.energy μ +
+        B.inverseTemperature⁻¹ * B.klDivergence μ B.gibbsReference
+
+/-- Spectral volume agrees pointwise with the selected Weyl-volume gauge. -/
+def spectralVolumeComparison (B : ModularVolumeBridgePacket) : Prop :=
+  ∀ x : B.SpectralGeometry,
+    B.spectralVolume x = B.weylVolumeGauge x
+
+end ModularVolumeBridgePacket
 
 namespace LogRadonNikodymPacket
 
 /-- Rewrite `logPotential` as a negative log-density. -/
 @[simp] theorem logPotential_eq_neg_log_density
-    (P : LogRadonNikodymPacket) (μ : P.StateCarrier) (x : P.SampleSpace) :
-    P.logPotential μ x = -Real.log (P.relativeDensity μ x) := by
-  exact P.logPotential_eq μ x
+    {SampleSpace : Type*} [MeasurableSpace SampleSpace]
+    (P : LogRadonNikodymPacket SampleSpace) (x : SampleSpace) :
+    P.logPotential x = -Real.log (P.relativeDensity x) := by
+  exact P.logPotential_eq x
 
 end LogRadonNikodymPacket
 
@@ -442,8 +465,13 @@ end SpectralBoltzmannPacket
 
 namespace SupervolumePacket
 
+def supertrace {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) : Algebra → ℝ :=
+  P.supertraceOwner.supertrace
+
 @[simp] theorem supertrace_eq_even_sub_odd
-    (P : SupervolumePacket) (x : P.GradedCarrier) :
+    {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) (x : Algebra) :
     P.supertrace x = P.evenTrace x - P.oddTrace x := by
   exact P.supertrace_eq x
 
@@ -451,15 +479,24 @@ end SupervolumePacket
 
 namespace GKSLPacket
 
-/-- Shadow of the decay witness evaluated on a time step. -/
+/-- Free-energy decay is the native Lyapunov inequality at nonnegative time. -/
+def freeEnergyDecay
+    {n : ℕ} (P : GKSLPacket n)
+    (ρ : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) : Prop :=
+  0 ≤ t →
+    P.freeEnergyShadow (P.generator t ρ) ≤ P.freeEnergyShadow ρ
+
+/-- The installed GKSL monotonicity law proves the derived decay predicate. -/
 theorem freeEnergyDecay_holds_apply
-    (P : GKSLPacket) (ρ : P.StateCarrier) (t : ℝ) :
-    P.freeEnergyDecay ρ t := by
-  exact P.freeEnergyDecay_holds ρ t
+    {n : ℕ} (P : GKSLPacket n)
+    (ρ : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) :
+    P.freeEnergyDecay ρ t :=
+  P.freeEnergy_monotone ρ t
 
 /-- Dissipative shadow generator contract (nonnegative times only). -/
 theorem freeEnergyShadow_generator_le
-    (P : GKSLPacket) (ρ : P.StateCarrier) (t : ℝ) (ht : 0 ≤ t) :
+    {n : ℕ} (P : GKSLPacket n)
+    (ρ : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) (ht : 0 ≤ t) :
     P.freeEnergyShadow (P.generator t ρ) ≤ P.freeEnergyShadow ρ := by
   exact P.freeEnergy_monotone ρ t ht
 

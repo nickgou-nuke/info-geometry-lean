@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 open CategoryTheory
 open CategoryTheory.Limits

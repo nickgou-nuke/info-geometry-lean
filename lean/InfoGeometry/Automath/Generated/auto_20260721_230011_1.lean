@@ -1,13 +1,10 @@
-import Mathlib.Tactic
-
+import Mathlib.Data.Complex.Basic
 
 namespace Automath.Generated
 
 set_option linter.unusedVariables false
 
-/--  -/
-theorem auto_20260721_230011_1 : True :=
-  -- HEADER: 
-  trivial
+/-- Complex multiplication square lemma -/
+theorem auto_20260721_230011_1 (z : ℂ) : z * z = z ^ 2 := by ring
 
 end Automath.Generated

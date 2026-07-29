@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.RingQuot
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 
 /-!
 # Arnold-Cohen Relation Surfaces

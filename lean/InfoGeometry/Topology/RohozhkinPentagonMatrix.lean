@@ -134,13 +134,12 @@ theorem rohozhkin_invariant_under_appendix_pentagon_move
     (h_km : zk - zm ≠ 0)
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0)
-    (w₁ w₂ : List (DelaunayFlipContext 1))
-    (hbefore hafter : Prop) :
+    (w₁ w₂ : List (DelaunayFlipContext 1)) :
     rohozhkinMatrix
-        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂, hbefore⟩ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1) =
       rohozhkinMatrix
-        (⟨w₁ ++ w₂, hafter⟩ : DelaunayFlipWord 1) := by
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) := by
   dsimp [appendixPentagonContexts]
   exact rohozhkin_invariant_under_pentagon_move w₁ w₂
     { matrix := pentagonGamma5 zi zj zk zl zm }
@@ -149,7 +148,6 @@ theorem rohozhkin_invariant_under_appendix_pentagon_move
     { matrix := pentagonGamma2 zi zj zk zl zm }
     { matrix := pentagonGamma1 zi zj zk zl zm }
     (pentagon_appendix_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl)
-    hbefore hafter
 
 /--
 The Appendix A five-flip pentagon is a single witnessed step in the Delaunay
@@ -165,12 +163,11 @@ theorem appendix_pentagon_delaunay_equiv
     (h_km : zk - zm ≠ 0)
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0)
-    (w₁ w₂ : List (DelaunayFlipContext 1))
-    (hbefore hafter : Prop) :
+    (w₁ w₂ : List (DelaunayFlipContext 1)) :
     DelaunayEquiv
-        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂, hbefore⟩ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1)
-        (⟨w₁ ++ w₂, hafter⟩ : DelaunayFlipWord 1) := by
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) := by
   dsimp [appendixPentagonContexts]
   exact DelaunayEquiv.step .pentagon _ _
     (DelaunayMoveList.pentagon w₁ w₂
@@ -194,15 +191,14 @@ theorem tiling_pentagon_braid_readout
     (h_km : zk - zm ≠ 0)
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0)
-    (w₁ w₂ : List (DelaunayFlipContext 1))
-    (hbefore hafter : Prop) :
+    (w₁ w₂ : List (DelaunayFlipContext 1)) :
     rohozhkinMatrix
-        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂, hbefore⟩ :
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂⟩ :
           DelaunayFlipWord 1) =
       rohozhkinMatrix
-        (⟨w₁ ++ w₂, hafter⟩ : DelaunayFlipWord 1) :=
+        (⟨w₁ ++ w₂⟩ : DelaunayFlipWord 1) :=
   rohozhkin_invariant_under_equiv
     (appendix_pentagon_delaunay_equiv zi zj zk zl zm
-      h_il h_ik h_km h_jm h_jl w₁ w₂ hbefore hafter)
+      h_il h_ik h_km h_jm h_jl w₁ w₂)
 
 end InfoGeometry.Topology.Delaunay

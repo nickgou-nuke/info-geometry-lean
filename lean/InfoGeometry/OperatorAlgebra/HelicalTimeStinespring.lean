@@ -161,10 +161,29 @@ This is the formal version of a state distributed over multiple timesheets.
 -/
 structure ProjectionPacket
     (Proj : Type*) where
-  weight : ℤ → ℝ
+  /-- Finitely supported sheet weights. Finite support is structural through
+  Mathlib's `Finsupp`. -/
+  weight : ℤ →₀ ℝ
   projector : ℤ → Proj
-  finiteSupport : Prop
-  normalized : Prop
+  /-- The finite sheet weights have total mass one. -/
+  weight_sum_eq_one :
+    weight.sum (fun _ w => w) = 1
+
+namespace ProjectionPacket
+
+variable {Proj : Type*} (P : ProjectionPacket Proj)
+
+/-- The sheet-weight support is finite by the `Finsupp` owner. -/
+theorem finiteSupport :
+    Set.Finite (P.weight.support : Set ℤ) :=
+  P.weight.support.finite_toSet
+
+/-- The packet's actual finite weight sum is normalized. -/
+theorem normalized :
+    P.weight.sum (fun _ w => w) = 1 :=
+  P.weight_sum_eq_one
+
+end ProjectionPacket
 
 /-- A readout of the packet on a selected visible sheet. -/
 def visibleSheetReadout
@@ -252,11 +271,11 @@ structure LFunctionHelicalBranch
   divisor : SpectralDivisorDatum
   calibration :
     HelicalSpectralChargeCalibration State helix divisor
-  /--
-  Certificate that the spectral function is the intended zeta/L/scattering
-  determinant for this model.
-  -/
-  spectral_function_calibrated : Prop
+  /-- Intended zeta/L/scattering determinant for this model. -/
+  referenceSpectralFunction : ℂ → ℂ
+  /-- The divisor's spectral function is exactly the intended function. -/
+  divisor_L_eq_reference :
+    divisor.L = referenceSpectralFunction
 
 namespace LFunctionHelicalBranch
 
@@ -269,6 +288,12 @@ theorem sheet_eq_divisor_charge
     B.helix.sheet x =
       B.divisor.chargeOf (B.calibration.spectralRegion x) :=
   B.calibration.sheet_eq_charge x
+
+/-- The branch's spectral function is calibrated by equality with its owned
+reference function. -/
+theorem spectral_function_calibrated :
+    B.divisor.L = B.referenceSpectralFunction :=
+  B.divisor_L_eq_reference
 
 end LFunctionHelicalBranch
 

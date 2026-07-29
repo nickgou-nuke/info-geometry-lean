@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.TensorAlgebra.Basic
+import Mathlib.Algebra.Star.RingQuot
 import InfoGeometry.Algebra.GenericDirac
 
 /-!

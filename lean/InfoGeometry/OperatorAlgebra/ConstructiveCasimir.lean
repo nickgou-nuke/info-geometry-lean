@@ -21,6 +21,7 @@ longer hidden inside a bare `is_central` hypothesis.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
 
 noncomputable section
 
@@ -277,18 +278,29 @@ downstream modules usually need:
 * centrality;
 * unit-conjugation invariance.
 -/
-structure IndividuatedCasimir
-    (A : Type*) [Ring A] where
-  /-- The Casimir element. -/
-  element : A
+abbrev IndividuatedCasimir
+    (A : Type*) [Ring A] :=
+  InfoGeometry.OperatorAlgebra.IndividuatedCasimir.VerifiedCasimir A
 
-  /-- Centrality proof. -/
-  isCentral :
-    IsCentral element
+namespace IndividuatedCasimir
 
-  /-- Unit-conjugation invariance proof. -/
-  isInvariant :
-    IsUnitConjugationInvariant element
+variable {A : Type*} [Ring A]
+
+/-- Historical centrality readout, derived from the canonical commutation law. -/
+theorem isCentral (C : IndividuatedCasimir A) :
+    IsCentral C.element := by
+  intro X
+  simp [assocCommutator, C.central X]
+
+/--
+Historical invariance readout.  Unit-conjugation invariance is derived from
+centrality rather than stored as a second evidence field.
+-/
+theorem isInvariant (C : IndividuatedCasimir A) :
+    IsUnitConjugationInvariant C.element :=
+  unitConjugationInvariant_of_central C.isCentral
+
+end IndividuatedCasimir
 
 /--
 Build an individuated Casimir from a verified quadratic Casimir datum.
@@ -298,8 +310,7 @@ def VerifiedQuadraticCasimir.toIndividuatedCasimir
     (C : VerifiedQuadraticCasimir A ι) :
     IndividuatedCasimir A where
   element := C.element
-  isCentral := C.isCentral
-  isInvariant := C.unitConjugationInvariant
+  central := fun X => (C.commutes_with X).symm
 
 /-! ## 7. Owner target -/
 

@@ -120,24 +120,18 @@ end BayesRouterCertification
 
 /-! ## 3. Existing Majorana lift as latent closure grammar -/
 
-namespace MajoranaLiftPacket
-
 variable
     {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-variable (P : MajoranaLiftPacket (E := E))
-
 /--
-The existing Majorana packet supplies the latent phase-axis closure grammar:
-`K² = -Id`.
+The canonical doubled-core Majorana phase axis supplies the latent closure
+grammar `K² = -Id`.
 -/
-theorem latent_phase_axis_square :
-    P.K.comp P.K =
+theorem canonicalMajorana_latent_phase_axis_square :
+    (canonicalMajoranaK (E := E)).comp (canonicalMajoranaK (E := E)) =
       -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
-  P.K_sq_eq_neg_id
-
-end MajoranaLiftPacket
+  canonicalMajoranaK_sq_eq_neg_id (E := E)
 
 namespace RealMajoranaDatum
 

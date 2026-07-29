@@ -13,6 +13,7 @@ only through proof-carrying calibration data.
 -/
 
 import Mathlib.Tactic
+import Mathlib.Analysis.Normed.Operator.Banach
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.Meta.OwnerTarget
 
@@ -24,19 +25,19 @@ open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 /-! ## 1. Bregman Hessian degeneracy -/
 
-/--
-Bregman/Fenchel Hessian data.
-
-`isInvertibleAt U` is the regularity predicate for the local Legendre/Fisher
-Hessian at `U`.
--/
+/-- Bregman/Fenchel Hessian data. -/
 structure BregmanHessianDatum
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
   /-- Hessian/response operator at a state. -/
   hessian : Op → (Op →L[ℝ] Op)
 
-  /-- Regularity predicate for the Hessian. -/
-  isInvertibleAt : Op → Prop
+/-! The regularity predicate is owned by the stored operator, not supplied as
+an unrelated proposition. -/
+
+def BregmanHessianDatum.isInvertibleAt
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (H : BregmanHessianDatum Op) (U : Op) : Prop :=
+  IsUnit (H.hessian U)
 
 /--
 The topological snap boundary is the locus where the Hessian ceases to be

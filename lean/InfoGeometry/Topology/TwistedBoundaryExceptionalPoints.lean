@@ -35,42 +35,71 @@ to their topological invariants.
 -/
 structure EPCaseClassification where
   pair_type : EPPairType
-  vorticities_opposite : Bool
-  braid_trivial : Bool
-  berry_phase_pi : Bool
+  left_vorticity : ℤ
+  right_vorticity : ℤ
+  braid_winding : ℤ
+  berry_phase : ℝ
   merging : MergingOutcome
 
+/-- Opposite vorticities are represented by the actual integer charges. -/
+def vorticitiesOpposite (C : EPCaseClassification) : Prop :=
+  C.left_vorticity = -C.right_vorticity
+
+/-- Trivial braid monodromy is zero winding in the integer braid readout. -/
+def braidTrivial (C : EPCaseClassification) : Prop :=
+  C.braid_winding = 0
+
+/-- The Berry phase is the physical angle `π`, not a Boolean marker. -/
+def berryPhasePi (C : EPCaseClassification) : Prop :=
+  C.berry_phase = Real.pi
+
 /-- Case 1: H(z) = [0, z; z*, 0]. Type I, DP merging. -/
-def case1 : EPCaseClassification :=
+noncomputable def case1 : EPCaseClassification :=
   { pair_type := EPPairType.TypeI,
-    vorticities_opposite := true,
-    braid_trivial := true,
-    berry_phase_pi := true,
+    left_vorticity := 1,
+    right_vorticity := -1,
+    braid_winding := 0,
+    berry_phase := Real.pi,
     merging := MergingOutcome.DP }
 
 /-- Case 2: H(z) = [0, 1; |z|^2, 0]. Type I, Defective merging. -/
 def case2 : EPCaseClassification :=
   { pair_type := EPPairType.TypeI,
-    vorticities_opposite := true,
-    braid_trivial := true,
-    berry_phase_pi := false,
+    left_vorticity := 1,
+    right_vorticity := -1,
+    braid_winding := 0,
+    berry_phase := 0,
     merging := MergingOutcome.Defective }
 
 /-- Case 3: H(z) = [0, z; z, 0]. Type II, VP merging. -/
 def case3 : EPCaseClassification :=
   { pair_type := EPPairType.TypeII,
-    vorticities_opposite := false,
-    braid_trivial := false,
-    berry_phase_pi := false,
+    left_vorticity := 1,
+    right_vorticity := 1,
+    braid_winding := 1,
+    berry_phase := 0,
     merging := MergingOutcome.VP }
 
 /-- Case 4: H(z) = [0, 1; z^2, 0]. Type II, Defective merging. -/
-def case4 : EPCaseClassification :=
+noncomputable def case4 : EPCaseClassification :=
   { pair_type := EPPairType.TypeII,
-    vorticities_opposite := false,
-    braid_trivial := false,
-    berry_phase_pi := true,
+    left_vorticity := 1,
+    right_vorticity := 1,
+    braid_winding := 1,
+    berry_phase := Real.pi,
     merging := MergingOutcome.Defective }
+
+@[simp] theorem case1_vorticities_opposite : vorticitiesOpposite case1 := by
+  norm_num [vorticitiesOpposite, case1]
+
+@[simp] theorem case2_vorticities_opposite : vorticitiesOpposite case2 := by
+  norm_num [vorticitiesOpposite, case2]
+
+@[simp] theorem case3_not_vorticities_opposite : ¬vorticitiesOpposite case3 := by
+  norm_num [vorticitiesOpposite, case3]
+
+@[simp] theorem case4_not_vorticities_opposite : ¬vorticitiesOpposite case4 := by
+  norm_num [vorticitiesOpposite, case4]
 
 /--
 Theorem: A co-rotating pair of EPs (Type II), as defined in Case 3, cannot merge into a Dirac Point,

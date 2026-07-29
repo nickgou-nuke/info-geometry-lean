@@ -14,16 +14,10 @@ noncomputable section
 namespace CubicJordanPeirceDecomposition
 
 /-- Two-sided orthogonal Peirce idempotents. -/
-structure PeirceIdempotents {A : Type*} [Ring A] (E1 E2 E3 : A) : Prop where
-  id_E1 : E1 * E1 = E1
-  id_E2 : E2 * E2 = E2
-  id_E3 : E3 * E3 = E3
-  ortho_12 : E1 * E2 = 0
-  ortho_21 : E2 * E1 = 0
-  ortho_23 : E2 * E3 = 0
-  ortho_32 : E3 * E2 = 0
-  ortho_31 : E3 * E1 = 0
-  ortho_13 : E1 * E3 = 0
+abbrev PeirceIdempotents {A : Type*} [Ring A] (E1 E2 E3 : A) : Prop :=
+  (E1 * E1 = E1 ∧ E2 * E2 = E2 ∧ E3 * E3 = E3) ∧
+  (E1 * E2 = 0 ∧ E2 * E1 = 0 ∧ E2 * E3 = 0 ∧ E3 * E2 = 0 ∧
+    E3 * E1 = 0 ∧ E1 * E3 = 0)
 
 variable {A : Type*} [Ring A]
 variable (E1 E2 E3 : A)
@@ -38,7 +32,7 @@ theorem Pcanonical_sq (h : PeirceIdempotents E1 E2 E3) :
   calc
     (E1 - E2) * (E1 - E2)
         = E1 * E1 - E1 * E2 - E2 * E1 + E2 * E2 := by noncomm_ring
-    _ = E1 - 0 - 0 + E2 := by rw [h.id_E1, h.ortho_12, h.ortho_21, h.id_E2]
+    _ = E1 - 0 - 0 + E2 := by rw [h.1.1, h.2.1, h.2.2.1, h.1.2.1]
     _ = E1 + E2 := by simp
 
 /-- Verification of the tripotent condition `P³=P` for `P=E₁-E₂`. -/
@@ -50,26 +44,26 @@ theorem Pcanonical_is_tripotent (h : PeirceIdempotents E1 E2 E3) :
   calc
     (E1 + E2) * (E1 - E2)
         = E1 * E1 - E1 * E2 + E2 * E1 - E2 * E2 := by noncomm_ring
-    _ = E1 - 0 + 0 - E2 := by rw [h.id_E1, h.ortho_12, h.ortho_21, h.id_E2]
+    _ = E1 - 0 + 0 - E2 := by rw [h.1.1, h.2.1, h.2.2.1, h.1.2.1]
     _ = E1 - E2 := by simp
 
 /-- `E₁` belongs to the `+1` eigenspace of left multiplication by `P`. -/
 theorem L_P_E1_eigen (h : PeirceIdempotents E1 E2 E3) :
     Pcanonical E1 E2 * E1 = E1 := by
   unfold Pcanonical
-  rw [sub_mul, h.id_E1, h.ortho_21, sub_zero]
+  rw [sub_mul, h.1.1, h.2.2.1, sub_zero]
 
 /-- `E₂` belongs to the `-1` eigenspace of left multiplication by `P`. -/
 theorem L_P_E2_eigen (h : PeirceIdempotents E1 E2 E3) :
     Pcanonical E1 E2 * E2 = -E2 := by
   unfold Pcanonical
-  rw [sub_mul, h.ortho_12, h.id_E2, zero_sub]
+  rw [sub_mul, h.2.1, h.1.2.1, zero_sub]
 
 /-- `E₃` belongs to the `0` eigenspace of left multiplication by `P`. -/
 theorem L_P_E3_zero (h : PeirceIdempotents E1 E2 E3) :
     Pcanonical E1 E2 * E3 = 0 := by
   unfold Pcanonical
-  rw [sub_mul, h.ortho_13, h.ortho_23, sub_self]
+  rw [sub_mul, h.2.2.2.2.2.2, h.2.2.2.1, sub_self]
 
 
 

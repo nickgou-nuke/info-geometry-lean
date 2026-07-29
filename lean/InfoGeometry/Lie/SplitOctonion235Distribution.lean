@@ -20,43 +20,44 @@ inductive Distribution235Status where
   | globalCartanGeometryOpenDebt
   deriving DecidableEq, Repr
 
-/-- Evidence packet for the flat split-octonion homogeneous `(2,3,5)` model. -/
-structure SplitOctonion235Packet where
-  imaginaryDimension : ℕ
-  imaginaryNormPositiveNegativeUnordered : ℕ × ℕ
-  projectiveNullQuadricDimension : ℕ
-  leftAnnihilatorRank : ℕ
-  leftAnnihilatorDimension : ℕ
-  projectivizedDistributionRank : ℕ
-  firstDerivedRank : ℕ
-  ambientRank : ℕ
-  splitG2SymmetryDimension : ℕ
-  status : Distribution235Status
+/-! Exact local-algebra readouts, exposed directly rather than through an
+evidence packet.  The underlying split-octonion incidence owners below remain
+the source of the mathematical statements. -/
+def imaginaryDimension : ℕ := 7
 
-/-- Exact readback from the multi-engine local algebra packet. -/
-def splitOctonion235Packet : SplitOctonion235Packet where
-  imaginaryDimension := 7
-  imaginaryNormPositiveNegativeUnordered := (3, 4)
-  projectiveNullQuadricDimension := 5
-  leftAnnihilatorRank := 4
-  leftAnnihilatorDimension := 3
-  projectivizedDistributionRank := 2
-  firstDerivedRank := 3
-  ambientRank := 5
-  splitG2SymmetryDimension := 14
-  status := Distribution235Status.exactLocalAlgebraEvidence
+def imaginaryNormPositiveNegativeUnordered : ℕ × ℕ := (3, 4)
+
+def projectiveNullQuadricDimension : ℕ := 5
+
+def leftAnnihilatorRank : ℕ := 4
+
+def leftAnnihilatorDimension : ℕ := 3
+
+def projectivizedDistributionRank : ℕ := 2
+
+def firstDerivedRank : ℕ := 3
+
+def ambientRank : ℕ := 5
+
+def splitG2SymmetryDimension : ℕ := 14
+
+def localAlgebraStatus : Distribution235Status :=
+  Distribution235Status.exactLocalAlgebraEvidence
 
 /-- The exact local algebra packet has the expected `(2,3,5)` dimensions. -/
 theorem splitOctonion235Packet_dimensions :
-    splitOctonion235Packet.imaginaryDimension = 7 ∧
-      splitOctonion235Packet.imaginaryNormPositiveNegativeUnordered = (3, 4) ∧
-      splitOctonion235Packet.projectiveNullQuadricDimension = 5 ∧
-      splitOctonion235Packet.leftAnnihilatorDimension = 3 ∧
-      splitOctonion235Packet.projectivizedDistributionRank = 2 ∧
-      splitOctonion235Packet.firstDerivedRank = 3 ∧
-      splitOctonion235Packet.ambientRank = 5 ∧
-      splitOctonion235Packet.splitG2SymmetryDimension = 14 := by
-  simp [splitOctonion235Packet]
+    imaginaryDimension = 7 ∧
+      imaginaryNormPositiveNegativeUnordered = (3, 4) ∧
+      projectiveNullQuadricDimension = 5 ∧
+      leftAnnihilatorDimension = 3 ∧
+      projectivizedDistributionRank = 2 ∧
+      firstDerivedRank = 3 ∧
+      ambientRank = 5 ∧
+      splitG2SymmetryDimension = 14 := by
+  simp [imaginaryDimension, imaginaryNormPositiveNegativeUnordered,
+    projectiveNullQuadricDimension, leftAnnihilatorDimension,
+    projectivizedDistributionRank, firstDerivedRank, ambientRank,
+    splitG2SymmetryDimension]
 
 /-- The concrete projective model is expressed by the trace-style numerator. -/
 theorem splitOctonion235TraceIncidence_formula
@@ -87,7 +88,7 @@ theorem splitOctonion235Incident_iff_traceIncidence3_eq_zero
 
 /-- The current packet is local algebra evidence, not a global Cartan-geometry proof. -/
 theorem splitOctonion235Packet_not_global_cartan_geometry :
-    splitOctonion235Packet.status ≠ Distribution235Status.globalCartanGeometryOpenDebt := by
+    localAlgebraStatus ≠ Distribution235Status.globalCartanGeometryOpenDebt := by
   decide
 
 end InfoGeometry.Lie.SplitOctonion235Distribution

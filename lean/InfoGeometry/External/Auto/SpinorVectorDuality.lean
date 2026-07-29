@@ -31,14 +31,18 @@ class KleinAction (M : Type) where
   act_e : ∀ x, act V4.e x = x
   act_mul : ∀ g h x, act (V4.mul g h) x = act g (act h x)
 
-/-- Spinor and Vector state representations on the resolved manifold. -/
-structure SpinorState (M : Type) where
-  val : M
-  is_spinor : True
+/-- A spinor predicate supplied by the geometric/Clifford owner. -/
+abbrev SpinorPredicate (M : Type) := M → Prop
 
-structure VectorState (M : Type) where
+/-- Spinor states satisfying the supplied admissibility predicate. -/
+structure SpinorState (M : Type) (P : SpinorPredicate M) where
   val : M
-  is_vector : True
+  is_spinor : P val
+
+/-- Vector states satisfying the same carrier predicate. -/
+structure VectorState (M : Type) (P : SpinorPredicate M) where
+  val : M
+  is_vector : P val
 
 /-- The equivalence relation mapping spinor states to vector states 
     (duality on resolved orbifolds). -/
@@ -48,13 +52,14 @@ structure IsoEquiv (A B : Type) where
   left_inv : ∀ a, invFun (toFun a) = a
   right_inv : ∀ b, toFun (invFun b) = b
 
-def SpinorVectorEquiv (M : Type) : IsoEquiv (SpinorState M) (VectorState M) where
-  toFun s := ⟨s.val, trivial⟩
-  invFun v := ⟨v.val, trivial⟩
+def SpinorVectorEquiv (M : Type) (P : SpinorPredicate M) :
+    IsoEquiv (SpinorState M P) (VectorState M P) where
+  toFun s := ⟨s.val, s.is_spinor⟩
+  invFun v := ⟨v.val, v.is_vector⟩
   left_inv s := by cases s; rfl
   right_inv v := by cases v; rfl
 
 /-- Formal statement of the exact isomorphism between spinor and vector states. -/
-def spinor_vector_duality (M : Type) [KleinAction M] :
-  IsoEquiv (SpinorState M) (VectorState M) :=
-  SpinorVectorEquiv M
+def spinor_vector_duality (M : Type) [KleinAction M] (P : SpinorPredicate M) :
+  IsoEquiv (SpinorState M P) (VectorState M P) :=
+  SpinorVectorEquiv M P

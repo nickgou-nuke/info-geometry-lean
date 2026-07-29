@@ -22,15 +22,12 @@ open FiniteJonesModel
 
 /-! ## 1. Invertible transport and conjugation -/
 
-/--
-A lightweight invertible transport.
+/-!
+`InvertibleTransport` is the local name for Mathlib's native unit carrier.
+The public conjugation API below remains unchanged while inverse laws come
+directly from `Units`.
 -/
-structure InvertibleTransport
-    (Op : Type*) [Monoid Op] where
-  val : Op
-  inv : Op
-  val_inv : val * inv = 1
-  inv_val : inv * val = 1
+abbrev InvertibleTransport (Op : Type*) [Monoid Op] := Opˣ
 
 namespace InvertibleTransport
 

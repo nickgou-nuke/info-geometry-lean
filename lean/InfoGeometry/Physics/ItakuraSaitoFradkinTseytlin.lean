@@ -30,13 +30,24 @@ noncomputable def bohmMadelungQuantumPotential (_ρ : ℝ) (grad2LogRho : ℝ) (
   -- We set constants to 1 for the formal structure
   - (grad2LogRho + (1/2) * gradLogRhoSq)
 
-/-- A finite packet relating a gradient parameter to a declared fourth-order term. -/
+/-- Independent positive-scale and quantum-gradient data. -/
 structure FourthOrderScalePacket where
   (spectral_base : ℝ)
   (is_positive : spectral_base > 0)
   (quantum_potential_gradient : ℝ)
-  (four_derivative_term : ℝ)
-  scaling_eq : quantum_potential_gradient ^ 2 = four_derivative_term
+
+namespace FourthOrderScalePacket
+
+/-- The fourth-order scalar term is canonically the gradient square. -/
+def four_derivative_term (P : FourthOrderScalePacket) : ℝ :=
+  P.quantum_potential_gradient ^ 2
+
+/-- The scale relation is definitional, not separately supplied evidence. -/
+theorem scaling_eq (P : FourthOrderScalePacket) :
+    P.quantum_potential_gradient ^ 2 = P.four_derivative_term :=
+  rfl
+
+end FourthOrderScalePacket
 
 /-- A finite count packet with explicit balance equations. -/
 structure ScaleInvariantCocycles where

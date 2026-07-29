@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Ring.Associator
 
 /-!
 # Derivations of Alternative Algebras

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Arithmetic.GenuineBounds
 
 /-!
 # InfoGeometry.Arithmetic.FinitePrimeGroverOracle
@@ -180,34 +181,32 @@ theorem markedCard_add_unmarkedCard :
 end FinitePrimeOraclePacket
 
 /--
-Quantum-counting witness gate.
-
-This records a model-supplied counting/estimation law.  It is not derived from
-the phase-oracle involution theorem alone.
+Historical quantum-counting gate name, now owned by the concrete numerical
+accuracy and Chernoff-bound structure.
 -/
-structure QuantumCountingGate
-    (Estimator ErrorModel : Type*) where
-  estimator : Estimator
-  errorModel : ErrorModel
-  query_bound : Prop
-  counting_accuracy : Prop
-  certificate : query_bound ∧ counting_accuracy
+abbrev QuantumCountingGate :=
+  InfoGeometry.Arithmetic.GenuineBounds.GenuineQuantumCountingAccuracy
 
 namespace QuantumCountingGate
 
-/-- The supplied query-bound law. -/
+/-- A certified quantum-counting run uses a positive number of queries. -/
 theorem query_bound_holds
-    {Estimator ErrorModel : Type*}
-    (G : QuantumCountingGate Estimator ErrorModel) :
-    G.query_bound :=
-  G.certificate.1
+    (G : QuantumCountingGate) :
+    0 < G.queries :=
+  G.queries_pos
 
-/-- The supplied counting-accuracy law. -/
+/-- The estimate satisfies its explicit absolute-error tolerance. -/
 theorem counting_accuracy_holds
-    {Estimator ErrorModel : Type*}
-    (G : QuantumCountingGate Estimator ErrorModel) :
-    G.counting_accuracy :=
-  G.certificate.2
+    (G : QuantumCountingGate) :
+    InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
+      G.estimate G.actual G.ε :=
+  G.counting_accuracy
+
+/-- The run's failure probability satisfies its explicit Chernoff bound. -/
+theorem chernoff_bound_holds
+    (G : QuantumCountingGate) :
+    2 * Real.exp (-2 * (G.queries : ℝ) * G.ε ^ 2) ≤ G.failure_prob :=
+  G.chernoff_bound
 
 end QuantumCountingGate
 
@@ -218,8 +217,8 @@ Finite estimate is within absolute error `ε` of the actual readout.
 
 This is an operational numerical predicate; it is not an RH statement.
 -/
-def WithinError (estimate actual ε : ℝ) : Prop :=
-  |estimate - actual| ≤ ε
+abbrev WithinError :=
+  InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
 
 /--
 Quantum-counting certified finite fluctuation packet.

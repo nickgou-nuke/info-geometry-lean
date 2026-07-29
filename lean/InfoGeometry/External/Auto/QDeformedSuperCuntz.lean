@@ -251,16 +251,47 @@ structure QDeformedThreeLayerArchitecture where
   layer1 : Type*
   layer2 : Type*
   layer3 : Type*
-  rootStageFinite : Prop
-  colimitStageExists : Prop
-  classicalStageExists : Prop
-  rootStageFinite_proof : rootStageFinite
-  colimitStageExists_proof : colimitStageExists
-  classicalStageExists_proof : classicalStageExists
+  /-- Cardinality of the finite root stage. -/
+  rootCardinality : ℕ
+  /-- Concrete finite presentation of the root stage. -/
+  rootStageEquiv : layer1 ≃ Fin rootCardinality
+  /-- A realized point of the colimit stage. -/
+  colimitStage : layer2
+  /-- A realized point of the classical stage. -/
+  classicalStage : layer3
+  /-- Root-stage inclusion into the colimit carrier. -/
+  rootToColimit : layer1 → layer2
+  /-- Classical-limit readout from the colimit carrier. -/
+  colimitToClassical : layer2 → layer3
+
+namespace QDeformedThreeLayerArchitecture
+
+variable (data : QDeformedThreeLayerArchitecture)
+
+/-- Historical root-stage statement, derived from an explicit finite model. -/
+def rootStageFinite : Prop :=
+  _root_.Finite data.layer1
+
+/-- Historical colimit-stage existence statement, derived from actual data. -/
+def colimitStageExists : Prop :=
+  Nonempty data.layer2
+
+/-- Historical classical-stage existence statement, derived from actual data. -/
+def classicalStageExists : Prop :=
+  Nonempty data.layer3
+
+/-- The explicit finite presentation supplies Mathlib's finite typeclass. -/
+noncomputable instance instFiniteLayer1 : Finite data.layer1 :=
+  _root_.Finite.of_equiv (Fin data.rootCardinality) data.rootStageEquiv.symm
+
+end QDeformedThreeLayerArchitecture
 
 theorem q_deformed_three_layer_architecture
     (data : QDeformedThreeLayerArchitecture) :
     data.rootStageFinite ∧ data.colimitStageExists ∧ data.classicalStageExists :=
-  ⟨data.rootStageFinite_proof, data.colimitStageExists_proof, data.classicalStageExists_proof⟩
+  ⟨by
+      change Finite data.layer1
+      exact inferInstance,
+    ⟨data.colimitStage⟩, ⟨data.classicalStage⟩⟩
 
 end

@@ -52,15 +52,13 @@ noncomputable def finiteFermionicProduct (n : ℕ) (primes : Fin n → ℕ) (β 
 
 /-- The Euler product over all primes = ζ(β) for Re(β) > 1.
     This is the fundamental bridge theorem, already proved in Arithmetic/. -/
-theorem eulerProduct_equals_riemannZeta (β : ℂ) (hβ : 1 < β.re) :
-    eulerProductZeta β = riemannZeta β :=
-  eulerProductZeta_eq_riemannZeta β hβ
+alias eulerProduct_equals_riemannZeta :=
+  InfoGeometry.Arithmetic.RiemannZetaEquivalences.eulerProductZeta_eq_riemannZeta
 
 /-- The bosonic partition function equals ζ(β) for Re(β) > 1.
     Already proved as `bosonicZetaPartition_eq_riemannZeta` in Arithmetic/. -/
-theorem bosonicPartition_equals_riemannZeta (β : ℂ) (hβ : 1 < β.re) :
-    bosonicZetaPartition β = riemannZeta β :=
-  bosonicZetaPartition_eq_riemannZeta hβ
+alias bosonicPartition_equals_riemannZeta :=
+  InfoGeometry.Arithmetic.PrimeInformationKMS.bosonicZetaPartition_eq_riemannZeta
 
 /-! ## 2. Finite KMS weight → infinite KMS weight -/
 
@@ -69,14 +67,14 @@ theorem bosonicPartition_equals_riemannZeta (β : ℂ) (hβ : 1 < β.re) :
 
     This is the limit of our finite `realKMSWeight` as the set of primes
     grows to include all primes. For Re(β) > 1, ζ(β) is finite and nonzero. -/
-noncomputable def infiniteKMSWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < β.re) : ℂ :=
+noncomputable def infiniteKMSWeight (p : ℕ) (_hp : Nat.Prime p) (β : ℂ) (_hβ : 1 < β.re) : ℂ :=
   ((p : ℂ) ^ (-β)) / riemannZeta β
 
 /-- The infinite KMS weight matches the one from `PrimeInformationKMS`
     when the additional structure is supplied. -/
 theorem infiniteKMSWeight_eq_bosonicZetaWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < β.re) :
     infiniteKMSWeight p hp β hβ = ((p : ℂ) ^ (-β)) / bosonicZetaPartition β := by
-  rw [bosonicPartition_equals_riemannZeta β hβ, infiniteKMSWeight]
+  rw [bosonicPartition_equals_riemannZeta hβ, infiniteKMSWeight]
 
 /-! ## 3. Finite sum → positive and bounds
 
@@ -86,9 +84,7 @@ a finite lower bound for the full prime zeta function P(β) = Σ_{p prime} p^{-�
 
 /-- The real partition sum is positive for real β (all terms are positive reals
     since primes are positive). Re-export from `BostConnesAnalytic`. -/
-theorem realPartitionSum_pos (n : ℕ) [NeZero n] (primes : Fin n → ℕ) (hpos : ∀ i, 0 < primes i) (β : ℝ) :
-    0 < realPartitionSum n primes β :=
-  BostConnesAnalytic.realPartitionSum_pos n primes hpos β
+alias realPartitionSum_pos := BostConnesAnalytic.realPartitionSum_pos
 
 /-! ## 4. Ground state limit → zero-temperature zeta limit
 
@@ -101,10 +97,6 @@ algebraically precise finite-dimensional analogue.
 -/
 
 /-- Re-export: our finite ground state limit theorem from `BostConnesAnalytic`. -/
-theorem ground_state_limit (n : ℕ) (primes : Fin n → ℕ)
-    (hpos : ∀ i, 0 < primes i) (hmono : ∀ i j, i.val < j.val → primes i < primes j) (i : Fin n) :
-    Tendsto (λ (β : ℝ) => realKMSWeight n primes β i) atTop
-      (𝓝 (if i.val = 0 then 1 else 0)) :=
-  BostConnesAnalytic.ground_state_limit n primes hpos hmono i
+alias ground_state_limit := BostConnesAnalytic.ground_state_limit
 
 end InfoGeometry.Algebra.BostConnesArithmeticBridge

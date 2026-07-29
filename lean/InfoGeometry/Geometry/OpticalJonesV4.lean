@@ -8,6 +8,9 @@ the discrete orientation/parity/time-reversal bookkeeping of the event.
 -/
 
 import Mathlib.Tactic
+import InfoGeometry.Geometry.OperatorialJonesConnection
+import InfoGeometry.Geometry.KleinFourTag
+import InfoGeometry.Optics.FiniteJonesModel
 
 noncomputable section
 
@@ -15,34 +18,27 @@ namespace InfoGeometry.Geometry.OpticalJonesV4
 
 /-! ## 1. V4 orientation tags -/
 
-/--
-Discrete orientation tag.
-
-`parity = true` records a spatial/parity flip.
-`time = true` records time/propagation-orientation reversal bookkeeping.
--/
-structure V4Tag where
-  parity : Bool
-  time : Bool
-deriving DecidableEq, Repr
+/-- Canonical Klein-four parity/time orientation tag. -/
+abbrev V4Tag :=
+  InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace V4Tag
 
 /-- Identity sector. -/
 def id : V4Tag :=
-  ⟨false, false⟩
+  InfoGeometry.Geometry.KleinFourTag.id
 
 /-- Parity/spatial reflection sector. -/
 def P : V4Tag :=
-  ⟨true, false⟩
+  InfoGeometry.Geometry.KleinFourTag.P
 
 /-- Time/propagation-reversal sector. -/
 def T : V4Tag :=
-  ⟨false, true⟩
+  InfoGeometry.Geometry.KleinFourTag.T
 
 /-- Combined PT sector. -/
 def PT : V4Tag :=
-  ⟨true, true⟩
+  InfoGeometry.Geometry.KleinFourTag.PT
 
 end V4Tag
 
@@ -54,7 +50,7 @@ abbrev JonesVec :=
 
 /-- Two-by-two Jones matrix. -/
 abbrev JonesMat :=
-  Matrix (Fin 2) (Fin 2) ℂ
+  InfoGeometry.Optics.FiniteJonesModel.JonesMat
 
 /--
 Diagonal Jones matrix.
@@ -64,18 +60,15 @@ the chosen basis.
 -/
 def diagJones
     (a b : ℂ) : JonesMat :=
-  fun i j =>
-    if i = j then
-      if i = 0 then a else b
-    else 0
+  InfoGeometry.Optics.FiniteJonesModel.diagJones a b
 
 /-- The `s`-sector projector in the Fresnel `s/p` basis. -/
 def sProjector : JonesMat :=
-  diagJones 1 0
+  InfoGeometry.Optics.FiniteJonesModel.sProjector
 
 /-- The `p`-sector projector in the Fresnel `s/p` basis. -/
 def pProjector : JonesMat :=
-  diagJones 0 1
+  InfoGeometry.Optics.FiniteJonesModel.pProjector
 
 /-! ## 3. Fresnel reflection events -/
 
@@ -119,25 +112,35 @@ def IsDiattenuating
     (R : FresnelReflection) : Prop :=
   ‖R.rs‖ ≠ ‖R.rp‖
 
-/--
-Scaled projector event.
+/-- Independent data determining a scaled-projector event.
 
-This captures the Brewster pattern `R_B = c P_s` without forcing the raw
-Jones matrix itself to be idempotent.
+The realized matrix is derived rather than stored together with an equality
+certificate.
 -/
-structure ScaledProjectorEvent where
-  /-- Scalar optical coefficient. -/
-  scale : ℂ
+abbrev ScaledProjectorEvent :=
+  ℂ × JonesMat
 
-  /-- Projector channel. -/
-  projector : JonesMat
+namespace ScaledProjectorEvent
 
-  /-- Matrix realized by the event. -/
-  matrix : JonesMat
+/-- Scalar optical coefficient. -/
+def scale (E : ScaledProjectorEvent) : ℂ :=
+  E.1
 
-  /-- Scaled-projector law. -/
-  matrix_eq_scaled_projector :
-    matrix = scale • projector
+/-- Projector channel selected by the event. -/
+def projector (E : ScaledProjectorEvent) : JonesMat :=
+  E.2
+
+/-- Matrix canonically realized by the event. -/
+def matrix (E : ScaledProjectorEvent) : JonesMat :=
+  E.scale • E.projector
+
+/-- The realized matrix is definitionally the scaled projector. -/
+@[simp]
+theorem matrix_eq_scaled_projector (E : ScaledProjectorEvent) :
+    E.matrix = E.scale • E.projector :=
+  rfl
+
+end ScaledProjectorEvent
 
 /-! ## 4. Circular/chiral transport -/
 
@@ -195,10 +198,9 @@ deriving DecidableEq, Repr
 /--
 A local operatorial Jones connection event.
 
-This packages a Jones matrix with its discrete V4 orientation tag.  The
-`coherent` field is the witness that Jones calculus is the right local model;
-if it fails, a concrete theory should use Stokes/Mueller or quantum-channel
-data instead.
+This packages a Jones matrix with its discrete V4 orientation tag.  Coherence,
+complete positivity, and noncommutative transport laws belong to their
+operator-algebraic owners and are not represented by free proposition fields.
 -/
 structure JonesTransport where
   /-- Continuous Jones/Fresnel operator. -/
@@ -210,16 +212,12 @@ structure JonesTransport where
   /-- Optical event type. -/
   kind : OpticalEventKind
 
-  /-- Coherence certificate for using Jones calculus. -/
-  coherent : Prop
-
 /-- A Fresnel reflection supplies a diagonal `s/p` Jones transport. -/
 def fresnelJonesTransport
     (R : FresnelReflection) : JonesTransport where
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.dielectricReflection
-  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A Brewster reflection supplies a singular/projector-type transport event. -/
 def brewsterJonesTransport
@@ -228,7 +226,6 @@ def brewsterJonesTransport
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.brewsterReflection
-  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A lossless total-internal-reflection branch supplies a phase-retarder event. -/
 def losslessRetarderJonesTransport
@@ -237,7 +234,6 @@ def losslessRetarderJonesTransport
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.totalInternalReflection
-  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A chiral medium supplies circular-basis Cartan transport. -/
 def chiralJonesTransport
@@ -245,7 +241,6 @@ def chiralJonesTransport
   matrix := C.jones
   tag := C.tag
   kind := OpticalEventKind.chiralMedium
-  coherent := C.jones 0 1 = 0 ∧ C.jones 1 0 = 0
 
 /--
 Rough or depolarizing surfaces are marked explicitly as outside the pure Jones
@@ -253,11 +248,90 @@ regime unless a concrete model supplies a coherence certificate.
 -/
 def depolarizingSurfaceTransport
     (M : JonesMat)
-    (tag : V4Tag)
-    (coherent : Prop) : JonesTransport where
+    (tag : V4Tag) : JonesTransport where
   matrix := M
   tag := tag
   kind := OpticalEventKind.roughDepolarizingSurface
-  coherent := coherent
+
+/-! ## 6. Noncommutative operatorial realization -/
+
+open InfoGeometry.Geometry.OperatorialJonesConnection
+
+/--
+An operatorial Jones transport realizes the optical matrix event when its
+underlying unit is exactly the event matrix.
+
+This is an explicit bridge relation, not a coherence marker.
+-/
+def JonesTransportRealizesOperatorial
+    (J : JonesTransport)
+    (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C) : Prop :=
+  T.U.val = J.matrix
+
+/--
+Genuine noncommutative replacement for the former unconstrained
+`JonesTransport.coherent : Prop` field.
+
+A Jones event is coherent precisely when its matrix is realized by an
+invertible operatorial transport whose conjugation action preserves algebraic
+projectors and whose action on the chiral Cartan axis is controlled.
+-/
+def JonesTransport.coherent (J : JonesTransport) : Prop :=
+  ∃ (C : ChiralCartanProjectors JonesMat)
+      (T : OperatorialJonesTransport JonesMat C),
+    JonesTransportRealizesOperatorial J C T
+
+/-- Coherence is exactly existence of an operatorial Jones realization. -/
+theorem JonesTransport.coherent_iff_exists_operatorial
+    (J : JonesTransport) :
+    J.coherent ↔
+      ∃ (C : ChiralCartanProjectors JonesMat)
+          (T : OperatorialJonesTransport JonesMat C),
+        JonesTransportRealizesOperatorial J C T :=
+  Iff.rfl
+
+/--
+Every realized operatorial Jones event has an invertible representative whose
+noncommutative conjugation action preserves algebraic projectors.
+-/
+theorem operatorial_realization_preserves_projector
+    (J : JonesTransport)
+    (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C)
+    (hRealizes : JonesTransportRealizesOperatorial J C T)
+    {P : JonesMat}
+    (hP : IsProjector P) :
+    ∃ U : Units JonesMat,
+      U.val = J.matrix ∧ IsProjector (conjugationAction U P) :=
+  ⟨T.U, hRealizes, T.maps_projector hP⟩
+
+/--
+Historical projector-preservation API, recovered as a direct corollary of the
+operatorial conjugation owner.  The realization hypothesis identifies the
+optical event with `T`; projector preservation itself is the native theorem
+carried by that noncommutative transport.
+-/
+theorem maps_projector_of_operatorial_realization
+    (J : JonesTransport)
+    (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C)
+    (_hRealizes : JonesTransportRealizesOperatorial J C T)
+    {P : JonesMat}
+    (hP : IsProjector P) :
+    IsProjector (conjugationAction T.U P) :=
+  T.maps_projector hP
+
+/-- A realized Jones matrix genuinely preserves or reverses the Cartan axis. -/
+theorem operatorial_realization_cartan_behavior
+    (J : JonesTransport)
+    (C : ChiralCartanProjectors JonesMat)
+    (T : OperatorialJonesTransport JonesMat C)
+    (hRealizes : JonesTransportRealizesOperatorial J C T) :
+    PreservesCartanAxis C.chi J.matrix ∨
+      ReversesCartanAxis C.chi J.matrix := by
+  have hU : T.U.val = J.matrix := hRealizes
+  rw [← hU]
+  exact T.cartan_behavior
 
 end InfoGeometry.Geometry.OpticalJonesV4

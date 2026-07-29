@@ -29,11 +29,30 @@ open InfoGeometry.Projective.NonIsoConf3RankIngestion
 open InfoGeometry.Projective.PenroseSpinTiling
 
 /-- Explicit external rank evidence sufficient to match the finite `Fin 32` carrier. -/
-structure ExternalRank32BoundaryCertificate where
-  data : ExternalBettiData
-  ambient : HasConf3AmbientDimension data
-  consistent : RankDataConsistent data
-  localRank_eq : data.totalRank = 8
+abbrev ExternalRank32BoundaryCertificate : Type :=
+  Σ' data : ExternalBettiData,
+    HasConf3AmbientDimension data ∧
+      RankDataConsistent data ∧
+        data.totalRank = 8
+
+namespace ExternalRank32BoundaryCertificate
+
+abbrev data (C : ExternalRank32BoundaryCertificate) : ExternalBettiData :=
+  C.1
+
+abbrev ambient (C : ExternalRank32BoundaryCertificate) :
+    HasConf3AmbientDimension C.data :=
+  C.2.1
+
+abbrev consistent (C : ExternalRank32BoundaryCertificate) :
+    RankDataConsistent C.data :=
+  C.2.2.1
+
+abbrev localRank_eq (C : ExternalRank32BoundaryCertificate) :
+    C.data.totalRank = 8 :=
+  C.2.2.2
+
+end ExternalRank32BoundaryCertificate
 
 /--
 The spin-tiled external rank equals the cardinality of the finite rank-32
@@ -61,11 +80,9 @@ theorem candidate_spin_tiled_rank_eq_boundary_card :
 
 /-- The current candidate rank data packaged as an external rank certificate. -/
 def candidateExternalRank32BoundaryCertificate :
-    ExternalRank32BoundaryCertificate where
-  data := candidateLocalBettiData
-  ambient := rfl
-  consistent := candidateLocalBettiData_consistent
-  localRank_eq := candidateLocalBettiData_totalRank
+    ExternalRank32BoundaryCertificate :=
+  ⟨candidateLocalBettiData, rfl, candidateLocalBettiData_consistent,
+    candidateLocalBettiData_totalRank⟩
 
 /--
 A rank-32 boundary realization with attached external rank evidence.

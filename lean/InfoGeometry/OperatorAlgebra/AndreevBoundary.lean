@@ -152,12 +152,11 @@ Constructive witness that a boundary process satisfies the Andreev swap.
 
 This packages the swap certificates as first-class data.
 -/
-structure AndreevSwapWitness
+abbrev AndreevSwapWitness
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (closure : LinearClosureInvolution V)
-    (electron hole : V) : Type where
-  theta_electron : closure.theta electron = hole
-  theta_hole : closure.theta hole = electron
+    (electron hole : V) : Prop :=
+  closure.theta electron = hole ∧ closure.theta hole = electron
 
 /--
 The Andreev diagonal is fixed by electron/hole closure, given a swap witness.
@@ -168,7 +167,7 @@ theorem electron_hole_diagonal_fixed_of_swap_witness
     (electron hole : V)
     (w : AndreevSwapWitness closure electron hole) :
     electron + hole ∈ closure.Fixed :=
-  closure.diagonal_fixed_of_swap w.theta_electron w.theta_hole
+  closure.diagonal_fixed_of_swap w.1 w.2
 
 
 /-! ## 4. Andreev closure datum -/
@@ -314,14 +313,9 @@ Constructive packet for Andreev boundary closure claims.
 This packages the boundary datum together with first-class witnesses for
 (1) diagonal fixedness and (2) imbalance anti-fixedness.
 -/
-structure BoundaryClosureWitness
-    (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  boundary : AndreevBoundaryDatum V
-  diagonal_fixed_cert :
-    boundary.electron + boundary.hole ∈ boundary.closure.Fixed
-  imbalance_anti_fixed_cert :
-    boundary.closure.theta (boundary.electron - boundary.hole) =
-      -(boundary.electron - boundary.hole)
+abbrev BoundaryClosureWitness
+    (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  AndreevBoundaryDatum V
 
 namespace BoundaryClosureWitness
 
@@ -332,21 +326,19 @@ variable (W : BoundaryClosureWitness V)
 
 /-- Read back closure-fixed diagonal from the constructive packet. -/
 theorem diagonal_fixed :
-    W.boundary.electron + W.boundary.hole ∈ W.boundary.closure.Fixed :=
-  W.diagonal_fixed_cert
+    W.electron + W.hole ∈ W.closure.Fixed :=
+  W.electron_hole_diagonal_fixed
 
 /-- Read back anti-fixed imbalance from the constructive packet. -/
 theorem imbalance_anti_fixed :
-    W.boundary.closure.theta (W.boundary.electron - W.boundary.hole) =
-      -(W.boundary.electron - W.boundary.hole) :=
-  W.imbalance_anti_fixed_cert
+    W.closure.theta (W.electron - W.hole) =
+      -(W.electron - W.hole) :=
+  W.electron_hole_imbalance_anti_fixed
 
 /-- Canonical constructor from any Andreev boundary datum. -/
 def ofBoundary
-    (A : AndreevBoundaryDatum V) : BoundaryClosureWitness V where
-  boundary := A
-  diagonal_fixed_cert := A.electron_hole_diagonal_fixed
-  imbalance_anti_fixed_cert := A.electron_hole_imbalance_anti_fixed
+    (A : AndreevBoundaryDatum V) : BoundaryClosureWitness V :=
+  A
 
 end BoundaryClosureWitness
 
@@ -389,12 +381,11 @@ structure AndreevChargeLedger
 /--
 Constructive witness for the explicit charge balance law of an Andreev process.
 -/
-structure ChargeBalanceWitness
+abbrev ChargeBalanceWitness
     {V Charge : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup Charge]
-    (L : AndreevChargeLedger V Charge) : Type where
-  certificate :
-    L.chargeOf L.boundary.electron =
-      L.chargeOf L.boundary.hole + L.condensateTransfer
+    (L : AndreevChargeLedger V Charge) : Prop :=
+  L.chargeOf L.boundary.electron =
+    L.chargeOf L.boundary.hole + L.condensateTransfer
 
 namespace AndreevChargeLedger
 
@@ -418,7 +409,7 @@ theorem charge_balance_valid_of_witness
     (w : ChargeBalanceWitness L) :
     L.chargeOf L.boundary.electron =
       L.chargeOf L.boundary.hole + L.condensateTransfer :=
-  w.certificate
+  w
 
 /-- The Andreev diagonal is closure-fixed. -/
 theorem diagonal_fixed :
@@ -430,9 +421,10 @@ Witness-only surface for closure-fixed diagonal readout.
 -/
 theorem diagonal_fixed_of_boundary_witness
     (W : BoundaryClosureWitness V)
-    (hboundary : W.boundary = L.boundary) :
+    (hboundary : W = L.boundary) :
     L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by
-  simpa [hboundary] using W.diagonal_fixed
+  rw [← hboundary]
+  exact W.electron_hole_diagonal_fixed
 
 /-- The Andreev imbalance is anti-fixed. -/
 theorem imbalance_anti_fixed :

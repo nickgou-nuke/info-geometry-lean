@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Module.LinearMap.End
 import Mathlib.Tactic
 import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.Algebra.BosonizedOSpCoproduct
 import InfoGeometry.Canonical.OperatorCartanSuperbracketClosure
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 
@@ -149,6 +150,70 @@ theorem even_add_odd (Γ T : Op V) :
 theorem active_support_compression (O : Op V) :
     projUp O + projDown O = O ^ 2 := by
   exact supportProjector_eq O
+
+/-- The first odd self-bracket relation determines its square. -/
+theorem G1_sq (S : OperatorSurface (V := V)) :
+    S.G1 * S.G1 = S.Ep := by
+  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) S.G1_G1
+  have h' :
+      (1 / 2 : ℝ) • (S.G1 * S.G1) + (1 / 2 : ℝ) • (S.G1 * S.G1) = S.Ep := by
+    simpa [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+      InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+      smul_add, smul_smul] using h
+  calc
+    S.G1 * S.G1 =
+        (1 / 2 : ℝ) • (S.G1 * S.G1) + (1 / 2 : ℝ) • (S.G1 * S.G1) := by
+      module
+    _ = S.Ep := h'
+
+/-- The second odd self-bracket relation determines its signed square. -/
+theorem G2_sq (S : OperatorSurface (V := V)) :
+    S.G2 * S.G2 = -S.Em := by
+  have h := congrArg (fun T : Op V => (1 / 2 : ℝ) • T) S.G2_G2
+  have h' :
+      (1 / 2 : ℝ) • (S.G2 * S.G2) + (1 / 2 : ℝ) • (S.G2 * S.G2) = -S.Em := by
+    simpa [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+      InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+      smul_add, smul_smul] using h
+  calc
+    S.G2 * S.G2 =
+        (1 / 2 : ℝ) • (S.G2 * S.G2) + (1 / 2 : ℝ) • (S.G2 * S.G2) := by
+      module
+    _ = -S.Em := h'
+
+/--
+The bosonized coproduct preserves the first odd--odd `osp(1|2)` closure
+relation.
+-/
+theorem bosonized_G1_self_anticommutator (S : OperatorSurface (V := V)) :
+    InfoGeometry.Algebra.SupergradedBracket.anticommutator
+        (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
+          (R := ℝ) S.Γ S.G1)
+        (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
+          (R := ℝ) S.Γ S.G1) =
+      (2 : ℝ) •
+        InfoGeometry.Algebra.BosonizedOSpCoproduct.primitiveEven
+          (R := ℝ) S.Ep := by
+  exact
+    InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd_self_anticommutator
+      (R := ℝ) S.Γ S.G1 S.Ep S.hΓ S.G1_odd S.G1_sq
+
+/--
+The bosonized coproduct preserves the signed second odd--odd `osp(1|2)`
+closure relation.
+-/
+theorem bosonized_G2_self_anticommutator (S : OperatorSurface (V := V)) :
+    InfoGeometry.Algebra.SupergradedBracket.anticommutator
+        (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
+          (R := ℝ) S.Γ S.G2)
+        (InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd
+          (R := ℝ) S.Γ S.G2) =
+      (2 : ℝ) •
+        InfoGeometry.Algebra.BosonizedOSpCoproduct.primitiveEven
+          (R := ℝ) (-S.Em) := by
+  exact
+    InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd_self_anticommutator
+      (R := ℝ) S.Γ S.G2 (-S.Em) S.hΓ S.G2_odd S.G2_sq
 
 /-- Concrete instantiation of the `OperatorSurface` to prove it is not vacuous.
 We use the trivial representation where all elements are zero, and `Γ` is `1`. -/

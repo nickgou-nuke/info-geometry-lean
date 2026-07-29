@@ -2,6 +2,8 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Topology.Basic
+import Mathlib
 
 /-!
 # Punctured Riemann Surfaces
@@ -26,7 +28,7 @@ open Complex
 The punctured unit disk $D^* = \{z \in \mathbb{C} \mid 0 < |z| < 1\}$. 
 Used as the standard local model for a puncture on a Riemann surface.
 -/
-def PuncturedDisk : Type :=
+abbrev PuncturedDisk : Type :=
   { z : ℂ // z ≠ 0 ∧ norm z < 1 }
 
 /--
@@ -46,11 +48,33 @@ except at a distinguished puncture where it is locally isomorphic to the `Punctu
 class PuncturedRiemannSurface (X : Type*) [TopologicalSpace X] where
   /-- Local coordinate chart near the puncture mapping into the punctured unit disk $D^*$ -/
   punctureChart : X → PuncturedDisk
-  
-  /-- The chart is an open embedding near the puncture. -/
-  isOpenDomain : Prop
-  
-  /-- Verification that the geometry locally pulls back the Poincaré metric (placeholder for full metric structure). -/
-  isPoincareMetricNearPuncture : Prop
+
+  /-- The puncture chart is an open embedding, so its image is an open local
+  model and the chart is a homeomorphism onto that image. -/
+  punctureChart_openEmbedding : Topology.IsOpenEmbedding punctureChart
+
+  /-- Conformal factor of the metric on the surface near the puncture. -/
+  metricFactor : X → ℝ
+
+  /-- The metric factor is the pullback of the standard punctured-disk
+  Poincaré factor along the puncture chart. -/
+  metricFactor_eq_poincare :
+    ∀ x : X, metricFactor x = poincareMetricFactor (punctureChart x)
+
+namespace PuncturedRiemannSurface
+
+variable {X : Type*} [TopologicalSpace X] (S : PuncturedRiemannSurface X)
+
+/-- The image of the puncture chart is open in the standard punctured disk. -/
+theorem isOpen_range_punctureChart :
+    IsOpen (Set.range S.punctureChart) :=
+  S.punctureChart_openEmbedding.isOpen_range
+
+/-- Owner theorem for the local Poincaré metric law. -/
+theorem isPoincareMetricNearPuncture (x : X) :
+    S.metricFactor x = poincareMetricFactor (S.punctureChart x) :=
+  S.metricFactor_eq_poincare x
+
+end PuncturedRiemannSurface
 
 end InfoGeometry.Topology

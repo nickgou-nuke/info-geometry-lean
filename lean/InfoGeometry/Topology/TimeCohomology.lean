@@ -42,8 +42,16 @@ def CausalDeterminant (t x y z : R) : R :=
 /-- 
 The determinant-zero locus in the simple causal matrix model.
 -/
-structure KleinQuadric (t x y z : R) : Prop where
-  null_space : CausalDeterminant t x y z = 0
+def KleinQuadric (t x y z : R) : Prop :=
+  CausalDeterminant t x y z = 0
+
+namespace KleinQuadric
+
+theorem null_space (t x y z : R) (h : KleinQuadric t x y z) :
+    CausalDeterminant t x y z = 0 :=
+  h
+
+end KleinQuadric
 
 /-- 
 A logarithmic barrier potential on the open determinant-positive region.

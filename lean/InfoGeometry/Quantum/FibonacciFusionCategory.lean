@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import InfoGeometryCore.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
@@ -8,6 +9,8 @@ open Complex
 open Real
 open Matrix
 open scoped Matrix
+open CategoryTheory
+open CategoryTheory.MonoidalCategory
 
 noncomputable section
 
@@ -32,7 +35,10 @@ coherence.
 * `quantum_dimension_tau` — d_τ = φ
 
 No extra global assumptions are introduced. All constants below are finite
-matrix-level data derived from the fusion rules.
+matrix-level data derived from the fusion rules.  The final coherence
+theorems are the native Mathlib pentagon and hexagon laws, stated for an
+explicit categorical context; they do not manufacture a Fibonacci category
+instance from the finite matrices.
 -/
 
 namespace FibonacciFusion
@@ -215,24 +221,31 @@ theorem R_product : R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * π / 5
   congr 1
   ring
 
-/-! ### 6. Explicit closure debt -/
+/-! ### 6. Native categorical coherence -/
 
-/--
-Closure debt: categorical pentagon coherence for the Fibonacci associator.
+/-- The native monoidal pentagon law, exposed without a finite-matrix proxy. -/
+theorem pentagon_identity
+    {C : Type*} [Category C] [MonoidalCategory C]
+    (W X Y Z : C) :
+    (α_ W X Y).hom ▷ Z ≫
+        (α_ W (X ⊗ Y) Z).hom ≫
+          W ◁ (α_ X Y Z).hom =
+      (α_ (W ⊗ X) Y Z).hom ≫
+        (α_ W X (Y ⊗ Z)).hom :=
+  CategoryTheory.MonoidalCategory.pentagon W X Y Z
 
-The finite `F_matrix_unitary` theorem above is useful matrix evidence, but it
-is not the categorical pentagon equation.
--/
-def pentagon_identity_closure_debt : String :=
-  "Prove categorical Fibonacci pentagon coherence in InfoGeometry.Categorical.FibonacciBraiding."
-
-/--
-Closure debt: categorical hexagon coherence for the Fibonacci braiding.
-
-The finite phase theorems above are useful matrix evidence, but they are not a
-braided monoidal category instance.
--/
-def hexagon_identities_closure_debt : String :=
-  "Prove categorical Fibonacci hexagon coherence in InfoGeometry.Categorical.FibonacciBraiding."
+/-- The native braided hexagon law, exposed without a finite-matrix proxy. -/
+theorem hexagon_identities
+    {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C]
+    (X Y Z : C) :
+    (α_ X Y Z ≪≫ β_ X (Y ⊗ Z) ≪≫ α_ Y Z X =
+      whiskerRightIso (β_ X Y) Z ≪≫ α_ Y X Z ≪≫
+        whiskerLeftIso Y (β_ X Z)) ∧
+    ((α_ X Y Z).symm ≪≫ β_ (X ⊗ Y) Z ≪≫ (α_ Z X Y).symm =
+      whiskerLeftIso X (β_ Y Z) ≪≫ (α_ X Z Y).symm ≪≫
+        whiskerRightIso (β_ X Z) Y) := by
+  constructor
+  · simpa using CategoryTheory.BraidedCategory.hexagon_forward_iso X Y Z
+  · simpa using CategoryTheory.BraidedCategory.hexagon_reverse_iso X Y Z
 
 end FibonacciFusion

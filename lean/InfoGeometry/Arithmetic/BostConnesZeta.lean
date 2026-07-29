@@ -3,6 +3,7 @@ import Mathlib.Data.Finsupp.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
 # Bost-Connes Partition Function and the Amplituhedron Volume

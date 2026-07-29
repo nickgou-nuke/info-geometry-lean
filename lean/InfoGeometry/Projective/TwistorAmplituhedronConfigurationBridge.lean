@@ -3,6 +3,7 @@ import InfoGeometry.Projective.NonIsoConf3RankIngestion
 import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.Twistor.Incidence
 import InfoGeometry.Projective.KuzminCuntzPath
+import InfoGeometry.Topology.AmplituhedronBoundary
 
 /-!
 # Twistor / Amplituhedron Configuration Bridge
@@ -39,6 +40,7 @@ open InfoGeometry.Topology.Delaunay
 open InfoGeometry.Topology.PureBraid
 open InfoGeometry.Topology.RohozhkinBoundary
 open InfoGeometry.Projective.KuzminCuntzPath
+open InfoGeometry.Topology.AmplituhedronBoundary
 
 namespace Plucker6
 
@@ -106,21 +108,23 @@ theorem boundary_of_incidence
   A.incidence_to_boundary hij hinc
 
 /--
-Interface for comparing an Arnold/cooperad relation with a BCFW recursion step.
-
-This is intentionally a one-way supplied implication.
+The native three-point Arnold--BCFW carrier is the Arnold--Cohen quotient
+algebra.  Its boundary packet stores actual ring elements and a proved
+cooperad/BCFW equality, rather than two unrelated proposition markers.
 -/
-structure ArnoldBCFWInterface where
-  arnoldRelation : Prop
-  bcfwRecursion : Prop
-  arnold_to_bcfw : arnoldRelation → bcfwRecursion
+abbrev ThreePointArnoldAlgebra :=
+  RingQuot
+    (InfoGeometry.Projective.Amplituhedron.ArnoldRel ℤ (Fin 3))
 
-/-- Read back the supplied Arnold-to-BCFW implication. -/
+/-- Genuine operator-valued Arnold/BCFW comparison packet. -/
+abbrev ArnoldBCFWInterface :=
+  AmplituhedronBoundaryPacket ThreePointArnoldAlgebra
+
+/-- Read back the installed equality of Arnold/cooperad and BCFW operators. -/
 theorem bcfw_of_arnold
-    (A : ArnoldBCFWInterface)
-    (hArnold : A.arnoldRelation) :
-    A.bcfwRecursion :=
-  A.arnold_to_bcfw hArnold
+    (A : ArnoldBCFWInterface) :
+    A.cooperadReadout = A.bcfwReadout :=
+  A.bcfw_readout
 
 /-! ## Rank-32 budget interface -/
 
@@ -166,7 +170,7 @@ theorem rohozhkin_plabic_descent_packet {moving : ℕ}
     (P : RohozhkinPlabicInterface moving) :
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
       ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-        ρ (of g) = P.packet.delaunay.gen g :=
+        ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen P.packet g :=
   rohozhkin_projective_braid_descent_packet P.packet
 
 /--
@@ -188,7 +192,7 @@ theorem twistor_amplituhedron_bridge_packet {moving : ℕ}
       D.rank.data.totalRank * spinTilingMultiplicity = D.rank.stateBudget ∧
       ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
         ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = D.rohozhkin.packet.delaunay.gen g := by
+          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
   exact ⟨D.lines.line_isKlein i,
     spin_tiled_rank_matches_stateBudget D.rank,
     rohozhkin_plabic_descent_packet D.rohozhkin⟩

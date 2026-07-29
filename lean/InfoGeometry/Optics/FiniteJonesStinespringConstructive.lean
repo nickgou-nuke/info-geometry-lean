@@ -333,14 +333,8 @@ end ConstructiveJonesStinespring
 
 /-! ## 5. Scalar readout: visible loss equals hidden gain -/
 
-/--
-A scalar readout of a finite Jones defect/gain matrix.
-
-Concrete choices include trace, normalized trace, total intensity loss,
-absorbed power, or detector-calibrated heat.
--/
-structure DefectReadout where
-  read : JonesMat → ℝ
+/-! A scalar defect readout is the function it evaluates. -/
+abbrev DefectReadout := JonesMat → ℝ
 
 namespace DefectReadout
 
@@ -351,14 +345,14 @@ Visible defect readout.
 -/
 def visibleLoss
     (D : ConstructiveJonesStinespring) : ℝ :=
-  H.read D.visibleDefect
+  H D.visibleDefect
 
 /--
 Hidden environment gain readout.
 -/
 def hiddenEnvironmentGain
     (D : ConstructiveJonesStinespring) : ℝ :=
-  H.read D.environmentGain
+  H D.environmentGain
 
 /--
 Every scalar readout assigns equal values to visible loss and hidden gain,
@@ -366,7 +360,7 @@ because the matrices are equal.
 -/
 theorem visibleLoss_eq_hiddenEnvironmentGain
     (D : ConstructiveJonesStinespring) :
-    H.visibleLoss D = H.hiddenEnvironmentGain D := by
+    DefectReadout.visibleLoss H D = DefectReadout.hiddenEnvironmentGain H D := by
   dsimp [visibleLoss, hiddenEnvironmentGain]
   rw [D.visibleDefect_eq_environmentGain]
 

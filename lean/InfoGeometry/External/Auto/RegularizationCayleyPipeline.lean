@@ -20,11 +20,29 @@ variable {A : Type*} [Ring A] [StarRing A]
 /-- Relative regularization around the vacuum coordinate. -/
 def regularize (T : A) : A := T - 1
 
-/-- A squashed coordinate is an algebra element together with the boundedness
-contract needed to place it in the bounded C*-algebra stage. -/
-structure SquashedCoordinate (A : Type*) [Ring A] where
-  value : A
-  bounded : Prop
+/--
+A squashed coordinate in the bounded stage is an element of a normed algebra.
+
+There is no separate boundedness certificate: membership in a `NormedRing`
+already gives the finite norm required by the bounded coordinate model.
+-/
+abbrev SquashedCoordinate (A : Type*) [NormedRing A] :=
+  A
+
+namespace SquashedCoordinate
+
+variable {B : Type*} [NormedRing B]
+
+/-- Historical projection name for the underlying bounded coordinate. -/
+def value (x : SquashedCoordinate B) : B :=
+  x
+
+/-- Every normed-algebra coordinate is bounded by its own norm. -/
+theorem bounded (x : SquashedCoordinate B) :
+    ∃ C : ℝ, 0 ≤ C ∧ ‖x.value‖ ≤ C :=
+  ⟨‖x.value‖, norm_nonneg _, le_rfl⟩
+
+end SquashedCoordinate
 
 /-- A Cayley coordinate is represented by a unitary element.  This is the exact
 bounded coordinate used in the colimit; recovering an unbounded generator is a

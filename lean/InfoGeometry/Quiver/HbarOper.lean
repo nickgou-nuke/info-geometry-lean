@@ -8,6 +8,7 @@ Z-twisted (G,ℏ)-opers and quantum/classical
 (q-Langlands) correspondence
 -/
 import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Algebra.Polynomial.Basic
@@ -18,6 +19,34 @@ open Matrix Polynomial
 namespace KoroteevZeitlin.Oper
 
 variable (r : ℕ)
+
+/-- Fiber of the defining `SL(r+1)` representation. -/
+abbrev Fiber := Fin (r + 1) → ℂ
+
+/-- A finite flag in the defining representation. -/
+structure Flag where
+  subspace : Fin (r + 1) → Submodule ℂ (Fiber r)
+  monotone :
+    ∀ {i j : Fin (r + 1)}, (i : ℕ) ≤ (j : ℕ) →
+      subspace i ≤ subspace j
+
+/-- A matrix preserves every subspace in a flag. -/
+def PreservesFlag
+    (A : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ)
+    (F : Flag r) : Prop :=
+  ∀ i : Fin (r + 1), ∀ v : Fiber r,
+    v ∈ F.subspace i → A.mulVec v ∈ F.subspace i
+
+/--
+Oper upper pattern: entries more than one step above the diagonal vanish and
+every simple-root superdiagonal entry is nonzero.
+-/
+def HasOperUpperPattern
+    (A : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) : Prop :=
+  (∀ i j : Fin (r + 1), (i : ℕ) + 1 < (j : ℕ) → A i j = 0) ∧
+  (∀ i : Fin r,
+    A ⟨i, Nat.lt_trans i.isLt (Nat.lt_succ_self r)⟩
+      ⟨i + 1, Nat.succ_lt_succ i.isLt⟩ ≠ 0)
 
 /--
 An (SL(r+1), ℏ)-connection on P^1.
@@ -53,10 +82,14 @@ This means A(z) preserves the full flag and
 acts by the Weyl translation on the flag.
 -/
 structure OperCondition extends HbarConnection r where
-  /-- The connection preserves a Borel flag -/
-  preserves_flag : Prop
-  /-- Upper-triangular part has prescribed form -/
-  upper_tri_prescribed : Prop
+  /-- Chosen Borel flag. -/
+  borelFlag : Flag r
+  /-- The connection preserves the chosen flag at every spectral parameter. -/
+  preserves_flag :
+    ∀ z : ℂ, PreservesFlag r (connection z) borelFlag
+  /-- The connection has the nondegenerate simple-root oper pattern. -/
+  upper_tri_prescribed :
+    ∀ z : ℂ, HasOperUpperPattern r (connection z)
 
 /--
 Miura (G,ℏ)-oper: an oper equipped with a
@@ -67,8 +100,11 @@ The space of Miura opers for a given oper
 is a torsor for the Weyl group W.
 -/
 structure MiuraOper extends OperCondition r where
-  /-- Second Borel reduction preserved -/
-  second_flag_preserved : Prop
+  /-- Second Borel reduction. -/
+  secondFlag : Flag r
+  /-- The second Borel reduction is preserved by the same connection. -/
+  second_flag_preserved :
+    ∀ z : ℂ, PreservesFlag r (connection z) secondFlag
   /-- The Miura transform: H-valued function
       encoding the relative position of the
       two flags -/
@@ -96,8 +132,19 @@ structure ZTwistedMiuraOper
         if (i : ℕ) = (a : ℕ) then 1
         else if (i : ℕ) = (a : ℕ) + 1 then -1
         else 0 : ℤ)
-  /-- Gauge equivalence to Z at infinity -/
-  gauge_equiv_at_inf : Prop
+  /-- Gauge transformation and its pointwise inverse. -/
+  gauge : ℂ → Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ
+  gaugeInv : ℂ → Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ
+  gauge_mul_inv :
+    ∀ z : ℂ, gauge z * gaugeInv z = 1
+  gauge_inv_mul :
+    ∀ z : ℂ, gaugeInv z * gauge z = 1
+  /-- Radius outside which the connection is gauge-equivalent to the torus element `Z`. -/
+  infinityRadius : ℝ
+  gauge_equiv_at_inf :
+    ∀ z : ℂ, infinityRadius < Real.sqrt (Complex.normSq z) →
+      gauge (hbar * z) * connection z * gaugeInv z =
+        Matrix.diagonal Z_element
 
 /--
 Regular singularities of the oper.
@@ -111,8 +158,11 @@ structure RegularSingularities where
   numSing : ℕ
   /-- Positions = equivariant parameters -/
   positions : Fin numSing → ℂ
-  /-- Regularity condition -/
-  is_regular : Prop
+  /-- Pole order of the connection at each marked point. -/
+  poleOrder : Fin numSing → ℕ
+  /-- Regular singularities have pole order at most one. -/
+  is_regular :
+    ∀ i : Fin numSing, poleOrder i ≤ 1
 
 /--
 MAIN CORRESPONDENCE (Theorem from [FKSZ]):
@@ -202,8 +252,12 @@ structure ElectricFrame where
   momenta : Fin n → ℂ
   /-- Constraint: χᵢ = aᵢ -/
   position_constraint : Fin n → ℂ → Prop
-  /-- tRS Hamiltonian constraint -/
-  trs_constraint : Prop
+  /-- Commuting-family readout and prescribed level values. -/
+  trsHamiltonian : Fin n → (Fin n → ℂ) → (Fin n → ℂ) → ℂ
+  trsLevel : Fin n → ℂ
+  /-- The electric variables lie on the specified tRS common level set. -/
+  trs_constraint :
+    ∀ k : Fin n, trsHamiltonian k positions momenta = trsLevel k
 
 /--
 Magnetic frame description:
@@ -219,8 +273,13 @@ structure MagneticFrame where
   dual_positions : Fin n → ℂ
   /-- Dual momentum variables -/
   dual_momenta : Fin n → ℂ
-  /-- Constraint from dual tRS -/
-  dual_trs_constraint : Prop
+  /-- Dual tRS commuting-family readout and prescribed levels. -/
+  dualTrsHamiltonian : Fin n → (Fin n → ℂ) → (Fin n → ℂ) → ℂ
+  dualTrsLevel : Fin n → ℂ
+  /-- The magnetic variables lie on the dual common level set. -/
+  dual_trs_constraint :
+    ∀ k : Fin n,
+      dualTrsHamiltonian k dual_positions dual_momenta = dualTrsLevel k
 
 /--
 Mirror symmetry at the oper level:

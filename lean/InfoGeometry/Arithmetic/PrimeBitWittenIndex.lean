@@ -26,12 +26,15 @@ open scoped ArithmeticFunction.Moebius
 
 /-- A finite certified prime register. -/
 @[rep_depth thermo]
-structure PrimeRegister where
-  /-- Occupied prime modes. -/
-  primes : Finset ℕ
+abbrev PrimeRegister :=
+  {P : Finset ℕ // ∀ p ∈ P, Nat.Prime p}
 
-  /-- Every occupied mode is prime. -/
-  prime_mem : ∀ p ∈ primes, Nat.Prime p
+namespace PrimeRegister
+
+abbrev primes (P : PrimeRegister) : Finset ℕ := P.1
+abbrev prime_mem (P : PrimeRegister) : ∀ p ∈ P.primes, Nat.Prime p := P.2
+
+end PrimeRegister
 
 /--
 A prime-bit state: each certified prime mode is either unoccupied or occupied.
@@ -94,9 +97,8 @@ def fermionParityOfState (P : PrimeRegister) (ψ : PrimeBitState P) : ℤ :=
 /-- Restrict a prime register to a subset of its occupied modes. -/
 @[rep_depth thermo]
 def subregister (P : PrimeRegister) (S : Finset ℕ) (hS : S ⊆ P.primes) :
-    PrimeRegister where
-  primes := S
-  prime_mem := fun p hp => P.prime_mem p (hS hp)
+    PrimeRegister :=
+  ⟨S, fun p hp => P.prime_mem p (hS hp)⟩
 
 /--
 Möbius parity for a finite set of prime modes.

@@ -21,9 +21,8 @@ open RohozhkinRepresentation
 
 /-- The Appendix A five-flip word in the `n = 1` Delaunay presentation layer. -/
 noncomputable def appendixPentagonWord
-    (zi zj zk zl zm : ℚ) (h : Prop) : DelaunayFlipWord 1 :=
-  { flips := appendixPentagonContexts zi zj zk zl zm
-    admissible := h }
+    (zi zj zk zl zm : ℚ) : DelaunayFlipWord 1 :=
+  { flips := appendixPentagonContexts zi zj zk zl zm }
 
 /-- The Appendix A pentagon word evaluates to the identity transport matrix. -/
 theorem appendixPentagonWord_matrix_eq_one
@@ -34,24 +33,12 @@ theorem appendixPentagonWord_matrix_eq_one
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0) :
     rohozhkinMatrix
-      (appendixPentagonWord zi zj zk zl zm
-        (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-          pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-          pentagonGamma1 zi zj zk zl zm =
-            (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))) =
+      (appendixPentagonWord zi zj zk zl zm) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) := by
   simpa [appendixPentagonWord] using
     (tiling_pentagon_braid_readout zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl
-      ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
-      (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-        pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-        pentagonGamma1 zi zj zk zl zm =
-          (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))
-      (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-        pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-        pentagonGamma1 zi zj zk zl zm =
-          (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ)))
+      ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1)))
 
 /-- The Appendix A pentagon word is equivalent to the empty word in the Delaunay
 quotient relation. -/
@@ -63,29 +50,13 @@ theorem appendixPentagonWord_equiv_empty
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0) :
     DelaunayEquiv
-      (appendixPentagonWord zi zj zk zl zm
-        (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-          pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-          pentagonGamma1 zi zj zk zl zm =
-            (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ)))
-      ({ flips := [],
-         admissible := pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-           pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-           pentagonGamma1 zi zj zk zl zm =
-             (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) } :
+      (appendixPentagonWord zi zj zk zl zm)
+      ({ flips := [] } :
          DelaunayFlipWord 1) := by
   simpa [appendixPentagonWord] using
     (appendix_pentagon_delaunay_equiv zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl
-      ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1))
-      (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-        pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-        pentagonGamma1 zi zj zk zl zm =
-          (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))
-      (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-        pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-        pentagonGamma1 zi zj zk zl zm =
-          (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ)))
+      ([] : List (DelaunayFlipContext 1)) ([] : List (DelaunayFlipContext 1)))
 
 /--
 A minimal trajectory abstraction for the braid-surface readout.
@@ -106,11 +77,7 @@ theorem one_cycle_scramble_identity
     (h_jm : zj - zm ≠ 0)
     (h_jl : zj - zl ≠ 0) :
     trajectoryMatrix (moving := 1)
-      (appendixPentagonWord zi zj zk zl zm
-        (pentagonGamma5 zi zj zk zl zm * pentagonGamma4 zi zj zk zl zm *
-          pentagonGamma3 zi zj zk zl zm * pentagonGamma2 zi zj zk zl zm *
-          pentagonGamma1 zi zj zk zl zm =
-            (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ))) =
+      (appendixPentagonWord zi zj zk zl zm) =
       (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) := by
   simpa using appendixPentagonWord_matrix_eq_one zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 

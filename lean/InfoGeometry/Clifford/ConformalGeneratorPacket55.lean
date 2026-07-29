@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
 import InfoGeometry.Clifford.ConformalReflection55
 import InfoGeometry.Clifford.ModularCftBridge
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 
 noncomputable section
 
@@ -153,8 +154,8 @@ theorem S_conjugates_exp_dilation_neg (lam : ℂ) :
     ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [S, SInv, Dproj, modularS, modularSInverse]
   have hExp :=
-    Matrix.exp_units_conj
-      (U := (⟨S, SInv, modularS_mul_inverse, modularS_inverse_mul⟩ :
+    Matrix.exp_units_conj'
+      (U := (⟨SInv, S, modularS_inverse_mul, modularS_mul_inverse⟩ :
         (Matrix (Fin 2) (Fin 2) ℂ)ˣ))
       (A := lam • Dproj)
   calc

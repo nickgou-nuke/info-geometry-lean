@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly

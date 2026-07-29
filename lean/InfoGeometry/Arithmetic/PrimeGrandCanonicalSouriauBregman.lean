@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
 import InfoGeometry.Arithmetic.PrimonFinite
+import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.BridgeTarget
@@ -181,12 +182,31 @@ socket data.
 @[rep_depth transport]
 structure PrimeGrandCanonicalSouriauBregmanPacket where
   massieuBridge : MassieuBridge
-  zetaPotential : ℂ → ℂ
-  zetaMomentMap : ℂ → ℂ
-  zetaPotential_is_negLogZeta : Prop
-  zetaMomentMap_is_neg_zetaDeriv_over_zeta : Prop
+  zeta : ℂ → ℂ
+  dzeta : ℂ → ℂ
 
 namespace PrimeGrandCanonicalSouriauBregmanPacket
+
+variable (B : PrimeGrandCanonicalSouriauBregmanPacket)
+
+/-- Zeta free-energy potential, derived from the native complex thermodynamic owner. -/
+def zetaPotential : ℂ → ℂ :=
+  InfoGeometry.Arithmetic.ZetaSouriauComplexLift.freeEnergyOf B.zeta
+
+/-- Zeta logarithmic-derivative force, derived from `zeta` and `dzeta`. -/
+def zetaMomentMap : ℂ → ℂ :=
+  InfoGeometry.Arithmetic.ZetaSouriauComplexLift.logDerivativeForce
+    B.zeta B.dzeta
+
+/-- The derived zeta potential is pointwise `-log ζ`. -/
+theorem zetaPotential_is_negLogZeta (s : ℂ) :
+    B.zetaPotential s = -Complex.log (B.zeta s) := by
+  rfl
+
+/-- The derived zeta moment map is pointwise `-ζ'/ζ`. -/
+theorem zetaMomentMap_is_neg_zetaDeriv_over_zeta (s : ℂ) :
+    B.zetaMomentMap s = -(B.dzeta s) / B.zeta s := by
+  rfl
 
 end PrimeGrandCanonicalSouriauBregmanPacket
 

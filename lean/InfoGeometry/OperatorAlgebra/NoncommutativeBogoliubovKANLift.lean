@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Canonical.BogoliubovTransport
-import InfoGeometry.OperatorAlgebra.ModularSignCPT
 
 /-!
 InfoGeometry/OperatorAlgebra/NoncommutativeBogoliubovKANLift
@@ -40,6 +39,7 @@ separate shadow packet.
 structure NoncommutativeModularOperatorLift
     (A Weight Deriv Ham Phase Core : Type*)
     [Ring A]
+    [Mul Core]
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase] where
@@ -70,22 +70,11 @@ structure NoncommutativeModularOperatorLift
   /-- Modular sign/phase readout of `relativeHamiltonian`. -/
   modularPhase : Weight → Weight → Phase
 
-  /-- Compatibility witness between cocycle and spatial derivative carriers. -/
-  cocycleCompatibility : Type*
-
-  /-- Compatibility witness for modular Hamiltonian functional calculus. -/
-  hamFunctionalCalculus : Type*
-
-  /-- Compatibility witness for phase/sign functional calculus. -/
-  phaseFunctionalCalculus : Type*
-
-  /-- Guard: diagonal/commutative objects are not treated as owner data. -/
-  diagonalIsShadowGuard : Type*
-
 namespace NoncommutativeModularOperatorLift
 
 variable {A Weight Deriv Ham Phase Core : Type*}
-  [Ring A] [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
+  [Ring A] [Mul Core]
+  [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
 
 variable (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core)
 
@@ -178,12 +167,6 @@ structure BogoliubovKANShadowPacket
     (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (Bog Korth Asplit Nshear CartanDiag : Type*) where
-  /-- Chosen doubled-space real carrier for the representation. -/
-  doubledCarrier : Type*
-
-  /-- Chosen polarization of the doubled-space carrier. -/
-  polarization : Type*
-
   /-- Real Bogoliubov implementer witness. -/
   bogoliubovTransform : Bog
 
@@ -198,18 +181,6 @@ structure BogoliubovKANShadowPacket
 
   /-- Diagonal readout from the Cartan sector. -/
   diagonalShadow : CartanDiag
-
-  /-- Compatibility of the chosen polarization with the doubled-space implementation. -/
-  polarizationWitness : Type*
-
-  /-- KAN decomposition existence witness for the chosen implementer. -/
-  kanDecomposition : Type*
-
-  /-- Guard: diagonal readout is not a primitive operator owner. -/
-  diagonalIsOnlyShadow : Type*
-
-  /-- Link to `BogoliubovTransport` coordinate implementation data. -/
-  transportCarrier : Type*
 
 namespace BogoliubovKANShadowPacket
 
@@ -296,6 +267,7 @@ data.
 structure NoncommutativeModularToBogoliubovKANPacket
     (A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*)
     [Ring A]
+    [Mul Core]
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase]
@@ -306,19 +278,11 @@ structure NoncommutativeModularToBogoliubovKANPacket
   /-- Derived Bogoliubov representation shadow. -/
   bogoliubovShadow : BogoliubovKANShadowPacket E Bog Korth Asplit Nshear CartanDiag
 
-  /-- Link from spatial derivative data to the Bogoliubov implementer. -/
-  spatialDerivativeToBogoliubov : Type*
-
-  /-- Link from modular sign/phase data to Bogoliubov phase axis. -/
-  phaseToBogoliubov : Type*
-
-  /-- Guard: diagonal shadow cannot replace the noncommutative object. -/
-  noDiagonalOwner : Type*
-
 namespace NoncommutativeModularToBogoliubovKANPacket
 
 variable {A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*}
-  [Ring A] [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
+  [Ring A] [Mul Core]
+  [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 variable (P : NoncommutativeModularToBogoliubovKANPacket

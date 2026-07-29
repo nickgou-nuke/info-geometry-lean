@@ -880,18 +880,37 @@ structure ColRNBarrierCountProfileLift
           (countRay (colSumCounts n M) hcol)
 
 /--
-Proof-carrying row-count mass-normalization witness for the RN-barrier profile
-lift.
-
-This packages the positivity and total-mass certificate needed to route a raw
-row-count profile into the projective information-geometric readback lane.
+Native existential statement that row counts are positive and have total mass
+`n`.  No custom proof packet is needed for these two dependent propositions.
 -/
-structure RowCountMassNormalizedWitness
+def RowCountMassNormalizedWitness
     {n : Nat}
     [Nonempty (Fin n)]
-    (M : SinkhornMatrix n) where
-  hrow : HasPositiveRowSums n M
-  hMass : countMass (rowSumCounts n M) hrow = n
+    (M : SinkhornMatrix n) : Prop :=
+  ∃ hrow : HasPositiveRowSums n M,
+    countMass (rowSumCounts n M) hrow = n
+
+namespace RowCountMassNormalizedWitness
+
+/-- Positive-row component selected from the native existential statement. -/
+noncomputable def hrow
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (W : RowCountMassNormalizedWitness M) :
+    HasPositiveRowSums n M :=
+  Classical.choose W
+
+/-- Mass-normalization theorem selected from the native existential statement. -/
+theorem hMass
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (W : RowCountMassNormalizedWitness M) :
+    countMass (rowSumCounts n M) W.hrow = n :=
+  Classical.choose_spec W
+
+end RowCountMassNormalizedWitness
 
 /--
 Construct the row RN-barrier profile lift from positive observed row counts

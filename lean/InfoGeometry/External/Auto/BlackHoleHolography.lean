@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.Real.GoldenRatio
 
 /-!
 # Black-hole holography scalar anchor

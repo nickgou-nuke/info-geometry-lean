@@ -1,5 +1,8 @@
 import Mathlib.Tactic
 import Mathlib.CategoryTheory.Functor.OfSequence
+import Mathlib.CategoryTheory.Limits.HasLimits
+import Mathlib.CategoryTheory.Limits.Filtered
+import Mathlib.CategoryTheory.Limits.Types.Filtered
 
 open CategoryTheory
 open CategoryTheory.Limits

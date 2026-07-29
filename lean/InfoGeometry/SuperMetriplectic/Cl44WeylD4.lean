@@ -89,11 +89,12 @@ Chiral spinor weight label for `D₄`: `1/2 (±e₁ ± e₂ ± e₃ ± e₄)`.
 -/
 structure D4SpinorWeight where
   signs : Fin 4 → D4Sign
-  positiveChirality : Prop
-  chiralityProof :
-    positiveChirality ↔ d4PositiveChirality signs
 
 namespace D4SpinorWeight
+
+/-- Chirality is derived from the parity of the sign label. -/
+def positiveChirality (W : D4SpinorWeight) : Prop :=
+  d4PositiveChirality W.signs
 
 /-- Coordinate readout of a chiral spinor weight. -/
 noncomputable def coordinate (W : D4SpinorWeight) (k : Fin 4) : ℝ :=
@@ -103,7 +104,7 @@ noncomputable def coordinate (W : D4SpinorWeight) (k : Fin 4) : ℝ :=
 theorem positiveChirality_iff
     (W : D4SpinorWeight) :
     W.positiveChirality ↔ d4PositiveChirality W.signs :=
-  W.chiralityProof
+  Iff.rfl
 
 end D4SpinorWeight
 

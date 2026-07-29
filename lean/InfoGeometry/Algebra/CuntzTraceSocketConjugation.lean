@@ -25,14 +25,34 @@ variable {n : ℕ}
 
 /-- `CuntzTraceSocket n` couples the scalar trace with the finite-matrix
 inverse-on-image map and asserts cyclicity on the faithful image. -/
-structure CuntzTraceSocket (n : ℕ) where
-  socket_trace : CuntzAlg n → ℝ
-  socket_inv_of_image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
-  trace_cycle {A B : Matrix (Fin n) (Fin n) ℂ} :
-    socket_trace (socket_inv_of_image (A * B))
-      = socket_trace (socket_inv_of_image (B * A))
-  trace_cycle_cuntz (X Y : CuntzAlg n) :
-    socket_trace (X * Y) = socket_trace (Y * X)
+abbrev CuntzTraceSocket (n : ℕ) : Type :=
+  Σ' socket_trace : CuntzAlg n → ℝ,
+    Σ' socket_inv_of_image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n,
+      (∀ {A B : Matrix (Fin n) (Fin n) ℂ},
+        socket_trace (socket_inv_of_image (A * B)) =
+          socket_trace (socket_inv_of_image (B * A))) ∧
+        (∀ X Y : CuntzAlg n, socket_trace (X * Y) = socket_trace (Y * X))
+
+namespace CuntzTraceSocket
+
+abbrev socket_trace {n : ℕ} (S : CuntzTraceSocket n) : CuntzAlg n → ℝ :=
+  S.1
+
+abbrev socket_inv_of_image {n : ℕ} (S : CuntzTraceSocket n) :
+    Matrix (Fin n) (Fin n) ℂ → CuntzAlg n :=
+  S.2.1
+
+abbrev trace_cycle {n : ℕ} (S : CuntzTraceSocket n) :
+    ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
+      S.socket_trace (S.socket_inv_of_image (A * B)) =
+        S.socket_trace (S.socket_inv_of_image (B * A)) :=
+  S.2.2.1
+
+abbrev trace_cycle_cuntz {n : ℕ} (S : CuntzTraceSocket n) :
+    ∀ X Y : CuntzAlg n, S.socket_trace (X * Y) = S.socket_trace (Y * X) :=
+  S.2.2.2
+
+end CuntzTraceSocket
 
 open CuntzTraceSocket (socket_trace socket_inv_of_image)
 

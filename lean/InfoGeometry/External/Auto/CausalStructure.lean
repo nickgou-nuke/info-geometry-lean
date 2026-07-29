@@ -17,10 +17,27 @@ def causal_diamond {M : Type} [Spacetime M] (x y : M) : M → Prop :=
 def is_Cauchy_surface {M : Type} [Spacetime M] (S : M → Prop) : Prop :=
   ∀ ⦃x y z : M⦄, S z → causal_diamond x y z → J_plus x z ∧ J_minus y z
 
-class GloballyHyperbolic (M : Type) [Spacetime M] : Prop where
-  exists_cauchy : ∃ S : M → Prop, is_Cauchy_surface S
-  diamond_compact : ∀ x y : M, IsCompact (causal_diamond x y)
+def GloballyHyperbolic (M : Type) [Spacetime M] : Prop :=
+  (∃ S : M → Prop, is_Cauchy_surface S) ∧
+    (∀ x y : M, IsCompact (causal_diamond x y))
 
-theorem diamond_is_compact {M : Type} [Spacetime M] [GloballyHyperbolic M] (x y : M) :
+namespace GloballyHyperbolic
+
+/-- Compatibility projection for existence of a Cauchy surface. -/
+theorem exists_cauchy
+    [Spacetime M] (h : GloballyHyperbolic M) :
+    ∃ S : M → Prop, is_Cauchy_surface S :=
+  h.1
+
+/-- Compatibility projection for compact causal diamonds. -/
+theorem diamond_compact
+    [Spacetime M] (h : GloballyHyperbolic M) (x y : M) :
     IsCompact (causal_diamond x y) :=
-  GloballyHyperbolic.diamond_compact x y
+  h.2 x y
+
+end GloballyHyperbolic
+
+theorem diamond_is_compact {M : Type} [Spacetime M]
+    (h : GloballyHyperbolic M) (x y : M) :
+    IsCompact (causal_diamond x y) :=
+  GloballyHyperbolic.diamond_compact h x y

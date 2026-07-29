@@ -259,7 +259,7 @@ This witness packages a geometric Möbius datum on the bilingual upper
 half-plane together with explicit arithmetic transports on
 `Bulk` and `Boundary`, together with Siegel projector compatibility.
 -/
-structure LanglandsGeometryCorrespondence
+abbrev LanglandsGeometryCorrespondence
     {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {Bulk Boundary : Type*}
@@ -275,11 +275,8 @@ structure LanglandsGeometryCorrespondence
     (P : ProjectedAutomorphicLFunctionWitness W)
     (packet : LanglandsLaneArithmeticPacket (W := W) (P := P)
       (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State))
-    (Z : BilingualUpperHalfPlane D) where
-  /-- Action-level correspondence from geometry to arithmetic transport data. -/
-  moebiusToArithmetic :
-    LanglandsGeometryToArithmetic
-      D Z W P packet
+    (Z : BilingualUpperHalfPlane D) :=
+  LanglandsGeometryToArithmetic D Z W P packet
 
 
 /--
@@ -325,7 +322,7 @@ theorem constructLanglandsLanePacket_withGeometry
     exact ⟨
       constructLanglandsLanePacket (W := W) (P := P) (packet := packet)
         S Wr Tr G K,
-      let I : LanglandsGeometryArithmeticIntertwiner (W := W) := C.moebiusToArithmetic m
+      let I : LanglandsGeometryArithmeticIntertwiner (W := W) := C m
       ⟨I, I.siegel_transport, I.boundaryProjector_transport⟩
     ⟩
 

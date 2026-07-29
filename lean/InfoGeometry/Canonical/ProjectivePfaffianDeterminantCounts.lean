@@ -247,12 +247,12 @@ inductive ProjectiveCountChannel where
   deriving DecidableEq, Fintype
 
 /-- Readout from projective determinant coordinates to Fierz/Klein coordinates. -/
-structure ProjectiveDeterminantReadout (Γ : Type*) [Fintype Γ] where
-  coord : ProjectiveCountChannel → (Γ → ℝ) → ℝ
+abbrev ProjectiveDeterminantReadout (Γ : Type*) [Fintype Γ] :=
+  ProjectiveCountChannel → (Γ → ℝ) → ℝ
 
 /-- Residual for the Pluecker/Klein quadric shadow. -/
-structure KleinResidual where
-  residual : (ProjectiveCountChannel → ℝ) → ℝ
+abbrev KleinResidual :=
+  (ProjectiveCountChannel → ℝ) → ℝ
 
 /--
 Witness that the projective determinant/Pfaffian count ray lies on the intended
@@ -269,18 +269,18 @@ structure ProjectivePfaffianKleinLaw
 
   coords : ProjectiveCountChannel → ℝ :=
     fun ch =>
-      readout.coord ch
+      readout ch
         (fun γ => projectiveDeterminantCoordinate Ω φ γ)
 
   klein_residual_eq_zero :
-    residual.residual coords = 0
+    residual coords = 0
 
 /-- Read back the witness-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
 theorem projective_pfaffian_counts_lie_on_klein
     {Γ : Type*}
     [Fintype Γ]
     (K : ProjectivePfaffianKleinLaw Γ) :
-    K.residual.residual K.coords = 0 :=
+    K.residual K.coords = 0 :=
   K.klein_residual_eq_zero
 
 /-- The projective Pfaffian count ray lies on the Fierz--Klein residual locus. -/
@@ -288,7 +288,7 @@ theorem projective_pfaffian_counts_lie_on_fierz_klein
     {Γ : Type*}
     [Fintype Γ]
     (K : ProjectivePfaffianKleinLaw Γ) :
-    K.residual.residual K.coords = 0 :=
+    K.residual K.coords = 0 :=
   K.klein_residual_eq_zero
 
 end InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts

@@ -81,27 +81,43 @@ noncomputable def quantizedSurprisalOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
   firstQuantize (n := n) (classicalSurprisal (n := n) q q0)
 
-/--
-Boltzmann-entropy / surprisal operator on the finite first-quantized modular
-lane. This is the diagonal observable whose eigenvalues are the pointwise
-microstate surprisal values `-log λ`.
--/
+/-- State-surprisal operator with pointwise eigenvalues `-log λ`. -/
 @[rep_depth operator]
-noncomputable def boltzmannEntropyOperator
+noncomputable def quantizedStateSurprisalOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
   quantizedSurprisalOperator (n := n) q q0
 
-@[simp] theorem boltzmannEntropyOperator_diag
+/-! Historical compatibility alias: this selector denotes state surprisal,
+not macrostate Boltzmann entropy. -/
+@[deprecated quantizedStateSurprisalOperator (since := "2026-07-27")]
+noncomputable abbrev boltzmannEntropyOperator
+    (q q0 : PositiveRay (Fin n)) : FinMat n :=
+  quantizedStateSurprisalOperator (n := n) q q0
+
+@[simp] theorem quantizedStateSurprisalOperator_diag
+    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
+    quantizedStateSurprisalOperator (n := n) q q0 i i =
+      classicalSurprisal (n := n) q q0 i := by
+  rw [quantizedStateSurprisalOperator, quantizedSurprisalOperator, firstQuantize_apply_diag]
+
+@[deprecated quantizedStateSurprisalOperator_diag (since := "2026-07-27")]
+theorem boltzmannEntropyOperator_diag
     (q q0 : PositiveRay (Fin n)) (i : Fin n) :
     boltzmannEntropyOperator (n := n) q q0 i i =
-      classicalSurprisal (n := n) q q0 i := by
-  rw [boltzmannEntropyOperator, quantizedSurprisalOperator, firstQuantize_apply_diag]
+      classicalSurprisal (n := n) q q0 i :=
+  quantizedStateSurprisalOperator_diag (n := n) q q0 i
 
-@[simp] theorem boltzmannEntropyOperator_offdiag
+@[simp] theorem quantizedStateSurprisalOperator_offdiag
     (q q0 : PositiveRay (Fin n)) {i j : Fin n} (hij : i ≠ j) :
-    boltzmannEntropyOperator (n := n) q q0 i j = 0 := by
-  rw [boltzmannEntropyOperator, quantizedSurprisalOperator]
+    quantizedStateSurprisalOperator (n := n) q q0 i j = 0 := by
+  rw [quantizedStateSurprisalOperator, quantizedSurprisalOperator]
   exact firstQuantize_apply_offdiag (n := n) (a := classicalSurprisal (n := n) q q0) (hij := hij)
+
+@[deprecated quantizedStateSurprisalOperator_offdiag (since := "2026-07-27")]
+theorem boltzmannEntropyOperator_offdiag
+    (q q0 : PositiveRay (Fin n)) {i j : Fin n} (hij : i ≠ j) :
+    boltzmannEntropyOperator (n := n) q q0 i j = 0 :=
+  quantizedStateSurprisalOperator_offdiag (n := n) q q0 hij
 
 /-- `-log λ` first-quantized equals the relative modular-potential operator. -/
 @[rep_depth operator]
@@ -143,18 +159,23 @@ theorem relativeModularHamiltonianOperator_eq_quantizedSurprisalOperator
           symm
           exact quantizedSurprisalOperator_eq_relativeModularPotentialOperator (n := n) q q0
 
-/--
-Terminology repair on the finite commuting modular lane: the historical
-"relative modular Hamiltonian" is exactly the Boltzmann-entropy / surprisal
-operator.
--/
+/-- The relative modular Hamiltonian is the quantized state-surprisal operator. -/
 @[rep_depth operator]
-theorem relativeModularHamiltonianOperator_eq_boltzmannEntropyOperator
+theorem relativeModularHamiltonianOperator_eq_quantizedStateSurprisalOperator
     (q q0 : PositiveRay (Fin n)) :
     relativeModularHamiltonianOperator (n := n) q q0
-      = boltzmannEntropyOperator (n := n) q q0 := by
-  rw [boltzmannEntropyOperator]
+      = quantizedStateSurprisalOperator (n := n) q q0 := by
+  rw [quantizedStateSurprisalOperator]
   exact relativeModularHamiltonianOperator_eq_quantizedSurprisalOperator (n := n) q q0
+
+@[deprecated relativeModularHamiltonianOperator_eq_quantizedStateSurprisalOperator
+    (since := "2026-07-27")]
+theorem relativeModularHamiltonianOperator_eq_boltzmannEntropyOperator
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularHamiltonianOperator (n := n) q q0 =
+      boltzmannEntropyOperator (n := n) q q0 :=
+  relativeModularHamiltonianOperator_eq_quantizedStateSurprisalOperator
+    (n := n) q q0
 
 end FiniteDictionary
 

@@ -73,7 +73,7 @@ theorem wardAction_eq_zero_of_globalMode_freeEnergy
     (n : ℤ) (hn : n ≥ -1) :
     P.ward.wardAction n P.jaynes.freeEnergy = 0 := by
   rw [← P.freeEnergy_eq]
-  rw [P.ward.thermodynamics.freeEnergy_eq_neg_log_partition]
+  rw [P.ward.freeEnergy_eq_neg_log_partition]
   exact P.ward.wardAction_eq_zero_of_globalMode_negLogPartition n hn
 
 /-- The Jaynes free energy is the Ward free-energy readout. -/

@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.KleinBottleTopology
-import InfoGeometry.Canonical.KleinBottleOrientifold
 
 /-!
 # Klein Bottle Boundary Action
@@ -13,17 +12,17 @@ This module adds only the finite topological story requested here:
 * closed proofs that these maps square to the identity and commute in this
   finite boundary model;
 * a conditional boundary-operator lemma connecting
-  `KleinBottleTopology.klein_gluing` to the existing orientifold packet.
+  `KleinBottleTopology.klein_gluing` to an explicit orthogonal parity operator.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 `sheetReflection_involutive`, `deckTranslation_involutive`,
 `sheet_deck_commute`, `glideReflection_eq_deck_sheet`, and
 `glideReflection_involutive` are closed finite `Z₂` action facts.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-`orientifold_klein_gluing_trace_closure` depends on explicit orientifold
-hypotheses and the existing `KleinBottleTopology.klein_topology_trace_closure`
-operator lemma.
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT OPERATORS
+`orientifold_klein_gluing_trace_closure` depends only on the explicit
+orthogonal parity operator and the existing
+`KleinBottleTopology.klein_topology_trace_closure` operator lemma.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 This file does not prove that a global Klein bottle is realized by the analytic
@@ -124,25 +123,16 @@ theorem finite_z2_glide_action_packet :
 end KleinBoundaryCell
 
 /--
-Boundary-operator bridge from `KleinBottleTopology` to the existing
-`KleinBottleOrientifold` packet.
-
-The orientifold propositions remain explicit hypotheses.  The closed operator
-content is exactly the existing trace-closure theorem for `klein_gluing`.
+Native boundary-operator theorem for the Klein gluing.  The former statement
+also carried an unrelated orientifold evidence packet and returned its input
+propositions unchanged; the trace law needs only the actual orthogonality
+relation.
 -/
 theorem orientifold_klein_gluing_trace_closure
-    (O : KleinBottleOrientifold.KleinBottleOrientifold)
     (M P_parity : Matrix (Fin 32) (Fin 32) ℝ)
     (h_orth : P_parityᵀ * P_parity = 1)
-    (h_trace : Matrix.trace M = 0)
-    (h_projection : O.orientationReversingProjection)
-    (h_quotient : O.kleinBottleQuotient) :
-    Matrix.trace (KleinBottleTopology.klein_gluing M P_parity) = 0 ∧
-      O.orientationReversingProjection ∧
-      O.kleinBottleQuotient := by
-  exact ⟨KleinBottleTopology.klein_topology_trace_closure M P_parity h_orth h_trace,
-    h_projection,
-    h_quotient⟩
+    (h_trace : Matrix.trace M = 0) :
+    Matrix.trace (KleinBottleTopology.klein_gluing M P_parity) = 0 :=
+  KleinBottleTopology.klein_topology_trace_closure M P_parity h_orth h_trace
 
 end InfoGeometry.Canonical.KleinBottleBoundaryAction
-

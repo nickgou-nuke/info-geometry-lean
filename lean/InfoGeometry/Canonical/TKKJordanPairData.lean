@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.Basic
 
 /-!
 # Abstract TKK/Jordan-pair data
@@ -75,10 +76,52 @@ structure JordanPair (R : Type*) [CommRing R] where
   [minus_module : Module R Vminus]
   triplePlus : Vplus → Vminus → Vplus → Vplus
   tripleMinus : Vminus → Vplus → Vminus → Vminus
-  jordanPairIdentities : Prop
+  /-- Outer symmetry of the positive Jordan-pair product. -/
+  triplePlus_outer :
+    ∀ x y z, triplePlus x y z = triplePlus z y x
+  /-- Outer symmetry of the negative Jordan-pair product. -/
+  tripleMinus_outer :
+    ∀ x y z, tripleMinus x y z = tripleMinus z y x
+  /-- Fundamental Jordan-pair identity in the positive component. -/
+  triplePlus_fundamental :
+    ∀ (x u w : Vplus) (y v : Vminus),
+      triplePlus x y (triplePlus u v w) -
+          triplePlus u v (triplePlus x y w) =
+        triplePlus (triplePlus x y u) v w -
+          triplePlus u (tripleMinus y x v) w
+  /-- Fundamental Jordan-pair identity in the negative component. -/
+  tripleMinus_fundamental :
+    ∀ (x u w : Vminus) (y v : Vplus),
+      tripleMinus x y (tripleMinus u v w) -
+          tripleMinus u v (tripleMinus x y w) =
+        tripleMinus (tripleMinus x y u) v w -
+          tripleMinus u (triplePlus y x v) w
 
 attribute [instance] JordanPair.plus_add JordanPair.minus_add
 attribute [instance] JordanPair.plus_module JordanPair.minus_module
+
+namespace JordanPair
+
+variable {R : Type*} [CommRing R] (J : JordanPair R)
+
+/-- Consolidated readback of the four defining Jordan-pair identities. -/
+theorem jordanPairIdentities :
+    (∀ x y z, J.triplePlus x y z = J.triplePlus z y x) ∧
+      (∀ x y z, J.tripleMinus x y z = J.tripleMinus z y x) ∧
+      (∀ (x u w : J.Vplus) (y v : J.Vminus),
+        J.triplePlus x y (J.triplePlus u v w) -
+            J.triplePlus u v (J.triplePlus x y w) =
+          J.triplePlus (J.triplePlus x y u) v w -
+            J.triplePlus u (J.tripleMinus y x v) w) ∧
+      (∀ (x u w : J.Vminus) (y v : J.Vplus),
+        J.tripleMinus x y (J.tripleMinus u v w) -
+            J.tripleMinus u v (J.tripleMinus x y w) =
+          J.tripleMinus (J.tripleMinus x y u) v w -
+            J.tripleMinus u (J.triplePlus y x v) w) :=
+  ⟨J.triplePlus_outer, J.tripleMinus_outer,
+    J.triplePlus_fundamental, J.tripleMinus_fundamental⟩
+
+end JordanPair
 
 /-- A five-graded Lie-algebra interface indexed by `TKKGrade`. -/
 structure FiveGradedLieAlgebra (R : Type*) [CommRing R] where

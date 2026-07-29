@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Quaternion
 import InfoGeometry.Clifford.DiracPauliGamma
 
 noncomputable section
@@ -208,8 +209,16 @@ def spinSourceReadout {V T : Type*}
   simp [spinSourceReadout]
 
 /-- Explicit map from a torsion carrier into complex quaternions. -/
-structure BiquaternionTorsionBridge (T : Type*) [AddCommGroup T] [Module ℝ T] where
-  to_biquat : T → Biquaternion
+abbrev BiquaternionTorsionBridge (T : Type*) [AddCommGroup T] [Module ℝ T] :=
+  T → Biquaternion
+
+namespace BiquaternionTorsionBridge
+
+/-- Projection-compatible name for the direct biquaternion readout. -/
+abbrev to_biquat {T : Type*} [AddCommGroup T] [Module ℝ T]
+    (bridge : BiquaternionTorsionBridge T) : T → Biquaternion := bridge
+
+end BiquaternionTorsionBridge
 
 /-- The finite torsion readout is exactly the supplied bilinear map. -/
 theorem emergent_torsion_consistency {V T : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup T] [Module ℝ T]
@@ -231,8 +240,10 @@ theorem biquaternion_torsion_readout_consistency
     {V T : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup T] [Module ℝ T]
     (condensate : SpinorCondensate V) (sigma_phi : V)
     (st : SpinorTorsion V T) (bridge : BiquaternionTorsionBridge T) :
-    bridge.to_biquat (condensate_torsion condensate sigma_phi st) =
-      bridge.to_biquat (st.torsion_map condensate.bar_phi sigma_phi) := by
+    BiquaternionTorsionBridge.to_biquat bridge
+        (condensate_torsion condensate sigma_phi st) =
+      BiquaternionTorsionBridge.to_biquat bridge
+        (st.torsion_map condensate.bar_phi sigma_phi) := by
   rfl
 
 section EinsteinCartanFinite

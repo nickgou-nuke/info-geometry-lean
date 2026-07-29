@@ -62,6 +62,17 @@ notation A " ≁ " B => SpacelikeSeparated A B
   Observables at spacelike separated events must commute when pushed forward
   into the Universal Causal Future.
 -/
-class EinsteinCausality (F : CausalFunctor α) [HasColimit F] : Prop where
-  commute_of_spacelike : ∀ {A B : CausalSpacetime α} (_h : A ≁ B) (x : F.obj A) (y : F.obj B),
+def EinsteinCausality (F : CausalFunctor α) [HasColimit F] : Prop :=
+  ∀ {A B : CausalSpacetime α} (_h : A ≁ B) (x : F.obj A) (y : F.obj B),
     Commute ((colimit.ι F A) x) ((colimit.ι F B) y)
+
+namespace EinsteinCausality
+
+theorem commute_of_spacelike
+    (F : CausalFunctor α) [HasColimit F]
+    (h : EinsteinCausality F) {A B : CausalSpacetime α} (_h : A ≁ B)
+    (x : F.obj A) (y : F.obj B) :
+    Commute ((colimit.ι F A) x) ((colimit.ι F B) y) :=
+  h _h x y
+
+end EinsteinCausality

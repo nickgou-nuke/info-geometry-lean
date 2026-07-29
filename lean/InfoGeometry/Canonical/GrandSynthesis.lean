@@ -64,8 +64,8 @@ radial transport closure.
 theorem canopy_singular_boundary_closure
     (S : SingularTransportSystem E)
     (hZero : S.boundary.boundaryGenerator = 0) :
-    S.boundary.regularRadialTransportCloses := by
-  exact regularRadialTransportCloses_of_boundaryGenerator_eq_zero (S := S) hZero
+    S.boundary.regularRadialTransport = 0 := by
+  exact S.boundary.closure_of_zero_boundaryGenerator hZero
 
 /--
 Trunk-to-canopy closure packet for the GrandSynthesis canopy:
@@ -84,7 +84,7 @@ theorem grandSynthesis_trunk_to_canopy_closure
     ThermodynamicEquilibrium n P.trajectory ∧
       SinkhornEntropyMonotoneRN n P.trajectory.traj ∧
       (∃ c : ℝ, ∀ s, flow s u v = c) ∧
-      S.boundary.regularRadialTransportCloses := by
+      S.boundary.regularRadialTransport = 0 := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact (canopy_thermo_equilibrium_and_entropy (n := n) P).1
   · exact (canopy_thermo_equilibrium_and_entropy (n := n) P).2
@@ -110,7 +110,7 @@ theorem grandSynthesis_root_factorization
       ThermodynamicEquilibrium n P.trajectory ∧
       SinkhornEntropyMonotoneRN n P.trajectory.traj ∧
       (∀ s, flow s u v = c) ∧
-      S.boundary.regularRadialTransportCloses := by
+      S.boundary.regularRadialTransport = 0 := by
   obtain ⟨c, hc⟩ := canopy_geometric_component_constant flow u v hDiff hGeo
   refine ⟨c, ?_⟩
   refine ⟨?_, ?_, hc, ?_⟩

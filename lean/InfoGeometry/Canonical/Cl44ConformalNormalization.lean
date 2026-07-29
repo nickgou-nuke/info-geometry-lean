@@ -92,24 +92,35 @@ theorem quadratic_light_conformal_count :
 The quadratic route is the one compatible with the slogan
 `Cl(4,4) → V_{4,4} → so(5,5)`.
 -/
-structure QuadraticLightConeConformalRoute where
-  /-- The translation grade is the eight-dimensional quadratic light space. -/
-  translation_dim_eq : quadraticLightSpaceDim = 8
-
-  /-- The grade-zero piece is `so(4,4) ⊕ R` at the dimension level. -/
-  grade_zero_dim_eq :
-    quadraticLeviRotationDim + dilationCharacterDim = 29
-
-  /-- The full conformal closure dimension is `45`. -/
-  closure_dim_eq : quadraticConformalClosureDim = 45
+def QuadraticLightConeConformalRoute : Prop :=
+  quadraticLightSpaceDim = 8 ∧
+  quadraticLeviRotationDim + dilationCharacterDim = 29 ∧
+  quadraticConformalClosureDim = 45
 
 namespace QuadraticLightConeConformalRoute
 
+/-- The quadratic route has an eight-dimensional translation grade. -/
+theorem translation_dim_eq
+    (h : QuadraticLightConeConformalRoute) :
+    quadraticLightSpaceDim = 8 :=
+  h.1
+
+/-- The quadratic route has grade-zero dimension `28 + 1 = 29`. -/
+theorem grade_zero_dim_eq
+    (h : QuadraticLightConeConformalRoute) :
+    quadraticLeviRotationDim + dilationCharacterDim = 29 :=
+  h.2.1
+
+/-- The quadratic conformal closure has dimension `45`. -/
+theorem closure_dim_eq
+    (h : QuadraticLightConeConformalRoute) :
+    quadraticConformalClosureDim = 45 :=
+  h.2.2
+
 /-- Canonical dimension-normalized quadratic route. -/
-def canonical : QuadraticLightConeConformalRoute where
-  translation_dim_eq := rfl
-  grade_zero_dim_eq := by norm_num [quadraticLeviRotationDim, dilationCharacterDim]
-  closure_dim_eq := rfl
+theorem canonical : QuadraticLightConeConformalRoute := by
+  norm_num [QuadraticLightConeConformalRoute, quadraticLightSpaceDim,
+    quadraticLeviRotationDim, dilationCharacterDim, quadraticConformalClosureDim]
 
 /-- The canonical quadratic route has the `so(5,5)` dimension count. -/
 theorem canonical_count :
@@ -152,24 +163,35 @@ theorem spin_factor_tkk_count :
 The unital spin-factor route has a nine-dimensional translation grade and
 therefore closes at the `so(6,5)` dimension level, not at `so(5,5)`.
 -/
-structure SpinFactorConformalRoute where
-  /-- The translation grade is `R ⊕ V_{4,4}`, hence dimension `9`. -/
-  translation_dim_eq : spinFactorDim = 9
-
-  /-- The grade-zero dimension is `36 + 1 = 37`. -/
-  grade_zero_dim_eq :
-    spinFactorStructureRotationDim + dilationCharacterDim = 37
-
-  /-- The full TKK closure dimension is `55`. -/
-  closure_dim_eq : spinFactorTKKClosureDim = 55
+def SpinFactorConformalRoute : Prop :=
+  spinFactorDim = 9 ∧
+  spinFactorStructureRotationDim + dilationCharacterDim = 37 ∧
+  spinFactorTKKClosureDim = 55
 
 namespace SpinFactorConformalRoute
 
+/-- The unital spin-factor route has a nine-dimensional translation grade. -/
+theorem translation_dim_eq
+    (h : SpinFactorConformalRoute) :
+    spinFactorDim = 9 :=
+  h.1
+
+/-- The spin-factor route has grade-zero dimension `36 + 1 = 37`. -/
+theorem grade_zero_dim_eq
+    (h : SpinFactorConformalRoute) :
+    spinFactorStructureRotationDim + dilationCharacterDim = 37 :=
+  h.2.1
+
+/-- The spin-factor TKK closure has dimension `55`. -/
+theorem closure_dim_eq
+    (h : SpinFactorConformalRoute) :
+    spinFactorTKKClosureDim = 55 :=
+  h.2.2
+
 /-- Canonical dimension-normalized spin-factor route. -/
-def canonical : SpinFactorConformalRoute where
-  translation_dim_eq := rfl
-  grade_zero_dim_eq := by norm_num [spinFactorStructureRotationDim, dilationCharacterDim]
-  closure_dim_eq := rfl
+theorem canonical : SpinFactorConformalRoute := by
+  norm_num [SpinFactorConformalRoute, spinFactorDim,
+    spinFactorStructureRotationDim, dilationCharacterDim, spinFactorTKKClosureDim]
 
 /--
 A nine-dimensional spin-factor translation sector cannot have the `so(5,5)`
@@ -238,42 +260,99 @@ This is a dimension-normalized witness saying that the triality package lives
 over the `so(4,4)` rotation sector, not as an outer symmetry of the full
 `D₅` conformal closure.
 -/
-structure TrialityLeviPlacement where
-  /-- Triality acts on the `D₄` light/half-spinor package at dimension `8`. -/
-  triality_rep_dim_eq : quadraticLightSpaceDim = 8
-
-  /-- The Levi rotation sector carrying triality has dimension `28`. -/
-  levi_rotation_dim_eq : quadraticLeviRotationDim = 28
-
-  /-- The full quadratic conformal closure has the `D₅` dimension `45`. -/
-  full_conformal_dim_eq : quadraticConformalClosureDim = 45
+def TrialityLeviPlacement : Prop :=
+  quadraticLightSpaceDim = 8 ∧
+  quadraticLeviRotationDim = 28 ∧
+  quadraticConformalClosureDim = 45
 
 namespace TrialityLeviPlacement
 
+/-- Triality acts on an eight-dimensional `D₄` representation sector. -/
+theorem triality_rep_dim_eq
+    (h : TrialityLeviPlacement) :
+    quadraticLightSpaceDim = 8 :=
+  h.1
+
+/-- The Levi rotation sector carrying triality has dimension `28`. -/
+theorem levi_rotation_dim_eq
+    (h : TrialityLeviPlacement) :
+    quadraticLeviRotationDim = 28 :=
+  h.2.1
+
+/-- The containing quadratic conformal closure has dimension `45`. -/
+theorem full_conformal_dim_eq
+    (h : TrialityLeviPlacement) :
+    quadraticConformalClosureDim = 45 :=
+  h.2.2
+
 /-- Canonical placement of triality in the `so(4,4)` Levi layer. -/
-def canonical : TrialityLeviPlacement where
-  triality_rep_dim_eq := rfl
-  levi_rotation_dim_eq := rfl
-  full_conformal_dim_eq := rfl
+theorem canonical : TrialityLeviPlacement := by
+  norm_num [TrialityLeviPlacement, quadraticLightSpaceDim,
+    quadraticLeviRotationDim, quadraticConformalClosureDim]
 
 end TrialityLeviPlacement
 
-/-! ## 6. Owner target -/
+/-! ## 6. Native operatorial conformal route -/
+
+open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
+
+section NativeOperatorRoute
+
+variable {α : Type _}
+variable {H : Type}
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /--
-Owner target for the corrected `Cl(4,4)` conformal normalization.
+The genuine operatorial `Cl(4,4)` conformal route owned by the imported split
+Clifford/TKK/Jordan--Lie packet.
+
+The dimension normalization remains useful bookkeeping, but it is not the
+closure owner.  This predicate records the actual master relation,
+operator-admissibility gate, Jordan--Lie closure, and triality-supercharge law.
+-/
+def NativeCl44ConformalRoute
+    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) : Prop :=
+  QuadraticLightConeConformalRoute
+    ∧ P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
+    ∧ P.closure.gibbs.IsOperatorAdmissible
+    ∧ P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
+    ∧ P.triality.trialitySupercharge.comp P.triality.trialitySupercharge =
+        LinearMap.id
+
+/--
+Every native split `Cl(4,4)` TKK/Jordan--Lie packet realizes the operatorial
+conformal route; the numerical `so(5,5)` normalization is only its first
+compatibility component.
+-/
+@[rep_depth transport]
+theorem nativeCl44ConformalRoute
+    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) :
+    NativeCl44ConformalRoute P :=
+  ⟨QuadraticLightConeConformalRoute.canonical,
+    P.tkkMasterRelation,
+    P.operatorAdmissible,
+    P.satisfiesKKT_TKK_Weyl_JordanLieClosure,
+    P.triality.trialitySupercharge_sq_eq_id⟩
+
+end NativeOperatorRoute
+
+/-! ## 7. Compatibility owner target -/
+
+/--
+Compatibility target for the dimension normalization.  The actual operatorial
+owner is `NativeCl44ConformalRoute`.
 -/
 @[owner_target_tag]
 def Cl44ConformalNormalizationOwnerTarget : Prop :=
-  Nonempty QuadraticLightConeConformalRoute
-    ∧ Nonempty SpinFactorConformalRoute
-    ∧ Nonempty TrialityLeviPlacement
+  QuadraticLightConeConformalRoute
+    ∧ SpinFactorConformalRoute
+    ∧ TrialityLeviPlacement
 
 /-- The corrected normalization owner target is inhabited. -/
 theorem cl44ConformalNormalizationOwnerTarget :
     Cl44ConformalNormalizationOwnerTarget :=
-  ⟨⟨QuadraticLightConeConformalRoute.canonical⟩,
-    ⟨SpinFactorConformalRoute.canonical⟩,
-    ⟨TrialityLeviPlacement.canonical⟩⟩
+  ⟨QuadraticLightConeConformalRoute.canonical,
+    SpinFactorConformalRoute.canonical,
+    TrialityLeviPlacement.canonical⟩
 
 end InfoGeometry.Canonical.Cl44ConformalNormalization

@@ -49,14 +49,32 @@ def stateProbability (κ : ℕ) (x : ℝ) (n : ℕ) : ℝ :=
 def stateSurprisal (κ : ℕ) (x : ℝ) (n : ℕ) : ℝ :=
   -Real.log (stateProbability κ x n)
 
-/-- The microscopic surprisal is exactly the Boltzmann entropy of the state. -/
-theorem stateSurprisal_eq_boltzmannEntropy (κ : ℕ) (x : ℝ) (n : ℕ)
+/--
+The microscopic state surprisal splits into the Massieu normalization and the
+logarithmic occupation weight.
+-/
+theorem stateSurprisal_eq_massieu_sub_logWeight
+    (κ : ℕ) (x : ℝ) (n : ℕ)
     (hx : 0 < x) (hQ : 0 < parafermionLocalFactor κ x) :
     stateSurprisal κ x n =
       Real.log (parafermionLocalFactor κ x) - n * Real.log x := by
   unfold stateSurprisal stateProbability
   rw [Real.log_div (pow_pos hx n).ne' hQ.ne', Real.log_pow x n]
   ring
+
+/--
+Historical compatibility name for the state-surprisal decomposition.
+
+Its conclusion is a negative-log probability identity, not a Boltzmann
+macrostate-multiplicity theorem. The retained legacy name is not a semantic
+identification with Boltzmann macroentropy.
+-/
+theorem stateSurprisal_eq_boltzmannEntropy
+    (κ : ℕ) (x : ℝ) (n : ℕ)
+    (hx : 0 < x) (hQ : 0 < parafermionLocalFactor κ x) :
+    stateSurprisal κ x n =
+      Real.log (parafermionLocalFactor κ x) - n * Real.log x :=
+  stateSurprisal_eq_massieu_sub_logWeight κ x n hx hQ
 
 /-- The local occupation law is the geometric weight normalized by the `κ`-sum. -/
 theorem stateProbability_eq_kappa_normalized_weight (κ : ℕ) (x : ℝ) (n : ℕ) :
@@ -148,7 +166,7 @@ theorem localShannonEntropy_eq_massieu_sub_expectedOccupation_mul_log
                 (Real.log (parafermionLocalFactor κ x) - n * Real.log x)) := by
           refine Finset.sum_congr rfl ?_
           intro n hn
-          rw [stateSurprisal_eq_boltzmannEntropy κ x n hx hQ]
+          rw [stateSurprisal_eq_massieu_sub_logWeight κ x n hx hQ]
     _ = Finset.sum (Finset.range κ)
           (fun n =>
             stateProbability κ x n * Real.log (parafermionLocalFactor κ x)
@@ -194,7 +212,7 @@ theorem stateSurprisal_eq_primeWeight_massieu_add_energy
   have hx : 0 < primeWeight β p := by
     unfold primeWeight
     exact Real.exp_pos _
-  rw [stateSurprisal_eq_boltzmannEntropy κ (primeWeight β p) n hx hQ]
+  rw [stateSurprisal_eq_massieu_sub_logWeight κ (primeWeight β p) n hx hQ]
   unfold parafermionMassieu primeWeight primeEnergy
   rw [Real.log_exp]
   ring
@@ -233,7 +251,7 @@ def massieu (B : PrimeParafermionGrandCanonicalPacket) : ℝ :=
 def grandPotential (B : PrimeParafermionGrandCanonicalPacket) : ℝ :=
   -B.beta⁻¹ * B.massieu
 
-/-- Boltzmann entropy readout in Massieu form. -/
+/-- Grand-canonical surprisal readout in Massieu form. -/
 def boltzmannEntropy (B : PrimeParafermionGrandCanonicalPacket) (U N : ℝ) : ℝ :=
   B.massieu + B.beta * (U - B.mu * N)
 

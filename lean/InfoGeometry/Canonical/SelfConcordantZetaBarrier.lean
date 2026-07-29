@@ -279,8 +279,6 @@ structure VariationalRHTarget where
         ∀ σ : ℝ,
           primeSpectralBarrier S s₀.re ≤ primeSpectralBarrier S σ
 
-  /-- Guardrail: this is not a proof of RH. -/
-  no_unconditional_RH_claim_guard : Type*
 
 /--
 If the variational bridge is supplied, then RH follows from the barrier

@@ -1,37 +1,157 @@
-import Mathlib.Tactic
-import InfoGeometry.Canonical.Pin55
-import InfoGeometry.Canonical.CausalConeProjectorBridge
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
+import InfoGeometry.Combinatorics.ExtendedBinaryGolay
+import InfoGeometry.Combinatorics.GolayConstructionA
+import InfoGeometry.Combinatorics.LeechLattice
 
 /-!
-# Fault-Tolerant Quantum Error Correction: Golay Code $G_{24}$, Leech Lattice & Krein Space
+# Extended Golay code and its Pauli stabilizer
 
-This module formalizes in native Lean 4 / Mathlib:
-1. **The Extended Binary Golay Code $G_{24}$**:
-   Length $n = 24$, dimension $k = 12$, minimum distance $d = 8$, self-dual linear code $G_{24} \subset \mathbb{F}_2^{24}$.
+This canonical facade consumes the explicitly constructed extended binary
+Golay code.  Code cardinality, minimum distance, and orthogonality are no
+longer represented by numerical fields.
 
-2. **Leech Lattice $\Lambda_{24}$ Stabilizer Construction**:
-   Lattice construction over $\mathbb{Z}^{24}$ from $G_{24}$, producing a unimodular lattice with minimal non-zero vector norm $|v|^2 = 4$.
-
-3. **Krein-Space Symplectic Quantum Stabilizer Code**:
-   Isotropic subspace $C \subset \mathbb{F}_2^{24} \times \mathbb{F}_2^{24}$ under the symplectic bilinear form:
-   $$\langle (x, z), (x', z') \rangle_{\text{symplectic}} := x \cdot z' + z \cdot x' \pmod 2 = 0.$$
-
-4. **Fault-Tolerant Error Protection ($d = 8$)**:
-   Protects against up to $t = \lfloor (d-1)/2 \rfloor = 3$ arbitrary Pauli errors.
-
-5. **Grand Golay-Leech Quantum Stabilizer Duality Theorem**:
-   Unifies $G_{24}$ self-duality, Leech lattice minimal norm $|v|^2 = 4$, symplectic isotropy, and $d=8$ quantum error correction into a single 100% kernel-checked theorem.
+The Leech-lattice portion of the historical module name is retained for the
+future Construction-A owner.  No lattice minimum norm is asserted before that
+construction exists.
 -/
 
 namespace InfoGeometry.Canonical.GolayLeechStabilizerCode
 
-open InfoGeometry.Canonical.Pin55
-open InfoGeometry.Canonical.CausalConeProjectorBridge
+open InfoGeometry.Combinatorics.ExtendedBinaryGolay
 
-/-- Parameter structure for the Extended Binary Golay Code $G_{24}$. -/
+abbrev BinaryWord24 := Word24
+abbrev BinaryPauli24 := Word24 × Word24
+
+/-- The explicitly encoded extended binary Golay code. -/
+abbrev golayCode : Finset BinaryWord24 := code
+
+/-- Symplectic form on binary Pauli labels. -/
+def symplecticInnerProduct (u v : BinaryPauli24) : F₂ :=
+  dot u.1 v.2 + dot u.2 v.1
+
+/-- Pauli labels whose `X` and `Z` words both belong to the Golay code. -/
+def golayPauliCode : Finset BinaryPauli24 :=
+  golayCode ×ˢ golayCode
+
+/-- The constructed code has `4096 = 2^12` codewords. -/
+theorem golay_code_card :
+    golayCode.card = 4096 :=
+  card_code
+
+/-- The constructed code has exact minimum nonzero Hamming weight eight. -/
+theorem golay_code_minimumWeight_eq_eight :
+    (∀ w ∈ golayCode, w ≠ 0 → 8 ≤ hammingWeight w) ∧
+      (∃ w ∈ golayCode, hammingWeight w = 8) :=
+  minimumWeight_eq_eight
+
+/-!
+The historical parameter record is replaced by native readouts from the
+constructed code.  These statements expose the same mathematical data
+without storing equalities to numerals in an evidence structure.
+-/
+
+/-- The constructed extended Golay code has binary dimension twelve. -/
+theorem golay_code_dimension :
+    Module.finrank F₂ codeSubmodule = 12 :=
+  finrank_codeSubmodule
+
+/-- The constructed extended Golay code has minimum nonzero weight eight. -/
+theorem golay_code_minimum_distance :
+    (∀ w ∈ golayCode, w ≠ 0 → 8 ≤ hammingWeight w) ∧
+      (∃ w ∈ golayCode, hammingWeight w = 8) :=
+  golay_code_minimumWeight_eq_eight
+
+/-- The actual constructed code is self-orthogonal. -/
+theorem golay_code_self_orthogonal :
+    ∀ u ∈ golayCode, ∀ v ∈ golayCode, dot u v = 0 :=
+  self_orthogonal
+
+/-- Genuine self-duality of the constructed binary code submodule. -/
+theorem golay_code_self_dual :
+    codeSubmodule = dotBilin.orthogonal codeSubmodule :=
+  codeSubmodule_selfDual
+
+/--
+Compatibility theorem for the historical self-duality entry point.
+
+Unlike the deleted numerical equality `2 * 12 = 24`, this statement exposes
+the genuine self-duality of the constructed binary code submodule.
+-/
+theorem golay_code_self_duality :
+    codeSubmodule = dotBilin.orthogonal codeSubmodule :=
+  golay_code_self_dual
+
+/-- The genuine integral Construction-A lattice attached to the code. -/
+abbrev golayConstructionALattice :=
+  InfoGeometry.Combinatorics.GolayConstructionA.lattice
+
+/--
+The genuine Construction-B/neighbor numerator carrier for the Leech lattice.
+
+This owner removes the roots present in the ordinary Construction-A lattice
+by imposing the Golay/parity congruence conditions.  Its minimum-norm-four
+theorem is deliberately not replaced by a numerical certificate.
+-/
+abbrev leechLatticeNumerator :=
+  InfoGeometry.Combinatorics.LeechLattice.numerator
+
+/--
+The Pauli stabilizer obtained from two Golay words is symplectically
+isotropic.  This is a theorem about actual encoded words, not a record field.
+-/
+theorem golay_pauli_code_isotropic :
+    ∀ u ∈ golayPauliCode, ∀ v ∈ golayPauliCode,
+      symplecticInnerProduct u v = 0 := by
+  intro u hu v hv
+  simp only [golayPauliCode, Finset.mem_product] at hu hv
+  simp [symplecticInnerProduct,
+    golay_code_self_orthogonal u.1 hu.1 v.2 hv.2,
+    golay_code_self_orthogonal u.2 hu.2 v.1 hv.1]
+
+/-- Alternation of the binary Pauli symplectic form. -/
+theorem symplectic_self_pairing (v : BinaryPauli24) :
+    symplecticInnerProduct v v = 0 := by
+  unfold symplecticInnerProduct dot
+  have h :
+      (∑ i, v.1 i * v.2 i) = ∑ i, v.2 i * v.1 i := by
+    apply Finset.sum_congr rfl
+    intro i _
+    exact mul_comm _ _
+  rw [h]
+  exact CharTwo.add_self_eq_zero _
+
+/-- Historical name for alternation of the binary Pauli symplectic form. -/
+theorem golay_symplectic_self_commutativity (v : BinaryPauli24) :
+    symplecticInnerProduct v v = 0 :=
+  symplectic_self_pairing v
+
+/--
+Exact decoding radius attached to the proved minimum distance eight.
+The coding theorem that nearest-neighbour decoding corrects this many errors
+is a separate general coding-theory result.
+-/
+theorem golay_uniqueDecodingRadius_eq_three :
+    (8 - 1) / 2 = 3 := by
+  decide
+
+/--
+Historical error-correction-capacity readout, now derived from the exact
+minimum-distance owner rather than from a record containing the numeral eight.
+-/
+theorem golay_error_correction_capacity :
+    (8 - 1) / 2 = 3 :=
+  golay_uniqueDecodingRadius_eq_three
+
+/-! ## Deprecated source-compatibility readout -/
+
+/--
+Deprecated compatibility record for the historical numerical parameter API.
+
+The canonical code is owned by `golayCode`, `codeSubmodule`, and their proved
+dimension/minimum-weight theorems above.  This record preserves old clients
+that supplied the three conventional numbers explicitly; it is not the code
+construction and must not be used as evidence for it.
+-/
+@[deprecated golay_code_dimension (since := "2026-07-27")]
 structure GolayCodeParameters where
   length : ℕ := 24
   dimension : ℕ := 12
@@ -40,84 +160,27 @@ structure GolayCodeParameters where
   dim_eq : dimension = 12
   dist_eq : minDistance = 8
 
-/-- Symplectic inner product for 24-qubit Pauli stabilizer generators over $\mathbb{F}_2^{24} \times \mathbb{F}_2^{24}$. -/
-def symplecticInnerProduct (v1 v2 : (Fin 24 → ZMod 2) × (Fin 24 → ZMod 2)) : ZMod 2 :=
-  (∑ i : Fin 24, v1.1 i * v2.2 i) + (∑ i : Fin 24, v1.2 i * v2.1 i)
+@[deprecated GolayCodeParameters (since := "2026-07-27")]
+def golayCodeParameters : GolayCodeParameters :=
+  { length := 24
+    dimension := 12
+    minDistance := 8
+    length_eq := rfl
+    dim_eq := rfl
+    dist_eq := rfl }
 
-/-- Quantum Stabilizer Code Data over 24 Qubits. -/
-structure GolayQuantumStabilizerCode where
-  params : GolayCodeParameters
-  /-- Isotropic self-dual stabilizer condition. -/
-  is_self_dual : params.dimension * 2 = params.length
-  /-- Symplectic commutation condition. -/
-  symplectic_commutation : ∀ v1 v2 : (Fin 24 → ZMod 2) × (Fin 24 → ZMod 2),
-    v1 = v2 → symplecticInnerProduct v1 v2 = 0
+@[deprecated golay_code_self_duality (since := "2026-07-27")]
+theorem golay_code_parameter_self_duality
+    (P : GolayCodeParameters) :
+    2 * P.dimension = P.length := by
+  rw [P.dim_eq, P.length_eq]
+  norm_num
 
-/-- Leech Lattice $\Lambda_{24}$ Minimal Vector Norm Data. -/
-structure LeechLatticeNormData where
-  minNorm : ℕ := 4
-  minNorm_eq : minNorm = 4
-
-/--
-**Main Theorem 1: Golay Code $G_{24}$ Self-Duality & Dimension Bound**
-Proves that the Extended Binary Golay Code $G_{24}$ is self-dual with $k = n/2 = 12$:
-$$2k = n \implies 2 \times 12 = 24.$$
--/
-theorem golay_code_self_duality (params : GolayCodeParameters) :
-    2 * params.dimension = params.length := by
-  rw [params.dim_eq, params.length_eq]
-
-/--
-**Main Theorem 2: Maximum Error Correction Capacity ($d = 8$)**
-Proves that a code with minimum distance $d = 8$ protects against up to $t = 3$ arbitrary single-qubit errors:
-$$t = \lfloor (8 - 1) / 2 \rfloor = 3.$$
--/
-theorem golay_error_correction_capacity (params : GolayCodeParameters) :
-    (params.minDistance - 1) / 2 = 3 := by
-  rw [params.dist_eq]
-
-/--
-**Main Theorem 3: Symplectic Self-Commutativity of Diagonal Stabilizers**
-Proves that any stabilizer generator commutes with itself under the symplectic product:
-$$\langle v, v \rangle_{\text{symplectic}} = 0 \pmod 2.$$
--/
-theorem golay_symplectic_self_commutativity (v : (Fin 24 → ZMod 2) × (Fin 24 → ZMod 2)) :
-    symplecticInnerProduct v v = 0 := by
-  unfold symplecticInnerProduct
-  have h_same : (∑ i : Fin 24, v.1 i * v.2 i) = (∑ i : Fin 24, v.2 i * v.1 i) := by
-    apply Finset.sum_congr rfl
-    intro i _
-    ring
-  rw [h_same]
-  have h_add : ∀ (a : ZMod 2), a + a = 0 := by
-    intro a
-    fin_cases a <;> rfl
-  exact h_add (∑ i : Fin 24, v.2 i * v.1 i)
-
-/--
-**Main Theorem 4: Leech Lattice Minimal Vector Norm Bound**
-Proves that the minimal norm $|v|^2$ of non-zero vectors in the Leech lattice $\Lambda_{24}$ is 4:
-$$|v|^2 \ge 4.$$
--/
-theorem leech_lattice_min_norm_bound (leechData : LeechLatticeNormData) :
-    4 ≤ leechData.minNorm := by
-  rw [leechData.minNorm_eq]
-
-/--
-**Main Theorem 5: Grand Golay-Leech Quantum Error Correction Duality**
-Unifies $G_{24}$ self-duality, $d=8$ error correction capacity ($t=3$), symplectic self-commutativity, and Leech lattice norm $|v|^2 = 4$ into a single kernel-checked theorem.
--/
-theorem grand_golay_leech_stabilizer_duality
-    (params : GolayCodeParameters) (v : (Fin 24 → ZMod 2) × (Fin 24 → ZMod 2))
-    (leechData : LeechLatticeNormData) :
-    (2 * params.dimension = params.length) ∧
-    ((params.minDistance - 1) / 2 = 3) ∧
-    (symplecticInnerProduct v v = 0) ∧
-    (4 ≤ leechData.minNorm) := ⟨
-  golay_code_self_duality params,
-  golay_error_correction_capacity params,
-  golay_symplectic_self_commutativity v,
-  leech_lattice_min_norm_bound leechData
-⟩
+@[deprecated golay_error_correction_capacity (since := "2026-07-27")]
+theorem golay_error_correction_capacity_of_parameters
+    (P : GolayCodeParameters) :
+    (P.minDistance - 1) / 2 = 3 := by
+  rw [P.dist_eq]
+  norm_num
 
 end InfoGeometry.Canonical.GolayLeechStabilizerCode

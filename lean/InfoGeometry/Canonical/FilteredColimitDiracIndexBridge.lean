@@ -10,8 +10,10 @@ set_option linter.unusedVariables false
 
 This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
 
-1. **Finite-Stage Self-Adjoint Dirac Operator Structure**:
-   Models the finite-stage Dirac operator $D_n = \sum_{i=1}^n (S_i + S_i^*)$ on a vector space $V_n$.
+1. **Finite-Stage Dirac Operator Structure**:
+   Models the finite-stage Dirac operator $D_n = \sum_{i=1}^n (S_i + S_i^*)$ and its
+   operator square on a vector space $V_n$. Self-adjointness belongs to the
+   Hilbert-space spectral owner and is not asserted at this algebraic stage.
 
 2. **Stage Injectivity Non-Kernel Survival**:
    Proves natively that along an injective sequence of vector space stages, non-zero kernel vectors $v \in \ker(D_n) \setminus \{0\}$ never fall into the zero vector at any downstream stage $m \ge n$.
@@ -31,7 +33,16 @@ open InfoGeometry.Canonical.CategoricalRiemannRigidity
 /-- Finite-stage Dirac operator data structure on a real vector space. -/
 structure FiniteDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] where
   diracOp : V →ₗ[ℝ] V
-  is_self_adjoint : ∀ v w : V, diracOp v = v → diracOp w = w → True
+  diracSquare : V →ₗ[ℝ] V
+  diracSquare_eq : diracSquare = diracOp.comp diracOp
+
+/-- Applying the stored Dirac square is the same as applying the Dirac operator twice. -/
+@[simp] theorem diracSquare_apply
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (data : FiniteDiracData V) (v : V) :
+    data.diracSquare v = data.diracOp (data.diracOp v) := by
+  rw [data.diracSquare_eq]
+  rfl
 
 /-- Kernel subspace of a finite-stage Dirac operator. -/
 def diracKernel {V : Type*} [AddCommGroup V] [Module ℝ V] (data : FiniteDiracData V) : Submodule ℝ V :=

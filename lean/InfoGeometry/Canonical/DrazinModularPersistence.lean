@@ -402,19 +402,28 @@ inductive FierzChannel where
 
 /-- Model-supplied Fierz channel map on an observable algebra. -/
 @[rep_depth operator]
-structure FierzChannelMap
-    (Obs : Type*) where
-  channel : FierzChannel → Obs → Obs
+abbrev FierzChannelMap (Obs : Type*) :=
+  FierzChannel → Obs → Obs
+
+def FierzChannelMap.channel {Obs : Type*}
+    (C : FierzChannelMap Obs) : FierzChannel → Obs → Obs :=
+  C
 
 /-- Expectation-valued Fierz coordinates. -/
 @[rep_depth operator]
-structure FierzCoordinates where
-  coord : FierzChannel → ℝ
+abbrev FierzCoordinates : Type :=
+  FierzChannel → ℝ
+
+def FierzCoordinates.coord (C : FierzCoordinates) : FierzChannel → ℝ :=
+  C
 
 /-- Abstract Fierz residual functional. -/
 @[rep_depth operator]
-structure FierzResidual where
-  residual : FierzCoordinates → ℝ
+abbrev FierzResidual : Type :=
+  FierzCoordinates → ℝ
+
+def FierzResidual.residual (R : FierzResidual) : FierzCoordinates → ℝ :=
+  R
 
 /-- Fierz channels are admissible when each channel is a horizon zero mode. -/
 @[rep_depth operator]
@@ -432,8 +441,8 @@ def horizonFierzVector
     (φA : RealExpectationState Obs)
     (C : FierzChannelMap Obs)
     (D : DrazinSupportData Obs) :
-    FierzCoordinates where
-  coord := fun ch => φA.expect (C.channel ch D.AD)
+    FierzCoordinates :=
+  fun ch => φA.expect (C.channel ch D.AD)
 
 /--
 Compatibility assumption for the model-specific Fierz identity.

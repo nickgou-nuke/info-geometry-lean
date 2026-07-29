@@ -29,7 +29,7 @@ structure StabilizerCode where
   of the CPT Vacuum provides an intrinsic topological error-correcting code.
 -/
 theorem causality_implies_stabilizer
-    [EinsteinCausality (CliffordTowerCausalFunctor Q h_compat)]
+    (hca : EinsteinCausality (CliffordTowerCausalFunctor Q h_compat))
     (m n : CantorIndexCategory)
     (h_spacelike : SpacelikeSeparated m n)
     (x : (CliffordTowerCausalFunctor Q h_compat).obj m)
@@ -37,6 +37,7 @@ theorem causality_implies_stabilizer
     let x_global := (colimit.ι (CliffordTowerCausalFunctor Q h_compat) m) x
     let y_global := (colimit.ι (CliffordTowerCausalFunctor Q h_compat) n) y
     Commute x_global y_global := by
-  apply EinsteinCausality.commute_of_spacelike h_spacelike x y
+  exact EinsteinCausality.commute_of_spacelike
+    (F := CliffordTowerCausalFunctor Q h_compat) hca h_spacelike x y
 
 end InfoGeometry.Canonical

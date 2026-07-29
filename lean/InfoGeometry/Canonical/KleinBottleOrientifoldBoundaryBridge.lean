@@ -1,7 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.KleinBottleTopology
-import InfoGeometry.Canonical.KleinBottleOrientifold
 import InfoGeometry.Canonical.CantorSimplicialHomotopy
 
 /-!
@@ -37,16 +36,15 @@ namespace InfoGeometry.Canonical.KleinBottleOrientifoldBoundaryBridge
 
 open Matrix
 open InfoGeometry.Canonical.KleinBottleTopology
-open InfoGeometry.Canonical.KleinBottleOrientifold
 open InfoGeometry.Canonical.CantorSimplicialHomotopy
-open InfoGeometry.Canonical.PrimeGasMaxEnt
 
 /--
-Existing orientifold hypothesis packet plus the explicit parity operator needed
-by the matrix-level Klein gluing theorem.
+Explicit parity operator needed by the matrix-level Klein gluing theorem.
+
+The orientifold and prime-gas hypothesis packets were not used by the trace
+argument and therefore do not belong to this operator owner.
 -/
-structure OrientifoldBoundaryOperatorPacket (D : PrimeGasJaynesData) where
-  orientifoldPacket : OrientifoldPrimeGasPacket D
+structure OrientifoldBoundaryOperatorPacket where
   parityOperator : Matrix (Fin 32) (Fin 32) ℝ
   parityOperator_orthogonal : parityOperatorᵀ * parityOperator = 1
 
@@ -55,8 +53,7 @@ If a boundary operator has zero trace, then the Klein gluing induced by the
 packet's parity operator preserves that zero trace.
 -/
 theorem orientifold_packet_trace_closed
-    {D : PrimeGasJaynesData}
-    (B : OrientifoldBoundaryOperatorPacket D)
+    (B : OrientifoldBoundaryOperatorPacket)
     (M : Matrix (Fin 32) (Fin 32) ℝ)
     (h_trace : Matrix.trace M = 0) :
     Matrix.trace (klein_gluing M B.parityOperator) = 0 := by
@@ -67,8 +64,7 @@ The same bridge closes every boundary face of the existing Cantor simplicial
 packet, provided the packet already carries the `chiral_balance` trace witness.
 -/
 theorem orientifold_packet_closes_cantor_boundary_faces
-    {D : PrimeGasJaynesData}
-    (B : OrientifoldBoundaryOperatorPacket D)
+    (B : OrientifoldBoundaryOperatorPacket)
     (n : ℕ)
     (step : KanSimplicialStep n) :
     ∀ i, Matrix.trace (klein_gluing (step.boundary_face i) B.parityOperator) = 0 := by

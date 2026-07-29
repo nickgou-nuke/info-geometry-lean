@@ -45,12 +45,18 @@ namespace InfoGeometry.Canonical.WeylKMSGromovWittenCounts
 open scoped BigOperators
 
 /-- Supergraded finite orbit-sector space. -/
-structure SuperOrbitSpace (Γ : Type*) where
-  parity : Γ → Bool
+abbrev SuperOrbitSpace (Γ : Type*) := Γ → Bool
+
+namespace SuperOrbitSpace
+
+/-- Projection-compatible name for the direct parity function. -/
+abbrev parity {Γ : Type*} (S : SuperOrbitSpace Γ) : Γ → Bool := S
+
+end SuperOrbitSpace
 
 /-- Real Witten sign of an orbit sector. -/
 def paritySign {Γ : Type*} (S : SuperOrbitSpace Γ) (γ : Γ) : ℝ :=
-  if S.parity γ then -1 else 1
+  if S γ then -1 else 1
 
 /-- A Weyl gauge assigns a positive local dilation weight to each orbit sector. -/
 structure WeylGaugeWeight (Γ : Type*) where
@@ -110,10 +116,36 @@ sectors of a GW-type theory.
 This prevents the overclaim that every zero-mode count is automatically a
 Gromov--Witten invariant.
 -/
-structure GromovWittenCalibration (Γ : Type*) where
+structure GromovWittenCalibration
+    {Γ : Type*}
+    [Fintype Γ]
+    (Ω : WeylGaugeWeight Γ)
+    (φ : KMSOrbitState Γ) where
   curveClass : Γ → Type*
   gwWeight : Γ → ℝ
-  calibrated : Prop
+  gwWeight_eq_weylKMS :
+    ∀ γ : Γ, gwWeight γ = Ω.weight γ * φ.expect γ
+
+namespace GromovWittenCalibration
+
+/--
+The total calibrated Gromov--Witten weight is the Weyl/KMS orbit partition
+function.
+-/
+theorem sum_gwWeight_eq_orbitPartitionFunction
+    {Γ : Type*}
+    [Fintype Γ]
+    {Ω : WeylGaugeWeight Γ}
+    {φ : KMSOrbitState Γ}
+    (C : GromovWittenCalibration Ω φ) :
+    Finset.univ.sum C.gwWeight =
+      orbitPartitionFunction Ω φ := by
+  unfold orbitPartitionFunction
+  apply Finset.sum_congr rfl
+  intro γ _
+  exact C.gwWeight_eq_weylKMS γ
+
+end GromovWittenCalibration
 
 /--
 A calibrated effective volume law.
@@ -160,12 +192,18 @@ inductive FierzChannel where
   deriving DecidableEq, Fintype
 
 /-- Fierz coordinates are projective functions of Weyl/KMS orbit counts. -/
-structure FierzFromProjectiveCounts (Γ : Type*) [Fintype Γ] where
-  coord : FierzChannel → (Γ → ℝ) → ℝ
+abbrev FierzFromProjectiveCounts (Γ : Type*) [Fintype Γ] :=
+  FierzChannel → (Γ → ℝ) → ℝ
 
 /-- Residual measuring failure of the intended Fierz--Klein relation. -/
-structure FierzKleinResidual where
-  residual : (FierzChannel → ℝ) → ℝ
+abbrev FierzKleinResidual := (FierzChannel → ℝ) → ℝ
+
+namespace FierzKleinResidual
+
+/-- Projection-compatible name for the direct residual function. -/
+abbrev residual (R : FierzKleinResidual) : (FierzChannel → ℝ) → ℝ := R
+
+end FierzKleinResidual
 
 /--
 Projective Weyl/KMS count readout data for Fierz--Klein coordinates.
@@ -189,7 +227,7 @@ structure ProjectiveCountFierzKleinData
 
   coords : FierzChannel → ℝ :=
     fun ch =>
-      readout.coord ch
+      readout ch
         (fun γ => projectiveOrbitCoordinate Ω φ γ)
 
 end InfoGeometry.Canonical.WeylKMSGromovWittenCounts

@@ -94,31 +94,24 @@ theorem massieu_centered_second_difference (β : ℚ) :
   simp [massieu]
   ring
 
-structure FiniteSouriauCasimirCertificate where
-  f : M2Q
-  x : M2Q
-  y : M2Q
-  z : M2Q
-  bracket_skew : commutator x y = - commutator y x
-  jacobi : commutator x (commutator y z) +
-      commutator y (commutator z x) +
-      commutator z (commutator x y) = 0
-  kks_alt : kksForm f x x = 0
-  kks_cocycle : souriauTheta f x (commutator y z) +
-      souriauTheta f y (commutator z x) +
-      souriauTheta f z (commutator x y) = 0
-  fisher_unit : massieu (0 + 1) - 2 * massieu 0 + massieu (0 - 1) = 1
+abbrev FiniteSouriauCasimirCertificate (F X Y Z : M2Q) : Prop :=
+  commutator X Y = - commutator Y X ∧
+    (commutator X (commutator Y Z) +
+      commutator Y (commutator Z X) +
+      commutator Z (commutator X Y) = 0) ∧
+    kksForm F X X = 0 ∧
+    (souriauTheta F X (commutator Y Z) +
+      souriauTheta F Y (commutator Z X) +
+      souriauTheta F Z (commutator X Y) = 0) ∧
+    (massieu (0 + 1) - 2 * massieu 0 + massieu (0 - 1) = 1)
 
-def certificate (F X Y Z : M2Q) : FiniteSouriauCasimirCertificate where
-  f := F
-  x := X
-  y := Y
-  z := Z
-  bracket_skew := commutator_skew X Y
-  jacobi := commutator_jacobi X Y Z
-  kks_alt := kks_alternating F X
-  kks_cocycle := souriau_cocycle_jacobi F X Y Z
-  fisher_unit := massieu_centered_second_difference 0
+theorem certificate (F X Y Z : M2Q) :
+    FiniteSouriauCasimirCertificate F X Y Z := by
+  exact ⟨commutator_skew X Y,
+    commutator_jacobi X Y Z,
+    kks_alternating F X,
+    souriau_cocycle_jacobi F X Y Z,
+    massieu_centered_second_difference 0⟩
 
 end BarbarescoSPILG2020
 end Canonical

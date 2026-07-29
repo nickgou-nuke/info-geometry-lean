@@ -146,12 +146,36 @@ This is intentionally a witness-gated interface for downstream affine/Sugawara
 calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
-structure CentralReadoutWitness
-    {Op : Type*}
-    (C : HodgeDiracLaplacianCarrier Op) where
-  centralReadout : Op
-  centralReadout_eq_carrier :
-    centralReadout = C.centralReadout
+abbrev CentralReadoutWitness
+    {Op : Type*} [Ring Op]
+    (C : HodgeDiracLaplacianCarrier Op) : Type _ :=
+  Σ' centralReadout : Op,
+    centralReadout = C.centralReadout ∧
+      ∀ A : Op, Commute centralReadout A
+
+namespace CentralReadoutWitness
+
+abbrev centralReadout
+    {Op : Type*} [Ring Op]
+    {C : HodgeDiracLaplacianCarrier Op}
+    (W : CentralReadoutWitness C) : Op :=
+  W.1
+
+abbrev centralReadout_eq_carrier
+    {Op : Type*} [Ring Op]
+    {C : HodgeDiracLaplacianCarrier Op}
+    (W : CentralReadoutWitness C) :
+    W.centralReadout = C.centralReadout :=
+  W.2.1
+
+abbrev centrality
+    {Op : Type*} [Ring Op]
+    {C : HodgeDiracLaplacianCarrier Op}
+    (W : CentralReadoutWitness C) :
+    ∀ A : Op, Commute W.centralReadout A :=
+  W.2.2
+
+end CentralReadoutWitness
 
 /--
 Owner-facing central-readout gate: the bridge exports only a supplied witness
@@ -159,15 +183,14 @@ whose readout is tied to the carrier readout.
 -/
 @[rep_depth operator]
 def IsCentralReadoutFromLaplacianAnomaly
-    {Op : Type*}
+    {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  ∃ W : CentralReadoutWitness C,
-    W.centralReadout = C.centralReadout
+  ∀ A : Op, Commute C.centralReadout A
 
 /-- Readback from a central/anomaly witness to the carrier readout. -/
 @[rep_depth operator]
 theorem centralReadout_eq_carrier_of_witness
-    {Op : Type*}
+    {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (W : CentralReadoutWitness C) :
     W.centralReadout = C.centralReadout :=
@@ -176,11 +199,21 @@ theorem centralReadout_eq_carrier_of_witness
 /-- Readback that the central/anomaly gate supplies a carrier-tied readout. -/
 @[rep_depth operator]
 theorem centralReadout_is_witness_gated
-    {Op : Type*}
+    {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (h : IsCentralReadoutFromLaplacianAnomaly C) :
-    ∃ W : CentralReadoutWitness C,
-      W.centralReadout = C.centralReadout :=
+    IsCentralReadoutFromLaplacianAnomaly C :=
   h
+
+/-- A genuine centrality witness transfers to the carrier readout. -/
+@[rep_depth operator]
+theorem centralReadout_isCentral_of_witness
+    {Op : Type*} [Ring Op]
+    (C : HodgeDiracLaplacianCarrier Op)
+    (W : CentralReadoutWitness C) :
+    IsCentralReadoutFromLaplacianAnomaly C := by
+  intro A
+  rw [← W.centralReadout_eq_carrier]
+  exact W.centrality A
 
 end InfoGeometry.Canonical.HodgeDiracLaplacianBridge

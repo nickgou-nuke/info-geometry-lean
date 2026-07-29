@@ -92,7 +92,7 @@ close to regular radial transport.
 theorem regularRadialTransportCloses_of_boundaryGenerator_eq_zero
     (S : SingularTransportSystem E)
     (hZero : S.boundary.boundaryGenerator = 0) :
-    S.boundary.regularRadialTransportCloses := by
+    S.boundary.regularRadialTransport = 0 := by
   have hScale : S.boundary.boundaryScale = 0 := by
     exact (S.boundary.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).mpr hZero
   exact S.boundary.regular_radial_transport_closes_of_boundaryScale_eq_zero hScale

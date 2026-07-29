@@ -30,9 +30,21 @@ namespace InfoGeometry.Canonical.MicrostateBoltzmannEntropy
 
 /-- Microstate space with a statewise microcanonical cell partition. -/
 structure MicrostateCellPartition (X : Type*) where
-  /-- The statewise phase-volume / multiplicity function $\Omega(x) \ge 1$. -/
-  phaseVolume : X → ℕ
-  phaseVolume_pos : ∀ x : X, 1 ≤ phaseVolume x
+  /-- Positive statewise phase-volume / multiplicity. -/
+  multiplicity : X → {n : ℕ // 1 ≤ n}
+
+namespace MicrostateCellPartition
+
+/-- Historical phase-volume selector, derived from positive multiplicity. -/
+def phaseVolume {X : Type*} (P : MicrostateCellPartition X) (x : X) : ℕ :=
+  P.multiplicity x
+
+/-- Positivity is carried by the multiplicity subtype, not an evidence field. -/
+theorem phaseVolume_pos {X : Type*} (P : MicrostateCellPartition X) (x : X) :
+    1 ≤ P.phaseVolume x :=
+  (P.multiplicity x).property
+
+end MicrostateCellPartition
 
 /--
 **Pure Statewise Boltzmann Entropy**:
@@ -80,23 +92,48 @@ theorem microstate_boltzmann_additivity
     exact_mod_cast Nat.succ_le_iff.mp h1
   exact Real.log_mul (ne_of_gt hX) (ne_of_gt hY)
 
-/-- Diagonal Microstate Boltzmann Operator acting on basis microstates. -/
-structure MicrostateBoltzmannOperator (n : Type*) [Fintype n] [DecidableEq n] (R : Type*) [CommRing R] where
-  phaseVolumeDiag : n → R
-  boltzmannOperatorMatrix : Matrix n n R
-  is_diagonal : ∀ i j, boltzmannOperatorMatrix i j = if i = j then phaseVolumeDiag i else 0
+/--
+Boltzmann macroentropy as a genuine multiplication operator on microstate
+amplitudes.
+
+This replaces the former custom matrix plus `is_diagonal` evidence field.
+The operator acts on the full function module and is linear by construction.
+-/
+noncomputable def microstateBoltzmannOperator
+    {X : Type*} (P : MicrostateCellPartition X) :
+    (X → ℝ) →ₗ[ℝ] (X → ℝ) where
+  toFun ψ x := microstateBoltzmannEntropy P x * ψ x
+  map_add' ψ φ := by
+    funext x
+    exact mul_add _ _ _
+  map_smul' c ψ := by
+    funext x
+    simp [mul_assoc, mul_left_comm, mul_comm]
+
+/-- Basis amplitude concentrated at one exact microstate. -/
+def microstateBasisAmplitude
+    {X : Type*} [DecidableEq X] (x : X) : X → ℝ :=
+  fun y => if y = x then 1 else 0
 
 /--
 **Main Theorem 3: Pure Microstate Operator Action**
 On a basis microstate $|x\rangle$, the Microstate Boltzmann Operator acts by scaling by its statewise eigenvalue:
 $$\hat S_{\text{micro}} |i\rangle = \Omega(i) |i\rangle.$$
 -/
+theorem microstate_operator_basis_action
+    {X : Type*} [DecidableEq X]
+    (P : MicrostateCellPartition X) (x : X) :
+    microstateBoltzmannOperator P (microstateBasisAmplitude x) x =
+      microstateBoltzmannEntropy P x := by
+  simp [microstateBoltzmannOperator, microstateBasisAmplitude]
+
+/-- Historical theorem name routed to the native multiplication operator. -/
 theorem microstate_operator_diagonal_action
-    {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
-    (M : MicrostateBoltzmannOperator n R) (i : n) :
-    M.boltzmannOperatorMatrix i i = M.phaseVolumeDiag i := by
-  have h := M.is_diagonal i i
-  rw [h, if_pos rfl]
+    {X : Type*} [DecidableEq X]
+    (P : MicrostateCellPartition X) (x : X) :
+    microstateBoltzmannOperator P (microstateBasisAmplitude x) x =
+      microstateBoltzmannEntropy P x :=
+  microstate_operator_basis_action P x
 
 /--
 **Main Theorem 4: Pure Statewise Non-Ensemble Duality**

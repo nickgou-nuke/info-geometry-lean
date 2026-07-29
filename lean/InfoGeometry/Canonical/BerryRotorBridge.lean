@@ -101,6 +101,8 @@ structure AbelianModularBerryData
   boundary : Chain2 → Chain1
   A : OneForm
   F : TwoForm
+  /-- Exterior derivative readout of the supplied connection one-form. -/
+  exteriorDerivativeA : TwoForm
   lineIntegral : Chain1 → OneForm → Biv
   surfaceIntegral : Chain2 → TwoForm → Biv
   residue : Chain2 → Biv
@@ -111,7 +113,8 @@ structure AbelianModularBerryData
     ∀ D : Chain2, (BivectorPhaseAlgebra.phaseLine (Rotor := Rotor)) (surfaceIntegral D F)
   residue_mem_phaseLine :
     ∀ D : Chain2, (BivectorPhaseAlgebra.phaseLine (Rotor := Rotor)) (residue D)
-  curvature_eq_dA : Prop
+  /-- The curvature two-form is the exterior derivative readout of `A`. -/
+  curvature_eq_dA : F = exteriorDerivativeA
   stokes_with_residue :
     ∀ D : Chain2, lineIntegral (boundary D) A = surfaceIntegral D F + residue D
   holonomy_is_exp :
@@ -162,28 +165,34 @@ This is the correct target for a genuine bivector-valued Spin connection.
 The curvature is not `dA`; it is `dA + 1/2 [A ∧ A]`.
 -/
 structure NonAbelianSpinBerryData
-    (M : Type u) (Spin : Type v)
-    [Group Spin] where
+    (M : Type u) (Spin : Type v) (Curv2 : Type u)
+    [Group Spin] [HAdd Curv2 Curv2 Curv2] where
   Conn1 : Type u
-  Curv2 : Type u
   Loop : Type u
   Surface : Type u
   boundary : Surface → Loop
   A : Conn1
   Ω : Curv2
+  /-- Exterior-derivative contribution to the non-Abelian curvature. -/
+  exteriorDerivativeA : Curv2
+  /-- Bracket contribution to the non-Abelian curvature. -/
+  bracketContribution : Curv2
   holonomy : Loop → Spin
   surfaceOrderedExp : Surface → Spin
   anomaly : Surface → Spin
-  curvature_eq_dA_plus_bracket : Prop
+  /-- Curvature decomposes into the differential and bracket contributions. -/
+  curvature_eq_dA_plus_bracket :
+    Ω = (exteriorDerivativeA + bracketContribution : Curv2)
   nonabelian_stokes_with_anomaly :
     ∀ D : Surface, holonomy (boundary D) = surfaceOrderedExp D * anomaly D
 
 namespace NonAbelianSpinBerryData
 
-variable {M : Type u} {Spin : Type v} [Group Spin]
+variable {M : Type u} {Spin : Type v} {Curv2 : Type u}
+  [Group Spin] [HAdd Curv2 Curv2 Curv2]
 
 theorem modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly
-    (data : NonAbelianSpinBerryData M Spin) (D : data.Surface) :
+    (data : NonAbelianSpinBerryData M Spin Curv2) (D : data.Surface) :
     data.holonomy (data.boundary D) = data.surfaceOrderedExp D * data.anomaly D :=
   data.nonabelian_stokes_with_anomaly D
 

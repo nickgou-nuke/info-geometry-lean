@@ -21,8 +21,14 @@ section
 variable {M T S : Type*}
 
 /-- Spinor-side bilinear seed pairing two spinors into a scalar. -/
-structure SpinorBilinear where
-  pair : S → S → ℝ
+abbrev SpinorBilinear := S → S → ℝ
+
+namespace SpinorBilinear
+
+/-- Projection-compatible name for the direct bilinear readout. -/
+abbrev pair {S : Type*} (B : SpinorBilinear (S := S)) : S → S → ℝ := B
+
+end SpinorBilinear
 
 /--
 Local spinor Lie-action data over a conformal Souriau background.

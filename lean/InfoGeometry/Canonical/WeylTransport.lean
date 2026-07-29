@@ -16,16 +16,27 @@ This file keeps the base `GeneratedFlow` abstraction clean while adding:
 -/
 
 /-- Index-parameterized trajectory in the Weyl base space. -/
-structure WeylTrajectory (I X : Type*) where
-  point : I → X
+abbrev WeylTrajectory (I X : Type*) := I → X
 
 /-- Abstract line-integration operator over trajectory-indexed fields. -/
-structure WeylLineIntegrator (I A S : Type*) where
-  integrate : (I → A) → S
+abbrev WeylLineIntegrator (I A S : Type*) := (I → A) → S
+
+namespace WeylLineIntegrator
+
+/-- Projection-compatible name for the direct line-integration operator. -/
+abbrev integrate (Λ : WeylLineIntegrator I A S) : (I → A) → S := Λ
+
+end WeylLineIntegrator
 
 /-- Abstract holonomy/readout map from integrated scale data. -/
-structure WeylHolonomyMap (S P : Type*) where
-  toHolonomy : S → P
+abbrev WeylHolonomyMap (S P : Type*) := S → P
+
+namespace WeylHolonomyMap
+
+/-- Projection-compatible name for the direct holonomy readout. -/
+abbrev toHolonomy (H : WeylHolonomyMap S P) : S → P := H
+
+end WeylHolonomyMap
 
 /-- Bundled generated-flow transport with attached Weyl scale track. -/
 structure ScaleEquivariantFlow (I F A : Type*) where
@@ -38,9 +49,12 @@ namespace WeylTrajectory
 
 variable {I X : Type*}
 
+/-- The direct function carrier of a trajectory, retained as the public projection API. -/
+abbrev point (γ : WeylTrajectory I X) : I → X := γ
+
 /-- View a trajectory as its underlying point map. -/
 def along (γ : WeylTrajectory I X) : I → X :=
-  γ.point
+  γ
 
 
 end WeylTrajectory
@@ -284,8 +298,8 @@ Concrete discrete Weyl line integrator for finite trajectories.
 It computes line integration by summing the trajectory-indexed field over all
 indices.
 -/
-def finiteSumIntegrator : WeylLineIntegrator I A A where
-  integrate f := ∑ i : I, f i
+def finiteSumIntegrator : WeylLineIntegrator I A A :=
+  fun f => ∑ i : I, f i
 
 
 end Finite

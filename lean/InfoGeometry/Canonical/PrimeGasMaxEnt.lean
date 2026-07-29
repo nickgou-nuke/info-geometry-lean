@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.MaxEnt.Core
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.BostConnes.BostConnesParity
+import InfoGeometry.Topology.V4RootSystem
 
 /-!
 # InfoGeometry.Canonical.PrimeGasMaxEnt
@@ -36,12 +38,23 @@ record the nonorientable discrete twist separately from the reflection skeleton.
 -/
 @[rep_depth transport]
 structure PrimeGasSymmetry where
-  V4_Weyl : Prop
-  V4_tensor_V4 : Prop
-  V4_tensor_V4_tensor_V4 : Prop
-  kleinBottleQuotient : Prop
-  moebiusDiscreteTwist : Prop
-  splitCl11Atom : Prop
+  weyl : InfoGeometry.Topology.V4RootSystem.V4Group
+  weyl_involution :
+    weyl * weyl = InfoGeometry.Topology.V4RootSystem.V4Group.I
+  moebiusParity : ℕ → ℤ
+  moebiusParity_spec :
+    ∀ n,
+      ArithmeticFunction.moebius n =
+        InfoGeometry.BostConnes.squarefreeProj n * moebiusParity n
+
+/-- Canonical V4/Möbius symmetry data owned by the finite source modules. -/
+def canonicalPrimeGasSymmetry : PrimeGasSymmetry where
+  weyl := InfoGeometry.Topology.V4RootSystem.V4Group.W12
+  weyl_involution :=
+    InfoGeometry.Topology.V4RootSystem.v4_point_inversion_involution
+  moebiusParity := InfoGeometry.BostConnes.liouvilleParity
+  moebiusParity_spec :=
+    InfoGeometry.BostConnes.moebius_eq_squarefreeProj_mul_liouvilleParity
 
 /--
 Explicit Jaynes data for the prime-occupation gas.
@@ -58,9 +71,6 @@ structure PrimeGasJaynesData where
   energy : LinearConstraint Ω
   particleNumber : LinearConstraint Ω
   symmetry : PrimeGasSymmetry
-  idealFermionGas : Prop
-  primeOccupationLogEnergy : Prop
-  eulerProductPartition : Prop
 
 namespace PrimeGasJaynesData
 
@@ -180,16 +190,7 @@ and Gibbs surfaces are owned by the module above.
 def PrimeGasJaynesConjecture : Prop :=
   ∃ (P : ProbabilityMeasure D.Ω) (lam : Bool → ℝ)
       (hInt : PartitionIntegrable D lam),
-    P = gibbsProbability D lam hInt ∧
-      D.symmetry.V4_Weyl ∧
-      D.symmetry.V4_tensor_V4 ∧
-      D.symmetry.V4_tensor_V4_tensor_V4 ∧
-      D.symmetry.kleinBottleQuotient ∧
-      D.symmetry.moebiusDiscreteTwist ∧
-      D.symmetry.splitCl11Atom ∧
-      D.idealFermionGas ∧
-      D.primeOccupationLogEnergy ∧
-      D.eulerProductPartition
+    P = gibbsProbability D lam hInt
 
 end PrimeGasJaynesData
 

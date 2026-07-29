@@ -76,8 +76,9 @@ structure PrimeLeeYangConvergenceSocket
   outer_zero_free :
     ∀ z : ℂ, OutsideUnitDisk z → limitF z ≠ 0
 
-  /-- No finite renormalization or limiting artifact contributes spurious zeros. -/
-  noSpuriousZeros : Prop
+  /-- Every zero of the limiting readout lies on the Lee--Yang circle. -/
+  noSpuriousZeros :
+    ∀ z : ℂ, limitF z = 0 → OnUnitCircle z
 
   /--
   Comparison between completed-`xi` zeros and zeros of the limiting Cayley
@@ -110,7 +111,9 @@ def toCorrectHurwitzZeroTransferWitness :
   locallyUniformRenormalizedLimit := S.locallyUniformRenormalizedLimit
   nontrivial_in := S.nontrivial_in
   nontrivial_out := S.nontrivial_out
-  noSpuriousZeros := S.noSpuriousZeros
+  noSpuriousZeros := fun z hz =>
+    ZeroFreeDomainTransfer.zero_on_unit_of_inner_outer_zero_free
+      S.zeroFreeTransfer hz
   transfer := S.zeroFreeTransfer
   transfer_limitF := rfl
   xi_zero_iff_limit_zero := S.xi_zero_iff_limit_zero

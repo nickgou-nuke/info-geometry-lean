@@ -4,6 +4,8 @@ import InfoGeometry.Canonical.MetricTransport
 import InfoGeometry.Holography.RyuTakayanagiEmergence
 import InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Projectivization.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
 /-!
 # Entanglement residual owner
@@ -57,10 +59,10 @@ theorem transportedAgreement_implies_projectorEquality
 
 /-- Positive compression witness for a projector/compression sector. -/
 @[rep_depth transport]
-structure PositiveCompressionWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
+structure PositiveCompressionWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   projector : A
   projector_idem : projector * projector = projector
-  projector_selfAdj_G : Prop
+  projector_selfAdj_G : IsSelfAdjoint projector
   state : A → ℝ
   denom_pos : 0 < state projector
   compressedState : A → ℝ
@@ -72,9 +74,19 @@ structure DrazinNullSector (R : Type*) [Ring R] where
   pair : ProjectorPair R
   nullProjector : R
   nullProjector_eq : nullProjector = pair.PD
-  algebraicNull : Prop
-  physicalNull : Prop
-  physicalWitness : physicalNull → algebraicNull
+  /-- The null projector annihilates every observable after compression. -/
+  algebraicNull : ∀ a : R, nullProjector * a * nullProjector = 0
+  /-- The physical null sector is represented by left annihilation. -/
+  physicalNull : ∀ a : R, nullProjector * a = 0
+  /-- Left annihilation implies the compressed algebraic null law. -/
+  physicalWitness : ∀ a : R, (nullProjector * a = 0) →
+    (nullProjector * a * nullProjector = 0)
+
+theorem DrazinNullSector.nullProjector_idempotent
+    {R : Type*} [Ring R] (W : DrazinNullSector R) :
+    W.nullProjector * W.nullProjector = W.nullProjector := by
+  rw [W.nullProjector_eq]
+  exact W.pair.PD_idempotent
 
 /-- Bipartite algebra and state data. -/
 @[rep_depth transport]
@@ -91,7 +103,7 @@ def Factorizes {A : Type*} [Semiring A] [Algebra ℝ A]
 
 /-- Residual covariance supported on the Drazin-null sector. -/
 @[rep_depth transport]
-structure ResidualCovariance (A : Type*) [Semiring A] [Algebra ℝ A] where
+structure ResidualCovariance (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   compression : PositiveCompressionWitness A
   bipartite : BipartiteStateData A
   ω₀ : A → ℝ
@@ -101,7 +113,7 @@ structure ResidualCovariance (A : Type*) [Semiring A] [Algebra ℝ A] where
 
 /-- Factorization kills the residual covariance. -/
 theorem factorizes_implies_corr_zero
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (R : ResidualCovariance A)
     (h : Factorizes R.ω₀ R.bipartite.A_L R.bipartite.A_R)
     {a : A} (ha : a ∈ R.bipartite.A_L) {b : A} (hb : b ∈ R.bipartite.A_R) :
@@ -111,7 +123,7 @@ theorem factorizes_implies_corr_zero
 
 /-- Nonzero residual covariance obstructs factorization. -/
 theorem corr_nonzero_implies_not_factorize
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (R : ResidualCovariance A)
     {a : A} (ha : a ∈ R.bipartite.A_L) {b : A} (hb : b ∈ R.bipartite.A_R) :
     R.corrD0 a b ≠ 0 →
@@ -123,7 +135,7 @@ theorem corr_nonzero_implies_not_factorize
 covariance is residual covariance plus a nonzero covariance certificate.  It is
 not the entanglement itself. -/
 @[rep_depth transport]
-structure DrazinNullCovariance (A : Type*) [Semiring A] [Algebra ℝ A] where
+structure DrazinNullCovariance (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   residual : ResidualCovariance A
   leftObservable : A
   rightObservable : A
@@ -134,7 +146,7 @@ structure DrazinNullCovariance (A : Type*) [Semiring A] [Algebra ℝ A] where
 /-- Nonzero residual covariance is a Drazin-null-supported nonproduct
 correlation; it is not an automatic entanglement theorem. -/
 theorem nonfactorizingCovariance_implies_drazinNullSupportedCorrelation
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (C : DrazinNullCovariance A) :
     ¬ Factorizes C.residual.ω₀ C.residual.bipartite.A_L C.residual.bipartite.A_R :=
   corr_nonzero_implies_not_factorize (R := C.residual)
@@ -166,7 +178,7 @@ theorem entropyWitness_of_twoStateRT_readout_eq_ln2 :
 /-- Negativity witness: a residual covariance packet plus a certified nonzero
 covariance readout. -/
 @[rep_depth transport]
-structure NegativityWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
+structure NegativityWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   residual : DrazinNullCovariance A
   covarianceNonzero :
     residual.residual.corrD0 residual.leftObservable residual.rightObservable ≠ 0
@@ -174,7 +186,7 @@ structure NegativityWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
 /-- A concrete negativity witness comes directly from any supplied Drazin-null
 supported covariance packet. -/
 def negativityWitness_of_drazinNullCovariance
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (C : DrazinNullCovariance A) :
     NegativityWitness A := by
   refine ⟨C, ?_⟩
@@ -182,14 +194,14 @@ def negativityWitness_of_drazinNullCovariance
 
 /-- A negativity witness exposes an explicit nonzero covariance readout. -/
 theorem negativityWitness_covarianceNonzero
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
     W.residual.residual.corrD0 W.residual.leftObservable W.residual.rightObservable ≠ 0 :=
   W.covarianceNonzero
 
 /-- A negativity witness directly blocks factorization. -/
 theorem negativityWitness_blocks_factorization
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
     ¬ Factorizes W.residual.residual.ω₀ W.residual.residual.bipartite.A_L
         W.residual.residual.bipartite.A_R :=
@@ -198,21 +210,21 @@ theorem negativityWitness_blocks_factorization
 
 /-- The positive-compression witness exposes the idempotent projector law. -/
 theorem positiveCompressionWitness_projector_idem
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : PositiveCompressionWitness A) :
     W.projector * W.projector = W.projector :=
   W.projector_idem
 
 /-- The positive-compression witness exposes the self-adjoint projector side-condition. -/
 def positiveCompressionWitness_projector_selfAdj_G
-    {A : Type*} [Semiring A] [Algebra ℝ A]
-    (W : PositiveCompressionWitness A) : Prop :=
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
+    (W : PositiveCompressionWitness A) : IsSelfAdjoint W.projector :=
   W.projector_selfAdj_G
 
 /-- The compression formula on the projector itself unfolds to the compressed
 state at the idempotent projector. -/
 theorem positiveCompressionWitness_compression_on_projector
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : PositiveCompressionWitness A) :
     W.compressedState W.projector =
       W.state (W.projector * W.projector) / W.state W.projector := by
@@ -225,30 +237,51 @@ theorem positiveCompressionWitness_compression_on_projector
 
 /-- The Drazin-null sector exposes its physical-null certificate. -/
 def drazinNullSector_physicalNull
-    (W : DrazinNullSector R) : Prop :=
-  W.physicalNull
+    (W : DrazinNullSector R) (a : R) : W.nullProjector * a = 0 :=
+  W.physicalNull a
 
 /-- The Drazin-null sector exposes the implication from physical nullity to algebraic nullity. -/
 theorem drazinNullSector_physicalWitness
     (W : DrazinNullSector R) :
-    W.physicalNull → W.algebraicNull :=
+    ∀ a : R, (W.nullProjector * a = 0) →
+      (W.nullProjector * a * W.nullProjector = 0) :=
   W.physicalWitness
 
-/-- Gaussian bosonic witness: a concrete normalized CAR/CCR readout carrier. -/
+/-! The concrete normalized CAR/CCR readout is already the owner carrier. -/
 @[rep_depth transport]
-structure GaussianBosonicWitness
-    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  readout : WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)
+abbrev GaussianBosonicWitness
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)
 
-/-- Gaussian fermionic witness: a concrete normalized CAR readout carrier. -/
+namespace GaussianBosonicWitness
+
+abbrev readout
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (W : GaussianBosonicWitness E) :
+    WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E) :=
+  W
+
+end GaussianBosonicWitness
+
+/-! The concrete normalized CAR readout is already the owner carrier. -/
 @[rep_depth transport]
-structure GaussianFermionicWitness
-    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  readout : WeylFiveGradePhysicalReadoutBridge.WeylCARPhysicalReadoutCarrier (E := E)
+abbrev GaussianFermionicWitness
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  WeylFiveGradePhysicalReadoutBridge.WeylCARPhysicalReadoutCarrier (E := E)
+
+namespace GaussianFermionicWitness
+
+abbrev readout
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (W : GaussianFermionicWitness E) :
+    WeylFiveGradePhysicalReadoutBridge.WeylCARPhysicalReadoutCarrier (E := E) :=
+  W
+
+end GaussianFermionicWitness
 
 /-- Entanglement witness assembled from one of the concrete witness lanes. -/
 @[rep_depth transport]
-inductive EntanglementWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
+inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   | entropy : EntropyWitness → EntanglementWitness A
   | negativity : NegativityWitness A → EntanglementWitness A
   | gaussianBosonic
@@ -258,45 +291,48 @@ inductive EntanglementWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
       {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
       GaussianFermionicWitness E → EntanglementWitness A
 
-/-- Compatibility name for explicit entanglement criteria. -/
-@[rep_depth transport]
-structure EntanglementCriterionWitness (A : Type*) [Semiring A] [Algebra ℝ A] where
-  witness : EntanglementWitness A
+/-!
+An explicit entanglement criterion is already represented by the inductive
+`EntanglementWitness` owner. Keep the compatibility name as a type alias
+instead of introducing a one-field wrapper.
+-/
+abbrev EntanglementCriterionWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] :=
+  EntanglementWitness A
 
 /-- Entanglement is represented by the existence of an explicit witness. -/
-def IsEntangled (A : Type*) [Semiring A] [Algebra ℝ A] : Prop :=
+def IsEntangled (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] : Prop :=
   Nonempty (EntanglementWitness A)
 
 /-- An entanglement witness certifies entanglement. -/
 theorem entanglementWitness_implies_entangled
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness A) :
     IsEntangled A := by
   exact ⟨W⟩
 
 /-- Lemma 1: an explicit entropy witness proves entanglement. -/
 theorem isEntangled_of_entropy
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntropyWitness) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.entropy W⟩
 
 /-- The two-state RT entropy witness directly certifies entanglement. -/
 theorem isEntangled_of_twoStateRT
-    {A : Type*} [Semiring A] [Algebra ℝ A] :
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A] :
     IsEntangled (A := A) := by
   exact isEntangled_of_entropy (A := A) entropyWitness_of_twoStateRT
 
 /-- Lemma 2: an explicit negativity witness proves entanglement. -/
 theorem isEntangled_of_negativity
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.negativity W⟩
 
 /-- Lemma 3: an explicit Gaussian bosonic witness proves entanglement. -/
 theorem isEntangled_of_gaussianBosonic
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (W : GaussianBosonicWitness E) :
     IsEntangled A := by
@@ -304,7 +340,7 @@ theorem isEntangled_of_gaussianBosonic
 
 /-- The bosonic Gaussian witness exposes a normalized CAR pair. -/
 theorem gaussianBosonicWitness_car_is_normalized
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (W : GaussianBosonicWitness E) :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
@@ -313,7 +349,7 @@ theorem gaussianBosonicWitness_car_is_normalized
 
 /-- The bosonic Gaussian witness also exposes the normalized CCR pair. -/
 theorem gaussianBosonicWitness_ccr_is_normalized
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (W : GaussianBosonicWitness E) :
     InfoGeometry.Canonical.IsCCRPair
@@ -322,7 +358,7 @@ theorem gaussianBosonicWitness_ccr_is_normalized
 
 /-- Lemma 4: an explicit Gaussian fermionic witness proves entanglement. -/
 theorem isEntangled_of_gaussianFermionic
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (W : GaussianFermionicWitness E) :
     IsEntangled A := by
@@ -330,7 +366,7 @@ theorem isEntangled_of_gaussianFermionic
 
 /-- The fermionic Gaussian witness exposes a normalized CAR pair. -/
 theorem gaussianFermionicWitness_car_is_normalized
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (W : GaussianFermionicWitness E) :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
@@ -339,17 +375,17 @@ theorem gaussianFermionicWitness_car_is_normalized
 
 /-- Lemma 5: any witness inhabits the entangled predicate. -/
 theorem isEntangled_of_entanglementWitness
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness A) :
     IsEntangled A := by
   exact ⟨W⟩
 
 /-- Theorem: any one explicit criterion proves entanglement. -/
 theorem isEntangled_of_any_explicit_criterion
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementCriterionWitness A) :
     IsEntangled A :=
-  entanglementWitness_implies_entangled W.witness
+  entanglementWitness_implies_entangled W
 
 /-- Residual correlation factoring through mismatch. -/
 @[rep_depth transport]
@@ -389,46 +425,64 @@ theorem restrictedCovariance_zero_implies_no_support
 
 /-- Lorentzian lightcone witness: null rays need a dedicated Dirac witness. -/
 @[rep_depth transport]
-structure LightconeReadoutBoundary where
-  diracSquare : Prop
-  kernelNontrivial : Prop
-  nullConeCertified : Prop
-  projectivizationWitness : Prop
+structure LightconeReadoutBoundary
+    (V : Type*) [AddCommGroup V] [Module ℝ V]
+    (Q : QuadraticForm ℝ V) where
+  dirac : V →ₗ[ℝ] V
+  diracSquare : dirac.comp dirac = 0
+  kernelVector : V
+  kernelNontrivial : dirac kernelVector = 0 ∧ kernelVector ≠ 0
+  nullConeCertified : Q kernelVector = 0
+  projectiveRay : Projectivization ℝ V
+  projectivizationWitness :
+    projectiveRay = Projectivization.mk ℝ kernelVector kernelNontrivial.2
 
 theorem entanglement_claim_from_witness
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness (A := A)) :
     IsEntangled (A := A) :=
   entanglementWitness_implies_entangled (A := A) W
 
 /-- A lightcone boundary witness exposes its Dirac-square side condition. -/
 def lightconeReadoutBoundary_diracSquare
-    (W : LightconeReadoutBoundary) : Prop :=
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
+    W.dirac.comp W.dirac = 0 :=
   W.diracSquare
 
 /-- A lightcone boundary witness exposes kernel nontriviality. -/
 def lightconeReadoutBoundary_kernelNontrivial
-    (W : LightconeReadoutBoundary) : Prop :=
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
+    W.dirac W.kernelVector = 0 ∧ W.kernelVector ≠ 0 :=
   W.kernelNontrivial
 
 /-- A lightcone boundary witness exposes null-cone certification. -/
 def lightconeReadoutBoundary_nullConeCertified
-    (W : LightconeReadoutBoundary) : Prop :=
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
+    Q W.kernelVector = 0 :=
   W.nullConeCertified
 
 /-- A lightcone boundary witness exposes the projectivization witness. -/
 def lightconeReadoutBoundary_projectivizationWitness
-    (W : LightconeReadoutBoundary) : Prop :=
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
+    W.projectiveRay = Projectivization.mk ℝ W.kernelVector W.kernelNontrivial.2 :=
   W.projectivizationWitness
 
 /-- The full lightcone boundary packet can be read back as a conjunction of
 its four supplied boundary conditions. -/
 def lightconeReadoutBoundary_packet
-    (W : LightconeReadoutBoundary) : Prop :=
-  W.diracSquare ∧ W.kernelNontrivial ∧ W.nullConeCertified ∧ W.projectivizationWitness
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+  {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) : Prop :=
+  (W.dirac.comp W.dirac = 0) ∧
+    (W.dirac W.kernelVector = 0 ∧ W.kernelVector ≠ 0) ∧
+    (Q W.kernelVector = 0) ∧
+    (W.projectiveRay = Projectivization.mk ℝ W.kernelVector W.kernelNontrivial.2)
 
 theorem nonfactorizing_covariance_is_not_entanglement
-    {A : Type*} [Semiring A] [Algebra ℝ A]
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (R : ResidualCovariance A)
     {a : A} (ha : a ∈ R.bipartite.A_L) {b : A} (hb : b ∈ R.bipartite.A_R)
     (h : R.corrD0 a b ≠ 0) :

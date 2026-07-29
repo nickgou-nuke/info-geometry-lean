@@ -66,7 +66,26 @@ Bekenstein Bound Space:
 A physical state space where the complexity of any state is bounded by an 
 upper limit `C_max`, representing the finite information capacity of the region.
 -/
-structure BekensteinBoundedSpace (S P : Type*) (vacuum : S) (eval : P → S → S) (length : P → ℕ) (C_max : ℕ) : Prop where
-  bounded : ∀ (s : S), stateComplexity vacuum eval length s ≤ C_max
+/-
+The bound is a direct proposition; there is no independent carrier data to
+package here.  Keeping the relation transparent lets downstream arguments
+use the native inequality directly while preserving the historical accessor.
+-/
+def BekensteinBoundedSpace
+    (S P : Type*) (vacuum : S) (eval : P → S → S)
+    (length : P → ℕ) (C_max : ℕ) : Prop :=
+  ∀ s : S, stateComplexity vacuum eval length s ≤ C_max
+
+namespace BekensteinBoundedSpace
+
+/-- Read the boundedness relation under its historical field name. -/
+theorem bounded
+    {S P : Type*} {vacuum : S} {eval : P → S → S}
+    {length : P → ℕ} {C_max : ℕ}
+    (h : BekensteinBoundedSpace S P vacuum eval length C_max)
+    (s : S) : stateComplexity vacuum eval length s ≤ C_max :=
+  h s
+
+end BekensteinBoundedSpace
 
 end InfoGeometry.Canonical.WheelerComplexity

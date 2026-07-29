@@ -122,12 +122,7 @@ theorem lightcone_entropy_readout_support :
 /-- `\log\det` / volume-compression carrier. -/
 noncomputable def lightconeBarrierCarrier :
     InfoGeometry.Canonical.SouriauOperatorialLogPotential.RegularizedJacobianPotential Chiral3 :=
-  { jacobian := fun _ => (1 : ℝ)
-    logDetReg := fun X => Real.log (lightconePotential X)
-    volumeCompressionPotential := fun X => -Real.log (lightconePotential X)
-    volumeCompressionPotential_eq_neg_logDetReg := by
-      intro X
-      simp }
+  (fun _ => (1 : ℝ), fun X => Real.log (lightconePotential X))
 
 theorem lightconeBarrierCarrier_entropyReadoutRequiresStateClaim :
     lightconeEntropyReadoutSupport :=
@@ -135,9 +130,7 @@ theorem lightconeBarrierCarrier_entropyReadoutRequiresStateClaim :
 
 @[simp] theorem lightcone_barrier_equals_neg_logdet (X : Chiral3) :
     lightconeBarrierCarrier.volumeCompressionPotential X = -Real.log (lightconePotential X) := by
-  simpa [lightconeBarrierCarrier] using
-    (InfoGeometry.Canonical.SouriauOperatorialLogPotential.RegularizedJacobianPotential.volumeCompressionPotential_eq_neg_logDetReg_apply
-      lightconeBarrierCarrier X)
+  rfl
 
 /-- `Q(\mathrm{rindler\_boost}(X,\eta)) = Q(X)`. -/
 theorem rindler_isometry [ModularTimeFlow ℝ] (X : Chiral3) (η : ℝ) :

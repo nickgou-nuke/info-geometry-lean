@@ -81,12 +81,10 @@ structure DrazinInfiniteWeylCompatibility (T : EndH) where
     assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
 
-/-- Compatibility witness alias with expected legacy naming in test fixtures. -/
-structure DrazinInfiniteWeylWitness (T : EndH) where
-  assumptions : DrazinInfiniteAssumptions (𝕂 := ℝ) T
-  classical_candidate_commutes_spectralEpsilon :
-    assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
-      = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
+/-! Compatibility name for the existing operator owner; no duplicate witness
+structure is introduced. -/
+abbrev DrazinInfiniteWeylWitness (T : EndH) :=
+  DrazinInfiniteWeylCompatibility (E := E) T
 
 /--
 Proof-carrying infinite Drazin compatibility replacing direct classical-candidate

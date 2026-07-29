@@ -3,6 +3,7 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.Cl11ModularAtom
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimeHurwitzLimit
+import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 
 /-!
 # InfoGeometry.Canonical.PrimeCl11ModularAtom
@@ -28,6 +29,7 @@ namespace InfoGeometry.Canonical.PrimeCl11ModularAtom
 
 open InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 open InfoGeometry.Canonical.PrimeHurwitzLimit
+open InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 
 section Core
 
@@ -109,13 +111,16 @@ structure LaplaceMellinWaveletTransform
   approximants : LeeYangApproximants
   cptSymmetry : ContinuousCPTSymmetry
 
+  /-- The concrete Clifford-valued two-channel filter bank used by the packet. -/
+  filterBank : ParaunitaryCliffordFilterBank
+
   /-- CPT preservation at the level of Lee--Yang zero sets. -/
   cpt_preservation :
     ∀ N z, z ≠ 0 →
       (approximants.Z N z = 0 ↔ approximants.Z N (z⁻¹) = 0)
 
-  /-- Paraunitary boundedness / energy preservation witness. -/
-  paraunitary_boundedness : Prop
+  /-- Native paraunitary energy law for the supplied Clifford filter bank. -/
+  paraunitary_boundedness : paraunitary filterBank
 
 
 /--

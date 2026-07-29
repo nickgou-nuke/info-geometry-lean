@@ -100,8 +100,12 @@ theorem scale_det_at_zero : (scaleMatrix 0).det = 0 := by simp [scaleMatrix_det]
 
 /-- Abstract socket for the conformal scale limit of the resolvent. -/
 structure ResolventScaleLimit where
-  resolventVanishesAtInfinity : Prop
-  zeroMonodromyOnlyAsLimit : Prop
+  resolvent : ℂ → M2C
+  resolventVanishesAtInfinity :
+    Filter.Tendsto resolvent (Filter.cocompact ℂ) (nhds 0)
+  monodromy : ℂ → ℂ
+  zeroMonodromyOnlyAsLimit :
+    Filter.Tendsto monodromy (nhdsWithin 0 ({0}ᶜ : Set ℂ)) (nhds 0)
 
 /-- Synthesis theorem. -/
 theorem biquaternion_laplace_tripotent_synthesis :

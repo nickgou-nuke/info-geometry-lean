@@ -138,30 +138,55 @@ theorem lorentz_lorentz_commutator {A : Type*} [Ring A] (P : PoincareAlgebraSock
 end PoincareAlgebraSocket
 
 /-- Twistor/null-incidence data needed before the chiral algebra can be read geometrically. -/
-structure TwistorChiralNullSocket where
-  TwistorSpace : Type*
-  nullCone : TwistorSpace → Prop
-  incidence : TwistorSpace → TwistorSpace → Prop
-  chiralPlus : TwistorSpace → Prop
-  chiralMinus : TwistorSpace → Prop
-  plus_incidence_null :
-    ∀ Z W, chiralPlus Z → incidence Z W → nullCone W
-  minus_incidence_null :
-    ∀ Z W, chiralMinus Z → incidence Z W → nullCone W
+abbrev TwistorChiralNullSocket : Type _ :=
+  Σ' nullCone : InfoGeometry.Twistor.Incidence.Twistor → Prop,
+    Σ' incidence : InfoGeometry.Twistor.Incidence.Twistor →
+      InfoGeometry.Twistor.Incidence.Twistor → Prop,
+      Σ' chiralPlus : InfoGeometry.Twistor.Incidence.Twistor → Prop,
+        Σ' chiralMinus : InfoGeometry.Twistor.Incidence.Twistor → Prop,
+          (∀ Z W, chiralPlus Z → incidence Z W → nullCone W) ∧
+            ∀ Z W, chiralMinus Z → incidence Z W → nullCone W
 
 namespace TwistorChiralNullSocket
 
+def nullCone (T : TwistorChiralNullSocket) :
+    InfoGeometry.Twistor.Incidence.Twistor → Prop :=
+  T.1
+
+def incidence (T : TwistorChiralNullSocket) :
+    InfoGeometry.Twistor.Incidence.Twistor →
+      InfoGeometry.Twistor.Incidence.Twistor → Prop :=
+  T.2.1
+
+def chiralPlus (T : TwistorChiralNullSocket) :
+    InfoGeometry.Twistor.Incidence.Twistor → Prop :=
+  T.2.2.1
+
+def chiralMinus (T : TwistorChiralNullSocket) :
+    InfoGeometry.Twistor.Incidence.Twistor → Prop :=
+  T.2.2.2.1
+
+def plus_incidence_null (T : TwistorChiralNullSocket) :
+    ∀ Z W, T.chiralPlus Z → T.incidence Z W → T.nullCone W :=
+  T.2.2.2.2.1
+
+def minus_incidence_null (T : TwistorChiralNullSocket) :
+    ∀ Z W, T.chiralMinus Z → T.incidence Z W → T.nullCone W :=
+  T.2.2.2.2.2
+
+end TwistorChiralNullSocket
+
 theorem plus_incidence_forces_null (T : TwistorChiralNullSocket)
-    {Z W : T.TwistorSpace} (hZ : T.chiralPlus Z) (hZW : T.incidence Z W) :
+    {Z W : InfoGeometry.Twistor.Incidence.Twistor}
+    (hZ : T.chiralPlus Z) (hZW : T.incidence Z W) :
     T.nullCone W :=
   T.plus_incidence_null Z W hZ hZW
 
 theorem minus_incidence_forces_null (T : TwistorChiralNullSocket)
-    {Z W : T.TwistorSpace} (hZ : T.chiralMinus Z) (hZW : T.incidence Z W) :
+    {Z W : InfoGeometry.Twistor.Incidence.Twistor}
+    (hZ : T.chiralMinus Z) (hZW : T.incidence Z W) :
     T.nullCone W :=
   T.minus_incidence_null Z W hZ hZW
-
-end TwistorChiralNullSocket
 
 /--
 Chiral supercharge packet with explicit central charge, parity, beta four-vector,

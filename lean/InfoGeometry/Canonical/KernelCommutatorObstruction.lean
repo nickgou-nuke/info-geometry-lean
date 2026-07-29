@@ -60,26 +60,8 @@ Direct central-charge-to-obstruction eliminator using the canonical projector
 pair and a supplied mismatch-to-noncommutation implication.
 -/
 @[rep_depth transport, capstone]
-theorem projectorObstruction_ne_zero_of_mismatch_direct
-    (CI : ConformalInference E)
-    (V : BogoliubovVielbeinBundle (E := E))
-    (X : RealSplitKreinDiracFredholmModule A B H₂)
-    (hX : ChiralFredholmSurface X)
-    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
-    (t : ℝ)
-    (hMismatchNoncommute :
-      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
-          V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) →
-        CI.spectralChiralProjector * CI.metricChiralProjector
-          ≠
-        CI.metricChiralProjector * CI.spectralChiralProjector)
-    (hCentral :
-      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
-    CI.projectorObstruction ≠ 0 := by
-  exact
-    InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge.projectorObstruction_ne_zero_of_operatorialCentralCharge_ne_zero_of_mismatch_forces_projector_noncommute
-      (A := A) (B := B) (E := E)
-      CI V X hX hEven t hMismatchNoncommute hCentral
+alias projectorObstruction_ne_zero_of_mismatch_direct :=
+  InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge.projectorObstruction_ne_zero_of_operatorialCentralCharge_ne_zero_of_mismatch_forces_projector_noncommute
 
 end Core
 

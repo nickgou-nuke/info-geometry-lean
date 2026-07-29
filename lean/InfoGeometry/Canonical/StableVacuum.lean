@@ -71,8 +71,9 @@ structure SpectralGroundState
   /-- Vacuum vector. -/
   Omega : V
 
-  /-- Normalization condition for the vacuum, supplied by the concrete model. -/
-  normalized : Prop
+  /-- Unit normalization of the vacuum in the ambient real Hilbert space. -/
+  normalized :
+    inner ℝ Omega Omega = 1
 
   /-- The vacuum lies in the bottom eigenspace. -/
   ground :
@@ -86,6 +87,11 @@ namespace SpectralGroundState
 
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 variable (S : SpectralGroundState V)
+
+/-- The vacuum has unit Hilbert norm, expressed by its inner-product square. -/
+theorem omega_normalized :
+    inner ℝ S.Omega S.Omega = 1 :=
+  S.normalized
 
 /-- The ground-state subspace is the kernel of the physical Hamiltonian. -/
 def groundSubspace : Submodule ℝ V :=

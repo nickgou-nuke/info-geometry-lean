@@ -102,9 +102,8 @@ This packages the paired projector identities into one constructive witness so
 downstream collapse routes need not carry the raw `hProj`/`hLeft` pair.
 -/
 @[rep_depth transport]
-structure StructuredProjectorHypothesesWitness where
-  hProj : CI.P_MP_right = CI.P_MP
-  hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
+abbrev StructuredProjectorHypothesesWitness : Prop :=
+  CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
 
 /--
 Proof-carrying RN/Kähler witness for the conformal zero-scale lane.
@@ -114,11 +113,10 @@ unit-relative-volume bit, so downstream zero-collapse routes need not carry the
 raw `(hScaleFromKahler, bit)` pair.
 -/
 @[rep_depth transport]
-structure UnitRelativeVolumeScaleWitness
-    {n : Nat} (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) where
-  hScaleFromKahler :
-    CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M
-  bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
+abbrev UnitRelativeVolumeScaleWitness
+    {n : Nat} (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop :=
+  CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M ∧
+    InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
 
 /--
 Structured dilation-source closure:
@@ -144,7 +142,7 @@ theorem dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProject
       = -((2 : ℝ)⁻¹) • CI.projectorObstruction := by
   exact
     dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses
-      (CI := CI) W.hProj W.hLeft
+      (CI := CI) W.1 W.2
 
 /--
 Semantic-collapse packet for the operatorial Weyl anomaly lane:
@@ -226,7 +224,7 @@ theorem semanticCollapsePacket_of_structuredProjectorWitness_of_chiralScale_eq_z
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   have hObsDil :=
     projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
-      (CI := CI) W.hProj W.hLeft hScaleZero
+      (CI := CI) W.1 W.2 hScaleZero
   have hEpsZero : CI.epsilon = 0 := by
     calc
       CI.epsilon = CI.chiralScale := by symm; exact chiralScale_eq_epsilon (CI := CI)
@@ -277,7 +275,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
-      (CI := CI) (M := M) hScaleFromKahler bit W.hProj W.hLeft
+      (CI := CI) (M := M) hScaleFromKahler bit W.1 W.2
 
 /--
 Smaller constructive projector/dilation zero packet from a single RN/Kähler
@@ -297,7 +295,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorWitness
-      (CI := CI) (M := M) WV.hScaleFromKahler WV.bit W
+      (CI := CI) (M := M) WV.1 WV.2 W
 
 end ConformalInference
 
@@ -321,13 +319,12 @@ hypothesis
 `IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`.
 -/
 @[rep_depth transport]
-structure StationaryScaleZeroWitness
+abbrev StationaryScaleZeroWitness
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
     (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) : Prop where
-  use :
-    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-        (E := E) P ψ A → CI.chiralScale = 0
+    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) : Prop :=
+  InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+      (E := E) P ψ A → CI.chiralScale = 0
 
 /--
 Recover the stationarity-to-zero-scale bridge from the proof-carrying witness.
@@ -340,7 +337,7 @@ theorem stationaryScaleZero_of_witness
     (W : StationaryScaleZeroWitness (E := E) CI P ψ A) :
     InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
         (E := E) P ψ A → CI.chiralScale = 0 :=
-  W.use
+  W
 
 /--
 Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
@@ -399,7 +396,7 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
-      (CI := CI) hEq WScale WProj.hProj WProj.hLeft
+      (CI := CI) hEq WScale WProj.1 WProj.2
 
 /--
 Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
@@ -429,7 +426,7 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypothes
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
-      (CI := CI) hEq ⟨hStationaryToScaleZero⟩ hProj hLeft
+      (CI := CI) hEq hStationaryToScaleZero hProj hLeft
 
 
 /--
@@ -482,7 +479,7 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWi
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
-      (CI := CI) (M := M) hScaleFromKahler bit W.hProj W.hLeft
+      (CI := CI) (M := M) hScaleFromKahler bit W.1 W.2
 
 /--
 Smaller constructive zero-scale packet from a single RN/Kähler witness packet
@@ -504,7 +501,7 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeScaleWitness_of_structuredPr
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWitness
-      (CI := CI) (M := M) WV.hScaleFromKahler WV.bit W
+      (CI := CI) (M := M) WV.1 WV.2 W
 
 /--
 Souriau-to-Weyl zero-scale packet from the smaller constructive thermodynamic
@@ -563,7 +560,7 @@ theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_stationaryScaleZeroWitness
-      (CI := CI) hFaithful hFirst ⟨hStationaryToScaleZero⟩ hProj hLeft
+      (CI := CI) hFaithful hFirst hStationaryToScaleZero hProj hLeft
 
 end ConformalInference
 

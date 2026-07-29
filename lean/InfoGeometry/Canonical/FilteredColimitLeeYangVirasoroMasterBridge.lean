@@ -12,22 +12,22 @@ set_option linter.unusedVariables false
 # Filtered Inductive Colimit & Inverse Limit Master Bridge:
 ## Categorical Lee-Yang, Asano Contraction, and Virasoro LogCFT Resolution
 
-This module reformulates the 15-step proof plan for Lee-Yang stability, Asano contractions, Virasoro VOA extensions, and thermodynamic phase transitions strictly within the **Categorical Filtered Direct Inductive Colimit ($\varinjlim$) and Inverse Limit ($\varprojlim$) Framework**:
+This module reformulates parts of the Lee--Yang / LogCFT proof plan within the
+**categorical filtered direct/inductive colimit and inverse-limit framework**.
+It proves native algebraic facts only; analytic continuation, meromorphic
+continuation, and the Riemann hypothesis are not proved here.
 
-1. **Multiaffine Support & Separate Affinity Direct System**:
-   Proves natively that degree-one monomial bounds imply separate linearity in each variable, and projects polynomial algebras as a direct system.
-
+1. **Multiaffine Support & Separate Affine Direct System**:
+   degree-one monomial bounds imply separate linearity in each variable.
 2. **Asano Contraction Inverse Limit System**:
-   Proves natively that the Asano contraction operator $\mathcal{A}: \mathcal{P}_n \to \mathcal{P}_{n-1}$ preserves zero-free polydiscs, forming an inverse system of zero-free domains $\varprojlim \text{ZeroFree}(K_n)$.
-
+   a quadratic bilinear contraction reduces to a linear root equation.
 3. **Virasoro LogCFT Jordan-Krein Filtered Colimit**:
-   Proves natively that the rank-two Virasoro Jordan shear $N^2 = 0$ and Krein bilinear pairing $B_{\text{log}}((x_1, x_2), (y_1, y_2)) = B(x_1, y_2) + B(x_2, y_1)$ are preserved across the filtered inductive colimit tower.
-
+   the rank-two LogCFT Krein form `x1*y2 + x2*y1` is symmetric.
 4. **Direct Limit Topological Zero-Mode Protection**:
-   Proves natively that injective transition maps $\iota_n$ guarantee that non-trivial zero-modes $v \neq 0$ survive in the colimit $\iota_{n,\infty}(v) \neq 0$.
-
+   injective transition maps `ι` guarantee `ι v ≠ 0` for `v ≠ 0`.
 5. **Grand Unified Filtered Colimit Master Theorem**:
-   Unifies multiaffine separate affinity, Asano zero-free contraction preservation, Virasoro LogCFT Krein duality, and direct limit kernel survival into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
+   combines the above algebraic facts with the Cayley critical-line map and
+   the antiunitary fixed-locus characterization.
 -/
 
 noncomputable section

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ModularCoproductFlux
+import Mathlib.RingTheory.Coalgebra.Basic
 
 /-!
 # InfoGeometry.Canonical.ModularHopfCoproductRules
@@ -73,5 +74,45 @@ theorem hatDeltaPhi_eq_primitive_of_cross_zero
     one_add_tmul_one_add_sub_one_eq_primitive_of_cross_zero (R := R) N hcross
 
 end
+
+/-! ## Operator-surprisal coproduct defect -/
+
+section Coalgebra
+
+variable {R A : Type*}
+variable [CommRing R] [Ring A] [Algebra R A] [Coalgebra R A]
+
+/--
+Failure of an operator-valued surprisal/log generator `K` to be primitive
+under the actual coalgebra comultiplication.
+
+This definition uses `Coalgebra.comul`; it is distinct from the concrete
+tensor expression `hatDeltaDelta` above.
+-/
+def surprisalCoproductDefect (K : A) : A ⊗[R] A :=
+  (Coalgebra.comul : A →ₗ[R] A ⊗[R] A) K - primitiveFlux (R := R) K
+
+/--
+Every coalgebra coproduct decomposes exactly into the primitive tensor sum and
+the operatorial surprisal coproduct defect.
+-/
+theorem comul_eq_primitiveFlux_add_surprisalCoproductDefect
+    (K : A) :
+    (Coalgebra.comul : A →ₗ[R] A ⊗[R] A) K =
+      primitiveFlux (R := R) K + surprisalCoproductDefect (R := R) K := by
+  simp [surprisalCoproductDefect]
+
+/--
+The operatorial surprisal coproduct defect vanishes exactly when the
+surprisal/log generator is primitive.
+-/
+theorem surprisalCoproductDefect_eq_zero_iff
+    (K : A) :
+    surprisalCoproductDefect (R := R) K = 0 ↔
+      (Coalgebra.comul : A →ₗ[R] A ⊗[R] A) K =
+        primitiveFlux (R := R) K := by
+  simp [surprisalCoproductDefect, sub_eq_zero]
+
+end Coalgebra
 
 end InfoGeometry.Canonical.ModularHopfCoproductRules

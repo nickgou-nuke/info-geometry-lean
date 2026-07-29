@@ -64,7 +64,7 @@ theorem responseCoefficient_eq_spineRespond
       (onsagerMetricGeneratedFlow (E := E) P)
       (onsagerPairReadout X Y) w
       =
-    responseCoefficient (E := E) P X Y (L.logGen w) := by
+    responseCoefficient (E := E) P X Y (LogGenerator.apply L w) := by
   rfl
 
 /--
@@ -82,7 +82,7 @@ theorem curvatureCoefficient_eq_spineRespond
       (onsagerCurvatureGeneratedFlow (E := E) P)
       (onsagerPairReadout X Y) w
       =
-    curvatureCoefficient (E := E) P X Y (L.logGen w) := by
+    curvatureCoefficient (E := E) P X Y (LogGenerator.apply L w) := by
   rfl
 
 /--
@@ -104,7 +104,7 @@ theorem spineRespond_metric_swap
       (onsagerMetricGeneratedFlow (E := E) P)
       (onsagerPairReadout Y X) w := by
   simpa [responseCoefficient_eq_spineRespond] using
-    (responseCoefficient_swap (E := E) P X Y (L.logGen w))
+    (responseCoefficient_swap (E := E) P X Y (LogGenerator.apply L w))
 
 /--
 Spine-level Casimir skew law:
@@ -125,7 +125,7 @@ theorem spineRespond_curvature_swap_neg
       (onsagerCurvatureGeneratedFlow (E := E) P)
       (onsagerPairReadout X Y) w := by
   simpa [curvatureCoefficient_eq_spineRespond] using
-    (curvatureCoefficient_swap_neg (E := E) P X Y (L.logGen w))
+    (curvatureCoefficient_swap_neg (E := E) P X Y (LogGenerator.apply L w))
 
 end Core
 

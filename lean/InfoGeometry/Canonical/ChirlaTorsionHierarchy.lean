@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 namespace InfoGeometry.Canonical.ChirlaTorsionHierarchy
 

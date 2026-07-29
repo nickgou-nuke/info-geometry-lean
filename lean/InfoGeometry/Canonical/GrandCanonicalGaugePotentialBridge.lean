@@ -30,8 +30,8 @@ variable {α : Type _}
 /-- Chemical potential background gauge coupling to the count observable. -/
 @[rep_depth transport]
 noncomputable def chemicalPotentialGauge
-    (params : GrandCanonicalTwoParam α) : WeylGaugeField ℝ (α → ℝ) where
-  gaugeOf μ := fun x => μ * params.number x
+    (params : GrandCanonicalTwoParam α) : WeylGaugeField ℝ (α → ℝ) :=
+  fun μ x => μ * params.number x
 
 /-- Pointwise expansion of the chemical-potential gauge coupling. -/
 @[simp]

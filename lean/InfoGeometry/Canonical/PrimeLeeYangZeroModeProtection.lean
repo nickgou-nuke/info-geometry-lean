@@ -21,26 +21,15 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 
-/--
-Readout packet for the defect-free prime Lee--Yang limit.
-
-Spectral and analytic claims remain outside this data carrier as explicit
-theorems in the corresponding owner files.
--/
+/-! The defect-free limit carrier is the supplied completed-xi readout itself;
+the former packet added no field or law. -/
 @[socket_debt_tag]
-structure DefectFreeLimitPacket (CompletedXiReadout : Type) where
-  completedXiReadout : CompletedXiReadout
+abbrev DefectFreeLimitPacket (CompletedXiReadout : Type) := CompletedXiReadout
 
 @[socket_debt_tag]
-structure ZeroModeProtectionPacket
-    (CompletedXiReadout ProtectionReadout : Type) where
-  /-- Defect-free Lee--Yang/large-deviation limit packet. -/
-  defectFreeLimit :
-    DefectFreeLimitPacket CompletedXiReadout
-
-  /-- Extra readout for topological protection data. -/
-  protectionReadout :
-    ProtectionReadout
+abbrev ZeroModeProtectionPacket
+    (CompletedXiReadout ProtectionReadout : Type) :=
+  DefectFreeLimitPacket CompletedXiReadout × ProtectionReadout
 
 namespace ZeroModeProtectionPacket
 
@@ -48,6 +37,13 @@ variable {CompletedXiReadout ProtectionReadout : Type}
 variable
   (P : ZeroModeProtectionPacket
     CompletedXiReadout ProtectionReadout)
+
+abbrev defectFreeLimit :
+    DefectFreeLimitPacket CompletedXiReadout :=
+  P.1
+
+abbrev protectionReadout : ProtectionReadout :=
+  P.2
 
 end ZeroModeProtectionPacket
 

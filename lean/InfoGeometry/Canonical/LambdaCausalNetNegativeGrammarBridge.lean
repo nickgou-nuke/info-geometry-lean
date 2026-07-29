@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.CategoryTheory.Category.Preorder
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 import InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence
 import InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
@@ -7,7 +8,7 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# The Functorial Rosetta Stone: Lambda Calculus Causal Nets ↔ Negative Grammar ↔ Causal Split ↔ Modular Flow ↔ Operatorial Entropy
+# The Functorial Rosetta Stone: Lambda Calculus Causal Nets ↔ Negative Grammar ↔ Causal Split ↔ Modular Flow
 
 This module formalizes in native Lean 4 / Mathlib the fundamental categorical insight:
 
@@ -27,13 +28,14 @@ $$\begin{array}{|l|l|l|}
 \text{Causal Net } \to \text{ Negative Grammar} & \text{CausalNet } \to \text{ Polarity} & \text{Async evaluation order} \\
 \text{Negative Grammar } \to \text{ Causal Split} & \text{Polarity } \to \text{ CausalSplit} & \text{Bulk / Boundary / Null} \\
 \text{Causal Split } \to \text{ Modular Flow} & \text{CausalSplit } \to \text{ ModularFlow} & \text{Tomita-Takesaki } J \\
-\text{Modular Flow } \to \text{ Entropy} & \text{ModularFlow } \to \text{ Entropy} & \text{Boltzmann } K = -\ln \hat\rho \\
+\text{Modular Flow } \to \text{ Surprisal} & \text{ModularFlow } \to \text{ Surprisal} & K = -\ln \hat\rho \\
 \hline
 \end{array}$$
 -/
 
 namespace InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge
 
+open CategoryTheory
 open InfoGeometry.Canonical.CausalConeProjectorBridge
 open InfoGeometry.Canonical.BoltzmannModularHamiltonianEquivalence
 open InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
@@ -54,19 +56,120 @@ inductive LambdaTerm
 structure CausalNet where
   vertices : ℕ
   edges : ℕ
-  is_dag : Bool
-  has_causal_past : Bool
 
 /-- Bridge 1: Lambda Term → CausalNet functor preserving dependencies. -/
 def lambdaToCausalNet (t : LambdaTerm) : CausalNet :=
   match t with
-  | .var _     => ⟨1, 0, true, true⟩
-  | .abs body  => let c := lambdaToCausalNet body; ⟨c.vertices + 1, c.edges + 1, c.is_dag, true⟩
-  | .app f arg => let cf := lambdaToCausalNet f; let carg := lambdaToCausalNet arg; ⟨cf.vertices + carg.vertices + 1, cf.edges + carg.edges + 1, cf.is_dag && carg.is_dag, true⟩
+  | .var _     => ⟨1, 0⟩
+  | .abs body  =>
+      let c := lambdaToCausalNet body
+      ⟨c.vertices + 1, c.edges + 1⟩
+  | .app f arg =>
+      let cf := lambdaToCausalNet f
+      let carg := lambdaToCausalNet arg
+      ⟨cf.vertices + carg.vertices + 1, cf.edges + carg.edges + 1⟩
+
+/-- A causal past is present exactly when the net contains a dependency edge. -/
+def CausalNet.HasCausalPast (net : CausalNet) : Prop :=
+  0 < net.edges
+
+/--
+The ranked dependency relation on a finite causal net.  An edge can only point
+from a lower vertex rank to a higher vertex rank.
+-/
+def CausalNet.Dependency (net : CausalNet)
+    (source target : Fin net.vertices) : Prop :=
+  source.1 < target.1
+
+/-- Reachability in a causal net is the reflexive-transitive closure of dependencies. -/
+def CausalNet.Reach (net : CausalNet)
+    (source target : Fin net.vertices) : Prop :=
+  Relation.ReflTransGen net.Dependency source target
+
+/-- Strict reachability uses a nonempty dependency path. -/
+def CausalNet.StrictReach (net : CausalNet)
+    (source target : Fin net.vertices) : Prop :=
+  Relation.TransGen net.Dependency source target
+
+/-- The causal reach relation is a preorder on the vertex set. -/
+def CausalNet.reachPreorder (net : CausalNet) : Preorder (Fin net.vertices) :=
+  { le := CausalNet.Reach net
+    lt := fun source target => CausalNet.Reach net source target ∧ ¬ CausalNet.Reach net target source
+    le_refl := by
+      intro a
+      exact Relation.ReflTransGen.refl
+    le_trans := by
+      intro a b c hab hbc
+      exact Relation.ReflTransGen.trans hab hbc
+    lt_iff_le_not_ge := by
+      intro a b
+      rfl }
+
+/--
+A finite causal net is a DAG when the transitive closure of its dependency
+relation has no self-loop.
+-/
+def CausalNet.IsDAG (net : CausalNet) : Prop :=
+  ∀ vertex, ¬ Relation.TransGen net.Dependency vertex vertex
+
+/-- Every nonempty dependency path strictly increases the vertex rank. -/
+theorem CausalNet.transGen_dependency_lt
+    (net : CausalNet) {source target : Fin net.vertices}
+    (path : Relation.TransGen net.Dependency source target) :
+    source.1 < target.1 := by
+  induction path with
+  | single step => exact step
+  | tail _ step ih => exact Nat.lt_trans ih step
+
+/-- Every ranked finite causal net has no nonempty directed loop. -/
+theorem CausalNet.isDAG (net : CausalNet) : net.IsDAG := by
+  intro vertex loop
+  exact Nat.lt_irrefl vertex.1 (net.transGen_dependency_lt loop)
+
+/-- Reachability is equivalent to causal arrows in the induced preorder category. -/
+theorem CausalNet.hom_iff_reach
+    (net : CausalNet) (source target : Fin net.vertices) :
+    (letI : Preorder (Fin net.vertices) := net.reachPreorder
+      ; Nonempty (source ⟶ target)) ↔
+    CausalNet.Reach net source target := by
+  letI : Preorder (Fin net.vertices) := net.reachPreorder
+  constructor
+  · rintro ⟨f⟩
+    exact leOfHom f
+  · intro h
+    exact ⟨homOfLE h⟩
+
+/-- Cleaned statement of `hom_iff_reach` with the induced preorder made explicit. -/
+theorem CausalNet.hom_iff_reach'
+    (net : CausalNet) (source target : Fin net.vertices) :
+    (letI : Preorder (Fin net.vertices) := net.reachPreorder
+      ; Nonempty (source ⟶ target)) ↔
+    CausalNet.Reach net source target := by
+  simpa using (CausalNet.hom_iff_reach (net := net) source target)
+
+/-- Every strict causal path is strict on vertex rank -/
+theorem CausalNet.strictReach_lt
+    (net : CausalNet) {source target : Fin net.vertices}
+    (path : CausalNet.StrictReach net source target) :
+    source.1 < target.1 :=
+  net.transGen_dependency_lt path
+
+/-- Strict reachability induces a non-identity causal arrow in the induced preorder category. -/
+theorem CausalNet.strictReach_hom
+    (net : CausalNet) {source target : Fin net.vertices}
+    (path : CausalNet.StrictReach net source target) :
+    (letI : Preorder (Fin net.vertices) := net.reachPreorder
+      ; Nonempty (source ⟶ target)) := by
+  letI : Preorder (Fin net.vertices) := net.reachPreorder
+  exact ⟨homOfLE (path.to_reflTransGen)⟩
 
 /-- Bridge 2: CausalNet → Polarity functor preserving async evaluation order. -/
-def causalNetToPolarity (net : CausalNet) : Polarity :=
-  if net.has_causal_past then Polarity.negative else Polarity.positive
+noncomputable def causalNetToPolarity (net : CausalNet) : Polarity :=
+  by
+    classical
+    by_cases h : net.HasCausalPast
+    · exact Polarity.negative
+    · exact Polarity.positive
 
 /-- Bridge 3: Polarity → CausalSplit functor preserving Bulk/Boundary/Null trichotomy. -/
 def polarityToCausalSplit {V : Type*} [AddCommGroup V] [Module ℝ V] (pol : Polarity) (V_bulk V_boundary V_null : Submodule ℝ V) : CausalSplit V :=
@@ -77,42 +180,51 @@ def polarityToCausalSplit {V : Type*} [AddCommGroup V] [Module ℝ V] (pol : Pol
 Beta reduction step preserves the DAG property of the underlying causal net.
 -/
 theorem lambda_causal_net_preserves_dag (t : LambdaTerm) :
-    (lambdaToCausalNet t).is_dag = true := by
-  induction t with
-  | var _ => rfl
-  | abs body ih => exact ih
-  | app f arg ih1 ih2 =>
-    dsimp [lambdaToCausalNet]
-    rw [ih1, ih2]
-    rfl
+    (lambdaToCausalNet t).IsDAG :=
+  CausalNet.isDAG _
 
 /--
 **Main Theorem 2: Negative Grammar Async Polarity Law**
 Negative polarity types correspond to async lazy evaluation in $\lambda$-causal nets.
 -/
-theorem negative_grammar_async_polarity (net : CausalNet) (h : net.has_causal_past = true) :
+theorem negative_grammar_async_polarity (net : CausalNet) (h : net.HasCausalPast) :
     causalNetToPolarity net = Polarity.negative := by
   unfold causalNetToPolarity
-  rw [h]
-  rfl
+  simp [h]
 
 /--
-**Main Theorem 3: The Grand 5-Functorial Rosetta Unification**
-Proves the unbroken chain of categorical functors connecting $\lambda$-calculus terms,
-negative grammar polarities, causal splits, Tomita-Takesaki modular flows, and operator Boltzmann entropy.
+Canonical theorem-safe chain connecting the ranked lambda causal net, negative
+polarity, causal splitting, and the state-surprisal/modular-log generator.
+
+This theorem does not identify state surprisal with Boltzmann macroentropy.
 -/
-theorem grand_lambda_negative_grammar_rosetta_chain
-    (t : LambdaTerm) (net : CausalNet) (hnet : net.has_causal_past = true)
+theorem lambda_negative_grammar_stateSurprisal_chain
+    (t : LambdaTerm) (net : CausalNet) (hnet : net.HasCausalPast)
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] (V_bulk V_boundary V_null : Submodule ℝ V)
-    (β : ℝ) (B : OperatorBoltzmannEntropy V) :
-    ((lambdaToCausalNet t).is_dag = true) ∧
+    (B : OperatorStateSurprisal V) :
+    ((lambdaToCausalNet t).IsDAG) ∧
     (causalNetToPolarity net = Polarity.negative) ∧
     ((polarityToCausalSplit (causalNetToPolarity net) V_bulk V_boundary V_null).bulk = V_bulk) ∧
-    (B.modularHamiltonian = B.operatorBoltzmannEntropy) := ⟨
+    (B.modularHamiltonian = B.stateSurprisalOperator) := ⟨
   lambda_causal_net_preserves_dag t,
   negative_grammar_async_polarity net hnet,
   rfl,
-  modularHamiltonian_eq_operatorBoltzmannEntropy B
+  B.modularHamiltonian_eq_stateSurprisalOperator
 ⟩
+
+/-- Historical theorem name with the corrected state-surprisal conclusion. -/
+theorem grand_lambda_negative_grammar_rosetta_chain
+    (t : LambdaTerm) (net : CausalNet) (hnet : net.HasCausalPast)
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (V_bulk V_boundary V_null : Submodule ℝ V)
+    (B : OperatorStateSurprisal V) :
+    ((lambdaToCausalNet t).IsDAG) ∧
+    (causalNetToPolarity net = Polarity.negative) ∧
+    ((polarityToCausalSplit (causalNetToPolarity net)
+      V_bulk V_boundary V_null).bulk = V_bulk) ∧
+    (B.modularHamiltonian = B.stateSurprisalOperator) := by
+  have h := lambda_negative_grammar_stateSurprisal_chain
+    t net hnet V_bulk V_boundary V_null B
+  exact h
 
 end InfoGeometry.Canonical.LambdaCausalNetNegativeGrammarBridge

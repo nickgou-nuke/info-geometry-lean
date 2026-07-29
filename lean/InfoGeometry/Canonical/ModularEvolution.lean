@@ -35,13 +35,13 @@ def IsModularInvariantState (F : CausalFunctor α) [HasColimit F]
   must preserve the spacelike commutativity of the localized observables.
 -/
 theorem modular_evolution_preserves_commutativity 
-    (F : CausalFunctor α) [HasColimit F] [EinsteinCausality F]
+    (F : CausalFunctor α) [HasColimit F] (hca : EinsteinCausality F)
     (σ : ModularAutomorphismGroup F)
     {A B : CausalSpacetime α} (h : A ≁ B) (x : F.obj A) (y : F.obj B) (t : Multiplicative ℝ) :
     Commute 
       (((σ t).hom : UniversalCausalFuture F → UniversalCausalFuture F) ((colimit.ι F A) x)) 
       (((σ t).hom : UniversalCausalFuture F → UniversalCausalFuture F) ((colimit.ι F B) y)) := by
-  have h_comm := EinsteinCausality.commute_of_spacelike (F := F) h x y
+  have h_comm := EinsteinCausality.commute_of_spacelike (F := F) hca h x y
   -- Since σ(t) is an algebra automorphism, it preserves algebraic commutativity.
   dsimp [Commute, SemiconjBy] at h_comm ⊢
   -- applying the ring homomorphism

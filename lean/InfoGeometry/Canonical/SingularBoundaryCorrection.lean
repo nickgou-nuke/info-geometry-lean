@@ -81,12 +81,16 @@ structure SingularBoundaryCorrection (E : Type*)
     dilation = ((2 : ℝ)⁻¹) • (kernel.mpRangeProjector - kernel.metricProjector)
   spectralProjector_star :
     star kernel.spectralProjector = kernel.spectralProjector
-  regularRadialTransportCloses : Prop
+  regularRadialTransport : E →L[ℝ] E
+  regularRadialTransportCloses :
+    kernel.chiralAnomaly = 0 → regularRadialTransport = 0
   closure_of_zero_boundaryGenerator :
-    kernel.chiralAnomaly = 0 → regularRadialTransportCloses
+    kernel.chiralAnomaly = 0 → regularRadialTransport = 0
   reducedVolumeKind : ReducedVolumeKind
-  gradedSurvivor : Prop
-  boundaryGenerator_skew_adjoints_to_krein_isometry : Prop
+  /-- The reduced volume kind that survives the graded boundary projection. -/
+  gradedSurvivor : ReducedVolumeKind
+  boundaryGenerator_skew_adjoints_to_krein_isometry :
+    star kernel.chiralAnomaly = -kernel.chiralAnomaly
 
 namespace SingularBoundaryCorrection
 
@@ -201,9 +205,9 @@ transport.
 -/
 theorem regular_radial_transport_closes_of_boundaryScale_eq_zero
     (hScale : S.boundaryScale = 0) :
-    S.regularRadialTransportCloses := by
-  apply S.closure_of_zero_boundaryGenerator
-  exact (S.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).mp hScale
+    S.regularRadialTransport = 0 := by
+  exact S.closure_of_zero_boundaryGenerator
+    ((S.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).mp hScale)
 
 end SingularBoundaryCorrection
 

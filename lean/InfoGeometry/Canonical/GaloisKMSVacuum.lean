@@ -27,8 +27,14 @@ variable {CuntzUHF : Type*}
 variable (GaloisGroup : Type*)
 
 /-- The space of extreme degenerate KMS vacuum states at zero temperature. -/
-structure KMSVacuum (A : Type*) where
-  val : A → ℂ
+abbrev KMSVacuum (A : Type*) := A → ℂ
+
+namespace KMSVacuum
+
+/-- Projection-compatible name for the direct state functional. -/
+abbrev val (φ : KMSVacuum A) : A → ℂ := φ
+
+end KMSVacuum
 
 /- The action of the Galois group on the Cuntz UHF operators. 
    It acts as an automorphism group over the operator algebra. -/
@@ -38,15 +44,15 @@ variable (galois_action : GaloisGroup → CuntzUHF → CuntzUHF)
     The vacuum is permuted by evaluating the state on the Galois-shifted
     observable. -/
 def gauge_transformation (g : GaloisGroup) (φ : KMSVacuum CuntzUHF) : KMSVacuum CuntzUHF :=
-  ⟨fun (A : CuntzUHF) => φ.val (galois_action g A)⟩
+  fun (A : CuntzUHF) => φ (galois_action g A)
 
 /-- **Theorem: Galois Covariance of the Vacuum**
     The degenerate KMS vacuums form a faithful representation space for
     the absolute Galois group. Any arbitrary KMS state can be transformed
     into another degenerate state via the Galois gauge action. -/
 theorem galois_covariance (g : GaloisGroup) (φ : KMSVacuum CuntzUHF) :
-    (gauge_transformation GaloisGroup galois_action g φ).val = 
-      fun A => φ.val (galois_action g A) := by
+    KMSVacuum.val (gauge_transformation GaloisGroup galois_action g φ) =
+      fun A => KMSVacuum.val φ (galois_action g A) := by
   rfl
 
 end InfoGeometry.Canonical.GaloisKMSVacuum

@@ -72,10 +72,10 @@ theorem compactifiedInversion_commutes_boundaryLoopAction_closed
       boundaryLoopAction w (C.compactifiedInversion p) :=
   compactifiedInversion_commutes_boundaryLoopAction C w hcomm p
 
-/-- A finite algebraic closure packet exposes the boundary loop packet readback. -/
-structure FiniteBoundaryAlgebraicClosure where
-  /-- The underlying boundary-loop packet. -/
-  packet : BoundaryLoopClosurePacket
+/-! The finite closure owner is the boundary-loop packet itself. There is no
+additional finite compatibility datum here, so a second one-field structure
+would only obscure the existing owner. -/
+abbrev FiniteBoundaryAlgebraicClosure := BoundaryLoopClosurePacket
 
 namespace FiniteBoundaryAlgebraicClosure
 
@@ -85,22 +85,22 @@ variable (B : FiniteBoundaryAlgebraicClosure)
 theorem preserves_boundary
     {p : AlgebraicCompactification ℕ}
     (hp : AlgebraicCompactification.IsBoundary p) :
-    AlgebraicCompactification.IsBoundary (boundaryLoopAction B.packet.loop p) :=
-  B.packet.preserves_boundary hp
+    AlgebraicCompactification.IsBoundary (boundaryLoopAction B.loop p) :=
+  BoundaryLoopClosurePacket.preserves_boundary B hp
 
 /-- Cayley--Möbius inversion readback for the finite closure packet. -/
 theorem cayley_commutes_loop
     (p : AlgebraicCompactification ℕ) :
-    B.packet.cayley.compactifiedInversion (boundaryLoopAction B.packet.loop p) =
-      boundaryLoopAction B.packet.loop (B.packet.cayley.compactifiedInversion p) :=
-  B.packet.cayley_commutes_loop p
+    B.cayley.compactifiedInversion (boundaryLoopAction B.loop p) =
+      boundaryLoopAction B.loop (B.cayley.compactifiedInversion p) :=
+  BoundaryLoopClosurePacket.cayley_commutes_loop B p
 
 /-- Lifted deck-commutation readback for the finite closure packet. -/
 theorem lifted_commutes_deck
     (x : DoubleCover (AlgebraicCompactification ℕ)) :
-    liftedBoundaryLoopAction B.packet.loop (deckInvolution x) =
-      deckInvolution (liftedBoundaryLoopAction B.packet.loop x) :=
-  B.packet.lifted_commutes_deck x
+    liftedBoundaryLoopAction B.loop (deckInvolution x) =
+      deckInvolution (liftedBoundaryLoopAction B.loop x) :=
+  BoundaryLoopClosurePacket.lifted_commutes_deck B x
 
 end FiniteBoundaryAlgebraicClosure
 

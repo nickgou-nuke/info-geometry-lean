@@ -5,26 +5,19 @@ import InfoGeometry.Canonical.RedLineCausalConeMonodromy
 set_option linter.unusedSectionVars false
 
 /-!
-# Surprisal / Boltzmann Log-Volume as Topological Geometry & De Rham Cohomology Generator
+# Operator Surprisal and Log-Volume Topological Generators
 
-This module formalizes in native Lean 4 / Mathlib:
-1. **The Scalar Surprisal Misnomer**:
-   In information theory, $S(x) = -\ln P(x)$ is termed "surprisal" or "self-information".
-   In Non-Commutative Geometry (NCG), it is the **infinitesimal generator of non-commutative geometry**.
+This module collects three type-distinct logarithmic constructions already
+owned by the repository:
 
-2. **De Rham Cohomology Generation**:
-   The differential of surprisal yields the de Rham logarithmic winding form:
-   $$\omega_{\text{deRham}} = d S_{\text{surprisal}} = - d \ln \Omega$$
-   which generates non-trivial 1st de Rham cohomology $H^1_{\text{deRham}}(\mathbb{C} \setminus \{0\}, \mathbb{C})$.
+1. an operator-surprisal commutator generating a hyperbolic boost;
+2. the logarithmic pole form whose contour integral records winding;
+3. a red-line log-Jacobian potential whose exponential recovers a Jacobian.
 
-3. **Hyperbolic Boost & Monodromy Generation**:
-   The surprisal operator $S_{\text{surprisal}}(\beta) = \beta \cdot K$ generates the hyperbolic modular boost
-   $$[S_{\text{surprisal}}(\beta), N] = (2\beta) \cdot N$$
-   and de Rham monodromies $w_n = n \cdot 2\pi i$ around topological singularities.
-
-4. **Grand Synthesis Theorem**:
-   Proves the formal equivalence connecting information surprisal, NCG geometry generation,
-   and de Rham cohomology classes.
+The packet theorem records that these three owner results hold
+simultaneously.  It does not identify their carriers, does not prove an
+equivalence between them, and does not identify generic state surprisal with
+Boltzmann macroentropy.
 -/
 
 namespace InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator
@@ -36,7 +29,11 @@ open InfoGeometry.Canonical.TimeAsWindingMonodromy3D
 open InfoGeometry.Canonical.RedLineCausalConeMonodromy
 open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 
-/-- The Surprisal / Boltzmann Log-Volume differential form generator $\omega = d S$. -/
+/-- The logarithmic pole-form coefficient `1 / z`.
+
+Its winding theorem is independent of any identification with a state
+surprisal operator or a Boltzmann multiplicity operator.
+-/
 noncomputable def surprisalDeRhamGenerator (z : ℂ) : ℂ :=
   1 / z
 
@@ -50,9 +47,9 @@ theorem surprisal_generates_modular_geometry (β : ℝ) :
   surprisal_generates_hyperbolic_boost β
 
 /--
-**Main Theorem 2: Surprisal Differential Generates De Rham Cohomology**
-The contour integral of the surprisal differential form around the singularity generates
-non-trivial de Rham cohomology classes (monodromies):
+**Main Theorem 2: The logarithmic pole form records winding.**
+The normalized contour integral around the singularity is the integral
+winding number:
 $$\frac{1}{2\pi i} \oint_{\gamma} d S_{\text{surprisal}} = n \in \mathbb{Z}.$$
 -/
 theorem surprisal_derham_cohomology_generator (R : ℝ) (hR : 0 < R) (n : ℤ) :
@@ -60,13 +57,17 @@ theorem surprisal_derham_cohomology_generator (R : ℝ) (hR : 0 < R) (n : ℤ) :
   discrete_quantized_time_loop R hR n
 
 /--
-**Main Theorem 3: The Surprisal-NCG Topological Geometry Identity**
-Unifies the 3 manifestations of Surprisal / Boltzmann Entropy:
-1. Operator Surprisal generates non-commutative hyperbolic geometry ($[S, N] = 2\beta N$).
-2. Surprisal differential generates 1st de Rham cohomology ($\oint dS / 2\pi i = n$).
-3. Surprisal potential exponentiation recovers the phase volume ($\det J = e^{-\Phi_{\text{RedLine}}}$).
+**Main Theorem 3: Operator-surprisal and log-volume theorem packet.**
+
+The conjunction preserves the native meaning of each component:
+
+1. the operator-surprisal commutator identity;
+2. the logarithmic pole winding identity;
+3. exponentiation of the red-line log-Jacobian potential.
+
+No equality or equivalence between the three logarithmic owners is asserted.
 -/
-theorem surprisal_topological_geometry_unification
+theorem operatorSurprisal_logVolume_topological_packet
     (β : ℝ) (R : ℝ) (hR : 0 < R) (n : ℤ)
     (data : SpinorialFlowJacobianData Map) (φ : Map) :
     (InfoGeometry.Canonical.OperatorSurprisal.surprisal β * N - N * InfoGeometry.Canonical.OperatorSurprisal.surprisal β = (2 * β) • N) ∧
@@ -76,5 +77,17 @@ theorem surprisal_topological_geometry_unification
   surprisal_derham_cohomology_generator R hR n,
   redLine_potential_exp_recovery data φ
 ⟩
+
+/-- Historical compatibility name for
+`operatorSurprisal_logVolume_topological_packet`. -/
+theorem surprisal_topological_geometry_unification
+    (β : ℝ) (R : ℝ) (hR : 0 < R) (n : ℤ)
+    (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    (InfoGeometry.Canonical.OperatorSurprisal.surprisal β * N -
+        N * InfoGeometry.Canonical.OperatorSurprisal.surprisal β =
+          (2 * β) • N) ∧
+    (poleWinding R hR n / (2 * Real.pi * Complex.I : ℂ) = (n : ℂ)) ∧
+    (Real.exp (- data.redLinePotential φ) = data.jacobianDet φ) :=
+  operatorSurprisal_logVolume_topological_packet β R hR n data φ
 
 end InfoGeometry.Canonical.SurprisalTopologicalGeometryGenerator

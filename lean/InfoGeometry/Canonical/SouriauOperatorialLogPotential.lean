@@ -13,19 +13,48 @@ open InfoGeometry.Canonical.StandardFormCore
 abbrev Density (State : Type*) := State → ℝ
 
 @[rep_depth thermo]
-structure LogRadonNikodymData (State : Type*) where
-  rnDerivative : Density State
-  logDensity : Density State
-  surprisalDensity : Density State
-  expectationNu : (Density State) → ℝ
-  KL : ℝ
-  logDensity_eq : ∀ x, logDensity x = Real.log (rnDerivative x)
-  surprisalDensity_eq : ∀ x, surprisalDensity x = -logDensity x
-  KL_eq_logDensityExpectation : KL = expectationNu logDensity
-  KL_eq_neg_surprisalExpectation : KL = -expectationNu surprisalDensity
+abbrev LogRadonNikodymData (State : Type*) :=
+  Density State × ((Density State) →ₗ[ℝ] ℝ)
 
 namespace LogRadonNikodymData
   variable {State : Type*}
+
+  def rnDerivative (D : LogRadonNikodymData State) : Density State :=
+    D.1
+
+  def expectationNu (D : LogRadonNikodymData State) :
+      (Density State) →ₗ[ℝ] ℝ :=
+    D.2
+
+  noncomputable def logDensity (D : LogRadonNikodymData State) : Density State :=
+    fun x => Real.log (D.rnDerivative x)
+
+  noncomputable def surprisalDensity (D : LogRadonNikodymData State) : Density State :=
+    -D.logDensity
+
+  noncomputable def KL (D : LogRadonNikodymData State) : ℝ :=
+    D.expectationNu D.logDensity
+
+  @[simp, rep_depth thermo]
+  theorem logDensity_eq (D : LogRadonNikodymData State) (x : State) :
+      D.logDensity x = Real.log (D.rnDerivative x) :=
+    rfl
+
+  @[simp, rep_depth thermo]
+  theorem surprisalDensity_eq (D : LogRadonNikodymData State) (x : State) :
+      D.surprisalDensity x = -D.logDensity x :=
+    rfl
+
+  @[rep_depth thermo]
+  theorem KL_eq_logDensityExpectation (D : LogRadonNikodymData State) :
+      D.KL = D.expectationNu D.logDensity :=
+    rfl
+
+  @[rep_depth thermo]
+  theorem KL_eq_neg_surprisalExpectation (D : LogRadonNikodymData State) :
+      D.KL = -D.expectationNu D.surprisalDensity := by
+    simp [KL, surprisalDensity]
+
   @[rep_depth thermo]
   theorem KL_eq_expectation_logDensity (D : LogRadonNikodymData State) : D.KL = D.expectationNu D.logDensity := D.KL_eq_logDensityExpectation
 
@@ -36,45 +65,58 @@ namespace LogRadonNikodymData
   theorem surprisalDensity_eq_neg_logDensity (D : LogRadonNikodymData State) (x : State) : D.surprisalDensity x = -D.logDensity x := D.surprisalDensity_eq x
 end LogRadonNikodymData
 
-def instLogRadonNikodymData : LogRadonNikodymData Unit where
-  rnDerivative _ := 1
-  logDensity _ := 0
-  surprisalDensity _ := 0
-  expectationNu _ := 0
-  KL := 0
-  logDensity_eq _ := by simp
-  surprisalDensity_eq _ := by simp
-  KL_eq_logDensityExpectation := by simp
-  KL_eq_neg_surprisalExpectation := by simp
+def instLogRadonNikodymData : LogRadonNikodymData Unit :=
+  (fun _ => 1, 0)
 
 @[rep_depth thermo]
-structure RegularizedJacobianPotential (Map : Type*) where
-  jacobian : Map → ℝ
-  logDetReg : Map → ℝ
-  volumeCompressionPotential : Map → ℝ
-  volumeCompressionPotential_eq_neg_logDetReg : ∀ φ, volumeCompressionPotential φ = -logDetReg φ
+abbrev RegularizedJacobianPotential (Map : Type*) :=
+  (Map → ℝ) × (Map → ℝ)
 
 namespace RegularizedJacobianPotential
   variable {Map : Type*}
+
+  def jacobian (J : RegularizedJacobianPotential Map) : Map → ℝ :=
+    J.1
+
+  def logDetReg (J : RegularizedJacobianPotential Map) : Map → ℝ :=
+    J.2
+
+  def volumeCompressionPotential
+      (J : RegularizedJacobianPotential Map) : Map → ℝ :=
+    -J.logDetReg
+
+  @[simp, rep_depth thermo]
+  theorem volumeCompressionPotential_eq_neg_logDetReg
+      (J : RegularizedJacobianPotential Map) (φ : Map) :
+      J.volumeCompressionPotential φ = -J.logDetReg φ :=
+    rfl
+
   @[rep_depth thermo]
   theorem volumeCompressionPotential_eq_neg_logDetReg_apply (J : RegularizedJacobianPotential Map) (φ : Map) : J.volumeCompressionPotential φ = -J.logDetReg φ := J.volumeCompressionPotential_eq_neg_logDetReg φ
 end RegularizedJacobianPotential
 
-def instRegularizedJacobianPotential : RegularizedJacobianPotential Unit where
-  jacobian _ := 1
-  logDetReg _ := 0
-  volumeCompressionPotential _ := 0
-  volumeCompressionPotential_eq_neg_logDetReg _ := by simp
+def instRegularizedJacobianPotential : RegularizedJacobianPotential Unit :=
+  (fun _ => 1, fun _ => 0)
 
 @[rep_depth operator]
-structure ModularHamiltonianData (Op : Type*) where
-  densityOperator : Op
-  negativeLogDensity : Op
-  gibbsHamiltonian : Op
-  logPartitionScalar : ℝ
+abbrev ModularHamiltonianData (Op : Type*) :=
+  Op × Op × Op × ℝ
 
 namespace ModularHamiltonianData
   variable {Op : Type*}
+
+  def densityOperator (M : ModularHamiltonianData Op) : Op :=
+    M.1
+
+  def negativeLogDensity (M : ModularHamiltonianData Op) : Op :=
+    M.2.1
+
+  def gibbsHamiltonian (M : ModularHamiltonianData Op) : Op :=
+    M.2.2.1
+
+  def logPartitionScalar (M : ModularHamiltonianData Op) : ℝ :=
+    M.2.2.2
+
   @[rep_depth operator]
   def modularHamiltonian (M : ModularHamiltonianData Op) : Op := M.negativeLogDensity
 
@@ -82,24 +124,61 @@ namespace ModularHamiltonianData
   theorem modularHamiltonian_eq_negativeLogDensity_theorem (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
 end ModularHamiltonianData
 
-def instModularHamiltonianData : ModularHamiltonianData Unit where
-  densityOperator := ()
-  negativeLogDensity := ()
-  gibbsHamiltonian := ()
-  logPartitionScalar := 0
+def instModularHamiltonianData : ModularHamiltonianData Unit :=
+  ((), (), (), 0)
 
 @[rep_depth operator]
-structure OperatorialExponentialFamily (Param Op : Type*) where
-  K : Param → Op
-  untracedExponential : Param → Op
-  operatorialExponentialFamily : Param → Op
-  operatorialExponentialFamily_eq : ∀ β, operatorialExponentialFamily β = untracedExponential β
-  traceReadout : Op → ℝ
-  partitionFunction : Param → ℝ
-  partitionFunction_eq_trace : ∀ β, partitionFunction β = traceReadout (untracedExponential β)
-  partitionPotential : Param → ℝ
-  normalizedState : Param → Op
-  partitionPotential_eq_log_trace : ∀ β, partitionPotential β = Real.log (traceReadout (untracedExponential β))
+abbrev OperatorialExponentialFamily (Param Op : Type*) :=
+  (Param → Op) × (Param → Op) × (Op → ℝ) × (Param → Op)
+
+namespace OperatorialExponentialFamily
+  variable {Param Op : Type*}
+
+  def K (E : OperatorialExponentialFamily Param Op) : Param → Op :=
+    E.1
+
+  def untracedExponential
+      (E : OperatorialExponentialFamily Param Op) : Param → Op :=
+    E.2.1
+
+  def traceReadout (E : OperatorialExponentialFamily Param Op) : Op → ℝ :=
+    E.2.2.1
+
+  def normalizedState
+      (E : OperatorialExponentialFamily Param Op) : Param → Op :=
+    E.2.2.2
+
+  def operatorialExponentialFamily
+      (E : OperatorialExponentialFamily Param Op) : Param → Op :=
+    E.untracedExponential
+
+  def partitionFunction
+      (E : OperatorialExponentialFamily Param Op) : Param → ℝ :=
+    fun β => E.traceReadout (E.untracedExponential β)
+
+  noncomputable def partitionPotential
+      (E : OperatorialExponentialFamily Param Op) : Param → ℝ :=
+    fun β => Real.log (E.partitionFunction β)
+
+  @[simp, rep_depth operator]
+  theorem operatorialExponentialFamily_eq
+      (E : OperatorialExponentialFamily Param Op) (β : Param) :
+      E.operatorialExponentialFamily β = E.untracedExponential β :=
+    rfl
+
+  @[simp, rep_depth operator]
+  theorem partitionFunction_eq_trace
+      (E : OperatorialExponentialFamily Param Op) (β : Param) :
+      E.partitionFunction β = E.traceReadout (E.untracedExponential β) :=
+    rfl
+
+  @[simp, rep_depth operator]
+  theorem partitionPotential_eq_log_trace
+      (E : OperatorialExponentialFamily Param Op) (β : Param) :
+      E.partitionPotential β =
+        Real.log (E.traceReadout (E.untracedExponential β)) :=
+    rfl
+end OperatorialExponentialFamily
 
 theorem traceClassClaim {Param Op : Type*} [SMul ℝ Op] (E : OperatorialExponentialFamily Param Op) (β : Param)
   (h_norm : E.normalizedState β = (E.partitionFunction β)⁻¹ • E.untracedExponential β)
@@ -123,27 +202,45 @@ namespace OperatorialExponentialFamily
   theorem partitionPotential_eq_log_trace_theorem (E : OperatorialExponentialFamily Param Op) (β : Param) : E.partitionPotential β = Real.log (E.traceReadout (E.untracedExponential β)) := E.partitionPotential_eq_log_trace β
 end OperatorialExponentialFamily
 
-def instOperatorialExponentialFamily : OperatorialExponentialFamily Unit Unit where
-  K _ := ()
-  untracedExponential _ := ()
-  operatorialExponentialFamily _ := ()
-  operatorialExponentialFamily_eq _ := rfl
-  traceReadout _ := 1
-  partitionFunction _ := 1
-  partitionFunction_eq_trace _ := rfl
-  partitionPotential _ := 0
-  normalizedState _ := ()
-  partitionPotential_eq_log_trace _ := by simp
+def instOperatorialExponentialFamily : OperatorialExponentialFamily Unit Unit :=
+  (fun _ => (), fun _ => (), fun _ => 1, fun _ => ())
 
 @[rep_depth operator]
-structure DuhamelOperatorDerivative (Param Op Direction : Type*) where
-  K : Param → Op
-  directionToInsertion : Direction → Op
-  derivativeOfExp : Param → Direction → Op
-  higherSimplexOrderedForms : Nat → Param → List Direction → Op
-  traceStateKMSReadout : Op → ℝ
-  derivativeOfExp_eq_first_ordered_form :
-    ∀ β δ, derivativeOfExp β δ = higherSimplexOrderedForms 1 β [δ]
+abbrev DuhamelOperatorDerivative (Param Op Direction : Type*) :=
+  (Param → Op) × (Direction → Op) ×
+    (Nat → Param → List Direction → Op) × (Op → ℝ)
+
+namespace DuhamelOperatorDerivative
+  variable {Param Op Direction : Type*}
+
+  def K (D : DuhamelOperatorDerivative Param Op Direction) : Param → Op :=
+    D.1
+
+  def directionToInsertion
+      (D : DuhamelOperatorDerivative Param Op Direction) : Direction → Op :=
+    D.2.1
+
+  def higherSimplexOrderedForms
+      (D : DuhamelOperatorDerivative Param Op Direction) :
+      Nat → Param → List Direction → Op :=
+    D.2.2.1
+
+  def traceStateKMSReadout
+      (D : DuhamelOperatorDerivative Param Op Direction) : Op → ℝ :=
+    D.2.2.2
+
+  def derivativeOfExp
+      (D : DuhamelOperatorDerivative Param Op Direction) :
+      Param → Direction → Op :=
+    fun β δ => D.higherSimplexOrderedForms 1 β [δ]
+
+  @[simp, rep_depth operator]
+  theorem derivativeOfExp_eq_first_ordered_form
+      (D : DuhamelOperatorDerivative Param Op Direction)
+      (β : Param) (δ : Direction) :
+      D.derivativeOfExp β δ = D.higherSimplexOrderedForms 1 β [δ] :=
+    rfl
+end DuhamelOperatorDerivative
 
 theorem duhamelFormulaClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (δ : Direction) :
   D.derivativeOfExp β δ = D.higherSimplexOrderedForms 1 β [δ] :=
@@ -169,13 +266,8 @@ namespace DuhamelOperatorDerivative
   variable {Param Op Direction : Type*}
 end DuhamelOperatorDerivative
 
-def instDuhamelOperatorDerivative : DuhamelOperatorDerivative Unit Unit Unit where
-  K _ := ()
-  directionToInsertion _ := ()
-  derivativeOfExp _ _ := ()
-  higherSimplexOrderedForms _ _ _ := ()
-  traceStateKMSReadout _ := 0
-  derivativeOfExp_eq_first_ordered_form _ _ := rfl
+def instDuhamelOperatorDerivative : DuhamelOperatorDerivative Unit Unit Unit :=
+  (fun _ => (), fun _ => (), fun _ _ _ => (), fun _ => 0)
 
 @[rep_depth operator]
 structure MomentGeneratingReadout (Param Op : Type*) [Mul Op] where
@@ -215,28 +307,87 @@ def instMomentGeneratingReadout : MomentGeneratingReadout Unit Unit where
   nResponseForm
     | 1, _, _ => 1
     | _, _, _ => 0
-  firstMoment_eq_trace_normalized_mul _ _ := by simp [instOperatorialExponentialFamily]
+  firstMoment_eq_trace_normalized_mul _ _ := by
+    simp [instOperatorialExponentialFamily, OperatorialExponentialFamily.traceReadout,
+      OperatorialExponentialFamily.normalizedState]
   bkmCovariance_symm _ _ _ := rfl
   bkmCovariance_self_nonneg _ _ := by norm_num
   nResponseForm_one_two_eq _ _ _ := by constructor <;> rfl
 
 @[rep_depth thermo]
-structure SouriauLieThermoData (State LieAlgebra LieDual : Type*) where
-  momentMap : State → LieDual
-  beta : LieAlgebra
-  pairing : LieDual → LieAlgebra → ℝ
-  liouvilleWeight : Density State
-  K_beta : Density State
-  partitionFunction : ℝ
-  partitionPotential : ℝ
-  gibbsDensity : Density State
-  partitionFunction_pos : 0 < partitionFunction
-  K_beta_eq_pairing : ∀ x, K_beta x = pairing (momentMap x) beta
-  partitionPotential_eq_logZ : partitionPotential = Real.log partitionFunction
-  gibbsDensity_eq : ∀ x, gibbsDensity x = Real.exp (-K_beta x - partitionPotential)
+abbrev PositivePartitionFunction :=
+  {Z : ℝ // 0 < Z}
+
+@[rep_depth thermo]
+abbrev SouriauLieThermoData (State LieAlgebra LieDual : Type*) :=
+  (State → LieDual) × LieAlgebra ×
+    (LieDual → LieAlgebra → ℝ) × Density State × PositivePartitionFunction
 
 namespace SouriauLieThermoData
   variable {State LieAlgebra LieDual : Type*}
+
+  def momentMap
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : State → LieDual :=
+    D.1
+
+  def beta
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : LieAlgebra :=
+    D.2.1
+
+  def pairing
+      (D : SouriauLieThermoData State LieAlgebra LieDual) :
+      LieDual → LieAlgebra → ℝ :=
+    D.2.2.1
+
+  def liouvilleWeight
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : Density State :=
+    D.2.2.2.1
+
+  def positivePartitionFunction
+      (D : SouriauLieThermoData State LieAlgebra LieDual) :
+      PositivePartitionFunction :=
+    D.2.2.2.2
+
+  def K_beta
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : Density State :=
+    fun x => D.pairing (D.momentMap x) D.beta
+
+  def partitionFunction
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : ℝ :=
+    D.positivePartitionFunction
+
+  noncomputable def partitionPotential
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : ℝ :=
+    Real.log D.partitionFunction
+
+  noncomputable def gibbsDensity
+      (D : SouriauLieThermoData State LieAlgebra LieDual) : Density State :=
+    fun x => Real.exp (-D.K_beta x - D.partitionPotential)
+
+  @[simp, rep_depth thermo]
+  theorem partitionFunction_pos
+      (D : SouriauLieThermoData State LieAlgebra LieDual) :
+      0 < D.partitionFunction :=
+    D.positivePartitionFunction.property
+
+  @[simp, rep_depth thermo]
+  theorem K_beta_eq_pairing
+      (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) :
+      D.K_beta x = D.pairing (D.momentMap x) D.beta :=
+    rfl
+
+  @[simp, rep_depth thermo]
+  theorem partitionPotential_eq_logZ
+      (D : SouriauLieThermoData State LieAlgebra LieDual) :
+      D.partitionPotential = Real.log D.partitionFunction :=
+    rfl
+
+  @[simp, rep_depth thermo]
+  theorem gibbsDensity_eq
+      (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) :
+      D.gibbsDensity x = Real.exp (-D.K_beta x - D.partitionPotential) :=
+    rfl
+
   @[rep_depth thermo]
   theorem K_beta_eq_pairing_apply (D : SouriauLieThermoData State LieAlgebra LieDual) (x : State) : D.K_beta x = D.pairing (D.momentMap x) D.beta := D.K_beta_eq_pairing x
 
@@ -273,19 +424,8 @@ namespace SouriauLieThermoData
     linarith [negativeLogGibbsDensity_eq_K_beta_add_Phi D x]
 end SouriauLieThermoData
 
-def instSouriauLieThermoData : SouriauLieThermoData Unit Unit Unit where
-  momentMap _ := ()
-  beta := ()
-  pairing _ _ := 0
-  liouvilleWeight _ := 1
-  K_beta _ := 0
-  partitionFunction := 1
-  partitionPotential := 0
-  gibbsDensity _ := 1
-  partitionFunction_pos := by norm_num
-  K_beta_eq_pairing _ := rfl
-  partitionPotential_eq_logZ := Real.log_one.symm
-  gibbsDensity_eq _ := by simp
+def instSouriauLieThermoData : SouriauLieThermoData Unit Unit Unit :=
+  (fun _ => (), (), fun _ _ => 0, fun _ => 1, ⟨1, by norm_num⟩)
 
 @[rep_depth thermo]
 structure SouriauNegativeLogRNDerivative (State LieAlgebra LieDual : Type*) where
@@ -330,23 +470,69 @@ end SouriauNegativeLogRNDerivative
 def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Unit Unit where
   souriau := instSouriauLieThermoData
   rnDerivative _ := 1
-  rnDerivative_eq_gibbsDensity := rfl
+  rnDerivative_eq_gibbsDensity := by
+    funext x
+    simp [SouriauLieThermoData.gibbsDensity, instSouriauLieThermoData,
+      SouriauLieThermoData.K_beta, SouriauLieThermoData.partitionPotential,
+      SouriauLieThermoData.partitionFunction, SouriauLieThermoData.pairing,
+      SouriauLieThermoData.momentMap, SouriauLieThermoData.beta,
+      SouriauLieThermoData.positivePartitionFunction]
   expectationBeta _ := 0
   Q := ()
-  entropy_eq_Phi_add_pairing_Q_beta := by change (0 : ℝ) = 0 + 0; norm_num
+  entropy_eq_Phi_add_pairing_Q_beta := by
+    rw [SouriauLieThermoData.partitionPotential_eq_logZ]
+    simp only [instSouriauLieThermoData, SouriauLieThermoData.pairing,
+      SouriauLieThermoData.beta, SouriauLieThermoData.partitionFunction,
+      SouriauLieThermoData.positivePartitionFunction]
+    norm_num
 
 @[rep_depth thermo]
-structure MomentMapGeneratingPotential (State LieAlgebra LieDual : Type*) where
-  souriau : SouriauLieThermoData State LieAlgebra LieDual
-  Q : LieDual
-  dPhi : LieAlgebra → ℝ
-  hessian : LieAlgebra → LieAlgebra → ℝ
-  covarianceTensor : LieAlgebra → LieAlgebra → ℝ
-  dPhi_eq_negative_pairing_Q : ∀ δβ, dPhi δβ = -souriau.pairing Q δβ
-  hessian_eq_covariance : ∀ ξ η, hessian ξ η = covarianceTensor ξ η
+abbrev MomentMapGeneratingPotential
+    (State LieAlgebra LieDual : Type*) :=
+  SouriauLieThermoData State LieAlgebra LieDual × LieDual ×
+    (LieAlgebra → LieAlgebra → ℝ)
 
 namespace MomentMapGeneratingPotential
   variable {State LieAlgebra LieDual : Type*}
+
+  def souriau
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual) :
+      SouriauLieThermoData State LieAlgebra LieDual :=
+    M.1
+
+  def Q
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual) : LieDual :=
+    M.2.1
+
+  def covarianceTensor
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual) :
+      LieAlgebra → LieAlgebra → ℝ :=
+    M.2.2
+
+  def dPhi
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual) :
+      LieAlgebra → ℝ :=
+    fun δβ => -M.souriau.pairing M.Q δβ
+
+  def hessian
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual) :
+      LieAlgebra → LieAlgebra → ℝ :=
+    M.covarianceTensor
+
+  @[simp, rep_depth thermo]
+  theorem dPhi_eq_negative_pairing_Q
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
+      (δβ : LieAlgebra) :
+      M.dPhi δβ = -M.souriau.pairing M.Q δβ :=
+    rfl
+
+  @[simp, rep_depth thermo]
+  theorem hessian_eq_covariance
+      (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
+      (ξ η : LieAlgebra) :
+      M.hessian ξ η = M.covarianceTensor ξ η :=
+    rfl
+
   @[rep_depth thermo]
   theorem firstVariation_eq_negative_pairing_Q (M : MomentMapGeneratingPotential State LieAlgebra LieDual) (δβ : LieAlgebra) : M.dPhi δβ = -M.souriau.pairing M.Q δβ := M.dPhi_eq_negative_pairing_Q δβ
 
@@ -354,28 +540,40 @@ namespace MomentMapGeneratingPotential
   theorem secondVariation_eq_covariance (M : MomentMapGeneratingPotential State LieAlgebra LieDual) (ξ η : LieAlgebra) : M.hessian ξ η = M.covarianceTensor ξ η := M.hessian_eq_covariance ξ η
 end MomentMapGeneratingPotential
 
-def instMomentMapGeneratingPotential : MomentMapGeneratingPotential Unit Unit Unit where
-  souriau := instSouriauLieThermoData
-  Q := ()
-  dPhi _ := 0
-  hessian _ _ := 0
-  covarianceTensor _ _ := 0
-  dPhi_eq_negative_pairing_Q _ := by change (0 : ℝ) = - 0; norm_num
-  hessian_eq_covariance _ _ := rfl
+def instMomentMapGeneratingPotential :
+    MomentMapGeneratingPotential Unit Unit Unit :=
+  (instSouriauLieThermoData, (), fun _ _ => 0)
 
 @[rep_depth thermo]
-structure SouriauKLBregmanWitness (State LieAlgebra LieDual : Type*) where
-  generator : MomentMapGeneratingPotential State LieAlgebra LieDual
-  alpha : LieAlgebra
-  alphaPartitionPotential : ℝ
-  alphaMinusBeta : LieAlgebra
+abbrev SouriauKLBregmanWitness
+    (State LieAlgebra LieDual : Type*) :=
+  MomentMapGeneratingPotential State LieAlgebra LieDual ×
+    LieAlgebra × ℝ × LieAlgebra
 
 abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
 
 namespace SouriauKLBregmanWitness
   variable {State LieAlgebra LieDual : Type*}
+
+  def generator
+      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
+      MomentMapGeneratingPotential State LieAlgebra LieDual :=
+    B.1
+
+  def alpha
+      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : LieAlgebra :=
+    B.2.1
+
+  def alphaPartitionPotential
+      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ :=
+    B.2.2.1
+
+  def alphaMinusBeta
+      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : LieAlgebra :=
+    B.2.2.2
+
   @[rep_depth thermo]
-  def klValue (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ := B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta
+  noncomputable def klValue (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ := B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta
 
   @[rep_depth thermo]
   theorem KL_eq_souriau_Bregman (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta := rfl
@@ -388,64 +586,141 @@ theorem supportHypothesesClaim {State LieAlgebra LieDual : Type*} (B : SouriauKL
   B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta :=
   B.KL_eq_souriau_Bregman
 
-def instSouriauKLBregmanWitness : SouriauKLBregmanWitness Unit Unit Unit where
-  generator := instMomentMapGeneratingPotential
-  alpha := ()
-  alphaPartitionPotential := 0
-  alphaMinusBeta := ()
+def instSouriauKLBregmanWitness :
+    SouriauKLBregmanWitness Unit Unit Unit :=
+  (instMomentMapGeneratingPotential, (), 0, ())
 
 @[rep_depth operator]
-structure QuantumOperatorialSouriauFamily (LieAlgebra Obs : Type*) where
-  Jhat : LieAlgebra → Obs
-  beta : LieAlgebra
-  Khat_beta : Obs
-  untracedExponential : Obs
-  opAdd : Obs → Obs → Obs
-  opScale : ℝ → Obs → Obs
-  opIdentity : Obs
-  partitionFunction : ℝ
-  partitionPotential : ℝ
-  rho_beta : Obs
-  modularHamiltonian : Obs
-  partitionFunction_pos : 0 < partitionFunction
-  Khat_beta_eq : Khat_beta = Jhat beta
-  partitionPotential_eq_log_trace : partitionPotential = Real.log partitionFunction
-  rho_beta_eq_normalized_exp : rho_beta = opScale (partitionFunction⁻¹) untracedExponential
-  modularHamiltonian_eq : modularHamiltonian = opAdd Khat_beta (opScale partitionPotential opIdentity)
+abbrev QuantumOperatorialSouriauFamily (LieAlgebra Obs : Type*) :=
+  (LieAlgebra → Obs) × LieAlgebra × Obs × PositivePartitionFunction
+
+namespace QuantumOperatorialSouriauFamily
+
+variable {LieAlgebra Obs : Type*}
+
+@[rep_depth operator]
+def Jhat (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra → Obs := Q.1
+
+@[rep_depth operator]
+def beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra := Q.2.1
+
+@[rep_depth operator]
+def untracedExponential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+  Q.2.2.1
+
+@[rep_depth thermo]
+def positivePartitionFunction
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : PositivePartitionFunction :=
+  Q.2.2.2
+
+@[rep_depth operator]
+def Khat_beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+  Q.Jhat Q.beta
+
+@[rep_depth operator]
+def opAdd [Add Obs] (_Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Obs → Obs → Obs :=
+  (· + ·)
+
+@[rep_depth operator]
+def opScale [SMul ℝ Obs] (_Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    ℝ → Obs → Obs :=
+  (· • ·)
+
+@[rep_depth operator]
+def opIdentity [One Obs] (_Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+  1
+
+@[rep_depth thermo]
+def partitionFunction (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : ℝ :=
+  Q.positivePartitionFunction
+
+@[rep_depth thermo]
+  noncomputable def partitionPotential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : ℝ :=
+  Real.log Q.partitionFunction
+
+@[rep_depth operator]
+  noncomputable def rho_beta [SMul ℝ Obs] (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+  Q.partitionFunction⁻¹ • Q.untracedExponential
+
+@[rep_depth operator]
+  noncomputable def modularHamiltonian [Add Obs] [SMul ℝ Obs] [One Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+  Q.Khat_beta + Q.partitionPotential • (1 : Obs)
+
+@[rep_depth thermo]
+theorem partitionFunction_pos (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    0 < Q.partitionFunction :=
+  Q.positivePartitionFunction.property
+
+@[rep_depth operator]
+theorem Khat_beta_eq (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Q.Khat_beta = Q.Jhat Q.beta :=
+  rfl
+
+@[rep_depth thermo]
+theorem partitionPotential_eq_log_trace
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Q.partitionPotential = Real.log Q.partitionFunction :=
+  rfl
+
+@[rep_depth operator]
+theorem rho_beta_eq_normalized_exp [SMul ℝ Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Q.rho_beta = Q.opScale Q.partitionFunction⁻¹ Q.untracedExponential :=
+  rfl
+
+@[rep_depth operator]
+theorem modularHamiltonian_eq [Add Obs] [SMul ℝ Obs] [One Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Q.modularHamiltonian =
+      Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) :=
+  rfl
+
+@[rep_depth operator]
+theorem opAdd_eq_add [Add Obs] (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs)
+    (A B : Obs) :
+    Q.opAdd A B = A + B :=
+  rfl
+
+@[rep_depth operator]
+theorem opScale_eq_smul [SMul ℝ Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) (r : ℝ) (A : Obs) :
+    Q.opScale r A = r • A :=
+  rfl
+
+@[rep_depth operator]
+theorem opIdentity_eq_one [One Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+    Q.opIdentity = (1 : Obs) :=
+  rfl
+
+end QuantumOperatorialSouriauFamily
 
 theorem quantumTraceClassClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
   0 < Q.partitionFunction :=
   Q.partitionFunction_pos
-theorem traceStateKMSReadoutRequiredClaim {LieAlgebra Obs : Type*} (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+theorem traceStateKMSReadoutRequiredClaim {LieAlgebra Obs : Type*} [SMul ℝ Obs]
+    (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
   Q.rho_beta = Q.opScale (Q.partitionFunction⁻¹) Q.untracedExponential :=
   Q.rho_beta_eq_normalized_exp
 
 namespace QuantumOperatorialSouriauFamily
   variable {LieAlgebra Obs : Type*}
   @[rep_depth operator]
-  theorem modularHamiltonian_eq_Khat_add_logZ (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.modularHamiltonian = Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) := Q.modularHamiltonian_eq
+  theorem modularHamiltonian_eq_Khat_add_logZ [Add Obs] [SMul ℝ Obs] [One Obs]
+      (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
+      Q.modularHamiltonian =
+        Q.opAdd Q.Khat_beta (Q.opScale Q.partitionPotential Q.opIdentity) :=
+    Q.modularHamiltonian_eq
 
   @[rep_depth operator]
   theorem Khat_beta_eq_Jhat_beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Q.Khat_beta = Q.Jhat Q.beta := Q.Khat_beta_eq
 end QuantumOperatorialSouriauFamily
 
-def instQuantumOperatorialSouriauFamily : QuantumOperatorialSouriauFamily Unit Unit where
-  Jhat _ := ()
-  beta := ()
-  Khat_beta := ()
-  untracedExponential := ()
-  opAdd _ _ := ()
-  opScale _ _ := ()
-  opIdentity := ()
-  partitionFunction := 1
-  partitionPotential := 0
-  rho_beta := ()
-  modularHamiltonian := ()
-  partitionFunction_pos := by norm_num
-  Khat_beta_eq := rfl
-  partitionPotential_eq_log_trace := Real.log_one.symm
-  rho_beta_eq_normalized_exp := rfl
-  modularHamiltonian_eq := rfl
+def instQuantumOperatorialSouriauFamily :
+    QuantumOperatorialSouriauFamily Unit Unit :=
+  (fun _ => (), (), (), ⟨1, by norm_num⟩)
 
 @[rep_depth thermo]
 structure RenyiMellinSouriauReadout (State : Type*) where

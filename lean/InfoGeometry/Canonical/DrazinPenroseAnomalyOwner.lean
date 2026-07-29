@@ -14,16 +14,16 @@ open OperatorProjectorMismatch
 variable {R : Type*} [Ring R]
 
 /-- Spectral/metric projector mismatch obstruction. -/
-def spectralMetricMismatch (P : ProjectorPair (R := R)) : Prop :=
-  P.ProjectorMismatch ≠ 0
+abbrev spectralMetricMismatch (P : ProjectorPair (R := R)) : Prop :=
+  P.HasMismatchAnomaly
 
 /-- Noncommuting split obstruction. -/
-def noncommutingSplit (P : ProjectorPair (R := R)) : Prop :=
-  P.ProjectorCommutator ≠ 0
+abbrev noncommutingSplit (P : ProjectorPair (R := R)) : Prop :=
+  P.NoncommutingSplit
 
-/-- The projector anomaly is the disjunction of mismatch and noncommuting split. -/
-def HasProjectorAnomaly (P : ProjectorPair (R := R)) : Prop :=
-  spectralMetricMismatch P ∨ noncommutingSplit P
+/-- Canonical projector anomaly owned by `OperatorProjectorMismatch`. -/
+abbrev HasProjectorAnomaly (P : ProjectorPair (R := R)) : Prop :=
+  P.HasProjectorAnomaly
 
 /-- Mismatch in projector equality is the same as nonzero mismatch. -/
 theorem spectralMetricMismatch_iff_mismatch_nonzero (P : ProjectorPair (R := R)) :
@@ -36,11 +36,21 @@ theorem noncommutingSplit_implies_spectralMetricMismatch (P : ProjectorPair (R :
   intro hComm
   exact ProjectorPair.commutator_ne_zero_implies_mismatch_ne_zero (P := P) hComm
 
-/-- Physical anomaly language is allowed only after a realization witness is supplied. -/
+/--
+Historical physical-anomaly name, now restricted to the actual algebraic
+projector anomaly.  A separate physical model may interpret this obstruction,
+but no unconstrained interpretation proposition is stored here.
+-/
 @[rep_depth transport]
-structure PhysicalAnomalyRealizationWitness (P : ProjectorPair (R := R)) where
-  projectorAnomaly : HasProjectorAnomaly P
-  physicalRealization : Prop
-  realizationCertified : physicalRealization
+abbrev PhysicalAnomalyRealizationWitness
+    (P : ProjectorPair (R := R)) : Prop :=
+  P.HasProjectorAnomaly
+
+/-- The historical realization name projects to the native anomaly owner. -/
+theorem PhysicalAnomalyRealizationWitness.projectorAnomaly
+    {P : ProjectorPair (R := R)}
+    (h : PhysicalAnomalyRealizationWitness P) :
+    P.HasProjectorAnomaly :=
+  h
 
 end InfoGeometry.Canonical.DrazinPenroseAnomalyOwner

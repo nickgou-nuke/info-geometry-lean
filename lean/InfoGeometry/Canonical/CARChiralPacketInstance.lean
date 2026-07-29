@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
+import InfoGeometry.Projective.TwistorSpace
 import InfoGeometry.OperatorAlgebra.SuperchargeNilpotence
 import InfoGeometry.OperatorAlgebra.CARFermionParity
 import InfoGeometry.OperatorAlgebra.CliffordCAR
@@ -29,7 +30,6 @@ def carSingleModePacket (w : ℝ) : ChiralSuperPoincareSouriauPacket (Clnn 1) wh
   beta4 := λ _ => 0
   energyMomentum4 := λ μ => if μ = 0 then w * w else 0
   twistorSocket := {
-    TwistorSpace := Unit
     nullCone := fun _ =>
       InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w) *
           InfoGeometry.OperatorAlgebra.SuperchargeNilpotence.Q 1 (λ _ => w) = 0 ∧

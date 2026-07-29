@@ -137,10 +137,8 @@ A real homology witness/readout.
 It descends to homology if it vanishes on generated boundaries.
 -/
 @[rep_depth operator]
-structure BoundaryVanishingWitness where
-  eval : C →ₗ[ℝ] ℝ
-  vanishes_on_boundaries :
-    ∀ y : C, eval (𝒟.D y) = 0
+def BoundaryVanishingWitness : Type _ :=
+  { eval : C →ₗ[ℝ] ℝ // ∀ y : C, eval (𝒟.D y) = 0 }
 
 namespace BoundaryVanishingWitness
 
@@ -152,11 +150,11 @@ variable (ω : BoundaryVanishingWitness 𝒟)
 theorem descends_to_homology_equivalence
     {x y : C}
     (hxy : 𝒟.HomologyEquivalent x y) :
-    ω.eval x = ω.eval y := by
+    ω.1 x = ω.1 y := by
   rcases hxy with ⟨b, hb⟩
-  have hdiff : ω.eval (x - y) = 0 := by
+  have hdiff : ω.1 (x - y) = 0 := by
     rw [← hb]
-    exact ω.vanishes_on_boundaries b
+    exact ω.2 b
   rw [map_sub] at hdiff
   exact sub_eq_zero.mp hdiff
 

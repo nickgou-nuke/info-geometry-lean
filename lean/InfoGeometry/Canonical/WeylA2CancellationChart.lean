@@ -47,8 +47,8 @@ noncomputable def expNodes : Fin 3 → ℝ :=
 
 /-- Finite Vandermonde witness for the denominator lane. -/
 @[rep_depth thermo]
-def denominatorWitness : FiniteVandermondeExclusionWitness (R := ℝ) (n := 3) where
-  nodes := C.nodes
+def denominatorWitness : FiniteVandermondeExclusionWitness (R := ℝ) (n := 3) :=
+  C.nodes
 
 /-- Denominator value. -/
 @[rep_depth thermo]

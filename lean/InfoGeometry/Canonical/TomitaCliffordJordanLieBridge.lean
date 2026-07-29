@@ -52,25 +52,35 @@ structure Bridge where
   /-- Split `Cl(4,4)` / TKK / Jordan-Lie owner data. -/
   jordanLie : SplitCl44TKKJordanLiePacket (α := α) (H := H)
 
-  /--
-  Calibration law: the compact/mirror-even sector feeds the symmetric
-  observable/Jordan readout.
-  -/
-  compactEvenFeedsJordan : Prop
+  /-- A selected compact generator in the mirror-even sector. -/
+  compactEvenGenerator : Op
 
-  /-- Evidence for the compact/Jordan calibration law. -/
-  compact_even_feeds_jordan :
-    compactEvenFeedsJordan
+  /-- The selected compact generator is fixed by the Tomita mirror. -/
+  compactEvenGenerator_mirror_even :
+    mirror.mirror (mirror.compactLift compactEvenGenerator) =
+      mirror.compactLift compactEvenGenerator
 
-  /--
-  Calibration law: the noncompact/mirror-odd sector feeds the antisymmetric
-  generator/Lie readout.
-  -/
-  noncompactOddFeedsLie : Prop
+  /-- A selected noncompact generator in the mirror-odd sector. -/
+  noncompactOddGenerator : Op
 
-  /-- Evidence for the noncompact/Lie calibration law. -/
-  noncompact_odd_feeds_lie :
-    noncompactOddFeedsLie
+  /-- The selected noncompact generator is odd under the Tomita mirror. -/
+  noncompactOddGenerator_mirror_odd :
+    mirror.mirror (mirror.noncompactLift noncompactOddGenerator) =
+      -mirror.noncompactLift noncompactOddGenerator
+
+  /-- The concrete Jordan readout law on the imported TKK owner carrier. -/
+  compactEvenFeedsJordan :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
+      jordanLie.closure.gibbs.conformalGeometricTemperature
+      jordanLie.closure.weylTemperature =
+        (2 : ℝ) • jordanLie.closure.jordanProductTemperatureWeyl
+
+  /-- The concrete Lie readout law on the imported TKK owner carrier. -/
+  noncompactOddFeedsLie :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
+      jordanLie.closure.gibbs.conformalGeometricTemperature
+      jordanLie.closure.weylTemperature =
+        (2 : ℝ) • jordanLie.closure.lieProductTemperatureWeyl
 
 namespace Bridge
 
@@ -84,6 +94,20 @@ theorem compactLift_mirror_even
     (x : Op) :
     B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x :=
   B.mirror.mirror_compactLift x
+
+/-! The selected generators expose the calibration's parity data directly. -/
+
+@[rep_depth transport]
+theorem selectedCompactEvenGenerator_mirror_even :
+    B.mirror.mirror (B.mirror.compactLift B.compactEvenGenerator) =
+      B.mirror.compactLift B.compactEvenGenerator :=
+  B.compactEvenGenerator_mirror_even
+
+@[rep_depth transport]
+theorem selectedNoncompactOddGenerator_mirror_odd :
+    B.mirror.mirror (B.mirror.noncompactLift B.noncompactOddGenerator) =
+      -B.mirror.noncompactLift B.noncompactOddGenerator :=
+  B.noncompactOddGenerator_mirror_odd
 
 /-- Noncompact Tomita-Cartan lifts are mirror-odd. -/
 @[rep_depth transport]
@@ -140,8 +164,10 @@ def TomitaCliffordJordanLieBridgeOwnerTarget
           B.jordanLie.closure.gibbs.conformalGeometricTemperature
           B.jordanLie.closure.weylTemperature =
             (2 : ℝ) • B.jordanLie.closure.jordanProductTemperatureWeyl
-      ∧ B.compactEvenFeedsJordan
-      ∧ B.noncompactOddFeedsLie
+      ∧ B.mirror.mirror (B.mirror.compactLift B.compactEvenGenerator) =
+          B.mirror.compactLift B.compactEvenGenerator
+      ∧ B.mirror.mirror (B.mirror.noncompactLift B.noncompactOddGenerator) =
+          -B.mirror.noncompactLift B.noncompactOddGenerator
 
 @[rep_depth transport]
 theorem tomitaCliffordJordanLieBridgeOwnerTarget
@@ -154,7 +180,7 @@ theorem tomitaCliffordJordanLieBridgeOwnerTarget
       B.noncompactLift_mirror_odd y,
       B.commutator_eq_two_smul_lieProduct,
       B.anticommutator_eq_two_smul_jordanProduct,
-      B.compact_even_feeds_jordan,
-      B.noncompact_odd_feeds_lie⟩
+      B.compactEvenGenerator_mirror_even,
+      B.noncompactOddGenerator_mirror_odd⟩
 
 end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

@@ -55,10 +55,9 @@ theorem itakuraSaito_expectation_scale_shift
       (c - logc - 1) * inner ℂ Ω Ω + inner ℂ Ω (operatorItakuraSaito Delta logDelta Ω) := by
   intro Delta' logDelta'
   unfold operatorItakuraSaito
-  have h_norm_sq : ((norm Ω : ℂ) ^ 2 : ℂ) = 1 := by
-    simpa using h_norm_vacuum
   dsimp [Delta', logDelta']
-  simp [h_delta_vacuum, h_norm_sq]
+  simp only [inner_sub_right, inner_add_right, inner_smul_right]
+  rw [h_delta_vacuum, h_norm_vacuum]
   ring
 
 end InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence

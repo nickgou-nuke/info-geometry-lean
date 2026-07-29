@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Complex.ExponentialBounds
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Canonical.FenchelExpLogScalar
 import InfoGeometry.Canonical.ModularTensorInduction

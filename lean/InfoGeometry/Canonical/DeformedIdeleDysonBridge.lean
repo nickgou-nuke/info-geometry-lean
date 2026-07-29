@@ -116,12 +116,13 @@ noncollision bridge and the existing owner theorem.
 @[rep_depth thermo]
 theorem vandermonde_determinant_ne_zero_of_range_defect
     (hRange : InfoGeometry.Algebra.NonCommutativity.rangeProjection B.branch ≠ (1 : A)) :
-    (InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.mk
-      (R := ℝ) (n := N) B.nodes).determinant ≠ 0 := by
+    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+      (B.nodes : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
+        (R := ℝ) (n := N)) ≠ 0 := by
   let W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
       (R := ℝ) (n := N) :=
-    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.mk B.nodes
-  have hinj : Function.Injective W.nodes := B.nodes_injective_of_range_defect hRange
+    B.nodes
+  have hinj : Function.Injective W := B.nodes_injective_of_range_defect hRange
   exact W.determinant_ne_zero_iff_injective.mpr hinj
 
 end BranchDefectToDysonNodes

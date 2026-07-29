@@ -35,19 +35,21 @@ exponents are interpreted as macroscopic random-field defects.
 All asymptotic estimates must be proved in concrete downstream models; this
 packet stores only the readout data.
 -/
-structure MertensDefectBoundary where
-  /-- Signed arithmetic magnetization readout. -/
-  mobiusMagnetization : ℕ → ℝ
-
-  /-- Random-walk comparison scale. -/
-  randomWalkScale : ℕ → ℝ
-
-  /-- Predicate for exponents that would represent macroscopic defects. -/
-  defectExponent : ℝ → Prop
+abbrev MertensDefectBoundary : Type :=
+  (ℕ → ℝ) × ((ℕ → ℝ) × (ℝ → Prop))
 
 namespace MertensDefectBoundary
 
 variable (M : MertensDefectBoundary)
+
+def mobiusMagnetization : ℕ → ℝ :=
+  M.1
+
+def randomWalkScale : ℕ → ℝ :=
+  M.2.1
+
+def defectExponent : ℝ → Prop :=
+  M.2.2
 
 end MertensDefectBoundary
 
@@ -104,6 +106,15 @@ structure MertensDefectReadout (D : MobiusMertensData) where
   defectCost : ℝ
   freeEnergyGap : ℝ
 
+/-!
+The macroscopic defect is compared to its supplied large-deviation speed by
+the native normalized readout below.  No positivity or asymptotic conclusion
+is inferred until a concrete model supplies the corresponding hypotheses.
+-/
+def normalizedDefectRatio
+    (speed defectObservable : ℕ → ℝ) (N : ℕ) : ℝ :=
+  defectObservable N / speed N
+
 /--
 Conditional large-deviation boundary for the Mertens defect.
 
@@ -116,12 +127,24 @@ structure MertensLDPBoundary (D : MobiusMertensData) where
   speed : ℕ → ℝ
   rate : ℝ → ℝ
   defectObservable : ℕ → ℝ
-  entropyDominatesDefect : Prop
-  noMacroscopicDefect : Prop
+  /-- The entropy barrier dominates the supplied defect cost. -/
+  entropyDominatesDefect :
+    readout.defectCost ≤ readout.entropyBarrier
+  /-- The defect is submacroscopic relative to the supplied speed. -/
+  noMacroscopicDefect :
+    Filter.Tendsto
+      (normalizedDefectRatio speed defectObservable)
+      Filter.atTop (nhds 0)
   ldp_to_noMacroscopicDefect :
-    entropyDominatesDefect → noMacroscopicDefect
+    (readout.defectCost ≤ readout.entropyBarrier) →
+      Filter.Tendsto
+        (normalizedDefectRatio speed defectObservable)
+        Filter.atTop (nhds 0)
   noMacroscopicDefect_to_RHScale :
-    noMacroscopicDefect → RHScaleBoundary D
+    Filter.Tendsto
+        (normalizedDefectRatio speed defectObservable)
+        Filter.atTop (nhds 0) →
+      RHScaleBoundary D
 
 namespace MertensLDPBoundary
 
@@ -129,7 +152,7 @@ namespace MertensLDPBoundary
 theorem RHScaleBoundary_of_entropyDominance
     {D : MobiusMertensData}
     (B : MertensLDPBoundary D)
-    (h : B.entropyDominatesDefect) :
+    (h : B.readout.defectCost ≤ B.readout.entropyBarrier) :
     RHScaleBoundary D :=
   B.noMacroscopicDefect_to_RHScale
     (B.ldp_to_noMacroscopicDefect h)
@@ -150,7 +173,7 @@ structure MertensBoundaryPacket where
 def MertensBoundaryPacket.ofLDP
     (D : MobiusMertensData)
     (B : MertensLDPBoundary D)
-    (h : B.entropyDominatesDefect) :
+    (h : B.readout.defectCost ≤ B.readout.entropyBarrier) :
     MertensBoundaryPacket where
   mertensData := D
   boundary := MertensLDPBoundary.RHScaleBoundary_of_entropyDominance B h

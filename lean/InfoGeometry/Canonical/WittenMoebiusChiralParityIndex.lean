@@ -115,9 +115,8 @@ theorem moebiusInversion_chiralPole_sum_eq_splitOne :
   rw [add_comm, ePlus_add_eMinus]
 
 /-- The signed two-pole orbit space: `e₊` has sign `+1`, `e₋` has sign `-1`. -/
-def chiralPoleOrbitSpace :
-    WeylKMSGromovWittenCounts.SuperOrbitSpace ChiralPole where
-  parity
+def chiralPoleOrbitSpace : ChiralPole → Bool :=
+  fun x => match x with
     | ChiralPole.plus => false
     | ChiralPole.minus => true
 

@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
+import InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 /-!
 # Five-graded Möbius/Witten globality packet
@@ -16,39 +17,24 @@ It does **not** prove:
 - global conformal-group equivalence;
 - a full physical Witten-index theorem.
 
-The burden is placed at the instantiation boundary: the three closure
-facts (`source_sink_closure`, `incoming_outgoing_closure`,
-`center_stability`) and the grade-two compensation axiom
-(`visibleLoss_eq_gradeTwoGain`) are structural witness fields, not
-open proofs.
+The five-grade closure laws are imported from the canonical involutive
+grade-swap owner.  Only the independent grade-two evolution law remains data
+at the ledger boundary.
 -/
 
 namespace InfoGeometry.Canonical.Globality
 
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
+
 /--
-A five-grade closure socket.
+A compatibility name for the canonical five-graded conformal inversion owner.
 
-This structure does not prove CCC, black-hole unitarity, analytic
-superconformal index theory, or global conformal-group equivalence.
-It only records the source/sink, incoming/outgoing, and center-stability
-closure witnesses needed by the packet bridge.
+Its source/sink, incoming/outgoing, and center-stability laws are theorems
+derived from involutivity and the grade-swap equation; they are not duplicated
+as witness fields here.
 -/
-structure ConformalFiveGradeSystem (M : Type*) where
-  sourceSet    : Set M
-  sinkSet      : Set M
-  incomingSet  : Set M
-  outgoingSet  : Set M
-  centerSet    : Set M
-  theta        : M → M
-
-  source_sink_closure :
-    ∀ x, x ∈ sourceSet ↔ theta x ∈ sinkSet
-
-  incoming_outgoing_closure :
-    ∀ x, x ∈ incomingSet ↔ theta x ∈ outgoingSet
-
-  center_stability :
-    ∀ x, x ∈ centerSet ↔ theta x ∈ centerSet
+abbrev ConformalFiveGradeSystem (M : Type*) :=
+  FiveGradedConformalInversion M
 
 /--
 One-step visible-loss / grade-two-gain ledger.
@@ -155,9 +141,9 @@ theorem five_graded_mobius_witten_globality_packet
     (A.visible s - A.visible (stateAt A step s n) =
       A.gradeTwo (stateAt A step s n) - A.gradeTwo s) := by
   exact ⟨
-    G.source_sink_closure,
-    G.incoming_outgoing_closure,
-    G.center_stability,
+    G.mem_source_iff_mem_sink,
+    G.mem_incoming_iff_mem_outgoing,
+    G.mem_center_iff_mem_center,
     h_chi_global,
     h_moebius_chiral,
     h_witten_parity,

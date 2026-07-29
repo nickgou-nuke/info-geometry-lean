@@ -32,8 +32,6 @@ universe u
 @[rep_depth transport]
 structure PrimeGeodesicOrbit where
   label : ℕ
-  primitive : Prop
-  irreducible : Prop
   primeLabel : Nat.Prime label
 
 namespace PrimeGeodesicOrbit
@@ -46,6 +44,11 @@ noncomputable def energy (o : PrimeGeodesicOrbit) : ℝ :=
 @[rep_depth transport]
 theorem energy_eq_log_label (o : PrimeGeodesicOrbit) :
     o.energy = Real.log o.label := rfl
+
+@[rep_depth transport]
+theorem squarefree_label (o : PrimeGeodesicOrbit) :
+    Squarefree o.label :=
+  o.primeLabel.squarefree
 
 end PrimeGeodesicOrbit
 
@@ -63,15 +66,8 @@ structure PrimeGeodesicEmergence
   spacetime : RealSpacetimeAlgebra A
   boostBivector : A
   boostBivector_sq : boostBivector * boostBivector = 1
-  discreteDilationSemigroup : Prop
   orbit : PrimeGeodesicOrbit
-  fermionicPrimitiveOrbit : Prop
-  integerFockSpace : Prop
-  squareFreeSupport : Prop
   orientifold : KleinBottleOrientifold
-  V4_projection : Prop
-  moebiusParity : Prop
-  eulerProductPartition : Prop
 
 /--
 Bridge packet tying prime-gas MaxEnt data to prime-orbit emergence.
@@ -88,7 +84,6 @@ structure PrimeGeodesicEmergencePacket
   emergence : PrimeGeodesicEmergence A
   orbitEnergy_eq_log_label : emergence.orbit.energy = Real.log emergence.orbit.label
   primeOrbit : Nat.Prime emergence.orbit.label
-  squareFreeSupport : emergence.squareFreeSupport
-  kleinBottleFilter : emergence.orientifold.squareFreeSupport
+  squareFreeSupport : Squarefree emergence.orbit.label
 
 end InfoGeometry.Canonical.PrimeGeodesicEmergence

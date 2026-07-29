@@ -107,9 +107,9 @@ Fredholm-surface finiteness for the Drazin defect lane:
 only the defect plus/minus slices are required finite-dimensional.
 -/
 @[rep_depth transport]
-structure DefectChiralFredholmSurface (T TD : EndH₂) : Prop where
-  plusFinite : FiniteDimensional ℝ (defectKernelSlicePlus (E := E) T TD)
-  minusFinite : FiniteDimensional ℝ (defectKernelSliceMinus (E := E) T TD)
+abbrev DefectChiralFredholmSurface (T TD : EndH₂) : Prop :=
+  FiniteDimensional ℝ (defectKernelSlicePlus (E := E) T TD) ∧
+    FiniteDimensional ℝ (defectKernelSliceMinus (E := E) T TD)
 
 /-- The defect chiral index: plus/minus defect-slice dimension difference. -/
 @[rep_depth transport]

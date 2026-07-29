@@ -38,8 +38,14 @@ structure DeformedCharacterWitness where
   deformationLaw : deformedCharacter = undeformedCharacter
 
 @[rep_depth thermo]
-structure ThermalEvaluationMap where
-  thermalParameter : ℝ
+abbrev ThermalEvaluationMap : Type := ℝ
+
+namespace ThermalEvaluationMap
+
+def thermalParameter (thermal : ThermalEvaluationMap) : ℝ :=
+  thermal
+
+end ThermalEvaluationMap
 
 @[rep_depth thermo]
 structure SeparatedDeformationWitness where

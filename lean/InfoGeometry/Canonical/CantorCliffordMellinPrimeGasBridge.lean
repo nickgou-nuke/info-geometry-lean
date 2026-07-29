@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Meta.BridgeTarget
@@ -69,12 +70,12 @@ structure CantorCliffordAddressPacket where
   CantorCylinder : Type*
   /-- Clifford/Fock mode carrier. -/
   CliffordFockMode : Type*
+  /-- Concrete identification of the address carrier with binary profiles. -/
+  profileEquiv : Profile ≃ BinaryProfile k
   /-- Address-to-cylinder map. -/
   addressToCylinder : Profile → CantorCylinder
   /-- Address-to-Fock-mode map. -/
   addressToFockMode : Profile → CliffordFockMode
-  /-- Witness that these maps use the same binary address data. -/
-  sameAddressWitness : Type*
 
 /-! ## 2. Finite prime profile and energy -/
 
@@ -206,12 +207,6 @@ structure FiniteZetaChannelSeparation
   /-- Parity supertrace equality to the finite inverse-zeta product. -/
   paritySupertraceChannel_eq :
     paritySupertraceChannel = paritySupertracePartition P β
-  /-- Interpretive witness: finite bosonic zeta truncation. -/
-  bosonFiniteZetaTruncationWitness : Type*
-  /-- Interpretive witness: finite ordinary fermion zeta/zeta(2 beta)-ratio truncation. -/
-  fermionFiniteZetaRatioTruncationWitness : Type*
-  /-- Interpretive witness: finite inverse-zeta / Weyl-denominator channel. -/
-  parityInverseZetaTruncationWitness : Type*
 
 /-- Bosonic finite channel is tied by equality to the finite boson product. -/
 theorem bosonChannel_eq_bosonicPartition
@@ -296,20 +291,22 @@ structure ZetaChannelWitnessPacket where
   /-- Parity supertrace equals the inverse-zeta channel. -/
   parity_eq_inverse_zeta :
     parityTrace = inverseZeta
-  /-- Guardrail: this packet does not prove RH or zero locations. -/
-  noRHClaimWitness : Type*
 
 /-- Zero-location socket recording a spectral/analytic zero statement only as supplied data. -/
 @[socket_debt_tag]
+structure AnalyticContinuationData (L : ℂ → ℂ) where
+  domain : Set ℂ
+  domain_open : IsOpen domain
+  continuation : ℂ → ℂ
+  continuation_eq : ∀ z, z ∈ domain → continuation z = L z
+  holomorphic : DifferentiableOn ℂ continuation domain
+
 structure ZetaZeroSocket where
-  /-- Function/spectral carrier. -/
-  FunctionCarrier : Type*
-  /-- Zero predicate on the carrier. -/
-  zeroPredicate : FunctionCarrier → Prop
-  /-- Analytic-continuation witness. -/
-  analyticContinuationWitness : Type*
-  /-- External zero-location witness. -/
-  zeroLocationWitness : Type*
+  zetaFunction : ℂ → ℂ
+  analyticContinuation : AnalyticContinuationData zetaFunction
+  zeroLocation : Set ℂ
+  zeroLocation_spec :
+    ∀ z, z ∈ zeroLocation ↔ analyticContinuation.continuation z = 0
 
 /-! ## 6. Full composed bridge -/
 
@@ -346,11 +343,6 @@ structure CantorCliffordMellinPrimeGasBridge where
   /-- Optional zero-location socket. -/
   zeroSocket :
     Option ZetaZeroSocket
-  /--
-  Witness that zeta-channel statements are analytic/witness-gated, not
-  consequences of the finite binary profile theorem alone.
-  -/
-  analyticGuardWitness : Type*
 
 /-- The bosonic channel is the finite reciprocal-product lane. -/
 @[bridge_target_tag]

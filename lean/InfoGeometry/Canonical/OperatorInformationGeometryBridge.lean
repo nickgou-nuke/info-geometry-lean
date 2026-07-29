@@ -1,175 +1,122 @@
-import Mathlib.Tactic
+import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
 import InfoGeometry.Meta.Architecture
 
 /-!
-# InfoGeometry.Canonical.OperatorInformationGeometryBridge
+# Native operator-information geometry interfaces
 
-Carrier layer for operator information geometry.
-
-This file intentionally contains no arbitrary `Prop` law fields.  It only names
-the local real-algebraic data channels that downstream owner modules may connect
-to already-proved theorem surfaces.
-
-The discipline is:
-
-* definitions and carriers may live here,
-* actual algebra/analysis laws must be imported from their proving modules,
-* no Type III, Araki, Takesaki, ergodic, or chart theorem is asserted by witness
-  fields in this dictionary.
+This file exposes the laws connecting modular flow, noncommutative relative
+entropy, conditional expectation, and invariant sectors directly on their
+owning functions.  It contains no carrier records and no reflexive readback
+theorems.
 -/
 
 namespace InfoGeometry.Canonical.OperatorInformationGeometryBridge
 
-/--
-Carrier for operator-information geometry.
+open scoped ComplexOrder
 
-This is a naming/dictionary object only.  The fields are the channels:
-modular flow, relative-entropy/KL readout, conditional-expectation/update, and
-ergodic/macroscopic projection.
--/
-structure OperatorInformationGeometryCarrier
-    (Alg State Value : Type*) where
-  /-- Modular/Tomita flow or a repo-local bounded surrogate. -/
-  modularFlow : ℝ → Alg → Alg
+/-- A one-parameter action on an operator algebra. -/
+abbrev OperatorFlow (Alg : Type*) :=
+  ℝ → Alg → Alg
 
-  /-- Relative entropy / KL / Araki-style readout channel. -/
-  relativeEntropy : State → State → Value
+/-- Group law for a one-parameter operator flow. -/
+def IsOperatorFlow {Alg : Type*} (σ : OperatorFlow Alg) : Prop :=
+  (∀ A, σ 0 A = A) ∧
+    ∀ s t A, σ (s + t) A = σ s (σ t A)
 
-  /-- Noncommutative Bayesian update channel, e.g. conditional expectation. -/
-  conditionalExpectation : Alg → Alg
+/-- A conditional-expectation candidate is idempotent when applying it twice
+does not change the result. -/
+def IsIdempotentExpectation {Alg : Type*} (E : Alg → Alg) : Prop :=
+  ∀ A, E (E A) = E A
 
-  /-- Ergodic/macroscopic projection channel. -/
-  ergodicProjection : Alg → Alg
+/-- Compatibility of a conditional expectation with modular time. -/
+def IsModularEquivariant
+    {Alg : Type*}
+    (σ : OperatorFlow Alg)
+    (E : Alg → Alg) : Prop :=
+  ∀ t A, E (σ t A) = σ t (E A)
 
-namespace OperatorInformationGeometryCarrier
+/-- The invariant sector of an expectation map. -/
+def ExpectationFixedPoint
+    {Alg : Type*}
+    (E : Alg → Alg)
+    (A : Alg) : Prop :=
+  E A = A
 
-variable {Alg State Value : Type*}
-variable (G : OperatorInformationGeometryCarrier Alg State Value)
+/-- Every value in the range of an idempotent expectation is fixed. -/
+theorem expectation_fixedPoint_of_mem_range
+    {Alg : Type*}
+    {E : Alg → Alg}
+    (hE : IsIdempotentExpectation E)
+    (A : Alg) :
+    ExpectationFixedPoint E (E A) :=
+  hE A
 
-/-- Definitional readback for modular flow. -/
-@[rep_depth operator]
-theorem modularFlow_apply (t : ℝ) (A : Alg) :
-    G.modularFlow t A = G.modularFlow t A := rfl
+/-- A modular-equivariant expectation carries a fixed observable to a fixed
+observable along the modular flow. -/
+theorem expectationFixedPoint_modularFlow
+    {Alg : Type*}
+    {σ : OperatorFlow Alg}
+    {E : Alg → Alg}
+    (hEquivariant : IsModularEquivariant σ E)
+    {A : Alg}
+    (hA : ExpectationFixedPoint E A)
+    (t : ℝ) :
+    ExpectationFixedPoint E (σ t A) := by
+  rw [ExpectationFixedPoint, hEquivariant, hA]
 
-/-- Definitional readback for relative entropy. -/
-@[rep_depth operator]
-theorem relativeEntropy_apply (ρ σ : State) :
-    G.relativeEntropy ρ σ = G.relativeEntropy ρ σ := rfl
+/-- Modular evolution preserves the range of a modular-equivariant
+expectation. -/
+theorem modularFlow_mem_range_of_mem_range
+    {Alg : Type*}
+    {σ : OperatorFlow Alg}
+    {E : Alg → Alg}
+    (hEquivariant : IsModularEquivariant σ E)
+    {A : Alg}
+    (hA : A ∈ Set.range E)
+    (t : ℝ) :
+    σ t A ∈ Set.range E := by
+  obtain ⟨B, rfl⟩ := hA
+  exact ⟨σ t B, hEquivariant t B⟩
 
-/-- Definitional readback for conditional expectation/update. -/
-@[rep_depth operator]
-theorem conditionalExpectation_apply (A : Alg) :
-    G.conditionalExpectation A = G.conditionalExpectation A := rfl
+section NoncommutativeRelativeEntropy
 
-/-- Definitional readback for ergodic/macroscopic projection. -/
-@[rep_depth operator]
-theorem ergodicProjection_apply (A : Alg) :
-    G.ergodicProjection A = G.ergodicProjection A := rfl
+variable {A : Type*}
+variable [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]
 
-end OperatorInformationGeometryCarrier
+/-- Native noncommutative relative log-density operator. -/
+noncomputable abbrev relativeLogDensity (ρ σ : A) : A :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.relativeLogDensity ρ σ
 
-/--
-Carrier for modular Bayesian/update language.
+/-- Native Umegaki operator kernel, before any scalar readout. -/
+noncomputable abbrev umegakiKernel (ρ σ : A) : A :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.umegakiKernel ρ σ
 
-No Takesaki theorem is asserted here.  Modules that prove modular invariance or
-conditional-expectation laws must own those theorems directly.
--/
-structure ModularBayesianUpdateCarrier
-    (Alg : Type*) where
-  modularFlow : ℝ → Alg → Alg
-  update : Alg → Alg
+/-- Umegaki readout through a genuine Mathlib positive functional. -/
+noncomputable abbrev umegakiRelativeEntropy
+    (τ : A →ₚ[ℂ] ℂ)
+    (ρ σ : A) : ℂ :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.umegakiRelativeEntropy
+    τ ρ σ
 
-namespace ModularBayesianUpdateCarrier
+@[simp]
+theorem relativeLogDensity_self (ρ : A) :
+    relativeLogDensity ρ ρ = 0 :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.relativeLogDensity_self ρ
 
-variable {Alg : Type*}
-variable (B : ModularBayesianUpdateCarrier Alg)
+@[simp]
+theorem umegakiKernel_self (ρ : A) :
+    umegakiKernel ρ ρ = 0 :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.umegakiKernel_self ρ
 
-@[rep_depth operator]
-theorem modularFlow_apply (t : ℝ) (A : Alg) :
-    B.modularFlow t A = B.modularFlow t A := rfl
+@[simp]
+theorem umegakiRelativeEntropy_self
+    (τ : A →ₚ[ℂ] ℂ)
+    (ρ : A) :
+    umegakiRelativeEntropy τ ρ ρ = 0 :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeRenyi.umegakiRelativeEntropy_self
+    τ ρ
 
-@[rep_depth operator]
-theorem update_apply (A : Alg) :
-    B.update A = B.update A := rfl
-
-end ModularBayesianUpdateCarrier
-
-/--
-Carrier for relative modular entropy language.
-
-The logarithmic relative-modular formula is not asserted here.  It must be
-proved or imported from a dedicated owner module.
--/
-structure RelativeModularEntropyCarrier
-    (State Value ModularOperator : Type*) where
-  relativeModularOperator : State → State → ModularOperator
-  modularHamiltonian : ModularOperator → Value
-  relativeEntropy : State → State → Value
-
-namespace RelativeModularEntropyCarrier
-
-variable {State Value ModularOperator : Type*}
-variable (R : RelativeModularEntropyCarrier State Value ModularOperator)
-
-@[rep_depth operator]
-theorem relativeModularOperator_apply (ρ σ : State) :
-    R.relativeModularOperator ρ σ = R.relativeModularOperator ρ σ := rfl
-
-@[rep_depth operator]
-theorem modularHamiltonian_apply (Δ : ModularOperator) :
-    R.modularHamiltonian Δ = R.modularHamiltonian Δ := rfl
-
-@[rep_depth operator]
-theorem relativeEntropy_apply (ρ σ : State) :
-    R.relativeEntropy ρ σ = R.relativeEntropy ρ σ := rfl
-
-end RelativeModularEntropyCarrier
-
-/--
-Carrier for ergodic invariant readout language.
-
-Mean-ergodic convergence and invariant-sector theorems are not fields here.
--/
-structure ModularErgodicInvariantCarrier
-    (Alg : Type*) where
-  modularFlow : ℝ → Alg → Alg
-  ergodicProjection : Alg → Alg
-
-namespace ModularErgodicInvariantCarrier
-
-variable {Alg : Type*}
-variable (E : ModularErgodicInvariantCarrier Alg)
-
-@[rep_depth operator]
-theorem modularFlow_apply (t : ℝ) (A : Alg) :
-    E.modularFlow t A = E.modularFlow t A := rfl
-
-@[rep_depth operator]
-theorem ergodicProjection_apply (A : Alg) :
-    E.ergodicProjection A = E.ergodicProjection A := rfl
-
-end ModularErgodicInvariantCarrier
-
-/--
-Carrier for classical chart readout from operator-information channels.
-
-The chart theorem is not a field.  A downstream owner module must prove any
-invariance, smoothness, or coordinate-chart property directly.
--/
-structure ClassicalChartReadoutCarrier
-    (Alg State Value Chart : Type*) where
-  bridge : OperatorInformationGeometryCarrier Alg State Value
-  chartReadout : Alg → Chart
-
-namespace ClassicalChartReadoutCarrier
-
-variable {Alg State Value Chart : Type*}
-variable (C : ClassicalChartReadoutCarrier Alg State Value Chart)
-
-@[rep_depth operator]
-theorem chartReadout_apply (A : Alg) :
-    C.chartReadout A = C.chartReadout A := rfl
-
-end ClassicalChartReadoutCarrier
+end NoncommutativeRelativeEntropy
 
 end InfoGeometry.Canonical.OperatorInformationGeometryBridge

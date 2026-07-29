@@ -13,12 +13,18 @@ namespace InfoGeometry.Canonical.SupergradedRandomWalkZeroModes
 open scoped BigOperators
 
 /-- Supergraded finite state space. -/
-structure SuperLattice (V : Type*) where
-  parity : V → Bool
+abbrev SuperLattice (V : Type*) := V → Bool
+
+namespace SuperLattice
+
+/-- Projection-compatible name for the direct parity function. -/
+abbrev parity {V : Type*} (S : SuperLattice V) : V → Bool := S
+
+end SuperLattice
 
 /-- Even states have sign `1`, odd states have sign `-1`. -/
 def paritySign {V : Type*} (S : SuperLattice V) (v : V) : ℝ :=
-  if S.parity v then -1 else 1
+  if S v then -1 else 1
 
 /-- Finite supertrace. -/
 def superTrace {V : Type*} [Fintype V] (S : SuperLattice V) (M : Matrix V V ℝ) : ℝ :=

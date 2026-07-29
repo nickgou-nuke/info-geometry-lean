@@ -118,23 +118,22 @@ end SequentialColimitSystem
 A proof family over a sequential directed system: every finite stage has a
 property, and the property is preserved by the bonding maps.
 -/
-structure CompatibleProofFamily (S : SequentialColimitSystem) where
-  P : ∀ n : ℕ, S.Stage n → Prop
-  compat : S.CompatibleProperty P
+abbrev CompatibleProofFamily (S : SequentialColimitSystem) :=
+  { P : (∀ n : ℕ, S.Stage n → Prop) // S.CompatibleProperty P }
 
 namespace CompatibleProofFamily
 
 variable {S : SequentialColimitSystem} (F : CompatibleProofFamily S)
 
 /-- The proof family transports along any finite number of bonding maps. -/
-theorem transport (n m : ℕ) (x : S.Stage n) (hx : F.P n x) :
-    F.P (n + m) (S.bondSeq n m x) :=
-  S.compatibleProperty_bondSeq F.P F.compat n m x hx
+theorem transport (n m : ℕ) (x : S.Stage n) (hx : F.1 n x) :
+    F.1 (n + m) (S.bondSeq n m x) :=
+  S.compatibleProperty_bondSeq F.1 F.2 n m x hx
 
 /-- Read a compatible proof family into a limit predicate. -/
 theorem to_limit {Pinf : S.Limit → Prop}
-    (hread : S.LimitReadout F.P Pinf)
-    (n : ℕ) (x : S.Stage n) (hx : F.P n x) :
+    (hread : S.LimitReadout F.1 Pinf)
+    (n : ℕ) (x : S.Stage n) (hx : F.1 n x) :
     Pinf (S.toLimit n x) :=
   hread n x hx
 

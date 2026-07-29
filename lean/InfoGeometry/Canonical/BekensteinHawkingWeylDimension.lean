@@ -28,10 +28,15 @@ structure FreudenthalInvariant (ChargeSpace : Type*) [AddCommGroup ChargeSpace] 
   weyl_invariance : ∀ (Q : ChargeSpace) (w_action : ChargeSpace → ChargeSpace), 
     J4 (w_action Q) = J4 Q
 
-/-- The Weyl Character Dimension on the Cantor Boundary. -/
-structure WeylCharacterBoundary (StateSpace : Type*) where
-  /-- The continuous character dimension of the topological soliton state. -/
-  dim_ch : StateSpace → ℝ
+/-- The Weyl character dimension on the Cantor boundary, as its direct readout. -/
+abbrev WeylCharacterBoundary (StateSpace : Type*) := StateSpace → ℝ
+
+namespace WeylCharacterBoundary
+
+/-- Projection-compatible name for the direct character-dimension readout. -/
+abbrev dim_ch (W : WeylCharacterBoundary StateSpace) : StateSpace → ℝ := W
+
+end WeylCharacterBoundary
 
 variable {ChargeSpace StateSpace : Type*} [AddCommGroup ChargeSpace]
 variable (Q : ChargeSpace) (S : StateSpace)

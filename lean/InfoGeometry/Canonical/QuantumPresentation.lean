@@ -68,11 +68,9 @@ structure Intertwiner (P Q : Presentation) where
 
 /-- Scalar readout preservation contract for an intertwiner. -/
 @[rep_depth krein]
-structure ReadoutPreservation
-    {P Q : Presentation} (F : Intertwiner P Q) : Prop where
-  metric :
-    ∀ s, F.mapScalar (P.metricReadout s) = Q.metricReadout (F.mapState s)
-  phase :
+abbrev ReadoutPreservation
+    {P Q : Presentation} (F : Intertwiner P Q) : Prop :=
+  (∀ s, F.mapScalar (P.metricReadout s) = Q.metricReadout (F.mapState s)) ∧
     ∀ s, F.mapScalar (P.phaseReadout s) = Q.phaseReadout (F.mapState s)
 
 /-- Identity intertwiner on a presentation. -/
@@ -179,12 +177,11 @@ def pairedSwapIntertwiner (α : Type) :
 /-- Readout preservation for the paired swap intertwiner. -/
 @[rep_depth krein]
 def pairedSwapReadoutPreservation (α : Type) :
-    ReadoutPreservation (pairedSwapIntertwiner α) where
-  metric := by
-    intro s
+    ReadoutPreservation (pairedSwapIntertwiner α) := by
+  refine ⟨?_, ?_⟩
+  · intro s
     rfl
-  phase := by
-    intro s
+  · intro s
     rfl
 
 @[rep_depth krein]

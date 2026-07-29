@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
@@ -43,18 +44,30 @@ structure PrimeHurwitzCliffordCascadeRealization
     ∀ N z, cascadePartial N z = A.renormZ N z
 
   /-- Holomorphicity of the finite discrete cascade partial sums. -/
-  holomorphicPartials : Prop
+  holomorphicPartials :
+    ∀ N, Differentiable ℂ (cascadePartial N)
 
   /-- Local boundedness needed for Montel/normal-family arguments. -/
-  locallyUniformBounded : Prop
+  locallyUniformBounded :
+    ∀ K : Set ℂ, IsCompact K →
+      ∃ C : ℝ, ∀ N z, z ∈ K → ‖cascadePartial N z‖ ≤ C
 
   /-- Compact-uniform tail control on every compact subset of the Cayley chart. -/
-  compactUniformTailControl : Prop
+  compactUniformTailControl :
+    ∀ K : Set ℂ, IsCompact K → ∀ ε : ℝ, 0 < ε →
+      ∃ N₀, ∀ m n, N₀ ≤ m → N₀ ≤ n →
+        ∀ z, z ∈ K → ‖cascadePartial m z - cascadePartial n z‖ < ε
+
+  /-- The candidate locally uniform cascade limit. -/
+  cascadeLimit : ℂ → ℂ
 
   /-- Full cascade reconstruction equals the Cayley pullback of `xi`. -/
-  reconstruction_eq_xi_cayley : Prop
+  reconstruction_eq_xi_cayley :
+    ∀ z : ℂ,
+      cascadeLimit z = Xi.xi (cayleyInv z)
 
   /-- Final Hurwitz-ready convergence statement to be proved by a concrete model. -/
-  locallyUniformRenormalizedLimit : Prop
+  locallyUniformRenormalizedLimit :
+    TendstoLocallyUniformly cascadePartial cascadeLimit Filter.atTop
 
 end InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit

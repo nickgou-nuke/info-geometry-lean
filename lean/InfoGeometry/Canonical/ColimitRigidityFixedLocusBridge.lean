@@ -8,24 +8,23 @@ set_option linter.unusedVariables false
 /-!
 # Colimit Rigidity & Fixed Locus Master Bridge
 
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
+This module formalizes native Lean / Mathlib proofs for:
 
 1. **Antiunitary Reflection Fixed Locus Uniqueness**:
-   Proves that the fixed locus of complex reflection $s = 1 - \bar{s}$ is strictly the critical line $\operatorname{Re}(s) = 1/2$:
-   $$s = 1 - \overline{s} \iff \operatorname{Re}(s) = \frac{1}{2}.$$
-
+   `s = 1 - star s ↔ s.re = 1/2`.
 2. **Critical Line Antiunitary Duality**:
-   For $s = \frac{1}{2} + i t$ ($t \in \mathbb{R}$), reflection $1 - s$ equals complex conjugation $\bar{s}$:
-   $$1 - \left(\frac{1}{2} + i t\right) = \overline{\frac{1}{2} + i t}.$$
+   `1 - ((1/2 : ℂ) + I * t) = star ((1/2 : ℂ) + I * t)`.
+3. **Stage Injectivity Non-Kernel Survival**:
+   injective linear maps `f n : V n → V (n+1)` preserve nonzero elements,
+   i.e. `v ≠ 0 → f n v ≠ 0`.
+4. **Truncated Real Euler Product Positivity**:
+   for any finite set of primes `S` and `σ > 1`, the finite Euler product
+   `∏ p in S, (1 - p^(-σ))⁻¹` is strictly positive.
+5. **Grand Colimit Rigidity Master Duality**:
+   combines fixed-locus uniqueness, antiunitary identity, injectivity survival,
+   and Euler-product positivity.
 
-3. **Stage Injectivity Threshold (Non-Kernel Survival)**:
-   Proves that along an injective sequence of vector spaces $\phi_n : V_n \hookrightarrow V_{n+1}$, any non-zero element $v \in V_n$ remains non-zero in all downstream stages $V_m$ ($m \ge n$).
-
-4. **Finite Euler Factor Positivity**:
-   Proves that for any finite prime cutoff set $S \subset \mathbb{P}$ and $\sigma > 1$, the truncated Euler product $P_S(\sigma) > 0$.
-
-5. **Grand Colimit Rigidity Master Duality Theorem**:
-   Unifies critical fixed locus uniqueness, antiunitary duality, stage injectivity survival, and finite Euler product positivity into a single 100% kernel-checked theorem.
+No analytic continuation, meromorphic continuation, or RH proof is claimed.
 -/
 
 namespace InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Dynamics.ModularThermalState
@@ -47,17 +48,21 @@ structure BosonicPrimonTFDModel where
   MirrorStateSpace : Type*
   TensorDoubledSpace : Type*
   beta : ℝ
-  beta_gt_one : Prop
+  beta_gt_one : 1 < beta
   Hamiltonian : Type*
   partitionFunction : ℝ
   zetaValue : ℝ
   partition_eq_zeta : partitionFunction = zetaValue
   purifiedVector : Type*
-  purifiedVectorWitness : Type*
   modularOperator : Type*
   liouvillean : Type*
 
 namespace BosonicPrimonTFDModel
+
+/-- The trace/Hilbert primon model lies in the normalizable inverse-temperature domain. -/
+theorem inverseTemperature_gt_one (T : BosonicPrimonTFDModel) :
+    1 < T.beta :=
+  T.beta_gt_one
 
 /-- The trace/Hilbert zeta partition calibration. -/
 theorem partition_eq_zeta_theorem (T : BosonicPrimonTFDModel) :
@@ -78,7 +83,6 @@ structure FullMobiusPartialParity where
   FullState : Type*
   GammaMu : Type*
   squareFreeProjection : Type*
-  not_global_fundamental_symmetry_guard : Type*
 
 namespace FullMobiusPartialParity
 
@@ -93,7 +97,6 @@ structure SquarefreeMobiusKreinSector where
   SFState : Type*
   Gamma : Type*
   kreinForm : Type*
-  mobius_squarefree_parity_guard : Type*
   fullCarrierPartialParity : FullMobiusPartialParity
 
 namespace SquarefreeMobiusKreinSector
@@ -160,7 +163,6 @@ structure TypeIIIModularPrimonSocket (A : Type*) [Mul A] where
   faithfulNormalStateOrWeight : Type*
   modularFlowReadout : Type*
   nontracialReadout : Type*
-  noTraceGuard : Type*
 
 /--
 Supertrace/index readout socket.
@@ -175,8 +177,6 @@ structure MobiusSupertraceReadout where
   parity_eq_inverse_zeta :
     paritySupertrace = inverseZetaChannel
   lowTemperatureVacuumLimit : Type*
-  mobiusInversionWitness : Type*
-  not_constant_witten_index_guard : Type*
 
 namespace MobiusSupertraceReadout
 
@@ -218,7 +218,6 @@ structure HestenesKreinOrbitChannel where
   generator : Type*
   windingNumber : ℤ
   windingObstruction : Type*
-  obstruction_vs_zeta_zero_guard : Type*
 
 namespace HestenesKreinOrbitChannel
 
@@ -234,8 +233,20 @@ winding periodicity.  They require a separate analytic/spectral witness.
 structure WitnessGatedZetaZeroSocket where
   spectralObject : Type*
   zetaZeroReadout : Type*
-  analyticContinuationWitness : Type*
-  not_implied_by_winding_obstruction_guard : Type*
+  /-- Complex-valued spectral function whose zero set is being tracked. -/
+  spectralFunction : ℂ → ℂ
+  /-- Open domain on which the continuation agrees with the spectral function. -/
+  continuationDomain : Set ℂ
+  continuationDomain_open : IsOpen continuationDomain
+  /-- Candidate analytic continuation. -/
+  continuation : ℂ → ℂ
+  continuation_eq_function :
+    ∀ z, z ∈ continuationDomain → continuation z = spectralFunction z
+  continuation_holomorphic : DifferentiableOn ℂ continuation continuationDomain
+  /-- The tracked zero locus is defined by the supplied continuation. -/
+  zeroLocation : Set ℂ
+  zeroLocation_spec :
+    ∀ z, z ∈ zeroLocation ↔ continuation z = 0
 
 namespace WitnessGatedZetaZeroSocket
 
@@ -256,8 +267,6 @@ structure PrimonTFDKreinMobiusBridge (A : Type*) [Mul A] where
   duality : TFDKreinSupertraceDuality
   orbit : HestenesKreinOrbitChannel
   zetaZeroSocket : WitnessGatedZetaZeroSocket
-  tfd_modular_compatibility : Type*
-  krein_mobius_compatibility : Type*
 
 
 end InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge

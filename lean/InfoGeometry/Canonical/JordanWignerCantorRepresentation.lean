@@ -217,7 +217,7 @@ noncomputable def complexMatToCantor (n : ℕ) : MatStage n →ₐ[ℝ] CantorOp
 theorem complexMatToCantor_injective (n : ℕ) : Function.Injective (complexMatToCantor n) := by
   intro A B h
   have hmat : complexMatToMatrix n A = complexMatToMatrix n B := by
-    exact ((Matrix.toLinAlgEquiv (Pi.basisFun ℂ (CantorAddress n))).toAlgHom.restrictScalars ℝ).injective h
+    exact (Matrix.toLinAlgEquiv (Pi.basisFun ℂ (CantorAddress n))).injective h
   have hidx : complexifyMatrixAlgHom n A = complexifyMatrixAlgHom n B := by
     exact (Matrix.reindexAlgEquiv ℝ ℂ (idxEquivCantorAddress n)).injective hmat
   ext i j

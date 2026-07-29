@@ -179,12 +179,14 @@ theorem cayley_reflection_eq_fugacity_inversion
 /-- The RH route remains conditional on the supplied prime Lee--Yang hypotheses. -/
 @[rep_depth thermo, capstone]
 theorem conditional_RH_from_supplied_primeLeeYang
-    {CompletedXiReadout : Type*}
-    (_R : CompletedXiReadout)
-    (_C : CayleyCriticalLineWitness)
-    (_A : LeeYangPrimeApproximation CompletedXiReadout) :
-    True :=
-  trivial
+    {n : ℕ}
+    (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))
+    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {z : ℂ}
+    (hz : W.partitionPolynomial.IsRoot z)
+    (hpole : z.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z) :=
+  partitionRoot_mapsToCriticalLine W hLeeYang hz hpole
 
 /-- A finite boundary readout exists for every finite bulk state. -/
 @[rep_depth thermo, capstone]

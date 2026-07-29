@@ -35,6 +35,7 @@ modular/decoherence evolution keeps that entropy nonnegative.
 -/
 structure ModularDrazinEntropyFlow
     {Op State : Type*}
+    [Add Op] [Mul Op]
     (entropyFunctional : InfoGeometry.OperatorAlgebra.DrazinEntropyFunctional Op State)
     (Time : Type*) where
   /-- Modular/decoherence flow on entropy states. -/
@@ -55,7 +56,7 @@ structure ModularDrazinEntropyFlow
 
 namespace ModularDrazinEntropyFlow
 
-variable {Op State Time : Type*}
+variable {Op State Time : Type*} [Add Op] [Mul Op]
 variable {F : InfoGeometry.OperatorAlgebra.DrazinEntropyFunctional Op State}
 variable (M : ModularDrazinEntropyFlow F Time)
 
@@ -89,7 +90,7 @@ modular/decoherence flow on the same entropy state space.
 structure DIIIModularEntropyFlowBridge
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
-    (Op State Time : Type*) where
+    (Op State Time : Type*) [Add Op] [Mul Op] where
   /-- Static DIII/Z₂ boundary entropy bridge. -/
   base :
     DIIIZ2DivisionEntropyBridge (S := S) M P0 Op State
@@ -104,7 +105,7 @@ namespace DIIIModularEntropyFlowBridge
 
 variable {M : RealMajoranaDatum (S := S)}
 variable {P0 : KPolarization (S := S) M}
-variable {Op State Time : Type*}
+variable {Op State Time : Type*} [Add Op] [Mul Op]
 variable (B : DIIIModularEntropyFlowBridge (S := S) M P0 Op State Time)
 
 omit [CompleteSpace S] [FiniteDimensional ℝ S] in
@@ -115,7 +116,7 @@ theorem state_valid_along_DIII_modular_flow
     (t : Time) :
     B.base.divisionEntropy.calibration.functional.readout.valid
       (B.modularEntropyFlow.flow t B.base.stateOfChain) :=
-  B.modularEntropyFlow.valid_along t B.base.stateOfChain hvalid
+  ModularDrazinEntropyFlow.valid_along B.modularEntropyFlow t B.base.stateOfChain hvalid
 
 omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 /--
@@ -129,15 +130,12 @@ theorem entropy_nonneg_along_DIII_modular_flow
     0 ≤
       B.base.divisionEntropy.calibration.functional.entropy
         (B.modularEntropyFlow.flow t B.base.stateOfChain) :=
-  B.modularEntropyFlow.entropy_nonneg_along
+  ModularDrazinEntropyFlow.entropy_nonneg_along B.modularEntropyFlow
     t
     B.base.stateOfChain
     hvalid
-    (B.base.divisionEntropy.entropy_nonneg_of_division_identity
-      B.base.stateOfChain
-      hvalid
-      B.base.divisionFiber_of_topologicalSector
-      B.base.representedNontrivially_of_topologicalSector)
+    (DIIIZ2DivisionEntropyBridge.entropy_nonneg_of_DIII_Z2_sector B.base
+      hvalid)
 
 /--
 Dynamic capstone: the DIII/Z₂ sector supplies a boundary zero mode, and the
@@ -155,8 +153,8 @@ theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg_along_flow
     0 ≤
       B.base.divisionEntropy.calibration.functional.entropy
         (B.modularEntropyFlow.flow t B.base.stateOfChain) :=
-  ⟨B.base.hasSurfaceZeroMode,
-    B.entropy_nonneg_along_DIII_modular_flow hvalid t⟩
+  ⟨DIIIZ2DivisionEntropyBridge.hasSurfaceZeroMode B.base,
+    entropy_nonneg_along_DIII_modular_flow B hvalid t⟩
 
 end DIIIModularEntropyFlowBridge
 

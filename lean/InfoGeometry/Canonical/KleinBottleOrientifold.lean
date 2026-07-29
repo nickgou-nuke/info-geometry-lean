@@ -1,6 +1,9 @@
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.Topology.ProjectiveKleinCompactification
+import InfoGeometry.BostConnes.BostConnesParity
 
 /-!
 # InfoGeometry.Canonical.KleinBottleOrientifold
@@ -23,31 +26,49 @@ instantiates them.
 
 namespace InfoGeometry.Canonical.KleinBottleOrientifold
 
+open InfoGeometry.Topology
 open PrimeGasMaxEnt
 open InfoGeometry.Clifford.HestenesDirac
 
 universe u
 
-set_option linter.dupNamespace false in
-/--
-Abstract orientifold filter for the prime-gas/Fock corridor.
-
-The fields are deliberately propositions so the module records the exact
-topological hypotheses without introducing a fake proof of the Möbius law.
+/-!
+The finite orientifold carrier is the actual involutive element of the
+repo-owned Klein-four group.  The former record only stored unrelated `Prop`
+markers and reflexive equalities; the projective Klein and Möbius laws are
+owned by `ProjectiveKleinCompactification` and are not duplicated here.
 -/
-@[rep_depth transport]
-structure KleinBottleOrientifold where
-  V4_Weyl : Prop
-  V4_tensor_V4 : Prop
-  V4_tensor_V4_tensor_V4 : Prop
-  orientationReversingProjection : Prop
-  kleinBottleQuotient : Prop
-  fermionParity : Prop
-  mobiusTwist : Prop
-  squareAnnihilation : Prop
-  squareFreeSupport : Prop
-  wittenMod16AnomalyCancellation : Prop
-  wittenMod4GaugeAnomaly : Prop
+abbrev KleinBottleOrientifold :=
+  {g : InfoGeometry.Topology.V4RootSystem.V4Group //
+    g * g = InfoGeometry.Topology.V4RootSystem.V4Group.I}
+
+/-- Canonical point-inversion carrier for the finite orientifold lane. -/
+def canonicalKleinBottleOrientifold : KleinBottleOrientifold :=
+  ⟨InfoGeometry.Topology.V4RootSystem.V4Group.W12,
+    InfoGeometry.Topology.V4RootSystem.v4_point_inversion_involution⟩
+
+@[simp]
+theorem canonicalKleinBottleOrientifold_value :
+    (canonicalKleinBottleOrientifold : KleinBottleOrientifold).1 =
+      InfoGeometry.Topology.V4RootSystem.V4Group.W12 :=
+  rfl
+
+@[simp]
+theorem canonicalKleinBottleOrientifold_projective_klein_mobius (t : ℚ) :
+    ProjectiveKleinCompactification.ProjectivelyEqual
+        ProjectiveKleinCompactification.I2
+        ProjectiveKleinCompactification.minusI2 ∧
+      ProjectiveKleinCompactification.twistA *
+          ProjectiveKleinCompactification.parabolicB *
+          ProjectiveKleinCompactification.twistA *
+          ProjectiveKleinCompactification.parabolicB =
+        ProjectiveKleinCompactification.I2 ∧
+      ProjectiveKleinCompactification.mobiusS.mulVec ![t, 1] = ![-1, t] ∧
+      ProjectiveKleinCompactification.ProjectivelyEqual
+        (ProjectiveKleinCompactification.mobiusS *
+          ProjectiveKleinCompactification.mobiusS)
+        ProjectiveKleinCompactification.I2 :=
+  ProjectiveKleinCompactification.projective_klein_formula_packet t
 
 /--
 Bridge packet tying the prime-gas MaxEnt data to the Klein bottle orientifold
@@ -60,12 +81,6 @@ and the orientifold effect remains an explicit hypothesis block.
 structure OrientifoldPrimeGasPacket (D : PrimeGasJaynesData) where
   orientifold : KleinBottleOrientifold
   primeGas : PrimeGasJaynesData.PrimeGasJaynesConjecture D
-  V4_projection : Prop
-  fermionParity_projection : Prop
-  moebiusSign : Prop
-  support_kills_squares : Prop
-  squareFreeSupport : Prop
-  wittenMod16_boundary : Prop
 
 /--
 Topological support packet for the square-free sector.
@@ -75,11 +90,7 @@ as a kernel axiom.
 -/
 @[rep_depth transport]
 structure SquareFreeSupportPacket where
-  orientationReversingProjection : Prop
-  fermionParity : Prop
-  mobiusTwist : Prop
-  squareAnnihilation : Prop
-  squareFreeSupport : Prop
-  wittenMod16AnomalyCancellation : Prop
+  label : ℕ
+  squareFree : Squarefree label
 
 end InfoGeometry.Canonical.KleinBottleOrientifold

@@ -77,6 +77,10 @@ structure Bridge where
   state :
     State
 
+  /-- State representative supplied by the standard-form backend. -/
+  standardFormState :
+    State
+
   /-- Calibration: the bridge state is the Weyl state of the GW count pair. -/
   state_eq_weylState :
     state =
@@ -115,8 +119,9 @@ structure Bridge where
   physicalVolume_eq_gwIntensity_mul_inverseWeylGauge :
     ∀ s : State, physicalVolume s = gwIntensity s * inverseWeylGauge s
 
-  /-- Optional backend certificate tying the standard-form sector to the state. -/
-  standardForm_state_calibration : Prop
+  /-- The projective state is the standard-form backend state. -/
+  standardForm_state_calibration :
+    state = standardFormState
 
 namespace Bridge
 
@@ -208,13 +213,43 @@ structure FaceBridge where
   faceBridge :
     BinaryWordModularFaceBridge (H := H)
 
-  /-- Optional certificate tying the projective state to the localized face data. -/
-  face_state_calibration : Prop
+  /-- Binary word indexing the localized natural-cone face used by the bridge. -/
+  faceWord : TypeIIIModularCantorSystem.BinaryWord
+
+  /-- Typed readout from the projective state carrier to the doubled Hilbert carrier. -/
+  faceStateOf : State → InfoGeometry.Krein.DoubledSpace H
+
+  /-- The selected projective state lands in the indexed modular cone face. -/
+  face_state_calibration :
+    faceStateOf base.state ∈
+      BinaryWordModularFaceBridge.modularConeFace faceBridge faceWord
 
 namespace FaceBridge
 
 variable (B : FaceBridge (H := H) (Functional := Functional)
   (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff))
+
+/-- The calibrated projective state has a concrete localized face readout. -/
+@[rep_depth projective]
+theorem face_state_mem_modularConeFace :
+    B.faceStateOf B.base.state ∈
+      BinaryWordModularFaceBridge.modularConeFace B.faceBridge B.faceWord :=
+  B.face_state_calibration
+
+/-- The calibrated face readout lies in the supplied standard natural cone. -/
+@[rep_depth operator]
+theorem face_state_mem_naturalCone :
+    B.faceStateOf B.base.state ∈ B.faceBridge.naturalCone :=
+  BinaryWordModularFaceBridge.modularConeFace_subset_naturalCone
+    B.faceBridge B.faceWord B.face_state_calibration
+
+/-- The calibrated face readout is fixed by its binary-word localizer. -/
+@[rep_depth operator]
+theorem localizationOp_fixes_face_state :
+    BinaryWordModularFaceBridge.localizationOp B.faceBridge B.faceWord
+        (B.faceStateOf B.base.state) = B.faceStateOf B.base.state :=
+  BinaryWordModularFaceBridge.localizationOp_fixes_of_mem_modularConeFace
+    B.faceBridge B.faceWord B.face_state_calibration
 
 /-- Binary-word localization operator inherited from the standard-form face bridge. -/
 @[rep_depth projective]

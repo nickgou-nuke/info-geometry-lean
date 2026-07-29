@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.SouriauThermalEvaluation
 import InfoGeometry.Canonical.ParityTraceWitness
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
@@ -21,6 +22,7 @@ open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.SouriauThermalEvaluation
 open InfoGeometry.Canonical.ParityTraceWitness
 open InfoGeometry.Canonical.PrimeGasPartitions
+open InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 /-- Bundle of the finite A₁^P supertrace facts. -/
 @[rep_depth thermo]
@@ -43,9 +45,8 @@ theorem finiteWeylSupertraceOwner_denominator_eq_paritySupertrace
 
 /-- The finite Weyl packet can be reinterpreted as a prime register for the finite Möbius/Euler corridor. -/
 def toPrimeRegister (W : FiniteWeylSupertraceOwner) :
-    InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister where
-  primes := W.lattice.primes
-  prime_mem := W.lattice.prime_mem
+    InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister :=
+  ⟨W.lattice.primes, W.lattice.prime_mem⟩
 
 /-- The finite Weyl packet also reads through the finite Möbius Dirichlet / fermionic Euler equality. -/
 theorem finiteWeylSupertraceOwner_mobiusDirichlet_eq_finiteFermionicEulerProduct
@@ -68,23 +69,41 @@ theorem finiteWeylSupertraceOwner_readback_corridor
   refine ⟨finiteWeylSupertraceOwner_denominator_eq_paritySupertrace W, ?_⟩
   exact finiteWeylSupertraceOwner_mobiusDirichlet_eq_finiteFermionicEulerProduct W
 
-/-- Analytic infinite-product claims remain behind the PrimeGasPartitions witness. -/
+/--
+The infinite parity supertrace is the reciprocal of the bosonic prime product.
+Unlike `InfiniteEulerProductWitness`, this is an actual complex-valued function.
+-/
+noncomputable def infiniteParitySupertrace (s : ℂ) : ℂ :=
+  (infiniteComplexBosonicEulerProduct s)⁻¹
+
+/-- The parity supertrace equals inverse zeta on the absolute-convergence half-plane. -/
 theorem inverseZeta_is_paritySupertrace_limit
-    (W : InfiniteEulerProductWitness) :
-    W.parityTrace = W.inverseZeta :=
-  W.parity_eq_inverse_zeta
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteParitySupertrace s = (riemannZeta s)⁻¹ := by
+  exact inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta hs
 
-/-- Bosonic zeta is explicitly the reciprocal/inverse-denominator trace, not the Weyl denominator. -/
+/-- The bosonic prime product is zeta on the absolute-convergence half-plane. -/
 theorem zeta_is_bosonicTrace_limit
-    (W : InfiniteEulerProductWitness) :
-    W.bosonTrace = W.zeta :=
-  W.boson_eq_zeta
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteComplexBosonicEulerProduct s = riemannZeta s :=
+  infiniteComplexBosonicEulerProduct_eq_riemannZeta hs
 
-/-- Ordinary positive fermion trace remains separate from parity supertrace. -/
+/--
+The positive fermion channel is the genuine zeta ratio.  The second
+half-plane condition follows from `1 < re s`.
+-/
 theorem fermionTrace_is_zeta_div_zeta_two_beta_limit
-    (W : InfiniteEulerProductWitness) :
-    W.fermionTrace = W.zeta / W.zeta_two_beta :=
-  W.fermion_eq_zeta_div_zeta_two_beta
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteComplexPositiveFermionZetaRatio s =
+      riemannZeta s / riemannZeta ((2 : ℂ) * s) := by
+  apply infiniteComplexPositiveFermionZetaRatio_eq_zeta_div_zeta_two hs
+  have htwo : (((2 : ℂ) * s).re) = 2 * s.re := by
+    norm_num [Complex.mul_re]
+  rw [htwo]
+  linarith
 
 /--
 Split Clifford translation of the Weyl supertrace owner.

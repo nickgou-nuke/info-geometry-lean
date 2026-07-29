@@ -23,10 +23,9 @@ Drazin inverse property.
 `A` is the singular operator and `D` is the Drazin inverse candidate.
 -/
 @[rep_depth operator]
-structure IsDrazinInverse (A D : EndV) : Prop where
-  drazin_outer : D * A * D = D
-  commute : A * D = D * A
-  drazin_power : ∃ k : ℕ, A ^ (k + 1) * D = A ^ k
+abbrev IsDrazinInverse (A D : EndV) : Prop :=
+  D * A * D = D ∧ A * D = D * A ∧
+    ∃ k : ℕ, A ^ (k + 1) * D = A ^ k
 
 /--
 Proof-carrying Drazin-style projector split data.
@@ -41,13 +40,13 @@ structure DrazinSurgeryData (A : EndV) where
 
 /-- The core and nil projectors satisfy the expected algebraic relations. -/
 @[rep_depth operator]
-structure IsDrazinSurgery (A : EndV) (S : DrazinSurgeryData A) : Prop where
-  is_idempotent_core : S.projector_core * S.projector_core = S.projector_core
-  is_idempotent_nil : S.projector_nil * S.projector_nil = S.projector_nil
-  is_disjoint : S.projector_core * S.projector_nil = 0
-  is_partition : S.projector_core + S.projector_nil = LinearMap.id
-  commutes_with_A : S.projector_core * A = A * S.projector_core
-  nil_eventually_annihilated : ∃ k : ℕ, A ^ k * S.projector_nil = 0
+abbrev IsDrazinSurgery (A : EndV) (S : DrazinSurgeryData A) : Prop :=
+  S.projector_core * S.projector_core = S.projector_core ∧
+    S.projector_nil * S.projector_nil = S.projector_nil ∧
+    S.projector_core * S.projector_nil = 0 ∧
+    S.projector_core + S.projector_nil = LinearMap.id ∧
+    S.projector_core * A = A * S.projector_core ∧
+    ∃ k : ℕ, A ^ k * S.projector_nil = 0
 
 namespace DrazinSurgeryData
 
@@ -55,39 +54,39 @@ namespace DrazinSurgeryData
 @[simp]
 theorem core_idempotent {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_core * W.projector_core = W.projector_core :=
-  hW.is_idempotent_core
+  hW.1
 
 /-- The nil projector is idempotent. -/
 @[simp]
 theorem nil_idempotent {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_nil * W.projector_nil = W.projector_nil :=
-  hW.is_idempotent_nil
+  hW.2.1
 
 /-- The stored core/nil projectors are disjoint in the declared order. -/
 @[simp]
 theorem core_nil_disjoint {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_core * W.projector_nil = 0 :=
-  hW.is_disjoint
+  hW.2.2.1
 
 /-- The core and nil projectors partition the identity. -/
 theorem core_add_nil {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_core + W.projector_nil = LinearMap.id :=
-  hW.is_partition
+  hW.2.2.2.1
 
 /-- The core projector commutes with the operator under surgery. -/
 theorem core_commutes_with_A {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_core * A = A * W.projector_core :=
-  hW.commutes_with_A
+  hW.2.2.2.2.1
 
 /-- The nil/radical projector is annihilated by some power of `A`. -/
 theorem nil_power_annihilates {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     ∃ k : ℕ, A ^ k * W.projector_nil = 0 :=
-  hW.nil_eventually_annihilated
+  hW.2.2.2.2.2
 
 /-- Pointwise form of nil-power annihilation. -/
 theorem nil_power_annihilates_apply {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     ∃ k : ℕ, ∀ v : V, (A ^ k) (W.projector_nil v) = 0 := by
-  rcases hW.nil_eventually_annihilated with ⟨k, hk⟩
+  rcases hW.2.2.2.2.2 with ⟨k, hk⟩
   refine ⟨k, ?_⟩
   intro v
   change (A ^ k * W.projector_nil) v = (0 : EndV) v
@@ -97,12 +96,12 @@ theorem nil_power_annihilates_apply {A : EndV} {W : DrazinSurgeryData A} (hW : I
 theorem core_nil_apply_eq_zero {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) (v : V) :
     W.projector_core (W.projector_nil v) = 0 := by
   change (W.projector_core * W.projector_nil) v = (0 : EndV) v
-  exact congrArg (fun f : EndV => f v) hW.is_disjoint
+  exact congrArg (fun f : EndV => f v) hW.2.2.1
 
 /-- Pointwise form of `projector_core + projector_nil = id`. -/
 theorem core_add_nil_apply {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) (v : V) :
       W.projector_core v + W.projector_nil v = v := by
-  have hpart := congrArg (fun f : EndV => f v) hW.is_partition
+  have hpart := congrArg (fun f : EndV => f v) hW.2.2.2.1
   simpa only [LinearMap.add_apply, LinearMap.id_coe, id_eq] using hpart
 
 /--
@@ -114,8 +113,8 @@ This is derived, not stored.
 theorem nil_core_disjoint {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) :
     W.projector_nil * W.projector_core = 0 := by
   ext v
-  have hpart := congrArg (fun f : EndV => f (W.projector_core v)) hW.is_partition
-  have hcore := congrArg (fun f : EndV => f v) hW.is_idempotent_core
+  have hpart := congrArg (fun f : EndV => f (W.projector_core v)) hW.2.2.2.1
+  have hcore := congrArg (fun f : EndV => f v) hW.1
   have hpart' :
       W.projector_core (W.projector_core v) + W.projector_nil (W.projector_core v) = W.projector_core v := by
     simpa only [LinearMap.add_apply, LinearMap.id_coe, id_eq] using hpart
@@ -129,8 +128,8 @@ theorem nil_core_disjoint {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSur
 /-- Pointwise form of `projector_nil * projector_core = 0`. -/
 theorem nil_core_apply_eq_zero {A : EndV} {W : DrazinSurgeryData A} (hW : IsDrazinSurgery A W) (v : V) :
     W.projector_nil (W.projector_core v) = 0 := by
-  have hpart := congrArg (fun f : EndV => f (W.projector_core v)) hW.is_partition
-  have hcore := congrArg (fun f : EndV => f v) hW.is_idempotent_core
+  have hpart := congrArg (fun f : EndV => f (W.projector_core v)) hW.2.2.2.1
+  have hcore := congrArg (fun f : EndV => f v) hW.1
   have hpart' :
       W.projector_core (W.projector_core v) + W.projector_nil (W.projector_core v) = W.projector_core v := by
     simpa only [LinearMap.add_apply, LinearMap.id_coe, id_eq] using hpart
@@ -171,10 +170,10 @@ theorem isDrazinSurgery_ofDrazinInverse {A D : EndV}
     calc
       (A * D) * (A * D)
           = A * (D * A * D) := by rw [mul_assoc, ← mul_assoc D A D]
-      _ = A * D := by rw [hD.drazin_outer]
+      _ = A * D := by rw [hD.1]
 
   have hNilPower : ∃ k : ℕ, A ^ k * (1 - P) = 0 := by
-    rcases hD.drazin_power with ⟨k, hk⟩
+    rcases hD.2.2 with ⟨k, hk⟩
     refine ⟨k, ?_⟩
     dsimp [P]
     have hPowSucc : A ^ k * A = A ^ (k + 1) := by rw [pow_succ]
@@ -186,13 +185,7 @@ theorem isDrazinSurgery_ofDrazinInverse {A D : EndV}
       _ = A ^ k - A ^ k := by rw [hk]
       _ = 0 := by simp
 
-  refine
-    { is_idempotent_core := hP
-      is_idempotent_nil := ?_
-      is_disjoint := ?_
-      is_partition := ?_
-      commutes_with_A := ?_
-      nil_eventually_annihilated := hNilPower }
+  refine ⟨hP, ?_, ?_, ?_, ?_, hNilPower⟩
 
   · calc
       (1 - P) * (1 - P)
@@ -214,7 +207,7 @@ theorem isDrazinSurgery_ofDrazinInverse {A D : EndV}
   · calc
       (A * D) * A
           = A * (D * A) := by rw [mul_assoc]
-      _ = A * (A * D) := by rw [← hD.commute]
+      _ = A * (A * D) := by rw [← hD.2.1]
 
 /--
 The trivial identity/zero projector split.
@@ -229,13 +222,19 @@ def identitySplit (A : EndV) : DrazinSurgeryData A where
   projector_nil := 0
 
 @[rep_depth operator]
-theorem isDrazinSurgery_identitySplit (A : EndV) : IsDrazinSurgery A (identitySplit A) where
-  is_idempotent_core := by change LinearMap.id * LinearMap.id = LinearMap.id; exact mul_one LinearMap.id
-  is_idempotent_nil := by change 0 * 0 = (0 : EndV); exact mul_zero 0
-  is_disjoint := by change LinearMap.id * 0 = (0 : EndV); exact mul_zero LinearMap.id
-  is_partition := by change LinearMap.id + 0 = LinearMap.id; exact add_zero LinearMap.id
-  commutes_with_A := by change LinearMap.id * A = A * LinearMap.id; exact (one_mul A).trans (mul_one A).symm
-  nil_eventually_annihilated := ⟨0, by change A ^ 0 * 0 = (0 : EndV); exact mul_zero _⟩
+theorem isDrazinSurgery_identitySplit (A : EndV) : IsDrazinSurgery A (identitySplit A) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · change LinearMap.id * LinearMap.id = LinearMap.id
+    exact mul_one LinearMap.id
+  · change 0 * 0 = (0 : EndV)
+    exact mul_zero 0
+  · change LinearMap.id * 0 = (0 : EndV)
+    exact mul_zero LinearMap.id
+  · change LinearMap.id + 0 = LinearMap.id
+    exact add_zero LinearMap.id
+  · change LinearMap.id * A = A * LinearMap.id
+    exact (one_mul A).trans (mul_one A).symm
+  · exact ⟨0, by change A ^ 0 * 0 = (0 : EndV); exact mul_zero _⟩
 
 @[simp]
 theorem identitySplit_projector_core (A : EndV) :
@@ -276,5 +275,48 @@ theorem isDrazinSurgery_drazinSurgeryOfDrazinInverse
     {A D : EndV} (hD : IsDrazinInverse A D) :
     IsDrazinSurgery A (drazinSurgeryOfDrazinInverse hD) :=
   DrazinSurgeryData.isDrazinSurgery_ofDrazinInverse hD
+
+/-! ## Generic noncommutative ring consequences -/
+
+/-- An index-one Drazin outer-inverse law makes `A * D` idempotent. -/
+theorem drazin_indexOne_projector_idempotent_ring
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hDAD : D * A * D = D) :
+    (A * D) * (A * D) = A * D := by
+  calc
+    (A * D) * (A * D) = A * (D * A * D) := by noncomm_ring
+    _ = A * D := by rw [hDAD]
+
+/-- The source operator annihilates the right defect under the index-one
+inverse and commutation laws. -/
+theorem drazin_indexOne_annihilates_right_defect_ring
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hADA : A * D * A = A)
+    (hcomm : A * D = D * A) :
+    A * (1 - A * D) = 0 := by
+  have hAeq : A = A * (A * D) := by
+    calc
+      A = A * D * A := by symm; exact hADA
+      _ = A * (D * A) := by rw [mul_assoc]
+      _ = A * (A * D) := by rw [hcomm]
+  calc
+    A * (1 - A * D) = A * 1 - A * (A * D) := by rw [mul_sub]
+    _ = A - A * (A * D) := by rw [mul_one]
+    _ = 0 := sub_eq_zero.mpr hAeq
+
+/-- The source operator annihilates the left defect under the index-one
+inverse law. -/
+theorem drazin_indexOne_annihilates_left_defect_ring
+    {R : Type*} [Ring R]
+    {A D : R}
+    (hADA : A * D * A = A) :
+    (1 - A * D) * A = 0 := by
+  calc
+    (1 - A * D) * A = 1 * A - (A * D) * A := by rw [sub_mul]
+    _ = A - (A * D) * A := by rw [one_mul]
+    _ = A - A := by rw [hADA]
+    _ = 0 := by simp
 
 end InfoGeometry.Canonical.OperatorSurgery

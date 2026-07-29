@@ -104,9 +104,8 @@ can route through a single constructive packet rather than two separate bare
 hypotheses.
 -/
 @[rep_depth transport]
-structure StructuredProjectorWitness (CI : ConformalInference E) where
-  hProj : CI.P_MP_right = CI.P_MP
-  hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
+abbrev StructuredProjectorWitness (CI : ConformalInference E) : Prop :=
+  CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
 
 namespace StructuredProjectorWitness
 
@@ -117,7 +116,7 @@ variable {CI : ConformalInference E}
 theorem hypotheses
     (W : StructuredProjectorWitness CI) :
     CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D :=
-  ⟨W.hProj, W.hLeft⟩
+  W
 
 end StructuredProjectorWitness
 
@@ -319,7 +318,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompres
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
-      R hIncomp x W.hProj W.hLeft
+      R hIncomp x W.1 W.2
 
 /--
 Witness-routed full Weyl/KKT semantic-collapse packet from the operatorial
@@ -342,7 +341,7 @@ theorem semanticCollapsePacket_of_incompressible_of_projectorWitness
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
     semanticCollapsePacket_of_incompressible
-      R hIncomp x W.hProj W.hLeft
+      R hIncomp x W.1 W.2
 
 end CramerRaoNegLogVolumeAnomalyReadout
 

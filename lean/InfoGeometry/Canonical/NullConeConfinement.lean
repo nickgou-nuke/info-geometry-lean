@@ -31,12 +31,10 @@ def NullCone (q : QuadraticForm K V) : Set V :=
 def KleinQuadricBoundary (q : QuadraticForm K V) : Set (V × V) :=
   { p : V × V | q p.1 = 0 ∨ q p.2 = 0 ∨ q (p.1 - p.2) = 0 }
 
-/-- `x\in\mathrm{NullCone}(q)`. -/
-structure ConfinedState (q : QuadraticForm K V) where
-  /-- The underlying physical state vector -/
-  state : V
-  /-- The confinement witness: the state strictly lives on the null cone -/
-  is_confined : state ∈ NullCone q
+/-! A confined state is the Mathlib subtype of states satisfying the cone
+constraint; no bespoke state-plus-proof wrapper is needed. -/
+abbrev ConfinedState (q : QuadraticForm K V) :=
+  { x : V // x ∈ NullCone q }
 
 /-- `\mathrm{project}:V\to V` with image in `\mathrm{NullCone}(q)`. -/
 structure ConfinementOperator (q : QuadraticForm K V) where
@@ -50,16 +48,13 @@ structure ConfinementOperator (q : QuadraticForm K V) where
 /-- `\mathrm{enforce\_confinement}`. -/
 def enforce_confinement {q : QuadraticForm K V} 
   (op : ConfinementOperator q) (x : V) : ConfinedState q :=
-  { state := op.project x,
-    is_confined := op.confines x }
+  ⟨op.project x, op.confines x⟩
 
 /-- `x\in\mathrm{NullCone}(q) \to \mathrm{project}(x)=x`. -/
 theorem confinement_preserves_valid_states {q : QuadraticForm K V}
   (op : ConfinementOperator q) (x : V) (hx : x ∈ NullCone q) :
-  (enforce_confinement op x).state = x := by
-  -- Unfold the definition
+  (enforce_confinement op x).1 = x := by
   dsimp [enforce_confinement]
-  -- Use the idempotence property of the confinement operator
   exact op.idempotent_on_cone x hx
 
 end InfoGeometry.Canonical.NullConeConfinement

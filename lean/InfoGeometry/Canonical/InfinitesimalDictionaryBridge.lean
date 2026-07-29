@@ -63,8 +63,6 @@ structure InfinitesimalDictionaryPacket
   connesInfinitesimal : Alg
   /-- Modular-Hamiltonian difference `K_ψ - K_φ` in the same lane. -/
   modularHamiltonianDifference : Alg
-  /-- Operatorial Boltzmann/von Neumann entropy readout, conventionally `-log Δ`. -/
-  operatorBoltzmannEntropy : Alg
   /-- Gradient of the Araki/Bregman relative entropy readout. -/
   arakiRelativeEntropyGradient : Alg
   /-- Self-concordant barrier force `-d log Q`. -/
@@ -73,8 +71,6 @@ structure InfinitesimalDictionaryPacket
     connesInfinitesimal = modularHamiltonianDifference
   modular_eq_pathConstraint :
     modularHamiltonianDifference = pathConstraint
-  boltzmannEntropy_eq_modular :
-    operatorBoltzmannEntropy = modularHamiltonianDifference
   arakiGradient_eq_neg_pathConstraint :
     arakiRelativeEntropyGradient = -pathConstraint
   barrierForce_eq_neg_pathConstraint :
@@ -88,6 +84,15 @@ namespace InfinitesimalDictionaryPacket
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
 variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
+
+/--
+Operator-valued variation of the state-surprisal generator.
+
+With `K = -log Q`, its infinitesimal variation is `dK = -d log Q`.  This is
+derived from the unique path-current owner and is not Boltzmann macroentropy.
+-/
+def stateSurprisalVariation : Alg :=
+  -P.pathConstraint
 
 /-- The logarithmic partition potential is explicitly `log Q`. -/
 theorem psi_eq_logQ (θ : Θ) :
@@ -136,10 +141,27 @@ theorem connesInfinitesimal_eq_entropyProduction :
     P.connesInfinitesimal = entropy_production P.gauge.flow := by
   rw [P.connesInfinitesimal_eq_dlnQ, ← P.entropy_production_eq_dlnQ]
 
-/-- The operatorial Boltzmann entropy readout is the logarithmic de Rham current. -/
+/-- The state-surprisal variation is the negative logarithmic de Rham current. -/
+theorem stateSurprisalVariation_eq_neg_dlnQ :
+    P.stateSurprisalVariation = -P.gauge.flow.d_ln_Q := by
+  rw [stateSurprisalVariation, P.pathConstraint_eq_dlnQ]
+
+/-- The state-surprisal variation is `dK = -d log Q`. -/
+theorem stateSurprisalVariation_eq_neg_logGeneratorVariation :
+    P.stateSurprisalVariation = -P.gauge.flow.d_ln_Q :=
+  P.stateSurprisalVariation_eq_neg_dlnQ
+
+/-! Historical compatibility names.  These refer to state-surprisal
+variation, not Boltzmann macroentropy. -/
+@[deprecated stateSurprisalVariation (since := "2026-07-27")]
+abbrev operatorBoltzmannEntropy : Alg :=
+  P.stateSurprisalVariation
+
+@[deprecated stateSurprisalVariation_eq_neg_logGeneratorVariation
+    (since := "2026-07-27")]
 theorem operatorBoltzmannEntropy_eq_dlnQ :
-    P.operatorBoltzmannEntropy = P.gauge.flow.d_ln_Q := by
-  rw [P.boltzmannEntropy_eq_modular, P.modularHamiltonianDifference_eq_dlnQ]
+    P.operatorBoltzmannEntropy = -P.gauge.flow.d_ln_Q :=
+  P.stateSurprisalVariation_eq_neg_logGeneratorVariation
 
 /-- The Araki/Bregman gradient is the negative logarithmic de Rham current. -/
 theorem arakiRelativeEntropyGradient_eq_neg_dlnQ :
@@ -163,7 +185,7 @@ theorem selfConcordantBarrierForce_eq_neg_connesInfinitesimal :
 
 /--
 At exact detailed balance, the de Rham current, Connes infinitesimal, modular
-Hamiltonian difference, operator entropy readout, Araki gradient, and barrier
+Hamiltonian difference, state-surprisal variation, Araki gradient, and barrier
 force all vanish.
 -/
 theorem detailedBalance_trivializes_infinitesimal_dictionary
@@ -171,7 +193,7 @@ theorem detailedBalance_trivializes_infinitesimal_dictionary
     P.gauge.flow.d_ln_Q = 0 ∧
     P.connesInfinitesimal = 0 ∧
     P.modularHamiltonianDifference = 0 ∧
-    P.operatorBoltzmannEntropy = 0 ∧
+    P.stateSurprisalVariation = 0 ∧
     P.arakiRelativeEntropyGradient = 0 ∧
     P.selfConcordantBarrierForce = 0 := by
   have hdln : P.gauge.flow.d_ln_Q = 0 := by
@@ -182,7 +204,7 @@ theorem detailedBalance_trivializes_infinitesimal_dictionary
   refine ⟨hdln, ?_, ?_, ?_, ?_, ?_⟩
   · rw [P.connes_eq_modular, P.modular_eq_pathConstraint, hpath]
   · rw [P.modular_eq_pathConstraint, hpath]
-  · rw [P.boltzmannEntropy_eq_modular, P.modular_eq_pathConstraint, hpath]
+  · simp [stateSurprisalVariation, hpath]
   · rw [P.arakiGradient_eq_neg_pathConstraint, hpath, neg_zero]
   · rw [P.barrierForce_eq_neg_pathConstraint, hpath, neg_zero]
 
@@ -309,13 +331,20 @@ open InfoGeometry.Canonical.RelativeModularOperator
 
 variable {n : ℕ} [Nonempty (Fin n)]
 
-/-- In the finite commuting lane, `K = -log Δ` on every diagonal component. -/
-theorem finite_operatorBoltzmannEntropy_eq_neg_log_delta_diag
+/-- In the finite commuting lane, state surprisal is `K = -log Δ` componentwise. -/
+theorem finite_stateSurprisal_eq_neg_log_delta_diag
     (q q0 : PositiveRay (Fin n)) (i : Fin n) :
     relativeModularHamiltonianOperator (n := n) q q0 i i =
       -Real.log (relativeModularOperator (n := n) q q0 i i) := by
   rw [relativeModularHamiltonianOperator_diag]
   exact relativeModularPotential_eq_neg_log_relativeModularOperator_diag (n := n) q q0 i
+
+@[deprecated finite_stateSurprisal_eq_neg_log_delta_diag (since := "2026-07-27")]
+theorem finite_operatorBoltzmannEntropy_eq_neg_log_delta_diag
+    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
+    relativeModularHamiltonianOperator (n := n) q q0 i i =
+      -Real.log (relativeModularOperator (n := n) q q0 i i) :=
+  finite_stateSurprisal_eq_neg_log_delta_diag (n := n) q q0 i
 
 end FiniteDeltaPrimary
 

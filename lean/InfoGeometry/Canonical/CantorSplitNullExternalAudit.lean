@@ -45,47 +45,40 @@ inductive ExternalEngine where
 structure ExternalAuditLane where
   engine : ExternalEngine
   status : AuditStatus
-  isVerified : Bool
 
-/-- Explicitly marked verified finite lane. -/
+/-- A finite lane is verified exactly when its native status is `ok`. -/
 def Verified (lane : ExternalAuditLane) : Prop :=
-  lane.isVerified = true
+  lane.status = AuditStatus.ok
 
 /-- Macaulay2 with explicit `Dmodules` load reached the singular-locus readback. -/
 def observedMacaulay2SingularLocus : ExternalAuditLane where
   engine := ExternalEngine.macaulay2SingularLocus
   status := AuditStatus.ok
-  isVerified := true
 
 /-- Bounded `deRham(0,q)` timed out and is therefore unverified. -/
 def observedMacaulay2Derham0 : ExternalAuditLane where
   engine := ExternalEngine.macaulay2Derham0
   status := AuditStatus.timeout
-  isVerified := false
 
 /-- Sage/GAP lane completed the finite hyperbolic-pair readback. -/
 def observedSageGap : ExternalAuditLane where
   engine := ExternalEngine.sageGap
   status := AuditStatus.ok
-  isVerified := true
 
 /-- SymPy lane completed the finite split-null readback. -/
 def observedSymPy : ExternalAuditLane where
   engine := ExternalEngine.sympy
   status := AuditStatus.ok
-  isVerified := true
 
 /-- clifford lane completed the split `Cl(4,4)` null-vector readback. -/
 def observedClifford : ExternalAuditLane where
   engine := ExternalEngine.clifford
   status := AuditStatus.ok
-  isVerified := true
 
 /-- galgebra lane completed the split `Cl(4,4)` null-vector readback. -/
 def observedGalgebra : ExternalAuditLane where
   engine := ExternalEngine.galgebra
   status := AuditStatus.ok
-  isVerified := true
 
 @[simp] theorem observedMacaulay2SingularLocus_verified :
     Verified observedMacaulay2SingularLocus := by

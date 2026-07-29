@@ -45,9 +45,29 @@ theorem commonStageInner_smul_left_real
       r • commonStageInner E sys i j x y := by
   unfold commonStageInner
   have h :=
-    (sys.map (le_commonUpper_left i j)).map_smul
-      (r : ℂ) x
-  rw [h, inner_smul_left]
+    (sys.map
+      (le_commonUpper_left i j)).toLinearMap.map_smul_of_tower r x
+  change
+    inner ℂ
+        ((sys.map
+          (le_commonUpper_left i j)).toLinearMap (r • x))
+        (sys.map (le_commonUpper_right i j) y) =
+      r •
+        inner ℂ
+          (sys.map (le_commonUpper_left i j) x)
+          (sys.map (le_commonUpper_right i j) y)
+  rw [h]
+  change
+    inner ℂ
+        ((r : ℂ) •
+          (sys.map
+            (le_commonUpper_left i j)).toLinearMap x)
+        (sys.map (le_commonUpper_right i j) y) =
+      (r : ℂ) *
+        inner ℂ
+          (sys.map (le_commonUpper_left i j) x)
+          (sys.map (le_commonUpper_right i j) y)
+  rw [inner_smul_left]
   simp
 
 /-- Additivity in the second argument. -/
@@ -66,9 +86,29 @@ theorem commonStageInner_smul_right_real
       r • commonStageInner E sys i j x y := by
   unfold commonStageInner
   have h :=
-    (sys.map (le_commonUpper_right i j)).map_smul
-      (r : ℂ) y
-  rw [h, inner_smul_right]
+    (sys.map
+      (le_commonUpper_right i j)).toLinearMap.map_smul_of_tower r y
+  change
+    inner ℂ
+        (sys.map (le_commonUpper_left i j) x)
+        ((sys.map
+          (le_commonUpper_right i j)).toLinearMap (r • y)) =
+      r •
+        inner ℂ
+          (sys.map (le_commonUpper_left i j) x)
+          (sys.map (le_commonUpper_right i j) y)
+  rw [h]
+  change
+    inner ℂ
+        (sys.map (le_commonUpper_left i j) x)
+        ((r : ℂ) •
+          (sys.map
+            (le_commonUpper_right i j)).toLinearMap y) =
+      (r : ℂ) *
+        inner ℂ
+          (sys.map (le_commonUpper_left i j) x)
+          (sys.map (le_commonUpper_right i j) y)
+  rw [inner_smul_right]
   rfl
 
 /-- For a fixed first representative, pairing against a later stage is

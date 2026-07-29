@@ -159,60 +159,43 @@ theorem goutev_cycle_closes : restartVacuumLayer = holographicBoundaryLayer := r
 /-══════════════════════════════════════════════════════════════════════
   BRIDGES — connections to pre-proved theorems
   ═════════════════════════════════════════════════════════════════════-/
-structure BridgeArtifact where
-  name : String
-  artifact : String
-  exported_symbols : List String
+abbrev BridgeArtifact := String × String × List String
 
-def bridge_tomita_kms : BridgeArtifact where
-  name := "Tomita-KMS-V4"
-  artifact := "proofs/tomita_kms_v4.lean"
-  exported_symbols := ["KMSData", "KleinFour"]
+def bridge_tomita_kms : BridgeArtifact :=
+  ("Tomita-KMS-V4", "proofs/tomita_kms_v4.lean", ["KMSData", "KleinFour"])
 
-def bridge_krein_souriau : BridgeArtifact where
-  name := "Krein-Souriau"
-  artifact := "proofs/krein_souriau_full.lean"
-  exported_symbols := [
+def bridge_krein_souriau : BridgeArtifact :=
+  ("Krein-Souriau", "proofs/krein_souriau_full.lean", [
     "Jm_sq_I",
     "souriau_cocycle",
     "souriauDualPairing",
     "souriauPairingEnergy",
     "souriauDualPairing_eq_inner",
     "souriau_pairing_energy_eq_inner"
-  ]
+  ])
 
-def bridge_J_duality : BridgeArtifact where
-  name := "J-duality chain"
-  artifact := "proofs/J_duality_chain.lean"
-  exported_symbols := ["J_mod_sq_I", "V4"]
+def bridge_J_duality : BridgeArtifact :=
+  ("J-duality chain", "proofs/J_duality_chain.lean", ["J_mod_sq_I", "V4"])
 
-def bridge_clifford_seed : BridgeArtifact where
-  name := "Clifford seed"
-  artifact := "proofs/clifford_seed.lean"
-  exported_symbols := ["Cl11", "Pauli"]
+def bridge_clifford_seed : BridgeArtifact :=
+  ("Clifford seed", "proofs/clifford_seed.lean", ["Cl11", "Pauli"])
 
-def bridge_uhf_ladder : BridgeArtifact where
-  name := "UHF ladder"
-  artifact := "proofs/uhf_ladder.lean"
-  exported_symbols := ["cl11Seed", "thermodynamicLadder"]
+def bridge_uhf_ladder : BridgeArtifact :=
+  ("UHF ladder", "proofs/uhf_ladder.lean", ["cl11Seed", "thermodynamicLadder"])
 
 /-- Explicit colimit/number-theory bridge for diagonal MASA/cantor modeling. -/
-def bridge_uhf_colimit_dyadic : BridgeArtifact where
-  name := "Inductive colimit ↔ dyadic chain"
-  artifact := "proofs/inductive_colimit_uhf_group.lean"
-  exported_symbols := ["diagonalWordToDyadic", "diagonalWordToDyadicRange", "uhf_colimit_dyadic_bridge", "dyadic_is_union"]
+def bridge_uhf_colimit_dyadic : BridgeArtifact :=
+  ("Inductive colimit ↔ dyadic chain", "proofs/inductive_colimit_uhf_group.lean",
+    ["diagonalWordToDyadic", "diagonalWordToDyadicRange", "uhf_colimit_dyadic_bridge", "dyadic_is_union"])
 
 /-- Complex-temperature RH partition interpretation: damping + phase + interference. -/
-def bridge_complex_temperature_rh : BridgeArtifact where
-  name := "Complex-temperature RH partition dictionary"
-  artifact := "proofs/ComplexTemperatureRH.lean"
-  exported_symbols := ["complexTemperature", "finiteComplexArithmeticTrace", "criticalBalanceLine", "RHModel", "HilbertPólya_shape", "hp_shape_implies_rh", "bosonicPrimonPartition", "ordinaryFermionicPrimonPartition", "gradedFermionicPrimonPartition", "gradedPrimonPartition_at_zero"]
+def bridge_complex_temperature_rh : BridgeArtifact :=
+  ("Complex-temperature RH partition dictionary", "proofs/ComplexTemperatureRH.lean",
+    ["complexTemperature", "finiteComplexArithmeticTrace", "criticalBalanceLine", "RHModel", "HilbertPólya_shape", "hp_shape_implies_rh", "bosonicPrimonPartition", "ordinaryFermionicPrimonPartition", "gradedFermionicPrimonPartition", "gradedPrimonPartition_at_zero"])
 
 /-- Layer-11 RH spectral dictionary: poles, critical damping, and Hilbert-Pólya map. -/
-def bridge_riemann_hypothesis_layer11 : BridgeArtifact where
-  name := "Riemann hypothesis Layer 11"
-  artifact := "proofs/RiemannHypothesis.lean"
-  exported_symbols := [
+def bridge_riemann_hypothesis_layer11 : BridgeArtifact :=
+  ("Riemann hypothesis Layer 11", "proofs/RiemannHypothesis.lean", [
     "complexTemperature",
     "criticalDamping",
     "criticalDampingLine",
@@ -231,27 +214,23 @@ def bridge_riemann_hypothesis_layer11 : BridgeArtifact where
     "rhGradedIndexSingularity",
     "rh_graded_index_singularity_iff_denominator_zero",
     "rh_zeta_zero_implies_graded_index_pole"
-  ]
+  ])
 
 /-- Layer-12 geometric lightcone climax: graded index poles as parabolic boundary. -/
-def bridge_geometric_zeta_lightcone : BridgeArtifact where
-  name := "Geometric zeta Layer 12"
-  artifact := "proofs/GeometricZeta.lean"
-  exported_symbols := [
+def bridge_geometric_zeta_lightcone : BridgeArtifact :=
+  ("Geometric zeta Layer 12", "proofs/GeometricZeta.lean", [
     "Z_fermion_graded",
     "geometricReciprocalSingularity",
     "paravector_temperature",
     "riemann_zeros_to_lightcones_model",
     "riemann_zeros_are_lightcones",
     "geometric_zeta_lightcone_synthesis"
-  ]
+  ])
 
 /-- Finite Pauli/Souriau thermodynamic induction:
     finite graded-index factors and a compatible boundary cocone. -/
-def bridge_souriau_thermo_colimit : BridgeArtifact where
-  name := "Souriau thermodynamic finite colimit"
-  artifact := "proofs/SouriauThermoColimit.lean"
-  exported_symbols := [
+def bridge_souriau_thermo_colimit : BridgeArtifact :=
+  ("Souriau thermodynamic finite colimit", "proofs/SouriauThermoColimit.lean", [
     "SouriauFockStage",
     "SouriauEmbed",
     "SouriauBoundaryProfile",
@@ -273,23 +252,17 @@ def bridge_souriau_thermo_colimit : BridgeArtifact where
     "SplitParavector",
     "paravectorTemperature",
     "paravectorLightcone_iff"
-  ]
+  ])
 
 
-def bridge_fib_anyons : BridgeArtifact where
-  name := "Fibonacci anyons"
-  artifact := "proofs/FibAnyonThm*.lean"
-  exported_symbols := ["pentagon", "hexagon", "yang_baxter"]
+def bridge_fib_anyons : BridgeArtifact :=
+  ("Fibonacci anyons", "proofs/FibAnyonThm*.lean", ["pentagon", "hexagon", "yang_baxter"])
 
-def bridge_virasoro : BridgeArtifact where
-  name := "Virasoro cocycle"
-  artifact := "VirasoroProject.WittAlgebra"
-  exported_symbols := ["virasoro_cocycle"]
+def bridge_virasoro : BridgeArtifact :=
+  ("Virasoro cocycle", "VirasoroProject.WittAlgebra", ["virasoro_cocycle"])
 
-def bridge_trifactor_geometry : BridgeArtifact where
-  name := "Trifactor geometry and Pauli/Zorn lane"
-  artifact := "proofs/TrifactorGeometry.lean"
-  exported_symbols := [
+def bridge_trifactor_geometry : BridgeArtifact :=
+  ("Trifactor geometry and Pauli/Zorn lane", "proofs/TrifactorGeometry.lean", [
     "TrifactorGeometry.CubicOperator",
     "TrifactorGeometry.cubicOperator_iff_trifactor",
     "TrifactorGeometry.cubic_real_roots",
@@ -305,12 +278,10 @@ def bridge_trifactor_geometry : BridgeArtifact where
     "TrifactorGeometry.pauliQuadratic",
     "TrifactorGeometry.det_paravector",
     "TrifactorGeometry.trifactor_geometry_synthesis"
-  ]
+  ])
 
-def bridge_canonical_souriau_pauli : BridgeArtifact where
-  name := "Canonical Souriau Pauli thermodynamics"
-  artifact := "proofs/CanonicalSouriauPauliThermodynamics.lean"
-  exported_symbols := [
+def bridge_canonical_souriau_pauli : BridgeArtifact :=
+  ("Canonical Souriau Pauli thermodynamics", "proofs/CanonicalSouriauPauliThermodynamics.lean", [
     "CanonicalSouriauPauliThermodynamics.PauliDual",
     "CanonicalSouriauPauliThermodynamics.PauliParavector",
     "CanonicalSouriauPauliThermodynamics.pauliPairing",
@@ -340,12 +311,10 @@ def bridge_canonical_souriau_pauli : BridgeArtifact where
     "CanonicalSouriauPauliThermodynamics.pauliHamiltonian_det",
     "CanonicalSouriauPauliThermodynamics.pauliHamiltonian_trace",
     "CanonicalSouriauPauliThermodynamics.canonical_souriau_pauli_thermo_synthesis"
-  ]
+  ])
 
-def bridge_furey_zorn_fermion : BridgeArtifact where
-  name := "Furey-style Zorn fermion bridge"
-  artifact := "proofs/FureyZornFermionBridge.lean"
-  exported_symbols := [
+def bridge_furey_zorn_fermion : BridgeArtifact :=
+  ("Furey-style Zorn fermion bridge", "proofs/FureyZornFermionBridge.lean", [
     "FureyZornFermionBridge.ColorTriplet",
     "FureyZornFermionBridge.leptonProjectorPlus",
     "FureyZornFermionBridge.leptonProjectorMinus",
@@ -357,12 +326,10 @@ def bridge_furey_zorn_fermion : BridgeArtifact where
     "FureyZornFermionBridge.lower_lane_selected_by_upper_projector",
     "FureyZornFermionBridge.lower_lane_annihilated_by_lower_projector",
     "FureyZornFermionBridge.furey_zorn_fermion_bridge_synthesis"
-  ]
+  ])
 
-def bridge_chiral_twisted_fibration : BridgeArtifact where
-  name := "Chiral twisted fibration bookkeeping"
-  artifact := "proofs/ChiralTwistedFibration.lean"
-  exported_symbols := [
+def bridge_chiral_twisted_fibration : BridgeArtifact :=
+  ("Chiral twisted fibration bookkeeping", "proofs/ChiralTwistedFibration.lean", [
     "ChiralTwistedFibration.SpaceLabel",
     "ChiralTwistedFibration.realDim",
     "ChiralTwistedFibration.quaternionic_hopf_dimension",
@@ -379,19 +346,17 @@ def bridge_chiral_twisted_fibration : BridgeArtifact where
     "ChiralTwistedFibration.chiralProjector_partition",
     "ChiralTwistedFibration.chiral_twisted_fibration_theorem",
     "ChiralTwistedFibration.twistor_fiber_chiral_projector_synthesis"
-  ]
+  ])
 
 /-- Direct-limit Hilbert-space backbone for the finite-stage Dirac-Hodge operators. -/
-def bridge_dirac_colimit : BridgeArtifact where
-  name := "Infinite Dirac-Hodge operator from inductive finite-stage colimit"
-  artifact := "proofs/DiracColimit.lean"
-  exported_symbols := [
+def bridge_dirac_colimit : BridgeArtifact :=
+  ("Infinite Dirac-Hodge operator from inductive finite-stage colimit", "proofs/DiracColimit.lean", [
     "InfoGeometry.Canonical.DiracColimit.DiracColimitData",
     "InfoGeometry.Canonical.DiracColimit.DiracColimitLimit",
     "InfoGeometry.Canonical.DiracColimit.dirac_colimit_selfAdjoint",
     "InfoGeometry.Canonical.DiracColimit.dirac_colimit_spectrum_is_real",
     "InfoGeometry.Canonical.DiracColimit.dirac_colimit_reality_chain"
-  ]
+  ])
 
 def bridge_registry : List BridgeArtifact :=
   [ bridge_tomita_kms

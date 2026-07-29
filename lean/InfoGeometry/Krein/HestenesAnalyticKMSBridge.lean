@@ -87,46 +87,14 @@ structure Bridge where
 Minimal witness surface with explicit certificates but without duplicating
 `flow_invariant` and boundary-certificate names at this level.
 -/
-@[rep_depth krein]
-structure MinimalHestenesAnalyticKMSWitness where
-  flow :
-    OperatorFlow EndH
-
-  preserves_KLinear :
-    ∀ t A,
-      KLinear (E := E) A →
-        KLinear (E := E) (flow.flow t A)
-
-  phase_left_covariant :
-    ∀ t A,
-      flow.flow t ((clockAxis (E := E)).comp A)
-        =
-      (clockAxis (E := E)).comp (flow.flow t A)
-
-  phase_right_covariant :
-    ∀ t A,
-      flow.flow t (A.comp (clockAxis (E := E)))
-        =
-      (flow.flow t A).comp (clockAxis (E := E))
-
-  beta :
-    ℝ
-
-  kms :
-    KMSState EndH flow beta
+abbrev MinimalHestenesAnalyticKMSWitness : Type _ := Bridge (E := E)
 
 namespace MinimalHestenesAnalyticKMSWitness
 
 variable (B : MinimalHestenesAnalyticKMSWitness (E := E))
 
 /-- Canonical adapter into the full bridge surface. -/
-def toBridge : Bridge (E := E) where
-  flow := B.flow
-  preserves_KLinear := B.preserves_KLinear
-  phase_left_covariant := B.phase_left_covariant
-  phase_right_covariant := B.phase_right_covariant
-  beta := B.beta
-  kms := B.kms
+def toBridge : Bridge (E := E) := B
 
 /-- KMS state readback is preserved by `toBridge`. -/
 theorem toBridge_state_eq :

@@ -43,14 +43,19 @@ witness.  Computing it as a difference of chiral kernel dimensions is separate
 closure debt; this packet prevents that missing construction from being hidden
 behind a fake definition.
 -/
-structure DrazinAnomalyReadout (Γ Op : SpinorOp) (k : ℕ) where
-  drazinInverse : SpinorOp
-  drazinProof : IsDrazinInverse Op drazinInverse k
-  anomalyIndex : ℤ
+abbrev DrazinAnomalyReadout (_Γ Op : SpinorOp) (k : ℕ) : Type :=
+  Σ' drazinInverse : SpinorOp,
+    Σ' _anomalyIndex : ℤ,
+      IsDrazinInverse Op drazinInverse k
 
 namespace DrazinAnomalyReadout
 
 variable {Γ Op : SpinorOp} {k : ℕ}
+
+abbrev drazinInverse (R : DrazinAnomalyReadout Γ Op k) : SpinorOp := R.1
+abbrev anomalyIndex (R : DrazinAnomalyReadout Γ Op k) : ℤ := R.2.1
+abbrev drazinProof (R : DrazinAnomalyReadout Γ Op k) :
+    IsDrazinInverse Op R.drazinInverse k := R.2.2
 
 /-- A readout exposes the underlying Drazin-defect witness. -/
 theorem is_drazin_defective (R : DrazinAnomalyReadout Γ Op k) :

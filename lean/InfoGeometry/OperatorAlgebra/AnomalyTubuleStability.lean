@@ -268,31 +268,37 @@ The point of this socket is the strict qualification: a local defect becomes a
 stable global object only after a nonzero anomaly/topological readout proves
 that it cannot be removed by local gauge choices.
 -/
-structure TubuleStability
-    (Op Sector : Type*) [Ring Op] where
-  /-- Local defect locus: Drazin nil branch, isotropic cone shadow, tear, etc. -/
-  defect : Set Op
+abbrev TubuleStability
+    (Op Sector : Type*) [Ring Op] : Type _ :=
+  Σ' _defect : Set Op,
+    Σ' _energy : Op → ℝ,
+      Σ' anomaly : AnomalyReadout Op,
+        Σ' sectorReadout : Op → Sector,
+          Σ' isNontrivialSector : Sector → Prop,
+            ∀ x : Op,
+              anomaly.anomaly x ≠ anomaly.anomaly 0 →
+                isNontrivialSector (sectorReadout x)
 
-  /-- Energy or action readout. -/
-  energy : Op → ℝ
+namespace TubuleStability
 
-  /-- Anomaly/global obstruction readout. -/
-  anomaly : AnomalyReadout Op
-
-  /-- Sector readout for configurations/operators. -/
-  sectorReadout : Op → Sector
-
-  /-- Chosen nontrivial sector predicate. -/
-  isNontrivialSector : Sector → Prop
-
-  /--
-  Nonzero anomaly/topological readout rules out a trivial sector for the
-  selected model.
-  -/
-  stable_nontrivial_of_nonzero_anomaly :
+abbrev defect {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) : Set Op := T.1
+abbrev energy {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) : Op → ℝ := T.2.1
+abbrev anomaly {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) : AnomalyReadout Op := T.2.2.1
+abbrev sectorReadout {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) : Op → Sector := T.2.2.2.1
+abbrev isNontrivialSector {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) : Sector → Prop := T.2.2.2.2.1
+abbrev stable_nontrivial_of_nonzero_anomaly
+    {Op Sector : Type*} [Ring Op]
+    (T : TubuleStability Op Sector) :
     ∀ x : Op,
-      anomaly.anomaly x ≠ anomaly.anomaly 0 →
-        isNontrivialSector (sectorReadout x)
+      T.anomaly.anomaly x ≠ T.anomaly.anomaly 0 →
+        T.isNontrivialSector (T.sectorReadout x) := T.2.2.2.2.2
+
+end TubuleStability
 
 namespace TubuleStability
 

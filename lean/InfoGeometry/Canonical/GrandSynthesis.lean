@@ -25,8 +25,7 @@ variable (n : Nat)
 Thermodynamic canopy package: a doubly-stochastic Sinkhorn branch carrying the
 thermodynamic and entropy monotonicity legs.
 -/
-structure ThermoCanopyPackage where
-  trajectory : DoublyStochasticSinkhornTrajectory n
+abbrev ThermoCanopyPackage := DoublyStochasticSinkhornTrajectory n
 
 /--
 Thermodynamic canopy closure: one package discharges both equilibrium and
@@ -34,11 +33,11 @@ RN-entropy monotonicity branches.
 -/
 theorem canopy_thermo_equilibrium_and_entropy
     (P : ThermoCanopyPackage n) :
-    ThermodynamicEquilibrium n P.trajectory ∧
-      SinkhornEntropyMonotoneRN n P.trajectory.traj := by
+    ThermodynamicEquilibrium n P ∧
+      SinkhornEntropyMonotoneRN n P.traj := by
   refine ⟨?_, ?_⟩
-  · exact thermodynamicEquilibrium_of_doublyStochastic (n := n) P.trajectory
-  · exact doublyStochastic_sinkhornEntropyMonotoneRN (n := n) P.trajectory
+  · exact thermodynamicEquilibrium_of_doublyStochastic (n := n) P
+  · exact doublyStochastic_sinkhornEntropyMonotoneRN (n := n) P
 
 variable {X : Type*}
 
@@ -81,8 +80,8 @@ theorem grandSynthesis_trunk_to_canopy_closure
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (S : SingularTransportSystem E)
     (hZero : S.boundary.boundaryGenerator = 0) :
-    ThermodynamicEquilibrium n P.trajectory ∧
-      SinkhornEntropyMonotoneRN n P.trajectory.traj ∧
+    ThermodynamicEquilibrium n P ∧
+      SinkhornEntropyMonotoneRN n P.traj ∧
       (∃ c : ℝ, ∀ s, flow s u v = c) ∧
       S.boundary.regularRadialTransport = 0 := by
   refine ⟨?_, ?_, ?_, ?_⟩
@@ -107,8 +106,8 @@ theorem grandSynthesis_root_factorization
     (S : SingularTransportSystem E)
     (hZero : S.boundary.boundaryGenerator = 0) :
     ∃ c : ℝ,
-      ThermodynamicEquilibrium n P.trajectory ∧
-      SinkhornEntropyMonotoneRN n P.trajectory.traj ∧
+      ThermodynamicEquilibrium n P ∧
+      SinkhornEntropyMonotoneRN n P.traj ∧
       (∀ s, flow s u v = c) ∧
       S.boundary.regularRadialTransport = 0 := by
   obtain ⟨c, hc⟩ := canopy_geometric_component_constant flow u v hDiff hGeo

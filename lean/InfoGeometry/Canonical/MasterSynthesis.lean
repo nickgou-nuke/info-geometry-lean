@@ -79,8 +79,8 @@ GrandSynthesis canopy packet is available under the synthesis surface name.
 -/
 theorem master_thermo_canopy_packet (n : Nat)
     (P : ThermoCanopyPackage n) :
-    ThermodynamicEquilibrium n P.trajectory ∧
-      SinkhornEntropyMonotoneRN n P.trajectory.traj := by
+    ThermodynamicEquilibrium n P ∧
+      SinkhornEntropyMonotoneRN n P.traj := by
   exact canopy_thermo_equilibrium_and_entropy (n := n) P
 
 /--
@@ -101,8 +101,8 @@ theorem master_synthesis_packet
         antisymmetricDivergence P.divergence ω φ ∧
       antisymmetricDivergence P.divergence φ ω =
         -antisymmetricDivergence P.divergence ω φ ∧
-      ThermodynamicEquilibrium n C.trajectory ∧
-      SinkhornEntropyMonotoneRN n C.trajectory.traj := by
+      ThermodynamicEquilibrium n C ∧
+      SinkhornEntropyMonotoneRN n C.traj := by
   have hfinite := infinitesimal_dictionary_packet (P := P) θ ω φ
   have hgrand := canopy_thermo_equilibrium_and_entropy (n := n) C
   exact ⟨hfinite.1, hfinite.2.1, hfinite.2.2.1, hfinite.2.2.2.1,

@@ -71,7 +71,9 @@ theorem outerLocalVariance_eq_zero_iff (C : OuterSensitivityContract)
   · intro hv
     by_contra hzero
     have hpos : 0 < outerLocalVariance C v := outerLocalVariance_pos C hzero
-    linarith
+    have h00 : ¬ 0 < (0 : ℝ) :=
+      not_lt_of_ge (show (0 : ℝ) ≤ 0 from le_rfl)
+    exact h00 (by simpa [hv] using hpos)
   · intro hv
     simpa [hv] using outerLocalVariance_zero C
 

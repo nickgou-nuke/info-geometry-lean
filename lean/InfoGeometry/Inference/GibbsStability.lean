@@ -63,4 +63,36 @@ theorem exactScalarHessian_pos_iff_pairwise
   rw [exactScalarHessian_eq_stiffness_sub_pairwise w h₂ f ε hε hw]
   exact sub_pos
 
+/--
+When Fisher stiffness is positive, scalar stability is equivalent to the
+temperature exceeding the explicit pairwise-disagreement threshold
+`D / (2 A)`, where `D` is the finite pairwise energy and `A` is stiffness.
+-/
+theorem exactScalarHessian_pos_iff_temperature_gt_critical
+    (w h₂ f : Data → ℝ) (ε : ℝ)
+    (hε : 0 < ε) (hw : ∑ i : Data, w i = 1)
+    (hA : 0 < fisherStiffness w h₂) :
+    0 < exactScalarHessian w h₂ f ε ↔
+      (∑ i : Data, ∑ j : Data,
+        w i * w j * (f i - f j) ^ 2) / (2 * fisherStiffness w h₂) < ε := by
+  rw [exactScalarHessian_pos_iff_pairwise w h₂ f ε hε hw]
+  let D : ℝ := ∑ i : Data, ∑ j : Data,
+    w i * w j * (f i - f j) ^ 2
+  let A : ℝ := fisherStiffness w h₂
+  change (1 / (2 * ε)) * D < A ↔ D / (2 * A) < ε
+  have hdenε : 0 < 2 * ε := by positivity
+  have hdenA : 0 < 2 * A := by positivity
+  constructor
+  · intro h
+    have hmul : D < A * (2 * ε) := by
+      have hdiv := (div_lt_iff₀ hdenε).mp (show D / (2 * ε) < A by
+        convert h using 1 <;> field_simp [ne_of_gt hε])
+      linarith
+    apply (div_lt_iff₀ hdenA).2
+    nlinarith
+  · intro h
+    have hmul : D < ε * (2 * A) := (div_lt_iff₀ hdenA).mp h
+    have hdiv : D / (2 * ε) < A := (div_lt_iff₀ hdenε).2 (by nlinarith)
+    convert hdiv using 1 <;> field_simp [ne_of_gt hε]
+
 end InfoGeometry.Inference

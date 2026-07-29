@@ -40,14 +40,15 @@ variable
     ContinuousStarInductiveSystem.CompatibleStateFamily
       Stage sys)
 
-local notation "G" =>
-  fun i => (ω.state i).functional.GNS
+/-- Completed GNS Hilbert space at one filtered stage. -/
+abbrev GNSStage (i : I) : Type u :=
+  (ω.state i).functional.GNS
 
 /-- The filtered completed-GNS transitions bundled as a coherent isometric
 direct system.  Identity and composition are inherited from the native GNS
 transport theorems, not postulated as compatibility fields. -/
 def filteredGNSIsometricDirectSystem :
-    IsometricDirectSystem G where
+    IsometricDirectSystem (GNSStage Stage sys ω) where
   map := fun hij =>
     filteredGNSLinearIsometry Stage sys ω hij
   map_id := by
@@ -59,31 +60,44 @@ def filteredGNSIsometricDirectSystem :
   map_comp := by
     intro i j k hij hjk
     ext x
-    change
-      filteredGNSMap Stage sys ω hjk
-          (filteredGNSMap Stage sys ω hij x) =
-        filteredGNSMap Stage sys ω
-          (le_trans hij hjk) x
-    exact congrFun
-      (filteredGNSMap_comp Stage sys ω hij hjk) x
+    calc
+      ((filteredGNSLinearIsometry
+          Stage sys ω hjk).comp
+        (filteredGNSLinearIsometry
+          Stage sys ω hij)) x =
+          filteredGNSLinearIsometry Stage sys ω hjk
+            (filteredGNSLinearIsometry Stage sys ω hij x) :=
+        rfl
+      _ = filteredGNSMap Stage sys ω hjk
+            (filteredGNSMap Stage sys ω hij x) := by
+          rw [filteredGNSLinearIsometry_apply,
+            filteredGNSLinearIsometry_apply]
+      _ = filteredGNSMap Stage sys ω
+            (le_trans hij hjk) x :=
+          congrFun
+            (filteredGNSMap_comp
+              Stage sys ω hij hjk) x
+      _ = filteredGNSLinearIsometry Stage sys ω
+            (le_trans hij hjk) x := by
+          rw [filteredGNSLinearIsometry_apply]
 
 /-- Algebraic filtered colimit of the completed stage GNS spaces. -/
 abbrev AlgebraicGNSHilbertColimit : Type u :=
-  RealDirectLimit G
+  RealDirectLimit (GNSStage Stage sys ω)
     (filteredGNSIsometricDirectSystem Stage sys ω)
 
 /-- Hilbert completion of the filtered GNS direct limit. -/
 abbrev GNSHilbertColimit : Type u :=
-  HilbertDirectLimit G
+  HilbertDirectLimit (GNSStage Stage sys ω)
     (filteredGNSIsometricDirectSystem Stage sys ω)
 
 /-- Canonical complex linear isometry from a stage GNS space into the
 completed filtered GNS colimit. -/
 def gnsStageToHilbertColimit
-    (i : I) :
+  (i : I) :
     (ω.state i).functional.GNS →ₗᵢ[ℂ]
       GNSHilbertColimit Stage sys ω :=
-  stageToHilbertDirectLimit G
+  stageToHilbertDirectLimit (GNSStage Stage sys ω)
     (filteredGNSIsometricDirectSystem Stage sys ω) i
 
 @[simp] theorem gnsStageToHilbertColimit_transition
@@ -92,8 +106,11 @@ def gnsStageToHilbertColimit
     gnsStageToHilbertColimit Stage sys ω j
         (filteredGNSMap Stage sys ω hij x) =
       gnsStageToHilbertColimit Stage sys ω i x := by
+  rw [← filteredGNSLinearIsometry_apply
+    Stage sys ω hij x]
   exact
-    stageToHilbertDirectLimit_transition G
+    stageToHilbertDirectLimit_transition
+      (GNSStage Stage sys ω)
       (filteredGNSIsometricDirectSystem Stage sys ω)
       hij x
 
@@ -104,7 +121,8 @@ theorem dense_iUnion_range_gnsStageToHilbertColimit :
       (⋃ i : I,
         Set.range
           (gnsStageToHilbertColimit Stage sys ω i)) :=
-  dense_iUnion_range_stageToHilbertDirectLimit G
+  dense_iUnion_range_stageToHilbertDirectLimit
+    (GNSStage Stage sys ω)
     (filteredGNSIsometricDirectSystem Stage sys ω)
 
 /-- The filtered GNS Hilbert colimit is complete. -/

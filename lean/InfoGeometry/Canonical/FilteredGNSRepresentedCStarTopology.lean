@@ -113,4 +113,27 @@ formula on the canonical dense completion inclusion. -/
       (algebraicStarDirectLimitOf Stage sys i a)
   exact representedRangeCompletionEquiv_stage Stage sys ω i a
 
+/- The continuous algebra equivalence transports the canonical dense
+completion inclusion to a dense subset of the represented C-star closure.
+This is a topological consequence of the uniform completion API and the
+surjectivity of the bundled equivalence; no finite enumeration is involved. -/
+theorem representedRangeCompletionContinuousAlgEquiv_coe_denseRange :
+    DenseRange
+      (fun x : representedAlgebraicRange Stage sys ω =>
+        representedRangeCompletionContinuousAlgEquiv Stage sys ω
+          (x : representedAlgebraicRangeCompletion Stage sys ω)) := by
+  have h_equiv :
+      DenseRange
+        (representedRangeCompletionContinuousAlgEquiv Stage sys ω) :=
+    (representedRangeCompletionContinuousAlgEquiv Stage sys ω).surjective.denseRange
+  have h_coe :
+      DenseRange
+        (fun x : representedAlgebraicRange Stage sys ω =>
+          (x : representedAlgebraicRangeCompletion Stage sys ω)) :=
+    UniformSpace.Completion.denseRange_coe
+  simpa [Function.comp_def] using
+    h_equiv.comp h_coe
+      (representedRangeCompletionHomeomorph_continuous
+        Stage sys ω)
+
 end CStarStateColimit.Native.FilteredGNSRepresentedCStarTopology

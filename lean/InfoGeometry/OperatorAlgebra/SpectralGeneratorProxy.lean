@@ -364,17 +364,9 @@ structure BoundedRealRepresentation
     [Ring A] [Module ℝ A]
     [NormedAddCommGroup H] [NormedSpace ℝ H] where
   /-- Representation map. -/
-  rep : A → EndR H
+  rep : A →+* EndR H
 
-  map_one :
-    rep 1 = ContinuousLinearMap.id ℝ H
-
-  map_mul :
-    ∀ a b : A, rep (a * b) = (rep a).comp (rep b)
-
-  map_add :
-    ∀ a b : A, rep (a + b) = rep a + rep b
-
+  /-- Compatibility with the given real module structure. -/
   map_smul :
     ∀ (r : ℝ) (a : A), rep (r • a) = r • rep a
 
@@ -389,12 +381,26 @@ variable (ρ : BoundedRealRepresentation A H)
 
 theorem rep_one :
     ρ.rep 1 = ContinuousLinearMap.id ℝ H :=
-  ρ.map_one
+  ρ.rep.map_one
+
+theorem map_one :
+    ρ.rep 1 = ContinuousLinearMap.id ℝ H :=
+  ρ.rep.map_one
+
+theorem map_add
+    (a b : A) :
+    ρ.rep (a + b) = ρ.rep a + ρ.rep b :=
+  ρ.rep.map_add a b
 
 theorem rep_mul
     (a b : A) :
     ρ.rep (a * b) = (ρ.rep a).comp (ρ.rep b) :=
-  ρ.map_mul a b
+  ρ.rep.map_mul a b
+
+theorem map_mul
+    (a b : A) :
+    ρ.rep (a * b) = (ρ.rep a).comp (ρ.rep b) :=
+  ρ.rep.map_mul a b
 
 end BoundedRealRepresentation
 

@@ -429,6 +429,7 @@ import InfoGeometry.Canonical.FQHEMooreReadPfaffianBridge
 import InfoGeometry.Canonical.NoncommutativeTorusAlgebraBridge
 import InfoGeometry.Canonical.FibonacciBraidingPhaseBridge
 import InfoGeometry.Canonical.KitaevBdGPfaffianBridge
+import InfoGeometry.Canonical.NambuGorkovParticleHoleBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge
@@ -1496,6 +1497,7 @@ import InfoGeometry.Arithmetic.RamanujanDefectTower
 import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift

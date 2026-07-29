@@ -2,6 +2,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Physics.SplitOctonionBraidSU3
@@ -23,6 +24,8 @@ abbrev ZornCell :=
   InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 namespace ZornCell
+
+abbrev ColorGauge := Matrix.GeneralLinearGroup (Fin 3) ℂ
 
 /-- Dot product pairing for color vectors v • w = ∑ v_i w_i. -/
 abbrev colorDot :=
@@ -66,12 +69,33 @@ theorem null_boundary_color_pairing_zero (v w : Fin 3 → ℂ) (h_null : colorDo
 
 /-- **Theorem**: Gell-Mann SU(3) Unitary Color Gauge Action Trace Invariance:
     Tr(U * (v ⊗ w) * U⁻¹) = Tr(v ⊗ w). -/
-theorem gellmann_su3_gauge_trace_invariant (U U_inv : Matrix (Fin 3) (Fin 3) ℂ) (v w : Fin 3 → ℂ) (h_inv : U_inv * U = 1) :
-    trace (U * colorTensorMatrix v w * U_inv) = trace (colorTensorMatrix v w) := by
-  have h_comm : trace (U * colorTensorMatrix v w * U_inv) = trace (U_inv * (U * colorTensorMatrix v w)) := trace_mul_comm (U * colorTensorMatrix v w) U_inv
+theorem gellmann_su3_gauge_trace_invariant
+    (U : ColorGauge) (v w : Fin 3 → ℂ) :
+    trace
+        ((U : Matrix (Fin 3) (Fin 3) ℂ) * colorTensorMatrix v w *
+          ((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ)) =
+      trace (colorTensorMatrix v w) := by
+  have h_comm :
+      trace
+          ((U : Matrix (Fin 3) (Fin 3) ℂ) * colorTensorMatrix v w *
+            ((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ)) =
+        trace
+          (((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ) *
+            ((U : Matrix (Fin 3) (Fin 3) ℂ) * colorTensorMatrix v w)) :=
+    trace_mul_comm
+      ((U : Matrix (Fin 3) (Fin 3) ℂ) * colorTensorMatrix v w)
+      ((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ)
   rw [h_comm]
-  have h_assoc : U_inv * (U * colorTensorMatrix v w) = (U_inv * U) * colorTensorMatrix v w := by
+  have h_assoc :
+      ((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ) *
+          ((U : Matrix (Fin 3) (Fin 3) ℂ) * colorTensorMatrix v w) =
+        (((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ) *
+          (U : Matrix (Fin 3) (Fin 3) ℂ)) * colorTensorMatrix v w := by
     rw [← Matrix.mul_assoc]
+  have h_inv :
+      ((U⁻¹ : ColorGauge) : Matrix (Fin 3) (Fin 3) ℂ) *
+          (U : Matrix (Fin 3) (Fin 3) ℂ) = 1 :=
+    (U⁻¹ : ColorGauge).val_inv
   rw [h_assoc, h_inv, one_mul]
 
 end ZornCell

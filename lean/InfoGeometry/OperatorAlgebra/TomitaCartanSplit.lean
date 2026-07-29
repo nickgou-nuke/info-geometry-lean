@@ -38,23 +38,9 @@ mirror-even/mirror-odd lift theorems.
 structure MirrorInvolution
     (Op : Type uOp) [Ring Op] where
   /-- Mirror operation, morally `X ↦ J X J`. -/
-  mirror : Op → Op
+  mirror : Op ≃+* Op
 
-  map_zero :
-    mirror 0 = 0
-
-  map_one :
-    mirror 1 = 1
-
-  map_add :
-    ∀ x y : Op, mirror (x + y) = mirror x + mirror y
-
-  map_neg :
-    ∀ x : Op, mirror (-x) = -mirror x
-
-  map_mul :
-    ∀ x y : Op, mirror (x * y) = mirror x * mirror y
-
+  /-- Applying the mirror twice is the identity. -/
   involutive :
     ∀ x : Op, mirror (mirror x) = x
 
@@ -62,6 +48,19 @@ namespace MirrorInvolution
 
 variable {Op : Type uOp} [Ring Op]
 variable (M : MirrorInvolution Op)
+
+theorem map_zero : M.mirror 0 = 0 := M.mirror.map_zero
+
+theorem map_one : M.mirror 1 = 1 := M.mirror.map_one
+
+theorem map_add (x y : Op) :
+    M.mirror (x + y) = M.mirror x + M.mirror y := M.mirror.map_add x y
+
+theorem map_neg (x : Op) :
+    M.mirror (-x) = -M.mirror x := M.mirror.map_neg x
+
+theorem map_mul (x y : Op) :
+    M.mirror (x * y) = M.mirror x * M.mirror y := M.mirror.map_mul x y
 
 /-- Mirror preserves subtraction. -/
 theorem map_sub

@@ -1,6 +1,8 @@
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Clopen
 import Mathlib.Topology.Algebra.Algebra
+import Mathlib.Topology.Algebra.StarSubalgebra
+import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 import Mathlib.Topology.Instances.Complex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
@@ -473,5 +475,79 @@ theorem cylinderColimitToContinuousMap_injective :
   apply Subtype.ext
   funext x
   exact congrArg (fun k : C(CantorBoundary, ℂ) => k x) gh
+
+/-! Star closure and topological density of the finite-cylinder image. -/
+
+theorem cylinder_colimit_star {g : CantorBoundary → ℂ}
+    (hg : g ∈ CylinderColimit) : star g ∈ CylinderColimit := by
+  rcases hg with ⟨⟨n, f⟩, rfl⟩
+  refine ⟨⟨n, fun w => star (f w)⟩, ?_⟩
+  ext x
+  rfl
+
+def cylinderColimitStarSubalgebra :
+    StarSubalgebra ℂ (CantorBoundary → ℂ) :=
+  { toSubalgebra := cylinderColimitSubalgebra
+    star_mem' := cylinder_colimit_star }
+
+noncomputable def cylinderColimitToContinuousMapStarAlgHom :
+    cylinderColimitStarSubalgebra →⋆ₐ[ℂ] C(CantorBoundary, ℂ) where
+  toFun := fun g => cylinderContinuousMap ⟨g.1, g.property⟩
+  map_one' := by
+    ext x
+    rfl
+  map_mul' g h := by
+    ext x
+    rfl
+  map_zero' := by
+    ext x
+    rfl
+  map_add' g h := by
+    ext x
+    rfl
+  commutes' c := by
+    ext x
+    rfl
+  map_star' g := by
+    ext x
+    rfl
+
+noncomputable def cylinderContinuousStarSubalgebra :
+    StarSubalgebra ℂ C(CantorBoundary, ℂ) :=
+  cylinderColimitToContinuousMapStarAlgHom.range
+
+theorem cylinderContinuousStarSubalgebra_separatesPoints :
+    cylinderContinuousStarSubalgebra.toSubalgebra.SeparatesPoints := by
+  intro x y hxy
+  obtain ⟨n, w, hx, hy⟩ := cylinderSet_separates hxy
+  let f : DiagAlg n := fun v => if v = w then 1 else 0
+  let g : cylinderColimitStarSubalgebra :=
+    ⟨cylinder n f, cylinder_mem_colimit n f⟩
+  let q := cylinderColimitToContinuousMapStarAlgHom g
+  refine ⟨fun z => q z, ?_, ?_⟩
+  · exact ⟨q, ⟨g, rfl⟩, rfl⟩
+  · change f (boundaryPrefix n x) ≠ f (boundaryPrefix n y)
+    change boundaryPrefix n x = w at hx
+    change boundaryPrefix n y ≠ w at hy
+    simp [f, hx, hy]
+
+theorem cylinderContinuousStarSubalgebra_dense :
+    cylinderContinuousStarSubalgebra.topologicalClosure = ⊤ := by
+  exact ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints
+    cylinderContinuousStarSubalgebra cylinderContinuousStarSubalgebra_separatesPoints
+
+/-- The bundled finite-cylinder star homomorphism has dense range in the
+    continuous functions on the product boundary.  This is the direct
+    `DenseRange` form of the Stone--Weierstrass closure statement above. -/
+theorem cylinderColimitToContinuousMapStarAlgHom_denseRange :
+    DenseRange (cylinderColimitToContinuousMapStarAlgHom :
+      cylinderColimitStarSubalgebra → C(CantorBoundary, ℂ)) := by
+  rw [denseRange_iff_closure_range]
+  have h := cylinderContinuousStarSubalgebra_dense
+  have h' := congrArg (fun s : StarSubalgebra ℂ C(CantorBoundary, ℂ) =>
+      (s : Set C(CantorBoundary, ℂ))) h
+  change closure (↑cylinderContinuousStarSubalgebra) =
+      (Set.univ : Set C(CantorBoundary, ℂ)) at h'
+  simpa [cylinderContinuousStarSubalgebra] using h'
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology

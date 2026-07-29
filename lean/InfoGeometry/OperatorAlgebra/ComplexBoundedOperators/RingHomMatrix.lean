@@ -23,22 +23,19 @@ open scoped BigOperators
 
 /-- Ordered ring embedding into the reals, matching AFP `real_embedding`. -/
 class RealEmbedding (α : Type*) [CommRing α] [LinearOrder α] [IsStrictOrderedRing α] where
-  /-- Scalar conversion into the reals. -/
-  toReal : α → ℝ
-  /-- Conversion preserves zero. -/
-  map_zero : toReal 0 = 0
-  /-- Conversion preserves one. -/
-  map_one : toReal 1 = 1
-  /-- Conversion preserves addition. -/
-  map_add : ∀ x y : α, toReal (x + y) = toReal x + toReal y
-  /-- Conversion preserves multiplication. -/
-  map_mul : ∀ x y : α, toReal (x * y) = toReal x * toReal y
+  /-- The native multiplicative and additive embedding into the reals. -/
+  toRingHom : α →+* ℝ
   /-- Real upper bounds pull back to integer-ceiling bounds in the source ring. -/
-  le_ceil : ∀ {x : α} {z : ℝ}, toReal x ≤ z → x ≤ (Int.ceil z : α)
+  le_ceil : ∀ {x : α} {z : ℝ}, toRingHom x ≤ z → x ≤ (Int.ceil z : α)
 
 namespace RealEmbedding
 
 variable {α : Type*} [CommRing α] [LinearOrder α] [IsStrictOrderedRing α] [RealEmbedding α]
+
+/-! Compatibility readouts for the historical scalar-conversion interface. -/
+
+def toReal (x : α) : ℝ :=
+  RealEmbedding.toRingHom x
 
 /-- The scalar real conversion attached to a `RealEmbedding`. -/
 def realOf (x : α) : ℝ :=
@@ -46,27 +43,19 @@ def realOf (x : α) : ℝ :=
 
 @[simp]
 theorem realOf_zero : realOf (0 : α) = 0 :=
-  RealEmbedding.map_zero
+  RealEmbedding.toRingHom.map_zero
 
 @[simp]
 theorem realOf_one : realOf (1 : α) = 1 :=
-  RealEmbedding.map_one
+  RealEmbedding.toRingHom.map_one
 
 @[simp]
 theorem realOf_add (x y : α) : realOf (x + y) = realOf x + realOf y :=
-  RealEmbedding.map_add x y
+  RealEmbedding.toRingHom.map_add x y
 
 @[simp]
 theorem realOf_mul (x y : α) : realOf (x * y) = realOf x * realOf y :=
-  RealEmbedding.map_mul x y
-
-/-- The bundled ring homomorphism behind `realOf`. -/
-def toRingHom : α →+* ℝ where
-  toFun := realOf
-  map_one' := realOf_one
-  map_mul' := realOf_mul
-  map_zero' := realOf_zero
-  map_add' := realOf_add
+  RealEmbedding.toRingHom.map_mul x y
 
 @[simp]
 theorem toRingHom_apply (x : α) : toRingHom x = realOf x :=
@@ -83,33 +72,33 @@ theorem realOf_le_ceil {x : α} {z : ℝ} (h : realOf x ≤ z) :
 end RealEmbedding
 
 instance : RealEmbedding ℝ where
-  toReal x := x
-  map_zero := rfl
-  map_one := rfl
-  map_add _ _ := rfl
-  map_mul _ _ := rfl
+  toRingHom := RingHom.id ℝ
   le_ceil := by
     intro x z h
     exact le_trans h (Int.le_ceil z)
 
 instance : RealEmbedding ℤ where
-  toReal x := x
-  map_zero := by norm_num
-  map_one := by norm_num
-  map_add x y := by norm_num
-  map_mul x y := by norm_num
+  toRingHom :=
+    { toFun := fun x => x
+      map_one' := by norm_num
+      map_mul' := by intro x y; norm_num
+      map_zero' := by norm_num
+      map_add' := by intro x y; norm_num }
   le_ceil := by
     intro x z h
+    change (x : ℝ) ≤ z at h
     exact_mod_cast (le_trans h (Int.le_ceil z))
 
 instance : RealEmbedding ℚ where
-  toReal x := x
-  map_zero := by norm_num
-  map_one := by norm_num
-  map_add x y := by norm_num
-  map_mul x y := by norm_num
+  toRingHom :=
+    { toFun := fun x => x
+      map_one' := by norm_num
+      map_mul' := by intro x y; norm_num
+      map_zero' := by norm_num
+      map_add' := by intro x y; norm_num }
   le_ceil := by
     intro x z h
+    change (x : ℝ) ≤ z at h
     exact_mod_cast (le_trans h (Int.le_ceil z))
 
 /-- AFP `mat_real`: entrywise conversion of a matrix into a real matrix. -/

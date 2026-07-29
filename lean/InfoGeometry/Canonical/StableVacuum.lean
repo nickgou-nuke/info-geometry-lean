@@ -461,9 +461,9 @@ The work expression is the usual Hamiltonian form
 is kept separate in `KMSPassiveEquilibrium`.
 -/
 structure HamiltonianPassivity
-    (Op : Type*) [Mul Op] [Sub Op] [Star Op] where
+    (Op : Type*) [AddMonoid Op] [Mul Op] [Sub Op] [Star Op] where
   /-- Real energy-state readout. -/
-  omega : Op → ℝ
+  omega : Op →+ ℝ
 
   /-- Physical Hamiltonian used in the work inequality. -/
   H : Op
@@ -477,7 +477,7 @@ structure HamiltonianPassivity
 
 namespace HamiltonianPassivity
 
-variable {Op : Type*} [Mul Op] [Sub Op] [Star Op]
+variable {Op : Type*} [AddMonoid Op] [Mul Op] [Sub Op] [Star Op]
 variable (P : HamiltonianPassivity Op)
 
 /-- Work extracted from a cyclic perturbation in Hamiltonian form. -/
@@ -501,7 +501,7 @@ state.  It only packages the two equilibrium controls that belong to the
 finite-temperature layer.
 -/
 structure KMSPassiveEquilibrium
-    (Op : Type*) [Mul Op] [Sub Op] [Star Op]
+    (Op : Type*) [AddMonoid Op] [Mul Op] [Sub Op] [Star Op]
     (sigma : InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Op)
     (beta : ℝ) where
   /-- KMS state with respect to the chosen flow. -/
@@ -512,7 +512,7 @@ structure KMSPassiveEquilibrium
 
 namespace KMSPassiveEquilibrium
 
-variable {Op : Type*} [Mul Op] [Sub Op] [Star Op]
+variable {Op : Type*} [AddMonoid Op] [Mul Op] [Sub Op] [Star Op]
 variable {sigma : InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Op} {beta : ℝ}
 variable (E : KMSPassiveEquilibrium Op sigma beta)
 
@@ -599,7 +599,7 @@ The physical Hamiltonian is in `spectral.H`; the modular/thermal flow is in
 structure StableVacuumArchitecture
     (V Op Index Tangent : Type*)
     [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-    [Mul Op] [Sub Op] [Star Op]
+    [AddMonoid Op] [Mul Op] [Sub Op] [Star Op]
     [SeminormedAddCommGroup Tangent] [InnerProductSpace ℝ Tangent]
     (sigma : InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Op)
     (beta : ℝ) where
@@ -617,7 +617,7 @@ namespace StableVacuumArchitecture
 variable
     {V Op Index Tangent : Type*}
     [NormedAddCommGroup V] [InnerProductSpace ℝ V]
-    [Mul Op] [Sub Op] [Star Op]
+    [AddMonoid Op] [Mul Op] [Sub Op] [Star Op]
     [SeminormedAddCommGroup Tangent] [InnerProductSpace ℝ Tangent]
     {sigma : InfoGeometry.OperatorAlgebra.Thermodynamics.FlowDatum Op}
     {beta : ℝ}

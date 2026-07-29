@@ -48,10 +48,12 @@ theorem susy_partner_hamiltonian_trace_eq :
 /-- **Theorem**: Möbius Boundary Quadric Scalar Square Root Duality:
     If det(Z) = a * b - v • w = 0, then a * b = v • w. -/
 theorem moebius_boundary_scalar_product_eq_dot (a b : ℂ) (v w : Fin 3 → ℂ)
-    (h_null : ZornCell.detZ ⟨a, b, v, w⟩ = 0) :
+    (h_null : ZornCell.detZ ⟨a, w, v, b⟩ = 0) :
     a * b = ZornCell.colorDot v w := by
   dsimp [ZornCell.detZ] at h_null
-  exact sub_eq_zero.mp h_null
+  have h_pair := sub_eq_zero.mp h_null
+  simpa [ZornCell.colorDot, InfoGeometry.Physics.SplitOctonionBraidSU3.dot3,
+    mul_comm, add_comm, add_left_comm] using h_pair
 
 /-- **Theorem**: Supercharge Nilpotent Trace Vanishing: Tr(Q_+²) = 0 and Tr(Q_-²) = 0. -/
 theorem supercharge_nilpotent_trace_zero :

@@ -800,18 +800,9 @@ invariants are invariant.
 -/
 structure OperatorSymmetryAction
     (G : Type uG) (Op : Type uOp)
-    [Group G] [Ring Op] [Module ℝ Op] where
+    [Group G] [Ring Op] [Algebra ℝ Op] where
   /-- The action of a symmetry element on the operator algebra. -/
-  act : G → Op →ₗ[ℝ] Op
-
-  /-- The action preserves the multiplicative identity. -/
-  map_one :
-    ∀ g : G, act g 1 = 1
-
-  /-- The action preserves multiplication. -/
-  map_mul :
-    ∀ (g : G) (x y : Op),
-      act g (x * y) = act g x * act g y
+  act : G → Op ≃ₐ[ℝ] Op
 
   /-- The identity group element acts trivially. -/
   act_id :
@@ -825,16 +816,9 @@ structure OperatorSymmetryAction
 /-- Convert a linear operator symmetry action into a ring-automorphism action. -/
 def toSymmetryAction
     {G : Type uG} {Op : Type uOp}
-    [Group G] [Ring Op] [Module ℝ Op]
+    [Group G] [Ring Op] [Algebra ℝ Op]
     (S : OperatorSymmetryAction G Op) : SymmetryAction G Op where
-  act g := {
-    toFun := S.act g
-    invFun := S.act g⁻¹
-    left_inv := by intro x; rw [← S.act_mul, inv_mul_cancel, S.act_id]
-    right_inv := by intro x; rw [← S.act_mul, mul_inv_cancel, S.act_id]
-    map_add' := (S.act g).map_add
-    map_mul' := S.map_mul g
-  }
+  act g := (S.act g).toRingEquiv
   act_one x := S.act_id x
   act_mul g h x := S.act_mul g h x
 
@@ -842,9 +826,14 @@ namespace OperatorSymmetryAction
 
 variable
     {G : Type uG} {Op : Type uOp}
-    [Group G] [Ring Op] [Module ℝ Op]
+    [Group G] [Ring Op] [Algebra ℝ Op]
 
 variable (S : OperatorSymmetryAction G Op)
+
+theorem map_one (g : G) : S.act g 1 = 1 := (S.act g).map_one
+
+theorem map_mul (g : G) (x y : Op) :
+    S.act g (x * y) = S.act g x * S.act g y := (S.act g).map_mul x y
 
 @[simp]
 theorem act_one_apply
@@ -876,7 +865,7 @@ theorem act_smul
     (c : ℝ)
     (x : Op) :
     S.act g (c • x) = c • S.act g x :=
-  (S.act g).map_smul c x
+  (S.act g).toLinearMap.map_smul c x
 
 /-! ### Invariant operators -/
 
@@ -894,11 +883,11 @@ def invariantSubmodule : Submodule ℝ Op where
   add_mem' := by
     intro x y hx hy g
     change S.act g (x + y) = x + y
-    rw [(S.act g).map_add, hx g, hy g]
+    rw [(S.act g).toRingEquiv.map_add, hx g, hy g]
   smul_mem' := by
     intro a x hx g
     change S.act g (a • x) = a • x
-    rw [(S.act g).map_smul, hx g]
+    rw [(S.act g).toLinearMap.map_smul, hx g]
 
 @[simp]
 theorem mem_invariantSubmodule_iff
@@ -993,7 +982,7 @@ def commutator
     (x y : Op) : Op :=
   x * y - y * x
 
-omit [Module ℝ Op] in
+omit [Algebra ℝ Op] in
 @[simp]
 theorem commutator_self
     (x : Op) :
@@ -1107,7 +1096,7 @@ end InvariantProjectorPair
 /-- A linear map between two symmetry systems that commutes with the actions. -/
 structure EquivariantLinearMap
     {Op₂ : Type uOp₂}
-    [Ring Op₂] [Module ℝ Op₂]
+    [Ring Op₂] [Algebra ℝ Op₂]
     (S₂ : OperatorSymmetryAction G Op₂) where
   toLinearMap : Op →ₗ[ℝ] Op₂
 
@@ -1121,7 +1110,7 @@ namespace EquivariantLinearMap
 variable
     {S : OperatorSymmetryAction G Op}
     {Op₂ : Type uOp₂}
-    [Ring Op₂] [Module ℝ Op₂]
+    [Ring Op₂] [Algebra ℝ Op₂]
     {S₂ : OperatorSymmetryAction G Op₂}
 
 variable (F : S.EquivariantLinearMap S₂)
@@ -1139,17 +1128,9 @@ end EquivariantLinearMap
 /-- A multiplicative equivariant map between operator algebras. -/
 structure EquivariantAlgebraMap
     {Op₂ : Type uOp₂}
-    [Ring Op₂] [Module ℝ Op₂]
+    [Ring Op₂] [Algebra ℝ Op₂]
     (S₂ : OperatorSymmetryAction G Op₂) where
-  toLinearMap : Op →ₗ[ℝ] Op₂
-
-  map_one :
-    toLinearMap 1 = 1
-
-  map_mul :
-    ∀ x y : Op,
-      toLinearMap (x * y) =
-        toLinearMap x * toLinearMap y
+  toLinearMap : Op →ₐ[ℝ] Op₂
 
   equivariant :
     ∀ (g : G) (x : Op),
@@ -1161,10 +1142,16 @@ namespace EquivariantAlgebraMap
 variable
     {S : OperatorSymmetryAction G Op}
     {Op₂ : Type uOp₂}
-    [Ring Op₂] [Module ℝ Op₂]
+    [Ring Op₂] [Algebra ℝ Op₂]
     {S₂ : OperatorSymmetryAction G Op₂}
 
 variable (F : S.EquivariantAlgebraMap S₂)
+
+theorem map_one : F.toLinearMap 1 = 1 := F.toLinearMap.map_one
+
+theorem map_mul (x y : Op) :
+    F.toLinearMap (x * y) = F.toLinearMap x * F.toLinearMap y :=
+  F.toLinearMap.map_mul x y
 
 /-- Equivariant algebra maps send invariant elements to invariant elements. -/
 theorem maps_invariants_to_invariants
@@ -1196,7 +1183,7 @@ theorem map_commutator
     F.toLinearMap (commutator x y) =
       commutator (F.toLinearMap x) (F.toLinearMap y) := by
   dsimp [commutator]
-  rw [(F.toLinearMap).map_sub,
+  rw [F.toLinearMap.toRingHom.map_sub,
     EquivariantAlgebraMap.map_mul F x y,
     EquivariantAlgebraMap.map_mul F y x]
 
@@ -1355,9 +1342,9 @@ theorem invariant_P_left_of_preserves_chi
         = S.act g ((1 / 2 : ℝ) • ((1 : Op) + C.chi)) := by
           rw [C.P_left_def]
     _ = (1 / 2 : ℝ) • S.act g ((1 : Op) + C.chi) := by
-          rw [(S.act g).map_smul]
+          rw [(S.act g).toLinearMap.map_smul]
     _ = (1 / 2 : ℝ) • ((1 : Op) + C.chi) := by
-          rw [(S.act g).map_add, S.map_one, hC g]
+          rw [(S.act g).toRingEquiv.map_add, S.map_one, hC g]
     _ = C.P_left := by
           exact C.P_left_def.symm
 
@@ -1370,13 +1357,14 @@ theorem invariant_P_right_of_preserves_chi
   have hsub :
       S.act g ((1 : Op) - C.chi) =
         (1 : Op) - C.chi := by
-    rw [sub_eq_add_neg, (S.act g).map_add, S.map_one, (S.act g).map_neg, hC g]
+    rw [sub_eq_add_neg, (S.act g).toRingEquiv.map_add, S.map_one,
+      (S.act g).toRingEquiv.map_neg, hC g]
   calc
     S.act g C.P_right
         = S.act g ((1 / 2 : ℝ) • ((1 : Op) - C.chi)) := by
           rw [C.P_right_def]
     _ = (1 / 2 : ℝ) • S.act g ((1 : Op) - C.chi) := by
-          rw [(S.act g).map_smul]
+          rw [(S.act g).toLinearMap.map_smul]
     _ = (1 / 2 : ℝ) • ((1 : Op) - C.chi) := by
           rw [hsub]
     _ = C.P_right := by
@@ -1510,7 +1498,7 @@ of readouts. Concrete geometry modules should refine this with spectra,
 projectors, traces, cyclic cocycles, Drazin data, Siegel data, or metric data.
 -/
 structure OperatorGeometryOrigin
-    (G : Type uG) (Op : Type uOp) [Group G] [Ring Op] [Module ℝ Op] where
+    (G : Type uG) (Op : Type uOp) [Group G] [Ring Op] [Algebra ℝ Op] where
   symmetry :
     OperatorSymmetryAction G Op
 
@@ -1525,7 +1513,7 @@ structure OperatorGeometryOrigin
 namespace OperatorGeometryOrigin
 
 variable {G : Type uG} {Op : Type uOp}
-variable [Group G] [Ring Op] [Module ℝ Op]
+variable [Group G] [Ring Op] [Algebra ℝ Op]
 
 /-- Historical readback derived from the presence of concrete projector
 geometry rather than stored as an evidence marker. -/
@@ -1553,7 +1541,7 @@ action on one fixed ambient operator algebra.
 -/
 def HasInvariantOperatorOrigin
     (G : Type uG) (Op : Type uOp)
-    [Group G] [Ring Op] [Module ℝ Op] : Prop :=
+    [Group G] [Ring Op] [Algebra ℝ Op] : Prop :=
   ∃ S : OperatorSymmetryAction G Op,
     (∀ x : Op, S.act 1 x = x)
       ∧ (∀ (g h : G) (x : Op), S.act (g * h) x = S.act g (S.act h x))
@@ -1562,7 +1550,7 @@ def HasInvariantOperatorOrigin
 
 theorem hasInvariantOperatorOrigin_of_operatorSymmetryAction
     (G : Type uG) (Op : Type uOp)
-    [Group G] [Ring Op] [Module ℝ Op]
+    [Group G] [Ring Op] [Algebra ℝ Op]
     (S : OperatorSymmetryAction G Op) :
     HasInvariantOperatorOrigin G Op := by
   exact ⟨S, S.act_id, S.act_mul, S.map_one, S.map_mul⟩

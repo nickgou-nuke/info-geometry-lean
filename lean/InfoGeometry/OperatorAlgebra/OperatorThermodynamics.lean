@@ -38,9 +38,9 @@ This is deliberately minimal. Concrete modules may add positivity, normality,
 faithfulness, continuity, or GNS data.
 -/
 structure AlgebraicState
-    (Op : Type*) where
-  /-- Evaluation of the state. -/
-  eval : Op → ℂ
+    (Op : Type*) [AddMonoid Op] where
+  /-- Additive evaluation of the state. -/
+  eval : Op →+ ℂ
 
 /--
 A one-parameter automorphism-like flow.
@@ -48,9 +48,9 @@ A one-parameter automorphism-like flow.
 For type III and AQFT models this is usually a modular flow.
 -/
 structure OperatorFlow
-    (Op : Type*) [Mul Op] where
-  /-- The time-parametrized flow. -/
-  flow : ℝ → Op → Op
+    (Op : Type*) [Monoid Op] where
+  /-- The time-parametrized multiplicative automorphism flow. -/
+  flow : ℝ → Op ≃* Op
 
   /-- Time zero acts trivially. -/
   flow_zero :
@@ -62,7 +62,7 @@ structure OperatorFlow
 
 namespace OperatorFlow
 
-variable {Op : Type*} [Mul Op]
+variable {Op : Type*} [Monoid Op]
 variable (σ : OperatorFlow Op)
 
 @[simp]
@@ -77,6 +77,19 @@ theorem flow_add_apply
     σ.flow (s + t) x = σ.flow s (σ.flow t x) :=
   σ.flow_add s t x
 
+theorem flow_neg_apply
+    (t : ℝ)
+    (x : Op) :
+    σ.flow (-t) (σ.flow t x) = x := by
+  rw [← σ.flow_add (-t) t x]
+  simp
+
+theorem flow_mul_apply
+    (t : ℝ)
+    (x y : Op) :
+    σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
+  (σ.flow t).map_mul x y
+
 end OperatorFlow
 
 /-! ## 2. KMS state socket -/
@@ -89,7 +102,7 @@ this field should be replaced or refined by the usual holomorphic strip
 boundary condition.
 -/
 structure KMSState
-    (Op : Type*) [Mul Op]
+    (Op : Type*) [AddMonoid Op] [Monoid Op]
     (σ : OperatorFlow Op)
     (beta : ℝ) where
   /-- The underlying state. -/
@@ -100,7 +113,7 @@ structure KMSState
     ∀ t x, state.eval (σ.flow t x) = state.eval x
 
   /-- Complex-time correlation attached to an ordered pair of observables. -/
-  correlation : Op → Op → ℂ → ℂ
+  correlation : Op →+ Op →+ ℂ → ℂ
 
   /-- Holomorphy on the open KMS strip. -/
   correlation_differentiableOn_openStrip :
@@ -122,7 +135,7 @@ structure KMSState
 
 namespace KMSState
 
-variable {Op : Type*} [Mul Op]
+variable {Op : Type*} [AddMonoid Op] [Monoid Op]
 variable {σ : OperatorFlow Op}
 variable {beta : ℝ}
 variable (K : KMSState Op σ beta)
@@ -165,7 +178,7 @@ This is the type-III-safe replacement for the finite-dimensional phrase
 -/
 structure StateRestriction
     (Global Local : Type*)
-    [Mul Global] [Mul Local] where
+    [AddMonoid Global] [Mul Global] [AddMonoid Local] [Mul Local] where
   /-- Embedding of the local algebra into the global algebra. -/
   includeMap : Local → Global
 
@@ -182,7 +195,8 @@ structure StateRestriction
 
 namespace StateRestriction
 
-variable {Global Local : Type*} [Mul Global] [Mul Local]
+variable {Global Local : Type*}
+  [AddMonoid Global] [Mul Global] [AddMonoid Local] [Mul Local]
 variable (R : StateRestriction Global Local)
 
 /-- Re-export the restriction equation. -/
@@ -203,12 +217,12 @@ keeps that content as supplied evidence instead of making it definitionally
 `True`.
 -/
 structure KMSAnalyticBoundary
-    {Op : Type*} [Mul Op]
-    (eval : Op → ℂ)
+    {Op : Type*} [AddMonoid Op] [Monoid Op]
+    (eval : Op →+ ℂ)
     (σ : OperatorFlow Op)
     (beta : ℝ) where
   /-- Complex-time correlation attached to each ordered observable pair. -/
-  correlation : Op → Op → ℂ → ℂ
+  correlation : Op →+ Op →+ ℂ → ℂ
   /-- Holomorphy on the open KMS strip. -/
   differentiableOn_openStrip :
     ∀ A B : Op,
@@ -237,17 +251,17 @@ structure ObserverReduction
     (Op : Type*) [Ring Op]
     (T : TomitaCommutantDatum Op) where
   /-- Global state/expectation readout. -/
-  globalEval : Op → ℂ
+  globalEval : Op →+ ℂ
 
   /-- Local observer readout on the observable algebra. -/
-  observableEval : Op → ℂ
+  observableEval : Op →+ ℂ
 
   /-- On observable elements, local and global readouts agree. -/
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
   /-- Concrete restriction/conditional-reduction backend. -/
-  reduce : Op → Op
+  reduce : Op →+ Op
 
   /-- Every reduced observable belongs to the visible Tomita algebra. -/
   reduce_mem_observable :
@@ -338,7 +352,8 @@ theorem exists_kms_state_for_observer :
     ∃ ω : KMSState Op σ beta,
       ω.state.eval = Θ.reduction.observableEval := by
   refine ⟨Θ.thermal, ?_⟩
-  funext A
+  apply AddMonoidHom.ext
+  intro A
   exact Θ.thermal_eq_reduction A
 
 /-- The observer-reduced state carries the named KMS boundary certificate. -/
@@ -396,7 +411,7 @@ structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
     (T : TomitaCommutantDatum Op) where
   /-- Boundary map/readout. -/
-  boundary : Op → Op
+  boundary : Op →+ Op
 
   /-- Observable elements hitting the boundary are routed to the commutant. -/
   boundary_maps_observable_to_commutant :
@@ -464,7 +479,7 @@ This is the formal Tomita-Takesaki socket: the state restricted to the
 observable algebra is KMS for its modular flow.
 -/
 structure ModularKMSDatum
-    (Op : Type*) [Mul Op] where
+    (Op : Type*) [AddMonoid Op] [Monoid Op] where
   /-- Modular flow. -/
   modularFlow : OperatorFlow Op
 
@@ -484,7 +499,7 @@ Without this field, the KMS state is modular-thermal but not yet physically
 identified as Unruh or Hawking radiation.
 -/
 structure HorizonFlowCalibration
-    (Op : Type*) [Mul Op]
+    (Op : Type*) [AddMonoid Op] [Monoid Op]
     (σ : OperatorFlow Op) where
   /-- Physical flow, e.g. boost or Killing horizon flow. -/
   physicalFlow : OperatorFlow Op
@@ -507,7 +522,7 @@ that a modular KMS state plus a horizon-flow calibration yields a physical
 thermal readout.
 -/
 structure EmergentThermalRadiation
-    (Op : Type*) [Mul Op] where
+    (Op : Type*) [AddMonoid Op] [Monoid Op] where
   /-- Modular KMS theorem socket. -/
   modularKMS : ModularKMSDatum Op
 
@@ -528,7 +543,7 @@ structure EmergentThermalRadiation
 
 namespace EmergentThermalRadiation
 
-variable {Op : Type*} [Mul Op]
+variable {Op : Type*} [AddMonoid Op] [Monoid Op]
 variable (E : EmergentThermalRadiation Op)
 
 /-- The local state is KMS before geometric interpretation. -/
@@ -559,8 +574,8 @@ In concrete Tomita-Takesaki applications this is the modular automorphism flow
 -/
 structure FlowDatum
     (Op : Type*) where
-  /-- Time-parametrized flow. -/
-  flow : ℝ → Op → Op
+  /-- Time-parametrized bijective flow. -/
+  flow : ℝ → Op ≃ Op
 
   /-- Time zero is the identity. -/
   flow_zero :
@@ -586,6 +601,13 @@ theorem flow_add_apply
     (x : Op) :
     σ.flow (s + t) x = σ.flow s (σ.flow t x) :=
   σ.flow_add s t x
+
+theorem flow_neg_apply
+    (t : ℝ)
+    (x : Op) :
+    σ.flow (-t) (σ.flow t x) = x := by
+  rw [← σ.flow_add (-t) t x]
+  simp
 
 end FlowDatum
 
@@ -637,7 +659,7 @@ theorem flow_mul_apply
 /-- Forget the multiplicative law and regard a modular flow as a plain flow datum. -/
 def toFlowDatum :
     FlowDatum Op where
-  flow := fun t A => σ.flow t A
+  flow := fun t => σ.flow t
   flow_zero := σ.flow_zero
   flow_add := σ.flow_add
 
@@ -648,7 +670,7 @@ The generic KMS carrier is only an algebraic readout. Positivity and normality
 are not defined for a bare `Type*` with `[Mul Op]`; concrete C*-algebra models
 must use Mathlib's `PositiveLinearMap` carrier.
 -/
-abbrev StateFunctional (Op : Type*) :=
+abbrev StateFunctional (Op : Type*) [AddMonoid Op] :=
   InfoGeometry.OperatorAlgebra.OperatorThermodynamics.AlgebraicState Op
 
 /-! ## 2. KMS condition -/
@@ -660,12 +682,12 @@ The true KMS condition is an analytic strip-boundary condition.  This algebraic
 layer records it as named data, not as an automatically true proposition.
 -/
 structure KMSAnalyticCertificate
-    {Op : Type*} [Mul Op]
+    {Op : Type*} [AddMonoid Op] [Mul Op]
     (σ : FlowDatum Op)
     (β : ℝ)
     (ω : StateFunctional Op) where
   /-- Complex-time correlation attached to each ordered pair of observables. -/
-  correlation : Op → Op → ℂ → ℂ
+  correlation : Op →+ Op →+ ℂ → ℂ
 
   /-- Holomorphy on the open KMS strip `0 < im z < β`. -/
   differentiableOn_openStrip :
@@ -687,7 +709,7 @@ structure KMSAnalyticCertificate
 
 namespace KMSAnalyticCertificate
 
-variable {Op : Type*} [Mul Op]
+variable {Op : Type*} [AddMonoid Op] [Mul Op]
 variable {σ : FlowDatum Op} {β : ℝ} {ω : StateFunctional Op}
 
 /-- The exact KMS strip and both boundary equations as one derived predicate. -/
@@ -713,7 +735,7 @@ end KMSAnalyticCertificate
 
 /-- A KMS state for a given flow and inverse temperature. -/
 structure KMSState
-    (Op : Type*) [Mul Op]
+    (Op : Type*) [AddMonoid Op] [Mul Op]
     (σ : FlowDatum Op)
     (β : ℝ) where
   /-- Underlying state/readout. -/
@@ -730,7 +752,7 @@ structure KMSState
 
 namespace KMSState
 
-variable {Op : Type*} [Mul Op] {σ : FlowDatum Op} {β : ℝ}
+variable {Op : Type*} [AddMonoid Op] [Mul Op] {σ : FlowDatum Op} {β : ℝ}
 variable (ω : KMSState Op σ β)
 
 /-- Re-export real-time invariance. -/
@@ -758,11 +780,11 @@ ambient algebraic data.
 -/
 structure KMSAnalyticBoundary
     {Op : Type*} [Ring Op]
-    (eval : Op → ℂ)
+    (eval : Op →+ ℂ)
     (σ : ModularFlow Op)
     (β : ℝ) where
   /-- Complex-time correlation attached to each ordered observable pair. -/
-  correlation : Op → Op → ℂ → ℂ
+  correlation : Op →+ Op →+ ℂ → ℂ
   /-- Holomorphy on the open KMS strip. -/
   differentiableOn_openStrip :
     ∀ A B : Op,
@@ -841,12 +863,13 @@ commutant."  In type I finite-dimensional situations, a separate module may
 instantiate this restriction by an actual partial trace.
 -/
 structure ObservableRestrictionDatum
-    (Global Visible : Type*) where
+    (Global Visible : Type*) [AddMonoid Global] [Mul Global]
+    [AddMonoid Visible] [Mul Visible] where
   /-- Embedding of visible observables into the global carrier. -/
-  embedVisible : Visible → Global
+  embedVisible : Visible →+ Global
 
   /-- Concrete observer restriction from global to visible observables. -/
-  restrictVisible : Global → Visible
+  restrictVisible : Global →+ Visible
 
   /-- Restriction is a left inverse of the visible inclusion. -/
   restrictVisible_embedVisible :
@@ -865,7 +888,8 @@ structure ObservableRestrictionDatum
 
 namespace ObservableRestrictionDatum
 
-variable {Global Visible : Type*}
+variable {Global Visible : Type*} [AddMonoid Global] [Mul Global]
+  [AddMonoid Visible] [Mul Visible]
 variable (R : ObservableRestrictionDatum Global Visible)
 
 /-- Re-export visible evaluation as restricted global evaluation. -/
@@ -907,17 +931,17 @@ structure ObserverReduction
     (Op : Type*) [Ring Op]
     (T : TomitaCommutantDatum Op) where
   /-- Global state/expectation readout. -/
-  globalEval : Op → ℂ
+  globalEval : Op →+ ℂ
 
   /-- Local observer readout on the observable algebra. -/
-  observableEval : Op → ℂ
+  observableEval : Op →+ ℂ
 
   /-- On observable elements, the local readout agrees with the global readout. -/
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
   /-- Concrete restriction/conditional-reduction backend. -/
-  reduce : Op → Op
+  reduce : Op →+ Op
 
   /-- Every reduced observable belongs to the visible Tomita algebra. -/
   reduce_mem_observable :
@@ -1010,7 +1034,8 @@ theorem exists_kms_state_for_observer :
     ∃ ω : KMSState Op σ.toFlowDatum β,
       ω.state.eval = Θ.reduction.observableEval := by
   refine ⟨Θ.thermal, ?_⟩
-  funext A
+  apply AddMonoidHom.ext
+  intro A
   exact Θ.thermal_eq_reduction A
 
 /-- The observer-reduced state carries the named KMS boundary certificate. -/
@@ -1071,7 +1096,7 @@ structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
     (T : TomitaCommutantDatum Op) where
   /-- Boundary map/readout. -/
-  boundary : Op → Op
+  boundary : Op →+ Op
 
   /-- Observable elements hitting the boundary are routed to the commutant. -/
   boundary_maps_observable_to_commutant :
@@ -1142,7 +1167,8 @@ This replaces the heuristic "tracing out the commutant produces a thermal
 state."
 -/
 structure ObservableKMSReduction
-    (Global Visible : Type*) [Mul Visible] where
+    (Global Visible : Type*) [AddMonoid Global] [Mul Global]
+    [AddMonoid Visible] [Mul Visible] where
   /-- Observable restriction. -/
   restriction :
     ObservableRestrictionDatum Global Visible
@@ -1167,7 +1193,8 @@ structure ObservableKMSReduction
 
 namespace ObservableKMSReduction
 
-variable {Global Visible : Type*} [Ring Visible]
+variable {Global Visible : Type*} [AddMonoid Global] [Mul Global]
+  [AddMonoid Visible] [Mul Visible]
 variable (R : ObservableKMSReduction Global Visible)
 
 /-- The restricted visible state is KMS. -/
@@ -1223,7 +1250,8 @@ structure HorizonThermalCalibration
 
 /-- A Hawking/Unruh branch is visible KMS reduction plus geometric calibration. -/
 structure HawkingUnruhBranch
-    (Global Visible : Type*) [Ring Visible] where
+    (Global Visible : Type*) [AddMonoid Global] [Mul Global]
+    [Ring Visible] where
   /-- Visible KMS reduction. -/
   reduction :
     ObservableKMSReduction Global Visible
@@ -1238,7 +1266,8 @@ structure HawkingUnruhBranch
 
 namespace HawkingUnruhBranch
 
-variable {Global Visible : Type*} [Ring Visible]
+variable {Global Visible : Type*} [AddMonoid Global] [Mul Global]
+  [Ring Visible]
 variable (H : HawkingUnruhBranch Global Visible)
 
 /-- The observer sees a KMS state. -/

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentation
 import InfoGeometry.Canonical.StarAlgEquivTransport
+import Mathlib.Analysis.Normed.Operator.ContinuousAlgEquiv
 
 /-!
 # Transport normal form for global GNS stage representations
@@ -24,6 +25,9 @@ open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 open CStarStateColimit.Native.FilteredGNSTailRepresentation
 open CStarStateColimit.Native.FilteredGNSTailStarRepresentation
 open CStarStateColimit.Native.FilteredGNSCofinalTail
+open InfoGeometry.Canonical.FilteredIsometricInnerProductColimit
+open InfoGeometry.Canonical.FilteredIsometricInnerProductDirectLimit
+open InfoGeometry.Canonical.FilteredIsometricHilbertCompletion
 
 universe u
 
@@ -83,5 +87,37 @@ theorem globalStageRepresentation_continuous_apply
     Continuous
       (globalStageRepresentationStarAlgHom Stage sys ω i₀ a) :=
   (globalStageRepresentationStarAlgHom Stage sys ω i₀ a).continuous
+
+/-- The unitary conjugation also has a native operator-norm homeomorphism
+between the tail and global bounded-operator algebras. -/
+def globalStageOperatorConjugationHomeomorph
+    (i₀ : I) :
+    (HilbertDirectLimit (E i₀) (S i₀) →L[ℂ]
+        HilbertDirectLimit (E i₀) (S i₀)) ≃ₜ
+      (GNSHilbertColimit Stage sys ω →L[ℂ]
+        GNSHilbertColimit Stage sys ω) :=
+  (ContinuousLinearEquiv.conjContinuousAlgEquiv
+    (tailHilbertGlobalEquiv Stage sys ω i₀).toContinuousLinearEquiv).toHomeomorph
+
+@[simp] theorem globalStageOperatorConjugationHomeomorph_apply
+    {i₀ : I}
+    (T : HilbertDirectLimit (E i₀) (S i₀) →L[ℂ]
+      HilbertDirectLimit (E i₀) (S i₀)) :
+    globalStageOperatorConjugationHomeomorph Stage sys ω i₀ T =
+      (tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv T :=
+  rfl
+
+theorem globalStageOperatorConjugationHomeomorph_continuous
+    (i₀ : I) :
+    Continuous (globalStageOperatorConjugationHomeomorph Stage sys ω i₀) :=
+  (ContinuousLinearEquiv.conjContinuousAlgEquiv
+    (tailHilbertGlobalEquiv Stage sys ω i₀).toContinuousLinearEquiv).continuous
+
+theorem globalStageOperatorConjugationHomeomorph_continuous_inv
+    (i₀ : I) :
+    Continuous
+      (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm :=
+  (ContinuousLinearEquiv.conjContinuousAlgEquiv
+    (tailHilbertGlobalEquiv Stage sys ω i₀).toContinuousLinearEquiv).symm.continuous
 
 end CStarStateColimit.Native.FilteredGNSGlobalStageRepresentationTransport

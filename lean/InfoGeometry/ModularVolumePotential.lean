@@ -125,21 +125,30 @@ Noncommutative modular-flow packet (Tomita–Takesaki style skeleton).
 No full modular theory is assumed; the fields record only explicit
 compatible data supplied by witnesses.
 -/
-structure ModularFlowPacket (Algebra : Type*) [Ring Algebra] where
-  /-- The operator-valued modular flow owner. -/
-  modularOwner :
-    InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative.ModularFlow Algebra
-  /-- Modular Hamiltonian (log density/potential) on states. -/
-  modularHamiltonian : Algebra → ℝ
-  /-- Connes cocycle trace shadow (`[Dφ:Dψ]_t` in abstract notation). -/
-  connesCocycle : ℝ → Algebra → ℝ
-  /-- Relative modular potential witness. -/
-  relativeModularPotential : Algebra → Algebra → ℝ
-  /-- Explicit choice between trace and modular/KMS normalization. -/
-  normalizationReference : ModularNormalizationReference
+abbrev ModularFlowPacket (Algebra : Type*) [Ring Algebra] : Type _ :=
+  InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative.ModularFlow Algebra ×
+    ((Algebra → ℝ) ×
+      ((ℝ → Algebra → ℝ) ×
+        ((Algebra → Algebra → ℝ) ×
+          (ModularNormalizationReference × Algebra))))
 
-  /-- Distinguished state/witness carrying the modular data. -/
-  modularState : Algebra
+namespace ModularFlowPacket
+
+abbrev modularOwner {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) :
+    InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative.ModularFlow Algebra := P.1
+abbrev modularHamiltonian {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) : Algebra → ℝ := P.2.1
+abbrev connesCocycle {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) : ℝ → Algebra → ℝ := P.2.2.1
+abbrev relativeModularPotential {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) : Algebra → Algebra → ℝ := P.2.2.2.1
+abbrev normalizationReference {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) : ModularNormalizationReference := P.2.2.2.2.1
+abbrev modularState {Algebra : Type*} [Ring Algebra]
+    (P : ModularFlowPacket Algebra) : Algebra := P.2.2.2.2.2
+
+end ModularFlowPacket
 
 /--
 Supervolume layer (graded/signed trace skeleton).
@@ -157,26 +166,39 @@ Dissipative KMS-compatible flow skeleton (GKSL-style container).
 This remains a witness-level wrapper of a generator and entropy/energy
 functional decay shadow.
 -/
-structure GKSLPacket (n : ℕ) where
-  /-- Hamiltonian matrix in the noncommutative state algebra. -/
-  hamiltonian : Matrix (Fin n) (Fin n) ℝ
-  /-- Lindblad jump operator matrix. -/
-  jumpOperator : Matrix (Fin n) (Fin n) ℝ
-  /-- One-parameter generator on matrix states. -/
-  generator : ℝ → Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ
-  /-- Generator is the canonical Hamiltonian plus Lindblad dissipator. -/
-  generator_eq : ∀ t ρ,
-    generator t ρ =
-      TomitaTakesakiKMSEntropy.hamiltonianCommutator hamiltonian ρ +
-        TomitaTakesakiKMSEntropy.lindbladDissipator jumpOperator ρ
-  /-- Energy/potential Lyapunov readout carried by the flow. -/
-  freeEnergyShadow : Matrix (Fin n) (Fin n) ℝ → ℝ
-  /-- Dissipative monotonicity for nonnegative time (shadow law). -/
-  freeEnergy_monotone :
-    ∀ ρ t, 0 ≤ t → freeEnergyShadow (generator t ρ) ≤ freeEnergyShadow ρ
+abbrev GKSLPacket (n : ℕ) : Type _ :=
+  Σ' hamiltonian : Matrix (Fin n) (Fin n) ℝ,
+    Σ' jumpOperator : Matrix (Fin n) (Fin n) ℝ,
+      Σ' generator : ℝ → Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ,
+        Σ' generator_eq :
+          ∀ t ρ,
+            generator t ρ =
+              TomitaTakesakiKMSEntropy.hamiltonianCommutator hamiltonian ρ +
+                TomitaTakesakiKMSEntropy.lindbladDissipator jumpOperator ρ,
+          Σ' freeEnergyShadow : Matrix (Fin n) (Fin n) ℝ → ℝ,
+            Σ' freeEnergy_monotone :
+              ∀ ρ t, 0 ≤ t → freeEnergyShadow (generator t ρ) ≤ freeEnergyShadow ρ,
+              Matrix (Fin n) (Fin n) ℝ
 
-  /-- Equilibrium/reference state used by the flow data. -/
-  equilibriumState : Matrix (Fin n) (Fin n) ℝ
+namespace GKSLPacket
+
+abbrev hamiltonian {n : ℕ} (P : GKSLPacket n) : Matrix (Fin n) (Fin n) ℝ := P.1
+abbrev jumpOperator {n : ℕ} (P : GKSLPacket n) : Matrix (Fin n) (Fin n) ℝ := P.2.1
+abbrev generator {n : ℕ} (P : GKSLPacket n) :
+    ℝ → Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ := P.2.2.1
+abbrev generator_eq {n : ℕ} (P : GKSLPacket n) :
+    ∀ t ρ, P.2.2.1 t ρ =
+      TomitaTakesakiKMSEntropy.hamiltonianCommutator P.1 ρ +
+        TomitaTakesakiKMSEntropy.lindbladDissipator P.2.1 ρ := P.2.2.2.1
+abbrev freeEnergyShadow {n : ℕ} (P : GKSLPacket n) :
+    Matrix (Fin n) (Fin n) ℝ → ℝ := P.2.2.2.2.1
+abbrev freeEnergy_monotone {n : ℕ} (P : GKSLPacket n) :
+    ∀ ρ t, 0 ≤ t →
+      P.2.2.2.2.1 (P.2.2.1 t ρ) ≤ P.2.2.2.2.1 ρ := P.2.2.2.2.2.1
+abbrev equilibriumState {n : ℕ} (P : GKSLPacket n) :
+    Matrix (Fin n) (Fin n) ℝ := P.2.2.2.2.2.2
+
+end GKSLPacket
 
 /-!
 Finite spectral-thermal normalization schema.
@@ -355,21 +377,39 @@ theorem modularPartitionNormalization_kms
 /--
 Integrated modular-volume thermodynamic packet.
 -/
-structure ModularVolumePotentialPacket
+abbrev ModularVolumePotentialPacket
     (SampleSpace Algebra : Type*) (n : ℕ)
-    [MeasurableSpace SampleSpace] [Ring Algebra] where
-  /-- Classical measure/potential layer. -/
-  logRN : LogRadonNikodymPacket SampleSpace
-  /-- Relative surprisal and KL readout layer. -/
-  relativeKL : RelativeSurprisalPacket SampleSpace
-  /-- Gibbs/free-energy layer. -/
-  freeEnergy : GibbsFreeEnergyPacket
-  /-- Modular flow and modular Hamiltonian layer. -/
-  modularFlow : ModularFlowPacket Algebra
-  /-- Graded/supertrace layer. -/
-  supervolume : SupervolumePacket Algebra
-  /-- Dissipative/KMS-compatible flow layer. -/
-  dissipativeFlow : GKSLPacket n
+    [MeasurableSpace SampleSpace] [Ring Algebra] : Type _ :=
+  LogRadonNikodymPacket SampleSpace ×
+    (RelativeSurprisalPacket SampleSpace ×
+      (GibbsFreeEnergyPacket ×
+        (ModularFlowPacket Algebra ×
+          (SupervolumePacket Algebra × GKSLPacket n))))
+
+namespace ModularVolumePotentialPacket
+
+abbrev logRN {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) :
+    LogRadonNikodymPacket SampleSpace := P.1
+abbrev relativeKL {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) :
+    RelativeSurprisalPacket SampleSpace := P.2.1
+abbrev freeEnergy {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) : GibbsFreeEnergyPacket := P.2.2.1
+abbrev modularFlow {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) : ModularFlowPacket Algebra := P.2.2.2.1
+abbrev supervolume {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) : SupervolumePacket Algebra := P.2.2.2.2.1
+abbrev dissipativeFlow {SampleSpace Algebra : Type*} {n : ℕ}
+    [MeasurableSpace SampleSpace] [Ring Algebra]
+    (P : ModularVolumePotentialPacket SampleSpace Algebra n) : GKSLPacket n := P.2.2.2.2.2
+
+end ModularVolumePotentialPacket
 
 /-!
 Grand unification bridge packet.

@@ -1560,15 +1560,21 @@ See §11 for the concrete `momentMap` definition.
 The entropy function on the simplex is the metric shadow of round-sphere geometry
 via the square-root embedding `pᵢ = xᵢ²` (see §1 `squareRootEmbedding`).
 -/
-structure MomentumMapProbabilityPacket where
-  /-- Abstract projective state space (e.g. `Fin n → ℂ` or `ℂPⁿ⁻¹`). -/
-  ProjectiveStateSpace : Type*
-  /-- Abstract probability simplex (e.g. `Fin n → ℝ` satisfying `Σpᵢ = 1`). -/
-  ProbabilitySimplex : Type*
-  /-- Torus momentum map: projective state ↦ probability distribution. -/
-  momentumMap : ProjectiveStateSpace → ProbabilitySimplex
-  /-- Entropy functional on the simplex (metric shadow of spherical geometry). -/
-  entropyFn : ProbabilitySimplex → ℝ
+abbrev MomentumMapProbabilityPacket : Type _ :=
+  Σ' ProjectiveStateSpace : Type*,
+    Σ' ProbabilitySimplex : Type*,
+      Σ' momentumMap : ProjectiveStateSpace → ProbabilitySimplex,
+        ProbabilitySimplex → ℝ
+
+namespace MomentumMapProbabilityPacket
+
+abbrev ProjectiveStateSpace (P : MomentumMapProbabilityPacket) : Type _ := P.1
+abbrev ProbabilitySimplex (P : MomentumMapProbabilityPacket) : Type _ := P.2.1
+abbrev momentumMap (P : MomentumMapProbabilityPacket) :
+    ProjectiveStateSpace P → ProbabilitySimplex P := P.2.2.1
+abbrev entropyFn (P : MomentumMapProbabilityPacket) : ProbabilitySimplex P → ℝ := P.2.2.2
+
+end MomentumMapProbabilityPacket
 
 /--
 **Concrete instance — §11 `momentMap` as a momentum-map packet.**
@@ -1578,10 +1584,7 @@ The `momentMap` and `entropyOfSpectrum` of §11 instantiate
 Mechanically verified: no `by rfl`.
 -/
 def momentumMapPacketFromFinDim (n : ℕ) : MomentumMapProbabilityPacket :=
-  { ProjectiveStateSpace := Fin n → ℂ
-    ProbabilitySimplex   := Fin n → ℝ
-    momentumMap          := momentMap
-    entropyFn            := entropyOfSpectrum }
+  ⟨Fin n → ℂ, Fin n → ℝ, momentMap, entropyOfSpectrum⟩
 
 /--
 **Packet 24.2 — Homological measure packet.**
@@ -2315,27 +2318,33 @@ Weyl laws recover `Vol(M)` from asymptotics of the density of states:
   `N(λ) ~ C_D · Vol(M) · λ^{D/2}` (Laplace Weyl law);
   `ω_p(M) ~ a_D · Vol(M)^{(D-1)/D} · p^{1/D}` (Liokumovich–Marques–Neves 2018).
 -/
-structure SpectralVolumeWeightPacket where
-  /-- Number of spectral sectors (finite). -/
-  n : ℕ
-  /-- Energy levels `E_i`. -/
-  energyLevel : Fin n → ℝ
-  /-- Spectral volume (density of states) `v_i`: geometric degeneracy of sector `i`. -/
-  spectralVolume : Fin n → ℝ
-  /-- Inverse temperature `β`. -/
-  beta : ℝ
-  /-- Partition function `Z_β = Σ v_i e^{-β E_i}`. -/
-  partitionFunction : ℝ
-  /-- Boltzmann spectral weights `w_i(β) = v_i e^{-β E_i} / Z_β`. -/
-  boltzmannWeight : Fin n → ℝ
-  /-- Spectral volumes are non-negative. -/
-  spectralVolume_nonneg : ∀ i : Fin n, 0 ≤ spectralVolume i
-  /-- Partition function is positive (thermal normalization). -/
-  partitionFunction_pos : 0 < partitionFunction
-  /-- Boltzmann weight axiom: `w_i = v_i e^{-β E_i} / Z_β`. -/
-  boltzmannWeight_eq : ∀ i : Fin n,
-    boltzmannWeight i =
-      spectralVolume i * Real.exp (-(beta * energyLevel i)) / partitionFunction
+abbrev SpectralVolumeWeightPacket : Type _ :=
+  Σ' n : ℕ,
+    Σ' energyLevel : Fin n → ℝ,
+      Σ' spectralVolume : Fin n → ℝ,
+        Σ' beta : ℝ,
+          Σ' partitionFunction : ℝ,
+            Σ' boltzmannWeight : Fin n → ℝ,
+              Σ' spectralVolume_nonneg : ∀ i : Fin n, 0 ≤ spectralVolume i,
+                Σ' partitionFunction_pos : 0 < partitionFunction,
+                  ∀ i : Fin n,
+                    boltzmannWeight i =
+                      spectralVolume i * Real.exp (-(beta * energyLevel i)) /
+                        partitionFunction
+
+namespace SpectralVolumeWeightPacket
+
+abbrev n (P : SpectralVolumeWeightPacket) : ℕ := P.1
+abbrev energyLevel (P : SpectralVolumeWeightPacket) : Fin P.n → ℝ := P.2.1
+abbrev spectralVolume (P : SpectralVolumeWeightPacket) : Fin P.n → ℝ := P.2.2.1
+abbrev beta (P : SpectralVolumeWeightPacket) : ℝ := P.2.2.2.1
+abbrev partitionFunction (P : SpectralVolumeWeightPacket) : ℝ := P.2.2.2.2.1
+abbrev boltzmannWeight (P : SpectralVolumeWeightPacket) : Fin P.n → ℝ := P.2.2.2.2.2.1
+abbrev spectralVolume_nonneg (P : SpectralVolumeWeightPacket) := P.2.2.2.2.2.2.1
+abbrev partitionFunction_pos (P : SpectralVolumeWeightPacket) := P.2.2.2.2.2.2.2.1
+abbrev boltzmannWeight_eq (P : SpectralVolumeWeightPacket) := P.2.2.2.2.2.2.2.2
+
+end SpectralVolumeWeightPacket
 
 /--
 **Theorem 26.1a — Spectral weight is Boltzmann-tilted spectral volume.**
@@ -2364,21 +2373,27 @@ Arithmetic prime-gas example (Spector):
 index-type functional.  Positivity must be recovered by restricting to an even
 sector, choosing a physical state, or passing to a Hilbert/Krein realization.
 -/
-structure SupertraceSupervolumePacket where
-  /-- Graded observable space (abstract). -/
-  GradedSpace : Type*
-  /-- Even-sector trace functional. -/
-  evenTrace : GradedSpace → ℝ
-  /-- Odd-sector trace functional. -/
-  oddTrace : GradedSpace → ℝ
-  /-- Supertrace: `Str(A) = Tr_even(A) - Tr_odd(A)`. -/
-  superTrace : GradedSpace → ℝ
-  /-- Supertrace axiom: `Str = even - odd`. -/
-  superTrace_eq : ∀ a : GradedSpace, superTrace a = evenTrace a - oddTrace a
-  /-- Abstract graded Hamiltonian (type label). -/
-  GradedHamiltonianType : Type*
-  /-- Superpartition function `Z_super(β) = Str(e^{-βH})` (scalar readout). -/
-  superPartitionFunction : ℝ
+abbrev SupertraceSupervolumePacket : Type _ :=
+  Σ' GradedSpace : Type*,
+    Σ' evenTrace : GradedSpace → ℝ,
+      Σ' oddTrace : GradedSpace → ℝ,
+        Σ' superTrace : GradedSpace → ℝ,
+          Σ' superTrace_eq : ∀ a : GradedSpace,
+            superTrace a = evenTrace a - oddTrace a,
+            Σ' GradedHamiltonianType : Type*,
+              ℝ
+
+namespace SupertraceSupervolumePacket
+
+abbrev GradedSpace (P : SupertraceSupervolumePacket) : Type _ := P.1
+abbrev evenTrace (P : SupertraceSupervolumePacket) : GradedSpace P → ℝ := P.2.1
+abbrev oddTrace (P : SupertraceSupervolumePacket) : GradedSpace P → ℝ := P.2.2.1
+abbrev superTrace (P : SupertraceSupervolumePacket) : GradedSpace P → ℝ := P.2.2.2.1
+abbrev superTrace_eq (P : SupertraceSupervolumePacket) := P.2.2.2.2.1
+abbrev GradedHamiltonianType (P : SupertraceSupervolumePacket) : Type _ := P.2.2.2.2.2.1
+abbrev superPartitionFunction (P : SupertraceSupervolumePacket) : ℝ := P.2.2.2.2.2.2
+
+end SupertraceSupervolumePacket
 
 /--
 **Theorem 26.2a — Supertrace axiom stated cleanly.**
@@ -2405,41 +2420,63 @@ Thin witness hub collecting comparison data between:
 - `D_KL` (≡ `klDivergenceData`) is not the same object as GH distance.
   See `KLDivergenceDistinctFromGromovHausdorff` below.
 -/
-structure ModularVolumeBridgePacket where
-  /-- Classical measure space (commutative probability model). -/
-  ClassicalMeasureSpace : Type*
-  /-- Von Neumann algebraic system (noncommutative model). -/
-  VonNeumannSystem : Type*
-  /-- Spectral / Weyl geometric system (asymptotic model). -/
-  SpectralGeometry : Type*
-  /-- Classical reference volume (measure `ν`). -/
-  classicalVolume : Type*
-  /-- Classical state / absolutely-continuous density (`dμ = ρ dν`). -/
-  classicalState : Type*
-  /-- Classical logarithmic RN potential: `-log(dμ/dν)`. -/
-  classicalLogPotential : Type*
-  /-- Von Neumann reference weight/state `ψ`. -/
-  modularWeight : Type*
-  /-- Relative modular operator `Δ_{φ|ψ}` or Connes cocycle `[Dφ:Dψ]_t`. -/
-  modularData : Type*
-  /-- Modular Hamiltonian `-log Δ_{φ|ψ}` (noncommutative log RN potential). -/
-  modularHamiltonian : Type*
-  /-- Classical KL divergence `D_KL(μ|ν)` (scalar datum). -/
-  klDivergenceData : Type*
-  /-- Araki relative entropy `S(φ|ψ)` (noncommutative KL datum). -/
-  arakiRelativeEntropyData : Type*
-  /-- Free-energy functional `F_β(ρ) = ⟨H⟩_ρ - β⁻¹S(ρ)` (datum). -/
-  freeEnergyData : Type*
-  /-- Spectral volume / density-of-states datum `{v_i}`. -/
-  spectralVolumeData : Type*
-  /-- Weyl-type asymptotic volume recovery datum. -/
-  weylVolumeGaugeData : Type*
-  /-- Witness: KL and Araki entropy agree in a specified commutative reduction. -/
-  entropyComparison : Type*
-  /-- Witness: free energy is temperature-regularized relative entropy. -/
-  freeEnergyComparison : Type*
-  /-- Witness: spectral volume recovers geometric volume asymptotically (Weyl). -/
-  spectralVolumeComparison : Type*
+abbrev ModularVolumeBridgePacket : Type _ :=
+  Σ' ClassicalMeasureSpace : Type*,
+    Σ' VonNeumannSystem : Type*,
+      Σ' SpectralGeometry : Type*,
+        Σ' classicalVolume : Type*,
+          Σ' classicalState : Type*,
+            Σ' classicalLogPotential : Type*,
+              Σ' modularWeight : Type*,
+                Σ' modularData : Type*,
+                  Σ' modularHamiltonian : Type*,
+                    Σ' klDivergenceData : Type*,
+                      Σ' arakiRelativeEntropyData : Type*,
+                        Σ' freeEnergyData : Type*,
+                          Σ' spectralVolumeData : Type*,
+                            Σ' weylVolumeGaugeData : Type*,
+                              Σ' entropyComparison : Type*,
+                                Σ' freeEnergyComparison : Type*,
+                                  Type*
+
+namespace ModularVolumeBridgePacket
+
+abbrev tail₁ (P : ModularVolumeBridgePacket) := P.2
+abbrev tail₂ (P : ModularVolumeBridgePacket) := (tail₁ P).2
+abbrev tail₃ (P : ModularVolumeBridgePacket) := (tail₂ P).2
+abbrev tail₄ (P : ModularVolumeBridgePacket) := (tail₃ P).2
+abbrev tail₅ (P : ModularVolumeBridgePacket) := (tail₄ P).2
+abbrev tail₆ (P : ModularVolumeBridgePacket) := (tail₅ P).2
+abbrev tail₇ (P : ModularVolumeBridgePacket) := (tail₆ P).2
+abbrev tail₈ (P : ModularVolumeBridgePacket) := (tail₇ P).2
+abbrev tail₉ (P : ModularVolumeBridgePacket) := (tail₈ P).2
+abbrev tail₁₀ (P : ModularVolumeBridgePacket) := (tail₉ P).2
+abbrev tail₁₁ (P : ModularVolumeBridgePacket) := (tail₁₀ P).2
+abbrev tail₁₂ (P : ModularVolumeBridgePacket) := (tail₁₁ P).2
+abbrev tail₁₃ (P : ModularVolumeBridgePacket) := (tail₁₂ P).2
+abbrev tail₁₄ (P : ModularVolumeBridgePacket) := (tail₁₃ P).2
+abbrev tail₁₅ (P : ModularVolumeBridgePacket) := (tail₁₄ P).2
+abbrev tail₁₆ (P : ModularVolumeBridgePacket) := (tail₁₅ P).2
+
+abbrev ClassicalMeasureSpace (P : ModularVolumeBridgePacket) : Type _ := P.1
+abbrev VonNeumannSystem (P : ModularVolumeBridgePacket) : Type _ := (tail₁ P).1
+abbrev SpectralGeometry (P : ModularVolumeBridgePacket) : Type _ := (tail₂ P).1
+abbrev classicalVolume (P : ModularVolumeBridgePacket) : Type _ := (tail₃ P).1
+abbrev classicalState (P : ModularVolumeBridgePacket) : Type _ := (tail₄ P).1
+abbrev classicalLogPotential (P : ModularVolumeBridgePacket) : Type _ := (tail₅ P).1
+abbrev modularWeight (P : ModularVolumeBridgePacket) : Type _ := (tail₆ P).1
+abbrev modularData (P : ModularVolumeBridgePacket) : Type _ := (tail₇ P).1
+abbrev modularHamiltonian (P : ModularVolumeBridgePacket) : Type _ := (tail₈ P).1
+abbrev klDivergenceData (P : ModularVolumeBridgePacket) : Type _ := (tail₉ P).1
+abbrev arakiRelativeEntropyData (P : ModularVolumeBridgePacket) : Type _ := (tail₁₀ P).1
+abbrev freeEnergyData (P : ModularVolumeBridgePacket) : Type _ := (tail₁₁ P).1
+abbrev spectralVolumeData (P : ModularVolumeBridgePacket) : Type _ := (tail₁₂ P).1
+abbrev weylVolumeGaugeData (P : ModularVolumeBridgePacket) : Type _ := (tail₁₃ P).1
+abbrev entropyComparison (P : ModularVolumeBridgePacket) : Type _ := (tail₁₄ P).1
+abbrev freeEnergyComparison (P : ModularVolumeBridgePacket) : Type _ := (tail₁₅ P).1
+abbrev spectralVolumeComparison (P : ModularVolumeBridgePacket) : Type _ := tail₁₆ P
+
+end ModularVolumeBridgePacket
 
 /--
 **Theorem 26.4 — Constructor for the modular volume bridge packet.**
@@ -2450,23 +2487,7 @@ Mechanically verified: no `by rfl`.
 def constructModularVolumeBridgePacket
     (CMS VNS SG CV CS LP MW MD MH KL AR FE SV WG EC FC SC : Type*) :
     ModularVolumeBridgePacket :=
-  { ClassicalMeasureSpace    := CMS
-    VonNeumannSystem         := VNS
-    SpectralGeometry         := SG
-    classicalVolume          := CV
-    classicalState           := CS
-    classicalLogPotential    := LP
-    modularWeight            := MW
-    modularData              := MD
-    modularHamiltonian       := MH
-    klDivergenceData         := KL
-    arakiRelativeEntropyData := AR
-    freeEnergyData           := FE
-    spectralVolumeData       := SV
-    weylVolumeGaugeData      := WG
-    entropyComparison        := EC
-    freeEnergyComparison     := FC
-    spectralVolumeComparison := SC }
+  ⟨CMS, VNS, SG, CV, CS, LP, MW, MD, MH, KL, AR, FE, SV, WG, EC, FC, SC⟩
 
 /--
 **Definition 26.6 — Grand modular volume bridge capstone slogans.**
@@ -2585,6 +2606,9 @@ theorem logRN_potential_form
     pkt.boltzmannWeight i * pkt.partitionFunction =
       Real.exp (-(pkt.beta * pkt.energyLevel i)) := by
   have h := pkt.boltzmannWeight_eq i
+  change pkt.boltzmannWeight i =
+    pkt.spectralVolume i * Real.exp (-(pkt.beta * pkt.energyLevel i)) /
+      pkt.partitionFunction at h
   rw [hv i, one_mul] at h
   rw [h]
   field_simp [ne_of_gt pkt.partitionFunction_pos]

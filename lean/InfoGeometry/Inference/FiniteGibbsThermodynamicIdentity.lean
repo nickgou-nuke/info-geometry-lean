@@ -145,6 +145,28 @@ theorem entropyOf_eq_log_card_iff_uniform
     rw [finiteRelativeEntropy_to_uniform_eq_log_card_sub_entropyOf q hq_pos hq_sum] at hkl
     linarith
 
+/-- Entropy of any positive normalized finite trial distribution is nonnegative. -/
+theorem entropyOf_nonneg
+    (q : Data → ℝ) (hq_pos : ∀ i, 0 < q i)
+    (hq_sum : ∑ i : Data, q i = 1) :
+    0 ≤ entropyOf q := by
+  have hq_nonneg : ∀ i : Data, 0 ≤ q i := fun i => (hq_pos i).le
+  have hq_leone : ∀ i : Data, q i ≤ 1 := by
+    intro i
+    have hsingle : q i ≤ ∑ j : Data, q j := by
+      exact Finset.single_le_sum (fun j hj => hq_nonneg j)
+        (Finset.mem_univ i)
+    simpa [hq_sum] using hsingle
+  unfold entropyOf
+  rw [← Finset.sum_neg_distrib]
+  apply Finset.sum_nonneg
+  intro i hi
+  have hlog := Real.log_le_sub_one_of_pos (hq_pos i)
+  have hmul := mul_le_mul_of_nonneg_left hlog (hq_pos i).le
+  have hquad : q i * (q i - 1) ≤ 0 :=
+    mul_nonpos_of_nonneg_of_nonpos (hq_pos i).le (sub_nonpos.mpr (hq_leone i))
+  linarith
+
 /--
 Canonical finite Gibbs free energy decomposes as mean energy minus
 temperature times entropy.

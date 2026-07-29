@@ -35,17 +35,19 @@ Each field is an existing owner theorem or a direct restatement of one.
 Nothing here claims the full global cohomology, amplituhedron, or scattering
 interpretation.
 -/
-structure FiniteBridgePacket where
-  residue : ∀ (R : ℝ) (hR : 0 < R),
-    (∮ z in C((0 : ℂ), R), grothendieck_dlog z) = (2 * Real.pi * Complex.I : ℂ)
-  winding : ∀ (R : ℝ) (hR : 0 < R) (n : ℤ),
-    Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z)) = (1 : ℂ)
-  arnold : ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
+def FiniteBridgePacket : Prop :=
+  (∀ (R : ℝ) (hR : 0 < R),
+    (∮ z in C((0 : ℂ), R), grothendieck_dlog z) =
+      (2 * Real.pi * Complex.I : ℂ)) ∧
+  (∀ (R : ℝ) (hR : 0 < R) (n : ℤ),
+    Complex.exp ((n : ℂ) * (∮ z in C((0 : ℂ), R), grothendieck_dlog z)) =
+      (1 : ℂ)) ∧
+  (∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M]
     {A : Type*} [Semiring A]
     (w12 w23 w31 : ArnoldExterior R M) (φ : ArnoldExterior R M →+* A),
     arnoldMixedRelation R M w12 w23 w31 ∈ RingHom.ker φ →
-      φ (arnoldMixedRelation R M w12 w23 w31) = 0
-  twistor : ∀ (X₁ X₂ X₃ : InfoGeometry.Clifford.Soldering.Vec22),
+      φ (arnoldMixedRelation R M w12 w23 w31) = 0) ∧
+  (∀ (X₁ X₂ X₃ : InfoGeometry.Clifford.Soldering.Vec22),
     TripleNonNull X₁ X₂ X₃ →
       (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
         InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧
@@ -55,12 +57,12 @@ structure FiniteBridgePacket where
         InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧ Z.2 ≠ 0) ∧
       (¬ ∃ Z : InfoGeometry.Twistor.Incidence.Twistor,
         InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧
-        InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧ Z.2 ≠ 0)
-  determinantCarrier : ∀ v : Minkowski4,
-    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ)
+        InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧ Z.2 ≠ 0)) ∧
+  (∀ v : Minkowski4,
+    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ))
 
 /-- The finite bridge packet is inhabited by the already-proved owner theorems. -/
-def finite_bridge_packet : FiniteBridgePacket := by
+theorem finite_bridge_packet : FiniteBridgePacket := by
   refine ⟨?residue, ?winding, ?arnold, ?twistor, ?determinantCarrier⟩
   · intro R hR
     exact circleIntegral_grothendieck_dlog R hR

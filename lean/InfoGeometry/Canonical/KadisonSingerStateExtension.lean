@@ -37,7 +37,7 @@ def apply (A : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
 
 /-- **Theorem**: State Evaluation Normalization: ω(1) = 1. -/
 theorem state_normalized : state.apply 1 = 1 := by
-  dsimp [apply]
+  dsimp [apply, rhoVal]
   rw [mul_one, state.h_rho_normalized]
 
 /-- **Theorem**: State Functional Linearity under Matrix Addition: ω(A + B) = ω(A) + ω(B). -/
@@ -55,6 +55,8 @@ theorem state_smul (c : ℂ) (A : Matrix (Fin n) (Fin n) ℂ) :
 /-- Tracial State Structure where ρ = (1/n) • 1. -/
 def tracialState (h_n : (n : ℂ) ≠ 0) : CStarState n where
   rho := ⟨(1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ), by
+    change ((1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)).conjTranspose =
+      (1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)
     rw [conjTranspose_smul, conjTranspose_one]
     simp⟩
   h_rho_normalized := by
@@ -65,7 +67,7 @@ def tracialState (h_n : (n : ℂ) ≠ 0) : CStarState n where
 /-- **Theorem**: Tracial State Commutativity ω([A, B]) = 0 for ρ = (1/n) • 1. -/
 theorem tracial_state_commutator_zero (h_n : (n : ℂ) ≠ 0) (A B : Matrix (Fin n) (Fin n) ℂ) :
     (tracialState h_n).apply (A * B - B * A) = 0 := by
-  dsimp [tracialState, apply]
+  dsimp [tracialState, rhoVal, apply]
   have h_smul : ((1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)) * (A * B - B * A) = (1 / (n : ℂ)) • (A * B - B * A) := by
     rw [Matrix.smul_mul, one_mul]
   rw [h_smul, trace_smul, trace_sub]

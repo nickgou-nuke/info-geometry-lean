@@ -35,14 +35,14 @@ variable {n : ℕ}
 
 /-- A square root of minus one acting on a finite matrix space. -/
 structure KahlerPhase (n : ℕ) where
-  K : Matrix (Fin n) (Fin n) ℂ
-  h_K_sq : K * K = -1
+  K : (Matrix (Fin n) (Fin n) ℂ)ˣ
+  h_K_sq : (K : Matrix (Fin n) (Fin n) ℂ) * K = -1
 
 /-- The algebraic phase action on a radial matrix. -/
 noncomputable def symplecticTrick (phase : KahlerPhase n)
     (radial_M : Matrix (Fin n) (Fin n) ℂ) :
     Matrix (Fin n) (Fin n) ℂ :=
-  phase.K * radial_M
+  (phase.K : Matrix (Fin n) (Fin n) ℂ) * radial_M
 
 /-- Applying the phase action twice gives the negative radial matrix. -/
 theorem symplecticTrick_sq (phase : KahlerPhase n)
@@ -54,41 +54,49 @@ theorem symplecticTrick_sq (phase : KahlerPhase n)
 
 /-- Two finite Majorana generators with the Clifford relations used below. -/
 structure NullBoundaryMajoranas (n : ℕ) where
-  gamma_L : Matrix (Fin n) (Fin n) ℂ
-  gamma_R : Matrix (Fin n) (Fin n) ℂ
-  h_anticomm : gamma_L * gamma_R + gamma_R * gamma_L = 0
-  h_L_sq : gamma_L * gamma_L = 1
-  h_R_sq : gamma_R * gamma_R = 1
+  gamma_L : (Matrix (Fin n) (Fin n) ℂ)ˣ
+  gamma_R : (Matrix (Fin n) (Fin n) ℂ)ˣ
+  h_anticomm : (gamma_L : Matrix (Fin n) (Fin n) ℂ) * gamma_R +
+      gamma_R * gamma_L = 0
+  h_L_sq : (gamma_L : Matrix (Fin n) (Fin n) ℂ) * gamma_L = 1
+  h_R_sq : (gamma_R : Matrix (Fin n) (Fin n) ℂ) * gamma_R = 1
+
+def gammaLVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.gamma_L
+
+def gammaRVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.gamma_R
 
 /-- The extra hypothesis needed to identify the algebraic partner with an
 actual Hilbert-space adjoint. -/
 def MajoranasSelfAdjoint (m : NullBoundaryMajoranas n) : Prop :=
-  m.gamma_Lᴴ = m.gamma_L ∧ m.gamma_Rᴴ = m.gamma_R
+  (gammaLVal m)ᴴ = gammaLVal m ∧ (gammaRVal m)ᴴ = gammaRVal m
 
 /-- The `1 / √2` Cooper-pair combination. -/
 noncomputable def cooperPairCondensate (m : NullBoundaryMajoranas n) :
     Matrix (Fin n) (Fin n) ℂ :=
-  (↑(1 / Real.sqrt 2) : ℂ) • (m.gamma_L + Complex.I • m.gamma_R)
+  (↑(1 / Real.sqrt 2) : ℂ) • (gammaLVal m + Complex.I • gammaRVal m)
 
 private theorem majorana_sum_sq_zero (m : NullBoundaryMajoranas n) :
-    (m.gamma_L + Complex.I • m.gamma_R) *
-        (m.gamma_L + Complex.I • m.gamma_R) = 0 := by
+    (gammaLVal m + Complex.I • gammaRVal m) *
+        (gammaLVal m + Complex.I • gammaRVal m) = 0 := by
   have hI2 : Complex.I * Complex.I = -1 := by
     have h := Complex.I_sq
     rwa [sq] at h
-  have h_cross : Complex.I • (m.gamma_L * m.gamma_R) +
-      Complex.I • (m.gamma_R * m.gamma_L) = 0 := by
-    rw [← smul_add, m.h_anticomm, smul_zero]
-  have h_expand : (m.gamma_L + Complex.I • m.gamma_R) *
-      (m.gamma_L + Complex.I • m.gamma_R) =
-      m.gamma_L * m.gamma_L +
-        (Complex.I • (m.gamma_L * m.gamma_R) +
-          Complex.I • (m.gamma_R * m.gamma_L)) +
-        (Complex.I * Complex.I) • (m.gamma_R * m.gamma_R) := by
+  have h_cross : Complex.I • (gammaLVal m * gammaRVal m) +
+      Complex.I • (gammaRVal m * gammaLVal m) = 0 := by
+    have hanti : gammaLVal m * gammaRVal m + gammaRVal m * gammaLVal m = 0 := by
+      simpa [gammaLVal, gammaRVal] using m.h_anticomm
+    rw [← smul_add, hanti, smul_zero]
+  have h_expand : (gammaLVal m + Complex.I • gammaRVal m) *
+      (gammaLVal m + Complex.I • gammaRVal m) =
+      gammaLVal m * gammaLVal m +
+        (Complex.I • (gammaLVal m * gammaRVal m) +
+          Complex.I • (gammaRVal m * gammaLVal m)) +
+        (Complex.I * Complex.I) • (gammaRVal m * gammaRVal m) := by
     simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm,
       smul_add, smul_smul]
     abel
-  rw [h_expand, m.h_L_sq, h_cross, m.h_R_sq, hI2]
+  rw [h_expand, show gammaLVal m * gammaLVal m = 1 from m.h_L_sq,
+    h_cross, show gammaRVal m * gammaRVal m = 1 from m.h_R_sq, hI2]
   simp
 
 /-- The Cooper-pair combination is nilpotent under the Clifford relations. -/
@@ -102,7 +110,7 @@ theorem cooper_pair_is_nilpotent_cap (m : NullBoundaryMajoranas n) :
 /-- The conjugate Cooper-pair combination. -/
 noncomputable def cooperPairConjugate (m : NullBoundaryMajoranas n) :
     Matrix (Fin n) (Fin n) ℂ :=
-  (↑(1 / Real.sqrt 2) : ℂ) • (m.gamma_L - Complex.I • m.gamma_R)
+  (↑(1 / Real.sqrt 2) : ℂ) • (gammaLVal m - Complex.I • gammaRVal m)
 
 /-- Under self-adjoint Majorana generators, the sign-flipped pair is the
 matrix adjoint of the normalized Cooper pair. -/
@@ -117,18 +125,26 @@ theorem cooper_pair_conjugate_eq_conjTranspose
   abel
 
 private theorem majorana_conj_sq_zero (m : NullBoundaryMajoranas n) :
-    (m.gamma_L - Complex.I • m.gamma_R) *
-        (m.gamma_L - Complex.I • m.gamma_R) = 0 := by
+    (gammaLVal m - Complex.I • gammaRVal m) *
+        (gammaLVal m - Complex.I • gammaRVal m) = 0 := by
   let m' : NullBoundaryMajoranas n :=
     { gamma_L := m.gamma_L
-      gamma_R := -m.gamma_R
+      gamma_R :=
+        { val := -(m.gamma_R : Matrix (Fin n) (Fin n) ℂ)
+          inv := -(m.gamma_R : Matrix (Fin n) (Fin n) ℂ)
+          val_inv := by rw [neg_mul_neg]; exact m.h_R_sq
+          inv_val := by rw [neg_mul_neg]; exact m.h_R_sq }
       h_anticomm := by
-        simp only [mul_neg, neg_mul]
-        rw [← neg_add, m.h_anticomm, neg_zero]
+        change gammaLVal m * (-gammaRVal m) + (-gammaRVal m) * gammaLVal m = 0
+        have hanti : gammaLVal m * gammaRVal m + gammaRVal m * gammaLVal m = 0 := by
+          simpa [gammaLVal, gammaRVal] using m.h_anticomm
+        rw [mul_neg, neg_mul, ← neg_add, hanti, neg_zero]
       h_L_sq := m.h_L_sq
-      h_R_sq := by simp [m.h_R_sq] }
+      h_R_sq := by
+        change (-gammaRVal m) * (-gammaRVal m) = 1
+        rw [neg_mul_neg, show gammaRVal m * gammaRVal m = 1 from m.h_R_sq] }
   have h := majorana_sum_sq_zero m'
-  simpa [m', sub_eq_add_neg, neg_smul, smul_neg] using h
+  simpa [m', gammaLVal, gammaRVal, sub_eq_add_neg, neg_smul, smul_neg] using h
 
 /-- The conjugate Cooper-pair combination is nilpotent. -/
 theorem conjugate_pair_is_nilpotent (m : NullBoundaryMajoranas n) :
@@ -139,15 +155,19 @@ theorem conjugate_pair_is_nilpotent (m : NullBoundaryMajoranas n) :
   exact smul_zero _
 
 private theorem majorana_cross_sum (m : NullBoundaryMajoranas n) :
-    (m.gamma_L + Complex.I • m.gamma_R) *
-          (m.gamma_L - Complex.I • m.gamma_R) +
-        (m.gamma_L - Complex.I • m.gamma_R) *
-          (m.gamma_L + Complex.I • m.gamma_R) =
+    (gammaLVal m + Complex.I • gammaRVal m) *
+          (gammaLVal m - Complex.I • gammaRVal m) +
+        (gammaLVal m - Complex.I • gammaRVal m) *
+          (gammaLVal m + Complex.I • gammaRVal m) =
       (4 : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ) := by
   simp only [sub_eq_add_neg, add_mul, mul_add, smul_mul_assoc,
     mul_smul_comm, smul_add]
   ring_nf
-  simp [m.h_L_sq, m.h_R_sq, smul_smul]
+  have hL : gammaLVal m * gammaLVal m = 1 := by
+    simpa [gammaLVal] using m.h_L_sq
+  have hR : gammaRVal m * gammaRVal m = 1 := by
+    simpa [gammaRVal] using m.h_R_sq
+  simp [hL, hR, smul_smul]
   abel
   ext i j; simp
 

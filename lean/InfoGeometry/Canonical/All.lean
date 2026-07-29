@@ -363,6 +363,7 @@ import InfoGeometry.Canonical.QuantumGroupHopfAlgebra
 import InfoGeometry.Canonical.AtiyahSingerChiralIndex
 import InfoGeometry.Canonical.ConnesCyclicCohomology
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
+import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
 import InfoGeometry.Canonical.AnyonicStabilizerCodeDistance
 import InfoGeometry.Canonical.CStarAlgebraDirectSumBlock
 import InfoGeometry.Canonical.QuantumChannelContractivity
@@ -425,6 +426,7 @@ import InfoGeometry.Canonical.QuantumHallSkyrmionBridge
 import InfoGeometry.Canonical.ConnesSpectralMetricBridge
 import InfoGeometry.Canonical.QuantumGroupUqSL2Bridge
 import InfoGeometry.Canonical.FQHEMooreReadPfaffianBridge
+import InfoGeometry.Canonical.NoncommutativeTorusAlgebraBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge
@@ -1491,10 +1493,12 @@ import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 import InfoGeometry.Arithmetic.RamanujanDefectTower
 import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 import InfoGeometry.Canonical.UHFInductiveLimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.UHFBoundaryExactSequence
+import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 import InfoGeometry.Canonical.UHFColimitRepresentationBridge
 import InfoGeometry.Canonical.DeRhamCantorCohomology
 import InfoGeometry.Canonical.OmegaBoundaryRepresentation

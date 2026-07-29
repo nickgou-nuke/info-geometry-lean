@@ -17,24 +17,31 @@ open Matrix Complex
 namespace KasparovKHomologyProductBridge
 
 /-- Kasparov KK-Module Representation between C*-Algebras A and B in Mₙ(ℂ). -/
-structure KasparovModule (n : ℕ) [DecidableEq (Fin n)] where
-  fredholm_operator : Matrix (Fin n) (Fin n) ℂ
-  h_self_adjoint : fredholm_operator.conjTranspose = fredholm_operator
-  h_involution : fredholm_operator * fredholm_operator = 1
+abbrev KasparovModule (n : ℕ) [DecidableEq (Fin n)] :=
+  { F : selfAdjoint (Matrix (Fin n) (Fin n) ℂ) //
+      (F : Matrix (Fin n) (Fin n) ℂ) * F = 1 }
 
 namespace KasparovModule
 
 variable {n : ℕ} [DecidableEq (Fin n)] (modAB modBC modCD : KasparovModule n)
 
+def fredholm_operator : Matrix (Fin n) (Fin n) ℂ := modAB.1
+
+theorem h_self_adjoint : (fredholm_operator modAB).conjTranspose = fredholm_operator modAB := by
+  simpa only [fredholm_operator, Matrix.star_eq_conjTranspose] using modAB.1.property
+
+theorem h_involution : fredholm_operator modAB * fredholm_operator modAB = 1 := by
+  exact modAB.2
+
 /-- **Theorem**: Kasparov Module Involutivity: F² = 1. -/
 theorem kasparov_module_involution :
-    modAB.fredholm_operator * modAB.fredholm_operator = 1 :=
-  modAB.h_involution
+    fredholm_operator modAB * fredholm_operator modAB = 1 :=
+  h_involution modAB
 
 /-- **Theorem**: Kasparov Module Self-Adjointness: F† = F. -/
 theorem kasparov_module_self_adjoint :
-    modAB.fredholm_operator.conjTranspose = modAB.fredholm_operator :=
-  modAB.h_self_adjoint
+    (fredholm_operator modAB).conjTranspose = fredholm_operator modAB :=
+  h_self_adjoint modAB
 
 /-- Composite Kasparov Product Element F_AC = F_AB * F_BC. -/
 def kasparovProduct (x y : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=

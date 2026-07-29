@@ -121,7 +121,7 @@ def stageToDirectLimitLinearMap
   rw [directLimit_inner_eq, directLimitInner_apply,
     realDirectLimitInner_of_of]
   unfold commonStageInner
-  simpa using
+  exact
     (sys.map (le_commonUpper_left i i)).inner_map_map x y
 
 /-- Canonical stage inclusion bundled as a complex linear isometry. -/
@@ -208,7 +208,13 @@ def stageToHilbertDirectLimit
   LinearIsometry.mk
     ((directLimitToCompletionLinearIsometry E sys).toLinearMap.comp
       (stageToDirectLimitLinearIsometry E sys i).toLinearMap)
-    (fun x => by simp)
+    (fun x => by
+      change
+        ‖directLimitToCompletionLinearIsometry E sys
+            (stageToDirectLimitLinearIsometry E sys i x)‖ =
+          ‖x‖
+      rw [(directLimitToCompletionLinearIsometry E sys).norm_map,
+        (stageToDirectLimitLinearIsometry E sys i).norm_map])
 
 @[simp] theorem stageToHilbertDirectLimit_apply
     (i : I) (x : E i) :

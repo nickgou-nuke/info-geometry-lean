@@ -127,19 +127,17 @@ The bridge says that the Sugawara central/stress readout of the Siegel boundary
 datum equals the completed L-function readout at the corresponding spectral
 parameter.
 -/
-structure LanglandsSugawaraBridge
+def LanglandsSugawaraBridge
     (W : SiegelEisensteinWitness Bulk Boundary)
     {Stress : Type uStress}
     {Spectral : Type uSpectral}
     {Scalar : Type uScalar}
     [Zero Scalar]
     (L : CompletedLReadout Boundary Spectral Scalar)
-    (S : SugawaraCentralReadout Boundary Stress Scalar) where
-  /-- Central/stress readout equals completed-L readout on the Siegel boundary. -/
-  central_eq_completedL_on_boundary :
-    ∀ b : Boundary,
-      S.centralReadout (S.stressOfBoundary b) =
-        L.completedL (L.spectralOfBoundary b)
+    (S : SugawaraCentralReadout Boundary Stress Scalar) : Prop :=
+  ∀ b : Boundary,
+    S.centralReadout (S.stressOfBoundary b) =
+      L.completedL (L.spectralOfBoundary b)
 
 namespace LanglandsSugawaraBridge
 
@@ -159,7 +157,7 @@ theorem central_zero_iff_L_zero
     S.HasCentralZero b ↔ L.IsBoundaryLZero b := by
   dsimp [SugawaraCentralReadout.HasCentralZero,
     CompletedLReadout.IsBoundaryLZero]
-  rw [LanglandsSugawaraBridge.central_eq_completedL_on_boundary B b]
+  rw [B b]
 
 /-- Completed-L zero implies Sugawara central-zero. -/
 theorem central_zero_of_L_zero

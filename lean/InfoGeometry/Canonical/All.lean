@@ -387,6 +387,7 @@ import InfoGeometry.Canonical.FibonacciModularGroupBridge
 import InfoGeometry.Canonical.KleinBottleMoebiusToricCodeBridge
 import InfoGeometry.Canonical.KitaevHoneycombPlaquetteFluxBridge
 import InfoGeometry.Canonical.QuantumDoubleS3Bridge
+import InfoGeometry.Canonical.AnyonCondensationDomainWallBridge
 import InfoGeometry.Canonical.NonAbelianBerryPhaseBridge
 import InfoGeometry.Canonical.AreaLawEntropyViolationBridge
 import InfoGeometry.Canonical.OTOCScramblingChaosBridge

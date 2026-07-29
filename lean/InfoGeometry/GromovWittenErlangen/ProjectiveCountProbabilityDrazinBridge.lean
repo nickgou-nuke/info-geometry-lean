@@ -43,10 +43,11 @@ probability gauge sections, density matrices, surprisal operators, and
 projective modular count profiles.
 -/
 @[rep_depth operator]
-abbrev GWProjectiveCountProbabilityBridge
-    (n : ℕ)
-    (G T Target Coeff : Type*) :=
-  GWCanonicalCountRayBridge n G T Target Coeff
+structure GWProjectiveCountProbabilityBridge
+    (n : ℕ) [Nonempty (Fin n)]
+    (G T Target Coeff : Type*) where
+  canonical :
+    GWCanonicalCountRayBridge n G T Target Coeff
 
 namespace GWProjectiveCountProbabilityBridge
 
@@ -56,38 +57,38 @@ variable (B : GWProjectiveCountProbabilityBridge n G T Target Coeff)
 
 /-- Probability gauge of the localized count ray. -/
 def stateFinProb : InfoGeometry.FinProb (Fin n) :=
-  GWCanonicalCountRayBridge.stateFinProb B
+  B.canonical.stateFinProb
 
 /-- Density matrix of the localized probability gauge. -/
 def stateDensityMatrix : FinMat n :=
-  GWCanonicalCountRayBridge.stateDensityMatrix B
+  B.canonical.stateDensityMatrix
 
 /-- Surprisal operator of the localized probability gauge. -/
 def stateSurprisalOperator : FinMat n :=
-  GWCanonicalCountRayBridge.stateSurprisalOperator B
+  B.canonical.stateSurprisalOperator
 
 /-- Projective count Hamiltonian profile of the localized/reference count pair. -/
 def projectiveHamiltonianProfile : Fin n → ℝ :=
-  GWCanonicalCountRayBridge.projectiveHamiltonianProfile B
+  B.canonical.projectiveHamiltonianProfile
 
 /-- Modular-potential operator attached to the raw count representative pair. -/
 def relativeCountModularPotentialOperator : FinMat n :=
   InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeCountModularPotentialOperator
-    B.counts B.ref
+    B.canonical.counts B.canonical.ref
 
 /-- Density diagonal entries are the normalized count masses. -/
 theorem stateDensityMatrix_diag
     (i : Fin n) :
-    stateDensityMatrix B i i =
-      B.counts i /
-        countMass B.counts B.counts_pos := by
-  exact GWCanonicalCountRayBridge.stateDensityMatrix_diag B i
+    B.stateDensityMatrix i i =
+      B.canonical.counts i /
+        countMass B.canonical.counts B.canonical.counts_pos := by
+  exact B.canonical.stateDensityMatrix_diag i
 
 /-- Entropy of the probability gauge is expectation of the surprisal operator. -/
 theorem entropy_eq_diagonalExpectation_stateSurprisalOperator :
-    InfoGeometry.entropy (stateFinProb B) =
-      diagonalExpectation (stateFinProb B) (stateSurprisalOperator B) := by
-  exact GWCanonicalCountRayBridge.entropy_eq_diagonalExpectation_stateSurprisalOperator B
+    InfoGeometry.entropy B.stateFinProb =
+      diagonalExpectation B.stateFinProb B.stateSurprisalOperator := by
+  exact B.canonical.entropy_eq_diagonalExpectation_stateSurprisalOperator
 
 /--
 The projective count Hamiltonian is the relative modular potential of the
@@ -95,12 +96,12 @@ canonical count rays.
 -/
 theorem projectiveHamiltonianProfile_eq_relativeModularPotential
     (i : Fin n) :
-    projectiveHamiltonianProfile B i =
+    B.projectiveHamiltonianProfile i =
       relativeModularPotential
         (α := Fin n)
-        (GWCanonicalCountRayBridge.stateRay (n := n) B)
-        (GWCanonicalCountRayBridge.referenceRay (n := n) B) i := by
-  exact GWCanonicalCountRayBridge.projectiveHamiltonianProfile_eq_relativeModularPotential B i
+        B.canonical.stateRay
+        B.canonical.referenceRay i := by
+  exact B.canonical.projectiveHamiltonianProfile_eq_relativeModularPotential i
 
 end GWProjectiveCountProbabilityBridge
 
@@ -130,7 +131,7 @@ structure GWProjectiveCountDrazinBridge
   -/
   localization_packet_eq :
     drazin.drazinLocalization.virtualLocalization =
-      projectiveProbability.projectiveCounts.localization
+      projectiveProbability.canonical.projectiveCounts.localization
 
 namespace GWProjectiveCountDrazinBridge
 
@@ -141,7 +142,7 @@ variable (B : GWProjectiveCountDrazinBridge n G T Target Coeff Algebra)
 /-- The Drazin and projective-count packets use the same localization graph. -/
 theorem localization_packet_matches_projectiveCounts :
     B.drazin.drazinLocalization.virtualLocalization =
-      B.projectiveProbability.projectiveCounts.localization :=
+      B.projectiveProbability.canonical.projectiveCounts.localization :=
   B.localization_packet_eq
 
 /-- Edge Drazin residues annihilate the corresponding regular inverse on the left. -/
@@ -153,14 +154,11 @@ theorem edgeResidue_mul_regularInverse
 
 /-- Entropy of the projective probability gauge is expectation of surprisal. -/
 theorem entropy_eq_diagonalExpectation_stateSurprisalOperator :
-    InfoGeometry.entropy
-        (GWProjectiveCountProbabilityBridge.stateFinProb B.projectiveProbability) =
+    InfoGeometry.entropy B.projectiveProbability.stateFinProb =
       diagonalExpectation
-        (GWProjectiveCountProbabilityBridge.stateFinProb B.projectiveProbability)
-        (GWProjectiveCountProbabilityBridge.stateSurprisalOperator
-          B.projectiveProbability) :=
-  GWProjectiveCountProbabilityBridge.entropy_eq_diagonalExpectation_stateSurprisalOperator
-    B.projectiveProbability
+        B.projectiveProbability.stateFinProb
+        B.projectiveProbability.stateSurprisalOperator :=
+  B.projectiveProbability.entropy_eq_diagonalExpectation_stateSurprisalOperator
 
 end GWProjectiveCountDrazinBridge
 

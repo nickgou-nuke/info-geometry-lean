@@ -185,10 +185,9 @@ Projective-count bridge without gauge fixing.
 This is the L0/L1/L2 owner surface: localization data supplies explicit count
 readouts, and the finite normalized shape is scale-invariant by construction.
 -/
-structure GWProjectiveCountBridge
-    (G T Target Coeff : Type*) where
-  countState :
-    GWProjectiveCountState G T Target Coeff
+abbrev GWProjectiveCountBridge
+    (G T Target Coeff : Type*) :=
+  GWProjectiveCountState G T Target Coeff
 
 namespace GWProjectiveCountBridge
 
@@ -200,9 +199,9 @@ theorem normalizedShape_scale_counts
     (β c : ℝ) (hc : c ≠ 0) :
     finiteArithmeticNormalizedRay
         (fun n => c * B.countState.counts n)
-        B.countState.support β =
-      B.countState.normalizedShape β :=
-  B.countState.normalizedShape_scale_counts β c hc
+        B.support β =
+      B.normalizedShape β :=
+  B.normalizedShape_scale_counts β c hc
 
 end GWProjectiveCountBridge
 
@@ -211,13 +210,10 @@ Gauge-fixed projective-count bridge.
 
 This is the first point at which thermodynamic language is allowed.
 -/
-structure GaugeFixedGWProjectiveCountBridge
-    (G T Target Coeff : Type*) where
-  projective :
-    GWProjectiveCountBridge G T Target Coeff
-
-  gauge :
-    ProjectiveCountVolumeGauge projective.countState
+def GaugeFixedGWProjectiveCountBridge
+    (G T Target Coeff : Type*) :=
+  Σ projective : GWProjectiveCountBridge G T Target Coeff,
+    ProjectiveCountVolumeGauge projective
 
 namespace GaugeFixedGWProjectiveCountBridge
 
@@ -226,9 +222,9 @@ variable (B : GaugeFixedGWProjectiveCountBridge G T Target Coeff)
 
 /-- Entropy is nonnegative when the selected gauge volume is at least one. -/
 theorem entropy_nonneg_of_one_le_volume
-    (hvol : 1 ≤ B.gauge.volume) :
-    0 ≤ B.gauge.entropy :=
-  B.gauge.entropy_nonneg_of_one_le_volume hvol
+    (hvol : 1 ≤ B.2.volume) :
+    0 ≤ B.2.entropy :=
+  B.2.entropy_nonneg_of_one_le_volume hvol
 
 end GaugeFixedGWProjectiveCountBridge
 

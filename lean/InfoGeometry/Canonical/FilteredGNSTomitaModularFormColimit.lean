@@ -152,4 +152,249 @@ theorem commonStageModularPairing_eq_at
   dsimp only
   rw [hc, hk]
 
+/-- Additivity in the first representative. -/
+theorem commonStageModularPairing_add_left
+    (i j : I)
+    (x₁ x₂ : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    commonStageModularPairing Stage sys ω hclos i j
+        (x₁ + x₂) y =
+      commonStageModularPairing Stage sys ω hclos i j x₁ y +
+        commonStageModularPairing Stage sys ω hclos i j x₂ y := by
+  unfold commonStageModularPairing
+  simp only [map_add]
+
+/-- Real homogeneity in the first representative. -/
+theorem commonStageModularPairing_smul_left
+    (i j : I) (r : ℝ)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    commonStageModularPairing Stage sys ω hclos i j
+        (r • x) y =
+      r • commonStageModularPairing
+        Stage sys ω hclos i j x y := by
+  unfold commonStageModularPairing
+  rw [map_smul]
+  change
+    closedTomitaModularForm Stage sys ω hclos
+        (commonUpper i j)
+        ((r : ℂ) •
+          domainTransition Stage sys ω
+            (le_commonUpper_left i j) x)
+        (domainTransition Stage sys ω
+          (le_commonUpper_right i j) y) =
+      (r : ℂ) •
+        closedTomitaModularForm Stage sys ω hclos
+          (commonUpper i j)
+          (domainTransition Stage sys ω
+            (le_commonUpper_left i j) x)
+          (domainTransition Stage sys ω
+            (le_commonUpper_right i j) y)
+  rw [map_smulₛₗ]
+  simp
+
+/-- Additivity in the second representative. -/
+theorem commonStageModularPairing_add_right
+    (i j : I)
+    (x : closedTomitaDomain (ω.state i))
+    (y₁ y₂ : closedTomitaDomain (ω.state j)) :
+    commonStageModularPairing Stage sys ω hclos i j
+        x (y₁ + y₂) =
+      commonStageModularPairing Stage sys ω hclos i j x y₁ +
+        commonStageModularPairing Stage sys ω hclos i j x y₂ := by
+  unfold commonStageModularPairing
+  simp only [map_add]
+
+/-- Real homogeneity in the second representative. -/
+theorem commonStageModularPairing_smul_right
+    (i j : I) (r : ℝ)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    commonStageModularPairing Stage sys ω hclos i j
+        x (r • y) =
+      r • commonStageModularPairing
+        Stage sys ω hclos i j x y := by
+  unfold commonStageModularPairing
+  rw [map_smul]
+  change
+    closedTomitaModularForm Stage sys ω hclos
+        (commonUpper i j)
+        (domainTransition Stage sys ω
+          (le_commonUpper_left i j) x)
+        ((r : ℂ) •
+          domainTransition Stage sys ω
+            (le_commonUpper_right i j) y) =
+      (r : ℂ) •
+        closedTomitaModularForm Stage sys ω hclos
+          (commonUpper i j)
+          (domainTransition Stage sys ω
+            (le_commonUpper_left i j) x)
+          (domainTransition Stage sys ω
+            (le_commonUpper_right i j) y)
+  rw [map_smul]
+
+/-- Compatibility when the second representative is transported forward. -/
+theorem commonStageModularPairing_map_right
+    (i j k : I) (hjk : j ≤ k)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    commonStageModularPairing Stage sys ω hclos i k x
+        (domainTransition Stage sys ω hjk y) =
+      commonStageModularPairing Stage sys ω hclos i j x y := by
+  let m := commonUpper i k
+  have him : i ≤ m := le_commonUpper_left i k
+  have hkm : k ≤ m := le_commonUpper_right i k
+  rw [commonStageModularPairing_eq_at
+    Stage sys ω hclos i k m him hkm]
+  rw [commonStageModularPairing_eq_at
+    Stage sys ω hclos i j m him (le_trans hjk hkm)]
+  rw [domainTransition_comp_apply Stage sys ω hjk hkm y]
+
+/-- Compatibility when the first representative is transported forward. -/
+theorem commonStageModularPairing_map_left
+    (i j k : I) (hij : i ≤ j)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state k)) :
+    commonStageModularPairing Stage sys ω hclos j k
+        (domainTransition Stage sys ω hij x) y =
+      commonStageModularPairing Stage sys ω hclos i k x y := by
+  let m := commonUpper j k
+  have hjm : j ≤ m := le_commonUpper_left j k
+  have hkm : k ≤ m := le_commonUpper_right j k
+  rw [commonStageModularPairing_eq_at
+    Stage sys ω hclos j k m hjm hkm]
+  rw [commonStageModularPairing_eq_at
+    Stage sys ω hclos i k m (le_trans hij hjm) hkm]
+  rw [domainTransition_comp_apply Stage sys ω hij hjm x]
+
+/-- For a fixed first-stage representative, pairing against one later stage is
+a real-linear functional. -/
+def pairingRightAtStage
+    (i : I) (x : closedTomitaDomain (ω.state i))
+    (j : I) :
+    closedTomitaDomain (ω.state j) →ₗ[ℝ] ℂ where
+  toFun := commonStageModularPairing Stage sys ω hclos i j x
+  map_add' :=
+    commonStageModularPairing_add_right
+      Stage sys ω hclos i j x
+  map_smul' :=
+    commonStageModularPairing_smul_right
+      Stage sys ω hclos i j x
+
+/-- The right-stage functionals form a cocone over the real domain system. -/
+theorem pairingRightAtStage_compatible
+    (i : I) (x : closedTomitaDomain (ω.state i))
+    (j k : I) (hjk : j ≤ k)
+    (y : closedTomitaDomain (ω.state j)) :
+    pairingRightAtStage Stage sys ω hclos i x k
+        (domainTransition Stage sys ω hjk y) =
+      pairingRightAtStage Stage sys ω hclos i x j y :=
+  commonStageModularPairing_map_right
+    Stage sys ω hclos i j k hjk x y
+
+/-- Pair a fixed stage representative against the genuine real module direct
+limit. -/
+def pairStageAgainstDirectLimit
+    (i : I) (x : closedTomitaDomain (ω.state i)) :
+    ClosedDomainDirectLimit Stage sys ω →ₗ[ℝ] ℂ :=
+  Module.DirectLimit.lift
+    ℝ I
+    (fun j => closedTomitaDomain (ω.state j))
+    (fun _ _ hjk => domainTransition Stage sys ω hjk)
+    (pairingRightAtStage Stage sys ω hclos i x)
+    (pairingRightAtStage_compatible Stage sys ω hclos i x)
+
+@[simp] theorem pairStageAgainstDirectLimit_of
+    (i j : I)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    pairStageAgainstDirectLimit Stage sys ω hclos i x
+        (Module.DirectLimit.of
+          ℝ I
+          (fun k => closedTomitaDomain (ω.state k))
+          (fun _ _ h => domainTransition Stage sys ω h)
+          j y) =
+      commonStageModularPairing Stage sys ω hclos i j x y := by
+  exact
+    Module.DirectLimit.lift_of
+      (pairingRightAtStage Stage sys ω hclos i x)
+      (pairingRightAtStage_compatible Stage sys ω hclos i x)
+
+/-- A first-stage vector determines a real-linear functional on the direct
+limit. -/
+def stageToDirectLimitFunctional
+    (i : I) :
+    closedTomitaDomain (ω.state i) →ₗ[ℝ]
+      (ClosedDomainDirectLimit Stage sys ω →ₗ[ℝ] ℂ) where
+  toFun := pairStageAgainstDirectLimit Stage sys ω hclos i
+  map_add' := by
+    intro x₁ x₂
+    ext z
+    induction z using Module.DirectLimit.induction_on with
+    | ih j y =>
+        simp only [pairStageAgainstDirectLimit_of]
+        exact
+          commonStageModularPairing_add_left
+            Stage sys ω hclos i j x₁ x₂ y
+  map_smul' := by
+    intro r x
+    ext z
+    induction z using Module.DirectLimit.induction_on with
+    | ih j y =>
+        simp only [pairStageAgainstDirectLimit_of,
+          LinearMap.smul_apply]
+        exact
+          commonStageModularPairing_smul_left
+            Stage sys ω hclos i j r x y
+
+/-- The first-stage functionals also form a cocone. -/
+theorem stageToDirectLimitFunctional_compatible
+    (i j : I) (hij : i ≤ j)
+    (x : closedTomitaDomain (ω.state i)) :
+    stageToDirectLimitFunctional Stage sys ω hclos j
+        (domainTransition Stage sys ω hij x) =
+      stageToDirectLimitFunctional Stage sys ω hclos i x := by
+  ext z
+  induction z using Module.DirectLimit.induction_on with
+  | ih k y =>
+      simp only [stageToDirectLimitFunctional,
+        pairStageAgainstDirectLimit_of]
+      exact
+        commonStageModularPairing_map_left
+          Stage sys ω hclos i j k hij x y
+
+/-- The full complex-valued Tomita modular form descended to the genuine
+filtered real module direct limit. -/
+def directLimitModularForm :
+    ClosedDomainDirectLimit Stage sys ω →ₗ[ℝ]
+      ClosedDomainDirectLimit Stage sys ω →ₗ[ℝ] ℂ :=
+  Module.DirectLimit.lift
+    ℝ I
+    (fun i => closedTomitaDomain (ω.state i))
+    (fun _ _ hij => domainTransition Stage sys ω hij)
+    (stageToDirectLimitFunctional Stage sys ω hclos)
+    (stageToDirectLimitFunctional_compatible Stage sys ω hclos)
+
+/-- The descended form evaluates on canonical representatives by transporting
+them to any common upper stage. -/
+@[simp] theorem directLimitModularForm_of_of
+    (i j : I)
+    (x : closedTomitaDomain (ω.state i))
+    (y : closedTomitaDomain (ω.state j)) :
+    directLimitModularForm Stage sys ω hclos
+        (Module.DirectLimit.of
+          ℝ I
+          (fun k => closedTomitaDomain (ω.state k))
+          (fun _ _ h => domainTransition Stage sys ω h)
+          i x)
+        (Module.DirectLimit.of
+          ℝ I
+          (fun k => closedTomitaDomain (ω.state k))
+          (fun _ _ h => domainTransition Stage sys ω h)
+          j y) =
+      commonStageModularPairing Stage sys ω hclos i j x y := by
+  rw [Module.DirectLimit.lift_of]
+  exact pairStageAgainstDirectLimit_of
+    Stage sys ω hclos i j x y
+
 end CStarStateColimit.Native.FilteredGNSTomitaModularFormColimit

@@ -101,17 +101,13 @@ theorem master_equation_synthesis (K : ℝ) :
   exact ⟨masterOp_nonneg K, rfl, by simp [masterOpReal]⟩
 
 -- Bridges
-structure BridgeArtifact where
-  name : String
-  artifact : String
+abbrev BridgeArtifact := String × String
 
-def bridge_thermo_gauge_flow : BridgeArtifact where
-  name := "thermodynamic gauge flow"
-  artifact := "thermo_gauge_flow.lean"
+def bridge_thermo_gauge_flow : BridgeArtifact :=
+  ("thermodynamic gauge flow", "thermo_gauge_flow.lean")
 
-def bridge_tomita_kms : BridgeArtifact where
-  name := "Tomita KMS modular flow"
-  artifact := "tomita_kms_v4.lean"
+def bridge_tomita_kms : BridgeArtifact :=
+  ("Tomita KMS modular flow", "tomita_kms_v4.lean")
 
 def master_equation_bridge_registry : List BridgeArtifact :=
   [bridge_thermo_gauge_flow, bridge_tomita_kms]

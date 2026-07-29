@@ -318,4 +318,199 @@ def complexScalarDirectLimit
       (complexScalarCoconeMap_compatible E sys c)
       (i := i) x)
 
+/-- Descended complex scalar action on the real direct-limit carrier. -/
+noncomputable instance complexSMulRealDirectLimit :
+    SMul ℂ D∞ where
+  smul c := complexScalarDirectLimit E sys c
+
+@[simp] theorem complex_smul_of
+    (c : ℂ) (i : I) (x : E i) :
+    c •
+        (Module.DirectLimit.of
+          ℝ I E
+          (fun _ _ h => realTransition E sys h)
+          i x) =
+      Module.DirectLimit.of
+        ℝ I E
+        (fun _ _ h => realTransition E sys h)
+        i (c • x) :=
+  complexScalarDirectLimit_of E sys c i x
+
+/-- Distributive complex action on the filtered carrier. -/
+noncomputable instance complexDistribMulActionRealDirectLimit :
+    DistribMulAction ℂ D∞ where
+  smul := (· • ·)
+  one_smul := by
+    intro z
+    induction z using Module.DirectLimit.induction_on with
+    | ih i x => simp
+  mul_smul := by
+    intro c d z
+    induction z using Module.DirectLimit.induction_on with
+    | ih i x => simp [mul_smul]
+  smul_zero := by
+    intro c
+    exact (complexScalarDirectLimit E sys c).map_zero
+  smul_add := by
+    intro c x y
+    exact (complexScalarDirectLimit E sys c).map_add x y
+
+/-- Native complex module structure recovered on the filtered carrier. -/
+noncomputable instance complexModuleRealDirectLimit :
+    Module ℂ D∞ where
+  add_smul := by
+    intro c d z
+    induction z using Module.DirectLimit.induction_on with
+    | ih i x => simp [add_smul]
+  zero_smul := by
+    intro z
+    induction z using Module.DirectLimit.induction_on with
+    | ih i x => simp
+
+/-- Complex conjugate homogeneity at a common stage. -/
+theorem commonStageInner_smul_left_complex
+    (i j : I) (c : ℂ) (x : E i) (y : E j) :
+    commonStageInner E sys i j (c • x) y =
+      star c * commonStageInner E sys i j x y := by
+  unfold commonStageInner
+  rw [(sys.map (le_commonUpper_left i j)).map_smul,
+    inner_smul_left]
+
+/-- Complex homogeneity in the second common-stage argument. -/
+theorem commonStageInner_smul_right_complex
+    (i j : I) (c : ℂ) (x : E i) (y : E j) :
+    commonStageInner E sys i j x (c • y) =
+      c * commonStageInner E sys i j x y := by
+  unfold commonStageInner
+  rw [(sys.map (le_commonUpper_right i j)).map_smul,
+    inner_smul_right]
+
+/-- Conjugate homogeneity of the descended pairing. -/
+theorem realDirectLimitInner_smul_left_complex
+    (c : ℂ) (z w : D∞) :
+    realDirectLimitInner E sys (c • z) w =
+      star c * realDirectLimitInner E sys z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          rw [complex_smul_of]
+          rw [realDirectLimitInner_of_of,
+            realDirectLimitInner_of_of]
+          exact commonStageInner_smul_left_complex
+            E sys i j c x y
+
+/-- Complex homogeneity in the second descended argument. -/
+theorem realDirectLimitInner_smul_right_complex
+    (c : ℂ) (z w : D∞) :
+    realDirectLimitInner E sys z (c • w) =
+      c * realDirectLimitInner E sys z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          rw [complex_smul_of]
+          rw [realDirectLimitInner_of_of,
+            realDirectLimitInner_of_of]
+          exact commonStageInner_smul_right_complex
+            E sys i j c x y
+
+/-- Genuine complex sesquilinear inner pairing on the direct-limit carrier. -/
+def directLimitInner :
+    D∞ →ₛₗ[starRingEnd ℂ] D∞ →ₗ[ℂ] ℂ :=
+  LinearMap.mk₂'ₛₗ
+    (starRingEnd ℂ) (RingHom.id ℂ)
+    (fun z w => realDirectLimitInner E sys z w)
+    (by
+      intro z₁ z₂ w
+      exact LinearMap.congr_fun
+        ((realDirectLimitInner E sys).map_add z₁ z₂) w)
+    (by
+      intro c z w
+      simpa only [smul_eq_mul] using
+        realDirectLimitInner_smul_left_complex
+          E sys c z w)
+    (by
+      intro z w₁ w₂
+      exact (realDirectLimitInner E sys z).map_add w₁ w₂)
+    (by
+      intro c z w
+      simpa only [smul_eq_mul] using
+        realDirectLimitInner_smul_right_complex
+          E sys c z w)
+
+@[simp] theorem directLimitInner_apply
+    (z w : D∞) :
+    directLimitInner E sys z w =
+      realDirectLimitInner E sys z w :=
+  rfl
+
+/-- Hermitian symmetry of the direct-limit inner pairing. -/
+theorem directLimitInner_conj_symm
+    (z w : D∞) :
+    star (directLimitInner E sys w z) =
+      directLimitInner E sys z w := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      induction w using Module.DirectLimit.induction_on with
+      | ih j y =>
+          simp only [directLimitInner_apply,
+            realDirectLimitInner_of_of]
+          let k := commonUpper i j
+          rw [commonStageInner_eq_at E sys j i k
+            (le_commonUpper_right i j)
+            (le_commonUpper_left i j)]
+          rw [commonStageInner_eq_at E sys i j k
+            (le_commonUpper_left i j)
+            (le_commonUpper_right i j)]
+          exact inner_conj_symm (𝕜 := ℂ) _ _
+
+/-- Nonnegativity of the direct-limit diagonal. -/
+theorem directLimitInner_nonneg
+    (z : D∞) :
+    0 ≤ Complex.re (directLimitInner E sys z z) := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      simp only [directLimitInner_apply,
+        realDirectLimitInner_of_of]
+      unfold commonStageInner
+      exact inner_self_nonneg (𝕜 := ℂ)
+
+/-- Positive definiteness of the direct-limit inner pairing. -/
+theorem directLimitInner_self_eq_zero_iff
+    (z : D∞) :
+    directLimitInner E sys z z = 0 ↔ z = 0 := by
+  induction z using Module.DirectLimit.induction_on with
+  | ih i x =>
+      constructor
+      · intro hx
+        simp only [directLimitInner_apply,
+          realDirectLimitInner_of_of] at hx
+        let k := commonUpper i i
+        have hik : i ≤ k := le_commonUpper_left i i
+        rw [commonStageInner_eq_at E sys i i k hik hik] at hx
+        have hmap : sys.map hik x = 0 :=
+          (inner_self_eq_zero (𝕜 := ℂ)).mp hx
+        calc
+          Module.DirectLimit.of
+              ℝ I E
+              (fun _ _ h => realTransition E sys h)
+              i x =
+            Module.DirectLimit.of
+              ℝ I E
+              (fun _ _ h => realTransition E sys h)
+              k (realTransition E sys hik x) :=
+                Module.DirectLimit.of_f.symm
+          _ = 0 := by
+            change
+              Module.DirectLimit.of
+                  ℝ I E
+                  (fun _ _ h => realTransition E sys h)
+                  k (sys.map hik x) = 0
+            rw [hmap]
+            exact map_zero _
+      · intro hz
+        subst hz
+        simp
+
 end InfoGeometry.Canonical.FilteredIsometricInnerProductDirectLimit

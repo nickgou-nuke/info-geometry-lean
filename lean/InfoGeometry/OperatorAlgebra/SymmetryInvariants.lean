@@ -882,12 +882,16 @@ def invariantSubmodule : Submodule ℝ Op where
     simp
   add_mem' := by
     intro x y hx hy g
-    change S.act g (x + y) = x + y
-    rw [(S.act g).toRingEquiv.map_add, hx g, hy g]
+    calc
+      S.act g (x + y) = S.act g x + S.act g y :=
+        (S.act g).toLinearMap.map_add x y
+      _ = x + y := by rw [hx g, hy g]
   smul_mem' := by
     intro a x hx g
-    change S.act g (a • x) = a • x
-    rw [(S.act g).toLinearMap.map_smul, hx g]
+    calc
+      S.act g (a • x) = a • S.act g x :=
+        (S.act g).toLinearMap.map_smul a x
+      _ = a • x := by rw [hx g]
 
 @[simp]
 theorem mem_invariantSubmodule_iff
@@ -1183,9 +1187,14 @@ theorem map_commutator
     F.toLinearMap (commutator x y) =
       commutator (F.toLinearMap x) (F.toLinearMap y) := by
   dsimp [commutator]
-  rw [F.toLinearMap.toRingHom.map_sub,
-    EquivariantAlgebraMap.map_mul F x y,
-    EquivariantAlgebraMap.map_mul F y x]
+  calc
+    F.toLinearMap (x * y - y * x) =
+        F.toLinearMap (x * y) - F.toLinearMap (y * x) :=
+      F.toLinearMap.toLinearMap.map_sub (x * y) (y * x)
+    _ = F.toLinearMap x * F.toLinearMap y -
+          F.toLinearMap y * F.toLinearMap x := by
+      rw [EquivariantAlgebraMap.map_mul F x y,
+        EquivariantAlgebraMap.map_mul F y x]
 
 end EquivariantAlgebraMap
 
@@ -1342,9 +1351,13 @@ theorem invariant_P_left_of_preserves_chi
         = S.act g ((1 / 2 : ℝ) • ((1 : Op) + C.chi)) := by
           rw [C.P_left_def]
     _ = (1 / 2 : ℝ) • S.act g ((1 : Op) + C.chi) := by
-          rw [(S.act g).toLinearMap.map_smul]
+          exact (S.act g).toLinearMap.map_smul _ _
     _ = (1 / 2 : ℝ) • ((1 : Op) + C.chi) := by
-          rw [(S.act g).toRingEquiv.map_add, S.map_one, hC g]
+          congr 1
+          calc
+            S.act g ((1 : Op) + C.chi) = S.act g 1 + S.act g C.chi :=
+              (S.act g).toLinearMap.map_add _ _
+            _ = (1 : Op) + C.chi := by rw [S.map_one, hC g]
     _ = C.P_left := by
           exact C.P_left_def.symm
 
@@ -1355,16 +1368,19 @@ theorem invariant_P_right_of_preserves_chi
     S.IsInvariant C.P_right := by
   intro g
   have hsub :
-      S.act g ((1 : Op) - C.chi) =
+    S.act g ((1 : Op) - C.chi) =
         (1 : Op) - C.chi := by
-    rw [sub_eq_add_neg, (S.act g).toRingEquiv.map_add, S.map_one,
-      (S.act g).toRingEquiv.map_neg, hC g]
+    calc
+      S.act g ((1 : Op) - C.chi) =
+          S.act g 1 - S.act g C.chi :=
+        (S.act g).toLinearMap.map_sub _ _
+      _ = (1 : Op) - C.chi := by rw [S.map_one, hC g]
   calc
     S.act g C.P_right
         = S.act g ((1 / 2 : ℝ) • ((1 : Op) - C.chi)) := by
           rw [C.P_right_def]
     _ = (1 / 2 : ℝ) • S.act g ((1 : Op) - C.chi) := by
-          rw [(S.act g).toLinearMap.map_smul]
+          exact (S.act g).toLinearMap.map_smul _ _
     _ = (1 / 2 : ℝ) • ((1 : Op) - C.chi) := by
           rw [hsub]
     _ = C.P_right := by

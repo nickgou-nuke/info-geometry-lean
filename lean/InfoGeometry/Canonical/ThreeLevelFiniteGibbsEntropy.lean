@@ -108,6 +108,28 @@ theorem layeredJointWeight_pos
     mul_pos houter hfiber
   exact mul_pos hpair hcond
 
+/-! The factorized hierarchy is not a second probability model: after the
+    partition factors cancel, it is the canonical joint Gibbs weight. -/
+theorem layeredJointWeight_eq_jointWeight
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (fiber_nonempty : ∀ g, (superFiber super g).Nonempty)
+    (g : SuperSector) (s : Sector) (x : State s) :
+    layeredJointWeight State super energy particleNumber superNumber β μ ν g s x =
+      jointWeight State super energy particleNumber superNumber β μ ν g s x := by
+  unfold layeredJointWeight outerWeight fiberSectorWeight conditionalWeight jointWeight
+    outerNumerator middleNumerator jointNumerator
+  have hcanonical : canonicalPartition State energy β s ≠ 0 :=
+    ne_of_gt (canonicalPartition_pos State energy β s)
+  have hsuper : superPartition State super energy particleNumber β μ g ≠ 0 :=
+    ne_of_gt (superPartition_pos State super energy particleNumber β μ fiber_nonempty g)
+  have hgrand : grandPartition State super energy particleNumber superNumber β μ ν ≠ 0 :=
+    ne_of_gt (grandPartition_pos State super energy particleNumber superNumber β μ ν
+      fiber_nonempty)
+  field_simp [hcanonical, hsuper, hgrand]
+  ring
+
 /-- The conditional Gibbs weights normalize inside each sector. -/
 theorem sum_conditionalWeight_eq_one
     (energy : ∀ s, State s → ℝ) (β : ℝ) (s : Sector) :

@@ -1879,31 +1879,39 @@ The logarithm converts multiplicative change-of-measure into additive
 thermodynamic potential; entropy / relative entropy are expectations of this
 logarithmic potential.
 -/
-structure ClassicalRadonNikodymPacket where
-  /-- Base measurable state space. -/
-  StateSpace : Type*
-  /-- Measurable structure carried by the state space. -/
-  measurableSpace : MeasurableSpace StateSpace
-  /-- Reference measure μ. -/
-  referenceMeasure : @MeasureTheory.Measure StateSpace measurableSpace
-  /-- Target measure ν. -/
-  targetMeasure : @MeasureTheory.Measure StateSpace measurableSpace
-  /-- Radon–Nikodym density `dν/dμ : StateSpace → ENNReal`. -/
-  rnDensity : StateSpace → ENNReal
-  /-- The target measure is obtained from μ by this density. -/
-  targetMeasure_eq_withDensity :
-    targetMeasure = referenceMeasure.withDensity rnDensity
-  /-- Log-likelihood ratio `log((dν/dμ).toReal)`. -/
-  logLikelihood : StateSpace → ℝ
-  /-- Log-likelihood agrees with log of the density. -/
-  logLikelihood_eq : ∀ x : StateSpace,
-    logLikelihood x = Real.log ((rnDensity x).toReal)
-  /-- Relative surprisal `S_{ν|μ}(x) = log(dν/dμ)(x)` (= log-likelihood). -/
-  surprisal : StateSpace → ℝ
-  /-- Surprisal agrees with log-likelihood. -/
-  surprisal_eq : ∀ x : StateSpace, surprisal x = logLikelihood x
-  /-- KL divergence `D_KL(ν|μ) = 𝔼_ν[log(dν/dμ)]` (scalar readout). -/
-  klDivergence : ℝ
+abbrev ClassicalRadonNikodymPacket : Type _ :=
+  Σ' StateSpace : Type*,
+    Σ' measurableSpace : MeasurableSpace StateSpace,
+      Σ' referenceMeasure : @MeasureTheory.Measure StateSpace measurableSpace,
+        Σ' targetMeasure : @MeasureTheory.Measure StateSpace measurableSpace,
+          Σ' rnDensity : StateSpace → ENNReal,
+            Σ' targetMeasure_eq_withDensity :
+              targetMeasure = referenceMeasure.withDensity rnDensity,
+              Σ' logLikelihood : StateSpace → ℝ,
+                Σ' logLikelihood_eq : ∀ x : StateSpace,
+                  logLikelihood x = Real.log ((rnDensity x).toReal),
+                  Σ' surprisal : StateSpace → ℝ,
+                    Σ' surprisal_eq : ∀ x : StateSpace,
+                      surprisal x = logLikelihood x,
+                      ℝ
+
+namespace ClassicalRadonNikodymPacket
+
+abbrev StateSpace (P : ClassicalRadonNikodymPacket) : Type _ := P.1
+abbrev measurableSpace (P : ClassicalRadonNikodymPacket) : MeasurableSpace (StateSpace P) := P.2.1
+abbrev referenceMeasure (P : ClassicalRadonNikodymPacket) :
+    @MeasureTheory.Measure (StateSpace P) (measurableSpace P) := P.2.2.1
+abbrev targetMeasure (P : ClassicalRadonNikodymPacket) :
+    @MeasureTheory.Measure (StateSpace P) (measurableSpace P) := P.2.2.2.1
+abbrev rnDensity (P : ClassicalRadonNikodymPacket) : StateSpace P → ENNReal := P.2.2.2.2.1
+abbrev targetMeasure_eq_withDensity (P : ClassicalRadonNikodymPacket) := P.2.2.2.2.2.1
+abbrev logLikelihood (P : ClassicalRadonNikodymPacket) : StateSpace P → ℝ := P.2.2.2.2.2.2.1
+abbrev logLikelihood_eq (P : ClassicalRadonNikodymPacket) := P.2.2.2.2.2.2.2.1
+abbrev surprisal (P : ClassicalRadonNikodymPacket) : StateSpace P → ℝ := P.2.2.2.2.2.2.2.2.1
+abbrev surprisal_eq (P : ClassicalRadonNikodymPacket) := P.2.2.2.2.2.2.2.2.2.1
+abbrev klDivergence (P : ClassicalRadonNikodymPacket) : ℝ := P.2.2.2.2.2.2.2.2.2.2
+
+end ClassicalRadonNikodymPacket
 
 /--
 **Packet 25.2 — Noncommutative Radon–Nikodym / Tomita–Takesaki layer.**
@@ -1918,26 +1926,31 @@ type-isomorphism between modular operators and classical RN densities.
 Connes' and Pedersen–Takesaki-style Radon–Nikodym theorems for weights are
 precisely the operator-algebraic framework behind this package.
 -/
-structure ModularRadonNikodymPacket where
-  /-- The von Neumann algebra M. -/
-  VonNeumannAlgebra : Type*
-  /-- Reference faithful normal state or weight φ. -/
-  ReferenceState : Type*
-  /-- Target faithful normal state or weight ψ. -/
-  TargetState : Type*
-  /-- Relative modular operator `Δ_{ψ|φ}`. -/
-  RelativeModularOperator : Type*
-  /-- Connes cocycle derivative `[Dψ:Dφ]_t`. -/
-  ConnescCocycle : Type*
-  /-- Relative modular Hamiltonian: `log Δ_{ψ|φ}` (noncommutative `-log(dφ/dψ)`). -/
-  RelativeModularHamiltonian : Type*
-  /--
-  Witness that the relative modular operator plays the role of
-  a noncommutative Radon–Nikodym derivative (comparison data, not identity).
-  -/
-  modularNCRadonNikodymWitness : RelativeModularOperator → ConnescCocycle → Prop
-  /-- Araki relative entropy `S(ψ|φ)` (scalar shadow of the modular logarithm). -/
-  arakiRelativeEntropy : ℝ
+abbrev ModularRadonNikodymPacket : Type _ :=
+  Σ' VonNeumannAlgebra : Type*,
+    Σ' ReferenceState : Type*,
+      Σ' TargetState : Type*,
+        Σ' RelativeModularOperator : Type*,
+          Σ' ConnescCocycle : Type*,
+            Σ' RelativeModularHamiltonian : Type*,
+              Σ' modularNCRadonNikodymWitness :
+                RelativeModularOperator → ConnescCocycle → Prop,
+                ℝ
+
+namespace ModularRadonNikodymPacket
+
+abbrev VonNeumannAlgebra (P : ModularRadonNikodymPacket) : Type _ := P.1
+abbrev ReferenceState (P : ModularRadonNikodymPacket) : Type _ := P.2.1
+abbrev TargetState (P : ModularRadonNikodymPacket) : Type _ := P.2.2.1
+abbrev RelativeModularOperator (P : ModularRadonNikodymPacket) : Type _ := P.2.2.2.1
+abbrev ConnescCocycle (P : ModularRadonNikodymPacket) : Type _ := P.2.2.2.2.1
+abbrev RelativeModularHamiltonian (P : ModularRadonNikodymPacket) : Type _ :=
+  P.2.2.2.2.2.1
+abbrev modularNCRadonNikodymWitness (P : ModularRadonNikodymPacket) :=
+  P.2.2.2.2.2.2.1
+abbrev arakiRelativeEntropy (P : ModularRadonNikodymPacket) : ℝ := P.2.2.2.2.2.2.2
+
+end ModularRadonNikodymPacket
 
 /--
 **Theorem 25.2a — Classical RN packet embeds into the modular RN packet.**
@@ -1949,14 +1962,14 @@ Mechanically verified: no `by rfl`.
 -/
 def classicalToModularWitness
     (cl : ClassicalRadonNikodymPacket) : ModularRadonNikodymPacket :=
-  { VonNeumannAlgebra         := cl.StateSpace → ℝ
-    ReferenceState             := cl.StateSpace
-    TargetState                := cl.StateSpace
-    RelativeModularOperator    := cl.StateSpace → ℝ   -- multiplication by dν/dμ
-    ConnescCocycle             := cl.StateSpace → ℝ   -- pointwise r^{it}
-    RelativeModularHamiltonian := cl.StateSpace → ℝ   -- pointwise log r
-    modularNCRadonNikodymWitness := fun relativeOperator cocycle => relativeOperator = cocycle
-    arakiRelativeEntropy       := cl.klDivergence }
+  ⟨cl.StateSpace → ℝ,
+    cl.StateSpace,
+    cl.StateSpace,
+    cl.StateSpace → ℝ,
+    cl.StateSpace → ℝ,
+    cl.StateSpace → ℝ,
+    (fun relativeOperator cocycle => relativeOperator = cocycle),
+    cl.klDivergence⟩
 
 /--
 In the commutative specialization, the modular Radon-Nikodym witness is the
@@ -2109,30 +2122,38 @@ Integrates all layers of the Tomita–Gromov synthesis.
 | partition function | `Tr(e^{-βH})` | Weyl spectral-volume asymptotic |
 | signed cancellation | supertrace | supervolume / index |
 -/
-structure ModularThermodynamicBridgePacket where
-  /-- Classical Radon–Nikodym layer (§25.1). -/
-  classicalRN    : ClassicalRadonNikodymPacket
-  /-- Noncommutative RN / Tomita–Takesaki layer (§25.2). -/
-  modularRN      : ModularRadonNikodymPacket
-  /-- Gibbs–KMS thermodynamic layer (§25.3). -/
-  gibbsKMS       : GibbsKMSPacket
-  /-- Dissipative GKSL dynamics layer (§25.4). -/
-  gkslDynamics   : GKSLDissipativeDynamicsPacket
-  /-- Gromov homological probability roadmap layer (§24). -/
-  gromovRoadmap  : GromovHomologicalProbabilityRoadmapPacket
-  /-- Spectral probability weights (eigenvalue probabilities `pᵢ = ρ(Pᵢ)`). -/
-  SpectralWeights : Type*
-  /-- Spectral geometric volumes (tracial / K-theoretic sector charges `τ(Pᵢ)`). -/
-  SpectralVolumes : Type*
-  /--
-  Comparison witness: spectral weight ≠ spectral volume in general;
-  the mismatch is the logarithmic Radon–Nikodym potential.
-  -/
-  spectralWeightVolumeComparison : SpectralWeights → SpectralVolumes → Prop
-  /-- Graded / signed volume object (supertrace `Tr_even − Tr_odd` or index). -/
-  SuperVolumeWeight : Type*
-  /-- Weyl gauge recovery: asymptotic spectral data recovers geometric volume. -/
-  WeylGaugeRecovery : Type*
+abbrev ModularThermodynamicBridgePacket : Type _ :=
+  Σ' classicalRN : ClassicalRadonNikodymPacket,
+    Σ' modularRN : ModularRadonNikodymPacket,
+      Σ' gibbsKMS : GibbsKMSPacket,
+        Σ' gkslDynamics : GKSLDissipativeDynamicsPacket,
+          Σ' gromovRoadmap : GromovHomologicalProbabilityRoadmapPacket,
+            Σ' SpectralWeights : Type*,
+              Σ' SpectralVolumes : Type*,
+                Σ' spectralWeightVolumeComparison :
+                  SpectralWeights → SpectralVolumes → Prop,
+                  Σ' SuperVolumeWeight : Type*,
+                    Type*
+
+namespace ModularThermodynamicBridgePacket
+
+abbrev classicalRN (P : ModularThermodynamicBridgePacket) : ClassicalRadonNikodymPacket := P.1
+abbrev modularRN (P : ModularThermodynamicBridgePacket) : ModularRadonNikodymPacket := P.2.1
+abbrev gibbsKMS (P : ModularThermodynamicBridgePacket) : GibbsKMSPacket := P.2.2.1
+abbrev gkslDynamics (P : ModularThermodynamicBridgePacket) : GKSLDissipativeDynamicsPacket :=
+  P.2.2.2.1
+abbrev gromovRoadmap (P : ModularThermodynamicBridgePacket) :
+    GromovHomologicalProbabilityRoadmapPacket := P.2.2.2.2.1
+abbrev SpectralWeights (P : ModularThermodynamicBridgePacket) : Type _ := P.2.2.2.2.2.1
+abbrev SpectralVolumes (P : ModularThermodynamicBridgePacket) : Type _ := P.2.2.2.2.2.2.1
+abbrev spectralWeightVolumeComparison (P : ModularThermodynamicBridgePacket) :=
+  P.2.2.2.2.2.2.2.1
+abbrev SuperVolumeWeight (P : ModularThermodynamicBridgePacket) : Type _ :=
+  P.2.2.2.2.2.2.2.2.1
+abbrev WeylGaugeRecovery (P : ModularThermodynamicBridgePacket) : Type _ :=
+  P.2.2.2.2.2.2.2.2.2
+
+end ModularThermodynamicBridgePacket
 
 /--
 **Theorem 25.6 — Constructor from explicit layer witnesses.**
@@ -2153,16 +2174,7 @@ def constructModularThermodynamicBridge
     (SUV : Type*)
     (WGR : Type*) :
     ModularThermodynamicBridgePacket :=
-  { classicalRN                    := cl
-    modularRN                      := mr
-    gibbsKMS                       := gk
-    gkslDynamics                   := dyn
-    gromovRoadmap                  := gr
-    SpectralWeights                := SW
-    SpectralVolumes                := SV
-    spectralWeightVolumeComparison := cmp
-    SuperVolumeWeight              := SUV
-    WeylGaugeRecovery              := WGR }
+  ⟨cl, mr, gk, dyn, gr, SW, SV, cmp, SUV, WGR⟩
 
 /--
 **Definition 25.7 — Momentum-map / Radon–Nikodym compatibility condition.**

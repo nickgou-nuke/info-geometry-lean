@@ -19,17 +19,21 @@ variable {n : ℕ} [DecidableEq (Fin n)]
 
 /-- C*-Algebra Density State Functional ω(A) = Tr(ρ * A) with Tr(ρ) = 1. -/
 structure CStarState (n : ℕ) [DecidableEq (Fin n)] where
-  rho : Matrix (Fin n) (Fin n) ℂ
-  h_rho_self_adj : rho.conjTranspose = rho
-  h_rho_normalized : trace rho = 1
+  rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ)
+  h_rho_normalized : trace (rho : Matrix (Fin n) (Fin n) ℂ) = 1
 
 namespace CStarState
 
 variable (state : CStarState n)
 
+def rhoVal : Matrix (Fin n) (Fin n) ℂ := state.rho
+
+theorem rho_self_adj : (rhoVal state).conjTranspose = rhoVal state := by
+  simpa only [rhoVal, Matrix.star_eq_conjTranspose] using state.rho.property
+
 /-- State Evaluation Functional ω(A) = Tr(ρ * A). -/
 def apply (A : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
-  trace (state.rho * A)
+  trace (rhoVal state * A)
 
 /-- **Theorem**: State Evaluation Normalization: ω(1) = 1. -/
 theorem state_normalized : state.apply 1 = 1 := by
@@ -50,10 +54,9 @@ theorem state_smul (c : ℂ) (A : Matrix (Fin n) (Fin n) ℂ) :
 
 /-- Tracial State Structure where ρ = (1/n) • 1. -/
 def tracialState (h_n : (n : ℂ) ≠ 0) : CStarState n where
-  rho := (1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)
-  h_rho_self_adj := by
+  rho := ⟨(1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ), by
     rw [conjTranspose_smul, conjTranspose_one]
-    simp
+    simp⟩
   h_rho_normalized := by
     rw [trace_smul, trace_one, Fintype.card_fin]
     dsimp [nsmul_eq_mul]

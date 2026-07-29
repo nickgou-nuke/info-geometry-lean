@@ -79,7 +79,6 @@ theorem outerWeight_pos
       (grandPartition_pos State super energy particleNumber superNumber β μ ν fiber_nonempty)
 
 /-- The product-form joint weight is the product of the three normalized layers. -/
-omit [Nonempty SuperSector] [Nonempty Sector] [∀ (s : Sector), Nonempty (State s)] in
 theorem layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight
     (super : Sector → SuperSector)
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)

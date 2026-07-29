@@ -257,44 +257,39 @@ This is a record of the owner-backed facts that are actually proved.  Analytic
 convergence and categorical coherence claims are intentionally excluded.
 -/
 @[rep_depth thermo, capstone]
-structure VerifiedTransitionMatrix (bulk : BulkState) where
-  denominator_identity :
-    weylDenominatorProduct bulk.rootLattice bulk.thermalRootVariable =
-      weylAlternatingSum bulk.rootLattice bulk.thermalRootVariable
-  reciprocal_partition_identity :
+def VerifiedTransitionMatrix (bulk : BulkState) : Prop :=
+  weylDenominatorProduct bulk.rootLattice bulk.thermalRootVariable =
+      weylAlternatingSum bulk.rootLattice bulk.thermalRootVariable ∧
     finitePrimonPartition bulk.rootLattice bulk.beta =
-      (evaluatedWeylDenominator bulk.rootLattice bulk.beta)⁻¹
-  thermal_cayley_boundary_limit :
-    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1)
-  canonical_sewn_boundary_anomaly_free :
+      (evaluatedWeylDenominator bulk.rootLattice bulk.beta)⁻¹ ∧
+    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1) ∧
     SouriauBostConnesClosureProofs.sewnChiralIndex
-        SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0
-  yang_baxter_parameters :
+        SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0 ∧
     YangBaxterProof.q ^ 5 = -1 ∧
-      YangBaxterProof.τ ^ 2 + YangBaxterProof.τ = 1
-  fibonacci_identities :
+      YangBaxterProof.τ ^ 2 + YangBaxterProof.τ = 1 ∧
     0 < phi ∧ 1 < phi ∧ 0 < phiInv ∧
-      phi ^ 2 = phi + 1 ∧ phiInv ^ 2 + phiInv = 1
-  rmatrix_phases :
+      phi ^ 2 = phi + 1 ∧ phiInv ^ 2 + phiInv = 1 ∧
     ‖R1_phase‖ = 1 ∧
       ‖Rtau_phase‖ = 1 ∧
-        R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5))
-  dirac_sea_readout :
+        R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5)) ∧
     diracSeaVacuum = (fun n : ℤ => n < 0) ∧
       (∀ w : DiracSeaBoundary, Option.bind (diracSeaStep w) diracSeaStep = none)
 
 /-- Construct the verified finite/local matrix from the existing owner theorems. -/
 @[rep_depth thermo, capstone]
-def verifiedTransitionMatrix (bulk : BulkState) : VerifiedTransitionMatrix bulk where
-  denominator_identity := finite_weylDenominator_eq_alternatingSum bulk
-  reciprocal_partition_identity :=
-    finite_primonPartition_eq_inverse_evaluatedWeylDenominator bulk
-  thermal_cayley_boundary_limit := thermal_cayley_tendsto_boundary_one
-  canonical_sewn_boundary_anomaly_free := concrete_canonical_sewn_boundary_anomaly_free
-  yang_baxter_parameters := yangBaxter_boundary_parameters
-  fibonacci_identities := fibonacci_golden_ratio_identities
-  rmatrix_phases := rmatrix_unitarity
-  dirac_sea_readout := diracSea_half_filled
+theorem verifiedTransitionMatrix (bulk : BulkState) : VerifiedTransitionMatrix bulk := by
+  refine ⟨finite_weylDenominator_eq_alternatingSum bulk, ?_⟩
+  refine ⟨finite_primonPartition_eq_inverse_evaluatedWeylDenominator bulk, ?_⟩
+  refine ⟨thermal_cayley_tendsto_boundary_one, ?_⟩
+  refine ⟨concrete_canonical_sewn_boundary_anomaly_free, ?_⟩
+  refine ⟨yangBaxter_boundary_parameters.1, yangBaxter_boundary_parameters.2, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.2.1, ?_⟩
+  refine ⟨fibonacci_golden_ratio_identities.2.2.2.2, ?_⟩
+  refine ⟨rmatrix_unitarity.1, rmatrix_unitarity.2.1, rmatrix_unitarity.2.2, ?_⟩
+  exact diracSea_half_filled
 
 /-- Public package constructor for the finite/local transition readout. -/
 @[rep_depth thermo, capstone]
@@ -323,9 +318,8 @@ This is the theorem-safe capstone exported by this file.
 @[rep_depth thermo, capstone]
 theorem souriau_bost_connes_transition_verified
     (P : Finset ℕ) (primesP : ∀ p ∈ P, Nat.Prime p) (β : ℝ) (hβpos : 0 < β) :
-    Nonempty
-      (VerifiedTransitionMatrix
-        (souriau_bost_connes_transition_Package P primesP β hβpos).bulk) :=
-  ⟨verifiedTransitionMatrix _⟩
+    VerifiedTransitionMatrix
+      (souriau_bost_connes_transition_Package P primesP β hβpos).bulk :=
+  verifiedTransitionMatrix _
 
 end InfoGeometry.Canonical.SouriauBostConnesTransition

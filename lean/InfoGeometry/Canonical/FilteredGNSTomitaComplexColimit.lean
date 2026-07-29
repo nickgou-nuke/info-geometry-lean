@@ -354,6 +354,8 @@ theorem complexDirectLimitModularForm_conj_symm
             Stage sys ω hclos i j k
             (le_commonUpper_left i j)
             (le_commonUpper_right i j)]
-          exact inner_conj_symm _ _
+          rw [closedTomitaModularForm_apply,
+            closedTomitaModularForm_apply]
+          exact inner_conj_symm (𝕜 := ℂ) _ _
 
 end CStarStateColimit.Native.FilteredGNSTomitaComplexColimit

@@ -23,8 +23,8 @@ open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 
 def pauliMajoranaWitness : NullBoundaryMajoranas 2 :=
-  { gamma_L := σ1
-    gamma_R := σ3
+  { gamma_L := involutiveUnit σ1 pauli_sigma1_sq
+    gamma_R := involutiveUnit σ3 pauli_sigma3_sq
     h_anticomm := by
       exact pauli_sigma1_anti_sigma3
     h_L_sq := by
@@ -34,22 +34,22 @@ def pauliMajoranaWitness : NullBoundaryMajoranas 2 :=
 
 theorem pauliMajoranaWitness_exists :
     ∃ m : NullBoundaryMajoranas 2,
-      m.gamma_L * m.gamma_L = 1 ∧
-      m.gamma_R * m.gamma_R = 1 ∧
-      m.gamma_L * m.gamma_R + m.gamma_R * m.gamma_L = 0 := by
+      gammaLVal m * gammaLVal m = 1 ∧
+      gammaRVal m * gammaRVal m = 1 ∧
+      gammaLVal m * gammaRVal m + gammaRVal m * gammaLVal m = 0 := by
   refine ⟨pauliMajoranaWitness, ?_⟩
   exact ⟨pauli_sigma1_sq, pauli_sigma3_sq, pauli_sigma1_anti_sigma3⟩
 
 theorem pauliMajoranaWitness_selfAdjoint :
-    (pauliMajoranaWitness.gamma_L)ᴴ = pauliMajoranaWitness.gamma_L ∧
-      (pauliMajoranaWitness.gamma_R)ᴴ = pauliMajoranaWitness.gamma_R := by
+    (gammaLVal pauliMajoranaWitness)ᴴ = gammaLVal pauliMajoranaWitness ∧
+      (gammaRVal pauliMajoranaWitness)ᴴ = gammaRVal pauliMajoranaWitness := by
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [pauliMajoranaWitness, σ1, Matrix.conjTranspose]
+    simp [pauliMajoranaWitness, gammaLVal, σ1, Matrix.conjTranspose]
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [pauliMajoranaWitness, σ3, Matrix.conjTranspose]
+    simp [pauliMajoranaWitness, gammaRVal, σ3, Matrix.conjTranspose]
 
 theorem pauliMajoranaWitness_majoranasSelfAdjoint :
     MajoranasSelfAdjoint pauliMajoranaWitness := by

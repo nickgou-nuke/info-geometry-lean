@@ -61,6 +61,13 @@ structure NullBoundaryMajoranas (n : ℕ) where
   h_L_sq : (gamma_L : Matrix (Fin n) (Fin n) ℂ) * gamma_L = 1
   h_R_sq : (gamma_R : Matrix (Fin n) (Fin n) ℂ) * gamma_R = 1
 
+def involutiveUnit (x : Matrix (Fin n) (Fin n) ℂ)
+    (hx : x * x = 1) : (Matrix (Fin n) (Fin n) ℂ)ˣ :=
+  { val := x
+    inv := x
+    val_inv := hx
+    inv_val := by simpa [mul_comm] using hx }
+
 def gammaLVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.gamma_L
 
 def gammaRVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.gamma_R

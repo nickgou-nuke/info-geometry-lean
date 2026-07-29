@@ -1,5 +1,6 @@
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Clopen
+import Mathlib.Topology.MetricSpace.PiNat
 import Mathlib.Topology.Instances.Complex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
@@ -328,6 +329,63 @@ theorem cylinderSet_prependBit_image (n : ℕ) (b : Bool) (w : BitWord n) :
       have htail := congrFun hy ⟨j.1 + 1, Nat.succ_lt_succ j.2⟩
       simpa [prependWord, boundaryPrefix, tail] using htail
     · exact prependBit_tail_of_head hhead
+
+/-- Extend a finite word to a boundary point by a fixed default tail. -/
+def extendWord (n : ℕ) (w : BitWord n) : CantorBoundary :=
+  fun i => if h : i < n then w ⟨i, h⟩ else false
+
+theorem boundaryPrefix_extendWord (n : ℕ) (w : BitWord n) :
+    boundaryPrefix n (extendWord n w) = w := by
+  ext i
+  simp [boundaryPrefix, extendWord, i.2]
+
+theorem cylinderSet_eq_piNat_cylinder_extendWord (n : ℕ) (w : BitWord n) :
+    cylinderSet n w = PiNat.cylinder (extendWord n w) n := by
+  ext x
+  change boundaryPrefix n x = w ↔ ∀ i < n, x i = extendWord n w i
+  constructor
+  · intro h i hi
+    have hi' := congrFun h ⟨i, hi⟩
+    simpa [extendWord, hi] using hi'
+  · intro h
+    funext i
+    have hi := h i i.2
+    simpa [extendWord, i.2] using hi
+
+theorem cylinderSet_eq_piNat_cylinder (n : ℕ) (x : CantorBoundary) :
+    cylinderSet n (boundaryPrefix n x) = PiNat.cylinder x n := by
+  ext y
+  change boundaryPrefix n y = boundaryPrefix n x ↔ ∀ i < n, y i = x i
+  constructor
+  · intro h i hi
+    exact congrFun h ⟨i, hi⟩
+  · intro h
+    funext i
+    exact h i i.2
+
+/-- Finite-prefix cylinders form a topological basis for the product boundary.
+
+This reuses Mathlib's product-topology basis theorem; no metric or analytic
+completion is used in this statement. -/
+theorem isTopologicalBasis_cylinderSet :
+    TopologicalSpace.IsTopologicalBasis
+      {s : Set CantorBoundary |
+        ∃ (n : ℕ) (w : BitWord n), s = cylinderSet n w} := by
+  have hfamily :
+      {s : Set CantorBoundary |
+          ∃ (n : ℕ) (w : BitWord n), s = cylinderSet n w} =
+        {s : Set CantorBoundary |
+          ∃ (x : CantorBoundary) (n : ℕ), s = PiNat.cylinder x n} := by
+    ext s
+    constructor
+    · rintro ⟨n, w, rfl⟩
+      exact ⟨extendWord n w, n,
+        cylinderSet_eq_piNat_cylinder_extendWord n w⟩
+    · rintro ⟨x, n, rfl⟩
+      exact ⟨n, boundaryPrefix n x,
+        (cylinderSet_eq_piNat_cylinder n x).symm⟩
+  rw [hfamily]
+  exact PiNat.isTopologicalBasis_cylinders (fun _ : ℕ => Bool)
 
 /-! The finite-cylinder carrier is closed under its algebra operations. -/
 

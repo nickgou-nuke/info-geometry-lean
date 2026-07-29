@@ -427,6 +427,7 @@ import InfoGeometry.Canonical.ConnesSpectralMetricBridge
 import InfoGeometry.Canonical.QuantumGroupUqSL2Bridge
 import InfoGeometry.Canonical.FQHEMooreReadPfaffianBridge
 import InfoGeometry.Canonical.NoncommutativeTorusAlgebraBridge
+import InfoGeometry.Canonical.FibonacciBraidingPhaseBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge

@@ -20,7 +20,11 @@ open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredGNSHilbertColimit
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarClosure
 open CStarStateColimit.Native.FilteredGNSRepresentedRangeCompletion
+open CStarStateColimit.Native.FilteredGNSFaithfulRangeQuotient
+open CStarStateColimit.Native.FilteredGNSRepresentedAlgebraCompletion
 open CStarStateColimit.Native.FilteredGNSRepresentedCStarCompletion
+open CStarStateColimit.Native.FilteredStarAlgebraDirectLimit
+open CStarStateColimit.Native.FilteredGNSAlgebraicColimitRepresentation
 
 universe u
 
@@ -66,5 +70,47 @@ theorem representedRangeCompletionStarAlgEquiv_continuous_inv :
     Continuous (representedRangeCompletionStarAlgEquiv Stage sys ω).symm := by
   simpa [representedRangeCompletionStarAlgEquiv] using
     (representedRangeCompletionEquiv Stage sys ω).symm.continuous
+
+/-- The algebraic and topological equivalences combine into Mathlib's native
+continuous algebra equivalence. -/
+def representedRangeCompletionContinuousAlgEquiv :
+    representedAlgebraicRangeCompletion Stage sys ω ≃A[ℂ]
+      representedCStarClosure Stage sys ω :=
+  ContinuousAlgEquiv.mk
+    (representedRangeCompletionAlgEquiv Stage sys ω)
+    (representedRangeCompletionEquiv Stage sys ω).continuous
+    (representedRangeCompletionEquiv Stage sys ω).symm.continuous
+
+@[simp] theorem representedRangeCompletionContinuousAlgEquiv_apply
+    (x : representedAlgebraicRangeCompletion Stage sys ω) :
+    representedRangeCompletionContinuousAlgEquiv Stage sys ω x =
+      representedRangeCompletionStarAlgEquiv Stage sys ω x := by
+  change representedRangeCompletionAlgEquiv Stage sys ω x =
+    representedRangeCompletionAlgEquiv Stage sys ω x
+  rfl
+
+@[simp] theorem representedRangeCompletionContinuousAlgEquiv_symm_apply
+    (x : representedCStarClosure Stage sys ω) :
+    (representedRangeCompletionContinuousAlgEquiv Stage sys ω).symm x =
+      (representedRangeCompletionStarAlgEquiv Stage sys ω).symm x := by
+  change (representedRangeCompletionAlgEquiv Stage sys ω).symm x =
+    (representedRangeCompletionAlgEquiv Stage sys ω).symm x
+  rfl
+
+/- The continuous equivalence preserves the verified finite-stage cocone
+formula on the canonical dense completion inclusion. -/
+@[simp] theorem representedRangeCompletionContinuousAlgEquiv_stage
+    (i : I) (a : Stage i) :
+    representedRangeCompletionContinuousAlgEquiv Stage sys ω
+        (algebraicColimitRangeRestrict Stage sys ω
+          (algebraicStarDirectLimitOf Stage sys i a)) =
+      algebraicColimitToRepresentedClosure Stage sys ω
+        (algebraicStarDirectLimitOf Stage sys i a) := by
+  change representedRangeCompletionEquiv Stage sys ω
+      (algebraicColimitRangeRestrict Stage sys ω
+        (algebraicStarDirectLimitOf Stage sys i a)) =
+    algebraicColimitToRepresentedClosure Stage sys ω
+      (algebraicStarDirectLimitOf Stage sys i a)
+  exact representedRangeCompletionEquiv_stage Stage sys ω i a
 
 end CStarStateColimit.Native.FilteredGNSRepresentedCStarTopology

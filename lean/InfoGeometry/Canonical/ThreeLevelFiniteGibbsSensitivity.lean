@@ -55,6 +55,13 @@ theorem outerLocalVariance_zero (C : OuterSensitivityContract) :
   simpa [outerLocalVariance] using
     InfoGeometry.Inference.localVariance_zero_direction C.fisherInverse C.contract
 
+/-- Nonzero directions have strictly positive local variance. -/
+theorem outerLocalVariance_pos (C : OuterSensitivityContract) {v : Fin 2 → ℝ}
+    (hv : v ≠ 0) :
+    0 < outerLocalVariance C v := by
+  simpa [outerLocalVariance] using
+    InfoGeometry.Inference.localVariance_pos C.fisherInverse C.contract hv
+
 end OuterSensitivityContract
 
 end ThreeLevelFiniteGibbs

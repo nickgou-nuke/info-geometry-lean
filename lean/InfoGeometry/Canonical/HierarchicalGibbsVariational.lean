@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.HierarchicalGibbsFreeEnergy
 import InfoGeometry.Inference.GibbsVariationalDecomposition
+import InfoGeometry.Inference.FiniteRelativeEntropyEquality
 
 open scoped BigOperators
 
@@ -128,6 +129,48 @@ theorem grandFreeEnergy_le_sectorVariationalObjective
     State energy particleNumber hβ q hq_pos hq_sum]
   exact le_add_of_nonneg_right
     (sectorVariationalGap_nonneg State energy particleNumber hβ q hq_pos hq_sum)
+
+/-- Equality in the outer variational bound characterizes the sector Gibbs
+    distribution among positive normalized sector weights. -/
+theorem sectorVariationalObjective_eq_grandFreeEnergy_iff
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    {β μ : ℝ} (hβ : 0 < β) (q : Sector → ℝ)
+    (hq_pos : ∀ s, 0 < q s) (hq_sum : ∑ s, q s = 1) :
+    sectorVariationalObjective State energy particleNumber β μ q =
+      grandFreeEnergy State energy particleNumber β μ ↔
+      q = sectorWeight State energy particleNumber β μ := by
+  rw [sectorVariationalObjective_eq_grandFreeEnergy_add_relativeEntropy
+    State energy particleNumber hβ q hq_pos hq_sum]
+  have hβne : β ≠ 0 := ne_of_gt hβ
+  have hfactor : (1 / β) ≠ 0 := ne_of_gt (one_div_pos.mpr hβ)
+  have hp_pos : ∀ s, 0 < sectorWeight State energy particleNumber β μ s := by
+    intro s
+    unfold sectorWeight sectorNumerator
+    exact div_pos
+      (mul_pos (Real.exp_pos _) (canonicalPartition_pos State energy β s))
+      (grandPartition_pos State energy particleNumber β μ)
+  have hp_sum : ∑ s, sectorWeight State energy particleNumber β μ s = 1 :=
+    sum_sectorWeight_eq_one State energy particleNumber β μ
+  constructor
+  · intro h
+    have hgap : (1 / β) * finiteRelativeEntropy q
+        (sectorWeight State energy particleNumber β μ) = 0 := by
+      linarith
+    have hkl : finiteRelativeEntropy q
+        (sectorWeight State energy particleNumber β μ) = 0 :=
+      (mul_eq_zero.mp hgap).resolve_left hfactor
+    exact (finiteRelativeEntropy_eq_zero_iff q
+      (sectorWeight State energy particleNumber β μ)
+      hq_pos hp_pos hq_sum hp_sum).mp hkl
+  · intro hq
+    have hkl : finiteRelativeEntropy q
+        (sectorWeight State energy particleNumber β μ) = 0 := by
+      apply (finiteRelativeEntropy_eq_zero_iff q
+        (sectorWeight State energy particleNumber β μ)
+        hq_pos hp_pos hq_sum hp_sum).mpr
+      exact hq
+    rw [hkl]
+    ring
 
 end HierarchicalGrandCanonical
 

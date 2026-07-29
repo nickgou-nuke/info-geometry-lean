@@ -90,6 +90,21 @@ theorem layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalW
         conditionalWeight State energy β s x := by
   rfl
 
+/-- The product-form three-level joint weight is strictly positive. -/
+theorem layeredJointWeight_pos
+    (super : Sector → SuperSector)
+    (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
+    (superNumber : SuperSector → ℝ) (β μ ν : ℝ)
+    (fiber_nonempty : ∀ g, (superFiber super g).Nonempty)
+    (g : SuperSector) (s : Sector) (x : State s) :
+    0 < layeredJointWeight State super energy particleNumber superNumber β μ ν g s x := by
+  rw [layeredJointWeight_eq_outerWeight_mul_fiberSectorWeight_mul_conditionalWeight]
+  exact mul_pos
+    (outerWeight_pos State super energy particleNumber superNumber β μ ν fiber_nonempty g)
+    (mul_pos
+      (fiberSectorWeight_pos State super energy particleNumber β μ fiber_nonempty g s)
+      (conditionalWeight_pos State energy β s x))
+
 /-- The conditional Gibbs weights normalize inside each sector. -/
 theorem sum_conditionalWeight_eq_one
     (energy : ∀ s, State s → ℝ) (β : ℝ) (s : Sector) :

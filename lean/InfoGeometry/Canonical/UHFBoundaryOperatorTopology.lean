@@ -77,6 +77,174 @@ theorem continuous_UHF_Laplacian_op :
   (continuous_UHF_boundary_op.comp continuous_star_UHF_boundary_op).add
     (continuous_star_UHF_boundary_op.comp continuous_UHF_boundary_op)
 
+/-! The branch partition also glues continuous boundary functions. -/
+
+theorem branchSet_eq_head (b : Bool) :
+    Set.range (prependBit b) = {x : CantorBoundary | x 0 = b} := by
+  ext x
+  constructor
+  · rintro ⟨y, rfl⟩
+    exact prependBit_head b y
+  · intro hx
+    exact ⟨tail x, prependBit_tail_of_head hx⟩
+
+theorem branchSet_frontier_empty (b : Bool) :
+    frontier {x : CantorBoundary | x 0 = b} = ∅ := by
+  rw [← branchSet_eq_head b]
+  rw [frontier, (prependBit_image_closed b).closure_eq,
+    (prependBit_image_clopen b).isOpen.interior_eq]
+  simp
+
+theorem continuous_S_L_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (S_L_op f) := by
+  change Continuous (fun x => if x 0 = false then f (tail x) else 0)
+  apply Continuous.if _ (hf.comp continuous_tail) continuous_const
+  intro x hx
+  rw [branchSet_frontier_empty false] at hx
+  exact False.elim (by exact hx)
+
+theorem continuous_S_R_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (S_R_op f) := by
+  change Continuous (fun x => if x 0 = true then f (tail x) else 0)
+  apply Continuous.if _ (hf.comp continuous_tail) continuous_const
+  intro x hx
+  rw [branchSet_frontier_empty true] at hx
+  exact False.elim (by exact hx)
+
+theorem continuous_star_S_L_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (star_S_L_op f) :=
+  hf.comp (continuous_prependBit false)
+
+theorem continuous_star_S_R_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (star_S_R_op f) :=
+  hf.comp (continuous_prependBit true)
+
+theorem continuous_UHF_boundary_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (UHF_boundary_op f) :=
+  continuous_S_L_op_of_continuous
+    (continuous_star_S_R_op_of_continuous hf)
+
+theorem continuous_star_UHF_boundary_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (star_UHF_boundary_op f) :=
+  continuous_S_R_op_of_continuous
+    (continuous_star_S_L_op_of_continuous hf)
+
+theorem continuous_UHF_Laplacian_op_of_continuous
+    {f : CantorBoundary → ℂ} (hf : Continuous f) :
+    Continuous (UHF_Laplacian_op f) :=
+  (continuous_UHF_boundary_op_of_continuous
+      (continuous_star_UHF_boundary_op_of_continuous hf)).add
+    (continuous_star_UHF_boundary_op_of_continuous
+      (continuous_UHF_boundary_op_of_continuous hf))
+
+noncomputable def S_L_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := S_L_op f
+    continuous_toFun := continuous_S_L_op_of_continuous f.continuous }
+
+noncomputable def S_R_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := S_R_op f
+    continuous_toFun := continuous_S_R_op_of_continuous f.continuous }
+
+noncomputable def star_S_L_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := star_S_L_op f
+    continuous_toFun := continuous_star_S_L_op_of_continuous f.continuous }
+
+noncomputable def star_S_R_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := star_S_R_op f
+    continuous_toFun := continuous_star_S_R_op_of_continuous f.continuous }
+
+noncomputable def UHF_boundary_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := UHF_boundary_op f
+    continuous_toFun := continuous_UHF_boundary_op_of_continuous f.continuous }
+
+noncomputable def star_UHF_boundary_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := star_UHF_boundary_op f
+    continuous_toFun := continuous_star_UHF_boundary_op_of_continuous f.continuous }
+
+noncomputable def UHF_Laplacian_continuousMap
+    (f : C(CantorBoundary, ℂ)) : C(CantorBoundary, ℂ) :=
+  { toFun := UHF_Laplacian_op f
+    continuous_toFun := continuous_UHF_Laplacian_op_of_continuous f.continuous }
+
+@[simp] theorem S_L_continuousMap_apply
+    (f : C(CantorBoundary, ℂ)) (x : CantorBoundary) :
+    S_L_continuousMap f x = S_L_op f x := rfl
+
+@[simp] theorem S_R_continuousMap_apply
+    (f : C(CantorBoundary, ℂ)) (x : CantorBoundary) :
+    S_R_continuousMap f x = S_R_op f x := rfl
+
+@[simp] theorem star_S_L_continuousMap_apply
+    (f : C(CantorBoundary, ℂ)) (x : CantorBoundary) :
+    star_S_L_continuousMap f x = star_S_L_op f x := rfl
+
+@[simp] theorem star_S_R_continuousMap_apply
+    (f : C(CantorBoundary, ℂ)) (x : CantorBoundary) :
+    star_S_R_continuousMap f x = star_S_R_op f x := rfl
+
+/-! Cuntz and Hodge identities transported to continuous boundary functions. -/
+
+theorem star_S_L_continuousMap_S_L
+    (f : C(CantorBoundary, ℂ)) :
+    star_S_L_continuousMap (S_L_continuousMap f) = f := by
+  ext x
+  exact congrFun (star_S_L_op_S_L_op f) x
+
+theorem star_S_R_continuousMap_S_R
+    (f : C(CantorBoundary, ℂ)) :
+    star_S_R_continuousMap (S_R_continuousMap f) = f := by
+  ext x
+  exact congrFun (star_S_R_op_S_R_op f) x
+
+theorem star_S_L_continuousMap_S_R
+    (f : C(CantorBoundary, ℂ)) :
+    star_S_L_continuousMap (S_R_continuousMap f) = 0 := by
+  ext x
+  exact congrFun (star_S_L_op_S_R_op f) x
+
+theorem star_S_R_continuousMap_S_L
+    (f : C(CantorBoundary, ℂ)) :
+    star_S_R_continuousMap (S_L_continuousMap f) = 0 := by
+  ext x
+  exact congrFun (star_S_R_op_S_L_op f) x
+
+theorem cuntz_partition_continuousMap
+    (f : C(CantorBoundary, ℂ)) :
+    S_L_continuousMap (star_S_L_continuousMap f) +
+      S_R_continuousMap (star_S_R_continuousMap f) = f := by
+  ext x
+  exact congrFun (cuntz_partition_op f) x
+
+theorem UHF_boundary_continuousMap_sq_zero
+    (f : C(CantorBoundary, ℂ)) :
+    UHF_boundary_continuousMap (UHF_boundary_continuousMap f) = 0 := by
+  ext x
+  exact congrFun (UHF_boundary_op_sq_zero f) x
+
+theorem star_UHF_boundary_continuousMap_sq_zero
+    (f : C(CantorBoundary, ℂ)) :
+    star_UHF_boundary_continuousMap (star_UHF_boundary_continuousMap f) = 0 := by
+  ext x
+  exact congrFun (star_UHF_boundary_op_sq_zero f) x
+
+theorem UHF_Laplacian_continuousMap_eq_id
+    (f : C(CantorBoundary, ℂ)) :
+    UHF_Laplacian_continuousMap f = f := by
+  ext x
+  exact congrFun (UHF_Laplacian_op_eq_id f) x
+
 /-! Continuous restrictions to the finite-cylinder subalgebra. -/
 
 abbrev CylinderAlgebra := cylinderColimitSubalgebra
@@ -175,6 +343,34 @@ theorem continuous_UHF_Laplacian_cylinderMap :
     UHF_Laplacian_cylinderMap g =
       ⟨UHF_Laplacian_op g,
         UHF_Laplacian_op_preserves_cylinder_colimit g.property⟩ := rfl
+
+theorem cylinderContinuousMap_S_L_intertwines
+    (g : CylinderAlgebra) :
+    S_L_continuousMap (cylinderContinuousMap g) =
+      cylinderContinuousMap (S_L_cylinderMap g) := by
+  ext x
+  rfl
+
+theorem cylinderContinuousMap_S_R_intertwines
+    (g : CylinderAlgebra) :
+    S_R_continuousMap (cylinderContinuousMap g) =
+      cylinderContinuousMap (S_R_cylinderMap g) := by
+  ext x
+  rfl
+
+theorem cylinderContinuousMap_star_S_L_intertwines
+    (g : CylinderAlgebra) :
+    star_S_L_continuousMap (cylinderContinuousMap g) =
+      cylinderContinuousMap (star_S_L_cylinderMap g) := by
+  ext x
+  rfl
+
+theorem cylinderContinuousMap_star_S_R_intertwines
+    (g : CylinderAlgebra) :
+    star_S_R_continuousMap (cylinderContinuousMap g) =
+      cylinderContinuousMap (star_S_R_cylinderMap g) := by
+  ext x
+  rfl
 
 theorem UHF_boundary_cylinderMap_sq_zero (g : CylinderAlgebra) :
     UHF_boundary_cylinderMap (UHF_boundary_cylinderMap g) = 0 := by

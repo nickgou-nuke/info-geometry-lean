@@ -18,47 +18,53 @@ open Complex Real
 
 namespace CStarStateColimit
 
-variable {A : Type*} [Ring A] [StarRing A]
+universe u
 
-/-- A Positive Linear Functional φ on a Star Algebra A. -/
-structure PositiveState (A : Type*) [Ring A] [StarRing A] where
-  toFun : A → ℂ
-  map_add' : ∀ a b, toFun (a + b) = toFun a + toFun b
-  map_pos' : ∀ a, 0 ≤ (toFun (star a * a)).re
-  map_self_star_im' : ∀ a, (toFun (star a * a)).im = 0
+open scoped ComplexOrder
+
+variable {A : Type u} [CStarAlgebra A] [PartialOrder A] [StarOrderedRing A]
+
+/-- A state functional is the native positive linear map from Mathlib. -/
+abbrev PositiveState (A : Type u) [CStarAlgebra A] [PartialOrder A]
+    [StarOrderedRing A] := A →ₚ[ℂ] ℂ
 
 namespace PositiveState
 
 variable (phi : PositiveState A)
 
 /-- **Theorem**: Non-commutative GNS State Positivity: Re(φ(a* a)) ≥ 0 for all a ∈ A. -/
-theorem gns_state_pos (a : A) : 0 ≤ (phi.toFun (star a * a)).re :=
-  phi.map_pos' a
+theorem gns_state_pos (a : A) : 0 ≤ (phi (star a * a)).re :=
+  (Complex.nonneg_iff.mp
+    (PositiveLinearMap.map_nonneg phi
+      (CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨a, rfl⟩))).1
 
 /-- **Theorem**: Real Part of Self-Adjoint Star Product is Zero in Imaginary Component. -/
-theorem gns_state_self_star_real (a : A) : (phi.toFun (star a * a)).im = 0 :=
-  phi.map_self_star_im' a
+theorem gns_state_self_star_real (a : A) : (phi (star a * a)).im = 0 := by
+  exact (Complex.nonneg_iff.mp
+    (PositiveLinearMap.map_nonneg phi
+      (CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨a, rfl⟩))).2.symm
 
 /-- GNS Null Space N_φ = { a ∈ A | φ(a* a) = 0 }. -/
 def gnsNullSpace (a : A) : Prop :=
-  phi.toFun (star a * a) = 0
+  phi (star a * a) = 0
 
 /-- **Theorem**: GNS Null Element Characterization: a ∈ N_φ ⟹ Re(φ(a* a)) = 0. -/
 theorem gns_null_re_zero (a : A) (h_null : phi.gnsNullSpace a) :
-    (phi.toFun (star a * a)).re = 0 := by
+    (phi (star a * a)).re = 0 := by
   dsimp [gnsNullSpace] at h_null
   rw [h_null]
   rfl
 
 /-- KMS Thermal Equilibrium Condition for modular time flow σ_t on C*-algebra A:
     φ(a * b) = φ(b * σ_iβ(a)). -/
-structure KMSState (sigma_i_beta : A → A) extends PositiveState A where
-  kms_condition : ∀ a b : A, toFun (a * b) = toFun (b * sigma_i_beta a)
+structure KMSState (sigma_i_beta : A → A) where
+  state : PositiveState A
+  kms_condition : ∀ a b : A, state (a * b) = state (b * sigma_i_beta a)
 
 /-- **Theorem**: KMS Boundary State Commutativity under Identity Modular Automorphism:
     If σ_iβ = Id, then φ(a * b) = φ(b * a) (Tracial State Condition). -/
 theorem kms_tracial_state (kms : KMSState (fun x => x)) (a b : A) :
-    kms.toFun (a * b) = kms.toFun (b * a) :=
+    kms.state (a * b) = kms.state (b * a) :=
   kms.kms_condition a b
 
 end PositiveState
